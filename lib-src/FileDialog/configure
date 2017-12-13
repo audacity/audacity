@@ -759,6 +759,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -853,6 +854,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1105,6 +1107,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1242,7 +1253,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1395,6 +1406,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -15927,16 +15939,24 @@ fi
 
 # Check whether --with-wx-config was given.
 if test "${with_wx_config+set}" = set; then :
-  withval=$with_wx_config; wx_config="$withval"
+  withval=$with_wx_config; WX_CONFIG="$withval"
 else
-  wx_config=""
+  WX_CONFIG="$WX_CONFIG"
 fi
 
 
-for ac_prog in wx-config wx-config-3.0
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+
+if test "${ac_cv_cxx_compiler_gnu}" = "yes"; then
+    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+else
+    CXXFLAGS="${CXXFLAGS} --std=c++11"
+fi
+
+if [ ! -x "$WX_CONFIG" ]; then
+    for tool in $WX_CONFIG wx-config wx-config-3.0; do
+        if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}$tool", so it can be a program name with args.
+set dummy ${ac_tool_prefix}$tool; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_WX_CONFIG+:} false; then :
@@ -15948,7 +15968,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$PATH:/usr/local/bin "
+as_dummy="$PATH:/usr/local/bin"
 for as_dir in $as_dummy
 do
   IFS=$as_save_IFS
@@ -15976,9 +15996,67 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$WX_CONFIG" && break
+fi
+if test -z "$ac_cv_path_WX_CONFIG"; then
+  ac_pt_WX_CONFIG=$WX_CONFIG
+  # Extract the first word of "$tool", so it can be a program name with args.
+set dummy $tool; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_ac_pt_WX_CONFIG+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $ac_pt_WX_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_WX_CONFIG="$ac_pt_WX_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$PATH:/usr/local/bin"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_ac_pt_WX_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
 done
-test -n "$WX_CONFIG" || WX_CONFIG="no"
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_WX_CONFIG=$ac_cv_path_ac_pt_WX_CONFIG
+if test -n "$ac_pt_WX_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_pt_WX_CONFIG" >&5
+$as_echo "$ac_pt_WX_CONFIG" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+  if test "x$ac_pt_WX_CONFIG" = x; then
+    WX_CONFIG="no"
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    WX_CONFIG=$ac_pt_WX_CONFIG
+  fi
+else
+  WX_CONFIG="$ac_cv_path_WX_CONFIG"
+fi
+
+        if [ -x "$WX_CONFIG" ]; then break; fi
+    done
+fi
 
 if [ "$WX_CONFIG" = "no" ] ; then
    as_fn_error $? "\"Could not find wx-config: is wxWidgets installed? is wx-config in your path?\"" "$LINENO" 5
@@ -16233,7 +16311,7 @@ case "${host_os}" in
             IMPLEMENTATION="mac"
    ;;
 
-   cygwin*)
+   cygwin* | mingw32*)
             IMPLEMENTATION="win"
    ;;
 

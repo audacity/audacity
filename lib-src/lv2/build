@@ -1,15 +1,24 @@
 #!/bin/bash
 
 srcdir=.
+host=
 while [ $# -gt 0 ]
 do
    if [[ "$1" =~ --srcdir=.* ]]
    then
       srcdir=${1#*=}
-      break
+   fi
+   if [[ "$1" =~ --host=.* ]]
+   then
+      host=${1#*=}
    fi
    shift
 done
+
+AR=ar
+if [ ! -z $host ]; then
+   AR="$host-ar"
+fi
 
 function waf
 {
@@ -25,8 +34,8 @@ function waf
    then
       mkdir -p obj
       pushd obj
-      ar vx ../${pkg}/build/*.a
-      ar vq ../liblv2.a *
+      ${AR} vx ../${pkg}/build/*.a
+      ${AR} vq ../liblv2.a *
       popd
       rm -rf obj
    fi

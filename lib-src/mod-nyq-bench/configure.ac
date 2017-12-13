@@ -50,11 +50,18 @@ AC_ARG_WITH(wx-version,
 
 AC_ARG_WITH(wx-config,
             [AS_HELP_STRING([--with-wx-config],[override default wxWidgets config script])],
-            wx_config="$withval",
-            wx_config="")
+            WX_CONFIG="$withval",
+            WX_CONFIG="")
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+dnl there is no AC_PATH_TOOLS so we have this loop
+if [[ ! -x "$WX_CONFIG" ]]; then
+    for tool in $WX_CONFIG wx-config wx-config-3.0; do
+        AC_PATH_TOOL(WX_CONFIG, $tool, no, $PATH:/usr/local/bin)
+        if [[ -x "$WX_CONFIG" ]]; then break; fi
+    done
+fi
+
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
 fi

@@ -25,9 +25,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVAMP], [
 
    dnl see if Vamp is available locally
 
-   AC_CHECK_FILE(${srcdir}/lib-src/libvamp/vamp-hostsdk/PluginLoader.h,
-                 LIBVAMP_LOCAL_AVAILABLE="yes",
-                 LIBVAMP_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/libvamp/vamp-hostsdk/PluginLoader.h"; then
+      LIBVAMP_LOCAL_AVAILABLE="yes"
+   else
+      LIBVAMP_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBVAMP_LOCAL_AVAILABLE" = "yes"; then
       LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"

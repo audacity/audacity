@@ -107,7 +107,15 @@ endif ()
 
 check_function_exists (lrint HAVE_LRINT)
 check_include_files (fenv.h HAVE_FENV_H)
-test_big_endian (WORDS_BIGENDIAN)
+
+# When cross-compiling we can't exec endian test program.
+# This check could be replaced with preprocessor macro
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  message (STATUS "Detected Windows target, assuming little-endian")
+  set (WORDS_BIGENDIAN 0)
+else ()
+  test_big_endian (WORDS_BIGENDIAN)
+endif ()
 
 macro (make_exist)
   foreach (x ${ARGN})

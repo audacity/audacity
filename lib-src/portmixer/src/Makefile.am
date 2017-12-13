@@ -18,6 +18,23 @@ if USE_MAC_COREAUDIO
 libportmixer_la_SOURCES += px_mac_coreaudio.c
 endif
 
+if USE_WIN
+libportmixer_la_SOURCES += \
+    px_win_common.c \
+    px_win_common.h \
+    px_win_endpoint.c \
+    px_win_endpoint.h  \
+    $(NULL)
+endif
+
+if USE_WIN_MME
+libportmixer_la_SOURCES += px_win_wmme.c
+endif
+
+if USE_WIN_DSOUND
+libportmixer_la_SOURCES += px_win_ds.c
+endif
+
 EXTRA_DIST = \
 	px_example_api.c \
 	px_win_common.c \

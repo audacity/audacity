@@ -93,6 +93,9 @@
    declarations. */
 #undef HAVE_VISIBILITY
 
+/* Define if wxWidgets has wxMSWDisableSettingHighDPIAware() */
+#undef HAVE_WXMSWDISABLEHIGHDPIAWARE
+
 /* define as prefix where Audacity is installed */
 #undef INSTALL_PREFIX
 

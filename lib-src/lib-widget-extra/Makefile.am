@@ -1,4 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
+AM_LIBTOOLFLAGS = --tag=CXX
 
 EXTRA_DIST = libwidgetextra.pc.in
 

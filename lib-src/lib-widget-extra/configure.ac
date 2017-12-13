@@ -58,6 +58,13 @@ AC_ARG_WITH(wx-version,
            wx_preference="")
 dnl Right now only support wx 3.0
 
+dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
+if test "${ac_cv_cxx_compiler_gnu}" = "yes"; then
+    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+else
+    CXXFLAGS="${CXXFLAGS} --std=c++11"
+fi
+
 dnl ----------------------------------------------------
 dnl If user asked for debug, put debug in compiler flags
 dnl ----------------------------------------------------
@@ -99,7 +106,14 @@ fi
 dnl --- check for required libraries ---
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+dnl there is no AC_PATH_TOOLS so we have this loop
+if [[ ! -x "$WX_CONFIG" ]]; then
+    for tool in $WX_CONFIG wx-config wx-config-3.0; do
+        AC_PATH_TOOL(WX_CONFIG, $tool, no, $PATH:/usr/local/bin)
+        if [[ -x "$WX_CONFIG" ]]; then break; fi
+    done
+fi
+
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
 fi

@@ -106,7 +106,12 @@ fi
 dnl --- check for required libraries ---
 dnl system libraries
 AC_CHECK_FUNCS([strchr memmove])
-AC_FUNC_MALLOC
+
+dnl can't check for GNU malloc when cross-compiling
+if test "$cross_compiling" = "no" ; then
+   AC_FUNC_MALLOC
+fi
+
 AC_HEADER_STDBOOL
 
 dnl Checks for header files.
@@ -116,6 +121,25 @@ AC_CHECK_HEADERS([stdlib.h string.h])
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
+
+target_win32=no
+target_mingw=no
+target_unix=no
+AC_CANONICAL_HOST
+case "${host_os}" in
+   cygwin* | mingw32*)
+      target_win32=yes
+      target_mingw=yes
+      ;;
+
+   *)
+      target_unix=yes
+   ;;
+esac
+
+AM_CONDITIONAL([TARGET_WIN32], [test ${target_win32} = "yes"])
+AM_CONDITIONAL([TARGET_MINGW], [test ${target_mingw} = "yes"])
+AM_CONDITIONAL([TARGET_UNIX], [test ${target_unix} = "yes"]) 
 
 AC_CONFIG_FILES([Makefile])
 

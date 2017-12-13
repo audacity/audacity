@@ -41,10 +41,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_EXPAT], [
    fi
 
    dnl see if expat is available in the local tree
-
-   AC_CHECK_FILE(${srcdir}/lib-src/expat/lib/expat.h,
-                 EXPAT_LOCAL_AVAILABLE="yes",
-                 EXPAT_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/expat/lib/expat.h"; then
+      EXPAT_LOCAL_AVAILABLE="yes"
+   else
+      EXPAT_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$EXPAT_LOCAL_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([Expat libraries are available in the local tree])

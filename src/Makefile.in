@@ -195,9 +195,18 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_VST_TRUE@	effects/VST/aeffectx.h \
 @USE_VST_TRUE@	effects/VST/VSTEffect.cpp \
 @USE_VST_TRUE@	effects/VST/VSTEffect.h \
-@USE_VST_TRUE@	effects/VST/VSTControlGTK.cpp \
-@USE_VST_TRUE@	effects/VST/VSTControlGTK.h \
 @USE_VST_TRUE@	$(NULL)
+
+@TARGET_WIN32_TRUE@@USE_VST_TRUE@am__append_50 = \
+@TARGET_WIN32_TRUE@@USE_VST_TRUE@	effects/VST/VSTControlMSW.cpp \
+@TARGET_WIN32_TRUE@@USE_VST_TRUE@	effects/VST/VSTControlMSW.h \
+@TARGET_WIN32_TRUE@@USE_VST_TRUE@	../win/audacity.rc \
+@TARGET_WIN32_TRUE@@USE_VST_TRUE@	$(NULL)
+
+@TARGET_WIN32_FALSE@@USE_VST_TRUE@am__append_51 = \
+@TARGET_WIN32_FALSE@@USE_VST_TRUE@	effects/VST/VSTControlGTK.cpp \
+@TARGET_WIN32_FALSE@@USE_VST_TRUE@	effects/VST/VSTControlGTK.h \
+@TARGET_WIN32_FALSE@@USE_VST_TRUE@	$(NULL)
 
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -571,8 +580,9 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/vamp/LoadVamp.cpp effects/vamp/LoadVamp.h \
 	effects/vamp/VampEffect.cpp effects/vamp/VampEffect.h \
 	effects/VST/aeffectx.h effects/VST/VSTEffect.cpp \
-	effects/VST/VSTEffect.h effects/VST/VSTControlGTK.cpp \
-	effects/VST/VSTControlGTK.h
+	effects/VST/VSTEffect.h effects/VST/VSTControlMSW.cpp \
+	effects/VST/VSTControlMSW.h ../win/audacity.rc \
+	effects/VST/VSTControlGTK.cpp effects/VST/VSTControlGTK.h
 am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 	audacity-DirManager.$(OBJEXT) audacity-Dither.$(OBJEXT) \
 	audacity-FileFormats.$(OBJEXT) audacity-Internat.$(OBJEXT) \
@@ -608,8 +618,10 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 @USE_VAMP_TRUE@	effects/vamp/audacity-LoadVamp.$(OBJEXT) \
 @USE_VAMP_TRUE@	effects/vamp/audacity-VampEffect.$(OBJEXT)
 @USE_VST_TRUE@am__objects_12 =  \
-@USE_VST_TRUE@	effects/VST/audacity-VSTEffect.$(OBJEXT) \
-@USE_VST_TRUE@	effects/VST/audacity-VSTControlGTK.$(OBJEXT)
+@USE_VST_TRUE@	effects/VST/audacity-VSTEffect.$(OBJEXT)
+@TARGET_WIN32_TRUE@@USE_VST_TRUE@am__objects_13 = effects/VST/audacity-VSTControlMSW.$(OBJEXT) \
+@TARGET_WIN32_TRUE@@USE_VST_TRUE@	../win/audacity.$(OBJEXT)
+@TARGET_WIN32_FALSE@@USE_VST_TRUE@am__objects_14 = effects/VST/audacity-VSTControlGTK.$(OBJEXT)
 am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-AColor.$(OBJEXT) audacity-AudacityApp.$(OBJEXT) \
 	audacity-AudacityException.$(OBJEXT) \
@@ -866,7 +878,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
 	$(am__objects_6) $(am__objects_7) $(am__objects_8) \
 	$(am__objects_9) $(am__objects_10) $(am__objects_11) \
-	$(am__objects_12)
+	$(am__objects_12) $(am__objects_13) $(am__objects_14)
 audacity_OBJECTS = $(am_audacity_OBJECTS)
 @USE_FFMPEG_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 @USE_GSTREAMER_TRUE@am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
@@ -1103,7 +1115,6 @@ LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
-LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 LV2_CFLAGS = @LV2_CFLAGS@
 LV2_LIBS = @LV2_LIBS@
 MAINT = @MAINT@
@@ -1129,8 +1140,6 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
-PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
-PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 PORTAUDIO_CFLAGS = @PORTAUDIO_CFLAGS@
 PORTAUDIO_LIBS = @PORTAUDIO_LIBS@
 PORTMIDI_CFLAGS = @PORTMIDI_CFLAGS@
@@ -1141,6 +1150,7 @@ PORTSMF_LIBS = @PORTSMF_LIBS@
 POSUB = @POSUB@
 PRECOMP_CFLAGS = @PRECOMP_CFLAGS@
 RANLIB = @RANLIB@
+RC = @RC@
 SBSMS_CFLAGS = @SBSMS_CFLAGS@
 SBSMS_LIBS = @SBSMS_LIBS@
 SED = @SED@
@@ -1210,6 +1220,7 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -1263,7 +1274,7 @@ libaudacity_la_SOURCES = \
 	xml/XMLTagHandler.h \
 	$(NULL)
 
-audacity_CPPFLAGS = -std=c++11 -Wno-deprecated-declarations \
+audacity_CPPFLAGS = -Wno-deprecated-declarations \
 	-D__STDC_CONSTANT_MACROS -DLIBDIR=\"$(libdir)\" \
 	$(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) $(PORTAUDIO_CFLAGS) \
 	$(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) $(SOXR_CFLAGS) \
@@ -1293,7 +1304,8 @@ audacity_CPPFLAGS = -std=c++11 -Wno-deprecated-declarations \
 audacity_CXXFLAGS = \
    -Wno-unused-local-typedefs
 
-audacity_LDFLAGS = -rdynamic
+@TARGET_WIN32_FALSE@audacity_LDFLAGS = -rdynamic
+@TARGET_WIN32_TRUE@audacity_LDFLAGS = 
 audacity_LDADD = $(EXPAT_LIBS) $(FILEDIALOG_LIBS) $(PORTAUDIO_LIBS) \
 	$(PORTMIXER_LIBS) $(SNDFILE_LIBS) $(SOXR_LIBS) \
 	$(WIDGETEXTRA_LIBS) $(WX_LIBS) $(NULL) $(am__append_2) \
@@ -1572,7 +1584,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	$(am__append_3) $(am__append_6) $(am__append_9) \
 	$(am__append_12) $(am__append_17) $(am__append_24) \
 	$(am__append_33) $(am__append_36) $(am__append_41) \
-	$(am__append_46) $(am__append_49)
+	$(am__append_46) $(am__append_49) $(am__append_50) \
+	$(am__append_51)
 
 # TODO: Check *.cpp and *.h files if they are needed.
 EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
@@ -1588,7 +1601,7 @@ all: configwin.h configunix.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .cpp .lo .o .obj
+.SUFFIXES: .cpp .lo .o .obj .rc
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -2342,6 +2355,17 @@ effects/VST/$(DEPDIR)/$(am__dirstamp):
 	@: > effects/VST/$(DEPDIR)/$(am__dirstamp)
 effects/VST/audacity-VSTEffect.$(OBJEXT): effects/VST/$(am__dirstamp) \
 	effects/VST/$(DEPDIR)/$(am__dirstamp)
+effects/VST/audacity-VSTControlMSW.$(OBJEXT):  \
+	effects/VST/$(am__dirstamp) \
+	effects/VST/$(DEPDIR)/$(am__dirstamp)
+../win/$(am__dirstamp):
+	@$(MKDIR_P) ../win
+	@: > ../win/$(am__dirstamp)
+../win/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ../win/$(DEPDIR)
+	@: > ../win/$(DEPDIR)/$(am__dirstamp)
+../win/audacity.$(OBJEXT): ../win/$(am__dirstamp) \
+	../win/$(DEPDIR)/$(am__dirstamp)
 effects/VST/audacity-VSTControlGTK.$(OBJEXT):  \
 	effects/VST/$(am__dirstamp) \
 	effects/VST/$(DEPDIR)/$(am__dirstamp)
@@ -2352,6 +2376,7 @@ audacity$(EXEEXT): $(audacity_OBJECTS) $(audacity_DEPENDENCIES) $(EXTRA_audacity
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f ../win/*.$(OBJEXT)
 	-rm -f blockfile/*.$(OBJEXT)
 	-rm -f blockfile/*.lo
 	-rm -f commands/*.$(OBJEXT)
@@ -2564,6 +2589,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-TwoPassSimpleMono.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Wahwah.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/VST/$(DEPDIR)/audacity-VSTControlGTK.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@effects/VST/$(DEPDIR)/audacity-VSTControlMSW.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/VST/$(DEPDIR)/audacity-VSTEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/audiounits/$(DEPDIR)/audacity-AudioUnitEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/ladspa/$(DEPDIR)/audacity-LadspaEffect.Po@am__quote@
@@ -7282,6 +7308,20 @@ effects/VST/audacity-VSTEffect.obj: effects/VST/VSTEffect.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/VST/audacity-VSTEffect.obj `if test -f 'effects/VST/VSTEffect.cpp'; then $(CYGPATH_W) 'effects/VST/VSTEffect.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/VST/VSTEffect.cpp'; fi`
 
+effects/VST/audacity-VSTControlMSW.o: effects/VST/VSTControlMSW.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/VST/audacity-VSTControlMSW.o -MD -MP -MF effects/VST/$(DEPDIR)/audacity-VSTControlMSW.Tpo -c -o effects/VST/audacity-VSTControlMSW.o `test -f 'effects/VST/VSTControlMSW.cpp' || echo '$(srcdir)/'`effects/VST/VSTControlMSW.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/VST/$(DEPDIR)/audacity-VSTControlMSW.Tpo effects/VST/$(DEPDIR)/audacity-VSTControlMSW.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/VST/VSTControlMSW.cpp' object='effects/VST/audacity-VSTControlMSW.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/VST/audacity-VSTControlMSW.o `test -f 'effects/VST/VSTControlMSW.cpp' || echo '$(srcdir)/'`effects/VST/VSTControlMSW.cpp
+
+effects/VST/audacity-VSTControlMSW.obj: effects/VST/VSTControlMSW.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/VST/audacity-VSTControlMSW.obj -MD -MP -MF effects/VST/$(DEPDIR)/audacity-VSTControlMSW.Tpo -c -o effects/VST/audacity-VSTControlMSW.obj `if test -f 'effects/VST/VSTControlMSW.cpp'; then $(CYGPATH_W) 'effects/VST/VSTControlMSW.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/VST/VSTControlMSW.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/VST/$(DEPDIR)/audacity-VSTControlMSW.Tpo effects/VST/$(DEPDIR)/audacity-VSTControlMSW.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/VST/VSTControlMSW.cpp' object='effects/VST/audacity-VSTControlMSW.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/VST/audacity-VSTControlMSW.obj `if test -f 'effects/VST/VSTControlMSW.cpp'; then $(CYGPATH_W) 'effects/VST/VSTControlMSW.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/VST/VSTControlMSW.cpp'; fi`
+
 effects/VST/audacity-VSTControlGTK.o: effects/VST/VSTControlGTK.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/VST/audacity-VSTControlGTK.o -MD -MP -MF effects/VST/$(DEPDIR)/audacity-VSTControlGTK.Tpo -c -o effects/VST/audacity-VSTControlGTK.o `test -f 'effects/VST/VSTControlGTK.cpp' || echo '$(srcdir)/'`effects/VST/VSTControlGTK.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/VST/$(DEPDIR)/audacity-VSTControlGTK.Tpo effects/VST/$(DEPDIR)/audacity-VSTControlGTK.Po
@@ -7462,6 +7502,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f ../win/$(DEPDIR)/$(am__dirstamp)
+	-rm -f ../win/$(am__dirstamp)
 	-rm -f blockfile/$(DEPDIR)/$(am__dirstamp)
 	-rm -f blockfile/$(am__dirstamp)
 	-rm -f commands/$(DEPDIR)/$(am__dirstamp)
@@ -7603,6 +7645,10 @@ uninstall-am: uninstall-binPROGRAMS uninstall-desktopDATA \
 
 .PRECIOUS: Makefile
 
+
+# rule to compile resource files
+.rc.o:
+	$(RC) --include-dir=. $< -o $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

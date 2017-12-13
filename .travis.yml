@@ -1,3 +1,17 @@
+#
+# Audacity Travis-CI Configuration
+#
+# The common configuration for all targets goes here.
+# Specific configuration goes in scripts/travis.sh
+#
+# Build logs: https://travis-ci.org/audacity/audacity
+#
+language: cpp
+
+# need sudo to install packages
+sudo: required
+
+# linux build needs gcc 4.9 or later
 addons:
     apt:
         sources:
@@ -5,16 +19,22 @@ addons:
         packages:
             - g++-4.9
             - gcc-4.9
+            - gettext
+            - autopoint
+env:
+   matrix:
+      - TARGET=linux-x86_64
+      - TARGET=windows-i686
+      - TARGET=windows-x86_64
+
 before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -y libwxgtk3.0-dev libgtk2.0-dev gettext libasound2-dev alsa-utils alsa-oss
-    - git show -s --format="#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n" | tee ./src/RevisionIdent.h
-    - export CXX="g++-4.9" CC="gcc-4.9"
-    - FLAGS="-w -std=gnu++11"
-    - export CFLAGS="$CFLAGS $FLAGS"
-    - export CXXFLAGS="$CXXFLAGS $FLAGS"
-    - g++-4.9 --version
-language:
-    - cpp
+   # bake version info into binary
+   - git show -s --format="#define REV_LONG \"%H\"%n#define REV_TIME \"%cd\"%n" | tee ./src/RevisionIdent.h
+   - ./scripts/travis.sh before_install
+
+before_script:
+   - ./scripts/travis.sh before_script
+
 script:
-    -  time ./configure && time make -j2
+   - autoreconf --no-recursive --install --force
+   - ./scripts/travis.sh script

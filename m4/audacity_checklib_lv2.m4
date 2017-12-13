@@ -25,9 +25,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_LV2], [
 
    dnl see if LV2 is available locally
 
-   AC_CHECK_FILE(${srcdir}/lib-src/lv2/configure,
-                 LV2_LOCAL_AVAILABLE="yes",
-                 LV2_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/lv2/configure"; then
+      LV2_LOCAL_AVAILABLE="yes"
+   else
+      LV2_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LV2_LOCAL_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([LV2 libraries are available in the local tree])

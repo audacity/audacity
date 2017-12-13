@@ -636,6 +636,12 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+USE_WIN_FALSE
+USE_WIN_TRUE
+USE_WIN_DSOUND_FALSE
+USE_WIN_DSOUND_TRUE
+USE_WIN_MME_FALSE
+USE_WIN_MME_TRUE
 USE_MAC_COREAUDIO_FALSE
 USE_MAC_COREAUDIO_TRUE
 USE_LINUX_ALSA_FALSE
@@ -744,6 +750,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -830,6 +837,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1082,6 +1090,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1219,7 +1236,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1372,6 +1389,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -2269,7 +2287,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
-am__api_version='1.14'
+am__api_version='1.15'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -2441,8 +2459,8 @@ test "$program_suffix" != NONE &&
 ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
 program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
 
-# expand $ac_aux_dir to an absolute path
-am_aux_dir=`cd $ac_aux_dir && pwd`
+# Expand $ac_aux_dir to an absolute path.
+am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 if test x"${MISSING+set}" != xset; then
   case $am_aux_dir in
@@ -2461,7 +2479,7 @@ else
 $as_echo "$as_me: WARNING: 'missing' script is too old or missing" >&2;}
 fi
 
-if test x"${install_sh}" != xset; then
+if test x"${install_sh+set}" != xset; then
   case $am_aux_dir in
   *\ * | *\	*)
     install_sh="\${SHELL} '$am_aux_dir/install-sh'" ;;
@@ -2789,8 +2807,8 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 # <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
 mkdir_p='$(MKDIR_P)'
 
-# We need awk for the "check" target.  The system "awk" is bad on
-# some platforms.
+# We need awk for the "check" target (and possibly the TAP driver).  The
+# system "awk" is bad on some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
 # in the wild :-(  We should find a proper way to deprecate it ...
 AMTAR='$${TAR-tar}'
@@ -2847,6 +2865,7 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 $as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
@@ -12163,11 +12182,19 @@ fi
 
 
 if [ $have_windows = "yes" ] ; then
-   ac_fn_c_check_header_mongrel "$LINENO" "pa_win_wmme.h" "ac_cv_header_pa_win_wmme_h" "$ac_includes_default"
+   for ac_header in pa_win_wmme.h
+do :
+  ac_fn_c_check_header_compile "$LINENO" "pa_win_wmme.h" "ac_cv_header_pa_win_wmme_h" "#include <windows.h>
+
+"
 if test "x$ac_cv_header_pa_win_wmme_h" = xyes; then :
-  have_wmme=yes
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_PA_WIN_WMME_H 1
+_ACEOF
+ have_wmme=yes
 fi
 
+done
 
    if [ $have_wmme = "yes" ] ; then
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -12189,11 +12216,19 @@ $as_echo "$as_me: WARNING: Missing PaWinMME_GetStreamInputHandle support in pa_w
       fi
    fi
 
-   ac_fn_c_check_header_mongrel "$LINENO" "pa_win_ds.h" "ac_cv_header_pa_win_ds_h" "$ac_includes_default"
+   for ac_header in pa_win_ds.h
+do :
+  ac_fn_c_check_header_compile "$LINENO" "pa_win_ds.h" "ac_cv_header_pa_win_ds_h" "#include <windows.h>
+
+"
 if test "x$ac_cv_header_pa_win_ds_h" = xyes; then :
-  have_ds=yes
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_PA_WIN_DS_H 1
+_ACEOF
+ have_ds=yes
 fi
 
+done
 
    if [ $have_ds = "yes" ] ; then
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -12209,7 +12244,7 @@ else
 fi
 rm -f conftest*
 
-      if [ $have_support = "no" ] ; then
+      if [ $have_ds = "no" ] ; then
          { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Missing PaWinDS_GetStreamInputGUID support in pa_win_ds.h" >&5
 $as_echo "$as_me: WARNING: Missing PaWinDS_GetStreamInputGUID support in pa_win_ds.h" >&2;};
       fi
@@ -12298,6 +12333,47 @@ $as_echo "$as_me: Including support for Coreaudio" >&6;}
 
    have_support=yes
 fi
+
+ if test "$have_wmme" = yes; then
+  USE_WIN_MME_TRUE=
+  USE_WIN_MME_FALSE='#'
+else
+  USE_WIN_MME_TRUE='#'
+  USE_WIN_MME_FALSE=
+fi
+
+if [ $have_wmme = "yes" ] ; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: Including support for MME" >&5
+$as_echo "$as_me: Including support for MME" >&6;}
+   $as_echo "#define PX_USE_WIN_MME 1" >>confdefs.h
+
+   have_support=yes
+fi
+
+ if test "$have_ds" = yes; then
+  USE_WIN_DSOUND_TRUE=
+  USE_WIN_DSOUND_FALSE='#'
+else
+  USE_WIN_DSOUND_TRUE='#'
+  USE_WIN_DSOUND_FALSE=
+fi
+
+if [ $have_ds = "yes" ] ; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: Including support for DirectSound" >&5
+$as_echo "$as_me: Including support for DirectSound" >&6;}
+   $as_echo "#define PX_USE_WIN_DSOUND 1" >>confdefs.h
+
+   have_support=yes
+fi
+
+ if test "$have_ds" = yes -o "$have_wmme" = yes; then
+  USE_WIN_TRUE=
+  USE_WIN_FALSE='#'
+else
+  USE_WIN_TRUE='#'
+  USE_WIN_FALSE=
+fi
+
 
 if [ $have_support = "no" ] ; then
    as_fn_error $? "No supported mixer interfaces detected" "$LINENO" 5
@@ -12494,6 +12570,18 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_MAC_COREAUDIO_TRUE}" && test -z "${USE_MAC_COREAUDIO_FALSE}"; then
   as_fn_error $? "conditional \"USE_MAC_COREAUDIO\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_WIN_MME_TRUE}" && test -z "${USE_WIN_MME_FALSE}"; then
+  as_fn_error $? "conditional \"USE_WIN_MME\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_WIN_DSOUND_TRUE}" && test -z "${USE_WIN_DSOUND_FALSE}"; then
+  as_fn_error $? "conditional \"USE_WIN_DSOUND\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_WIN_TRUE}" && test -z "${USE_WIN_FALSE}"; then
+  as_fn_error $? "conditional \"USE_WIN\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

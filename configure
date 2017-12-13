@@ -643,12 +643,15 @@ USE_QUICKTIME_FALSE
 USE_QUICKTIME_TRUE
 USE_AUDIO_UNITS_FALSE
 USE_AUDIO_UNITS_TRUE
+TARGET_WIN32_FALSE
+TARGET_WIN32_TRUE
 PORTMIXER_LIBS
 JACK_LIBS
 JACK_CFLAGS
 GTK_LIBS
 GTK_CFLAGS
 HAVE_GTK
+RC
 USE_LADSPA_FALSE
 USE_LADSPA_TRUE
 USE_LOCAL_WIDGETEXTRA_FALSE
@@ -902,6 +905,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -943,6 +947,7 @@ enable_unicode
 enable_debug
 with_lib_preference
 enable_sse
+enable_openmp
 enable_universal_binary
 enable_dynamic_loading
 with_wx_version
@@ -1083,6 +1088,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1335,6 +1341,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1472,7 +1487,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1625,6 +1640,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1682,8 +1698,10 @@ Optional Features:
   --enable-static-wx      link wx statically [default=no]
   --enable-unicode        enable unicode support [default=yes]
   --enable-debug          enable debug support [default=no]
-  --enable-sse            enable SSE optimizations
-  --enable-universal_binary enable universal binary build: (default: disable)
+  --enable-sse            enable SSE optimizations [default=yes]
+  --enable-openmp         enable OpenMP support [default=no]
+  --enable-universal-binary
+                          enable universal binary [default=no]
   --enable-dynamic-loading
                           enable dynamic loading of lame and FFmpeg
                           [default=yes]
@@ -1709,7 +1727,7 @@ Optional Packages:
   --with-sysroot=DIR Search for dependent libraries within DIR
                         (or the compiler's sysroot if not specified).
   --with-lib-preference   whether to use local and/or system libraries, in
-                          order of preference (default="system local")
+                          order of preference [default="system local"]
   --with-wx-version       select wxWidgets version (if both installed) [3.0,]
   --with-expat            which expat to use for XML file support:
                           [system,local]
@@ -2902,7 +2920,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
-am__api_version='1.14'
+am__api_version='1.15'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -3074,8 +3092,8 @@ test "$program_suffix" != NONE &&
 ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
 program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
 
-# expand $ac_aux_dir to an absolute path
-am_aux_dir=`cd $ac_aux_dir && pwd`
+# Expand $ac_aux_dir to an absolute path.
+am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 if test x"${MISSING+set}" != xset; then
   case $am_aux_dir in
@@ -3094,7 +3112,7 @@ else
 $as_echo "$as_me: WARNING: 'missing' script is too old or missing" >&2;}
 fi
 
-if test x"${install_sh}" != xset; then
+if test x"${install_sh+set}" != xset; then
   case $am_aux_dir in
   *\ * | *\	*)
     install_sh="\${SHELL} '$am_aux_dir/install-sh'" ;;
@@ -3422,8 +3440,8 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 # <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
 mkdir_p='$(MKDIR_P)'
 
-# We need awk for the "check" target.  The system "awk" is bad on
-# some platforms.
+# We need awk for the "check" target (and possibly the TAP driver).  The
+# system "awk" is bad on some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
 # in the wild :-(  We should find a proper way to deprecate it ...
 AMTAR='$${TAR-tar}'
@@ -3596,6 +3614,7 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 $as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
@@ -19149,17 +19168,25 @@ fi
 
 # Check whether --enable-sse was given.
 if test "${enable_sse+set}" = set; then :
-  enableval=$enable_sse; enable_sse=$enableval
+  enableval=$enable_sse; enable_sse="$enableval"
 else
-  enable_sse=yes
+  enable_sse="yes"
 fi
 
 
-# Check whether --enable-universal_binary was given.
-if test "${enable_universal_binary+set}" = set; then :
-  enableval=$enable_universal_binary; enable_universal_binary=$enableval
+# Check whether --enable-openmp was given.
+if test "${enable_openmp+set}" = set; then :
+  enableval=$enable_openmp; enable_openmp="$enableval"
 else
-  enable_universal_binary=no
+  enable_openmp="no"
+fi
+
+
+# Check whether --enable-universal-binary was given.
+if test "${enable_universal_binary+set}" = set; then :
+  enableval=$enable_universal_binary; enable_universal_binary="$enableval"
+else
+  enable_universal_binary="no"
 fi
 
 
@@ -19193,7 +19220,7 @@ fi
 
 if test x$enable_sse = xyes; then
 
-   if test "${ax_cv_cxx_compiler_vendor}" = "gnu"; then
+   if test "${ax_cv_c_compiler_vendor}" = "gnu"; then
        { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -msse" >&5
 $as_echo_n "checking whether C++ compiler accepts -msse... " >&6; }
 if ${ax_cv_cxx_flags__msse+:} false; then :
@@ -19256,6 +19283,46 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo "#define ENABLE_SSE 1" >>confdefs.h
 
    fi
+fi
+
+if test x$enable_openmp = xyes; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -fopenmp" >&5
+$as_echo_n "checking whether C++ compiler accepts -fopenmp... " >&6; }
+if ${ax_cv_cxx_flags__fopenmp+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+      ax_save_FLAGS=$CXXFLAGS
+      CXXFLAGS="-fopenmp"
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ax_cv_cxx_flags__fopenmp=yes
+else
+  ax_cv_cxx_flags__fopenmp=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      CXXFLAGS=$ax_save_FLAGS
+fi
+
+eval ax_check_compiler_flags=$ax_cv_cxx_flags__fopenmp
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_check_compiler_flags" >&5
+$as_echo "$ax_check_compiler_flags" >&6; }
+if test "x$ax_check_compiler_flags" = xyes; then
+	CXXFLAGS="$CXXFLAGS -fopenmp"
+else
+	as_fn_error $? "OpenMP is not available" "$LINENO" 5
+fi
+
 fi
 
 if test x"$debug_preference" = "xyes" ; then
@@ -19834,10 +19901,11 @@ _ACEOF
 
 
 
-for ac_prog in $WX_CONFIG wx-config wx-config-3.0
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+if [ ! -x "$WX_CONFIG" ]; then
+    for tool in $WX_CONFIG wx-config wx-config-3.0; do
+        if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}$tool", so it can be a program name with args.
+set dummy ${ac_tool_prefix}$tool; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_WX_CONFIG+:} false; then :
@@ -19849,7 +19917,7 @@ else
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$PATH:/usr/local/bin "
+as_dummy="$PATH:/usr/local/bin"
 for as_dir in $as_dummy
 do
   IFS=$as_save_IFS
@@ -19877,13 +19945,72 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$WX_CONFIG" && break
+fi
+if test -z "$ac_cv_path_WX_CONFIG"; then
+  ac_pt_WX_CONFIG=$WX_CONFIG
+  # Extract the first word of "$tool", so it can be a program name with args.
+set dummy $tool; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_ac_pt_WX_CONFIG+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $ac_pt_WX_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_WX_CONFIG="$ac_pt_WX_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+as_dummy="$PATH:/usr/local/bin"
+for as_dir in $as_dummy
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_ac_pt_WX_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
 done
-test -n "$WX_CONFIG" || WX_CONFIG="no"
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_WX_CONFIG=$ac_cv_path_ac_pt_WX_CONFIG
+if test -n "$ac_pt_WX_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_pt_WX_CONFIG" >&5
+$as_echo "$ac_pt_WX_CONFIG" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+  if test "x$ac_pt_WX_CONFIG" = x; then
+    WX_CONFIG="no"
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    WX_CONFIG=$ac_pt_WX_CONFIG
+  fi
+else
+  WX_CONFIG="$ac_cv_path_WX_CONFIG"
+fi
+
+        if [ -x "$WX_CONFIG" ]; then break; fi
+    done
+fi
 
 if [ "$WX_CONFIG" = "no" ] ; then
    as_fn_error $? "Could not find wx-config: is wxWidgets installed? is wx-config in your path?" "$LINENO" 5
 fi
+
 
 if test "x$debug_preference" = "xyes"; then
       wxconfigargs="--debug=yes"
@@ -20199,30 +20326,11 @@ $as_echo "$as_me: Expat libraries are available as system libraries" >&6;}
 $as_echo "$as_me: Expat libraries are NOT available as system libraries" >&6;}
    fi
 
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/expat/lib/expat.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/expat/lib/expat.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/expat/lib/expat.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/expat/lib/expat.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  EXPAT_LOCAL_AVAILABLE="yes"
-else
-  EXPAT_LOCAL_AVAILABLE="no"
-fi
-
+      if test -f "${srcdir}/lib-src/expat/lib/expat.h"; then
+      EXPAT_LOCAL_AVAILABLE="yes"
+   else
+      EXPAT_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$EXPAT_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are available in the local tree" >&5
@@ -20455,53 +20563,17 @@ $as_echo "$as_me: FFmpeg library available as system library" >&6;}
 $as_echo "$as_me: FFmpeg library NOT available as system library" >&6;}
    fi
 
-         as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/ffmpeg/libavcodec/avcodec.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/ffmpeg/libavcodec/avcodec.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/ffmpeg/libavcodec/avcodec.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/ffmpeg/libavcodec/avcodec.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  avcodec_h_found="yes"
-else
-  avcodec_h_found="no"
-fi
+         if test -f "${srcdir}/lib-src/ffmpeg/libavcodec/avcodec.h"; then
+      avcodec_h_found="yes"
+   else
+      avcodec_h_found="no"
+   fi
 
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/ffmpeg/libavformat/avformat.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/ffmpeg/libavformat/avformat.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/ffmpeg/libavformat/avformat.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/ffmpeg/libavformat/avformat.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  avformat_h_found="yes"
-else
-  avformat_h_found="no"
-fi
-
+   if test -f "${srcdir}/lib-src/ffmpeg/libavformat/avformat.h"; then
+      avformat_h_found="yes"
+   else
+      avformat_h_found="no"
+   fi
 
    if test "$avcodec_h_found" = "yes" -a "$avformat_h_found" = "yes"; then
       FFMPEG_LOCAL_AVAILABLE="yes"
@@ -20589,29 +20661,11 @@ $as_echo "$as_me: LAME library is NOT available as system library." >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/lame/lame/lame.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/lame/lame/lame.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/lame/lame/lame.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/lame/lame/lame.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LAME_LOCAL_AVAILABLE="yes"
-else
-  LAME_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/lame/lame/lame.h"; then
+      LAME_LOCAL_AVAILABLE="yes"
+   else
+      LAME_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LAME_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: LAME headers are available in this source tree." >&5
@@ -20780,53 +20834,17 @@ $as_echo "$as_me: FLAC/FLAC++ libraries are NOT available as system libraries" >
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libflac/include/FLAC/format.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libflac/include/FLAC/format.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libflac/include/FLAC/format.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libflac/include/FLAC/format.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  flac_h_available="yes"
-else
-  flac_h_available="no"
-fi
+   if test -f "${srcdir}/lib-src/libflac/include/FLAC/format.h"; then
+      flac_h_available="yes"
+   else
+      flac_h_available="no"
+   fi
 
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libflac/include/FLAC++/decoder.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libflac/include/FLAC++/decoder.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libflac/include/FLAC++/decoder.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libflac/include/FLAC++/decoder.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  flacpp_h_available="yes"
-else
-  flacpp_h_available="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libflac/include/FLAC++/decoder.h"; then
+      flacpp_h_available="yes"
+   else
+      flacpp_h_available="no"
+   fi
 
    if test "$flac_h_available" = "yes" -a "$flacpp_h_available" = "yes"; then
       LIBFLAC_LOCAL_AVAILABLE="yes"
@@ -20930,29 +20948,11 @@ $as_echo "$as_me: Libid3tag libraries are NOT available as system libraries" >&6
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libid3tag/frame.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libid3tag/frame.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libid3tag/frame.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libid3tag/frame.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBID3TAG_LOCAL_AVAILABLE="yes"
-else
-  LIBID3TAG_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libid3tag/frame.h"; then
+      LIBID3TAG_LOCAL_AVAILABLE="yes"
+   else
+      LIBID3TAG_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBID3TAG_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: libid3tag libraries are available in the local tree" >&5
@@ -21099,29 +21099,11 @@ $as_echo "$as_me: libmad libraries are NOT available as system libraries" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libmad/frame.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libmad/frame.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libmad/frame.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libmad/frame.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBMAD_LOCAL_AVAILABLE="yes"
-else
-  LIBMAD_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libmad/frame.h"; then
+      LIBMAD_LOCAL_AVAILABLE="yes"
+   else
+      LIBMAD_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBMAD_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: libmad libraries are available in the local tree" >&5
@@ -21144,29 +21126,11 @@ fi
          LIBNYQUIST_SYSTEM_AVAILABLE="no"
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libnyquist/nyx.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libnyquist/nyx.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libnyquist/nyx.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libnyquist/nyx.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBNYQUIST_LOCAL_AVAILABLE="yes"
-else
-  LIBNYQUIST_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libnyquist/nyx.h"; then
+      LIBNYQUIST_LOCAL_AVAILABLE="yes"
+   else
+      LIBNYQUIST_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBNYQUIST_LOCAL_AVAILABLE" = "yes" ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: nyquist libraries are available in the local tree" >&5
@@ -21265,29 +21229,11 @@ $as_echo "$as_me: Libsbsms libraries are NOT available as system libraries" >&6;
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/sbsms/include/sbsms.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/sbsms/include/sbsms.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/sbsms/include/sbsms.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/sbsms/include/sbsms.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBSBSMS_LOCAL_AVAILABLE="yes"
-else
-  LIBSBSMS_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/sbsms/include/sbsms.h"; then
+      LIBSBSMS_LOCAL_AVAILABLE="yes"
+   else
+      LIBSBSMS_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBSBSMS_LOCAL_AVAILABLE" = "yes"; then
             LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
@@ -21388,29 +21334,11 @@ $as_echo "$as_me: Libsndfile libraries are NOT available as system libraries" >&
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libsndfile/src/sndfile.h.in" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libsndfile/src/sndfile.h.in" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libsndfile/src/sndfile.h.in... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libsndfile/src/sndfile.h.in"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBSNDFILE_LOCAL_AVAILABLE="yes"
-else
-  LIBSNDFILE_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libsndfile/src/sndfile.h.in"; then
+      LIBSNDFILE_LOCAL_AVAILABLE="yes"
+   else
+      LIBSNDFILE_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBSNDFILE_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsndfile libraries are available in this source tree" >&5
@@ -21650,29 +21578,11 @@ $as_echo "$as_me: Libsoundtouch libraries are NOT available as system libraries"
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/soundtouch/include/SoundTouch.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/soundtouch/include/SoundTouch.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/soundtouch/include/SoundTouch.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/soundtouch/include/SoundTouch.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBSOUNDTOUCH_LOCAL_AVAILABLE="yes"
-else
-  LIBSOUNDTOUCH_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/soundtouch/include/SoundTouch.h"; then
+      LIBSOUNDTOUCH_LOCAL_AVAILABLE="yes"
+   else
+      LIBSOUNDTOUCH_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBSOUNDTOUCH_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsoundtouch libraries are available in the local tree" >&5
@@ -21771,29 +21681,11 @@ $as_echo "$as_me: Soxr libraries are NOT available as system libraries" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libsoxr/src/soxr.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libsoxr/src/soxr.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libsoxr/src/soxr.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libsoxr/src/soxr.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBSOXR_LOCAL_AVAILABLE="yes"
-else
-  LIBSOXR_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libsoxr/src/soxr.h"; then
+      LIBSOXR_LOCAL_AVAILABLE="yes"
+   else
+      LIBSOXR_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBSOXR_LOCAL_AVAILABLE" = "yes"; then
       # Breaks other other libraries in Audacity tree; but why is ./configure
@@ -21894,29 +21786,11 @@ $as_echo "$as_me: Libtwolame library NOT available as system library" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/twolame/libtwolame/twolame.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/twolame/libtwolame/twolame.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/twolame/libtwolame/twolame.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/twolame/libtwolame/twolame.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBTWOLAME_LOCAL_AVAILABLE="yes"
-else
-  LIBTWOLAME_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/twolame/libtwolame/twolame.h"; then
+      LIBTWOLAME_LOCAL_AVAILABLE="yes"
+   else
+      LIBTWOLAME_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBTWOLAME_LOCAL_AVAILABLE" = "yes"; then
             LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
@@ -22015,29 +21889,11 @@ $as_echo "$as_me: Vamp libraries are NOT available as system libraries" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libvamp/vamp-hostsdk/PluginLoader.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libvamp/vamp-hostsdk/PluginLoader.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libvamp/vamp-hostsdk/PluginLoader.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libvamp/vamp-hostsdk/PluginLoader.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LIBVAMP_LOCAL_AVAILABLE="yes"
-else
-  LIBVAMP_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libvamp/vamp-hostsdk/PluginLoader.h"; then
+      LIBVAMP_LOCAL_AVAILABLE="yes"
+   else
+      LIBVAMP_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBVAMP_LOCAL_AVAILABLE" = "yes"; then
       LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
@@ -22136,53 +21992,17 @@ $as_echo "$as_me: Vorbis libraries are NOT available as system libraries" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libvorbis/include/vorbis/vorbisenc.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libvorbis/include/vorbis/vorbisenc.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libvorbis/include/vorbis/vorbisenc.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libvorbis/include/vorbis/vorbisenc.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  vorbisenc_h_available="yes"
-else
-  vorbisenc_h_available="no"
-fi
+   if test -f "${srcdir}/lib-src/libvorbis/include/vorbis/vorbisenc.h"; then
+      vorbisenc_h_available="yes"
+   else
+      vorbisenc_h_available="no"
+   fi
 
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libogg/include/ogg/ogg.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libogg/include/ogg/ogg.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libogg/include/ogg/ogg.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libogg/include/ogg/ogg.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  ogg_h_available="yes"
-else
-  ogg_h_available="no"
-fi
-
+   if test -f "${srcdir}/lib-src/libogg/include/ogg/ogg.h"; then
+      ogg_h_available="yes"
+   else
+      ogg_h_available="no"
+   fi
 
    if test "$vorbisenc_h_available" = "yes" -a "$ogg_h_available" = "yes"; then
       LIBVORBIS_LOCAL_AVAILABLE="yes"
@@ -22290,29 +22110,11 @@ $as_echo "$as_me: LV2 libraries are NOT available as system libraries" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/lv2/configure" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/lv2/configure" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/lv2/configure... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/lv2/configure"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  LV2_LOCAL_AVAILABLE="yes"
-else
-  LV2_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/lv2/configure"; then
+      LV2_LOCAL_AVAILABLE="yes"
+   else
+      LV2_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LV2_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: LV2 libraries are available in the local tree" >&5
@@ -22432,29 +22234,11 @@ $as_echo "$as_me: portaudio19 library is NOT available as system library" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/portaudio-v19/include/portaudio.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/portaudio-v19/include/portaudio.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/portaudio-v19/include/portaudio.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/portaudio-v19/include/portaudio.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  PORTAUDIO_LOCAL_AVAILABLE="yes"
-else
-  PORTAUDIO_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/portaudio-v19/include/portaudio.h"; then
+      PORTAUDIO_LOCAL_AVAILABLE="yes"
+   else
+      PORTAUDIO_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$PORTAUDIO_LOCAL_AVAILABLE" = "yes"; then
                   pa_dir="$(pwd)/${srcdir}/lib-src/portaudio-v19"
@@ -22555,29 +22339,11 @@ $as_echo "$as_me: portSMF library is available as system library" >&6;}
 $as_echo "$as_me: portSMF library is NOT available as system library" >&6;}
    fi
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/portsmf/allegro.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/portsmf/allegro.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/portsmf/allegro.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/portsmf/allegro.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  PORTSMF_LOCAL_AVAILABLE="yes"
-else
-  PORTSMF_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/portsmf/allegro.h"; then
+      PORTSMF_LOCAL_AVAILABLE="yes"
+   else
+      PORTSMF_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$PORTSMF_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: portSMF library is available in the local tree" >&5
@@ -22596,7 +22362,6 @@ if test "${with_portmidi+set}" = set; then :
 else
   PORTMIDI_ARGUMENT="unspecified"
 fi
-
 
 
 
@@ -22667,6 +22432,82 @@ $as_echo "yes" >&6; }
 	PORTMIDI_SYSTEM_AVAILABLE="yes"
 fi
 
+      if test "$PORTMIDI_SYSTEM_AVAILABLE" = "no"; then
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for portmidi without pkg-config" >&5
+$as_echo "$as_me: checking for portmidi without pkg-config" >&6;}
+
+      ac_fn_cxx_check_header_mongrel "$LINENO" "portmidi.h" "ac_cv_header_portmidi_h" "$ac_includes_default"
+if test "x$ac_cv_header_portmidi_h" = xyes; then :
+  header_found="yes"
+else
+  header_found="no"
+fi
+
+
+
+      PORTMIDI_CFLAGS=""
+
+      case "${host_os}" in
+         cygwin* | mingw32*)
+            PORTMIDI_LIBS="-lwinmm"
+            ;;
+         *)
+            PORTMIDI_LIBS=""
+            ;;
+      esac
+
+      if test "$header_found" = "yes"; then
+         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Pm_Initialize in -lportmidi" >&5
+$as_echo_n "checking for Pm_Initialize in -lportmidi... " >&6; }
+if ${ac_cv_lib_portmidi_Pm_Initialize+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lportmidi "${PORTMIDI_LIBS}" $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char Pm_Initialize ();
+int
+main ()
+{
+return Pm_Initialize ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_portmidi_Pm_Initialize=yes
+else
+  ac_cv_lib_portmidi_Pm_Initialize=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_portmidi_Pm_Initialize" >&5
+$as_echo "$ac_cv_lib_portmidi_Pm_Initialize" >&6; }
+if test "x$ac_cv_lib_portmidi_Pm_Initialize" = xyes; then :
+  lib_found="yes"
+else
+  lib_found="no"
+fi
+
+
+         if test "$lib_found" = "yes" -a "$header_found" = "yes"; then
+           PORTMIDI_SYSTEM_AVAILABLE="yes"
+           PORTMIDI_LIBS="-lportmidi ${PORTMIDI_LIBS}"
+         fi
+      fi
+   fi
+
    if test "$PORTMIDI_SYSTEM_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is available as system library" >&5
 $as_echo "$as_me: portmidi library is available as system library" >&6;}
@@ -22675,29 +22516,11 @@ $as_echo "$as_me: portmidi library is available as system library" >&6;}
 $as_echo "$as_me: portmidi library is NOT available as system library" >&6;}
    fi
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/portmidi/pm_common/portmidi.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/portmidi/pm_common/portmidi.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/portmidi/pm_common/portmidi.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/portmidi/pm_common/portmidi.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  PORTMIDI_LOCAL_AVAILABLE="yes"
-else
-  PORTMIDI_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f ${srcdir}/lib-src/portmidi/pm_common/portmidi.h; then
+      PORTMIDI_LOCAL_AVAILABLE="yes"
+   else
+      PORTMIDI_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$PORTMIDI_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is available in the local tree" >&5
@@ -22795,29 +22618,11 @@ $as_echo "$as_me: libwidgetextra library is NOT available as system library." >&
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  WIDGETEXTRA_LOCAL_AVAILABLE="yes"
-else
-  WIDGETEXTRA_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f "${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h"; then
+      WIDGETEXTRA_LOCAL_AVAILABLE="yes"
+   else
+      WIDGETEXTRA_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$WIDGETEXTRA_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is available in the local tree" >&5
@@ -23606,6 +23411,7 @@ fi
 
 
 
+target_win32=no
 
 case "${host_os}" in
    darwin* | rhapsody*)
@@ -23621,19 +23427,57 @@ case "${host_os}" in
          use_quicktime="yes"
       fi
       ;;
+   cygwin* | mingw32*)
+            CONFIGHEADER="configwin.h"
 
-   cygwin*)
-            LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm"
-      CONFIGHEADER="configwin.h"
+      target_win32=yes
 
+      LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm -lshlwapi"
+
+            if [[ "$host_os" == cygwin* ]]; then
 
 $as_echo "#define __CYGWIN__ 1" >>confdefs.h
 
 
 $as_echo "#define _FILE_OFFSET_BITS 32" >>confdefs.h
 
-      ;;
+      fi
 
+            ac_configure_args="$ac_configure_args --with-winapi=directx,wmme"
+
+            echo -n "checking for wxMSWDisableSettingHighDPIAware in wxWidgets... "
+      cxxflags_save=${CXXFLAGS}
+      CXXFLAGS+=" ${WX_CXXFLAGS}"
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <wx/app.h>
+int
+main ()
+{
+wxMSWDisableSettingHighDPIAware();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  wx_hidpi_patch=yes
+else
+  wx_hidpi_patch=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      echo $wx_hidpi_patch
+      CXXFLAGS=${cxxflags_save}
+
+      if [ "$wx_hidpi_patch" = "yes" ] ; then
+
+$as_echo "#define HAVE_WXMSWDISABLEHIGHDPIAWARE 1" >>confdefs.h
+
+      fi
+
+            RC=$($WX_CONFIG --rescomp)
+
+
+      ;;
    *)
             CONFIGHEADER="configunix.h"
 
@@ -23816,7 +23660,7 @@ case "${host_os}" in
       LIBS="-framework AudioUnit -framework AudioToolbox $LIBS"
       LIBS="-framework CoreAudio $LIBS -lz"
       ;;
-   cygwin*)
+   cygwin* | mingw32*)
       ;;
    *)
             { $as_echo "$as_me:${as_lineno-$LINENO}: checking for snd_pcm_open in -lasound" >&5
@@ -24179,6 +24023,15 @@ $as_echo "#define USE_LADSPA 1" >>confdefs.h
    esac
 fi
 
+ if test "$target_win32" = yes; then
+  TARGET_WIN32_TRUE=
+  TARGET_WIN32_FALSE='#'
+else
+  TARGET_WIN32_TRUE='#'
+  TARGET_WIN32_FALSE=
+fi
+
+
  if test "$use_audiounits" = yes; then
   USE_AUDIO_UNITS_TRUE=
   USE_AUDIO_UNITS_FALSE='#'
@@ -24222,7 +24075,7 @@ $as_echo "#define USE_VST 1" >>confdefs.h
 fi
 
 case "${host_os}" in
-   cygwin*)
+   cygwin* | mingw32*)
       ac_config_headers="$ac_config_headers src/configwin.h:src/configtemplate.h"
 
       ;;
@@ -24519,6 +24372,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LADSPA_TRUE}" && test -z "${USE_LADSPA_FALSE}"; then
   as_fn_error $? "conditional \"USE_LADSPA\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${TARGET_WIN32_TRUE}" && test -z "${TARGET_WIN32_FALSE}"; then
+  as_fn_error $? "conditional \"TARGET_WIN32\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_AUDIO_UNITS_TRUE}" && test -z "${USE_AUDIO_UNITS_FALSE}"; then

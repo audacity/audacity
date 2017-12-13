@@ -316,7 +316,7 @@ EffectType EffectEqualization::GetType()
 
 bool EffectEqualization::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   parms.Write(KEY_FilterLength, (unsigned long)mM);
+   parms.Write(KEY_FilterLength, (int)mM);
    parms.Write(KEY_CurveName, mCurveName);
    parms.Write(KEY_InterpLin, mLin);
    parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(kNumInterpolations, kInterpStrings));
