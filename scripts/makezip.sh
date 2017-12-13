@@ -4,7 +4,7 @@ DST="."
 HOST=x86_64-w64-mingw32.static
 
 ID=$(git show -s --format="%h")
-DST="${DST}/${ID}"
+DST="${DST}/${ID}.${HOST}"
 
 mkdir -pv "${DST}"
 
