@@ -905,6 +905,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -1087,6 +1088,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1339,6 +1341,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1476,7 +1487,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1629,6 +1640,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -2908,7 +2920,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
-am__api_version='1.14'
+am__api_version='1.15'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -3080,8 +3092,8 @@ test "$program_suffix" != NONE &&
 ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
 program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
 
-# expand $ac_aux_dir to an absolute path
-am_aux_dir=`cd $ac_aux_dir && pwd`
+# Expand $ac_aux_dir to an absolute path.
+am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 if test x"${MISSING+set}" != xset; then
   case $am_aux_dir in
@@ -3100,7 +3112,7 @@ else
 $as_echo "$as_me: WARNING: 'missing' script is too old or missing" >&2;}
 fi
 
-if test x"${install_sh}" != xset; then
+if test x"${install_sh+set}" != xset; then
   case $am_aux_dir in
   *\ * | *\	*)
     install_sh="\${SHELL} '$am_aux_dir/install-sh'" ;;
@@ -3428,8 +3440,8 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 # <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
 mkdir_p='$(MKDIR_P)'
 
-# We need awk for the "check" target.  The system "awk" is bad on
-# some platforms.
+# We need awk for the "check" target (and possibly the TAP driver).  The
+# system "awk" is bad on some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
 # in the wild :-(  We should find a proper way to deprecate it ...
 AMTAR='$${TAR-tar}'
@@ -3602,6 +3614,7 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 $as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
@@ -22352,7 +22365,6 @@ fi
 
 
 
-
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for PORTMIDI" >&5
 $as_echo_n "checking for PORTMIDI... " >&6; }
@@ -22420,6 +22432,82 @@ $as_echo "yes" >&6; }
 	PORTMIDI_SYSTEM_AVAILABLE="yes"
 fi
 
+      if test "$PORTMIDI_SYSTEM_AVAILABLE" = "no"; then
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for portmidi without pkg-config" >&5
+$as_echo "$as_me: checking for portmidi without pkg-config" >&6;}
+
+      ac_fn_cxx_check_header_mongrel "$LINENO" "portmidi.h" "ac_cv_header_portmidi_h" "$ac_includes_default"
+if test "x$ac_cv_header_portmidi_h" = xyes; then :
+  header_found="yes"
+else
+  header_found="no"
+fi
+
+
+
+      PORTMIDI_CFLAGS=""
+
+      case "${host_os}" in
+         cygwin* | mingw32*)
+            PORTMIDI_LIBS="-lwinmm"
+            ;;
+         *)
+            PORTMIDI_LIBS=""
+            ;;
+      esac
+
+      if test "$header_found" = "yes"; then
+         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Pm_Initialize in -lportmidi" >&5
+$as_echo_n "checking for Pm_Initialize in -lportmidi... " >&6; }
+if ${ac_cv_lib_portmidi_Pm_Initialize+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lportmidi "${PORTMIDI_LIBS}" $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char Pm_Initialize ();
+int
+main ()
+{
+return Pm_Initialize ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_portmidi_Pm_Initialize=yes
+else
+  ac_cv_lib_portmidi_Pm_Initialize=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_portmidi_Pm_Initialize" >&5
+$as_echo "$ac_cv_lib_portmidi_Pm_Initialize" >&6; }
+if test "x$ac_cv_lib_portmidi_Pm_Initialize" = xyes; then :
+  lib_found="yes"
+else
+  lib_found="no"
+fi
+
+
+         if test "$lib_found" = "yes" -a "$header_found" = "yes"; then
+           PORTMIDI_SYSTEM_AVAILABLE="yes"
+           PORTMIDI_LIBS="-lportmidi ${PORTMIDI_LIBS}"
+         fi
+      fi
+   fi
+
    if test "$PORTMIDI_SYSTEM_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is available as system library" >&5
 $as_echo "$as_me: portmidi library is available as system library" >&6;}
@@ -22428,29 +22516,11 @@ $as_echo "$as_me: portmidi library is available as system library" >&6;}
 $as_echo "$as_me: portmidi library is NOT available as system library" >&6;}
    fi
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/portmidi/pm_common/portmidi.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/portmidi/pm_common/portmidi.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/portmidi/pm_common/portmidi.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/portmidi/pm_common/portmidi.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  PORTMIDI_LOCAL_AVAILABLE="yes"
-else
-  PORTMIDI_LOCAL_AVAILABLE="no"
-fi
-
+   if test -f ${srcdir}/lib-src/portmidi/pm_common/portmidi.h; then
+      PORTMIDI_LOCAL_AVAILABLE="yes"
+   else
+      PORTMIDI_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$PORTMIDI_LOCAL_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is available in the local tree" >&5
