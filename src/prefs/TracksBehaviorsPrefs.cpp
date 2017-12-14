@@ -85,7 +85,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                     ScrollingPreferenceKey(),
                     ScrollingPreferenceDefault());
 #endif
-      S.TieCheckBox(_("Enable Vertical Zooming"),
+      S.TieCheckBox(_("More &vertical zooming"),
                     wxT("/GUI/VerticalZooming"),
                     CFG_DA(!) true);
 

@@ -83,6 +83,7 @@ void WaveTrackVZoomHandle::DoZoom
    float min, max, c, minBand = 0;
    const double rate = pTrack->GetRate();
    const float halfrate = rate / 2;
+   float maxFreq = 8000.0;
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
    NumberScale scale;
    const bool spectral = (pTrack->GetDisplay() == WaveTrack::Spectrum);
@@ -91,7 +92,8 @@ void WaveTrackVZoomHandle::DoZoom
 
 
    bool bDragZoom = IsDragZooming(zoomStart, zoomEnd);
-   const int kSpectral = 8;
+   // Add 100 if spectral to separate the kinds of zoom.
+   const int kSpectral = 100;
 
    // Possibly override the zoom kind.
    if( bDragZoom )
@@ -108,7 +110,7 @@ void WaveTrackVZoomHandle::DoZoom
       scale = (settings.GetScale(min, max));
       const auto fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
-
+      maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
       // JKC:  Following discussions of Bug 1208 I'm allowing zooming in
       // down to one bin.
       //      const int minBins =
@@ -135,6 +137,7 @@ void WaveTrackVZoomHandle::DoZoom
       // In release builds Audacity will ignore the zoom.
       wxFAIL_MSG("Zooming Case not implemented by Audacity");
       break;
+   case kZoomReset:
    case kZoom1to1:
       {
          // Zoom out full
@@ -239,6 +242,13 @@ void WaveTrackVZoomHandle::DoZoom
 
    // VZooming on spectral we don't implement the other zoom presets.
    // They are also not in the menu.
+   case kZoomReset + kSpectral:
+      {
+         // Zoom out to normal level.
+         min = spectrumLinear ? 0.0f : 1.0f;
+         max = maxFreq;
+      }
+      break;
    case kZoom1to1 + kSpectral:
    case kZoomDiv2 + kSpectral:
    case kZoomTimes2 + kSpectral:
@@ -336,6 +346,7 @@ void WaveTrackVZoomHandle::DoZoom
 
 enum {
    OnZoomFitVerticalID = 20000,
+   OnZoomResetID,
    OnZoomDiv2ID,
    OnZoomTimes2ID,
    OnZoomHalfWaveID,
@@ -370,12 +381,14 @@ private:
 protected:
    InitMenuData *mpData {};
 
-   void OnZoomFitVertical(wxCommandEvent&);
-   void OnZoomDiv2Vertical(wxCommandEvent&);
-   void OnZoomTimes2Vertical(wxCommandEvent&);
-   void OnZoomHalfWave(wxCommandEvent&);
-   void OnZoomInVertical(wxCommandEvent&);
-   void OnZoomOutVertical(wxCommandEvent&);
+   void OnZoom( int iZoomCode );
+   void OnZoomFitVertical(wxCommandEvent&){ OnZoom( kZoom1to1 );};
+   void OnZoomReset(wxCommandEvent&){ OnZoom( kZoomReset );};
+   void OnZoomDiv2Vertical(wxCommandEvent&){ OnZoom( kZoomDiv2 );};
+   void OnZoomTimes2Vertical(wxCommandEvent&){ OnZoom( kZoomTimes2 );};
+   void OnZoomHalfWave(wxCommandEvent&){ OnZoom( kZoomHalfWave );};
+   void OnZoomInVertical(wxCommandEvent&){ OnZoom( kZoomIn );};
+   void OnZoomOutVertical(wxCommandEvent&){ OnZoom( kZoomOut );};
 };
 
 void WaveTrackVRulerMenuTable::InitMenu(Menu *, void *pUserData)
@@ -383,55 +396,11 @@ void WaveTrackVRulerMenuTable::InitMenu(Menu *, void *pUserData)
    mpData = static_cast<InitMenuData*>(pUserData);
 }
 
-void WaveTrackVRulerMenuTable::OnZoomInVertical(wxCommandEvent &)
+
+void WaveTrackVRulerMenuTable::OnZoom( int iZoomCode )
 {
    WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, kZoomIn, mpData->rect, mpData->yy, mpData->yy, false);
-
-   using namespace RefreshCode;
-   mpData->result = UpdateVRuler | RefreshAll;
-}
-
-void WaveTrackVRulerMenuTable::OnZoomOutVertical(wxCommandEvent &)
-{
-   WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, kZoomOut, mpData->rect, mpData->yy, mpData->yy, false);
-
-   using namespace RefreshCode;
-   mpData->result = UpdateVRuler | RefreshAll;
-}
-
-void WaveTrackVRulerMenuTable::OnZoomFitVertical(wxCommandEvent &)
-{
-   WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, kZoom1to1, mpData->rect, mpData->yy, mpData->yy, false);
-
-   using namespace RefreshCode;
-   mpData->result = UpdateVRuler | RefreshAll;
-}
-
-void WaveTrackVRulerMenuTable::OnZoomDiv2Vertical(wxCommandEvent &)
-{
-   WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, kZoomDiv2, mpData->rect, mpData->yy, mpData->yy, false);
-
-   using namespace RefreshCode;
-   mpData->result = UpdateVRuler | RefreshAll;
-}
-
-void WaveTrackVRulerMenuTable::OnZoomTimes2Vertical(wxCommandEvent &)
-{
-   WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, kZoomTimes2, mpData->rect, mpData->yy, mpData->yy, false);
-
-   using namespace RefreshCode;
-   mpData->result = UpdateVRuler | RefreshAll;
-}
-
-void WaveTrackVRulerMenuTable::OnZoomHalfWave(wxCommandEvent &)
-{
-   WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, kZoomHalfWave, mpData->rect, mpData->yy, mpData->yy, false);
+      (::GetActiveProject(), mpData->pTrack, iZoomCode, mpData->rect, mpData->yy, mpData->yy, false);
 
    using namespace RefreshCode;
    mpData->result = UpdateVRuler | RefreshAll;
@@ -476,7 +445,7 @@ void WaveformVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
 
 BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
-   POPUP_MENU_ITEM(OnZoomFitVerticalID, _("Zoom Reset\tShift-Right-Click"), OnZoomFitVertical)
+   POPUP_MENU_ITEM(OnZoomFitVerticalID, _("Zoom Reset\tShift-Right-Click"), OnZoomReset)
    POPUP_MENU_ITEM(OnZoomDiv2ID,        _("Zoom x1/2"),                     OnZoomDiv2Vertical)
    POPUP_MENU_ITEM(OnZoomTimes2ID,      _("Zoom x2"),                       OnZoomTimes2Vertical)
 
@@ -568,10 +537,11 @@ BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
       }
    }
 
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnZoomInVerticalID,  _("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
-   POPUP_MENU_ITEM(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
-   POPUP_MENU_ITEM(OnZoomFitVerticalID, _("Zoom to Fit\tShift-Right-Click"), OnZoomFitVertical)
+POPUP_MENU_SEPARATOR()
+   POPUP_MENU_ITEM(OnZoomResetID,         _("Zoom Reset"),                     OnZoomReset)
+   POPUP_MENU_ITEM(OnZoomFitVerticalID,   _("Zoom to Fit\tShift-Right-Click"), OnZoomFitVertical)
+   POPUP_MENU_ITEM(OnZoomInVerticalID,    _("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
+   POPUP_MENU_ITEM(OnZoomOutVerticalID,   _("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
 END_POPUP_MENU()
 
 void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)

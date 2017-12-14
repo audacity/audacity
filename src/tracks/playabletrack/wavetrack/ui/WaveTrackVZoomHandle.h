@@ -27,6 +27,7 @@ const int kZoomHalfWave = 4;
 const int kZoomInByDrag = 5;
 const int kZoomIn = 6;
 const int kZoomOut = 7;
+const int kZoomReset = 8;
 
 class WaveTrackVZoomHandle : public UIHandle
 {
