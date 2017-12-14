@@ -134,7 +134,8 @@ void MeterUpdateQueue::Clear()
 // queue was full.
 bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
 {
-   wxASSERT( mEnd >= mStart);
+   // mStart cnan be greater than mEnd because it is all mod mBufferSize
+   wxASSERT( (mEnd + mBufferSize - mStart) >= 0 );
    int len = (mEnd + mBufferSize - mStart) % mBufferSize;
 
    // Never completely fill the queue, because then the
