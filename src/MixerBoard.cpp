@@ -266,13 +266,15 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew AButton(this, ID_TOGGLEBUTTON_MUTE,
                   ctrlPos, ctrlSize,
                   *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
-                  *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDisabled),
+                  *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDown),
+                  *(mMixerBoard->mImageMuteDisabled),
                   true); // toggle button
    mToggleButton_Mute->SetName(_("Mute"));
    mToggleButton_Mute->SetAlternateImages(
       1,
       *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
-      *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDisabled));
+      *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDown), 
+      *(mMixerBoard->mImageMuteDisabled));
    this->UpdateMute();
 
    ctrlPos.y += MUTE_SOLO_HEIGHT;
@@ -280,7 +282,8 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       safenew AButton(this, ID_TOGGLEBUTTON_SOLO,
                   ctrlPos, ctrlSize,
                   *(mMixerBoard->mImageSoloUp), *(mMixerBoard->mImageSoloOver),
-                  *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDisabled),
+                  *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDown), 
+                  *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
    this->UpdateSolo();

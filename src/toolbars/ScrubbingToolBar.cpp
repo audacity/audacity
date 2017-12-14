@@ -85,7 +85,7 @@ AButton *ScrubbingToolBar::AddButton
 
    r = ToolBar::MakeButton
    (this,
-    bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+    bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
     eEnabledUp, eEnabledDown, eDisabled,
     wxWindowID(id),
     wxDefaultPosition,

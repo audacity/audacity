@@ -118,13 +118,14 @@ AButton::AButton(wxWindow * parent,
                  wxImage up,
                  wxImage over,
                  wxImage down,
+                 wxImage overDown,
                  wxImage dis,
                  bool toggle):
    wxWindow()
 {
    Init(parent, id, pos, size,
         ImageRoll(up), ImageRoll(over),
-        ImageRoll(down), ImageRoll(dis),
+        ImageRoll(down), ImageRoll(overDown), ImageRoll(dis),
         toggle);
 }
 
@@ -135,12 +136,13 @@ AButton::AButton(wxWindow * parent,
                  ImageRoll up,
                  ImageRoll over,
                  ImageRoll down,
+                 ImageRoll overDown,
                  ImageRoll dis,
                  bool toggle):
    wxWindow()
 {
    Init(parent, id, pos, size,
-        up, over, down, dis,
+        up, over, down, overDown, dis,
         toggle);
 }
 
@@ -157,6 +159,7 @@ void AButton::Init(wxWindow * parent,
                    ImageRoll up,
                    ImageRoll over,
                    ImageRoll down,
+                   ImageRoll overDown,
                    ImageRoll dis,
                    bool toggle)
 {
@@ -179,7 +182,8 @@ void AButton::Init(wxWindow * parent,
    mImages[0].mArr[0] = up;
    mImages[0].mArr[1] = over;
    mImages[0].mArr[2] = down;
-   mImages[0].mArr[3] = dis;
+   mImages[0].mArr[3] = overDown;
+   mImages[0].mArr[4] = dis;
 
    mAlternateIdx = 0;
 
@@ -213,6 +217,7 @@ void AButton::SetAlternateImages(unsigned idx,
                                  wxImage up,
                                  wxImage over,
                                  wxImage down,
+                                 wxImage overDown,
                                  wxImage dis)
 {
    if (1 + idx > mImages.size())
@@ -220,13 +225,15 @@ void AButton::SetAlternateImages(unsigned idx,
    mImages[idx].mArr[0] = ImageRoll(up);
    mImages[idx].mArr[1] = ImageRoll(over);
    mImages[idx].mArr[2] = ImageRoll(down);
-   mImages[idx].mArr[3] = ImageRoll(dis);
+   mImages[idx].mArr[3] = ImageRoll(overDown);
+   mImages[idx].mArr[4] = ImageRoll(dis);
 }
 
 void AButton::SetAlternateImages(unsigned idx,
                                  ImageRoll up,
                                  ImageRoll over,
                                  ImageRoll down,
+                                 ImageRoll overDown,
                                  ImageRoll dis)
 {
    if (1 + idx > mImages.size())
@@ -234,7 +241,8 @@ void AButton::SetAlternateImages(unsigned idx,
    mImages[idx].mArr[0] = up;
    mImages[idx].mArr[1] = over;
    mImages[idx].mArr[2] = down;
-   mImages[idx].mArr[3] = dis;
+   mImages[idx].mArr[3] = overDown;
+   mImages[idx].mArr[4] = dis;
 }
 
 void AButton::SetAlternateIdx(unsigned idx)
@@ -271,11 +279,11 @@ AButton::AButtonState AButton::GetState()
          if (mIsClicking) {
             state = mButtonIsDown ? AButtonUp : AButtonDown;
             if (mUseDisabledAsDownHiliteImage) {
-               state = mButtonIsDown ? AButtonOver : AButtonDis;
+               state = mButtonIsDown ? AButtonOverDown : AButtonDis;
             }
          }
          else {
-            state = mButtonIsDown ? AButtonDown : AButtonOver;
+            state = mButtonIsDown ? AButtonOverDown : AButtonOver;
             if (mUseDisabledAsDownHiliteImage) {
                state = mButtonIsDown ? AButtonDis : AButtonOver;
             }
@@ -286,7 +294,7 @@ AButton::AButtonState AButton::GetState()
             state = mButtonIsDown ? AButtonOver : AButtonDown;
          }
          else {
-            state = mButtonIsDown ? AButtonDown : AButtonOver;
+            state = mButtonIsDown ? AButtonOverDown : AButtonOver;
          }
       }
    }
@@ -338,11 +346,12 @@ bool AButton::HasAlternateImages(unsigned idx)
       return false;
 
    const ImageArr &images = mImages[idx];
-   const ImageRoll (&arr)[4] = images.mArr;
+   const ImageRoll (&arr)[5] = images.mArr;
    return (arr[0].Ok() &&
            arr[1].Ok() &&
            arr[2].Ok() &&
-           arr[3].Ok());
+           arr[3].Ok() &&
+           arr[4].Ok());
 }
 
 void AButton::OnMouseEvent(wxMouseEvent & event)
@@ -725,6 +734,11 @@ wxAccStatus AButtonAx::GetState(int WXUNUSED(childId), long* state)
 
       case AButton::AButtonOver:
          *state = wxACC_STATE_SYSTEM_HOTTRACKED | wxACC_STATE_SYSTEM_FOCUSABLE;
+      break;
+
+      case AButton::AButtonOverDown:
+         *state = wxACC_STATE_SYSTEM_HOTTRACKED | wxACC_STATE_SYSTEM_PRESSED |
+            wxACC_STATE_SYSTEM_FOCUSABLE;
       break;
 
       case AButton::AButtonDis:

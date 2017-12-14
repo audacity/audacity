@@ -161,7 +161,10 @@ AButton * ToolsToolBar::MakeTool( teBmps eTool,
    int id, const wxChar *label)
 {
    AButton *button = ToolBar::MakeButton(this,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+      bmpRecoloredUpSmall, 
+      bmpRecoloredDownSmall, 
+      bmpRecoloredUpHiliteSmall, 
+      bmpRecoloredDownSmall, // Not bmpRecoloredHiliteSmall as down is inactive.
       eTool, eTool, eTool,
       wxWindowID(id),
       wxDefaultPosition, true,

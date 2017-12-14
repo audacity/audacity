@@ -717,13 +717,15 @@ void ToolBar:: MakeButtonBackgroundsLarge()
 #endif
 
    if( bUseAqua ){
-      MakeMacRecoloredImage( bmpRecoloredUpLarge,     bmpMacUpButton );
-      MakeMacRecoloredImage( bmpRecoloredDownLarge,   bmpMacDownButton );
-      MakeMacRecoloredImage( bmpRecoloredHiliteLarge, bmpMacHiliteButton );
+      MakeMacRecoloredImage( bmpRecoloredUpLarge,       bmpMacUpButton );
+      MakeMacRecoloredImage( bmpRecoloredDownLarge,     bmpMacDownButton );
+      MakeMacRecoloredImage( bmpRecoloredUpHiliteLarge, bmpMacHiliteUpButton );
+      MakeMacRecoloredImage( bmpRecoloredHiliteLarge,   bmpMacHiliteButton );
    } else {
-      MakeRecoloredImage( bmpRecoloredUpLarge,     bmpUpButtonLarge );
-      MakeRecoloredImage( bmpRecoloredDownLarge,   bmpDownButtonLarge );
-      MakeRecoloredImage( bmpRecoloredHiliteLarge, bmpHiliteButtonLarge );
+      MakeRecoloredImage( bmpRecoloredUpLarge,       bmpUpButtonLarge );
+      MakeRecoloredImage( bmpRecoloredDownLarge,     bmpDownButtonLarge );
+      MakeRecoloredImage( bmpRecoloredUpHiliteLarge, bmpHiliteUpButtonLarge );
+      MakeRecoloredImage( bmpRecoloredHiliteLarge,   bmpHiliteButtonLarge );
    }
 }
 
@@ -741,13 +743,15 @@ void ToolBar::MakeButtonBackgroundsSmall()
 #endif
 
    if( bUseAqua ){
-      MakeMacRecoloredImage( bmpRecoloredUpSmall,     bmpMacUpButtonSmall );
-      MakeMacRecoloredImage( bmpRecoloredDownSmall,   bmpMacDownButtonSmall );
-      MakeMacRecoloredImage( bmpRecoloredHiliteSmall, bmpMacHiliteButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredUpSmall,       bmpMacUpButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredDownSmall,     bmpMacDownButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredUpHiliteSmall, bmpMacHiliteUpButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredHiliteSmall,   bmpMacHiliteButtonSmall );
    } else {
-      MakeRecoloredImage( bmpRecoloredUpSmall,     bmpUpButtonSmall );
-      MakeRecoloredImage( bmpRecoloredDownSmall,   bmpDownButtonSmall );
-      MakeRecoloredImage( bmpRecoloredHiliteSmall, bmpHiliteButtonSmall );
+      MakeRecoloredImage(    bmpRecoloredUpSmall,       bmpUpButtonSmall );
+      MakeRecoloredImage(    bmpRecoloredDownSmall,     bmpDownButtonSmall );
+      MakeRecoloredImage(    bmpRecoloredUpHiliteSmall, bmpHiliteUpButtonSmall );
+      MakeRecoloredImage(    bmpRecoloredHiliteSmall,   bmpHiliteButtonSmall );
    }
 }
 
@@ -767,6 +771,7 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
                               teBmps eUp,
                               teBmps eDown,
                               teBmps eHilite,
+                              teBmps eDownHi,
                               teBmps eStandardUp,
                               teBmps eStandardDown,
                               teBmps eDisabled,
@@ -783,11 +788,12 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
    wxImagePtr up2        (OverlayImage(eUp,     eStandardUp, xoff, yoff));
    wxImagePtr hilite2    (OverlayImage(eHilite, eStandardUp, xoff, yoff));
    wxImagePtr down2      (OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1));
+   wxImagePtr downHi2    (OverlayImage(eDownHi, eStandardDown, xoff + 1, yoff + 1));
    wxImagePtr disable2   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    wxASSERT(parent); // to justify safenew
    AButton * button =
-      safenew AButton(parent, id, placement, size, *up2, *hilite2, *down2,
+      safenew AButton(parent, id, placement, size, *up2, *hilite2, *down2, *downHi2,
             *disable2, processdownevents);
 
    return button;
@@ -798,6 +804,7 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
                                   teBmps eUp,
                                   teBmps eDown,
                                   teBmps eHilite,
+                                  teBmps eDownHi,
                                   teBmps eStandardUp,
                                   teBmps eStandardDown,
                                   teBmps eDisabled,
@@ -811,9 +818,10 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
    wxImagePtr up        (OverlayImage(eUp,     eStandardUp, xoff, yoff));
    wxImagePtr hilite    (OverlayImage(eHilite, eStandardUp, xoff, yoff));
    wxImagePtr down      (OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1));
+   wxImagePtr downHi    (OverlayImage(eDownHi, eStandardDown, xoff + 1, yoff + 1));
    wxImagePtr disable   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
-   button.SetAlternateImages(idx, *up, *hilite, *down, *disable);
+   button.SetAlternateImages(idx, *up, *hilite, *down, *downHi, *disable);
 }
 
 void ToolBar::SetButtonToolTip

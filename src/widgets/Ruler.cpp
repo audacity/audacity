@@ -2097,7 +2097,8 @@ void AdornedRulerPanel::ReCreateButtons()
       const auto button =
       ToolBar::MakeButton(
          this,
-         bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+         bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
+         bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
          bitmap, bitmap, bitmap,
          id, position, toggle, size
       );
@@ -2109,7 +2110,8 @@ void AdornedRulerPanel::ReCreateButtons()
    auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
    ToolBar::MakeAlternateImages(
       *button, 1,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+      bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
+      bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
       //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
       bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
       size);

@@ -463,7 +463,8 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       if (mStyle != MixerTrackCluster)
       {
          bool highlight = InIcon();
-         dc.DrawBitmap( theTheme.Bitmap( highlight ? bmpHiliteButtonSmall : bmpUpButtonSmall ), 
+         dc.DrawBitmap( theTheme.Bitmap( highlight ? 
+            bmpHiliteUpButtonSmall : bmpUpButtonSmall ), 
             mIconRect.GetPosition(), false );
 
          dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);

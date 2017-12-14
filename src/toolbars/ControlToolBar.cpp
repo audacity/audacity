@@ -135,7 +135,7 @@ AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBm
                                     const wxChar *label)
 {
    AButton *r = ToolBar::MakeButton(this,
-      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
+      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
       wxDefaultPosition, processdownevents,
@@ -160,7 +160,7 @@ void ControlToolBar::MakeAlternateImages(AButton &button, int idx,
                                          teBmps eDisabled)
 {
    ToolBar::MakeAlternateImages(button, idx,
-      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
+      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
 }

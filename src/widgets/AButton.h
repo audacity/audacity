@@ -39,6 +39,7 @@ class AButton final : public wxWindow {
            ImageRoll up,
            ImageRoll over,
            ImageRoll down,
+           ImageRoll overDown,
            ImageRoll dis,
            bool toggle);
 
@@ -51,6 +52,7 @@ class AButton final : public wxWindow {
            wxImage up,
            wxImage over,
            wxImage down,
+           wxImage overDown,
            wxImage dis,
            bool toggle);
 
@@ -67,6 +69,7 @@ class AButton final : public wxWindow {
                                    ImageRoll up,
                                    ImageRoll over,
                                    ImageRoll down,
+                                   ImageRoll overDown,
                                    ImageRoll dis);
 
    // Associate a set of four images (button up, highlight, button down,
@@ -75,6 +78,7 @@ class AButton final : public wxWindow {
                                    wxImage up,
                                    wxImage over,
                                    wxImage down,
+                                   wxImage overDown,
                                    wxImage dis);
 
    // Choose state of the button
@@ -134,6 +138,7 @@ class AButton final : public wxWindow {
       AButtonUp,
       AButtonOver,
       AButtonDown,
+      AButtonOverDown,
       AButtonDis
    };
 
@@ -160,6 +165,7 @@ class AButton final : public wxWindow {
              ImageRoll up,
              ImageRoll over,
              ImageRoll down,
+             ImageRoll overDown,
              ImageRoll dis,
              bool toggle);
 
@@ -181,7 +187,7 @@ class AButton final : public wxWindow {
    bool mUseDisabledAsDownHiliteImage;
    bool mIsDoubleClicked {};
 
-   struct ImageArr { ImageRoll mArr[4]; };
+   struct ImageArr { ImageRoll mArr[5]; };
    std::vector<ImageArr> mImages;
 
    wxRect mFocusRect;

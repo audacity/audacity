@@ -144,7 +144,7 @@ AButton *TranscriptionToolBar::AddButton(
    AButton *&r = mButtons[id];
 
    r = ToolBar::MakeButton(this,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall,bmpRecoloredHiliteSmall,
       eFore, eFore, eDisabled,
       wxWindowID(id),
       wxDefaultPosition,
@@ -165,7 +165,7 @@ void TranscriptionToolBar::MakeAlternateImages(
    int id, unsigned altIdx)
 {
    ToolBar::MakeAlternateImages(*mButtons[id], altIdx,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall,bmpRecoloredHiliteSmall,
       eFore, eFore, eDisabled,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
 }
