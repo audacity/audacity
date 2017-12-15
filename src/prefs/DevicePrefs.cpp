@@ -52,8 +52,8 @@ BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
    EVT_CHOICE(RecordID, DevicePrefs::OnDevice)
 END_EVENT_TABLE()
 
-DevicePrefs::DevicePrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Devices"))
+DevicePrefs::DevicePrefs(wxWindow * parent, int Options)
+:  PrefsPanel(parent, _("Devices")), mOptions( Options )
 {
    Populate();
 }
@@ -108,6 +108,9 @@ void DevicePrefs::GetNamesAndLabels()
 
 void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
 {
+   bool bHasPlay = (mOptions==0) || (mOptions==1);
+   bool bHasRecord = (mOptions==0) || (mOptions==2);
+   bool bHasLatency = (mOptions==0);
    wxArrayString empty;
 
    S.SetBorder(2);
@@ -131,65 +134,75 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Playback"));
-   {
-      S.StartMultiColumn(2);
+   mPlay=NULL;
+   if( bHasPlay ){
+      S.StartStatic(_("Playback"));
       {
-         S.Id(PlayID);
-         mPlay = S.AddChoice(_("&Device:"),
-                             wxEmptyString,
-                             &empty);
+         S.StartMultiColumn(2);
+         {
+            S.Id(PlayID);
+            mPlay = S.AddChoice(_("&Device:"),
+                                wxEmptyString,
+                                &empty);
+         }
+         S.EndMultiColumn();
       }
-      S.EndMultiColumn();
+      S.EndStatic();
    }
-   S.EndStatic();
 
-   S.StartStatic(_("Recording"));
+   mRecord = NULL;
+   mChannels = NULL;
+   if( bHasRecord )
    {
-      S.StartMultiColumn(2);
+      S.StartStatic(_("Recording"));
       {
-         S.Id(RecordID);
-         mRecord = S.AddChoice(_("De&vice:"),
-                               wxEmptyString,
-                               &empty);
+         S.StartMultiColumn(2);
+         {
+            S.Id(RecordID);
+            mRecord = S.AddChoice(_("De&vice:"),
+                                  wxEmptyString,
+                                  &empty);
 
-         S.Id(ChannelsID);
-         mChannels = S.AddChoice(_("Cha&nnels:"),
-                                 wxEmptyString,
-                                 &empty);
+            S.Id(ChannelsID);
+            mChannels = S.AddChoice(_("Cha&nnels:"),
+                                    wxEmptyString,
+                                    &empty);
+         }
+         S.EndMultiColumn();
       }
-      S.EndMultiColumn();
+      S.EndStatic();
    }
-   S.EndStatic();
 
-   // These previously lived in recording preferences.
-   // However they are liable to become device specific.
-   // Buffering also affects playback, not just recording, so is a device characteristic.
-   S.StartStatic( _("Latency"));
+   if( bHasLatency )
    {
-      S.StartThreeColumn();
+      // These previously lived in recording preferences.
+      // However they are liable to become device specific.
+      // Buffering also affects playback, not just recording, so is a device characteristic.
+      S.StartStatic( _("Latency"));
       {
-         wxTextCtrl *w;
-         // only show the following controls if we use Portaudio v19, because
-         // for Portaudio v18 we always use default buffer sizes
-         w = S.TieNumericTextBox(_("&Buffer length:"),
-                                 wxT("/AudioIO/LatencyDuration"),
-                                 DEFAULT_LATENCY_DURATION,
-                                 9);
-         S.AddUnits(_("milliseconds"));
-         w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
+         S.StartThreeColumn();
+         {
+            wxTextCtrl *w;
+            // only show the following controls if we use Portaudio v19, because
+            // for Portaudio v18 we always use default buffer sizes
+            w = S.TieNumericTextBox(_("&Buffer length:"),
+                                    wxT("/AudioIO/LatencyDuration"),
+                                    DEFAULT_LATENCY_DURATION,
+                                    9);
+            S.AddUnits(_("milliseconds"));
+            w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
 
-         w = S.TieNumericTextBox(_("&Offset:"),
-                                 wxT("/AudioIO/LatencyCorrection"),
-                                 DEFAULT_LATENCY_CORRECTION,
-                                 9);
-         S.AddUnits(_("milliseconds"));
-         w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
+            w = S.TieNumericTextBox(_("&Offset:"),
+                                    wxT("/AudioIO/LatencyCorrection"),
+                                    DEFAULT_LATENCY_CORRECTION,
+                                    9);
+            S.AddUnits(_("milliseconds"));
+            w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
+         }
+         S.EndThreeColumn();
       }
-      S.EndThreeColumn();
+      S.EndStatic();
    }
-   S.EndStatic();
-
 }
 
 void DevicePrefs::OnHost(wxCommandEvent & e)
@@ -238,75 +251,86 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    if (this->mRecordSource != wxT(""))
       recDevice += wxT(": ") + mRecordSource;
 
-   mRecord->Clear();
-   for (i = 0; i < inMaps.size(); i++) {
-      if (index == inMaps[i].hostIndex) {
-         device   = MakeDeviceSourceString(&inMaps[i]);
-         devindex = mRecord->Append(device);
-         // We need to const cast here because SetClientData is a wx function
-         // It is okay beause the original variable is non-const.
-         mRecord->SetClientData(devindex, const_cast<DeviceSourceMap *>(&inMaps[i]));
-         if (device == recDevice) {  /* if this is the default device, select it */
-            mRecord->SetSelection(devindex);
+   if( mRecord )
+   {
+      mRecord->Clear();
+      for (i = 0; i < inMaps.size(); i++) {
+         if (index == inMaps[i].hostIndex) {
+            device   = MakeDeviceSourceString(&inMaps[i]);
+            devindex = mRecord->Append(device);
+            // We need to const cast here because SetClientData is a wx function
+            // It is okay beause the original variable is non-const.
+            mRecord->SetClientData(devindex, const_cast<DeviceSourceMap *>(&inMaps[i]));
+            if (device == recDevice) {  /* if this is the default device, select it */
+               mRecord->SetSelection(devindex);
+            }
          }
+      }
+      if (mRecord->GetCount() == 0) {
+         recordnames.Add(_("No devices found"));
+         mRecord->Append(recordnames[0], (void *) NULL);
+         mRecord->SetSelection(0);
       }
    }
 
-   mPlay->Clear();
-   for (i = 0; i < outMaps.size(); i++) {
-      if (index == outMaps[i].hostIndex) {
-         device   = MakeDeviceSourceString(&outMaps[i]);
-         devindex = mPlay->Append(device);
-         mPlay->SetClientData(devindex, const_cast<DeviceSourceMap *>(&outMaps[i]));
-         if (device == mPlayDevice) {  /* if this is the default device, select it */
-            mPlay->SetSelection(devindex);
+   if( mPlay )
+   {
+      mPlay->Clear();
+      for (i = 0; i < outMaps.size(); i++) {
+         if (index == outMaps[i].hostIndex) {
+            device   = MakeDeviceSourceString(&outMaps[i]);
+            devindex = mPlay->Append(device);
+            mPlay->SetClientData(devindex, const_cast<DeviceSourceMap *>(&outMaps[i]));
+            if (device == mPlayDevice) {  /* if this is the default device, select it */
+               mPlay->SetSelection(devindex);
+            }
          }
       }
-   }
 
-   /* deal with not having any devices at all */
-   if (mPlay->GetCount() == 0) {
-      playnames.Add(_("No devices found"));
-      mPlay->Append(playnames[0], (void *) NULL);
-      mPlay->SetSelection(0);
-   }
-   if (mRecord->GetCount() == 0) {
-      recordnames.Add(_("No devices found"));
-      mRecord->Append(recordnames[0], (void *) NULL);
-      mRecord->SetSelection(0);
-   }
-
-   /* what if we have no device selected? we should choose the default on
-    * this API, as defined by PortAudio. We then fall back to using 0 only if
-    * that fails */
-   if (mPlay->GetCount() && mPlay->GetSelection() == wxNOT_FOUND) {
-      DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(index);
-      if (defaultMap)
-         mPlay->SetStringSelection(MakeDeviceSourceString(defaultMap));
-
-      if (mPlay->GetSelection() == wxNOT_FOUND) {
+      /* deal with not having any devices at all */
+      if (mPlay->GetCount() == 0) {
+         playnames.Add(_("No devices found"));
+         mPlay->Append(playnames[0], (void *) NULL);
          mPlay->SetSelection(0);
       }
+
+      /* what if we have no device selected? we should choose the default on
+       * this API, as defined by PortAudio. We then fall back to using 0 only if
+       * that fails */
+      if (mPlay->GetCount() && mPlay->GetSelection() == wxNOT_FOUND) {
+         DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(index);
+         if (defaultMap)
+            mPlay->SetStringSelection(MakeDeviceSourceString(defaultMap));
+
+         if (mPlay->GetSelection() == wxNOT_FOUND) {
+            mPlay->SetSelection(0);
+         }
+      }
    }
 
-   if (mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
+   if( mRecord && mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
       DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(index);
       if (defaultMap)
          mRecord->SetStringSelection(MakeDeviceSourceString(defaultMap));
 
-      if (mPlay->GetSelection() == wxNOT_FOUND) {
+      if (mPlay && mPlay->GetSelection() == wxNOT_FOUND) {
          mPlay->SetSelection(0);
       }
    }
 
    ShuttleGui S(this, eIsCreating);
-   S.SetSizeHints(mPlay, mPlay->GetStrings());
-   S.SetSizeHints(mRecord, mRecord->GetStrings());
+   if( mPlay )
+      S.SetSizeHints(mPlay, mPlay->GetStrings());
+   if( mRecord )
+      S.SetSizeHints(mRecord, mRecord->GetStrings());
    OnDevice(e);
 }
 
 void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
 {
+   if( !mRecord )
+      return;
+
    int ndx = mRecord->GetCurrentSelection();
    if (ndx == wxNOT_FOUND) {
       ndx = 0;
@@ -376,7 +400,7 @@ bool DevicePrefs::Commit()
    PopulateOrExchange(S);
    DeviceSourceMap *map = NULL;
 
-   if (mPlay->GetCount() > 0) {
+   if (mPlay && mPlay->GetCount() > 0) {
       map = (DeviceSourceMap *) mPlay->GetClientData(
             mPlay->GetSelection());
    }
@@ -385,7 +409,7 @@ bool DevicePrefs::Commit()
    }
 
    map = NULL;
-   if (mRecord->GetCount() > 0) {
+   if (mRecord && mRecord->GetCount() > 0) {
       map = (DeviceSourceMap *) mRecord->GetClientData(mRecord->GetSelection());
    }
    if (map) {

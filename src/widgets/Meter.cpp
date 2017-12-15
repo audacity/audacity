@@ -73,6 +73,9 @@
 #include "../AllThemeResources.h"
 #include "../Experimental.h"
 #include "../widgets/valnum.h"
+#include "../prefs/DevicePrefs.h"
+#include "../toolbars/ToolManager.h"
+
 
 static const long MIN_REFRESH_RATE = 1;
 static const long MAX_REFRESH_RATE = 100;
@@ -2067,6 +2070,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    wxRadioButton *horizontal;
    wxRadioButton *vertical;
    int meterRefreshRate = mMeterRefreshRate;
+   DevicePrefs * pPrefs = NULL;
 
    wxString title(mIsInput ? _("Recording Meter Options") : _("Playback Meter Options"));
 
@@ -2076,6 +2080,12 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    wxDialogWrapper dlg(GetActiveProject(), wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
+
+   // Tempting to use S.StartNotebook(); and S.StartNotebookPage( "tab name" );
+   // To have meter and device options on different pages.  However it is
+   // MUCH clearer to make the dialog a little bigger and no tabs.
+   // so that is what we do.
+
    S.StartVerticalLay();
    {
       S.StartStatic(_("Refresh Rate"), 0);
@@ -2151,9 +2161,13 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
         S.EndStatic();
       }
       S.EndHorizontalLay();
+      // mIsInput selects either recording or Play
+      pPrefs = safenew DevicePrefs(S.GetParent(), mIsInput ? 2:1);
+      S.AddWindow( pPrefs );
       S.AddStandardButtons();
    }
    S.EndVerticalLay();
+
    dlg.Layout();
    dlg.Fit();
 
@@ -2161,6 +2175,14 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
    if (dlg.ShowModal() == wxID_OK)
    {
+      if( pPrefs ){
+         pPrefs->Commit();
+         for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+            ToolManager * pMan = gAudacityProjects[i]->GetToolManager();
+            pMan->UpdatePrefs();
+         }
+      }
+
       wxArrayString style;
       style.Add(wxT("AutomaticStereo"));
       style.Add(wxT("HorizontalStereo"));
