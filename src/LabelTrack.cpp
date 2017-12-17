@@ -2706,6 +2706,10 @@ int LabelTrack::GetLabelIndex(double t, double t1)
    return wxNOT_FOUND;
 }
 
+
+// restoreFocus of -1 is the default, and sets the focus to this label.
+// restoreFocus of -2 or other value leaves the focus unchanged.
+// restoreFocus >= 0 will later cause focus to move to that track.
 int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
                          const wxString &title, int restoreFocus)
 {
@@ -2720,7 +2724,8 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
 
    mLabels.insert(mLabels.begin() + pos, l);
 
-   mSelIndex = pos;
+   if( restoreFocus == -1 )
+      mSelIndex = pos;
 
    // Make sure the caret is visible
    //

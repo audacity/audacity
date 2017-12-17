@@ -380,7 +380,7 @@ bool LabelDialog::TransferDataFromWindow()
          return false;
 
       // Add the label to it
-      static_cast<LabelTrack *>(t)->AddLabel(rd.selectedRegion, rd.title);
+      static_cast<LabelTrack *>(t)->AddLabel(rd.selectedRegion, rd.title,-2);
       static_cast<LabelTrack *>(t)->Unselect();
    }
 
@@ -682,7 +682,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    for (i = 0; i < cnt; i++) {
       RowData &rd = mData[i];
 
-      lt->AddLabel(rd.selectedRegion, rd.title);
+      lt->AddLabel(rd.selectedRegion, rd.title,-2);
    }
 
    // Export them and clean
