@@ -5566,12 +5566,15 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
          TrackListIterator iter(GetTracks());
          Track *i = iter.First();
          int nPlaying=0;
+         int nPlayableTracks =0;
 
          // We also set a solo indicator if we have just one track / stereo pair playing.
+         // in a group of more than one playable tracks.
          // otherwise clear solo on everything.
          while (i) {
             auto pi = dynamic_cast<PlayableTrack *>( i );
             if (pi) {
+               nPlayableTracks++;
                if( !pi->GetMute())
                {
                   nPlaying += 1;
@@ -5586,7 +5589,7 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
          while (i) {
             auto pi = dynamic_cast<PlayableTrack *>( i );
             if (pi)
-               pi->SetSolo( (nPlaying==1) && !pi->GetMute() );   // will set both of a stereo pair
+               pi->SetSolo( (nPlaying==1) && (nPlayableTracks > 1 ) && !pi->GetMute() );   // will set both of a stereo pair
             i = iter.Next();
          }
       }
