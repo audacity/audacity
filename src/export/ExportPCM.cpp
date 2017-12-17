@@ -493,7 +493,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                                  selectionOnly ?
                                  wxString::Format(_("Exporting the selected audio as %s"),
                                                   formatStr.c_str()) :
-                                 wxString::Format(_("Exporting the entire project as %s"),
+                                 wxString::Format(_("Exporting the audio as %s"),
                                                   formatStr.c_str()));
 
          while (updateResult == ProgressResult::Success) {

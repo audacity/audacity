@@ -873,7 +873,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()) :
-         wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()));
+         wxString::Format(_("Exporting the audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()));
 
       while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);

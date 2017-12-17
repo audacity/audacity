@@ -1828,19 +1828,19 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       if (rmode == MODE_SET) {
          title.Printf(selectionOnly ?
             _("Exporting selected audio with %s preset") :
-            _("Exporting entire file with %s preset"),
+            _("Exporting the audio with %s preset"),
             FindName(setRates, WXSIZEOF(setRates), brate).c_str());
       }
       else if (rmode == MODE_VBR) {
          title.Printf(selectionOnly ?
             _("Exporting selected audio with VBR quality %s") :
-            _("Exporting entire file with VBR quality %s"),
+            _("Exporting the audio with VBR quality %s"),
             FindName(varRates, WXSIZEOF(varRates), brate).c_str());
       }
       else {
          title.Printf(selectionOnly ?
             _("Exporting selected audio at %d Kbps") :
-            _("Exporting entire file at %d Kbps"),
+            _("Exporting the audio at %d Kbps"),
             brate);
       }
 

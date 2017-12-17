@@ -270,7 +270,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          wxString::Format(_("Exporting selected audio at %ld kbps"), bitrate) :
-         wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
+         wxString::Format(_("Exporting the audio at %ld kbps"), bitrate));
 
       while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);

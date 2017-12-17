@@ -260,7 +260,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          _("Exporting the selected audio as Ogg Vorbis") :
-         _("Exporting the entire project as Ogg Vorbis"));
+         _("Exporting the audio as Ogg Vorbis"));
 
       while (updateResult == ProgressResult::Success && !eos) {
          float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);

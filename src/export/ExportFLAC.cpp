@@ -337,7 +337,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    ProgressDialog progress(wxFileName(fName).GetName(),
                            selectionOnly ?
                            _("Exporting the selected audio as FLAC") :
-                           _("Exporting the entire project as FLAC"));
+                           _("Exporting the audio as FLAC"));
 
    while (updateResult == ProgressResult::Success) {
       auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
