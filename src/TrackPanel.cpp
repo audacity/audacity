@@ -2749,6 +2749,50 @@ void TrackPanel::EnsureVisible(Track * t)
    Refresh(false);
 }
 
+// 0.0 scrolls to top
+// 1.0 scrolls to bottom.
+void TrackPanel::VerticalScroll( float fracPosition){
+   TrackListIterator iter(GetTracks());
+   Track *it = NULL;
+   Track *nt = NULL;
+
+   // Compute trackHeight
+   int trackTop = 0;
+   int trackHeight =0;
+
+   for (it = iter.First(); it; it = iter.Next()) {
+      trackTop += trackHeight;
+      trackHeight =  it->GetHeight();
+
+      //find the second track if this is stereo
+      if (it->GetLinked()) {
+         nt = iter.Next();
+         trackHeight += nt->GetHeight();
+      }
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      else if(MONO_WAVE_PAN(it)){
+         trackHeight += it->GetHeight(true);
+      }
+#endif
+      else {
+         nt = it;
+      }
+   }
+
+   int delta;
+   
+   //Get the size of the trackpanel.
+   int width, height;
+   GetSize(&width, &height);
+
+   delta = (fracPosition * (trackTop + trackHeight - height)) - mViewInfo->vpos + mViewInfo->scrollStep;
+   //wxLogDebug( "Scroll down by %i pixels", delta );
+   delta /= mViewInfo->scrollStep;
+   mListener->TP_ScrollUpDown(delta);
+   Refresh(false);
+}
+
+
 // Given rectangle excludes the insets left, right, and top
 // Draw a rectangular border and also a vertical separator of track controls
 // from the rest (ruler and proper track area)

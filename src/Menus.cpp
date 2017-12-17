@@ -4298,6 +4298,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
+   int nTracksOriginally = GetTrackCount();
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    WaveTrack *newTrack{};
@@ -4389,9 +4390,18 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    if (focus != nullptr) {
       focus->SetFocus();
    }
-   mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
 
-   mTrackPanel->Refresh(false);
+   // A fix for Bug 63
+   // New tracks added?  Scroll them into view so that user sees them.
+   // Don't care what track type.  An analyser might just have added a
+   // Label track and we want to see it.
+   if( GetTrackCount() > nTracksOriginally ){
+      // 0.0 is min scroll position, 1.0 is max scroll position.
+      GetTrackPanel()->VerticalScroll( 1.0 );
+   }  else {
+      mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
+      mTrackPanel->Refresh(false);
+   }
 
    return true;
 }

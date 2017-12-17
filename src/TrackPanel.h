@@ -332,6 +332,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    bool IsMouseCaptured();
 
    void EnsureVisible(Track * t);
+   void VerticalScroll( float fracPosition);
 
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
