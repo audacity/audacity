@@ -114,11 +114,14 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
    ParamValueMap::const_iterator iter;
    ParamValueMap params = signature.GetDefaults();
 
+   // Iterate through the parameters defined by the command
    for (iter = params.begin(); iter != params.end(); ++iter)
    {
       wxString paramString;
+      // IF there is a match in the args actually used
       if (shuttle.TransferString(iter->first, paramString, wxT("")))
       {
+         // Then set that parameter.
          if (!mCommand->SetParameter(iter->first, paramString))
          {
             Failure();

@@ -26,7 +26,7 @@ wxString HelpCommandType::BuildName()
 void HelpCommandType::BuildSignature(CommandSignature &signature)
 {
    auto commandNameValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("CommandName"), wxT(""), std::move(commandNameValidator));
+   signature.AddParameter(wxT("CommandName"), wxT("Help"), std::move(commandNameValidator));
 }
 
 CommandHolder HelpCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)

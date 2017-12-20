@@ -245,6 +245,8 @@ bool Shuttle::TransferString( const wxString & Name, wxString & strValue, const 
       {
          strValue = mValueString;
       }
+      else
+         return false;
    }
    else
    {

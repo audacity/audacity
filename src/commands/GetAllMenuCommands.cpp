@@ -25,7 +25,7 @@ wxString GetAllMenuCommandsType::BuildName()
 void GetAllMenuCommandsType::BuildSignature(CommandSignature &signature)
 {
    auto showStatusValidator = make_movable<BoolValidator>();
-   signature.AddParameter(wxT("ShowStatus"), 0, std::move(showStatusValidator));
+   signature.AddParameter(wxT("ShowStatus"), false, std::move(showStatusValidator));
 }
 
 CommandHolder GetAllMenuCommandsType::Create(std::unique_ptr<CommandOutputTarget> &&target)
