@@ -1,6 +1,6 @@
-# pipetest.py
+# pipe-test.py
 # Tests the audacity pipe.  Sends 3 commands.
-# Keep pipetest.py short!!
+# Keep pipe-test.py short!!
 # You can make more complicated longer tests to test other functionality
 # or to generate screenshots etc in other scripts.
 
