@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio Express 2013 for Windows Desktop
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audacity", "Projects\Audacity\Audacity.vcxproj", "{1D64095C-F936-4FCF-B609-56E9DDF941FA}"
@@ -52,6 +52,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lv2", "Projects\lv2\lv2.vcxproj", "{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expat", "Projects\expat\expat.vcxproj", "{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod-script-pipe", "..\lib-src\mod-script-pipe\mod-script-pipe.vcxproj", "{85774A29-EA2F-4A40-994F-6BE593D847A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,10 @@ Global
 		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.ActiveCfg = Release|Win32
 		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.Build.0 = Release|Win32
 		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.Deploy.0 = Release|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug|Win32.Build.0 = Debug|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Release|Win32.ActiveCfg = Release|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

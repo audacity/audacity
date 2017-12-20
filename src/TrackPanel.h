@@ -565,6 +565,10 @@ protected:
    bool mEnableTab{};
 
    DECLARE_EVENT_TABLE()
+
+   // friending AutomationCommands allow automation to get sizes of the 
+   // tracks, track control panel and such.
+   friend class AutomationCommands;
 };
 
 // See big pictorial comment in TrackPanel for explanation of these numbers

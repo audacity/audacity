@@ -70,6 +70,7 @@ static const wxString MP3Conversion = wxT("MP3 Conversion");
 
 BatchCommands::BatchCommands()
 {
+   mMessage = "";
    ResetChain();
 
    wxArrayString names = GetNames();

@@ -27,8 +27,12 @@ def doCommand( command ) :
     print( "Rcvd: " + response )
     return response
 
-def getStructure() :
-    doCommand( 'GetAllMenuCommands:' )
+def do( command ) :
+    doCommand( command )
 
+def getStructure() :
+    do( 'GetBoxes' )
+    #doCommand( 'Screenshot: CaptureMode=menus' )
+    do( 'GetMenusPlus' )
 
 getStructure()

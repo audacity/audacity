@@ -61,6 +61,8 @@ class BatchCommands final {
    wxString GetCommand(int index);
    wxString GetParams(int index);
    int GetCount();
+   wxString GetMessage(){ return mMessage;};
+   void AddToMessage(const wxString & msgIn ){ mMessage += msgIn;};
 
    void SetWavToMp3Chain();
 
@@ -74,6 +76,7 @@ class BatchCommands final {
    wxArrayString mCommandChain;
    wxArrayString mParamsChain;
    bool mAbort;
+   wxString mMessage;
 
    Exporter mExporter;
    wxString mFileName;

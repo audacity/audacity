@@ -275,6 +275,8 @@ audacity_SOURCES = \
 	wxFileNameWrapper.h \
 	commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h \
+	commands/AutomationCommands.cpp \
+	commands/AutomationCommands.h \
 	commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h \
 	commands/Command.cpp \
@@ -299,8 +301,6 @@ audacity_SOURCES = \
 	commands/CompareAudioCommand.h \
 	commands/ExecMenuCommand.cpp \
 	commands/ExecMenuCommand.h \
-	commands/GetAllMenuCommands.cpp \
-	commands/GetAllMenuCommands.h \
 	commands/GetProjectInfoCommand.cpp \
 	commands/GetProjectInfoCommand.h \
 	commands/GetTrackInfoCommand.cpp \

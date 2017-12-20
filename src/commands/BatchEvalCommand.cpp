@@ -51,8 +51,12 @@ bool BatchEvalCommand::Apply(CommandExecutionContext WXUNUSED(context))
 
    // Create a Batch that will have just one command in it...
    BatchCommands Batch;
-
-   return Batch.ApplyCommand(cmdName, cmdParams);
+   bool bResult = Batch.ApplyCommand(cmdName, cmdParams);
+   // Relay messages, if any.
+   wxString Message = Batch.GetMessage();
+   if( !Message.IsEmpty() )
+      Status( Message );
+   return bResult;
 }
 
 BatchEvalCommand::~BatchEvalCommand()

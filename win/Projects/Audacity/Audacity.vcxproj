@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -399,7 +399,7 @@
     <ClCompile Include="..\..\..\src\commands\CommandType.cpp" />
     <ClCompile Include="..\..\..\src\commands\CompareAudioCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\ExecMenuCommand.cpp" />
-    <ClCompile Include="..\..\..\src\commands\GetAllMenuCommands.cpp" />
+    <ClCompile Include="..\..\..\src\commands\AutomationCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\GetProjectInfoCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp" />
@@ -749,7 +749,7 @@
     <ClInclude Include="..\..\..\src\commands\CommandType.h" />
     <ClInclude Include="..\..\..\src\commands\CompareAudioCommand.h" />
     <ClInclude Include="..\..\..\src\commands\ExecMenuCommand.h" />
-    <ClInclude Include="..\..\..\src\commands\GetAllMenuCommands.h" />
+    <ClInclude Include="..\..\..\src\commands\AutomationCommands.h" />
     <ClInclude Include="..\..\..\src\commands\GetProjectInfoCommand.h" />
     <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h" />
     <ClInclude Include="..\..\..\src\commands\HelpCommand.h" />

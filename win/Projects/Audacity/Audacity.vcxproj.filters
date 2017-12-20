@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
@@ -683,9 +683,6 @@
     <ClCompile Include="..\..\..\src\commands\ExecMenuCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\GetAllMenuCommands.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\commands\GetProjectInfoCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
@@ -1060,6 +1057,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackSliderHandles.cpp">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\AutomationCommands.cpp">
+      <Filter>src\commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1669,9 +1669,6 @@
     <ClInclude Include="..\..\..\src\commands\ExecMenuCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\GetAllMenuCommands.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\commands\GetProjectInfoCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
@@ -2115,6 +2112,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackSliderHandles.h">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\AutomationCommands.h">
+      <Filter>src\commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

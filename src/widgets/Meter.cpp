@@ -240,6 +240,8 @@ Meter::Meter(AudacityProject *project,
    mIcon{},
    mAccSilent(false)
 {
+   // i18n-hint: Noun (the meter is used for playback or record level monitoring)
+   SetName( _("Meter") );
    // Suppress warnings about the header file
    wxUnusedVar(SpeakerMenu_xpm);
    wxUnusedVar(MicMenu_xpm);

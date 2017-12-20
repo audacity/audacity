@@ -9,7 +9,8 @@
 ******************************************************************//**
 
 \file CommandDirectory.cpp
-\brief Contains definitions for the CommandDirectory class
+\brief A dictionary of supported scripting commands, including 
+functions to look up a command by name.
 
 *//*******************************************************************/
 
@@ -20,7 +21,7 @@
 #include "ScreenshotCommand.h"
 #include "BatchEvalCommand.h"
 #include "ExecMenuCommand.h"
-#include "GetAllMenuCommands.h"
+#include "AutomationCommands.h"
 #include "MessageCommand.h"
 #include "GetTrackInfoCommand.h"
 #include "GetProjectInfoCommand.h"
@@ -42,10 +43,18 @@ CommandDirectory::CommandDirectory()
    AddCommand(make_movable<ScreenshotCommandType>());
    AddCommand(make_movable<BatchEvalCommandType>());
    AddCommand(make_movable<ExecMenuCommandType>());
-   AddCommand(make_movable<GetAllMenuCommandsType>());
    AddCommand(make_movable<MessageCommandType>());
    AddCommand(make_movable<GetTrackInfoCommandType>());
    AddCommand(make_movable<GetProjectInfoCommandType>());
+
+   // AutomationCommandsType will be renamed GenericCommand
+   // It can be customised in the constructor and so
+   // appear as many distinct commands.
+   AddCommand(make_movable<AutomationCommandsType>("GetAll"));
+   AddCommand(make_movable<AutomationCommandsType>("GetMenus"));
+   AddCommand(make_movable<AutomationCommandsType>("GetMenusPlus"));
+   AddCommand(make_movable<AutomationCommandsType>("GetBoxes"));
+   AddCommand(make_movable<AutomationCommandsType>("GetClips"));
 
    AddCommand(make_movable<HelpCommandType>());
    AddCommand(make_movable<SelectCommandType>());
