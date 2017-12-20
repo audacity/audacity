@@ -3454,6 +3454,8 @@ TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begi
       else
          mpCell = trackPanel->GetBackgroundCell();
    }
+   else
+      mDidBackground = true;
 
    const auto size = mPanel->GetSize();
    mRect = { 0, 0, size.x, size.y };
