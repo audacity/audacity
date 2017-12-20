@@ -179,6 +179,9 @@ void CommandBuilder::BuildCommand(const wxString &cmdStringArg)
 
    wxString cmdName = cmdString.Left(splitAt);
    wxString cmdParams = cmdString.Mid(splitAt+1);
+   if( splitAt < 0 )
+      cmdParams = "";
+
    cmdName.Trim(true);
    cmdParams.Trim(false);
 
