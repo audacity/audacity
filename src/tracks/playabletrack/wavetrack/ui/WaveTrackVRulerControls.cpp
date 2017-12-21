@@ -31,12 +31,16 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
  const AudacityProject *pProject)
 {
    std::vector<UIHandlePtr> results;
-   auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
-   if (pTrack) {
-      auto result = std::make_shared<WaveTrackVZoomHandle>(
-         pTrack, st.rect, st.state.m_y );
-      result = AssignUIHandlePtr(mVZoomHandle, result);
-      results.push_back(result);
+
+   const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
+   if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
+      auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
+      if (pTrack) {
+         auto result = std::make_shared<WaveTrackVZoomHandle>(
+            pTrack, st.rect, st.state.m_y );
+         result = AssignUIHandlePtr(mVZoomHandle, result);
+         results.push_back(result);
+      }
    }
 
    auto more = TrackVRulerControls::HitTest(st, pProject);
