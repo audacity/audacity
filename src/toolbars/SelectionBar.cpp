@@ -273,10 +273,12 @@ void SelectionBar::Populate()
       _("Length and End of Selection"),
       _("Length and Center of Selection"),
    };
+   // The choice control now has a name.
+   // If this is less good for VI users, can go back to no name.
    mChoice = safenew wxChoice
       (this, ChoiceID, wxDefaultPosition, wxDefaultSize, 4, choices,
-       0, wxDefaultValidator, "");
-   mChoice->SetName(wxT("\a"));     // stop Jaws screen reader using nearby text for name when name is empty
+       0, wxDefaultValidator, "Selection Type Chooser");
+   //mChoice->SetName(wxT("\a"));     // stop Jaws screen reader using nearby text for name when name is empty
    mChoice->SetSelection(0);
 #ifdef __WXGTK__
    // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
