@@ -32,7 +32,6 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
 {
    std::vector<UIHandlePtr> results;
 
-   const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
    if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
       auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
       if (pTrack) {
