@@ -986,10 +986,14 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                break;
             }
 
+            wxString errMsgs;
+
             // Try to register the plugin via each provider until one succeeds
             for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
             {
-               if (mm.RegisterPlugin(item.plugs[j]->GetProviderID(), path))
+               wxString errMsg;
+               if (mm.RegisterPlugin(item.plugs[j]->GetProviderID(), path,
+                                     errMsg))
                {
                   for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
                   {
@@ -997,7 +1001,18 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                   }
                   break;
                }
+               else
+               {
+                  if (errMsgs.empty())
+                     errMsgs += '\n';
+                  errMsgs += errMsg;
+               }
             }
+            if (!errMsgs.empty())
+               ::wxMessageBox( wxString::Format(
+                  _("Effect at %s failed to register:\n%s"),
+                  path, errMsgs
+               ) );
          }
          else if (item.state == STATE_New)
          {

@@ -199,8 +199,10 @@ wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(p
    return names;
 }
 
-bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
+                                       const wxString & path, wxString &errMsg)
 {
+   errMsg.clear();
    int output;
    bool hasParameters;
 

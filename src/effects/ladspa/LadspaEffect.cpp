@@ -160,6 +160,7 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    // Audacity.  A little simplistic, but it should suffice for now.
    wxArrayString pathList = GetSearchPaths();
    wxArrayString files;
+   wxString ignoredErrMsg;
 
    for (int i = 0; i < WXSIZEOF(kShippedEffects); i++)
    {
@@ -169,7 +170,8 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       {
          if (!pm.IsPluginRegistered(files[j]))
          {
-            RegisterPlugin(pm, files[j]);
+            // No checking for error ?
+            RegisterPlugin(pm, files[j], ignoredErrMsg);
          }
       }
    }
@@ -203,8 +205,11 @@ wxArrayString LadspaEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return files;
 }
 
-bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
+                                         const wxString & path,
+                                         wxString &errMsg)
 {
+   errMsg.clear();
    // Since we now have builtin VST support, ignore the VST bridge as it
    // causes duplicate menu entries to appear.
    wxFileName ff(path);

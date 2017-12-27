@@ -289,13 +289,15 @@ void BuiltinEffectsModule::Terminate()
 
 bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
+   wxString ignoredErrMsg;
    for (size_t i = 0; i < WXSIZEOF(kEffectNames); i++)
    {
       wxString path(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
 
       if (!pm.IsPluginRegistered(path))
       {
-         RegisterPlugin(pm, path);
+         // No checking of error ?
+         RegisterPlugin(pm, path, ignoredErrMsg);
       }
    }
 
@@ -308,8 +310,11 @@ wxArrayString BuiltinEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSE
    return mNames;
 }
 
-bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
+                                          const wxString & path,
+                                          wxString &errMsg)
 {
+   errMsg.clear();
    auto effect = Instantiate(path);
    if (effect)
    {

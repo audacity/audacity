@@ -90,7 +90,8 @@ public:
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
    wxArrayString FindPlugins(PluginManagerInterface & pm) override;
-   bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path) override;
+   bool RegisterPlugin(PluginManagerInterface & pm,
+                       const wxString & path, wxString &errMsg) override;
 
    bool IsPluginValid(const wxString & path, bool bFast) override;
 

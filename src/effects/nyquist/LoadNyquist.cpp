@@ -165,10 +165,12 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    // Audacity.  A little simplistic, but it should suffice for now.
    wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
    wxArrayString files;
+   wxString ignoredErrMsg;
 
    if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
    {
-      RegisterPlugin(pm, NYQUIST_PROMPT_ID);
+      // No checking of error ?
+      RegisterPlugin(pm, NYQUIST_PROMPT_ID, ignoredErrMsg);
    }
 
    for (size_t i = 0; i < WXSIZEOF(kShippedEffects); i++)
@@ -179,7 +181,8 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       {
          if (!pm.IsPluginRegistered(files[j]))
          {
-            RegisterPlugin(pm, files[j]);
+            // No checking of error ?
+            RegisterPlugin(pm, files[j], ignoredErrMsg);
          }
       }
    }
@@ -204,8 +207,11 @@ wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return files;
 }
 
-bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
+                                          const wxString & path,
+                                          wxString &errMsg)
 {
+   errMsg.clear();
    NyquistEffect effect(path);
    if (effect.IsOk())
    {

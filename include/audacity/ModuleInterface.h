@@ -88,8 +88,10 @@ public:
    // will be made to request registration of that plugin.  If the module must create
    // an instance of the plugin to register it, then then instance should be deleted
    // after registration.
+   // Error message does not need to mention the path.
    virtual bool RegisterPlugin(PluginManagerInterface & pluginManager,
-                               const wxString & path) = 0;
+                               const wxString & path,
+                               wxString &errMsg) = 0;
 
    // For modules providing an interface to other dynamically loaded plugins,
    // the module returns true if the plugin is still valid, otherwise false.

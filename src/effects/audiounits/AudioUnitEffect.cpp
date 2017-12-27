@@ -171,8 +171,11 @@ wxArrayString AudioUnitEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return effects;
 }
 
-bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
+                                            const wxString & path,
+                                            wxString &errMsg)
 {
+   errMsg.clear();
    wxString name;
    AudioComponent component = FindAudioUnit(path, name);
    if (component == NULL)

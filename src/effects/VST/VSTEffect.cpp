@@ -466,8 +466,10 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return files;
 }
 
-bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
+                                      const wxString & path, wxString &errMsg)
 {
+   errMsg.clear();
    // TODO:  Fix this for external usage
    const wxString &cmdpath = PlatformCompatibility::GetExecutablePath();
 

@@ -242,8 +242,10 @@ wxArrayString LV2EffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm
    return plugins;
 }
 
-bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm,
+                                      const wxString & path, wxString &errMsg)
 {
+   errMsg.clear();
    const LilvPlugin *plug = GetPlugin(path);
    if (!plug)
    {

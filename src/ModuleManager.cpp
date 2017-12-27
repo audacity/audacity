@@ -539,14 +539,16 @@ wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
    return mDynModules[providerID]->FindPlugins(PluginManager::Get());
 }
 
-bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString & path)
+bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
 {
+   errMsg.clear();
    if (mDynModules.find(providerID) == mDynModules.end())
    {
       return false;
    }
 
-   return mDynModules[providerID]->RegisterPlugin(PluginManager::Get(), path);
+   return mDynModules[providerID]->RegisterPlugin(PluginManager::Get(), path,
+                                                  errMsg);
 }
 
 IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
