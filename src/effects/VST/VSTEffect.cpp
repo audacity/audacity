@@ -502,7 +502,8 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       catch (...)
       {
          wxLogMessage(_("VST plugin registration failed for %s\n"), path.c_str());
-         return false;
+         valid = false;
+         break;
       }
 
       wxString output;
@@ -630,6 +631,9 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
          }
       }
    }
+
+   if (!valid)
+      errMsg = _("Could not load the library");
 
    return valid;
 }

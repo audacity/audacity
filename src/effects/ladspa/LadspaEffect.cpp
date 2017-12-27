@@ -214,6 +214,7 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    // causes duplicate menu entries to appear.
    wxFileName ff(path);
    if (ff.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
+      errMsg = _("Audacity no longer uses vst-bridge");
       return false;
    }
 
@@ -241,6 +242,11 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
             if (effect.SetHost(NULL)) {
                pm.RegisterPlugin(this, &effect);
             }
+            else {
+               // If pm.RegisterPlugin is skipped, be sure to report error
+               index = 0;
+               break;
+            }
          }
       }
    }
@@ -256,6 +262,9 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
 
    wxSetWorkingDirectory(saveOldCWD);
    hadpath ? wxSetEnv(wxT("PATH"), envpath) : wxUnsetEnv(wxT("PATH"));
+
+   if (index == 0)
+      errMsg = _("Could not load the library");
 
    return index > 0;
 }

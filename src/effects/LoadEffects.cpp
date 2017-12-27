@@ -322,6 +322,7 @@ bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       return true;
    }
 
+   errMsg = _("Unknown built-in effect name");
    return false;
 }
 

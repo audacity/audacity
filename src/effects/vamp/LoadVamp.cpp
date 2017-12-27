@@ -215,6 +215,7 @@ bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       return true;
    }
 
+   errMsg = _("Could not load the library");
    return false;
 }
 

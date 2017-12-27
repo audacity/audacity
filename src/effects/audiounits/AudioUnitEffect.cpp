@@ -180,12 +180,16 @@ bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    AudioComponent component = FindAudioUnit(path, name);
    if (component == NULL)
    {
+      errMsg = _("Could not find component");
       return false;
    }
 
    AudioUnitEffect effect(path, name, component);
    if (!effect.SetHost(NULL))
    {
+      // TODO:  Is it worth it to discriminate all the ways SetHost might
+      // return false?
+      errMsg = _("Could not initialize component");
       return false;
    }
 

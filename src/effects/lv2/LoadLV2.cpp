@@ -247,18 +247,18 @@ bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm,
 {
    errMsg.clear();
    const LilvPlugin *plug = GetPlugin(path);
-   if (!plug)
+   if (plug)
    {
-      return false;
+      LV2Effect effect(plug);
+      if (effect.SetHost(NULL))
+      {
+         pm.RegisterPlugin(this, &effect);
+         return true;
+      }
    }
 
-   LV2Effect effect(plug);
-   if (effect.SetHost(NULL))
-   {
-      pm.RegisterPlugin(this, &effect);
-   }
-
-   return true;
+   errMsg = _("Could not load the library");
+   return false;
 }
 
 bool LV2EffectsModule::IsPluginValid(const wxString & path, bool bFast)
