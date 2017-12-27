@@ -219,6 +219,7 @@ bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       return true;
    }
 
+   errMsg = effect.InitializationError();
    return false;
 }
 
