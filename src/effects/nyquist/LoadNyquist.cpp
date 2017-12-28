@@ -15,6 +15,7 @@
 #include "Nyquist.h"
 
 #include "LoadNyquist.h"
+#include "../../FileNames.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
@@ -159,6 +160,11 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
+wxString NyquistEffectsModule::InstallPath()
+{
+   return FileNames::PlugInDir();
+}
+
 bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
@@ -170,7 +176,8 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
    {
       // No checking of error ?
-      RegisterPlugin(pm, NYQUIST_PROMPT_ID, ignoredErrMsg);
+      DiscoverPluginsAtPath(NYQUIST_PROMPT_ID, ignoredErrMsg,
+         PluginManagerInterface::DefaultRegistrationCallback);
    }
 
    for (size_t i = 0; i < WXSIZEOF(kShippedEffects); i++)
@@ -182,7 +189,8 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
          if (!pm.IsPluginRegistered(files[j]))
          {
             // No checking of error ?
-            RegisterPlugin(pm, files[j], ignoredErrMsg);
+            DiscoverPluginsAtPath(files[j], ignoredErrMsg,
+               PluginManagerInterface::DefaultRegistrationCallback);
          }
       }
    }
@@ -191,7 +199,7 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
+wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
    wxArrayString files;
@@ -207,20 +215,20 @@ wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return files;
 }
 
-bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
-                                          const wxString & path,
-                                          wxString &errMsg)
+unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
    errMsg.clear();
    NyquistEffect effect(path);
    if (effect.IsOk())
    {
-      pm.RegisterPlugin(this, &effect);
-      return true;
+      callback(this, &effect);
+      return 1;
    }
 
    errMsg = effect.InitializationError();
-   return false;
+   return 0;
 }
 
 bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)

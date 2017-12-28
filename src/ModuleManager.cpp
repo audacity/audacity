@@ -514,7 +514,7 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
       ModuleInterface *module =
          static_cast<ModuleInterface *>(CreateProviderInstance(providerID, modPaths[i]));
       
-      wxArrayString newpaths = module->FindPlugins(pm);
+      wxArrayString newpaths = module->FindPluginPaths(pm);
       for (size_t i = 0, cnt = newpaths.size(); i < cnt; i++)
       {
          providers.push_back(providerID);
@@ -536,7 +536,7 @@ wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
       }
    }
 
-   return mDynModules[providerID]->FindPlugins(PluginManager::Get());
+   return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
 bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
@@ -547,8 +547,9 @@ bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString &
       return false;
    }
 
-   return mDynModules[providerID]->RegisterPlugin(PluginManager::Get(), path,
-                                                  errMsg);
+   auto nFound = mDynModules[providerID]->DiscoverPluginsAtPath(path, errMsg);
+
+   return nFound > 0;
 }
 
 IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,

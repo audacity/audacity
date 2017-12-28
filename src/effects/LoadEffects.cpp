@@ -297,7 +297,8 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       if (!pm.IsPluginRegistered(path))
       {
          // No checking of error ?
-         RegisterPlugin(pm, path, ignoredErrMsg);
+         DiscoverPluginsAtPath(path, ignoredErrMsg,
+            PluginManagerInterface::DefaultRegistrationCallback);
       }
    }
 
@@ -305,25 +306,25 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString BuiltinEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
+wxArrayString BuiltinEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    return mNames;
 }
 
-bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
-                                          const wxString & path,
-                                          wxString &errMsg)
+unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
    errMsg.clear();
    auto effect = Instantiate(path);
    if (effect)
    {
-      pm.RegisterPlugin(this, effect.get());
-      return true;
+      callback(this, effect.get());
+      return 1;
    }
 
    errMsg = _("Unknown built-in effect name");
-   return false;
+   return 0;
 }
 
 bool BuiltinEffectsModule::IsPluginValid(const wxString & path, bool bFast)

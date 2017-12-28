@@ -49,6 +49,7 @@ effects from this one class.
 #include <wx/version.h>
 
 #include "LadspaEffect.h"       // This class's header file
+#include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
@@ -154,6 +155,12 @@ void LadspaEffectsModule::Terminate()
    return;
 }
 
+wxString LadspaEffectsModule::InstallPath()
+{
+   // To do: better choice
+   return FileNames::PlugInDir();
+}
+
 bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
@@ -171,7 +178,8 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
          if (!pm.IsPluginRegistered(files[j]))
          {
             // No checking for error ?
-            RegisterPlugin(pm, files[j], ignoredErrMsg);
+            DiscoverPluginsAtPath(files[j], ignoredErrMsg,
+               PluginManagerInterface::DefaultRegistrationCallback);
          }
       }
    }
@@ -180,7 +188,7 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString LadspaEffectsModule::FindPlugins(PluginManagerInterface & pm)
+wxArrayString LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    wxArrayString pathList = GetSearchPaths();
    wxArrayString files;
@@ -205,9 +213,9 @@ wxArrayString LadspaEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return files;
 }
 
-bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
-                                         const wxString & path,
-                                         wxString &errMsg)
+unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
    errMsg.clear();
    // Since we now have builtin VST support, ignore the VST bridge as it
@@ -215,7 +223,7 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    wxFileName ff(path);
    if (ff.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
       errMsg = _("Audacity no longer uses vst-bridge");
-      return false;
+      return 0;
    }
 
    // As a courtesy to some plug-ins that might be bridges to
@@ -227,8 +235,8 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    wxString saveOldCWD = ff.GetCwd();
    ff.SetCwd();
 
-   bool error = false;
    int index = 0;
+   int nLoaded = 0;
    LADSPA_Descriptor_Function mainFn = NULL;
    wxDynamicLibrary lib;
    if (lib.Load(path, wxDL_NOW)) {
@@ -241,15 +249,16 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
          for (data = mainFn(index); data; data = mainFn(++index)) {
             LadspaEffect effect(path, index);
             if (effect.SetHost(NULL)) {
-               pm.RegisterPlugin(this, &effect);
+               ++nLoaded;
+               callback( this, &effect );
             }
-            else {
-               // If pm.RegisterPlugin is skipped, be sure to report error
-               error = true;
-            }
+            else
+               errMsg = _("Could not load the library");
          }
       }
    }
+   else
+      errMsg = _("Could not load the library");
 
    if (lib.IsLoaded()) {
       // PRL:  I suspect Bug1257 -- Crash when enabling Amplio2 -- is the fault of a timing-
@@ -263,10 +272,7 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    wxSetWorkingDirectory(saveOldCWD);
    hadpath ? wxSetEnv(wxT("PATH"), envpath) : wxUnsetEnv(wxT("PATH"));
 
-   if (error)
-      errMsg = _("Could not load the library");
-
-   return index > 0;
+   return nLoaded;
 }
 
 bool LadspaEffectsModule::IsPluginValid(const wxString & path, bool bFast)

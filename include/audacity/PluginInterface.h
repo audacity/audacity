@@ -54,6 +54,9 @@ class PluginManagerInterface /* not final */
 {
 public:
 
+   static const PluginID &DefaultRegistrationCallback(
+      ModuleInterface *provider, EffectIdentInterface *ident );
+
    virtual bool IsPluginRegistered(const wxString & path) = 0;
 
    virtual const PluginID & RegisterPlugin(ModuleInterface *module) = 0;

@@ -42,6 +42,14 @@
 #ifndef __AUDACITY_MODULEINTERFACE_H__
 #define __AUDACITY_MODULEINTERFACE_H__
 
+#include <functional>
+
+#ifdef __WXMAC__
+// Needs this for std::function
+// Make this go away when Mac moves to a proper C++11 library
+#include "../../src/MemoryX.h"
+#endif
+
 #include "audacity/Types.h"
 #include "audacity/IdentInterface.h"
 #include "audacity/PluginInterface.h"
@@ -75,23 +83,45 @@ public:
    // Called just prior to deletion to allow releasing any resources.
    virtual void Terminate() = 0;
 
+   // "Paths" returned by FindPluginPaths() and passed back to
+   // DiscoverPluginsAtPath() have module-specific meaning.
+   // They are not necessarily file system paths to existent files that
+   // could be placed in any folder and queried for
+   // plugin information.  This function returns true when that is the case.
+   virtual bool PathsAreFiles() = 0;
+
+   // Returns empty, or else, where to copy a plug-in file or bundle.
+   // Drag-and-drop is supported only if PathsAreFiles() is true and this
+   // function returns nonempty.
+   virtual wxString InstallPath() = 0;
+
    // Modules providing a single or static set of plugins may use
    // AutoRegisterPlugins() to register those plugins.
    virtual bool AutoRegisterPlugins(PluginManagerInterface & pluginManager) = 0;
 
    // For modules providing an interface to other dynamically loaded plugins,
    // the module returns a list of path names that will be presented to the
-   // user for enablement.
-   virtual wxArrayString FindPlugins(PluginManagerInterface & pluginManager) = 0;
+   // user as "New" for enablement.
+   virtual wxArrayString FindPluginPaths(PluginManagerInterface & pluginManager) = 0;
 
-   // Once the user selects desired paths from FindPlugins(), a call to RegisterPlugin()
-   // will be made to request registration of that plugin.  If the module must create
+   // Once the user selects desired paths from FindPluginPaths(),
+   // a call to DiscoverPluginsAtPath()
+   // will be made to request registration of one or more plugins.  If the module must create
    // an instance of the plugin to register it, then then instance should be deleted
    // after registration.
-   // Error message does not need to mention the path.
-   virtual bool RegisterPlugin(PluginManagerInterface & pluginManager,
-                               const wxString & path,
-                               wxString &errMsg) = 0;
+   // May discover more than one plug-in at the path, and
+   // may call-back with paths not equal to path (perhaps appending
+   // other information to it).
+   // Error message does not need to mention the path and may be nonempty
+   // even if some plugins are also discovered successfully.
+   // Return value is the number of plugins found.
+   using RegistrationCallback =
+      std::function< void(ModuleInterface *, EffectIdentInterface *) >;
+   virtual unsigned DiscoverPluginsAtPath(
+      const wxString & path, wxString &errMsg,
+      const RegistrationCallback &callback =
+         PluginManagerInterface::DefaultRegistrationCallback)
+         = 0;
 
    // For modules providing an interface to other dynamically loaded plugins,
    // the module returns true if the plugin is still valid, otherwise false.

@@ -218,7 +218,7 @@ bool LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm)
    return false;
 }
 
-wxArrayString LV2EffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
+wxArrayString LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    // Retrieve data about all LV2 plugins
    const LilvPlugins *plugs = lilv_world_get_all_plugins(gWorld);
@@ -242,8 +242,9 @@ wxArrayString LV2EffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm
    return plugins;
 }
 
-bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm,
-                                      const wxString & path, wxString &errMsg)
+unsigned LV2EffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
    errMsg.clear();
    const LilvPlugin *plug = GetPlugin(path);
@@ -252,13 +253,13 @@ bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       LV2Effect effect(plug);
       if (effect.SetHost(NULL))
       {
-         pm.RegisterPlugin(this, &effect);
-         return true;
+         callback( this, &effect );
+         return 1;
       }
    }
 
    errMsg = _("Could not load the library");
-   return false;
+   return 0;
 }
 
 bool LV2EffectsModule::IsPluginValid(const wxString & path, bool bFast)

@@ -1379,6 +1379,12 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 // ============================================================================
 
+const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
+   ModuleInterface *provider, EffectIdentInterface *pInterface )
+{
+   return PluginManager::Get().RegisterPlugin(provider, pInterface);
+}
+
 bool PluginManager::IsPluginRegistered(const wxString & path)
 {
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
