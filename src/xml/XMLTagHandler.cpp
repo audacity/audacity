@@ -106,86 +106,60 @@ bool XMLValueChecker::IsGoodPathString(const wxString &str)
 }
 
 
-bool XMLValueChecker::IsGoodInt(const wxString & strInt)
+bool XMLValueChecker::IsGoodIntForRange(const wxString & strInt, const wxString & strMAXABS)
 {
    if (!IsGoodString(strInt))
       return false;
 
    // Check that the value won't overflow.
-   // Signed long: -2,147,483,648 to +2,147,483,647, i.e., -2^31 to 2^31-1
-   // We're strict about disallowing spaces and commas, and requiring minus sign to be first char for negative.
-   const size_t lenMAXABS = strlen("2147483647");
+   // Must lie between -Range and +Range-1
+   // We're strict about disallowing spaces and commas, and requiring minus sign to be first 
+   // char for negative. No + sign for positive numbers.  It's disallowed, not optional.
+
+   const size_t lenMAXABS = strMAXABS.Length();
    const size_t lenStrInt = strInt.Length();
 
-   if (lenStrInt > (lenMAXABS + 1))
+   if( lenStrInt < 1 )
       return false;
-   else if ((lenStrInt == (lenMAXABS + 1)) && (strInt[0] == '-'))
-   {
-      const int digitsMAXABS[] = {2, 1, 4, 7, 4, 8, 3, 6, 4, 9};
-      unsigned int i;
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i+1] < '0' || strInt[i+1] > '9')
-            return false; // not a digit
+   int offset = (strInt[0] == '-') ?1:0;
+   if( lenStrInt <= offset )
+      return false;// string too short, no digits in it.
 
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i+1] - '0' < digitsMAXABS[i])
-            return true; // number is small enough
+   if (lenStrInt > (lenMAXABS + offset))
       return false;
-   }
-   else if (lenStrInt == lenMAXABS)
-   {
-      const int digitsMAXABS[] = {2, 1, 4, 7, 4, 8, 3, 6, 4, 8};
-      unsigned int i;
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i] < '0' || strInt[i+1] > '9')
-            return false; // not a digit
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i] - '0' < digitsMAXABS[i])
-            return true; // number is small enough
-      return false;
-   }
-   return true;
+
+   unsigned int i;
+   for (i = offset; i < lenStrInt; i++)
+      if (strInt[i] < '0' || strInt[i] > '9' )
+          return false; // not a digit
+
+   // All chars were digits.
+   if( (lenStrInt - offset) < lenMAXABS )
+      return true; // too few digits to overflow.
+
+   // Numerical part is same length as strMAXABS
+   for (i = 0; i < lenMAXABS; i++)
+      if (strInt[i+offset] < strMAXABS[i])
+         return true; // number is small enough
+      else if (strInt[i+offset] > strMAXABS[i])
+         return false; // number is too big.
+
+   // Digits were textually equal to strMAXABS
+   // That's OK if negative, but not OK if positive.
+   return (strInt[0] == '-');
+}
+
+
+bool XMLValueChecker::IsGoodInt(const wxString & strInt)
+{
+   // Signed long: -2,147,483,648 to +2,147,483,647, i.e., -2^31 to 2^31-1
+   return IsGoodIntForRange( strInt, "2147483648" );
 }
 
 bool XMLValueChecker::IsGoodInt64(const wxString & strInt)
 {
-   if (!IsGoodString(strInt))
-      return false;
-
-   // Check that the value won't overflow.
-   // Signed 64-bit: -18446744073709551616 to +18446744073709551615, i.e., -2^64 to 2^64-1
-   // We're strict about disallowing spaces and commas, and requiring minus sign to be first char for negative.
-   const size_t lenMAXABS = strlen("18446744073709551615");
-   const size_t lenStrInt = strInt.Length();
-
-   if (lenStrInt > (lenMAXABS + 1))
-      return false;
-   else if ((lenStrInt == (lenMAXABS + 1)) && (strInt[0] == '-'))
-   {
-      const int digitsMAXABS[] = {1, 8, 4, 4, 6, 7, 4, 4, 0, 7, 3, 7, 0, 9, 5, 5, 1, 6, 1, 7};
-      unsigned int i;
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i+1] < '0' || strInt[i+1] > '9')
-            return false; // not a digit
-
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i+1] - '0' < digitsMAXABS[i])
-            return true; // number is small enough
-      return false;
-   }
-   else if (lenStrInt == lenMAXABS)
-   {
-      const int digitsMAXABS[] = {1, 8, 4, 4, 6, 7, 4, 4, 0, 7, 3, 7, 0, 9, 5, 5, 1, 6, 1, 6};
-      unsigned int i;
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i] < '0' || strInt[i+1] > '9')
-            return false; // not a digit
-      for (i = 0; i < lenMAXABS; i++)
-         if (strInt[i] - '0' < digitsMAXABS[i])
-            return true; // number is small enough
-      return false;
-   }
-   return true;
+   // Signed 64-bit:  -9,223,372,036,854,775,808 to +9,223,372,036,854,775,807, i.e., -2^63 to 2^63-1
+   return IsGoodIntForRange( strInt, "9223372036854775808" );
 }
 
 bool XMLValueChecker::IsValidChannel(const int nValue)

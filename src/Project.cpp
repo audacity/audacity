@@ -3494,10 +3494,14 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // such as 1.5.10, i.e. with 2 digit numbers.
    // We're able to do a shortcut and use string comparison because we know
    // that does not happen.
+   // TODO: Um.  We actually have released 0.98 and 1.3.14 so the comment
+   // above is inaccurate.
 
    if (!bFileVersionFound ||
          (fileVersion.Length() != 5) || // expecting '1.1.0', for example
-         !XMLValueChecker::IsGoodInt(fileVersion) ||
+         // JKC: I commentted out next line.  IsGoodInt is not for
+         // checking dotted numbers.
+         //!XMLValueChecker::IsGoodInt(fileVersion) ||
          (fileVersion > wxT(AUDACITY_FILE_FORMAT_VERSION)))
    {
       wxString msg;
