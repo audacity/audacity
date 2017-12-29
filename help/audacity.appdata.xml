@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application>
-  <id type="desktop">audacity.desktop</id>
+  <id>org.audacityteam.Audacity</id>
+  <launchable type="desktop">audacity.desktop</launchable>
   <licence>CC-BY</licence>
   <description>
     <p>
