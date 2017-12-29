@@ -461,6 +461,17 @@ public:
          } );
 
          for (const auto &name : sortednames) {
+
+#ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
+            // Is it a plug-in?
+            if (PluginManager::Get().DropFile(name)) {
+               mProject->RebuildAllMenuBars();
+               continue;
+            }
+
+            // No, so import.
+#endif
+
             if (Importer::IsMidi(name))
                AudacityProject::DoImportMIDI(mProject, name);
             else

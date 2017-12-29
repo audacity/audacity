@@ -1747,6 +1747,111 @@ void PluginManager::Terminate()
    }
 }
 
+bool PluginManager::DropFile(const wxString &fileName)
+{
+   auto &mm = ModuleManager::Get();
+
+   for (const PluginDescriptor *plug = GetFirstPlugin(PluginTypeModule);
+        plug;
+        plug = GetNextPlugin(PluginTypeModule))
+   {
+      auto module = static_cast<ModuleInterface *>
+         (mm.CreateProviderInstance(plug->GetID(), plug->GetPath()));
+      const auto &ff = module->InstallPath();
+      if (!ff.empty() && module->PathsAreFiles()) {
+         wxString errMsg;
+         // Do dry-run test of the file format
+         unsigned nPlugIns = module->DiscoverPluginsAtPath(fileName, errMsg,
+            [](ModuleInterface *, EffectIdentInterface *){});
+         if (nPlugIns) {
+            // File contents are good for this module, so check no others.
+            // All branches of this block return true, even in case of
+            // failure for other reasons, to signal that other drag-and-drop
+            // actions should not be tried.
+
+            // Find path to copy it
+            const wxFileName src{ fileName };
+            wxFileName dst;
+            dst.AssignDir( ff );
+            dst.SetFullName( src.GetFullName() );
+            if ( dst.Exists() ) {
+               // Query whether to overwrite
+               bool overwrite = (wxYES == ::wxMessageBox(
+                  wxString::Format(_("Overwrite the plug-in file %s ?"),
+                                   dst.GetFullPath() ),
+                  _("Plug-in already exists"),
+                  wxYES_NO
+               ) );
+               if ( !overwrite )
+                  return true;
+            }
+
+            // Move the file or subtree
+            bool copied = false;
+            auto dstPath = dst.GetFullPath();
+            if ( src.FileExists() )
+               // A simple one-file plug-in
+               copied = FileNames::CopyFile(
+                  src.GetFullPath(), dstPath, true );
+            else {
+               // A sub-folder
+               // such as for some VST packages
+               // Recursive copy needed -- to do
+               return true;
+            }
+
+            if (!copied) {
+               ::wxMessageBox(
+                  _("Plug-in file is in use.  Failed to overwrite"));
+               return true;
+            }
+
+            // Register for real
+            std::vector<PluginID> ids;
+            std::vector<wxString> names;
+            nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
+               [&](ModuleInterface *provider, EffectIdentInterface *ident){
+                  // Register as by default, but also collecting the PluginIDs
+                  // and names
+                  ids.push_back(
+                     PluginManagerInterface::DefaultRegistrationCallback(
+                        provider, ident) );
+                  names.push_back( wxGetTranslation( ident->GetName() ) );
+               });
+            if ( ! nPlugIns ) {
+               // Unlikely after the dry run succeeded
+               ::wxMessageBox( wxString::Format(
+                  _("Failed to register:\n%s"), errMsg ) );
+               return true;
+            }
+
+            // Ask whether to enable the plug-ins
+            if (auto nIds = ids.size()) {
+               auto format = wxPLURAL(
+                  _("Enable this plug-in?"),
+                  _("Enable these plug-ins?"),
+                  nIds
+               );
+               format += wxT("\n");
+               for (const auto &name : names)
+                  format += name + wxT("\n");
+               bool enable = (wxYES == ::wxMessageBox(
+                  wxString::Format( format, nIds ),
+                  _("Enable new plug-ins"),
+                  wxYES_NO
+               ) );
+               for (const auto &id : ids)
+                  mPlugins[id].SetEnabled(enable);
+            }
+
+            return true;
+         }
+      }
+   }
+   
+   return false;
+}
+
 void PluginManager::Load()
 {
    // Create/Open the registry
