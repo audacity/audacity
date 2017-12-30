@@ -1377,11 +1377,12 @@ std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
        || newFileName.GetFullName().empty() )
       return { false, {} };
 
+   newPath = newFileName.GetFullPath();
+
    if (newFileName != oldFileNameRef) {
       //check to see that summary exists before we copy.
       bool summaryExisted = f->IsSummaryAvailable();
       auto oldPath = oldFileNameRef.GetFullPath();
-      newPath = newFileName.GetFullPath();
       if (summaryExisted) {
          auto success = MyCopyFile(oldPath, newPath);
          if (!success)
