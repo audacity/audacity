@@ -361,6 +361,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
       auto success = GuardedCall< bool >( [&] {
          project->Import(files[i]);
+         project->ZoomAfterImport(nullptr);
          project->OnSelectAll();
          if (!mBatchCommands.ApplyChain())
             return false;
