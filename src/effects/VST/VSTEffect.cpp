@@ -469,6 +469,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
 bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
                                       const wxString & path, wxString &errMsg)
 {
+   bool error = false;
    errMsg.clear();
    // TODO:  Fix this for external usage
    const wxString &cmdpath = PlatformCompatibility::GetExecutablePath();
@@ -502,8 +503,8 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       catch (...)
       {
          wxLogMessage(_("VST plugin registration failed for %s\n"), path.c_str());
+         error = true;
          valid = false;
-         break;
       }
 
       wxString output;
@@ -632,7 +633,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       }
    }
 
-   if (!valid)
+   if (error)
       errMsg = _("Could not load the library");
 
    return valid;

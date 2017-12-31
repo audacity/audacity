@@ -226,7 +226,8 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    wxSetEnv(wxT("PATH"), ff.GetPath() + wxFILE_SEP_PATH + envpath);
    wxString saveOldCWD = ff.GetCwd();
    ff.SetCwd();
-   
+
+   bool error = false;
    int index = 0;
    LADSPA_Descriptor_Function mainFn = NULL;
    wxDynamicLibrary lib;
@@ -244,8 +245,7 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
             }
             else {
                // If pm.RegisterPlugin is skipped, be sure to report error
-               index = 0;
-               break;
+               error = true;
             }
          }
       }
@@ -263,7 +263,7 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    wxSetWorkingDirectory(saveOldCWD);
    hadpath ? wxSetEnv(wxT("PATH"), envpath) : wxUnsetEnv(wxT("PATH"));
 
-   if (index == 0)
+   if (error)
       errMsg = _("Could not load the library");
 
    return index > 0;
