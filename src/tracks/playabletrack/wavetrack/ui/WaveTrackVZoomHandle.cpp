@@ -636,6 +636,10 @@ UIHandle::Result WaveTrackVZoomHandle::Release
    const bool shiftDown = event.ShiftDown();
    const bool rightUp = event.RightUp();
 
+
+   bool bVZoom;
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
+
    // Popup menu... 
    if (
        rightUp &&
@@ -651,8 +655,6 @@ UIHandle::Result WaveTrackVZoomHandle::Release
          : (PopupMenuTable *) &WaveformVRulerMenuTable::Instance();
       std::unique_ptr<PopupMenuTable::Menu>
          pMenu(PopupMenuTable::BuildMenu(pParent, pTable, &data));
-      bool bVZoom;
-      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
 
       // Accelerators only if zooming enabled.
       if( !bVZoom )
@@ -674,8 +676,6 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       return data.result;
    }
    else{
-      bool bVZoom;
-      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
       // Ignore Capture Lost event 
       bVZoom &= event.GetId() != kCaptureLostEventId;
       // shiftDown | rightUp | ZoomKind
