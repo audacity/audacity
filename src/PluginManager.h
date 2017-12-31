@@ -228,6 +228,8 @@ public:
    void Initialize();
    void Terminate();
 
+   bool DropFile(const wxString &fileName);
+
    static PluginManager & Get();
 
    static PluginID GetID(ModuleInterface *module);

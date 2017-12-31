@@ -122,7 +122,7 @@ bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm
    return false;
 }
 
-wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
+wxArrayString VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    wxArrayString names;
 
@@ -199,8 +199,9 @@ wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(p
    return names;
 }
 
-bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
-                                       const wxString & path, wxString &errMsg)
+unsigned VampEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
    errMsg.clear();
    int output;
@@ -210,13 +211,13 @@ bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    if (vp)
    {
       VampEffect effect(std::move(vp), path, output, hasParameters);
-      pm.RegisterPlugin(this, &effect);
+      callback( this, &effect );
 
-      return true;
+      return 1;
    }
 
    errMsg = _("Could not load the library");
-   return false;
+   return 0;
 }
 
 bool VampEffectsModule::IsPluginValid(const wxString & path, bool bFast)

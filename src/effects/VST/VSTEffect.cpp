@@ -351,13 +351,21 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
+wxString VSTEffectsModule::InstallPath()
+{
+   // Not yet ready for VST drag-and-drop...
+   // return FileNames::PlugInDir();
+
+   return {};
+}
+
 bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
    // We don't auto-register
    return true;
 }
 
-wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
+wxArrayString VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    wxArrayString pathList;
    wxArrayString files;
@@ -466,10 +474,12 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return files;
 }
 
-bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
-                                      const wxString & path, wxString &errMsg)
+unsigned VSTEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
    bool error = false;
+   unsigned nFound = 0;
    errMsg.clear();
    // TODO:  Fix this for external usage
    const wxString &cmdpath = PlatformCompatibility::GetExecutablePath();
@@ -620,7 +630,8 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
                if (!skip && cont)
                {
                   valid = true;
-                  pm.RegisterPlugin(this, &proc);
+                  callback( this, &proc );
+                  ++nFound;
                }
             }
             break;
@@ -636,7 +647,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    if (error)
       errMsg = _("Could not load the library");
 
-   return valid;
+   return nFound;
 }
 
 bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)

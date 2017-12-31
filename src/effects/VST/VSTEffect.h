@@ -391,10 +391,15 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
+   bool PathsAreFiles() override { return true; }
+   wxString InstallPath() override;
+
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   wxArrayString FindPlugins(PluginManagerInterface & pm) override;
-   bool RegisterPlugin(PluginManagerInterface & pm,
-                       const wxString & path, wxString &errMsg) override;
+   wxArrayString FindPluginPaths(PluginManagerInterface & pm) override;
+   unsigned DiscoverPluginsAtPath(
+      const wxString & path, wxString &errMsg,
+      const RegistrationCallback &callback)
+         override;
 
    bool IsPluginValid(const wxString & path, bool bFast) override;
 

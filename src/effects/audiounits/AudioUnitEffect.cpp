@@ -158,7 +158,7 @@ bool AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return true;
 }
 
-wxArrayString AudioUnitEffectsModule::FindPlugins(PluginManagerInterface & pm)
+wxArrayString AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    wxArrayString effects;
 
@@ -171,9 +171,9 @@ wxArrayString AudioUnitEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return effects;
 }
 
-bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
-                                            const wxString & path,
-                                            wxString &errMsg)
+unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
    errMsg.clear();
    wxString name;
@@ -181,7 +181,7 @@ bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
    if (component == NULL)
    {
       errMsg = _("Could not find component");
-      return false;
+      return 0;
    }
 
    AudioUnitEffect effect(path, name, component);
@@ -190,12 +190,11 @@ bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm,
       // TODO:  Is it worth it to discriminate all the ways SetHost might
       // return false?
       errMsg = _("Could not initialize component");
-      return false;
+      return 0;
    }
 
-   pm.RegisterPlugin(this, &effect);
-
-   return true;
+   callback(this, &effect);
+   return 1;
 }
 
 bool AudioUnitEffectsModule::IsPluginValid(
