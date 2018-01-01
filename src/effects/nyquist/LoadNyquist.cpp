@@ -223,7 +223,8 @@ unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
    NyquistEffect effect(path);
    if (effect.IsOk())
    {
-      callback(this, &effect);
+      if (callback)
+         callback(this, &effect);
       return 1;
    }
 

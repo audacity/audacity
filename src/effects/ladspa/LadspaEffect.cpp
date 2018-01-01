@@ -250,7 +250,8 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
             LadspaEffect effect(path, index);
             if (effect.SetHost(NULL)) {
                ++nLoaded;
-               callback( this, &effect );
+               if (callback)
+                  callback( this, &effect );
             }
             else
                errMsg = _("Could not load the library");

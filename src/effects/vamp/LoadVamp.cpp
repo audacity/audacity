@@ -211,7 +211,8 @@ unsigned VampEffectsModule::DiscoverPluginsAtPath(
    if (vp)
    {
       VampEffect effect(std::move(vp), path, output, hasParameters);
-      callback( this, &effect );
+      if (callback)
+         callback( this, &effect );
 
       return 1;
    }

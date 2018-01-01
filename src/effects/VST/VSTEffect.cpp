@@ -630,7 +630,8 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                if (!skip && cont)
                {
                   valid = true;
-                  callback( this, &proc );
+                  if (callback)
+                     callback( this, &proc );
                   ++nFound;
                }
             }

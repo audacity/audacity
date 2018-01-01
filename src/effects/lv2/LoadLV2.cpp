@@ -253,7 +253,8 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
       LV2Effect effect(plug);
       if (effect.SetHost(NULL))
       {
-         callback( this, &effect );
+         if (callback)
+            callback( this, &effect );
          return 1;
       }
    }

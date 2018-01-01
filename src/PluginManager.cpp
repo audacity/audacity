@@ -1761,8 +1761,8 @@ bool PluginManager::DropFile(const wxString &fileName)
       if (!ff.empty() && module->PathsAreFiles()) {
          wxString errMsg;
          // Do dry-run test of the file format
-         unsigned nPlugIns = module->DiscoverPluginsAtPath(fileName, errMsg,
-            [](ModuleInterface *, EffectIdentInterface *){});
+         unsigned nPlugIns =
+            module->DiscoverPluginsAtPath(fileName, errMsg, {});
          if (nPlugIns) {
             // File contents are good for this module, so check no others.
             // All branches of this block return true, even in case of
@@ -1813,10 +1813,12 @@ bool PluginManager::DropFile(const wxString &fileName)
                [&](ModuleInterface *provider, EffectIdentInterface *ident){
                   // Register as by default, but also collecting the PluginIDs
                   // and names
-                  ids.push_back(
+                  const auto &id =
                      PluginManagerInterface::DefaultRegistrationCallback(
-                        provider, ident) );
+                        provider, ident);
+                  ids.push_back(id);
                   names.push_back( wxGetTranslation( ident->GetName() ) );
+                  return id;
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded

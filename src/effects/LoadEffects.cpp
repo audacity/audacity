@@ -319,7 +319,8 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
    auto effect = Instantiate(path);
    if (effect)
    {
-      callback(this, effect.get());
+      if (callback)
+         callback(this, effect.get());
       return 1;
    }
 

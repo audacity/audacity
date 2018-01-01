@@ -193,7 +193,9 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
       return 0;
    }
 
-   callback(this, &effect);
+   if(callback)
+      callback(this, &effect);
+
    return 1;
 }
 
