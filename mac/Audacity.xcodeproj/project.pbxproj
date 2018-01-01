@@ -1222,6 +1222,7 @@
 		5E15126E1DB0010C00702E29 /* TrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512681DB0010C00702E29 /* TrackControls.cpp */; };
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
+		5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
 		5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */; };
@@ -3070,6 +3071,7 @@
 		5E15126A1DB0010C00702E29 /* TrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackUI.cpp; sourceTree = "<group>"; };
 		5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
+		5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LanguageNames.txt; path = ../locale/LanguageNames.txt; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
 		5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackSliderHandles.cpp; sourceTree = "<group>"; };
@@ -5349,6 +5351,7 @@
 		286D30AC0F264B58004E6E4A /* locale */ = {
 			isa = PBXGroup;
 			children = (
+				5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */,
 				28884912131B6CF500B59735 /* af.po */,
 				28884913131B6CF500B59735 /* ar.po */,
 				28884914131B6CF500B59735 /* be.po */,
@@ -7091,6 +7094,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,

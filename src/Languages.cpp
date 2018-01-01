@@ -35,8 +35,10 @@
 #include <wx/defs.h>
 #include <wx/hashmap.h>
 #include <wx/intl.h>
+#include <wx/textfile.h>
 
 #include "Languages.h"
+#include "FileNames.h"
 
 #include "AudacityApp.h"
 
@@ -131,66 +133,25 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    LangHash reverseHash;
    LangHash tempHash;
 
-   // MM: Use only ASCII characters here to avoid problems with
-   //     charset conversion on Linux platforms
-   localLanguageName[wxT("af")] = wxT("Afrikaans");
-   localLanguageName[wxT("ar")] = wxT("Arabic");
-   localLanguageName[wxT("be")] = wxT("Belarusian");
-   localLanguageName[wxT("bg")] = wxT("Balgarski");
-   localLanguageName[wxT("bn")] = wxT("Bengali");
-   localLanguageName[wxT("bs")] = wxT("Bosnian");
-   localLanguageName[wxT("ca")] = wxT("Catalan");
-   localLanguageName[wxT("ca_ES@valencia")] = wxT("Valencian (southern Catalan)");
-   localLanguageName[wxT("cs")] = wxT("Czech");
-   localLanguageName[wxT("cy")] = wxT("Welsh");
-   localLanguageName[wxT("da")] = wxT("Dansk");
-   localLanguageName[wxT("de")] = wxT("Deutsch");
-   localLanguageName[wxT("el")] = wxT("Ellinika");
-   localLanguageName[wxT("en")] = wxT("English");
-   localLanguageName[wxT("es")] = wxT("Espanol");
-   localLanguageName[wxT("eu")] = wxT("Euskara");
-   localLanguageName[wxT("eu_ES")] = wxT("Euskara (Espainiako)");
-   localLanguageName[wxT("fa")] = wxT("Farsi");
-   localLanguageName[wxT("fi")] = wxT("Suomi");
-   localLanguageName[wxT("fr")] = wxT("Francais");
-   localLanguageName[wxT("ga")] = wxT("Gaeilge");
-   localLanguageName[wxT("gl")] = wxT("Galician");
-   localLanguageName[wxT("he")] = wxT("Hebrew");
-   localLanguageName[wxT("hi")] = wxT("Hindi");
-   localLanguageName[wxT("hr")] = wxT("Croatian");
-   localLanguageName[wxT("hu")] = wxT("Magyar");
-   localLanguageName[wxT("hy")] = wxT("Armenian");
-   localLanguageName[wxT("id")] = wxT("Bahasa Indonesia"); // aka Indonesian
-   localLanguageName[wxT("it")] = wxT("Italiano");
-   localLanguageName[wxT("ja")] = wxT("Nihongo");
-   localLanguageName[wxT("ka")] = wxT("Georgian");
-   localLanguageName[wxT("km")] = wxT("Khmer");
-   localLanguageName[wxT("ko")] = wxT("Korean");
-   localLanguageName[wxT("lt")] = wxT("Lietuviu");
-   localLanguageName[wxT("mk")] = wxT("Makedonski");
-   localLanguageName[wxT("my")] = wxT("Burmese");
-   localLanguageName[wxT("nb")] = wxT("Norsk");
-   localLanguageName[wxT("nl")] = wxT("Nederlands");
-   localLanguageName[wxT("oc")] = wxT("Occitan");
-   localLanguageName[wxT("pl")] = wxT("Polski");
-   localLanguageName[wxT("pt")] = wxT("Portugues");
-   localLanguageName[wxT("pt_BR")] = wxT("Portugues (Brasil)");
-   localLanguageName[wxT("ro")] = wxT("Romanian");
-   localLanguageName[wxT("ru")] = wxT("Russky");
-   localLanguageName[wxT("sk")] = wxT("Slovak");
-   localLanguageName[wxT("sl")] = wxT("Slovenscina");
-   localLanguageName[wxT("sr_RS")] = wxT("Serbian (Cyrillic)");
-   localLanguageName[wxT("sr_RS@latin")] = wxT("Serbian (Latin)");
-   localLanguageName[wxT("sv")] = wxT("Svenska");
-   localLanguageName[wxT("tg")] = wxT("Tajik");
-   localLanguageName[wxT("ta")] = wxT("Tamil");
-   localLanguageName[wxT("tr")] = wxT("Turkce");
-   localLanguageName[wxT("uk")] = wxT("Ukrainska");
-   localLanguageName[wxT("vi")] = wxT("Vietnamese");
-   // If we look up zh in wxLocale we get zh_TW hence we MUST look
-   // for zh_CN.
-   localLanguageName[wxT("zh_CN")] = wxT("Chinese (Simplified)");
-   localLanguageName[wxT("zh_TW")] = wxT("Chinese (Traditional)");
+   {
+      // The list of locales and associated self-names of languages
+      // is stored in an external resource file which is easier
+      // to edit as Unicode than C++ source code.
+      auto dir = FileNames::ResourcesDir();
+      wxTextFile file{dir + wxFILE_SEP_PATH + "LanguageNames.txt"};
+      file.Open();
+      for ( auto str = file.GetFirstLine(); !file.Eof();
+            str = file.GetNextLine() )
+      {
+         // Allow commenting-out of languages no longer supported
+         if (str[0] == '#')
+            continue;
+
+         auto code = str.BeforeFirst(' ');
+         auto name = str.AfterFirst(' ');
+         localLanguageName[code] = name;
+      }
+   }
 
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
 

@@ -98,6 +98,7 @@ Source: "{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
 
 Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "..\locale\LanguageNames.txt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 ; wxWidgets DLLs. Be specific (not *.dll) so we don't accidentally distribute avformat.dll, for example.
 ; Don't use the WXWIN environment variable, because...
