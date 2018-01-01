@@ -40,7 +40,6 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 #include <wx/dynlib.h>
-#include <wx/msgdlg.h>
 #include <wx/utils.h>
 #include <wx/timer.h>
 #include <wx/window.h>
@@ -56,6 +55,7 @@
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
+#include "../widgets/ErrorDialog.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
@@ -226,7 +226,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    if (twolame_init_params(encodeOptions) != 0)
    {
-      wxMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
+      AudacityMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
          _("Error"), wxICON_STOP);
       return ProgressResult::Cancelled;
    }
@@ -237,7 +237,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
-      wxMessageBox(_("Unable to open target file for writing"));
+      AudacityMessageBox(_("Unable to open target file for writing"));
       return ProgressResult::Cancelled;
    }
 

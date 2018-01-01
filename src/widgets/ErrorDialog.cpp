@@ -232,3 +232,8 @@ void ShowAliasMissingDialog(AudacityProject *parent,
    // PRL: answer is that the parent window guarantees destruction of the dialog
    // but in practice Destroy() in OnOK does that
 }
+
+extern wxString AudacityMessageBoxCaptionStr()
+{
+   return _("Message");
+}

@@ -12,11 +12,11 @@
 #include "../Audacity.h"
 
 #include <algorithm>
-#include <wx/msgdlg.h>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
 
 #include "../Experimental.h"
+#include "../widgets/ErrorDialog.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 #include "EffectRack.h"
@@ -717,7 +717,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
          }
       }
 
-      wxMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
+      AudacityMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
                                     PluginManager::Get().GetName(ID).c_str()),
                    _("Effect failed to initialize"));
 

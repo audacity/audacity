@@ -24,11 +24,11 @@ should be reference-counted.
 
 #include "../MemoryX.h"
 #include <wx/string.h>
-#include <wx/msgdlg.h>
 #include <wx/statusbr.h>
 #include "../widgets/ProgressDialog.h"
 #include "../commands/ResponseQueue.h"
 #include "../src/Project.h"
+#include "../widgets/ErrorDialog.h"
 
 /// Interface for objects that can receive command progress information
 class CommandProgressTarget /* not final */
@@ -96,14 +96,14 @@ public:
    void Update(const wxString &) override {}
 };
 
-/// Displays messages from a command in a wxMessageBox
+/// Displays messages from a command in an AudacityMessageBox
 class MessageBoxTarget final : public CommandMessageTarget
 {
 public:
    virtual ~MessageBoxTarget() {}
    void Update(const wxString &message) override
    {
-      wxMessageBox(message);
+      AudacityMessageBox(message);
    }
 };
 

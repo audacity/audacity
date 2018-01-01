@@ -32,7 +32,6 @@
 #include <wx/string.h>
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
-#include <wx/msgdlg.h>
 
 #include "ShuttleGui.h"
 #include "Project.h"
@@ -40,6 +39,7 @@
 #include "Prefs.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/HelpSystem.h"
+#include "widgets/ErrorDialog.h"
 
 #define TIMER_ID 7000
 
@@ -309,7 +309,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    // If project already exists then abort - we do not allow users to overwrite an existing project
    // unless it is the current project.
    if (wxFileExists(fName) && (pProject->GetFileName() != fName)) {
-      wxMessageDialog m(
+      AudacityMessageDialog m(
          NULL,
          _("The selected file name could not be used\nfor Timer Recording because it \
 would overwrite another project.\nPlease try again and select an original name."),
@@ -364,7 +364,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    this->TransferDataFromWindow();
    if (!m_TimeSpan_Duration.IsPositive())
    {
-      wxMessageBox(_("Duration is zero. Nothing will be recorded."),
+      AudacityMessageBox(_("Duration is zero. Nothing will be recorded."),
                      _("Error in Duration"), wxICON_EXCLAMATION | wxOK);
       return;
    }
@@ -373,14 +373,14 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    wxString sTemp = m_fnAutoSaveFile.GetFullPath();
    if (m_pTimerAutoSaveCheckBoxCtrl->IsChecked()) {
       if (!m_fnAutoSaveFile.IsOk() || m_fnAutoSaveFile.IsDir()) {
-         wxMessageBox(_("Automatic Save path is invalid."),
+         AudacityMessageBox(_("Automatic Save path is invalid."),
             _("Error in Automatic Save"), wxICON_EXCLAMATION | wxOK);
          return;
       }
    }
    if (m_pTimerAutoExportCheckBoxCtrl->IsChecked()) {
       if (!m_fnAutoExportFile.IsOk() || m_fnAutoExportFile.IsDir()) {
-         wxMessageBox(_("Automatic Export path is invalid."),
+         AudacityMessageBox(_("Automatic Export path is invalid."),
             _("Error in Automatic Export"), wxICON_EXCLAMATION | wxOK);
          return;
       }
@@ -416,7 +416,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
          sPlannedTime,
          sRemainingTime);
 
-      wxMessageDialog dlgMessage(NULL,
+      AudacityMessageDialog dlgMessage(NULL,
          sMessage,
          _("Timer Recording Disk Space Warning"),
          wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
@@ -469,7 +469,7 @@ bool TimerRecordDialog::HaveFilesToRecover()
 {
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened()) {
-      wxMessageBox(_("Could not enumerate files in auto save directory."),
+      AudacityMessageBox(_("Could not enumerate files in auto save directory."),
          _("Error"), wxICON_STOP);
       return false;
    }
@@ -492,7 +492,7 @@ bool TimerRecordDialog::RemoveAllAutoSaveFiles()
       {
          // I don't think this error message is actually useful.
          // -dmazzoni
-         //wxMessageBox(_("Could not remove auto save file: " + files[i]),
+         //AudacityMessageBox(_("Could not remove auto save file: " + files[i]),
          //             _("Error"), wxICON_STOP);
          return false;
       }
@@ -648,7 +648,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          }
 
          // Show Error Message Box
-         wxMessageBox(sMessage, _("Error"), wxICON_EXCLAMATION | wxOK);
+         AudacityMessageBox(sMessage, _("Error"), wxICON_EXCLAMATION | wxOK);
       } else {
 
          if (bWasStopped && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
@@ -657,7 +657,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
                             m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
 
-         wxMessageBox(sMessage, _("Timer Recording"), wxICON_INFORMATION | wxOK);
+         AudacityMessageBox(sMessage, _("Timer Recording"), wxICON_INFORMATION | wxOK);
       }
    }
 

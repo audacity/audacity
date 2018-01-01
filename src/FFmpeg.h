@@ -137,7 +137,6 @@ extern "C" {
 #include <wx/string.h>
 #include <wx/dynlib.h>
 #include <wx/log.h>      // for wxLogNull
-#include <wx/msgdlg.h>   // for wxMessageBox
 #include <wx/utils.h>
 #include "widgets/LinkingHtmlWindow.h"
 #include "ShuttleGui.h"

@@ -76,7 +76,6 @@
 #include <wx/utils.h>
 #include <wx/intl.h>
 #include <wx/textfile.h>
-#include <wx/msgdlg.h>
 #include <wx/tokenzr.h>
 
 #ifdef USE_MIDI
@@ -91,6 +90,7 @@
 #include "../FileFormats.h"
 #include "../Prefs.h"
 #include "../Internat.h"
+#include "../widgets/ErrorDialog.h"
 
 #define BINARY_FILE_CHECK_BUFFER_SIZE 1024
 
@@ -332,7 +332,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             else
             {
                /* i18n-hint: You do not need to translate "LOF" */
-               wxMessageBox(_("Invalid window offset in LOF file."),
+               AudacityMessageBox(_("Invalid window offset in LOF file."),
                             /* i18n-hint: You do not need to translate "LOF" */
                             _("LOF Error"), wxOK | wxCENTRE);
             }
@@ -353,7 +353,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             else
             {
                /* i18n-hint: You do not need to translate "LOF" */
-               wxMessageBox(_("Invalid duration in LOF file."),
+               AudacityMessageBox(_("Invalid duration in LOF file."),
                             /* i18n-hint: You do not need to translate "LOF" */
                             _("LOF Error"), wxOK | wxCENTRE);
             }
@@ -449,7 +449,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false) ||
                    targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
                {
-                  wxMessageBox(_("MIDI tracks cannot be offset individually, only audio files can be."),
+                  AudacityMessageBox(_("MIDI tracks cannot be offset individually, only audio files can be."),
                                _("LOF Error"), wxOK | wxCENTRE);
                }
                else
@@ -473,7 +473,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             else
             {
                /* i18n-hint: You do not need to translate "LOF" */
-               wxMessageBox(_("Invalid track offset in LOF file."),
+               AudacityMessageBox(_("Invalid track offset in LOF file."),
                             _("LOF Error"), wxOK | wxCENTRE);
             }
          }     // End if statement for "offset" parameters

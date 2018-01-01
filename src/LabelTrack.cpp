@@ -47,7 +47,6 @@ for drawing different aspects of the label and its text box.
 #include <wx/event.h>
 #include <wx/intl.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/pen.h>
 #include <wx/string.h>
 #include <wx/textfile.h>
@@ -69,6 +68,7 @@ for drawing different aspects of the label and its text box.
 #include "commands/CommandManager.h"
 
 #include "effects/TimeWarper.h"
+#include "widgets/ErrorDialog.h"
 
 enum
 {
@@ -2285,7 +2285,7 @@ void LabelTrack::Import(wxTextFile & in)
       catch(const LabelStruct::BadFormatException&) { error = true; }
    }
    if (error)
-      ::wxMessageBox( _("One or more saved labels could not be read.") );
+      ::AudacityMessageBox( _("One or more saved labels could not be read.") );
    SortLabels();
 }
 

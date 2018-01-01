@@ -25,7 +25,6 @@
 #include <wx/gdicmn.h>
 #include <wx/intl.h>
 #include <wx/listbox.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
 #include <wx/listbook.h>

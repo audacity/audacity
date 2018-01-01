@@ -30,7 +30,6 @@
 #include <wx/radiobut.h>
 #include <wx/button.h>
 #include <wx/imaglist.h>
-#include <wx/msgdlg.h>
 #include <wx/settings.h>
 
 #include "AudacityException.h"
@@ -52,6 +51,7 @@
 #include "FileDialog.h"
 #include "FileNames.h"
 #include "import/Import.h"
+#include "widgets/ErrorDialog.h"
 
 #define ChainsListID       7001
 #define CommandsListID     7002
@@ -150,7 +150,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
    if (item == -1) {
-      wxMessageBox(_("No chain selected"));
+      AudacityMessageBox(_("No chain selected"));
       return;
    }
    wxString name = mChains->GetItemText(item);
@@ -224,7 +224,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
    if (item == -1) {
-      wxMessageBox(_("No chain selected"));
+      AudacityMessageBox(_("No chain selected"));
       return;
    }
 
@@ -234,7 +234,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    AudacityProject *project = GetActiveProject();
    if (!project->GetIsEmpty()) {
-      wxMessageBox(_("Please save and close the current project first."));
+      AudacityMessageBox(_("Please save and close the current project first."));
       return;
    }
 
@@ -280,7 +280,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    }
 
    auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
-   FileDialog dlog(this,
+   FileDialogWrapper dlog(this,
                    prompt,
                    path,
                    wxT(""),
@@ -645,7 +645,7 @@ bool EditChainsDialog::ChangeOK()
       title.Printf(_("%s changed"), mActiveChain.c_str());
       msg = _("Do you want to save the changes?");
 
-      id = wxMessageBox(msg, title, wxYES_NO | wxCANCEL);
+      id = AudacityMessageBox(msg, title, wxYES_NO | wxCANCEL);
       if (id == wxCANCEL) {
          return false;
       }
@@ -779,7 +779,7 @@ void EditChainsDialog::OnChainsEndEdit(wxListEvent &event)
 void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    while (true) {
-      wxTextEntryDialog d(this,
+      AudacityTextEntryDialog d(this,
                           _("Enter name of new chain"),
                           _("Name of new chain"));
       d.SetName(d.GetTitle());
@@ -792,7 +792,7 @@ void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
       name = d.GetValue().Strip(wxString::both);
 
       if (name.Length() == 0) {
-         wxMessageBox(_("Name must not be blank"),
+         AudacityMessageBox(_("Name must not be blank"),
                       GetTitle(),
                       wxOK | wxICON_ERROR,
                       this);
@@ -802,7 +802,7 @@ void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
       if (name.Contains(wxFILE_SEP_PATH) ||
           name.Contains(wxFILE_SEP_PATH_UNIX)) {
          /*i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.*/
-         wxMessageBox(wxString::Format(_("Names may not contain '%c' and '%c'"),
+         AudacityMessageBox(wxString::Format(_("Names may not contain '%c' and '%c'"),
                       wxFILE_SEP_PATH, wxFILE_SEP_PATH_UNIX),
                       GetTitle(),
                       wxOK | wxICON_ERROR,
@@ -831,7 +831,7 @@ void EditChainsDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    }
 
    wxString name = mChains->GetItemText(item);
-   wxMessageDialog m(this,
+   AudacityMessageDialog m(this,
    /*i18n-hint: %s will be replaced by the name of a file.*/
                      wxString::Format(_("Are you sure you want to delete %s?"), name.c_str()),
                      GetTitle(),

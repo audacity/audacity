@@ -71,7 +71,6 @@ scroll information.  It also has some status flags.
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/menu.h>
-#include <wx/msgdlg.h>
 #include <wx/notebook.h>
 #include <wx/progdlg.h>
 #include <wx/scrolbar.h>
@@ -2539,7 +2538,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          {
           Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
          }
-         int result = wxMessageBox( Message,
+         int result = AudacityMessageBox( Message,
                                     Title,
                                    wxYES_NO | wxCANCEL | wxICON_QUESTION,
                                    this);
@@ -2816,7 +2815,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    // Construct and display the file dialog
    wxArrayString selected;
 
-   FileDialog dlog(NULL,
+   FileDialogWrapper dlog(NULL,
                    _("Select one or more files"),
                    path,
                    wxT(""),
@@ -2856,7 +2855,7 @@ bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
             wxString::Format(_("%s is already open in another window."),
                               newProjPathName.GetName().c_str());
          wxLogError(errMsg);
-         wxMessageBox(errMsg, _("Error Opening Project"), wxOK | wxCENTRE);
+         AudacityMessageBox(errMsg, _("Error Opening Project"), wxOK | wxCENTRE);
          return true;
       }
    }
@@ -2936,7 +2935,7 @@ bool AudacityProject::WarnOfLegacyFile( )
 
    // Stop icon, and choose 'NO' by default.
    int action =
-      wxMessageBox(msg,
+      AudacityMessageBox(msg,
                    _("Warning - Opening Old Project File"),
                    wxYES_NO | wxICON_STOP | wxNO_DEFAULT | wxCENTRE,
                    this);
@@ -2982,7 +2981,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    // So we always refuse to open such files.
    if (fileName.Lower().EndsWith(wxT(".aup.bak")))
    {
-      wxMessageBox(
+      AudacityMessageBox(
          _("You are trying to open an automatically created backup file.\nDoing this may result in severe data loss.\n\nPlease open the actual Audacity project file instead."),
          _("Warning - Backup File Detected"),
          wxOK | wxCENTRE, this);
@@ -2990,7 +2989,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    }
 
    if (!::wxFileExists(fileName)) {
-      wxMessageBox(_("Could not open file: ") + fileName,
+      AudacityMessageBox(_("Could not open file: ") + fileName,
                    _("Error Opening File"),
                    wxOK | wxCENTRE, this);
       return;
@@ -3005,14 +3004,14 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    {
       wxFFile ff(fileName, wxT("rb"));
       if (!ff.IsOpened()) {
-         wxMessageBox(_("Could not open file: ") + fileName,
+         AudacityMessageBox(_("Could not open file: ") + fileName,
             _("Error opening file"),
             wxOK | wxCENTRE, this);
          return;
       }
       int numRead = ff.Read(buf, 15);
       if (numRead != 15) {
-         wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
+         AudacityMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
             (const wxChar*)fileName), _("Error Opening File or Project"),
             wxOK | wxCENTRE, this);
          ff.Close();
@@ -3031,7 +3030,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       // Convert to the NEW format.
       bool success = ConvertLegacyProjectFile(wxFileName{ fileName });
       if (!success) {
-         wxMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
+         AudacityMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
                       _("Error Opening Project"),
                       wxOK | wxCENTRE, this);
          return;
@@ -3073,7 +3072,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       AutoSaveFile asf;
       if (!asf.Decode(fileName))
       {
-         wxMessageBox(_("Could not decode file: ") + fileName,
+         AudacityMessageBox(_("Could not decode file: ") + fileName,
                       _("Error decoding file"),
                       wxOK | wxCENTRE, this);
          return;
@@ -3207,7 +3206,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          this->PushState(_("Project was recovered"), _("Recover"));
 
          if (!wxRemoveFile(fileName))
-            wxMessageBox(_("Could not remove old auto save file"),
+            AudacityMessageBox(_("Could not remove old auto save file"),
                          _("Error"), wxICON_STOP, this);
       }
       else
@@ -3288,7 +3287,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       SetProjectTitle();
 
       wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName.c_str(), xmlFile.GetErrorStr().c_str());
-      wxMessageBox(xmlFile.GetErrorStr(),
+      AudacityMessageBox(xmlFile.GetErrorStr(),
                    _("Error Opening Project"),
                    wxOK | wxCENTRE, this);
    }
@@ -3461,7 +3460,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             {
                projName = GetName() + wxT("_data");
                if (!mDirManager->SetProject(projPath, projName, false)) {
-                  wxMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
+                  AudacityMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
                                              projName.c_str()),
                                              _("Error Opening Project"),
                                              wxOK | wxCENTRE, this);
@@ -3520,7 +3519,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       msg.Printf(_("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file."),
                  audacityVersion.c_str(),
                  AUDACITY_VERSION_STRING);
-      wxMessageBox(msg,
+      AudacityMessageBox(msg,
                    _("Can't open project file"),
                    wxOK | wxICON_EXCLAMATION | wxCENTRE, this);
       return false;
@@ -3552,7 +3551,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          // Stop icon, and choose 'NO' by default.
          icon_choice = wxICON_STOP | wxNO_DEFAULT;
       int action =
-         wxMessageBox(msg,
+         AudacityMessageBox(msg,
                       _("Warning - Opening Old Project File"),
                       wxYES_NO | icon_choice | wxCENTRE,
                       this);
@@ -3781,7 +3780,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       if (!bHasTracks)
       {
          if (GetUndoManager()->UnsavedChanges() && mEmptyCanBeDirty) {
-            int result = wxMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
+            int result = AudacityMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
                                       _("Warning - Empty Project"),
                                       wxYES_NO | wxICON_QUESTION, this);
             if (result == wxNO)
@@ -3822,7 +3821,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          wxRemoveFile(safetyFileName);
 
       if ( !wxRenameFile(mFileName, safetyFileName) ) {
-         wxMessageBox(_("Could not create safety file: ") + safetyFileName,
+         AudacityMessageBox(_("Could not create safety file: ") + safetyFileName,
                       _("Error"), wxICON_STOP, this);
          return false;
       }
@@ -3841,7 +3840,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       // mStrOtherNamesArray is a temporary array of file names, used only when
       // saving compressed
       if (!success) {
-         wxMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
+         AudacityMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
                                        project.c_str()),
                       _("Error Saving Project"),
                       wxICON_ERROR, this);
@@ -3866,7 +3865,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       projPath = wxPathOnly(project);
 
       if( !wxDir::Exists( projPath ) ){
-         wxMessageBox(wxString::Format(
+         AudacityMessageBox(wxString::Format(
             _("Could not save project. Path not found.  Try creating \ndirectory \"%s\" before saving project with this name."),
             projPath.c_str()),
                       _("Error Saving Project"),
@@ -4301,7 +4300,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if( !bOwnsNewAupName && wxFileExists(newFileName)) {
-      wxMessageDialog m(
+      AudacityMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
          _("Error Saving Project"),
@@ -4402,7 +4401,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if (!bOwnsNewAupName && filename.FileExists()) {
-      wxMessageDialog m(
+      AudacityMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
          _("Error Saving Project"),
@@ -5282,7 +5281,7 @@ void AudacityProject::AutoSave()
 
    if (!wxRenameFile(fn + wxT(".tmp"), fn + wxT(".autosave")))
    {
-      wxMessageBox(_("Could not create autosave file: ") + fn +
+      AudacityMessageBox(_("Could not create autosave file: ") + fn +
                    wxT(".autosave"), _("Error"), wxICON_STOP, this);
       return;
    }
@@ -5301,7 +5300,7 @@ void AudacityProject::DeleteCurrentAutoSaveFile()
       {
          if (!wxRemoveFile(mAutoSaveFileName))
          {
-            wxMessageBox(_("Could not remove old autosave file: ") +
+            AudacityMessageBox(_("Could not remove old autosave file: ") +
                          mAutoSaveFileName, _("Error"), wxICON_STOP, this);
             return;
          }

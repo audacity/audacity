@@ -20,7 +20,6 @@ and on Mac OS X for the filesystem.
 
 *//*******************************************************************/
 
-#include <wx/msgdlg.h>
 #include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
@@ -243,7 +242,7 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
       wxFileName ff(name);
       wxString ext;
       while ((char *) (const char *)name.mb_str() == NULL) {
-         wxMessageBox(_("The specified filename could not be converted due to Unicode character use."));
+         AudacityMessageBox(_("The specified filename could not be converted due to Unicode character use."));
 
          ext = ff.GetExt();
          name = FileNames::SelectFile(FileNames::Operation::_None,

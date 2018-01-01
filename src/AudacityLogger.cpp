@@ -23,11 +23,11 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/log.h>
 #include <wx/frame.h>
 #include <wx/icon.h>
-#include <wx/msgdlg.h>
 #include <wx/settings.h>
 
 #include "../images/AudacityLogoAlpha.xpm"
 #include "Experimental.h"
+#include "widgets/ErrorDialog.h"
 
 //
 // AudacityLogger class
@@ -307,7 +307,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
    }
 
    if (!mText->SaveFile(fName)) {
-      wxMessageBox(_("Couldn't save log to file: ") + fName,
+      AudacityMessageBox(_("Couldn't save log to file: ") + fName,
                    _("Warning"),
                    wxICON_EXCLAMATION,
                    mFrame.get());

@@ -51,7 +51,6 @@ and in the spectrogram spectral selection.
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/dcmemory.h>
-#include <wx/msgdlg.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
 #include <wx/intl.h>
@@ -84,6 +83,7 @@ and in the spectrogram spectral selection.
 
 #include "./widgets/LinkingHtmlWindow.h"
 #include "./widgets/HelpSystem.h"
+#include "widgets/ErrorDialog.h"
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
@@ -590,7 +590,7 @@ void FreqWindow::GetAudio()
          }
          else {
             if (track->GetRate() != mRate) {
-               wxMessageBox(_("To plot the spectrum, all selected tracks must be the same sample rate."));
+               AudacityMessageBox(_("To plot the spectrum, all selected tracks must be the same sample rate."));
                mData.reset();
                mDataLen = 0;
                return;
@@ -615,7 +615,7 @@ void FreqWindow::GetAudio()
       wxString msg;
       msg.Printf(_("Too much audio was selected.  Only the first %.1f seconds of audio will be analyzed."),
                           (mDataLen / mRate));
-      wxMessageBox(msg);
+      AudacityMessageBox(msg);
    }
 }
 
@@ -1055,7 +1055,7 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      wxMessageBox(_("Couldn't write to file: ") + fName);
+      AudacityMessageBox(_("Couldn't write to file: ") + fName);
       return;
    }
 

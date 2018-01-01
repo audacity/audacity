@@ -21,7 +21,6 @@ See also BatchCommandDialog and BatchProcessDialog.
 
 #include <wx/defs.h>
 #include <wx/dir.h>
-#include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include <wx/textfile.h>
 
@@ -43,6 +42,7 @@ See also BatchCommandDialog and BatchProcessDialog.
 #include "AllThemeResources.h"
 
 #include "Track.h"
+#include "widgets/ErrorDialog.h"
 
 // KLUDGE: All commands should be on the same footing
 // however, for historical reasons we distinguish between
@@ -366,13 +366,13 @@ double BatchCommands::GetEndTime()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( _("No project to process!") );
+      //AudacityMessageBox( _("No project to process!") );
       return -1.0;
    }
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( _("No tracks to process!") );
+      //AudacityMessageBox( _("No tracks to process!") );
       return -1.0;
    }
 
@@ -385,14 +385,14 @@ bool BatchCommands::IsMono()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( _("No project and no Audio to process!") );
+      //AudacityMessageBox( _("No project and no Audio to process!") );
       return false;
    }
 
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( _("No tracks to process!") );
+      //AudacityMessageBox( _("No tracks to process!") );
       return false;
    }
 
@@ -435,7 +435,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
 //      double startTime = 0.0;
       //OnSelectAll();
       pathName = FileNames::FindDefaultPath(FileNames::Operation::Export);
-      ::wxMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
+      ::AudacityMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
             pathName.c_str(), cleanedString.c_str(), justName.c_str(), extension.c_str()),
          _("Export recording"),
          wxOK | wxCENTRE);
@@ -445,7 +445,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
    cleanedName += cleanedString;
    bool flag  = ::wxFileName::FileExists(cleanedName);
    if (flag == true) {
-      ::wxMessageBox(_("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
+      ::AudacityMessageBox(_("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
       return wxString{};
    }
    ::wxFileName::Mkdir(cleanedName, 0777, wxPATH_MKDIR_FULL); // make sure it exists
@@ -569,7 +569,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       }
       return mExporter.Process(project, numChannels, wxT("OGG"), filename, false, 0.0, endTime);
 #else
-      wxMessageBox(_("Ogg Vorbis support is not included in this build of Audacity"));
+      AudacityMessageBox(_("Ogg Vorbis support is not included in this build of Audacity"));
       return false;
 #endif
    } else if (command == wxT("ExportFLAC")) {
@@ -581,11 +581,11 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       }
       return mExporter.Process(project, numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
 #else
-      wxMessageBox(_("FLAC support is not included in this build of Audacity"));
+      AudacityMessageBox(_("FLAC support is not included in this build of Audacity"));
       return false;
 #endif
    }
-   wxMessageBox(wxString::Format(_("Command %s not implemented yet"),command.c_str()));
+   AudacityMessageBox(wxString::Format(_("Command %s not implemented yet"),command.c_str()));
    return false;
 }
 // end CLEANSPEECH remnant
@@ -639,7 +639,7 @@ bool BatchCommands::ApplyCommand(const wxString & command, const wxString & para
       return ApplyEffectCommand(ID, command, params);
    }
 
-   wxMessageBox(
+   AudacityMessageBox(
       wxString::Format(
       _("Your batch command of %s was not recognized."), command.c_str() ));
 
@@ -762,12 +762,12 @@ bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & par
    //TODO: Add a cancel button to these, and add the logic so that we can abort.
    if( params != wxT("") )
    {
-      wxMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),command.c_str(), params.c_str()),
+      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),command.c_str(), params.c_str()),
          _("Test Mode"));
    }
    else
    {
-      wxMessageBox( wxString::Format(_("Apply %s"),command.c_str()),
+      AudacityMessageBox( wxString::Format(_("Apply %s"),command.c_str()),
          _("Test Mode"));
    }
    return true;

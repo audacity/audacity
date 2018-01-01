@@ -19,7 +19,6 @@ Paul Licameli
 #include "../TranslatableStringArray.h"
 
 #include <algorithm>
-#include <wx/msgdlg.h>
 
 #include "../FFT.h"
 #include "../Prefs.h"
@@ -28,6 +27,7 @@ Paul Licameli
 #include <cmath>
 
 #include "../Experimental.h"
+#include "../widgets/ErrorDialog.h"
 
 SpectrogramSettings::Globals::Globals()
 {
@@ -186,7 +186,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 {
    if (!quiet &&
       maxFreq < 100) {
-      wxMessageBox(_("Maximum frequency must be 100 Hz or above"));
+      AudacityMessageBox(_("Maximum frequency must be 100 Hz or above"));
       return false;
    }
    else
@@ -194,7 +194,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       minFreq < 0) {
-      wxMessageBox(_("Minimum frequency must be at least 0 Hz"));
+      AudacityMessageBox(_("Minimum frequency must be at least 0 Hz"));
       return false;
    }
    else
@@ -202,7 +202,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       maxFreq <= minFreq) {
-      wxMessageBox(_("Minimum frequency must be less than maximum frequency"));
+      AudacityMessageBox(_("Minimum frequency must be less than maximum frequency"));
       return false;
    }
    else
@@ -210,7 +210,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       range <= 0) {
-      wxMessageBox(_("The range must be at least 1 dB"));
+      AudacityMessageBox(_("The range must be at least 1 dB"));
       return false;
    }
    else
@@ -218,12 +218,12 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       frequencyGain < 0) {
-      wxMessageBox(_("The frequency gain cannot be negative"));
+      AudacityMessageBox(_("The frequency gain cannot be negative"));
       return false;
    }
    else if (!quiet &&
       frequencyGain > 60) {
-      wxMessageBox(_("The frequency gain must be no more than 60 dB/dec"));
+      AudacityMessageBox(_("The frequency gain must be no more than 60 dB/dec"));
       return false;
    }
    else

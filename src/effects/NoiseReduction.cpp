@@ -45,6 +45,7 @@
 #include "../Prefs.h"
 
 #include "../WaveTrack.h"
+#include "../widgets/ErrorDialog.h"
 
 #include <algorithm>
 #include <vector>
@@ -206,7 +207,7 @@ public:
    bool PromptUser(EffectNoiseReduction *effect,
       wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings);
    bool PrefsIO(bool read);
-   bool Validate() const;
+   bool Validate(EffectNoiseReduction *effect) const;
 
    size_t WindowSize() const { return 1u << (3 + mWindowSizeChoice); }
    unsigned StepsPerWindow() const { return 1u << (1 + mStepsPerWindowChoice); }
@@ -576,20 +577,20 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
    }
 }
 
-bool EffectNoiseReduction::Settings::Validate() const
+bool EffectNoiseReduction::Settings::Validate(EffectNoiseReduction *effect) const
 {
    if (StepsPerWindow() < windowTypesInfo[mWindowTypes].minSteps) {
-      ::wxMessageBox(_("Steps per block are too few for the window types."));
+      effect->Effect::MessageBox(_("Steps per block are too few for the window types."));
       return false;
    }
 
    if (StepsPerWindow() > WindowSize()) {
-      ::wxMessageBox(_("Steps per block cannot exceed the window size."));
+      effect->Effect::MessageBox(_("Steps per block cannot exceed the window size."));
       return false;
    }
 
    if (mMethod == DM_MEDIAN && StepsPerWindow() > 4) {
-      ::wxMessageBox(_("Median method is not implemented for more than four steps per window."));
+      effect->Effect::MessageBox(_("Median method is not implemented for more than four steps per window."));
       return false;
    }
 
@@ -616,12 +617,12 @@ bool EffectNoiseReduction::Process()
    }
    else if (mStatistics->mWindowSize != mSettings->WindowSize()) {
       // possible only with advanced settings
-      ::wxMessageBox(_("You must specify the same window size for steps 1 and 2."));
+      ::Effect::MessageBox(_("You must specify the same window size for steps 1 and 2."));
       return false;
    }
    else if (mStatistics->mWindowTypes != mSettings->mWindowTypes) {
       // A warning only
-      ::wxMessageBox(_("Warning: window types are not the same as for profiling."));
+      ::Effect::MessageBox(_("Warning: window types are not the same as for profiling."));
    }
 
    Worker worker(*mSettings, mStatistics->mRate
@@ -653,9 +654,9 @@ bool EffectNoiseReduction::Worker::Process
    while (track) {
       if (track->GetRate() != mSampleRate) {
          if (mDoProfile)
-            ::wxMessageBox(_("All noise profile data must have the same sample rate."));
+            effect.Effect::MessageBox(_("All noise profile data must have the same sample rate."));
          else
-            ::wxMessageBox(_("The sample rate of the noise profile must match that of the sound to be processed."));
+            effect.Effect::MessageBox(_("The sample rate of the noise profile must match that of the sound to be processed."));
          return false;
       }
 
@@ -679,7 +680,7 @@ bool EffectNoiseReduction::Worker::Process
 
    if (mDoProfile) {
       if (statistics.mTotalWindows == 0) {
-         ::wxMessageBox(_("Selected noise profile is too short."));
+         effect.Effect::MessageBox(_("Selected noise profile is too short."));
          return false;
       }
    }
@@ -1851,7 +1852,7 @@ bool EffectNoiseReduction::Dialog::TransferDataFromWindow()
    wxCommandEvent dummy;
    OnNoiseReductionChoice(dummy);
 
-   return mTempSettings.Validate();
+   return mTempSettings.Validate(m_pEffect);
 }
 
 void EffectNoiseReduction::Dialog::OnText(wxCommandEvent &event)

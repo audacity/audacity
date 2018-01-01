@@ -41,7 +41,6 @@ a graph for EffectScienFilter.
 #include <wx/brush.h>
 #include <wx/dcmemory.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/utils.h>
 #include <wx/valgen.h>
@@ -55,6 +54,7 @@ a graph for EffectScienFilter.
 #include "../Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "Equalization.h" // For SliderAx
 
@@ -348,7 +348,7 @@ bool EffectScienFilter::Init()
          {
             if (t->GetRate() != rate)
             {
-               wxMessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
+               Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
                return false;
             }
          }

@@ -71,7 +71,6 @@ void GetMP3ImportPlugin(ImportPluginList &importPluginList,
 #include <wx/textctrl.h>
 #include <wx/file.h>
 #include <wx/thread.h>
-#include <wx/msgdlg.h>
 #include <wx/progdlg.h>
 #include <wx/string.h>
 #include <wx/timer.h>

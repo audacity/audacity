@@ -25,7 +25,6 @@ function.
 #include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/timer.h>
-#include <wx/msgdlg.h>
 #include <wx/progdlg.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
@@ -41,6 +40,7 @@ function.
 #include "../Project.h"
 #include "../Tags.h"
 #include "../Track.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "Export.h"
 #include "ExportFFmpeg.h"
@@ -63,7 +63,7 @@ static bool CheckFFmpegPresence(bool quiet = false)
    {
       if (!quiet)
       {
-         wxMessageBox(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
+         AudacityMessageBox(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
       }
       result = false;
    }
@@ -279,7 +279,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // and the default video/audio codecs that the format uses.
    if ((mEncFormatDesc = av_guess_format(shortname, OSINPUT(mName), NULL)) == NULL)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't determine format description for file \"%s\"."), mName.c_str()),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't determine format description for file \"%s\"."), mName.c_str()),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -288,7 +288,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    mEncFormatCtx.reset(avformat_alloc_context());
    if (!mEncFormatCtx)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't allocate output format context.")),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't allocate output format context.")),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -301,7 +301,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // At the moment Audacity can export only one audio stream
    if ((mEncAudioStream = avformat_new_stream(mEncFormatCtx.get(), NULL)) == NULL)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."), mName.c_str()),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."), mName.c_str()),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -326,7 +326,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    {
       if ((err = ufile_fopen(&mEncFormatCtx->pb, mName, AVIO_FLAG_WRITE)) < 0)
       {
-         wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), mName.c_str(), err),
+         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), mName.c_str(), err),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return false;
       }
@@ -352,7 +352,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // Write headers to the output file.
    if ((err = avformat_write_header(mEncFormatCtx.get(), NULL)) < 0)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."), mName.c_str(),err),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."), mName.c_str(),err),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -492,7 +492,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    // Is the required audio codec compiled into libavcodec?
    if (codec == NULL)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg cannot find audio codec 0x%x.\nSupport for this codec is probably not compiled in."), (unsigned int) mEncAudioCodecCtx->codec_id),
+      AudacityMessageBox(wxString::Format(_("FFmpeg cannot find audio codec 0x%x.\nSupport for this codec is probably not compiled in."), (unsigned int) mEncAudioCodecCtx->codec_id),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -525,7 +525,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    // Open the codec.
    if (avcodec_open2(mEncAudioCodecCtx.get(), codec, &options) < 0)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open audio codec 0x%x."),mEncAudioCodecCtx->codec_id),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open audio codec 0x%x."),mEncAudioCodecCtx->codec_id),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -546,7 +546,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    mEncAudioFifoOutBuf.reset(static_cast<int16_t*>(av_malloc(mEncAudioFifoOutBufSiz)));
    if (!mEncAudioFifoOutBuf)
    {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.")),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.")),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -576,13 +576,13 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
       buffer_size = av_samples_get_buffer_size(NULL, avctx->channels, frame->nb_samples,
                                               avctx->sample_fmt, 0);
       if (buffer_size < 0) {
-         wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not get sample buffer size")),
+         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not get sample buffer size")),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return buffer_size;
       }
       samples.reset(static_cast<uint8_t*>(av_malloc(buffer_size)));
       if (!samples) {
-         wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not allocate bytes for samples buffer")),
+         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not allocate bytes for samples buffer")),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return AVERROR(ENOMEM);
       }
@@ -590,7 +590,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
       ret = avcodec_fill_audio_frame(frame.get(), avctx->channels, avctx->sample_fmt,
                                   samples.get(), buffer_size, 0);
       if (ret < 0) {
-         wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not setup audio frame")),
+         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not setup audio frame")),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return ret;
       }
@@ -638,7 +638,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
 
    ret = avcodec_encode_audio2(avctx, pkt, frame.get(), &got_output);
    if (ret < 0) {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - encoding frame failed")),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - encoding frame failed")),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return ret;
    }
@@ -664,7 +664,7 @@ bool ExportFFmpeg::Finalize()
          int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
 
          if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz || nFifoBytes > mEncAudioFifoOutBufSiz) {
-            wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Too much remaining data.")),
+            AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Too much remaining data.")),
                _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION);
             return false;
          }
@@ -727,7 +727,7 @@ bool ExportFFmpeg::Finalize()
 
          if (av_interleaved_write_frame(mEncFormatCtx.get(), &pkt) != 0)
          {
-            wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Couldn't write last audio frame to output file.")),
+            AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Couldn't write last audio frame to output file.")),
                _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION);
             break;
          }
@@ -777,7 +777,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
       return false;
 
    if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz) {
-      wxMessageBox(wxString::Format(_("FFmpeg : ERROR - nAudioFrameSizeOut too large.")),
+      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - nAudioFrameSizeOut too large.")),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -795,7 +795,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
          default_frame_size);
       if (ret < 0)
       {
-         wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't encode audio frame.")),
+         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't encode audio frame.")),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return false;
       }
@@ -814,7 +814,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
       // Write the encoded audio frame to the output file.
       if ((ret = av_interleaved_write_frame(mEncFormatCtx.get(), &pkt)) < 0)
       {
-         wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Failed to write audio frame to file.")),
+         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Failed to write audio frame to file.")),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return false;
       }
@@ -834,7 +834,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    mSubFormat = AdjustFormatIndex(subformat);
    if (channels > ExportFFmpegOptions::fmts[mSubFormat].maxchannels)
    {
-      wxMessageBox(
+      AudacityMessageBox(
          wxString::Format(
                _("Attempted to export %d channels, but maximum number of channels for selected output format is %d"),
                channels,

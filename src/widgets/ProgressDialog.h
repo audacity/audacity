@@ -26,7 +26,6 @@
 #include <wx/gauge.h>
 #include <wx/stattext.h>
 #include <wx/utils.h>
-#include <wx/msgdlg.h>
 
 #include "wxPanelWrapper.h"
 

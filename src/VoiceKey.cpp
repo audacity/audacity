@@ -22,17 +22,16 @@ or "OFF" point
 
 #include "VoiceKey.h"
 #include <wx/string.h>
-#include <wx/msgdlg.h>
 #include <math.h>
 #include <stdio.h>
 
 #include <wx/filedlg.h>
-#include <wx/msgdlg.h>
 #include <wx/textfile.h>
 #include <wx/intl.h>
 #include <iostream>
 
 #include "WaveTrack.h"
+#include "widgets/ErrorDialog.h"
 
 using std::cout;
 using std::endl;
@@ -96,7 +95,7 @@ sampleCount VoiceKey::OnForward (
          backwards by words.  So 'key' is being used in the sense of an index.
          This error message means that you've selected too short
          a region of audio to be able to use this feature.*/
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
       return start;
    }
    else {
@@ -244,7 +243,7 @@ sampleCount VoiceKey::OnBackward (
 
    if((mWindowSize) >= (len + 10).as_double() ){
 
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
       return end;
    }
    else {
@@ -381,7 +380,7 @@ sampleCount VoiceKey::OffForward (
 {
 
    if((mWindowSize) >= (len + 10).as_double() ){
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
 
       return start;
    }
@@ -519,7 +518,7 @@ sampleCount VoiceKey::OffBackward (
 
    if((mWindowSize) >= (len + 10).as_double() ){
 
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
       return end;
    }
    else {
@@ -817,7 +816,7 @@ void VoiceKey::CalibrateNoise(const WaveTrack & t, sampleCount start, sampleCoun
    text +=           wxString::Format(_("Energy                  -- mean: %1.4f  sd: (%1.4f)\n"),mEnergyMean,mEnergySD);
    text+=            wxString::Format(_("Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"),mSignChangesMean,mSignChangesSD);
    text += wxString::Format(_("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"), mDirectionChangesMean, mDirectionChangesSD);
-   wxMessageDialog{ NULL, text,
+   AudacityMessageDialog{ NULL, text,
       _("Calibration Complete"),
       wxOK | wxICON_INFORMATION,
       wxPoint(-1, -1) }

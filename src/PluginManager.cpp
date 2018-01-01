@@ -41,6 +41,7 @@
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "effects/EffectManager.h"
+#include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
 
 #include "PluginManager.h"
@@ -1009,7 +1010,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                }
             }
             if (!errMsgs.empty())
-               ::wxMessageBox( wxString::Format(
+               AudacityMessageBox( wxString::Format(
                   _("Effect at %s failed to register:\n%s"),
                   path, errMsgs
                ) );
@@ -1778,7 +1779,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             dst.SetFullName( src.GetFullName() );
             if ( dst.Exists() ) {
                // Query whether to overwrite
-               bool overwrite = (wxYES == ::wxMessageBox(
+               bool overwrite = (wxYES == ::AudacityMessageBox(
                   wxString::Format(_("Overwrite the plug-in file %s ?"),
                                    dst.GetFullPath() ),
                   _("Plug-in already exists"),
@@ -1803,7 +1804,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             }
 
             if (!copied) {
-               ::wxMessageBox(
+               ::AudacityMessageBox(
                   _("Plug-in file is in use.  Failed to overwrite"));
                return true;
             }
@@ -1824,7 +1825,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded
-               ::wxMessageBox( wxString::Format(
+               ::AudacityMessageBox( wxString::Format(
                   _("Failed to register:\n%s"), errMsg ) );
                return true;
             }
@@ -1839,7 +1840,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                format += wxT("\n");
                for (const auto &name : names)
                   format += name + wxT("\n");
-               bool enable = (wxYES == ::wxMessageBox(
+               bool enable = (wxYES == ::AudacityMessageBox(
                   wxString::Format( format, nIds ),
                   _("Enable new plug-ins"),
                   wxYES_NO

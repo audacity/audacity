@@ -20,7 +20,6 @@
 #include <wx/defs.h>
 #include <wx/dc.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/print.h>
 #include <wx/printdlg.h>
 
@@ -29,6 +28,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/Ruler.h"
+#include "widgets/ErrorDialog.h"
 
 #include "Experimental.h"
 
@@ -163,7 +163,7 @@ void HandlePrint(wxWindow *parent, const wxString &name, TrackList *tracks)
    AudacityPrintout printout(name, tracks);
    if (!printer.Print(parent, &printout, true)) {
       if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
-         wxMessageBox(_("There was a problem printing."),
+         AudacityMessageBox(_("There was a problem printing."),
                       _("Print"), wxOK);
       }
       else {

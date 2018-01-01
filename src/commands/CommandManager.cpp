@@ -83,7 +83,6 @@ CommandManager.  It holds the callback for one command.
 #include <wx/hash.h>
 #include <wx/intl.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/tokenzr.h>
 
 #include "../AudacityException.h"
@@ -1710,7 +1709,7 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 void CommandManager::HandleXMLEndTag(const wxChar *tag)
 {
    if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
-      wxMessageBox(wxString::Format(_("Loaded %d keyboard shortcuts\n"),
+      AudacityMessageBox(wxString::Format(_("Loaded %d keyboard shortcuts\n"),
                                     mXMLKeysRead),
                    _("Loading Keyboard Shortcuts"),
                    wxOK | wxCENTRE);

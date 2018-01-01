@@ -25,7 +25,6 @@
 #include <wx/evtloop.h>
 #endif
 
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/tokenzr.h>
@@ -38,6 +37,7 @@
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
+#include "../../widgets/ErrorDialog.h"
 
 #include "lilv/lilv.h"
 #include "suil/suil.h"
@@ -1034,7 +1034,7 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
    mMaster = InitInstance(mSampleRate);
    if (mMaster == NULL)
    {
-      wxMessageBox(_("Couldn't instantiate effect"));
+      AudacityMessageBox(_("Couldn't instantiate effect"));
       return false;
    }
    

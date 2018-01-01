@@ -34,7 +34,6 @@ It \TODO: description
 #include <wx/choice.h>
 #include <wx/image.h>
 #include <wx/dcmemory.h>
-#include <wx/msgdlg.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
 #include <wx/intl.h>

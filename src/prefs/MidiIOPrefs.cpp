@@ -39,6 +39,7 @@ other settings.
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "MidiIOPrefs.h"
 
@@ -281,7 +282,7 @@ bool MidiIOPrefs::Validate()
 {
    long latency;
    if (!mLatency->GetValue().ToLong(&latency)) {
-      wxMessageBox(_("The MIDI Synthesizer Latency must be an integer"));
+      AudacityMessageBox(_("The MIDI Synthesizer Latency must be an integer"));
       return false;
    }
    return true;

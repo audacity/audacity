@@ -27,6 +27,7 @@
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
 #include "../SampleFormat.h"
 
@@ -104,7 +105,7 @@ bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
       history.reinit(histLen, true);
    }
    catch ( const std::bad_alloc& ) {
-      wxMessageBox(_("Requested value exceeds memory capacity."));
+      Effect::MessageBox(_("Requested value exceeds memory capacity."));
       return false;
    }
 

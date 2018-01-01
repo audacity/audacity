@@ -29,6 +29,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/SpectrumPrefs.h"
 #include "../../../../prefs/TracksBehaviorsPrefs.h"
 #include "../../../../prefs/WaveformPrefs.h"
+#include "../../../../widgets/ErrorDialog.h"
 
 #include <wx/combobox.h>
 
@@ -533,7 +534,7 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
          break;
       }
 
-      wxMessageBox(_("The entered value is invalid"), _("Error"),
+      AudacityMessageBox(_("The entered value is invalid"), _("Error"),
          wxICON_ERROR, mpData->pParent);
    }
 
@@ -781,7 +782,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    };
 
    if (gAudioIO->IsBusy()){
-      wxMessageBox(_("To change Spectrogram Settings, stop any\n"
+      AudacityMessageBox(_("To change Spectrogram Settings, stop any\n"
                      "playing or recording first."),
                    _("Stop the Audio First"), wxOK | wxICON_EXCLAMATION | wxCENTRE);
       return;

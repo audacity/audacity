@@ -25,7 +25,6 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbox.h>
@@ -39,6 +38,7 @@
 
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/ErrorDialog.h"
 
 #include "../../LabelTrack.h"
 #include "../../WaveTrack.h"
@@ -324,7 +324,7 @@ bool VampEffect::Init()
 
          if (left->GetRate() != right->GetRate())
          {
-            wxMessageBox(_("Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."));
+            Effect::MessageBox(_("Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."));
             return false;
          }
       }
@@ -343,7 +343,7 @@ bool VampEffect::Init()
    mPlugin.reset(loader->loadPlugin(mKey, mRate, Vamp::HostExt::PluginLoader::ADAPT_ALL));
    if (!mPlugin)
    {
-      wxMessageBox(_("Sorry, failed to load Vamp Plug-in."));
+      Effect::MessageBox(_("Sorry, failed to load Vamp Plug-in."));
       return false;
    }
 
@@ -437,7 +437,7 @@ bool VampEffect::Process()
       {
          if (!mPlugin->initialise(channels, step, block))
          {
-            wxMessageBox(_("Sorry, Vamp Plug-in failed to initialize."));
+            Effect::MessageBox(_("Sorry, Vamp Plug-in failed to initialize."));
             return false;
          }
       }

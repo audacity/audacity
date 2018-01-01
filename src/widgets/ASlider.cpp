@@ -45,7 +45,6 @@ or ASlider.
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
 #include <wx/image.h>
-#include <wx/msgdlg.h>
 #include <wx/panel.h>
 #include <wx/tooltip.h>
 #include <wx/debug.h>

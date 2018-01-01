@@ -26,7 +26,6 @@ of the BlockFile system.
 #include <wx/choice.h>
 #include <wx/dialog.h>
 #include <wx/filedlg.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/timer.h>
@@ -42,6 +41,7 @@ of the BlockFile system.
 #include "Prefs.h"
 
 #include "FileNames.h"
+#include "widgets/ErrorDialog.h"
 
 class BenchmarkDialog final : public wxDialogWrapper
 {
@@ -82,7 +82,7 @@ private:
 void RunBenchmark(wxWindow *parent)
 {
    /*
-   int action = wxMessageBox(
+   int action = AudacityMessageBox(
 _("This will close all project windows (without saving)\nand open the Audacity Benchmark dialog.\n\nAre you sure you want to do this?"),
                              _("Benchmark"),
                              wxYES_NO | wxICON_EXCLAMATION,
@@ -323,17 +323,17 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    mRandSeedStr.ToLong(&randSeed);
 
    if (blockSize < 1 || blockSize > 1024) {
-      wxMessageBox(_("Block size should be in the range 1 - 1024 KB."));
+      AudacityMessageBox(_("Block size should be in the range 1 - 1024 KB."));
       return;
    }
 
    if (numEdits < 1 || numEdits > 10000) {
-      wxMessageBox(_("Number of edits should be in the range 1 - 10000."));
+      AudacityMessageBox(_("Number of edits should be in the range 1 - 10000."));
       return;
    }
 
    if (dataSize < 1 || dataSize > 2000) {
-      wxMessageBox(_("Test data size should be in the range 1 - 2000 MB."));
+      AudacityMessageBox(_("Test data size should be in the range 1 - 2000 MB."));
       return;
    }
 

@@ -24,6 +24,7 @@
 
 #include "../Audacity.h"
 #include "valnum.h"
+#include "ErrorDialog.h"
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -32,7 +33,6 @@
 #if wxUSE_VALIDATORS && wxUSE_TEXTCTRL
 
 #ifndef WX_PRECOMP
-    #include <wx/msgdlg.h>
     #include <wx/textctrl.h>
 #endif
 
@@ -91,7 +91,7 @@ bool NumValidatorBase::Validate(wxWindow *parent)
 
    if ( !res )
    {
-      wxMessageBox(errmsg, _("Validation error"),
+      AudacityMessageBox(errmsg, _("Validation error"),
                   wxOK | wxICON_ERROR, parent);
       wxTextEntry *te = GetTextEntry();
       if ( te )

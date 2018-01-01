@@ -30,7 +30,6 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
@@ -50,6 +49,7 @@
 #include "../Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/ErrorDialog.h"
 
 
 /* define our dynamic array of export settings */
@@ -180,7 +180,7 @@ int ExportMultiple::ShowModal()
    // Cannot export if all audio tracks are muted.
    if (mNumWaveTracks == 0)
    {
-      ::wxMessageBox(_("All audio is muted."),
+      ::AudacityMessageBox(_("All audio is muted."),
                      _("Cannot Export Multiple"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
@@ -188,7 +188,7 @@ int ExportMultiple::ShowModal()
 
    if ((mNumWaveTracks == 1) && (mNumLabels < 1))
    {
-      ::wxMessageBox(_(
+      ::AudacityMessageBox(_(
 "You have only one unmuted Audio Track and no applicable \
 \nlabels, so you cannot export to separate audio files."),
                      _("Cannot Export Multiple"),
@@ -472,7 +472,7 @@ void ExportMultiple::OnCreate(wxCommandEvent& WXUNUSED(event))
       return;
    }
 
-   ::wxMessageBox(wxString::Format(_("\"%s\" successfully created."),
+   ::AudacityMessageBox(wxString::Format(_("\"%s\" successfully created."),
                                    fn.GetPath().c_str()),
                   _("Export Multiple"),
                   wxOK | wxCENTRE, this);
@@ -480,7 +480,7 @@ void ExportMultiple::OnCreate(wxCommandEvent& WXUNUSED(event))
 
 void ExportMultiple::OnChoose(wxCommandEvent& WXUNUSED(event))
 {
-   wxDirDialog dlog(this,
+   wxDirDialogWrapper dlog(this,
                     _("Choose a location to save the exported files"),
                     mDir->GetValue());
    dlog.ShowModal();
@@ -626,7 +626,7 @@ bool ExportMultiple::DirOk()
    prompt.Printf(_("\"%s\" doesn't exist.\n\nWould you like to create it?"),
                  fn.GetFullPath().c_str());
 
-   int action = wxMessageBox(prompt,
+   int action = AudacityMessageBox(prompt,
                              wxT("Warning"),
                              wxYES_NO | wxICON_EXCLAMATION);
    if (action != wxYES) {
@@ -1006,7 +1006,7 @@ wxString ExportMultiple::MakeFileName(const wxString &input)
             excluded.c_str());
       }
 
-      wxTextEntryDialog dlg( this, msg, _("Save As..."), newname );
+      AudacityTextEntryDialog dlg( this, msg, _("Save As..."), newname );
 
 
       // And tell the validator about excluded chars

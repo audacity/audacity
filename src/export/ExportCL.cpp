@@ -20,7 +20,6 @@
 #include <wx/combobox.h>
 #include <wx/filedlg.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/process.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
@@ -33,6 +32,7 @@
 #include "../Internat.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "../Track.h"
 
@@ -370,7 +370,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    }
 
    if (!rc) {
-      wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
+      AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
                                     fName.c_str()));
       process.Detach();
       process.CloseOutput();

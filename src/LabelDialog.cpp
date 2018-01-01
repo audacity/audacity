@@ -24,7 +24,6 @@
 #include <wx/filedlg.h>
 #include <wx/grid.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -37,6 +36,7 @@
 #include "Project.h"
 #include "ViewInfo.h"
 #include "widgets/NumericTextCtrl.h"
+#include "widgets/ErrorDialog.h"
 
 #include "FileNames.h"
 #include <limits>
@@ -603,7 +603,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       // Get at the data
       f.Open(fileName);
       if (!f.IsOpened()) {
-         wxMessageBox(_("Could not open file: ") + fileName);
+         AudacityMessageBox(_("Could not open file: ") + fileName);
       }
       else {
          // Create a temporary label track and load the labels
@@ -628,7 +628,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    // Silly user (could just disable the button, but that's a hassle ;-))
    if (cnt == 0) {
-      wxMessageBox(_("No labels to export."));
+      AudacityMessageBox(_("No labels to export."));
       return;
    }
 
@@ -671,7 +671,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      wxMessageBox(_("Couldn't write to file: ") + fName);
+      AudacityMessageBox(_("Couldn't write to file: ") + fName);
       return;
    }
 
@@ -774,7 +774,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
 
    // User selected the "New..." choice so ask for a NEW name
    if (mTrackNames.Index(val) == 0) {
-      wxTextEntryDialog d(this,
+      AudacityTextEntryDialog d(this,
                           _("New Label Track"),
                           _("Enter track name"),
                           /* i18n-hint: (noun) it's the name of a kind of track.*/

@@ -34,7 +34,6 @@
 #include <wx/dynarray.h>
 #include <wx/file.h>
 #include <wx/filename.h>
-#include <wx/msgdlg.h>
 #include <wx/progdlg.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
@@ -66,6 +65,7 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../widgets/ErrorDialog.h"
 #include "../widgets/Warning.h"
 #include "../AColor.h"
 #include "../Dependencies.h"
@@ -474,7 +474,7 @@ bool Exporter::ExamineTracks()
          message = _("All selected audio is muted.");
       else
          message = _("All audio is muted.");
-      wxMessageBox(message,
+      AudacityMessageBox(message,
                     _("Unable to export"),
                     wxOK | wxICON_INFORMATION);
       return false;
@@ -537,7 +537,7 @@ bool Exporter::GetFilename()
          auto useFileName = mFilename;
          if (!useFileName.HasExt())
             useFileName.SetExt(defext);
-         FileDialog fd(mProject,
+         FileDialogWrapper fd(mProject,
                        mFileDialogTitle,
                        mFilename.GetPath(),
                        useFileName.GetFullName(),
@@ -599,7 +599,7 @@ bool Exporter::GetFilename()
                               mFilename.GetFullName() +
                               wxT("\"?\n");
 
-            int action = wxMessageBox(prompt,
+            int action = AudacityMessageBox(prompt,
                                       _("Warning"),
                                       wxYES_NO | wxICON_EXCLAMATION);
             if (action != wxYES) {
@@ -620,7 +620,7 @@ bool Exporter::GetFilename()
                        mFilename.GetFullName().c_str(),
                        defext.c_str());
 
-         int action = wxMessageBox(prompt,
+         int action = AudacityMessageBox(prompt,
                                    _("Warning"),
                                    wxYES_NO | wxICON_EXCLAMATION);
          if (action != wxYES) {
@@ -629,7 +629,7 @@ bool Exporter::GetFilename()
       }
 
       if (mFilename.GetFullPath().Length() >= 256) {
-         wxMessageBox(_("Sorry, pathnames longer than 256 characters not supported."));
+         AudacityMessageBox(_("Sorry, pathnames longer than 256 characters not supported."));
          continue;
       }
 
@@ -646,7 +646,7 @@ bool Exporter::GetFilename()
             if (mFilename.GetFullPath() == aliasedFile.mFileName.GetFullPath() &&
                 !mFilename.FileExists()) {
                // Warn and return to the dialog
-               wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
+               AudacityMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
                The file cannot be written because the path is needed to restore the original audio to the project.\n\
                Choose File > Check Dependencies to view the locations of all missing files.\n\
                If you still wish to export, please choose a different filename or folder."));
@@ -663,7 +663,7 @@ bool Exporter::GetFilename()
          prompt.Printf(_("A file named \"%s\" already exists.  Replace?"),
                        mFilename.GetFullPath().c_str());
 
-         int action = wxMessageBox(prompt,
+         int action = AudacityMessageBox(prompt,
                                    _("Warning"),
                                    wxYES_NO | wxICON_EXCLAMATION);
          if (action != wxYES) {

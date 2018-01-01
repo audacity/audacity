@@ -428,7 +428,6 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 
 #include <wx/log.h>
 #include <wx/textctrl.h>
-#include <wx/msgdlg.h>
 #include <wx/timer.h>
 #include <wx/intl.h>
 #include <wx/debug.h>
@@ -450,6 +449,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
+#include "widgets/ErrorDialog.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    #define MIDI_SLEEP 10 /* milliseconds */
@@ -1222,7 +1222,7 @@ AudioIO::AudioIO()
          errStr += _("Error: ")+paErrStr;
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
-      wxMessageBox(errStr, _("Error Initializing Audio"), wxICON_ERROR|wxOK);
+      AudacityMessageBox(errStr, _("Error Initializing Audio"), wxICON_ERROR|wxOK);
 
       // Since PortAudio is not initialized, all calls to PortAudio
       // functions will fail.  This will give reasonable behavior, since
@@ -1242,7 +1242,7 @@ AudioIO::AudioIO()
          errStr += _("Error: ") + pmErrStr;
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
-      wxMessageBox(errStr, _("Error Initializing Midi"), wxICON_ERROR|wxOK);
+      AudacityMessageBox(errStr, _("Error Initializing Midi"), wxICON_ERROR|wxOK);
 
       // Same logic for PortMidi as described above for PortAudio
    }
@@ -2131,7 +2131,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
             if(captureBufferSize < 100)
             {
                StartStreamCleanup();
-               wxMessageBox(_("Out of memory!"));
+               AudacityMessageBox(_("Out of memory!"));
                return 0;
             }
 
@@ -2165,7 +2165,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
          {
             StartStreamCleanup();
-            wxMessageBox(_("Out of memory!"));
+            AudacityMessageBox(_("Out of memory!"));
             return 0;
          }
       }
@@ -2289,7 +2289,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          if (mListener && mNumCaptureChannels > 0)
             mListener->OnAudioIOStopRecording();
          StartStreamCleanup();
-         wxMessageBox(LAT1CTOWX(Pa_GetErrorText(err)));
+         AudacityMessageBox(LAT1CTOWX(Pa_GetErrorText(err)));
          return 0;
       }
    }
@@ -2754,7 +2754,7 @@ void AudioIO::StopStream()
                         // Bug 96: Only warn for the first track.
                         if( i==0 )
                         {
-                           wxMessageDialog m(NULL, _(
+                           AudacityMessageDialog m(NULL, _(
 "Latency Correction setting has caused the recorded audio to be hidden before zero.\nAudacity has brought it back to start at zero.\nYou may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."),
                            _("Latency problem"), wxOK);
                            m.ShowModal();

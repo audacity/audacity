@@ -12,7 +12,6 @@
 #include "ImportMIDI.h"
 
 #include <wx/defs.h>
-#include <wx/msgdlg.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
 
@@ -24,11 +23,14 @@
 
 #include "../Internat.h"
 #include "../NoteTrack.h"
+#include "../widgets/ErrorDialog.h"
 
 bool ImportMIDI(const wxString &fName, NoteTrack * dest)
 {
    if (fName.Length() <= 4){
-      wxMessageBox( _("Could not open file ") + fName + _(": Filename too short."));
+      AudacityMessageBox(
+         _("Could not open file ") + fName + _(": Filename too short.")
+      );
       return false;
    }
 
@@ -36,13 +38,17 @@ bool ImportMIDI(const wxString &fName, NoteTrack * dest)
    if (fName.Right(4).CmpNoCase(wxT(".mid")) == 0 || fName.Right(5).CmpNoCase(wxT(".midi")) == 0)
       is_midi = true;
    else if(fName.Right(4).CmpNoCase(wxT(".gro")) != 0) {
-      wxMessageBox( _("Could not open file ") + fName + _(": Incorrect filetype."));
+      AudacityMessageBox(
+         _("Could not open file ") + fName + _(": Incorrect filetype.")
+      );
       return false;
    }
 
    wxFFile mf(fName, wxT("rb"));
    if (!mf.IsOpened()) {
-      wxMessageBox( _("Could not open file ") + fName + wxT("."));
+      AudacityMessageBox(
+         _("Could not open file ") + fName + wxT(".")
+      );
       return false;
    }
 
@@ -51,7 +57,9 @@ bool ImportMIDI(const wxString &fName, NoteTrack * dest)
 
    //Should we also check if(seq->tracks() == 0) ?
    if(new_seq->get_read_error() == alg_error_open){
-      wxMessageBox( _("Could not open file ") + fName + wxT("."));
+      AudacityMessageBox(
+         _("Could not open file ") + fName + wxT(".")
+      );
       mf.Close();
       return false;
    }

@@ -18,7 +18,6 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/timer.h>
-#include <wx/msgdlg.h>
 #include <wx/progdlg.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
@@ -36,6 +35,7 @@
 #include "../Tags.h"
 #include "../Track.h"
 #include "../ondemand/ODManager.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "Export.h"
 
@@ -440,7 +440,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       if (!sf_format_check(&info))
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
-         wxMessageBox(_("Cannot export audio in this format."));
+         AudacityMessageBox(_("Cannot export audio in this format."));
          return ProgressResult::Cancelled;
       }
 
@@ -454,7 +454,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       }
 
       if (!sf) {
-         wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
+         AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
                                        fName.c_str()));
          return ProgressResult::Cancelled;
       }
@@ -513,7 +513,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
             if (samplesWritten != numSamples) {
                char buffer2[1000];
                sf_error_str(sf.get(), buffer2, 1000);
-               wxMessageBox(wxString::Format(
+               AudacityMessageBox(wxString::Format(
                                              /* i18n-hint: %s will be the error message from libsndfile, which
                                               * is usually something unhelpful (and untranslated) like "system
                                               * error" */

@@ -53,7 +53,6 @@
 #include "Audacity.h"
 
 #include <wx/defs.h>
-#include <wx/msgdlg.h>
 #include <wx/app.h>
 #include <wx/config.h>
 #include <wx/intl.h>
@@ -66,6 +65,7 @@
 #include "Languages.h"
 
 #include "Prefs.h"
+#include "widgets/ErrorDialog.h"
 
 std::unique_ptr<wxFileConfig> ugPrefs {};
 wxFileConfig *gPrefs = NULL;
@@ -180,7 +180,7 @@ void InitPreferences()
       bool gone = wxRemoveFile(fullPath);  // remove FirstTime.ini
       if (!gone)
       {
-         wxMessageBox(wxString::Format(_("Failed to remove %s"), fullPath.c_str()), _("Failed!"));
+         AudacityMessageBox(wxString::Format(_("Failed to remove %s"), fullPath.c_str()), _("Failed!"));
       }
    }
 
@@ -198,7 +198,7 @@ void InitPreferences()
    {
       // pop up a dialogue
       wxString prompt = _("Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset.");
-      int action = wxMessageBox(prompt, _("Reset Audacity Preferences"),
+      int action = AudacityMessageBox(prompt, _("Reset Audacity Preferences"),
                                 wxYES_NO, NULL);
       if (action == wxYES)   // reset
       {

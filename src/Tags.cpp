@@ -47,6 +47,7 @@
 #include "ShuttleGui.h"
 #include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
+#include "widgets/ErrorDialog.h"
 #include "xml/XMLFileReader.h"
 
 #include <wx/button.h>
@@ -55,7 +56,6 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
-#include <wx/msgdlg.h>
 #include <wx/notebook.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
@@ -1112,7 +1112,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
    wxFileName fn(FileNames::DataDir(), wxT("genres.txt"));
    wxFile f(fn.GetFullPath(), wxFile::write);
    if (!f.IsOpened() || !f.Write(tc->GetValue())) {
-      wxMessageBox(_("Unable to save genre file."), _("Reset Genres"));
+      AudacityMessageBox(_("Unable to save genre file."), _("Reset Genres"));
       return;
    }
 
@@ -1123,7 +1123,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
 {
-   int id = wxMessageBox(_("Are you sure you want to reset the genre list to defaults?"),
+   int id = AudacityMessageBox(_("Are you sure you want to reset the genre list to defaults?"),
                          _("Reset Genres"),
                          wxYES_NO);
 
@@ -1139,7 +1139,7 @@ void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
                (!tf.Exists() && tf.Create());
 
    if (!open) {
-      wxMessageBox(_("Unable to open genre file."), _("Reset Genres"));
+      AudacityMessageBox(_("Unable to open genre file."), _("Reset Genres"));
       mLocal.LoadGenres();
       return;
    }
@@ -1151,7 +1151,7 @@ void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
    }
 
    if (!tf.Write()) {
-      wxMessageBox(_("Unable to save genre file."), _("Reset Genres"));
+      AudacityMessageBox(_("Unable to save genre file."), _("Reset Genres"));
       mLocal.LoadGenres();
       return;
    }
@@ -1198,7 +1198,7 @@ void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
    XMLFileReader reader;
    if (!reader.Parse(&mLocal, fn)) {
       // Inform user of load failure
-      wxMessageBox(reader.GetErrorStr(),
+      AudacityMessageBox(reader.GetErrorStr(),
                    _("Error Loading Metadata"),
                    wxOK | wxCENTRE,
                    this);
