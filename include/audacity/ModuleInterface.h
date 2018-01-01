@@ -87,12 +87,15 @@ public:
    // DiscoverPluginsAtPath() have module-specific meaning.
    // They are not necessarily file system paths to existent files that
    // could be placed in any folder and queried for
-   // plugin information.  This function returns true when that is the case.
-   virtual bool PathsAreFiles() = 0;
+   // plugin information.
+   // This function returns nonempty only when that is the case, and lists
+   // the possible extensions of such files (an empty string in a nonempty
+   // array means any file is a candidate).
+   virtual wxArrayString FileExtensions() = 0;
 
    // Returns empty, or else, where to copy a plug-in file or bundle.
-   // Drag-and-drop is supported only if PathsAreFiles() is true and this
-   // function returns nonempty.
+   // Drag-and-drop is supported only if FileExtensions() returns nonempty and
+   // this function returns nonempty.
    virtual wxString InstallPath() = 0;
 
    // Modules providing a single or static set of plugins may use

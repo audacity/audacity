@@ -155,6 +155,30 @@ void LadspaEffectsModule::Terminate()
    return;
 }
 
+wxArrayString LadspaEffectsModule::FileExtensions()
+{
+   static const wxString ext[] = {
+
+#ifdef __WXMSW__
+
+      { _T("dll") }
+
+#else
+
+      { _T("so") }
+
+   #ifdef __WXMAC__
+   // Is it correct that these are candidate plug-in files too for macOs?
+      , { _T("dylib") }
+   #endif
+
+#endif
+
+   };
+   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
+   return result;
+}
+
 wxString LadspaEffectsModule::InstallPath()
 {
    // To do: better choice

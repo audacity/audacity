@@ -243,7 +243,7 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
-   bool PathsAreFiles() override { return false; }
+   wxArrayString FileExtensions() override;
    wxString InstallPath() override { return {}; }
 
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;

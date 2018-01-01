@@ -140,6 +140,13 @@ wxString AudioUnitEffectsModule::GetDescription()
 // ModuleInterface implementation
 // ============================================================================
 
+wxArrayString AudioUnitEffectsModule::FileExtensions()
+{
+   static const wxString ext[] = { _T("au") };
+   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
+   return result;
+}
+
 bool AudioUnitEffectsModule::Initialize()
 {
    // Nothing to do here

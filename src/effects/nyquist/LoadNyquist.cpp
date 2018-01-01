@@ -160,6 +160,13 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
+wxArrayString NyquistEffectsModule::FileExtensions()
+{
+   static const wxString ext[] = { _T("ny") };
+   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
+   return result;
+}
+
 wxString NyquistEffectsModule::InstallPath()
 {
    return FileNames::PlugInDir();

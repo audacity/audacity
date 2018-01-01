@@ -351,6 +351,13 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
+wxArrayString VSTEffectsModule::FileExtensions()
+{
+   static const wxString ext[] = { _T("vst") };
+   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
+   return result;
+}
+
 wxString VSTEffectsModule::InstallPath()
 {
    // Not yet ready for VST drag-and-drop...

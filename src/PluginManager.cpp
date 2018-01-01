@@ -1750,6 +1750,7 @@ void PluginManager::Terminate()
 bool PluginManager::DropFile(const wxString &fileName)
 {
    auto &mm = ModuleManager::Get();
+   const wxFileName src{ fileName };
 
    for (const PluginDescriptor *plug = GetFirstPlugin(PluginTypeModule);
         plug;
@@ -1758,7 +1759,9 @@ bool PluginManager::DropFile(const wxString &fileName)
       auto module = static_cast<ModuleInterface *>
          (mm.CreateProviderInstance(plug->GetID(), plug->GetPath()));
       const auto &ff = module->InstallPath();
-      if (!ff.empty() && module->PathsAreFiles()) {
+      auto extensions = module->FileExtensions();
+      if (!ff.empty() &&
+          make_iterator_range(extensions).contains(src.GetExt())) {
          wxString errMsg;
          // Do dry-run test of the file format
          unsigned nPlugIns =
@@ -1770,7 +1773,6 @@ bool PluginManager::DropFile(const wxString &fileName)
             // actions should not be tried.
 
             // Find path to copy it
-            const wxFileName src{ fileName };
             wxFileName dst;
             dst.AssignDir( ff );
             dst.SetFullName( src.GetFullName() );
