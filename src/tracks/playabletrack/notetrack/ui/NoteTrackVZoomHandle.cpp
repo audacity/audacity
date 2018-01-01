@@ -39,7 +39,9 @@ namespace
    bool IsDragZooming(int zoomStart, int zoomEnd)
    {
       const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
-      return (abs(zoomEnd - zoomStart) > DragThreshold);
+      bool bVZoom;
+      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+      return bVZoom && (abs(zoomEnd - zoomStart) > DragThreshold);
    }
 
 }
@@ -66,11 +68,18 @@ HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
    static auto zoomOutCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
-   const auto message =
-_("Click to vertically zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
+   static  wxCursor arrowCursor{ wxCURSOR_ARROW };
+
+   bool bVZoom;
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+   bVZoom &= !state.RightIsDown();
+   const auto message = bVZoom ? 
+      _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.") :
+      _("Right-click for menu.");
+
    return {
       message,
-      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
+      bVZoom ? (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor) : &arrowCursor
       // , message
    };
 }
