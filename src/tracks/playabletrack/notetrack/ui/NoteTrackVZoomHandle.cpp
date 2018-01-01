@@ -243,7 +243,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
 
 
    bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
 
    // Popup menu... 
    if (
