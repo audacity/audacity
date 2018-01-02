@@ -382,6 +382,11 @@ namespace std {
    }
 }
 
+#else
+
+// To define function
+#include <functional>
+
 #endif
 
 #if !(_MSC_VER >= 1800 || __cplusplus >= 201402L)
@@ -1044,10 +1049,6 @@ make_iterator_range( const Container &container )
    return { container.begin(), container.end() };
 }
 
-
-// 1st Jan 2018
-// Commented out by James Crook until such time as we migrate to a newer MSVC.
-#if OK_IN_MSVC_2013
 /*
  * Transform an iterator sequence, as another iterator sequence
  */
@@ -1137,7 +1138,5 @@ make_value_transform_iterator(const Iterator &iterator, Function function)
    using NewFunction = value_transformer<Function, Iterator>;
    return { iterator, NewFunction{ function } };
 }
-#endif
-
 
 #endif // __AUDACITY_MEMORY_X_H__
