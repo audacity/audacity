@@ -20,11 +20,16 @@ class wxTabTraversalWrapper : public Base
 {
 public:
    template <typename... Args>
-   wxTabTraversalWrapper(Args&&... args)
+   explicit wxTabTraversalWrapper(Args&&... args)
    : Base( std::forward<Args>(args)... )
    {
       this->Bind(wxEVT_CHAR_HOOK, wxTabTraversalWrapperCharHook);
    }
+
+   wxTabTraversalWrapper(const wxTabTraversalWrapper&) = delete;
+   wxTabTraversalWrapper(wxTabTraversalWrapper&&) = delete;
+   wxTabTraversalWrapper& operator=(const wxTabTraversalWrapper&) = delete;
+   wxTabTraversalWrapper& operator=(wxTabTraversalWrapper&&) = delete;
 
    ~wxTabTraversalWrapper()
    {
@@ -36,9 +41,9 @@ class wxPanelWrapper : public wxTabTraversalWrapper<wxPanel>
 {
 public:
    // Constructors
-   wxPanelWrapper() {}
+   wxPanelWrapper() = default;
 
-   wxPanelWrapper(
+   explicit wxPanelWrapper(
          wxWindow *parent,
          wxWindowID winid = wxID_ANY,
          const wxPoint& pos = wxDefaultPosition,
@@ -69,10 +74,10 @@ class wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>
 {
 public:
    // Constructors
-   wxDialogWrapper() {}
+   wxDialogWrapper() = default;
 
    // Constructor with no modal flag - the new convention.
-   wxDialogWrapper(
+   explicit wxDialogWrapper(
       wxWindow *parent, wxWindowID id,
       const wxString& title,
       const wxPoint& pos = wxDefaultPosition,
@@ -105,10 +110,10 @@ public:
 class wxDirDialogWrapper : public wxTabTraversalWrapper<wxDirDialog>
 {
 public:
-   wxDirDialogWrapper() {}
+   wxDirDialogWrapper() = default;
 
    // Constructor with no modal flag - the new convention.
-   wxDirDialogWrapper(
+   explicit wxDirDialogWrapper(
       wxWindow *parent,
       const wxString& message = _("Select a directory"),
       const wxString& defaultPath = wxT(""),
@@ -142,10 +147,10 @@ public:
 class FileDialogWrapper : public wxTabTraversalWrapper<FileDialog>
 {
 public:
-   FileDialogWrapper() {}
+   FileDialogWrapper() = default;
 
    // Constructor with no modal flag - the new convention.
-   FileDialogWrapper(
+   explicit FileDialogWrapper(
       wxWindow *parent,
       const wxString& message = _("Select a file"),
       const wxString& defaultDir = wxEmptyString,
