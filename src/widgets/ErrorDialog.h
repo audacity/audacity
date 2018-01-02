@@ -113,7 +113,7 @@ public:
          long style = wxTextEntryDialogStyle,
          const wxPoint& pos = wxDefaultPosition)
    : wxTabTraversalWrapper< wxTextEntryDialog>
-      { parent, message, caption, value, style, pos }
+      ( parent, message, caption, value, style, pos )
    {}
 };
 
@@ -129,7 +129,7 @@ public:
          long style = wxOK|wxCENTRE,
          const wxPoint& pos = wxDefaultPosition)
    : wxTabTraversalWrapper< wxMessageDialog>
-      { parent, message, caption, style, pos }
+      ( parent, message, caption, style, pos )
    {}
 };
 
