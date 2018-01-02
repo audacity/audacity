@@ -131,7 +131,7 @@ public:
       // Important:  default window name localizes!
       const wxString& name = _("Directory Dialog"))
    {
-      return wxTabTraversalWrapper<wxDirDialog>::Create(
+      wxTabTraversalWrapper<wxDirDialog>::Create(
          parent, message, defaultPath, style, pos, size, name
       );
    }
@@ -172,7 +172,7 @@ public:
       // Important:  default window name localizes!
       const wxString& name = _("File Dialog"))
    {
-      return wxTabTraversalWrapper<FileDialog>::Create(
+      wxTabTraversalWrapper<FileDialog>::Create(
          parent, message, defaultDir, defaultFile, wildCard, style, pos, sz, name
       );
    }
