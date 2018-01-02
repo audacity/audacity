@@ -1,4 +1,4 @@
-﻿/**********************************************************************
+/**********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -133,7 +133,6 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    LangHash reverseHash;
    LangHash tempHash;
 
-#ifdef EXPERIMENTAL_LANGUAGES_DOT_TEXT
    {
       // The list of locales and associated self-names of languages
       // is stored in an external resource file which is easier
@@ -153,67 +152,6 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
          localLanguageName[code] = name;
       }
    }
-#else
-//#include "../locale/LanguageNames.h"
-localLanguageName["af"] = L"Afrikaans";
-localLanguageName["ar"] = L"العربية";
-localLanguageName["be"] = L"Беларуская";
-localLanguageName["bg"] = L"Български";
-localLanguageName["bn"] = L"বাংলা";
-localLanguageName["bs"] = L"Bosanski";
-localLanguageName["ca"] = L"Català";
-localLanguageName["ca_ES@valencia"] = L"Valencià";
-localLanguageName["cs"] = L"Čeština";
-localLanguageName["cy"] = L"Cymraeg";
-localLanguageName["da"] = L"Dansk";
-localLanguageName["de"] = L"Deutsch";
-localLanguageName["el"] = L"Ελληνικά";
-localLanguageName["en"] = L"English";
-localLanguageName["es"] = L"Español";
-localLanguageName["eu"] = L"Euskara";
-localLanguageName["eu_ES"] = L"Euskara (Espainiako)";
-localLanguageName["fa"] = L"فارسی";
-localLanguageName["fi"] = L"Suomi";
-localLanguageName["fr"] = L"Français";
-localLanguageName["ga"] = L"Gaeilge";
-localLanguageName["gl"] = L"Galego";
-localLanguageName["he"] = L"עברית";
-localLanguageName["hi"] = L"हिन्दी";
-localLanguageName["hr"] = L"Hrvatski";
-localLanguageName["hu"] = L"Magyar";
-localLanguageName["hy"] = L"Հայերեն";
-localLanguageName["id"] = L"Bahasa Indonesia";
-localLanguageName["it"] = L"Italiano";
-localLanguageName["ja"] = L"日本語";
-localLanguageName["ka"] = L"ქართული";
-localLanguageName["km"] = L"ខេមរភាសា";
-localLanguageName["ko"] = L"한국어";
-localLanguageName["lt"] = L"Lietuvių";
-localLanguageName["mk"] = L"Македонски";
-localLanguageName["my"] = L"မြန်မာစာ";
-localLanguageName["nb"] = L"Norsk";
-localLanguageName["nl"] = L"Nederlands";
-localLanguageName["oc"] = L"Occitan";
-localLanguageName["pl"] = L"Polski";
-localLanguageName["pt"] = L"Português";
-localLanguageName["pt_BR"] = L"Português (Brasil)";
-localLanguageName["ro"] = L"Română";
-localLanguageName["ru"] = L"Русский";
-localLanguageName["sk"] = L"Slovenčina";
-localLanguageName["sl"] = L"Slovenščina";
-localLanguageName["sr_RS"] = L"Српски";
-localLanguageName["sr_RS@latin"] = L"Srpski";
-localLanguageName["sv"] = L"Svenska";
-localLanguageName["ta"] = L"தமிழ்";
-localLanguageName["tg"] = L"Тоҷикӣ";
-localLanguageName["tr"] = L"Türkçe";
-localLanguageName["uk"] = L"Українська";
-localLanguageName["vi"] = L"Tiếng Việt";
-localLanguageName["zh_CN"] = L"中文";
-localLanguageName["zh_TW"] = L"中文";
-
-
-#endif
 
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
 
