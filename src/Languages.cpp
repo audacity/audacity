@@ -127,30 +127,77 @@ wxString GetSystemLanguageCode()
 
 void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 {
+   const char *utf8Names[] = {
+      "af Afrikaans",
+      "ar العربية",
+      "be Беларуская",
+      "bg Български",
+      "bn বাংলা",
+      "bs Bosanski",
+      "ca Català",
+      "ca_ES@valencia Valencià",
+      "cs Čeština",
+      "cy Cymraeg",
+      "da Dansk",
+      "de Deutsch",
+      "el Ελληνικά",
+      "en English",
+      "es Español",
+      "eu Euskara",
+      "eu_ES Euskara (Espainiako)",
+      "fa فارسی",
+      "fi Suomi",
+      "fr Français",
+      "ga Gaeilge",
+      "gl Galego",
+      "he עברית",
+      "hi हिन्दी",
+      "hr Hrvatski",
+      "hu Magyar",
+      "hy Հայերեն",
+      "id Bahasa Indonesia",
+      "it Italiano",
+      "ja 日本語",
+      "ka ქართული",
+      "km ខេមរភាសា",
+      "ko 한국어",
+      "lt Lietuvių",
+      "mk Македонски",
+      "my မြန်မာစာ",
+      "nb Norsk",
+      "nl Nederlands",
+      "oc Occitan",
+      "pl Polski",
+      "pt Português",
+      "pt_BR Português (Brasil)",
+      "ro Română",
+      "ru Русский",
+      "sk Slovenčina",
+      "sl Slovenščina",
+      "sr_RS Српски",
+      "sr_RS@latin Srpski",
+      "sv Svenska",
+      "ta தமிழ்",
+      "tg Тоҷикӣ",
+      "tr Türkçe",
+      "uk Українська",
+      "vi Tiếng Việt",
+      "zh_CN 中文",
+      "zh_TW 中文",
+   };
+
    wxArrayString tempNames;
    wxArrayString tempCodes;
    LangHash localLanguageName;
    LangHash reverseHash;
    LangHash tempHash;
 
+   for ( auto utf8Name : utf8Names )
    {
-      // The list of locales and associated self-names of languages
-      // is stored in an external resource file which is easier
-      // to edit as Unicode than C++ source code.
-      auto dir = FileNames::ResourcesDir();
-      wxTextFile file{dir + wxFILE_SEP_PATH + "LanguageNames.txt"};
-      file.Open();
-      for ( auto str = file.GetFirstLine(); !file.Eof();
-            str = file.GetNextLine() )
-      {
-         // Allow commenting-out of languages no longer supported
-         if (str[0] == '#')
-            continue;
-
-         auto code = str.BeforeFirst(' ');
-         auto name = str.AfterFirst(' ');
-         localLanguageName[code] = name;
-      }
+      auto str = wxString::FromUTF8(utf8Name);
+      auto code = str.BeforeFirst(' ');
+      auto name = str.AfterFirst(' ');
+      localLanguageName[code] = name;
    }
 
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
