@@ -51,7 +51,7 @@ public:
          long style = wxTAB_TRAVERSAL | wxNO_BORDER,
          // Important:  default window name localizes!
          const wxString& name = _("Panel"))
-   : wxTabTraversalWrapper<wxPanel> { parent, winid, pos, size, style, name }
+   : wxTabTraversalWrapper<wxPanel> ( parent, winid, pos, size, style, name )
    {}
 
     // Pseudo ctor
@@ -86,7 +86,7 @@ public:
       // Important:  default window name localizes!
       const wxString& name = _("Dialog"))
    : wxTabTraversalWrapper<wxDialog>
-      { parent, id, title, pos, size, style, name }
+      ( parent, id, title, pos, size, style, name )
    {}
 
    // Pseudo ctor
@@ -123,9 +123,10 @@ public:
       // Important:  default window name localizes!
       const wxString& name = _("Directory Dialog"))
    : wxTabTraversalWrapper<wxDirDialog>
-      { parent, message, defaultPath, style, pos, size, name }
+      ( parent, message, defaultPath, style, pos, size, name )
    {}
 
+   // Pseudo ctor
    void Create(
       wxWindow *parent,
       const wxString& message = _("Select a directory"),
@@ -162,9 +163,10 @@ public:
       // Important:  default window name localizes!
       const wxString& name = _("File Dialog"))
    : wxTabTraversalWrapper<FileDialog>
-   { parent, message, defaultDir, defaultFile, wildCard, style, pos, sz, name }
+   ( parent, message, defaultDir, defaultFile, wildCard, style, pos, sz, name )
    {}
 
+   // Pseudo ctor
    void Create(
       wxWindow *parent,
       const wxString& message = _("Select a file"),
