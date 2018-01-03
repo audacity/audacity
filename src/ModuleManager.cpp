@@ -513,7 +513,10 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
 
       ModuleInterface *module =
          static_cast<ModuleInterface *>(CreateProviderInstance(providerID, modPaths[i]));
-      
+
+      if (!module)
+         continue;
+
       wxArrayString newpaths = module->FindPluginPaths(pm);
       for (size_t i = 0, cnt = newpaths.size(); i < cnt; i++)
       {

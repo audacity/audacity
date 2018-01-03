@@ -1759,6 +1759,9 @@ bool PluginManager::DropFile(const wxString &fileName)
    {
       auto module = static_cast<ModuleInterface *>
          (mm.CreateProviderInstance(plug->GetID(), plug->GetPath()));
+      if (! module)
+         continue;
+
       const auto &ff = module->InstallPath();
       auto extensions = module->FileExtensions();
       if (!ff.empty() &&
