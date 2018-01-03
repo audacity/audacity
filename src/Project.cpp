@@ -461,16 +461,6 @@ public:
 
          for (const auto &name : sortednames) {
 
-#ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
-            // Is it a plug-in?
-            if (PluginManager::Get().DropFile(name)) {
-               mProject->RebuildAllMenuBars();
-               continue;
-            }
-
-            // No, so import.
-#endif
-
             if (Importer::IsMidi(name))
                AudacityProject::DoImportMIDI(mProject, name);
             else
@@ -3043,12 +3033,24 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    // FIXME: //v Surely we could be smarter about this, like checking much earlier that this is a .aup file.
    if (temp.Mid(0, 6) != wxT("<?xml ")) {
       // If it's not XML, try opening it as any other form of audio
-      if (Importer::IsMidi(fileName))
-         DoImportMIDI(this, fileName);
-      else
-         Import(fileName);
 
-      ZoomAfterImport(nullptr);
+#ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
+      // Is it a plug-in?
+      if (PluginManager::Get().DropFile(fileName)) {
+         this->RebuildAllMenuBars();
+      }
+      else
+      // No, so import.
+#endif
+
+      {
+         if (Importer::IsMidi(fileName))
+            DoImportMIDI(this, fileName);
+         else
+            Import(fileName);
+
+         ZoomAfterImport(nullptr);
+      }
 
       return;
    }

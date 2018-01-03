@@ -1847,6 +1847,8 @@ bool PluginManager::DropFile(const wxString &fileName)
                ) );
                for (const auto &id : ids)
                   mPlugins[id].SetEnabled(enable);
+               // Make changes to enabled status persist:
+               this->Save();
             }
 
             return true;
