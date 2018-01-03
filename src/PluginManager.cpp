@@ -1835,16 +1835,16 @@ bool PluginManager::DropFile(const wxString &fileName)
 
             // Ask whether to enable the plug-ins
             if (auto nIds = ids.size()) {
-               auto format = wxPLURAL(
+               auto message = wxPLURAL(
                   _("Enable this plug-in?"),
                   _("Enable these plug-ins?"),
                   nIds
                );
-               format += wxT("\n");
+               message += wxT("\n");
                for (const auto &name : names)
-                  format += name + wxT("\n");
+                  message += name + wxT("\n");
                bool enable = (wxYES == ::AudacityMessageBox(
-                  wxString::Format( format, nIds ),
+                  message,
                   _("Enable new plug-ins"),
                   wxYES_NO
                ) );
