@@ -587,7 +587,7 @@ void ScreenFrame::DoCapture(wxString captureMode)
 
    mCommand->SetParameter(wxT("CaptureMode"), captureMode);
    if (!mCommand->Apply(mContext))
-      mStatus->SetStatusText(wxT("Capture failed!"), mainStatusBarField);
+      mStatus->SetStatusText(_("Capture failed!"), mainStatusBarField);
    Show();
 }
 
