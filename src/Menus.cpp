@@ -1598,6 +1598,9 @@ void AudacityProject::CreateMenusAndCommands()
 #endif
 }
 
+/// The effects come from a plug in list
+/// This code iterates through the list, adding effects into
+/// the menu.
 void AudacityProject::PopulateEffectsMenu(CommandManager* c,
                                           EffectType type,
                                           CommandFlag batchflags,
@@ -2182,6 +2185,8 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
    return flags;
 }
 
+// Select the full time range, if no
+// time range is selected.
 void AudacityProject::SelectAllIfNone()
 {
    auto flags = GetUpdateFlags();
@@ -2190,6 +2195,7 @@ void AudacityProject::SelectAllIfNone()
       OnSelectSomething();
 }
 
+// Stop playing or recording, if paused.
 void AudacityProject::StopIfPaused()
 {
    auto flags = GetUpdateFlags();
@@ -2359,6 +2365,7 @@ void AudacityProject::UpdateMenus(bool checkActive)
 // Tool selection commands
 //
 
+/// Called by handlers that set tools.
 void AudacityProject::SetTool(int tool)
 {
    ToolsToolBar *toolbar = GetToolsToolBar();
@@ -2368,21 +2375,25 @@ void AudacityProject::SetTool(int tool)
    }
 }
 
+/// Handler to set the select tool active
 void AudacityProject::OnSelectTool()
 {
    SetTool(selectTool);
 }
 
+/// Handler to set the Zoom tool active
 void AudacityProject::OnZoomTool()
 {
    SetTool(zoomTool);
 }
 
+/// Handler to set the Envelope tool active
 void AudacityProject::OnEnvelopeTool()
 {
    SetTool(envelopeTool);
 }
 
+/// Handler to set the Time shift tool active
 void AudacityProject::OnTimeShiftTool()
 {
    SetTool(slideTool);
@@ -3831,8 +3842,8 @@ void AudacityProject::PrevWindow()
 #endif
 }
 
-//The following methods operate controls on specified tracks,
-//This will pop up the track panning dialog for specified track
+///The following methods operate controls on specified tracks,
+///This will pop up the track panning dialog for specified track
 void AudacityProject::OnTrackPan()
 {
    Track *const track = mTrackPanel->GetFocusedTrack();
