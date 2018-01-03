@@ -127,7 +127,7 @@ wxString GetSystemLanguageCode()
 
 void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 {
-   const char *utf8Names[] = {
+   static const char *const utf8Names[] = {
       "af Afrikaans",
       "ar العربية",
       "be Беларуская",
