@@ -614,11 +614,13 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
    }
 
    // Prevent same hotkey combination being used twice.
-   if (!oldname.IsEmpty()) {
-      wxString oldlabel = mManager->GetCategoryFromName(oldname) + wxT(" - ") +
-                          mManager->GetPrefixedLabelFromName(oldname);
-      wxString newlabel = mManager->GetCategoryFromName(newname) + wxT(" - ") +
-                          mManager->GetPrefixedLabelFromName(newname);
+   if (!oldname.empty()) {
+      auto oldlabel = wxString::Format( _("%s - %s"),
+         mManager->GetCategoryFromName(oldname),
+         mManager->GetPrefixedLabelFromName(oldname) );
+      auto newlabel = wxString::Format( _("%s - %s"),
+         mManager->GetCategoryFromName(newname),
+         mManager->GetPrefixedLabelFromName(newname) );
       if (AudacityMessageBox(
             wxString::Format(
             _("The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead.  Otherwise, click Cancel."),

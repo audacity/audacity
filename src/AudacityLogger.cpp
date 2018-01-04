@@ -307,10 +307,11 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
    }
 
    if (!mText->SaveFile(fName)) {
-      AudacityMessageBox(_("Couldn't save log to file: ") + fName,
-                   _("Warning"),
-                   wxICON_EXCLAMATION,
-                   mFrame.get());
+      AudacityMessageBox(
+         wxString::Format( _("Couldn't save log to file: %s"), fName ),
+         _("Warning"),
+         wxICON_EXCLAMATION,
+         mFrame.get());
       return;
    }
 }

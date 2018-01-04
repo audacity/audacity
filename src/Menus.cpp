@@ -4578,7 +4578,8 @@ void AudacityProject::OnExportLabels()
    f.Create();
    f.Open();
    if (!f.IsOpened()) {
-      AudacityMessageBox(_("Couldn't write to file: ") + fName);
+      AudacityMessageBox( wxString::Format(
+         _("Couldn't write to file: %s"), fName ) );
       return;
    }
 
@@ -6891,7 +6892,8 @@ void AudacityProject::OnImportLabels()
 
       f.Open(fileName);
       if (!f.IsOpened()) {
-         AudacityMessageBox(_("Could not open file: ") + fileName);
+         AudacityMessageBox(
+            wxString::Format( _("Could not open file: %s"), fileName ) );
          return;
       }
 

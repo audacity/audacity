@@ -595,9 +595,9 @@ bool Exporter::GetFilename()
          // as an extension with no name, like just plain ".wav".
          //
          if (mFilename.GetName().Left(1) == wxT(".")) {
-            wxString prompt = _("Are you sure you want to export the file as \"") +
-                              mFilename.GetFullName() +
-                              wxT("\"?\n");
+            wxString prompt = wxString::Format(
+               _("Are you sure you want to export the file as \"%s\"?\n"),
+                  mFilename.GetFullName() );
 
             int action = AudacityMessageBox(prompt,
                                       _("Warning"),
@@ -1267,9 +1267,11 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          numTracks++;
          const wxString sTrackName = (t->GetName()).Left(20);
          if( t->GetChannel() == Track::LeftChannel )
-            mTrackNames.Add(sTrackName + _( " - L" ));
+            /* i18n-hint: track name and L abbreviating Left channel */
+            mTrackNames.Add( wxString::Format( _( "%s - L" ), sTrackName ) );
          else if( t->GetChannel() == Track::RightChannel )
-            mTrackNames.Add(sTrackName + _( " - R" ));
+         /* i18n-hint: track name and R abbreviating Right channel */
+            mTrackNames.Add( wxString::Format( _( "%s - R" ), sTrackName ) );
          else
             mTrackNames.Add(sTrackName);
       }

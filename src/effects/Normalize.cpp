@@ -192,12 +192,14 @@ bool EffectNormalize::Process()
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
          wxString msg;
-         wxString trackName = track->GetName();
+         auto trackName = track->GetName();
 
          if(!track->GetLinked() || mStereoInd)
-            msg = topMsg + _("Analyzing: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Analyzing: %s"), trackName );
          else
-            msg = topMsg + _("Analyzing first track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName );
          float offset, min, max;
          bGoodResult = AnalyseTrack(track, msg, curTrackNum, offset, min, max); 
          if (!bGoodResult )
@@ -209,9 +211,11 @@ bool EffectNormalize::Process()
                mMult = ratio / extent;
             else
                mMult = 1.0;
-            msg = topMsg + _("Processing: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Processing: %s"), trackName );
             if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
-               msg = topMsg + _("Processing stereo channels independently: ") + trackName;
+               msg =
+                  topMsg + wxString::Format( _("Processing stereo channels independently: %s"), trackName );
 
             if (!ProcessOne(track, msg, curTrackNum, offset))
             {
@@ -225,7 +229,8 @@ bool EffectNormalize::Process()
             // so we need to find it's min, max and offset
             // as they are needed to calc the multiplier for both tracks
             track = (WaveTrack *) iter.Next();  // get the next one
-            msg = topMsg + _("Analyzing second track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
             float offset2, min2, max2;
             bGoodResult = AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2);
             if ( !bGoodResult )
@@ -238,7 +243,8 @@ bool EffectNormalize::Process()
             else
                mMult = 1.0;
             track = (WaveTrack *) iter.Prev();  // go back to the first linked one
-            msg = topMsg + _("Processing first track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Processing first track of stereo pair: %s"), trackName );
             if (!ProcessOne(track, msg, curTrackNum, offset))
             {
                bGoodResult = false;
@@ -246,7 +252,8 @@ bool EffectNormalize::Process()
             }
             track = (WaveTrack *) iter.Next();  // go to the second linked one
             curTrackNum++;   // keeps progress bar correct
-            msg = topMsg + _("Processing second track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Processing second track of stereo pair: %s"), trackName );
             if (!ProcessOne(track, msg, curTrackNum, offset2))
             {
                bGoodResult = false;

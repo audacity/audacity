@@ -2420,21 +2420,22 @@ void TrackInfo::Status1DrawFunction
    /// indicating whether the track is mono, left, right, or
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
-   wxString s = wxString::Format(wxT("%dHz"), (int) (rate + 0.5));
+   wxString s;
    if (!wt || (wt->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
        && wt->GetChannel() != Track::MonoChannel
 #endif
    ))
-      s = _("Stereo, ") + s;
+      s = _("Stereo, %dHz");
    else {
       if (wt->GetChannel() == Track::MonoChannel)
-         s = _("Mono, ") + s;
+         s = _("Mono, %dHz");
       else if (wt->GetChannel() == Track::LeftChannel)
-         s = _("Left, ") + s;
+         s = _("Left, %dHz");
       else if (wt->GetChannel() == Track::RightChannel)
-         s = _("Right, ") + s;
+         s = _("Right, %dHz");
    }
+   s = wxString::Format( s, (int) (rate + 0.5) );
 
    StatusDrawFunction( s, dc, rect );
 }

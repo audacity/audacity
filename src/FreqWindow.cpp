@@ -231,9 +231,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    wxArrayString funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
    {
-      /* i18n-hint: This refers to a "window function", used in the
+      /* i18n-hint: This refers to a "window function",
+       * such as Hann or Rectangular, used in the
        * Frequency analyze dialog box. */
-      funcChoices.Add(wxString(WindowFuncName(i)) + wxT(" ") + _("window"));
+      funcChoices.Add(wxString::Format("%s window",  WindowFuncName(i) ) );
    }
 
    wxArrayString axisChoices;
@@ -1055,7 +1056,8 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      AudacityMessageBox(_("Couldn't write to file: ") + fName);
+      AudacityMessageBox( wxString::Format(
+         _("Couldn't write to file: %s"), fName ) );
       return;
    }
 

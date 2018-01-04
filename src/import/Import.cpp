@@ -662,14 +662,15 @@ bool Importer::Import(const wxString &fName,
    else
    {
       // We DO have a plugin for this file, but import failed.
-      wxString pluglist = wxEmptyString;
+      wxString pluglist;
 
       for (const auto &plugin : compatiblePlugins)
       {
-         if (pluglist == wxEmptyString)
+         if (pluglist.empty())
            pluglist = plugin->GetPluginFormatDescription();
          else
-           pluglist = pluglist + wxT(", ") + plugin->GetPluginFormatDescription();
+           pluglist = wxString::Format( _("%s, %s"),
+               pluglist, plugin->GetPluginFormatDescription() );
       }
 
       errorMessage.Printf(_("Audacity recognized the type of the file '%s'.\nImporters supposedly supporting such files are:\n%s,\nbut none of them understood this file format."),fName, pluglist);

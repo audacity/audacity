@@ -245,10 +245,11 @@ void ScreenshotCommand::Capture(const wxString &filename,
    // Save the final image
    wxImage image = part.ConvertToImage();
    if (image.SaveFile(filename)) {
-      mOutput->Status(_("Saved ") + filename);
+      mOutput->Status( wxString::Format( _("Saved %s"), filename ) );
    }
    else {
-      mOutput->Error(_("Error trying to save file: ") + filename);
+      mOutput->Error(
+         wxString::Format( _("Error trying to save file: %s"), filename ) );
    }
 
    ::wxBell();

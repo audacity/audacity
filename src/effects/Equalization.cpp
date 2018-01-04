@@ -653,7 +653,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
             mdBMaxSlider->SetName(_("Max dB"));
-            mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
+            mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
 #endif
 
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
@@ -661,7 +661,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
             mdBMinSlider->SetName(_("Min dB"));
-            mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
+            mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
          }
          S.EndVerticalLay();
@@ -720,11 +720,11 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 #if wxUSE_ACCESSIBILITY
             wxString name;
             if( kThirdOct[i] < 1000.)
-               name.Printf(wxString(wxT("%d ")) + _("Hz"), (int)kThirdOct[i]);
+               name.Printf(_("%d Hz"), (int)kThirdOct[i]);
             else
-               name.Printf(wxString(wxT("%g ")) + _("kHz"), kThirdOct[i]/1000.);
+               name.Printf(_("%g kHz"), kThirdOct[i]/1000.);
             mSliders[i]->SetName(name);
-            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], wxString(wxT("%d ")) + _("dB")));
+            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], _("%d dB")));
 #endif
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
@@ -1004,7 +1004,7 @@ bool EffectEqualization::TransferDataFromWindow()
    if (dB != mdBMin) {
       rr = true;
       mdBMin = dB;
-      tip.Printf(wxString(wxT("%d ")) + _("dB"),(int)mdBMin);
+      tip.Printf(_("%d dB"), (int)mdBMin);
       mdBMinSlider->SetToolTip(tip);
    }
 
@@ -1012,7 +1012,7 @@ bool EffectEqualization::TransferDataFromWindow()
    if (dB != mdBMax) {
       rr = true;
       mdBMax = dB;
-      tip.Printf(wxString(wxT("%d ")) + _("dB"),(int)mdBMax);
+      tip.Printf(_("%d dB"), (int)mdBMax);
       mdBMaxSlider->SetToolTip(tip);
    }
 
@@ -3316,10 +3316,11 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          bad = false;
          // build the dialog
          AudacityTextEntryDialog dlg( this,
-            _("Rename '") + mEditCurves[ item ].Name + _("' to..."),
+            wxString::Format( _("Rename '%s' to..."), mEditCurves[ item ].Name ),
             _("Rename...") );
          dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );
-         dlg.SetName( _("Rename '") + mEditCurves[ item ].Name );
+         dlg.SetName(
+            wxString::Format( _("Rename '%s'"), mEditCurves[ item ].Name ) );
          wxTextValidator *tv = dlg.GetTextValidator();
          tv->SetExcludes( exclude );   // Tell the validator about excluded chars
          if( dlg.ShowModal() == wxID_CANCEL )

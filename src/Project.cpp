@@ -2979,9 +2979,10 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    }
 
    if (!::wxFileExists(fileName)) {
-      AudacityMessageBox(_("Could not open file: ") + fileName,
-                   _("Error Opening File"),
-                   wxOK | wxCENTRE, this);
+      AudacityMessageBox(
+         wxString::Format( _("Could not open file: %s"), fileName ),
+         ("Error Opening File"),
+         wxOK | wxCENTRE, this);
       return;
    }
 
@@ -2994,7 +2995,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    {
       wxFFile ff(fileName, wxT("rb"));
       if (!ff.IsOpened()) {
-         AudacityMessageBox(_("Could not open file: ") + fileName,
+         AudacityMessageBox(
+            wxString::Format( _("Could not open file: %s"), fileName ),
             _("Error opening file"),
             wxOK | wxCENTRE, this);
          return;
@@ -3074,9 +3076,10 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       AutoSaveFile asf;
       if (!asf.Decode(fileName))
       {
-         AudacityMessageBox(_("Could not decode file: ") + fileName,
-                      _("Error decoding file"),
-                      wxOK | wxCENTRE, this);
+         AudacityMessageBox(
+            wxString::Format( _("Could not decode file: %s"), fileName ),
+            _("Error decoding file"),
+            wxOK | wxCENTRE, this);
          return;
       }
    }
@@ -3823,8 +3826,10 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          wxRemoveFile(safetyFileName);
 
       if ( !wxRenameFile(mFileName, safetyFileName) ) {
-         AudacityMessageBox(_("Could not create safety file: ") + safetyFileName,
-                      _("Error"), wxICON_STOP, this);
+         AudacityMessageBox(
+            wxString::Format(
+               _("Could not create safety file: %s"), safetyFileName ),
+            _("Error"), wxICON_STOP, this);
          return false;
       }
    }
@@ -5283,8 +5288,10 @@ void AudacityProject::AutoSave()
 
    if (!wxRenameFile(fn + wxT(".tmp"), fn + wxT(".autosave")))
    {
-      AudacityMessageBox(_("Could not create autosave file: ") + fn +
-                   wxT(".autosave"), _("Error"), wxICON_STOP, this);
+      AudacityMessageBox(
+         wxString::Format( _("Could not create autosave file: %s"),
+            fn + wxT(".autosave") ),
+         _("Error"), wxICON_STOP, this);
       return;
    }
 
@@ -5302,8 +5309,10 @@ void AudacityProject::DeleteCurrentAutoSaveFile()
       {
          if (!wxRemoveFile(mAutoSaveFileName))
          {
-            AudacityMessageBox(_("Could not remove old autosave file: ") +
-                         mAutoSaveFileName, _("Error"), wxICON_STOP, this);
+            AudacityMessageBox(
+               wxString::Format(
+                  _("Could not remove old autosave file: %s"), mAutoSaveFileName ),
+               _("Error"), wxICON_STOP, this);
             return;
          }
       }

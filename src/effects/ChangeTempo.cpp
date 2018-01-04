@@ -313,8 +313,9 @@ bool EffectChangeTempo::TransferDataToWindow()
    m_bLoopDetect = false;
 
    // Set the accessibility name here because we need m_pTextCtrl_FromLength to have had its value set
-   m_pTextCtrl_ToLength->SetName(_("Length in seconds from") + wxT(" ") +  m_pTextCtrl_FromLength->GetValue()
-               +wxT(", ") + _("to"));
+   m_pTextCtrl_ToLength->SetName(
+      wxString::Format( _("Length in seconds from %s, to"),
+         m_pTextCtrl_FromLength->GetValue() ) );
 
    return true;
 }
