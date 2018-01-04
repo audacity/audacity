@@ -308,15 +308,19 @@ void OnSelectStartCursor();
 void OnSelectPrevClipBoundaryToCursor();
 void OnSelectCursorToNextClipBoundary();
 void OnSelectClipBoundary(bool next);
-typedef struct FoundClip {
+struct FoundTrack {
    const WaveTrack* waveTrack;
    int trackNumber;
    bool channel;
+
+   wxString ComposeTrackName() const;
+};
+struct FoundClip : FoundTrack {
    bool found;
    double startTime;
    double endTime;
    int index;
-} FoundClip;
+};
 FoundClip FindNextClip(const WaveTrack* wt, double t0, double t1);
 FoundClip FindPrevClip(const WaveTrack* wt, double t0, double t1);
 int FindClips(double t0, double t1, bool next, std::vector<FoundClip>& results);
@@ -422,17 +426,14 @@ void OnCursorTrackStart();
 void OnCursorTrackEnd();
 void OnCursorSelStart();
 void OnCursorSelEnd();
-typedef struct FoundClipBoundary {
-   const WaveTrack* waveTrack;
-   int trackNumber;
-   bool channel;
+struct FoundClipBoundary : FoundTrack {
    int nFound;    // 0, 1, or 2
    double time;
    int index1;
    bool clipStart1;
    int index2;
    bool clipStart2;
-} FoundClipBoundary;
+};
 FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time);
 FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time);
 double AdjustForFindingStartTimes(const std::vector<const WaveClip*>& clips, double time);
@@ -441,7 +442,7 @@ int FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& r
 void OnCursorNextClipBoundary();
 void OnCursorPrevClipBoundary();
 void OnCursorClipBoundary(bool next);
-wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results);
+static wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results);
 
 void OnAlignNoSync(int index);
 void OnAlign(int index);

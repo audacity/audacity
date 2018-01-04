@@ -6350,23 +6350,24 @@ void AudacityProject::OnSelectClip(bool next)
       // create and send message to screen reader
       wxString message;
       for (auto& result : results) {
-         wxString temp;         
-         temp.Printf(wxT("%d %s %d %s "), result.index + 1, _("of"), result.waveTrack->GetNumClips(),
-            result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
-         message += temp;         
+         auto longName = result.ComposeTrackName();
+         auto nClips = result.waveTrack->GetNumClips();
+         auto format = wxPLURAL(
+            /* i18n-hint:
+               first number identifies one of a sequence of clips,
+               last number counts the clips,
+               string names a track
+             */
+            _("%d of %d clip %s"),
+            _("%d of %d clips %s"),
+            nClips
+         );
+         auto str = wxString::Format( format, result.index + 1, nClips, longName );
 
-         if (result.waveTrack->GetName() == result.waveTrack->GetDefaultName())
-            temp.Printf(wxT("%s %d "), _("Track"), result.trackNumber);
+         if (message.empty())
+            message = str;
          else
-            temp.Printf(wxT("%s "), result.waveTrack->GetName());
-         message += temp;
-
-         if (result.channel) {
-            message += result.waveTrack->GetLinked() ? _("left") : _("right");
-            message += wxT(" ");
-         }
-
-         message += wxT(", ");
+            message = wxString::Format(_("%s, %s"), message, str);
       }
       mTrackPanel->MessageForScreenReader(message);
    }
@@ -7418,39 +7419,82 @@ void AudacityProject::OnCursorClipBoundary(bool next)
    }
 }
 
+wxString AudacityProject::FoundTrack::ComposeTrackName() const
+{
+   auto name = waveTrack->GetName();
+   auto shortName = name == waveTrack->GetDefaultName()
+      /* i18n-hint: compose a name identifying an unnamed track by number */
+      ? wxString::Format( _("Track %d"), trackNumber )
+      : name;
+   auto longName = shortName;
+   if (channel) {
+      if ( waveTrack->GetLinked() )
+      /* i18n-hint: given the name of a track, specify its left channel */
+         longName = wxString::Format(_("%s left"), shortName);
+      else
+      /* i18n-hint: given the name of a track, specify its right channel */
+         longName = wxString::Format(_("%s right"), shortName);
+   }
+   return longName;
+}
+
 // for clip boundary commands, create a message for screen readers
 wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results)
 {
    wxString message;
    for (auto& result : results) {
-      wxString temp;
-      // TODO This section is extremely difficult for translators.
-      // Can it be made easier and can hints be given?
-      temp.Printf(wxT("%s %d "), result.clipStart1 ? _("start") : _("end"), result.index1 + 1);
-      message += temp;
 
-      if (result.nFound == 2) {
-         temp.Printf(wxT("%s %s %d "), _("and"), result.clipStart2 ? _("start") : _("end"),
-            result.index2 + 1);
-         message += temp;
+      auto longName = result.ComposeTrackName();
+
+      wxString str;
+      auto nClips = result.waveTrack->GetNumClips();
+      if (result.nFound < 2) {
+         auto format = wxPLURAL(
+            /* i18n-hint: First %s is replaced with the noun "start" or "end"
+               identifying one end of a clip,
+               first number gives the position of that clip in a sequence
+               of clips,
+               last number counts all clips,
+               and the last string is the name of the track containing the clips.
+             */
+            _("%s %d of %d clip %s"),
+            _("%s %d of %d clips %s"),
+            nClips
+         );
+         str = wxString::Format(format,
+            result.clipStart1 ? _("start") : _("end"),
+            result.index1 + 1,
+            nClips,
+            longName
+         );
+      }
+      else {
+            /* i18n-hint: First two %s are each replaced with the noun "start"
+               or with "end", identifying and end of a clip,
+               first and second numbers give the position of those clips in
+               a seqeunce of clips,
+               last number counts all clips,
+               and the last string is the name of the track containing the clips.
+             */
+         auto format = wxPLURAL(
+            _("%s %d and %s %d of %d clip %s"),
+            _("%s %d and %s %d of %d clips %s"),
+            nClips
+         );
+         str = wxString::Format(format,
+            result.clipStart1 ? _("start") : _("end"),
+            result.index1 + 1,
+            result.clipStart2 ? _("start") : _("end"),
+            result.index2 + 1,
+            nClips,
+            longName
+         );
       }
 
-      temp.Printf(wxT("%s %d %s "), _("of"), result.waveTrack->GetNumClips(),
-         result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
-      message += temp;
-
-      if (result.waveTrack->GetName() == result.waveTrack->GetDefaultName())
-         temp.Printf(wxT("%s %d "), _("Track"), result.trackNumber);
-      else 
-         temp.Printf( wxT("%s "), result.waveTrack->GetName());
-      message += temp;
-
-      if (result.channel) {
-         message += result.waveTrack->GetLinked() ? _("left") : _("right");
-         message += wxT(" ");
-      }
-
-      message += wxT(", ");
+      if (message.empty())
+         message = str;
+      else
+         message = wxString::Format(_("%s, %s"), message, str);
    }
 
    return message;
