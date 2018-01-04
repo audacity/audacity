@@ -90,6 +90,9 @@ public:
 
    // Limits zoom to certain bounds
    void SetZoom(double pixelsPerSecond);
+   double GetZoom();
+   static double GetMaxZoom( );
+   static double GetMinZoom( );
 
    // Limits zoom to certain bounds
    // multipliers above 1.0 zoom in, below out

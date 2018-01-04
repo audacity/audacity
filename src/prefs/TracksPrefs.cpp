@@ -80,11 +80,32 @@ void TracksPrefs::Populate()
 
    // How samples are displayed when zoomed in:
 
-   mSampleDisplayChoice.Add(_("Connect dots"));
-   mSampleDisplayCodes.Add((int) WaveTrack::LinarInterpolate);
+   mSampleDisplayChoices.Add(_("Connect dots"));
+   mSampleDisplayCodes.Add((int) WaveTrack::LinearInterpolate);
 
-   mSampleDisplayChoice.Add(_("Stem plot"));
+   mSampleDisplayChoices.Add(_("Stem plot"));
    mSampleDisplayCodes.Add((int) WaveTrack::StemPlot);
+
+   mZoomChoices.Add( _("Zoom to Fit") );
+   mZoomCodes.Add( WaveTrack::kZoomToFit );
+   mZoomChoices.Add( _("Zoom to Selection") );
+   mZoomCodes.Add( WaveTrack::kZoomToSelection );
+   mZoomChoices.Add( _("Zoom Default") );
+   mZoomCodes.Add( WaveTrack::kZoomDefault );
+   mZoomChoices.Add( _("Minutes") );
+   mZoomCodes.Add( WaveTrack::kZoomMinutes );
+   mZoomChoices.Add( _("Seconds") );
+   mZoomCodes.Add( WaveTrack::kZoomSeconds );
+   mZoomChoices.Add( _("MilliSeconds") );
+   mZoomCodes.Add( WaveTrack::kZoomMilliSeconds );
+   mZoomChoices.Add( _("Samples") );
+   mZoomCodes.Add( WaveTrack::kZoomSamples );
+   mZoomChoices.Add( _("4 Pixels per Sample") );
+   mZoomCodes.Add( WaveTrack::kZoom4To1 );
+   mZoomChoices.Add( _("Max Zoom") );
+   mZoomCodes.Add( WaveTrack::kMaxZoom );
+
+
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -125,9 +146,9 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
          S.TieChoice(_("Display &samples:"),
                      wxT("/GUI/SampleView"),
                      1,
-                     mSampleDisplayChoice,
+                     mSampleDisplayChoices,
                      mSampleDisplayCodes);
-         S.SetSizeHints(mSampleDisplayChoice);
+         S.SetSizeHints(mSampleDisplayChoices);
 
          S.TieTextBox(_("Default audio track &name:"),
                       wxT("/GUI/TrackNames/DefaultTrackName"),
@@ -139,6 +160,27 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Sho&w audio track name as overlay"),
                   wxT("/GUI/ShowTrackNameInWaveform"),
                   false);
+   }
+   S.EndStatic();
+
+   S.StartStatic(_("Zoom-Toggle"));
+   {
+      S.StartMultiColumn(4);
+      {
+         S.TieChoice(_("Preset 1:"),
+                     wxT("/GUI/ZoomPreset1"),
+                     WaveTrack::kZoomDefault,
+                     mZoomChoices,
+                     mZoomCodes);
+         S.SetSizeHints(mZoomChoices);
+
+         S.TieChoice(_("Preset 2:"),
+                     wxT("/GUI/ZoomPreset2"),
+                     WaveTrack::kZoom4To1,
+                     mZoomChoices,
+                     mZoomCodes);
+         S.SetSizeHints(mZoomChoices);
+      }
    }
    S.EndStatic();
 }

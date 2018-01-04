@@ -331,11 +331,9 @@ void OnSelectClip(bool next);
 void OnSelectCursorStoredCursor(const CommandContext &);
 void OnSelectSyncLockSel(const CommandContext &);
 
-        // View Menu
-
 void OnZoomIn(const CommandContext &);
 void OnZoomOut(const CommandContext &);
-// void OnZoomToggle(const CommandContext &);
+void OnZoomToggle(const CommandContext &);
 void OnZoomNormal(const CommandContext &);
 void OnZoomFit(const CommandContext &);
 void OnZoomFitV(const CommandContext &);

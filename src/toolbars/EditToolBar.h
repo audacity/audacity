@@ -48,10 +48,9 @@ enum {
 
    ETBZoomInID,
    ETBZoomOutID,
-
-   #if 0 // Disabled for version 1.2.0 since it doesn't work quite right...
+#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
    ETBZoomToggleID,
-   #endif
+#endif
 
    ETBZoomSelID,
    ETBZoomFitID,

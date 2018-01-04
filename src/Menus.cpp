@@ -719,7 +719,12 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ZoomOut"), _("Zoom &Out"), FN(OnZoomOut), wxT("Ctrl+3"),
          ZoomOutAvailableFlag,
          ZoomOutAvailableFlag);
-      c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
+      c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), 
+         TimeSelectedFlag, 
+         TimeSelectedFlag);
+      c->AddItem(wxT("ZoomToggle"), _("Zoom &Toggle"), FN(OnZoomToggle), wxT(""),
+         TracksExistFlag, 
+         TracksExistFlag);
       c->EndSubMenu();
 
       c->BeginSubMenu(_("T&rack Size"));
@@ -6530,29 +6535,25 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
    TP_ScrollWindow(newh);
 
 }
-
-// this is unused:
-#if 0
-static double OldZooms[2]={ 44100.0/512.0, 4410.0/512.0 };
-void AudacityProject::OnZoomToggle()
+void AudacityProject::OnZoomToggle(const CommandContext &)
 {
-   double origLeft = mViewInfo.h;
-   double origWidth = mViewInfo.screen;
+//   const double origLeft = mViewInfo.h;
+//   const double origWidth = GetScreenEndTime() - origLeft;
 
-   float f;
-   // look at percentage difference.  We add a small fudge factor
-   // to avoid testing for zero divisor.
-   f = mViewInfo.zoom / (OldZooms[0] + 0.0001f);
-   // If old zoom is more than 10 percent different, use it.
-   if( (0.90f > f) || (f >1.10) ){
-      OldZooms[1]=OldZooms[0];
-      OldZooms[0]=mViewInfo.zoom;
-   }
-   Zoom( OldZooms[1] );
-   double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
-   TP_ScrollWindow(newh);
+   // Choose the zoom that is most different to the current zoom.
+   double Zoom1 = GetZoomOfPref(
+      wxT("/GUI/ZoomPreset1"), WaveTrack::kZoomDefault );
+   double Zoom2 = GetZoomOfPref(
+      wxT("/GUI/ZoomPreset2"), WaveTrack::kZoom4To1 );
+   double Z = mViewInfo.GetZoom();// Current Zoom.
+   double ChosenZoom = abs(log(Zoom1 / Z)) > abs(log( Z / Zoom2)) ? Zoom1:Zoom2;
+
+   Zoom(ChosenZoom);
+   mTrackPanel->Refresh(false);
+//   const double newWidth = GetScreenEndTime() - mViewInfo.h;
+//   const double newh = origLeft + (origWidth - newWidth) / 2;
+//   TP_ScrollWindow(newh);
 }
-#endif
 
 
 void AudacityProject::OnZoomNormal(const CommandContext &)
@@ -6563,20 +6564,11 @@ void AudacityProject::OnZoomNormal(const CommandContext &)
 
 void AudacityProject::OnZoomFit(const CommandContext &)
 {
-   const double end = mTracks->GetEndTime();
    const double start = mViewInfo.bScrollBeyondZero
       ? std::min(mTracks->GetStartTime(), 0.0)
       : 0;
-   const double len = end - start;
 
-   if (len <= 0.0)
-      return;
-
-   int w;
-   mTrackPanel->GetTracksUsableArea(&w, NULL);
-   w -= 10;
-
-   Zoom(w / len);
+   Zoom( GetZoomOfToFit() );
    TP_ScrollWindow(start);
 }
 
@@ -6628,26 +6620,7 @@ void AudacityProject::OnZoomFitV(const CommandContext &)
 
 void AudacityProject::OnZoomSel(const CommandContext &)
 {
-   const double lowerBound =
-      std::max(mViewInfo.selectedRegion.t0(), ScrollingLowerBoundTime());
-   const double denom =
-      mViewInfo.selectedRegion.t1() - lowerBound;
-   if (denom <= 0.0)
-      return;
-
-   // LL:  The "-1" is just a hack to get around an issue where zooming to
-   //      selection doesn't actually get the entire selected region within the
-   //      visible area.  This causes a problem with scrolling at end of playback
-   //      where the selected region may be scrolled off the left of the screen.
-   //      I know this isn't right, but until the real rounding or 1-off issue is
-   //      found, this will have to work.
-   // PRL:  Did I fix this?  I am not sure, so I leave the hack in place.
-   //      Fixes might have resulted from commits
-   //      1b8f44d0537d987c59653b11ed75a842b48896ea and
-   //      e7c7bb84a966c3b3cc4b3a9717d5f247f25e7296
-   int width;
-   mTrackPanel->GetTracksUsableArea(&width, NULL);
-   Zoom((width - 1) / denom);
+   Zoom( GetZoomOfSelection() );
    TP_ScrollWindow(mViewInfo.selectedRegion.t0());
 }  
 

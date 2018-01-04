@@ -577,8 +577,21 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    // Only two types of sample display for now, but
    // others (eg sinc interpolation) may be added later.
    enum SampleDisplay {
-      LinarInterpolate = 0,
+      LinearInterpolate = 0,
       StemPlot
+   };
+
+   // Various preset zooming levels.
+   enum ZoomPresets {
+      kZoomToFit = 0,
+      kZoomToSelection,
+      kZoomDefault,
+      kZoomMinutes,
+      kZoomSeconds,
+      kZoomMilliSeconds,
+      kZoomSamples,
+      kZoom4To1,
+      kMaxZoom,
    };
 
    // Read appropriate value from preferences

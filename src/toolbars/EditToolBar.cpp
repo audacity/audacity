@@ -160,6 +160,11 @@ void EditToolBar::Populate()
    AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
       _("Zoom Out"));
 
+#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
+   AddButton(bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
+      _("Zoom Toggle"));
+#endif
+
    AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
       _("Fit selection in window"));
    AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
@@ -167,6 +172,9 @@ void EditToolBar::Populate()
 
    mButtons[ETBZoomInID]->SetEnabled(false);
    mButtons[ETBZoomOutID]->SetEnabled(false);
+#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
+   mButtons[ETBZoomToggleID]->SetEnabled(false);
+#endif
 
    mButtons[ETBZoomSelID]->SetEnabled(false);
    mButtons[ETBZoomFitID]->SetEnabled(false);
@@ -226,6 +234,9 @@ static const struct Entry {
 
    { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In")  },
    { ETBZoomOutID,  wxT("ZoomOut"),     XO("Zoom Out")  },
+#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
+   { ETBZoomToggleID,   wxT("ZoomToggle"),      XO("Zoom Toggle")  },
+#endif 
    { ETBZoomSelID,  wxT("ZoomSel"),     XO("Fit selection in window")  },
    { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project in window")  },
 

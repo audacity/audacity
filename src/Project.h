@@ -576,6 +576,11 @@ public:
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
 
+   double GetZoomOfToFit();
+   double GetZoomOfSelection();
+   double GetZoomOfPreset(int preset );
+   double GetZoomOfPref( const wxString & PresetPrefName, int defaultPreset );
+
  public:
    bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
    bool IsSoloNone() const { return mSoloPref == wxT("None"); }

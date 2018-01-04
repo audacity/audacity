@@ -44,7 +44,9 @@ class TracksPrefs final : public PrefsPanel
    wxArrayInt    mViewCodes;
    wxArrayString mViewChoices;
    wxArrayInt    mSampleDisplayCodes;
-   wxArrayString mSampleDisplayChoice;
+   wxArrayString mSampleDisplayChoices;
+   wxArrayInt    mZoomCodes;
+   wxArrayString mZoomChoices;
 };
 
 class TracksPrefsFactory final : public PrefsPanelFactory
