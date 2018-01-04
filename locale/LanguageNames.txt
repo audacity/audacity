@@ -52,5 +52,5 @@ tg Тоҷикӣ
 tr Türkçe
 uk Українська
 vi Tiếng Việt
-zh_CN 中文
-zh_TW 中文
+zh_CN 中文（简体）
+zh_TW 中文（繁體）
