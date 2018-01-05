@@ -1010,6 +1010,17 @@ ProgressDialog::ProgressDialog(const wxString & title,
    Create(title, message, flags, sRemainingLabelText);
 }
 
+ProgressDialog::ProgressDialog(const wxString & title,
+                               const MessageTable &columns,
+                               int flags /* = pdlgDefaultFlags */,
+                               const wxString & sRemainingLabelText /* = wxEmptyString */)
+:  wxDialogWrapper()
+{
+   Init();
+
+   Create(title, columns, flags, sRemainingLabelText);
+}
+
 //
 // Destructor
 //
@@ -1071,13 +1082,18 @@ void ProgressDialog::Init()
 }
 
 // Add a NEW text column each time this is called.
-void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText, bool bFirstColumn) {
+void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer,
+                                        const MessageColumn & column,
+                                        bool bFirstColumn) {
 
    // Assuming that we don't want empty columns, bail out if there is no text.
-   if (sText.IsEmpty())
-   {
+   if (column.empty())
       return;
-   }
+
+   // Join strings
+   auto sText = column[0];
+   std::for_each( column.begin() + 1, column.end(),
+      [&](const wxString &text) { sText += wxT("\n") + text; });
 
    // Create a statictext object and add to the sizer
    wxStaticText* oText = safenew wxStaticText(this,
@@ -1089,7 +1105,7 @@ void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sT
    oText->SetName(sText); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    // If this is the first column then set the mMessage pointer so non-TimerRecord usages
-   // will still work correctly
+   // will still work correctly in SetMessage()
    if (bFirstColumn) {
       mMessage = oText;
    }
@@ -1099,6 +1115,25 @@ void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sT
 
 bool ProgressDialog::Create(const wxString & title,
                             const wxString & message /* = wxEmptyString */,
+                            int flags /* = pdlgDefaultFlags */,
+                            const wxString & sRemainingLabelText /* = wxEmptyString */)
+{
+   MessageTable columns(1);
+   columns.back().push_back(message);
+   auto result = Create(title, columns, flags, sRemainingLabelText);
+
+   if (result) {
+      // Record some values used in case of change of message
+      // TODO: make the following work in case of message tables
+      wxClientDC dc(this);
+      dc.GetMultiLineTextExtent(message, &mLastW, &mLastH);
+   }
+
+   return result;
+}
+
+bool ProgressDialog::Create(const wxString & title,
+                            const MessageTable & columns,
                             int flags /* = pdlgDefaultFlags */,
                             const wxString & sRemainingLabelText /* = wxEmptyString */)
 {
@@ -1126,15 +1161,19 @@ bool ProgressDialog::Create(const wxString & title,
 
    {
       wxWindow *window;
-      wxArrayString arMessages(wxSplit(message, ProgressDialog::ColoumnSplitMarker));
 
       // There may be more than one column, so create a BoxSizer container
       auto uColSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       auto colSizer = uColSizer.get();
 
-      for (size_t column = 0; column < arMessages.GetCount(); column++) {
-         bool bFirstCol = (column == 0);
-         AddMessageAsColumn(colSizer, arMessages[column], bFirstCol);
+      // TODO:  this setting-up of a grid of text in a sizer might be worth
+      // extracting as a utility for building other dialogs.
+      {
+         bool bFirstCol = true;
+         for (const auto &column : columns) {
+            AddMessageAsColumn(colSizer, column, bFirstCol);
+            bFirstCol = false;
+         }
       }
 
       // and put message column(s) into a main vertical sizer.
@@ -1224,13 +1263,6 @@ bool ProgressDialog::Create(const wxString & title,
       SetSizerAndFit(vertSizer.release());
    }
    Layout();
-
-   wxClientDC dc(this);
-   dc.GetMultiLineTextExtent(message, &mLastW, &mLastH);
-
-   // Add a little bit more width when we have TABs to stop words wrapping
-   int iTabFreq = wxMax((message.Freq('\t') - 1), 0); 
-   mLastW = mLastW + (iTabFreq * 8);
 
    Centre(wxCENTER_FRAME | wxBOTH);
 
@@ -1459,6 +1491,7 @@ void ProgressDialog::SetMessage(const wxString & message)
       bool sizeUpdated = false;
       wxSize ds = GetClientSize();
 
+      // TODO: make the following work in case of message tables
       if (w > mLastW)
       {
          ds.x += (w - mLastW);
@@ -1591,15 +1624,15 @@ bool ProgressDialog::ConfirmAction(const wxString & sPrompt,
 
 TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,
                                          const wxString & title,
-                                         const wxString & message /* = wxEmptyString */,
+                                         const MessageTable & columns,
                                          int flags /* = pdlgDefaultFlags */,
                                          const wxString & sRemainingLabelText /* = wxEmptyString */)
-: ProgressDialog(title, message, flags, sRemainingLabelText)
+: ProgressDialog(title, columns, flags, sRemainingLabelText)
 {
    mDuration = duration;
 }
 
-ProgressResult TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
+ProgressResult TimerProgressDialog::UpdateProgress()
 {
    if (mCancel)
    {
@@ -1624,8 +1657,6 @@ ProgressResult TimerProgressDialog::Update(const wxString & message /*= wxEmptyS
       SetTransparent(255);
       mIsTransparent = false;
    }
-
-   SetMessage(message);
 
    wxLongLong_t remains = mStartTime + mDuration - now;
 

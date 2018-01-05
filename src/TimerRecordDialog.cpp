@@ -522,30 +522,36 @@ int TimerRecordDialog::RunWaitDialog()
 
       wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
 
-      // Two column layout. Line spacing must match for both columns.
-      // First column
-      wxString strMsg = _("Recording start:\n") +
-                                         _("Duration:\n") +
-                                         _("Recording end:\n\n") +
-                                         _("Automatic Save enabled:\n") +
-                                         _("Automatic Export enabled:\n") +
-                                         _("Action after Timer Recording:");
+      // Two column layout.
+      TimerProgressDialog::MessageTable columns(2);
+      auto &column1 = columns[0];
+      auto &column2 = columns[1];
 
-      strMsg += ProgressDialog::ColoumnSplitMarker;
+      column1.push_back( _("Recording start:") );
+      column2.push_back( GetDisplayDate(m_DateTime_Start) );
 
-      // Second column
-      strMsg += wxString::Format(wxT("%s\n%s\n%s\n\n%s\n%s\n%s"),
-                                       GetDisplayDate(m_DateTime_Start),
-                                       m_TimeSpan_Duration.Format(),
-                                       GetDisplayDate(m_DateTime_End),
-                                       (m_bAutoSaveEnabled ? _("Yes") : _("No")),
-                                       (m_bAutoExportEnabled ? _("Yes") : _("No")),
-                                       sPostAction);
+      column1.push_back( _("Duration:") );
+      column2.push_back( m_TimeSpan_Duration.Format() );
+
+      column1.push_back( _("Recording end:") );
+      column2.push_back( GetDisplayDate(m_DateTime_End) );
+
+      column1.push_back( {} );
+      column2.push_back( {} );
+
+      column1.push_back( _("Automatic Save enabled:") );
+      column2.push_back( (m_bAutoSaveEnabled ? _("Yes") : _("No")) );
+
+      column1.push_back( _("Automatic Export enabled:") );
+      column2.push_back( (m_bAutoExportEnabled ? _("Yes") : _("No")) );
+
+      column1.push_back( _("Action after Timer Recording:") );
+      column2.push_back( sPostAction );
 
       TimerProgressDialog
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
                   _("Audacity Timer Record Progress"),
-                  strMsg,
+                  columns,
                   pdlgHideCancelButton | pdlgConfirmStopCancel);
 
       // Make sure that start and end time are updated, so we always get the full
@@ -555,7 +561,7 @@ int TimerRecordDialog::RunWaitDialog()
 
       // Loop for progress display during recording.
       while (bIsRecording && (updateResult == ProgressResult::Success)) {
-         updateResult = progress.Update();
+         updateResult = progress.UpdateProgress();
          wxMilliSleep(kTimerInterval);
          bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
       }
@@ -1007,31 +1013,37 @@ ProgressResult TimerRecordDialog::WaitForStart()
    // MY: The Waiting For Start dialog now shows what actions will occur after recording has completed
    wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
 
-   // Two column layout. Line spacing must match for both columns.
-   // First column
-   wxString strMsg = _("Waiting to start recording at:\n") +
-                                      _("Recording duration:\n") +
-                                      _("Scheduled to stop at:\n\n") +
-                                      _("Automatic Save enabled:\n") +
-                                      _("Automatic Export enabled:\n") +
-                                      _("Action after Timer Recording:");
+   // Two column layout.
+   TimerProgressDialog::MessageTable columns(2);
+   auto &column1 = columns[0];
+   auto &column2 = columns[1];
 
-   strMsg += ProgressDialog::ColoumnSplitMarker;
+   column1.push_back(_("Waiting to start recording at:"));
+   column2.push_back(GetDisplayDate(m_DateTime_Start));
 
-   // Second column
-   strMsg += wxString::Format(wxT("%s\n%s\n%s\n\n%s\n%s\n%s"),
-                                    GetDisplayDate(m_DateTime_Start),
-                                    m_TimeSpan_Duration.Format(),
-                                    GetDisplayDate(m_DateTime_End),
-                                    (m_bAutoSaveEnabled ? _("Yes") : _("No")),
-                                    (m_bAutoExportEnabled ? _("Yes") : _("No")),
-                                    sPostAction);
+   column1.push_back(_("Recording duration:"));
+   column2.push_back(m_TimeSpan_Duration.Format());
+
+   column1.push_back(_("Scheduled to stop at:"));
+   column2.push_back(GetDisplayDate(m_DateTime_End));
+
+   column1.push_back( {} );
+   column2.push_back( {} );
+
+   column1.push_back(_("Automatic Save enabled:"));
+   column2.push_back((m_bAutoSaveEnabled ? _("Yes") : _("No")));
+
+   column1.push_back(_("Automatic Export enabled:"));
+   column2.push_back((m_bAutoExportEnabled ? _("Yes") : _("No")));
+
+   column1.push_back(_("Action after Timer Recording:"));
+   column2.push_back(sPostAction);
 
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
    TimerProgressDialog progress(waitDuration.GetMilliseconds().GetValue(),
       _("Audacity Timer Record - Waiting for Start"),
-      strMsg,
+      columns,
       pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
       _("Recording will commence in:"));
 
@@ -1039,7 +1051,7 @@ ProgressResult TimerRecordDialog::WaitForStart()
    bool bIsRecording = false;
    while (updateResult == ProgressResult::Success && !bIsRecording)
    {
-      updateResult = progress.Update();
+      updateResult = progress.UpdateProgress();
       wxMilliSleep(10);
       bIsRecording = (m_DateTime_Start <= wxDateTime::UNow());
    }
@@ -1052,20 +1064,25 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    wxString sCountdownLabel;
    sCountdownLabel.Printf("%s in:", sAction);
 
-   // Two column layout. Line spacing must match for both columns.
-   // First column
-   wxString strMsg = _("Timer Recording completed.\n\n") +
-                                      _("Recording Saved:\n") +
-                                      _("Recording Exported:\n") +
-                                      _("Action after Timer Recording:");
+   // Two column layout.
+   TimerProgressDialog::MessageTable columns(2);
+   auto &column1 = columns[0];
+   auto &column2 = columns[1];
 
-   strMsg += ProgressDialog::ColoumnSplitMarker;
+   column1.push_back(_("Timer Recording completed."));
+   column2.push_back( {} );
 
-   // Second column
-   strMsg +=  wxString::Format(wxT("\n\n%s\n%s\n%s"),
-                                    ((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")),
-                                    ((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")),
-                                    sAction);
+   column1.push_back( {} );
+   column2.push_back( {} );
+
+   column1.push_back(_("Recording Saved:"));
+   column2.push_back(((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")));
+
+   column1.push_back(_("Recording Exported:"));
+   column2.push_back(((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")));
+
+   column1.push_back(_("Action after Timer Recording:"));
+   column2.push_back(sAction);
 
    wxDateTime dtNow = wxDateTime::UNow();
    wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
@@ -1073,7 +1090,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
 
    TimerProgressDialog dlgAction(tsWait.GetMilliseconds().GetValue(),
                           _("Audacity Timer Record - Waiting"),
-                          strMsg,
+                          columns,
                           pdlgHideStopButton | pdlgHideElapsedTime,
                           sCountdownLabel);
 
@@ -1081,7 +1098,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    bool bIsTime = false;
    while (iUpdateResult == ProgressResult::Success && !bIsTime)
    {
-      iUpdateResult = dlgAction.Update();
+      iUpdateResult = dlgAction.UpdateProgress();
       wxMilliSleep(10);
       bIsTime = (dtActionTime <= wxDateTime::UNow());
    }
