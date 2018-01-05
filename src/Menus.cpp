@@ -6356,7 +6356,7 @@ void AudacityProject::OnSelectClip(bool next)
                first number identifies one of a sequence of clips,
                last number counts the clips,
                string names a track */
-         _("dummyStringOnSelectClip")
+         _("dummyStringOnSelectClip");
          auto format = wxPLURAL(
             "%d of %d clip %s",
             "%d of %d clips %s",
