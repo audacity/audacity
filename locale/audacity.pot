@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-04 19:54-0500\n"
+"POT-Creation-Date: 2018-01-05 00:25-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4135,20 +4135,20 @@ msgstr ""
 msgid "Split New"
 msgstr ""
 
-#. i18n-hint:
+#. i18n-hint: in the string after this one,
 #. first number identifies one of a sequence of clips,
 #. last number counts the clips,
 #. string names a track
-#.
 #: src/Menus.cpp
-#, c-format
-msgid "%d of %d clip %s"
+msgid "dummyStringOnSelectClip"
 msgstr ""
 
 #: src/Menus.cpp
 #, c-format
-msgid "%d of %d clips %s"
-msgstr ""
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/Menus.cpp src/import/Import.cpp
 #, c-format
@@ -4259,14 +4259,15 @@ msgstr ""
 #. and the last string is the name of the track containing the clips.
 #.
 #: src/Menus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
+msgid "dummyStringClipBoundaryMessage"
 msgstr ""
 
 #: src/Menus.cpp
 #, c-format
-msgid "%s %d of %d clips %s"
-msgstr ""
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/Menus.cpp
 msgid "start"
@@ -4276,15 +4277,24 @@ msgstr ""
 msgid "end"
 msgstr ""
 
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
 #: src/Menus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
+msgid "dummyStringClipBoundaryMessageLong"
 msgstr ""
 
 #: src/Menus.cpp
 #, c-format
-msgid "%s %d and %s %d of %d clips %s"
-msgstr ""
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
 
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
@@ -4875,11 +4885,9 @@ msgstr ""
 
 #: src/PluginManager.cpp
 msgid "Enable this plug-in?"
-msgstr ""
-
-#: src/PluginManager.cpp
-msgid "Enable these plug-ins?"
-msgstr ""
+msgid_plural "Enable these plug-ins?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/PluginManager.cpp
 msgid "Enable new plug-ins"

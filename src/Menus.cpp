@@ -6352,14 +6352,14 @@ void AudacityProject::OnSelectClip(bool next)
       for (auto& result : results) {
          auto longName = result.ComposeTrackName();
          auto nClips = result.waveTrack->GetNumClips();
-         auto format = wxPLURAL(
-            /* i18n-hint:
+            /* i18n-hint: in the string after this one,
                first number identifies one of a sequence of clips,
                last number counts the clips,
-               string names a track
-             */
-            _("%d of %d clip %s"),
-            _("%d of %d clips %s"),
+               string names a track */
+         _("dummyStringOnSelectClip")
+         auto format = wxPLURAL(
+            "%d of %d clip %s",
+            "%d of %d clips %s",
             nClips
          );
          auto str = wxString::Format( format, result.index + 1, nClips, longName );
@@ -7449,7 +7449,6 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
       wxString str;
       auto nClips = result.waveTrack->GetNumClips();
       if (result.nFound < 2) {
-         auto format = wxPLURAL(
             /* i18n-hint: First %s is replaced with the noun "start" or "end"
                identifying one end of a clip,
                first number gives the position of that clip in a sequence
@@ -7457,8 +7456,10 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
                last number counts all clips,
                and the last string is the name of the track containing the clips.
              */
-            _("%s %d of %d clip %s"),
-            _("%s %d of %d clips %s"),
+         _("dummyStringClipBoundaryMessage");
+         auto format = wxPLURAL(
+            "%s %d of %d clip %s",
+            "%s %d of %d clips %s",
             nClips
          );
          str = wxString::Format(format,
@@ -7469,16 +7470,18 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
          );
       }
       else {
-            /* i18n-hint: First two %s are each replaced with the noun "start"
+            /* i18n-hint: in the string after this one,
+               First two %s are each replaced with the noun "start"
                or with "end", identifying and end of a clip,
                first and second numbers give the position of those clips in
                a seqeunce of clips,
                last number counts all clips,
                and the last string is the name of the track containing the clips.
              */
+         _("dummyStringClipBoundaryMessageLong");
          auto format = wxPLURAL(
-            _("%s %d and %s %d of %d clip %s"),
-            _("%s %d and %s %d of %d clips %s"),
+            "%s %d and %s %d of %d clip %s",
+            "%s %d and %s %d of %d clips %s",
             nClips
          );
          str = wxString::Format(format,

@@ -233,8 +233,23 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 #undef wxPLURAL
 #endif
 
-// Note:  The strings will go to the .pot file (do not use _(...)).
-#define wxPLURAL(sing, plur, n)  wxGetTranslation((sing), (plur), n)
+// The two string arugments will go to the .pot file, as
+// msgid sing
+// msgid_plural plural
+//
+// (You must use plain string literals.  Do not use _() or wxT() or L prefix,
+//  which (inentionally) will fail to compile.  The macro inserts wxT).
+//
+// Note too:  it seems an i18n-hint comment is not extracted if it precedes
+// wxPLURAL directly.  A workaround:  after the comment, insert a line
+// _("dummyStringXXXX");
+// where for XXXX subsitute something making this dummy string unique in the
+// program.  Then check in your generated audacity.pot that the dummy is
+// immediately before the singular/plural entry.
+//
+// Your i18n-comment should therefore say something like,
+// "In the string after this one, ..."
+#define wxPLURAL(sing, plur, n)  wxGetTranslation( wxT(sing), wxT(plur), n)
 
 
 #ifdef _
