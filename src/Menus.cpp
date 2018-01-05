@@ -8132,8 +8132,7 @@ void AudacityProject::OnTimerRecord(const CommandContext &)
          // No action required
          break;
       case POST_TIMER_RECORD_CLOSE:
-         // Quit Audacity
-         exit(0);
+         wxTheApp->CallAfter( []{ QuitAudacity(); } );
          break;
       case POST_TIMER_RECORD_RESTART:
          // Restart System
