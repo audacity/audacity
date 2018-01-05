@@ -7449,7 +7449,8 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
       wxString str;
       auto nClips = result.waveTrack->GetNumClips();
       if (result.nFound < 2) {
-            /* i18n-hint: First %s is replaced with the noun "start" or "end"
+            /* i18n-hint: in the string after this one,
+               First %s is replaced with the noun "start" or "end"
                identifying one end of a clip,
                first number gives the position of that clip in a sequence
                of clips,
