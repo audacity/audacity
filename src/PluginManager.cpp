@@ -2457,7 +2457,8 @@ const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
       bool familyEnabled = true;
       if (type == PluginTypeEffect)
       {
-         gPrefs->Read(plug.GetTranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+         // This preference may be written by EffectsPrefs
+         gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
       if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
@@ -2476,7 +2477,8 @@ const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
       bool familyEnabled = true;
       if (type == PluginTypeEffect)
       {
-         gPrefs->Read(plug.GetTranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+         // This preference may be written by EffectsPrefs
+         gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
       if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
@@ -2496,6 +2498,7 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
       PluginDescriptor & plug = mPluginsIter->second;
 
       bool familyEnabled;
+      // This preference may be written by EffectsPrefs
       gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
@@ -2519,7 +2522,8 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
    {
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled;
-      gPrefs->Read(plug.GetTranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      // This preference may be written by EffectsPrefs
+      gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
