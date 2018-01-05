@@ -490,7 +490,7 @@ void OnApplyChain();
 void OnEditChains();
 void OnStereoToMono(int index);
 void OnManagePluginsMenu(EffectType Type);
-void RebuildAllMenuBars();
+static void RebuildAllMenuBars();
 void OnManageGenerators();
 void OnManageEffects();
 void OnManageAnalyzers();

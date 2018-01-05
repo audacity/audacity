@@ -3039,7 +3039,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 #ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
       // Is it a plug-in?
       if (PluginManager::Get().DropFile(fileName)) {
-         this->RebuildAllMenuBars();
+         RebuildAllMenuBars();
       }
       else
       // No, so import.
