@@ -62,11 +62,14 @@ public:
    const wxString & GetPath() const;
    const wxString & GetSymbol() const;
 
-   // These return translated strings (if available and if requested)
-   wxString GetName(bool translate = true) const;
-   wxString GetVersion(bool translate = true) const;
-   wxString GetVendor(bool translate = true) const;
-   wxString GetDescription(bool translate = true) const;
+   wxString GetUntranslatedVersion() const;
+   // There is no translated version
+
+   wxString GetUntranslatedName() const;
+   wxString GetTranslatedName() const;
+
+   wxString GetUntranslatedVendor() const;
+   wxString GetTranslatedVendor() const;
    bool IsEnabled() const;
    bool IsValid() const;
 
@@ -81,15 +84,14 @@ public:
    void SetName(const wxString & name);
    void SetVersion(const wxString & version);
    void SetVendor(const wxString & vendor);
-   void SetDescription(const wxString & description);
 
    void SetEnabled(bool enable);
    void SetValid(bool valid);
 
    // Effect plugins only
 
-   // Will return an untranslated string
-   wxString GetEffectFamily(bool translate = true) const;
+   wxString GetUntranslatedEffectFamily() const;
+   wxString GetTranslatedEffectFamily() const;
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;
@@ -135,7 +137,6 @@ private:
    wxString mName;
    wxString mVersion;
    wxString mVendor;
-   wxString mDescription;
    wxString mProviderID;
    bool mEnabled;
    bool mValid;
