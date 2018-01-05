@@ -89,7 +89,6 @@ array of Ruler::Label.
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelCellIterator.h"
-#include "../Menus.h"
 #include "../NumberScale.h"
 #include "../Prefs.h"
 #include "../Snap.h"
@@ -2415,7 +2414,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
          if (switchToQP && evt.LeftDown()) {
             // We can't stop scrubbing yet (see comments in Bug 1391), but we can pause it.
-            mProject->OnPause();
+            mProject->OnPause(*mProject);
             // Don't return, fall through
          }
          else if (scrubber.IsPaused())
@@ -2554,7 +2553,7 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Temporarily unlock locked play region
    if (mPlayRegionLock && evt.LeftDown()) {
       //mPlayRegionLock = true;
-      mProject->OnUnlockPlayRegion();
+      mProject->OnUnlockPlayRegion(*mProject);
    }
 
    mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
@@ -2734,7 +2733,7 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       if (mPlayRegionLock) {
          // Restore Locked Play region
          SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
-         mProject->OnLockPlayRegion();
+         mProject->OnLockPlayRegion(*mProject);
          // and release local lock
          mPlayRegionLock = false;
       }
@@ -2845,10 +2844,10 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
 // This version toggles ruler state indirectly via the scrubber
 // to ensure that all the places where the state is shown update.
 // For example buttons and menus must update.
-void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent& Evt)
+void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
 {
    auto &scrubber = mProject->GetScrubber();
-   scrubber.OnToggleScrubRuler( Evt );
+   scrubber.OnToggleScrubRuler(*mProject);
 }
 
 void AdornedRulerPanel::OnToggleScrubRuler(/*wxCommandEvent&*/)
@@ -2903,7 +2902,7 @@ void AdornedRulerPanel::UpdateButtonStates()
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 {
-   mProject->OnTogglePinnedHead();
+   mProject->OnTogglePinnedHead(*mProject);
    UpdateButtonStates();
 }
 
@@ -3042,9 +3041,9 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
 {
    if (mProject->IsPlayRegionLocked())
-      mProject->OnUnlockPlayRegion();
+      mProject->OnUnlockPlayRegion(*mProject);
    else
-      mProject->OnLockPlayRegion();
+      mProject->OnLockPlayRegion(*mProject);
 }
 
 

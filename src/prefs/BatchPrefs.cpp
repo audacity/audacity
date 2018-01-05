@@ -26,7 +26,6 @@
 #include "../Project.h"
 #include "../BatchCommandDialog.h"
 #include "../ShuttleGui.h"
-#include "../Menus.h"
 #include "../toolbars/ToolManager.h"
 
 BEGIN_EVENT_TABLE(BatchPrefs, PrefsPanel)

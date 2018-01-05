@@ -765,7 +765,7 @@ bool Effect::Apply()
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   return GetActiveProject()->OnEffect(GetID(), AudacityProject::OnEffectFlags::kConfigured);
+   return GetActiveProject()->DoEffect(GetID(), AudacityProject::OnEffectFlags::kConfigured);
 }
 
 void Effect::Preview()

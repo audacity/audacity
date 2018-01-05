@@ -224,7 +224,7 @@ namespace {
       wxString label;
       wxString status;
       CommandFlag flags;
-      void (Scrubber::*memFn)(wxCommandEvent&);
+      void (Scrubber::*memFn)(const CommandContext&);
       bool seek;
       bool (Scrubber::*StatusTest)() const;
 
@@ -921,19 +921,19 @@ void Scrubber::OnScrubOrSeek(bool seek)
    scrubbingToolBar->RegenerateTooltips();
 }
 
-void Scrubber::OnScrub(wxCommandEvent&)
+void Scrubber::OnScrub(const CommandContext&)
 {
    OnScrubOrSeek(false);
    CheckMenuItems();
 }
 
-void Scrubber::OnSeek(wxCommandEvent&)
+void Scrubber::OnSeek(const CommandContext&)
 {
    OnScrubOrSeek(true);
    CheckMenuItems();
 }
 
-void Scrubber::OnToggleScrubRuler(wxCommandEvent&)
+void Scrubber::OnToggleScrubRuler(const CommandContext&)
 {
    mProject->GetRulerPanel()->OnToggleScrubRuler();
    const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
@@ -943,10 +943,12 @@ void Scrubber::OnToggleScrubRuler(wxCommandEvent&)
 
 enum { CMD_ID = 8000 };
 
+#define THUNK(Name) Scrubber::Thunk<&Scrubber::Name>
+
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
-   EVT_MENU(CMD_ID,     Scrubber::OnScrub)
-   EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
-   EVT_MENU(CMD_ID + 2, Scrubber::OnToggleScrubRuler)
+   EVT_MENU(CMD_ID,     THUNK(OnScrub))
+   EVT_MENU(CMD_ID + 1, THUNK(OnSeek))
+   EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
@@ -1000,6 +1002,10 @@ bool Scrubber::CanScrub() const
    return cm->GetEnabled(menuItems[ 0 ].name);
 }
 
+// To supply the "finder" argument
+static CommandHandlerObject &findme(AudacityProject &project)
+{ return project.GetScrubber(); }
+
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
@@ -1008,13 +1014,13 @@ void Scrubber::AddMenuItems()
    for (const auto &item : menuItems) {
       if (item.StatusTest)
          cm->AddCheck(item.name, wxGetTranslation(item.label),
-                      FNT(Scrubber, this, item.memFn),
+                      findme, static_cast<CommandFunctorPointer>(item.memFn),
                       false,
                       item.flags, item.flags);
       else
          // The start item
          cm->AddItem(item.name, wxGetTranslation(item.label),
-                     FNT(Scrubber, this, item.memFn),
+                     findme, static_cast<CommandFunctorPointer>(item.memFn),
                      item.flags, item.flags);
    }
    cm->EndSubMenu();

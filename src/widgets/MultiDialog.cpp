@@ -150,7 +150,8 @@ void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 {
-   GetActiveProject()->OnShowLog();
+   auto project = GetActiveProject();
+   project->OnShowLog(*project);
 }
 
 
