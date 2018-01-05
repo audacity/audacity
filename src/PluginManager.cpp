@@ -1150,9 +1150,9 @@ wxString PluginDescriptor::GetName(bool translate) const
    return translate ? wxString(wxGetTranslation(mName)) : mName;
 }
 
-wxString PluginDescriptor::GetVersion(bool translate) const
+wxString PluginDescriptor::GetUntranslatedVersion() const
 {
-   return translate ? wxString(wxGetTranslation(mVersion)) : mVersion;
+   return mVersion;
 }
 
 wxString PluginDescriptor::GetVendor(bool translate) const
@@ -2206,7 +2206,7 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
       pRegistry->Write(KEY_PATH, plug.GetPath());
       pRegistry->Write(KEY_SYMBOL, plug.GetSymbol());
       pRegistry->Write(KEY_NAME, plug.GetName(false));
-      pRegistry->Write(KEY_VERSION, plug.GetVersion(false));
+      pRegistry->Write(KEY_VERSION, plug.GetUntranslatedVersion());
       pRegistry->Write(KEY_VENDOR, plug.GetVendor(false));
       // Write a blank -- see comments in LoadGroup:
       pRegistry->Write(KEY_DESCRIPTION, wxString{});

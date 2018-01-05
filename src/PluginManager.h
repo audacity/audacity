@@ -62,9 +62,10 @@ public:
    const wxString & GetPath() const;
    const wxString & GetSymbol() const;
 
+   wxString GetUntranslatedVersion() const;
+
    // These return translated strings (if available and if requested)
    wxString GetName(bool translate = true) const;
-   wxString GetVersion(bool translate = true) const;
    wxString GetVendor(bool translate = true) const;
    bool IsEnabled() const;
    bool IsValid() const;
