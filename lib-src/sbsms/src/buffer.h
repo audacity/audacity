@@ -197,6 +197,7 @@ long ArrayRingBuffer<T> :: nReadable()
 
 template<class T>
 void ArrayRingBuffer<T> :: advance(long n) {
+  grow(N);
   memset(buf+readPos,0,n*sizeof(T));
   readPos += n;
   if(readPos >= length) {
