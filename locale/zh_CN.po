@@ -9063,7 +9063,7 @@ msgstr "重复"
 
 #: src/effects/Reverse.h
 msgid "Reverse"
-msgstr "反向（時間）"
+msgstr "反向（时间）"
 
 #: src/effects/SBSMSEffect.h
 msgid "SBSMS Time / Pitch Stretch"
