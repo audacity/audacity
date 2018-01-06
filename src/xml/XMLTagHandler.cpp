@@ -121,7 +121,7 @@ bool XMLValueChecker::IsGoodIntForRange(const wxString & strInt, const wxString 
 
    if( lenStrInt < 1 )
       return false;
-   int offset = (strInt[0] == '-') ?1:0;
+   size_t offset = (strInt[0] == '-') ?1:0;
    if( lenStrInt <= offset )
       return false;// string too short, no digits in it.
 
@@ -134,7 +134,7 @@ bool XMLValueChecker::IsGoodIntForRange(const wxString & strInt, const wxString 
           return false; // not a digit
 
    // All chars were digits.
-   if( (lenStrInt - offset) < lenMAXABS )
+   if( lenStrInt < (lenMAXABS + offset) )
       return true; // too few digits to overflow.
 
    // Numerical part is same length as strMAXABS

@@ -17,8 +17,8 @@
 #define __AUDACITY_EFFECT_SBSMS__
 
 #include "Effect.h"
+#include "../../../lib-src/header-substitutes/sbsms.h"
 
-#include "sbsms.h"
 using namespace _sbsms_;
 
 class LabelTrack;

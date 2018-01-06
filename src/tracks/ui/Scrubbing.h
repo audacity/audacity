@@ -131,7 +131,7 @@ public:
 
    // Convenience wrapper for the above
    template<void (Scrubber::*pfn)(const CommandContext&)>
-      void Thunk(wxCommandEvent &dummy)
+      void Thunk(wxCommandEvent &)
          { (this->*pfn)(*GetActiveProject()); }
 
    // A string to put in the leftmost part of the status bar

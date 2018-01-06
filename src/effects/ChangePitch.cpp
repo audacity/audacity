@@ -21,7 +21,6 @@ the pitch without changing the tempo.
 #include "ChangePitch.h"
 
 #if USE_SBSMS
-#include "sbsms.h"
 #include <wx/valgen.h>
 #endif
 

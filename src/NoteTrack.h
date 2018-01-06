@@ -20,7 +20,7 @@
 
 #if defined(USE_MIDI)
 
-#include "allegro.h"
+#include "../lib-src/header-substitutes/allegro.h"
 
 // define this switch to play MIDI during redisplay to sonify run times
 // Note that if SONIFY is defined, the default MIDI device will be opened

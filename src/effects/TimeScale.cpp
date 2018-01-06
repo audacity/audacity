@@ -26,8 +26,6 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-#include "sbsms.h"
-
 enum
 {
    ID_RatePercentChangeStart = 10000,

@@ -29,7 +29,7 @@
 #include "../lib-src/portmidi/pm_common/portmidi.h"
 #include "../lib-src/portmidi/porttime/porttime.h"
 #include <cstring> // Allegro include fails if this header isn't included do to no memcpy
-#include "../lib-src/portsmf/allegro.h"
+#include "../lib-src/header-substitutes/allegro.h"
 
 class NoteTrack;
 using NoteTrackArray = std::vector < NoteTrack* >;

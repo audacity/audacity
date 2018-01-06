@@ -21,20 +21,17 @@ class wxDC;
 
 // MSVC 2013 says this can't be instantiated - but in fact it can
 // using {} syntax.
+// As it's a bogus warning caused by a bug in MSVC2013, it's Ok to disable it.
+#pragma warning( push )
+#pragma warning( disable : 4510)
+#pragma warning( disable : 4610)
+
 struct TrackPanelDrawingContext {
    wxDC &dc;
    UIHandlePtr target;
    wxMouseState lastState;
-
-   // MSVC 2013 has a bug and reports
-   // warning C4610: struct 'TrackPanelDrawingContext' 
-   // can never be instantiated 
-#ifdef _MSC_VER
-   // Add a default initialiser here to workaround that?
-   //TrackPanelDrawingContext();
-
-#endif
-
 };
+
+#pragma warning( pop ) 
 
 #endif

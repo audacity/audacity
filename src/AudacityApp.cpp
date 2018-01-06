@@ -1063,6 +1063,10 @@ void AudacityApp::OnFatalException()
    exit(-1);
 }
 
+
+#pragma warning( push )
+#pragma warning( disable : 4702) // unreachable code warning.
+
 bool AudacityApp::OnExceptionInMainLoop()
 {
    // This function is invoked from catch blocks in the wxWidgets framework,
@@ -1099,10 +1103,10 @@ bool AudacityApp::OnExceptionInMainLoop()
       // Let the inherited function do throw; again and whatever else it does.
       return wxApp::OnExceptionInMainLoop();
    }
-
    // Shouldn't ever reach this line
    return false;
 }
+#pragma warning( pop )
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)

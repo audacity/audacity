@@ -203,7 +203,7 @@ NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
    return instance;
 }
 
-void NoteTrackVRulerMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+void NoteTrackVRulerMenuTable::InitMenu(Menu *WXUNUSED(pMenu), void *pUserData)
 {
    mpData = static_cast<InitMenuData*>(pUserData);
 }
@@ -247,7 +247,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
       return RefreshNone;
 
    const wxMouseEvent &event = evt.event;
-   const bool shiftDown = event.ShiftDown();
+   //const bool shiftDown = event.ShiftDown();
    const bool rightUp = event.RightUp();
 
 

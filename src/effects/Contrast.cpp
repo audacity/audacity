@@ -39,6 +39,7 @@
 #define DB_MAX_LIMIT 0.0   // Audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
 
+
 bool ContrastDialog::GetDB(float &dB)
 {
    float rms = float(0.0);
@@ -99,7 +100,9 @@ bool ContrastDialog::GetDB(float &dB)
       m.ShowModal();
       return false;
    }
-
+   // Gives warning C4056, Overflow in floating-point constant arithmetic
+   // -INFINITY is intentional here.
+   // Looks like we are stuck with this warning, as    // #pragma warning( disable : 4056)   // even around the whole function does not disable it successfully.
    dB = (rms == 0.0)? -INFINITY : LINEAR_TO_DB(rms);
    return true;
 }

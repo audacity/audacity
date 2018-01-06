@@ -67,7 +67,7 @@ bool Envelope::ConsistencyCheck()
       for ( size_t ii = 0, count = mEnv.size(); ii < count; ) {
          // Find range of points with equal T
          const double thisT = mEnv[ii].GetT();
-         double nextT;
+         double nextT = 0.0f;
          auto nextI = ii + 1;
          while ( nextI < count && thisT == ( nextT = mEnv[nextI].GetT() ) )
             ++nextI;
@@ -1080,7 +1080,7 @@ void Envelope::SetTrackLen( double trackLen, double sampleDur )
    // Preserve the left-side limit at trackLen.
    auto range = EqualRange( trackLen, sampleDur );
    bool needPoint = ( range.first == range.second && trackLen < mTrackLen );
-   double value;
+   double value=0.0;
    if ( needPoint )
       value = GetValueRelative( trackLen );
 
@@ -1344,7 +1344,7 @@ void Envelope::GetValues
    // Getting many envelope values, corresponding to pixel columns, which may
    // not be uniformly spaced in time when there is a fisheye.
 
-   double prevDiscreteTime, prevSampleVal, nextSampleVal;
+   double prevDiscreteTime=0.0, prevSampleVal=0.0, nextSampleVal=0.0;
    for ( int xx = 0; xx < bufferLen; ++xx ) {
       auto time = zoomInfo.PositionToTime( xx, -leftOffset );
       if ( sampleDur <= 0 )

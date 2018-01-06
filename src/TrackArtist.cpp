@@ -2581,7 +2581,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       }
       else {
           int specIndex = (xx - fisheyeLeft) * nBins;
-          wxASSERT(specIndex >= 0 && specIndex < specCache.freq.size());
+          wxASSERT(specIndex >= 0 && specIndex < (int)specCache.freq.size());
           uncached = &specCache.freq[specIndex];
       }
 

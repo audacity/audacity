@@ -126,19 +126,19 @@ public:
 
       //if they are both off the cache boundary in the same direction, the cache is missed,
       //so we are safe, and don't need to track this one.
-      if((invalStart<0 && invalEnd <0) || (invalStart>=len && invalEnd >= len))
+      if((invalStart<0 && invalEnd <0) || (invalStart>=(long)len && invalEnd >= (long)len))
          return;
 
       //in all other cases, we need to clip the boundries so they make sense with the cache.
       //for some reason, the cache is set up to access up to array[len], not array[len-1]
       if(invalStart <0)
          invalStart =0;
-      else if(invalStart > len)
+      else if((size_t)invalStart > len)
          invalStart = len;
 
       if(invalEnd <0)
          invalEnd =0;
-      else if(invalEnd > len)
+      else if((size_t)invalEnd > len)
          invalEnd = len;
 
 
@@ -153,13 +153,13 @@ public:
          {
             //if the regions intersect OR are pixel adjacent
             InvalidRegion &region = mRegions[i];
-            if(region.start <= invalEnd+1
-               && region.end + 1 >= invalStart)
+            if(region.start <= (size_t)(invalEnd+1)
+               && (region.end + 1) >= (size_t)invalStart)
             {
                //take the union region
-               if(region.start > invalStart)
+               if(region.start > (size_t)invalStart)
                   region.start = invalStart;
-               if(region.end < invalEnd)
+               if((int)region.end < invalEnd)
                   region.end = invalEnd;
                added=true;
                break;
@@ -206,7 +206,7 @@ public:
          }
 
          //if we are past the end of the region we added, we are past the area of regions that might be oversecting.
-         if(region.start > invalEnd)
+         if(invalEnd < 0 || region.start > (size_t)invalEnd)
          {
             break;
          }
@@ -842,7 +842,7 @@ bool SpecCache::CalculateOneSpectrum
       from = sampleCount(
          where[0].as_double() + xx * (rate / pixelsPerSecond)
       );
-   else if (xx > len)
+   else if ((size_t)xx > len)
       from = sampleCount(
          where[len].as_double() + (xx - len) * (rate / pixelsPerSecond)
       );
@@ -857,7 +857,7 @@ bool SpecCache::CalculateOneSpectrum
    auto nBins = settings.NBins();
 
    if (from < 0 || from >= numSamples) {
-      if (xx >= 0 && xx < len) {
+      if (xx >= 0 && xx < (int)len) {
          // Pixel column is out of bounds of the clip!  Should not happen.
          float *const results = &out[nBins * xx];
          std::fill(results, results + nBins, 0.0f);
@@ -1276,8 +1276,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       // old cache doesn't match. It won't happen in resize, since the
       // spectrum view is pinned to left side of window.
       wxASSERT(
-         (copyBegin >= 0 && copyEnd == numPixels) || // copied the end
-         (copyBegin == 0 && copyEnd <= numPixels)    // copied the beginning
+         (copyBegin >= 0 && copyEnd == (int)numPixels) || // copied the end
+         (copyBegin == 0 && copyEnd <= (int)numPixels)    // copied the beginning
       );
 
       int zeroBegin = copyBegin > 0 ? 0 : copyEnd-copyBegin;

@@ -16,7 +16,7 @@
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 
 template <typename Base>
-class wxTabTraversalWrapper : public Base
+class AUDACITY_DLL_API wxTabTraversalWrapper : public Base
 {
 public:
    template <typename... Args>
@@ -32,7 +32,7 @@ public:
    }
 };
 
-class wxPanelWrapper : public wxTabTraversalWrapper<wxPanel>
+class AUDACITY_DLL_API wxPanelWrapper : public wxTabTraversalWrapper<wxPanel>
 {
 public:
    // Constructors

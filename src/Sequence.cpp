@@ -420,7 +420,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       // Nonnegative result is length of block0 or less:
       blocklen =
          ( std::min(s1, block0.start + file->GetLength()) - s0 ).as_size_t();
-      wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
+      wxASSERT(file->IsAlias() || (blocklen <= (int)mMaxSamples)); // Vaughan, 2012-02-29
       ensureSampleBufferSize(buffer, mSampleFormat, bufferSize, blocklen);
       Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen, true);
 
@@ -440,7 +440,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       const auto &file = block.f;
       // s1 is within block:
       blocklen = (s1 - block.start).as_size_t();
-      wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
+      wxASSERT(file->IsAlias() || (blocklen <= (int)mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < (int)file->GetLength()) {
          ensureSampleBufferSize(buffer, mSampleFormat, bufferSize, blocklen);
          Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen, true);

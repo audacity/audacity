@@ -556,7 +556,7 @@ size_t BlockFile::CommonReadData(
       else {
          auto channels = info.channels;
          wxASSERT(channels >= 1);
-         wxASSERT(channel < channels);
+         wxASSERT(channel < (unsigned int)channels);
 
          if (channels == 1 &&
              format == int16Sample &&
