@@ -280,43 +280,43 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
    for(i=1; (int)i < sep; i *= 2) {
       for(j=0;j<len-i; j++)
          ms_seq[j] += ms_seq[j+i];
-      }
+   }
 
-      /* Cheat by truncating sep to next-lower power of two... */
-      sep = i;
+   /* Cheat by truncating sep to next-lower power of two... */
+   sep = i;
 
-      for( i=0; i<len-sep; i++ ) {
-         ms_seq[i] /= sep;
-      }
-      /* ww runs from about 4 to mClickWidth.  wrc is the reciprocal;
-       * chosen so that integer roundoff doesn't clobber us.
-       */
-      int wrc;
-      for(wrc=mClickWidth/4; wrc>=1; wrc /= 2) {
-         ww = mClickWidth/wrc;
+   for( i=0; i<len-sep; i++ ) {
+      ms_seq[i] /= sep;
+   }
+   /* ww runs from about 4 to mClickWidth.  wrc is the reciprocal;
+    * chosen so that integer roundoff doesn't clobber us.
+    */
+   int wrc;
+   for(wrc=mClickWidth/4; wrc>=1; wrc /= 2) {
+      ww = mClickWidth/wrc;
 
-         for( i=0; i<len-sep; i++ ){
-            msw = 0;
-            for( j=0; (int)j<ww; j++) {
-               msw += b2[i+s2+j];
+      for( i=0; i<len-sep; i++ ){
+         msw = 0;
+         for( j=0; (int)j<ww; j++) {
+            msw += b2[i+s2+j];
+         }
+         msw /= ww;
+
+         if(msw >= mThresholdLevel * ms_seq[i]/10) {
+            if( left == 0 ) {
+               left = i+s2;
             }
-            msw /= ww;
-
-            if(msw >= mThresholdLevel * ms_seq[i]/10) {
-               if( left == 0 ) {
-                  left = i+s2;
+         } else {
+            if(left != 0 && (int)(i-left+s2) <= ww*2) {
+               float lv = buffer[left];
+               float rv = buffer[i+ww+s2];
+               for(j=left; j<i+ww+s2; j++) {
+                  bResult = true;
+                  buffer[j]= (rv*(j-left) + lv*(i+ww+s2-j))/(float)(i+ww+s2-left);
+                  b2[j] = buffer[j]*buffer[j];
                }
-            } else {
-               if(left != 0 && (int)(i-left+s2) <= ww*2) {
-                  float lv = buffer[left];
-                  float rv = buffer[i+ww+s2];
-                  for(j=left; j<i+ww+s2; j++) {
-                     bResult = true;
-                     buffer[j]= (rv*(j-left) + lv*(i+ww+s2-j))/(float)(i+ww+s2-left);
-                     b2[j] = buffer[j]*buffer[j];
-                  }
-                  left=0;
-               } else if(left != 0) {
+               left=0;
+            } else if(left != 0) {
                left = 0;
             }
          }
