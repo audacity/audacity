@@ -194,7 +194,7 @@ void ControlToolBar::Populate()
       ID_FF_BUTTON, false, _("Skip to End"));
 
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
-      ID_RECORD_BUTTON, true, _("Record"));
+      ID_RECORD_BUTTON, false, _("Record"));
 
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
