@@ -92,7 +92,7 @@ bool ExportCommand::Apply(CommandExecutionContext context)
    }
 
    // Find the extension and check it's valid
-   int splitAt = filename.Find(wxT("."));
+   int splitAt = filename.Find(wxUniChar('.'), true);
    if (splitAt < 0)
    {
       Error(wxT("Export filename must have an extension!"));
