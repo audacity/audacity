@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-05 00:25-0500\n"
+"POT-Creation-Date: 2018-01-05 19:31-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4251,7 +4251,8 @@ msgstr ""
 msgid "%s right"
 msgstr ""
 
-#. i18n-hint: First %s is replaced with the noun "start" or "end"
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
 #. identifying one end of a clip,
 #. first number gives the position of that clip in a sequence
 #. of clips,
@@ -5825,25 +5826,25 @@ msgid "Current Project"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording start:\n"
+msgid "Recording start:"
+msgstr ""
+
+#: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
+#: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+msgid "Duration:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid "Duration:\n"
+msgid "Recording end:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Recording end:\n"
-"\n"
+msgid "Automatic Save enabled:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Save enabled:\n"
-msgstr ""
-
-#: src/TimerRecordDialog.cpp
-msgid "Automatic Export enabled:\n"
+msgid "Automatic Export enabled:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
@@ -6008,17 +6009,15 @@ msgid "After Recording completes:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid "Waiting to start recording at:\n"
+msgid "Waiting to start recording at:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording duration:\n"
+msgid "Recording duration:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Scheduled to stop at:\n"
-"\n"
+msgid "Scheduled to stop at:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
@@ -6030,17 +6029,11 @@ msgid "Recording will commence in:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Timer Recording completed.\n"
-"\n"
+msgid "Recording Saved:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording Saved:\n"
-msgstr ""
-
-#: src/TimerRecordDialog.cpp
-msgid "Recording Exported:\n"
+msgid "Recording Exported:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
@@ -7214,12 +7207,6 @@ msgstr ""
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/ToneGen.cpp
 msgid "Amplitude (0-1):"
-msgstr ""
-
-#: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
-#: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Duration:"
 msgstr ""
 
 #: src/effects/DtmfGen.cpp
