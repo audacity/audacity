@@ -100,7 +100,7 @@ bool GetTrackInfoCommand::Apply(CommandExecutionContext context)
    }
    else if (mode.IsSameAs(wxT("EndTime")))
    {
-      Status(wxString::Format(wxT("%f"), t->GetEndTime()));
+      Status(wxString::Format(wxT("%.17g"), t->GetEndTime()));
    }
    else if (mode.IsSameAs(wxT("Pan")))
    {
