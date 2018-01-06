@@ -984,8 +984,10 @@ bool SpecCache::CalculateOneSpectrum
                freqCorrection = multiplier * quotIm;
             }
 
-            const size_t bin = (size_t)(ii + freqCorrection + 0.5f);
-            if (bin >= 0 && bin < hFFT->Points) {
+            const int bin = (int)((int)ii + freqCorrection + 0.5f);
+            // Must check if correction takes bin out of bounds, above or below!
+            // bin is signed!
+            if (bin >= 0 && bin < (int)hFFT->Points) {
                double timeCorrection;
                {
                   const float
