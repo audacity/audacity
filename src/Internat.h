@@ -29,7 +29,7 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s)  wxT(s)
 
-#ifdef __WXDEBUG__
+#if defined( __WXDEBUG__ ) && !defined( _MSC_VER )
    #include <signal.h>
    // Force a crash if you misuse _ in a static initializer, so that translation
    // is looked up too early and not found.
