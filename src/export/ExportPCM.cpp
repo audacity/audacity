@@ -700,10 +700,12 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, con
    return true;
 }
 
+#ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
    void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
 };
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+#endif
 
 bool ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
 {

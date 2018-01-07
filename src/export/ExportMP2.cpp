@@ -322,10 +322,13 @@ wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportMP2Options(parent, format);
 }
 
+
+#ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
    void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
 };
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+#endif
 
 // returns buffer len; caller frees
 int ExportMP2::AddTags(
