@@ -31,6 +31,7 @@
 #include "../ShuttleGui.h"
 
 #include "../Experimental.h"
+#include "../Internat.h"
 
 using std::min;
 

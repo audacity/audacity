@@ -29,6 +29,7 @@
 #include <wx/intl.h>
 
 #include "Track.h"
+#include "Internat.h"
 
 TrackPanelAx::TrackPanelAx( wxWindow *window )
 #if wxUSE_ACCESSIBILITY

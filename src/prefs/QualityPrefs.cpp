@@ -26,6 +26,7 @@
 #include "../Resample.h"
 #include "../SampleFormat.h"
 #include "../ShuttleGui.h"
+#include "../Internat.h"
 
 #define ID_SAMPLE_RATE_CHOICE           7001
 

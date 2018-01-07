@@ -19,6 +19,8 @@
 #include "MemoryX.h"
 #include <wx/app.h>
 
+#include "Internat.h"
+
 class wxString;
 
 class AudacityException /* not final */

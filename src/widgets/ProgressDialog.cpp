@@ -51,6 +51,7 @@
 #include "ProgressDialog.h"
 #include "ErrorDialog.h"
 #include "../Prefs.h"
+#include "../Internat.h"
 
 // This really should be a Preferences setting
 static const unsigned char beep[] =

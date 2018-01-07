@@ -27,10 +27,10 @@ and on Mac OS X for the filesystem.
 #include <locale.h>
 #include <math.h> // for pow()
 
-#include "Internat.h"
 #include "Experimental.h"
 #include "FileNames.h"
 #include "widgets/ErrorDialog.h"
+#include "Internat.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.

@@ -30,6 +30,7 @@ the ability to not see similar warnings again for this session.
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include "wxPanelWrapper.h"
+#include "../Internat.h"
 
 class WarningDialog final : public wxDialogWrapper
 {

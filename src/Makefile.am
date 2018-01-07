@@ -52,6 +52,7 @@ audacity_CPPFLAGS = \
 	-std=c++11 \
 	-Wno-deprecated-declarations \
 	-D__STDC_CONSTANT_MACROS \
+	-DWXINTL_NO_GETTEXT_MACRO \
 	-DLIBDIR=\"$(libdir)\" \
 	$(EXPAT_CFLAGS) \
 	$(FILEDIALOG_CFLAGS) \

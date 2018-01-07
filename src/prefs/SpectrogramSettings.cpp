@@ -28,6 +28,7 @@ Paul Licameli
 
 #include "../Experimental.h"
 #include "../widgets/ErrorDialog.h"
+#include "../Internat.h"
 
 SpectrogramSettings::Globals::Globals()
 {

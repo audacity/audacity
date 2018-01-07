@@ -40,6 +40,7 @@
 #include <wx/dataobj.h>
 
 #include "numformatter.h"
+#include "../Internat.h"
 
 // ============================================================================
 // NumValidatorBase implementation

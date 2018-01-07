@@ -22,6 +22,7 @@
 
 #include "Audacity.h"
 #include "PitchName.h"
+#include "Internat.h"
 
 
 double FreqToMIDInote(const double freq)

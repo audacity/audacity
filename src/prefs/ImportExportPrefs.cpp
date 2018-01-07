@@ -23,6 +23,7 @@
 #include "../ShuttleGui.h"
 
 #include "ImportExportPrefs.h"
+#include "../Internat.h"
 
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent)
 :   PrefsPanel(parent, _("Import / Export"))

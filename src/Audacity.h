@@ -213,52 +213,6 @@ void QuitAudacity();
 #define JUST_BELOW_MAX_AUDIO (1.f - 1.f/(1<<14))
 
 
-#ifndef IN_RC
-//#include <wx/defs.h>
-//#include <wx/string.h>
-class wxString;
-
-extern const wxString& GetCustomTranslation(const wxString& str1 );
-extern const wxString& GetCustomSubstitution(const wxString& str1 );
-
-// Marks strings for extraction only...must use wxGetTranslation() to translate.
-#define XO(s)  wxT(s)
-// Marks string for substitution only.
-#define _TS( s ) GetCustomSubstitution( s )
-
-
-#define WXINTL_NO_GETTEXT_MACRO
-
-#ifdef wxPLURAL
-#undef wxPLURAL
-#endif
-
-// The two string arugments will go to the .pot file, as
-// msgid sing
-// msgid_plural plural
-//
-// (You must use plain string literals.  Do not use _() or wxT() or L prefix,
-//  which (inentionally) will fail to compile.  The macro inserts wxT).
-//
-// Note too:  it seems an i18n-hint comment is not extracted if it precedes
-// wxPLURAL directly.  A workaround:  after the comment, insert a line
-// _("dummyStringXXXX");
-// where for XXXX subsitute something making this dummy string unique in the
-// program.  Then check in your generated audacity.pot that the dummy is
-// immediately before the singular/plural entry.
-//
-// Your i18n-comment should therefore say something like,
-// "In the string after this one, ..."
-#define wxPLURAL(sing, plur, n)  wxGetTranslation( wxT(sing), wxT(plur), n)
-
-
-#ifdef _
-#undef _
-#endif
-
-#define _(s) GetCustomTranslation((s))
-#endif
-
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete
 

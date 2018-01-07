@@ -25,6 +25,7 @@
 
 #include <wx/arrimpl.cpp>
 #include <wx/dc.h>
+#include "../Internat.h"
 
 // Various drawing constants
 #define KV_BITMAP_SIZE 16

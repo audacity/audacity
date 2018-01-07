@@ -28,7 +28,9 @@
 #endif
 
 
+#include "../Audacity.h"
 #include "numformatter.h"
+#include "../Internat.h"
 #include <wx/intl.h>
 
 #include <locale.h> // for setlocale and LC_ALL

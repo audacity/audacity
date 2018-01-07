@@ -19,8 +19,8 @@
 
 #include <string.h>
 
-#include "../Internat.h"
 #include "XMLFileReader.h"
+#include "../Internat.h"
 
 XMLFileReader::XMLFileReader()
 {

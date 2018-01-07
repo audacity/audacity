@@ -34,6 +34,7 @@
 
 #include "ThemePrefs.h"
 #include "../AColor.h"
+#include "../Internat.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent)
 /* i18n-hint: refers to Audacity's user interface settings */

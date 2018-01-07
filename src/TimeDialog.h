@@ -16,6 +16,7 @@
 #include <wx/string.h>
 
 #include "widgets/wxPanelWrapper.h"
+#include "Internat.h"
 
 class NumericTextCtrl;
 class ShuttleGui;

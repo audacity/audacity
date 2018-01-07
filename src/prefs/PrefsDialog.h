@@ -20,6 +20,7 @@
 #include <wx/treebook.h>
 #include <wx/window.h>
 #include "../widgets/wxPanelWrapper.h"
+#include "../Internat.h"
 
 class PrefsPanel;
 class PrefsPanelFactory;

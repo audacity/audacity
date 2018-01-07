@@ -13,6 +13,8 @@
 #include <wx/panel.h>
 #include <wx/dialog.h>
 
+#include "../Internat.h"
+
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 
 template <typename Base>

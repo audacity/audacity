@@ -24,6 +24,7 @@ with names like mnod-script-pipe that add NEW features.
 
 #include "ModulePrefs.h"
 #include "../Prefs.h"
+#include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

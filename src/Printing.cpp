@@ -33,6 +33,7 @@
 #include "Experimental.h"
 
 #include "TrackPanelDrawingContext.h"
+#include "Internat.h"
 
 // Globals, so that we remember settings from session to session
 wxPrintData &gPrintData()

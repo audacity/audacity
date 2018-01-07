@@ -33,6 +33,7 @@ around to NEW positions.
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
+#include "../Internat.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for Grabber

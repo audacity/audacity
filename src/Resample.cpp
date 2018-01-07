@@ -25,6 +25,7 @@
 #include "Resample.h"
 #include "Prefs.h"
 #include "TranslatableStringArray.h"
+#include "Internat.h"
 
 #include <soxr.h>
 

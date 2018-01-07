@@ -56,9 +56,8 @@ but little else.
 #define __AUDACITY_IMPORTER__
 
 #include "../Audacity.h"
-#include <wx/arrstr.h>
+#include "../Internat.h"
 #include <wx/filename.h>
-#include <wx/string.h>
 #include "../MemoryX.h"
 
 #include "../widgets/ProgressDialog.h"
