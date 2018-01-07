@@ -79,6 +79,12 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
          center_h = viewInfo.h + (pProject->GetScreenEndTime() - viewInfo.h) / 2.0;
          xx = viewInfo.TimeToPosition(center_h, trackLeftEdge);
       }
+      else if( steps > 0 ){
+         // When zooming in, keep the selection start where it was.
+         // This is particularly helpful for a point selection.
+         center_h = viewInfo.selectedRegion.t0();
+         xx = viewInfo.TimeToPosition( center_h, trackLeftEdge);
+      }
       else
       {
          xx = event.m_x;
