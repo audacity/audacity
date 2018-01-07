@@ -102,7 +102,10 @@ bool ContrastDialog::GetDB(float &dB)
    }
    // Gives warning C4056, Overflow in floating-point constant arithmetic
    // -INFINITY is intentional here.
-   // Looks like we are stuck with this warning, as    // #pragma warning( disable : 4056)   // even around the whole function does not disable it successfully.
+   // Looks like we are stuck with this warning, as 
+   // #pragma warning( disable : 4056)
+   // even around the whole function does not disable it successfully.
+
    dB = (rms == 0.0)? -INFINITY : LINEAR_TO_DB(rms);
    return true;
 }
