@@ -92,7 +92,7 @@
 //#define EXPERIMENTAL_THEME_PREFS
 
 // This shows the zoom toggle button on the edit toolbar.
-//#define EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
+#define EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
 
 //Next line enables Mic monitoring at times when it was previously off.
 //More work is needed as after recording or playing it results in an

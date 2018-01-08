@@ -700,7 +700,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->AddItem(wxT("ZeroCross"), _("At &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
+      c->AddItem(wxT("ZeroCross"), _("At &Zero Crossings"), FN(OnZeroCrossing), wxT(""));
 
       c->EndMenu();
 
@@ -722,7 +722,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), 
          TimeSelectedFlag, 
          TimeSelectedFlag);
-      c->AddItem(wxT("ZoomToggle"), _("Zoom &Toggle"), FN(OnZoomToggle), wxT(""),
+      c->AddItem(wxT("ZoomToggle"), _("Zoom &Toggle"), FN(OnZoomToggle), wxT("Z"),
          TracksExistFlag, 
          TracksExistFlag);
       c->EndSubMenu();
@@ -6544,7 +6544,7 @@ void AudacityProject::OnZoomToggle(const CommandContext &)
    double Zoom1 = GetZoomOfPref(
       wxT("/GUI/ZoomPreset1"), WaveTrack::kZoomDefault );
    double Zoom2 = GetZoomOfPref(
-      wxT("/GUI/ZoomPreset2"), WaveTrack::kZoom4To1 );
+      wxT("/GUI/ZoomPreset2"), WaveTrack::kZoomMinutes );
    double Z = mViewInfo.GetZoom();// Current Zoom.
    double ChosenZoom = abs(log(Zoom1 / Z)) > abs(log( Z / Zoom2)) ? Zoom1:Zoom2;
 

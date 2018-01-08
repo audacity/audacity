@@ -86,7 +86,7 @@ void TracksPrefs::Populate()
    mSampleDisplayChoices.Add(_("Stem plot"));
    mSampleDisplayCodes.Add((int) WaveTrack::StemPlot);
 
-   mZoomChoices.Add( _("Zoom to Fit") );
+   mZoomChoices.Add( _("Fit to Width") );
    mZoomCodes.Add( WaveTrack::kZoomToFit );
    mZoomChoices.Add( _("Zoom to Selection") );
    mZoomCodes.Add( WaveTrack::kZoomToSelection );
@@ -176,7 +176,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.TieChoice(_("Preset 2:"),
                      wxT("/GUI/ZoomPreset2"),
-                     WaveTrack::kZoom4To1,
+                     WaveTrack::kZoomMinutes,
                      mZoomChoices,
                      mZoomCodes);
          S.SetSizeHints(mZoomChoices);

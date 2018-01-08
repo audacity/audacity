@@ -159,16 +159,17 @@ void EditToolBar::Populate()
       _("Zoom In"));
    AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
       _("Zoom Out"));
+   AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
+      _("Fit selection in window"));
+   AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
+      _("Fit project in window"));
 
 #ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
    AddButton(bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
       _("Zoom Toggle"));
 #endif
 
-   AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
-      _("Fit selection in window"));
-   AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
-      _("Fit project in window"));
+
 
    mButtons[ETBZoomInID]->SetEnabled(false);
    mButtons[ETBZoomOutID]->SetEnabled(false);
