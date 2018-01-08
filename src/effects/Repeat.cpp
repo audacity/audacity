@@ -64,7 +64,7 @@ wxString EffectRepeat::GetSymbol()
 
 wxString EffectRepeat::GetDescription()
 {
-   return XO("Repeats the selection the specified number of times");
+   return _("Repeats the selection the specified number of times");
 }
 
 wxString EffectRepeat::ManualPage()

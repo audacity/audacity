@@ -186,7 +186,7 @@ wxString EffectScienFilter::GetSymbol()
 
 wxString EffectScienFilter::GetDescription()
 {
-   return XO("Performs IIR filtering that emulates analog filters");
+   return _("Performs IIR filtering that emulates analog filters");
 }
 
 wxString EffectScienFilter::ManualPage()

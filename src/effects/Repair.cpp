@@ -50,7 +50,7 @@ wxString EffectRepair::GetSymbol()
 
 wxString EffectRepair::GetDescription()
 {
-   return XO("Sets the peak amplitude of a one or more tracks");
+   return _("Sets the peak amplitude of a one or more tracks");
 }
 
 // EffectIdentInterface implementation

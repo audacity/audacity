@@ -58,11 +58,12 @@ public:
    virtual wxString GetName() = 0;
    virtual wxString GetVendor() = 0;
    virtual wxString GetVersion() = 0;
+
+   // This returns a translated string
    virtual wxString GetDescription() = 0;
 
-   // non-virtual convenience functions
+   // non-virtual convenience function
    const wxString& GetTranslatedName();
-   const wxString& GetTranslatedDescription();
 };
 
 #endif // __AUDACITY_IDENTINTERFACE_H__

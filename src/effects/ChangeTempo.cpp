@@ -99,7 +99,7 @@ wxString EffectChangeTempo::GetSymbol()
 
 wxString EffectChangeTempo::GetDescription()
 {
-   return XO("Change the tempo of a selection without changing its pitch");
+   return _("Change the tempo of a selection without changing its pitch");
 }
 
 wxString EffectChangeTempo::ManualPage()

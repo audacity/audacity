@@ -87,7 +87,7 @@ wxString EffectAmplify::GetSymbol()
 wxString EffectAmplify::GetDescription()
 {
    // Note: This is useful only after ratio has been set.
-   return XO("Increases or decreases the volume of the audio you have selected");
+   return _("Increases or decreases the volume of the audio you have selected");
 }
 
 wxString EffectAmplify::ManualPage()

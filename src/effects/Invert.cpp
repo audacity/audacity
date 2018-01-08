@@ -37,7 +37,7 @@ wxString EffectInvert::GetSymbol()
 
 wxString EffectInvert::GetDescription()
 {
-   return XO("Flips the audio samples upside-down, reversing their polarity");
+   return _("Flips the audio samples upside-down, reversing their polarity");
 }
 
 // EffectIdentInterface implementation

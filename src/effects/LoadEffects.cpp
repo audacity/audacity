@@ -259,7 +259,7 @@ wxString BuiltinEffectsModule::GetVersion()
 
 wxString BuiltinEffectsModule::GetDescription()
 {
-   return XO("Provides builtin effects to Audacity");
+   return _("Provides builtin effects to Audacity");
 }
 
 // ============================================================================

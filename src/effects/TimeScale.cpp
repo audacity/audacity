@@ -96,7 +96,7 @@ wxString EffectTimeScale::GetName()
 
 wxString EffectTimeScale::GetDescription()
 {
-   return XO("Allows continuous changes to the tempo and/or pitch");
+   return _("Allows continuous changes to the tempo and/or pitch");
 }
 
 wxString EffectTimeScale::ManualPage()

@@ -82,7 +82,7 @@ wxString EffectClickRemoval::GetSymbol()
 
 wxString EffectClickRemoval::GetDescription()
 {
-   return XO("Click Removal is designed to remove clicks on audio tracks");
+   return _("Click Removal is designed to remove clicks on audio tracks");
 }
 
 wxString EffectClickRemoval::ManualPage()

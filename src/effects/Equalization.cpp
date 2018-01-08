@@ -296,7 +296,7 @@ wxString EffectEqualization::GetSymbol()
 
 wxString EffectEqualization::GetDescription()
 {
-   return XO("Adjusts the volume levels of particular frequencies");
+   return _("Adjusts the volume levels of particular frequencies");
 }
 
 wxString EffectEqualization::ManualPage()

@@ -100,7 +100,7 @@ wxString EffectWahwah::GetSymbol()
 
 wxString EffectWahwah::GetDescription()
 {
-   return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
+   return _("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
 wxString EffectWahwah::ManualPage()

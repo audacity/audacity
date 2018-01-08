@@ -137,7 +137,7 @@ wxString EffectReverb::GetSymbol()
 
 wxString EffectReverb::GetDescription()
 {
-   return XO("Adds ambience or a \"hall effect\"");
+   return _("Adds ambience or a \"hall effect\"");
 }
 
 wxString EffectReverb::ManualPage()

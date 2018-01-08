@@ -103,7 +103,7 @@ wxString EffectCompressor::GetSymbol()
 
 wxString EffectCompressor::GetDescription()
 {
-   return XO("Compresses the dynamic range of audio");
+   return _("Compresses the dynamic range of audio");
 }
 
 wxString EffectCompressor::ManualPage()

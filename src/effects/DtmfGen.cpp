@@ -98,7 +98,7 @@ wxString EffectDtmf::GetSymbol()
 
 wxString EffectDtmf::GetDescription()
 {
-   return XO("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
+   return _("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
 }
 
 wxString EffectDtmf::ManualPage()

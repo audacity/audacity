@@ -59,7 +59,7 @@ wxString EffectFindClipping::GetSymbol()
 
 wxString EffectFindClipping::GetDescription()
 {
-   return XO("Creates labels where clipping is detected");
+   return _("Creates labels where clipping is detected");
 }
 
 wxString EffectFindClipping::ManualPage()

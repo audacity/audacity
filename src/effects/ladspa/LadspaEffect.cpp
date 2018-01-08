@@ -135,7 +135,7 @@ wxString LadspaEffectsModule::GetVersion()
 
 wxString LadspaEffectsModule::GetDescription()
 {
-   return XO("Provides LADSPA Effects");
+   return _("Provides LADSPA Effects");
 }
 
 // ============================================================================

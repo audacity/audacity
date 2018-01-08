@@ -3126,8 +3126,3 @@ const wxString& IdentInterface::GetTranslatedName()
 {
    return wxGetTranslation( GetName() );
 }
-
-const wxString& IdentInterface::GetTranslatedDescription()
-{
-   return wxGetTranslation( GetDescription() );
-}

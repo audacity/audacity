@@ -364,7 +364,7 @@ wxString LV2Effect::GetVersion()
 
 wxString LV2Effect::GetDescription()
 {
-   return XO("n/a");
+   return _("n/a");
 }
 
 // ============================================================================

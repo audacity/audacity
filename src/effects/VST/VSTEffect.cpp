@@ -332,7 +332,7 @@ wxString VSTEffectsModule::GetVersion()
 
 wxString VSTEffectsModule::GetDescription()
 {
-   return XO("Adds the ability to use VST effects in Audacity.");
+   return _("Adds the ability to use VST effects in Audacity.");
 }
 
 // ============================================================================
@@ -1214,15 +1214,11 @@ wxString VSTEffect::GetVersion()
 
 wxString VSTEffect::GetDescription()
 {
-   // VST does have a product string opcode and sum effects return a short
+   // VST does have a product string opcode and some effects return a short
    // description, but most do not or they just return the name again.  So,
    // try to provide some sort of useful information.
-   mDescription = XO("Audio In: ") +
-                  wxString::Format(wxT("%d"), mAudioIns) +
-                  XO(", Audio Out: ") +
-                  wxString::Format(wxT("%d"), mAudioOuts);
-
-   return mDescription;
+   return wxString::Format( _("Audio In: %d, Audio Out: %d"),
+                            mAudioIns, mAudioOuts);
 }
 
 // ============================================================================

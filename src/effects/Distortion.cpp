@@ -200,7 +200,7 @@ wxString EffectDistortion::GetSymbol()
 
 wxString EffectDistortion::GetDescription()
 {
-   return XO("Waveshaping distortion effect");
+   return _("Waveshaping distortion effect");
 }
 
 wxString EffectDistortion::ManualPage()

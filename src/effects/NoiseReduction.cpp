@@ -433,7 +433,7 @@ wxString EffectNoiseReduction::GetSymbol()
 
 wxString EffectNoiseReduction::GetDescription()
 {
-   return XO("Removes background noise such as fans, tape noise, or hums");
+   return _("Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectIdentInterface implementation

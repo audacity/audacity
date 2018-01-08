@@ -109,7 +109,7 @@ wxString EffectPhaser::GetSymbol()
 
 wxString EffectPhaser::GetDescription()
 {
-   return XO("Combines phase-shifted signals with the original signal");
+   return _("Combines phase-shifted signals with the original signal");
 }
 
 wxString EffectPhaser::ManualPage()

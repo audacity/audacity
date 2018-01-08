@@ -115,7 +115,7 @@ wxString EffectAutoDuck::GetSymbol()
 
 wxString EffectAutoDuck::GetDescription()
 {
-   return XO("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
+   return _("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
 }
 
 wxString EffectAutoDuck::ManualPage()

@@ -122,7 +122,7 @@ wxString EffectChangePitch::GetSymbol()
 
 wxString EffectChangePitch::GetDescription()
 {
-   return XO("Change the pitch of a track without changing its tempo");
+   return _("Change the pitch of a track without changing its tempo");
 }
 
 wxString EffectChangePitch::ManualPage()

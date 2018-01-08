@@ -112,7 +112,7 @@ wxString EffectChangeSpeed::GetSymbol()
 
 wxString EffectChangeSpeed::GetDescription()
 {
-   return XO("Change the speed of a track, also changing its pitch");
+   return _("Change the speed of a track, also changing its pitch");
 }
 
 wxString EffectChangeSpeed::ManualPage()

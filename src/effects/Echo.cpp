@@ -58,7 +58,7 @@ wxString EffectEcho::GetSymbol()
 
 wxString EffectEcho::GetDescription()
 {
-   return XO("Repeats the selected audio again and again");
+   return _("Repeats the selected audio again and again");
 }
 
 wxString EffectEcho::ManualPage()

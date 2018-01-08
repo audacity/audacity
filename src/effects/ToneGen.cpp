@@ -129,8 +129,8 @@ wxString EffectToneGen::GetSymbol()
 wxString EffectToneGen::GetDescription()
 {
    return mChirp
-      ? XO("Generates an ascending or descending tone of one of four types")
-      : XO("Generates a constant frequency tone of one of four types");
+      ? _("Generates an ascending or descending tone of one of four types")
+      : _("Generates a constant frequency tone of one of four types");
 }
 
 wxString EffectToneGen::ManualPage()

@@ -75,7 +75,7 @@ wxString EffectNoise::GetSymbol()
 
 wxString EffectNoise::GetDescription()
 {
-   return XO("Generates one of three different types of noise");
+   return _("Generates one of three different types of noise");
 }
 
 wxString EffectNoise::ManualPage()

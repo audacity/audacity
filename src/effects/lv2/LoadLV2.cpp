@@ -119,7 +119,7 @@ wxString LV2EffectsModule::GetVersion()
 
 wxString LV2EffectsModule::GetDescription()
 {
-   return XO("Provides LV2 Effects support to Audacity");
+   return _("Provides LV2 Effects support to Audacity");
 }
 
 // ============================================================================

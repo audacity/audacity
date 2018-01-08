@@ -89,7 +89,7 @@ wxString EffectBassTreble::GetSymbol()
 
 wxString EffectBassTreble::GetDescription()
 {
-   return XO("Simple tone control effect");
+   return _("Simple tone control effect");
 }
 
 wxString EffectBassTreble::ManualPage()

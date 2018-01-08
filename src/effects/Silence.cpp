@@ -39,7 +39,7 @@ wxString EffectSilence::GetSymbol()
 
 wxString EffectSilence::GetDescription()
 {
-   return XO("Creates audio of zero amplitude");
+   return _("Creates audio of zero amplitude");
 }
 
 wxString EffectSilence::ManualPage()
