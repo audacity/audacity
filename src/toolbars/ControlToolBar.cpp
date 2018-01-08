@@ -220,56 +220,70 @@ void ControlToolBar::Populate()
 void ControlToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   std::vector<wxString> commands;
    for (long iWinID = ID_PLAY_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
-      commands.clear();
       auto pCtrl = static_cast<AButton*>(this->FindWindow(iWinID));
-      commands.push_back(pCtrl->GetLabel());
+      const wxChar *name = nullptr;
       switch (iWinID)
       {
          case ID_PLAY_BUTTON:
             // Without shift
-            commands.push_back(wxT("PlayStop"));
-            // With shift
-            commands.push_back(_("Loop Play"));
-            // For the shortcut tooltip.
-            commands.push_back(wxT("PlayLooped"));
+            name = wxT("PlayStop");
             break;
          case ID_RECORD_BUTTON:
             // Without shift
-            //commands.push_back(wxT("Record"));
-            commands.push_back(wxT("Record1stChoice"));
+            //name = wxT("Record");
+            name = wxT("Record1stChoice");
+            break;
+         case ID_PAUSE_BUTTON:
+            name = wxT("Pause");
+            break;
+         case ID_STOP_BUTTON:
+            name = wxT("Stop");
+            break;
+         case ID_FF_BUTTON:
+            name = wxT("CursProjectEnd");
+            break;
+         case ID_REW_BUTTON:
+            name = wxT("CursProjectStart");
+            break;
+      }
+      LocalizedCommandNameVector commands( 1u, { pCtrl->GetLabel(), name } );
+
+      // Some have a second
+      switch (iWinID)
+      {
+         case ID_PLAY_BUTTON:
+            // With shift
+            commands.push_back(
+               LocalizedCommandName( _("Loop Play"), wxT("PlayLooped") ) );
+            break;
+         case ID_RECORD_BUTTON:
+            // With shift
             {  bool bPreferNewTrack;
                gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
-               if( !bPreferNewTrack ){
-                  commands.push_back(_("Record New Track"));
-               } else {
-                  commands.push_back(_("Append Record"));
-               }
                // For the shortcut tooltip.
-               commands.push_back(wxT("Record2ndChoice"));
+               commands.push_back( LocalizedCommandName(
+                  !bPreferNewTrack
+                     ? _("Record New Track")
+                     : _("Append Record"),
+                  wxT("Record2ndChoice")
+               ));
             }
             break;
          case ID_PAUSE_BUTTON:
-            commands.push_back(wxT("Pause"));
             break;
          case ID_STOP_BUTTON:
-            commands.push_back(wxT("Stop"));
             break;
          case ID_FF_BUTTON:
-            commands.push_back(wxT("CursProjectEnd"));
             // With shift
-            commands.push_back(_("Select to End"));
-            // For the shortcut tooltip.
-            commands.push_back(wxT("SelEnd"));
+            commands.push_back( LocalizedCommandName(
+               _("Select to End"), wxT("SelEnd") ) );
             break;
          case ID_REW_BUTTON:
-            commands.push_back(wxT("CursProjectStart"));
             // With shift
-            commands.push_back(_("Select to Start"));
-            // For the shortcut tooltip.
-            commands.push_back(wxT("SelStart"));
+            commands.push_back( LocalizedCommandName(
+               _("Select to Start"), wxT("SelStart") ) );
             break;
       }
       ToolBar::SetButtonToolTip(*pCtrl, commands);

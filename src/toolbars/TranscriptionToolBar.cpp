@@ -310,13 +310,15 @@ void TranscriptionToolBar::RegenerateTooltips()
       },
    };
 
-   std::vector<wxString> commands;
+   LocalizedCommandNameVector commands;
    for (const auto &entry : table) {
       commands.clear();
-      commands.push_back(wxGetTranslation(entry.untranslatedLabel));
-      commands.push_back(entry.commandName);
-      commands.push_back(wxGetTranslation(entry.untranslatedLabel2));
-      commands.push_back(entry.commandName2);
+      commands.push_back( LocalizedCommandName(
+         wxGetTranslation(entry.untranslatedLabel), entry.commandName
+      ) );
+      commands.push_back( LocalizedCommandName(
+         wxGetTranslation(entry.untranslatedLabel2), entry.commandName2
+      ) );
       ToolBar::SetButtonToolTip(*mButtons[entry.tool], commands);
    }
 

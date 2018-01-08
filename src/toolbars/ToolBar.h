@@ -156,14 +156,16 @@ class ToolBar /* not final */ : public wxPanelWrapper
                             teBmps eDisabled,
                             wxSize size);
 
+   using LocalizedCommandName = std::pair<wxString, const wxChar*>;
+   using LocalizedCommandNameVector = std::vector<LocalizedCommandName>;
    static
    void SetButtonToolTip
       (AButton &button,
-       // An array, alternating user-visible strings, and
+       // An array of paired user-visible strings, and
        // non-user-visible command names.  If a shortcut key is defined
        // for the command, then it is appended, parenthesized, after the
        // user-visible string.
-       const std::vector<wxString> &commands);
+       const LocalizedCommandNameVector &commands);
 
  protected:
    void SetButton(bool down, AButton *button);

@@ -115,9 +115,8 @@ wxString CloseButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackClose"));
+   CommandManager::LocalizedCommandNameVector commands( 1u,
+      { name, wxT("TrackClose") } );
    return commandManager->DescribeCommandsAndShortcuts(commands);
 }
 
@@ -176,9 +175,8 @@ wxString MenuButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackMenu"));
+   CommandManager::LocalizedCommandNameVector commands( 1u,
+      { name, wxT("TrackMenu") } );
    return commandManager->DescribeCommandsAndShortcuts(commands);
 }
 

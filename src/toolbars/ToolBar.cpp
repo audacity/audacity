@@ -825,7 +825,7 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 }
 
 void ToolBar::SetButtonToolTip
-(AButton &button, const std::vector<wxString> &commands)
+(AButton &button, const LocalizedCommandNameVector &commands)
 {
    wxString result;
    const auto project = GetActiveProject();

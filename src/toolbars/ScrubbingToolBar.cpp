@@ -133,13 +133,10 @@ void ScrubbingToolBar::UpdatePrefs()
 void ScrubbingToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   std::vector<wxString> commands;
    auto fn = [&]
    (AButton &button, const wxString &label, const wxString &command)
    {
-      commands.clear();
-      commands.push_back(label);
-      commands.push_back(command);
+      LocalizedCommandNameVector commands( 1u, { label, command } );
       ToolBar::SetButtonToolTip(button, commands);
    };
 

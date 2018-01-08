@@ -1310,7 +1310,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
 }
 
 wxString CommandManager::DescribeCommandsAndShortcuts
-(const std::vector<wxString> &commands) const
+(const LocalizedCommandNameVector &commands) const
 {
    wxString mark;
    // This depends on the language setting and may change in-session after
@@ -1321,36 +1321,34 @@ wxString CommandManager::DescribeCommandsAndShortcuts
 
    static const wxString &separatorFormat = wxT("%s / %s");
    wxString result;
-   auto iter = commands.begin(), end = commands.end();
-   while (iter != end) {
+   for (const auto &pair : commands) {
       // If RTL, then the control character forces right-to-left sequencing of
       // "/" -separated command names, and puts any "(...)" shortcuts to the
       // left, consistently with accelerators in menus (assuming matching
       // operating system prefernces for language), even if the command name
       // was missing from the translation file and defaulted to the English.
-      auto piece = wxString::Format(wxT("%s%s"), mark, *iter++);
+      auto piece = wxString::Format(wxT("%s%s"), mark, pair.first);
 
-      if (iter != end) {
-         if (!iter->empty()) {
-            auto keyStr = GetKeyFromName(*iter);
-            if (!keyStr.empty()){
-               auto keyString = KeyStringDisplay(keyStr, true);
-               auto format = wxT("%s %s(%s)");
+      wxString name{ pair.second };
+      if (!name.empty()) {
+         auto keyStr = GetKeyFromName(name);
+         if (!keyStr.empty()){
+            auto keyString = KeyStringDisplay(keyStr, true);
+            auto format = wxT("%s %s(%s)");
 #ifdef __WXMAC__
-               // The unicode controls push and pop left-to-right embedding.
-               // This keeps the directionally weak characters, such as uparrow
-               // for Shift, left of the key name,
-               // consistently with how menu accelerators appear, even when the
-               // system language is RTL.
-               format = wxT("%s %s(\u202a%s\u202c)");
+            // The unicode controls push and pop left-to-right embedding.
+            // This keeps the directionally weak characters, such as uparrow
+            // for Shift, left of the key name,
+            // consistently with how menu accelerators appear, even when the
+            // system language is RTL.
+            format = wxT("%s %s(\u202a%s\u202c)");
 #endif
-               // The mark makes correctly placed parentheses for RTL, even
-               // in the case that the piece is untranslated.
-               piece = wxString::Format(format, piece, mark, keyString);
-            }
+            // The mark makes correctly placed parentheses for RTL, even
+            // in the case that the piece is untranslated.
+            piece = wxString::Format(format, piece, mark, keyString);
          }
-         ++iter;
       }
+
       if (result.empty())
          result = piece;
       else

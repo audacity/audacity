@@ -2875,9 +2875,8 @@ void AdornedRulerPanel::UpdateButtonStates()
 {
    auto common = [this]
    (AButton &button, const wxString &commandName, const wxString &label) {
-      std::vector<wxString> commands;
-      commands.push_back(label);
-      commands.push_back(commandName);
+      CommandManager::LocalizedCommandNameVector commands( 1u,
+         { label, commandName } );
       ToolBar::SetButtonToolTip(button, commands);
       button.SetLabel(button.GetToolTipText());
 

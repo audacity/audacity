@@ -48,9 +48,8 @@ wxString MuteButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackMute"));
+   CommandManager::LocalizedCommandNameVector commands( 1u,
+      { name, wxT("TrackMute") } );
    return commandManager->DescribeCommandsAndShortcuts(commands);
 }
 
@@ -106,9 +105,8 @@ wxString SoloButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackSolo"));
+   CommandManager::LocalizedCommandNameVector commands( 1u,
+      { name, wxT("TrackSolo")  } );
    return commandManager->DescribeCommandsAndShortcuts(commands);
 }
 

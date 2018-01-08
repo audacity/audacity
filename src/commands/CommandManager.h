@@ -278,12 +278,14 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    ///
    /// Formatting summaries that include shortcut keys
    ///
+   using LocalizedCommandName = std::pair<wxString, const wxChar*>;
+   using LocalizedCommandNameVector = std::vector<LocalizedCommandName>;
    wxString DescribeCommandsAndShortcuts
-      (// An array, alternating user-visible strings, and
+      (// An array of paired user-visible strings, and
        // non-user-visible command names.  If a shortcut key is defined
        // for the command, then it is appended, parenthesized, after the
        // user-visible string.
-       const std::vector<wxString> &commands) const;
+       const LocalizedCommandNameVector &commands) const;
 
 protected:
 
