@@ -28,6 +28,10 @@
 
 #include "audacity/Types.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 struct MenuBarListEntry
 {
    MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
@@ -88,8 +92,8 @@ using SubMenuList = std::vector < movable_ptr<SubMenuListEntry> >;
 // so we don't want the structures to relocate with vector operations.
 using CommandList = std::vector<movable_ptr<CommandListEntry>>;
 
-WX_DECLARE_STRING_HASH_MAP_WITH_DECL(CommandListEntry *, CommandNameHash, class AUDACITY_DLL_API);
-WX_DECLARE_HASH_MAP_WITH_DECL(int, CommandListEntry *, wxIntegerHash, wxIntegerEqual, CommandIDHash, class AUDACITY_DLL_API);
+using CommandNameHash = std::unordered_map<wxString, CommandListEntry*>;
+using CommandIDHash = std::unordered_map<int, CommandListEntry*>;
 
 class AudacityProject;
 

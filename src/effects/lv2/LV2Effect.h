@@ -39,6 +39,10 @@
 
 #include "LoadLV2.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
 #define LV2EFFECTS_FAMILY wxT("LV2")
 
@@ -89,7 +93,7 @@ public:
 };
 
 WX_DECLARE_OBJARRAY(LV2Port, LV2PortArray);
-WX_DECLARE_STRING_HASH_MAP(wxArrayInt, LV2GroupMap);
+using LV2GroupMap = std::unordered_map<wxString, wxArrayInt>;
 WX_DEFINE_ARRAY_PTR(LilvInstance *, LV2SlaveArray);
 
 class LV2EffectSettingsDialog;

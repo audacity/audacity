@@ -22,6 +22,10 @@
 #include "xml/XMLTagHandler.h"
 #include "wxFileNameWrapper.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 class wxHashTable;
 class BlockArray;
 class BlockFile;
@@ -31,13 +35,12 @@ class SequenceTest;
 #define FSCKstatus_CHANGED   0x2
 #define FSCKstatus_SAVE_AUP  0x4 // used in combination with FSCKstatus_CHANGED
 
-WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
+using DirHash = std::unordered_map<int, int>;
 
 class BlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 
-WX_DECLARE_HASH_MAP(wxString, std::weak_ptr<BlockFile>, wxStringHash,
-                    wxStringEqual, BlockHash);
+using BlockHash = std::unordered_map< wxString, std::weak_ptr<BlockFile> >;
 
 wxMemorySize GetFreeMemory();
 

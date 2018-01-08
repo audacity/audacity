@@ -34,9 +34,13 @@ effects.
 #include "../PluginManager.h"
 #include "Effect.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 using EffectArray = std::vector <Effect*> ;
-WX_DECLARE_STRING_HASH_MAP_WITH_DECL(Effect *, EffectMap, class AUDACITY_DLL_API);
-WX_DECLARE_STRING_HASH_MAP_WITH_DECL(std::shared_ptr<Effect>, EffectOwnerMap, class AUDACITY_DLL_API);
+using EffectMap = std::unordered_map<wxString, Effect *>;
+using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<Effect> >;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 class EffectRack;

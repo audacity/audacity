@@ -43,6 +43,10 @@ Functions that find and load all LV2 plugins on the system.
 
 #include "LoadLV2.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 // ============================================================================
 // Module registration entry point
 //
@@ -69,7 +73,7 @@ DECLARE_BUILTIN_MODULE(LV2sEffectBuiltin);
 // LV2EffectsModule
 //
 ///////////////////////////////////////////////////////////////////////////////
-WX_DECLARE_STRING_HASH_MAP(LilvNode *, UriHash);
+using UriHash = std::unordered_map<wxString, LilvNode*>;
 
 LilvWorld *gWorld = NULL;
 

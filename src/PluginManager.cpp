@@ -50,7 +50,11 @@
 
 #include "Experimental.h"
 
-WX_DECLARE_STRING_HASH_MAP(wxArrayString, ProviderMap);
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
+using ProviderMap = std::unordered_map<wxString, wxArrayString>;
 
 // ============================================================================
 //
@@ -390,7 +394,7 @@ struct ItemData
    int stateWidth;
 };
 
-WX_DECLARE_STRING_HASH_MAP(ItemData, ItemDataMap);
+using ItemDataMap = std::unordered_map<wxString, ItemData>;
 
 enum
 {

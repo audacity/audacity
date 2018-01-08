@@ -64,6 +64,10 @@ greater use in future.
 #include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
 static const int kImportID = 20002;
@@ -88,7 +92,7 @@ const wxString Effect::kFactoryPresetIdent = wxT("Factory Preset:");
 const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
 const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
 
-WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
+using t2bHash = std::unordered_map< void*, bool >;
 
 Effect::Effect()
 {

@@ -42,7 +42,11 @@
 
 #include "AudacityApp.h"
 
-WX_DECLARE_STRING_HASH_MAP(wxString, LangHash);
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
+using LangHash = std::unordered_map<wxString, wxString>;
 
 static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
 {

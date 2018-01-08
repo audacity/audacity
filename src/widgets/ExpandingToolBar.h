@@ -24,6 +24,10 @@
 #include "ImageRoll.h"
 #include "wxPanelWrapper.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 class wxDragImage;
 
 class AButton;
@@ -36,7 +40,7 @@ class ToolBarGrabber;
 
 class ToolBarArrangement;
 
-WX_DECLARE_VOIDPTR_HASH_MAP(int, WindowHash);
+using WindowHash = std::unordered_map<void*, int>;
 WX_DEFINE_ARRAY(ExpandingToolBar *, ExpandingToolBarArray);
 WX_DECLARE_OBJARRAY(wxRect, wxArrayRect);
 

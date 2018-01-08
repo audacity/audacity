@@ -33,7 +33,16 @@ using std::isinf;
 // To define function
 #include <tr1/functional>
 
+// To define unordered_set
+#include <tr1/unordered_set>
+
+// To define unordered_map and hash
+#include <tr1/unordered_map>
+
 namespace std {
+   using std::tr1::unordered_set;
+   using std::tr1::hash;
+   using std::tr1::unordered_map;
    using std::tr1::function;
    using std::tr1::shared_ptr;
    using std::tr1::weak_ptr;
@@ -1138,5 +1147,22 @@ make_value_transform_iterator(const Iterator &iterator, Function function)
    using NewFunction = value_transformer<Function, Iterator>;
    return { iterator, NewFunction{ function } };
 }
+
+// For using std::unordered_map on wxString
+namespace std
+#ifdef __AUDACITY_OLD_STD__
+             ::tr1
+#endif
+{
+   template<typename T> struct hash;
+   template<> struct hash< wxString > {
+      size_t operator () (const wxString &str) const // noexcept
+      {
+         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
+         using Hasher = hash< decltype(stdstr) >;
+         return Hasher{}( stdstr );
+      }
+   };
+};
 
 #endif // __AUDACITY_MEMORY_X_H__

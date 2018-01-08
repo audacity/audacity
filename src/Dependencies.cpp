@@ -56,15 +56,16 @@ AliasedFile s.
 #include "WaveClip.h"
 #include "widgets/ErrorDialog.h"
 
-WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
-                    wxStringHash, wxStringEqual, AliasedFileHash);
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
+using AliasedFileHash = std::unordered_map<wxString, AliasedFile*>;
 
 // These two hash types are used only inside short scopes
 // so it is safe to key them by plain pointers.
-WX_DECLARE_HASH_MAP(BlockFile *, BlockFilePtr,
-                    wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
-WX_DECLARE_HASH_MAP(BlockFile *, bool,
-                    wxPointerHash, wxPointerEqual, BoolBlockFileHash);
+using ReplacedBlockFileHash = std::unordered_map<BlockFile *, BlockFilePtr>;
+using BoolBlockFileHash = std::unordered_map<BlockFile *, bool>;
 
 // Given a project, returns a single array of all SeqBlocks
 // in the current set of tracks.  Enumerating that array allows
