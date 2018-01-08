@@ -156,7 +156,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 CommandFunctorPointer callback,
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
-                const CommandParameter &parameter = {});
+                const CommandParameter &parameter = CommandParameter{});
 
    void AddItem(const wxChar *name,
                 const wxChar *label_in,
@@ -166,7 +166,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
                 int checkmark = -1,
-                const CommandParameter &parameter = {});
+                const CommandParameter &parameter = CommandParameter{});
 
    void AddSeparator();
 

@@ -42,7 +42,7 @@ struct CommandContext {
       AudacityProject &p
       , const wxEvent *e = nullptr
       , int ii = 0
-      , const CommandParameter &param = {}
+      , const CommandParameter &param = CommandParameter{}
    )
       : project{ p }
       , pEvt{ e }
