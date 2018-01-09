@@ -722,7 +722,7 @@ static wxArrayString names()
    return theArray.Get();
 }
 
-static struct
+static const struct
 {
    wxString label;
    wxString name;
@@ -778,22 +778,6 @@ TagsEditor::TagsEditor(wxWindow * parent,
    mEditTrack(editTrack)
 {
    SetName(GetTitle());
-
-   labelmap[0].label = LABEL_ARTIST;
-   labelmap[1].label = LABEL_TITLE;
-   labelmap[2].label = LABEL_ALBUM;
-   labelmap[3].label = LABEL_TRACK;
-   labelmap[4].label = LABEL_YEAR;
-   labelmap[5].label = LABEL_GENRE;
-   labelmap[6].label = LABEL_COMMENTS;
-
-   labelmap[0].name = TAG_ARTIST;
-   labelmap[1].name = TAG_TITLE;
-   labelmap[2].name = TAG_ALBUM;
-   labelmap[3].name = TAG_TRACK;
-   labelmap[4].name = TAG_YEAR;
-   labelmap[5].name = TAG_GENRE;
-   labelmap[6].name = TAG_COMMENTS;
 
    mGrid = NULL;
 
@@ -954,25 +938,25 @@ bool TagsEditor::TransferDataFromWindow()
          continue;
       }
 
-      if (n.CmpNoCase(LABEL_ARTIST) == 0) {
+      if (n.CmpNoCase(wxGetTranslation(LABEL_ARTIST)) == 0) {
          n = TAG_ARTIST;
       }
-      else if (n.CmpNoCase(LABEL_TITLE) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
          n = TAG_TITLE;
       }
-      else if (n.CmpNoCase(LABEL_ALBUM) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_ALBUM)) == 0) {
          n = TAG_ALBUM;
       }
-      else if (n.CmpNoCase(LABEL_TRACK) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
          n = TAG_TRACK;
       }
-      else if (n.CmpNoCase(LABEL_YEAR) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_YEAR)) == 0) {
          n = TAG_YEAR;
       }
-      else if (n.CmpNoCase(LABEL_GENRE) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_GENRE)) == 0) {
          n = TAG_GENRE;
       }
-      else if (n.CmpNoCase(LABEL_COMMENTS) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_COMMENTS)) == 0) {
          n = TAG_COMMENTS;
       }
 
@@ -1000,14 +984,16 @@ bool TagsEditor::TransferDataToWindow()
       mGrid->AppendRows();
 
       mGrid->SetReadOnly(i, 0);
-      mGrid->SetCellValue(i, 0, labelmap[i].label);
+      mGrid->SetCellValue(i, 0, wxGetTranslation( labelmap[i].label ) );
       mGrid->SetCellValue(i, 1, mLocal.GetTag(labelmap[i].name));
 
-      if (!mEditTitle && mGrid->GetCellValue(i, 0).CmpNoCase(LABEL_TITLE) == 0) {
+      if (!mEditTitle &&
+          mGrid->GetCellValue(i, 0).CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
          mGrid->SetReadOnly(i, 1);
       }
 
-      if (!mEditTrack && mGrid->GetCellValue(i, 0).CmpNoCase(LABEL_TRACK) == 0) {
+      if (!mEditTrack &&
+          mGrid->GetCellValue(i, 0).CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
          mGrid->SetReadOnly(i, 1);
       }
 
@@ -1328,10 +1314,13 @@ void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
    size_t row = mGrid->GetGridCursorRow();
 
-   if (!mEditTitle && mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TITLE) == 0) {
+   if (!mEditTitle &&
+       mGrid->GetCellValue(row, 0).CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
       return;
    }
-   else if (!mEditTrack && mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TRACK) == 0) {
+   else if (!mEditTrack &&
+            mGrid->GetCellValue(row, 0)
+               .CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
       return;
    }
    else if (row < STATICCNT) {
@@ -1405,7 +1394,7 @@ void TagsEditor::SetEditors()
 
    for (int i = 0; i < cnt; i++) {
       wxString label = mGrid->GetCellValue(i, 0);
-      if (label.CmpNoCase(LABEL_GENRE) == 0) {
+      if (label.CmpNoCase(wxGetTranslation(LABEL_GENRE)) == 0) {
          // This use of GetDefaultEditorForType does not require DecRef.
          mGrid->SetCellEditor(i, 1, mGrid->GetDefaultEditorForType(wxT("Combo")));
       }
