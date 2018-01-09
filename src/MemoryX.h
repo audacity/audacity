@@ -1150,19 +1150,23 @@ make_value_transform_iterator(const Iterator &iterator, Function function)
 
 // For using std::unordered_map on wxString
 namespace std
-#ifdef __AUDACITY_OLD_STD__
-             ::tr1
-#endif
 {
-   template<typename T> struct hash;
-   template<> struct hash< wxString > {
-      size_t operator () (const wxString &str) const // noexcept
-      {
-         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
-         using Hasher = hash< decltype(stdstr) >;
-         return Hasher{}( stdstr );
-      }
-   };
-};
+#ifdef __AUDACITY_OLD_STD__
+   namespace tr1
+   {
+#endif
+      template<typename T> struct hash;
+      template<> struct hash< wxString > {
+         size_t operator () (const wxString &str) const // noexcept
+         {
+            auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
+            using Hasher = hash< decltype(stdstr) >;
+            return Hasher{}( stdstr );
+         }
+      };
+#ifdef __AUDACITY_OLD_STD__
+   }
+#endif
+}
 
 #endif // __AUDACITY_MEMORY_X_H__
