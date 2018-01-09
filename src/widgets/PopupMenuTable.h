@@ -144,7 +144,7 @@ That's all!
 */
 
 #define DECLARE_POPUP_MENU(HandlerClass) \
-   virtual void Populate();
+   void Populate() override;
 
 // begins function
 #define BEGIN_POPUP_MENU(HandlerClass) \
