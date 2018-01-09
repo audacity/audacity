@@ -308,15 +308,16 @@ namespace {
    {
       // Maps are unordered, hash maps; can't just iterate in tandem and
       // compare.
-      auto copy(map1);
+      if (map1.size() != map2.size())
+         return false;
+
       for (const auto &pair : map2) {
-         auto iter = copy.find(pair.first);
-         if (iter == copy.end() || iter->second != pair.second)
+         auto iter = map1.find(pair.first);
+         if (iter == map1.end() || iter->second != pair.second)
             return false;
-         copy.erase(iter);
       }
 
-      return copy.empty();
+      return true;
    }
 }
 
