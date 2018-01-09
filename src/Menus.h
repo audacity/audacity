@@ -309,17 +309,17 @@ void OnSelectPrevClipBoundaryToCursor(const CommandContext &);
 void OnSelectCursorToNextClipBoundary(const CommandContext &);
 void OnSelectClipBoundary(bool next);
 struct FoundTrack {
-   const WaveTrack* waveTrack;
-   int trackNumber;
-   bool channel;
+   const WaveTrack* waveTrack{};
+   int trackNumber{};
+   bool channel{};
 
    wxString ComposeTrackName() const;
 };
 struct FoundClip : FoundTrack {
-   bool found;
-   double startTime;
-   double endTime;
-   int index;
+   bool found{};
+   double startTime{};
+   double endTime{};
+   int index{};
 };
 FoundClip FindNextClip(const WaveTrack* wt, double t0, double t1);
 FoundClip FindPrevClip(const WaveTrack* wt, double t0, double t1);
@@ -425,12 +425,12 @@ void OnCursorTrackEnd(const CommandContext &);
 void OnCursorSelStart(const CommandContext &);
 void OnCursorSelEnd(const CommandContext &);
    struct FoundClipBoundary : FoundTrack {
-   int nFound;    // 0, 1, or 2
-   double time;
-   int index1;
-   bool clipStart1;
-   int index2;
-   bool clipStart2;
+   int nFound{};    // 0, 1, or 2
+   double time{};
+   int index1{};
+   bool clipStart1{};
+   int index2{};
+   bool clipStart2{};
 };
 FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time);
 FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time);
