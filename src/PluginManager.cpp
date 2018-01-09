@@ -2905,6 +2905,7 @@ bool PluginManager::SetConfig(const wxString & key, const double & value)
    return result;
 }
 
+/* Return value is a key for lookup in a config file */
 wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
 {
    if (mPlugins.find(ID) == mPlugins.end())
@@ -2929,6 +2930,7 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
           wxCONFIG_PATH_SEPARATOR;
 }
 
+/* Return value is a key for lookup in a config file */
 wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
 {
    wxString path = SettingsPath(ID, true);
@@ -2942,6 +2944,7 @@ wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
    return path;
 }
 
+/* Return value is a key for lookup in a config file */
 wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, const wxString & key)
 {
    wxString path = SharedGroup(ID, group);
@@ -2953,6 +2956,7 @@ wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, c
    return path + key;
 }
 
+/* Return value is a key for lookup in a config file */
 wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group)
 {
    wxString path = SettingsPath(ID, false);
@@ -2966,6 +2970,7 @@ wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group
    return path;
 }
 
+/* Return value is a key for lookup in a config file */
 wxString PluginManager::PrivateKey(const PluginID & ID, const wxString & group, const wxString & key)
 {
    wxString path = PrivateGroup(ID, group);

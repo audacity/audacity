@@ -294,6 +294,7 @@ private:
    bool SetConfig(const wxString & key, const float & value);
    bool SetConfig(const wxString & key, const double & value);
 
+   /* Return values are keys for lookup in a config file */
    wxString SettingsPath(const PluginID & ID, bool shared);
    wxString SharedGroup(const PluginID & ID, const wxString & group);
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
