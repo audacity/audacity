@@ -306,19 +306,17 @@ void Tags::Clear()
 namespace {
    bool EqualMaps(const TagMap &map1, const TagMap &map2)
    {
-      for (auto it1 = map1.begin(), end1 = map1.end(),
-           it2 = map2.begin(), end2 = map2.end();
-           it1 != end1 || it2 != end2;) {
-         if (it1 == end1 || it2 == end2)
+      // Maps are unordered, hash maps; can't just iterate in tandem and
+      // compare.
+      auto copy(map1);
+      for (const auto &pair : map2) {
+         auto iter = copy.find(pair.first);
+         if (iter == copy.end() || iter->second != pair.second)
             return false;
-         else if (it1->first != it2->first)
-            return false;
-         else if (it1->second != it2->second)
-            return false;
-         else
-            ++it1, ++it2;
+         copy.erase(iter);
       }
-      return true;
+
+      return copy.empty();
    }
 }
 
