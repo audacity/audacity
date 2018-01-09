@@ -525,7 +525,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       if (n == wxT("id3v2")) {
-         // LLL:  This is obsolute, but it must be handled and ignored.
+         // LLL:  This is obsolete, but it must be handled and ignored.
       }
       else {
          SetTag(n, v);
@@ -931,6 +931,8 @@ bool TagsEditor::TransferDataFromWindow()
 
    mLocal.Clear();
    for (i = 0; i < cnt; i++) {
+      // Get tag name from the grid
+
       wxString n = mGrid->GetCellValue(i, 0);
       wxString v = mGrid->GetCellValue(i, 1);
 
@@ -938,6 +940,7 @@ bool TagsEditor::TransferDataFromWindow()
          continue;
       }
 
+      // Map special tag names back to internal keys
       if (n.CmpNoCase(wxGetTranslation(LABEL_ARTIST)) == 0) {
          n = TAG_ARTIST;
       }
@@ -984,6 +987,8 @@ bool TagsEditor::TransferDataToWindow()
       mGrid->AppendRows();
 
       mGrid->SetReadOnly(i, 0);
+      // The special tag name that's displayed and translated may not match
+      // the key string used for internal lookup.
       mGrid->SetCellValue(i, 0, wxGetTranslation( labelmap[i].label ) );
       mGrid->SetCellValue(i, 1, mLocal.GetTag(labelmap[i].name));
 
@@ -1041,12 +1046,19 @@ void TagsEditor::OnChange(wxGridEvent & event)
       return;
    }
 
-   wxString n = mGrid->GetCellValue(event.GetRow(), 0);
-   for (size_t i = 0; i < STATICCNT; i++) {
-      if (n.CmpNoCase(labelmap[i].label) == 0) {
+   // Do not permit duplication of any of the tags.
+   // Tags differing only in case are nondistinct.
+   auto row = event.GetRow();
+   const wxString key0 = mGrid->GetCellValue(row, 0).Upper();
+   auto nn = mGrid->GetNumberRows();
+   for (decltype(nn) ii = 0; ii < nn; ++ii) {
+      if (ii == row)
+         continue;
+      auto key = mGrid->GetCellValue(ii, 0).Upper();
+      if (key0.CmpNoCase(key) == 0) {
          ischanging = true;
          wxBell();
-         mGrid->SetGridCursor(i, 0);
+         mGrid->SetGridCursor(ii, 0);
          event.Veto();
          ischanging = false;
          break;
