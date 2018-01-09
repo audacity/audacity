@@ -291,6 +291,59 @@ struct CommandIdTag;
 using CommandID = TaggedIdentifier< CommandIdTag, false >;
 using CommandIDs = std::vector<CommandID>;
 
+
+// Holds a msgid for the translation catalog (and in future, might also hold a
+// second, disambiguating context string)
+//
+// Two different wxString accessors -- one for the msgid itself, another for
+// the user-visible translation.  The msgid should be used only in unusual cases
+// and the translation more often
+//
+class TranslatableString : public wxString {
+public:
+   TranslatableString() {}
+
+   explicit TranslatableString(const wxString &str) : wxString{ str } {}
+   explicit TranslatableString(const wxChar *str) : wxString{ str } {}
+
+   using wxString::empty;
+
+   // MSGID is the English lookup key in the message catalog, not necessarily
+   // for user's eyes if the locale is some other.
+   // The MSGID might not be all the information TranslatableString holds
+   // in future.
+   // This is a deliberately ugly-looking function name.  Use with caution.
+   Identifier MSGID() const { return Identifier{ *this }; }
+
+   const wxString &Translation() const;
+
+   friend bool operator == (
+      const TranslatableString &x, const TranslatableString &y)
+   { return x.MSGID() == y.MSGID(); }
+
+   friend bool operator != (
+      const TranslatableString &x, const TranslatableString &y)
+   { return !(x == y); }
+
+   // Future: may also store a domain and context, as if for dpgettext()
+   friend std::hash< TranslatableString >;
+};
+
+using TranslatableStrings = std::vector<TranslatableString>;
+
+// For using std::unordered_map on TranslatableString
+namespace std
+{
+   template<> struct hash< TranslatableString > {
+      size_t operator () (const TranslatableString &str) const // noexcept
+      {
+         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
+         using Hasher = hash< decltype(stdstr) >;
+         return Hasher{}( stdstr );
+      }
+   };
+}
+
 // ----------------------------------------------------------------------------
 // A native 64-bit integer...used when referring to any number of samples
 // ----------------------------------------------------------------------------
