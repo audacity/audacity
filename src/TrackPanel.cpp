@@ -1846,8 +1846,17 @@ void TrackPanel::DrawTracks(wxDC * dc)
    TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
 
    // The track artist actually draws the stuff inside each track
-   auto first = GetProject()->GetFirstVisible();
-   mTrackArtist->DrawTracks(context, GetTracks(), first.get(),
+   auto project = GetProject();
+   // Make a function that reproduces the range, because, quirkily, the range
+   // can't be copied and iterated twice.  Fix that later.
+   auto range = [&]{
+      return make_iterator_range(
+         PendingTrackIterator{ project->GetTracks(),
+             std::make_shared<VisibleTrackIterator>( project ) },
+         PendingTrackIterator{}
+      );
+   };
+   mTrackArtist->DrawTracks(context, range,
                             region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
@@ -1869,8 +1878,13 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    wxRect trackRect = clip;
    trackRect.height = 0;   // for drawing background in no tracks case.
 
-   VisibleTrackIterator iter(GetProject());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   auto project = GetProject();
+   PendingTrackIterator
+      begin{ project->GetTracks(),
+             std::make_shared<VisibleTrackIterator>( project ) },
+      end;
+   for (const auto &track : make_iterator_range(begin, end)) {
+      auto t = track.get();
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 

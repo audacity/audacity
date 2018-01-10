@@ -1560,3 +1560,69 @@ std::shared_ptr<Track> TrackList::FindPendingChangedTrack(TrackId id) const
       return {};
    return *it;
 }
+
+// Make begin iterator
+PendingTrackIterator::PendingTrackIterator
+(TrackList *list, const std::shared_ptr<TrackListIterator> &pIter)
+   : mList{ list }
+   , mpIter{ pIter }
+{
+   auto &pending = mList->FindPendingNewTracks();
+
+   // Assume no invalidation of these iterators happens during the lifetime
+   // of this!
+   mpPendingIt = pending.begin(), mpPendingEnd = pending.end();
+
+   mpTrack = Track::Pointer( mpIter->First() );
+   SubstituteTrack();
+      
+   mDoingExtras = !mpTrack;
+   FindExtraTrack();
+}
+
+// Make end iterator; the only important thing is to define operators == and
+// != with other iterators
+PendingTrackIterator::PendingTrackIterator()
+   : mList{ nullptr }
+   , mpIter{ }
+{
+   mDoingExtras = true;
+}
+
+PendingTrackIterator &PendingTrackIterator::operator++()
+{
+   if (!mDoingExtras) {
+      Track *next = mpIter->Next();
+      if (next) {
+         mpTrack = Track::Pointer( next );
+         SubstituteTrack();
+      }
+      else
+         mDoingExtras = true;
+   }
+   FindExtraTrack();
+   return *this;
+}
+
+void PendingTrackIterator::SubstituteTrack()
+{
+   if (mpTrack) {
+      auto sub = mList->FindPendingChangedTrack( mpTrack->GetId() );
+      if (sub)
+         mpTrack = sub;
+   }
+}
+
+void PendingTrackIterator::FindExtraTrack()
+{
+   if (mDoingExtras) {
+      auto pCondIter = dynamic_cast<TrackListCondIterator*>(mpIter.get());
+      while(
+         mpTrack.reset(),
+         mpPendingIt != mpPendingEnd &&
+         (mpTrack = *mpPendingIt++,
+          pCondIter &&
+          !pCondIter->Condition(mpTrack.get())))
+      {}
+   }
+}

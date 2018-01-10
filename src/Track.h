@@ -501,7 +501,6 @@ class AUDACITY_DLL_API TrackListCondIterator /* not final */ : public TrackListI
       Track *Prev(bool skiplinked = false) override;
       Track *Last(bool skiplinked = false) override;
 
-   protected:
       // NEW virtual
       virtual bool Condition(Track *t) = 0;
 };
@@ -578,6 +577,52 @@ class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
    bool mInLabelSection;
 };
 
+
+// Iterates over the tracks, substituting any pending replacement tracks
+// for the actual, and always appending the added tracks, but then
+// also filtering all tracks according to the criterion in the
+// TrackListIterator given to the constructor.
+// Iterator may be invalidated if the project's TrackList is mutated during
+// the iterator's lifetime (though not in case of RegisterPendingChangedTrack()).
+class PendingTrackIterator {
+public:
+   // Construct a begin iterator
+   PendingTrackIterator
+      (TrackList *list,
+       // Track iterator that can include a condition
+       const std::shared_ptr<TrackListIterator> &pIter);
+
+   // Construct an end iterator
+   PendingTrackIterator();
+
+   PendingTrackIterator &operator++();
+
+   const std::shared_ptr<Track> &operator* () const { return mpTrack; }
+
+   bool operator == (const PendingTrackIterator &other) const
+   // Test for identity of the tracks pointed to should be a sufficient
+   // test of iterator equality, assuming no track is ever duplicated in the
+   // sequence, which should be the case, and that an end iterator stores a
+   // null pointer.
+   { return mpTrack == other.mpTrack; }
+
+   bool operator != (const PendingTrackIterator &other) const
+   { return !(*this == other); }
+
+protected:
+
+   std::shared_ptr<Track> mpTrack;
+
+private:
+   void SubstituteTrack();
+   void FindExtraTrack();
+
+   TrackList *mList;
+   std::shared_ptr<TrackListIterator> mpIter;
+
+   bool mDoingExtras{ false };
+   ListOfTracks::const_iterator mpPendingIt, mpPendingEnd;
+};
 
 /** \brief TrackList is a flat linked list of tracks supporting Add,  Remove,
  * Clear, and Contains, plus serialization of the list of tracks.
