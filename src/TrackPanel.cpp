@@ -1871,6 +1871,9 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
    VisibleTrackIterator iter(GetProject());
    for (Track *t = iter.First(); t; t = iter.Next()) {
+      auto other = GetTracks()->FindPendingChangedTrack(t->GetId());
+      if (other)
+         t = other.get();
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 

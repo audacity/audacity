@@ -1896,8 +1896,20 @@ void AudacityProject::FixScrollbars()
       panelHeight = 0;
    }
 
-   double LastTime =
-      std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
+   auto LastTime = -std::numeric_limits<double>::max();
+   auto &tracks = *GetTracks();
+   for (auto track : tracks) {
+      // Iterate over pending changed tracks if present.
+      {
+         auto other =
+         tracks.FindPendingChangedTrack(track->GetId());
+         if (other)
+            track = other.get();
+      }
+      LastTime = std::max( LastTime, track->GetEndTime() );
+   }
+   LastTime =
+      std::max(LastTime, mViewInfo.selectedRegion.t1());
 
    const double screen = GetScreenEndTime() - mViewInfo.h;
    const double halfScreen = screen / 2.0;
