@@ -163,7 +163,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Zoom-Toggle"));
+   S.StartStatic(_("Zoom Toggle"));
    {
       S.StartMultiColumn(4);
       {
@@ -176,7 +176,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.TieChoice(_("Preset 2:"),
                      wxT("/GUI/ZoomPreset2"),
-                     WaveTrack::kZoomMinutes,
+                     WaveTrack::kZoom4To1,
                      mZoomChoices,
                      mZoomCodes);
          S.SetSizeHints(mZoomChoices);

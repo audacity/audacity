@@ -6544,7 +6544,7 @@ void AudacityProject::OnZoomToggle(const CommandContext &)
    double Zoom1 = GetZoomOfPref(
       wxT("/GUI/ZoomPreset1"), WaveTrack::kZoomDefault );
    double Zoom2 = GetZoomOfPref(
-      wxT("/GUI/ZoomPreset2"), WaveTrack::kZoomMinutes );
+      wxT("/GUI/ZoomPreset2"), WaveTrack::kZoom4To1 );
    double Z = mViewInfo.GetZoom();// Current Zoom.
    double ChosenZoom = abs(log(Zoom1 / Z)) > abs(log( Z / Zoom2)) ? Zoom1:Zoom2;
 

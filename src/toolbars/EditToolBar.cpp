@@ -128,6 +128,7 @@ void EditToolBar::Populate()
    MakeButtonBackgroundsSmall();
 
    /* Buttons */
+   // Tooltips slightly more verbose than the menu entries are.
    AddButton(bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
       _("Cut selection"));
    AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
@@ -155,14 +156,16 @@ void EditToolBar::Populate()
    AddSeparator();
 #endif
 
+   // Tooltips match menu entries.
+   // We previously had longer tooltips which were not more clear.
    AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
       _("Zoom In"));
    AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
       _("Zoom Out"));
    AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
-      _("Fit selection in window"));
+      _("Zoom to Selection"));
    AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
-      _("Fit project in window"));
+      _("Fit to Width"));
 
 #ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
    AddButton(bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
