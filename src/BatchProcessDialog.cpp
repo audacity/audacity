@@ -486,6 +486,8 @@ EditChainsDialog::~EditChainsDialog()
 /// Creates the dialog and its contents.
 void EditChainsDialog::Populate()
 {
+   mCommandNames = BatchCommands::GetAllCommands();
+
    //------------------------- Main section --------------------
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -627,11 +629,20 @@ void EditChainsDialog::PopulateList()
 /// Add one item into mList
 void EditChainsDialog::AddItem(const wxString &Action, const wxString &Params)
 {
+   // Translate internal command name to a friendly form
+   auto item = make_iterator_range(mCommandNames).index_if(
+      [&](const CommandName &name){ return Action == name.second; }
+   );
+   auto friendlyName = item >= 0
+      ? // wxGetTranslation
+                           ( mCommandNames[item].first )
+      : Action;
+
    int i = mList->GetItemCount();
 
    mList->InsertItem(i, wxT(""));
    mList->SetItem(i, ItemNumberColumn, wxString::Format(wxT(" %02i"), i + 1));
-   mList->SetItem(i, ActionColumn, Action );
+   mList->SetItem(i, ActionColumn, friendlyName );
    mList->SetItem(i, ParamsColumn, Params );
 }
 

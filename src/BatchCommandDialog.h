@@ -56,13 +56,20 @@ class BatchCommandDialog final : public wxDialogWrapper {
 
    void ValidateChoices();
    void PopulateCommandList();
-   int GetSelectedItem();
+   //int GetSelectedItem();
 
    wxButton   *mEditParams;
    wxButton   *mUsePreset;
    wxListCtrl *mChoices;
    wxTextCtrl * mCommand;
    wxTextCtrl * mParameters;
+
+   wxString mInternalCommandName;
+
+   using CommandName = std::pair<wxString, wxString>;
+   using CommandNameVector = std::vector<CommandName>;
+   CommandNameVector mCommandNames;
+
    DECLARE_EVENT_TABLE()
 };
 

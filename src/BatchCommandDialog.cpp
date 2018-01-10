@@ -118,16 +118,15 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
 
 void BatchCommandDialog::PopulateCommandList()
 {
-   wxArrayString commandList = BatchCommands::GetAllCommands();
+   mCommandNames = BatchCommands::GetAllCommands();
 
-   unsigned int i;
    mChoices->DeleteAllItems();
-   for( i=0;i<commandList.GetCount();i++)
-   {
-      mChoices->InsertItem( i, commandList[i]);
-   }
+   for (size_t ii = 0, size = mCommandNames.size(); ii < size; ++ii)
+      // insert the user-facing string
+      mChoices->InsertItem( ii, mCommandNames[ii].first );
 }
 
+#if 0
 int BatchCommandDialog::GetSelectedItem()
 {
    int i;
@@ -142,6 +141,7 @@ int BatchCommandDialog::GetSelectedItem()
    }
    return -1;
 }
+#endif
 
 void BatchCommandDialog::ValidateChoices()
 {
@@ -153,7 +153,7 @@ void BatchCommandDialog::OnChoice(wxCommandEvent & WXUNUSED(event))
 
 void BatchCommandDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
-   mSelectedCommand = mCommand->GetValue().Strip(wxString::both);
+   mSelectedCommand = mInternalCommandName.Strip(wxString::both);
    mSelectedParameters = mParameters->GetValue().Strip(wxString::trailing);
    EndModal(true);
 }
@@ -165,24 +165,23 @@ void BatchCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void BatchCommandDialog::OnItemSelected(wxListEvent &event)
 {
-   wxString command = mChoices->GetItemText(event.GetIndex());
+   const auto &command = mCommandNames[ event.GetIndex() ];
 
    EffectManager & em = EffectManager::Get();
-   PluginID ID = em.GetEffectByIdentifier(command);
+   PluginID ID = em.GetEffectByIdentifier(command.second);
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
    mEditParams->Enable(!ID.IsEmpty());
    mUsePreset->Enable(em.HasPresets(ID));
 
-   if (command == mCommand->GetValue())
-   {
+   if (command.first == mCommand->GetValue())
       return;
-   }
 
-   mCommand->SetValue(command);
+   mCommand->SetValue(command.first);
+   mInternalCommandName = command.second;
 
-   wxString params = BatchCommands::GetCurrentParamsFor(command);
+   wxString params = BatchCommands::GetCurrentParamsFor(command.second);
    if (params.IsEmpty())
    {
       params = em.GetDefaultPreset(ID);
@@ -193,7 +192,7 @@ void BatchCommandDialog::OnItemSelected(wxListEvent &event)
 
 void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mCommand->GetValue();
+   wxString command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
    params = BatchCommands::PromptForParamsFor(command, params, this).Trim();
@@ -204,7 +203,7 @@ void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 
 void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mCommand->GetValue();
+   wxString command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
    wxString preset = BatchCommands::PromptForPresetFor(command, params, this).Trim();
@@ -215,12 +214,17 @@ void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
 
 void BatchCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
 {
-   mCommand->SetValue( Command );
+   auto item = make_iterator_range(mCommandNames).index_if(
+      [&](const CommandName &name){ return Command == name.second; }
+   );
+
    mParameters->SetValue( Params );
 
-   int item = mChoices->FindItem(-1, Command);
-   if (item != wxNOT_FOUND)
-   {
+   mInternalCommandName = Command;
+   if (item < 0)
+      mCommand->SetValue( Command );
+   else {
+      mCommand->SetValue( mCommandNames[item].first );
       mChoices->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 
       EffectManager & em = EffectManager::Get();

@@ -54,15 +54,30 @@ enum eCommandType { CtEffect, CtMenu, CtSpecial };
 // TIDY-ME: Not currently translated,
 // but there are issues to address if we do.
 // CLEANSPEECH remnant
-static wxString SpecialCommands[] = {
-   wxT("NoAction"),
-   // wxT("Import"),   // non-functioning
-   wxT("ExportMP3_56k_before"),
-   wxT("ExportMP3_56k_after"),
-   wxT("ExportFLAC"),
-   wxT("ExportMP3"),
-   wxT("ExportOgg"),
-   wxT("ExportWAV")
+static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
+   // Use translations of the first members, some other day.
+   // For 2.2.2 we'll get them into the catalog at least.
+
+   { XO("No Action"),            wxT("NoAction") },
+
+   // { wxT("Import"), wxT("Import") },   // non-functioning
+   /* i18n-hint: before is adverb; MP3 names an audio file format */
+   { XO("Export as MP3 56k before"), wxT("ExportMP3_56k_before") },
+
+   /* i18n-hint: after is adverb; MP3 names an audio file format */
+   { XO("Export as MP3 56k after"),  wxT("ExportMP3_56k_after") },
+
+   /* i18n-hint: FLAC names an audio file format */
+   { XO("Export as FLAC"),          wxT("ExportFLAC") },
+
+   /* i18n-hint: MP3 names an audio file format */
+   { XO("Export as MP3"),           wxT("ExportMP3") },
+
+   /* i18n-hint: Ogg names an audio file format */
+   { XO("Export as Ogg"),           wxT("ExportOgg") },
+
+   /* i18n-hint: WAV names an audio file format */
+   { XO("Export as WAV"),           wxT("ExportWAV") },
 };
 // end CLEANSPEECH remnant
 
@@ -259,25 +274,22 @@ void BatchCommands::SetWavToMp3Chain() // a function per default chain?  This is
 }
 
 // Gets all commands that are valid for this mode.
-wxArrayString BatchCommands::GetAllCommands()
+auto BatchCommands::GetAllCommands() -> CommandNameVector
 {
-   wxArrayString commands;
-   wxString command;
-   commands.Clear();
+   CommandNameVector commands;
 
    AudacityProject *project = GetActiveProject();
    if (!project)
-   {
       return commands;
-   }
-
-   unsigned int i;
 
    // CLEANSPEECH remnant
-   for(i=0;i<sizeof(SpecialCommands)/sizeof(SpecialCommands[0]);i++)
-   {
-      commands.Add( SpecialCommands[i] );
-   }
+   for( const auto &command : SpecialCommands )
+      commands.push_back( {
+         //wxGetTranslation
+                           (command.first),
+         command.second
+      } );
+
    // end CLEANSPEECH remnant
 
    PluginManager & pm = PluginManager::Get();
@@ -285,15 +297,23 @@ wxArrayString BatchCommands::GetAllCommands()
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      command = em.GetEffectIdentifier(plug->GetID());
+      auto command = em.GetEffectIdentifier(plug->GetID());
       if (!command.IsEmpty())
-      {
-         commands.Add(command);
-      }
+         commands.push_back( {
+            plug->GetUntranslatedName(), // plug->GetTranslatedName(),
+            command
+         } );
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
 
-   commands.Sort();
+   // Sort commands by their user-visible names.
+   // PRL:  What should happen if first members of pairs are not unique?
+   // Sort stably?
+   std::sort(
+      commands.begin(), commands.end(),
+      [](const CommandName &a, const CommandName &b)
+         { return a.first < b.first; }
+   );
 
    /* This is for later in development: include the menu commands.
          CommandManager * mManager = project->GetCommandManager();
@@ -626,9 +646,8 @@ bool BatchCommands::ApplyCommand(const wxString & command, const wxString & para
    unsigned int i;
    // Test for a special command.
    // CLEANSPEECH remnant
-   for(i=0;i<sizeof(SpecialCommands)/sizeof(SpecialCommands[0]);i++)
-   {
-      if( command == SpecialCommands[i] )
+   for( i = 0; i < sizeof(SpecialCommands)/sizeof(*SpecialCommands); ++i ) {
+      if( command == SpecialCommands[i].second )
          return ApplySpecialCommand( i, command, params );
    }
    // end CLEANSPEECH remnant

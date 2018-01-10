@@ -110,6 +110,10 @@ private:
    int mSelectedCommand;
    bool mChanged;
 
+   using CommandName = std::pair<wxString, wxString>;
+   using CommandNameVector = std::vector<CommandName>;
+   CommandNameVector mCommandNames;
+   
    DECLARE_EVENT_TABLE()
 };
 
