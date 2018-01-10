@@ -2800,6 +2800,10 @@ void AudioIO::StopStream()
                });
             }
          }
+
+         AudacityProject *p = GetActiveProject();
+         ControlToolBar *bar = p->GetControlToolBar();
+         bar->CommitRecording();
       }
    }
 
