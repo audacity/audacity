@@ -1,4 +1,4 @@
-//   ThemeAsCeeCode.h
+//   LightThemeAsCeeCode.h
 //
 //   This file was Auto-Generated.
 //   It is included by Theme.cpp.

@@ -700,7 +700,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->AddItem(wxT("ZeroCross"), _("At &Zero Crossings"), FN(OnZeroCrossing), wxT(""));
+      c->AddItem(wxT("ZeroCross"), _("At &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
 
       c->EndMenu();
 
@@ -722,7 +722,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), 
          TimeSelectedFlag, 
          TimeSelectedFlag);
-      c->AddItem(wxT("ZoomToggle"), _("Zoom &Toggle"), FN(OnZoomToggle), wxT("Z"),
+      c->AddItem(wxT("ZoomToggle"), _("Zoom &Toggle"), FN(OnZoomToggle), wxT("Shift+Z"),
          TracksExistFlag, 
          TracksExistFlag);
       c->EndSubMenu();
