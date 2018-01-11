@@ -5,9 +5,6 @@ addons:
         packages:
             - g++-4.9
             - gcc-4.9
-sudo: required
-dist: trusty            
-group: deprecated-2017Q4              
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y libwxgtk3.0-dev libgtk2.0-dev gettext libasound2-dev alsa-utils alsa-oss
