@@ -792,15 +792,6 @@ std::shared_ptr<TrackList> TrackList::Create()
    return result;
 }
 
-TrackList& TrackList::operator= (const TrackList &that)
-{
-   if (this != &that) {
-      this->Clear();
-      DoAssign(that);
-   }
-   return *this;
-}
-
 TrackList &TrackList::operator= (TrackList &&that)
 {
    if (this != &that) {
@@ -808,23 +799,6 @@ TrackList &TrackList::operator= (TrackList &&that)
       Swap(that);
    }
    return *this;
-}
-
-void TrackList::DoAssign(const TrackList &that)
-{
-   auto copyLOT = [](
-      ListOfTracks &dst, const std::weak_ptr< TrackList > &self,
-      const ListOfTracks &src )
-   {
-      for (const auto &ptr : src)
-         dst.push_back(
-            ListOfTracks::value_type{ ptr->Duplicate().release() } );
-      for (auto it = dst.begin(), last = dst.end(); it != last; ++it)
-         (*it)->SetOwner(self, it);
-   };
-   copyLOT( *this, mSelf, that );
-   copyLOT( this->mPendingUpdates, mSelf, that.mPendingUpdates );
-   mUpdaters = that.mUpdaters;
 }
 
 void TrackList::Swap(TrackList &that)
