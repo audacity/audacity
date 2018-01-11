@@ -4479,6 +4479,20 @@ void AudacityProject::InitialState()
    this->UpdateMixerBoard();
 }
 
+bool AudacityProject::UndoAvailable()
+{
+   auto trackList = GetTracks();
+   return GetUndoManager()->UndoAvailable() &&
+      !GetTracks()->HasPendingChanges();
+}
+
+bool AudacityProject::RedoAvailable()
+{
+   auto trackList = GetTracks();
+   return GetUndoManager()->RedoAvailable() &&
+      !GetTracks()->HasPendingChanges();
+}
+
 void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
 {
    PushState(desc, shortDesc, UndoPush::AUTOSAVE);
