@@ -104,9 +104,6 @@ const wxString VerCheckHtml(){
 
 void AboutDialog::CreateCreditsList()
 {
-   // Deceased team members
-   AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleDeceased);
-
    // The Audacity Team: developers and support
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
@@ -116,12 +113,12 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
-   AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Bill Wharrie, ")) + _("documentation and support"), roleTeamMember);
 
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
+   AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Richard Ash, ")) + _("developer"), roleEmeritusTeam); 
    AddCredit(wxString(wxT("Christian Brochec, ")) + _("documentation and support, French"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Matt Brubeck, ")) + _("developer"), roleEmeritusTeam);
@@ -137,6 +134,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Shane Mueller, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Tony Oetzmann, ")) + _("documentation and support"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Alexandre Prokoudine, ")) + _("documentation and support"), roleEmeritusTeam);
+   AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleEmeritusTeam);
 
    // Contributors
    AddCredit(wxString(wxT("Lynn Allan, ")) + _("developer"), roleContributor);
@@ -346,8 +344,8 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 #endif
 
       /* i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages */
-      wxT("<p><b>") + _("In Memoriam") + wxT("</b><br>") +
-      GetCreditsByRole(roleDeceased) +
+      //wxT("<p><b>") + _("In Memoriam") + wxT("</b><br>") +
+      //GetCreditsByRole(roleDeceased) +
 
       wxT("<p><b>") + _("Audacity Team Members") + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
