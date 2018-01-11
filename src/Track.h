@@ -64,6 +64,32 @@ using TrackNodePointer = ListOfTracks::iterator;
 
 class ViewInfo;
 
+// This is an in-session identifier of track objects across undo states
+// It does not persist between sessions
+// Default constructed value is not equal to the id of any track that has ever
+// been added to a TrackList, or (directly or transitively) copied from such
+// TrackIds are assigned uniquely across projects
+class TrackId
+{
+public:
+   TrackId() : mValue(-1) {}
+   explicit TrackId (long value) : mValue(value) {}
+
+   bool operator == (const TrackId &other) const
+   { return mValue == other.mValue; }
+
+   bool operator != (const TrackId &other) const
+   { return mValue != other.mValue; }
+
+   // Define this in case you want to key a std::map on TrackId
+   // The operator does not mean anything else
+   bool operator <  (const TrackId &other) const
+   { return mValue <  other.mValue; }
+
+private:
+   long mValue;
+};
+
 class AUDACITY_DLL_API Track /* not final */
    : public CommonTrackPanelCell, public XMLTagHandler
 {
@@ -72,6 +98,9 @@ class AUDACITY_DLL_API Track /* not final */
    friend class SyncLockedTracksIterator;
 
  // To be TrackDisplay
+ private:
+   TrackId mId;
+
  protected:
    std::weak_ptr<TrackList> mList;
    TrackNodePointer mNode{};
@@ -86,6 +115,11 @@ class AUDACITY_DLL_API Track /* not final */
    bool           mLinked;
    bool           mMinimized;
 
+ public:
+
+   TrackId GetId() const { return mId; }
+ private:
+   void SetId( TrackId id ) { mId = id; }
  public:
 
    // Given a bare pointer, find a shared_ptr.  But this is not possible for
@@ -617,16 +651,22 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    /// For use in sorting:  assume each iterator points into this list, no duplications
    void Permute(const std::vector<TrackNodePointer> &permutation);
 
-   /// Add this Track or all children of this TrackList.
+   Track *FindById( TrackId id );
+
+   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
    Track *Add(std::unique_ptr<TrackKind> &&t);
+
+   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
    Track *AddToHead(std::unique_ptr<TrackKind> &&t);
 
+   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
    Track *Add(std::shared_ptr<TrackKind> &&t);
 
    /// Replace first track with second track, give back a holder
+   /// Give the replacement the same id as the replaced
    ListOfTracks::value_type Replace(Track * t, ListOfTracks::value_type &&with);
 
    /// Remove this Track or all children of this TrackList.
@@ -743,6 +783,11 @@ private:
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
 
    std::weak_ptr<TrackList> mSelf;
+
+   // Nondecreasing during the session.
+   // Nonpersistent.
+   // Used to assign ids to added tracks.
+   static long mCounter;
 };
 
 class AUDACITY_DLL_API TrackFactory

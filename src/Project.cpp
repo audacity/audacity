@@ -3585,6 +3585,10 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
       return mTags.get();
    }
 
+   // Note that TrackList::Add includes assignment of unique in-session TrackId
+   // to a reloaded track, though no promise that it equals the id it originally
+   // had
+
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
       return mTracks->Add(mTrackFactory->NewWaveTrack());
    }

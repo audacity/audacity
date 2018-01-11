@@ -82,6 +82,8 @@ Track::Track(const Track &orig)
 // Copy all the track properties except the actual contents
 void Track::Init(const Track &orig)
 {
+   mId = orig.mId;
+
    mDefaultName = orig.mDefaultName;
    mName = orig.mName;
 
@@ -739,6 +741,9 @@ DEFINE_EVENT_TYPE(EVT_TRACKLIST_PERMUTED);
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZING);
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_DELETION);
 
+// same value as in the default constructed TrackId:
+long TrackList::mCounter = -1;
+
 TrackList::TrackList()
 :  wxEvtHandler()
 {
@@ -853,6 +858,17 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
    PermutationEvent();
 }
 
+Track *TrackList::FindById( TrackId id )
+{
+   // Linear search.  Tracks in a project are usually very few.
+   // Search only the non-pending tracks.
+   auto it = std::find_if( ListOfTracks::begin(), ListOfTracks::end(),
+      [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
+   if (it == ListOfTracks::end())
+      return {};
+   return it->get();
+}
+
 template<typename TrackKind>
 Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
 {
@@ -862,6 +878,7 @@ Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
    auto n = getPrev( getEnd() );
 
    pTrack->SetOwner(mSelf, n);
+   pTrack->SetId( TrackId{ ++mCounter } );
    RecalcPositions(n);
    ResizingEvent(n);
    return back().get();
@@ -883,6 +900,7 @@ Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
    push_front(ListOfTracks::value_type(pTrack = t.release()));
    auto n = getBegin();
    pTrack->SetOwner(mSelf, n);
+   pTrack->SetId( TrackId{ ++mCounter } );
    RecalcPositions(n);
    ResizingEvent(n);
    return front().get();
@@ -899,6 +917,7 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
    auto n = getPrev( getEnd() );
 
    t->SetOwner(mSelf, n);
+   t->SetId( TrackId{ ++mCounter } );
    RecalcPositions(n);
    ResizingEvent(n);
    return back().get();
@@ -921,6 +940,7 @@ auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
       Track *pTrack = with.get();
       *node = std::move(with);
       pTrack->SetOwner(mSelf, node);
+      pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
       DeletionEvent();
