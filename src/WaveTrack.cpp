@@ -452,7 +452,7 @@ float WaveTrack::GetChannelGain(int channel) const
       return right*mGain;
 }
 
-void WaveTrack::SetMinimized(bool isMinimized){
+void WaveTrack::DoSetMinimized(bool isMinimized){
 
 #ifdef EXPERIMENTAL_HALF_WAVE
    // Show half wave on collapse, full on restore.
@@ -465,7 +465,7 @@ void WaveTrack::SetMinimized(bool isMinimized){
       pWtvc->DoZoomPreset( isMinimized ? 1:0);
 #endif
 
-   Track::SetMinimized( isMinimized );
+   PlayableTrack::DoSetMinimized( isMinimized );
 }
 
 void WaveTrack::SetWaveColorIndex(int colorIndex)

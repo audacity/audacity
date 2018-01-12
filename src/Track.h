@@ -151,12 +151,28 @@ class AUDACITY_DLL_API Track /* not final */
 
    int GetIndex() const;
    void SetIndex(int index);
+
    int GetY() const;
+private:
+   // Always maintain a strictly contiguous layout of tracks.
+   // So client code is not permitted to modify this attribute directly.
    void SetY(int y);
+   // No need yet to make this virtual
+   void DoSetY(int y);
+public:
+
    int GetHeight() const;
-   virtual void SetHeight(int h);
+   void SetHeight(int h);
+protected:
+   virtual void DoSetHeight(int h);
+public:
+
    bool GetMinimized() const;
-   virtual void SetMinimized(bool isMinimized);
+   void SetMinimized(bool isMinimized);
+protected:
+   virtual void DoSetMinimized(bool isMinimized);
+public:
+
    Track *GetLink() const;
 
  private:
@@ -215,10 +231,14 @@ class AUDACITY_DLL_API Track /* not final */
    void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
-   bool GetLinked  () const { return mLinked;   }
-
    virtual void SetSelected(bool s);
+
+   bool GetLinked  () const { return mLinked;   }
    void SetLinked  (bool l);
+private:
+   // No need yet to make this virtual
+   void DoSetLinked(bool l);
+public:
 
    virtual int GetChannel() const { return mChannel;};
    virtual double GetOffset() const = 0;

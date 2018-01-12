@@ -210,11 +210,11 @@ double NoteTrack::GetEndTime() const
    return GetStartTime() + GetSeq().get_real_dur();
 }
 
-void NoteTrack::SetHeight(int h)
+void NoteTrack::DoSetHeight(int h)
 {
    auto oldHeight = GetHeight();
    auto oldMargin = GetNoteMargin(oldHeight);
-   Track::SetHeight(h);
+   PlayableTrack::DoSetHeight(h);
    auto margin = GetNoteMargin(h);
    Zoom(
       wxRect{ 0, 0, 1, h }, // only height matters
