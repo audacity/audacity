@@ -154,6 +154,11 @@ int Track::GetY() const
 
 void Track::SetY(int y)
 {
+   DoSetY(y);
+}
+
+void Track::DoSetY(int y)
+{
    mY = y;
 }
 
@@ -168,12 +173,19 @@ int Track::GetHeight() const
 
 void Track::SetHeight(int h)
 {
-   mHeight = h;
    auto pList = mList.lock();
+
+   DoSetHeight(h);
+
    if (pList) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
+}
+
+void Track::DoSetHeight(int h)
+{
+   mHeight = h;
 }
 
 bool Track::GetMinimized() const
@@ -184,21 +196,35 @@ bool Track::GetMinimized() const
 void Track::SetMinimized(bool isMinimized)
 {
    auto pList = mList.lock();
-   mMinimized = isMinimized;
+
+   DoSetMinimized(isMinimized);
+
    if (pList) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
 }
 
+void Track::DoSetMinimized(bool isMinimized)
+{
+   mMinimized = isMinimized;
+}
+
 void Track::SetLinked(bool l)
 {
    auto pList = mList.lock();
-   mLinked = l;
+
+   DoSetLinked(l);
+
    if (pList) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
+}
+
+void Track::DoSetLinked(bool l)
+{
+   mLinked = l;
 }
 
 Track *Track::GetLink() const
@@ -787,7 +813,7 @@ void TrackList::RecalcPositions(TrackNodePointer node)
    for (auto n = TrackListIterator{ this, node }; n != theEnd; ++n) {
       t = *n;
       t->SetIndex(i++);
-      t->SetY(y);
+      t->DoSetY(y);
       y += t->GetHeight();
    }
 }
