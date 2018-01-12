@@ -37,22 +37,6 @@ class EnvelopeHandle;
 //
 #define WAVETRACK_MERGE_POINT_TOLERANCE 0.01
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-#define MONO_WAVE_PAN(T) \
-   (T != NULL && \
-    T->GetChannel() == Track::MonoChannel && \
-    T->GetKind() == Track::Wave && \
-    ((const WaveTrack *)T)->GetPan() != 0 && \
-    WaveTrack::mMonoAsVirtualStereo && \
-    ((const WaveTrack *)T)->GetDisplay() == WaveTrack::Waveform)
-
-#define MONO_PAN \
-   (mPan != 0.0 && \
-    mChannel == MonoChannel && \
-    mDisplay == Waveform && \
-    mMonoAsVirtualStereo)
-#endif
-
 /// \brief Structure to hold region of a wavetrack and a comparison function
 /// for sortability.
 struct Region
@@ -92,15 +76,9 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    Track::Holder Duplicate() const override;
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void VirtualStereoInit();
-#endif
    friend class TrackFactory;
 
  public:
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   static bool mMonoAsVirtualStereo;
-#endif
 
    typedef WaveTrackLocation Location;
    using Holder = std::unique_ptr<WaveTrack>;
@@ -135,9 +113,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    //
 
    int GetKind() const override { return Wave; }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   int GetMinimizedHeight() const override;
-#endif
+
    //
    // WaveTrack parameters
    //
@@ -151,16 +127,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    // -1.0 (left) -> 1.0 (right)
    float GetPan() const;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   bool SetPan(float newPan);
-#else
    void SetPan(float newPan) override;
-#endif
+
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void SetVirtualState(bool state, bool half=false);
-#endif
 
    void SetMinimized(bool isMinimized) override;
 

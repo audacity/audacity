@@ -204,11 +204,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("B&lend system and Audacity theme"),
                     wxT("/GUI/BlendThemes"),
                     true);
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      S.TieCheckBox(_("&Display a mono channel as virtual stereo"),
-                    wxT("/GUI/MonoAsVirtualStereo"),
-                    false);
-#endif
    }
    S.EndStatic();
 }

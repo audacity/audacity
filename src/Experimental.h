@@ -179,10 +179,6 @@
    //#define EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 #endif
 
-// John (Thales) work to make the display show the result of the pan and gain sliders, rather than their input.
-// First committed by Martyn, 30th May 2013.
-//#define EXPERIMENTAL_OUTPUT_DISPLAY
-
 // Module prefs provides a panel in prefs where users can choose which modules
 // to enable.
 #define EXPERIMENTAL_MODULE_PREFS

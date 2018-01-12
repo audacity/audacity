@@ -738,14 +738,6 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
             ? WaveformSettings::stLinear
             : WaveformSettings::stLogarithmic;
       }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if (pTrack->GetDisplay() == WaveTrack::Waveform) {
-         pTrack->SetVirtualState(false);
-      }
-      else if (id == WaveTrack::Waveform) {
-         pTrack->SetVirtualState(true);
-      }
-#endif
 
       AudacityProject *const project = ::GetActiveProject();
       project->ModifyState(true);
@@ -853,13 +845,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    // Assume partner is wave or null
    const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (MONO_WAVE_PAN(pTrack))
-      pTrack->SetVirtualState(false);
-   if (MONO_WAVE_PAN(partner))
-      static_cast<WaveTrack*>(partner)->SetVirtualState(false);
-#endif
-
    if (partner) {
       // Set partner's parameters to match target.
       partner->Merge(*pTrack);
@@ -917,13 +902,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    wxASSERT(partner);
    if (!partner)
       return;
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (!stereo && MONO_WAVE_PAN(pTrack))
-      pTrack->SetVirtualState(true, true);
-   if (!stereo && MONO_WAVE_PAN(partner))
-      partner->SetVirtualState(true, true);
-#endif
 
    if (partner)
    {

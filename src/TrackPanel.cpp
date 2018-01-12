@@ -406,33 +406,6 @@ LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
 }
 #endif
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-void TrackPanel::UpdateVirtualStereoOrder()
-{
-   TrackListOfKindIterator iter(Track::Wave, GetTracks());
-   Track *t;
-   int temp;
-
-   for (t = iter.First(); t; t = iter.Next()) {
-      const auto wt = static_cast<WaveTrack*>(t);
-      if(t->GetChannel() == Track::MonoChannel){
-
-         if(WaveTrack::mMonoAsVirtualStereo && wt->GetPan() != 0){
-            temp = wt->GetHeight();
-            wt->SetHeight(temp*wt->GetVirtualTrackPercentage());
-            wt->SetHeight(temp - wt->GetHeight(),true);
-         }else if(!WaveTrack::mMonoAsVirtualStereo && wt->GetPan() != 0){
-            wt->SetHeight(wt->GetHeight() + wt->GetHeight(true));
-         }
-      }
-   }
-   t = iter.First();
-   if(t){
-      t->ReorderList(false);
-   }
-}
-#endif
-
 wxString TrackPanel::gSoloPref;
 
 void TrackPanel::UpdatePrefs()
@@ -440,15 +413,6 @@ void TrackPanel::UpdatePrefs()
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo->bUpdateTrackIndicator,
       true);
    gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   bool temp = WaveTrack::mMonoAsVirtualStereo;
-   gPrefs->Read(wxT("/GUI/MonoAsVirtualStereo"), &WaveTrack::mMonoAsVirtualStereo,
-      false);
-
-   if(WaveTrack::mMonoAsVirtualStereo != temp)
-      UpdateVirtualStereoOrder();
-#endif
 
    mViewInfo->UpdatePrefs();
 
@@ -1818,12 +1782,6 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
       rect.height += link->GetHeight();
    }
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   else if(MONO_WAVE_PAN(trk)){
-      rect.height += trk->GetHeight(true);
-   }
-#endif
-
    if( refreshbacking )
    {
       mRefreshBacking = true;
@@ -1925,12 +1883,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          skipBorder = true;
       }
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(MONO_WAVE_PAN(t)){
-         rect.height += t->GetHeight(true);
-      }
-#endif
-
       // If the previous track is linked to this one but isn't on the screen
       // (and thus would have been skipped by VisibleTrackIterator) we need to
       // draw that track's border instead.
@@ -1973,21 +1925,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          rect.height -= (kTopMargin + kBottomMargin);
          mTrackArtist->DrawVRuler(context, t, rect);
       }
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(MONO_WAVE_PAN(t)){
-         trackRect.y = t->GetY(true) - mViewInfo->vpos;
-         trackRect.height = t->GetHeight(true);
-         if (region.Contains(0, trackRect.y, GetLeftOffset(), trackRect.height)) {
-            wxRect rect = trackRect;
-            rect.x += GetVRulerOffset();
-            rect.y += kTopMargin;
-            rect.width = GetVRulerWidth();
-            rect.height -= (kTopMargin + kBottomMargin);
-            mTrackArtist->DrawVRuler(context, t, rect);
-         }
-      }
-#endif
    }
 
    auto target = Target();
@@ -2421,11 +2358,7 @@ void TrackInfo::Status1DrawFunction
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
    wxString s;
-   if (!wt || (wt->GetLinked()
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-       && wt->GetChannel() != Track::MonoChannel
-#endif
-   ))
+   if (!wt || (wt->GetLinked()))
       s = _("Stereo, %dHz");
    else {
       if (wt->GetChannel() == Track::MonoChannel)
@@ -2529,11 +2462,7 @@ void TrackPanel::DrawOutsideOfTrack
    dc->DrawRectangle(side);
 
    // Area between tracks of stereo group
-   if (t->GetLinked()
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-       || MONO_WAVE_PAN(t)
-#endif
-       ) {
+   if (t->GetLinked()) {
       // Paint the channel separator over (what would be) the shadow of the top
       // channel, and the top inset of the bottom channel
       side = rect;
@@ -2611,12 +2540,6 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
       rect.height = l->GetHeight() - (kTopMargin + kBottomMargin);
       mTrackArtist->UpdateVRuler(l, rect);
    }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   else if(MONO_WAVE_PAN(t)){
-      rect.height = t->GetHeight(true) - (kTopMargin + kBottomMargin);
-      mTrackArtist->UpdateVRuler(t, rect);
-   }
-#endif
 }
 
 void TrackPanel::UpdateVRulerSize()
@@ -2717,11 +2640,6 @@ void TrackPanel::EnsureVisible(Track * t)
          nt = iter.Next();
          trackHeight += nt->GetHeight();
       }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      else if(MONO_WAVE_PAN(it)){
-         trackHeight += it->GetHeight(true);
-      }
-#endif
       else {
          nt = it;
       }
@@ -2770,11 +2688,6 @@ void TrackPanel::VerticalScroll( float fracPosition){
          nt = iter.Next();
          trackHeight += nt->GetHeight();
       }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      else if(MONO_WAVE_PAN(it)){
-         trackHeight += it->GetHeight(true);
-      }
-#endif
       else {
          nt = it;
       }
@@ -2814,11 +2727,7 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
 
    // The lines at bottom of 1st track and top of second track of stereo group
    // Possibly replace with DrawRectangle to add left border.
-   if (t->GetLinked()
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-       || MONO_WAVE_PAN(t)
-#endif
-       ) {
+   if (t->GetLinked()) {
       // The given rect has had the top inset subtracted
       int h1 = rect.y + t->GetHeight() - kTopInset;
       // h1 is the top coordinate of the second tracks' rectangle
@@ -3518,7 +3427,6 @@ auto TrackPanelCellIterator::operator* () const -> value_type
 
 void TrackPanelCellIterator::UpdateRect()
 {
-   // TODO:  cooperate with EXPERIMENTAL_OUTPUT_DISPLAY
    const auto size = mPanel->GetSize();
    if ( mpTrack ) {
       mRect = {

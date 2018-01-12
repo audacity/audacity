@@ -20,10 +20,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelAx.h"
 #include "../../ViewInfo.h"
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-#include "../../WaveTrack.h"
-#endif
-
 #include <wx/dc.h>
 
 namespace {
@@ -116,16 +112,6 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
             // AColor::Line includes both endpoints so use GetBottom()
             AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
             // ^^^ The whole point of this routine.
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-            if (MONO_WAVE_PAN(pTrack)){
-               auto y = pTrack->GetY(true) - viewInfo.vpos;
-               auto top = y + kTopMargin;
-               auto height = pTrack->GetHeight(true) - (kTopMargin + kBottomMargin);
-               // - 1 because AColor::Line is inclusive of endpoint
-               AColor::Line(dc, mLastCursorX, top, mLastCursorX, top + height - 1);
-            }
-#endif
 
          }
       }

@@ -437,10 +437,6 @@ public:
       (const std::shared_ptr< TrackPanelCell > &pCell);
    std::shared_ptr< TrackPanelCell > GetBackgroundCell();
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void UpdateVirtualStereoOrder();
-#endif
-
 public:
    // Accessors...
    static bool HasSoloButton(){  return gSoloPref!=wxT("None");}

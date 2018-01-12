@@ -78,12 +78,6 @@ class AUDACITY_DLL_API Track /* not final */
    int            mIndex;
    int            mY;
    int            mHeight;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   int            mYv;   //For mono a virtual Y value is necessary.
-   int            mHeightv; // For mono a virtual height value is necessary.
-   float          mPerY; //mY as a percent of mYv + mY
-   bool           mVirtualStereo;
-#endif
    wxString       mName;
    wxString       mDefaultName;
 
@@ -157,25 +151,12 @@ class AUDACITY_DLL_API Track /* not final */
 
    int GetIndex() const;
    void SetIndex(int index);
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   int GetY(bool vStereo = false) const;
-   void SetY(int y, bool vStereo = false);
-   int GetHeight(bool vStereo = false) const;
-   void SetHeight(int h, bool vStereo = false);
-#else
    int GetY() const;
    void SetY(int y);
    int GetHeight() const;
    virtual void SetHeight(int h);
-#endif
    bool GetMinimized() const;
    virtual void SetMinimized(bool isMinimized);
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   float GetVirtualTrackPercentage() const { return mPerY;}
-   void SetVirtualTrackPercentage(float val) { mPerY = val;}
-   bool GetVirtualStereo() { return mVirtualStereo;}
-   void SetVirtualStereo(bool vStereo) { mVirtualStereo = vStereo;}
-#endif
    Track *GetLink() const;
 
  private:
@@ -192,9 +173,6 @@ class AUDACITY_DLL_API Track /* not final */
    mutable std::shared_ptr<DirManager> mDirManager;
 
  public:
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void ReorderList(bool resize = true);
-#endif
 
    enum
    {
@@ -249,11 +227,7 @@ class AUDACITY_DLL_API Track /* not final */
    virtual void SetOffset (double o) { mOffset = o; }
 
    void SetChannel(int    c) { mChannel = c; }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   virtual bool SetPan( float ){ return false; }
-#else
    virtual void SetPan( float ){ ;}
-#endif
    virtual void SetPanFromChannelType(){ ;};
 
    // AS: Note that the dirManager is mutable.  This is

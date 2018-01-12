@@ -419,12 +419,6 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
             stereoTrackRect.height += link->GetHeight();
          }
       }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(MONO_WAVE_PAN(t)){
-         stereoTrackRect.height += t->GetHeight(true);
-         t->SetVirtualStereo(false);
-      }
-#endif
 
       if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
          wxRect rr = trackRect;
@@ -436,26 +430,6 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
                    selectedRegion, zoomInfo,
                    drawEnvelope, bigPoints, drawSliders, hasSolo);
       }
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(MONO_WAVE_PAN(t)){
-         trackRect.y = t->GetY(true) - zoomInfo.vpos;
-         trackRect.height = t->GetHeight(true);
-         stereoTrackRect = trackRect;
-         stereoTrackRect.y -= t->GetHeight();
-         stereoTrackRect.height += t->GetHeight();
-         t->SetVirtualStereo(true);
-         if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
-            wxRect rr = trackRect;
-            rr.x += mMarginLeft;
-            rr.y += mMarginTop;
-            rr.width -= (mMarginLeft + mMarginRight);
-            rr.height -= (mMarginTop + mMarginBottom);
-            DrawTrack(t, dc, rr, selectedRegion, zoomInfo,
-                      drawEnvelope, bigPoints, drawSliders, hasSolo);
-         }
-      }
-#endif
 
       t = iter.Next();
    }
@@ -1192,11 +1166,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
    float zoomMin, float zoomMax,
    bool dB, float dBRange,
    const float *min, const float *max, const float *rms, const int *bl,
-   bool /* showProgress */, bool muted
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   , const float gain
-#endif
-)
+   bool /* showProgress */, bool muted)
 {
    // Display a line representing the
    // min and max of the samples in this region
@@ -1223,12 +1193,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int xx = rect.x + x0;
       double v;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-     //JWA: "gain" variable passed to function includes the pan value and is used below 4/14/13
-      v = min[x0] * env[x0] * gain;
-#else
       v = min[x0] * env[x0];
-#endif
       if (clipped && mShowClipping && (v <= -MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -1238,11 +1203,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
       h1 = GetWaveYPos(v, zoomMin, zoomMax,
                        rect.height, dB, true, dBRange, true);
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      v = max[x0] * env[x0] * gain;
-#else
       v = max[x0] * env[x0];
-#endif
       if (clipped && mShowClipping && (v >= MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -1265,17 +1226,10 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
       lasth1 = h1;
       lasth2 = h2;
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      r1[x0] = GetWaveYPos(-rms[x0] * env[x0]*gain, zoomMin, zoomMax,
-                          rect.height, dB, true, dBRange, true);
-      r2[x0] = GetWaveYPos(rms[x0] * env[x0]*gain, zoomMin, zoomMax,
-                          rect.height, dB, true, dBRange, true);
-#else
       r1[x0] = GetWaveYPos(-rms[x0] * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
       r2[x0] = GetWaveYPos(rms[x0] * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
-#endif
       // Make sure the rms isn't larger than the waveform min/max
       if (r1[x0] > h1 - 1) {
          r1[x0] = h1 - 1;
@@ -2012,11 +1966,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
                zoomMin, zoomMax,
                dB, dBRange,
                useMin, useMax, useRms, useBl,
-               isLoadingOD, muted
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-               , track->GetChannelGain(track->GetChannel())
-#endif
-            );
+               isLoadingOD, muted);
          }
          else {
             bool highlight = false;
