@@ -2865,15 +2865,15 @@ void TrackPanel::SetFocusedTrack( Track *t )
    if (t && !t->GetLinked() && t->GetLink())
       t = (WaveTrack*)t->GetLink();
 
-   if (t && AudacityProject::GetKeyboardCaptureHandler()) {
+   if ( !mAx->SetFocus( Track::Pointer( t ) ) )
+      return;
+
+   if (t && AudacityProject::GetKeyboardCaptureHandler())
       AudacityProject::ReleaseKeyboard(this);
-   }
 
-   if (t) {
+   if (t)
       AudacityProject::CaptureKeyboard(this);
-   }
 
-   mAx->SetFocus( Track::Pointer( t ) );
    Refresh( false );
 }
 
