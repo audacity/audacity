@@ -120,6 +120,7 @@ class CommandImplementation /* not final */ : public Command
 private:
    CommandType &mType;
    ParamValueMap mParams;
+   ParamBoolMap mSetParams;
 
    /// Using the command signature, looks up a possible parameter value and
    /// checks whether it passes the validator.
@@ -133,6 +134,7 @@ protected:
                   const wxString &paramName,
                   const wxVariant &param);
    void CheckParam(const wxString &paramName);
+   bool HasParam( const wxString &paramName);
    bool GetBool(const wxString &paramName);
    long GetLong(const wxString &paramName);
    double GetDouble(const wxString &paramName);

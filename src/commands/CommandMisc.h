@@ -25,6 +25,7 @@ class CommandType;
 // Map from parameter name to the value of the parameter
 // to do: use hash
 typedef std::map<wxString, wxVariant> ParamValueMap;
+typedef std::map<wxString, bool> ParamBoolMap;
 
 // Map from parameter name to a suitable Validator
 // to do: use hash

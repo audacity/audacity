@@ -95,6 +95,7 @@ CommandImplementation::CommandImplementation(CommandType &type,
       std::unique_ptr<CommandOutputTarget> &&output)
 : mType(type),
    mParams(type.GetSignature().GetDefaults()),
+   mSetParams(),
    mOutput(std::move(output))
 {
    wxASSERT(mOutput);
@@ -126,6 +127,14 @@ void CommandImplementation::CheckParam(const wxString &paramName)
                 + wxT("command tried to get '")
                 + paramName
                 + wxT("' parameter, but that parameter doesn't exist in the command signature!"));
+}
+
+bool CommandImplementation::HasParam( const wxString &paramName) 
+{
+   // Test for not even in map...
+   if( mParams.count(paramName) < 1)
+      return false;
+   return mSetParams[paramName];
 }
 
 bool CommandImplementation::GetBool(const wxString &paramName)
@@ -208,6 +217,7 @@ bool CommandImplementation::SetParameter(const wxString &paramName, const wxVari
       return false;
    }
    mParams[paramName] = validator.GetConverted();
+   mSetParams[ paramName ] = true;
 
    // (debug)
    // Status(wxT("Set parameter ") + paramName + wxT(" to type ") + mParams[paramName].GetType() + wxT(", value ") + mParams[paramName].MakeString());
