@@ -18,6 +18,7 @@
 
 #include "MemoryX.h"
 #include <wx/app.h>
+#include <exception>
 
 #include "Internat.h"
 
@@ -105,29 +106,6 @@ struct DefaultDelayedHandlerAction
    }
 };
 
-// Helpers for defining GuardedCall:
-
-// Call one function object,
-// then another unless the first throws, return result of first
-template <typename R> struct Sequencer {
-   template <typename F1, typename Argument, typename F2>
-   R operator () (const F1 &f1, Argument &&a, const F2 &f2)
-   {
-      auto result = f1( std::forward<Argument>(a) );
-      f2();
-      return result;
-   }
-};
-// template specialization to allow R to be void
-template <> struct Sequencer<void> {
-   template <typename F1, typename Argument, typename F2>
-   void operator () (const F1 &f1, Argument &&a, const F2 &f2)
-   {
-      f1( std::forward<Argument>(a) );
-      f2();
-   }
-};
-
 // Classes that can supply the second argument of GuardedCall:
 // Frequently useful converter of all exceptions to some failure constant
 template <typename R> struct SimpleGuard
@@ -169,11 +147,11 @@ inline SimpleGuard< void > MakeSimpleGuard() { return {}; }
  * for the guarded call or throw the same or another exception.
  * It executes in the same thread as the body.
  *
- * If the handler catches non-null and does not throw, then delayedHandler
+ * If the handler is passed non-null and does not throw, then delayedHandler
  * executes later in the main thread, in idle time of the event loop.
  */
 template <
-   typename R, // return type
+   typename R = void, // return type
 
    typename F1, // function object with signature R()
 
@@ -190,15 +168,18 @@ R GuardedCall
 {
    try { return body(); }
    catch ( AudacityException &e ) {
-      return Sequencer<R>{}( handler, &e,
-         [&] {
+
+      auto end = finally([&]{
+         if (!std::uncaught_exception()) {
             auto pException =
                std::shared_ptr< AudacityException > { e.Move().release() };
             wxTheApp->CallAfter( [=] { // capture pException by value
                delayedHandler( pException.get() );
             } );
          }
-      );
+      });
+
+      return handler( &e );
    }
    catch ( ... ) {
       return handler( nullptr );

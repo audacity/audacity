@@ -2513,7 +2513,7 @@ void Effect::Preview(bool dryOnly)
       // was called.
       if (!dryOnly) {
          End();
-         GuardedCall< void >( [&]{ Init(); } );
+         GuardedCall( [&]{ Init(); } );
       }
 
       if (FocusDialog) {

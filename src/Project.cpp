@@ -502,7 +502,7 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    // Guard this call so that C++ exceptions don't propagate through
    // the expat library
-   GuardedCall< void >(
+   GuardedCall(
       [&] { mProject->Import(strAttr, &trackArray); },
       [&] (AudacityException*) { trackArray.clear(); }
    );

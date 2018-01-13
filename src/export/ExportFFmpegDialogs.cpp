@@ -494,7 +494,7 @@ FFmpegPresets::FFmpegPresets()
 FFmpegPresets::~FFmpegPresets()
 {
    // We're in a destructor!  Don't let exceptions out!
-   GuardedCall< void >( [&] {
+   GuardedCall( [&] {
       wxFileName xmlFileName{ FileNames::DataDir(), wxT("ffmpeg_presets.xml") };
       XMLFileWriter writer{
          xmlFileName.GetFullPath(), _("Error Saving FFmpeg Presets") };
@@ -520,7 +520,7 @@ void FFmpegPresets::ImportPresets(wxString &filename)
 
 void FFmpegPresets::ExportPresets(wxString &filename)
 {
-   GuardedCall< void >( [&] {
+   GuardedCall( [&] {
       XMLFileWriter writer{ filename, _("Error Saving FFmpeg Presets") };
       WriteXMLHeader(writer);
       WriteXML(writer);

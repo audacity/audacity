@@ -2724,7 +2724,7 @@ void AudioIO::StopStream()
 
             // If the other track operations fail their strong guarantees, then
             // the shift for latency correction may be skipped.
-            GuardedCall<void>( [&] {
+            GuardedCall( [&] {
                WaveTrack* track = mCaptureTracks[i].get();
 
                // use NOFAIL-GUARANTEE that track is flushed,
@@ -3976,7 +3976,7 @@ void AudioIO::FillBuffers()
 
    if (!mRecordingException &&
        mCaptureTracks.size() > 0)
-      GuardedCall<void>( [&] {
+      GuardedCall( [&] {
          // start record buffering
          auto commonlyAvail = GetCommonlyAvailCapture();
 

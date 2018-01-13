@@ -1239,7 +1239,7 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   GuardedCall< void >( [&] {
+   GuardedCall( [&] {
       // Create/Open the file
       XMLFileWriter writer{ fn, _("Error Saving Tags File") };
 

@@ -1600,7 +1600,7 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
    else
       fn = fileName;
 
-   GuardedCall< void >( [&] {
+   GuardedCall( [&] {
       // Create/Open the file
       const wxString fullPath{ fn.GetFullPath() };
       XMLFileWriter eqFile{ fullPath, _("Error Saving Equalization Curves") };

@@ -1660,7 +1660,7 @@ _("Project check of \"%s\" folder \
                   // and don't try to recover other files but
                   // silence them too.  GuardedCall will cause an appropriate
                   // error message for the user.
-                  GuardedCall<void>(
+                  GuardedCall(
                      [&] { ab->Recover(); },
                      [&] (AudacityException*) { action = 1; }
                   );
@@ -1726,7 +1726,7 @@ _("Project check of \"%s\" folder \
                   // and don't try to recover other files but
                   // silence them too.  GuardedCall will cause an appropriate
                   // error message for the user.
-                  GuardedCall<void>(
+                  GuardedCall(
                      [&] {
                         b->Recover();
                         nResult |= FSCKstatus_CHANGED;
@@ -1800,7 +1800,7 @@ _("Project check of \"%s\" folder \
                   // and don't try to recover other files but
                   // silence them too.  GuardedCall will cause an appropriate
                   // error message for the user.
-                  GuardedCall<void>(
+                  GuardedCall(
                      [&] {
                         //regenerate with zeroes
                         b->Recover();

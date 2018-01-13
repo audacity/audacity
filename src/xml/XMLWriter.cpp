@@ -329,7 +329,7 @@ XMLFileWriter::XMLFileWriter
 XMLFileWriter::~XMLFileWriter()
 {
    // Don't let a destructor throw!
-   GuardedCall< void >( [&] {
+   GuardedCall( [&] {
       if (!mCommitted) {
          auto fileName = GetName();
          if ( IsOpened() )
