@@ -688,10 +688,30 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 private:
    bool isNull(TrackNodePointer p) const
    { return p == ListOfTracks::end(); }
-   void setNull(TrackNodePointer &p)
-   { p = ListOfTracks::end(); }
-   bool hasPrev(TrackNodePointer p) const
-   { return p != ListOfTracks::begin(); }
+   TrackNodePointer getEnd() const
+   { return const_cast<TrackList*>(this)->ListOfTracks::end(); }
+   TrackNodePointer getBegin() const
+   { return const_cast<TrackList*>(this)->ListOfTracks::begin(); }
+
+   // Move an iterator to the next node, if any; else stay at end
+   TrackNodePointer getNext(TrackNodePointer p) const
+   {
+      if ( isNull(p) )
+         return p;
+      auto q = p;
+      return ++q;
+   }
+
+   // Move an iterator to the previous node, if any; else wrap to end
+   TrackNodePointer getPrev(TrackNodePointer p) const
+   {
+      if (p == this->ListOfTracks::begin())
+         return getEnd();
+      else {
+         auto q = p;
+         return --q;
+      }
+   }
 
    void DoAssign(const TrackList &that);
        
