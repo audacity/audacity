@@ -343,7 +343,8 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    // The default-constructed value can serve as the end iterator for
    // traversal over any track list.
    TrackListIterator() {}
-   explicit TrackListIterator(TrackList * val, TrackNodePointer p = {});
+   explicit TrackListIterator(TrackList * val);
+   explicit TrackListIterator(TrackList * val, TrackNodePointer p);
    TrackListIterator(const TrackListIterator&) = default;
    TrackListIterator& operator=(const TrackListIterator&) = default;
    virtual ~TrackListIterator() {}
@@ -384,8 +385,12 @@ public:
    // traversal over any track list.
    TrackListConstIterator() {}
    explicit TrackListConstIterator(
-      const TrackList * val, TrackNodePointer p = {})
+      const TrackList * val, TrackNodePointer p)
       : mIter(const_cast<TrackList*>(val), p)
+   {}
+   explicit TrackListConstIterator(
+      const TrackList * val)
+      : mIter(const_cast<TrackList*>(val))
    {}
    TrackListConstIterator(const TrackListConstIterator&) = default;
    TrackListConstIterator& operator=(const TrackListConstIterator&) = default;
@@ -678,7 +683,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 
 private:
    bool isNull(TrackNodePointer p) const
-   { return p == TrackNodePointer{} || p == ListOfTracks::end(); }
+   { return p == ListOfTracks::end(); }
    void setNull(TrackNodePointer &p)
    { p = ListOfTracks::end(); }
    bool hasPrev(TrackNodePointer p) const

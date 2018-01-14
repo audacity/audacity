@@ -325,7 +325,13 @@ TrackListIterator::TrackListIterator(TrackList * val, TrackNodePointer p)
    : l{ val }
    , cur{ p }
 {
-   if ( l && p == TrackNodePointer{} )
+}
+
+TrackListIterator::TrackListIterator(TrackList * val)
+   : l{ val }
+   , cur{}
+{
+   if (l)
       cur = l->ListOfTracks::begin();
 }
 
