@@ -242,7 +242,7 @@ void HistoryWindow::UpdateLevels()
    }
 
    mLevels->Enable(mSelected > 0);
-   mDiscard->Enable(mSelected > 0);
+   mDiscard->Enable(!mAudioIOBusy && mSelected > 0);
 }
 
 void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
