@@ -21,7 +21,11 @@ custom controls.
 #include <wx/filectrl.h>
 #include <wx/filedlg.h>
 
-class FileDialogBase : public wxFileDialogBase
+#ifndef AUDACITY_DLL_API
+#define AUDACITY_DLL_API
+#endif
+
+class AUDACITY_DLL_API FileDialogBase : public wxFileDialogBase
 {
 public:
    FileDialogBase();

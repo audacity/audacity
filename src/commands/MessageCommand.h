@@ -11,7 +11,7 @@
 \file MessageCommand.h
 \brief Contains definition of MessageCommand class.
 
-*//***************************************************************//***
+*//***************************************************************//**
 
 \class MessageCommand
 \brief Command to send a message (currently on the status channel)
@@ -29,16 +29,15 @@ class MessageCommandType final : public CommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+   OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class MessageCommand final : public CommandImplementation
 {
 public:
-   MessageCommand(CommandType &type,
-                  std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target)) {}
-   bool Apply(CommandExecutionContext context) override;
+   MessageCommand(CommandType &type)
+      : CommandImplementation(type) {}
+   bool Apply(const CommandContext &context ) override;
 };
 
 #endif /* End of include guard: __MESSAGECOMMAND__ */

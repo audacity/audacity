@@ -57,6 +57,7 @@
 #include "../widgets/AButton.h"
 
 #include "../Experimental.h"
+#include "../commands/CommandContext.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
@@ -300,7 +301,8 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    if (!cm) return;
 
    auto flags = p->GetUpdateFlags();
-   cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, flags, NoFlagsSpecifed);
+   const CommandContext context( *GetActiveProject() );
+   cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecifed);
 }
 
 

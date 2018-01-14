@@ -13,6 +13,7 @@
 #include "Experimental.h"
 
 
+
 // These are all member functions of class AudacityProject.
 // Vaughan, 2010-08-05:
 //    Note that this file is included in a "public" section of Project.h.
@@ -487,12 +488,14 @@ public:
    static const int kDontRepeatLast = 0x04;
 };
 
-bool DoEffect(const PluginID & ID, int flags);
+bool DoEffect(const PluginID & ID, const CommandContext & context, int flags);
 void OnEffect(const CommandContext &context );
 void OnRepeatLastEffect(const CommandContext &context );
+bool DoAudacityCommand(const PluginID & ID, const CommandContext &, int flags);
 void OnApplyChain(const CommandContext &context );
 void OnEditChains(const CommandContext &context );
 void OnStereoToMono(const CommandContext &context );
+void OnAudacityCommand(const CommandContext &context );
 void OnManagePluginsMenu(EffectType Type);
 static void RebuildAllMenuBars();
 void OnManageGenerators(const CommandContext &context );
@@ -555,6 +558,7 @@ double GridMove(double t, int minPix);
 
 // Make sure we return to "public" for subsequent declarations in Project.h.
 public:
+
 
 #endif
 

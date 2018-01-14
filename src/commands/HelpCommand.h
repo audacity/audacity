@@ -22,20 +22,23 @@
 #include "CommandType.h"
 #include "Command.h"
 
-class HelpCommandType final : public CommandType
+#define HELP_PLUGIN_SYMBOL XO("Help")
+
+class HelpCommand : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return HELP_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Gives help on a command.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
+
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Help");};
+public:
+   wxString mCommandName;
 };
 
-class HelpCommand final : public CommandImplementation
-{
-public:
-   HelpCommand(HelpCommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target)) { }
-   bool Apply(CommandExecutionContext context) override;
-};
 
 #endif /* End of include guard: __HELPCOMMAND__ */

@@ -11,26 +11,6 @@
 \file Command.h
 \brief Contains declaration of Command base class.
 
-\class CommandExecutionContext
-\brief Represents a context to which a command may be applied.
-
-\class Command
-\brief Abstract base class for command interface.  It implements 
-Command::SetParameter() and defers all other operations to derived classes.
-
-That process may depend on certain parameters (determined by the command's
-signature) and may produce output on various channels. Any process which is to
-be controlled by a script should be separated out into its own Command class.
-(And that class should be registered with the CommandDirectory).
-
-\class ApplyAndSendResponse
-\brief Decorator command that performs the given command and then 
-outputs a status message according to the result.
-
-\class CommandImplementation,
-\brief is derived from Command.  It validates and 
-applies the command.  CommandImplementation::Apply() is overloaded in 
-classes derived from it.
 
 *//*******************************************************************/
 
@@ -38,61 +18,40 @@ classes derived from it.
 #define __COMMAND__
 
 #include <wx/app.h>
-
-#include "../Project.h"
+#include "../MemoryX.h"
 
 #include "CommandMisc.h"
 #include "CommandSignature.h"
+#include "CommandTargets.h"
+#include "../commands/AudacityCommand.h"
 
 class AudacityApp;
+class CommandContext;
 class CommandOutputTarget;
 
-class CommandExecutionContext
-{
-public:
-   CommandExecutionContext(AudacityApp *WXUNUSED(app), AudacityProject *WXUNUSED(proj))
-   {
-   };
-   AudacityApp *GetApp() const
-   {
-      return (AudacityApp *) wxTheApp;
-   };
-   AudacityProject *GetProject() const
-   {
-      // TODO:  Presumably, this would be different if running in a command context.
-      // So, if this command system is ever actually enabled, then this will need to
-      // be reviewed.
-      return GetActiveProject();
-   };
-};
-
 // Abstract base class for command interface.  
-class Command /* not final */
+class OldStyleCommand /* not final */
 {
 public:
-   virtual void Progress(double completed) = 0;
-   virtual void Status(const wxString &message) = 0;
-   virtual void Error(const wxString &message) = 0;
-   virtual ~Command() { }
+   OldStyleCommand() {};
+   virtual ~OldStyleCommand() { }
    virtual wxString GetName() = 0;
    virtual CommandSignature &GetSignature() = 0;
    virtual bool SetParameter(const wxString &paramName, const wxVariant &paramValue);
-   virtual bool Apply(CommandExecutionContext context) = 0;
+   virtual bool Apply()=0;
+   virtual bool Apply(const CommandContext &context) = 0;
 };
 
-using CommandHolder = std::shared_ptr<Command>;
+using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;
 
 /// Command which wraps another command
-class DecoratedCommand /* not final */ : public Command
+/// It ISA command and HAS a command.
+class DecoratedCommand /* not final */ : public OldStyleCommand
 {
 protected:
-   CommandHolder mCommand;
+   OldStyleCommandPointer mCommand;
 public:
-   void Progress(double completed) override;
-   void Status(const wxString &message) override;
-   void Error(const wxString &message) override;
-
-   DecoratedCommand(const CommandHolder &cmd)
+   DecoratedCommand(const OldStyleCommandPointer &cmd)
       : mCommand(cmd)
    {
       wxASSERT(cmd != NULL);
@@ -108,14 +67,14 @@ public:
 class ApplyAndSendResponse final : public DecoratedCommand
 {
 public:
-   ApplyAndSendResponse(const CommandHolder &cmd)
-      : DecoratedCommand(cmd)
-   { }
+   ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTarget> &target);
+   bool Apply() override;
+   bool Apply(const CommandContext &context) override;// Error to use this.
+   std::unique_ptr<CommandContext> mCtx;
 
-   bool Apply(CommandExecutionContext context) override;
 };
 
-class CommandImplementation /* not final */ : public Command
+class CommandImplementation /* not final */ : public OldStyleCommand
 {
 private:
    CommandType &mType;
@@ -127,8 +86,6 @@ private:
    bool Valid(const wxString &paramName, const wxVariant &paramValue);
 
 protected:
-   std::unique_ptr<CommandOutputTarget> mOutput;
-
    // Convenience methods for allowing subclasses to access parameters
    void TypeCheck(const wxString &typeName,
                   const wxString &paramName,
@@ -141,15 +98,9 @@ protected:
    wxString GetString(const wxString &paramName);
 
 public:
-   // Convenience methods for passing messages to the output target
-   void Progress(double completed);
-   void Status(const wxString &status) override;
-   void Error(const wxString &message) override;
-
    /// Constructor should not be called directly; only by a factory which
    /// ensures name and params are set appropriately for the command.
-   CommandImplementation(CommandType &type,
-                         std::unique_ptr<CommandOutputTarget> &&output);
+   CommandImplementation(CommandType &type);
 
    virtual ~CommandImplementation();
 
@@ -168,7 +119,8 @@ public:
 
    /// Actually carry out the command. Return true if successful and false
    /// otherwise.
-   bool Apply(CommandExecutionContext context) override;
+   bool Apply() { return false;};// No longer supported.
+   bool Apply(const CommandContext &context) override;
 };
 
 #endif /* End of include guard: __COMMAND__ */

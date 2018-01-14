@@ -8,8 +8,8 @@
 
 ******************************************************************//**
 
-\file AutomationCommands.cpp
-\brief Contains definitions for AutomationCommands class.
+\file GetInfoCommand.cpp
+\brief Contains definitions for GetInfoCommand class.
 This class now handles the GetAll script command, which can 
 - Get all keycodes
 - Get all menus
@@ -17,37 +17,96 @@ This class now handles the GetAll script command, which can
 
 *//*******************************************************************/
 
-#include "AutomationCommands.h"
+#include "../Audacity.h"
+#include "GetInfoCommand.h"
 #include "../Project.h"
 #include "CommandManager.h"
+#include "../effects/EffectManager.h"
 #include "../widgets/Overlay.h"
 #include "../widgets/OverlayPanel.h"
 #include "../TrackPanel.h"
+#include "CommandContext.h"
 
-wxString AutomationCommandsType::BuildName()
+#include "SelectCommand.h"
+#include "../Project.h"
+#include "../Track.h"
+#include "../ShuttleGui.h"
+#include "CommandContext.h"
+
+const int nTypes =5;
+static const wxString kTypes[nTypes] =
 {
-   return mCustomName;
+   XO("Commands"),
+   XO("Menus"),
+   XO("Clips"),
+   XO("Keycodes"),
+   XO("Boxes")
+};
+
+enum {
+   kCommands,
+   kMenus,
+   kClips,
+   kKeycodes,
+   kBoxes
+};
+
+
+const int nFormats =2;
+static const wxString kFormats[nFormats] =
+{
+   XO("JSON"),
+   XO("Other")
+};
+
+enum {
+   kJson =0*nTypes,
+   kOther =1*nTypes
+};
+
+
+bool GetInfoCommand::DefineParams( ShuttleParams & S ){
+   wxArrayString types( nTypes, kTypes );
+   wxArrayString formats( nFormats, kFormats );
+   S.DefineEnum( mInfoType, wxT("Type"), 0, types );
+   S.DefineEnum( mFormat, wxT("Format"), 0, formats );
+   return true;
 }
 
-void AutomationCommandsType::BuildSignature(CommandSignature &signature)
+void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto infoTypeValidator = make_movable<OptionValidator>();
-   infoTypeValidator->AddOption(wxT("Menus"));
-   infoTypeValidator->AddOption(wxT("Menus+"));
-   infoTypeValidator->AddOption(wxT("Keycodes"));
-   infoTypeValidator->AddOption(wxT("Boxes"));
+   wxArrayString types( nTypes, kTypes );
+   wxArrayString formats( nFormats, kFormats );
+   S.AddSpace(0, 5);
 
-   signature.AddParameter(wxT("Type"), "Menus", std::move(infoTypeValidator));
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieChoice( _("Types:"), mInfoType, &types);
+      S.TieChoice( _("Formats:"), mFormat, &formats);
+   }
+   S.EndMultiColumn();
 }
 
-CommandHolder AutomationCommandsType::Create(std::unique_ptr<CommandOutputTarget> &&target)
+bool GetInfoCommand::Apply(const CommandContext &context)
 {
-   return std::make_shared<AutomationCommands>(*this, std::move(target));
+   switch( mInfoType + nTypes * mFormat ){
+      case kCommands + kJson  : return SendCommandsAsJson( context);
+      case kCommands + kOther : return SendCommandsAsJson( context);
+      case kMenus    + kJson  : return SendMenusAsJson( context); 
+      case kMenus    + kOther : return SendMenus( context );
+      case kClips    + kJson  : return SendClips( context); 
+      case kClips    + kOther : return SendClips( context );
+      case kKeycodes + kJson  : return SendKeycodes( context); 
+      case kKeycodes + kOther : return SendKeycodes( context );
+      case kBoxes    + kJson  : return SendBoxesAsJson( context); 
+      case kBoxes    + kOther : return SendBoxesAsJson( context );
+      default:
+         context.Status( "Command options not recognised" );
+   }
+   return false;
 }
 
-
-
-void AutomationCommands::ExploreMenu( wxMenu * pMenu, int Id, int depth ){
+void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth ){
    Id;//compiler food.
    if( !pMenu )
       return;
@@ -74,15 +133,15 @@ void AutomationCommands::ExploreMenu( wxMenu * pMenu, int Id, int depth ){
       if (item->IsCheck() && item->IsChecked())
          flags +=2;
 
-      Status( wxString::Format("  [ %2i, %2i, \"%s\", \"%s\" ],", depth, flags, Label,Accel )); 
+      context.Status( wxString::Format("  [ %2i, %2i, \"%s\", \"%s\" ],", depth, flags, Label,Accel )); 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
-         ExploreMenu( pMenu, item->GetId(), depth+1 );
+         ExploreMenu( context, pMenu, item->GetId(), depth+1 );
       }
    }
 }
 
-bool AutomationCommands::SendMenusPlus(CommandExecutionContext context)
+bool GetInfoCommand::SendMenusAsJson(const CommandContext &context)
 {
    wxMenuBar * pBar = context.GetProject()->GetMenuBar();
    if(!pBar ){
@@ -93,20 +152,49 @@ bool AutomationCommands::SendMenusPlus(CommandExecutionContext context)
    size_t cnt = pBar->GetMenuCount();
    size_t i;
    wxString Label;
-   Status( "AudacityMenus[" );
+   context.Status( "[" );
    for(i=0;i<cnt;i++)
    {
       Label = pBar->GetMenuLabelText( i );
-      Status( wxString::Format("  [ %2i, %2i, \"%s\", \"%s\" ],", 0, 0, Label, "" )); 
-      ExploreMenu( pBar->GetMenu( i ), pBar->GetId(), 1 );
+      context.Status( wxString::Format("  [ %2i, %2i, \"%s\", \"%s\" ],", 0, 0, Label, "" )); 
+      ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
    }
-   Status( "];" );
+   context.Status( "]" );
    return true;
 }
 
+/**
+ Send the list of commands.
+ */
+bool GetInfoCommand::SendCommandsAsJson(const CommandContext &context )
+{
+   PluginManager & pm = PluginManager::Get();
+   EffectManager & em = EffectManager::Get();
+   {
+      wxString out="";
+      wxString maybeComma="";
+      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeGeneric);
+      while (plug)
+      {
+         auto command = em.GetCommandIdentifier(plug->GetID());
+         if (!command.IsEmpty()){
+            // delayed sending of previous string, so we can maybe add a comma.
+            if( !out.IsEmpty() )
+            {
+               context.Status(out+maybeComma);
+               maybeComma = ",";
+            }
+            out = em.GetCommandDefinition( plug->GetID() );
+         }
+         plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeGeneric );
+      }
+      if( !out.IsEmpty() )
+         context.Status(out);  // Last one does not have a comma.
+   }
+   return true;
+}
 
-
-bool AutomationCommands::SendMenus(CommandExecutionContext context)
+bool GetInfoCommand::SendMenus(const CommandContext &context)
 {
    bool bShowStatus = true;
    wxArrayString names;
@@ -122,12 +210,12 @@ bool AutomationCommands::SendMenus(CommandExecutionContext context)
          out += wxT("\t");
          out += cmdManager->GetEnabled(name) ? wxT("Enabled") : wxT("Disabled");
       }
-      Status(out);
+      context.Status(out);
    }
    return true;
 }
 
-bool AutomationCommands::SendClips(CommandExecutionContext context)
+bool GetInfoCommand::SendClips(const CommandContext &context)
 {
    bool bShowStatus = true;
    wxArrayString names;
@@ -143,18 +231,18 @@ bool AutomationCommands::SendClips(CommandExecutionContext context)
          out += wxT("\t");
          out += cmdManager->GetEnabled(name) ? wxT("Enabled") : wxT("Disabled");
       }
-      Status(out);
+      context.Status(out);
    }
    return true;
 }
 
-bool AutomationCommands::SendKeycodes(CommandExecutionContext WXUNUSED(context))
+bool GetInfoCommand::SendKeycodes(const CommandContext &context)
 {
-   Status("Keycodes");
+   context.Status("Keycodes");
    return true;
 }
 
-void AutomationCommands::ExploreAdornments( CommandExecutionContext WXUNUSED(context),
+void GetInfoCommand::ExploreAdornments( const CommandContext &context,
    wxPoint WXUNUSED(P), wxWindow * pWin, int WXUNUSED(Id), int depth )
 {
    // Dang! wxMenuBar returns bogus screen rect.
@@ -167,11 +255,11 @@ void AutomationCommands::ExploreAdornments( CommandExecutionContext WXUNUSED(con
    wxSize s = pWin->GetWindowBorderSize();
    wxRect R( 2,32, R1.GetWidth() - s.GetWidth() * 2 -16, 22 );
 
-   Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
+   context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
       depth, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), "MenuBar" )); 
 }
 
-void AutomationCommands::ExploreTrackPanel( CommandExecutionContext context,
+void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    wxPoint P, wxWindow * pWin, int WXUNUSED(Id), int depth )
 {
    AudacityProject * pProj = context.GetProject();
@@ -227,7 +315,7 @@ void AutomationCommands::ExploreTrackPanel( CommandExecutionContext context,
 
          for (Overlay * pOverlay : pTP->mOverlays) {
             auto R2(pOverlay->GetRectangle(trackRect.GetSize()).first);
-            Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
+            context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
                depth, R2.GetLeft(), R2.GetTop(), R2.GetRight(), R2.GetBottom(), "Overthing" )); 
          }
       }
@@ -242,14 +330,14 @@ void AutomationCommands::ExploreTrackPanel( CommandExecutionContext context,
          R.height -= (kTopMargin + kBottomMargin);
          R.SetPosition( R.GetPosition() + P );
 
-         Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
+         context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
             depth, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), "VRuler" )); 
       }
    }
 }
 
 
-void AutomationCommands::ExploreWindows( CommandExecutionContext context,
+void GetInfoCommand::ExploreWindows( const CommandContext &context,
    wxPoint P, wxWindow * pWin, int Id, int depth )
 {
    Id;//Compiler food.
@@ -278,59 +366,32 @@ void AutomationCommands::ExploreWindows( CommandExecutionContext context,
          continue;
       if( Name.IsEmpty() )
          Name = wxString("*") + item->GetToolTipText();
-      Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
+      context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
          depth, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), Name )); 
       ExploreWindows( context, P, item, item->GetId(), depth+1 );
    }
 }
 
 
-bool AutomationCommands::SendBoxes(CommandExecutionContext context)
+bool GetInfoCommand::SendBoxesAsJson(const CommandContext &context)
 {
-   Status("Boxes");
+   context.Status("Boxes");
    wxWindow * pWin = context.GetProject();
 
-   Status( "AudacityBoxes[" );
+   context.Status( "AudacityBoxes[" );
    wxRect R = pWin->GetScreenRect();
 
    //R.SetPosition( wxPoint(0,0) );
    
    //wxString Name = pWin->GetName();
-   Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
+   context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
          0, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), "Audacity Window" )); 
    ExploreAdornments( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
    ExploreWindows( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
-   Status( "];" );
+   context.Status( "];" );
    return true;
 }
 
 
 
-bool AutomationCommands::Apply(CommandExecutionContext context)
-{
-   wxString mode = mMode;
 
-   bool bOK = false;
-   if (mode.IsSameAs(wxT("GetMenus")))
-   {
-      bOK = SendMenus( context );
-   }
-   if (mode.IsSameAs(wxT("GetMenusPlus")))
-   {
-      bOK = SendMenusPlus( context );
-   }
-   else if (mode.IsSameAs(wxT("GetClips")))
-   {
-      bOK = SendClips( context );
-   }
-   else if (mode.IsSameAs(wxT("GetKeycodes")))
-   {
-      bOK = SendKeycodes( context );
-   }
-   else if (mode.IsSameAs(wxT("GetBoxes")))
-   {
-      bOK = SendBoxes( context );
-   }
-
-   return bOK;
-}

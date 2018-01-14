@@ -140,7 +140,7 @@ wxString EffectToneGen::ManualPage()
       : wxT("Tone");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectToneGen::GetType()
 {
@@ -253,7 +253,30 @@ size_t EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, 
    return blockLen;
 }
 
-bool EffectToneGen::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectToneGen::DefineParams( ShuttleParams & S ){
+   if( mChirp ){
+      S.SHUTTLE_PARAM( mFrequency[0], StartFreq  );
+      S.SHUTTLE_PARAM( mFrequency[1], EndFreq  );
+      S.SHUTTLE_PARAM( mAmplitude[0], StartAmp  );
+      S.SHUTTLE_PARAM( mAmplitude[1], EndAmp  );
+   } else {
+      S.SHUTTLE_PARAM( mFrequency[0], Frequency  );
+      S.SHUTTLE_PARAM( mAmplitude[0], Amplitude );
+   }
+   wxArrayString waves( kNumWaveforms, kWaveStrings );
+   wxArrayString interps( kNumInterpolations ,kInterStrings );
+   S.SHUTTLE_ENUM_PARAM( mWaveform, Waveform, waves  );
+   S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, interps  );
+
+
+//   double freqMax = (GetActiveProject() ? GetActiveProject()->GetRate() : 44100.0) / 2.0;
+//   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+
+
+   return true;
+}
+
+bool EffectToneGen::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    if (mChirp)
    {
@@ -274,7 +297,7 @@ bool EffectToneGen::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectToneGen::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectToneGen::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    ReadAndVerifyEnum(Waveform,  wxArrayString(kNumWaveforms, kWaveStrings));
    ReadAndVerifyEnum(Interp, wxArrayString(kNumInterpolations, kInterStrings));

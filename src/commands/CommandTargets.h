@@ -25,9 +25,9 @@ should be reference-counted.
 #include "../MemoryX.h"
 #include <wx/string.h>
 #include <wx/statusbr.h>
+//#include "../src/Project.h"
 #include "../widgets/ProgressDialog.h"
 #include "../commands/ResponseQueue.h"
-#include "../src/Project.h"
 #include "../widgets/ErrorDialog.h"
 
 /// Interface for objects that can receive command progress information

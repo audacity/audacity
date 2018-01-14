@@ -18,6 +18,7 @@
 #include "export/Export.h"
 
 class Effect;
+class CommandContext;
 
 class BatchCommands final {
  public:
@@ -25,10 +26,10 @@ class BatchCommands final {
    BatchCommands();
  public:
    bool ApplyChain(const wxString & filename = wxT(""));
-   bool ApplyCommand( const wxString & command, const wxString & params );
+   bool ApplyCommand( const wxString & command, const wxString & params, CommandContext const * pContext=NULL );
    bool ApplyCommandInBatchMode(const wxString & command, const wxString &params);
    bool ApplySpecialCommand(int iCommand, const wxString & command,const wxString & params);
-   bool ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params);
+   bool ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params, const CommandContext & Context);
    bool ReportAndSkip( const wxString & command, const wxString & params );
    void AbortBatch();
 

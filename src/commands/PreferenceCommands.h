@@ -6,14 +6,15 @@
 
    PreferenceCommands.h
    Dan Horgan
+   James Crook
 
 ******************************************************************//**
 
-\class SetPreferenceCommand
-\brief Command for setting a preference to a given value
-
 \class GetPreferenceCommand
 \brief Command for getting the value of a preference
+
+\class SetPreferenceCommand
+\brief Command for setting a preference to a given value
 
 *//*******************************************************************/
 
@@ -25,46 +26,43 @@
 
 // GetPreference
 
-class GetPreferenceCommandType final : public CommandType
+#define GET_PREFERENCE_PLUGIN_SYMBOL XO("Get Preference")
+#define SET_PREFERENCE_PLUGIN_SYMBOL XO("Set Preference")
+
+class GetPreferenceCommand final : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
-};
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return GET_PREFERENCE_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Gets the value of a single preference.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
 
-class GetPreferenceCommand final : public CommandImplementation
-{
-public:
-   GetPreferenceCommand(CommandType &type,
-                    std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target))
-   { }
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Preferences");};
 
-   virtual ~GetPreferenceCommand();
-   bool Apply(CommandExecutionContext context) override;
+   wxString mName;
 };
 
 // SetPreference
 
-class SetPreferenceCommandType final : public CommandType
+class SetPreferenceCommand final : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
-};
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return SET_PREFERENCE_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Sets the value of a single preference.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
 
-class SetPreferenceCommand final : public CommandImplementation
-{
-public:
-   SetPreferenceCommand(CommandType &type,
-                    std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target))
-   { }
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Preferences");};
 
-   virtual ~SetPreferenceCommand();
-   bool Apply(CommandExecutionContext context) override;
+   wxString mName;
+   wxString mValue;
+   bool mbReload;
 };
 
 #endif /* End of include guard: __PREFERENCECOMMANDS__ */

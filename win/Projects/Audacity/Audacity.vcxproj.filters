@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
@@ -677,49 +677,13 @@
     <ClCompile Include="..\..\..\src\commands\CommandType.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\CompareAudioCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\ExecMenuCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\GetProjectInfoCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\ImportExportCommands.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\commands\Keyboard.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\commands\MessageCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\PreferenceCommands.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\commands\ResponseQueue.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\ScreenshotCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\ScriptCommandRelay.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\SelectCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\SetProjectInfoCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\SetTrackInfoCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\blockfile\LegacyAliasBlockFile.cpp">
@@ -817,9 +781,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\SseMathFuncs.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp">
-      <Filter>src\commands</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\import\ImportGStreamer.cpp">
       <Filter>src\import</Filter>
@@ -1058,7 +1019,49 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackSliderHandles.cpp">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\AutomationCommands.cpp">
+    <ClCompile Include="..\..\..\src\commands\ScriptCommandRelay.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandContext.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\AudacityCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CompareAudioCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\Demo.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\GetInfoCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\ImportExportCommands.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\LoadCommands.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\PreferenceCommands.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\ScreenshotCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SelectCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SetTrackInfoCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1663,49 +1666,13 @@
     <ClInclude Include="..\..\..\src\commands\CommandType.h">
       <Filter>src\commands</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\CompareAudioCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\ExecMenuCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\GetProjectInfoCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\HelpCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\ImportExportCommands.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\commands\Keyboard.h">
       <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\MessageCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\PreferenceCommands.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\commands\ResponseQueue.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\ScreenshotCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\ScriptCommandRelay.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\SelectCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\SetProjectInfoCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\SetTrackInfoCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\Validators.h">
@@ -1809,9 +1776,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\SseMathFuncs.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h">
-      <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h">
       <Filter>src\import</Filter>
@@ -2113,7 +2077,52 @@
     <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackSliderHandles.h">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\AutomationCommands.h">
+    <ClInclude Include="..\..\..\src\commands\ScriptCommandRelay.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandContext.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\AudacityCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CompareAudioCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\Demo.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\GetInfoCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\HelpCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\ImportExportCommands.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\LoadCommands.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\PreferenceCommands.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Registrar.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\ScreenshotCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SelectCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SetTrackInfoCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
   </ItemGroup>

@@ -300,7 +300,7 @@ wxString EffectEqualization::ManualPage()
    return wxT("Equalization");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectEqualization::GetType()
 {
@@ -308,8 +308,17 @@ EffectType EffectEqualization::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectEqualization::DefineParams( ShuttleParams & S ){
+   wxArrayString interp(kNumInterpolations, kInterpStrings);
+   S.SHUTTLE_PARAM( mM, FilterLength );
+   S.SHUTTLE_PARAM( mCurveName, CurveName);
+   S.SHUTTLE_PARAM( mLin, InterpLin);
+   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, interp );
 
-bool EffectEqualization::GetAutomationParameters(EffectAutomationParameters & parms)
+   return true;
+}
+
+bool EffectEqualization::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    parms.Write(KEY_FilterLength, (unsigned long)mM);
    parms.Write(KEY_CurveName, mCurveName);
@@ -319,7 +328,7 @@ bool EffectEqualization::GetAutomationParameters(EffectAutomationParameters & pa
    return true;
 }
 
-bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectEqualization::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    // Pretty sure the interpolation name shouldn't have been interpreted when
    // specified in chains, but must keep it that way for compatibility.

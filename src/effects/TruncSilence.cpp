@@ -125,7 +125,7 @@ wxString EffectTruncSilence::ManualPage()
    return wxT("Truncate_Silence");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectTruncSilence::GetType()
 {
@@ -134,7 +134,21 @@ EffectType EffectTruncSilence::GetType()
 
 // EffectClientInterface implementation
 
-bool EffectTruncSilence::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
+   wxArrayString actions(kNumActions, kActionStrings);
+   //actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before
+   //actions.Insert(wxT("1"), 1); // Compatible with 2.1.0 and before
+
+   S.SHUTTLE_ENUM_PARAM( mTruncDbChoiceIndex, DbIndex, mDbChoices );
+   S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, actions );
+   S.SHUTTLE_PARAM( mInitialAllowedSilence, Minimum );
+   S.SHUTTLE_PARAM( mTruncLongestAllowedSilence, Truncate );
+   S.SHUTTLE_PARAM( mSilenceCompressPercent, Compress );
+   S.SHUTTLE_PARAM( mbIndependent, Independent );
+   return true;
+}
+
+bool EffectTruncSilence::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    parms.Write(KEY_DbIndex, Enums::DbChoices[mTruncDbChoiceIndex]);
    parms.Write(KEY_ActIndex, kActionStrings[mActionIndex]);
@@ -146,7 +160,7 @@ bool EffectTruncSilence::GetAutomationParameters(EffectAutomationParameters & pa
    return true;
 }
 
-bool EffectTruncSilence::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectTruncSilence::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    wxArrayString actions(kNumActions, kActionStrings);
    actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before

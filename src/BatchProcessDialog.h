@@ -36,6 +36,7 @@ class wxRadioButton;
 class wxListCtrl;
 class wxListEvent;
 class wxButton;
+class wxTextCtrl;
 class ShuttleGui;
 
 class BatchProcessDialog final : public wxDialogWrapper {
@@ -56,6 +57,7 @@ class BatchProcessDialog final : public wxDialogWrapper {
    wxListCtrl *mChains;
    wxListCtrl *mList;
    BatchCommands mBatchCommands;
+   wxTextCtrl *mResults;
 
    bool mAbort;
 
@@ -103,6 +105,7 @@ private:
    wxButton *mRemove;
    wxButton *mRename;
    wxButton *mDefaults;
+
 
    BatchCommands mBatchCommands;  /// Provides list of available commands.
    wxString mActiveChain;

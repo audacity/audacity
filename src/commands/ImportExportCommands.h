@@ -22,44 +22,39 @@
 
 // Import
 
-class ImportCommandType final : public CommandType
+#define IMPORT_PLUGIN_SYMBOL XO("Import")
+
+class ImportCommand : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return IMPORT_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Imports from a file.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
+
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Import");};
+public:
+   wxString mFileName;
 };
 
-class ImportCommand final : public CommandImplementation
+#define EXPORT_PLUGIN_SYMBOL XO("Export")
+
+class ExportCommand : public AudacityCommand
 {
 public:
-   ImportCommand(CommandType &type,
-                    std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target))
-   { }
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return EXPORT_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Exports to a file.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
 
-   virtual ~ImportCommand();
-   bool Apply(CommandExecutionContext context) override;
-};
-
-// Export
-
-class ExportCommandType final : public CommandType
-{
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Export");};
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
-};
-
-class ExportCommand final : public CommandImplementation
-{
-public:
-   ExportCommand(CommandType &type,
-                    std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target))
-   { }
-
-   virtual ~ExportCommand();
-   bool Apply(CommandExecutionContext context) override;
+   wxString mFileName;
+   int mnChannels;
 };
