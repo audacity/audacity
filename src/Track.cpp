@@ -321,12 +321,12 @@ bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
 }
 
 // TrackListIterator
-TrackListIterator::TrackListIterator(TrackList * val)
-   : l(val)
-   , cur{}
+TrackListIterator::TrackListIterator(TrackList * val, TrackNodePointer p)
+   : l{ val }
+   , cur{ p }
 {
-   if (l)
-      cur = l->begin();
+   if ( l && p == TrackNodePointer{} )
+      cur = l->ListOfTracks::begin();
 }
 
 Track *TrackListIterator::StartWith(Track * val)
@@ -356,7 +356,7 @@ Track *TrackListIterator::First(TrackList * val)
       return NULL;
    }
 
-   cur = l->begin();
+   cur = l->ListOfTracks::begin();
 
    if (!l->isNull(cur)) {
       return cur->get();
@@ -371,7 +371,7 @@ Track *TrackListIterator::Last(bool skiplinked)
       return NULL;
    }
 
-   cur = l->end();
+   cur = l->ListOfTracks::end();
    if (l->hasPrev(cur))
       --cur;
    else
@@ -442,6 +442,14 @@ Track *TrackListIterator::Prev(bool skiplinked)
    return cur->get();
 }
 
+Track *TrackListIterator::operator *() const
+{
+   if ( !l || l->isNull( cur ) )
+      return nullptr;
+   else
+      return cur->get();
+}
+
 Track *TrackListIterator::RemoveCurrent()
 {
    if (!l || l->isNull(cur))
@@ -458,6 +466,21 @@ Track *TrackListIterator::RemoveCurrent()
    }
 
    return NULL;
+}
+
+bool TrackListIterator::operator == (const TrackListIterator &other) const
+{
+   if (cur == other.cur)
+      // sufficient but not necessary
+      return true;
+
+   // Also return true whenever each contains either an end iterator or is
+   // in default-constructed state.
+   bool isEnd = !l || l->isNull( cur );
+   if (isEnd)
+      return !other.l || other.l->isNull( other.cur );
+
+   return false;
 }
 
 //
@@ -741,9 +764,11 @@ void TrackList::DoAssign(const TrackList &that)
 void TrackList::Swap(TrackList &that)
 {
    ListOfTracks::swap(that);
-   for (auto it = begin(), last = end(); it != last; ++it)
+   for (auto it = ListOfTracks::begin(), last = ListOfTracks::end();
+        it != last; ++it)
       (*it)->SetOwner(this->mSelf, it);
-   for (auto it = that.begin(), last = that.end(); it != last; ++it)
+   for (auto it = that.ListOfTracks::begin(), last = that.ListOfTracks::end();
+        it != last; ++it)
       (*it)->SetOwner(that.mSelf, it);
 }
 
@@ -770,8 +795,8 @@ void TrackList::RecalcPositions(TrackNodePointer node)
    }
 
    const auto theEnd = end();
-   for (auto n = node; n != theEnd; ++n) {
-      t = n->get();
+   for (auto n = TrackListIterator{ this, node }; n != theEnd; ++n) {
+      t = *n;
       t->SetIndex(i++);
       t->SetY(y);
       y += t->GetHeight();
@@ -803,12 +828,12 @@ void TrackList::ResizingEvent(TrackNodePointer node)
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
 {
    for (const auto iter : permutation) {
-      value_type track = std::move(*iter);
+      ListOfTracks::value_type track = std::move(*iter);
       erase(iter);
       Track *pTrack = track.get();
-      pTrack->SetOwner(mSelf, insert(end(), std::move(track)));
+      pTrack->SetOwner(mSelf, insert(ListOfTracks::end(), std::move(track)));
    }
-   auto n = begin();
+   auto n = ListOfTracks::begin();
    RecalcPositions(n);
    PermutationEvent();
 }
@@ -817,8 +842,8 @@ template<typename TrackKind>
 Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
 {
    Track *pTrack;
-   push_back(value_type(pTrack = t.release()));
-   auto n = end();
+   push_back(ListOfTracks::value_type(pTrack = t.release()));
+   auto n = ListOfTracks::end();
    --n;
    pTrack->SetOwner(mSelf, n);
    RecalcPositions(n);
@@ -839,8 +864,8 @@ template<typename TrackKind>
 Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
 {
    Track *pTrack;
-   push_front(value_type(pTrack = t.release()));
-   auto n = begin();
+   push_front(ListOfTracks::value_type(pTrack = t.release()));
+   auto n = ListOfTracks::begin();
    pTrack->SetOwner(mSelf, n);
    RecalcPositions(n);
    ResizingEvent(n);
@@ -854,7 +879,7 @@ template<typename TrackKind>
 Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 {
    push_back(t);
-   auto n = end();
+   auto n = ListOfTracks::end();
    --n;
    t->SetOwner(mSelf, n);
    RecalcPositions(n);
@@ -866,9 +891,10 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 template Track *TrackList::Add<Track>(std::shared_ptr<Track> &&);
 template Track *TrackList::Add<WaveTrack>(std::shared_ptr<WaveTrack> &&);
 
-auto TrackList::Replace(Track * t, value_type &&with) -> value_type
+auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
+   ListOfTracks::value_type
 {
-   value_type holder;
+   ListOfTracks::value_type holder;
    if (t && with) {
       auto node = t->GetNode();
       t->SetOwner({}, {});
@@ -888,13 +914,13 @@ auto TrackList::Replace(Track * t, value_type &&with) -> value_type
 
 TrackNodePointer TrackList::Remove(Track *t)
 {
-   TrackNodePointer result(end());
+   auto result = ListOfTracks::end();
    if (t) {
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
       if (!isNull(node)) {
-         value_type holder = std::move( *node );
+         ListOfTracks::value_type holder = std::move( *node );
 
          result = erase(node);
          if (!isNull(result)) {
@@ -1052,7 +1078,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    }
 
    // Remove tracks
-   value_type save11 = std::move(*s1), save12{};
+   ListOfTracks::value_type save11 = std::move(*s1), save12{};
    s1 = erase(s1);
    if (linked1) {
       wxASSERT(s1 != s2);
@@ -1060,7 +1086,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    }
    const bool same = (s1 == s2);
 
-   value_type save21 = std::move(*s2), save22{};
+   ListOfTracks::value_type save21 = std::move(*s2), save22{};
    s2 = erase(s2);
    if (linked2)
       save22 = std::move(*s2), s2 = erase(s2);
@@ -1112,9 +1138,7 @@ bool TrackList::MoveDown(Track * t)
 
 bool TrackList::Contains(const Track * t) const
 {
-   return std::find_if(begin(), end(),
-      [=](const value_type &track) { return t == track.get(); }
-   ) != end();
+   return make_iterator_range( *this ).contains( t );
 }
 
 bool TrackList::IsEmpty() const
@@ -1136,12 +1160,12 @@ int TrackList::GetCount() const
 TimeTrack *TrackList::GetTimeTrack()
 {
    auto iter = std::find_if(begin(), end(),
-      [] (const value_type &t) { return t->GetKind() == Track::Time; }
+      [] ( Track *t ) { return t->GetKind() == Track::Time; }
    );
    if (iter == end())
       return nullptr;
    else
-      return static_cast<TimeTrack*>(iter->get());
+      return static_cast<TimeTrack*>(*iter);
 }
 
 const TimeTrack *TrackList::GetTimeTrack() const
@@ -1214,7 +1238,7 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
 
 namespace {
    template<typename Array>
-   Array GetWaveTracks(ListOfTracks::const_iterator p, ListOfTracks::const_iterator end,
+   Array GetWaveTracks(TrackListIterator p, const TrackListIterator end,
                        bool selectionOnly, bool includeMuted)
    {
       Array waveTrackArray;
@@ -1225,8 +1249,7 @@ namespace {
          if (track->GetKind() == Track::Wave &&
             (includeMuted || !wt->GetMute()) &&
             (track->GetSelected() || !selectionOnly)) {
-            waveTrackArray.push_back(
-               std::static_pointer_cast<WaveTrack>(track));
+            waveTrackArray.push_back( Track::Pointer< WaveTrack >( track ) );
          }
       }
 
@@ -1241,7 +1264,9 @@ WaveTrackArray TrackList::GetWaveTrackArray(bool selectionOnly, bool includeMute
 
 WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool includeMuted) const
 {
-   return GetWaveTracks<WaveTrackConstArray>(begin(), end(), selectionOnly, includeMuted);
+   auto list = const_cast<TrackList*>(this);
+   return GetWaveTracks<WaveTrackConstArray>(
+      list->begin(), list->end(), selectionOnly, includeMuted);
 }
 
 #if defined(USE_MIDI)
@@ -1252,7 +1277,7 @@ NoteTrackArray TrackList::GetNoteTrackArray(bool selectionOnly)
    for(const auto &track : *this) {
       if (track->GetKind() == Track::Note &&
          (track->GetSelected() || !selectionOnly)) {
-         noteTrackArray.push_back(std::static_pointer_cast<NoteTrack>(track));
+         noteTrackArray.push_back( Track::Pointer<NoteTrack>(track) );
       }
    }
 
