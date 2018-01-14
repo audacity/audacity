@@ -336,29 +336,19 @@ PrefsDialog::PrefsDialog
    // However, we think screens have got bigger now, and that was a bit too restrictive.
    // The impetus for increasing the limit (before we ASSERT) was that this ASSERT
    // was firing with wxWidgets 3.0, which has slightly different sizer behaviour.
-   wxASSERT_MSG(sz.x <= 1000 && sz.y <= 750, wxT("Preferences dialog exceeds max size"));
+   // Now takes display size into account to counter firing with high dpi displays.
+   wxRect screenRect(wxGetClientDisplayRect());
+   wxASSERT_MSG(sz.x <= screenRect.width && sz.y <= screenRect.height, wxT("Preferences dialog exceeds max size"));
 
-   if (sz.x > 800) {
-      sz.x = 800;
-   }
+   sz.DecTo(screenRect.GetSize());
 
-   if (sz.y > 600) {
-      sz.y = 600;
-   }
+   int prefWidth, prefHeight;
+   gPrefs->Read(wxT("/Prefs/Width"), &prefWidth, sz.x);
+   gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, sz.y);
 
-   // Set the minimum height to be slightly bigger than default, as fix for bug 161.
-   // The magic number 7 was determined by Ed's experimentation.
-   // Frankly, this is a hack to work around a bug in wxTreebook, and
-   // will have to be revisited if we add another category to mCategories.
-   // JKC later added a category and 20 onto the 7.
-
-   sz.y += 7 + 20;
-
-   // PRL:  Bug 161 is an obsolete concern with wx3; bug 1183 is a problem
-   // of minimum size being too great at low resolution.
-   sz.DecTo( ::wxGetDisplaySize() );
-
-   SetSize(sz);
+   wxSize prefSize = wxSize(prefWidth, prefHeight);
+   prefSize.DecTo(screenRect.GetSize());
+   SetSize(prefSize);
    SetMinSize(sz);
 
    // Center after all that resizing, but make sure it doesn't end up
@@ -481,6 +471,9 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       mUniquePage->Commit();
    }
 
+   wxSize sz = GetSize();
+   gPrefs->Write(wxT("/Prefs/Width"), sz.x);
+   gPrefs->Write(wxT("/Prefs/Height"), sz.y);
    gPrefs->Flush();
 
    // Reads preference /GUI/Theme
