@@ -365,6 +365,8 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    Track *operator * () const;
 
    TrackListIterator &operator++ () { (void) Next(); return *this; }
+   TrackListIterator operator++ (int)
+   { auto copy = *this; operator++(); return copy; }
 
    bool operator == (const TrackListIterator &other) const;
    bool operator != (const TrackListIterator &other) const
@@ -415,6 +417,8 @@ public:
    const Track *operator * () const { return *mIter; }
 
    TrackListConstIterator &operator++ () { (void) Next(); return *this; }
+   TrackListConstIterator operator++ (int)
+   { auto copy = *this; operator++(); return copy; }
 
    bool operator == (const TrackListConstIterator &other) const
    { return mIter == other.mIter; }
@@ -666,8 +670,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
       return {};
    }
 
-   bool IsEmpty() const;
-   int GetCount() const;
+   bool empty() const;
+   size_t size() const;
 
    double GetStartTime() const;
    double GetEndTime() const;

@@ -176,7 +176,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    TrackList *GetTracks() { return mTracks.get(); }
    const TrackList *GetTracks() const { return mTracks.get(); }
-   const int GetTrackCount(){ return GetTracks()->GetCount(); }
+   size_t GetTrackCount() const { return GetTracks()->size(); }
    UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }

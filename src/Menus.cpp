@@ -2912,7 +2912,7 @@ void AudacityProject::SortTracks(int flags)
    // This one place outside of TrackList where we must use undisguised
    // std::list iterators!  Avoid this elsewhere!
    std::vector<ListOfTracks::iterator> arr;
-   arr.reserve(mTracks->GetCount());
+   arr.reserve(mTracks->size());
    bool lastTrackLinked = false;
    //sort by linked tracks. Assumes linked track follows owner in list.
 
@@ -4332,7 +4332,7 @@ bool AudacityProject::DoEffect(const PluginID & ID, int flags)
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
-   int nTracksOriginally = GetTrackCount();
+   auto nTracksOriginally = GetTrackCount();
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    WaveTrack *newTrack{};

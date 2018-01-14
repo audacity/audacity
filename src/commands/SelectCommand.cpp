@@ -108,7 +108,7 @@ bool SelectCommand::Apply(CommandExecutionContext context)
          Error(wxT("Trying to select a negatively numbered track!"));
          return false;
       }
-      if (lastTrack >= tracks->GetCount())
+      if (lastTrack >= (long)tracks->size())
       {
          Error(wxT("Trying to select higher number track than exists!"));
          return false;

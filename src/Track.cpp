@@ -1142,18 +1142,17 @@ bool TrackList::Contains(const Track * t) const
    return make_iterator_range( *this ).contains( t );
 }
 
-bool TrackList::IsEmpty() const
+bool TrackList::empty() const
 {
-   return empty();
+   return begin() == end();
 }
 
-int TrackList::GetCount() const
+size_t TrackList::size() const
 {
    int cnt = 0;
 
-   if (!empty()) {
+   if (!empty())
       cnt = back()->GetIndex() + 1;
-   }
 
    return cnt;
 }
@@ -1303,7 +1302,7 @@ namespace {
    double doubleMin(double a, double b) { return std::min(a, b); }
    double doubleMax(double a, double b) { return std::max(a, b); }
    inline double Accumulate
-      (const ListOfTracks &list,
+      (const TrackList &list,
        double (Track::*memfn)() const,
        double (*combine)(double, double))
    {
@@ -1316,8 +1315,8 @@ namespace {
       auto iter = list.begin();
       double acc = (**iter++.*memfn)();
       return std::accumulate(iter, list.end(), acc,
-         [=](double acc, const ListOfTracks::value_type &pTrack) {
-         return combine(acc, (*pTrack.*memfn)());
+         [=](double acc, const Track *pTrack) {
+            return combine(acc, (*pTrack.*memfn)());
       });
    }
 }

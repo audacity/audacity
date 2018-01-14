@@ -29,7 +29,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
 {
    using namespace RefreshCode;
 
-   if (pProject->GetTracks()->IsEmpty())
+   if (pProject->GetTracks()->empty())
       // Scrolling and Zoom in and out commands are disabled when there are no tracks.
       // This should be disabled too for consistency.  Otherwise
       // you do see changes in the time ruler.

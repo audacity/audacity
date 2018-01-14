@@ -1484,7 +1484,7 @@ void AudacityProject::SetProjectTitle( int number)
 
 bool AudacityProject::GetIsEmpty()
 {
-   return mTracks->IsEmpty();
+   return mTracks->empty();
 }
 
 bool AudacityProject::SnapSelection()
@@ -2896,7 +2896,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       // there are no tracks, but there's an Undo history, etc, then
       // bad things can happen, including data files moving to the NEW
       // project directory, etc.
-      if ( proj && ( proj->mDirty || !proj->mTracks->IsEmpty() ) )
+      if ( proj && ( proj->mDirty || !proj->mTracks->empty() ) )
          proj = nullptr;
 
       // This project is clean; it's never been touched.  Therefore
@@ -4145,7 +4145,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
    const auto numTracks = newTracks.size();
    SelectNone();
 
-   bool initiallyEmpty = mTracks->IsEmpty();
+   bool initiallyEmpty = mTracks->empty();
    double newRate = 0;
    wxString trackNameBase = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast('.');
    bool isLinked = false;

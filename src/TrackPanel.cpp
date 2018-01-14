@@ -1088,7 +1088,7 @@ bool TrackPanel::IsMouseCaptured()
 
 void TrackPanel::UpdateViewIfNoTracks()
 {
-   if (mTracks->IsEmpty())
+   if (mTracks->empty())
    {
       // BG: There are no more tracks on screen
       //BG: Set zoom to normal
