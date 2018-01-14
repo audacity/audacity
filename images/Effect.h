@@ -1,5 +1,5 @@
 /* XPM */
-static const char * effect_menu_xpm[] = {
+static const char * const effect_menu_xpm[] = {
 "16 16 2 1",
 " 	c None",
 ".	c #000000",
@@ -21,7 +21,7 @@ static const char * effect_menu_xpm[] = {
 "                "};
 
 /* XPM */
-static const char * effect_play_xpm[] = {
+static const char * const effect_play_xpm[] = {
 "16 16 70 1",
 " 	c None",
 ".	c #000000",
@@ -111,7 +111,7 @@ static const char * effect_play_xpm[] = {
 " CDE            "};
 
 /* XPM */
-static const char * effect_stop_xpm[] = {
+static const char * const effect_stop_xpm[] = {
 "16 16 31 1",
 " 	c None",
 ".	c #000000",
@@ -162,7 +162,7 @@ static const char * effect_stop_xpm[] = {
 "                "};
 
 /* XPM */
-static const char * effect_rewind_xpm[] = {
+static const char * const effect_rewind_xpm[] = {
 "16 16 82 1",
 " 	c None",
 ".	c #000000",
@@ -263,7 +263,7 @@ static const char * effect_rewind_xpm[] = {
 "        PQ   PQ ",
 "                "};
 /* XPM */
-static const char * effect_ffwd_xpm[] = {
+static const char * const effect_ffwd_xpm[] = {
 "16 16 79 1",
 " 	c None",
 ".	c #000000",
@@ -362,7 +362,7 @@ static const char * effect_ffwd_xpm[] = {
 "                "};
 
 /* XPM */
-static const char * effect_play_disabled_xpm[] = {
+static const char * const effect_play_disabled_xpm[] = {
 "16 16 48 1",
 " 	c None",
 ".	c #6B6B6B",
@@ -430,7 +430,7 @@ static const char * effect_play_disabled_xpm[] = {
 " ((_            "};
 
 /* XPM */
-static const char * effect_stop_disabled_xpm[] = {
+static const char * const effect_stop_disabled_xpm[] = {
 "16 16 26 1",
 " 	c None",
 ".	c #737373",
@@ -476,7 +476,7 @@ static const char * effect_stop_disabled_xpm[] = {
 "                "};
 
 /* XPM */
-static const char * effect_rewind_disabled_xpm[] = {
+static const char * const effect_rewind_disabled_xpm[] = {
 "16 16 63 1",
 " 	c None",
 ".	c #6B6B6B",
@@ -559,7 +559,7 @@ static const char * effect_rewind_disabled_xpm[] = {
 "                "};
 
 /* XPM */
-static const char * effect_ffwd_disabled_xpm[] = {
+static const char * const effect_ffwd_disabled_xpm[] = {
 "16 16 61 1",
 " 	c None",
 ".	c #6B6B6B",

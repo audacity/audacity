@@ -1,4 +1,4 @@
-static const char *Glyph0[] = {
+static const char * const Glyph0[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -34,7 +34,7 @@ static const char *Glyph0[] = {
 "..............."
 };
 
-static const char *Glyph1[] = {
+static const char * const Glyph1[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -70,7 +70,7 @@ static const char *Glyph1[] = {
 "..............."
 };
 
-static const char *Glyph2[] = {
+static const char * const Glyph2[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -106,7 +106,7 @@ static const char *Glyph2[] = {
 "..............."
 };
 
-static const char *Glyph3[] = {
+static const char * const Glyph3[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -142,7 +142,7 @@ static const char *Glyph3[] = {
 "..............."
 };
 
-static const char *Glyph4[] = {
+static const char * const Glyph4[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -178,7 +178,7 @@ static const char *Glyph4[] = {
 "..............."
 };
 
-static const char *Glyph5[] = {
+static const char * const Glyph5[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -215,7 +215,7 @@ static const char *Glyph5[] = {
 };
 
 
-static const char *Glyph6[] = {
+static const char * const Glyph6[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -251,7 +251,7 @@ static const char *Glyph6[] = {
 "..............."
 };
 
-static const char *Glyph7[] = {
+static const char * const Glyph7[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -287,7 +287,7 @@ static const char *Glyph7[] = {
 "..............."
 };
 
-static const char *Glyph8[] = {
+static const char * const Glyph8[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -324,7 +324,7 @@ static const char *Glyph8[] = {
 };
 
 
-static const char *Glyph9[] = {
+static const char * const Glyph9[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -360,7 +360,7 @@ static const char *Glyph9[] = {
 "..............."
 };
 
-static const char *Glyph10[] = {
+static const char * const Glyph10[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",
@@ -396,7 +396,7 @@ static const char *Glyph10[] = {
 "..............."
 };
 
-static const char *Glyph11[] = {
+static const char * const Glyph11[] = {
 /* columns rows colors const chars-per-pixel */
 "15 23 7 1",
 ". c none",

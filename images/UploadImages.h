@@ -1,5 +1,5 @@
 
-static const char *file_xpm[] = {
+static const char * const file_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 4 1",
 "  c #040404",
@@ -25,7 +25,7 @@ static const char *file_xpm[] = {
 "oo             o"
 };
 
-static const char *folder_xpm[] = {
+static const char * const folder_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 15 1",
 "  c gray30",
@@ -62,7 +62,7 @@ static const char *folder_xpm[] = {
 ";-=***********=-"
 };
 
-static const char *mp3_xpm[] = {
+static const char * const mp3_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 19 1",
 "  c #040404",
@@ -103,7 +103,7 @@ static const char *mp3_xpm[] = {
 "<<<<<<<<<<<<<<<<"
 };
 
-static const char *up_xpm[] = {
+static const char * const up_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 25 1",
 "  c #040404",

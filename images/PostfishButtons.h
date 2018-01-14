@@ -1,5 +1,5 @@
 /* XPM */
-static const char * bar_home_xpm[] = {
+static const char * const bar_home_xpm[] = {
 "19 17 33 1",
 " 	c None",
 ".	c #020202",
@@ -52,7 +52,7 @@ static const char * bar_home_xpm[] = {
 "#*;;*#  >'4*@ >'4*#",
 " #11#    @1#   @1# "};
 /* XPM */
-static const char * bar_bb_xpm[] = {
+static const char * const bar_bb_xpm[] = {
 "17 17 33 1",
 " 	c None",
 ".	c #020202",
@@ -105,7 +105,7 @@ static const char * bar_bb_xpm[] = {
 "      >'4*@ >'4*#",
 "       @1#   @1# "};
 /* XPM */
-static const char * bar_b_xpm[] = {
+static const char * const bar_b_xpm[] = {
 "18 17 33 1",
 " 	c None",
 ".	c #020202",
@@ -158,7 +158,7 @@ static const char * bar_b_xpm[] = {
 "           @2';;*#",
 "             @~1# "};
 /* XPM */
-static const char * bar_p_xpm[] = {
+static const char * const bar_p_xpm[] = {
 "29 17 33 1",
 " 	c None",
 ".	c #020202",
@@ -211,7 +211,7 @@ static const char * bar_p_xpm[] = {
 "#*;;'2@        #1~~~~~~~~~~# ",
 " #1~@                        "};
 /* XPM */
-static const char * bar_f_xpm[] = {
+static const char * const bar_f_xpm[] = {
 "18 17 33 1",
 " 	c None",
 ".	c #020202",
@@ -264,7 +264,7 @@ static const char * bar_f_xpm[] = {
 "#*;;'2@           ",
 " #1~@             "};
 /* XPM */
-static const char * bar_ff_xpm[] = {
+static const char * const bar_ff_xpm[] = {
 "17 17 33 1",
 " 	c None",
 ".	c #020202",
@@ -317,7 +317,7 @@ static const char * bar_ff_xpm[] = {
 "#*4'> @*4'>      ",
 " #1@   #1@       "};
 /* XPM */
-static const char * bar_end_xpm[] = {
+static const char * const bar_end_xpm[] = {
 "19 17 30 1",
 " 	c None",
 ".	c #6682CE",
@@ -367,7 +367,7 @@ static const char * bar_end_xpm[] = {
 ".#$%& @#$%&  .#**#.",
 " .+@   .+@    .++. "};
 /* XPM */
-static const char * bar_l_xpm[] = {
+static const char * const bar_l_xpm[] = {
 "29 17 33 1",
 " 	c None",
 ".	c #020203",
