@@ -1,5 +1,5 @@
 /* XPM */
-static const char * PauseDisabled[] = {
+static const char * const PauseDisabled[] = {
 "16 16 53 1",
 " 	c None",
 ".	c #8D8D8D",

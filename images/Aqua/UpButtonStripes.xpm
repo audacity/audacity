@@ -1,5 +1,5 @@
 /* XPM */
-static const char * UpButton[] = {
+static const char * const UpButton[] = {
 "48 48 1223 2",
 "  	c None",
 ". 	c #E7E7E7",

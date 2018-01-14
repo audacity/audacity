@@ -1,5 +1,5 @@
 /* XPM */
-static const char * IBeamAlpha[] = {
+static const char * const IBeamAlpha[] = {
 "27 27 3 1",
 " 	c None",
 ".	c #000000",

@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Pause[] = {
+static const char * const Pause[] = {
 "16 16 79 1",
 " 	c None",
 ".	c #F5F5F5",

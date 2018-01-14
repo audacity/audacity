@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * turntable_xpm[] = {
+static const char * const turntable_xpm[] = {
 "48 48 685 2",
 "  	c #969696",
 ". 	c #6A6D70",

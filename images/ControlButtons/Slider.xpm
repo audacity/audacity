@@ -1,5 +1,5 @@
 /* XPM */
-static const char *Slider[] = {
+static const char * const Slider[] = {
 /* columns rows colors chars-per-pixel */
 "100 28 60 1",
 "  c #9d9c9a",

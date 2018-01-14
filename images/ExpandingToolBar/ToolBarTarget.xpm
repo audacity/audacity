@@ -1,5 +1,5 @@
 /* XPM */
-static const char *ToolBarTarget[] = {
+static const char * const ToolBarTarget[] = {
 /* columns rows colors chars-per-pixel */
 "17 26 3 1",
 "  c cyan",

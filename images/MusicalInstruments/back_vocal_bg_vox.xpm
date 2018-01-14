@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * back_vocal_bg_vox_xpm[] = {
+static const char * const back_vocal_bg_vox_xpm[] = {
 "48 48 530 2",
 "  	c #969696",
 ". 	c #636A71",

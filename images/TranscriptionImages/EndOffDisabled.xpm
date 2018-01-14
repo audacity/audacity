@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * EndOffDisabled[] = {
+static const char * const EndOffDisabled[] = {
 "27 27 6 1",
 " 	c None",
 ".	c #FFFFFF",

@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * acoustic_guitar_gtr_xpm[] = {
+static const char * const acoustic_guitar_gtr_xpm[] = {
 "48 48 935 2",
 "  	c None",
 ". 	c #969696",

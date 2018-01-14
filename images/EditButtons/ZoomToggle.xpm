@@ -1,5 +1,5 @@
 /* XPM */
-static const char * ZoomToggle[] = {
+static const char * const ZoomToggle[] = {
 "27 27 7 1",
 " 	c None",
 ".	c #FFFFFF",

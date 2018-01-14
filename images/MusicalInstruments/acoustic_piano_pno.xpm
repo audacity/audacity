@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * acoustic_piano_pno_xpm[] = {
+static const char * const acoustic_piano_pno_xpm[] = {
 "48 48 750 2",
 "  	c None",
 ". 	c #969696",

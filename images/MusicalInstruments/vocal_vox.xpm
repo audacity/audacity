@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * vocal_vox_xpm[] = {
+static const char * const vocal_vox_xpm[] = {
 "48 48 699 2",
 "  	c #969696",
 ". 	c #55575C",

@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * loop_xpm[] = {
+static const char * const loop_xpm[] = {
 "48 48 958 2",
 "  	c #969696",
 ". 	c #6E4137",

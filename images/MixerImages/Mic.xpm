@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Mic[] = {
+static const char * const Mic[] = {
 "25 25 19 1",
 " 	c None",
 ".	c #DEDEDE",

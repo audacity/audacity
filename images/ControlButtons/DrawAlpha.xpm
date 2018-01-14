@@ -1,5 +1,5 @@
 /* XPM */
-static const char * DrawAlpha[] = {
+static const char * const DrawAlpha[] = {
 "27 27 3 1",
 " 	c None",
 ".	c #000000",

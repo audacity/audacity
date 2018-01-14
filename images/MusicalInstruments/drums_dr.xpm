@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * drums_dr_xpm[] = {
+static const char * const drums_dr_xpm[] = {
 "48 48 828 2",
 "  	c #969696",
 ". 	c #707477",

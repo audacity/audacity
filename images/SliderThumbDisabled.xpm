@@ -1,5 +1,5 @@
 /* XPM */
-static const char * SliderThumbDisabled[] = {
+static const char * const SliderThumbDisabled[] = {
 "11 14 7 1",
 " 	c None",
 ".	c #DEDEDE",

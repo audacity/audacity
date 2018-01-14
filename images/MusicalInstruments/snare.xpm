@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * snare_xpm[] = {
+static const char * const snare_xpm[] = {
 "48 48 1369 2",
 "  	c None",
 ". 	c #969696",

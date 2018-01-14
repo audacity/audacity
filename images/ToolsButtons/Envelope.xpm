@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Envelope[] = {
+static const char * const Envelope[] = {
 "27 27 5 1",
 " 	c None",
 ".	c #FFFFFF",

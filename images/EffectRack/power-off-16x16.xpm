@@ -1,5 +1,5 @@
 /* XPM */
-static const char *power_off_16x16_xpm[] = {
+static const char * const power_off_16x16_xpm[] = {
 "16 16 4 1",
 " 	c None",
 "a c #FF0000",

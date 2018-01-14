@@ -1,5 +1,5 @@
 /* XPM */
-static const char * arrow15x15_xpm[] = {
+static const char * const arrow15x15_xpm[] = {
 "15 15 24 1",
 " 	c None",
 ".	c #FFFFFF",
