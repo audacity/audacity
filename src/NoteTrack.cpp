@@ -214,9 +214,11 @@ double NoteTrack::GetEndTime() const
 void NoteTrack::DoSetHeight(int h)
 {
    auto oldHeight = GetHeight();
-   auto oldMargin = GetNoteMargin(oldHeight);
+   NoteTrackDisplayData oldData = NoteTrackDisplayData(this, wxRect(0, 0, 1, oldHeight));
+   auto oldMargin = oldData.GetNoteMargin();
    PlayableTrack::DoSetHeight(h);
-   auto margin = GetNoteMargin(h);
+   NoteTrackDisplayData newData = NoteTrackDisplayData(this, wxRect(0, 0, 1, h));
+   auto margin = newData.GetNoteMargin();
    Zoom(
       wxRect{ 0, 0, 1, h }, // only height matters
       h - margin - 1, // preserve bottom note
@@ -979,17 +981,17 @@ void NoteTrack::Zoom(const wxRect &rect, int y, float multiplier, bool center)
    // Construct track rectangle to map pitch to screen coordinates
    // Only y and height are needed:
    wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
-   PrepareIPitchToY(trackRect);
-   int clickedPitch = YToIPitch(y);
+   NoteTrackDisplayData data = NoteTrackDisplayData(this, trackRect);
+   int clickedPitch = data.YToIPitch(y);
    // zoom by changing the pitch height
    SetPitchHeight(rect.height, mPitchHeight * multiplier);
-   PrepareIPitchToY(trackRect); // update because mPitchHeight changed
+   NoteTrackDisplayData newData = NoteTrackDisplayData(this, trackRect); // update because mPitchHeight changed
    if (center) {
-      int newCenterPitch = YToIPitch(rect.GetY() + rect.GetHeight() / 2);
+      int newCenterPitch = newData.YToIPitch(rect.GetY() + rect.GetHeight() / 2);
       // center the pitch that the user clicked on
       SetBottomNote(mBottomNote + (clickedPitch - newCenterPitch));
    } else {
-      int newClickedPitch = YToIPitch(y);
+      int newClickedPitch = newData.YToIPitch(y);
       // align to keep the pitch that the user clicked on in the same place
       SetBottomNote(mBottomNote + (clickedPitch - newClickedPitch));
    }
@@ -999,9 +1001,9 @@ void NoteTrack::Zoom(const wxRect &rect, int y, float multiplier, bool center)
 void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
 {
    wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
-   PrepareIPitchToY(trackRect);
-   int topPitch = YToIPitch(start);
-   int botPitch = YToIPitch(end);
+   NoteTrackDisplayData data = NoteTrackDisplayData(this, trackRect);
+   int topPitch = data.YToIPitch(start);
+   int botPitch = data.YToIPitch(end);
    if (topPitch < botPitch) { // swap
       int temp = topPitch; topPitch = botPitch; botPitch = temp;
    }
@@ -1013,7 +1015,20 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
    Zoom(rect, (start + end) / 2, trialPitchHeight / mPitchHeight, true);
 }
 
-int NoteTrack::YToIPitch(int y)
+NoteTrackDisplayData::NoteTrackDisplayData(const NoteTrack* track, const wxRect &r)
+{
+   mPitchHeight = track->mPitchHeight;
+   mMargin = std::min(r.height / 4, (GetPitchHeight(1) + 1) / 2);
+
+   mBottom = r.y + r.height - GetNoteMargin() - 1 - GetPitchHeight(1) +
+            (track->GetBottomNote() / 12) * GetOctaveHeight() +
+               GetNotePos(track->GetBottomNote() % 12);
+}
+
+int NoteTrackDisplayData::IPitchToY(int p) const
+{ return mBottom - (p / 12) * GetOctaveHeight() - GetNotePos(p % 12); }
+
+int NoteTrackDisplayData::YToIPitch(int y) const
 {
    y = mBottom - y; // pixels above pitch 0
    int octave = (y / GetOctaveHeight());
