@@ -89,6 +89,7 @@ bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
    // then middle pitch class is D. Round mean_pitch to the nearest D:
    int mid_pitch = ((mean_pitch - 2 + 6) / 12) * 12 + 2;
    dest->SetBottomNote(mid_pitch - 14);
+   dest->SetTopNote(mid_pitch + 13);
    return true;
 }
 
