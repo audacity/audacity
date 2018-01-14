@@ -337,19 +337,13 @@ protected:
 };
 
 class AUDACITY_DLL_API TrackListIterator /* not final */
-: public std::iterator< std::forward_iterator_tag, Track *const >
 {
  public:
-   // The default-constructed value can serve as the end iterator for
-   // traversal over any track list.
-   TrackListIterator() {}
-   explicit TrackListIterator(TrackList * val, TrackNodePointer p = {});
-   TrackListIterator(const TrackListIterator&) = default;
-   TrackListIterator& operator=(const TrackListIterator&) = default;
+   TrackListIterator(TrackList * val = NULL);
    virtual ~TrackListIterator() {}
 
    // Iterate functions
-   virtual Track *First(TrackList * val = nullptr);
+   virtual Track *First(TrackList * val = NULL);
    virtual Track *StartWith(Track * val);
    virtual Track *Next(bool skiplinked = false);
    virtual Track *Prev(bool skiplinked = false);
@@ -357,38 +351,19 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
 
    Track *RemoveCurrent(); // deletes track, returns next
 
-   // Provide minimal STL forward-iterator idiom:
-
-   // unlike Next, this is non-mutating.
-   // An end iterator may be safely dereferenced, returning nullptr.
-   Track *operator * () const;
-
-   TrackListIterator &operator++ () { (void) Next(); return *this; }
-
-   bool operator == (const TrackListIterator &other) const;
-   bool operator != (const TrackListIterator &other) const
-   { return !(*this == other); }
-
  protected:
    friend TrackList;
 
-   TrackList *l {};
+   TrackList *l;
    TrackNodePointer cur{};
 };
 
 class AUDACITY_DLL_API TrackListConstIterator
-: public std::iterator< std::forward_iterator_tag, const Track *const >
 {
 public:
-   // The default-constructed value can serve as the end iterator for
-   // traversal over any track list.
-   TrackListConstIterator() {}
-   explicit TrackListConstIterator(
-      const TrackList * val, TrackNodePointer p = {})
-      : mIter(const_cast<TrackList*>(val), p)
+   TrackListConstIterator(const TrackList * val = NULL)
+      : mIter(const_cast<TrackList*>(val))
    {}
-   TrackListConstIterator(const TrackListConstIterator&) = default;
-   TrackListConstIterator& operator=(const TrackListConstIterator&) = default;
    ~TrackListConstIterator() {}
 
    // Iterate functions
@@ -402,19 +377,6 @@ public:
    { return mIter.Prev(skiplinked); }
    const Track *Last(bool skiplinked = false)
    { return mIter.Last(skiplinked); }
-
-   // Provide minimal STL forward-iterator idiom:
-
-   // unlike Next, this is non-mutating.
-   // An end iterator may be safely dereferenced, returning nullptr.
-   const Track *operator * () const { return *mIter; }
-
-   TrackListConstIterator &operator++ () { (void) Next(); return *this; }
-
-   bool operator == (const TrackListConstIterator &other) const
-   { return mIter == other.mIter; }
-   bool operator != (const TrackListConstIterator &other) const
-   { return !(*this == other); }
 
 private:
    TrackListIterator mIter;
@@ -570,17 +532,6 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    // Destructor
    virtual ~TrackList();
 
-   // Hide the inherited begin() and end()
-   using iterator = TrackListIterator;
-   using const_iterator = TrackListConstIterator;
-   using value_type = Track *;
-   iterator begin() { return iterator{ this, ListOfTracks::begin() }; }
-   iterator end() { return {}; }
-   const_iterator begin() const { return const_iterator{ this }; }
-   const_iterator end() const { return {}; }
-   const_iterator cbegin() const { return begin(); }
-   const_iterator cend() const { return end(); }
-
    friend class Track;
    friend class TrackListIterator;
    friend class SyncLockedTracksIterator;
@@ -598,7 +549,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    Track *Add(std::shared_ptr<TrackKind> &&t);
 
    /// Replace first track with second track, give back a holder
-   ListOfTracks::value_type Replace(Track * t, ListOfTracks::value_type &&with);
+   value_type Replace(Track * t, value_type &&with);
 
    /// Remove this Track or all children of this TrackList.
    /// Return an iterator to what followed the removed track.
@@ -678,11 +629,11 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 
 private:
    bool isNull(TrackNodePointer p) const
-   { return p == TrackNodePointer{} || p == ListOfTracks::end(); }
+   { return p == end(); }
    void setNull(TrackNodePointer &p)
-   { p = ListOfTracks::end(); }
+   { p = end(); }
    bool hasPrev(TrackNodePointer p) const
-   { return p != ListOfTracks::begin(); }
+   { return p != begin(); }
 
    void DoAssign(const TrackList &that);
        

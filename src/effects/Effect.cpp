@@ -2170,8 +2170,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    // Assume resources need to be freed.
    wxASSERT(mOutputTracks); // Make sure we at least did the CopyInputTracks().
 
-   auto iterOut = mOutputTracks->ListOfTracks::begin(),
-      iterEnd = mOutputTracks->ListOfTracks::end();
+   auto iterOut = mOutputTracks->begin(), iterEnd = mOutputTracks->end();
 
    size_t cnt = mOMap.size();
    size_t i = 0;

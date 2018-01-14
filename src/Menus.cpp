@@ -2909,16 +2909,13 @@ void AudacityProject::SortTracks(int flags)
 {
    size_t ndx = 0;
    int cmpValue;
-   // This one place outside of TrackList where we must use undisguised
-   // std::list iterators!  Avoid this elsewhere!
    std::vector<ListOfTracks::iterator> arr;
    arr.reserve(mTracks->GetCount());
    bool lastTrackLinked = false;
    //sort by linked tracks. Assumes linked track follows owner in list.
 
    // First find the permutation.
-   for (auto iter = mTracks->ListOfTracks::begin(),
-        end = mTracks->ListOfTracks::end(); iter != end; ++iter) {
+   for (auto iter = mTracks->begin(), end = mTracks->end(); iter != end; ++iter) {
       const auto &track = *iter;
       if(lastTrackLinked) {
          //insert after the last track since this track should be linked to it.
@@ -6245,7 +6242,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
 
    bool anyWaveTracksSelected =
       tracks->end() != std::find_if(tracks->begin(), tracks->end(),
-         [] (const Track * t) {
+         [] (const std::shared_ptr<Track>& t) {
             return t->GetSelected() && t->GetKind() == Track::Wave; });
 
    // first search the tracks individually
@@ -7323,7 +7320,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
 
    bool anyWaveTracksSelected =
       tracks->end() != std::find_if(tracks->begin(), tracks->end(),
-         [] (const Track *t) {
+         [] (const std::shared_ptr<Track>& t) {
             return t->GetSelected() && t->GetKind() == Track::Wave; });
 
 
