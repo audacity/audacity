@@ -140,11 +140,11 @@ sub menuCommand{
 
 # Send a command which requests a list of all available menu commands
 sub getMenuCommands{
-   doCommand("GetAllMenuCommands: ShowStatus=0");
+   doCommand("GetMenus: ShowStatus=0");
 }
 
 sub showMenuStatus{
-   sendCommand("GetAllMenuCommands: ShowStatus=1");
+   sendCommand("GetMenus: ShowStatus=1");
    my @resps = getResponses();
    map { print "$_\n"; } @resps;
 }
@@ -161,7 +161,7 @@ sub noSuchCommand{
 
 sub parameterTest{
    # Set a non-existent parameter
-   doCommand("GetAllMenuCommands: blah=2");
+   doCommand("GetMenus: blah=2");
    # Parameter with no '='
    doCommand("MenuCommand: CommandName");
 }
@@ -197,7 +197,7 @@ sub help{
 
 # Get help on all of the listed commands
 sub fullHelp{
-   my @cmds = qw(BatchCommand CompareAudio MenuCommand GetAllMenuCommands GetTrackInfo Help Message Screenshot Select SetTrackInfo);
+   my @cmds = qw(BatchCommand CompareAudio MenuCommand GetMenus GetTrackInfo Help Message Screenshot Select SetTrackInfo);
    foreach my $cmd (@cmds){
       help($cmd);
    }
@@ -260,10 +260,38 @@ sub getTrackInfo{
    sendCommand("GetTrackInfo: Type=EndTime TrackIndex=0");
    @resps = getResponses();
    my $endTime = shift(@resps);
+   sendCommand("GetTrackInfo: Type=Pan TrackIndex=0");
+   @resps = getResponses();
+   my $pan = shift(@resps);
+   sendCommand("GetTrackInfo: Type=Gain TrackIndex=0");
+   @resps = getResponses();
+   my $gain = shift(@resps);
+   sendCommand("GetTrackInfo: Type=Mute TrackIndex=0");
+   @resps = getResponses();
+   my $mute = shift(@resps);
+   sendCommand("GetTrackInfo: Type=Solo TrackIndex=0");
+   @resps = getResponses();
+   my $solo = shift(@resps);
+   sendCommand("GetTrackInfo: Type=Selected TrackIndex=0");
+   @resps = getResponses();
+   my $selected = shift(@resps);
+   sendCommand("GetTrackInfo: Type=Focused TrackIndex=0");
+   @resps = getResponses();
+   my $focused = shift(@resps);
+   sendCommand("GetTrackInfo: Type=Linked TrackIndex=0");
+   @resps = getResponses();
+   my $linked = shift(@resps);
 
    print "     Name: $name\n";
    print "StartTime: $startTime\n";
    print "  EndTime: $endTime\n";
+   print "      Pan: $pan\n";
+   print "     Gain: $gain\n";
+   print "     Mute: $mute\n";
+   print "     Solo: $solo\n";
+   print " Selected: $selected\n";
+   print "  Focused: $focused\n";
+   print "   Linked: $linked\n";
 }
 
 # Assortment of different tests
@@ -390,7 +418,6 @@ sub getEffects{
       FadeIn
       FadeOut
       Invert
-      Leveller
       Normalize
       Phaser
       Repeat
