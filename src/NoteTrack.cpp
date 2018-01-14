@@ -1047,6 +1047,37 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
    SetNoteRange(pitch1, pitch2);
 }
 
+void NoteTrack::ZoomAllNotes()
+{
+   Alg_iterator iterator( &GetSeq(), false );
+   iterator.begin();
+   Alg_event_ptr evt;
+
+   // Go through all of the notes, finding the minimum and maximum value pitches.
+   bool hasNotes = false;
+   int minPitch = MaxPitch;
+   int maxPitch = MinPitch;
+
+   while (NULL != (evt = iterator.next())) {
+      if (evt->is_note()) {
+         int pitch = (int) evt->get_pitch();
+         hasNotes = true;
+         if (pitch < minPitch)
+            minPitch = pitch;
+         if (pitch > maxPitch)
+            maxPitch = pitch;
+      }
+   }
+
+   if (!hasNotes) {
+      // Semi-arbitary default values:
+      minPitch = 48;
+      maxPitch = 72;
+   }
+
+   SetNoteRange(minPitch, maxPitch);
+}
+
 NoteTrackDisplayData::NoteTrackDisplayData(const NoteTrack* track, const wxRect &r)
 {
    auto span = track->GetTopNote() - track->GetBottomNote() + 1; // + 1 to make sure it includes both
