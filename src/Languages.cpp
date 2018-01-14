@@ -129,6 +129,8 @@ wxString GetSystemLanguageCode()
    return wxT("en");
 }
 
+static wxString Foo = _("Foo");
+
 void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 {
    static const char *const utf8Names[] = {

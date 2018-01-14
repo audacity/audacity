@@ -36,7 +36,7 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
    #ifdef _MSC_VER
 
    #define _(s) ((wxTranslations::Get() || \
-                  (DbgBreak("Do not use _ in static initializers"), true)), \
+                  (DebugBreak(), true)), \
                 GetCustomTranslation((s)))
 
    #else
