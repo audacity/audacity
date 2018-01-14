@@ -92,7 +92,6 @@ namespace TrackArt {
                      const WaveTrack *track,
                      const wxRect & rect);
 #ifdef USE_MIDI
-   int GetBottom(NoteTrack *t, const wxRect &rect);
    void DrawNoteBackground(TrackPanelDrawingContext &context,
                            const NoteTrack *track,
                            const wxRect &rect, const wxRect &sel,
