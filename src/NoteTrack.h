@@ -131,6 +131,8 @@ class AUDACITY_DLL_API NoteTrack final
    /// Sets the top and bottom note (both pitches) automatically, swapping them if needed.
    void SetNoteRange(int note1, int note2);
 
+   /// Zooms so that all notes are visible
+   void ZoomAllNotes();
    /// Zooms so that the entire track is visible
    void ZoomMaxExtent() { SetNoteRange(MinPitch, MaxPitch); }
    /// Shifts all notes vertically by the given pitch
