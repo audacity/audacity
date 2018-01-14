@@ -76,7 +76,7 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
    } else if (!event.CmdDown() && event.ShiftDown()) {
       // Scroll some fixed number of notes, independent of zoom level or track height:
       static const int movement = 6; // 6 semitones is half an octave
-      nt->SetBottomNote(nt->GetBottomNote() + (int) (steps * movement));
+      nt->ShiftNoteRange((int) (steps * movement));
    } else {
       return RefreshNone;
    }
