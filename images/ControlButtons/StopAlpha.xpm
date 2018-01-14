@@ -1,5 +1,5 @@
 /* XPM */
-static const char * StopAlpha[] = {
+static const char * const StopAlpha[] = {
 "16 16 5 1",
 " 	c None",
 ".	c #000000",

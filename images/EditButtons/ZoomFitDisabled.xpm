@@ -1,5 +1,5 @@
 /* XPM */
-static const char * ZoomFitDisabled[] = {
+static const char * const ZoomFitDisabled[] = {
 "27 27 6 1",
 " 	c None",
 ".	c #A8A8A8",

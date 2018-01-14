@@ -1,5 +1,5 @@
 /* XPM */
-static const char * MicAlpha[] = {
+static const char * const MicAlpha[] = {
 "25 25 2 1",
 ".	c #000000",
 "#	c #FFFFFF",

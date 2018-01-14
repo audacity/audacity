@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * tambo_xpm[] = {
+static const char * const tambo_xpm[] = {
 "48 48 1133 2",
 "  	c #969696",
 ". 	c #7F8285",

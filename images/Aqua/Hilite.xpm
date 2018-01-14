@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Hilite[] = {
+static const char * const Hilite[] = {
 "27 27 55 1",
 " 	c None",
 ".	c #ADADAD",

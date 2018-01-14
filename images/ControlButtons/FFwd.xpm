@@ -1,5 +1,5 @@
 /* XPM */
-static const char * FFwd[] = {
+static const char * const FFwd[] = {
 "16 16 79 1",
 " 	c None",
 ".	c #000000",

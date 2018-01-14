@@ -1,5 +1,5 @@
 /* XPM */
-static const char * unchecked_xpm[] = {
+static const char * const unchecked_xpm[] = {
 "15 15 56 1",
 " 	c None",
 ".	c #FFFFFF",

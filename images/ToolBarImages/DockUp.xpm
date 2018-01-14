@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * DockUp[] = {
+static const char * const DockUp[] = {
 "15 55 6 1",
 " 	c None",
 ".	c #E2E2DE",

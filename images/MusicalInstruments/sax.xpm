@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * sax_xpm[] = {
+static const char * const sax_xpm[] = {
 "48 48 459 2",
 "  	c #969696",
 ". 	c #75797D",

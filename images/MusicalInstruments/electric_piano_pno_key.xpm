@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * electric_piano_pno_key_xpm[] = {
+static const char * const electric_piano_pno_key_xpm[] = {
 "48 48 862 2",
 "  	c None",
 ". 	c #969696",

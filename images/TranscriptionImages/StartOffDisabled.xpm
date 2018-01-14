@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * StartOffDisabled[] = {
+static const char * const StartOffDisabled[] = {
 "27 27 6 1",
 " 	c None",
 ".	c #FFFFFF",

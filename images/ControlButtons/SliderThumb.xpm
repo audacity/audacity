@@ -1,5 +1,5 @@
 /* XPM */
-static const char *SliderThumb[] = {
+static const char * const SliderThumb[] = {
 /* columns rows colors chars-per-pixel */
 "10 28 4 1",
 "  c #9a9997",

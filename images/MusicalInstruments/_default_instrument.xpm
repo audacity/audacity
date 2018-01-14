@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * _default_instrument_xpm[] = {
+static const char * const _default_instrument_xpm[] = {
 "48 48 555 2",
 "  	c #969696",
 ". 	c #939395",

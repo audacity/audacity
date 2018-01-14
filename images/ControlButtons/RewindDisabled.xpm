@@ -1,5 +1,5 @@
 /* XPM */
-static const char * RewindDisabled[] = {
+static const char * const RewindDisabled[] = {
 "16 16 63 1",
 " 	c None",
 ".	c #6B6B6B",

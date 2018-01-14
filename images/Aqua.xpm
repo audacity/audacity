@@ -1,5 +1,5 @@
 /* XPM */
-static const char *Background[] = {
+static const char * const Background[] = {
 /* columns rows colors chars-per-pixel */
 "8 8 3 1",
 "  c #e7e7e7",
@@ -16,7 +16,7 @@ static const char *Background[] = {
 "........"
 };
 /* XPM */
-static const char *Div[] = {
+static const char * const Div[] = {
 /* columns rows colors chars-per-pixel */
 "15 48 4 1",
 "  c #909090",
@@ -74,7 +74,7 @@ static const char *Div[] = {
 "XXXXXXXXXXXXXXX"
 };
 /* XPM */
-static const char *IBeamDown[] = {
+static const char * const IBeamDown[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 144 2",
 "   c #17232e",
@@ -251,7 +251,7 @@ static const char *IBeamDown[] = {
 "x.c.j.g.~ T = = * * * * * * * * * * * * * * * * * * * "
 };
 /* XPM */
-static const char *IBeamOver[] = {
+static const char * const IBeamOver[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 35 1",
 "  c #2d2d2d",
@@ -319,7 +319,7 @@ static const char *IBeamOver[] = {
 "qq;1*$#OOOOOOOOOOOOOOOOOOO+"
 };
 /* XPM */
-static const char *IBeamUp[] = {
+static const char * const IBeamUp[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 35 1",
 "  c #2d2d2d",
@@ -387,7 +387,7 @@ static const char *IBeamUp[] = {
 "qq;1*$#OOOOOOOOOOOOOOOOOOO+"
 };
 /* XPM */
-static const char *Loud[] = {
+static const char * const Loud[] = {
 /* columns rows colors chars-per-pixel */
 "27 48 47 1",
 "  c #181818",
@@ -488,7 +488,7 @@ static const char *Loud[] = {
 "ggggggggggggggggggggggggggg"
 };
 /* XPM */
-static const char *MoveDown[] = {
+static const char * const MoveDown[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 129 2",
 "   c #192430",
@@ -650,7 +650,7 @@ static const char *MoveDown[] = {
 "i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i.i."
 };
 /* XPM */
-static const char *MoveOver[] = {
+static const char * const MoveOver[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 29 1",
 "  c Gray18",
@@ -712,7 +712,7 @@ static const char *MoveOver[] = {
 "000000000000000000000000000"
 };
 /* XPM */
-static const char *MoveUp[] = {
+static const char * const MoveUp[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 29 1",
 "  c Gray18",
@@ -774,7 +774,7 @@ static const char *MoveUp[] = {
 "000000000000000000000000000"
 };
 /* XPM */
-static const char *Mute[] = {
+static const char * const Mute[] = {
 /* columns rows colors chars-per-pixel */
 "27 48 47 1",
 "  c #181818",
@@ -875,7 +875,7 @@ static const char *Mute[] = {
 "ggggggggggggggggggggggggggg"
 };
 /* XPM */
-static const char *PlayDisabled[] = {
+static const char * const PlayDisabled[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 191 2",
 "   c #272727",
@@ -1120,7 +1120,7 @@ static const char *PlayDisabled[] = {
 "(.E.(.(.(.(.(.(.(.(.(.E.(.(.(.E.E.E.E.E.E.E.E.E.E.E.E.E.E.E.E.E.E.E.E.(.(.(.(.(.(.(.(.(._.(.(._."
 };
 /* XPM */
-static const char *PlayDown[] = {
+static const char * const PlayDown[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 255 2",
 "   c #033b95",
@@ -1429,7 +1429,7 @@ static const char *PlayDown[] = {
 "MXMXMXMXmXmXmXmXmXmXmXmXMXMXbXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcXbXbXMXMXMXmXmXmXmXmXmXmXmXmXmXmX"
 };
 /* XPM */
-static const char *PlayOver[] = {
+static const char * const PlayOver[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 256 2",
 "   c #222e33",
@@ -1739,7 +1739,7 @@ static const char *PlayOver[] = {
 "NXNXNXNXMXMXMXMXMXMXMXMXNXNXnXvXvXvXvXvXvXvXvXvXvXvXvXvXvXvXvXvXnXnXNXNXNXMXMXMXMXMXMXMXMXMXMXMX"
 };
 /* XPM */
-static const char *PlayUp[] = {
+static const char * const PlayUp[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 254 2",
 "   c #1f272f",
@@ -2047,7 +2047,7 @@ static const char *PlayUp[] = {
 "mXbXbXmXmXmXmXmXmXmXmXmXmXvXvXvXcXxXxXxXxXxXxXxXxXxXxXxXxXxXcXcXvXvXvXbXmXmXmXmXmXmXmXmXmXmXmXSX"
 };
 /* XPM */
-static const char *RecordDisabled[] = {
+static const char * const RecordDisabled[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 194 2",
 "   c #282828",
@@ -2295,7 +2295,7 @@ static const char *RecordDisabled[] = {
 "`.!.`.`.`.`.`.`.`.`.`.!.`.`.`.!.!.!.!.!.!.!.!.!.!.!.!.!.!.!.!.!.!.!.!.`.`.`.`.`.`.`.`.`.].`.`.]."
 };
 /* XPM */
-static const char *RecordDown[] = {
+static const char * const RecordDown[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 254 2",
 "   c #033b95",
@@ -2603,7 +2603,7 @@ static const char *RecordDown[] = {
 "nXnXnXnXnXbXbXbXbXbXbXbXnXnXcXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXzXcXcXnXnXnXbXbXbXbXbXbXbXbXbXbXbX"
 };
 /* XPM */
-static const char *RecordOver[] = {
+static const char * const RecordOver[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 255 2",
 "   c #232f33",
@@ -2912,7 +2912,7 @@ static const char *RecordOver[] = {
 "mXmXmXmXmXnXnXnXnXnXnXnXmXmXvXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXvXvXmXmXmXnXnXnXnXnXnXnXnXnXnXnX"
 };
 /* XPM */
-static const char *RecordUp[] = {
+static const char * const RecordUp[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 255 2",
 "   c #232a33",
@@ -3221,7 +3221,7 @@ static const char *RecordUp[] = {
 "MXnXnXMXMXMXMXMXMXMXMXMXMXbXbXbXvXcXcXcXcXcXcXcXcXcXcXcXcXcXvXvXbXbXbXnXMXMXMXMXMXMXMXMXMXMXMXDX"
 };
 /* XPM */
-static const char *SelectDown[] = {
+static const char * const SelectDown[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 180 2",
 "   c #17232e",
@@ -3434,7 +3434,7 @@ static const char *SelectDown[] = {
 "3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 ..+.~.^.`._._."
 };
 /* XPM */
-static const char *SelectOver[] = {
+static const char * const SelectOver[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 64 1",
 "  c #2d2d2d",
@@ -3531,7 +3531,7 @@ static const char *SelectOver[] = {
 "**==******==****===<47auccc"
 };
 /* XPM */
-static const char *SelectUp[] = {
+static const char * const SelectUp[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 64 1",
 "  c #2d2d2d",
@@ -3628,7 +3628,7 @@ static const char *SelectUp[] = {
 "**==******==****===<47auccc"
 };
 /* XPM */
-static const char *Slider[] = {
+static const char * const Slider[] = {
 /* columns rows colors chars-per-pixel */
 "100 28 23 1",
 "  c Gray29",
@@ -3685,7 +3685,7 @@ static const char *Slider[] = {
 "3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333"
 };
 /* XPM */
-static const char *SliderThumb[] = {
+static const char * const SliderThumb[] = {
 /* columns rows colors chars-per-pixel */
 "17 28 117 2",
 "   c #000063",
@@ -3836,7 +3836,7 @@ static const char *SliderThumb[] = {
 "4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4."
 };
 /* XPM */
-static const char *StopDisabled[] = {
+static const char * const StopDisabled[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 187 2",
 "   c #272727",
@@ -4077,7 +4077,7 @@ static const char *StopDisabled[] = {
 "!.U.!.!.!.!.!.!.!.!.!.U.!.!.!.U.U.U.U.U.U.U.U.U.U.U.U.U.U.U.U.U.U.U.U.!.!.!.!.!.!.!.!.!.^.!.!.^."
 };
 /* XPM */
-static const char *StopDown[] = {
+static const char * const StopDown[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 256 2",
 "   c #033b95",
@@ -4387,7 +4387,7 @@ static const char *StopDown[] = {
 "MXMXMXMXMXmXmXmXmXmXmXmXMXMXbXbXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXbXbXMXMXMXmXmXmXmXmXmXmXmXmXmXmX"
 };
 /* XPM */
-static const char *StopOver[] = {
+static const char * const StopOver[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 256 2",
 "   c #222e33",
@@ -4697,7 +4697,7 @@ static const char *StopOver[] = {
 "MXMXMXMXMXmXmXmXmXmXmXmXMXMXbXbXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXbXbXMXMXMXmXmXmXmXmXmXmXmXmXmXmX"
 };
 /* XPM */
-static const char *StopUp[] = {
+static const char * const StopUp[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 256 2",
 "   c #1f272f",
@@ -5007,7 +5007,7 @@ static const char *StopUp[] = {
 "MXbXbXMXMXMXMXMXMXMXMXMXMXvXvXvXcXxXxXxXxXxXxXxXxXxXxXxXxXxXcXcXvXvXvXbXMXMXMXMXMXMXMXMXMXMXMXFX"
 };
 /* XPM */
-static const char *ZoomDown[] = {
+static const char * const ZoomDown[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 208 2",
 "   c #1c272f",
@@ -5248,7 +5248,7 @@ static const char *ZoomDown[] = {
 "5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X5X"
 };
 /* XPM */
-static const char *ZoomOver[] = {
+static const char * const ZoomOver[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 89 1",
 "  c #2d2d2d",
@@ -5370,7 +5370,7 @@ static const char *ZoomOver[] = {
 "'''''''''''''''''''''''''''"
 };
 /* XPM */
-static const char *ZoomUp[] = {
+static const char * const ZoomUp[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 89 1",
 "  c #2d2d2d",

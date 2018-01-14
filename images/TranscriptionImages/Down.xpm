@@ -1,5 +1,5 @@
 /* XPM */
-static const char *Down[] = {
+static const char * const Down[] = {
 "27 27 27 1",
 " 	c None",
 ".	c #3B3B3B",

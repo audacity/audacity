@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Copy[] = {
+static const char * const const Copy[] = {
 "26 24 11 1",
 " 	c None",
 ".	c #CCCCCC",

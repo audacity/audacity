@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * SilenceAlpha[] = {
+static const char * const SilenceAlpha[] = {
 "26 24 3 1",
 " 	c None",
 ".	c #000000",

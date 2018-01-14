@@ -1,5 +1,5 @@
 /* XPM */
-static const char * TimeShiftAlpha[] = {
+static const char * const TimeShiftAlpha[] = {
 "27 27 3 1",
 " 	c None",
 ".	c #000000",

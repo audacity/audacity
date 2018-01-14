@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * MakeTagDisabled[] = {
+static const char * const MakeTagDisabled[] = {
 "27 27 4 1",
 " 	c None",
 ".	c #FFFFFF",

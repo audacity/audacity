@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Play[] = {
+static const char * const Play[] = {
 "16 16 70 1",
 " 	c None",
 ".	c #000000",

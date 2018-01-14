@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * AudacityLogoAlpha_xpm[] = {
+static const char * const AudacityLogoAlpha_xpm[] = {
 "48 48 389 2",
 "  	c None",
 ". 	c #000092",

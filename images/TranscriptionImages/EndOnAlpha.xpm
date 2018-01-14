@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * EndOnAlpha[] = {
+static const char * const EndOnAlpha[] = {
 "27 27 3 1",
 " 	c None",
 ".	c #000000",
