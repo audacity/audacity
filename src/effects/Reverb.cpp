@@ -145,7 +145,7 @@ wxString EffectReverb::ManualPage()
    return wxT("Reverb");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectReverb::GetType()
 {
@@ -269,8 +269,21 @@ size_t EffectReverb::ProcessBlock(float **inBlock, float **outBlock, size_t bloc
 
    return blockLen;
 }
+bool EffectReverb::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mParams.mRoomSize,       RoomSize );
+   S.SHUTTLE_PARAM( mParams.mPreDelay,       PreDelay );
+   S.SHUTTLE_PARAM( mParams.mReverberance,   Reverberance );
+   S.SHUTTLE_PARAM( mParams.mHfDamping,      HfDamping );
+   S.SHUTTLE_PARAM( mParams.mToneLow,        ToneLow );
+   S.SHUTTLE_PARAM( mParams.mToneHigh,       ToneHigh );
+   S.SHUTTLE_PARAM( mParams.mWetGain,        WetGain );
+   S.SHUTTLE_PARAM( mParams.mDryGain,        DryGain );
+   S.SHUTTLE_PARAM( mParams.mStereoWidth,    StereoWidth );
+   S.SHUTTLE_PARAM( mParams.mWetOnly,        WetOnly );
+   return true;
+}
 
-bool EffectReverb::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectReverb::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    parms.Write(KEY_RoomSize, mParams.mRoomSize);
    parms.Write(KEY_PreDelay, mParams.mPreDelay);
@@ -286,7 +299,7 @@ bool EffectReverb::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectReverb::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectReverb::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    ReadAndVerifyDouble(RoomSize);
    ReadAndVerifyDouble(PreDelay);

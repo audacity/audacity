@@ -4,7 +4,6 @@
 
   Shuttle.h
 
-  Dominic Mazzoni
   James Crook
 
 **********************************************************************/
@@ -58,5 +57,135 @@ public:
    virtual ~ShuttleCli() {}
    bool ExchangeWithMaster(const wxString & Name) override;
 };
+
+class CommandAutomationParameters;
+/**************************************************************************//**
+\brief Shuttle that deals with parameters.  This is a base class with lots of
+pure virtual functions.
+********************************************************************************/
+class ShuttleParams : public Shuttle
+{
+public:
+   wxString mParams;
+   CommandAutomationParameters * mpEap;
+   ShuttleParams(){ mParams = wxT("") ;mpEap=NULL;}
+   virtual ~ShuttleParams() {}
+   bool ExchangeWithMaster(const wxString & Name) override;
+   ShuttleParams & Optional( bool & var ){ var = true;return *this;};
+   virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false )=0;
+   virtual void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 )=0;
+   virtual void Define( int & var,      const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 )=0;
+   virtual void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f )=0;
+   virtual void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f )=0;
+   virtual void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl=1.0f )=0;
+   virtual void Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin="", const wxString vmax="", const wxString vscl="" )=0;
+   virtual void DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )=0;
+   virtual void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )=0;
+};
+
+/**************************************************************************//**
+\brief Shuttle that gets parameter values into a string.
+********************************************************************************/
+class ShuttleGetAutomation : public ShuttleParams
+{
+public:
+   void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
+   void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
+   void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
+   void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
+   void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
+   void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
+   void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
+   void DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )override;
+   void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )override;
+};
+
+/**************************************************************************//**
+\brief Shuttle that sets parameters to a value (from a string)
+********************************************************************************/
+class ShuttleSetAutomation : public ShuttleParams
+{
+public:
+   ShuttleSetAutomation(){ bWrite = false; bOK = false;};
+   bool bOK;
+   bool bWrite;
+   void SetForValidating( CommandAutomationParameters * pEap){ mpEap=pEap; bOK=true;bWrite=false;};
+   void SetForWriting(CommandAutomationParameters * pEap){ mpEap=pEap;bOK=true;bWrite=true;};
+   void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
+   void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
+   void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
+   void Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
+   void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
+   void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
+   void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
+   void DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )override;
+   void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )override;
+};
+
+/**************************************************************************//**
+\brief Shuttle that retrieves a JSON format definition of a command's parameters.
+********************************************************************************/
+class ShuttleGetDefinition : public ShuttleParams
+{
+public:
+   wxString Result;
+   void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
+   void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
+   void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
+   void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
+   void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
+   void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
+   void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
+   void DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )override;
+   void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )override;
+};
+
+
+/**************************************************************************//**
+\brief Shuttle that sets parameters to their default values.
+********************************************************************************/
+class ShuttleDefaults : public ShuttleParams
+{
+public:
+   wxString Result;
+   void Define( bool & var,          const wxChar * WXUNUSED(key),  const bool     vdefault, 
+      const bool     WXUNUSED(vmin), const bool     WXUNUSED(vmax), const bool     WXUNUSED(vscl) ) 
+      override { var = vdefault;};
+   void Define( int & var,           const wxChar * WXUNUSED(key),  const int      vdefault, 
+      const int      WXUNUSED(vmin), const int      WXUNUSED(vmax), const int      WXUNUSED(vscl) ) 
+      override { var = vdefault;};
+   void Define( size_t & var,        const wxChar * WXUNUSED(key),  const int      vdefault, 
+      const int      WXUNUSED(vmin), const int      WXUNUSED(vmax), const int      WXUNUSED(vscl) ) 
+      override{ var = vdefault;};
+   void Define( float & var,         const wxChar * WXUNUSED(key),  const float    vdefault, 
+      const float    WXUNUSED(vmin), const float    WXUNUSED(vmax), const float    WXUNUSED(vscl) ) 
+      override { var = vdefault;};
+   void Define( double & var,        const wxChar * WXUNUSED(key),  const float    vdefault, 
+      const float    WXUNUSED(vmin), const float    WXUNUSED(vmax), const float    WXUNUSED(vscl) ) 
+      override { var = vdefault;};
+   void Define( double & var,        const wxChar * WXUNUSED(key),  const double   vdefault, 
+      const double   WXUNUSED(vmin), const double   WXUNUSED(vmax), const double   WXUNUSED(vscl) ) 
+      override { var = vdefault;};
+   void Define( wxString &var,       const wxChar * WXUNUSED(key),  const wxString vdefault, 
+      const wxString WXUNUSED(vmin), const wxString WXUNUSED(vmax), const wxString WXUNUSED(vscl) ) 
+      override { var = vdefault;};
+   void DefineEnum( wxString &var,   const wxChar * WXUNUSED(key),  const wxString vdefault, 
+      wxArrayString  WXUNUSED(strings) )
+      override { var = vdefault;};
+   void DefineEnum( int &var,        const wxChar * WXUNUSED(key),  const int vdefault, 
+      wxArrayString  WXUNUSED(strings) )
+      override { var = vdefault;};
+};
+
+
+
+
+
+
+#define SHUTTLE_PARAM( var, name ) \
+  Define( var, KEY_ ## name, DEF_ ## name, MIN_ ## name, MAX_ ## name, SCL_ ## name )
+
+#define SHUTTLE_ENUM_PARAM( var, name, strings ) \
+  DefineEnum( var, KEY_ ## name, DEF_ ## name, strings )
 
 #endif

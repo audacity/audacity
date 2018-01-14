@@ -31,7 +31,7 @@ CommandType::~CommandType()
 {
 }
 
-const wxString &CommandType::GetName()
+wxString CommandType::GetName()
 {
    if (mName.empty())
       mName = BuildName();

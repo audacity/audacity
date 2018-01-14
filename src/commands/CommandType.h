@@ -19,14 +19,29 @@
 #include "CommandMisc.h"
 #include "CommandSignature.h"
 #include "../MemoryX.h"
+#include "../commands/AudacityCommand.h"
 
-class Command;
-using CommandHolder = std::shared_ptr<Command>;
+class OldStyleCommand;
+
+/**************************************************************//**
+
+\class OldStyleCommand 
+\brief OldStyleCommand is the key class that allows us to carry
+a converted (not textual) command from a non-GUI place to the GUI
+thread.  It contains the command AND the context that will be used 
+for its output.
+
+\class OldStyleCommandPointer
+\brief OldStyleCommandPointer is a shared_ptr to a OldStyleCommandPointer.
+
+*******************************************************************/
+
+using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;
 class CommandOutputTarget;
 class CommandSignature;
 class wxString;
 
-class CommandType /* not final */
+class CommandType : public AudacityCommand
 {
 private:
    wxString mName;
@@ -35,7 +50,7 @@ private:
 public:
    CommandType();
    virtual ~CommandType();
-   const wxString &GetName();
+   wxString GetName() override;
    CommandSignature &GetSignature();
    wxString Describe();
 
@@ -50,7 +65,7 @@ public:
    virtual void BuildSignature(CommandSignature &signature) = 0;
 
    // Create a command instance with the specified output target
-   virtual CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) = 0;
+   virtual OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTarget> &&target) = 0;
 };
 
 #endif /* End of include guard: __COMMANDTYPE__ */

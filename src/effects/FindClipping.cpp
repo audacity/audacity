@@ -36,9 +36,9 @@
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name    Type  Key               Def   Min   Max      Scale
-Param( Start,  int,  wxT("Duty Cycle"), 3,    1,    INT_MAX, 1   );
-Param( Stop,   int,  wxT("Duty Cycle"), 3,    1,    INT_MAX, 1   );
+//     Name    Type  Key                     Def   Min   Max      Scale
+Param( Start,  int,  wxT("Duty Cycle Start"), 3,    1,    INT_MAX, 1   );
+Param( Stop,   int,  wxT("Duty Cycle End"),   3,    1,    INT_MAX, 1   );
 
 EffectFindClipping::EffectFindClipping()
 {
@@ -67,7 +67,7 @@ wxString EffectFindClipping::ManualPage()
    return wxT("Find_Clipping");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectFindClipping::GetType()
 {
@@ -75,8 +75,13 @@ EffectType EffectFindClipping::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectFindClipping::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mStart, Start );
+   S.SHUTTLE_PARAM( mStop, Stop );
+   return true;
+}
 
-bool EffectFindClipping::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectFindClipping::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    parms.Write(KEY_Start, mStart);
    parms.Write(KEY_Stop, mStop);
@@ -84,7 +89,7 @@ bool EffectFindClipping::GetAutomationParameters(EffectAutomationParameters & pa
    return true;
 }
 
-bool EffectFindClipping::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectFindClipping::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    ReadAndVerifyInt(Start);
    ReadAndVerifyInt(Stop);

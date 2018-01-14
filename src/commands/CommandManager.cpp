@@ -75,8 +75,10 @@ CommandManager.  It holds the callback for one command.
 
 *//******************************************************************/
 
+#include "../AudacityHeaders.h"
 #include "../Audacity.h"
 #include "CommandManager.h"
+#include "CommandContext.h"
 
 #include <wx/defs.h>
 #include <wx/eventfilter.h>
@@ -806,9 +808,14 @@ void CommandManager::AddItem(const wxChar *name,
                              int checkmark,
                              const CommandParameter &parameter)
 {
+   wxString cookedParameter;
+   if( parameter == "" )
+      cookedParameter = name;
+   else 
+      cookedParameter = parameter;
    CommandListEntry *entry =
       NewIdentifier(name, label_in, accel, CurrentMenu(), finder, callback,
-                    false, 0, 0, parameter);
+                    false, 0, 0, cookedParameter);
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
@@ -1492,7 +1499,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
          return true;
    }
 
-   CommandContext context{ *proj, evt, entry->index, entry->parameter };
+   const CommandContext context{ *proj, evt, entry->index, entry->parameter };
    auto &handler = entry->finder(*proj);
    (handler.*(entry->callback))(context);
 
@@ -1529,7 +1536,7 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 /// HandleTextualCommand() allows us a limitted version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
-bool CommandManager::HandleTextualCommand(const wxString & Str, CommandFlag flags, CommandMask mask)
+bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandContext & context, CommandFlag flags, CommandMask mask)
 {
    if( Str.IsEmpty() )
       return false;
@@ -1559,9 +1566,9 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, CommandFlag flag
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      if (em.GetEffectIdentifier(plug->GetID()).IsSameAs(Str))
+      if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str))
       {
-         return proj->DoEffect(plug->GetID(), AudacityProject::OnEffectFlags::kConfigured);
+         return proj->DoEffect(plug->GetID(), context, AudacityProject::OnEffectFlags::kConfigured);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }

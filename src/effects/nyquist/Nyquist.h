@@ -87,7 +87,7 @@ public:
    wxString ManualPage() override;
    wxString HelpPage() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    wxString GetFamilyId() override;
@@ -97,8 +97,8 @@ public:
 
    // EffectClientInterface implementation
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool GetAutomationParameters(CommandAutomationParameters & parms) override;
+   bool SetAutomationParameters(CommandAutomationParameters & parms) override;
 
    // Effect implementation
    

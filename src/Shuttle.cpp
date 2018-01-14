@@ -64,6 +64,8 @@ preferences.
 #include <wx/radiobut.h>
 #include <wx/button.h>
 
+#include "../include/audacity/EffectAutomationParameters.h" // for command automation
+
 //#include "Project.h"
 #include "Shuttle.h"
 #include "WrappedType.h"
@@ -323,3 +325,231 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
    }
    return true;
 }
+
+
+bool ShuttleParams::ExchangeWithMaster(const wxString & WXUNUSED(Name))
+{
+   return true;
+}
+
+#pragma warning( push )
+#pragma warning( disable: 4100 ) // unused parameters.
+/*
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+{
+}
+*/
+
+
+void ShuttleGetAutomation::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
+{
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   mpEap->WriteFloat(key, var);
+}
+
+void ShuttleGetAutomation::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   mpEap->WriteFloat(key, var);
+}
+
+void ShuttleGetAutomation::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
+{
+   mpEap->Write(key, var);
+}
+
+
+void ShuttleGetAutomation::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
+{
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )
+{
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+{
+   mpEap->Write(key, strings[var]);
+}
+
+
+void ShuttleSetAutomation::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
+{
+   if( !bOK )
+      return;
+   // Use of temp in this and related functions is to handle the case of 
+   // only committing values if all values pass verification.
+   bool temp =var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   if( !bOK )
+      return;
+   int temp =var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   if( !bOK )
+      return;
+   int temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK )
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   if( !bOK )
+      return;
+   float temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK )
+      var = temp;
+}
+
+
+void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   if( !bOK )
+      return;
+   double temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
+{
+   if( !bOK )
+      return;
+   double temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+
+void ShuttleSetAutomation::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
+{
+   if( !bOK )
+      return;
+   wxString temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault);
+   if( bWrite && bOK )
+      var = temp;
+}
+
+
+void ShuttleSetAutomation::DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )
+{
+   if( !bOK )
+      return;
+   int temp =0;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings);
+   if( bWrite && bOK)
+      var = strings[temp];
+}
+
+void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+{
+   if( !bOK )
+      return;
+   int temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+// JSON definitions.
+// All these MUST end with ",\r\n", so that we can put them in an array (and so we can remove the last "," easily for JSON).
+void ShuttleGetDefinition::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"bool\", default: \"%s\"},\r\n",
+      key , vdefault ? "True" : "False" );
+}
+
+void ShuttleGetDefinition::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"int\", default: \"%i\"},\r\n",
+      key , vdefault  );
+}
+
+void ShuttleGetDefinition::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"size_t\", default: \"%li\"},\r\n",
+      key , vdefault  );
+}
+
+void ShuttleGetDefinition::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"float\", default: \"%f\"},\r\n",
+      key , vdefault  );
+}
+
+void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"float\", default: \"%f\"},\r\n",
+      key , vdefault  );
+}
+
+void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"double\", default: \"%f\"},\r\n",
+      key , vdefault  );
+}
+
+
+void ShuttleGetDefinition::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"string\", default: \"%s\"},\r\n",
+      key , vdefault );
+}
+
+
+void ShuttleGetDefinition::DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"enum\", default: \"%s\",\r\n      enum : [",
+      key , vdefault );
+   for( size_t i=0;i<strings.Count(); i++ )
+      Result += wxString::Format("%s\"%s\"", (i>0) ? ", ":"", strings[i] );
+   Result += "]\r\n   },\r\n";
+}
+
+void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vdefault, wxArrayString strings )
+{
+   Result += wxString::Format( "   { key: \"%s\", type: \"enum\", default: \"%i\",\r\n      enum : [",
+      key , vdefault );
+   for( size_t i=0;i<strings.Count(); i++ )
+      Result += wxString::Format("%s\"%s\"", (i>0) ? ", ":"",strings[i] );
+   Result += "]\r\n   },\r\n";
+}
+
+#pragma warning( pop )
+
+
+
+
+

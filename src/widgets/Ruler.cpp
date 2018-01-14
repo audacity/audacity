@@ -97,6 +97,7 @@ array of Ruler::Label.
 #include "../prefs/TracksPrefs.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
 #include "../widgets/Grabber.h"
+#include "../commands/CommandContext.h"
 
 //#define SCRUB_ABOVE
 

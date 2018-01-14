@@ -86,7 +86,7 @@ enum kTypes
    kNumTypes
 };
 
-static const wxChar *kTypeStrings[] =
+static const wxChar *kTypeStrings[kNumTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    XO("Butterworth"),
@@ -103,7 +103,7 @@ enum kSubTypes
    kNumSubTypes
 };
 
-static const wxChar *kSubTypeStrings[] =
+static const wxChar *kSubTypeStrings[kNumSubTypes] =
 {
    XO("Lowpass"),
    XO("Highpass")
@@ -195,7 +195,7 @@ wxString EffectScienFilter::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectScienFilter::GetType()
 {
@@ -240,8 +240,19 @@ size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t
 
    return blockLen;
 }
+bool EffectScienFilter::DefineParams( ShuttleParams & S ){
+   wxArrayString filters( kNumTypes, kTypeStrings );
+   wxArrayString subtypes( kNumSubTypes, kSubTypeStrings );
+   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, filters );
+   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, subtypes );
+   S.SHUTTLE_PARAM( mOrder, Order );
+   S.SHUTTLE_PARAM( mCutoff, Cutoff );
+   S.SHUTTLE_PARAM( mRipple, Passband );
+   S.SHUTTLE_PARAM( mStopbandRipple, Stopband );
+   return true;
+}
 
-bool EffectScienFilter::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectScienFilter::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    parms.Write(KEY_Type, kTypeStrings[mFilterType]);
    parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype]);
@@ -253,7 +264,7 @@ bool EffectScienFilter::GetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
-bool EffectScienFilter::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectScienFilter::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    ReadAndVerifyEnum(Type, wxArrayString(kNumTypes, kTypeStrings));
    ReadAndVerifyEnum(Subtype, wxArrayString(kNumSubTypes, kSubTypeStrings));

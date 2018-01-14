@@ -41,7 +41,7 @@ wxString EffectStereoToMono::GetDescription()
    return _("Converts stereo tracks to mono");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectStereoToMono::GetType()
 {

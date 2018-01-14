@@ -44,6 +44,11 @@
 
 #include "audacity/Types.h"
 
+/**************************************************************************//**
+
+\brief IdentInterface provides name / vendor / version functions to identify
+plugins.  It is what makes a class a plug-in.
+********************************************************************************/
 class AUDACITY_DLL_API IdentInterface /* not final */
 {
 public:

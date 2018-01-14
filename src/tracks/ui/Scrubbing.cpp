@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
-#include "../../commands/CommandFunctors.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
@@ -29,6 +28,8 @@ Paul Licameli split from TrackPanel.cpp
 #endif
 
 #include "../../widgets/Ruler.h"
+#include "../../commands/CommandFunctors.h"
+#include "../../commands/CommandContext.h"
 
 #include <algorithm>
 

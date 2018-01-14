@@ -6,6 +6,7 @@
 
    Dominic Mazzoni
    Dan Horgan
+   James Crook
 
 **********************************************************************/
 
@@ -13,7 +14,7 @@
 #define __SCREENSHOTCOMMAND__
 
 #include "Command.h"
-#include "CommandType.h"
+#include "../commands/AudacityCommand.h"
 
 #include <wx/colour.h>
 class wxWindow;
@@ -22,17 +23,39 @@ class wxCommandEvent;
 class wxRect;
 class ToolManager;
 class CommandOutputTarget;
+class TrackPanel;
+class AdornedRulerPanel;
+class AudacityProject;
+class CommandContext;
 
-class ScreenshotCommandType final : public CommandType
+#define SCREENSHOT_PLUGIN_SYMBOL XO("Screenshot")
+
+class ScreenshotCommandType : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Takes screenshots.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Help_Menu:_Tools#screenshot_tools");};
+
+private:
+   wxString mWhat;
+   wxString mBack;
+   wxString mPath;
+   friend class ScreenshotCommand;
+   friend class ScreenFrame;
 };
 
-class ScreenshotCommand final : public CommandImplementation
+class ScreenshotCommand final : public ScreenshotCommandType
 {
+public:
+   bool Apply(const CommandContext & context) override;
+   void GetDerivedParams();
+
 private:
    // May need to ignore the screenshot dialog
    wxWindow *mIgnore;
@@ -41,19 +64,32 @@ private:
    wxColour mBackColor;
    wxString mDirToWriteTo;
 
+   wxString mFilePath;
+   wxString mFileName;
+   wxString mCaptureMode;
+
    wxString MakeFileName(const wxString &path, const wxString &basename);
 
    wxRect GetBackgroundRect();
 
-   void CaptureToolbar(ToolManager *man, int type, const wxString &name);
-   void CaptureDock(wxWindow *win, const wxString &fileName);
-   void CaptureMenus(wxMenuBar*pBar, const wxString &fileName);
-   void CaptureEffects( AudacityProject * pProject, const wxString &fileName );
-   void CapturePreferences( AudacityProject * pProject, const wxString &fileName );
-   void Capture(const wxString &basename,
-         wxWindow *window,
-         int x, int y, int width, int height,
+   bool CaptureToolbar(const CommandContext & Context, ToolManager *man, int type, const wxString &name);
+   bool CaptureDock(const CommandContext & Context, wxWindow *win, const wxString &fileName);
+   void CaptureMenus(const CommandContext & Context, wxMenuBar*pBar, const wxString &fileName);
+   void CaptureEffects(const CommandContext & Context, AudacityProject * pProject, const wxString &fileName );
+   void CapturePreferences(const CommandContext & Context, AudacityProject * pProject, const wxString &fileName );
+   bool Capture(
+      const CommandContext & Context,
+      const wxString &basename,
+         wxWindow *window, wxRect rect, 
          bool bg = false);
+   wxRect GetWindowRect(wxTopLevelWindow *w);
+   wxRect GetFullWindowRect(wxTopLevelWindow *w);
+   wxRect GetScreenRect();
+   wxRect GetPanelRect(TrackPanel * panel);
+   wxRect GetRulerRect(AdornedRulerPanel *ruler);
+   wxRect GetTracksRect(TrackPanel * panel);
+   wxRect GetTrackRect( AudacityProject * pProj, TrackPanel * panel,int n);
+   wxString WindowFileName(AudacityProject * proj, wxTopLevelWindow *w);
 
 public:
    static ScreenshotCommand * mpShooter;
@@ -61,16 +97,8 @@ public:
    static void SetIdleHandler( void (*pHandler)(wxIdleEvent& event) ){mIdleHandler=pHandler;};
    static bool MayCapture( wxDialog * pDlg );
 
-   void CaptureWindowOnIdle( wxWindow * pWin );
+   void CaptureWindowOnIdle( const CommandContext & context, wxWindow * pWin );
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);
-   ScreenshotCommand(CommandType &type,
-                     std::unique_ptr<CommandOutputTarget> &&output,
-                     wxWindow *ignore = NULL)
-      : CommandImplementation(type, std::move(output)),
-        mIgnore(ignore),
-        mBackground(false)
-   { }
-   bool Apply(CommandExecutionContext context);
 };
 
 #endif /* End of include guard: __SCREENSHOTCOMMAND__ */

@@ -45,6 +45,7 @@ greater use in future.
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
+#include "../Shuttle.h"
 #include "../WaveTrack.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../widgets/AButton.h"
@@ -56,6 +57,8 @@ greater use in future.
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"
+#include "../commands/AudacityCommand.h"
+#include "../commands/CommandContext.h"
 
 #if defined(__WXMAC__)
 #include <Cocoa/Cocoa.h>
@@ -141,7 +144,7 @@ Effect::~Effect()
    }
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType Effect::GetType()
 {
@@ -586,7 +589,7 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool Effect::GetAutomationParameters(EffectAutomationParameters & parms)
+bool Effect::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    if (mClient)
    {
@@ -596,7 +599,7 @@ bool Effect::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool Effect::SetAutomationParameters(EffectAutomationParameters & parms)
+bool Effect::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    if (mClient)
    {
@@ -785,10 +788,12 @@ void Effect::SetDuration(double seconds)
 
 bool Effect::Apply()
 {
+   CommandContext context( *GetActiveProject() );
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   return GetActiveProject()->DoEffect(GetID(), AudacityProject::OnEffectFlags::kConfigured);
+   return GetActiveProject()->DoEffect(GetID(), context,
+      AudacityProject::OnEffectFlags::kConfigured);
 }
 
 void Effect::Preview()
@@ -1024,14 +1029,20 @@ bool Effect::Startup()
 
 bool Effect::GetAutomationParameters(wxString & parms)
 {
-   EffectAutomationParameters eap;
+   CommandAutomationParameters eap;
 
    if (mUIDialog && !TransferDataFromWindow())
    {
       return false;
    }
 
-   if (!GetAutomationParameters(eap))
+   ShuttleGetAutomation S;
+   S.mpEap = &eap;
+   if( DefineParams( S ) ){
+      ;// got eap value using DefineParams.
+   }
+   // Won't be needed in future
+   else if (!GetAutomationParameters(eap))
    {
       return false;
    }
@@ -1066,8 +1077,20 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    }
    else
    {
-      EffectAutomationParameters eap(parms);
-      success = SetAutomationParameters(eap);
+      CommandAutomationParameters eap(parms);
+      ShuttleSetAutomation S;
+      S.SetForValidating( &eap );
+      // DefineParams returns false if not defined for this effect.
+      if( !DefineParams( S ) )
+         // the old method...
+         success = SetAutomationParameters(eap);
+      else if( !S.bOK )
+         success = false;
+      else{
+         success = true;
+         S.SetForWriting( &eap );
+         DefineParams( S );
+      }
    }
 
    if (!success)
@@ -2863,6 +2886,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
    mParent = parent;
    mEffect = effect;
+   mCommand = NULL;
    mClient = client;
 
    mProject = GetActiveProject();
@@ -2877,6 +2901,42 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mPlayPos = 0.0;
    mClient->SetHostUI(this);
 }
+
+EffectUIHost::EffectUIHost(wxWindow *parent,
+                           AudacityCommand *command,
+                           EffectUIClientInterface *client)
+:  wxDialogWrapper(parent, wxID_ANY, "Some Command"/*command->GetTranslatedName()*/,
+            wxDefaultPosition, wxDefaultSize,
+            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
+{
+#if defined(__WXMAC__)
+   // Make sure the effect window actually floats above the main window
+   [[((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+#endif
+
+   //SetName( command->GetTranslatedName() );
+   SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+
+   mParent = parent;
+   mEffect = NULL;
+   mCommand = command;
+   mClient = client;
+
+   mProject = GetActiveProject();
+
+   mInitialized = false;
+   mSupportsRealtime = false;
+
+   mDisableTransport = false;
+
+   mEnabled = true;
+
+   mPlayPos = 0.0;
+   mClient->SetHostUI(this);
+}
+
+
+
 
 EffectUIHost::~EffectUIHost()
 {
@@ -2898,12 +2958,20 @@ EffectUIHost::~EffectUIHost()
 
 bool EffectUIHost::TransferDataToWindow()
 {
-   return mEffect->TransferDataToWindow();
+   if( mEffect )
+      return mEffect->TransferDataToWindow();
+   if( mCommand )
+      return mCommand->TransferDataToWindow();
+   return false;
 }
 
 bool EffectUIHost::TransferDataFromWindow()
 {
-   return mEffect->TransferDataFromWindow();
+   if( mEffect) 
+      return mEffect->TransferDataFromWindow();
+   if( mCommand) 
+      return mCommand->TransferDataFromWindow();
+   return false;
 }
 
 // ============================================================================
@@ -2974,9 +3042,10 @@ bool EffectUIHost::Initialize()
       {
          auto bs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-         mSupportsRealtime = mEffect->SupportsRealtime();
+         mSupportsRealtime = mEffect && mEffect->SupportsRealtime();
          mIsGUI = mClient->IsGraphicalUI();
-         mIsBatch = mEffect->IsBatchProcessing();
+         mIsBatch = (mEffect && mEffect->IsBatchProcessing()) ||
+            (mCommand && mCommand->IsBatchProcessing());
 
          wxBitmapButton *bb;
 
@@ -3018,7 +3087,7 @@ bool EffectUIHost::Initialize()
                   mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
                   bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
                }
-               else if (mEffect->GetType() != EffectTypeAnalyze)
+               else if (mEffect && mEffect->GetType() != EffectTypeAnalyze)
                {
                   wxASSERT(bar); // To justify safenew
                   mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
@@ -3105,7 +3174,7 @@ bool EffectUIHost::Initialize()
       }
 
       long buttons;
-      if ( mEffect->ManualPage().IsEmpty() && mEffect->HelpPage().IsEmpty()) {
+      if ( mEffect && mEffect->ManualPage().IsEmpty() && mEffect->HelpPage().IsEmpty()) {
          buttons = eApplyButton + eCloseButton;
          this->SetAcceleratorTable(wxNullAcceleratorTable);
       }
@@ -3121,7 +3190,7 @@ bool EffectUIHost::Initialize()
          this->SetAcceleratorTable(accel);
       }
 
-      if (mEffect->mUIDebug) {
+      if (mEffect && mEffect->mUIDebug) {
          buttons += eDebugButton;
       }
 
@@ -3215,7 +3284,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
 
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
-   if (!mIsBatch && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
+   if (!mIsBatch && mEffect && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed = mProject->ReportIfActionNotAllowed(
@@ -3232,13 +3301,19 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
-   // This will take care of calling TransferDataFromWindow()
-   if (!mEffect->SaveUserPreset(mEffect->GetCurrentSettingsGroup()))
+   // This will take care of calling TransferDataFromWindow() for an effect.
+   if (mEffect &&  !mEffect->SaveUserPreset(mEffect->GetCurrentSettingsGroup()))
    {
       return;
    }
+   // This will take care of calling TransferDataFromWindow() for a command.
+   if (mCommand ){
+      wxString params;
+      mCommand->GetAutomationParameters( params );
+   }
 
-   mEffect->mUIResultID = evt.GetId();
+   if( mEffect )
+      mEffect->mUIResultID = evt.GetId();
 
    if (IsModal())
    {
@@ -3256,13 +3331,17 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    mApplyBtn->Disable();
    auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
 
-   mEffect->Apply();
+   if( mEffect )
+      mEffect->Apply();
+   if( mCommand )
+      mCommand->Apply();
 }
 
 void EffectUIHost::DoCancel()
 {
    if (!mDismissed) {
-      mEffect->mUIResultID = wxID_CANCEL;
+      if( mEffect )
+         mEffect->mUIResultID = wxID_CANCEL;
 
       if (IsModal())
          EndModal(false);
@@ -3281,12 +3360,13 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect->GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
+   if (mEffect && mEffect->GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
       HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
    }
-   else {
+   else if( mEffect )
+   {
       // otherwise use the NEW ShowHelp
       HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
    }
@@ -3295,12 +3375,15 @@ void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 void EffectUIHost::OnDebug(wxCommandEvent & evt)
 {
    OnApply(evt);
-   mEffect->mUIResultID = evt.GetId();
+   if( mEffect )
+      mEffect->mUIResultID = evt.GetId();
 }
 
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
    wxMenu menu;
+   if( !mEffect )
+      return;
 
    LoadUserPresets();
 
@@ -3752,7 +3835,7 @@ void EffectUIHost::UpdateControls()
    }
 
    mApplyBtn->Enable(!mCapturing);
-   if (mEffect->GetType() != EffectTypeAnalyze)
+   if (mEffect && mEffect->GetType() != EffectTypeAnalyze)
    {
       (!mIsGUI ? mPlayToggleBtn : mPlayBtn)->Enable(!(mCapturing || mDisableTransport));
    }
@@ -3816,7 +3899,8 @@ void EffectUIHost::LoadUserPresets()
 {
    mUserPresets.Clear();
 
-   mEffect->GetPrivateConfigSubgroups(mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
+   if( mEffect )
+      mEffect->GetPrivateConfigSubgroups(mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
 
    mUserPresets.Sort();
 

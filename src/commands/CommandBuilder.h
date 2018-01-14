@@ -19,8 +19,8 @@
 #include "../MemoryX.h"
 #include <wx/string.h>
 
-class Command;
-using CommandHolder = std::shared_ptr<Command>;
+class OldStyleCommand;
+using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;
 class wxString;
 
 // CommandBuilder has the task of validating and interpreting a command string.
@@ -30,11 +30,11 @@ class CommandBuilder
 {
    private:
       bool mValid;
-      CommandHolder mCommand;
+      OldStyleCommandPointer mCommand;
       wxString mError;
 
       void Failure(const wxString &msg = wxEmptyString);
-      void Success(const CommandHolder &cmd);
+      void Success(const OldStyleCommandPointer &cmd);
       void BuildCommand(const wxString &cmdName, const wxString &cmdParams);
       void BuildCommand(const wxString &cmdString);
    public:
@@ -43,7 +43,7 @@ class CommandBuilder
                      const wxString &cmdParams);
       ~CommandBuilder();
       bool WasValid();
-      CommandHolder GetCommand();
+      OldStyleCommandPointer GetCommand();
       const wxString &GetErrorMessage();
 };
 #endif /* End of include guard: __COMMANDBUILDER__ */

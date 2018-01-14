@@ -49,13 +49,13 @@ wxEvent *AppCommandEvent::Clone() const
 }
 
 /// Store a pointer to a command object
-void AppCommandEvent::SetCommand(const CommandHolder &cmd)
+void AppCommandEvent::SetCommand(const OldStyleCommandPointer &cmd)
 {
    wxASSERT(!mCommand);
    mCommand = cmd;
 }
 
-CommandHolder AppCommandEvent::GetCommand()
+OldStyleCommandPointer AppCommandEvent::GetCommand()
 {
    return mCommand;
 }
