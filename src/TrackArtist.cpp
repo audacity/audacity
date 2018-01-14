@@ -2786,16 +2786,19 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    // eOffset is for the line between E and F; there's another line
    // between B and C, hence the offset of 2 for two line thicknesses
    int eOffset = data.GetPitchHeight(5) + 2;
-   while (obottom > rect.y + data.GetNoteMargin() + 3) {
+   // Top and bottom including margins
+   auto top = rect.y + data.GetNoteMargin();
+   auto bottom = rect.y + rect.height - data.GetNoteMargin();
+   while (obottom > top) {
       // draw a black line separating octaves if this octave botton is visible
-      if (obottom < rect.y + rect.height - data.GetNoteMargin()) {
+      if (obottom < bottom) {
          dc.SetPen(*wxBLACK_PEN);
          // obottom - 1 because obottom is at the bottom of the line
          AColor::Line(dc, left, obottom - 1, right, obottom - 1);
       }
       dc.SetPen(bp);
       // draw a black-key stripe colored line separating E and F if visible
-      if (obottom - eOffset > rect.y && obottom - eOffset < rect.y + rect.height) {
+      if (obottom - eOffset > top && obottom - eOffset < bottom) {
          AColor::Line(dc, left, obottom - eOffset,
                           right, obottom - eOffset);
       }
@@ -2804,12 +2807,21 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
       wxRect br;
       br.x = left;
       br.width = right - left;
-      br.height = data.GetPitchHeight(1);
       for (int black = 0; black < 5; black++) {
          br.y = obottom - data.GetBlackPos(black);
-         if (br.y > rect.y && br.y + br.height < rect.y + rect.height) {
-            dc.DrawRectangle(br); // draw each black key background stripe
+         br.height = data.GetPitchHeight(1);
+         if (br.y + br.height < top || br.y > bottom) {
+            continue; // Cannot fit at all
          }
+         // Clip to avoid going into the margins
+         if (br.y < top) {
+            br.height -= top - br.y;
+            br.y = top;
+         }
+         if (br.y + br.height > bottom) {
+            br.height = br.y - bottom;
+         }
+         dc.DrawRectangle(br); // draw each black key background stripe
       }
       obottom = data.GetOctaveBottom(++octave);
    }
