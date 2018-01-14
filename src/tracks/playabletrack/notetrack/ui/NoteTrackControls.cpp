@@ -116,7 +116,7 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
    pTrack->ShiftNoteRange((bDown) ? -12 : 12);
 
    AudacityProject *const project = ::GetActiveProject();
-   project->ModifyState(true);
+   project->ModifyState(false);
    mpData->result = RefreshCode::RefreshAll;
 }
 

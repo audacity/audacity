@@ -222,6 +222,7 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
       break;
 
    }
+   GetActiveProject()->ModifyState(false);
 }
 
 
@@ -308,7 +309,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    }
 
    mZoomEnd = mZoomStart = 0;
-   pProject->ModifyState(true);
+   pProject->ModifyState(false);
 
    return RefreshAll;
 }

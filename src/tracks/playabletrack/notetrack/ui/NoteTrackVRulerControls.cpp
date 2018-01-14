@@ -81,7 +81,7 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
       return RefreshNone;
    }
 
-   pProject->ModifyState(true);
+   pProject->ModifyState(false);
 
    return RefreshCell | UpdateVRuler;
 }
