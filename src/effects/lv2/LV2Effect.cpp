@@ -363,7 +363,7 @@ wxString LV2Effect::GetDescription()
 }
 
 // ============================================================================
-// EffectIdentInterface Implementation
+// EffectDefinitionInterface Implementation
 // ============================================================================
 
 EffectType LV2Effect::GetType()
@@ -948,7 +948,7 @@ bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool LV2Effect::GetAutomationParameters(EffectAutomationParameters & parms)
+bool LV2Effect::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
@@ -964,7 +964,7 @@ bool LV2Effect::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool LV2Effect::SetAutomationParameters(EffectAutomationParameters & parms)
+bool LV2Effect::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    // First pass validates values
    for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
@@ -1256,7 +1256,7 @@ bool LV2Effect::LoadParameters(const wxString & group)
       return false;
    }
 
-   EffectAutomationParameters eap;
+   CommandAutomationParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -1267,7 +1267,7 @@ bool LV2Effect::LoadParameters(const wxString & group)
 
 bool LV2Effect::SaveParameters(const wxString & group)
 {
-   EffectAutomationParameters eap;
+   CommandAutomationParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;

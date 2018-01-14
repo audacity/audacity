@@ -16,6 +16,7 @@
 #include "../Audacity.h"
 #include "MessageCommand.h"
 #include "CommandType.h"
+#include "CommandContext.h"
 
 wxString MessageCommandType::BuildName()
 {
@@ -28,14 +29,14 @@ void MessageCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("MessageString"), wxT("Connected"), std::move(stringValidator));
 }
 
-CommandHolder MessageCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
+OldStyleCommandPointer MessageCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return std::make_shared<MessageCommand>(*this, std::move(target));
+   return std::make_shared<MessageCommand>(*this);
 }
 
-bool MessageCommand::Apply(CommandExecutionContext WXUNUSED(context))
+bool MessageCommand::Apply(const CommandContext & context)
 {
    wxString message = GetString(wxT("MessageString"));
-   Status(message);
+   context.Status(message);
    return true;
 }

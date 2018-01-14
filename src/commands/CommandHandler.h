@@ -20,15 +20,15 @@
 class AudacityApp;
 class AudacityProject;
 class AppCommandEvent;
-class CommandExecutionContext;
+class CommandContext;
 
 class CommandHandler
 {
    private:
-      std::unique_ptr<CommandExecutionContext> mCurrentContext;
+      std::unique_ptr<CommandContext> mCurrentContext;
 
    public:
-      CommandHandler(AudacityApp &app);
+      CommandHandler();
       ~CommandHandler();
 
       // This should only be used during initialization

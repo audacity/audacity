@@ -121,7 +121,7 @@ wxString EffectChangeSpeed::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectChangeSpeed::GetType()
 {
@@ -129,15 +129,19 @@ EffectType EffectChangeSpeed::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectChangeSpeed::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
+   return true;
+}
 
-bool EffectChangeSpeed::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeSpeed::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    parms.Write(KEY_Percentage, m_PercentChange);
 
    return true;
 }
 
-bool EffectChangeSpeed::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeSpeed::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
 

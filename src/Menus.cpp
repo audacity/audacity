@@ -139,6 +139,8 @@ simplifies construction of menu items.
 
 #include "widgets/Meter.h"
 #include "widgets/ErrorDialog.h"
+#include "./commands/AudacityCommand.h"
+#include "commands/CommandContext.h"
 
 enum {
    kAlignStartZero = 0,
@@ -163,7 +165,7 @@ enum {
    POST_TIMER_RECORD_SHUTDOWN
 };
 
-#include "commands/CommandFunctors.h"
+#include "commands/CommandContext.h"
 #include "commands/ScreenshotCommand.h"
 //
 // Effects menu arrays
@@ -1132,7 +1134,7 @@ void AudacityProject::CreateMenusAndCommands()
       wxString buildMenuLabel;
       if (!mLastEffect.IsEmpty()) {
          buildMenuLabel.Printf(_("Repeat %s"),
-            EffectManager::Get().GetEffectName(mLastEffect));
+            EffectManager::Get().GetCommandName(mLastEffect));
       }
       else
          buildMenuLabel = _("Repeat Last Effect");
@@ -1245,7 +1247,7 @@ void AudacityProject::CreateMenusAndCommands()
                   gAudioIO->mDetectUpstreamDropouts);
 #endif
 
-      c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
+      c->AddItem(wxT("FancyScreenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
 
 // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
 // as they used to in 1.3.x
@@ -1582,6 +1584,33 @@ void AudacityProject::CreateMenusAndCommands()
                  AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
       c->EndSubMenu();
 
+      // Effects Manager also (now) manages Generic commands.
+      // plug-in manager, as if an effect.  
+      c->BeginSubMenu(_("&Automation"));
+
+      // Note that the PLUGIN_SYMBOL must have a space between words, 
+      // whereas the short-form used here must not.
+      // (If you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
+      // you would have to use "Compareaudio" here.)
+      c->AddItem(wxT("Demo"), _("Just a Demo!"), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Screenshot"), _("Screenshot (Vanilla)"), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("SetTrackInfo"), _("Set Track Info"), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("CompareAudio"), _("Compare Audio"), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("SelectTime"), _("Select Time"), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("SelectTracks"), _("Select Tracks"), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Select"), _("Select"), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+
+
+      c->EndSubMenu();
+
+
       // Accel key is not bindable.
       c->AddItem(wxT("FullScreenOnOff"), _("&Full screen (on/off)"), FN(OnFullScreen),
 #ifdef __WXMAC__
@@ -1598,6 +1627,9 @@ void AudacityProject::CreateMenusAndCommands()
          FN(OnMacMinimizeAll), wxT("Ctrl+Alt+M"),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
+      
+      
+
       c->EndMenu();
 
 
@@ -1896,12 +1928,14 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
          c->BeginSubMenu(name);
          while (i < namesCnt && names[i].IsSameAs(name))
          {
-            wxString item = PluginManager::Get().GetPlugin(plugs[i])->GetPath();
-            c->AddItem(item,
-                       item,
-                       FN(OnEffect),
-                       flags[i],
-                       flags[i], plugs[i]);
+            const PluginDescriptor *plug = PluginManager::Get().GetPlugin(plugs[i]);
+            wxString item = plug->GetPath();
+            if( plug->GetPluginType() == PluginTypeEffect )
+               c->AddItem(item,
+                          item,
+                          FN(OnEffect),
+                          flags[i],
+                          flags[i], plugs[i]);
 
             i++;
          }
@@ -1910,11 +1944,13 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
       }
       else
       {
-         c->AddItem(names[i],
-                    names[i],
-                    FN(OnEffect),
-                    flags[i],
-                    flags[i], plugs[i]);
+         const PluginDescriptor *plug = PluginManager::Get().GetPlugin(plugs[i]);
+         if( plug->GetPluginType() == PluginTypeEffect )
+            c->AddItem(names[i],
+                       names[i],
+                       FN(OnEffect),
+                       flags[i],
+                       flags[i], plugs[i]);
       }
 
       if (max > 0)
@@ -4320,6 +4356,48 @@ void AudacityProject::OnZeroCrossing(const CommandContext &WXUNUSED(context) )
    mTrackPanel->Refresh(false);
 }
 
+
+/// DoAudacityCommand() takes a PluginID and executes the assocated effect.
+///
+/// At the moment flags are used only to indicate whether to prompt for parameters,
+bool AudacityProject::DoAudacityCommand(const PluginID & ID, const CommandContext & context, int flags)
+{
+   const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
+   if (!plug)
+      return false;
+
+   if (flags & OnEffectFlags::kConfigured)
+   {
+      OnStop(*this);
+//    SelectAllIfNone();
+   }
+
+   EffectManager & em = EffectManager::Get();
+   bool success = em.DoAudacityCommand(ID, 
+      context,
+      this, 
+      (flags & OnEffectFlags::kConfigured) == 0);
+
+   if (!success)
+      return false;
+
+/*
+   if (em.GetSkipStateFlag())
+      flags = flags | OnEffectFlags::kSkipState;
+
+   if (!(flags & OnEffectFlags::kSkipState))
+   {
+      wxString shortDesc = em.GetCommandName(ID);
+      wxString longDesc = em.GetCommandDescription(ID);
+      PushState(longDesc, shortDesc);
+   }
+*/
+   RedrawProject();
+   return true;
+}
+
+
+
 //
 // Effect Menus
 //
@@ -4328,7 +4406,7 @@ void AudacityProject::OnZeroCrossing(const CommandContext &WXUNUSED(context) )
 ///
 /// At the moment flags are used only to indicate whether to prompt for parameters,
 /// whether to save the state to history and whether to allow 'Repeat Last Effect'.
-bool AudacityProject::DoEffect(const PluginID & ID, int flags)
+bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUSED(context), int flags)
 {
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
@@ -4389,7 +4467,7 @@ bool AudacityProject::DoEffect(const PluginID & ID, int flags)
          newTrack->SetSelected(true);
       }
    }
-
+      
    EffectManager & em = EffectManager::Get();
 
    success = em.DoEffect(ID, this, mRate,
@@ -4405,8 +4483,8 @@ bool AudacityProject::DoEffect(const PluginID & ID, int flags)
 
    if (!(flags & OnEffectFlags::kSkipState))
    {
-      wxString shortDesc = em.GetEffectName(ID);
-      wxString longDesc = em.GetEffectDescription(ID);
+      wxString shortDesc = em.GetCommandName(ID);
+      wxString longDesc = em.GetCommandDescription(ID);
       PushState(longDesc, shortDesc);
    }
 
@@ -4415,7 +4493,7 @@ bool AudacityProject::DoEffect(const PluginID & ID, int flags)
       // Only remember a successful effect, don't remember insert,
       // or analyze effects.
       if (type == EffectTypeProcess) {
-         wxString shortDesc = em.GetEffectName(ID);
+         wxString shortDesc = em.GetCommandName(ID);
          mLastEffect = ID;
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
@@ -4457,14 +4535,14 @@ bool AudacityProject::DoEffect(const PluginID & ID, int flags)
 
 void AudacityProject::OnEffect(const CommandContext &context)
 {
-   DoEffect(context.parameter, 0);
+   DoEffect(context.parameter, context, 0);
 }
 
 void AudacityProject::OnRepeatLastEffect(const CommandContext &context)
 {
    if (!mLastEffect.IsEmpty())
    {
-      DoEffect(mLastEffect, OnEffectFlags::kConfigured);
+      DoEffect(mLastEffect, context, OnEffectFlags::kConfigured);
    }
 }
 
@@ -4513,7 +4591,16 @@ void AudacityProject::OnManageAnalyzers(const CommandContext &WXUNUSED(context) 
 void AudacityProject::OnStereoToMono(const CommandContext &context)
 {
    DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
-            OnEffectFlags::kConfigured);
+      context,
+      OnEffectFlags::kConfigured);
+}
+
+void AudacityProject::OnAudacityCommand(const CommandContext & ctx)
+{
+   wxLogDebug( "Command was: %s", ctx.parameter);
+   DoAudacityCommand(EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
+      ctx,
+      OnEffectFlags::kNone);  // Not configured, so prompt user.
 }
 
 //

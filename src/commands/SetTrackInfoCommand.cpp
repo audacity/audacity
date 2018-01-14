@@ -5,6 +5,7 @@
    License: wxwidgets
 
    Dan Horgan
+   James Crook
 
 ******************************************************************//**
 
@@ -12,7 +13,7 @@
 \brief Definitions for SetTrackInfoCommand and SetTrackInfoCommandType classes
 
 \class SetTrackInfoCommand
-\brief Command that sets track information (currently name only)
+\brief Command that sets track information , name, mute/sol etc.
 
 *//*******************************************************************/
 
@@ -22,80 +23,90 @@
 #include "../Track.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../ShuttleGui.h"
+#include "CommandContext.h"
 
-wxString SetTrackInfoCommandType::BuildName()
+SetTrackInfoCommand::SetTrackInfoCommand()
 {
-   return wxT("SetTrackInfo");
+   mTrackIndex = 0;
+   mTrackName = "unnamed";
+   mPan = 0.0f;
+   mGain = 1.0f;
+   bSelected = false;
+   bFocused = false;
+   bSolo = false;
+   bMute = false;
 }
 
-void SetTrackInfoCommandType::BuildSignature(CommandSignature &signature)
+bool SetTrackInfoCommand::DefineParams( ShuttleParams & S ){ 
+   S.Define(   mTrackIndex,                        wxT("TrackIndex"), 0, 0, 100 );
+   S.Optional( bHasTrackName ).Define( mTrackName, wxT("Name"),       wxT("Unnamed") );
+   S.Optional( bHasPan       ).Define( mPan,       wxT("Pan"),        0.0, -1.0, 1.0);
+   S.Optional( bHasGain      ).Define( mGain,      wxT("Gain"),       1.0,  0.0, 10.0);
+   S.Optional( bHasSelected  ).Define( bSelected,  wxT("Selected"),   false );
+   S.Optional( bHasFocused   ).Define( bFocused,   wxT("Focuseed"),   false );
+   S.Optional( bHasSolo      ).Define( bSolo,      wxT("Solo"),       false );
+   S.Optional( bHasMute      ).Define( bMute,      wxT("Mute"),       false );
+   return true;
+};
+
+void SetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto trackIndexValidator = make_movable<IntValidator>();
-   signature.AddParameter(wxT("TrackIndex"), 0, std::move(trackIndexValidator));
-   auto nameValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("Name"), wxT("Unnamed"), std::move(nameValidator));
-   auto panValidator = make_movable<DoubleValidator>();
-   signature.AddParameter(wxT("Pan"), wxT("1.0"), std::move(panValidator));
-   auto gainValidator = make_movable<DoubleValidator>();
-   signature.AddParameter(wxT("Gain"), wxT("1.0"), std::move(gainValidator));
-   auto selectedValidator = make_movable<BoolValidator>();
-   signature.AddParameter(wxT("Selected"), wxT("True"), std::move(selectedValidator));
-   auto focusedValidator = make_movable<BoolValidator>();
-   signature.AddParameter(wxT("Focused"), wxT("True"), std::move(focusedValidator));
-   auto soloValidator = make_movable<BoolValidator>();
-   signature.AddParameter(wxT("Solo"), wxT("True"), std::move(soloValidator));
-   auto muteValidator = make_movable<BoolValidator>();
-   signature.AddParameter(wxT("Mute"), wxT("True"), std::move(muteValidator));
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieNumericTextBox( _("Track Index"), mTrackIndex );
+      S.Optional( bHasTrackName ).TieTextBox(        _("Name"),        mTrackName );
+      S.Optional( bHasPan       ).TieSlider(         _("Pan"),         mPan,  1.0, -1.0);
+      S.Optional( bHasGain      ).TieSlider(         _("Gain"),        mGain, 10.0, 0.0);
+      S.Optional( bHasSelected  ).TieCheckBox(       _("Selected"),    bSelected );
+      S.Optional( bHasFocused   ).TieCheckBox(       _("Focused"),     bFocused);
+      S.Optional( bHasSolo      ).TieCheckBox(       _("Solo"),        bSolo);
+      S.Optional( bHasMute      ).TieCheckBox(       _("Mute"),        bMute);
+   }
+   S.EndMultiColumn();
 }
 
-CommandHolder SetTrackInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
-{
-   return std::make_shared<SetTrackInfoCommand>(*this, std::move(target));
-}
-
-bool SetTrackInfoCommand::Apply(CommandExecutionContext context)
+bool SetTrackInfoCommand::Apply(const CommandContext & context)
 {
    //wxString mode = GetString(wxT("Type"));
-
-   long trackIndex = 0;
-   if( HasParam("TrackIndex") )
-      trackIndex = GetLong(wxT("TrackIndex"));
 
    // (Note: track selection ought to be somewhere else)
    long i = 0;
    TrackListIterator iter(context.GetProject()->GetTracks());
    Track *t = iter.First();
-   while (t && i != trackIndex)
+   while (t && i != mTrackIndex)
    {
       t = iter.Next();
       ++i;
    }
-   if (i != trackIndex || !t)
+   if (i != mTrackIndex || !t)
    {
-      Error(wxT("TrackIndex was invalid."));
+      context.Error(wxT("TrackIndex was invalid."));
       return false;
    }
 
    auto wt = dynamic_cast<WaveTrack *>(t);
    auto pt = dynamic_cast<PlayableTrack *>(t);
 
-   if( HasParam( "Name" ) )
-      t->SetName(GetString(wxT("Name")));
-   if( wt && HasParam( "Pan" ) )
-      wt->SetPan(GetDouble(wxT("Pan")));
-   if( wt && HasParam( "Gain" ) )
-      wt->SetGain(GetDouble(wxT("Gain")));
-   if( HasParam( "Selected" ) )
-      t->SetSelected(GetBool(wxT("Selected")));
-   if(HasParam("Focused"))
+   if( bHasTrackName )
+      t->SetName(mTrackName);
+   if( wt && bHasPan )
+      wt->SetPan(mPan);
+   if( wt && bHasGain )
+      wt->SetGain(mGain);
+   if( bHasSelected )
+      t->SetSelected(bSelected);
+   if( bHasFocused )
    {
       TrackPanel *panel = context.GetProject()->GetTrackPanel();
       panel->SetFocusedTrack( t );
    }
-   if( pt && HasParam( "Solo" ) )
-      pt->SetSolo(GetBool(wxT("Solo")));
-   if( pt && HasParam( "Mute" ) )
-      pt->SetMute(GetBool(wxT("Mute")));
+   if( pt && bHasSolo )
+      pt->SetSolo(bSolo);
+   if( pt && bHasMute )
+      pt->SetMute(bMute);
 
    return true;
 }

@@ -38,6 +38,7 @@
 #include "Project.h"
 #include "Internat.h"
 #include "commands/CommandManager.h"
+#include "commands/CommandContext.h"
 #include "effects/Effect.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
@@ -166,6 +167,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
          S.SetBorder(20);
          S.AddFixedText(wxString::Format(_("Applying '%s' to current project"),
                                          name));
+         mResults = S.AddTextWindow( wxT("") );
       }
       S.EndStatic();
    }

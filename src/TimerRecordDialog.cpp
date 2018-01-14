@@ -40,6 +40,7 @@
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
+#include "commands/CommandContext.h"
 
 #define TIMER_ID 7000
 

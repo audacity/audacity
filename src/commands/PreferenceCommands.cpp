@@ -5,6 +5,7 @@
    File License: wxWidgets
 
    Dan Horgan
+   James Crook
 
 ******************************************************************//**
 
@@ -17,66 +18,61 @@ SetPreferenceCommand classes
 #include "../Audacity.h"
 #include "PreferenceCommands.h"
 #include "../Prefs.h"
+#include "../ShuttleGui.h"
+#include "../commands/CommandContext.h"
 
-// GetPreference
-
-wxString GetPreferenceCommandType::BuildName()
-{
-   return wxT("GetPreference");
-}
-
-void GetPreferenceCommandType::BuildSignature(CommandSignature &signature)
-{
-   auto prefNameValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("PrefName"), wxT(""), std::move(prefNameValidator));
-}
-
-CommandHolder GetPreferenceCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
-{
-   return std::make_shared<GetPreferenceCommand>(*this, std::move(target));
-}
-
-bool GetPreferenceCommand::Apply(CommandExecutionContext WXUNUSED(context))
-{
-   wxString prefName = GetString(wxT("PrefName"));
-   wxString prefValue;
-   if (!gPrefs->Read(prefName, &prefValue))
-   {
-      return false;
-   }
-   Status(prefValue);
+bool GetPreferenceCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mName, wxT("Name"),   wxT("") );
    return true;
 }
 
-GetPreferenceCommand::~GetPreferenceCommand()
-{ }
-
-// SetPreference
-
-wxString SetPreferenceCommandType::BuildName()
+void GetPreferenceCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   return wxT("SetPreference");
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("Name:"),mName);
+   }
+   S.EndMultiColumn();
 }
 
-void SetPreferenceCommandType::BuildSignature(CommandSignature &signature)
+
+bool GetPreferenceCommand::Apply(const CommandContext & context)
 {
-   auto prefNameValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("PrefName"), wxT(""), std::move(prefNameValidator));
-   auto prefValueValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("PrefValue"), wxT(""), std::move(prefValueValidator));
+   wxString prefValue;
+   if (!gPrefs->Read(mName, &prefValue))
+      return false;
+
+   context.Status(prefValue);
+   return true;
 }
 
-CommandHolder SetPreferenceCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
-{
-   return std::make_shared<SetPreferenceCommand>(*this, std::move(target));
+bool SetPreferenceCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mName,    wxT("Name"),    wxT("") );
+   S.Define( mValue,   wxT("Value"),   wxT("") );
+   S.Define( mbReload, wxT("Reload"),  false );
+   return true;
 }
 
-bool SetPreferenceCommand::Apply(CommandExecutionContext WXUNUSED(context))
+void SetPreferenceCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxString prefName = GetString(wxT("PrefName"));
-   wxString prefValue = GetString(wxT("PrefValue"));
-   return (gPrefs->Write(prefName, prefValue) && gPrefs->Flush());
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("Name:"),mName);
+      S.TieTextBox(_("Value:"),mValue);
+      S.TieCheckBox(_("Reload:"),mbReload);
+   }
+   S.EndMultiColumn();
 }
 
-SetPreferenceCommand::~SetPreferenceCommand()
-{ }
+bool SetPreferenceCommand::Apply(const CommandContext & WXUNUSED(context))
+{
+   bool bOK = gPrefs->Write(mName, mValue) && gPrefs->Flush();
+   if( bOK && mbReload )
+      bOK = bOK; // Not yet implemented.
+   return bOK;
+}
+

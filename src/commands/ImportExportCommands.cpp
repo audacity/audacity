@@ -18,106 +18,79 @@
 #include "../Project.h"
 #include "../Track.h"
 #include "../export/Export.h"
+#include "../ShuttleGui.h"
+#include "CommandContext.h"
 
-// Import
-
-wxString ImportCommandType::BuildName()
-{
-   return wxT("Import");
+bool ImportCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mFileName, wxT("Filename"),  "" );
+   return true;
 }
 
-void ImportCommandType::BuildSignature(CommandSignature &signature)
+void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto filenameValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("Filename"), wxT(""), std::move(filenameValidator));
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("File Name:"),mFileName);
+   }
+   S.EndMultiColumn();
 }
 
-CommandHolder ImportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
-{
-   return std::make_shared<ImportCommand>(*this, std::move(target));
+bool ImportCommand::Apply(const CommandContext & context){
+   return context.GetProject()->Import(mFileName);
 }
 
-bool ImportCommand::Apply(CommandExecutionContext context)
-{
-   wxString filename = GetString(wxT("Filename"));
-   return context.GetProject()->Import(filename);
+
+
+bool ExportCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mFileName, wxT("Filename"),  "exported.wav" );
+   S.Define( mnChannels, wxT("NumChannels"),  1 );
+   return true;
 }
 
-ImportCommand::~ImportCommand()
-{ }
-
-// Export
-
-wxString ExportCommandType::BuildName()
+void ExportCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   return wxT("Export");
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("File Name:"),mFileName);
+      S.TieTextBox(_("Number of Channels:"),mnChannels);
+   }
+   S.EndMultiColumn();
 }
 
-void ExportCommandType::BuildSignature(CommandSignature &signature)
+bool ExportCommand::Apply(const CommandContext & context)
 {
-   auto modeValidator = make_movable<OptionValidator>();
-   modeValidator->AddOption(wxT("All"));
-   modeValidator->AddOption(wxT("Selection"));
-   signature.AddParameter(wxT("Mode"), wxT("All"), std::move(modeValidator));
-
-   auto filenameValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("Filename"), wxT("exported.wav"), std::move(filenameValidator));
-
-   auto channelsValidator = make_movable<IntValidator>();
-   signature.AddParameter(wxT("Channels"), 1, std::move(channelsValidator));
-}
-
-CommandHolder ExportCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
-{
-   return std::make_shared<ExportCommand>(*this, std::move(target));
-}
-
-bool ExportCommand::Apply(CommandExecutionContext context)
-{
-   wxString mode = GetString(wxT("Mode"));
-   wxString filename = GetString(wxT("Filename"));
-   long numChannels = GetLong(wxT("Channels"));
-
-   bool selection = mode.IsSameAs(wxT("Selection"));
-
    double t0, t1;
-   if (selection)
-   {
-      t0 = context.GetProject()->mViewInfo.selectedRegion.t0();
-      t1 = context.GetProject()->mViewInfo.selectedRegion.t1();
-   }
-   else
-   {
-      t0 = 0.0;
-      t1 = context.GetProject()->GetTracks()->GetEndTime();
-   }
+   t0 = context.GetProject()->mViewInfo.selectedRegion.t0();
+   t1 = context.GetProject()->mViewInfo.selectedRegion.t1();
 
    // Find the extension and check it's valid
-   int splitAt = filename.Find(wxUniChar('.'), true);
+   int splitAt = mFileName.Find(wxUniChar('.'), true);
    if (splitAt < 0)
    {
-      Error(wxT("Export filename must have an extension!"));
+      context.Error(wxT("Export filename must have an extension!"));
       return false;
    }
-   wxString extension = filename.Mid(splitAt+1).MakeUpper();
+   wxString extension = mFileName.Mid(splitAt+1).MakeUpper();
 
    Exporter exporter;
 
    bool exportSuccess = exporter.Process(context.GetProject(),
-                                         std::max(0L, numChannels),
-                                         extension, filename,
-                                         selection, t0, t1);
+                                         std::max(0, mnChannels),
+                                         extension, mFileName,
+                                         true, t0, t1);
 
    if (exportSuccess)
    {
-      Status(wxString::Format(wxT("Exported to %s format: %s"),
-                              extension, filename));
+      context.Status(wxString::Format(wxT("Exported to %s format: %s"),
+                              extension, mFileName));
       return true;
    }
 
-   Error(wxString::Format(wxT("Could not export to %s format!"), extension));
+   context.Error(wxString::Format(wxT("Could not export to %s format!"), extension));
    return false;
 }
 
-ExportCommand::~ExportCommand()
-{ }

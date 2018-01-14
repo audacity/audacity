@@ -20,46 +20,41 @@
 #include "Command.h"
 #include "CommandType.h"
 
-// Open
+#define OPEN_PROJECT_PLUGIN_SYMBOL XO("Open Project")
 
-class OpenProjectCommandType final : public CommandType
+class OpenProjectCommand : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return OPEN_PROJECT_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Open a project.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
+
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Open");};
+public:
+   wxString mFileName;
+   bool mbAddToHistory;
 };
 
-class OpenProjectCommand final : public CommandImplementation
+#define SAVE_PROJECT_PLUGIN_SYMBOL XO("Save Project")
+
+class SaveProjectCommand : public AudacityCommand
 {
 public:
-   OpenProjectCommand(CommandType &type,
-                    std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target))
-   { }
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return SAVE_PROJECT_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Saves a project.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
 
-   virtual ~OpenProjectCommand();
-   bool Apply(CommandExecutionContext context) override;
-};
-
-// Save
-
-class SaveProjectCommandType final : public CommandType
-{
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Save");};
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
-};
-
-class SaveProjectCommand final : public CommandImplementation
-{
-public:
-   SaveProjectCommand(CommandType &type,
-                    std::unique_ptr<CommandOutputTarget> &&target)
-      : CommandImplementation(type, std::move(target))
-   { }
-
-   virtual ~SaveProjectCommand();
-   bool Apply(CommandExecutionContext context) override;
+   wxString mFileName;
+   bool mbAddToHistory;
+   bool mbCompress;
 };

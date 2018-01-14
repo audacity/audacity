@@ -48,7 +48,7 @@ wxString EffectSilence::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectSilence::GetType()
 {

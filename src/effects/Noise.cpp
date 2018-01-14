@@ -83,7 +83,7 @@ wxString EffectNoise::ManualPage()
    return wxT("Noise");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectNoise::GetType()
 {
@@ -161,8 +161,14 @@ size_t EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t
 
    return size;
 }
+bool EffectNoise::DefineParams( ShuttleParams & S ){
+   wxArrayString types( kNumTypes, kTypeStrings );
+   S.SHUTTLE_ENUM_PARAM( mType, Type, types );
+   S.SHUTTLE_PARAM( mAmp, Amp );
+   return true;
+}
 
-bool EffectNoise::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectNoise::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    parms.Write(KEY_Type, kTypeStrings[mType]);
    parms.Write(KEY_Amp, mAmp);
@@ -170,7 +176,7 @@ bool EffectNoise::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectNoise::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectNoise::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    ReadAndVerifyEnum(Type, wxArrayString(kNumTypes, kTypeStrings));
    ReadAndVerifyDouble(Amp);

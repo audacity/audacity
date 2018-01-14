@@ -53,7 +53,7 @@ public:
    wxString GetVersion() override;
    wxString GetDescription() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    wxString GetFamily() override;
@@ -98,8 +98,8 @@ public:
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool GetAutomationParameters(CommandAutomationParameters & parms) override;
+   bool SetAutomationParameters(CommandAutomationParameters & parms) override;
 
    bool LoadUserPreset(const wxString & name) override;
    bool SaveUserPreset(const wxString & name) override;

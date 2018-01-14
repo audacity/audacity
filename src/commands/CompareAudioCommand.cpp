@@ -5,6 +5,7 @@
    License: wxwidgets
 
    Dan Horgan
+   James Crook
 
 ******************************************************************//**
 
@@ -18,36 +19,58 @@ threshold of difference in two selected tracks
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "CompareAudioCommand.h"
+#include "../MemoryX.h"
 #include "../Project.h"
-#include "Command.h"
 #include "../WaveTrack.h"
+#include "CompareAudioCommand.h"
+#include "Command.h"
 
-wxString CompareAudioCommandType::BuildName()
-{
-   return wxT("CompareAudio");
+
+#include <float.h>
+#include <wx/intl.h>
+
+#include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
+#include "../widgets/valnum.h"
+#include "../SampleFormat.h"
+#include "CommandContext.h"
+
+extern void RegisterCompareAudio( Registrar & R){
+   R.AddCommand( make_movable<CompareAudioCommand>() );
+// std::unique_ptr<CommandOutputTarget> &&target
+//   return std::make_shared<CompareAudioCommand>(*this, std::move(target));
+
 }
 
-void CompareAudioCommandType::BuildSignature(CommandSignature &signature)
-{
-   auto thresholdValidator = make_movable<DoubleValidator>();
-   signature.AddParameter(wxT("Threshold"), 0.0, std::move(thresholdValidator));
+bool CompareAudioCommand::DefineParams( ShuttleParams & S ){
+   S.Define( errorThreshold,  wxT("Threshold"),   0.0f,  0.0f,    0.01f,    1.0f );
+   return true;
 }
 
-CommandHolder CompareAudioCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
+bool CompareAudioCommand::Apply(){
+   return true;
+}
+
+void CompareAudioCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   return std::make_shared<CompareAudioCommand>(*this, std::move(target));
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("Threshold:"),errorThreshold);
+   }
+   S.EndMultiColumn();
 }
 
 // Update member variables with project selection data (and validate)
-bool CompareAudioCommand::GetSelection(AudacityProject &proj)
+bool CompareAudioCommand::GetSelection(const CommandContext &context, AudacityProject &proj)
 {
    // Get the selected time interval
    mT0 = proj.mViewInfo.selectedRegion.t0();
    mT1 = proj.mViewInfo.selectedRegion.t1();
    if (mT0 >= mT1)
    {
-      Error(wxT("There is no selection!"));
+      context.Error(wxT("There is no selection!"));
       return false;
    }
 
@@ -57,18 +80,18 @@ bool CompareAudioCommand::GetSelection(AudacityProject &proj)
    mTrack0 = (WaveTrack*)(iter.First());
    if (mTrack0 == NULL)
    {
-      Error(wxT("No tracks selected! Select two tracks to compare."));
+      context.Error(wxT("No tracks selected! Select two tracks to compare."));
       return false;
    }
    mTrack1 = (WaveTrack*)(iter.Next());
    if (mTrack1 == NULL)
    {
-      Error(wxT("Only one track selected! Select two tracks to compare."));
+      context.Error(wxT("Only one track selected! Select two tracks to compare."));
       return false;
    }
    if (iter.Next() != NULL)
    {
-      Status(wxT("More than two tracks selected - only the first two will be compared."));
+      context.Status(wxT("More than two tracks selected - only the first two will be compared."));
    }
    return true;
 }
@@ -83,9 +106,9 @@ inline int min(int a, int b)
    return (a < b) ? a : b;
 }
 
-bool CompareAudioCommand::Apply(CommandExecutionContext context)
+bool CompareAudioCommand::Apply(const CommandContext & context)
 {
-   if (!GetSelection(*context.GetProject()))
+   if (!GetSelection(context, *context.GetProject()))
    {
       return false;
    }
@@ -93,11 +116,9 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
    wxString msg = wxT("Comparing tracks '");
    msg += mTrack0->GetName() + wxT("' and '")
       + mTrack1->GetName() + wxT("'.");
-   Status(msg);
+   context.Status(msg);
 
    long errorCount = 0;
-   double errorThreshold = GetDouble(wxT("Threshold"));
-
    // Initialize buffers for track data to be analyzed
    auto buffSize = std::min(mTrack0->GetMaxBlockSize(), mTrack1->GetMaxBlockSize());
 
@@ -127,7 +148,7 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
       }
 
       position += block;
-      Progress(
+      context.Progress(
          (position - s0).as_double() /
          length.as_double()
       );
@@ -135,8 +156,8 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
 
    // Output the results
    double errorSeconds = mTrack0->LongSamplesToTime(errorCount);
-   Status(wxString::Format(wxT("%li"), errorCount));
-   Status(wxString::Format(wxT("%.4f"), errorSeconds));
-   Status(wxString::Format(wxT("Finished comparison: %li samples (%.3f seconds) exceeded the error threshold of %f."), errorCount, errorSeconds, errorThreshold));
+   context.Status(wxString::Format(wxT("%li"), errorCount));
+   context.Status(wxString::Format(wxT("%.4f"), errorSeconds));
+   context.Status(wxString::Format(wxT("Finished comparison: %li samples (%.3f seconds) exceeded the error threshold of %f."), errorCount, errorSeconds, errorThreshold));
    return true;
 }
