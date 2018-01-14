@@ -54,4 +54,4 @@
 
 #endif
 
-std::unique_ptr<wxCursor> MakeCursor(int WXUNUSED(CursorId), const char * pXpm[36], int HotX, int HotY);
+std::unique_ptr<wxCursor> MakeCursor(int WXUNUSED(CursorId), const char * const pXpm[36], int HotX, int HotY);
