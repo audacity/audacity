@@ -476,17 +476,12 @@ Track *TrackListIterator::RemoveCurrent()
 
 bool TrackListIterator::operator == (const TrackListIterator &other) const
 {
-   if (cur == other.cur)
-      // sufficient but not necessary
-      return true;
-
-   // Also return true whenever each contains either an end iterator or is
-   // in default-constructed state.
+   // Order these steps so as not to use operator == on default-constructed
+   // std::list::iterator -- that crashes in the MSVC 2013 standard library
    bool isEnd = !l || l->isNull( cur );
-   if (isEnd)
-      return !other.l || other.l->isNull( other.cur );
+   bool otherIsEnd = !other.l || other.l->isNull( other.cur );
 
-   return false;
+   return (isEnd == otherIsEnd && (isEnd || cur == other.cur));
 }
 
 //
