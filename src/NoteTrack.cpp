@@ -123,8 +123,8 @@ NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
 #ifdef EXPERIMENTAL_MIDI_OUT
    mVelocity = 0;
 #endif
-   mBottomNote = 24;
-   mPitchHeight = 5.0f;
+   mBottomNote = MinPitch;
+   mTopNote = MaxPitch;
 
    mVisibleChannels = ALL_CHANNELS;
 }
@@ -186,7 +186,7 @@ Track::Holder NoteTrack::Duplicate() const
    }
    // copy some other fields here
    duplicate->SetBottomNote(mBottomNote);
-   duplicate->mPitchHeight = mPitchHeight;
+   duplicate->SetTopNote(mTopNote);
    duplicate->mVisibleChannels = mVisibleChannels;
    duplicate->SetOffset(GetOffset());
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -210,24 +210,6 @@ double NoteTrack::GetEndTime() const
 {
    return GetStartTime() + GetSeq().get_real_dur();
 }
-
-void NoteTrack::DoSetHeight(int h)
-{
-   auto oldHeight = GetHeight();
-   NoteTrackDisplayData oldData = NoteTrackDisplayData(this, wxRect(0, 0, 1, oldHeight));
-   auto oldMargin = oldData.GetNoteMargin();
-   PlayableTrack::DoSetHeight(h);
-   NoteTrackDisplayData newData = NoteTrackDisplayData(this, wxRect(0, 0, 1, h));
-   auto margin = newData.GetNoteMargin();
-   Zoom(
-      wxRect{ 0, 0, 1, h }, // only height matters
-      h - margin - 1, // preserve bottom note
-      (float)(h - 2 * margin) /
-           std::max(1, oldHeight - 2 * oldMargin),
-      false
-   );
-}
-
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
                                       const TimeWarper &warper,
@@ -962,6 +944,56 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("notetrack"));
 }
 
+void NoteTrack::SetBottomNote(int note)
+{
+   if (note < MinPitch)
+      note = MinPitch;
+   else if (note > 96)
+      note = 96;
+
+   wxCHECK(note <= mTopNote, );
+
+   mBottomNote = note;
+}
+
+void NoteTrack::SetTopNote(int note)
+{
+   if (note > MaxPitch)
+      note = MaxPitch;
+
+   wxCHECK(note >= mBottomNote, );
+
+   mTopNote = note;
+}
+
+void NoteTrack::SetNoteRange(int note1, int note2)
+{
+   // Bounds check
+   if (note1 > MaxPitch)
+      note1 = MaxPitch;
+   else if (note1 < MinPitch)
+      note1 = MinPitch;
+   if (note2 > MaxPitch)
+      note2 = MaxPitch;
+   else if (note2 < MinPitch)
+      note2 = MinPitch;
+   // Swap to ensure ordering
+   if (note2 < note1) { auto tmp = note1; note1 = note2; note2 = tmp; }
+
+   mBottomNote = note1;
+   mTopNote = note2;
+}
+
+void NoteTrack::ShiftNoteRange(int offset)
+{
+   // Ensure everything stays in bounds
+   if (mBottomNote + offset < MinPitch || mTopNote + offset > MaxPitch)
+       return;
+
+   mBottomNote += offset;
+   mTopNote += offset;
+}
+
 #if 0
 void NoteTrack::StartVScroll()
 {
@@ -972,29 +1004,27 @@ void NoteTrack::VScroll(int start, int end)
 {
     int ph = GetPitchHeight();
     int delta = ((end - start) + ph / 2) / ph;
-    SetBottomNote(mStartBottomNote + delta);
+    ShiftNoteRange(delta);
 }
 #endif
 
 void NoteTrack::Zoom(const wxRect &rect, int y, float multiplier, bool center)
 {
-   // Construct track rectangle to map pitch to screen coordinates
-   // Only y and height are needed:
-   wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
-   NoteTrackDisplayData data = NoteTrackDisplayData(this, trackRect);
+   NoteTrackDisplayData data = NoteTrackDisplayData(this, rect);
    int clickedPitch = data.YToIPitch(y);
-   // zoom by changing the pitch height
-   SetPitchHeight(rect.height, mPitchHeight * multiplier);
-   NoteTrackDisplayData newData = NoteTrackDisplayData(this, trackRect); // update because mPitchHeight changed
+   int extent = mTopNote - mBottomNote + 1;
+   int newExtent = (int) (extent / multiplier);
+   float position;
    if (center) {
-      int newCenterPitch = newData.YToIPitch(rect.GetY() + rect.GetHeight() / 2);
       // center the pitch that the user clicked on
-      SetBottomNote(mBottomNote + (clickedPitch - newCenterPitch));
+      position = .5;
    } else {
-      int newClickedPitch = newData.YToIPitch(y);
       // align to keep the pitch that the user clicked on in the same place
-      SetBottomNote(mBottomNote + (clickedPitch - newClickedPitch));
+      position = extent / (clickedPitch - mBottomNote);
    }
+   int newBottomNote = clickedPitch - (newExtent * position);
+   int newTopNote = clickedPitch + (newExtent * (1 - position));
+   SetNoteRange(newBottomNote, newTopNote);
 }
 
 
@@ -1002,27 +1032,53 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
 {
    wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
    NoteTrackDisplayData data = NoteTrackDisplayData(this, trackRect);
-   int topPitch = data.YToIPitch(start);
-   int botPitch = data.YToIPitch(end);
-   if (topPitch < botPitch) { // swap
-      int temp = topPitch; topPitch = botPitch; botPitch = temp;
-   }
-   if (topPitch == botPitch) { // can't divide by zero, do something else
+   int pitch1 = data.YToIPitch(start);
+   int pitch2 = data.YToIPitch(end);
+   if (pitch1 == pitch2) {
+      // Just zoom in instead of zooming to show only one note
       Zoom(rect, start, 1, true);
       return;
    }
-   auto trialPitchHeight = (float)trackRect.height / (topPitch - botPitch);
-   Zoom(rect, (start + end) / 2, trialPitchHeight / mPitchHeight, true);
+   // It's fine for this to be in either order
+   SetNoteRange(pitch1, pitch2);
 }
 
 NoteTrackDisplayData::NoteTrackDisplayData(const NoteTrack* track, const wxRect &r)
 {
-   mPitchHeight = track->mPitchHeight;
-   mMargin = std::min(r.height / 4, (GetPitchHeight(1) + 1) / 2);
+   auto span = track->GetTopNote() - track->GetBottomNote() + 1; // + 1 to make sure it includes both
+
+   mMargin = std::min((int) (r.height / (float)(span)) / 2, r.height / 4);
+
+   // Count the number of dividers between B/C and E/F
+   int numC = 0, numF = 0;
+   auto botOctave = track->GetBottomNote() / 12, botNote = track->GetBottomNote() % 12;
+   auto topOctave = track->GetTopNote() / 12, topNote = track->GetTopNote() % 12;
+   if (topOctave == botOctave)
+   {
+      if (botNote == 0) numC = 1;
+      if (topNote <= 5) numF = 1;
+   }
+   else
+   {
+      numC = topOctave - botOctave;
+      numF = topOctave - botOctave - 1;
+      if (botNote == 0) numC++;
+      if (botNote <= 5) numF++;
+      if (topOctave <= 5) numF++;
+   }
+   // Effective space, excluding the margins and the lines between some notes
+   auto effectiveHeight = r.height - (2 * (mMargin + 1)) - numC - numF;
+   // Guarenteed that both the bottom and top notes will be visible
+   // (assuming that the clamping below does not happen)
+   mPitchHeight = effectiveHeight / ((float) span);
+
+   if (mPitchHeight < MinPitchHeight)
+      mPitchHeight = MinPitchHeight;
+   if (mPitchHeight > MaxPitchHeight)
+      mPitchHeight = MaxPitchHeight;
 
    mBottom = r.y + r.height - GetNoteMargin() - 1 - GetPitchHeight(1) +
-            (track->GetBottomNote() / 12) * GetOctaveHeight() +
-               GetNotePos(track->GetBottomNote() % 12);
+            botOctave * GetOctaveHeight() + GetNotePos(botNote);
 }
 
 int NoteTrackDisplayData::IPitchToY(int p) const
@@ -1035,7 +1091,9 @@ int NoteTrackDisplayData::YToIPitch(int y) const
    y -= octave * GetOctaveHeight();
    // result is approximate because C and G are one pixel taller than
    // mPitchHeight.
-   return (y / GetPitchHeight(1)) + octave * 12;
+   // Poke 1-13-18: However in practice this seems not to be an issue,
+   // as long as we use mPitchHeight and not the rounded version
+   return (y / mPitchHeight) + octave * 12;
 }
 
 const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );

@@ -195,8 +195,6 @@ private:
    }
 
    virtual void InitMenu(Menu *pMenu, void *pUserData) override;
-
-   void OnWaveformScaleType(wxCommandEvent &evt);
 };
 
 NoteTrackVRulerMenuTable &NoteTrackVRulerMenuTable::Instance()
@@ -213,8 +211,7 @@ void NoteTrackVRulerMenuTable::InitMenu(Menu *WXUNUSED(pMenu), void *pUserData)
 void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
    switch( iZoomCode ){
    case kZoomReset:
-      mpData->pTrack->SetBottomNote(0);
-      mpData->pTrack->SetPitchHeight(mpData->rect.height, 1);
+      mpData->pTrack->ZoomMaxExtent();
       break;
    case kZoomIn:
       mpData->pTrack->ZoomIn(mpData->rect, mpData->yy);
@@ -299,8 +296,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    else if (event.ShiftDown() || event.RightUp()) {
       if (event.ShiftDown() && event.RightUp()) {
          // Zoom out completely
-         pTrack->SetBottomNote(0);
-         pTrack->SetPitchHeight(evt.rect.height, 1);
+         pTrack->ZoomMaxExtent();
       } else {
          // Zoom out
          pTrack->ZoomOut(evt.rect, mZoomEnd);
