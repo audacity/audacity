@@ -2164,7 +2164,8 @@ void TrackInfo::MidiControlsDrawFunction
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
    auto target = dynamic_cast<NoteTrackButtonHandle*>( context.target.get() );
-   auto channel = target ? target->GetChannel() : -1;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   auto channel = hit ? target->GetChannel() : -1;
    auto &dc = context.dc;
    wxRect midiRect = rect;
    GetMidiControlsHorizontalBounds(rect, midiRect);
