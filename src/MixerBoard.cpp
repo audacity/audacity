@@ -1404,7 +1404,7 @@ int MixerBoard::FindMixerTrackCluster(const PlayableTrack* pTrack,
 
 void MixerBoard::LoadMusicalInstruments()
 {
-   const struct Data { const char **bitmap; wxString name; } table[] = {
+   const struct Data { const char * const *bitmap; wxString name; } table[] = {
       {acoustic_guitar_gtr_xpm, wxT("acoustic_guitar_gtr")},
       {acoustic_piano_pno_xpm, wxT("acoustic_piano_pno")},
       {back_vocal_bg_vox_xpm, wxT("back_vocal_bg_vox")},

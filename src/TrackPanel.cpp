@@ -271,7 +271,7 @@ END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
 /// TODO:  Move this function to some other source file for reuse elsewhere.
-std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  int HotX, int HotY )
+std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const pXpm[36],  int HotX, int HotY )
 {
 #ifdef CURSORS_SIZE32
    const int HotAdjust =0;

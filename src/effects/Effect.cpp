@@ -3784,7 +3784,7 @@ void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
    return;
 }
 
-wxBitmap EffectUIHost::CreateBitmap(const char *xpm[], bool up, bool pusher)
+wxBitmap EffectUIHost::CreateBitmap(const char * const xpm[], bool up, bool pusher)
 {
    wxMemoryDC dc;
    wxBitmap pic(xpm);

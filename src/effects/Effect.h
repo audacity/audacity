@@ -638,7 +638,7 @@ private:
    void OnDefaults(wxCommandEvent & evt);
 
    void UpdateControls();
-   wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
+   wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
    void LoadUserPresets();
 
    void InitializeRealtime();
