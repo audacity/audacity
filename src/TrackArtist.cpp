@@ -590,34 +590,44 @@ void TrackArtist::DrawVRuler
       int octave = 0;
       int obottom = data.GetOctaveBottom(octave);
       int marg = data.GetNoteMargin();
+      int top = rect.y + marg;
+      int bottom = rect.y + rect.height - marg;
 
       while (obottom >= rect.y) {
          dc->SetPen(*wxBLACK_PEN);
          for (int white = 0; white < 7; white++) {
             int pos = data.GetWhitePos(white);
-            if (obottom - pos > rect.y + marg + 1 &&
-                // don't draw too close to margin line -- it's annoying
-                obottom - pos < rect.y + rect.height - marg - 3)
-               AColor::Line(*dc, rect.x, obottom - pos,
+            if (obottom - pos > top && obottom - pos < bottom)
+               AColor::Line(*dc, rect.x + 1, obottom - pos,
                             rect.x + rect.width, obottom - pos);
          }
          wxRect br = rect;
-         br.height = data.GetPitchHeight(1);
          br.x++;
          br.width = 17;
          for (int black = 0; black < 5; black++) {
             br.y = obottom - data.GetBlackPos(black);
-            if (br.y > rect.y + marg - 2 && br.y + br.height < rect.y + rect.height - marg) {
-               dc->SetPen(hilitePen);
-               dc->DrawRectangle(br);
-               dc->SetPen(*wxBLACK_PEN);
-               AColor::Line(*dc,
-                            br.x + 1, br.y + br.height - 1,
-                            br.x + br.width - 1, br.y + br.height - 1);
-               AColor::Line(*dc,
-                            br.x + br.width - 1, br.y + 1,
-                            br.x + br.width - 1, br.y + br.height - 1);
+            br.height = data.GetPitchHeight(1);
+            if (br.y + br.height <= top || br.y >= bottom) {
+               continue; // Cannot fit at all
             }
+            // Clip to avoid going into the margins
+            if (br.y < top) {
+               br.height -= top - br.y;
+               br.y = top;
+            }
+            if (br.y + br.height > bottom) {
+               br.height = br.y - bottom;
+            }
+            if (br.height <= 1) continue; // Also cannot fit
+            dc->SetPen(hilitePen);
+            dc->DrawRectangle(br);
+            dc->SetPen(*wxBLACK_PEN);
+            AColor::Line(*dc,
+                           br.x + 1, br.y + br.height - 1,
+                           br.x + br.width - 1, br.y + br.height - 1);
+            AColor::Line(*dc,
+                           br.x + br.width - 1, br.y + 1,
+                           br.x + br.width - 1, br.y + br.height - 1);
          }
 
          if (octave >= 1 && octave <= 10) {
