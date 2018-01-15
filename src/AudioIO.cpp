@@ -1867,6 +1867,7 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
 {
    mLostSamples = 0;
    mLostCaptureIntervals.clear();
+   mDetectDropouts = gPrefs->Read(wxT("/AudioIO/DetectDropouts"), true);
    auto cleanup = finally ( [this] { ClearRecordingException(); } );
 
    if( IsBusy() )
@@ -5171,7 +5172,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // the other thread, executing FillBuffers, isn't consuming fast
          // enough from mCaptureBuffers; maybe it's CPU-bound, or maybe the
          // storage device it writes is too slow
-         if (inputError || len < framesPerBuffer) {
+         if (gAudioIO->mDetectDropouts &&
+             (inputError || len < framesPerBuffer) ) {
             // Assume that any good partial buffer should be written leftmost
             // and zeroes will be padded after; label the zeroes.
             auto start = gAudioIO->mTime;

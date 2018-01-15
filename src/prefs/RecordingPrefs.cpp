@@ -166,6 +166,9 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
        S.TieCheckBox(_("Always record on a new track"),
                     wxT("/GUI/PreferNewTrackRecord"),
                     false);
+       S.TieCheckBox(_("Detect dropouts"),
+                     wxT("/AudioIO/DetectDropouts"),
+                     true);
    }
    S.EndStatic();
 

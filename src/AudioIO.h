@@ -798,6 +798,7 @@ private:
       { if (mRecordingException) wxAtomicDec( mRecordingException ); }
 
    std::vector< std::pair<double, double> > mLostCaptureIntervals;
+   bool mDetectDropouts{ true };
 
 public:
    const std::vector< std::pair<double, double> > &LostCaptureIntervals()
