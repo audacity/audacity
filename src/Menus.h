@@ -509,6 +509,7 @@ void OnBenchmark(const CommandContext &);
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 void OnCrashReport(const CommandContext &);
 #endif
+void OnSimulateRecordingErrors(const CommandContext &);
 void OnScreenshot(const CommandContext &);
 void OnAudioDeviceInfo(const CommandContext &);
 #ifdef EXPERIMENTAL_MIDI_OUT

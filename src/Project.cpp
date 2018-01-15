@@ -5371,6 +5371,27 @@ void AudacityProject::OnAudioIOStopRecording()
    // Only push state if we were capturing and not monitoring
    if (GetAudioIOToken() > 0)
    {
+      auto &intervals = gAudioIO->LostCaptureIntervals();
+      if (intervals.size()) {
+         // Make a track with labels for recording errors
+         auto uTrack = GetTrackFactory()->NewLabelTrack();
+         auto pTrack = uTrack.get();
+         GetTracks()->Add( std::move(uTrack) );
+         pTrack->SetName(_("Errors"));
+         long counter = 1;
+         for (auto &interval : intervals)
+            pTrack->AddLabel(
+               SelectedRegion{ interval.first, interval.second },
+               wxString::Format(wxT("%ld"), counter++),
+               -2 );
+         AudacityMessageBox(_(
+"Recorded audio was lost at the labelled locations.\n\
+This may have happened because you are saving directly to a \
+slow external storage device, or because other applications are \
+competing with Audacity for processor time."
+         ));
+      }
+
       // Add to history
       PushState(_("Recorded Audio"), _("Record"));
 

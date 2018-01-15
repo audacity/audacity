@@ -18,6 +18,7 @@
 #include "Experimental.h"
 
 #include "MemoryX.h"
+#include <utility>
 #include <vector>
 #include <wx/atomic.h>
 
@@ -677,7 +678,7 @@ private:
    unsigned int        mNumCaptureChannels;
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
-   int                 mLostSamples;
+   unsigned long long  mLostSamples{ 0 };
    volatile bool       mAudioThreadShouldCallFillBuffersOnce;
    volatile bool       mAudioThreadFillBuffersLoopRunning;
    volatile bool       mAudioThreadFillBuffersLoopActive;
@@ -795,6 +796,15 @@ private:
       { wxAtomicInc( mRecordingException ); }
    void ClearRecordingException()
       { if (mRecordingException) wxAtomicDec( mRecordingException ); }
+
+   std::vector< std::pair<double, double> > mLostCaptureIntervals;
+
+public:
+   const std::vector< std::pair<double, double> > &LostCaptureIntervals()
+   { return mLostCaptureIntervals; }
+
+   // Used only for testing purposes in alpha builds
+   bool mSimulateRecordingErrors{ false };
 };
 
 #endif

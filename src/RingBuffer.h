@@ -24,6 +24,7 @@ class RingBuffer {
 
    size_t AvailForPut();
    size_t Put(samplePtr buffer, sampleFormat format, size_t samples);
+   size_t Clear(sampleFormat format, size_t samples);
 
    //
    // For the reader only:

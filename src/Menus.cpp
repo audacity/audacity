@@ -1231,6 +1231,14 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
       c->BeginSubMenu( _("&Tools") );
+
+#ifdef IS_ALPHA
+      c->AddCheck(wxT("SimulateRecordingErrors"),
+                  _("Simulate Recording Errors"),
+                  FN(OnSimulateRecordingErrors),
+                  gAudioIO->mSimulateRecordingErrors);
+#endif
+
       c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
 
 // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
@@ -8406,6 +8414,13 @@ void AudacityProject::OnCrashReport(const CommandContext &)
    wxGetApp().GenerateCrashReport(wxDebugReport::Context_Current);
 }
 #endif
+
+void AudacityProject::OnSimulateRecordingErrors(const CommandContext &)
+{
+   bool &setting = gAudioIO->mSimulateRecordingErrors;
+   mCommandManager.Check(wxT("SimulateRecordingErrors"), !setting);
+   setting = !setting;
+}
 
 void AudacityProject::OnScreenshot(const CommandContext &)
 {

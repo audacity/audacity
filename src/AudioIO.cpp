@@ -1865,6 +1865,8 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
                          double t0, double t1,
                          const AudioIOStartStreamOptions &options)
 {
+   mLostSamples = 0;
+   mLostCaptureIntervals.clear();
    auto cleanup = finally ( [this] { ClearRecordingException(); } );
 
    if( IsBusy() )
@@ -2710,6 +2712,10 @@ void AudioIO::StopStream()
 
          double recordingOffset =
             mLastRecordingOffset + latencyCorrection / 1000.0;
+
+         for (auto &interval : mLostCaptureIntervals)
+            interval.first += recordingOffset,
+            interval.second += recordingOffset;
 
          for (unsigned int i = 0; i < mCaptureTracks.size(); i++) {
             // The calls to Flush, and (less likely) Clear and InsertSilence,
@@ -4633,7 +4639,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #else
                           const PaStreamCallbackTimeInfo * WXUNUSED(timeInfo),
 #endif
-                          const PaStreamCallbackFlags WXUNUSED(statusFlags), void * WXUNUSED(userData) )
+                          const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
 {
    auto numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
    auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
@@ -5145,10 +5151,34 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
       if( inputBuffer && (numCaptureChannels > 0) )
       {
+         // The error likely from a too-busy CPU falling behind real-time data
+         // is paInputOverflow, but let's check the other input error too
+         bool inputError =
+            (statusFlags & (paInputOverflow | paInputUnderflow))
+            && !(statusFlags & paPrimingOutput);
+
          size_t len = framesPerBuffer;
-         for(unsigned t = 0; t < numCaptureChannels; t++) {
+         for(unsigned t = 0; t < numCaptureChannels; t++)
             len = std::min( len,
-               gAudioIO->mCaptureBuffers[t]->AvailForPut());
+                           gAudioIO->mCaptureBuffers[t]->AvailForPut());
+
+         if (gAudioIO->mSimulateRecordingErrors && 100LL * rand() < RAND_MAX)
+            // Make spurious errors for purposes of testing the error
+            // reporting
+            len = 0;
+
+         // A different symptom is that len < framesPerBuffer because
+         // the other thread, executing FillBuffers, isn't consuming fast
+         // enough from mCaptureBuffers; maybe it's CPU-bound, or maybe the
+         // storage device it writes is too slow
+         if (inputError || len < framesPerBuffer) {
+            // Assume that any good partial buffer should be written leftmost
+            // and zeroes will be padded after; label the zeroes.
+            auto start = gAudioIO->mTime;
+            auto end = start + framesPerBuffer / gAudioIO->mRate;
+            auto middle = start + len / gAudioIO->mRate;
+            auto interval = std::make_pair( middle, end );
+            gAudioIO->mLostCaptureIntervals.push_back( interval );
          }
 
          if (len < framesPerBuffer)
@@ -5197,6 +5227,19 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                const auto put =
                   gAudioIO->mCaptureBuffers[t]->Put(
                      (samplePtr)tempBuffer, gAudioIO->mCaptureFormat, len);
+               // wxASSERT(put == len);
+               // but we can't assert in this thread
+               wxUnusedVar(put);
+            }
+         }
+
+         if (len < framesPerBuffer) {
+            for(unsigned t = 0; t < numCaptureChannels; t++) {
+               // Get here probably because of failure to keep up with real
+               // time, causing loss of input samples.
+               // Pad with zeroes
+               const auto put = gAudioIO->mCaptureBuffers[t]->Clear(
+                     gAudioIO->mCaptureFormat, framesPerBuffer - len);
                // wxASSERT(put == len);
                // but we can't assert in this thread
                wxUnusedVar(put);
@@ -5325,4 +5368,3 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
    return callbackReturn;
 }
-
