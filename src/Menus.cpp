@@ -1947,7 +1947,6 @@ void AudacityProject::ModifyUndoMenuItems()
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo %s"),
                                               desc));
-      mCommandManager.Enable(wxT("Undo"), this->UndoAvailable());
    }
    else {
       mCommandManager.Modify(wxT("Undo"),
@@ -1959,7 +1958,7 @@ void AudacityProject::ModifyUndoMenuItems()
       mCommandManager.Modify(wxT("Redo"),
                              wxString::Format(_("&Redo %s"),
                                               desc));
-      mCommandManager.Enable(wxT("Redo"), this->RedoAvailable());
+      mCommandManager.Enable(wxT("Redo"), true);
    }
    else {
       mCommandManager.Modify(wxT("Redo"),
@@ -2139,10 +2138,10 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
    if (!mLastEffect.IsEmpty())
       flags |= HasLastEffectFlag;
 
-   if (UndoAvailable())
+   if (GetUndoManager()->UndoAvailable())
       flags |= UndoAvailableFlag;
 
-   if (RedoAvailable())
+   if (GetUndoManager()->RedoAvailable())
       flags |= RedoAvailableFlag;
 
    if (ZoomInAvailable() && (flags & TracksExistFlag))
@@ -4795,7 +4794,7 @@ void AudacityProject::OnPrint(const CommandContext &)
 
 void AudacityProject::OnUndo(const CommandContext &)
 {
-   if (!UndoAvailable()) {
+   if (!GetUndoManager()->UndoAvailable()) {
       AudacityMessageBox(_("Nothing to undo"));
       return;
    }
@@ -4825,7 +4824,7 @@ void AudacityProject::OnUndo(const CommandContext &)
 
 void AudacityProject::OnRedo(const CommandContext &)
 {
-   if (!RedoAvailable()) {
+   if (!GetUndoManager()->RedoAvailable()) {
       AudacityMessageBox(_("Nothing to redo"));
       return;
    }

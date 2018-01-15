@@ -655,10 +655,6 @@ namespace
       // TODO:  make a finer distinction between refreshing the track control area,
       // and the waveform area.  As it is, redraw both whenever you must redraw either.
 
-      // Copy data from the underlying tracks to the pending tracks that are
-      // really displayed
-      panel->GetProject()->GetTracks()->UpdatePendingTracks();
-
       using namespace RefreshCode;
 
       if (refreshResult & DestroyedCell) {
@@ -1846,17 +1842,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
    TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
 
    // The track artist actually draws the stuff inside each track
-   auto project = GetProject();
-   // Make a function that reproduces the range, because, quirkily, the range
-   // can't be copied and iterated twice.  Fix that later.
-   auto range = [&]{
-      return make_iterator_range(
-         PendingTrackIterator{ project->GetTracks(),
-             std::make_shared<VisibleTrackIterator>( project ) },
-         PendingTrackIterator{}
-      );
-   };
-   mTrackArtist->DrawTracks(context, range,
+   auto first = GetProject()->GetFirstVisible();
+   mTrackArtist->DrawTracks(context, GetTracks(), first.get(),
                             region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
@@ -1878,13 +1865,8 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    wxRect trackRect = clip;
    trackRect.height = 0;   // for drawing background in no tracks case.
 
-   auto project = GetProject();
-   PendingTrackIterator
-      begin{ project->GetTracks(),
-             std::make_shared<VisibleTrackIterator>( project ) },
-      end;
-   for (const auto &track : make_iterator_range(begin, end)) {
-      auto t = track.get();
+   VisibleTrackIterator iter(GetProject());
+   for (Track *t = iter.First(); t; t = iter.Next()) {
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
@@ -2879,15 +2861,15 @@ void TrackPanel::SetFocusedTrack( Track *t )
    if (t && !t->GetLinked() && t->GetLink())
       t = (WaveTrack*)t->GetLink();
 
-   if ( !mAx->SetFocus( Track::Pointer( t ) ) )
-      return;
-
-   if (t && AudacityProject::GetKeyboardCaptureHandler())
+   if (t && AudacityProject::GetKeyboardCaptureHandler()) {
       AudacityProject::ReleaseKeyboard(this);
+   }
 
-   if (t)
+   if (t) {
       AudacityProject::CaptureKeyboard(this);
+   }
 
+   mAx->SetFocus( Track::Pointer( t ) );
    Refresh( false );
 }
 

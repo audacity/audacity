@@ -236,11 +236,11 @@ void UndoManager::ModifyState(const TrackList * l,
 
    // Duplicate
    auto tracksCopy = TrackList::Create();
-   for (auto t : *l) {
-      if ( t->GetId() == TrackId{} )
-         // Don't push a pending added track
-         continue;
+   TrackListConstIterator iter(l);
+   const Track *t = iter.First();
+   while (t) {
       tracksCopy->Add(t->Duplicate());
+      t = iter.Next();
    }
 
    // Replace
@@ -280,11 +280,11 @@ void UndoManager::PushState(const TrackList * l,
    }
 
    auto tracksCopy = TrackList::Create();
-   for (auto t : *l) {
-      if ( t->GetId() == TrackId{} )
-         // Don't push a pending added track
-         continue;
+   TrackListConstIterator iter(l);
+   const Track *t = iter.First();
+   while (t) {
       tracksCopy->Add(t->Duplicate());
+      t = iter.Next();
    }
 
    // Assume tags was duplicted before any changes.

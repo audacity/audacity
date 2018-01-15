@@ -2019,6 +2019,25 @@ void AudacityProject::FixScrollbars()
          GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
+std::shared_ptr<Track> AudacityProject::GetFirstVisible()
+{
+   std::shared_ptr<Track> pTrack;
+   if (GetTracks()) {
+      TrackListIterator iter(GetTracks());
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         int y = t->GetY();
+         int h = t->GetHeight();
+         if (y + h - 1 >= mViewInfo.vpos) {
+            // At least the bottom row of pixels is not scrolled away above
+            pTrack = Track::Pointer(t);
+            break;
+         }
+      }
+   }
+
+   return pTrack;
+}
+
 void AudacityProject::UpdateLayout()
 {
    if (!mTrackPanel)
@@ -3566,10 +3585,6 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
       return mTags.get();
    }
 
-   // Note that TrackList::Add includes assignment of unique in-session TrackId
-   // to a reloaded track, though no promise that it equals the id it originally
-   // had
-
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
       return mTracks->Add(mTrackFactory->NewWaveTrack());
    }
@@ -4458,20 +4473,6 @@ void AudacityProject::InitialState()
    UpdateMenus();
    this->UpdateLyrics();
    this->UpdateMixerBoard();
-}
-
-bool AudacityProject::UndoAvailable()
-{
-   auto trackList = GetTracks();
-   return GetUndoManager()->UndoAvailable() &&
-      !GetTracks()->HasPendingChanges();
-}
-
-bool AudacityProject::RedoAvailable()
-{
-   auto trackList = GetTracks();
-   return GetUndoManager()->RedoAvailable() &&
-      !GetTracks()->HasPendingChanges();
 }
 
 void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)

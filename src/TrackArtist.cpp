@@ -339,7 +339,8 @@ void TrackArtist::SetMargins(int left, int top, int right, int bottom)
 }
 
 void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
-                             const std::function< Range() > &range,
+                             TrackList * tracks,
+                             Track * start,
                              const wxRegion & reg,
                              const wxRect & rect,
                              const wxRect & clip,
@@ -351,10 +352,11 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 {
    wxRect trackRect = rect;
    wxRect stereoTrackRect;
+   TrackListIterator iter(tracks);
+   Track *t;
 
    bool hasSolo = false;
-   for (auto &track : range()) {
-      auto t = track.get();
+   for (t = iter.First(); t; t = iter.Next()) {
       auto pt = dynamic_cast<const PlayableTrack *>(t);
       if (pt && pt->GetSolo()) {
          hasSolo = true;
@@ -377,8 +379,8 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 
    gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), &mbShowTrackNameInWaveform, false);
 
-   for (auto &track : range()) {
-      auto t = track.get();
+   t = iter.StartWith(start);
+   while (t) {
       trackRect.y = t->GetY() - zoomInfo.vpos;
       trackRect.height = t->GetHeight();
 
@@ -428,6 +430,8 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
                    selectedRegion, zoomInfo,
                    drawEnvelope, bigPoints, drawSliders, hasSolo);
       }
+
+      t = iter.Next();
    }
 }
 

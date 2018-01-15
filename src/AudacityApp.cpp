@@ -1087,9 +1087,6 @@ bool AudacityApp::OnExceptionInMainLoop()
          // failed operation
          pProject->RollbackState();
 
-         // Forget pending changes in the TrackList
-         pProject->GetTracks()->ClearPendingTracks();
-
          pProject->RedrawProject();
 
          // Give the user an alert
