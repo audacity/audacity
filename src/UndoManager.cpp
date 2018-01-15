@@ -272,19 +272,25 @@ void UndoManager::PushState(const TrackList * l,
       return;
    }
 
-   mayConsolidate = true;
-
-   i = current + 1;
-   while (i < stack.size()) {
-      RemoveStateAt(i);
-   }
-
    auto tracksCopy = TrackList::Create();
    for (auto t : *l) {
       if ( t->GetId() == TrackId{} )
          // Don't copy a pending added track
          continue;
       tracksCopy->Add(t->Duplicate());
+   }
+
+   // Quit with no effects if the change looks vacuous
+   // (Don't examine track contents to decide vacuity)
+   if (current >= 0 &&
+       tags == stack[current]->state.tags && tracksCopy->empty())
+      return;
+
+   mayConsolidate = true;
+
+   i = current + 1;
+   while (i < stack.size()) {
+      RemoveStateAt(i);
    }
 
    // Assume tags was duplicted before any changes.
