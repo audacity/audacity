@@ -74,12 +74,6 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    void Init(const WaveTrack &orig);
 
-public:
-   // overwrite data excluding the sample sequence but including display
-   // settings
-   void Reinit(const WaveTrack &orig);
-
-private:
    Track::Holder Duplicate() const override;
 
    friend class TrackFactory;

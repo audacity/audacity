@@ -163,33 +163,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    mDisplayLocationsCache.clear();
 }
 
-void WaveTrack::Reinit(const WaveTrack &orig)
-{
-   Init(orig);
-
-   {
-      auto &settings = orig.mpSpectrumSettings;
-      if (settings)
-         mpSpectrumSettings = std::make_unique<SpectrogramSettings>(*settings);
-      else
-         mpSpectrumSettings.reset();
-   }
-
-   {
-      auto &settings = orig.mpWaveformSettings;
-      if (settings)
-         mpWaveformSettings = std::make_unique<WaveformSettings>(*settings);
-      else
-         mpWaveformSettings.reset();
-   }
-
-   this->SetOffset(orig.GetOffset());
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   // To do:  mYv, mHeightV, mPerY, mVirtualStereo
-#endif
-}
-
 void WaveTrack::Merge(const Track &orig)
 {
    if (orig.GetKind() == Wave)

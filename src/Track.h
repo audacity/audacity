@@ -659,19 +659,20 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    // Create an empty TrackList
    TrackList();
 
-   // Disallow copy
    TrackList(const TrackList &that) = delete;
-   TrackList &operator= (const TrackList&) = delete;
-
-   // Allow move
-   TrackList(TrackList &&that) : TrackList() { Swap(that); }
-   TrackList& operator= (TrackList&&);
+   TrackList(TrackList &&that) = delete;
 
    void clear() = delete;
 
  public:
    // Create an empty TrackList
    static std::shared_ptr<TrackList> Create();
+
+   // Allow copy -- a deep copy that duplicates all tracks
+   TrackList &operator= (const TrackList &that);
+
+   // Allow move
+   TrackList& operator= (TrackList&&);
 
    // Move is defined in terms of Swap
    void Swap(TrackList &that);
@@ -830,6 +831,8 @@ private:
       }
    }
 
+   void DoAssign(const TrackList &that);
+       
    void RecalcPositions(TrackNodePointer node);
    void PermutationEvent();
    void DeletionEvent();
