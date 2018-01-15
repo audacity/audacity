@@ -332,11 +332,13 @@ PrefsDialog::PrefsDialog
          mCategories->ExpandNode(iPage, it->expanded);
    }
 
-   // This ASSERT used to limit us to 800 x 600.
-   // However, we think screens have got bigger now, and that was a bit too restrictive.
-   // The impetus for increasing the limit (before we ASSERT) was that this ASSERT
-   // was firing with wxWidgets 3.0, which has slightly different sizer behaviour.
-   // Now takes display size into account to counter firing with high dpi displays.
+   // This ASSERT was originally used to limit us to 800 x 600.
+   // However, the range of screen sizes and dpi of modern (2018) displays
+   // makes pixel dimensions an inadequate measure of usability, so
+   // now we only ASSERT that preferences will fit in the client display
+   // rectangle of the developer / tester's monitor.
+   // Use scrollers when necessary to ensure that preference pages will
+   // be fully visible.
    wxRect screenRect(wxGetClientDisplayRect());
    wxASSERT_MSG(sz.x <= screenRect.width && sz.y <= screenRect.height, wxT("Preferences dialog exceeds max size"));
 

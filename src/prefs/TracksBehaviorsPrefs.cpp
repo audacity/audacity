@@ -60,6 +60,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
+   S.StartScroller();
    S.StartStatic(_("Behaviors"));
    {
       S.TieCheckBox(_("A&uto-select, if selection required"),
@@ -104,6 +105,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndStatic();
+   S.EndScroller();
 }
 
 bool TracksBehaviorsPrefs::Commit()

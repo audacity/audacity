@@ -57,6 +57,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
+   S.StartScroller();
    S.StartStatic(_("Enable Effects"));
    {
 
@@ -158,6 +159,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
    }
    S.EndStatic();
+   S.EndScroller();
 #endif
 }
 

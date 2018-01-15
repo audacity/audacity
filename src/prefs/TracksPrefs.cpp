@@ -120,6 +120,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
+   S.StartScroller();
    S.StartStatic(_("Display"));
    {
       S.TieCheckBox(_("&Pinned Recording/Playback head"),
@@ -183,6 +184,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       }
    }
    S.EndStatic();
+   S.EndScroller();
 }
 
 bool TracksPrefs::GetPinnedHeadPreference()

@@ -124,6 +124,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
+   S.StartScroller();
    S.StartStatic(_("Display"));
    {
       S.StartMultiColumn(2);
@@ -206,6 +207,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
    }
    S.EndStatic();
+   S.EndScroller();
 }
 
 bool GUIPrefs::Commit()
