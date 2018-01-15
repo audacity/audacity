@@ -132,7 +132,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;
 
-   void SetMinimized(bool isMinimized) override;
+   void DoSetMinimized(bool isMinimized) override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);

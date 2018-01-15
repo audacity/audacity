@@ -24,6 +24,8 @@
 #include "Experimental.h"
 #include "audacity/Types.h"
 
+#include <functional>
+
 class wxDC;
 class wxRect;
 class wxHashTable;
@@ -36,10 +38,10 @@ class WaveClip;
 class NoteTrack;
 class LabelTrack;
 class TimeTrack;
-class TrackList;
 class Ruler;
 class SelectedRegion;
 class ZoomInfo;
+class PendingTrackIterator;
 
 struct TrackPanelDrawingContext;
 
@@ -54,8 +56,10 @@ class AUDACITY_DLL_API TrackArtist {
    ~TrackArtist();
 
    void SetColours(int iColorIndex);
+
+   using Range = IteratorRange< PendingTrackIterator >;
    void DrawTracks(TrackPanelDrawingContext &context,
-                   TrackList *tracks, Track *start,
+                   const std::function< Range() > &range,
                    const wxRegion & reg,
                    const wxRect & rect, const wxRect & clip,
                    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,

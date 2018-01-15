@@ -192,8 +192,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
 
-   std::shared_ptr<Track> GetFirstVisible();
-
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
 
@@ -551,6 +549,9 @@ public:
       ( const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
    bool TryToMakeActionAllowed
       ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+
+   bool UndoAvailable();
+   bool RedoAvailable();
 
    void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
    void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
