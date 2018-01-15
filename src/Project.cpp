@@ -5377,6 +5377,10 @@ void AudacityProject::OnAudioIOStopRecording()
          auto uTrack = GetTrackFactory()->NewLabelTrack();
          auto pTrack = uTrack.get();
          GetTracks()->Add( std::move(uTrack) );
+         /* i8n-hint:  A name given to a track, appearing as its menu button.
+          The translation should be short or else it will not display well.
+          At most, about 11 Latin characters.
+          */
          pTrack->SetName(_("Errors"));
          long counter = 1;
          for (auto &interval : intervals)
