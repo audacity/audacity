@@ -148,6 +148,8 @@ const int kZoomIn = 6;
 const int kZoomOut = 7;
 const int kZoomReset = 8;
 const int kZoomMax = 9;
+const int kUpOctave = 10;
+const int kDownOctave = 11;
 
 enum {
    OnZoomFitVerticalID = 20000,
@@ -167,6 +169,9 @@ enum {
    OnLastSpectrumScaleID = OnFirstSpectrumScaleID + 19,
 
    OnZoomMaxID,
+
+   OnUpOctaveID,
+   OnDownOctaveID,
 };
 ///////////////////////////////////////////////////////////////////////////////
 // Table class
@@ -191,6 +196,8 @@ protected:
    void OnZoomInVertical(wxCommandEvent&){ OnZoom( kZoomIn );};
    void OnZoomOutVertical(wxCommandEvent&){ OnZoom( kZoomOut );};
    void OnZoomMax(wxCommandEvent&){ OnZoom( kZoomMax );};
+   void OnUpOctave(wxCommandEvent&){ OnZoom( kUpOctave );};
+   void OnDownOctave(wxCommandEvent&){ OnZoom( kDownOctave );};
 
 private:
    void DestroyMenu() override
@@ -226,6 +233,12 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
    case kZoomMax:
       mpData->pTrack->ZoomMaxExtent();
       break;
+   case kUpOctave:
+      mpData->pTrack->ShiftNoteRange(12);
+      break;
+   case kDownOctave:
+      mpData->pTrack->ShiftNoteRange(-12);
+      break;
    }
    GetActiveProject()->ModifyState(false);
 }
@@ -239,6 +252,10 @@ BEGIN_POPUP_MENU(NoteTrackVRulerMenuTable)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(OnZoomInVerticalID,  _("Zoom In\tLeft-Click/Left-Drag"),  OnZoomInVertical)
    POPUP_MENU_ITEM(OnZoomOutVerticalID, _("Zoom Out\tShift-Left-Click"),     OnZoomOutVertical)
+
+   POPUP_MENU_SEPARATOR()
+   POPUP_MENU_ITEM(OnUpOctaveID,   _("Up &Octave"),   OnUpOctave)
+   POPUP_MENU_ITEM(OnDownOctaveID, _("Down Octa&ve"), OnDownOctave)
 
 END_POPUP_MENU()
 
