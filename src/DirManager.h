@@ -29,7 +29,6 @@
 class wxHashTable;
 class BlockArray;
 class BlockFile;
-class SequenceTest;
 
 #define FSCKstatus_CLOSE_REQ 0x1
 #define FSCKstatus_CHANGED   0x2
@@ -232,8 +231,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    wxString mytemp;
    static int numDirManagers;
    static bool dontDeleteTempFiles;
-
-   friend class SequenceTest;
 };
 
 #endif
