@@ -5153,10 +5153,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       if( inputBuffer && (numCaptureChannels > 0) )
       {
          // The error likely from a too-busy CPU falling behind real-time data
-         // is paInputOverflow, but let's check the other input error too
+         // is paInputOverflow
          bool inputError =
-            (statusFlags & (paInputOverflow | paInputUnderflow))
+            (statusFlags & (paInputOverflow))
             && !(statusFlags & paPrimingOutput);
+         // But it seems it's easy to get false positives, at least on Mac
+         wxUnusedVar( inputError );
 
          size_t len = framesPerBuffer;
          for(unsigned t = 0; t < numCaptureChannels; t++)
@@ -5173,7 +5175,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // enough from mCaptureBuffers; maybe it's CPU-bound, or maybe the
          // storage device it writes is too slow
          if (gAudioIO->mDetectDropouts &&
-             (inputError || len < framesPerBuffer) ) {
+             (//inputError ||
+              len < framesPerBuffer) ) {
             // Assume that any good partial buffer should be written leftmost
             // and zeroes will be padded after; label the zeroes.
             auto start = gAudioIO->mTime;
