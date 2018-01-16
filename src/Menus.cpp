@@ -1647,48 +1647,31 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
          && (plug->GetName() != _("Nyquist Prompt"))
 #endif
          )
-      {
          defplugs.push_back(plug);
-      }
       else
-      {
          optplugs.push_back(plug);
-      }
       plug = pm.GetNextPluginForEffectType(type);
    }
 
    wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
 
+   using Comparator = bool(*)(const PluginDescriptor*, const PluginDescriptor*);
+   Comparator comp1, comp2;
    if (groupby == wxT("sortby:name"))
-   {
-      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
-      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByName);
-   }
+      comp1 = comp2 = SortEffectsByName;
    else if (groupby == wxT("sortby:publisher:name"))
-   {
-      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
-      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByPublisherAndName);
-   }
+      comp1 = SortEffectsByName, comp2 = SortEffectsByPublisherAndName;
    else if (groupby == wxT("sortby:type:name"))
-   {
-      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
-      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByTypeAndName);
-   }
+      comp1 = SortEffectsByName, comp2 = SortEffectsByTypeAndName;
    else if (groupby == wxT("groupby:publisher"))
-   {
-      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByPublisher);
-      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByPublisher);
-   }
+      comp1 = comp2 = SortEffectsByPublisher;
    else if (groupby == wxT("groupby:type"))
-   {
-      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByType);
-      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByType);
-   }
+      comp1 = comp2 = SortEffectsByType;
    else // name
-   {
-      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
-      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByName);
-   }
+      comp1 = comp2 = SortEffectsByName;
+
+   std::sort( defplugs.begin(), defplugs.end(), comp1 );
+   std::sort( optplugs.begin(), optplugs.end(), comp2 );
 
    AddEffectMenuItems(c, defplugs, batchflags, realflags, true);
 
