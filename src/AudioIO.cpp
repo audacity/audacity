@@ -5240,7 +5240,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             }
          }
 
-         if (len < framesPerBuffer) {
+         if (gAudioIO->mDetectDropouts &&
+             len < framesPerBuffer) {
             for(unsigned t = 0; t < numCaptureChannels; t++) {
                // Get here probably because of failure to keep up with real
                // time, causing loss of input samples.
