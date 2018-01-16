@@ -222,7 +222,7 @@ wxString Effect::GetFamily()
 
    // PRL:  In 2.2.2 we wanted to change the user-visible name to
    // "Built-in" but we did not do it the obvious way by just changing this
-   // string, because of problems with compatibility of pluginregistry.cfg
+   // string, because of problems with compatibility of pluginsettings.cfg
    // See PluginDescriptor::GetTranslatedEffectFamily and
    // EffectUIHost::OnMenu
    // See PluginManager::RegisterPlugin and PluginManager::GetID, where the
@@ -3360,7 +3360,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
       auto type = mEffect->GetFamily();
       // PRL:  2.2.2 hack to change the visible name without breaking
-      // compatibility of pluginregistry.cfg; redo this better
+      // compatibility of pluginsettings.cfg; redo this better
       // See also PluginDescriptor::GetTranslatedEffectFamily
       if (type == wxT("Audacity"))
          type = XO("Built-in");

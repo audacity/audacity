@@ -1250,7 +1250,7 @@ wxString PluginDescriptor::GetTranslatedEffectFamily() const
 #else
 
    // PRL: 2.2.2 hack to change the visible name without breaking
-   // compatibility of pluginregistry.cfg; redo this better
+   // compatibility of pluginsettings.cfg; redo this better
    // Remap "Audacity" to "Built-in" (suitably translated)
 
    // "Audacity" was the only possibility for mEffectFamily that was in the
