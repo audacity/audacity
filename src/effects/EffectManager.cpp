@@ -117,6 +117,14 @@ wxString EffectManager::GetEffectName(const PluginID & ID)
    return PluginManager::Get().GetName(ID);
 }
 
+wxString EffectManager::GetEffectFamilyName(const PluginID & ID)
+{
+   auto effect = GetEffect(ID);
+   if (effect)
+      return effect->GetFamilyName();
+   return {};
+}
+
 wxString EffectManager::GetEffectIdentifier(const PluginID & ID)
 {
    wxString name = (PluginManager::Get().GetSymbol(ID));

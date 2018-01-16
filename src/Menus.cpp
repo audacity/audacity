@@ -227,8 +227,9 @@ static bool SortEffectsByPublisherAndName(const PluginDescriptor *a, const Plugi
 
 static bool SortEffectsByTypeAndName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = a->GetTranslatedEffectFamily();
-   wxString bkey = b->GetTranslatedEffectFamily();
+   auto &em = EffectManager::Get();
+   auto akey = em.GetEffectFamilyName(a->GetID());
+   auto bkey = em.GetEffectFamilyName(b->GetID());
 
    if (akey.IsEmpty())
    {
@@ -259,8 +260,9 @@ static bool SortEffectsByTypeAndName(const PluginDescriptor *a, const PluginDesc
 
 static bool SortEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = a->GetTranslatedEffectFamily();
-   wxString bkey = b->GetTranslatedEffectFamily();
+   auto &em = EffectManager::Get();
+   auto akey = em.GetEffectFamilyName(a->GetID());
+   auto bkey = em.GetEffectFamilyName(b->GetID());
 
    if (akey.IsEmpty())
    {
@@ -1730,7 +1732,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          }
          else if (groupBy == wxT("groupby:type"))
          {
-            current = plug->GetTranslatedEffectFamily();
+            current = EffectManager::Get().GetEffectFamilyName(plug->GetID());
             if (current.IsEmpty())
             {
                current = _("Unknown");
@@ -1791,7 +1793,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          }
          else if (groupBy == wxT("sortby:type:name"))
          {
-            group = plug->GetTranslatedEffectFamily();
+            group = EffectManager::Get().GetEffectFamilyName(plug->GetID());
          }
 
          if (plug->IsEffectDefault())

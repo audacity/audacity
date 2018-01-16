@@ -89,8 +89,10 @@ public:
 
    // Effect plugins only
 
+   // Internal string only, no translated counterpart!
+   // (Use Effect::GetFamilyName instead)
    wxString GetEffectFamilyId() const;
-   wxString GetTranslatedEffectFamily() const;
+
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;

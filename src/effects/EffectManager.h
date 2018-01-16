@@ -83,6 +83,7 @@ public:
                  bool shouldPrompt = true);
 
    wxString GetEffectName(const PluginID & ID);
+   wxString GetEffectFamilyName(const PluginID & ID);
    wxString GetEffectIdentifier(const PluginID & ID);
    wxString GetEffectDescription(const PluginID & ID);
    bool IsHidden(const PluginID & ID);
