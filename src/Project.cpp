@@ -3661,7 +3661,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
       // then the file has been saved.  This is not neccessarily true when
       // autosaving as it gets set by AddImportedTracks (presumably as a proposal).
       // I don't think that mDirManager.projName gets set without a save so check that.
-      if( mDirManager->GetProjectName() == wxT("") )
+      if( !IsProjectSaved() )
          projName = wxT("_data");
    }
 
@@ -3771,7 +3771,7 @@ private:
 
 bool AudacityProject::Save()
 {
-   if (mDirManager->GetProjectName() == wxT(""))
+   if ( !IsProjectSaved() )
       return SaveAs();
 
    return DoSave(false, false);
@@ -3872,7 +3872,7 @@ bool AudacityProject::DoSave
       mStrOtherNamesArray.clear();
    } );
 
-   if (fromSaveAs || mDirManager->GetProjectName() == wxT("")) {
+   if (fromSaveAs || !IsProjectSaved() ) {
       // This block of code is duplicated in WriteXML, for now...
       project = mFileName;
       if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
@@ -3929,7 +3929,7 @@ bool AudacityProject::DoSave
    if (!success)
       return false;
 
-   if (fromSaveAs || mDirManager->GetProjectName() == wxT("")) {
+   if (fromSaveAs || !IsProjectSaved() ) {
       if (!bWantSaveCompressed)
       {
          // We are about to move files from the current directory to
@@ -4215,7 +4215,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
 
-   if (initiallyEmpty && mDirManager->GetProjectName() == wxT("")) {
+   if (initiallyEmpty && !IsProjectSaved() ) {
       wxString name = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast(wxT('.'));
       mFileName =::wxPathOnly(fileName) + wxFILE_SEP_PATH + name + wxT(".aup");
       mbLoadedFromAup = false;
@@ -5794,6 +5794,9 @@ int AudacityProject::GetOpenProjectCount() {
 }
 
 bool AudacityProject::IsProjectSaved() {
+   // This is true if a project was opened from an .aup
+   // Otherwise it becomes true only when a project is first saved successfully
+   // in DirManager::SetProject
    wxString sProjectName = mDirManager->GetProjectName();
    return (sProjectName != wxT(""));
 }
