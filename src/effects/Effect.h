@@ -87,7 +87,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // EffectIdentInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamily() override; // returns UNTRANSLATED
+   wxString GetFamilyId() override;
+   wxString GetFamilyName() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;

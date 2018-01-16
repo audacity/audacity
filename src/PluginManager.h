@@ -89,7 +89,7 @@ public:
 
    // Effect plugins only
 
-   wxString GetUntranslatedEffectFamily() const;
+   wxString GetEffectFamilyId() const;
    wxString GetTranslatedEffectFamily() const;
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
@@ -99,7 +99,7 @@ public:
    bool IsEffectAutomatable() const;
 
    // "family" should be an untranslated string wrapped in wxT()
-   void SetEffectFamily(const wxString & family);
+   void SetEffectFamilyId(const wxString & family);
    void SetEffectType(EffectType type);
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);

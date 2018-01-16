@@ -1221,7 +1221,7 @@ void PluginDescriptor::SetValid(bool valid)
 
 // Effects
 
-wxString PluginDescriptor::GetUntranslatedEffectFamily() const
+wxString PluginDescriptor::GetEffectFamilyId() const
 {
    return mEffectFamily;
 }
@@ -1290,7 +1290,7 @@ bool PluginDescriptor::IsEffectAutomatable() const
    return mEffectAutomatable;
 }
 
-void PluginDescriptor::SetEffectFamily(const wxString & family)
+void PluginDescriptor::SetEffectFamilyId(const wxString & family)
 {
    mEffectFamily = family;
 }
@@ -1439,7 +1439,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
    plug.SetProviderID(PluginManager::GetID(provider));
 
    plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamily(effect->GetFamily());
+   plug.SetEffectFamilyId(effect->GetFamilyId());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -2105,7 +2105,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
             {
                continue;
             }
-            plug.SetEffectFamily(strVal);
+            plug.SetEffectFamilyId(strVal);
 
             // Is it a default (above the line) effect and bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTDEFAULT, &boolVal))
@@ -2277,7 +2277,7 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
                stype = KEY_EFFECTTYPE_HIDDEN;
             }
             pRegistry->Write(KEY_EFFECTTYPE, stype);
-            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetUntranslatedEffectFamily());
+            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamilyId());
             pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
             pRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
             pRegistry->Write(KEY_EFFECTREALTIME, plug.IsEffectRealtime());
@@ -2354,7 +2354,7 @@ void PluginManager::CheckForUpdates(bool bFast)
          continue;
       }
 
-      if ( (plugType == PluginTypeModule)  )
+      if ( plugType == PluginTypeModule  )
       {
          if( bFast ) 
          {
@@ -2416,7 +2416,7 @@ const PluginID & PluginManager::RegisterPlugin(EffectIdentInterface *effect)
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
 
    plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamily(effect->GetFamily());
+   plug.SetEffectFamilyId(effect->GetFamilyId());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -2476,7 +2476,7 @@ const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
       if (type == PluginTypeEffect)
       {
          // This preference may be written by EffectsPrefs
-         gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+         gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
       }
       if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
@@ -2496,7 +2496,7 @@ const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
       if (type == PluginTypeEffect)
       {
          // This preference may be written by EffectsPrefs
-         gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+         gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
       }
       if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
@@ -2517,7 +2517,7 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
 
       bool familyEnabled;
       // This preference may be written by EffectsPrefs
-      gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
@@ -2541,7 +2541,7 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled;
       // This preference may be written by EffectsPrefs
-      gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      gPrefs->Read(plug.GetEffectFamilyId() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
@@ -2634,7 +2634,7 @@ PluginID PluginManager::GetID(EffectIdentInterface *effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),
-                           effect->GetFamily(),
+                           effect->GetFamilyId(),
                            effect->GetVendor(),
                            effect->GetName(),
                            effect->GetPath());
@@ -2931,7 +2931,7 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
    
    wxString id = GetPluginTypeString(plug.GetPluginType()) +
                  wxT("_") +
-                 plug.GetUntranslatedEffectFamily() + // is empty for non-Effects
+                 plug.GetEffectFamilyId() + // is empty for non-Effects
                  wxT("_") +
                  plug.GetUntranslatedVendor() +
                  wxT("_") +

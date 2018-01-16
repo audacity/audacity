@@ -64,7 +64,10 @@ public:
    virtual ~EffectIdentInterface() {};
 
    virtual EffectType GetType() = 0;
-   virtual wxString GetFamily() = 0;
+   // Returns a string for internal uses only that may persist in config files:
+   virtual wxString GetFamilyId() = 0;
+   // Returns a user-visible string:
+   virtual wxString GetFamilyName() = 0;
 
    // These should move to the "EffectClientInterface" class once all
    // effects have been converted.

@@ -213,11 +213,11 @@ wxString Effect::GetDescription()
    return wxEmptyString;
 }
 
-wxString Effect::GetFamily()
+wxString Effect::GetFamilyId()
 {
    if (mClient)
    {
-      return mClient->GetFamily();
+      return mClient->GetFamilyId();
    }
 
    // PRL:  In 2.2.2 we wanted to change the user-visible name to
@@ -230,6 +230,16 @@ wxString Effect::GetFamily()
    // NOT as a user-visible  string!
    // Thereby affecting configuration file contents!
    return XO("Audacity");
+}
+
+wxString Effect::GetFamilyName()
+{
+   if (mClient)
+   {
+      return mClient->GetFamilyName();
+   }
+
+   return XO("Built-in");
 }
 
 bool Effect::IsInteractive()
@@ -2480,7 +2490,7 @@ void Effect::Preview(bool dryOnly)
    wxWindow *FocusDialog = wxWindow::FindFocus();
 
    double previewDuration;
-   bool isNyquist = (GetFamily().IsSameAs(NYQUISTEFFECTS_FAMILY))? true : false;
+   bool isNyquist = GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY);
    bool isGenerator = GetType() == EffectTypeGenerate;
 
    // Mix a few seconds of audio from all of the tracks
@@ -3271,7 +3281,7 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect->GetFamily().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
+   if (mEffect->GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
       HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
@@ -3358,16 +3368,8 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    {
       auto sub = std::make_unique<wxMenu>();
 
-      auto type = mEffect->GetFamily();
-      // PRL:  2.2.2 hack to change the visible name without breaking
-      // compatibility of pluginsettings.cfg; redo this better
-      // See also PluginDescriptor::GetTranslatedEffectFamily
-      if (type == wxT("Audacity"))
-         type = XO("Built-in");
-      // And now, also, translate this (what 2.2.1 neglected)
-      type = wxGetTranslation(type);
-
-      sub->Append(kDummyID, wxString::Format(_("Type: %s"), type));
+      sub->Append(kDummyID, wxString::Format(_("Type: %s"),
+                  ::wxGetTranslation( mEffect->GetFamilyName() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor()));
