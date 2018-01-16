@@ -4310,6 +4310,8 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
 
 bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
 {
+   // This version of SaveAs is invoked only from scripting and does not
+   // prompt for a file name
    wxString oldFileName = mFileName;
 
    bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==newFileName);
@@ -4337,7 +4339,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    //Don't change the title, unless we succeed.
    //SetProjectTitle();
 
-   success = DoSave(true, bWantSaveCompressed);
+   success = DoSave(!bOwnsNewAupName || bWantSaveCompressed, bWantSaveCompressed);
 
    if (success && addToHistory) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -4436,7 +4438,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
          mFileName = oldFileName;
    } );
 
-   success = DoSave(true, bWantSaveCompressed);
+   success = DoSave(!bOwnsNewAupName || bWantSaveCompressed, bWantSaveCompressed);
 
    if (success) {
       wxGetApp().AddFileToHistory(mFileName);
