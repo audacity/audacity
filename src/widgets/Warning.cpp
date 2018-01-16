@@ -86,7 +86,7 @@ int ShowWarningDialog(wxWindow *parent,
                       const wxString &message,
                       bool showCancelButton)
 {
-   wxString key(wxT("/Warnings/") + internalDialogName);
+   auto key = WarningDialogKey(internalDialogName);
    if (!gPrefs->Read(key, (long) true)) {
       return wxID_OK;
    }
@@ -100,4 +100,9 @@ int ShowWarningDialog(wxWindow *parent,
    gPrefs->Write(key, (retCode == wxID_YES));
    gPrefs->Flush();
    return wxID_OK;
+}
+
+wxString WarningDialogKey(const wxString &internalDialogName)
+{
+   return wxT("/Warnings/") + internalDialogName;
 }

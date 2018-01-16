@@ -450,6 +450,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/Warning.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    #define MIDI_SLEEP 10 /* milliseconds */
@@ -1867,7 +1868,8 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
 {
    mLostSamples = 0;
    mLostCaptureIntervals.clear();
-   mDetectDropouts = gPrefs->Read(wxT("/AudioIO/DetectDropouts"), true);
+   mDetectDropouts =
+      gPrefs->Read( WarningDialogKey(wxT("DropoutDetected")), true );
    auto cleanup = finally ( [this] { ClearRecordingException(); } );
 
    if( IsBusy() )

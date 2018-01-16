@@ -4956,7 +4956,7 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
    TrackListIterator iter(GetTracks());
    Track *n;
 
-   //determine labelled regions
+   //determine labeled regions
    for( n = iter.First(); n; n = iter.Next() )
       if( n->GetKind() == Track::Label && n->GetSelected() )
       {
@@ -5388,11 +5388,13 @@ void AudacityProject::OnAudioIOStopRecording()
                SelectedRegion{ interval.first, interval.second },
                wxString::Format(wxT("%ld"), counter++),
                -2 );
-         AudacityMessageBox(_(
-"Recorded audio was lost at the labelled locations.\n\
-This may have happened because you are saving directly to a \
-slow external storage device, or because other applications are \
-competing with Audacity for processor time."
+         ShowWarningDialog(this, wxT("DropoutDetected"), _("\
+Recorded audio was lost at the labeled locations. Possible causes:\n\
+\n\
+\tOther applications are competing with Audacity for processor time\n\
+\n\
+\tYou are saving directly to a slow external storage device\n\
+"
          ));
       }
 

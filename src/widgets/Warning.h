@@ -25,4 +25,9 @@ int ShowWarningDialog(wxWindow *parent,
                       const wxString &message,
                       bool showCancelButton = false);
 
+/// Return the config file key associated with a warning dialog identified
+/// by internalDialogName.  When the box is checked, the value at the key
+/// becomes false.
+wxString WarningDialogKey(const wxString &internalDialogName);
+
 #endif // __AUDACITY_WARNING__
