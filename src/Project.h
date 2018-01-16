@@ -279,7 +279,7 @@ public:
       bool SaveCompressedWaveTracks(const wxString & strProjectPathName); // full path for aup except extension
    #endif
 private:
-   bool DoSave(bool overwrite, bool fromSaveAs, bool bWantSaveCompressed);
+   bool DoSave(bool fromSaveAs, bool bWantSaveCompressed);
 public:
 
    void Clear();

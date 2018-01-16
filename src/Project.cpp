@@ -3774,13 +3774,13 @@ bool AudacityProject::Save()
    if (mDirManager->GetProjectName() == wxT(""))
       return SaveAs();
 
-   return DoSave(true, false, false);
+   return DoSave(false, false);
 }
 
 
 // Assumes AudacityProject::mFileName has been set to the desired path.
 bool AudacityProject::DoSave
-   (const bool overwrite, const bool fromSaveAs, const bool bWantSaveCompressed)
+   (const bool fromSaveAs, const bool bWantSaveCompressed)
 {
    // See explanation above
    // ProjectDisabler disabler(this);
@@ -3940,7 +3940,7 @@ bool AudacityProject::DoSave
          // be empty of all of its files.)
 
          std::vector<movable_ptr<WaveTrack::Locker>> lockers;
-         if (mLastSavedTracks && !overwrite) {
+         if (mLastSavedTracks && fromSaveAs) {
             lockers.reserve(mLastSavedTracks->size());
             TrackListIterator iter(mLastSavedTracks.get());
             Track *t = iter.First();
@@ -3955,7 +3955,7 @@ bool AudacityProject::DoSave
 
          // This renames the project directory, and moves or copies
          // all of our block files over.
-         success = mDirManager->SetProject(projPath, projName, !overwrite);
+         success = mDirManager->SetProject(projPath, projName, fromSaveAs);
       }
 
       if (!success)
@@ -4340,7 +4340,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    //Don't change the title, unless we succeed.
    //SetProjectTitle();
 
-   success = DoSave(false, true, bWantSaveCompressed);
+   success = DoSave(true, bWantSaveCompressed);
 
    if (success && addToHistory) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -4439,7 +4439,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
          mFileName = oldFileName;
    } );
 
-   success = DoSave(false, true, bWantSaveCompressed);
+   success = DoSave(true, bWantSaveCompressed);
 
    if (success) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -5826,7 +5826,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
          mFileName = sOldFilename;
    } );
 
-   bSuccess = DoSave(false, true, false);
+   bSuccess = DoSave(true, false);
 
    if (bSuccess) {
       wxGetApp().AddFileToHistory(mFileName);
