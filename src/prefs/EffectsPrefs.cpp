@@ -105,13 +105,13 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          wxArrayString visualgroups;
          wxArrayString prefsgroups;
-      
+
          visualgroups.Add(_("Sorted by Effect Name"));
          visualgroups.Add(_("Sorted by Publisher and Effect Name"));
          visualgroups.Add(_("Sorted by Type and Effect Name"));
          visualgroups.Add(_("Grouped by Publisher"));
          visualgroups.Add(_("Grouped by Type"));
-      
+
          prefsgroups.Add(wxT("sortby:name"));
          prefsgroups.Add(wxT("sortby:publisher:name"));
          prefsgroups.Add(wxT("sortby:type:name"));
@@ -124,7 +124,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                                    visualgroups,
                                    prefsgroups);
          c->SetMinSize(c->GetBestSize());
-                     
+
          S.TieNumericTextBox(_("&Maximum effects per group (0 to disable):"),
                              wxT("/Effects/MaxPerGroup"),
 #if defined(__WXGTK__)

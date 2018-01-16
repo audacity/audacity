@@ -296,7 +296,7 @@ void AudacityProject::CreateMenusAndCommands()
    wxArrayString names;
    wxArrayInt indices;
 
-   // The list of defaults to exclude depends on 
+   // The list of defaults to exclude depends on
    // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
    c->SetMaxList();
 
@@ -525,7 +525,7 @@ void AudacityProject::CreateMenusAndCommands()
 #else
          wxT("Ctrl+M"),
 #endif
-         AudioIOBusyFlag, 
+         AudioIOBusyFlag,
          AudioIOBusyFlag);
       c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
@@ -643,13 +643,13 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"),AlwaysEnabledFlag,AlwaysEnabledFlag);
       c->AddSeparator();
       // GA: Audacity had 'Store Re&gion' here previously. There is no one-step
-      // way to restore the 'Saved Cursor Position' in Select Menu, so arguably 
+      // way to restore the 'Saved Cursor Position' in Select Menu, so arguably
       // using the word 'Selection' to do duty for both saving the region or the
-      // cursor is better. But it does not belong in a 'Region' submenu. 
+      // cursor is better. But it does not belong in a 'Region' submenu.
       c->AddItem(wxT("SelSave"), _("S&tore Selection"), FN(OnSelectionSave),
          WaveTracksSelectedFlag,
          WaveTracksSelectedFlag);
-      // Audacity had 'Retrieve Regio&n' here previously. 
+      // Audacity had 'Retrieve Regio&n' here previously.
       c->AddItem(wxT("SelRestore"), _("Retrieve Selectio&n"), FN(OnSelectionRestore),
          TracksExistFlag,
          TracksExistFlag);
@@ -719,11 +719,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ZoomOut"), _("Zoom &Out"), FN(OnZoomOut), wxT("Ctrl+3"),
          ZoomOutAvailableFlag,
          ZoomOutAvailableFlag);
-      c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), 
-         TimeSelectedFlag, 
+      c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"),
+         TimeSelectedFlag,
          TimeSelectedFlag);
       c->AddItem(wxT("ZoomToggle"), _("Zoom &Toggle"), FN(OnZoomToggle), wxT("Shift+Z"),
-         TracksExistFlag, 
+         TracksExistFlag,
          TracksExistFlag);
       c->EndSubMenu();
 
@@ -850,16 +850,16 @@ void AudacityProject::CreateMenusAndCommands()
       // TODO: Do 'the right thing' with other options like TimerRecord.
       bool bPreferNewTrack;
       gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
-      c->AddItem(  wxT("Record2ndChoice"), 
+      c->AddItem(  wxT("Record2ndChoice"),
          // Our first choice is bound to R (by default) and gets the prime position.
-         // We supply the name for the 'other one' here.  It should be bound to Shift+R 
-         bPreferNewTrack ? _("&Append Record") : _("Record &New Track"), 
-         FN(OnRecord2ndChoice), 
+         // We supply the name for the 'other one' here.  It should be bound to Shift+R
+         bPreferNewTrack ? _("&Append Record") : _("Record &New Track"),
+         FN(OnRecord2ndChoice),
          wxT("Shift+R")
       );
 
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
-      // JKC: I decided to duplicate this between play and record, rather than put it 
+      // JKC: I decided to duplicate this between play and record, rather than put it
       // at the top level.  AddItem can now cope with simple duplicated items.
       // PRL:  This second registration of wxT("Pause"), with unspecified flags,
       // in fact will use the same flags as in the previous registration.
@@ -870,8 +870,8 @@ void AudacityProject::CreateMenusAndCommands()
       GetScrubber().AddMenuItems();
 
       // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it useful?
-      // GA: 'Skip to' moves the viewpoint to center of the track and preserves the 
-      // selection. 'Cursor to' does neither. 'Center at' might describe it better than 'Skip'.   
+      // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
+      // selection. 'Cursor to' does neither. 'Center at' might describe it better than 'Skip'.
       c->BeginSubMenu(_("&Cursor to"));
 
       c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart),
@@ -1042,8 +1042,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
       c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
       c->AddSeparator();
-      c->AddCheck(wxT("MoveSelectionWithTracks"), _("&Move Selection with Tracks (on/off)"), 
-         FN(OnMoveSelectionWithTracks), 
+      c->AddCheck(wxT("MoveSelectionWithTracks"), _("&Move Selection with Tracks (on/off)"),
+         FN(OnMoveSelectionWithTracks),
          gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->EndSubMenu();
@@ -1281,7 +1281,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
 #endif
       c->AddItem(wxT("About"), _("&About Audacity..."), FN(OnAbout));
-      
+
       c->EndMenu();
 
       /////////////////////////////////////////////////////////////////////////////
@@ -1677,7 +1677,7 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
    {
       defplugs.Sort(SortEffectsByType);
       optplugs.Sort(SortEffectsByType);
-   }      
+   }
    else // name
    {
       defplugs.Sort(SortEffectsByName);
@@ -2116,7 +2116,7 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
             }
          }
          if( t->GetEndTime() > t->GetStartTime() )
-            flags |= HasWaveDataFlag; 
+            flags |= HasWaveDataFlag;
       }
 #if defined(USE_MIDI)
       else if (t->GetKind() == Track::Note) {
@@ -3592,7 +3592,7 @@ void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
    if (amount != 0.0) {
       wxString message = right? _("Time shifted clips to the right") :
          _("Time shifted clips to the left");
-      
+
       // The following use of the UndoPush flags is so that both a single
       // keypress (keydown, then keyup), and holding down a key
       // (multiple keydowns followed by a keyup) result in a single
@@ -3788,7 +3788,7 @@ void AudacityProject::NextWindow(const CommandContext &)
    for (; iter != end; ++iter)
    {
       // If it's a toplevel, visible (we have hidden windows) and is enabled,
-      // then we're done.  The IsEnabled() prevents us from moving away from 
+      // then we're done.  The IsEnabled() prevents us from moving away from
       // a modal dialog because all other toplevel windows will be disabled.
       w = *iter;
       if (w->IsTopLevel() && w->IsShown() && w->IsEnabled())
@@ -5953,7 +5953,7 @@ void AudacityProject::OnSplitNew(const CommandContext &)
    RedrawProject();
 }
 
-int AudacityProject::CountSelectedWaveTracks() 
+int AudacityProject::CountSelectedWaveTracks()
 {
    TrackListIterator iter(GetTracks());
 
@@ -5965,7 +5965,7 @@ int AudacityProject::CountSelectedWaveTracks()
    return count;
 }
 
-int AudacityProject::CountSelectedTracks() 
+int AudacityProject::CountSelectedTracks()
 {
    TrackListIterator iter(GetTracks());
 
@@ -6013,7 +6013,7 @@ void AudacityProject::OnSelectAll(const CommandContext &)
 // This function selects all tracks if no tracks selected,
 // and all time if no time selected.
 // There is an argument for making it just count wave tracks,
-// However you could then not select a label and cut it, 
+// However you could then not select a label and cut it,
 // without this function selecting all tracks.
 void AudacityProject::OnSelectSomething(const CommandContext &)
 {
@@ -6286,7 +6286,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
                results.push_back(result);
             }
          }
-         
+
          nTracksSearched++;
       }
 
@@ -6455,7 +6455,7 @@ double AudacityProject::GetScreenEndTime() const
 
 void AudacityProject::ZoomInByFactor( double ZoomFactor )
 {
-   // LLL: Handling positioning differently when audio is 
+   // LLL: Handling positioning differently when audio is
    // actively playing.  Don't do this if paused.
    if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) && !gAudioIO->IsPaused()){
       ZoomBy(ZoomFactor);
@@ -6633,7 +6633,7 @@ void AudacityProject::OnZoomSel(const CommandContext &)
 {
    Zoom( GetZoomOfSelection() );
    TP_ScrollWindow(mViewInfo.selectedRegion.t0());
-}  
+}
 
 void AudacityProject::OnGoSelStart(const CommandContext &)
 {
@@ -6762,7 +6762,7 @@ void AudacityProject::OnShowMeterToolBar(const CommandContext &)
    if( !mToolManager->IsVisible( MeterBarID ) )
    {
       mToolManager->Expose( PlayMeterBarID, false );
-      mToolManager->Expose( RecordMeterBarID, false ); 
+      mToolManager->Expose( RecordMeterBarID, false );
    }
    mToolManager->ShowHide( MeterBarID );
    ModifyToolbarMenus();
@@ -7365,7 +7365,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
                results.push_back(result);
             }
          }
-         
+
          nTracksSearched++;
       }
 
@@ -7416,7 +7416,7 @@ void AudacityProject::OnCursorClipBoundary(bool next)
       mTrackPanel->ScrollIntoView(mViewInfo.selectedRegion.t0());
       mTrackPanel->Refresh(false);
 
-      wxString message = ClipBoundaryMessage(results);     
+      wxString message = ClipBoundaryMessage(results);
       mTrackPanel->MessageForScreenReader(message);
    }
 }
