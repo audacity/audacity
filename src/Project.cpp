@@ -3872,7 +3872,7 @@ bool AudacityProject::DoSave
       mStrOtherNamesArray.clear();
    } );
 
-   if (fromSaveAs || !IsProjectSaved() ) {
+   if (fromSaveAs) {
       // This block of code is duplicated in WriteXML, for now...
       project = mFileName;
       if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
@@ -3929,34 +3929,31 @@ bool AudacityProject::DoSave
    if (!success)
       return false;
 
-   if (fromSaveAs || !IsProjectSaved() ) {
-      if (!bWantSaveCompressed)
-      {
-         // We are about to move files from the current directory to
-         // the NEW directory.  We need to make sure files that belonged
-         // to the last saved project don't get erased, so we "lock" them, so that
-         // SetProject() copies instead of moves the files.
-         // (Otherwise the NEW project would be fine, but the old one would
-         // be empty of all of its files.)
+   if (fromSaveAs && !bWantSaveCompressed) {
+      // We are about to move files from the current directory to
+      // the NEW directory.  We need to make sure files that belonged
+      // to the last saved project don't get erased, so we "lock" them, so that
+      // SetProject() copies instead of moves the files.
+      // (Otherwise the NEW project would be fine, but the old one would
+      // be empty of all of its files.)
 
-         std::vector<movable_ptr<WaveTrack::Locker>> lockers;
-         if (mLastSavedTracks && fromSaveAs) {
-            lockers.reserve(mLastSavedTracks->size());
-            TrackListIterator iter(mLastSavedTracks.get());
-            Track *t = iter.First();
-            while (t) {
-               if (t->GetKind() == Track::Wave)
-                  lockers.push_back(
-                     make_movable<WaveTrack::Locker>(
-                        static_cast<const WaveTrack*>(t)));
-               t = iter.Next();
-            }
+      std::vector<movable_ptr<WaveTrack::Locker>> lockers;
+      if (mLastSavedTracks) {
+         lockers.reserve(mLastSavedTracks->size());
+         TrackListIterator iter(mLastSavedTracks.get());
+         Track *t = iter.First();
+         while (t) {
+            if (t->GetKind() == Track::Wave)
+               lockers.push_back(
+                  make_movable<WaveTrack::Locker>(
+                     static_cast<const WaveTrack*>(t)));
+            t = iter.Next();
          }
-
-         // This renames the project directory, and moves or copies
-         // all of our block files over.
-         success = mDirManager->SetProject(projPath, projName, fromSaveAs);
       }
+
+      // This renames the project directory, and moves or copies
+      // all of our block files over.
+      success = mDirManager->SetProject(projPath, projName, true);
 
       if (!success)
          return false;
