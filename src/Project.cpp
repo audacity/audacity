@@ -3769,16 +3769,27 @@ private:
 };
 #endif
 
-bool AudacityProject::Save(bool overwrite /* = true */ ,
-                           bool fromSaveAs /* = false */,
-                           bool bWantSaveCompressed /*= false*/)
+bool AudacityProject::Save()
+{
+   if (mDirManager->GetProjectName() == wxT(""))
+      return SaveAs();
+
+   return DoSave(true, false, false);
+}
+
+
+// Assumes AudacityProject::mFileName has been set to the desired path.
+bool AudacityProject::DoSave
+   (const bool overwrite, const bool fromSaveAs, const bool bWantSaveCompressed)
 {
    // See explanation above
    // ProjectDisabler disabler(this);
 
    if (bWantSaveCompressed)
       wxASSERT(fromSaveAs);
-   else
+
+   // Some confirmation dialogs
+   if (!bWantSaveCompressed)
    {
       TrackListIterator iter(GetTracks());
       bool bHasTracks = (iter.First() != NULL);
@@ -3793,9 +3804,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          }
       }
 
-      if (!fromSaveAs && mDirManager->GetProjectName() == wxT(""))
-         return SaveAs();
-
       // If the user has recently imported dependencies, show
       // a dialog where the user can see audio files that are
       // aliased by this project.  The user may make the project
@@ -3808,6 +3816,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          mImportedDependencies = false; // do not show again
       }
    }
+   // End of confirmations
 
    //
    // Always save a backup of the original project file
@@ -4331,7 +4340,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    //Don't change the title, unless we succeed.
    //SetProjectTitle();
 
-   success = Save(false, true, bWantSaveCompressed);
+   success = DoSave(false, true, bWantSaveCompressed);
 
    if (success && addToHistory) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -4430,7 +4439,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
          mFileName = oldFileName;
    } );
 
-   success = Save(false, true, bWantSaveCompressed);
+   success = DoSave(false, true, bWantSaveCompressed);
 
    if (success) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -5817,7 +5826,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
          mFileName = sOldFilename;
    } );
 
-   bSuccess = Save(false, true, false);
+   bSuccess = DoSave(false, true, false);
 
    if (bSuccess) {
       wxGetApp().AddFileToHistory(mFileName);
