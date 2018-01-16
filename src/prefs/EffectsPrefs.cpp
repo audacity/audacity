@@ -86,7 +86,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
 #if USE_VAMP
-      S.TieCheckBox(wxT("&VAMP"),
+      S.TieCheckBox(wxT("&Vamp"),
                     wxT("/VAMP/Enable"),
                     true);
 #endif
