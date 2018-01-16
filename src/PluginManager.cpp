@@ -1243,7 +1243,36 @@ wxString PluginDescriptor::GetUntranslatedEffectFamily() const
 
 wxString PluginDescriptor::GetTranslatedEffectFamily() const
 {
+#if 0
+
    return wxGetTranslation(mEffectFamily);
+
+#else
+
+   // PRL: 2.2.2 hack to change the visible name without breaking
+   // compatibility of pluginregistry.cfg; redo this better
+   // Remap "Audacity" to "Built-in" (suitably translated)
+
+   // "Audacity" was the only possibility for mEffectFamily that was in the
+   // message catalog.
+   // The other possibilites are "VST", "LADSPA", "AudioUnit", "Nyquist",
+   // "LV2", "Vamp"
+   // None of these strings (yet) occur anywhere in the program in _() or XO()
+   // And we will leave them verbatim in other locales, as proper names
+
+   // See also EffectUIHost::OnMenu
+
+   // See also commits cafbff9ff82520ff7d4344570385752869c6d230 and
+   // c6bbe4c3dae8a52bb4b7a3c720af97bc3bd69769 for more about the complications
+   // involving this function
+
+   auto result = mEffectFamily;
+   if (result == wxT("Audacity"))
+      // Use XO so that this string does localize
+      result = XO("Built-in");
+   return wxGetTranslation( result );
+
+#endif
 }
 
 EffectType PluginDescriptor::GetEffectType() const

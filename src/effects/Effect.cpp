@@ -220,6 +220,15 @@ wxString Effect::GetFamily()
       return mClient->GetFamily();
    }
 
+   // PRL:  In 2.2.2 we wanted to change the user-visible name to
+   // "Built-in" but we did not do it the obvious way by just changing this
+   // string, because of problems with compatibility of pluginregistry.cfg
+   // See PluginDescriptor::GetTranslatedEffectFamily and
+   // EffectUIHost::OnMenu
+   // See PluginManager::RegisterPlugin and PluginManager::GetID, where the
+   // return value is also (mis?)used for internal identification purposes,
+   // NOT as a user-visible  string!
+   // Thereby affecting configuration file contents!
    return XO("Audacity");
 }
 
@@ -3349,7 +3358,16 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    {
       auto sub = std::make_unique<wxMenu>();
 
-      sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily()));
+      auto type = mEffect->GetFamily();
+      // PRL:  2.2.2 hack to change the visible name without breaking
+      // compatibility of pluginregistry.cfg; redo this better
+      // See also PluginDescriptor::GetTranslatedEffectFamily
+      if (type == wxT("Audacity"))
+         type = XO("Built-in");
+      // And now, also, translate this (what 2.2.1 neglected)
+      type = wxGetTranslation(type);
+
+      sub->Append(kDummyID, wxString::Format(_("Type: %s"), type));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor()));
