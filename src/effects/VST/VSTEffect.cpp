@@ -3737,7 +3737,7 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             if (value != GetSymbol().Internal())
             {
                wxString msg;
-               msg.Printf(_("This parameter file was saved from %s.  Continue?"), value);
+               msg.Printf(_("This parameter file was saved from %s. Continue?"), value);
                int result = AudacityMessageBox(msg, wxT("Confirm"), wxYES_NO, mParent);
                if (result == wxNO)
                {

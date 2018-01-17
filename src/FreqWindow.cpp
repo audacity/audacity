@@ -618,7 +618,7 @@ void FreqWindow::GetAudio()
 
    if (warning) {
       wxString msg;
-      msg.Printf(_("Too much audio was selected.  Only the first %.1f seconds of audio will be analyzed."),
+      msg.Printf(_("Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."),
                           (mDataLen / mRate));
       AudacityMessageBox(msg);
    }

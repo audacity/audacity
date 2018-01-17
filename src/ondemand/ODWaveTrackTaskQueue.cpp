@@ -333,7 +333,7 @@ void ODWaveTrackTaskQueue::FillTipForWaveTrack( const WaveTrack * t, wxString &t
    {
 
     //  if(GetNumTasks()==1)
-      mTipMsg.Printf(_("%s %2.0f%% complete.  Click to change task focal point."), GetFrontTask()->GetTip(), GetFrontTask()->PercentComplete()*100.0 );
+      mTipMsg.Printf(_("%s %2.0f%% complete. Click to change task focal point."), GetFrontTask()->GetTip(), GetFrontTask()->PercentComplete()*100.0 );
      // else
        //  msg.Printf(_("%s %d additional tasks remaining."), GetFrontTask()->GetTip(), GetNumTasks());
 

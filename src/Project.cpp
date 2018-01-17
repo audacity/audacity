@@ -3915,7 +3915,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
 
       if( !wxDir::Exists( projPath ) ){
          AudacityMessageBox(wxString::Format(
-            _("Could not save project. Path not found.  Try creating \ndirectory \"%s\" before saving project with this name."),
+            _("Could not save project. Path not found. Try creating \ndirectory \"%s\" before saving project with this name."),
             projPath),
                       _("Error Saving Project"),
                       wxICON_ERROR, this);

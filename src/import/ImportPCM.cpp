@@ -261,7 +261,7 @@ static wxString AskCopyOrEdit()
       ;
 
       wxString clause3 = _(
-"Reading the files directly allows you to play or edit them almost immediately.  "
+"Reading the files directly allows you to play or edit them almost immediately. "
 "This is less safe than copying in, because you must retain the files with their "
 "original names in their original locations.\n"
 "Help > Diagnostics > Check Dependencies will show the original names and locations of any files "

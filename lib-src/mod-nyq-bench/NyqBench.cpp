@@ -1632,7 +1632,7 @@ bool NyqBench::Validate()
 {
    if (mScript->GetLastPosition() > 0 && mScript->IsModified()) {
       int ans;
-      ans = AudacityMessageBox(_("Code has been modified.  Are you sure?"),
+      ans = AudacityMessageBox(_("Code has been modified. Are you sure?"),
                          _("Warning"),
                          wxYES_NO | wxICON_QUESTION,
                          this);

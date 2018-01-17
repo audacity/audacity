@@ -1837,7 +1837,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 
             if (!copied) {
                ::AudacityMessageBox(
-                  _("Plug-in file is in use.  Failed to overwrite"));
+                  _("Plug-in file is in use. Failed to overwrite"));
                return true;
             }
 

@@ -114,7 +114,7 @@ bool Module::Load()
    if (versionFn == NULL){
       wxString ShortName = wxFileName( mName ).GetName();
       AudacityMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName));
+      wxLogMessage(wxString::Format(_("The module %s does not provide a version string. It will not be loaded."), mName));
       mLib->Unload();
       return false;
    }
@@ -123,7 +123,7 @@ bool Module::Load()
    if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
       wxString ShortName = wxFileName( mName ).GetName();
       AudacityMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName, moduleVersion), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName, moduleVersion));
+      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s. It will not be loaded."), mName, moduleVersion));
       mLib->Unload();
       return false;
    }

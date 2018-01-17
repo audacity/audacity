@@ -694,7 +694,7 @@ bool Exporter::GetFilename()
       if (mFilename.FileExists()) {
          wxString prompt;
 
-         prompt.Printf(_("A file named \"%s\" already exists.  Replace?"),
+         prompt.Printf(_("A file named \"%s\" already exists. Replace?"),
                        mFilename.GetFullPath());
 
          int action = AudacityMessageBox(prompt,
