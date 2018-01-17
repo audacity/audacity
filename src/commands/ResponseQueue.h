@@ -48,7 +48,7 @@ class Response {
       std::string mMessage;
    public:
       Response(const wxString &response)
-         : mMessage(response.mb_str())
+         : mMessage(response.utf8_str())
       { }
 
       wxString GetMessage()
