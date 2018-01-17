@@ -343,10 +343,6 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("James Crook, art, coding &amp; design<br>") +
 #endif
 
-      /* i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages */
-      //wxT("<p><b>") + _("In Memoriam") + wxT("</b><br>") +
-      //GetCreditsByRole(roleDeceased) +
-
       wxT("<p><b>") + _("Audacity Team Members") + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
 

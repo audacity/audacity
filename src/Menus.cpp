@@ -1587,7 +1587,7 @@ void AudacityProject::CreateMenusAndCommands()
          wxTopLevelWindow::IsFullScreen() ? 1:0); // Check Mark.
 
 #ifdef __WXMAC__
-      /* i8n-hint: Shrink all project windows to icons on the Macintosh tooldock */
+      /* i18n-hint: Shrink all project windows to icons on the Macintosh tooldock */
       c->AddItem(wxT("MacMinimizeAll"), _("Minimize all projects"),
          FN(OnMacMinimizeAll), wxT("Ctrl+Alt+M"),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
