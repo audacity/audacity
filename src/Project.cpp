@@ -5404,7 +5404,9 @@ Other applications are competing with Audacity for processor time\n\
 \n\
 You are saving directly to a slow external storage device\n\
 "
-         ));
+         ),
+         false,
+         _("Turn off dropout detection"));
       }
 
       // Add to history
