@@ -3661,7 +3661,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
       // then the file has been saved.  This is not neccessarily true when
       // autosaving as it gets set by AddImportedTracks (presumably as a proposal).
       // I don't think that mDirManager.projName gets set without a save so check that.
-      if( mDirManager->GetProjectName() == wxT("") )
+      if( !IsProjectSaved() )
          projName = wxT("_data");
    }
 
@@ -3769,16 +3769,27 @@ private:
 };
 #endif
 
-bool AudacityProject::Save(bool overwrite /* = true */ ,
-                           bool fromSaveAs /* = false */,
-                           bool bWantSaveCompressed /*= false*/)
+bool AudacityProject::Save()
+{
+   if ( !IsProjectSaved() )
+      return SaveAs();
+
+   return DoSave(false, false);
+}
+
+
+// Assumes AudacityProject::mFileName has been set to the desired path.
+bool AudacityProject::DoSave
+   (const bool fromSaveAs, const bool bWantSaveCompressed)
 {
    // See explanation above
    // ProjectDisabler disabler(this);
 
    if (bWantSaveCompressed)
       wxASSERT(fromSaveAs);
-   else
+
+   // Some confirmation dialogs
+   if (!bWantSaveCompressed)
    {
       TrackListIterator iter(GetTracks());
       bool bHasTracks = (iter.First() != NULL);
@@ -3793,9 +3804,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          }
       }
 
-      if (!fromSaveAs && mDirManager->GetProjectName() == wxT(""))
-         return SaveAs();
-
       // If the user has recently imported dependencies, show
       // a dialog where the user can see audio files that are
       // aliased by this project.  The user may make the project
@@ -3808,6 +3816,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          mImportedDependencies = false; // do not show again
       }
    }
+   // End of confirmations
 
    //
    // Always save a backup of the original project file
@@ -3863,7 +3872,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       mStrOtherNamesArray.clear();
    } );
 
-   if (fromSaveAs || mDirManager->GetProjectName() == wxT("")) {
+   if (fromSaveAs) {
       // This block of code is duplicated in WriteXML, for now...
       project = mFileName;
       if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
@@ -3920,34 +3929,31 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
    if (!success)
       return false;
 
-   if (fromSaveAs || mDirManager->GetProjectName() == wxT("")) {
-      if (!bWantSaveCompressed)
-      {
-         // We are about to move files from the current directory to
-         // the NEW directory.  We need to make sure files that belonged
-         // to the last saved project don't get erased, so we "lock" them, so that
-         // SetProject() copies instead of moves the files.
-         // (Otherwise the NEW project would be fine, but the old one would
-         // be empty of all of its files.)
+   if (fromSaveAs && !bWantSaveCompressed) {
+      // We are about to move files from the current directory to
+      // the NEW directory.  We need to make sure files that belonged
+      // to the last saved project don't get erased, so we "lock" them, so that
+      // SetProject() copies instead of moves the files.
+      // (Otherwise the NEW project would be fine, but the old one would
+      // be empty of all of its files.)
 
-         std::vector<movable_ptr<WaveTrack::Locker>> lockers;
-         if (mLastSavedTracks && !overwrite) {
-            lockers.reserve(mLastSavedTracks->size());
-            TrackListIterator iter(mLastSavedTracks.get());
-            Track *t = iter.First();
-            while (t) {
-               if (t->GetKind() == Track::Wave)
-                  lockers.push_back(
-                     make_movable<WaveTrack::Locker>(
-                        static_cast<const WaveTrack*>(t)));
-               t = iter.Next();
-            }
+      std::vector<movable_ptr<WaveTrack::Locker>> lockers;
+      if (mLastSavedTracks) {
+         lockers.reserve(mLastSavedTracks->size());
+         TrackListIterator iter(mLastSavedTracks.get());
+         Track *t = iter.First();
+         while (t) {
+            if (t->GetKind() == Track::Wave)
+               lockers.push_back(
+                  make_movable<WaveTrack::Locker>(
+                     static_cast<const WaveTrack*>(t)));
+            t = iter.Next();
          }
-
-         // This renames the project directory, and moves or copies
-         // all of our block files over.
-         success = mDirManager->SetProject(projPath, projName, !overwrite);
       }
+
+      // This renames the project directory, and moves or copies
+      // all of our block files over.
+      success = mDirManager->SetProject(projPath, projName, true);
 
       if (!success)
          return false;
@@ -4206,7 +4212,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
 
-   if (initiallyEmpty && mDirManager->GetProjectName() == wxT("")) {
+   if (initiallyEmpty && !IsProjectSaved() ) {
       wxString name = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast(wxT('.'));
       mFileName =::wxPathOnly(fileName) + wxFILE_SEP_PATH + name + wxT(".aup");
       mbLoadedFromAup = false;
@@ -4304,6 +4310,8 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
 
 bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
 {
+   // This version of SaveAs is invoked only from scripting and does not
+   // prompt for a file name
    wxString oldFileName = mFileName;
 
    bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==newFileName);
@@ -4331,7 +4339,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    //Don't change the title, unless we succeed.
    //SetProjectTitle();
 
-   success = Save(false, true, bWantSaveCompressed);
+   success = DoSave(!bOwnsNewAupName || bWantSaveCompressed, bWantSaveCompressed);
 
    if (success && addToHistory) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -4430,7 +4438,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
          mFileName = oldFileName;
    } );
 
-   success = Save(false, true, bWantSaveCompressed);
+   success = DoSave(!bOwnsNewAupName || bWantSaveCompressed, bWantSaveCompressed);
 
    if (success) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -5785,6 +5793,9 @@ int AudacityProject::GetOpenProjectCount() {
 }
 
 bool AudacityProject::IsProjectSaved() {
+   // This is true if a project was opened from an .aup
+   // Otherwise it becomes true only when a project is first saved successfully
+   // in DirManager::SetProject
    wxString sProjectName = mDirManager->GetProjectName();
    return (sProjectName != wxT(""));
 }
@@ -5817,7 +5828,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
          mFileName = sOldFilename;
    } );
 
-   bSuccess = Save(false, true, false);
+   bSuccess = DoSave(true, false);
 
    if (bSuccess) {
       wxGetApp().AddFileToHistory(mFileName);

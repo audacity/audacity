@@ -272,12 +272,16 @@ public:
    AddImportedTracks(const wxString &fileName,
                      TrackHolders &&newTracks);
 
-   bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);
+   bool Save();
    bool SaveAs(bool bWantSaveCompressed = false);
    bool SaveAs(const wxString & newFileName, bool bWantSaveCompressed = false, bool addToHistory = true);
    #ifdef USE_LIBVORBIS
       bool SaveCompressedWaveTracks(const wxString & strProjectPathName); // full path for aup except extension
    #endif
+private:
+   bool DoSave(bool fromSaveAs, bool bWantSaveCompressed);
+public:
+
    void Clear();
 
    const wxString &GetFileName() { return mFileName; }
