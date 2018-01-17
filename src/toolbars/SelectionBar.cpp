@@ -255,7 +255,7 @@ void SelectionBar::Populate()
 
    wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
-   AddTitle( _("Project Rate (Hz):"), mainSizer );
+   AddTitle( _("Project Rate (Hz)"), mainSizer );
    AddVLine( mainSizer );
    AddTitle( _("Snap-To"), mainSizer );
 #ifdef OPTIONS_BUTTON
@@ -297,7 +297,7 @@ void SelectionBar::Populate()
    mRateBox = safenew wxComboBox(this, RateID,
                              wxT(""),
                              wxDefaultPosition, wxSize(80, -1));
-   mRateBox->SetName(_("Project Rate (Hz):"));
+   mRateBox->SetName(_("Project Rate (Hz)"));
    //mRateBox->SetForegroundColour( clrText2 );
    wxTextValidator vld(wxFILTER_INCLUDE_CHAR_LIST);
    vld.SetIncludes(wxArrayString(10, numbers));

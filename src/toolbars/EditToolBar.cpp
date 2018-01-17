@@ -241,8 +241,8 @@ static const struct Entry {
 #ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
    { ETBZoomToggleID,   wxT("ZoomToggle"),      XO("Zoom Toggle")  },
 #endif 
-   { ETBZoomSelID,  wxT("ZoomSel"),     XO("Fit selection in window")  },
-   { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project in window")  },
+   { ETBZoomSelID,  wxT("ZoomSel"),     XO("Fit selection to width")  },
+   { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project to width")  },
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    { ETBEffectsID,  wxT(""),            XO("Open Effects Rack")  },
