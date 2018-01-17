@@ -3423,7 +3423,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       {
          // Create the prompt
          wxString quest;
-         quest = wxString(_("Delete '")) + mEditCurves[ item-deleted ].Name + _("' ?");
+         quest = wxString(_("Delete '")) + mEditCurves[ item-deleted ].Name + _("'?");
 
          // Ask for confirmation before removal
          int ans = mEffect->Effect::MessageBox( quest, wxYES_NO | wxCENTRE, _("Confirm Deletion") );
@@ -3452,7 +3452,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       quest.Printf(_("Delete ") + wxString(wxT("%d ")) + _("items?"), count);
    else
       if( count == 1 )
-         quest = wxString(_("Delete '")) + mEditCurves[ item ].Name + _("' ?");
+         quest = wxString(_("Delete '")) + mEditCurves[ item ].Name + _("'?");
       else
          return;
    // Ask for confirmation before removal
