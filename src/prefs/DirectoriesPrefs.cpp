@@ -79,6 +79,7 @@ void DirectoriesPrefs::Populate()
 void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Temporary files directory"));
    {
@@ -122,6 +123,8 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif // DEPRECATED_AUDIO_CACHE
+   S.EndScroller();
+
 }
 
 void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)

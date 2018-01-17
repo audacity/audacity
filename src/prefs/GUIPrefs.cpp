@@ -123,8 +123,8 @@ void GUIPrefs::Populate()
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
-
    S.StartScroller();
+
    S.StartStatic(_("Display"));
    {
       S.StartMultiColumn(2);

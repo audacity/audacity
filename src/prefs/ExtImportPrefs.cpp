@@ -85,6 +85,7 @@ void ExtImportPrefs::Populate()
 void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.TieCheckBox(_("A&ttempt to use filter in OpenFile dialog first"),
          wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"),
@@ -182,6 +183,8 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndStatic();
+   S.EndScroller();
+
    Layout();
    Fit();
    SetMinSize(GetSize());

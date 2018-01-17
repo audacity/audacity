@@ -56,6 +56,7 @@ void ProjectsPrefs::Populate()
 void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("When saving a project that depends on other audio files"));
    {
@@ -71,6 +72,8 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndRadioButtonGroup();
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 bool ProjectsPrefs::Commit()

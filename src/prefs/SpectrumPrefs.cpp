@@ -158,13 +158,12 @@ void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
 void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    mPopulating = true;
-
    S.SetBorder(2);
+   S.StartScroller(); {
 
    // S.StartStatic(_("Track Settings"));
    // {
 
-   S.StartScroller(); {
 
    mDefaultsCheckbox = 0;
    if (mWt) {

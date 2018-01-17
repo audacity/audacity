@@ -50,6 +50,7 @@ void ImportExportPrefs::Populate()
 void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("When importing audio files"));
    {
@@ -101,6 +102,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
+   S.EndScroller();
 }
 
 bool ImportExportPrefs::Commit()

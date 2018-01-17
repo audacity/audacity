@@ -52,6 +52,7 @@ void WarningsPrefs::Populate()
 void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Show Warnings/Prompts for"));
    {
@@ -78,6 +79,8 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 bool WarningsPrefs::Commit()

@@ -53,8 +53,10 @@ void BatchPrefs::Populate( )
 /// Defines the dialog and does data exchange with it.
 void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
 {
-   S.StartHorizontalLay( wxEXPAND, 0 );
    S.SetBorder( 2 );
+   S.StartScroller();
+   S.StartHorizontalLay( wxEXPAND, 0 );
+
    S.StartStatic( _("Behaviors"),1 );
    {
 #ifdef __WXDEBUG__
@@ -64,7 +66,7 @@ void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
    }
    S.EndStatic();
    S.EndHorizontalLay();
-
+   S.EndScroller();
    return;
 }
 

@@ -88,6 +88,7 @@ void ThemePrefs::Populate()
 void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Info"));
    {
@@ -146,6 +147,8 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 /// Load Theme from multiple png files.

@@ -101,7 +101,9 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
    StatusChoices.Add( _("Ask" ) );
    StatusChoices.Add( _("Failed" ) );
    StatusChoices.Add( _("New" ) );
+
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic( {} );
    {
@@ -110,7 +112,6 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
       S.AddFixedText(wxString(wxT("  ")) + _("'Failed' means Audacity thinks the module is broken and won't run it.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'New' means no choice has been made yet.") );
       S.AddFixedText(_("Changes to these settings only take effect when Audacity starts up."));
-      S.StartScroller();
       {
         S.StartMultiColumn( 2 );
         int i;
@@ -122,9 +123,9 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
       {
         S.AddFixedText( _("No modules were found") );
       }
-      S.EndScroller();
    }
    S.EndStatic();
+   S.EndScroller();
 }
 
 bool ModulePrefs::Commit()

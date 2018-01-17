@@ -71,6 +71,7 @@ void RecordingPrefs::Populate()
 void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Playthrough"));
    {
@@ -220,6 +221,8 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
    #endif
+   S.EndScroller();
+
 }
 
 bool RecordingPrefs::Commit()

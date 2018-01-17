@@ -118,6 +118,7 @@ void QualityPrefs::GetNamesAndLabels()
 void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Sampling"));
    {
@@ -204,6 +205,8 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 /// Enables or disables the Edit box depending on

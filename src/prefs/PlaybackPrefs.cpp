@@ -53,6 +53,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    wxTextCtrl *w;
 
+   S.StartScroller();
    S.SetBorder(2);
 
    S.StartStatic(_("Effects Preview"));
@@ -114,6 +115,8 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 bool PlaybackPrefs::Commit()

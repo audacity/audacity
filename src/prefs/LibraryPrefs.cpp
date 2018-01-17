@@ -81,6 +81,8 @@ void LibraryPrefs::Populate()
 void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
+
    S.StartStatic(_("MP3 Export Library"));
    {
       S.StartTwoColumn();
@@ -161,6 +163,8 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 /// Sets the a text area on the dialog to have the name

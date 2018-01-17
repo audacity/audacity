@@ -115,6 +115,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    wxArrayString empty;
 
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Interface"));
    {
@@ -173,6 +174,8 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    }
    S.EndStatic();
 #endif
+   S.EndScroller();
+
 }
 
 void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))

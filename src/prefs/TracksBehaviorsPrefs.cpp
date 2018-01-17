@@ -59,8 +59,8 @@ void TracksBehaviorsPrefs::Populate()
 void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
-
    S.StartScroller();
+
    S.StartStatic(_("Behaviors"));
    {
       S.TieCheckBox(_("A&uto-select, if selection required"),

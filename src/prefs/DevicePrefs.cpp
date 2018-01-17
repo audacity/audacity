@@ -111,6 +111,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    wxArrayString empty;
 
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Interface"));
    {
@@ -189,6 +190,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
    }
    S.EndStatic();
+   S.EndScroller();
 
 }
 

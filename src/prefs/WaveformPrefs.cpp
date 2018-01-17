@@ -76,6 +76,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    mPopulating = true;
 
    S.SetBorder(2);
+   S.StartScroller();
 
    // S.StartStatic(_("Track Settings"));
    {
@@ -112,6 +113,8 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
    */
+
+   S.EndScroller();
 
    EnableDisableRange();
 
