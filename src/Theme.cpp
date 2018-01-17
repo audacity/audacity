@@ -1168,7 +1168,7 @@ void ThemeBase::SaveComponents()
       auto result =
          AudacityMessageBox(
             wxString::Format(
-               _("Some required files in:\n  %s\nwere already present.  Overwrite?"),
+               _("Some required files in:\n  %s\nwere already present. Overwrite?"),
                FileNames::ThemeComponentsDir()),
                AudacityMessageBoxCaptionStr(),
                wxYES_NO | wxNO_DEFAULT);
