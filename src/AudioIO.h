@@ -801,6 +801,7 @@ private:
    bool mDetectDropouts{ true };
 
 public:
+   // Pairs of starting time and duration
    const std::vector< std::pair<double, double> > &LostCaptureIntervals()
    { return mLostCaptureIntervals; }
 

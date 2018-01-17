@@ -5394,7 +5394,8 @@ void AudacityProject::OnAudioIOStopRecording()
          long counter = 1;
          for (auto &interval : intervals)
             pTrack->AddLabel(
-               SelectedRegion{ interval.first, interval.second },
+               SelectedRegion{ interval.first,
+                  interval.first + interval.second },
                wxString::Format(wxT("%ld"), counter++),
                -2 );
          ShowWarningDialog(this, wxT("DropoutDetected"), _("\

@@ -2716,10 +2716,6 @@ void AudioIO::StopStream()
          double recordingOffset =
             mLastRecordingOffset + latencyCorrection / 1000.0;
 
-         for (auto &interval : mLostCaptureIntervals)
-            interval.first += recordingOffset,
-            interval.second += recordingOffset;
-
          for (unsigned int i = 0; i < mCaptureTracks.size(); i++) {
             // The calls to Flush, and (less likely) Clear and InsertSilence,
             // may cause exceptions because of exhaustion of disk space.
@@ -2790,6 +2786,19 @@ void AudioIO::StopStream()
                   }
                }
             } );
+         }
+
+         for (auto &interval : mLostCaptureIntervals) {
+            auto &start = interval.first;
+            if (mPlaybackTracks.size() > 0)
+               // only do latency correction if some tracks are being played back
+               start += recordingOffset;
+            auto duration = interval.second;
+            for (auto &track : mCaptureTracks) {
+               GuardedCall([&] {
+                  track->SyncLockAdjust(start, start + duration);
+               });
+            }
          }
       }
    }
@@ -5181,10 +5190,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
               len < framesPerBuffer) ) {
             // Assume that any good partial buffer should be written leftmost
             // and zeroes will be padded after; label the zeroes.
-            auto start = gAudioIO->mTime;
-            auto end = start + framesPerBuffer / gAudioIO->mRate;
-            auto middle = start + len / gAudioIO->mRate;
-            auto interval = std::make_pair( middle, end );
+            auto start = gAudioIO->mTime + len / gAudioIO->mRate;
+            auto duration = (framesPerBuffer - len) / gAudioIO->mRate;
+            auto interval = std::make_pair( start, duration );
             gAudioIO->mLostCaptureIntervals.push_back( interval );
          }
 
@@ -5234,20 +5242,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                const auto put =
                   gAudioIO->mCaptureBuffers[t]->Put(
                      (samplePtr)tempBuffer, gAudioIO->mCaptureFormat, len);
-               // wxASSERT(put == len);
-               // but we can't assert in this thread
-               wxUnusedVar(put);
-            }
-         }
-
-         if (gAudioIO->mDetectDropouts &&
-             len < framesPerBuffer) {
-            for(unsigned t = 0; t < numCaptureChannels; t++) {
-               // Get here probably because of failure to keep up with real
-               // time, causing loss of input samples.
-               // Pad with zeroes
-               const auto put = gAudioIO->mCaptureBuffers[t]->Clear(
-                     gAudioIO->mCaptureFormat, framesPerBuffer - len);
                // wxASSERT(put == len);
                // but we can't assert in this thread
                wxUnusedVar(put);
