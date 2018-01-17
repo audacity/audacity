@@ -169,6 +169,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/GUI/PreferNewTrackRecord"),
                     false);
 
+/* i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording */
        S.TieCheckBox(_("Detect dropouts"),
                      WarningDialogKey(wxT("DropoutDetected")),
                      true);
