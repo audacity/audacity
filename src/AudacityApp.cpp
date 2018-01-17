@@ -904,7 +904,7 @@ Silence is being substituted for the affected audio.\n\
 The first detected missing file is:\n\
 %s\n\
 There may be additional missing files.\n\
-Choose File > Check Dependencies to view a list of \
+Choose Help > Diagnostics > Check Dependencies to view a list of \
 locations of the missing files."), missingFileName);
 
          // if an old dialog exists, raise it if it is

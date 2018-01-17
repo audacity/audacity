@@ -648,7 +648,7 @@ bool Exporter::GetFilename()
                // Warn and return to the dialog
                AudacityMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
                The file cannot be written because the path is needed to restore the original audio to the project.\n\
-               Choose File > Check Dependencies to view the locations of all missing files.\n\
+               Choose Help > Diagnostics > Check Dependencies to view the locations of all missing files.\n\
                If you still wish to export, please choose a different filename or folder."));
                overwritingMissingAlias = true;
             }

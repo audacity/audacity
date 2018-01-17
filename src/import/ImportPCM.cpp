@@ -264,7 +264,7 @@ static wxString AskCopyOrEdit()
 "Reading the files directly allows you to play or edit them almost immediately.  "
 "This is less safe than copying in, because you must retain the files with their "
 "original names in their original locations.\n"
-"File > Check Dependencies will show the original names and locations of any files "
+"Help > Diagnostics > Check Dependencies will show the original names and locations of any files "
 "that you are reading directly.\n\n"
 "How do you want to import the current file(s)?"
       );
