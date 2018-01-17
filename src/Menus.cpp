@@ -1237,6 +1237,10 @@ void AudacityProject::CreateMenusAndCommands()
                   _("Simulate Recording Errors"),
                   FN(OnSimulateRecordingErrors),
                   gAudioIO->mSimulateRecordingErrors);
+      c->AddCheck(wxT("DetectUpstreamDropouts"),
+                  _("Detect Upstream Dropouts"),
+                  FN(OnDetectUpstreamDropouts),
+                  gAudioIO->mDetectUpstreamDropouts);
 #endif
 
       c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
@@ -8419,6 +8423,13 @@ void AudacityProject::OnSimulateRecordingErrors(const CommandContext &)
 {
    bool &setting = gAudioIO->mSimulateRecordingErrors;
    mCommandManager.Check(wxT("SimulateRecordingErrors"), !setting);
+   setting = !setting;
+}
+
+void AudacityProject::OnDetectUpstreamDropouts(const CommandContext &)
+{
+   bool &setting = gAudioIO->mDetectUpstreamDropouts;
+   mCommandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
    setting = !setting;
 }
 

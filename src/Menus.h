@@ -510,6 +510,7 @@ void OnBenchmark(const CommandContext &);
 void OnCrashReport(const CommandContext &);
 #endif
 void OnSimulateRecordingErrors(const CommandContext &);
+void OnDetectUpstreamDropouts(const CommandContext &);
 void OnScreenshot(const CommandContext &);
 void OnAudioDeviceInfo(const CommandContext &);
 #ifdef EXPERIMENTAL_MIDI_OUT

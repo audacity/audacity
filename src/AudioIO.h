@@ -807,6 +807,10 @@ public:
 
    // Used only for testing purposes in alpha builds
    bool mSimulateRecordingErrors{ false };
+
+   // Whether to check the error code passed to audacityAudioCallback to
+   // detect more dropouts
+   bool mDetectUpstreamDropouts{ false };
 };
 
 #endif
