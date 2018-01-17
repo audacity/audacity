@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-05 19:31-0500\n"
+"POT-Creation-Date: 2018-01-16 21:45-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -395,10 +395,6 @@ msgid "Check Online"
 msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "quality assurance"
-msgstr ""
-
-#: src/AboutDialog.cpp
 msgid "system administration"
 msgstr ""
 
@@ -412,6 +408,10 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "documentation and support"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "quality assurance"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -493,11 +493,6 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "DarkAudacity Customisation"
-msgstr ""
-
-#. i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages
-#: src/AboutDialog.cpp
-msgid "In Memoriam"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -1059,6 +1054,40 @@ msgstr ""
 
 #: src/BatchCommandDialog.cpp
 msgid "C&hoose command"
+msgstr ""
+
+#: src/BatchCommands.cpp
+msgid "No Action"
+msgstr ""
+
+#. i18n-hint: before is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+msgid "Export as MP3 56k before"
+msgstr ""
+
+#. i18n-hint: after is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+msgid "Export as MP3 56k after"
+msgstr ""
+
+#. i18n-hint: FLAC names an audio file format
+#: src/BatchCommands.cpp
+msgid "Export as FLAC"
+msgstr ""
+
+#. i18n-hint: MP3 names an audio file format
+#: src/BatchCommands.cpp
+msgid "Export as MP3"
+msgstr ""
+
+#. i18n-hint: Ogg names an audio file format
+#: src/BatchCommands.cpp
+msgid "Export as Ogg"
+msgstr ""
+
+#. i18n-hint: WAV names an audio file format
+#: src/BatchCommands.cpp
+msgid "Export as WAV"
 msgstr ""
 
 #: src/BatchCommands.cpp
@@ -2889,6 +2918,10 @@ msgid "&Zoom to Selection"
 msgstr ""
 
 #: src/Menus.cpp
+msgid "Zoom &Toggle"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "T&rack Size"
 msgstr ""
 
@@ -3330,6 +3363,10 @@ msgid "&Tools"
 msgstr ""
 
 #: src/Menus.cpp
+msgid "Simulate Recording Errors"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "&Screenshot Tools..."
 msgstr ""
 
@@ -3759,6 +3796,7 @@ msgstr ""
 msgid "&Full screen (on/off)"
 msgstr ""
 
+#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
 msgid "Minimize all projects"
 msgstr ""
@@ -4864,6 +4902,10 @@ msgid ""
 "%s"
 msgstr ""
 
+#: src/PluginManager.cpp src/effects/Effect.cpp
+msgid "Built-in"
+msgstr ""
+
 #: src/PluginManager.cpp
 #, c-format
 msgid "Overwrite the plug-in file %s ?"
@@ -5233,6 +5275,23 @@ msgstr ""
 msgid "Actual Rate: %d"
 msgstr ""
 
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#.
+#: src/Project.cpp
+msgid "Errors"
+msgstr ""
+
+#: src/Project.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"\tOther applications are competing with Audacity for processor time\n"
+"\n"
+"\tYou are saving directly to a slow external storage device\n"
+msgstr ""
+
 #: src/Project.cpp
 msgid "Recorded Audio"
 msgstr ""
@@ -5413,6 +5472,7 @@ msgstr ""
 msgid "Mixer"
 msgstr ""
 
+#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr ""
@@ -9464,11 +9524,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Audio In: "
-msgstr ""
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ", Audio Out: "
+#, c-format
+msgid "Audio In: %d, Audio Out: %d"
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
@@ -11557,10 +11614,6 @@ msgstr ""
 msgid "B&lend system and Audacity theme"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "&Display a mono channel as virtual stereo"
-msgstr ""
-
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr ""
@@ -12235,6 +12288,11 @@ msgstr ""
 msgid "Always record on a new track"
 msgstr ""
 
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr ""
+
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
 msgstr ""
@@ -12610,6 +12668,42 @@ msgstr ""
 msgid "Stem plot"
 msgstr ""
 
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+msgid "Fit to Width"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+msgid "Zoom to Selection"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Zoom Default"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Minutes"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Seconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "MilliSeconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Samples"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "4 Pixels per Sample"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Max Zoom"
+msgstr ""
+
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
 msgstr ""
@@ -12640,6 +12734,18 @@ msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w audio track name as overlay"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+msgid "Zoom Toggle"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Preset 1:"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Preset 2:"
 msgstr ""
 
 #: src/prefs/WarningsPrefs.cpp
@@ -12814,15 +12920,15 @@ msgid "Zoom Out"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr ""
+
+#: src/toolbars/EditToolBar.cpp
 msgid "Fit selection in window"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Fit project in window"
-msgstr ""
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp

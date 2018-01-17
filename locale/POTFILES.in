@@ -248,6 +248,7 @@ src/blockfile/PCMAliasBlockFile.h
 src/blockfile/SilentBlockFile.h
 src/blockfile/SimpleBlockFile.h
 src/commands/AppCommandEvent.cpp
+src/commands/AutomationCommands.cpp
 src/commands/BatchEvalCommand.cpp
 src/commands/Command.cpp
 src/commands/CommandBuilder.cpp
@@ -258,7 +259,6 @@ src/commands/CommandSignature.cpp
 src/commands/CommandType.cpp
 src/commands/CompareAudioCommand.cpp
 src/commands/ExecMenuCommand.cpp
-src/commands/GetAllMenuCommands.cpp
 src/commands/GetProjectInfoCommand.cpp
 src/commands/GetTrackInfoCommand.cpp
 src/commands/HelpCommand.cpp
@@ -274,6 +274,7 @@ src/commands/SelectCommand.cpp
 src/commands/SetProjectInfoCommand.cpp
 src/commands/SetTrackInfoCommand.cpp
 src/commands/AppCommandEvent.h
+src/commands/AutomationCommands.h
 src/commands/BatchEvalCommand.h
 src/commands/Command.h
 src/commands/CommandBuilder.h
@@ -288,7 +289,6 @@ src/commands/CommandTargets.h
 src/commands/CommandType.h
 src/commands/CompareAudioCommand.h
 src/commands/ExecMenuCommand.h
-src/commands/GetAllMenuCommands.h
 src/commands/GetProjectInfoCommand.h
 src/commands/GetTrackInfoCommand.h
 src/commands/HelpCommand.h
