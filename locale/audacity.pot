@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.2.2\n"
+"Project-Id-Version: audacity 2.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-16 21:45-0500\n"
+"POT-Creation-Date: 2018-01-18 00:56-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -692,8 +692,8 @@ msgid ""
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
-"Choose File > Check Dependencies to view a list of locations of the missing "
-"files."
+"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
+"of the missing files."
 msgstr ""
 
 #: src/AudacityApp.cpp
@@ -3367,6 +3367,10 @@ msgid "Simulate Recording Errors"
 msgstr ""
 
 #: src/Menus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "&Screenshot Tools..."
 msgstr ""
 
@@ -5278,18 +5282,23 @@ msgstr ""
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
-#.
+#. Dropout is a loss of a short sequence audio sample data from the
+#. recording
 #: src/Project.cpp
-msgid "Errors"
+msgid "Dropouts"
 msgstr ""
 
 #: src/Project.cpp
 msgid ""
 "Recorded audio was lost at the labeled locations. Possible causes:\n"
 "\n"
-"\tOther applications are competing with Audacity for processor time\n"
+"Other applications are competing with Audacity for processor time\n"
 "\n"
-"\tYou are saving directly to a slow external storage device\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/Project.cpp
+msgid "Turn off dropout detection"
 msgstr ""
 
 #: src/Project.cpp
@@ -9636,8 +9645,8 @@ msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "               The file cannot be written because the path is needed to "
 "restore the original audio to the project.\n"
-"               Choose File > Check Dependencies to view the locations of all "
-"missing files.\n"
+"               Choose Help > Diagnostics > Check Dependencies to view the "
+"locations of all missing files.\n"
 "               If you still wish to export, please choose a different "
 "filename or folder."
 msgstr ""
@@ -11063,8 +11072,8 @@ msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately.  This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
-"File > Check Dependencies will show the original names and locations of any "
-"files that you are reading directly.\n"
+"Help > Diagnostics > Check Dependencies will show the original names and "
+"locations of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
@@ -12924,11 +12933,11 @@ msgid "Show Effects Rack"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit selection in window"
+msgid "Fit selection to width"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit project in window"
+msgid "Fit project to width"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
@@ -13057,7 +13066,7 @@ msgid "Selection"
 msgstr ""
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Project Rate (Hz):"
+msgid "Project Rate (Hz)"
 msgstr ""
 
 #: src/toolbars/SelectionBar.cpp
