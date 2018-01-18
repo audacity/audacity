@@ -6,10 +6,10 @@
 # Yuri Chornoivan <yurchor@ukr.net>, 2010-2017, 2018.
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.2.1\n"
+"Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-16 21:45-0500\n"
-"PO-Revision-Date: 2018-01-17 09:46+0200\n"
+"POT-Creation-Date: 2018-01-18 00:56-0500\n"
+"PO-Revision-Date: 2018-01-18 08:56+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -722,8 +722,8 @@ msgid ""
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
-"Choose File > Check Dependencies to view a list of locations of the missing "
-"files."
+"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
+"of the missing files."
 msgstr ""
 "Не вдалося знайти один або декілька зовнішніх звукових файлів.\n"
 "Ймовірно, ці файли пересунуто, вилучено або збережено на носії, який зараз "
@@ -731,7 +731,8 @@ msgstr ""
 "Звукові дані файлів, які не знайдено, буде замінено тишею.\n"
 "Першою виявлено нестачу цього файла:\n"
 "%s\n"
-"Може не вистачати інших файлів. Скористайтеся пунктом меню «Файл -> "
+"Може не вистачати інших файлів. Скористайтеся пунктом меню «Довідка ->"
+" Діагностика -> "
 "Перевірити залежності», щоб переглянути дані щодо розташування файлів."
 
 #: src/AudacityApp.cpp
@@ -3611,6 +3612,10 @@ msgid "Simulate Recording Errors"
 msgstr "Імітувати помилки запису"
 
 #: src/Menus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "Виявляти провали у початкових даних"
+
+#: src/Menus.cpp
 msgid "&Screenshot Tools..."
 msgstr "Створення &знімків екрана…"
 
@@ -5644,24 +5649,29 @@ msgstr "Фактична частота %d"
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
-#.
+#. Dropout is a loss of a short sequence audio sample data from the
+#. recording
 #: src/Project.cpp
-msgid "Errors"
-msgstr "Помилки"
+msgid "Dropouts"
+msgstr "Провали"
 
 #: src/Project.cpp
 msgid ""
 "Recorded audio was lost at the labeled locations. Possible causes:\n"
 "\n"
-"\tOther applications are competing with Audacity for processor time\n"
+"Other applications are competing with Audacity for processor time\n"
 "\n"
-"\tYou are saving directly to a slow external storage device\n"
+"You are saving directly to a slow external storage device\n"
 msgstr ""
 "У позначених мітками місцях записаний звук було втрачено. Можливі причини:\n"
 "\n"
-"\tКонкуренція за процесорний час Audacity з іншими програмами\n"
+"Конкуренція за процесорний час Audacity з іншими програмами\n"
 "\n"
-"\tБезпосереднє збереження даних на зовнішній пристрій із повільним доступом\n"
+"Безпосереднє збереження даних на зовнішній пристрій із повільним доступом\n"
+
+#: src/Project.cpp
+msgid "Turn off dropout detection"
+msgstr "Вимкнути виявлення провалів"
 
 #: src/Project.cpp
 msgid "Recorded Audio"
@@ -10262,8 +10272,8 @@ msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "               The file cannot be written because the path is needed to "
 "restore the original audio to the project.\n"
-"               Choose File > Check Dependencies to view the locations of all "
-"missing files.\n"
+"               Choose Help > Diagnostics > Check Dependencies to view the "
+"locations of all missing files.\n"
 "               If you still wish to export, please choose a different "
 "filename or folder."
 msgstr ""
@@ -10271,7 +10281,8 @@ msgstr ""
 "проекті.\n"
 "Запис цього файла неможливий, оскільки для відновлення початкових звукових "
 "даних у проекті слід вказати шлях до них.\n"
-"Скористайтеся пунктом меню «Файл > Перевірити залежності», щоб переглянути "
+"Скористайтеся пунктом меню «Довідка -> Діагностика -> Перевірити залежності»,"
+" щоб переглянути "
 "записи щодо розташування всіх файлів, яких не вистачає.\n"
 "Якщо ви все ще бажаєте експортувати дані, будь ласка, вкажіть іншу назву "
 "файла або теки."
@@ -11910,8 +11921,8 @@ msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately.  This is less safe than copying in, because you must retain the "
 "files with their original names in their original locations.\n"
-"File > Check Dependencies will show the original names and locations of any "
-"files that you are reading directly.\n"
+"Help > Diagnostics > Check Dependencies will show the original names and "
+"locations of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
@@ -11920,7 +11931,8 @@ msgstr ""
 "вам доведеться зберігати початкові назви та розташування редагованих "
 "файлів.\n"
 "Переглянути список назв та розташування файлів, дані яких використовуються "
-"безпосередньо, можна за допомогою пункту меню «Файл > Перевірити "
+"безпосередньо, можна за допомогою пункту меню «Довідка -> Діагностика ->"
+" Перевірити "
 "залежності».\n"
 "\n"
 "Отже, який спосіб слід використати для імпортування поточних файлів?"
@@ -13832,12 +13844,12 @@ msgid "Show Effects Rack"
 msgstr "Показати список ефектів"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit selection in window"
-msgstr "Розмістити позначене у вікні"
+msgid "Fit selection to width"
+msgstr "Розмістити позначене за шириною"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit project in window"
-msgstr "Розмістити проект у вікні"
+msgid "Fit project to width"
+msgstr "Розмістити проект за шириною"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Open Effects Rack"
@@ -13965,8 +13977,8 @@ msgid "Selection"
 msgstr "Вибрана область"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Project Rate (Hz):"
-msgstr "Частота проекту (Гц):"
+msgid "Project Rate (Hz)"
+msgstr "Частота проекту (Гц)"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap-To"
@@ -15471,6 +15483,9 @@ msgstr "Помилка: %hs у рядку %lu"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "Не вдалося завантажити файл: «%s»"
+
+#~ msgid "Errors"
+#~ msgstr "Помилки"
 
 #~ msgid "In Memoriam"
 #~ msgstr "На пам'ять про"
