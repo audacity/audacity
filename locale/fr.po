@@ -1,6 +1,6 @@
 # French translation file for Audacity.
 # Traduction française pour Audacity.
-# Copyright (C) 2013-2017 Audacity Team
+# Copyright (C) 2013-2018 Audacity Team
 # This file is distributed under the same license as the Audacity package.
 #
 # Translators:
