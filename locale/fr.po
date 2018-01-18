@@ -4337,11 +4337,11 @@ msgstr "Impossible d’effacer les pistes avec de l’audio active"
 #: src/Menus.cpp
 #, c-format
 msgid "Moved '%s' to Top"
-msgstr "'%s' déplacé vers le haut"
+msgstr "'%s' déplacé tout en haut"
 
 #: src/Menus.cpp
 msgid "Move Track to Top"
-msgstr "Déplacer la piste vers le haut"
+msgstr "Déplacer la piste tout en haut"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
@@ -4624,8 +4624,8 @@ msgstr "dummyStringOnSelectClip"
 #, c-format
 msgid "%d of %d clip %s"
 msgid_plural "%d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d de %d clip %s"
+msgstr[1] "%d de %d clips %s"
 
 #: src/Menus.cpp src/import/Import.cpp
 #, c-format
@@ -4788,7 +4788,7 @@ msgstr "Aligné/déplacé le départ à zéro"
 
 #: src/Menus.cpp
 msgid "Aligned start to zero"
-msgstr "Aligner le départ à zéro"
+msgstr "Départ aligné à zéro"
 
 #: src/Menus.cpp
 msgid "Align/Move Start"
@@ -5392,7 +5392,7 @@ msgstr "Intégré"
 #: src/PluginManager.cpp
 #, c-format
 msgid "Overwrite the plug-in file %s ?"
-msgstr "Écraser le fichier greffon %s ?"
+msgstr "Écraser le fichier du greffon %s ?"
 
 #: src/PluginManager.cpp
 msgid "Plug-in already exists"
@@ -5847,8 +5847,8 @@ msgstr ""
 "D'autres applications sont en compétition avec Audacity en ce qui concerne le "
 "temps-processeur\n"
 "\n"
-"Vous êtes en train de sauvegarder vers un périphérique de stockage externe "
-"lent\n"
+"Vous êtes en train de sauvegarder directement vers un périphérique de "
+"stockage externe lent\n"
 
 #: src/Project.cpp
 msgid "Turn off dropout detection"
@@ -10110,7 +10110,7 @@ msgstr "Console Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Ill-formed Nyquist plug-in header"
-msgstr "Entête de greffon Nyquist mal formé"
+msgstr "Entête de greffon Nyquist mal formée"
 
 # trbmuh to check (vérifier dans la GUI)
 #: src/effects/nyquist/Nyquist.cpp
@@ -10402,7 +10402,7 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Audio In: %d, Audio Out: %d"
-msgstr "Entrée audio : %d, Sortie audio : %d"
+msgstr "Entrée audio : %d, sortie audio : %d"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -11511,7 +11511,7 @@ msgid ""
 "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*.so|"
 "Extended Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr ""
-"Seulement libmp3lame.so|libmp3lame.so|Fichiers objets primairement partagés  "
+"Seulement libmp3lame.so|libmp3lame.so|Fichiers objets primairement partagés "
 "(*.so)|*.so|Bibliothèques étendues (*.so*)|*.so*|Tous les fichiers (*)|*"
 
 #: src/export/ExportMP3.cpp
@@ -12148,8 +12148,8 @@ msgid ""
 "\n"
 msgstr ""
 "Lors de l’importation de fichiers audio non-compressés, vous pouvez soit les "
-"copier dans le projet, ou les lire directement depuis leurs emplacements "
-"actuells (sans les copier).\n"
+"copier dans le projet, soit les lire directement depuis leurs emplacements "
+"actuels (sans les copier).\n"
 "\n"
 
 #: src/import/ImportPCM.cpp
@@ -12306,7 +12306,7 @@ msgstr "Taux d’échantillonnage :"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
-msgstr "Mauvaise taille de donnée"
+msgstr "Mauvaise taille de données"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
@@ -13045,7 +13045,7 @@ msgid ""
 "'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"'Demander' signifie qu’Audacity vous demandera si vous souhaitez charger le  "
+"'Demander' signifie qu’Audacity vous demandera si vous souhaitez charger le "
 "module à chaque fois qu’il démarre."
 
 #: src/prefs/ModulePrefs.cpp
@@ -13896,7 +13896,7 @@ msgstr "Zoom par défaut"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Minutes"
-msgstr "minuteq"
+msgstr "minutes"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Seconds"
@@ -14219,7 +14219,7 @@ msgstr "Volume d’enregistrement (indisponible ; utilisez le mixeur système.)"
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
 msgid "Playback Volume: %s (emulated)"
-msgstr "Volume de lecture : %s (émulaté)"
+msgstr "Volume de lecture : %s (émulé)"
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
@@ -14316,7 +14316,7 @@ msgstr "Durée et centre de la sélection"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap To"
-msgstr "Incrément"
+msgstr "Se coller à"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Length"
@@ -14500,7 +14500,7 @@ msgstr "Clic-droit pour le menu."
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Reset\tShift-Right-Click"
-msgstr "Réinitialiser le zoom\tShift + clic-droit"
+msgstr "Réinitialiser le zoom\tMaj + clic-droit"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
