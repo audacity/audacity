@@ -265,7 +265,12 @@ private:
 
    static int wxCMPFUNC_CONV SortCurvePoints (EQPoint **p0, EQPoint **p1)
    {
-      return (*p0)->Freq > (*p1)->Freq;
+      auto diff = (*p0)->Freq - (*p1)->Freq;
+      if (diff < 0)
+         return -1;
+      if (diff > 0)
+         return 1;
+      return 0;
    }
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
