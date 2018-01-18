@@ -150,9 +150,23 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
          Failure(wxT("Unrecognized parameter: '") + paramName + wxT("'"));
          return;
       }
+      // Handling of quoted strings is quite limitted.
+      // You start and end with a " or a '.
+      // There is no escaping in the string.
       cmdParams = cmdParams.Mid(splitAt+1);
-      splitAt = cmdParams.Find(wxT(' '));
-      if (splitAt < 0)
+      if( cmdParams.IsEmpty() )
+         splitAt =-1;
+      else if( cmdParams[0] == '\"' ){
+         cmdParams = cmdParams.Mid(1);
+         splitAt = cmdParams.Find(wxT('\"'))+1;
+      }
+      else if( cmdParams[0] == '\'' ){
+         cmdParams = cmdParams.Mid(1);
+         splitAt = cmdParams.Find(wxT('\''))+1;
+      }
+      else
+         splitAt = cmdParams.Find(wxT(' '))+1;
+      if (splitAt < 1)
       {
          splitAt = cmdParams.Len();
       }

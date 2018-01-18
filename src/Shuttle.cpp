@@ -308,6 +308,11 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
             terminator = wxT('"');
             j++;
          }
+         else if(mParams.GetChar(j) == wxT('\'')) // or by single quotes.
+         {
+            terminator = wxT('\'');
+            j++;
+         }         
          i=j;
          while( j<(int)mParams.Length() && mParams.GetChar(j) != terminator )
             j++;
