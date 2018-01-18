@@ -278,6 +278,8 @@ list( APPEND SOURCES
       Spectrum.h
       SpectrumAnalyst.cpp
       SpectrumAnalyst.h
+      SpectrumTransformer.cpp
+      SpectrumTransformer.h
       SplashDialog.cpp
       SplashDialog.h
       SqliteSampleBlock.cpp
