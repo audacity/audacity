@@ -669,6 +669,8 @@ bool ExportFFmpeg::Finalize()
       {
          AVPacketEx pkt;
          int nFifoBytes = av_fifo_size(mEncAudioFifo.get()); // any bytes left in audio FIFO?
+         if (nFifoBytes <= 0)
+            break;
 
          nEncodedBytes = 0;
          int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
@@ -715,35 +717,28 @@ bool ExportFFmpeg::Finalize()
                if (av_fifo_generic_read(mEncAudioFifo.get(), mEncAudioFifoOutBuf.get(), nFifoBytes, NULL) == 0)
                {
                   nEncodedBytes = encode_audio(mEncAudioCodecCtx.get(), &pkt, mEncAudioFifoOutBuf.get(), frame_size);
+
+                  // Now flush the encoder.
+                  {
+                     int ret;
+                     pkt.stream_index = mEncAudioStream->index;
+
+                     // Set presentation time of frame (currently in the codec's timebase) in the stream timebase.
+                     if (pkt.pts != int64_t(AV_NOPTS_VALUE))
+                        pkt.pts = av_rescale_q(pkt.pts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
+                     if (pkt.dts != int64_t(AV_NOPTS_VALUE))
+                        pkt.dts = av_rescale_q(pkt.dts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
+                     if ((ret = av_interleaved_write_frame(mEncFormatCtx.get(), &pkt)) < 0)
+                     {
+                        AudacityMessageBox(
+                           _("FFmpeg : ERROR - Couldn't write last audio frame to output file."),
+                           _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION
+                        );
+                        break;
+                     }
+                  }
                }
             }
-         }
-      }
-
-      // Now flush the encoder.
-      {
-         AVPacketEx pkt;
-         if (nEncodedBytes <= 0)
-            nEncodedBytes = encode_audio(mEncAudioCodecCtx.get(), &pkt, NULL, 0);
-
-         if (nEncodedBytes <= 0)
-            break;
-
-         pkt.stream_index = mEncAudioStream->index;
-
-         // Set presentation time of frame (currently in the codec's timebase) in the stream timebase.
-         if (pkt.pts != int64_t(AV_NOPTS_VALUE))
-            pkt.pts = av_rescale_q(pkt.pts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
-         if (pkt.dts != int64_t(AV_NOPTS_VALUE))
-            pkt.dts = av_rescale_q(pkt.dts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
-
-         if (av_interleaved_write_frame(mEncFormatCtx.get(), &pkt) != 0)
-         {
-            AudacityMessageBox(
-               _("FFmpeg : ERROR - Couldn't write last audio frame to output file."),
-               _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION
-            );
-            break;
          }
       }
    }
