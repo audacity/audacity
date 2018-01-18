@@ -253,6 +253,7 @@ list( APPEND SOURCES
       SoundActivatedRecord.h
       SpectrumAnalyst.cpp
       SpectrumAnalyst.h
+      SpectrumTransformer.cpp
       SpectrumTransformer.h
       SplashDialog.cpp
       SplashDialog.h

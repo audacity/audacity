@@ -12,6 +12,13 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTRUM_TRANSFORMER__
 #define __AUDACITY_SPECTRUM_TRANSFORMER__
  
+#include <functional>
+#include <memory>
+#include <vector>
+#include "audacity/Types.h"
+#include "RealFFTf.h"
+#include "SampleCount.h"
+
 enum eWindowFunctions : int;
 
 /*!
