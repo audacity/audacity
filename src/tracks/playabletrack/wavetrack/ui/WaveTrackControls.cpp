@@ -549,10 +549,11 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
 class WaveTrackMenuTable : public PopupMenuTable
 {
 public:
-   static WaveTrackMenuTable &Instance();
+   static WaveTrackMenuTable &Instance( Track * pTrack);
+   Track * mpTrack;
 
 protected:
-   WaveTrackMenuTable() : mpData(NULL) {}
+   WaveTrackMenuTable() : mpData(NULL) {mpTrack=NULL;}
 
    void InitMenu(Menu *pMenu, void *pUserData) override;
 
@@ -578,9 +579,16 @@ protected:
    void OnSplitStereoMono(wxCommandEvent & event);
 };
 
-WaveTrackMenuTable &WaveTrackMenuTable::Instance()
+WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
 {
    static WaveTrackMenuTable instance;
+   wxCommandEvent evt;
+   // Clear it out so we force a repopulate
+   instance.Invalidate( evt );
+   // Ensure we know how to poulate.
+   // Messy, but the design does not seem to offer an alternative.
+   // We won't use pTrack after populate.
+   instance.mpTrack = pTrack;
    return instance;
 }
 
@@ -686,8 +694,12 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 #ifndef EXPERIMENTAL_DA
    POPUP_MENU_ITEM(OnSplitStereoMonoID, _("Split Stereo to Mo&no"), OnSplitStereoMono)
 #endif
-   POPUP_MENU_SEPARATOR()
-   POPUP_MENU_SUB_MENU(0, _("&Wave Color"), WaveColorMenuTable)
+
+   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
+   if( pTrack && pTrack->GetDisplay() != WaveTrack::Spectrum  ){
+      POPUP_MENU_SEPARATOR()
+      POPUP_MENU_SUB_MENU(OnWaveColorID, _("&Wave Color"), WaveColorMenuTable)
+   }
 
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_SUB_MENU(0, _("&Format"), FormatMenuTable)
@@ -1000,7 +1012,9 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
 }
 
 //=============================================================================
-PopupMenuTable *WaveTrackControls::GetMenuExtension(Track *WXUNUSED(pTrack))
+PopupMenuTable *WaveTrackControls::GetMenuExtension(Track * pTrack)
 {
-   return &WaveTrackMenuTable::Instance();
+
+   WaveTrackMenuTable & result = WaveTrackMenuTable::Instance( pTrack );
+   return &result;
 }
