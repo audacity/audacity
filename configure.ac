@@ -540,7 +540,7 @@ AC_ARG_WITH(portmixer,
      [compile with PortMixer [default=yes]])],
   use_portmixer=$withval,
   use_portmixer="yes")
-
+AM_CONDITIONAL([USE_PORTMIXER], [test "$use_portmixer" = yes])
 
 AC_CANONICAL_HOST
 
