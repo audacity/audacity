@@ -202,24 +202,41 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       vorbis_comment_clear(&comment);
    } );
 
+   // Many of the library functions called below return 0 for success and
+   // various nonzero codes for failure.
+
    // Encoding setup
    vorbis_info_init(&info);
-   vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality);
+   if (vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality)) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
    // Retrieve tags
    if (!FillComment(project, &comment, metadata)) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
       return ProgressResult::Cancelled;
    }
 
    // Set up analysis state and auxiliary encoding storage
-   vorbis_analysis_init(&dsp, &info);
-   vorbis_block_init(&dsp, &block);
+   if (vorbis_analysis_init(&dsp, &info) ||
+       vorbis_block_init(&dsp, &block)) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
    // Set up packet->stream encoder.  According to encoder example,
    // a random serial number makes it more likely that you can make
    // chained streams with concatenation.
    srand(time(NULL));
-   ogg_stream_init(&stream, rand());
+   if (ogg_stream_init(&stream, rand())) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
    // First we need to write the required headers:
    //    1. The Ogg bitstream header, which contains codec setup params
@@ -233,19 +250,26 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    ogg_packet comment_header;
    ogg_packet codebook_header;
 
-   vorbis_analysis_headerout(&dsp, &comment, &bitstream_header, &comment_header,
-         &codebook_header);
-
-   // Place these headers into the stream
-   ogg_stream_packetin(&stream, &bitstream_header);
-   ogg_stream_packetin(&stream, &comment_header);
-   ogg_stream_packetin(&stream, &codebook_header);
+   if(vorbis_analysis_headerout(&dsp, &comment, &bitstream_header, &comment_header,
+         &codebook_header) ||
+      // Place these headers into the stream
+      ogg_stream_packetin(&stream, &bitstream_header) ||
+      ogg_stream_packetin(&stream, &comment_header) ||
+      ogg_stream_packetin(&stream, &codebook_header)) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
    // Flushing these headers now guarentees that audio data will
    // start on a NEW page, which apparently makes streaming easier
    while (ogg_stream_flush(&stream, &page)) {
-      outFile.Write(page.header, page.header_len);
-      outFile.Write(page.body, page.body_len);
+      if ( outFile.Write(page.header, page.header_len).GetLastError() ||
+           outFile.Write(page.body, page.body_len).GetLastError()) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
    }
 
    const WaveTrackConstArray waveTracks =
@@ -310,8 +334,12 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
                      break;
                   }
 
-                  outFile.Write(page.header, page.header_len);
-                  outFile.Write(page.body, page.body_len);
+                  if ( outFile.Write(page.header, page.header_len).GetLastError() ||
+                       outFile.Write(page.body, page.body_len).GetLastError()) {
+                     // TODO: more precise message
+                     AudacityMessageBox(_("Unable to export"));
+                     return ProgressResult::Cancelled;
+                  }
 
                   if (ogg_page_eos(&page)) {
                      eos = 1;
@@ -322,6 +350,8 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
 
          if (err) {
             updateResult = ProgressResult::Cancelled;
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
             break;
          }
 

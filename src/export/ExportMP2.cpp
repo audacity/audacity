@@ -245,8 +245,13 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    int id3len;
    bool endOfFile;
    id3len = AddTags(project, id3buffer, &endOfFile, metadata);
-   if (id3len && !endOfFile)
-      outFile.Write(id3buffer.get(), id3len);
+   if (id3len && !endOfFile) {
+      if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
+   }
 
    // Values taken from the twolame simple encoder sample
    const size_t pcmBufferSize = 9216 / 2; // number of samples
@@ -288,11 +293,17 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
             mp2BufferSize);
 
          if (mp2BufferNumBytes < 0) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
             break;
          }
 
-         outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
+         if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            return ProgressResult::Cancelled;
+         }
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
@@ -304,12 +315,20 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       mp2BufferSize);
 
    if (mp2BufferNumBytes > 0)
-      outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
+      if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
 
    /* Write ID3 tag if it was supposed to be at the end of the file */
 
    if (id3len && endOfFile)
-      outFile.Write(id3buffer.get(), id3len);
+      if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
 
    outFile.Close();
 

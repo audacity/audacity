@@ -529,6 +529,8 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       dlg.Center();
 
       dlg.ShowModal();
+
+      updateResult = ProgressResult::Failed;
    }
 
    return updateResult;

@@ -556,6 +556,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    return true;
 }
 
+// Returns 0 if no more output, 1 if more output, negative if error
 static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_samples, int nb_samples)
 {
    // Assume *pkt is already initialized.
@@ -724,9 +725,16 @@ bool ExportFFmpeg::Finalize()
       {
          AVPacketEx pkt;
          if (nEncodedBytes <= 0)
+            // We didn't encode_audio yet for this pass
             nEncodedBytes = encode_audio(mEncAudioCodecCtx.get(), &pkt, NULL, 0);
 
-         if (nEncodedBytes <= 0)
+         if (nEncodedBytes < 0) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            return false;
+         }
+
+         if (nEncodedBytes == 0)
             break;
 
          pkt.stream_index = mEncAudioStream->index;
@@ -743,13 +751,23 @@ bool ExportFFmpeg::Finalize()
                _("FFmpeg : ERROR - Couldn't write last audio frame to output file."),
                _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION
             );
+#if 0
+            // We ought to propagate this error, but it is known to happen
+            // spuriously in some versions of FFmpeg when exporting AAC
+            return false;
+#else
             break;
+#endif
          }
       }
    }
 
    // Write any file trailers.
-   av_write_trailer(mEncFormatCtx.get());
+   if (av_write_trailer(mEncFormatCtx.get()) != 0) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return false;
+   }
 
    return true;
 }
@@ -782,7 +800,8 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 
    nBytesToWrite = frameSize;
    pRawSamples  = (uint8_t*)pFrame;
-   av_fifo_realloc2(mEncAudioFifo.get(), av_fifo_size(mEncAudioFifo.get()) + frameSize);
+   if (av_fifo_realloc2(mEncAudioFifo.get(), av_fifo_size(mEncAudioFifo.get()) + frameSize) < 0)
+      return false;
 
    // Put the raw audio samples into the FIFO.
    ret = av_fifo_generic_write(mEncAudioFifo.get(), pRawSamples, nBytesToWrite,NULL);
@@ -866,8 +885,11 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    const TrackList *tracks = project->GetTracks();
    bool ret = true;
 
-   if (mSubFormat >= FMT_LAST)
+   if (mSubFormat >= FMT_LAST) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
       return ProgressResult::Cancelled;
+   }
 
    wxString shortname(ExportFFmpegOptions::fmts[mSubFormat].shortname);
    if (mSubFormat == FMT_OTHER)
@@ -875,8 +897,11 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    ret = Init(shortname.mb_str(),project, metadata, subformat);
    auto cleanup = finally ( [&] { FreeResources(); } );
 
-   if (!ret)
+   if (!ret) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
       return ProgressResult::Cancelled;
+   }
 
    size_t pcmBufferSize = 1024;
 
@@ -905,6 +930,9 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
          if (!EncodeAudioFrame(
             pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels)) {
+            // TODO: more precise message, and fix redundancy with messages
+            // already given on some of the failure paths of the above call
+            AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
             break;
          }
@@ -914,7 +942,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    }
 
    if ( updateResult != ProgressResult::Cancelled )
-      if ( !Finalize() )
+      if ( !Finalize() ) // Finalize makes its own messages
          return ProgressResult::Cancelled;
 
    return updateResult;

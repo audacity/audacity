@@ -245,22 +245,26 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    FLAC::Encoder::File encoder;
 
+   bool success = true;
+   success = success &&
 #ifdef LEGACY_FLAC
-   encoder.set_filename(OSOUTPUT(fName));
+   encoder.set_filename(OSOUTPUT(fName)) &&
 #endif
-   encoder.set_channels(numChannels);
+   encoder.set_channels(numChannels) &&
    encoder.set_sample_rate(lrint(rate));
 
    // See note in GetMetadata() about a bug in libflac++ 1.1.2
-   if (!GetMetadata(project, metadata)) {
+   if (success && !GetMetadata(project, metadata)) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
       return ProgressResult::Cancelled;
    }
 
-   if (mMetadata) {
+   if (success && mMetadata) {
       // set_metadata expects an array of pointers to metadata and a size.
       // The size is 1.
       FLAC__StreamMetadata *p = mMetadata.get();
-      encoder.set_metadata(&p, 1);
+      success = encoder.set_metadata(&p, 1);
    }
 
    auto cleanup1 = finally( [&] {
@@ -270,31 +274,44 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    sampleFormat format;
    if (bitDepthPref == wxT("24")) {
       format = int24Sample;
-      encoder.set_bits_per_sample(24);
+      success = success && encoder.set_bits_per_sample(24);
    } else { //convert float to 16 bits
       format = int16Sample;
-      encoder.set_bits_per_sample(16);
+      success = success && encoder.set_bits_per_sample(16);
    }
+
 
    // Duplicate the flac command line compression levels
    if (levelPref < 0 || levelPref > 8) {
       levelPref = 5;
    }
-   encoder.set_do_exhaustive_model_search(flacLevels[levelPref].do_exhaustive_model_search);
+   success = success &&
+   encoder.set_do_exhaustive_model_search(flacLevels[levelPref].do_exhaustive_model_search) &&
    encoder.set_do_escape_coding(flacLevels[levelPref].do_escape_coding);
+
    if (numChannels != 2) {
-      encoder.set_do_mid_side_stereo(false);
+      success = success &&
+      encoder.set_do_mid_side_stereo(false) &&
       encoder.set_loose_mid_side_stereo(false);
    }
    else {
-      encoder.set_do_mid_side_stereo(flacLevels[levelPref].do_mid_side_stereo);
+      success = success &&
+      encoder.set_do_mid_side_stereo(flacLevels[levelPref].do_mid_side_stereo) &&
       encoder.set_loose_mid_side_stereo(flacLevels[levelPref].loose_mid_side_stereo);
    }
-   encoder.set_qlp_coeff_precision(flacLevels[levelPref].qlp_coeff_precision);
-   encoder.set_min_residual_partition_order(flacLevels[levelPref].min_residual_partition_order);
-   encoder.set_max_residual_partition_order(flacLevels[levelPref].max_residual_partition_order);
-   encoder.set_rice_parameter_search_dist(flacLevels[levelPref].rice_parameter_search_dist);
+
+   success = success &&
+   encoder.set_qlp_coeff_precision(flacLevels[levelPref].qlp_coeff_precision) &&
+   encoder.set_min_residual_partition_order(flacLevels[levelPref].min_residual_partition_order) &&
+   encoder.set_max_residual_partition_order(flacLevels[levelPref].max_residual_partition_order) &&
+   encoder.set_rice_parameter_search_dist(flacLevels[levelPref].rice_parameter_search_dist) &&
    encoder.set_max_lpc_order(flacLevels[levelPref].max_lpc_order);
+
+   if (!success) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
 #ifdef LEGACY_FLAC
    encoder.init();
@@ -361,6 +378,8 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
          if (! encoder.process(
                reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
                samplesThisRun) ) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
             break;
          }
@@ -402,9 +421,10 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
       }
       FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
                                                  v.mb_str(wxConvUTF8));
-      ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
+      if (! ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
                                                            entry.get_entry(),
-                                                           true);
+                                                           true) )
+         return false;
    }
 
    return true;

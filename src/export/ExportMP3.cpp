@@ -1801,7 +1801,11 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    bool endOfFile;
    id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
-     outFile.Write(id3buffer.get(), id3len);
+      if (id3len < outFile.Write(id3buffer.get(), id3len)) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
    }
 
    wxFileOffset pos = outFile.Tell();
@@ -1809,8 +1813,11 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    long bytes;
 
    size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
-   if (bufferSize == 0)
+   if (bufferSize <= 0) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
       return ProgressResult::Cancelled;
+   }
 
    ArrayOf<unsigned char> buffer{ bufferSize };
    wxASSERT(buffer);
@@ -1880,22 +1887,42 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         outFile.Write(buffer.get(), bytes);
+         if (bytes < outFile.Write(buffer.get(), bytes)) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            updateResult = ProgressResult::Cancelled;
+            break;
+         }
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 
-   if ( updateResult != ProgressResult::Cancelled ) {
+   if ( updateResult == ProgressResult::Success ||
+        updateResult == ProgressResult::Stopped ) {
       bytes = exporter.FinishStream(buffer.get());
 
+      if (bytes < 0) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
+
       if (bytes > 0) {
-         outFile.Write(buffer.get(), bytes);
+         if (bytes < outFile.Write(buffer.get(), bytes)) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            return ProgressResult::Cancelled;
+         }
       }
 
       // Write ID3 tag if it was supposed to be at the end of the file
       if (id3len > 0 && endOfFile) {
-         outFile.Write(id3buffer.get(), id3len);
+         if (bytes < outFile.Write(id3buffer.get(), id3len)) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            return ProgressResult::Cancelled;
+         }
       }
 
       // Always write the info (Xing/Lame) tag.  Until we stop supporting Lame
@@ -1906,7 +1933,11 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       // this call, so do not use it.
       exporter.PutInfoTag(outFile, pos);
 
-      outFile.Close();
+      if (!outFile.Close()) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
    }
 
    return updateResult;

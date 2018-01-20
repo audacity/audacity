@@ -108,6 +108,10 @@ public:
     * export to "Other PCM", "AIFF 16 Bit" and "WAV 16 Bit" are all the same
     * libsndfile export plug-in, but with subformat set to 0, 1, and 2
     * respectively.
+    * @return ProgressResult::Failed or ProgressResult::Cancelled if export
+    * fails to complete for any reason, in which case this function is
+    * responsible for alerting the user.  Otherwise ProgressResult::Success or
+    * ProgressResult::Stopped
     */
    virtual ProgressResult Export(AudacityProject *project,
                        unsigned channels,

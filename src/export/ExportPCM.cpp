@@ -529,18 +529,27 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       }
       
       // Install the WAV metata in a "LIST" chunk at the end of the file
-      if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
-          (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
-         if (!AddStrings(project, sf.get(), metadata, sf_format)) {
-            return ProgressResult::Cancelled;
-         }
+      if (updateResult == ProgressResult::Success ||
+          updateResult == ProgressResult::Stopped)
+         if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
+             (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
+            if (!AddStrings(project, sf.get(), metadata, sf_format)) {
+               // TODO: more precise message
+               AudacityMessageBox(_("Unable to export"));
+               return ProgressResult::Cancelled;
+            }
       }
    }
 
-   if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
-       ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV))
-      if (!AddID3Chunk(fName, metadata, sf_format) )
-         return ProgressResult::Cancelled;
+   if (updateResult == ProgressResult::Success ||
+       updateResult == ProgressResult::Stopped)
+      if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
+          ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV))
+         if (!AddID3Chunk(fName, metadata, sf_format) ) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            return ProgressResult::Cancelled;
+         }
 
    return updateResult;
 }
