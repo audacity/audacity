@@ -92,7 +92,6 @@ DIST_SUBDIRS = \
 	libsoxr \
 	lib-widget-extra \
 	lv2 \
-	portmixer \
 	portsmf \
 	sbsms \
 	$(NULL)
@@ -156,8 +155,10 @@ if USE_LOCAL_PORTAUDIO
 SUBDIRS += portaudio-v19
 endif
 
+if USE_PORTMIXER
 # Note: portmixer needs to be linked against (the local or system) portaudio.
 SUBDIRS += portmixer
+endif
 
 if USE_LOCAL_PORTSMF
 SUBDIRS += portsmf
