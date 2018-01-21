@@ -227,9 +227,9 @@ sub deleteAll{
 sub compareTest{
    deleteAll();
 
-   menuCommand("NewAudioTrack");
+   menuCommand("NewMonoTrack");
    doCommand("Chirp:");
-   menuCommand("NewAudioTrack");
+   menuCommand("NewMonoTrack");
    doCommand("Chirp:");
 
    my $j = 0;
@@ -302,7 +302,7 @@ sub fullTest{
    #screenshot($screenshotDir, "window", "None"); # (Slow)
    doCommand("Select: Mode=All");
    getMenuCommands();
-   menuCommand("NewAudioTrack");
+   menuCommand("NewMonoTrack");
    batchFallback();
    help("Screenshot");
    message("Hello!");
@@ -352,7 +352,9 @@ sub testClearAndPasters{
    my $len = 20.0;
 
    # Since there aren't proper generator commands yet, we use the preferences
-   # to control the duration
+   # to control the duration.
+   # This preferences is not read in Audacity 2.2.x where duration
+   # is read from pluginsettings.cfg
    my $origDuration = getPref("/CsPresets/NoiseGen_Duration");
    setPref("/CsPresets/NoiseGen_Duration", $len);
 
@@ -403,6 +405,8 @@ sub getEffects{
    # Bass and Treble
    # Repair
    # NoiseRemoval
+   # ClickRemoval
+   # Paulstretch
 
    # TimeScale (disabled because it's so slow)
 
@@ -411,7 +415,6 @@ sub getEffects{
       ChangePitch
       ChangeSpeed
       ChangeTempo
-      ClickRemoval
       Compressor
       Echo
       Equalization
@@ -428,11 +431,13 @@ sub getEffects{
    return @effects;
 }
 
-# Create a chirp for an effect to be applied to
+# Create a chirp for an effect to be applied to.
+# The duration setting does not work in Audacity 2.2.x where duration
+# is read from pluginsettings.cfg
 sub generateBase{
    my $genCmd = "Chirp";
    my $duration = 30.0;
-   menuCommand("NewAudioTrack");
+   menuCommand("NewMonoTrack");
    doCommand("$genCmd:");
    my $desc = $genCmd . "-" . $duration . "s";
    return $desc;
