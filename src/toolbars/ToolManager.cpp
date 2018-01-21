@@ -764,10 +764,10 @@ void ToolManager::ReadConfig()
          default:        d = nullptr; pLegacy = nullptr; break;
       }
 
-      bool ordered = ToolBarConfiguration::Read
-         (d ? &d->GetConfiguration() : nullptr,
-          pLegacy,
-          bar, show[ ndx ], bShownByDefault)
+      bool ordered = ToolBarConfiguration::Read(
+         d ? &d->GetConfiguration() : nullptr,
+         pLegacy,
+         bar, show[ ndx ], bShownByDefault)
       && found;
 
       gPrefs->Read( wxT("X"), &x, -1 );
@@ -922,7 +922,7 @@ void ToolManager::ReadConfig()
             const auto deviceToolBar = mBars[ DeviceBarID ].get();
             if (deviceToolBar->GetDock() == mTopDock) {
                deviceToolBar->GetDock()->Undock(deviceToolBar);
-               position = { t, nullptr };
+               position = ToolBarConfiguration::Position{ t, nullptr };
                mTopDock->Dock(deviceToolBar, false, position);
 
                // Remember not to place the device toolbar again
