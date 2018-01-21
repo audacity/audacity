@@ -326,9 +326,6 @@ public:
 
 
 
-   int mTotalToolBarHeight;
-   wxWindow *mParent;
-
    ToolManager *mManager;
 
    // Stores adjacency relations that we want to realize in the dock layout
