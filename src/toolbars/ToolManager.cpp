@@ -1168,7 +1168,8 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       // Button was released...finish the drag
       // Transition the bar to a dock
       if (!mDidDrag) {
-         mPrevDock->RestoreConfiguration(mPrevConfiguration);
+         if (mPrevDock)
+            mPrevDock->RestoreConfiguration(mPrevConfiguration);
          DoneDragging();
          return;
       }
@@ -1200,7 +1201,8 @@ void ToolManager::OnMouse( wxMouseEvent & event )
          mp = mParent->ClientToScreen(mp);
          if (!mDragWindow) {
             // We no longer have control
-            mPrevDock->GetConfiguration().Remove( mDragBar );
+            if (mPrevDock)
+               mPrevDock->GetConfiguration().Remove( mDragBar );
             UndockBar(mp);
          }
       }
