@@ -854,7 +854,7 @@ public:
    int FinishStream(unsigned char outbuffer[]);
    void CancelEncoding();
 
-   void PutInfoTag(wxFFile & f, wxFileOffset off);
+   bool PutInfoTag(wxFFile & f, wxFileOffset off);
 
 private:
 
@@ -1393,17 +1393,21 @@ void MP3Exporter::CancelEncoding()
    mEncoding = false;
 }
 
-void MP3Exporter::PutInfoTag(wxFFile & f, wxFileOffset off)
+bool MP3Exporter::PutInfoTag(wxFFile & f, wxFileOffset off)
 {
    if (mGF) {
       if (mInfoTagLen > 0) {
          // FIXME: TRAP_ERR Seek and writ ein MP3 exporter could fail.
-         f.Seek(off, wxFromStart);
-         f.Write(mInfoTagBuf, mInfoTagLen);
+         if ( !f.Seek(off, wxFromStart))
+            return false;
+         if (mInfoTagLen > f.Write(mInfoTagBuf, mInfoTagLen))
+            return false;
       }
 #if defined(__WXMSW__)
       else if (beWriteInfoTag) {
-         f.Flush();
+         if ( !f.Flush() )
+            return false;
+         // PRL:  What is the correct error check on the return value?
          beWriteInfoTag(mGF, OSOUTPUT(f.GetName()));
          mGF = NULL;
       }
@@ -1413,7 +1417,10 @@ void MP3Exporter::PutInfoTag(wxFFile & f, wxFileOffset off)
       }
    }
 
-   f.SeekEnd();
+   if ( !f.SeekEnd() )
+      return false;
+
+   return true;
 }
 
 #if defined(__WXMSW__)
@@ -1801,7 +1808,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    bool endOfFile;
    id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
-      if (id3len < outFile.Write(id3buffer.get(), id3len)) {
+      if (id3len > outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
          AudacityMessageBox(_("Unable to export"));
          return ProgressResult::Cancelled;
@@ -1887,7 +1894,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         if (bytes < outFile.Write(buffer.get(), bytes)) {
+         if (bytes > outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
@@ -1909,7 +1916,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       }
 
       if (bytes > 0) {
-         if (bytes < outFile.Write(buffer.get(), bytes)) {
+         if (bytes > outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             return ProgressResult::Cancelled;
@@ -1918,7 +1925,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
       // Write ID3 tag if it was supposed to be at the end of the file
       if (id3len > 0 && endOfFile) {
-         if (bytes < outFile.Write(id3buffer.get(), id3len)) {
+         if (bytes > outFile.Write(id3buffer.get(), id3len)) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             return ProgressResult::Cancelled;
@@ -1931,9 +1938,9 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       //
       // Also, if beWriteInfoTag() is used, mGF will no longer be valid after
       // this call, so do not use it.
-      exporter.PutInfoTag(outFile, pos);
-
-      if (!outFile.Close()) {
+      if (!exporter.PutInfoTag(outFile, pos) ||
+          !outFile.Flush() ||
+          !outFile.Close()) {
          // TODO: more precise message
          AudacityMessageBox(_("Unable to export"));
          return ProgressResult::Cancelled;
