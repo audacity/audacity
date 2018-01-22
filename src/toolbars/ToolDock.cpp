@@ -147,22 +147,27 @@ void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
 
       // Insert as a leaf, or as an internal node?
       if (adopt && position.adopt) {
-         // Existing child of parent become its grandchild
-
-         // TODO:  is it ever correct to adopt more than one, depending on
-         // heights?  Could an inserted tall bar adopt two short ones?
+         // Existing children of parent become grandchildren
 
          // Make NEW node
          Tree tree;
          tree.pBar = bar;
 
          // Do adoption
-         tree.children.push_back(Tree{});
-         auto &child = tree.children.back();
-         child.pBar = iter->pBar;
-         child.children.swap(iter->children);
+         const auto barHeight = bar->GetSize().GetY() + toolbarGap;
+         auto totalHeight = 0;
+         while (iter != pForest->end() &&
+            barHeight >=
+               (totalHeight += (iter->pBar->GetSize().GetY() + toolbarGap))) {
+            tree.children.push_back(Tree{});
+            auto &child = tree.children.back();
+            child.pBar = iter->pBar;
+            child.children.swap(iter->children);
+            iter = pForest->erase(iter);
+         }
 
          // Put the node in the tree
+         iter = pForest->insert(iter, Tree{});
          (*iter).swap(tree);
       }
       else
