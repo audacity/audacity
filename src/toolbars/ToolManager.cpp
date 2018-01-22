@@ -538,6 +538,13 @@ void ToolManager::Reset()
       else
          dock = mTopDock;
 
+      // PRL: Destroy the tool frame before recreating buttons.
+      // This fixes some subtle sizing problems on macOs.
+      bar->Reparent( dock );
+      //OK (and good) to DELETE floater, as bar is no longer in it.
+      if( floater )
+         floater->Destroy();
+
       // Recreate bar buttons (and resize it)
       bar->ReCreateButtons();
       bar->EnableDisableButtons();
@@ -571,9 +578,6 @@ void ToolManager::Reset()
          // when we dock, we reparent, so bar is no longer a child of floater.
          dock->Dock( bar, false, position );
          Expose( ndx, expose );
-         //OK (and good) to DELETE floater, as bar is no longer in it.
-         if( floater )
-            floater->Destroy();
       }
       else
       {
