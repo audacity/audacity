@@ -662,17 +662,18 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
 
 bool ExportFFmpeg::Finalize()
 {
-   int nEncodedBytes;
-
    // Flush the audio FIFO and encoder.
    for (;;)
    {
-      {
-         AVPacketEx pkt;
-         int nFifoBytes = av_fifo_size(mEncAudioFifo.get()); // any bytes left in audio FIFO?
+      AVPacketEx pkt;
+      const int nFifoBytes = av_fifo_size(mEncAudioFifo.get()); // any bytes left in audio FIFO?
+      int encodeResult = 0;
 
-         nEncodedBytes = 0;
-         int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
+      // Flush the audio FIFO first if necessary. It won't contain a _full_ audio frame because
+      // if it did we'd have pulled it from the FIFO during the last encodeAudioFrame() call
+      if (nFifoBytes > 0)
+      {
+         const int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
 
          if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz || nFifoBytes > mEncAudioFifoOutBufSiz) {
             AudacityMessageBox(
@@ -682,83 +683,65 @@ bool ExportFFmpeg::Finalize()
             return false;
          }
 
-         // Flush the audio FIFO first if necessary. It won't contain a _full_ audio frame because
-         // if it did we'd have pulled it from the FIFO during the last encodeAudioFrame() call -
-         // the encoder must support short/incomplete frames for this to work.
-         if (nFifoBytes > 0)
+         // We have an incomplete buffer of samples left, encode it.
+         // If codec supports CODEC_CAP_SMALL_LAST_FRAME, we can feed it with smaller frame
+         // Or if frame_size is 1, then it's some kind of PCM codec, they don't have frames and will be fine with the samples
+         // Otherwise we'll send a full frame of audio + silence padding to ensure all audio is encoded
+         int frame_size = default_frame_size;
+         if (mEncAudioCodecCtx->codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME ||
+             frame_size == 1)
+            frame_size = nFifoBytes / (mEncAudioCodecCtx->channels * sizeof(int16_t));
+
+         wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %d bytes, writing %d sample frame ..."),
+            nFifoBytes, frame_size);
+
+         // Fill audio buffer with zeroes. If codec tries to read the whole buffer,
+         // it will just read silence. If not - who cares?
+         memset(mEncAudioFifoOutBuf.get(), 0, mEncAudioFifoOutBufSiz);
+         const AVCodec *codec = mEncAudioCodecCtx->codec;
+
+         // Pull the bytes out from the FIFO and feed them to the encoder.
+         if (av_fifo_generic_read(mEncAudioFifo.get(), mEncAudioFifoOutBuf.get(), nFifoBytes, NULL) == 0)
          {
-            // Fill audio buffer with zeroes. If codec tries to read the whole buffer,
-            // it will just read silence. If not - who cares?
-            memset(mEncAudioFifoOutBuf.get(), 0, mEncAudioFifoOutBufSiz);
-            const AVCodec *codec = mEncAudioCodecCtx->codec;
-
-            // We have an incomplete buffer of samples left.  Is it OK to encode it?
-            // If codec supports CODEC_CAP_SMALL_LAST_FRAME, we can feed it with smaller frame
-            // Or if codec is FLAC, feed it anyway (it doesn't have CODEC_CAP_SMALL_LAST_FRAME, but it works)
-            // Or if frame_size is 1, then it's some kind of PCM codec, they don't have frames and will be fine with the samples
-            // Or if user configured the exporter to pad with silence, then we'll send audio + silence as a frame.
-            if ((codec->capabilities & (CODEC_CAP_SMALL_LAST_FRAME | CODEC_CAP_VARIABLE_FRAME_SIZE))
-               || mEncAudioCodecCtx->frame_size <= 1
-               || gPrefs->Read(wxT("/FileFormats/OverrideSmallLastFrame"), true)
-               )
-            {
-               int frame_size = default_frame_size;
-
-               // The last frame is going to contain a smaller than usual number of samples.
-               // For codecs without CODEC_CAP_SMALL_LAST_FRAME use normal frame size
-               if (codec->capabilities & (CODEC_CAP_SMALL_LAST_FRAME | CODEC_CAP_VARIABLE_FRAME_SIZE))
-                  frame_size = nFifoBytes / (mEncAudioCodecCtx->channels * sizeof(int16_t));
-
-               wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %d bytes, writing %d sample frame ..."),
-                  nFifoBytes, frame_size);
-
-               // Pull the bytes out from the FIFO and feed them to the encoder.
-               if (av_fifo_generic_read(mEncAudioFifo.get(), mEncAudioFifoOutBuf.get(), nFifoBytes, NULL) == 0)
-               {
-                  nEncodedBytes = encode_audio(mEncAudioCodecCtx.get(), &pkt, mEncAudioFifoOutBuf.get(), frame_size);
-               }
-            }
+            encodeResult = encode_audio(mEncAudioCodecCtx.get(), &pkt, mEncAudioFifoOutBuf.get(), frame_size);
+         }
+         else
+         {
+            wxLogDebug(wxT("FFmpeg : Reading from Audio FIFO failed, aborting"));
+            break;
          }
       }
-
-      // Now flush the encoder.
+      else
       {
-         AVPacketEx pkt;
-         if (nEncodedBytes <= 0)
-            // We didn't encode_audio yet for this pass
-            nEncodedBytes = encode_audio(mEncAudioCodecCtx.get(), &pkt, NULL, 0);
+         // Fifo is empty, flush encoder. May be called multiple times.
+         encodeResult = encode_audio(mEncAudioCodecCtx.get(), &pkt, NULL, 0);
+      }
 
-         if (nEncodedBytes < 0) {
-            // TODO: more precise message
-            AudacityMessageBox(_("Unable to export"));
-            return false;
-         }
+      if (encodeResult < 0)
+         AudacityMessageBox(_("FFmpeg : ERROR - Couldn't encode last audio frame."),
+                            _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION);
 
-         if (nEncodedBytes == 0)
-            break;
+      if (encodeResult <= 0)
+         break;
 
-         pkt.stream_index = mEncAudioStream->index;
+      // We have a packet, send to the muxer
+      pkt.stream_index = mEncAudioStream->index;
 
-         // Set presentation time of frame (currently in the codec's timebase) in the stream timebase.
-         if (pkt.pts != int64_t(AV_NOPTS_VALUE))
-            pkt.pts = av_rescale_q(pkt.pts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
-         if (pkt.dts != int64_t(AV_NOPTS_VALUE))
-            pkt.dts = av_rescale_q(pkt.dts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
+      // Set presentation time of frame (currently in the codec's timebase) in the stream timebase.
+      if (pkt.pts != int64_t(AV_NOPTS_VALUE))
+         pkt.pts = av_rescale_q(pkt.pts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
+      if (pkt.dts != int64_t(AV_NOPTS_VALUE))
+         pkt.dts = av_rescale_q(pkt.dts, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
+      if (pkt.duration)
+         pkt.duration = av_rescale_q(pkt.duration, mEncAudioCodecCtx->time_base, mEncAudioStream->time_base);
 
-         if (av_interleaved_write_frame(mEncFormatCtx.get(), &pkt) != 0)
-         {
-            AudacityMessageBox(
-               _("FFmpeg : ERROR - Couldn't write last audio frame to output file."),
-               _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION
-            );
-#if 0
-            // We ought to propagate this error, but it is known to happen
-            // spuriously in some versions of FFmpeg when exporting AAC
-            return false;
-#else
-            break;
-#endif
-         }
+      if (av_interleaved_write_frame(mEncFormatCtx.get(), &pkt) != 0)
+      {
+         AudacityMessageBox(
+            _("FFmpeg : ERROR - Couldn't write last audio frame to output file."),
+            _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION
+         );
+         break;
       }
    }
 
