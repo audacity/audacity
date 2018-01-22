@@ -83,11 +83,6 @@ bool SelectCommand::Apply(CommandExecutionContext context)
          Error(wxT("Start time is before start of track!"));
          return false;
       }
-      if (t1 > context.GetProject()->GetTracks()->GetEndTime())
-      {
-         Error(wxT("End time is after end of track!"));
-         return false;
-      }
 
       // PRL: to do: only setting time boundaries of current selection.
       // Should other fields be left alone, or rather
