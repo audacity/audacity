@@ -454,6 +454,7 @@ void ToolDock::LoadConfig()
    }
 }
 
+// A policy object for the skeleton routine below
 class ToolDock::LayoutVisitor
 {
 public:
@@ -477,6 +478,8 @@ public:
    }
 };
 
+// Skeleton routine common to insertion of a toolbar, and figuring out
+// width-constrained layout of toolbars
 void ToolDock::VisitLayout(LayoutVisitor &visitor,
                            ToolBarConfiguration *pWrappedConfiguration)
 {
@@ -709,7 +712,7 @@ void ToolDock::LayoutToolBars()
 
 // Determine the position where a NEW bar would be placed
 //
-// 'rect' will be the rectangle for the dock marker.
+// 'rect' will be the rectangle for the dock marker (black triangle)
 ToolBarConfiguration::Position
    ToolDock::PositionBar( ToolBar *t, const wxPoint & pos, wxRect & rect )
 {
@@ -918,6 +921,8 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
 
       wxRect r = toolbar->GetRect();
 
+      // Draw a horizontal line under the bar extending to the right edge of
+      // the dock
       AColor::Line( dc,
                    r.GetLeft(),
                    r.GetBottom() + 1,
@@ -925,8 +930,8 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
                    r.GetBottom() + 1 );
 
       // For all bars but the last...
-      // ...and for bars that aren't the last in a row, draw an
-      // horizontal gap line
+      // ...and for bars that aren't the last in a row, draw a
+      // vertical gap line
       if (!mConfiguration.IsRightmost(toolbar)) {
          AColor::Line(dc,
             r.GetRight() + 1,
