@@ -1469,7 +1469,8 @@ FLAC_API FLAC__bool FLAC__stream_encoder_finish(FLAC__StreamEncoder *encoder)
 
 	if(0 != encoder->private_->file) {
 		if(encoder->private_->file != stdout)
-			fclose(encoder->private_->file);
+			error = fflush(encoder->private_->file) ||
+				fclose(encoder->private_->file);
 		encoder->private_->file = 0;
 	}
 
