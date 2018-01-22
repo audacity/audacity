@@ -945,6 +945,12 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
       if ( !Finalize() ) // Finalize makes its own messages
          return ProgressResult::Cancelled;
 
+   if ( mUfileCloser.close() != 0 ) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
+
    return updateResult;
 }
 

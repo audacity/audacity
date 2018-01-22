@@ -288,7 +288,7 @@ OSType sf_header_mactype(int format)
 
 ODLock libSndFileMutex;
 
-void SFFileCloser::operator() (SNDFILE *sf) const
+int SFFileCloser::operator() (SNDFILE *sf) const
 {
    auto err = SFCall<int>(sf_close, sf);
    if (err) {
@@ -299,4 +299,5 @@ void SFFileCloser::operator() (SNDFILE *sf) const
          (_("Error (file may not have been written): %s"),
          buffer));
    }
+   return err;
 }

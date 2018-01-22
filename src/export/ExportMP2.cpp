@@ -330,7 +330,11 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
          return ProgressResult::Cancelled;
       }
 
-   outFile.Close();
+   if ( !outFile.Close() ) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
    return updateResult;
 }

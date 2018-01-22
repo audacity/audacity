@@ -335,10 +335,13 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    mMetadata.reset();
 
    auto cleanup2 = finally( [&] {
+      if (!(updateResult == ProgressResult::Success ||
+            updateResult == ProgressResult::Stopped)) {
 #ifndef LEGACY_FLAC
-      f.Detach(); // libflac closes the file
+         f.Detach(); // libflac closes the file
 #endif
-      encoder.finish();
+         encoder.finish();
+      }
    } );
 
    const WaveTrackConstArray waveTracks =
@@ -387,6 +390,20 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
             updateResult =
                progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
+   }
+
+   if (updateResult == ProgressResult::Success ||
+       updateResult == ProgressResult::Stopped) {
+#ifndef LEGACY_FLAC
+      f.Detach(); // libflac closes the file
+#endif
+      if (!encoder.finish())
+         // Do not reassign updateResult, see cleanup2
+         return ProgressResult::Failed;
+#ifdef LEGACY_FLAC
+      if (!f.Flush() || !f.Close())
+         return ProgressResult::Failed;
+#endif
    }
 
    return updateResult;
