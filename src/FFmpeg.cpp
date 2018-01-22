@@ -209,10 +209,17 @@ int ufile_close(AVIOContext *pb)
 {
    std::unique_ptr<wxFile> f{ (wxFile *)pb->opaque };
 
-   if (f)
-      f->Close();
+   bool success = true;
+   if (f) {
+      success = f->Flush() && f->Close();
+      pb->opaque = nullptr;
+   }
 
-   return 0;
+   // We're not certain that a close error is for want of space, but we'll
+   // guess that
+   return success ? 0 : -ENOSPC;
+
+   // Implicitly destroy the wxFile object here
 }
 
 // Open a file with a (possibly) Unicode filename

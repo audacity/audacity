@@ -530,7 +530,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       
       // Install the WAV metata in a "LIST" chunk at the end of the file
       if (updateResult == ProgressResult::Success ||
-          updateResult == ProgressResult::Stopped)
+          updateResult == ProgressResult::Stopped) {
          if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
              (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
             if (!AddStrings(project, sf.get(), metadata, sf_format)) {
@@ -538,6 +538,12 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                AudacityMessageBox(_("Unable to export"));
                return ProgressResult::Cancelled;
             }
+         }
+         if (0 != sf.close()) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            return ProgressResult::Cancelled;
+         }
       }
    }
 
@@ -545,6 +551,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
        updateResult == ProgressResult::Stopped)
       if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
           ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV))
+         // Note: file has closed, and gets reopened and closed again here:
          if (!AddID3Chunk(fName, metadata, sf_format) ) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
@@ -843,6 +850,9 @@ bool ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
       if (!f.Seek(4))
          return false;
       if (4 != f.Write(&sz, 4))
+         return false;
+
+      if (!f.Flush())
          return false;
 
       if (!f.Close())

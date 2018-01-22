@@ -52,11 +52,18 @@ bool FileIO::IsOpened()
    return mOpen;
 }
 
-void FileIO::Close()
+bool FileIO::Close()
 {
-   mOutputStream.reset();
+   bool success = true;
+   if (mOutputStream) {
+      // mOutputStream->Sync() returns void!  Rrr!
+      success = mOutputStream->GetFile()->Flush() &&
+         mOutputStream->Close();
+      mOutputStream.reset();
+   }
    mInputStream.reset();
    mOpen = false;
+   return success;
 }
 
 wxInputStream & FileIO::Read(void *buf, size_t size)

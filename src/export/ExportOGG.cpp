@@ -359,7 +359,11 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       }
    }
 
-   outFile.Close();
+   if ( !outFile.Close() ) {
+      updateResult = ProgressResult::Cancelled;
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+   }
 
    return updateResult;
 }

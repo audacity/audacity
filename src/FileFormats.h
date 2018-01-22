@@ -127,7 +127,16 @@ inline R SFCall(F fun, Args&&... args)
 }
 
 //RAII for SNDFILE*
-struct SFFileCloser { void operator () (SNDFILE*) const; };
-using SFFile = std::unique_ptr<SNDFILE, SFFileCloser>;
+struct SFFileCloser { int operator () (SNDFILE*) const; };
+struct SFFile : public std::unique_ptr<SNDFILE, SFFileCloser>
+{
+   // Close explicitly, not ignoring return values.
+   int close()
+   {
+      auto result = get_deleter() ( get() );
+      release();
+      return result;
+   }
+};
 
 #endif

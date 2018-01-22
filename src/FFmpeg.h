@@ -928,6 +928,18 @@ private:
 
 // Deleter adaptor for functions like av_free that take a pointer
 template<typename T, typename R, R(*Fn)(T*)> struct AV_Deleter {
+   inline R operator() (T* p) const
+   {
+      R result{};
+      if (p)
+         result = Fn(p);
+      return result;
+   }
+};
+
+// Specialization of previous for void return
+template<typename T, void(*Fn)(T*)>
+struct AV_Deleter<T, void, Fn> {
    inline void operator() (T* p) const
    {
       if (p)
@@ -959,9 +971,19 @@ using AVCodecContextHolder = std::unique_ptr<
 using AVDictionaryCleanup = std::unique_ptr<
    AVDictionary*, AV_Deleter<AVDictionary*, void, av_dict_free>
 >;
-using UFileHolder = std::unique_ptr<
+struct UFileHolder : public std::unique_ptr<
    AVIOContext, AV_Deleter<AVIOContext, int, ufile_close>
->;
+>
+{
+   // Close explicitly, not ignoring return values.
+   int close()
+   {
+      auto result = get_deleter() ( get() );
+      release();
+      return result;
+   }
+};
+
 template<typename T> using AVMallocHolder = std::unique_ptr<
    T, AV_Deleter<void, void, av_free>
 >;
