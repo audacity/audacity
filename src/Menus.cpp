@@ -2144,7 +2144,7 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
    if((msClipT1 - msClipT0) > 0.0)
       flags |= ClipboardFlag;
 
-   if (GetUndoManager()->UnsavedChanges())
+   if (GetUndoManager()->UnsavedChanges() || !IsProjectSaved())
       flags |= UnsavedChangesFlag;
 
    if (!mLastEffect.IsEmpty())
