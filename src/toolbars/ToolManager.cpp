@@ -610,7 +610,6 @@ void ToolManager::Reset()
    // It would be nice to show them again, but hardly essential as
    // they will show up again on the next play.
    // SetVUMeters(AudacityProject *p);
-   LayoutToolBars();
    Updated();
 }
 
@@ -1061,6 +1060,7 @@ bool ToolManager::IsVisible( int type )
 void ToolManager::ShowHide( int type )
 {
    Expose( type, !mBars[ type ]->IsVisible() );
+   Updated();
 }
 
 //
@@ -1146,6 +1146,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       {
          // Trip over...everyone ashore that's going ashore...
          mDragDock->Dock( mDragBar, true, mDragBefore );
+         Updated();
          mDragWindow->ClearBar();
 
          // Done with the floater
@@ -1461,6 +1462,7 @@ void ToolManager::HandleEscapeKey()
          // I want to go home.
          mPrevDock->RestoreConfiguration(mPrevConfiguration);
          mPrevDock->Dock( mDragBar, true, mPrevSlot );
+         Updated();
 
          // Done with the floater
          mDragWindow->ClearBar();

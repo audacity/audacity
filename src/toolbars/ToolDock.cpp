@@ -440,11 +440,6 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position 
 
    // Inform toolbar of change
    bar->SetDocked( this, false );
-
-   // Rearrange our world
-   if (bar->IsVisible())
-      LayoutToolBars();
-   Updated();
 }
 
 // Initial docking of bars
@@ -458,6 +453,7 @@ void ToolDock::LoadConfig()
       // configuration
       Expose( bar->GetId(), true );
    }
+   Updated();
 }
 
 // A policy object for the skeleton routine below
@@ -847,10 +843,6 @@ void ToolDock::Expose( int type, bool show )
 
    // Make it (dis)appear
    t->Expose( show );
-
-   // Update the layout
-   LayoutToolBars();
-   Updated();
 }
 
 //
