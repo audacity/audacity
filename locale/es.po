@@ -5177,7 +5177,7 @@ msgid ""
 "%s"
 msgstr ""
 "El efecto en %s falló en el registro:\n"
-"%S"
+"%s"
 
 #: src/PluginManager.cpp src/effects/Effect.cpp
 msgid "Built-in"
@@ -13885,7 +13885,7 @@ msgstr "Volumen de grabación (no disponible, utilice el mezclado del sistema.)"
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
 msgid "Playback Volume: %s (emulated)"
-msgstr "Volumen de reproducción: % (emulado)"
+msgstr "Volumen de reproducción: %s (emulado)"
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format

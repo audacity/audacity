@@ -6,7 +6,7 @@
 # Xabier Aramendi <azpidatziak@gmail.com> 2011-2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.2.0\n"
+"Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-18 00:56-0500\n"
 "PO-Revision-Date: 2018-01-21 09:48+0100\n"
