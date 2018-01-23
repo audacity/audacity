@@ -1,10 +1,10 @@
 Compilation and install instructions for GNU/Linux
 
-Note: Audacity 2.2.0 requires gcc 4.9 or later. For Ubuntu 14.04 which only
+Note: Audacity 2.2.2 requires gcc 4.9 or later. For Ubuntu 14.04 which only
 has up to 4.8.4, see here for upgrade instructions:
    http://wiki.audacityteam.org/wiki/Upgrade_to_gcc_4.9
 
-Audacity 2.2.0 requires wxWidgets 3.0.x, preferably 3.0.2, built with gtk2.
+Audacity 2.2.2 requires wxWidgets 3.0.x, preferably 3.0.2, built with gtk2.
 If not available in your distribution repository, it may be  downloaded from:
    https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.2/wxWidgets-3.0.2.tar.bz2 .
 
@@ -13,13 +13,13 @@ On openSUSE, be sure to install wxWidgets without STL.
 The latest Audacity development source code is available from:
    https://github.com/audacity/audacity
 
-If you are not planning to do any development, the Audacity 2.2.0 release
+If you are not planning to do any development, the Audacity 2.2.2 release
 minimal source tarball is recommended from:
 http://www.audacityteam.org/download/source/ .
 
 Other required dependencies:
 
-Audacity 2.2.0 requires the local (included) versions of PortAudio and PortMidi.
+Audacity 2.2.2 requires the local (included) versions of PortAudio and PortMidi.
 Attempting to build with system library versions will fail.
 
 libsndfile library is required and is included in the Audacity source.
