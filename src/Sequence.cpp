@@ -1217,7 +1217,7 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
       // but it guards against infinite loop in case of inconsistencies
       // (too-small files, not yet seen?)
       // that cause the loop to make no progress because blen == 0
-      && (unsigned int)b < size
+      && b < (int)size
    ) {
       newBlock.push_back( mBlock[b] );
       SeqBlock &block = newBlock.back();

@@ -133,13 +133,13 @@ void MeterUpdateQueue::Clear()
 // queue was full.
 bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
 {
-   // mStart cnan be greater than mEnd because it is all mod mBufferSize
+   // mStart can be greater than mEnd because it is all mod mBufferSize
    wxASSERT( (mEnd + mBufferSize - mStart) >= 0 );
    int len = (mEnd + mBufferSize - mStart) % mBufferSize;
 
    // Never completely fill the queue, because then the
    // state is ambiguous (mStart==mEnd)
-   if (len >= (int)(mBufferSize-1))
+   if (len + 1 >= (int)(mBufferSize))
       return false;
 
    //wxLogDebug(wxT("Put: %s"), msg.toString());

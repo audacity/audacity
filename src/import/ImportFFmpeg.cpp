@@ -743,7 +743,7 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
    unsigned int pos = 0;
    while (pos < insamples)
    {
-      for (size_t chn = 0; chn < (size_t)sc->m_stream->codec->channels; chn++)
+      for (size_t chn = 0; (int)chn < sc->m_stream->codec->channels; chn++)
       {
          if (chn < nChannels)
          {

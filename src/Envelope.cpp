@@ -77,14 +77,14 @@ bool Envelope::ConsistencyCheck()
 
          while ( nextI - ii > 2 ) {
             // too many coincident time values
-            if (ii == (size_t)mDragPoint || (int)(nextI - 1) == mDragPoint)
+            if ((int)ii == mDragPoint || (int)nextI - 1 == mDragPoint)
                // forgivable
                ;
             else {
                consistent = false;
                // repair it
                Delete( nextI - 2 );
-               if (mDragPoint >= (int)(nextI - 2))
+               if (mDragPoint >= (int)nextI - 2)
                   --mDragPoint;
                --nextI, --count;
                // wxLogError
@@ -731,7 +731,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    auto len = mEnv.size();
    for ( size_t i = begin; i < len; ++i ) {
       auto &point = mEnv[i];
-      if (rightPoint && i == (size_t)begin)
+      if (rightPoint && (int)i == begin)
          // Avoid roundoff error.
          // Make exactly equal times of neighboring points so that we have
          // a real discontinuity.
@@ -884,7 +884,7 @@ void Envelope::RemoveUnneededPoints
       // Stop at any discontinuity
       if ( index > 0       && isDiscontinuity( index - 1 ) )
          break;
-      if ( (unsigned int)(index + 1) < len && isDiscontinuity( index ) )
+      if ( (index + 1) < (int)len && isDiscontinuity( index ) )
          break;
 
       if ( ! remove( index, false ) )
@@ -1627,7 +1627,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
    if(area == 0.0)
       return t0;
 
-   unsigned int count = mEnv.size();
+   const auto count = mEnv.size();
    if(count == 0) // 'empty' envelope
       return t0 + area * mDefaultValue;
 
@@ -1655,7 +1655,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
       else if(t0 >= mEnv[count - 1].GetT()) // t0 at or following the last point
       {
          if (area < 0) {
-            i = count - 2;
+            i = (int)count - 2;
             lastT = mEnv[count - 1].GetT();
             lastVal = mEnv[count - 1].GetVal();
             double added = (lastT - t0) / lastVal; // negative

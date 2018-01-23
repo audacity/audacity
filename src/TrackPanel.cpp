@@ -914,7 +914,7 @@ void TrackPanel::HandleMotion
          auto begin = mTargets.begin(), end = mTargets.end(),
             iter = std::find(begin, end, oldHandle);
          if (iter != end) {
-            unsigned int newPosition = iter - begin;
+            size_t newPosition = iter - begin;
             if (newPosition <= oldPosition)
                mTarget = newPosition;
             // else, some NEW hit and this position takes priority

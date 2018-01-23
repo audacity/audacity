@@ -1869,7 +1869,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
          short *mixed = (short *)mixer->GetBuffer();
 
-         if (blockLen < (unsigned int)inSamples) {
+         if ((int)blockLen < inSamples) {
             if (channels > 1) {
                bytes = exporter.EncodeRemainder(mixed, blockLen, buffer.get());
             }

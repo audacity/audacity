@@ -705,7 +705,8 @@ void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
    for (size_t ii = 0; ii < mSpectrumSize; ++ii)
       gains[ii] = log(gains[ii]);
 
-   for (int ii = 0; (size_t)ii < mSpectrumSize; ++ii) {
+   // ii must be signed
+   for (int ii = 0; ii < (int)mSpectrumSize; ++ii) {
       const int j0 = std::max(0, ii - (int)mFreqSmoothingBins);
       const int j1 = std::min(mSpectrumSize - 1, ii + mFreqSmoothingBins);
       for(int jj = j0; jj <= j1; ++jj) {

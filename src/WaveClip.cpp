@@ -133,12 +133,12 @@ public:
       //for some reason, the cache is set up to access up to array[len], not array[len-1]
       if(invalStart <0)
          invalStart =0;
-      else if((size_t)invalStart > len)
+      else if(invalStart > (long)len)
          invalStart = len;
 
       if(invalEnd <0)
          invalEnd =0;
-      else if((size_t)invalEnd > len)
+      else if(invalEnd > (long)len)
          invalEnd = len;
 
 
@@ -153,13 +153,13 @@ public:
          {
             //if the regions intersect OR are pixel adjacent
             InvalidRegion &region = mRegions[i];
-            if(region.start <= (size_t)(invalEnd+1)
-               && (region.end + 1) >= (size_t)invalStart)
+            if((long)region.start <= (invalEnd+1)
+               && ((long)region.end + 1) >= invalStart)
             {
                //take the union region
-               if(region.start > (size_t)invalStart)
+               if((long)region.start > invalStart)
                   region.start = invalStart;
-               if((int)region.end < invalEnd)
+               if((long)region.end < invalEnd)
                   region.end = invalEnd;
                added=true;
                break;
@@ -206,7 +206,7 @@ public:
          }
 
          //if we are past the end of the region we added, we are past the area of regions that might be oversecting.
-         if(invalEnd < 0 || region.start > (size_t)invalEnd)
+         if(invalEnd < 0 || (long)region.start > invalEnd)
          {
             break;
          }
@@ -842,7 +842,7 @@ bool SpecCache::CalculateOneSpectrum
       from = sampleCount(
          where[0].as_double() + xx * (rate / pixelsPerSecond)
       );
-   else if ((size_t)xx > len)
+   else if (xx > (int)len)
       from = sampleCount(
          where[len].as_double() + (xx - len) * (rate / pixelsPerSecond)
       );

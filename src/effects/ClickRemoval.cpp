@@ -307,7 +307,7 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
                left = i+s2;
             }
          } else {
-            if(left != 0 && (int)(i-left+s2) <= ww*2) {
+            if(left != 0 && ((int)i-left+s2) <= ww*2) {
                float lv = buffer[left];
                float rv = buffer[i+ww+s2];
                for(j=left; j<i+ww+s2; j++) {
