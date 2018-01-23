@@ -176,7 +176,10 @@ static int ufile_read(void *opaque, uint8_t *buf, int size)
 
 static int ufile_write(void *opaque, uint8_t *buf, int size)
 {
-   return (int) ((wxFile *) opaque)->Write(buf, size);
+   auto bytes = (int) ((wxFile *) opaque)->Write(buf, size);
+   if (bytes != size)
+      return -ENOSPC;
+   return bytes;
 }
 
 static int64_t ufile_seek(void *opaque, int64_t pos, int whence)
