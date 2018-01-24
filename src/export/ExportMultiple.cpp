@@ -585,6 +585,9 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
          FileList += '\n';
       }
 
+      // TODO: give some warning dialog first, when only some files exported
+      // successfully.
+
       GuardedCall( [&] {
          // This results dialog is a child of this dialog.
          HelpSystem::ShowInfoDialog( this,
@@ -945,12 +948,23 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
    else
       wxLogDebug(wxT("Whole Project"));
 
+   wxFileName backup;
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
       if (!mProject->GetDirManager()->EnsureSafeFilename(inName)) {
          return ProgressResult::Cancelled;
       }
       name = inName;
+      backup.Assign(name);
+
+      int suffix = 0;
+      do {
+         backup.SetName(name.GetName() +
+                           wxString::Format(wxT("%d"), suffix));
+         ++suffix;
+      }
+      while (backup.FileExists());
+      ::wxRenameFile(inName.GetFullPath(), backup.GetFullPath());
    }
    else {
       name = inName;
@@ -961,9 +975,32 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
       }
    }
 
-   // Call the format export routine
+   ProgressResult success = ProgressResult::Cancelled;
    const wxString fullPath{name.GetFullPath()};
-   auto success = mPlugins[mPluginIndex]->Export(mProject,
+
+   auto cleanup = finally( [&] {
+      bool ok =
+         success == ProgressResult::Stopped ||
+         success == ProgressResult::Success;
+      if (backup.IsOk()) {
+         if ( ok )
+            // Remove backup
+            ::wxRemoveFile(backup.GetFullPath());
+         else {
+            // Restore original
+            ::wxRemoveFile(fullPath);
+            ::wxRenameFile(backup.GetFullPath(), fullPath);
+         }
+      }
+      else {
+         if ( ! ok )
+            // Remove any new, and only partially written, file.
+            ::wxRemoveFile(fullPath);
+      }
+   } );
+
+   // Call the format export routine
+   success = mPlugins[mPluginIndex]->Export(mProject,
                                                 channels,
                                                 fullPath,
                                                 selectedOnly,
