@@ -972,11 +972,15 @@ using AVDictionaryCleanup = std::unique_ptr<
    AVDictionary*, AV_Deleter<AVDictionary*, void, av_dict_free>
 >;
 struct UFileHolder : public std::unique_ptr<
-   AVIOContext, AV_Deleter<AVIOContext, int, ufile_close>
+   AVIOContext, ::AV_Deleter<AVIOContext, int, ufile_close>
 >
 {
    UFileHolder() = default;
-   UFileHolder( UFileHolder&& ) = default;
+   UFileHolder( UFileHolder &&that )
+   : std::unique_ptr< AVIOContext, ::AV_Deleter<AVIOContext, int, ufile_close> >(
+        std::move(that) )
+   {
+   }
 
    // Close explicitly, not ignoring return values.
    int close()

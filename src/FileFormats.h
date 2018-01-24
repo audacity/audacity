@@ -128,10 +128,12 @@ inline R SFCall(F fun, Args&&... args)
 
 //RAII for SNDFILE*
 struct SFFileCloser { int operator () (SNDFILE*) const; };
-struct SFFile : public std::unique_ptr<SNDFILE, SFFileCloser>
+struct SFFile : public std::unique_ptr<SNDFILE, ::SFFileCloser>
 {
    SFFile() = default;
-   SFFile( SFFile&& ) = default;
+   SFFile( SFFile &&that )
+   : std::unique_ptr<SNDFILE, ::SFFileCloser>( std::move( that ) )
+   {}
 
    // Close explicitly, not ignoring return values.
    int close()
