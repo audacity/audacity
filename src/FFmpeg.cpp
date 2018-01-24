@@ -140,11 +140,7 @@ void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl)
 #if defined(__WXMSW__)
    frm.Replace(wxT("%t"),wxT("%i"),true); //TODO: on Windows vprintf won't handle %t, and probably some others. Investigate.
 #endif
-#if defined(wxUSE_UNICODE)
-   // String comes with %s format field and a value in value list is ascii char*. Thus in Unicode configurations
-   // we have to convert %s to %S.
-   frm.Replace(wxT("%s"),wxT("%S"),true);
-#endif
+
    printstring.Append(wxString::FormatV(frm,vl));
    wxString cpt;
    switch (level)
