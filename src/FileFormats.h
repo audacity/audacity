@@ -130,6 +130,9 @@ inline R SFCall(F fun, Args&&... args)
 struct SFFileCloser { int operator () (SNDFILE*) const; };
 struct SFFile : public std::unique_ptr<SNDFILE, SFFileCloser>
 {
+   SFFile() = default;
+   SFFile( SFFile&& ) = default;
+
    // Close explicitly, not ignoring return values.
    int close()
    {

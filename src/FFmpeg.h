@@ -975,6 +975,9 @@ struct UFileHolder : public std::unique_ptr<
    AVIOContext, AV_Deleter<AVIOContext, int, ufile_close>
 >
 {
+   UFileHolder() = default;
+   UFileHolder( UFileHolder&& ) = default;
+
    // Close explicitly, not ignoring return values.
    int close()
    {
