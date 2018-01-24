@@ -137,9 +137,6 @@ void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl)
    }
 
    wxString frm(fmt,wxConvLibc);
-#if defined(__WXMSW__)
-   frm.Replace(wxT("%t"),wxT("%i"),true); //TODO: on Windows vprintf won't handle %t, and probably some others. Investigate.
-#endif
 
    printstring.Append(wxString::FormatV(frm,vl));
    wxString cpt;
