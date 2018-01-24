@@ -150,15 +150,7 @@ void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl)
    case 2: cpt = wxT("Debug"); break;
    default: cpt = wxT("Log"); break;
    }
-#ifdef EXPERIMENTAL_OD_FFMPEG
-//if the decoding happens thru OD then this gets called from a non main thread, which means wxLogDebug
-//will crash.
-//TODO:find some workaround for the log.  perhaps use ODManager as a bridge. for now just print
-   if(!wxThread::IsMain())
-      wxPrintf("%s: %s\n",(char*)cpt.char_str(),(char*)printstring.char_str());
-   else
-#endif
-      wxLogDebug(wxT("%s: %s"),cpt,printstring);
+   wxLogDebug(wxT("%s: %s"),cpt,printstring);
 }
 
 //======================= Unicode aware uri protocol for FFmpeg
