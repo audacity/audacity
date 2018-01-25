@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-18 00:56-0500\n"
-"PO-Revision-Date: 2018-01-24 01:46+0000\n"
+"PO-Revision-Date: 2018-01-25 01:37+0000\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language: pt_PT\n"
@@ -1266,7 +1266,7 @@ msgstr "Aplicar cadeia"
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
 msgid "&Select Chain"
-msgstr "&Seleccionar Cadeia"
+msgstr "&Selecionar Cadeia"
 
 #. i18n-hint: This is the heading for a column in the edit chains dialog
 #: src/BatchProcessDialog.cpp
@@ -2237,7 +2237,7 @@ msgstr "&Grelhas"
 
 #: src/FreqWindow.cpp
 msgid "&Algorithm:"
-msgstr "&Algorítmo:"
+msgstr "&Algoritmo:"
 
 #: src/FreqWindow.cpp
 msgid "&Size:"
@@ -3154,7 +3154,7 @@ msgstr "&Ampliar"
 
 #: src/Menus.cpp
 msgid "Zoom &Normal"
-msgstr "&Normal"
+msgstr "&Normal Zoom"
 
 #: src/Menus.cpp
 msgid "Zoom &Out"
@@ -3162,7 +3162,7 @@ msgstr "&Reduzir"
 
 #: src/Menus.cpp
 msgid "&Zoom to Selection"
-msgstr "&Selecção"
+msgstr "&Zoom para a Seleção"
 
 #: src/Menus.cpp
 msgid "Zoom &Toggle"
@@ -3332,7 +3332,7 @@ msgstr "Gravar &Nova Faixa"
 # Gravação programada
 #: src/Menus.cpp
 msgid "&Timer Record..."
-msgstr "&Gravação Programada..."
+msgstr "&Gravação Temporizada..."
 
 #: src/Menus.cpp
 msgid "&Cursor to"
@@ -3504,11 +3504,11 @@ msgstr "Início ao &Fim da Selecção"
 
 #: src/Menus.cpp
 msgid "End to Cu&rsor/Selection Start"
-msgstr "Fim ao Cursor / &Início da Selecção"
+msgstr "Fim ao Cursor / &Início da Seleção"
 
 #: src/Menus.cpp
 msgid "End to Selection En&d"
-msgstr "Fim ao Fim da &Selecção"
+msgstr "Fim ao Fim da &Seleção"
 
 #: src/Menus.cpp
 msgid "&Align Tracks"
@@ -3672,7 +3672,7 @@ msgstr "Reproduzir &um Segundo"
 
 #: src/Menus.cpp
 msgid "Play To &Selection"
-msgstr "Reproduzir até à &Selecção"
+msgstr "Reproduzir até à &Seleção"
 
 #: src/Menus.cpp
 msgid "Play &Before Selection Start"
@@ -12323,7 +12323,7 @@ msgstr "&Nova regra"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "De&lete selected rule"
-msgstr "A&pagar regra seleccionada"
+msgstr "A&pagar regra selecionada"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Unused filters:"
