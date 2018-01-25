@@ -141,6 +141,7 @@ public:
    ///\param subformat index of export type
    ///\return true if export succeded
    ProgressResult Export(AudacityProject *project,
+      std::unique_ptr<ProgressDialog> &pDialog,
       unsigned channels,
       const wxString &fName,
       bool selectedOnly,
@@ -849,8 +850,10 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 
 
 ProgressResult ExportFFmpeg::Export(AudacityProject *project,
-                       unsigned channels, const wxString &fName,
-                       bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata, int subformat)
+   std::unique_ptr<ProgressDialog> &pDialog,
+   unsigned channels, const wxString &fName,
+   bool selectionOnly, double t0, double t1,
+   MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
    if (!CheckFFmpegPresence())
       return ProgressResult::Cancelled;
@@ -901,10 +904,13 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    auto updateResult = ProgressResult::Success;
    {
-      ProgressDialog progress(wxFileName(fName).GetName(),
-         selectionOnly ?
-         wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()) :
-         wxString::Format(_("Exporting the audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()));
+      InitProgress( pDialog, wxFileName(fName).GetName(),
+         selectionOnly
+            ? wxString::Format(_("Exporting selected audio as %s"),
+               ExportFFmpegOptions::fmts[mSubFormat].Description())
+            : wxString::Format(_("Exporting the audio as %s"),
+               ExportFFmpegOptions::fmts[mSubFormat].Description()) );
+      auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);

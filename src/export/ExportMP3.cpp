@@ -1610,6 +1610,7 @@ public:
 
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
    ProgressResult Export(AudacityProject *project,
+               std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -1670,6 +1671,7 @@ int ExportMP3::SetNumExportChannels()
 
 
 ProgressResult ExportMP3::Export(AudacityProject *project,
+                       std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned channels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -1858,7 +1860,8 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             brate);
       }
 
-      ProgressDialog progress(wxFileName(fName).GetName(), title);
+      InitProgress( pDialog, wxFileName(fName).GetName(), title );
+      auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
          auto blockLen = mixer->Process(inSamples);

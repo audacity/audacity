@@ -319,6 +319,7 @@ public:
 
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
    ProgressResult Export(AudacityProject *project,
+               std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -390,6 +391,7 @@ ExportPCM::ExportPCM()
  * file type, or giving the user full control over libsndfile.
  */
 ProgressResult ExportPCM::Export(AudacityProject *project,
+                       std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned numChannels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -489,12 +491,13 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                                   info.channels, maxBlockLen, true,
                                   rate, format, true, mixerSpec);
 
-         ProgressDialog progress(wxFileName(fName).GetName(),
-                                 selectionOnly ?
-                                 wxString::Format(_("Exporting the selected audio as %s"),
-                                                  formatStr) :
-                                 wxString::Format(_("Exporting the audio as %s"),
-                                                  formatStr));
+         InitProgress( pDialog, wxFileName(fName).GetName(),
+            selectionOnly
+               ? wxString::Format(_("Exporting the selected audio as %s"),
+                  formatStr)
+               : wxString::Format(_("Exporting the audio as %s"),
+                  formatStr) );
+         auto &progress = *pDialog;
 
          while (updateResult == ProgressResult::Success) {
             sf_count_t samplesWritten;

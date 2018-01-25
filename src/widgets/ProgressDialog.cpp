@@ -997,7 +997,6 @@ END_EVENT_TABLE()
 ProgressDialog::ProgressDialog()
 :  wxDialogWrapper()
 {
-   Init();
 }
 
 ProgressDialog::ProgressDialog(const wxString & title,
@@ -1006,8 +1005,6 @@ ProgressDialog::ProgressDialog(const wxString & title,
                                const wxString & sRemainingLabelText /* = wxEmptyString */)
 :  wxDialogWrapper()
 {
-   Init();
-
    Create(title, message, flags, sRemainingLabelText);
 }
 
@@ -1017,8 +1014,6 @@ ProgressDialog::ProgressDialog(const wxString & title,
                                const wxString & sRemainingLabelText /* = wxEmptyString */)
 :  wxDialogWrapper()
 {
-   Init();
-
    Create(title, columns, flags, sRemainingLabelText);
 }
 
@@ -1059,10 +1054,6 @@ ProgressDialog::~ProgressDialog()
 
 void ProgressDialog::Init()
 {
-   mLastValue = 0;
-   mDisable = NULL;
-   mIsTransparent = true;
-
    // There's a problem where the focus is not returned to the window that had
    // it before creating this object.  The reason is because the focus events
    // that are sent to the parent window after the wxWindowDisabler are created
@@ -1080,6 +1071,34 @@ void ProgressDialog::Init()
       GetParent()->SetFocus();
    }
 #endif
+}
+
+void ProgressDialog::Reinit()
+{
+   mLastValue = 0;
+
+   mStartTime = wxGetLocalTimeMillis().GetValue();
+   mLastUpdate = mStartTime;
+   mYieldTimer = mStartTime;
+   mCancel = false;
+   mStop = false;
+
+   // Because wxGTK is very sensitive about maintaining focus when
+   // this window is not shown, we always show it.  But, since we
+   // want a 500ms delay before it's actually visible for those
+   // quick tasks, we show it as transparent.  If the initial
+   // delay is exceeded, then we reset the dialog to full opacity.
+   SetTransparent(0);
+   mIsTransparent = true;
+
+   auto button = FindWindowById(wxID_CANCEL, this);
+   if (button)
+      button->Enable();
+   button = FindWindowById(wxID_OK, this);
+   if (button)
+      button->Enable();
+
+   wxDialogWrapper::Show(true);
 }
 
 // Add a NEW text column each time this is called.
@@ -1138,6 +1157,8 @@ bool ProgressDialog::Create(const wxString & title,
                             int flags /* = pdlgDefaultFlags */,
                             const wxString & sRemainingLabelText /* = wxEmptyString */)
 {
+   Init();
+
    wxWindow *parent = GetParentForModalDialog(NULL, 0);
 
    // Set this boolean to indicate if we are using the "Elapsed" labels
@@ -1267,21 +1288,7 @@ bool ProgressDialog::Create(const wxString & title,
 
    Centre(wxCENTER_FRAME | wxBOTH);
 
-   mStartTime = wxGetLocalTimeMillis().GetValue();
-   mLastUpdate = mStartTime;
-   mYieldTimer = mStartTime;
-   mCancel = false;
-   mStop = false;
-
-   // Because wxGTK is very sensitive about maintaining focus when
-   // this window is not shown, we always show it.  But, since we
-   // want a 500ms delay before it's actually visible for those
-   // quick tasks, we show it as transparent.  If the initial
-   // delay is exceeded, then we reset the dialog to full opacity.
-   SetTransparent(0);
-   mIsTransparent = true;
-
-   wxDialogWrapper::Show(true);
+   Reinit();
 
    // Even though we won't necessarily show the dialog due to the 500ms
    // delay, we MUST disable other windows/menus anyway since we run the risk

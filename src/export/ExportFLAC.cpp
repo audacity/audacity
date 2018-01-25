@@ -191,6 +191,7 @@ public:
 
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
    ProgressResult Export(AudacityProject *project,
+               std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -222,6 +223,7 @@ ExportFLAC::ExportFLAC()
 }
 
 ProgressResult ExportFLAC::Export(AudacityProject *project,
+                        std::unique_ptr<ProgressDialog> &pDialog,
                         unsigned numChannels,
                         const wxString &fName,
                         bool selectionOnly,
@@ -354,10 +356,11 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
-   ProgressDialog progress(wxFileName(fName).GetName(),
-                           selectionOnly ?
-                           _("Exporting the selected audio as FLAC") :
-                           _("Exporting the audio as FLAC"));
+   InitProgress( pDialog, wxFileName(fName).GetName(),
+      selectionOnly
+         ? _("Exporting the selected audio as FLAC")
+         : _("Exporting the audio as FLAC") );
+   auto &progress = *pDialog;
 
    while (updateResult == ProgressResult::Success) {
       auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
