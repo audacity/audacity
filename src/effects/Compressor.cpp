@@ -196,7 +196,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxEXPAND, true);
    {
       S.SetBorder(10);
-      mPanel = safenew EffectCompressorPanel(S.GetParent(),
+      mPanel = safenew EffectCompressorPanel(S.GetParent(), wxID_ANY,
                                          mThresholdDB,
                                          mNoiseFloorDB,
                                          mRatio);
@@ -644,11 +644,11 @@ BEGIN_EVENT_TABLE(EffectCompressorPanel, wxPanelWrapper)
    EVT_SIZE(EffectCompressorPanel::OnSize)
 END_EVENT_TABLE()
 
-EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent,
+EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent, wxWindowID winid,
                                              double & threshold,
                                              double & noiseFloor,
                                              double & ratio)
-:  wxPanelWrapper(parent),
+:  wxPanelWrapper(parent, winid),
    threshold(threshold),
    noiseFloor(noiseFloor),
    ratio(ratio)

@@ -245,7 +245,41 @@ class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
    DECLARE_DYNAMIC_CLASS(RulerPanel)
 
  public:
+   using Range = std::pair<double, double>;
+
+   struct Options {
+      bool log { false };
+      bool flip { false };
+      bool labelEdges { false };
+      bool ticksAtExtremes { false };
+      bool hasTickColour{ false };
+      wxColour tickColour;
+
+      Options() {}
+
+      Options &Log( bool l )
+      { log = l; return *this; }
+
+      Options &Flip( bool f )
+      { flip = f; return *this; }
+
+      Options &LabelEdges( bool l )
+      { labelEdges = l; return *this; }
+
+      Options &TicksAtExtremes( bool t )
+      { ticksAtExtremes = t; return *this; }
+
+      Options &TickColour( const wxColour c )
+      { tickColour = c; hasTickColour = true; return *this; }
+   };
+
    RulerPanel(wxWindow* parent, wxWindowID id,
+              wxOrientation orientation,
+              const wxSize &bounds,
+              const Range &range,
+              Ruler::RulerFormat format,
+              const wxString &units,
+              const Options &options = {},
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize);
 

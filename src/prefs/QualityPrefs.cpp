@@ -34,9 +34,9 @@ BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
    EVT_CHOICE(ID_SAMPLE_RATE_CHOICE, QualityPrefs::OnSampleRateChoice)
 END_EVENT_TABLE()
 
-QualityPrefs::QualityPrefs(wxWindow * parent)
+QualityPrefs::QualityPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: meaning accuracy in reproduction of sounds */
-:  PrefsPanel(parent, _("Quality"))
+:  PrefsPanel(parent, winid, _("Quality"))
 {
    Populate();
 }
@@ -240,8 +240,8 @@ wxString QualityPrefs::HelpPageName()
    return "Quality_Preferences";
 }
 
-PrefsPanel *QualityPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *QualityPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew QualityPrefs(parent);
+   return safenew QualityPrefs(parent, winid);
 }

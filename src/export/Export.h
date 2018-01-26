@@ -233,8 +233,9 @@ private:
 class ExportMixerPanel final : public wxPanelWrapper
 {
 public:
-   ExportMixerPanel( MixerSpec *mixerSpec, wxArrayString trackNames,
-         wxWindow *parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition,
+   ExportMixerPanel( wxWindow *parent, wxWindowID id,
+         MixerSpec *mixerSpec, wxArrayString trackNames,
+         const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize);
    virtual ~ExportMixerPanel();
 

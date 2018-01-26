@@ -205,10 +205,9 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
 NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * pSizer ){
    wxString formatName = mListener ? mListener->AS_GetSelectionFormat() 
       : wxString(wxEmptyString);
-   NumericTextCtrl * pCtrl = safenew NumericTextCtrl(
-      NumericConverter::TIME, this, id, formatName, 0.0, mRate);
+   auto pCtrl = safenew NumericTextCtrl(
+      this, id, NumericConverter::TIME, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
-   pCtrl->EnableMenu();
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
    return pCtrl;
 }

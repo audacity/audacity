@@ -22,9 +22,9 @@
 #include "../Experimental.h"
 #include "../Internat.h"
 
-TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent)
+TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: two nouns */
-:  PrefsPanel(parent, _("Tracks Behaviors"))
+:  PrefsPanel(parent, winid, _("Tracks Behaviors"))
 {
    Populate();
 }
@@ -125,8 +125,8 @@ TracksBehaviorsPrefsFactory::TracksBehaviorsPrefsFactory()
 {
 }
 
-PrefsPanel *TracksBehaviorsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *TracksBehaviorsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew TracksBehaviorsPrefs(parent);
+   return safenew TracksBehaviorsPrefs(parent, winid);
 }

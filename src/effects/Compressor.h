@@ -138,7 +138,7 @@ private:
 class EffectCompressorPanel final : public wxPanelWrapper
 {
 public:
-   EffectCompressorPanel(wxWindow *parent,
+   EffectCompressorPanel(wxWindow *parent, wxWindowID winid,
                          double & threshold,
                          double & noiseFloor,
                          double & ratio);

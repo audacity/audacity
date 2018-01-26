@@ -428,7 +428,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
    {
       S.AddSpace(0, 5);
 
-      mPanel = safenew EffectAutoDuckPanel(S.GetParent(), this);
+      mPanel = safenew EffectAutoDuckPanel(S.GetParent(), wxID_ANY, this);
       S.AddWindow(mPanel);
 
       S.AddSpace(0, 5);
@@ -618,8 +618,9 @@ BEGIN_EVENT_TABLE(EffectAutoDuckPanel, wxPanelWrapper)
    EVT_MOTION(EffectAutoDuckPanel::OnMotion)
 END_EVENT_TABLE()
 
-EffectAutoDuckPanel::EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect)
-:  wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(600, 300))
+EffectAutoDuckPanel::EffectAutoDuckPanel(
+   wxWindow *parent, wxWindowID winid, EffectAutoDuck *effect)
+:  wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(600, 300))
 {
    mParent = parent;
    mEffect = effect;

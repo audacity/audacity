@@ -1566,17 +1566,14 @@ bool LV2Effect::BuildPlain()
             wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
             sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
             mDuration = safenew
-               NumericTextCtrl(NumericConverter::TIME,
-               w,
-               ID_Duration,
-               mHost->GetDurationFormat(),
-               mHost->GetDuration(),
-               mSampleRate,
-               wxDefaultPosition,
-               wxDefaultSize,
-               true);
+               NumericTextCtrl(w, ID_Duration,
+                  NumericConverter::TIME,
+                  mHost->GetDurationFormat(),
+                  mHost->GetDuration(),
+                  mSampleRate,
+                  NumericTextCtrl::Options{}
+                     .AutoPos(true));
             mDuration->SetName(_("Duration"));
-            mDuration->EnableMenu();
             sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
 
             groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);

@@ -28,8 +28,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-WarningsPrefs::WarningsPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Warnings"))
+WarningsPrefs::WarningsPrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Warnings"))
 {
    Populate();
 }
@@ -96,8 +96,8 @@ wxString WarningsPrefs::HelpPageName()
    return "Warnings_Preferences";
 }
 
-PrefsPanel *WarningsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *WarningsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew WarningsPrefs(parent);
+   return safenew WarningsPrefs(parent, winid);
 }

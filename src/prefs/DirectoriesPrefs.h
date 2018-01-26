@@ -21,7 +21,7 @@ class ShuttleGui;
 class DirectoriesPrefs final : public PrefsPanel
 {
  public:
-   DirectoriesPrefs(wxWindow * parent);
+   DirectoriesPrefs(wxWindow * parent, wxWindowID winid);
    ~DirectoriesPrefs();
    bool Commit() override;
    bool Validate() override;
@@ -42,6 +42,6 @@ class DirectoriesPrefs final : public PrefsPanel
 class DirectoriesPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

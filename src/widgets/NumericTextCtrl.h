@@ -145,15 +145,36 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
  public:
    DECLARE_DYNAMIC_CLASS(NumericTextCtrl)
 
-   NumericTextCtrl(NumericConverter::Type type,
-                   wxWindow *parent,
-                   wxWindowID id,
+   struct Options {
+      bool autoPos { false };
+      bool readOnly { false };
+      bool menuEnabled { true };
+      bool hasInvalidValue { false };
+      double invalidValue { -1.0 };
+      wxString format {};
+      bool hasValue { false };
+      double value{ -1.0 };
+
+      Options() {}
+
+      Options &AutoPos (bool value) { autoPos = value; return *this; }
+      Options &ReadOnly (bool value) { readOnly = value; return *this; }
+      Options &MenuEnabled (bool value) { menuEnabled = value; return *this; }
+      Options &InvalidValue (bool has, double value = -1.0)
+         { hasInvalidValue = has, invalidValue = value; return *this; }
+      Options &Format (const wxString &value) { format = value; return *this; }
+      Options &Value (bool has, double v)
+         { hasValue = has, value = v; return *this; }
+   };
+
+   NumericTextCtrl(wxWindow *parent, wxWindowID winid,
+                   NumericConverter::Type type,
                    const wxString &formatName = wxEmptyString,
                    double value = 0.0,
                    double sampleRate = 44100,
+                   const Options &options = {},
                    const wxPoint &pos = wxDefaultPosition,
-                   const wxSize &size = wxDefaultSize,
-                   bool autoPos = false);
+                   const wxSize &size = wxDefaultSize);
 
    virtual ~NumericTextCtrl();
 

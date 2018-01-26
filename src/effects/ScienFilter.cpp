@@ -377,16 +377,15 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.StartVerticalLay();
       {
-         mdBRuler = safenew RulerPanel(parent, wxID_ANY);
-         mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         mdBRuler->ruler.SetOrientation(wxVERTICAL);
-         mdBRuler->ruler.SetRange(30.0, -120.0);
-         mdBRuler->ruler.SetFormat(Ruler::LinearDBFormat);
-         mdBRuler->ruler.SetUnits(_("dB"));
-         mdBRuler->ruler.SetLabelEdges(true);
-         int w;
-         mdBRuler->ruler.GetMaxSize(&w, NULL);
-         mdBRuler->SetSize(wxSize(w, 150));  // height needed for wxGTK
+         mdBRuler = safenew RulerPanel(
+            parent, wxID_ANY, wxVERTICAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ 30.0, -120.0 },
+            Ruler::LinearDBFormat,
+            _("dB"),
+            RulerPanel::Options{}
+               .LabelEdges(true)
+         );
 
          S.SetBorder(1);
          S.AddSpace(1, 1);
@@ -396,8 +395,10 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndVerticalLay();
 
-      mPanel = safenew EffectScienFilterPanel(this, parent);
-      mPanel->SetFreqRange(mLoFreq, mNyquist);
+      mPanel = safenew EffectScienFilterPanel(
+         parent, wxID_ANY,
+         this, mLoFreq, mNyquist
+      );
 
       S.SetBorder(5);
       S.Prop(1);
@@ -430,18 +431,17 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.AddSpace(1, 1);
 
-      mfreqRuler  = safenew RulerPanel(parent, wxID_ANY);
-      mfreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-      mfreqRuler->ruler.SetOrientation(wxHORIZONTAL);
-      mfreqRuler->ruler.SetLog(true);
-      mfreqRuler->ruler.SetRange(mLoFreq, mNyquist);
-      mfreqRuler->ruler.SetFormat(Ruler::IntFormat);
-      mfreqRuler->ruler.SetUnits(wxT(""));
-      mfreqRuler->ruler.SetFlip(true);
-      mfreqRuler->ruler.SetLabelEdges(true);
-      int h;
-      mfreqRuler->ruler.GetMaxSize(NULL, &h);
-      mfreqRuler->SetMinSize(wxSize(-1, h));
+      mfreqRuler  = safenew RulerPanel(
+         parent, wxID_ANY, wxHORIZONTAL,
+         wxSize{ 100, 100 }, // Ruler can't handle small sizes
+         RulerPanel::Range{ mLoFreq, mNyquist },
+         Ruler::IntFormat,
+         wxT(""),
+         RulerPanel::Options{}
+            .Log(true)
+            .Flip(true)
+            .LabelEdges(true)
+      );
 
       S.Prop(1);
       S.AddWindow(mfreqRuler, wxEXPAND | wxALIGN_LEFT | wxRIGHT);
@@ -1012,8 +1012,10 @@ BEGIN_EVENT_TABLE(EffectScienFilterPanel, wxPanelWrapper)
     EVT_SIZE(EffectScienFilterPanel::OnSize)
 END_EVENT_TABLE()
 
-EffectScienFilterPanel::EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent)
-:  wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 200))
+EffectScienFilterPanel::EffectScienFilterPanel(
+   wxWindow *parent, wxWindowID winid,
+   EffectScienFilter *effect, double lo, double hi)
+:  wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(400, 200))
 {
    mEffect = effect;
    mParent = parent;
@@ -1025,6 +1027,8 @@ EffectScienFilterPanel::EffectScienFilterPanel(EffectScienFilter *effect, wxWind
    mHiFreq = 0.0;
    mDbMin = 0.0;
    mDbMax = 0.0;
+
+   SetFreqRange(lo, hi);
 }
 
 EffectScienFilterPanel::~EffectScienFilterPanel()

@@ -287,7 +287,8 @@ private:
 class EqualizationPanel final : public wxPanelWrapper
 {
 public:
-   EqualizationPanel(EffectEqualization *effect, wxWindow *parent);
+   EqualizationPanel(
+      wxWindow *parent, wxWindowID winid, EffectEqualization *effect);
    ~EqualizationPanel();
 
    // We don't need or want to accept focus.

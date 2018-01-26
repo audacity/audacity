@@ -70,7 +70,8 @@ class ToolsToolBar final : public ToolBar {
 
    void RegenerateTooltips() override;
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
-   AButton *MakeTool(teBmps eTool, int id, const wxChar *label);
+   static AButton *MakeTool(
+      ToolsToolBar *pBar, teBmps eTool, int id, const wxChar *label);
 
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;

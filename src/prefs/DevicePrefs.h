@@ -26,7 +26,7 @@ class ShuttleGui;
 class DevicePrefs final : public PrefsPanel
 {
  public:
-   DevicePrefs(wxWindow * parent);
+   DevicePrefs(wxWindow * parent, wxWindowID winid);
    virtual ~DevicePrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -58,7 +58,7 @@ class DevicePrefs final : public PrefsPanel
 class DevicePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 
 #endif

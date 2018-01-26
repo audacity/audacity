@@ -44,16 +44,17 @@ NumericEditor::~NumericEditor()
 void NumericEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
    wxASSERT(parent); // to justify safenew
-   auto control = safenew NumericTextCtrl(mType, parent,
-                                wxID_ANY,
-                                mFormat,
-                                mOld,
-                                mRate,
-                                wxDefaultPosition,
-                                wxDefaultSize,
-                                true);
-   if (mType == NumericTextCtrl::FREQUENCY)
-      control->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+   auto control = safenew NumericTextCtrl(
+      parent, wxID_ANY,
+      mType,
+      mFormat,
+      mOld,
+      mRate,
+      NumericTextCtrl::Options{}
+         .AutoPos(true)
+         .InvalidValue(mType == NumericTextCtrl::FREQUENCY,
+                       SelectedRegion::UndefinedFrequency)
+   );
    m_control = control;
 
    wxGridCellEditor::Create(parent, id, handler);
@@ -174,14 +175,13 @@ void NumericRenderer::Draw(wxGrid &grid,
 
       table->GetValue(row, col).ToDouble(&value);
 
-      NumericTextCtrl tt(mType, &grid,
-                      wxID_ANY,
+      NumericTextCtrl tt(&grid, wxID_ANY,
+                      mType,
                       ne->GetFormat(),
                       value,
                       ne->GetRate(),
-                      wxPoint(10000, 10000),  // create offscreen
-                      wxDefaultSize,
-                      true);
+                      NumericTextCtrl::Options{}.AutoPos(true),
+                      wxPoint(10000, 10000));  // create offscreen
       tstr = tt.GetString();
 
       ne->DecRef();
@@ -231,14 +231,13 @@ wxSize NumericRenderer::GetBestSize(wxGrid &grid,
    if (ne) {
       double value;
       table->GetValue(row, col).ToDouble(&value);
-      NumericTextCtrl tt(mType, &grid,
-                      wxID_ANY,
+      NumericTextCtrl tt(&grid, wxID_ANY,
+                      mType,
                       ne->GetFormat(),
                       value,
                       ne->GetRate(),
-                      wxPoint(10000, 10000),  // create offscreen
-                      wxDefaultSize,
-                      true);
+                      NumericTextCtrl::Options{}.AutoPos(true),
+                      wxPoint(10000, 10000));  // create offscreen
       sz = tt.GetSize();
 
       ne->DecRef();

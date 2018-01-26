@@ -261,7 +261,7 @@ PrefsDialog::PrefsDialog
                {
                   const PrefsNode &node = *it;
                   PrefsPanelFactory &factory = *node.pFactory;
-                  wxWindow *const w = factory.Create(mCategories);
+                  wxWindow *const w = factory(mCategories, wxID_ANY);
                   if (stack.empty())
                      // Parameters are: AddPage(page, name, IsSelected, imageId).
                      mCategories->AddPage(w, w->GetName(), false, 0);
@@ -289,7 +289,7 @@ PrefsDialog::PrefsDialog
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
-         mUniquePage = factory.Create(this);
+         mUniquePage = factory(this, wxID_ANY);
          wxWindow * uniquePageWindow = S.Prop(1).AddWindow(mUniquePage, wxEXPAND);
          // We're not in the wxTreebook, so add the accelerator here
          wxAcceleratorEntry entries[1];

@@ -1606,10 +1606,37 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
+                       wxOrientation orientation,
+                       const wxSize &bounds,
+                       const Range &range,
+                       Ruler::RulerFormat format,
+                       const wxString &units,
+                       const Options &options,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):
    wxPanelWrapper(parent, id, pos, size)
 {
+   ruler.SetBounds( 0, 0, bounds.x, bounds.y );
+   ruler.SetOrientation(orientation);
+   ruler.SetRange( range.first, range.second );
+   ruler.SetLog( options.log );
+   ruler.SetFormat(format);
+   ruler.SetUnits( units );
+   ruler.SetFlip( options.flip );
+   ruler.SetLabelEdges( options.labelEdges );
+   ruler.mbTicksAtExtremes = options.ticksAtExtremes;
+   if (orientation == wxVERTICAL) {
+      wxCoord w;
+      ruler.GetMaxSize(&w, NULL);
+      SetMinSize(wxSize(w, 150));  // height needed for wxGTK
+   }
+   else if (orientation == wxHORIZONTAL) {
+      wxCoord h;
+      ruler.GetMaxSize(NULL, &h);
+      SetMinSize(wxSize(wxDefaultCoord, h));
+   }
+   if (options.hasTickColour)
+      ruler.SetTickColour( options.tickColour );
 }
 
 RulerPanel::~RulerPanel()

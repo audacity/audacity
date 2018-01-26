@@ -39,11 +39,7 @@ public:
                      const wxString &name,
                      const wxPoint & pos,
                      const wxSize & size,
-                     int style = FRAC_SLIDER,
-                     bool popup = true,
-                     bool canUseShift = true,
-                     float stepValue = STEP_CONTINUOUS,
-                     int orientation = wxHORIZONTAL);
+                     const ASlider::Options &options = ASlider::Options{});
    virtual ~MixerTrackSlider() {}
 
    void OnMouseEvent(wxMouseEvent & event);

@@ -1019,8 +1019,9 @@ BEGIN_EVENT_TABLE(ExportMixerPanel, wxPanelWrapper)
     EVT_MOUSE_EVENTS(ExportMixerPanel::OnMouseEvent)
 END_EVENT_TABLE()
 
-ExportMixerPanel::ExportMixerPanel( MixerSpec *mixerSpec,
-      wxArrayString trackNames,wxWindow *parent, wxWindowID id,
+ExportMixerPanel::ExportMixerPanel( wxWindow *parent, wxWindowID id,
+      MixerSpec *mixerSpec,
+      wxArrayString trackNames,
       const wxPoint& pos, const wxSize& size):
    wxPanelWrapper(parent, id, pos, size)
    , mMixerSpec{mixerSpec}
@@ -1311,8 +1312,9 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
       auto uVertSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       vertSizer = uVertSizer.get();
 
-      wxWindow *mixerPanel = safenew ExportMixerPanel(mMixerSpec.get(), mTrackNames, this,
-         ID_MIXERPANEL, wxDefaultPosition, wxSize(400, -1));
+      wxWindow *mixerPanel = safenew ExportMixerPanel(this, ID_MIXERPANEL,
+         mMixerSpec.get(), mTrackNames,
+         wxDefaultPosition, wxSize(400, -1));
       mixerPanel->SetName(_("Mixer Panel"));
       vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5);
 

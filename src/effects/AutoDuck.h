@@ -94,7 +94,8 @@ private:
 class EffectAutoDuckPanel final : public wxPanelWrapper
 {
 public:
-   EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect);
+   EffectAutoDuckPanel(
+      wxWindow *parent, wxWindowID winid, EffectAutoDuck *effect);
    virtual ~EffectAutoDuckPanel();
 
 private:

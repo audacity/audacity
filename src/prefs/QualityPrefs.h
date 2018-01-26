@@ -26,7 +26,7 @@ class ShuttleGui;
 class QualityPrefs final : public PrefsPanel
 {
  public:
-   QualityPrefs(wxWindow * parent);
+   QualityPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~QualityPrefs();
 
    bool Commit() override;
@@ -57,6 +57,6 @@ class QualityPrefs final : public PrefsPanel
 class QualityPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

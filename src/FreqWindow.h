@@ -86,7 +86,7 @@ private:
 class FreqGauge final : public wxStatusBar
 {
 public:
-   FreqGauge(wxWindow * parent);
+   FreqGauge(wxWindow * parent, wxWindowID winid);
 
    void SetRange(int range, int bar = 12, int gap = 3);
    void SetValue(int value);
@@ -106,7 +106,7 @@ private:
 class FreqPlot final : public wxWindow
 {
 public:
-   FreqPlot(wxWindow *parent);
+   FreqPlot(wxWindow *parent, wxWindowID winid);
 
    // We don't need or want to accept focus.
    bool AcceptsFocus() const;

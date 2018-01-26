@@ -623,18 +623,17 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          S.StartVerticalLay();
          {
-            mdBRuler = safenew RulerPanel(parent, wxID_ANY);
-            mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-            mdBRuler->ruler.SetOrientation(wxVERTICAL);
-            mdBRuler->ruler.SetRange(60.0, -120.0);
-            mdBRuler->ruler.SetFormat(Ruler::LinearDBFormat);
-            mdBRuler->ruler.SetUnits(_("dB"));
-            mdBRuler->ruler.SetLabelEdges(true);
-            mdBRuler->ruler.mbTicksAtExtremes = true;
-            int w;
-            mdBRuler->ruler.GetMaxSize(&w, NULL);
-            mdBRuler->SetMinSize(wxSize(w, 150));  // height needed for wxGTK
-            mdBRuler->ruler.SetTickColour( wxColour(0,0,0) );
+            mdBRuler = safenew RulerPanel(
+               parent, wxID_ANY, wxVERTICAL,
+               wxSize{ 100, 100 }, // Ruler can't handle small sizes
+               RulerPanel::Range{ 60.0, -120.0 },
+               Ruler::LinearDBFormat,
+               _("dB"),
+               RulerPanel::Options{}
+                  .LabelEdges(true)
+                  .TicksAtExtremes(true)
+                  .TickColour( { 0, 0, 0 } )
+            );
 
             S.Prop(1);
             S.AddSpace(0, 1);
@@ -643,7 +642,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndVerticalLay();
 
-         mPanel = safenew EqualizationPanel(this, parent);
+         mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
          S.Prop(1);
          S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
@@ -677,20 +676,19 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Column 1 is empty
          S.AddSpace(1, 1);
 
-         mFreqRuler  = safenew RulerPanel(parent, wxID_ANY);
-         mFreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         mFreqRuler->ruler.SetOrientation(wxHORIZONTAL);
-         mFreqRuler->ruler.SetLog(true);
-         mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
-         mFreqRuler->ruler.SetFormat(Ruler::IntFormat);
-         mFreqRuler->ruler.SetUnits(_("Hz"));
-         mFreqRuler->ruler.SetFlip(true);
-         mFreqRuler->ruler.SetLabelEdges(true);
-         mFreqRuler->ruler.mbTicksAtExtremes = true;
-         int h;
-         mFreqRuler->ruler.GetMaxSize(NULL, &h);
-         mFreqRuler->SetMinSize(wxSize(wxDefaultCoord, h));
-         mFreqRuler->ruler.SetTickColour( wxColour(0,0,0) );
+         mFreqRuler  = safenew RulerPanel(
+            parent, wxID_ANY, wxHORIZONTAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ mLoFreq, mHiFreq },
+            Ruler::IntFormat,
+            _("Hz"),
+            RulerPanel::Options{}
+               .Log(true)
+               .Flip(true)
+               .LabelEdges(true)
+               .TicksAtExtremes(true)
+               .TickColour( { 0, 0, 0 } )
+         );
 
 
          S.Prop(1);
@@ -2846,8 +2844,9 @@ BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
    EVT_SIZE(EqualizationPanel::OnSize)
 END_EVENT_TABLE()
 
-EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *parent)
-:  wxPanelWrapper(parent)
+EqualizationPanel::EqualizationPanel(
+   wxWindow *parent, wxWindowID winid, EffectEqualization *effect)
+:  wxPanelWrapper(parent, winid)
 {
    mParent = parent;
    mEffect = effect;

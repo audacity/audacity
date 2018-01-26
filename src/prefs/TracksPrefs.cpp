@@ -45,11 +45,11 @@ namespace {
 }
 
 
-TracksPrefs::TracksPrefs(wxWindow * parent)
+TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
  * notes */
-:  PrefsPanel(parent, _("Tracks"))
+:  PrefsPanel(parent, winid, _("Tracks"))
 {
    // Bugs 1043, 1044
    // First rewrite legacy preferences
@@ -239,8 +239,8 @@ wxString TracksPrefs::HelpPageName()
    return "Tracks_Preferences";
 }
 
-PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *TracksPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew TracksPrefs(parent);
+   return safenew TracksPrefs(parent, winid);
 }
