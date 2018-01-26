@@ -38,6 +38,8 @@ enum FFmpegExposedFormat
    FMT_LAST
 };
 
+#define AV_CANMETA (AV_VERSION_INT(255, 255, 255))
+
 /// Describes export type
 struct ExposedFormat
 {
@@ -46,7 +48,7 @@ struct ExposedFormat
    const wxChar *extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
    const wxChar *shortname;   //!< used to guess the format
    unsigned maxchannels;      //!< how many channels this format could handle
-   int canmetadata;           //!< !=0 if format supports metadata, -1 any avformat version, otherwise version support added
+   const int canmetadata;           //!< !=0 if format supports metadata, AV_CANMETA any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
    const wxChar *description_; //!< format description (will be shown in export dialog) (untranslated!)
    AVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)

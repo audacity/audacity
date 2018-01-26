@@ -291,10 +291,10 @@ class ExpandingToolBarEvtHandler final : public wxEvtHandler
 
    bool ProcessEvent(wxEvent& evt) override
    {
-      if (mToolBar->IsCursorInWindow())
+//      if (mToolBar->IsCursorInWindow())
          mToolBar->TryAutoExpand();
-      else
-         mToolBar->TryAutoExpand();
+//      else
+//         mToolBar->TryAutoExpand();
 
       return mInheritedEvtHandler->ProcessEvent(evt);
    }
