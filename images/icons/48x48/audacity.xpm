@@ -1,5 +1,5 @@
 /* XPM */
-static char * audacity_xpm[] = {
+static const char * audacity_xpm[] = {
 "48 48 474 2",
 "  	c None",
 ". 	c #0000B7",
