@@ -655,6 +655,10 @@ namespace
       // TODO:  make a finer distinction between refreshing the track control area,
       // and the waveform area.  As it is, redraw both whenever you must redraw either.
 
+      // Copy data from the underlying tracks to the pending tracks that are
+      // really displayed
+      panel->GetProject()->GetTracks()->UpdatePendingTracks();
+
       using namespace RefreshCode;
 
       if (refreshResult & DestroyedCell) {
@@ -1867,6 +1871,9 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
    VisibleTrackIterator iter(GetProject());
    for (Track *t = iter.First(); t; t = iter.Next()) {
+      auto other = GetTracks()->FindPendingChangedTrack(t->GetId());
+      if (other)
+         t = other.get();
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
@@ -2862,15 +2869,15 @@ void TrackPanel::SetFocusedTrack( Track *t )
    if (t && !t->GetLinked() && t->GetLink())
       t = (WaveTrack*)t->GetLink();
 
-   if (t && AudacityProject::GetKeyboardCaptureHandler()) {
+   if ( !mAx->SetFocus( Track::Pointer( t ) ) )
+      return;
+
+   if (t && AudacityProject::GetKeyboardCaptureHandler())
       AudacityProject::ReleaseKeyboard(this);
-   }
 
-   if (t) {
+   if (t)
       AudacityProject::CaptureKeyboard(this);
-   }
 
-   mAx->SetFocus( Track::Pointer( t ) );
    Refresh( false );
 }
 

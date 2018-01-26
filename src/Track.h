@@ -16,6 +16,7 @@
 #include "MemoryX.h"
 #include <vector>
 #include <list>
+#include <functional>
 #include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -64,6 +65,33 @@ using TrackNodePointer = ListOfTracks::iterator;
 
 class ViewInfo;
 
+// This is an in-session identifier of track objects across undo states
+// It does not persist between sessions
+// Default constructed value is not equal to the id of any track that has ever
+// been added to a TrackList, or (directly or transitively) copied from such
+// (A pending additional track that is not yet applied is not considered added)
+// TrackIds are assigned uniquely across projects
+class TrackId
+{
+public:
+   TrackId() : mValue(-1) {}
+   explicit TrackId (long value) : mValue(value) {}
+
+   bool operator == (const TrackId &other) const
+   { return mValue == other.mValue; }
+
+   bool operator != (const TrackId &other) const
+   { return mValue != other.mValue; }
+
+   // Define this in case you want to key a std::map on TrackId
+   // The operator does not mean anything else
+   bool operator <  (const TrackId &other) const
+   { return mValue <  other.mValue; }
+
+private:
+   long mValue;
+};
+
 class AUDACITY_DLL_API Track /* not final */
    : public CommonTrackPanelCell, public XMLTagHandler
 {
@@ -72,6 +100,9 @@ class AUDACITY_DLL_API Track /* not final */
    friend class SyncLockedTracksIterator;
 
  // To be TrackDisplay
+ private:
+   TrackId mId;
+
  protected:
    std::weak_ptr<TrackList> mList;
    TrackNodePointer mNode{};
@@ -86,6 +117,11 @@ class AUDACITY_DLL_API Track /* not final */
    bool           mLinked;
    bool           mMinimized;
 
+ public:
+
+   TrackId GetId() const { return mId; }
+ private:
+   void SetId( TrackId id ) { mId = id; }
  public:
 
    // Given a bare pointer, find a shared_ptr.  But this is not possible for
@@ -151,12 +187,28 @@ class AUDACITY_DLL_API Track /* not final */
 
    int GetIndex() const;
    void SetIndex(int index);
+
    int GetY() const;
+private:
+   // Always maintain a strictly contiguous layout of tracks.
+   // So client code is not permitted to modify this attribute directly.
    void SetY(int y);
+   // No need yet to make this virtual
+   void DoSetY(int y);
+public:
+
    int GetHeight() const;
-   virtual void SetHeight(int h);
+   void SetHeight(int h);
+protected:
+   virtual void DoSetHeight(int h);
+public:
+
    bool GetMinimized() const;
-   virtual void SetMinimized(bool isMinimized);
+   void SetMinimized(bool isMinimized);
+protected:
+   virtual void DoSetMinimized(bool isMinimized);
+public:
+
    Track *GetLink() const;
 
  private:
@@ -215,10 +267,14 @@ class AUDACITY_DLL_API Track /* not final */
    void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
-   bool GetLinked  () const { return mLinked;   }
-
    virtual void SetSelected(bool s);
+
+   bool GetLinked  () const { return mLinked;   }
    void SetLinked  (bool l);
+private:
+   // No need yet to make this virtual
+   void DoSetLinked(bool l);
+public:
 
    virtual int GetChannel() const { return mChannel;};
    virtual double GetOffset() const = 0;
@@ -597,16 +653,22 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    /// For use in sorting:  assume each iterator points into this list, no duplications
    void Permute(const std::vector<TrackNodePointer> &permutation);
 
-   /// Add this Track or all children of this TrackList.
+   Track *FindById( TrackId id );
+
+   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
    Track *Add(std::unique_ptr<TrackKind> &&t);
+
+   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
    Track *AddToHead(std::unique_ptr<TrackKind> &&t);
 
+   /// Add a Track, giving it a fresh id
    template<typename TrackKind>
    Track *Add(std::shared_ptr<TrackKind> &&t);
 
    /// Replace first track with second track, give back a holder
+   /// Give the replacement the same id as the replaced
    ListOfTracks::value_type Replace(Track * t, ListOfTracks::value_type &&with);
 
    /// Remove this Track or all children of this TrackList.
@@ -687,11 +749,32 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 
 private:
    bool isNull(TrackNodePointer p) const
-   { return p == ListOfTracks::end(); }
-   void setNull(TrackNodePointer &p)
-   { p = ListOfTracks::end(); }
-   bool hasPrev(TrackNodePointer p) const
-   { return p != ListOfTracks::begin(); }
+   { return p == ListOfTracks::end()
+      || p == mPendingUpdates.end(); }
+   TrackNodePointer getEnd() const
+   { return const_cast<TrackList*>(this)->ListOfTracks::end(); }
+   TrackNodePointer getBegin() const
+   { return const_cast<TrackList*>(this)->ListOfTracks::begin(); }
+
+   // Move an iterator to the next node, if any; else stay at end
+   TrackNodePointer getNext(TrackNodePointer p) const
+   {
+      if ( isNull(p) )
+         return p;
+      auto q = p;
+      return ++q;
+   }
+
+   // Move an iterator to the previous node, if any; else wrap to end
+   TrackNodePointer getPrev(TrackNodePointer p) const
+   {
+      if (p == this->ListOfTracks::begin())
+         return getEnd();
+      else {
+         auto q = p;
+         return --q;
+      }
+   }
 
    void DoAssign(const TrackList &that);
        
@@ -703,6 +786,66 @@ private:
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
 
    std::weak_ptr<TrackList> mSelf;
+
+   // Nondecreasing during the session.
+   // Nonpersistent.
+   // Used to assign ids to added tracks.
+   static long sCounter;
+
+public:
+   using Updater = std::function< void(Track &dest, const Track &src) >;
+   // Start a deferred update of the project.
+   // The return value is a duplicate of the given track.
+   // While ApplyPendingTracks or ClearPendingTracks is not yet called,
+   // there may be other direct changes to the project that push undo history.
+   // Meanwhile the returned object can accumulate other changes for a deferred
+   // push, and temporarily shadow the actual project track for display purposes.
+   // The Updater function, if not null, merges state (from the actual project
+   // into the pending track) which is not meant to be overridden by the
+   // accumulated pending changes.
+   // To keep the display consistent, the Y and Height values, minimized state,
+   // and Linked state must be copied, and this will be done even if the
+   // Updater does not do it.
+   // Pending track will have the same TrackId as the actual.
+   // Pending changed tracks will not occur in iterations.
+   std::shared_ptr<Track> RegisterPendingChangedTrack(
+      Updater updater,
+      Track *src
+   );
+
+   // Like the previous, but for a NEW track, not a replacement track.  Caller
+   // supplies the track, and there are no updates.
+   // Pending track will have an unassigned TrackId.
+   // Pending changed tracks WILL occur in iterations, always after actual
+   // tracks, and in the sequence that they were added.  They can be
+   // distinguished from actual tracks by TrackId.
+   void RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack );
+
+   // Invoke the updaters of pending tracks.  Pass any exceptions from the
+   // updater functions.
+   void UpdatePendingTracks();
+
+   // Forget pending track additions and changes;
+   // if requested, give back the pending added tracks.
+   void ClearPendingTracks( ListOfTracks *pAdded = nullptr );
+
+   // Change the state of the project.
+   // Strong guarantee for project state in case of exceptions.
+   // Will always clear the pending updates.
+   // Return true if the state of the track list really did change.
+   bool ApplyPendingTracks();
+
+   // Find anything registered with RegisterPendingChangedTrack and not yet
+   // cleared or applied
+   std::shared_ptr<Track> FindPendingChangedTrack(TrackId id) const;
+
+   bool HasPendingTracks() const;
+
+private:
+   // Need to put pending tracks into a list so that GetLink() works
+   ListOfTracks mPendingUpdates;
+   // This is in correspondence with mPendingUpdates
+   std::vector< Updater > mUpdaters;
 };
 
 class AUDACITY_DLL_API TrackFactory

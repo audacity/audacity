@@ -236,11 +236,11 @@ void UndoManager::ModifyState(const TrackList * l,
 
    // Duplicate
    auto tracksCopy = TrackList::Create();
-   TrackListConstIterator iter(l);
-   const Track *t = iter.First();
-   while (t) {
+   for (auto t : *l) {
+      if ( t->GetId() == TrackId{} )
+         // Don't copy a pending added track
+         continue;
       tracksCopy->Add(t->Duplicate());
-      t = iter.Next();
    }
 
    // Replace
@@ -272,19 +272,25 @@ void UndoManager::PushState(const TrackList * l,
       return;
    }
 
+   auto tracksCopy = TrackList::Create();
+   for (auto t : *l) {
+      if ( t->GetId() == TrackId{} )
+         // Don't copy a pending added track
+         continue;
+      tracksCopy->Add(t->Duplicate());
+   }
+
+   // Quit with no effects if the change looks vacuous
+   // (Don't examine track contents to decide vacuity)
+   if (current >= 0 &&
+       tags == stack[current]->state.tags && tracksCopy->empty())
+      return;
+
    mayConsolidate = true;
 
    i = current + 1;
    while (i < stack.size()) {
       RemoveStateAt(i);
-   }
-
-   auto tracksCopy = TrackList::Create();
-   TrackListConstIterator iter(l);
-   const Track *t = iter.First();
-   while (t) {
-      tracksCopy->Add(t->Duplicate());
-      t = iter.Next();
    }
 
    // Assume tags was duplicted before any changes.

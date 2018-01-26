@@ -1896,8 +1896,20 @@ void AudacityProject::FixScrollbars()
       panelHeight = 0;
    }
 
-   double LastTime =
-      std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
+   auto LastTime = -std::numeric_limits<double>::max();
+   auto &tracks = *GetTracks();
+   for (auto track : tracks) {
+      // Iterate over pending changed tracks if present.
+      {
+         auto other =
+         tracks.FindPendingChangedTrack(track->GetId());
+         if (other)
+            track = other.get();
+      }
+      LastTime = std::max( LastTime, track->GetEndTime() );
+   }
+   LastTime =
+      std::max(LastTime, mViewInfo.selectedRegion.t1());
 
    const double screen = GetScreenEndTime() - mViewInfo.h;
    const double halfScreen = screen / 2.0;
@@ -3585,6 +3597,10 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
       return mTags.get();
    }
 
+   // Note that TrackList::Add includes assignment of unique in-session TrackId
+   // to a reloaded track, though no promise that it equals the id it originally
+   // had
+
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
       return mTracks->Add(mTrackFactory->NewWaveTrack());
    }
@@ -4481,6 +4497,20 @@ void AudacityProject::InitialState()
    UpdateMenus();
    this->UpdateLyrics();
    this->UpdateMixerBoard();
+}
+
+bool AudacityProject::UndoAvailable()
+{
+   auto trackList = GetTracks();
+   return GetUndoManager()->UndoAvailable() &&
+      !GetTracks()->HasPendingTracks();
+}
+
+bool AudacityProject::RedoAvailable()
+{
+   auto trackList = GetTracks();
+   return GetUndoManager()->RedoAvailable() &&
+      !GetTracks()->HasPendingTracks();
 }
 
 void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
