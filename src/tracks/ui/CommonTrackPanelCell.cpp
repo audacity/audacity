@@ -83,7 +83,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
       else if( steps <= 0 )
          center_h = mouse_h;
       // No Selection? Focus on mouse.
-      else if( viewInfo.selectedRegion.t1() <= 0.0  )
+      else if((viewInfo.selectedRegion.t1() - viewInfo.selectedRegion.t0() ) < 0.00001  )
          center_h = mouse_h;
       // Before Selection? Focus on left
       else if( mouse_h < viewInfo.selectedRegion.t0() )
