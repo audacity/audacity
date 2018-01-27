@@ -1364,15 +1364,15 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                // Set number of decimal places
                if (upper - lower < 10.0)
                {
-                  vld.SetStyle(NUM_VAL_THREE_TRAILING_ZEROES);
+                  vld.SetStyle(NumValidatorStyle::THREE_TRAILING_ZEROES);
                }
                else if (upper - lower < 100.0)
                {
-                  vld.SetStyle(NUM_VAL_TWO_TRAILING_ZEROES);
+                  vld.SetStyle(NumValidatorStyle::TWO_TRAILING_ZEROES);
                }
                else
                {
-                  vld.SetStyle(NUM_VAL_ONE_TRAILING_ZERO);
+                  vld.SetStyle(NumValidatorStyle::ONE_TRAILING_ZERO);
                }
 
                mFields[p]->SetValidator(vld);

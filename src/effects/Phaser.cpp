@@ -268,7 +268,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDryWetS->SetName(_("Dry Wet"));
       mDryWetS->SetMinSize(wxSize(100, -1));
 
-      FloatingPointValidator<double> vldFreq(5, &mFreq, NUM_VAL_ONE_TRAILING_ZERO);
+      FloatingPointValidator<double> vldFreq(5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO);
       vldFreq.SetRange(MIN_Freq, MAX_Freq);
       mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
       mFreqT->SetValidator(vldFreq);
