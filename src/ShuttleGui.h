@@ -131,6 +131,7 @@ public:
    void AddPrompt(const wxString &Prompt);
    void AddUnits(const wxString &Prompt);
    void AddTitle(const wxString &Prompt);
+   // Applies wxALL (which affects borders) only when in Flags:
    wxWindow * AddWindow(wxWindow * pWindow, int Flags = wxALIGN_CENTRE | wxALL );
    wxSlider * AddSlider(const wxString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
@@ -138,8 +139,12 @@ public:
    wxTreeCtrl * AddTree();
    wxRadioButton * AddRadioButton( const wxString & Prompt );
    wxRadioButton * AddRadioButtonToGroup( const wxString & Prompt);
+   // Always ORs the flags with wxALL (which affects borders):
    wxButton * AddButton( const wxString & Text, int PositionFlags = wxALIGN_CENTRE );
+   // Always ORs the flags with wxALL (which affects borders):
    wxBitmapButton * AddBitmapButton(const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE);
+   // When PositionFlags is 0, applies wxALL (which affects borders),
+   // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
    wxStaticText * AddVariableText(const wxString &Str, bool bCenter = false, int PositionFlags = 0);
    wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);

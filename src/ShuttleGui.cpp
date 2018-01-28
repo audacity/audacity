@@ -1061,6 +1061,7 @@ void ShuttleGuiBase::StartHorizontalLay( int PositionFlags, int iProp)
       return;
    miSizerProp=iProp;
    mpSubSizer = std::make_unique<wxBoxSizer>( wxHORIZONTAL );
+   // PRL:  wxALL has no effect because UpdateSizersCore ignores border
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
@@ -1086,6 +1087,7 @@ void ShuttleGuiBase::StartVerticalLay(int PositionFlags, int iProp)
       return;
    miSizerProp=iProp;
    mpSubSizer = std::make_unique<wxBoxSizer>( wxVERTICAL );
+   // PRL:  wxALL has no effect because UpdateSizersCore ignores border
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
@@ -1101,6 +1103,7 @@ void ShuttleGuiBase::StartMultiColumn(int nCols, int PositionFlags)
    if( mShuttleMode != eIsCreating )
       return;
    mpSubSizer = std::make_unique<wxFlexGridSizer>( nCols );
+   // PRL:  wxALL has no effect because UpdateSizersCore ignores border
    UpdateSizersCore( false, PositionFlags | wxALL );
 }
 
