@@ -458,6 +458,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
          mFilterTypeCtl = S.Id(ID_Type)
+            .Focus()
             .Validator<wxGenericValidator>(&mFilterType)
             .AddChoice(_("&Filter Type:"),
                LocalizedStrings(kTypeStrings, nTypes)
@@ -515,8 +516,6 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       S.AddSpace(1, 1);
    }
    S.EndMultiColumn();
-
-   mFilterTypeCtl->SetFocus();
 
    return;
 }

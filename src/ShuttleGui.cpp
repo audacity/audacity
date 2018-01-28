@@ -2084,6 +2084,9 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
             mpWind->SetName(
                mpWind->GetName() + mItem.mNameSuffix.Translation() );
 
+         if (mItem.mFocused)
+            mpWind->SetFocus();
+
          // Reset to defaults
          mItem = {};
       }

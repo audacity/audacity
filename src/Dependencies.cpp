@@ -364,12 +364,12 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 
          mCopySelectedFilesButton =
             S.Id(CopySelectedFilesButtonID)
+               .Focus()
                .AddButton(
                   _("Copy Selected Files"),
                   wxALIGN_LEFT, true);
          mCopySelectedFilesButton->Enable(
             mFileListCtrl->GetSelectedItemCount() > 0);
-         mCopySelectedFilesButton->SetFocus();
       }
       S.EndStatic();
 

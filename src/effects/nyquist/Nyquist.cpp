@@ -2587,7 +2587,7 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
       S.StartHorizontalLay(wxEXPAND, 1);
       {
-          mCommandText = S.AddTextWindow(wxT(""));
+          mCommandText = S.Focus().AddTextWindow(wxT(""));
           mCommandText->SetMinSize(wxSize(500, 200));
       }
       S.EndHorizontalLay();
@@ -2600,8 +2600,6 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
-
-   mCommandText->SetFocus();
 }
 
 void NyquistEffect::BuildEffectWindow(ShuttleGui & S)

@@ -167,12 +167,21 @@ struct Item {
       return std::move( *this );
    }
 
+   // Only the last item specified as focused (if more than one) will be
+   Item&& Focus( bool focused = true ) &&
+   {
+      mFocused = focused;
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
    TranslatableString mName;
    TranslatableString mNameSuffix;
 
    long miStyle{};
+
+   bool mFocused { false };
 };
 
 }
@@ -528,6 +537,13 @@ public:
 public:
    ShuttleGui & Optional( bool & bVar );
    ShuttleGui & Id(int id );
+
+   // Only the last item specified as focused (if more than one) will be
+   ShuttleGui & Focus( bool focused = true )
+   {
+      std::move( mItem ).Focus( focused );
+      return *this;
+   }
 
    ShuttleGui & ToolTip( const TranslatableString &tip )
    {

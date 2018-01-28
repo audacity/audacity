@@ -393,11 +393,10 @@ visit our [[https://forum.audacityteam.org/|forum]].");
                                          wxDefaultPosition,
                                          wxSize(ABOUT_DIALOG_WIDTH, 359),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
-   html->SetFocus();
    html->SetPage(creditStr);
 
    /* locate the html renderer where it fits in the dialogue */
-   S.Prop(1).AddWindow( html, wxEXPAND );
+   S.Prop(1).Focus().AddWindow( html, wxEXPAND );
 
    S.EndVerticalLay();
    S.EndNotebookPage();

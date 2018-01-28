@@ -447,7 +447,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.AddSpace(5);
 
-      mAlgChoice = S.Id(FreqAlgChoiceID)
+      mAlgChoice = S.Id(FreqAlgChoiceID).Focus()
          .AddChoice(_("&Algorithm:"), algChoices, mAlg);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
@@ -514,7 +514,6 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    mCloseButton = static_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
    mCloseButton->SetDefault();
-   mCloseButton->SetFocus();
 
    Layout();
    Fit();
@@ -522,7 +521,6 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    Center();
 
    SetMinSize(GetSize());
-   mAlgChoice->SetFocus();
 
 #if defined(__WXGTK__)
    // This should be rechecked with wx3.
