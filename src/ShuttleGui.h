@@ -137,8 +137,15 @@ public:
    wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
    wxSpinCtrl * AddSpinCtrl(const wxString &Prompt, int Value, int Max, int Min);
    wxTreeCtrl * AddTree();
-   wxRadioButton * AddRadioButton( const wxString & Prompt );
-   wxRadioButton * AddRadioButtonToGroup( const wxString & Prompt);
+
+   // Pass the same initValue to the sequence of calls to AddRadioButton and
+   // AddRadioButtonToGroup.
+   // The radio button is filled if selector == initValue
+   wxRadioButton * AddRadioButton(
+      const wxString & Prompt, int selector = 0, int initValue = 0 );
+   wxRadioButton * AddRadioButtonToGroup(
+      const wxString & Prompt, int selector = 1, int initValue = 0 );
+
    // Only the last button specified as default (if more than one) will be
    // Always ORs the flags with wxALL (which affects borders):
    wxButton * AddButton(
@@ -375,7 +382,8 @@ private:
    Maybe<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    int mRadioCount;       /// The index of this radio item.  -1 for none.
    wxString mRadioValueString; /// Unwrapped string value.
-   wxRadioButton * DoAddRadioButton(const wxString &Prompt, int style);
+   wxRadioButton * DoAddRadioButton(
+      const wxString &Prompt, int style, int selector, int initValue);
 };
 
 // A rarely used helper function that sets a pointer

@@ -490,7 +490,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 
 
 wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
-   const wxString &Prompt, int style)
+   const wxString &Prompt, int style, int selector, int initValue)
 {
    /// \todo This function and the next two, suitably adapted, could be
    /// used by TieRadioButton.
@@ -504,17 +504,20 @@ wxRadioButton * ShuttleGuiBase::DoAddRadioButton(
    if ( style )
       pRad->SetValue( true );
    UpdateSizers();
+   pRad->SetValue( selector == initValue );
    return pRad;
 }
 
-wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
+wxRadioButton * ShuttleGuiBase::AddRadioButton(
+   const wxString &Prompt, int selector, int initValue)
 {
-   return DoAddRadioButton( Prompt, wxRB_GROUP );
+   return DoAddRadioButton( Prompt, wxRB_GROUP, selector, initValue );
 }
 
-wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(const wxString &Prompt)
+wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(
+   const wxString &Prompt, int selector, int initValue)
 {
-   return DoAddRadioButton( Prompt, 0 );
+   return DoAddRadioButton( Prompt, 0, selector, initValue );
 }
 
 #ifdef __WXMAC__

@@ -1041,16 +1041,34 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddUnits(_("&Processing: "));
 
-         mMathProcessingType[0] = S.Id(ID_DefaultMath).
-            AddRadioButton(_("D&efault"));
-         mMathProcessingType[1] = S.Id(ID_SSE).
-            AddRadioButtonToGroup(_("&SSE"));
-         mMathProcessingType[2] = S.Id(ID_SSEThreaded).
-            AddRadioButtonToGroup(_("SSE &Threaded"));
-         mMathProcessingType[3] = S.Id(ID_AVX).
-            AddRadioButtonToGroup(_("A&VX"));
-         mMathProcessingType[4] = S.Id(ID_AVXThreaded).
-            AddRadioButtonToGroup(_("AV&X Threaded"));
+         // update the control state
+         int mathPath = EffectEqualization48x::GetMathPath();
+         int value =
+            (mathPath & MATH_FUNCTION_SSE)
+            ? (mathPath & MATH_FUNCTION_THREADED)
+               ? 2
+               : 1
+            : false // (mathPath & MATH_FUNCTION_AVX) // not implemented
+               ? (mathPath & MATH_FUNCTION_THREADED)
+                  ? 4
+                  : 3
+               : 0;
+
+         mMathProcessingType[0] = S.Id(ID_DefaultMath)
+            .AddRadioButton(_("D&efault"),
+                            0, value);
+         mMathProcessingType[1] = S.Id(ID_SSE)
+            .AddRadioButtonToGroup(_("&SSE"),
+                                   1, value);
+         mMathProcessingType[2] = S.Id(ID_SSEThreaded)
+            .AddRadioButtonToGroup(_("SSE &Threaded"),
+                                   2, value);
+         mMathProcessingType[3] = S.Id(ID_AVX)
+            .AddRadioButtonToGroup(_("A&VX"),
+                                   3, value);
+         mMathProcessingType[4] = S.Id(ID_AVXThreaded)
+            .AddRadioButtonToGroup(_("AV&X Threaded"),
+                                   4, value);
 
          if (!EffectEqualization48x::GetMathCaps()->SSE)
          {
@@ -1062,21 +1080,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mMathProcessingType[3]->Disable();
             mMathProcessingType[4]->Disable();
          }
-         // update the control state
-         mMathProcessingType[0]->SetValue(true);
-         int mathPath=EffectEqualization48x::GetMathPath();
-         if (mathPath&MATH_FUNCTION_SSE)
-         {
-            mMathProcessingType[1]->SetValue(true);
-            if (mathPath&MATH_FUNCTION_THREADED)
-               mMathProcessingType[2]->SetValue(true);
-         }
-         if (false) //mathPath&MATH_FUNCTION_AVX) { not implemented
-         {
-            mMathProcessingType[3]->SetValue(true);
-            if (mathPath&MATH_FUNCTION_THREADED)
-               mMathProcessingType[4]->SetValue(true);
-         }
+
          S.Id(ID_Bench).AddButton(_("&Bench"));
       }
       S.EndHorizontalLay();
