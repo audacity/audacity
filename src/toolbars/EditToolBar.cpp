@@ -245,7 +245,7 @@ static const struct Entry {
    { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project to width")  },
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-   { ETBEffectsID,  wxT(""),            XO("Open Effects Rack")  },
+   { ETBEffectsID,  wxT("ShowEffectsRack"), XO("Open Effects Rack")  },
 #endif
 };
 

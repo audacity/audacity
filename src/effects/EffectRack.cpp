@@ -304,7 +304,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         if (!project->OnEffect(mEffects[i]->GetID(),
+         if (!project->DoEffect(mEffects[i]->GetID(),
                            AudacityProject::OnEffectFlags::kConfigured))
             // If any effect fails (or throws), then stop.
             return;
