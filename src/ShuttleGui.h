@@ -429,7 +429,12 @@ public:
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
    AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
-   void AddStandardButtons( long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
+
+   // The first of these buttons, if any, that is included will be default:
+   // Apply, Yes, OK
+   void AddStandardButtons(
+      long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
+
    wxSizerItem * AddSpace( int width, int height );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
 

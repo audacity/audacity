@@ -617,7 +617,6 @@ PrefsDialog::PrefsDialog
    S.EndVerticalLay();
 
    S.AddStandardButtons(eOkButton | eCancelButton | ePreviewButton | eHelpButton);
-   static_cast<wxButton*>(wxWindow::FindWindowById(wxID_OK, this))->SetDefault();
 
    if (mUniquePage && !mUniquePage->ShowsPreviewButton()) {
       wxWindow *const previewButton =
