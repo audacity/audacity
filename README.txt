@@ -7,7 +7,7 @@ http://forum.audacityteam.org/ .
 We welcome feedback on Audacity, suggestions for new or improved features, 
 and bug reports. Please visit http://audacityteam.org/contact/#feedback .
 
-Audacity is copyright (c) 1999-2017 by Audacity Team. This copyright 
+Audacity is copyright (c) 1999-2018 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
 except as otherwise noted (mostly in the lib-src subdirectories). 
 "Audacity" is a registered trademark of Dominic Mazzoni. 
@@ -28,12 +28,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.2.1
+Version 2.2.2
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.2.0
+2.  Changes since version 2.2.1
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -63,45 +63,73 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.2.0: 
+2. Changes since version 2.2.1: 
 
 Improvements
 
-    * Waveform colorways
-      You can optionally change the colorway of the waveforms displayed in your project.
-      The setting is per track and not per project so you can have multiple colorways 
-          in the same project. 
-    * "Save Other" reverts to "Export" in the File menu
-      When we made the menu changes for 2.2.0 we introduced an entry into the File menu
-      called "Save Other" which led to a sub-menu for exporting various audio formats.
-      Many users were confused by this change and found it hard to find where they could
-      export audio from. So for 2.2.1 we have changed that menu entry to be File > Export. 
+    * Dropout detection
+      Dropout detection is controlled from a setting in Recording Preferences 
+      called "Detect dropouts".
+      When this setting is "on" (default setting) Audacity will detect dropouts 
+      (brief gaps in the recording) and will insert zeroes into the recording 
+      to keep the other good parts synchronized. These silent spans will make 
+      the dropouts more obvious, but keep the duration of the recording correct.
+      When recording stops, a Warning message box alerts the user and a label track, 
+      called "Dropouts", is added showing the lost parts, labeled with consecutive numbers.
+    * Improved horizontal zooming
+      For this release we have improved the way zooming using your mouse wheel 
+      works and provided a new Zoom Toggle function. 
+    * Improved vertical zooming
+      We have added a context menu to the vertical scale to control vertical zooming
+      Previous vertical zooming methods (left-click in the vertical ruler, left-drag
+      in the vertical ruler) remain available by selecting "Advanced Vertical Zooming"
+      in Track Behaviors Preferences.
+    * "Extra" menu
+      The "Ext-Bar" and "Ext-Command" menus have been consolidated into the "Extra" menu.
+    * Theme tweaks
+      The appearance and/or contrast of a few icons has been improved.
+    * Easier access to changing key bindings for shortcuts
+      For menu commands that are enabled (not grayed-out) if you hold the Shift key 
+      and click on the sub-menu item, instead of executing the command the Keyboard 
+      Preferences pop open at the chosen command. You can then change that (or any 
+      other) shortcut binding. 
+    * Language selection in Preferences
+      Interface Preferences has been upgraded so when selecting languages the proper
+      spelling of these languages is shown with accented and special characters. 
 
 Bug Fixes
-
-   * Release 2.2.1 is mainly a maintenance release. 
-     Soon after the release of 2.2.0 we discovered some problematical bugs in Audacity:
-       Bug #1767 - Opening a second project from Mac's Finder produces a second 
-         inaccessible instance of Audacity
-       Bug #1770 - Crash applying certain chain files
-       Bug #1783 - Preview fails when selection extends before zero
-       Bug #1787 - Auto-scroll stopped working in 2.2.0
-       Bug #1765 - Using File > Open to import audio gives wrong zoom level 
-         and no scroll bar slider 
-
- See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.2.1
- and: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.2.1
+   * Multiple use of "Save As" to the existing open project can result in data 
+     corruption/loss
+   * Crash undoing during record, using Discard button of History window
+   * Exporting audio in compressed formats to device with insufficient space produces
+     inconsistent/truncated results
+   * In Export Multiple, Cancel does not remove the file that is in progress when 
+     Cancel is chosen
+   * Unicode page encodings fixed ( ͡° ͜ʖ ͡°)
+   * Crash using SBSMS pitch change at low sample rate
+   * (Mac) Equalization: "Telephone" curve displays a flat line, no sound on Preview
+   * Toolbars: open undocked if previously not shown, unless Reset Toolbars first
+   * Analysis effects that create labels should give focus to label track
+   * Control value may be out of range when using FloatingPointValidator
+   * Analysis effects produce false indication that a label is open for editing
+   * Import Uncompressed File Dialog Incorrect Reference to Menu Item
+   * Wave Color not grayed out in TCP dropdown menu when in Spectrogram view
+   * Hover indication on note track channel toggle appears on all tracks (when 
+     they rerender)
+   * Installer has old logo for 2.2.1 and 2.2.0 
+   
+ See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.2.2
+ and: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.2.2
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.2.1:
+3. Known Issues in 2.2.2:
 
-For known issues at release of 2.2.1 please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.2.1/Issues 
+For known issues at release of 2.2.2 please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_2.2.2/Issues 
 
 Please also check:
-  http://wiki.audacityteam.org/index.php?title=Known_Issues
-
+  https://wiki.audacityteam.org/wiki/Known_Issues
 for details of any issues that have been identified after release of
 this version.
 
