@@ -687,7 +687,7 @@ public:
    }
    ~WaveTrackCache();
 
-   const WaveTrack *GetTrack() const { return mPTrack.get(); }
+   const std::shared_ptr<const WaveTrack>& GetTrack() const { return mPTrack; }
    void SetTrack(const std::shared_ptr<const WaveTrack> &pTrack);
 
    // Uses fillZero always

@@ -2188,7 +2188,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    Profiler profiler;
 #endif
 
-   const WaveTrack *const track = waveTrackCache.GetTrack();
+   const WaveTrack *const track = waveTrackCache.GetTrack().get();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 

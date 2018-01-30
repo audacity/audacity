@@ -1200,7 +1200,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               size_t numPixels,
                               double t0, double pixelsPerSecond) const
 {
-   const WaveTrack *const track = waveTrackCache.GetTrack();
+   const WaveTrack *const track = waveTrackCache.GetTrack().get();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
 
    bool match =
