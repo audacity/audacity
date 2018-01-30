@@ -630,7 +630,7 @@ PrefsDialog::PrefsDialog
       mCategories->GetTreeCtrl()->EnsureVisible(mCategories->GetTreeCtrl()->GetRootItem());
 #endif
 
-//   mCategories->SetSizeHints(-1, -1, 790, 600);  // 790 = 800 - (border * 2)
+//   mCategories->SetMaxSize({ 790, 600 });  // 790 = 800 - (border * 2)
    Layout();
    Fit();
    wxSize sz = GetSize();

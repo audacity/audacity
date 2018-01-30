@@ -1104,14 +1104,15 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       //S.GetParent()->Layout();
       wxSize sz = szrV->GetMinSize();
       sz += wxSize( 30, 0);
-      mUIParent->SetSizeHints(sz);
+      mUIParent->SetMinSize(sz);
    }
    else{
       mPanel->Show( true );
       szrV->Show(szr1, true);
-      mUIParent->SetSizeHints(mUIParent->GetBestSize());
+      mUIParent->SetMinSize(mUIParent->GetBestSize());
    }
    ForceRecalc();
+
    return;
 }
 
@@ -2304,7 +2305,7 @@ void EffectEqualization::UpdateCurves()
    
    // Allow the control to resize
    if( mCurve ) 
-      mCurve->SetSizeHints(-1, -1);
+      mCurve->SetMinSize({-1, -1});
 
    // Set initial curve
    setCurve( mCurveName );

@@ -271,8 +271,8 @@ void AButton::Init(wxWindow * parent,
    mFocusRect = GetClientRect().Deflate( 3, 3 );
    mForceFocusRect = false;
 
-   SetSizeHints(mImages[0].mArr[0].GetMinSize(),
-                mImages[0].mArr[0].GetMaxSize());
+   SetMinSize(mImages[0].mArr[0].GetMinSize());
+   SetMaxSize(mImages[0].mArr[0].GetMaxSize());
 
 #if wxUSE_ACCESSIBILITY
    SetName( wxT("") );

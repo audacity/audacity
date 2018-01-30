@@ -1500,10 +1500,10 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    // Try to give the window a sensible default/minimum size
    wxSize sz1 = marginSizer->GetMinSize();
    wxSize sz2 = mParent->GetMinSize();
-   w->SetSizeHints(wxSize(wxMin(sz1.x, sz2.x), wxMin(sz1.y, sz2.y)));
+   w->SetMinSize( { std::min(sz1.x, sz2.x), std::min(sz1.y, sz2.y) } );
 
    // And let the parent reduce to the NEW minimum if possible
-   mParent->SetSizeHints(-1, -1);
+   mParent->SetMinSize({ -1, -1 });
 
    return true;
 }

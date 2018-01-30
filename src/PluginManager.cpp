@@ -671,7 +671,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
    // Keep dialog from getting too wide
    int w = r.GetWidth() - (GetClientSize().GetWidth() - mEffects->GetSize().GetWidth());
-   mEffects->SetSizeHints(wxSize(wxMin(maxW, w), 200), wxSize(w, -1));
+   mEffects->SetMinSize({ std::min(maxW, w), 200 });
+   mEffects->SetMaxSize({ w, -1 });
 
    RegenerateEffectsList(ID_ShowAll);
 

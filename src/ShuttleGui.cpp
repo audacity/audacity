@@ -397,7 +397,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
       choices,
       Style( 0 ) );
 
-   pChoice->SetSizeHints( 180,-1);// Use -1 for 'default size' - Platform specific.
+   pChoice->SetMinSize( { 180, -1 } );// Use -1 for 'default size' - Platform specific.
 #ifdef __WXMAC__
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
@@ -2347,7 +2347,7 @@ void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayStringEx & ite
    maxw += 50;
 #endif
 
-   window->SetSizeHints( maxw, -1 );
+   window->SetMinSize( { maxw, -1 } );
 }
 
 void ShuttleGuiBase::SetSizeHints( const wxArrayStringEx & items )
