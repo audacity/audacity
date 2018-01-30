@@ -151,6 +151,9 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       bool menuEnabled { true };
       bool hasInvalidValue { false };
       double invalidValue { -1.0 };
+      wxString format {};
+      bool hasValue { false };
+      double value{ -1.0 };
 
       Options() {}
 
@@ -159,6 +162,9 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       Options &MenuEnabled (bool value) { menuEnabled = value; return *this; }
       Options &InvalidValue (bool has, double value = -1.0)
          { hasInvalidValue = has, invalidValue = value; return *this; }
+      Options &Format (const wxString &value) { format = value; return *this; }
+      Options &Value (bool has, double v)
+         { hasValue = has, value = v; return *this; }
    };
 
    NumericTextCtrl(wxWindow *parent, wxWindowID winid,

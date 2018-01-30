@@ -793,7 +793,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
          */
          wxString strFormat = _("099 h 060 m 060 s");
-         const auto options = NumericTextCtrl::Options{}.MenuEnabled(false);
+         using Options = NumericTextCtrl::Options;
          S.StartStatic(_("Start Date and Time"), true);
          {
             m_pDatePickerCtrl_Start =
@@ -810,11 +810,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
             m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
                this, ID_TIMETEXT_START, NumericConverter::TIME,
-               wxEmptyString, 0, 44100, options);
+               wxEmptyString, 0, 44100,
+               Options{}
+                  .MenuEnabled(false)
+                  .Format(strFormat)
+                  .Value(true, wxDateTime_to_AudacityTime(m_DateTime_Start)));
             m_pTimeTextCtrl_Start->SetName(_("Start Time"));
-            m_pTimeTextCtrl_Start->SetFormatString(strFormat);
-            m_pTimeTextCtrl_Start->
-               SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
             S.AddWindow(m_pTimeTextCtrl_Start);
          }
          S.EndStatic();
@@ -838,10 +839,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
             m_pTimeTextCtrl_End = safenew NumericTextCtrl(
                this, ID_TIMETEXT_END, NumericConverter::TIME,
-               wxEmptyString, 0, 44100, options);
+               wxEmptyString, 0, 44100,
+               Options{}
+                  .MenuEnabled(false)
+                  .Format(strFormat)
+                  .Value(true, wxDateTime_to_AudacityTime(m_DateTime_End)));
             m_pTimeTextCtrl_End->SetName(_("End Time"));
-            m_pTimeTextCtrl_End->SetFormatString(strFormat);
-            m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
             S.AddWindow(m_pTimeTextCtrl_End);
          }
          S.EndStatic();
@@ -859,10 +862,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             wxString strFormat1 = _("099 days 024 h 060 m 060 s");
             m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
                this, ID_TIMETEXT_DURATION, NumericConverter::TIME,
-               wxEmptyString, 0, 44100, options);
+               wxEmptyString, 0, 44100,
+               Options{}
+                  .MenuEnabled(false)
+                  .Format(strFormat1)
+                  .Value(true, m_TimeSpan_Duration.GetSeconds().ToDouble()));
             m_pTimeTextCtrl_Duration->SetName(_("Duration"));
-            m_pTimeTextCtrl_Duration->SetFormatString(strFormat1);
-            m_pTimeTextCtrl_Duration->SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
             S.AddWindow(m_pTimeTextCtrl_Duration);
          }
          S.EndStatic();

@@ -1284,6 +1284,12 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
 
    if (options.hasInvalidValue)
       SetInvalidValue( options.invalidValue );
+
+   if (!options.format.empty())
+      SetFormatString( options.format );
+
+   if (options.hasValue)
+      SetValue( options.value );
 }
 
 NumericTextCtrl::~NumericTextCtrl()
