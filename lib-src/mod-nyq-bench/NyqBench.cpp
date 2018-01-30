@@ -31,6 +31,7 @@
 #include "effects/EffectManager.h"
 #include "effects/nyquist/Nyquist.h"
 #include "../images/AudacityLogo.xpm"
+#include "widgets/ErrorDialog.h"
 
 #include "NyqBench.h"
 
@@ -138,6 +139,11 @@ extern "C"
 {
    static NyqBench *gBench = NULL;
 
+   static CommandHandlerObject &findme(AudacityProject&)
+   {
+      return *NyqBench::GetBench();
+   }
+
    #ifdef _MSC_VER
       #define DLL_API _declspec(dllexport)
    #else
@@ -185,8 +191,9 @@ extern "C"
             c->AddSeparator();
             c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
             c->AddItem(wxT("NyqBench"),
-                       _("&Nyquist Workbench..."),
-                       FNT(NyqBench, NyqBench::GetBench(), &NyqBench::ShowNyqBench));
+               _("&Nyquist Workbench..."),
+               findme,
+               static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench));
 
             c->ClearCurrentMenu();
          }
@@ -1391,7 +1398,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      p->OnEffect(ID);
+      p->DoEffect(ID, 0);
 
       mRunning = false;
       UpdateWindowUI();
@@ -1767,7 +1774,7 @@ void NyqBench::LoadFile()
 // Connects Audacity menu item to an action in this dll.
 // Only one action implemented so far.
 //----------------------------------------------------------------------------
-void NyqBench::ShowNyqBench()
+void NyqBench::ShowNyqBench(const CommandContext &)
 {
    Show();
 }
