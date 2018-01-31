@@ -54,6 +54,7 @@ public:
 
 private:
    // handlers
+   void OnChar(wxKeyEvent &event);
    void OnGetURL(wxCommandEvent &event);
    void OnExport(wxCommandEvent &event);
    void OnGetForeground(wxCommandEvent & event);

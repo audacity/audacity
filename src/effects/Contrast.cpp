@@ -155,7 +155,7 @@ BEGIN_EVENT_TABLE(ContrastDialog,wxDialogWrapper)
    EVT_BUTTON(wxID_CANCEL, ContrastDialog::OnClose)
 END_EVENT_TABLE()
 
-static void OnChar(wxKeyEvent & event)
+void ContrastDialog::OnChar(wxKeyEvent &event)
 {
    // Is this still required?
    if (event.GetKeyCode() == WXK_TAB) {
@@ -252,8 +252,10 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             .AddWindow(mForegroundEndT);
 
          m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
-         mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
-         mForegroundRMSText->Bind(wxEVT_KEY_DOWN, OnChar);
+         mForegroundRMSText = S.Id(ID_FOREGROUNDDB_TEXT)
+            .ConnectRoot(wxEVT_KEY_DOWN,
+                         &ContrastDialog::OnChar)
+            .AddTextBox( {}, wxT(""), 17);
 
          //Background
          S.AddFixedText(_("&Background:"));
@@ -284,8 +286,10 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             .AddWindow(mBackgroundEndT);
 
          m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
-         mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
-         mBackgroundRMSText->Bind(wxEVT_KEY_DOWN, OnChar);
+         mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT)
+            .ConnectRoot(wxEVT_KEY_DOWN,
+                         &ContrastDialog::OnChar)
+            .AddTextBox( {}, wxT(""), 17);
       }
       S.EndMultiColumn();
    }
@@ -300,16 +304,18 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText(label.Translation());
          mPassFailText = S.Id(ID_RESULTS_TEXT)
             .Name(label)
+            .ConnectRoot(wxEVT_KEY_DOWN,
+                         &ContrastDialog::OnChar)
             .AddTextBox( {}, wxT(""), 50);
-         mPassFailText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
 
          label = XO("&Difference:");
          S.AddFixedText(label.Translation());
          mDiffText = S.Id(ID_RESULTSDB_TEXT)
             .Name(label)
+            .ConnectRoot(wxEVT_KEY_DOWN,
+                         &ContrastDialog::OnChar)
             .AddTextBox( {}, wxT(""), 50);
-         mDiffText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }
       S.EndMultiColumn();

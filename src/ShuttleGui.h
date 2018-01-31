@@ -180,10 +180,35 @@ struct Item {
       return std::move( *this );
    }
 
+   // Dispatch events from the control to the dialog
+   // The template type deduction ensures consistency between the argument type
+   // and the event type.  It does not (yet) ensure correctness of the type of
+   // the handler object.
+   template< typename Tag, typename Argument, typename Handler >
+   auto ConnectRoot(
+      wxEventTypeTag<Tag> eventType,
+      void (Handler::*func)(Argument&)
+   ) &&
+        -> typename std::enable_if<
+            std::is_base_of<Argument, Tag>::value,
+            Item&&
+        >::type
+   {
+      mRootConnections.push_back({
+         eventType,
+         (void(wxEvtHandler::*)(wxEvent&)) (
+            static_cast<void(wxEvtHandler::*)(Argument&)>( func )
+         )
+      });
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
    TranslatableString mName;
    TranslatableString mNameSuffix;
+
+   std::vector<std::pair<wxEventType, wxObjectEventFunction>> mRootConnections;
 
    long miStyle{};
 
@@ -592,6 +617,24 @@ public:
    {
       if ( GetMode() == eIsCreating )
          std::move( mItem ).Validator<V>( std::forward<Args>(args)... );
+      return *this;
+   }
+
+   // Dispatch events from the control to the dialog
+   // The template type deduction ensures consistency between the argument type
+   // and the event type.  It does not (yet) ensure correctness of the type of
+   // the handler object.
+   template< typename Tag, typename Argument, typename Handler >
+   auto ConnectRoot(
+      wxEventTypeTag<Tag> eventType,
+      void (Handler::*func)(Argument&)
+   )
+        -> typename std::enable_if<
+            std::is_base_of<Argument, Tag>::value,
+            ShuttleGui&
+        >::type
+   {
+      std::move( mItem ).ConnectRoot( eventType, func );
       return *this;
    }
 

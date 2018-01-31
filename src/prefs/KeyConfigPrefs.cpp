@@ -226,14 +226,13 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
                                         wxTE_PROCESS_ENTER);
                mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
-               mFilter->Bind(wxEVT_KEY_DOWN,
-                                &KeyConfigPrefs::OnFilterKeyDown,
-                                this);
-               mFilter->Bind(wxEVT_CHAR,
-                                &KeyConfigPrefs::OnFilterChar,
-                                this);
             }
-            S.AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
+            S
+               .ConnectRoot(wxEVT_KEY_DOWN,
+                            &KeyConfigPrefs::OnFilterKeyDown)
+               .ConnectRoot(wxEVT_CHAR,
+                            &KeyConfigPrefs::OnFilterChar)
+               .AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
          }
          S.EndHorizontalLay();
       }
@@ -269,17 +268,15 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mKey->SetAccessible(safenew WindowAccessible(mKey));
 #endif
             mKey->SetName(_("Short cut"));
-            mKey->Bind(wxEVT_KEY_DOWN,
-                          &KeyConfigPrefs::OnHotkeyKeyDown,
-                          this);
-            mKey->Bind(wxEVT_CHAR,
-                          &KeyConfigPrefs::OnHotkeyChar,
-                          this);
-            mKey->Bind(wxEVT_KILL_FOCUS,
-                          &KeyConfigPrefs::OnHotkeyKillFocus,
-                          this);
          }
-         S.AddWindow(mKey);
+         S
+            .ConnectRoot(wxEVT_KEY_DOWN,
+                      &KeyConfigPrefs::OnHotkeyKeyDown)
+            .ConnectRoot(wxEVT_CHAR,
+                      &KeyConfigPrefs::OnHotkeyChar)
+            .ConnectRoot(wxEVT_KILL_FOCUS,
+                      &KeyConfigPrefs::OnHotkeyKillFocus)
+            .AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
          mSet = S.Id(SetButtonID).AddButton(_("&Set"));
@@ -455,12 +452,12 @@ void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
    t->SetValue(KeyEventToKeyString(e).Display());
 }
 
-void KeyConfigPrefs::OnHotkeyChar(wxKeyEvent & WXUNUSED(e))
+void KeyConfigPrefs::OnHotkeyChar(wxEvent & WXUNUSED(e))
 {
    // event.Skip() not performed, so event will not be processed further.
 }
 
-void KeyConfigPrefs::OnHotkeyKillFocus(wxFocusEvent & e)
+void KeyConfigPrefs::OnHotkeyKillFocus(wxEvent & e)
 {
    if (mKey->GetValue().empty() && mCommandSelected != wxNOT_FOUND) {
       mKey->AppendText(mView->GetKey(mCommandSelected).Display());
@@ -521,7 +518,7 @@ void KeyConfigPrefs::OnFilterKeyDown(wxKeyEvent & e)
    }
 }
 
-void KeyConfigPrefs::OnFilterChar(wxKeyEvent & e)
+void KeyConfigPrefs::OnFilterChar(wxEvent & e)
 {
    if (mViewType != ViewByKey)
    {

@@ -33,6 +33,7 @@ public:
 
 private:
 
+   void OnChar(wxMouseEvent &event);
    void Populate( ShuttleGui & S );
    void OnDontShow( wxCommandEvent & Evt );
 

@@ -864,12 +864,10 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
                wxDefaultPosition, wxSize(-1,150), wxSL_VERTICAL | wxSL_INVERSE);
 
-            mSliders[i]->Bind(wxEVT_ERASE_BACKGROUND,
-                              // ignore it
-                              [](wxEvent&){});
 #if wxUSE_ACCESSIBILITY
             mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], _("%d dB")));
 #endif
+
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
             //S.SetSizerProportion(1);
@@ -879,6 +877,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                      ? wxString::Format(_("%d Hz"), (int)kThirdOct[i])
                      : wxString::Format(_("%g kHz"), kThirdOct[i]/1000.)
                } )
+               .ConnectRoot(
+                  wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
                .AddWindow( mSliders[i], wxEXPAND );
          }
          S.AddSpace(15,0);
@@ -2755,6 +2755,10 @@ double EffectEqualization::splint(double x[], double y[], size_t n, double y2[],
    a = ( x[k+1] - xr )/h;
    b = (xr - x[k])/h;
    return( a*y[k]+b*y[k+1]+((a*a*a-a)*y2[k]+(b*b*b-b)*y2[k+1])*h*h/6.);
+}
+
+void EffectEqualization::OnErase( wxEvent& )
+{
 }
 
 void EffectEqualization::OnSize(wxSizeEvent & event)

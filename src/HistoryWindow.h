@@ -36,6 +36,7 @@ class HistoryWindow final : public wxDialogWrapper {
    void DoUpdate();
    void UpdateLevels();
 
+   void OnChar(wxEvent &event);
    void OnSize(wxSizeEvent & event);
    void OnCloseWindow(wxCloseEvent & WXUNUSED(event));
    void OnItemSelected(wxListEvent & event);

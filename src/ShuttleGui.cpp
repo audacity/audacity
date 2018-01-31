@@ -2083,6 +2083,9 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          if (mItem.mDisabled)
             mpWind->Enable( false );
 
+         for (auto &pair : mItem.mRootConnections)
+            mpWind->Connect( pair.first, pair.second, nullptr, mpDlg );
+
          // Reset to defaults
          mItem = {};
       }

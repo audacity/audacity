@@ -96,16 +96,14 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
 
          S.StartMultiColumn(3, wxCENTRE);
          {
-            mTotal = S.Id(ID_TOTAL).AddTextBox(_("&Total space used"), wxT("0"), 10);
-            mTotal->Bind(wxEVT_KEY_DOWN,
-                            // ignore it
-                            [](wxEvent&){});
+            mTotal = S.Id(ID_TOTAL)
+               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryWindow::OnChar)
+               .AddTextBox(_("&Total space used"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
-            mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo levels available"), wxT("0"), 10);
-            mAvail->Bind(wxEVT_KEY_DOWN,
-                            // ignore it
-                            [](wxEvent&){});
+            mAvail = S.Id(ID_AVAIL)
+               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryWindow::OnChar)
+               .AddTextBox(_("&Undo levels available"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
             S.AddPrompt(_("&Levels to discard"));
@@ -122,10 +120,9 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
             /* i18n-hint: (verb)*/
             mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
 
-            mClipboard = S.AddTextBox(_("Clipboard space used"), wxT("0"), 10);
-            mClipboard->Bind(wxEVT_KEY_DOWN,
-                                // ignore it
-                                [](wxEvent&){});
+            mClipboard = S
+               .ConnectRoot(wxEVT_KEY_DOWN, &HistoryWindow::OnChar)
+               .AddTextBox(_("Clipboard space used"), wxT("0"), 10);
             S.Id(ID_DISCARD_CLIPBOARD).AddButton(_("Discard"));
          }
          S.EndMultiColumn();
@@ -162,6 +159,11 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    parent->Bind(EVT_UNDO_MODIFIED, &HistoryWindow::UpdateDisplay, this);
    parent->Bind(EVT_UNDO_OR_REDO, &HistoryWindow::UpdateDisplay, this);
    parent->Bind(EVT_UNDO_RESET, &HistoryWindow::UpdateDisplay, this);
+}
+
+void HistoryWindow::OnChar( wxEvent& )
+{
+   // ignore it
 }
 
 void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
