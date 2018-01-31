@@ -1210,7 +1210,6 @@ AudioIO::AudioIO()
    mUpdatingMeters = false;
 
    mOwningProject = NULL;
-   mInputMeter = NULL;
    mOutputMeter = NULL;
 
    PaError err = Pa_Initialize();
@@ -1662,7 +1661,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    if (!mOwningProject)
       return false;
 
-   mInputMeter = NULL;
+   mInputMeter.Release();
    mOutputMeter = NULL;
 
    mLastPaError = paNoError;
@@ -1751,7 +1750,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      mInputMeter = mOwningProject->GetCaptureMeter();
+      SetCaptureMeter( mOwningProject, mOwningProject->GetCaptureMeter() );
    }
 
    SetMeters();
@@ -2479,11 +2478,13 @@ void AudioIO::SetCaptureMeter(AudacityProject *project, MeterPanel *meter)
 {
    if (!mOwningProject || mOwningProject == project)
    {
-      mInputMeter = meter;
-      if (mInputMeter)
+      if (meter)
       {
+         mInputMeter = meter;
          mInputMeter->Reset(mRate, true);
       }
+      else
+         mInputMeter.Release();
    }
 }
 
@@ -2497,10 +2498,6 @@ void AudioIO::SetPlaybackMeter(AudacityProject *project, MeterPanel *meter)
          mOutputMeter->Reset(mRate, true);
       }
    }
-}
-
-MeterPanel * AudioIO::GetCaptureMeter(){
-   return mInputMeter;
 }
 
 void AudioIO::SetMeters()
@@ -2817,7 +2814,7 @@ void AudioIO::StopStream()
    if (pMixerBoard)
       pMixerBoard->ResetMeters(false);
 
-   mInputMeter = NULL;
+   mInputMeter.Release();
    mOutputMeter = NULL;
    mOwningProject = NULL;
 
@@ -4506,7 +4503,7 @@ double AudioIO::AILAGetLastDecisionTime() {
 void AudioIO::AILAProcess(double maxPeak) {
    AudacityProject *proj = GetActiveProject();
    if (proj && mAILAActive) {
-      if (mInputMeter->IsClipping()) {
+      if (mInputMeter && mInputMeter->IsClipping()) {
          mAILAClipped = true;
          wxPrintf("clipped");
       }
@@ -4515,7 +4512,7 @@ void AudioIO::AILAProcess(double maxPeak) {
 
       if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mTime - mAILALastStartTime >= mAILAAnalysisTime) {
          putchar('\n');
-         mAILAMax = mInputMeter->ToLinearIfDB(mAILAMax);
+         mAILAMax = mInputMeter ? mInputMeter->ToLinearIfDB(mAILAMax) : 0.0;
          double iv = (double) Px_GetInputVolume(mPortMixer);
          unsigned short changetype = 0; //0 - no change, 1 - increase change, 2 - decrease change
          wxPrintf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);

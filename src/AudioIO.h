@@ -21,6 +21,7 @@
 #include <utility>
 #include <vector>
 #include <wx/atomic.h>
+#include <wx/weakref.h>
 
 #ifdef USE_MIDI
 
@@ -410,7 +411,6 @@ class AUDACITY_DLL_API AudioIO final {
    bool IsAvailable(AudacityProject *projecT);
    void SetCaptureMeter(AudacityProject *project, MeterPanel *meter);
    void SetPlaybackMeter(AudacityProject *project, MeterPanel *meter);
-   MeterPanel * GetCaptureMeter();
 
 private:
    /** \brief Set the current VU meters - this should be done once after
@@ -694,7 +694,7 @@ private:
    PaError             mLastPaError;
 
    AudacityProject    *mOwningProject;
-   MeterPanel         *mInputMeter;
+   wxWeakRef<MeterPanel> mInputMeter{};
    MeterPanel         *mOutputMeter;
    bool                mUpdateMeters;
    volatile bool       mUpdatingMeters;

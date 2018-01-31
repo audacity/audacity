@@ -367,12 +367,6 @@ MeterPanel::~MeterPanel()
                         wxCommandEventHandler(MeterPanel::OnMeterPrefsUpdated),
                         NULL,
                         this);
-
-   // LLL:  This prevents a crash during termination if monitoring
-   //       is active.
-   if (gAudioIO && gAudioIO->IsMonitoring())
-      if( gAudioIO->GetCaptureMeter() == this )
-         gAudioIO->StopStream();
 }
 
 void MeterPanel::UpdatePrefs()
