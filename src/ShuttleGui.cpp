@@ -120,12 +120,12 @@ for registering for changes.
 #endif
 
 ShuttleGuiBase::ShuttleGuiBase(wxWindow * pParent, teShuttleMode ShuttleMode )
+   : mpDlg{ pParent }
 {
    wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
    mpbOptionalFlag = nullptr;
    mpParent = pParent;
    mShuttleMode = ShuttleMode;
-   mpDlg = pParent;
    Init();
 }
 

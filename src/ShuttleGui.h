@@ -314,7 +314,7 @@ public:
 
 protected:
    wxWindow * mpLastWind;
-   wxWindow * mpDlg;
+   wxWindow *const mpDlg;
    wxSizer * pSizerStack[ nMaxNestedSizers ];
 
    std::unique_ptr<Shuttle> mpShuttle; /*! Controls source/destination of shuttled data.  You can
