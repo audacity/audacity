@@ -423,7 +423,6 @@ class PluginRegistrationDialog final : public wxDialogWrapper
 public:
    // constructors and destructors
    PluginRegistrationDialog(wxWindow *parent, EffectType type);
-   virtual ~PluginRegistrationDialog();
 
 private:
    void Populate();
@@ -499,14 +498,6 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType 
    mSortDirection = 1;
 
    Populate();
-}
-
-PluginRegistrationDialog::~PluginRegistrationDialog()
-{
-   mEffects->Disconnect(wxEVT_KEY_DOWN,
-                        wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
-                        NULL,
-                        this);
 }
 
 void PluginRegistrationDialog::Populate()

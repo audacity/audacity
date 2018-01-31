@@ -206,7 +206,6 @@ public:
                wxFrame* parent,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize);
-   virtual ~MixerBoard();
 
    void UpdatePrefs();
 

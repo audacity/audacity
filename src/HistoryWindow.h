@@ -28,7 +28,6 @@ class HistoryWindow final : public wxDialogWrapper {
 
  public:
    HistoryWindow(AudacityProject * parent, UndoManager *manager);
-   ~HistoryWindow();
 
    void UpdateDisplay();
 

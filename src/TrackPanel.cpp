@@ -360,20 +360,6 @@ TrackPanel::~TrackPanel()
 {
    mTimer.Stop();
 
-   // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
-                       wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
-                       NULL,
-                       this);
-   mTracks->Disconnect(EVT_TRACKLIST_RESIZING,
-                       wxCommandEventHandler(TrackPanel::OnTrackListResizing),
-                       NULL,
-                       this);
-   wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
-                        wxCommandEventHandler(TrackPanel::OnPlayback),
-                        NULL,
-                        this);
-
    // This can happen if a label is being edited and the user presses
    // ALT+F4 or Command+Q
    if (HasCapture())

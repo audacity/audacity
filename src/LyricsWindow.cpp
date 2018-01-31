@@ -133,14 +133,6 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    Center();
 }
 
-LyricsWindow::~LyricsWindow()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(LyricsWindow::OnTimer),
-      NULL,
-      this);
-}
-
 void LyricsWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
   this->Hide();

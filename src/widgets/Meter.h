@@ -114,8 +114,6 @@ class MeterPanel final : public wxPanelWrapper
          Style style = HorizontalStereo,
          float fDecayRate = 60.0f);
 
-   ~MeterPanel();
-
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return true; }
 

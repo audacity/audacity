@@ -89,37 +89,6 @@ KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
    }
 }
 
-KeyConfigPrefs::~KeyConfigPrefs()
-{
-   if (mKey)
-   {
-      mKey->Disconnect(wxEVT_KEY_DOWN,
-            wxKeyEventHandler(KeyConfigPrefs::OnHotkeyKeyDown),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_CHAR,
-            wxKeyEventHandler(KeyConfigPrefs::OnHotkeyChar),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_KILL_FOCUS,
-            wxFocusEventHandler(KeyConfigPrefs::OnHotkeyKillFocus),
-            NULL,
-            this);
-   }
-
-   if (mFilter)
-   {
-      mKey->Disconnect(wxEVT_KEY_DOWN,
-            wxKeyEventHandler(KeyConfigPrefs::OnFilterKeyDown),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_CHAR,
-            wxKeyEventHandler(KeyConfigPrefs::OnFilterChar),
-            NULL,
-            this);
-   }
-}
-
 void KeyConfigPrefs::Populate()
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);

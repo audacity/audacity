@@ -340,35 +340,6 @@ void MeterPanel::Clear()
    mQueue.Clear();
 }
 
-MeterPanel::~MeterPanel()
-{
-   if (mIsInput)
-   {
-      // Unregister for AudioIO events
-      wxTheApp->Disconnect(EVT_AUDIOIO_MONITOR,
-                           wxCommandEventHandler(MeterPanel::OnAudioIOStatus),
-                           NULL,
-                           this);
-      wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
-                           wxCommandEventHandler(MeterPanel::OnAudioIOStatus),
-                           NULL,
-                           this);
-   }
-   else
-   {
-      wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
-                           wxCommandEventHandler(MeterPanel::OnAudioIOStatus),
-                           NULL,
-                           this);
-   }
-
-   // Unregister for our preference update event
-   wxTheApp->Disconnect(EVT_METER_PREFERENCES_CHANGED,
-                        wxCommandEventHandler(MeterPanel::OnMeterPrefsUpdated),
-                        NULL,
-                        this);
-}
-
 void MeterPanel::UpdatePrefs()
 {
    mDBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);

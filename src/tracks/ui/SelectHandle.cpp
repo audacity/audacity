@@ -1048,15 +1048,6 @@ public:
             this);
    }
 
-   ~TimerHandler()
-   {
-      if (mConnectedProject)
-         mConnectedProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-            wxCommandEventHandler(SelectHandle::TimerHandler::OnTimer),
-            NULL,
-            this);
-   }
-
    // Receives timer event notifications, to implement auto-scroll
    void OnTimer(wxCommandEvent &event);
 

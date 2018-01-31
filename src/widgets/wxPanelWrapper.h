@@ -27,11 +27,6 @@ public:
    {
       this->Bind(wxEVT_CHAR_HOOK, wxTabTraversalWrapperCharHook);
    }
-
-   ~wxTabTraversalWrapper()
-   {
-      this->Unbind(wxEVT_CHAR_HOOK, wxTabTraversalWrapperCharHook);
-   }
 };
 
 class AUDACITY_DLL_API wxPanelWrapper : public wxTabTraversalWrapper<wxPanel>

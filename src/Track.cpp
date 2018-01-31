@@ -770,7 +770,7 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 //
 // The TrackList sends events whenever certain updates occur to the list it
 // is managing.  Any other classes that may be interested in get these updates
-// should use TrackList::Connect() and TrackList::Disconnect().
+// should use TrackList::Connect() or TrackList::Bind().
 //
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_PERMUTED);
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZING);

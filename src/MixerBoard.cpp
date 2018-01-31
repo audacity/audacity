@@ -934,17 +934,6 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
       this);
 }
 
-MixerBoard::~MixerBoard()
-{
-   // private data members
-   mMusicalInstruments.clear();
-
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(MixerBoard::OnTimer),
-      NULL,
-      this);
-}
-
 
 
 

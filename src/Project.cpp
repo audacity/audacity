@@ -1258,11 +1258,6 @@ AudacityProject::~AudacityProject()
       mTrackPanel->RemoveOverlay(mCursorOverlay.get());
       mTrackPanel->RemoveOverlay(mIndicatorOverlay.get());
    }
-
-   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(AudacityProject::OnCapture),
-                     NULL,
-                     this);
 }
 
 void AudacityProject::ApplyUpdatedTheme()
@@ -2714,11 +2709,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       }
 #endif
    }
-
-   this->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ViewInfo::OnTimer),
-      NULL,
-      &mViewInfo);
 
    // Destroys this
    pSelf.reset();
@@ -6036,14 +6026,6 @@ AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
                      wxCommandEventHandler(PlaybackScroller::OnTimer),
                      NULL,
                      this);
-}
-
-AudacityProject::PlaybackScroller::~PlaybackScroller()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-                        wxCommandEventHandler(PlaybackScroller::OnTimer),
-                        NULL,
-                        this);
 }
 
 void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)

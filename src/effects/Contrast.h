@@ -32,7 +32,6 @@ public:
    // constructors and destructors
    ContrastDialog(wxWindow * parent, wxWindowID id,
               const wxString & title, const wxPoint & pos);
-   ~ContrastDialog();
 
    wxButton * m_pButton_UseCurrentF;
    wxButton * m_pButton_UseCurrentB;

@@ -43,15 +43,6 @@ public:
             this);
    }
 
-   ~TranslatableArray()
-   {
-      if (wxTheApp)
-         wxTheApp->Disconnect(EVT_LANGUAGE_CHANGE,
-            wxCommandEventHandler(TranslatableArray::Invalidate),
-            NULL,
-            this);
-   }
-
    const ArrayType& Get()
    {
       if (mContents.empty())

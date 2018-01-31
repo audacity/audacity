@@ -458,30 +458,6 @@ ToolManager::~ToolManager()
    // crashing when running with Jaws on Windows 10 1703.
    mTopDock->GetConfiguration().Clear();
    mBotDock->GetConfiguration().Clear();
-
-   // Remove handlers from parent
-   mParent->Disconnect( wxEVT_LEFT_UP,
-                        wxMouseEventHandler( ToolManager::OnMouse ),
-                        NULL,
-                        this );
-   mParent->Disconnect( wxEVT_MOTION,
-                        wxMouseEventHandler( ToolManager::OnMouse ),
-                        NULL,
-                        this );
-   mParent->Disconnect( wxEVT_MOUSE_CAPTURE_LOST,
-                        wxMouseCaptureLostEventHandler( ToolManager::OnCaptureLost ),
-                        NULL,
-                        this );
-
-   // Remove our event handlers
-   mIndicator->Disconnect( wxEVT_CREATE,
-                           wxWindowCreateEventHandler( ToolManager::OnIndicatorCreate ),
-                           NULL,
-                           this );
-   mIndicator->Disconnect( wxEVT_PAINT,
-                           wxPaintEventHandler( ToolManager::OnIndicatorPaint ),
-                           NULL,
-                           this );
 }
 
 // This table describes the default configuration of the toolbars as

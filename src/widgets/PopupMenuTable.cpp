@@ -13,6 +13,8 @@ Paul Licameli split from TrackPanel.cpp
 
 PopupMenuTable::Menu::~Menu()
 {
+   // Event connections between the parent window and the singleton table
+   // object must be broken when this menu is destroyed.
    Disconnect();
 }
 
