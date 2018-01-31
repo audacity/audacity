@@ -248,8 +248,8 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       mFreqS = S.Id(ID_Freq)
          .Name(XO("LFO frequency in hertz"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, MIN_Freq * SCL_Freq);
-      mFreqS->SetMinSize(wxSize(100, -1));
 
       mPhaseT = S.Id(ID_Phase)
          .Validator<FloatingPointValidator<double>>(
@@ -259,9 +259,9 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       mPhaseS = S.Id(ID_Phase)
          .Name(XO("LFO start phase in degrees"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetLineSize(10);
-      mPhaseS->SetMinSize(wxSize(100, -1));
 
       mDepthT = S.Id(ID_Depth)
          .Validator<IntegerValidator<int>>(
@@ -271,8 +271,8 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       mDepthS = S.Id(ID_Depth)
          .Name(XO("Depth in percent"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
-      mDepthS->SetMinSize(wxSize(100, -1));
 
       mResT = S.Id(ID_Res)
          .Validator<FloatingPointValidator<double>>(
@@ -282,8 +282,8 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       mResS = S.Id(ID_Res)
          .Name(XO("Resonance"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Res * SCL_Res, MAX_Res * SCL_Res, MIN_Res * SCL_Res);
-      mResS->SetMinSize(wxSize(100, -1));
 
       mFreqOfsT = S.Id(ID_FreqOfs)
          .Validator<IntegerValidator<int>>(
@@ -293,8 +293,8 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       mFreqOfsS = S.Id(ID_FreqOfs)
          .Name(XO("Wah frequency offset in percent"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_FreqOfs * SCL_FreqOfs, MAX_FreqOfs * SCL_FreqOfs, MIN_FreqOfs * SCL_FreqOfs);
-      mFreqOfsT->SetMinSize(wxSize(100, -1));
 
       mOutGainT = S.Id(ID_OutGain)
          .Validator<FloatingPointValidator<double>>(
@@ -304,8 +304,8 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       mOutGainS = S.Id(ID_OutGain)
          .Name(XO("Output gain (dB)"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
-      mOutGainS->SetMinSize(wxSize(100, -1));
    }
    S.EndMultiColumn();
 }

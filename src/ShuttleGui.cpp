@@ -184,14 +184,6 @@ void ShuttleGuiBase::ResetId()
    miIdNext = 3000;
 }
 
-/// Used to modify an already placed Window.
-void ShuttleGuiBase::SetSizeHints( int minX, int minY )
-{
-   if( mShuttleMode != eIsCreating )
-      return;
-   mpLastWind->SetSizeHints( minX, minY );
-}
-
 
 /// Used to modify an already placed FlexGridSizer to make a column stretchy.
 void ShuttleGuiBase::SetStretchyCol( int i )
@@ -1460,6 +1452,7 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
          }
          else
             pChoice = AddChoice( Prompt, choices, WrappedRef.ReadAsInt() );
+         ShuttleGui::SetMinSize(pChoice, choices);
       }
       break;
    // IF setting internal storage from the controls.
@@ -1497,7 +1490,6 @@ wxChoice * ShuttleGuiBase::DoTieChoice(
       wxASSERT( false );
       break;
    }
-   SetSizeHints(choices);
    return pChoice;
 }
 
@@ -2086,6 +2078,11 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          for (auto &pair : mItem.mRootConnections)
             mpWind->Connect( pair.first, pair.second, nullptr, mpDlg );
 
+         if( mItem.mUseBestSize )
+            mpWind->SetMinSize( mpWind->GetBestSize() );
+         else if( mItem.mHasMinSize )
+            mpWind->SetMinSize( mItem.mMinSize );
+
          // Reset to defaults
          mItem = {};
       }
@@ -2107,7 +2104,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
       mpSizer = pSubSizer;
       PushSizer();
    }
-   mpLastWind = mpWind;
+
    mpWind = NULL;
    miProp = 0;
    miSizerProp =0;
@@ -2398,7 +2395,7 @@ wxSizerItem * ShuttleGui::AddSpace( int width, int height )
    return mpSizer->Add( width, height, miProp);
 }
 
-void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayStringEx & items )
+void ShuttleGui::SetMinSize( wxWindow *window, const wxArrayStringEx & items )
 {
    int maxw = 0;
 
@@ -2429,10 +2426,16 @@ void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayStringEx & ite
    window->SetMinSize( { maxw, -1 } );
 }
 
-void ShuttleGuiBase::SetSizeHints( const wxArrayStringEx & items )
+/*
+void ShuttleGui::SetMinSize( wxWindow *window, const std::vector<int> & items )
 {
-   if( mShuttleMode != eIsCreating )
-      return;
+   wxArrayStringEx strs;
 
-   SetSizeHints( mpLastWind, items );
+   for( size_t i = 0; i < items.size(); i++ )
+   {
+      strs.Add( wxString::Format( wxT("%d"), items[i] ) );
+   }
+
+   SetMinSize( window, strs );
 }
+*/

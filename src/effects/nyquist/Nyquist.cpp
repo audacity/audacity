@@ -2587,8 +2587,9 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
       S.StartHorizontalLay(wxEXPAND, 1);
       {
-          mCommandText = S.Focus().AddTextWindow(wxT(""));
-          mCommandText->SetMinSize(wxSize(500, 200));
+          mCommandText = S.Focus()
+            .MinSize( { 500, 200 } )
+            .AddTextWindow(wxT(""));
       }
       S.EndHorizontalLay();
 
@@ -2735,8 +2736,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   {
                      S.Id(ID_Slider + i)
                         .Style(wxSL_HORIZONTAL)
+                        .MinSize( { 150, -1 } )
                         .AddSlider( {}, 0, ctrl.ticks, 0);
-                     S.SetSizeHints(150, -1);
                   }
                }
 

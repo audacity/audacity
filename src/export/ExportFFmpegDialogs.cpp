@@ -1611,8 +1611,8 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
 
                   mProfileChoice = S.Id(FEProfileID)
                      .ToolTip(XO("AAC Profile\nLow Complexity - default\nMost players won't play anything other than LC"))
+                     .MinSize( { 100, -1 } )
                      .TieChoice(_("Profile:"), AACProfiles);
-                  mProfileChoice->SetSizeHints( 100,-1);
                }
                S.EndMultiColumn();
             }
@@ -1635,13 +1635,13 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
 
                   mPredictionOrderMethodChoice = S.Id(FEPredOrderID)
                      .ToolTip(XO("Prediction Order Method\nEstimate - fastest, lower compression\nLog search - slowest, best compression\nFull search - default"))
+                     .MinSize( { 100, -1 } )
                      .TieNumberAsChoice(
                         _("PdO Method:"),
                         {wxT("/FileFormats/FFmpegPredOrderMethod"),
                          4}, // Full search
                         PredictionOrderMethodNames
                      );
-                  mPredictionOrderMethodChoice->SetSizeHints( 100,-1);
 
                   mMinPredictionOrderSpin = S.Id(FEMinPredID)
                      .ToolTip(XO("Minimal prediction order\nOptional\n-1 - default\nmin - 0\nmax - 32 (with LPC) or 4 (without LPC)"))

@@ -1440,8 +1440,8 @@ struct ControlInfo {
          S.Id(id)
             .Name( sliderName )
             .Style(wxSL_HORIZONTAL)
+            .MinSize( { 150, -1 } )
             .AddSlider( {}, 0, sliderMax);
-      slider->SetSizeHints(150, -1);
    }
 
    MemberPointer field;

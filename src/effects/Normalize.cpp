@@ -300,10 +300,10 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
                mGainCheckBox = S
+                  .MinSize()
                   .Validator<wxGenericValidator>(&mGain)
                   .AddCheckBox(_("Normalize peak amplitude to   "),
                      mGain);
-               mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
                mLevelTextCtrl = S
                   .Name(XO("Peak amplitude dB"))

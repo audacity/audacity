@@ -355,11 +355,11 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       S.AddFixedText(_("Tone/silence ratio:"), false);
       mDtmfDutyCycleS = S.Id(ID_DutyCycle)
          .Style(wxSL_HORIZONTAL | wxEXPAND)
+         .MinSize( { -1, -1 } )
          .AddSlider( {},
                      dtmfDutyCycle * SCL_DutyCycle,
                      MAX_DutyCycle * SCL_DutyCycle,
                      MIN_DutyCycle * SCL_DutyCycle);
-      S.SetSizeHints(-1,-1);
    }
    S.EndMultiColumn();
 

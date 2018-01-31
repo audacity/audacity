@@ -310,9 +310,9 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       S.EndVerticalLay();
 
       mFreqPlot = safenew FreqPlot(this, wxID_ANY);
-      mFreqPlot->SetMinSize(wxSize(wxDefaultCoord, FREQ_WINDOW_HEIGHT));
-      S.Prop(1);
-      S.AddWindow(mFreqPlot, wxEXPAND);
+      S.Prop(1)
+         .MinSize( { wxDefaultCoord, FREQ_WINDOW_HEIGHT } )
+         .AddWindow(mFreqPlot, wxEXPAND);
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
@@ -448,14 +448,14 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       S.AddSpace(5);
 
       mAlgChoice = S.Id(FreqAlgChoiceID).Focus()
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Algorithm:"), algChoices, mAlg);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
 
       mSizeChoice = S.Id(FreqSizeChoiceID)
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Size:"), sizeChoices, mSize);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
 
@@ -471,15 +471,15 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       S.AddSpace(5);
 
       mFuncChoice = S.Id(FreqFuncChoiceID)
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Function:"), funcChoices, mFunc);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
       mAxisChoice = S.Id(FreqAxisChoiceID)
+         .MinSize( { wxDefaultCoord, wxDefaultCoord } )
          .AddChoice(_("&Axis:"), axisChoices, mAxis);
-      S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 
       S.AddSpace(5);

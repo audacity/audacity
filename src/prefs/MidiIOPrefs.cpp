@@ -256,10 +256,9 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
       mRecord->SetSelection(0);
    }
 #endif
-   ShuttleGui S(this, eIsCreating);
-   S.SetSizeHints(mPlay, playnames);
+   ShuttleGui::SetMinSize(mPlay, playnames);
 #ifdef EXPERIMENTAL_MIDI_IN
-   S.SetSizeHints(mRecord, recordnames);
+   ShuttleGui::SetMinSize(mRecord, recordnames);
 #endif
 //   OnDevice(e);
 }

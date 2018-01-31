@@ -101,9 +101,9 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mFramePeriodSlider = S.Id(ID_FRAMEPERIOD)
       .Name(XO("Frame Period"))
       .Style(wxSL_HORIZONTAL)
+      .MinSize( { 300, -1 } )
       .AddSlider(wxT(""),
        /*pos*/ (int) (p.mFramePeriod * 100 + 0.5), /*max*/ 50, /*min*/ 5);
-   S.SetSizeHints(300, -1);
    mFramePeriodText = S.AddVariableText(SA_DFT_FRAME_PERIOD_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 

@@ -278,24 +278,24 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
             m_pChoice_FromPitch = S.Id(ID_FromPitch)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .Name(XO("from"))
+               .MinSize( { 80, -1 } )
                .AddChoice(_("from"), pitch);
-            m_pChoice_FromPitch->SetSizeHints(80, -1);
 
             m_pSpin_FromOctave = S.Id(ID_FromOctave)
                .Name(XO("from Octave"))
+               .MinSize( { 50, -1 } )
                .AddSpinCtrl( {}, m_nFromOctave, INT_MAX, INT_MIN);
-            m_pSpin_FromOctave->SetSizeHints(50, -1);
 
             m_pChoice_ToPitch = S.Id(ID_ToPitch)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .Name(XO("to"))
+               .MinSize( { 80, -1 } )
                .AddChoice(_("to"), pitch);
-            m_pChoice_ToPitch->SetSizeHints(80, -1);
 
             m_pSpin_ToOctave = S.Id(ID_ToOctave)
                .Name(XO("to Octave"))
+               .MinSize( { 50, -1 } )
                .AddSpinCtrl( {}, m_nToOctave, INT_MAX, INT_MIN);
-            m_pSpin_ToOctave->SetSizeHints(50, -1);
          }
          S.EndMultiColumn();
 

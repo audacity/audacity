@@ -84,6 +84,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
       S.StartStatic(_("&Manage History"), 1);
       {
          mList = S
+            .MinSize()
             .AddListControlReportMode(
                { { _("Action"), wxLIST_FORMAT_LEFT, 260 },
                  { _("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125 } },
@@ -139,7 +140,6 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
 
-   mList->SetMinSize(mList->GetSize());
    Fit();
    SetMinSize(GetSize());
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));

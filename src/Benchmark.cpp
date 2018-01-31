@@ -216,8 +216,8 @@ void BenchmarkDialog::MakeBenchmarkDialog()
       mText = S.Id(StaticTextID)
          /* i18n-hint noun */
          .Name(XO("Output"))
+         .MinSize( { 500, 200 } )
          .AddTextWindow(wxT(""));
-      mText->SetSizeHints(wxSize(500,200));
 
       //
       S.SetBorder(10);

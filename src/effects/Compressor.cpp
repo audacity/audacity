@@ -213,8 +213,9 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
                                          mThresholdDB,
                                          mNoiseFloorDB,
                                          mRatio);
-      mPanel->SetMinSize(wxSize(400, 200));
-      S.Prop(true).AddWindow(mPanel, wxEXPAND | wxALL);
+      S.Prop(true)
+         .MinSize( { 400, 200 } )
+         .AddWindow(mPanel, wxEXPAND | wxALL);
       S.SetBorder(5);
    }
    S.EndHorizontalLay();

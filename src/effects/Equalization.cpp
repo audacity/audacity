@@ -789,8 +789,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
          mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
          S.Prop(1);
-         S.AddWindow(mPanel, wxEXPAND );
-         S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
+         S
+            .MinSize( { wxDefaultCoord, wxDefaultCoord } )
+            .AddWindow(mPanel, wxEXPAND );
 
          S.SetBorder(5);
          S.StartVerticalLay();

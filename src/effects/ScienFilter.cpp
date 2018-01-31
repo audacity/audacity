@@ -398,9 +398,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       );
 
       S.SetBorder(5);
-      S.Prop(1);
-      S.AddWindow(mPanel, wxEXPAND | wxRIGHT);
-      S.SetSizeHints(-1, -1);
+      S.Prop(1)
+         .MinSize( { -1, -1 } )
+         .AddWindow(mPanel, wxEXPAND | wxRIGHT);
 
       S.StartVerticalLay();
       {
@@ -460,14 +460,15 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          mFilterTypeCtl = S.Id(ID_Type)
             .Focus()
             .Validator<wxGenericValidator>(&mFilterType)
+            .MinSize( { -1, -1 } )
             .AddChoice(_("&Filter Type:"),
                LocalizedStrings(kTypeStrings, nTypes)
             );
-         S.SetSizeHints(-1, -1);
 
          mFilterOrderCtl = S.Id(ID_Order)
             .Validator<wxGenericValidator>(&mOrderIndex)
             /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
+            .MinSize( { -1, -1 } )
             .AddChoice(_("O&rder:"),
                []{
                   wxArrayStringEx orders;
@@ -476,7 +477,6 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
                   return orders;
                }()
             );
-         S.SetSizeHints(-1, -1);
          S.AddSpace(1, 1);
 
          mRippleCtlP = S.AddVariableText(_("&Passband Ripple:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -490,11 +490,11 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          mFilterSubTypeCtl = S.Id(ID_SubType)
             .Validator<wxGenericValidator>(&mFilterSubtype)
+            .MinSize( { -1, -1 } )
             .AddChoice(_("&Subtype:"),
                LocalizedStrings(kSubTypeStrings, nSubTypes)
             );
-         S.SetSizeHints(-1, -1);
-      
+
          mCutoffCtl = S.Id(ID_Cutoff)
             .Name(XO("Cutoff (Hz)"))
             .Validator<FloatingPointValidator<float>>(

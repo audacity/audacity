@@ -203,6 +203,18 @@ struct Item {
       return std::move( *this );
    }
 
+   Item&& MinSize() && // set best size as min size
+   {
+      mUseBestSize = true;
+      return std::move ( *this );
+   }
+
+   Item&& MinSize( wxSize sz ) &&
+   {
+      mMinSize = sz; mHasMinSize = true;
+      return std::move ( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
    TranslatableString mName;
@@ -212,8 +224,13 @@ struct Item {
 
    long miStyle{};
 
+   wxSize mMinSize{ -1, -1 };
+   bool mHasMinSize{ false };
+   bool mUseBestSize{ false };
+
    bool mFocused { false };
    bool mDisabled { false };
+
 };
 
 }
@@ -419,7 +436,6 @@ public:
       const int max,
       const int min);
 //-- End of variants.
-   void SetSizeHints( int minX, int minY );
    void SetBorder( int Border ) {miBorder = Border;};
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
@@ -451,18 +467,12 @@ protected:
    long GetStyle( long Style );
 
 private:
-   void SetSizeHints( const wxArrayStringEx & items );
-
    void DoInsertListColumns(
       wxListCtrl *pListCtrl,
       long listControlStyles,
       std::initializer_list<const ListControlColumn> columns );
 
-public:
-   static void SetSizeHints( wxWindow *window, const wxArrayStringEx & items );
-
 protected:
-   wxWindow * mpLastWind;
    wxWindow *const mpDlg;
    wxSizer * pSizerStack[ nMaxNestedSizers ];
 
@@ -647,6 +657,11 @@ public:
       return *this;
    }
 
+   ShuttleGui &MinSize() // set best size as min size
+      { std::move( mItem ).MinSize(); return *this; }
+   ShuttleGui &MinSize( wxSize sz )
+      { std::move( mItem ).MinSize( sz ); return *this; }
+
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
    AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
 
@@ -657,6 +672,11 @@ public:
 
    wxSizerItem * AddSpace( int width, int height );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
+
+   // Calculate width of a choice control adequate for the items, maybe after
+   // the dialog is created but the items change.
+   static void SetMinSize( wxWindow *window, const wxArrayStringEx & items );
+  // static void SetMinSize( wxWindow *window, const std::vector<int> & items );
 
    teShuttleMode GetMode() { return  mShuttleMode; };
 };

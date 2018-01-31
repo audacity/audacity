@@ -315,9 +315,8 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       }
    }
 
-   ShuttleGui S(this, eIsCreating);
-   S.SetSizeHints(mPlay, mPlay->GetStrings());
-   S.SetSizeHints(mRecord, mRecord->GetStrings());
+   ShuttleGui::SetMinSize(mPlay, mPlay->GetStrings());
+   ShuttleGui::SetMinSize(mRecord, mRecord->GetStrings());
    OnDevice(e);
 }
 
@@ -381,8 +380,7 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
       mChannels->SetSelection(0);
    }
 
-   ShuttleGui S(this, eIsCreating);
-   S.SetSizeHints(mChannels, channelnames);
+   ShuttleGui::SetMinSize(mChannels, channelnames);
    Layout();
 }
 

@@ -562,6 +562,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
                S.Id(ID_Program);
                mProgram = S.Name(XO("Program"))
+                  .MinSize( { -1, -1 } )
                   .AddChoice( {},
                      [&]{
                         wxArrayStringEx choices;
@@ -571,7 +572,6 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      }(),
                      wxString::FromUTF8(mPlugin->getCurrentProgram().c_str())
                   );
-               mProgram->SetSizeHints(-1, -1);
                wxSizer *s = mProgram->GetContainingSizer();
                s->GetItem(mProgram)->SetFlag(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL);
 
@@ -638,8 +638,9 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   S.Id(ID_Choices + p);
                   mChoices[p] = S.ToolTip( TranslatableString{ tip } )
                      .Name( TranslatableString{ labelText } )
+                     .MinSize( { -1, -1 } )
                      .AddChoice( {}, choices, selected );
-                  mChoices[p]->SetSizeHints(-1, -1);
+
                   wxSizer *s = mChoices[p]->GetContainingSizer();
                   s->GetItem(mChoices[p])->SetFlag(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL);
 
@@ -675,9 +676,9 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   mSliders[p] = S.ToolTip( TranslatableString{ tip } )
                      .Name( TranslatableString{ labelText } )
                      .Style(wxSL_HORIZONTAL)
+                     .MinSize( { 150, -1 } )
                      .AddSlider( {}, 0, 1000, 0);
-                  mSliders[p]->SetSizeHints(150, -1);
-                  
+
                   str = Internat::ToDisplayString(mParameters[p].maxValue);
                   S.AddUnits(str);
                }

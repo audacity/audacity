@@ -264,9 +264,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mStagesS = S.Id(ID_Stages)
          .Name(XO("Stages"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
       mStagesS->SetLineSize(2);
-      mStagesS->SetMinSize(wxSize(100, -1));
 
       mDryWetT = S.Id(ID_DryWet)
          .Validator<IntegerValidator<int>>(
@@ -276,8 +276,8 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDryWetS = S.Id(ID_DryWet)
          .Name(XO("Dry Wet"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
-      mDryWetS->SetMinSize(wxSize(100, -1));
 
       mFreqT = S.Id(ID_Freq)
          .Validator<FloatingPointValidator<double>>(
@@ -287,8 +287,8 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFreqS = S.Id(ID_Freq)
          .Name(XO("LFO frequency in hertz"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
-      mFreqS ->SetMinSize(wxSize(100, -1));
 
       mPhaseT = S.Id(ID_Phase)
          .Validator<FloatingPointValidator<double>>(
@@ -298,9 +298,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mPhaseS = S.Id(ID_Phase)
          .Name(XO("LFO start phase in degrees"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetLineSize(10);
-      mPhaseS->SetMinSize(wxSize(100, -1));
 
       mDepthT = S.Id(ID_Depth)
          .Validator<IntegerValidator<int>>(
@@ -310,8 +310,8 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDepthS = S.Id(ID_Depth)
          .Name(XO("Depth in percent"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
-      mDepthS->SetMinSize(wxSize(100, -1));
 
       mFeedbackT = S.Id(ID_Feedback)
          .Validator<IntegerValidator<int>>(
@@ -321,9 +321,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFeedbackS = S.Id(ID_Feedback)
          .Name(XO("Feedback in percent"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
       mFeedbackS->SetLineSize(10);
-      mFeedbackS->SetMinSize(wxSize(100, -1));
 
       mOutGainT = S.Id(ID_OutGain)
          .Validator<FloatingPointValidator<double>>(
@@ -333,8 +333,8 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mOutGainS = S.Id(ID_OutGain)
          .Name(XO("Output gain (dB)"))
          .Style(wxSL_HORIZONTAL)
+         .MinSize( { 100, -1 } )
          .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
-      mOutGainS->SetMinSize(wxSize(100, -1));
    }
    S.EndMultiColumn();
 }
