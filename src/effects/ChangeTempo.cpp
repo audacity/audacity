@@ -221,6 +221,8 @@ bool EffectChangeTempo::Process()
 
 void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
 {
+   enum { precision = 2 };
+
    S.StartVerticalLay(0);
    {
       S.AddSpace(0, 5);
@@ -273,8 +275,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            int precission = 2;
-            FloatingPointValidator<double> vldFromLength(precission, &m_FromLength, NumValidatorStyle::TWO_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldFromLength(precision, &m_FromLength, NumValidatorStyle::TWO_TRAILING_ZEROES);
             m_pTextCtrl_FromLength = S.Id(ID_FromLength)
                .AddTextBox(_("from"), wxT(""), 12);
             m_pTextCtrl_FromLength->SetValidator(vldFromLength);
@@ -285,8 +286,8 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
             // min and max need same precision as what we're validating (bug 963)
             double minLength = (m_FromLength * 100.0) / (100.0 + MAX_Percentage);
             double maxLength = (m_FromLength * 100.0) / (100.0 + MIN_Percentage);
-            minLength = Internat::CompatibleToDouble(Internat::ToString(minLength, precission));
-            maxLength = Internat::CompatibleToDouble(Internat::ToString(maxLength, precission));
+            minLength = Internat::CompatibleToDouble(Internat::ToString(minLength, precision));
+            maxLength = Internat::CompatibleToDouble(Internat::ToString(maxLength, precision));
 
             vldToLength.SetRange(minLength, maxLength);
             m_pTextCtrl_ToLength = S.Id(ID_ToLength)

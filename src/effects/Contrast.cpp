@@ -197,6 +197,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    const auto &settings = ProjectSettings::Get( *p );
    mProjectRate = settings.GetRate();
 
+      const auto options = NumericTextCtrl::Options{}
+         .AutoPos(true)
+         .MenuEnabled(false)
+         .ReadOnly(true);
+
    ShuttleGui S(this, eIsCreating);
 
    S.SetBorder(5);
@@ -217,11 +222,6 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText(_("End"));
          S.AddFixedText( {} );   // spacer
          S.AddFixedText(_("Volume    "));
-
-         const auto options = NumericTextCtrl::Options{}
-            .AutoPos(true)
-            .MenuEnabled(false)
-            .ReadOnly(true);
 
          //Foreground
          S.AddFixedText(_("&Foreground:"), false);

@@ -299,14 +299,9 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
-               // The checkbox needs to be sized for the longer prompt, and
-               // which that is will depend on translation.  So decide that here.
-               // (strictly we should count pixels, not characters).
-               wxString prompt1 = _("Normalize peak amplitude to");
-               wxString longerPrompt = prompt1 + "   ";
-               // Now make the checkbox.
-               mGainCheckBox = S.AddCheckBox(longerPrompt,
-                                             mGain);
+               mGainCheckBox = S
+                  .AddCheckBox(_("Normalize peak amplitude to   "),
+                     mGain);
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
                mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 

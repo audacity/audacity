@@ -325,6 +325,43 @@ static EnumSetting< MP3ChannelMode > MP3ChannelModeSetting{
 ///
 void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 {
+   bool mono = false;
+   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
+
+   const wxArrayStringEx *choices = nullptr;
+   const std::vector< int > *codes = nullptr;
+   bool enable;
+   int defrate;
+
+   switch( MP3RateModeSetting.ReadEnum() ) {
+      case MODE_SET:
+         choices = &setRateNames;
+         enable = true;
+         defrate = mSetRate;
+         break;
+
+      case MODE_VBR:
+         choices = &varRateNames;
+         enable = true;
+         defrate = mVbrRate;
+         break;
+
+      case MODE_ABR:
+         choices = &fixRateNames;
+         codes = &fixRateValues;
+         enable = false;
+         defrate = mAbrRate;
+         break;
+
+      case MODE_CBR:
+      default:
+         choices = &fixRateNames;
+         codes = &fixRateValues;
+         enable = false;
+         defrate = mCbrRate;
+         break;
+   }
+
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxCENTER);
@@ -347,35 +384,6 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   S.EndRadioButtonGroup();
                }
                S.EndHorizontalLay();
-   
-               const wxArrayStringEx *choices = nullptr;
-               const std::vector< int > *codes = nullptr;
-               bool enable;
-               int defrate;
-   
-               if (mSET->GetValue()) {
-                  choices = &setRateNames;
-                  enable = true;
-                  defrate = mSetRate;
-               }
-               else if (mVBR->GetValue()) {
-                  choices = &varRateNames;
-                  enable = true;
-                  defrate = mVbrRate;
-               }
-               else if (mABR->GetValue()) {
-                  choices = &fixRateNames;
-                  codes = &fixRateValues;
-                  enable = false;
-                  defrate = mAbrRate;
-               }
-               else {
-                  mCBR->SetValue(true);
-                  choices = &fixRateNames;
-                  codes = &fixRateValues;
-                  enable = false;
-                  defrate = mCbrRate;
-               }
 
                mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
                   _("Quality"),
@@ -393,9 +401,6 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                S.AddPrompt(_("Channel Mode:"));
                S.StartMultiColumn(3, wxEXPAND);
                {
-                  bool mono = false;
-                  gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
-
                   S.StartRadioButtonGroup(MP3ChannelModeSetting);
                   {
                      mJoint = S.TieRadioButton();
@@ -566,19 +571,17 @@ public:
 
    void PopulateOrExchange(ShuttleGui & S)
    {
-      wxString text;
-
       S.SetBorder(10);
       S.StartVerticalLay(true);
       {
-         text.Printf(_("Audacity needs the file %s to create MP3s."), mName);
-         S.AddTitle(text);
+         S.AddTitle(
+            wxString::Format(_("Audacity needs the file %s to create MP3s."),
+               mName));
 
          S.SetBorder(3);
          S.StartHorizontalLay(wxALIGN_LEFT, true);
          {
-            text.Printf(_("Location of %s:"), mName);
-            S.AddTitle(text);
+            S.AddTitle( wxString::Format(_("Location of %s:"), mName) );
          }
          S.EndHorizontalLay();
 
@@ -587,8 +590,8 @@ public:
          {
             if (mLibPath.GetFullPath().empty()) {
                /* i18n-hint: There is a  button to the right of the arrow.*/
-               text.Printf(_("To find %s, click here -->"), mName);
-               mPathText = S.AddTextBox( {}, text, 0);
+               mPathText = S.AddTextBox( {},
+                  wxString::Format(_("To find %s, click here -->"), mName), 0);
             }
             else {
                mPathText = S.AddTextBox( {}, mLibPath.GetFullPath(), 0);
@@ -2000,7 +2003,6 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
    d.SetName(d.GetTitle());
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);
-   wxString text;
 
    int selected = -1;
 
@@ -2011,15 +2013,16 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
       {
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the MP3\nfile format. "), rate);
-            }
-            else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. "), rate, bitrate);
-            }
-
-            text += _("You may resample to one of the rates below.");
-            S.AddTitle(text);
+            S.AddTitle(
+               ((bitrate == 0)
+                  ? wxString::Format(
+                     _("The project sample rate (%d) is not supported by the MP3\nfile format. "),
+                     rate)
+                  : wxString::Format(
+                     _("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. "),
+                     rate, bitrate))
+               + _("You may resample to one of the rates below.")
+            );
          }
          S.EndHorizontalLay();
 

@@ -1001,7 +1001,6 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
    d.SetName(d.GetTitle());
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);
-   wxString text;
 
    int selected = -1;
 
@@ -1012,15 +1011,16 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
       {
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the current output\nfile format. "), rate);
-            }
-            else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "), rate, bitrate/1024);
-            }
-
-            text += _("You may resample to one of the rates below.");
-            S.AddTitle(text);
+            S.AddTitle(
+               (bitrate == 0
+                  ? wxString::Format(
+                     _("The project sample rate (%d) is not supported by the current output\nfile format. "),
+                     rate)
+                  : wxString::Format(
+                     _("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the current output file format. "),
+                     rate, bitrate/1024))
+               + _("You may resample to one of the rates below.")
+            );
          }
          S.EndHorizontalLay();
 
