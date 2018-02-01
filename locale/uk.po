@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-23 18:10-0500\n"
-"PO-Revision-Date: 2018-02-01 08:59+0200\n"
+"PO-Revision-Date: 2018-02-01 10:23+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -59,7 +59,7 @@ msgstr "С&тенд Nyquist…"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
-msgstr "С&касувати\tCtrl+Z"
+msgstr "&Вернути\tCtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
@@ -314,7 +314,7 @@ msgstr "Позначити увесь текст"
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Undo"
-msgstr "Скасувати"
+msgstr "Вернути"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Undo last change"
@@ -3106,7 +3106,7 @@ msgstr "Наступна &верхня пікова частота"
 
 #: src/Menus.cpp
 msgid "Next &Lower Peak Frequency"
-msgstr "Наступна &нижча пікова частота"
+msgstr "Наступна &найнижча пікова частота"
 
 #: src/Menus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
@@ -3223,7 +3223,7 @@ msgstr "Від&новити панелі"
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
 #: src/Menus.cpp
 msgid "&Transport Toolbar"
-msgstr "Панель від&творення"
+msgstr "Панель к&ерування"
 
 #. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
 #: src/Menus.cpp
@@ -3289,7 +3289,7 @@ msgstr "Показати з&різання (увімкн./вимкн.)"
 #. play, record, pause etc.
 #: src/Menus.cpp
 msgid "T&ransport"
-msgstr "Пе&ренесення"
+msgstr "Ке&рування"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/Menus.cpp
@@ -3307,7 +3307,7 @@ msgstr "Пуск/Стоп і вс&тановлення курсора"
 
 #: src/Menus.cpp
 msgid "&Loop Play"
-msgstr "Ві&дтворити циклічно"
+msgstr "Ві&дтворити у циклі"
 
 #: src/Menus.cpp
 msgid "&Pause"
@@ -3364,7 +3364,7 @@ msgstr "К&інець проекту"
 
 #: src/Menus.cpp
 msgid "Pla&y Region"
-msgstr "Область відтво&рення"
+msgstr "Відтвор&ити область"
 
 #: src/Menus.cpp
 msgid "&Lock"
@@ -3380,11 +3380,11 @@ msgstr "П&овторно виявити звукові пристрої"
 
 #: src/Menus.cpp
 msgid "Transport &Options"
-msgstr "Параметри від&творення"
+msgstr "Параметри к&ерування"
 
 #: src/Menus.cpp
 msgid "Sound Activation Le&vel..."
-msgstr "&Рівень активізації звуком…"
+msgstr "&Рівень активізації звуку…"
 
 #: src/Menus.cpp
 msgid "Sound A&ctivated Recording (on/off)"
@@ -3428,11 +3428,11 @@ msgstr "Доріжку &часу"
 
 #: src/Menus.cpp
 msgid "Mi&x"
-msgstr "Мі&кшування"
+msgstr "Змі&кшувати"
 
 #: src/Menus.cpp
 msgid "Mix Stereo down to &Mono"
-msgstr "Мікшувати стерео у &моно"
+msgstr "Змікшувати стерео у &моно"
 
 #: src/Menus.cpp
 msgid "Mi&x and Render"
@@ -3440,7 +3440,7 @@ msgstr "Змі&кшувати і обробити"
 
 #: src/Menus.cpp
 msgid "Mix and Render to Ne&w Track"
-msgstr "Мікшувати і обробити як &нову доріжку"
+msgstr "Змікшувати і обробити як &нову доріжку"
 
 #: src/Menus.cpp
 msgid "&Resample..."
@@ -4526,7 +4526,7 @@ msgstr "Змікшовано та перетворено %d доріжок у о
 
 #: src/Menus.cpp src/Mix.cpp
 msgid "Mix and Render"
-msgstr "Мікшувати і перетворити"
+msgstr "Змікшувати і перетворити"
 
 #. i18n-hint: compose a name identifying an unnamed track by number
 #. i18n-hint: The %d is replaced by th enumber of the track.
@@ -5322,7 +5322,7 @@ msgstr ""
 "Якщо проект зберегти, у ньому не буде доріжок.\n"
 "\n"
 "Щоб зберегти всі попередньо відкрити доріжки:\n"
-"Скасуйте операцію, вибирайте Зміни > Скасувати, аж\n"
+"Скасуйте операцію, вибирайте Зміни > Вернути, аж\n"
 "доки всі доріжки не буде відкрито, а потім виберіть\n"
 "Файл > Зберегти проект."
 
@@ -5484,7 +5484,7 @@ msgstr ""
 "Якщо проект зберегти, у ньому не буде доріжок.\n"
 "\n"
 "Щоб зберегти всі попередньо відкрити доріжки:\n"
-"Скасуйте операцію, скористайтеся пунктом меню Зміни > Скасувати, аж\n"
+"Скасуйте операцію, скористайтеся пунктом меню Зміни > Вернути, аж\n"
 "доки всі доріжки не буде відкрито, а потім виберіть\n"
 "Файл > Зберегти проект.\n"
 "\n"
@@ -5851,7 +5851,7 @@ msgstr "Інструменти"
 
 #: src/Screenshot.cpp src/toolbars/ControlToolBar.cpp
 msgid "Transport"
-msgstr "Відтворення"
+msgstr "Керування"
 
 #: src/Screenshot.cpp src/toolbars/MixerToolBar.cpp
 msgid "Mixer"
@@ -5995,7 +5995,7 @@ msgstr "Вимкнено"
 
 #: src/Snap.cpp
 msgid "Nearest"
-msgstr "Найближче"
+msgstr "Найближчен"
 
 #: src/Snap.cpp
 msgid "Prior"
@@ -12520,7 +12520,7 @@ msgstr "Коли експортуються доріжки до аудіофай
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Mix down to Stereo or Mono"
-msgstr "Мікшувати с&терео у моно"
+msgstr "Змікшувати с&терео у моно"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Use custom mix"
@@ -13466,8 +13466,8 @@ msgstr ""
 "Натисніть «Завантажити кеш тем», щоб завантажити змінені зображення та "
 "кольори до Audacity.\n"
 "\n"
-"(У поточній версії передбачено підтримку панелі відтворення та кольорів "
-"звукової доріжки, незважаючи на те, що файли\n"
+"(У поточній версії підтримуються панель керування та кольори звукової "
+"доріжки, незважаючи на те, що файли\n"
 "зображень показують також інші піктограми.)"
 
 #: src/prefs/ThemePrefs.cpp
@@ -13975,7 +13975,7 @@ msgstr "Показати лінійку прокручування"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Selection"
-msgstr "Позначене"
+msgstr "Вибрана область"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
