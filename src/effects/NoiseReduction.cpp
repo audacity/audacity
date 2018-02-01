@@ -1437,9 +1437,9 @@ struct ControlInfo {
       text->SetValidator(vld2);
 
       wxSlider *const slider =
-         S.Id(id).AddSlider( {}, 0, sliderMax);
+         S.Id(id)
+            .AddSlider( {}, 0, sliderMax);
       slider->SetName(sliderName());
-      slider->SetRange(0, sliderMax);
       slider->SetSizeHints(150, -1);
    }
 
