@@ -974,7 +974,7 @@ void MixerBoard::UpdateTrackClusters()
       this->CreateMuteSoloImages();
 
    const int nClusterHeight = mScrolledWindow->GetClientSize().GetHeight() - kDoubleInset;
-   size_t nClusterCount = mMixerTrackClusters.GetCount();
+   size_t nClusterCount = mMixerTrackClusters.size();
    unsigned int nClusterIndex = 0;
    TrackListIterator iterTracks(mTracks);
    MixerTrackCluster* pMixerTrackCluster = NULL;
@@ -1010,7 +1010,7 @@ void MixerBoard::UpdateTrackClusters()
                                        spTrack,
                                        clusterPos, clusterSize);
             if (pMixerTrackCluster)
-               mMixerTrackClusters.Add(pMixerTrackCluster);
+               mMixerTrackClusters.push_back(pMixerTrackCluster);
          }
          nClusterIndex++;
       }
@@ -1038,7 +1038,7 @@ int MixerBoard::GetTrackClustersWidth()
 {
    return
       kInset +                                     // extra margin at left for first one
-      (mMixerTrackClusters.GetCount() *            // number of tracks times
+      (mMixerTrackClusters.size() *            // number of tracks times
          (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each
       kDoubleInset;                                // plus final right margin
 }
@@ -1066,7 +1066,7 @@ void MixerBoard::MoveTrackCluster(const PlayableTrack* pTrack,
    }
    else
    {  // Move it down (right).
-      if (((unsigned int)nIndex + 1) >= mMixerTrackClusters.GetCount())
+      if (((unsigned int)nIndex + 1) >= mMixerTrackClusters.size())
          return; // It's already last.
 
       pos = pMixerTrackCluster->GetPosition();
@@ -1093,13 +1093,13 @@ void MixerBoard::RemoveTrackCluster(const PlayableTrack* pTrack)
 void MixerBoard::RemoveTrackCluster(size_t nIndex)
 {
    auto pMixerTrackCluster = mMixerTrackClusters[nIndex];
-   mMixerTrackClusters.RemoveAt(nIndex);
+   mMixerTrackClusters.erase(mMixerTrackClusters.begin() + nIndex);
    pMixerTrackCluster->Destroy(); // DELETE is unsafe on wxWindow.
 
    // Close the gap, if any.
    wxPoint pos;
    int targetX;
-   for (unsigned int i = nIndex; i < mMixerTrackClusters.GetCount(); i++)
+   for (unsigned int i = nIndex; i < mMixerTrackClusters.size(); i++)
    {
       pos = mMixerTrackClusters[i]->GetPosition();
       targetX =
@@ -1180,13 +1180,13 @@ void MixerBoard::RefreshTrackCluster(const PlayableTrack* pTrack, bool bEraseBac
 
 void MixerBoard::RefreshTrackClusters(bool bEraseBackground /*= true*/)
 {
-   for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+   for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
       mMixerTrackClusters[i]->Refresh(bEraseBackground);
 }
 
 void MixerBoard::ResizeTrackClusters()
 {
-   for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.GetCount(); nClusterIndex++)
+   for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.size(); nClusterIndex++)
       mMixerTrackClusters[nClusterIndex]->HandleResize();
 }
 
@@ -1197,7 +1197,7 @@ void MixerBoard::ResetMeters(const bool bResetClipping)
    if (!this->IsShown())
       return;
 
-   for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+   for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
       mMixerTrackClusters[i]->ResetMeter(bResetClipping);
 }
 
@@ -1213,7 +1213,7 @@ void MixerBoard::UpdateMute(const PlayableTrack* pTrack /*= NULL*/) // NULL mean
 {
    if (pTrack == NULL)
    {
-      for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+      for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
          mMixerTrackClusters[i]->UpdateMute();
    }
    else
@@ -1229,7 +1229,7 @@ void MixerBoard::UpdateSolo(const PlayableTrack* pTrack /*= NULL*/) // NULL mean
 {
    if (pTrack == NULL)
    {
-      for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+      for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
          mMixerTrackClusters[i]->UpdateSolo();
    }
    else
@@ -1245,7 +1245,7 @@ void MixerBoard::UpdatePan(const PlayableTrack* pTrack)
 {
    if (pTrack == NULL)
    {
-      for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+      for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
          mMixerTrackClusters[i]->UpdatePan();
    }
    else
@@ -1296,7 +1296,7 @@ void MixerBoard::UpdateMeters(const double t1, const bool bLoopedPlay)
       return;
    }
 
-   for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+   for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
       mMixerTrackClusters[i]->UpdateMeter(mPrevT1, t1);
 
    mPrevT1 = t1;
@@ -1391,7 +1391,7 @@ int MixerBoard::FindMixerTrackCluster(const PlayableTrack* pTrack,
                                         MixerTrackCluster** hMixerTrackCluster) const
 {
    *hMixerTrackCluster = NULL;
-   for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+   for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
    {
       if (mMixerTrackClusters[i]->mTrack.get() == pTrack)
       {

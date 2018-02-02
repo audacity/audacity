@@ -700,7 +700,7 @@ void LV2Effect::SetSampleRate(double rate)
          mOptionsInterface->set(lilv_instance_get_handle(mMaster), options);
       }
 
-      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
       {
          mOptionsInterface->set(lilv_instance_get_handle(mSlaves[i]), options);
       }
@@ -722,7 +722,7 @@ size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
          mOptionsInterface->set(lilv_instance_get_handle(mMaster), options);
       }
 
-      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
       {
          mOptionsInterface->set(lilv_instance_get_handle(mSlaves[i]), options);
       }
@@ -814,13 +814,13 @@ bool LV2Effect::RealtimeInitialize()
 
 bool LV2Effect::RealtimeFinalize()
 {
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       lilv_instance_deactivate(mSlaves[i]);
 
       FreeInstance(mSlaves[i]);
    }
-   mSlaves.Clear();
+   mSlaves.clear();
 
    lilv_instance_deactivate(mMaster);
 
@@ -856,10 +856,10 @@ size_t LV2Effect::RealtimeProcess(int group,
                                        float **outbuf,
                                        size_t numSamples)
 {
-   wxASSERT(group >= 0 && group < (int) mSlaves.GetCount());
+   wxASSERT(group >= 0 && group < (int) mSlaves.size());
    wxASSERT(numSamples <= mBlockSize);
 
-   if (group < 0 || group >= (int) mSlaves.GetCount())
+   if (group < 0 || group >= (int) mSlaves.size())
    {
       return 0;
    }
@@ -900,7 +900,7 @@ bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampl
 
    lilv_instance_activate(slave);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }

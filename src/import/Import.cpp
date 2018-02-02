@@ -213,20 +213,20 @@ void Importer::ReadImportItems()
          {
             if (importPlugin->GetPluginStringID().Cmp(new_item->filters[i]) == 0)
             {
-               new_item->filter_objects.Add (importPlugin.get());
+               new_item->filter_objects.push_back(importPlugin.get());
                found = true;
                break;
             }
          }
          /* IDs that do not have corresponding filters, will be shown as-is */
          if (!found)
-           new_item->filter_objects.Add (NULL);
+           new_item->filter_objects.push_back(nullptr);
       }
       /* Find all filter objects that are not present in the filter list */
       for (const auto &importPlugin : mImportPluginList)
       {
          bool found = false;
-         for (size_t i = 0; i < new_item->filter_objects.Count(); i++)
+         for (size_t i = 0; i < new_item->filter_objects.size(); i++)
          {
             if (importPlugin.get() == new_item->filter_objects[i])
             {
@@ -241,7 +241,8 @@ void Importer::ReadImportItems()
             if (new_item->divider < 0)
                index = new_item->filters.Count();
             new_item->filters.Insert(importPlugin->GetPluginStringID(),index);
-            new_item->filter_objects.Insert (importPlugin.get(), index);
+            new_item->filter_objects.insert(
+               new_item->filter_objects.begin() + index, importPlugin.get());
             if (new_item->divider >= 0)
                new_item->divider++;
          }
@@ -320,7 +321,7 @@ movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
    for (const auto &importPlugin : mImportPluginList)
    {
       new_item->filters.Add (importPlugin->GetPluginStringID());
-      new_item->filter_objects.Add (importPlugin.get());
+      new_item->filter_objects.push_back(importPlugin.get());
    }
    new_item->divider = -1;
    return new_item;
@@ -435,7 +436,7 @@ bool Importer::Import(const wxString &fName,
       if (matches_ext && matches_mime)
       {
          wxLogDebug(wxT("Complete match!"));
-         for (size_t j = 0; j < item->filter_objects.Count() && (item->divider < 0 || (int) j < item->divider); j++)
+         for (size_t j = 0; j < item->filter_objects.size() && (item->divider < 0 || (int) j < item->divider); j++)
          {
             // the filter_object can be NULL if a suitable importer was not found
             // this happens when we recompile with --without-ffmpeg and there

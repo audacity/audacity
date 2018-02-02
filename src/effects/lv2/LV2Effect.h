@@ -96,7 +96,6 @@ public:
 };
 
 using LV2GroupMap = std::unordered_map<wxString, std::vector<int>>;
-WX_DEFINE_ARRAY_PTR(LilvInstance *, LV2SlaveArray);
 
 class LV2EffectSettingsDialog;
 
@@ -281,7 +280,7 @@ private:
 
    LilvInstance *mMaster;
    LilvInstance *mProcess;
-   LV2SlaveArray mSlaves;
+   std::vector<LilvInstance*> mSlaves;
 
    FloatBuffers mMasterIn, mMasterOut;
    size_t mNumSamples;

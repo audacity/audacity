@@ -63,7 +63,6 @@ class ODLock;
 class RecordingRecoveryHandler;
 class TrackList;
 class Tags;
-class EffectPlugs;
 
 class TrackPanel;
 class FreqWindow;
@@ -120,8 +119,6 @@ using AProjectArray = std::vector< AProjectHolder >;
 
 extern AProjectArray gAudacityProjects;
 
-
-WX_DEFINE_ARRAY(wxMenu *, MenuArray);
 
 enum class PlayMode : int {
    normalPlay,

@@ -40,7 +40,6 @@ class ToolBarGrabber;
 class ToolBarArrangement;
 
 using WindowHash = std::unordered_map<void*, int>;
-WX_DEFINE_ARRAY(ExpandingToolBar *, ExpandingToolBarArray);
 
 class ExpandingToolBarEvtHandler;
 
@@ -239,7 +238,7 @@ class ToolBarArea final : public wxPanelWrapper
    void AdjustLayout();
    void Fit(bool horizontal, bool vertical);
 
-   ExpandingToolBarArray    mChildArray;
+   std::vector<ExpandingToolBar*> mChildArray;
    std::vector<int>         mRowArray;
    wxSize                   mLastLayoutSize;
    bool                     mInOnSize;

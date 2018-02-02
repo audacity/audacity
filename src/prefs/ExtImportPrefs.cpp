@@ -298,13 +298,13 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
       PluginList->SetItemState (itemIndex, 0, wxLIST_STATE_SELECTED);
       PluginList->SetItemState (itemIndex2, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
    }
-   int fcount = item->filter_objects.Count();
+   int fcount = item->filter_objects.size();
    if (item->divider >= fcount)
    {
       item->divider = -1;
    }
    if (item->divider < -1)
-      item->divider = item->filter_objects.Count() - 1;
+      item->divider = item->filter_objects.size() - 1;
 
    return true;
 }

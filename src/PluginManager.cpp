@@ -377,11 +377,9 @@ enum
    STATE_COUNT
 };
 
-WX_DEFINE_ARRAY(PluginDescriptor *, DescriptorArray);
-
 struct ItemData
 {
-   DescriptorArray plugs;
+   std::vector<PluginDescriptor*> plugs;
    wxString name;
    wxString path;
    int state;
@@ -612,7 +610,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
       const  wxString &path = plug.GetPath();
       ItemData & item = mItems[path];  // will create NEW entry
-      item.plugs.Add(&plug);
+      item.plugs.push_back(&plug);
       item.path = path;
       item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
       item.valid = plug.IsValid();
@@ -981,13 +979,13 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
             wxString errMsgs;
 
             // Try to register the plugin via each provider until one succeeds
-            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
             {
                wxString errMsg;
                if (mm.RegisterPlugin(item.plugs[j]->GetProviderID(), path,
                                      errMsg))
                {
-                  for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+                  for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
                   {
                      pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
                   }
@@ -1008,14 +1006,14 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          }
          else if (item.state == STATE_New)
          {
-            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
             {
                item.plugs[j]->SetValid(false);
             }
          }
          else if (item.state != STATE_New)
          {
-            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
             {
                item.plugs[j]->SetEnabled(item.state == STATE_Enabled);
                item.plugs[j]->SetValid(item.valid);
