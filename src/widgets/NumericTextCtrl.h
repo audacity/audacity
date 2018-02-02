@@ -18,7 +18,6 @@
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/panel.h>
 #include <wx/stattext.h>
@@ -45,10 +44,8 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
 struct BuiltinFormatString;
 
 class NumericField;
-WX_DECLARE_OBJARRAY(NumericField, NumericFieldArray);
 
 class DigitInfo;
-WX_DECLARE_OBJARRAY(DigitInfo, DigitInfoArray);
 
 class NumericConverter /* not final */
 {
@@ -119,7 +116,7 @@ protected:
 
    wxString       mFormatString;
 
-   NumericFieldArray mFields;
+   std::vector<NumericField> mFields;
    wxString       mPrefix;
    wxString       mValueTemplate;
    wxString       mValueMask;
@@ -131,7 +128,7 @@ protected:
    bool           mNtscDrop;
 
    int            mFocusedDigit;
-   DigitInfoArray mDigits;
+   std::vector<DigitInfo> mDigits;
 
    const std::vector<BuiltinFormatString> &mBuiltinFormatStrings;
    int mNBuiltins;

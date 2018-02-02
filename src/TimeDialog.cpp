@@ -16,7 +16,6 @@
 #include "Audacity.h"
 
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/string.h>

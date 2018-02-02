@@ -53,9 +53,6 @@ Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 30
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(EffectWahwahStateArray);
-
 //
 // EffectWahwah
 //
@@ -157,7 +154,7 @@ bool EffectWahwah::RealtimeInitialize()
 {
    SetBlockSize(512);
 
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -168,14 +165,14 @@ bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
 
    InstanceInit(slave, sampleRate);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool EffectWahwah::RealtimeFinalize()
 {
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }

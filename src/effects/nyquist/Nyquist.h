@@ -46,6 +46,12 @@ enum NyqControlType
 class NyqControl
 {
 public:
+   NyqControl() = default;
+   NyqControl( const NyqControl& ) = default;
+   NyqControl &operator = ( const NyqControl & ) = default;
+   NyqControl( NyqControl && ) = default;
+   NyqControl &operator = ( NyqControl && ) = default;
+
    int type;
    wxString var;
    wxString name;
@@ -58,8 +64,6 @@ public:
    double high;
    int ticks;
 };
-
-WX_DECLARE_USER_EXPORTED_OBJARRAY(NyqControl,  NyqControlArray, AUDACITY_DLL_API);
 
 class AUDACITY_DLL_API NyquistEffect final : public Effect
 {
@@ -214,7 +218,7 @@ private:
    wxString          mDebugOutput;
 
    int               mVersion;
-   NyqControlArray   mControls;
+   std::vector<NyqControl>   mControls;
 
    unsigned          mCurNumChannels;
    WaveTrack         *mCurTrack[2];

@@ -17,7 +17,6 @@
 #include <vector>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
-#include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
@@ -62,6 +61,10 @@ public:
       mHasLo = false;
       mHasHi = false;
    }
+   LV2Port( const LV2Port & ) = default;
+   LV2Port& operator = ( const LV2Port & ) = default;
+   LV2Port( LV2Port && ) = default;
+   LV2Port& operator = ( LV2Port && ) = default;
 
    uint32_t mIndex;
    wxString mSymbol;
@@ -92,7 +95,6 @@ public:
    wxArrayString mScaleLabels;
 };
 
-WX_DECLARE_OBJARRAY(LV2Port, LV2PortArray);
 using LV2GroupMap = std::unordered_map<wxString, wxArrayInt>;
 WX_DEFINE_ARRAY_PTR(LilvInstance *, LV2SlaveArray);
 
@@ -265,7 +267,7 @@ private:
    double mSampleRate;
 
    wxLongToLongHashMap mControlsMap;
-   LV2PortArray mControls;
+   std::vector<LV2Port> mControls;
    wxArrayInt mAudioInputs;
    wxArrayInt mAudioOutputs;
 

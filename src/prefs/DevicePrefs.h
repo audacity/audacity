@@ -17,7 +17,6 @@
 #include <wx/choice.h>
 #include <wx/string.h>
 #include <wx/window.h>
-#include <wx/dynarray.h>
 
 #include "PrefsPanel.h"
 

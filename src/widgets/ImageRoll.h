@@ -12,10 +12,10 @@
 #ifndef __AUDACITY_IMAGE_ROLL__
 #define __AUDACITY_IMAGE_ROLL__
 
+#include <vector>
 #include <wx/dc.h>
 #include <wx/dcclient.h>
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/version.h>
 #include "wxPanelWrapper.h"
 
@@ -23,8 +23,8 @@
 #define wxRasterOperationMode int
 #endif
 
-WX_DECLARE_OBJARRAY(wxBitmap, BitmapArray);
-WX_DECLARE_OBJARRAY(wxImage, ImageArray);
+// wxImage copies cheaply with reference counting
+using ImageArray = std::vector<wxImage>;
 
 class ImageRoll
 {
@@ -60,7 +60,8 @@ class ImageRoll
    void Init(RollType type, const wxImage &src, wxColour magicColor);
 
    RollType     mType;
-   BitmapArray  mPieces;
+   // wxBitmap copies cheaply with reference counting
+   std::vector<wxBitmap>  mPieces;
    wxSize       mMinSize;
    wxSize       mMaxSize;
 };

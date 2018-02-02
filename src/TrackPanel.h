@@ -65,19 +65,6 @@ struct TrackPanelDrawingContext;
 
 enum class UndoPush : unsigned char;
 
-// JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
-// and only a worry when there are DLLs using the structures.
-// Array classes are private in TrackInfo, so we will not
-// access them directly from the DLL.
-// TrackClipArray in TrackPanel needs to be handled with care in the derived
-// class, but the C4251 warning is no worry in core Audacity.
-// wxWidgets doesn't cater to the exact details we need in
-// WX_DECLARE_EXPORTED_OBJARRAY to be able to use that for these two arrays.
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable: 4251 )
-#endif
-
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 

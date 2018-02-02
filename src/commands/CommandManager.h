@@ -20,7 +20,6 @@
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/string.h>
-#include <wx/dynarray.h>
 #include <wx/menu.h>
 #include <wx/hashmap.h>
 

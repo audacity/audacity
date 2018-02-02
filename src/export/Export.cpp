@@ -31,7 +31,6 @@
 #include "../Audacity.h"
 #include "Export.h"
 
-#include <wx/dynarray.h>
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/progdlg.h>
@@ -74,18 +73,13 @@
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
-#include <wx/arrimpl.cpp>
-
-WX_DEFINE_USER_EXPORTED_OBJARRAY(FormatInfoArray);
 
 ExportPlugin::ExportPlugin()
 {
-   mFormatInfos.Empty();
 }
 
 ExportPlugin::~ExportPlugin()
 {
-   mFormatInfos.Clear();
 }
 
 bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
@@ -103,13 +97,13 @@ bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
 int ExportPlugin::AddFormat()
 {
    FormatInfo nf;
-   mFormatInfos.Add(nf);
-   return mFormatInfos.Count();
+   mFormatInfos.push_back(nf);
+   return mFormatInfos.size();
 }
 
 int ExportPlugin::GetFormatCount()
 {
-   return mFormatInfos.Count();
+   return mFormatInfos.size();
 }
 
 /**

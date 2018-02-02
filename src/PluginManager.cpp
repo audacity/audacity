@@ -20,7 +20,6 @@
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dir.h>
-#include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/hashmap.h>
 #include <wx/filename.h>
@@ -45,8 +44,6 @@
 #include "widgets/ProgressDialog.h"
 
 #include "PluginManager.h"
-
-#include <wx/arrimpl.cpp>
 
 #include "Experimental.h"
 

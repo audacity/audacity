@@ -147,9 +147,6 @@ wxString defaultLabel(int index)
    return theArray.Get()[ index ];
 }
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(EffectDistortionStateArray);
- 
 //
 // EffectDistortion
 //
@@ -251,7 +248,7 @@ bool EffectDistortion::RealtimeInitialize()
 {
    SetBlockSize(512);
 
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -262,14 +259,14 @@ bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
 
    InstanceInit(slave, sampleRate);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool EffectDistortion::RealtimeFinalize()
 {
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }

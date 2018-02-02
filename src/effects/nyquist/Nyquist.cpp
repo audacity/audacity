@@ -100,9 +100,6 @@ static const wxChar *KEY_Command = wxT("Command");
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(NyqControlArray);
-
 BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
    EVT_BUTTON(ID_Load, NyquistEffect::OnLoad)
    EVT_BUTTON(ID_Save, NyquistEffect::OnSave)
@@ -267,7 +264,7 @@ bool NyquistEffect::IsInteractive()
       return true;
    }
 
-   return mControls.GetCount() != 0;
+   return mControls.size() != 0;
 }
 
 bool NyquistEffect::IsDefault()
@@ -292,7 +289,7 @@ bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
       return true;
    }
 
-   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
       NyqControl & ctrl = mControls[c];
       double d = ctrl.val;
@@ -340,7 +337,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
    }
 
    // First pass verifies values
-   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
       NyqControl & ctrl = mControls[c];
       bool good = false;
@@ -379,7 +376,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
    }
 
    // Second pass sets the variables
-   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
       NyqControl & ctrl = mControls[c];
 
@@ -485,7 +482,7 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 {
    // If we're a prompt and we have controls, then we've already processed
    // the audio, so skip further processing.
-   return (mIsPrompt && mControls.GetCount() > 0);
+   return (mIsPrompt && mControls.size() > 0);
 }
 
 bool NyquistEffect::Process()
@@ -811,7 +808,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
 
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
-   if (!res || !mIsPrompt || mControls.GetCount() == 0)
+   if (!res || !mIsPrompt || mControls.size() == 0)
    {
       return res;
    }
@@ -1091,7 +1088,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *tracenable* NIL)\n");
    }
 
-   for (unsigned int j = 0; j < mControls.GetCount(); j++) {
+   for (unsigned int j = 0; j < mControls.size(); j++) {
       if (mControls[j].type == NYQ_CTRL_REAL || mControls[j].type == NYQ_CTRL_FLOAT_TEXT) {
          // We use Internat::ToString() rather than "%f" here because we
          // always have to use the dot as decimal separator when giving
@@ -1775,7 +1772,7 @@ void NyquistEffect::Parse(const wxString &line)
 
       if( mPresetNames.Index( ctrl.var ) == wxNOT_FOUND )
       {
-         mControls.Add(ctrl);
+         mControls.push_back(ctrl);
       }
    }
 
@@ -1798,7 +1795,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
 
    mCmd = wxT("");
    mIsSal = false;
-   mControls.Clear();
+   mControls.clear();
    mCategories.Clear();
    mIsSpectral = false;
    mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
@@ -2047,7 +2044,7 @@ bool NyquistEffect::TransferDataToPromptWindow()
 
 bool NyquistEffect::TransferDataToEffectWindow()
 {
-   for (size_t i = 0, cnt = mControls.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mControls.size(); i < cnt; i++)
    {
       NyqControl & ctrl = mControls[i];
 
@@ -2087,12 +2084,12 @@ bool NyquistEffect::TransferDataFromPromptWindow()
 
 bool NyquistEffect::TransferDataFromEffectWindow()
 {
-   if (mControls.GetCount() == 0)
+   if (mControls.size() == 0)
    {
       return true;
    }
 
-   for (unsigned int i = 0; i < mControls.GetCount(); i++)
+   for (unsigned int i = 0; i < mControls.size(); i++)
    {
       NyqControl *ctrl = &mControls[i];
 
@@ -2200,7 +2197,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
    {
       S.StartMultiColumn(4);
       {
-         for (size_t i = 0; i < mControls.GetCount(); i++)
+         for (size_t i = 0; i < mControls.size(); i++)
          {
             NyqControl & ctrl = mControls[i];
 

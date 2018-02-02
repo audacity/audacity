@@ -46,7 +46,6 @@ and ImportLOF.cpp.
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
-#include <wx/arrimpl.cpp>
 #include <wx/listimpl.cpp>
 #include "../ShuttleGui.h"
 #include "../Project.h"

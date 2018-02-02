@@ -41,8 +41,6 @@ public:
    double b0, b1, b2, a0, a1, a2;
 };
 
-WX_DECLARE_OBJARRAY(EffectWahwahState, EffectWahwahStateArray);
-
 class EffectWahwah final : public Effect
 {
 public:
@@ -104,7 +102,7 @@ private:
 
 private:
    EffectWahwahState mMaster;
-   EffectWahwahStateArray mSlaves;
+   std::vector<EffectWahwahState> mSlaves;
 
    /* Parameters:
    mFreq - LFO frequency

@@ -39,8 +39,6 @@ public:
    double xn1Treble, xn2Treble, yn1Treble, yn2Treble;
 };
 
-WX_DECLARE_OBJARRAY(EffectBassTrebleState, EffectBassTrebleStateArray);
-
 class EffectBassTreble final : public Effect
 {
 public:
@@ -106,7 +104,7 @@ private:
 
 private:
    EffectBassTrebleState mMaster;
-   EffectBassTrebleStateArray mSlaves;
+   std::vector<EffectBassTrebleState> mSlaves;
 
    double      mBass;
    double      mTreble;

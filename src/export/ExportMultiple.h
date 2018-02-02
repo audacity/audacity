@@ -13,12 +13,12 @@
 
 #include <wx/dialog.h>
 #include <wx/string.h>
-#include <wx/dynarray.h>   // sadly we are using wx dynamic arrays
 #include <wx/listctrl.h>
 #include <wx/simplebook.h>
 
 #include "Export.h"
 #include "../Tags.h"       // we need to know about the Tags class for metadata
+#include "../wxFileNameWrapper.h"
 
 class wxButton;
 class wxCheckBox;
@@ -198,7 +198,7 @@ private:
    {
    public:
       Tags filetags; /**< The set of metadata to use for the export */
-      wxFileName destfile; /**< The file to export to */
+      wxFileNameWrapper destfile; /**< The file to export to */
       double t0;           /**< Start time for the export */
       double t1;           /**< End time for the export */
       unsigned channels;   /**< Number of channels for ExportMultipleByTrack */
@@ -208,7 +208,6 @@ private:
     * this isn't done anywhere else in Audacity, presumably for a reason?, so
     * I'm stuck with wxArrays, which are much harder, as well as non-standard.
     */
-   WX_DECLARE_OBJARRAY(ExportKit, ExportKitArray);
 
 
 #endif

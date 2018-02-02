@@ -14,7 +14,7 @@
 
 #include "Audacity.h"
 
-#include <wx/dynarray.h>
+#include <vector>
 #include <wx/textctrl.h>
 #include "widgets/wxPanelWrapper.h"
 
@@ -25,6 +25,12 @@ class LabelTrack;
 #define LYRICS_DEFAULT_HEIGHT 280
 
 struct Syllable {
+   Syllable() = default;
+   Syllable( const Syllable& ) = default;
+   Syllable& operator= ( const Syllable& ) = default;
+   Syllable( Syllable && ) = default;
+   Syllable& operator= ( Syllable&& ) = default;
+
    double t;
    wxString text;
    wxString textWithSpace;
@@ -34,8 +40,6 @@ struct Syllable {
    int leftX;
    int x; // centerX, used only for kBouncingBallLyrics
 };
-
-WX_DECLARE_OBJARRAY(Syllable, SyllableArray);
 
 class LyricsPanel;
 
@@ -136,7 +140,7 @@ private:
    double         mT;
 
    int            mCurrentSyllable;
-   SyllableArray  mSyllables;
+   std::vector<Syllable>  mSyllables;
    wxString       mText;
 
    int            mTextHeight; // only for drawn text

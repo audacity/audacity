@@ -15,7 +15,6 @@
 #include <math.h>
 
 #include <wx/dcmemory.h>
-#include <wx/arrimpl.cpp>
 #include <wx/icon.h>
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 

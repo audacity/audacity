@@ -18,7 +18,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 *//*******************************************************************/
 
-#include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
@@ -43,8 +42,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "ModuleManager.h"
 #include "widgets/MultiDialog.h"
-
-#include <wx/arrimpl.cpp>
 
 #include "Experimental.h"
 #include "widgets/ErrorDialog.h"

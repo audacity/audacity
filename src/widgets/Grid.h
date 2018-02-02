@@ -15,7 +15,6 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/choice.h>
-#include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/grid.h>
 #include <wx/string.h>

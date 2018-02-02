@@ -35,7 +35,6 @@
 #include <float.h>
 #include <math.h>
 
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/ffile.h>
@@ -1799,7 +1798,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
          Read(scratch.ptr() + prepreLen*sampleSize, mSampleFormat,
               preBlock, 0, preBufferLen, true);
 
-         newBlock.erase(newBlock.end() - 1);
+         newBlock.pop_back();
          Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                   newBlock, prepreBlock.start, scratch.ptr(), sum);
       }

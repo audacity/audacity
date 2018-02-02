@@ -19,7 +19,6 @@
 #include <wx/choice.h>
 #include <wx/dcbuffer.h>
 #include <wx/dialog.h>
-#include <wx/dynarray.h>
 
 #ifdef __WXMAC__
 #include <wx/evtloop.h>
@@ -294,10 +293,6 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-#include <wx/arrimpl.cpp>
-
-WX_DEFINE_OBJARRAY(LV2PortArray);
-
 LV2Effect::LV2Effect(const LilvPlugin *plug)
 {
    mPlug = plug;
@@ -398,7 +393,7 @@ wxString LV2Effect::GetFamily()
 
 bool LV2Effect::IsInteractive()
 {
-   return mControls.GetCount() != 0;
+   return mControls.size() != 0;
 }
 
 bool LV2Effect::IsDefault()
@@ -587,9 +582,9 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
                ctrl.mEnumeration = true;
             }
 
-            mControlsMap[ctrl.mIndex] = mControls.GetCount();
-            mGroupMap[ctrl.mGroup].Add(mControls.GetCount());
-            mControls.Add(ctrl);
+            mControlsMap[ctrl.mIndex] = mControls.size();
+            mGroupMap[ctrl.mGroup].push_back(mControls.size());
+            mControls.push_back(ctrl);
          }
          else if (lilv_port_is_a(mPlug, port, gOutput))
          {
@@ -600,8 +595,8 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
             }
             else
             {
-               mGroupMap[ctrl.mGroup].Add(mControls.GetCount());
-               mControls.Add(ctrl);
+               mGroupMap[ctrl.mGroup].Add(mControls.size());
+               mControls.push_back(ctrl);
             }
          }
          else
@@ -955,7 +950,7 @@ bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
 
 bool LV2Effect::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       if (mControls[p].mInput)
       {
@@ -972,7 +967,7 @@ bool LV2Effect::GetAutomationParameters(EffectAutomationParameters & parms)
 bool LV2Effect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    // First pass validates values
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       LV2Port & ctrl = mControls[p];
       
@@ -993,7 +988,7 @@ bool LV2Effect::SetAutomationParameters(EffectAutomationParameters & parms)
    }
 
    // Second pass actually sets the values
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       LV2Port & ctrl = mControls[p];
       
@@ -1338,7 +1333,7 @@ LilvInstance *LV2Effect::InitInstance(float sampleRate)
    SetBlockSize(mBlockSize);
    SetSampleRate(sampleRate);
 
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(handle,
                                  mControls[p].mIndex,
@@ -1529,7 +1524,7 @@ bool LV2Effect::BuildPlain()
    int numCols = 5;
 
    // Allocate memory for the user parameter controls
-   auto ctrlcnt = mControls.GetCount();
+   auto ctrlcnt = mControls.size();
    mSliders.reinit(ctrlcnt);
    mFields.reinit(ctrlcnt);
 
@@ -1833,7 +1828,7 @@ bool LV2Effect::TransferDataToWindow()
    {
       if (mSuilInstance)
       {
-         for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+         for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
          {
             if (mControls[p].mInput)
             {
@@ -2112,7 +2107,7 @@ void LV2Effect::SetPortValue(const char *port_symbol,
    LV2_URID Int = URID_Map(lilv_node_as_string(gInt));
    LV2_URID Long = URID_Map(lilv_node_as_string(gLong));
 
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       if (mControls[p].mSymbol.IsSameAs(symbol))
       {
