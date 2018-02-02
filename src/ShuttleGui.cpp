@@ -298,7 +298,7 @@ wxWindow * ShuttleGuiBase::AddWindow(wxWindow * pWindow, int Flags )
    return pWindow;
 }
 
-wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString &Selected)
+wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, bool Selected)
 {
    HandleOptionality( Prompt );
    wxString realPrompt = Prompt;
@@ -315,7 +315,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString
    miProp=0;
    mpWind = pCheckBox = safenew wxCheckBox(GetParent(), miId, realPrompt, wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
-   pCheckBox->SetValue(Selected == wxT("true"));
+   pCheckBox->SetValue(Selected);
    if (realPrompt.empty()) {
       // NVDA 2018.3 does not read controls which are buttons, check boxes or radio buttons which have
       // an accessibility name which is empty. Bug 1980.
@@ -332,7 +332,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString
 /// For a consistant two-column layout we want labels on the left and
 /// controls on the right.  CheckBoxes break that rule, so we fake it by
 /// placing a static text label and then a tick box with an empty label.
-wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const wxString &Prompt, const wxString &Selected)
+wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const wxString &Prompt, bool Selected)
 {
    HandleOptionality( Prompt );
    AddPrompt( Prompt );
@@ -343,7 +343,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const wxString &Prompt, const w
    miProp=0;
    mpWind = pCheckBox = safenew wxCheckBox(GetParent(), miId, wxT(""), wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
-   pCheckBox->SetValue(Selected==wxT("true"));
+   pCheckBox->SetValue(Selected);
    pCheckBox->SetName(wxStripMenuCodes(Prompt));
    UpdateSizers();
    return pCheckBox;
@@ -1111,7 +1111,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(const wxString &Prompt, WrappedType & W
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode == eIsCreating )
-      return AddCheckBox( Prompt, WrappedRef.ReadAsString());
+      return AddCheckBox( Prompt, WrappedRef.ReadAsString() == wxT("true"));
 
    UseUpId();
 
@@ -1153,7 +1153,8 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, WrappedT
    HandleOptionality( Prompt );
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode == eIsCreating )
-      return AddCheckBoxOnRight( Prompt, WrappedRef.ReadAsString());
+      return AddCheckBoxOnRight( Prompt, WrappedRef.ReadAsString() == wxT("true"));
+
    UseUpId();
 
    wxWindow * pWnd      = wxWindow::FindWindowById( miId, mpDlg);
@@ -1505,7 +1506,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, bool &Va
    // Only does anything different if it's creating.
    WrappedType WrappedRef( Var );
    if( mShuttleMode == eIsCreating )
-      return AddCheckBoxOnRight( Prompt, WrappedRef.ReadAsString() );
+      return AddCheckBoxOnRight( Prompt, WrappedRef.ReadAsString() == wxT("true") );
    return TieCheckBox( Prompt, WrappedRef );
 }
 

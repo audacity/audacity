@@ -361,7 +361,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
          S.StartVerticalLay(false);
          {
             mDCCheckBox = S.AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
-                                        mDC ? wxT("true") : wxT("false"));
+                                        mDC);
             mDCCheckBox->SetValidator(wxGenericValidator(&mDC));
 
             S.StartHorizontalLay(wxALIGN_LEFT, false);
@@ -378,7 +378,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 #endif
                // Now make the checkbox.
                mGainCheckBox = S.AddCheckBox(longerPrompt,
-                                             mGain ? wxT("true") : wxT("false"));
+                                             mGain);
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
                mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
@@ -397,11 +397,11 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
 #ifdef EXPERIMENTAL_R128_NORM
             mUseLoudnessCheckBox = S.AddCheckBox(_("Use loudness instead of peak amplitude"),
-                                                 mUseLoudness ? wxT("true") : wxT("false"));
+                                                 mUseLoudness);
             mUseLoudnessCheckBox->SetValidator(wxGenericValidator(&mGUIUseLoudness));
 #endif
             mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
-                                               mStereoInd ? wxT("true") : wxT("false"));
+                                               mStereoInd);
             mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
          }
          S.EndVerticalLay();

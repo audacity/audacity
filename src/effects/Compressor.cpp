@@ -290,9 +290,9 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
    {
       /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
       mGainCheckBox = S.AddCheckBox(_("Make-up gain for 0 dB after compressing"),
-                                    DEF_Normalize ? wxT("true") : wxT("false"));
+                                    DEF_Normalize);
       mPeakCheckBox = S.AddCheckBox(_("Compress based on Peaks"),
-                                    DEF_UsePeak ? wxT("true") : wxT("false"));
+                                    DEF_UsePeak);
    }
    S.EndHorizontalLay();
 }

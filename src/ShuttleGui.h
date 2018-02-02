@@ -108,8 +108,8 @@ public:
    wxListCtrl * AddListControl();
    wxListCtrl * AddListControlReportMode();
    wxGrid * AddGrid();
-   wxCheckBox * AddCheckBox( const wxString &Prompt, const wxString &Selected);
-   wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, const wxString &Selected);
+   wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
+   wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
    wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayStringEx & choices, long style = 0 );
    wxChoice   * AddChoice( const wxString &Prompt, const wxArrayStringEx &choices, int Selected = -1 );
    wxMenuBar  * AddMenuBar( );

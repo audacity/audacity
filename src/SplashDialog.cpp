@@ -134,7 +134,7 @@ void SplashDialog::Populate( ShuttleGui & S )
    S.SetStretchyCol( 1 );// Column 1 is stretchy...
    {
       S.SetBorder( 5 );
-      S.Id( DontShowID).AddCheckBox( _("Don't show this again at start up"), bShow ? wxT("false") : wxT("true") );
+      S.Id( DontShowID).AddCheckBox( _("Don't show this again at start up"), !bShow );
       wxButton *ok = safenew wxButton(S.GetParent(), wxID_OK);
       ok->SetDefault();
       S.SetBorder( 5 );

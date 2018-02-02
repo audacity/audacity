@@ -202,12 +202,12 @@ void BenchmarkDialog::MakeBenchmarkDialog()
 
       //
       item = S.AddCheckBox(_("Show detailed info about each block file"),
-                           wxT("false"));
+                           false);
       item->SetValidator(wxGenericValidator(&mBlockDetail));
 
       //
       item = S.AddCheckBox(_("Show detailed info about each editing operation"),
-                           wxT("false"));
+                           false);
       item->SetValidator(wxGenericValidator(&mEditDetail));
 
       //

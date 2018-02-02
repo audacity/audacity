@@ -376,7 +376,7 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
          S.SetSizeHints(-1, -1);
 
          mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(_("DC blocking filter"),
-                                       DEF_DCBlock ? wxT("true") : wxT("false"));
+                                       DEF_DCBlock);
       }
       S.EndMultiColumn();
       S.AddSpace(0, 10);

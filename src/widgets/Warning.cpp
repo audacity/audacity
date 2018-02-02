@@ -73,7 +73,7 @@ WarningDialog::WarningDialog(wxWindow *parent, const wxString &message,
    S.StartVerticalLay(false);
    {
       S.AddFixedText(message);
-      mCheckBox = S.AddCheckBox(footer, wxT("false"));
+      mCheckBox = S.AddCheckBox(footer, false);
    }
    S.EndVerticalLay();
 

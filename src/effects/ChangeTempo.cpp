@@ -300,7 +300,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          mUseSBSMSCheckBox = S.AddCheckBox(_("Use high quality stretching (slow)"),
-                                             mUseSBSMS? wxT("true") : wxT("false"));
+                                             mUseSBSMS);
          mUseSBSMSCheckBox->SetValidator(wxGenericValidator(&mUseSBSMS));
       }
       S.EndMultiColumn();

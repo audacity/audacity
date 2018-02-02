@@ -802,7 +802,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrL = S.GetSizer();
 
-               mLinFreq = S.Id(ID_Linear).AddCheckBox(_("Li&near Frequency Scale"), wxT("false"));
+               mLinFreq = S.Id(ID_Linear).AddCheckBox(_("Li&near Frequency Scale"), false);
                mLinFreq->SetName(_("Linear Frequency Scale"));
             }
             S.EndHorizontalLay();
@@ -881,7 +881,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.Id(ID_Clear).AddButton(_("Fla&tten"));
             S.Id(ID_Invert).AddButton(_("&Invert"));
 
-            mGridOnOff = S.Id(ID_Grid).AddCheckBox(_("Show g&rid lines"), wxT("false"));
+            mGridOnOff = S.Id(ID_Grid).AddCheckBox(_("Show g&rid lines"), false);
             mGridOnOff->SetName(_("Show grid lines"));
          }
          S.EndHorizontalLay();

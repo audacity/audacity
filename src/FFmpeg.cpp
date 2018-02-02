@@ -586,7 +586,7 @@ to download or locate the FFmpeg libraries."
 
       int dontShowDlg = 0;
       gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
-      mDontShow = S.AddCheckBox(_("Do not show this warning again"),dontShowDlg ? wxT("true") : wxT("false"));
+      mDontShow = S.AddCheckBox(_("Do not show this warning again"),dontShowDlg);
 
       S.AddStandardButtons(eOkButton);
    }

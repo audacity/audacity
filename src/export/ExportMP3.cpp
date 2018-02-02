@@ -414,7 +414,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   }
                   S.EndRadioButtonGroup();
 
-                  mMono = S.Id(ID_MONO).AddCheckBox(_("Force export to mono"), mono? wxT("true") : wxT("false"));
+                  mMono = S.Id(ID_MONO).AddCheckBox(_("Force export to mono"), mono);
                }
                S.EndTwoColumn();
             }

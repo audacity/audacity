@@ -272,7 +272,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
       {
          // Link checkbox
          mLinkCheckBox = S.Id(ID_Link).AddCheckBox(_("&Link Volume control to Tone controls"),
-                                          DEF_Link ? wxT("true") : wxT("false"));
+                                          DEF_Link);
       }
       S.EndMultiColumn();
    }

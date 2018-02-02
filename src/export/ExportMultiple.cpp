@@ -297,7 +297,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             // Row 3 (indented)
             S.AddVariableText(wxT("   "), false);
             mFirst = S.Id(FirstID)
-               .AddCheckBox(_("Include audio before first label"), wxT("false"));
+               .AddCheckBox(_("Include audio before first label"), false);
 
             // Row 4
             S.AddVariableText( {}, false);

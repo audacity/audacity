@@ -417,8 +417,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             mPeakText = S.AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
-            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), wxT("false"));
-            mGridOnOff->SetValue(mDrawGrid);
+            mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), mDrawGrid);
          }
          S.EndMultiColumn();
       }

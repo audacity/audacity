@@ -609,7 +609,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                {
                   S.Id(ID_Toggles + p);
                   mToggles[p] = S.AddCheckBox( {},
-                                              value > 0.5 ? wxT("true") : wxT("false"));
+                                              value > 0.5);
                   mToggles[p]->SetName(labelText);
                   if (!tip.empty())
                   {

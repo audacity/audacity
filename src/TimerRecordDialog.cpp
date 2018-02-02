@@ -891,7 +891,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          {
             // If checked, the project will be saved when the recording is completed
             m_pTimerAutoSaveCheckBoxCtrl = S.Id(ID_AUTOSAVE_CHECKBOX).AddCheckBox(_("Enable &Automatic Save?"),
-                                                                                    (bAutoSave ? "true" : "false"));
+                                                                                    bAutoSave);
             S.StartMultiColumn(3, wxEXPAND);
             {
                wxString sInitialValue;
@@ -914,7 +914,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
          S.StartStatic(_("Automatic Export"), true);
          {
-            m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), (bAutoExport ? "true" : "false"));
+            m_pTimerAutoExportCheckBoxCtrl = S.Id(ID_AUTOEXPORT_CHECKBOX).AddCheckBox(_("Enable Automatic &Export?"), bAutoExport);
             S.StartMultiColumn(3, wxEXPAND);
             {
                S.AddPrompt(_("Export Project As:"));

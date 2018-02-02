@@ -369,7 +369,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          {
             mDelayCheckBox = S.Id(IdDelayCheckBox).AddCheckBox
                (_("Wait 5 seconds and capture frontmost window/dialog"),
-                _("false"));
+                false);
          }
          S.EndHorizontalLay();
       }
