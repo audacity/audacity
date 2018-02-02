@@ -96,14 +96,14 @@ bool GetInfoCommand::DefineParams( ShuttleParams & S ){
 
 void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto types = LocalizedStrings( kTypes, nTypes );
-   auto formats = LocalizedStrings( kFormats, nFormats );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( _("Type:"), mInfoType, &types);
-      S.TieChoice( _("Format:"), mFormat, &formats);
+      S.TieChoice( _("Type:"),
+         mInfoType, LocalizedStrings( kTypes, nTypes ));
+      S.TieChoice( _("Format:"),
+         mFormat, LocalizedStrings( kFormats, nFormats ));
    }
    S.EndMultiColumn();
 }

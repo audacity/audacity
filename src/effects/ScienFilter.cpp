@@ -463,17 +463,17 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
          mFilterTypeCtl = S.Id(ID_Type)
-            .AddChoice(_("&Filter Type:"), &typeChoices);
+            .AddChoice(_("&Filter Type:"), typeChoices);
          mFilterTypeCtl->SetValidator(wxGenericValidator(&mFilterType));
          S.SetSizeHints(-1, -1);
 
-         wxArrayString orders;
+         wxArrayStringEx orders;
          for (int i = 1; i <= 10; i++)
          {
             orders.push_back(wxString::Format(wxT("%d"), i));
          }
          /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
-         mFilterOrderCtl = S.Id(ID_Order).AddChoice(_("O&rder:"), &orders);
+         mFilterOrderCtl = S.Id(ID_Order).AddChoice(_("O&rder:"), orders);
          mFilterOrderCtl->SetValidator(wxGenericValidator(&mOrderIndex));
          S.SetSizeHints(-1, -1);
          S.AddSpace(1, 1);
@@ -491,7 +491,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          auto subTypeChoices = LocalizedStrings(kSubTypeStrings, nSubTypes);
          mFilterSubTypeCtl = S.Id(ID_SubType)
-            .AddChoice(_("&Subtype:"), &subTypeChoices);
+            .AddChoice(_("&Subtype:"), subTypeChoices);
          mFilterSubTypeCtl->SetValidator(wxGenericValidator(&mFilterSubtype));
          S.SetSizeHints(-1, -1);
       

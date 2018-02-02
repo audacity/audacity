@@ -112,7 +112,6 @@ void MidiIOPrefs::GetNamesAndLabels() {
 }
 
 void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
-   wxArrayString empty;
 
    S.SetBorder(2);
    S.StartScroller();
@@ -141,7 +140,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(PlayID);
          mPlay = S.AddChoice(_("&Device:"),
-                             &empty);
+                             {} );
          int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"),
                                     DEFAULT_SYNTH_LATENCY);
          mLatency = S.TieNumericTextBox(_("MIDI Synth L&atency (ms):"),
@@ -158,13 +157,13 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(RecordID);
          mRecord = S.AddChoice(_("De&vice:"),
-                               &empty);
+                               {} );
 
          S.Id(ChannelsID);
          /*
          mChannels = S.AddChoice(_("&Channels:"),
                                  wxEmptyString,
-                                 &empty);
+                                 {} );
          */
       }
       S.EndMultiColumn();
@@ -194,7 +193,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
    mRecord->clear();
 #endif
 
-   wxArrayString playnames;
+   wxArrayStringEx playnames;
    wxArrayString recordnames;
 
    for (int i = 0; i < nDevices; i++) {

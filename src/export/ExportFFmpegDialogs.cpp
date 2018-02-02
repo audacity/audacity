@@ -1460,7 +1460,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(7, wxEXPAND);
       {
          S.SetStretchyCol(1);
-         mPresetCombo = S.Id(FEPresetID).AddCombo(_("Preset:"), gPrefs->Read(wxT("/FileFormats/FFmpegPreset"),wxEmptyString), &mPresetNames);
+         mPresetCombo = S.Id(FEPresetID).AddCombo(_("Preset:"), gPrefs->Read(wxT("/FileFormats/FFmpegPreset"),wxEmptyString), mPresetNames);
          mLoadPreset = S.Id(FELoadPresetID).AddButton(_("Load Preset"));
          mSavePreset = S.Id(FESavePresetID).AddButton(_("Save Preset"));
          mDeletePreset = S.Id(FEDeletePresetID).AddButton(_("Delete Preset"));
@@ -1486,9 +1486,9 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyRow(1);
             S.Id(FEAllFormatsID).AddButton(_("Show All Formats"));
             S.Id(FEAllCodecsID).AddButton(_("Show All Codecs"));
-            mFormatList = S.Id(FEFormatID).AddListBox(&mFormatNames);
+            mFormatList = S.Id(FEFormatID).AddListBox(mFormatNames);
             mFormatList->DeselectAll();
-            mCodecList = S.Id(FECodecID).AddListBox(&mCodecNames);
+            mCodecList = S.Id(FECodecID).AddListBox(mCodecNames);
             mCodecList->DeselectAll();
          }
          S.EndMultiColumn();

@@ -1754,41 +1754,41 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
                windowTypeChoices.push_back(windowTypesInfo[ii].name);
             S.TieChoice(_("&Window types") + wxString(wxT(":")),
                mTempSettings.mWindowTypes,
-               &windowTypeChoices);
+               windowTypeChoices);
          }
 
          {
-            wxArrayStringEx windowSizeChoices{
-               _("8") ,
-               _("16") ,
-               _("32") ,
-               _("64") ,
-               _("128") ,
-               _("256") ,
-               _("512") ,
-               _("1024") ,
-               _("2048 (default)") ,
-               _("4096") ,
-               _("8192") ,
-               _("16384") ,
-            };
             S.TieChoice(_("Window si&ze") + wxString(wxT(":")),
                mTempSettings.mWindowSizeChoice,
-               &windowSizeChoices);
+               {
+                  _("8") ,
+                  _("16") ,
+                  _("32") ,
+                  _("64") ,
+                  _("128") ,
+                  _("256") ,
+                  _("512") ,
+                  _("1024") ,
+                  _("2048 (default)") ,
+                  _("4096") ,
+                  _("8192") ,
+                  _("16384") ,
+               }
+            );
          }
 
          {
-            wxArrayStringEx stepsPerWindowChoices{
-               _("2") ,
-               _("4 (default)") ,
-               _("8") ,
-               _("16") ,
-               _("32") ,
-               _("64") ,
-            };
             S.TieChoice(_("S&teps per window") + wxString(wxT(":")),
                mTempSettings.mStepsPerWindowChoice,
-               &stepsPerWindowChoices);
+               {
+                  _("2") ,
+                  _("4 (default)") ,
+                  _("8") ,
+                  _("16") ,
+                  _("32") ,
+                  _("64") ,
+               }
+            );
          }
 
          S.Id(ID_CHOICE_METHOD);
@@ -1802,7 +1802,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
                methodChoices.push_back(discriminationMethodInfo[ii].name);
             S.TieChoice(_("Discrimination &method") + wxString(wxT(":")),
                mTempSettings.mMethod,
-               &methodChoices);
+               methodChoices);
          }
       }
       S.EndMultiColumn();

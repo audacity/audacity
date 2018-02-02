@@ -83,30 +83,11 @@ enum {
 
 void SpectrumPrefs::Populate(size_t windowSize)
 {
-   mSizeChoices.push_back(_("8 - most wideband"));
-   mSizeChoices.push_back(wxT("16"));
-   mSizeChoices.push_back(wxT("32"));
-   mSizeChoices.push_back(wxT("64"));
-   mSizeChoices.push_back(wxT("128"));
-   mSizeChoices.push_back(wxT("256"));
-   mSizeChoices.push_back(wxT("512"));
-   mSizeChoices.push_back(_("1024 - default"));
-   mSizeChoices.push_back(wxT("2048"));
-   mSizeChoices.push_back(wxT("4096"));
-   mSizeChoices.push_back(wxT("8192"));
-   mSizeChoices.push_back(wxT("16384"));
-   mSizeChoices.push_back(_("32768 - most narrowband"));
-   wxASSERT(mSizeChoices.size() == SpectrogramSettings::NumWindowSizes);
-
    PopulatePaddingChoices(windowSize);
 
    for (int i = 0; i < NumWindowFuncs(); i++) {
       mTypeChoices.push_back(WindowFuncName(i));
    }
-
-   mScaleChoices = SpectrogramSettings::GetScaleNames();
-
-   mAlgorithmChoices = SpectrogramSettings::GetAlgorithmNames();
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -183,7 +164,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol( 1 );
             S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
                mTempSettings.scaleType,
-               &mScaleChoices);
+               SpectrogramSettings::GetScaleNames());
             mMinFreq =
                S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&n Frequency (Hz):"),
                mTempSettings.minFreq,
@@ -233,21 +214,36 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          mAlgorithmChoice =
             S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm") + wxString(wxT(":")),
             mTempSettings.algorithm,
-            &mAlgorithmChoices);
+            SpectrogramSettings::GetAlgorithmNames());
 
          S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
             mTempSettings.windowSize,
-            &mSizeChoices);
+            {
+               _("8 - most wideband"),
+               _("16"),
+               _("32"),
+               _("64"),
+               _("128"),
+               _("256"),
+               _("512"),
+               _("1024 - default"),
+               _("2048"),
+               _("4096"),
+               _("8192"),
+               _("16384"),
+               _("32768 - most narrowband"),
+            }
+         );
 
          S.Id(ID_WINDOW_TYPE).TieChoice(_("Window &type:"),
             mTempSettings.windowType,
-            &mTypeChoices);
+            mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
             S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
             mTempSettings.zeroPaddingFactor,
-            &mZeroPaddingChoices);
+            mZeroPaddingChoices);
 #endif
       }
       S.EndMultiColumn();

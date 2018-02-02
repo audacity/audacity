@@ -47,7 +47,7 @@ private:
 
    int mNumLangs;
    wxArrayString mLangCodes;
-   wxArrayString mLangNames;
+   wxArrayStringEx mLangNames;
 
    DECLARE_EVENT_TABLE()
 };
@@ -88,7 +88,7 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
       {
          S.SetBorder(15);
          mChoice = S.AddChoice(_("Choose Language for Audacity to use:"),
-                              &mLangNames,
+                              mLangNames,
                               lang);
       }
       S.EndVerticalLay();

@@ -139,7 +139,7 @@ SpectrogramSettings& SpectrogramSettings::defaults()
 }
 
 //static
-const wxArrayString &SpectrogramSettings::GetScaleNames()
+const wxArrayStringEx &SpectrogramSettings::GetScaleNames()
 {
    class ScaleNamesArray final : public TranslatableStringArray
    {
@@ -166,7 +166,7 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
 }
 
 //static
-const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
+const wxArrayStringEx &SpectrogramSettings::GetAlgorithmNames()
 {
    class AlgorithmNamesArray final : public TranslatableStringArray
    {

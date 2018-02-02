@@ -17,6 +17,7 @@
 #include "PrefsPanel.h"
 
 class ShuttleGui;
+class wxArrayStringEx;
 
 class TracksBehaviorsPrefs final : public PrefsPanel
 {

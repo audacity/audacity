@@ -20,6 +20,8 @@ class WaveTrack;
 class wxCheckBox;
 class wxChoice;
 
+class wxArrayStringEx;
+
 class WaveformPrefs final : public PrefsPanel
 {
 public:
@@ -47,7 +49,6 @@ private:
    wxChoice *mScaleChoice;
    wxChoice *mRangeChoice;
 
-   wxArrayString mScaleChoices;
    wxArrayStringEx mRangeCodes;
    wxArrayStringEx mRangeChoices;
 

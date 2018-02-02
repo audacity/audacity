@@ -25,6 +25,8 @@ class ShuttleGui;
 enum sampleFormat : unsigned;
 enum DitherType : unsigned;
 
+class wxArrayStringEx;
+
 class QualityPrefs final : public PrefsPanel
 {
  public:
@@ -45,7 +47,7 @@ class QualityPrefs final : public PrefsPanel
    void GetNamesAndLabels();
    void OnSampleRateChoice(wxCommandEvent & e);
 
-   wxArrayString mSampleRateNames;
+   wxArrayStringEx mSampleRateNames;
    std::vector<int> mSampleRateLabels;
 
    wxChoice *mSampleRates;

@@ -108,8 +108,6 @@ void DevicePrefs::GetNamesAndLabels()
 
 void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString empty;
-
    S.SetBorder(2);
    S.StartScroller();
 
@@ -137,7 +135,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.Id(PlayID);
          mPlay = S.AddChoice(_("&Device:"),
-                             &empty);
+                             {} );
       }
       S.EndMultiColumn();
    }
@@ -149,11 +147,11 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.Id(RecordID);
          mRecord = S.AddChoice(_("De&vice:"),
-                               &empty);
+                               {} );
 
          S.Id(ChannelsID);
          mChannels = S.AddChoice(_("Cha&nnels:"),
-                                 &empty);
+                                 {} );
       }
       S.EndMultiColumn();
    }
@@ -336,7 +334,7 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
       cnt = 256;
    }
 
-   wxArrayString channelnames;
+   wxArrayStringEx channelnames;
 
    // Channel counts, mono, stereo etc...
    for (int i = 0; i < cnt; i++) {

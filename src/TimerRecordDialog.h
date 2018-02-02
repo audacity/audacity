@@ -30,6 +30,8 @@ class NumericTextCtrl;
 class ShuttleGui;
 class TimerRecordPathCtrl;
 
+class wxArrayStringEx;
+
 enum TimerRecordCompletedActions {
    TR_ACTION_NOTHING = 0x00000000,
    TR_ACTION_SAVED = 0x00000001,
@@ -145,7 +147,7 @@ private:
    bool m_bProjectAlreadySaved;
 
    // Variables for After Timer Recording Option
-   wxArrayString m_sTimerAfterCompleteOptionsArray;
+   wxArrayStringEx m_sTimerAfterCompleteOptionsArray;
 
    DECLARE_EVENT_TABLE()
 };

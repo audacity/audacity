@@ -224,7 +224,7 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxCENTER);
    {
       auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
-      S.AddChoice(_("Noise type:"), &typeChoices)
+      S.AddChoice(_("Noise type:"), typeChoices)
          ->SetValidator(wxGenericValidator(&mType));
 
       FloatingPointValidator<double> vldAmp(6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES);

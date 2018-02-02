@@ -235,7 +235,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       wxT("65536") ,
    };
 
-   wxArrayString funcChoices;
+   wxArrayStringEx funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
    {
       /* i18n-hint: This refers to a "window function",
@@ -444,13 +444,13 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       S.AddSpace(5);
 
       mAlgChoice = S.Id(FreqAlgChoiceID)
-         .AddChoice(_("&Algorithm:"), &algChoices, mAlg);
+         .AddChoice(_("&Algorithm:"), algChoices, mAlg);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
 
       mSizeChoice = S.Id(FreqSizeChoiceID)
-         .AddChoice(_("&Size:"), &sizeChoices, mSize);
+         .AddChoice(_("&Size:"), sizeChoices, mSize);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
       S.AddSpace(5);
@@ -467,14 +467,14 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       S.AddSpace(5);
 
       mFuncChoice = S.Id(FreqFuncChoiceID)
-         .AddChoice(_("&Function:"), &funcChoices, mFunc);
+         .AddChoice(_("&Function:"), funcChoices, mFunc);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
       mAxisChoice = S.Id(FreqAxisChoiceID)
-         .AddChoice(_("&Axis:"), &axisChoices, mAxis);
+         .AddChoice(_("&Axis:"), axisChoices, mAxis);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
       mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 

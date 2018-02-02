@@ -93,7 +93,7 @@ public:
    bool TransferDataFromWindow() override;
 
 private:
-   wxArrayString mBitRateNames;
+   wxArrayStringEx mBitRateNames;
    std::vector<int> mBitRateLabels;
 };
 

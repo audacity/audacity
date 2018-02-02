@@ -26,6 +26,8 @@ class ShuttleGui;
 
 #include "PrefsPanel.h"
 
+class wxArrayStringEx;
+
 class MidiIOPrefs final : public PrefsPanel
 {
  public:
@@ -43,8 +45,8 @@ class MidiIOPrefs final : public PrefsPanel
    void OnHost(wxCommandEvent & e);
 //   void OnDevice(wxCommandEvent & e);
 
-   wxArrayString mHostNames;
-   wxArrayString mHostLabels;
+   wxArrayStringEx mHostNames;
+   wxArrayStringEx mHostLabels;
 
    wxString mPlayDevice;
 #ifdef EXPERIMENTAL_MIDI_IN

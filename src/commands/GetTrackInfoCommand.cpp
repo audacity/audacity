@@ -48,12 +48,11 @@ bool GetTrackInfoCommand::DefineParams( ShuttleParams & S ){
 
 void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto types = LocalizedStrings( kTypes, nTypes );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( _("Types:"), mInfoType, &types);
+      S.TieChoice( _("Types:"), mInfoType, LocalizedStrings( kTypes, nTypes ));
    }
    S.EndMultiColumn();
 }

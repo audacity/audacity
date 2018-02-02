@@ -147,7 +147,7 @@ void WaveformSettings::NextHigherDBRange()
 }
 
 //static
-const wxArrayString &WaveformSettings::GetScaleNames()
+const wxArrayStringEx &WaveformSettings::GetScaleNames()
 {
    class ScaleNamesArray final : public TranslatableStringArray
    {

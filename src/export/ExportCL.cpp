@@ -99,7 +99,7 @@ ExportCLOptions::~ExportCLOptions()
 ///
 void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString cmds;
+   wxArrayStringEx cmds;
    wxString cmd;
 
    for (size_t i = 0; i < mHistory.GetCount(); i++) {
@@ -117,7 +117,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
             S.SetStretchyCol(1);
             mCmd = S.AddCombo(_("Command:"),
                               cmd,
-                              &cmds);
+                              cmds);
             S.Id(ID_BROWSE).AddButton(_("Browse..."),
                                       wxALIGN_CENTER_VERTICAL);
             S.AddFixedText( {} );

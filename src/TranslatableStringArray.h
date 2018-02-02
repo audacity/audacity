@@ -14,7 +14,7 @@ Paul Licameli
 #include <wx/app.h>
 #include <wx/event.h>
 
-class wxArrayString;
+class wxArrayStringEx;
 
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_LANGUAGE_CHANGE, wxCommandEvent);
 

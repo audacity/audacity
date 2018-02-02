@@ -810,7 +810,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    }
 
 #if USE_PORTMIXER
-   auto inputSources = combo->GetStrings();
+   wxArrayStringEx inputSources = combo->GetStrings();
 
    wxDialogWrapper dlg(nullptr, wxID_ANY, title);
    dlg.SetName(dlg.GetTitle());
@@ -822,7 +822,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
      S.StartHorizontalLay(wxCENTER, false);
       {
          c = S.AddChoice(combo->GetName(),
-                         &inputSources,
+                         inputSources,
                          combo->GetSelection());
       }
       S.EndHorizontalLay();

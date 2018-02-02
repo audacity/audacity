@@ -60,8 +60,6 @@ bool DragCommand::DefineParams( ShuttleParams & S ){
 
 void DragCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto coords = LocalizedStrings( kCoordTypeStrings, nCoordTypes );
-
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
@@ -73,7 +71,8 @@ void DragCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasFromY      ).TieNumericTextBox(  _("From Y:"),      mFromY );
       S.Optional( bHasToX        ).TieNumericTextBox(  _("To X:"),        mToX );
       S.Optional( bHasToY        ).TieNumericTextBox(  _("To Y:"),        mToY );
-      S.Optional( bHasRelativeTo ).TieChoice(          _("Relative To:"), mRelativeTo, &coords );
+      S.Optional( bHasRelativeTo ).TieChoice(          _("Relative To:"), mRelativeTo,
+         LocalizedStrings( kCoordTypeStrings, nCoordTypes ) );
    }
    S.EndMultiColumn();
 }

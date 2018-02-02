@@ -1019,7 +1019,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          }
          S.EndHorizontalLay();
 
-         wxArrayString choices;
+         wxArrayStringEx choices;
          int selected = -1;
          for (int i = 0; sampRates[i] > 0; i++)
          {
@@ -1041,7 +1041,7 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             choice = S.AddChoice(_("Sample Rates"),
-                                 &choices,
+                                 choices,
                                  selected);
          }
          S.EndHorizontalLay();

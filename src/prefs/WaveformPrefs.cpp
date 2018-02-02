@@ -59,8 +59,6 @@ enum {
 
 void WaveformPrefs::Populate()
 {
-   mScaleChoices = WaveformSettings::GetScaleNames();
-
    // Reuse the same choices and codes as for Interface prefs
    GUIPrefs::GetRangeChoices(&mRangeChoices, &mRangeCodes);
 
@@ -93,12 +91,12 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
             mScaleChoice =
                S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
                   mTempSettings.scaleType,
-                  &mScaleChoices);
+                  WaveformSettings::GetScaleNames());
 
             mRangeChoice =
                S.Id(ID_RANGE).TieChoice(_("Waveform dB &range") + wxString(wxT(":")),
                mTempSettings.dBRange,
-               &mRangeChoices);
+               mRangeChoices);
          }
          S.EndTwoColumn();
       }

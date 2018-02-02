@@ -338,8 +338,6 @@ private:
    bool mUseLatency;
    wxString mUIType;
 
-   wxArrayStringEx mUITypes;
-
    DECLARE_EVENT_TABLE()
 };
 
@@ -351,10 +349,6 @@ AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent, Ef
 :  wxDialogWrapper(parent, wxID_ANY, wxString(_("Audio Unit Effect Options")))
 {
    mHost = host;
-
-   mUITypes.push_back(_("Full"));
-   mUITypes.push_back(_("Generic"));
-   mUITypes.push_back(_("Basic"));
 
    mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
    mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
@@ -407,7 +401,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             {
                S.TieChoice(_("Select &interface"),
                            mUIType,
-                           &mUITypes);
+                           { _("Full"), _("Generic"), _("Basic") });
             }
             S.EndHorizontalLay();
          }

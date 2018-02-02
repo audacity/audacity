@@ -494,7 +494,7 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
          {
             cb = S.AddCombo(_("New sample rate (Hz):"),
                rate,
-               &rates);
+               rates);
 #if defined(__WXMAC__)
             // As of wxMac-2.8.12, setting manually is required
             // to handle rates not in the list.  See: Bug #427
