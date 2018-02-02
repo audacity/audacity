@@ -68,7 +68,7 @@ XMLWriter::XMLWriter()
 {
    mDepth = 0;
    mInTag = false;
-   mHasKids.Add(false);
+   mHasKids.push_back(false);
 }
 
 XMLWriter::~XMLWriter()
@@ -93,7 +93,7 @@ void XMLWriter::StartTag(const wxString &name)
 
    mTagstack.Insert(name, 0);
    mHasKids[0] = true;
-   mHasKids.Insert(false, 0);
+   mHasKids.insert(mHasKids.begin(), false);
    mDepth++;
    mInTag = true;
 }
@@ -120,7 +120,7 @@ void XMLWriter::EndTag(const wxString &name)
             Write(wxT(">\n"));
          }
          mTagstack.RemoveAt(0);
-         mHasKids.RemoveAt(0);
+         mHasKids.erase(mHasKids.begin());
       }
    }
 

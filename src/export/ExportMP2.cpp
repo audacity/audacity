@@ -94,7 +94,7 @@ public:
 
 private:
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int> mBitRateLabels;
 };
 
 ///
@@ -105,7 +105,7 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
    for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)
    {
       mBitRateNames.Add(wxString::Format(_("%i kbps"),iBitrates[i]));
-      mBitRateLabels.Add(iBitrates[i]);
+      mBitRateLabels.push_back(iBitrates[i]);
    }
 
    ShuttleGui S(this, eIsCreatingFromPrefs);

@@ -487,7 +487,7 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
 #endif
 
    mBitmapNames.Add( Name );
-   mBitmapFlags.Add( mFlow.mFlags );
+   mBitmapFlags.push_back( mFlow.mFlags );
    mFlow.mFlags &= ~resFlagSkip;
    iIndex = mBitmaps.size() - 1;
 }

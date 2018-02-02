@@ -10,6 +10,7 @@
 #ifndef __AUDACITY_XML_XML_FILE_WRITER__
 #define __AUDACITY_XML_XML_FILE_WRITER__
 
+#include <vector>
 #include <wx/arrstr.h>
 #include <wx/ffile.h>
 
@@ -54,7 +55,7 @@ class AUDACITY_DLL_API XMLWriter /* not final */ {
    bool mInTag;
    int mDepth;
    wxArrayString mTagstack;
-   wxArrayInt mHasKids;
+   std::vector<int> mHasKids;
 
 };
 

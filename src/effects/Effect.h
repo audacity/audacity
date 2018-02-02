@@ -530,7 +530,7 @@ private:
    size_t mBlockSize;
    unsigned mNumChannels;
 
-   wxArrayInt mGroupProcessor;
+   std::vector<int> mGroupProcessor;
    int mCurrentProcessor;
 
    wxCriticalSection mRealtimeSuspendLock;

@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_QUALITY_PREFS__
 #define __AUDACITY_QUALITY_PREFS__
 
+#include <vector>
 #include <wx/defs.h>
 
 #include <wx/arrstr.h>
@@ -38,13 +39,13 @@ class QualityPrefs final : public PrefsPanel
    void OnSampleRateChoice(wxCommandEvent & e);
 
    wxArrayString mDitherNames;
-   wxArrayInt    mDitherLabels;
+   std::vector<int> mDitherLabels;
    wxArrayString mSampleRateNames;
-   wxArrayInt    mSampleRateLabels;
+   std::vector<int> mSampleRateLabels;
    wxArrayString mSampleFormatNames;
-   wxArrayInt    mSampleFormatLabels;
+   std::vector<int> mSampleFormatLabels;
    wxArrayString mConverterNames;
-   wxArrayInt    mConverterLabels;
+   std::vector<int> mConverterLabels;
 
    wxChoice *mSampleRates;
    wxTextCtrl *mOtherSampleRate;

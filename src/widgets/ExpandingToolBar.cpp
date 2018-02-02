@@ -97,7 +97,7 @@ class ToolBarArrangement
 public:
    ExpandingToolBarArray    childArray;
    std::vector<wxRect>      rectArray;
-   wxArrayInt               rowArray;
+   std::vector<int>         rowArray;
 };
 
 //
@@ -1154,7 +1154,7 @@ void ToolBarArea::CollapseAll(bool now)
 void ToolBarArea::AddChild(ExpandingToolBar *child)
 {
    mChildArray.Add(child);
-   mRowArray.Add(-1); // unknown row
+   mRowArray.push_back(-1); // unknown row
    LayoutOne(mChildArray.GetCount()-1);
    Fit(false, true);
 }
@@ -1168,7 +1168,7 @@ void ToolBarArea::RemoveChild(ExpandingToolBar *child)
          child->Hide();
 
          mChildArray.RemoveAt(i);
-         mRowArray.RemoveAt(i);
+         mRowArray.erase(mRowArray.begin() + i);
 
          for(j=i; j<(int)mChildArray.GetCount(); j++)
             mRowArray[j] = -1;
@@ -1215,8 +1215,8 @@ void ToolBarArea::RestoreArrangement(std::unique_ptr<ToolBarArrangement>&& arran
 std::vector<wxRect> ToolBarArea::GetDropTargets()
 {
    mDropTargets.clear();
-   mDropTargetIndices.Clear();
-   mDropTargetRows.Clear();
+   mDropTargetIndices.clear();
+   mDropTargetRows.clear();
 
    int numChildren = (int)mChildArray.GetCount();
    int i;
@@ -1232,15 +1232,15 @@ std::vector<wxRect> ToolBarArea::GetDropTargets()
       if (childRow != row) {
          // Add a target before this child (at beginning of row only)
          row = childRow;
-         mDropTargetIndices.Add(i);
-         mDropTargetRows.Add(row);
+         mDropTargetIndices.push_back(i);
+         mDropTargetRows.push_back(row);
          mDropTargets.push_back(wxRect(childRect.x, childRect.y,
                                  0, childRect.height));
       }
 
       // Add a target after this child (always)
-      mDropTargetIndices.Add(i+1);
-      mDropTargetRows.Add(row);
+      mDropTargetIndices.push_back(i+1);
+      mDropTargetRows.push_back(row);
       mDropTargets.push_back(wxRect(childRect.x+childRect.width, childRect.y,
                               0, childRect.height));
    }
@@ -1258,7 +1258,7 @@ void ToolBarArea::MoveChild(ExpandingToolBar *toolBar, wxRect dropTarget)
          int newRow = mDropTargetRows[i];
 
          mChildArray.Insert(toolBar, newIndex);
-         mRowArray.Insert(newRow, newIndex);
+         mRowArray.insert(mRowArray.begin() + newIndex, newRow);
 
          for(j=newIndex+1; j<(int)mChildArray.GetCount(); j++)
             mRowArray[j] = -1;

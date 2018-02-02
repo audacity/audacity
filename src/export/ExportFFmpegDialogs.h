@@ -87,7 +87,7 @@ public:
 private:
 
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -125,7 +125,7 @@ public:
 private:
 
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -148,7 +148,7 @@ public:
 private:
 
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -222,9 +222,9 @@ private:
    wxArrayString mCodecNames;
    wxArrayString mCodecLongNames;
    wxArrayString mProfileNames;
-   wxArrayInt    mProfileLabels;
+   std::vector<int> mProfileLabels;
    wxArrayString mPredictionOrderMethodNames;
-   wxArrayInt    mPredictionOrderMethodLabels;
+   std::vector<int> mPredictionOrderMethodLabels;
 
    wxChoice *mFormatChoice;
    wxChoice *mCodecChoice;

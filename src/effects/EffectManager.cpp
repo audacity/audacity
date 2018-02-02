@@ -470,7 +470,7 @@ void EffectManager::RealtimeInitialize(double rate)
 
    // (Re)Set processor parameters
    mRealtimeChans.clear();
-   mRealtimeRates.Clear();
+   mRealtimeRates.clear();
 
    // RealtimeAdd/RemoveEffect() needs to know when we're active so it can
    // initialize newly added effects
@@ -492,7 +492,7 @@ void EffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
       e->RealtimeAddProcessor(group, chans, rate);
 
    mRealtimeChans.push_back(chans);
-   mRealtimeRates.Add(rate);
+   mRealtimeRates.push_back(rate);
 }
 
 void EffectManager::RealtimeFinalize()
@@ -509,7 +509,7 @@ void EffectManager::RealtimeFinalize()
 
    // Reset processor parameters
    mRealtimeChans.clear();
-   mRealtimeRates.Clear();
+   mRealtimeRates.clear();
 
    // No longer active
    mRealtimeActive = false;

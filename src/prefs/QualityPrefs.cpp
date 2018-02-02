@@ -72,10 +72,10 @@ void QualityPrefs::Populate()
 void QualityPrefs::GetNamesAndLabels()
 {
    //------------ Dither Names
-   mDitherNames.Add(_("None"));        mDitherLabels.Add(Dither::none);
-   mDitherNames.Add(_("Rectangle"));   mDitherLabels.Add(Dither::rectangle);
-   mDitherNames.Add(_("Triangle"));    mDitherLabels.Add(Dither::triangle);
-   mDitherNames.Add(_("Shaped"));      mDitherLabels.Add(Dither::shaped);
+   mDitherNames.Add(_("None"));        mDitherLabels.push_back(Dither::none);
+   mDitherNames.Add(_("Rectangle"));   mDitherLabels.push_back(Dither::rectangle);
+   mDitherNames.Add(_("Triangle"));    mDitherLabels.push_back(Dither::triangle);
+   mDitherNames.Add(_("Shaped"));      mDitherLabels.push_back(Dither::shaped);
 
    //------------ Sample Rate Names
    // JKC: I don't understand the following comment.
@@ -93,25 +93,25 @@ void QualityPrefs::GetNamesAndLabels()
    //      how do you get at them as they are on the Audio I/O page????
    for (int i = 0; i < AudioIO::NumStandardRates; i++) {
       int iRate = AudioIO::StandardRates[i];
-      mSampleRateLabels.Add(iRate);
+      mSampleRateLabels.push_back(iRate);
       mSampleRateNames.Add(wxString::Format(wxT("%i Hz"), iRate));
    }
 
    mSampleRateNames.Add(_("Other..."));
 
    // The label for the 'Other...' case can be any value at all.
-   mSampleRateLabels.Add(44100); // If chosen, this value will be overwritten
+   mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten
 
    //------------- Sample Format Names
-   mSampleFormatNames.Add(wxT("16-bit"));       mSampleFormatLabels.Add(int16Sample);
-   mSampleFormatNames.Add(wxT("24-bit"));       mSampleFormatLabels.Add(int24Sample);
-   mSampleFormatNames.Add(wxT("32-bit float")); mSampleFormatLabels.Add(floatSample);
+   mSampleFormatNames.Add(wxT("16-bit"));       mSampleFormatLabels.push_back(int16Sample);
+   mSampleFormatNames.Add(wxT("24-bit"));       mSampleFormatLabels.push_back(int24Sample);
+   mSampleFormatNames.Add(wxT("32-bit float")); mSampleFormatLabels.push_back(floatSample);
 
    //------------- Converter Names
    int numConverters = Resample::GetNumMethods();
    for (int i = 0; i < numConverters; i++) {
       mConverterNames.Add(Resample::GetMethodName(i));
-      mConverterLabels.Add(i);
+      mConverterLabels.push_back(i);
    }
 }
 

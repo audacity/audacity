@@ -461,11 +461,11 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          {
             if (lilv_port_is_a(mPlug, port, gInput))
             {
-               mAudioInputs.Add(index);
+               mAudioInputs.push_back(index);
             }
             else if (lilv_port_is_a(mPlug, port, gOutput))
             {
-               mAudioOutputs.Add(index);
+               mAudioOutputs.push_back(index);
             }
             continue;
          }
@@ -521,7 +521,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          {
             const LilvScalePoint *point = lilv_scale_points_get(points, j);
 
-            ctrl.mScaleValues.Add(lilv_node_as_float(lilv_scale_point_get_value(point)));
+            ctrl.mScaleValues.push_back(lilv_node_as_float(lilv_scale_point_get_value(point)));
             ctrl.mScaleLabels.Add(LilvString(lilv_scale_point_get_label(point)));
          }
          lilv_scale_points_free(points);
@@ -595,7 +595,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
             }
             else
             {
-               mGroupMap[ctrl.mGroup].Add(mControls.size());
+               mGroupMap[ctrl.mGroup].push_back(mControls.size());
                mControls.push_back(ctrl);
             }
          }
@@ -667,12 +667,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
 
 unsigned LV2Effect::GetAudioInCount()
 {
-   return mAudioInputs.GetCount();
+   return mAudioInputs.size();
 }
 
 unsigned LV2Effect::GetAudioOutCount()
 {
-   return mAudioOutputs.GetCount();
+   return mAudioOutputs.size();
 }
 
 int LV2Effect::GetMidiInCount()
@@ -782,12 +782,12 @@ bool LV2Effect::ProcessFinalize()
 
 size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
 {
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(mProcess, mAudioInputs[p], inbuf[p]);
    }
 
-   for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioOutputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(mProcess, mAudioOutputs[p], outbuf[p]);
    }
@@ -799,12 +799,12 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
 
 bool LV2Effect::RealtimeInitialize()
 {
-   mMasterIn.reinit( mAudioInputs.GetCount(), mBlockSize );
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   mMasterIn.reinit( mAudioInputs.size(), mBlockSize );
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
       lilv_instance_connect_port(mMaster, mAudioInputs[p], mMasterIn[p].get());
 
-   mMasterOut.reinit( mAudioOutputs.GetCount(), mBlockSize );
-   for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
+   mMasterOut.reinit( mAudioOutputs.size(), mBlockSize );
+   for (size_t p = 0, cnt = mAudioOutputs.size(); p < cnt; p++)
       lilv_instance_connect_port(mMaster, mAudioOutputs[p], mMasterOut[p].get());
 
    lilv_instance_activate(mMaster);
@@ -843,7 +843,7 @@ bool LV2Effect::RealtimeResume()
 
 bool LV2Effect::RealtimeProcessStart()
 {
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
       memset(mMasterIn[p].get(), 0, mBlockSize * sizeof(float));
 
    mNumSamples = 0;
@@ -864,7 +864,7 @@ size_t LV2Effect::RealtimeProcess(int group,
       return 0;
    }
 
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
    {
       for (decltype(numSamples) s = 0; s < numSamples; s++)
       {
@@ -875,12 +875,12 @@ size_t LV2Effect::RealtimeProcess(int group,
 
    LilvInstance *slave = mSlaves[group];
 
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(slave, mAudioInputs[p], inbuf[p]);
    }
 
-   for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioOutputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(slave, mAudioOutputs[p], outbuf[p]);
    }
@@ -1589,8 +1589,8 @@ bool LV2Effect::BuildPlain()
             auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
             gridSizer->AddGrowableCol(3);
 
-            const wxArrayInt & params = mGroupMap[mGroups[i]];
-            for (size_t pi = 0, cnt = params.GetCount(); pi < cnt; pi++)
+            const auto & params = mGroupMap[mGroups[i]];
+            for (size_t pi = 0, cnt = params.size(); pi < cnt; pi++)
             {
                int p = params[pi];
                LV2Port & ctrl = mControls[p];
@@ -1633,7 +1633,7 @@ bool LV2Effect::BuildPlain()
                else if (ctrl.mEnumeration)      // Check before integer
                {
                   int s;
-                  for (s = (int)ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+                  for (s = (int)ctrl.mScaleValues.size() - 1; s >= 0; s--)
                   {
                      if (ctrl.mVal >= ctrl.mScaleValues[s])
                      {
@@ -1751,8 +1751,7 @@ bool LV2Effect::BuildPlain()
          innerSizer->Layout();
 
          // Calculate the maximum width of all columns (bypass Generator sizer)
-         wxArrayInt widths;
-         widths.Add(0, numCols);
+         std::vector<int> widths(numCols);
 
          size_t cnt = innerSizer->GetChildren().GetCount();
          for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
@@ -1846,8 +1845,8 @@ bool LV2Effect::TransferDataToWindow()
 
    for (size_t i = 0, cnt = mGroups.GetCount(); i < cnt; i++)
    {
-      const wxArrayInt & params = mGroupMap[mGroups[i]];
-      for (size_t pi = 0, cnt = params.GetCount(); pi < cnt; pi++)
+      const auto & params = mGroupMap[mGroups[i]];
+      for (size_t pi = 0, cnt = params.size(); pi < cnt; pi++)
       {
          int p = params[pi];
          LV2Port & ctrl = mControls[p];
@@ -1866,7 +1865,7 @@ bool LV2Effect::TransferDataToWindow()
          else if (ctrl.mEnumeration)      // Check before integer
          {
             int s;
-            for (s = (int) ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+            for (s = (int) ctrl.mScaleValues.size() - 1; s >= 0; s--)
             {
                if (ctrl.mVal >= ctrl.mScaleValues[s])
                {

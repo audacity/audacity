@@ -586,10 +586,10 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
    S.EndVerticalLay();
 
-   wxArrayInt colWidths;
+   std::vector<int> colWidths;
    for (int i = 0, cnt = mEffects->GetColumnCount(); i < cnt; i++)
    {
-      colWidths.Add(0);
+      colWidths.push_back(0);
    }
 
    for (int i = 0, cnt = mStates.GetCount(); i < cnt; i++)
@@ -900,16 +900,16 @@ void PluginRegistrationDialog::OnClearAll(wxCommandEvent & WXUNUSED(evt))
 
 void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
-   wxArrayLong items;
+   std::vector<long> items;
 
    long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    while (i != wxNOT_FOUND)
    {
-      items.Insert(i, 0);
+      items.insert(items.begin(), i);
       i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
-   for (size_t i = 0, cnt = items.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = items.size(); i < cnt; i++)
    {
       SetState(items[i], false, STATE_Enabled);
    }
@@ -917,16 +917,16 @@ void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
 
 void PluginRegistrationDialog::OnDisable(wxCommandEvent & WXUNUSED(evt))
 {
-   wxArrayLong items;
+   std::vector<long> items;
 
    long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    while (i != wxNOT_FOUND)
    {
-      items.Insert(i, 0);
+      items.insert(items.begin(), i);
       i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
-   for (size_t i = 0, cnt = items.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = items.size(); i < cnt; i++)
    {
       SetState(items[i], false, STATE_Disabled);
    }

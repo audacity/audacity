@@ -146,7 +146,7 @@ protected:
    std::vector<wxImage> mImages;
    std::vector<wxBitmap> mBitmaps;
    wxArrayString mBitmapNames;
-   wxArrayInt mBitmapFlags;
+   std::vector<int> mBitmapFlags;
 
    std::vector<wxColour> mColours;
    wxArrayString mColourNames;

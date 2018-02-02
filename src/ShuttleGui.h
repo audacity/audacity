@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include <vector>
 #include "MemoryX.h"
 #include <wx/grid.h>
 #include <wx/sizer.h>
@@ -41,7 +42,6 @@ enum teShuttleMode
    eIsSavingToPrefs
 };
 
-class wxArrayInt;
 class wxListCtrl;
 class wxCheckBox;
 class wxChoice;
@@ -149,8 +149,8 @@ public:
    bool DoStep( int iStep );
    int TranslateToIndex( const wxString &Value, const wxArrayString &Choices );
    wxString TranslateFromIndex( const int nIn, const wxArrayString &Choices );
-   int TranslateToIndex( const int Value, const wxArrayInt &Choices );
-   int TranslateFromIndex( const int nIn, const wxArrayInt &Choices );
+   int TranslateToIndex( const int Value, const std::vector<int> &Choices );
+   int TranslateFromIndex( const int nIn, const std::vector<int> &Choices );
 
 //-- Tie functions both add controls and also read/write to them.
 // The ones taking a 'WrappedType' are type-generic and are used by the type specific ones.
@@ -212,7 +212,7 @@ public:
       const wxString &SettingName,
       const int Default,
       const wxArrayString & Choices,
-      const wxArrayInt & TranslatedChoices);
+      const std::vector<int> & TranslatedChoices);
    wxTextCtrl * TieTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
@@ -380,9 +380,9 @@ public:
 
    void SetSizeHints( int minX = -1, int minY = -1 );
    void SetSizeHints( const wxArrayString & items );
-   void SetSizeHints( const wxArrayInt & items );
+   void SetSizeHints( const std::vector<int> & items );
    static void SetSizeHints( wxWindow *window, const wxArrayString & items );
-   static void SetSizeHints( wxWindow *window, const wxArrayInt & items );
+   static void SetSizeHints( wxWindow *window, const std::vector<int> & items );
 
    teShuttleMode GetMode() { return  mShuttleMode; };
 };

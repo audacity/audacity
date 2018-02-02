@@ -294,7 +294,7 @@ void AudacityProject::CreateMenusAndCommands()
 {
    CommandManager *c = &mCommandManager;
    wxArrayString names;
-   wxArrayInt indices;
+   std::vector<int> indices;
 
    // The list of defaults to exclude depends on
    // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
@@ -7536,8 +7536,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    Track *t = iter.First();
    double delta = 0.0;
    double newPos = -1.0;
-   wxArrayDouble trackStartArray;
-   wxArrayDouble trackEndArray;
+   std::vector<double> trackStartArray;
+   std::vector<double> trackEndArray;
    double firstTrackOffset=0.0f;
 
    while (t) {
@@ -7561,8 +7561,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
             }
             numSelected++;
          }
-         trackStartArray.Add(t->GetStartTime());
-         trackEndArray.Add(t->GetEndTime());
+         trackStartArray.push_back(t->GetStartTime());
+         trackEndArray.push_back(t->GetEndTime());
 
          if (offset < minOffset)
             minOffset = offset;

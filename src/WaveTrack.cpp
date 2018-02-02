@@ -803,7 +803,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       return;
    }
 
-   wxArrayDouble splits;
+   std::vector<double> splits;
    WaveClipHolders cuts;
 
    // If provided time warper was NULL, use a default one that does nothing
@@ -822,13 +822,13 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
       // Remember clip boundaries as locations to split
       st = LongSamplesToTime(TimeToLongSamples(clip->GetStartTime()));
-      if (st >= t0 && st <= t1 && splits.Index(st) == wxNOT_FOUND) {
-         splits.Add(st);
+      if (st >= t0 && st <= t1 && !make_iterator_range(splits).contains(st)) {
+         splits.push_back(st);
       }
 
       st = LongSamplesToTime(TimeToLongSamples(clip->GetEndTime()));
-      if (st >= t0 && st <= t1 && splits.Index(st) == wxNOT_FOUND) {
-         splits.Add(st);
+      if (st >= t0 && st <= t1 && !make_iterator_range(splits).contains(st)) {
+         splits.push_back(st);
       }
 
       // Search for cut lines
@@ -862,7 +862,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       Paste(t0, src);
       {
          // First, merge the NEW clip(s) in with the existing clips
-         if (merge && splits.GetCount() > 0)
+         if (merge && splits.size() > 0)
          {
             // Now t1 represents the absolute end of the pasted data.
             t1 = t0 + src->GetEndTime();

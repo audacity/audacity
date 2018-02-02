@@ -158,7 +158,7 @@ private:
    bool mRealtimeSuspended;
    bool mRealtimeActive;
    std::vector<unsigned> mRealtimeChans;
-   wxArrayDouble mRealtimeRates;
+   std::vector<double> mRealtimeRates;
 
    // Set true if we want to skip pushing state 
    // after processing at effect run time.

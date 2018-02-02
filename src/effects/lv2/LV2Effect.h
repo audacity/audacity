@@ -91,11 +91,11 @@ public:
    LilvPort *mPort;
 
    // ScalePoints
-   wxArrayDouble mScaleValues;
+   std::vector<double> mScaleValues;
    wxArrayString mScaleLabels;
 };
 
-using LV2GroupMap = std::unordered_map<wxString, wxArrayInt>;
+using LV2GroupMap = std::unordered_map<wxString, std::vector<int>>;
 WX_DEFINE_ARRAY_PTR(LilvInstance *, LV2SlaveArray);
 
 class LV2EffectSettingsDialog;
@@ -268,8 +268,8 @@ private:
 
    wxLongToLongHashMap mControlsMap;
    std::vector<LV2Port> mControls;
-   wxArrayInt mAudioInputs;
-   wxArrayInt mAudioOutputs;
+   std::vector<int> mAudioInputs;
+   std::vector<int> mAudioOutputs;
 
    LV2GroupMap mGroupMap;
    wxArrayString mGroups;

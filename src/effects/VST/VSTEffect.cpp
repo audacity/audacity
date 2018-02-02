@@ -697,14 +697,14 @@ void VSTEffectsModule::Check(const wxChar *path)
    VSTEffect effect(path);
    if (effect.SetHost(NULL))
    {
-      wxArrayInt effectIDs = effect.GetEffectIDs();
+      auto effectIDs = effect.GetEffectIDs();
       wxString out;
 
-      if (effectIDs.GetCount() > 0)
+      if (effectIDs.size() > 0)
       {
          wxString subids;
 
-         for (size_t i = 0, cnt = effectIDs.GetCount(); i < cnt; i++)
+         for (size_t i = 0, cnt = effectIDs.size(); i < cnt; i++)
          {
             subids += wxString::Format(wxT("%d;"), effectIDs[i]);
          }
@@ -2269,9 +2269,9 @@ void VSTEffect::Unload()
    }
 }
 
-wxArrayInt VSTEffect::GetEffectIDs()
+std::vector<int> VSTEffect::GetEffectIDs()
 {
-   wxArrayInt effectIDs;
+   std::vector<int> effectIDs;
 
    // Are we a shell?
    if (mVstVersion >= 2 && (VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
@@ -2282,7 +2282,7 @@ wxArrayInt VSTEffect::GetEffectIDs()
       effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
       while (effectID)
       {
-         effectIDs.Add(effectID);
+         effectIDs.push_back(effectID);
          effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
       }
    }
