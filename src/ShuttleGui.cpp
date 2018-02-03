@@ -699,20 +699,6 @@ wxListBox * ShuttleGuiBase::AddListBox(const wxArrayStringEx &choices, long styl
 }
 
 
-wxListCtrl * ShuttleGuiBase::AddListControl()
-{
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxListCtrl);
-   wxListCtrl * pListCtrl;
-   SetProportions( 1 );
-   mpWind = pListCtrl = safenew wxListCtrl(GetParent(), miId,
-      wxDefaultPosition, wxDefaultSize, Style( wxLC_ICON ));
-   pListCtrl->SetMinSize( wxSize( 120,150 ));
-   UpdateSizers();
-   return pListCtrl;
-}
-
 wxGrid * ShuttleGuiBase::AddGrid()
 {
    UseUpId();
@@ -727,7 +713,30 @@ wxGrid * ShuttleGuiBase::AddGrid()
    return pGrid;
 }
 
-wxListCtrl * ShuttleGuiBase::AddListControlReportMode()
+wxListCtrl * ShuttleGuiBase::AddListControl(
+   std::initializer_list<const ListControlColumn> columns,
+   long listControlStyles
+)
+{
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxListCtrl);
+   wxListCtrl * pListCtrl;
+   SetProportions( 1 );
+   mpWind = pListCtrl = safenew wxListCtrl(GetParent(), miId,
+      wxDefaultPosition, wxDefaultSize, Style( wxLC_ICON ));
+   pListCtrl->SetMinSize( wxSize( 120,150 ));
+   UpdateSizers();
+
+   DoInsertListColumns( pListCtrl, listControlStyles, columns );
+
+   return pListCtrl;
+}
+
+wxListCtrl * ShuttleGuiBase::AddListControlReportMode(
+   std::initializer_list<const ListControlColumn> columns,
+   long listControlStyles
+)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -739,7 +748,41 @@ wxListCtrl * ShuttleGuiBase::AddListControlReportMode()
       Style( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxSUNKEN_BORDER ));
 //   pListCtrl->SetMinSize( wxSize( 120,150 ));
    UpdateSizers();
+
+   DoInsertListColumns( pListCtrl, listControlStyles, columns );
+
    return pListCtrl;
+}
+
+void ShuttleGuiBase::DoInsertListColumns(
+   wxListCtrl *pListCtrl,
+   long listControlStyles,
+   std::initializer_list<const ListControlColumn> columns )
+{
+   // Old comment from HistoryWindow.cpp follows
+   // -- is it still correct for wxWidgets 3?
+
+   // Do this BEFORE inserting the columns.  On the Mac at least, the
+   // columns are deleted and later InsertItem()s will cause Audacity to crash.
+   for ( auto style = 1l; style <= listControlStyles; style <<= 1 )
+      if ( (style & listControlStyles) )
+         pListCtrl->SetSingleStyle(style, true);
+
+   long iCol = 0;
+   bool dummyColumn =
+      columns.size() > 0 && begin(columns)->format == wxLIST_FORMAT_RIGHT;
+
+   //A dummy first column, which is then deleted, is a workaround -
+   // under Windows the first column can't be right aligned.
+   if (dummyColumn)
+      pListCtrl->InsertColumn( iCol++, wxString{} );
+
+   for (auto &column : columns)
+      pListCtrl->InsertColumn(
+         iCol++, column.heading, column.format, column.width );
+
+   if (dummyColumn)
+      pListCtrl->DeleteColumn( 0 );
 }
 
 wxTreeCtrl * ShuttleGuiBase::AddTree()

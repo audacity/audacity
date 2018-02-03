@@ -3334,8 +3334,10 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartStatic(_("&Curves"), 1);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
-         mList = S.Id(CurvesListID).AddListControlReportMode();
-         mList->InsertColumn(0, _("Curve Name"), wxLIST_FORMAT_RIGHT);
+         mList = S.Id(CurvesListID)
+            .AddListControlReportMode({
+               { _("Curve Name"), wxLIST_FORMAT_RIGHT }
+            });
       }
       S.EndStatic();
       S.StartVerticalLay(0);

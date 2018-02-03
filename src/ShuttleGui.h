@@ -20,6 +20,7 @@
 #include <vector>
 #include <wx/slider.h> // to inherit
 #include "MemoryX.h"
+#include <wx/listbase.h> // for wxLIST_FORMAT_LEFT
 
 #include "WrappedType.h"
 
@@ -163,8 +164,26 @@ public:
    wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
    wxListBox * AddListBox(const wxArrayStringEx &choices, long style = 0);
-   wxListCtrl * AddListControl();
-   wxListCtrl * AddListControlReportMode();
+
+   struct ListControlColumn{
+      ListControlColumn(
+         wxString h, int f = wxLIST_FORMAT_LEFT, int w = wxLIST_AUTOSIZE)
+         : heading(h), format(f), width(w)
+      {}
+
+      wxString heading;
+      int format;
+      int width;
+   };
+   wxListCtrl * AddListControl(
+      std::initializer_list<const ListControlColumn> columns = {},
+      long listControlStyles = 0
+   );
+   wxListCtrl * AddListControlReportMode(
+      std::initializer_list<const ListControlColumn> columns = {},
+      long listControlStyles = 0
+   );
+
    wxGrid * AddGrid();
    wxCheckBox * AddCheckBox( const wxString &Prompt, bool Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, bool Selected);
@@ -334,6 +353,12 @@ protected:
 
 private:
    void SetSizeHints( const wxArrayStringEx & items );
+
+   void DoInsertListColumns(
+      wxListCtrl *pListCtrl,
+      long listControlStyles,
+      std::initializer_list<const ListControlColumn> columns );
+
 public:
    static void SetSizeHints( wxWindow *window, const wxArrayStringEx & items );
 

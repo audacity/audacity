@@ -565,16 +565,14 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          S.EndHorizontalLay();
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
-         mEffects = S.Id(ID_List).AddListControlReportMode();
+         mEffects = S.Id(ID_List)
+            .AddListControlReportMode({ _("Name"), _("State"), _("Path") });
          mEffects->Bind(wxEVT_KEY_DOWN,
                            &PluginRegistrationDialog::OnListChar,
                            this);
 #if wxUSE_ACCESSIBILITY
          mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));
 #endif
-         mEffects->InsertColumn(COL_Name, _("Name"));
-         mEffects->InsertColumn(COL_State, _("State"));
-         mEffects->InsertColumn(COL_Path, _("Path"));
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, 0);
          {

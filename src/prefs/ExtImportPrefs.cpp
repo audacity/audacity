@@ -148,14 +148,14 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.AddWindow(RuleTable, wxEXPAND | wxALL);
 
-         PluginList = S.Id(EIPPluginList).AddListControl ();
+         PluginList = S.Id(EIPPluginList).AddListControl(
+            { { _("Importer order"), wxLIST_FORMAT_LEFT,
+                wxLIST_AUTOSIZE_USEHEADER } },
+            wxLC_REPORT | wxLC_SINGLE_SEL
+         );
 
          if (fillRuleTable)
          {
-            PluginList->SetSingleStyle (wxLC_REPORT, true);
-            PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
-            PluginList->InsertColumn (0, _("Importer order"));
-
             ExtImportPrefsDropTarget *dragtarget2 {};
             PluginList->SetDropTarget (
                dragtarget2 = safenew ExtImportPrefsDropTarget(
@@ -163,8 +163,6 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
                )
             );
             dragtarget2->SetPrefs (this);
-
-            PluginList->SetColumnWidth (0, wxLIST_AUTOSIZE_USEHEADER);
 
             auto &items = Importer::Get().GetImportItems();
             {

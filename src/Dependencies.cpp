@@ -356,11 +356,10 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartStatic(_("Project Dependencies"),1);
       {
-         mFileListCtrl = S.Id(FileListID).AddListControlReportMode();
-         mFileListCtrl->InsertColumn(0, _("Audio File"));
-         mFileListCtrl->SetColumnWidth(0, 220);
-         mFileListCtrl->InsertColumn(1, _("Disk Space"));
-         mFileListCtrl->SetColumnWidth(1, 120);
+         mFileListCtrl = S.Id(FileListID).AddListControlReportMode({
+            { _("Audio File"), wxLIST_FORMAT_LEFT, 220 },
+            { _("Disk Space"), wxLIST_FORMAT_LEFT, 120 }
+         });
          PopulateList();
 
          mCopySelectedFilesButton =
