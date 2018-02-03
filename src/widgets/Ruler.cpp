@@ -119,7 +119,6 @@ Ruler::Ruler()
 
    mValid = false;
 
-   mCustom = false;
    mbMinor = true;
 
    mGridLineLength = 0;
@@ -832,120 +831,6 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
 
 }
 
-void Ruler::TickCustom(int labelIdx, bool major, bool minor)
-{
-   //This should only used in the mCustom case
-   // Many code comes from 'Tick' method: this should
-   // be optimized.
-
-   int pos;
-   wxString l;
-   wxCoord strW, strH, strD, strL;
-   int strPos, strLen, strLeft, strTop;
-
-   // FIXME: We don't draw a tick if of end of our label arrays
-   // But we shouldn't have an array of labels.
-   if( mNumMinor >= mLength )
-      return;
-   if( mNumMajor >= mLength )
-      return;
-
-   Label *label;
-   if (major)
-      label = &mMajorLabels[labelIdx];
-   else if (minor)
-      label = &mMinorLabels[labelIdx];
-   else
-      label = &mMinorMinorLabels[labelIdx];
-
-   label->value = 0.0;
-   pos = label->pos;         // already stored in label class
-   l   = label->text;
-   label->lx = mLeft - 1000; // don't display
-   label->ly = mTop - 1000;  // don't display
-
-   mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
-
-   mDC->GetTextExtent(l, &strW, &strH, &strD, &strL);
-
-   if (mOrientation == wxHORIZONTAL) {
-      strLen = strW;
-      strPos = pos - strW/2;
-      if (strPos < 0)
-         strPos = 0;
-      if (strPos + strW >= mLength)
-         strPos = mLength - strW;
-      strLeft = mLeft + strPos;
-      if (mFlip) {
-         strTop = mTop + 4;
-         mMaxHeight = max(mMaxHeight, strH + 4);
-      }
-      else {
-
-         strTop = mTop- mLead+4;// More space was needed...
-         mMaxHeight = max(mMaxHeight, strH + 6);
-      }
-   }
-   else {
-      strLen = strH;
-      strPos = pos - strH/2;
-      if (strPos < 0)
-         strPos = 0;
-      if (strPos + strH >= mLength)
-         strPos = mLength - strH;
-      strTop = mTop + strPos;
-      if (mFlip) {
-         strLeft = mLeft + 5;
-         mMaxWidth = max(mMaxWidth, strW + 5);
-      }
-      else {
-
-         strLeft =-strW-6;
-       }
-   }
-
-
-   // FIXME: we shouldn't even get here if strPos < 0.
-   // Ruler code currently does  not handle very small or
-   // negative sized windows (i.e. don't draw) properly.
-   if( strPos < 0 )
-      return;
-
-   // See if any of the pixels we need to draw this
-   // label is already covered
-
-   int i;
-   for(i=0; i<strLen; i++)
-      if (mBits[strPos+i])
-         return;
-
-   // If not, position the label
-
-   label->lx = strLeft;
-   label->ly = strTop;
-
-   // And mark these pixels, plus some surrounding
-   // ones (the spacing between labels), as covered
-   int leftMargin = mSpacing;
-   if (strPos < leftMargin)
-      leftMargin = strPos;
-   strPos -= leftMargin;
-   strLen += leftMargin;
-
-   int rightMargin = mSpacing;
-   if (strPos + strLen > mLength - mSpacing)
-      rightMargin = mLength - strPos - strLen;
-   strLen += rightMargin;
-
-   for(i=0; i<strLen; i++)
-      mBits[strPos+i] = 1;
-
-
-   wxRect r(strLeft, strTop, strW, strH);
-   mRect.Union(r);
-
-}
-
 void Ruler::Update()
 {
   Update(NULL);
@@ -1030,18 +915,17 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
    // FIXME: Surely we do not need to allocate storage for the labels?
    // We can just recompute them as we need them?  Yes, but only if
    // mCustom is false!!!!
+   // FIXME: mCustom does not exist anymore
 
    auto size = static_cast<size_t>(mLength + 1);
-   if(!mCustom) {
-      mNumMajor = 0;
-      mNumMinor = 0;
-      mNumMinorMinor = 0;
-      if (mLength!=mLengthOld) {
-         mMajorLabels.reinit(size);
-         mMinorLabels.reinit(size);
-         mMinorMinorLabels.reinit(size);
-         mLengthOld = mLength;
-      }
+   mNumMajor = 0;
+   mNumMinor = 0;
+   mNumMinorMinor = 0;
+   if (mLength!=mLengthOld) {
+      mMajorLabels.reinit(size);
+      mMinorLabels.reinit(size);
+      mMinorMinorLabels.reinit(size);
+      mLengthOld = mLength;
    }
 
    mBits.reinit(size);
@@ -1053,21 +937,7 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
          mBits[i] = 0;
 
    // *************** Label calculation routine **************
-   if(mCustom == true) {
-
-      // SET PARAMETER IN MCUSTOM CASE
-      // Works only with major labels
-
-      int numLabel = mNumMajor;
-
-      i = 0;
-      while((i<numLabel) && (i<=mLength)) {
-
-         TickCustom(i, true, false);
-         i++;
-      }
-
-   } else if(mLog==false) {
+   if(mLog==false) {
 
       // Use the "hidden" min and max to determine the tick size.
       // That may make a difference with fisheye.
@@ -1521,33 +1391,6 @@ void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 
    if (height)
       *height = mRect.GetHeight(); //mMaxHeight;
-}
-
-
-void Ruler::SetCustomMode(bool value) { mCustom = value; }
-
-void Ruler::SetCustomMajorLabels(wxArrayString *label, size_t numLabel, int start, int step)
-{
-   mNumMajor = numLabel;
-   mMajorLabels.reinit(numLabel);
-
-   for(size_t i = 0; i<numLabel; i++) {
-      mMajorLabels[i].text = label->Item(i);
-      mMajorLabels[i].pos  = start + i*step;
-   }
-   //Remember: DELETE majorlabels....
-}
-
-void Ruler::SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int start, int step)
-{
-   mNumMinor = numLabel;
-   mMinorLabels.reinit(numLabel);
-
-   for(size_t i = 0; i<numLabel; i++) {
-      mMinorLabels[i].text = label->Item(i);
-      mMinorLabels[i].pos  = start + i*step;
-   }
-   //Remember: DELETE majorlabels....
 }
 
 void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const

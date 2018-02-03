@@ -119,18 +119,6 @@ class AUDACITY_DLL_API Ruler {
    //
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
-
-   // The following functions should allow a custom ruler setup:
-   // autosize is a GREAT thing, but for some applications it's
-   // useful the definition of a label array and label step by
-   // the user.
-   void SetCustomMode(bool value);
-   // If this is the case, you should provide a wxString array of labels, start
-   // label position, and labels step. The range eventually specified will be
-   // ignored.
-   void SetCustomMajorLabels(wxArrayString *label, size_t numLabel, int start, int step);
-   void SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int start, int step);
-
    void SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo);
 
    //
@@ -160,9 +148,6 @@ class AUDACITY_DLL_API Ruler {
    wxString LabelString(double d, bool major);
 
    void Tick(int pos, double d, bool major, bool minor);
-
-   // Another tick generator for custom ruler case (noauto) .
-   void TickCustom(int labelIdx, bool major, bool minor);
 
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
@@ -228,7 +213,6 @@ private:
    RulerFormat  mFormat;
    bool         mLog;
    bool         mFlip;
-   bool         mCustom;
    bool         mbMinor;
    bool         mMajorGrid;      //  for grid drawing
    bool         mMinorGrid;      //         .
