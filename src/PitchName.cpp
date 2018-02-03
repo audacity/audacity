@@ -27,13 +27,23 @@
 
 double FreqToMIDInote(const double freq)
 {
-   // Make the calculation relative to A440 (A4), note number 69.
-   return (69.0 + (12.0 * (log(freq / 440.0) / log(2.0))));
+    return FreqToMIDInoteWithTuning(freq, 440.0);
+}
+
+double FreqToMIDInoteWithTuning(const double freq, const double aTune)
+{
+   // Make the calculation relative to tune of A4 (aTune = 440.0), note number 69.
+   return (69.0 + (12.0 * (log(freq / aTune) / log(2.0))));
 }
 
 double MIDInoteToFreq(const double dMIDInote)
 {
-   return (440.0 * pow(2.0, (dMIDInote - 69.0) / 12.0));
+    return MIDInoteToFreqWithTuning(dMIDInote, 440.0);
+}
+
+double MIDInoteToFreqWithTuning(const double dMIDInote, const double aTune)
+{
+   return (aTune * pow(2.0, (dMIDInote - 69.0) / 12.0));
 }
 
 unsigned int PitchIndex(const double dMIDInote)

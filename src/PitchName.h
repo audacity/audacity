@@ -28,7 +28,11 @@
 // MIDI note number 0 is C-1 in Scientific pitch notation.
 double FreqToMIDInote(const double freq);
 
+double FreqToMIDInoteWithTuning(const double dMIDInote, const double aTune);
+
 double MIDInoteToFreq(const double dMIDInote);
+
+double MIDInoteToFreqWithTuning(const double dMIDInote, const double aTune);
 
 // PitchIndex returns the [0,11] index for a double MIDI note number,
 // per result from FreqToMIDInote, corresponding to modulo 12
