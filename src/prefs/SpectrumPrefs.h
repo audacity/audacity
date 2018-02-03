@@ -83,6 +83,7 @@ class SpectrumPrefs final : public PrefsPanel
 
    wxArrayString mTypeChoices;
    wxArrayString mScaleChoices;
+   wxArrayString mFreqLabelChoices;
 
    wxChoice *mAlgorithmChoice;
    wxArrayString mAlgorithmChoices;
