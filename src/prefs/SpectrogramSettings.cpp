@@ -76,6 +76,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #endif
    , isGrayscale(other.isGrayscale)
    , scaleType(other.scaleType)
+   , freqLabelType(other.freqLabelType)
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    , spectralSelection(other.spectralSelection)
 #endif
@@ -113,6 +114,7 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
 #endif
       isGrayscale = other.isGrayscale;
       scaleType = other.scaleType;
+      freqLabelType = other.freqLabelType;
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
       spectralSelection = other.spectralSelection;
 #endif
@@ -162,6 +164,20 @@ const wxArrayString &SpectrogramSettings::GetScaleNames()
 
    static ScaleNamesArray theArray;
    return theArray.Get();
+}
+
+const wxArrayString &SpectrogramSettings::GetFreqLabelNames()
+{
+    class FreqLabelNamesArray final : public TranslatableStringArray
+    {
+        void Populate() override
+        {
+            mContents.Add(_("Numeric"));
+            mContents.Add(_("Notes (Equal Temperament)"));
+        }
+    };
+    static FreqLabelNamesArray theArray;
+    return theArray.Get();
 }
 
 //static
@@ -237,6 +253,7 @@ bool SpectrogramSettings::Validate(bool quiet)
    // preference files, which could be or from future versions.  Validate quietly.
    windowType = Clamp(windowType, 0, NumWindowFuncs() - 1);
    scaleType = ScaleType(Clamp((int)scaleType, 0, SpectrogramSettings::stNumScaleTypes - 1));
+   freqLabelType = FreqLabelType(Clamp((int)freqLabelType, 0, fltNumFreqLabelTypes - 1));
    algorithm = Algorithm(Clamp((int)algorithm, 0, algNumAlgorithms - 1));
    ConvertToEnumeratedWindowSizes();
    ConvertToActualWindowSizes();
@@ -265,6 +282,7 @@ void SpectrogramSettings::LoadPrefs()
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
 
    scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
+   freqLabelType = FreqLabelType(gPrefs->Read(wxT("/Spectrum/FreqLabelType"), 0L));
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    spectralSelection = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 1L) != 0);
@@ -313,6 +331,7 @@ void SpectrogramSettings::SavePrefs()
    gPrefs->Write(wxT("/Spectrum/Grayscale"), isGrayscale);
 
    gPrefs->Write(wxT("/Spectrum/ScaleType"), (int) scaleType);
+   gPrefs->Write(wxT("/Spectrum/FreqLabelType"), (int) freqLabelType);
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
