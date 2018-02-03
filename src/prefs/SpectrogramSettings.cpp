@@ -29,6 +29,7 @@ Paul Licameli
 #include "../Experimental.h"
 #include "../widgets/ErrorDialog.h"
 #include "../Internat.h"
+#include "../Clamp.h"
 
 SpectrogramSettings::Globals::Globals()
 {
@@ -234,15 +235,9 @@ bool SpectrogramSettings::Validate(bool quiet)
    // The rest are controlled by drop-down menus so they can't go wrong
    // in the Preferences dialog, but we also come here after reading fom saved
    // preference files, which could be or from future versions.  Validate quietly.
-   windowType =
-      std::max(0, std::min(NumWindowFuncs() - 1, windowType));
-   scaleType =
-      ScaleType(std::max(0,
-         std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
-            (int)(scaleType))));
-   algorithm = Algorithm(
-      std::max(0, std::min((int)(algNumAlgorithms) - 1, (int)(algorithm)))
-   );
+   windowType = Clamp(windowType, 0, NumWindowFuncs() - 1);
+   scaleType = ScaleType(Clamp((int)scaleType, 0, SpectrogramSettings::stNumScaleTypes - 1));
+   algorithm = Algorithm(Clamp((int)algorithm, 0, algNumAlgorithms - 1));
    ConvertToEnumeratedWindowSizes();
    ConvertToActualWindowSizes();
 
