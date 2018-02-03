@@ -85,6 +85,7 @@ audio tracks.
 #include "AllThemeResources.h"
 #include "Experimental.h"
 #include "TrackPanelDrawingContext.h"
+#include "PitchName.h"
 
 
 #undef PROFILE_WAVEFORM
@@ -163,6 +164,83 @@ int TrackArt::GetBottom(NoteTrack *t, const wxRect &rect)
 }
 */
 #endif // USE_MIDI
+
+// Adds the freqency and name of the MIDI note midiNote to the vectors ticks
+// and tickLabels, respectively.
+static void AddNoteToTicks(std::vector<double> * ticks,
+                           wxArrayString * tickLabels,
+                           int midiNote,
+                           bool addHz)
+{
+    if(!ticks)
+        return;
+    if(!tickLabels)
+        return;
+    const double freq = MIDInoteToFreq(midiNote);
+    if(addHz)
+    {
+        wxString freqText;
+        freqText.Printf(wxT("(%.1fHz) "), freq);
+        tickLabels->Add(freqText + PitchName(midiNote, PitchNameChoice::Both));
+    }
+    else
+    {
+        tickLabels->Add(PitchName(midiNote, PitchNameChoice::Both));
+    }
+    ticks->push_back(freq);
+}
+
+// Set custom ticks and labels for note pitches to the Ruler of the Spectrogram
+static void SetNotesCustomTicks(Ruler * vruler)
+{
+    if(!vruler)
+        return;
+
+    std::vector<double> majorTicks;
+    wxArrayString majorTickLabels;
+    // major ticks are C and A notes
+    for(int i=0; i<=108; i+=12)
+    {
+        AddNoteToTicks(&majorTicks, &majorTickLabels, i  , true);
+        AddNoteToTicks(&majorTicks, &majorTickLabels, i+9, true);
+    }
+    AddNoteToTicks(&majorTicks, &majorTickLabels, 120, true);
+
+    std::vector<double> minorTicks;
+    wxArrayString minorTickLabels;
+    // minor ticks are all remaining white keys
+    for(int i=0; i<=108; i+=12)
+    {
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 2, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 4, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 5, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 7, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+11, false);
+    }
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 122, false);
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 124, false);
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 125, false);
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 127, false);
+    
+    std::vector<double> minorMinorTicks;
+    wxArrayString minorMinorTickLabels;
+    // minor minor ticks are all black keys
+    for(int i=0; i<=108; i+=12)
+    {
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 1, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 3, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 6, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 8, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+10, false);
+    }
+    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 121, false);
+    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 123, false);
+    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 126, false);
+
+    vruler->CustomTicks(majorTicks, majorTickLabels, true, false);
+    vruler->CustomTicks(minorTicks, minorTickLabels, false, true);
+    vruler->CustomTicks(minorMinorTicks, minorMinorTickLabels, false, false);
+}
 
 TrackArtist::TrackArtist( TrackPanel *parent_ )
    : parent( parent_ )
@@ -545,6 +623,7 @@ void TrackArt::DrawVRuler
 
 void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
 {
+
    auto update = t->TypeSwitch<bool>(
       [] (const LabelTrack *) {
       // Label tracks do not have a vruler
@@ -578,7 +657,6 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
          if (display == WaveTrack::Waveform) {
             WaveformSettings::ScaleType scaleType =
                wt->GetWaveformSettings().scaleType;
-
             if (scaleType == WaveformSettings::stLinear) {
                // Waveform
 
@@ -763,6 +841,9 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
                   vruler->SetUnits(wxT(""));
                }
                vruler->SetLog(false);
+               if(wt->GetSpectrogramSettings().freqLabelType
+                  == SpectrogramSettings::fltNotesEqualTemperament)
+                SetNotesCustomTicks(vruler.get());
             }
             break;
             case SpectrogramSettings::stLogarithmic:
@@ -792,6 +873,9 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
                   wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
                      .Reversal() );
                vruler->SetNumberScale(&scale);
+               if(wt->GetSpectrogramSettings().freqLabelType
+                  == SpectrogramSettings::fltNotesEqualTemperament)
+                SetNotesCustomTicks(vruler.get());
             }
             break;
             }
