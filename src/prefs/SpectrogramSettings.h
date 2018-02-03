@@ -135,6 +135,7 @@ public:
 
    ScaleType scaleType;
    FreqLabelType freqLabelType;
+   double ticksTuningFreq;
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    bool spectralSelection; // But should this vary per track? -- PRL

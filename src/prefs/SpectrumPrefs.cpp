@@ -70,6 +70,7 @@ enum {
    ID_PADDING_SIZE,
    ID_SCALE,
    ID_FREQLABEL,
+   ID_TICKSTUNINGFREQ,
    ID_ALGORITHM,
    ID_MINIMUM,
    ID_MAXIMUM,
@@ -179,6 +180,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.SetStretchyCol( 1 );
       S.StartStatic(_("Scale"),1);
       {
+<<<<<<< HEAD
          S.StartMultiColumn(2,wxEXPAND);
          {
             S.SetStretchyCol( 0 );
@@ -199,6 +201,29 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                  &mFreqLabelChoices);
          }
          S.EndMultiColumn();
+=======
+         S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+            *(int*)&mTempSettings.scaleType,
+            &mScaleChoices);
+
+         mMinFreq =
+            S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
+            mTempSettings.minFreq,
+            12);
+
+         mMaxFreq =
+            S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
+            mTempSettings.maxFreq,
+            12);
+
+         S.Id(ID_FREQLABEL).TieChoice(_("Frequency Labels") + wxString(wxT(":")),
+                 *(int*)&mTempSettings.freqLabelType,
+                 &mFreqLabelChoices);
+
+         mTicksTuningFreq = S.Id(ID_TICKSTUNINGFREQ).TieNumericTextBox(_("Tuning Freqency for ticks (Hz):"),
+            mTempSettings.ticksTuningFreq,
+            12);
+>>>>>>> added tuning freqency setting to Spectrogram ruler ticks
       }
       S.EndStatic();
 
@@ -368,6 +393,12 @@ bool SpectrumPrefs::Validate()
       return false;
    }
 #endif //EXPERIMENTAL_FIND_NOTES
+
+   double ticksTuningFreq = 0.0;
+   if (!mTicksTuningFreq->GetValue().ToDouble(&ticksTuningFreq)) {
+      AudacityMessageBox(_("Tuning freqency must be a floating point value."));
+      return false;
+   }
 
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -556,6 +587,7 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_PADDING_SIZE, SpectrumPrefs::OnControl)
    EVT_CHOICE(ID_SCALE, SpectrumPrefs::OnControl)
    EVT_CHOICE(ID_FREQLABEL, SpectrumPrefs::OnControl)
+   EVT_TEXT(ID_TICKSTUNINGFREQ, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_MINIMUM, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_MAXIMUM, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_GAIN, SpectrumPrefs::OnControl)

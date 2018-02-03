@@ -170,13 +170,14 @@ int TrackArt::GetBottom(NoteTrack *t, const wxRect &rect)
 static void AddNoteToTicks(std::vector<double> * ticks,
                            wxArrayString * tickLabels,
                            int midiNote,
+                           double tuningFreq,
                            bool addHz)
 {
     if(!ticks)
         return;
     if(!tickLabels)
         return;
-    const double freq = MIDInoteToFreq(midiNote);
+    const double freq = MIDInoteToFreqWithTuning(midiNote, tuningFreq);
     if(addHz)
     {
         wxString freqText;
@@ -191,7 +192,7 @@ static void AddNoteToTicks(std::vector<double> * ticks,
 }
 
 // Set custom ticks and labels for note pitches to the Ruler of the Spectrogram
-static void SetNotesCustomTicks(Ruler * vruler)
+static void SetNotesCustomTicks(Ruler * vruler, double tuningFreq)
 {
     if(!vruler)
         return;
@@ -201,41 +202,41 @@ static void SetNotesCustomTicks(Ruler * vruler)
     // major ticks are C and A notes
     for(int i=0; i<=108; i+=12)
     {
-        AddNoteToTicks(&majorTicks, &majorTickLabels, i  , true);
-        AddNoteToTicks(&majorTicks, &majorTickLabels, i+9, true);
+        AddNoteToTicks(&majorTicks, &majorTickLabels, i  , tuningFreq, true);
+        AddNoteToTicks(&majorTicks, &majorTickLabels, i+9, tuningFreq, true);
     }
-    AddNoteToTicks(&majorTicks, &majorTickLabels, 120, true);
+    AddNoteToTicks(&majorTicks, &majorTickLabels, 120, tuningFreq, true);
 
     std::vector<double> minorTicks;
     wxArrayString minorTickLabels;
     // minor ticks are all remaining white keys
     for(int i=0; i<=108; i+=12)
     {
-        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 2, false);
-        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 4, false);
-        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 5, false);
-        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 7, false);
-        AddNoteToTicks(&minorTicks, &minorTickLabels, i+11, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 2, tuningFreq, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 4, tuningFreq, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 5, tuningFreq, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+ 7, tuningFreq, false);
+        AddNoteToTicks(&minorTicks, &minorTickLabels, i+11, tuningFreq, false);
     }
-    AddNoteToTicks(&minorTicks, &minorTickLabels, 122, false);
-    AddNoteToTicks(&minorTicks, &minorTickLabels, 124, false);
-    AddNoteToTicks(&minorTicks, &minorTickLabels, 125, false);
-    AddNoteToTicks(&minorTicks, &minorTickLabels, 127, false);
-    
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 122, tuningFreq, false);
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 124, tuningFreq, false);
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 125, tuningFreq, false);
+    AddNoteToTicks(&minorTicks, &minorTickLabels, 127, tuningFreq, false);
+
     std::vector<double> minorMinorTicks;
     wxArrayString minorMinorTickLabels;
     // minor minor ticks are all black keys
     for(int i=0; i<=108; i+=12)
     {
-        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 1, false);
-        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 3, false);
-        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 6, false);
-        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 8, false);
-        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+10, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 1, tuningFreq, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 3, tuningFreq, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 6, tuningFreq, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+ 8, tuningFreq, false);
+        AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, i+10, tuningFreq, false);
     }
-    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 121, false);
-    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 123, false);
-    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 126, false);
+    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 121, tuningFreq, false);
+    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 123, tuningFreq, false);
+    AddNoteToTicks(&minorMinorTicks, &minorMinorTickLabels, 126, tuningFreq, false);
 
     vruler->CustomTicks(majorTicks, majorTickLabels, true, false);
     vruler->CustomTicks(minorTicks, minorTickLabels, false, true);
@@ -843,7 +844,8 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
                vruler->SetLog(false);
                if(wt->GetSpectrogramSettings().freqLabelType
                   == SpectrogramSettings::fltNotesEqualTemperament)
-                SetNotesCustomTicks(vruler.get());
+<<<<<<< HEAD
+                SetNotesCustomTicks(vruler.get(), wt->GetSpectrogramSettings().ticksTuningFreq);
             }
             break;
             case SpectrogramSettings::stLogarithmic:
@@ -875,10 +877,12 @@ void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
                vruler->SetNumberScale(&scale);
                if(wt->GetSpectrogramSettings().freqLabelType
                   == SpectrogramSettings::fltNotesEqualTemperament)
-                SetNotesCustomTicks(vruler.get());
+                SetNotesCustomTicks(vruler.get(), wt->GetSpectrogramSettings().ticksTuningFreq);
             }
             break;
             }
+
+                
          }
          return true;
       }

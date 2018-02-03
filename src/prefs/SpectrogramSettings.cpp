@@ -77,6 +77,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    , isGrayscale(other.isGrayscale)
    , scaleType(other.scaleType)
    , freqLabelType(other.freqLabelType)
+   , ticksTuningFreq(other.ticksTuningFreq)
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    , spectralSelection(other.spectralSelection)
 #endif
@@ -115,6 +116,7 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
       isGrayscale = other.isGrayscale;
       scaleType = other.scaleType;
       freqLabelType = other.freqLabelType;
+      ticksTuningFreq = other.ticksTuningFreq;
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
       spectralSelection = other.spectralSelection;
 #endif
@@ -227,6 +229,15 @@ bool SpectrogramSettings::Validate(bool quiet)
       maxFreq = std::max(1 + minFreq, maxFreq);
 
    if (!quiet &&
+      (ticksTuningFreq < 100.0 || 1000.0 < ticksTuningFreq)) {
+      AudacityMessageBox(_("Tuning freqency of the musical note A must be between 100Hz and 1000Hz"));
+       return false;
+   }
+   else
+       ticksTuningFreq = Clamp(ticksTuningFreq, 100.0, 1000.0);
+
+
+   if (!quiet &&
       range <= 0) {
       AudacityMessageBox(_("The range must be at least 1 dB"));
       return false;
@@ -283,6 +294,7 @@ void SpectrogramSettings::LoadPrefs()
 
    scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
    freqLabelType = FreqLabelType(gPrefs->Read(wxT("/Spectrum/FreqLabelType"), 0L));
+   ticksTuningFreq = gPrefs->Read(wxT("/Spectrum/TicksTuningFreq"), 440.0);
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    spectralSelection = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 1L) != 0);
@@ -332,6 +344,7 @@ void SpectrogramSettings::SavePrefs()
 
    gPrefs->Write(wxT("/Spectrum/ScaleType"), (int) scaleType);
    gPrefs->Write(wxT("/Spectrum/FreqLabelType"), (int) freqLabelType);
+   gPrefs->Write(wxT("/Spectrum/TicksTuningFreq"), ticksTuningFreq);
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
