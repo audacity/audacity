@@ -13,6 +13,7 @@
 
 #include "wxPanelWrapper.h"
 #include "../Experimental.h"
+#include <vector>
 
 #include <wx/colour.h>
 #include <wx/gdicmn.h>
@@ -84,6 +85,9 @@ class AUDACITY_DLL_API Ruler {
    // Logarithmic
    void SetLog(bool log);
 
+   // Set custom ticks
+   void CustomTicks(const std::vector<double>& values, const wxArrayString& labels, bool major, bool minor);
+
    // Minimum number of pixels between labels
    void SetSpacing(int spacing);
 
@@ -149,6 +153,8 @@ class AUDACITY_DLL_API Ruler {
 
    void TickWithLabel(int pos, const wxString& l, double d, bool major, bool minor);
    void Tick(int pos, double d, bool major, bool minor);
+
+   void UpdateCustomTicks(const std::vector<double>& customValues, const wxArrayString& customLabels, double min, double max, const NumberScale& numberScale, bool major, bool minor);
 
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
@@ -222,6 +228,13 @@ private:
    bool         mTwoTone;
    const ZoomInfo *mUseZoomInfo;
    int          mLeftOffset;
+
+   std::vector<double> mCustomMajorTicksValues;
+   wxArrayString       mCustomMajorTicksLabels;
+   std::vector<double> mCustomMinorTicksValues;
+   wxArrayString       mCustomMinorTicksLabels;
+   std::vector<double> mCustomMinorMinorTicksValues;
+   wxArrayString       mCustomMinorMinorTicksLabels;
 
    std::unique_ptr<NumberScale> mpNumberScale;
 };

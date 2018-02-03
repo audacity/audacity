@@ -174,6 +174,26 @@ void Ruler::SetUnits(const wxString &units)
    }
 }
 
+void Ruler::CustomTicks(const std::vector<double> & values, const wxArrayString& labels, bool major, bool minor)
+{
+    wxASSERT( values.size() == labels.GetCount() );
+    if(major)
+    {
+        mCustomMajorTicksValues = values;
+        mCustomMajorTicksLabels = labels;
+    }
+    else if(minor)
+    {
+        mCustomMinorTicksValues = values;
+        mCustomMinorTicksLabels = labels;
+    }
+    else
+    {
+        mCustomMinorMinorTicksValues = values;
+        mCustomMinorMinorTicksLabels = labels;
+    }
+}
+
 void Ruler::SetOrientation(int orient)
 {
    // wxHORIZONTAL || wxVERTICAL
@@ -844,6 +864,24 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    TickWithLabel(pos, LabelString(d, major), d, major, minor);
 }
 
+void Ruler::UpdateCustomTicks(const std::vector<double>& customValues, const wxArrayString& customLabels, double min, double max, const NumberScale& numberScale, bool major, bool minor)
+{
+   wxASSERT( customValues.size() == customLabels.GetCount() );
+   std::vector<double>::const_iterator vit = customValues.cbegin();
+   while(vit != customValues.cend())
+   {
+       const double val = *vit;
+       if(min < val && val < max)
+       {
+           const int idx = std::distance(customValues.cbegin(), vit);
+           const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+           wxASSERT( idx < customLabels.GetCount() );
+           TickWithLabel(pos, customLabels[idx], val, major, minor);
+       }
+       ++vit;
+   }
+}
+
 void Ruler::Update()
 {
   Update(NULL);
@@ -950,34 +988,47 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
          mBits[i] = 0;
 
    // *************** Label calculation routine **************
-   if(mLog==false) {
+   if(!mCustomMajorTicksValues.empty() || !mCustomMinorTicksValues.empty() || !mCustomMinorMinorTicksValues.empty())
+   {
+       NumberScale numberScale(mpNumberScale ? *mpNumberScale
+            : NumberScale(mLog ? nstLogarithmic :nstLinear, mMin, mMax)
+         );
+       const double rMin = std::min(mMin, mMax);
+       const double rMax = std::max(mMin, mMax);
+       UpdateCustomTicks(mCustomMajorTicksValues, mCustomMajorTicksLabels, rMin, rMax, numberScale, true, false);
+       UpdateCustomTicks(mCustomMinorTicksValues, mCustomMinorTicksLabels, rMin, rMax, numberScale, false, true);
+       UpdateCustomTicks(mCustomMinorMinorTicksValues, mCustomMinorMinorTicksLabels, rMin, rMax, numberScale, false, false);
+   }
+   else
+   {
+      if(mLog==false) {
 
-      // Use the "hidden" min and max to determine the tick size.
-      // That may make a difference with fisheye.
-      // Otherwise you may see the tick size for the whole ruler change
-      // when the fisheye approaches start or end.
-      double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-      FindLinearTickSizes(UPP);
+         // Use the "hidden" min and max to determine the tick size.
+         // That may make a difference with fisheye.
+         // Otherwise you may see the tick size for the whole ruler change
+         // when the fisheye approaches start or end.
+         double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
+         FindLinearTickSizes(UPP);
 
-      // Left and Right Edges
-      if (mLabelEdges) {
-         Tick(0, mMin, true, false);
-         Tick(mLength, mMax, true, false);
-      }
+         // Left and Right Edges
+         if (mLabelEdges) {
+            Tick(0, mMin, true, false);
+            Tick(mLength, mMax, true, false);
+         }
 
-      // Zero (if it's in the middle somewhere)
-      if (mMin * mMax < 0.0) {
-         int mid;
-         if (zoomInfo != NULL)
-            mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
-         else
-            mid = (int)(mLength*(mMin / (mMin - mMax)) + 0.5);
-         const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
-         if (mid >= 0 && mid < iMaxPos)
-            Tick(mid, 0.0, true, false);
-      }
+         // Zero (if it's in the middle somewhere)
+         if (mMin * mMax < 0.0) {
+            int mid;
+            if (zoomInfo != NULL)
+               mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
+            else
+               mid = (int)(mLength*(mMin / (mMin - mMax)) + 0.5);
+            const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
+            if (mid >= 0 && mid < iMaxPos)
+               Tick(mid, 0.0, true, false);
+         }
 
-      double sg = UPP > 0.0? 1.0: -1.0;
+         double sg = UPP > 0.0? 1.0: -1.0;
 
       int nDroppedMinorLabels=0;
       // Major and minor ticks
@@ -986,38 +1037,38 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
          i = -1; j = 0;
          double d, warpedD, nextD;
 
-         double prevTime = 0.0, time = 0.0;
-         if (zoomInfo != NULL) {
-            j = zoomInfo->TimeToPosition(mMin);
-            prevTime = zoomInfo->PositionToTime(--j);
-            time = zoomInfo->PositionToTime(++j);
-            d = (prevTime + time) / 2.0;
-         }
-         else
-            d = mMin - UPP / 2;
-         if (timetrack)
-            warpedD = timetrack->ComputeWarpedLength(0.0, d);
-         else
-            warpedD = d;
-         // using ints doesn't work, as
-         // this will overflow and be negative at high zoom.
-         double step = floor(sg * warpedD / denom);
-         while (i <= mLength) {
-            i++;
-            if (zoomInfo)
-            {
-               prevTime = time;
+            double prevTime = 0.0, time = 0.0;
+            if (zoomInfo != NULL) {
+               j = zoomInfo->TimeToPosition(mMin);
+               prevTime = zoomInfo->PositionToTime(--j);
                time = zoomInfo->PositionToTime(++j);
-               nextD = (prevTime + time) / 2.0;
-               // wxASSERT(time >= prevTime);
+               d = (prevTime + time) / 2.0;
             }
             else
-               nextD = d + UPP;
+               d = mMin - UPP / 2;
             if (timetrack)
-               warpedD += timetrack->ComputeWarpedLength(d, nextD);
+               warpedD = timetrack->ComputeWarpedLength(0.0, d);
             else
-               warpedD = nextD;
-            d = nextD;
+               warpedD = d;
+            // using ints doesn't work, as
+            // this will overflow and be negative at high zoom.
+            double step = floor(sg * warpedD / denom);
+            while (i <= mLength) {
+               i++;
+               if (zoomInfo)
+               {
+                  prevTime = time;
+                  time = zoomInfo->PositionToTime(++j);
+                  nextD = (prevTime + time) / 2.0;
+                  // wxASSERT(time >= prevTime);
+               }
+               else
+                  nextD = d + UPP;
+               if (timetrack)
+                  warpedD += timetrack->ComputeWarpedLength(d, nextD);
+               else
+                  warpedD = nextD;
+               d = nextD;
 
             if (floor(sg * warpedD / denom) > step) {
                step = floor(sg * warpedD / denom);
@@ -1028,7 +1079,6 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
                }
             }
          }
-      }
 
       // If we've dropped minor labels through overcrowding, then don't show
       // any of them.  We're allowed though to drop ones which correspond to the
@@ -1046,81 +1096,81 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
          Tick(0, mMin, true, false);
          Tick(mLength, mMax, true, false);
       }
-   }
-   else {
-      // log case
+      else {
+         // log case
 
-      NumberScale numberScale(mpNumberScale
-         ? *mpNumberScale
-         : NumberScale(nstLogarithmic, mMin, mMax)
-      );
+         NumberScale numberScale(mpNumberScale
+            ? *mpNumberScale
+            : NumberScale(nstLogarithmic, mMin, mMax)
+         );
 
-      mDigits=2; //TODO: implement dynamic digit computation
-      double loLog = log10(mMin);
-      double hiLog = log10(mMax);
-      int loDecade = (int) floor(loLog);
+         mDigits=2; //TODO: implement dynamic digit computation
+         double loLog = log10(mMin);
+         double hiLog = log10(mMax);
+         int loDecade = (int) floor(loLog);
 
-      double val;
-      double startDecade = pow(10., (double)loDecade);
+         double val;
+         double startDecade = pow(10., (double)loDecade);
 
-      // Major ticks are the decades
-      double decade = startDecade;
-      double delta=hiLog-loLog, steps=fabs(delta);
-      double step = delta>=0 ? 10 : 0.1;
-      double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
-      for(i=0; i<=steps; i++)
-      {  // if(i!=0)
-         {  val = decade;
-            if(val >= rMin && val < rMax) {
-               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick(pos, val, true, false);
+         // Major ticks are the decades
+         double decade = startDecade;
+         double delta=hiLog-loLog, steps=fabs(delta);
+         double step = delta>=0 ? 10 : 0.1;
+         double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
+         for(i=0; i<=steps; i++)
+         {  // if(i!=0)
+            {  val = decade;
+               if(val >= rMin && val < rMax) {
+                  const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+                  Tick(pos, val, true, false);
+               }
             }
+            decade *= step;
          }
-         decade *= step;
-      }
 
-      // Minor ticks are multiples of decades
-      decade = startDecade;
-      float start, end, mstep;
-      if (delta > 0)
-      {  start=2; end=10; mstep=1;
-      }else
-      {  start=9; end=1; mstep=-1;
-      }
-      steps++;
-      for(i=0; i<=steps; i++) {
-         for(j=start; j!=end; j+=mstep) {
-            val = decade * j;
-            if(val >= rMin && val < rMax) {
-               const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-               Tick(pos, val, false, true);
+         // Minor ticks are multiples of decades
+         decade = startDecade;
+         float start, end, mstep;
+         if (delta > 0)
+         {  start=2; end=10; mstep=1;
+         }else
+         {  start=9; end=1; mstep=-1;
+         }
+         steps++;
+         for(i=0; i<=steps; i++) {
+            for(j=start; j!=end; j+=mstep) {
+               val = decade * j;
+               if(val >= rMin && val < rMax) {
+                  const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+                  Tick(pos, val, false, true);
+               }
             }
+            decade *= step;
          }
-         decade *= step;
-      }
 
-      // MinorMinor ticks are multiples of decades
-      decade = startDecade;
-      if (delta > 0)
-      {  start= 10; end=100; mstep= 1;
-      }else
-      {  start=100; end= 10; mstep=-1;
-      }
-      steps++;
-      for (i = 0; i <= steps; i++) {
-         // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
-         if (!(mFormat == IntFormat && decade < 10.0)) {
-            for (int f = start; f != (int)(end); f += mstep) {
-               if ((int)(f / 10) != f / 10.0f) {
-                  val = decade * f / 10;
-                  if (val >= rMin && val < rMax) {
-                     const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                     Tick(pos, val, false, false);
+         // MinorMinor ticks are multiples of decades
+         decade = startDecade;
+         if (delta > 0)
+         {  start= 10; end=100; mstep= 1;
+         }else
+         {  start=100; end= 10; mstep=-1;
+         }
+         steps++;
+         for (i = 0; i <= steps; i++) {
+            // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
+            if (!(mFormat == IntFormat && decade < 10.0)) {
+               for (int f = start; f != (int)(end); f += mstep) {
+                  if ((int)(f / 10) != f / 10.0f) {
+                     val = decade * f / 10;
+                     if (val >= rMin && val < rMax) {
+                        const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
+                        Tick(pos, val, false, false);
+                     }
                   }
                }
             }
+            decade *= step;
          }
-         decade *= step;
       }
    }
 
