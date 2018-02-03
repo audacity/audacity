@@ -174,7 +174,7 @@ const wxArrayString &SpectrogramSettings::GetFreqLabelNames()
     {
         void Populate() override
         {
-            mContents.Add(_("Numeric"));
+            mContents.Add(_("Hertz (Hz)"));
             mContents.Add(_("Notes (Equal Temperament)"));
         }
     };
