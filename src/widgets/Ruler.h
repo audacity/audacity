@@ -147,6 +147,7 @@ class AUDACITY_DLL_API Ruler {
    void FindLinearTickSizes(double UPP);
    wxString LabelString(double d, bool major);
 
+   void TickWithLabel(int pos, const wxString& l, double d, bool major, bool minor);
    void Tick(int pos, double d, bool major, bool minor);
 
 public:
