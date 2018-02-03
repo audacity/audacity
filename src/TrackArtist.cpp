@@ -185,6 +185,7 @@ audio tracks.
 #include "Experimental.h"
 #include "TrackPanelDrawingContext.h"
 #include "PitchName.h"
+#include "Clamp.h"
 
 
 #undef PROFILE_WAVEFORM
@@ -2351,14 +2352,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
 
       NumberScale::Iterator it = numberScale.begin(mid.height);
-      float nextBin = std::max( 0.0f, std::min( float(nBins - 1),
-         settings.findBin( *it, binUnit ) ) );
+      float nextBin = Clamp(settings.findBin(*it, binUnit), 0.0f, float(nBins - 1));
 
       int yy;
       for (yy = 0; yy < hiddenMid.height; ++yy) {
          bins[yy] = nextBin;
-         nextBin = std::max( 0.0f, std::min( float(nBins - 1),
-            settings.findBin( *++it, binUnit ) ) );
+         nextBin = Clamp(settings.findBin( *++it, binUnit), 0.0f, float(nBins - 1));
       }
       bins[yy] = nextBin;
    }
