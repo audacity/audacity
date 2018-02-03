@@ -760,9 +760,8 @@ wxString Ruler::LabelString(double d, bool major)
    return s;
 }
 
-void Ruler::Tick(int pos, double d, bool major, bool minor)
+void Ruler::TickWithLabel(int pos, const wxString& l, double d, bool major, bool minor)
 {
-   wxString l;
    wxCoord strW, strH, strD, strL;
    int strPos, strLen, strLeft, strTop;
 
@@ -790,7 +789,6 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    label->text = wxT("");
 
    mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
-   l = LabelString(d, major);
    mDC->GetTextExtent(l, &strW, &strH, &strD, &strL);
 
    if (mOrientation == wxHORIZONTAL) {
@@ -865,7 +863,19 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
 
    wxRect r(strLeft, strTop, strW, strH);
    mRect.Union(r);
+}
 
+void Ruler::Tick(int pos, double d, bool major, bool minor)
+{
+   // FIXME: We don't draw a tick if of end of our label arrays
+   // But we shouldn't have an array of labels.
+   if( mNumMinorMinor >= mLength )
+      return;
+   if( mNumMinor >= mLength )
+      return;
+   if( mNumMajor >= mLength )
+      return;
+   TickWithLabel(pos, LabelString(d, major), d, major, minor);
 }
 
 void Ruler::Update()
