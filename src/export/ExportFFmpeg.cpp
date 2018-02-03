@@ -141,6 +141,7 @@ public:
    ///\param subformat index of export type
    ///\return true if export succeded
    ProgressResult Export(AudacityProject *project,
+      std::unique_ptr<ProgressDialog> &pDialog,
       unsigned channels,
       const wxString &fName,
       bool selectedOnly,
@@ -226,7 +227,7 @@ ExportFFmpeg::ExportFFmpeg()
       SetDescription(ExportFFmpegOptions::fmts[newfmt].Description(), fmtindex);
 
       int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
-      if (canmeta && (canmeta == AV_VERSION_INT(-1,-1,-1) || canmeta <= avfver))
+      if (canmeta && (canmeta == AV_CANMETA || canmeta <= avfver))
       {
          SetCanMetaData(true,fmtindex);
       }
@@ -464,12 +465,13 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 
    if (mEncAudioCodecCtx->global_quality >= 0)
    {
-      mEncAudioCodecCtx->flags |= CODEC_FLAG_QSCALE;
+      mEncAudioCodecCtx->flags |= AV_CODEC_FLAG_QSCALE;
    }
    else mEncAudioCodecCtx->global_quality = 0;
    mEncAudioCodecCtx->global_quality = mEncAudioCodecCtx->global_quality * FF_QP2LAMBDA;
    mEncAudioCodecCtx->sample_rate = mSampleRate;
    mEncAudioCodecCtx->channels = mChannels;
+   mEncAudioCodecCtx->channel_layout = av_get_default_channel_layout(mChannels);
    mEncAudioCodecCtx->time_base.num = 1;
    mEncAudioCodecCtx->time_base.den = mEncAudioCodecCtx->sample_rate;
    mEncAudioCodecCtx->sample_fmt = AV_SAMPLE_FMT_S16;
@@ -518,8 +520,8 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 
    if (mEncFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
    {
-      mEncAudioCodecCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
-      mEncFormatCtx->flags |= CODEC_FLAG_GLOBAL_HEADER;
+      mEncAudioCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+      mEncFormatCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
    }
 
    // Open the codec.
@@ -688,7 +690,7 @@ bool ExportFFmpeg::Finalize()
          // Or if frame_size is 1, then it's some kind of PCM codec, they don't have frames and will be fine with the samples
          // Otherwise we'll send a full frame of audio + silence padding to ensure all audio is encoded
          int frame_size = default_frame_size;
-         if (mEncAudioCodecCtx->codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME ||
+         if (mEncAudioCodecCtx->codec->capabilities & AV_CODEC_CAP_SMALL_LAST_FRAME ||
              frame_size == 1)
             frame_size = nFifoBytes / (mEncAudioCodecCtx->channels * sizeof(int16_t));
 
@@ -849,8 +851,10 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 
 
 ProgressResult ExportFFmpeg::Export(AudacityProject *project,
-                       unsigned channels, const wxString &fName,
-                       bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata, int subformat)
+   std::unique_ptr<ProgressDialog> &pDialog,
+   unsigned channels, const wxString &fName,
+   bool selectionOnly, double t0, double t1,
+   MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
    if (!CheckFFmpegPresence())
       return ProgressResult::Cancelled;
@@ -901,10 +905,13 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    auto updateResult = ProgressResult::Success;
    {
-      ProgressDialog progress(wxFileName(fName).GetName(),
-         selectionOnly ?
-         wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()) :
-         wxString::Format(_("Exporting the audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()));
+      InitProgress( pDialog, wxFileName(fName).GetName(),
+         selectionOnly
+            ? wxString::Format(_("Exporting selected audio as %s"),
+               ExportFFmpegOptions::fmts[mSubFormat].Description())
+            : wxString::Format(_("Exporting the audio as %s"),
+               ExportFFmpegOptions::fmts[mSubFormat].Description()) );
+      auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);

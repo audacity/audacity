@@ -287,6 +287,7 @@ public:
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
    ProgressResult Export(AudacityProject *project,
+               std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -309,6 +310,7 @@ ExportCL::ExportCL()
 }
 
 ProgressResult ExportCL::Export(AudacityProject *project,
+                      std::unique_ptr<ProgressDialog> &pDialog,
                       unsigned channels,
                       const wxString &fName,
                       bool selectionOnly,
@@ -448,10 +450,11 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       } );
 
       // Prepare the progress display
-      ProgressDialog progress(_("Export"),
-         selectionOnly ?
-         _("Exporting the selected audio using command-line encoder") :
-         _("Exporting the audio using command-line encoder"));
+      InitProgress( pDialog, _("Export"),
+         selectionOnly
+            ? _("Exporting the selected audio using command-line encoder")
+            : _("Exporting the audio using command-line encoder") );
+      auto &progress = *pDialog;
 
       // Start piping the mixed data to the command
       while (updateResult == ProgressResult::Success && process.IsActive() && os->IsOk()) {

@@ -133,6 +133,7 @@ public:
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
    ProgressResult Export(AudacityProject *project,
+               std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -159,6 +160,7 @@ ExportOGG::ExportOGG()
 }
 
 ProgressResult ExportOGG::Export(AudacityProject *project,
+                       std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned numChannels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -281,10 +283,11 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          numChannels, SAMPLES_PER_RUN, false,
          rate, floatSample, true, mixerSpec);
 
-      ProgressDialog progress(wxFileName(fName).GetName(),
-         selectionOnly ?
-         _("Exporting the selected audio as Ogg Vorbis") :
-         _("Exporting the audio as Ogg Vorbis"));
+      InitProgress( pDialog, wxFileName(fName).GetName(),
+         selectionOnly
+            ? _("Exporting the selected audio as Ogg Vorbis")
+            : _("Exporting the audio as Ogg Vorbis") );
+      auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success && !eos) {
          float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);

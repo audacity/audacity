@@ -299,12 +299,12 @@ AButton::AButtonState AButton::GetState()
       }
    }
    else {
-      if (mToggle) {
+      //if (mToggle) {
          state = mButtonIsDown ? AButtonDown : AButtonUp;
-      }
-      else {
-         state = mButtonIsDown ? AButtonDown : AButtonUp;
-      }
+      //}
+      //else {
+         //state = mButtonIsDown ? AButtonDown : AButtonUp;
+      //}
    }
 
    return state;

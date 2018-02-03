@@ -86,6 +86,8 @@ public:
                int flags = pdlgDefaultFlags,
                const wxString & sRemainingLabelText = wxEmptyString);
 
+   void Reinit();
+
 protected:
    bool Create(const wxString & title,
                const MessageTable & columns,
@@ -103,7 +105,7 @@ public:
    void SetMessage(const wxString & message);
 
 protected:
-   wxWindow *mHadFocus;
+   wxWeakRef<wxWindow> mHadFocus;
 
    wxStaticText *mElapsed;
    wxStaticText *mRemaining;

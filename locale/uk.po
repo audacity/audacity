@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-18 00:56-0500\n"
-"PO-Revision-Date: 2018-01-18 08:56+0200\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
+"PO-Revision-Date: 2018-02-01 10:23+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -731,9 +731,9 @@ msgstr ""
 "Звукові дані файлів, які не знайдено, буде замінено тишею.\n"
 "Першою виявлено нестачу цього файла:\n"
 "%s\n"
-"Може не вистачати інших файлів. Скористайтеся пунктом меню «Довідка ->"
-" Діагностика -> "
-"Перевірити залежності», щоб переглянути дані щодо розташування файлів."
+"Може не вистачати інших файлів. Скористайтеся пунктом меню «Довідка -> "
+"Діагностика -> Перевірити залежності», щоб переглянути дані щодо "
+"розташування файлів."
 
 #: src/AudacityApp.cpp
 msgid "Files Missing"
@@ -3223,7 +3223,7 @@ msgstr "Від&новити панелі"
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
 #: src/Menus.cpp
 msgid "&Transport Toolbar"
-msgstr "Панель п&еренесення"
+msgstr "Панель к&ерування"
 
 #. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
 #: src/Menus.cpp
@@ -3289,7 +3289,7 @@ msgstr "Показати з&різання (увімкн./вимкн.)"
 #. play, record, pause etc.
 #: src/Menus.cpp
 msgid "T&ransport"
-msgstr "Пе&ренесення"
+msgstr "Ке&рування"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/Menus.cpp
@@ -3380,7 +3380,7 @@ msgstr "П&овторно виявити звукові пристрої"
 
 #: src/Menus.cpp
 msgid "Transport &Options"
-msgstr "Параметри п&ередавання"
+msgstr "Параметри к&ерування"
 
 #: src/Menus.cpp
 msgid "Sound Activation Le&vel..."
@@ -3428,11 +3428,11 @@ msgstr "Доріжку &часу"
 
 #: src/Menus.cpp
 msgid "Mi&x"
-msgstr "Мі&кшування"
+msgstr "Змі&кшувати"
 
 #: src/Menus.cpp
 msgid "Mix Stereo down to &Mono"
-msgstr "Мікшувати стерео у &моно"
+msgstr "Змікшувати стерео у &моно"
 
 #: src/Menus.cpp
 msgid "Mi&x and Render"
@@ -3440,7 +3440,7 @@ msgstr "Змі&кшувати і обробити"
 
 #: src/Menus.cpp
 msgid "Mix and Render to Ne&w Track"
-msgstr "Мікшувати і обробити як &нову доріжку"
+msgstr "Змікшувати і обробити як &нову доріжку"
 
 #: src/Menus.cpp
 msgid "&Resample..."
@@ -4526,7 +4526,7 @@ msgstr "Змікшовано та перетворено %d доріжок у о
 
 #: src/Menus.cpp src/Mix.cpp
 msgid "Mix and Render"
-msgstr "Мікшувати і перетворити"
+msgstr "Змікшувати і перетворити"
 
 #. i18n-hint: compose a name identifying an unnamed track by number
 #. i18n-hint: The %d is replaced by th enumber of the track.
@@ -5851,7 +5851,7 @@ msgstr "Інструменти"
 
 #: src/Screenshot.cpp src/toolbars/ControlToolBar.cpp
 msgid "Transport"
-msgstr "Перенесення"
+msgstr "Керування"
 
 #: src/Screenshot.cpp src/toolbars/MixerToolBar.cpp
 msgid "Mixer"
@@ -10233,7 +10233,9 @@ msgstr "Всі позначені ділянки звукових доріжок
 msgid "All audio is muted."
 msgstr "Всі дані звукових доріжок замінено тишею."
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "Не вдалося експортувати"
 
@@ -10281,9 +10283,9 @@ msgstr ""
 "проекті.\n"
 "Запис цього файла неможливий, оскільки для відновлення початкових звукових "
 "даних у проекті слід вказати шлях до них.\n"
-"Скористайтеся пунктом меню «Довідка -> Діагностика -> Перевірити залежності»,"
-" щоб переглянути "
-"записи щодо розташування всіх файлів, яких не вистачає.\n"
+"Скористайтеся пунктом меню «Довідка -> Діагностика -> Перевірити "
+"залежності», щоб переглянути записи щодо розташування всіх файлів, яких не "
+"вистачає.\n"
 "Якщо ви все ще бажаєте експортувати дані, будь ласка, вкажіть іншу назву "
 "файла або теки."
 
@@ -11931,9 +11933,8 @@ msgstr ""
 "вам доведеться зберігати початкові назви та розташування редагованих "
 "файлів.\n"
 "Переглянути список назв та розташування файлів, дані яких використовуються "
-"безпосередньо, можна за допомогою пункту меню «Довідка -> Діагностика ->"
-" Перевірити "
-"залежності».\n"
+"безпосередньо, можна за допомогою пункту меню «Довідка -> Діагностика -> "
+"Перевірити залежності».\n"
 "\n"
 "Отже, який спосіб слід використати для імпортування поточних файлів?"
 
@@ -12519,7 +12520,7 @@ msgstr "Коли експортуються доріжки до аудіофай
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Mix down to Stereo or Mono"
-msgstr "Мікшувати с&терео у моно"
+msgstr "Змікшувати с&терео у моно"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Use custom mix"
@@ -13465,7 +13466,7 @@ msgstr ""
 "Натисніть «Завантажити кеш тем», щоб завантажити змінені зображення та "
 "кольори до Audacity.\n"
 "\n"
-"(У поточній версії підтримуються панель перенесення та кольори звукової "
+"(У поточній версії підтримуються панель керування та кольори звукової "
 "доріжки, незважаючи на те, що файли\n"
 "зображень показують також інші піктограми.)"
 

@@ -166,7 +166,7 @@ wxArrayString VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUS
          if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
                j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||
                !j->hasFixedBinCount ||
-               (j->hasFixedBinCount && j->binCount > 1))
+               j->binCount > 1)
          {
             // All of these qualities disqualify (see notes above)
 
@@ -299,7 +299,7 @@ std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const wxString & pat
       if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
             j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||
             !j->hasFixedBinCount ||
-            (j->hasFixedBinCount && j->binCount > 1))
+            j->binCount > 1)
       {
          // All of these qualities disqualify (see notes above)
 

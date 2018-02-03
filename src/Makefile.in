@@ -338,9 +338,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h \
 	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
-	commands/ExecMenuCommand.h commands/AutomationCommands.cpp \
-	commands/AutomationCommands.h \
-	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
+	commands/AppCommandEvent.h commands/AutomationCommands.cpp \
+	commands/AutomationCommands.h commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h commands/Command.cpp \
 	commands/Command.h commands/CommandBuilder.cpp \
 	commands/CommandBuilder.h commands/CommandDirectory.cpp \
@@ -352,7 +351,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	commands/CommandTargets.h commands/CommandType.cpp \
 	commands/CommandType.h commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h commands/ExecMenuCommand.cpp \
-	commands/GetProjectInfoCommand.cpp \
+	commands/ExecMenuCommand.h commands/GetProjectInfoCommand.cpp \
 	commands/GetProjectInfoCommand.h \
 	commands/GetTrackInfoCommand.cpp \
 	commands/GetTrackInfoCommand.h commands/HelpCommand.cpp \
@@ -661,6 +660,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-VoiceKey.$(OBJEXT) audacity-WaveClip.$(OBJEXT) \
 	audacity-WaveTrack.$(OBJEXT) audacity-WrappedType.$(OBJEXT) \
 	commands/audacity-AppCommandEvent.$(OBJEXT) \
+	commands/audacity-AutomationCommands.$(OBJEXT) \
 	commands/audacity-BatchEvalCommand.$(OBJEXT) \
 	commands/audacity-Command.$(OBJEXT) \
 	commands/audacity-CommandBuilder.$(OBJEXT) \
@@ -671,7 +671,6 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	commands/audacity-CommandType.$(OBJEXT) \
 	commands/audacity-CompareAudioCommand.$(OBJEXT) \
 	commands/audacity-ExecMenuCommand.$(OBJEXT) \
-	commands/audacity-AutomationCommands.$(OBJEXT) \
 	commands/audacity-GetProjectInfoCommand.$(OBJEXT) \
 	commands/audacity-GetTrackInfoCommand.$(OBJEXT) \
 	commands/audacity-HelpCommand.$(OBJEXT) \
@@ -1103,7 +1102,6 @@ LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
-LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 LV2_CFLAGS = @LV2_CFLAGS@
 LV2_LIBS = @LV2_LIBS@
 MAINT = @MAINT@
@@ -1129,8 +1127,6 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
-PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
-PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 PORTAUDIO_CFLAGS = @PORTAUDIO_CFLAGS@
 PORTAUDIO_LIBS = @PORTAUDIO_LIBS@
 PORTMIDI_CFLAGS = @PORTMIDI_CFLAGS@
@@ -1264,16 +1260,17 @@ libaudacity_la_SOURCES = \
 	$(NULL)
 
 audacity_CPPFLAGS = -std=c++11 -Wno-deprecated-declarations \
-	-D__STDC_CONSTANT_MACROS -DLIBDIR=\"$(libdir)\" \
-	$(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) $(PORTAUDIO_CFLAGS) \
-	$(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) $(SOXR_CFLAGS) \
-	$(WIDGETEXTRA_CFLAGS) $(WX_CXXFLAGS) $(NULL) $(am__append_1) \
-	$(am__append_4) $(am__append_7) $(am__append_10) \
-	$(am__append_13) $(am__append_15) $(am__append_18) \
-	$(am__append_20) $(am__append_22) $(am__append_25) \
-	$(am__append_27) $(am__append_29) $(am__append_31) \
-	$(am__append_34) $(am__append_37) $(am__append_39) \
-	$(am__append_42) $(am__append_44) $(am__append_47)
+	-D__STDC_CONSTANT_MACROS -DWXINTL_NO_GETTEXT_MACRO \
+	-DLIBDIR=\"$(libdir)\" $(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) \
+	$(PORTAUDIO_CFLAGS) $(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) \
+	$(SOXR_CFLAGS) $(WIDGETEXTRA_CFLAGS) $(WX_CXXFLAGS) $(NULL) \
+	$(am__append_1) $(am__append_4) $(am__append_7) \
+	$(am__append_10) $(am__append_13) $(am__append_15) \
+	$(am__append_18) $(am__append_20) $(am__append_22) \
+	$(am__append_25) $(am__append_27) $(am__append_29) \
+	$(am__append_31) $(am__append_34) $(am__append_37) \
+	$(am__append_39) $(am__append_42) $(am__append_44) \
+	$(am__append_47)
 
 # Until we upgrade to a newer version of wxWidgets...will get rid of hundreds of these:
 #
@@ -1353,7 +1350,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h \
 	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
-	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
+	commands/AppCommandEvent.h commands/AutomationCommands.cpp \
+	commands/AutomationCommands.h commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h commands/Command.cpp \
 	commands/Command.h commands/CommandBuilder.cpp \
 	commands/CommandBuilder.h commands/CommandDirectory.cpp \
@@ -1365,9 +1363,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	commands/CommandTargets.h commands/CommandType.cpp \
 	commands/CommandType.h commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h commands/ExecMenuCommand.cpp \
-	commands/ExecMenuCommand.h commands/AutomationCommands.cpp \
-	commands/GetAllMenuCommands.h \
-	commands/GetProjectInfoCommand.cpp \
+	commands/ExecMenuCommand.h commands/GetProjectInfoCommand.cpp \
 	commands/GetProjectInfoCommand.h \
 	commands/GetTrackInfoCommand.cpp \
 	commands/GetTrackInfoCommand.h commands/HelpCommand.cpp \
@@ -1762,6 +1758,8 @@ commands/$(DEPDIR)/$(am__dirstamp):
 	@: > commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-AppCommandEvent.$(OBJEXT): commands/$(am__dirstamp) \
 	commands/$(DEPDIR)/$(am__dirstamp)
+commands/audacity-AutomationCommands.$(OBJEXT):  \
+	commands/$(am__dirstamp) commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-BatchEvalCommand.$(OBJEXT):  \
 	commands/$(am__dirstamp) commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-Command.$(OBJEXT): commands/$(am__dirstamp) \
@@ -1782,8 +1780,6 @@ commands/audacity-CompareAudioCommand.$(OBJEXT):  \
 	commands/$(am__dirstamp) commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-ExecMenuCommand.$(OBJEXT): commands/$(am__dirstamp) \
 	commands/$(DEPDIR)/$(am__dirstamp)
-commands/audacity-AutomationCommands.$(OBJEXT):  \
-	commands/$(am__dirstamp) commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-GetProjectInfoCommand.$(OBJEXT):  \
 	commands/$(am__dirstamp) commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-GetTrackInfoCommand.$(OBJEXT):  \
@@ -2493,6 +2489,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-SilentBlockFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-SimpleBlockFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-AppCommandEvent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-AutomationCommands.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-BatchEvalCommand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-Command.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-CommandBuilder.Po@am__quote@
@@ -2503,7 +2500,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-CommandType.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-CompareAudioCommand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-ExecMenuCommand.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-AutomationCommands.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-GetProjectInfoCommand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-GetTrackInfoCommand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-HelpCommand.Po@am__quote@
@@ -4216,6 +4212,20 @@ commands/audacity-AppCommandEvent.obj: commands/AppCommandEvent.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-AppCommandEvent.obj `if test -f 'commands/AppCommandEvent.cpp'; then $(CYGPATH_W) 'commands/AppCommandEvent.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/AppCommandEvent.cpp'; fi`
 
+commands/audacity-AutomationCommands.o: commands/AutomationCommands.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-AutomationCommands.o -MD -MP -MF commands/$(DEPDIR)/audacity-AutomationCommands.Tpo -c -o commands/audacity-AutomationCommands.o `test -f 'commands/AutomationCommands.cpp' || echo '$(srcdir)/'`commands/AutomationCommands.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) commands/$(DEPDIR)/audacity-AutomationCommands.Tpo commands/$(DEPDIR)/audacity-AutomationCommands.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/AutomationCommands.cpp' object='commands/audacity-AutomationCommands.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-AutomationCommands.o `test -f 'commands/AutomationCommands.cpp' || echo '$(srcdir)/'`commands/AutomationCommands.cpp
+
+commands/audacity-AutomationCommands.obj: commands/AutomationCommands.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-AutomationCommands.obj -MD -MP -MF commands/$(DEPDIR)/audacity-AutomationCommands.Tpo -c -o commands/audacity-AutomationCommands.obj `if test -f 'commands/AutomationCommands.cpp'; then $(CYGPATH_W) 'commands/AutomationCommands.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/AutomationCommands.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) commands/$(DEPDIR)/audacity-AutomationCommands.Tpo commands/$(DEPDIR)/audacity-AutomationCommands.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/AutomationCommands.cpp' object='commands/audacity-AutomationCommands.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-AutomationCommands.obj `if test -f 'commands/AutomationCommands.cpp'; then $(CYGPATH_W) 'commands/AutomationCommands.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/AutomationCommands.cpp'; fi`
+
 commands/audacity-BatchEvalCommand.o: commands/BatchEvalCommand.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-BatchEvalCommand.o -MD -MP -MF commands/$(DEPDIR)/audacity-BatchEvalCommand.Tpo -c -o commands/audacity-BatchEvalCommand.o `test -f 'commands/BatchEvalCommand.cpp' || echo '$(srcdir)/'`commands/BatchEvalCommand.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) commands/$(DEPDIR)/audacity-BatchEvalCommand.Tpo commands/$(DEPDIR)/audacity-BatchEvalCommand.Po
@@ -4355,20 +4365,6 @@ commands/audacity-ExecMenuCommand.obj: commands/ExecMenuCommand.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/ExecMenuCommand.cpp' object='commands/audacity-ExecMenuCommand.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-ExecMenuCommand.obj `if test -f 'commands/ExecMenuCommand.cpp'; then $(CYGPATH_W) 'commands/ExecMenuCommand.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/ExecMenuCommand.cpp'; fi`
-
-commands/audacity-AutomationCommands.o: commands/AutomationCommands.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-AutomationCommands.o -MD -MP -MF commands/$(DEPDIR)/audacity-AutomationCommands.Tpo -c -o commands/audacity-AutomationCommands.o `test -f 'commands/AutomationCommands.cpp' || echo '$(srcdir)/'`commands/AutomationCommands.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) commands/$(DEPDIR)/audacity-AutomationCommands.Tpo commands/$(DEPDIR)/audacity-AutomationCommands.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/AutomationCommands.cpp' object='commands/audacity-AutomationCommands.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-AutomationCommands.o `test -f 'commands/AutomationCommands.cpp' || echo '$(srcdir)/'`commands/AutomationCommands.cpp
-
-commands/audacity-AutomationCommands.obj: commands/AutomationCommands.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-AutomationCommands.obj -MD -MP -MF commands/$(DEPDIR)/audacity-AutomationCommands.Tpo -c -o commands/audacity-AutomationCommands.obj `if test -f 'commands/AutomationCommands.cpp'; then $(CYGPATH_W) 'commands/AutomationCommands.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/AutomationCommands.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) commands/$(DEPDIR)/audacity-AutomationCommands.Tpo commands/$(DEPDIR)/audacity-AutomationCommands.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/AutomationCommands.cpp' object='commands/audacity-AutomationCommands.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-AutomationCommands.obj `if test -f 'commands/AutomationCommands.cpp'; then $(CYGPATH_W) 'commands/AutomationCommands.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/AutomationCommands.cpp'; fi`
 
 commands/audacity-GetProjectInfoCommand.o: commands/GetProjectInfoCommand.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-GetProjectInfoCommand.o -MD -MP -MF commands/$(DEPDIR)/audacity-GetProjectInfoCommand.Tpo -c -o commands/audacity-GetProjectInfoCommand.o `test -f 'commands/GetProjectInfoCommand.cpp' || echo '$(srcdir)/'`commands/GetProjectInfoCommand.cpp

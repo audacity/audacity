@@ -810,7 +810,7 @@ public:
 
    // Whether to check the error code passed to audacityAudioCallback to
    // detect more dropouts
-   bool mDetectUpstreamDropouts{ false };
+   bool mDetectUpstreamDropouts{ true };
 };
 
 #endif

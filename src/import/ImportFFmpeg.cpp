@@ -404,23 +404,27 @@ bool FFmpegImportFileHandle::InitCodecs()
          sc->m_stream = mFormatContext->streams[i];
          sc->m_codecCtx = sc->m_stream->codec;
 
-         AVCodec *codec = avcodec_find_decoder(sc->m_codecCtx->codec_id);
+         const AVCodecID id   = sc->m_codecCtx->codec_id;
+         const char*     name = avcodec_get_name(id);
+         const AVCodec *codec = avcodec_find_decoder(id);
+
          if (codec == NULL)
          {
-            wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,id,name);
             //FFmpeg can't decode this stream, skip it
             continue;
          }
+
          if (codec->type != sc->m_codecCtx->codec_type)
          {
-            wxLogError(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,id,name);
             //Non-audio codec reported as audio? Nevertheless, we don't need THIS.
             continue;
          }
 
          if (avcodec_open2(sc->m_codecCtx, codec, NULL) < 0)
          {
-            wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,id,name);
             //Can't open decoder - skip this stream
             continue;
          }
@@ -434,7 +438,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             duration = mFormatContext->duration / AV_TIME_BASE;
          wxString bitrate = wxT("");
          if (sc->m_codecCtx->bit_rate > 0)
-            bitrate.Printf(wxT("%d"),sc->m_codecCtx->bit_rate);
+            bitrate.Printf(wxT("%d"),(int)sc->m_codecCtx->bit_rate);
          else
             bitrate.Printf(wxT("?"));
 
@@ -444,7 +448,8 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             lang.FromUTF8(tag->value);
          }
-         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang,bitrate,sc->m_stream->codec->channels, duration);
+         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),
+                        sc->m_stream->id,codec->name,lang,bitrate,(int)sc->m_stream->codec->channels,(int)duration);
          mStreamInfo.Add(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }

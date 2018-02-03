@@ -128,6 +128,19 @@ extern "C" {
       }
       #endif
    #endif
+
+   #if LIBAVCODEC_VERSION_MAJOR < 58
+      #ifndef AV_CODEC_FLAG_QSCALE
+         #define AV_CODEC_FLAG_QSCALE CODEC_FLAG_QSCALE
+      #endif
+      #ifndef AV_CODEC_FLAG_GLOBAL_HEADER
+         #define AV_CODEC_FLAG_GLOBAL_HEADER CODEC_FLAG_GLOBAL_HEADER
+      #endif
+      #ifndef AV_CODEC_CAP_SMALL_LAST_FRAME
+         #define AV_CODEC_CAP_SMALL_LAST_FRAME CODEC_CAP_SMALL_LAST_FRAME
+      #endif
+   #endif
+
 }
 #endif
 
@@ -535,6 +548,12 @@ extern "C" {
       (void *ptr),
       (ptr)
    );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int64_t,
+      av_get_default_channel_layout,
+      (int nb_channels),
+      (nb_channels)
+   );
 
    //
    // libavcodec
@@ -560,6 +579,12 @@ extern "C" {
    FFMPEG_FUNCTION_WITH_RETURN(
       AVCodec*,
       avcodec_find_decoder,
+      (enum AVCodecID id),
+      (id)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      const char*,
+      avcodec_get_name,
       (enum AVCodecID id),
       (id)
    );

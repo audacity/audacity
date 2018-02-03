@@ -75,7 +75,8 @@ private:
     * @param t1 End time for export
     * @param tags Metadata to include in the file (if possible).
     */
-   ProgressResult DoExport(unsigned channels,
+   ProgressResult DoExport(std::unique_ptr<ProgressDialog> &pDialog,
+                 unsigned channels,
                  const wxFileName &name,
                  bool selectedOnly,
                  double t0,

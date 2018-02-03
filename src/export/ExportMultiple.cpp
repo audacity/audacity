@@ -749,6 +749,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
    ExportKit activeSetting;  // pointer to the settings in use for this export
    /* Go round again and do the exporting (so this run is slow but
     * non-interactive) */
+   std::unique_ptr<ProgressDialog> pDialog;
    for (count = 0; count < numFiles; count++) {
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
@@ -757,7 +758,8 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
          continue;
 
       // Export it
-      ok = DoExport(channels, activeSetting.destfile, false, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
+      ok = DoExport(pDialog, channels, activeSetting.destfile, false,
+         activeSetting.t0, activeSetting.t1, activeSetting.filetags);
       if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
          break;
       }
@@ -887,6 +889,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    // loop
    int count = 0; // count the number of sucessful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
+   std::unique_ptr<ProgressDialog> pDialog;
    for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
 
       // Want only non-muted wave tracks.
@@ -918,7 +921,9 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
          tr2->SetSelected(true);
 
       // Export the data. "channels" are per track.
-      ok = DoExport(activeSetting.channels, activeSetting.destfile, true, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
+      ok = DoExport(pDialog,
+         activeSetting.channels, activeSetting.destfile, true,
+         activeSetting.t0, activeSetting.t1, activeSetting.filetags);
 
       // Stop if an error occurred
       if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
@@ -932,7 +937,8 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    return ok ;
 }
 
-ProgressResult ExportMultiple::DoExport(unsigned channels,
+ProgressResult ExportMultiple::DoExport(std::unique_ptr<ProgressDialog> &pDialog,
+                              unsigned channels,
                               const wxFileName &inName,
                               bool selectedOnly,
                               double t0,
@@ -1001,6 +1007,7 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
 
    // Call the format export routine
    success = mPlugins[mPluginIndex]->Export(mProject,
+                                            pDialog,
                                                 channels,
                                                 fullPath,
                                                 selectedOnly,

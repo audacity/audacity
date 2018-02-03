@@ -256,6 +256,18 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inpu
                   highQuality, mixerSpec);
 }
 
+void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
+   const wxString &title, const wxString &message)
+{
+   if (!pDialog)
+      pDialog = std::make_unique<ProgressDialog>( title, message );
+   else {
+      pDialog->SetTitle( title );
+      pDialog->SetMessage( message );
+      pDialog->Reinit();
+   }
+}
+
 //----------------------------------------------------------------------------
 // Export
 //----------------------------------------------------------------------------
@@ -849,7 +861,9 @@ bool Exporter::ExportTracks()
       }
    } );
 
+   std::unique_ptr<ProgressDialog> pDialog;
    auto result = mPlugins[mFormat]->Export(mProject,
+                                       pDialog,
                                        mChannels,
                                        mActualName.GetFullPath(),
                                        mSelectedOnly,

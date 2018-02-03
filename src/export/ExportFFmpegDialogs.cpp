@@ -931,7 +931,9 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("asf"), AV_CODEC_ID_ADPCM_G726 },
    { wxT("asf"), AV_CODEC_ID_MP2 },
    { wxT("asf"), AV_CODEC_ID_MP3 },
+#if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("asf"), AV_CODEC_ID_VOXWARE },
+#endif
    { wxT("asf"), AV_CODEC_ID_AAC },
    { wxT("asf"), AV_CODEC_ID_WMAV1 },
    { wxT("asf"), AV_CODEC_ID_WMAV2 },
@@ -965,7 +967,9 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("avi"), AV_CODEC_ID_ADPCM_G726 },
    { wxT("avi"), AV_CODEC_ID_MP2 },
    { wxT("avi"), AV_CODEC_ID_MP3 },
+#if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("avi"), AV_CODEC_ID_VOXWARE },
+#endif
    { wxT("avi"), AV_CODEC_ID_AAC },
    { wxT("avi"), AV_CODEC_ID_WMAV1 },
    { wxT("avi"), AV_CODEC_ID_WMAV2 },
@@ -1012,7 +1016,9 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("matroska"), AV_CODEC_ID_ADPCM_G726 },
    { wxT("matroska"), AV_CODEC_ID_MP2 },
    { wxT("matroska"), AV_CODEC_ID_MP3 },
+#if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("matroska"), AV_CODEC_ID_VOXWARE },
+#endif
    { wxT("matroska"), AV_CODEC_ID_AAC },
    { wxT("matroska"), AV_CODEC_ID_WMAV1 },
    { wxT("matroska"), AV_CODEC_ID_WMAV2 },
@@ -1118,7 +1124,9 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("nut"), AV_CODEC_ID_ADPCM_G726 },
    { wxT("nut"), AV_CODEC_ID_MP2 },
    { wxT("nut"), AV_CODEC_ID_MP3 },
+ #if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("nut"), AV_CODEC_ID_VOXWARE },
+ #endif
    { wxT("nut"), AV_CODEC_ID_AAC },
    { wxT("nut"), AV_CODEC_ID_WMAV1 },
    { wxT("nut"), AV_CODEC_ID_WMAV2 },
@@ -1166,7 +1174,9 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("wav"), AV_CODEC_ID_ADPCM_G726 },
    { wxT("wav"), AV_CODEC_ID_MP2 },
    { wxT("wav"), AV_CODEC_ID_MP3 },
+#if LIBAVCODEC_VERSION_MAJOR < 58
    { wxT("wav"), AV_CODEC_ID_VOXWARE },
+#endif
    { wxT("wav"), AV_CODEC_ID_AAC },
    { wxT("wav"), AV_CODEC_ID_WMAV1 },
    { wxT("wav"), AV_CODEC_ID_WMAV2 },
@@ -1218,11 +1228,11 @@ static wxString iAACProfileNames(int index)
 /// List of export types
 ExposedFormat ExportFFmpegOptions::fmts[] =
 {
-   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_VERSION_INT(-1,-1,-1), true,  XO("M4A (AAC) Files (FFmpeg)"),         AV_CODEC_ID_AAC,    true},
+   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_CANMETA,              true,  XO("M4A (AAC) Files (FFmpeg)"),         AV_CODEC_ID_AAC,    true},
    {FMT_AC3,   wxT("AC3"),    wxT("ac3"), wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),    false, XO("AC3 Files (FFmpeg)"),               AV_CODEC_ID_AC3,    true},
    {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"), wxT("amr"),  1,   AV_VERSION_INT(0,0,0),    false, XO("AMR (narrow band) Files (FFmpeg)"), AV_CODEC_ID_AMR_NB, true},
    {FMT_WMA2,  wxT("WMA"),    wxT("wma"), wxT("asf"),  2,   AV_VERSION_INT(52,53,0),  false, XO("WMA (version 2) Files (FFmpeg)"),   AV_CODEC_ID_WMAV2,  true},
-   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_VERSION_INT(-1,-1,-1), true,  XO("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
+   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_CANMETA,             true,  XO("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
 };
 
 wxString ExposedFormat::Description() const

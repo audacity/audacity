@@ -30,6 +30,7 @@ class DirManager;
 class WaveTrack;
 class TrackList;
 class MixerSpec;
+class ProgressDialog;
 class TimeTrack;
 class Mixer;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -97,6 +98,9 @@ public:
 
    /** \brief called to export audio into a file.
     *
+    * @param pDialog To be initialized with pointer to a NEW ProgressDialog if
+    * it was null, otherwise gives an existing dialog to be reused
+   *  (working around a problem in wxWidgets for Mac; see bug 1600)
     * @param selectedOnly Set to true if all tracks should be mixed, to false
     * if only the selected tracks should be mixed and exported.
     * @param metadata A Tags object that will over-ride the one in *project and
@@ -114,6 +118,7 @@ public:
     * ProgressResult::Stopped
     */
    virtual ProgressResult Export(AudacityProject *project,
+                       std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned channels,
                        const wxString &fName,
                        bool selectedOnly,
@@ -130,6 +135,10 @@ protected:
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality = true, MixerSpec *mixerSpec = NULL);
+
+   // Create or recycle a dialog.
+   static void InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
+         const wxString &title, const wxString &message);
 
 private:
    FormatInfoArray mFormatInfos;
