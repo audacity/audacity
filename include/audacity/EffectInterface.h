@@ -64,8 +64,11 @@ public:
    virtual ~EffectIdentInterface() {};
 
    virtual EffectType GetType() = 0;
-   // Returns a string for internal uses only that may persist in config files:
+
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
    virtual wxString GetFamilyId() = 0;
+
    // Returns a user-visible string:
    virtual wxString GetFamilyName() = 0;
 

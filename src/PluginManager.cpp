@@ -2616,6 +2616,8 @@ PluginID PluginManager::GetID(ImporterInterface *importer)
                            importer->GetPath());
 }
 
+// This string persists in configuration files
+// So config compatibility will break if it is changed across Audacity versions
 wxString PluginManager::GetPluginTypeString(PluginType type)
 {
    wxString str;
@@ -2888,6 +2890,11 @@ bool PluginManager::SetConfig(const wxString & key, const double & value)
 /* Return value is a key for lookup in a config file */
 wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
 {
+   // All the strings reported by PluginDescriptor and used in this function
+   // persist in the plugin settings configuration file, so they should not
+   // be changed across Audacity versions, or else compatibility of the
+   // configuration files will break.
+
    if (mPlugins.find(ID) == mPlugins.end())
    {
       return wxEmptyString;

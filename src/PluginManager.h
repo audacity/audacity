@@ -91,6 +91,8 @@ public:
 
    // Internal string only, no translated counterpart!
    // (Use Effect::GetFamilyName instead)
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
    wxString GetEffectFamilyId() const;
 
    EffectType GetEffectType() const;
@@ -237,6 +239,8 @@ public:
    static PluginID GetID(EffectIdentInterface *effect);
    static PluginID GetID(ImporterInterface *importer);
 
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);
