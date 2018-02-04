@@ -860,12 +860,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          szrG = S.GetSizer();
 
          // Panel used to host the sliders since they will be positioned manually.
-         //mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
-         //S.Prop(1)
+         //mGraphicPanel = S.Prop(1)
             //.Position(wxEXPAND)
-            //.AddWindow(mGraphicPanel);
+            //.Size( { -1, 150 } )
+            //.StartPanel();
          wxWindow *pParent = S.GetParent();
          S.AddSpace(15,0);
+         {
 
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
@@ -891,6 +892,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                .AddWindow( mSliders[i] );
          }
          S.AddSpace(15,0);
+
+         } //S.EndPanel();
       }
       S.EndHorizontalLay();
 
