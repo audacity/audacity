@@ -234,7 +234,12 @@ public:
       return mDescription;
    }
 
-   wxString GetFamily() override
+   wxString GetFamilyId() override
+   {
+      return VSTPLUGINTYPE;
+   }
+
+   wxString GetFamilyName() override
    {
       return VSTPLUGINTYPE;
    }
@@ -1246,7 +1251,12 @@ EffectType VSTEffect::GetType()
 }
 
 
-wxString VSTEffect::GetFamily()
+wxString VSTEffect::GetFamilyId()
+{
+   return VSTPLUGINTYPE;
+}
+
+wxString VSTEffect::GetFamilyName()
 {
    return VSTPLUGINTYPE;
 }

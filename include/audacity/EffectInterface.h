@@ -64,7 +64,13 @@ public:
    virtual ~EffectIdentInterface() {};
 
    virtual EffectType GetType() = 0;
-   virtual wxString GetFamily() = 0;
+
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
+   virtual wxString GetFamilyId() = 0;
+
+   // Returns a user-visible string:
+   virtual wxString GetFamilyName() = 0;
 
    // These should move to the "EffectClientInterface" class once all
    // effects have been converted.

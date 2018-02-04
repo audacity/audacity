@@ -89,8 +89,12 @@ public:
 
    // Effect plugins only
 
-   wxString GetUntranslatedEffectFamily() const;
-   wxString GetTranslatedEffectFamily() const;
+   // Internal string only, no translated counterpart!
+   // (Use Effect::GetFamilyName instead)
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
+   wxString GetEffectFamilyId() const;
+
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;
@@ -99,7 +103,7 @@ public:
    bool IsEffectAutomatable() const;
 
    // "family" should be an untranslated string wrapped in wxT()
-   void SetEffectFamily(const wxString & family);
+   void SetEffectFamilyId(const wxString & family);
    void SetEffectType(EffectType type);
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);
@@ -235,6 +239,8 @@ public:
    static PluginID GetID(EffectIdentInterface *effect);
    static PluginID GetID(ImporterInterface *importer);
 
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);

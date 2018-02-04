@@ -95,7 +95,8 @@ class VSTEffect final : public wxEvtHandler,
    // EffectIdentInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamily() override;
+   wxString GetFamilyId() override;
+   wxString GetFamilyName() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;

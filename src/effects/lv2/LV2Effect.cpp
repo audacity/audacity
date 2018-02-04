@@ -386,7 +386,12 @@ EffectType LV2Effect::GetType()
    return EffectTypeProcess;
 }
 
-wxString LV2Effect::GetFamily()
+wxString LV2Effect::GetFamilyId()
+{
+   return LV2EFFECTS_FAMILY;
+}
+
+wxString LV2Effect::GetFamilyName()
 {
    return LV2EFFECTS_FAMILY;
 }
