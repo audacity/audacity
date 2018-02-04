@@ -168,22 +168,21 @@ enum {
 //
 // Effects menu arrays
 //
-WX_DEFINE_ARRAY_PTR(const PluginDescriptor *, EffectPlugs);
-static int SortEffectsByName(const PluginDescriptor **a, const PluginDescriptor **b)
+static bool SortEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = (*a)->GetTranslatedName();
-   wxString bkey = (*b)->GetTranslatedName();
+   wxString akey = a->GetTranslatedName();
+   wxString bkey = b->GetTranslatedName();
 
-   akey += (*a)->GetPath();
-   bkey += (*b)->GetPath();
+   akey += a->GetPath();
+   bkey += b->GetPath();
 
-   return akey.CmpNoCase(bkey);
+   return akey.CmpNoCase(bkey) < 0;
 }
 
-static int SortEffectsByPublisher(const PluginDescriptor **a, const PluginDescriptor **b)
+static bool SortEffectsByPublisher(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = (*a)->GetTranslatedVendor();
-   wxString bkey = (*b)->GetTranslatedVendor();
+   wxString akey = a->GetTranslatedVendor();
+   wxString bkey = b->GetTranslatedVendor();
 
    if (akey.IsEmpty())
    {
@@ -194,42 +193,42 @@ static int SortEffectsByPublisher(const PluginDescriptor **a, const PluginDescri
       bkey = _("Uncategorized");
    }
 
-   akey += (*a)->GetTranslatedName();
-   bkey += (*b)->GetTranslatedName();
+   akey += a->GetTranslatedName();
+   bkey += b->GetTranslatedName();
 
-   akey += (*a)->GetPath();
-   bkey += (*b)->GetPath();
+   akey += a->GetPath();
+   bkey += b->GetPath();
 
-   return akey.CmpNoCase(bkey);
+   return akey.CmpNoCase(bkey) < 0;
 }
 
-static int SortEffectsByPublisherAndName(const PluginDescriptor **a, const PluginDescriptor **b)
+static bool SortEffectsByPublisherAndName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = (*a)->GetTranslatedVendor();
-   wxString bkey = (*b)->GetTranslatedVendor();
+   wxString akey = a->GetTranslatedVendor();
+   wxString bkey = b->GetTranslatedVendor();
 
-   if ((*a)->IsEffectDefault())
+   if (a->IsEffectDefault())
    {
       akey = wxEmptyString;
    }
-   if ((*b)->IsEffectDefault())
+   if (b->IsEffectDefault())
    {
       bkey = wxEmptyString;
    }
 
-   akey += (*a)->GetTranslatedName();
-   bkey += (*b)->GetTranslatedName();
+   akey += a->GetTranslatedName();
+   bkey += b->GetTranslatedName();
 
-   akey += (*a)->GetPath();
-   bkey += (*b)->GetPath();
+   akey += a->GetPath();
+   bkey += b->GetPath();
 
-   return akey.CmpNoCase(bkey);
+   return akey.CmpNoCase(bkey) < 0;
 }
 
-static int SortEffectsByTypeAndName(const PluginDescriptor **a, const PluginDescriptor **b)
+static bool SortEffectsByTypeAndName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = (*a)->GetTranslatedEffectFamily();
-   wxString bkey = (*b)->GetTranslatedEffectFamily();
+   wxString akey = a->GetTranslatedEffectFamily();
+   wxString bkey = b->GetTranslatedEffectFamily();
 
    if (akey.IsEmpty())
    {
@@ -240,28 +239,28 @@ static int SortEffectsByTypeAndName(const PluginDescriptor **a, const PluginDesc
       bkey = _("Uncategorized");
    }
 
-   if ((*a)->IsEffectDefault())
+   if (a->IsEffectDefault())
    {
       akey = wxEmptyString;
    }
-   if ((*b)->IsEffectDefault())
+   if (b->IsEffectDefault())
    {
       bkey = wxEmptyString;
    }
 
-   akey += (*a)->GetTranslatedName();
-   bkey += (*b)->GetTranslatedName();
+   akey += a->GetTranslatedName();
+   bkey += b->GetTranslatedName();
 
-   akey += (*a)->GetPath();
-   bkey += (*b)->GetPath();
+   akey += a->GetPath();
+   bkey += b->GetPath();
 
-   return akey.CmpNoCase(bkey);
+   return akey.CmpNoCase(bkey) < 0;
 }
 
-static int SortEffectsByType(const PluginDescriptor **a, const PluginDescriptor **b)
+static bool SortEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = (*a)->GetTranslatedEffectFamily();
-   wxString bkey = (*b)->GetTranslatedEffectFamily();
+   wxString akey = a->GetTranslatedEffectFamily();
+   wxString bkey = b->GetTranslatedEffectFamily();
 
    if (akey.IsEmpty())
    {
@@ -272,13 +271,13 @@ static int SortEffectsByType(const PluginDescriptor **a, const PluginDescriptor 
       bkey = _("Uncategorized");
    }
 
-   akey += (*a)->GetTranslatedName();
-   bkey += (*b)->GetTranslatedName();
+   akey += a->GetTranslatedName();
+   bkey += b->GetTranslatedName();
 
-   akey += (*a)->GetPath();
-   bkey += (*b)->GetPath();
+   akey += a->GetPath();
+   bkey += b->GetPath();
 
-   return akey.CmpNoCase(bkey);
+   return akey.CmpNoCase(bkey) < 0;
 }
 
 /// CreateMenusAndCommands builds the menus, and also rebuilds them after
@@ -294,7 +293,7 @@ void AudacityProject::CreateMenusAndCommands()
 {
    CommandManager *c = &mCommandManager;
    wxArrayString names;
-   wxArrayInt indices;
+   std::vector<int> indices;
 
    // The list of defaults to exclude depends on
    // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
@@ -1633,8 +1632,8 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 {
    PluginManager & pm = PluginManager::Get();
 
-   EffectPlugs defplugs;
-   EffectPlugs optplugs;
+   std::vector<const PluginDescriptor*> defplugs;
+   std::vector<const PluginDescriptor*> optplugs;
 
    const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
    while (plug)
@@ -1649,11 +1648,11 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 #endif
          )
       {
-         defplugs.Add(plug);
+         defplugs.push_back(plug);
       }
       else
       {
-         optplugs.Add(plug);
+         optplugs.push_back(plug);
       }
       plug = pm.GetNextPluginForEffectType(type);
    }
@@ -1662,38 +1661,38 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 
    if (groupby == wxT("sortby:name"))
    {
-      defplugs.Sort(SortEffectsByName);
-      optplugs.Sort(SortEffectsByName);
+      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
+      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByName);
    }
    else if (groupby == wxT("sortby:publisher:name"))
    {
-      defplugs.Sort(SortEffectsByName);
-      optplugs.Sort(SortEffectsByPublisherAndName);
+      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
+      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByPublisherAndName);
    }
    else if (groupby == wxT("sortby:type:name"))
    {
-      defplugs.Sort(SortEffectsByName);
-      optplugs.Sort(SortEffectsByTypeAndName);
+      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
+      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByTypeAndName);
    }
    else if (groupby == wxT("groupby:publisher"))
    {
-      defplugs.Sort(SortEffectsByPublisher);
-      optplugs.Sort(SortEffectsByPublisher);
+      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByPublisher);
+      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByPublisher);
    }
    else if (groupby == wxT("groupby:type"))
    {
-      defplugs.Sort(SortEffectsByType);
-      optplugs.Sort(SortEffectsByType);
+      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByType);
+      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByType);
    }
    else // name
    {
-      defplugs.Sort(SortEffectsByName);
-      optplugs.Sort(SortEffectsByName);
+      std::sort(defplugs.begin(), defplugs.end(), SortEffectsByName);
+      std::sort(optplugs.begin(), optplugs.end(), SortEffectsByName);
    }
 
    AddEffectMenuItems(c, defplugs, batchflags, realflags, true);
 
-   if (defplugs.GetCount() && optplugs.GetCount())
+   if (defplugs.size() && optplugs.size())
    {
       c->AddSeparator();
    }
@@ -1704,12 +1703,12 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 }
 
 void AudacityProject::AddEffectMenuItems(CommandManager *c,
-                                         EffectPlugs & plugs,
-                                         CommandFlag batchflags,
-                                         CommandFlag realflags,
-                                         bool isDefault)
+   std::vector<const PluginDescriptor*> & plugs,
+   CommandFlag batchflags,
+   CommandFlag realflags,
+   bool isDefault)
 {
-   size_t pluginCnt = plugs.GetCount();
+   size_t pluginCnt = plugs.size();
 
    wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
 
@@ -7536,8 +7535,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    Track *t = iter.First();
    double delta = 0.0;
    double newPos = -1.0;
-   wxArrayDouble trackStartArray;
-   wxArrayDouble trackEndArray;
+   std::vector<double> trackStartArray;
+   std::vector<double> trackEndArray;
    double firstTrackOffset=0.0f;
 
    while (t) {
@@ -7561,8 +7560,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
             }
             numSelected++;
          }
-         trackStartArray.Add(t->GetStartTime());
-         trackEndArray.Add(t->GetEndTime());
+         trackStartArray.push_back(t->GetStartTime());
+         trackEndArray.push_back(t->GetEndTime());
 
          if (offset < minOffset)
             minOffset = offset;

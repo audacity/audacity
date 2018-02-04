@@ -152,8 +152,6 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
-WX_DEFINE_ARRAY(MixerTrackCluster*, MixerTrackClusterArray);
-
 
 class MusicalInstrument
 {
@@ -265,7 +263,7 @@ public:
 
 private:
    // Track clusters are maintained in the same order as the WaveTracks.
-   MixerTrackClusterArray     mMixerTrackClusters;
+   std::vector<MixerTrackCluster*> mMixerTrackClusters;
 
    MusicalInstrumentArray     mMusicalInstruments;
    AudacityProject*           mProject;

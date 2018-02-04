@@ -18,8 +18,6 @@
 #include "LabelTrack.h"
 #include "WaveTrack.h"
 
-#include <wx/arrimpl.cpp>
-
 inline bool operator < (SnapPoint s1, SnapPoint s2)
 {
    return s1.t < s2.t;

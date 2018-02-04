@@ -318,7 +318,7 @@ class AUDACITY_DLL_API AudioIO final {
     * You may also specify a rate for which to check in addition to the
     * standard rates.
     */
-   static wxArrayLong GetSupportedPlaybackRates(int DevIndex = -1,
+   static std::vector<long> GetSupportedPlaybackRates(int DevIndex = -1,
                                                 double rate = 0.0);
 
    /** \brief Get a list of sample rates the input (recording) device
@@ -333,7 +333,7 @@ class AUDACITY_DLL_API AudioIO final {
     * You may also specify a rate for which to check in addition to the
     * standard rates.
     */
-   static wxArrayLong GetSupportedCaptureRates(int devIndex = -1,
+   static std::vector<long> GetSupportedCaptureRates(int devIndex = -1,
                                                double rate = 0.0);
 
    /** \brief Get a list of sample rates the current input/output device
@@ -350,7 +350,7 @@ class AUDACITY_DLL_API AudioIO final {
     * You may also specify a rate for which to check in addition to the
     * standard rates.
     */
-   static wxArrayLong GetSupportedSampleRates(int playDevice = -1,
+   static std::vector<long> GetSupportedSampleRates(int playDevice = -1,
                                               int recDevice = -1,
                                        double rate = 0.0);
 
@@ -745,10 +745,10 @@ private:
 
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;
-   static wxArrayLong mCachedPlaybackRates;
+   static std::vector<long> mCachedPlaybackRates;
    static int mCachedCaptureIndex;
-   static wxArrayLong mCachedCaptureRates;
-   static wxArrayLong mCachedSampleRates;
+   static std::vector<long> mCachedCaptureRates;
+   static std::vector<long> mCachedSampleRates;
    static double mCachedBestRateIn;
    static double mCachedBestRateOut;
 

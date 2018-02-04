@@ -34,8 +34,6 @@ class wxCheckBox;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-WX_DEFINE_ARRAY_PTR(LADSPA_Handle, LadspaSlaveArray);
-
 class LadspaEffectMeter;
 
 class LadspaEffect final : public wxEvtHandler,
@@ -179,7 +177,7 @@ private:
    bool mLatencyDone;
 
    // Realtime processing
-   LadspaSlaveArray mSlaves;
+   std::vector<LADSPA_Handle> mSlaves;
 
    EffectUIHostInterface *mUIHost;
 

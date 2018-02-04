@@ -19,7 +19,6 @@
 #include <wx/choice.h>
 #include <wx/dcbuffer.h>
 #include <wx/dialog.h>
-#include <wx/dynarray.h>
 
 #ifdef __WXMAC__
 #include <wx/evtloop.h>
@@ -294,10 +293,6 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-#include <wx/arrimpl.cpp>
-
-WX_DEFINE_OBJARRAY(LV2PortArray);
-
 LV2Effect::LV2Effect(const LilvPlugin *plug)
 {
    mPlug = plug;
@@ -398,7 +393,7 @@ wxString LV2Effect::GetFamily()
 
 bool LV2Effect::IsInteractive()
 {
-   return mControls.GetCount() != 0;
+   return mControls.size() != 0;
 }
 
 bool LV2Effect::IsDefault()
@@ -466,11 +461,11 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          {
             if (lilv_port_is_a(mPlug, port, gInput))
             {
-               mAudioInputs.Add(index);
+               mAudioInputs.push_back(index);
             }
             else if (lilv_port_is_a(mPlug, port, gOutput))
             {
-               mAudioOutputs.Add(index);
+               mAudioOutputs.push_back(index);
             }
             continue;
          }
@@ -526,7 +521,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          {
             const LilvScalePoint *point = lilv_scale_points_get(points, j);
 
-            ctrl.mScaleValues.Add(lilv_node_as_float(lilv_scale_point_get_value(point)));
+            ctrl.mScaleValues.push_back(lilv_node_as_float(lilv_scale_point_get_value(point)));
             ctrl.mScaleLabels.Add(LilvString(lilv_scale_point_get_label(point)));
          }
          lilv_scale_points_free(points);
@@ -587,9 +582,9 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
                ctrl.mEnumeration = true;
             }
 
-            mControlsMap[ctrl.mIndex] = mControls.GetCount();
-            mGroupMap[ctrl.mGroup].Add(mControls.GetCount());
-            mControls.Add(ctrl);
+            mControlsMap[ctrl.mIndex] = mControls.size();
+            mGroupMap[ctrl.mGroup].push_back(mControls.size());
+            mControls.push_back(ctrl);
          }
          else if (lilv_port_is_a(mPlug, port, gOutput))
          {
@@ -600,8 +595,8 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
             }
             else
             {
-               mGroupMap[ctrl.mGroup].Add(mControls.GetCount());
-               mControls.Add(ctrl);
+               mGroupMap[ctrl.mGroup].push_back(mControls.size());
+               mControls.push_back(ctrl);
             }
          }
          else
@@ -672,12 +667,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
 
 unsigned LV2Effect::GetAudioInCount()
 {
-   return mAudioInputs.GetCount();
+   return mAudioInputs.size();
 }
 
 unsigned LV2Effect::GetAudioOutCount()
 {
-   return mAudioOutputs.GetCount();
+   return mAudioOutputs.size();
 }
 
 int LV2Effect::GetMidiInCount()
@@ -705,7 +700,7 @@ void LV2Effect::SetSampleRate(double rate)
          mOptionsInterface->set(lilv_instance_get_handle(mMaster), options);
       }
 
-      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
       {
          mOptionsInterface->set(lilv_instance_get_handle(mSlaves[i]), options);
       }
@@ -727,7 +722,7 @@ size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
          mOptionsInterface->set(lilv_instance_get_handle(mMaster), options);
       }
 
-      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
       {
          mOptionsInterface->set(lilv_instance_get_handle(mSlaves[i]), options);
       }
@@ -787,12 +782,12 @@ bool LV2Effect::ProcessFinalize()
 
 size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
 {
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(mProcess, mAudioInputs[p], inbuf[p]);
    }
 
-   for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioOutputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(mProcess, mAudioOutputs[p], outbuf[p]);
    }
@@ -804,12 +799,12 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
 
 bool LV2Effect::RealtimeInitialize()
 {
-   mMasterIn.reinit( mAudioInputs.GetCount(), mBlockSize );
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   mMasterIn.reinit( mAudioInputs.size(), mBlockSize );
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
       lilv_instance_connect_port(mMaster, mAudioInputs[p], mMasterIn[p].get());
 
-   mMasterOut.reinit( mAudioOutputs.GetCount(), mBlockSize );
-   for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
+   mMasterOut.reinit( mAudioOutputs.size(), mBlockSize );
+   for (size_t p = 0, cnt = mAudioOutputs.size(); p < cnt; p++)
       lilv_instance_connect_port(mMaster, mAudioOutputs[p], mMasterOut[p].get());
 
    lilv_instance_activate(mMaster);
@@ -819,13 +814,13 @@ bool LV2Effect::RealtimeInitialize()
 
 bool LV2Effect::RealtimeFinalize()
 {
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       lilv_instance_deactivate(mSlaves[i]);
 
       FreeInstance(mSlaves[i]);
    }
-   mSlaves.Clear();
+   mSlaves.clear();
 
    lilv_instance_deactivate(mMaster);
 
@@ -848,7 +843,7 @@ bool LV2Effect::RealtimeResume()
 
 bool LV2Effect::RealtimeProcessStart()
 {
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
       memset(mMasterIn[p].get(), 0, mBlockSize * sizeof(float));
 
    mNumSamples = 0;
@@ -861,15 +856,15 @@ size_t LV2Effect::RealtimeProcess(int group,
                                        float **outbuf,
                                        size_t numSamples)
 {
-   wxASSERT(group >= 0 && group < (int) mSlaves.GetCount());
+   wxASSERT(group >= 0 && group < (int) mSlaves.size());
    wxASSERT(numSamples <= mBlockSize);
 
-   if (group < 0 || group >= (int) mSlaves.GetCount())
+   if (group < 0 || group >= (int) mSlaves.size())
    {
       return 0;
    }
 
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
    {
       for (decltype(numSamples) s = 0; s < numSamples; s++)
       {
@@ -880,12 +875,12 @@ size_t LV2Effect::RealtimeProcess(int group,
 
    LilvInstance *slave = mSlaves[group];
 
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioInputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(slave, mAudioInputs[p], inbuf[p]);
    }
 
-   for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mAudioOutputs.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(slave, mAudioOutputs[p], outbuf[p]);
    }
@@ -905,7 +900,7 @@ bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampl
 
    lilv_instance_activate(slave);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
@@ -955,7 +950,7 @@ bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
 
 bool LV2Effect::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       if (mControls[p].mInput)
       {
@@ -972,7 +967,7 @@ bool LV2Effect::GetAutomationParameters(EffectAutomationParameters & parms)
 bool LV2Effect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    // First pass validates values
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       LV2Port & ctrl = mControls[p];
       
@@ -993,7 +988,7 @@ bool LV2Effect::SetAutomationParameters(EffectAutomationParameters & parms)
    }
 
    // Second pass actually sets the values
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       LV2Port & ctrl = mControls[p];
       
@@ -1338,7 +1333,7 @@ LilvInstance *LV2Effect::InitInstance(float sampleRate)
    SetBlockSize(mBlockSize);
    SetSampleRate(sampleRate);
 
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       lilv_instance_connect_port(handle,
                                  mControls[p].mIndex,
@@ -1529,7 +1524,7 @@ bool LV2Effect::BuildPlain()
    int numCols = 5;
 
    // Allocate memory for the user parameter controls
-   auto ctrlcnt = mControls.GetCount();
+   auto ctrlcnt = mControls.size();
    mSliders.reinit(ctrlcnt);
    mFields.reinit(ctrlcnt);
 
@@ -1594,8 +1589,8 @@ bool LV2Effect::BuildPlain()
             auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
             gridSizer->AddGrowableCol(3);
 
-            const wxArrayInt & params = mGroupMap[mGroups[i]];
-            for (size_t pi = 0, cnt = params.GetCount(); pi < cnt; pi++)
+            const auto & params = mGroupMap[mGroups[i]];
+            for (size_t pi = 0, cnt = params.size(); pi < cnt; pi++)
             {
                int p = params[pi];
                LV2Port & ctrl = mControls[p];
@@ -1638,7 +1633,7 @@ bool LV2Effect::BuildPlain()
                else if (ctrl.mEnumeration)      // Check before integer
                {
                   int s;
-                  for (s = (int)ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+                  for (s = (int)ctrl.mScaleValues.size() - 1; s >= 0; s--)
                   {
                      if (ctrl.mVal >= ctrl.mScaleValues[s])
                      {
@@ -1756,8 +1751,7 @@ bool LV2Effect::BuildPlain()
          innerSizer->Layout();
 
          // Calculate the maximum width of all columns (bypass Generator sizer)
-         wxArrayInt widths;
-         widths.Add(0, numCols);
+         std::vector<int> widths(numCols);
 
          size_t cnt = innerSizer->GetChildren().GetCount();
          for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
@@ -1833,7 +1827,7 @@ bool LV2Effect::TransferDataToWindow()
    {
       if (mSuilInstance)
       {
-         for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+         for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
          {
             if (mControls[p].mInput)
             {
@@ -1851,8 +1845,8 @@ bool LV2Effect::TransferDataToWindow()
 
    for (size_t i = 0, cnt = mGroups.GetCount(); i < cnt; i++)
    {
-      const wxArrayInt & params = mGroupMap[mGroups[i]];
-      for (size_t pi = 0, cnt = params.GetCount(); pi < cnt; pi++)
+      const auto & params = mGroupMap[mGroups[i]];
+      for (size_t pi = 0, cnt = params.size(); pi < cnt; pi++)
       {
          int p = params[pi];
          LV2Port & ctrl = mControls[p];
@@ -1871,7 +1865,7 @@ bool LV2Effect::TransferDataToWindow()
          else if (ctrl.mEnumeration)      // Check before integer
          {
             int s;
-            for (s = (int) ctrl.mScaleValues.GetCount() - 1; s >= 0; s--)
+            for (s = (int) ctrl.mScaleValues.size() - 1; s >= 0; s--)
             {
                if (ctrl.mVal >= ctrl.mScaleValues[s])
                {
@@ -2112,7 +2106,7 @@ void LV2Effect::SetPortValue(const char *port_symbol,
    LV2_URID Int = URID_Map(lilv_node_as_string(gInt));
    LV2_URID Long = URID_Map(lilv_node_as_string(gLong));
 
-   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
       if (mControls[p].mSymbol.IsSameAs(symbol))
       {

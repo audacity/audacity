@@ -53,7 +53,7 @@ void ModulePrefs::GetAllModuleStatuses(){
    // TODO: On an Audacity upgrade we should (?) actually untick modules.
    // The old modules might be still around, and we do not want to use them.
    mModules.Clear();
-   mStatuses.Clear();
+   mStatuses.clear();
    mPaths.Clear();
 
 
@@ -73,7 +73,7 @@ void ModulePrefs::GetAllModuleStatuses(){
          }
          //wxLogDebug( wxT("Entry: %s Value: %i"), str, iStatus );
          mModules.Add( str );
-         mStatuses.Add( iStatus );
+         mStatuses.push_back( iStatus );
          mPaths.Add( fname );
       }
       bCont = gPrefs->GetNextEntry(str, dummy);

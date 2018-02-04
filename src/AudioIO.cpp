@@ -487,10 +487,10 @@ wxDEFINE_EVENT(EVT_AUDIOIO_MONITOR, wxCommandEvent);
 // static
 int AudioIO::mNextStreamToken = 0;
 int AudioIO::mCachedPlaybackIndex = -1;
-wxArrayLong AudioIO::mCachedPlaybackRates;
+std::vector<long> AudioIO::mCachedPlaybackRates;
 int AudioIO::mCachedCaptureIndex = -1;
-wxArrayLong AudioIO::mCachedCaptureRates;
-wxArrayLong AudioIO::mCachedSampleRates;
+std::vector<long> AudioIO::mCachedCaptureRates;
+std::vector<long> AudioIO::mCachedSampleRates;
 double AudioIO::mCachedBestRateIn = 0.0;
 double AudioIO::mCachedBestRateOut;
 
@@ -1464,7 +1464,7 @@ void AudioIO::HandleDeviceChange()
 
    // that might have given us no rates whatsoever, so we have to guess an
    // answer to do the next bit
-   int numrates = mCachedSampleRates.GetCount();
+   int numrates = mCachedSampleRates.size();
    int highestSampleRate;
    if (numrates > 0)
    {
@@ -2975,7 +2975,7 @@ double AudioIO::GetStreamTime()
 }
 
 
-wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
+std::vector<long> AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
 {
    if (devIndex == -1)
    {  // weren't given a device index, get the prefs / default one
@@ -2984,12 +2984,12 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
 
    // Check if we can use the cached rates
    if (mCachedPlaybackIndex != -1 && devIndex == mCachedPlaybackIndex
-         && (rate == 0.0 || mCachedPlaybackRates.Index(rate) != wxNOT_FOUND))
+         && (rate == 0.0 || make_iterator_range(mCachedPlaybackRates).contains(rate)))
    {
       return mCachedPlaybackRates;
    }
 
-   wxArrayLong supported;
+   std::vector<long> supported;
    int irate = (int)rate;
    const PaDeviceInfo* devInfo = NULL;
    int i;
@@ -3022,22 +3022,22 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(NULL, &pars, RatesToTry[i]) == 0)
-         supported.Add(RatesToTry[i]);
+         supported.push_back(RatesToTry[i]);
    }
 
-   if (irate != 0 && supported.Index(irate) == wxNOT_FOUND)
+   if (irate != 0 && !make_iterator_range(supported).contains(irate))
    {
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(NULL, &pars, irate) == 0)
-         supported.Add(irate);
+         supported.push_back(irate);
    }
 
    return supported;
 }
 
-wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
+std::vector<long> AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
 {
    if (devIndex == -1)
    {  // not given a device, look up in prefs / default
@@ -3046,12 +3046,12 @@ wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
 
    // Check if we can use the cached rates
    if (mCachedCaptureIndex != -1 && devIndex == mCachedCaptureIndex
-         && (rate == 0.0 || mCachedCaptureRates.Index(rate) != wxNOT_FOUND))
+         && (rate == 0.0 || make_iterator_range(mCachedCaptureRates).contains(rate)))
    {
       return mCachedCaptureRates;
    }
 
-   wxArrayLong supported;
+   std::vector<long> supported;
    int irate = (int)rate;
    const PaDeviceInfo* devInfo = NULL;
    int i;
@@ -3088,22 +3088,22 @@ wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(&pars, NULL, RatesToTry[i]) == 0)
-         supported.Add(RatesToTry[i]);
+         supported.push_back(RatesToTry[i]);
    }
 
-   if (irate != 0 && supported.Index(irate) == wxNOT_FOUND)
+   if (irate != 0 && !make_iterator_range(supported).contains(irate))
    {
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(&pars, NULL, irate) == 0)
-         supported.Add(irate);
+         supported.push_back(irate);
    }
 
    return supported;
 }
 
-wxArrayLong AudioIO::GetSupportedSampleRates(int playDevice, int recDevice, double rate)
+std::vector<long> AudioIO::GetSupportedSampleRates(int playDevice, int recDevice, double rate)
 {
    // Not given device indices, look up prefs
    if (playDevice == -1) {
@@ -3117,21 +3117,21 @@ wxArrayLong AudioIO::GetSupportedSampleRates(int playDevice, int recDevice, doub
    if (mCachedPlaybackIndex != -1 && mCachedCaptureIndex != -1 &&
          playDevice == mCachedPlaybackIndex &&
          recDevice == mCachedCaptureIndex &&
-         (rate == 0.0 || mCachedSampleRates.Index(rate) != wxNOT_FOUND))
+         (rate == 0.0 || make_iterator_range(mCachedSampleRates).contains(rate)))
    {
       return mCachedSampleRates;
    }
 
-   wxArrayLong playback = GetSupportedPlaybackRates(playDevice, rate);
-   wxArrayLong capture = GetSupportedCaptureRates(recDevice, rate);
+   auto playback = GetSupportedPlaybackRates(playDevice, rate);
+   auto capture = GetSupportedCaptureRates(recDevice, rate);
    int i;
 
    // Return only sample rates which are in both arrays
-   wxArrayLong result;
+   std::vector<long> result;
 
-   for (i = 0; i < (int)playback.GetCount(); i++)
-      if (capture.Index(playback[i]) != wxNOT_FOUND)
-         result.Add(playback[i]);
+   for (i = 0; i < (int)playback.size(); i++)
+      if (make_iterator_range(capture).contains(playback[i]))
+         result.push_back(playback[i]);
 
    // If this yields no results, use the default sample rates nevertheless
 /*   if (result.IsEmpty())
@@ -3149,12 +3149,12 @@ wxArrayLong AudioIO::GetSupportedSampleRates(int playDevice, int recDevice, doub
  * the real rates. */
 int AudioIO::GetOptimalSupportedSampleRate()
 {
-   wxArrayLong rates = GetSupportedSampleRates();
+   auto rates = GetSupportedSampleRates();
 
-   if (rates.Index(44100) != wxNOT_FOUND)
+   if (make_iterator_range(rates).contains(44100))
       return 44100;
 
-   if (rates.Index(48000) != wxNOT_FOUND)
+   if (make_iterator_range(rates).contains(48000))
       return 48000;
 
    // if there are no supported rates, the next bit crashes. So check first,
@@ -3162,9 +3162,9 @@ int AudioIO::GetOptimalSupportedSampleRate()
    // will still get an error later, but with any luck may have changed
    // something by then. It's no worse than having an invalid default rate
    // stored in the preferences, which we don't check for
-   if (rates.IsEmpty()) return 44100;
+   if (rates.empty()) return 44100;
 
-   return rates[rates.GetCount() - 1];
+   return rates.back();
 }
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
@@ -3178,7 +3178,7 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
    // and jump to finished
    double retval;
 
-   wxArrayLong rates;
+   std::vector<long> rates;
    if (capturing) wxLogDebug(wxT("AudioIO::GetBestRate() for capture"));
    if (playing) wxLogDebug(wxT("AudioIO::GetBestRate() for playback"));
    wxLogDebug(wxT("GetBestRate() suggested rate %.0lf Hz"), sampleRate);
@@ -3197,7 +3197,7 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     * configuration), sampleRate is the Project Rate (desired sample rate) */
    long rate = (long)sampleRate;
 
-   if (rates.Index(rate) != wxNOT_FOUND) {
+   if (make_iterator_range(rates).contains(rate)) {
       wxLogDebug(wxT("GetBestRate() Returning %.0ld Hz"), rate);
       retval = rate;
       goto finished;
@@ -3215,14 +3215,14 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     *   rate to use.
     * * If there aren't any higher, we use the highest available rate */
 
-   if (rates.IsEmpty()) {
+   if (rates.empty()) {
       /* we're stuck - there are no supported rates with this hardware. Error */
       wxLogDebug(wxT("GetBestRate() Error - no supported sample rates"));
       retval = 0.0;
       goto finished;
    }
    int i;
-   for (i = 0; i < (int)rates.GetCount(); i++)  // for each supported rate
+   for (i = 0; i < (int)rates.size(); i++)  // for each supported rate
          {
          if (rates[i] > rate) {
             // supported rate is greater than requested rate
@@ -3232,8 +3232,8 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
          }
          }
 
-   wxLogDebug(wxT("GetBestRate() Returning highest rate - %.0ld Hz"), rates[rates.GetCount() - 1]);
-   retval = rates[rates.GetCount() - 1]; // the highest available rate
+   wxLogDebug(wxT("GetBestRate() Returning highest rate - %.0ld Hz"), rates.back());
+   retval = rates.back(); // the highest available rate
    goto finished;
 
 finished:
@@ -3504,10 +3504,10 @@ wxString AudioIO::GetDeviceInfo()
       s << wxT("High Recording Latency: ") << info->defaultHighInputLatency << e;
       s << wxT("High Playback Latency: ") << info->defaultHighOutputLatency << e;
 
-      wxArrayLong rates = GetSupportedPlaybackRates(j, 0.0);
+      auto rates = GetSupportedPlaybackRates(j, 0.0);
 
       s << wxT("Supported Rates:") << e;
-      for (int k = 0; k < (int) rates.GetCount(); k++) {
+      for (int k = 0; k < (int) rates.size(); k++) {
          s << wxT("    ") << (int)rates[k] << e;
       }
 
@@ -3542,13 +3542,13 @@ wxString AudioIO::GetDeviceInfo()
       s << wxT("No playback device found for '") << playDevice << wxT("'.") << e;
    }
 
-   wxArrayLong supportedSampleRates;
+   std::vector<long> supportedSampleRates;
 
    if(havePlayDevice && haveRecDevice){
       supportedSampleRates = GetSupportedSampleRates(playDeviceNum, recDeviceNum);
 
       s << wxT("Supported Rates:") << e;
-      for (int k = 0; k < (int) supportedSampleRates.GetCount(); k++) {
+      for (int k = 0; k < (int) supportedSampleRates.size(); k++) {
          s << wxT("    ") << (int)supportedSampleRates[k] << e;
       }
    }else{
@@ -3557,9 +3557,9 @@ wxString AudioIO::GetDeviceInfo()
    }
 
 #if defined(USE_PORTMIXER)
-   if (supportedSampleRates.GetCount() > 0)
+   if (supportedSampleRates.size() > 0)
       {
-      int highestSampleRate = supportedSampleRates[supportedSampleRates.GetCount() - 1];
+      int highestSampleRate = supportedSampleRates.back();
       bool EmulateMixerInputVol = true;
       bool EmulateMixerOutputVol = true;
       float MixerInputVol = 1.0;

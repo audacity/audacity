@@ -45,8 +45,6 @@ public:
    double queuetotal;
 };
 
-WX_DECLARE_OBJARRAY(EffectDistortionState, EffectDistortionStateArray);
-
 class EffectDistortion final : public Effect
 {
 public:
@@ -171,7 +169,7 @@ private:
 
 private:
    EffectDistortionState mMaster;
-   EffectDistortionStateArray mSlaves;
+   std::vector<EffectDistortionState> mSlaves;
 
    double mTable[TABLESIZE];
    double mThreshold;

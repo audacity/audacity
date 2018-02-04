@@ -59,9 +59,6 @@ Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 20
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(EffectPhaserStateArray);
-
 //
 // EffectPhaser
 //
@@ -165,7 +162,7 @@ bool EffectPhaser::RealtimeInitialize()
 {
    SetBlockSize(512);
 
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -176,14 +173,14 @@ bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
 
    InstanceInit(slave, sampleRate);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool EffectPhaser::RealtimeFinalize()
 {
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }

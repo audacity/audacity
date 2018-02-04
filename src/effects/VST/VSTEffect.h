@@ -179,7 +179,7 @@ private:
    // Plugin loading and unloading
    bool Load();
    void Unload();
-   wxArrayInt GetEffectIDs();
+   std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
    bool LoadParameters(const wxString & group);

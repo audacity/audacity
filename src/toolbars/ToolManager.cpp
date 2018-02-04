@@ -653,7 +653,7 @@ int ToolManager::FilterEvent(wxEvent &event)
 void ToolManager::ReadConfig()
 {
    wxString oldpath = gPrefs->GetPath();
-   wxArrayInt unordered[ DockCount ];
+   std::vector<int> unordered[ DockCount ];
    std::vector<ToolBar*> dockedAndHidden;
    bool show[ ToolBarCount ];
    int width[ ToolBarCount ];
@@ -806,7 +806,7 @@ void ToolManager::ReadConfig()
          if (!ordered)
          {
             // These must go at the end
-            unordered[ dock - 1 ].Add( ndx );
+            unordered[ dock - 1 ].push_back( ndx );
          }
       }
       else
@@ -859,7 +859,7 @@ void ToolManager::ReadConfig()
 
       // Add all unordered toolbars
       bool deviceWasPositioned = false;
-      for( int ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
+      for( int ord = 0; ord < (int) unordered[ dock ].size(); ord++ )
       {
          ToolBar *t = mBars[ unordered[ dock ][ ord ] ].get();
 

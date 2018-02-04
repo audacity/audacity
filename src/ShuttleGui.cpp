@@ -1533,23 +1533,23 @@ wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayString 
 }
 
 /// Int-to-Index (choices can be items like e.g 0x400120 )
-int ShuttleGuiBase::TranslateToIndex( const int Value, const wxArrayInt &Choices )
+int ShuttleGuiBase::TranslateToIndex( const int Value, const std::vector<int> &Choices )
 {
-   int n = Choices.Index( Value );
-   if( n== wxNOT_FOUND )
+   int n = make_iterator_range(Choices).index( Value );
+   if( n == wxNOT_FOUND )
       n=miNoMatchSelector;
    miNoMatchSelector = 0;
    return n;
 }
 
 /// Index-to-int (choices can be items like e.g 0x400120 )
-int ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayInt &Choices )
+int ShuttleGuiBase::TranslateFromIndex( const int nIn, const std::vector<int> &Choices )
 {
    int n = nIn;
    if( n== wxNOT_FOUND )
       n=miNoMatchSelector;
    miNoMatchSelector = 0;
-   if( n < (int)Choices.GetCount() )
+   if( n < (int)Choices.size() )
    {
       return Choices[n];
    }
@@ -1815,7 +1815,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &SettingName,
    const int Default,
    const wxArrayString & Choices,
-   const wxArrayInt & TranslatedChoices)
+   const std::vector<int> & TranslatedChoices)
 {
    wxChoice * pChoice=(wxChoice*)NULL;
 
@@ -2257,11 +2257,11 @@ void ShuttleGui::SetSizeHints( wxWindow *window, const wxArrayString & items )
    window->SetSizeHints( maxw, -1 );
 }
 
-void ShuttleGui::SetSizeHints( wxWindow *window, const wxArrayInt & items )
+void ShuttleGui::SetSizeHints( wxWindow *window, const std::vector<int> & items )
 {
    wxArrayString strs;
 
-   for( size_t i = 0; i < items.GetCount(); i++ )
+   for( size_t i = 0; i < items.size(); i++ )
    {
       strs.Add( wxString::Format( wxT("%d"), items[i] ) );
    }
@@ -2277,7 +2277,7 @@ void ShuttleGui::SetSizeHints( const wxArrayString & items )
    SetSizeHints( mpLastWind, items );
 }
 
-void ShuttleGui::SetSizeHints( const wxArrayInt & items )
+void ShuttleGui::SetSizeHints( const std::vector<int> & items )
 {
    if( mShuttleMode != eIsCreating )
       return;

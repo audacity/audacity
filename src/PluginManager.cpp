@@ -20,7 +20,6 @@
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dir.h>
-#include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/hashmap.h>
 #include <wx/filename.h>
@@ -45,8 +44,6 @@
 #include "widgets/ProgressDialog.h"
 
 #include "PluginManager.h"
-
-#include <wx/arrimpl.cpp>
 
 #include "Experimental.h"
 
@@ -380,11 +377,9 @@ enum
    STATE_COUNT
 };
 
-WX_DEFINE_ARRAY(PluginDescriptor *, DescriptorArray);
-
 struct ItemData
 {
-   DescriptorArray plugs;
+   std::vector<PluginDescriptor*> plugs;
    wxString name;
    wxString path;
    int state;
@@ -589,10 +584,10 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
    S.EndVerticalLay();
 
-   wxArrayInt colWidths;
+   std::vector<int> colWidths;
    for (int i = 0, cnt = mEffects->GetColumnCount(); i < cnt; i++)
    {
-      colWidths.Add(0);
+      colWidths.push_back(0);
    }
 
    for (int i = 0, cnt = mStates.GetCount(); i < cnt; i++)
@@ -615,7 +610,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
       const  wxString &path = plug.GetPath();
       ItemData & item = mItems[path];  // will create NEW entry
-      item.plugs.Add(&plug);
+      item.plugs.push_back(&plug);
       item.path = path;
       item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
       item.valid = plug.IsValid();
@@ -903,16 +898,16 @@ void PluginRegistrationDialog::OnClearAll(wxCommandEvent & WXUNUSED(evt))
 
 void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
-   wxArrayLong items;
+   std::vector<long> items;
 
    long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    while (i != wxNOT_FOUND)
    {
-      items.Insert(i, 0);
+      items.insert(items.begin(), i);
       i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
-   for (size_t i = 0, cnt = items.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = items.size(); i < cnt; i++)
    {
       SetState(items[i], false, STATE_Enabled);
    }
@@ -920,16 +915,16 @@ void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
 
 void PluginRegistrationDialog::OnDisable(wxCommandEvent & WXUNUSED(evt))
 {
-   wxArrayLong items;
+   std::vector<long> items;
 
    long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    while (i != wxNOT_FOUND)
    {
-      items.Insert(i, 0);
+      items.insert(items.begin(), i);
       i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
-   for (size_t i = 0, cnt = items.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = items.size(); i < cnt; i++)
    {
       SetState(items[i], false, STATE_Disabled);
    }
@@ -984,13 +979,13 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
             wxString errMsgs;
 
             // Try to register the plugin via each provider until one succeeds
-            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
             {
                wxString errMsg;
                if (mm.RegisterPlugin(item.plugs[j]->GetProviderID(), path,
                                      errMsg))
                {
-                  for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+                  for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
                   {
                      pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
                   }
@@ -1011,14 +1006,14 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          }
          else if (item.state == STATE_New)
          {
-            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
             {
                item.plugs[j]->SetValid(false);
             }
          }
          else if (item.state != STATE_New)
          {
-            for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
+            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
             {
                item.plugs[j]->SetEnabled(item.state == STATE_Enabled);
                item.plugs[j]->SetValid(item.valid);

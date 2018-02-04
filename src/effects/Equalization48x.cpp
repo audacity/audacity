@@ -34,8 +34,6 @@
 
 #include <math.h>
 
-#include <wx/arrimpl.cpp>
-
 #include "Equalization48x.h"
 #include "../RealFFTf.h"
 #include "../RealFFTf48x.h"

@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <vector>
 
-#include <wx/dynarray.h>
 #include <wx/brush.h>
 #include <wx/pen.h>
 

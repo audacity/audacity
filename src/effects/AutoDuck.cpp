@@ -24,7 +24,6 @@
 
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 
 #include "../AColor.h"
@@ -71,11 +70,6 @@ struct AutoDuckRegion
    double t0;
    double t1;
 };
-
-#include <wx/arrimpl.cpp>
-
-WX_DECLARE_OBJARRAY(AutoDuckRegion, AutoDuckRegionArray);
-WX_DEFINE_OBJARRAY(AutoDuckRegionArray);
 
 /*
  * Effect implementation
@@ -296,7 +290,7 @@ bool EffectAutoDuck::Process()
    float rmsSum = 0;
    // to make the progress bar appear more natural, we first look for all
    // duck regions and apply them all at once afterwards
-   AutoDuckRegionArray regions;
+   std::vector<AutoDuckRegion> regions;
    bool inDuckRegion = false;
    {
       Floats rmsWindow{ kRMSWindowSize, true };
@@ -354,7 +348,7 @@ bool EffectAutoDuck::Process()
                   double duckRegionEnd =
                      mControlTrack->LongSamplesToTime(i - curSamplesPause);
 
-                  regions.Add(AutoDuckRegion(
+                  regions.push_back(AutoDuckRegion(
                      duckRegionStart - mOuterFadeDownLen,
                      duckRegionEnd + mOuterFadeUpLen));
 
@@ -381,7 +375,7 @@ bool EffectAutoDuck::Process()
       {
          double duckRegionEnd =
             mControlTrack->LongSamplesToTime(end - curSamplesPause);
-         regions.Add(AutoDuckRegion(
+         regions.push_back(AutoDuckRegion(
             duckRegionStart - mOuterFadeDownLen,
             duckRegionEnd + mOuterFadeUpLen));
       }
@@ -399,7 +393,7 @@ bool EffectAutoDuck::Process()
       {
          WaveTrack* t = (WaveTrack*)iterTrack;
 
-         for (size_t i = 0; i < regions.GetCount(); i++)
+         for (size_t i = 0; i < regions.size(); i++)
          {
             const AutoDuckRegion& region = regions[i];
             if (ApplyDuckFade(trackNumber, t, region.t0, region.t1))

@@ -47,7 +47,7 @@ class ModulePrefs final : public PrefsPanel
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    wxArrayString mModules;
-   wxArrayInt    mStatuses;
+   std::vector<int> mStatuses;
    wxArrayString mPaths;
 };
 

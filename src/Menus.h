@@ -26,7 +26,8 @@ void CreateMenusAndCommands();
 
 void PopulateEffectsMenu(CommandManager *c, EffectType type,
                          CommandFlag batchflags, CommandFlag realflags);
-void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs,
+void AddEffectMenuItems(CommandManager *c,
+                        std::vector<const PluginDescriptor*> & plugs,
                         CommandFlag batchflags, CommandFlag realflags, bool isDefault);
 void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names,
                             const PluginIDList & plugs,

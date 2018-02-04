@@ -81,8 +81,6 @@ scroll information.  It also has some status flags.
 #include <wx/timer.h>
 #include <wx/display.h>
 
-#include <wx/arrimpl.cpp>       // this allows for creation of wxObjArray
-
 #if defined(__WXMAC__)
 #if !wxCHECK_VERSION(3, 0, 0)
 #include <CoreServices/CoreServices.h>

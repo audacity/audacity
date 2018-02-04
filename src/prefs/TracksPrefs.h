@@ -18,6 +18,7 @@
 //#include <wx/arrstr.h>
 //#include <wx/window.h>
 
+#include <vector>
 #include "PrefsPanel.h"
 
 class ShuttleGui;
@@ -41,11 +42,11 @@ class TracksPrefs final : public PrefsPanel
 
    static int iPreferencePinned;
 
-   wxArrayInt    mViewCodes;
+   std::vector<int> mViewCodes;
    wxArrayString mViewChoices;
-   wxArrayInt    mSampleDisplayCodes;
+   std::vector<int> mSampleDisplayCodes;
    wxArrayString mSampleDisplayChoices;
-   wxArrayInt    mZoomCodes;
+   std::vector<int> mZoomCodes;
    wxArrayString mZoomChoices;
 };
 

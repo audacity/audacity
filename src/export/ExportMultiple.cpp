@@ -24,7 +24,6 @@
 #include <wx/choice.h>
 #include <wx/dialog.h>
 #include <wx/dirdlg.h>
-#include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/filedlg.h>
 #include <wx/filefn.h>
@@ -53,8 +52,6 @@
 
 
 /* define our dynamic array of export settings */
-#include <wx/arrimpl.cpp>     // much hackery
-WX_DEFINE_OBJARRAY( ExportKitArray )
 
 enum {
    FormatID = 10001,
@@ -647,8 +644,8 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
    bool tagsPrompt = mProject->GetShowId3Dialog();
    int numFiles = mNumLabels;
    int l = 0;        // counter for files done
-   ExportKitArray exportSettings; // dynamic array for settings.
-   exportSettings.Alloc(numFiles); // Allocate some guessed space to use.
+   std::vector<ExportKit> exportSettings; // dynamic array for settings.
+   exportSettings.reserve(numFiles); // Allocate some guessed space to use.
 
    // Account for exporting before first label
    if( mFirst->GetValue() ) {
@@ -739,7 +736,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
       }
 
       /* add the settings to the array of settings to be used for export */
-      exportSettings.Add(setting);
+      exportSettings.push_back(setting);
 
       l++;  // next label, count up one
    }
@@ -777,9 +774,9 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    int l = 0;     // track counter
    auto ok = ProgressResult::Success;
    wxArrayString otherNames;
-   ExportKitArray exportSettings; // dynamic array we will use to store the
+   std::vector<ExportKit> exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
-   exportSettings.Alloc(mNumWaveTracks);   // Allocate some guessed space to use.
+   exportSettings.reserve(mNumWaveTracks);   // Allocate some guessed space to use.
    ExportKit setting;   // the current batch of settings
    setting.destfile.SetPath(mDir->GetValue());
    setting.destfile.SetExt(mPlugins[mPluginIndex]->GetExtension(mSubFormatIndex));
@@ -881,7 +878,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
             return ProgressResult::Cancelled;
       }
       /* add the settings to the array of settings to be used for export */
-      exportSettings.Add(setting);
+      exportSettings.push_back(setting);
 
       l++;  // next track, count up one
    }

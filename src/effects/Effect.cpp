@@ -2287,11 +2287,11 @@ bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
    if (group == 0)
    {
       mCurrentProcessor = 0;
-      mGroupProcessor.Clear();
+      mGroupProcessor.clear();
    }
 
    // Remember the processor starting index
-   mGroupProcessor.Add(mCurrentProcessor);
+   mGroupProcessor.push_back(mCurrentProcessor);
 
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)

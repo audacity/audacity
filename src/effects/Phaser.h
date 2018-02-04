@@ -44,8 +44,6 @@ public:
    int laststages;
 };
 
-WX_DECLARE_OBJARRAY(EffectPhaserState, EffectPhaserStateArray);
-
 class EffectPhaser final : public Effect
 {
 public:
@@ -120,7 +118,7 @@ private:
 
 private:
    EffectPhaserState mMaster;
-   EffectPhaserStateArray mSlaves;
+   std::vector<EffectPhaserState> mSlaves;
 
    // parameters
    int mStages;

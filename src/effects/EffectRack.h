@@ -76,8 +76,8 @@ private:
    wxBitmap mRemovePushed;
    wxBitmap mRemoveRaised;
 
-   wxArrayInt mPowerState;
-   wxArrayInt mFavState;
+   std::vector<int> mPowerState;
+   std::vector<int> mFavState;
 
    int mNumEffects;
 

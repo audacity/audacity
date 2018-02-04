@@ -46,9 +46,6 @@ Param( Treble,    double,  wxT("Treble"),        0.0,     -30.0,   30.0,    1  )
 Param( Gain,      double,  wxT("Gain"),          0.0,     -30.0,   30.0,    1  );
 Param( Link,      bool,    wxT("Link Sliders"),  false,    false,  true,    1  );
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(EffectBassTrebleStateArray);
-
 // Used to communicate the type of the filter.
 enum kShelfType
 {
@@ -142,7 +139,7 @@ bool EffectBassTreble::RealtimeInitialize()
 {
    SetBlockSize(512);
 
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -153,14 +150,14 @@ bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
 
    InstanceInit(slave, sampleRate);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool EffectBassTreble::RealtimeFinalize()
 {
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
