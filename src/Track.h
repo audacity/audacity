@@ -205,8 +205,10 @@ class AUDACITY_DLL_API Track /* not final */
    wxString       mName;
    wxString       mDefaultName;
 
+ private:
    bool           mSelected;
 
+ protected:
    bool           mLinked;
    bool           mMinimized;
 
@@ -367,7 +369,7 @@ private:
    virtual void Merge(const Track &orig);
 
    wxString GetName() const { return mName; }
-   void SetName( const wxString &n ) { mName = n; }
+   void SetName( const wxString &n );
    wxString GetDefaultName() const { return mDefaultName; }
    void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
@@ -714,6 +716,11 @@ public:
    // Checks if sync-lock is on and any track in its sync-lock group is selected.
    bool IsSyncLockSelected() const;
 
+   // Send an event to listeners when state of the track changes
+   // To do: define values for the argument to distinguish different parts
+   // of the state, perhaps with wxNewId
+   void Notify( int code = -1 );
+
    // An always-true predicate useful for defining iterators
    bool Any() const;
 
@@ -763,8 +770,8 @@ public:
 
    bool GetMute    () const { return mMute;     }
    bool GetSolo    () const { return mSolo;     }
-   void SetMute    (bool m) { mMute     = m; }
-   void SetSolo    (bool s) { mSolo     = s; }
+   void SetMute    (bool m);
+   void SetSolo    (bool s);
 
    void Init( const PlayableTrack &init );
    void Merge( const Track &init ) override;
@@ -1086,31 +1093,50 @@ template <
  * Clear, and Contains, plus serialization of the list of tracks.
  */
 
-struct TrackListEvent : public wxCommandEvent
+struct TrackListEvent : public wxEvent
 {
-   TrackListEvent(wxEventType commandType = wxEVT_NULL, int winid = 0)
-   : wxCommandEvent{ commandType, winid } {}
+   explicit
+   TrackListEvent(
+      wxEventType commandType,
+      const std::weak_ptr<Track> &pTrack = {}, int code = -1)
+   : wxEvent{ commandType }
+   , mpTrack{ pTrack }
+   , mCode{ code }
+   {}
 
    TrackListEvent( const TrackListEvent& ) = default;
 
    wxEvent *Clone() const override { return new TrackListEvent(*this); }
 
    std::weak_ptr<Track> mpTrack;
+   int mCode;
 };
+
+// Posted when the set of selected tracks changes.
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_SELECTION_CHANGE, TrackListEvent);
+
+// Posted when certain fields of a track change.
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
 
 // Posted when tracks are reordered but otherwise unchanged.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_TRACKLIST_PERMUTED, wxCommandEvent);
+                         EVT_TRACKLIST_PERMUTED, TrackListEvent);
 
-// Posted when some track was added or changed its height.
-// Cast to TrackListEvent and examine mpTrack to retrieve it.
+// Posted when some track changed its height.
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_TRACKLIST_RESIZING, wxCommandEvent);
+                         EVT_TRACKLIST_RESIZING, TrackListEvent);
+
+// Posted when a track has been added to a tracklist.
+// Also posted when one track replaces another
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_ADDITION, TrackListEvent);
 
 // Posted when a track has been deleted from a tracklist.
 // Also posted when one track replaces another
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_TRACKLIST_DELETION, wxCommandEvent);
+                         EVT_TRACKLIST_DELETION, TrackListEvent);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
 {
@@ -1495,8 +1521,11 @@ private:
    }
 
    void RecalcPositions(TrackNodePointer node);
+   void SelectionEvent( const std::shared_ptr<Track> &pTrack );
    void PermutationEvent();
+   void DataEvent( const std::shared_ptr<Track> &pTrack, int code );
    void DeletionEvent();
+   void AdditionEvent(TrackNodePointer node);
    void ResizingEvent(TrackNodePointer node);
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);

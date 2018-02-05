@@ -422,7 +422,10 @@ float WaveTrack::GetGain() const
 
 void WaveTrack::SetGain(float newGain)
 {
-   mGain = newGain;
+   if (mGain != newGain) {
+      mGain = newGain;
+      Notify();
+   }
 }
 
 float WaveTrack::GetPan() const
@@ -433,11 +436,14 @@ float WaveTrack::GetPan() const
 void WaveTrack::SetPan(float newPan)
 {
    if (newPan > 1.0)
-      mPan = 1.0;
+      newPan = 1.0;
    else if (newPan < -1.0)
-      mPan = -1.0;
-   else
+      newPan = -1.0;
+
+   if ( mPan != newPan ) {
       mPan = newPan;
+      Notify();
+   }
 }
 
 float WaveTrack::GetChannelGain(int channel) const

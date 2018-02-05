@@ -332,6 +332,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTracks->Bind(EVT_TRACKLIST_RESIZING,
                     &TrackPanel::OnTrackListResizing,
                     this);
+   mTracks->Bind(EVT_TRACKLIST_ADDITION,
+                    &TrackPanel::OnTrackListResizing,
+                    this);
    mTracks->Bind(EVT_TRACKLIST_DELETION,
                     &TrackPanel::OnTrackListDeletion,
                     this);
@@ -781,7 +784,7 @@ void TrackPanel::UpdateViewIfNoTracks()
    }
 }
 
-void TrackPanel::OnPlayback(wxCommandEvent &e)
+void TrackPanel::OnPlayback(wxEvent &e)
 {
    e.Skip();
    // Starting or stopping of play or record affects some cursors.
@@ -792,9 +795,9 @@ void TrackPanel::OnPlayback(wxCommandEvent &e)
 
 // The tracks positions within the list have changed, so update the vertical
 // ruler size for the track that triggered the event.
-void TrackPanel::OnTrackListResizing(wxCommandEvent & e)
+void TrackPanel::OnTrackListResizing(TrackListEvent & e)
 {
-   auto t = static_cast<TrackListEvent&>(e).mpTrack.lock();
+   auto t = e.mpTrack.lock();
    // A deleted track can trigger the event.  In which case do nothing here.
    if( t )
       UpdateVRuler(t.get());
@@ -802,7 +805,7 @@ void TrackPanel::OnTrackListResizing(wxCommandEvent & e)
 }
 
 // Tracks have been removed from the list.
-void TrackPanel::OnTrackListDeletion(wxCommandEvent & e)
+void TrackPanel::OnTrackListDeletion(wxEvent & e)
 {
    // copy shared_ptr for safety, as in HandleClick
    auto handle = Target();

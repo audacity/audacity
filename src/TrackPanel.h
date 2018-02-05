@@ -33,6 +33,7 @@ class LabelTrack;
 class SpectrumAnalyst;
 class Track;
 class TrackList;
+class TrackListEvent;
 class TrackPanel;
 class TrackArtist;
 class Ruler;
@@ -41,7 +42,6 @@ class AdornedRulerPanel;
 class LWSlider;
 class ControlToolBar; //Needed because state of controls can affect what gets drawn.
 class ToolsToolBar; //Needed because state of controls can affect what gets drawn.
-class MixerBoard;
 
 class TrackPanelAx;
 class TrackPanelCellIterator;
@@ -257,9 +257,9 @@ class AUDACITY_DLL_API TrackPanel final : public CellularPanel {
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
 
-   void OnPlayback(wxCommandEvent &);
-   void OnTrackListResizing(wxCommandEvent & event);
-   void OnTrackListDeletion(wxCommandEvent & event);
+   void OnPlayback(wxEvent &);
+   void OnTrackListResizing(TrackListEvent & event);
+   void OnTrackListDeletion(wxEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
 
    double GetMostRecentXPos();

@@ -643,6 +643,14 @@ void NoteTrack::InsertSilence(double t, double len)
    // AddToDuration( len );
 }
 
+void NoteTrack::SetVelocity(float velocity)
+{
+   if (mVelocity != velocity) {
+      mVelocity = velocity;
+      Notify();
+   }
+}
+
 // Call this function to manipulate the underlying sequence data. This is
 // NOT the function that handles horizontal dragging.
 bool NoteTrack::Shift(double t) // t is always seconds
