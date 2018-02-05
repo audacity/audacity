@@ -62,7 +62,7 @@ hold information about one contributor to Audacity.
 #endif
 
 #ifdef REV_LONG
-#define REV_IDENT wxString( "[[http://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
+#define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
 #else
 #define REV_IDENT wxT("No revision identifier was provided")
 #endif
@@ -83,7 +83,7 @@ const wxString VerCheckArgs(){
 // Url with Version check args attached.
 const wxString VerCheckUrl(){
    //The version we intend to use for live Audacity.
-#define VER_CHECK_URL "http://www.audacityteam.org/download/?"
+#define VER_CHECK_URL "https://www.audacityteam.org/download/?"
 //For testing of our scriptlet.
 //#define VER_CHECK_URL "http://www.audacityteam.org/slug/?"
 //For testing locally
@@ -185,23 +185,23 @@ void AboutDialog::CreateCreditsList()
 
    // Libraries
 
-   AddCredit(wxT("[[http://libexpat.github.io/|expat]]"), roleLibrary);
-   AddCredit(wxT("[[http://xiph.org/flac/|FLAC]]"), roleLibrary);
+   AddCredit(wxT("[[https://libexpat.github.io/|expat]]"), roleLibrary);
+   AddCredit(wxT("[[https://xiph.org/flac/|FLAC]]"), roleLibrary);
    AddCredit(wxT("[[http://lame.sourceforge.net/|LAME]]"), roleLibrary);
-   AddCredit(wxT("[[http://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
+   AddCredit(wxT("[[https://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
    AddCredit(wxT("[[http://www.mega-nerd.com/libsndfile/|libsndfile]]"), roleLibrary);
-   AddCredit(wxT("[[http://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
+   AddCredit(wxT("[[https://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
    AddCredit(wxT("[[http://lv2plug.in/|lv2]] (") + _("incorporating") + wxT(" lilv, msinttypes, serd, sord and sratom)"), roleLibrary);
-   AddCredit(wxT("[[http://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
+   AddCredit(wxT("[[https://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
    AddCredit(wxT("[[http://vorbis.com/|Ogg Vorbis]]"), roleLibrary);
    AddCredit(wxT("[[http://www.portaudio.com/|PortAudio]]"), roleLibrary);
    AddCredit(wxT("[[http://www.portmedia.sourceforge.net/portmidi/|PortMidi]]"), roleLibrary);
-   AddCredit(wxT("[[http://sourceforge.net/p/portmedia/wiki/portsmf/|portsmf]]"), roleLibrary);
+   AddCredit(wxT("[[https://sourceforge.net/p/portmedia/wiki/portsmf/|portsmf]]"), roleLibrary);
    AddCredit(wxT("[[http://sbsms.sourceforge.net/|sbsms]]"), roleLibrary);
-   AddCredit(wxT("[[http://www.surina.net/soundtouch/|SoundTouch]]"), roleLibrary);
+   AddCredit(wxT("[[https://www.surina.net/soundtouch/|SoundTouch]]"), roleLibrary);
    AddCredit(wxT("[[http://www.twolame.org/|TwoLAME]]"), roleLibrary);
    AddCredit(wxT("[[http://www.vamp-plugins.org/|Vamp]]"), roleLibrary);
-   AddCredit(wxT("[[http://wxwidgets.org/|wxWidgets]]"), roleLibrary);
+   AddCredit(wxT("[[https://wxwidgets.org/|wxWidgets]]"), roleLibrary);
 
    // Thanks
 
@@ -283,24 +283,24 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 // DA: Says that it is a customised version.
 #ifdef EXPERIMENTAL_DA
       wxT(
-"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 #else
       _(
-"Audacity is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 #endif
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    wxString par2StrUntranslated = wxT(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
-For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
-visit our [[http://forum.audacityteam.org/|forum]].");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[https://forum.audacityteam.org/|forum]]. \
+For help, view the tips and tricks on our [[https://wiki.audacityteam.org/|wiki]] or \
+visit our [[https://forum.audacityteam.org/|forum]].");
    wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
-For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
-visit our [[http://forum.audacityteam.org/|forum]].");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[https://forum.audacityteam.org/|forum]]. \
+For help, view the tips and tricks on our [[https://wiki.audacityteam.org/|wiki]] or \
+visit our [[https://forum.audacityteam.org/|forum]].");
 
    if( par2Str == par2StrUntranslated )
       par2Str.Replace( wxT(", in English,"), wxT("") );
@@ -365,11 +365,11 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
-      wxT("<p><br>") + _("Audacity website: ") + wxT("[[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
+      wxT("<p><br>") + _("Audacity website: ") + wxT("[[https://www.audacityteam.org/|https://www.audacityteam.org/]]") +
 
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
-      wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
+      wxT("<br>DarkAudacity website: [[https://www.darkaudacity.com/|https://www.darkaudacity.com/]]") +
 #else
       []{
          // Will this post-translation substitution work in all locales?

@@ -308,7 +308,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
 #ifdef EXPERIMENTAL_DA
       releasePageName = wxT("video") + HelpSystem::ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
-      webHelpPath = wxT("http://www.darkaudacity.com/");
+      webHelpPath = wxT("https://www.darkaudacity.com/");
 #else
       releasePageName = wxT("quick_help") + HelpSystem::ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
