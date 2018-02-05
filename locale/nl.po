@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-23 18:10-0500\n"
-"PO-Revision-Date: 2018-01-31 09:37+0000\n"
+"PO-Revision-Date: 2018-02-05 11:56+0000\n"
 "Last-Translator: Thomas De Rocker\n"
 "Language-Team: Dutch (http://www.transifex.com/klyok/audacity/language/nl/)\n"
 "Language: nl\n"
@@ -5628,10 +5628,16 @@ msgid ""
 "\n"
 "You are saving directly to a slow external storage device\n"
 msgstr ""
+"Opgenomen audio is verloren gegaan op de gelabelde plaatsen. Mogelijke "
+"redenen:\n"
+"\n"
+"Andere toepassingen strijden met Audacity voor processortijd\n"
+"\n"
+"U bent rechtstreeks naar een traag extern opslagapparaat aan het opslaan\n"
 
 #: src/Project.cpp
 msgid "Turn off dropout detection"
-msgstr ""
+msgstr "Uitvaldetectie uitschakelen"
 
 #: src/Project.cpp
 msgid "Recorded Audio"
@@ -5909,7 +5915,7 @@ msgstr "Kies een locatie om screenshot-afbeeldingen op te slaan"
 
 #: src/Screenshot.cpp
 msgid "Capture failed!"
-msgstr ""
+msgstr "Opnemen mislukt!"
 
 #: src/Sequence.cpp
 #, c-format
@@ -6276,7 +6282,7 @@ msgstr "Huidig project"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording start:"
-msgstr ""
+msgstr "Opname-begin:"
 
 #: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
 #: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
@@ -6286,15 +6292,15 @@ msgstr "Tijdsduur:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording end:"
-msgstr ""
+msgstr "Opname-einde:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save enabled:"
-msgstr ""
+msgstr "Automatisch opslaan ingeschakeld:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export enabled:"
-msgstr ""
+msgstr "Automatisch exporteren ingeschakeld:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Action after Timer Recording:"
@@ -6477,15 +6483,15 @@ msgstr "Nadat opnemen voltooid is:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Waiting to start recording at:"
-msgstr ""
+msgstr "Wachten met opnemen tot:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording duration:"
-msgstr ""
+msgstr "Opname-duur:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Scheduled to stop at:"
-msgstr ""
+msgstr "Gepland stoppen om:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record - Waiting for Start"
@@ -6497,11 +6503,11 @@ msgstr "Opnemen zal beginnen binnen:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
-msgstr ""
+msgstr "Opname opgeslagen:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Exported:"
-msgstr ""
+msgstr "Opname geëxporteerd:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record - Waiting"
@@ -8334,7 +8340,7 @@ msgstr "'naamloos' is speciaal"
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "Rename '%s' to..."
-msgstr ""
+msgstr "'%s' hernoemen naar..."
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
@@ -8343,7 +8349,7 @@ msgstr "Hernoemen..."
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "Rename '%s'"
-msgstr ""
+msgstr "'%s' hernoemen"
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -8496,7 +8502,7 @@ msgstr "Voorziet ingebouwde effecten in Audacity"
 
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
-msgstr ""
+msgstr "Onbekende naam van ingebouwd effect"
 
 #: src/effects/Noise.cpp
 msgid "White"
@@ -8797,37 +8803,37 @@ msgstr "Niets aan het doen...\n"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing: %s"
-msgstr ""
+msgstr "Analyseren: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing first track of stereo pair: %s"
-msgstr ""
+msgstr "Analyseren van eerste track van stereo-paar: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing: %s"
-msgstr ""
+msgstr "Verwerken: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr ""
+msgstr "Stereokanalen onafhankelijk verwerken: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing second track of stereo pair: %s"
-msgstr ""
+msgstr "Analyseren van tweede track van stereo-paar: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing first track of stereo pair: %s"
-msgstr ""
+msgstr "Verwerken van eerste track van stereo-paar: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing second track of stereo pair: %s"
-msgstr ""
+msgstr "Verwerken van tweede track van stereo-paar: %s"
 
 #: src/effects/Normalize.cpp
 msgid "Remove DC offset (center on 0.0 vertically)"
@@ -9021,12 +9027,12 @@ msgstr "Nieuwe selectielengte: dd:hh:mm:ss"
 #: src/effects/Repeat.cpp
 #, c-format
 msgid "Current selection length: %s"
-msgstr ""
+msgstr "Huidige selectielengte: %s"
 
 #: src/effects/Repeat.cpp
 #, c-format
 msgid "New selection length: %s"
-msgstr ""
+msgstr "Nieuwe selectielengte:  %s"
 
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
@@ -9587,11 +9593,11 @@ msgstr "Voorziet ondersteuning voor Audio Unit Effects in Audacity"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Could not find component"
-msgstr ""
+msgstr "Kon component niet terugvinden"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Could not initialize component"
-msgstr ""
+msgstr "Kon component niet initialiseren"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
@@ -9711,12 +9717,12 @@ msgstr "Voorziet LADSPA-effecten"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Audacity no longer uses vst-bridge"
-msgstr ""
+msgstr "Audacity gebruikt niet langer vst-bridge"
 
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
 #: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
 msgid "Could not load the library"
-msgstr ""
+msgstr "Kon de bibliotheek niet laden"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effect Options"
@@ -9817,7 +9823,7 @@ msgstr "Nyquist-worker"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Ill-formed Nyquist plug-in header"
-msgstr ""
+msgstr "Ill-gevormde Nyquist plug-in header"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9916,7 +9922,7 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr ""
+msgstr "Deze versie van Audacity ondersteunt Nyquist plugin-versie %ld niet"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -9929,7 +9935,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
-msgstr ""
+msgstr "Kon bestand niet openen"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9954,7 +9960,7 @@ msgstr "Fout in Nyquist code"
 #. i18n-hint: refers to programming "languages"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not determine language"
-msgstr ""
+msgstr "Kon taal niet bepalen"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -10106,7 +10112,7 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Audio In: %d, Audio Out: %d"
-msgstr ""
+msgstr "Audio in: %d, Audio uit: %d"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -10196,7 +10202,7 @@ msgstr "naamloos"
 #: src/export/Export.cpp
 #, c-format
 msgid "Are you sure you want to export the file as \"%s\"?\n"
-msgstr ""
+msgstr "Weet u zeker dat u het bestand wilt exporteren als \"%s\"?\n"
 
 #: src/export/Export.cpp
 #, c-format
@@ -10230,6 +10236,12 @@ msgid ""
 "               If you still wish to export, please choose a different "
 "filename or folder."
 msgstr ""
+"U probeert een ontbrekend ge-aliast bestand te overschrijven.\n"
+"Het bestand kan niet geschreven worden omdat het pad nodig is om de "
+"originele audio naar het project te herstellen.\n"
+"Kies Help > Diagnostiek > Afhankelijkheidscontrole om de locaties van alle "
+"ontbrekende bestanden weer te geven.\n"
+"Als u nog steeds wilt exporteren, kies dan een andere bestandsnaam of map."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10275,13 +10287,13 @@ msgstr "Kanaal: %2d"
 #: src/export/Export.cpp
 #, c-format
 msgid "%s - L"
-msgstr ""
+msgstr "%s - L"
 
 #. i18n-hint: track name and R abbreviating Right channel
 #: src/export/Export.cpp
 #, c-format
 msgid "%s - R"
-msgstr ""
+msgstr "%s - R"
 
 #: src/export/Export.cpp
 msgid "Mixer Panel"
@@ -10334,7 +10346,7 @@ msgstr ""
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
-msgstr ""
+msgstr "Audio wordt met codeerprogramma op de opdrachtregel geëxporteerd"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
@@ -10457,7 +10469,7 @@ msgstr "Geselecteerde audio exporteren als %s"
 #: src/export/ExportFFmpeg.cpp src/export/ExportPCM.cpp
 #, c-format
 msgid "Exporting the audio as %s"
-msgstr ""
+msgstr "Audio exporteren als %s"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Invalid sample rate"
@@ -11036,7 +11048,7 @@ msgstr "De geselecteerde audio wordt geëxporteerd als FLAC"
 
 #: src/export/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
-msgstr ""
+msgstr "Audio exporteren als FLAC"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -11058,7 +11070,7 @@ msgstr "Geselecteerde audio exorteren aan %ld kbps"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "Exporting the audio at %ld kbps"
-msgstr ""
+msgstr "Audio exporteren aan %ld kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "kbps"
@@ -11231,7 +11243,7 @@ msgstr "De geselecteerde audio exporteren met %s voorinstelling"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with %s preset"
-msgstr ""
+msgstr "Audio exporteren met %s-voorinstelling"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11241,7 +11253,7 @@ msgstr "De geselecteerde audio exporteren met vbr-kwaliteit %s"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with VBR quality %s"
-msgstr ""
+msgstr "Audio exporteren met vbr-kwaliteit %s"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11251,7 +11263,7 @@ msgstr "De geselecteerde audio exporteren met %d kbps"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
-msgstr ""
+msgstr "Audio exporteren aan %d kbps"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11443,7 +11455,7 @@ msgstr "De geselecteerde audio wordt als Ogg Vorbis geëxporteerd"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"
-msgstr ""
+msgstr "Audio exporteren als Ogg Vorbis"
 
 #: src/export/ExportPCM.cpp
 msgid "AIFF (Apple) signed 16-bit PCM"
@@ -11777,17 +11789,17 @@ msgstr "Ongeldige track-offset in LOF-bestand."
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Could not open file %s: Filename too short."
-msgstr ""
+msgstr "Kon bestand %s niet openen: bestandsnaam te kort."
 
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Could not open file %s: Incorrect filetype."
-msgstr ""
+msgstr "Kon bestand %s niet openen: onjuist bestandstype"
 
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Could not open file %s."
-msgstr ""
+msgstr "Kon bestand %s niet openen."
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
@@ -11828,18 +11840,25 @@ msgid ""
 "copying).\n"
 "\n"
 msgstr ""
+"Bij het importeren van niet-gecomprimeerde audiobestanden kunt u ze kopiëren "
+"in het project of ze direct lezen vanaf hun huidige locatie (zonder "
+"kopiëren).\n"
 
 #: src/import/ImportPCM.cpp
 msgid ""
 "Your current preference is set to copy in.\n"
 "\n"
 msgstr ""
+"Uw huidige voorkeur is ingesteld om ze erin te kopiëren.\n"
+"\n"
 
 #: src/import/ImportPCM.cpp
 msgid ""
 "Your current preference is set to read directly.\n"
 "\n"
 msgstr ""
+"Uw huidige voorkeur is ingesteld om ze direct te lezen.\n"
+"\n"
 
 #: src/import/ImportPCM.cpp
 msgid ""
@@ -11851,6 +11870,13 @@ msgid ""
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
+"Direct lezen van de bestanden laat u toe om ze bijna onmiddellijk af te "
+"spelen of te bewerken. Dit is minder veilig dan ze te kopiëren, omdat u de "
+"bestanden met hun originele namen op hun originele locaties moet houden.\n"
+"Help > Diagnostiek > Afhankelijkheidscontrole zal de originele namen en "
+"locaties weergeven van de bestanden die u direct inleest.\n"
+"\n"
+"Hoe wilt u de huidige bestanden importeren?"
 
 #: src/import/ImportPCM.cpp
 msgid "Choose an import method"
@@ -11971,7 +11997,7 @@ msgstr "Samplefrequentie:"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size"
-msgstr ""
+msgstr "Slechte datagrootte"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
@@ -12557,7 +12583,7 @@ msgstr "U moet een sneltoets toewijzen voordat u een snelkoppeling toewijst"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid "%s - %s"
-msgstr ""
+msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -13105,7 +13131,7 @@ msgstr "Altijd op een nieuw spoor opnemen"
 #. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
-msgstr ""
+msgstr "Uitval detecteren"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
@@ -13475,7 +13501,7 @@ msgstr "Links van &nul scrollen inschakelen"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Advanced &vertical zooming"
-msgstr ""
+msgstr "Geavanceerd &verticaal zoomen"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -13503,39 +13529,39 @@ msgstr "Stam-plot"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Fit to Width"
-msgstr ""
+msgstr "In breedte passen"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom to Selection"
-msgstr ""
+msgstr "Inzoomen op selectie"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Zoom Default"
-msgstr ""
+msgstr "Standaard zoom"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Minutes"
-msgstr ""
+msgstr "Minuten"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Seconds"
-msgstr ""
+msgstr "Seconden"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "MilliSeconds"
-msgstr ""
+msgstr "Milliseconden"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Samples"
-msgstr ""
+msgstr "Samples"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "4 Pixels per Sample"
-msgstr ""
+msgstr "4 pixels per sample"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Max Zoom"
-msgstr ""
+msgstr "Maximale zoom"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -13571,15 +13597,15 @@ msgstr "Naam audiotrack &weergeven als overlay"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
-msgstr ""
+msgstr "Zoomen aan/uit"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Preset 1:"
-msgstr ""
+msgstr "Preset 1:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Preset 2:"
-msgstr ""
+msgstr "Preset 2:"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Warnings"
@@ -13761,11 +13787,11 @@ msgstr "Effecten-rack weergeven"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Fit selection to width"
-msgstr ""
+msgstr "Selectie in breedte passen"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Fit project to width"
-msgstr ""
+msgstr "Project in breedte passen"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Open Effects Rack"
@@ -13833,12 +13859,12 @@ msgstr "Opnamevolume (niet beschikbaar; gebruik systeemmixer)"
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
 msgid "Playback Volume: %s (emulated)"
-msgstr ""
+msgstr "Afspeelvolume: %s (geëmuleerd)"
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
 msgid "Playback Volume: %s"
-msgstr ""
+msgstr "Afspeelvolume: %s"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume (Unavailable; use system mixer.)"
@@ -13894,7 +13920,7 @@ msgstr "Selectie"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
-msgstr ""
+msgstr "Projectfrequentie (Hz)"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap-To"
@@ -14099,12 +14125,12 @@ msgstr ""
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Right-click for menu."
-msgstr ""
+msgstr "Rechtsklikken voor menu."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Reset\tShift-Right-Click"
-msgstr ""
+msgstr "Zoom herstellen\tShift-rechtsklikken"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -14382,19 +14408,19 @@ msgstr "Splitsen naar mono"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom x1/2"
-msgstr ""
+msgstr "Zoom x1/2"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom x2"
-msgstr ""
+msgstr "Zoom x2"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Half Wave"
-msgstr ""
+msgstr "Halve golf"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Reset"
-msgstr ""
+msgstr "Zoom herstellen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom to Fit\tShift-Right-Click"
@@ -14571,12 +14597,12 @@ msgstr "Clips naar andere track verplaatst"
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, c-format
 msgid "Time shifted tracks/clips right %.02f seconds"
-msgstr ""
+msgstr "Tracks/clips %.02f seconden naar rechts verschoven"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, c-format
 msgid "Time shifted tracks/clips left %.02f seconds"
-msgstr ""
+msgstr "Tracks/clips %.02f seconden naar links verschoven"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Collapse"
@@ -14649,12 +14675,12 @@ msgstr "%s om track te selecteren of deselecteren."
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "Moved '%s' up"
-msgstr ""
+msgstr "'%s' naar boven verplaatst"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "Moved '%s' down"
-msgstr ""
+msgstr "'%s' naar beneden verplaatst"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Move Track"
@@ -14700,13 +14726,13 @@ msgstr "R"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%.0f%% Left"
-msgstr ""
+msgstr "%.0f%% links"
 
 #. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%.0f%% Right"
-msgstr ""
+msgstr "%.0f%% rechts"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -15349,27 +15375,27 @@ msgstr "Selecteer een actie"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Panel"
-msgstr ""
+msgstr "Venster"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
-msgstr ""
+msgstr "Dialoogvenster"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Select a directory"
-msgstr ""
+msgstr "Map selecteren"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Directory Dialog"
-msgstr ""
+msgstr "Mapvenster"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Select a file"
-msgstr ""
+msgstr "Bestand selecteren"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "File Dialog"
-msgstr ""
+msgstr "Bestandsvenster"
 
 #: src/xml/XMLFileReader.cpp
 #, c-format
