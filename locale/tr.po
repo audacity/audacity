@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr_TR\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -4203,6 +4203,7 @@ msgstr "ParçaSeçimiBoşDizgesi"
 msgid "%d of %d clip %s"
 msgid_plural "%d of %d clips %s"
 msgstr[0] "%d / %d %s parça"
+msgstr[1] "%d / %d %s parça"
 
 #: src/Menus.cpp src/import/Import.cpp
 #, c-format
@@ -4321,6 +4322,7 @@ msgstr "ParçaSınırıİletisiBoşDizgesi"
 msgid "%s %d of %d clip %s"
 msgid_plural "%s %d of %d clips %s"
 msgstr[0] "%s %d / %d %s parça"
+msgstr[1] "%s %d / %d %s parça"
 
 #: src/Menus.cpp
 msgid "start"
@@ -4346,6 +4348,7 @@ msgstr "ParçaSınırıUzunİletisiBoşDizgesi"
 msgid "%s %d and %s %d of %d clip %s"
 msgid_plural "%s %d and %s %d of %d clips %s"
 msgstr[0] "%s %d ve %s %d / %d %s parça"
+msgstr[1] "%s %d ve %s %d / %d %s parça"
 
 #. i18n-hint: In this and similar messages describing editing actions,
 #. the starting or ending points of tracks are re-"aligned" to other
@@ -4948,6 +4951,7 @@ msgstr "Kayıt edilemedi:\n%s"
 msgid "Enable this plug-in?"
 msgid_plural "Enable these plug-ins?"
 msgstr[0] "Bu uygulama ekleri etkinleştirilsin mi?"
+msgstr[1] "Bu uygulama ekleri etkinleştirilsin mi?"
 
 #: src/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -5346,12 +5350,14 @@ msgstr "1 dakikadan az"
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d saat"
+msgstr[1] "%d saat"
 
 #: src/Project.cpp
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d dakika"
+msgstr[1] "%d dakika"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/Project.cpp
