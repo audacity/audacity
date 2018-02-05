@@ -5971,20 +5971,20 @@ int AudacityProject::CountSelectedTracks()
 
 void AudacityProject::OnSelectTimeAndTracks(bool bAllTime, bool bAllTracks)
 {
-   if( bAllTime )
+   if ( bAllTime )
       mViewInfo.selectedRegion.setTimes(
          mTracks->GetMinOffset(), mTracks->GetEndTime());
 
-   if( bAllTracks ){
+   if ( bAllTracks ) {
       TrackListIterator iter(GetTracks());
-      for (Track *t = iter.First(); t; t = iter.Next()) {
+      for (Track *t = iter.First(); t; t = iter.Next())
          t->SetSelected(true);
-   }
 
-   ModifyState(false);
-   mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);}
+      ModifyState(false);
+      mTrackPanel->Refresh(false);
+      if (mMixerBoard)
+         mMixerBoard->Refresh(false);
+   }
 }
 
 void AudacityProject::OnSelectAllTime(const CommandContext &WXUNUSED(context) )
