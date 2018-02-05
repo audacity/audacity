@@ -325,7 +325,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
       wxT("Customised version of the Audacity free, open source, cross-platform software " ) +
       wxT("for recording and editing sounds.") +
-      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>") +
       wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
 
 #else
@@ -371,7 +371,15 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 #ifdef EXPERIMENTAL_DA
       wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
 #else
-      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      []{
+         // Will this post-translation substitution work in all locales?
+         // As of 2.2.2, yes for all of the up-to-date languages.
+         auto str =
+      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>");
+         str.Replace( wxT("2017"), wxT("2018") );
+         return str;
+      }() +
+
       _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
 #endif
 
