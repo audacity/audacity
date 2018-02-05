@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-18 00:56-0500\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
 "PO-Revision-Date: 2018-01-18 12:59+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
@@ -5844,8 +5844,8 @@ msgstr ""
 "L’audio enregistrée a été perdue aux emplacements marqués.\n"
 "Causes possibles :\n"
 "\n"
-"D'autres applications sont en compétition avec Audacity en ce qui concerne le "
-"temps-processeur\n"
+"D'autres applications sont en compétition avec Audacity en ce qui concerne "
+"le temps-processeur\n"
 "\n"
 "Vous êtes en train de sauvegarder directement vers un périphérique de "
 "stockage externe lent\n"
@@ -10211,7 +10211,8 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Cette version d’Audacity ne supporte pas la version %ld de greffon Nyquist."
+msgstr ""
+"Cette version d’Audacity ne supporte pas la version %ld de greffon Nyquist."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10481,7 +10482,9 @@ msgstr "Toute la sélection audio est muette."
 msgid "All audio is muted."
 msgstr "Toute l’audio est muette."
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "Impossible d’exporter"
 
@@ -12180,8 +12183,8 @@ msgid ""
 msgstr ""
 "Lire directement les fichiers vous permet de les lire ou de les modifier "
 "presque instantanément.  Ceci est toutefois moins sûr que de les copier "
-"puisque vous devrez retenir les fichiers ainsi que leurs noms et leurs "
-" emplacements originaux.\n"
+"puisque vous devrez retenir les fichiers ainsi que leurs noms et leurs  "
+"emplacements originaux.\n"
 "Aide > Diagnostiques > Vérifier les fichiers associés affichera les noms et "
 "emplacements originaux de tous les fichiers lus directement .\n"
 "\n"

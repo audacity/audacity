@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-11-06 13:24-0500\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
 "PO-Revision-Date: 2016-11-27 20:07+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
@@ -350,8 +350,7 @@ msgstr "Врх"
 msgid "Go to top S-expr"
 msgstr "Идите на врх С-израза"
 
-#. i18n-hint: a direction.
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr "Горе"
 
@@ -375,7 +374,7 @@ msgstr "Следеће"
 msgid "Go to next S-expr"
 msgstr "Идите на следећи С-израз"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp src/effects/Contrast.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "Почетак"
@@ -398,10 +397,6 @@ msgid "Check Online"
 msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "quality assurance"
-msgstr "осигураност квалитета"
-
-#: src/AboutDialog.cpp
 msgid "system administration"
 msgstr "администрација система"
 
@@ -416,6 +411,10 @@ msgstr "суоснивач и програмер"
 #: src/AboutDialog.cpp
 msgid "documentation and support"
 msgstr "документација и подршка"
+
+#: src/AboutDialog.cpp
+msgid "quality assurance"
+msgstr "осигураност квалитета"
 
 #: src/AboutDialog.cpp
 msgid "documentation and support, French"
@@ -516,11 +515,6 @@ msgstr "Заслуге"
 
 #: src/AboutDialog.cpp
 msgid "DarkAudacity Customisation"
-msgstr ""
-
-#. i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages
-#: src/AboutDialog.cpp
-msgid "In Memoriam"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -722,7 +716,17 @@ msgstr ""
 "Уклоњена је са списка недавних датотека."
 
 #: src/AudacityApp.cpp
-#, c-format
+#, fuzzy, c-format
+#| msgid ""
+#| "One or more external audio files could not be found.\n"
+#| "It is possible they were moved, deleted, or the drive they were on was "
+#| "unmounted.\n"
+#| "Silence is being substituted for the affected audio.\n"
+#| "The first detected missing file is:\n"
+#| "%s\n"
+#| "There may be additional missing files.\n"
+#| "Choose File > Check Dependencies to view a list of locations of the "
+#| "missing files."
 msgid ""
 "One or more external audio files could not be found.\n"
 "It is possible they were moved, deleted, or the drive they were on was "
@@ -731,8 +735,8 @@ msgid ""
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
-"Choose File > Check Dependencies to view a list of locations of the missing "
-"files."
+"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
+"of the missing files."
 msgstr ""
 "Не могу да пронађем једну или више спољних датотека звука.\n"
 "Могуће је да су премештене, обрисане, или да је уређај на коме се налазе "
@@ -959,7 +963,9 @@ msgid "Save log to:"
 msgstr "Сачувај дневник у:"
 
 #: src/AudacityLogger.cpp
-msgid "Couldn't save log to file: "
+#, fuzzy, c-format
+#| msgid "Couldn't save log to file: "
+msgid "Couldn't save log to file: %s"
 msgstr "Не могу да сачувам дневник у датотеку: "
 
 #: src/AudioIO.cpp
@@ -1159,6 +1165,48 @@ msgstr "&Параметри"
 #: src/BatchCommandDialog.cpp
 msgid "C&hoose command"
 msgstr "&Изабери наредбу"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Action"
+msgid "No Action"
+msgstr "Радња"
+
+#. i18n-hint: before is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3 56k before"
+msgstr "Извезене ознаке"
+
+#. i18n-hint: after is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3 56k after"
+msgstr "Извезене ознаке"
+
+#. i18n-hint: FLAC names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as FLAC"
+msgstr "Извези натписе као:"
+
+#. i18n-hint: MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3"
+msgstr "Извезене ознаке"
+
+#. i18n-hint: Ogg names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as Ogg"
+msgstr "Извезене ознаке"
+
+#. i18n-hint: WAV names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as WAV"
+msgstr "Извези натписе као:"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1674,7 +1722,9 @@ msgid "Whenever a project depends on other files:"
 msgstr "Ако пројекат зависи од других датотека:"
 
 #: src/Dependencies.cpp
-msgid "MISSING "
+#, fuzzy, c-format
+#| msgid "MISSING "
+msgid "MISSING %s"
 msgstr "НЕДОСТАЈУ "
 
 #: src/Dependencies.cpp
@@ -2152,13 +2202,6 @@ msgstr ""
 "није уписив или је диск попуњен."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
-msgid "Audacity failed to write to a file in %s."
-msgstr ""
-"Аудасити не може да запише датотеку:\n"
-"  %s."
-
-#: src/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
@@ -2191,12 +2234,6 @@ msgstr "Побољшана самоузајамност"
 #: src/FreqWindow.cpp
 msgid "Cepstrum"
 msgstr "Кепстар"
-
-#. i18n-hint: This refers to a "window function", used in the
-#. * Frequency analyze dialog box.
-#: src/FreqWindow.cpp
-msgid "window"
-msgstr "прозор"
 
 #: src/FreqWindow.cpp
 msgid "Linear frequency"
@@ -2323,7 +2360,9 @@ msgstr "Извези податке спектра као:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
 #: src/effects/Contrast.cpp
-msgid "Couldn't write to file: "
+#, fuzzy, c-format
+#| msgid "Couldn't write to file: "
+msgid "Couldn't write to file: %s"
 msgstr "Не могу да упишем у датотеку: "
 
 #: src/FreqWindow.cpp
@@ -2645,7 +2684,7 @@ msgid "&Import..."
 msgstr "&Увези..."
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp
 msgid "Track"
 msgstr "Нумера"
 
@@ -2688,8 +2727,10 @@ msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "Текстуалне датотеке (*.txt)|*.txt|Све датотеке|*"
 
 #: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
-msgid "Could not open file: "
-msgstr "Не могу да отворим датотеку: "
+#, fuzzy, c-format
+#| msgid "Could not open file: \"%s\""
+msgid "Could not open file: %s"
+msgstr "Не могу да отворим датотеку: „%s“"
 
 #: src/LabelDialog.cpp
 msgid "No labels to export."
@@ -2814,8 +2855,10 @@ msgid "Save Project &As..."
 msgstr "Сачувај пројекат &као..."
 
 #: src/Menus.cpp
-msgid "Save Othe&r"
-msgstr ""
+#, fuzzy
+#| msgid "Export"
+msgid "&Export"
+msgstr "Извезите"
 
 #: src/Menus.cpp
 #, fuzzy
@@ -3171,6 +3214,12 @@ msgstr "У&мањи"
 #: src/Menus.cpp
 msgid "&Zoom to Selection"
 msgstr "Увећај &избор"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom &Toggle"
+msgstr "Алат увећања"
 
 #: src/Menus.cpp
 #, fuzzy
@@ -3644,6 +3693,18 @@ msgid "&Tools"
 msgstr "Алати"
 
 #: src/Menus.cpp
+#, fuzzy
+#| msgid "Timer Recording"
+msgid "Simulate Recording Errors"
+msgstr "Временско снимање"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Select stream(s) to import"
+msgid "Detect Upstream Dropouts"
+msgstr "Изаберите ток(ове) за увоз"
+
+#: src/Menus.cpp
 msgid "&Screenshot Tools..."
 msgstr "&Алати за снимање екрана..."
 
@@ -3681,9 +3742,9 @@ msgstr "&Провери зависности..."
 msgid "&Check for Updates..."
 msgstr "&Провери има ли ажурирања..."
 
-#. i18n-hint: Ext-Bar is a menu with extra commands from tool bars
+#. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
-msgid "Ext-&Bar"
+msgid "E&xtra"
 msgstr ""
 
 #. i18n-hint: (verb) Stop playing audio
@@ -3828,7 +3889,8 @@ msgstr "Тастер брисања2"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "Trans&cription"
+#| msgid "Transcription"
+msgid "Transcri&ption"
 msgstr "Преписивање"
 
 #: src/Menus.cpp
@@ -3871,10 +3933,9 @@ msgstr "Премести на претходни натпис"
 msgid "Move to &Next Label"
 msgstr "Премести на следећи натпис"
 
-#: src/Menus.cpp
-#, fuzzy
-msgid "Scru&b"
-msgstr "Прочишћавање"
+#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "Пре&мотај"
 
 #: src/Menus.cpp
 #, fuzzy
@@ -3980,12 +4041,6 @@ msgstr "Скупи избор на лево"
 #, fuzzy
 msgid "Selection Contract R&ight"
 msgstr "Скупи избор на десно"
-
-#. i18n-hint: Ext-Command is a menu with extra commands
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ext-Co&mmand"
-msgstr "Наредба"
 
 #: src/Menus.cpp
 msgid "Move backward thru active windows"
@@ -4173,6 +4228,7 @@ msgstr "Премести на дно нумеру у фокусу"
 msgid "&Full screen (on/off)"
 msgstr "Укључи/искључи цео екран"
 
+#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
 msgid "Minimize all projects"
 msgstr "Умањи све пројекте"
@@ -4276,29 +4332,57 @@ msgstr "Постави десну границу избора"
 msgid "Can't delete track with active audio"
 msgstr "Не могу да обришем нумеру са активним звуком"
 
-#. i18n-hint: where the track is moving to.
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
-msgid "to Top"
-msgstr "на врх"
-
-#. i18n-hint: where the track is moving to.
-#: src/Menus.cpp
-msgid "to Bottom"
-msgstr "на дно"
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' to Top"
+msgstr "„%s“ је премештена %s"
 
 #: src/Menus.cpp
-msgid "Down"
-msgstr "Доле"
+#, fuzzy
+#| msgid "Move Track to &Top"
+msgid "Move Track to Top"
+msgstr "Премести нумеру на &врх"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
-msgid "Moved"
-msgstr "Премештено"
+#, fuzzy, c-format
+#| msgid "Move Track to &Bottom"
+msgid "Moved '%s' to Bottom"
+msgstr "Премести нумеру на &дно"
 
-#. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp src/tracks/ui/TrackSelectHandle.cpp
-msgid "Move Track"
-msgstr "Премештена је нумера"
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Move Track to &Bottom"
+msgid "Move Track to Bottom"
+msgstr "Премести нумеру на &дно"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Up"
+msgstr "„%s“ је премештена %s"
+
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Down"
+msgstr "„%s“ је премештена %s"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Move Track &Up"
+msgid "Move Track Up"
+msgstr "Премести нумеру &горе"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Move Track &Down"
+msgid "Move Track Down"
+msgstr "Премести нумеру &доле"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/Menus.cpp
@@ -4541,27 +4625,26 @@ msgstr "Поделите на нову нумеру"
 msgid "Split New"
 msgstr "Подели ново"
 
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
 #: src/Menus.cpp
-msgid "of"
+msgid "dummyStringOnSelectClip"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "clip"
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/Menus.cpp src/import/Import.cpp
+#, c-format
+msgid "%s, %s"
 msgstr ""
-
-#: src/Menus.cpp
-msgid "clips"
-msgstr ""
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "left"
-msgstr "лево"
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "right"
-msgstr "десно"
 
 #: src/Menus.cpp
 msgid "Frequency Analysis"
@@ -4644,6 +4727,47 @@ msgstr "Измешане су и исцртане %d нумере у једну 
 msgid "Mix and Render"
 msgstr "Измешај и исцртај"
 
+#. i18n-hint: compose a name identifying an unnamed track by number
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#: src/Menus.cpp src/TrackPanelAx.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Нумера %d"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "left"
+msgid "%s left"
+msgstr "лево"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "right"
+msgid "%s right"
+msgstr "десно"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
+#: src/Menus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/Menus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 #: src/Menus.cpp
 #, fuzzy
 msgid "start"
@@ -4654,71 +4778,162 @@ msgstr "Почетак"
 msgid "end"
 msgstr "Крај"
 
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
 #: src/Menus.cpp
-#, fuzzy
-msgid "and"
-msgstr "Крај"
-
-#: src/Menus.cpp
-msgid "start to zero"
-msgstr "почни од нуле"
-
-#: src/Menus.cpp
-msgid "start to cursor/selection start"
-msgstr "почни од курзора/почетка избора"
-
-#: src/Menus.cpp
-msgid "start to selection end"
-msgstr "почни од краја избора"
-
-#: src/Menus.cpp
-msgid "end to cursor/selection start"
-msgstr "заврши на курзору/почетку избора"
-
-#: src/Menus.cpp src/effects/Contrast.cpp src/effects/ToneGen.cpp
-#: src/toolbars/SelectionBar.cpp
-msgid "End"
-msgstr "Крај"
-
-#: src/Menus.cpp
-msgid "end to selection end"
-msgstr "заврши на крају избора"
-
-#: src/Menus.cpp
-msgid "end to end"
-msgstr "заврши на крају"
-
-#: src/Menus.cpp
-msgid "End to End"
-msgstr "Заврши на крају"
-
-#: src/Menus.cpp
-msgid "together"
-msgstr "заједно"
-
-#: src/Menus.cpp
-msgid "Together"
-msgstr "Заједно"
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
 
 #: src/Menus.cpp
 #, c-format
-msgid "Aligned/Moved %s"
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned/Moved %s"
+msgid "Aligned/Moved start to zero"
 msgstr "Поравнат/померен %s"
 
 #: src/Menus.cpp
-#, c-format
-msgid "Align %s/Move"
+#, fuzzy
+#| msgid "start to zero"
+msgid "Aligned start to zero"
+msgstr "почни од нуле"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align %s/Move"
+msgid "Align/Move Start"
 msgstr "Поравнај %s/помери"
 
 #: src/Menus.cpp
-#, c-format
-msgid "Aligned %s"
-msgstr "Поравнат %s"
+#, fuzzy
+#| msgid "Amplitude Start"
+msgid "Align Start"
+msgstr "Почетак досега"
 
 #: src/Menus.cpp
-#, c-format
-msgid "Align %s"
+#, fuzzy
+#| msgid "start to cursor/selection start"
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "почни од курзора/почетка избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "start to cursor/selection start"
+msgid "Aligned start to cursor/selection start"
+msgstr "почни од курзора/почетка избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "start to selection end"
+msgid "Aligned/Moved start to selection end"
+msgstr "почни од краја избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "start to selection end"
+msgid "Aligned start to selection end"
+msgstr "почни од краја избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to cursor/selection start"
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "заврши на курзору/почетку избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to cursor/selection start"
+msgid "Aligned end to cursor/selection start"
+msgstr "заврши на курзору/почетку избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align %s/Move"
+msgid "Align/Move End"
+msgstr "Поравнај %s/помери"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align %s"
+msgid "Align End"
 msgstr "Поравнај %s"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to selection end"
+msgid "Aligned/Moved end to selection end"
+msgstr "заврши на крају избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to selection end"
+msgid "Aligned end to selection end"
+msgstr "заврши на крају избора"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned/Moved %s"
+msgid "Aligned/Moved end to end"
+msgstr "Поравнат/померен %s"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "&Align End to End"
+msgid "Aligned end to end"
+msgstr "Поравнај &крај са крајем"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "&Align End to End"
+msgid "Align/Move End to End"
+msgstr "Поравнај &крај са крајем"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "&Align End to End"
+msgid "Align End to End"
+msgstr "Поравнај &крај са крајем"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned/Moved %s"
+msgid "Aligned/Moved together"
+msgstr "Поравнат/померен %s"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align &Together"
+msgid "Aligned together"
+msgstr "Поравнај &заједно"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align &Together"
+msgid "Align/Move Together"
+msgstr "Поравнај &заједно"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align &Together"
+msgid "Align Together"
+msgstr "Поравнај &заједно"
 
 #: src/Menus.cpp
 msgid "Synchronizing MIDI and Audio Tracks"
@@ -5018,6 +5233,124 @@ msgstr "Да пробам и да учитам овај модул?"
 msgid "Note Track"
 msgstr "Прибележи нумеру"
 
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "LC"
+msgid "C"
+msgstr "ЛЦ"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "Db"
+msgid "D"
+msgstr "Db"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "GB"
+msgid "G"
+msgstr "GB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "dB"
+msgid "B"
+msgstr "dB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "B♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯/D♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯/E♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯/G♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯/A♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯/B♭"
+msgstr ""
+
 #: src/PluginManager.cpp
 msgid "Plug-in Manager: Effects, Generators and Analyzers"
 msgstr "Управник прикључака: ефекти, ствараоци и анализатори"
@@ -5110,6 +5443,57 @@ msgstr ""
 "\n"
 "%s"
 
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Effect failed to initialize"
+msgid ""
+"Effect at %s failed to register:\n"
+"%s"
+msgstr "Ефекат није успео да се покрене"
+
+#: src/PluginManager.cpp src/effects/Effect.cpp
+#, fuzzy
+#| msgid "Builtin Effects"
+msgid "Built-in"
+msgstr "Уграђени ефекти"
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Overwrite existing files"
+msgid "Overwrite the plug-in file %s ?"
+msgstr "Препиши постојеће датотеке"
+
+#: src/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: src/PluginManager.cpp
+msgid "Plug-in file is in use.  Failed to overwrite"
+msgstr ""
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Failed to remove %s"
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr "Нисам успео да уклоним „%s“"
+
+#: src/PluginManager.cpp
+#, fuzzy
+#| msgid "Enable cut &lines"
+msgid "Enable this plug-in?"
+msgid_plural "Enable these plug-ins?"
+msgstr[0] "Укључи линије &одсецања"
+msgstr[1] "Укључи линије &одсецања"
+msgstr[2] "Укључи линије &одсецања"
+
+#: src/PluginManager.cpp
+#, fuzzy
+#| msgid "Enable cut &lines"
+msgid "Enable new plug-ins"
+msgstr "Укључи линије &одсецања"
+
 #: src/Prefs.cpp
 #, c-format
 msgid "Failed to remove %s"
@@ -5149,6 +5533,18 @@ msgstr "Штампајте"
 #: src/Project.cpp
 msgid "Main Mix"
 msgstr "Главно мешање"
+
+#: src/Project.cpp
+#, fuzzy
+#| msgid "Horizontal"
+msgid "Horizontal Scrollbar"
+msgstr "Водоравно"
+
+#: src/Project.cpp
+#, fuzzy
+#| msgid "Vertical"
+msgid "Vertical Scrollbar"
+msgstr "Усправно"
 
 #: src/Project.cpp
 #, c-format
@@ -5261,10 +5657,6 @@ msgid "Warning - Backup File Detected"
 msgstr "Упозорење — Откривена је датотека резерве"
 
 #: src/Project.cpp
-msgid "Error Opening File"
-msgstr "Грешка отварања датотеке"
-
-#: src/Project.cpp
 msgid "Error opening file"
 msgstr "Грешка приликом отварања датотеке"
 
@@ -5290,7 +5682,9 @@ msgstr ""
 "пројекта."
 
 #: src/Project.cpp
-msgid "Could not decode file: "
+#, fuzzy, c-format
+#| msgid "Could not decode file: "
+msgid "Could not decode file: %s"
 msgstr "Не могу да дешифрујем датотеку: "
 
 #: src/Project.cpp
@@ -5359,8 +5753,8 @@ msgid "Warning - Empty Project"
 msgstr "Упозорење — Празан пројекат"
 
 #: src/Project.cpp
-#, fuzzy
-msgid "Could not create safety file: "
+#, fuzzy, c-format
+msgid "Could not create safety file: %s"
 msgstr "Не могу да направим самочувајућу датотеку: "
 
 #: src/Project.cpp
@@ -5385,7 +5779,7 @@ msgstr ""
 "Не могу да сачувам пројекат. Нисам пронашао путању.  Покушајте да \n"
 "направите директоријум „%s“ пре чувања пројекта под овим називом."
 
-#: src/Project.cpp
+#: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "Сачувах %s"
@@ -5495,17 +5889,43 @@ msgstr ""
 "обављено."
 
 #: src/Project.cpp
-msgid "Could not create autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not create autosave file: "
+msgid "Could not create autosave file: %s"
 msgstr "Не могу да направим самочувајућу датотеку: "
 
 #: src/Project.cpp
-msgid "Could not remove old autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not remove old autosave file: "
+msgid "Could not remove old autosave file: %s"
 msgstr "Не могу да уклоним стару самочувајућу датотеку: "
 
 #: src/Project.cpp
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Прави проток: %d"
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence audio sample data from the
+#. recording
+#: src/Project.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/Project.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/Project.cpp
+msgid "Turn off dropout detection"
+msgstr ""
 
 #: src/Project.cpp
 msgid "Recorded Audio"
@@ -5537,23 +5957,26 @@ msgid "Less than 1 minute"
 msgstr "Мање од 1 минута"
 
 #: src/Project.cpp
-msgid "hour"
-msgid_plural "hours"
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
 #: src/Project.cpp
-msgid "minute"
-msgid_plural "minutes"
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/Project.cpp
-#, c-format
-msgid "%d %s and %d %s."
+#, fuzzy, c-format
+#| msgid "%d %s and %d %s."
+msgid "%s and %s."
 msgstr "%d %s и %d %s."
 
 #: src/Resample.cpp
@@ -5696,6 +6119,7 @@ msgstr "Пренос"
 msgid "Mixer"
 msgstr "Мешач"
 
+#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr "Мерач"
@@ -5788,6 +6212,10 @@ msgstr "Дуге нумере"
 #: src/Screenshot.cpp
 msgid "Choose a location to save screenshot images"
 msgstr "Изаберите место за чување слика снимака екрана"
+
+#: src/Screenshot.cpp
+msgid "Capture failed!"
+msgstr ""
 
 #: src/Sequence.cpp
 #, c-format
@@ -6139,27 +6567,37 @@ msgid "Current Project"
 msgstr "Текући пројекат"
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording start:\n"
+#, fuzzy
+#| msgid "Recording start:\n"
+msgid "Recording start:"
 msgstr "Почетак снимања:\n"
 
-#: src/TimerRecordDialog.cpp
-msgid "Duration:\n"
-msgstr "Трајање:\n"
+#: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
+#: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+msgid "Duration:"
+msgstr "Трајање:"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Recording end:\n"
-"\n"
+#, fuzzy
+#| msgid ""
+#| "Recording end:\n"
+#| "\n"
+msgid "Recording end:"
 msgstr ""
 "Крај снимања:\n"
 "\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Save enabled:\n"
+#, fuzzy
+#| msgid "Automatic Save enabled:\n"
+msgid "Automatic Save enabled:"
 msgstr "Самостално чување је укључено:\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Export enabled:\n"
+#, fuzzy
+#| msgid "Automatic Export enabled:\n"
+msgid "Automatic Export enabled:"
 msgstr "Самостални извоз је укључен:\n"
 
 #: src/TimerRecordDialog.cpp
@@ -6327,17 +6765,23 @@ msgid "After Recording completes:"
 msgstr "Након обављеног снимања:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Waiting to start recording at:\n"
+#, fuzzy
+#| msgid "Waiting to start recording at:\n"
+msgid "Waiting to start recording at:"
 msgstr "Чекам да започнем снимање у:\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording duration:\n"
+#, fuzzy
+#| msgid "Recording duration:\n"
+msgid "Recording duration:"
 msgstr "Трајање снимања:\n"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Scheduled to stop at:\n"
-"\n"
+#, fuzzy
+#| msgid ""
+#| "Scheduled to stop at:\n"
+#| "\n"
+msgid "Scheduled to stop at:"
 msgstr "Заустављање је заказано за:\n"
 
 #: src/TimerRecordDialog.cpp
@@ -6349,19 +6793,15 @@ msgid "Recording will commence in:"
 msgstr "Снимање ће започети за:"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Timer Recording completed.\n"
-"\n"
-msgstr ""
-"Временско снимање је обављено.\n"
-"\n"
-
-#: src/TimerRecordDialog.cpp
-msgid "Recording Saved:\n"
+#, fuzzy
+#| msgid "Recording Saved:\n"
+msgid "Recording Saved:"
 msgstr "Снимање је сачувано:\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording Exported:\n"
+#, fuzzy
+#| msgid "Recording Exported:\n"
+msgid "Recording Exported:"
 msgstr "Снимање је извезено:\n"
 
 #: src/TimerRecordDialog.cpp
@@ -6380,19 +6820,27 @@ msgid "(Esc to cancel)"
 msgstr ""
 
 #: src/TrackPanel.cpp
-msgid "Stereo, "
+#, fuzzy, c-format
+#| msgid "Stereo, "
+msgid "Stereo, %dHz"
 msgstr "Стерео, "
 
 #: src/TrackPanel.cpp
-msgid "Mono, "
+#, fuzzy, c-format
+#| msgid "Mono, "
+msgid "Mono, %dHz"
 msgstr "Моно, "
 
 #: src/TrackPanel.cpp
-msgid "Left, "
+#, fuzzy, c-format
+#| msgid "Left, "
+msgid "Left, %dHz"
 msgstr "Леви, "
 
 #: src/TrackPanel.cpp
-msgid "Right, "
+#, fuzzy, c-format
+#| msgid "Right, "
+msgid "Right, %dHz"
 msgstr "Десни, "
 
 #: src/TrackPanel.cpp
@@ -6402,12 +6850,6 @@ msgstr "Стерео, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "Преглед нумере"
-
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Нумера %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track mute is on.
@@ -6491,7 +6933,7 @@ msgstr "Нема довољно доступног места за убацив�
 msgid "There is not enough room available to expand the cut line"
 msgstr "Нема довољно доступног места за ширење траке одсецања"
 
-#: src/AudacityException.h
+#: src/AudacityException.h src/widgets/ErrorDialog.cpp
 msgid "Message"
 msgstr ""
 
@@ -6638,11 +7080,9 @@ msgid "Loading Keyboard Shortcuts"
 msgstr "Учитавам пречице тастатуре"
 
 #: src/commands/ScreenshotCommand.cpp
-msgid "Saved "
-msgstr "Сачувано "
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Error trying to save file: "
+#, fuzzy, c-format
+#| msgid "Error trying to save file: "
+msgid "Error trying to save file: %s"
 msgstr "Грешка приликом покушаја чувања датотеке: "
 
 #: src/effects/Amplify.cpp
@@ -6680,13 +7120,6 @@ msgid ""
 msgstr ""
 "Изабрали сте нумеру која не садржи звук. Самоутишавање може да обради само "
 "звучне нумере."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-#. * of the audio automatically when there is sound on another track.  Not as
-#. * in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp src/effects/AutoDuck.h
-msgid "Auto Duck"
-msgstr "Самоутишавање"
 
 #: src/effects/AutoDuck.cpp
 msgid ""
@@ -6933,7 +7366,9 @@ msgid "Length (seconds)"
 msgstr "Трајање (у секундама)"
 
 #: src/effects/ChangeTempo.cpp
-msgid "Length in seconds from"
+#, fuzzy, c-format
+#| msgid "Length in seconds from"
+msgid "Length in seconds from %s, to"
 msgstr "Трајање у секундама од"
 
 #: src/effects/ClickRemoval.cpp
@@ -7105,6 +7540,11 @@ msgid ""
 msgstr ""
 "Анализатор супротности, за мерење РМС разлика јачине звука између два избора "
 "звука."
+
+#: src/effects/Contrast.cpp src/effects/ToneGen.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "End"
+msgstr "Крај"
 
 #: src/effects/Contrast.cpp
 msgid "Volume    "
@@ -7585,12 +8025,6 @@ msgstr "ДТМФ низ:"
 msgid "Amplitude (0-1):"
 msgstr "Досег (0-1):"
 
-#: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
-#: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Duration:"
-msgstr "Трајање:"
-
 #: src/effects/DtmfGen.cpp
 msgid "Tone/silence ratio:"
 msgstr "Однос размере тона/тишине:"
@@ -7610,6 +8044,12 @@ msgstr "ms"
 #: src/effects/DtmfGen.cpp
 msgid "Silence duration:"
 msgstr "Трајање тишине:"
+
+#: src/effects/DtmfGen.cpp
+#, fuzzy, c-format
+#| msgid "%.0f:1"
+msgid "%.0f ms"
+msgstr "%.0f:1"
 
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
@@ -7667,7 +8107,8 @@ msgstr ""
 "Грешка отварања звучног уређаја. Покушајте да измените домаћина звука, "
 "уређај пуштања и проток узорка пројекта."
 
-#: src/effects/Effect.cpp
+#: src/effects/Effect.cpp src/effects/vamp/VampEffect.cpp
+#: src/widgets/ASlider.cpp
 #, c-format
 msgid "%s: %s"
 msgstr ""
@@ -7709,10 +8150,6 @@ msgstr "Премотајте назад"
 #: src/effects/Effect.cpp
 msgid "Skip &Forward"
 msgstr "Премотај на&пред"
-
-#: src/effects/Effect.cpp
-msgid "Skip &Foreward"
-msgstr "Премотај &унапред"
 
 #: src/effects/Effect.cpp
 msgid "Skip forward"
@@ -7998,6 +8435,12 @@ msgid "Max dB"
 msgstr "Највише dB"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
+#, fuzzy, c-format
+#| msgid "%3d dB"
+msgid "%d dB"
+msgstr "%3d dB"
+
+#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
 msgstr "- dB"
 
@@ -8005,9 +8448,15 @@ msgstr "- dB"
 msgid "Min dB"
 msgstr "Најмање dB"
 
-#: src/effects/Equalization.cpp src/widgets/NumericTextCtrl.cpp
-msgid "kHz"
-msgstr "kHz"
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%d Hz"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%g kHz"
+msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8189,16 +8638,20 @@ msgid "'unnamed' is special"
 msgstr "„неименована“ је посебна"
 
 #: src/effects/Equalization.cpp
-msgid "Rename '"
-msgstr "Преименујте „"
-
-#: src/effects/Equalization.cpp
-msgid "' to..."
-msgstr "“ у..."
+#, fuzzy, c-format
+#| msgid "Renamed '%s' to '%s'"
+msgid "Rename '%s' to..."
+msgstr "„%s“ је преименована у „%s“"
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
 msgstr "Преименуј..."
+
+#: src/effects/Equalization.cpp
+#, fuzzy, c-format
+#| msgid "Rename '"
+msgid "Rename '%s'"
+msgstr "Преименујте „"
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -8348,6 +8801,10 @@ msgstr "Тим Аудаситија"
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
 msgstr "Обезбеђује уграђене ефекте у Аудаситију"
+
+#: src/effects/LoadEffects.cpp
+msgid "Unknown built-in effect name"
+msgstr ""
 
 #: src/effects/Noise.cpp
 msgid "White"
@@ -8643,31 +9100,45 @@ msgid "Not doing anything...\n"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing: "
+#, fuzzy, c-format
+#| msgid "Analyzing: "
+msgid "Analyzing: %s"
 msgstr "Анализирам: "
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing first track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Analyzing first track of stereo pair: "
+msgid "Analyzing first track of stereo pair: %s"
 msgstr "Анализирам прву нумеру стерео пара: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing: "
+#, fuzzy, c-format
+#| msgid "Processing: "
+msgid "Processing: %s"
 msgstr "Обрађујем: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing stereo channels independently: "
+#, fuzzy, c-format
+#| msgid "Processing stereo channels independently: "
+msgid "Processing stereo channels independently: %s"
 msgstr "Обрађујем стерео канале независно: "
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing second track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Analyzing second track of stereo pair: "
+msgid "Analyzing second track of stereo pair: %s"
 msgstr "Анализирам другу нумеру стерео пара: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing first track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Processing first track of stereo pair: "
+msgid "Processing first track of stereo pair: %s"
 msgstr "Обређујем прву нумеру стерео пара: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing second track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Processing second track of stereo pair: "
+msgid "Processing second track of stereo pair: %s"
 msgstr "Обређујем другу нумеру стерео пара: "
 
 #: src/effects/Normalize.cpp
@@ -8861,11 +9332,15 @@ msgid "New selection length: dd:hh:mm:ss"
 msgstr "Трајање новог избора: дд:чч:мм:сс"
 
 #: src/effects/Repeat.cpp
-msgid "Current selection length: "
+#, fuzzy, c-format
+#| msgid "Current selection length: "
+msgid "Current selection length: %s"
 msgstr "Трајање текућег избора: "
 
 #: src/effects/Repeat.cpp
-msgid "New selection length: "
+#, fuzzy, c-format
+#| msgid "New selection length: "
+msgid "New selection length: %s"
 msgstr "Трајање новог избора: "
 
 #: src/effects/Repeat.cpp
@@ -9295,6 +9770,10 @@ msgstr "Померај вау учесталости у процентима"
 msgid "Amplify"
 msgstr "Појачај"
 
+#: src/effects/AutoDuck.h
+msgid "Auto Duck"
+msgstr "Самоутишавање"
+
 #: src/effects/BassTreble.h
 msgid "Bass and Treble"
 msgstr "Нискотонац и високотонац"
@@ -9420,6 +9899,18 @@ msgid "Provides Audio Unit Effects support to Audacity"
 msgstr "Обезбеђује Аудаситију подршку ефеката звучне јединице"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+#| msgid "Could not open file "
+msgid "Could not find component"
+msgstr "Не могу да отворим датотеку "
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+#| msgid "Could not initialize MP3 encoding library!"
+msgid "Could not initialize component"
+msgstr "Не могу да покренем библиотеку МП3 кодирања!"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
 msgstr "Подешавања ефеката звучне јединице"
 
@@ -9532,6 +10023,17 @@ msgid "Provides LADSPA Effects"
 msgstr "Обезбеђује ЛАДСПА ефекте"
 
 #: src/effects/ladspa/LadspaEffect.cpp
+msgid "Audacity no longer uses vst-bridge"
+msgstr ""
+
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy
+#| msgid "Could not open MP3 encoding library!"
+msgid "Could not load the library"
+msgstr "Не могу да отворим библиотеку МП3 кодирања!"
+
+#: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effect Options"
 msgstr "Подешавања ЛАДСПА ефеката"
 
@@ -9623,6 +10125,12 @@ msgstr "Примењујем Никвист ефекат..."
 #, fuzzy
 msgid "Nyquist Worker"
 msgstr "&Радни сто Никвиста..."
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Nyquist plug-ins"
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Прикључци Никвиста"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9719,12 +10227,24 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy, c-format
+#| msgid "This version of Audacity was not compiled with %s support."
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "Ово издање Аудаситија није састављено са %s подршком."
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
 msgid ""
 "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 "Control not created."
 msgstr ""
 "Лоша одредница врсте „контроле“ Никвиста: „%s“ у датотеци прикључка „%s“.\n"
 "Контрола није направљена."
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Could not open file "
+msgid "Could not open file"
+msgstr "Не могу да отворим датотеку "
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -9746,6 +10266,13 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Error in Nyquist code"
 msgstr "Грешка у коду Никвиста"
+
+#. i18n-hint: refers to programming "languages"
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Could not decode file: "
+msgid "Could not determine language"
+msgstr "Не могу да дешифрујем датотеку: "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -9887,11 +10414,9 @@ msgstr ""
 "Већина ВСТ ефеката има графичко сучеље за подешавање вредности параметара."
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Audio In: "
-msgstr "Звучни улаз: "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ", Audio Out: "
+#, fuzzy, c-format
+#| msgid ", Audio Out: "
+msgid "Audio In: %d, Audio Out: %d"
 msgstr ", Звучни излаз: "
 
 #: src/effects/VST/VSTEffect.cpp
@@ -9971,7 +10496,9 @@ msgstr "Сав изабрани звук је утишан."
 msgid "All audio is muted."
 msgstr "Сав звук је утишан."
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "Не могу да извезем"
 
@@ -9980,7 +10507,9 @@ msgid "untitled"
 msgstr "без наслова"
 
 #: src/export/Export.cpp
-msgid "Are you sure you want to export the file as \""
+#, fuzzy, c-format
+#| msgid "Are you sure you want to export the file as \""
+msgid "Are you sure you want to export the file as \"%s\"?\n"
 msgstr "Да ли сте сигурни да желите да извезете датотеку као „"
 
 #: src/export/Export.cpp
@@ -10005,12 +10534,21 @@ msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "Извините, називи путања дужи од 256 знакова нису подржани."
 
 #: src/export/Export.cpp
+#, fuzzy
+#| msgid ""
+#| "You are attempting to overwrite an aliased file that is missing.\n"
+#| "               The file cannot be written because the path is needed to "
+#| "restore the original audio to the project.\n"
+#| "               Choose File > Check Dependencies to view the locations of "
+#| "all missing files.\n"
+#| "               If you still wish to export, please choose a different "
+#| "filename or folder."
 msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "               The file cannot be written because the path is needed to "
 "restore the original audio to the project.\n"
-"               Choose File > Check Dependencies to view the locations of all "
-"missing files.\n"
+"               Choose Help > Diagnostics > Check Dependencies to view the "
+"locations of all missing files.\n"
 "               If you still wish to export, please choose a different "
 "filename or folder."
 msgstr ""
@@ -10059,12 +10597,18 @@ msgstr "Опште формата"
 msgid "Channel: %2d"
 msgstr "Канал: %2d"
 
+#. i18n-hint: track name and L abbreviating Left channel
 #: src/export/Export.cpp
-msgid " - L"
+#, fuzzy, c-format
+#| msgid " - L"
+msgid "%s - L"
 msgstr " — Л"
 
+#. i18n-hint: track name and R abbreviating Right channel
 #: src/export/Export.cpp
-msgid " - R"
+#, fuzzy, c-format
+#| msgid " - R"
+msgid "%s - R"
 msgstr " — Д"
 
 #: src/export/Export.cpp
@@ -10115,8 +10659,10 @@ msgid "Exporting the selected audio using command-line encoder"
 msgstr "Извозим изабрани звук користећи шифрер линије наредби"
 
 #: src/export/ExportCL.cpp
-msgid "Exporting the entire project using command-line encoder"
-msgstr "Извозим читав пројекат користећи шифрер линије наредби"
+#, fuzzy
+#| msgid "Exporting the selected audio using command-line encoder"
+msgid "Exporting the audio using command-line encoder"
+msgstr "Извозим изабрани звук користећи шифрер линије наредби"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
@@ -10238,10 +10784,11 @@ msgstr ""
 msgid "Exporting selected audio as %s"
 msgstr "Извозим изабрани звук као %s"
 
-#: src/export/ExportFFmpeg.cpp
-#, c-format
-msgid "Exporting entire file as %s"
-msgstr "Извозим читаву датотеку као %s"
+#: src/export/ExportFFmpeg.cpp src/export/ExportPCM.cpp
+#, fuzzy, c-format
+#| msgid "Exporting selected audio as %s"
+msgid "Exporting the audio as %s"
+msgstr "Извозим изабрани звук као %s"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Invalid sample rate"
@@ -10819,8 +11366,10 @@ msgid "Exporting the selected audio as FLAC"
 msgstr "Извозим изабрани звук као ФЛАЦ"
 
 #: src/export/ExportFLAC.cpp
-msgid "Exporting the entire project as FLAC"
-msgstr "Извозим читав пројекат као ФЛАЦ"
+#, fuzzy
+#| msgid "Exporting the selected audio as FLAC"
+msgid "Exporting the audio as FLAC"
+msgstr "Извозим изабрани звук као ФЛАЦ"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -10840,9 +11389,10 @@ msgid "Exporting selected audio at %ld kbps"
 msgstr "Извозим изабрани звук при брзини од %ld kb/s"
 
 #: src/export/ExportMP2.cpp
-#, c-format
-msgid "Exporting entire file at %ld kbps"
-msgstr "Извозим читаву датотеку при брзини од %ld kb/s"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %ld kbps"
+msgid "Exporting the audio at %ld kbps"
+msgstr "Извозим изабрани звук при брзини од %ld kb/s"
 
 #: src/export/ExportMP3.cpp
 msgid "kbps"
@@ -11013,9 +11563,10 @@ msgid "Exporting selected audio with %s preset"
 msgstr "Извозим изабрани звук са %s претподешавањем"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with %s preset"
-msgstr "Извозим читаву датотеку са %s претподешавањем"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio with %s preset"
+msgid "Exporting the audio with %s preset"
+msgstr "Извозим изабрани звук са %s претподешавањем"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11023,9 +11574,10 @@ msgid "Exporting selected audio with VBR quality %s"
 msgstr "Извозим изабрани звук са ВБР квалитетом %s"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with VBR quality %s"
-msgstr "Извозим читаву датотеку са ВБР квалитетом %s"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio with VBR quality %s"
+msgid "Exporting the audio with VBR quality %s"
+msgstr "Извозим изабрани звук са ВБР квалитетом %s"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11033,9 +11585,10 @@ msgid "Exporting selected audio at %d Kbps"
 msgstr "Извозим изабрани звук при брзини од %d Kb/s"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file at %d Kbps"
-msgstr "Извозим читаву датотеку при брзини од %d Kb/s"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %d Kbps"
+msgid "Exporting the audio at %d Kbps"
+msgstr "Извозим изабрани звук при брзини од %d Kb/s"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11222,8 +11775,10 @@ msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "Извозим изабрани звук као Огг Ворбис"
 
 #: src/export/ExportOGG.cpp
-msgid "Exporting the entire project as Ogg Vorbis"
-msgstr "Извозим читав пројекат као Огг Ворбис"
+#, fuzzy
+#| msgid "Exporting the selected audio as Ogg Vorbis"
+msgid "Exporting the audio as Ogg Vorbis"
+msgstr "Извозим изабрани звук као Огг Ворбис"
 
 #: src/export/ExportPCM.cpp
 msgid "AIFF (Apple) signed 16-bit PCM"
@@ -11257,11 +11812,6 @@ msgstr "Не могу да извезем звук у тај формат."
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "Извозим изабрани звук као %s"
-
-#: src/export/ExportPCM.cpp
-#, c-format
-msgid "Exporting the entire project as %s"
-msgstr "Извозим читав пројекат као %s"
 
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
@@ -11564,16 +12114,22 @@ msgid "Invalid track offset in LOF file."
 msgstr "Неисправан померај нумере у ЛОФ датотеци."
 
 #: src/import/ImportMIDI.cpp
-msgid "Could not open file "
-msgstr "Не могу да отворим датотеку "
-
-#: src/import/ImportMIDI.cpp
-msgid ": Filename too short."
+#, fuzzy, c-format
+#| msgid ": Filename too short."
+msgid "Could not open file %s: Filename too short."
 msgstr ": Назив датотеке је прекратак."
 
 #: src/import/ImportMIDI.cpp
-msgid ": Incorrect filetype."
+#, fuzzy, c-format
+#| msgid ": Incorrect filetype."
+msgid "Could not open file %s: Incorrect filetype."
 msgstr ": Неисправна врста датотеке."
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy, c-format
+#| msgid "Could not open file "
+msgid "Could not open file %s."
+msgstr "Не могу да отворим датотеку "
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
@@ -11608,19 +12164,47 @@ msgid "WAV, AIFF, and other uncompressed types"
 msgstr "ВАВ, АИФФ, и остале несажете врсте"
 
 #: src/import/ImportPCM.cpp
-#, c-format
 msgid ""
 "When importing uncompressed audio files you can either copy them into the "
 "project, or read them directly from their current location (without "
 "copying).\n"
 "\n"
-"Your current preference is set to %s.\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to copy in.\n"
 "\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to read directly.\n"
+"\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+#, fuzzy
+#| msgid ""
+#| "When importing uncompressed audio files you can either copy them into the "
+#| "project, or read them directly from their current location (without "
+#| "copying).\n"
+#| "\n"
+#| "Your current preference is set to %s.\n"
+#| "\n"
+#| "Reading the files directly allows you to play or edit them almost "
+#| "immediately.  This is less safe than copying in, because you must retain "
+#| "the files with their original names in their original location.\n"
+#| "File > Check Dependencies will show the original names and location of "
+#| "any files that you are reading directly.\n"
+#| "\n"
+#| "How do you want to import the current file(s)?"
+msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately.  This is less safe than copying in, because you must retain the "
-"files with their original names in their original location.\n"
-"File > Check Dependencies will show the original names and location of any "
-"files that you are reading directly.\n"
+"files with their original names in their original locations.\n"
+"Help > Diagnostics > Check Dependencies will show the original names and "
+"locations of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
@@ -11637,14 +12221,6 @@ msgstr ""
 "датотека које читате непосредно.\n"
 "\n"
 "Како желите да увезете текућу(е) датотеку(е)?"
-
-#: src/import/ImportPCM.cpp
-msgid "copy in"
-msgstr "умножи"
-
-#: src/import/ImportPCM.cpp
-msgid "read directly"
-msgstr "читај посредно"
 
 #: src/import/ImportPCM.cpp
 msgid "Choose an import method"
@@ -11762,6 +12338,12 @@ msgstr "Износ за увоз:"
 #: src/import/ImportRaw.cpp
 msgid "Sample rate:"
 msgstr "Проток узорка:"
+
+#: src/import/RawAudioGuess.cpp
+#, fuzzy
+#| msgid "Load Metadata As:"
+msgid "Bad data size"
+msgstr "Учитајте метаподатке као:"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
@@ -12202,10 +12784,6 @@ msgstr "&Очувај натписе ако избор приања на иви�
 msgid "B&lend system and Audacity theme"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "&Display a mono channel as virtual stereo"
-msgstr "&Прикажи моно канал као виртуелни стерео"
-
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "Увоз / извоз"
@@ -12358,6 +12936,11 @@ msgstr "Не можете доделити кључ овом уносу"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You must select a binding before assigning a shortcut"
 msgstr "Морате изабрати свезу пре додељивања пречице"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, c-format
+msgid "%s - %s"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -12919,6 +13502,11 @@ msgstr "Додај системско &време"
 msgid "Always record on a new track"
 msgstr ""
 
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr ""
+
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
 msgstr "Осамостаљено дотеривање нивоа снимања"
@@ -13290,6 +13878,12 @@ msgid "Enable scrolling left of &zero"
 msgstr "Укључи премицање лево од &нуле"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+#| msgid "Advanced Settings"
+msgid "Advanced &vertical zooming"
+msgstr "Напредна подешавања"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
 msgstr "&Дугме соло:"
 
@@ -13312,6 +13906,54 @@ msgstr ""
 #: src/prefs/TracksPrefs.cpp
 msgid "Stem plot"
 msgstr ""
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+msgid "Fit to Width"
+msgstr "Уклопи у &прозор"
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "&Zoom to Selection"
+msgid "Zoom to Selection"
+msgstr "Увећај &избор"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Zoom default"
+msgid "Zoom Default"
+msgstr "Основно увећавање"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Minutes"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Seconds"
+msgstr "секунде"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "milliseconds"
+msgid "MilliSeconds"
+msgstr "милисек."
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "samples"
+msgid "Samples"
+msgstr "узорци"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "4 Pixels per Sample"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Zoom"
+msgid "Max Zoom"
+msgstr "Зумирање"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -13344,6 +13986,24 @@ msgstr "Звучна нумера"
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w audio track name as overlay"
 msgstr "&Прикажи назив нумере као прекривач"
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom Toggle"
+msgstr "Алат увећања"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Preset:"
+msgid "Preset 1:"
+msgstr "Подешеност:"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Preset:"
+msgid "Preset 2:"
+msgstr "Подешеност:"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Warnings"
@@ -13524,16 +14184,20 @@ msgid "Zoom Out"
 msgstr "Умањите"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit selection in window"
+msgid "Show Effects Rack"
+msgstr "Прикажи спремиште ефеката"
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Fit selection in window"
+msgid "Fit selection to width"
 msgstr "Уклопи избор у прозор"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit project in window"
+#, fuzzy
+#| msgid "Fit project in window"
+msgid "Fit project to width"
 msgstr "Уклопи пројекат у прозор"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Прикажи спремиште ефеката"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Open Effects Rack"
@@ -13599,13 +14263,16 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Јачина звука снимања (недоступно; користите системски мешач.)"
 
 #: src/toolbars/MixerToolBar.cpp
-#, c-format
-msgid "Playback Volume: %%.2f%s"
+#, fuzzy, c-format
+#| msgid "Playback Volume: %%.2f%s"
+msgid "Playback Volume: %s (emulated)"
 msgstr "Јачина звука пуштања: %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp
-msgid " (emulated)"
-msgstr " (опонашано)"
+#, fuzzy, c-format
+#| msgid "Playback Volume: %%.2f%s"
+msgid "Playback Volume: %s"
+msgstr "Јачина звука пуштања: %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume (Unavailable; use system mixer.)"
@@ -13660,7 +14327,9 @@ msgid "Selection"
 msgstr "Избор"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Project Rate (Hz):"
+#, fuzzy
+#| msgid "Project Rate (Hz):"
+msgid "Project Rate (Hz)"
 msgstr "Проток пројекта (Hz):"
 
 #: src/toolbars/SelectionBar.cpp
@@ -13672,26 +14341,6 @@ msgstr "Приони на"
 #, fuzzy
 msgid "Audio Position"
 msgstr "Положај звука:"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start-End"
-msgstr "Почетак"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start-Length"
-msgstr "Трајање филтера"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Length-End"
-msgstr "Трајање"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Length-Center"
-msgstr "Трајање"
 
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
@@ -13714,21 +14363,16 @@ msgid "Length and Center of Selection"
 msgstr "Тренутно трајање избора."
 
 #: src/toolbars/SelectionBar.cpp
+msgid "Snap To"
+msgstr "Приони на"
+
+#: src/toolbars/SelectionBar.cpp
 msgid "Length"
 msgstr "Трајање"
 
 #: src/toolbars/SelectionBar.cpp src/widgets/ASlider.cpp
 msgid "Center"
 msgstr "На средини"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Snap To"
-msgstr "Приони на"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Selection options"
-msgstr "Избор за крај"
 
 #: src/toolbars/SelectionBar.cpp
 #, c-format
@@ -13747,8 +14391,6 @@ msgstr ""
 msgid "Selection %s.  %s won't change."
 msgstr ""
 
-#. i18n hints occur i the right place in
-#. the .pot file
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
 msgid "Start - End"
@@ -13768,64 +14410,6 @@ msgstr "Трајање"
 #, fuzzy
 msgid "Length - Center"
 msgstr "Трајање филтера"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start - Length - End"
-msgstr "Почни од &краја избора"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Center - Length"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start - Center - End"
-msgstr "Почни од &краја избора"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length - Center - End"
-msgstr ""
-
-#. i18n-hint: S-E is an abbreviation of Start-End
-#: src/toolbars/SelectionBar.cpp
-msgid "S-E"
-msgstr ""
-
-#. i18n-hint: S-L is an abbreviation of Start-Length
-#: src/toolbars/SelectionBar.cpp
-msgid "S-L"
-msgstr ""
-
-#. i18n-hint: L-E is an abbreviation of Length-End
-#: src/toolbars/SelectionBar.cpp
-msgid "L-E"
-msgstr ""
-
-#. i18n-hint: L-C is an abbreviation of Length-Center
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "L-C"
-msgstr "ЛЦ"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show start time and end time"
-msgstr "Датум и време покретања"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show start time and length"
-msgstr "Датум и време покретања"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show length and end time"
-msgstr "Крајње време прочеља"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show length and center"
-msgstr ""
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -13953,12 +14537,37 @@ msgid "Down Octa&ve"
 msgstr "&Доња октава"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid ""
-"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-"particular zoom region."
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
 msgstr ""
-"Притисните за усправно увећање, помак+притисак на тастер миша за умањење, "
-"превуците да направите посебну област првог плана."
+"Притисните за усправно увећање. Помак+притисак на тастер миша за умањење. "
+"Превуците да одредите област првог плана."
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Right-Click"
+msgid "Right-click for menu."
+msgstr "Десни тастер"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom Reset\tShift-Right-Click"
+msgstr "Помак + леви тастер"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr ""
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Помак + леви тастер"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -14037,6 +14646,8 @@ msgstr "Уређивање узорка"
 msgid "Instrument %i"
 msgstr "Музички инструмент"
 
+#. i18n-hint: The strings name a track and a format
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s"
@@ -14105,6 +14716,7 @@ msgstr ""
 msgid "&Other..."
 msgstr "&Остало..."
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s Hz"
@@ -14194,6 +14806,7 @@ msgstr "Десни канал"
 msgid "Channel"
 msgstr "Канал"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
@@ -14203,6 +14816,7 @@ msgstr "Учини „%s“ стерео нумером"
 msgid "Make Stereo"
 msgstr "Направи стерео"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Swapped Channels in '%s'"
@@ -14212,11 +14826,13 @@ msgstr "Замењени су канали у „%s“"
 msgid "Swap Channels"
 msgstr "Замени канале"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "Подељена је стерео нумера „%s“"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split Stereo to Mono '%s'"
@@ -14227,25 +14843,30 @@ msgid "Split to Mono"
 msgstr "Подели у моно"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid "Zoom In\tLeft-Click/Left-Drag"
+#, fuzzy
+#| msgid "Zoom In"
+msgid "Zoom x1/2"
+msgstr "Увећајте"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Zoom"
+msgid "Zoom x2"
+msgstr "Зумирање"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+msgid "Half Wave"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Out\tShift-Left-Click"
-msgstr "Помак + леви тастер"
+#| msgid "Zoom Out"
+msgid "Zoom Reset"
+msgstr "Умањите"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom to Fit\tShift-Right-Click"
 msgstr ""
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"Притисните за усправно увећање. Помак+притисак на тастер миша за умањење. "
-"Превуците да одредите област првог плана."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -14337,10 +14958,6 @@ msgid "&Scrub"
 msgstr "&Прочисти"
 
 #: src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "Пре&мотај"
-
-#: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
 msgstr "Премотавам"
 
@@ -14422,10 +15039,14 @@ msgstr "Притисните и превуците да преместите н�
 msgid "Moved clips to another track"
 msgstr "Одсечци су премештени на другу нумеру"
 
-#. i18n-hint: %s is a direction like left or right
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, fuzzy, c-format
-msgid "Time shifted tracks/clips %s %.02f seconds"
+msgid "Time shifted tracks/clips right %.02f seconds"
+msgstr "Утишане су изабране нумере за %.2f секунде при %.2f"
+
+#: src/tracks/ui/TimeShiftHandle.cpp
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips left %.02f seconds"
 msgstr "Утишане су изабране нумере за %.2f секунде при %.2f"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
@@ -14496,20 +15117,22 @@ msgstr ""
 msgid "%s to select or deselect track."
 msgstr "„%s“ да изаберете или поништите нумеру."
 
-#. i18n-hint: a direction as in up or down.
+#. i18n-hint: will substitute name of track for %s
 #: src/tracks/ui/TrackSelectHandle.cpp
-msgid "up"
-msgstr "горе"
-
-#: src/tracks/ui/TrackSelectHandle.cpp
-msgid "down"
-msgstr "доле"
-
-#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
-#: src/tracks/ui/TrackSelectHandle.cpp
-#, c-format
-msgid "Moved '%s' %s"
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' up"
 msgstr "„%s“ је премештена %s"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' down"
+msgstr "„%s“ је премештена %s"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+msgid "Move Track"
+msgstr "Премештена је нумера"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
@@ -14547,17 +15170,17 @@ msgstr "Л"
 msgid "R"
 msgstr "Д"
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Left"
-msgstr "Лево"
+#, c-format
+msgid "%.0f%% Left"
+msgstr ""
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Right"
-msgstr "Десно"
-
-#: src/widgets/ASlider.cpp
-msgid "+"
-msgstr "+"
+#, c-format
+msgid "%.0f%% Right"
+msgstr ""
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -14928,6 +15551,10 @@ msgstr "01000,01000 кадрова|75"
 msgid "0100000.0100 Hz"
 msgstr "0100000.0100 Hz"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "kHz"
+msgstr "kHz"
+
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
@@ -15199,6 +15826,39 @@ msgstr "Не приказуј више ово упозорење"
 msgid "Please select an action"
 msgstr "Изаберите радњу"
 
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Track Panel"
+msgid "Panel"
+msgstr "Панел нумере"
+
+#: src/widgets/wxPanelWrapper.h
+msgid "Dialog"
+msgstr ""
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Select all text"
+msgid "Select a directory"
+msgstr "Изаберите сав текст"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Directories"
+msgid "Directory Dialog"
+msgstr "Директоријуми"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a file"
+msgstr "Изаберите МИДИ датотеку..."
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Find dialog"
+msgid "File Dialog"
+msgstr "Нађи прозорче"
+
 #: src/xml/XMLFileReader.cpp
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -15208,6 +15868,191 @@ msgstr "Грешка: %hs у реду %lu"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "Не могу да учитам датотеку: „%s“"
+
+#, fuzzy
+#~ msgid "Audacity failed to write to a file in %s."
+#~ msgstr ""
+#~ "Аудасити не може да запише датотеку:\n"
+#~ "  %s."
+
+#~ msgid "window"
+#~ msgstr "прозор"
+
+#~ msgid "Could not open file: "
+#~ msgstr "Не могу да отворим датотеку: "
+
+#, fuzzy
+#~ msgid "Trans&cription"
+#~ msgstr "Преписивање"
+
+#, fuzzy
+#~ msgid "Scru&b"
+#~ msgstr "Прочишћавање"
+
+#, fuzzy
+#~ msgid "Ext-Co&mmand"
+#~ msgstr "Наредба"
+
+#~ msgid "to Top"
+#~ msgstr "на врх"
+
+#~ msgid "to Bottom"
+#~ msgstr "на дно"
+
+#~ msgid "Down"
+#~ msgstr "Доле"
+
+#~ msgid "Moved"
+#~ msgstr "Премештено"
+
+#, fuzzy
+#~ msgid "and"
+#~ msgstr "Крај"
+
+#~ msgid "end to end"
+#~ msgstr "заврши на крају"
+
+#~ msgid "End to End"
+#~ msgstr "Заврши на крају"
+
+#~ msgid "together"
+#~ msgstr "заједно"
+
+#~ msgid "Together"
+#~ msgstr "Заједно"
+
+#~ msgid "Aligned %s"
+#~ msgstr "Поравнат %s"
+
+#~ msgid "Error Opening File"
+#~ msgstr "Грешка отварања датотеке"
+
+#~ msgid "Duration:\n"
+#~ msgstr "Трајање:\n"
+
+#~ msgid ""
+#~ "Timer Recording completed.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Временско снимање је обављено.\n"
+#~ "\n"
+
+#~ msgid "Saved "
+#~ msgstr "Сачувано "
+
+#~ msgid "Skip &Foreward"
+#~ msgstr "Премотај &унапред"
+
+#~ msgid "' to..."
+#~ msgstr "“ у..."
+
+#~ msgid "Audio In: "
+#~ msgstr "Звучни улаз: "
+
+#~ msgid "Exporting the entire project using command-line encoder"
+#~ msgstr "Извозим читав пројекат користећи шифрер линије наредби"
+
+#~ msgid "Exporting entire file as %s"
+#~ msgstr "Извозим читаву датотеку као %s"
+
+#~ msgid "Exporting the entire project as FLAC"
+#~ msgstr "Извозим читав пројекат као ФЛАЦ"
+
+#~ msgid "Exporting entire file at %ld kbps"
+#~ msgstr "Извозим читаву датотеку при брзини од %ld kb/s"
+
+#~ msgid "Exporting entire file with %s preset"
+#~ msgstr "Извозим читаву датотеку са %s претподешавањем"
+
+#~ msgid "Exporting entire file with VBR quality %s"
+#~ msgstr "Извозим читаву датотеку са ВБР квалитетом %s"
+
+#~ msgid "Exporting entire file at %d Kbps"
+#~ msgstr "Извозим читаву датотеку при брзини од %d Kb/s"
+
+#~ msgid "Exporting the entire project as Ogg Vorbis"
+#~ msgstr "Извозим читав пројекат као Огг Ворбис"
+
+#~ msgid "Exporting the entire project as %s"
+#~ msgstr "Извозим читав пројекат као %s"
+
+#~ msgid "copy in"
+#~ msgstr "умножи"
+
+#~ msgid "read directly"
+#~ msgstr "читај посредно"
+
+#~ msgid "&Display a mono channel as virtual stereo"
+#~ msgstr "&Прикажи моно канал као виртуелни стерео"
+
+#~ msgid " (emulated)"
+#~ msgstr " (опонашано)"
+
+#, fuzzy
+#~ msgid "Start-End"
+#~ msgstr "Почетак"
+
+#, fuzzy
+#~ msgid "Start-Length"
+#~ msgstr "Трајање филтера"
+
+#, fuzzy
+#~ msgid "Length-End"
+#~ msgstr "Трајање"
+
+#, fuzzy
+#~ msgid "Length-Center"
+#~ msgstr "Трајање"
+
+#, fuzzy
+#~ msgid "Selection options"
+#~ msgstr "Избор за крај"
+
+#, fuzzy
+#~ msgid "Start - Length - End"
+#~ msgstr "Почни од &краја избора"
+
+#, fuzzy
+#~ msgid "Start - Center - End"
+#~ msgstr "Почни од &краја избора"
+
+#, fuzzy
+#~ msgid "L-C"
+#~ msgstr "ЛЦ"
+
+#, fuzzy
+#~ msgid "Show start time and end time"
+#~ msgstr "Датум и време покретања"
+
+#, fuzzy
+#~ msgid "Show start time and length"
+#~ msgstr "Датум и време покретања"
+
+#, fuzzy
+#~ msgid "Show length and end time"
+#~ msgstr "Крајње време прочеља"
+
+#~ msgid ""
+#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+#~ "particular zoom region."
+#~ msgstr ""
+#~ "Притисните за усправно увећање, помак+притисак на тастер миша за умањење, "
+#~ "превуците да направите посебну област првог плана."
+
+#~ msgid "up"
+#~ msgstr "горе"
+
+#~ msgid "down"
+#~ msgstr "доле"
+
+#~ msgid "Left"
+#~ msgstr "Лево"
+
+#~ msgid "Right"
+#~ msgstr "Десно"
+
+#~ msgid "+"
+#~ msgstr "+"
 
 #~ msgid "("
 #~ msgstr "("
@@ -15464,9 +16309,6 @@ msgstr "Не могу да учитам датотеку: „%s“"
 
 #~ msgid "Interpolation"
 #~ msgstr "Уметање"
-
-#~ msgid "Db"
-#~ msgstr "Db"
 
 #~ msgid "Minimum"
 #~ msgstr "Најмање"
