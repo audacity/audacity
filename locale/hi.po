@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-11-06 13:24-0500\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
 "PO-Revision-Date: 2017-11-09 20:07+0530\n"
 "Last-Translator: bashishtha narayan singh <bashishtha.singh@gmail.com>\n"
 "Language-Team: bashishtha singh, tushar raj <bashishtha.singh@gmail.com>\n"
@@ -353,8 +353,7 @@ msgstr "सबसे ऊपर"
 msgid "Go to top S-expr"
 msgstr "सबसे ऊपर के S-expr पर जाएं"
 
-#. i18n-hint: a direction.
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr "ऊपर"
 
@@ -378,7 +377,7 @@ msgstr "आगे"
 msgid "Go to next S-expr"
 msgstr "अगले S-expr पर जाएं"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp src/effects/Contrast.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "आरंभ"
@@ -401,10 +400,6 @@ msgid "Check Online"
 msgstr "ऑनलाइन देखें"
 
 #: src/AboutDialog.cpp
-msgid "quality assurance"
-msgstr "गुणवत्ता परख"
-
-#: src/AboutDialog.cpp
 msgid "system administration"
 msgstr "सिस्टम प्रशासन"
 
@@ -419,6 +414,10 @@ msgstr "सह-संस्थापक और विकासकर्ता"
 #: src/AboutDialog.cpp
 msgid "documentation and support"
 msgstr "प्रलेखन और समर्थन"
+
+#: src/AboutDialog.cpp
+msgid "quality assurance"
+msgstr "गुणवत्ता परख"
 
 #: src/AboutDialog.cpp
 msgid "documentation and support, French"
@@ -516,11 +515,6 @@ msgstr "श्रेयसूची"
 #: src/AboutDialog.cpp
 msgid "DarkAudacity Customisation"
 msgstr "DarkAudacity कस्टमाइजेशन"
-
-#. i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages
-#: src/AboutDialog.cpp
-msgid "In Memoriam"
-msgstr "संस्मरण"
 
 #: src/AboutDialog.cpp
 msgid "Audacity Team Members"
@@ -720,7 +714,17 @@ msgstr ""
 "इसे हाल की फ़ाइलों की सूची से हटा दिया गया है."
 
 #: src/AudacityApp.cpp
-#, c-format
+#, fuzzy, c-format
+#| msgid ""
+#| "One or more external audio files could not be found.\n"
+#| "It is possible they were moved, deleted, or the drive they were on was "
+#| "unmounted.\n"
+#| "Silence is being substituted for the affected audio.\n"
+#| "The first detected missing file is:\n"
+#| "%s\n"
+#| "There may be additional missing files.\n"
+#| "Choose File > Check Dependencies to view a list of locations of the "
+#| "missing files."
 msgid ""
 "One or more external audio files could not be found.\n"
 "It is possible they were moved, deleted, or the drive they were on was "
@@ -729,8 +733,8 @@ msgid ""
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
-"Choose File > Check Dependencies to view a list of locations of the missing "
-"files."
+"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
+"of the missing files."
 msgstr ""
 "एक या अधिक बाहरी ऑडियो फाइलें नहीं मिलीं.\n"
 "ये हो सकता है कि उन्हें हटा या मिटा दिया गया हो, या वो डिस्क-ड्राइव अनमाउंटेड हो.\n"
@@ -947,7 +951,9 @@ msgid "Save log to:"
 msgstr "लॉग यहाँ संचित करें :"
 
 #: src/AudacityLogger.cpp
-msgid "Couldn't save log to file: "
+#, fuzzy, c-format
+#| msgid "Couldn't save log to file: "
+msgid "Couldn't save log to file: %s"
 msgstr "लॉग फाईल में संचित नहीं हुआ : "
 
 #: src/AudioIO.cpp
@@ -1138,6 +1144,55 @@ msgstr "परिमाण(&P)"
 #: src/BatchCommandDialog.cpp
 msgid "C&hoose command"
 msgstr "आदेश चुनें"
+
+# कार्य
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Action"
+msgid "No Action"
+msgstr "गतिविथि"
+
+#. i18n-hint: before is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Export as MP&3"
+msgid "Export as MP3 56k before"
+msgstr "MP&3 में निर्यात करें"
+
+#. i18n-hint: after is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Export as MP&3"
+msgid "Export as MP3 56k after"
+msgstr "MP&3 में निर्यात करें"
+
+#. i18n-hint: FLAC names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Export as &WAV"
+msgid "Export as FLAC"
+msgstr "&WAV में निर्यात करें"
+
+#. i18n-hint: MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Export as MP&3"
+msgid "Export as MP3"
+msgstr "MP&3 में निर्यात करें"
+
+#. i18n-hint: Ogg names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Export as &OGG"
+msgid "Export as Ogg"
+msgstr "&OGG में निर्यात करें"
+
+#. i18n-hint: WAV names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Export as &WAV"
+msgid "Export as WAV"
+msgstr "&WAV में निर्यात करें"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1635,7 +1690,9 @@ msgid "Whenever a project depends on other files:"
 msgstr "जब भी परियोजना दूसरी फ़ाईलों पर निर्भर है:"
 
 #: src/Dependencies.cpp
-msgid "MISSING "
+#, fuzzy, c-format
+#| msgid "MISSING "
+msgid "MISSING %s"
 msgstr "लापता "
 
 #: src/Dependencies.cpp
@@ -2091,11 +2148,6 @@ msgstr ""
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity failed to write to a file in %s."
-msgstr "Audacity %s में एक फ़ाइल में लिखने में असमर्थ रहा."
-
-#: src/FileException.cpp
-#, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
 "Audacity ने सफलतापूर्वक एक फ़ाइल %s में लिखा, लेकिन इसका नामकरण %s करने में नाकाम रहा."
@@ -2128,12 +2180,6 @@ msgstr "अन्यतम ऑटोकोरीलेशन"
 #: src/FreqWindow.cpp
 msgid "Cepstrum"
 msgstr "Cepstrum"
-
-#. i18n-hint: This refers to a "window function", used in the
-#. * Frequency analyze dialog box.
-#: src/FreqWindow.cpp
-msgid "window"
-msgstr "विंडो"
 
 #: src/FreqWindow.cpp
 msgid "Linear frequency"
@@ -2256,7 +2302,9 @@ msgstr "Spectral डेटा निर्यात इस तरह:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
 #: src/effects/Contrast.cpp
-msgid "Couldn't write to file: "
+#, fuzzy, c-format
+#| msgid "Couldn't write to file: "
+msgid "Couldn't write to file: %s"
 msgstr "फ़ाइल में लिख नहीं सका: "
 
 #: src/FreqWindow.cpp
@@ -2594,7 +2642,7 @@ msgid "&Import..."
 msgstr "आयात...(&I)"
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp
 msgid "Track"
 msgstr "ट्रैक"
 
@@ -2637,8 +2685,10 @@ msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "टेक्सट फ़ाइलें (*.txt)|*.txt|सभी फ़ाइलें|*"
 
 #: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
-msgid "Could not open file: "
-msgstr "फ़ाइल को खोला नहीं जा सका: "
+#, fuzzy, c-format
+#| msgid "Could not open file: \"%s\""
+msgid "Could not open file: %s"
+msgstr "फ़ाइल खोला नहीं जा सका : \"%s\""
 
 #: src/LabelDialog.cpp
 msgid "No labels to export."
@@ -2763,8 +2813,10 @@ msgid "Save Project &As..."
 msgstr "परियोजना ऐसे सहेजें...(&A)"
 
 #: src/Menus.cpp
-msgid "Save Othe&r"
-msgstr "अन्य संचित करें (&r)"
+#, fuzzy
+#| msgid "Export"
+msgid "&Export"
+msgstr "निर्यात"
 
 #: src/Menus.cpp
 msgid "Export as MP&3"
@@ -3109,6 +3161,12 @@ msgstr "छोटा करें(&O)"
 #: src/Menus.cpp
 msgid "&Zoom to Selection"
 msgstr "चयनित भाग दिखाएं(&Z)"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom &Toggle"
+msgstr "बड़ा-छोटा करें"
 
 #: src/Menus.cpp
 msgid "T&rack Size"
@@ -3561,6 +3619,18 @@ msgid "&Tools"
 msgstr "औज़ार (&T)"
 
 #: src/Menus.cpp
+#, fuzzy
+#| msgid "Save Timer Recording As"
+msgid "Simulate Recording Errors"
+msgstr "समयबद्ध रिकार्डिंग ऐसे संचित करें"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Select stream(s) to import"
+msgid "Detect Upstream Dropouts"
+msgstr "आयात के लिए प्रवाह(stream)चुनें"
+
+#: src/Menus.cpp
 msgid "&Screenshot Tools..."
 msgstr "स्क्रीनशॉट औजार...(&S)"
 
@@ -3596,10 +3666,13 @@ msgstr "निर्भरता देखें...(&k)"
 msgid "&Check for Updates..."
 msgstr "अद्यतन के लिए देखें..."
 
-#. i18n-hint: Ext-Bar is a menu with extra commands from tool bars
+# अतिरिक्त तालिका
+#. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
-msgid "Ext-&Bar"
-msgstr "अन्य-पट्टी (&B)"
+#, fuzzy
+#| msgid "E&xtra menus"
+msgid "E&xtra"
+msgstr "अतिरिक्त (&x) मेन्यु"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/Menus.cpp
@@ -3716,8 +3789,10 @@ msgid "DeleteKey&2"
 msgstr "मिटाओकुंजी&2"
 
 #: src/Menus.cpp
-msgid "Trans&cription"
-msgstr "श्रुतिलेखन (&c)"
+#, fuzzy
+#| msgid "Transcription"
+msgid "Transcri&ption"
+msgstr "श्रुतिलेखन"
 
 #: src/Menus.cpp
 msgid "Pl&ay-at-Speed"
@@ -3754,9 +3829,9 @@ msgstr "पिछले नामपट्ट पर जाएं (&P)"
 msgid "Move to &Next Label"
 msgstr "अगले नामपट्ट पर जाएं (&N)"
 
-#: src/Menus.cpp
-msgid "Scru&b"
-msgstr "स्क्रब (&b)"
+#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr "ढूंढें"
 
 #: src/Menus.cpp
 msgid "Short seek &left during playback"
@@ -3841,11 +3916,6 @@ msgstr "चयन बाँई (&e) ओर सिकोड़ें"
 #: src/Menus.cpp
 msgid "Selection Contract R&ight"
 msgstr "चयन दाँई (&R) ओर सिकोड़ें"
-
-#. i18n-hint: Ext-Command is a menu with extra commands
-#: src/Menus.cpp
-msgid "Ext-Co&mmand"
-msgstr "अन्य-आदेश (&m)"
 
 # सक्रिय विंडो से होकर पीछे जाएँ
 #: src/Menus.cpp
@@ -4002,6 +4072,7 @@ msgid "&Full screen (on/off)"
 msgstr "पूर्ण (&F) स्क्रीन (शुरू/बंद)"
 
 # परियोजनाओं को न्यूनतम विंडों में ले जाएं
+#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
 msgid "Minimize all projects"
 msgstr "सभी परियोजनाएं न्यूनतम"
@@ -4105,29 +4176,57 @@ msgstr "दाईं ओर चयन सीमा सेट करें"
 msgid "Can't delete track with active audio"
 msgstr "सक्रिय ऑडियो वाली ट्रैक को नष्ट नहीं कर सकते"
 
-#. i18n-hint: where the track is moving to.
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
-msgid "to Top"
-msgstr "चोटी पर"
-
-#. i18n-hint: where the track is moving to.
-#: src/Menus.cpp
-msgid "to Bottom"
-msgstr "धरातल पर"
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' to Top"
+msgstr "'%s' %s खिसकाया"
 
 #: src/Menus.cpp
-msgid "Down"
-msgstr "नीचे"
+#, fuzzy
+#| msgid "Move Track to &Top"
+msgid "Move Track to Top"
+msgstr "ट्रैक चोटी पर खिसकाएं ( &T)"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
-msgid "Moved"
-msgstr "हट गया"
+#, fuzzy, c-format
+#| msgid "Move Track to &Bottom"
+msgid "Moved '%s' to Bottom"
+msgstr "ट्रैक सबसे नीचे खिसकाएं (&B)"
 
-#. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp src/tracks/ui/TrackSelectHandle.cpp
-msgid "Move Track"
-msgstr "ट्रैक खिसकाएं"
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Move Track to &Bottom"
+msgid "Move Track to Bottom"
+msgstr "ट्रैक सबसे नीचे खिसकाएं (&B)"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Up"
+msgstr "'%s' %s खिसकाया"
+
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Down"
+msgstr "'%s' %s खिसकाया"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Move Track &Up"
+msgid "Move Track Up"
+msgstr "ट्रैक ऊपर खिसकाएं (&U)"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Move Track &Down"
+msgid "Move Track Down"
+msgstr "ट्रैक नीचे खिसकाएँ"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/Menus.cpp
@@ -4369,27 +4468,25 @@ msgstr "अलग नया ट्रैक बनाएं"
 msgid "Split New"
 msgstr "भाजित नया"
 
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
 #: src/Menus.cpp
-msgid "of"
-msgstr "का"
+msgid "dummyStringOnSelectClip"
+msgstr ""
 
 #: src/Menus.cpp
-msgid "clip"
-msgstr "क्लिप"
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
 
-#: src/Menus.cpp
-msgid "clips"
-msgstr "क्लिप्स"
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "left"
-msgstr "बायाँ"
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "right"
-msgstr "दायाँ"
+#: src/Menus.cpp src/import/Import.cpp
+#, c-format
+msgid "%s, %s"
+msgstr ""
 
 #: src/Menus.cpp
 msgid "Frequency Analysis"
@@ -4471,6 +4568,46 @@ msgstr "%d ट्रैक से मिश्रित कर एक नए म
 msgid "Mix and Render"
 msgstr "मिश्रण और प्रतिपादन"
 
+#. i18n-hint: compose a name identifying an unnamed track by number
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#: src/Menus.cpp src/TrackPanelAx.cpp
+#, c-format
+msgid "Track %d"
+msgstr "ट्रैक %d"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "left"
+msgid "%s left"
+msgstr "बायाँ"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "right"
+msgid "%s right"
+msgstr "दायाँ"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
+#: src/Menus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/Menus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/Menus.cpp
 msgid "start"
 msgstr "आरंभ"
@@ -4479,70 +4616,161 @@ msgstr "आरंभ"
 msgid "end"
 msgstr "अंत"
 
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
 #: src/Menus.cpp
-msgid "and"
-msgstr "और"
-
-#: src/Menus.cpp
-msgid "start to zero"
-msgstr "आरंभ शून्य से"
-
-#: src/Menus.cpp
-msgid "start to cursor/selection start"
-msgstr "शुरूआत कर्सर/चयन-आरंभ से"
-
-#: src/Menus.cpp
-msgid "start to selection end"
-msgstr "आरंभ से चयन समाप्ति तक"
-
-#: src/Menus.cpp
-msgid "end to cursor/selection start"
-msgstr "अंत से कर्सर/चयन-आरंभ तक"
-
-#: src/Menus.cpp src/effects/Contrast.cpp src/effects/ToneGen.cpp
-#: src/toolbars/SelectionBar.cpp
-msgid "End"
-msgstr "अंत"
-
-#: src/Menus.cpp
-msgid "end to selection end"
-msgstr "अंत से चयन समाप्ति तक"
-
-#: src/Menus.cpp
-msgid "end to end"
-msgstr "अंत से अंत"
-
-#: src/Menus.cpp
-msgid "End to End"
-msgstr "अंत से अंत"
-
-#: src/Menus.cpp
-msgid "together"
-msgstr "साथ"
-
-#: src/Menus.cpp
-msgid "Together"
-msgstr "साथ"
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
 
 #: src/Menus.cpp
 #, c-format
-msgid "Aligned/Moved %s"
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned/Moved %s"
+msgid "Aligned/Moved start to zero"
 msgstr "निलाया/खिसकाया %s"
 
 #: src/Menus.cpp
-#, c-format
-msgid "Align %s/Move"
+#, fuzzy
+#| msgid "start to zero"
+msgid "Aligned start to zero"
+msgstr "आरंभ शून्य से"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align %s/Move"
+msgid "Align/Move Start"
 msgstr "%s मिलाएं/हटाएं"
 
 #: src/Menus.cpp
-#, c-format
-msgid "Aligned %s"
-msgstr "%s साथ मिलाया"
+#, fuzzy
+#| msgid "Amplitude Start"
+msgid "Align Start"
+msgstr "आरंभिक आयाम"
 
 #: src/Menus.cpp
-#, c-format
-msgid "Align %s"
+#, fuzzy
+#| msgid "start to cursor/selection start"
+msgid "Aligned/Moved start to cursor/selection start"
+msgstr "शुरूआत कर्सर/चयन-आरंभ से"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "start to cursor/selection start"
+msgid "Aligned start to cursor/selection start"
+msgstr "शुरूआत कर्सर/चयन-आरंभ से"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "start to selection end"
+msgid "Aligned/Moved start to selection end"
+msgstr "आरंभ से चयन समाप्ति तक"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "start to selection end"
+msgid "Aligned start to selection end"
+msgstr "आरंभ से चयन समाप्ति तक"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to cursor/selection start"
+msgid "Aligned/Moved end to cursor/selection start"
+msgstr "अंत से कर्सर/चयन-आरंभ तक"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to cursor/selection start"
+msgid "Aligned end to cursor/selection start"
+msgstr "अंत से कर्सर/चयन-आरंभ तक"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align %s/Move"
+msgid "Align/Move End"
+msgstr "%s मिलाएं/हटाएं"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align %s"
+msgid "Align End"
 msgstr "%s मिलाएं"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to selection end"
+msgid "Aligned/Moved end to selection end"
+msgstr "अंत से चयन समाप्ति तक"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "end to selection end"
+msgid "Aligned end to selection end"
+msgstr "अंत से चयन समाप्ति तक"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned/Moved %s"
+msgid "Aligned/Moved end to end"
+msgstr "निलाया/खिसकाया %s"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "&Align End to End"
+msgid "Aligned end to end"
+msgstr "अंत से अंत मिलाएं (&A)"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "&Align End to End"
+msgid "Align/Move End to End"
+msgstr "अंत से अंत मिलाएं (&A)"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "&Align End to End"
+msgid "Align End to End"
+msgstr "अंत से अंत मिलाएं (&A)"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned/Moved %s"
+msgid "Aligned/Moved together"
+msgstr "निलाया/खिसकाया %s"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align &Together"
+msgid "Aligned together"
+msgstr "साथ मिलाएं(&T)"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align &Together"
+msgid "Align/Move Together"
+msgstr "साथ मिलाएं(&T)"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Align &Together"
+msgid "Align Together"
+msgstr "साथ मिलाएं(&T)"
 
 #: src/Menus.cpp
 msgid "Synchronizing MIDI and Audio Tracks"
@@ -4835,6 +5063,124 @@ msgstr "इस मॉड्यूल को लोड करने की को
 msgid "Note Track"
 msgstr "सुर ट्रैक"
 
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "LC"
+msgid "C"
+msgstr "LC"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "Db"
+msgid "D"
+msgstr "Db"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "GB"
+msgid "G"
+msgstr "GB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "dB"
+msgid "B"
+msgstr "dB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "B♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯/D♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯/E♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯/G♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯/A♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯/B♭"
+msgstr ""
+
 #: src/PluginManager.cpp
 msgid "Plug-in Manager: Effects, Generators and Analyzers"
 msgstr "प्लग-इन प्रबंधक: प्रभाव, जेनरेटर और अनालाइजर"
@@ -4925,6 +5271,56 @@ msgstr ""
 "\n"
 "%s"
 
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Effect failed to initialize"
+msgid ""
+"Effect at %s failed to register:\n"
+"%s"
+msgstr "प्रभाव आरंभ करने में विफल"
+
+#: src/PluginManager.cpp src/effects/Effect.cpp
+#, fuzzy
+#| msgid "Builtin Effects"
+msgid "Built-in"
+msgstr "अंतर्निहित प्रभाव"
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Overwrite existing files"
+msgid "Overwrite the plug-in file %s ?"
+msgstr "उपस्थित फ़ाइलों को मिटाकर लिखें"
+
+#: src/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: src/PluginManager.cpp
+msgid "Plug-in file is in use.  Failed to overwrite"
+msgstr ""
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Failed to remove %s"
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr "%s को हटाने में असफ़ल"
+
+#: src/PluginManager.cpp
+#, fuzzy
+#| msgid "Enable cut &lines"
+msgid "Enable this plug-in?"
+msgid_plural "Enable these plug-ins?"
+msgstr[0] "काट रेखाएं(&l) सक्रिय करें"
+msgstr[1] "काट रेखाएं(&l) सक्रिय करें"
+
+#: src/PluginManager.cpp
+#, fuzzy
+#| msgid "Enable cut &lines"
+msgid "Enable new plug-ins"
+msgstr "काट रेखाएं(&l) सक्रिय करें"
+
 #: src/Prefs.cpp
 #, c-format
 msgid "Failed to remove %s"
@@ -4964,6 +5360,18 @@ msgstr "मुद्रण"
 #: src/Project.cpp
 msgid "Main Mix"
 msgstr "मुख्य - मिक्सर"
+
+#: src/Project.cpp
+#, fuzzy
+#| msgid "Horizontal"
+msgid "Horizontal Scrollbar"
+msgstr "समतल"
+
+#: src/Project.cpp
+#, fuzzy
+#| msgid "Vertical"
+msgid "Vertical Scrollbar"
+msgstr "लंबवत"
 
 #: src/Project.cpp
 #, c-format
@@ -5074,10 +5482,6 @@ msgid "Warning - Backup File Detected"
 msgstr "चेतावनी - ये बैकअप फ़ाइल है"
 
 #: src/Project.cpp
-msgid "Error Opening File"
-msgstr "फ़ाइल खोलने में त्रुटि"
-
-#: src/Project.cpp
 msgid "Error opening file"
 msgstr "फ़ाइल खोलने में त्रुटि"
 
@@ -5103,7 +5507,9 @@ msgstr ""
 "संभव नहीं था."
 
 #: src/Project.cpp
-msgid "Could not decode file: "
+#, fuzzy, c-format
+#| msgid "Could not decode file: "
+msgid "Could not decode file: %s"
 msgstr "फ़ाइल को डिकोड नहीं कर सका: "
 
 #: src/Project.cpp
@@ -5172,7 +5578,9 @@ msgid "Warning - Empty Project"
 msgstr "चेतावनी - खाली परियोजना"
 
 #: src/Project.cpp
-msgid "Could not create safety file: "
+#, fuzzy, c-format
+#| msgid "Could not create safety file: "
+msgid "Could not create safety file: %s"
 msgstr "सुरक्षा फाइल नहीं बन सका: "
 
 #: src/Project.cpp
@@ -5197,7 +5605,7 @@ msgstr ""
 "परियोजना संचित नहीं किया जा सका. पथ नहीं मिला. इस नाम से \n"
 "परियोजना सहेजने से पहले \"%s\" नामक फोल्डर बनाने का प्रयास करें."
 
-#: src/Project.cpp
+#: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "सुरक्षित किया %s"
@@ -5301,17 +5709,43 @@ msgid ""
 msgstr "आयात संपूर्ण. मांग-पर तरंगरूप की गणना चल रही है. कुल %2.0f%% संपूर्ण."
 
 #: src/Project.cpp
-msgid "Could not create autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not create autosave file: "
+msgid "Could not create autosave file: %s"
 msgstr "स्वसंचयन फ़ाइल नहीं बन सका: "
 
 #: src/Project.cpp
-msgid "Could not remove old autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not remove old autosave file: "
+msgid "Could not remove old autosave file: %s"
 msgstr "स्वत:-संचित पुराना फ़ाइल हटा नहीं सका : "
 
 #: src/Project.cpp
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "आवृति दर: %d"
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence audio sample data from the
+#. recording
+#: src/Project.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/Project.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/Project.cpp
+msgid "Turn off dropout detection"
+msgstr ""
 
 #: src/Project.cpp
 msgid "Recorded Audio"
@@ -5343,21 +5777,28 @@ msgid "Less than 1 minute"
 msgstr "1 मिनट से भी कम"
 
 #: src/Project.cpp
-msgid "hour"
-msgid_plural "hours"
+#, fuzzy, c-format
+#| msgid "hour"
+#| msgid_plural "hours"
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] "घंटा"
 msgstr[1] "घंटे"
 
 #: src/Project.cpp
-msgid "minute"
-msgid_plural "minutes"
+#, fuzzy, c-format
+#| msgid "minute"
+#| msgid_plural "minutes"
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] "मिनट"
 msgstr[1] "मिनट"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/Project.cpp
-#, c-format
-msgid "%d %s and %d %s."
+#, fuzzy, c-format
+#| msgid "%d %s and %d %s."
+msgid "%s and %s."
 msgstr "%d %s और %d %s."
 
 #: src/Resample.cpp
@@ -5492,6 +5933,7 @@ msgstr "भ्रमण"
 msgid "Mixer"
 msgstr "मिक्सर"
 
+#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr "मीटर"
@@ -5584,6 +6026,10 @@ msgstr "लंबा ट्रैक"
 #: src/Screenshot.cpp
 msgid "Choose a location to save screenshot images"
 msgstr "स्क्रीनशॉट छवियों को सहेजने का स्थान चुनें"
+
+#: src/Screenshot.cpp
+msgid "Capture failed!"
+msgstr ""
 
 #: src/Sequence.cpp
 #, c-format
@@ -5942,27 +6388,37 @@ msgid "Current Project"
 msgstr "वर्तमान परियोजना"
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording start:\n"
+#, fuzzy
+#| msgid "Recording start:\n"
+msgid "Recording start:"
 msgstr "ध्वन्यांकन आरंभ :\n"
 
-#: src/TimerRecordDialog.cpp
-msgid "Duration:\n"
-msgstr "अवधि:\n"
+#: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
+#: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+msgid "Duration:"
+msgstr "अंतराल :"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Recording end:\n"
-"\n"
+#, fuzzy
+#| msgid ""
+#| "Recording end:\n"
+#| "\n"
+msgid "Recording end:"
 msgstr ""
 "ध्वन्यांकन समाप्ति :\n"
 "\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Save enabled:\n"
+#, fuzzy
+#| msgid "Automatic Save enabled:\n"
+msgid "Automatic Save enabled:"
 msgstr "स्वचालित संचय सक्रिय :\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Export enabled:\n"
+#, fuzzy
+#| msgid "Automatic Export enabled:\n"
+msgid "Automatic Export enabled:"
 msgstr "स्वचालित निर्यात सक्रिय :\n"
 
 #: src/TimerRecordDialog.cpp
@@ -6147,17 +6603,23 @@ msgid "After Recording completes:"
 msgstr "रिकाडिंग समाप्ति के बाद :"
 
 #: src/TimerRecordDialog.cpp
-msgid "Waiting to start recording at:\n"
+#, fuzzy
+#| msgid "Waiting to start recording at:\n"
+msgid "Waiting to start recording at:"
 msgstr "रिकॉर्डिंग शुरू होने की प्रतीक्षा है :\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording duration:\n"
+#, fuzzy
+#| msgid "Recording duration:\n"
+msgid "Recording duration:"
 msgstr "रिकॉर्डिंग अवधि :\n"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Scheduled to stop at:\n"
-"\n"
+#, fuzzy
+#| msgid ""
+#| "Scheduled to stop at:\n"
+#| "\n"
+msgid "Scheduled to stop at:"
 msgstr ""
 "इस समय रोक दें:\n"
 "\n"
@@ -6171,19 +6633,15 @@ msgid "Recording will commence in:"
 msgstr "ध्वन्यांकन इतनी देर में आरंभ होगा :"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Timer Recording completed.\n"
-"\n"
-msgstr ""
-"घड़ी से रिकार्डिंग संपूर्ण.\n"
-"\n"
-
-#: src/TimerRecordDialog.cpp
-msgid "Recording Saved:\n"
+#, fuzzy
+#| msgid "Recording Saved:\n"
+msgid "Recording Saved:"
 msgstr "ध्वन्यांकन संचित किया :\n"
 
 #: src/TimerRecordDialog.cpp
-msgid "Recording Exported:\n"
+#, fuzzy
+#| msgid "Recording Exported:\n"
+msgid "Recording Exported:"
 msgstr "ध्वन्यांकन निर्यात किया :\n"
 
 #: src/TimerRecordDialog.cpp
@@ -6202,19 +6660,27 @@ msgid "(Esc to cancel)"
 msgstr "(Esc से निरस्त करें)"
 
 #: src/TrackPanel.cpp
-msgid "Stereo, "
+#, fuzzy, c-format
+#| msgid "Stereo, "
+msgid "Stereo, %dHz"
 msgstr "स्टिरियो, "
 
 #: src/TrackPanel.cpp
-msgid "Mono, "
+#, fuzzy, c-format
+#| msgid "Mono, "
+msgid "Mono, %dHz"
 msgstr "मोनो, "
 
 #: src/TrackPanel.cpp
-msgid "Left, "
+#, fuzzy, c-format
+#| msgid "Left, "
+msgid "Left, %dHz"
 msgstr "बायाँ, "
 
 #: src/TrackPanel.cpp
-msgid "Right, "
+#, fuzzy, c-format
+#| msgid "Right, "
+msgid "Right, %dHz"
 msgstr "दायाँ, "
 
 #: src/TrackPanel.cpp
@@ -6224,12 +6690,6 @@ msgstr "स्टिरियो, 999999Hz"
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "ट्रैक दृश्य"
-
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "ट्रैक %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track mute is on.
@@ -6310,7 +6770,7 @@ msgstr "चयनित भाग चिपकाने के लिए पर�
 msgid "There is not enough room available to expand the cut line"
 msgstr "काट-रेखा के विस्तार के लिए पर्याप्त जगह नहीं है"
 
-#: src/AudacityException.h
+#: src/AudacityException.h src/widgets/ErrorDialog.cpp
 msgid "Message"
 msgstr "संदेश"
 
@@ -6457,11 +6917,9 @@ msgid "Loading Keyboard Shortcuts"
 msgstr "लघु कुंजी लोड हो रहा है"
 
 #: src/commands/ScreenshotCommand.cpp
-msgid "Saved "
-msgstr "संचित किया "
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Error trying to save file: "
+#, fuzzy, c-format
+#| msgid "Error trying to save file: "
+msgid "Error trying to save file: %s"
 msgstr "फ़ाइल संचयन में त्रुटि: "
 
 #: src/effects/Amplify.cpp
@@ -6499,13 +6957,6 @@ msgid ""
 msgstr ""
 "आपने एक ऐसा ट्रैक चुना है जिसमें ऑडियो शामिल नहीं है. ऑटोडक केवल ऑडियो ट्रैक पर ही काम "
 "करता है."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-#. * of the audio automatically when there is sound on another track.  Not as
-#. * in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp src/effects/AutoDuck.h
-msgid "Auto Duck"
-msgstr "ऑटो डक"
 
 #: src/effects/AutoDuck.cpp
 msgid ""
@@ -6751,7 +7202,9 @@ msgid "Length (seconds)"
 msgstr "लंबाई (सेकेंड)"
 
 #: src/effects/ChangeTempo.cpp
-msgid "Length in seconds from"
+#, fuzzy, c-format
+#| msgid "Length in seconds from"
+msgid "Length in seconds from %s, to"
 msgstr "लंबाई सेकेंडों में"
 
 #: src/effects/ClickRemoval.cpp
@@ -6921,6 +7374,11 @@ msgid ""
 "Contrast Analyzer, for measuring RMS volume differences between two "
 "selections of audio."
 msgstr "कॉनट्रास्ट विश्लेषक, दो चुने हुए ऑडियो के बीच rms वाल्यूम में अंतर मापने के लिए."
+
+#: src/effects/Contrast.cpp src/effects/ToneGen.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "End"
+msgstr "अंत"
 
 #: src/effects/Contrast.cpp
 msgid "Volume    "
@@ -7400,12 +7858,6 @@ msgstr "DTMF क्रम:"
 msgid "Amplitude (0-1):"
 msgstr "आयाम (0-1)"
 
-#: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
-#: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Duration:"
-msgstr "अंतराल :"
-
 #: src/effects/DtmfGen.cpp
 msgid "Tone/silence ratio:"
 msgstr "स्वर/मौन अनुपात :"
@@ -7425,6 +7877,12 @@ msgstr "ms"
 #: src/effects/DtmfGen.cpp
 msgid "Silence duration:"
 msgstr "मौन अंतराल :"
+
+#: src/effects/DtmfGen.cpp
+#, fuzzy, c-format
+#| msgid "%.0f:1"
+msgid "%.0f ms"
+msgstr "%.0f:1"
 
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
@@ -7481,7 +7939,8 @@ msgstr ""
 "ध्वनि उपकरण खोलने में त्रुटि.\n"
 "कृपया ऑडियो मेजबान, प्लेबैक यंत्र और परियोजना के नमूना दर बदल कर कोशिश करें."
 
-#: src/effects/Effect.cpp
+#: src/effects/Effect.cpp src/effects/vamp/VampEffect.cpp
+#: src/widgets/ASlider.cpp
 #, c-format
 msgid "%s: %s"
 msgstr "%s: %s"
@@ -7523,10 +7982,6 @@ msgstr "पीछे का छोड़ें"
 
 #: src/effects/Effect.cpp
 msgid "Skip &Forward"
-msgstr "आगे का छोड़ें (&F)"
-
-#: src/effects/Effect.cpp
-msgid "Skip &Foreward"
 msgstr "आगे का छोड़ें (&F)"
 
 #: src/effects/Effect.cpp
@@ -7814,6 +8269,12 @@ msgid "Max dB"
 msgstr "अधिकतम dB"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
+#, fuzzy, c-format
+#| msgid "%3d dB"
+msgid "%d dB"
+msgstr "%3d dB"
+
+#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
 msgstr "- dB"
 
@@ -7821,9 +8282,15 @@ msgstr "- dB"
 msgid "Min dB"
 msgstr "न्यूनतम dB"
 
-#: src/effects/Equalization.cpp src/widgets/NumericTextCtrl.cpp
-msgid "kHz"
-msgstr "kHz"
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%d Hz"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%g kHz"
+msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8006,16 +8473,20 @@ msgid "'unnamed' is special"
 msgstr "'बेनाम' विशिष्ट है"
 
 #: src/effects/Equalization.cpp
-msgid "Rename '"
-msgstr "पुनः नामकरण '"
-
-#: src/effects/Equalization.cpp
-msgid "' to..."
-msgstr "' तक..."
+#, fuzzy, c-format
+#| msgid "Renamed '%s' to '%s'"
+msgid "Rename '%s' to..."
+msgstr "नामकरण '%s' to '%s'"
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
 msgstr "पुनः नामकरण ..."
+
+#: src/effects/Equalization.cpp
+#, fuzzy, c-format
+#| msgid "Rename '"
+msgid "Rename '%s'"
+msgstr "पुनः नामकरण '"
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -8165,6 +8636,10 @@ msgstr "Audacity टीम"
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
 msgstr "Audacity में अंतर्निहित प्रभाव प्रदान करता है"
+
+#: src/effects/LoadEffects.cpp
+msgid "Unknown built-in effect name"
+msgstr ""
 
 #: src/effects/Noise.cpp
 msgid "White"
@@ -8457,31 +8932,45 @@ msgid "Not doing anything...\n"
 msgstr "कुछ भी नहीं कर रहे हैं...\n"
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing: "
+#, fuzzy, c-format
+#| msgid "Analyzing: "
+msgid "Analyzing: %s"
 msgstr "विश्लेषण कर रहे हैं: "
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing first track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Analyzing first track of stereo pair: "
+msgid "Analyzing first track of stereo pair: %s"
 msgstr "स्टीरियो युगल के पहले ट्रैक का विश्लेषण चल रहा है: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing: "
+#, fuzzy, c-format
+#| msgid "Processing: "
+msgid "Processing: %s"
 msgstr "प्रक्रिया चल रही है: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing stereo channels independently: "
+#, fuzzy, c-format
+#| msgid "Processing stereo channels independently: "
+msgid "Processing stereo channels independently: %s"
 msgstr "स्टीरियो चैनल को स्वतंत्र रूप से सामान्य कर रहे हैं : "
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing second track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Analyzing second track of stereo pair: "
+msgid "Analyzing second track of stereo pair: %s"
 msgstr "स्टीरियो युगल के दूसरे ट्रैक का विश्लेषण चल रहा है: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing first track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Processing first track of stereo pair: "
+msgid "Processing first track of stereo pair: %s"
 msgstr "स्टीरियो युगल के पहले ट्रैक को बनाने की प्रक्रिया चल रही हैं: "
 
 #: src/effects/Normalize.cpp
-msgid "Processing second track of stereo pair: "
+#, fuzzy, c-format
+#| msgid "Processing second track of stereo pair: "
+msgid "Processing second track of stereo pair: %s"
 msgstr "स्टीरियो युगल के दूसरे ट्रैक को बनाने की प्रक्रिया चल रही हैं: "
 
 #: src/effects/Normalize.cpp
@@ -8677,11 +9166,15 @@ msgid "New selection length: dd:hh:mm:ss"
 msgstr "नवीन चयन लंबाई : दिन:घंटे:मिनट:सेकेंड"
 
 #: src/effects/Repeat.cpp
-msgid "Current selection length: "
+#, fuzzy, c-format
+#| msgid "Current selection length: "
+msgid "Current selection length: %s"
 msgstr "नवीन चयन लंबाई : "
 
 #: src/effects/Repeat.cpp
-msgid "New selection length: "
+#, fuzzy, c-format
+#| msgid "New selection length: "
+msgid "New selection length: %s"
 msgstr "नवीन चयन लंबाई: "
 
 #: src/effects/Repeat.cpp
@@ -9115,6 +9608,10 @@ msgstr "Wah आवृत्ति ऑफसेट प्रतिशत मे�
 msgid "Amplify"
 msgstr "प्रवर्धन करें"
 
+#: src/effects/AutoDuck.h
+msgid "Auto Duck"
+msgstr "ऑटो डक"
+
 #: src/effects/BassTreble.h
 msgid "Bass and Treble"
 msgstr "बेस और ट्रेबल"
@@ -9240,6 +9737,18 @@ msgid "Provides Audio Unit Effects support to Audacity"
 msgstr "Audacity में ऑडियो यूनिट प्रभाव  का समर्थन प्रदान करता है"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+#| msgid "Could not open file "
+msgid "Could not find component"
+msgstr "फ़ाइल को खोल नहीं सका "
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+#| msgid "Could not initialize MP3 encoding library!"
+msgid "Could not initialize component"
+msgstr "MP3 एनकोडिंग लाइब्रेरी नहीं खोल सका!"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
 msgstr "आडियो युनिट प्रभाव विकल्प"
 
@@ -9351,6 +9860,17 @@ msgid "Provides LADSPA Effects"
 msgstr "LADSPA प्रभाव प्रदान करता है"
 
 #: src/effects/ladspa/LadspaEffect.cpp
+msgid "Audacity no longer uses vst-bridge"
+msgstr ""
+
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy
+#| msgid "Could not open MP3 encoding library!"
+msgid "Could not load the library"
+msgstr "MP3 एनकोडिंग लाइब्रेरी नहीं खोल सका!"
+
+#: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effect Options"
 msgstr "LADSPA प्रभाव विकल्प"
 
@@ -9440,6 +9960,12 @@ msgstr "Nyquist प्रभाव लगाना..."
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
 msgstr "Nyquist कार्यकर्ता"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Nyquist plug-ins"
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Nyquist प्लग-इन्स"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9532,6 +10058,12 @@ msgstr ""
 "किया गया]"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+#| msgid "This version of Audacity was not compiled with %s support."
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "ऑडेसिटी का यह संस्करण %s  समर्थन के साथ तैयार नहीं किया गया."
+
+#: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid ""
 "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
@@ -9539,6 +10071,12 @@ msgid ""
 msgstr ""
 "गलत Nyquist 'नियंत्रण' टाइप विनिर्देश : '%s' प्लग-इन फ़ाइल '%s' में.\n"
 "नियंत्रण नहीं बन पाया."
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Could not open file "
+msgid "Could not open file"
+msgstr "फ़ाइल को खोल नहीं सका "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9558,6 +10096,13 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Error in Nyquist code"
 msgstr "Nyquist कोड में त्रुटि"
+
+#. i18n-hint: refers to programming "languages"
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Could not decode file: "
+msgid "Could not determine language"
+msgstr "फ़ाइल को डिकोड नहीं कर सका: "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -9697,11 +10242,9 @@ msgid ""
 msgstr "अधिकांश VST प्रभाव पैरामीटर मान सेट करने के लिए एक चित्रमय इंटरफ़ेस दिया गया है."
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Audio In: "
-msgstr "आडियो इन : "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ", Audio Out: "
+#, fuzzy, c-format
+#| msgid ", Audio Out: "
+msgid "Audio In: %d, Audio Out: %d"
 msgstr ", ऑडियो आउट: "
 
 #: src/effects/VST/VSTEffect.cpp
@@ -9780,7 +10323,9 @@ msgstr "सभी चयनित ऑडियो मौन है."
 msgid "All audio is muted."
 msgstr "सभी ध्वनियाँ मौन हैं."
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "निर्यात नहीं कर सका"
 
@@ -9789,7 +10334,9 @@ msgid "untitled"
 msgstr "बेनाम"
 
 #: src/export/Export.cpp
-msgid "Are you sure you want to export the file as \""
+#, fuzzy, c-format
+#| msgid "Are you sure you want to export the file as \""
+msgid "Are you sure you want to export the file as \"%s\"?\n"
 msgstr "क्या आप फ़ाइल का निर्यात इस नाम से करना चाहते हैं \""
 
 #: src/export/Export.cpp
@@ -9814,12 +10361,21 @@ msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "क्षमा करें, 256 अक्षरों से अधिक लंबा पथनाम समर्थित नहीं है."
 
 #: src/export/Export.cpp
+#, fuzzy
+#| msgid ""
+#| "You are attempting to overwrite an aliased file that is missing.\n"
+#| "               The file cannot be written because the path is needed to "
+#| "restore the original audio to the project.\n"
+#| "               Choose File > Check Dependencies to view the locations of "
+#| "all missing files.\n"
+#| "               If you still wish to export, please choose a different "
+#| "filename or folder."
 msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "               The file cannot be written because the path is needed to "
 "restore the original audio to the project.\n"
-"               Choose File > Check Dependencies to view the locations of all "
-"missing files.\n"
+"               Choose Help > Diagnostics > Check Dependencies to view the "
+"locations of all missing files.\n"
 "               If you still wish to export, please choose a different "
 "filename or folder."
 msgstr ""
@@ -9865,12 +10421,18 @@ msgstr "प्रारूप विकल्प"
 msgid "Channel: %2d"
 msgstr "चैनल : %2d"
 
+#. i18n-hint: track name and L abbreviating Left channel
 #: src/export/Export.cpp
-msgid " - L"
+#, fuzzy, c-format
+#| msgid " - L"
+msgid "%s - L"
 msgstr " - बायाँ"
 
+#. i18n-hint: track name and R abbreviating Right channel
 #: src/export/Export.cpp
-msgid " - R"
+#, fuzzy, c-format
+#| msgid " - R"
+msgid "%s - R"
 msgstr " - दायाँ"
 
 #: src/export/Export.cpp
@@ -9919,8 +10481,10 @@ msgid "Exporting the selected audio using command-line encoder"
 msgstr "कमांड लाइन एनकोडर उपयोग करके चयनित ऑडियो का निर्यात"
 
 #: src/export/ExportCL.cpp
-msgid "Exporting the entire project using command-line encoder"
-msgstr "कमांड-लाइन एनकोडर का प्रयोग करके पूरी परियोजना का निर्यात"
+#, fuzzy
+#| msgid "Exporting the selected audio using command-line encoder"
+msgid "Exporting the audio using command-line encoder"
+msgstr "कमांड लाइन एनकोडर उपयोग करके चयनित ऑडियो का निर्यात"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
@@ -10032,10 +10596,11 @@ msgstr ""
 msgid "Exporting selected audio as %s"
 msgstr "%s में चुनी हुई ध्वनी निर्यात करें"
 
-#: src/export/ExportFFmpeg.cpp
-#, c-format
-msgid "Exporting entire file as %s"
-msgstr "पूरी परियोजना %s के नाम से निर्यात कर रहे हैं"
+#: src/export/ExportFFmpeg.cpp src/export/ExportPCM.cpp
+#, fuzzy, c-format
+#| msgid "Exporting selected audio as %s"
+msgid "Exporting the audio as %s"
+msgstr "%s में चुनी हुई ध्वनी निर्यात करें"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Invalid sample rate"
@@ -10612,8 +11177,10 @@ msgid "Exporting the selected audio as FLAC"
 msgstr "चयनित ऑडियो का निर्यात FLAC में कर रहे हैं"
 
 #: src/export/ExportFLAC.cpp
-msgid "Exporting the entire project as FLAC"
-msgstr "पूरी परियोजना का निर्यात FLAC में कर रहे हैं"
+#, fuzzy
+#| msgid "Exporting the selected audio as FLAC"
+msgid "Exporting the audio as FLAC"
+msgstr "चयनित ऑडियो का निर्यात FLAC में कर रहे हैं"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -10633,9 +11200,10 @@ msgid "Exporting selected audio at %ld kbps"
 msgstr "चयनित ऑडियो का निर्यात %ld kbps पर कर रहे हैं"
 
 #: src/export/ExportMP2.cpp
-#, c-format
-msgid "Exporting entire file at %ld kbps"
-msgstr "पूरी फ़ाइल का निर्यात at %ld kbps पर कर रहे हैं"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %ld kbps"
+msgid "Exporting the audio at %ld kbps"
+msgstr "चयनित ऑडियो का निर्यात %ld kbps पर कर रहे हैं"
 
 #: src/export/ExportMP3.cpp
 msgid "kbps"
@@ -10806,9 +11374,10 @@ msgid "Exporting selected audio with %s preset"
 msgstr "चयनित ऑडियो का निर्यात  %s प्रिसेट के साथ कर रहे हैं"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with %s preset"
-msgstr "पूरी फ़ाइल का निर्यात %s प्रिसेट के साथ कर रहे हैं"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio with %s preset"
+msgid "Exporting the audio with %s preset"
+msgstr "चयनित ऑडियो का निर्यात  %s प्रिसेट के साथ कर रहे हैं"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10816,9 +11385,10 @@ msgid "Exporting selected audio with VBR quality %s"
 msgstr "चुने गए ऑडियो का VBR गुणवत्ता %s के साथ निर्यात करते हैं"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with VBR quality %s"
-msgstr "पूरी फ़ाइल का VBR गुणवत्ता %s के साथ निर्यात करते हैं"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio with VBR quality %s"
+msgid "Exporting the audio with VBR quality %s"
+msgstr "चुने गए ऑडियो का VBR गुणवत्ता %s के साथ निर्यात करते हैं"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10826,9 +11396,10 @@ msgid "Exporting selected audio at %d Kbps"
 msgstr "चयनित ऑडियो का निर्यात %d Kbps पर कर रहे हैं"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file at %d Kbps"
-msgstr "पूरी फ़ाइल का निर्यात %d Kbps पर कर रहे हैं"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %d Kbps"
+msgid "Exporting the audio at %d Kbps"
+msgstr "चयनित ऑडियो का निर्यात %d Kbps पर कर रहे हैं"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11015,8 +11586,10 @@ msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "चयनित ऑडियो को  Ogg वॉर्बिस  के रूप में निर्यात करते हैं"
 
 #: src/export/ExportOGG.cpp
-msgid "Exporting the entire project as Ogg Vorbis"
-msgstr "पूरी परियोजना Ogg वॉर्बिस के रूप में निर्यात करते हैं"
+#, fuzzy
+#| msgid "Exporting the selected audio as Ogg Vorbis"
+msgid "Exporting the audio as Ogg Vorbis"
+msgstr "चयनित ऑडियो को  Ogg वॉर्बिस  के रूप में निर्यात करते हैं"
 
 #: src/export/ExportPCM.cpp
 msgid "AIFF (Apple) signed 16-bit PCM"
@@ -11050,11 +11623,6 @@ msgstr "इस प्रारूप में ऑडियो निर्य�
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "चुनी हुई ध्वनी का निर्यात %s नाम से"
-
-#: src/export/ExportPCM.cpp
-#, c-format
-msgid "Exporting the entire project as %s"
-msgstr "पूरी परियोजना %s नाम से निर्यात कर रहे हैं"
 
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
@@ -11344,16 +11912,22 @@ msgid "Invalid track offset in LOF file."
 msgstr "LOF फ़ाइल में अवैध ट्रैक ऑफसेट."
 
 #: src/import/ImportMIDI.cpp
-msgid "Could not open file "
-msgstr "फ़ाइल को खोल नहीं सका "
-
-#: src/import/ImportMIDI.cpp
-msgid ": Filename too short."
+#, fuzzy, c-format
+#| msgid ": Filename too short."
+msgid "Could not open file %s: Filename too short."
 msgstr ": फ़ाइल-नाम बहुत छोटा है."
 
 #: src/import/ImportMIDI.cpp
-msgid ": Incorrect filetype."
+#, fuzzy, c-format
+#| msgid ": Incorrect filetype."
+msgid "Could not open file %s: Incorrect filetype."
 msgstr ": गलत फ़ाइल प्रकार."
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy, c-format
+#| msgid "Could not open file "
+msgid "Could not open file %s."
+msgstr "फ़ाइल को खोल नहीं सका "
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
@@ -11388,19 +11962,47 @@ msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, तथा अन्य असंपीड़ित प्रकार"
 
 #: src/import/ImportPCM.cpp
-#, c-format
 msgid ""
 "When importing uncompressed audio files you can either copy them into the "
 "project, or read them directly from their current location (without "
 "copying).\n"
 "\n"
-"Your current preference is set to %s.\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to copy in.\n"
 "\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to read directly.\n"
+"\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+#, fuzzy
+#| msgid ""
+#| "When importing uncompressed audio files you can either copy them into the "
+#| "project, or read them directly from their current location (without "
+#| "copying).\n"
+#| "\n"
+#| "Your current preference is set to %s.\n"
+#| "\n"
+#| "Reading the files directly allows you to play or edit them almost "
+#| "immediately.  This is less safe than copying in, because you must retain "
+#| "the files with their original names in their original location.\n"
+#| "File > Check Dependencies will show the original names and location of "
+#| "any files that you are reading directly.\n"
+#| "\n"
+#| "How do you want to import the current file(s)?"
+msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately.  This is less safe than copying in, because you must retain the "
-"files with their original names in their original location.\n"
-"File > Check Dependencies will show the original names and location of any "
-"files that you are reading directly.\n"
+"files with their original names in their original locations.\n"
+"Help > Diagnostics > Check Dependencies will show the original names and "
+"locations of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
 msgstr ""
@@ -11416,14 +12018,6 @@ msgstr ""
 "हैं.\n"
 "\n"
 "आप वर्तमान फ़ाइल (लों)का आयात किस प्रकार करना चाहते हैं ?"
-
-#: src/import/ImportPCM.cpp
-msgid "copy in"
-msgstr "इसमें प्रतिलिपी बनाएं"
-
-#: src/import/ImportPCM.cpp
-msgid "read directly"
-msgstr "सीधे पढ़ें"
 
 #: src/import/ImportPCM.cpp
 msgid "Choose an import method"
@@ -11541,6 +12135,12 @@ msgstr "आयात की मात्रा:"
 #: src/import/ImportRaw.cpp
 msgid "Sample rate:"
 msgstr "सैंपल रेट:"
+
+#: src/import/RawAudioGuess.cpp
+#, fuzzy
+#| msgid "Load Metadata As:"
+msgid "Bad data size"
+msgstr "मेटा डाटा ऐसे लोड करें:"
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
@@ -11977,10 +12577,6 @@ msgstr "नामपट्ट यथावत (&t) रखें यदि चय
 msgid "B&lend system and Audacity theme"
 msgstr "सिस्टम और Audacity रंग-रूप एकसार करें (&l)"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "&Display a mono channel as virtual stereo"
-msgstr "एक मोनो चैनल आभासी स्टीरियो के रूप में प्रदर्शित"
-
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "आयात / निर्यात"
@@ -12127,6 +12723,11 @@ msgstr "आप इस प्रविष्टि के लिए लघुक�
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You must select a binding before assigning a shortcut"
 msgstr "आप एक लघुकुँजी नियत करने से पहले उसकी जोड़ी चुनें"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, c-format
+msgid "%s - %s"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -12668,6 +13269,11 @@ msgstr "सिस्टम समय(&i)"
 msgid "Always record on a new track"
 msgstr "हमेशा नया ट्रैक रिकार्ड करें"
 
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr ""
+
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
 msgstr "स्वचालित रिकार्डिंग स्तर अनुकूलन"
@@ -13034,6 +13640,12 @@ msgid "Enable scrolling left of &zero"
 msgstr "शून्य से पहले स्क्रॉलिंग सक्रिय करें (&z)"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+#| msgid "Advanced Settings"
+msgid "Advanced &vertical zooming"
+msgstr "उन्नत सेटिंग्स"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
 msgstr "एकल बटन:(&B)"
 
@@ -13056,6 +13668,60 @@ msgstr "बिंदु जोड़ें"
 #: src/prefs/TracksPrefs.cpp
 msgid "Stem plot"
 msgstr "वर्णक्रम बनाएं"
+
+# "विंडो में फ़िट करें(&F)"
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "&Fit to Width"
+msgid "Fit to Width"
+msgstr "चौड़ाई में बिठाएं (&F)"
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "&Zoom to Selection"
+msgid "Zoom to Selection"
+msgstr "चयनित भाग दिखाएं(&Z)"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Zoom default"
+msgid "Zoom Default"
+msgstr "ज़ूम - डिफ़ाल्ट"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "minute"
+#| msgid_plural "minutes"
+msgid "Minutes"
+msgstr "मिनट"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "&Seconds"
+msgid "Seconds"
+msgstr "सेकेंड (&S)"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "milliseconds"
+msgid "MilliSeconds"
+msgstr "मिलिसेकेंड"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "samples"
+msgid "Samples"
+msgstr "नमूने"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "4 Pixels per Sample"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Zoom"
+msgid "Max Zoom"
+msgstr "बड़ा करें"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -13088,6 +13754,24 @@ msgstr "आडियो ट्रैक"
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w audio track name as overlay"
 msgstr "ऑडियो ट्रैक का नाम पारभासी रूप में दिखाएं (&w)"
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom Toggle"
+msgstr "बड़ा-छोटा करें"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Preset:"
+msgid "Preset 1:"
+msgstr "पूर्व-निर्धारित:"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Preset:"
+msgid "Preset 2:"
+msgstr "पूर्व-निर्धारित:"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Warnings"
@@ -13263,17 +13947,21 @@ msgid "Zoom Out"
 msgstr "छोटा करें"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit selection in window"
+msgid "Show Effects Rack"
+msgstr "प्रभाव रैक दिखाएं"
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Fit selection in window"
+msgid "Fit selection to width"
 msgstr "चयन झरोखे में फ़िट करें"
 
 # "विंडो में फ़िट करें(&F)"
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit project in window"
+#, fuzzy
+#| msgid "Fit project in window"
+msgid "Fit project to width"
 msgstr "परियोजना झरोखे में फ़िट करें"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "प्रभाव रैक दिखाएं"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Open Effects Rack"
@@ -13341,13 +14029,16 @@ msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "रिकार्डिंग वॉल्यूम (अनुपलब्ध; सिस्टम मिक्सर का प्रयोग करें.)"
 
 #: src/toolbars/MixerToolBar.cpp
-#, c-format
-msgid "Playback Volume: %%.2f%s"
+#, fuzzy, c-format
+#| msgid "Playback Volume: %%.2f%s"
+msgid "Playback Volume: %s (emulated)"
 msgstr "प्लेबैक वॉल्यूम : %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp
-msgid " (emulated)"
-msgstr " (अनुकृत)"
+#, fuzzy, c-format
+#| msgid "Playback Volume: %%.2f%s"
+msgid "Playback Volume: %s"
+msgstr "प्लेबैक वॉल्यूम : %%.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume (Unavailable; use system mixer.)"
@@ -13402,7 +14093,9 @@ msgid "Selection"
 msgstr "चयन"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Project Rate (Hz):"
+#, fuzzy
+#| msgid "Project Rate (Hz):"
+msgid "Project Rate (Hz)"
 msgstr "परियोजना दर (Hz):"
 
 #: src/toolbars/SelectionBar.cpp
@@ -13412,22 +14105,6 @@ msgstr "साथ जोड़ें"
 #: src/toolbars/SelectionBar.cpp
 msgid "Audio Position"
 msgstr "आडियो स्थिति"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start-End"
-msgstr "आरंभ-समाप्ति"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start-Length"
-msgstr "लंबाई-आरंभ"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length-End"
-msgstr "लंबाई-अंत"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length-Center"
-msgstr "लंबाई-मध्य"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
@@ -13446,20 +14123,16 @@ msgid "Length and Center of Selection"
 msgstr "आरंभ और चयन मध्य"
 
 #: src/toolbars/SelectionBar.cpp
+msgid "Snap To"
+msgstr "साथ जोड़ें"
+
+#: src/toolbars/SelectionBar.cpp
 msgid "Length"
 msgstr "लंबाई"
 
 #: src/toolbars/SelectionBar.cpp src/widgets/ASlider.cpp
 msgid "Center"
 msgstr "मध्य"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Snap To"
-msgstr "साथ जोड़ें"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Selection options"
-msgstr "चुनाव विकल्प"
 
 #: src/toolbars/SelectionBar.cpp
 #, c-format
@@ -13478,8 +14151,6 @@ msgstr "%s - चालित"
 msgid "Selection %s.  %s won't change."
 msgstr "सेक्शन %s.  %s नहीं बदलेगा."
 
-#. i18n hints occur i the right place in
-#. the .pot file
 #: src/toolbars/SelectionBar.cpp
 msgid "Start - End"
 msgstr "आरंभ - समाप्ति"
@@ -13495,58 +14166,6 @@ msgstr "लंबाई - समाप्त"
 #: src/toolbars/SelectionBar.cpp
 msgid "Length - Center"
 msgstr "लंबाई - मध्य"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length - End"
-msgstr "आरंभ - लंबाई - समाप्ति"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Center - Length"
-msgstr "आरंभ - मध्य - लंबाई"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Center - End"
-msgstr "आरंभ - मध्य - समाप्ति"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length - Center - End"
-msgstr "आरंभ - लंबाई - मध्य - समाप्ति"
-
-#. i18n-hint: S-E is an abbreviation of Start-End
-#: src/toolbars/SelectionBar.cpp
-msgid "S-E"
-msgstr "S-E"
-
-#. i18n-hint: S-L is an abbreviation of Start-Length
-#: src/toolbars/SelectionBar.cpp
-msgid "S-L"
-msgstr "S-L"
-
-#. i18n-hint: L-E is an abbreviation of Length-End
-#: src/toolbars/SelectionBar.cpp
-msgid "L-E"
-msgstr "L-E"
-
-#. i18n-hint: L-C is an abbreviation of Length-Center
-#: src/toolbars/SelectionBar.cpp
-msgid "L-C"
-msgstr "L-C"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show start time and end time"
-msgstr "आरंभिक व समाप्ति समय दिखाएं"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show start time and length"
-msgstr "आरंभिक समय व लंबाई दिखाएं"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show length and end time"
-msgstr "लंबाई व समाप्ति समय दिखाएं"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show length and center"
-msgstr "लंबाई व मध्य दिखाएं"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -13675,12 +14294,37 @@ msgid "Down Octa&ve"
 msgstr "निम्न सप्तक(&v)"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid ""
-"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-"particular zoom region."
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
 msgstr ""
-"क्लिक करें ऊर्ध्व में बड़ा दिखाने के लिए, उच्च-क्लिक छोटा दिखाने के लिए, और खींचें एक क्षेत्र "
-"विशेष को छोटा-बड़ा दिखाने के लिए."
+"क्लिक करें ऊर्ध्व में ज़ूम के लिए, उच्च-क्लिक ज़ूम-आउट के लिए. ज़ूम-क्षेत्र बताने के लिए क्लिक करते "
+"हुए खींचें."
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Right-Click"
+msgid "Right-click for menu."
+msgstr "दायां बटन-क्लिक"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Zoom to Fit\tShift-Right-Click"
+msgid "Zoom Reset\tShift-Right-Click"
+msgstr "बड़ा कर फिट करें\tऊच्च-दायाँ-क्लिक"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "बड़ा करें\tबायाँ-क्लिक या बायाँ-क्लिक खीचें"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "छोटा करें\tऊच्च-बायाँ-क्लिक"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -13755,6 +14399,8 @@ msgstr "संपादन नमूना"
 msgid "Instrument %i"
 msgstr "वाद्य-यंत्र %i"
 
+#. i18n-hint: The strings name a track and a format
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s"
@@ -13820,6 +14466,7 @@ msgstr "384000 Hz"
 msgid "&Other..."
 msgstr "अन्य...(&O)"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s Hz"
@@ -13905,6 +14552,7 @@ msgstr "दायां चैनल"
 msgid "Channel"
 msgstr "चैनल"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
@@ -13914,6 +14562,7 @@ msgstr "'%s' को स्टिरियो ट्रैक बनाया"
 msgid "Make Stereo"
 msgstr "स्टिरियो बनाएं"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Swapped Channels in '%s'"
@@ -13923,11 +14572,13 @@ msgstr "'%s' में चैनल अदला-बदली"
 msgid "Swap Channels"
 msgstr "चैनल अदला-बदली"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "स्टिरियो ट्रैक '%s' अलग करें"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split Stereo to Mono '%s'"
@@ -13938,24 +14589,30 @@ msgid "Split to Mono"
 msgstr "मोनो में तोड़ें"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr "बड़ा करें\tबायाँ-क्लिक या बायाँ-क्लिक खीचें"
+#, fuzzy
+#| msgid "Zoom In"
+msgid "Zoom x1/2"
+msgstr "बड़ा करें"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid "Zoom Out\tShift-Left-Click"
-msgstr "छोटा करें\tऊच्च-बायाँ-क्लिक"
+#, fuzzy
+#| msgid "Zoom"
+msgid "Zoom x2"
+msgstr "बड़ा करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+msgid "Half Wave"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Zoom Out"
+msgid "Zoom Reset"
+msgstr "छोटा करें"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom to Fit\tShift-Right-Click"
 msgstr "बड़ा कर फिट करें\tऊच्च-दायाँ-क्लिक"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"क्लिक करें ऊर्ध्व में ज़ूम के लिए, उच्च-क्लिक ज़ूम-आउट के लिए. ज़ूम-क्षेत्र बताने के लिए क्लिक करते "
-"हुए खींचें."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -14046,10 +14703,6 @@ msgid "&Scrub"
 msgstr "स्क्रब(&S)"
 
 #: src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr "ढूंढें"
-
-#: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
 msgstr "खोजना"
 
@@ -14128,10 +14781,16 @@ msgstr "ट्रैक को समय में खिसकाने के 
 msgid "Moved clips to another track"
 msgstr "कतरन को दूसरे ट्रैक पर भेजा गया"
 
-#. i18n-hint: %s is a direction like left or right
 #: src/tracks/ui/TimeShiftHandle.cpp
-#, c-format
-msgid "Time shifted tracks/clips %s %.02f seconds"
+#, fuzzy, c-format
+#| msgid "Time shifted tracks/clips %s %.02f seconds"
+msgid "Time shifted tracks/clips right %.02f seconds"
+msgstr "ट्रैक/कतरन को %s ओर %.02f सेकंड के समय से स्थानांतरित किया"
+
+#: src/tracks/ui/TimeShiftHandle.cpp
+#, fuzzy, c-format
+#| msgid "Time shifted tracks/clips %s %.02f seconds"
+msgid "Time shifted tracks/clips left %.02f seconds"
 msgstr "ट्रैक/कतरन को %s ओर %.02f सेकंड के समय से स्थानांतरित किया"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
@@ -14199,20 +14858,22 @@ msgstr "%s से ट्रैक का चयन करें या रद्
 msgid "%s to select or deselect track."
 msgstr "%s से ट्रैक चयन करें या छोड़ें."
 
-#. i18n-hint: a direction as in up or down.
+#. i18n-hint: will substitute name of track for %s
 #: src/tracks/ui/TrackSelectHandle.cpp
-msgid "up"
-msgstr "ऊपर"
-
-#: src/tracks/ui/TrackSelectHandle.cpp
-msgid "down"
-msgstr "नीचे"
-
-#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
-#: src/tracks/ui/TrackSelectHandle.cpp
-#, c-format
-msgid "Moved '%s' %s"
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' up"
 msgstr "'%s' %s खिसकाया"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' down"
+msgstr "'%s' %s खिसकाया"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+msgid "Move Track"
+msgstr "ट्रैक खिसकाएं"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
@@ -14250,17 +14911,17 @@ msgstr "बाएं"
 msgid "R"
 msgstr "दाएं"
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Left"
-msgstr "बायाँ"
+#, c-format
+msgid "%.0f%% Left"
+msgstr ""
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Right"
-msgstr "दायाँ"
-
-#: src/widgets/ASlider.cpp
-msgid "+"
-msgstr "+"
+#, c-format
+msgid "%.0f%% Right"
+msgstr ""
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -14631,6 +15292,10 @@ msgstr "01000,01000 फ़्रेम्स|75"
 msgid "0100000.0100 Hz"
 msgstr "0100000.0100 Hz"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "kHz"
+msgstr "kHz"
+
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
@@ -14901,6 +15566,40 @@ msgstr "यह चेतावनी दुबारा न दिखाएँ"
 msgid "Please select an action"
 msgstr "कृपया एक कार्य का चयन करें"
 
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Track Panel"
+msgid "Panel"
+msgstr "ट्रैक पैनल"
+
+#: src/widgets/wxPanelWrapper.h
+msgid "Dialog"
+msgstr ""
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Select all text"
+msgid "Select a directory"
+msgstr "सब पाठ चुनें"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Directories"
+msgid "Directory Dialog"
+msgstr "निर्देशिकाएं"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Select a MIDI file"
+msgid "Select a file"
+msgstr "एक MIDI फ़ाइल चुनें"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Find dialog"
+msgid "File Dialog"
+msgstr "संवाद खोजें"
+
 #: src/xml/XMLFileReader.cpp
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14910,6 +15609,209 @@ msgstr "त्रुटि: %hs पंक्ति %lu  पर"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "फ़ाइल : \"%s\"  को लोड नहीं किया जा सका"
+
+#~ msgid "In Memoriam"
+#~ msgstr "संस्मरण"
+
+#~ msgid "Audacity failed to write to a file in %s."
+#~ msgstr "Audacity %s में एक फ़ाइल में लिखने में असमर्थ रहा."
+
+#~ msgid "window"
+#~ msgstr "विंडो"
+
+#~ msgid "Could not open file: "
+#~ msgstr "फ़ाइल को खोला नहीं जा सका: "
+
+#~ msgid "Save Othe&r"
+#~ msgstr "अन्य संचित करें (&r)"
+
+#~ msgid "Ext-&Bar"
+#~ msgstr "अन्य-पट्टी (&B)"
+
+#~ msgid "Trans&cription"
+#~ msgstr "श्रुतिलेखन (&c)"
+
+#~ msgid "Scru&b"
+#~ msgstr "स्क्रब (&b)"
+
+#~ msgid "Ext-Co&mmand"
+#~ msgstr "अन्य-आदेश (&m)"
+
+#~ msgid "to Top"
+#~ msgstr "चोटी पर"
+
+#~ msgid "to Bottom"
+#~ msgstr "धरातल पर"
+
+#~ msgid "Down"
+#~ msgstr "नीचे"
+
+#~ msgid "Moved"
+#~ msgstr "हट गया"
+
+#~ msgid "of"
+#~ msgstr "का"
+
+#~ msgid "clip"
+#~ msgstr "क्लिप"
+
+#~ msgid "clips"
+#~ msgstr "क्लिप्स"
+
+#~ msgid "and"
+#~ msgstr "और"
+
+#~ msgid "end to end"
+#~ msgstr "अंत से अंत"
+
+#~ msgid "End to End"
+#~ msgstr "अंत से अंत"
+
+#~ msgid "together"
+#~ msgstr "साथ"
+
+#~ msgid "Together"
+#~ msgstr "साथ"
+
+#~ msgid "Aligned %s"
+#~ msgstr "%s साथ मिलाया"
+
+#~ msgid "Error Opening File"
+#~ msgstr "फ़ाइल खोलने में त्रुटि"
+
+#~ msgid "Duration:\n"
+#~ msgstr "अवधि:\n"
+
+#~ msgid ""
+#~ "Timer Recording completed.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "घड़ी से रिकार्डिंग संपूर्ण.\n"
+#~ "\n"
+
+#~ msgid "Saved "
+#~ msgstr "संचित किया "
+
+#~ msgid "Skip &Foreward"
+#~ msgstr "आगे का छोड़ें (&F)"
+
+#~ msgid "' to..."
+#~ msgstr "' तक..."
+
+#~ msgid "Audio In: "
+#~ msgstr "आडियो इन : "
+
+#~ msgid "Exporting the entire project using command-line encoder"
+#~ msgstr "कमांड-लाइन एनकोडर का प्रयोग करके पूरी परियोजना का निर्यात"
+
+#~ msgid "Exporting entire file as %s"
+#~ msgstr "पूरी परियोजना %s के नाम से निर्यात कर रहे हैं"
+
+#~ msgid "Exporting the entire project as FLAC"
+#~ msgstr "पूरी परियोजना का निर्यात FLAC में कर रहे हैं"
+
+#~ msgid "Exporting entire file at %ld kbps"
+#~ msgstr "पूरी फ़ाइल का निर्यात at %ld kbps पर कर रहे हैं"
+
+#~ msgid "Exporting entire file with %s preset"
+#~ msgstr "पूरी फ़ाइल का निर्यात %s प्रिसेट के साथ कर रहे हैं"
+
+#~ msgid "Exporting entire file with VBR quality %s"
+#~ msgstr "पूरी फ़ाइल का VBR गुणवत्ता %s के साथ निर्यात करते हैं"
+
+#~ msgid "Exporting entire file at %d Kbps"
+#~ msgstr "पूरी फ़ाइल का निर्यात %d Kbps पर कर रहे हैं"
+
+#~ msgid "Exporting the entire project as Ogg Vorbis"
+#~ msgstr "पूरी परियोजना Ogg वॉर्बिस के रूप में निर्यात करते हैं"
+
+#~ msgid "Exporting the entire project as %s"
+#~ msgstr "पूरी परियोजना %s नाम से निर्यात कर रहे हैं"
+
+#~ msgid "copy in"
+#~ msgstr "इसमें प्रतिलिपी बनाएं"
+
+#~ msgid "read directly"
+#~ msgstr "सीधे पढ़ें"
+
+#~ msgid "&Display a mono channel as virtual stereo"
+#~ msgstr "एक मोनो चैनल आभासी स्टीरियो के रूप में प्रदर्शित"
+
+#~ msgid " (emulated)"
+#~ msgstr " (अनुकृत)"
+
+#~ msgid "Start-End"
+#~ msgstr "आरंभ-समाप्ति"
+
+#~ msgid "Start-Length"
+#~ msgstr "लंबाई-आरंभ"
+
+#~ msgid "Length-End"
+#~ msgstr "लंबाई-अंत"
+
+#~ msgid "Length-Center"
+#~ msgstr "लंबाई-मध्य"
+
+#~ msgid "Selection options"
+#~ msgstr "चुनाव विकल्प"
+
+#~ msgid "Start - Length - End"
+#~ msgstr "आरंभ - लंबाई - समाप्ति"
+
+#~ msgid "Start - Center - Length"
+#~ msgstr "आरंभ - मध्य - लंबाई"
+
+#~ msgid "Start - Center - End"
+#~ msgstr "आरंभ - मध्य - समाप्ति"
+
+#~ msgid "Start - Length - Center - End"
+#~ msgstr "आरंभ - लंबाई - मध्य - समाप्ति"
+
+#~ msgid "S-E"
+#~ msgstr "S-E"
+
+#~ msgid "S-L"
+#~ msgstr "S-L"
+
+#~ msgid "L-E"
+#~ msgstr "L-E"
+
+#~ msgid "L-C"
+#~ msgstr "L-C"
+
+#~ msgid "Show start time and end time"
+#~ msgstr "आरंभिक व समाप्ति समय दिखाएं"
+
+#~ msgid "Show start time and length"
+#~ msgstr "आरंभिक समय व लंबाई दिखाएं"
+
+#~ msgid "Show length and end time"
+#~ msgstr "लंबाई व समाप्ति समय दिखाएं"
+
+#~ msgid "Show length and center"
+#~ msgstr "लंबाई व मध्य दिखाएं"
+
+#~ msgid ""
+#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+#~ "particular zoom region."
+#~ msgstr ""
+#~ "क्लिक करें ऊर्ध्व में बड़ा दिखाने के लिए, उच्च-क्लिक छोटा दिखाने के लिए, और खींचें एक क्षेत्र "
+#~ "विशेष को छोटा-बड़ा दिखाने के लिए."
+
+#~ msgid "up"
+#~ msgstr "ऊपर"
+
+#~ msgid "down"
+#~ msgstr "नीचे"
+
+#~ msgid "Left"
+#~ msgstr "बायाँ"
+
+#~ msgid "Right"
+#~ msgstr "दायाँ"
+
+#~ msgid "+"
+#~ msgstr "+"
 
 #~ msgid "("
 #~ msgstr "("
@@ -15145,9 +16047,6 @@ msgstr "फ़ाइल : \"%s\"  को लोड नहीं किया जा
 
 #~ msgid "Interpolation"
 #~ msgstr "अंतर्गणना"
-
-#~ msgid "Db"
-#~ msgstr "Db"
 
 #~ msgid "Minimum"
 #~ msgstr "न्यूनतम"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-18 00:56-0500\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
 "PO-Revision-Date: 2018-01-25 01:37+0000\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
@@ -10226,7 +10226,9 @@ msgstr "Todo o áudio seleccionado está emudecido."
 msgid "All audio is muted."
 msgstr "Todo o áudio está mudo."
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "Não foi possível exportar"
 

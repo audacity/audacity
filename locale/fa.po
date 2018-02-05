@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-11-06 13:24-0500\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
 "PO-Revision-Date: 2012-02-27 19:02-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: Persian\n"
@@ -380,8 +380,7 @@ msgstr ""
 msgid "Go to top S-expr"
 msgstr ""
 
-#. i18n-hint: a direction.
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr ""
 
@@ -407,7 +406,7 @@ msgstr "ابزار بعدی"
 msgid "Go to next S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp src/effects/Contrast.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "آغاز"
@@ -432,10 +431,6 @@ msgid "Check Online"
 msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "quality assurance"
-msgstr ""
-
-#: src/AboutDialog.cpp
 msgid "system administration"
 msgstr ""
 
@@ -450,6 +445,10 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "documentation and support"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "quality assurance"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -538,11 +537,6 @@ msgstr "دست‌اندرکاران"
 
 #: src/AboutDialog.cpp
 msgid "DarkAudacity Customisation"
-msgstr ""
-
-#. i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages
-#: src/AboutDialog.cpp
-msgid "In Memoriam"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -753,8 +747,8 @@ msgid ""
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
-"Choose File > Check Dependencies to view a list of locations of the missing "
-"files."
+"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
+"of the missing files."
 msgstr ""
 
 #: src/AudacityApp.cpp
@@ -969,8 +963,8 @@ msgid "Save log to:"
 msgstr ""
 
 #: src/AudacityLogger.cpp
-#, fuzzy
-msgid "Couldn't save log to file: "
+#, fuzzy, c-format
+msgid "Couldn't save log to file: %s"
 msgstr "نمی‌توان در پرونده نوشت: "
 
 #: src/AudioIO.cpp
@@ -1149,6 +1143,48 @@ msgstr "&پارامترها"
 #: src/BatchCommandDialog.cpp
 msgid "C&hoose command"
 msgstr "ان&تخاب فرمان"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Action"
+msgid "No Action"
+msgstr "کُنش"
+
+#. i18n-hint: before is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3 56k before"
+msgstr "‏«‎%s» وارد شد"
+
+#. i18n-hint: after is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3 56k after"
+msgstr "‏«‎%s» وارد شد"
+
+#. i18n-hint: FLAC names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as FLAC"
+msgstr "صدور برچسب‌ها به صورت:"
+
+#. i18n-hint: MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3"
+msgstr "‏«‎%s» وارد شد"
+
+#. i18n-hint: Ogg names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as Ogg"
+msgstr "‏«‎%s» وارد شد"
+
+#. i18n-hint: WAV names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as WAV"
+msgstr "صدور برچسب‌ها به صورت:"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1649,7 +1685,8 @@ msgid "Whenever a project depends on other files:"
 msgstr "وقتی پروژه‌ای به پرونده‌های دیگر وابسته بود:"
 
 #: src/Dependencies.cpp
-msgid "MISSING "
+#, c-format
+msgid "MISSING %s"
 msgstr ""
 
 #: src/Dependencies.cpp
@@ -2056,13 +2093,6 @@ msgstr ""
 "  %s."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
-msgid "Audacity failed to write to a file in %s."
-msgstr ""
-"اوداسیتی نتوانست این پرونده را بنویسد:\n"
-"  %s."
-
-#: src/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
@@ -2095,13 +2125,6 @@ msgstr "خودهمبستگی بهبودیافته"
 #: src/FreqWindow.cpp
 msgid "Cepstrum"
 msgstr "Cepstrum"
-
-#. i18n-hint: This refers to a "window function", used in the
-#. * Frequency analyze dialog box.
-#: src/FreqWindow.cpp
-#, fuzzy
-msgid "window"
-msgstr " پنجره‌ای"
 
 #: src/FreqWindow.cpp
 msgid "Linear frequency"
@@ -2229,7 +2252,9 @@ msgstr "صدور داده‌های طیفی به صورت:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
 #: src/effects/Contrast.cpp
-msgid "Couldn't write to file: "
+#, fuzzy, c-format
+#| msgid "Couldn't write to file: "
+msgid "Couldn't write to file: %s"
 msgstr "نمی‌توان در پرونده نوشت: "
 
 #: src/FreqWindow.cpp
@@ -2530,7 +2555,7 @@ msgid "&Import..."
 msgstr "&وارد کردن..."
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp
 msgid "Track"
 msgstr "شیار"
 
@@ -2577,8 +2602,10 @@ msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "پرونده‌های متنی ‏‎(*.txt)|*.txt|همهٔ پرونده‌ها (*.*)|*.*"
 
 #: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
-msgid "Could not open file: "
-msgstr "پرونده باز نمی‌شود: "
+#, fuzzy, c-format
+#| msgid "Could not open file: \"%s\""
+msgid "Could not open file: %s"
+msgstr "باز کردن پروندهٔ «%s» مممکن نیست"
 
 #: src/LabelDialog.cpp
 msgid "No labels to export."
@@ -2704,8 +2731,10 @@ msgid "Save Project &As..."
 msgstr "ذخیرهٔ پروژه به &نام..."
 
 #: src/Menus.cpp
-msgid "Save Othe&r"
-msgstr ""
+#, fuzzy
+#| msgid "&Export..."
+msgid "&Export"
+msgstr "&صدور..."
 
 #: src/Menus.cpp
 #, fuzzy
@@ -3071,6 +3100,12 @@ msgstr "زوم به &خارج"
 #: src/Menus.cpp
 msgid "&Zoom to Selection"
 msgstr "&زوم به اندازهٔ انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom &Toggle"
+msgstr "ابزار زوم"
 
 #: src/Menus.cpp
 #, fuzzy
@@ -3566,6 +3601,15 @@ msgid "&Tools"
 msgstr "ابزارها"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "در حال ضبط"
+
+#: src/Menus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "&Screenshot Tools..."
 msgstr ""
 
@@ -3602,9 +3646,9 @@ msgstr "ب&ررسی وابستگی‌ها..."
 msgid "&Check for Updates..."
 msgstr "ب&ررسی وابستگی‌ها..."
 
-#. i18n-hint: Ext-Bar is a menu with extra commands from tool bars
+#. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
-msgid "Ext-&Bar"
+msgid "E&xtra"
 msgstr ""
 
 #. i18n-hint: (verb) Stop playing audio
@@ -3749,7 +3793,8 @@ msgstr "حذف کلید ۲"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "Trans&cription"
+#| msgid "Transcription"
+msgid "Transcri&ption"
 msgstr "آوانویسی"
 
 #: src/Menus.cpp
@@ -3792,10 +3837,9 @@ msgstr "جابه‌جایی تمرکز به شیار قبلی"
 msgid "Move to &Next Label"
 msgstr "جابه‌جایی تمرکز به شیار بعدی"
 
-#: src/Menus.cpp
-#, fuzzy
-msgid "Scru&b"
-msgstr "نوار ابزار ویرایش"
+#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr ""
 
 #: src/Menus.cpp
 msgid "Short seek &left during playback"
@@ -3894,12 +3938,6 @@ msgstr "انقباض از چپ انتخاب"
 #, fuzzy
 msgid "Selection Contract R&ight"
 msgstr "انقباض از راست انتخاب"
-
-#. i18n-hint: Ext-Command is a menu with extra commands
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ext-Co&mmand"
-msgstr "&فرمان"
 
 #: src/Menus.cpp
 msgid "Move backward thru active windows"
@@ -4084,6 +4122,7 @@ msgstr "پایین بردن شیار"
 msgid "&Full screen (on/off)"
 msgstr ""
 
+#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
 msgid "Minimize all projects"
 msgstr ""
@@ -4192,30 +4231,52 @@ msgstr ""
 msgid "Can't delete track with active audio"
 msgstr "شیار با صوت فعال را نمی‌توان حذف کرد"
 
-#. i18n-hint: where the track is moving to.
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
-msgid "to Top"
-msgstr ""
-
-#. i18n-hint: where the track is moving to.
-#: src/Menus.cpp
-msgid "to Bottom"
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' to Top"
+msgstr "«%s» به %s جابه‌جا شد"
 
 #: src/Menus.cpp
-msgid "Down"
-msgstr ""
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "بالا بردن شیار"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "پایین بردن شیار"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "پایین بردن شیار"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Up"
+msgstr "«%s» به %s جابه‌جا شد"
+
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Down"
+msgstr "«%s» به %s جابه‌جا شد"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
 #, fuzzy
-msgid "Moved"
-msgstr "&بالاتر"
+msgid "Move Track Up"
+msgstr "بالا بردن شیار"
 
-#. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp src/tracks/ui/TrackSelectHandle.cpp
-msgid "Move Track"
-msgstr "جابه‌جایی شیار"
+#: src/Menus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "پایین بردن شیار"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/Menus.cpp
@@ -4473,27 +4534,25 @@ msgstr "تفکیک به شیار جدید"
 msgid "Split New"
 msgstr "تفکیک جدید"
 
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
 #: src/Menus.cpp
-msgid "of"
+msgid "dummyStringOnSelectClip"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "clip"
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Menus.cpp src/import/Import.cpp
+#, c-format
+msgid "%s, %s"
 msgstr ""
-
-#: src/Menus.cpp
-msgid "clips"
-msgstr ""
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "left"
-msgstr "چپ"
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "right"
-msgstr "راست"
 
 #: src/Menus.cpp
 msgid "Frequency Analysis"
@@ -4576,6 +4635,46 @@ msgstr "%Id شیار در یک شیار مونو، میکس و رندر شدند
 msgid "Mix and Render"
 msgstr "&میکس و رندر"
 
+#. i18n-hint: compose a name identifying an unnamed track by number
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#: src/Menus.cpp src/TrackPanelAx.cpp
+#, c-format
+msgid "Track %d"
+msgstr "شیار %Id"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "left"
+msgid "%s left"
+msgstr "چپ"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "right"
+msgid "%s right"
+msgstr "راست"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
+#: src/Menus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/Menus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/Menus.cpp
 #, fuzzy
 msgid "start"
@@ -4586,77 +4685,142 @@ msgstr "آغاز"
 msgid "end"
 msgstr "پایان"
 
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
 #: src/Menus.cpp
-#, fuzzy
-msgid "and"
-msgstr "پایان"
-
-#: src/Menus.cpp
-msgid "start to zero"
+msgid "dummyStringClipBoundaryMessageLong"
 msgstr ""
 
 #: src/Menus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
+#: src/Menus.cpp
 #, fuzzy
-msgid "start to cursor/selection start"
+msgid "Aligned/Moved start to zero"
+msgstr "ردیف شد"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned with zero"
+msgid "Aligned start to zero"
+msgstr "هم‌ردیف با صفر"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align/Move Start"
+msgstr "ردیف شد"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "آغاز انتخاب:"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
 msgstr "به آغاز انتخاب"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "start to selection end"
+msgid "Aligned start to cursor/selection start"
+msgstr "به آغاز انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
 msgstr "به پایان انتخاب"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "end to cursor/selection start"
+msgid "Aligned start to selection end"
+msgstr "به پایان انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
 msgstr "هم‌ردیف با آغاز انتخاب"
 
-#: src/Menus.cpp src/effects/Contrast.cpp src/effects/ToneGen.cpp
-#: src/toolbars/SelectionBar.cpp
-msgid "End"
-msgstr "پایان"
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "هم‌ردیف با آغاز انتخاب"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "end to selection end"
-msgstr "هم‌ردیف با پایان انتخاب"
+msgid "Align/Move End"
+msgstr "ردیف شد"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "end to end"
-msgstr "انتخاب تا پایان"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "End to End"
-msgstr "پرش به انتها"
-
-#: src/Menus.cpp
-msgid "together"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Together"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Aligned/Moved %s"
-msgstr "ردیف شد"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Align %s/Move"
-msgstr "ردیف شد"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Aligned %s"
-msgstr "ردیف شد"
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Align %s"
+msgid "Align End"
 msgstr "ردیف کردن"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned end with selection end"
+msgid "Aligned/Moved end to selection end"
+msgstr "پایان هم‌ردیف با پایان انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Aligned end with selection end"
+msgid "Aligned end to selection end"
+msgstr "پایان هم‌ردیف با پایان انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to end"
+msgstr "ردیف شد"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "ردیف کردن پایان با پایان انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "ردیف کردن پایان با پایان انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align End to End"
+msgstr "ردیف کردن پایان با پایان انتخاب"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "ردیف شد"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "هم‌ردیف کردن شیار‌ها"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "هم‌ردیف کردن شیار‌ها"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "هم‌ردیف کردن شیار‌ها"
 
 #: src/Menus.cpp
 msgid "Synchronizing MIDI and Audio Tracks"
@@ -4937,6 +5101,120 @@ msgstr ""
 msgid "Note Track"
 msgstr "شیار نُت"
 
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "GB"
+msgid "G"
+msgstr "گیگابایت"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "dB"
+msgid "B"
+msgstr "دسی‌بل"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "B♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯/D♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯/E♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯/G♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯/A♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯/B♭"
+msgstr ""
+
 #: src/PluginManager.cpp
 msgid "Plug-in Manager: Effects, Generators and Analyzers"
 msgstr ""
@@ -5029,6 +5307,50 @@ msgid ""
 "%s"
 msgstr "جلوه‌های اعمال‌شده: %s"
 
+#: src/PluginManager.cpp
+#, c-format
+msgid ""
+"Effect at %s failed to register:\n"
+"%s"
+msgstr ""
+
+#: src/PluginManager.cpp src/effects/Effect.cpp
+msgid "Built-in"
+msgstr ""
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Overwrite existing files"
+msgid "Overwrite the plug-in file %s ?"
+msgstr "رونویسی پرونده‌های موجود"
+
+#: src/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: src/PluginManager.cpp
+msgid "Plug-in file is in use.  Failed to overwrite"
+msgstr ""
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr "حذف «‎%s» ممکن نیست"
+
+#: src/PluginManager.cpp
+#, fuzzy
+msgid "Enable this plug-in?"
+msgid_plural "Enable these plug-ins?"
+msgstr[0] "به کار انداختن اندازه‌گیر"
+msgstr[1] "به کار انداختن اندازه‌گیر"
+
+#: src/PluginManager.cpp
+#, fuzzy
+msgid "Enable new plug-ins"
+msgstr "به کار انداختن اندازه‌گیر"
+
 #: src/Prefs.cpp
 #, fuzzy, c-format
 msgid "Failed to remove %s"
@@ -5065,6 +5387,17 @@ msgstr "چاپ"
 #: src/Project.cpp
 msgid "Main Mix"
 msgstr "میکس اصلی"
+
+#: src/Project.cpp
+#, fuzzy
+msgid "Horizontal Scrollbar"
+msgstr "استریوی افقی"
+
+#: src/Project.cpp
+#, fuzzy
+#| msgid "Vertical Stereo"
+msgid "Vertical Scrollbar"
+msgstr "استریوی عمودی"
 
 #: src/Project.cpp
 #, c-format
@@ -5158,10 +5491,6 @@ msgid "Warning - Backup File Detected"
 msgstr ""
 
 #: src/Project.cpp
-msgid "Error Opening File"
-msgstr ""
-
-#: src/Project.cpp
 msgid "Error opening file"
 msgstr "خطا در باز کردن پرونده"
 
@@ -5185,8 +5514,8 @@ msgid ""
 msgstr "اوداسیتی قادر نبود پروژهٔ اواسیتی 1.0 را به قالب جدید پروژه تبدیل کند."
 
 #: src/Project.cpp
-#, fuzzy
-msgid "Could not decode file: "
+#, fuzzy, c-format
+msgid "Could not decode file: %s"
 msgstr "پرونده باز نمی‌شود: "
 
 #: src/Project.cpp
@@ -5245,8 +5574,8 @@ msgid "Warning - Empty Project"
 msgstr ""
 
 #: src/Project.cpp
-#, fuzzy
-msgid "Could not create safety file: "
+#, fuzzy, c-format
+msgid "Could not create safety file: %s"
 msgstr "نمی‌توان پروندهٔ ذخیره‌سازی خودکار را ایجاد کرد: "
 
 #: src/Project.cpp
@@ -5267,7 +5596,7 @@ msgid ""
 "directory \"%s\" before saving project with this name."
 msgstr ""
 
-#: src/Project.cpp
+#: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "‏‎%s ذخیره شد"
@@ -5357,17 +5686,43 @@ msgid ""
 msgstr ""
 
 #: src/Project.cpp
-msgid "Could not create autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not create autosave file: "
+msgid "Could not create autosave file: %s"
 msgstr "نمی‌توان پروندهٔ ذخیره‌سازی خودکار را ایجاد کرد: "
 
 #: src/Project.cpp
-msgid "Could not remove old autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not remove old autosave file: "
+msgid "Could not remove old autosave file: %s"
 msgstr "نمی‌توان پروندهٔ ذخیره‌سازی خودکار را حذف کرد: "
 
 #: src/Project.cpp
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "نرخ واقعی %Id"
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence audio sample data from the
+#. recording
+#: src/Project.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/Project.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/Project.cpp
+msgid "Turn off dropout detection"
+msgstr ""
 
 #: src/Project.cpp
 msgid "Recorded Audio"
@@ -5399,21 +5754,23 @@ msgid "Less than 1 minute"
 msgstr ""
 
 #: src/Project.cpp
-msgid "hour"
-msgid_plural "hours"
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
 #: src/Project.cpp
-msgid "minute"
-msgid_plural "minutes"
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/Project.cpp
 #, c-format
-msgid "%d %s and %d %s."
+msgid "%s and %s."
 msgstr ""
 
 #: src/Resample.cpp
@@ -5555,6 +5912,7 @@ msgstr ""
 msgid "Mixer"
 msgstr "میکسر"
 
+#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr "اندازه‌گیر"
@@ -5646,6 +6004,10 @@ msgstr ""
 
 #: src/Screenshot.cpp
 msgid "Choose a location to save screenshot images"
+msgstr ""
+
+#: src/Screenshot.cpp
+msgid "Capture failed!"
 msgstr ""
 
 #: src/Sequence.cpp
@@ -5995,28 +6357,29 @@ msgstr "اِعمال بر پر&وژهٔ فعلی"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid "Recording start:\n"
+msgid "Recording start:"
 msgstr "اندازه‌گیر ضبط"
 
-#: src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Duration:\n"
-msgstr "مدت زمان"
+#: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
+#: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+msgid "Duration:"
+msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid ""
-"Recording end:\n"
-"\n"
+msgid "Recording end:"
 msgstr "در حال ضبط"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Save enabled:\n"
-msgstr ""
+#, fuzzy
+msgid "Automatic Save enabled:"
+msgstr "بازیابی خودکار پس از فروپاشی"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Export enabled:\n"
-msgstr ""
+#, fuzzy
+msgid "Automatic Export enabled:"
+msgstr "بازیابی خودکار پس از فروپاشی"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -6194,19 +6557,18 @@ msgid "After Recording completes:"
 msgstr "اندازه‌گیر ضبط"
 
 #: src/TimerRecordDialog.cpp
-msgid "Waiting to start recording at:\n"
+msgid "Waiting to start recording at:"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid "Recording duration:\n"
+msgid "Recording duration:"
 msgstr "مدت زمان صوت:"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Scheduled to stop at:\n"
-"\n"
-msgstr ""
+#, fuzzy
+msgid "Scheduled to stop at:"
+msgstr "انتخاب تا آغاز"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record - Waiting for Start"
@@ -6219,19 +6581,12 @@ msgstr "اندازه‌گیر ضبط"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid ""
-"Timer Recording completed.\n"
-"\n"
-msgstr "در حال پردازش مخفی‌سازی خودکار..."
-
-#: src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Recording Saved:\n"
+msgid "Recording Saved:"
 msgstr "اندازه‌گیر ضبط"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid "Recording Exported:\n"
+msgid "Recording Exported:"
 msgstr "اندازه‌گیر ضبط"
 
 #: src/TimerRecordDialog.cpp
@@ -6251,19 +6606,27 @@ msgid "(Esc to cancel)"
 msgstr ""
 
 #: src/TrackPanel.cpp
-msgid "Stereo, "
+#, fuzzy, c-format
+#| msgid "Stereo, "
+msgid "Stereo, %dHz"
 msgstr "استریو، "
 
 #: src/TrackPanel.cpp
-msgid "Mono, "
+#, fuzzy, c-format
+#| msgid "Mono, "
+msgid "Mono, %dHz"
 msgstr "مونو، "
 
 #: src/TrackPanel.cpp
-msgid "Left, "
+#, fuzzy, c-format
+#| msgid "Left, "
+msgid "Left, %dHz"
 msgstr "چپ، "
 
 #: src/TrackPanel.cpp
-msgid "Right, "
+#, fuzzy, c-format
+#| msgid "Right, "
+msgid "Right, %dHz"
 msgstr "راست، "
 
 #: src/TrackPanel.cpp
@@ -6273,12 +6636,6 @@ msgstr ""
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "نمای شیار"
-
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "شیار %Id"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track mute is on.
@@ -6366,7 +6723,7 @@ msgstr "برای چسباندن انتخاب به اندازهٔ کافی جا �
 msgid "There is not enough room available to expand the cut line"
 msgstr "برای گسترش خط برشْ به اندازهٔ کافی جا نیست"
 
-#: src/AudacityException.h
+#: src/AudacityException.h src/widgets/ErrorDialog.cpp
 msgid "Message"
 msgstr ""
 
@@ -6495,12 +6852,9 @@ msgid "Loading Keyboard Shortcuts"
 msgstr "در حال بار کردن میانبُرهای صفحه‌کلیدی"
 
 #: src/commands/ScreenshotCommand.cpp
-msgid "Saved "
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Error trying to save file: "
-msgstr ""
+#, fuzzy, c-format
+msgid "Error trying to save file: %s"
+msgstr "نمی‌توان در پرونده نوشت: "
 
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
@@ -6535,13 +6889,6 @@ msgid ""
 msgstr ""
 "شما شیاری را انتخاب کرده‌اید که حاوی صوت نیست. مخفی‌سازی خودکار فقط می‌تواند "
 "شیارهای صوتی را پردازش کند."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-#. * of the audio automatically when there is sound on another track.  Not as
-#. * in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp src/effects/AutoDuck.h
-msgid "Auto Duck"
-msgstr "مخفی‌سازی خودکار"
 
 #: src/effects/AutoDuck.cpp
 msgid ""
@@ -6805,8 +7152,8 @@ msgid "Length (seconds)"
 msgstr "طول (به ثانیه)"
 
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
-msgid "Length in seconds from"
+#, fuzzy, c-format
+msgid "Length in seconds from %s, to"
 msgstr "طول (به ثانیه)"
 
 #: src/effects/ClickRemoval.cpp
@@ -6975,6 +7322,11 @@ msgid ""
 "Contrast Analyzer, for measuring RMS volume differences between two "
 "selections of audio."
 msgstr ""
+
+#: src/effects/Contrast.cpp src/effects/ToneGen.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "End"
+msgstr "پایان"
 
 #: src/effects/Contrast.cpp
 msgid "Volume    "
@@ -7470,12 +7822,6 @@ msgstr "دنبالهٔ DTMF"
 msgid "Amplitude (0-1):"
 msgstr "دامنه (۰-۱)"
 
-#: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
-#: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Duration:"
-msgstr ""
-
 #: src/effects/DtmfGen.cpp
 msgid "Tone/silence ratio:"
 msgstr "نسبت صوت/سکوت:"
@@ -7495,6 +7841,11 @@ msgstr "میلی‌ثانیه"
 #: src/effects/DtmfGen.cpp
 msgid "Silence duration:"
 msgstr "مدت زمان سکوت:"
+
+#: src/effects/DtmfGen.cpp
+#, c-format
+msgid "%.0f ms"
+msgstr ""
 
 #: src/effects/Echo.cpp
 #, fuzzy
@@ -7550,7 +7901,8 @@ msgstr ""
 "خطا در هنگام باز کردن دستگاه صدا. لطفاً تنظیمات خروجی دستگاه و نرخ "
 "نمونه‌برداری پروژه را بررسی کنید."
 
-#: src/effects/Effect.cpp
+#: src/effects/Effect.cpp src/effects/vamp/VampEffect.cpp
+#: src/widgets/ASlider.cpp
 #, c-format
 msgid "%s: %s"
 msgstr ""
@@ -7596,10 +7948,6 @@ msgstr ""
 #, fuzzy
 msgid "Skip &Forward"
 msgstr "پرش به آغاز"
-
-#: src/effects/Effect.cpp
-msgid "Skip &Foreward"
-msgstr ""
 
 #: src/effects/Effect.cpp
 #, fuzzy
@@ -7896,6 +8244,11 @@ msgid "Max dB"
 msgstr "حداکثر قدرت صدا (دسی‌بل)"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
+#, c-format
+msgid "%d dB"
+msgstr ""
+
+#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
 msgstr ""
 
@@ -7903,9 +8256,15 @@ msgstr ""
 msgid "Min dB"
 msgstr "حداقل قدرت صدا (دسی‌بل)"
 
-#: src/effects/Equalization.cpp src/widgets/NumericTextCtrl.cpp
-msgid "kHz"
-msgstr "کیلوهرتز"
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%d Hz"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%g kHz"
+msgstr ""
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8087,16 +8446,20 @@ msgid "'unnamed' is special"
 msgstr ""
 
 #: src/effects/Equalization.cpp
-msgid "Rename '"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "' to..."
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Renamed '%s' to '%s'"
+msgid "Rename '%s' to..."
+msgstr "نام «%s» به «%s» تغییر کرد"
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
 msgstr ""
+
+#: src/effects/Equalization.cpp
+#, fuzzy, c-format
+#| msgid "Renamed '%s' to '%s'"
+msgid "Rename '%s'"
+msgstr "نام «%s» به «%s» تغییر کرد"
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -8242,6 +8605,10 @@ msgstr "تیم پشتیبانی اوداسیتی %s"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
+msgstr ""
+
+#: src/effects/LoadEffects.cpp
+msgid "Unknown built-in effect name"
 msgstr ""
 
 #: src/effects/Noise.cpp
@@ -8563,33 +8930,38 @@ msgid "Not doing anything...\n"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-#, fuzzy
-msgid "Analyzing: "
+#, fuzzy, c-format
+msgid "Analyzing: %s"
 msgstr "تحلی&ل"
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing first track of stereo pair: "
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-#, fuzzy
-msgid "Processing: "
+#, fuzzy, c-format
+msgid "Processing: %s"
 msgstr "در حال پردازش مخفی‌سازی خودکار..."
 
 #: src/effects/Normalize.cpp
-msgid "Processing stereo channels independently: "
+#, c-format
+msgid "Processing stereo channels independently: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing second track of stereo pair: "
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid "Processing first track of stereo pair: "
+#, c-format
+msgid "Processing first track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid "Processing second track of stereo pair: "
+#, c-format
+msgid "Processing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
@@ -8776,12 +9148,14 @@ msgid "New selection length: dd:hh:mm:ss"
 msgstr "طول انتخاب جدید: "
 
 #: src/effects/Repeat.cpp
-#, fuzzy
-msgid "Current selection length: "
+#, fuzzy, c-format
+msgid "Current selection length: %s"
 msgstr "طول انتخاب جدید: "
 
 #: src/effects/Repeat.cpp
-msgid "New selection length: "
+#, fuzzy, c-format
+#| msgid "New selection length: "
+msgid "New selection length: %s"
 msgstr "طول انتخاب جدید: "
 
 #: src/effects/Repeat.cpp
@@ -9229,6 +9603,10 @@ msgstr ""
 msgid "Amplify"
 msgstr "تقویت"
 
+#: src/effects/AutoDuck.h
+msgid "Auto Duck"
+msgstr "مخفی‌سازی خودکار"
+
 #: src/effects/BassTreble.h
 msgid "Bass and Treble"
 msgstr ""
@@ -9359,6 +9737,17 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
+#| msgid "Could not open file: "
+msgid "Could not find component"
+msgstr "پرونده باز نمی‌شود: "
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+msgid "Could not initialize component"
+msgstr "نمی‌توان کتاب‌خانهٔ رمزگذاری MP3 را باز کرد!"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
 msgid "Audio Unit Effect Options"
 msgstr "تنظیمات جلوه"
 
@@ -9474,6 +9863,17 @@ msgid "Provides LADSPA Effects"
 msgstr ""
 
 #: src/effects/ladspa/LadspaEffect.cpp
+msgid "Audacity no longer uses vst-bridge"
+msgstr ""
+
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy
+#| msgid "Could not open MP3 encoding library!"
+msgid "Could not load the library"
+msgstr "نمی‌توان کتاب‌خانهٔ رمزگذاری MP3 را باز کرد!"
+
+#: src/effects/ladspa/LadspaEffect.cpp
 #, fuzzy
 msgid "LADSPA Effect Options"
 msgstr "تنظیمات جلوه"
@@ -9573,6 +9973,11 @@ msgid "Nyquist Worker"
 msgstr "Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "خروجی Nyquist: "
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
@@ -9662,11 +10067,23 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+#| msgid "This version of Audacity was not compiled with %s support."
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "این نسخه از اوداسیتی از %s پشتیبانی نمی‌کند."
+
+#: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid ""
 "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 "Control not created."
 msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Could not open file: "
+msgid "Could not open file"
+msgstr "پرونده باز نمی‌شود: "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9681,6 +10098,12 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Error in Nyquist code"
 msgstr ""
+
+#. i18n-hint: refers to programming "languages"
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Could not determine language"
+msgstr "پرونده باز نمی‌شود: "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -9815,12 +10238,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
-msgid "Audio In: "
-msgstr "مکان صوت:"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ", Audio Out: "
+#, c-format
+msgid "Audio In: %d, Audio Out: %d"
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
@@ -9904,7 +10323,9 @@ msgstr ""
 msgid "All audio is muted."
 msgstr ""
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "صدور ممکن نیست"
 
@@ -9913,8 +10334,8 @@ msgid "untitled"
 msgstr ""
 
 #: src/export/Export.cpp
-#, fuzzy
-msgid "Are you sure you want to export the file as \""
+#, fuzzy, c-format
+msgid "Are you sure you want to export the file as \"%s\"?\n"
 msgstr "آیا مطمئن هستید که می‌خواهید پرونده را با ذخیره کنید با نام \""
 
 #: src/export/Export.cpp
@@ -9937,8 +10358,8 @@ msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "               The file cannot be written because the path is needed to "
 "restore the original audio to the project.\n"
-"               Choose File > Check Dependencies to view the locations of all "
-"missing files.\n"
+"               Choose Help > Diagnostics > Check Dependencies to view the "
+"locations of all missing files.\n"
 "               If you still wish to export, please choose a different "
 "filename or folder."
 msgstr ""
@@ -9979,14 +10400,16 @@ msgstr "تنظیمات جلوه"
 msgid "Channel: %2d"
 msgstr "کانال: %I2d"
 
+#. i18n-hint: track name and L abbreviating Left channel
 #: src/export/Export.cpp
-#, fuzzy
-msgid " - L"
+#, fuzzy, c-format
+msgid "%s - L"
 msgstr " ‐ چپ"
 
+#. i18n-hint: track name and R abbreviating Right channel
 #: src/export/Export.cpp
-#, fuzzy
-msgid " - R"
+#, fuzzy, c-format
+msgid "%s - R"
 msgstr " ‐ راست"
 
 #: src/export/Export.cpp
@@ -10035,8 +10458,10 @@ msgid "Exporting the selected audio using command-line encoder"
 msgstr "صدور صوت انتخاب‌شده با استفاده از رمزگذار خط فرمان"
 
 #: src/export/ExportCL.cpp
-msgid "Exporting the entire project using command-line encoder"
-msgstr "صدور پروژه بطور کامل با استفاده از رمزگذار خط فرمان"
+#, fuzzy
+#| msgid "Exporting the selected audio using command-line encoder"
+msgid "Exporting the audio using command-line encoder"
+msgstr "صدور صوت انتخاب‌شده با استفاده از رمزگذار خط فرمان"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
@@ -10143,10 +10568,11 @@ msgstr ""
 msgid "Exporting selected audio as %s"
 msgstr ""
 
-#: src/export/ExportFFmpeg.cpp
-#, c-format
-msgid "Exporting entire file as %s"
-msgstr ""
+#: src/export/ExportFFmpeg.cpp src/export/ExportPCM.cpp
+#, fuzzy, c-format
+#| msgid "Exporting the selected audio as FLAC"
+msgid "Exporting the audio as %s"
+msgstr "صدور صوت انتخاب‌شده بعنوان FLAC"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Invalid sample rate"
@@ -10648,8 +11074,10 @@ msgid "Exporting the selected audio as FLAC"
 msgstr "صدور صوت انتخاب‌شده بعنوان FLAC"
 
 #: src/export/ExportFLAC.cpp
-msgid "Exporting the entire project as FLAC"
-msgstr "صدور پروژه بطور کامل بعنوان FLAC"
+#, fuzzy
+#| msgid "Exporting the selected audio as FLAC"
+msgid "Exporting the audio as FLAC"
+msgstr "صدور صوت انتخاب‌شده بعنوان FLAC"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -10670,9 +11098,10 @@ msgid "Exporting selected audio at %ld kbps"
 msgstr "صدور صوت انتخاب‌شده با سرعت %ld کیلوبیت در ثانیه"
 
 #: src/export/ExportMP2.cpp
-#, c-format
-msgid "Exporting entire file at %ld kbps"
-msgstr "صدور پرونده بطور کامل با سرعت %ld کیلوبیت در ثانیه"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %ld kbps"
+msgid "Exporting the audio at %ld kbps"
+msgstr "صدور صوت انتخاب‌شده با سرعت %ld کیلوبیت در ثانیه"
 
 #: src/export/ExportMP3.cpp
 msgid "kbps"
@@ -10841,9 +11270,10 @@ msgid "Exporting selected audio with %s preset"
 msgstr ""
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with %s preset"
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %ld kbps"
+msgid "Exporting the audio with %s preset"
+msgstr "صدور صوت انتخاب‌شده با سرعت %ld کیلوبیت در ثانیه"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10851,9 +11281,10 @@ msgid "Exporting selected audio with VBR quality %s"
 msgstr ""
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with VBR quality %s"
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %ld kbps"
+msgid "Exporting the audio with VBR quality %s"
+msgstr "صدور صوت انتخاب‌شده با سرعت %ld کیلوبیت در ثانیه"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10861,9 +11292,10 @@ msgid "Exporting selected audio at %d Kbps"
 msgstr ""
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file at %d Kbps"
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %ld kbps"
+msgid "Exporting the audio at %d Kbps"
+msgstr "صدور صوت انتخاب‌شده با سرعت %ld کیلوبیت در ثانیه"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11040,8 +11472,10 @@ msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "صدور صوت انتخاب‌شده در قالب اُگ وربیس"
 
 #: src/export/ExportOGG.cpp
-msgid "Exporting the entire project as Ogg Vorbis"
-msgstr "صدور پروژه بطور کامل در قالب اُگ وربیس"
+#, fuzzy
+#| msgid "Exporting the selected audio as Ogg Vorbis"
+msgid "Exporting the audio as Ogg Vorbis"
+msgstr "صدور صوت انتخاب‌شده در قالب اُگ وربیس"
 
 #: src/export/ExportPCM.cpp
 msgid "AIFF (Apple) signed 16-bit PCM"
@@ -11075,11 +11509,6 @@ msgstr "صدور صوت در این قالب ممکن نیست."
 #: src/export/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
-msgstr ""
-
-#: src/export/ExportPCM.cpp
-#, c-format
-msgid "Exporting the entire project as %s"
 msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile, which
@@ -11318,16 +11747,22 @@ msgid "Invalid track offset in LOF file."
 msgstr "افست شیار در پروندهٔ LOF نامعتبر است."
 
 #: src/import/ImportMIDI.cpp
-msgid "Could not open file "
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Could not open file: "
+msgid "Could not open file %s: Filename too short."
+msgstr "پرونده باز نمی‌شود: "
 
 #: src/import/ImportMIDI.cpp
-msgid ": Filename too short."
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Could not open file: "
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "پرونده باز نمی‌شود: "
 
 #: src/import/ImportMIDI.cpp
-msgid ": Incorrect filetype."
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Could not open file: \"%s\""
+msgid "Could not open file %s."
+msgstr "باز کردن پروندهٔ «%s» مممکن نیست"
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
@@ -11362,29 +11797,34 @@ msgid "WAV, AIFF, and other uncompressed types"
 msgstr ""
 
 #: src/import/ImportPCM.cpp
-#, c-format
 msgid ""
 "When importing uncompressed audio files you can either copy them into the "
 "project, or read them directly from their current location (without "
 "copying).\n"
 "\n"
-"Your current preference is set to %s.\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to copy in.\n"
 "\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to read directly.\n"
+"\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately.  This is less safe than copying in, because you must retain the "
-"files with their original names in their original location.\n"
-"File > Check Dependencies will show the original names and location of any "
-"files that you are reading directly.\n"
+"files with their original names in their original locations.\n"
+"Help > Diagnostics > Check Dependencies will show the original names and "
+"locations of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
-msgstr ""
-
-#: src/import/ImportPCM.cpp
-msgid "copy in"
-msgstr ""
-
-#: src/import/ImportPCM.cpp
-msgid "read directly"
 msgstr ""
 
 #: src/import/ImportPCM.cpp
@@ -11503,6 +11943,10 @@ msgstr "مقداری که باید وارد شود:"
 #: src/import/ImportRaw.cpp
 msgid "Sample rate:"
 msgstr "نرخ نمونه‌برداری:"
+
+#: src/import/RawAudioGuess.cpp
+msgid "Bad data size"
+msgstr ""
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
@@ -11939,10 +12383,6 @@ msgstr ""
 msgid "B&lend system and Audacity theme"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "&Display a mono channel as virtual stereo"
-msgstr ""
-
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr ""
@@ -12096,6 +12536,11 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You must select a binding before assigning a shortcut"
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, c-format
+msgid "%s - %s"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -12646,6 +13091,11 @@ msgstr ""
 msgid "Always record on a new track"
 msgstr ""
 
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr ""
+
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
 msgstr ""
@@ -13011,6 +13461,11 @@ msgid "Enable scrolling left of &zero"
 msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
+msgid "Advanced &vertical zooming"
+msgstr "گزینه‌های پیشرفتهٔ میکس"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
 msgstr ""
 
@@ -13034,6 +13489,53 @@ msgstr ""
 #: src/prefs/TracksPrefs.cpp
 msgid "Stem plot"
 msgstr ""
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+msgid "Fit to Width"
+msgstr "&جا دادن در پنجره"
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "&Zoom to Selection"
+msgid "Zoom to Selection"
+msgstr "&زوم به اندازهٔ انتخاب"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Zoom Default"
+msgstr "&پیش‌فرض‌ها"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Minutes"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Seconds"
+msgstr "ثانیه"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "milliseconds"
+msgid "MilliSeconds"
+msgstr "میلی‌ثانیه"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "samples"
+msgid "Samples"
+msgstr "نمونه‌ها"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "4 Pixels per Sample"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Zoom"
+msgid "Max Zoom"
+msgstr "زوم"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -13068,6 +13570,22 @@ msgstr "شیار صوتی"
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w audio track name as overlay"
 msgstr ""
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom Toggle"
+msgstr "ابزار زوم"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preset 1:"
+msgstr "فشار دهید"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Preset 2:"
+msgstr "فشار دهید"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Warnings"
@@ -13266,16 +13784,20 @@ msgid "Zoom Out"
 msgstr "زوم به خارج"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit selection in window"
+msgid "Show Effects Rack"
+msgstr ""
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Fit selection in window"
+msgid "Fit selection to width"
 msgstr "جادادن انتخاب در پنجره"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit project in window"
+#, fuzzy
+#| msgid "Fit project in window"
+msgid "Fit project to width"
 msgstr "جادادن پروژه در پنجره"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Open Effects Rack"
@@ -13351,13 +13873,13 @@ msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp
 #, fuzzy, c-format
-msgid "Playback Volume: %%.2f%s"
+msgid "Playback Volume: %s (emulated)"
 msgstr "پخش"
 
 #: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid " (emulated)"
-msgstr "قالب"
+#, fuzzy, c-format
+msgid "Playback Volume: %s"
+msgstr "پخش"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume (Unavailable; use system mixer.)"
@@ -13415,7 +13937,9 @@ msgid "Selection"
 msgstr "انتخاب"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Project Rate (Hz):"
+#, fuzzy
+#| msgid "Project Rate (Hz):"
+msgid "Project Rate (Hz)"
 msgstr "نرخ پروژه (هرتز):"
 
 #: src/toolbars/SelectionBar.cpp
@@ -13426,26 +13950,6 @@ msgstr ""
 #, fuzzy
 msgid "Audio Position"
 msgstr "مکان صوت:"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start-End"
-msgstr "آغاز"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start-Length"
-msgstr "طول"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Length-End"
-msgstr "طول"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Length-Center"
-msgstr "طول"
 
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
@@ -13468,21 +13972,16 @@ msgid "Length and Center of Selection"
 msgstr "کوتاه‌کردن پرونده بنابر انتخاب"
 
 #: src/toolbars/SelectionBar.cpp
+msgid "Snap To"
+msgstr ""
+
+#: src/toolbars/SelectionBar.cpp
 msgid "Length"
 msgstr "طول"
 
 #: src/toolbars/SelectionBar.cpp src/widgets/ASlider.cpp
 msgid "Center"
 msgstr "مرکز"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Snap To"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Selection options"
-msgstr "انتخاب تا پایان"
 
 #: src/toolbars/SelectionBar.cpp
 #, c-format
@@ -13501,8 +14000,6 @@ msgstr ""
 msgid "Selection %s.  %s won't change."
 msgstr ""
 
-#. i18n hints occur i the right place in
-#. the .pot file
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
 msgid "Start - End"
@@ -13520,62 +14017,6 @@ msgstr "طول"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Length - Center"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start - Length - End"
-msgstr "به پایان انتخاب"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Center - Length"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start - Center - End"
-msgstr "به پایان انتخاب"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length - Center - End"
-msgstr ""
-
-#. i18n-hint: S-E is an abbreviation of Start-End
-#: src/toolbars/SelectionBar.cpp
-msgid "S-E"
-msgstr ""
-
-#. i18n-hint: S-L is an abbreviation of Start-Length
-#: src/toolbars/SelectionBar.cpp
-msgid "S-L"
-msgstr ""
-
-#. i18n-hint: L-E is an abbreviation of Length-End
-#: src/toolbars/SelectionBar.cpp
-msgid "L-E"
-msgstr ""
-
-#. i18n-hint: L-C is an abbreviation of Length-Center
-#: src/toolbars/SelectionBar.cpp
-msgid "L-C"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show start time and end time"
-msgstr "تاریخ و زمان آغاز"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show start time and length"
-msgstr "تاریخ و زمان آغاز"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show length and end time"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show length and center"
 msgstr ""
 
 #: src/toolbars/SpectralSelectionBar.cpp
@@ -13718,13 +14159,39 @@ msgid "Down Octa&ve"
 msgstr "اُکتاو پایین"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
 msgid ""
-"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-"particular zoom region."
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
 msgstr ""
 "برای زوم به داخل عمودی کلیک، برای زوم به خارج تبدیل-کلیک کنید و برای ایجاد "
 "محدودهٔ زوم خاص کلید موشی را نگه دارید و موشی را حرکت دهید."
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Right-Click"
+msgid "Right-click for menu."
+msgstr "کلیک راست"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom Reset\tShift-Right-Click"
+msgstr "کلیک چپ با تبدیل"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "کلیک چپ با تبدیل"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "کلیک چپ با تبدیل"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 #, fuzzy
@@ -13803,6 +14270,8 @@ msgstr "ویرایش نمونه"
 msgid "Instrument %i"
 msgstr ""
 
+#. i18n-hint: The strings name a track and a format
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s"
@@ -13872,6 +14341,7 @@ msgstr ""
 msgid "&Other..."
 msgstr "غیره..."
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s Hz"
@@ -13967,6 +14437,7 @@ msgstr "کانال راست"
 msgid "Channel"
 msgstr "کانال"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
@@ -13976,6 +14447,7 @@ msgstr "«%s» یک شیار استریو شد"
 msgid "Make Stereo"
 msgstr "استریو شود"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy, c-format
 msgid "Swapped Channels in '%s'"
@@ -13986,11 +14458,13 @@ msgstr "%Id کاناله"
 msgid "Swap Channels"
 msgstr "%Id کاناله"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "تفکیک شیار استریوی «%s»"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy, c-format
 msgid "Split Stereo to Mono '%s'"
@@ -14003,27 +14477,30 @@ msgstr "ا&ستریو به مونو"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr "کلیک چپ با تبدیل"
+#| msgid "Zoom In"
+msgid "Zoom x1/2"
+msgstr "زوم به داخل"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Out\tShift-Left-Click"
-msgstr "کلیک چپ با تبدیل"
+#| msgid "Zoom"
+msgid "Zoom x2"
+msgstr "زوم"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+msgid "Half Wave"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Zoom Out"
+msgid "Zoom Reset"
+msgstr "زوم به خارج"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom to Fit\tShift-Right-Click"
 msgstr "کلیک چپ با تبدیل"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-#, fuzzy
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"برای زوم به داخل عمودی کلیک، برای زوم به خارج تبدیل-کلیک کنید و برای ایجاد "
-"محدودهٔ زوم خاص کلید موشی را نگه دارید و موشی را حرکت دهید."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -14116,10 +14593,6 @@ msgstr "پاکت تنظیم‌شده."
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
-msgstr ""
-
-#: src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
 msgstr ""
 
 #: src/tracks/ui/Scrubbing.cpp
@@ -14224,10 +14697,14 @@ msgstr "برای جابه‌جایی یک شیار در زمان کلیک کنی
 msgid "Moved clips to another track"
 msgstr "بریده‌های منتقل‌شده به شیاری دیگر"
 
-#. i18n-hint: %s is a direction like left or right
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, fuzzy, c-format
-msgid "Time shifted tracks/clips %s %.02f seconds"
+msgid "Time shifted tracks/clips right %.02f seconds"
+msgstr "شیار‌های انتخاب شده برای %I.2f ثانیه از %I.2f ساکت شدند"
+
+#: src/tracks/ui/TimeShiftHandle.cpp
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips left %.02f seconds"
 msgstr "شیار‌های انتخاب شده برای %I.2f ثانیه از %I.2f ساکت شدند"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
@@ -14303,20 +14780,22 @@ msgstr ""
 msgid "%s to select or deselect track."
 msgstr "ایجاد شیار صوتی جدید"
 
-#. i18n-hint: a direction as in up or down.
+#. i18n-hint: will substitute name of track for %s
 #: src/tracks/ui/TrackSelectHandle.cpp
-msgid "up"
-msgstr "بالا"
-
-#: src/tracks/ui/TrackSelectHandle.cpp
-msgid "down"
-msgstr "پایین"
-
-#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
-#: src/tracks/ui/TrackSelectHandle.cpp
-#, c-format
-msgid "Moved '%s' %s"
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' up"
 msgstr "«%s» به %s جابه‌جا شد"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' down"
+msgstr "«%s» به %s جابه‌جا شد"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+msgid "Move Track"
+msgstr "جابه‌جایی شیار"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
@@ -14356,16 +14835,16 @@ msgstr "چ"
 msgid "R"
 msgstr "ر"
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Left"
-msgstr "چپ"
+#, c-format
+msgid "%.0f%% Left"
+msgstr ""
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Right"
-msgstr "راست"
-
-#: src/widgets/ASlider.cpp
-msgid "+"
+#, c-format
+msgid "%.0f%% Right"
 msgstr ""
 
 #: src/widgets/FileHistory.cpp
@@ -14749,6 +15228,10 @@ msgstr "01000,01000 فریم|75"
 msgid "0100000.0100 Hz"
 msgstr "0100 h 060 m 060.0100 s"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "kHz"
+msgstr "کیلوهرتز"
+
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
@@ -15038,6 +15521,36 @@ msgstr "این اخطار دیگر نشان داده نشود"
 msgid "Please select an action"
 msgstr ""
 
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Track Panel"
+msgid "Panel"
+msgstr "تابلوی شیار"
+
+#: src/widgets/wxPanelWrapper.h
+msgid "Dialog"
+msgstr ""
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a directory"
+msgstr "پروژهٔ جدید ایجاد شد"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Directories"
+msgid "Directory Dialog"
+msgstr "شاخه‌ها"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a file"
+msgstr "یک یا چند پروندهٔ MIDI انتخاب کنید..."
+
+#: src/widgets/wxPanelWrapper.h
+msgid "File Dialog"
+msgstr ""
+
 #: src/xml/XMLFileReader.cpp
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -15047,6 +15560,138 @@ msgstr ""
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr ""
+
+#, fuzzy
+#~ msgid "Audacity failed to write to a file in %s."
+#~ msgstr ""
+#~ "اوداسیتی نتوانست این پرونده را بنویسد:\n"
+#~ "  %s."
+
+#, fuzzy
+#~ msgid "window"
+#~ msgstr " پنجره‌ای"
+
+#, fuzzy
+#~ msgid "Trans&cription"
+#~ msgstr "آوانویسی"
+
+#, fuzzy
+#~ msgid "Scru&b"
+#~ msgstr "نوار ابزار ویرایش"
+
+#, fuzzy
+#~ msgid "Ext-Co&mmand"
+#~ msgstr "&فرمان"
+
+#, fuzzy
+#~ msgid "Moved"
+#~ msgstr "&بالاتر"
+
+#, fuzzy
+#~ msgid "and"
+#~ msgstr "پایان"
+
+#, fuzzy
+#~ msgid "end to selection end"
+#~ msgstr "هم‌ردیف با پایان انتخاب"
+
+#, fuzzy
+#~ msgid "end to end"
+#~ msgstr "انتخاب تا پایان"
+
+#, fuzzy
+#~ msgid "End to End"
+#~ msgstr "پرش به انتها"
+
+#, fuzzy
+#~ msgid "Aligned %s"
+#~ msgstr "ردیف شد"
+
+#, fuzzy
+#~ msgid "Duration:\n"
+#~ msgstr "مدت زمان"
+
+#, fuzzy
+#~ msgid ""
+#~ "Timer Recording completed.\n"
+#~ "\n"
+#~ msgstr "در حال پردازش مخفی‌سازی خودکار..."
+
+#, fuzzy
+#~ msgid "Audio In: "
+#~ msgstr "مکان صوت:"
+
+#~ msgid "Exporting the entire project using command-line encoder"
+#~ msgstr "صدور پروژه بطور کامل با استفاده از رمزگذار خط فرمان"
+
+#~ msgid "Exporting the entire project as FLAC"
+#~ msgstr "صدور پروژه بطور کامل بعنوان FLAC"
+
+#~ msgid "Exporting entire file at %ld kbps"
+#~ msgstr "صدور پرونده بطور کامل با سرعت %ld کیلوبیت در ثانیه"
+
+#~ msgid "Exporting the entire project as Ogg Vorbis"
+#~ msgstr "صدور پروژه بطور کامل در قالب اُگ وربیس"
+
+#, fuzzy
+#~ msgid " (emulated)"
+#~ msgstr "قالب"
+
+#, fuzzy
+#~ msgid "Start-End"
+#~ msgstr "آغاز"
+
+#, fuzzy
+#~ msgid "Start-Length"
+#~ msgstr "طول"
+
+#, fuzzy
+#~ msgid "Length-End"
+#~ msgstr "طول"
+
+#, fuzzy
+#~ msgid "Length-Center"
+#~ msgstr "طول"
+
+#, fuzzy
+#~ msgid "Selection options"
+#~ msgstr "انتخاب تا پایان"
+
+#, fuzzy
+#~ msgid "Start - Length - End"
+#~ msgstr "به پایان انتخاب"
+
+#, fuzzy
+#~ msgid "Start - Center - End"
+#~ msgstr "به پایان انتخاب"
+
+#, fuzzy
+#~ msgid "Show start time and end time"
+#~ msgstr "تاریخ و زمان آغاز"
+
+#, fuzzy
+#~ msgid "Show start time and length"
+#~ msgstr "تاریخ و زمان آغاز"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+#~ "particular zoom region."
+#~ msgstr ""
+#~ "برای زوم به داخل عمودی کلیک، برای زوم به خارج تبدیل-کلیک کنید و برای "
+#~ "ایجاد محدودهٔ زوم خاص کلید موشی را نگه دارید و موشی را حرکت دهید."
+
+#~ msgid "up"
+#~ msgstr "بالا"
+
+#~ msgid "down"
+#~ msgstr "پایین"
+
+#~ msgid "Left"
+#~ msgstr "چپ"
+
+#~ msgid "Right"
+#~ msgstr "راست"
 
 #, fuzzy
 #~ msgid "DuckAmountDb"
@@ -15453,10 +16098,6 @@ msgstr ""
 #~ "  %s"
 
 #, fuzzy
-#~ msgid "Create new directory"
-#~ msgstr "پروژهٔ جدید ایجاد شد"
-
-#, fuzzy
 #~ msgid "Current directory:"
 #~ msgstr ""
 #~ "این شاخه ایجاد نشد:\n"
@@ -15489,10 +16130,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Plug-ins %i to %i"
 #~ msgstr "متصل‌شونده‌های %Ii تا %Ii"
-
-#, fuzzy
-#~ msgid "Default"
-#~ msgstr "&پیش‌فرض‌ها"
 
 #~ msgid "FLAC Export Setup"
 #~ msgstr "برپاسازی صدور FLAC"
@@ -15811,9 +16448,6 @@ msgstr ""
 #~ msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 #~ msgstr "حالت چند ابزاری: برای ترجیحات موشی و صفحه‌کلید مهار-ح"
 
-#~ msgid "Vertical Stereo"
-#~ msgstr "استریوی عمودی"
-
 #~ msgid "Input Meter"
 #~ msgstr "اندازه‌گیر ورودی"
 
@@ -15909,9 +16543,6 @@ msgstr ""
 #~ msgid "Join Labels"
 #~ msgstr "پیوستن برچسب‌ها"
 
-#~ msgid "Aligned with zero"
-#~ msgstr "هم‌ردیف با صفر"
-
 #~ msgid "Aligned cursor"
 #~ msgstr "هم‌ردیف مکان‌نما"
 
@@ -15920,9 +16551,6 @@ msgstr ""
 
 #~ msgid "Aligned end with selection start"
 #~ msgstr "پایان هم‌ردیف با آغاز انتخاب"
-
-#~ msgid "Aligned end with selection end"
-#~ msgstr "پایان هم‌ردیف با پایان انتخاب"
 
 #~ msgid "Save CleanSpeech Preset File As:"
 #~ msgstr "ذخیرهٔ پروندهٔ پیش‌تنظیمات CleanSpeech با نام:"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-18 00:56-0500\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
 "PO-Revision-Date: 2018-01-21 09:48+0100\n"
 "Last-Translator: EUS_Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi)\n"
@@ -10090,7 +10090,6 @@ msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
-#| msgid ", Audio Out: "
 msgid "Audio In: %d, Audio Out: %d"
 msgstr "Audio Sarrera: %d, Audio Irteera: %d"
 
@@ -10169,7 +10168,9 @@ msgstr "Hautaturiko audio dena mututurik dago."
 msgid "All audio is muted."
 msgstr "Audio dena mututurik dago."
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "Ezinezkoa esportazioa"
 

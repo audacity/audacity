@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AUDACITY.PO\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-11-06 13:24-0500\n"
+"POT-Creation-Date: 2018-01-23 18:10-0500\n"
 "PO-Revision-Date: 2009-01-16 03:10-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team:  <en@li.org>\n"
@@ -385,8 +385,7 @@ msgstr "კენ:"
 msgid "Go to top S-expr"
 msgstr ""
 
-#. i18n-hint: a direction.
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr "ზემოთ"
 
@@ -412,7 +411,7 @@ msgstr "შემდეგი ხელსაწყო"
 msgid "Go to next S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp src/effects/Contrast.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "დაწყება"
@@ -437,10 +436,6 @@ msgid "Check Online"
 msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "quality assurance"
-msgstr ""
-
-#: src/AboutDialog.cpp
 msgid "system administration"
 msgstr ""
 
@@ -455,6 +450,10 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "documentation and support"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "quality assurance"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -540,11 +539,6 @@ msgstr "კრედიტები"
 
 #: src/AboutDialog.cpp
 msgid "DarkAudacity Customisation"
-msgstr ""
-
-#. i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages
-#: src/AboutDialog.cpp
-msgid "In Memoriam"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -756,8 +750,8 @@ msgid ""
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
-"Choose File > Check Dependencies to view a list of locations of the missing "
-"files."
+"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
+"of the missing files."
 msgstr ""
 
 #: src/AudacityApp.cpp
@@ -976,8 +970,8 @@ msgid "Save log to:"
 msgstr ""
 
 #: src/AudacityLogger.cpp
-#, fuzzy
-msgid "Couldn't save log to file: "
+#, fuzzy, c-format
+msgid "Couldn't save log to file: %s"
 msgstr "შეუძლებელია ფაილზე ჩაწერა:"
 
 #: src/AudioIO.cpp
@@ -1159,6 +1153,48 @@ msgstr "&პარამეტრები"
 #: src/BatchCommandDialog.cpp
 msgid "C&hoose command"
 msgstr "ბრძანების ა&მორჩევა"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+#| msgid "Action"
+msgid "No Action"
+msgstr "მოქმედება"
+
+#. i18n-hint: before is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3 56k before"
+msgstr "ექსპორტი"
+
+#. i18n-hint: after is adverb; MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3 56k after"
+msgstr "ექსპორტი"
+
+#. i18n-hint: FLAC names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as FLAC"
+msgstr "იარლიყის ექსპორტი, როგორც:"
+
+#. i18n-hint: MP3 names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as MP3"
+msgstr "ექსპორტი"
+
+#. i18n-hint: Ogg names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as Ogg"
+msgstr "ექსპორტი"
+
+#. i18n-hint: WAV names an audio file format
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export as WAV"
+msgstr "იარლიყის ექსპორტი, როგორც:"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1665,7 +1701,8 @@ msgid "Whenever a project depends on other files:"
 msgstr "როდესაც პროექტი დამოკიდებულია სხვა ფაილებზე:"
 
 #: src/Dependencies.cpp
-msgid "MISSING "
+#, c-format
+msgid "MISSING %s"
 msgstr ""
 
 #: src/Dependencies.cpp
@@ -2073,13 +2110,6 @@ msgstr ""
 "არ არის ჩაწერადი ან დისკია გადავსებული."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
-msgid "Audacity failed to write to a file in %s."
-msgstr ""
-"Audacity ვერ შეძლო ფაილის ჩაწერა:\n"
-"  %s."
-
-#: src/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
@@ -2112,13 +2142,6 @@ msgstr "გაუმჯობესებული ავტოკორექ�
 #: src/FreqWindow.cpp
 msgid "Cepstrum"
 msgstr "Cepstrum"
-
-#. i18n-hint: This refers to a "window function", used in the
-#. * Frequency analyze dialog box.
-#: src/FreqWindow.cpp
-#, fuzzy
-msgid "window"
-msgstr "ფანჯარა"
 
 #: src/FreqWindow.cpp
 msgid "Linear frequency"
@@ -2249,7 +2272,9 @@ msgstr "სპექტრული მონაცემების ექს�
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/Menus.cpp
 #: src/effects/Contrast.cpp
-msgid "Couldn't write to file: "
+#, fuzzy, c-format
+#| msgid "Couldn't write to file: "
+msgid "Couldn't write to file: %s"
 msgstr "შეუძლებელია ფაილზე ჩაწერა:"
 
 #: src/FreqWindow.cpp
@@ -2551,7 +2576,7 @@ msgid "&Import..."
 msgstr "&იმპორტი..."
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
-#: src/LabelDialog.cpp src/Menus.cpp
+#: src/LabelDialog.cpp
 msgid "Track"
 msgstr "ტრეკი"
 
@@ -2597,8 +2622,10 @@ msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "ტექსტური (*.txt)|*.txt|ყველა ფაილი(*.*)|*.*"
 
 #: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
-msgid "Could not open file: "
-msgstr "შეუძლებელია ფაილის გახსნა:"
+#, fuzzy, c-format
+#| msgid "Could not open file: \"%s\""
+msgid "Could not open file: %s"
+msgstr "შეუძლებელია ფაილის გახსნა: \"%s\""
 
 #: src/LabelDialog.cpp
 msgid "No labels to export."
@@ -2724,8 +2751,10 @@ msgid "Save Project &As..."
 msgstr "პროექტის შენახვა, &როგორც..."
 
 #: src/Menus.cpp
-msgid "Save Othe&r"
-msgstr ""
+#, fuzzy
+#| msgid "Export"
+msgid "&Export"
+msgstr "ექსპორტი"
 
 #: src/Menus.cpp
 #, fuzzy
@@ -3089,6 +3118,12 @@ msgstr "გადიდება"
 #: src/Menus.cpp
 msgid "&Zoom to Selection"
 msgstr "მონიშვნამდე &გადიდება"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom &Toggle"
+msgstr "გადიდების ხელსაწყო"
 
 #: src/Menus.cpp
 #, fuzzy
@@ -3583,6 +3618,17 @@ msgid "&Tools"
 msgstr "ხელსაწყოები"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Simulate Recording Errors"
+msgstr "ჩაწერა"
+
+#: src/Menus.cpp
+#, fuzzy
+#| msgid "Select stream(s) to import"
+msgid "Detect Upstream Dropouts"
+msgstr "ნაკადების მონიშვნა იმპორტირებისთვის"
+
+#: src/Menus.cpp
 msgid "&Screenshot Tools..."
 msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
 
@@ -3620,9 +3666,9 @@ msgstr "დამოკიდებულებების &შემოწმ�
 msgid "&Check for Updates..."
 msgstr "დამოკიდებულებების &შემოწმება..."
 
-#. i18n-hint: Ext-Bar is a menu with extra commands from tool bars
+#. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
-msgid "Ext-&Bar"
+msgid "E&xtra"
 msgstr ""
 
 #. i18n-hint: (verb) Stop playing audio
@@ -3767,7 +3813,8 @@ msgstr "გასაღების წაშლა2"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "Trans&cription"
+#| msgid "Transcription"
+msgid "Transcri&ption"
 msgstr "ტრანსკრიპცია"
 
 #: src/Menus.cpp
@@ -3810,10 +3857,9 @@ msgstr "ფოკუსის წინა ტრეკზე გადატა
 msgid "Move to &Next Label"
 msgstr "ფოკუსის შემდეგ ტრეკზე გადატანა"
 
-#: src/Menus.cpp
-#, fuzzy
-msgid "Scru&b"
-msgstr "&ხელსაწყოთა ზოლები"
+#: src/Menus.cpp src/tracks/ui/Scrubbing.cpp
+msgid "See&k"
+msgstr ""
 
 #: src/Menus.cpp
 msgid "Short seek &left during playback"
@@ -3915,12 +3961,6 @@ msgstr "კონტრასტის მარცხნივ მონიშ�
 #, fuzzy
 msgid "Selection Contract R&ight"
 msgstr "კონტრასტის მარჯვნივ მონიშნვა"
-
-#. i18n-hint: Ext-Command is a menu with extra commands
-#: src/Menus.cpp
-#, fuzzy
-msgid "Ext-Co&mmand"
-msgstr "&ბრძანება"
 
 #: src/Menus.cpp
 msgid "Move backward thru active windows"
@@ -4105,6 +4145,7 @@ msgstr "ტრეკის ჩამოტანა"
 msgid "&Full screen (on/off)"
 msgstr ""
 
+#. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
 #, fuzzy
 msgid "Minimize all projects"
@@ -4213,30 +4254,52 @@ msgstr ""
 msgid "Can't delete track with active audio"
 msgstr "აქტიური აუდიოს მქონე ტრეკის წაშლა შეუძლებელია"
 
-#. i18n-hint: where the track is moving to.
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
-msgid "to Top"
-msgstr ""
-
-#. i18n-hint: where the track is moving to.
-#: src/Menus.cpp
-msgid "to Bottom"
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' to Top"
+msgstr "გადაადგილებული '%s' %s"
 
 #: src/Menus.cpp
-msgid "Down"
-msgstr "ქვემოთ"
+#, fuzzy
+msgid "Move Track to Top"
+msgstr "ტრეკის ატანა"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy, c-format
+msgid "Moved '%s' to Bottom"
+msgstr "ტრეკის ჩამოტანა"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Move Track to Bottom"
+msgstr "ტრეკის ჩამოტანა"
+
+#. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Up"
+msgstr "გადაადგილებული '%s' %s"
+
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' Down"
+msgstr "გადაადგილებული '%s' %s"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/Menus.cpp
 #, fuzzy
-msgid "Moved"
-msgstr "აწევა"
+msgid "Move Track Up"
+msgstr "ტრეკის ატანა"
 
-#. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp src/tracks/ui/TrackSelectHandle.cpp
-msgid "Move Track"
-msgstr "ტრეკის გადაადგილება"
+#: src/Menus.cpp
+#, fuzzy
+msgid "Move Track Down"
+msgstr "ტრეკის ჩამოტანა"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/Menus.cpp
@@ -4497,27 +4560,25 @@ msgstr "ახალ ტრეკზე დაყოფა"
 msgid "Split New"
 msgstr "ახლის დაყოფა"
 
+#. i18n-hint: in the string after this one,
+#. first number identifies one of a sequence of clips,
+#. last number counts the clips,
+#. string names a track
 #: src/Menus.cpp
-msgid "of"
+msgid "dummyStringOnSelectClip"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "clip"
+#, c-format
+msgid "%d of %d clip %s"
+msgid_plural "%d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Menus.cpp src/import/Import.cpp
+#, c-format
+msgid "%s, %s"
 msgstr ""
-
-#: src/Menus.cpp
-msgid "clips"
-msgstr ""
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "left"
-msgstr "მარცხნივ"
-
-#. i18n-hint: a direction as in left or right.
-#: src/Menus.cpp src/tracks/ui/TimeShiftHandle.cpp
-msgid "right"
-msgstr "მარჯვენა"
 
 #: src/Menus.cpp
 msgid "Frequency Analysis"
@@ -4605,6 +4666,46 @@ msgstr "%d ტრეკების ერთ ახალ მონო ტრ�
 msgid "Mix and Render"
 msgstr "&არევა და რენდერი"
 
+#. i18n-hint: compose a name identifying an unnamed track by number
+#. i18n-hint: The %d is replaced by th enumber of the track.
+#: src/Menus.cpp src/TrackPanelAx.cpp
+#, c-format
+msgid "Track %d"
+msgstr "ტრეკი %d"
+
+#. i18n-hint: given the name of a track, specify its left channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "left"
+msgid "%s left"
+msgstr "მარცხნივ"
+
+#. i18n-hint: given the name of a track, specify its right channel
+#: src/Menus.cpp
+#, fuzzy, c-format
+#| msgid "right"
+msgid "%s right"
+msgstr "მარჯვენა"
+
+#. i18n-hint: in the string after this one,
+#. First %s is replaced with the noun "start" or "end"
+#. identifying one end of a clip,
+#. first number gives the position of that clip in a sequence
+#. of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
+#: src/Menus.cpp
+msgid "dummyStringClipBoundaryMessage"
+msgstr ""
+
+#: src/Menus.cpp
+#, c-format
+msgid "%s %d of %d clip %s"
+msgid_plural "%s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/Menus.cpp
 #, fuzzy
 msgid "start"
@@ -4615,78 +4716,141 @@ msgstr "დაწყება"
 msgid "end"
 msgstr "დასასრული"
 
+#. i18n-hint: in the string after this one,
+#. First two %s are each replaced with the noun "start"
+#. or with "end", identifying and end of a clip,
+#. first and second numbers give the position of those clips in
+#. a seqeunce of clips,
+#. last number counts all clips,
+#. and the last string is the name of the track containing the clips.
+#.
+#: src/Menus.cpp
+msgid "dummyStringClipBoundaryMessageLong"
+msgstr ""
+
+#: src/Menus.cpp
+#, c-format
+msgid "%s %d and %s %d of %d clip %s"
+msgid_plural "%s %d and %s %d of %d clips %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. i18n-hint: In this and similar messages describing editing actions,
+#. the starting or ending points of tracks are re-"aligned" to other
+#. times, and the time selection may be "moved" too.  The first
+#. noun -- "start" in this example -- is the object of a verb (not of
+#. an implied preposition "from").
 #: src/Menus.cpp
 #, fuzzy
-msgid "and"
-msgstr "დასასრული"
+msgid "Aligned/Moved start to zero"
+msgstr "გა&სწორება და კურსორის გადატანა"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "start to zero"
+msgid "Aligned start to zero"
 msgstr "საწყისი დრო"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "start to cursor/selection start"
+msgid "Align/Move Start"
+msgstr "გახსწორებული"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align Start"
+msgstr "მონიშვნის დაწყება"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to cursor/selection start"
 msgstr "მონიშვნის დასაწყისამდე"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "start to selection end"
+msgid "Aligned start to cursor/selection start"
+msgstr "მონიშვნის დასაწყისამდე"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved start to selection end"
 msgstr "მონიშვნის დასასრულამდე"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "end to cursor/selection start"
+msgid "Aligned start to selection end"
+msgstr "მონიშვნის დასასრულამდე"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved end to cursor/selection start"
 msgstr "მონიშვნის დასაწყისით გასწორებული"
 
-#: src/Menus.cpp src/effects/Contrast.cpp src/effects/ToneGen.cpp
-#: src/toolbars/SelectionBar.cpp
-msgid "End"
-msgstr "დასასრული"
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned end to cursor/selection start"
+msgstr "მონიშვნის დასაწყისით გასწორებული"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "end to selection end"
-msgstr "მონიშვნის დასასრულით გასწორებული"
+msgid "Align/Move End"
+msgstr "გახსწორებული"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "end to end"
-msgstr "დასარულზე მონიშვნა"
+msgid "Align End"
+msgstr "გასწორება"
 
 #: src/Menus.cpp
 #, fuzzy
-msgid "End to End"
-msgstr "ბოლოში გადასვლა"
+#| msgid "Aligned end with selection end"
+msgid "Aligned/Moved end to selection end"
+msgstr "მონიშვნის დასასრულით გასწორებული დასასრული"
 
 #: src/Menus.cpp
-msgid "together"
-msgstr ""
+#, fuzzy
+#| msgid "Aligned end with selection end"
+msgid "Aligned end to selection end"
+msgstr "მონიშვნის დასასრულით გასწორებული დასასრული"
 
 #: src/Menus.cpp
-msgid "Together"
-msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Aligned/Moved %s"
+#, fuzzy
+msgid "Aligned/Moved end to end"
 msgstr "გა&სწორება და კურსორის გადატანა"
 
 #: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Align %s/Move"
-msgstr "გახსწორებული"
+#, fuzzy
+msgid "Aligned end to end"
+msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
 
 #: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Aligned %s"
-msgstr "გახსწორებული"
+#, fuzzy
+msgid "Align/Move End to End"
+msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
 
 #: src/Menus.cpp
-#, fuzzy, c-format
-msgid "Align %s"
-msgstr "გასწორება"
+#, fuzzy
+msgid "Align End to End"
+msgstr "მონიშვნის დასასრული&თ დასასრულის გასწორება"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned/Moved together"
+msgstr "გა&სწორება და კურსორის გადატანა"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Aligned together"
+msgstr "ტრეკების ერთმანეთზე სწორება"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align/Move Together"
+msgstr "ტრეკების ერთმანეთზე სწორება"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Align Together"
+msgstr "ტრეკების ერთმანეთზე სწორება"
 
 #: src/Menus.cpp
 msgid "Synchronizing MIDI and Audio Tracks"
@@ -4967,6 +5131,120 @@ msgstr ""
 msgid "Note Track"
 msgstr "გაითვალისწინეთ ტრეკი"
 
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "GB"
+msgid "G"
+msgstr "GB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+#, fuzzy
+#| msgid "dB"
+msgid "B"
+msgstr "dB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "E♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "B♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "C♯/D♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "D♯/E♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "F♯/G♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "G♯/A♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: src/PitchName.cpp
+msgid "A♯/B♭"
+msgstr ""
+
 #: src/PluginManager.cpp
 msgid "Plug-in Manager: Effects, Generators and Analyzers"
 msgstr ""
@@ -5060,6 +5338,50 @@ msgid ""
 "%s"
 msgstr "გამოყენებული ეფექტი: %s"
 
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Effect at %s failed to register:\n"
+"%s"
+msgstr "Vamp მოდულის დაწყებამ მარცხი განიცადა."
+
+#: src/PluginManager.cpp src/effects/Effect.cpp
+msgid "Built-in"
+msgstr ""
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+#| msgid "Overwrite existing files"
+msgid "Overwrite the plug-in file %s ?"
+msgstr "არსებულ ფაილებზე გადაწერა"
+
+#: src/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: src/PluginManager.cpp
+msgid "Plug-in file is in use.  Failed to overwrite"
+msgstr ""
+
+#: src/PluginManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr "შეუძლებელია '%s'-ის წაშლა"
+
+#: src/PluginManager.cpp
+#, fuzzy
+msgid "Enable this plug-in?"
+msgid_plural "Enable these plug-ins?"
+msgstr[0] "Vamp მოდულის გაშვებამ მარცხი განიცადა."
+msgstr[1] "Vamp მოდულის გაშვებამ მარცხი განიცადა."
+
+#: src/PluginManager.cpp
+#, fuzzy
+msgid "Enable new plug-ins"
+msgstr "Vamp მოდულის გაშვებამ მარცხი განიცადა."
+
 #: src/Prefs.cpp
 #, fuzzy, c-format
 msgid "Failed to remove %s"
@@ -5096,6 +5418,17 @@ msgstr "ამობეჭდვა"
 #: src/Project.cpp
 msgid "Main Mix"
 msgstr "ძირითადი არევა"
+
+#: src/Project.cpp
+#, fuzzy
+msgid "Horizontal Scrollbar"
+msgstr "ჰორიზონტალური სტერეო"
+
+#: src/Project.cpp
+#, fuzzy
+#| msgid "Vertical Stereo"
+msgid "Vertical Scrollbar"
+msgstr "ვერტიკალური სტერეო"
 
 #: src/Project.cpp
 #, c-format
@@ -5195,10 +5528,6 @@ msgid "Warning - Backup File Detected"
 msgstr ""
 
 #: src/Project.cpp
-msgid "Error Opening File"
-msgstr ""
-
-#: src/Project.cpp
 msgid "Error opening file"
 msgstr "ფაილის გახსნის შეცდომა"
 
@@ -5224,8 +5553,8 @@ msgstr ""
 "ფორმატად."
 
 #: src/Project.cpp
-#, fuzzy
-msgid "Could not decode file: "
+#, fuzzy, c-format
+msgid "Could not decode file: %s"
 msgstr "შეუძლებელია ფაილის გახსნა:"
 
 #: src/Project.cpp
@@ -5284,8 +5613,8 @@ msgid "Warning - Empty Project"
 msgstr ""
 
 #: src/Project.cpp
-#, fuzzy
-msgid "Could not create safety file: "
+#, fuzzy, c-format
+msgid "Could not create safety file: %s"
 msgstr "შეუძლებელია ავტოშენახვის ფაილის შექმნა:"
 
 #: src/Project.cpp
@@ -5308,7 +5637,7 @@ msgid ""
 "directory \"%s\" before saving project with this name."
 msgstr ""
 
-#: src/Project.cpp
+#: src/Project.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "შენახულია %s"
@@ -5402,17 +5731,43 @@ msgstr ""
 "დასრულებულია %2.0f%%."
 
 #: src/Project.cpp
-msgid "Could not create autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not create autosave file: "
+msgid "Could not create autosave file: %s"
 msgstr "შეუძლებელია ავტოშენახვის ფაილის შექმნა:"
 
 #: src/Project.cpp
-msgid "Could not remove old autosave file: "
+#, fuzzy, c-format
+#| msgid "Could not remove old autosave file: "
+msgid "Could not remove old autosave file: %s"
 msgstr "შეუძლებელია ძველი ავტოშენახული ფაილის წაშლა:"
 
 #: src/Project.cpp
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "რეალური კოეფიციენტი: %d"
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence audio sample data from the
+#. recording
+#: src/Project.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/Project.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/Project.cpp
+msgid "Turn off dropout detection"
+msgstr ""
 
 #: src/Project.cpp
 msgid "Recorded Audio"
@@ -5444,21 +5799,23 @@ msgid "Less than 1 minute"
 msgstr ""
 
 #: src/Project.cpp
-msgid "hour"
-msgid_plural "hours"
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
 #: src/Project.cpp
-msgid "minute"
-msgid_plural "minutes"
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/Project.cpp
 #, c-format
-msgid "%d %s and %d %s."
+msgid "%s and %s."
 msgstr ""
 
 #: src/Resample.cpp
@@ -5602,6 +5959,7 @@ msgstr ""
 msgid "Mixer"
 msgstr "მიქსერი"
 
+#. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr "მთვლელი"
@@ -5693,6 +6051,10 @@ msgstr ""
 
 #: src/Screenshot.cpp
 msgid "Choose a location to save screenshot images"
+msgstr ""
+
+#: src/Screenshot.cpp
+msgid "Capture failed!"
 msgstr ""
 
 #: src/Sequence.cpp
@@ -6046,28 +6408,29 @@ msgstr "მიმდინარე &პროექტის გააქტი
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid "Recording start:\n"
+msgid "Recording start:"
 msgstr "ჩაწერის დაწყება"
 
-#: src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Duration:\n"
+#: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
+#: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+msgid "Duration:"
 msgstr "ხანგრძლივობა:"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid ""
-"Recording end:\n"
-"\n"
+msgid "Recording end:"
 msgstr "ჩაწერის დასასრული"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Save enabled:\n"
-msgstr ""
+#, fuzzy
+msgid "Automatic Save enabled:"
+msgstr "ავტომატური აღდგენა მარცხის მერე"
 
 #: src/TimerRecordDialog.cpp
-msgid "Automatic Export enabled:\n"
-msgstr ""
+#, fuzzy
+msgid "Automatic Export enabled:"
+msgstr "ინდივიდუალური FFmpeg ექსპორტირება"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -6246,19 +6609,18 @@ msgstr "რეკორდის გამზომავი"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid "Waiting to start recording at:\n"
+msgid "Waiting to start recording at:"
 msgstr "კოდირების დაწყების მოლოდინი %s-ზე.\n"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid "Recording duration:\n"
+msgid "Recording duration:"
 msgstr "აუდიოს ჩაწერა"
 
 #: src/TimerRecordDialog.cpp
-msgid ""
-"Scheduled to stop at:\n"
-"\n"
-msgstr ""
+#, fuzzy
+msgid "Scheduled to stop at:"
+msgstr "დასაწყისზე მონიშვნა"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record - Waiting for Start"
@@ -6271,19 +6633,12 @@ msgstr "ჩაწერის დასასრული"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid ""
-"Timer Recording completed.\n"
-"\n"
-msgstr "Auto Duck დამუშავება..."
-
-#: src/TimerRecordDialog.cpp
-#, fuzzy
-msgid "Recording Saved:\n"
+msgid "Recording Saved:"
 msgstr "ჩაწერის დასასრული"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
-msgid "Recording Exported:\n"
+msgid "Recording Exported:"
 msgstr "ჩაწერის დასასრული"
 
 #: src/TimerRecordDialog.cpp
@@ -6303,19 +6658,27 @@ msgid "(Esc to cancel)"
 msgstr ""
 
 #: src/TrackPanel.cpp
-msgid "Stereo, "
+#, fuzzy, c-format
+#| msgid "Stereo, "
+msgid "Stereo, %dHz"
 msgstr "სტერეო,"
 
 #: src/TrackPanel.cpp
-msgid "Mono, "
+#, fuzzy, c-format
+#| msgid "Mono, "
+msgid "Mono, %dHz"
 msgstr "მონო,"
 
 #: src/TrackPanel.cpp
-msgid "Left, "
+#, fuzzy, c-format
+#| msgid "Left, "
+msgid "Left, %dHz"
 msgstr "მარცხენა,"
 
 #: src/TrackPanel.cpp
-msgid "Right, "
+#, fuzzy, c-format
+#| msgid "Right, "
+msgid "Right, %dHz"
 msgstr "მარჯვენა,"
 
 #: src/TrackPanel.cpp
@@ -6325,12 +6688,6 @@ msgstr ""
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
 msgstr "ტრეკის ხედი"
-
-#. i18n-hint: The %d is replaced by th enumber of the track.
-#: src/TrackPanelAx.cpp
-#, c-format
-msgid "Track %d"
-msgstr "ტრეკი %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track mute is on.
@@ -6414,7 +6771,7 @@ msgstr "მონიშვნის ჩასასმელად არ არ
 msgid "There is not enough room available to expand the cut line"
 msgstr "ამოჭრის ხაზის გასაფართოებლად არ არის საკმარისი სივრცე"
 
-#: src/AudacityException.h
+#: src/AudacityException.h src/widgets/ErrorDialog.cpp
 msgid "Message"
 msgstr ""
 
@@ -6556,11 +6913,9 @@ msgid "Loading Keyboard Shortcuts"
 msgstr "კლავიატურის მალსახმობების ჩატვირთვა"
 
 #: src/commands/ScreenshotCommand.cpp
-msgid "Saved "
-msgstr "შენახულია"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Error trying to save file: "
+#, fuzzy, c-format
+#| msgid "Error trying to save file: "
+msgid "Error trying to save file: %s"
 msgstr "ფაილის შენახვის შეცდომა:"
 
 #: src/effects/Amplify.cpp
@@ -6596,13 +6951,6 @@ msgid ""
 msgstr ""
 "მონიშნული გაქვთ ტრეკი, რომელიც არ შეიცავს აუდიოს. AutoDuck-ს მხოლოდ აუდიო "
 "ტრეკების დამუშავება შეუძლია."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-#. * of the audio automatically when there is sound on another track.  Not as
-#. * in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp src/effects/AutoDuck.h
-msgid "Auto Duck"
-msgstr "Auto Duck"
 
 #: src/effects/AutoDuck.cpp
 msgid ""
@@ -6874,8 +7222,8 @@ msgid "Length (seconds)"
 msgstr "სიგრძე (წამებო)"
 
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
-msgid "Length in seconds from"
+#, fuzzy, c-format
+msgid "Length in seconds from %s, to"
 msgstr "სიგრძეზე წამებში"
 
 #: src/effects/ClickRemoval.cpp
@@ -7046,6 +7394,11 @@ msgid ""
 "Contrast Analyzer, for measuring RMS volume differences between two "
 "selections of audio."
 msgstr ""
+
+#: src/effects/Contrast.cpp src/effects/ToneGen.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "End"
+msgstr "დასასრული"
 
 #: src/effects/Contrast.cpp
 msgid "Volume    "
@@ -7553,12 +7906,6 @@ msgstr "DTMF მიმსევრობა:"
 msgid "Amplitude (0-1):"
 msgstr "ამპლიტუდა (0-1)"
 
-#: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
-#: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Duration:"
-msgstr "ხანგრძლივობა:"
-
 #: src/effects/DtmfGen.cpp
 msgid "Tone/silence ratio:"
 msgstr "ტონის/სიჩუმის პარამეტრები:"
@@ -7578,6 +7925,12 @@ msgstr "ms"
 #: src/effects/DtmfGen.cpp
 msgid "Silence duration:"
 msgstr "სიჩუმის ხანგრძლივობა:"
+
+#: src/effects/DtmfGen.cpp
+#, fuzzy, c-format
+#| msgid "%.0f:1"
+msgid "%.0f ms"
+msgstr "%.0f:1"
 
 #: src/effects/Echo.cpp
 #, fuzzy
@@ -7633,7 +7986,8 @@ msgstr ""
 "ხმის მოწყობილობის გახსნის შეცდომა. გთხოვთ, შეამოწმოთ გამონატანი მოწყობილობის "
 "პარამეტრები და პროექტის სემპლის კოეფიციენტი."
 
-#: src/effects/Effect.cpp
+#: src/effects/Effect.cpp src/effects/vamp/VampEffect.cpp
+#: src/widgets/ASlider.cpp
 #, c-format
 msgid "%s: %s"
 msgstr ""
@@ -7680,11 +8034,6 @@ msgstr "უაკნ"
 #: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip &Forward"
-msgstr "წინ"
-
-#: src/effects/Effect.cpp
-#, fuzzy
-msgid "Skip &Foreward"
 msgstr "წინ"
 
 #: src/effects/Effect.cpp
@@ -7988,6 +8337,12 @@ msgid "Max dB"
 msgstr "Max dB"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
+#, fuzzy, c-format
+#| msgid "%3d dB"
+msgid "%d dB"
+msgstr "%3d dB"
+
+#: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
 msgstr ""
 
@@ -7995,9 +8350,15 @@ msgstr ""
 msgid "Min dB"
 msgstr "Min dB"
 
-#: src/effects/Equalization.cpp src/widgets/NumericTextCtrl.cpp
-msgid "kHz"
-msgstr "kHz"
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%d Hz"
+msgstr ""
+
+#: src/effects/Equalization.cpp
+#, c-format
+msgid "%g kHz"
+msgstr ""
 
 #: src/effects/Equalization.cpp
 #, fuzzy
@@ -8181,16 +8542,20 @@ msgid "'unnamed' is special"
 msgstr ""
 
 #: src/effects/Equalization.cpp
-msgid "Rename '"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "' to..."
-msgstr ""
+#, fuzzy, c-format
+#| msgid "Renamed '%s' to '%s'"
+msgid "Rename '%s' to..."
+msgstr "სახელშეცვლილია '%s' -დან  '%s'-ზე"
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
 msgstr ""
+
+#: src/effects/Equalization.cpp
+#, fuzzy, c-format
+#| msgid "Renamed '%s' to '%s'"
+msgid "Rename '%s'"
+msgstr "სახელშეცვლილია '%s' -დან  '%s'-ზე"
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -8336,6 +8701,10 @@ msgstr "Audacity %s მხარდაჭერის გუნდი"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
+msgstr ""
+
+#: src/effects/LoadEffects.cpp
+msgid "Unknown built-in effect name"
 msgstr ""
 
 #: src/effects/Noise.cpp
@@ -8657,33 +9026,38 @@ msgid "Not doing anything...\n"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-#, fuzzy
-msgid "Analyzing: "
+#, fuzzy, c-format
+msgid "Analyzing: %s"
 msgstr "&ანალიზი"
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing first track of stereo pair: "
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-#, fuzzy
-msgid "Processing: "
+#, fuzzy, c-format
+msgid "Processing: %s"
 msgstr "Auto Duck დამუშავება..."
 
 #: src/effects/Normalize.cpp
-msgid "Processing stereo channels independently: "
+#, c-format
+msgid "Processing stereo channels independently: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid "Analyzing second track of stereo pair: "
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid "Processing first track of stereo pair: "
+#, c-format
+msgid "Processing first track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
-msgid "Processing second track of stereo pair: "
+#, c-format
+msgid "Processing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
@@ -8878,12 +9252,14 @@ msgid "New selection length: dd:hh:mm:ss"
 msgstr "ახალი მონიშვნის სიგრძე: სს:წწ:წწ"
 
 #: src/effects/Repeat.cpp
-#, fuzzy
-msgid "Current selection length: "
+#, fuzzy, c-format
+msgid "Current selection length: %s"
 msgstr "ახალი მონიშვნის სიგრძე:"
 
 #: src/effects/Repeat.cpp
-msgid "New selection length: "
+#, fuzzy, c-format
+#| msgid "New selection length: "
+msgid "New selection length: %s"
 msgstr "ახალი მონიშვნის სიგრძე:"
 
 #: src/effects/Repeat.cpp
@@ -9337,6 +9713,10 @@ msgstr "Wah სიხშირის ოფსეტი პროცენტუ
 msgid "Amplify"
 msgstr "გაძლიერება"
 
+#: src/effects/AutoDuck.h
+msgid "Auto Duck"
+msgstr "Auto Duck"
+
 #: src/effects/BassTreble.h
 msgid "Bass and Treble"
 msgstr ""
@@ -9468,6 +9848,17 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
+#| msgid "Could not open file "
+msgid "Could not find component"
+msgstr "შეუძლებელია ფაილის გახსნა"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
+msgid "Could not initialize component"
+msgstr "შეუძლებელია MP3 კოდირების ბიბლიოთეკის გახსნა !"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy
 msgid "Audio Unit Effect Options"
 msgstr "ეფექტის პარამეტრები"
 
@@ -9584,6 +9975,17 @@ msgid "Provides LADSPA Effects"
 msgstr ""
 
 #: src/effects/ladspa/LadspaEffect.cpp
+msgid "Audacity no longer uses vst-bridge"
+msgstr ""
+
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
+#, fuzzy
+#| msgid "Could not open MP3 encoding library!"
+msgid "Could not load the library"
+msgstr "შეუძლებელია MP3 კოდირების ბიბლიოთეკის გახსნა !"
+
+#: src/effects/ladspa/LadspaEffect.cpp
 #, fuzzy
 msgid "LADSPA Effect Options"
 msgstr "ეფექტის პარამეტრები"
@@ -9683,6 +10085,11 @@ msgid "Nyquist Worker"
 msgstr "Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Nyquist გამონატანი: "
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
@@ -9772,11 +10179,23 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+#| msgid "This version of Audacity was not compiled with %s support."
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "Audacity ეს ვერსია არ იყო კომპილირებული %s მხარდაჭერით."
+
+#: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid ""
 "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 "Control not created."
 msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+#| msgid "Could not open file "
+msgid "Could not open file"
+msgstr "შეუძლებელია ფაილის გახსნა"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9791,6 +10210,12 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Error in Nyquist code"
 msgstr ""
+
+#. i18n-hint: refers to programming "languages"
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Could not determine language"
+msgstr "შეუძლებელია ფაილის გახსნა:"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -9927,12 +10352,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
-#, fuzzy
-msgid "Audio In: "
-msgstr "აუდიოს პოზიცია"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ", Audio Out: "
+#, c-format
+msgid "Audio In: %d, Audio Out: %d"
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
@@ -10019,7 +10440,9 @@ msgstr "მონიშნული აუდიოს ექსპორტი 
 msgid "All audio is muted."
 msgstr ""
 
-#: src/export/Export.cpp
+#: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
+#: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "შეუძლებელია ესპორტირება"
 
@@ -10028,8 +10451,8 @@ msgid "untitled"
 msgstr ""
 
 #: src/export/Export.cpp
-#, fuzzy
-msgid "Are you sure you want to export the file as \""
+#, fuzzy, c-format
+msgid "Are you sure you want to export the file as \"%s\"?\n"
 msgstr "მართლა გსურთ შეინახოთ ეს ფაილი როგორც \""
 
 #: src/export/Export.cpp
@@ -10058,8 +10481,8 @@ msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "               The file cannot be written because the path is needed to "
 "restore the original audio to the project.\n"
-"               Choose File > Check Dependencies to view the locations of all "
-"missing files.\n"
+"               Choose Help > Diagnostics > Check Dependencies to view the "
+"locations of all missing files.\n"
 "               If you still wish to export, please choose a different "
 "filename or folder."
 msgstr ""
@@ -10102,14 +10525,16 @@ msgstr "ეფექტის პარამეტრები"
 msgid "Channel: %2d"
 msgstr "არხი: %2d"
 
+#. i18n-hint: track name and L abbreviating Left channel
 #: src/export/Export.cpp
-#, fuzzy
-msgid " - L"
+#, fuzzy, c-format
+msgid "%s - L"
 msgstr "-მარცხენა"
 
+#. i18n-hint: track name and R abbreviating Right channel
 #: src/export/Export.cpp
-#, fuzzy
-msgid " - R"
+#, fuzzy, c-format
+msgid "%s - R"
 msgstr "- მარჯვენა"
 
 #: src/export/Export.cpp
@@ -10158,8 +10583,10 @@ msgid "Exporting the selected audio using command-line encoder"
 msgstr "მონიშნული აუდიოს ბრძანების სტრიქონის მაკოდირებელის ექსპორტირება"
 
 #: src/export/ExportCL.cpp
-msgid "Exporting the entire project using command-line encoder"
-msgstr "მთლიანი პროექტის ბრძანების სტრიქონის მაკოდირებელის ექსპორტირება"
+#, fuzzy
+#| msgid "Exporting the selected audio using command-line encoder"
+msgid "Exporting the audio using command-line encoder"
+msgstr "მონიშნული აუდიოს ბრძანების სტრიქონის მაკოდირებელის ექსპორტირება"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
@@ -10266,10 +10693,11 @@ msgstr ""
 msgid "Exporting selected audio as %s"
 msgstr "მონიშნული აუდიოს ექსპორტი როგორც %s"
 
-#: src/export/ExportFFmpeg.cpp
-#, c-format
-msgid "Exporting entire file as %s"
-msgstr "მთლიანი ფაილის ექსპორტი როფორც  %s"
+#: src/export/ExportFFmpeg.cpp src/export/ExportPCM.cpp
+#, fuzzy, c-format
+#| msgid "Exporting selected audio as %s"
+msgid "Exporting the audio as %s"
+msgstr "მონიშნული აუდიოს ექსპორტი როგორც %s"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Invalid sample rate"
@@ -10846,8 +11274,10 @@ msgid "Exporting the selected audio as FLAC"
 msgstr "მონიშნული აუდიოს ექსპორტი FLAC ფორმატში"
 
 #: src/export/ExportFLAC.cpp
-msgid "Exporting the entire project as FLAC"
-msgstr "მთლიანი პროექტის ექსპორტი FLAC ფორმატში"
+#, fuzzy
+#| msgid "Exporting the selected audio as FLAC"
+msgid "Exporting the audio as FLAC"
+msgstr "მონიშნული აუდიოს ექსპორტი FLAC ფორმატში"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -10867,9 +11297,10 @@ msgid "Exporting selected audio at %ld kbps"
 msgstr "მონიშნული აუდიოს ექსპორტი %ld კბწ-ით"
 
 #: src/export/ExportMP2.cpp
-#, c-format
-msgid "Exporting entire file at %ld kbps"
-msgstr "მთლიანი ფაილის ექსპორტი %ld კბწით"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %ld kbps"
+msgid "Exporting the audio at %ld kbps"
+msgstr "მონიშნული აუდიოს ექსპორტი %ld კბწ-ით"
 
 #: src/export/ExportMP3.cpp
 msgid "kbps"
@@ -11041,9 +11472,10 @@ msgid "Exporting selected audio with %s preset"
 msgstr "მონიშნული აუდიოს %s პარამეტრით ექსპორტი"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with %s preset"
-msgstr "მთლიანი ფაილის %s პარამეტრით ექსპორტი"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio with %s preset"
+msgid "Exporting the audio with %s preset"
+msgstr "მონიშნული აუდიოს %s პარამეტრით ექსპორტი"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11051,9 +11483,10 @@ msgid "Exporting selected audio with VBR quality %s"
 msgstr "მონიშნული აუდიოს VBR  %s ხარისხით ექსპორტი"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file with VBR quality %s"
-msgstr "მთლიანი ფაილის VBR  %s ხარისხით ექსპორტი"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio with VBR quality %s"
+msgid "Exporting the audio with VBR quality %s"
+msgstr "მონიშნული აუდიოს VBR  %s ხარისხით ექსპორტი"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11061,9 +11494,10 @@ msgid "Exporting selected audio at %d Kbps"
 msgstr "Exporting selected audio at %d Kbps"
 
 #: src/export/ExportMP3.cpp
-#, c-format
-msgid "Exporting entire file at %d Kbps"
-msgstr "Exporting entire file at %d Kbps"
+#, fuzzy, c-format
+#| msgid "Exporting selected audio at %d Kbps"
+msgid "Exporting the audio at %d Kbps"
+msgstr "Exporting selected audio at %d Kbps"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11248,8 +11682,10 @@ msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "მონიშნული Ogg Vorbis აუდიოს ექსპორტირება"
 
 #: src/export/ExportOGG.cpp
-msgid "Exporting the entire project as Ogg Vorbis"
-msgstr "მთლიანი პროექტის Ogg Vorbis ექსპორტი"
+#, fuzzy
+#| msgid "Exporting the selected audio as Ogg Vorbis"
+msgid "Exporting the audio as Ogg Vorbis"
+msgstr "მონიშნული Ogg Vorbis აუდიოს ექსპორტირება"
 
 #: src/export/ExportPCM.cpp
 #, fuzzy
@@ -11286,11 +11722,6 @@ msgstr "შეუძლებელია აუდიოს ამ ფორმ
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "მონიშნული აუდიოს ექსპორტირება როგორც %s"
-
-#: src/export/ExportPCM.cpp
-#, c-format
-msgid "Exporting the entire project as %s"
-msgstr "მთლიანი პროექტის ექსპორტირება როგორც %s"
 
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
@@ -11578,16 +12009,26 @@ msgid "Invalid track offset in LOF file."
 msgstr "LOF ფაილში არასწორი ტრეკის ოფსეტი."
 
 #: src/import/ImportMIDI.cpp
-msgid "Could not open file "
-msgstr "შეუძლებელია ფაილის გახსნა"
+#, fuzzy, c-format
+#| msgid ""
+#| "Could not open file:\n"
+#| "  %s"
+msgid "Could not open file %s: Filename too short."
+msgstr ""
+"შეუძლებელია ფაილის გახსნა:\n"
+"  %s"
 
 #: src/import/ImportMIDI.cpp
-msgid ": Filename too short."
-msgstr ": ფაილის სახელი ძალიან მოკლეა."
-
-#: src/import/ImportMIDI.cpp
-msgid ": Incorrect filetype."
+#, fuzzy, c-format
+#| msgid ": Incorrect filetype."
+msgid "Could not open file %s: Incorrect filetype."
 msgstr ": ფაილის არასწორი ტიპი."
+
+#: src/import/ImportMIDI.cpp
+#, fuzzy, c-format
+#| msgid "Could not open file "
+msgid "Could not open file %s."
+msgstr "შეუძლებელია ფაილის გახსნა"
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
@@ -11622,29 +12063,34 @@ msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, და სხვა არაკომპრესირებული ტიპები"
 
 #: src/import/ImportPCM.cpp
-#, c-format
 msgid ""
 "When importing uncompressed audio files you can either copy them into the "
 "project, or read them directly from their current location (without "
 "copying).\n"
 "\n"
-"Your current preference is set to %s.\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to copy in.\n"
 "\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
+"Your current preference is set to read directly.\n"
+"\n"
+msgstr ""
+
+#: src/import/ImportPCM.cpp
+msgid ""
 "Reading the files directly allows you to play or edit them almost "
 "immediately.  This is less safe than copying in, because you must retain the "
-"files with their original names in their original location.\n"
-"File > Check Dependencies will show the original names and location of any "
-"files that you are reading directly.\n"
+"files with their original names in their original locations.\n"
+"Help > Diagnostics > Check Dependencies will show the original names and "
+"locations of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
-msgstr ""
-
-#: src/import/ImportPCM.cpp
-msgid "copy in"
-msgstr ""
-
-#: src/import/ImportPCM.cpp
-msgid "read directly"
 msgstr ""
 
 #: src/import/ImportPCM.cpp
@@ -11763,6 +12209,10 @@ msgstr "იმპორტირების რაოდენობა:"
 #: src/import/ImportRaw.cpp
 msgid "Sample rate:"
 msgstr "სემპლის კოეფიციენტი"
+
+#: src/import/RawAudioGuess.cpp
+msgid "Bad data size"
+msgstr ""
 
 #: src/ondemand/ODWaveTrackTaskQueue.cpp
 #, c-format
@@ -12202,10 +12652,6 @@ msgstr ""
 msgid "B&lend system and Audacity theme"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "&Display a mono channel as virtual stereo"
-msgstr ""
-
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
 msgstr "იმპორტი / ექსპორტი"
@@ -12365,6 +12811,11 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You must select a binding before assigning a shortcut"
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, c-format
+msgid "%s - %s"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -12923,6 +13374,11 @@ msgstr ""
 msgid "Always record on a new track"
 msgstr ""
 
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr ""
+
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
 msgid "Automated Recording Level Adjustment"
@@ -13305,6 +13761,11 @@ msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 #, fuzzy
+msgid "Advanced &vertical zooming"
+msgstr "მიქსირების დამატებითი პარამეტრები"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+#, fuzzy
 msgid "Solo &Button:"
 msgstr "სოლო ღილაკი:"
 
@@ -13328,6 +13789,54 @@ msgstr ""
 #: src/prefs/TracksPrefs.cpp
 msgid "Stem plot"
 msgstr ""
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+msgid "Fit to Width"
+msgstr "ფანჯარაზე მორგება"
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "&Zoom to Selection"
+msgid "Zoom to Selection"
+msgstr "მონიშვნამდე &გადიდება"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Zoom default"
+msgid "Zoom Default"
+msgstr "ნაგულისხმევი მასშტაბირება"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Minutes"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "Seconds"
+msgstr "წამები"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "milliseconds"
+msgid "MilliSeconds"
+msgstr "მილიწამები"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "samples"
+msgid "Samples"
+msgstr "სემპლები"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "4 Pixels per Sample"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Zoom"
+msgid "Max Zoom"
+msgstr "გადიდება"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -13362,6 +13871,24 @@ msgstr "აუდიო ტრეკი"
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w audio track name as overlay"
 msgstr ""
+
+#: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Zoom Tool"
+msgid "Zoom Toggle"
+msgstr "გადიდების ხელსაწყო"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Preset:"
+msgid "Preset 1:"
+msgstr "პარამეტრები:"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+#| msgid "Preset:"
+msgid "Preset 2:"
+msgstr "პარამეტრები:"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Warnings"
@@ -13560,16 +14087,20 @@ msgid "Zoom Out"
 msgstr "გადიდება"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit selection in window"
+msgid "Show Effects Rack"
+msgstr ""
+
+#: src/toolbars/EditToolBar.cpp
+#, fuzzy
+#| msgid "Fit selection in window"
+msgid "Fit selection to width"
 msgstr "მონიშვნის ფანჯარაში მორგება"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Fit project in window"
+#, fuzzy
+#| msgid "Fit project in window"
+msgid "Fit project to width"
 msgstr "პროექტის ფანჯარაში მორგება"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Open Effects Rack"
@@ -13645,13 +14176,13 @@ msgstr ""
 
 #: src/toolbars/MixerToolBar.cpp
 #, fuzzy, c-format
-msgid "Playback Volume: %%.2f%s"
+msgid "Playback Volume: %s (emulated)"
 msgstr "დაკვრა"
 
 #: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid " (emulated)"
-msgstr "შაბლონი"
+#, fuzzy, c-format
+msgid "Playback Volume: %s"
+msgstr "დაკვრა"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume (Unavailable; use system mixer.)"
@@ -13709,7 +14240,9 @@ msgid "Selection"
 msgstr "მონიშვნა"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Project Rate (Hz):"
+#, fuzzy
+#| msgid "Project Rate (Hz):"
+msgid "Project Rate (Hz)"
 msgstr "პროექტის კოეფიციენტი (Hz):"
 
 #: src/toolbars/SelectionBar.cpp
@@ -13721,26 +14254,6 @@ msgstr "გადაღება"
 #, fuzzy
 msgid "Audio Position"
 msgstr "აუდიოს პოზიცია"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start-End"
-msgstr "დაწყება"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start-Length"
-msgstr "ფილტრი"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Length-End"
-msgstr "სიგრძე"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Length-Center"
-msgstr "სიგრძე"
 
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
@@ -13763,21 +14276,16 @@ msgid "Length and Center of Selection"
 msgstr "ფაილის დაყოფა მონიშვნამდე"
 
 #: src/toolbars/SelectionBar.cpp
+msgid "Snap To"
+msgstr "გადაღება"
+
+#: src/toolbars/SelectionBar.cpp
 msgid "Length"
 msgstr "სიგრძე"
 
 #: src/toolbars/SelectionBar.cpp src/widgets/ASlider.cpp
 msgid "Center"
 msgstr "ცენტრში"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Snap To"
-msgstr "გადაღება"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Selection options"
-msgstr "დასარულზე მონიშვნა"
 
 #: src/toolbars/SelectionBar.cpp
 #, c-format
@@ -13796,8 +14304,6 @@ msgstr ""
 msgid "Selection %s.  %s won't change."
 msgstr ""
 
-#. i18n hints occur i the right place in
-#. the .pot file
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
 msgid "Start - End"
@@ -13815,63 +14321,6 @@ msgstr "სიგრძე"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Length - Center"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start - Length - End"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Center - Length"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Start - Center - End"
-msgstr "მონიშვნის დასასრულამდე"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length - Center - End"
-msgstr ""
-
-#. i18n-hint: S-E is an abbreviation of Start-End
-#: src/toolbars/SelectionBar.cpp
-msgid "S-E"
-msgstr ""
-
-#. i18n-hint: S-L is an abbreviation of Start-Length
-#: src/toolbars/SelectionBar.cpp
-msgid "S-L"
-msgstr ""
-
-#. i18n-hint: L-E is an abbreviation of Length-End
-#: src/toolbars/SelectionBar.cpp
-msgid "L-E"
-msgstr ""
-
-#. i18n-hint: L-C is an abbreviation of Length-Center
-#: src/toolbars/SelectionBar.cpp
-msgid "L-C"
-msgstr ""
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show start time and end time"
-msgstr "საწყისი თარიღი და დრო"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show start time and length"
-msgstr "საწყისი თარიღი და დრო"
-
-#: src/toolbars/SelectionBar.cpp
-#, fuzzy
-msgid "Show length and end time"
-msgstr "სიგრძიდან წამებში"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Show length and center"
 msgstr ""
 
 #: src/toolbars/SpectralSelectionBar.cpp
@@ -14011,13 +14460,39 @@ msgid "Down Octa&ve"
 msgstr "ოქტავით დაბლა"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
 msgid ""
-"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-"particular zoom region."
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
 msgstr ""
 "ვერტიკალური შემცირებისთვის დაუწკაპუნეთ, Shift-დაწკაპუნება გადიდებისთვის, "
 "გადათრევა კი ქმნის მასშტაბირების კონკრეტული არეს."
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Right-Click"
+msgid "Right-click for menu."
+msgstr "მარჯვენა წკაპი"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom Reset\tShift-Right-Click"
+msgstr "Shift-მარცხენა-წკაპი"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Shift-მარცხენა-წკაპი"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Shift-მარცხენა-წკაპი"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 #, fuzzy
@@ -14101,6 +14576,8 @@ msgstr "სემპლის რედაქტირება"
 msgid "Instrument %i"
 msgstr "ინსტრუმენტი"
 
+#. i18n-hint: The strings name a track and a format
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s"
@@ -14170,6 +14647,7 @@ msgstr ""
 msgid "&Other..."
 msgstr "სხვა..."
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s Hz"
@@ -14265,6 +14743,7 @@ msgstr "მარჯვენა არხი"
 msgid "Channel"
 msgstr "არხი"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
@@ -14274,6 +14753,7 @@ msgstr "შექმნილი '%s' სტერეო ტრეკი"
 msgid "Make Stereo"
 msgstr "სტერეოს შექმნა"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy, c-format
 msgid "Swapped Channels in '%s'"
@@ -14284,11 +14764,13 @@ msgstr "%d არხი"
 msgid "Swap Channels"
 msgstr "%d არხი"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "სტერო ტრეკის დაყოფა '%s'"
 
+#. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy, c-format
 msgid "Split Stereo to Mono '%s'"
@@ -14301,27 +14783,30 @@ msgstr "&სტერეოდან მონოზე"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr "Shift-მარცხენა-წკაპი"
+#| msgid "Zoom In"
+msgid "Zoom x1/2"
+msgstr "შემცირება"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Out\tShift-Left-Click"
-msgstr "Shift-მარცხენა-წკაპი"
+#| msgid "Zoom"
+msgid "Zoom x2"
+msgstr "გადიდება"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+msgid "Half Wave"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#, fuzzy
+#| msgid "Zoom Out"
+msgid "Zoom Reset"
+msgstr "გადიდება"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom to Fit\tShift-Right-Click"
 msgstr "Shift-მარცხენა-წკაპი"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-#, fuzzy
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"ვერტიკალური შემცირებისთვის დაუწკაპუნეთ, Shift-დაწკაპუნება გადიდებისთვის, "
-"გადათრევა კი ქმნის მასშტაბირების კონკრეტული არეს."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change lower speed limit (%) to:"
@@ -14418,10 +14903,6 @@ msgid "&Scrub"
 msgstr ""
 
 #: src/tracks/ui/Scrubbing.cpp
-msgid "See&k"
-msgstr ""
-
-#: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
 msgstr ""
 
@@ -14512,10 +14993,14 @@ msgstr "დაუწკაპუნეთ და გადაათრიეთ 
 msgid "Moved clips to another track"
 msgstr "სხვა ტრეკზე გადატანილი სანიშნი"
 
-#. i18n-hint: %s is a direction like left or right
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, fuzzy, c-format
-msgid "Time shifted tracks/clips %s %.02f seconds"
+msgid "Time shifted tracks/clips right %.02f seconds"
+msgstr "დაჩუმებული მონუშნული ტრეკები %.2f-ისთვის.2f წამი %.2f"
+
+#: src/tracks/ui/TimeShiftHandle.cpp
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips left %.02f seconds"
 msgstr "დაჩუმებული მონუშნული ტრეკები %.2f-ისთვის.2f წამი %.2f"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
@@ -14591,20 +15076,22 @@ msgstr ""
 msgid "%s to select or deselect track."
 msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
 
-#. i18n-hint: a direction as in up or down.
+#. i18n-hint: will substitute name of track for %s
 #: src/tracks/ui/TrackSelectHandle.cpp
-msgid "up"
-msgstr "ზემოთ"
-
-#: src/tracks/ui/TrackSelectHandle.cpp
-msgid "down"
-msgstr "ქვემოთ"
-
-#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
-#: src/tracks/ui/TrackSelectHandle.cpp
-#, c-format
-msgid "Moved '%s' %s"
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' up"
 msgstr "გადაადგილებული '%s' %s"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+#, fuzzy, c-format
+#| msgid "Moved '%s' %s"
+msgid "Moved '%s' down"
+msgstr "გადაადგილებული '%s' %s"
+
+#: src/tracks/ui/TrackSelectHandle.cpp
+msgid "Move Track"
+msgstr "ტრეკის გადაადგილება"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
@@ -14642,16 +15129,16 @@ msgstr "მარცხ"
 msgid "R"
 msgstr "მარჯ"
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Left"
-msgstr "მარცენა"
+#, c-format
+msgid "%.0f%% Left"
+msgstr ""
 
+#. i18n-hint: Stereo pan setting
 #: src/widgets/ASlider.cpp
-msgid "Right"
-msgstr "მარჯვენა"
-
-#: src/widgets/ASlider.cpp
-msgid "+"
+#, c-format
+msgid "%.0f%% Right"
 msgstr ""
 
 #: src/widgets/FileHistory.cpp
@@ -15035,6 +15522,10 @@ msgstr "01000,01000 კადრი|75"
 msgid "0100000.0100 Hz"
 msgstr "0100 ს 060 წ 060.01000 წ"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "kHz"
+msgstr "kHz"
+
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
@@ -15330,6 +15821,36 @@ msgstr "მეტჯერ აღარ აჩვენო ეს გაფრ�
 msgid "Please select an action"
 msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
 
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Track Panel"
+msgid "Panel"
+msgstr "ტრეკის ზოლი"
+
+#: src/widgets/wxPanelWrapper.h
+msgid "Dialog"
+msgstr ""
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a directory"
+msgstr "ახალი შექმნილი პროექტი"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+#| msgid "Directories"
+msgid "Directory Dialog"
+msgstr "დირექტორიები"
+
+#: src/widgets/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a file"
+msgstr "MIDI ფაილის ამორჩევა"
+
+#: src/widgets/wxPanelWrapper.h
+msgid "File Dialog"
+msgstr ""
+
 #: src/xml/XMLFileReader.cpp
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -15339,6 +15860,173 @@ msgstr "შეცდომა: %hs at line %lu"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "შეუძლებელია ფაილის ჩატვირთვა: \"%s\""
+
+#, fuzzy
+#~ msgid "Audacity failed to write to a file in %s."
+#~ msgstr ""
+#~ "Audacity ვერ შეძლო ფაილის ჩაწერა:\n"
+#~ "  %s."
+
+#, fuzzy
+#~ msgid "window"
+#~ msgstr "ფანჯარა"
+
+#~ msgid "Could not open file: "
+#~ msgstr "შეუძლებელია ფაილის გახსნა:"
+
+#, fuzzy
+#~ msgid "Trans&cription"
+#~ msgstr "ტრანსკრიპცია"
+
+#, fuzzy
+#~ msgid "Scru&b"
+#~ msgstr "&ხელსაწყოთა ზოლები"
+
+#, fuzzy
+#~ msgid "Ext-Co&mmand"
+#~ msgstr "&ბრძანება"
+
+#~ msgid "Down"
+#~ msgstr "ქვემოთ"
+
+#, fuzzy
+#~ msgid "Moved"
+#~ msgstr "აწევა"
+
+#, fuzzy
+#~ msgid "and"
+#~ msgstr "დასასრული"
+
+#, fuzzy
+#~ msgid "end to selection end"
+#~ msgstr "მონიშვნის დასასრულით გასწორებული"
+
+#, fuzzy
+#~ msgid "end to end"
+#~ msgstr "დასარულზე მონიშვნა"
+
+#, fuzzy
+#~ msgid "End to End"
+#~ msgstr "ბოლოში გადასვლა"
+
+#, fuzzy
+#~ msgid "Aligned %s"
+#~ msgstr "გახსწორებული"
+
+#, fuzzy
+#~ msgid "Duration:\n"
+#~ msgstr "ხანგრძლივობა:"
+
+#, fuzzy
+#~ msgid ""
+#~ "Timer Recording completed.\n"
+#~ "\n"
+#~ msgstr "Auto Duck დამუშავება..."
+
+#~ msgid "Saved "
+#~ msgstr "შენახულია"
+
+#, fuzzy
+#~ msgid "Skip &Foreward"
+#~ msgstr "წინ"
+
+#, fuzzy
+#~ msgid "Audio In: "
+#~ msgstr "აუდიოს პოზიცია"
+
+#~ msgid "Exporting the entire project using command-line encoder"
+#~ msgstr "მთლიანი პროექტის ბრძანების სტრიქონის მაკოდირებელის ექსპორტირება"
+
+#~ msgid "Exporting entire file as %s"
+#~ msgstr "მთლიანი ფაილის ექსპორტი როფორც  %s"
+
+#~ msgid "Exporting the entire project as FLAC"
+#~ msgstr "მთლიანი პროექტის ექსპორტი FLAC ფორმატში"
+
+#~ msgid "Exporting entire file at %ld kbps"
+#~ msgstr "მთლიანი ფაილის ექსპორტი %ld კბწით"
+
+#~ msgid "Exporting entire file with %s preset"
+#~ msgstr "მთლიანი ფაილის %s პარამეტრით ექსპორტი"
+
+#~ msgid "Exporting entire file with VBR quality %s"
+#~ msgstr "მთლიანი ფაილის VBR  %s ხარისხით ექსპორტი"
+
+#~ msgid "Exporting entire file at %d Kbps"
+#~ msgstr "Exporting entire file at %d Kbps"
+
+#~ msgid "Exporting the entire project as Ogg Vorbis"
+#~ msgstr "მთლიანი პროექტის Ogg Vorbis ექსპორტი"
+
+#~ msgid "Exporting the entire project as %s"
+#~ msgstr "მთლიანი პროექტის ექსპორტირება როგორც %s"
+
+#~ msgid ": Filename too short."
+#~ msgstr ": ფაილის სახელი ძალიან მოკლეა."
+
+#, fuzzy
+#~ msgid " (emulated)"
+#~ msgstr "შაბლონი"
+
+#, fuzzy
+#~ msgid "Start-End"
+#~ msgstr "დაწყება"
+
+#, fuzzy
+#~ msgid "Start-Length"
+#~ msgstr "ფილტრი"
+
+#, fuzzy
+#~ msgid "Length-End"
+#~ msgstr "სიგრძე"
+
+#, fuzzy
+#~ msgid "Length-Center"
+#~ msgstr "სიგრძე"
+
+#, fuzzy
+#~ msgid "Selection options"
+#~ msgstr "დასარულზე მონიშვნა"
+
+#, fuzzy
+#~ msgid "Start - Length - End"
+#~ msgstr "მონიშვნის დასასრულამდე"
+
+#, fuzzy
+#~ msgid "Start - Center - End"
+#~ msgstr "მონიშვნის დასასრულამდე"
+
+#, fuzzy
+#~ msgid "Show start time and end time"
+#~ msgstr "საწყისი თარიღი და დრო"
+
+#, fuzzy
+#~ msgid "Show start time and length"
+#~ msgstr "საწყისი თარიღი და დრო"
+
+#, fuzzy
+#~ msgid "Show length and end time"
+#~ msgstr "სიგრძიდან წამებში"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+#~ "particular zoom region."
+#~ msgstr ""
+#~ "ვერტიკალური შემცირებისთვის დაუწკაპუნეთ, Shift-დაწკაპუნება გადიდებისთვის, "
+#~ "გადათრევა კი ქმნის მასშტაბირების კონკრეტული არეს."
+
+#~ msgid "up"
+#~ msgstr "ზემოთ"
+
+#~ msgid "down"
+#~ msgstr "ქვემოთ"
+
+#~ msgid "Left"
+#~ msgstr "მარცენა"
+
+#~ msgid "Right"
+#~ msgstr "მარჯვენა"
 
 #, fuzzy
 #~ msgid "DuckAmountDb"
@@ -15845,10 +16533,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgstr ""
 #~ "შეუძლებელია დირექტორიის შექმნა:\n"
 #~ "  %s"
-
-#, fuzzy
-#~ msgid "Create new directory"
-#~ msgstr "ახალი შექმნილი პროექტი"
 
 #, fuzzy
 #~ msgid "Current directory:"
@@ -16376,10 +17060,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ "ვწუხვართ, მოდულის ეფექტის შესულება შეუძლებელია სტერეო ტრეკებზე, სადაც "
 #~ "ტრეკის ინდივიდუალური არხები არ ემთხვევა."
 
-#, fuzzy
-#~ msgid "Unable to load plug-in %s"
-#~ msgstr "Vamp მოდულის გაშვებამ მარცხი განიცადა."
-
 #~ msgid "Note length (seconds)"
 #~ msgstr "შენიშვნის სიგრძე (წამები)"
 
@@ -16435,9 +17115,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 
 #~ msgid "To RPM"
 #~ msgstr "RPM-ზე"
-
-#~ msgid "Vertical Stereo"
-#~ msgstr "ვერტიკალური სტერეო"
 
 #~ msgid "Input Meter"
 #~ msgstr "შენატანის მთვლელი"
@@ -16585,9 +17262,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Aligned end with selection start"
 #~ msgstr "მონიშვნის დასაწყისით გასწორებული დასასრული"
 
-#~ msgid "Aligned end with selection end"
-#~ msgstr "მონიშვნის დასასრულით გასწორებული დასასრული"
-
 #~ msgid "Save CleanSpeech Preset File As:"
 #~ msgstr "CleanSpeech პარამეტრის ფაილის შენახვა როგორც:"
 
@@ -16716,13 +17390,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 
 #~ msgid "Noise Threshold (Hiss/Hum/Ambient Noise)"
 #~ msgstr "ხარვეზის ზღვარი  (Hiss/Hum/Ambient ხარვეზი)"
-
-#~ msgid ""
-#~ "Could not open file:\n"
-#~ "  %s"
-#~ msgstr ""
-#~ "შეუძლებელია ფაილის გახსნა:\n"
-#~ "  %s"
 
 #~ msgid "Attempt to run Noise Removal without a noise profile.\n"
 #~ msgstr "ხარვეზის გაწმენდის გაშვების მცდელობა ხარვეზის პროფილის გარეშე.\n"
