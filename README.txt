@@ -1,11 +1,11 @@
 Audacity(R): free, open source, cross-platform audio software for 
-multi-track recording and editing: http://www.audacityteam.org/ . 
+multi-track recording and editing: https://www.audacityteam.org/ . 
 
 User suppport is provided on Audacity Forum:
-http://forum.audacityteam.org/ .
+https://forum.audacityteam.org/ .
 
 We welcome feedback on Audacity, suggestions for new or improved features, 
-and bug reports. Please visit http://audacityteam.org/contact/#feedback .
+and bug reports. Please visit https://forum.audacityteam.org/viewforum.php?f=25 .
 
 Audacity is copyright (c) 1999-2018 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
@@ -13,7 +13,7 @@ except as otherwise noted (mostly in the lib-src subdirectories).
 "Audacity" is a registered trademark of Dominic Mazzoni. 
 
 The Audacity documentation is licensed under the Creative Commons
-Attribution 3.0 license: http://creativecommons.org/licenses/by/3.0/legalcode .
+Attribution 3.0 license: https://creativecommons.org/licenses/by/3.0/legalcode .
 
 Compilation instructions for Audacity are provided in the source code:
 * Windows: win\compile.txt
@@ -21,7 +21,7 @@ Compilation instructions for Audacity are provided in the source code:
 * GNU/Linux: INSTALL . 
 
 You can ask for help with compilation problems at:
-http://forum.audacityteam.org/viewforum.php?f=19 .
+https://forum.audacityteam.org/viewforum.php?f=19 .
 
 If you want to suggest some simple text change in our code, please submit a 
 pull request on https://github.com/audacity/audacity/pulls . It's usually 
@@ -54,7 +54,7 @@ License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program (in a file called LICENSE.txt); if not, go
-to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
+to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
   Free Software Foundation, Inc.
   59 Temple Place - Suite 330
@@ -141,7 +141,7 @@ this version.
 Source code to this program is always available; for more information visit
 our web site at:
 
-  http://audacityteam.org/download/source
+  https://www.audacityteam.org/download/source
 
 Audacity is built upon other free libraries; some of these libraries may have
 come with Audacity in the lib-src directory.  Others you are expected to install
