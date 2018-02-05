@@ -6144,8 +6144,6 @@ void AudacityProject::SelectNone()
       t->SetSelected(false);
 
    mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);
 }
 
 void AudacityProject::ZoomInByFactor( double ZoomFactor )

@@ -95,15 +95,12 @@ UIHandle::Result LabelTextHandle::Click
       if (!done) {
          //otherwise, select all tracks
          for (auto t : tracks->Any())
-            selectionState.SelectTrack
-               ( *t, true, true, pProject->GetMixerBoard() );
+            selectionState.SelectTrack( *t, true, true );
       }
 
       // Do this after, for its effect on TrackPanel's memory of last selected
       // track (which affects shift-click actions)
-      selectionState.SelectTrack
-         ( *pLT, true, true,
-           pProject->GetMixerBoard() );
+      selectionState.SelectTrack( *pLT, true, true );
    }
 
    // PRL: bug1659 -- make selection change undo correctly

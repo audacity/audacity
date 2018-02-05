@@ -940,6 +940,10 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mProject->Bind(EVT_TRACK_PANEL_TIMER,
       &MixerBoard::OnTimer,
       this);
+
+   mProject->GetTracks()->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
+      &MixerBoard::OnTrackChanged,
+      this);
 }
 
 
@@ -1162,14 +1166,6 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 bool MixerBoard::HasSolo()
 {
    return !(( mTracks->Any<PlayableTrack>() + &PlayableTrack::GetSolo ).empty());
-}
-
-void MixerBoard::RefreshTrackCluster(const PlayableTrack* pTrack, bool bEraseBackground /*= true*/)
-{
-   MixerTrackCluster* pMixerTrackCluster;
-   this->FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   if (pMixerTrackCluster)
-      pMixerTrackCluster->Refresh(bEraseBackground);
 }
 
 void MixerBoard::RefreshTrackClusters(bool bEraseBackground /*= true*/)
@@ -1473,6 +1469,19 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    event.Skip();
 }
 
+void MixerBoard::OnTrackChanged(TrackListEvent &evt)
+{
+   evt.Skip();
+
+   auto pTrack = evt.mpTrack.lock();
+   auto pPlayable = dynamic_cast<PlayableTrack*>( pTrack.get() );
+   if ( pPlayable ) {
+      MixerTrackCluster *pMixerTrackCluster;
+      FindMixerTrackCluster( pPlayable, &pMixerTrackCluster );
+      if ( pMixerTrackCluster )
+         pMixerTrackCluster->Refresh();
+   }
+}
 
 // class MixerBoardFrame
 

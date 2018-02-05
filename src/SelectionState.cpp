@@ -8,7 +8,6 @@
 
 #include "Audacity.h"
 #include "SelectionState.h"
-#include "MixerBoard.h"
 #include "ViewInfo.h"
 #include "Track.h"
 
@@ -34,10 +33,8 @@ void SelectionState::SelectTrackLength
    viewInfo.selectedRegion.setTimes(minOffset, maxEnd);
 }
 
-
-void SelectionState::SelectTrack
-( Track &track, bool selected, bool updateLastPicked,
-  MixerBoard *pMixerBoard )
+void SelectionState::SelectTrack(
+   Track &track, bool selected, bool updateLastPicked )
 {
    bool wasCorrect = (selected == track.GetSelected());
 
@@ -62,17 +59,10 @@ void SelectionState::SelectTrack
          mLastPickedTrack.reset();
    }
 */
-
-   // Update mixer board, but only as needed so it does not flicker.
-   if (!wasCorrect) {
-      auto pt = dynamic_cast< PlayableTrack* >( &track );
-      if (pMixerBoard && pt)
-         pMixerBoard->RefreshTrackCluster( pt );
-   }
 }
 
 void SelectionState::SelectRangeOfTracks
-( TrackList &tracks, Track &rsTrack, Track &reTrack, MixerBoard *pMixerBoard )
+( TrackList &tracks, Track &rsTrack, Track &reTrack )
 {
    Track *sTrack = &rsTrack, *eTrack = &reTrack;
    // Swap the track pointers if needed
@@ -81,17 +71,17 @@ void SelectionState::SelectRangeOfTracks
 
    for (auto track :
         tracks.Any().StartingWith(sTrack).EndingAfter(eTrack))
-      SelectTrack(*track, true, false, pMixerBoard);
+      SelectTrack(*track, true, false);
 }
 
-void SelectionState::SelectNone( TrackList &tracks, MixerBoard *pMixerBoard )
+void SelectionState::SelectNone( TrackList &tracks )
 {
    for (auto t : tracks.Any())
-      SelectTrack( *t, false, false, pMixerBoard );
+      SelectTrack( *t, false, false );
 }
 
 void SelectionState::ChangeSelectionOnShiftClick
-( TrackList &tracks, Track &track, MixerBoard *pMixerBoard )
+( TrackList &tracks, Track &track )
 {
    // We will either extend from the first or from the last.
    auto pExtendFrom = tracks.Lock(mLastPickedTrack);
@@ -109,33 +99,30 @@ void SelectionState::ChangeSelectionOnShiftClick
          pExtendFrom = Track::Pointer( *trackRange.rbegin() );
    }
 
-   SelectNone( tracks, pMixerBoard );
+   SelectNone( tracks );
    if( pExtendFrom )
-      SelectRangeOfTracks( tracks, track, *pExtendFrom, pMixerBoard );
+      SelectRangeOfTracks( tracks, track, *pExtendFrom );
    else
-      SelectTrack( track, true, true, pMixerBoard );
+      SelectTrack( track, true, true );
    mLastPickedTrack = pExtendFrom;
 }
 
 void SelectionState::HandleListSelection
 ( TrackList &tracks, ViewInfo &viewInfo,
-  Track &track, bool shift, bool ctrl, bool syncLocked, MixerBoard *pMixerBoard )
+  Track &track, bool shift, bool ctrl, bool syncLocked )
 {
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
    if (ctrl)
-      SelectTrack( track, !track.GetSelected(), true, pMixerBoard );
+      SelectTrack( track, !track.GetSelected(), true );
    else {
       if (shift && mLastPickedTrack.lock())
-         ChangeSelectionOnShiftClick( tracks, track, pMixerBoard );
+         ChangeSelectionOnShiftClick( tracks, track );
       else {
-         SelectNone( tracks, pMixerBoard );
-         SelectTrack( track, true, true, pMixerBoard );
+         SelectNone( tracks );
+         SelectTrack( track, true, true );
          SelectTrackLength( viewInfo, track, syncLocked );
       }
-
-      if (pMixerBoard)
-         pMixerBoard->RefreshTrackClusters();
    }
 }
 

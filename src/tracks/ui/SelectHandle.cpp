@@ -18,7 +18,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../FreqWindow.h"
 #include "../../HitTestResult.h"
 #include "../../Menus.h"
-#include "../../MixerBoard.h"
 #include "../../NumberScale.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
@@ -561,10 +560,9 @@ UIHandle::Result SelectHandle::Click
       TrackList *const trackList = pProject->GetTracks();
 
       // Deselect all other tracks and select this one.
-      selectionState.SelectNone( *trackList, pProject->GetMixerBoard() );
+      selectionState.SelectNone( *trackList );
 
-      selectionState.SelectTrack
-         ( *pTrack, true, true, pProject->GetMixerBoard() );
+      selectionState.SelectTrack( *pTrack, true, true );
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength
@@ -599,8 +597,6 @@ UIHandle::Result SelectHandle::Click
    bool bShiftDown = event.ShiftDown();
    bool bCtrlDown = event.ControlDown();
 
-   auto pMixerBoard = pProject->GetMixerBoard();
-
    mSelStart = mUseSnap ? mSnapStart.outTime : mSnapStart.timeSnappedTime;
    auto xx = viewInfo.TimeToPosition(mSelStart, mRect.x);
 
@@ -608,7 +604,7 @@ UIHandle::Result SelectHandle::Click
    if (bShiftDown || bCtrlDown) {
       if (bShiftDown)
          selectionState.ChangeSelectionOnShiftClick
-            ( *trackList, *pTrack, pMixerBoard );
+            ( *trackList, *pTrack );
       if( bCtrlDown ){
          //Commented out bIsSelected toggles, as in Track Control Panel.
          //bool bIsSelected = pTrack->GetSelected();
@@ -616,8 +612,7 @@ UIHandle::Result SelectHandle::Click
          bool bIsSelected = false;
          // Don't toggle away the last selected track.
          if( !bIsSelected || trackPanel->GetSelectedTrackCount() > 1 )
-            selectionState.SelectTrack
-               ( *pTrack, !bIsSelected, true, pMixerBoard );
+            selectionState.SelectTrack( *pTrack, !bIsSelected, true );
       }
 
       double value;
@@ -767,13 +762,12 @@ UIHandle::Result SelectHandle::Click
 
    if (startNewSelection) {
       // If we didn't move a selection boundary, start a NEW selection
-      selectionState.SelectNone( *trackList, pMixerBoard );
+      selectionState.SelectNone( *trackList );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       StartFreqSelection (viewInfo, event.m_y, mRect.y, mRect.height, pTrack);
 #endif
       StartSelection(pProject);
-      selectionState.SelectTrack
-         ( *pTrack, true, true, pMixerBoard );
+      selectionState.SelectTrack( *pTrack, true, true );
       trackPanel->SetFocusedTrack(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
       pTrack->TypeSwitch( [&](WaveTrack *wt) {
@@ -844,11 +838,9 @@ UIHandle::Result SelectHandle::Drag
          Track *sTrack = pTrack.get();
          Track *eTrack = clickedTrack.get();
          auto trackList = pProject->GetTracks();
-         auto pMixerBoard = pProject->GetMixerBoard();
          if ( sTrack && eTrack && !event.ControlDown() ) {
             auto &selectionState = pProject->GetSelectionState();
-            selectionState.SelectRangeOfTracks
-            ( *trackList, *sTrack, *eTrack, pMixerBoard );
+            selectionState.SelectRangeOfTracks( *trackList, *sTrack, *eTrack );
          }
 
    #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1012,10 +1004,6 @@ UIHandle::Result SelectHandle::Cancel(AudacityProject *pProject)
 {
    mSelectionStateChanger.reset();
    pProject->GetViewInfo().selectedRegion = mInitialSelection;
-
-   // Refresh mixer board for change of set of selected tracks
-   if (MixerBoard* pMixerBoard = pProject->GetMixerBoard())
-      pMixerBoard->Refresh();
 
    return RefreshCode::RefreshAll;
 }

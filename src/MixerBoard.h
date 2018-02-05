@@ -25,6 +25,8 @@
 #include "widgets/ASlider.h"
 #include "widgets/wxPanelWrapper.h"
 
+class TrackListEvent;
+
 // containment hierarchy:
 //    MixerBoardFrame -> MixerBoard -> MixerBoardScrolledWindow -> MixerTrackCluster(s)
 
@@ -221,7 +223,6 @@ public:
 
    bool HasSolo();
 
-   void RefreshTrackCluster(const PlayableTrack* pTrack, bool bEraseBackground = true);
    void RefreshTrackClusters(bool bEraseBackground = true);
    void ResizeTrackClusters();
 
@@ -251,6 +252,7 @@ private:
    // event handlers
    void OnSize(wxSizeEvent &evt);
    void OnTimer(wxCommandEvent &event);
+   void OnTrackChanged(TrackListEvent &event);
 
 
 public:
