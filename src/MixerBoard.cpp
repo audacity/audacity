@@ -165,7 +165,7 @@ END_EVENT_TABLE()
 
 MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                                        MixerBoard* grandParent, AudacityProject* project,
-                                       PlayableTrack* pTrack,
+                                       const std::shared_ptr<PlayableTrack> &pTrack,
                                        const wxPoint& pos /*= wxDefaultPosition*/,
                                        const wxSize& size /*= wxDefaultSize*/)
 : wxPanelWrapper(parent, -1, pos, size)
@@ -230,7 +230,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    // musical instrument image
    ctrlPos.x += kLeftSideStackWidth + kInset; // + kInset to center it in right side stack
    ctrlSize.Set(MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH, MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH);
-   wxBitmap* bitmap = mMixerBoard->GetMusicalInstrumentBitmap(mTrack);
+   wxBitmap* bitmap = mMixerBoard->GetMusicalInstrumentBitmap(mTrack.get());
    wxASSERT(bitmap);
    mBitmapButton_MusicalInstrument =
       safenew wxBitmapButton(this, ID_BITMAPBUTTON_MUSICAL_INSTRUMENT, *bitmap,
@@ -329,7 +329,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 
 WaveTrack *MixerTrackCluster::GetWave() const
 {
-   return dynamic_cast< WaveTrack * >( mTrack );
+   return dynamic_cast< WaveTrack * >( mTrack.get() );
 }
 
 WaveTrack *MixerTrackCluster::GetRight() const
@@ -344,7 +344,7 @@ WaveTrack *MixerTrackCluster::GetRight() const
 #ifdef EXPERIMENTAL_MIDI_OUT
 NoteTrack *MixerTrackCluster::GetNote() const
 {
-   return dynamic_cast< NoteTrack * >( mTrack );
+   return dynamic_cast< NoteTrack * >( mTrack.get() );
 }
 #endif
 
@@ -405,7 +405,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
       GetRight()->SetGain(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->RefreshTPTrack(mTrack);
+   mProject->RefreshTPTrack(mTrack.get());
    if (bWantPushState)
       mProject->TP_PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
@@ -418,7 +418,7 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
       GetNote()->SetVelocity(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->RefreshTPTrack(mTrack);
+   mProject->RefreshTPTrack(mTrack.get());
    if (bWantPushState)
       mProject->TP_PushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
 }
@@ -433,7 +433,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
       GetRight()->SetPan(fValue);
 
    // Update the TrackPanel correspondingly.
-   mProject->RefreshTPTrack(mTrack);
+   mProject->RefreshTPTrack(mTrack.get());
 
    if (bWantPushState)
       mProject->TP_PushState(_("Moved pan slider"), _("Pan"), UndoPush::CONSOLIDATE );
@@ -465,7 +465,7 @@ void MixerTrackCluster::UpdateName()
       mStaticText_TrackName->SetToolTip(newName);
    #endif
    mBitmapButton_MusicalInstrument->SetBitmapLabel(
-      *(mMixerBoard->GetMusicalInstrumentBitmap(mTrack)));
+      *(mMixerBoard->GetMusicalInstrumentBitmap(mTrack.get())));
 }
 
 void MixerTrackCluster::UpdateMute()
@@ -683,7 +683,7 @@ wxColour MixerTrackCluster::GetTrackColor()
 
 void MixerTrackCluster::HandleSelect(bool bShiftDown, bool bControlDown)
 {
-   mProject->HandleListSelection( mTrack, bShiftDown, bControlDown, true
+   mProject->HandleListSelection( mTrack.get(), bShiftDown, bControlDown, true
                                  );
 }
 
@@ -758,7 +758,7 @@ void MixerTrackCluster::OnSlider_Pan(wxCommandEvent& WXUNUSED(event))
 
 void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 {
-   mProject->HandleTrackMute(mTrack, mToggleButton_Mute->WasShiftDown());
+   mProject->HandleTrackMute(mTrack.get(), mToggleButton_Mute->WasShiftDown());
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
@@ -770,12 +770,12 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
    }
    else
       // Update only the changed track.
-      mProject->RefreshTPTrack(mTrack);
+      mProject->RefreshTPTrack(mTrack.get());
 }
 
 void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 {
-   mProject->HandleTrackSolo(mTrack, mToggleButton_Solo->WasShiftDown());
+   mProject->HandleTrackSolo(mTrack.get(), mToggleButton_Solo->WasShiftDown());
    bool bIsSolo = mTrack->GetSolo();
    mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
 
@@ -996,13 +996,14 @@ void MixerBoard::UpdateTrackClusters()
    while (pTrack) {
       if (auto pPlayableTrack = dynamic_cast<PlayableTrack*>(pTrack))
       {
+         auto spTrack = Track::Pointer<PlayableTrack>( pPlayableTrack );
          if (nClusterIndex < nClusterCount)
          {
             // Already showing it.
             // Track clusters are maintained in the same order as the WaveTracks.
             // Track pointers can change for the "same" track for different states
             // on the undo stack, so update the pointers and display name.
-            mMixerTrackClusters[nClusterIndex]->mTrack = pPlayableTrack;
+            mMixerTrackClusters[nClusterIndex]->mTrack = spTrack;
             // Assume linked track is wave or null
             mMixerTrackClusters[nClusterIndex]->UpdateForStateChange();
          }
@@ -1018,7 +1019,7 @@ void MixerBoard::UpdateTrackClusters()
             wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
             pMixerTrackCluster =
                safenew MixerTrackCluster(mScrolledWindow, this, mProject,
-                                       pPlayableTrack,
+                                       spTrack,
                                        clusterPos, clusterSize);
             if (pMixerTrackCluster)
                mMixerTrackClusters.Add(pMixerTrackCluster);
@@ -1404,7 +1405,7 @@ int MixerBoard::FindMixerTrackCluster(const PlayableTrack* pTrack,
    *hMixerTrackCluster = NULL;
    for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
    {
-      if (mMixerTrackClusters[i]->mTrack == pTrack)
+      if (mMixerTrackClusters[i]->mTrack.get() == pTrack)
       {
          *hMixerTrackCluster = mMixerTrackClusters[i];
          return i;
