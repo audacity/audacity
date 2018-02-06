@@ -874,6 +874,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
 
 
 BEGIN_EVENT_TABLE(MixerBoard, wxWindow)
+   EVT_PAINT(MixerBoard::OnPaint)
    EVT_SIZE(MixerBoard::OnSize)
 END_EVENT_TABLE()
 
@@ -943,6 +944,18 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 
    mProject->GetTracks()->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
       &MixerBoard::OnTrackChanged,
+      this);
+
+   mProject->GetTracks()->Bind(EVT_TRACKLIST_PERMUTED,
+      &MixerBoard::OnTrackSetChanged,
+      this);
+
+   mProject->GetTracks()->Bind(EVT_TRACKLIST_ADDITION,
+      &MixerBoard::OnTrackSetChanged,
+      this);
+
+   mProject->GetTracks()->Bind(EVT_TRACKLIST_DELETION,
+      &MixerBoard::OnTrackSetChanged,
       this);
 }
 
@@ -1046,53 +1059,6 @@ int MixerBoard::GetTrackClustersWidth()
       (mMixerTrackClusters.size() *            // number of tracks times
          (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each
       kDoubleInset;                                // plus final right margin
-}
-
-void MixerBoard::MoveTrackCluster(const PlayableTrack* pTrack,
-                                  bool bUp) // Up in TrackPanel is left in MixerBoard.
-{
-   MixerTrackCluster* pMixerTrackCluster;
-   int nIndex = FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   if (pMixerTrackCluster == NULL)
-      return; // Couldn't find it.
-
-   wxPoint pos;
-   if (bUp)
-   {  // Move it up (left).
-      if (nIndex <= 0)
-         return; // It's already first (0), or not found (-1).
-
-      pos = pMixerTrackCluster->GetPosition();
-      mMixerTrackClusters[nIndex] = mMixerTrackClusters[nIndex - 1];
-      mMixerTrackClusters[nIndex]->Move(pos);
-
-      mMixerTrackClusters[nIndex - 1] = pMixerTrackCluster;
-      pMixerTrackCluster->Move(pos.x - (kInset + kMixerTrackClusterWidth), pos.y);
-   }
-   else
-   {  // Move it down (right).
-      if (((unsigned int)nIndex + 1) >= mMixerTrackClusters.size())
-         return; // It's already last.
-
-      pos = pMixerTrackCluster->GetPosition();
-      mMixerTrackClusters[nIndex] = mMixerTrackClusters[nIndex + 1];
-      mMixerTrackClusters[nIndex]->Move(pos);
-
-      mMixerTrackClusters[nIndex + 1] = pMixerTrackCluster;
-      pMixerTrackCluster->Move(pos.x + (kInset + kMixerTrackClusterWidth), pos.y);
-   }
-}
-
-void MixerBoard::RemoveTrackCluster(const PlayableTrack* pTrack)
-{
-   // Find and destroy.
-   MixerTrackCluster* pMixerTrackCluster;
-   int nIndex = this->FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-
-   if (pMixerTrackCluster == NULL)
-      return; // Couldn't find it.
-
-   RemoveTrackCluster(nIndex);
 }
 
 void MixerBoard::RemoveTrackCluster(size_t nIndex)
@@ -1436,6 +1402,17 @@ void MixerBoard::LoadMusicalInstruments()
 
 // event handlers
 
+void MixerBoard::OnPaint(wxPaintEvent& evt)
+{
+   if (!mUpToDate) {
+      mUpToDate = true;
+      UpdateTrackClusters();
+      Refresh();
+   }
+   // Does the base class do anything for repainting?
+   evt.Skip();
+}
+
 void MixerBoard::OnSize(wxSizeEvent &evt)
 {
    // this->FitInside() doesn't work, and it doesn't happen automatically. Is wxScrolledWindow wrong?
@@ -1481,6 +1458,13 @@ void MixerBoard::OnTrackChanged(TrackListEvent &evt)
       if ( pMixerTrackCluster )
          pMixerTrackCluster->Refresh();
    }
+}
+
+void MixerBoard::OnTrackSetChanged(wxEvent &evt)
+{
+   evt.Skip();
+   mUpToDate = false;
+   Refresh();
 }
 
 // class MixerBoardFrame

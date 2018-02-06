@@ -4707,7 +4707,6 @@ void AudacityProject::PopState(const UndoState &state)
    HandleResize();
 
    GetMenuManager(*this).UpdateMenus(*this);
-   this->UpdateMixerBoard();
 
    AutoSave();
 }
@@ -4721,7 +4720,6 @@ void AudacityProject::SetStateTo(unsigned int n)
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
-   this->UpdateMixerBoard();
 }
 
 void AudacityProject::UpdateMixerBoard()
@@ -5597,15 +5595,6 @@ void AudacityProject::RemoveTrack(Track * toRemove)
    }
 
    wxString name = toRemove->GetName();
-
-   auto playable = dynamic_cast<PlayableTrack*>(toRemove);
-   if (playable)
-   {
-      // Update mixer board displayed tracks.
-      MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->RemoveTrackCluster(playable); // Will remove partner shown in same cluster.
-   }
 
    auto channels = TrackList::Channels(toRemove);
    // Be careful to post-increment over positions that get erased!

@@ -214,9 +214,6 @@ public:
    void UpdateTrackClusters();
 
    int GetTrackClustersWidth();
-   void MoveTrackCluster(const PlayableTrack* pTrack, bool bUp); // Up in TrackPanel is left in MixerBoard.
-   void RemoveTrackCluster(const PlayableTrack* pTrack);
-   void RemoveTrackCluster(size_t nIndex);
 
 
    wxBitmap* GetMusicalInstrumentBitmap(const Track *pTrack);
@@ -242,7 +239,8 @@ public:
    void UpdateWidth();
 
 private:
-   void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap, 
+   void RemoveTrackCluster(size_t nIndex);
+   void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap,
       wxRect & bev, const wxString & str, bool up );
    void CreateMuteSoloImages();
    int FindMixerTrackCluster(const PlayableTrack* pTrack,
@@ -250,8 +248,10 @@ private:
    void LoadMusicalInstruments();
 
    // event handlers
+   void OnPaint(wxPaintEvent& evt);
    void OnSize(wxSizeEvent &evt);
    void OnTimer(wxCommandEvent &event);
+   void OnTrackSetChanged(wxEvent &event);
    void OnTrackChanged(TrackListEvent &event);
 
 
@@ -272,6 +272,7 @@ private:
    MixerBoardScrolledWindow*  mScrolledWindow; // Holds the MixerTrackClusters and handles scrolling.
    double                     mPrevT1;
    TrackList*                 mTracks;
+   bool                       mUpToDate{ false };
 
 public:
    DECLARE_EVENT_TABLE()

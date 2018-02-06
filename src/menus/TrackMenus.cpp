@@ -515,7 +515,6 @@ void DoRemoveTracks( AudacityProject &project )
 {
    auto tracks = project.GetTracks();
    auto trackPanel = project.GetTrackPanel();
-   auto mixerBoard = project.GetMixerBoard();
 
    std::vector<Track*> toRemove;
    for (auto track : tracks->Selected())
@@ -527,10 +526,6 @@ void DoRemoveTracks( AudacityProject &project )
       auto found = tracks->Find(toRemove[0]);
       f = *--found;
    }
-
-   if (mixerBoard)
-      for (auto track : tracks->Selected<PlayableTrack>())
-         mixerBoard->RemoveTrackCluster(track);
 
    for (auto track : toRemove)
       tracks->Remove(track);
@@ -554,9 +549,6 @@ void DoRemoveTracks( AudacityProject &project )
 
    trackPanel->UpdateViewIfNoTracks();
    trackPanel->Refresh(false);
-
-   if (mixerBoard)
-      mixerBoard->Refresh(true);
 }
 
 void DoMoveTrack
@@ -564,11 +556,9 @@ void DoMoveTrack
 {
    auto trackPanel = project.GetTrackPanel();
    auto tracks = project.GetTracks();
-   auto mixerBoard = project.GetMixerBoard(); // Update mixer board.
 
    wxString longDesc, shortDesc;
 
-   auto pt = dynamic_cast<PlayableTrack*>(target);
    switch (choice)
    {
    case OnMoveTopID:
@@ -576,32 +566,27 @@ void DoMoveTrack
       longDesc = _("Moved '%s' to Top");
       shortDesc = _("Move Track to Top");
 
-      while (tracks->CanMoveUp(target)) {
-         if (tracks->Move(target, true)) {
-            if (mixerBoard && pt)
-               mixerBoard->MoveTrackCluster(pt, true);
-         }
-      }
+      // TODO: write TrackList::Rotate to do this in one step and avoid emitting
+      // an event for each swap
+      while (tracks->CanMoveUp(target))
+         tracks->Move(target, true);
+
       break;
    case OnMoveBottomID:
       /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
       longDesc = _("Moved '%s' to Bottom");
       shortDesc = _("Move Track to Bottom");
 
-      while (tracks->CanMoveDown(target)) {
-         if(tracks->Move(target, false)) {
-            if (mixerBoard && pt)
-               mixerBoard->MoveTrackCluster(pt, false);
-         }
-      }
+      // TODO: write TrackList::Rotate to do this in one step and avoid emitting
+      // an event for each swap
+      while (tracks->CanMoveDown(target))
+         tracks->Move(target, false);
+
       break;
    default:
       bool bUp = (OnMoveUpID == choice);
 
-      if (tracks->Move(target, bUp)) {
-         if (mixerBoard && pt)
-            mixerBoard->MoveTrackCluster(pt, bUp);
-      }
+      tracks->Move(target, bUp);
       longDesc =
          /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
          bUp? _("Moved '%s' Up")

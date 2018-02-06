@@ -2,7 +2,6 @@
 #include "../AudacityApp.h" // for EVT_CLIPBOARD_CHANGE
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../MixerBoard.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -219,7 +218,6 @@ void DoUndo(AudacityProject &project)
 {
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto mixerBoard = project.GetMixerBoard();
    auto historyWindow = project.GetHistoryWindow();
 
    if (!project.UndoAvailable()) {
@@ -239,10 +237,6 @@ void DoUndo(AudacityProject &project)
 
    project.RedrawProject();
 
-   if (mixerBoard)
-      // Mixer board may need to change for selection state and pan/gain
-      mixerBoard->Refresh();
-
    MenuManager::ModifyUndoMenuItems(project);
 }
 
@@ -260,7 +254,6 @@ void OnRedo(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto mixerBoard = project.GetMixerBoard();
    auto historyWindow = project.GetHistoryWindow();
 
    if (!project.RedoAvailable()) {
@@ -278,10 +271,6 @@ void OnRedo(const CommandContext &context)
    trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
 
    project.RedrawProject();
-
-   if (mixerBoard)
-      // Mixer board may need to change for selection state and pan/gain
-      mixerBoard->Refresh();
 
    MenuManager::ModifyUndoMenuItems(project);
 }
