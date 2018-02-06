@@ -925,6 +925,11 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mProject->GetTracks()->Bind(EVT_TRACKLIST_TRACK_DATA_CHANGE,
       &MixerBoard::OnTrackChanged,
       this);
+
+   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
+      wxCommandEventHandler(MixerBoard::OnStartStop),
+      NULL,
+      this);
 }
 
 
@@ -1359,6 +1364,13 @@ void MixerBoard::OnTrackSetChanged(wxEvent &evt)
    evt.Skip();
    mUpToDate = false;
    Refresh();
+}
+
+void MixerBoard::OnStartStop(wxCommandEvent &evt)
+{
+   evt.Skip();
+   bool start = evt.GetInt();
+   ResetMeters( start );
 }
 
 // class MixerBoardFrame

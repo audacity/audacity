@@ -214,13 +214,12 @@ public:
    void RefreshTrackClusters(bool bEraseBackground = true);
    void ResizeTrackClusters();
 
-   void ResetMeters(const bool bResetClipping);
-
    void UpdateMeters(const double t1, const bool bLoopedPlay);
 
    void UpdateWidth();
 
 private:
+   void ResetMeters(const bool bResetClipping);   
    void RemoveTrackCluster(size_t nIndex);
    void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap,
       wxRect & bev, const wxString & str, bool up );
@@ -235,6 +234,7 @@ private:
    void OnTimer(wxCommandEvent &event);
    void OnTrackSetChanged(wxEvent &event);
    void OnTrackChanged(TrackListEvent &event);
+   void OnStartStop(wxCommandEvent &event);
 
 public:
    // mute & solo button images: Create once and store on MixerBoard for use in all MixerTrackClusters.
