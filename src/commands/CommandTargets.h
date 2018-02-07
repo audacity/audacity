@@ -185,7 +185,7 @@ public:
 /// Assumes responsibility for pointers passed into it.
 class CommandOutputTarget
 {
-private:
+protected:
    std::unique_ptr<CommandProgressTarget> mProgressTarget;
    std::shared_ptr<CommandMessageTarget> mStatusTarget;
    std::shared_ptr<CommandMessageTarget> mErrorTarget;
@@ -213,6 +213,13 @@ public:
       if (mErrorTarget)
          mErrorTarget->Update(message);
    }
+};
+
+class InteractiveOutputTarget : public CommandOutputTarget
+{
+public:
+   InteractiveOutputTarget();
+
 };
 
 #endif /* End of include guard: __COMMANDTARGETS__ */
