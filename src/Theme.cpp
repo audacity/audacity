@@ -1308,13 +1308,14 @@ auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
    SetBackgroundColour( theTheme.Colour( clrMedium));
    SetForegroundColour( theTheme.Colour( clrTrackPanelText));
    SetName(textIn);
+   SetLabel(textIn);
 }
  
 void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
    //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));
-   dc.DrawText( GetName(), 0,0);
+   dc.DrawText( GetLabel(), 0,0);
 }
 
 

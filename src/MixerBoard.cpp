@@ -461,6 +461,7 @@ void MixerTrackCluster::UpdateName()
    const wxString newName = mTrack->GetName();
    SetName(newName);
    mStaticText_TrackName->SetLabel(newName);
+   mStaticText_TrackName->SetName(newName);
    #if wxUSE_TOOLTIPS
       mStaticText_TrackName->SetToolTip(newName);
    #endif
