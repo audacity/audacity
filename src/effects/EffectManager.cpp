@@ -863,6 +863,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
       auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
       if (command )//&& command->Startup(NULL))
       {
+         command->Init();
          mCommands[ID] = command;
          return command;
       }
