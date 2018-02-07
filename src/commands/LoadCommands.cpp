@@ -38,7 +38,7 @@ modelled on BuiltinEffectsModule
 //
 #define COMMAND_LIST \
    COMMAND( DEMO,              DemoCommand, () )           \
-   COMMAND( SCREENSHOT,        ScreenshotCommandType, () ) \
+   COMMAND( SCREENSHOT,        ScreenshotCommand,   () ) \
    COMMAND( COMPARE_AUDIO,     CompareAudioCommand, () )   \
    COMMAND( GET_TRACK_INFO,    GetTrackInfoCommand, () )   \
    COMMAND( SET_TRACK_INFO,    SetTrackInfoCommand, () )   \
