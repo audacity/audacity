@@ -46,7 +46,8 @@ CommandContext::CommandContext(
       , const CommandParameter &param
    )
       : project{ p }
-      , pOutput( nullptr )
+      // No target specified?  Use the special interactive one that pops up a dialog.
+      , pOutput( std::move( std::make_unique<InteractiveOutputTarget>()) )
       , pEvt{ e }
       , index{ ii }
       , parameter{ param }

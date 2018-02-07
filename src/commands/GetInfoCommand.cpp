@@ -52,10 +52,11 @@ enum {
 };
 
 
-const int nFormats =2;
+const int nFormats =3;
 static const wxString kFormats[nFormats] =
 {
    XO("JSON"),
+   XO("LISP"),
    XO("Other")
 };
 
@@ -81,8 +82,8 @@ void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieChoice( _("Types:"), mInfoType, &types);
-      S.TieChoice( _("Formats:"), mFormat, &formats);
+      S.TieChoice( _("Type:"), mInfoType, &types);
+      S.TieChoice( _("Format:"), mFormat, &formats);
    }
    S.EndMultiColumn();
 }
