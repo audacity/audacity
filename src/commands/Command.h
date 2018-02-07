@@ -77,7 +77,7 @@ public:
 class CommandImplementation /* not final */ : public OldStyleCommand
 {
 private:
-   CommandType &mType;
+   OldStyleCommandType &mType;
    ParamValueMap mParams;
    ParamBoolMap mSetParams;
 
@@ -100,7 +100,7 @@ protected:
 public:
    /// Constructor should not be called directly; only by a factory which
    /// ensures name and params are set appropriately for the command.
-   CommandImplementation(CommandType &type);
+   CommandImplementation(OldStyleCommandType &type);
 
    virtual ~CommandImplementation();
 

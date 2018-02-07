@@ -26,7 +26,7 @@ to that system.
 #include "CommandType.h"
 #include "../BatchCommands.h"
 
-class BatchEvalCommandType final : public CommandType
+class BatchEvalCommandType final : public OldStyleCommandType
 {
 public:
    wxString BuildName() override;
@@ -37,7 +37,7 @@ public:
 class BatchEvalCommand final : public CommandImplementation
 {
 public:
-   BatchEvalCommand(CommandType &type)
+   BatchEvalCommand(OldStyleCommandType &type)
       : CommandImplementation(type)
    { }
 

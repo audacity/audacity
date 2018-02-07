@@ -11,7 +11,7 @@
 \file CommandType.cpp
 \brief Contains definitions for CommandType class
 
-\class CommandType
+\class OldStyleCommandType
 \brief Base class for containing data common to all commands of a given type.
 Also acts as a factory.
 
@@ -23,22 +23,22 @@ Also acts as a factory.
 #include "CommandSignature.h"
 #include <wx/string.h>
 
-CommandType::CommandType()
+OldStyleCommandType::OldStyleCommandType()
    : mName{}, mSignature{}
 { }
 
-CommandType::~CommandType()
+OldStyleCommandType::~OldStyleCommandType()
 {
 }
 
-wxString CommandType::GetName()
+wxString OldStyleCommandType::GetName()
 {
    if (mName.empty())
       mName = BuildName();
    return mName;
 }
 
-CommandSignature &CommandType::GetSignature()
+CommandSignature &OldStyleCommandType::GetSignature()
 {
    if (!mSignature)
    {
@@ -48,7 +48,7 @@ CommandSignature &CommandType::GetSignature()
    return *mSignature;
 }
 
-wxString CommandType::Describe()
+wxString OldStyleCommandType::Describe()
 {
    wxString desc = GetName() + wxT("\nParameters:");
    GetSignature();
