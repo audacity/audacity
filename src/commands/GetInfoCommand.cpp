@@ -378,7 +378,7 @@ bool GetInfoCommand::SendBoxesAsJson(const CommandContext &context)
    context.Status("Boxes");
    wxWindow * pWin = context.GetProject();
 
-   context.Status( "AudacityBoxes[" );
+   context.Status( "[" );
    wxRect R = pWin->GetScreenRect();
 
    //R.SetPosition( wxPoint(0,0) );
@@ -388,7 +388,7 @@ bool GetInfoCommand::SendBoxesAsJson(const CommandContext &context)
          0, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), "Audacity Window" )); 
    ExploreAdornments( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
    ExploreWindows( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
-   context.Status( "];" );
+   context.Status( "]" );
    return true;
 }
 
