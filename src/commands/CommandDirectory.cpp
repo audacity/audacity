@@ -67,7 +67,7 @@ CommandDirectory::~CommandDirectory()
 {
 }
 
-CommandType *CommandDirectory::LookUp(const wxString &cmdName) const
+OldStyleCommandType *CommandDirectory::LookUp(const wxString &cmdName) const
 {
    CommandMap::const_iterator iter = mCmdMap.find(cmdName);
    if (iter == mCmdMap.end())
@@ -77,7 +77,7 @@ CommandType *CommandDirectory::LookUp(const wxString &cmdName) const
    return iter->second.get();
 }
 
-void CommandDirectory::AddCommand(movable_ptr<CommandType> &&type)
+void CommandDirectory::AddCommand(movable_ptr<OldStyleCommandType> &&type)
 {
    wxASSERT(type != NULL);
    wxString cmdName = type->GetName();

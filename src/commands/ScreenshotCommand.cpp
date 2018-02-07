@@ -122,7 +122,7 @@ static const wxString kBackgroundStrings[kNumBackgrounds] =
 };
 
 
-bool ScreenshotCommandType::DefineParams( ShuttleParams & S ){ 
+bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString whats(kNumCaptureWhats, kCaptureWhatStrings);
    wxArrayString backs(kNumBackgrounds, kBackgroundStrings);
    S.Define( mPath, wxT("Path"),         wxT(""),       wxT(""), wxT(""), wxT(""));
@@ -131,7 +131,7 @@ bool ScreenshotCommandType::DefineParams( ShuttleParams & S ){
    return true;
 };
 
-void ScreenshotCommandType::PopulateOrExchange(ShuttleGui & S)
+void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 {
    wxArrayString whats(kNumCaptureWhats, kCaptureWhatStrings);
    wxArrayString backs(kNumBackgrounds, kBackgroundStrings);

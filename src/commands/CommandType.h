@@ -41,15 +41,15 @@ class CommandOutputTarget;
 class CommandSignature;
 class wxString;
 
-class CommandType : public AudacityCommand
+class OldStyleCommandType : public AudacityCommand
 {
 private:
    wxString mName;
    Maybe<CommandSignature> mSignature;
 
 public:
-   CommandType();
-   virtual ~CommandType();
+   OldStyleCommandType();
+   virtual ~OldStyleCommandType();
    wxString GetName() override;
    CommandSignature &GetSignature();
    wxString Describe();

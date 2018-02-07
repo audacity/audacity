@@ -41,10 +41,10 @@ public:
    /// If a command with the given name has been registered in the directory,
    /// return a pointer to the factory for commands of that type.
    /// Otherwise return NULL.
-   CommandType *LookUp(const wxString &cmdName) const;
+   OldStyleCommandType *LookUp(const wxString &cmdName) const;
 
    /// Register a type of command with the directory.
-   void AddCommand(movable_ptr<CommandType> &&type);
+   void AddCommand(movable_ptr<OldStyleCommandType> &&type);
 
    /// Get a pointer to the singleton instance
    static CommandDirectory *Get();

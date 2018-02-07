@@ -165,7 +165,7 @@ bool ApplyAndSendResponse::Apply()
    return result;
 }
 
-CommandImplementation::CommandImplementation(CommandType &type)
+CommandImplementation::CommandImplementation(OldStyleCommandType &type)
 : mType(type),
    mParams(type.GetSignature().GetDefaults()),
    mSetParams()

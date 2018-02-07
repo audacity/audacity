@@ -30,7 +30,7 @@ class CommandContext;
 
 #define SCREENSHOT_PLUGIN_SYMBOL XO("Screenshot")
 
-class ScreenshotCommandType : public AudacityCommand
+class ScreenshotCommand : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
@@ -48,10 +48,7 @@ private:
    wxString mPath;
    friend class ScreenshotCommand;
    friend class ScreenFrame;
-};
 
-class ScreenshotCommand final : public ScreenshotCommandType
-{
 public:
    bool Apply(const CommandContext & context) override;
    void GetDerivedParams();

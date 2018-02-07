@@ -24,7 +24,7 @@
 #include "Command.h"
 #include "CommandType.h"
 
-class MessageCommandType final : public CommandType
+class MessageCommandType final : public OldStyleCommandType
 {
 public:
    wxString BuildName() override;
@@ -35,7 +35,7 @@ public:
 class MessageCommand final : public CommandImplementation
 {
 public:
-   MessageCommand(CommandType &type)
+   MessageCommand(OldStyleCommandType &type)
       : CommandImplementation(type) {}
    bool Apply(const CommandContext &context ) override;
 };

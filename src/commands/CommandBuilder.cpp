@@ -90,13 +90,13 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
                                 scriptOutput);
 
 #ifdef OLD_BATCH_SYSTEM
-   CommandType *factory = CommandDirectory::Get()->LookUp(cmdName);
+   OldStyleCommandType *factory = CommandDirectory::Get()->LookUp(cmdName);
 
    if (factory == NULL)
    {
       // Fall back to hoping the Batch Command system can handle it
 #endif
-      CommandType *type = CommandDirectory::Get()->LookUp(wxT("BatchCommand"));
+      OldStyleCommandType *type = CommandDirectory::Get()->LookUp(wxT("BatchCommand"));
       wxASSERT(type != NULL);
       mCommand = type->Create(nullptr);
       mCommand->SetParameter(wxT("CommandName"), cmdName);
