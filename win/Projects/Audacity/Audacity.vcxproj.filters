@@ -1064,6 +1064,9 @@
     <ClCompile Include="..\..\..\src\commands\SetTrackInfoCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">

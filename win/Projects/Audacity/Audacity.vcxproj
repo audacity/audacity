@@ -139,6 +139,7 @@
     <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp" />
     <ClCompile Include="..\..\..\src\commands\AudacityCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandContext.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp" />
     <ClCompile Include="..\..\..\src\commands\Demo.cpp" />
     <ClCompile Include="..\..\..\src\commands\LoadCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp" />

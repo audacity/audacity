@@ -284,3 +284,14 @@ bool CommandImplementation::Apply(const CommandContext & WXUNUSED(context))
 {
    return true;
 }
+
+// Hackery so that we dont have to update the makefiles on linux (yet)
+#ifndef __WIN32__
+#ifndef __WXMAC__
+
+#include "CommandTargets.cpp"
+
+
+#endif
+#endif
+
