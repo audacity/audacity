@@ -821,12 +821,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
    effect.SetCommand(mInputCmd);
    effect.mDebug = (mUIResultID == eDebugID);
 
-   SelectedRegion region(mT0, mT1);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   region.setF0(mF0);
-   region.setF1(mF1);
-#endif
-   return Delegate(effect, parent, &region, true);
+   return Delegate(effect, parent, true);
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
