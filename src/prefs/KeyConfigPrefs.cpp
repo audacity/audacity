@@ -454,6 +454,8 @@ void KeyConfigPrefs::FilterKeys( wxArrayString & arr )
    MaxListOnly.Add( "Alt+Shift+F6" );
    MaxListOnly.Add( "Alt+F6" );
 
+   std::transform( MaxListOnly.begin(), MaxListOnly.end(), MaxListOnly.begin(),
+                   KeyStringNormalize );
    MaxListOnly.Sort();
    // Remove items that are in MaxList.
    for (size_t i = 0; i < arr.GetCount(); i++) {

@@ -509,6 +509,8 @@ void CommandManager::SetMaxList()
    mMaxListOnly.Add( "Alt+Shift+F6" );
    mMaxListOnly.Add( "Alt+F6" );
 
+   std::transform( mMaxListOnly.begin(), mMaxListOnly.end(), mMaxListOnly.begin(),
+                   KeyStringNormalize );
    mMaxListOnly.Sort();
 }
 
