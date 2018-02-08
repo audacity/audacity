@@ -34,7 +34,7 @@ typedef enum
    PluginTypeNone = 0,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
    PluginTypeStub =1,               // Used for plugins that have not yet been registered
    PluginTypeEffect =1<<1,
-   PluginTypeGeneric=1<<2,
+   PluginTypeAudacityCommand=1<<2,
    PluginTypeExporter=1<<3,
    PluginTypeImporter=1<<4,
    PluginTypeModule=1<<5,
