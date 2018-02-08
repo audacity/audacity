@@ -43,7 +43,7 @@ bool HelpCommand::Apply(const CommandContext & context){
    if( ID.IsEmpty() )
       context.Status( "Command not found" );
    else
-      context.Status( em.GetCommandDefinition( ID ));
+      em.GetCommandDefinition( ID, context);
    return true;
 }
 

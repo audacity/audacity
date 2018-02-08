@@ -43,7 +43,7 @@ class CommandMessageTarget /* not final */
 {
 public:
    CommandMessageTarget() {mCounts.push_back(0);}
-   virtual ~CommandMessageTarget() {}
+   virtual ~CommandMessageTarget() { Flush();}
    virtual void Update(const wxString &message) = 0;
    virtual void StartArray();
    virtual void EndArray();
@@ -52,10 +52,56 @@ public:
    virtual void AddItem(const wxString &value , const wxString &name="" );
    virtual void AddItem(const bool value      , const wxString &name="" );
    virtual void AddItem(const double value    , const wxString &name="" );
+   virtual void AddField( const wxString &name="" );
+   virtual void Flush();
    wxArrayInt mCounts;
 };
 
+class CommandMessageTargetDecorator : public CommandMessageTarget
+{
+public:
+   CommandMessageTargetDecorator( CommandMessageTarget & target): mTarget(target) {};
+   virtual ~CommandMessageTargetDecorator() { };
+   virtual void Update(const wxString &message) { mTarget.Update( message );};
+   virtual void StartArray() { mTarget.StartArray();};
+   virtual void EndArray(){ mTarget.EndArray();};
+   virtual void StartStruct(){ mTarget.StartStruct();};
+   virtual void EndStruct(){ mTarget.EndStruct();};
+   virtual void AddItem(const wxString &value , const wxString &name="" ){ mTarget.AddItem(value,name);};
+   virtual void AddItem(const bool value      , const wxString &name="" ){ mTarget.AddItem(value,name);};
+   virtual void AddItem(const double value    , const wxString &name="" ){ mTarget.AddItem(value,name);};
+   virtual void AddField( const wxString &name="" ){ mTarget.AddField(name);};
+   virtual void Flush(){ mTarget.Flush();};
+   CommandMessageTarget & mTarget;
+};
 
+class LispyCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
+{
+public:
+   LispyCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   virtual void StartArray() override;
+   virtual void EndArray() override;
+   virtual void StartStruct() override;
+   virtual void EndStruct() override;
+   virtual void AddItem(const wxString &value , const wxString &name="" )override;
+   virtual void AddItem(const bool value      , const wxString &name="" )override;
+   virtual void AddItem(const double value    , const wxString &name="" )override;
+   virtual void AddField( const wxString &name="" )override;
+};
+
+class DeformattedCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
+{
+public:
+   DeformattedCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   virtual void StartArray() override;
+   virtual void EndArray() override;
+   virtual void StartStruct() override;
+   virtual void EndStruct() override;
+   virtual void AddItem(const wxString &value , const wxString &name="" )override;
+   virtual void AddItem(const bool value      , const wxString &name="" )override;
+   virtual void AddItem(const double value    , const wxString &name="" )override;
+   virtual void AddField( const wxString &name="" )override;
+};
 
 /// Used to ignore a command's progress updates
 class NullProgressTarget final : public CommandProgressTarget
@@ -197,7 +243,7 @@ public:
 /// Assumes responsibility for pointers passed into it.
 class CommandOutputTarget
 {
-protected:
+public:
    std::unique_ptr<CommandProgressTarget> mProgressTarget;
    std::shared_ptr<CommandMessageTarget> mStatusTarget;
    std::shared_ptr<CommandMessageTarget> mErrorTarget;
@@ -261,9 +307,24 @@ public:
       if (mStatusTarget)
          mStatusTarget->AddItem( value, name );
    }
+};
 
+class LispifiedCommandOutputTarget : public CommandOutputTarget
+{
+public :
+   LispifiedCommandOutputTarget( CommandOutputTarget & target );
+   ~LispifiedCommandOutputTarget();
+private:
+   CommandOutputTarget * pToRestore;
+};
 
-
+class DeformattedCommandOutputTarget : public CommandOutputTarget
+{
+public :
+   DeformattedCommandOutputTarget( CommandOutputTarget & target );
+   ~DeformattedCommandOutputTarget();
+private:
+   CommandOutputTarget * pToRestore;
 };
 
 class InteractiveOutputTarget : public CommandOutputTarget

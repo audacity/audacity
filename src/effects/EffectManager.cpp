@@ -198,27 +198,30 @@ wxString EffectManager::GetCommandDescription(const PluginID & ID)
    return wxEmptyString;
 }
 
-wxString EffectManager::GetCommandDefinition(const PluginID & ID)
+void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context)
 {
    CommandDefinitionInterface *command;
    command = GetEffect(ID);
    if( !command )
       command = GetAudacityCommand( ID );
    if( !command )
-      return wxEmptyString;
+      return;
 
-   ShuttleGetDefinition S;
-   if( command->DefineParams( S ) )
-   {
-      wxString Temp; 
-      Temp += "{ id: \"" + GetCommandIdentifier( ID ) + "\", name: \"" + GetCommandName( ID ) + "\", params: [\r\n";
-      Temp += S.Result;
-      Temp += "]}";
-      Temp.Replace( ",\r\n]","\r\n]"); // fix up for trailing comma.  Relies on \r\n endings from ShuttleGetDefinition
-      return Temp;
-   }
+   ShuttleParams NullShuttle;
+   // Test if it defines any parameters at all.
+   if( !command->DefineParams( NullShuttle ) )
+      return;
 
-   return wxEmptyString;
+   // This is capturing the output context into the shuttle.
+   ShuttleGetDefinition S(  *context.pOutput.get()->mStatusTarget.get() );
+   S.StartStruct();
+   S.AddItem( GetCommandIdentifier( ID ), "id" );
+   S.AddItem( GetCommandName( ID ), "name" );
+   S.AddField( "params" );
+   S.StartArray();
+   command->DefineParams( S );
+   S.EndArray();
+   S.EndStruct();
 }
 
 

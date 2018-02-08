@@ -64,6 +64,169 @@ void CommandMessageTarget::AddItem(const double value,    const wxString &name){
    mCounts.Last() += 1;
 }
 
+void CommandMessageTarget::AddField(const wxString &name){
+   Update( wxString::Format( "%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":""));
+   mCounts.Last() = 0; // Lie so that we don't get a comma.
+}
+
+void CommandMessageTarget::Flush(){
+}
+
+
+
+void LispyCommandMessageTarget::StartArray()
+{
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   Update( wxString::Format( "%s%s( ", ( mCounts.Last() > 0 ) ? ",\n" : "\n", Padding ));
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
+}
+
+void LispyCommandMessageTarget::EndArray(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+   Update( " )" );
+}
+void LispyCommandMessageTarget::StartStruct(){
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   Update( wxString::Format( "%s%s( ", ( mCounts.Last() > 0 ) ? ",\n" : "\n", Padding ));
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
+}
+void LispyCommandMessageTarget::EndStruct(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+   Update( " )" );
+}
+void LispyCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
+   Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value));
+   mCounts.Last() += 1;
+}
+void LispyCommandMessageTarget::AddItem(const bool value,      const wxString &name){
+   Update( wxString::Format( "%s%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value?"True":"False"));
+   mCounts.Last() += 1;
+}
+void LispyCommandMessageTarget::AddItem(const double value,    const wxString &name){
+   Update( wxString::Format( "%s%s%s%g", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value));
+   mCounts.Last() += 1;
+}
+
+void LispyCommandMessageTarget::AddField(const wxString &name){
+   Update( wxString::Format( "%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":""));
+   mCounts.Last() = 0; // Lie so that we don't get a comma.
+}
+
+
+
+
+
+
+
+void DeformattedCommandMessageTarget::StartArray()
+{
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   if( mCounts.GetCount() <= 3 )
+      Update( wxString::Format( "%s%s ", ( mCounts.Last() > 0 ) ? " \n" : "", Padding ));
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
+}
+
+void DeformattedCommandMessageTarget::EndArray(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+   if( mCounts.GetCount() <= 3 )
+     Update( " " );
+}
+void DeformattedCommandMessageTarget::StartStruct(){
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   if( mCounts.GetCount() <= 3 )
+      Update( wxString::Format( "%s%s ", ( mCounts.Last() > 0 ) ? " \n" : "", Padding ));
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
+}
+void DeformattedCommandMessageTarget::EndStruct(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+   if( mCounts.GetCount() <= 3 )
+      Update( " " );
+}
+void DeformattedCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
+   if( mCounts.GetCount() <= 3 )
+      Update( wxString::Format( "%s\"%s\"", (mCounts.Last()>0)?" ":"",value));
+   mCounts.Last() += 1;
+}
+void DeformattedCommandMessageTarget::AddItem(const bool value,      const wxString &name){
+   if( mCounts.GetCount() <= 3 )
+      Update( wxString::Format( "%s%s", (mCounts.Last()>0)?" ":"",value?"True":"False"));
+   mCounts.Last() += 1;
+}
+void DeformattedCommandMessageTarget::AddItem(const double value,    const wxString &name){
+   if( mCounts.GetCount() <= 3 )
+      Update( wxString::Format( "%s%g", (mCounts.Last()>0)?" ":"", value));
+   mCounts.Last() += 1;
+}
+
+void DeformattedCommandMessageTarget::AddField(const wxString &name){
+   mCounts.Last() = 0; // Lie so that we don't get a comma.
+}
+
+
+
+
+
+LispifiedCommandOutputTarget::LispifiedCommandOutputTarget( CommandOutputTarget & target )
+ : CommandOutputTarget() ,
+   pToRestore( &target )
+{
+   mProgressTarget = std::move(target.mProgressTarget), 
+   mStatusTarget = std::make_shared<LispyCommandMessageTarget>( *target.mStatusTarget.get() ), 
+   mErrorTarget = std::move( target.mErrorTarget );
+}
+
+LispifiedCommandOutputTarget::~LispifiedCommandOutputTarget()
+{
+   pToRestore->mProgressTarget = std::move( mProgressTarget );
+   //The status was never captured so does not need restoring.
+   //pToRestore->mStatusTarget = std::move( mStatusTarget );
+   pToRestore->mErrorTarget = std::move( mErrorTarget );
+}
+
+DeformattedCommandOutputTarget::DeformattedCommandOutputTarget( CommandOutputTarget & target )
+ : CommandOutputTarget() ,
+   pToRestore( &target )
+{
+   mProgressTarget = std::move(target.mProgressTarget), 
+   mStatusTarget = std::make_shared<DeformattedCommandMessageTarget>( *target.mStatusTarget.get() ), 
+   mErrorTarget = std::move( target.mErrorTarget );
+}
+
+DeformattedCommandOutputTarget::~DeformattedCommandOutputTarget()
+{
+   pToRestore->mProgressTarget = std::move( mProgressTarget );
+   //The status was never captured so does not need restoring.
+   //pToRestore->mStatusTarget = std::move( mStatusTarget );
+   pToRestore->mErrorTarget = std::move( mErrorTarget );
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /// Dialog for long messages.
 class AUDACITY_DLL_API LongMessageDialog /* not final */ : public wxDialogWrapper
@@ -82,8 +245,10 @@ public:
    virtual void OnCancel(wxCommandEvent & evt);
 
    static void AcceptText( const wxString & Text );
+   static void Flush();
 
-   wxTextCtrl * mText;
+   wxTextCtrl * mTextCtrl;
+   wxString mText;
    static LongMessageDialog * pDlg;
 private:
    int mType;
@@ -124,7 +289,7 @@ bool LongMessageDialog::Init()
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
-      mText = S.AddTextWindow( "" );
+      mTextCtrl = S.AddTextWindow( "" );
       long buttons = eOkButton;
       S.AddStandardButtons(buttons|mAdditionalButtons);
    }
@@ -154,7 +319,16 @@ void LongMessageDialog::AcceptText( const wxString & Text )
       pDlg->Init();
       pDlg->Show();
    }
-   pDlg->mText->SetValue( pDlg->mText->GetValue( ) + Text );
+   pDlg->mText = pDlg->mText + Text;
+}
+
+void LongMessageDialog::Flush()
+{
+   if( pDlg ){
+      pDlg->mText += "\n\n";
+      pDlg->mTextCtrl->SetValue( pDlg->mText );
+      pDlg->mTextCtrl->ShowPosition( pDlg->mTextCtrl->GetLastPosition() );
+   }
 }
 
 
@@ -166,10 +340,14 @@ void LongMessageDialog::AcceptText( const wxString & Text )
 class MessageDialogTarget final : public CommandMessageTarget
 {
 public:
-   virtual ~MessageDialogTarget() {}
+   virtual ~MessageDialogTarget() {Flush();}
    void Update(const wxString &message) override
    {
       LongMessageDialog::AcceptText(message);
+   }
+   void Flush() override
+   {
+      LongMessageDialog::Flush();
    }
 };
 
@@ -183,7 +361,6 @@ public:
    {
       return std::make_shared<MessageDialogTarget>();
    }
-
 };
 
 
