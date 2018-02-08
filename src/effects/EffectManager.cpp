@@ -192,7 +192,7 @@ wxString EffectManager::GetCommandDescription(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context)
 {
-   CommandDefinitionInterface *command;
+   ParamsInterface *command;
    command = GetEffect(ID);
    if( !command )
       command = GetAudacityCommand( ID );
@@ -909,14 +909,14 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
 
    PluginManager & pm = PluginManager::Get();
    // Effects OR Generic commands...
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeGeneric);
+   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
    while (plug)
    {
       if (GetCommandIdentifier(plug->GetID()).IsSameAs(strTarget))
       {
          return plug->GetID();
       }
-      plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeGeneric);
+      plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
    }
    return empty;;
 }

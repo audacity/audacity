@@ -1410,18 +1410,24 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 // ============================================================================
 
 const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
-   ModuleInterface *provider, CommandDefinitionInterface *pInterface )
+   ModuleInterface *provider, IdentInterface *pInterface )
 {
    EffectDefinitionInterface * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
    if( pEInterface )
       return PluginManager::Get().RegisterPlugin(provider, pEInterface, PluginTypeEffect);
-   return PluginManager::Get().RegisterPlugin(provider, pInterface);
+   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
+   if( pCInterface )
+      return PluginManager::Get().RegisterPlugin(provider, pCInterface);
+   return "";
 }
 
-const PluginID &PluginManagerInterface::GenericRegistrationCallback(
-   ModuleInterface *provider, CommandDefinitionInterface *pInterface )
+const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
+   ModuleInterface *provider, IdentInterface *pInterface )
 {
-   return PluginManager::Get().RegisterPlugin(provider, pInterface);
+   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
+   if( pCInterface )
+      return PluginManager::Get().RegisterPlugin(provider, pCInterface);
+   return "";
 }
 
 
@@ -1450,16 +1456,9 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
 
 const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, CommandDefinitionInterface *command)
 {
-   PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeGeneric);
+   PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeAudacityCommand);
 
    plug.SetProviderID(PluginManager::GetID(provider));
-
-   //plug.SetEffectType(effect->GetType());
-   //plug.SetEffectFamily(effect->GetFamily());
-   //plug.SetEffectInteractive(effect->IsInteractive());
-   //plug.SetEffectDefault(effect->IsDefault());
-   //plug.SetEffectRealtime(effect->SupportsRealtime());
-   //plug.SetEffectAutomatable(effect->SupportsAutomation());
 
    plug.SetEnabled(true);
    plug.SetValid(true);
@@ -1874,7 +1873,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, CommandDefinitionInterface *ident){
+               [&](ModuleInterface *provider, IdentInterface *ident){
                   // Register as by default, but also collecting the PluginIDs
                   // and names
                   const PluginID * id = &PluginManagerInterface::DefaultRegistrationCallback(
@@ -1945,7 +1944,7 @@ void PluginManager::Load()
 
    // Now the rest
    LoadGroup(&registry, PluginTypeEffect);
-   LoadGroup(&registry, PluginTypeGeneric );
+   LoadGroup(&registry, PluginTypeAudacityCommand );
    LoadGroup(&registry, PluginTypeExporter);
    LoadGroup(&registry, PluginTypeImporter);
 
@@ -2243,7 +2242,7 @@ void PluginManager::Save()
    // Save the individual groups
    SaveGroup(&registry, PluginTypeEffect);
    SaveGroup(&registry, PluginTypeExporter);
-   SaveGroup(&registry, PluginTypeGeneric);
+   SaveGroup(&registry, PluginTypeAudacityCommand);
    SaveGroup(&registry, PluginTypeImporter);
    SaveGroup(&registry, PluginTypeStub);
 
@@ -2669,7 +2668,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
 PluginID PluginManager::GetID(CommandDefinitionInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeGeneric),
+                           GetPluginTypeString(PluginTypeAudacityCommand),
                            wxEmptyString,
                            command->GetVendor(),
                            command->GetName(),
@@ -2712,7 +2711,7 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
    case PluginTypeEffect:
       str = wxT("Effect");
       break;
-   case PluginTypeGeneric:
+   case PluginTypeAudacityCommand:
       str = wxT("Generic");
       break;
    case PluginTypeExporter:

@@ -16,7 +16,6 @@ This class now lists
 - Tracks
 - Clips
 - Labels
-- Keycodes
 - Boxes
 
 *//*******************************************************************/
@@ -39,7 +38,7 @@ This class now lists
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
-const int nTypes =7;
+const int nTypes =6;
 static const wxString kTypes[nTypes] =
 {
    XO("Commands"),
@@ -47,7 +46,6 @@ static const wxString kTypes[nTypes] =
    XO("Tracks"),
    XO("Clips"),
    XO("Labels"),
-   XO("Keycodes"),
    XO("Boxes")
 };
 
@@ -57,7 +55,6 @@ enum {
    kTracks,
    kClips,
    kLabels,
-   kKeycodes,
    kBoxes
 };
 
@@ -133,7 +130,6 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
       case kTracks   : return SendTracks( context );
       case kClips    : return SendClips( context );
       case kLabels   : return SendLabels( context );
-      case kKeycodes : return SendKeycodes( context );
       case kBoxes    : return SendBoxes( context );
       default:
          context.Status( "Command options not recognised" );
@@ -177,43 +173,19 @@ bool GetInfoCommand::SendCommands(const CommandContext &context )
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
    {
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeGeneric);
+      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
       while (plug)
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty()){
             em.GetCommandDefinition( plug->GetID(), context );
          }
-         plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeGeneric );
+         plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand );
       }
    }
    context.EndArray();
    return true;
 }
-
-#if 0
-// Old version which gives enabled/disabled status too.
-bool GetInfoCommand::SendMenus(const CommandContext &context)
-{
-   bool bShowStatus = true;
-   wxArrayString names;
-   CommandManager *cmdManager = context.GetProject()->GetCommandManager();
-   cmdManager->GetAllCommandNames(names, false);
-   wxArrayString::iterator iter;
-   for (iter = names.begin(); iter != names.end(); ++iter)
-   {
-      wxString name = *iter;
-      wxString out = name;
-      if (bShowStatus)
-      {
-         out += wxT("\t");
-         out += cmdManager->GetEnabled(name) ? wxT("Enabled") : wxT("Disabled");
-      }
-      context.Status(out);
-   }
-   return true;
-}
-#endif
 
 bool GetInfoCommand::SendBoxes(const CommandContext &context)
 {
@@ -330,12 +302,6 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
 
 
 
-   return true;
-}
-
-bool GetInfoCommand::SendKeycodes(const CommandContext &context)
-{
-   context.Status("Keycodes - Not yet");
    return true;
 }
 
