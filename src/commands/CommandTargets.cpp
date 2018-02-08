@@ -326,9 +326,12 @@ void LongMessageDialog::AcceptText( const wxString & Text )
 void LongMessageDialog::Flush()
 {
    if( pDlg ){
-      pDlg->mText += "\n\n";
-      pDlg->mTextCtrl->SetValue( pDlg->mText );
-      pDlg->mTextCtrl->ShowPosition( pDlg->mTextCtrl->GetLastPosition() );
+      if( !pDlg->mText.EndsWith( "\n\n" ))
+      {
+         pDlg->mText += "\n\n";
+         pDlg->mTextCtrl->SetValue( pDlg->mText );
+         pDlg->mTextCtrl->ShowPosition( pDlg->mTextCtrl->GetLastPosition() );
+      }
    }
 }
 

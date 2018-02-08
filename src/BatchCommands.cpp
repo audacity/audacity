@@ -269,7 +269,7 @@ auto BatchCommands::GetAllCommands() -> CommandNameVector
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
    {
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect|PluginTypeGeneric);
+      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       while (plug)
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
@@ -278,7 +278,7 @@ auto BatchCommands::GetAllCommands() -> CommandNameVector
                plug->GetUntranslatedName(), // plug->GetTranslatedName(),
                command
             } );
-         plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeGeneric);
+         plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       }
    }
 
@@ -615,7 +615,7 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    // FIXME: for later versions may want to not select-all in batch mode.
    // IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
-   if( plug->GetPluginType() != PluginTypeGeneric )
+   if( plug->GetPluginType() != PluginTypeAudacityCommand )
       project->SelectAllIfNone();
 
    bool res = false;
@@ -625,7 +625,7 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    // transfer the parameters to the effect...
    if (EffectManager::Get().SetEffectParameters(ID, params))
    {
-      if( plug->GetPluginType() == PluginTypeGeneric )
+      if( plug->GetPluginType() == PluginTypeAudacityCommand )
          // and apply the effect...
          res = project->DoAudacityCommand(ID, 
             Context,

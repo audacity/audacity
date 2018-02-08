@@ -52,7 +52,6 @@ private:
    bool SendTracks(const CommandContext & context);
    bool SendLabels(const CommandContext & context);
    bool SendClips(const CommandContext & context);
-   bool SendKeycodes(const CommandContext & context);
    bool SendBoxes(const CommandContext & context);
 
    void ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth );

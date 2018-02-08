@@ -57,9 +57,9 @@ class PluginManagerInterface /* not final */
 public:
 
    static const PluginID &DefaultRegistrationCallback(
-      ModuleInterface *provider, CommandDefinitionInterface *ident );
-   static const PluginID &GenericRegistrationCallback(
-      ModuleInterface *provider, CommandDefinitionInterface *ident );
+      ModuleInterface *provider, IdentInterface *ident );
+   static const PluginID &AudacityCommandRegistrationCallback(
+      ModuleInterface *provider, IdentInterface *ident );
 
    virtual bool IsPluginRegistered(const wxString & path) = 0;
 
