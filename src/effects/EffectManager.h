@@ -31,6 +31,7 @@
 
 class AudacityCommand;
 class CommandContext;
+class CommandMessageTarget;
 
 using EffectArray = std::vector <Effect*> ;
 using EffectMap = std::unordered_map<wxString, Effect *>;
@@ -90,7 +91,7 @@ public:
    wxString GetCommandName(const PluginID & ID);
    wxString GetCommandIdentifier(const PluginID & ID);
    wxString GetCommandDescription(const PluginID & ID);
-   wxString GetCommandDefinition(const PluginID & ID);
+   void GetCommandDefinition(const PluginID & ID, const CommandContext & context);
    bool IsHidden(const PluginID & ID);
 
    /** Support for batch commands */

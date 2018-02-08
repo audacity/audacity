@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_SHUTTLE__
 #define __AUDACITY_SHUTTLE__
 
-
+#include "commands\CommandTargets.h"
 
 class Enums {
 public:
@@ -61,7 +61,7 @@ public:
 class CommandAutomationParameters;
 /**************************************************************************//**
 \brief Shuttle that deals with parameters.  This is a base class with lots of
-pure virtual functions.
+virtual functions that do nothing by default.
 ********************************************************************************/
 class ShuttleParams : public Shuttle
 {
@@ -72,15 +72,15 @@ public:
    virtual ~ShuttleParams() {}
    bool ExchangeWithMaster(const wxString & Name) override;
    ShuttleParams & Optional( bool & var ){ var = true;return *this;};
-   virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false )=0;
-   virtual void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 )=0;
-   virtual void Define( int & var,      const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 )=0;
-   virtual void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f )=0;
-   virtual void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f )=0;
-   virtual void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl=1.0f )=0;
-   virtual void Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin="", const wxString vmax="", const wxString vscl="" )=0;
-   virtual void DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )=0;
-   virtual void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )=0;
+   virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false );
+   virtual void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
+   virtual void Define( int & var,      const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
+   virtual void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f );
+   virtual void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f );
+   virtual void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl=1.0f );
+   virtual void Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin="", const wxString vmax="", const wxString vscl="" );
+   virtual void DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings );
+   virtual void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings );
 };
 
 /**************************************************************************//**
@@ -125,9 +125,10 @@ public:
 /**************************************************************************//**
 \brief Shuttle that retrieves a JSON format definition of a command's parameters.
 ********************************************************************************/
-class ShuttleGetDefinition : public ShuttleParams
+class ShuttleGetDefinition : public ShuttleParams, public CommandMessageTargetDecorator
 {
 public:
+   ShuttleGetDefinition( CommandMessageTarget & target );
    wxString Result;
    void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
    void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;

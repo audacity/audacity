@@ -23,7 +23,9 @@ This class now handles the GetAll script command, which can
 #include "../effects/EffectManager.h"
 #include "../widgets/Overlay.h"
 #include "../widgets/OverlayPanel.h"
+#include "../Track.h"
 #include "../TrackPanel.h"
+#include "../WaveTrack.h"
 #include "CommandContext.h"
 
 #include "SelectCommand.h"
@@ -32,12 +34,14 @@ This class now handles the GetAll script command, which can
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
-const int nTypes =5;
+const int nTypes =7;
 static const wxString kTypes[nTypes] =
 {
    XO("Commands"),
    XO("Menus"),
+   XO("Tracks"),
    XO("Clips"),
+   XO("Labels"),
    XO("Keycodes"),
    XO("Boxes")
 };
@@ -45,7 +49,9 @@ static const wxString kTypes[nTypes] =
 enum {
    kCommands,
    kMenus,
+   kTracks,
    kClips,
+   kLabels,
    kKeycodes,
    kBoxes
 };
@@ -60,8 +66,9 @@ static const wxString kFormats[nFormats] =
 };
 
 enum {
-   kJson =0*nTypes,
-   kOther =1*nTypes
+   kJson ,
+   kLisp,
+   kOther
 };
 
 
@@ -89,22 +96,200 @@ void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool GetInfoCommand::Apply(const CommandContext &context)
 {
-   switch( mInfoType + nTypes * mFormat ){
-      case kCommands + kJson  : return SendCommandsAsJson( context);
-      case kCommands + kOther : return SendCommandsAsJson( context);
-      case kMenus    + kJson  : return SendMenusAsJson( context); 
-      case kMenus    + kOther : return SendMenus( context );
-      case kClips    + kJson  : return SendClips( context); 
-      case kClips    + kOther : return SendClips( context );
-      case kKeycodes + kJson  : return SendKeycodes( context); 
-      case kKeycodes + kOther : return SendKeycodes( context );
-      case kBoxes    + kJson  : return SendBoxesAsJson( context); 
-      case kBoxes    + kOther : return SendBoxesAsJson( context );
+   if( mFormat == kJson )
+      return ApplyInner( context );
+
+   if( mFormat == kLisp )
+   {
+      CommandContext LispyContext( 
+         *(context.GetProject()), 
+         std::make_unique<LispifiedCommandOutputTarget>( *context.pOutput.get() )
+         );
+      return ApplyInner( LispyContext );
+   }
+
+   if( mFormat == kOther )
+   {
+      CommandContext DeformattedContext( 
+         *(context.GetProject()), 
+         std::make_unique<DeformattedCommandOutputTarget>( *context.pOutput.get() )
+         );
+      return ApplyInner( DeformattedContext );
+   }
+
+   return false;
+}
+
+bool GetInfoCommand::ApplyInner(const CommandContext &context)
+{
+   switch( mInfoType  ){
+      case kCommands : return SendCommands( context );
+      case kMenus    : return SendMenus( context );
+      case kTracks   : return SendTracks( context );
+      case kClips    : return SendClips( context );
+      case kLabels   : return SendLabels( context );
+      case kKeycodes : return SendKeycodes( context );
+      case kBoxes    : return SendBoxes( context );
       default:
          context.Status( "Command options not recognised" );
    }
    return false;
 }
+
+bool GetInfoCommand::SendMenus(const CommandContext &context)
+{
+   wxMenuBar * pBar = context.GetProject()->GetMenuBar();
+   if(!pBar ){
+      wxLogDebug("No menus");
+      return false;
+   }
+
+   size_t cnt = pBar->GetMenuCount();
+   size_t i;
+   wxString Label;
+   context.StartArray();
+   for(i=0;i<cnt;i++)
+   {
+      Label = pBar->GetMenuLabelText( i );
+      context.StartArray();
+      context.AddItem( 0 );
+      context.AddItem( 0 );
+      context.AddItem( Label );
+      context.AddItem( "" );
+      context.EndArray();
+      ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
+   }
+   context.EndArray();
+   return true;
+}
+
+/**
+ Send the list of commands.
+ */
+bool GetInfoCommand::SendCommands(const CommandContext &context )
+{
+   context.StartArray();
+   PluginManager & pm = PluginManager::Get();
+   EffectManager & em = EffectManager::Get();
+   {
+      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeGeneric);
+      while (plug)
+      {
+         auto command = em.GetCommandIdentifier(plug->GetID());
+         if (!command.IsEmpty()){
+            em.GetCommandDefinition( plug->GetID(), context );
+         }
+         plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeGeneric );
+      }
+   }
+   context.EndArray();
+   return true;
+}
+
+#if 0
+// Old version which gives enabled/disabled status too.
+bool GetInfoCommand::SendMenus(const CommandContext &context)
+{
+   bool bShowStatus = true;
+   wxArrayString names;
+   CommandManager *cmdManager = context.GetProject()->GetCommandManager();
+   cmdManager->GetAllCommandNames(names, false);
+   wxArrayString::iterator iter;
+   for (iter = names.begin(); iter != names.end(); ++iter)
+   {
+      wxString name = *iter;
+      wxString out = name;
+      if (bShowStatus)
+      {
+         out += wxT("\t");
+         out += cmdManager->GetEnabled(name) ? wxT("Enabled") : wxT("Disabled");
+      }
+      context.Status(out);
+   }
+   return true;
+}
+#endif
+
+bool GetInfoCommand::SendBoxes(const CommandContext &context)
+{
+   //context.Status("Boxes");
+   wxWindow * pWin = context.GetProject();
+
+   context.StartArray();
+   wxRect R = pWin->GetScreenRect();
+
+   //R.SetPosition( wxPoint(0,0) );
+   
+   //wxString Name = pWin->GetName();
+   context.StartArray();
+   context.AddItem( 0 );
+   context.AddItem( R.GetLeft() );
+   context.AddItem( R.GetTop() );
+   context.AddItem( R.GetRight() );
+   context.AddItem( R.GetBottom() );
+   context.AddItem( "Audacity Window" ); 
+   context.EndArray( );
+
+   ExploreAdornments( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
+   ExploreWindows( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
+   context.EndArray( );
+   return true;
+}
+
+bool GetInfoCommand::SendTracks(const CommandContext & context)
+{
+   TrackList *projTracks = context.GetProject()->GetTracks();
+   TrackListIterator iter(projTracks);
+   Track *trk = iter.First();
+   context.StartArray();
+   while (trk)
+   {
+      context.StartStruct();
+      context.AddItem( trk->GetName(), "name" );
+      auto t = dynamic_cast<WaveTrack*>( trk );
+      if( t )
+      {
+         context.AddItem( t->GetStartTime(), "start" );
+         context.AddItem( t->GetEndTime(), "end" );
+         context.AddItem( t->GetPan() , "pan");
+         context.AddItem( t->GetGain() , "gain");
+         context.AddBool( t->GetSelected(), "selected" );
+         context.AddBool( t->GetLinked(), "linked");
+         context.AddBool( t->GetSolo(), "solo" );
+         context.AddBool( t->GetMute(), "mute");
+      }
+      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+      Track * fTrack = panel->GetFocusedTrack();
+      context.AddBool( (trk == fTrack), "focused");
+      context.EndStruct();
+      trk=iter.Next();
+   }
+   context.EndArray();
+   return true;
+}
+
+bool GetInfoCommand::SendClips(const CommandContext &context)
+{
+   context.Status("Clips - Not yet");
+   return true;
+}
+
+bool GetInfoCommand::SendLabels(const CommandContext &context)
+{
+   context.Status("Labels - Not yet");
+   return true;
+}
+
+bool GetInfoCommand::SendKeycodes(const CommandContext &context)
+{
+   context.Status("Keycodes - Not yet");
+   return true;
+}
+
+/*******************************************************************
+The various Explore functions are called from the Send functions,
+and may be recursive.  'Send' is the top level.
+*******************************************************************/
 
 void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth ){
    Id;//compiler food.
@@ -133,113 +318,18 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
       if (item->IsCheck() && item->IsChecked())
          flags +=2;
 
-      context.Status( wxString::Format("  [ %2i, %2i, \"%s\", \"%s\" ],", depth, flags, Label,Accel )); 
+      context.StartArray();
+      context.AddItem( depth );
+      context.AddItem( flags );
+      context.AddItem( Label );
+      context.AddItem( Accel );
+      context.EndArray();
+
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
          ExploreMenu( context, pMenu, item->GetId(), depth+1 );
       }
    }
-}
-
-bool GetInfoCommand::SendMenusAsJson(const CommandContext &context)
-{
-   wxMenuBar * pBar = context.GetProject()->GetMenuBar();
-   if(!pBar ){
-      wxLogDebug("No menus");
-      return false;
-   }
-
-   size_t cnt = pBar->GetMenuCount();
-   size_t i;
-   wxString Label;
-   context.Status( "[" );
-   for(i=0;i<cnt;i++)
-   {
-      Label = pBar->GetMenuLabelText( i );
-      context.Status( wxString::Format("  [ %2i, %2i, \"%s\", \"%s\" ],", 0, 0, Label, "" )); 
-      ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
-   }
-   context.Status( "]" );
-   return true;
-}
-
-/**
- Send the list of commands.
- */
-bool GetInfoCommand::SendCommandsAsJson(const CommandContext &context )
-{
-   PluginManager & pm = PluginManager::Get();
-   EffectManager & em = EffectManager::Get();
-   {
-      wxString out="";
-      wxString maybeComma="";
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeGeneric);
-      while (plug)
-      {
-         auto command = em.GetCommandIdentifier(plug->GetID());
-         if (!command.IsEmpty()){
-            // delayed sending of previous string, so we can maybe add a comma.
-            if( !out.IsEmpty() )
-            {
-               context.Status(out+maybeComma);
-               maybeComma = ",";
-            }
-            out = em.GetCommandDefinition( plug->GetID() );
-         }
-         plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeGeneric );
-      }
-      if( !out.IsEmpty() )
-         context.Status(out);  // Last one does not have a comma.
-   }
-   return true;
-}
-
-bool GetInfoCommand::SendMenus(const CommandContext &context)
-{
-   bool bShowStatus = true;
-   wxArrayString names;
-   CommandManager *cmdManager = context.GetProject()->GetCommandManager();
-   cmdManager->GetAllCommandNames(names, false);
-   wxArrayString::iterator iter;
-   for (iter = names.begin(); iter != names.end(); ++iter)
-   {
-      wxString name = *iter;
-      wxString out = name;
-      if (bShowStatus)
-      {
-         out += wxT("\t");
-         out += cmdManager->GetEnabled(name) ? wxT("Enabled") : wxT("Disabled");
-      }
-      context.Status(out);
-   }
-   return true;
-}
-
-bool GetInfoCommand::SendClips(const CommandContext &context)
-{
-   bool bShowStatus = true;
-   wxArrayString names;
-   CommandManager *cmdManager = context.GetProject()->GetCommandManager();
-   cmdManager->GetAllCommandNames(names, false);
-   wxArrayString::iterator iter;
-   for (iter = names.begin(); iter != names.end(); ++iter)
-   {
-      wxString name = *iter;
-      wxString out = name;
-      if (bShowStatus)
-      {
-         out += wxT("\t");
-         out += cmdManager->GetEnabled(name) ? wxT("Enabled") : wxT("Disabled");
-      }
-      context.Status(out);
-   }
-   return true;
-}
-
-bool GetInfoCommand::SendKeycodes(const CommandContext &context)
-{
-   context.Status("Keycodes");
-   return true;
 }
 
 void GetInfoCommand::ExploreAdornments( const CommandContext &context,
@@ -391,34 +481,4 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       ExploreWindows( context, P, item, item->GetId(), depth+1 );
    }
 }
-
-
-bool GetInfoCommand::SendBoxesAsJson(const CommandContext &context)
-{
-   //context.Status("Boxes");
-   wxWindow * pWin = context.GetProject();
-
-   context.StartArray();
-   wxRect R = pWin->GetScreenRect();
-
-   //R.SetPosition( wxPoint(0,0) );
-   
-   //wxString Name = pWin->GetName();
-   context.StartArray();
-   context.AddItem( 0 );
-   context.AddItem( R.GetLeft() );
-   context.AddItem( R.GetTop() );
-   context.AddItem( R.GetRight() );
-   context.AddItem( R.GetBottom() );
-   context.AddItem( "Audacity Window" ); 
-   context.EndArray( );
-
-   ExploreAdornments( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
-   ExploreWindows( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
-   context.EndArray( );
-   return true;
-}
-
-
-
 

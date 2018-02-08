@@ -12,7 +12,7 @@
 \brief Definitions for GetTrackInfoCommand and GetTrackInfoCommandType classes
 
 \class GetTrackInfoCommand
-\brief Command that returns requested track information
+\brief Obsolete.  GetInfo now does it.
 
 *//*******************************************************************/
 
@@ -58,38 +58,9 @@ void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool GetTrackInfoCommand::Apply(const CommandContext & context)
+
+
+bool GetTrackInfoCommand::Apply(const CommandContext &context)
 {
-   TrackList *projTracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(projTracks);
-   Track *trk = iter.First();
-   wxString str = "[\n";
-   while (trk)
-   {
-      str += "{\n";
-      str += wxString::Format("  name:\"%s\",\n", trk->GetName() );
-      auto t = dynamic_cast<WaveTrack*>( trk );
-      if( t )
-      {
-         str += wxString::Format("  start:%g,\n", t->GetStartTime() );
-         str += wxString::Format("  end:%g,\n", t->GetEndTime() );
-         str += wxString::Format("  pan:%g,\n", t->GetPan() );
-         str += wxString::Format("  gain:%g,\n", t->GetGain() );
-         str += wxString::Format("  selected:%s,\n", t->GetSelected()?"True":"False"  );
-         str += wxString::Format("  linked:%s,\n", t->GetLinked()?"True":"False"  );
-         str += wxString::Format("  solo:%s,\n", t->GetSolo()?"True":"False"  );
-         str += wxString::Format("  mute:%s,\n", t->GetMute()?"True":"False"  );
-      }
-      TrackPanel *panel = context.GetProject()->GetTrackPanel();
-      Track * fTrack = panel->GetFocusedTrack();
-      str += wxString::Format("  focused:%s,\n", (trk == fTrack)?"True":"False" );
-      str += "},\n";
-      trk=iter.Next();
-   }
-   str += "]";
-   // Make it true JSON by removing excess commas.
-   str.Replace(",\n}","\n}");
-   str.Replace(",\n]","\n]");
-   context.Status( str );
-   return true;
+   return false;
 }

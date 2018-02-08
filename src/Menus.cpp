@@ -1612,8 +1612,8 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("GetInfo"), _("Get Info..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("GetTrackInfo"), _("Get Track Info..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+//      c->AddItem(wxT("GetTrackInfo"), _("Get Track Info..."), FN(OnAudacityCommand),
+//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
 
 
       c->EndSubMenu();

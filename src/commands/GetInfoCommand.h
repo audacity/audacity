@@ -40,19 +40,21 @@ public:
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Automation");};
    bool Apply(const CommandContext &context) override;
+   bool ApplyInner(const CommandContext &context);
 
 public:
    int mInfoType;
    int mFormat;
 
 private:
-   bool SendCommandsAsJson(const CommandContext & context);
+   bool SendCommands(const CommandContext & context);
    bool SendMenus(const CommandContext & context);
-   bool SendMenusAsJson(const CommandContext & context);
-
+   bool SendTracks(const CommandContext & context);
+   bool SendLabels(const CommandContext & context);
    bool SendClips(const CommandContext & context);
    bool SendKeycodes(const CommandContext & context);
-   bool SendBoxesAsJson(const CommandContext & context);
+   bool SendBoxes(const CommandContext & context);
+
    void ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth );
    void ExploreTrackPanel( const CommandContext & context,
       wxPoint P, wxWindow * pWin, int Id, int depth );
