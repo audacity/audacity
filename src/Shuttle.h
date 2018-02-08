@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_SHUTTLE__
 #define __AUDACITY_SHUTTLE__
 
-#include "commands\CommandTargets.h"
+#include "commands/CommandTargets.h"
 
 class Enums {
 public:
