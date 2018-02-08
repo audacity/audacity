@@ -31,7 +31,7 @@ class BatchEvalCommandType final : public OldStyleCommandType
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+   OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTargets> &&target) override;
 };
 
 class BatchEvalCommand final : public CommandImplementation

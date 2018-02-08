@@ -54,8 +54,8 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
                                 public CommandDefinitionInterface
 {
  public:
-   //std::unique_ptr<CommandOutputTarget> mOutput;
-   //CommandOutputTarget * mOutput;
+   //std::unique_ptr<CommandOutputTargets> mOutput;
+   //CommandOutputTargets * mOutput;
  public:
    AudacityCommand();
    virtual ~AudacityCommand();

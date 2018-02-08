@@ -122,7 +122,7 @@ bool DecoratedCommand::SetParameter(const wxString &paramName,
    return mCommand->SetParameter(paramName, paramValue);
 }
 
-ApplyAndSendResponse::ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTarget> &target)
+ApplyAndSendResponse::ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTargets> &target)
       : DecoratedCommand(cmd),
        mCtx( std::make_unique<CommandContext>( *GetActiveProject(), std::move(target) ) )
 {

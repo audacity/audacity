@@ -17,6 +17,39 @@ objects needn't be concerned with what happens to the information.
 Note: currently, reusing target objects is not generally safe - perhaps they
 should be reference-counted.
 
+\class CommandMessageTargetDecorator
+\brief CommandMessageTargetDecorator is a CommandOutputTarget that forwards
+its work on to another one.  Typically we derive from it to modify some 
+functionality and forward the rest.
+
+\class BriefCommandMessageTarget
+\brief BriefCommandMessageTarget is a CommandOutputTarget that provides
+status in a briefer listing 
+
+\class LispyCommandMessageTarget
+\brief LispyCommandMessageTarget is a CommandOutputTarget that provides status 
+in a lispy style.
+
+\class MessageDialogTarget
+\brief MessageDialogTarget is a CommandOutputTarget that sends its status
+to the LongMessageDialog.
+
+\class CommandOutputTargets
+\brief CommandOutputTargets a mix of three output classes to output 
+progress indication, status messages and errors.
+
+\class BriefCommandOutputTargets
+\brief BriefCommandOutputTargets is a CommandOutputTargets that  replaces the 
+status message target with the BriefCommandMessageTarget version.
+
+\class LispifiedCommandOutputTargets
+\brief LispifiedCommandOutputTargets is a CommandOutputTargets that  replaces the 
+status message target with the LispyCommandMessageTarget version.
+
+\class ProgressToMessageTarget
+\brief ProgressToMessageTarget formats the percentage complete text as a message
+and sends it to that message target.
+
 *//*******************************************************************/
 
 #ifndef __COMMANDTARGETS__
@@ -89,10 +122,10 @@ public:
    virtual void AddField( const wxString &name="" )override;
 };
 
-class DeformattedCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
+class BriefCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
 {
 public:
-   DeformattedCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   BriefCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
    virtual void StartArray() override;
    virtual void EndArray() override;
    virtual void StartStruct() override;
@@ -223,8 +256,11 @@ public:
 };
 
 
-// By default, we ignore progress updates but display all other messages
-// directly
+/** 
+\class TargetFactory
+\brief TargetFactory makes Command output targets.  By default, we ignore progress 
+updates but display all other messages directly
+*/
 class TargetFactory
 {
 public:
@@ -241,19 +277,19 @@ public:
 
 /// Used to aggregate the various output targets a command may have.
 /// Assumes responsibility for pointers passed into it.
-class CommandOutputTarget
+class CommandOutputTargets
 {
 public:
    std::unique_ptr<CommandProgressTarget> mProgressTarget;
    std::shared_ptr<CommandMessageTarget> mStatusTarget;
    std::shared_ptr<CommandMessageTarget> mErrorTarget;
 public:
-   CommandOutputTarget(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
+   CommandOutputTargets(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
                        std::shared_ptr<CommandMessageTarget>  &&st = TargetFactory::MessageDefault(),
                        std::shared_ptr<CommandMessageTarget> &&et = TargetFactory::MessageDefault())
       : mProgressTarget(std::move(pt)), mStatusTarget(st), mErrorTarget(et)
    { }
-   ~CommandOutputTarget()
+   ~CommandOutputTargets()
    {
    }
    // Lots of forwarding...
@@ -309,28 +345,28 @@ public:
    }
 };
 
-class LispifiedCommandOutputTarget : public CommandOutputTarget
+class LispifiedCommandOutputTargets : public CommandOutputTargets
 {
 public :
-   LispifiedCommandOutputTarget( CommandOutputTarget & target );
-   ~LispifiedCommandOutputTarget();
+   LispifiedCommandOutputTargets( CommandOutputTargets & target );
+   ~LispifiedCommandOutputTargets();
 private:
-   CommandOutputTarget * pToRestore;
+   CommandOutputTargets * pToRestore;
 };
 
-class DeformattedCommandOutputTarget : public CommandOutputTarget
+class BriefCommandOutputTargets : public CommandOutputTargets
 {
 public :
-   DeformattedCommandOutputTarget( CommandOutputTarget & target );
-   ~DeformattedCommandOutputTarget();
+   BriefCommandOutputTargets( CommandOutputTargets & target );
+   ~BriefCommandOutputTargets();
 private:
-   CommandOutputTarget * pToRestore;
+   CommandOutputTargets * pToRestore;
 };
 
-class InteractiveOutputTarget : public CommandOutputTarget
+class InteractiveOutputTargets : public CommandOutputTargets
 {
 public:
-   InteractiveOutputTarget();
+   InteractiveOutputTargets();
 
 };
 

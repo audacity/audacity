@@ -22,7 +22,7 @@ class wxTopLevelWindow;
 class wxCommandEvent;
 class wxRect;
 class ToolManager;
-class CommandOutputTarget;
+class CommandOutputTargets;
 class TrackPanel;
 class AdornedRulerPanel;
 class AudacityProject;

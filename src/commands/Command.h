@@ -27,7 +27,7 @@
 
 class AudacityApp;
 class CommandContext;
-class CommandOutputTarget;
+class CommandOutputTargets;
 
 // Abstract base class for command interface.  
 class OldStyleCommand /* not final */
@@ -67,7 +67,7 @@ public:
 class ApplyAndSendResponse final : public DecoratedCommand
 {
 public:
-   ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTarget> &target);
+   ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTargets> &target);
    bool Apply() override;
    bool Apply(const CommandContext &context) override;// Error to use this.
    std::unique_ptr<CommandContext> mCtx;

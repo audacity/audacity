@@ -37,7 +37,7 @@ for its output.
 *******************************************************************/
 
 using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;
-class CommandOutputTarget;
+class CommandOutputTargets;
 class CommandSignature;
 class wxString;
 
@@ -65,7 +65,7 @@ public:
    virtual void BuildSignature(CommandSignature &signature) = 0;
 
    // Create a command instance with the specified output target
-   virtual OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTarget> &&target) = 0;
+   virtual OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTargets> &&target) = 0;
 };
 
 #endif /* End of include guard: __COMMANDTYPE__ */

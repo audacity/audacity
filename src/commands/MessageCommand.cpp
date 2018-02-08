@@ -29,7 +29,7 @@ void MessageCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("MessageString"), wxT("Connected"), std::move(stringValidator));
 }
 
-OldStyleCommandPointer MessageCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
+OldStyleCommandPointer MessageCommandType::Create(std::unique_ptr<CommandOutputTargets> &&target)
 {
    return std::make_shared<MessageCommand>(*this);
 }
