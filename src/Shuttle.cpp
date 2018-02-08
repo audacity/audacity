@@ -332,8 +332,23 @@ bool ShuttleParams::ExchangeWithMaster(const wxString & WXUNUSED(Name))
    return true;
 }
 
+
 #pragma warning( push )
 #pragma warning( disable: 4100 ) // unused parameters.
+
+// These are functions to override.  They do nothing.
+void ShuttleParams::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl){;};
+void ShuttleParams::Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
+void ShuttleParams::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
+void ShuttleParams::Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
+void ShuttleParams::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
+void ShuttleParams::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ){;};
+void ShuttleParams::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ){;};
+void ShuttleParams::DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings ){;};
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings ){;};
+
+
+
 /*
 void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
 {
@@ -483,68 +498,103 @@ void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int v
       var = temp;
 }
 
+ShuttleGetDefinition::ShuttleGetDefinition( CommandMessageTarget & target ) : CommandMessageTargetDecorator( target )
+{
+}
+
 // JSON definitions.
-// All these MUST end with ",\r\n", so that we can put them in an array (and so we can remove the last "," easily for JSON).
 void ShuttleGetDefinition::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"bool\", default: \"%s\"},\r\n",
-      key , vdefault ? "True" : "False" );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "bool", "type" );
+   AddItem( vdefault ? "True" : "False", "default" );
+   EndStruct();
 }
 
 void ShuttleGetDefinition::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"int\", default: \"%i\"},\r\n",
-      key , vdefault  );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "int", "type" );
+   AddItem( (double)vdefault, "default"  );
+   EndStruct();
 }
 
 void ShuttleGetDefinition::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"size_t\", default: \"%li\"},\r\n",
-      key , vdefault  );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "size_t", "type" );
+   AddItem( (double)vdefault, "default"  );
+   EndStruct();
+
 }
 
 void ShuttleGetDefinition::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"float\", default: \"%f\"},\r\n",
-      key , vdefault  );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "float", "type" );
+   AddItem( (double)vdefault, "default"  );
+   EndStruct();
 }
 
 void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"float\", default: \"%f\"},\r\n",
-      key , vdefault  );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "float", "type" );
+   AddItem( (double)vdefault, "default"  );
+   EndStruct();
 }
 
 void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"double\", default: \"%f\"},\r\n",
-      key , vdefault  );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "double", "type" );
+   AddItem( (double)vdefault, "default"  );
+   EndStruct();
 }
 
 
 void ShuttleGetDefinition::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"string\", default: \"%s\"},\r\n",
-      key , vdefault );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "string", "type" );
+   AddItem( vdefault, "default"  );
+   EndStruct();
 }
 
 
 void ShuttleGetDefinition::DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"enum\", default: \"%s\",\r\n      enum : [",
-      key , vdefault );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "enum", "type" );
+   AddItem( vdefault, "default"  );
+   AddField( "enum" );
+   StartArray();
    for( size_t i=0;i<strings.Count(); i++ )
-      Result += wxString::Format("%s\"%s\"", (i>0) ? ", ":"", strings[i] );
-   Result += "]\r\n   },\r\n";
+      AddItem( strings[i] );
+   EndArray();
+   EndStruct();
 }
 
 void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vdefault, wxArrayString strings )
 {
-   Result += wxString::Format( "   { key: \"%s\", type: \"enum\", default: \"%i\",\r\n      enum : [",
-      key , vdefault );
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "enum", "type" );
+   AddItem( (double)vdefault, "default"  );
+   AddField( "enum" );
+   StartArray();
    for( size_t i=0;i<strings.Count(); i++ )
-      Result += wxString::Format("%s\"%s\"", (i>0) ? ", ":"",strings[i] );
-   Result += "]\r\n   },\r\n";
+      AddItem( strings[i] );
+   EndArray();
+   EndStruct();
 }
 
 #pragma warning( pop )

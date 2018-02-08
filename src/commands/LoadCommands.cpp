@@ -38,9 +38,8 @@ modelled on BuiltinEffectsModule
 //
 #define COMMAND_LIST \
    COMMAND( DEMO,              DemoCommand, () )           \
-   COMMAND( SCREENSHOT,        ScreenshotCommand,   () ) \
+   COMMAND( SCREENSHOT,        ScreenshotCommand,   () )   \
    COMMAND( COMPARE_AUDIO,     CompareAudioCommand, () )   \
-   COMMAND( GET_TRACK_INFO,    GetTrackInfoCommand, () )   \
    COMMAND( SET_TRACK_INFO,    SetTrackInfoCommand, () )   \
    COMMAND( SELECT,            SelectCommand, () )         \
    COMMAND( SELECT_TIME,       SelectTimeCommand, () )     \
@@ -54,6 +53,8 @@ modelled on BuiltinEffectsModule
    COMMAND( OPEN_PROJECT,      OpenProjectCommand, () )    \
    COMMAND( SAVE_PROJECT,      SaveProjectCommand, () )    \
 
+   // GET_TRACK_INFO subsumed by GET_INFO
+   //COMMAND( GET_TRACK_INFO,    GetTrackInfoCommand, () )   
 
 
 //
