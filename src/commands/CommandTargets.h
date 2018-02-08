@@ -38,6 +38,25 @@ public:
    virtual void Update(double completed) = 0;
 };
 
+/// Interface for objects that can receive (string) messages from a command
+class CommandMessageTarget /* not final */
+{
+public:
+   CommandMessageTarget() {mCounts.push_back(0);}
+   virtual ~CommandMessageTarget() {}
+   virtual void Update(const wxString &message) = 0;
+   virtual void StartArray();
+   virtual void EndArray();
+   virtual void StartStruct();
+   virtual void EndStruct();
+   virtual void AddItem(const wxString &value , const wxString &name="" );
+   virtual void AddItem(const bool value      , const wxString &name="" );
+   virtual void AddItem(const double value    , const wxString &name="" );
+   wxArrayInt mCounts;
+};
+
+
+
 /// Used to ignore a command's progress updates
 class NullProgressTarget final : public CommandProgressTarget
 {
@@ -62,13 +81,6 @@ public:
    }
 };
 
-/// Interface for objects that can receive (string) messages from a command
-class CommandMessageTarget /* not final */
-{
-public:
-   virtual ~CommandMessageTarget() {}
-   virtual void Update(const wxString &message) = 0;
-};
 
 ///
 class ProgressToMessageTarget final : public CommandProgressTarget
@@ -198,6 +210,7 @@ public:
    ~CommandOutputTarget()
    {
    }
+   // Lots of forwarding...
    void Progress(double completed)
    {
       if (mProgressTarget)
@@ -213,6 +226,44 @@ public:
       if (mErrorTarget)
          mErrorTarget->Update(message);
    }
+   void StartArray()
+   {
+      if (mStatusTarget)
+         mStatusTarget->StartArray();
+   }
+   void EndArray()
+   {
+      if (mStatusTarget)
+         mStatusTarget->EndArray();
+   }
+   void StartStruct()
+   {
+      if (mStatusTarget)
+         mStatusTarget->StartStruct();
+   }
+   void EndStruct()
+   {
+      if (mStatusTarget)
+         mStatusTarget->EndStruct();
+   }
+   void AddItem(const wxString &value , const wxString &name="" )
+   {
+      if (mStatusTarget)
+         mStatusTarget->AddItem( value, name );
+   }
+   void AddItem(const bool value      , const wxString &name="" )
+   {
+      if (mStatusTarget)
+         mStatusTarget->AddItem( value, name );
+   }
+   void AddItem(const double value    , const wxString &name="" )
+   {
+      if (mStatusTarget)
+         mStatusTarget->AddItem( value, name );
+   }
+
+
+
 };
 
 class InteractiveOutputTarget : public CommandOutputTarget

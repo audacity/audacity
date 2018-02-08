@@ -23,6 +23,46 @@ dialog, if necessary.
 #include "../ShuttleGui.h"
 #include "../Project.h"
 
+void CommandMessageTarget::StartArray()
+{
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   Update( wxString::Format( "%s%s[ ", ( mCounts.Last() > 0 ) ? ",\n" : "\n", Padding ));
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
+}
+
+void CommandMessageTarget::EndArray(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+   Update( " ]" );
+}
+void CommandMessageTarget::StartStruct(){
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   Update( wxString::Format( "%s%s{ ", ( mCounts.Last() > 0 ) ? ",\n" : "\n", Padding ));
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
+}
+void CommandMessageTarget::EndStruct(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+   Update( " }" );
+}
+void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
+   Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value));
+   mCounts.Last() += 1;
+}
+void CommandMessageTarget::AddItem(const bool value,      const wxString &name){
+   Update( wxString::Format( "%s%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value?"True":"False"));
+   mCounts.Last() += 1;
+}
+void CommandMessageTarget::AddItem(const double value,    const wxString &name){
+   Update( wxString::Format( "%s%s%s%g", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value));
+   mCounts.Last() += 1;
+}
 
 
 /// Dialog for long messages.
@@ -114,7 +154,7 @@ void LongMessageDialog::AcceptText( const wxString & Text )
       pDlg->Init();
       pDlg->Show();
    }
-   pDlg->mText->SetValue( pDlg->mText->GetValue( ) + "\n" + Text );
+   pDlg->mText->SetValue( pDlg->mText->GetValue( ) + Text );
 }
 
 

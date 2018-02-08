@@ -98,3 +98,42 @@ AudacityApp * CommandContext::GetApp() const
 AudacityProject *CommandContext::GetProject() const
 {  return GetActiveProject();}
 
+void CommandContext::StartArray() const
+{
+   if( pOutput )
+      pOutput->StartArray();
+}
+void CommandContext::EndArray() const
+{
+   if( pOutput )
+      pOutput->EndArray();
+}
+void CommandContext::StartStruct() const
+{
+   if( pOutput )
+      pOutput->StartStruct();
+}
+void CommandContext::EndStruct() const
+{
+   if( pOutput )
+      pOutput->EndStruct();
+}
+void CommandContext::AddItem(const wxString &value , const wxString &name ) const
+{
+   if( pOutput )
+      pOutput->AddItem( value, name );
+}
+void CommandContext::AddBool(const bool value      , const wxString &name ) const
+{
+   if( pOutput )
+      pOutput->AddItem( value, name );
+}
+void CommandContext::AddItem(const double value    , const wxString &name ) const
+{
+   if( pOutput )
+      pOutput->AddItem( value, name );
+}
+
+
+
+
