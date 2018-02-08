@@ -256,8 +256,14 @@ void GetInfoCommand::ExploreAdornments( const CommandContext &context,
    wxSize s = pWin->GetWindowBorderSize();
    wxRect R( 2,32, R1.GetWidth() - s.GetWidth() * 2 -16, 22 );
 
-   context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
-      depth, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), "MenuBar" )); 
+   context.StartArray();
+   context.AddItem( depth );
+   context.AddItem( R.GetLeft() );
+   context.AddItem( R.GetTop() );
+   context.AddItem( R.GetRight() );
+   context.AddItem( R.GetBottom() );
+   context.AddItem( "MenuBar" ); 
+   context.EndArray();
 }
 
 void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
@@ -331,8 +337,14 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          R.height -= (kTopMargin + kBottomMargin);
          R.SetPosition( R.GetPosition() + P );
 
-         context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
-            depth, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), "VRuler" )); 
+         context.StartArray();
+         context.AddItem( depth );
+         context.AddItem( R.GetLeft() );
+         context.AddItem( R.GetTop() );
+         context.AddItem( R.GetRight() );
+         context.AddItem( R.GetBottom() );
+         context.AddItem( "VRuler" ); 
+         context.EndArray();
       }
    }
 }
@@ -367,8 +379,16 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
          continue;
       if( Name.IsEmpty() )
          Name = wxString("*") + item->GetToolTipText();
-      context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
-         depth, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), Name )); 
+
+      context.StartArray();
+      context.AddItem( depth );
+      context.AddItem( R.GetLeft() );
+      context.AddItem( R.GetTop() );
+      context.AddItem( R.GetRight() );
+      context.AddItem( R.GetBottom() );
+      context.AddItem( Name ); 
+      context.EndArray();
+
       ExploreWindows( context, P, item, item->GetId(), depth+1 );
    }
 }
@@ -376,20 +396,27 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
 
 bool GetInfoCommand::SendBoxesAsJson(const CommandContext &context)
 {
-   context.Status("Boxes");
+   //context.Status("Boxes");
    wxWindow * pWin = context.GetProject();
 
-   context.Status( "[" );
+   context.StartArray();
    wxRect R = pWin->GetScreenRect();
 
    //R.SetPosition( wxPoint(0,0) );
    
    //wxString Name = pWin->GetName();
-   context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
-         0, R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom(), "Audacity Window" )); 
+   context.StartArray();
+   context.AddItem( 0 );
+   context.AddItem( R.GetLeft() );
+   context.AddItem( R.GetTop() );
+   context.AddItem( R.GetRight() );
+   context.AddItem( R.GetBottom() );
+   context.AddItem( "Audacity Window" ); 
+   context.EndArray( );
+
    ExploreAdornments( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
    ExploreWindows( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
-   context.Status( "]" );
+   context.EndArray( );
    return true;
 }
 

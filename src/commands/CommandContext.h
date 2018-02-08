@@ -38,6 +38,16 @@ public:
    virtual void Status( const wxString & WXUNUSED(message) ) const;
    virtual void Error(  const wxString & WXUNUSED(message) ) const;
    virtual void Progress( double WXUNUSED(d) ) const;
+
+   // Output formatting...
+   void StartArray() const;
+   void EndArray() const;
+   void StartStruct() const;
+   void EndStruct() const;
+   void AddItem(const wxString &value , const wxString &name="" ) const;
+   void AddBool(const bool value      , const wxString &name="" ) const;
+   void AddItem(const double value    , const wxString &name="" ) const;
+
    AudacityProject &project;
    std::unique_ptr<CommandOutputTarget> pOutput;
    const wxEvent *pEvt;
