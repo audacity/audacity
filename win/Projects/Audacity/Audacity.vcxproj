@@ -406,7 +406,6 @@
     <ClCompile Include="..\..\..\src\commands\CommandType.cpp" />
     <ClCompile Include="..\..\..\src\commands\CompareAudioCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\GetInfoCommand.cpp" />
-    <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\ImportExportCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\Keyboard.cpp" />
@@ -758,7 +757,6 @@
     <ClInclude Include="..\..\..\src\commands\CommandType.h" />
     <ClInclude Include="..\..\..\src\commands\CompareAudioCommand.h" />
     <ClInclude Include="..\..\..\src\commands\GetInfoCommand.h" />
-    <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h" />
     <ClInclude Include="..\..\..\src\commands\HelpCommand.h" />
     <ClInclude Include="..\..\..\src\commands\ImportExportCommands.h" />
     <ClInclude Include="..\..\..\src\commands\Keyboard.h" />

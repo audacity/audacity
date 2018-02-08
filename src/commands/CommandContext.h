@@ -19,7 +19,7 @@
 class AudacityProject;
 class AudacityApp;
 class wxEvent;
-class CommandOutputTarget;
+class CommandOutputTargets;
 using CommandParameter = wxString;
 
 class CommandContext {
@@ -33,7 +33,7 @@ public:
 
    CommandContext(
       AudacityProject &p,
-      std::unique_ptr<CommandOutputTarget> target);
+      std::unique_ptr<CommandOutputTargets> target);
 
    virtual void Status( const wxString & WXUNUSED(message) ) const;
    virtual void Error(  const wxString & WXUNUSED(message) ) const;
@@ -49,7 +49,7 @@ public:
    void AddItem(const double value    , const wxString &name="" ) const;
 
    AudacityProject &project;
-   std::unique_ptr<CommandOutputTarget> pOutput;
+   std::unique_ptr<CommandOutputTargets> pOutput;
    const wxEvent *pEvt;
    int index;
    CommandParameter parameter;

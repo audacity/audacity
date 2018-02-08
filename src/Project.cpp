@@ -5175,7 +5175,7 @@ void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 void AudacityProject::SafeDisplayStatusMessage(const wxChar *msg)
 {
    auto target
-      = std::make_unique<CommandOutputTarget>(TargetFactory::ProgressDefault(),
+      = std::make_unique<CommandOutputTargets>(TargetFactory::ProgressDefault(),
                                 std::make_shared<StatusBarTarget>(*mStatusBar),
                                 TargetFactory::MessageDefault());
    OldStyleCommandType *type = CommandDirectory::Get()->LookUp(wxT("Message"));

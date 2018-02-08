@@ -11,9 +11,13 @@
 \file CommandTargets.cpp
 \brief Contains definitions for CommandType class
 
-\class InteractiveOutputTarget
-\brief InteractiveOutputTarget is an output target that pops up a 
+\class InteractiveOutputTargets
+\brief InteractiveOutputTargets is an output target that pops up a 
 dialog, if necessary.
+
+\class LongMessageDialog
+\brief LongMessageDialog is a dialog with a Text Window in it to 
+capture the more lengthy output from some commands.
 
 *//*******************************************************************/
 
@@ -126,7 +130,7 @@ void LispyCommandMessageTarget::AddField(const wxString &name){
 
 
 
-void DeformattedCommandMessageTarget::StartArray()
+void BriefCommandMessageTarget::StartArray()
 {
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
@@ -136,14 +140,14 @@ void DeformattedCommandMessageTarget::StartArray()
    mCounts.push_back( 0 );
 }
 
-void DeformattedCommandMessageTarget::EndArray(){
+void BriefCommandMessageTarget::EndArray(){
    if( mCounts.GetCount() > 1 ){
       mCounts.pop_back();
    }
    if( mCounts.GetCount() <= 3 )
      Update( " " );
 }
-void DeformattedCommandMessageTarget::StartStruct(){
+void BriefCommandMessageTarget::StartStruct(){
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
    if( mCounts.GetCount() <= 3 )
@@ -151,30 +155,30 @@ void DeformattedCommandMessageTarget::StartStruct(){
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }
-void DeformattedCommandMessageTarget::EndStruct(){
+void BriefCommandMessageTarget::EndStruct(){
    if( mCounts.GetCount() > 1 ){
       mCounts.pop_back();
    }
    if( mCounts.GetCount() <= 3 )
       Update( " " );
 }
-void DeformattedCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
+void BriefCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    if( mCounts.GetCount() <= 3 )
       Update( wxString::Format( "%s\"%s\"", (mCounts.Last()>0)?" ":"",value));
    mCounts.Last() += 1;
 }
-void DeformattedCommandMessageTarget::AddItem(const bool value,      const wxString &name){
+void BriefCommandMessageTarget::AddItem(const bool value,      const wxString &name){
    if( mCounts.GetCount() <= 3 )
       Update( wxString::Format( "%s%s", (mCounts.Last()>0)?" ":"",value?"True":"False"));
    mCounts.Last() += 1;
 }
-void DeformattedCommandMessageTarget::AddItem(const double value,    const wxString &name){
+void BriefCommandMessageTarget::AddItem(const double value,    const wxString &name){
    if( mCounts.GetCount() <= 3 )
       Update( wxString::Format( "%s%g", (mCounts.Last()>0)?" ":"", value));
    mCounts.Last() += 1;
 }
 
-void DeformattedCommandMessageTarget::AddField(const wxString &name){
+void BriefCommandMessageTarget::AddField(const wxString &name){
    mCounts.Last() = 0; // Lie so that we don't get a comma.
 }
 
@@ -182,8 +186,8 @@ void DeformattedCommandMessageTarget::AddField(const wxString &name){
 
 
 
-LispifiedCommandOutputTarget::LispifiedCommandOutputTarget( CommandOutputTarget & target )
- : CommandOutputTarget() ,
+LispifiedCommandOutputTargets::LispifiedCommandOutputTargets( CommandOutputTargets & target )
+ : CommandOutputTargets() ,
    pToRestore( &target )
 {
    mProgressTarget = std::move(target.mProgressTarget), 
@@ -191,7 +195,7 @@ LispifiedCommandOutputTarget::LispifiedCommandOutputTarget( CommandOutputTarget 
    mErrorTarget = std::move( target.mErrorTarget );
 }
 
-LispifiedCommandOutputTarget::~LispifiedCommandOutputTarget()
+LispifiedCommandOutputTargets::~LispifiedCommandOutputTargets()
 {
    pToRestore->mProgressTarget = std::move( mProgressTarget );
    //The status was never captured so does not need restoring.
@@ -199,16 +203,16 @@ LispifiedCommandOutputTarget::~LispifiedCommandOutputTarget()
    pToRestore->mErrorTarget = std::move( mErrorTarget );
 }
 
-DeformattedCommandOutputTarget::DeformattedCommandOutputTarget( CommandOutputTarget & target )
- : CommandOutputTarget() ,
+BriefCommandOutputTargets::BriefCommandOutputTargets( CommandOutputTargets & target )
+ : CommandOutputTargets() ,
    pToRestore( &target )
 {
    mProgressTarget = std::move(target.mProgressTarget), 
-   mStatusTarget = std::make_shared<DeformattedCommandMessageTarget>( *target.mStatusTarget.get() ), 
+   mStatusTarget = std::make_shared<BriefCommandMessageTarget>( *target.mStatusTarget.get() ), 
    mErrorTarget = std::move( target.mErrorTarget );
 }
 
-DeformattedCommandOutputTarget::~DeformattedCommandOutputTarget()
+BriefCommandOutputTargets::~BriefCommandOutputTargets()
 {
    pToRestore->mProgressTarget = std::move( mProgressTarget );
    //The status was never captured so does not need restoring.
@@ -226,9 +230,6 @@ DeformattedCommandOutputTarget::~DeformattedCommandOutputTarget()
 
 
 
-
-
-/// Dialog for long messages.
 class AUDACITY_DLL_API LongMessageDialog /* not final */ : public wxDialogWrapper
 {
 public:
@@ -336,7 +337,10 @@ void LongMessageDialog::Flush()
 
 
 
-/// Displays messages from a command in an AudacityMessageBox
+/** 
+CommandMessageTarget that displays messages from a command in the 
+LongMessageDialog
+*/
 class MessageDialogTarget final : public CommandMessageTarget
 {
 public:
@@ -365,8 +369,8 @@ public:
 
 
 
-InteractiveOutputTarget::InteractiveOutputTarget() : 
-   CommandOutputTarget( 
+InteractiveOutputTargets::InteractiveOutputTargets() : 
+   CommandOutputTargets( 
       ExtTargetFactory::ProgressDefault(), 
       ExtTargetFactory::LongMessages(), 
       ExtTargetFactory::MessageDefault()
