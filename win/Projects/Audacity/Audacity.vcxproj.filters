@@ -1037,9 +1037,6 @@
     <ClCompile Include="..\..\..\src\commands\GetInfoCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp">
-      <Filter>src\commands</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
@@ -2096,9 +2093,6 @@
       <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\GetInfoCommand.h">
-      <Filter>src\commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\HelpCommand.h">

@@ -4,16 +4,20 @@
    Copyright 1999-2009 Audacity Team
    License: wxWidgets
 
-   Dan Horgan
+   James Crook
 
 ******************************************************************//**
 
 \file GetInfoCommand.cpp
 \brief Contains definitions for GetInfoCommand class.
-This class now handles the GetAll script command, which can 
-- Get all keycodes
-- Get all menus
-- Get all boxes
+This class now lists
+- Commands
+- Menus
+- Tracks
+- Clips
+- Labels
+- Keycodes
+- Boxes
 
 *//*******************************************************************/
 
@@ -32,6 +36,7 @@ This class now handles the GetAll script command, which can
 #include "SelectCommand.h"
 #include "../Project.h"
 #include "../Track.h"
+#include "../LabelTrack.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
@@ -63,13 +68,13 @@ static const wxString kFormats[nFormats] =
 {
    XO("JSON"),
    XO("LISP"),
-   XO("Other")
+   XO("Brief")
 };
 
 enum {
    kJson ,
    kLisp,
-   kOther
+   kBrief
 };
 
 
@@ -104,18 +109,18 @@ bool GetInfoCommand::Apply(const CommandContext &context)
    {
       CommandContext LispyContext( 
          *(context.GetProject()), 
-         std::make_unique<LispifiedCommandOutputTarget>( *context.pOutput.get() )
+         std::make_unique<LispifiedCommandOutputTargets>( *context.pOutput.get() )
          );
       return ApplyInner( LispyContext );
    }
 
-   if( mFormat == kOther )
+   if( mFormat == kBrief )
    {
-      CommandContext DeformattedContext( 
+      CommandContext BriefContext( 
          *(context.GetProject()), 
-         std::make_unique<DeformattedCommandOutputTarget>( *context.pOutput.get() )
+         std::make_unique<BriefCommandOutputTargets>( *context.pOutput.get() )
          );
-      return ApplyInner( DeformattedContext );
+      return ApplyInner( BriefContext );
    }
 
    return false;
@@ -271,13 +276,61 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
 
 bool GetInfoCommand::SendClips(const CommandContext &context)
 {
-   context.Status("Clips - Not yet");
+   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackListIterator iter(tracks);
+   Track *t = iter.First();
+   int i=0;
+   context.StartArray();
+   while (t) {
+      if (t->GetKind() == Track::Wave) {
+         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
+         for(const auto &clip : waveTrack->GetAllClips()) {
+            context.StartStruct();
+            context.AddItem( (double)i, "track" );
+            context.AddItem( clip->GetStartTime(), "start" );
+            context.AddItem( clip->GetEndTime(), "end" );
+            context.AddItem( clip->GetColourIndex(), "color" );
+            context.EndStruct();
+         }
+      }
+      t = iter.Next();
+      i++;
+   }
+   context.EndArray();
+
    return true;
 }
 
 bool GetInfoCommand::SendLabels(const CommandContext &context)
 {
-   context.Status("Labels - Not yet");
+   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackListIterator iter(tracks);
+   Track *t = iter.First();
+   int i=0;
+   context.StartArray();
+   while (t) {
+      if (t->GetKind() == Track::Label) {
+         LabelTrack *labelTrack = static_cast<LabelTrack*>(t);
+         if( labelTrack )
+         {
+            for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
+               const auto &label = labelTrack->mLabels[nn];
+               context.StartStruct();
+               context.AddItem( (double)i, "track" );
+               context.AddItem( label.getT0(), "start" );
+               context.AddItem( label.getT1(), "end" );
+               context.AddItem( label.title, "text" );
+               context.EndStruct();
+            }
+         }
+      }
+      t = iter.Next();
+      i++;
+   }
+   context.EndArray();
+
+
+
    return true;
 }
 

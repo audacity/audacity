@@ -248,7 +248,7 @@ std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
 {
    wxASSERT(mStatus != NULL);
    auto output =
-      std::make_unique<CommandOutputTarget>(std::make_unique<NullProgressTarget>(),
+      std::make_unique<CommandOutputTargets>(std::make_unique<NullProgressTarget>(),
                               std::make_shared<StatusBarTarget>(*mStatus),
                               std::make_shared<MessageBoxTarget>());
    //OldStyleCommandType *type = CommandDirectory::Get()->LookUp(wxT("Screenshot"));
