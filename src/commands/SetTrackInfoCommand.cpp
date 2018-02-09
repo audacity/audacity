@@ -16,6 +16,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "SetTrackInfoCommand.h"
 #include "../Project.h"
 #include "../Track.h"

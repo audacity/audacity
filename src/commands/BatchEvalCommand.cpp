@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "BatchEvalCommand.h"
 
 wxString BatchEvalCommandType::BuildName()

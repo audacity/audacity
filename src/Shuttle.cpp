@@ -50,7 +50,7 @@ preferences.
 
 *//*******************************************************************/
 
-//#include "Audacity.h"
+#include "Audacity.h"
 
 #include <wx/defs.h>
 #include <wx/checkbox.h>

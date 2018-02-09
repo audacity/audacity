@@ -15,11 +15,12 @@ project window.
 
 *//*******************************************************************/
 
-/* TODO: JKC: The screenshot code is very verbose and should be made 
+/* TODO: JKC: The screenshot code is very verbose and should be made
    much shorter.  It could work from a single list of function 
    names and functors.
   */
 
+#include "../Audacity.h"
 #include "ScreenshotCommand.h"
 #include "CommandTargets.h"
 #include "../Project.h"

@@ -14,6 +14,7 @@ ApplyAndSendResponse, and CommandImplementation classes
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "Command.h"
 #include <map>
 #include <wx/string.h>

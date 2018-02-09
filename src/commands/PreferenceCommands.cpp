@@ -14,6 +14,7 @@ SetPreferenceCommand classes
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "PreferenceCommands.h"
 #include "../Prefs.h"
 

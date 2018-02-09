@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "OpenSaveCommands.h"
 #include "../Project.h"
 #include "../export/Export.h"

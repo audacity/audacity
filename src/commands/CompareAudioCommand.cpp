@@ -17,6 +17,7 @@ threshold of difference in two selected tracks
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "CompareAudioCommand.h"
 #include "../Project.h"
 #include "Command.h"
