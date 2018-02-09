@@ -290,8 +290,6 @@ bool CommandImplementation::Apply(const CommandContext & WXUNUSED(context))
 #ifndef __WXMAC__
 
 #include "CommandTargets.cpp"
-
-
 #endif
 #endif
 
