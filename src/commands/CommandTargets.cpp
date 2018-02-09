@@ -59,7 +59,7 @@ void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value));
    mCounts.Last() += 1;
 }
-void CommandMessageTarget::AddItem(const bool value,      const wxString &name){
+void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
    Update( wxString::Format( "%s%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value?"True":"False"));
    mCounts.Last() += 1;
 }
@@ -110,7 +110,7 @@ void LispyCommandMessageTarget::AddItem(const wxString &value, const wxString &n
    Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value));
    mCounts.Last() += 1;
 }
-void LispyCommandMessageTarget::AddItem(const bool value,      const wxString &name){
+void LispyCommandMessageTarget::AddBool(const bool value,      const wxString &name){
    Update( wxString::Format( "%s%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value?"True":"False"));
    mCounts.Last() += 1;
 }
@@ -167,7 +167,7 @@ void BriefCommandMessageTarget::AddItem(const wxString &value, const wxString &n
       Update( wxString::Format( "%s\"%s\"", (mCounts.Last()>0)?" ":"",value));
    mCounts.Last() += 1;
 }
-void BriefCommandMessageTarget::AddItem(const bool value,      const wxString &name){
+void BriefCommandMessageTarget::AddBool(const bool value,      const wxString &name){
    if( mCounts.GetCount() <= 3 )
       Update( wxString::Format( "%s%s", (mCounts.Last()>0)?" ":"",value?"True":"False"));
    mCounts.Last() += 1;
