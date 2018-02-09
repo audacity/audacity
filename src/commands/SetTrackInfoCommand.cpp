@@ -9,11 +9,11 @@
 
 ******************************************************************//**
 
-\file SetTrackInfoCommand.cpp
-\brief Definitions for SetTrackInfoCommand and SetTrackInfoCommandType classes
+\file SetTrackCommand.cpp
+\brief Definitions for SetTrackCommand
 
-\class SetTrackInfoCommand
-\brief Command that sets track information , name, mute/sol etc.
+\class SetTrackCommand
+\brief Command that sets track information, name, mute/solo etc.
 
 *//*******************************************************************/
 
@@ -26,8 +26,8 @@
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
-SetTrackInfoCommand::SetTrackInfoCommand()
-{
+SetTrackCommand::SetTrackCommand()
+{/*
    mTrackIndex = 0;
    mTrackName = "unnamed";
    mPan = 0.0f;
@@ -36,22 +36,45 @@ SetTrackInfoCommand::SetTrackInfoCommand()
    bFocused = false;
    bSolo = false;
    bMute = false;
+*/
 }
 
-bool SetTrackInfoCommand::DefineParams( ShuttleParams & S ){ 
-   S.Define(   mTrackIndex,                        wxT("TrackIndex"), 0, 0, 100 );
-   S.Optional( bHasTrackName ).Define( mTrackName, wxT("Name"),       wxT("Unnamed") );
-   S.Optional( bHasPan       ).Define( mPan,       wxT("Pan"),        0.0, -1.0, 1.0);
-   S.Optional( bHasGain      ).Define( mGain,      wxT("Gain"),       1.0,  0.0, 10.0);
-   S.Optional( bHasSelected  ).Define( bSelected,  wxT("Selected"),   false );
-   S.Optional( bHasFocused   ).Define( bFocused,   wxT("Focuseed"),   false );
-   S.Optional( bHasSolo      ).Define( bSolo,      wxT("Solo"),       false );
-   S.Optional( bHasMute      ).Define( bMute,      wxT("Mute"),       false );
+enum kColours
+{
+   kColour0,
+   kColour1,
+   kColour2,
+   kColour3,
+   nColours
+};
+
+static const wxString kColourStrings[nColours] =
+{
+   XO("Color0"),
+   XO("Color1"),
+   XO("Color2"),
+   XO("Color3"),
+};
+
+bool SetTrackCommand::DefineParams( ShuttleParams & S ){ 
+   wxArrayString colours( nColours, kColourStrings );
+   S.Define(   mTrackIndex,                                wxT("TrackIndex"), 0, 0, 100 );
+   S.Optional( bHasTrackName   ).Define(     mTrackName,   wxT("Name"),       wxT("Unnamed") );
+   S.Optional( bHasPan         ).Define(     mPan,         wxT("Pan"),        0.0, -1.0, 1.0);
+   S.Optional( bHasGain        ).Define(     mGain,        wxT("Gain"),       1.0,  0.0, 10.0);
+   S.Optional( bHasHeight      ).Define(     mHeight,      wxT("Height"),     120, 44, 700 );
+   S.Optional( bHasColour      ).DefineEnum( mColour,      wxT("Color"),      kColour0, colours );
+   S.Optional( bHasSelected    ).Define(     bSelected,    wxT("Selected"),   false );
+   S.Optional( bHasFocused     ).Define(     bFocused,     wxT("Focuseed"),   false );
+   S.Optional( bHasSolo        ).Define(     bSolo,        wxT("Solo"),       false );
+   S.Optional( bHasMute        ).Define(     bMute,        wxT("Mute"),       false );
    return true;
 };
 
-void SetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
+void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
 {
+   wxArrayString colours( nColours, kColourStrings );
+
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
@@ -61,22 +84,24 @@ void SetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      S.Optional( bHasTrackName ).TieTextBox(        _("Name"),        mTrackName );
-      S.Optional( bHasPan       ).TieSlider(         _("Pan"),         mPan,  1.0, -1.0);
-      S.Optional( bHasGain      ).TieSlider(         _("Gain"),        mGain, 10.0, 0.0);
+      S.Optional( bHasTrackName ).TieTextBox(         _("Name:"),     mTrackName );
+      S.Optional( bHasPan       ).TieSlider(          _("Pan:"),      mPan,  1.0, -1.0);
+      S.Optional( bHasGain      ).TieSlider(          _("Gain:"),     mGain, 10.0, 0.0);
+      S.Optional( bHasHeight    ).TieNumericTextBox(  _("Height:"),   mHeight );
+      S.Optional( bHasColour    ).TieChoice(          _("Colour:"),   mColour, &colours );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.Optional( bHasSelected  ).TieCheckBox(       _("Selected"),    bSelected );
-      S.Optional( bHasFocused   ).TieCheckBox(       _("Focused"),     bFocused);
-      S.Optional( bHasSolo      ).TieCheckBox(       _("Solo"),        bSolo);
-      S.Optional( bHasMute      ).TieCheckBox(       _("Mute"),        bMute);
+      S.Optional( bHasSelected  ).TieCheckBox( _("Selected:"), bSelected );
+      S.Optional( bHasFocused   ).TieCheckBox( _("Focused:"),  bFocused);
+      S.Optional( bHasSolo      ).TieCheckBox( _("Solo:"),     bSolo);
+      S.Optional( bHasMute      ).TieCheckBox( _("Mute:"),     bMute);
    }
    S.EndMultiColumn();
 }
 
-bool SetTrackInfoCommand::Apply(const CommandContext & context)
+bool SetTrackCommand::Apply(const CommandContext & context)
 {
    //wxString mode = GetString(wxT("Type"));
 
@@ -104,6 +129,10 @@ bool SetTrackInfoCommand::Apply(const CommandContext & context)
       wt->SetPan(mPan);
    if( wt && bHasGain )
       wt->SetGain(mGain);
+   if( wt && bHasColour )
+      wt->SetWaveColorIndex( mColour );
+   if( t && bHasHeight )
+      t->SetHeight( mHeight );
    if( bHasSelected )
       t->SetSelected(bSelected);
    if( bHasFocused )
@@ -118,3 +147,5 @@ bool SetTrackInfoCommand::Apply(const CommandContext & context)
 
    return true;
 }
+
+

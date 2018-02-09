@@ -1600,6 +1600,10 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("CompareAudio"), _("Compare Audio..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("GetPreference"), _("Get Preference..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("GetInfo"), _("Get Info..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SelectTime"), _("Select Time..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SelectTracks"), _("Select Tracks..."), FN(OnAudacityCommand),
@@ -1608,14 +1612,14 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetPreference"), _("Set Preference..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SetTrackInfo"), _("Set Track Info..."), FN(OnAudacityCommand),
+      c->AddItem(wxT("SetClip"), _("Set Clip..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("GetPreference"), _("Get Preference..."), FN(OnAudacityCommand),
+      c->AddItem(wxT("SetLabel"), _("Set Label..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("GetInfo"), _("Get Info..."), FN(OnAudacityCommand),
+      c->AddItem(wxT("SetProject"), _("Set Project..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
-//      c->AddItem(wxT("GetTrackInfo"), _("Get Track Info..."), FN(OnAudacityCommand),
-//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("SetTrack"), _("Set Track..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
 
 
       c->EndSubMenu();
@@ -6350,7 +6354,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   int trackNumber = 1;
+   int trackNum = 1;
    while (track) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
@@ -6359,7 +6363,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
          auto result = next ? FindNextClip(waveTrack, t0, t1) :
             FindPrevClip(waveTrack, t0, t1);
          if (result.found) {
-            result.trackNumber = trackNumber;
+            result.trackNum = trackNum;
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
@@ -6368,7 +6372,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
             auto result = next ? FindNextClip(waveTrack2, t0, t1) :
                FindPrevClip(waveTrack2, t0, t1);
             if (result.found) {
-               result.trackNumber = trackNumber;
+               result.trackNum = trackNum;
                result.channel = stereoAndDiff;
                results.push_back(result);
             }
@@ -6377,7 +6381,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
          nTracksSearched++;
       }
 
-      trackNumber++;
+      trackNum++;
       track = iter.Next(true);
    }
 
@@ -7436,7 +7440,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   int trackNumber = 1;
+   int trackNum = 1;
    while (track) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
@@ -7445,7 +7449,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
          auto result = next ? FindNextClipBoundary(waveTrack, time) :
             FindPrevClipBoundary(waveTrack, time);
          if (result.nFound > 0) {
-            result.trackNumber = trackNumber;
+            result.trackNum = trackNum;
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
@@ -7454,7 +7458,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
             auto result = next ? FindNextClipBoundary(waveTrack2, time) :
                FindPrevClipBoundary(waveTrack2, time);
             if (result.nFound > 0) {
-               result.trackNumber = trackNumber;
+               result.trackNum = trackNum;
                result.channel = stereoAndDiff;
                results.push_back(result);
             }
@@ -7463,7 +7467,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
          nTracksSearched++;
       }
 
-      trackNumber++;
+      trackNum++;
       track = iter.Next(true);
    }
 
@@ -7520,7 +7524,7 @@ wxString AudacityProject::FoundTrack::ComposeTrackName() const
    auto name = waveTrack->GetName();
    auto shortName = name == waveTrack->GetDefaultName()
       /* i18n-hint: compose a name identifying an unnamed track by number */
-      ? wxString::Format( _("Track %d"), trackNumber )
+      ? wxString::Format( _("Track %d"), trackNum )
       : name;
    auto longName = shortName;
    if (channel) {

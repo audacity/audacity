@@ -47,10 +47,10 @@ enum kVinyl
    kVinyl_45,
    kVinyl_78,
    kVinyl_NA,
-   kNumVinyl
+   nVinyl
 };
 
-static const wxChar *kVinylStrings[kNumVinyl] =
+static const wxChar *kVinylStrings[nVinyl] =
 {
    wxT("33\u2153"),
    wxT("45"),
@@ -338,10 +338,10 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute". */
          S.AddUnits(_("Standard Vinyl rpm:"));
 
-         wxASSERT(kNumVinyl == WXSIZEOF(kVinylStrings));
+         wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
 
          wxArrayString vinylChoices;
-         for (int i = 0; i < kNumVinyl; i++)
+         for (int i = 0; i < nVinyl; i++)
          {
             if (i == kVinyl_NA)
             {

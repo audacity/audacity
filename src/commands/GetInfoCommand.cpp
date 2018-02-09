@@ -39,10 +39,21 @@ This class now lists
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
-const int nTypes =6;
+enum {
+   kCommands,
+   kCommandsPlus,
+   kMenus,
+   kTracks,
+   kClips,
+   kLabels,
+   kBoxes,
+   nTypes
+};
+
 static const wxString kTypes[nTypes] =
 {
    XO("Commands"),
+   XO("Commands+"),
    XO("Menus"),
    XO("Tracks"),
    XO("Clips"),
@@ -51,16 +62,12 @@ static const wxString kTypes[nTypes] =
 };
 
 enum {
-   kCommands,
-   kMenus,
-   kTracks,
-   kClips,
-   kLabels,
-   kBoxes
+   kJson,
+   kLisp,
+   kBrief,
+   nFormats
 };
 
-
-const int nFormats =3;
 static const wxString kFormats[nFormats] =
 {
    XO("JSON"),
@@ -68,11 +75,6 @@ static const wxString kFormats[nFormats] =
    XO("Brief")
 };
 
-enum {
-   kJson ,
-   kLisp,
-   kBrief
-};
 
 
 bool GetInfoCommand::DefineParams( ShuttleParams & S ){
@@ -126,12 +128,13 @@ bool GetInfoCommand::Apply(const CommandContext &context)
 bool GetInfoCommand::ApplyInner(const CommandContext &context)
 {
    switch( mInfoType  ){
-      case kCommands : return SendCommands( context );
-      case kMenus    : return SendMenus( context );
-      case kTracks   : return SendTracks( context );
-      case kClips    : return SendClips( context );
-      case kLabels   : return SendLabels( context );
-      case kBoxes    : return SendBoxes( context );
+      case kCommands     : return SendCommands( context, 0 );
+      case kCommandsPlus : return SendCommands( context, 1 );
+      case kMenus        : return SendMenus( context );
+      case kTracks       : return SendTracks( context );
+      case kClips        : return SendClips( context );
+      case kLabels       : return SendLabels( context );
+      case kBoxes        : return SendBoxes( context );
       default:
          context.Status( "Command options not recognised" );
    }
@@ -168,7 +171,7 @@ bool GetInfoCommand::SendMenus(const CommandContext &context)
 /**
  Send the list of commands.
  */
-bool GetInfoCommand::SendCommands(const CommandContext &context )
+bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
 {
    context.StartArray();
    PluginManager & pm = PluginManager::Get();
@@ -179,7 +182,7 @@ bool GetInfoCommand::SendCommands(const CommandContext &context )
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty()){
-            em.GetCommandDefinition( plug->GetID(), context );
+            em.GetCommandDefinition( plug->GetID(), context, flags );
          }
          plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand );
       }
@@ -256,12 +259,13 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
    while (t) {
       if (t->GetKind() == Track::Wave) {
          WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         for(const auto &clip : waveTrack->GetAllClips()) {
+         WaveClipPointers ptrs( waveTrack->SortedClipArray());
+         for(WaveClip * pClip : ptrs ) {
             context.StartStruct();
             context.AddItem( (double)i, "track" );
-            context.AddItem( clip->GetStartTime(), "start" );
-            context.AddItem( clip->GetEndTime(), "end" );
-            context.AddItem( clip->GetColourIndex(), "color" );
+            context.AddItem( pClip->GetStartTime(), "start" );
+            context.AddItem( pClip->GetEndTime(), "end" );
+            context.AddItem( pClip->GetColourIndex(), "color" );
             context.EndStruct();
          }
       }
