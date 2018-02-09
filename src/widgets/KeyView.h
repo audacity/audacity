@@ -41,7 +41,7 @@ public:
    wxString category;
    wxString prefix;
    wxString label;
-   wxString key;
+   NormalizedKeyString key;
    int index;
    int line;
    int depth;
@@ -83,7 +83,7 @@ public:
                         const wxArrayString & categories,
                         const wxArrayString & prefixes,
                         const wxArrayString & labels,
-                        const wxArrayString & keys,
+                        const std::vector<NormalizedKeyString> & keys,
                         bool bSort);
 
    int GetSelected() const;
@@ -93,13 +93,13 @@ public:
 
    int GetIndexByName(const wxString & name) const;
    wxString GetName(int index) const;
-   wxString GetNameByKey(const wxString & key) const;
+   wxString GetNameByKey(const NormalizedKeyString & key) const;
 
-   int GetIndexByKey(const wxString & key) const;
-   wxString GetKey(int index) const;
+   int GetIndexByKey(const NormalizedKeyString & key) const;
+   NormalizedKeyString GetKey(int index) const;
    bool CanSetKey(int index) const;
-   bool SetKey(int index, const wxString & key);
-   bool SetKeyByName(const wxString & name, const wxString & key);
+   bool SetKey(int index, const NormalizedKeyString & key);
+   bool SetKeyByName(const wxString & name, const NormalizedKeyString & key);
 
    void SetView(ViewByType type);
 

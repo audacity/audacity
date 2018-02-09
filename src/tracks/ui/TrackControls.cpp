@@ -125,30 +125,31 @@ BEGIN_POPUP_MENU(TrackMenuTable)
    POPUP_MENU_ITEM(OnSetNameID, _("&Name..."), OnSetName)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(
-      // It is not correct to use KeyStringDisplay here -- wxWidgets will apply
-      // its equivalent to the key names passed to menu functions.
+      // It is not correct to use NormalizedKeyString::Display here --
+      // wxWidgets will apply its equivalent to the key names passed to menu
+      // functions.
       OnMoveUpID,
       _("Move Track &Up") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveUp"))),
+          GetKeyFromName(wxT("TrackMoveUp")).Raw()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveDownID,
       _("Move Track &Down") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveDown"))),
+          GetKeyFromName(wxT("TrackMoveDown")).Raw()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveTopID,
       _("Move Track to &Top") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveTop"))),
+          GetKeyFromName(wxT("TrackMoveTop")).Raw()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveBottomID,
       _("Move Track to &Bottom") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveBottom"))),
+          GetKeyFromName(wxT("TrackMoveBottom")).Raw()),
       OnMoveTrack)
 END_POPUP_MENU()
 

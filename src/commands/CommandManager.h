@@ -18,6 +18,7 @@
 #include "CommandFlag.h"
 
 #include "../MemoryX.h"
+#include "Keyboard.h"
 #include <vector>
 #include <wx/string.h>
 #include <wx/menu.h>
@@ -63,8 +64,8 @@ struct CommandListEntry
 {
    int id;
    wxString name;
-   wxString key;
-   wxString defaultKey;
+   NormalizedKeyString key;
+   NormalizedKeyString defaultKey;
    wxString label;
    wxString labelPrefix;
    wxString labelTop;
@@ -93,6 +94,27 @@ using SubMenuList = std::vector < movable_ptr<SubMenuListEntry> >;
 // so we don't want the structures to relocate with vector operations.
 using CommandList = std::vector<movable_ptr<CommandListEntry>>;
 
+namespace std
+{
+#ifdef __AUDACITY_OLD_STD__
+   namespace tr1
+   {
+#endif
+      template<typename T> struct hash;
+      template<> struct hash< NormalizedKeyString > {
+         size_t operator () (const NormalizedKeyString &str) const // noexcept
+         {
+            auto &stdstr = str.Raw(); // no allocations, a cheap fetch
+            using Hasher = hash< wxString >;
+            return Hasher{}( stdstr );
+         }
+      };
+#ifdef __AUDACITY_OLD_STD__
+   }
+#endif
+}
+
+using CommandKeyHash = std::unordered_map<NormalizedKeyString, CommandListEntry*>;
 using CommandNameHash = std::unordered_map<wxString, CommandListEntry*>;
 using CommandIDHash = std::unordered_map<int, CommandListEntry*>;
 
@@ -234,8 +256,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Modifying accelerators
    //
 
-   void SetKeyFromName(const wxString &name, const wxString &key);
-   void SetKeyFromIndex(int i, const wxString &key);
+   void SetKeyFromName(const wxString &name, const NormalizedKeyString &key);
+   void SetKeyFromIndex(int i, const NormalizedKeyString &key);
 
    //
    // Executing commands
@@ -255,7 +277,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void GetAllCommandNames(wxArrayString &names, bool includeMultis);
    void GetAllCommandLabels(wxArrayString &labels, bool includeMultis);
    void GetAllCommandData(
-      wxArrayString &names, wxArrayString &keys, wxArrayString &default_keys,
+      wxArrayString &names,
+      std::vector<NormalizedKeyString> &keys,
+      std::vector<NormalizedKeyString> &default_keys,
       wxArrayString &labels, wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
       wxArrayString &prefixes,
@@ -266,8 +290,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    wxString GetLabelFromName(const wxString &name);
    wxString GetPrefixedLabelFromName(const wxString &name);
    wxString GetCategoryFromName(const wxString &name);
-   wxString GetKeyFromName(const wxString &name) const;
-   wxString GetDefaultKeyFromName(const wxString &name);
+   NormalizedKeyString GetKeyFromName(const wxString &name) const;
+   NormalizedKeyString GetDefaultKeyFromName(const wxString &name);
 
    bool GetEnabled(const wxString &name);
 
@@ -293,6 +317,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
        // for the command, then it is appended, parenthesized, after the
        // user-visible string.
        const LocalizedCommandNameVector &commands) const;
+
+   // Sorted list of the shortcut keys to be exluded from the standard defaults
+   static const std::vector<NormalizedKeyString> &ExcludedList();
 
 protected:
 
@@ -352,14 +379,15 @@ protected:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
 private:
-   // mMaxList only holds shortcuts that should not be added (by default).
-   wxSortedArrayString mMaxListOnly;
+   // mMaxList only holds shortcuts that should not be added (by default)
+   // and is sorted.
+   std::vector<NormalizedKeyString> mMaxListOnly;
 
    MenuBarList  mMenuBarList;
    SubMenuList  mSubMenuList;
    CommandList  mCommandList;
    CommandNameHash  mCommandNameHash;
-   CommandNameHash  mCommandKeyHash;
+   CommandKeyHash mCommandKeyHash;
    CommandIDHash  mCommandIDHash;
    int mCurrentID;
    int mXMLKeysRead;

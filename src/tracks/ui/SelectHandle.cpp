@@ -913,14 +913,14 @@ HitTestPreview SelectHandle::Preview
       if (bMultiToolMode) {
          // Look up the current key binding for Preferences.
          // (Don't assume it's the default!)
-         wxString keyStr
-            (pProject->GetCommandManager()->GetKeyFromName(wxT("Preferences")));
-         if (keyStr.IsEmpty())
+         auto keyStr =
+            pProject->GetCommandManager()->GetKeyFromName(wxT("Preferences"))
+            .Display( true );
+         if (keyStr.empty())
             // No keyboard preference defined for opening Preferences dialog
             /* i18n-hint: These are the names of a menu and a command in that menu */
             keyStr = _("Edit, Preferences...");
-         else
-            keyStr = KeyStringDisplay(keyStr);
+         
          /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
          tip = wxString::Format(
             _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),

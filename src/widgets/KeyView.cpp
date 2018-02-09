@@ -178,14 +178,14 @@ KeyView::GetName(int index) const
 // Returns the command manager index for the given key combination
 //
 wxString
-KeyView::GetNameByKey(const wxString & key) const
+KeyView::GetNameByKey(const NormalizedKeyString & key) const
 {
    int cnt = (int) mNodes.size();
 
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.CmpNoCase(mNodes[i].key) == 0)
+      if (key.NoCaseEqual( mNodes[i].key))
       {
          return mNodes[i].name;
       }
@@ -198,14 +198,14 @@ KeyView::GetNameByKey(const wxString & key) const
 // Returns the index for the given key
 //
 int
-KeyView::GetIndexByKey(const wxString & key) const
+KeyView::GetIndexByKey(const NormalizedKeyString & key) const
 {
    int cnt = (int) mNodes.size();
 
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.CmpNoCase(mNodes[i].key) == 0)
+      if (key.NoCaseEqual( mNodes[i].key))
       {
          return mNodes[i].index;
       }
@@ -217,14 +217,14 @@ KeyView::GetIndexByKey(const wxString & key) const
 //
 // Returns the key for the given index
 //
-wxString
+NormalizedKeyString
 KeyView::GetKey(int index) const
 {
    // Make sure index is valid
    if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
-      return wxEmptyString;
+      return {};
    }
 
    return mNodes[index].key;
@@ -251,7 +251,7 @@ KeyView::CanSetKey(int index) const
 // Sets the key for the given index
 //
 bool
-KeyView::SetKey(int index, const wxString & key)
+KeyView::SetKey(int index, const NormalizedKeyString & key)
 {
    // Make sure index is valid
    if (index < 0 || index >= (int) mNodes.size())
@@ -274,7 +274,7 @@ KeyView::SetKey(int index, const wxString & key)
 
    // Check to see if the key column needs to be expanded
    int x, y;
-   GetTextExtent(node.key, &x, &y);
+   GetTextExtent(node.key.Display(), &x, &y);
    if (x > mKeyWidth || y > mLineHeight)
    {
       // New key is wider than column so recalc extents (will refresh view)
@@ -292,7 +292,7 @@ KeyView::SetKey(int index, const wxString & key)
 // Sets the key for the given name
 //
 bool
-KeyView::SetKeyByName(const wxString & name, const wxString & key)
+KeyView::SetKeyByName(const wxString & name, const NormalizedKeyString & key)
 {
    int index = GetIndexByName(name);
 
@@ -465,7 +465,7 @@ KeyView::RecalcExtents()
       else
       {
          // Measure the key
-         GetTextExtent(node.key, &x, &y);
+         GetTextExtent(node.key.Display(), &x, &y);
          mLineHeight = wxMax(mLineHeight, y);
          mKeyWidth = wxMax(mKeyWidth, x);
 
@@ -531,7 +531,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
                          const wxArrayString & categories,
                          const wxArrayString & prefixes,
                          const wxArrayString & labels,
-                         const wxArrayString & keys,
+                         const std::vector<NormalizedKeyString> & keys,
                          bool bSort
                          )
 {
@@ -676,7 +676,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
 
       // Fill in remaining info
       node.name = name;
-      node.key = KeyStringDisplay(keys[i]);
+      node.key = keys[i];
       node.index = nodecnt++;
       node.depth = depth;
 
@@ -684,7 +684,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
       mNodes.push_back(node);
 
       // Measure key
-      GetTextExtent(node.key, &x, &y);
+      GetTextExtent(node.key.Display(), &x, &y);
       mLineHeight = wxMax(mLineHeight, y);
       mKeyWidth = wxMax(mKeyWidth, x);
 
@@ -767,7 +767,7 @@ KeyView::RefreshLines(bool bSort)
             case ViewByTree:
                searchit = node.label.Lower() +
                           wxT("\01x") +
-                          node.key.Lower();
+                          node.key.Display().Lower();
             break;
 
             case ViewByName:
@@ -775,7 +775,7 @@ KeyView::RefreshLines(bool bSort)
             break;
 
             case ViewByKey:
-               searchit = node.key.Lower();
+               searchit = node.key.Display().Lower();
             break;
          }
          if (searchit.Find(mFilter) == wxNOT_FOUND)
@@ -1175,7 +1175,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       x += KV_LEFT_MARGIN;
 
       // Draw the key and command columns
-      dc.DrawText(node->key, x , rect.y);
+      dc.DrawText(node->key.Display(), x , rect.y);
       dc.DrawText(label, x + mKeyWidth  + KV_COLUMN_SPACER + node->depth * KV_BITMAP_SIZE, rect.y);
    }
    else
@@ -1193,7 +1193,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       if((mViewType == ViewByName) || (mViewType == ViewByKey))
       {
          // Draw key columnd and then command column
-         dc.DrawText(node->key, x, rect.y);
+         dc.DrawText(node->key.Display(), x, rect.y);
          dc.DrawText(label, x + mKeyWidth + KV_COLUMN_SPACER, rect.y);
       }
    }
@@ -1446,7 +1446,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                }
                else if (mViewType == ViewByKey)
                {
-                  label = GetKey(LineToIndex(i));
+                  label = GetKey(LineToIndex(i)).Display();
                }
 
                // Move selection if they match
@@ -1480,7 +1480,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                }
                else if (mViewType == ViewByKey)
                {
-                  label = GetKey(LineToIndex(i));
+                  label = GetKey(LineToIndex(i)).Display();
                }
 
                // Move selection if they match
@@ -1638,8 +1638,8 @@ KeyView::CmpKeyNodeByName(KeyNode *t1, KeyNode *t2)
 bool
 KeyView::CmpKeyNodeByKey(KeyNode *t1, KeyNode *t2)
 {
-   wxString k1 = t1->key;
-   wxString k2 = t2->key;
+   wxString k1 = t1->key.Display();
+   wxString k2 = t2->key.Display();
 
    // Left node is unassigned, so prefix it
    if(k1.IsEmpty())
@@ -1748,7 +1748,7 @@ KeyView::GetValue(int line)
    {
       value = GetFullLabel(index);
    }
-   wxString key = GetKey(index);
+   wxString key = GetKey(index).Display();
 
    // Add the key if it isn't empty
    if (!key.IsEmpty())

@@ -9,10 +9,41 @@
 
 **********************************************************************/
 
+#ifndef __AUDACITY_KEYBOARD__
+#define __AUDACITY_KEYBOARD__
+
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/string.h>
 
-wxString KeyStringNormalize(const wxString & key);
-wxString KeyStringDisplay(const wxString & key, bool useSpecialChars = false);
-wxString KeyEventToKeyString(const wxKeyEvent & keyEvent);
+struct NormalizedKeyString : private wxString
+{
+   NormalizedKeyString() = default;
+
+   explicit NormalizedKeyString( const wxString &str );
+
+   wxString Display(bool usesSpecialChars = false) const;
+
+   const wxString &Raw() const { return *this; }
+
+   bool NoCaseEqual( const NormalizedKeyString &other ) const
+   { return 0 == this->Raw() .CmpNoCase( other.Raw() ); }
+
+   using wxString::empty;
+};
+
+inline bool operator ==
+( const NormalizedKeyString &a, const NormalizedKeyString &b)
+{ return a.Raw () == b.Raw(); }
+
+inline bool operator !=
+( const NormalizedKeyString &a, const NormalizedKeyString &b)
+{ return a.Raw () != b.Raw(); }
+
+inline bool operator <
+( const NormalizedKeyString &a, const NormalizedKeyString &b)
+{ return a.Raw () < b.Raw(); }
+
+NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & keyEvent);
+
+#endif
