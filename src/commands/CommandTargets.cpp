@@ -364,9 +364,9 @@ public:
 class ExtTargetFactory : public TargetFactory
 {
 public:
-   static std::unique_ptr<CommandMessageTarget> LongMessages()
+   static std::shared_ptr<CommandMessageTarget> LongMessages()
    {
-      return std::make_unique<MessageDialogTarget>();
+      return std::make_shared<MessageDialogTarget>();
    }
 };
 
