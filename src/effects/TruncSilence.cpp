@@ -41,10 +41,10 @@ enum kActions
 {
    kTruncate,
    kCompress,
-   kNumActions
+   nActions
 };
 
-static const wxChar *kActionStrings[kNumActions] =
+static const wxChar *kActionStrings[nActions] =
 {
    XO("Truncate Detected Silence"),
    XO("Compress Excess Silence")
@@ -60,7 +60,7 @@ static const wxChar *kActionStrings[kNumActions] =
 //
 //     Name       Type     Key               Def         Min      Max                        Scale
 Param( DbIndex,   int,     wxT("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
-Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       kNumActions - 1,           1  );
+Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       nActions - 1,           1  );
 Param( Minimum,   double,  wxT("Minimum"),    0.5,        0.001,   10000.0,                   1  );
 Param( Truncate,  double,  wxT("Truncate"),   0.5,        0.0,     10000.0,                   1  );
 Param( Compress,  double,  wxT("Compress"),   50.0,       0.0,     99.9,                      1  );
@@ -135,7 +135,7 @@ EffectType EffectTruncSilence::GetType()
 // EffectClientInterface implementation
 
 bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
-   wxArrayString actions(kNumActions, kActionStrings);
+   wxArrayString actions(nActions, kActionStrings);
    //actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before
    //actions.Insert(wxT("1"), 1); // Compatible with 2.1.0 and before
 
@@ -162,7 +162,7 @@ bool EffectTruncSilence::GetAutomationParameters(CommandAutomationParameters & p
 
 bool EffectTruncSilence::SetAutomationParameters(CommandAutomationParameters & parms)
 {
-   wxArrayString actions(kNumActions, kActionStrings);
+   wxArrayString actions(nActions, kActionStrings);
    actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before
    actions.Insert(wxT("1"), 1); // Compatible with 2.1.0 and before
 
@@ -181,9 +181,9 @@ bool EffectTruncSilence::SetAutomationParameters(CommandAutomationParameters & p
    mbIndependent = Independent;
 
    // Readjust for 2.1.0 or before
-   if (mActionIndex >= kNumActions)
+   if (mActionIndex >= nActions)
    {
-      mActionIndex -= kNumActions;
+      mActionIndex -= nActions;
    }
 
    return true;
@@ -713,10 +713,10 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 
 void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
 {
-   wxASSERT(kNumActions == WXSIZEOF(kActionStrings));
+   wxASSERT(nActions == WXSIZEOF(kActionStrings));
 
    wxArrayString actionChoices;
-   for (int i = 0; i < kNumActions; i++)
+   for (int i = 0; i < nActions; i++)
    {
       actionChoices.Add(wxGetTranslation(kActionStrings[i]));
    }

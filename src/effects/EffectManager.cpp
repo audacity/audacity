@@ -190,7 +190,7 @@ wxString EffectManager::GetCommandDescription(const PluginID & ID)
    return wxEmptyString;
 }
 
-void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context)
+void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
    ParamsInterface *command;
    command = GetEffect(ID);
@@ -201,7 +201,8 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
 
    ShuttleParams NullShuttle;
    // Test if it defines any parameters at all.
-   if( !command->DefineParams( NullShuttle ) )
+   bool bHasParams = command->DefineParams( NullShuttle );
+   if( (flags ==0) && !bHasParams )
       return;
 
    // This is capturing the output context into the shuttle.
@@ -209,10 +210,12 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    S.StartStruct();
    S.AddItem( GetCommandIdentifier( ID ), "id" );
    S.AddItem( GetCommandName( ID ), "name" );
-   S.AddField( "params" );
-   S.StartArray();
-   command->DefineParams( S );
-   S.EndArray();
+   if( bHasParams ){
+      S.AddField( "params" );
+      S.StartArray();
+      command->DefineParams( S );
+      S.EndArray();
+   }
    S.EndStruct();
 }
 

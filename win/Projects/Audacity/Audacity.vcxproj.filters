@@ -1064,6 +1064,15 @@
     <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SetClipCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SetLabelCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SetProjectCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2120,6 +2129,15 @@
       <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\SetTrackInfoCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SetClipCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SetLabelCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SetProjectCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
   </ItemGroup>

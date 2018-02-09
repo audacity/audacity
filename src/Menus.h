@@ -312,7 +312,7 @@ void OnSelectCursorToNextClipBoundary(const CommandContext &context );
 void OnSelectClipBoundary(bool next);
 struct FoundTrack {
    const WaveTrack* waveTrack{};
-   int trackNumber{};
+   int trackNum{};
    bool channel{};
 
    wxString ComposeTrackName() const;

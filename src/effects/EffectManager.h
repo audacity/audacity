@@ -91,7 +91,8 @@ public:
    wxString GetCommandName(const PluginID & ID);
    wxString GetCommandIdentifier(const PluginID & ID);
    wxString GetCommandDescription(const PluginID & ID);
-   void GetCommandDefinition(const PluginID & ID, const CommandContext & context);
+   // flags control which commands are included.
+   void GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags);
    bool IsHidden(const PluginID & ID);
 
    /** Support for batch commands */

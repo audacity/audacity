@@ -143,6 +143,9 @@
     <ClCompile Include="..\..\..\src\commands\Demo.cpp" />
     <ClCompile Include="..\..\..\src\commands\LoadCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetClipCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetLabelCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetProjectCommand.cpp" />
     <ClCompile Include="..\..\..\src\Dependencies.cpp" />
     <ClCompile Include="..\..\..\src\DeviceChange.cpp" />
     <ClCompile Include="..\..\..\src\DeviceManager.cpp" />
@@ -481,6 +484,9 @@
     <ClInclude Include="..\..\..\src\commands\Demo.h" />
     <ClInclude Include="..\..\..\src\commands\LoadCommands.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
+    <ClInclude Include="..\..\..\src\commands\SetClipCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\SetLabelCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\SetProjectCommand.h" />
     <ClInclude Include="..\..\..\src\DeviceChange.h" />
     <ClInclude Include="..\..\..\src\Diags.h" />
     <ClInclude Include="..\..\..\src\effects\Distortion.h" />

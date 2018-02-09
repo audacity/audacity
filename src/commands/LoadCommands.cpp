@@ -32,6 +32,10 @@ modelled on BuiltinEffectsModule
 #include "../commands/HelpCommand.h"
 #include "../commands/ImportExportCommands.h"
 #include "../commands/OpenSaveCommands.h"
+#include "../commands/SetLabelCommand.h"
+#include "../commands/SetClipCommand.h"
+#include "../commands/SetProjectCommand.h"
+
 
 //
 // Define the list of COMMANDs that will be autoregistered and how to instantiate each
@@ -40,7 +44,10 @@ modelled on BuiltinEffectsModule
    COMMAND( DEMO,              DemoCommand, () )           \
    COMMAND( SCREENSHOT,        ScreenshotCommand,   () )   \
    COMMAND( COMPARE_AUDIO,     CompareAudioCommand, () )   \
-   COMMAND( SET_TRACK_INFO,    SetTrackInfoCommand, () )   \
+   COMMAND( SET_TRACK,         SetTrackCommand, () )       \
+   COMMAND( SET_CLIP,          SetClipCommand, () )        \
+   COMMAND( SET_LABEL,         SetLabelCommand, () )       \
+   COMMAND( SET_PROJECT,       SetProjectCommand, () )     \
    COMMAND( SELECT,            SelectCommand, () )         \
    COMMAND( SELECT_TIME,       SelectTimeCommand, () )     \
    COMMAND( SELECT_TRACKS,     SelectTracksCommand, () )   \

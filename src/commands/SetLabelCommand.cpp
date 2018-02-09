@@ -1,0 +1,104 @@
+/**********************************************************************
+
+   Audacity - A Digital Audio Editor
+   Copyright 1999-2009 Audacity Team
+   License: wxwidgets
+
+   Dan Horgan
+   James Crook
+
+******************************************************************//**
+
+\file SetLabelCommand.cpp
+\brief Definitions for SetLabelCommand
+
+\class SetLabelCommand
+\brief Command that sets label information
+
+*//*******************************************************************/
+
+#include "SetLabelCommand.h"
+#include "../Project.h"
+#include "../Track.h"
+#include "../TrackPanel.h"
+#include "../WaveTrack.h"
+#include "../LabelTrack.h"
+#include "../ShuttleGui.h"
+#include "CommandContext.h"
+
+SetLabelCommand::SetLabelCommand()
+{
+}
+
+
+bool SetLabelCommand::DefineParams( ShuttleParams & S ){ 
+   S.Define(   mLabelIndex,                               wxT("LabelIndex"), 0, 0, 100 );
+   S.Optional( bHasText       ).Define(     mText,        wxT("Text"),       wxT("empty") );
+   S.Optional( bHasT0         ).Define(     mT0,          wxT("Start"),      0.0, 0.0, 100000.0);
+   S.Optional( bHasT1         ).Define(     mT1,          wxT("End"),        0.0, 0.0, 100000.0);
+   return true;
+};
+
+void SetLabelCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieNumericTextBox( _("Label Index"), mLabelIndex );
+   }
+   S.EndMultiColumn();
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasText      ).TieTextBox(         _("Text:"),     mText );
+      S.Optional( bHasT0        ).TieNumericTextBox(  _("Start:"),    mT0 );
+      S.Optional( bHasT1        ).TieNumericTextBox(  _("End:"),      mT1 );
+   }
+   S.EndMultiColumn();
+}
+
+bool SetLabelCommand::Apply(const CommandContext & context)
+{
+   // \todo we have similar code for finding the nth Label, Clip, Track etc.
+   // this code could be put in subroutines/reduced.
+
+   //wxString mode = GetString(wxT("Type"));
+   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackListIterator iter(tracks);
+   Track *t = iter.First();
+   LabelStruct * pLabel = NULL;
+   int i=0;
+
+   while (t && i<=mLabelIndex) {
+      if (t->GetKind() == Track::Label) {
+         LabelTrack *labelTrack = static_cast<LabelTrack*>(t);
+         if( labelTrack )
+         {
+            for (int nn = 0; 
+               (nn< (int)labelTrack->mLabels.size()) && i<=mLabelIndex; 
+               nn++) {
+               i++;
+               pLabel = &labelTrack->mLabels[nn];
+            }
+         }
+      }
+      t = iter.Next();
+   }
+
+   if ( (i< mLabelIndex) || (pLabel == NULL))
+   {
+      context.Error(wxT("LabelIndex was invalid."));
+      return false;
+   }
+   if( bHasText )
+      pLabel->title = mText;
+   if( bHasT0 )
+      pLabel->selectedRegion.setT0(mT0, false);
+   if( bHasT1 )
+      pLabel->selectedRegion.setT1(mT1, false);
+
+   if( bHasT0 || bHasT1 )
+      pLabel->selectedRegion.ensureOrdering();
+
+   return true;
+}

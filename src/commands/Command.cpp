@@ -286,7 +286,11 @@ bool CommandImplementation::Apply(const CommandContext & WXUNUSED(context))
 }
 
 // Hackery so that we don't have to update the makefiles on linux (yet)
+// When we do, these all can leave here.
 #if defined( __LINUX__ )
 #include "CommandTargets.cpp"
+#include "SetClipCommand.cpp"
+#include "SetLabelCommand.cpp"
+#include "SetProjectCommand.cpp"
 #endif
 
