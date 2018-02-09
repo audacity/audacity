@@ -73,10 +73,10 @@ enum kCaptureTypes
    ktracks,
    kfirsttrack,
    ksecondtrack,
-   kNumCaptureWhats
+   nCaptureWhats
 };
 
-static const wxString kCaptureWhatStrings[kNumCaptureWhats] =
+static const wxString kCaptureWhatStrings[nCaptureWhats] =
 {
    XO("Window"),
    XO("Full_Window"),
@@ -111,10 +111,10 @@ enum kBackgrounds
    kBlue,
    kWhite,
    kNone,
-   kNumBackgrounds
+   nBackgrounds
 };
 
-static const wxString kBackgroundStrings[kNumBackgrounds] =
+static const wxString kBackgroundStrings[nBackgrounds] =
 {
    XO("Blue"),
    XO("White"),
@@ -123,9 +123,9 @@ static const wxString kBackgroundStrings[kNumBackgrounds] =
 
 
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString whats(kNumCaptureWhats, kCaptureWhatStrings);
-   wxArrayString backs(kNumBackgrounds, kBackgroundStrings);
-   S.Define( mPath, wxT("Path"),         wxT(""),       wxT(""), wxT(""), wxT(""));
+   wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
+   wxArrayString backs(nBackgrounds, kBackgroundStrings);
+   S.Define(     mPath, wxT("Path"),         wxT(""),       wxT(""), wxT(""), wxT(""));
    S.DefineEnum( mWhat, wxT("CaptureWhat"),  wxT("Window"), whats );
    S.DefineEnum( mBack, wxT("Background"),   wxT("None"), backs );
    return true;
@@ -133,8 +133,8 @@ bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
 
 void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString whats(kNumCaptureWhats, kCaptureWhatStrings);
-   wxArrayString backs(kNumBackgrounds, kBackgroundStrings);
+   wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
+   wxArrayString backs(nBackgrounds, kBackgroundStrings);
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);

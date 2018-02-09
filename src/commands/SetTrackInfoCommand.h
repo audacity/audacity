@@ -9,31 +9,31 @@
 
 ******************************************************************//**
 
-\file SetTrackInfoCommand.h
-\brief Declarations of SetTrackInfoCommand and SetTrackInfoCommandType classes
+\file SetTrackCommand.h
+\brief Declarations of SetTrackCommand and SetTrackCommandType classes
 
 *//*******************************************************************/
 
-#ifndef __SETTRACKINFOCOMMAND__
-#define __SETTRACKINFOCOMMAND__
+#ifndef __SET_TRACK_COMMAND__
+#define __SET_TRACK_COMMAND__
 
 #include "Command.h"
 #include "CommandType.h"
 
-#define SET_TRACK_INFO_PLUGIN_SYMBOL XO("Set Track Info")
+#define SET_TRACK_PLUGIN_SYMBOL XO("Set Track")
 
-class SetTrackInfoCommand : public AudacityCommand
+class SetTrackCommand : public AudacityCommand
 {
 public:
-   SetTrackInfoCommand();
+   SetTrackCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_TRACK_INFO_PLUGIN_SYMBOL;};
+   wxString GetSymbol() override {return SET_TRACK_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_track_info");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_track");};
 
    bool Apply(const CommandContext & context) override;
 
@@ -42,6 +42,8 @@ public:
    wxString mTrackName;
    double mPan;
    double mGain;
+   int mColour;
+   int mHeight;
    bool bSelected;
    bool bFocused;
    bool bSolo;
@@ -51,6 +53,8 @@ public:
    bool bHasTrackName;
    bool bHasPan;
    bool bHasGain;
+   bool bHasColour;
+   bool bHasHeight;
    bool bHasSelected;
    bool bHasFocused;
    bool bHasSolo;

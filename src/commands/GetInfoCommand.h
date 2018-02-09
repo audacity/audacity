@@ -47,7 +47,7 @@ public:
    int mFormat;
 
 private:
-   bool SendCommands(const CommandContext & context);
+   bool SendCommands(const CommandContext & context, int flags);
    bool SendMenus(const CommandContext & context);
    bool SendTracks(const CommandContext & context);
    bool SendLabels(const CommandContext & context);

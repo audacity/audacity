@@ -32,10 +32,10 @@ enum kTypes
    kWhite,
    kPink,
    kBrownian,
-   kNumTypes
+   nTypes
 };
 
-static const wxChar *kTypeStrings[kNumTypes] =
+static const wxChar *kTypeStrings[nTypes] =
 {
    XO("White"),
    XO("Pink"),
@@ -45,7 +45,7 @@ static const wxChar *kTypeStrings[kNumTypes] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type     Key               Def      Min   Max            Scale
-Param( Type,   int,     wxT("Type"),       kWhite,  0,    kNumTypes - 1, 1  );
+Param( Type,   int,     wxT("Type"),       kWhite,  0,    nTypes - 1, 1  );
 Param( Amp,    double,  wxT("Amplitude"),  0.8,     0.0,  1.0,           1  );
 
 //
@@ -162,7 +162,7 @@ size_t EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t
    return size;
 }
 bool EffectNoise::DefineParams( ShuttleParams & S ){
-   wxArrayString types( kNumTypes, kTypeStrings );
+   wxArrayString types( nTypes, kTypeStrings );
    S.SHUTTLE_ENUM_PARAM( mType, Type, types );
    S.SHUTTLE_PARAM( mAmp, Amp );
    return true;
@@ -178,7 +178,7 @@ bool EffectNoise::GetAutomationParameters(CommandAutomationParameters & parms)
 
 bool EffectNoise::SetAutomationParameters(CommandAutomationParameters & parms)
 {
-   ReadAndVerifyEnum(Type, wxArrayString(kNumTypes, kTypeStrings));
+   ReadAndVerifyEnum(Type, wxArrayString(nTypes, kTypeStrings));
    ReadAndVerifyDouble(Amp);
 
    mType = Type;
@@ -219,10 +219,10 @@ bool EffectNoise::Startup()
 
 void EffectNoise::PopulateOrExchange(ShuttleGui & S)
 {
-   wxASSERT(kNumTypes == WXSIZEOF(kTypeStrings));
+   wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
    wxArrayString typeChoices;
-   for (int i = 0; i < kNumTypes; i++)
+   for (int i = 0; i < nTypes; i++)
    {
       typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
    }
