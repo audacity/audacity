@@ -83,7 +83,7 @@ public:
    virtual void StartStruct();
    virtual void EndStruct();
    virtual void AddItem(const wxString &value , const wxString &name="" );
-   virtual void AddItem(const bool value      , const wxString &name="" );
+   virtual void AddBool(const bool value      , const wxString &name="" );
    virtual void AddItem(const double value    , const wxString &name="" );
    virtual void AddField( const wxString &name="" );
    virtual void Flush();
@@ -101,7 +101,7 @@ public:
    virtual void StartStruct(){ mTarget.StartStruct();};
    virtual void EndStruct(){ mTarget.EndStruct();};
    virtual void AddItem(const wxString &value , const wxString &name="" ){ mTarget.AddItem(value,name);};
-   virtual void AddItem(const bool value      , const wxString &name="" ){ mTarget.AddItem(value,name);};
+   virtual void AddBool(const bool value      , const wxString &name="" ){ mTarget.AddBool(value,name);};
    virtual void AddItem(const double value    , const wxString &name="" ){ mTarget.AddItem(value,name);};
    virtual void AddField( const wxString &name="" ){ mTarget.AddField(name);};
    virtual void Flush(){ mTarget.Flush();};
@@ -117,7 +117,7 @@ public:
    virtual void StartStruct() override;
    virtual void EndStruct() override;
    virtual void AddItem(const wxString &value , const wxString &name="" )override;
-   virtual void AddItem(const bool value      , const wxString &name="" )override;
+   virtual void AddBool(const bool value      , const wxString &name="" )override;
    virtual void AddItem(const double value    , const wxString &name="" )override;
    virtual void AddField( const wxString &name="" )override;
 };
@@ -131,7 +131,7 @@ public:
    virtual void StartStruct() override;
    virtual void EndStruct() override;
    virtual void AddItem(const wxString &value , const wxString &name="" )override;
-   virtual void AddItem(const bool value      , const wxString &name="" )override;
+   virtual void AddBool(const bool value      , const wxString &name="" )override;
    virtual void AddItem(const double value    , const wxString &name="" )override;
    virtual void AddField( const wxString &name="" )override;
 };
@@ -333,7 +333,7 @@ public:
       if (mStatusTarget)
          mStatusTarget->AddItem( value, name );
    }
-   void AddItem(const bool value      , const wxString &name="" )
+   void AddBool(const bool value      , const wxString &name="" )
    {
       if (mStatusTarget)
          mStatusTarget->AddItem( value, name );
