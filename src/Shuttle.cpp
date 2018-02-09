@@ -336,6 +336,22 @@ bool ShuttleParams::ExchangeWithMaster(const wxString & WXUNUSED(Name))
 #pragma warning( push )
 #pragma warning( disable: 4100 ) // unused parameters.
 
+
+// The ShouldSet and CouldGet functions have an important side effect
+// on the pOptionalFlag.  They 'use it up' and clear it down for the next parameter.
+
+
+// Tests for parameter being optional.
+// Prepares for next parameter by clearing the pointer.
+// Reports on whether the parameter should be set, i.e. should set 
+// if it was chosen to be set, or was not optional.
+bool ShuttleParams::ShouldSet(){
+   if( !pOptionalFlag )
+      return true;
+   bool result = *pOptionalFlag;
+   pOptionalFlag = NULL;
+   return result;
+}
 // These are functions to override.  They do nothing.
 void ShuttleParams::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl){;};
 void ShuttleParams::Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
@@ -355,56 +371,92 @@ void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault
 }
 */
 
+// ShuttleGetAutomation gets from the shuttle into typically a string.
+ShuttleParams & ShuttleGetAutomation::Optional( bool & var ){ 
+   pOptionalFlag = &var;
+   return *this;
+};
 
 void ShuttleGetAutomation::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
 {
+   if( !ShouldSet() ) return;
    mpEap->Write(key, var);
 }
 
 void ShuttleGetAutomation::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
 {
+   if( !ShouldSet() ) return;
    mpEap->Write(key, var);
 }
 
 void ShuttleGetAutomation::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
 {
+   if( !ShouldSet() ) return;
    mpEap->Write(key, var);
 }
 
 void ShuttleGetAutomation::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
 {
+   if( !ShouldSet() ) return;
    mpEap->WriteFloat(key, var);
 }
 
 void ShuttleGetAutomation::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
 {
+   if( !ShouldSet() ) return;
    mpEap->WriteFloat(key, var);
 }
 
 void ShuttleGetAutomation::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
 {
+   if( !ShouldSet() ) return;
    mpEap->Write(key, var);
 }
 
 
 void ShuttleGetAutomation::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
 {
+   if( !ShouldSet() ) return;
    mpEap->Write(key, var);
 }
 
 void ShuttleGetAutomation::DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )
 {
+   if( !ShouldSet() ) return;
    mpEap->Write(key, var);
 }
 
 void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
 {
+   if( !ShouldSet() ) return;
    mpEap->Write(key, strings[var]);
 }
 
 
+
+ShuttleParams & ShuttleSetAutomation::Optional( bool & var ){ 
+   pOptionalFlag = &var;
+   return *this;
+};
+
+// Tests for parameter being optional.
+// Prepares for next parameter by clearing the pointer.
+// If the parameter is optional, finds out if it was actually provided.
+// i.e. could it be got from automation?
+// The result goes into the flag variable, so we typically ignore the result.
+bool ShuttleSetAutomation::CouldGet( const wxString &key ){
+   // Not optional?  Can get as we will get the default, at worst.
+   if( !pOptionalFlag )
+      return true;
+   bool result = mpEap->HasEntry( key );
+   *pOptionalFlag = result;
+   pOptionalFlag = NULL;
+   return result;
+}
+
 void ShuttleSetAutomation::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    // Use of temp in this and related functions is to handle the case of 
@@ -417,6 +469,7 @@ void ShuttleSetAutomation::Define( bool & var,     const wxChar * key, const boo
 
 void ShuttleSetAutomation::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    int temp =var;
@@ -427,6 +480,7 @@ void ShuttleSetAutomation::Define( int & var,      const wxChar * key, const int
 
 void ShuttleSetAutomation::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    int temp = var;
@@ -437,6 +491,7 @@ void ShuttleSetAutomation::Define( size_t & var,      const wxChar * key, const 
 
 void ShuttleSetAutomation::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    float temp = var;
@@ -448,6 +503,7 @@ void ShuttleSetAutomation::Define( float & var,   const wxChar * key, const floa
 
 void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    double temp = var;
@@ -458,6 +514,7 @@ void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const flo
 
 void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    double temp = var;
@@ -469,6 +526,7 @@ void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const dou
 
 void ShuttleSetAutomation::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    wxString temp = var;
@@ -480,6 +538,7 @@ void ShuttleSetAutomation::Define( wxString &var, const wxChar * key, const wxSt
 
 void ShuttleSetAutomation::DefineEnum( wxString &var, const wxChar * key, const wxString vdefault, wxArrayString strings )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    int temp =0;
@@ -490,12 +549,19 @@ void ShuttleSetAutomation::DefineEnum( wxString &var, const wxChar * key, const 
 
 void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
 {
+   CouldGet( key );
    if( !bOK )
       return;
    int temp = var;
    bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings);
    if( bWrite && bOK)
       var = temp;
+}
+
+bool ShuttleGetDefinition::IsOptional(){
+   bool result = pOptionalFlag ? true : false;
+   pOptionalFlag = NULL;
+   return result;
 }
 
 ShuttleGetDefinition::ShuttleGetDefinition( CommandMessageTarget & target ) : CommandMessageTargetDecorator( target )
@@ -508,7 +574,10 @@ void ShuttleGetDefinition::Define( bool & var,     const wxChar * key, const boo
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "bool", "type" );
-   AddItem( vdefault ? "True" : "False", "default" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( vdefault ? "True" : "False", "default" );
    EndStruct();
 }
 
@@ -517,7 +586,10 @@ void ShuttleGetDefinition::Define( int & var,      const wxChar * key, const int
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "int", "type" );
-   AddItem( (double)vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
    EndStruct();
 }
 
@@ -526,7 +598,10 @@ void ShuttleGetDefinition::Define( size_t & var,      const wxChar * key, const 
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "size_t", "type" );
-   AddItem( (double)vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
    EndStruct();
 
 }
@@ -536,7 +611,10 @@ void ShuttleGetDefinition::Define( float & var,   const wxChar * key, const floa
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "float", "type" );
-   AddItem( (double)vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
    EndStruct();
 }
 
@@ -545,7 +623,10 @@ void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const flo
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "float", "type" );
-   AddItem( (double)vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
    EndStruct();
 }
 
@@ -554,7 +635,10 @@ void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const dou
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "double", "type" );
-   AddItem( (double)vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
    EndStruct();
 }
 
@@ -564,7 +648,10 @@ void ShuttleGetDefinition::Define( wxString &var, const wxChar * key, const wxSt
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "string", "type" );
-   AddItem( vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( vdefault, "default"  );
    EndStruct();
 }
 
@@ -574,7 +661,10 @@ void ShuttleGetDefinition::DefineEnum( wxString &var, const wxChar * key, const 
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "enum", "type" );
-   AddItem( vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( vdefault, "default"  );
    AddField( "enum" );
    StartArray();
    for( size_t i=0;i<strings.Count(); i++ )
@@ -588,7 +678,10 @@ void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vd
    StartStruct();
    AddItem( wxString(key), "key" );
    AddItem( "enum", "type" );
-   AddItem( (double)vdefault, "default"  );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
    AddField( "enum" );
    StartArray();
    for( size_t i=0;i<strings.Count(); i++ )
