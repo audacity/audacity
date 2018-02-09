@@ -67,11 +67,13 @@ class ShuttleParams : public Shuttle
 {
 public:
    wxString mParams;
+   bool *pOptionalFlag;
    CommandAutomationParameters * mpEap;
-   ShuttleParams(){ mParams = wxT("") ;mpEap=NULL;}
+   ShuttleParams(){ mParams = wxT("") ;mpEap=NULL;pOptionalFlag=NULL;}
    virtual ~ShuttleParams() {}
    bool ExchangeWithMaster(const wxString & Name) override;
-   ShuttleParams & Optional( bool & var ){ var = true;return *this;};
+   bool ShouldSet();
+   virtual ShuttleParams & Optional( bool & var ){ pOptionalFlag = NULL;return *this;};
    virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false );
    virtual void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
    virtual void Define( int & var,      const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
@@ -89,6 +91,7 @@ public:
 class ShuttleGetAutomation : public ShuttleParams
 {
 public:
+   ShuttleParams & Optional( bool & var ) override;
    void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
    void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
    void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
@@ -109,6 +112,8 @@ public:
    ShuttleSetAutomation(){ bWrite = false; bOK = false;};
    bool bOK;
    bool bWrite;
+   ShuttleParams & Optional( bool & var ) override;
+   bool CouldGet(const wxString &key);
    void SetForValidating( CommandAutomationParameters * pEap){ mpEap=pEap; bOK=true;bWrite=false;};
    void SetForWriting(CommandAutomationParameters * pEap){ mpEap=pEap;bOK=true;bWrite=true;};
    void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
@@ -130,6 +135,7 @@ class ShuttleGetDefinition : public ShuttleParams, public CommandMessageTargetDe
 public:
    ShuttleGetDefinition( CommandMessageTarget & target );
    wxString Result;
+   bool IsOptional();
    void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
    void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
    void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
