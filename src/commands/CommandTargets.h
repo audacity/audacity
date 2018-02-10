@@ -277,6 +277,9 @@ public:
 
 /// Used to aggregate the various output targets a command may have.
 /// Assumes responsibility for pointers passed into it.
+/// mProgressTarget is a unique pointer, but mStatusTraget and
+/// mErrorTarget are shared ones, because they may both point to the same 
+/// output 
 class CommandOutputTargets
 {
 public:
@@ -284,6 +287,9 @@ public:
    std::shared_ptr<CommandMessageTarget> mStatusTarget;
    std::shared_ptr<CommandMessageTarget> mErrorTarget;
 public:
+   // && is not a reference to a reference, but rather a way to allow reference to a temporary
+   // that will be gone or transfered after we have taken it.  It's a reference to an xvalue, 
+   // or 'expiring value'.
    CommandOutputTargets(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
                        std::shared_ptr<CommandMessageTarget>  &&st = TargetFactory::MessageDefault(),
                        std::shared_ptr<CommandMessageTarget> &&et = TargetFactory::MessageDefault())
