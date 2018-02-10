@@ -71,7 +71,7 @@ int ExecCommand(wxString *pIn, wxString *pOut)
       if (builder.WasValid())
       {
          AudacityProject *project = GetActiveProject();
-         project->SafeDisplayStatusMessage(wxT("Received script command"));
+         //project->SafeDisplayStatusMessage(wxT("Received script command"));
          OldStyleCommandPointer cmd = builder.GetCommand();
          ScriptCommandRelay::PostCommand(project, cmd);
 

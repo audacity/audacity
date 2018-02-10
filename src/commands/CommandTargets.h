@@ -304,10 +304,13 @@ public:
       if (mProgressTarget)
          mProgressTarget->Update(completed);
    }
-   void Status(const wxString &status)
+   void Status(const wxString &status, bool bFlush=false)
    {
-      if (mStatusTarget)
+      if (mStatusTarget){
          mStatusTarget->Update(status);
+         if( bFlush )
+            mStatusTarget->Flush();
+      }
    }
    void Error(const wxString &message)
    {
