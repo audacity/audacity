@@ -56,6 +56,8 @@ void CommandMessageTarget::EndStruct(){
    Update( " }" );
 }
 void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
+   wxString Temp = value;
+   Temp.Replace("\"", "\\\"");// escape spaces.
    Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value));
    mCounts.Last() += 1;
 }

@@ -93,6 +93,8 @@ public:
    wxString GetCommandName(const PluginID & ID);
    wxString GetCommandIdentifier(const PluginID & ID);
    wxString GetCommandDescription(const PluginID & ID);
+   wxString GetCommandUrl(const PluginID & ID);
+   wxString GetCommandTip(const PluginID & ID);
    // flags control which commands are included.
    void GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags);
    bool IsHidden(const PluginID & ID);
