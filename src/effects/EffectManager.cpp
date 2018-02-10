@@ -198,6 +198,31 @@ wxString EffectManager::GetCommandDescription(const PluginID & ID)
    return wxEmptyString;
 }
 
+wxString EffectManager::GetCommandUrl(const PluginID & ID)
+{
+   Effect* pEff = GetEffect(ID);
+   if( pEff )
+      return pEff->ManualPage();
+   AudacityCommand * pCom = GetAudacityCommand(ID);
+   if( pCom )
+      return pCom->ManualPage();
+
+   return wxEmptyString;
+}
+
+wxString EffectManager::GetCommandTip(const PluginID & ID)
+{
+   Effect* pEff = GetEffect(ID);
+   if( pEff )
+      return pEff->GetDescription();
+   AudacityCommand * pCom = GetAudacityCommand(ID);
+   if( pCom )
+      return pCom->GetDescription();
+
+   return wxEmptyString;
+}
+
+
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
    ParamsInterface *command;
@@ -224,6 +249,8 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
       command->DefineParams( S );
       S.EndArray();
    }
+   S.AddItem( GetCommandUrl( ID ), "url" );
+   S.AddItem( GetCommandTip( ID ), "tip" );
    S.EndStruct();
 }
 
