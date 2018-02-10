@@ -136,6 +136,7 @@ public:
    ShuttleGetDefinition( CommandMessageTarget & target );
    wxString Result;
    bool IsOptional();
+   ShuttleParams & Optional( bool & var ) override;
    void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
    void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
    void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;

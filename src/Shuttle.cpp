@@ -559,10 +559,16 @@ void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int v
 }
 
 bool ShuttleGetDefinition::IsOptional(){
-   bool result = pOptionalFlag ? true : false;
+   bool result = pOptionalFlag !=NULL;
    pOptionalFlag = NULL;
    return result;
 }
+
+// Definition distinguishes optional from not.
+ShuttleParams & ShuttleGetDefinition::Optional( bool & var ){ 
+   pOptionalFlag = &var;
+   return *this;
+};
 
 ShuttleGetDefinition::ShuttleGetDefinition( CommandMessageTarget & target ) : CommandMessageTargetDecorator( target )
 {

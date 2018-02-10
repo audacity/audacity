@@ -320,15 +320,19 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
    if( !pMenu )
       return;
 
+   CommandManager * pMan = context.GetProject()->GetCommandManager();
+
    wxMenuItemList list = pMenu->GetMenuItems();
    size_t lcnt = list.GetCount();
    wxMenuItem * item;
    wxString Label;
    wxString Accel;
+   wxString Name;
 
    for (size_t lndx = 0; lndx < lcnt; lndx++) {
       item = list.Item(lndx)->GetData();
       Label = item->GetItemLabelText();
+      Name = pMan->GetNameFromID( item->GetId() );
       Accel = item->GetItemLabel();
       if( Accel.Contains("\t") )
          Accel = Accel.AfterLast('\t');
@@ -342,12 +346,14 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
       if (item->IsCheck() && item->IsChecked())
          flags +=2;
 
-      context.StartArray();
-      context.AddItem( depth );
-      context.AddItem( flags );
-      context.AddItem( Label );
-      context.AddItem( Accel );
-      context.EndArray();
+      context.StartStruct();
+      context.AddItem( depth, "0" );
+      context.AddItem( flags, "1" );
+      context.AddItem( Label, "2" );
+      context.AddItem( Accel, "3" );
+      if( !Name.IsEmpty() )
+         context.AddItem( Name, "id" );// It is called Automation ID outside Audacity.
+      context.EndStruct();
 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
