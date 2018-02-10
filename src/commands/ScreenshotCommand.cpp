@@ -299,7 +299,8 @@ bool ScreenshotCommand::Capture(
    ::wxBell();
 
    if (image.SaveFile(filename)) {
-      context.Status( wxString::Format( _("Saved %s"), filename ) );
+      // flush
+      context.Status( wxString::Format( _("Saved %s"), filename ), true );
    }
    else {
       context.Error(
@@ -815,7 +816,7 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       CapturePreferences(context, context.GetProject(), mFileName);
    else if (mCaptureMode.IsSameAs(wxT("Selectionbar")))
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), SelectionBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Spectral__Selection")))
+   else if (mCaptureMode.IsSameAs(wxT("Spectral_Selection")))
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), SpectralSelectionBarID, mFileName);
    else if (mCaptureMode.IsSameAs(wxT("Tools")))
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), ToolsBarID, mFileName);
@@ -843,9 +844,9 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       return Capture(context, mFileName, ruler, GetRulerRect(ruler) );
    else if (mCaptureMode.IsSameAs(wxT("Tracks")))
       return Capture(context, mFileName, panel, GetTracksRect(panel));
-   else if (mCaptureMode.IsSameAs(wxT("Firsttrack")))
+   else if (mCaptureMode.IsSameAs(wxT("First_Track")))
       return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 0 ) );
-   else if (mCaptureMode.IsSameAs(wxT("Secondtrack")))
+   else if (mCaptureMode.IsSameAs(wxT("Second_Track")))
       return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 1 ) );
    else
       return false;
