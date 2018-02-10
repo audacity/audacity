@@ -27,16 +27,7 @@
 #include "CommandContext.h"
 
 SetTrackCommand::SetTrackCommand()
-{/*
-   mTrackIndex = 0;
-   mTrackName = "unnamed";
-   mPan = 0.0f;
-   mGain = 1.0f;
-   bSelected = false;
-   bFocused = false;
-   bSolo = false;
-   bMute = false;
-*/
+{
 }
 
 enum kColours
@@ -65,7 +56,7 @@ bool SetTrackCommand::DefineParams( ShuttleParams & S ){
    S.Optional( bHasHeight      ).Define(     mHeight,      wxT("Height"),     120, 44, 700 );
    S.Optional( bHasColour      ).DefineEnum( mColour,      wxT("Color"),      kColour0, colours );
    S.Optional( bHasSelected    ).Define(     bSelected,    wxT("Selected"),   false );
-   S.Optional( bHasFocused     ).Define(     bFocused,     wxT("Focuseed"),   false );
+   S.Optional( bHasFocused     ).Define(     bFocused,     wxT("Focused"),    false );
    S.Optional( bHasSolo        ).Define(     bSolo,        wxT("Solo"),       false );
    S.Optional( bHasMute        ).Define(     bMute,        wxT("Mute"),       false );
    return true;
