@@ -65,10 +65,10 @@ CommandContext::CommandContext(
 {
 }
 
-void CommandContext::Status( const wxString & message ) const
+void CommandContext::Status( const wxString & message, bool bFlush ) const
 {
    if( pOutput )
-      pOutput->Status( message );
+      pOutput->Status( message, bFlush );
    else
    {
       wxLogDebug("Status:%s", message );
