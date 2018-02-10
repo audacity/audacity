@@ -104,7 +104,7 @@ static const wxString kCaptureWhatStrings[nCaptureWhats] =
    XO("Ruler"),
    XO("Tracks"),
    XO("First_Track"),
-   XO("Second_Track")
+   XO("Second_Track"),
    XO("Tracks_Plus"),
    XO("First_Track_Plus"),
 };
