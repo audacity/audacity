@@ -518,7 +518,10 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    WaveformSettings::defaults().LoadPrefs();
 
-   EndModal(true);
+   if( IsModal() )
+      EndModal(true);
+   else
+      Destroy();
 }
 
 void PrefsDialog::SelectPageByName(const wxString &pageName)
