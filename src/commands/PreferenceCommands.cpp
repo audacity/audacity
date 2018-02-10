@@ -20,6 +20,7 @@ SetPreferenceCommand classes
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandContext.h"
+#include "../Project.h" // for "OnReloadPreferences".
 
 bool GetPreferenceCommand::DefineParams( ShuttleParams & S ){
    S.Define( mName, wxT("Name"),   wxT("") );
@@ -68,11 +69,11 @@ void SetPreferenceCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetPreferenceCommand::Apply(const CommandContext & WXUNUSED(context))
+bool SetPreferenceCommand::Apply(const CommandContext & context)
 {
    bool bOK = gPrefs->Write(mName, mValue) && gPrefs->Flush();
    if( bOK && mbReload )
-      bOK = bOK; // Not yet implemented.
+      context.GetProject()->OnReloadPreferences( context );
    return bOK;
 }
 
