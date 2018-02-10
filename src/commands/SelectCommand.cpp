@@ -54,6 +54,11 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 }
 
 bool SelectTimeCommand::Apply(const CommandContext & context){
+   if( mFromEnd ){
+      double TEnd = context.GetProject()->GetTracks()->GetEndTime();
+      context.GetProject()->mViewInfo.selectedRegion.setTimes(TEnd - mT0, TEnd - mT1);
+      return true;
+   }
    context.GetProject()->mViewInfo.selectedRegion.setTimes(mT0, mT1);
    return true;
 }
