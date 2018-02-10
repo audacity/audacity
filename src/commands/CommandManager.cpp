@@ -1665,6 +1665,15 @@ void CommandManager::GetAllCommandData(
       }
    }
 }
+
+wxString CommandManager::GetNameFromID(int id)
+{
+   CommandListEntry *entry = mCommandIDHash[id];
+   if (!entry)
+      return wxT("");
+   return entry->name;
+}
+
 wxString CommandManager::GetLabelFromName(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];

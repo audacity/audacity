@@ -262,6 +262,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 #endif
       bool includeMultis);
 
+   wxString GetNameFromID( int id );
    wxString GetLabelFromName(const wxString &name);
    wxString GetPrefixedLabelFromName(const wxString &name);
    wxString GetCategoryFromName(const wxString &name);
