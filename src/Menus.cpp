@@ -1620,6 +1620,8 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetTrack"), _("Set Track..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("ReloadPreferences"), _("&Reload Preferences..."), FN(OnReloadPreferences),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
 
 
       c->EndSubMenu();
@@ -4853,6 +4855,37 @@ void AudacityProject::OnPreferences(const CommandContext &WXUNUSED(context) )
    if (!dialog.ShowModal()) {
       // Canceled
       return;
+   }
+
+   // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
+   //      rebuilding the menus while the PrefsDialog is still in the modal
+   //      state.
+   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+      AudacityProject *p = gAudacityProjects[i].get();
+
+      p->RebuildMenuBar();
+      p->RebuildOtherMenus();
+// TODO: The comment below suggests this workaround is obsolete.
+#if defined(__WXGTK__)
+      // Workaround for:
+      //
+      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
+      //
+      // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
+      wxRect r = p->GetRect();
+      p->SetSize(wxSize(1,1));
+      p->SetSize(r.GetSize());
+#endif
+   }
+}
+
+void AudacityProject::OnReloadPreferences(const CommandContext &WXUNUSED(context) )
+{
+   {
+      GlobalPrefsDialog dialog(this /* parent */ );
+      wxCommandEvent Evt;
+      //dialog.Show();
+      dialog.OnOK(Evt);
    }
 
    // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
