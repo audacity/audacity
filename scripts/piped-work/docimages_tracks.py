@@ -91,7 +91,7 @@ def makeStereoTrack() :
     do( 'SetTrack: TrackIndex=0 Name="Voodoo Children IN STEREO"')
 
 def closeTrack( ):
-    do( 'SetTrack: TrackIndex=0 Focuseed=True' )
+    do( 'SetTrack: TrackIndex=0 Focused=True' )
     do( 'TrackClose' )
 
 def image1() :
