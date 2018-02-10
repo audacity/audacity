@@ -89,7 +89,7 @@ int ExecCommand(wxString *pIn, wxString *pOut)
    wxString msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
    while (msg != wxT("\n"))
    {
-      wxLogDebug( "Msg: %s", msg );
+      //wxLogDebug( "Msg: %s", msg );
       *pOut += msg + wxT("\n");
       msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
    }
