@@ -73,6 +73,8 @@ enum kCaptureTypes
    ktracks,
    kfirsttrack,
    ksecondtrack,
+   ktracksplus,
+   kfirsttrackplus,
    nCaptureWhats
 };
 
@@ -103,6 +105,8 @@ static const wxString kCaptureWhatStrings[nCaptureWhats] =
    XO("Tracks"),
    XO("First_Track"),
    XO("Second_Track")
+   XO("Tracks_Plus"),
+   XO("First_Track_Plus"),
 };
 
 
@@ -267,13 +271,14 @@ bool ScreenshotCommand::Capture(
 
    //wxRect r(x, y, width, height);
 
-   // Ensure within bounds (x/y are negative on Windows when maximized)
-   r.Intersect(wxRect(0, 0, screenW, screenH));
 
    // Convert to screen coordinates if needed
    if (window && window->GetParent() && !window->IsTopLevel()) {
       r.SetPosition(window->GetParent()->ClientToScreen(r.GetPosition()));
    }
+
+   // Ensure within bounds (x/y are negative on Windows when maximized)
+   r.Intersect(wxRect(0, 0, screenW, screenH));
 
    // Extract the actual image
    wxBitmap part = full.GetSubBitmap(r);
@@ -799,6 +804,12 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    TrackPanel *panel = context.GetProject()->GetTrackPanel();
    AdornedRulerPanel *ruler = panel->mRuler;
 
+   int x1,y1,x2,y2;
+   w->ClientToScreen(&x1, &y1);
+   panel->ClientToScreen(&x2, &y2);
+
+   wxPoint p( x2-x1, y2-y1);
+
    if (mCaptureMode.IsSameAs(wxT("Window")))
       return Capture(context,  WindowFileName( context.GetProject(), w ) , w, GetWindowRect(w));
    else if (mCaptureMode.IsSameAs(wxT("Fullwindow"))
@@ -848,6 +859,18 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 0 ) );
    else if (mCaptureMode.IsSameAs(wxT("Second_Track")))
       return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 1 ) );
+   else if (mCaptureMode.IsSameAs(wxT("Tracks_Plus")))
+   {  wxRect r = GetTracksRect(panel);
+      r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
+      r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
+      return Capture(context, mFileName, panel, r);
+   }
+   else if (mCaptureMode.IsSameAs(wxT("First_Track_Plus")))
+   {  wxRect r = GetTrackRect(context.GetProject(), panel, 0 );
+      r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
+      r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
+      return Capture(context, mFileName, panel, r );
+   }
    else
       return false;
 
