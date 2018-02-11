@@ -39,7 +39,7 @@ print( "-- File to read from has now been opened too\r\n" )
 
 
 def sendCommand( command ) :
-    print( "Send: >>> "+command )
+    print( "Send: >>> \n"+command )
     tofile.write( command + EOL )	
     tofile.flush()
 
@@ -55,7 +55,7 @@ def getResponse() :
 def doCommand( command ) :
     sendCommand( command )
     response = getResponse()
-    print( "Rcvd: <<< " + response )
+    print( "Rcvd: <<< \n" + response )
     return response
 
 def do( command ) :
@@ -63,9 +63,6 @@ def do( command ) :
 
 def quickTest() :
     do( 'Help: Command=Help' )
-    do( 'Help: Command="SetTrackInfo"' )
-    do( 'SetPreference: Name=GUI/Theme Value=light Reload=false' )
-
 
 def setup() :
     global path
@@ -169,25 +166,20 @@ def image8() :
 # Zoomed in to show points stem-plot
 def image9() :
     global path
-    do( 'SetPreference: Name=/GUI/SampleView Value=1 Reload=True')
     makeMonoTracks(1)
     do( 'SelectTime: StartTime=0 EndTime=0.003' )
     do( 'ZoomSel' );
     do( 'Amplify: Ratio=3.0' )
+    do( 'SetPreference: Name=/GUI/SampleView Value=1 Reload=1')
     do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
 
 # Zoomed in to show points no stem plot
-def image10() :
+def image9and10() :
     global path
-    do( 'SetPreference: Name=/GUI/SampleView Value=0 Reload=True')
-    makeMonoTracks(1)
-    do( 'SelectTime: StartTime=0 EndTime=0.003' )
-    do( 'ZoomSel' );
-    do( 'Amplify: Ratio=3.0' )
+    image9()
+    do( 'SetPreference: Name=/GUI/SampleView Value=0 Reload=1')
     do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
     
-
-
 #quickTest()
 setup()
 image1()
@@ -198,6 +190,5 @@ image5()
 image6()      
 image7()
 image8()
-image9()
-image10()
+image9and10()
 

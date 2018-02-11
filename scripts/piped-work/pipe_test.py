@@ -1,6 +1,6 @@
-# pipe-test.py
+# pipe_test.py
 # Tests the audacity pipe.  Sends 3 commands.
-# Keep pipe-test.py short!!
+# Keep pipe_test.py short!!
 # You can make more complicated longer tests to test other functionality
 # or to generate screenshots etc in other scripts.
 
@@ -41,7 +41,7 @@ print( "-- File to read from has now been opened too\r\n" )
 
 
 def sendCommand( command ) :
-    print( "Send: >>> "+command )
+    print( "Send: >>> \n"+command )
     tofile.write( command + EOL )	
     tofile.flush()
 
@@ -57,7 +57,7 @@ def getResponse() :
 def doCommand( command ) :
     sendCommand( command )
     response = getResponse()
-    print( "Rcvd: <<< " + response )
+    print( "Rcvd: <<< \n" + response )
     return response
 
 def do( command ) :
@@ -65,7 +65,7 @@ def do( command ) :
 
 def quickTest() :
     do( 'Help: Command=Help' )
-    do( 'Help: Command="SetTrackInfo"' )
-    do( 'SetPreference: Name=GUI/Theme Value=light Reload=false' )
+    #do( 'Help: Command="GetInfo"' )
+    do( 'SetPreference: Name=GUI/Theme Value=dark Reload=1' )
 
 quickTest()
