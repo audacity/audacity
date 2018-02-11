@@ -33,10 +33,11 @@ SetLabelCommand::SetLabelCommand()
 
 
 bool SetLabelCommand::DefineParams( ShuttleParams & S ){ 
-   S.Define(   mLabelIndex,                               wxT("LabelIndex"), 0, 0, 100 );
-   S.Optional( bHasText       ).Define(     mText,        wxT("Text"),       wxT("empty") );
-   S.Optional( bHasT0         ).Define(     mT0,          wxT("Start"),      0.0, 0.0, 100000.0);
-   S.Optional( bHasT1         ).Define(     mT1,          wxT("End"),        0.0, 0.0, 100000.0);
+   S.Define(   mLabelIndex,                            wxT("LabelIndex"), 0, 0, 100 );
+   S.Optional( bHasText       ).Define(  mText,        wxT("Text"),       wxT("empty") );
+   S.Optional( bHasT0         ).Define(  mT0,          wxT("Start"),      0.0, 0.0, 100000.0);
+   S.Optional( bHasT1         ).Define(  mT1,          wxT("End"),        0.0, 0.0, 100000.0);
+   S.Optional( bHasSelected   ).Define(  mbSelected,   wxT("Selected"),   false );
    return true;
 };
 
@@ -54,6 +55,7 @@ void SetLabelCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasText      ).TieTextBox(         _("Text:"),     mText );
       S.Optional( bHasT0        ).TieNumericTextBox(  _("Start:"),    mT0 );
       S.Optional( bHasT1        ).TieNumericTextBox(  _("End:"),      mT1 );
+      S.Optional( bHasSelected  ).TieCheckBox(        _("Selected:"), mbSelected );
    }
    S.EndMultiColumn();
 }
@@ -69,13 +71,15 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    Track *t = iter.First();
    LabelStruct * pLabel = NULL;
    int i=0;
+   int nn=0;
 
+   LabelTrack *labelTrack = nullptr;
    while (t && i<=mLabelIndex) {
       if (t->GetKind() == Track::Label) {
-         LabelTrack *labelTrack = static_cast<LabelTrack*>(t);
+         labelTrack = static_cast<LabelTrack*>(t);
          if( labelTrack )
          {
-            for (int nn = 0; 
+            for (nn = 0; 
                (nn< (int)labelTrack->mLabels.size()) && i<=mLabelIndex; 
                nn++) {
                i++;
@@ -97,9 +101,17 @@ bool SetLabelCommand::Apply(const CommandContext & context)
       pLabel->selectedRegion.setT0(mT0, false);
    if( bHasT1 )
       pLabel->selectedRegion.setT1(mT1, false);
-
    if( bHasT0 || bHasT1 )
       pLabel->selectedRegion.ensureOrdering();
+   pLabel->updated = true;
+
+   // Only one label can be selected.
+   if( bHasSelected ){
+      if( mbSelected )
+         labelTrack->mSelIndex = nn-1;
+      else if( labelTrack->mSelIndex == (nn-1) )
+         labelTrack->mSelIndex = -1;
+   }
 
    return true;
 }

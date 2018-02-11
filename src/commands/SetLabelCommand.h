@@ -42,11 +42,13 @@ public:
    wxString mText;
    double mT0;
    double mT1;
+   bool mbSelected;
 
 // For tracking optional parameters.
    bool bHasText;
    bool bHasT0;
    bool bHasT1;
+   bool bHasSelected;
 };
 
 
