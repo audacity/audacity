@@ -218,17 +218,25 @@ class ResponseQueueTarget final : public CommandMessageTarget
 {
 private:
    ResponseQueue &mResponseQueue;
+   wxString mBuffer;
 public:
    ResponseQueueTarget(ResponseQueue &responseQueue)
-      : mResponseQueue(responseQueue)
+      : mResponseQueue(responseQueue),
+       mBuffer( wxEmptyString )
    { }
    virtual ~ResponseQueueTarget()
    {
+      if( mBuffer.StartsWith("\n" ) )
+         mBuffer = mBuffer.Mid( 1 );
+      mResponseQueue.AddResponse( mBuffer  );
       mResponseQueue.AddResponse(wxString(wxT("\n")));
    }
    void Update(const wxString &message) override
    {
-      mResponseQueue.AddResponse(message);
+      mBuffer += message;
+#if 0
+         mResponseQueue.AddResponse(message);
+#endif
    }
 };
 
