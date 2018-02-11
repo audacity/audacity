@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackSliderHandles.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../MixerBoard.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h"
@@ -50,10 +49,6 @@ UIHandle::Result GainSliderHandle::SetValue
       for (auto channel :
            TrackList::Channels(pTrack.get()))
          channel->SetGain(newValue);
-
-      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->UpdateGain(pTrack.get());
    }
 
    return RefreshCode::RefreshNone;
@@ -131,10 +126,6 @@ UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newV
       for (auto channel :
            TrackList::Channels(pTrack.get()))
          channel->SetPan(newValue);
-
-      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->UpdatePan(pTrack.get());
    }
 
    return result;

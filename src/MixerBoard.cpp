@@ -212,7 +212,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                .Style( DB_SLIDER )
                .Orientation( wxVERTICAL ));
    mSlider_Gain->SetName(_("Gain"));
-   this->UpdateGain();
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    mSlider_Velocity =
       safenew MixerTrackSlider(
@@ -224,7 +224,6 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                .Style( VEL_SLIDER )
                .Orientation( wxVERTICAL ));
    mSlider_Velocity->SetName(_("Velocity"));
-   this->UpdateVelocity();
 #endif
 
    // other controls and meter at right
@@ -260,8 +259,6 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
             ASlider::Options{}.Style( PAN_SLIDER ));
    mSlider_Pan->SetName(_("Pan"));
 
-   this->UpdatePan();
-
    // mute/solo buttons stacked below Pan slider
    ctrlPos.y += PAN_HEIGHT + kDoubleInset;
    ctrlSize.Set(mMixerBoard->mMuteSoloWidth, MUTE_SOLO_HEIGHT);
@@ -278,7 +275,6 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
       *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDown), 
       *(mMixerBoard->mImageMuteDisabled));
-   this->UpdateMute();
 
    ctrlPos.y += MUTE_SOLO_HEIGHT;
    mToggleButton_Solo =
@@ -289,7 +285,6 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
-   this->UpdateSolo();
    bool bSoloNone = mProject->IsSoloNone();
    mToggleButton_Solo->Show(!bSoloNone);
 
@@ -322,11 +317,12 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
          mMeter->SetToolTip(_("Signal Level Meter"));
    #endif // wxUSE_TOOLTIPS
 
+   UpdateForStateChange();
+
    #ifdef __WXMAC__
       wxSizeEvent event(GetSize(), GetId());
       event.SetEventObject(this);
       GetEventHandler()->ProcessEvent(event);
-      UpdateGain();
    #endif
 }
 
@@ -450,77 +446,51 @@ void MixerTrackCluster::ResetMeter(const bool bResetClipping)
 }
 
 
-// These are used by TrackPanel for synchronizing control states, etc.
-
-// Update the controls that can be affected by state change.
+// Update appearance to match the state of the track
 void MixerTrackCluster::UpdateForStateChange()
 {
-   this->UpdateName();
-   this->UpdatePan();
-   this->UpdateGain();
-}
-
-void MixerTrackCluster::UpdateName()
-{
    const wxString newName = mTrack->GetName();
-   SetName(newName);
-   mStaticText_TrackName->SetLabel(newName);
-   mStaticText_TrackName->SetName(newName);
-   #if wxUSE_TOOLTIPS
-      mStaticText_TrackName->SetToolTip(newName);
-   #endif
-   mBitmapButton_MusicalInstrument->SetBitmapLabel(
-      *(mMixerBoard->GetMusicalInstrumentBitmap(mTrack.get())));
-   Refresh();
-}
+   if (newName != GetName()) {
+      SetName(newName);
+      mStaticText_TrackName->SetLabel(newName);
+      mStaticText_TrackName->SetName(newName);
+#if wxUSE_TOOLTIPS
+         mStaticText_TrackName->SetToolTip(newName);
+#endif
+      mBitmapButton_MusicalInstrument->SetBitmapLabel(
+         *(mMixerBoard->GetMusicalInstrumentBitmap(mTrack.get())));
+   }
 
-void MixerTrackCluster::UpdateMute()
-{
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
    if (mTrack->GetMute())
       mToggleButton_Mute->PushDown();
    else
       mToggleButton_Mute->PopUp();
-}
 
-void MixerTrackCluster::UpdateSolo()
-{
    bool bIsSolo = mTrack->GetSolo();
    if (bIsSolo)
       mToggleButton_Solo->PushDown();
    else
       mToggleButton_Solo->PopUp();
    mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
-}
 
-void MixerTrackCluster::UpdatePan()
-{
-   if (!GetWave()) {
+   if (!GetWave())
       mSlider_Pan->Hide();
-      return;
-   }
-   mSlider_Pan->Set(GetWave()->GetPan());
-}
+   else
+      mSlider_Pan->Set(GetWave()->GetPan());
 
-void MixerTrackCluster::UpdateGain()
-{
-   if (!GetWave()) {
+   if (!GetWave())
       mSlider_Gain->Hide();
-      return;
-   }
-   mSlider_Gain->Set(GetWave()->GetGain());
-}
+   else
+      mSlider_Gain->Set(GetWave()->GetGain());
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-void MixerTrackCluster::UpdateVelocity()
-{
-   if (!GetNote()) {
+   if (!GetNote())
       mSlider_Velocity->Hide();
-      return;
-   }
-   mSlider_Velocity->Set(GetNote()->GetVelocity());
-}
+   else
+      mSlider_Velocity->Set(GetNote()->GetVelocity());
 #endif
+}
 
 void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 {
@@ -704,6 +674,8 @@ void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
 
 void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
+   UpdateForStateChange();
+
    auto selected = mTrack->GetSelected();
 
    wxColour col = theTheme.Colour(selected ? clrTrackInfoSelected : clrTrackInfo) ;
@@ -773,8 +745,6 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
    // Update the TrackPanel correspondingly.
    if (mProject->IsSoloSimple())
    {
-      // Have to refresh all tracks.
-      mMixerBoard->UpdateSolo();
       mProject->RedrawProject();
    }
    else
@@ -789,12 +759,6 @@ void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
    mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
-   if (mProject->IsSoloSimple())
-   {
-      // Have to refresh all tracks.
-      mMixerBoard->UpdateMute();
-      mMixerBoard->UpdateSolo();
-   }
    // Bug 509: Must repaint all, as many tracks can change with one Solo change.
    mProject->RedrawProject();
 }
@@ -956,6 +920,10 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 
    mProject->GetTracks()->Bind(EVT_TRACKLIST_DELETION,
       &MixerBoard::OnTrackSetChanged,
+      this);
+
+   mProject->GetTracks()->Bind(EVT_TRACKLIST_TRACK_DATA_CHANGE,
+      &MixerBoard::OnTrackChanged,
       this);
 }
 
@@ -1156,80 +1124,6 @@ void MixerBoard::ResetMeters(const bool bResetClipping)
    for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
       mMixerTrackClusters[i]->ResetMeter(bResetClipping);
 }
-
-void MixerBoard::UpdateName(const PlayableTrack* pTrack)
-{
-   MixerTrackCluster* pMixerTrackCluster;
-   this->FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   if (pMixerTrackCluster)
-      pMixerTrackCluster->UpdateName();
-}
-
-void MixerBoard::UpdateMute(const PlayableTrack* pTrack /*= NULL*/) // NULL means update for all tracks.
-{
-   if (pTrack == NULL)
-   {
-      for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
-         mMixerTrackClusters[i]->UpdateMute();
-   }
-   else
-   {
-      MixerTrackCluster* pMixerTrackCluster;
-      FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-      if (pMixerTrackCluster)
-         pMixerTrackCluster->UpdateMute();
-   }
-}
-
-void MixerBoard::UpdateSolo(const PlayableTrack* pTrack /*= NULL*/) // NULL means update for all tracks.
-{
-   if (pTrack == NULL)
-   {
-      for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
-         mMixerTrackClusters[i]->UpdateSolo();
-   }
-   else
-   {
-      MixerTrackCluster* pMixerTrackCluster;
-      FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-      if (pMixerTrackCluster)
-         pMixerTrackCluster->UpdateSolo();
-   }
-}
-
-void MixerBoard::UpdatePan(const PlayableTrack* pTrack)
-{
-   if (pTrack == NULL)
-   {
-      for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
-         mMixerTrackClusters[i]->UpdatePan();
-   }
-   else
-   {
-      MixerTrackCluster* pMixerTrackCluster;
-      FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-      if (pMixerTrackCluster)
-         pMixerTrackCluster->UpdatePan();
-   }
-}
-
-void MixerBoard::UpdateGain(const PlayableTrack* pTrack)
-{
-   MixerTrackCluster* pMixerTrackCluster;
-   FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   if (pMixerTrackCluster)
-      pMixerTrackCluster->UpdateGain();
-}
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-void MixerBoard::UpdateVelocity(const PlayableTrack* pTrack)
-{
-   MixerTrackCluster* pMixerTrackCluster;
-   FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   if (pMixerTrackCluster)
-      pMixerTrackCluster->UpdateVelocity();
-}
-#endif
 
 void MixerBoard::UpdateMeters(const double t1, const bool bLoopedPlay)
 {

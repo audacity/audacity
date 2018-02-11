@@ -3,7 +3,7 @@
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Mix.h"
-#include "../MixerBoard.h"
+
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
@@ -13,6 +13,7 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../widgets/ASlider.h"
 
 #include <wx/combobox.h>
 
@@ -103,7 +104,6 @@ void DoMixAndRender
 void DoPanTracks(AudacityProject &project, float PanValue)
 {
    auto tracks = project.GetTracks();
-   auto mixerBoard = project.GetMixerBoard();
 
    // count selected wave tracks
    const auto range = tracks->Any< WaveTrack >();
@@ -115,8 +115,6 @@ void DoPanTracks(AudacityProject &project, float PanValue)
       left->SetPan( PanValue );
 
    project.RedrawProject();
-   if (mixerBoard)
-      mixerBoard->UpdatePan();
 
    auto flags = UndoPush::AUTOSAVE;
    /*i18n-hint: One or more audio tracks have been panned*/
@@ -832,7 +830,6 @@ void OnMuteAllTracks(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto soloSimple = project.IsSoloSimple();
    auto soloNone = project.IsSoloNone();
-   auto mixerBoard = project.GetMixerBoard();
 
    for (auto pt : tracks->Any<PlayableTrack>())
    {
@@ -843,11 +840,6 @@ void OnMuteAllTracks(const CommandContext &context)
 
    project.ModifyState(true);
    project.RedrawProject();
-   if (mixerBoard) {
-      mixerBoard->UpdateMute();
-      if (soloSimple || soloNone)
-         mixerBoard->UpdateSolo();
-   }
 }
 
 void OnUnmuteAllTracks(const CommandContext &context)
@@ -856,7 +848,6 @@ void OnUnmuteAllTracks(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto soloSimple = project.IsSoloSimple();
    auto soloNone = project.IsSoloNone();
-   auto mixerBoard = project.GetMixerBoard();
 
    for (auto pt : tracks->Any<PlayableTrack>())
    {
@@ -867,11 +858,6 @@ void OnUnmuteAllTracks(const CommandContext &context)
 
    project.ModifyState(true);
    project.RedrawProject();
-   if (mixerBoard) {
-      mixerBoard->UpdateMute();
-      if (soloSimple || soloNone)
-         mixerBoard->UpdateSolo();
-   }
 }
 
 void OnPanLeft(const CommandContext &context)

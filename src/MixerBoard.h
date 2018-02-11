@@ -98,16 +98,7 @@ public:
 
    void ResetMeter(const bool bResetClipping);
 
-   // These are used by TrackPanel for synchronizing control states.
-   void UpdateForStateChange(); // Update the controls that can be affected by state change.
-   void UpdateName();
-   void UpdateMute();
-   void UpdateSolo();
-   void UpdatePan();
-   void UpdateGain();
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void UpdateVelocity();
-#endif
+   void UpdateForStateChange();
    void UpdateMeter(const double t0, const double t1);
 
 private:
@@ -225,15 +216,6 @@ public:
 
    void ResetMeters(const bool bResetClipping);
 
-   void UpdateName(const PlayableTrack* pTrack);
-   void UpdateMute(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdateSolo(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdatePan(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdateGain(const PlayableTrack* pTrack);
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void UpdateVelocity(const PlayableTrack* pTrack);
-#endif
-
    void UpdateMeters(const double t1, const bool bLoopedPlay);
 
    void UpdateWidth();
@@ -253,7 +235,6 @@ private:
    void OnTimer(wxCommandEvent &event);
    void OnTrackSetChanged(wxEvent &event);
    void OnTrackChanged(TrackListEvent &event);
-
 
 public:
    // mute & solo button images: Create once and store on MixerBoard for use in all MixerTrackClusters.

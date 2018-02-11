@@ -5524,14 +5524,6 @@ void AudacityProject::DoTrackMute(Track *t, bool exclusive)
 {
    HandleTrackMute(t, exclusive);
 
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
-
    mTrackPanel->UpdateAccessibility();
    mTrackPanel->Refresh(false);
 }
@@ -5539,14 +5531,6 @@ void AudacityProject::DoTrackMute(Track *t, bool exclusive)
 void AudacityProject::DoTrackSolo(Track *t, bool exclusive)
 {
    HandleTrackSolo(t, exclusive);
-
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
 
    mTrackPanel->UpdateAccessibility();
    mTrackPanel->Refresh(false);
