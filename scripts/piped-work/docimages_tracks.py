@@ -118,7 +118,7 @@ def image3() :
     do( 'SetTrack: TrackIndex=1 Name="Instrument 2" Height=122 Color=Color1')
     do( 'SetTrack: TrackIndex=2 Name="Instrument 3" Height=122 Color=Color2')
     do( 'SetTrack: TrackIndex=3 Name="Instrument 4" Height=122 Color=Color3')
-    do( 'Screenshot: Path='+path+' CaptureWhat=Tracks' )
+    do( 'Screenshot: Path='+path+' CaptureWhat=First_Four_Tracks' )
 
 # Two Tracks, ready to make stereo
 def image4():
@@ -126,7 +126,7 @@ def image4():
     makeMonoTracks(2)
     do( 'SetTrack: TrackIndex=0 Name="Left Track" Height=80')
     do( 'SetTrack: TrackIndex=1 Name="Right Track" Height=80')
-    do( 'Screenshot: Path='+path+' CaptureWhat=Tracks' )
+    do( 'Screenshot: Path='+path+' CaptureWhat=First_Two_Tracks' )
 
 # Mono tracks made stereo    
 def image5():
@@ -154,7 +154,7 @@ def image7() :
     makeMonoTracks(2)
     do( 'SetTrack: TrackIndex=0 Height=80')
     do( 'SetTrack: TrackIndex=1 Height=180')
-    do( 'Screenshot: Path='+path+' CaptureWhat=Tracks' )
+    do( 'Screenshot: Path='+path+' CaptureWhat=First_Two_Tracks' )
 
 # Mono with arrow at start.
 def image8() :
@@ -173,7 +173,7 @@ def image9() :
     do( 'SetPreference: Name=/GUI/SampleView Value=1 Reload=1')
     do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
 
-# Zoomed in to show points no stem plot
+# Zoomed in to show points stem-plot and then no stem plot
 def image9and10() :
     global path
     image9()

@@ -72,6 +72,9 @@ enum kCaptureTypes
    kruler,
    ktracks,
    kfirsttrack,
+   kfirsttwotracks,
+   kfirstthreetracks,
+   kfirstfourtracks,
    ksecondtrack,
    ktracksplus,
    kfirsttrackplus,
@@ -104,6 +107,9 @@ static const wxString kCaptureWhatStrings[nCaptureWhats] =
    XO("Ruler"),
    XO("Tracks"),
    XO("First_Track"),
+   XO("First_Two_Tracks"),
+   XO("First_Three_Tracks"),
+   XO("First_Four_Tracks"),
    XO("Second_Track"),
    XO("Tracks_Plus"),
    XO("First_Track_Plus"),
@@ -869,6 +875,21 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    {  wxRect r = GetTrackRect(context.GetProject(), panel, 0 );
       r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
       r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
+      return Capture(context, mFileName, panel, r );
+   }
+   else if (mCaptureMode.IsSameAs(wxT("First_Two_Tracks")))
+   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
+      r = r.Union( GetTrackRect( context.GetProject(), panel, 1 ));
+      return Capture(context, mFileName, panel, r );
+   }
+   else if (mCaptureMode.IsSameAs(wxT("First_Three_Tracks")))
+   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
+      r = r.Union( GetTrackRect( context.GetProject(), panel, 2 ));
+      return Capture(context, mFileName, panel, r );
+   }
+   else if (mCaptureMode.IsSameAs(wxT("First_Four_Tracks")))
+   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
+      r = r.Union( GetTrackRect( context.GetProject(), panel, 3 ));
       return Capture(context, mFileName, panel, r );
    }
    else
