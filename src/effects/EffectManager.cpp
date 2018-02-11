@@ -236,10 +236,11 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    S.AddItem( GetCommandIdentifier( ID ), "id" );
    S.AddItem( GetCommandName( ID ), "name" );
    if( bHasParams ){
-      S.AddField( "params" );
+      S.StartField( "params" );
       S.StartArray();
       command->DefineParams( S );
       S.EndArray();
+      S.EndField();
    }
    S.AddItem( GetCommandUrl( ID ), "url" );
    S.AddItem( GetCommandTip( ID ), "tip" );

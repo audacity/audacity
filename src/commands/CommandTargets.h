@@ -85,7 +85,8 @@ public:
    virtual void AddItem(const wxString &value , const wxString &name="" );
    virtual void AddBool(const bool value      , const wxString &name="" );
    virtual void AddItem(const double value    , const wxString &name="" );
-   virtual void AddField( const wxString &name="" );
+   virtual void StartField( const wxString &name="" );
+   virtual void EndField( );
    virtual void Flush();
    wxArrayInt mCounts;
 };
@@ -103,7 +104,8 @@ public:
    virtual void AddItem(const wxString &value , const wxString &name="" ){ mTarget.AddItem(value,name);};
    virtual void AddBool(const bool value      , const wxString &name="" ){ mTarget.AddBool(value,name);};
    virtual void AddItem(const double value    , const wxString &name="" ){ mTarget.AddItem(value,name);};
-   virtual void AddField( const wxString &name="" ){ mTarget.AddField(name);};
+   virtual void StartField( const wxString &name="" ){ mTarget.StartField(name);};
+   virtual void EndField( ){ mTarget.EndField();};
    virtual void Flush(){ mTarget.Flush();};
    CommandMessageTarget & mTarget;
 };
@@ -119,7 +121,8 @@ public:
    virtual void AddItem(const wxString &value , const wxString &name="" )override;
    virtual void AddBool(const bool value      , const wxString &name="" )override;
    virtual void AddItem(const double value    , const wxString &name="" )override;
-   virtual void AddField( const wxString &name="" )override;
+   virtual void StartField( const wxString &name="" )override;
+   virtual void EndField( ) override;
 };
 
 class BriefCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
@@ -133,7 +136,8 @@ public:
    virtual void AddItem(const wxString &value , const wxString &name="" )override;
    virtual void AddBool(const bool value      , const wxString &name="" )override;
    virtual void AddItem(const double value    , const wxString &name="" )override;
-   virtual void AddField( const wxString &name="" )override;
+   virtual void StartField( const wxString &name="" )override;
+   virtual void EndField( ) override;
 };
 
 /// Used to ignore a command's progress updates

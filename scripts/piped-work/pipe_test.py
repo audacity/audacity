@@ -65,7 +65,7 @@ def do( command ) :
 
 def quickTest() :
     do( 'Help: Command=Help' )
-    #do( 'Help: Command="GetInfo"' )
-    do( 'SetPreference: Name=GUI/Theme Value=dark Reload=1' )
+    do( 'Help: Command="GetInfo"' )
+    #do( 'SetPreference: Name=GUI/Theme Value=classic Reload=1' )
 
 quickTest()
