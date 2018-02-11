@@ -57,8 +57,11 @@ void CommandMessageTarget::EndStruct(){
 }
 void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    wxString Temp = value;
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   Padding = (( value.length() < 15 ) || (mCounts.Last()<=0))  ? "" : wxString("\n") + Padding;
    Temp.Replace("\"", "\\\"");// escape spaces.
-   Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value));
+   Update( wxString::Format( "%s%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", Padding, name, !name.IsEmpty()?":":"",value));
    mCounts.Last() += 1;
 }
 void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
@@ -70,9 +73,16 @@ void CommandMessageTarget::AddItem(const double value,    const wxString &name){
    mCounts.Last() += 1;
 }
 
-void CommandMessageTarget::AddField(const wxString &name){
+void CommandMessageTarget::StartField(const wxString &name){
    Update( wxString::Format( "%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":""));
-   mCounts.Last() = 0; // Lie so that we don't get a comma.
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
+}
+
+void CommandMessageTarget::EndField(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
 }
 
 void CommandMessageTarget::Flush(){
@@ -109,23 +119,43 @@ void LispyCommandMessageTarget::EndStruct(){
    Update( " )" );
 }
 void LispyCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
-   Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value));
+   wxString Padding;
+   Padding.Pad( mCounts.GetCount() *2 -2);
+   Padding = (( value.length() < 15 ) || (mCounts.Last()<=0))  ? "" : wxString("\n") + Padding;
+
+   if( name.IsEmpty() )
+      Update( wxString::Format( "%s%s\"%s\"", (mCounts.Last()>0)?", ":"", Padding, value));
+   else 
+      Update( wxString::Format( "%s%s( %s, \"%s\" )", (mCounts.Last()>0)?", ":"", Padding, name, value));
    mCounts.Last() += 1;
 }
 void LispyCommandMessageTarget::AddBool(const bool value,      const wxString &name){
-   Update( wxString::Format( "%s%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value?"True":"False"));
+   if( name.IsEmpty() )
+      Update( wxString::Format( "%s%s", (mCounts.Last()>0)?", ":"",value?"True":"False"));
+   else 
+      Update( wxString::Format( "%s( %s, %s )", (mCounts.Last()>0)?", ":"", name,value?"True":"False"));
    mCounts.Last() += 1;
 }
 void LispyCommandMessageTarget::AddItem(const double value,    const wxString &name){
-   Update( wxString::Format( "%s%s%s%g", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":"",value));
+   if( name.IsEmpty() )
+      Update( wxString::Format( "%s%g", (mCounts.Last()>0)?", ":"", value));
+   else 
+      Update( wxString::Format( "%s( %s, %g )", (mCounts.Last()>0)?", ":"", name,value));
    mCounts.Last() += 1;
 }
 
-void LispyCommandMessageTarget::AddField(const wxString &name){
-   Update( wxString::Format( "%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?",":""));
-   mCounts.Last() = 0; // Lie so that we don't get a comma.
+void LispyCommandMessageTarget::StartField(const wxString &name){
+   Update( wxString::Format( "%s( %s, ", (mCounts.Last()>0)?", ":"", name ));
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
 }
 
+void LispyCommandMessageTarget::EndField(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+   Update( " )" );
+}
 
 
 
@@ -180,12 +210,16 @@ void BriefCommandMessageTarget::AddItem(const double value,    const wxString &n
    mCounts.Last() += 1;
 }
 
-void BriefCommandMessageTarget::AddField(const wxString &name){
-   mCounts.Last() = 0; // Lie so that we don't get a comma.
+void BriefCommandMessageTarget::StartField(const wxString &name){
+   mCounts.Last() += 1;
+   mCounts.push_back( 0 );
 }
 
-
-
+void BriefCommandMessageTarget::EndField(){
+   if( mCounts.GetCount() > 1 ){
+      mCounts.pop_back();
+   }
+}
 
 
 LispifiedCommandOutputTargets::LispifiedCommandOutputTargets( CommandOutputTargets & target )

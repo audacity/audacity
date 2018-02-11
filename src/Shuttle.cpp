@@ -671,11 +671,12 @@ void ShuttleGetDefinition::DefineEnum( wxString &var, const wxChar * key, const 
       AddItem( "unchanged", "default" );
    else
       AddItem( vdefault, "default"  );
-   AddField( "enum" );
+   StartField( "enum" );
    StartArray();
    for( size_t i=0;i<strings.Count(); i++ )
       AddItem( strings[i] );
    EndArray();
+   EndField();
    EndStruct();
 }
 
@@ -688,11 +689,12 @@ void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vd
       AddItem( "unchanged", "default" );
    else
       AddItem( (double)vdefault, "default"  );
-   AddField( "enum" );
+   StartField( "enum" );
    StartArray();
    for( size_t i=0;i<strings.Count(); i++ )
       AddItem( strings[i] );
    EndArray();
+   EndField();
    EndStruct();
 }
 
