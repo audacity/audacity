@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-23 18:10-0500\n"
-"PO-Revision-Date: 2018-01-25 01:37+0000\n"
+"PO-Revision-Date: 2018-01-26 22:04+0000\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language: pt_PT\n"
@@ -138,7 +138,7 @@ msgstr "Ícones Pe&quenos"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Toolbar"
-msgstr "Barras de Ferramentas"
+msgstr "Barra de Ferramentas"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
@@ -3043,7 +3043,7 @@ msgstr "&Preferências..."
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/Menus.cpp
 msgid "&Select"
-msgstr "&Seleccionar"
+msgstr "&Selecionar"
 
 #. i18n-hint: Radio button to show all effects
 #: src/Menus.cpp src/PluginManager.cpp
@@ -3496,11 +3496,11 @@ msgstr "Iniciar do &Zero"
 
 #: src/Menus.cpp
 msgid "Start to &Cursor/Selection Start"
-msgstr "Início ao &Cursor / Início da Selecção"
+msgstr "Início ao &Cursor / Início da Seleção"
 
 #: src/Menus.cpp
 msgid "Start to Selection &End"
-msgstr "Início ao &Fim da Selecção"
+msgstr "Início ao &Fim da Seleção"
 
 #: src/Menus.cpp
 msgid "End to Cu&rsor/Selection Start"
@@ -5835,7 +5835,7 @@ msgstr "Todas as Preferências"
 
 #: src/Screenshot.cpp
 msgid "SelectionBar"
-msgstr "Barra de Selecção"
+msgstr "Barra de Seleção"
 
 #: src/Screenshot.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -6473,7 +6473,7 @@ msgstr "Guardar Projeto Como:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Select..."
-msgstr "Seleccionar..."
+msgstr "Selecionar..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
@@ -6598,7 +6598,7 @@ msgstr " Em Solo"
 #. this track is selected.
 #: src/TrackPanelAx.cpp
 msgid " Select On"
-msgstr " Em Selecção"
+msgstr " Em Seleção"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
@@ -6606,7 +6606,7 @@ msgstr " Em Selecção"
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
 msgid " Sync Lock Selected"
-msgstr " Trancar Sincronização na Selecção"
+msgstr " Trancar Sincronização na Seleção"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -8234,7 +8234,7 @@ msgstr "&Selecionar Curva:"
 
 #: src/effects/Equalization.cpp
 msgid "Select Curve"
-msgstr "Seleccionar Curva"
+msgstr "Selecionar Curva"
 
 #: src/effects/Equalization.cpp
 msgid "S&ave/Manage Curves..."
@@ -12802,11 +12802,11 @@ msgstr "Clique Esquerdo"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Select"
-msgstr "Seleccionar"
+msgstr "Selecionar"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Set Selection Point"
-msgstr "Definir Ponto da Selecção"
+msgstr "Definir Ponto da Seleção"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Left-Drag"
@@ -13789,11 +13789,11 @@ msgstr "Informações sobre o dispositivo não disponíveis."
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut selection"
-msgstr "Cortar Selecção"
+msgstr "Cortar Seleção"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Copy selection"
-msgstr "Copiar Selecção"
+msgstr "Copiar Seleção"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Trim audio outside selection"
@@ -13950,7 +13950,7 @@ msgstr "Mostrar Régua de Esfregar"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Selection"
-msgstr "Selecção"
+msgstr "Seleção"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
@@ -13966,7 +13966,7 @@ msgstr "Posição do Áudio"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
-msgstr "Início e Fim da Selecção"
+msgstr "Início e Fim da Seleção"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and Length of Selection"
@@ -14066,7 +14066,7 @@ msgstr "Doca de Ferramentas"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Selection Tool"
-msgstr "Ferramenta Selecção"
+msgstr "Ferramenta Seleção"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Envelope Tool"
