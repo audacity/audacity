@@ -149,7 +149,8 @@ bool ApplyAndSendResponse::Apply()
       bool bResult = mCommand->Apply(*( mCtx.get()));
       return bResult; }
    );
-   wxString response = GetName();
+   wxString response = wxT( "\n" );
+   response += GetName();
    // These three strings are deliberately not localised.
    // They are used in script responses and always happen in English.
    response += wxT(" finished: ");
