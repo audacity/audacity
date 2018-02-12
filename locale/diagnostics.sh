@@ -16,4 +16,11 @@ for filename in `ls *.po`; do
     echo "${filename}   " $'\t' $complete $'\t' "$((complete*100/total)) %"
 done | sort -n -k3
 
+echo
+
+# detect whether this sequence occures in any .po file.  It will break
+# msgfmt on Windows.
+echo "Files with illegal comment sequence:"
+fgrep -l '#~|' *.po
+
 exit 0
