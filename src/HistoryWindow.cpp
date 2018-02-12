@@ -95,11 +95,15 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
          {
             // FIXME: Textbox labels have inconsistent capitalization
             mTotal = S.Id(ID_TOTAL).AddTextBox(_("&Total space used"), wxT("0"), 10);
-            mTotal->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
+            mTotal->Bind(wxEVT_KEY_DOWN,
+                            // ignore it
+                            [](wxEvent&){});
             S.AddVariableText( {} )->Hide();
 
             mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo Levels Available"), wxT("0"), 10);
-            mAvail->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
+            mAvail->Bind(wxEVT_KEY_DOWN,
+                            // ignore it
+                            [](wxEvent&){});
             S.AddVariableText( {} )->Hide();
 
             S.AddPrompt(_("&Levels To Discard"));
@@ -117,7 +121,9 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
             mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
 
             mClipboard = S.AddTextBox(_("Clipboard space used"), wxT("0"), 10);
-            mClipboard->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
+            mClipboard->Bind(wxEVT_KEY_DOWN,
+                                // ignore it
+                                [](wxEvent&){});
             S.Id(ID_DISCARD_CLIPBOARD).AddButton(_("Discard"));
          }
          S.EndMultiColumn();
@@ -293,10 +299,4 @@ void HistoryWindow::OnSize(wxSizeEvent & WXUNUSED(event))
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    if (mList->GetItemCount() > 0)
       mList->EnsureVisible(mSelected);
-}
-
-void HistoryWindow::OnChar(wxKeyEvent &event)
-{
-   event.Skip(false);
-   return;
 }

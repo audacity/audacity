@@ -62,7 +62,6 @@ private:
    void results();
    void OnReset(wxCommandEvent & event);
    void OnClose(wxCommandEvent & event);
-   void OnChar(wxKeyEvent &event);
 
    wxTextCtrl *mForegroundRMSText;
    wxTextCtrl *mBackgroundRMSText;

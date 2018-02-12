@@ -172,7 +172,6 @@ private:
    double splint(double x[], double y[], size_t n, double y2[], double xr);
 
    void OnSize( wxSizeEvent & event );
-   void OnErase( wxEraseEvent & event );
    void OnSlider( wxCommandEvent & event );
    void OnInterp( wxCommandEvent & event );
    void OnSliderM( wxCommandEvent & event );

@@ -152,6 +152,20 @@ BEGIN_EVENT_TABLE(ContrastDialog,wxDialogWrapper)
    EVT_BUTTON(wxID_CANCEL, ContrastDialog::OnClose)
 END_EVENT_TABLE()
 
+static void OnChar(wxKeyEvent & event)
+{
+   // Is this still required?
+   if (event.GetKeyCode() == WXK_TAB) {
+      // pass to next handler
+      event.Skip();
+      return;
+   }
+
+   // ignore any other key
+   event.Skip(false);
+   return;
+}
+
 /* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
 ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                            const wxString & title,
@@ -235,7 +249,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
          mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
-         mForegroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mForegroundRMSText->Bind(wxEVT_KEY_DOWN, OnChar);
 
          //Background
          S.AddFixedText(_("&Background:"));
@@ -267,7 +281,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
          mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
-         mBackgroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mBackgroundRMSText->Bind(wxEVT_KEY_DOWN, OnChar);
       }
       S.EndMultiColumn();
    }
@@ -280,11 +294,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       {
          S.AddFixedText(_("Co&ntrast Result:"));
          mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox( {}, wxT(""), 50);
-         mPassFailText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mPassFailText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
          S.AddFixedText(_("&Difference:"));
          mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox( {}, wxT(""), 50);
-         mDiffText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mDiffText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }
       S.EndMultiColumn();
@@ -587,16 +601,4 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
    mBackgroundRMSText->ChangeValue(wxT(""));
    mPassFailText->ChangeValue(wxT(""));
    mDiffText->ChangeValue(wxT(""));
-}
-
-void ContrastDialog::OnChar(wxKeyEvent & event)
-{
-   // Is this still required?
-   if (event.GetKeyCode() == WXK_TAB) {
-      event.Skip();
-      return;
-   }
-
-   event.Skip(false);
-   return;
 }

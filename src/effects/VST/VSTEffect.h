@@ -195,7 +195,6 @@ private:
 
    // UI
    void OnSlider(wxCommandEvent & evt);
-   void OnSize(wxSizeEvent & evt);
    void OnSizeWindow(wxCommandEvent & evt);
    void OnUpdateDisplay(wxCommandEvent & evt);
 
