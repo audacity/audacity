@@ -147,14 +147,12 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    mList->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 
-   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-                     wxCommandEventHandler(HistoryWindow::OnAudioIO),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                     &HistoryWindow::OnAudioIO,
                      this);
 
-   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(HistoryWindow::OnAudioIO),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &HistoryWindow::OnAudioIO,
                      this);
 }
 

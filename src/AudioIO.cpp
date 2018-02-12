@@ -480,9 +480,9 @@ using std::min;
 std::unique_ptr<AudioIO> ugAudioIO;
 AudioIO *gAudioIO{};
 
-DEFINE_EVENT_TYPE(EVT_AUDIOIO_PLAYBACK);
-DEFINE_EVENT_TYPE(EVT_AUDIOIO_CAPTURE);
-DEFINE_EVENT_TYPE(EVT_AUDIOIO_MONITOR);
+wxDEFINE_EVENT(EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
+wxDEFINE_EVENT(EVT_AUDIOIO_CAPTURE, wxCommandEvent);
+wxDEFINE_EVENT(EVT_AUDIOIO_MONITOR, wxCommandEvent);
 
 // static
 int AudioIO::mNextStreamToken = 0;

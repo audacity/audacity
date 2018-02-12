@@ -2021,9 +2021,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxToolTip::Enable(true);
 #endif
 
-   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(AdornedRulerPanel::OnCapture),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &AdornedRulerPanel::OnCapture,
                      this);
 }
 

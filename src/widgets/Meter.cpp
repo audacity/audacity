@@ -176,7 +176,7 @@ bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 const static int gap = 2;
 
 // Event used to notify all meters of preference changes
-DEFINE_EVENT_TYPE(EVT_METER_PREFERENCES_CHANGED);
+wxDEFINE_EVENT(EVT_METER_PREFERENCES_CHANGED, wxCommandEvent);
 
 const static wxChar *PrefStyles[] =
 {
@@ -270,19 +270,16 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxSOLID);
 
    // Register for our preference update event
-   wxTheApp->Connect(EVT_METER_PREFERENCES_CHANGED,
-                     wxCommandEventHandler(MeterPanel::OnMeterPrefsUpdated),
-                     NULL,
+   wxTheApp->Bind(EVT_METER_PREFERENCES_CHANGED,
+                     &MeterPanel::OnMeterPrefsUpdated,
                      this);
 
    if (mIsInput) {
-      wxTheApp->Connect(EVT_AUDIOIO_MONITOR,
-                        wxCommandEventHandler(MeterPanel::OnAudioIOStatus),
-                        NULL,
+      wxTheApp->Bind(EVT_AUDIOIO_MONITOR,
+                        &MeterPanel::OnAudioIOStatus,
                         this);
-      wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                        wxCommandEventHandler(MeterPanel::OnAudioIOStatus),
-                        NULL,
+      wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                        &MeterPanel::OnAudioIOStatus,
                         this);
 
       mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxSOLID);
@@ -294,9 +291,8 @@ MeterPanel::MeterPanel(AudacityProject *project,
    }
    else {
       // Register for AudioIO events
-      wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-                        wxCommandEventHandler(MeterPanel::OnAudioIOStatus),
-                        NULL,
+      wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                        &MeterPanel::OnAudioIOStatus,
                         this);
 
       mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxSOLID);

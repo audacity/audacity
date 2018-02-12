@@ -928,9 +928,8 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mTracks = mProject->GetTracks();
 
    // Events from the project don't propagate directly to this other frame, so...
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(MixerBoard::OnTimer),
-      NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+      &MixerBoard::OnTimer,
       this);
 }
 

@@ -772,9 +772,9 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 // is managing.  Any other classes that may be interested in get these updates
 // should use TrackList::Connect() or TrackList::Bind().
 //
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_PERMUTED);
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZING);
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_DELETION);
+wxDEFINE_EVENT(EVT_TRACKLIST_PERMUTED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_TRACKLIST_RESIZING, wxCommandEvent);
+wxDEFINE_EVENT(EVT_TRACKLIST_DELETION, wxCommandEvent);
 
 // same value as in the default constructed TrackId:
 long TrackList::sCounter = -1;
