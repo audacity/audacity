@@ -15216,11 +15216,6 @@ msgstr "خطأ: %hs عند خط %lu"
 msgid "Could not load file: \"%s\""
 msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
-#, fuzzy
-#~| msgid "Error"
-#~ msgid "Errors"
-#~ msgstr "خطأ"
-
 #~ msgid "In Memoriam"
 #~ msgstr "إحياء لذكرى"
 
