@@ -556,9 +556,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
          mEffects = S.Id(ID_List).AddListControlReportMode();
-         mEffects->Connect(wxEVT_KEY_DOWN,
-                           wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
-                           NULL,
+         mEffects->Bind(wxEVT_KEY_DOWN,
+                           &PluginRegistrationDialog::OnListChar,
                            this);
 #if wxUSE_ACCESSIBILITY
          mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));

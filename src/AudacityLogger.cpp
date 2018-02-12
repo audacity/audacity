@@ -166,42 +166,28 @@ void AudacityLogger::Show(bool show)
    frame->Layout();
 
    // Hook into the frame events
-   frame->Connect(wxEVT_CLOSE_WINDOW,
+   frame->Bind(wxEVT_CLOSE_WINDOW,
                   wxCloseEventHandler(AudacityLogger::OnCloseWindow),
-                  NULL,
                   this);
 
-   frame->Connect(LoggerID_Save,
-                  wxEVT_COMMAND_MENU_SELECTED,
-                  wxCommandEventHandler(AudacityLogger::OnSave),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Clear,
-                  wxEVT_COMMAND_MENU_SELECTED,
-                  wxCommandEventHandler(AudacityLogger::OnClear),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Close,
-                  wxEVT_COMMAND_MENU_SELECTED,
-                  wxCommandEventHandler(AudacityLogger::OnClose),
-                  NULL,
-                  this);
-
-   frame->Connect(LoggerID_Save,
-                  wxEVT_COMMAND_BUTTON_CLICKED,
-                  wxCommandEventHandler(AudacityLogger::OnSave),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Clear,
-                  wxEVT_COMMAND_BUTTON_CLICKED,
-                  wxCommandEventHandler(AudacityLogger::OnClear),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Close,
-                  wxEVT_COMMAND_BUTTON_CLICKED,
-                  wxCommandEventHandler(AudacityLogger::OnClose),
-                  NULL,
-                  this);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
+                  &AudacityLogger::OnSave,
+                  this, LoggerID_Save);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
+                  &AudacityLogger::OnClear,
+                  this, LoggerID_Clear);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
+                  &AudacityLogger::OnClose,
+                  this, LoggerID_Close);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
+                  &AudacityLogger::OnSave,
+                  this, LoggerID_Save);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
+                  &AudacityLogger::OnClear,
+                  this, LoggerID_Clear);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
+                  &AudacityLogger::OnClose,
+                  this, LoggerID_Close);
 
    mFrame = std::move( frame );
 

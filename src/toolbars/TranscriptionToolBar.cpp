@@ -200,13 +200,11 @@ void TranscriptionToolBar::Populate()
    mPlaySpeedSlider->Set(mPlaySpeed / 100.0);
    mPlaySpeedSlider->SetLabel(_("Playback Speed"));
    Add( mPlaySpeedSlider, 0, wxALIGN_CENTER );
-   mPlaySpeedSlider->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(TranscriptionToolBar::OnFocus),
-                 NULL,
+   mPlaySpeedSlider->Bind(wxEVT_SET_FOCUS,
+                 &TranscriptionToolBar::OnFocus,
                  this);
-   mPlaySpeedSlider->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(TranscriptionToolBar::OnFocus),
-                 NULL,
+   mPlaySpeedSlider->Bind(wxEVT_KILL_FOCUS,
+                 &TranscriptionToolBar::OnFocus,
                  this);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION

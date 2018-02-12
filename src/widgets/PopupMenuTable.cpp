@@ -21,9 +21,9 @@ PopupMenuTable::Menu::~Menu()
 void PopupMenuTable::Menu::Extend(PopupMenuTable *pTable)
 {
    auto connect = [&]( const PopupMenuTable::Entry *pEntry ) {
-      this->pParent->Connect
-         (pEntry->id, wxEVT_COMMAND_MENU_SELECTED,
-         pEntry->func, NULL, pTable);
+      this->pParent->Bind
+         (wxEVT_COMMAND_MENU_SELECTED,
+         pEntry->func, pTable, pEntry->id);
    };
 
    for (const PopupMenuTable::Entry *pEntry = &*pTable->Get().begin();
@@ -69,8 +69,8 @@ void PopupMenuTable::Menu::DisconnectTable(PopupMenuTable *pTable)
    for (const PopupMenuTable::Entry *pEntry = &*pTable->Get().begin();
       pEntry->IsValid(); ++pEntry) {
       if ( pEntry->IsItem() )
-         pParent->Disconnect( pEntry->id, wxEVT_COMMAND_MENU_SELECTED,
-         pEntry->func, NULL, pTable );
+         pParent->Unbind( wxEVT_COMMAND_MENU_SELECTED,
+         pEntry->func, pTable, pEntry->id );
       else if ( pEntry->IsSubMenu() )
          // recur
          DisconnectTable(pEntry->subTable);
