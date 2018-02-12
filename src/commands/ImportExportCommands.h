@@ -22,7 +22,7 @@
 
 // Import
 
-#define IMPORT_PLUGIN_SYMBOL XO("Import")
+#define IMPORT_PLUGIN_SYMBOL XO("Import2")
 
 class ImportCommand : public AudacityCommand
 {
@@ -40,7 +40,7 @@ public:
    wxString mFileName;
 };
 
-#define EXPORT_PLUGIN_SYMBOL XO("Export")
+#define EXPORT_PLUGIN_SYMBOL XO("Export2")
 
 class ExportCommand : public AudacityCommand
 {

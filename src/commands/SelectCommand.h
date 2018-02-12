@@ -41,6 +41,10 @@ public:
 
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Audio_Selection");};
+
+   bool bHasT0;
+   bool bHasT1;
+
    double mT0;
    double mT1;
    bool mFromEnd;
@@ -57,6 +61,9 @@ public:
    bool Apply(const CommandContext & context) override;
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Audio_Selection");};
+
+   bool bHasFirstTrack;
+   bool bHasLastTrack;
 
    int mFirstTrack;
    int mLastTrack;

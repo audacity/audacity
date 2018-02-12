@@ -1592,21 +1592,26 @@ void AudacityProject::CreateMenusAndCommands()
       // whereas the short-form used here must not.
       // (If you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
       // you would have to use "Compareaudio" here.)
-      c->AddItem(wxT("Demo"), _("Just a Demo..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+//      c->AddItem(wxT("Demo"), _("Just a Demo..."), FN(OnAudacityCommand),
+//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("Screenshot"), _("Screenshot (Vanilla)..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Select"), _("Select..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+// Menu items not needed, since they are part of Select,
+//      c->AddItem(wxT("SelectTime"), _("Select Time..."), FN(OnAudacityCommand),
+//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+//      c->AddItem(wxT("SelectTracks"), _("Select Tracks..."), FN(OnAudacityCommand),
+//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Import2"), _("Import..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Export2"), _("Export..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("CompareAudio"), _("Compare Audio..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("GetPreference"), _("Get Preference..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("GetInfo"), _("Get Info..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SelectTime"), _("Select Time..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SelectTracks"), _("Select Tracks..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Select"), _("Select..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetPreference"), _("Set Preference..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
@@ -1618,8 +1623,9 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetTrack"), _("Set Track..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("ReloadPreferences"), _("&Reload Preferences..."), FN(OnReloadPreferences),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+// Menu item not needed, since it is part of SetPreference,
+//      c->AddItem(wxT("ReloadPreferences"), _("&Reload Preferences..."), FN(OnReloadPreferences),
+//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
 
 
       c->EndSubMenu();

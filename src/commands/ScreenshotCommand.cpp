@@ -617,6 +617,11 @@ void ScreenshotCommand::CaptureEffects(
 
 wxString ScreenshotCommand::MakeFileName(const wxString &path, const wxString &basename)
 {
+   // If the path is a full file name, then use it.
+   if( path.EndsWith( ".png" ) )
+      return path;
+
+   // Otherwise make up a file name that has not been used already.
    wxFileName prefixPath;
    prefixPath.AssignDir(path);
    wxString prefix = prefixPath.GetPath
