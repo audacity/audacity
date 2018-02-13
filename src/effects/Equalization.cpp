@@ -717,7 +717,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mSliders[i] = safenew wxSlider(mGraphicPanel, ID_Slider + i, 0, -20, +20,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
-            mSliders[i]->Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(EffectEqualization::OnErase));
+            mSliders[i]->Bind(wxEVT_ERASE_BACKGROUND,
+                              // ignore it
+                              [](wxEvent&){});
 #if wxUSE_ACCESSIBILITY
             wxString name;
             if( kThirdOct[i] < 1000.)
@@ -2590,11 +2592,6 @@ void EffectEqualization::OnSize(wxSizeEvent & event)
    }
 
    event.Skip();
-}
-
-void EffectEqualization::OnErase(wxEraseEvent & WXUNUSED(event))
-{
-   // Ignore it
 }
 
 void EffectEqualization::OnSlider(wxCommandEvent & event)

@@ -2755,6 +2755,24 @@ void VSTEffect::RemoveHandler()
 {
 }
 
+static void OnSize(wxSizeEvent & evt)
+{
+   evt.Skip();
+
+   // Once the parent dialog reaches its final size as indicated by
+   // a non-default minimum size, we set the maximum size to match.
+   // This is a bit of a hack to prevent VSTs GUI windows from resizing
+   // there's no real reason to allow it.  But, there should be a better
+   // way of handling it.
+   wxWindow *w = (wxWindow *) evt.GetEventObject();
+   wxSize sz = w->GetMinSize();
+
+   if (sz != wxDefaultSize)
+   {
+      w->SetMaxSize(sz);
+   }
+}
+
 void VSTEffect::BuildFancy()
 {
    // Turn the power on...some effects need this when the editor is open
@@ -2782,7 +2800,7 @@ void VSTEffect::BuildFancy()
 
    NeedEditIdle(true);
 
-   mDialog->Connect(wxEVT_SIZE, wxSizeEventHandler(VSTEffect::OnSize));
+   mDialog->Bind(wxEVT_SIZE, OnSize);
 
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -2965,24 +2983,6 @@ void VSTEffect::RefreshParameters(int skip)
       }
 
       mSliders[i]->SetName(name);
-   }
-}
-
-void VSTEffect::OnSize(wxSizeEvent & evt)
-{
-   evt.Skip();
-
-   // Once the parent dialog reaches it's final size as indicated by
-   // a non-default minimum size, we set the maximum size to match.
-   // This is a bit of a hack to prevent VSTs GUI windows from resizing
-   // there's no real reason to allow it.  But, there should be a better
-   // way of handling it.
-   wxWindow *w = (wxWindow *) evt.GetEventObject();
-   wxSize sz = w->GetMinSize();
-
-   if (sz != wxDefaultSize)
-   {
-      w->SetMaxSize(sz);
    }
 }
 

@@ -186,7 +186,7 @@ is time to refresh some aspect of the screen.
 #include "widgets/Ruler.h"
 #include <algorithm>
 
-DEFINE_EVENT_TYPE(EVT_TRACK_PANEL_TIMER)
+wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 /*
 
@@ -341,17 +341,14 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    GetProject()->Bind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTracks->Connect(EVT_TRACKLIST_RESIZING,
-                    wxCommandEventHandler(TrackPanel::OnTrackListResizing),
-                    NULL,
+   mTracks->Bind(EVT_TRACKLIST_RESIZING,
+                    &TrackPanel::OnTrackListResizing,
                     this);
-   mTracks->Connect(EVT_TRACKLIST_DELETION,
-                    wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
-                    NULL,
+   mTracks->Bind(EVT_TRACKLIST_DELETION,
+                    &TrackPanel::OnTrackListDeletion,
                     this);
-   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-                     wxCommandEventHandler(TrackPanel::OnPlayback),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                     &TrackPanel::OnPlayback,
                      this);
 }
 
@@ -359,20 +356,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 TrackPanel::~TrackPanel()
 {
    mTimer.Stop();
-
-   // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
-                       wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
-                       NULL,
-                       this);
-   mTracks->Disconnect(EVT_TRACKLIST_RESIZING,
-                       wxCommandEventHandler(TrackPanel::OnTrackListResizing),
-                       NULL,
-                       this);
-   wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
-                        wxCommandEventHandler(TrackPanel::OnPlayback),
-                        NULL,
-                        this);
 
    // This can happen if a label is being edited and the user presses
    // ALT+F4 or Command+Q

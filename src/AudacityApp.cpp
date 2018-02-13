@@ -240,7 +240,7 @@ It handles initialization and termination by subclassing wxApp.
 ////////////////////////////////////////////////////////////
 
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
-DEFINE_EVENT_TYPE(EVT_LANGUAGE_CHANGE);
+wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 #if 0
 #ifdef __WXGTK__

@@ -36,7 +36,6 @@ class KeyConfigPrefs final : public PrefsPanel
 {
 public:
    KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const wxString &name);
-   ~KeyConfigPrefs();
    bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;

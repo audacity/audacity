@@ -209,7 +209,6 @@ class ScrubbingOverlay final : public wxEvtHandler, public Overlay
 {
 public:
    ScrubbingOverlay(AudacityProject *project);
-   virtual ~ScrubbingOverlay();
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;

@@ -423,7 +423,6 @@ class PluginRegistrationDialog final : public wxDialogWrapper
 public:
    // constructors and destructors
    PluginRegistrationDialog(wxWindow *parent, EffectType type);
-   virtual ~PluginRegistrationDialog();
 
 private:
    void Populate();
@@ -501,14 +500,6 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType 
    Populate();
 }
 
-PluginRegistrationDialog::~PluginRegistrationDialog()
-{
-   mEffects->Disconnect(wxEVT_KEY_DOWN,
-                        wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
-                        NULL,
-                        this);
-}
-
 void PluginRegistrationDialog::Populate()
 {
    //------------------------- Main section --------------------
@@ -565,9 +556,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
          mEffects = S.Id(ID_List).AddListControlReportMode();
-         mEffects->Connect(wxEVT_KEY_DOWN,
-                           wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
-                           NULL,
+         mEffects->Bind(wxEVT_KEY_DOWN,
+                           &PluginRegistrationDialog::OnListChar,
                            this);
 #if wxUSE_ACCESSIBILITY
          mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));

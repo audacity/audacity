@@ -94,21 +94,17 @@ void MixerToolBar::Populate()
    Add(mOutputSlider, 0, wxALIGN_CENTER);
 
    // this bit taken from SelectionBar::Populate()
-   mInputSlider->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(MixerToolBar::OnFocus),
-                 NULL,
+   mInputSlider->Bind(wxEVT_SET_FOCUS,
+                 &MixerToolBar::OnFocus,
                  this);
-   mInputSlider->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(MixerToolBar::OnFocus),
-                 NULL,
+   mInputSlider->Bind(wxEVT_KILL_FOCUS,
+                 &MixerToolBar::OnFocus,
                  this);
-   mOutputSlider->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(MixerToolBar::OnFocus),
-                 NULL,
+   mOutputSlider->Bind(wxEVT_SET_FOCUS,
+                 &MixerToolBar::OnFocus,
                  this);
-   mOutputSlider->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(MixerToolBar::OnFocus),
-                 NULL,
+   mOutputSlider->Bind(wxEVT_KILL_FOCUS,
+                 &MixerToolBar::OnFocus,
                  this);
    // Show or hide the input slider based on whether it works
    mInputSlider->Enable(gAudioIO->InputMixerWorks());

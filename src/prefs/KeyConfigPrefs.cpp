@@ -89,37 +89,6 @@ KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
    }
 }
 
-KeyConfigPrefs::~KeyConfigPrefs()
-{
-   if (mKey)
-   {
-      mKey->Disconnect(wxEVT_KEY_DOWN,
-            wxKeyEventHandler(KeyConfigPrefs::OnHotkeyKeyDown),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_CHAR,
-            wxKeyEventHandler(KeyConfigPrefs::OnHotkeyChar),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_KILL_FOCUS,
-            wxFocusEventHandler(KeyConfigPrefs::OnHotkeyKillFocus),
-            NULL,
-            this);
-   }
-
-   if (mFilter)
-   {
-      mKey->Disconnect(wxEVT_KEY_DOWN,
-            wxKeyEventHandler(KeyConfigPrefs::OnFilterKeyDown),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_CHAR,
-            wxKeyEventHandler(KeyConfigPrefs::OnFilterChar),
-            NULL,
-            this);
-   }
-}
-
 void KeyConfigPrefs::Populate()
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
@@ -217,13 +186,11 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
                                         wxTE_PROCESS_ENTER);
                mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
-               mFilter->Connect(wxEVT_KEY_DOWN,
-                                wxKeyEventHandler(KeyConfigPrefs::OnFilterKeyDown),
-                                NULL,
+               mFilter->Bind(wxEVT_KEY_DOWN,
+                                &KeyConfigPrefs::OnFilterKeyDown,
                                 this);
-               mFilter->Connect(wxEVT_CHAR,
-                                wxKeyEventHandler(KeyConfigPrefs::OnFilterChar),
-                                NULL,
+               mFilter->Bind(wxEVT_CHAR,
+                                &KeyConfigPrefs::OnFilterChar,
                                 this);
             }
             S.AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
@@ -259,17 +226,14 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                   wxTE_PROCESS_ENTER);
 
             mKey->SetName(_("Short cut"));
-            mKey->Connect(wxEVT_KEY_DOWN,
-                          wxKeyEventHandler(KeyConfigPrefs::OnHotkeyKeyDown),
-                          NULL,
+            mKey->Bind(wxEVT_KEY_DOWN,
+                          &KeyConfigPrefs::OnHotkeyKeyDown,
                           this);
-            mKey->Connect(wxEVT_CHAR,
-                          wxKeyEventHandler(KeyConfigPrefs::OnHotkeyChar),
-                          NULL,
+            mKey->Bind(wxEVT_CHAR,
+                          &KeyConfigPrefs::OnHotkeyChar,
                           this);
-            mKey->Connect(wxEVT_KILL_FOCUS,
-                          wxFocusEventHandler(KeyConfigPrefs::OnHotkeyKillFocus),
-                          NULL,
+            mKey->Bind(wxEVT_KILL_FOCUS,
+                          &KeyConfigPrefs::OnHotkeyKillFocus,
                           this);
          }
          S.AddWindow(mKey);

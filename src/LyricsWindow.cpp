@@ -126,19 +126,10 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //}
 
    // Events from the project don't propagate directly to this other frame, so...
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(LyricsWindow::OnTimer),
-      NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+      &LyricsWindow::OnTimer,
       this);
    Center();
-}
-
-LyricsWindow::~LyricsWindow()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(LyricsWindow::OnTimer),
-      NULL,
-      this);
 }
 
 void LyricsWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))

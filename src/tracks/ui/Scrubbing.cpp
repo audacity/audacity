@@ -198,9 +198,9 @@ Scrubber::Scrubber(AudacityProject *project)
 
 {
    if (wxTheApp)
-      wxTheApp->Connect
+      wxTheApp->Bind
       (wxEVT_ACTIVATE_APP,
-      wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
+       &Scrubber::OnActivateOrDeactivateApp, this);
    mProject->PushEventHandler(&mForwarder);
 }
 
@@ -212,10 +212,6 @@ Scrubber::~Scrubber()
 #endif
 
    mProject->PopEventHandler();
-   if (wxTheApp)
-      wxTheApp->Disconnect
-      (wxEVT_ACTIVATE_APP,
-      wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
 }
 
 namespace {
@@ -730,17 +726,8 @@ ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
    , mLastScrubSpeedText()
    , mNextScrubSpeedText()
 {
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ScrubbingOverlay::OnTimer),
-      NULL,
-      this);
-}
-
-ScrubbingOverlay::~ScrubbingOverlay()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ScrubbingOverlay::OnTimer),
-      NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+      &ScrubbingOverlay::OnTimer,
       this);
 }
 

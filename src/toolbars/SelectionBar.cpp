@@ -323,13 +323,11 @@ void SelectionBar::Populate()
    }
 #endif
 
-   mRateText->Connect(wxEVT_SET_FOCUS,
-                      wxFocusEventHandler(SelectionBar::OnFocus),
-                      NULL,
+   mRateText->Bind(wxEVT_SET_FOCUS,
+                      &SelectionBar::OnFocus,
                       this);
-   mRateText->Connect(wxEVT_KILL_FOCUS,
-                      wxFocusEventHandler(SelectionBar::OnFocus),
-                      NULL,
+   mRateText->Bind(wxEVT_KILL_FOCUS,
+                      &SelectionBar::OnFocus,
                       this);
 
 #ifdef __WXGTK__
@@ -361,13 +359,11 @@ void SelectionBar::Populate()
    //mSnapTo->SetForegroundColour( clrText2 );
    mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
 
-   mSnapTo->Connect(wxEVT_SET_FOCUS,
-                    wxFocusEventHandler(SelectionBar::OnFocus),
-                    NULL,
+   mSnapTo->Bind(wxEVT_SET_FOCUS,
+                    &SelectionBar::OnFocus,
                     this);
-   mSnapTo->Connect(wxEVT_KILL_FOCUS,
-                    wxFocusEventHandler(SelectionBar::OnFocus),
-                    NULL,
+   mSnapTo->Bind(wxEVT_KILL_FOCUS,
+                    &SelectionBar::OnFocus,
                     this);
 
    AddVLine( mainSizer );

@@ -3827,14 +3827,12 @@ void EffectUIHost::InitializeRealtime()
    {
       EffectManager::Get().RealtimeAddEffect(mEffect);
 
-      wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-                        wxCommandEventHandler(EffectUIHost::OnPlayback),
-                        NULL,
+      wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                        &EffectUIHost::OnPlayback,
                         this);
 
-      wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                        wxCommandEventHandler(EffectUIHost::OnCapture),
-                        NULL,
+      wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                        &EffectUIHost::OnCapture,
                         this);
 
       mInitialized = true;
@@ -3845,16 +3843,6 @@ void EffectUIHost::CleanupRealtime()
 {
    if (mSupportsRealtime && mInitialized)
    {
-      wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
-                           wxCommandEventHandler(EffectUIHost::OnPlayback),
-                           NULL,
-                           this);
-
-      wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
-                           wxCommandEventHandler(EffectUIHost::OnCapture),
-                           NULL,
-                           this);
-
       EffectManager::Get().RealtimeRemoveEffect(mEffect);
 
       mInitialized = false;

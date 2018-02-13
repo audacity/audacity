@@ -596,15 +596,18 @@ struct TrackListEvent : public wxCommandEvent
 };
 
 // Posted when tracks are reordered but otherwise unchanged.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_PERMUTED, -1);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_PERMUTED, wxCommandEvent);
 
 // Posted when some track was added or changed its height.
 // Cast to TrackListEvent and examine mpTrack to retrieve it.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZING, -1);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_RESIZING, wxCommandEvent);
 
 // Posted when a track has been deleted from a tracklist.
 // Also posted when one track replaces another
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_DELETION, -1);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACKLIST_DELETION, wxCommandEvent);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
 {

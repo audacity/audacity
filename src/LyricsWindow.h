@@ -23,7 +23,6 @@ class LyricsWindow final : public wxFrame {
 
  public:
    LyricsWindow(AudacityProject* parent);
-   virtual ~LyricsWindow();
 
    LyricsPanel *GetLyricsPanel() { return mLyricsPanel; };
 

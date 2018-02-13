@@ -382,15 +382,13 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    };
 
    // Hook the creation event...only needed on GTK, but doesn't hurt for all
-   mIndicator->Connect( wxEVT_CREATE,
-                        wxWindowCreateEventHandler( ToolManager::OnIndicatorCreate ),
-                        NULL,
+   mIndicator->Bind( wxEVT_CREATE,
+                        &ToolManager::OnIndicatorCreate,
                         this );
 
    // Hook the paint event...needed for all
-   mIndicator->Connect( wxEVT_PAINT,
-                        wxPaintEventHandler( ToolManager::OnIndicatorPaint ),
-                        NULL,
+   mIndicator->Bind( wxEVT_PAINT,
+                        &ToolManager::OnIndicatorPaint,
                         this );
 
    // It's a little shy
@@ -398,17 +396,14 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 
    // Hook the parents mouse events...using the parent helps greatly
    // under GTK
-   mParent->Connect( wxEVT_LEFT_UP,
-                     wxMouseEventHandler( ToolManager::OnMouse ),
-                     NULL,
+   mParent->Bind( wxEVT_LEFT_UP,
+                     &ToolManager::OnMouse,
                      this );
-   mParent->Connect( wxEVT_MOTION,
-                     wxMouseEventHandler( ToolManager::OnMouse ),
-                     NULL,
+   mParent->Bind( wxEVT_MOTION,
+                     &ToolManager::OnMouse,
                      this );
-   mParent->Connect( wxEVT_MOUSE_CAPTURE_LOST,
-                     wxMouseCaptureLostEventHandler( ToolManager::OnCaptureLost ),
-                     NULL,
+   mParent->Bind( wxEVT_MOUSE_CAPTURE_LOST,
+                     &ToolManager::OnCaptureLost,
                      this );
 
    // Create the top and bottom docks
@@ -458,30 +453,6 @@ ToolManager::~ToolManager()
    // crashing when running with Jaws on Windows 10 1703.
    mTopDock->GetConfiguration().Clear();
    mBotDock->GetConfiguration().Clear();
-
-   // Remove handlers from parent
-   mParent->Disconnect( wxEVT_LEFT_UP,
-                        wxMouseEventHandler( ToolManager::OnMouse ),
-                        NULL,
-                        this );
-   mParent->Disconnect( wxEVT_MOTION,
-                        wxMouseEventHandler( ToolManager::OnMouse ),
-                        NULL,
-                        this );
-   mParent->Disconnect( wxEVT_MOUSE_CAPTURE_LOST,
-                        wxMouseCaptureLostEventHandler( ToolManager::OnCaptureLost ),
-                        NULL,
-                        this );
-
-   // Remove our event handlers
-   mIndicator->Disconnect( wxEVT_CREATE,
-                           wxWindowCreateEventHandler( ToolManager::OnIndicatorCreate ),
-                           NULL,
-                           this );
-   mIndicator->Disconnect( wxEVT_PAINT,
-                           wxPaintEventHandler( ToolManager::OnIndicatorPaint ),
-                           NULL,
-                           this );
 }
 
 // This table describes the default configuration of the toolbars as

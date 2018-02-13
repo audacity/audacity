@@ -104,9 +104,8 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-                     wxCommandEventHandler(PlayIndicatorOverlay::OnTimer),
-                     NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+                     &PlayIndicatorOverlay::OnTimer,
                      this);
 }
 
@@ -117,11 +116,6 @@ PlayIndicatorOverlay::~PlayIndicatorOverlay()
       if(ruler)
          ruler->RemoveOverlay(mPartner.get());
    }
-
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-                        wxCommandEventHandler(PlayIndicatorOverlay::OnTimer),
-                        NULL,
-                        this);
 }
 
 void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)

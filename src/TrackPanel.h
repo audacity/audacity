@@ -78,7 +78,8 @@ enum class UndoPush : unsigned char;
 #pragma warning( disable: 4251 )
 #endif
 
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 enum {
    kTimerInterval = 50, // milliseconds

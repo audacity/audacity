@@ -793,7 +793,6 @@ public:
    {
    public:
       explicit PlaybackScroller(AudacityProject *project);
-      ~PlaybackScroller();
 
       enum class Mode {
          Off,
