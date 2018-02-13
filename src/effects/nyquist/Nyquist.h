@@ -96,6 +96,7 @@ public:
 
    // EffectClientInterface implementation
 
+   bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandAutomationParameters & parms) override;
    bool SetAutomationParameters(CommandAutomationParameters & parms) override;
 

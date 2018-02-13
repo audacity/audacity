@@ -273,6 +273,70 @@ bool NyquistEffect::IsDefault()
 }
 
 // EffectClientInterface implementation
+bool NyquistEffect::DefineParams( ShuttleParams & S )
+{
+   // For now we assume Nyquist can do get and set better than DefineParams can,
+   // And so we ONLY use it for geting the signature.
+   auto pGa = dynamic_cast<ShuttleGetAutomation*>(&S);
+   if( pGa ){
+      GetAutomationParameters( *(pGa->mpEap) );
+      return true;
+   }
+   auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
+   if( pSa ){
+      SetAutomationParameters( *(pSa->mpEap) );
+      return true;
+   }
+   auto pSd  = dynamic_cast<ShuttleGetDefinition*>(&S);
+   if( pSd == nullptr )
+      return true;
+   //wxASSERT( pSd );
+
+   if (mExternal)
+      return true;
+
+   if (mIsPrompt)
+   {
+      S.Define( mInputCmd, KEY_Command, "" );
+      S.Define( mVersion, KEY_Version, 3 );
+      return true;
+   }
+
+   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   {
+      NyqControl & ctrl = mControls[c];
+      double d = ctrl.val;
+
+      if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
+      {
+         d = GetCtrlValue(ctrl.valStr);
+      }
+
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+      {
+         S.Define( d, static_cast<const wxChar*>( ctrl.var.c_str() ), (double)0.0, ctrl.low, ctrl.high, 1.0);
+      }
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
+      {
+         int x=d;
+         S.Define( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, ctrl.low, ctrl.high, 1);
+         //parms.Write(ctrl.var, (int) d);
+      }
+      else if (ctrl.type == NYQ_CTRL_CHOICE)
+      {
+         wxArrayString choices = ParseChoice(ctrl);
+         int x=d;
+         //parms.WriteEnum(ctrl.var, (int) d, choices);
+         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, choices );
+      }
+      else if (ctrl.type == NYQ_CTRL_STRING)
+      {
+         S.Define( ctrl.valStr, ctrl.var, "" , ctrl.lowStr, ctrl.highStr );
+         //parms.Write(ctrl.var, ctrl.valStr);
+      }
+   }
+   return true;
+}
 
 bool NyquistEffect::GetAutomationParameters(CommandAutomationParameters & parms)
 {
