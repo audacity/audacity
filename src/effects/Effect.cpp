@@ -1095,8 +1095,9 @@ bool Effect::SetAutomationParameters(const wxString & parms)
             preset
          )
       );
-
-      return false;
+      // We are using defualt settings and we still wish to continue.
+      return true;
+      //return false;
    }
 
    if (!mUIDialog)
