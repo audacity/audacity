@@ -488,6 +488,8 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 bool NyquistEffect::Process()
 {
    bool success = true;
+
+   int nEffectsSoFar = nEffectsDone;
    mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
@@ -790,7 +792,11 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
       dlog.ShowModal();
    }
 
-   ReplaceProcessedTracks(success);
+   // Has rug been pulled from under us by some effect done within Nyquist??
+   if( nEffectsSoFar == nEffectsDone )
+      ReplaceProcessedTracks(success);
+   else
+      ReplaceProcessedTracks(false); // Do not use the results.
 
    if (!mProjectChanged)
       em.SetSkipStateFlag(true);
