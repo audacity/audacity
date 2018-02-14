@@ -52,6 +52,7 @@ ShuttleGui.
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"
+#include "../widgets/HelpSystem.h"
 
 #include "../commands/CommandTargets.h"
 
@@ -256,6 +257,8 @@ int AudacityCommand::MessageBox(const wxString& message, long style, const wxStr
 
 BEGIN_EVENT_TABLE(AudacityCommandDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudacityCommandDialog::OnOk)
+   EVT_BUTTON(wxID_HELP, AudacityCommandDialog::OnHelp)
+   EVT_BUTTON(wxID_CANCEL, AudacityCommandDialog::OnCancel)
 END_EVENT_TABLE()
 
 AudacityCommandDialog::AudacityCommandDialog(wxWindow * parent,
@@ -269,7 +272,7 @@ AudacityCommandDialog::AudacityCommandDialog(wxWindow * parent,
    mType = type;
    wxASSERT( pCommand );
    mpCommand = pCommand;
-   mAdditionalButtons = additionalButtons;
+   mAdditionalButtons = additionalButtons |eCancelButton | eHelpButton;
 }
 
 bool AudacityCommandDialog::Init()
@@ -339,4 +342,14 @@ void AudacityCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
 {
    EndModal(false);
 }
+
+void AudacityCommandDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   if( mpCommand )
+   {
+      // otherwise use ShowHelp
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mpCommand->ManualPage(), true);
+   }
+}
+
 

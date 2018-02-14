@@ -172,6 +172,7 @@ public:
    virtual void PopulateOrExchange(ShuttleGui & S);
    virtual void OnOk(wxCommandEvent & evt);
    virtual void OnCancel(wxCommandEvent & evt);
+   virtual void OnHelp(wxCommandEvent & evt);
 
 private:
    int mType;
