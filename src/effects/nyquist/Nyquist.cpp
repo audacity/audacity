@@ -859,8 +859,10 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
    // Has rug been pulled from under us by some effect done within Nyquist??
    if( nEffectsSoFar == nEffectsDone )
       ReplaceProcessedTracks(success);
-   else
+   else{
       ReplaceProcessedTracks(false); // Do not use the results.
+      mT1 = mT0 - 1.0;// And don't use the times either, in resetting the selection  (make them bogus).
+   }
 
    if (!mProjectChanged)
       em.SetSkipStateFlag(true);

@@ -269,6 +269,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                   long style = DefaultMessageBoxStyle,
                   const wxString& titleStr = wxString{});
 
+   static void IncEffectCounter(){ nEffectsDone++;};
+
 //
 // protected virtual methods
 //

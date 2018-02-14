@@ -1266,7 +1266,7 @@ bool Effect::DoEffect(wxWindow *parent,
       returnVal = Process();
    }
 
-   if (returnVal)
+   if (returnVal && (mT1 >= mT0 ))
    {
       selectedRegion->setTimes(mT0, mT1);
    }

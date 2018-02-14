@@ -61,6 +61,10 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    if( !bHasT0 && !bHasT1 )
       return true;
 
+   // Count selection as a do-nothing effect.
+   // Used to invalidate cached selection and tracks.
+   Effect::IncEffectCounter();
+
    if( mFromEnd ){
       double TEnd = context.GetProject()->GetTracks()->GetEndTime();
       context.GetProject()->mViewInfo.selectedRegion.setTimes(TEnd - mT0, TEnd - mT1);
@@ -110,6 +114,11 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
 {
    if( !bHasFirstTrack && !bHasLastTrack )
       return true;
+
+   // Count selection as a do-nothing effect.
+   // Used to invalidate cached selection and tracks.
+   Effect::IncEffectCounter();
+
    int index = 0;
    TrackList *tracks = context.GetProject()->GetTracks();
    int last = wxMax( mFirstTrack, mLastTrack );
