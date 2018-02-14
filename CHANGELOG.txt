@@ -1,5 +1,108 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 2.2.1:
+
+Improvements
+
+    * Waveform colorways
+      You can optionally change the colorway of the waveforms displayed in your project.
+      The setting is per track and not per project so you can have multiple colorways
+          in the same project.
+    * "Save Other" reverts to "Export" in the File menu
+      When we made the menu changes for 2.2.0 we introduced an entry into the File menu
+      called "Save Other" which led to a sub-menu for exporting various audio formats.
+      Many users were confused by this change and found it hard to find where they could
+      export audio from. So for 2.2.1 we have changed that menu entry to be File > Export.
+
+Bug Fixes
+
+   * Release 2.2.1 was mainly a maintenance release.
+     Soon after the release of 2.2.0 we discovered some problematical bugs in Audacity:
+       Bug #1767 - Opening a second project from Mac's Finder produces a second
+         inaccessible instance of Audacity
+       Bug #1770 - Crash applying certain chain files
+       Bug #1783 - Preview fails when selection extends before zero
+       Bug #1787 - Auto-scroll stopped working in 2.2.0
+       Bug #1765 - Using File > Open to import audio gives wrong zoom level
+         and no scroll bar slider
+
+
+Changes in version 2.2.0:
+
+    * Four Selectable themes provided, with new 'Light' theme as default,
+      plus option to customize
+    * Many menu changes:
+        * Menus Reorganized
+        * Extended menu bar provided
+        * New keyboard commands for working with clips
+    * Help buttons ? in Preferences, Effects, Generators and Analyzers - and
+      other places
+    * Non-Greying out of effects when no selection (and explanatory dialog
+      with help button)
+    * Playback of MIDI (and Allegro) files imported into Note Tracks is
+      now available.
+    * 'Center' option in Selection Toolbar
+    * Stem plots
+    * Major overhaul to documentation/manual including many new images and
+      streamlined text on landing pages for in-program help.
+
+Other Changes
+
+    * Append-record is now the default (use Shift + Record for old behavior,
+	to record on a new track)
+    * The Esc key now cancels all click-and-drag actions. It also chooses among
+      overlapping mouse click targets, which is especially useful in the Multi-Tool.
+    * Sync-Lock button removed (use menu item or keyboard shortcut instead)
+    * New preferences and preference pages
+    * Overhaul of much code:
+        * Overhaul of envelope handling code to deal with some anomalies
+        * Overhaul of exception handling for greater safety
+   *  New Logo
+
+Bug Fixes
+
+   * Major work on bug fixing. 198 bugs that were in 2.1.3 were fixed for 2.2.0.
+        * The most serious bug fixed this time round was bug 437 which was
+          about what happens when Audacity is recording and runs out of storage.
+        * Most of the bugs fixed were more minor, such as bug 463 which was
+          about a case in which the numbering on the timeline could display
+          incorrect times.
+
+
+Changes in version 2.1.3:
+
+ * Interface:
+   * (macOS) Support for horizontal scroll on Magic Mouse / Trackpad and for
+     Trackpad pinch/expand zoom gestures.
+   * Pinned option on waveform makes waveform move and recording/playing head
+     stay still.
+   * Timer Record options to save/export/exit after recording.
+   * Scrub Ruler and optional Scrub Toolbar.
+   * New shortcuts ALT+RIGHT and ALT+LEFT (move to labels without editing).
+
+ * Effects:
+   * Effects no longer grayed out when paused.
+   * New Distortion effect (replaces Leveller).
+   * SBSMS (higher quality but slower) option on Change Tempo / Change Pitch
+     effects.
+   * New Rhythm Track generator (replaces Click Track).
+   * New Generator for Sample Data Import.
+   * Nyquist effects now significantly faster.
+
+ * Other Changes:
+   * Upgraded the PortAudio library to v19 rev r1966.  This gives Audacity
+     Windows 10 support.
+   * (Windows) DirectSound now records 24-bit samples.
+   * (macOS) Audacity.app now has its resources inside it rather than in a
+     separate folder, so installation to /Applications/ is cleaner.
+   * (macOS) Audacity 2.1.3 provides partial support for Sierra. Details at
+     http://wiki.audacityteam.org/wiki/Partial_Support_for_Mac_Sierra_in_2.1.3 .
+
+Bug fixes:
+
+ Over 60 bugs fixed, including five longstanding bugs.
+
+
 Changes in version 2.1.2:
    
  * Interface:  
