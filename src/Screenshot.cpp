@@ -20,7 +20,6 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "MemoryX.h"
 #include "commands/ScreenshotCommand.h"
 #include "commands/CommandTargets.h"
-#include "commands/CommandDirectory.h"
 #include "commands/CommandContext.h"
 #include <wx/defs.h>
 #include <wx/event.h>
@@ -251,8 +250,6 @@ std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
       std::make_unique<CommandOutputTargets>(std::make_unique<NullProgressTarget>(),
                               std::make_shared<StatusBarTarget>(*mStatus),
                               std::make_shared<MessageBoxTarget>());
-   //OldStyleCommandType *type = CommandDirectory::Get()->LookUp(wxT("Screenshot"));
-   //wxASSERT_MSG(type != NULL, wxT("Screenshot command doesn't exist!"));
    return std::make_unique<ScreenshotCommand>();//*type, std::move(output), this);
 }
 

@@ -22,6 +22,7 @@ modelled on BuiltinEffectsModule
 #include "../effects/EffectManager.h"
 #include "Demo.h"
 #include "../Experimental.h"
+#include "../commands/MessageCommand.h"
 #include "../commands/ScreenshotCommand.h"
 #include "../commands/CompareAudioCommand.h"
 #include "../commands/SetTrackInfoCommand.h"
@@ -43,6 +44,7 @@ modelled on BuiltinEffectsModule
 //
 #define COMMAND_LIST \
    COMMAND( DEMO,              DemoCommand, () )           \
+   COMMAND( MESSAGE,           MessageCommand,   () )      \
    COMMAND( SCREENSHOT,        ScreenshotCommand,   () )   \
    COMMAND( COMPARE_AUDIO,     CompareAudioCommand, () )   \
    COMMAND( SET_TRACK,         SetTrackCommand, () )       \

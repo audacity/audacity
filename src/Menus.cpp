@@ -1596,6 +1596,8 @@ void AudacityProject::CreateMenusAndCommands()
       // you would have to use "Compareaudio" here.)
 //      c->AddItem(wxT("Demo"), _("Just a Demo..."), FN(OnAudacityCommand),
 //         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Message"), _("Message..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("Screenshot"), _("Screenshot (Vanilla)..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("Select"), _("Select..."), FN(OnAudacityCommand),

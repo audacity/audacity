@@ -17,26 +17,25 @@
 #include "MessageCommand.h"
 #include "CommandType.h"
 #include "CommandContext.h"
+#include "../ShuttleGui.h"
 
-wxString MessageCommandType::BuildName()
-{
-   return wxT("Message");
+bool MessageCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mMessage, wxT("Text"),  "Some message" );
+   return true;
 }
 
-void MessageCommandType::BuildSignature(CommandSignature &signature)
+void MessageCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto stringValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("MessageString"), wxT("Connected"), std::move(stringValidator));
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("Text:"),mMessage,60);
+   }
+   S.EndMultiColumn();
 }
 
-OldStyleCommandPointer MessageCommandType::Create(std::unique_ptr<CommandOutputTargets> &&target)
-{
-   return std::make_shared<MessageCommand>(*this);
-}
-
-bool MessageCommand::Apply(const CommandContext & context)
-{
-   wxString message = GetString(wxT("MessageString"));
-   context.Status(message);
+bool MessageCommand::Apply(const CommandContext & context){
+   context.Status( mMessage );
    return true;
 }
