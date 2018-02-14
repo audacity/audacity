@@ -349,6 +349,16 @@ public:
       if (mStatusTarget)
          mStatusTarget->EndStruct();
    }
+   void StartField(const wxString &name)
+   {
+      if (mStatusTarget)
+         mStatusTarget->StartField(name);
+   }
+   void EndField()
+   {
+      if (mStatusTarget)
+         mStatusTarget->EndField();
+   }
    void AddItem(const wxString &value , const wxString &name="" )
    {
       if (mStatusTarget)

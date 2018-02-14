@@ -1073,6 +1073,9 @@
     <ClCompile Include="..\..\..\src\commands\SetProjectCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SetEnvelopeCommand.cpp">
+      <Filter>src\commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2138,6 +2141,9 @@
       <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\SetProjectCommand.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SetEnvelopeCommand.h">
       <Filter>src\commands</Filter>
     </ClInclude>
   </ItemGroup>
