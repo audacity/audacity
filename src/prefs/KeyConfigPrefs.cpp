@@ -676,8 +676,9 @@ bool KeyConfigPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   bool bFull = gPrefs->ReadBool(wxT("/GUI/Shortcuts/FullDefaults"), false);
    for (size_t i = 0; i < mNames.GetCount(); i++) {
-      wxString dkey = KeyStringNormalize(mStandardDefaultKeys[i]);
+      wxString dkey = bFull ? KeyStringNormalize(mDefaultKeys[i]) : KeyStringNormalize(mStandardDefaultKeys[i]);
       wxString name = wxT("/NewKeys/") + mNames[i];
       wxString key = KeyStringNormalize(mNewKeys[i]);
 
