@@ -459,8 +459,6 @@ public:
    void FinishAutoScroll();
    void FixScrollbars();
 
-   void SafeDisplayStatusMessage(const wxChar *msg);
-
    bool MayScrollBeyondZero() const;
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:

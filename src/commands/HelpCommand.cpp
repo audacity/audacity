@@ -15,8 +15,6 @@
 
 #include "../Audacity.h"
 #include "HelpCommand.h"
-//#include "../Project.h"
-//#include "../Track.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 #include "../effects/EffectManager.h"

@@ -28,7 +28,7 @@ CommandDirectory::CommandDirectory()
 {
    // Create the command map.
    // First we have commands which return information
-   AddCommand(make_movable<MessageCommandType>());
+   //AddCommand(make_movable<MessageCommandType>());
    AddCommand(make_movable<BatchEvalCommandType>());
 
 
