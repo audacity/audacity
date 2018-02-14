@@ -1271,6 +1271,7 @@
 		5EF3E65A203FDACE006C6882 /* SetClipCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E654203FDACE006C6882 /* SetClipCommand.cpp */; };
 		5EF3E65B203FDACE006C6882 /* SetLabelCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E656203FDACE006C6882 /* SetLabelCommand.cpp */; };
 		5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */; };
+		5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
@@ -3176,6 +3177,8 @@
 		5EF3E657203FDACE006C6882 /* SetLabelCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLabelCommand.h; sourceTree = "<group>"; };
 		5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetProjectCommand.cpp; sourceTree = "<group>"; };
 		5EF3E659203FDACE006C6882 /* SetProjectCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetProjectCommand.h; sourceTree = "<group>"; };
+		5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetEnvelopeCommand.cpp; sourceTree = "<group>"; };
+		5EF3E65E203FDFE9006C6882 /* SetEnvelopeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetEnvelopeCommand.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
@@ -3793,6 +3796,7 @@
 				28D540030FD1912A00FA7C75 /* ScriptCommandRelay.cpp */,
 				28851FA91027F16400152EE1 /* SelectCommand.cpp */,
 				5EF3E654203FDACE006C6882 /* SetClipCommand.cpp */,
+				5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */,
 				5EF3E656203FDACE006C6882 /* SetLabelCommand.cpp */,
 				5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */,
 				28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */,
@@ -3827,6 +3831,7 @@
 				28D540040FD1912A00FA7C75 /* ScriptCommandRelay.h */,
 				28851FAA1027F16400152EE1 /* SelectCommand.h */,
 				5EF3E655203FDACE006C6882 /* SetClipCommand.h */,
+				5EF3E65E203FDFE9006C6882 /* SetEnvelopeCommand.h */,
 				5EF3E657203FDACE006C6882 /* SetLabelCommand.h */,
 				5EF3E659203FDACE006C6882 /* SetProjectCommand.h */,
 				28DE72AD10388583007E18EC /* SetTrackInfoCommand.h */,
@@ -7815,6 +7820,7 @@
 				5E73964A1DAFD91D00BA0A4D /* CutlineHandle.cpp in Sources */,
 				1790B1A309883BFD008A330A /* Meter.cpp in Sources */,
 				1790B1A409883BFD008A330A /* MultiDialog.cpp in Sources */,
+				5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */,
 				5E73964D1DAFD95B00BA0A4D /* ButtonHandle.cpp in Sources */,
 				1790B1A509883BFD008A330A /* Ruler.cpp in Sources */,
 				1790B1A709883BFD008A330A /* Warning.cpp in Sources */,

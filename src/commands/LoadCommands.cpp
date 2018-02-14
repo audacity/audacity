@@ -33,6 +33,7 @@ modelled on BuiltinEffectsModule
 #include "../commands/ImportExportCommands.h"
 #include "../commands/OpenSaveCommands.h"
 #include "../commands/SetLabelCommand.h"
+#include "../commands/SetEnvelopeCommand.h"
 #include "../commands/SetClipCommand.h"
 #include "../commands/SetProjectCommand.h"
 
@@ -45,6 +46,7 @@ modelled on BuiltinEffectsModule
    COMMAND( SCREENSHOT,        ScreenshotCommand,   () )   \
    COMMAND( COMPARE_AUDIO,     CompareAudioCommand, () )   \
    COMMAND( SET_TRACK,         SetTrackCommand, () )       \
+   COMMAND( SET_ENVELOPE,      SetEnvelopeCommand, () )    \
    COMMAND( SET_CLIP,          SetClipCommand, () )        \
    COMMAND( SET_LABEL,         SetLabelCommand, () )       \
    COMMAND( SET_PROJECT,       SetProjectCommand, () )     \

@@ -27,15 +27,15 @@ This class now lists
 #include "../effects/EffectManager.h"
 #include "../widgets/Overlay.h"
 #include "../widgets/OverlayPanel.h"
-#include "../Track.h"
 #include "../TrackPanel.h"
+#include "../Track.h"
 #include "../WaveTrack.h"
+#include "../LabelTrack.h"
+#include "../Envelope.h"
 #include "CommandContext.h"
 
 #include "SelectCommand.h"
 #include "../Project.h"
-#include "../Track.h"
-#include "../LabelTrack.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
@@ -45,6 +45,7 @@ enum {
    kMenus,
    kTracks,
    kClips,
+   kEnvelopes,
    kLabels,
    kBoxes,
    nTypes
@@ -57,6 +58,7 @@ static const wxString kTypes[nTypes] =
    XO("Menus"),
    XO("Tracks"),
    XO("Clips"),
+   XO("Envelopes"),
    XO("Labels"),
    XO("Boxes")
 };
@@ -133,6 +135,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
       case kMenus        : return SendMenus( context );
       case kTracks       : return SendTracks( context );
       case kClips        : return SendClips( context );
+      case kEnvelopes    : return SendEnvelopes( context );
       case kLabels       : return SendLabels( context );
       case kBoxes        : return SendBoxes( context );
       default:
@@ -276,6 +279,50 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
 
    return true;
 }
+
+bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
+{
+   TrackList *tracks = context.GetProject()->GetTracks();
+   TrackListIterator iter(tracks);
+   Track *t = iter.First();
+   int i=0;
+   int j=0;
+   context.StartArray();
+   while (t) {
+      if (t->GetKind() == Track::Wave) {
+         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
+         WaveClipPointers ptrs( waveTrack->SortedClipArray());
+         for(WaveClip * pClip : ptrs ) {
+            context.StartStruct();
+            context.AddItem( (double)i, "track" );
+            context.AddItem( (double)j, "clip" );
+            context.AddItem( pClip->GetStartTime(), "start" );
+            Envelope * pEnv = pClip->GetEnvelope();
+            context.StartField( "points" );
+            context.StartArray();
+            double offset = pEnv->mOffset;
+            for( int k=0;k<pEnv->mEnv.size(); k++)
+            {
+               context.StartStruct( );
+               context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
+               context.AddItem( pEnv->mEnv[k].GetVal(), "y" );
+               context.EndStruct();
+            }
+            context.EndArray();
+            context.EndField();
+            context.AddItem( pClip->GetEndTime(), "end" );
+            context.EndStruct();
+            j++;
+         }
+      }
+      t = iter.Next();
+      i++;
+   }
+   context.EndArray();
+
+   return true;
+}
+
 
 bool GetInfoCommand::SendLabels(const CommandContext &context)
 {
