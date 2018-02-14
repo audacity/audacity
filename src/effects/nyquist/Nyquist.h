@@ -120,6 +120,7 @@ public:
    void Stop();
 
 private:
+   static int mReentryCount;
    // NyquistEffect implementation
 
    bool ProcessOne();

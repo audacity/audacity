@@ -74,6 +74,8 @@ effects from this one class.
 
 #include "../../Experimental.h"
 
+int NyquistEffect::mReentryCount = 0;
+
 enum
 {
    ID_Editor = 10000,
@@ -551,6 +553,18 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 
 bool NyquistEffect::Process()
 {
+   // Check for reentrant Nyquist commands.
+   // I'm choosing to mark skipped Nyquist commands as successful even though
+   // they are skipped.  The reason is that when Nyquist calls out to a chain,
+   // and that chain contains Nyquist,  it will be clearer if the chain completes 
+   // skipping Nyquist, rather than doing nothing at all.
+   if( mReentryCount > 0 )
+      return true;
+
+   // Restore the reentry counter (to zero) when we exit.
+   auto cleanup = valueRestorer( mReentryCount);
+   mReentryCount++;
+
    bool success = true;
 
    int nEffectsSoFar = nEffectsDone;
@@ -842,7 +856,7 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
       mT1 = mT0 + mOutputTime;
    }
 
- finish:
+finish:
 
    // Show debug window if trace set in plug-in header and something to show.
    mDebug = (mTrace && !mDebugOutput.IsEmpty())? true : mDebug;
