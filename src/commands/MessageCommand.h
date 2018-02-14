@@ -18,26 +18,29 @@
 
 *//*******************************************************************/
 
-#ifndef __MESSAGECOMMAND__
-#define __MESSAGECOMMAND__
+#ifndef __MESSAGE_COMMAND__
+#define __MESSAGE_COMMAND__
 
-#include "Command.h"
 #include "CommandType.h"
+#include "Command.h"
 
-class MessageCommandType final : public OldStyleCommandType
+#define MESSAGE_PLUGIN_SYMBOL XO("Message")
+
+class MessageCommand : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTargets> &&target) override;
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return MESSAGE_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Echos a message.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
+
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Message");};
+public:
+   wxString mMessage;
 };
 
-class MessageCommand final : public CommandImplementation
-{
-public:
-   MessageCommand(OldStyleCommandType &type)
-      : CommandImplementation(type) {}
-   bool Apply(const CommandContext &context ) override;
-};
 
 #endif /* End of include guard: __MESSAGECOMMAND__ */
