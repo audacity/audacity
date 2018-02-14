@@ -1617,6 +1617,8 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetClip"), _("Set Clip..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("SetEnvelope"), _("Set Envelope..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetLabel"), _("Set Label..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetProject"), _("Set Project..."), FN(OnAudacityCommand),

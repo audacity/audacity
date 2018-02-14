@@ -117,6 +117,16 @@ void CommandContext::EndStruct() const
    if( pOutput )
       pOutput->EndStruct();
 }
+void CommandContext::StartField(const wxString &name) const
+{
+   if( pOutput )
+      pOutput->StartField(name);
+}
+void CommandContext::EndField() const
+{
+   if( pOutput )
+      pOutput->EndField();
+}
 void CommandContext::AddItem(const wxString &value , const wxString &name ) const
 {
    if( pOutput )

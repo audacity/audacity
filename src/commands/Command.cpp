@@ -293,5 +293,6 @@ bool CommandImplementation::Apply(const CommandContext & WXUNUSED(context))
 #include "SetClipCommand.cpp"
 #include "SetLabelCommand.cpp"
 #include "SetProjectCommand.cpp"
+#include "SetEnvelopeCommand.cpp"
 #endif
 
