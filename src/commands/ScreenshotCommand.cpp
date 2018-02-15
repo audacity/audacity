@@ -518,7 +518,7 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
 #endif
    };
 
-   for( int i=0;i<sizeof(EffectNames)/sizeof(EffectNames[0]);i++){
+   for( int i=0; i<(int)(sizeof(EffectNames)/sizeof(EffectNames[0])); i++){
       // The handler is cleared each time it is used.
       SetIdleHandler( IdleHandler );
       Str = EffectNames[i];
