@@ -23,6 +23,8 @@
 #include "../Track.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../prefs/WaveformSettings.h"
+#include "../prefs/SpectrogramSettings.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
@@ -47,24 +49,61 @@ static const wxString kColourStrings[nColours] =
    XO("Color3"),
 };
 
+
+enum kDisplayTypes
+{
+   kWaveform,
+   kSpectrogram,
+   nDisplayTypes
+};
+
+static const wxString kDisplayTypeStrings[nDisplayTypes] =
+{
+   XO("Waveform"),
+   XO("Spectrogram"),
+};
+
+enum kScaleTypes
+{
+   kLinear,
+   kDb,
+   nScaleTypes
+};
+
+static const wxString kScaleTypeStrings[nScaleTypes] =
+{
+   XO("Linear"),
+   XO("dB"),
+};
+
+
 bool SetTrackCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString colours( nColours, kColourStrings );
-   S.Define(   mTrackIndex,                                wxT("Track"), 0, 0, 100 );
-   S.Optional( bHasTrackName   ).Define(     mTrackName,   wxT("Name"),       wxT("Unnamed") );
-   S.Optional( bHasPan         ).Define(     mPan,         wxT("Pan"),        0.0, -1.0, 1.0);
-   S.Optional( bHasGain        ).Define(     mGain,        wxT("Gain"),       1.0,  0.0, 10.0);
-   S.Optional( bHasHeight      ).Define(     mHeight,      wxT("Height"),     120, 44, 700 );
-   S.Optional( bHasColour      ).DefineEnum( mColour,      wxT("Color"),      kColour0, colours );
-   S.Optional( bHasSelected    ).Define(     bSelected,    wxT("Selected"),   false );
-   S.Optional( bHasFocused     ).Define(     bFocused,     wxT("Focused"),    false );
-   S.Optional( bHasSolo        ).Define(     bSolo,        wxT("Solo"),       false );
-   S.Optional( bHasMute        ).Define(     bMute,        wxT("Mute"),       false );
+   wxArrayString colours(  nColours,      kColourStrings );
+   wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
+   wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
+
+   S.Define(   mTrackIndex,                                      wxT("Track"), 0, 0, 100 );
+   S.Optional( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       wxT("Unnamed") );
+   S.Optional( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -1.0, 1.0);
+   S.Optional( bHasGain           ).Define(     mGain,           wxT("Gain"),       1.0,  0.0, 10.0);
+   S.Optional( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 700 );
+   S.Optional( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, displays );
+   S.Optional( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   scales );
+   S.Optional( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
+   S.Optional( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
+   S.Optional( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
+   S.Optional( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
+   S.Optional( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );
+   S.Optional( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
+   S.Optional( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    return true;
 };
 
 void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString colours( nColours, kColourStrings );
+   wxArrayString colours(  nColours,      kColourStrings );
+   wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
+   wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
 
    S.AddSpace(0, 5);
 
@@ -75,19 +114,23 @@ void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      S.Optional( bHasTrackName ).TieTextBox(         _("Name:"),     mTrackName );
-      S.Optional( bHasPan       ).TieSlider(          _("Pan:"),      mPan,  1.0, -1.0);
-      S.Optional( bHasGain      ).TieSlider(          _("Gain:"),     mGain, 10.0, 0.0);
-      S.Optional( bHasHeight    ).TieNumericTextBox(  _("Height:"),   mHeight );
-      S.Optional( bHasColour    ).TieChoice(          _("Colour:"),   mColour, &colours );
+      S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),     mTrackName );
+      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),      mPan,  1.0, -1.0);
+      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),     mGain, 10.0, 0.0);
+      S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),   mHeight );
+      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),   mColour,      &colours );
+      S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),  mDisplayType, &displays );
+      S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),    mScaleType,   &scales );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.Optional( bHasSelected  ).TieCheckBox( _("Selected:"), bSelected );
-      S.Optional( bHasFocused   ).TieCheckBox( _("Focused:"),  bFocused);
-      S.Optional( bHasSolo      ).TieCheckBox( _("Solo:"),     bSolo);
-      S.Optional( bHasMute      ).TieCheckBox( _("Mute:"),     bMute);
+      S.Optional( bHasSpectralSelect ).TieCheckBox( _("Spectral Select:"), bSpectralSelect );
+      S.Optional( bHasGrayScale      ).TieCheckBox( _("Gray Scale:"),      bGrayScale );
+      S.Optional( bHasSelected       ).TieCheckBox( _("Selected:"),        bSelected );
+      S.Optional( bHasFocused        ).TieCheckBox( _("Focused:"),         bFocused);
+      S.Optional( bHasSolo           ).TieCheckBox( _("Solo:"),            bSolo);
+      S.Optional( bHasMute           ).TieCheckBox( _("Mute:"),            bMute);
    }
    S.EndMultiColumn();
 }
@@ -124,6 +167,24 @@ bool SetTrackCommand::Apply(const CommandContext & context)
       wt->SetWaveColorIndex( mColour );
    if( t && bHasHeight )
       t->SetHeight( mHeight );
+
+   if( wt && bHasDisplayType  )
+      wt->SetDisplay(
+         (mDisplayType == kWaveform) ? 
+            WaveTrack::WaveTrackDisplay::Waveform
+            : WaveTrack::WaveTrackDisplay::Spectrum
+         );
+   if( wt && bHasScaleType )
+      wt->GetIndependentWaveformSettings().scaleType = 
+         (mScaleType==kLinear) ? 
+            WaveformSettings::stLinear
+            : WaveformSettings::stLogarithmic;
+   if( wt && bHasSpectralSelect )
+      wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
+   if( wt && bHasGrayScale )
+      wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
+
+
    if( bHasSelected )
       t->SetSelected(bSelected);
    if( bHasFocused )

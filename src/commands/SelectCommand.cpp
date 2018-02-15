@@ -15,11 +15,17 @@
 \class SelectTimeCommand
 \brief Command for changing the time selection
 
+\class SelectFrequenciesCommand
+\brief Command for changing the frequency selection
+
 \class SelectTracksCommand
 \brief Command for changing the selection of tracks
 
 \class SelectCommand
-\brief Command for changing both time and track selection.
+\brief Command for changing time, frequency and track selection. This
+class is a little baroque, as it uses the SelectTimeCommand, 
+SelectFrequenciesCommand and SelectTracksCommand, when it could just
+explicitly code all three.
 
 *//*******************************************************************/
 
@@ -70,6 +76,33 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    return true;
 }
 
+bool SelectFrequenciesCommand::DefineParams( ShuttleParams & S ){
+   S.Optional( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
+   S.Optional( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
+   return true;
+}
+
+void SelectFrequenciesCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasTop    ).TieTextBox(_("High:"), mTop);
+      S.Optional( bHasBottom ).TieTextBox(_("Low:"),  mBottom);
+   }
+   S.EndMultiColumn();
+}
+
+bool SelectFrequenciesCommand::Apply(const CommandContext & context){
+   if( !bHasBottom && !bHasTop )
+      return true;
+
+   context.GetProject()->SSBL_ModifySpectralSelection(
+      mBottom, mTop, false);// false for not done.
+   return true;
+}
+
 const int nModes =3;
 static const wxString kModes[nModes] =
 {
@@ -77,7 +110,6 @@ static const wxString kModes[nModes] =
    XO("Add"),
    XO("Remove")
 };
-
 
 bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
    wxArrayString modes( nModes, kModes );
@@ -121,19 +153,20 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
       bool sel = mFirstTrack <= index && index <= last;
       if( mMode == 0 ){ // Set
          t->SetSelected(sel);
-         if (sel)
-            context.Status(wxT("Selected track '") + t->GetName() + wxT("'"));
+//       if (sel)
+//          context.Status(wxT("Selected track '") + t->GetName() + wxT("'"));
       }
       else if( mMode == 1 && sel ){ // Add
          t->SetSelected(sel);
-         context.Status(wxT("Added track '") + t->GetName() + wxT("'"));
+//       context.Status(wxT("Added track '") + t->GetName() + wxT("'"));
       }
       else if( mMode == 2 && sel ){ // Remove
          t->SetSelected(!sel);
-         context.Status(wxT("Removed track '") + t->GetName() + wxT("'"));
+//       context.Status(wxT("Removed track '") + t->GetName() + wxT("'"));
       }
       t = iter.Next();
       ++index;
    }
    return true;
 }
+
