@@ -551,8 +551,8 @@ struct AudioIO::ScrubQueue
       , mLeadingIdx(1)
       , mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
-      , mUpdating()
       , mMaxDebt { maxDebt }
+      , mUpdating()
    {
       const auto s0 = std::max(options.minSample, std::min(options.maxSample,
          sampleCount(lrint(t0 * mRate))
