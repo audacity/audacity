@@ -2286,7 +2286,7 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
    if (!EffectManager::Get().RealtimeIsActive())
       flags |= IsRealtimeNotActiveFlag;
 
-      if (!mIsCapturing)
+  if (!mIsCapturing)
       flags |= CaptureNotBusyFlag;
 
    ControlToolBar *bar = GetControlToolBar();
@@ -7272,11 +7272,11 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
             if (t->GetLinked() || !t->GetLink())
                 selectedCount++;
 
-                if (!toNewTrack) {
-                   t = iter.RemoveCurrent();
-                } else {
-                   t = iter.Next();
-                };
+            if (!toNewTrack) {
+               t = iter.RemoveCurrent();
+            } else {
+               t = iter.Next();
+            };
          }
          else
             t = iter.Next();
