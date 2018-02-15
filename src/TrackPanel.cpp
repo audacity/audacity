@@ -3208,8 +3208,8 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    bool bHasMuteSolo, const int labelw, const int vrul) const
 {
    //compiler food.
-   bHasMuteSolo;
-   vrul;
+   static_cast<void>(bHasMuteSolo);
+   static_cast<void>(vrul);
 
    // fill in label
    wxRect fill = rect;

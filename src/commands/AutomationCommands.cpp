@@ -48,7 +48,7 @@ CommandHolder AutomationCommandsType::Create(std::unique_ptr<CommandOutputTarget
 
 
 void AutomationCommands::ExploreMenu( wxMenu * pMenu, int Id, int depth ){
-   Id;//compiler food.
+   static_cast<void>(Id);//compiler food.
    if( !pMenu )
       return;
 
@@ -252,7 +252,7 @@ void AutomationCommands::ExploreTrackPanel( CommandExecutionContext context,
 void AutomationCommands::ExploreWindows( CommandExecutionContext context,
    wxPoint P, wxWindow * pWin, int Id, int depth )
 {
-   Id;//Compiler food.
+   static_cast<void>(Id);//Compiler food.
 
    if( pWin->GetName() == "Track Panel" )
    {
