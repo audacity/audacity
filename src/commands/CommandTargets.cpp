@@ -98,7 +98,7 @@ void LispyCommandMessageTarget::StartArray()
 {
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
-   Update( wxString::Format( "\n%s(list ", Padding ));
+   Update( wxString::Format( "\n%s(", Padding ));
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }
