@@ -4011,7 +4011,7 @@ void AudioIO::FillBuffers()
             AutoSaveFile blockFileLog;
             auto numChannels = mCaptureTracks.size();
 
-            for( i = 0; (int)i < numChannels; i++ )
+            for( i = 0; i < numChannels; i++ )
             {
                auto avail = commonlyAvail;
                sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
