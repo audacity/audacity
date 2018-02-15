@@ -915,6 +915,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size)
    : wxFrame(parent, id, _TS("Audacity"), pos, size),
+     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
+     mbLoadedFromAup( false ),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
@@ -922,9 +924,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
      mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
-     mUndoManager(std::make_unique<UndoManager>()),
-     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
-     mbLoadedFromAup( false )
+     mUndoManager(std::make_unique<UndoManager>())
 {
    mTracks = TrackList::Create();
 
