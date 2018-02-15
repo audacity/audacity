@@ -335,6 +335,8 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
          LabelTrack *labelTrack = static_cast<LabelTrack*>(t);
          if( labelTrack )
          {
+
+#ifdef VERBOSE_LABELS_FORMATTING
             for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
                const auto &label = labelTrack->mLabels[nn];
                context.StartStruct();
@@ -344,6 +346,19 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
                context.AddItem( label.title, "text" );
                context.EndStruct();
             }
+#else
+            context.AddItem( (double)i ); // Track number.
+            context.StartArray();
+            for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
+               const auto &label = labelTrack->mLabels[nn];
+               context.StartArray();
+               context.AddItem( label.getT0() ); // start
+               context.AddItem( label.getT1() ); // end
+               context.AddItem( label.title ); //text.
+               context.EndArray();
+            }
+            context.EndArray();
+#endif
          }
       }
       t = iter.Next();

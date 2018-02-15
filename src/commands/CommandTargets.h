@@ -88,6 +88,7 @@ public:
    virtual void StartField( const wxString &name="" );
    virtual void EndField( );
    virtual void Flush();
+   wxString Escaped( const wxString & str);
    wxArrayInt mCounts;
 };
 
