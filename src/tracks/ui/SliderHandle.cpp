@@ -18,9 +18,9 @@ Paul Licameli
 
 SliderHandle::SliderHandle
 ( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
-   : mSliderFn{ sliderFn }
+   : mpTrack{ pTrack }
    , mRect{ rect }
-   , mpTrack{ pTrack }
+   , mSliderFn{ sliderFn }
 {
 }
 
