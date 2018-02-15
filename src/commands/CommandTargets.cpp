@@ -56,12 +56,10 @@ void CommandMessageTarget::EndStruct(){
    Update( " }" );
 }
 void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
-   wxString Temp = value;
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
    Padding = (( value.length() < 15 ) || (mCounts.Last()<=0))  ? "" : wxString("\n") + Padding;
-   Temp.Replace("\"", "\\\"");// escape spaces.
-   Update( wxString::Format( "%s%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", Padding, name, !name.IsEmpty()?":":"",value));
+   Update( wxString::Format( "%s%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", Padding, name, !name.IsEmpty()?":":"",Escaped(value)));
    mCounts.Last() += 1;
 }
 void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
@@ -88,13 +86,19 @@ void CommandMessageTarget::EndField(){
 void CommandMessageTarget::Flush(){
 }
 
+wxString CommandMessageTarget::Escaped( const wxString & str){
+   wxString Temp = str;
+   Temp.Replace( "\"", "\\\"");
+   return Temp;
+}
+
 
 
 void LispyCommandMessageTarget::StartArray()
 {
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
-   Update( wxString::Format( "\n%s(", Padding ));
+   Update( wxString::Format( "\n%s(list ", Padding ));
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }
@@ -121,9 +125,9 @@ void LispyCommandMessageTarget::EndStruct(){
 void LispyCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    wxString Padding = "";
    if( name.IsEmpty() )
-      Update( wxString::Format( "%s%s\"%s\"", (mCounts.Last()>0)?" ":"", Padding, value));
+      Update( wxString::Format( "%s%s\"%s\"", (mCounts.Last()>0)?" ":"", Padding, Escaped(value)));
    else 
-      Update( wxString::Format( "%s%s(%s \"%s\")", (mCounts.Last()>0)?" ":"", Padding, name, value));
+      Update( wxString::Format( "%s%s(%s \"%s\")", (mCounts.Last()>0)?" ":"", Padding, name, Escaped(value)));
    mCounts.Last() += 1;
 }
 void LispyCommandMessageTarget::AddBool(const bool value,      const wxString &name){
@@ -193,7 +197,7 @@ void BriefCommandMessageTarget::EndStruct(){
 }
 void BriefCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    if( mCounts.GetCount() <= 3 )
-      Update( wxString::Format( "%s\"%s\"", (mCounts.Last()>0)?" ":"",value));
+      Update( wxString::Format( "%s\"%s\"", (mCounts.Last()>0)?" ":"",Escaped(value)));
    mCounts.Last() += 1;
 }
 void BriefCommandMessageTarget::AddBool(const bool value,      const wxString &name){
