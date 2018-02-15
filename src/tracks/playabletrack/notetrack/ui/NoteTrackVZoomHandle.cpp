@@ -50,8 +50,7 @@ namespace
 
 NoteTrackVZoomHandle::NoteTrackVZoomHandle
 (const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect, int y)
-   : mZoomStart(y), mZoomEnd(y), mRect(rect)
-   , mpTrack{ pTrack }
+   : mpTrack{ pTrack } , mZoomStart(y), mZoomEnd(y), mRect(rect)
 {
 }
 
