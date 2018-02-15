@@ -1,6 +1,6 @@
-# docimages_tracks.py
+# docimages_spectro.py
 # Sends commands to get images for the manual.
-# Images for https://alphamanual.audacityteam.org/man/Audio_Tracks
+# Images for https://alphamanual.audacityteam.org/man/Spectrogram_View
 
 # Make sure Audacity is running first and that mod-script-pipe is enabled
 # before running this script.
@@ -67,11 +67,16 @@ def quickTest() :
 def setup() :
     global path
     global sample
+    global sample2
     path = 'C:\\Users\\James Crook\\'
     sample ='C:\\Users\\James Crook\\Music\\The Poodle Podcast.wav'
+    sample2 ='C:\\Users\\James Crook\\Music\\PoodlePodStereo.wav'
     do( 'SetProject: X=10 Y=10 Width=850 Height=800' )
 
 def makeWayForTracks(  ) :
+    # Twice to remove stereo tracks.
+    do( 'SelectTracks: First=0 Last=20' )
+    do( 'RemoveTracks' )
     do( 'SelectTracks: First=0 Last=20' )
     do( 'RemoveTracks' )
 
@@ -86,6 +91,14 @@ def loadMonoTrack():
     do( 'Select: First=0 Last=0 Start=0 End=150')
     do( 'Trim')
     do( 'ZoomSel' )
+
+def loadStereoTrack():
+    global sample2
+    makeWayForTracks( )
+    do( 'Import2: Filename="'+sample2+'"' )
+    do( 'Select: First=0 Last=0 Start=0 End=150')
+    do( 'Trim')
+    do( 'ZoomSel' )
     
 def loadMonoTracks( num ) :
     makeWayForTracks( )
@@ -95,6 +108,15 @@ def loadMonoTracks( num ) :
         do( 'Duplicate' )
     do( 'FitInWindow' )
     do( 'Select: Start=55 End=70')
+
+def loadStereoTracks( num ) :
+    makeWayForTracks( )
+    loadStereoTrack()
+    do( 'SetTrack: Track=0 Name="Foxy Lady"')
+    for i in range( 0, num-1 ):
+        do( 'Duplicate' )
+    do( 'FitInWindow' )
+    do( 'Select: Start=55 End=70 First=0 Last=' + str(num*2-1) )
 
 def makeMonoTracks( num ) :
     makeWayForTracks( )
@@ -118,70 +140,49 @@ def makeStereoTracks( num ) :
     do( 'FitInWindow' )
     do( 'Select: Start=55 End=70')
 
-def image1and8() :
-    loadMonoTracks(1)
-    # A mono track complete with ruler
-    capture( 'AutoTracks001.png', 'First_Track_Plus' )
-    # Mono with arrow at start.
-    do( 'SetClip: Clip=0 Start=-4.0')
-    capture( 'AutoTracks008.png', 'First_Track' )
+# 11 2KHz tones, of decreasing amplitude.
+# With label track to annotate it.
+def makeStepper():
+    makeWayForTracks()
+    do( 'NewMonoTrack' )
+    do( 'Select: Start=0 End=22')
+    do( 'Silence' ) #Just so we can watch.
+    do( 'FitInWindow')
+    for i in range( 0, 11 ):
+        do( 'Select: Start='+str(i*2)+' End='+str(i*2+2) )
+        do( 'Chirp: StartFreq=2000 EndFreq=2000 StartAmp=' + str( (400**(0.1 * (10-i)))/400 )+' EndAmp=' + str( (400**(0.1 * (10-i) ))/400 ))
+    do( 'Select: Start=0 End=22')
+    do( 'Join' )
+    do( 'FitInWindow')
+    do( 'AddLabelTrack' )
+    for i in range( 0, 11 ):
+        do( 'Select: Start='+str(i*2)+' End='+str(i*2+2) )
+        do( 'AddLabel' )
+        do( 'SetLabel: Label=' + str(i)+' Selected=0 Text='+str( -(i*10) ))
+    do( 'Select: Start=0 End=0')
+  
 
-def image2and6() :
-    makeStereoTracks(1)
-    # A stereo track, with its name on the track    
-    capture( 'AutoTracks002.png', 'First_Track' )
-    # A stereo track, with different sized channels
-    do( 'SetTrack: Track=0 Height=80')
-    do( 'SetTrack: Track=1 Height=180')
-    capture( 'AutoTracks006.png', 'First_Track' )
+def image1and2() :
+    loadStereoTracks(1)
+    # A stereo track
+    capture( 'Spectral001.png', 'First_Track' )
+    # As spectrogram.
+    do( 'SetTrack: Track=0 Display=Spectrogram')
+    do( 'SetTrack: Track=1 Display=Spectrogram')
+    do( 'Select: Start=55 End=70 First=0 Last=1')
+    capture( 'Spectral002.png', 'First_Track' )
 
-# Four colours of track
-def image3() :
-    loadMonoTracks( 4 )
-    do( 'SetTrack: Track=0 Name="Instrument 1" Height=122 Color=Color0')
-    do( 'SetTrack: Track=1 Name="Instrument 2" Height=122 Color=Color1')
-    do( 'SetTrack: Track=2 Name="Instrument 3" Height=122 Color=Color2')
-    do( 'SetTrack: Track=3 Name="Instrument 4" Height=122 Color=Color3')
-    capture( 'AutoTracks003.png', 'First_Four_Tracks' )
-
-def image7and4and5():
-    loadMonoTracks(2)
-    # Two mono tracks of different sizes
-    do( 'SetTrack: Track=0 Height=180')
-    do( 'SetTrack: Track=1 Height=80')
-    capture( 'AutoTracks007.png', 'First_Two_Tracks' )
-    # Two Tracks, ready to make stereo
-    do( 'SetTrack: Track=0 Name="Left Track" Height=80')
-    do( 'SetTrack: Track=1 Name="Right Track" Height=80')
-    capture( 'AutoTracks004.png', 'First_Two_Tracks' )
-    # Combined Stereo Track
-    do( 'SetTrack: Track=0 Pan=-1 Height=80')
-    do( 'SetTrack: Track=1 Pan=1 Height=80')
-    do( 'MixAndRender' )
-    do( 'SetTrack: Track=0 Name="Combined" Height=80')
-    do( 'SetTrack: Track=1 Height=80')
-    do( 'Select: First=0 Last=1' )
-    capture( 'AutoTracks005.png', 'First_Track' )
-
-
-def image9and10() :
-    #make rather than load.  We want an artificial track.
-    makeMonoTracks(1)
-    # Zoomed in to show points stem-plot
-    do( 'Select: Start=0 End=0.003' )
-    do( 'ZoomSel' );
-    do( 'Amplify: Ratio=3.0' )
-    do( 'SetPreference: Name=/GUI/SampleView Value=1 Reload=1')
-    capture( 'AutoTracks009.png', 'First_Track' )
-    # Zoomed in to show points stem-plot and then no stem plot
-    do( 'SetPreference: Name=/GUI/SampleView Value=0 Reload=1')
-    capture( 'AutoTracks010.png', 'First_Track' )
+def image3and4():
+    makeStepper();
+    # Stepper tone, viewed in dB.
+    do( 'SetTrack: Scale=dB')
+    capture( 'Spectral003.png', 'First_Two_Tracks' )
+    # As spectrogram.
+    do( 'SetTrack: Display=Spectrogram')
+    capture( 'Spectral004.png', 'First_Two_Tracks' )
     
 #quickTest()
 setup()
-image1and8()
-image2and6()
-image3()
-image7and4and5()
-image9and10()
+image1and2()
+image3and4()
 
