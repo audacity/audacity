@@ -371,10 +371,11 @@ bool ScreenshotCommand::CaptureDock(
    return Capture(context, mFileName, win, wxRect(x, y, width, height));
 }
 
-void ExploreMenu( 
+void ExploreMenu(
    const CommandContext & context,
    wxMenu * pMenu, int Id, int depth ){
-   Id;//compiler food.
+   static_cast<void>(Id);//compiler food.
+
    if( !pMenu )
       return;
 
@@ -482,7 +483,7 @@ void ScreenshotCommand::CapturePreferences(
    }
 }
 
-void ScreenshotCommand::CaptureEffects( 
+void ScreenshotCommand::CaptureEffects(
    const CommandContext & context,
    AudacityProject * pProject, const wxString &mFileName )
 {
