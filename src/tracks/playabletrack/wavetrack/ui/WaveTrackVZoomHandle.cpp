@@ -49,8 +49,7 @@ bool IsDragZooming(int zoomStart, int zoomEnd)
 
 WaveTrackVZoomHandle::WaveTrackVZoomHandle
 (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)
-   : mZoomStart(y), mZoomEnd(y), mRect(rect)
-   , mpTrack{ pTrack }
+   : mpTrack{ pTrack } , mZoomStart(y), mZoomEnd(y), mRect(rect)
 {
 }
 

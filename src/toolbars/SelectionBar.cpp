@@ -125,13 +125,13 @@ END_EVENT_TABLE()
 
 SelectionBar::SelectionBar()
 : ToolBar(SelectionBarID, _("Selection"), wxT("Selection")),
-  mListener(NULL), mRate(0.0), 
+  mListener(NULL), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
-  mStartTime(NULL), mEndTime(NULL), mLengthTime(NULL), mCenterTime(NULL), 
-  mAudioTime(NULL),
-  mChoice(NULL),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
-  mSelectionMode(0)
+  mSelectionMode(0),
+  mStartTime(NULL), mCenterTime(NULL), mLengthTime(NULL), mEndTime(NULL),
+  mAudioTime(NULL),
+  mChoice(NULL)
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
    // created in Populate()
