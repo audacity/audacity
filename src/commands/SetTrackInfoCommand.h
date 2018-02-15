@@ -44,6 +44,10 @@ public:
    double mGain;
    int mColour;
    int mHeight;
+   int mDisplayType;
+   int mScaleType;
+   bool bSpectralSelect;
+   bool bGrayScale;
    bool bSelected;
    bool bFocused;
    bool bSolo;
@@ -55,6 +59,10 @@ public:
    bool bHasGain;
    bool bHasColour;
    bool bHasHeight;
+   bool bHasDisplayType;
+   bool bHasScaleType;
+   bool bHasSpectralSelect;
+   bool bHasGrayScale;
    bool bHasSelected;
    bool bHasFocused;
    bool bHasSolo;
