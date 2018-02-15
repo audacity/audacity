@@ -411,6 +411,8 @@ UIHandlePtr SelectHandle::HitTest
       wxInt64 rightSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t1(), rect.x);
       // Something is wrong if right edge comes before left edge
       wxASSERT(!(rightSel < leftSel));
+      static_cast<void>(leftSel); // Suppress unused variable warnings if not in debug-mode
+      static_cast<void>(rightSel);
    }
 
    return result;
