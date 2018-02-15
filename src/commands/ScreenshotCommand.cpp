@@ -293,7 +293,6 @@ void ScreenshotCommand::CaptureDock(wxWindow *win, const wxString &fileName)
 }
 
 void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
-   Id;//compiler food.
    if( !pMenu )
       return;
 
@@ -329,7 +328,6 @@ void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
 
 void ScreenshotCommand::CaptureMenus(wxMenuBar*pBar, const wxString &fileName)
 {
-   fileName;//compiler food.
    if(!pBar ){
       wxLogDebug("No menus");
       return;
@@ -400,7 +398,6 @@ void ScreenshotCommand::CaptureWindowOnIdle( wxWindow * pWin )
 }
 
 void ScreenshotCommand::CapturePreferences( AudacityProject * pProject, const wxString &fileName ){
-   fileName;//compiler food.
    CommandManager * pMan = pProject->GetCommandManager();
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
@@ -426,7 +423,6 @@ void ScreenshotCommand::CapturePreferences( AudacityProject * pProject, const wx
 }
 
 void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxString &fileName ){
-   fileName;//compiler food.
    CommandManager * pMan = pProject->GetCommandManager();
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the

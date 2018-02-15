@@ -1638,8 +1638,6 @@ void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
-   r;//compiler food.
-   zoomInfo;//compiler food.
    if (evt.ButtonDown())
    {
 
