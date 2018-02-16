@@ -651,7 +651,7 @@ bool BatchCommands::ApplyCommand(const wxString & command, const wxString & para
    // Test for a special command.
    // CLEANSPEECH remnant
    for( i = 0; i < sizeof(SpecialCommands)/sizeof(*SpecialCommands); ++i ) {
-      if( command == SpecialCommands[i].second )
+      if( command.IsSameAs( SpecialCommands[i].second, false) )
          return ApplySpecialCommand( i, command, params );
    }
    // end CLEANSPEECH remnant
