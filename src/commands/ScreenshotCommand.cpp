@@ -78,6 +78,8 @@ enum kCaptureTypes
    ksecondtrack,
    ktracksplus,
    kfirsttrackplus,
+   kalltracks,
+   kalltracksplus,
    nCaptureWhats
 };
 
@@ -113,6 +115,8 @@ static const wxString kCaptureWhatStrings[nCaptureWhats] =
    XO("Second_Track"),
    XO("Tracks_Plus"),
    XO("First_Track_Plus"),
+   XO("All_Tracks"),
+   XO("All_Tracks_Plus"),
 };
 
 
@@ -815,6 +819,8 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    TrackPanel *panel = context.GetProject()->GetTrackPanel();
    AdornedRulerPanel *ruler = panel->mRuler;
 
+   int nTracks = context.GetProject()->GetTracks()->size();
+
    int x1,y1,x2,y2;
    w->ClientToScreen(&x1, &y1);
    panel->ClientToScreen(&x2, &y2);
@@ -895,6 +901,18 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
    else if (mCaptureMode.IsSameAs(wxT("First_Four_Tracks")))
    {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
       r = r.Union( GetTrackRect( context.GetProject(), panel, 3 ));
+      return Capture(context, mFileName, panel, r );
+   }
+   else if (mCaptureMode.IsSameAs(wxT("All_Tracks")))
+   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
+      r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
+      return Capture(context, mFileName, panel, r );
+   }
+   else if (mCaptureMode.IsSameAs(wxT("All_Tracks_Plus")))
+   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
+      r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
+      r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
+      r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
       return Capture(context, mFileName, panel, r );
    }
    else
