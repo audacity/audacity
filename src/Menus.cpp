@@ -1010,7 +1010,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginSubMenu(_("M&ute/Unmute"));
       c->AddItem(wxT("MuteAllTracks"), _("&Mute All Tracks"), FN(OnMuteAllTracks), wxT("Ctrl+U"));
-      c->AddItem(wxT("UnMuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnMuteAllTracks), wxT("Ctrl+Shift+U"));
+      c->AddItem(wxT("UnmuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnmuteAllTracks), wxT("Ctrl+Shift+U"));
       c->EndSubMenu();
 
       c->BeginSubMenu(_("&Pan"));
@@ -8753,7 +8753,7 @@ void AudacityProject::OnMuteAllTracks(const CommandContext &WXUNUSED(context) )
    }
 }
 
-void AudacityProject::OnUnMuteAllTracks(const CommandContext &WXUNUSED(context) )
+void AudacityProject::OnUnmuteAllTracks(const CommandContext &WXUNUSED(context) )
 {
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
