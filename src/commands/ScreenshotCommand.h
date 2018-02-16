@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: GPL v2 - see LICENSE.txt
 
    Dominic Mazzoni
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __SCREENSHOTCOMMAND__
-#define __SCREENSHOTCOMMAND__
+#ifndef __SCREENSHOT_COMMAND__
+#define __SCREENSHOT_COMMAND__
 
 #include "Command.h"
 #include "../commands/AudacityCommand.h"
@@ -98,4 +98,4 @@ public:
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);
 };
 
-#endif /* End of include guard: __SCREENSHOTCOMMAND__ */
+#endif /* End of include guard: __SCREENSHOT_COMMAND__ */

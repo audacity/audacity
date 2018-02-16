@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    File License: wxWidgets
 
    Dan Horgan
@@ -13,8 +13,8 @@
 
 *//*******************************************************************/
 
-#ifndef __SCRIPTCOMMANDRELAY__
-#define __SCRIPTCOMMANDRELAY__
+#ifndef __SCRIPT_COMMAND_RELAY__
+#define __SCRIPT_COMMAND_RELAY__
 
 #include "../Audacity.h"
 #include "../MemoryX.h"
@@ -55,4 +55,4 @@ class ScriptCommandRelay
       static std::shared_ptr<ResponseQueueTarget> GetResponseTarget();
 };
 
-#endif /* End of include guard: __SCRIPTCOMMANDRELAY__ */
+#endif /* End of include guard: __SCRIPT_COMMAND_RELAY__ */

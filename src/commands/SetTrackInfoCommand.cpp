@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -82,7 +82,8 @@ bool SetTrackCommand::DefineParams( ShuttleParams & S ){
    wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
    wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
 
-   S.Define(   mTrackIndex,                                      wxT("Track"), 0, 0, 100 );
+   S.Optional( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
+   S.Optional( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
    S.Optional( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       wxT("Unnamed") );
    S.Optional( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -1.0, 1.0);
    S.Optional( bHasGain           ).Define(     mGain,           wxT("Gain"),       1.0,  0.0, 10.0);
@@ -92,6 +93,7 @@ bool SetTrackCommand::DefineParams( ShuttleParams & S ){
    S.Optional( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
    S.Optional( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
    S.Optional( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
+   // There is also a select command.  This is an alternative.
    S.Optional( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
    S.Optional( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );
    S.Optional( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
@@ -107,20 +109,17 @@ void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.AddSpace(0, 5);
 
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieNumericTextBox( _("Track Index"), mTrackIndex );
-   }
-   S.EndMultiColumn();
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),     mTrackName );
-      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),      mPan,  1.0, -1.0);
-      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),     mGain, 10.0, 0.0);
-      S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),   mHeight );
-      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),   mColour,      &colours );
-      S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),  mDisplayType, &displays );
-      S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),    mScaleType,   &scales );
+      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
+      S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
+      S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),          mTrackName );
+      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  1.0, -1.0);
+      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 10.0, 0.0);
+      S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),        mHeight );
+      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,      &colours );
+      S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType, &displays );
+      S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,   &scales );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
@@ -137,66 +136,73 @@ void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SetTrackCommand::Apply(const CommandContext & context)
 {
-   //wxString mode = GetString(wxT("Type"));
 
-   // (Note: track selection ought to be somewhere else)
-   long i = 0;
+   long i = 0;// track counter
+   long j = 0;// channel counter
    TrackListIterator iter(context.GetProject()->GetTracks());
    Track *t = iter.First();
-   while (t && i != mTrackIndex)
+   bool bIsSecondChannel = false;
+   while (t )
    {
+      bool bThisTrack = 
+         (bHasTrackIndex && (i==mTrackIndex)) ||
+         (bHasChannelIndex && (j==mChannelIndex ) ) ||
+         (!bHasTrackIndex && !bHasChannelIndex) ;
+
+      if( bThisTrack ){
+         auto wt = dynamic_cast<WaveTrack *>(t);
+         auto pt = dynamic_cast<PlayableTrack *>(t);
+
+         // You can get some intriguing effects by setting R and L channels to 
+         // different values.
+         if( bHasTrackName )
+            t->SetName(mTrackName);
+         if( wt && bHasPan )
+            wt->SetPan(mPan);
+         if( wt && bHasGain )
+            wt->SetGain(mGain);
+         if( wt && bHasColour )
+            wt->SetWaveColorIndex( mColour );
+         if( t && bHasHeight )
+            t->SetHeight( mHeight );
+
+         if( wt && bHasDisplayType  )
+            wt->SetDisplay(
+               (mDisplayType == kWaveform) ? 
+                  WaveTrack::WaveTrackDisplay::Waveform
+                  : WaveTrack::WaveTrackDisplay::Spectrum
+               );
+         if( wt && bHasScaleType )
+            wt->GetIndependentWaveformSettings().scaleType = 
+               (mScaleType==kLinear) ? 
+                  WaveformSettings::stLinear
+                  : WaveformSettings::stLogarithmic;
+         if( wt && bHasSpectralSelect )
+            wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
+         if( wt && bHasGrayScale )
+            wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
+
+         // These ones don't make sense on the second channel of a stereo track.
+         if( !bIsSecondChannel ){
+            if( bHasSelected )
+               t->SetSelected(bSelected);
+            if( bHasFocused )
+            {
+               TrackPanel *panel = context.GetProject()->GetTrackPanel();
+               panel->SetFocusedTrack( t );
+            }
+            if( pt && bHasSolo )
+               pt->SetSolo(bSolo);
+            if( pt && bHasMute )
+               pt->SetMute(bMute);
+         }
+      }
+      bIsSecondChannel = t->GetLinked();
+      if( !bIsSecondChannel )
+         ++i;
+      j++;
       t = iter.Next();
-      ++i;
    }
-   if (i != mTrackIndex || !t)
-   {
-      context.Error(wxT("TrackIndex was invalid."));
-      return false;
-   }
-
-   auto wt = dynamic_cast<WaveTrack *>(t);
-   auto pt = dynamic_cast<PlayableTrack *>(t);
-
-   if( bHasTrackName )
-      t->SetName(mTrackName);
-   if( wt && bHasPan )
-      wt->SetPan(mPan);
-   if( wt && bHasGain )
-      wt->SetGain(mGain);
-   if( wt && bHasColour )
-      wt->SetWaveColorIndex( mColour );
-   if( t && bHasHeight )
-      t->SetHeight( mHeight );
-
-   if( wt && bHasDisplayType  )
-      wt->SetDisplay(
-         (mDisplayType == kWaveform) ? 
-            WaveTrack::WaveTrackDisplay::Waveform
-            : WaveTrack::WaveTrackDisplay::Spectrum
-         );
-   if( wt && bHasScaleType )
-      wt->GetIndependentWaveformSettings().scaleType = 
-         (mScaleType==kLinear) ? 
-            WaveformSettings::stLinear
-            : WaveformSettings::stLogarithmic;
-   if( wt && bHasSpectralSelect )
-      wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
-   if( wt && bHasGrayScale )
-      wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
-
-
-   if( bHasSelected )
-      t->SetSelected(bSelected);
-   if( bHasFocused )
-   {
-      TrackPanel *panel = context.GetProject()->GetTrackPanel();
-      panel->SetFocusedTrack( t );
-   }
-   if( pt && bHasSolo )
-      pt->SetSolo(bSolo);
-   if( pt && bHasMute )
-      pt->SetMute(bMute);
-
    return true;
 }
 
