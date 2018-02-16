@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -39,6 +39,7 @@ public:
 
 public:
    int mTrackIndex;
+   int mChannelIndex;
    wxString mTrackName;
    double mPan;
    double mGain;
@@ -54,6 +55,8 @@ public:
    bool bMute;
 
 // For tracking optional parameters.
+   bool bHasTrackIndex;
+   bool bHasChannelIndex;
    bool bHasTrackName;
    bool bHasPan;
    bool bHasGain;

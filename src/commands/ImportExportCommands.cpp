@@ -5,6 +5,7 @@
    File License: wxWidgets
 
    Dan Horgan
+   James Crook
 
 ******************************************************************//**
 

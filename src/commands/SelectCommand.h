@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: GPL v2 - see LICENSE.txt
 
    Dan Horgan
@@ -14,8 +14,8 @@
 
 *//*******************************************************************/
 
-#ifndef __SELECTCOMMAND__
-#define __SELECTCOMMAND__
+#ifndef __SELECT_COMMAND__
+#define __SELECT_COMMAND__
 
 
 
@@ -126,4 +126,4 @@ private:
 
 };
 
-#endif /* End of include guard: __SELECTCOMMAND__ */
+#endif /* End of include guard: __SELECT_COMMAND__ */
