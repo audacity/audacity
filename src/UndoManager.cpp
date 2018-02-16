@@ -313,12 +313,7 @@ const UndoState &UndoManager::SetStateTo
 
    current = n;
 
-   if (current == (int)(stack.size()-1)) {
-      *selectedRegion = stack[current]->state.selectedRegion;
-   }
-   else {
-      *selectedRegion = stack[current + 1]->state.selectedRegion;
-   }
+   *selectedRegion = stack[current]->state.selectedRegion;
 
    lastAction = wxT("");
    mayConsolidate = false;
