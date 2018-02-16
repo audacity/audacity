@@ -48,7 +48,7 @@ def addLabels2():
     do( 'Select: First=3 Last=3' )
 
 
-def image1and2() :
+def label_image1and2() :
     makeStereoTracks(1)
     addLabels()
     # A stero track with four labels.
@@ -60,7 +60,7 @@ def image1and2() :
     do( "Select: Start=0 End=0 First=0 Last=2" )
     capture( 'AutoLabels002.png','First_Two_Tracks' )
 
-def image3and4() :
+def label_image3and4() :
     makeStereoTracks(1)
     addLabels()
     # Removing a label with split-delete step 1
@@ -71,7 +71,7 @@ def image3and4() :
     do( "SplitDelete" )
     capture( 'AutoLabels004.png','First_Two_Tracks' )
 
-def image5and6and7() :
+def label_image5and6and7() :
     makeStereoTracks(1)
     addLabels2()
     # Nothing selected
@@ -85,7 +85,7 @@ def image5and6and7() :
     do( "Select: Start=0 End=0" )
     capture( 'AutoLabels007.png','First_Three_Tracks' )
 
-def image8and9and10() :
+def label_image8and9and10() :
     makeStereoTracks(1)
     addLabels2()
     # Select nothing in all three tracks.
@@ -101,11 +101,12 @@ def image8and9and10() :
     # Delete label and from all three tracks.
     do( 'Delete' )
     capture( 'AutoLabels010.png','First_Three_Tracks' )
-    
-image1and2()
-image3and4()
-image5and6and7()
-image8and9and10()
+
+imageSet("Labels")    
+label_image1and2()
+label_image3and4()
+label_image5and6and7()
+label_image8and9and10()
 
 
 

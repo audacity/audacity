@@ -80,6 +80,9 @@ def setup() :
     startPipes()
     do( 'SetProject: X=10 Y=10 Width=850 Height=800' )
 
+def imageSet(name):
+    print("****************** " + name + " ***************************")
+
 def makeWayForTracks(  ) :
     do( 'Select: First=0 Last=20' )
     do( 'RemoveTracks' )

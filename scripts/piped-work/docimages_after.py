@@ -132,12 +132,13 @@ def spaceDemo():
 def biasDemo():
     withDcBias( 0.1 )
     capture( 'DcBias.png' , 'All_Tracks' )
-    
-#imageAfters( Commands, 'All_Tracks_Plus' ) # With ruler
-#imageAfters( Effects, 'All_Tracks' ) # Without ruler
-#imageAfters( Slow, 'All_Tracks' ) # Without ruler
-#generators()
-#spaceDemo()
+
+imageSet("After")    
+imageAfters( Commands, 'All_Tracks_Plus' ) # With ruler
+imageAfters( Effects, 'All_Tracks' ) # Without ruler
+imageAfters( Slow, 'All_Tracks' ) # Without ruler
+generators()
+spaceDemo()
 biasDemo()    
 
 

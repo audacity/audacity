@@ -32,7 +32,7 @@ def makeStepper():
     do( 'Select: Start=0 End=0')
   
 
-def image1and2() :
+def spectro_image1and2() :
     loadStereoTracks(1)
     # A stereo track
     capture( 'Spectral001.png', 'First_Track' )
@@ -42,7 +42,7 @@ def image1and2() :
     do( 'Select: Start=55 End=70 First=0 Last=1')
     capture( 'Spectral002.png', 'First_Track' )
 
-def image3and4():
+def spectro_image3and4():
     makeStepper();
     # Stepper tone, viewed in dB.
     do( 'SetTrack: Scale=dB')
@@ -53,6 +53,6 @@ def image3and4():
     
 #quickTest()
 
-image1and2()
-image3and4()
+spectro_image1and2()
+spectro_image3and4()
 

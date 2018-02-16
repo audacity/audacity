@@ -10,7 +10,7 @@
 exec( open("docimages_core.py" ).read() )
 
 
-def image1and8() :
+def track_image1and8() :
     loadMonoTracks(1)
     # A mono track complete with ruler
     capture( 'AutoTracks001.png', 'First_Track_Plus' )
@@ -18,7 +18,7 @@ def image1and8() :
     do( 'SetClip: Clip=0 Start=-4.0')
     capture( 'AutoTracks008.png', 'First_Track' )
 
-def image2and6() :
+def track_image2and6() :
     makeStereoTracks(1)
     # A stereo track, with its name on the track    
     capture( 'AutoTracks002.png', 'First_Track' )
@@ -28,7 +28,7 @@ def image2and6() :
     capture( 'AutoTracks006.png', 'First_Track' )
 
 # Four colours of track
-def image3() :
+def track_image3() :
     loadMonoTracks( 4 )
     do( 'SetTrack: Track=0 Name="Instrument 1" Height=122 Color=Color0')
     do( 'SetTrack: Track=1 Name="Instrument 2" Height=122 Color=Color1')
@@ -36,7 +36,7 @@ def image3() :
     do( 'SetTrack: Track=3 Name="Instrument 4" Height=122 Color=Color3')
     capture( 'AutoTracks003.png', 'First_Four_Tracks' )
 
-def image7and4and5():
+def track_image7and4and5():
     loadMonoTracks(2)
     # Two mono tracks of different sizes
     do( 'SetTrack: Track=0 Height=180')
@@ -56,7 +56,7 @@ def image7and4and5():
     capture( 'AutoTracks005.png', 'First_Track' )
 
 
-def image9and10() :
+def track_image9and10() :
     #make rather than load.  We want an artificial track.
     makeMonoTracks(1)
     # Zoomed in to show points stem-plot
@@ -68,10 +68,11 @@ def image9and10() :
     # Zoomed in to show points stem-plot and then no stem plot
     do( 'SetPreference: Name=/GUI/SampleView Value=0 Reload=1')
     capture( 'AutoTracks010.png', 'First_Track' )
-    
-image1and8()
-image2and6()
-image3()
-image7and4and5()
-image9and10()
+
+imageSet("Tracks")    
+track_image1and8()
+track_image2and6()
+track_image3()
+track_image7and4and5()
+track_image9and10()
 
