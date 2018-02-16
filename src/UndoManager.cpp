@@ -38,6 +38,10 @@ UndoManager
 
 #include <unordered_set>
 
+wxDEFINE_EVENT(EVT_UNDO_PUSHED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
+
 using ConstBlockFilePtr = const BlockFile*;
 using Set = std::unordered_set<ConstBlockFilePtr>;
 
@@ -245,6 +249,9 @@ void UndoManager::ModifyState(const TrackList * l,
 
    stack[current]->state.selectedRegion = selectedRegion;
    SonifyEndModifyState();
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_MODIFIED } );
 }
 
 void UndoManager::PushState(const TrackList * l,
@@ -298,6 +305,9 @@ void UndoManager::PushState(const TrackList * l,
    }
 
    lastAction = longDescription;
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PUSHED } );
 }
 
 void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
@@ -312,6 +322,9 @@ void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
    mayConsolidate = false;
 
    consumer( stack[current]->state );
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
 }
 
 void UndoManager::Undo(const Consumer &consumer)
@@ -324,6 +337,9 @@ void UndoManager::Undo(const Consumer &consumer)
    mayConsolidate = false;
 
    consumer( stack[current]->state );
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
 }
 
 void UndoManager::Redo(const Consumer &consumer)
@@ -349,6 +365,9 @@ void UndoManager::Redo(const Consumer &consumer)
    mayConsolidate = false;
 
    consumer( stack[current]->state );
+
+   // wxWidgets will own the event object
+   QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
 }
 
 bool UndoManager::UnsavedChanges()
