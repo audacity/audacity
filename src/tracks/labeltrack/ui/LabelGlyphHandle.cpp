@@ -124,7 +124,7 @@ LabelGlyphHandle::~LabelGlyphHandle()
 void LabelGlyphHandle::HandleGlyphClick
 (LabelTrackHit &hit, const wxMouseEvent & evt,
  const wxRect & r, const ZoomInfo &zoomInfo,
- SelectedRegion *WXUNUSED(newSel))
+ NotifyingSelectedRegion &WXUNUSED(newSel))
 {
    if (evt.ButtonDown())
    {
@@ -188,7 +188,7 @@ UIHandle::Result LabelGlyphHandle::Click
 
    auto &viewInfo = ViewInfo::Get( *pProject );
    HandleGlyphClick(
-      *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
+      *mpHit, event, mRect, viewInfo, viewInfo.selectedRegion);
 
    if (! mpHit->mIsAdjustingLabel )
    {
@@ -278,7 +278,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
 (AudacityProject &project,
  LabelTrackHit &hit, const wxMouseEvent & evt,
  wxRect & r, const ZoomInfo &zoomInfo,
- SelectedRegion *newSel)
+ NotifyingSelectedRegion &newSel)
 {
    const auto pTrack = mpLT;
    const auto &mLabels = pTrack->GetLabels();
@@ -340,7 +340,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
          auto selIndex = view.GetSelectedIndex( project );
          //Set the selection region to be equal to
          //the NEW size of the label.
-         *newSel = mLabels[ selIndex ].selectedRegion;
+         newSel = mLabels[ selIndex ].selectedRegion;
       }
       pTrack->SortLabels();
    }
@@ -356,7 +356,7 @@ UIHandle::Result LabelGlyphHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    HandleGlyphDragRelease(
-      *pProject, *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
+      *pProject, *mpHit, event, mRect, viewInfo, viewInfo.selectedRegion);
 
    // Refresh all so that the change of selection is redrawn in all tracks
    return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
@@ -377,7 +377,7 @@ UIHandle::Result LabelGlyphHandle::Release
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (HandleGlyphDragRelease(
-         *pProject, *mpHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
+         *pProject, *mpHit, event, mRect, viewInfo, viewInfo.selectedRegion)) {
       ProjectHistory::Get( *pProject ).PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);

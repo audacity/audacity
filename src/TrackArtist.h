@@ -128,7 +128,7 @@ public:
    bool findNotesQuantizeOld;
 #endif
 
-   SelectedRegion *pSelectedRegion{};
+   const SelectedRegion *pSelectedRegion{};
    ZoomInfo *pZoomInfo{};
 
    bool drawEnvelope{ false };

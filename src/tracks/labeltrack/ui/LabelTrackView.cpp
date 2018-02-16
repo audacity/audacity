@@ -1336,7 +1336,7 @@ unsigned LabelTrackView::Char(
 
 /// KeyEvent is called for every keypress when over the label track.
 bool LabelTrackView::DoKeyDown(
-   AudacityProject &project, SelectedRegion &newSel, wxKeyEvent & event)
+   AudacityProject &project, NotifyingSelectedRegion &newSel, wxKeyEvent & event)
 {
    // Only track true changes to the label
    bool updated = false;
@@ -1564,7 +1564,7 @@ bool LabelTrackView::DoKeyDown(
 /// OnChar is called for incoming characters -- that's any keypress not handled
 /// by OnKeyDown.
 bool LabelTrackView::DoChar(
-   AudacityProject &project, SelectedRegion &WXUNUSED(newSel),
+   AudacityProject &project, NotifyingSelectedRegion &WXUNUSED(newSel),
    wxKeyEvent & event)
 {
    // Check for modifiers and only allow shift.

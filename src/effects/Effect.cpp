@@ -1171,14 +1171,14 @@ bool Effect::DoEffect(wxWindow *parent,
                       double projectRate,
                       TrackList *list,
                       TrackFactory *factory,
-                      SelectedRegion *selectedRegion,
+                      NotifyingSelectedRegion &selectedRegion,
                       bool shouldPrompt /* = true */)
 {
-   wxASSERT(selectedRegion->duration() >= 0.0);
+   wxASSERT(selectedRegion.duration() >= 0.0);
 
    mOutputTracks.reset();
 
-   mpSelectedRegion = selectedRegion;
+   mpSelectedRegion = &selectedRegion;
    mFactory = factory;
    mProjectRate = projectRate;
    mTracks = list;
@@ -1218,8 +1218,8 @@ bool Effect::DoEffect(wxWindow *parent,
       newTrack->SetSelected(true);
    }
 
-   mT0 = selectedRegion->t0();
-   mT1 = selectedRegion->t1();
+   mT0 = selectedRegion.t0();
+   mT1 = selectedRegion.t1();
    if (mT1 > mT0)
    {
       // there is a selection: let's fit in there...
@@ -1237,8 +1237,8 @@ bool Effect::DoEffect(wxWindow *parent,
       : NumericConverter::DefaultSelectionFormat();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   mF0 = selectedRegion->f0();
-   mF1 = selectedRegion->f1();
+   mF0 = selectedRegion.f0();
+   mF1 = selectedRegion.f1();
    wxArrayString Names;
    if( mF0 != SelectedRegion::UndefinedFrequency )
       Names.push_back(wxT("control-f0"));
@@ -1280,7 +1280,7 @@ bool Effect::DoEffect(wxWindow *parent,
 
    if (returnVal && (mT1 >= mT0 ))
    {
-      selectedRegion->setTimes(mT0, mT1);
+      selectedRegion.setTimes(mT0, mT1);
    }
 
    success = returnVal;
@@ -1289,10 +1289,11 @@ bool Effect::DoEffect(wxWindow *parent,
 
 bool Effect::Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt)
 {
-   SelectedRegion region{ mT0, mT1 };
+   NotifyingSelectedRegion region;
+   region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
-      &region, shouldPrompt );
+      region, shouldPrompt );
 }
 
 // All legacy effects should have this overridden

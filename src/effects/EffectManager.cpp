@@ -166,7 +166,7 @@ void EffectManager::UnregisterEffect(const PluginID & ID)
    EffectManager & em = EffectManager::Get();
 
    success = em.DoEffect(ID, &window, rate,
-      &tracks, &trackFactory, &selectedRegion,
+      &tracks, &trackFactory, selectedRegion,
       (flags & EffectManager::kConfigured) == 0);
 
    if (!success)
@@ -239,7 +239,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
                              double projectRate,
                              TrackList *list,
                              TrackFactory *factory,
-                             SelectedRegion *selectedRegion,
+                             NotifyingSelectedRegion &selectedRegion,
                              bool shouldPrompt /* = true */)
 
 {

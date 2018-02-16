@@ -851,7 +851,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const wxRect clip = GetRect();
 
-   mTrackArtist->pSelectedRegion = &mViewInfo->selectedRegion;
+   const SelectedRegion &sr = mViewInfo->selectedRegion;
+   mTrackArtist->pSelectedRegion = &sr;
    mTrackArtist->pZoomInfo = mViewInfo;
    TrackPanelDrawingContext context {
       *dc, Target(), mLastMouseState, mTrackArtist.get()

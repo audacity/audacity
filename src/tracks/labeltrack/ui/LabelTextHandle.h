@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class LabelTrack;
+class NotifyingSelectedRegion;
 class SelectionStateChanger;
 class ZoomInfo;
 
@@ -59,7 +60,7 @@ private:
    void HandleTextClick
       (AudacityProject &project,
        const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
+       NotifyingSelectedRegion &newSel);
    void HandleTextDragRelease(
       AudacityProject &project, const wxMouseEvent & evt);
 

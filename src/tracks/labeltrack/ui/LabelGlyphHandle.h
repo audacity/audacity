@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseState;
 class LabelTrack;
 class LabelTrackEvent;
-class SelectedRegion;
+class NotifyingSelectedRegion;
 class ZoomInfo;
 
 /// mEdge:
@@ -92,12 +92,12 @@ private:
    void HandleGlyphClick
       (LabelTrackHit &hit,
        const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
+       NotifyingSelectedRegion &newSel);
    bool HandleGlyphDragRelease
       (AudacityProject &project,
        LabelTrackHit &hit,
        const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
-       SelectedRegion *newSel);
+       NotifyingSelectedRegion &newSel);
 
    void MayAdjustLabel
       ( LabelTrackHit &hit,
