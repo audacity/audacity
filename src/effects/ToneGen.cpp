@@ -262,6 +262,10 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
    } else {
       S.SHUTTLE_PARAM( mFrequency[0], Frequency  );
       S.SHUTTLE_PARAM( mAmplitude[0], Amplitude );
+      // Slightly hacky way to set freq and ampl
+      // since we do this whatever query to params was made.
+      mFrequency[1] = mFrequency[0];
+      mAmplitude[1] = mAmplitude[0];
    }
    wxArrayString waves( nWaveforms, kWaveStrings );
    wxArrayString interps( nInterpolations ,kInterStrings );
