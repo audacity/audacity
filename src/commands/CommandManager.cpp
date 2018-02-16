@@ -1546,7 +1546,7 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandCon
       if (!entry->multi)
       {
          // Testing against labelPrefix too allows us to call Nyquist functions by name.
-         if( Str.IsSameAs( entry->name ) || Str.IsSameAs( entry->labelPrefix ))
+         if( Str.IsSameAs( entry->name, false ) || Str.IsSameAs( entry->labelPrefix, false ))
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }
@@ -1566,7 +1566,7 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandCon
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str))
+      if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str, false))
       {
          return proj->DoEffect(plug->GetID(), context, AudacityProject::OnEffectFlags::kConfigured);
       }

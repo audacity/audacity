@@ -151,9 +151,7 @@ extern void * nyq_make_opaque_string( int size, unsigned char *src );
 void * ExecForLisp( char * pIn ){
    wxString Str1( pIn );
    wxString Str2;
-   Str2 = "Foo Bar Halleluya";
    ExecCommand2( &Str1, &Str2 );
-   //Str2 = Str1;
 
    // wxString provides a const char *
    const char * pStr = static_cast<const char*>(Str2);

@@ -943,7 +943,7 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
    while (plug)
    {
-      if (GetCommandIdentifier(plug->GetID()).IsSameAs(strTarget))
+      if (GetCommandIdentifier(plug->GetID()).IsSameAs(strTarget, false))
       {
          return plug->GetID();
       }
