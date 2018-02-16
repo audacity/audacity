@@ -354,7 +354,7 @@ void OnPanRight(const CommandContext &context );
 void OnPanCenter(const CommandContext &context );
 
 void OnMuteAllTracks(const CommandContext &context );
-void OnUnMuteAllTracks(const CommandContext &context );
+void OnUnmuteAllTracks(const CommandContext &context );
 
 void OnShowClipping(const CommandContext &context );
 void OnShowExtraMenus(const CommandContext &context );
