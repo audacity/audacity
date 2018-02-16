@@ -219,7 +219,6 @@ void DoUndo(AudacityProject &project)
 {
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
    auto mixerBoard = project.GetMixerBoard();
    auto historyWindow = project.GetHistoryWindow();
 
@@ -233,8 +232,8 @@ void DoUndo(AudacityProject &project)
       return;
    }
 
-   const UndoState &state = undoManager.Undo(&selectedRegion);
-   project.PopState(state);
+   undoManager.Undo(
+      [&]( const UndoState &state ){ project.PopState( state ); } );
 
    trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
 
@@ -264,7 +263,6 @@ void OnRedo(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
    auto mixerBoard = project.GetMixerBoard();
    auto historyWindow = project.GetHistoryWindow();
 
@@ -277,8 +275,8 @@ void OnRedo(const CommandContext &context)
       return;
    }
 
-   const UndoState &state = undoManager.Redo(&selectedRegion);
-   project.PopState(state);
+   undoManager.Redo(
+      [&]( const UndoState &state ){ project.PopState( state ); } );
 
    trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
 

@@ -300,8 +300,7 @@ void UndoManager::PushState(const TrackList * l,
    lastAction = longDescription;
 }
 
-const UndoState &UndoManager::SetStateTo
-   (unsigned int n, SelectedRegion *selectedRegion)
+void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 {
    n -= 1;
 
@@ -309,35 +308,29 @@ const UndoState &UndoManager::SetStateTo
 
    current = n;
 
-   *selectedRegion = stack[current]->state.selectedRegion;
-
    lastAction = wxT("");
    mayConsolidate = false;
 
-   return stack[current]->state;
+   consumer( stack[current]->state );
 }
 
-const UndoState &UndoManager::Undo(SelectedRegion *selectedRegion)
+void UndoManager::Undo(const Consumer &consumer)
 {
    wxASSERT(UndoAvailable());
 
    current--;
 
-   *selectedRegion = stack[current]->state.selectedRegion;
-
    lastAction = wxT("");
    mayConsolidate = false;
 
-   return stack[current]->state;
+   consumer( stack[current]->state );
 }
 
-const UndoState &UndoManager::Redo(SelectedRegion *selectedRegion)
+void UndoManager::Redo(const Consumer &consumer)
 {
    wxASSERT(RedoAvailable());
 
    current++;
-
-   *selectedRegion = stack[current]->state.selectedRegion;
 
    /*
    if (!RedoAvailable()) {
@@ -355,7 +348,7 @@ const UndoState &UndoManager::Redo(SelectedRegion *selectedRegion)
    lastAction = wxT("");
    mayConsolidate = false;
 
-   return stack[current]->state;
+   consumer( stack[current]->state );
 }
 
 bool UndoManager::UnsavedChanges()

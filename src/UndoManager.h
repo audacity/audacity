@@ -118,9 +118,11 @@ class AUDACITY_DLL_API UndoManager {
    wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
    void SetLongDescription(unsigned int n, const wxString &desc);
 
-   const UndoState &SetStateTo(unsigned int n, SelectedRegion *selectedRegion);
-   const UndoState &Undo(SelectedRegion *selectedRegion);
-   const UndoState &Redo(SelectedRegion *selectedRegion);
+   // These functions accept a callback that uses the state
+   using Consumer = std::function< void( const UndoState & ) >;
+   void SetStateTo(unsigned int n, const Consumer &consumer);
+   void Undo(const Consumer &consumer);
+   void Redo(const Consumer &consumer);
 
    bool UndoAvailable();
    bool RedoAvailable();

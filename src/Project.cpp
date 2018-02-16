@@ -4673,6 +4673,8 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
 //    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
 void AudacityProject::PopState(const UndoState &state)
 {
+   mViewInfo.selectedRegion = state.selectedRegion;
+
    // Restore tags
    mTags = state.tags;
 
@@ -4725,9 +4727,8 @@ void AudacityProject::PopState(const UndoState &state)
 
 void AudacityProject::SetStateTo(unsigned int n)
 {
-   const UndoState &state =
-       GetUndoManager()->SetStateTo(n, &mViewInfo.selectedRegion);
-   PopState(state);
+   GetUndoManager()->SetStateTo(n,
+      [this]( const UndoState &state ){ PopState(state); } );
 
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);
