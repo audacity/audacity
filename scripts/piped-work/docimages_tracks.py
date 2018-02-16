@@ -23,8 +23,8 @@ def track_image2and6() :
     # A stereo track, with its name on the track    
     capture( 'AutoTracks002.png', 'First_Track' )
     # A stereo track, with different sized channels
-    do( 'SetTrack: Track=0 Height=80')
-    do( 'SetTrack: Track=1 Height=180')
+    do( 'SetTrack: Channel=0 Height=80')
+    do( 'SetTrack: Channel=1 Height=180')
     capture( 'AutoTracks006.png', 'First_Track' )
 
 # Four colours of track
@@ -43,15 +43,14 @@ def track_image7and4and5():
     do( 'SetTrack: Track=1 Height=80')
     capture( 'AutoTracks007.png', 'First_Two_Tracks' )
     # Two Tracks, ready to make stereo
-    do( 'SetTrack: Track=0 Name="Left Track" Height=80')
-    do( 'SetTrack: Track=1 Name="Right Track" Height=80')
+    do( 'SetTrack: Channel=0 Name="Left Track" Height=80')
+    do( 'SetTrack: Channel=1 Name="Right Track" Height=80')
     capture( 'AutoTracks004.png', 'First_Two_Tracks' )
     # Combined Stereo Track
     do( 'SetTrack: Track=0 Pan=-1 Height=80')
     do( 'SetTrack: Track=1 Pan=1 Height=80')
     do( 'MixAndRender' )
     do( 'SetTrack: Track=0 Name="Combined" Height=80')
-    do( 'SetTrack: Track=1 Height=80')
     do( 'Select: First=0 Last=1' )
     capture( 'AutoTracks005.png', 'First_Track' )
 

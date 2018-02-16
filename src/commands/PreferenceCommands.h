@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2009 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2018 Audacity Team.
    File License: wxwidgets
 
    PreferenceCommands.h
@@ -18,8 +18,8 @@
 
 *//*******************************************************************/
 
-#ifndef __PREFERENCECOMMANDS__
-#define __PREFERENCECOMMANDS__
+#ifndef __PREFERENCE_COMMANDS__
+#define __PREFERENCE_COMMANDS__
 
 #include "Command.h"
 #include "CommandType.h"
@@ -65,4 +65,4 @@ public:
    bool mbReload;
 };
 
-#endif /* End of include guard: __PREFERENCECOMMANDS__ */
+#endif /* End of include guard: __PREFERENCE_COMMANDS__ */

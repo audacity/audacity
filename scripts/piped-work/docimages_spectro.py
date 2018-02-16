@@ -38,9 +38,11 @@ def spectro_image1and2() :
     capture( 'Spectral001.png', 'First_Track' )
     # As spectrogram.
     do( 'SetTrack: Track=0 Display=Spectrogram')
-    do( 'SetTrack: Track=1 Display=Spectrogram')
     do( 'Select: Start=55 End=70 First=0 Last=1')
     capture( 'Spectral002.png', 'First_Track' )
+    # Half spectrogram, half wave.
+    do( 'SetTrack: Channel=1 Display=Waveform')
+    capture( 'MixedMode.png', 'First_Track' )
 
 def spectro_image3and4():
     makeStepper();

@@ -153,19 +153,17 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
       bool sel = mFirstTrack <= index && index <= last;
       if( mMode == 0 ){ // Set
          t->SetSelected(sel);
-//       if (sel)
-//          context.Status(wxT("Selected track '") + t->GetName() + wxT("'"));
       }
       else if( mMode == 1 && sel ){ // Add
          t->SetSelected(sel);
-//       context.Status(wxT("Added track '") + t->GetName() + wxT("'"));
       }
       else if( mMode == 2 && sel ){ // Remove
          t->SetSelected(!sel);
-//       context.Status(wxT("Removed track '") + t->GetName() + wxT("'"));
       }
+      // Do second channel in stereo track too.
+      if( !t->GetLinked() )
+         ++index;
       t = iter.Next();
-      ++index;
    }
    return true;
 }

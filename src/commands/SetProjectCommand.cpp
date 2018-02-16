@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: wxwidgets
 
    Dan Horgan

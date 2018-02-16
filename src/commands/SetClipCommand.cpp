@@ -1,10 +1,9 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: wxwidgets
 
-   Dan Horgan
    James Crook
 
 ******************************************************************//**
@@ -50,11 +49,13 @@ static const wxString kColourStrings[nColours] =
 
 bool SetClipCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString colours( nColours, kColourStrings );
-   S.Define(   mClipIndex,                                 wxT("Clip"), 0, 0, 100 );
-   S.Optional( bHasColour      ).DefineEnum( mColour,      wxT("Color"),      kColour0, colours );
+   S.Optional( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
+   S.Optional( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
+   S.Optional( bHasContainsTime   ).Define(     mContainsTime,   wxT("At"),         0.0, 0.0, 100000.0 );
+   S.Optional( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0, colours );
    // Allowing a negative start time is not a mistake.
    // It will be used in demonstrating time before zero.
-   S.Optional( bHasT0          ).Define(     mT0,          wxT("Start"),     0.0, -5.0, 1000000.0);
+   S.Optional( bHasT0             ).Define(     mT0,             wxT("Start"),      0.0, -5.0, 1000000.0);
    return true;
 };
 
@@ -64,15 +65,13 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.AddSpace(0, 5);
 
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieNumericTextBox( _("Clip Index"), mClipIndex );
-   }
-   S.EndMultiColumn();
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      S.Optional( bHasColour    ).TieChoice(          _("Colour:"),   mColour, &colours );
-      S.Optional( bHasT0        ).TieNumericTextBox(  _("Start:"),    mT0 );
+      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
+      S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
+      S.Optional( bHasContainsTime).TieNumericTextBox(  _("At:"),            mContainsTime );
+      S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour, &colours );
+      S.Optional( bHasT0          ).TieNumericTextBox(  _("Start:"),         mT0 );
    }
    S.EndMultiColumn();
 }
@@ -84,32 +83,46 @@ bool SetClipCommand::Apply(const CommandContext & context)
    Track *t = iter.First();
    WaveClip * pClip = NULL;
    int i=0;
+   int j=0;
 
-   while (t && i <= mClipIndex) {
-      if (t->GetKind() == Track::Wave) {
+   bool bIsSecondChannel = false;
+   while (t )
+   {
+      bool bThisTrack = 
+         (bHasTrackIndex && (i==mTrackIndex)) ||
+         (bHasChannelIndex && (j==mChannelIndex ) ) ||
+         (!bHasTrackIndex && !bHasChannelIndex) ;
+
+      if( bThisTrack && (t->GetKind() == Track::Wave)) {
+         bool bFound = false;
          WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
          WaveClipPointers ptrs( waveTrack->SortedClipArray());
-         for(auto it = ptrs.begin(); (it != ptrs.end()) && (i<=mClipIndex); it++,i++ ){
+         for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
             pClip = *it;
+            bFound = 
+               !bHasContainsTime || (
+                  ( pClip->GetStartTime() <= mContainsTime ) &&
+                  ( pClip->GetEndTime() >= mContainsTime )
+               );
+            if( bFound )
+            {
+               // Inside this IF is where we actually apply the command
+
+               if( bHasColour )
+                  pClip->SetColourIndex(mColour);
+               // No validation of overlap yet.  We assume the user is sensible!
+               if( bHasT0 )
+                  pClip->SetOffset(mT0);
+               // \todo Use SetClip to move a clip between tracks too.
+
+            }
          }
       }
+      bIsSecondChannel = t->GetLinked();
+      if( !bIsSecondChannel )
+         ++i;
+      j++;
       t = iter.Next();
    }
-
-   if (i <= mClipIndex || !pClip)
-   {
-      context.Error(wxT("ClipIndex was invalid."));
-      return false;
-   }
-
-   if( bHasColour )
-      pClip->SetColourIndex(mColour);
-
-   // No validation of overlap yet.  We assume the user is sensible!
-   if( bHasT0 )
-      pClip->SetOffset(mT0);
-
-   // \todo Use SetClip to move a clip between tracks too.
-
    return true;
 }

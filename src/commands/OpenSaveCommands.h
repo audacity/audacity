@@ -1,11 +1,12 @@
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2009 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2018 Audacity Team.
    File License: wxwidgets
 
    OpenSaveCommands.h
    Stephen Parry
+   James Crook
 
 ******************************************************************//**
 

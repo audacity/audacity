@@ -1,10 +1,9 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: wxwidgets
 
-   Dan Horgan
    James Crook
 
 ******************************************************************//**
@@ -38,11 +37,16 @@ public:
    bool Apply(const CommandContext & context) override;
 
 public:
-   int mClipIndex;
+   int mTrackIndex;
+   int mChannelIndex;
+   double mContainsTime;
    int mColour;
    double mT0;
 
 // For tracking optional parameters.
+   bool bHasTrackIndex;
+   bool bHasChannelIndex;
+   bool bHasContainsTime;
    bool bHasColour;
    bool bHasT0;
 };

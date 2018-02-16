@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: wxWidgets
 
    James Crook
@@ -228,8 +228,13 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
    context.StartArray();
    while (trk)
    {
+
+      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+      Track * fTrack = panel->GetFocusedTrack();
+
       context.StartStruct();
       context.AddItem( trk->GetName(), "name" );
+      context.AddBool( (trk == fTrack), "focused");
       auto t = dynamic_cast<WaveTrack*>( trk );
       if( t )
       {
@@ -242,11 +247,12 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
       }
-      TrackPanel *panel = context.GetProject()->GetTrackPanel();
-      Track * fTrack = panel->GetFocusedTrack();
-      context.AddBool( (trk == fTrack), "focused");
       context.EndStruct();
-      trk=iter.Next();
+      // Skip second tracks of stereo...
+      if( trk->GetLinked() )
+         trk= iter.Next();
+      if( trk )
+         trk=iter.Next();
    }
    context.EndArray();
    return true;
@@ -272,7 +278,11 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
             context.EndStruct();
          }
       }
-      t = iter.Next();
+      // Skip second tracks of stereo...
+      if( t->GetLinked() )
+         t= iter.Next();
+      if( t )
+         t=iter.Next();
       i++;
    }
    context.EndArray();
@@ -315,8 +325,11 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
             j++;
          }
       }
-      t = iter.Next();
-      i++;
+      // Skip second tracks of stereo...
+      if( t->GetLinked() )
+         t= iter.Next();
+      if( t )
+         t=iter.Next();
    }
    context.EndArray();
 
@@ -362,7 +375,13 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
 #endif
          }
       }
-      t = iter.Next();
+      // Theoretically you could have a stereo LabelTrack, and
+      // this way you'd skip the second version of it.
+      // Skip second tracks of stereo...
+      //if( t->GetLinked() )
+      //   t= iter.Next();
+      if( t )
+         t=iter.Next();
       i++;
    }
    context.EndArray();
