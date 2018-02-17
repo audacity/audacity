@@ -100,8 +100,6 @@ scroll information.  It also has some status flags.
 #include "Diags.h"
 #include "HistoryWindow.h"
 #include "InconsistencyException.h"
-#include "Lyrics.h"
-#include "LyricsWindow.h"
 #include "MixerBoard.h"
 #include "Internat.h"
 #include "import/Import.h"
@@ -4594,7 +4592,6 @@ void AudacityProject::InitialState()
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
 
    GetMenuManager(*this).UpdateMenus(*this);
-   this->UpdateLyrics();
    this->UpdateMixerBoard();
 }
 
@@ -4631,15 +4628,12 @@ void AudacityProject::PushState(const wxString &desc,
    GetMenuManager(*this).UpdateMenus(*this);
 
    // Some state pushes, like changing a track gain control (& probably others),
-   // should not repopulate Lyrics Window and MixerBoard.
-   // Others, such as deleting a label or adding a wave track, obviously do.
+   // should not repopulate MixerBoard.
+   // Others, such as deleting adding a wave track, obviously do.
    // Could categorize these state changes, but for now...
    // It's crucial to not do that repopulating during playback.
    if (!gAudioIO->IsStreamActive(GetAudioIOToken()))
-   {
-      this->UpdateLyrics();
       this->UpdateMixerBoard();
-   }
 
    if (GetTracksFitVerticallyZoomed())
       ViewActions::DoZoomFitV(*this);
@@ -4713,7 +4707,6 @@ void AudacityProject::PopState(const UndoState &state)
    HandleResize();
 
    GetMenuManager(*this).UpdateMenus(*this);
-   this->UpdateLyrics();
    this->UpdateMixerBoard();
 
    AutoSave();
@@ -4728,34 +4721,7 @@ void AudacityProject::SetStateTo(unsigned int n)
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
-   this->UpdateLyrics();
    this->UpdateMixerBoard();
-}
-
-void AudacityProject::UpdateLyrics()
-{
-   // JKC: Previously we created a lyrics window,
-   // if it did not exist.  But we don't need to.
-   if (!mLyricsWindow)
-      return;
-
-   // Lyrics come from only the first label track.
-   auto pLabelTrack = *GetTracks()->Any< const LabelTrack >().begin();
-   if (!pLabelTrack)
-      return;
-
-   // The code that updates the lyrics is rather expensive when there
-   // are a lot of labels.
-   // So - bail out early if the lyrics window is not visible.
-   // We will later force an update when the lyrics window is made visible.
-   if( !mLyricsWindow->IsVisible() )
-      return;
-
-   LyricsPanel* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
-   pLyricsPanel->Clear();
-   pLyricsPanel->AddLabels(pLabelTrack);
-   pLyricsPanel->Finish(pLabelTrack->GetEndTime());
-   pLyricsPanel->Update(this->GetSel0());
 }
 
 void AudacityProject::UpdateMixerBoard()

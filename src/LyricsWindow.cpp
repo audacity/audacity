@@ -114,9 +114,8 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //
    //pToolBar->Realize();
 
-   mLyricsPanel = safenew LyricsPanel(this, -1, panelPos, panelSize);
+   mLyricsPanel = safenew LyricsPanel(this, -1, parent, panelPos, panelSize);
    RTL_WORKAROUND(mLyricsPanel);
-
 
    //vvv Highlight style is broken in ported version.
    //switch (mLyricsPanel->GetLyricsStyle())

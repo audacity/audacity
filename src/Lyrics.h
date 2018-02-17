@@ -18,6 +18,7 @@
 #include <wx/textctrl.h>
 #include "widgets/wxPanelWrapper.h"
 
+class AudacityProject;
 class LabelTrack;
 
 
@@ -80,13 +81,10 @@ class LyricsPanel final : public wxPanelWrapper
 
  public:
    LyricsPanel(wxWindow* parent, wxWindowID id,
+          AudacityProject *project,
           const wxPoint& pos = wxDefaultPosition,
           const wxSize& size = wxDefaultSize);
    virtual ~LyricsPanel();
-
-   void Clear();
-   void AddLabels(const LabelTrack *pLT);
-   void Finish(double finalT);
 
    int FindSyllable(long startChar); // Find the syllable whose char0 <= startChar <= char1.
    int GetCurrentSyllableIndex() { return mCurrentSyllable; };
@@ -97,6 +95,9 @@ class LyricsPanel final : public wxPanelWrapper
    void SetLyricsStyle(const LyricsStyle newLyricsStyle);
 
    void Update(double t);
+   void UpdateLyrics(wxEvent &e);
+   void OnShow(wxShowEvent& e);
+   void OnStartStop(wxCommandEvent &e);
 
    //
    // Event handlers
@@ -116,6 +117,10 @@ class LyricsPanel final : public wxPanelWrapper
    void HandleLayout();
 
 private:
+   void Clear();
+   void AddLabels(const LabelTrack *pLT);
+   void Finish(double finalT);
+
    void Add(double t, const wxString &syllable, wxString &highlightText);
 
    unsigned int GetDefaultFontSize() const; // Depends on mLyricsStyle. Call only after mLyricsStyle is set.
@@ -145,6 +150,9 @@ private:
 
    int            mTextHeight; // only for drawn text
    bool           mMeasurementsDone; // only for drawn text
+
+   wxWeakRef<AudacityProject> mProject;
+   bool           mDelayedUpdate{ false };
 
    DECLARE_EVENT_TABLE()
 };

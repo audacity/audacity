@@ -605,7 +605,6 @@ public:
 
    void PopState(const UndoState &state);
 
-   void UpdateLyrics();
    void UpdateMixerBoard();
 
    void GetRegionsByLabel( Regions &regions );

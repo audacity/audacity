@@ -199,7 +199,6 @@ void OnKaraoke(const CommandContext &context)
 
    auto lyricsWindow = project.GetLyricsWindow(true);
    lyricsWindow->Show();
-   project.UpdateLyrics();
    lyricsWindow->Raise();
 }
 
