@@ -77,10 +77,27 @@ static const wxString kScaleTypeStrings[nScaleTypes] =
 };
 
 
+enum kZoomTypes
+{
+   kReset,
+   kTimes2,
+   kHalfWave,
+   nZoomTypes
+};
+
+static const wxString kZoomTypeStrings[nZoomTypes] =
+{
+   XO("Reset"),
+   XO("Times2"),
+   XO("HalfWave"),
+};
+
+
 bool SetTrackCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString colours(  nColours,      kColourStrings );
    wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
    wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
+   wxArrayString vzooms(   nZoomTypes,    kZoomTypeStrings );
 
    S.OptionalY( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
    S.OptionalN( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
@@ -91,6 +108,7 @@ bool SetTrackCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, displays );
    S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   scales );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
+   S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    vzooms );
    S.OptionalN( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
    S.OptionalN( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
    // There is also a select command.  This is an alternative.
@@ -106,6 +124,7 @@ void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
    wxArrayString colours(  nColours,      kColourStrings );
    wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
    wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
+   wxArrayString vzooms(   nZoomTypes,    kZoomTypeStrings );
 
    S.AddSpace(0, 5);
 
@@ -120,6 +139,7 @@ void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,      &colours );
       S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType, &displays );
       S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,   &scales );
+      S.Optional( bHasVZoom       ).TieChoice(          _("VZoom:"),         mVZoom,       &vzooms );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
@@ -181,6 +201,14 @@ bool SetTrackCommand::Apply(const CommandContext & context)
             wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
          if( wt && bHasGrayScale )
             wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
+         if( wt && bHasVZoom ){
+            switch( mVZoom ){
+               default:
+               case kReset: wt->SetDisplayBounds(-1,1); break;
+               case kTimes2: wt->SetDisplayBounds(-2,2); break;
+               case kHalfWave: wt->SetDisplayBounds(0,1); break;
+            }
+         }
 
          // These ones don't make sense on the second channel of a stereo track.
          if( !bIsSecondChannel ){
