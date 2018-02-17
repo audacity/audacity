@@ -241,6 +241,8 @@ It handles initialization and termination by subclassing wxApp.
 /// Custom events
 ////////////////////////////////////////////////////////////
 
+wxDEFINE_EVENT( EVT_CLIPBOARD_CHANGE, wxCommandEvent);
+
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
 wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 

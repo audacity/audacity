@@ -1,4 +1,5 @@
 #include "../AdornedRulerPanel.h"
+#include "../AudacityApp.h" // for EVT_CLIPBOARD_CHANGE
 #include "../HistoryWindow.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
@@ -335,6 +336,7 @@ void OnCut(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
@@ -414,6 +416,7 @@ void OnCopy(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    AudacityProject::msClipT0 = selectedRegion.t0();
    AudacityProject::msClipT1 = selectedRegion.t1();
@@ -754,6 +757,7 @@ void OnSplitCut(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    AudacityProject::msClipT0 = selectedRegion.t0();
    AudacityProject::msClipT1 = selectedRegion.t1();

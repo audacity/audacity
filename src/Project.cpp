@@ -5232,6 +5232,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    msClipT0 = regions.front().start;
    msClipT1 = regions.back().end;
