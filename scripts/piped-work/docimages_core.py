@@ -112,6 +112,7 @@ def loadMonoTracks( num ) :
     loadMonoTrack()
     do( 'SetTrack: Track=0 Name="Foxy Lady"')
     for i in range( 0, num-1 ):
+        do( 'Select: First=0 Last=0')
         do( 'Duplicate' )
     do( 'FitInWindow' )
     do( 'Select: Start=55 End=70')

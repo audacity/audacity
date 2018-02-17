@@ -86,5 +86,5 @@ def oddments_imagesB():
     capture( "QuikPlay001.png", "First_Track_Plus ToTop=0" )
 
 oddments_imagesA()
-#oddments_imagesB()
+oddments_imagesB()
 
