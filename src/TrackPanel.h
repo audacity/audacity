@@ -20,6 +20,7 @@
 #include <wx/timer.h> // to inherit
 
 #include "HitTestResult.h"
+#include "Prefs.h"
 
 #include "SelectedRegion.h"
 
@@ -210,6 +211,8 @@ namespace TrackInfo
        wxWindow *pParent);
 #endif
 
+   // Non-member, namespace function relying on TrackPanel to invoke it
+   // when it handles preference update events
    void UpdatePrefs( wxWindow *pParent );
 };
 
@@ -251,6 +254,7 @@ enum : int {
 class AUDACITY_DLL_API TrackPanel final
    : public CellularPanel
    , public NonKeystrokeInterceptingWindow
+   , private PrefsListener
 {
  public:
    TrackPanel(wxWindow * parent,
@@ -264,7 +268,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    virtual ~ TrackPanel();
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
    void ApplyUpdatedTheme();
 
    void OnPaint(wxPaintEvent & event);

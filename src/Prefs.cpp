@@ -71,6 +71,31 @@ int gMenusDirty = 0;
 
 wxDEFINE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
 
+PrefsListener::PrefsListener()
+{
+   wxTheApp->Bind(EVT_PREFS_UPDATE, &PrefsListener::OnEvent, this);
+}
+
+PrefsListener::~PrefsListener()
+{
+   // Explicit unbinding is needed because this is not a wxEvtHandler
+   wxTheApp->Unbind(EVT_PREFS_UPDATE, &PrefsListener::OnEvent, this);
+}
+
+void PrefsListener::UpdateSelectedPrefs( int )
+{
+}
+
+void PrefsListener::OnEvent( wxCommandEvent &evt )
+{
+   evt.Skip();
+   auto id = evt.GetId();
+   if (id <= 0)
+      UpdatePrefs();
+   else
+      UpdateSelectedPrefs( id );
+}
+
 #if 0
 // Copy one entry from one wxConfig object to another
 static void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxString entry)

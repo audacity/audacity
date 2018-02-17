@@ -132,6 +132,7 @@ SelectionBar::~SelectionBar()
 void SelectionBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
+   UpdatePrefs();
 }
 
 
@@ -504,7 +505,8 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    // Save format name before recreating the controls so they resize properly
    {
       auto format = mStartTime->GetBuiltinName(index);
-      mListener->AS_SetSelectionFormat(format);
+      if (mListener)
+         mListener->AS_SetSelectionFormat(format);
    }
 
    RegenerateTooltips();

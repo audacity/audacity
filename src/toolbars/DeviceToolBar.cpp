@@ -64,6 +64,12 @@ BEGIN_EVENT_TABLE(DeviceToolBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, DeviceToolBar::OnCaptureKey)
 END_EVENT_TABLE()
 
+static int DeviceToolbarPrefsID()
+{
+   static int value = wxNewId();
+   return value;
+}
+
 //Standard contructor
 DeviceToolBar::DeviceToolBar()
 : ToolBar(DeviceBarID, _("Device"), wxT("Device"), true)
@@ -311,6 +317,13 @@ void DeviceToolBar::UpdatePrefs()
 
    Layout();
    Refresh();
+}
+
+void DeviceToolBar::UpdateSelectedPrefs( int id )
+{
+   if (id == DeviceToolbarPrefsID())
+      UpdatePrefs();
+   ToolBar::UpdateSelectedPrefs( id );
 }
 
 
@@ -773,10 +786,8 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       gAudioIO->HandleDeviceChange();
    }
 
-   // Update all projects' DeviceToolBar.
-   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
-      gAudacityProjects[i]->GetDeviceToolBar()->UpdatePrefs();
-   }
+   wxTheApp->AddPendingEvent(wxCommandEvent{
+      EVT_PREFS_UPDATE, DeviceToolbarPrefsID() });
 }
 
 void DeviceToolBar::ShowInputDialog()

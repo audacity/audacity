@@ -1497,7 +1497,6 @@ void AudacityProject::UpdatePrefsVariables()
 {
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
-   gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
    gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
@@ -1531,20 +1530,6 @@ void AudacityProject::UpdatePrefs()
    UpdatePrefsVariables();
 
    SetProjectTitle();
-
-   {
-      ObjectFactorySetLocker locker;
-      for( const auto &pObject : mAttachedObjects )
-         pObject->UpdatePrefs();
-   }
-
-   GetMenuManager(*this).UpdatePrefs();
-
-   mTrackPanel->UpdatePrefs();
-   mToolManager->UpdatePrefs();
-   mRuler->UpdatePrefs();
-   if (mMixerBoard)
-      mMixerBoard->UpdatePrefs();
 }
 
 void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
@@ -3633,8 +3618,6 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
    } // while
 
-   mViewInfo.UpdatePrefs();
-
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
        mViewInfo.vpos = longVpos;
@@ -5530,10 +5513,8 @@ LyricsWindow* AudacityProject::GetLyricsWindow(bool create)
 
 MixerBoardFrame* AudacityProject::GetMixerBoardFrame(bool create)
 {
-   if (create && !mMixerBoardFrame) {
+   if (create && !mMixerBoardFrame)
       mMixerBoardFrame = safenew MixerBoardFrame{ this };
-      mMixerBoard = mMixerBoardFrame->mMixerBoard;
-   }
    return mMixerBoardFrame;
 }
 

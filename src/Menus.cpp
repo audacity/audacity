@@ -51,14 +51,6 @@
 
 #include <wx/menu.h>
 
-PrefsListener::~PrefsListener()
-{
-}
-
-void PrefsListener::UpdatePrefs()
-{
-}
-
 MenuManager &GetMenuManager(AudacityProject &project)
 { return *project.mMenuManager; }
 
@@ -68,6 +60,11 @@ MenuCreator::MenuCreator()
 
 MenuCreator::~MenuCreator()
 {
+}
+
+MenuManager::MenuManager()
+{
+   UpdatePrefs();
 }
 
 void MenuManager::UpdatePrefs()
@@ -387,6 +384,7 @@ CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 
    return AlwaysEnabledFlag;
 }
+
 
 CommandFlag MenuManager::GetUpdateFlags
 (AudacityProject &project, bool checkActive)

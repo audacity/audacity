@@ -893,6 +893,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
                      &AdornedRulerPanel::OnRecordStartStop,
                      this);
+
+   // Delay until after CommandManager has been populated:
+   this->CallAfter( &AdornedRulerPanel::UpdatePrefs );
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
@@ -1797,8 +1800,11 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
       gPrefs->Write(wxT("/GUI/AutoScroll"), false);
    else
       gPrefs->Write(wxT("/GUI/AutoScroll"), true);
-   mProject->UpdatePrefs();
+
    gPrefs->Flush();
+
+   wxTheApp->AddPendingEvent(wxCommandEvent{
+      EVT_PREFS_UPDATE, ViewInfo::UpdateScrollPrefsID() });
 }
 
 

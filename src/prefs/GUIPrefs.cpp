@@ -366,6 +366,12 @@ wxString GUIPrefs::GetLang()
       return {};
 }
 
+int ShowClippingPrefsID()
+{
+   static int value = wxNewId();
+   return value;
+}
+
 PrefsPanel::Factory
 GUIPrefsFactory = [](wxWindow *parent, wxWindowID winid)
 {
