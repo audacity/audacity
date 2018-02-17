@@ -33,6 +33,7 @@ class CommandContext;
 class ScreenshotCommand : public AudacityCommand
 {
 public:
+   ScreenshotCommand(){ mbBringToTop=true;};
    // CommandDefinitionInterface overrides
    wxString GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Takes screenshots.");};
@@ -46,7 +47,9 @@ private:
    wxString mWhat;
    wxString mBack;
    wxString mPath;
+   bool mbBringToTop;
    bool bHasBackground;
+   bool bHasBringToTop;
    friend class ScreenshotCommand;
    friend class ScreenFrame;
 

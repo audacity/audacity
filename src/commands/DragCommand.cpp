@@ -48,7 +48,7 @@ static const wxString kCoordTypeStrings[nCoordTypes] =
 
 bool DragCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString coords( nCoordTypes, kCoordTypeStrings );
-   S.OptionalN( bHasId         ).Define(     mId,          wxT("Id"),         0.0, 11000.0, 1000000.0);
+   S.OptionalN( bHasId         ).Define(     mId,          wxT("Id"),         11000.0, -100000.0, 1000000.0);
    S.OptionalY( bHasWinName    ).Define(     mWinName,     wxT("Window"),     "Timeline");
    S.OptionalY( bHasFromX      ).Define(     mFromX,       wxT("FromX"),      200.0, 0.0, 1000000.0);
    S.OptionalY( bHasFromY      ).Define(     mFromY,       wxT("FromY"),      10.0,  0.0, 1000000.0);
