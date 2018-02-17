@@ -1,6 +1,5 @@
 #include "../AdornedRulerPanel.h"
 #include "../AudacityApp.h" // for EVT_CLIPBOARD_CHANGE
-#include "../HistoryWindow.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../MixerBoard.h"
@@ -240,9 +239,6 @@ void DoUndo(AudacityProject &project)
 
    project.RedrawProject();
 
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
-
    if (mixerBoard)
       // Mixer board may need to change for selection state and pan/gain
       mixerBoard->Refresh();
@@ -282,9 +278,6 @@ void OnRedo(const CommandContext &context)
    trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
 
    project.RedrawProject();
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
 
    if (mixerBoard)
       // Mixer board may need to change for selection state and pan/gain
@@ -377,9 +370,6 @@ void OnCut(const CommandContext &context)
    ruler->DrawOverlays( true );
 
    project.RedrawProject();
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
 }
 
 void OnDelete(const CommandContext &context)
@@ -424,9 +414,6 @@ void OnCopy(const CommandContext &context)
 
    //Make sure the menus/toolbar states get updated
    trackPanel->Refresh(false);
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
 }
 
 void OnPaste(const CommandContext &context)
@@ -766,9 +753,6 @@ void OnSplitCut(const CommandContext &context)
    project.PushState(_("Split-cut to the clipboard"), _("Split Cut"));
 
    project.RedrawProject();
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
 }
 
 void OnSplitDelete(const CommandContext &context)

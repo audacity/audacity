@@ -4591,9 +4591,6 @@ void AudacityProject::InitialState()
 
    GetUndoManager()->StateSaved();
 
-   if (mHistoryWindow)
-      mHistoryWindow->UpdateDisplay();
-
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
 
    GetMenuManager(*this).UpdateMenus(*this);
@@ -4628,9 +4625,6 @@ void AudacityProject::PushState(const wxString &desc,
                           desc, shortDesc, flags);
 
    mDirty = true;
-
-   if (mHistoryWindow)
-      mHistoryWindow->UpdateDisplay();
 
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
 
@@ -5236,9 +5230,6 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 
    msClipT0 = regions.front().start;
    msClipT1 = regions.back().end;
-
-   if (mHistoryWindow)
-      mHistoryWindow->UpdateDisplay();
 }
 
 
