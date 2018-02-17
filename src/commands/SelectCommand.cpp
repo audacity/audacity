@@ -40,9 +40,9 @@ explicitly code all three.
 #include "CommandContext.h"
 
 bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
-   S.Optional( bHasT0 ).Define( mT0, wxT("Start"), 0.0, 0.0, (double)FLT_MAX);
-   S.Optional( bHasT1 ).Define( mT1, wxT("End"), 0.0, 0.0, (double)FLT_MAX);
-   S.Define( mFromEnd, wxT("FromEnd"),   false );
+   S.OptionalY( bHasT0     ).Define( mT0, wxT("Start"), 0.0, 0.0, (double)FLT_MAX);
+   S.OptionalY( bHasT1     ).Define( mT1, wxT("End"), 0.0, 0.0, (double)FLT_MAX);
+   S.OptionalY( bHasFromEnd).Define( mFromEnd, wxT("FromEnd"),   false );
    return true;
 }
 
@@ -58,6 +58,7 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
+      // Always used, so no optional checkbox.
       S.TieCheckBox(_("From End:"), mFromEnd );
    }
    S.EndMultiColumn();
@@ -81,8 +82,8 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
 }
 
 bool SelectFrequenciesCommand::DefineParams( ShuttleParams & S ){
-   S.Optional( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
-   S.Optional( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
+   S.OptionalN( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
+   S.OptionalN( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
    return true;
 }
 
@@ -121,9 +122,9 @@ static const wxString kModes[nModes] =
 
 bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
    wxArrayString modes( nModes, kModes );
-   S.Optional( bHasFirstTrack).Define( mFirstTrack, wxT("First"), 0, 0, 100);
-   S.Optional( bHasLastTrack ).Define( mLastTrack,  wxT("Last"),  0, 0, 100);
-   S.DefineEnum( mMode, wxT("Mode"), 0, modes );
+   S.OptionalN( bHasFirstTrack).Define( mFirstTrack, wxT("First"), 0, 0, 100);
+   S.OptionalN( bHasLastTrack ).Define( mLastTrack,  wxT("Last"),  0, 0, 100);
+   S.OptionalY( bHasMode      ).DefineEnum( mMode,   wxT("Mode"), 0, modes );
    
    return true;
 }
@@ -141,6 +142,7 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
+      // Always used, so no check box.
       S.TieChoice( _("Mode:"), mMode, &modes);
    }
    S.EndMultiColumn();

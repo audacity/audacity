@@ -45,6 +45,7 @@ public:
 
    bool bHasT0;
    bool bHasT1;
+   bool bHasFromEnd;
 
    double mT0;
    double mT1;
@@ -86,6 +87,7 @@ public:
 
    bool bHasFirstTrack;
    bool bHasLastTrack;
+   bool bHasMode;
 
    int mFirstTrack;
    int mLastTrack;

@@ -97,6 +97,7 @@ bool DragCommand::Apply(const CommandContext & context)
    pWin->GetEventHandler()->ProcessEvent( Evt );
    if( bHasToX ){
       wxMouseEvent Evt2( wxEVT_LEFT_DOWN );
+      Evt2.m_leftDown = true;
       Evt2.m_x = mFromX;
       Evt2.m_y = mFromY;
       Evt2.m_aux2Down = true;

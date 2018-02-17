@@ -39,14 +39,12 @@ public:
 public:
    int mTrackIndex;
    int mChannelIndex;
-   double mContainsTime;
    double mT;
    double mV;
    bool mbDelete;
 
    bool bHasTrackIndex;
    bool bHasChannelIndex;
-   bool bHasContainsTime;
    bool bHasT;
    bool bHasV;
    bool bHasDelete;

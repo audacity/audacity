@@ -38,6 +38,7 @@ public:
 public:
    wxString mFileName;
    bool mbAddToHistory;
+   bool bHasAddToHistory;
 };
 
 #define SAVE_PROJECT_PLUGIN_SYMBOL XO("Save Project")
@@ -58,4 +59,6 @@ public:
    wxString mFileName;
    bool mbAddToHistory;
    bool mbCompress;
+   bool bHasAddToHistory;
+   bool bHasCompress;
 };
