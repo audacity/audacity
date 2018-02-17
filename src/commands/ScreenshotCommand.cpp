@@ -139,9 +139,10 @@ static const wxString kBackgroundStrings[nBackgrounds] =
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
    wxArrayString backs(nBackgrounds, kBackgroundStrings);
-   S.Define(                               mPath, wxT("Path"),         wxT(""));
-   S.DefineEnum(                           mWhat, wxT("CaptureWhat"),  wxT("Window"), whats );
-   S.OptionalN(bHasBackground).DefineEnum( mBack, wxT("Background"),   wxT("None"), backs );
+   S.Define(                               mPath,        wxT("Path"),         wxT(""));
+   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  wxT("Window"), whats );
+   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   wxT("None"), backs );
+   S.OptionalN(bHasBringToTop).Define(     mbBringToTop, wxT("ToTop"), true );
    return true;
 };
 
@@ -153,9 +154,10 @@ void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox( _("Path:"), mPath);
-      S.TieChoice(  _("Capture What:"), mWhat, &whats);
-      S.TieChoice(  _("Background:"), mBack, &backs);
+      S.TieTextBox(  _("Path:"), mPath);
+      S.TieChoice(   _("Capture What:"), mWhat, &whats);
+      S.TieChoice(   _("Background:"), mBack, &backs);
+      S.TieCheckBox( _("Bring To Top:"), mbBringToTop);
    }
    S.EndMultiColumn();
 }
@@ -247,16 +249,18 @@ bool ScreenshotCommand::Capture(
    int height = r.height;
    if( r.width == 0 )
       return false;
-   if (window) {
-      if (window->IsTopLevel()) {
-         window->Raise();
-      }
-      else {
-         wxGetTopLevelParent(window)->Raise();
+   if (window ) {
+      wxWindow * win = window;
+      wxTopLevelWindow * top_win= nullptr;
+      if( !window->IsTopLevel())
+         win = wxGetTopLevelParent(window);
+      top_win = dynamic_cast<wxTopLevelWindow*>( win );
+      if( (!bHasBringToTop || mbBringToTop) && (!top_win || !top_win->IsActive()) ){
+         win->Raise();
+         Yield();
       }
    }
 
-   Yield();
 
    int screenW, screenH;
    wxDisplaySize(&screenW, &screenH);

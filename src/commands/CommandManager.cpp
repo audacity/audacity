@@ -947,7 +947,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                         count, {});
 }
 
-CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
+CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
    const wxString & label,
    const wxString & accel,
    wxMenu *menu,
@@ -958,6 +958,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    int count,
    const CommandParameter &parameter)
 {
+   wxString name = nameIn;
+
    // If we have the identifier already, reuse it.
    CommandListEntry *prev = mCommandNameHash[name];
    if (!prev);
@@ -973,6 +975,18 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       wxString labelPrefix;
       if (!mSubMenuList.empty()) {
          labelPrefix = mSubMenuList.back()->name;
+      }
+
+      // For key bindings for commands with a list, such as align,
+      // the name in prefs is the category name plus the effect name.
+      // This feature is not used for built-in effects.
+      if (multi) {
+         // The name needs to be clean for use by automation.
+         wxString cleanedName = wxString::Format(wxT("%s_%s"), name, label);
+         cleanedName.Replace( "/", "" );
+         cleanedName.Replace( "&", "" );
+         cleanedName.Replace( " ", "" );
+         name = cleanedName;
       }
 
       // wxMac 2.5 and higher will do special things with the
@@ -1023,13 +1037,6 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       // and the normal reduced list.
       if( mMaxListOnly.Index( entry->key ) !=-1) 
          entry->key = wxT("");
-
-
-      // For key bindings for commands with a list, such as effects,
-      // the name in prefs is the category name plus the effect name.
-      if (multi) {
-         entry->name = wxString::Format(wxT("%s:%s"), name, label);
-      }
 
       // Key from preferences overridse the default key given
       gPrefs->SetPath(wxT("/NewKeys"));
@@ -1547,6 +1554,14 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandCon
       {
          // Testing against labelPrefix too allows us to call Nyquist functions by name.
          if( Str.IsSameAs( entry->name, false ) || Str.IsSameAs( entry->labelPrefix, false ))
+         {
+            return HandleCommandEntry( entry.get(), flags, mask);
+         }
+      }
+      else
+      {
+         // Handle multis too...
+         if( Str.IsSameAs( entry->name, false ) )
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }

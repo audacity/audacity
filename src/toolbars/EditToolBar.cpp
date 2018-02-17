@@ -69,8 +69,8 @@ const int SEPARATOR_WIDTH = 14;
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
-   EVT_COMMAND_RANGE( ETBCutID,
-                      ETBCutID + ETBNumButtons - 1,
+   EVT_COMMAND_RANGE( ETBCutID+first_ETB_ID,
+                      ETBCutID+first_ETB_ID + ETBNumButtons - 1,
                       wxEVT_COMMAND_BUTTON_CLICKED,
                       EditToolBar::OnButton )
 END_EVENT_TABLE()
@@ -110,7 +110,7 @@ AButton *EditToolBar::AddButton(
    r = ToolBar::MakeButton(pBar,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
       eEnabledUp, eEnabledDown, eDisabled,
-      wxWindowID(id),
+      wxWindowID(id+first_ETB_ID),
       wxDefaultPosition,
       toggle,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
@@ -291,7 +291,7 @@ void EditToolBar::ForAllButtons(int Action)
 
 void EditToolBar::OnButton(wxCommandEvent &event)
 {
-   int id = event.GetId();
+   int id = event.GetId()-first_ETB_ID;
    // Be sure the pop-up happens even if there are exceptions, except for buttons which toggle.
    auto cleanup = finally( [&] { mButtons[id]->InteractionOver();});
 
