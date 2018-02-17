@@ -266,6 +266,8 @@ public:
    MixerBoardFrame(AudacityProject* parent);
    virtual ~MixerBoardFrame();
 
+   void Recreate(AudacityProject *pProject);
+
 private:
    // event handlers
    void OnCloseWindow(wxCloseEvent &WXUNUSED(event));

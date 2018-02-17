@@ -4713,24 +4713,6 @@ void AudacityProject::SetStateTo(unsigned int n)
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
 }
 
-void AudacityProject::RecreateMixerBoard( )
-{
-   wxASSERT( mMixerBoard );
-   wxASSERT( mMixerBoardFrame );
-   wxPoint  pos = mMixerBoard->GetPosition();
-   wxSize siz = mMixerBoard->GetSize();
-   wxSize siz2 = mMixerBoardFrame->GetSize();
-   //wxLogDebug("Got rid of board %p", mMixerBoard );
-   mMixerBoard->Destroy();
-   mMixerBoard = NULL;
-   mMixerBoard = safenew MixerBoard(this, mMixerBoardFrame, pos, siz);
-   mMixerBoardFrame->mMixerBoard = mMixerBoard;
-   //wxLogDebug("Created NEW board %p", mMixerBoard );
-   mMixerBoard->UpdateTrackClusters();
-   mMixerBoard->SetSize( siz );
-   mMixerBoardFrame->SetSize( siz2 );
-}
-
 //
 // Clipboard methods
 //

@@ -937,7 +937,8 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 
 void MixerBoard::UpdatePrefs()
 {
-   mProject->RecreateMixerBoard();
+   // Destroys this:
+   static_cast<MixerBoardFrame*>(GetParent())->Recreate( mProject );
 
 // Old approach modified things in situ.
 // However with a theme change there is so much to modify, it is easier
@@ -1449,5 +1450,23 @@ void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
    AudacityProject *project = GetActiveProject();
    project->GetCommandManager()->FilterKeyEvent(project, event, true);
 }
+
+void MixerBoardFrame::Recreate( AudacityProject *pProject )
+{
+   wxPoint  pos = mMixerBoard->GetPosition();
+   wxSize siz = mMixerBoard->GetSize();
+   wxSize siz2 = this->GetSize();
+
+   //wxLogDebug("Got rid of board %p", mMixerBoard );
+   mMixerBoard->Destroy();
+   mMixerBoard = NULL;
+   mMixerBoard = safenew MixerBoard(pProject, this, pos, siz);
+   //wxLogDebug("Created NEW board %p", mMixerBoard );
+   mMixerBoard->UpdateTrackClusters();
+   mMixerBoard->SetSize( siz );
+
+   this->SetSize( siz2 );
+}
+
 
 
