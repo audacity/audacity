@@ -313,6 +313,7 @@ LongMessageDialog::LongMessageDialog(wxWindow * parent,
 {
    mType = type;
    mAdditionalButtons = additionalButtons;
+   SetName( "Long Message" );
 }
 
 LongMessageDialog::~LongMessageDialog(){

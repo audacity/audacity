@@ -1611,6 +1611,12 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("Export2"), _("Export..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("OpenProject"), _("Open Project..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("SaveProject"), _("Save Project..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Drag"), _("Mousing About..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("CompareAudio"), _("Compare Audio..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("GetPreference"), _("Get Preference..."), FN(OnAudacityCommand),

@@ -2197,6 +2197,8 @@ void TrackInfo::GainSliderDrawFunction
    auto target = dynamic_cast<GainSliderHandle*>( context.target.get() );
    auto dc = &context.dc;
    bool hit = target && target->GetTrack().get() == pTrack;
+   if( hit )
+      hit=hit;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
       ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);

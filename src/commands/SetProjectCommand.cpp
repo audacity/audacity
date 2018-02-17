@@ -32,11 +32,11 @@ SetProjectCommand::SetProjectCommand()
 
 
 bool SetProjectCommand::DefineParams( ShuttleParams & S ){ 
-   S.Optional( bHasName        ).Define(     mName,        wxT("Name"),       _("Project") );
-   S.Optional( bHasSizing      ).Define(     mPosX,        wxT("X"),          10.0, 0.0, 2000.0);
-   S.Optional( bHasSizing      ).Define(     mPosY,        wxT("Y"),          10.0, 0.0, 2000.0);
-   S.Optional( bHasSizing      ).Define(     mWidth,       wxT("Width"),      1000.0, 200.0, 4000.0);
-   S.Optional( bHasSizing      ).Define(     mHeight,      wxT("Height"),      900.0, 200.0, 4000.0);
+   S.OptionalN( bHasName        ).Define(     mName,        wxT("Name"),       _("Project") );
+   S.OptionalY( bHasSizing      ).Define(     mPosX,        wxT("X"),          10.0, 0.0, 2000.0);
+   S.OptionalY( bHasSizing      ).Define(     mPosY,        wxT("Y"),          10.0, 0.0, 2000.0);
+   S.OptionalY( bHasSizing      ).Define(     mWidth,       wxT("Width"),      1000.0, 200.0, 4000.0);
+   S.OptionalY( bHasSizing      ).Define(     mHeight,      wxT("Height"),      900.0, 200.0, 4000.0);
    return true;
 };
 

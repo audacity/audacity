@@ -63,6 +63,7 @@ public:
    wxString mName;
    wxString mValue;
    bool mbReload;
+   bool bHasReload;
 };
 
 #endif /* End of include guard: __PREFERENCE_COMMANDS__ */

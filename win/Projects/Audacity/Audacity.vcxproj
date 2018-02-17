@@ -141,6 +141,7 @@
     <ClCompile Include="..\..\..\src\commands\CommandContext.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp" />
     <ClCompile Include="..\..\..\src\commands\Demo.cpp" />
+    <ClCompile Include="..\..\..\src\commands\DragCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\LoadCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\SetClipCommand.cpp" />
@@ -483,6 +484,7 @@
     <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h" />
     <ClInclude Include="..\..\..\src\commands\Demo.h" />
+    <ClInclude Include="..\..\..\src\commands\DragCommand.h" />
     <ClInclude Include="..\..\..\src\commands\LoadCommands.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
     <ClInclude Include="..\..\..\src\commands\SetClipCommand.h" />

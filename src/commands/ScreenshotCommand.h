@@ -46,6 +46,7 @@ private:
    wxString mWhat;
    wxString mBack;
    wxString mPath;
+   bool bHasBackground;
    friend class ScreenshotCommand;
    friend class ScreenFrame;
 

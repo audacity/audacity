@@ -295,6 +295,7 @@ bool CommandImplementation::Apply(const CommandContext & WXUNUSED(context))
 #include "SetLabelCommand.cpp"
 #include "SetProjectCommand.cpp"
 #include "SetEnvelopeCommand.cpp"
+#include "DragCommand.cpp"
 #endif
 #endif
 
