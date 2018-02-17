@@ -69,6 +69,8 @@ std::unique_ptr<AudacityPrefs> ugPrefs {};
 AudacityPrefs *gPrefs = NULL;
 int gMenusDirty = 0;
 
+wxDEFINE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
+
 #if 0
 // Copy one entry from one wxConfig object to another
 static void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxString entry)

@@ -844,12 +844,17 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    }
 #endif
 
+   // PRL:  Is the following concern still valid, now that prefs update is
+   //      handled instead by delayed event processing?
+
    // LL:  wxMac can't handle recreating the menus when this dialog is still active,
    //      so AudacityProject::UpdatePrefs() or any of the routines it calls must
    //      not cause MenuCreator::RebuildMenuBar() to be executed.
    for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       gAudacityProjects[i]->UpdatePrefs();
    }
+
+   wxTheApp->AddPendingEvent(wxCommandEvent{ EVT_PREFS_UPDATE });
 
    WaveformSettings::defaults().LoadPrefs();
    SpectrogramSettings::defaults().LoadPrefs();

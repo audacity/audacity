@@ -34,6 +34,7 @@
 #include "../include/audacity/ComponentInterface.h"
 
 #include <wx/fileconf.h>  // to inherit wxFileConfig
+#include <wx/event.h> // to declare custom event types
 
 void InitPreferences();
 void FinishPreferences();
@@ -158,5 +159,9 @@ private:
    const int *mIntValues;
    const wxString mOldKey;
 };
+
+// An event emitted by the application when the Preference dialog commits
+// changes
+wxDECLARE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
 
 #endif
