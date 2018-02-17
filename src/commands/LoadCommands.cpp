@@ -37,7 +37,7 @@ modelled on BuiltinEffectsModule
 #include "../commands/SetEnvelopeCommand.h"
 #include "../commands/SetClipCommand.h"
 #include "../commands/SetProjectCommand.h"
-
+#include "../commands/DragCommand.h"
 
 //
 // Define the list of COMMANDs that will be autoregistered and how to instantiate each
@@ -46,6 +46,7 @@ modelled on BuiltinEffectsModule
    COMMAND( DEMO,              DemoCommand, () )           \
    COMMAND( MESSAGE,           MessageCommand,   () )      \
    COMMAND( SCREENSHOT,        ScreenshotCommand,   () )   \
+   COMMAND( DRAG,              DragCommand, () )           \
    COMMAND( COMPARE_AUDIO,     CompareAudioCommand, () )   \
    COMMAND( SET_TRACK,         SetTrackCommand, () )       \
    COMMAND( SET_ENVELOPE,      SetEnvelopeCommand, () )    \

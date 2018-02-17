@@ -585,7 +585,8 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       context.AddItem( R.GetTop() );
       context.AddItem( R.GetRight() );
       context.AddItem( R.GetBottom() );
-      context.AddItem( Name ); 
+      context.AddItem( Name );
+      context.AddItem( item->GetId() );
       context.EndArray();
 
       ExploreWindows( context, P, item, item->GetId(), depth+1 );

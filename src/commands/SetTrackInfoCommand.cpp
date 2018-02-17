@@ -82,22 +82,22 @@ bool SetTrackCommand::DefineParams( ShuttleParams & S ){
    wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
    wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
 
-   S.Optional( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
-   S.Optional( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
-   S.Optional( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       wxT("Unnamed") );
-   S.Optional( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -1.0, 1.0);
-   S.Optional( bHasGain           ).Define(     mGain,           wxT("Gain"),       1.0,  0.0, 10.0);
-   S.Optional( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 700 );
-   S.Optional( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, displays );
-   S.Optional( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   scales );
-   S.Optional( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
-   S.Optional( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
-   S.Optional( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
+   S.OptionalY( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
+   S.OptionalN( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
+   S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       wxT("Unnamed") );
+   S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -1.0, 1.0);
+   S.OptionalN( bHasGain           ).Define(     mGain,           wxT("Gain"),       1.0,  0.0, 10.0);
+   S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 700 );
+   S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, displays );
+   S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   scales );
+   S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
+   S.OptionalN( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
+   S.OptionalN( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
    // There is also a select command.  This is an alternative.
-   S.Optional( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
-   S.Optional( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );
-   S.Optional( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
-   S.Optional( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
+   S.OptionalN( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
+   S.OptionalN( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );
+   S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
+   S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    return true;
 };
 
