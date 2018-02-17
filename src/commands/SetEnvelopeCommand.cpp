@@ -35,7 +35,7 @@ bool SetEnvelopeCommand::DefineParams( ShuttleParams & S ){
    S.OptionalY( bHasTrackIndex     ).Define(  mTrackIndex,     wxT("Track"),      0, 0, 100 );
    S.OptionalN( bHasChannelIndex   ).Define(  mChannelIndex,   wxT("Channel"),    0, 0, 100 );
    S.OptionalY( bHasT              ).Define(  mT,              wxT("Time"),     0.0, 0.0, 100000.0);
-   S.OptionalY( bHasV              ).Define(  mV,              wxT("Value"),    0.0, 0.0, 2.0);
+   S.OptionalY( bHasV              ).Define(  mV,              wxT("Value"),    1.0, 0.0, 2.0);
    S.OptionalN( bHasDelete         ).Define(  mbDelete,        wxT("Delete"),   false );
    return true;
 };
