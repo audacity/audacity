@@ -74,6 +74,8 @@ public:
    bool ExchangeWithMaster(const wxString & Name) override;
    bool ShouldSet();
    virtual ShuttleParams & Optional( bool & var ){ pOptionalFlag = NULL;return *this;};
+   virtual ShuttleParams & OptionalY( bool & var ){ return Optional( var );};
+   virtual ShuttleParams & OptionalN( bool & var ){ return Optional( var );};
    virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false );
    virtual void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
    virtual void Define( int & var,      const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
@@ -156,6 +158,10 @@ class ShuttleDefaults : public ShuttleParams
 {
 public:
    wxString Result;
+   virtual ShuttleParams & Optional( bool & var )override{  var = true; pOptionalFlag = NULL;return *this;};
+   virtual ShuttleParams & OptionalY( bool & var )override{ var = true; pOptionalFlag = NULL;return *this;};
+   virtual ShuttleParams & OptionalN( bool & var )override{ var = false;pOptionalFlag = NULL;return *this;};
+
    void Define( bool & var,          const wxChar * WXUNUSED(key),  const bool     vdefault, 
       const bool     WXUNUSED(vmin), const bool     WXUNUSED(vmax), const bool     WXUNUSED(vscl) ) 
       override { var = vdefault;};

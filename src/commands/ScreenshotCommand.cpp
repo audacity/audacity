@@ -139,9 +139,9 @@ static const wxString kBackgroundStrings[nBackgrounds] =
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
    wxArrayString backs(nBackgrounds, kBackgroundStrings);
-   S.Define(     mPath, wxT("Path"),         wxT(""),       wxT(""), wxT(""), wxT(""));
-   S.DefineEnum( mWhat, wxT("CaptureWhat"),  wxT("Window"), whats );
-   S.DefineEnum( mBack, wxT("Background"),   wxT("None"), backs );
+   S.Define(                               mPath, wxT("Path"),         wxT(""));
+   S.DefineEnum(                           mWhat, wxT("CaptureWhat"),  wxT("Window"), whats );
+   S.OptionalN(bHasBackground).DefineEnum( mBack, wxT("Background"),   wxT("None"), backs );
    return true;
 };
 
@@ -154,8 +154,8 @@ void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.TieTextBox( _("Path:"), mPath);
-      S.TieChoice( _("Capture What:"), mWhat, &whats);
-      S.TieChoice( _("Background:"), mBack, &backs);
+      S.TieChoice(  _("Capture What:"), mWhat, &whats);
+      S.TieChoice(  _("Background:"), mBack, &backs);
    }
    S.EndMultiColumn();
 }
@@ -483,7 +483,8 @@ void ScreenshotCommand::CaptureWindowOnIdle(
 void ScreenshotCommand::CapturePreferences( 
    const CommandContext & context,
    AudacityProject * pProject, const wxString &mFileName ){
-   mFileName;//compiler food.
+   (void)&mFileName;//compiler food.
+   (void)&context;
    CommandManager * pMan = pProject->GetCommandManager();
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
@@ -512,7 +513,8 @@ void ScreenshotCommand::CapturePreferences(
 void ScreenshotCommand::CaptureEffects( 
    const CommandContext & context,
    AudacityProject * pProject, const wxString &mFileName ){
-   mFileName;//compiler food.
+   (void)&mFileName;//compiler food.
+   (void)&context;
    CommandManager * pMan = pProject->GetCommandManager();
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the

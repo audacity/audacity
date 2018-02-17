@@ -2636,7 +2636,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
       case mesDraggingPlayRegionStart:
          HideQuickPlayIndicator();
 
-         // Don't start dragging until beyond tollerance initial playback start
+         // Don't start dragging until beyond tolerance initial playback start
          if (!mIsDragging && isWithinStart)
             mQuickPlayPos = mOldPlayRegionStart;
          else

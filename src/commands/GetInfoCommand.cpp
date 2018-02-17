@@ -311,7 +311,7 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
             context.StartField( "points" );
             context.StartArray();
             double offset = pEnv->mOffset;
-            for( int k=0;k<pEnv->mEnv.size(); k++)
+            for( size_t k=0;k<pEnv->mEnv.size(); k++)
             {
                context.StartStruct( );
                context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
@@ -586,7 +586,8 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       context.AddItem( R.GetTop() );
       context.AddItem( R.GetRight() );
       context.AddItem( R.GetBottom() );
-      context.AddItem( Name ); 
+      context.AddItem( Name );
+      context.AddItem( item->GetId() );
       context.EndArray();
 
       ExploreWindows( context, P, item, item->GetId(), depth+1 );

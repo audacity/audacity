@@ -32,12 +32,11 @@ SetEnvelopeCommand::SetEnvelopeCommand()
 
 
 bool SetEnvelopeCommand::DefineParams( ShuttleParams & S ){ 
-   S.Optional( bHasTrackIndex     ).Define(  mTrackIndex,     wxT("Track"),      0, 0, 100 );
-   S.Optional( bHasChannelIndex   ).Define(  mChannelIndex,   wxT("Channel"),    0, 0, 100 );
-   S.Optional( bHasContainsTime   ).Define(  mContainsTime,   wxT("At"),         0.0, 0.0, 100000.0 );
-   S.Optional( bHasT              ).Define(  mT,              wxT("Time"),     0.0, 0.0, 100000.0);
-   S.Optional( bHasV              ).Define(  mV,              wxT("Value"),    0.0, 0.0, 2.0);
-   S.Optional( bHasDelete         ).Define(  mbDelete,        wxT("Delete"),   false );
+   S.OptionalY( bHasTrackIndex     ).Define(  mTrackIndex,     wxT("Track"),      0, 0, 100 );
+   S.OptionalN( bHasChannelIndex   ).Define(  mChannelIndex,   wxT("Channel"),    0, 0, 100 );
+   S.OptionalY( bHasT              ).Define(  mT,              wxT("Time"),     0.0, 0.0, 100000.0);
+   S.OptionalY( bHasV              ).Define(  mV,              wxT("Value"),    0.0, 0.0, 2.0);
+   S.OptionalN( bHasDelete         ).Define(  mbDelete,        wxT("Delete"),   false );
    return true;
 };
 
@@ -49,7 +48,6 @@ void SetEnvelopeCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
       S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
-      S.Optional( bHasContainsTime).TieNumericTextBox(  _("At:"),            mContainsTime );
       S.Optional( bHasT           ).TieNumericTextBox(  _("Time:"),          mT );
       S.Optional( bHasV           ).TieNumericTextBox(  _("Value:"),         mV );
       S.Optional( bHasDelete      ).TieCheckBox(        _("Delete:"),        mbDelete );
@@ -85,9 +83,9 @@ bool SetEnvelopeCommand::Apply(const CommandContext & context)
          for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
             pClip = *it;
             bFound = 
-               !bHasContainsTime || (
-                  ( pClip->GetStartTime() <= mContainsTime ) &&
-                  ( pClip->GetEndTime() >= mContainsTime )
+               !bHasT || (
+                  ( pClip->GetStartTime() <= mT) &&
+                  ( pClip->GetEndTime() >= mT )
                );
             if( bFound )
             {

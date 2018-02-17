@@ -1272,6 +1272,7 @@
 		5EF3E65B203FDACE006C6882 /* SetLabelCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E656203FDACE006C6882 /* SetLabelCommand.cpp */; };
 		5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */; };
 		5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */; };
+		5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E660203FE73C006C6882 /* DragCommand.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
@@ -3179,6 +3180,8 @@
 		5EF3E659203FDACE006C6882 /* SetProjectCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetProjectCommand.h; sourceTree = "<group>"; };
 		5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetEnvelopeCommand.cpp; sourceTree = "<group>"; };
 		5EF3E65E203FDFE9006C6882 /* SetEnvelopeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetEnvelopeCommand.h; sourceTree = "<group>"; };
+		5EF3E660203FE73C006C6882 /* DragCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragCommand.cpp; sourceTree = "<group>"; };
+		5EF3E661203FE73C006C6882 /* DragCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragCommand.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
@@ -3782,6 +3785,7 @@
 				28851F9F1027F16400152EE1 /* CommandType.cpp */,
 				28851FA11027F16400152EE1 /* CompareAudioCommand.cpp */,
 				5EF3E647203FBAFB006C6882 /* Demo.cpp */,
+				5EF3E660203FE73C006C6882 /* DragCommand.cpp */,
 				5EF3E649203FBAFB006C6882 /* GetInfoCommand.cpp */,
 				28851FA31027F16400152EE1 /* GetTrackInfoCommand.cpp */,
 				28851FA51027F16400152EE1 /* HelpCommand.cpp */,
@@ -3817,6 +3821,7 @@
 				28851FA01027F16400152EE1 /* CommandType.h */,
 				28851FA21027F16400152EE1 /* CompareAudioCommand.h */,
 				5EF3E648203FBAFB006C6882 /* Demo.h */,
+				5EF3E661203FE73C006C6882 /* DragCommand.h */,
 				5EF3E64A203FBAFB006C6882 /* GetInfoCommand.h */,
 				28851FA41027F16400152EE1 /* GetTrackInfoCommand.h */,
 				28851FA61027F16400152EE1 /* HelpCommand.h */,
@@ -7866,6 +7871,7 @@
 				5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */,
 				2897F6F70AB3DB5A003C20C5 /* ToolManager.cpp in Sources */,
 				2897F6F80AB3DB5A003C20C5 /* ToolsToolBar.cpp in Sources */,
+				5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */,
 				2897F6F90AB3DB5A003C20C5 /* TranscriptionToolBar.cpp in Sources */,
 				2897F6FE0AB3DCD0003C20C5 /* Grabber.cpp in Sources */,
 				283DE1360AC0D4FD00E8C3AE /* XMLWriter.cpp in Sources */,
