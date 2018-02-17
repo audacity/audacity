@@ -64,6 +64,14 @@ def oddments_imagesA():
         do( "Drag: Id="+str( id) + " FromX=10 FromY=10" )
         capture( "Button" + str(id) +"Hover.png", "Transport" )
         do( "Drag: Id="+str( id) + " FromX=1000 FromY=10" )
+    for id in range( 11200, 11206 ):
+        do( "Drag: Id="+str( id) + " FromX=10 FromY=10" )
+        capture( "Button" + str(id) +"Hover.png", "Tools" )
+        do( "Drag: Id="+str( id) + " FromX=1000 FromY=10" )
+    for id in range( 11300, 11312 ):
+        do( "Drag: Id="+str( id) + " FromX=10 FromY=10" )
+        capture( "Button" + str(id) +"Hover.png", "Edit" )
+        do( "Drag: Id="+str( id) + " FromX=1000 FromY=10" )
 
 
 def oddments_imagesB():
@@ -77,6 +85,6 @@ def oddments_imagesB():
     #Disable bringing to top, so as not to destroy quick play.
     capture( "QuikPlay001.png", "First_Track_Plus ToTop=0" )
 
-#oddments_imagesA()
-oddments_imagesB()
+oddments_imagesA()
+#oddments_imagesB()
 
