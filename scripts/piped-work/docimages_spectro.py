@@ -55,12 +55,20 @@ def spectro_imagesB():
     capture( 'Spectral004.png', 'All_Tracks' )
 
 def spectro_imagesC():
+    # A chirp and the word 'Audacity'
     loadExample( 'AudacitySpectral.wav' )
     capture( 'Spectral005.png', 'All_Tracks' )
     do( 'SetTrack: Scale=dB')
     capture( 'Spectral006.png', 'All_Tracks' )
     do( 'SetTrack: Display=Spectrogram')
     capture( 'Spectral007.png', 'All_Tracks' )
+    do( 'Select: Start=1.5 End=2.1 Low=3000 High=6000') 
+    capture( 'Spectral008.png', 'All_Tracks' )
+    do( 'Select: Start=1.1 End=2.5' )
+    do( 'ZoomSel' )
+    do( 'Select: Start=1.5 End=2.1 Low=3000 High=6000')
+    do( 'SetTrack: Height=400' )
+    multiWindow( "SpectralVocal" )
 
 def setWindow( name, value ):
     do( 'SetTrack: SpecPrefs=1 Name="Window Size '+value+'"' )
@@ -138,9 +146,9 @@ def spectro_imagesF():
         
 #quickTest()
 
-#spectro_imagesA()
-#spectro_imagesB()
-#spectro_imagesC()
-#spectro_imagesD()
-#spectro_imagesE()
+spectro_imagesA()
+spectro_imagesB()
+spectro_imagesC()
+spectro_imagesD()
+spectro_imagesE()
 spectro_imagesF()
