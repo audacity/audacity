@@ -214,7 +214,7 @@ bool SetTrackCommand::Apply(const CommandContext & context)
          if( !bIsSecondChannel ){
             if( bHasSelected )
                t->SetSelected(bSelected);
-            if( bHasFocused )
+            if( bHasFocused && bFocused)
             {
                TrackPanel *panel = context.GetProject()->GetTrackPanel();
                panel->SetFocusedTrack( t );
