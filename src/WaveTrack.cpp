@@ -739,6 +739,23 @@ void WaveTrack::SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pS
    }
 }
 
+void WaveTrack::UseSpectralPrefs( bool bUse )
+{  
+   if( bUse ){
+      if( !mpSpectrumSettings )
+         return;
+      // reset it, and next we will be getting the defaults.
+      mpSpectrumSettings.reset();
+   }
+   else {
+      if( mpSpectrumSettings )
+         return;
+      GetIndependentSpectrogramSettings();
+   }
+}
+
+
+
 const WaveformSettings &WaveTrack::GetWaveformSettings() const
 {
    if (mpWaveformSettings)

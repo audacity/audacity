@@ -91,6 +91,8 @@ bool SetTrackCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, displays );
    S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   scales );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
+   S.OptionalN( bHasUseSpecPrefs   ).Define(     bUseSpecPrefs,   wxT("SpecPrefs"),  false );
+
    S.OptionalN( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
    S.OptionalN( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
    // There is also a select command.  This is an alternative.
@@ -124,12 +126,13 @@ void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.Optional( bHasSpectralSelect ).TieCheckBox( _("Spectral Select:"), bSpectralSelect );
-      S.Optional( bHasGrayScale      ).TieCheckBox( _("Gray Scale:"),      bGrayScale );
-      S.Optional( bHasSelected       ).TieCheckBox( _("Selected:"),        bSelected );
-      S.Optional( bHasFocused        ).TieCheckBox( _("Focused:"),         bFocused);
-      S.Optional( bHasSolo           ).TieCheckBox( _("Solo:"),            bSolo);
-      S.Optional( bHasMute           ).TieCheckBox( _("Mute:"),            bMute);
+      S.Optional( bHasUseSpecPrefs   ).TieCheckBox( _("Use Spectral Prefs:"), bUseSpecPrefs );
+      S.Optional( bHasSpectralSelect ).TieCheckBox( _("Spectral Select:"),    bSpectralSelect);
+      S.Optional( bHasGrayScale      ).TieCheckBox( _("Gray Scale:"),         bGrayScale );
+      S.Optional( bHasSelected       ).TieCheckBox( _("Selected:"),           bSelected );
+      S.Optional( bHasFocused        ).TieCheckBox( _("Focused:"),            bFocused);
+      S.Optional( bHasSolo           ).TieCheckBox( _("Solo:"),               bSolo);
+      S.Optional( bHasMute           ).TieCheckBox( _("Mute:"),               bMute);
    }
    S.EndMultiColumn();
 }
@@ -177,11 +180,14 @@ bool SetTrackCommand::Apply(const CommandContext & context)
                (mScaleType==kLinear) ? 
                   WaveformSettings::stLinear
                   : WaveformSettings::stLogarithmic;
+
+         if( wt && bHasUseSpecPrefs   ){
+            wt->UseSpectralPrefs( bUseSpecPrefs );
+         }
          if( wt && bHasSpectralSelect )
             wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
          if( wt && bHasGrayScale )
             wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
-
          // These ones don't make sense on the second channel of a stereo track.
          if( !bIsSecondChannel ){
             if( bHasSelected )
