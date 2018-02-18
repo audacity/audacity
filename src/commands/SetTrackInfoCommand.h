@@ -47,6 +47,7 @@ public:
    int mHeight;
    int mDisplayType;
    int mScaleType;
+   bool bUseSpecPrefs;
    bool bSpectralSelect;
    bool bGrayScale;
    bool bSelected;
@@ -64,6 +65,7 @@ public:
    bool bHasHeight;
    bool bHasDisplayType;
    bool bHasScaleType;
+   bool bHasUseSpecPrefs;
    bool bHasSpectralSelect;
    bool bHasGrayScale;
    bool bHasSelected;

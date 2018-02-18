@@ -4895,9 +4895,15 @@ void AudacityProject::OnPreferences(const CommandContext &WXUNUSED(context) )
    }
 }
 
+
+#include "./prefs/SpectrogramSettings.h"
+#include "./prefs/WaveformSettings.h"
 void AudacityProject::OnReloadPreferences(const CommandContext &WXUNUSED(context) )
 {
    {
+      SpectrogramSettings::defaults().LoadPrefs();
+      WaveformSettings::defaults().LoadPrefs();
+
       GlobalPrefsDialog dialog(this /* parent */ );
       wxCommandEvent Evt;
       //dialog.Show();

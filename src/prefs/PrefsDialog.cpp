@@ -517,6 +517,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    }
 
    WaveformSettings::defaults().LoadPrefs();
+   SpectrogramSettings::defaults().LoadPrefs();
 
    if( IsModal() )
       EndModal(true);
