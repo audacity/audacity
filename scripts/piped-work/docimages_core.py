@@ -72,9 +72,11 @@ def quickTest() :
 
 def setup() :
     global path
+    global sample_path
     global sample
     global sample2
     path = 'C:\\Users\\James Crook\\'
+    sample_path ='C:\\Users\\James Crook\\Music\\'
     sample ='C:\\Users\\James Crook\\Music\\The Poodle Podcast.wav'
     sample2 ='C:\\Users\\James Crook\\Music\\PoodlePodStereo.wav'
     startPipes()
@@ -90,6 +92,13 @@ def makeWayForTracks(  ) :
 def capture( name, what ) :
     global path
     do( 'Screenshot: Path="'+path+name+'" CaptureWhat=' + what )
+
+def loadExample( name ):
+    global sample_path
+    makeWayForTracks( )
+    do( 'Import2: Filename="'+sample_path+name+'"' )
+    do( 'Select: First=0 Last=0 Start=0 End=0')
+    do( 'FitInWindow' )
 
 def loadMonoTrack():
     global sample
