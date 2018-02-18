@@ -60,6 +60,7 @@ def oddments_imagesA():
         capture( name + "Tool.png" , 'Tools' );
     #A track is needed for the buttons to be active.
     loadMonoTracks(1)
+    do( 'SetPreference: Name="/GUI/Theme" Value="high-contrast"')
     for id in range( 11000, 11006 ):
         do( "Drag: Id="+str( id) + " FromX=10 FromY=10" )
         capture( "Button" + str(id) +"Hover.png", "Transport" )
@@ -72,6 +73,7 @@ def oddments_imagesA():
         do( "Drag: Id="+str( id) + " FromX=10 FromY=10" )
         capture( "Button" + str(id) +"Hover.png", "Edit" )
         do( "Drag: Id="+str( id) + " FromX=1000 FromY=10" )
+    do( 'SetPreference: Name="/GUI/Theme" Value="light"')
 
 
 def oddments_imagesB():
@@ -87,4 +89,5 @@ def oddments_imagesB():
 
 oddments_imagesA()
 oddments_imagesB()
-
+
+
