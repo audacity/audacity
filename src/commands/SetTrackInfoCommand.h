@@ -48,6 +48,7 @@ public:
    int mDisplayType;
    int mScaleType;
    int mVZoom;
+   bool bUseSpecPrefs;
    bool bSpectralSelect;
    bool bGrayScale;
    bool bSelected;
@@ -66,6 +67,7 @@ public:
    bool bHasDisplayType;
    bool bHasScaleType;
    bool bHasVZoom;
+   bool bHasUseSpecPrefs;
    bool bHasSpectralSelect;
    bool bHasGrayScale;
    bool bHasSelected;
