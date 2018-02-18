@@ -72,8 +72,9 @@ void SetPreferenceCommand::PopulateOrExchange(ShuttleGui & S)
 bool SetPreferenceCommand::Apply(const CommandContext & context)
 {
    bool bOK = gPrefs->Write(mName, mValue) && gPrefs->Flush();
-   if( bOK && mbReload )
+   if( bOK && mbReload ){
       context.GetProject()->OnReloadPreferences( context );
+   }
    return bOK;
 }
 
