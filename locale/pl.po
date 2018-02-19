@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-23 18:10-0500\n"
-"PO-Revision-Date: 2018-02-05 04:42+0000\n"
+"PO-Revision-Date: 2018-02-19 03:34+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/"
 "pl/)\n"
@@ -13099,7 +13099,7 @@ msgstr "Po&ziom (dB):"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Name newly recorded tracks"
-msgstr "Nazywa nowo nagranych ścieżek"
+msgstr "Nazwa nowo nagranych ścieżek"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "With:"
@@ -15355,7 +15355,7 @@ msgstr "Wartość przepełnienia"
 
 #: src/widgets/valnum.cpp
 msgid "Too many decimal digits"
-msgstr "Za wiele cyfr po przecinku"
+msgstr "Za dużo cyfr po przecinku"
 
 #: src/widgets/valnum.cpp
 #, c-format
