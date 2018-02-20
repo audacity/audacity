@@ -9,6 +9,7 @@
 exec( open("docimages_core.py" ).read() )
 
 import math
+import time
 
 
 # 11 2KHz tones, of decreasing amplitude.
@@ -74,9 +75,10 @@ def setWindow( name, value ):
     do( 'SetTrack: SpecPrefs=1 Name="Window Size '+value+'"' )
     do( 'SetPreference: Name="/Spectrum/FFTSize" Reload=1 Value='+value )
     do( 'SetTrack: Track=0 Display=Spectrogram' )
-    capture( name + value + '.png', 'All_Tracks' )
+    capture( name + postfix + value + '.png', 'All_Tracks' )
 
-def multiWindow( name ) :   
+
+def multiWindow( name ) :
     setWindow( name, "256" )
     setWindow( name, "512" )
     setWindow( name, "2048" )
@@ -146,9 +148,25 @@ def spectro_imagesF():
         
 #quickTest()
 
+do( 'SetPreference: Name="/GUI/Theme" Value=light Reload=1' )
+
+
+postfix = ''
 spectro_imagesA()
 spectro_imagesB()
 spectro_imagesC()
 spectro_imagesD()
 spectro_imagesE()
 spectro_imagesF()
+
+do( 'SetPreference: Name="/GUI/Theme" Value=dark Reload=1' )
+
+postfix = 'Dark'
+spectro_imagesA()
+spectro_imagesB()
+spectro_imagesC()
+spectro_imagesD()
+spectro_imagesE()
+spectro_imagesF()
+    
+do( 'SetPreference: Name="/GUI/Theme" Value=light Reload=1' )

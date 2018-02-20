@@ -75,6 +75,8 @@ def setup() :
     global sample_path
     global sample
     global sample2
+    global postfix
+    postfix = ''
     path = 'C:\\Users\\James Crook\\'
     sample_path ='C:\\Users\\James Crook\\Music\\'
     sample ='C:\\Users\\James Crook\\Music\\The Poodle Podcast.wav'
@@ -91,6 +93,8 @@ def makeWayForTracks(  ) :
 
 def capture( name, what ) :
     global path
+    global postfix
+    name = name.split( '.png' )[0] + postfix + '.png' 
     do( 'Screenshot: Path="'+path+name+'" CaptureWhat=' + what )
 
 def loadExample( name ):
