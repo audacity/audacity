@@ -1594,32 +1594,36 @@ void AudacityProject::CreateMenusAndCommands()
       // you would have to use "Compareaudio" here.)
 //      c->AddItem(wxT("Demo"), _("Just a Demo..."), FN(OnAudacityCommand),
 //         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Select"), _("Select..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("GetInfo"), _("Get Info..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Help"), _("Help..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+
+      c->AddItem(wxT("Import2"), _("Import..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("Export2"), _("Export..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("OpenProject2"), _("Open Project..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+      c->AddItem(wxT("SaveProject2"), _("Save Project..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag,  AudioIONotBusyFlag);
+
       c->AddItem(wxT("Message"), _("Message..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("Screenshot"), _("Screenshot (Vanilla)..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Select"), _("Select..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
 // Menu items not needed, since they are part of Select,
 //      c->AddItem(wxT("SelectTime"), _("Select Time..."), FN(OnAudacityCommand),
 //         AudioIONotBusyFlag,  AudioIONotBusyFlag);
 //      c->AddItem(wxT("SelectTracks"), _("Select Tracks..."), FN(OnAudacityCommand),
 //         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Import2"), _("Import..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Export2"), _("Export..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("OpenProject"), _("Open Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SaveProject"), _("Save Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("Drag"), _("Mousing About..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("CompareAudio"), _("Compare Audio..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("GetPreference"), _("Get Preference..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("GetInfo"), _("Get Info..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
       c->AddItem(wxT("SetPreference"), _("Set Preference..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag,  AudioIONotBusyFlag);
