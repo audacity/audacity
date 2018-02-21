@@ -143,7 +143,7 @@ bool EffectEcho::DefineParams( ShuttleParams & S ){
 }
 
 
-bool EffectEcho::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectEcho::GetAutomationParameters(CommandParameters & parms)
 {
    parms.WriteFloat(KEY_Delay, delay);
    parms.WriteFloat(KEY_Decay, decay);
@@ -151,7 +151,7 @@ bool EffectEcho::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectEcho::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Delay);
    ReadAndVerifyFloat(Decay);

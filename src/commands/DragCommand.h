@@ -32,7 +32,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Automation#drag");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables#drag");};
 
    bool Apply(const CommandContext & context) override;
 

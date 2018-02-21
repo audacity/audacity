@@ -134,14 +134,14 @@ bool EffectChangeSpeed::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectChangeSpeed::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectChangeSpeed::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_PercentChange);
 
    return true;
 }
 
-bool EffectChangeSpeed::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectChangeSpeed::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
 

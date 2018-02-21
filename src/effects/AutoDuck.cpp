@@ -136,7 +136,7 @@ bool EffectAutoDuck::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectAutoDuck::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_DuckAmountDb, mDuckAmountDb);
    parms.Write(KEY_InnerFadeDownLen, mInnerFadeDownLen);
@@ -149,7 +149,7 @@ bool EffectAutoDuck::GetAutomationParameters(CommandAutomationParameters & parms
    return true;
 }
 
-bool EffectAutoDuck::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAutoDuck::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(DuckAmountDb);
    ReadAndVerifyDouble(InnerFadeDownLen);

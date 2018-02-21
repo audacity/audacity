@@ -204,7 +204,7 @@ bool EffectPhaser::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectPhaser::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectPhaser::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Stages, mStages);
    parms.Write(KEY_DryWet, mDryWet);
@@ -217,7 +217,7 @@ bool EffectPhaser::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectPhaser::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectPhaser::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Stages);
    ReadAndVerifyInt(DryWet);

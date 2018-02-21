@@ -144,7 +144,7 @@ bool EffectChangePitch::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectChangePitch::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectChangePitch::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_dPercentChange);
    parms.Write(KEY_UseSBSMS, mUseSBSMS);
@@ -152,7 +152,7 @@ bool EffectChangePitch::GetAutomationParameters(CommandAutomationParameters & pa
    return true;
 }
 
-bool EffectChangePitch::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectChangePitch::SetAutomationParameters(CommandParameters & parms)
 {
    // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
    // Only m_dSemitonesChange is used in Process().

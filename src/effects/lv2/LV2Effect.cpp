@@ -953,7 +953,7 @@ bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool LV2Effect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool LV2Effect::GetAutomationParameters(CommandParameters & parms)
 {
    for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
    {
@@ -969,7 +969,7 @@ bool LV2Effect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool LV2Effect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool LV2Effect::SetAutomationParameters(CommandParameters & parms)
 {
    // First pass validates values
    for (size_t p = 0, cnt = mControls.size(); p < cnt; p++)
@@ -1261,7 +1261,7 @@ bool LV2Effect::LoadParameters(const wxString & group)
       return false;
    }
 
-   CommandAutomationParameters eap;
+   CommandParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -1272,7 +1272,7 @@ bool LV2Effect::LoadParameters(const wxString & group)
 
 bool LV2Effect::SaveParameters(const wxString & group)
 {
-   CommandAutomationParameters eap;
+   CommandParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;

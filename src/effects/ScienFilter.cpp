@@ -252,7 +252,7 @@ bool EffectScienFilter::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectScienFilter::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Type, kTypeStrings[mFilterType]);
    parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype]);
@@ -264,7 +264,7 @@ bool EffectScienFilter::GetAutomationParameters(CommandAutomationParameters & pa
    return true;
 }
 
-bool EffectScienFilter::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyEnum(Type, wxArrayString(nTypes, kTypeStrings));
    ReadAndVerifyEnum(Subtype, wxArrayString(nSubTypes, kSubTypeStrings));

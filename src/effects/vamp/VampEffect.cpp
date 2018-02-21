@@ -158,7 +158,7 @@ unsigned VampEffect::GetAudioInCount()
    return mPlugin->getMaxChannelCount();
 }
 
-bool VampEffect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool VampEffect::GetAutomationParameters(CommandParameters & parms)
 {
    for (size_t p = 0, cnt = mParameters.size(); p < cnt; p++)
    {
@@ -204,7 +204,7 @@ bool VampEffect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool VampEffect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool VampEffect::SetAutomationParameters(CommandParameters & parms)
 {
    // First pass verifies values
    for (size_t p = 0, cnt = mParameters.size(); p < cnt; p++)

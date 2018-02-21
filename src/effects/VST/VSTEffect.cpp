@@ -1631,7 +1631,7 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool VSTEffect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1651,7 +1651,7 @@ bool VSTEffect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool VSTEffect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
 {
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
@@ -2335,7 +2335,7 @@ bool VSTEffect::LoadParameters(const wxString & group)
       return false;
    }
 
-   CommandAutomationParameters eap;
+   CommandParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -2363,7 +2363,7 @@ bool VSTEffect::SaveParameters(const wxString & group)
       return true;
    }
 
-   CommandAutomationParameters eap;
+   CommandParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;

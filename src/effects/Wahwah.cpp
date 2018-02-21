@@ -196,7 +196,7 @@ bool EffectWahwah::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectWahwah::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectWahwah::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Freq, mFreq);
    parms.Write(KEY_Phase, mPhase);
@@ -208,7 +208,7 @@ bool EffectWahwah::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectWahwah::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectWahwah::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Freq);
    ReadAndVerifyDouble(Phase);

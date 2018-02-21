@@ -283,7 +283,7 @@ bool EffectReverb::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectReverb::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectReverb::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_RoomSize, mParams.mRoomSize);
    parms.Write(KEY_PreDelay, mParams.mPreDelay);
@@ -299,7 +299,7 @@ bool EffectReverb::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectReverb::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(RoomSize);
    ReadAndVerifyDouble(PreDelay);

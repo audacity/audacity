@@ -280,7 +280,7 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectToneGen::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectToneGen::GetAutomationParameters(CommandParameters & parms)
 {
    if (mChirp)
    {
@@ -301,7 +301,7 @@ bool EffectToneGen::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectToneGen::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyEnum(Waveform,  wxArrayString(nWaveforms, kWaveStrings));
    ReadAndVerifyEnum(Interp, wxArrayString(nInterpolations, kInterStrings));

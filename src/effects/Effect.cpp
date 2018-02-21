@@ -589,7 +589,7 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool Effect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool Effect::GetAutomationParameters(CommandParameters & parms)
 {
    if (mClient)
    {
@@ -599,7 +599,7 @@ bool Effect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool Effect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool Effect::SetAutomationParameters(CommandParameters & parms)
 {
    if (mClient)
    {
@@ -1029,7 +1029,7 @@ bool Effect::Startup()
 
 bool Effect::GetAutomationParameters(wxString & parms)
 {
-   CommandAutomationParameters eap;
+   CommandParameters eap;
 
    if (mUIDialog && !TransferDataFromWindow())
    {
@@ -1077,7 +1077,7 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    }
    else
    {
-      CommandAutomationParameters eap(parms);
+      CommandParameters eap(parms);
       ShuttleSetAutomation S;
       S.SetForValidating( &eap );
       // DefineParams returns false if not defined for this effect.

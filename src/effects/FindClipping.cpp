@@ -81,7 +81,7 @@ bool EffectFindClipping::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectFindClipping::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectFindClipping::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Start, mStart);
    parms.Write(KEY_Stop, mStop);
@@ -89,7 +89,7 @@ bool EffectFindClipping::GetAutomationParameters(CommandAutomationParameters & p
    return true;
 }
 
-bool EffectFindClipping::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectFindClipping::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Start);
    ReadAndVerifyInt(Stop);

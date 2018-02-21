@@ -85,14 +85,14 @@ bool EffectRepeat::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectRepeat::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectRepeat::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Count, repeatCount);
 
    return true;
 }
 
-bool EffectRepeat::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Count);
 

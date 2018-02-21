@@ -144,7 +144,7 @@ wxDialog *AudacityCommand::CreateUI(wxWindow *parent, AudacityCommand * WXUNUSED
 
 bool AudacityCommand::GetAutomationParameters(wxString & parms)
 {
-   CommandAutomationParameters eap;
+   CommandParameters eap;
 
    if (mUIDialog && !TransferDataFromWindow())
    {
@@ -163,7 +163,7 @@ bool AudacityCommand::SetAutomationParameters(const wxString & parms)
 {
    wxString preset = parms;
 
-   CommandAutomationParameters eap(parms);
+   CommandParameters eap(parms);
    ShuttleSetAutomation S;
 
    S.SetForWriting( &eap );
