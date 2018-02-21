@@ -604,7 +604,7 @@ UIHandle::Result TimeShiftHandle::Drag
       {
          trySnap = true;
          if (pTrack->GetKind() == Track::Wave) {
-            auto wt = static_cast<const WaveTrack *>(pTrack);
+            auto wt = static_cast<const WaveTrack *>(pTrack.get());
             const double rate = wt->GetRate();
             // set it to a sample point
             desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;

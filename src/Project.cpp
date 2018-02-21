@@ -460,10 +460,11 @@ public:
          } );
 
          for (const auto &name : sortednames) {
-
+#ifdef USE_MIDI
             if (Importer::IsMidi(name))
                AudacityProject::DoImportMIDI(mProject, name);
             else
+#endif
                mProject->Import(name);
          }
 
@@ -3046,9 +3047,11 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 #endif
 
       {
+#ifdef USE_MIDI
          if (Importer::IsMidi(fileName))
             DoImportMIDI(this, fileName);
          else
+#endif
             Import(fileName);
 
          ZoomAfterImport(nullptr);
