@@ -58,7 +58,7 @@ public:
    bool ExchangeWithMaster(const wxString & Name) override;
 };
 
-class CommandAutomationParameters;
+class CommandParameters;
 /**************************************************************************//**
 \brief Shuttle that deals with parameters.  This is a base class with lots of
 virtual functions that do nothing by default.
@@ -68,7 +68,7 @@ class ShuttleParams : public Shuttle
 public:
    wxString mParams;
    bool *pOptionalFlag;
-   CommandAutomationParameters * mpEap;
+   CommandParameters * mpEap;
    ShuttleParams(){ mParams = wxT("") ;mpEap=NULL;pOptionalFlag=NULL;}
    virtual ~ShuttleParams() {}
    bool ExchangeWithMaster(const wxString & Name) override;
@@ -116,8 +116,8 @@ public:
    bool bWrite;
    ShuttleParams & Optional( bool & var ) override;
    bool CouldGet(const wxString &key);
-   void SetForValidating( CommandAutomationParameters * pEap){ mpEap=pEap; bOK=true;bWrite=false;};
-   void SetForWriting(CommandAutomationParameters * pEap){ mpEap=pEap;bOK=true;bWrite=true;};
+   void SetForValidating( CommandParameters * pEap){ mpEap=pEap; bOK=true;bWrite=false;};
+   void SetForWriting(CommandParameters * pEap){ mpEap=pEap;bOK=true;bWrite=true;};
    void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
    void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
    void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;

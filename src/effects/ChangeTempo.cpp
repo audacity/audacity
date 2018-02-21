@@ -126,7 +126,7 @@ bool EffectChangeTempo::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectChangeTempo::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_PercentChange);
    parms.Write(KEY_UseSBSMS, mUseSBSMS);
@@ -134,7 +134,7 @@ bool EffectChangeTempo::GetAutomationParameters(CommandAutomationParameters & pa
    return true;
 }
 
-bool EffectChangeTempo::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectChangeTempo::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
    m_PercentChange = Percentage;

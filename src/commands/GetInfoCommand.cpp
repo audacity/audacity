@@ -433,7 +433,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
       context.AddItem( Label, "2" );
       context.AddItem( Accel, "3" );
       if( !Name.IsEmpty() )
-         context.AddItem( Name, "id" );// It is called Automation ID outside Audacity.
+         context.AddItem( Name, "id" );// It is called Scripting ID outside Audacity.
       context.EndStruct();
 
       if (item->IsSubMenu()) {

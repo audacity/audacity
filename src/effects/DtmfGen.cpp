@@ -236,7 +236,7 @@ bool EffectDtmf::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectDtmf::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectDtmf::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Sequence, dtmfSequence);
    parms.Write(KEY_DutyCycle, dtmfDutyCycle);
@@ -245,7 +245,7 @@ bool EffectDtmf::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectDtmf::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(DutyCycle);
    ReadAndVerifyDouble(Amplitude);

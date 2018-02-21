@@ -214,8 +214,8 @@ public:
    // should derive by some route from AudacityCommand to pick up that 
    // functionality.
    //virtual bool DefineParams( ShuttleParams & S){ return false;};
-   virtual bool GetAutomationParameters(CommandAutomationParameters & parms) = 0;
-   virtual bool SetAutomationParameters(CommandAutomationParameters & parms) = 0;
+   virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
+   virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
 
    virtual bool LoadUserPreset(const wxString & name) = 0;
    virtual bool SaveUserPreset(const wxString & name) = 0;

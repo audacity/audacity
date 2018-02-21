@@ -291,7 +291,7 @@ bool EffectDistortion::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectDistortion::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectDistortion::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_TableTypeIndx, kTableTypeStrings[mParams.mTableChoiceIndx]);
    parms.Write(KEY_DCBlock, mParams.mDCBlock);
@@ -304,7 +304,7 @@ bool EffectDistortion::GetAutomationParameters(CommandAutomationParameters & par
    return true;
 }
 
-bool EffectDistortion::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyEnum(TableTypeIndx,  wxArrayString(nTableTypes, kTableTypeStrings));
    ReadAndVerifyBool(DCBlock);

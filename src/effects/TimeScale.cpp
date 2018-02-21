@@ -122,7 +122,7 @@ bool EffectTimeScale::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectTimeScale::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectTimeScale::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_RatePercentStart, m_RatePercentChangeStart);
    parms.Write(KEY_RatePercentEnd, m_RatePercentChangeEnd);
@@ -134,7 +134,7 @@ bool EffectTimeScale::GetAutomationParameters(CommandAutomationParameters & parm
    return true;
 }
 
-bool EffectTimeScale::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectTimeScale::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(RatePercentStart);
    ReadAndVerifyDouble(RatePercentEnd);

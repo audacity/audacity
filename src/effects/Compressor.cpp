@@ -130,7 +130,7 @@ bool EffectCompressor::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectCompressor::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectCompressor::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Threshold, mThresholdDB);
    parms.Write(KEY_NoiseFloor, mNoiseFloorDB);
@@ -143,7 +143,7 @@ bool EffectCompressor::GetAutomationParameters(CommandAutomationParameters & par
    return true;
 }
 
-bool EffectCompressor::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectCompressor::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Threshold);
    ReadAndVerifyDouble(NoiseFloor);

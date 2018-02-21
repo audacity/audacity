@@ -336,7 +336,7 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
    
    if (effect)
    {
-      CommandAutomationParameters eap(params);
+      CommandParameters eap(params);
 
       if (eap.HasEntry(wxT("Use Preset")))
       {
@@ -351,7 +351,7 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
    {
       // Set defaults (if not initialised) before setting values.
       command->Init(); 
-      CommandAutomationParameters eap(params);
+      CommandParameters eap(params);
 
       if (eap.HasEntry(wxT("Use Preset")))
       {
@@ -409,7 +409,7 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
       return wxEmptyString;
    }
 
-   CommandAutomationParameters eap(params);
+   CommandParameters eap(params);
 
    wxString preset;
    if (eap.HasEntry(wxT("Use Preset")))
@@ -452,7 +452,7 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
 
    if (!preset.IsEmpty())
    {
-      CommandAutomationParameters eap;
+      CommandParameters eap;
 
       eap.Write(wxT("Use Preset"), preset);
       eap.GetParameters(preset);

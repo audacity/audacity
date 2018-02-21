@@ -148,7 +148,7 @@ bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectTruncSilence::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_DbIndex, Enums::DbChoices[mTruncDbChoiceIndex]);
    parms.Write(KEY_ActIndex, kActionStrings[mActionIndex]);
@@ -160,7 +160,7 @@ bool EffectTruncSilence::GetAutomationParameters(CommandAutomationParameters & p
    return true;
 }
 
-bool EffectTruncSilence::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
 {
    wxArrayString actions(nActions, kActionStrings);
    actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before

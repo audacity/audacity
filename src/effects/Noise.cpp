@@ -168,7 +168,7 @@ bool EffectNoise::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectNoise::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectNoise::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Type, kTypeStrings[mType]);
    parms.Write(KEY_Amp, mAmp);
@@ -176,7 +176,7 @@ bool EffectNoise::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectNoise::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectNoise::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyEnum(Type, wxArrayString(nTypes, kTypeStrings));
    ReadAndVerifyDouble(Amp);

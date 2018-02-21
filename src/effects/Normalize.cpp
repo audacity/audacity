@@ -89,7 +89,7 @@ bool EffectNormalize::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectNormalize::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Level, mLevel);
    parms.Write(KEY_ApplyGain, mGain);
@@ -99,7 +99,7 @@ bool EffectNormalize::GetAutomationParameters(CommandAutomationParameters & parm
    return true;
 }
 
-bool EffectNormalize::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Level);
    ReadAndVerifyBool(ApplyGain);

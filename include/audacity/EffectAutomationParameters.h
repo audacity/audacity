@@ -3,7 +3,7 @@
    Audacity: A Digital Audio Editor
 
    EffectAutomationParameters.h
-   (defining CommandAutomationParameters)
+   (defining CommandParameters)
 
    Leland Lucius
 
@@ -40,8 +40,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_COMMAND_AUTOMATION_PARAMETERS_H__
-#define __AUDACITY_COMMAND_AUTOMATION_PARAMETERS_H__
+#ifndef __AUDACITY_COMMAND_PARAMETERS_H__
+#define __AUDACITY_COMMAND_PARAMETERS_H__
 
 #include <locale.h>
 
@@ -51,7 +51,7 @@
 
 
 /**
-\brief CommandAutomationParameters, derived from wxFileConfig, is essentially doing 
+\brief CommandParameters, derived from wxFileConfig, is essentially doing 
 the same things as the Shuttle classes.  It does text <-> binary conversions of
 parameters.  It does not seem to be using actual file read/writing.  
 
@@ -61,10 +61,10 @@ wxWidget validators, and can create default dialogs.  However until that convers
 done, we need this class, and we use a pointer to one from within a Shuttle when interfacing
 with the code that still uses it.
 */
-class CommandAutomationParameters final : public wxFileConfig
+class CommandParameters final : public wxFileConfig
 {
 public:
-   CommandAutomationParameters(const wxString & parms = wxEmptyString)
+   CommandParameters(const wxString & parms = wxEmptyString)
    :  wxFileConfig(wxEmptyString,
                    wxEmptyString,
                    wxEmptyString,
@@ -74,7 +74,7 @@ public:
       SetParameters(parms);
    }
 
-   virtual ~CommandAutomationParameters()
+   virtual ~CommandParameters()
    {
    }
 

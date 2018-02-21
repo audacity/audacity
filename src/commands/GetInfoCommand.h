@@ -38,7 +38,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Automation");};
+   wxString ManualPage() override {return wxT("Scriptables");};
    bool Apply(const CommandContext &context) override;
    bool ApplyInner(const CommandContext &context);
 

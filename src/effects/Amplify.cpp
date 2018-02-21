@@ -128,14 +128,14 @@ bool EffectAmplify::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectAmplify::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
 {
    parms.WriteFloat(KEY_Ratio, mRatio);
 
    return true;
 }
 
-bool EffectAmplify::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAmplify::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Ratio);
 
