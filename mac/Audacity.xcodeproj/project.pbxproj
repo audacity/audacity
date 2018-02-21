@@ -1266,6 +1266,7 @@
 		5EBDBD38203E250C003D1CA9 /* SetClipCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD31203E250C003D1CA9 /* SetClipCommand.cpp */; };
 		5EBDBD39203E250C003D1CA9 /* SetLabelCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD33203E250C003D1CA9 /* SetLabelCommand.cpp */; };
 		5EBDBD3A203E250C003D1CA9 /* SetProjectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD35203E250C003D1CA9 /* SetProjectCommand.cpp */; };
+		5EBDBD3D203E26AF003D1CA9 /* SetEnvelopeCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD3B203E26AF003D1CA9 /* SetEnvelopeCommand.cpp */; };
 		5EC7ED061E101C5C0052CAE2 /* NotYetAvailableException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */; };
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
@@ -3163,6 +3164,8 @@
 		5EBDBD34203E250C003D1CA9 /* SetLabelCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLabelCommand.h; sourceTree = "<group>"; };
 		5EBDBD35203E250C003D1CA9 /* SetProjectCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetProjectCommand.cpp; sourceTree = "<group>"; };
 		5EBDBD36203E250C003D1CA9 /* SetProjectCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetProjectCommand.h; sourceTree = "<group>"; };
+		5EBDBD3B203E26AF003D1CA9 /* SetEnvelopeCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetEnvelopeCommand.cpp; sourceTree = "<group>"; };
+		5EBDBD3C203E26AF003D1CA9 /* SetEnvelopeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetEnvelopeCommand.h; sourceTree = "<group>"; };
 		5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NotYetAvailableException.cpp; sourceTree = "<group>"; };
 		5EC7ED051E101C5C0052CAE2 /* NotYetAvailableException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotYetAvailableException.h; sourceTree = "<group>"; };
 		5ECCE7651DE49834009900E9 /* AudacityException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityException.h; sourceTree = "<group>"; };
@@ -3765,6 +3768,8 @@
 		174D9025098C78AF00D5909F /* commands */ = {
 			isa = PBXGroup;
 			children = (
+				5EBDBD3B203E26AF003D1CA9 /* SetEnvelopeCommand.cpp */,
+				5EBDBD3C203E26AF003D1CA9 /* SetEnvelopeCommand.h */,
 				5EBDBD30203E250C003D1CA9 /* CommandTargets.cpp */,
 				5EBDBD31203E250C003D1CA9 /* SetClipCommand.cpp */,
 				5EBDBD32203E250C003D1CA9 /* SetClipCommand.h */,
@@ -7815,6 +7820,7 @@
 				5E73964A1DAFD91D00BA0A4D /* CutlineHandle.cpp in Sources */,
 				1790B1A309883BFD008A330A /* Meter.cpp in Sources */,
 				5EBDBD28203DB0CB003D1CA9 /* Demo.cpp in Sources */,
+				5EBDBD3D203E26AF003D1CA9 /* SetEnvelopeCommand.cpp in Sources */,
 				1790B1A409883BFD008A330A /* MultiDialog.cpp in Sources */,
 				5E73964D1DAFD95B00BA0A4D /* ButtonHandle.cpp in Sources */,
 				1790B1A509883BFD008A330A /* Ruler.cpp in Sources */,
