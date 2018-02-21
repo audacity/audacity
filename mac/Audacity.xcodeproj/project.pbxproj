@@ -1262,6 +1262,10 @@
 		5EBDBD28203DB0CB003D1CA9 /* Demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD15203DB0CB003D1CA9 /* Demo.cpp */; };
 		5EBDBD2A203DB0CB003D1CA9 /* GetInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD19203DB0CB003D1CA9 /* GetInfoCommand.cpp */; };
 		5EBDBD2B203DB0CB003D1CA9 /* LoadCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD1B203DB0CB003D1CA9 /* LoadCommands.cpp */; };
+		5EBDBD37203E250C003D1CA9 /* CommandTargets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD30203E250C003D1CA9 /* CommandTargets.cpp */; };
+		5EBDBD38203E250C003D1CA9 /* SetClipCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD31203E250C003D1CA9 /* SetClipCommand.cpp */; };
+		5EBDBD39203E250C003D1CA9 /* SetLabelCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD33203E250C003D1CA9 /* SetLabelCommand.cpp */; };
+		5EBDBD3A203E250C003D1CA9 /* SetProjectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EBDBD35203E250C003D1CA9 /* SetProjectCommand.cpp */; };
 		5EC7ED061E101C5C0052CAE2 /* NotYetAvailableException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */; };
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
@@ -3152,6 +3156,13 @@
 		5EBDBD1A203DB0CB003D1CA9 /* GetInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetInfoCommand.h; sourceTree = "<group>"; };
 		5EBDBD1B203DB0CB003D1CA9 /* LoadCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoadCommands.cpp; sourceTree = "<group>"; };
 		5EBDBD1C203DB0CB003D1CA9 /* LoadCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadCommands.h; sourceTree = "<group>"; };
+		5EBDBD30203E250C003D1CA9 /* CommandTargets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandTargets.cpp; sourceTree = "<group>"; };
+		5EBDBD31203E250C003D1CA9 /* SetClipCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetClipCommand.cpp; sourceTree = "<group>"; };
+		5EBDBD32203E250C003D1CA9 /* SetClipCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetClipCommand.h; sourceTree = "<group>"; };
+		5EBDBD33203E250C003D1CA9 /* SetLabelCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetLabelCommand.cpp; sourceTree = "<group>"; };
+		5EBDBD34203E250C003D1CA9 /* SetLabelCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLabelCommand.h; sourceTree = "<group>"; };
+		5EBDBD35203E250C003D1CA9 /* SetProjectCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetProjectCommand.cpp; sourceTree = "<group>"; };
+		5EBDBD36203E250C003D1CA9 /* SetProjectCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetProjectCommand.h; sourceTree = "<group>"; };
 		5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NotYetAvailableException.cpp; sourceTree = "<group>"; };
 		5EC7ED051E101C5C0052CAE2 /* NotYetAvailableException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotYetAvailableException.h; sourceTree = "<group>"; };
 		5ECCE7651DE49834009900E9 /* AudacityException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityException.h; sourceTree = "<group>"; };
@@ -3754,6 +3765,13 @@
 		174D9025098C78AF00D5909F /* commands */ = {
 			isa = PBXGroup;
 			children = (
+				5EBDBD30203E250C003D1CA9 /* CommandTargets.cpp */,
+				5EBDBD31203E250C003D1CA9 /* SetClipCommand.cpp */,
+				5EBDBD32203E250C003D1CA9 /* SetClipCommand.h */,
+				5EBDBD33203E250C003D1CA9 /* SetLabelCommand.cpp */,
+				5EBDBD34203E250C003D1CA9 /* SetLabelCommand.h */,
+				5EBDBD35203E250C003D1CA9 /* SetProjectCommand.cpp */,
+				5EBDBD36203E250C003D1CA9 /* SetProjectCommand.h */,
 				5EBDBD10203DB0CB003D1CA9 /* AudacityCommand.cpp */,
 				5EBDBD11203DB0CB003D1CA9 /* AudacityCommand.h */,
 				5EBDBD12203DB0CB003D1CA9 /* CommandContext.cpp */,
@@ -7691,6 +7709,7 @@
 				1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */,
 				5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */,
 				1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */,
+				5EBDBD38203E250C003D1CA9 /* SetClipCommand.cpp in Sources */,
 				1790B13709883BFD008A330A /* ClickRemoval.cpp in Sources */,
 				1790B13809883BFD008A330A /* Compressor.cpp in Sources */,
 				1790B13909883BFD008A330A /* Echo.cpp in Sources */,
@@ -7783,6 +7802,7 @@
 				1790B19709883BFD008A330A /* Track.cpp in Sources */,
 				1790B19809883BFD008A330A /* TrackArtist.cpp in Sources */,
 				1790B19909883BFD008A330A /* TrackPanel.cpp in Sources */,
+				5EBDBD37203E250C003D1CA9 /* CommandTargets.cpp in Sources */,
 				5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */,
 				1790B19A09883BFD008A330A /* TrackPanelAx.cpp in Sources */,
 				5EBDBD2A203DB0CB003D1CA9 /* GetInfoCommand.cpp in Sources */,
@@ -8000,6 +8020,7 @@
 				28884969131B6CF600B59735 /* ro.po in Sources */,
 				2888496A131B6CF600B59735 /* ru.po in Sources */,
 				2888496B131B6CF600B59735 /* sk.po in Sources */,
+				5EBDBD39203E250C003D1CA9 /* SetLabelCommand.cpp in Sources */,
 				EDAD326B1544452E009C6220 /* sl.po in Sources */,
 				EDAD326C1544452E009C6220 /* sr_RS.po in Sources */,
 				EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */,
@@ -8015,6 +8036,7 @@
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				5EBDBD25203DB0CB003D1CA9 /* AudacityCommand.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
+				5EBDBD3A203E250C003D1CA9 /* SetProjectCommand.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
