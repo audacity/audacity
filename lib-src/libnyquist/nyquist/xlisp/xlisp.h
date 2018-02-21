@@ -671,6 +671,11 @@ void xlinit(void);
 void xlsymbols(void);
 
 
+/* xlftab.c */
+/* returns true on success,
+   false if table limits would be exceeded and the table remains unchanged */
+int xlbindfunctions(FUNDEF *functions, size_t nfunctions);
+
 /* xlio.c */
 
 int xlgetc(LVAL fptr);

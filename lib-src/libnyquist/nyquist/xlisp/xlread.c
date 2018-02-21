@@ -925,7 +925,7 @@ int xlisnumber(char *str, LVAL *pval)
 /* defmacro - define a read macro */
 void defmacro(int ch, LVAL type, int offset)
 {
-    extern FUNDEF funtab[];
+    extern FUNDEF *funtab;
     LVAL subr;
     subr = cvsubr(funtab[offset].fd_subr,funtab[offset].fd_type,offset);
     setelement(getvalue(s_rtable),ch,cons(type,subr));
