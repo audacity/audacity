@@ -147,8 +147,8 @@ namespace std {
          : D(d), p{ p_ } {}
 
       // Copy is disallowed
-      unique_ptr(const unique_ptr &) PROHIBITED;
-      unique_ptr& operator= (const unique_ptr &) PROHIBITED;
+      unique_ptr(const unique_ptr &) =delete;
+      unique_ptr& operator= (const unique_ptr &) =delete;
 
       // But move is allowed!
       unique_ptr(unique_ptr &&that)
@@ -239,8 +239,8 @@ namespace std {
       // NO template constructor for upcasting!
 
       // Copy is disallowed
-      unique_ptr(const unique_ptr &) PROHIBITED;
-      unique_ptr& operator= (const unique_ptr &)PROHIBITED;
+      unique_ptr(const unique_ptr &) =delete;
+      unique_ptr& operator= (const unique_ptr &) =delete;
 
       // But move is allowed!
       unique_ptr(unique_ptr &&that)

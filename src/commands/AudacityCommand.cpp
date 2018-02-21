@@ -55,10 +55,6 @@ ShuttleGui.
 
 #include "../commands/CommandTargets.h"
 
-#if defined(__WXMAC__)
-#include <Cocoa/Cocoa.h>
-#endif
-
 #include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 

@@ -1472,7 +1472,7 @@ bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool AudioUnitEffect::GetAutomationParameters(EffectAutomationParameters & parms)
+bool AudioUnitEffect::GetAutomationParameters(CommandAutomationParameters & parms)
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1545,7 +1545,7 @@ bool AudioUnitEffect::GetAutomationParameters(EffectAutomationParameters & parms
    return true;
 }
 
-bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms)
+bool AudioUnitEffect::SetAutomationParameters(CommandAutomationParameters & parms)
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1890,7 +1890,7 @@ bool AudioUnitEffect::LoadParameters(const wxString & group)
       return false;
    }
 
-   EffectAutomationParameters eap;
+   CommandAutomationParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -1901,7 +1901,7 @@ bool AudioUnitEffect::LoadParameters(const wxString & group)
 
 bool AudioUnitEffect::SaveParameters(const wxString & group)
 {
-   EffectAutomationParameters eap;
+   CommandAutomationParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;
