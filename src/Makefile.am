@@ -302,8 +302,12 @@ audacity_SOURCES = \
 	commands/CommandType.h \
 	commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h \
+	commands/CommandTargets.cpp \
+	commands/CommandTargets.h \
 	commands/Demo.cpp \
 	commands/Demo.h \
+	commands/DragCommand.cpp \
+	commands/DragCommand.h \
 	commands/GetInfoCommand.cpp \
 	commands/GetInfoCommand.h \
 	commands/GetTrackInfoCommand.cpp \
@@ -315,7 +319,7 @@ audacity_SOURCES = \
 	commands/Keyboard.cpp \
 	commands/Keyboard.h \
 	commands/LoadCommands.cpp \
-	commands/LoadCommands.h \  
+	commands/LoadCommands.h \
 	commands/MessageCommand.cpp \
 	commands/MessageCommand.h \
 	commands/OpenSaveCommands.cpp \
@@ -330,6 +334,14 @@ audacity_SOURCES = \
 	commands/ScriptCommandRelay.h \
 	commands/SelectCommand.cpp \
 	commands/SelectCommand.h \
+	commands/SetClipCommand.cpp \
+	commands/SetClipCommand.h \
+	commands/SetEnvelopeCommand.cpp \
+	commands/SetEnvelopeCommand.h \
+	commands/SetLabelCommand.cpp \
+	commands/SetLabelCommand.h \
+	commands/SetProjectCommand.cpp \
+	commands/SetProjectCommand.h \
 	commands/SetTrackInfoCommand.cpp \
 	commands/SetTrackInfoCommand.h \
 	commands/Validators.h \
