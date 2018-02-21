@@ -10,6 +10,7 @@ exec( open("docimages_core.py" ).read() )
 
 import time
 
+<<<<<<< af0f420811f05659025215ed076ac8345a1f2eba
 
 # 11 2KHz tones, of decreasing amplitude.
 # With label track to annotate it.
@@ -54,6 +55,8 @@ def spectro_image3and4():
     do( 'SetTrack: Display=Spectrogram')
     capture( 'Spectral004.png', 'First_Two_Tracks' )
 
+=======
+>>>>>>> foo
 def oddments_imagesA():
     for name in ["Select","Envelope","Draw","Zoom","TimeShift","Multi"] :
         do( name + "Tool" )
