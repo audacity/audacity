@@ -4871,12 +4871,12 @@ TranscriptionToolBar *AudacityProject::GetTranscriptionToolBar()
            NULL);
 }
 
-Meter *AudacityProject::GetPlaybackMeter()
+MeterPanel *AudacityProject::GetPlaybackMeter()
 {
    return mPlaybackMeter;
 }
 
-void AudacityProject::SetPlaybackMeter(Meter *playback)
+void AudacityProject::SetPlaybackMeter(MeterPanel *playback)
 {
    mPlaybackMeter = playback;
    if (gAudioIO)
@@ -4885,12 +4885,12 @@ void AudacityProject::SetPlaybackMeter(Meter *playback)
    }
 }
 
-Meter *AudacityProject::GetCaptureMeter()
+MeterPanel *AudacityProject::GetCaptureMeter()
 {
    return mCaptureMeter;
 }
 
-void AudacityProject::SetCaptureMeter(Meter *capture)
+void AudacityProject::SetCaptureMeter(MeterPanel *capture)
 {
    mCaptureMeter = capture;
 

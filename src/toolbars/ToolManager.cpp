@@ -1542,7 +1542,7 @@ bool ToolManager::RestoreFocus()
    if (mLastFocus) {
       auto temp1 = AButton::TemporarilyAllowFocus();
       auto temp2 = ASlider::TemporarilyAllowFocus();
-      auto temp3 = Meter::TemporarilyAllowFocus();
+      auto temp3 = MeterPanel::TemporarilyAllowFocus();
       mLastFocus->SetFocus();
       return true;
    }

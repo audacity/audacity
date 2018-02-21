@@ -303,11 +303,11 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mMeter = NULL;
    if (GetWave()) {
       mMeter =
-         safenew Meter(GetActiveProject(), // AudacityProject* project,
+         safenew MeterPanel(GetActiveProject(), // AudacityProject* project,
                    this, -1, // wxWindow* parent, wxWindowID id,
                    false, // bool isInput
                    ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-                   Meter::MixerTrackCluster); // Style style = HorizontalStereo,
+                   MeterPanel::MixerTrackCluster); // Style style = HorizontalStereo,
       mMeter->SetName(_("Signal Level Meter"));
    }
 
@@ -540,12 +540,12 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 
    // Vaughan, 2010-11-27:
    // This commented out code is flawed. Mistaken understanding of "frame" vs "window".
-   // Caused me to override Meter::UpdateDisplay().
+   // Caused me to override MeterPanel::UpdateDisplay().
    // But I think it's got a good idea, of calling WaveTracks' GetMinMax and GetRMS
    // instead of passing in all the data and asking the meter to derive peak and rms.
    // May be worth revisiting as I think it should perform better, because it uses the min/max/rms
    // stored in blockfiles, rather than calculating them, but for now, changing it to use the
-   // original Meter::UpdateDisplay(). New code is below the previous (now commented out).
+   // original MeterPanel::UpdateDisplay(). New code is below the previous (now commented out).
    //
    //const size_t kFramesPerBuffer = 4;
    //float min; // dummy, since it's not shown in meters

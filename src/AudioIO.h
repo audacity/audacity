@@ -55,7 +55,7 @@ class Mixer;
 class Resample;
 class TimeTrack;
 class AudioThread;
-class Meter;
+class MeterPanel;
 class SelectedRegion;
 
 class AudacityProject;
@@ -408,9 +408,9 @@ class AUDACITY_DLL_API AudioIO final {
    #endif
 
    bool IsAvailable(AudacityProject *projecT);
-   void SetCaptureMeter(AudacityProject *project, Meter *meter);
-   void SetPlaybackMeter(AudacityProject *project, Meter *meter);
-   Meter * GetCaptureMeter();
+   void SetCaptureMeter(AudacityProject *project, MeterPanel *meter);
+   void SetPlaybackMeter(AudacityProject *project, MeterPanel *meter);
+   MeterPanel * GetCaptureMeter();
 
 private:
    /** \brief Set the current VU meters - this should be done once after
@@ -694,8 +694,8 @@ private:
    PaError             mLastPaError;
 
    AudacityProject    *mOwningProject;
-   Meter              *mInputMeter;
-   Meter              *mOutputMeter;
+   MeterPanel         *mInputMeter;
+   MeterPanel         *mOutputMeter;
    bool                mUpdateMeters;
    volatile bool       mUpdatingMeters;
 

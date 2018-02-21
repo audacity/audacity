@@ -60,7 +60,7 @@ public:
 
 
 class AudacityProject;
-class Meter;
+class MeterPanel;
 class MixerBoard;
 
 class Track;
@@ -150,7 +150,7 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    MixerTrackSlider* mSlider_Velocity;
 #endif
-   Meter* mMeter;
+   MeterPanel* mMeter;
 
 public:
    DECLARE_EVENT_TABLE()

@@ -3704,7 +3704,7 @@ void AudacityProject::NextOrPrevFrame(bool forward)
    // clicked.
    auto temp1 = AButton::TemporarilyAllowFocus();
    auto temp2 = ASlider::TemporarilyAllowFocus();
-   auto temp3 = Meter::TemporarilyAllowFocus();
+   auto temp3 = MeterPanel::TemporarilyAllowFocus();
 
 
    // Define the set of windows we rotate among.

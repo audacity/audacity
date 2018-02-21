@@ -2475,7 +2475,7 @@ bool AudioIO::IsAvailable(AudacityProject *project)
    return mOwningProject == NULL || mOwningProject == project;
 }
 
-void AudioIO::SetCaptureMeter(AudacityProject *project, Meter *meter)
+void AudioIO::SetCaptureMeter(AudacityProject *project, MeterPanel *meter)
 {
    if (!mOwningProject || mOwningProject == project)
    {
@@ -2487,7 +2487,7 @@ void AudioIO::SetCaptureMeter(AudacityProject *project, Meter *meter)
    }
 }
 
-void AudioIO::SetPlaybackMeter(AudacityProject *project, Meter *meter)
+void AudioIO::SetPlaybackMeter(AudacityProject *project, MeterPanel *meter)
 {
    if (!mOwningProject || mOwningProject == project)
    {
@@ -2499,7 +2499,7 @@ void AudioIO::SetPlaybackMeter(AudacityProject *project, Meter *meter)
    }
 }
 
-Meter * AudioIO::GetCaptureMeter(){
+MeterPanel * AudioIO::GetCaptureMeter(){
    return mInputMeter;
 }
 

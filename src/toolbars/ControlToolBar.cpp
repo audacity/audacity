@@ -881,7 +881,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    if( project ) {
       project->MayStartMonitoring();
 
-      Meter *meter = project->GetPlaybackMeter();
+      MeterPanel *meter = project->GetPlaybackMeter();
       if( meter ) {
          meter->Clear();
       }

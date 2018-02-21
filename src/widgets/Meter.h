@@ -85,9 +85,13 @@ class MeterUpdateQueue
 
 class MeterAx;
 
-class Meter final : public wxPanelWrapper
+/********************************************************************//**
+\brief MeterPanel is a panel that paints the meter used for monitoring
+or playback.
+************************************************************************/
+class MeterPanel final : public wxPanelWrapper
 {
-   DECLARE_DYNAMIC_CLASS(Meter)
+   DECLARE_DYNAMIC_CLASS(MeterPanel)
 
  public:
    // These should be kept in the same order as they appear
@@ -102,7 +106,7 @@ class Meter final : public wxPanelWrapper
    };
 
 
-   Meter(AudacityProject *,
+   MeterPanel(AudacityProject *,
          wxWindow* parent, wxWindowID id,
          bool isInput,
          const wxPoint& pos = wxDefaultPosition,
@@ -110,7 +114,7 @@ class Meter final : public wxPanelWrapper
          Style style = HorizontalStereo,
          float fDecayRate = 60.0f);
 
-   ~Meter();
+   ~MeterPanel();
 
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return true; }
