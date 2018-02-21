@@ -4628,7 +4628,7 @@ void AudacityProject::UpdateLyrics()
    if( !mLyricsWindow->IsVisible() )
       return;
 
-   Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
+   LyricsPanel* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
    pLyricsPanel->Clear();
    pLyricsPanel->AddLabels(pLabelTrack);
    pLyricsPanel->Finish(pLabelTrack->GetEndTime());

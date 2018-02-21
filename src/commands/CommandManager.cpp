@@ -1405,7 +1405,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       bool bIntercept = pWnd !=  pTrackPanel;
       // Intercept keys from windows that are NOT the Lyrics panel
       if( bIntercept ){
-         bIntercept = pWnd && ( dynamic_cast<Lyrics*>(pWnd) == NULL );
+         bIntercept = pWnd && ( dynamic_cast<LyricsPanel*>(pWnd) == NULL );
       }
       //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
       // We allow the keystrokes below to be handled by wxWidgets controls IF we are 

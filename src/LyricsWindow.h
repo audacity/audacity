@@ -17,7 +17,7 @@
 #include <wx/frame.h>
 
 class AudacityProject;
-class Lyrics;
+class LyricsPanel;
 
 class LyricsWindow final : public wxFrame {
 
@@ -25,7 +25,7 @@ class LyricsWindow final : public wxFrame {
    LyricsWindow(AudacityProject* parent);
    virtual ~LyricsWindow();
 
-   Lyrics *GetLyricsPanel() { return mLyricsPanel; };
+   LyricsPanel *GetLyricsPanel() { return mLyricsPanel; };
 
  private:
    void OnCloseWindow(wxCloseEvent & WXUNUSED(event));
@@ -35,7 +35,7 @@ class LyricsWindow final : public wxFrame {
    void OnTimer(wxCommandEvent &event);
 
    AudacityProject *mProject;
-   Lyrics *mLyricsPanel;
+   LyricsPanel *mLyricsPanel;
 
  public:
    DECLARE_EVENT_TABLE()
