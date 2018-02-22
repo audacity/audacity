@@ -673,7 +673,9 @@ void xlsymbols(void);
 
 /* xlftab.c */
 /* returns true on success,
-   false if table limits would be exceeded and the table remains unchanged */
+   false if table limits would be exceeded and the table remains unchanged
+   Call this, any number of times, before calling xlisp_main_init
+ */
 int xlbindfunctions(FUNDEF *functions, size_t nfunctions);
 
 /* xlio.c */

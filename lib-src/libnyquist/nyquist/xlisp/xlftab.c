@@ -518,7 +518,7 @@ int xlbindfunctions(FUNDEF *functions, size_t nfunctions)
    memcpy(newfuntab, funtab, (szfuntab - 1) * sizeof(FUNDEF));
    memcpy(newfuntab + szfuntab - 1, functions, nfunctions * sizeof(FUNDEF));
    FUNDEF sentinel = { 0, 0, 0 };
-   newfuntab[szfuntab - 1] = sentinel;
+   newfuntab[szfuntab + nfunctions - 1] = sentinel;
    funtab = newfuntab;
    szfuntab += nfunctions;
    return TRUE;
