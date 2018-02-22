@@ -382,7 +382,7 @@ void OnShowTranscriptionToolBar(const CommandContext &context );
 void OnResetToolBars(const CommandContext &context );
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-void OnShowEffectsRack(const CommandContext &);
+void OnShowEffectsRack(const CommandContext &context );
 #endif
 
         // Transport Menu

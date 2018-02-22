@@ -6825,7 +6825,7 @@ void AudacityProject::OnResetToolBars(const CommandContext &WXUNUSED(context) )
 }
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-void AudacityProject::OnShowEffectsRack(const CommandContext &)
+void AudacityProject::OnShowEffectsRack(const CommandContext &WXUNUSED(context) )
 {
    EffectManager::Get().ShowRack();
 }
