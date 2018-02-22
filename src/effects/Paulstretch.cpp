@@ -113,7 +113,7 @@ wxString EffectPaulstretch::ManualPage()
    return wxT("Paulstretch");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectPaulstretch::GetType()
 {
@@ -121,13 +121,8 @@ EffectType EffectPaulstretch::GetType()
 }
 
 // EffectClientInterface implementation
-bool EffectPaulstretch::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mAmount, Amount );
-   S.SHUTTLE_PARAM( mTime_resolution, Time );
-   return true;
-}
 
-bool EffectPaulstretch::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectPaulstretch::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.WriteFloat(KEY_Amount, mAmount);
    parms.WriteFloat(KEY_Time, mTime_resolution);
@@ -135,7 +130,7 @@ bool EffectPaulstretch::GetAutomationParameters(CommandAutomationParameters & pa
    return true;
 }
 
-bool EffectPaulstretch::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectPaulstretch::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    ReadAndVerifyFloat(Amount);
    ReadAndVerifyFloat(Time);

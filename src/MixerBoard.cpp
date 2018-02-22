@@ -599,7 +599,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //      rmsRight[i] *= gain;
    //   }
    //   if ( mMeter ) mMeter->UpdateDisplay(
-   //      2, // If mono, show left track values in both meters, as in MeterToolBar, rather than nChannels.
+   //      2, // If mono, show left track values in both meters, as in MeterToolBar, rather than kNumChannels.
    //      kFramesPerBuffer,
    //      maxLeft, rmsLeft,
    //      maxRight, rmsRight,

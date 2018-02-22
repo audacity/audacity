@@ -42,7 +42,6 @@ class wxWindow;
 #include "../Track.h"
 
 class ShuttleGui;
-class AudacityCommand;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
@@ -85,7 +84,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    wxString GetVersion() override;
    wxString GetDescription() override;
 
-   // EffectDefinitionInterface implementation
+   // EffectIdentInterface implementation
 
    EffectType GetType() override;
    wxString GetFamily() override; // returns UNTRANSLATED
@@ -130,8 +129,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   bool GetAutomationParameters(CommandAutomationParameters & parms) override;
-   bool SetAutomationParameters(CommandAutomationParameters & parms) override;
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    bool LoadUserPreset(const wxString & name) override;
    bool SaveUserPreset(const wxString & name) override;
@@ -269,8 +268,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                   long style = DefaultMessageBoxStyle,
                   const wxString& titleStr = wxString{});
 
-   static void IncEffectCounter(){ nEffectsDone++;};
-
 //
 // protected virtual methods
 //
@@ -342,6 +339,7 @@ protected:
    bool TrackGroupProgress(int whichGroup, double frac, const wxString & = wxEmptyString);
 
    int GetNumWaveTracks() { return mNumTracks; }
+
    int GetNumWaveGroups() { return mNumGroups; }
 
    // Calculates the start time and selection length in samples
@@ -369,9 +367,6 @@ protected:
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    void CopyInputTracks(); // trackType = Track::Wave
    void CopyInputTracks(int trackType);
-
-   // A global counter of all the successful Effect invocations.
-   static int nEffectsDone;
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to add label tracks.
@@ -598,9 +593,6 @@ public:
    EffectUIHost(wxWindow *parent,
                 Effect *effect,
                 EffectUIClientInterface *client);
-   EffectUIHost(wxWindow *parent,
-                AudacityCommand *command,
-                EffectUIClientInterface *client);
    virtual ~EffectUIHost();
 
    bool TransferDataToWindow() override;
@@ -648,7 +640,6 @@ private:
    AudacityProject *mProject;
    wxWindow *mParent;
    Effect *mEffect;
-   AudacityCommand * mCommand;
    EffectUIClientInterface *mClient;
 
    wxArrayString mUserPresets;

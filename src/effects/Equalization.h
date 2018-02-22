@@ -108,15 +108,14 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectDefinitionInterface implementation
+   // EffectIdentInterface implementation
 
    EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandAutomationParameters & parms) override;
-   bool SetAutomationParameters(CommandAutomationParameters & parms) override;
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
    // EffectUIClientInterface implementation

@@ -1,12 +1,11 @@
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2018 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2009 Audacity Team.
    File License: wxwidgets
 
    OpenSaveCommands.h
    Stephen Parry
-   James Crook
 
 ******************************************************************//**
 
@@ -21,44 +20,46 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define OPEN_PROJECT_PLUGIN_SYMBOL XO("Open Project")
+// Open
 
-class OpenProjectCommand : public AudacityCommand
+class OpenProjectCommandType final : public CommandType
 {
 public:
-   // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return OPEN_PROJECT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Open a project.");};
-   bool DefineParams( ShuttleParams & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
-
-   // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Open");};
-public:
-   wxString mFileName;
-   bool mbAddToHistory;
-   bool bHasAddToHistory;
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
-#define SAVE_PROJECT_PLUGIN_SYMBOL XO("Save Project")
-
-class SaveProjectCommand : public AudacityCommand
+class OpenProjectCommand final : public CommandImplementation
 {
 public:
-   // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SAVE_PROJECT_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Saves a project.");};
-   bool DefineParams( ShuttleParams & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
+   OpenProjectCommand(CommandType &type,
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
+   { }
 
-   // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Save");};
+   virtual ~OpenProjectCommand();
+   bool Apply(CommandExecutionContext context) override;
+};
+
+// Save
+
+class SaveProjectCommandType final : public CommandType
+{
 public:
-   wxString mFileName;
-   bool mbAddToHistory;
-   bool mbCompress;
-   bool bHasAddToHistory;
-   bool bHasCompress;
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+};
+
+class SaveProjectCommand final : public CommandImplementation
+{
+public:
+   SaveProjectCommand(CommandType &type,
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
+   { }
+
+   virtual ~SaveProjectCommand();
+   bool Apply(CommandExecutionContext context) override;
 };

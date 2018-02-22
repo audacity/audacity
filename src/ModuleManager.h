@@ -99,7 +99,7 @@ public:
    void FindAllPlugins(PluginIDList & providers, wxArrayString & paths);
 
    wxArrayString FindPluginsForProvider(const PluginID & provider, const wxString & path);
-   bool RegisterEffectPlugin(const PluginID & provider, const wxString & path,
+   bool RegisterPlugin(const PluginID & provider, const wxString & path,
                        wxString &errMsg);
 
    IdentInterface *CreateProviderInstance(const PluginID & provider, const wxString & path);

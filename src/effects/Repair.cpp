@@ -53,7 +53,7 @@ wxString EffectRepair::GetDescription()
    return _("Sets the peak amplitude of a one or more tracks");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectRepair::GetType()
 {

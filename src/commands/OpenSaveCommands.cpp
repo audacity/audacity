@@ -1,11 +1,10 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Copyright 1999-2009 Audacity Team
    File License: wxWidgets
 
    Stephen Parry
-   James Crook
 
 ******************************************************************//**
 
@@ -18,39 +17,40 @@
 #include "OpenSaveCommands.h"
 #include "../Project.h"
 #include "../export/Export.h"
-#include "../ShuttleGui.h"
-#include "CommandContext.h"
 
+// OpenProject
 
-bool OpenProjectCommand::DefineParams( ShuttleParams & S ){
-   S.Define( mFileName, wxT("Filename"),  "test.aup" );
-   S.OptionalN(bHasAddToHistory).Define( mbAddToHistory, wxT("AddToHistory"),  false );
-   return true;
-}
-
-void OpenProjectCommand::PopulateOrExchange(ShuttleGui & S)
+wxString OpenProjectCommandType::BuildName()
 {
-   S.AddSpace(0, 5);
-
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieTextBox(_("File Name:"),mFileName);
-      S.TieCheckBox(_("Add to History"), mbAddToHistory );
-   }
-   S.EndMultiColumn();
+   return wxT("OpenProject");
 }
 
-bool OpenProjectCommand::Apply(const CommandContext & context){
+void OpenProjectCommandType::BuildSignature(CommandSignature &signature)
+{
+   auto addToHistoryValidator = make_movable<BoolValidator>();
+   signature.AddParameter(wxT("AddToHistory"), true, std::move(addToHistoryValidator));
+   auto filenameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("Filename"), wxT(""), std::move(filenameValidator));
+}
 
+CommandHolder OpenProjectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
+{
+   return std::make_shared<OpenProjectCommand>(*this, std::move(target));
+}
+
+bool OpenProjectCommand::Apply(CommandExecutionContext context)
+{
+   wxString fileName = GetString(wxT("Filename"));
+   bool addToHistory  = GetBool(wxT("AddToHistory"));
    wxString oldFileName = context.GetProject()->GetFileName();
-   if(mFileName.IsEmpty())
+   if(fileName == wxEmptyString)
    {
       auto project = context.GetProject();
       project->OnOpen(*project);
    }
    else
    {
-      context.GetProject()->OpenFile(mFileName, mbAddToHistory);
+      context.GetProject()->OpenFile(fileName, addToHistory);
    }
    const wxString &newFileName = context.GetProject()->GetFileName();
 
@@ -60,30 +60,43 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    return newFileName != wxEmptyString && newFileName != oldFileName;
 }
 
-bool SaveProjectCommand::DefineParams( ShuttleParams & S ){
-   S.Define( mFileName, wxT("Filename"),  "name.aup" );
-   S.OptionalN(bHasAddToHistory).Define( mbAddToHistory, wxT("AddToHistory"),  false );
-   S.OptionalN(bHasCompress).Define( mbCompress, wxT("Compress"),  false );
-   return true;
+OpenProjectCommand::~OpenProjectCommand()
+{ }
+
+// SaveProject
+
+wxString SaveProjectCommandType::BuildName()
+{
+   return wxT("SaveProject");
 }
 
-void SaveProjectCommand::PopulateOrExchange(ShuttleGui & S)
+void SaveProjectCommandType::BuildSignature(CommandSignature &signature)
 {
-   S.AddSpace(0, 5);
+   auto saveCompressedValidator = make_movable<BoolValidator>();
+   auto addToHistoryValidator = make_movable<BoolValidator>();
 
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieTextBox(_("File Name:"),mFileName);
-      S.TieCheckBox(_("Add to History:"), mbAddToHistory );
-      S.TieCheckBox(_("Compress:"), mbCompress );
-   }
-   S.EndMultiColumn();
+   signature.AddParameter(wxT("Compress"), false, std::move(saveCompressedValidator));
+   signature.AddParameter(wxT("AddToHistory"), true, std::move(addToHistoryValidator));
+
+   auto filenameValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("Filename"), wxT(""), std::move(filenameValidator));
 }
 
-bool SaveProjectCommand::Apply(const CommandContext &context)
+CommandHolder SaveProjectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   if(mFileName.IsEmpty())
-      return context.GetProject()->SaveAs(mbCompress);
+   return std::make_shared<SaveProjectCommand>(*this, std::move(target));
+}
+
+bool SaveProjectCommand::Apply(CommandExecutionContext context)
+{
+   wxString fileName = GetString(wxT("Filename"));
+   bool saveCompressed  = GetBool(wxT("Compress"));
+   bool addToHistory  = GetBool(wxT("AddToHistory"));
+   if(fileName == wxEmptyString)
+      return context.GetProject()->SaveAs(saveCompressed);
    else
-      return context.GetProject()->SaveAs(mFileName,mbCompress,mbAddToHistory);
+      return context.GetProject()->SaveAs(fileName,saveCompressed,addToHistory);
 }
+
+SaveProjectCommand::~SaveProjectCommand()
+{ }

@@ -139,8 +139,6 @@ simplifies construction of menu items.
 
 #include "widgets/Meter.h"
 #include "widgets/ErrorDialog.h"
-#include "./commands/AudacityCommand.h"
-#include "commands/CommandContext.h"
 
 enum {
    kAlignStartZero = 0,
@@ -165,7 +163,7 @@ enum {
    POST_TIMER_RECORD_SHUTDOWN
 };
 
-#include "commands/CommandContext.h"
+#include "commands/CommandFunctors.h"
 #include "commands/ScreenshotCommand.h"
 //
 // Effects menu arrays
@@ -1008,7 +1006,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginSubMenu(_("M&ute/Unmute"));
       c->AddItem(wxT("MuteAllTracks"), _("&Mute All Tracks"), FN(OnMuteAllTracks), wxT("Ctrl+U"));
-      c->AddItem(wxT("UnmuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnmuteAllTracks), wxT("Ctrl+Shift+U"));
+      c->AddItem(wxT("UnMuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnMuteAllTracks), wxT("Ctrl+Shift+U"));
       c->EndSubMenu();
 
       c->BeginSubMenu(_("&Pan"));
@@ -1134,7 +1132,7 @@ void AudacityProject::CreateMenusAndCommands()
       wxString buildMenuLabel;
       if (!mLastEffect.IsEmpty()) {
          buildMenuLabel.Printf(_("Repeat %s"),
-            EffectManager::Get().GetCommandName(mLastEffect));
+            EffectManager::Get().GetEffectName(mLastEffect));
       }
       else
          buildMenuLabel = _("Repeat Last Effect");
@@ -1247,7 +1245,7 @@ void AudacityProject::CreateMenusAndCommands()
                   gAudioIO->mDetectUpstreamDropouts);
 #endif
 
-      c->AddItem(wxT("FancyScreenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
+      c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
 
 // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
 // as they used to in 1.3.x
@@ -1584,67 +1582,6 @@ void AudacityProject::CreateMenusAndCommands()
                  AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
       c->EndSubMenu();
 
-      // Effects Manager also (now) manages Generic commands.
-      // plug-in manager, as if an effect.  
-      c->BeginSubMenu(_("&Automation"));
-
-      // Note that the PLUGIN_SYMBOL must have a space between words, 
-      // whereas the short-form used here must not.
-      // (If you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
-      // you would have to use "Compareaudio" here.)
-//      c->AddItem(wxT("Demo"), _("Just a Demo..."), FN(OnAudacityCommand),
-//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Select"), _("Select..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("GetInfo"), _("Get Info..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Help"), _("Help..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-
-      c->AddItem(wxT("Import2"), _("Import..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Export2"), _("Export..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("OpenProject2"), _("Open Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SaveProject2"), _("Save Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-
-      c->AddItem(wxT("Message"), _("Message..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Screenshot"), _("Screenshot (Vanilla)..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-// Menu items not needed, since they are part of Select,
-//      c->AddItem(wxT("SelectTime"), _("Select Time..."), FN(OnAudacityCommand),
-//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-//      c->AddItem(wxT("SelectTracks"), _("Select Tracks..."), FN(OnAudacityCommand),
-//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("Drag"), _("Mousing About..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("CompareAudio"), _("Compare Audio..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("GetPreference"), _("Get Preference..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SetPreference"), _("Set Preference..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SetClip"), _("Set Clip..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SetEnvelope"), _("Set Envelope..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SetLabel"), _("Set Label..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SetProject"), _("Set Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-      c->AddItem(wxT("SetTrack"), _("Set Track..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-// Menu item not needed, since it is part of SetPreference,
-//      c->AddItem(wxT("ReloadPreferences"), _("&Reload Preferences..."), FN(OnReloadPreferences),
-//         AudioIONotBusyFlag,  AudioIONotBusyFlag);
-
-
-      c->EndSubMenu();
-
-
       // Accel key is not bindable.
       c->AddItem(wxT("FullScreenOnOff"), _("&Full screen (on/off)"), FN(OnFullScreen),
 #ifdef __WXMAC__
@@ -1661,9 +1598,6 @@ void AudacityProject::CreateMenusAndCommands()
          FN(OnMacMinimizeAll), wxT("Ctrl+Alt+M"),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
-      
-      
-
       c->EndMenu();
 
 
@@ -1962,14 +1896,12 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
          c->BeginSubMenu(name);
          while (i < namesCnt && names[i].IsSameAs(name))
          {
-            const PluginDescriptor *plug = PluginManager::Get().GetPlugin(plugs[i]);
-            wxString item = plug->GetPath();
-            if( plug->GetPluginType() == PluginTypeEffect )
-               c->AddItem(item,
-                          item,
-                          FN(OnEffect),
-                          flags[i],
-                          flags[i], plugs[i]);
+            wxString item = PluginManager::Get().GetPlugin(plugs[i])->GetPath();
+            c->AddItem(item,
+                       item,
+                       FN(OnEffect),
+                       flags[i],
+                       flags[i], plugs[i]);
 
             i++;
          }
@@ -1978,13 +1910,11 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
       }
       else
       {
-         const PluginDescriptor *plug = PluginManager::Get().GetPlugin(plugs[i]);
-         if( plug->GetPluginType() == PluginTypeEffect )
-            c->AddItem(names[i],
-                       names[i],
-                       FN(OnEffect),
-                       flags[i],
-                       flags[i], plugs[i]);
+         c->AddItem(names[i],
+                    names[i],
+                    FN(OnEffect),
+                    flags[i],
+                    flags[i], plugs[i]);
       }
 
       if (max > 0)
@@ -4390,48 +4320,6 @@ void AudacityProject::OnZeroCrossing(const CommandContext &WXUNUSED(context) )
    mTrackPanel->Refresh(false);
 }
 
-
-/// DoAudacityCommand() takes a PluginID and executes the assocated effect.
-///
-/// At the moment flags are used only to indicate whether to prompt for parameters,
-bool AudacityProject::DoAudacityCommand(const PluginID & ID, const CommandContext & context, int flags)
-{
-   const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-   if (!plug)
-      return false;
-
-   if (flags & OnEffectFlags::kConfigured)
-   {
-      OnStop(*this);
-//    SelectAllIfNone();
-   }
-
-   EffectManager & em = EffectManager::Get();
-   bool success = em.DoAudacityCommand(ID, 
-      context,
-      this, 
-      (flags & OnEffectFlags::kConfigured) == 0);
-
-   if (!success)
-      return false;
-
-/*
-   if (em.GetSkipStateFlag())
-      flags = flags | OnEffectFlags::kSkipState;
-
-   if (!(flags & OnEffectFlags::kSkipState))
-   {
-      wxString shortDesc = em.GetCommandName(ID);
-      wxString longDesc = em.GetCommandDescription(ID);
-      PushState(longDesc, shortDesc);
-   }
-*/
-   RedrawProject();
-   return true;
-}
-
-
-
 //
 // Effect Menus
 //
@@ -4440,7 +4328,7 @@ bool AudacityProject::DoAudacityCommand(const PluginID & ID, const CommandContex
 ///
 /// At the moment flags are used only to indicate whether to prompt for parameters,
 /// whether to save the state to history and whether to allow 'Repeat Last Effect'.
-bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUSED(context), int flags)
+bool AudacityProject::DoEffect(const PluginID & ID, int flags)
 {
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
@@ -4501,7 +4389,7 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
          newTrack->SetSelected(true);
       }
    }
-      
+
    EffectManager & em = EffectManager::Get();
 
    success = em.DoEffect(ID, this, mRate,
@@ -4517,8 +4405,8 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
 
    if (!(flags & OnEffectFlags::kSkipState))
    {
-      wxString shortDesc = em.GetCommandName(ID);
-      wxString longDesc = em.GetCommandDescription(ID);
+      wxString shortDesc = em.GetEffectName(ID);
+      wxString longDesc = em.GetEffectDescription(ID);
       PushState(longDesc, shortDesc);
    }
 
@@ -4527,7 +4415,7 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
       // Only remember a successful effect, don't remember insert,
       // or analyze effects.
       if (type == EffectTypeProcess) {
-         wxString shortDesc = em.GetCommandName(ID);
+         wxString shortDesc = em.GetEffectName(ID);
          mLastEffect = ID;
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
@@ -4569,14 +4457,14 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
 
 void AudacityProject::OnEffect(const CommandContext &context)
 {
-   DoEffect(context.parameter, context, 0);
+   DoEffect(context.parameter, 0);
 }
 
 void AudacityProject::OnRepeatLastEffect(const CommandContext &context)
 {
    if (!mLastEffect.IsEmpty())
    {
-      DoEffect(mLastEffect, context, OnEffectFlags::kConfigured);
+      DoEffect(mLastEffect, OnEffectFlags::kConfigured);
    }
 }
 
@@ -4625,16 +4513,7 @@ void AudacityProject::OnManageAnalyzers(const CommandContext &WXUNUSED(context) 
 void AudacityProject::OnStereoToMono(const CommandContext &context)
 {
    DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
-      context,
-      OnEffectFlags::kConfigured);
-}
-
-void AudacityProject::OnAudacityCommand(const CommandContext & ctx)
-{
-   wxLogDebug( "Command was: %s", ctx.parameter);
-   DoAudacityCommand(EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
-      ctx,
-      OnEffectFlags::kNone);  // Not configured, so prompt user.
+            OnEffectFlags::kConfigured);
 }
 
 //
@@ -4890,43 +4769,6 @@ void AudacityProject::OnPreferences(const CommandContext &WXUNUSED(context) )
    if (!dialog.ShowModal()) {
       // Canceled
       return;
-   }
-
-   // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
-   //      rebuilding the menus while the PrefsDialog is still in the modal
-   //      state.
-   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
-      AudacityProject *p = gAudacityProjects[i].get();
-
-      p->RebuildMenuBar();
-      p->RebuildOtherMenus();
-// TODO: The comment below suggests this workaround is obsolete.
-#if defined(__WXGTK__)
-      // Workaround for:
-      //
-      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
-      //
-      // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
-      wxRect r = p->GetRect();
-      p->SetSize(wxSize(1,1));
-      p->SetSize(r.GetSize());
-#endif
-   }
-}
-
-
-#include "./prefs/SpectrogramSettings.h"
-#include "./prefs/WaveformSettings.h"
-void AudacityProject::OnReloadPreferences(const CommandContext &WXUNUSED(context) )
-{
-   {
-      SpectrogramSettings::defaults().LoadPrefs();
-      WaveformSettings::defaults().LoadPrefs();
-
-      GlobalPrefsDialog dialog(this /* parent */ );
-      wxCommandEvent Evt;
-      //dialog.Show();
-      dialog.OnOK(Evt);
    }
 
    // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
@@ -6428,7 +6270,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   int trackNum = 1;
+   int trackNumber = 1;
    while (track) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
@@ -6437,7 +6279,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
          auto result = next ? FindNextClip(waveTrack, t0, t1) :
             FindPrevClip(waveTrack, t0, t1);
          if (result.found) {
-            result.trackNum = trackNum;
+            result.trackNumber = trackNumber;
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
@@ -6446,7 +6288,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
             auto result = next ? FindNextClip(waveTrack2, t0, t1) :
                FindPrevClip(waveTrack2, t0, t1);
             if (result.found) {
-               result.trackNum = trackNum;
+               result.trackNumber = trackNumber;
                result.channel = stereoAndDiff;
                results.push_back(result);
             }
@@ -6455,7 +6297,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
          nTracksSearched++;
       }
 
-      trackNum++;
+      trackNumber++;
       track = iter.Next(true);
    }
 
@@ -7514,7 +7356,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   int trackNum = 1;
+   int trackNumber = 1;
    while (track) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
@@ -7523,7 +7365,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
          auto result = next ? FindNextClipBoundary(waveTrack, time) :
             FindPrevClipBoundary(waveTrack, time);
          if (result.nFound > 0) {
-            result.trackNum = trackNum;
+            result.trackNumber = trackNumber;
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
@@ -7532,7 +7374,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
             auto result = next ? FindNextClipBoundary(waveTrack2, time) :
                FindPrevClipBoundary(waveTrack2, time);
             if (result.nFound > 0) {
-               result.trackNum = trackNum;
+               result.trackNumber = trackNumber;
                result.channel = stereoAndDiff;
                results.push_back(result);
             }
@@ -7541,7 +7383,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
          nTracksSearched++;
       }
 
-      trackNum++;
+      trackNumber++;
       track = iter.Next(true);
    }
 
@@ -7598,7 +7440,7 @@ wxString AudacityProject::FoundTrack::ComposeTrackName() const
    auto name = waveTrack->GetName();
    auto shortName = name == waveTrack->GetDefaultName()
       /* i18n-hint: compose a name identifying an unnamed track by number */
-      ? wxString::Format( _("Track %d"), trackNum )
+      ? wxString::Format( _("Track %d"), trackNumber )
       : name;
    auto longName = shortName;
    if (channel) {
@@ -8784,7 +8626,7 @@ void AudacityProject::OnMuteAllTracks(const CommandContext &WXUNUSED(context) )
    }
 }
 
-void AudacityProject::OnUnmuteAllTracks(const CommandContext &WXUNUSED(context) )
+void AudacityProject::OnUnMuteAllTracks(const CommandContext &WXUNUSED(context) )
 {
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();

@@ -44,16 +44,15 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectDefinitionInterface implementation
+   // EffectIdentInterface implementation
 
    EffectType GetType() override;
    bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
 
-   bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandAutomationParameters & parms) override;
-   bool SetAutomationParameters(CommandAutomationParameters & parms) override;
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 

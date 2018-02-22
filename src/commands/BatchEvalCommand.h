@@ -26,23 +26,24 @@ to that system.
 #include "CommandType.h"
 #include "../BatchCommands.h"
 
-class BatchEvalCommandType final : public OldStyleCommandType
+class BatchEvalCommandType final : public CommandType
 {
 public:
    wxString BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
-   OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTargets> &&target) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
 class BatchEvalCommand final : public CommandImplementation
 {
 public:
-   BatchEvalCommand(OldStyleCommandType &type)
-      : CommandImplementation(type)
+   BatchEvalCommand(CommandType &type,
+                    std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
    { }
 
    virtual ~BatchEvalCommand();
-   bool Apply(const CommandContext &context) override;
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __BATCHEVALCOMMAND__ */

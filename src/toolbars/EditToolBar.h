@@ -62,8 +62,6 @@ enum {
    ETBNumButtons
 };
 
-const int first_ETB_ID = 11300;
-
 // flags so 1,2,4,8 etc.
 enum {
    ETBActTooltips = 1,

@@ -1,11 +1,10 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Copyright 1999-2009 Audacity Team
    License: wxwidgets
 
    Dan Horgan
-   James Crook
 
 ******************************************************************//**
 
@@ -23,23 +22,20 @@
 #include "CommandType.h"
 #include "Command.h"
 
-#define HELP_PLUGIN_SYMBOL XO("Help")
-
-class HelpCommand : public AudacityCommand
+class HelpCommandType final : public CommandType
 {
 public:
-   // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return HELP_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Gives help on a command.");};
-   bool DefineParams( ShuttleParams & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
-
-   // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Help");};
-public:
-   wxString mCommandName;
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
+class HelpCommand final : public CommandImplementation
+{
+public:
+   HelpCommand(HelpCommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target)) { }
+   bool Apply(CommandExecutionContext context) override;
+};
 
 #endif /* End of include guard: __HELPCOMMAND__ */

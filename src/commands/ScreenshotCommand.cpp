@@ -1,21 +1,24 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Copyright 1999-2009 Audacity Team
    License: GPL v2 - see LICENSE.txt
 
    Dominic Mazzoni
    Dan Horgan
-   James Crook
 
 ******************************************************************//**
 
 \class ScreenshotCommand
 \brief Implements a command for capturing various areas of the screen or
-project window.  It's one big if-elseif switch statement with lots of 
-small calculations of rectangles.
+project window.
 
 *//*******************************************************************/
+
+/* TODO: JKC: The screenshot code is very verbose and should be made
+   much shorter.  It could work from a single list of function 
+   names and functors.
+  */
 
 #include "../Audacity.h"
 #include "ScreenshotCommand.h"
@@ -26,7 +29,6 @@ small calculations of rectangles.
 #include <wx/dcmemory.h>
 #include <wx/settings.h>
 #include <wx/bitmap.h>
-#include <wx/valgen.h>
 
 #include "../Track.h"
 #include "../TrackPanel.h"
@@ -42,125 +44,62 @@ small calculations of rectangles.
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../widgets/Ruler.h"
 #include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "CommandContext.h"
 
+#if defined(__WXMAC__) && !wxCHECK_VERSION(3, 0, 0)
+//
+// This is a temporary solution for capturing screenshots on
+// OS X 10.6 or greater.  This needs to go away once we move
+// to wx3.
+//
+// (This was copied from wx3.1.0 source and hacked up a bit.)
+//
+#include <wx/mac/private.h>
+#include <dlfcn.h>
 
-enum kCaptureTypes
+typedef CGImageRef (*CGDisplayCreateImageFunc)(CGDirectDisplayID displayID);
+
+static wxBitmap DoGetAsBitmap(const wxRect *subrect)
 {
-   kwindow,
-   kfullwindow,
-   kwindowplus,
-   kfullscreen,
-   ktoolbars,
-   kmenus,
-   keffects,
-   kpreferences,
-   kselectionbar,
-   kspectralselection,
-   ktools,
-   ktransport,
-   kmixer,
-   kmeter,
-   kplaymeter,
-   krecordmeter,
-   kedit,
-   kdevice,
-   kscrub,
-   ktranscription,
-   ktrackpanel,
-   kruler,
-   ktracks,
-   kfirsttrack,
-   kfirsttwotracks,
-   kfirstthreetracks,
-   kfirstfourtracks,
-   ksecondtrack,
-   ktracksplus,
-   kfirsttrackplus,
-   kalltracks,
-   kalltracksplus,
-   nCaptureWhats
-};
+    CGRect cgbounds = CGDisplayBounds(CGMainDisplayID());
 
-static const wxString kCaptureWhatStrings[nCaptureWhats] =
-{
-   XO("Window"),
-   XO("Full_Window"),
-   XO("Window_Plus"),
-   XO("Fullscreen"),
-   XO("Toolbars"),
-   XO("Menus"),
-   XO("Effects"),
-   XO("Preferences"),
-   XO("Selectionbar"),
-   XO("Spectral_Selection"),
-   XO("Tools"),
-   XO("Transport"),
-   XO("Mixer"),
-   XO("Meter"),
-   XO("Play_Meter"),
-   XO("Record_Meter"),
-   XO("Edit"),
-   XO("Device"),
-   XO("Scrub"),
-   XO("Transcription"),
-   XO("Trackpanel"),
-   XO("Ruler"),
-   XO("Tracks"),
-   XO("First_Track"),
-   XO("First_Two_Tracks"),
-   XO("First_Three_Tracks"),
-   XO("First_Four_Tracks"),
-   XO("Second_Track"),
-   XO("Tracks_Plus"),
-   XO("First_Track_Plus"),
-   XO("All_Tracks"),
-   XO("All_Tracks_Plus"),
-};
+    wxRect rect = subrect ? *subrect : wxRect(0, 0, cgbounds.size.width, cgbounds.size.height);
 
+    wxBitmap bmp(rect.GetSize().GetWidth(), rect.GetSize().GetHeight(), 32);
 
-enum kBackgrounds
-{
-   kBlue,
-   kWhite,
-   kNone,
-   nBackgrounds
-};
+    CGDisplayCreateImageFunc createImage =
+        (CGDisplayCreateImageFunc) dlsym(RTLD_NEXT, "CGDisplayCreateImage");
+    if (createImage == NULL)
+    {
+        return bmp;
+    }
 
-static const wxString kBackgroundStrings[nBackgrounds] =
-{
-   XO("Blue"),
-   XO("White"),
-   XO("None")
-};
+    CGRect srcRect = CGRectMake(rect.x, rect.y, rect.width, rect.height);
 
+    CGContextRef context = (CGContextRef)bmp.GetHBITMAP();
 
-bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
-   wxArrayString backs(nBackgrounds, kBackgroundStrings);
-   S.Define(                               mPath,        wxT("Path"),         wxT(""));
-   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  wxT("Window"), whats );
-   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   wxT("None"), backs );
-   S.OptionalN(bHasBringToTop).Define(     mbBringToTop, wxT("ToTop"), true );
-   return true;
-};
+    CGContextSaveGState(context);
 
-void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
-{
-   wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
-   wxArrayString backs(nBackgrounds, kBackgroundStrings);
-   S.AddSpace(0, 5);
+    CGContextTranslateCTM( context, 0,  cgbounds.size.height );
+    CGContextScaleCTM( context, 1, -1 );
 
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieTextBox(  _("Path:"), mPath);
-      S.TieChoice(   _("Capture What:"), mWhat, &whats);
-      S.TieChoice(   _("Background:"), mBack, &backs);
-      S.TieCheckBox( _("Bring To Top:"), mbBringToTop);
-   }
-   S.EndMultiColumn();
+    if ( subrect )
+        srcRect = CGRectOffset( srcRect, -subrect->x, -subrect->y ) ;
+
+    CGImageRef image = NULL;
+
+    image = createImage(kCGDirectMainDisplay);
+
+    wxASSERT_MSG(image, wxT("wxScreenDC::GetAsBitmap - unable to get screenshot."));
+
+    CGContextDrawImage(context, srcRect, image);
+
+    CGImageRelease(image);
+
+    CGContextRestoreGState(context);
+
+    return bmp;
 }
+#endif
 
 // static member variable.
 void (*ScreenshotCommand::mIdleHandler)(wxIdleEvent& event) = NULL;
@@ -175,10 +114,9 @@ void IdleHandler(wxIdleEvent& event){
    wxWindow * pWin = dynamic_cast<wxWindow*>(event.GetEventObject());
    wxASSERT( pWin );
    pWin->Unbind(wxEVT_IDLE, IdleHandler);
-   CommandContext context( *GetActiveProject() );
    // We have the relevant window, so go and capture it.
    if( ScreenshotCommand::mpShooter )
-      ScreenshotCommand::mpShooter->CaptureWindowOnIdle( context, pWin );
+      ScreenshotCommand::mpShooter->CaptureWindowOnIdle( pWin );
 }
 
 
@@ -239,28 +177,21 @@ static void Yield()
    }
 }
 
-bool ScreenshotCommand::Capture(
-   const CommandContext & context,
-   const wxString &filename,
-                          wxWindow *window, wxRect r,
+void ScreenshotCommand::Capture(const wxString &filename,
+                          wxWindow *window,
+                          int x, int y, int width, int height,
                           bool bg)
 {
-   int width = r.width;
-   int height = r.height;
-   if( r.width == 0 )
-      return false;
-   if (window ) {
-      wxWindow * win = window;
-      wxTopLevelWindow * top_win= nullptr;
-      if( !window->IsTopLevel())
-         win = wxGetTopLevelParent(window);
-      top_win = dynamic_cast<wxTopLevelWindow*>( win );
-      if( (!bHasBringToTop || mbBringToTop) && (!top_win || !top_win->IsActive()) ){
-         win->Raise();
-         Yield();
+   if (window) {
+      if (window->IsTopLevel()) {
+         window->Raise();
+      }
+      else {
+         wxGetTopLevelParent(window)->Raise();
       }
    }
 
+   Yield();
 
    int screenW, screenH;
    wxDisplaySize(&screenW, &screenH);
@@ -283,16 +214,15 @@ bool ScreenshotCommand::Capture(
    fullDC.SelectObject(wxNullBitmap);
 #endif
 
-   //wxRect r(x, y, width, height);
+   wxRect r(x, y, width, height);
 
+   // Ensure within bounds (x/y are negative on Windows when maximized)
+   r.Intersect(wxRect(0, 0, screenW, screenH));
 
    // Convert to screen coordinates if needed
    if (window && window->GetParent() && !window->IsTopLevel()) {
       r.SetPosition(window->GetParent()->ClientToScreen(r.GetPosition()));
    }
-
-   // Ensure within bounds (x/y are negative on Windows when maximized)
-   r.Intersect(wxRect(0, 0, screenW, screenH));
 
    // Extract the actual image
    wxBitmap part = full.GetSubBitmap(r);
@@ -315,23 +245,18 @@ bool ScreenshotCommand::Capture(
 
    // Save the final image
    wxImage image = part.ConvertToImage();
-   ::wxBell();
-
    if (image.SaveFile(filename)) {
-      // flush
-      context.Status( wxString::Format( _("Saved %s"), filename ), true );
+      mOutput->Status( wxString::Format( _("Saved %s"), filename ) );
    }
    else {
-      context.Error(
+      mOutput->Error(
          wxString::Format( _("Error trying to save file: %s"), filename ) );
-      return false;
    }
-   return true;
+
+   ::wxBell();
 }
 
-bool ScreenshotCommand::CaptureToolbar(
-   const CommandContext & context,
-   ToolManager *man, int type, const wxString &name)
+void ScreenshotCommand::CaptureToolbar(ToolManager *man, int type, const wxString &name)
 {
    bool visible = man->IsVisible(type);
    if (!visible) {
@@ -346,20 +271,17 @@ bool ScreenshotCommand::CaptureToolbar(
    w->ClientToScreen(&x, &y);
    w->GetParent()->ScreenToClient(&x, &y);
    w->GetClientSize(&width, &height);
-   
-   bool result = Capture(context, name, w, wxRect(x, y, width, height));
+
+   Capture(name, w, x, y, width, height);
 
    if (!visible) {
       man->ShowHide(type);
       if (mIgnore)
          mIgnore->Raise();
    }
-   return result;
 }
 
-bool ScreenshotCommand::CaptureDock(
-   const CommandContext & context,
-   wxWindow *win, const wxString &mFileName)
+void ScreenshotCommand::CaptureDock(wxWindow *win, const wxString &fileName)
 {
    int x = 0, y = 0;
    int width, height;
@@ -368,12 +290,10 @@ bool ScreenshotCommand::CaptureDock(
    win->GetParent()->ScreenToClient(&x, &y);
    win->GetClientSize(&width, &height);
 
-   return Capture(context, mFileName, win, wxRect(x, y, width, height));
+   Capture(fileName, win, x, y, width, height);
 }
 
-void ExploreMenu( 
-   const CommandContext & context,
-   wxMenu * pMenu, int Id, int depth ){
+void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
    Id;//compiler food.
    if( !pMenu )
       return;
@@ -403,16 +323,14 @@ void ExploreMenu(
       wxLogDebug("T.Add( %2i, %2i,  0, \"%s¬%s\" );", depth, flags, Label,Accel ); 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
-         ExploreMenu( context, pMenu, item->GetId(), depth+1 );
+         ExploreMenu( pMenu, item->GetId(), depth+1 );
       }
    }
 }
 
-void ScreenshotCommand::CaptureMenus(
-   const CommandContext & context,
-   wxMenuBar*pBar, const wxString &mFileName)
+void ScreenshotCommand::CaptureMenus(wxMenuBar*pBar, const wxString &fileName)
 {
-   mFileName;//compiler food.
+   fileName;//compiler food.
    if(!pBar ){
       wxLogDebug("No menus");
       return;
@@ -425,7 +343,7 @@ void ScreenshotCommand::CaptureMenus(
    {
       Label = pBar->GetMenuLabelText( i );
       wxLogDebug( "\nT.Add(  0,  0,  0, \"%s¬\" );", Label);
-      ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
+      ExploreMenu( pBar->GetMenu( i ), pBar->GetId(), 1 );
    }
 
 #if 0
@@ -436,7 +354,7 @@ void ScreenshotCommand::CaptureMenus(
    win->GetParent()->ScreenToClient(&x, &y);
    win->GetClientSize(&width, &height);
 
-   Capture(mFileName, win, wxRect(x, y, width, height));
+   Capture(fileName, win, x, y, width, height);
 #endif
 }
 
@@ -451,9 +369,7 @@ bool ScreenshotCommand::MayCapture( wxDialog * pDlg )
    return true;
 }
 
-void ScreenshotCommand::CaptureWindowOnIdle( 
-   const CommandContext & context,
-   wxWindow * pWin )
+void ScreenshotCommand::CaptureWindowOnIdle( wxWindow * pWin )
 {
    wxDialog * pDlg = dynamic_cast<wxDialog*>(pWin);
    if( !pDlg ){
@@ -477,23 +393,20 @@ void ScreenshotCommand::CaptureWindowOnIdle(
    wxMilliSleep( 200 );
    // JKC: The border of 7 pixels was determined from a trial capture and then measuring
    // in the GIMP.  I'm unsure where the border comes from.
-   Capture( context, Name, pDlg, wxRect((int)Pos.x+7, (int)Pos.y, (int)Siz.x-14, (int)Siz.y-7) );
+   Capture( Name, pDlg, (int)Pos.x+7, (int)Pos.y, (int)Siz.x-14, (int)Siz.y-7 );
 
    // We've captured the dialog, so now dismiss the dialog.
    wxCommandEvent Evt( wxEVT_BUTTON, wxID_CANCEL );
    pDlg->GetEventHandler()->AddPendingEvent( Evt );
 }
 
-void ScreenshotCommand::CapturePreferences( 
-   const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName ){
-   (void)&mFileName;//compiler food.
-   (void)&context;
+void ScreenshotCommand::CapturePreferences( AudacityProject * pProject, const wxString &fileName ){
+   fileName;//compiler food.
    CommandManager * pMan = pProject->GetCommandManager();
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
-   mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+   mDirToWriteTo = fileName.BeforeLast('\\') + "\\";
    mpShooter = this;
    const int nPrefsPages = 19;
 
@@ -503,8 +416,7 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)i);
       gPrefs->Flush();
       wxString Command = "Preferences";
-      const CommandContext context( *pProject );
-      if( !pMan->HandleTextualCommand( Command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !pMan->HandleTextualCommand( Command, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Command );
       }
@@ -514,16 +426,13 @@ void ScreenshotCommand::CapturePreferences(
    }
 }
 
-void ScreenshotCommand::CaptureEffects( 
-   const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName ){
-   (void)&mFileName;//compiler food.
-   (void)&context;
+void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxString &fileName ){
+   fileName;//compiler food.
    CommandManager * pMan = pProject->GetCommandManager();
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
-   mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+   mDirToWriteTo = fileName.BeforeLast('\\') + "\\";
    mpShooter = this;
 
 #define TRICKY_CAPTURE
@@ -614,8 +523,7 @@ void ScreenshotCommand::CaptureEffects(
       // The handler is cleared each time it is used.
       SetIdleHandler( IdleHandler );
       Str = EffectNames[i];
-      const CommandContext context( *pProject );
-      if( !pMan->HandleTextualCommand( Str, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      if( !pMan->HandleTextualCommand( Str, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Str);
       }
@@ -625,13 +533,64 @@ void ScreenshotCommand::CaptureEffects(
    }
 }
 
+
+wxString ScreenshotCommandType::BuildName()
+{
+   return wxT("Screenshot");
+}
+
+void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
+{
+   auto captureModeValidator = make_movable<OptionValidator>();
+   captureModeValidator->AddOption(wxT("window"));
+   captureModeValidator->AddOption(wxT("fullwindow"));
+   captureModeValidator->AddOption(wxT("windowplus"));
+   captureModeValidator->AddOption(wxT("fullscreen"));
+   captureModeValidator->AddOption(wxT("toolbars"));
+   captureModeValidator->AddOption(wxT("menus"));
+   captureModeValidator->AddOption(wxT("effects"));
+   captureModeValidator->AddOption(wxT("preferences"));
+   captureModeValidator->AddOption(wxT("selectionbar"));
+   captureModeValidator->AddOption(wxT("spectralselection"));
+   captureModeValidator->AddOption(wxT("tools"));
+   captureModeValidator->AddOption(wxT("transport"));
+   captureModeValidator->AddOption(wxT("mixer"));
+   captureModeValidator->AddOption(wxT("meter"));
+   captureModeValidator->AddOption(wxT("playmeter"));
+   captureModeValidator->AddOption(wxT("recordmeter"));
+   captureModeValidator->AddOption(wxT("edit"));
+   captureModeValidator->AddOption(wxT("device"));
+   captureModeValidator->AddOption(wxT("scrub"));
+   captureModeValidator->AddOption(wxT("transcription"));
+   captureModeValidator->AddOption(wxT("trackpanel"));
+   captureModeValidator->AddOption(wxT("ruler"));
+   captureModeValidator->AddOption(wxT("tracks"));
+   captureModeValidator->AddOption(wxT("firsttrack"));
+   captureModeValidator->AddOption(wxT("secondtrack"));
+
+   auto backgroundValidator = make_movable<OptionValidator>();
+   backgroundValidator->AddOption(wxT("Blue"));
+   backgroundValidator->AddOption(wxT("White"));
+   backgroundValidator->AddOption(wxT("None"));
+
+   auto filePathValidator = make_movable<DefaultValidator>();
+
+   signature.AddParameter(wxT("CaptureMode"),
+                          wxT("fullscreen"),
+                          std::move(captureModeValidator));
+   signature.AddParameter(wxT("Background"),
+                          wxT("None"),
+                          std::move(backgroundValidator));
+   signature.AddParameter(wxT("FilePath"), wxT(""), std::move(filePathValidator));
+}
+
+CommandHolder ScreenshotCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
+{
+   return std::make_shared<ScreenshotCommand>(*this, std::move(target));
+}
+
 wxString ScreenshotCommand::MakeFileName(const wxString &path, const wxString &basename)
 {
-   // If the path is a full file name, then use it.
-   if( path.EndsWith( ".png" ) )
-      return path;
-
-   // Otherwise make up a file name that has not been used already.
    wxFileName prefixPath;
    prefixPath.AssignDir(path);
    wxString prefix = prefixPath.GetPath
@@ -648,110 +607,8 @@ wxString ScreenshotCommand::MakeFileName(const wxString &path, const wxString &b
    return filename;
 }
 
-void ScreenshotCommand::GetDerivedParams()
+bool ScreenshotCommand::Apply(CommandExecutionContext context)
 {
-      // Read the parameters that were passed in
-   mFilePath    = mPath;
-   mCaptureMode = mWhat;
-   wxString background  = mBack;
-
-   // Build a suitable filename
-   mFileName = MakeFileName(mFilePath, mCaptureMode);
-
-   if (background.IsSameAs(wxT("Blue")))
-   {
-      mBackground = true;
-      mBackColor = wxColour(51, 102, 153);
-   }
-   else if (background.IsSameAs(wxT("White")))
-   {
-      mBackground = true;
-      mBackColor = wxColour(255, 255, 255);
-   }
-   else
-   {
-      mBackground = false;
-   }
-
-}
-
-wxRect ScreenshotCommand::GetWindowRect(wxTopLevelWindow *w){
-   int x = 0, y = 0;
-   int width, height;
-
-   w->ClientToScreen(&x, &y);
-   w->GetClientSize(&width, &height);
-   return wxRect( x,y,width,height);
-}
-
-wxRect ScreenshotCommand::GetFullWindowRect(wxTopLevelWindow *w){
-
-   wxRect r = w->GetRect();
-   r.SetPosition(w->GetScreenPosition());
-   r = w->GetScreenRect();
-
-#if defined(__WXGTK__)
-   // In wxGTK, we need to include decoration sizes
-   r.width += (wxSystemSettings::GetMetric(wxSYS_BORDER_X, w) * 2);
-   r.height += wxSystemSettings::GetMetric(wxSYS_CAPTION_Y, w) +
-      wxSystemSettings::GetMetric(wxSYS_BORDER_Y, w);
-#endif
-   if (!mBackground && mCaptureMode.IsSameAs(wxT("Window_Plus")))
-   {
-      // background colour not selected but we want a background
-      wxRect b = GetBackgroundRect();
-      r.x = (r.x - b.x) >= 0 ? (r.x - b.x): 0;
-      r.y = (r.y - b.y) >= 0 ? (r.y - b.y): 0;
-      r.width += b.width;
-      r.height += b.height;
-   }
-
-   return r;
-}
-
-wxRect ScreenshotCommand::GetScreenRect(){
-   int width, height;
-   wxDisplaySize(&width, &height);
-
-   return wxRect( 0,0,width,height);
-}
-
-wxRect ScreenshotCommand::GetPanelRect(TrackPanel * panel){
-   //AdornedRulerPanel *ruler = panel->mRuler;
-
-   int h = panel->mRuler->GetRulerHeight();
-   int x = 0, y = -h;
-   int width, height;
-
-   panel->ClientToScreen(&x, &y);
-   panel->GetParent()->ScreenToClient(&x, &y);
-   panel->GetClientSize(&width, &height);
-   return wxRect(x, y, width, height + h);
-}
-
-wxRect ScreenshotCommand::GetRulerRect(AdornedRulerPanel *ruler){
-   int x = 0, y = 0;
-   int width, height;
-
-   ruler->ClientToScreen(&x, &y);
-   ruler->GetParent()->ScreenToClient(&x, &y);
-   ruler->GetClientSize(&width, &height);
-   height = ruler->GetRulerHeight();
-   return wxRect( x, y, width, height);
-}
-
-wxRect ScreenshotCommand::GetTracksRect(TrackPanel * panel){
-   int x = 0, y = 0;
-   int width, height;
-
-   panel->ClientToScreen(&x, &y);
-   panel->GetParent()->ScreenToClient(&x, &y);
-   panel->GetClientSize(&width, &height);
-
-   return wxRect( x, y, width, height);
-}
-
-wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * panel, int n){
    auto FindRectangle = []( TrackPanel &panel, Track &t )
    {
       // This rectangle omits the focus ring about the track, and
@@ -785,144 +642,233 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
       return rect;
    };
 
-   TrackListIterator iter(pProj->GetTracks());
-   int count = 0;
-   for (auto t = iter.First(); t; t = iter.Next()) {
-      count +=  1;
-      if( count > n )
-      {
-         wxRect r =  FindRectangle( *panel, *t );
-         return r;
-      }
-      if( t->GetLinked() ){
-         t = iter.Next();
-         if( !t )
-            break;
-      }
-   }
-   return wxRect( 0,0,0,0);
-}
+   // Read the parameters that were passed in
+   wxString filePath    = GetString(wxT("FilePath"));
+   wxString captureMode = GetString(wxT("CaptureMode"));
+   wxString background  = GetString(wxT("Background"));
 
-wxString ScreenshotCommand::WindowFileName(AudacityProject * proj, wxTopLevelWindow *w){
-   if (w != proj && w->GetTitle() != wxT("")) {
-      mFileName = MakeFileName(mFilePath,
-            mCaptureMode + (wxT("-") + w->GetTitle() + wxT("-")));
-   }
-   return mFileName;
-}
+   // Build a suitable filename
+   wxString fileName = MakeFileName(filePath, captureMode);
 
-bool ScreenshotCommand::Apply(const CommandContext & context)
-{
-   GetDerivedParams();
+   if (background.IsSameAs(wxT("Blue")))
+   {
+      mBackground = true;
+      mBackColor = wxColour(51, 102, 153);
+   }
+   else if (background.IsSameAs(wxT("White")))
+   {
+      mBackground = true;
+      mBackColor = wxColour(255, 255, 255);
+   }
+   else
+   {
+      mBackground = false;
+   }
+
    //Don't reset the toolbars to a known state.
-   //We will be capturing variations of them.
+   //We wil lbe capturing variations of them.
    //context.GetProject()->GetToolManager()->Reset();
 
    wxTopLevelWindow *w = GetFrontWindow(context.GetProject());
    if (!w)
+   {
       return false;
+   }
 
-   TrackPanel *panel = context.GetProject()->GetTrackPanel();
-   AdornedRulerPanel *ruler = panel->mRuler;
+   if (captureMode.IsSameAs(wxT("window")))
+   {
+      int x = 0, y = 0;
+      int width, height;
 
-   int nTracks = context.GetProject()->GetTracks()->size();
+      w->ClientToScreen(&x, &y);
+      w->GetClientSize(&width, &height);
 
-   int x1,y1,x2,y2;
-   w->ClientToScreen(&x1, &y1);
-   panel->ClientToScreen(&x2, &y2);
+      if (w != context.GetProject() && w->GetTitle() != wxT("")) {
+         fileName = MakeFileName(filePath,
+               captureMode + (wxT("-") + w->GetTitle() + wxT("-")));
+      }
 
-   wxPoint p( x2-x1, y2-y1);
+      Capture(fileName, w, x, y, width, height);
+   }
+   else if (captureMode.IsSameAs(wxT("fullwindow"))
+         || captureMode.IsSameAs(wxT("windowplus")))
+   {
 
-   if (mCaptureMode.IsSameAs(wxT("Window")))
-      return Capture(context,  WindowFileName( context.GetProject(), w ) , w, GetWindowRect(w));
-   else if (mCaptureMode.IsSameAs(wxT("Fullwindow"))
-         || mCaptureMode.IsSameAs(wxT("Window_Plus")))
-      return Capture(context,  WindowFileName( context.GetProject(), w ) , w, GetFullWindowRect(w));
-   else if (mCaptureMode.IsSameAs(wxT("Fullscreen")))
-      return Capture(context, mFileName, w,GetScreenRect());
-   else if (mCaptureMode.IsSameAs(wxT("Toolbars")))
-      return CaptureDock(context, context.GetProject()->GetToolManager()->GetTopDock(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Menus")))
-      CaptureMenus(context, context.GetProject()->GetMenuBar(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Effects")))
-      CaptureEffects(context, context.GetProject(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Preferences")))
-      CapturePreferences(context, context.GetProject(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Selectionbar")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), SelectionBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Spectral_Selection")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), SpectralSelectionBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Tools")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), ToolsBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Transport")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), TransportBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Mixer")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), MixerBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Meter")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), MeterBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Recordmeter")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), RecordMeterBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Playmeter")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), PlayMeterBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Edit")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), EditBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Device")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), DeviceBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Transcription")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), TranscriptionBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Scrub")))
-      return CaptureToolbar(context, context.GetProject()->GetToolManager(), ScrubbingBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Trackpanel")))
-      return Capture(context, mFileName, panel, GetPanelRect(panel));
-   else if (mCaptureMode.IsSameAs(wxT("Ruler")))
-      return Capture(context, mFileName, ruler, GetRulerRect(ruler) );
-   else if (mCaptureMode.IsSameAs(wxT("Tracks")))
-      return Capture(context, mFileName, panel, GetTracksRect(panel));
-   else if (mCaptureMode.IsSameAs(wxT("First_Track")))
-      return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 0 ) );
-   else if (mCaptureMode.IsSameAs(wxT("Second_Track")))
-      return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 1 ) );
-   else if (mCaptureMode.IsSameAs(wxT("Tracks_Plus")))
-   {  wxRect r = GetTracksRect(panel);
-      r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
-      r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
-      return Capture(context, mFileName, panel, r);
+      wxRect r = w->GetRect();
+      r.SetPosition(w->GetScreenPosition());
+      r = w->GetScreenRect();
+
+      if (w != context.GetProject() && w->GetTitle() != wxT("")) {
+         fileName = MakeFileName(filePath,
+               captureMode + (wxT("-") + w->GetTitle() + wxT("-")));
+      }
+
+#if defined(__WXGTK__)
+      // In wxGTK, we need to include decoration sizes
+      r.width += (wxSystemSettings::GetMetric(wxSYS_BORDER_X, w) * 2);
+      r.height += wxSystemSettings::GetMetric(wxSYS_CAPTION_Y, w) +
+         wxSystemSettings::GetMetric(wxSYS_BORDER_Y, w);
+#endif
+      if (!mBackground && captureMode.IsSameAs(wxT("windowplus")))
+      {
+         // background colour not selected but we want a background
+         wxRect b = GetBackgroundRect();
+         r.x = (r.x - b.x) >= 0 ? (r.x - b.x): 0;
+         r.y = (r.y - b.y) >= 0 ? (r.y - b.y): 0;
+         r.width += b.width;
+         r.height += b.height;
+      }
+
+      Capture(fileName, w, r.x, r.y, r.width, r.height, true);
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Track_Plus")))
-   {  wxRect r = GetTrackRect(context.GetProject(), panel, 0 );
-      r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
-      r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
-      return Capture(context, mFileName, panel, r );
+   else if (captureMode.IsSameAs(wxT("fullscreen")))
+   {
+      int width, height;
+      wxDisplaySize(&width, &height);
+
+      Capture(fileName, w, 0, 0, width, height);
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Two_Tracks")))
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, 1 ));
-      return Capture(context, mFileName, panel, r );
+   else if (captureMode.IsSameAs(wxT("toolbars")))
+   {
+      CaptureDock(context.GetProject()->GetToolManager()->GetTopDock(), fileName);
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Three_Tracks")))
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, 2 ));
-      return Capture(context, mFileName, panel, r );
+   else if (captureMode.IsSameAs(wxT("menus")))
+   {
+      CaptureMenus(context.GetProject()->GetMenuBar(), fileName);
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Four_Tracks")))
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, 3 ));
-      return Capture(context, mFileName, panel, r );
+   else if (captureMode.IsSameAs(wxT("effects")))
+   {
+      CaptureEffects(context.GetProject(), fileName);
    }
-   else if (mCaptureMode.IsSameAs(wxT("All_Tracks")))
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
-      return Capture(context, mFileName, panel, r );
+   else if (captureMode.IsSameAs(wxT("preferences")))
+   {
+      CapturePreferences(context.GetProject(), fileName);
    }
-   else if (mCaptureMode.IsSameAs(wxT("All_Tracks_Plus")))
-   {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
-      r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
-      r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
-      r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
-      return Capture(context, mFileName, panel, r );
+   else if (captureMode.IsSameAs(wxT("selectionbar")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), SelectionBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("spectralselection")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), SpectralSelectionBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("tools")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), ToolsBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("transport")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), TransportBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("mixer")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), MixerBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("meter")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), MeterBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("recordmeter")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), RecordMeterBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("playmeter")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), PlayMeterBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("edit")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), EditBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("device")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), DeviceBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("transcription")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), TranscriptionBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("scrub")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), ScrubbingBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("trackpanel")))
+   {
+      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+      //AdornedRulerPanel *ruler = panel->mRuler;
+
+      int h = panel->mRuler->GetRulerHeight();
+      int x = 0, y = -h;
+      int width, height;
+
+      panel->ClientToScreen(&x, &y);
+      panel->GetParent()->ScreenToClient(&x, &y);
+      panel->GetClientSize(&width, &height);
+
+      Capture(fileName, panel, x, y, width, height + h);
+   }
+   else if (captureMode.IsSameAs(wxT("ruler")))
+   {
+      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+      AdornedRulerPanel *ruler = panel->mRuler;
+
+      int x = 0, y = 0;
+      int width, height;
+
+      ruler->ClientToScreen(&x, &y);
+      ruler->GetParent()->ScreenToClient(&x, &y);
+      ruler->GetClientSize(&width, &height);
+      height = ruler->GetRulerHeight();
+
+      Capture(fileName, ruler, x, y, width, height);
+   }
+   else if (captureMode.IsSameAs(wxT("tracks")))
+   {
+      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+
+      int x = 0, y = 0;
+      int width, height;
+
+      panel->ClientToScreen(&x, &y);
+      panel->GetParent()->ScreenToClient(&x, &y);
+      panel->GetClientSize(&width, &height);
+
+      Capture(fileName, panel, x, y, width, height);
+   }
+   else if (captureMode.IsSameAs(wxT("firsttrack")))
+   {
+      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+      TrackListIterator iter(context.GetProject()->GetTracks());
+      Track * t = iter.First();
+      if (!t) {
+         return false;
+      }
+      wxRect r = FindRectangle( *panel, *t );
+      Capture(fileName, panel, r.x, r.y, r.width, r.height);
+   }
+   else if (captureMode.IsSameAs(wxT("secondtrack")))
+   {
+      TrackPanel *panel = context.GetProject()->GetTrackPanel();
+      TrackListIterator iter(context.GetProject()->GetTracks());
+      Track * t = iter.First();
+      if (!t) {
+         return false;
+      }
+      if (t->GetLinked()) {
+         t = iter.Next();
+      }
+      t = iter.Next();
+      if (!t) {
+         return false;
+      }
+      wxRect r = FindRectangle( *panel, *t );
+      Capture(fileName, panel, r.x, r.y, r.width, r.height);
    }
    else
+   {
+      // Invalid capture mode!
       return false;
+   }
 
    return true;
 }

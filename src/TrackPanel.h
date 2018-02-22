@@ -550,9 +550,9 @@ protected:
 
    DECLARE_EVENT_TABLE()
 
-   // friending GetInfoCommand allow automation to get sizes of the 
+   // friending AutomationCommands allow automation to get sizes of the 
    // tracks, track control panel and such.
-   friend class GetInfoCommand;
+   friend class AutomationCommands;
 };
 
 // See big pictorial comment in TrackPanel for explanation of these numbers

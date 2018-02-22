@@ -74,8 +74,6 @@ effects from this one class.
 
 #include "../../Experimental.h"
 
-int NyquistEffect::mReentryCount = 0;
-
 enum
 {
    ID_Editor = 10000,
@@ -247,7 +245,7 @@ wxString NyquistEffect::HelpPage()
    return wxEmptyString;
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType NyquistEffect::GetType()
 {
@@ -275,72 +273,8 @@ bool NyquistEffect::IsDefault()
 }
 
 // EffectClientInterface implementation
-bool NyquistEffect::DefineParams( ShuttleParams & S )
-{
-   // For now we assume Nyquist can do get and set better than DefineParams can,
-   // And so we ONLY use it for geting the signature.
-   auto pGa = dynamic_cast<ShuttleGetAutomation*>(&S);
-   if( pGa ){
-      GetAutomationParameters( *(pGa->mpEap) );
-      return true;
-   }
-   auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
-   if( pSa ){
-      SetAutomationParameters( *(pSa->mpEap) );
-      return true;
-   }
-   auto pSd  = dynamic_cast<ShuttleGetDefinition*>(&S);
-   if( pSd == nullptr )
-      return true;
-   //wxASSERT( pSd );
 
-   if (mExternal)
-      return true;
-
-   if (mIsPrompt)
-   {
-      S.Define( mInputCmd, KEY_Command, "" );
-      S.Define( mVersion, KEY_Version, 3 );
-      return true;
-   }
-
-   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
-   {
-      NyqControl & ctrl = mControls[c];
-      double d = ctrl.val;
-
-      if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
-      {
-         d = GetCtrlValue(ctrl.valStr);
-      }
-
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
-      {
-         S.Define( d, static_cast<const wxChar*>( ctrl.var.c_str() ), (double)0.0, ctrl.low, ctrl.high, 1.0);
-      }
-      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
-      {
-         int x=d;
-         S.Define( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, ctrl.low, ctrl.high, 1);
-         //parms.Write(ctrl.var, (int) d);
-      }
-      else if (ctrl.type == NYQ_CTRL_CHOICE)
-      {
-         wxArrayString choices = ParseChoice(ctrl);
-         int x=d;
-         //parms.WriteEnum(ctrl.var, (int) d, choices);
-         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, choices );
-      }
-      else if (ctrl.type == NYQ_CTRL_STRING)
-      {
-         S.Define( ctrl.valStr, ctrl.var, "" , ctrl.lowStr, ctrl.highStr );
-         //parms.Write(ctrl.var, ctrl.valStr);
-      }
-   }
-   return true;
-}
-
-bool NyquistEffect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    if (mExternal)
    {
@@ -387,7 +321,7 @@ bool NyquistEffect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool NyquistEffect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    if (mExternal)
    {
@@ -553,21 +487,7 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 
 bool NyquistEffect::Process()
 {
-   // Check for reentrant Nyquist commands.
-   // I'm choosing to mark skipped Nyquist commands as successful even though
-   // they are skipped.  The reason is that when Nyquist calls out to a chain,
-   // and that chain contains Nyquist,  it will be clearer if the chain completes 
-   // skipping Nyquist, rather than doing nothing at all.
-   if( mReentryCount > 0 )
-      return true;
-
-   // Restore the reentry counter (to zero) when we exit.
-   auto cleanup = valueRestorer( mReentryCount);
-   mReentryCount++;
-
    bool success = true;
-
-   int nEffectsSoFar = nEffectsDone;
    mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
@@ -856,7 +776,7 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
       mT1 = mT0 + mOutputTime;
    }
 
-finish:
+ finish:
 
    // Show debug window if trace set in plug-in header and something to show.
    mDebug = (mTrace && !mDebugOutput.IsEmpty())? true : mDebug;
@@ -870,13 +790,7 @@ finish:
       dlog.ShowModal();
    }
 
-   // Has rug been pulled from under us by some effect done within Nyquist??
-   if( nEffectsSoFar == nEffectsDone )
-      ReplaceProcessedTracks(success);
-   else{
-      ReplaceProcessedTracks(false); // Do not use the results.
-      mT1 = mT0 - 1.0;// And don't use the times either, in resetting the selection  (make them bogus).
-   }
+   ReplaceProcessedTracks(success);
 
    if (!mProjectChanged)
       em.SetSkipStateFlag(true);

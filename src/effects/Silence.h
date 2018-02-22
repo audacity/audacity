@@ -33,7 +33,7 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectDefinitionInterface implementation
+   // EffectIdentInterface implementation
 
    EffectType GetType() override;
 

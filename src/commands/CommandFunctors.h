@@ -12,10 +12,8 @@
 #include <wx/string.h>
 #include <wx/event.h>
 #include "../MemoryX.h"
-#include "Command.h"
 
 class AudacityProject;
-class AudacityApp;
 class wxEvtHandler;
 
 // Base class for objects, to whose member functions, the CommandManager will
@@ -35,9 +33,32 @@ using CommandHandlerObject = wxEvtHandler;
 // of the handler object from the AudacityProject
 using CommandHandlerFinder = CommandHandlerObject &(*)(AudacityProject&);
 
+class wxEvent;
+
+using CommandParameter = wxString;
+
+struct CommandContext {
+   CommandContext(
+      AudacityProject &p
+      , const wxEvent *e = nullptr
+      , int ii = 0
+      , const CommandParameter &param = CommandParameter{}
+   )
+      : project{ p }
+      , pEvt{ e }
+      , index{ ii }
+      , parameter{ param }
+   {}
+
+   AudacityProject &project;
+   const wxEvent *pEvt;
+   int index;
+   CommandParameter parameter;
+};
+
 // Second of two function pointers registered with each command: a pointer
 // to a member function of the handler object
 using CommandFunctorPointer =
-   void (CommandHandlerObject::*)(const CommandContext &context );
+   void (CommandHandlerObject::*)(const CommandContext &);
 
 #endif

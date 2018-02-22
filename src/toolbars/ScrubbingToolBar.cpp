@@ -38,7 +38,6 @@
 #include "../widgets/AButton.h"
 #include "../widgets/Ruler.h"
 #include "../tracks/ui/Scrubbing.h"
-#include "../commands/CommandContext.h"
 
 #include "../Experimental.h"
 

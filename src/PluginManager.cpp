@@ -11,12 +11,7 @@
 \file PluginManager.cpp
 \brief
 
-************************************************************************//**
-\class PluginManager
-\brief PluginManager maintains a list of all plug ins.  That covers modules,
-effects, generators, analysis-effects, commands.  It also has functions
-for shared and private configs - which need to move out.
-*****************************************************************************/
+*//*******************************************************************/
 
 #include <algorithm>
 
@@ -957,8 +952,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                     mLongestPath + wxT("\n");
 
    wxString msg;
-
-   msg.Printf(_("Enabling effects or commands:\n\n%s"), last3);
+   msg.Printf(_("Enabling effects:\n\n%s"), last3);
 
    // Make sure the progress dialog is deleted before we call EndModal() or
    // we will leave the project window in an unusable state on OSX.
@@ -976,7 +970,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
          {
             last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
-            auto status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect or command:\n\n%s"), last3));
+            auto status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3));
             if (status == ProgressResult::Cancelled)
             {
                break;
@@ -988,7 +982,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
             for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
             {
                wxString errMsg;
-               if (mm.RegisterEffectPlugin(item.plugs[j]->GetProviderID(), path,
+               if (mm.RegisterPlugin(item.plugs[j]->GetProviderID(), path,
                                      errMsg))
                {
                   for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
@@ -1006,7 +1000,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
             }
             if (!errMsgs.empty())
                AudacityMessageBox( wxString::Format(
-                  _("Effect or Command at %s failed to register:\n%s"),
+                  _("Effect at %s failed to register:\n%s"),
                   path, errMsgs
                ) );
          }
@@ -1410,26 +1404,10 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 // ============================================================================
 
 const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
-   ModuleInterface *provider, IdentInterface *pInterface )
+   ModuleInterface *provider, EffectIdentInterface *pInterface )
 {
-   EffectDefinitionInterface * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
-   if( pEInterface )
-      return PluginManager::Get().RegisterPlugin(provider, pEInterface, PluginTypeEffect);
-   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
-   if( pCInterface )
-      return PluginManager::Get().RegisterPlugin(provider, pCInterface);
-   return "";
+   return PluginManager::Get().RegisterPlugin(provider, pInterface);
 }
-
-const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
-   ModuleInterface *provider, IdentInterface *pInterface )
-{
-   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
-   if( pCInterface )
-      return PluginManager::Get().RegisterPlugin(provider, pCInterface);
-   return "";
-}
-
 
 bool PluginManager::IsPluginRegistered(const wxString & path)
 {
@@ -1454,21 +1432,9 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, CommandDefinitionInterface *command)
+const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect)
 {
-   PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeAudacityCommand);
-
-   plug.SetProviderID(PluginManager::GetID(provider));
-
-   plug.SetEnabled(true);
-   plug.SetValid(true);
-
-   return plug.GetID();
-}
-
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type)
-{
-   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, (PluginType)type);
+   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
 
    plug.SetProviderID(PluginManager::GetID(provider));
 
@@ -1873,14 +1839,15 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, IdentInterface *ident){
+               [&](ModuleInterface *provider, EffectIdentInterface *ident){
                   // Register as by default, but also collecting the PluginIDs
                   // and names
-                  const PluginID * id = &PluginManagerInterface::DefaultRegistrationCallback(
+                  const auto &id =
+                     PluginManagerInterface::DefaultRegistrationCallback(
                         provider, ident);
-                  ids.push_back(*id);
+                  ids.push_back(id);
                   names.push_back( wxGetTranslation( ident->GetName() ) );
-                  return *id;
+                  return id;
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded
@@ -1944,7 +1911,6 @@ void PluginManager::Load()
 
    // Now the rest
    LoadGroup(&registry, PluginTypeEffect);
-   LoadGroup(&registry, PluginTypeAudacityCommand );
    LoadGroup(&registry, PluginTypeExporter);
    LoadGroup(&registry, PluginTypeImporter);
 
@@ -2242,13 +2208,12 @@ void PluginManager::Save()
    // Save the individual groups
    SaveGroup(&registry, PluginTypeEffect);
    SaveGroup(&registry, PluginTypeExporter);
-   SaveGroup(&registry, PluginTypeAudacityCommand);
    SaveGroup(&registry, PluginTypeImporter);
    SaveGroup(&registry, PluginTypeStub);
 
    // Not used by 2.1.1 or greater, but must save to allow users to switch between 2.1.0
    // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
-   //SaveGroup(&registry, PluginTypeNone);
+   SaveGroup(&registry, PluginTypeNone);
 
    // And now the providers
    SaveGroup(&registry, PluginTypeModule);
@@ -2446,9 +2411,9 @@ bool PluginManager::ShowManager(wxWindow *parent, EffectType type)
 
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
-const PluginID & PluginManager::RegisterPlugin(EffectDefinitionInterface *effect, PluginType type)
+const PluginID & PluginManager::RegisterPlugin(EffectIdentInterface *effect)
 {
-   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, type);
+   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
 
    plug.SetEffectType(effect->GetType());
    plug.SetEffectFamily(effect->GetFamily());
@@ -2502,40 +2467,40 @@ const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID)
    return &mPlugins[ID];
 }
 
-const PluginDescriptor *PluginManager::GetFirstPlugin(int type)
+const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
 {
    for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); ++mPluginsIter)
    {
       PluginDescriptor & plug = mPluginsIter->second;
-      PluginType plugType = plug.GetPluginType();
-      if( plug.IsValid() && plug.IsEnabled() &&  ((plugType & type) != 0))
+      bool familyEnabled = true;
+      if (type == PluginTypeEffect)
       {
-         bool familyEnabled = true;
-         if( (plugType & PluginTypeEffect) != 0)
-            // This preference may be written by EffectsPrefs
-            gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
-         if (familyEnabled)
-            return &mPluginsIter->second;
+         // This preference may be written by EffectsPrefs
+         gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      }
+      if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
+      {
+         return &mPluginsIter->second;
       }
    }
 
    return NULL;
 }
 
-const PluginDescriptor *PluginManager::GetNextPlugin(int type)
+const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
 {
    while (++mPluginsIter != mPlugins.end())
    {
       PluginDescriptor & plug = mPluginsIter->second;
-      PluginType plugType = plug.GetPluginType();
-      if( plug.IsValid() && plug.IsEnabled() &&  ((plugType & type) != 0))
+      bool familyEnabled = true;
+      if (type == PluginTypeEffect)
       {
-         bool familyEnabled = true;
-         if( (plugType & PluginTypeEffect) != 0)
-            // This preference may be written by EffectsPrefs
-            gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
-         if (familyEnabled)
-            return &mPluginsIter->second;
+         // This preference may be written by EffectsPrefs
+         gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      }
+      if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
+      {
+         return &mPluginsIter->second;
       }
    }
 
@@ -2665,17 +2630,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
                            module->GetPath());
 }
 
-PluginID PluginManager::GetID(CommandDefinitionInterface *command)
-{
-   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeAudacityCommand),
-                           wxEmptyString,
-                           command->GetVendor(),
-                           command->GetName(),
-                           command->GetPath());
-}
-
-PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
+PluginID PluginManager::GetID(EffectIdentInterface *effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),
@@ -2701,7 +2656,6 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
 
    switch (type)
    {
-   default:
    case PluginTypeNone:
       str = wxT("Placeholder");
       break;
@@ -2710,9 +2664,6 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
       break;
    case PluginTypeEffect:
       str = wxT("Effect");
-      break;
-   case PluginTypeAudacityCommand:
-      str = wxT("Generic");
       break;
    case PluginTypeExporter:
       str = wxT("Exporter");

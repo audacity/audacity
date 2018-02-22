@@ -111,7 +111,7 @@ wxString EffectCompressor::ManualPage()
    return wxT("Compressor");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectCompressor::GetType()
 {
@@ -119,18 +119,8 @@ EffectType EffectCompressor::GetType()
 }
 
 // EffectClientInterface implementation
-bool EffectCompressor::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mThresholdDB, Threshold );
-   S.SHUTTLE_PARAM( mNoiseFloorDB, NoiseFloor );
-   S.SHUTTLE_PARAM( mRatio, Ratio);
-   S.SHUTTLE_PARAM( mAttackTime, AttackTime);
-   S.SHUTTLE_PARAM( mDecayTime, ReleaseTime);
-   S.SHUTTLE_PARAM( mNormalize, Normalize);
-   S.SHUTTLE_PARAM( mUsePeak, UsePeak);
-   return true;
-}
 
-bool EffectCompressor::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectCompressor::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_Threshold, mThresholdDB);
    parms.Write(KEY_NoiseFloor, mNoiseFloorDB);
@@ -143,7 +133,7 @@ bool EffectCompressor::GetAutomationParameters(CommandAutomationParameters & par
    return true;
 }
 
-bool EffectCompressor::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectCompressor::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    ReadAndVerifyDouble(Threshold);
    ReadAndVerifyDouble(NoiseFloor);

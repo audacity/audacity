@@ -23,11 +23,10 @@
 #include "Command.h"
 #include "AppCommandEvent.h"
 #include "ScriptCommandRelay.h"
-#include "../commands/CommandContext.h"
 
-CommandHandler::CommandHandler()
- : mCurrentContext(std::make_unique<CommandContext>
-                   (*GetActiveProject()))
+CommandHandler::CommandHandler(AudacityApp &app)
+ : mCurrentContext(std::make_unique<CommandExecutionContext>
+                   (&app, GetActiveProject()))
 { }
 
 CommandHandler::~CommandHandler()
@@ -43,7 +42,7 @@ void CommandHandler::SetProject(AudacityProject *)
 void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
 {
    // First retrieve the actual command from the event 'envelope'.
-   OldStyleCommandPointer cmd = event.GetCommand();
+   CommandHolder cmd = event.GetCommand();
 
    // JKC: In case the user changed the project, let us track that.
    // This saves us the embarrassment (crash) of a NEW project

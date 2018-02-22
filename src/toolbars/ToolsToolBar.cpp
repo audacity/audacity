@@ -67,8 +67,8 @@ IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
-   EVT_COMMAND_RANGE(firstTool+FirstToolID,
-                     lastTool+FirstToolID,
+   EVT_COMMAND_RANGE(firstTool,
+                     lastTool,
                      wxEVT_COMMAND_BUTTON_CLICKED,
                      ToolsToolBar::OnTool)
 END_EVENT_TABLE()
@@ -165,7 +165,7 @@ AButton * ToolsToolBar::MakeTool(
       bmpRecoloredUpHiliteSmall, 
       bmpRecoloredDownSmall, // Not bmpRecoloredHiliteSmall as down is inactive.
       eTool, eTool, eTool,
-      wxWindowID(id + FirstToolID),
+      wxWindowID(id),
       wxDefaultPosition, true,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
    button->SetLabel( label );
@@ -250,7 +250,7 @@ int ToolsToolBar::GetDownTool()
 
 void ToolsToolBar::OnTool(wxCommandEvent & evt)
 {
-   mCurrentTool = evt.GetId() - firstTool - FirstToolID;
+   mCurrentTool = evt.GetId() - firstTool;
    for (int i = 0; i < numTools; i++)
       if (i == mCurrentTool)
          mTool[i]->PushDown();

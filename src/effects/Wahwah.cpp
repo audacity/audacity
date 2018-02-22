@@ -105,7 +105,7 @@ wxString EffectWahwah::ManualPage()
    return wxT("Wahwah");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectWahwah::GetType()
 {
@@ -186,17 +186,7 @@ size_t EffectWahwah::RealtimeProcess(int group,
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectWahwah::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mFreq, Freq );
-   S.SHUTTLE_PARAM( mPhase, Phase );
-   S.SHUTTLE_PARAM( mDepth, Depth );
-   S.SHUTTLE_PARAM( mRes, Res );
-   S.SHUTTLE_PARAM( mFreqOfs, FreqOfs );
-   S.SHUTTLE_PARAM( mOutGain, OutGain );
-   return true;
-}
-
-bool EffectWahwah::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectWahwah::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_Freq, mFreq);
    parms.Write(KEY_Phase, mPhase);
@@ -208,7 +198,7 @@ bool EffectWahwah::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectWahwah::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectWahwah::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    ReadAndVerifyDouble(Freq);
    ReadAndVerifyDouble(Phase);

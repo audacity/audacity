@@ -14,7 +14,7 @@
   it gets at a time.
 
   Your derived class only needs to implement
-  GetCommandName, GetEffectAction, and ProcessSimpleMono.
+  GetEffectName, GetEffectAction, and ProcessSimpleMono.
 
 *//*******************************************************************/
 

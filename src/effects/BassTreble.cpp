@@ -94,7 +94,7 @@ wxString EffectBassTreble::ManualPage()
    return wxT("Bass_and_Treble");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectBassTreble::GetType()
 {
@@ -169,15 +169,8 @@ size_t EffectBassTreble::RealtimeProcess(int group,
 {
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
-bool EffectBassTreble::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mBass, Bass );
-   S.SHUTTLE_PARAM( mTreble, Treble );
-   S.SHUTTLE_PARAM( mGain, Gain );
-   S.SHUTTLE_PARAM( mLink, Link );
-   return true;
-}
 
-bool EffectBassTreble::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectBassTreble::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_Bass, mBass);
    parms.Write(KEY_Treble, mTreble);
@@ -187,7 +180,7 @@ bool EffectBassTreble::GetAutomationParameters(CommandAutomationParameters & par
    return true;
 }
 
-bool EffectBassTreble::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectBassTreble::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    ReadAndVerifyDouble(Bass);
    ReadAndVerifyDouble(Treble);

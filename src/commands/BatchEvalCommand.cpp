@@ -15,7 +15,6 @@
 
 #include "../Audacity.h"
 #include "BatchEvalCommand.h"
-#include "CommandContext.h"
 
 wxString BatchEvalCommandType::BuildName()
 {
@@ -32,12 +31,12 @@ void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("ChainName"), wxT(""), std::move(chainValidator));
 }
 
-OldStyleCommandPointer BatchEvalCommandType::Create(std::unique_ptr<CommandOutputTargets> &&target)
+CommandHolder BatchEvalCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
 {
-   return std::make_shared<BatchEvalCommand>(*this);
+   return std::make_shared<BatchEvalCommand>(*this, std::move(target));
 }
 
-bool BatchEvalCommand::Apply(const CommandContext & context)
+bool BatchEvalCommand::Apply(CommandExecutionContext WXUNUSED(context))
 {
 
    wxString chainName = GetString(wxT("ChainName"));
@@ -53,11 +52,11 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
 
    // Create a Batch that will have just one command in it...
    BatchCommands Batch;
-   bool bResult = Batch.ApplyCommand(cmdName, cmdParams, &context);
+   bool bResult = Batch.ApplyCommand(cmdName, cmdParams);
    // Relay messages, if any.
    wxString Message = Batch.GetMessage();
    if( !Message.IsEmpty() )
-      context.Status( Message );
+      Status( Message );
    return bResult;
 }
 

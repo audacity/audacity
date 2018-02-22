@@ -32,10 +32,10 @@ enum kTypes
    kWhite,
    kPink,
    kBrownian,
-   nTypes
+   kNumTypes
 };
 
-static const wxChar *kTypeStrings[nTypes] =
+static const wxChar *kTypeStrings[kNumTypes] =
 {
    XO("White"),
    XO("Pink"),
@@ -45,7 +45,7 @@ static const wxChar *kTypeStrings[nTypes] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type     Key               Def      Min   Max            Scale
-Param( Type,   int,     wxT("Type"),       kWhite,  0,    nTypes - 1, 1  );
+Param( Type,   int,     wxT("Type"),       kWhite,  0,    kNumTypes - 1, 1  );
 Param( Amp,    double,  wxT("Amplitude"),  0.8,     0.0,  1.0,           1  );
 
 //
@@ -83,7 +83,7 @@ wxString EffectNoise::ManualPage()
    return wxT("Noise");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectNoise::GetType()
 {
@@ -161,14 +161,8 @@ size_t EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t
 
    return size;
 }
-bool EffectNoise::DefineParams( ShuttleParams & S ){
-   wxArrayString types( nTypes, kTypeStrings );
-   S.SHUTTLE_ENUM_PARAM( mType, Type, types );
-   S.SHUTTLE_PARAM( mAmp, Amp );
-   return true;
-}
 
-bool EffectNoise::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectNoise::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_Type, kTypeStrings[mType]);
    parms.Write(KEY_Amp, mAmp);
@@ -176,9 +170,9 @@ bool EffectNoise::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool EffectNoise::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectNoise::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   ReadAndVerifyEnum(Type, wxArrayString(nTypes, kTypeStrings));
+   ReadAndVerifyEnum(Type, wxArrayString(kNumTypes, kTypeStrings));
    ReadAndVerifyDouble(Amp);
 
    mType = Type;
@@ -219,10 +213,10 @@ bool EffectNoise::Startup()
 
 void EffectNoise::PopulateOrExchange(ShuttleGui & S)
 {
-   wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
+   wxASSERT(kNumTypes == WXSIZEOF(kTypeStrings));
 
    wxArrayString typeChoices;
-   for (int i = 0; i < nTypes; i++)
+   for (int i = 0; i < kNumTypes; i++)
    {
       typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
    }

@@ -122,7 +122,7 @@ wxString VampEffect::GetDescription()
 }
 
 // ============================================================================
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 // ============================================================================
 
 EffectType VampEffect::GetType()
@@ -153,7 +153,7 @@ unsigned VampEffect::GetAudioInCount()
    return mPlugin->getMaxChannelCount();
 }
 
-bool VampEffect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool VampEffect::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    for (size_t p = 0, cnt = mParameters.size(); p < cnt; p++)
    {
@@ -199,7 +199,7 @@ bool VampEffect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool VampEffect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool VampEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    // First pass verifies values
    for (size_t p = 0, cnt = mParameters.size(); p < cnt; p++)

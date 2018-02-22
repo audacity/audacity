@@ -11,36 +11,34 @@
 \file MessageCommand.h
 \brief Contains definition of MessageCommand class.
 
-*//***************************************************************//**
+*//***************************************************************//***
 
 \class MessageCommand
 \brief Command to send a message (currently on the status channel)
 
 *//*******************************************************************/
 
-#ifndef __MESSAGE_COMMAND__
-#define __MESSAGE_COMMAND__
+#ifndef __MESSAGECOMMAND__
+#define __MESSAGECOMMAND__
 
-#include "CommandType.h"
 #include "Command.h"
+#include "CommandType.h"
 
-#define MESSAGE_PLUGIN_SYMBOL XO("Message")
-
-class MessageCommand : public AudacityCommand
+class MessageCommandType final : public CommandType
 {
 public:
-   // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return MESSAGE_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Echos a message.");};
-   bool DefineParams( ShuttleParams & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
-
-   // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Message");};
-public:
-   wxString mMessage;
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
 };
 
+class MessageCommand final : public CommandImplementation
+{
+public:
+   MessageCommand(CommandType &type,
+                  std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target)) {}
+   bool Apply(CommandExecutionContext context) override;
+};
 
 #endif /* End of include guard: __MESSAGECOMMAND__ */

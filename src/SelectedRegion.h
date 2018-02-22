@@ -222,6 +222,7 @@ public:
        const wxChar *legacyT0Name = sDefaultT0Name,
        const wxChar *legacyT1Name = sDefaultT1Name);
 
+private:
    bool ensureOrdering() 
    {
       if (mT1 < mT0) {
@@ -233,8 +234,6 @@ public:
       else
          return false;
    }
-
-private:
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    bool ensureFrequencyOrdering()

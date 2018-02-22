@@ -31,8 +31,6 @@
 #include <unordered_map>
 #endif
 
-using CommandParameter = wxString;
-
 struct MenuBarListEntry
 {
    MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
@@ -97,7 +95,6 @@ using CommandNameHash = std::unordered_map<wxString, CommandListEntry*>;
 using CommandIDHash = std::unordered_map<int, CommandListEntry*>;
 
 class AudacityProject;
-class CommandContext;
 
 class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 {
@@ -245,7 +242,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(int id, CommandFlag flags, CommandMask mask);
-   bool HandleTextualCommand(const wxString & Str, const CommandContext & context, CommandFlag flags, CommandMask mask);
+   bool HandleTextualCommand(const wxString & Str, CommandFlag flags, CommandMask mask);
 
    //
    // Accessing
@@ -262,7 +259,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 #endif
       bool includeMultis);
 
-   wxString GetNameFromID( int id );
    wxString GetLabelFromName(const wxString &name);
    wxString GetPrefixedLabelFromName(const wxString &name);
    wxString GetCategoryFromName(const wxString &name);

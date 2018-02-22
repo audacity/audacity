@@ -194,7 +194,7 @@ enum InfoKeys
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTSubProcess final : public wxProcess,
-                      public EffectDefinitionInterface
+                      public EffectIdentInterface
 {
 public:
    VSTSubProcess()
@@ -1222,7 +1222,7 @@ wxString VSTEffect::GetDescription()
 }
 
 // ============================================================================
-// EffectDefinitionInterface Implementation
+// EffectIdentInterface Implementation
 // ============================================================================
 
 EffectType VSTEffect::GetType()
@@ -1621,7 +1621,7 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool VSTEffect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool VSTEffect::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1641,7 +1641,7 @@ bool VSTEffect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool VSTEffect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
@@ -2325,7 +2325,7 @@ bool VSTEffect::LoadParameters(const wxString & group)
       return false;
    }
 
-   CommandAutomationParameters eap;
+   EffectAutomationParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -2353,7 +2353,7 @@ bool VSTEffect::SaveParameters(const wxString & group)
       return true;
    }
 
-   CommandAutomationParameters eap;
+   EffectAutomationParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;

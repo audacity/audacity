@@ -26,7 +26,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 #include <wx/wx.h>
 
 //36 blockfiles > 3 minutes stereo 44.1kHz per ODTask::DoSome
-#define nBlockFilesPerDoSome 36
+#define kNumBlockFilesPerDoSome 36
 
 ///Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
 ODComputeSummaryTask::ODComputeSummaryTask()
@@ -138,7 +138,7 @@ float ODComputeSummaryTask::ComputeNextWorkUntilPercentageComplete()
 
    float nextPercent;
    mPercentCompleteMutex.Lock();
-   nextPercent=mPercentComplete + ((float)nBlockFilesPerDoSome/(mMaxBlockFiles+1));
+   nextPercent=mPercentComplete + ((float)kNumBlockFilesPerDoSome/(mMaxBlockFiles+1));
    mPercentCompleteMutex.Unlock();
 
    return nextPercent;

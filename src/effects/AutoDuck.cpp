@@ -117,7 +117,7 @@ wxString EffectAutoDuck::ManualPage()
    return wxT("Auto_Duck");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectAutoDuck::GetType()
 {
@@ -125,18 +125,8 @@ EffectType EffectAutoDuck::GetType()
 }
 
 // EffectClientInterface implementation
-bool EffectAutoDuck::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM(  mDuckAmountDb, DuckAmountDb);
-   S.SHUTTLE_PARAM(  mInnerFadeDownLen, InnerFadeDownLen);
-   S.SHUTTLE_PARAM(  mInnerFadeUpLen, InnerFadeUpLen);
-   S.SHUTTLE_PARAM(  mOuterFadeDownLen, OuterFadeDownLen);
-   S.SHUTTLE_PARAM(  mOuterFadeUpLen, OuterFadeUpLen);
-   S.SHUTTLE_PARAM(  mThresholdDb, ThresholdDb);
-   S.SHUTTLE_PARAM(  mMaximumPause, MaximumPause);
-   return true;
-}
 
-bool EffectAutoDuck::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAutoDuck::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_DuckAmountDb, mDuckAmountDb);
    parms.Write(KEY_InnerFadeDownLen, mInnerFadeDownLen);
@@ -149,7 +139,7 @@ bool EffectAutoDuck::GetAutomationParameters(CommandAutomationParameters & parms
    return true;
 }
 
-bool EffectAutoDuck::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAutoDuck::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    ReadAndVerifyDouble(DuckAmountDb);
    ReadAndVerifyDouble(InnerFadeDownLen);
@@ -397,7 +387,7 @@ bool EffectAutoDuck::Process()
       SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
       Track *iterTrack = iter.First();
 
-      int trackNum = 0;
+      int trackNumber = 0;
 
       while (iterTrack)
       {
@@ -406,7 +396,7 @@ bool EffectAutoDuck::Process()
          for (size_t i = 0; i < regions.size(); i++)
          {
             const AutoDuckRegion& region = regions[i];
-            if (ApplyDuckFade(trackNum, t, region.t0, region.t1))
+            if (ApplyDuckFade(trackNumber, t, region.t0, region.t1))
             {
                cancel = true;
                break;
@@ -417,7 +407,7 @@ bool EffectAutoDuck::Process()
             break;
 
          iterTrack = iter.Next();
-         trackNum++;
+         trackNumber++;
       }
    }
 
@@ -518,7 +508,7 @@ bool EffectAutoDuck::TransferDataFromWindow()
 // EffectAutoDuck implementation
 
 // this currently does an exponential fade
-bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
+bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
                                    double t0, double t1)
 {
    bool cancel = false;
@@ -571,7 +561,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
 
       float curTime = t->LongSamplesToTime(pos);
       float fractionFinished = (curTime - mT0) / (mT1 - mT0);
-      if (TotalProgress( (trackNum + 1 + fractionFinished) /
+      if (TotalProgress( (trackNumber + 1 + fractionFinished) /
                          (GetNumWaveTracks() + 1) ))
       {
          cancel = true;

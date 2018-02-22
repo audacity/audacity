@@ -19,7 +19,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Experimental.h"
 #include "../../widgets/Overlay.h"
 #include "../../commands/CommandFunctors.h"
-#include "../../commands/CommandContext.h"
 #include "../../../include/audacity/Types.h"
 
 class AudacityProject;

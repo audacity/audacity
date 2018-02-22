@@ -41,10 +41,8 @@ enum {
    numTools,
 
    firstTool = selectTool,
-   lastTool = multiTool,
+   lastTool = multiTool
 };
-
-const int FirstToolID = 11200;
 
 class ToolsToolBar final : public ToolBar {
 

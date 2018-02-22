@@ -44,9 +44,6 @@ See also BatchCommandDialog and BatchProcessDialog.
 #include "Track.h"
 #include "widgets/ErrorDialog.h"
 
-#include "commands/CommandFunctors.h"
-#include "commands/CommandContext.h"
-
 // KLUDGE: All commands should be on the same footing
 // however, for historical reasons we distinguish between
 //    - Effects (which are looked up in effects lists)
@@ -156,6 +153,23 @@ bool BatchCommands::ReadChain(const wxString & chain)
          wxString cmd = tf[i].Left(splitAt).Strip(wxString::both);
          wxString parm = tf[i].Mid(splitAt + 1).Strip(wxString::trailing);
 
+         // Backward compatibility for old Chain scripts
+         // Please comment the version of audacity these are introduced in, so
+         // that old ones can easily be removed once users have had a chance to
+         // migrate
+         if (cmd == wxT("SaveMP3_56k_before"))
+            cmd = wxT("ExportMP3_56k_before");
+         else if (cmd == wxT("SaveMP3_56k_after"))
+            cmd = wxT("ExportMP3_56k_after");
+         else if (cmd == wxT("ExportFlac"))
+            cmd = wxT("ExportFLAC");
+         else if (cmd == wxT("ExportMp3"))
+            cmd = wxT("ExportMP3");
+         else if (cmd == wxT("ExportWav"))
+            cmd = wxT("ExportWAV");
+         else if (cmd == wxT("Compressor") && (parm.find(wxT("DecayTime")) != parm.npos))
+            parm.Replace(wxT("DecayTime"), wxT("ReleaseTime"), NULL);   // 2.0.6
+
          // Add to lists
          mCommandChain.Add(cmd);
          mParamsChain.Add(parm);
@@ -196,6 +210,18 @@ bool BatchCommands::WriteChain(const wxString & chain)
    // Copy over the commands
    int lines = mCommandChain.GetCount();
    for (int i = 0; i < lines; i++) {
+      // restore deprecated commands in chain script
+      if (mCommandChain[i] == wxT("ExportMP3_56k_before"))
+         mCommandChain[i] = wxT("SaveMP3_56k_before");
+      else if (mCommandChain[i] == wxT("ExportMP3_56k_after"))
+         mCommandChain[i] = wxT("SaveMP3_56k_after");
+      else if (mCommandChain[i] == wxT("ExportFLAC"))
+         mCommandChain[i] = wxT("ExportFlac");
+      else if (mCommandChain[i] == wxT("ExportMP3"))
+         mCommandChain[i] = wxT("ExportMp3");
+      else if (mCommandChain[i] == wxT("ExportWAV"))
+         mCommandChain[i] = wxT("ExportWav");
+
       tf.AddLine(mCommandChain[i] + wxT(":") + mParamsChain[ i ]);
    }
 
@@ -268,37 +294,16 @@ auto BatchCommands::GetAllCommands() -> CommandNameVector
 
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
+   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
+   while (plug)
    {
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
-      while (plug)
-      {
-         auto command = em.GetCommandIdentifier(plug->GetID());
-         if (!command.IsEmpty())
-            commands.push_back( {
-               plug->GetUntranslatedName(), // plug->GetTranslatedName(),
-               command
-            } );
-         plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
-      }
-   }
-
-   CommandManager * mManager = project->GetCommandManager();
-   wxArrayString mLabels;
-   wxArrayString mNames;
-   mLabels.Clear();
-   mNames.Clear();
-   mManager->GetAllCommandLabels(mLabels, false);
-   mManager->GetAllCommandNames(mNames, false);
-   for(size_t i=0; i<mNames.GetCount(); i++) {
-      if( !mLabels[i].Contains( "..." ) ){
-         mLabels[i].Replace( "&", "" );
-         commands.push_back( 
-            {
-               mLabels[i] + " (" + mNames[i] + ")", // User readable name 
-               mNames[i] // Internal name.
-            }
-         );
-      }
+      auto command = em.GetEffectIdentifier(plug->GetID());
+      if (!command.IsEmpty())
+         commands.push_back( {
+            plug->GetUntranslatedName(), // plug->GetTranslatedName(),
+            command
+         } );
+      plug = pm.GetNextPlugin(PluginTypeEffect);
    }
 
    // Sort commands by their user-visible names.
@@ -310,8 +315,15 @@ auto BatchCommands::GetAllCommands() -> CommandNameVector
          { return a.first < b.first; }
    );
 
-
-
+   /* This is for later in development: include the menu commands.
+         CommandManager * mManager = project->GetCommandManager();
+         wxArrayString mNames;
+         mNames.Clear();
+         mManager->GetAllCommandNames(mNames, false);
+         for(i=0; i<mNames.GetCount(); i++) {
+            commands.Add( mNames[i] );
+         }
+   */
    return commands;
 }
 
@@ -467,7 +479,6 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
    return cleanedName;
 }
 
-// TODO Move this out of Batch Commands
 bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
 {  //check if current project is mono or stereo
    unsigned numChannels = 2;
@@ -600,23 +611,18 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
 }
 // end CLEANSPEECH remnant
 
-bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params, const CommandContext & Context)
+bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params)
 {
    //Possibly end processing here, if in batch-debug
    if( ReportAndSkip(command, params))
       return true;
-
-   const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-   if (!plug)
-      return false;
 
    AudacityProject *project = GetActiveProject();
 
    // FIXME: for later versions may want to not select-all in batch mode.
    // IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
-   if( plug->GetPluginType() != PluginTypeAudacityCommand )
-      project->SelectAllIfNone();
+   project->SelectAllIfNone();
 
    bool res = false;
 
@@ -625,33 +631,23 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    // transfer the parameters to the effect...
    if (EffectManager::Get().SetEffectParameters(ID, params))
    {
-      if( plug->GetPluginType() == PluginTypeAudacityCommand )
-         // and apply the effect...
-         res = project->DoAudacityCommand(ID, 
-            Context,
-            AudacityProject::OnEffectFlags::kConfigured |
-            AudacityProject::OnEffectFlags::kSkipState |
-            AudacityProject::OnEffectFlags::kDontRepeatLast);
-      else
-         // and apply the effect...
-         res = project->DoEffect(ID, 
-            Context,
-            AudacityProject::OnEffectFlags::kConfigured |
-            AudacityProject::OnEffectFlags::kSkipState |
-            AudacityProject::OnEffectFlags::kDontRepeatLast);
+      // and apply the effect...
+      res = project->DoEffect(ID, AudacityProject::OnEffectFlags::kConfigured |
+                                  AudacityProject::OnEffectFlags::kSkipState |
+                                  AudacityProject::OnEffectFlags::kDontRepeatLast);
    }
 
    return res;
 }
 
-bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params, CommandContext const * pContext)
+bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params)
 {
 
    unsigned int i;
    // Test for a special command.
    // CLEANSPEECH remnant
    for( i = 0; i < sizeof(SpecialCommands)/sizeof(*SpecialCommands); ++i ) {
-      if( command.IsSameAs( SpecialCommands[i].second, false) )
+      if( command == SpecialCommands[i].second )
          return ApplySpecialCommand( i, command, params );
    }
    // end CLEANSPEECH remnant
@@ -660,26 +656,7 @@ bool BatchCommands::ApplyCommand(const wxString & command, const wxString & para
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier( command );
    if (!ID.empty())
    {
-      if( pContext )
-         return ApplyEffectCommand(ID, command, params, *pContext);
-      const CommandContext context(  *GetActiveProject() );
-      return ApplyEffectCommand(ID, command, params, context);
-   }
-
-   AudacityProject *project = GetActiveProject();
-   CommandManager * pManager = project->GetCommandManager();
-   if( pContext ){
-      if( pManager->HandleTextualCommand( command, *pContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
-         return true;
-      pContext->Status( wxString::Format(
-         _("Your batch command of %s was not recognized."), command ));
-      return false;
-   }
-   else
-   {
-      const CommandContext context(  *GetActiveProject() );
-      if( pManager->HandleTextualCommand( command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
-         return true;
+      return ApplyEffectCommand(ID, command, params);
    }
 
    AudacityMessageBox(
@@ -704,8 +681,7 @@ bool BatchCommands::ApplyCommandInBatchMode(const wxString & command, const wxSt
 }
 
 // ApplyChain returns true on success, false otherwise.
-// Any error reporting to the user in setting up the chain
-// has already been done.
+// Any error reporting to the user has already been done.
 bool BatchCommands::ApplyChain(const wxString & filename)
 {
    mFileName = filename;

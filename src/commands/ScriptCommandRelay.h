@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Copyright 1999-2009 Audacity Team
    File License: wxWidgets
 
    Dan Horgan
@@ -13,8 +13,8 @@
 
 *//*******************************************************************/
 
-#ifndef __SCRIPT_COMMAND_RELAY__
-#define __SCRIPT_COMMAND_RELAY__
+#ifndef __SCRIPTCOMMANDRELAY__
+#define __SCRIPTCOMMANDRELAY__
 
 #include "../Audacity.h"
 #include "../MemoryX.h"
@@ -24,8 +24,8 @@ class ResponseQueue;
 class Response;
 class ResponseQueueTarget;
 class AudacityProject;
-class OldStyleCommand;
-using OldStyleCommandPointer = std::shared_ptr<OldStyleCommand>;
+class Command;
+using CommandHolder = std::shared_ptr<Command>;
 class wxString;
 
 typedef int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
@@ -49,10 +49,10 @@ class ScriptCommandRelay
       static void SetCommandHandler(CommandHandler &ch);
 
       static void Run();
-      static void PostCommand(AudacityProject *project, const OldStyleCommandPointer &cmd);
+      static void PostCommand(AudacityProject *project, const CommandHolder &cmd);
       static void SendResponse(const wxString &response);
       static Response ReceiveResponse();
       static std::shared_ptr<ResponseQueueTarget> GetResponseTarget();
 };
 
-#endif /* End of include guard: __SCRIPT_COMMAND_RELAY__ */
+#endif /* End of include guard: __SCRIPTCOMMANDRELAY__ */

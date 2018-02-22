@@ -98,13 +98,10 @@ inline int AudacityMessageBox(const wxString& message,
    return ::wxMessageBox(message, caption, style, parent, x, y);
 }
 
-
+// Similarly wrap wxTextEntryDialog, to prohibit the default,
+// unlocalized caption
 #include <wx/textdlg.h>
 
-/**************************************************************************//**
-\class AudacityTextEntryDialog
-\brief Wrap wxTextEntryDialog so that caption IS translatable.
-********************************************************************************/
 class AudacityTextEntryDialog : public wxTabTraversalWrapper< wxTextEntryDialog >
 {
 public:
@@ -120,10 +117,8 @@ public:
    {}
 };
 
-/**************************************************************************//**
-
-\brief Wrap wxMessageDialog so that caption IS translatable.
-********************************************************************************/
+// Similarly wrap wxMessageDialog, to prohibit the default,
+// unlocalized caption
 class AudacityMessageDialog : public wxTabTraversalWrapper< wxMessageDialog >
 {
 public:

@@ -276,16 +276,14 @@ audacity_SOURCES = \
 	wxFileNameWrapper.h \
 	commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h \
-	commands/AudacityCommand.cpp \
-	commands/AudacityCommand.h \
+	commands/AutomationCommands.cpp \
+	commands/AutomationCommands.h \
 	commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h \
 	commands/Command.cpp \
 	commands/Command.h \
 	commands/CommandBuilder.cpp \
 	commands/CommandBuilder.h \
-	commands/CommandContext.cpp \
-	commands/CommandContext.h \
 	commands/CommandDirectory.cpp \
 	commands/CommandDirectory.h \
 	commands/CommandFlag.h \
@@ -302,10 +300,10 @@ audacity_SOURCES = \
 	commands/CommandType.h \
 	commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h \
-	commands/Demo.cpp \
-	commands/Demo.h \
-	commands/GetInfoCommand.cpp \
-	commands/GetInfoCommand.h \
+	commands/ExecMenuCommand.cpp \
+	commands/ExecMenuCommand.h \
+	commands/GetProjectInfoCommand.cpp \
+	commands/GetProjectInfoCommand.h \
 	commands/GetTrackInfoCommand.cpp \
 	commands/GetTrackInfoCommand.h \
 	commands/HelpCommand.cpp \
@@ -314,8 +312,6 @@ audacity_SOURCES = \
 	commands/ImportExportCommands.h \
 	commands/Keyboard.cpp \
 	commands/Keyboard.h \
-	commands/LoadCommands.cpp \
-	commands/LoadCommands.h \  
 	commands/MessageCommand.cpp \
 	commands/MessageCommand.h \
 	commands/OpenSaveCommands.cpp \
@@ -330,6 +326,8 @@ audacity_SOURCES = \
 	commands/ScriptCommandRelay.h \
 	commands/SelectCommand.cpp \
 	commands/SelectCommand.h \
+	commands/SetProjectInfoCommand.cpp \
+	commands/SetProjectInfoCommand.h \
 	commands/SetTrackInfoCommand.cpp \
 	commands/SetTrackInfoCommand.h \
 	commands/Validators.h \

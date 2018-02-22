@@ -141,12 +141,12 @@ class ControlToolBar final : public ToolBar {
 
    enum
    {
-      ID_PAUSE_BUTTON = 11000,
-      ID_PLAY_BUTTON,
+      ID_PLAY_BUTTON = 11000,
+      ID_RECORD_BUTTON,
+      ID_PAUSE_BUTTON,
       ID_STOP_BUTTON,
       ID_FF_BUTTON,
       ID_REW_BUTTON,
-      ID_RECORD_BUTTON,
       BUTTON_COUNT,
    };
 

@@ -28,7 +28,7 @@ they are kept separate to make things simpler.
 #include "CommandType.h"
 
 class Command;
-class CommandOutputTargets;
+class CommandOutputTarget;
 
 class CommandDirectory
 {
@@ -41,10 +41,10 @@ public:
    /// If a command with the given name has been registered in the directory,
    /// return a pointer to the factory for commands of that type.
    /// Otherwise return NULL.
-   OldStyleCommandType *LookUp(const wxString &cmdName) const;
+   CommandType *LookUp(const wxString &cmdName) const;
 
    /// Register a type of command with the directory.
-   void AddCommand(movable_ptr<OldStyleCommandType> &&type);
+   void AddCommand(movable_ptr<CommandType> &&type);
 
    /// Get a pointer to the singleton instance
    static CommandDirectory *Get();

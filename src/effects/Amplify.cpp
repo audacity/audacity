@@ -95,7 +95,7 @@ wxString EffectAmplify::ManualPage()
    return wxT("Amplify");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectAmplify::GetType()
 {
@@ -123,19 +123,15 @@ size_t EffectAmplify::ProcessBlock(float **inBlock, float **outBlock, size_t blo
 
    return blockLen;
 }
-bool EffectAmplify::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mRatio, Ratio );
-   return true;
-}
 
-bool EffectAmplify::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAmplify::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.WriteFloat(KEY_Ratio, mRatio);
 
    return true;
 }
 
-bool EffectAmplify::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectAmplify::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    ReadAndVerifyFloat(Ratio);
 

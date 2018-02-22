@@ -44,7 +44,7 @@ wxString EffectFade::GetDescription()
       : _("Applies a linear fade-out to the selected audio");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectFade::GetType()
 {

@@ -48,7 +48,7 @@ wxString EffectReverse::GetDescription()
    return _("Reverses the selected audio");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectReverse::GetType()
 {

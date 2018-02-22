@@ -39,7 +39,7 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectDefinitionInterface implementation
+   // EffectIdentInterface implementation
 
    EffectType GetType() override;
 
@@ -48,9 +48,8 @@ public:
    unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
-   bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandAutomationParameters & parms) override;
-   bool SetAutomationParameters(CommandAutomationParameters & parms) override;
+   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
    // Effect implementation
 

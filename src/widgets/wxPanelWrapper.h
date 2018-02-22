@@ -62,7 +62,7 @@ public:
    }
 };
 
-class AUDACITY_DLL_API wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>
+class wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>
 {
 public:
    // Constructors
@@ -99,7 +99,7 @@ public:
 
 #include <wx/dirdlg.h>
 
-class AUDACITY_DLL_API wxDirDialogWrapper : public wxTabTraversalWrapper<wxDirDialog>
+class wxDirDialogWrapper : public wxTabTraversalWrapper<wxDirDialog>
 {
 public:
    // Constructor with no modal flag - the new convention.
@@ -135,7 +135,7 @@ public:
 
 #include "../lib-src/FileDialog/FileDialog.h"
 
-class AUDACITY_DLL_API FileDialogWrapper : public wxTabTraversalWrapper<FileDialog>
+class FileDialogWrapper : public wxTabTraversalWrapper<FileDialog>
 {
 public:
    FileDialogWrapper() {}

@@ -645,7 +645,7 @@ wxString LadspaEffect::GetDescription()
 }
 
 // ============================================================================
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 // ============================================================================
 
 EffectType LadspaEffect::GetType()
@@ -1071,7 +1071,7 @@ bool LadspaEffect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool LadspaEffect::GetAutomationParameters(CommandAutomationParameters & parms)
+bool LadspaEffect::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1089,7 +1089,7 @@ bool LadspaEffect::GetAutomationParameters(CommandAutomationParameters & parms)
    return true;
 }
 
-bool LadspaEffect::SetAutomationParameters(CommandAutomationParameters & parms)
+bool LadspaEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1599,7 +1599,7 @@ bool LadspaEffect::LoadParameters(const wxString & group)
       return false;
    }
 
-   CommandAutomationParameters eap;
+   EffectAutomationParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -1610,7 +1610,7 @@ bool LadspaEffect::LoadParameters(const wxString & group)
 
 bool LadspaEffect::SaveParameters(const wxString & group)
 {
-   CommandAutomationParameters eap;
+   EffectAutomationParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;

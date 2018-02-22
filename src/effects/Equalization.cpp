@@ -136,7 +136,7 @@ enum kInterpolations
    kBspline,
    kCosine,
    kCubic,
-   nInterpolations
+   kNumInterpolations
 };
 
 // Increment whenever EQCurves.xml is updated
@@ -144,7 +144,7 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const wxString kInterpStrings[nInterpolations] =
+static const wxString kInterpStrings[kNumInterpolations] =
 {
    /* i18n-hint: Technical term for a kind of curve.*/
    XO("B-spline"),
@@ -229,7 +229,7 @@ EffectEqualization::EffectEqualization()
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
-   for (int i = 0; i < nInterpolations; i++)
+   for (int i = 0; i < kNumInterpolations; i++)
    {
       mInterpolations.Add(wxGetTranslation(kInterpStrings[i]));
    }
@@ -300,7 +300,7 @@ wxString EffectEqualization::ManualPage()
    return wxT("Equalization");
 }
 
-// EffectDefinitionInterface implementation
+// EffectIdentInterface implementation
 
 EffectType EffectEqualization::GetType()
 {
@@ -308,32 +308,23 @@ EffectType EffectEqualization::GetType()
 }
 
 // EffectClientInterface implementation
-bool EffectEqualization::DefineParams( ShuttleParams & S ){
-   wxArrayString interp(nInterpolations, kInterpStrings);
-   S.SHUTTLE_PARAM( mM, FilterLength );
-   S.SHUTTLE_PARAM( mCurveName, CurveName);
-   S.SHUTTLE_PARAM( mLin, InterpLin);
-   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, interp );
 
-   return true;
-}
-
-bool EffectEqualization::GetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectEqualization::GetAutomationParameters(EffectAutomationParameters & parms)
 {
    parms.Write(KEY_FilterLength, (unsigned long)mM);
    parms.Write(KEY_CurveName, mCurveName);
    parms.Write(KEY_InterpLin, mLin);
-   parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(nInterpolations, kInterpStrings));
+   parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(kNumInterpolations, kInterpStrings));
 
    return true;
 }
 
-bool EffectEqualization::SetAutomationParameters(CommandAutomationParameters & parms)
+bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & parms)
 {
    // Pretty sure the interpolation name shouldn't have been interpreted when
    // specified in chains, but must keep it that way for compatibility.
    wxArrayString interpolations(mInterpolations);
-   for (int i = 0; i < nInterpolations; i++)
+   for (int i = 0; i < kNumInterpolations; i++)
    {
       interpolations.Add(kInterpStrings[i]);
    }
@@ -348,9 +339,9 @@ bool EffectEqualization::SetAutomationParameters(CommandAutomationParameters & p
    mLin = InterpLin;
    mInterp = InterpMeth;
 
-   if (InterpMeth >= nInterpolations)
+   if (InterpMeth >= kNumInterpolations)
    {
-      InterpMeth -= nInterpolations;
+      InterpMeth -= kNumInterpolations;
    }
 
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();

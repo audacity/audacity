@@ -5,7 +5,6 @@
    License: wxwidgets
 
    Dan Horgan
-   James Crook
 
 ******************************************************************//**
 
@@ -23,35 +22,32 @@ classes
 
 class WaveTrack;
 
-#define COMPARE_AUDIO_PLUGIN_SYMBOL XO("Compare Audio")
-
-class CompareAudioCommand final : public AudacityCommand
+class CompareAudioCommandType final : public CommandType
 {
 public:
-   // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return "Compare Audio";};
-   wxString GetDescription() override {return _("Compares a range on two tracks.");};
-   bool DefineParams( ShuttleParams & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply() override;
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+};
 
-   // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Compare_Audio");};
-   bool Apply(const CommandContext &context) override;
-
-
+class CompareAudioCommand final : public CommandImplementation
+{
 private:
-   double errorThreshold;
    double mT0, mT1;
    const WaveTrack *mTrack0;
    const WaveTrack *mTrack1;
 
    // Update member variables with project selection data (and validate)
-   bool GetSelection(const CommandContext &context, AudacityProject &proj);
+   bool GetSelection(AudacityProject &proj);
 
 protected:
    double CompareSample(double value1, double value2) /* not override */;
 
+public:
+   CompareAudioCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
+   { }
+   bool Apply(CommandExecutionContext context) override;
 };
 
 #endif /* End of include guard: __COMPAREAUDIOCOMMAND__ */

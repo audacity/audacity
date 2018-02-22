@@ -19,24 +19,27 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define GET_TRACK_INFO_PLUGIN_SYMBOL XO("Get Track Info")
-
-class GetTrackInfoCommand final : public AudacityCommand
+class GetTrackInfoCommandType final : public CommandType
 {
 public:
-   GetTrackInfoCommand();
-   // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return GET_TRACK_INFO_PLUGIN_SYMBOL;};
-   wxString GetDescription() override {return _("Gets track values as JSON.");};
-   bool DefineParams( ShuttleParams & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   wxString BuildName() override;
+   void BuildSignature(CommandSignature &signature) override;
+   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
+};
 
-   // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#get_track_info");};
-
-   bool Apply(const CommandContext &context ) override;
+class GetTrackInfoCommand final : public CommandImplementation
+{
 public:
-   int mInfoType;
+   GetTrackInfoCommand(CommandType &type, std::unique_ptr<CommandOutputTarget> &&target)
+      : CommandImplementation(type, std::move(target))
+   { }
+   virtual ~GetTrackInfoCommand()
+   { }
+
+   bool Apply(CommandExecutionContext context) override;
+
+private:
+   void SendBooleanStatus(bool BooleanValue);
 };
 
 #endif /* End of include guard: __GETTRACKINFOCOMMAND__ */

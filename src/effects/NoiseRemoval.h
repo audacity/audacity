@@ -50,7 +50,7 @@ public:
    wxString GetSymbol() override;
    wxString GetDescription() override;
 
-   // EffectDefinitionInterface implementation
+   // EffectIdentInterface implementation
 
    EffectType GetType() override;
    bool SupportsAutomation() override;
