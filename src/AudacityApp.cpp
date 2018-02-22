@@ -1063,8 +1063,11 @@ void AudacityApp::OnFatalException()
 }
 
 
+#ifdef _MSC_VER
+// If this is compiled with MSVC (Visual Studio)
 #pragma warning( push )
 #pragma warning( disable : 4702) // unreachable code warning.
+#endif //_MSC_VER
 
 bool AudacityApp::OnExceptionInMainLoop()
 {
@@ -1108,7 +1111,9 @@ bool AudacityApp::OnExceptionInMainLoop()
    // Shouldn't ever reach this line
    return false;
 }
+#ifdef _MSC_VER
 #pragma warning( pop )
+#endif //_MSC_VER
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)

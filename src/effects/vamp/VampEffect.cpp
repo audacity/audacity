@@ -274,7 +274,7 @@ bool VampEffect::SetAutomationParameters(EffectAutomationParameters & parms)
                !mParameters[p].valueNames.empty())
       {
          wxArrayString choices;
-         int val;
+         int val = 0;
 
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
          {

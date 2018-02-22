@@ -551,8 +551,8 @@ struct AudioIO::ScrubQueue
       , mLeadingIdx(1)
       , mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
-      , mUpdating()
       , mMaxDebt { maxDebt }
+      , mUpdating()
    {
       const auto s0 = std::max(options.minSample, std::min(options.maxSample,
          sampleCount(lrint(t0 * mRate))
@@ -4020,7 +4020,7 @@ void AudioIO::FillBuffers()
             AutoSaveFile blockFileLog;
             auto numChannels = mCaptureTracks.size();
 
-            for( i = 0; (int)i < numChannels; i++ )
+            for( i = 0; i < numChannels; i++ )
             {
                auto avail = commonlyAvail;
                sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();

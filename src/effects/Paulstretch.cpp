@@ -414,8 +414,8 @@ PaulStretch::PaulStretch(float rap_, size_t in_bufsize_, float samplerate_ )
    , in_pool { poolsize, true }
    , remained_samples { 0.0 }
    , fft_smps { poolsize, true }
-   , fft_s { poolsize, true }
    , fft_c { poolsize, true }
+   , fft_s { poolsize, true }
    , fft_freq { poolsize, true }
    , fft_tmp { poolsize }
 {

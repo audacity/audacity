@@ -1638,8 +1638,6 @@ void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
-   r;//compiler food.
-   zoomInfo;//compiler food.
    if (evt.ButtonDown())
    {
 
@@ -2166,6 +2164,7 @@ void LabelTrack::ShowContextMenu()
       int x = 0;
       bool success = CalcCursorX(&x);
       wxASSERT(success);
+      static_cast<void>(success); // Suppress unused variable warning if debug mode is disabled
 
       parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
    }

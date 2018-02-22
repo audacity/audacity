@@ -2165,7 +2165,7 @@ AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBin
    if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0))
       return  AColor::ColorGradientTimeAndFrequencySelected;
 
-      return  AColor::ColorGradientTimeSelected;
+   return  AColor::ColorGradientTimeSelected;
 }
 
 

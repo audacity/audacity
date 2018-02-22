@@ -26,9 +26,9 @@ Paul Licameli split from TrackPanel.cpp
 LabelGlyphHandle::LabelGlyphHandle
 (const std::shared_ptr<LabelTrack> &pLT,
  const wxRect &rect, const LabelTrackHit &hit)
-   : mpLT{ pLT }
+   : mHit{ hit }
+   , mpLT{ pLT }
    , mRect{ rect }
-   , mHit{ hit }
 {
 }
 
