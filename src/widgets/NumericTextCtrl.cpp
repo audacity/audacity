@@ -239,8 +239,8 @@ public:
    }
    NumericField( const NumericField & ) = default;
    NumericField &operator = ( const NumericField & ) = default;
-   NumericField( NumericField && ) = default;
-   NumericField &operator = ( NumericField && ) = default;
+   NumericField( NumericField && ) {}
+   NumericField &operator = ( NumericField && ) { return *this;}
    void CreateDigitFormatStr()
    {
       if (range > 1)

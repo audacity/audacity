@@ -33,8 +33,8 @@ public:
    }
    KeyNode( const KeyNode & ) = default;
    KeyNode &operator = ( const KeyNode & ) = default;
-   KeyNode( KeyNode && ) = default;
-   KeyNode &operator = ( KeyNode && ) = default;
+   KeyNode( KeyNode && ) {}
+   KeyNode &operator = ( KeyNode && ) { return *this;}
 
 public:
    wxString name;

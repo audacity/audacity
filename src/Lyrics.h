@@ -28,8 +28,8 @@ struct Syllable {
    Syllable() = default;
    Syllable( const Syllable& ) = default;
    Syllable& operator= ( const Syllable& ) = default;
-   Syllable( Syllable && ) = default;
-   Syllable& operator= ( Syllable&& ) = default;
+   Syllable( Syllable && ) {}
+   Syllable& operator= ( Syllable&& ) { return *this;}
 
    double t;
    wxString text;

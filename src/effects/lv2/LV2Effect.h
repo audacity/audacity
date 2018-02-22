@@ -63,8 +63,8 @@ public:
    }
    LV2Port( const LV2Port & ) = default;
    LV2Port& operator = ( const LV2Port & ) = default;
-   LV2Port( LV2Port && ) = default;
-   LV2Port& operator = ( LV2Port && ) = default;
+   LV2Port( LV2Port && ) {}
+   LV2Port& operator = ( LV2Port && ) { return *this;}
 
    uint32_t mIndex;
    wxString mSymbol;
