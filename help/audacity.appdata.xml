@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application>
+<component>
   <id>org.audacityteam.Audacity</id>
   <launchable type="desktop">audacity.desktop</launchable>
-  <licence>CC-BY</licence>
+  <project_license>GPL-2.0 and CC-BY-3.0</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>Audacity</name>
+  <summary>Record and edit audio files</summary>
   <description>
-    <p>
-	Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.
-    </p>
-    <p>
-	You can use Audacity to:
-    </p>
-	<ul>
-	<li>Record live audio</li>
-	<li>Convert tapes and records into digital recordings or CDs</li>
-	<li>Edit WAV, AIFF, FLAC, MP2, MP3 or Ogg Vorbis sound files</li>
-	<li>Cut, copy, splice or mix sounds together</li>
-	<li>Change the speed or pitch of a recording</li>
-	<li>Apply a wide range of other effects to audio recordings</li>
-	</ul>
+    <p>Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.</p>
+    <p>You can use Audacity to:</p>
+    <ul>
+      <li>Record live audio</li>
+      <li>Convert tapes and records into digital recordings or CDs</li>
+      <li>Edit WAV, AIFF, FLAC, MP2, MP3 or Ogg Vorbis sound files</li>
+      <li>Cut, copy, splice or mix sounds together</li>
+      <li>Change the speed or pitch of a recording</li>
+      <li>Apply a wide range of other effects to audio recordings</li>
+    </ul>
   </description>
-  <url type="homepage">http://www.audacityteam.org/</url>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+  </categories>
+  <url type="homepage">https://www.audacityteam.org/</url>
+  <url type="bugtracker">https://bugzilla.audacityteam.org/</url>
+  <url type="faq">https://manual.audacityteam.org/man/faq.html</url>
+  <url type="help">https://manual.audacityteam.org/</url>
+  <url type="donation">https://www.audacityteam.org/donate/</url>
+  <url type="translate">https://www.audacityteam.org/community/translators/</url>
   <screenshots>
-    <screenshot type="default">http://www.audacity.audio/wp-content/uploads/2016/01/audacity-212-linux.png</screenshot>
-    <screenshot>http://www.audacity.audio/wp-content/uploads/2015/11/Recording-with-Audacity-212.png</screenshot>
+    <screenshot type="default">
+      <image type="source">https://www.audacityteam.org/wp-content/uploads/2016/01/audacity-212-linux.png</image>
+    </screenshot>
+    <screenshot>
+      <image type="source">https://www.audacityteam.org/wp-content/uploads/2015/11/Audacity-2-2-0-on-Linux.png</image>
+    </screenshot>
   </screenshots>
-  <updatecontact>audacity-devel@lists.sourceforge.net</updatecontact>
-</application>
+  <update_contact>audacity-devel@lists.sourceforge.net</update_contact>
+</component>
