@@ -976,6 +976,7 @@ private:
 };
 #endif
 
+#ifdef EXPERIMENTAL_MIDI_OUT
 // return the system time as a double
 static double streamStartTime = 0; // bias system time to small number
 
@@ -995,6 +996,7 @@ static double SystemTime(bool usingAlsa)
 
    return PaUtil_GetTime() - streamStartTime;
 }
+#endif
 
 const int AudioIO::StandardRates[] = {
    8000,
@@ -1802,6 +1804,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    }
 #endif
 
+#ifdef EXPERIMENTAL_MIDI_OUT
    // We use audio latency to estimate how far ahead of DACS we are writing
    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
       const PaStreamInfo* info = Pa_GetStreamInfo(mPortStreamV19);
@@ -1810,6 +1813,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       mAudioOutLatency = info->outputLatency;
       mSystemMinusAudioTimePlusLatency += mAudioOutLatency;
    }
+#endif
 
    return (mLastPaError == paNoError);
 }
@@ -1954,8 +1958,10 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
 
    double playbackTime = 4.0;
 
+#ifdef EXPERIMENTAL_MIDI_OUT
    streamStartTime = 0;
    streamStartTime = SystemTime(mUsingAlsa);
+#endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    bool scrubbing = (options.pScrubbingOptions != nullptr);
@@ -2831,7 +2837,9 @@ void AudioIO::StopStream()
 
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
+#ifdef HAVE_MIDI
    mMidiPlaybackTracks.clear();
+#endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    mScrubQueue.reset();
@@ -4670,13 +4678,13 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          (float *)alloca(framesPerBuffer*numPlaybackChannels * sizeof(float)) :
          (float *)outputBuffer;
 
+#ifdef EXPERIMENTAL_MIDI_OUT
    if (gAudioIO->mCallbackCount++ == 0) {
        // This is effectively mSystemMinusAudioTime when the buffer is empty:
        gAudioIO->mStartTime = SystemTime(gAudioIO->mUsingAlsa) - gAudioIO->mT0;
        // later, mStartTime - mSystemMinusAudioTime will tell us latency
    }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    /* GSW: Save timeInfo in case MidiPlayback needs it */
    gAudioIO->mAudioCallbackClockTime = PaUtil_GetTime();
 
@@ -5052,7 +5060,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                   : gAudioIO->mTime >= gAudioIO->mT1))
                   // PRL: singalling MIDI output complete is necessary if
                   // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
+#ifdef EXPERIMENTAL_MIDI_OUT
                   gAudioIO->mMidiOutputComplete = true,
+#endif
                   callbackReturn = paComplete;
             }
             
@@ -5115,7 +5125,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
                // PRL: singalling MIDI output complete is necessary if
                // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
+#ifdef EXPERIMENTAL_MIDI_OUT
                gAudioIO->mMidiOutputComplete = true,
+#endif
                callbackReturn = paComplete;
             }
          }
