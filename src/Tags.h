@@ -74,7 +74,7 @@ class AUDACITY_DLL_API Tags final : public XMLTagHandler {
  public:
    Tags();  // constructor
    Tags( const Tags& ) = default;
-   Tags( Tags && ) {}
+   //Tags( Tags && ) = default;
    virtual ~Tags();
 
    std::shared_ptr<Tags> Duplicate() const;

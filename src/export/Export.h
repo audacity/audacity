@@ -41,8 +41,8 @@ class AUDACITY_DLL_API FormatInfo
       FormatInfo() {}
       FormatInfo( const FormatInfo & ) = default;
       FormatInfo &operator = ( const FormatInfo & ) = default;
-      FormatInfo( FormatInfo && ) {}
-      FormatInfo &operator = ( FormatInfo && ) { return *this;}
+      //FormatInfo( FormatInfo && ) = default;
+      //FormatInfo &operator = ( FormatInfo && ) = default;
       ~FormatInfo() {}
 
       wxString mFormat;

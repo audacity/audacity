@@ -49,8 +49,8 @@ public:
    NyqControl() = default;
    NyqControl( const NyqControl& ) = default;
    NyqControl &operator = ( const NyqControl & ) = default;
-   NyqControl( NyqControl && ) {}
-   NyqControl &operator = ( NyqControl && ) { return *this;}
+   //NyqControl( NyqControl && ) = default;
+   //NyqControl &operator = ( NyqControl && ) = default;
 
    int type;
    wxString var;
