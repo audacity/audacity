@@ -24233,7 +24233,7 @@ case "${host_os}" in
 esac
 
 # process Makefile.in's to generate Makefiles
-ac_config_files="$ac_config_files Makefile help/Makefile images/Makefile lib-src/Makefile po/Makefile.in src/audacity.desktop src/Makefile tests/Makefile"
+ac_config_files="$ac_config_files Makefile help/Makefile images/Makefile lib-src/Makefile po/Makefile.in nyq-po/Makefile.in src/audacity.desktop src/Makefile tests/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -25517,6 +25517,7 @@ do
     "images/Makefile") CONFIG_FILES="$CONFIG_FILES images/Makefile" ;;
     "lib-src/Makefile") CONFIG_FILES="$CONFIG_FILES lib-src/Makefile" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
+    "nyq-po/Makefile.in") CONFIG_FILES="$CONFIG_FILES nyq-po/Makefile.in" ;;
     "src/audacity.desktop") CONFIG_FILES="$CONFIG_FILES src/audacity.desktop" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
