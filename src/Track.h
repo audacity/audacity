@@ -60,7 +60,8 @@ class TrackList;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
 
-using TrackNodePointer = ListOfTracks::iterator;
+using TrackNodePointer =
+std::pair< ListOfTracks::iterator, ListOfTracks* >;
 
 class ViewInfo;
 
@@ -131,7 +132,7 @@ class AUDACITY_DLL_API Track /* not final */
       if (t) {
          auto pList = t->mList.lock();
          if (pList)
-            return std::static_pointer_cast<Subclass>(*t->mNode);
+            return std::static_pointer_cast<Subclass>(*t->mNode.first);
       }
       return {};
    }
@@ -142,7 +143,7 @@ class AUDACITY_DLL_API Track /* not final */
       if (t) {
          auto pList = t->mList.lock();
          if (pList) {
-            std::shared_ptr<const Track> p{ *t->mNode };
+            std::shared_ptr<const Track> p{ *t->mNode.first };
             // Let you change the type, but not cast away the const
             return std::static_pointer_cast<Subclass>(p);
          }
@@ -640,7 +641,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    using iterator = TrackListIterator;
    using const_iterator = TrackListConstIterator;
    using value_type = Track *;
-   iterator begin() { return iterator{ this, ListOfTracks::begin() }; }
+   iterator begin() { return iterator{
+      this, { ListOfTracks::begin(), this } }; }
    iterator end() { return {}; }
    const_iterator begin() const { return const_iterator{ this }; }
    const_iterator end() const { return {}; }
@@ -750,12 +752,14 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 
 private:
    bool isNull(TrackNodePointer p) const
-   { return p == ListOfTracks::end()
-      || p == mPendingUpdates.end(); }
+   { return (p.second == this && p.first == ListOfTracks::end())
+      || (p.second == &mPendingUpdates && p.first == mPendingUpdates.end()); }
    TrackNodePointer getEnd() const
-   { return const_cast<TrackList*>(this)->ListOfTracks::end(); }
+   { return { const_cast<TrackList*>(this)->ListOfTracks::end(),
+              const_cast<TrackList*>(this)}; }
    TrackNodePointer getBegin() const
-   { return const_cast<TrackList*>(this)->ListOfTracks::begin(); }
+   { return { const_cast<TrackList*>(this)->ListOfTracks::begin(),
+              const_cast<TrackList*>(this)}; }
 
    // Move an iterator to the next node, if any; else stay at end
    TrackNodePointer getNext(TrackNodePointer p) const
@@ -763,17 +767,19 @@ private:
       if ( isNull(p) )
          return p;
       auto q = p;
-      return ++q;
+      ++q.first;
+      return q;
    }
 
    // Move an iterator to the previous node, if any; else wrap to end
    TrackNodePointer getPrev(TrackNodePointer p) const
    {
-      if (p == this->ListOfTracks::begin())
+      if (p == getBegin())
          return getEnd();
       else {
          auto q = p;
-         return --q;
+         --q.first;
+         return q;
       }
    }
 

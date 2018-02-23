@@ -113,7 +113,7 @@ Track::~Track()
 
 TrackNodePointer Track::GetNode() const
 {
-   wxASSERT(mList.lock() == NULL || this == mNode->get());
+   wxASSERT(mList.lock() == NULL || this == mNode.first->get());
    return mNode;
 }
 
@@ -274,12 +274,12 @@ Track *Track::GetLink() const
       if (mLinked) {
          auto next = pList->getNext( mNode );
          if ( !pList->isNull( next ) )
-            return next->get();
+            return next.first->get();
       }
 
       auto prev = pList->getPrev( mNode );
       if ( !pList->isNull( prev ) ) {
-         auto track = prev->get();
+         auto track = prev.first->get();
          if (track && track->GetLinked())
             return track;
       }
@@ -408,7 +408,7 @@ Track *TrackListIterator::StartWith(Track * val)
       return nullptr;
 
    cur = val->GetNode();
-   return cur->get();
+   return cur.first->get();
 }
 
 Track *TrackListIterator::First(TrackList * val)
@@ -424,7 +424,7 @@ Track *TrackListIterator::First(TrackList * val)
    cur = l->getBegin();
 
    if (!l->isNull(cur)) {
-      return cur->get();
+      return cur.first->get();
    }
 
    return nullptr;
@@ -444,13 +444,13 @@ Track *TrackListIterator::Last(bool skiplinked)
    if (skiplinked) {
       auto prev = l->getPrev( cur );
       if ( !l->isNull( prev ) &&
-           !(*cur)->GetLinked() &&
-           (*cur)->GetLink()
+           !(*cur.first)->GetLinked() &&
+           (*cur.first)->GetLink()
       )
          cur = prev;
    }
 
-   return cur->get();
+   return cur.first->get();
 }
 
 Track *TrackListIterator::Next(bool skipLinked)
@@ -463,7 +463,7 @@ Track *TrackListIterator::Next(bool skipLinked)
       return nullptr;
 
    if (skipLinked &&
-       (*cur)->GetLinked())
+       (*cur.first)->GetLinked())
       cur = l->getNext( cur );
 
    #ifdef DEBUG_TLI // if we are debugging this bit
@@ -478,7 +478,7 @@ Track *TrackListIterator::Next(bool skipLinked)
    #endif
 
    if (!l->isNull(cur))
-      return cur->get();
+      return cur.first->get();
 
    return nullptr;
 }
@@ -494,11 +494,11 @@ Track *TrackListIterator::Prev(bool skiplinked)
 
    if ( skiplinked ) {
       auto prev = l->getPrev( cur );
-      if( !l->isNull( prev ) && (*prev)->GetLinked() )
+      if( !l->isNull( prev ) && (*prev.first)->GetLinked() )
          cur = prev;
    }
 
-   return cur->get();
+   return cur.first->get();
 }
 
 Track *TrackListIterator::operator *() const
@@ -506,7 +506,7 @@ Track *TrackListIterator::operator *() const
    if ( !l || l->isNull( cur ) )
       return nullptr;
    else
-      return cur->get();
+      return cur.first->get();
 }
 
 Track *TrackListIterator::RemoveCurrent()
@@ -514,14 +514,14 @@ Track *TrackListIterator::RemoveCurrent()
    if ( !l || l->isNull( cur ) )
       return nullptr;
 
-   cur = l->Remove( cur->get() );
+   cur = l->Remove( cur.first->get() );
 
    #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after deletion of track."));   // check that cur is in the list
    #endif
 
    if ( !l->isNull( cur ) )
-      return cur->get();
+      return cur.first->get();
 
    return nullptr;
 }
@@ -754,7 +754,7 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
    if ( !l || l->isNull( cur ) )
       return nullptr;
 
-   Track *t = cur->get();
+   Track *t = cur.first->get();
 
    while (const auto next = l->GetNext(t, skiplinked)) {
       if ( ! IsGoodNextTrack(next) )
@@ -809,9 +809,9 @@ void TrackList::Swap(TrackList &that)
    {
       a.swap(b);
       for (auto it = a.begin(), last = a.end(); it != last; ++it)
-         (*it)->SetOwner(aSelf, it);
+         (*it)->SetOwner(aSelf, {it, &a});
       for (auto it = b.begin(), last = b.end(); it != last; ++it)
-         (*it)->SetOwner(bSelf, it);
+         (*it)->SetOwner(bSelf, {it, &b});
    };
 
    SwapLOTs( *this, mSelf, that, that.mSelf );
@@ -835,7 +835,7 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
    auto prev = getPrev( node );
    if ( !isNull( prev ) ) {
-      t = prev->get();
+      t = prev.first->get();
       i = t->GetIndex() + 1;
       y = t->GetY() + t->GetHeight();
    }
@@ -868,7 +868,7 @@ void TrackList::DeletionEvent()
 void TrackList::ResizingEvent(TrackNodePointer node)
 {
    auto e = std::make_unique<TrackListEvent>(EVT_TRACKLIST_RESIZING);
-   e->mpTrack = *node;
+   e->mpTrack = *node.first;
    // wxWidgets will own the event object
    QueueEvent(e.release());
 }
@@ -876,10 +876,11 @@ void TrackList::ResizingEvent(TrackNodePointer node)
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
 {
    for (const auto iter : permutation) {
-      ListOfTracks::value_type track = std::move(*iter);
-      erase(iter);
+      ListOfTracks::value_type track = std::move(*iter.first);
+      erase(iter.first);
       Track *pTrack = track.get();
-      pTrack->SetOwner(mSelf, insert(ListOfTracks::end(), std::move(track)));
+      pTrack->SetOwner(mSelf,
+                       { insert(ListOfTracks::end(), std::move(track)), this });
    }
    auto n = getBegin();
    RecalcPositions(n);
@@ -963,10 +964,10 @@ auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
-      holder = std::move(*node);
+      holder = std::move(*node.first);
 
       Track *pTrack = with.get();
-      *node = std::move(with);
+      *node.first = std::move(with);
       pTrack->SetOwner(mSelf, node);
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
@@ -985,10 +986,10 @@ TrackNodePointer TrackList::Remove(Track *t)
       t->SetOwner({}, {});
 
       if ( !isNull( node ) ) {
-         ListOfTracks::value_type holder = std::move( *node );
+         ListOfTracks::value_type holder = std::move( *node.first );
 
          result = getNext( node );
-         erase(node);
+         erase(node.first);
          if ( !isNull( result ) )
             RecalcPositions(result);
 
@@ -1028,12 +1029,12 @@ void TrackList::Select(Track * t, bool selected /* = true */ )
          if ( t->GetLinked() ) {
             auto next = getNext( node );
             if ( !isNull( next ) )
-               (*next)->SetSelected( selected );
+               (*next.first)->SetSelected( selected );
          }
          else {
             auto prev = getPrev( node );
-            if ( !isNull( prev ) && (*prev)->GetLinked() )
-               (*prev)->SetSelected( selected );
+            if ( !isNull( prev ) && (*prev.first)->GetLinked() )
+               (*prev.first)->SetSelected( selected );
          }
       }
    }
@@ -1052,7 +1053,7 @@ Track *TrackList::GetNext(Track * t, bool linked) const
             node = getNext( node );
 
          if ( !isNull( node ) )
-            return node->get();
+            return node.first->get();
       }
    }
 
@@ -1083,11 +1084,11 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
             if (linked) {
                prev = getPrev( node );
                if( !isNull( prev ) &&
-                   !(*node)->GetLinked() && (*node)->GetLink() )
+                   !(*node.first)->GetLinked() && (*node.first)->GetLink() )
                   node = prev;
             }
 
-            return node->get();
+            return node.first->get();
          }
       }
    }
@@ -1131,15 +1132,15 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
 
    // Deal with first track in each team
    Track *link;
-   link = (*s1)->GetLink();
+   link = (*s1.first)->GetLink();
    bool linked1 = link != nullptr;
-   if (linked1 && !(*s1)->GetLinked()) {
+   if (linked1 && !(*s1.first)->GetLinked()) {
       s1 = link->GetNode();
    }
 
-   link = (*s2)->GetLink();
+   link = (*s2.first)->GetLink();
    bool linked2 = link != nullptr;
-   if (linked2 && !(*s2)->GetLinked()) {
+   if (linked2 && !(*s2.first)->GetLinked()) {
       s2 = link->GetNode();
    }
 
@@ -1148,24 +1149,24 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       return;
 
    // Be sure s1 is the earlier iterator
-   if ((*s1)->GetIndex() >= (*s2)->GetIndex()) {
+   if ((*s1.first)->GetIndex() >= (*s2.first)->GetIndex()) {
       std::swap(s1, s2);
       std::swap(linked1, linked2);
    }
 
    // Remove tracks
-   ListOfTracks::value_type save11 = std::move(*s1), save12{};
-   s1 = erase(s1);
+   ListOfTracks::value_type save11 = std::move(*s1.first), save12{};
+   s1.first = erase(s1.first);
    if (linked1) {
       wxASSERT(s1 != s2);
-      save12 = std::move(*s1), s1 = erase(s1);
+      save12 = std::move(*s1.first), s1.first = erase(s1.first);
    }
    const bool same = (s1 == s2);
 
-   ListOfTracks::value_type save21 = std::move(*s2), save22{};
-   s2 = erase(s2);
+   ListOfTracks::value_type save21 = std::move(*s2.first), save22{};
+   s2.first = erase(s2.first);
    if (linked2)
-      save22 = std::move(*s2), s2 = erase(s2);
+      save22 = std::move(*s2.first), s2.first = erase(s2.first);
 
    if (same)
       // We invalidated s1!
@@ -1174,12 +1175,16 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    // Reinsert them
    Track *pTrack;
    if (save22)
-      pTrack = save22.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save22)));
-   pTrack = save21.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save21)));
+      pTrack = save22.get(),
+      pTrack->SetOwner(mSelf, s1 = { insert(s1.first, std::move(save22)), this });
+   pTrack = save21.get(),
+   pTrack->SetOwner(mSelf, s1 = { insert(s1.first, std::move(save21)), this });
 
    if (save12)
-      pTrack = save12.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save12)));
-   pTrack = save11.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save11)));
+      pTrack = save12.get(),
+      pTrack->SetOwner(mSelf, s2 = { insert(s2.first, std::move(save12)), this });
+   pTrack = save11.get(),
+   pTrack->SetOwner(mSelf, s2 = { insert(s2.first, std::move(save11)), this });
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
@@ -1227,7 +1232,7 @@ size_t TrackList::size() const
    int cnt = 0;
 
    if (!empty())
-      cnt = getPrev( getEnd() )->get()->GetIndex() + 1;
+      cnt = getPrev( getEnd() ).first->get()->GetIndex() + 1;
 
    return cnt;
 }
@@ -1365,7 +1370,7 @@ int TrackList::GetHeight() const
    int height = 0;
 
    if (!empty()) {
-      auto track = getPrev( getEnd() )->get();
+      auto track = getPrev( getEnd() ).first->get();
       height = track->GetY() + track->GetHeight();
    }
 
@@ -1424,7 +1429,7 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
       mPendingUpdates.push_back( pTrack );
       auto n = mPendingUpdates.end();
       --n;
-      pTrack->SetOwner(mSelf, n);
+      pTrack->SetOwner(mSelf, {n, &mPendingUpdates});
    }
 
    return pTrack;
@@ -1480,7 +1485,7 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
    }
 
    if (!empty())
-      RecalcPositions(ListOfTracks::begin());
+      RecalcPositions(getBegin());
 }
 
 bool TrackList::ApplyPendingTracks()
@@ -1528,7 +1533,7 @@ bool TrackList::ApplyPendingTracks()
          auto iter = ListOfTracks::begin();
          std::advance( iter, pendingTrack->GetIndex() );
          iter = ListOfTracks::insert( iter, pendingTrack );
-         pendingTrack->SetOwner( mSelf, iter );
+         pendingTrack->SetOwner( mSelf, {iter, this} );
          pendingTrack->SetId( TrackId{ ++sCounter } );
          if (!inserted) {
             first = iter;
@@ -1537,7 +1542,7 @@ bool TrackList::ApplyPendingTracks()
       }
    }
    if (inserted) {
-      RecalcPositions(first);
+      RecalcPositions({first, this});
       result = true;
    }
 

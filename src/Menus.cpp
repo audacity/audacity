@@ -2911,7 +2911,7 @@ void AudacityProject::SortTracks(int flags)
    int cmpValue;
    // This one place outside of TrackList where we must use undisguised
    // std::list iterators!  Avoid this elsewhere!
-   std::vector<ListOfTracks::iterator> arr;
+   std::vector<TrackNodePointer> arr;
    arr.reserve(mTracks->size());
    bool lastTrackLinked = false;
    //sort by linked tracks. Assumes linked track follows owner in list.
@@ -2927,7 +2927,7 @@ void AudacityProject::SortTracks(int flags)
       else {
          bool bArrayTrackLinked = false;
          for (ndx = 0; ndx < arr.size(); ++ndx) {
-            Track &arrTrack = **arr[ndx];
+            Track &arrTrack = **arr[ndx].first;
             // Don't insert between channels of a stereo track!
             if( bArrayTrackLinked ){
                bArrayTrackLinked = false;
@@ -2968,7 +2968,7 @@ void AudacityProject::SortTracks(int flags)
                   time2 = std::min(time2, tempTime);
                   if(tempTrack->GetLinked() && (ndx+candidatesLookedAt < arr.size()-1) ) {
                      candidatesLookedAt++;
-                     tempTrack = &**arr[ndx+candidatesLookedAt];
+                     tempTrack = &**arr[ndx+candidatesLookedAt].first;
                   }
                   else
                      tempTrack = NULL;
@@ -2982,7 +2982,7 @@ void AudacityProject::SortTracks(int flags)
             bArrayTrackLinked = arrTrack.GetLinked();
          }
       }
-      arr.insert(arr.begin() + ndx, iter);
+      arr.insert(arr.begin() + ndx, TrackNodePointer{iter, mTracks.get()});
 
       lastTrackLinked = track->GetLinked();
    }
