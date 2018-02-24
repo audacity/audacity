@@ -36,6 +36,7 @@
 
 #include "EffectManager.h"
 #include "EffectRack.h"
+#include "../commands/CommandContext.h"
 #include "../Prefs.h"
 #include "../Project.h"
 
@@ -305,6 +306,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
       if (mPowerState[i])
       {
          if (!project->DoEffect(mEffects[i]->GetID(),
+                                *project,
                            AudacityProject::OnEffectFlags::kConfigured))
             // If any effect fails (or throws), then stop.
             return;

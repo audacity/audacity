@@ -137,13 +137,6 @@ bool EffectManager::DoAudacityCommand(const PluginID & ID,
       return false;
    }
 
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   if (effect->SupportsRealtime())
-   {
-      GetRack()->Add(effect);
-   }
-#endif
-
    bool res = command->DoAudacityCommand(parent, context, shouldPrompt);
 
    return res;
