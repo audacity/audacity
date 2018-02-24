@@ -6,13 +6,21 @@
 
   Dominic Mazzoni
 
-*******************************************************************/
+*******************************************************************//**
+
+\class ScreenFrame
+\brief ScreenFrame provides an alternative Gui for ScreenshotCommand.
+It adds a timer that allows a delay before taking a screenshot,
+provides lots of one-click buttons, options to resize the screen.
+It forwards the actual work of doing the commands to the ScreenshotCommand.
+
+***********************************************************************/
 
 #include "Screenshot.h"
 #include "MemoryX.h"
 #include "commands/ScreenshotCommand.h"
 #include "commands/CommandTargets.h"
-#include "commands/CommandDirectory.h"
+#include "commands/CommandContext.h"
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/frame.h>
@@ -35,9 +43,10 @@
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 
+
 #include "Track.h"
 
-class CommandType;
+class OldStyleCommandType;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +97,7 @@ class ScreenFrame final : public wxFrame
    wxStatusBar *mStatus;
 
    std::unique_ptr<ScreenshotCommand> mCommand;
-   CommandExecutionContext mContext;
+   CommandContext mContext;
 
    DECLARE_EVENT_TABLE()
 };
@@ -238,12 +247,10 @@ std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
 {
    wxASSERT(mStatus != NULL);
    auto output =
-      std::make_unique<CommandOutputTarget>(std::make_unique<NullProgressTarget>(),
+      std::make_unique<CommandOutputTargets>(std::make_unique<NullProgressTarget>(),
                               std::make_shared<StatusBarTarget>(*mStatus),
                               std::make_shared<MessageBoxTarget>());
-   CommandType *type = CommandDirectory::Get()->LookUp(wxT("Screenshot"));
-   wxASSERT_MSG(type != NULL, wxT("Screenshot command doesn't exist!"));
-   return std::make_unique<ScreenshotCommand>(*type, std::move(output), this);
+   return std::make_unique<ScreenshotCommand>();//*type, std::move(output), this);
 }
 
 ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
@@ -263,12 +270,12 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 #endif
 
            wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX),
-   mContext(&wxGetApp(), GetActiveProject())
+   mContext( *GetActiveProject() )
 {
    mDelayCheckBox = NULL;
    mDirectoryTextBox = NULL;
 
-   mStatus = CreateStatusBar();
+   mStatus = CreateStatusBar(3);
    mCommand = CreateCommand();
 
    Populate();
@@ -543,21 +550,18 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
       mDirectoryTextBox->SetValue(path);
       gPrefs->Write(wxT("/ScreenshotPath"), path);
       gPrefs->Flush();
+      mCommand->mPath = path;
    }
 }
 
 void ScreenFrame::OnToggleBackgroundBlue(wxCommandEvent & WXUNUSED(event))
 {
    mWhite->SetValue(false);
-   mCommand->SetParameter(wxT("Background"),
-         mBlue->GetValue() ? wxT("Blue") : wxT("None"));
 }
 
 void ScreenFrame::OnToggleBackgroundWhite(wxCommandEvent & WXUNUSED(event))
 {
    mBlue->SetValue(false);
-   mCommand->SetParameter(wxT("Background"),
-         mWhite->GetValue() ? wxT("White") : wxT("None"));
 }
 
 void ScreenFrame::SizeMainWindow(int w, int h)
@@ -583,9 +587,11 @@ void ScreenFrame::OnMainWindowLarge(wxCommandEvent & WXUNUSED(event))
 void ScreenFrame::DoCapture(wxString captureMode)
 {
    Hide();
-   mCommand->SetParameter(wxT("FilePath"), mDirectoryTextBox->GetValue());
-
-   mCommand->SetParameter(wxT("CaptureMode"), captureMode);
+   //mCommand->SetParameter(wxT("FilePath"), mDirectoryTextBox->GetValue());
+   //mCommand->SetParameter(wxT("CaptureMode"), captureMode);
+   mCommand->mBack = mWhite->GetValue() ? "White" : mBlue->GetValue() ? "Blue" : "None";
+   mCommand->mPath = mDirectoryTextBox->GetValue();
+   mCommand->mWhat = captureMode;
    if (!mCommand->Apply(mContext))
       mStatus->SetStatusText(_("Capture failed!"), mainStatusBarField);
    Show();
@@ -597,32 +603,32 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 
    wxArrayString Names;
 
-   Names.Add(wxT("menus"));
-   Names.Add(wxT("effects"));
-   Names.Add(wxT("preferences"));
+   Names.Add(wxT("Menus"));
+   Names.Add(wxT("Effects"));
+   Names.Add(wxT("Preferences"));
 
-   Names.Add(wxT("toolbars"));
-   Names.Add(wxT("window"));
-   Names.Add(wxT("fullwindow"));
-   Names.Add(wxT("windowplus"));
-   Names.Add(wxT("fullscreen"));
-   Names.Add(wxT("selectionbar"));
-   Names.Add(wxT("spectralselection"));
-   Names.Add(wxT("tools"));
-   Names.Add(wxT("transport"));
-   Names.Add(wxT("mixer"));
-   Names.Add(wxT("meter"));
-   Names.Add(wxT("playmeter"));
-   Names.Add(wxT("recordmeter"));
-   Names.Add(wxT("edit"));
-   Names.Add(wxT("device"));
-   Names.Add(wxT("transcription"));
-   Names.Add(wxT("scrub"));
-   Names.Add(wxT("trackpanel"));
-   Names.Add(wxT("ruler"));
-   Names.Add(wxT("tracks"));
-   Names.Add(wxT("firsttrack"));
-   Names.Add(wxT("secondtrack"));
+   Names.Add(wxT("Toolbars"));
+   Names.Add(wxT("Window"));
+   Names.Add(wxT("Full_Window"));
+   Names.Add(wxT("Window_Plus"));
+   Names.Add(wxT("Fullscreen"));
+   Names.Add(wxT("Selectionbar"));
+   Names.Add(wxT("Spectral_Selection"));
+   Names.Add(wxT("Tools"));
+   Names.Add(wxT("Transport"));
+   Names.Add(wxT("Mixer"));
+   Names.Add(wxT("Meter"));
+   Names.Add(wxT("Play_Meter"));
+   Names.Add(wxT("Record_Meter"));
+   Names.Add(wxT("Edit"));
+   Names.Add(wxT("Device"));
+   Names.Add(wxT("Transcription"));
+   Names.Add(wxT("Scrub"));
+   Names.Add(wxT("Trackpanel"));
+   Names.Add(wxT("Ruler"));
+   Names.Add(wxT("Tracks"));
+   Names.Add(wxT("First_Track"));
+   Names.Add(wxT("Second_Track"));
 
    DoCapture(Names[i]);
 }

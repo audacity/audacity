@@ -116,7 +116,7 @@ public:
    wxString GetVersion() override;
    wxString GetDescription() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    wxString GetFamilyId() override;
@@ -162,8 +162,8 @@ public:
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // EffectUIClientInterface implementation
 

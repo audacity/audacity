@@ -104,8 +104,8 @@ public:
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    bool LoadUserPreset(const wxString & name) override;
    bool SaveUserPreset(const wxString & name) override;

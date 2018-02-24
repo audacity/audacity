@@ -29,6 +29,7 @@ system by constructing BatchCommandEval objects.
 #include "Command.h"
 #include "CommandTargets.h"
 #include "ScriptCommandRelay.h"
+#include "CommandContext.h"
 
 CommandBuilder::CommandBuilder(const wxString &cmdString)
    : mValid(false)
@@ -56,7 +57,7 @@ const wxString &CommandBuilder::GetErrorMessage()
    return mError;
 }
 
-CommandHolder CommandBuilder::GetCommand()
+OldStyleCommandPointer CommandBuilder::GetCommand()
 {
    wxASSERT(mValid);
    wxASSERT(mCommand);
@@ -71,7 +72,7 @@ void CommandBuilder::Failure(const wxString &msg)
    mValid = false;
 }
 
-void CommandBuilder::Success(const CommandHolder &cmd)
+void CommandBuilder::Success(const OldStyleCommandPointer &cmd)
 {
    mCommand = cmd;
    mValid = true;
@@ -84,27 +85,31 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
 
    auto scriptOutput = ScriptCommandRelay::GetResponseTarget();
    auto output
-      = std::make_unique<CommandOutputTarget>(std::make_unique<NullProgressTarget>(),
+      = std::make_unique<CommandOutputTargets>(std::make_unique<NullProgressTarget>(),
                                 scriptOutput,
                                 scriptOutput);
 
-   CommandType *factory = CommandDirectory::Get()->LookUp(cmdName);
+#ifdef OLD_BATCH_SYSTEM
+   OldStyleCommandType *factory = CommandDirectory::Get()->LookUp(cmdName);
 
    if (factory == NULL)
    {
       // Fall back to hoping the Batch Command system can handle it
-      CommandType *type = CommandDirectory::Get()->LookUp(wxT("BatchCommand"));
+#endif
+      OldStyleCommandType *type = CommandDirectory::Get()->LookUp(wxT("BatchCommand"));
       wxASSERT(type != NULL);
-      mCommand = type->Create(std::move(output));
+      mCommand = type->Create(nullptr);
       mCommand->SetParameter(wxT("CommandName"), cmdName);
       mCommand->SetParameter(wxT("ParamString"), cmdParamsArg);
-      Success(std::make_shared<ApplyAndSendResponse>(mCommand));
+      auto aCommand = std::make_shared<ApplyAndSendResponse>(mCommand, output);
+      Success(aCommand);
       return;
+#ifdef OLD_BATCH_SYSTEM
    }
 
    CommandSignature &signature = factory->GetSignature();
-   mCommand = factory->Create(std::move(output));
-
+   mCommand = factory->Create(nullptr);
+   //mCommand->SetOutput( std::move(output) );
    // Stage 2: set the parameters
 
    ShuttleCli shuttle;
@@ -172,8 +177,9 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
       }
       cmdParams = cmdParams.Mid(splitAt);
    }
-
-   Success(std::make_shared<ApplyAndSendResponse>(mCommand));
+   auto aCommand = std::make_shared<ApplyAndSendResponse>(mCommand, output);
+   Success(aCommand);
+#endif
 }
 
 void CommandBuilder::BuildCommand(const wxString &cmdStringArg)

@@ -36,10 +36,10 @@ enum kInterpolations
 {
    kLinear,
    kLogarithmic,
-   kNumInterpolations
+   nInterpolations
 };
 
-static const wxString kInterStrings[kNumInterpolations] =
+static const wxString kInterStrings[nInterpolations] =
 {
    XO("Linear"),
    XO("Logarithmic")
@@ -51,10 +51,10 @@ enum kWaveforms
    kSquare,
    kSawtooth,
    kSquareNoAlias,
-   kNumWaveforms
+   nWaveforms
 };
 
-static const wxString kWaveStrings[kNumWaveforms] =
+static const wxString kWaveStrings[nWaveforms] =
 {
    XO("Sine"),
    XO("Square"),
@@ -71,8 +71,8 @@ Param( StartAmp,  double,  wxT("StartAmp"),      0.8,     0.0,     1.0,         
 Param( EndAmp,    double,  wxT("EndAmp"),        0.1,     0.0,     1.0,                    1  );
 Param( Frequency, double,  wxT("Frequency"),     440.0,   1.0,     DBL_MAX,                1  );
 Param( Amplitude, double,  wxT("Amplitude"),     0.8,     0.0,     1.0,                    1  );
-Param( Waveform,  int,     wxT("Waveform"),      0,       0,       kNumWaveforms - 1,      1  );
-Param( Interp,    int,     wxT("Interpolation"), 0,       0,       kNumInterpolations - 1, 1  );
+Param( Waveform,  int,     wxT("Waveform"),      0,       0,       nWaveforms - 1,      1  );
+Param( Interp,    int,     wxT("Interpolation"), 0,       0,       nInterpolations - 1, 1  );
 
 //
 // EffectToneGen
@@ -84,8 +84,8 @@ END_EVENT_TABLE();
 
 EffectToneGen::EffectToneGen(bool isChirp)
 {
-   wxASSERT(kNumWaveforms == WXSIZEOF(kWaveStrings));
-   wxASSERT(kNumInterpolations == WXSIZEOF(kInterStrings));
+   wxASSERT(nWaveforms == WXSIZEOF(kWaveStrings));
+   wxASSERT(nInterpolations == WXSIZEOF(kInterStrings));
 
    mChirp = isChirp;
 
@@ -96,12 +96,12 @@ EffectToneGen::EffectToneGen(bool isChirp)
    mAmplitude[1] = DEF_EndAmp;
    mInterpolation = DEF_Interp;
 
-   for (int i = 0; i < kNumWaveforms; i++)
+   for (int i = 0; i < nWaveforms; i++)
    {
       mWaveforms.Add(wxGetTranslation(kWaveStrings[i]));
    }
 
-   for (int i = 0; i < kNumInterpolations; i++)
+   for (int i = 0; i < nInterpolations; i++)
    {
       mInterpolations.Add(wxGetTranslation(kInterStrings[i]));
    }
@@ -140,7 +140,7 @@ wxString EffectToneGen::ManualPage()
       : wxT("Tone");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectToneGen::GetType()
 {
@@ -253,7 +253,34 @@ size_t EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, 
    return blockLen;
 }
 
-bool EffectToneGen::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectToneGen::DefineParams( ShuttleParams & S ){
+   if( mChirp ){
+      S.SHUTTLE_PARAM( mFrequency[0], StartFreq  );
+      S.SHUTTLE_PARAM( mFrequency[1], EndFreq  );
+      S.SHUTTLE_PARAM( mAmplitude[0], StartAmp  );
+      S.SHUTTLE_PARAM( mAmplitude[1], EndAmp  );
+   } else {
+      S.SHUTTLE_PARAM( mFrequency[0], Frequency  );
+      S.SHUTTLE_PARAM( mAmplitude[0], Amplitude );
+      // Slightly hacky way to set freq and ampl
+      // since we do this whatever query to params was made.
+      mFrequency[1] = mFrequency[0];
+      mAmplitude[1] = mAmplitude[0];
+   }
+   wxArrayString waves( nWaveforms, kWaveStrings );
+   wxArrayString interps( nInterpolations ,kInterStrings );
+   S.SHUTTLE_ENUM_PARAM( mWaveform, Waveform, waves  );
+   S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, interps  );
+
+
+//   double freqMax = (GetActiveProject() ? GetActiveProject()->GetRate() : 44100.0) / 2.0;
+//   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+
+
+   return true;
+}
+
+bool EffectToneGen::GetAutomationParameters(CommandParameters & parms)
 {
    if (mChirp)
    {
@@ -274,10 +301,10 @@ bool EffectToneGen::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectToneGen::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(Waveform,  wxArrayString(kNumWaveforms, kWaveStrings));
-   ReadAndVerifyEnum(Interp, wxArrayString(kNumInterpolations, kInterStrings));
+   ReadAndVerifyEnum(Waveform,  wxArrayString(nWaveforms, kWaveStrings));
+   ReadAndVerifyEnum(Interp, wxArrayString(nInterpolations, kInterStrings));
    if (mChirp)
    {
       ReadAndVerifyDouble(StartFreq);

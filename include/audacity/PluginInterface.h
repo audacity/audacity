@@ -48,19 +48,23 @@
 #include "audacity/ImporterInterface.h"
 #include "audacity/ModuleInterface.h"
 
+
 class ModuleInterface;
+
 
 class PluginManagerInterface /* not final */
 {
 public:
 
    static const PluginID &DefaultRegistrationCallback(
-      ModuleInterface *provider, EffectIdentInterface *ident );
+      ModuleInterface *provider, IdentInterface *ident );
+   static const PluginID &AudacityCommandRegistrationCallback(
+      ModuleInterface *provider, IdentInterface *ident );
 
    virtual bool IsPluginRegistered(const wxString & path) = 0;
 
    virtual const PluginID & RegisterPlugin(ModuleInterface *module) = 0;
-   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect) = 0;
+   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) = 0;
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) = 0;
 
    virtual void FindFilesInPathList(const wxString & pattern,

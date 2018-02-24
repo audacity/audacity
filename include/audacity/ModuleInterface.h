@@ -120,11 +120,10 @@ public:
    // Return value is the number of plugins found.
    using RegistrationCallback =
       std::function<
-         const PluginID &(ModuleInterface *, EffectIdentInterface *) >;
+         const PluginID &(ModuleInterface *, IdentInterface *) >;
    virtual unsigned DiscoverPluginsAtPath(
       const wxString & path, wxString &errMsg,
-      const RegistrationCallback &callback =
-         PluginManagerInterface::DefaultRegistrationCallback)
+      const RegistrationCallback &callback )
          = 0;
 
    // For modules providing an interface to other dynamically loaded plugins,

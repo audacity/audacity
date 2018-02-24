@@ -106,7 +106,7 @@ wxString EffectDtmf::ManualPage()
    return wxT("DTMF_Tones");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectDtmf::GetType()
 {
@@ -229,8 +229,14 @@ size_t EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t 
 
    return processed;
 }
+bool EffectDtmf::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( dtmfSequence, Sequence );
+   S.SHUTTLE_PARAM( dtmfDutyCycle, DutyCycle );
+   S.SHUTTLE_PARAM( dtmfAmplitude, Amplitude );
+   return true;
+}
 
-bool EffectDtmf::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectDtmf::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Sequence, dtmfSequence);
    parms.Write(KEY_DutyCycle, dtmfDutyCycle);
@@ -239,7 +245,7 @@ bool EffectDtmf::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectDtmf::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(DutyCycle);
    ReadAndVerifyDouble(Amplitude);

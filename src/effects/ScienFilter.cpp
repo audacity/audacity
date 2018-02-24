@@ -83,10 +83,10 @@ enum kTypes
    kButterworth,
    kChebyshevTypeI,
    kChebyshevTypeII,
-   kNumTypes
+   nTypes
 };
 
-static const wxChar *kTypeStrings[] =
+static const wxChar *kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    XO("Butterworth"),
@@ -100,10 +100,10 @@ enum kSubTypes
 {
    kLowPass,
    kHighPass,
-   kNumSubTypes
+   nSubTypes
 };
 
-static const wxChar *kSubTypeStrings[] =
+static const wxChar *kSubTypeStrings[nSubTypes] =
 {
    XO("Lowpass"),
    XO("Highpass")
@@ -112,8 +112,8 @@ static const wxChar *kSubTypeStrings[] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key                     Def            Min   Max               Scale
-Param( Type,      int,     wxT("FilterType"),       kButterworth,  0,    kNumTypes - 1,    1  );
-Param( Subtype,   int,     wxT("FilterSubtype"),    kLowPass,      0,    kNumSubTypes - 1, 1  );
+Param( Type,      int,     wxT("FilterType"),       kButterworth,  0,    nTypes - 1,    1  );
+Param( Subtype,   int,     wxT("FilterSubtype"),    kLowPass,      0,    nSubTypes - 1, 1  );
 Param( Order,     int,     wxT("Order"),            1,             1,    10,               1  );
 Param( Cutoff,    float,   wxT("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
 Param( Passband,  float,   wxT("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
@@ -195,7 +195,7 @@ wxString EffectScienFilter::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectScienFilter::GetType()
 {
@@ -240,8 +240,19 @@ size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t
 
    return blockLen;
 }
+bool EffectScienFilter::DefineParams( ShuttleParams & S ){
+   wxArrayString filters( nTypes, kTypeStrings );
+   wxArrayString subtypes( nSubTypes, kSubTypeStrings );
+   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, filters );
+   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, subtypes );
+   S.SHUTTLE_PARAM( mOrder, Order );
+   S.SHUTTLE_PARAM( mCutoff, Cutoff );
+   S.SHUTTLE_PARAM( mRipple, Passband );
+   S.SHUTTLE_PARAM( mStopbandRipple, Stopband );
+   return true;
+}
 
-bool EffectScienFilter::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Type, kTypeStrings[mFilterType]);
    parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype]);
@@ -253,10 +264,10 @@ bool EffectScienFilter::GetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
-bool EffectScienFilter::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(Type, wxArrayString(kNumTypes, kTypeStrings));
-   ReadAndVerifyEnum(Subtype, wxArrayString(kNumSubTypes, kSubTypeStrings));
+   ReadAndVerifyEnum(Type, wxArrayString(nTypes, kTypeStrings));
+   ReadAndVerifyEnum(Subtype, wxArrayString(nSubTypes, kSubTypeStrings));
    ReadAndVerifyInt(Order);
    ReadAndVerifyFloat(Cutoff);
    ReadAndVerifyFloat(Passband);
@@ -456,10 +467,10 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       S.SetSizerProportion(0);
       S.StartMultiColumn(8, wxALIGN_CENTER);
       {
-         wxASSERT(kNumTypes == WXSIZEOF(kTypeStrings));
+         wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
          wxArrayString typeChoices;
-         for (int i = 0; i < kNumTypes; i++)
+         for (int i = 0; i < nTypes; i++)
          {
             typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
          }
@@ -488,10 +499,10 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          mRippleCtl->SetValidator(vldRipple);
          mRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         wxASSERT(kNumSubTypes == WXSIZEOF(kSubTypeStrings));
+         wxASSERT(nSubTypes == WXSIZEOF(kSubTypeStrings));
 
          wxArrayString subTypeChoices;
-         for (int i = 0; i < kNumSubTypes; i++)
+         for (int i = 0; i < nSubTypes; i++)
          {
             subTypeChoices.Add(wxGetTranslation(kSubTypeStrings[i]));
          }

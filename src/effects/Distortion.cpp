@@ -54,10 +54,10 @@ enum kTableType
    kLeveller,
    kRectifier,
    kHardLimiter,
-   kNumTableTypes
+   nTableTypes
 };
 
-static const wxString kTableTypeStrings[kNumTableTypes] =
+static const wxString kTableTypeStrings[nTableTypes] =
 {
    XO("Hard Clipping"),
    XO("Soft Clipping"),
@@ -76,7 +76,7 @@ static const wxString kTableTypeStrings[kNumTableTypes] =
 // (Note: 'Repeats' is the total number of times the effect is applied.)
 //
 //     Name             Type     Key                   Def     Min      Max                 Scale
-Param( TableTypeIndx,   int,     wxT("Type"),           0,       0,      kNumTableTypes-1,    1    );
+Param( TableTypeIndx,   int,     wxT("Type"),           0,       0,      nTableTypes-1,    1    );
 Param( DCBlock,         bool,    wxT("DC Block"),      false,   false,   true,                1    );
 Param( Threshold_dB,    double,  wxT("Threshold dB"),  -6.0,  -100.0,     0.0,             1000.0f );
 Param( NoiseFloor,      double,  wxT("Noise Floor"),   -70.0,  -80.0,   -20.0,                1    );
@@ -168,7 +168,7 @@ END_EVENT_TABLE()
 
 EffectDistortion::EffectDistortion()
 {
-   wxASSERT(kNumTableTypes == WXSIZEOF(kTableTypeStrings));
+   wxASSERT(nTableTypes == WXSIZEOF(kTableTypeStrings));
 
    mParams.mTableChoiceIndx = DEF_TableTypeIndx;
    mParams.mDCBlock = DEF_DCBlock;
@@ -205,7 +205,7 @@ wxString EffectDistortion::ManualPage()
    return wxT("Distortion");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectDistortion::GetType()
 {
@@ -279,8 +279,19 @@ size_t EffectDistortion::RealtimeProcess(int group,
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
+bool EffectDistortion::DefineParams( ShuttleParams & S ){
+   wxArrayString tables( nTableTypes, kTableTypeStrings );
+   S.SHUTTLE_ENUM_PARAM( mParams.mTableChoiceIndx, TableTypeIndx, tables );
+   S.SHUTTLE_PARAM( mParams.mDCBlock,       DCBlock       );
+   S.SHUTTLE_PARAM( mParams.mThreshold_dB,  Threshold_dB  );
+   S.SHUTTLE_PARAM( mParams.mNoiseFloor,    NoiseFloor    );
+   S.SHUTTLE_PARAM( mParams.mParam1,        Param1        );
+   S.SHUTTLE_PARAM( mParams.mParam2,        Param2        );
+   S.SHUTTLE_PARAM( mParams.mRepeats,       Repeats       );
+   return true;
+}
 
-bool EffectDistortion::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectDistortion::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_TableTypeIndx, kTableTypeStrings[mParams.mTableChoiceIndx]);
    parms.Write(KEY_DCBlock, mParams.mDCBlock);
@@ -293,9 +304,9 @@ bool EffectDistortion::GetAutomationParameters(EffectAutomationParameters & parm
    return true;
 }
 
-bool EffectDistortion::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(TableTypeIndx,  wxArrayString(kNumTableTypes, kTableTypeStrings));
+   ReadAndVerifyEnum(TableTypeIndx,  wxArrayString(nTableTypes, kTableTypeStrings));
    ReadAndVerifyBool(DCBlock);
    ReadAndVerifyDouble(Threshold_dB);
    ReadAndVerifyDouble(NoiseFloor);
@@ -349,7 +360,7 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
 void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 {
-   for (int i = 0; i < kNumTableTypes; i++)
+   for (int i = 0; i < nTableTypes; i++)
    {
       mTableTypes.Add(wxGetTranslation(kTableTypeStrings[i]));
    }

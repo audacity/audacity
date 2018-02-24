@@ -155,6 +155,22 @@ class ImportXMLTagHandler final : public XMLTagHandler
    AudacityProject* mProject;
 };
 
+class EffectPlugs;
+typedef wxArrayString PluginIDList;
+class CommandContext;
+class CommandManager;
+class Track;
+class TrackHolder;
+class TrackList;
+class WaveClip;
+class WaveTrack;
+
+#include "./commands/CommandFlag.h"
+#include "../include/audacity/EffectInterface.h"
+
+#include "./commands/CommandManager.h"
+
+
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
@@ -442,8 +458,6 @@ public:
 
    void FinishAutoScroll();
    void FixScrollbars();
-
-   void SafeDisplayStatusMessage(const wxChar *msg);
 
    bool MayScrollBeyondZero() const;
    double ScrollingLowerBoundTime() const;

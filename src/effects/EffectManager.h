@@ -7,16 +7,7 @@
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2.  See License.txt.
 
-******************************************************************//**
-
-\class EffectManager
-\brief EffectManager is the class that handles effects and effect categories.
-
-It maintains a graph of effect categories and subcategories,
-registers and unregisters effects and can return filtered lists of
-effects.
-
-*//*******************************************************************/
+**********************************************************************/
 
 #ifndef __AUDACITY_EFFECTMANAGER__
 #define __AUDACITY_EFFECTMANAGER__
@@ -38,13 +29,20 @@ effects.
 #include <unordered_map>
 #endif
 
+class AudacityCommand;
+class CommandContext;
+class CommandMessageTarget;
+
 using EffectArray = std::vector <Effect*> ;
 using EffectMap = std::unordered_map<wxString, Effect *>;
+using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
 using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<Effect> >;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 class EffectRack;
 #endif
+class AudacityCommand;
+
 
 class AUDACITY_DLL_API EffectManager
 {
@@ -82,10 +80,23 @@ public:
                  SelectedRegion *selectedRegion,
                  bool shouldPrompt = true);
 
-   wxString GetEffectName(const PluginID & ID);
    wxString GetEffectFamilyName(const PluginID & ID);
-   wxString GetEffectIdentifier(const PluginID & ID);
-   wxString GetEffectDescription(const PluginID & ID);
+
+   /** Run a command given the plugin ID */
+   // Returns true on success. 
+   bool DoAudacityCommand(const PluginID & ID,
+                         const CommandContext &,
+                         wxWindow *parent,
+                         bool shouldPrompt  = true );
+
+   // Renamed from 'Effect' to 'Command' prior to moving out of this class.
+   wxString GetCommandName(const PluginID & ID);
+   wxString GetCommandIdentifier(const PluginID & ID);
+   wxString GetCommandDescription(const PluginID & ID);
+   wxString GetCommandUrl(const PluginID & ID);
+   wxString GetCommandTip(const PluginID & ID);
+   // flags control which commands are included.
+   void GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags);
    bool IsHidden(const PluginID & ID);
 
    /** Support for batch commands */
@@ -142,6 +153,7 @@ public:
 private:
    /** Return an effect by its ID. */
    Effect *GetEffect(const PluginID & ID);
+   AudacityCommand *GetAudacityCommand(const PluginID & ID);
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    EffectRack *GetRack();
@@ -149,6 +161,7 @@ private:
 
 private:
    EffectMap mEffects;
+   AudacityCommandMap mCommands;
    EffectOwnerMap mHostEffects;
 
    int mNumEffects;

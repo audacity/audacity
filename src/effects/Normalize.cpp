@@ -73,7 +73,7 @@ wxString EffectNormalize::ManualPage()
    return wxT("Normalize");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectNormalize::GetType()
 {
@@ -81,8 +81,15 @@ EffectType EffectNormalize::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectNormalize::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mLevel, Level );
+   S.SHUTTLE_PARAM( mGain, ApplyGain );
+   S.SHUTTLE_PARAM( mDC, RemoveDC );
+   S.SHUTTLE_PARAM( mStereoInd, StereoInd );
+   return true;
+}
 
-bool EffectNormalize::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Level, mLevel);
    parms.Write(KEY_ApplyGain, mGain);
@@ -92,7 +99,7 @@ bool EffectNormalize::GetAutomationParameters(EffectAutomationParameters & parms
    return true;
 }
 
-bool EffectNormalize::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Level);
    ReadAndVerifyBool(ApplyGain);

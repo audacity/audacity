@@ -22,7 +22,7 @@
 // FileDialog
 //-------------------------------------------------------------------------
 
-class FileDialog : public FileDialogBase
+class AUDACITY_DLL_API FileDialog : public FileDialogBase
 {
  public:
     FileDialog();

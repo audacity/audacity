@@ -27,6 +27,7 @@
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
+#include "../Shuttle.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
 #include "../SampleFormat.h"
@@ -66,7 +67,7 @@ wxString EffectEcho::ManualPage()
    return wxT("Echo");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectEcho::GetType()
 {
@@ -135,7 +136,14 @@ size_t EffectEcho::ProcessBlock(float **inBlock, float **outBlock, size_t blockL
    return blockLen;
 }
 
-bool EffectEcho::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectEcho::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( delay, Delay );
+   S.SHUTTLE_PARAM( decay, Decay );
+   return true;
+}
+
+
+bool EffectEcho::GetAutomationParameters(CommandParameters & parms)
 {
    parms.WriteFloat(KEY_Delay, delay);
    parms.WriteFloat(KEY_Decay, decay);
@@ -143,7 +151,7 @@ bool EffectEcho::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectEcho::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Delay);
    ReadAndVerifyFloat(Decay);

@@ -42,6 +42,15 @@
 #ifndef __AUDACITY_CONFIGINTERFACE_H__
 #define __AUDACITY_CONFIGINTERFACE_H__
 
+/*************************************************************************************//**
+
+\class ConfigClientInterface
+
+\brief ConfigClientInterface is an unholy get/set configuration class, which 
+differentiates between private and shared config.  It should probably be replaced 
+with a Shuttle.
+
+*******************************************************************************************/
 class AUDACITY_DLL_API ConfigClientInterface /* not final */
 {
 public:
@@ -84,11 +93,20 @@ public:
    virtual bool RemovePrivateConfig(const wxString & group, const wxString & key) = 0;
 };
 
+#if 0
+/*************************************************************************************//**
+
+\class ConfigHostInterface
+
+\brief ConfigHostInterface appears not to be used.
+
+*******************************************************************************************/
 class ConfigHostInterface
 {
 public:
    virtual ~ConfigHostInterface() {};
 
 };
+#endif
 
 #endif // __AUDACITY_CONFIGINTERFACE_H__

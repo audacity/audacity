@@ -486,8 +486,6 @@
 		2840CF760AEB807E00F49FC3 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 2840CF4C0AEB807E00F49FC3 /* util.h */; };
 		2840CF860AEB83DB00F49FC3 /* ExportMP2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */; };
 		2840CFA80AEB883500F49FC3 /* libtwolame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2840CF220AEB803C00F49FC3 /* libtwolame.a */; };
-		284249EE10D337CE004330A6 /* GetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */; };
-		284249EF10D337CE004330A6 /* SetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EC10D337CE004330A6 /* SetProjectInfoCommand.cpp */; };
 		28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */; };
 		284750541AD4EB84000AD751 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 2847504D1AD4EB84000AD751 /* common.h */; };
 		284750551AD4EB84000AD751 /* digest.c in Sources */ = {isa = PBXBuildFile; fileRef = 2847504E1AD4EB84000AD751 /* digest.c */; };
@@ -887,7 +885,6 @@
 		28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BB98031A15BE6800D1CC80 /* NoiseReduction.cpp */; };
 		28BD8AB1101DF4C700686679 /* BatchEvalCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */; };
 		28BD8AB2101DF4C700686679 /* CommandDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */; };
-		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
 		28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		28C8211D1B5C661E00B53328 /* ViewInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C8211C1B5C661E00B53328 /* ViewInfo.cpp */; };
@@ -1265,8 +1262,18 @@
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
 		5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AF1CDE560C00471E3C /* BackedPanel.cpp */; };
 		5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */; };
+		5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */; };
+		5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E645203FBAFB006C6882 /* CommandContext.cpp */; };
+		5EF3E64F203FBAFB006C6882 /* Demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E647203FBAFB006C6882 /* Demo.cpp */; };
+		5EF3E650203FBAFB006C6882 /* GetInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E649203FBAFB006C6882 /* GetInfoCommand.cpp */; };
+		5EF3E651203FBAFB006C6882 /* LoadCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E64B203FBAFB006C6882 /* LoadCommands.cpp */; };
+		5EF3E653203FBBE0006C6882 /* CommandTargets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E652203FBBE0006C6882 /* CommandTargets.cpp */; };
+		5EF3E65A203FDACE006C6882 /* SetClipCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E654203FDACE006C6882 /* SetClipCommand.cpp */; };
+		5EF3E65B203FDACE006C6882 /* SetLabelCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E656203FDACE006C6882 /* SetLabelCommand.cpp */; };
+		5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */; };
+		5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */; };
+		5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E660203FE73C006C6882 /* DragCommand.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
-		65BD96CF200150D5004090BD /* AutomationCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65BD96CD200150D5004090BD /* AutomationCommands.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA0084181EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp */; };
@@ -2227,10 +2234,6 @@
 		2840CF4C0AEB807E00F49FC3 /* util.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = util.h; path = twolame/libtwolame/util.h; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportMP2.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF850AEB83DB00F49FC3 /* ExportMP2.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportMP2.h; sourceTree = "<group>"; tabWidth = 3; };
-		284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = GetProjectInfoCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		284249EB10D337CE004330A6 /* GetProjectInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = GetProjectInfoCommand.h; sourceTree = "<group>"; tabWidth = 3; };
-		284249EC10D337CE004330A6 /* SetProjectInfoCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SetProjectInfoCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		284249ED10D337CE004330A6 /* SetProjectInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SetProjectInfoCommand.h; sourceTree = "<group>"; tabWidth = 3; };
 		284416391B82D6BC0000574D /* TranslatableStringArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslatableStringArray.h; sourceTree = "<group>"; };
 		2844163A1B82D6BC0000574D /* WaveTrackLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackLocation.h; sourceTree = "<group>"; };
 		28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ThemePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -2694,8 +2697,6 @@
 		28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = BatchEvalCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = CommandDirectory.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AAB101DF4C600686679 /* CommandDirectory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = CommandDirectory.h; sourceTree = "<group>"; tabWidth = 3; };
-		28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExecMenuCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		28BD8AAD101DF4C600686679 /* ExecMenuCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExecMenuCommand.h; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AB0101DF4C600686679 /* Validators.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Validators.h; sourceTree = "<group>"; tabWidth = 3; };
 		28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityLogger.cpp; sourceTree = "<group>"; };
 		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
@@ -3160,10 +3161,29 @@
 		5ED1D0B01CDE560C00471E3C /* BackedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackedPanel.h; sourceTree = "<group>"; };
 		5EF17C211D1F0A690090A642 /* ScrubbingToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrubbingToolBar.cpp; sourceTree = "<group>"; };
 		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
+		5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityCommand.cpp; sourceTree = "<group>"; };
+		5EF3E644203FBAFB006C6882 /* AudacityCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityCommand.h; sourceTree = "<group>"; };
+		5EF3E645203FBAFB006C6882 /* CommandContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandContext.cpp; sourceTree = "<group>"; };
+		5EF3E646203FBAFB006C6882 /* CommandContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandContext.h; sourceTree = "<group>"; };
+		5EF3E647203FBAFB006C6882 /* Demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Demo.cpp; sourceTree = "<group>"; };
+		5EF3E648203FBAFB006C6882 /* Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demo.h; sourceTree = "<group>"; };
+		5EF3E649203FBAFB006C6882 /* GetInfoCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetInfoCommand.cpp; sourceTree = "<group>"; };
+		5EF3E64A203FBAFB006C6882 /* GetInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetInfoCommand.h; sourceTree = "<group>"; };
+		5EF3E64B203FBAFB006C6882 /* LoadCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoadCommands.cpp; sourceTree = "<group>"; };
+		5EF3E64C203FBAFB006C6882 /* LoadCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadCommands.h; sourceTree = "<group>"; };
+		5EF3E652203FBBE0006C6882 /* CommandTargets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandTargets.cpp; sourceTree = "<group>"; };
+		5EF3E654203FDACE006C6882 /* SetClipCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetClipCommand.cpp; sourceTree = "<group>"; };
+		5EF3E655203FDACE006C6882 /* SetClipCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetClipCommand.h; sourceTree = "<group>"; };
+		5EF3E656203FDACE006C6882 /* SetLabelCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetLabelCommand.cpp; sourceTree = "<group>"; };
+		5EF3E657203FDACE006C6882 /* SetLabelCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLabelCommand.h; sourceTree = "<group>"; };
+		5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetProjectCommand.cpp; sourceTree = "<group>"; };
+		5EF3E659203FDACE006C6882 /* SetProjectCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetProjectCommand.h; sourceTree = "<group>"; };
+		5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetEnvelopeCommand.cpp; sourceTree = "<group>"; };
+		5EF3E65E203FDFE9006C6882 /* SetEnvelopeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetEnvelopeCommand.h; sourceTree = "<group>"; };
+		5EF3E660203FE73C006C6882 /* DragCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragCommand.cpp; sourceTree = "<group>"; };
+		5EF3E661203FE73C006C6882 /* DragCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragCommand.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
-		65BD96CD200150D5004090BD /* AutomationCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutomationCommands.cpp; sourceTree = "<group>"; };
-		65BD96CE200150D5004090BD /* AutomationCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutomationCommands.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -3751,23 +3771,27 @@
 		174D9025098C78AF00D5909F /* commands */ = {
 			isa = PBXGroup;
 			children = (
-				65BD96CD200150D5004090BD /* AutomationCommands.cpp */,
 				28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */,
+				5EF3E643203FBAFB006C6882 /* AudacityCommand.cpp */,
 				28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */,
 				28851F9C1027F16400152EE1 /* Command.cpp */,
 				28D53FFE0FD1912A00FA7C75 /* CommandBuilder.cpp */,
+				5EF3E645203FBAFB006C6882 /* CommandContext.cpp */,
 				28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */,
 				28D540000FD1912A00FA7C75 /* CommandHandler.cpp */,
 				174D9026098C78AF00D5909F /* CommandManager.cpp */,
 				28851F9D1027F16400152EE1 /* CommandSignature.cpp */,
+				5EF3E652203FBBE0006C6882 /* CommandTargets.cpp */,
 				28851F9F1027F16400152EE1 /* CommandType.cpp */,
 				28851FA11027F16400152EE1 /* CompareAudioCommand.cpp */,
-				28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */,
-				284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */,
+				5EF3E647203FBAFB006C6882 /* Demo.cpp */,
+				5EF3E660203FE73C006C6882 /* DragCommand.cpp */,
+				5EF3E649203FBAFB006C6882 /* GetInfoCommand.cpp */,
 				28851FA31027F16400152EE1 /* GetTrackInfoCommand.cpp */,
 				28851FA51027F16400152EE1 /* HelpCommand.cpp */,
 				EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */,
 				174D902A098C78AF00D5909F /* Keyboard.cpp */,
+				5EF3E64B203FBAFB006C6882 /* LoadCommands.cpp */,
 				28851FA71027F16400152EE1 /* MessageCommand.cpp */,
 				EDFCEB9A18894AE600C98E51 /* OpenSaveCommands.cpp */,
 				28DE72AA10388583007E18EC /* PreferenceCommands.cpp */,
@@ -3775,13 +3799,17 @@
 				181855950FFE916C0026D190 /* ScreenshotCommand.cpp */,
 				28D540030FD1912A00FA7C75 /* ScriptCommandRelay.cpp */,
 				28851FA91027F16400152EE1 /* SelectCommand.cpp */,
-				284249EC10D337CE004330A6 /* SetProjectInfoCommand.cpp */,
+				5EF3E654203FDACE006C6882 /* SetClipCommand.cpp */,
+				5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */,
+				5EF3E656203FDACE006C6882 /* SetLabelCommand.cpp */,
+				5EF3E658203FDACE006C6882 /* SetProjectCommand.cpp */,
 				28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */,
-				65BD96CE200150D5004090BD /* AutomationCommands.h */,
 				28D53FFB0FD1912A00FA7C75 /* AppCommandEvent.h */,
+				5EF3E644203FBAFB006C6882 /* AudacityCommand.h */,
 				28D53FFC0FD1912A00FA7C75 /* BatchEvalCommand.h */,
 				28D53FFD0FD1912A00FA7C75 /* Command.h */,
 				28D53FFF0FD1912A00FA7C75 /* CommandBuilder.h */,
+				5EF3E646203FBAFB006C6882 /* CommandContext.h */,
 				28BD8AAB101DF4C600686679 /* CommandDirectory.h */,
 				5E7838931DE4BBC2003270C0 /* CommandFlag.h */,
 				5E4685F81CCA9D84008741F2 /* CommandFunctors.h */,
@@ -3792,12 +3820,14 @@
 				181855900FFE916C0026D190 /* CommandTargets.h */,
 				28851FA01027F16400152EE1 /* CommandType.h */,
 				28851FA21027F16400152EE1 /* CompareAudioCommand.h */,
-				28BD8AAD101DF4C600686679 /* ExecMenuCommand.h */,
-				284249EB10D337CE004330A6 /* GetProjectInfoCommand.h */,
+				5EF3E648203FBAFB006C6882 /* Demo.h */,
+				5EF3E661203FE73C006C6882 /* DragCommand.h */,
+				5EF3E64A203FBAFB006C6882 /* GetInfoCommand.h */,
 				28851FA41027F16400152EE1 /* GetTrackInfoCommand.h */,
 				28851FA61027F16400152EE1 /* HelpCommand.h */,
 				EDD94EDA103CB520000873F1 /* ImportExportCommands.h */,
 				174D902B098C78AF00D5909F /* Keyboard.h */,
+				5EF3E64C203FBAFB006C6882 /* LoadCommands.h */,
 				28851FA81027F16400152EE1 /* MessageCommand.h */,
 				EDFCEB9B18894AE600C98E51 /* OpenSaveCommands.h */,
 				28DE72AB10388583007E18EC /* PreferenceCommands.h */,
@@ -3805,7 +3835,10 @@
 				181855960FFE916C0026D190 /* ScreenshotCommand.h */,
 				28D540040FD1912A00FA7C75 /* ScriptCommandRelay.h */,
 				28851FAA1027F16400152EE1 /* SelectCommand.h */,
-				284249ED10D337CE004330A6 /* SetProjectInfoCommand.h */,
+				5EF3E655203FDACE006C6882 /* SetClipCommand.h */,
+				5EF3E65E203FDFE9006C6882 /* SetEnvelopeCommand.h */,
+				5EF3E657203FDACE006C6882 /* SetLabelCommand.h */,
+				5EF3E659203FDACE006C6882 /* SetProjectCommand.h */,
 				28DE72AD10388583007E18EC /* SetTrackInfoCommand.h */,
 				28BD8AB0101DF4C600686679 /* Validators.h */,
 			);
@@ -7686,6 +7719,7 @@
 				1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */,
 				5EF17C231D1F0A690090A642 /* ScrubbingToolBar.cpp in Sources */,
 				1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */,
+				5EF3E65A203FDACE006C6882 /* SetClipCommand.cpp in Sources */,
 				1790B13709883BFD008A330A /* ClickRemoval.cpp in Sources */,
 				1790B13809883BFD008A330A /* Compressor.cpp in Sources */,
 				1790B13909883BFD008A330A /* Echo.cpp in Sources */,
@@ -7745,6 +7779,7 @@
 				1790B17009883BFD008A330A /* Internat.cpp in Sources */,
 				1790B17109883BFD008A330A /* LabelTrack.cpp in Sources */,
 				1790B17309883BFD008A330A /* LangChoice.cpp in Sources */,
+				5EF3E651203FBAFB006C6882 /* LoadCommands.cpp in Sources */,
 				282B70331B682342009A1618 /* WaveformPrefs.cpp in Sources */,
 				1790B17409883BFD008A330A /* Languages.cpp in Sources */,
 				1790B17509883BFD008A330A /* Legacy.cpp in Sources */,
@@ -7777,6 +7812,7 @@
 				1790B19409883BFD008A330A /* TimeTrack.cpp in Sources */,
 				1790B19709883BFD008A330A /* Track.cpp in Sources */,
 				1790B19809883BFD008A330A /* TrackArtist.cpp in Sources */,
+				5EF3E653203FBBE0006C6882 /* CommandTargets.cpp in Sources */,
 				1790B19909883BFD008A330A /* TrackPanel.cpp in Sources */,
 				5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */,
 				1790B19A09883BFD008A330A /* TrackPanelAx.cpp in Sources */,
@@ -7789,6 +7825,7 @@
 				5E73964A1DAFD91D00BA0A4D /* CutlineHandle.cpp in Sources */,
 				1790B1A309883BFD008A330A /* Meter.cpp in Sources */,
 				1790B1A409883BFD008A330A /* MultiDialog.cpp in Sources */,
+				5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */,
 				5E73964D1DAFD95B00BA0A4D /* ButtonHandle.cpp in Sources */,
 				1790B1A509883BFD008A330A /* Ruler.cpp in Sources */,
 				1790B1A709883BFD008A330A /* Warning.cpp in Sources */,
@@ -7831,8 +7868,10 @@
 				2897F6F40AB3DB5A003C20C5 /* SelectionBar.cpp in Sources */,
 				2897F6F50AB3DB5A003C20C5 /* ToolBar.cpp in Sources */,
 				2897F6F60AB3DB5A003C20C5 /* ToolDock.cpp in Sources */,
+				5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */,
 				2897F6F70AB3DB5A003C20C5 /* ToolManager.cpp in Sources */,
 				2897F6F80AB3DB5A003C20C5 /* ToolsToolBar.cpp in Sources */,
+				5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */,
 				2897F6F90AB3DB5A003C20C5 /* TranscriptionToolBar.cpp in Sources */,
 				2897F6FE0AB3DCD0003C20C5 /* Grabber.cpp in Sources */,
 				283DE1360AC0D4FD00E8C3AE /* XMLWriter.cpp in Sources */,
@@ -7923,7 +7962,6 @@
 				28BD8AB1101DF4C700686679 /* BatchEvalCommand.cpp in Sources */,
 				28BD8AB2101DF4C700686679 /* CommandDirectory.cpp in Sources */,
 				5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */,
-				28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */,
 				28948427101DF8FC005B0713 /* EffectsPrefs.cpp in Sources */,
 				287E207F102561F300BF47A2 /* PluginManager.cpp in Sources */,
 				5E7396501DAFD98400BA0A4D /* SliderHandle.cpp in Sources */,
@@ -7941,11 +7979,10 @@
 				28DE72AF10388583007E18EC /* SetTrackInfoCommand.cpp in Sources */,
 				28DE72B2103885AA007E18EC /* TimeWarper.cpp in Sources */,
 				EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */,
-				284249EE10D337CE004330A6 /* GetProjectInfoCommand.cpp in Sources */,
-				284249EF10D337CE004330A6 /* SetProjectInfoCommand.cpp in Sources */,
 				18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */,
 				ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */,
 				ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */,
+				5EF3E650203FBAFB006C6882 /* GetInfoCommand.cpp in Sources */,
 				8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */,
 				5EBD243D1F74C50800132E0A /* eu_ES.po in Sources */,
 				5EBD35861F78D37A0084D13F /* pt_PT.po in Sources */,
@@ -7956,6 +7993,7 @@
 				28884945131B6CF600B59735 /* be.po in Sources */,
 				28884946131B6CF600B59735 /* bg.po in Sources */,
 				28884947131B6CF600B59735 /* bn.po in Sources */,
+				5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */,
 				AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */,
 				28884948131B6CF600B59735 /* bs.po in Sources */,
 				28884949131B6CF600B59735 /* ca.po in Sources */,
@@ -7994,7 +8032,9 @@
 				28884967131B6CF600B59735 /* pt_BR.po in Sources */,
 				28884969131B6CF600B59735 /* ro.po in Sources */,
 				2888496A131B6CF600B59735 /* ru.po in Sources */,
+				5EF3E65B203FDACE006C6882 /* SetLabelCommand.cpp in Sources */,
 				2888496B131B6CF600B59735 /* sk.po in Sources */,
+				5EF3E64F203FBAFB006C6882 /* Demo.cpp in Sources */,
 				EDAD326B1544452E009C6220 /* sl.po in Sources */,
 				EDAD326C1544452E009C6220 /* sr_RS.po in Sources */,
 				EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */,
@@ -8008,7 +8048,7 @@
 				28884971131B6CF600B59735 /* vi.po in Sources */,
 				289D127A1B44D57F00B5B6AA /* VSTControlOSX.mm in Sources */,
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
-				65BD96CF200150D5004090BD /* AutomationCommands.cpp in Sources */,
+				5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,

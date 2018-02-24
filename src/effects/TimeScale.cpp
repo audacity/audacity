@@ -104,7 +104,7 @@ wxString EffectTimeScale::ManualPage()
    return wxT("Sliding_Time_Scale_-_Pitch_Shift");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectTimeScale::GetType()
 {
@@ -112,8 +112,17 @@ EffectType EffectTimeScale::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectTimeScale::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( m_RatePercentChangeStart,  RatePercentStart );
+   S.SHUTTLE_PARAM( m_RatePercentChangeEnd,    RatePercentEnd );
+   S.SHUTTLE_PARAM( m_PitchHalfStepsStart,     HalfStepsStart );
+   S.SHUTTLE_PARAM( m_PitchHalfStepsEnd,       HalfStepsEnd );
+   S.SHUTTLE_PARAM( m_PitchPercentChangeStart, PitchPercentStart );
+   S.SHUTTLE_PARAM( m_PitchPercentChangeEnd,   PitchPercentEnd );
+   return true;
+}
 
-bool EffectTimeScale::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectTimeScale::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_RatePercentStart, m_RatePercentChangeStart);
    parms.Write(KEY_RatePercentEnd, m_RatePercentChangeEnd);
@@ -125,7 +134,7 @@ bool EffectTimeScale::GetAutomationParameters(EffectAutomationParameters & parms
    return true;
 }
 
-bool EffectTimeScale::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectTimeScale::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(RatePercentStart);
    ReadAndVerifyDouble(RatePercentEnd);

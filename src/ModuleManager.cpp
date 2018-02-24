@@ -539,7 +539,7 @@ wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
    return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
-bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
+bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
 {
    errMsg.clear();
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -547,7 +547,7 @@ bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString &
       return false;
    }
 
-   auto nFound = mDynModules[providerID]->DiscoverPluginsAtPath(path, errMsg);
+   auto nFound = mDynModules[providerID]->DiscoverPluginsAtPath(path, errMsg, PluginManagerInterface::DefaultRegistrationCallback);
 
    return nFound > 0;
 }

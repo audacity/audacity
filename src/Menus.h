@@ -13,6 +13,7 @@
 #include "Experimental.h"
 
 
+
 // These are all member functions of class AudacityProject.
 // Vaughan, 2010-08-05:
 //    Note that this file is included in a "public" section of Project.h.
@@ -234,6 +235,7 @@ void OnExportLabels(const CommandContext &context );
 void OnExportMIDI(const CommandContext &context );
 
 void OnPreferences(const CommandContext &context );
+void OnReloadPreferences(const CommandContext &context );
 
 void OnPageSetup(const CommandContext &context );
 void OnPrint(const CommandContext &context );
@@ -311,7 +313,7 @@ void OnSelectCursorToNextClipBoundary(const CommandContext &context );
 void OnSelectClipBoundary(bool next);
 struct FoundTrack {
    const WaveTrack* waveTrack{};
-   int trackNumber{};
+   int trackNum{};
    bool channel{};
 
    wxString ComposeTrackName() const;
@@ -352,7 +354,7 @@ void OnPanRight(const CommandContext &context );
 void OnPanCenter(const CommandContext &context );
 
 void OnMuteAllTracks(const CommandContext &context );
-void OnUnMuteAllTracks(const CommandContext &context );
+void OnUnmuteAllTracks(const CommandContext &context );
 
 void OnShowClipping(const CommandContext &context );
 void OnShowExtraMenus(const CommandContext &context );
@@ -487,12 +489,14 @@ public:
    static const int kDontRepeatLast = 0x04;
 };
 
-bool DoEffect(const PluginID & ID, int flags);
+bool DoEffect(const PluginID & ID, const CommandContext & context, int flags);
 void OnEffect(const CommandContext &context );
 void OnRepeatLastEffect(const CommandContext &context );
+bool DoAudacityCommand(const PluginID & ID, const CommandContext &, int flags);
 void OnApplyChain(const CommandContext &context );
 void OnEditChains(const CommandContext &context );
 void OnStereoToMono(const CommandContext &context );
+void OnAudacityCommand(const CommandContext &context );
 void OnManagePluginsMenu(EffectType Type);
 static void RebuildAllMenuBars();
 void OnManageGenerators(const CommandContext &context );
@@ -555,6 +559,7 @@ double GridMove(double t, int minPix);
 
 // Make sure we return to "public" for subsequent declarations in Project.h.
 public:
+
 
 #endif
 

@@ -130,7 +130,7 @@ wxString EffectChangePitch::ManualPage()
    return wxT("Change_Pitch");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectChangePitch::GetType()
 {
@@ -138,8 +138,13 @@ EffectType EffectChangePitch::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectChangePitch::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( m_dPercentChange, Percentage );
+   S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
+   return true;
+}
 
-bool EffectChangePitch::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangePitch::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_dPercentChange);
    parms.Write(KEY_UseSBSMS, mUseSBSMS);
@@ -147,7 +152,7 @@ bool EffectChangePitch::GetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
-bool EffectChangePitch::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangePitch::SetAutomationParameters(CommandParameters & parms)
 {
    // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
    // Only m_dSemitonesChange is used in Process().

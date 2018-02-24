@@ -2044,6 +2044,12 @@ ShuttleGui & ShuttleGui::Id(int id )
    return *this;
 }
 
+ShuttleGui & ShuttleGui::Optional( bool &bVar ){
+ TieCheckBox( "Set", bVar );
+ return *this;
+};
+
+
 GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL

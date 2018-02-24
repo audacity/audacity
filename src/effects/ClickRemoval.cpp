@@ -90,7 +90,7 @@ wxString EffectClickRemoval::ManualPage()
    return wxT("Click_Removal");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectClickRemoval::GetType()
 {
@@ -98,8 +98,13 @@ EffectType EffectClickRemoval::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectClickRemoval::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mThresholdLevel, Threshold );
+   S.SHUTTLE_PARAM( mClickWidth, Width );
+   return true;
+}
 
-bool EffectClickRemoval::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectClickRemoval::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Threshold, mThresholdLevel);
    parms.Write(KEY_Width, mClickWidth);
@@ -107,7 +112,7 @@ bool EffectClickRemoval::GetAutomationParameters(EffectAutomationParameters & pa
    return true;
 }
 
-bool EffectClickRemoval::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectClickRemoval::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Threshold);
    ReadAndVerifyInt(Width);

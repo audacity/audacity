@@ -107,7 +107,7 @@ wxString EffectChangeTempo::ManualPage()
    return wxT("Change_Tempo");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectChangeTempo::GetType()
 {
@@ -120,8 +120,13 @@ bool EffectChangeTempo::SupportsAutomation()
 }
 
 // EffectClientInterface implementation
+bool EffectChangeTempo::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
+   S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
+   return true;
+}
 
-bool EffectChangeTempo::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_PercentChange);
    parms.Write(KEY_UseSBSMS, mUseSBSMS);
@@ -129,7 +134,7 @@ bool EffectChangeTempo::GetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
-bool EffectChangeTempo::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeTempo::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
    m_PercentChange = Percentage;

@@ -114,7 +114,7 @@ wxString EffectPhaser::ManualPage()
    return wxT("Phaser");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectPhaser::GetType()
 {
@@ -193,8 +193,18 @@ size_t EffectPhaser::RealtimeProcess(int group,
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
+bool EffectPhaser::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mStages,    Stages );
+   S.SHUTTLE_PARAM( mDryWet,    DryWet );
+   S.SHUTTLE_PARAM( mFreq,      Freq );
+   S.SHUTTLE_PARAM( mPhase,     Phase );
+   S.SHUTTLE_PARAM( mDepth,     Depth );
+   S.SHUTTLE_PARAM( mFeedback,  Feedback );
+   S.SHUTTLE_PARAM( mOutGain,   OutGain );
+   return true;
+}
 
-bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPhaser::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Stages, mStages);
    parms.Write(KEY_DryWet, mDryWet);
@@ -207,7 +217,7 @@ bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectPhaser::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPhaser::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Stages);
    ReadAndVerifyInt(DryWet);

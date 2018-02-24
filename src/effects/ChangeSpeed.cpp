@@ -47,10 +47,10 @@ enum kVinyl
    kVinyl_45,
    kVinyl_78,
    kVinyl_NA,
-   kNumVinyl
+   nVinyl
 };
 
-static const wxChar *kVinylStrings[kNumVinyl] =
+static const wxChar *kVinylStrings[nVinyl] =
 {
    wxT("33\u2153"),
    wxT("45"),
@@ -121,7 +121,7 @@ wxString EffectChangeSpeed::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectChangeSpeed::GetType()
 {
@@ -129,15 +129,19 @@ EffectType EffectChangeSpeed::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectChangeSpeed::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
+   return true;
+}
 
-bool EffectChangeSpeed::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeSpeed::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_PercentChange);
 
    return true;
 }
 
-bool EffectChangeSpeed::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeSpeed::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
 
@@ -334,10 +338,10 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute". */
          S.AddUnits(_("Standard Vinyl rpm:"));
 
-         wxASSERT(kNumVinyl == WXSIZEOF(kVinylStrings));
+         wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
 
          wxArrayString vinylChoices;
-         for (int i = 0; i < kNumVinyl; i++)
+         for (int i = 0; i < nVinyl; i++)
          {
             if (i == kVinyl_NA)
             {
