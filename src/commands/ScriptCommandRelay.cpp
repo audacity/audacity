@@ -97,6 +97,72 @@ int ExecCommand(wxString *pIn, wxString *pOut)
    return 0;
 }
 
+/// This is the function which actually obeys one command.  Rather than applying
+/// the command directly, an event containing a reference to the command is sent
+/// to the main (GUI) thread. This is because having more than one thread access
+/// the GUI at a time causes problems with wxwidgets.
+int ExecCommand2(wxString *pIn, wxString *pOut)
+{
+   {
+      CommandBuilder builder(*pIn);
+      if (builder.WasValid())
+      {
+         AudacityProject *project = GetActiveProject();
+         OldStyleCommandPointer cmd = builder.GetCommand();
+         AppCommandEvent ev;
+         ev.SetCommand(cmd);
+         AudacityApp & App = wxGetApp();
+         App.OnReceiveCommand(ev);
+
+         *pOut = wxEmptyString;
+      }
+      else
+      {
+         *pOut = wxT("Syntax error!\n");
+         *pOut += builder.GetErrorMessage() + wxT("\n");
+      }
+   }
+
+   // Wait until all responses from the command have been received.
+   // The last response is signalled by an empty line.
+   wxString msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
+   while (msg != wxT("\n"))
+   {
+      //wxLogDebug( "Msg: %s", msg );
+      *pOut += msg + wxT("\n");
+      msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
+   }
+
+   return 0;
+}
+
+
+
+#ifdef __cplusplus
+extern "C" {
+// The void * return is actually a Lisp LVAL and will be cast to such as needed.
+extern void * ExecForLisp( char * pIn );
+extern void * nyq_make_opaque_string( int size, unsigned char *src );
+};
+
+
+#endif
+
+void * ExecForLisp( char * pIn ){
+   wxString Str1( pIn );
+   wxString Str2;
+   ExecCommand2( &Str1, &Str2 );
+
+   // wxString provides a const char *
+   const char * pStr = static_cast<const char*>(Str2);
+
+   // We'll be passing it as a non-const unsigned char *
+   // That 'unsafe' cast is actually safe.  nyq_make_opaque_string is just copying the string.
+   void * pResult = nyq_make_opaque_string( Str2.Length(), (unsigned char *)pStr );
+   return pResult;
+};
+
+
 /// Adds a response to the queue to be sent back to the script
 void ScriptCommandRelay::SendResponse(const wxString &response)
 {
