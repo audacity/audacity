@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-23 18:10-0500\n"
-"PO-Revision-Date: 2018-01-18 18:26+0100\n"
+"PO-Revision-Date: 2018-02-24 22:27+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -443,7 +443,7 @@ msgstr "Nyquist-insticksmoduler"
 
 #: src/AboutDialog.cpp
 msgid "incorporating"
-msgstr "inkorporerar"
+msgstr "innehåller"
 
 #: src/AboutDialog.cpp
 msgid "About Audacity"
@@ -2101,7 +2101,7 @@ msgstr "Var hittar man \"%s\"?"
 
 #: src/FFmpeg.cpp
 msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Hittade inte kompatibla FFmpeg-bibliotek."
+msgstr "Misslyckades att hitta kompatibla FFmpeg-bibliotek."
 
 #: src/FFT.cpp
 msgid "Rectangular"
@@ -3078,7 +3078,7 @@ msgstr "Nästa &högre maxfrekvens"
 
 #: src/Menus.cpp
 msgid "Next &Lower Peak Frequency"
-msgstr "Nästa &längre maxfrekvens"
+msgstr "Nästa &lägre maxfrekvens"
 
 #: src/Menus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
@@ -3707,7 +3707,7 @@ msgstr "&Nästa verktyg"
 
 #: src/Menus.cpp
 msgid "Mi&xer"
-msgstr "&Mixer"
+msgstr "Mi&xer"
 
 #: src/Menus.cpp
 msgid "Ad&just playback volume"
@@ -3919,7 +3919,7 @@ msgstr "Vä&xla aktuellt spår"
 
 #: src/Menus.cpp
 msgid "&Cursor"
-msgstr "&Markör"
+msgstr "Mark&ör"
 
 #: src/Menus.cpp
 msgid "Cursor &Left"
@@ -3955,7 +3955,7 @@ msgstr "Flytta klipp åt h&öger"
 
 #: src/Menus.cpp
 msgid "&Track"
-msgstr "&Spår"
+msgstr "S&pår"
 
 #: src/Menus.cpp
 msgid "Change p&an on focused track"
@@ -5117,7 +5117,7 @@ msgstr "&Markera allt"
 
 #: src/PluginManager.cpp
 msgid "C&lear All"
-msgstr "&Rensa allt"
+msgstr "A&vmarkera allt"
 
 #: src/PluginManager.cpp src/effects/Effect.cpp src/prefs/RecordingPrefs.cpp
 msgid "&Enable"
@@ -5134,7 +5134,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Aktiverar effeker:\n"
+"Aktiverar effekter:\n"
 "\n"
 "%s"
 
@@ -5160,7 +5160,7 @@ msgstr ""
 
 #: src/PluginManager.cpp src/effects/Effect.cpp
 msgid "Built-in"
-msgstr "Inbyggda"
+msgstr "Inbyggd"
 
 #: src/PluginManager.cpp
 #, c-format
@@ -5173,7 +5173,7 @@ msgstr "Insticksmodulen finns redan"
 
 #: src/PluginManager.cpp
 msgid "Plug-in file is in use.  Failed to overwrite"
-msgstr "Insticksmodulen används. Misslyckades att skriva över"
+msgstr "Insticksmodulfilen används. Misslyckades att skriva över"
 
 #: src/PluginManager.cpp
 #, c-format
@@ -5197,7 +5197,7 @@ msgstr "Aktivera nya insticksmoduler"
 #: src/Prefs.cpp
 #, c-format
 msgid "Failed to remove %s"
-msgstr "Kan ej radera %s"
+msgstr "Misslyckades att ta bort %s"
 
 #: src/Prefs.cpp
 msgid "Failed!"
@@ -5280,7 +5280,7 @@ msgstr ""
 "Sparat projekt kommer inte att ha några spår.\n"
 "\n"
 "För att spara spåren som du hade tidigare:\n"
-"välj Avbryt, Redigera > Ångra till alla spår\n"
+"Välj Avbryt, Redigera > Ångra tills alla spår\n"
 "är öppna, välj sedan Arkiv > Spara projekt."
 
 #: src/Project.cpp
@@ -6682,7 +6682,7 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "Disallowed"
-msgstr "Avvisad"
+msgstr "Nekad"
 
 #: src/commands/CommandManager.cpp
 msgid ""
@@ -7956,7 +7956,7 @@ msgstr "Fabriksinställningar"
 #: src/effects/EffectManager.cpp
 #, c-format
 msgid "Applied effect: %s"
-msgstr "Använd effekt: %s"
+msgstr "Tillämpade effekt: %s"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -9258,7 +9258,7 @@ msgstr "Konverterar stereospå&r till mono"
 
 #: src/effects/TimeScale.cpp
 msgid "Sliding Time Scale/Pitch Shift"
-msgstr "Glidande tidskala/Tonhöjdändring"
+msgstr "Glidande tidskala/Tonhöjdsändring"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
@@ -10187,7 +10187,7 @@ msgstr ""
 
 #: src/export/Export.cpp
 msgid "Sorry, pathnames longer than 256 characters not supported."
-msgstr "Tyvärr, sökvägens namn får ej innehålla mer än 256 bokstäver."
+msgstr "Tyvärr, sökvägar längre än 256 tecken stöds inte."
 
 #: src/export/Export.cpp
 msgid ""
@@ -10296,7 +10296,7 @@ msgstr "(externt program)"
 #: src/export/ExportCL.cpp src/export/ExportPCM.cpp
 #, c-format
 msgid "Cannot export audio to %s"
-msgstr "Kan ej exportera ljud till %s"
+msgstr "Kan inte exportera ljud till %s"
 
 #: src/export/ExportCL.cpp src/export/ExportMultiple.cpp
 msgid "Export"
@@ -10932,11 +10932,11 @@ msgstr "Välj xml-fil att exportera förinställningar till"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
-msgstr "Misslyckades med att gissa formatet"
+msgstr "Misslyckade att gissa formatet"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to find the codec"
-msgstr "Misslyckades med att hitta kodek"
+msgstr "Misslyckade att hitta kodek"
 
 #: src/export/ExportFLAC.cpp
 msgid "0 (fastest)"
@@ -12612,7 +12612,7 @@ msgstr "FFmpeg-bibliotek:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Loca&te..."
-msgstr "Sö&k..."
+msgstr "&Sök..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Dow&nload"
@@ -12684,8 +12684,8 @@ msgstr ""
 #: src/prefs/ModulePrefs.cpp
 msgid "'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr ""
-"\"Misslyckades\" betyder att Audacity tycker att modulen är trasig och "
-"kommer inte köra den."
+"\"Misslyckades\" betyder att Audacity tror att modulen är trasig och kommer "
+"inte köra den."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "'New' means no choice has been made yet."
@@ -13249,7 +13249,7 @@ msgstr "Algoritm"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "A&lgorithm"
-msgstr "Algoritm"
+msgstr "A&lgoritm"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
@@ -13359,9 +13359,18 @@ msgid ""
 "affected, even\n"
 "though the image file shows other icons too.)"
 msgstr ""
-"(Endast verktygsfältet för transport och färgerna på ljudspåren för påverkas "
-"för tillfället, även\n"
-"om bildfilen även visar andra ikoner.)"
+"Themability är en experimentell funktion.\n"
+"\n"
+"För att prova den, klicka på \"Spara temacache\", hitta och ändra sedan "
+"bilderna och färgerna i\n"
+"ImageCacheVxx.png med en bildredigerare som Gimp.\n"
+"\n"
+"Klicka på \"Läs in temacache\" för att läsa in de ändrade bilderna och "
+"färgerna tillbaka till Audacity.\n"
+"\n"
+"(Endast verktygsfältet för transport och färgerna på ljudspåren påverkas för "
+"tillfället, även\n"
+"om bildfilen även visar andra ikoner också.)"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -14493,7 +14502,7 @@ msgstr "Klicka och dra för att flytta den vänstra markeringsgränsen."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move right selection boundary."
-msgstr "Klicka och dra för att flytta den högre markeringsgränsen."
+msgstr "Klicka och dra för att flytta den högra markeringsgränsen."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move bottom selection frequency."
