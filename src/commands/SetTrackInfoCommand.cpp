@@ -49,7 +49,7 @@ static const wxString kColourStrings[nColours] =
 
 bool SetTrackCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString colours( nColours, kColourStrings );
-   S.Define(   mTrackIndex,                                wxT("TrackIndex"), 0, 0, 100 );
+   S.Define(   mTrackIndex,                                wxT("Track"), 0, 0, 100 );
    S.Optional( bHasTrackName   ).Define(     mTrackName,   wxT("Name"),       wxT("Unnamed") );
    S.Optional( bHasPan         ).Define(     mPan,         wxT("Pan"),        0.0, -1.0, 1.0);
    S.Optional( bHasGain        ).Define(     mGain,        wxT("Gain"),       1.0,  0.0, 10.0);

@@ -34,8 +34,8 @@
 #include "CommandContext.h"
 
 bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
-   S.Define( mT0,      wxT("StartTime"), 0.0, 0.0, (double)FLT_MAX);
-   S.Define( mT1,      wxT("EndTime"),   0.0, 0.0, (double)FLT_MAX);
+   S.Optional( bHasT0 ).Define( mT0, wxT("Start"), 0.0, 0.0, (double)FLT_MAX);
+   S.Optional( bHasT1 ).Define( mT1, wxT("End"), 0.0, 0.0, (double)FLT_MAX);
    S.Define( mFromEnd, wxT("FromEnd"),   false );
    return true;
 }
@@ -44,16 +44,23 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasT0 ).TieTextBox(_("Start Time:"), mT0);
+      S.Optional( bHasT1 ).TieTextBox(_("End Time:"),   mT1);
+   }
+   S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(_("Start Time:"),mT0);
-      S.TieTextBox(_("End Time:"),mT1);
       S.TieCheckBox(_("From End:"), mFromEnd );
    }
    S.EndMultiColumn();
 }
 
 bool SelectTimeCommand::Apply(const CommandContext & context){
+   if( !bHasT0 && !bHasT1 )
+      return true;
+
    if( mFromEnd ){
       double TEnd = context.GetProject()->GetTracks()->GetEndTime();
       context.GetProject()->mViewInfo.selectedRegion.setTimes(TEnd - mT0, TEnd - mT1);
@@ -74,8 +81,8 @@ static const wxString kModes[nModes] =
 
 bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
    wxArrayString modes( nModes, kModes );
-   S.Define( mFirstTrack, wxT("FirstTrack"), 0, 0, 100);
-   S.Define( mLastTrack,  wxT("LastTrack"),  0, 0, 100);
+   S.Optional( bHasFirstTrack).Define( mFirstTrack, wxT("First"), 0, 0, 100);
+   S.Optional( bHasLastTrack ).Define( mLastTrack,  wxT("Last"),  0, 0, 100);
    S.DefineEnum( mMode, wxT("Mode"), 0, modes );
    
    return true;
@@ -86,10 +93,14 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
    wxArrayString modes( nModes, kModes );
    S.AddSpace(0, 5);
 
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasFirstTrack).TieTextBox(_("First Track:"),mFirstTrack);
+      S.Optional( bHasLastTrack).TieTextBox(_("Last Track:"),mLastTrack);
+   }
+   S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(_("First Track:"),mFirstTrack);
-      S.TieTextBox(_("Last Track:"),mLastTrack);
       S.TieChoice( _("Mode:"), mMode, &modes);
    }
    S.EndMultiColumn();
@@ -97,6 +108,9 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SelectTracksCommand::Apply(const CommandContext &context)
 {
+   if( !bHasFirstTrack && !bHasLastTrack )
+      return true;
+
    int index = 0;
    TrackList *tracks = context.GetProject()->GetTracks();
    int last = wxMax( mFirstTrack, mLastTrack );

@@ -33,7 +33,7 @@ SetLabelCommand::SetLabelCommand()
 
 
 bool SetLabelCommand::DefineParams( ShuttleParams & S ){ 
-   S.Define(   mLabelIndex,                            wxT("LabelIndex"), 0, 0, 100 );
+   S.Define(   mLabelIndex,                            wxT("Label"), 0, 0, 100 );
    S.Optional( bHasText       ).Define(  mText,        wxT("Text"),       wxT("empty") );
    S.Optional( bHasT0         ).Define(  mT0,          wxT("Start"),      0.0, 0.0, 100000.0);
    S.Optional( bHasT1         ).Define(  mT1,          wxT("End"),        0.0, 0.0, 100000.0);

@@ -27,16 +27,7 @@
 #include "CommandContext.h"
 
 SetClipCommand::SetClipCommand()
-{/*
-   mTrackIndex = 0;
-   mTrackName = "unnamed";
-   mPan = 0.0f;
-   mGain = 1.0f;
-   bSelected = false;
-   bFocused = false;
-   bSolo = false;
-   bMute = false;
-*/
+{
 }
 
 enum kColours
@@ -59,7 +50,7 @@ static const wxString kColourStrings[nColours] =
 
 bool SetClipCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString colours( nColours, kColourStrings );
-   S.Define(   mClipIndex,                                 wxT("ClipIndex"), 0, 0, 100 );
+   S.Define(   mClipIndex,                                 wxT("Clip"), 0, 0, 100 );
    S.Optional( bHasColour      ).DefineEnum( mColour,      wxT("Color"),      kColour0, colours );
    // Allowing a negative start time is not a mistake.
    // It will be used in demonstrating time before zero.
