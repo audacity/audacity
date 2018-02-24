@@ -25,6 +25,7 @@ code out of ModuleManager.
 #include "AppCommandEvent.h"
 #include "ResponseQueue.h"
 #include "../Project.h"
+#include "../AudacityApp.h"
 #include <wx/string.h>
 
 // Declare static class members

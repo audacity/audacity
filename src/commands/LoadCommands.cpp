@@ -49,8 +49,6 @@ modelled on BuiltinEffectsModule
    COMMAND( SET_LABEL,         SetLabelCommand, () )       \
    COMMAND( SET_PROJECT,       SetProjectCommand, () )     \
    COMMAND( SELECT,            SelectCommand, () )         \
-   COMMAND( SELECT_TIME,       SelectTimeCommand, () )     \
-   COMMAND( SELECT_TRACKS,     SelectTracksCommand, () )   \
    COMMAND( GET_PREFERENCE,    GetPreferenceCommand, () )  \
    COMMAND( SET_PREFERENCE,    SetPreferenceCommand, () )  \
    COMMAND( GET_INFO,          GetInfoCommand, () )        \
@@ -62,6 +60,9 @@ modelled on BuiltinEffectsModule
 
    // GET_TRACK_INFO subsumed by GET_INFO
    //COMMAND( GET_TRACK_INFO,    GetTrackInfoCommand, () )   
+   // SELECT_TIME and SELECT_TRACKS subsumed by SELECT
+   //COMMAND( SELECT_TIME,       SelectTimeCommand, () )     
+   //COMMAND( SELECT_TRACKS,     SelectTracksCommand, () )   
 
 
 //

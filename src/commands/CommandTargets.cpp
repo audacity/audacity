@@ -94,7 +94,7 @@ void LispyCommandMessageTarget::StartArray()
 {
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
-   Update( wxString::Format( "%s%s( ", ( mCounts.Last() > 0 ) ? ",\n" : "\n", Padding ));
+   Update( wxString::Format( "\n%s(", Padding ));
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }
@@ -103,12 +103,12 @@ void LispyCommandMessageTarget::EndArray(){
    if( mCounts.GetCount() > 1 ){
       mCounts.pop_back();
    }
-   Update( " )" );
+   Update( ")" );
 }
 void LispyCommandMessageTarget::StartStruct(){
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
-   Update( wxString::Format( "%s%s( ", ( mCounts.Last() > 0 ) ? ",\n" : "\n", Padding ));
+   Update( wxString::Format( "\n%s(", Padding ));
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }
@@ -116,36 +116,33 @@ void LispyCommandMessageTarget::EndStruct(){
    if( mCounts.GetCount() > 1 ){
       mCounts.pop_back();
    }
-   Update( " )" );
+   Update( ")" );
 }
 void LispyCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
-   wxString Padding;
-   Padding.Pad( mCounts.GetCount() *2 -2);
-   Padding = (( value.length() < 15 ) || (mCounts.Last()<=0))  ? "" : wxString("\n") + Padding;
-
+   wxString Padding = "";
    if( name.IsEmpty() )
-      Update( wxString::Format( "%s%s\"%s\"", (mCounts.Last()>0)?", ":"", Padding, value));
+      Update( wxString::Format( "%s%s\"%s\"", (mCounts.Last()>0)?" ":"", Padding, value));
    else 
-      Update( wxString::Format( "%s%s( %s, \"%s\" )", (mCounts.Last()>0)?", ":"", Padding, name, value));
+      Update( wxString::Format( "%s%s(%s \"%s\")", (mCounts.Last()>0)?" ":"", Padding, name, value));
    mCounts.Last() += 1;
 }
 void LispyCommandMessageTarget::AddBool(const bool value,      const wxString &name){
    if( name.IsEmpty() )
-      Update( wxString::Format( "%s%s", (mCounts.Last()>0)?", ":"",value?"True":"False"));
+      Update( wxString::Format( "%s%s", (mCounts.Last()>0)?" ":"",value?"True":"False"));
    else 
-      Update( wxString::Format( "%s( %s, %s )", (mCounts.Last()>0)?", ":"", name,value?"True":"False"));
+      Update( wxString::Format( "%s(%s %s)", (mCounts.Last()>0)?" ":"", name,value?"True":"False"));
    mCounts.Last() += 1;
 }
 void LispyCommandMessageTarget::AddItem(const double value,    const wxString &name){
    if( name.IsEmpty() )
-      Update( wxString::Format( "%s%g", (mCounts.Last()>0)?", ":"", value));
+      Update( wxString::Format( "%s%g", (mCounts.Last()>0)?" ":"", value));
    else 
-      Update( wxString::Format( "%s( %s, %g )", (mCounts.Last()>0)?", ":"", name,value));
+      Update( wxString::Format( "%s(%s %g)", (mCounts.Last()>0)?" ":"", name,value));
    mCounts.Last() += 1;
 }
 
 void LispyCommandMessageTarget::StartField(const wxString &name){
-   Update( wxString::Format( "%s( %s, ", (mCounts.Last()>0)?", ":"", name ));
+   Update( wxString::Format( "%s(%s", (mCounts.Last()>0)?" ":"", name ));
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }
@@ -154,7 +151,7 @@ void LispyCommandMessageTarget::EndField(){
    if( mCounts.GetCount() > 1 ){
       mCounts.pop_back();
    }
-   Update( " )" );
+   Update( ")" );
 }
 
 

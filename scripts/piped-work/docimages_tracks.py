@@ -66,119 +66,130 @@ def quickTest() :
 
 def setup() :
     global path
-    path = '\"C:/Users/James Crook/\"'
+    global sample
+    path = 'C:\\Users\\James Crook\\'
+    sample ='C:\\Users\\James Crook\\Music\\The Poodle Podcast.wav'
     do( 'SetProject: X=10 Y=10 Width=850 Height=800' )
 
 def makeWayForTracks(  ) :
-    do( 'SelectTracks: FirstTrack=0 LastTrack=20' )
+    do( 'SelectTracks: First=0 Last=20' )
     do( 'RemoveTracks' )
 
+def capture( name, what ) :
+    global path
+    do( 'Screenshot: Path="'+path+name+'" CaptureWhat=' + what )
+
+def loadMonoTrack():
+    global sample
+    makeWayForTracks( )
+    do( 'Import2: Filename="'+sample+'"' )
+    do( 'Select: First=0 Last=0 Start=0 End=150')
+    do( 'Trim')
+    do( 'ZoomSel' )
+    
+def loadMonoTracks( num ) :
+    makeWayForTracks( )
+    loadMonoTrack()
+    do( 'SetTrack: Track=0 Name="Foxy Lady"')
+    for i in range( 0, num-1 ):
+        do( 'Duplicate' )
+    do( 'FitInWindow' )
+    do( 'Select: Start=55 End=70')
 
 def makeMonoTracks( num ) :
     makeWayForTracks( )
     for i in range( 0, num ):
         do( 'NewMonoTrack' )
-    do( 'SetTrack: TrackIndex=0 Name="Foxy Lady"')
-    do( 'SelectTime: StartTime=0 EndTime=30' )
-    do( 'SelectTracks: FirstTrack=0 LastTrack=' + str(num-1) )
+    do( 'SetTrack: Track=0 Name="Foxy Lady"')
+    do( 'Select: Start=0 End=150 First=0 Last=' + str(num-1) )
     do( 'Chirp: StartAmp=0.5' )
     do( 'Wahwah' )
     do( 'FitInWindow' )
-    do( 'SelectTime: StartTime=11 EndTime=14')
+    do( 'Select: Start=55 End=70')
  
 def makeStereoTracks( num ) :
     makeWayForTracks( )
     for i in range( 0, num ):
        do( 'NewStereoTrack' )
-    do( 'SetTrack: TrackIndex=0 Name="Voodoo Children IN STEREO"')
-    do( 'SelectTime: StartTime=0 EndTime=30' )
-    do( 'SelectTracks: FirstTrack=0 LastTrack=' + str(num*2-1) )
+    do( 'SetTrack: Track=0 Name="Voodoo Children IN STEREO"')
+    do( 'Select: Start=0 End=150 First=0 Last=' + str(num*2-1) )
     do( 'Chirp: StartAmp=0.5' )
     do( 'Wahwah' )
     do( 'FitInWindow' )
-    do( 'SelectTime: StartTime=11 EndTime=14')
+    do( 'Select: Start=55 End=70')
 
 # A mono track complete with ruler
 def image1() :
-    global path
-    makeMonoTracks(1)
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Track_Plus' )
+    loadMonoTracks(1)
+    capture( 'AutoTracks001.png', 'First_Track_Plus' )
 
 # A stereo track, with its name on the track    
 def image2() :
-    global path
     makeStereoTracks(1)
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
+    capture( 'AutoTracks002.png', 'First_Track' )
 
 # Four colours of track
 def image3() :
-    global path
-    makeMonoTracks( 4 )
-    do( 'SetTrack: TrackIndex=0 Name="Instrument 1" Height=122 Color=Color0')
-    do( 'SetTrack: TrackIndex=1 Name="Instrument 2" Height=122 Color=Color1')
-    do( 'SetTrack: TrackIndex=2 Name="Instrument 3" Height=122 Color=Color2')
-    do( 'SetTrack: TrackIndex=3 Name="Instrument 4" Height=122 Color=Color3')
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Four_Tracks' )
+    loadMonoTracks( 4 )
+    do( 'SetTrack: Track=0 Name="Instrument 1" Height=122 Color=Color0')
+    do( 'SetTrack: Track=1 Name="Instrument 2" Height=122 Color=Color1')
+    do( 'SetTrack: Track=2 Name="Instrument 3" Height=122 Color=Color2')
+    do( 'SetTrack: Track=3 Name="Instrument 4" Height=122 Color=Color3')
+    capture( 'AutoTracks003.png', 'First_Four_Tracks' )
 
 # Two Tracks, ready to make stereo
 def image4():
-    global path
-    makeMonoTracks(2)
-    do( 'SetTrack: TrackIndex=0 Name="Left Track" Height=80')
-    do( 'SetTrack: TrackIndex=1 Name="Right Track" Height=80')
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Two_Tracks' )
+    loadMonoTracks(2)
+    do( 'SetTrack: Track=0 Name="Left Track" Height=80')
+    do( 'SetTrack: Track=1 Name="Right Track" Height=80')
+    capture( 'AutoTracks004.png', 'First_Two_Tracks' )
 
 # Mono tracks made stereo    
 def image5():
-    global path
-    makeMonoTracks(2)
-    do( 'SetTrack: TrackIndex=0 Pan=-1 Height=80')
-    do( 'SetTrack: TrackIndex=1 Pan=1 Height=80')
+    loadMonoTracks(2)
+    do( 'SetTrack: Track=0 Pan=-1 Height=80')
+    do( 'SetTrack: Track=1 Pan=1 Height=80')
     do( 'MixAndRender' )
-    do( 'SetTrack: TrackIndex=0 Name="Combined" Height=80')
-    do( 'SetTrack: TrackIndex=1 Height=80')
-    do( 'SelectTracks: FirstTrack=0 LastTrack=1' )
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
+    do( 'SetTrack: Track=0 Name="Combined" Height=80')
+    do( 'SetTrack: Track=1 Height=80')
+    do( 'Select: First=0 Last=1' )
+    capture( 'AutoTracks005.png', 'First_Track' )
 
 # A stereo track, with different sized channels
 def image6() :
-    global path
     makeStereoTracks(1)
-    do( 'SetTrack: TrackIndex=0 Height=80')
-    do( 'SetTrack: TrackIndex=1 Height=180')
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
+    do( 'SetTrack: Track=0 Height=80')
+    do( 'SetTrack: Track=1 Height=180')
+    capture( 'AutoTracks006.png', 'First_Track' )
 
 # Two mono tracks of different sizes
 def image7() :
-    global path
-    makeMonoTracks(2)
-    do( 'SetTrack: TrackIndex=0 Height=80')
-    do( 'SetTrack: TrackIndex=1 Height=180')
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Two_Tracks' )
+    loadMonoTracks(2)
+    do( 'SetTrack: Track=0 Height=180')
+    do( 'SetTrack: Track=1 Height=80')
+    capture( 'AutoTracks007.png', 'First_Two_Tracks' )
 
 # Mono with arrow at start.
 def image8() :
-    global path
-    makeMonoTracks(1)
-    do( 'SetClip: ClipIndex=0 Start=-4.0')
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
+    loadMonoTracks(1)
+    do( 'SetClip: Clip=0 Start=-4.0')
+    capture( 'AutoTracks008.png', 'First_Track' )
 
 # Zoomed in to show points stem-plot
 def image9() :
-    global path
+    #make rather than load.  We want an artificial track.
     makeMonoTracks(1)
-    do( 'SelectTime: StartTime=0 EndTime=0.003' )
+    do( 'Select: Start=0 End=0.003' )
     do( 'ZoomSel' );
     do( 'Amplify: Ratio=3.0' )
     do( 'SetPreference: Name=/GUI/SampleView Value=1 Reload=1')
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
+    capture( 'AutoTracks009.png', 'First_Track' )
 
 # Zoomed in to show points stem-plot and then no stem plot
 def image9and10() :
-    global path
     image9()
     do( 'SetPreference: Name=/GUI/SampleView Value=0 Reload=1')
-    do( 'Screenshot: Path='+path+' CaptureWhat=First_Track' )
+    capture( 'AutoTracks010.png', 'First_Track' )
     
 #quickTest()
 setup()
