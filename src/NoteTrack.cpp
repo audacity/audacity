@@ -1003,6 +1003,12 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
    Zoom(rect, (start + end) / 2, trialPitchHeight / mPitchHeight, true);
 }
 
+int NoteTrack::PitchToY(double p) const {
+   int ip = (int)p;
+   double offset = p - ip;
+   return IPitchToY(ip) - (int)(GetPitchHeight(1) * offset);
+}
+
 int NoteTrack::YToIPitch(int y)
 {
    y = mBottom - y; // pixels above pitch 0
@@ -1014,5 +1020,88 @@ int NoteTrack::YToIPitch(int y)
 }
 
 const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );
+
+std::unordered_map<int, std::map<double, double>> NoteTrack::GetPitchOffsets() const
+{
+   std::unordered_map<int, std::map<double, double>> pitchBendChanges;
+   // Current reserved parameter number
+   char rpnMSB[17];
+   char rpnLSB[17];
+   // Measured in semitones
+   char pitchRangeMSB[17];
+   // Measured in cents
+   char pitchRangeLSB[17];
+   // From -1 to 1
+   double curRawBend[17];
+   for (int i = 0; i < 17; i++)
+   {
+      pitchBendChanges[i][0] = 0;
+      rpnMSB[i] = 127;
+      rpnLSB[i] = 127;
+      pitchRangeMSB[i] = 2;
+      pitchRangeLSB[i] = 0;
+      curRawBend[i] = 0;
+   }
+   Alg_seq_ptr seq = &GetSeq();
+   Alg_iterator iterator(seq, false);
+   iterator.begin();
+
+   Alg_event_ptr evt;
+   while (0 != (evt = iterator.next())) {
+      if (evt->is_update()) {
+         Alg_update_ptr update = (Alg_update_ptr) evt;
+         auto typeCode = update->get_type_code();
+
+         int channel = update->chan;
+         if (channel < 0 || channel >= 16) {
+            channel = 16;
+         }
+
+         if (typeCode == ALG_BEND) {
+            double bend = update->get_real_value();
+
+            // The spec (https://www.midi.org/specifications/item/table-3-control-change-messages-data-bytes-2)
+            // doesn't make it clear what should happen if LSB (cents) is greater than 100, so just don't worry
+            // about that case
+            curRawBend[channel] = bend;
+            double pitchRange = pitchRangeMSB[channel] + .01 * pitchRangeLSB[channel];
+            pitchBendChanges[channel][update->time] = bend * pitchRange;
+         } else if (typeCode == ALG_CONTROL) {
+            double pitchRange;
+
+            const char *name = update->get_attribute();
+            // The number of the controller being changed is embedded
+            // in the parameter name.
+            char controller = atoi(name + 7);
+            // Allegro normalizes controller values
+            char value = (int)((update->parameter.r * 127) + .5);
+
+            switch (controller) {
+               case 101: // MSB
+                  rpnMSB[channel] = value;
+                  break;
+               case 100: // LSB
+                  rpnLSB[channel] = value;
+                  break;
+               case 6:
+                  pitchRangeMSB[channel] = value;
+                  pitchRange = value + .01 * pitchRangeLSB[channel];
+                  pitchBendChanges[channel][update->time] = curRawBend[channel] * pitchRange;
+                  break;
+               case 38:
+                  pitchRangeLSB[channel] = value;
+                  pitchRange = pitchRangeMSB[channel] + .01 * value;
+                  pitchBendChanges[channel][update->time] = curRawBend[channel] * pitchRange;
+                  break;
+
+               default: break;
+            }
+         }
+      }
+   }
+   iterator.end();
+
+   return pitchBendChanges;
+}
 
 #endif // USE_MIDI
