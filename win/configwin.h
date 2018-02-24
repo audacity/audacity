@@ -48,7 +48,7 @@
 #define USE_NYQUIST 1
 
 /* Define if MIDI playback support using PortMIDI should be enabled */
-#define USE_PORTMIDI 1
+//#define USE_PORTMIDI 1
 
 /* Define if PortMixer support should be enabled */
 #define USE_PORTMIXER 1

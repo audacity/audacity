@@ -214,7 +214,7 @@ void NoteTrack::DoSetHeight(int h)
 {
    auto oldHeight = GetHeight();
    auto oldMargin = GetNoteMargin(oldHeight);
-   PlayableTrack::DoSetHeight(h);
+   NoteTrackBase::DoSetHeight(h);
    auto margin = GetNoteMargin(h);
    Zoom(
       wxRect{ 0, 0, 1, h }, // only height matters
