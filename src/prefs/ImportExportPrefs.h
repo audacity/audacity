@@ -28,10 +28,10 @@ class ImportExportPrefs final : public PrefsPanel
    ~ImportExportPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 };
 
 class ImportExportPrefsFactory final : public PrefsPanelFactory

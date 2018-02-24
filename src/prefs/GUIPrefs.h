@@ -29,12 +29,12 @@ class GUIPrefs final : public PrefsPanel
    ~GUIPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    static void GetRangeChoices(wxArrayString *pChoices, wxArrayString *pCodes);
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 
    wxArrayString mLangCodes;
    wxArrayString mLangNames;

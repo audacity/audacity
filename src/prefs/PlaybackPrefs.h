@@ -27,10 +27,10 @@ class PlaybackPrefs final : public PrefsPanel
    virtual ~PlaybackPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 };
 
 class PlaybackPrefsFactory final : public PrefsPanelFactory

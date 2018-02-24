@@ -94,6 +94,8 @@ for registering for changes.
 
 
 #include "Audacity.h"
+#include "Experimental.h"
+#include "Shuttle.h"
 #include "ShuttleGui.h"
 
 #include "MemoryX.h"
@@ -105,8 +107,6 @@ for registering for changes.
 #include <wx/spinctrl.h>
 #include <wx/bmpbuttn.h>
 #include "Internat.h"
-#include "Experimental.h"
-#include "Shuttle.h"
 #include "WrappedType.h"
 #include "widgets/wxPanelWrapper.h"
 #include "AllThemeResources.h"
@@ -142,9 +142,7 @@ void ShuttleGuiBase::Init()
    miSizerProp=0;
    mSizerDepth=-1;
 
-   miIdSetByUser = -1;
-   miId = -1;
-   miIdNext = 3000;
+   ResetId();
 
    miNoMatchSelector = 0;
 
@@ -170,6 +168,13 @@ void ShuttleGuiBase::Init()
    }
    PushSizer();
    mpSizer->SetMinSize(250,100);
+}
+
+void ShuttleGuiBase::ResetId()
+{
+   miIdSetByUser = -1;
+   miId = -1;
+   miIdNext = 3000;
 }
 
 void ShuttleGuiBase::EnableCtrl( bool bEnable )
@@ -1038,6 +1043,8 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(const wxString &Prompt, WrappedType & W
    switch( mShuttleMode )
    {
    // IF setting internal storage from the controls.
+   case eIsGettingMetadata:
+      break;
    case eIsGettingFromDialog:
       {
          wxASSERT( pCheckBox );
@@ -1077,6 +1084,8 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, WrappedT
    switch( mShuttleMode )
    {
    // IF setting internal storage from the controls.
+   case eIsGettingMetadata:
+      break;
    case eIsGettingFromDialog:
       {
          wxASSERT( pCheckBox );
@@ -1117,6 +1126,8 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl( const wxString &Prompt, WrappedType & 
    switch( mShuttleMode )
    {
       // IF setting internal storage from the controls.
+   case eIsGettingMetadata:
+      break;
    case eIsGettingFromDialog:
       {
          wxASSERT( pSpinCtrl );
@@ -1157,6 +1168,8 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, WrappedType & W
    switch( mShuttleMode )
    {
    // IF setting internal storage from the controls.
+   case eIsGettingMetadata:
+      break;
    case eIsGettingFromDialog:
       {
          wxASSERT( pTextBox );
@@ -1197,6 +1210,8 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, WrappedT
    switch( mShuttleMode )
    {
    // IF setting internal storage from the controls.
+   case eIsGettingMetadata:
+      break;
    case eIsGettingFromDialog:
       {
          wxASSERT( pTextBox );
@@ -1236,6 +1251,8 @@ wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, WrappedType & Wrap
          }
          break;
       // IF setting internal storage from the controls.
+      case eIsGettingMetadata:
+         break;
       case eIsGettingFromDialog:
          {
             wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
@@ -1293,6 +1310,8 @@ wxChoice * ShuttleGuiBase::TieChoice(
       }
       break;
    // IF setting internal storage from the controls.
+   case eIsGettingMetadata:
+      break;
    case eIsGettingFromDialog:
       {
          wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
@@ -1346,6 +1365,8 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
          pRadioButton->SetName(wxStripMenuCodes(Prompt));
          UpdateSizers();
       }
+      break;
+   case eIsGettingMetadata:
       break;
    case eIsGettingFromDialog:
       {
@@ -1617,6 +1638,8 @@ bool ShuttleGuiBase::DoStep( int iStep )
    {
       return (iStep==2) || (iStep==3);
    }
+   if( mShuttleMode == eIsGettingMetadata )
+      return iStep ==2;
    wxASSERT( false );
    return false;
 }
@@ -2295,3 +2318,172 @@ void ShuttleGui::SetSizeHints( int minX, int minY )
 {
    ShuttleGuiBase::SetSizeHints( minX, minY );
 }
+
+/********************************* GetDefinition ******************************/
+
+ShuttleGuiGetDefinition::ShuttleGuiGetDefinition(
+   wxWindow * pParent,CommandMessageTarget & target )
+: CommandMessageTargetDecorator( target ),
+ShuttleGui( pParent, eIsGettingMetadata ) 
+{
+
+}
+ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
+{
+}
+
+wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const bool bDefault) 
+{ 
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "bool", "type" );
+   AddBool( bDefault, "default"  );
+   EndStruct();
+   return ShuttleGui::TieCheckBox( Prompt, SettingName, bDefault );
+}
+wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const bool bDefault) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "bool", "type" );
+   AddBool( bDefault, "default"  );
+   EndStruct();
+   return ShuttleGui::TieCheckBoxOnRight( Prompt, SettingName, bDefault );
+}
+wxChoice * ShuttleGuiGetDefinition::TieChoice(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const wxString &Default,
+   const wxArrayString &Choices,
+   const wxArrayString & TranslatedChoices ) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "enum", "type" );
+   AddItem( Default, "default"  );
+   StartField( "enum" );
+   StartArray();
+   for( size_t i=0;i<Choices.Count(); i++ )
+      AddItem( Choices[i] );
+   EndArray();
+   EndField();
+   EndStruct();
+   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, TranslatedChoices );
+}
+wxChoice * ShuttleGuiGetDefinition::TieChoice(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const int Default,
+   const wxArrayString & Choices,
+   const std::vector<int> & TranslatedChoices) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "enum", "type" );
+   AddItem( Default, "default"  );
+   StartField( "enum" );
+   StartArray();
+   for( size_t i=0;i<Choices.Count(); i++ )
+      AddItem( Choices[i] );
+   EndArray();
+   EndField();
+   EndStruct();
+   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, TranslatedChoices );
+}
+wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const wxString &Default,
+   const int nChars) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "string", "type" );
+   AddItem( Default, "default"  );
+   EndStruct();
+   return ShuttleGui::TieTextBox( Prompt, SettingName, Default, nChars );
+}
+wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
+   const wxString & Prompt,
+   const wxString & SettingName,
+   const double & Default,
+   const int nChars) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "string", "type" );
+   AddItem( Default, "default"  );
+   EndStruct();
+   return ShuttleGui::TieTextBox( Prompt, SettingName, Default, nChars );
+}
+wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const wxString &Default,
+   const int nChars) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "number", "type" );
+   AddItem( Default, "default"  );
+   EndStruct();
+   return ShuttleGui::TieNumericTextBox( Prompt, SettingName, Default, nChars );
+}
+wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
+   const wxString & Prompt,
+   const wxString & SettingName,
+   const double & Default,
+   const int nChars) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "number", "type" );
+   AddItem( Default, "default"  );
+   EndStruct();
+   return ShuttleGui::TieNumericTextBox( Prompt, SettingName, Default, nChars );
+}
+wxSlider * ShuttleGuiGetDefinition::TieSlider(
+   const wxString & Prompt,
+   const wxString & SettingName,
+   const int iDefault,
+   const int max,
+   const int min) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "number", "type" );
+   AddItem( iDefault, "default"  );
+   EndStruct();
+   return ShuttleGui::TieSlider( Prompt, SettingName, iDefault, max, min );
+}
+wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const int Value,
+   const int max,
+   const int min) 
+{
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "number", "type" );
+   AddItem( Value, "default"  );
+   EndStruct();
+   return ShuttleGui::TieSpinCtrl( Prompt, SettingName, Value, max, min );
+}
+

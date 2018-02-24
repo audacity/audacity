@@ -178,14 +178,14 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
                                  DEFAULT_LATENCY_DURATION,
                                  9);
          S.AddUnits(_("milliseconds"));
-         w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
+         if( w ) w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
 
          w = S.TieNumericTextBox(_("Track &shift after record:"),
                                  wxT("/AudioIO/LatencyCorrection"),
                                  DEFAULT_LATENCY_CORRECTION,
                                  9);
          S.AddUnits(_("milliseconds"));
-         w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
+         if( w ) w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
       }
       S.EndThreeColumn();
    }

@@ -63,7 +63,7 @@ void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    mCounts.Last() += 1;
 }
 void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
-   Update( wxString::Format( "%s%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value?"True":"False"));
+   Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value?"true":"false"));
    mCounts.Last() += 1;
 }
 void CommandMessageTarget::AddItem(const double value,    const wxString &name){

@@ -26,10 +26,10 @@ class MousePrefs final : public PrefsPanel
    ~MousePrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void CreateList();
    void AddItem(wxString const & buttons,
                 wxString const & tool,

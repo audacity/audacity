@@ -28,10 +28,10 @@ class RecordingPrefs final : public PrefsPanel
    virtual ~RecordingPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void OnToggleCustomName(wxCommandEvent & /* Evt */);
 
    wxTextCtrl *mToggleCustomName;

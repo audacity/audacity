@@ -158,7 +158,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/Library/FFmpegOnDemand"),
                     false);
 #if !defined(USE_FFMPEG)
-      checkbox->Enable(FALSE);
+      if( checkbox ) checkbox->Enable(FALSE);
 #endif
 #endif
    }

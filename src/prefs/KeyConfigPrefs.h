@@ -40,10 +40,10 @@ public:
    bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
 private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void RefreshBindings(bool bSort);
    void FilterKeys( std::vector<NormalizedKeyString> & arr );
    wxString NameFromKey(const NormalizedKeyString & key);

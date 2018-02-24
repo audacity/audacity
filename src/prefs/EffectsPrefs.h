@@ -29,10 +29,10 @@ class EffectsPrefs final : public PrefsPanel
    ~EffectsPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 };
 
 class EffectsPrefsFactory final : public PrefsPanelFactory

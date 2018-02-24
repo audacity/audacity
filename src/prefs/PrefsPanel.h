@@ -40,6 +40,8 @@ ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
+class ShuttleGui;
+
 class PrefsPanel /* not final */ : public wxPanelWrapper
 {
  public:
@@ -59,6 +61,7 @@ class PrefsPanel /* not final */ : public wxPanelWrapper
    // If it returns True, the Preview button is added below the panel
    // Default returns false
    virtual bool ShowsPreviewButton();
+   virtual void PopulateOrExchange( ShuttleGui & WXUNUSED(S) ){};
 
    // If not empty string, the Help button is added below the panel
    // Default returns empty string.

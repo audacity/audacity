@@ -38,7 +38,7 @@ class TracksPrefs final : public PrefsPanel
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    static int iPreferencePinned;
 

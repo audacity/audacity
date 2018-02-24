@@ -428,6 +428,23 @@ void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    HelpSystem::ShowHelp(this, page, true);
 }
 
+void PrefsDialog::ShuttleAll( ShuttleGui & S)
+{
+   // Validate all pages first
+   if (mCategories) {
+      for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
+         S.ResetId();
+         PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
+         panel->PopulateOrExchange( S );
+      }
+   }
+   else
+   {
+      S.ResetId();
+      mUniquePage->PopulateOrExchange( S );
+   }
+}
+
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
 {
    if(event.GetKeyCode() == WXK_RETURN)
