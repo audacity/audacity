@@ -75,6 +75,8 @@ effects from this one class.
 
 #include "../../Experimental.h"
 
+int NyquistEffect::mReentryCount = 0;
+
 enum
 {
    ID_Editor = 10000,
@@ -584,10 +586,21 @@ static void RegisterFunctions();
 
 bool NyquistEffect::Process()
 {
+   // Check for reentrant Nyquist commands.
+   // I'm choosing to mark skipped Nyquist commands as successful even though
+   // they are skipped.  The reason is that when Nyquist calls out to a chain,
+   // and that chain contains Nyquist,  it will be clearer if the chain completes 
+   // skipping Nyquist, rather than doing nothing at all.
+   if( mReentryCount > 0 )
+      return true;
+
+   // Restore the reentry counter (to zero) when we exit.
+   auto cleanup = valueRestorer( mReentryCount);
+   mReentryCount++;
    RegisterFunctions();
 
    bool success = true;
-
+   int nEffectsSoFar = nEffectsDone;
    mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
@@ -894,7 +907,13 @@ finish:
       dlog.ShowModal();
    }
 
-   ReplaceProcessedTracks(success);
+   // Has rug been pulled from under us by some effect done within Nyquist??
+   if( nEffectsSoFar == nEffectsDone )
+      ReplaceProcessedTracks(success);
+   else{
+      ReplaceProcessedTracks(false); // Do not use the results.
+      mT1 = mT0 - 1.0;// And don't use the times either, in resetting the selection  (make them bogus).
+   }
 
    if (!mProjectChanged)
       em.SetSkipStateFlag(true);

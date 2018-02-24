@@ -270,6 +270,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                   long style = DefaultMessageBoxStyle,
                   const wxString& titleStr = wxString{});
 
+   static void IncEffectCounter(){ nEffectsDone++;};
+
 //
 // protected virtual methods
 //
@@ -341,7 +343,6 @@ protected:
    bool TrackGroupProgress(int whichGroup, double frac, const wxString & = wxEmptyString);
 
    int GetNumWaveTracks() { return mNumTracks; }
-
    int GetNumWaveGroups() { return mNumGroups; }
 
    // Calculates the start time and selection length in samples
@@ -369,6 +370,9 @@ protected:
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    void CopyInputTracks(); // trackType = Track::Wave
    void CopyInputTracks(int trackType);
+
+   // A global counter of all the successful Effect invocations.
+   static int nEffectsDone;
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to add label tracks.

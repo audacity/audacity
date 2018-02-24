@@ -70,6 +70,9 @@ greater use in future.
 
 #include <unordered_map>
 
+// Effect application counter
+int Effect::nEffectsDone=0;
+
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
 static const int kImportID = 20002;
@@ -1074,8 +1077,9 @@ bool Effect::SetAutomationParameters(const wxString & parms)
             preset
          )
       );
-
-      return false;
+      // We are using defualt settings and we still wish to continue.
+      return true;
+      //return false;
    }
 
    if (!mUIDialog)
@@ -1246,7 +1250,7 @@ bool Effect::DoEffect(wxWindow *parent,
       returnVal = Process();
    }
 
-   if (returnVal)
+   if (returnVal && (mT1 >= mT0 ))
    {
       selectedRegion->setTimes(mT0, mT1);
    }
@@ -2246,6 +2250,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    // The output list is no longer needed
    mOutputTracks.reset();
    mOutputTracksType = Track::None;
+   nEffectsDone++;
 }
 
 void Effect::CountWaveTracks()
