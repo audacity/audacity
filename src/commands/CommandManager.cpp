@@ -1307,6 +1307,9 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    }
    else if( missingFlags & WaveTracksSelectedFlag)
       reason = _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
+   else if ( missingFlags & TracksSelectedFlag )
+      // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+      reason = wxString::Format(_("\"%s\" requires one or more tracks to be selected."), Name);
    // If the only thing wrong was no tracks, we do nothing and don't report a problem
    else if( missingFlags == TracksExistFlag )
       return;

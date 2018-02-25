@@ -885,12 +885,10 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd),
                  TimeSelectedFlag, TimeSelectedFlag);
 
-      // PRL:  I thought these two should require TracksSelectedFlag but there
-      // was complaint about an unhelpful error message
       c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"),
-         AlwaysEnabledFlag, AlwaysEnabledFlag);
+         TracksSelectedFlag, TracksSelectedFlag);
       c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"),
-         AlwaysEnabledFlag, AlwaysEnabledFlag);
+         TracksSelectedFlag, TracksSelectedFlag);
 
       c->AddItem(wxT("CursPrevClipBoundary"), _("Pre&vious Clip Boundary"), FN(OnCursorPrevClipBoundary), wxT(""),
          TrackPanelHasFocus | WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
@@ -1014,6 +1012,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->EndSubMenu();
 
       c->BeginSubMenu(_("&Pan"));
+      // As Pan changes are not saved on Undo stack, pan settings for all tracks
+      // in the project could very easily be lost unless we require the tracks to be selcted.
+      c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
       c->AddItem(wxT("PanLeft"), _("&Left"), FN(OnPanLeft));
       c->AddItem(wxT("PanRight"), _("&Right"), FN(OnPanRight));
       c->AddItem(wxT("PanCenter"), _("&Center"), FN(OnPanCenter));
