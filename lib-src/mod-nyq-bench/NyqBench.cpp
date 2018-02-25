@@ -31,6 +31,7 @@
 #include "effects/EffectManager.h"
 #include "effects/nyquist/Nyquist.h"
 #include "../images/AudacityLogo.xpm"
+#include "../../src/commands/CommandContext.h"
 #include "widgets/ErrorDialog.h"
 
 #include "NyqBench.h"
@@ -1398,7 +1399,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      p->DoEffect(ID, 0);
+      p->DoEffect(ID, CommandContext(*p), 0);
 
       mRunning = false;
       UpdateWindowUI();

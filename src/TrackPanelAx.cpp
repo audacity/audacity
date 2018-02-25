@@ -131,8 +131,14 @@ bool TrackPanelAx::IsFocused( Track *track )
    if( !focusedTrack )
       focusedTrack = SetFocus();
 
+   // Remap track pointer if there are oustanding pending updates
+   auto origTrack =
+      mTrackPanel->GetTracks()->FindById( track->GetId() );
+   if (origTrack)
+      track = origTrack;
+
    if( ( track == focusedTrack.get() ) ||
-       ( track == focusedTrack->GetLink() ) )
+       ( focusedTrack && track == focusedTrack->GetLink() ) )
    {
       return true;
    }
@@ -142,6 +148,8 @@ bool TrackPanelAx::IsFocused( Track *track )
 
 int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
 {
+   // Find 1-based position of the target in the visible tracks, or 0 if not
+   // found
    TrackListIterator iter( mTrackPanel->GetTracks() );
    Track *t = iter.First();
    int ndx = 0;

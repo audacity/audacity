@@ -24,7 +24,6 @@
 
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 
 #include "../AColor.h"
@@ -72,11 +71,6 @@ struct AutoDuckRegion
    double t1;
 };
 
-#include <wx/arrimpl.cpp>
-
-WX_DECLARE_OBJARRAY(AutoDuckRegion, AutoDuckRegionArray);
-WX_DEFINE_OBJARRAY(AutoDuckRegionArray);
-
 /*
  * Effect implementation
  */
@@ -123,7 +117,7 @@ wxString EffectAutoDuck::ManualPage()
    return wxT("Auto_Duck");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectAutoDuck::GetType()
 {
@@ -131,8 +125,18 @@ EffectType EffectAutoDuck::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectAutoDuck::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM(  mDuckAmountDb, DuckAmountDb);
+   S.SHUTTLE_PARAM(  mInnerFadeDownLen, InnerFadeDownLen);
+   S.SHUTTLE_PARAM(  mInnerFadeUpLen, InnerFadeUpLen);
+   S.SHUTTLE_PARAM(  mOuterFadeDownLen, OuterFadeDownLen);
+   S.SHUTTLE_PARAM(  mOuterFadeUpLen, OuterFadeUpLen);
+   S.SHUTTLE_PARAM(  mThresholdDb, ThresholdDb);
+   S.SHUTTLE_PARAM(  mMaximumPause, MaximumPause);
+   return true;
+}
 
-bool EffectAutoDuck::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_DuckAmountDb, mDuckAmountDb);
    parms.Write(KEY_InnerFadeDownLen, mInnerFadeDownLen);
@@ -145,7 +149,7 @@ bool EffectAutoDuck::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectAutoDuck::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectAutoDuck::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(DuckAmountDb);
    ReadAndVerifyDouble(InnerFadeDownLen);
@@ -296,7 +300,7 @@ bool EffectAutoDuck::Process()
    float rmsSum = 0;
    // to make the progress bar appear more natural, we first look for all
    // duck regions and apply them all at once afterwards
-   AutoDuckRegionArray regions;
+   std::vector<AutoDuckRegion> regions;
    bool inDuckRegion = false;
    {
       Floats rmsWindow{ kRMSWindowSize, true };
@@ -354,7 +358,7 @@ bool EffectAutoDuck::Process()
                   double duckRegionEnd =
                      mControlTrack->LongSamplesToTime(i - curSamplesPause);
 
-                  regions.Add(AutoDuckRegion(
+                  regions.push_back(AutoDuckRegion(
                      duckRegionStart - mOuterFadeDownLen,
                      duckRegionEnd + mOuterFadeUpLen));
 
@@ -381,7 +385,7 @@ bool EffectAutoDuck::Process()
       {
          double duckRegionEnd =
             mControlTrack->LongSamplesToTime(end - curSamplesPause);
-         regions.Add(AutoDuckRegion(
+         regions.push_back(AutoDuckRegion(
             duckRegionStart - mOuterFadeDownLen,
             duckRegionEnd + mOuterFadeUpLen));
       }
@@ -393,16 +397,16 @@ bool EffectAutoDuck::Process()
       SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
       Track *iterTrack = iter.First();
 
-      int trackNumber = 0;
+      int trackNum = 0;
 
       while (iterTrack)
       {
          WaveTrack* t = (WaveTrack*)iterTrack;
 
-         for (size_t i = 0; i < regions.GetCount(); i++)
+         for (size_t i = 0; i < regions.size(); i++)
          {
             const AutoDuckRegion& region = regions[i];
-            if (ApplyDuckFade(trackNumber, t, region.t0, region.t1))
+            if (ApplyDuckFade(trackNum, t, region.t0, region.t1))
             {
                cancel = true;
                break;
@@ -413,7 +417,7 @@ bool EffectAutoDuck::Process()
             break;
 
          iterTrack = iter.Next();
-         trackNumber++;
+         trackNum++;
       }
    }
 
@@ -428,44 +432,44 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
    {
       S.AddSpace(0, 5);
 
-      mPanel = safenew EffectAutoDuckPanel(S.GetParent(), this);
+      mPanel = safenew EffectAutoDuckPanel(S.GetParent(), wxID_ANY, this);
       S.AddWindow(mPanel);
 
       S.AddSpace(0, 5);
 
       S.StartMultiColumn(6, wxCENTER);
       {
-         FloatingPointValidator<double> vldDuckAmountDb(1, &mDuckAmountDb, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldDuckAmountDb(1, &mDuckAmountDb, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldDuckAmountDb.SetRange(MIN_DuckAmountDb, MAX_DuckAmountDb);
          mDuckAmountDbBox = S.AddTextBox(_("Duck amount:"), wxT(""), 10);
          mDuckAmountDbBox->SetValidator(vldDuckAmountDb);
          S.AddUnits(_("dB"));
 
-         FloatingPointValidator<double> vldMaximumPause(2, &mMaximumPause, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldMaximumPause(2, &mMaximumPause, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldMaximumPause.SetRange(MIN_MaximumPause, MAX_MaximumPause);
          mMaximumPauseBox = S.AddTextBox(_("Maximum pause:"), wxT(""), 10);
          mMaximumPauseBox->SetValidator(vldMaximumPause);
          S.AddUnits(_("seconds"));
 
-         FloatingPointValidator<double> vldOuterFadeDownLen(2, &mOuterFadeDownLen, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldOuterFadeDownLen(2, &mOuterFadeDownLen, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldOuterFadeDownLen.SetRange(MIN_OuterFadeDownLen, MAX_OuterFadeDownLen);
          mOuterFadeDownLenBox = S.AddTextBox(_("Outer fade down length:"), wxT(""), 10);
          mOuterFadeDownLenBox->SetValidator(vldOuterFadeDownLen);
          S.AddUnits(_("seconds"));
 
-         FloatingPointValidator<double> vldOuterFadeUpLen(2, &mOuterFadeUpLen, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldOuterFadeUpLen(2, &mOuterFadeUpLen, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldOuterFadeUpLen.SetRange(MIN_OuterFadeUpLen, MAX_OuterFadeUpLen);
          mOuterFadeUpLenBox = S.AddTextBox(_("Outer fade up length:"), wxT(""), 10);
          mOuterFadeUpLenBox->SetValidator(vldOuterFadeUpLen);
          S.AddUnits(_("seconds"));
 
-         FloatingPointValidator<double> vldInnerFadeDownLen(2, &mInnerFadeDownLen, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldInnerFadeDownLen(2, &mInnerFadeDownLen, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldInnerFadeDownLen.SetRange(MIN_InnerFadeDownLen, MAX_InnerFadeDownLen);
          mInnerFadeDownLenBox = S.AddTextBox(_("Inner fade down length:"), wxT(""), 10);
          mInnerFadeDownLenBox->SetValidator(vldInnerFadeDownLen);
          S.AddUnits(_("seconds"));
 
-         FloatingPointValidator<double> vldInnerFadeUpLen(2, &mInnerFadeUpLen, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldInnerFadeUpLen(2, &mInnerFadeUpLen, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldInnerFadeUpLen.SetRange(MIN_InnerFadeUpLen, MAX_InnerFadeUpLen);
          mInnerFadeUpLenBox = S.AddTextBox(_("Inner fade up length:"), wxT(""), 10);
          mInnerFadeUpLenBox->SetValidator(vldInnerFadeUpLen);
@@ -475,7 +479,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
 
       S.StartMultiColumn(3, wxCENTER);
       {
-         FloatingPointValidator<double> vldThresholdDb(2, &mThresholdDb, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldThresholdDb(2, &mThresholdDb, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldThresholdDb.SetRange(MIN_ThresholdDb, MAX_ThresholdDb);
          mThresholdDbBox = S.AddTextBox(_("Threshold:"), wxT(""), 10);
          mThresholdDbBox->SetValidator(vldThresholdDb);
@@ -514,7 +518,7 @@ bool EffectAutoDuck::TransferDataFromWindow()
 // EffectAutoDuck implementation
 
 // this currently does an exponential fade
-bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
+bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
                                    double t0, double t1)
 {
    bool cancel = false;
@@ -567,7 +571,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
 
       float curTime = t->LongSamplesToTime(pos);
       float fractionFinished = (curTime - mT0) / (mT1 - mT0);
-      if (TotalProgress( (trackNumber + 1 + fractionFinished) /
+      if (TotalProgress( (trackNum + 1 + fractionFinished) /
                          (GetNumWaveTracks() + 1) ))
       {
          cancel = true;
@@ -618,8 +622,9 @@ BEGIN_EVENT_TABLE(EffectAutoDuckPanel, wxPanelWrapper)
    EVT_MOTION(EffectAutoDuckPanel::OnMotion)
 END_EVENT_TABLE()
 
-EffectAutoDuckPanel::EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect)
-:  wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(600, 300))
+EffectAutoDuckPanel::EffectAutoDuckPanel(
+   wxWindow *parent, wxWindowID winid, EffectAutoDuck *effect)
+:  wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(600, 300))
 {
    mParent = parent;
    mEffect = effect;

@@ -111,7 +111,7 @@ wxString EffectCompressor::ManualPage()
    return wxT("Compressor");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectCompressor::GetType()
 {
@@ -119,8 +119,18 @@ EffectType EffectCompressor::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectCompressor::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mThresholdDB, Threshold );
+   S.SHUTTLE_PARAM( mNoiseFloorDB, NoiseFloor );
+   S.SHUTTLE_PARAM( mRatio, Ratio);
+   S.SHUTTLE_PARAM( mAttackTime, AttackTime);
+   S.SHUTTLE_PARAM( mDecayTime, ReleaseTime);
+   S.SHUTTLE_PARAM( mNormalize, Normalize);
+   S.SHUTTLE_PARAM( mUsePeak, UsePeak);
+   return true;
+}
 
-bool EffectCompressor::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectCompressor::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Threshold, mThresholdDB);
    parms.Write(KEY_NoiseFloor, mNoiseFloorDB);
@@ -133,7 +143,7 @@ bool EffectCompressor::GetAutomationParameters(EffectAutomationParameters & parm
    return true;
 }
 
-bool EffectCompressor::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectCompressor::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Threshold);
    ReadAndVerifyDouble(NoiseFloor);
@@ -196,7 +206,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxEXPAND, true);
    {
       S.SetBorder(10);
-      mPanel = safenew EffectCompressorPanel(S.GetParent(),
+      mPanel = safenew EffectCompressorPanel(S.GetParent(), wxID_ANY,
                                          mThresholdDB,
                                          mNoiseFloorDB,
                                          mRatio);
@@ -644,11 +654,11 @@ BEGIN_EVENT_TABLE(EffectCompressorPanel, wxPanelWrapper)
    EVT_SIZE(EffectCompressorPanel::OnSize)
 END_EVENT_TABLE()
 
-EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent,
+EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent, wxWindowID winid,
                                              double & threshold,
                                              double & noiseFloor,
                                              double & ratio)
-:  wxPanelWrapper(parent),
+:  wxPanelWrapper(parent, winid),
    threshold(threshold),
    noiseFloor(noiseFloor),
    ratio(ratio)

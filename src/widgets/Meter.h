@@ -23,7 +23,8 @@
 #include "Ruler.h"
 
 // Event used to notify all meters of preference changes
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_METER_PREFERENCES_CHANGED, -1);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_METER_PREFERENCES_CHANGED, wxCommandEvent);
 
 // Increase this when we add support for multichannel meters
 // (most of the code is already there)
@@ -85,9 +86,13 @@ class MeterUpdateQueue
 
 class MeterAx;
 
-class Meter final : public wxPanelWrapper
+/********************************************************************//**
+\brief MeterPanel is a panel that paints the meter used for monitoring
+or playback.
+************************************************************************/
+class MeterPanel final : public wxPanelWrapper
 {
-   DECLARE_DYNAMIC_CLASS(Meter)
+   DECLARE_DYNAMIC_CLASS(MeterPanel)
 
  public:
    // These should be kept in the same order as they appear
@@ -102,15 +107,13 @@ class Meter final : public wxPanelWrapper
    };
 
 
-   Meter(AudacityProject *,
+   MeterPanel(AudacityProject *,
          wxWindow* parent, wxWindowID id,
          bool isInput,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
          Style style = HorizontalStereo,
          float fDecayRate = 60.0f);
-
-   ~Meter();
 
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
    bool AcceptsFocusFromKeyboard() const override { return true; }

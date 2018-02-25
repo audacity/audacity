@@ -16,11 +16,11 @@
 
 #include "Audacity.h"
 
+#include <vector>
 #include <wx/wx.h>
 #include <wx/bitmap.h>
 #include <wx/colour.h>
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/font.h>
 #include <wx/image.h>
 
@@ -56,14 +56,6 @@ enum teThemeType
 };
 
 
-
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxImage,  ArrayOfImages, AUDACITY_DLL_API);
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxBitmap, ArrayOfBitmaps, AUDACITY_DLL_API);
-WX_DECLARE_USER_EXPORTED_OBJARRAY(wxColour, ArrayOfColours, AUDACITY_DLL_API);
-
-//WX_DECLARE_OBJARRAY(wxImage,  ArrayOfImages);
-//WX_DECLARE_OBJARRAY(wxBitmap, ArrayOfBitmaps);
-//WX_DECLARE_OBJARRAY(wxColour, ArrayOfColours);
 
 class AUDACITY_DLL_API FlowPacker
 {
@@ -150,12 +142,13 @@ public:
    wxImage MakeImageWithAlpha( wxBitmap & Bmp );
 
 protected:
-   ArrayOfImages mImages;
-   ArrayOfBitmaps mBitmaps;
+   // wxImage, wxBitmap copy cheaply using reference counting
+   std::vector<wxImage> mImages;
+   std::vector<wxBitmap> mBitmaps;
    wxArrayString mBitmapNames;
-   wxArrayInt mBitmapFlags;
+   std::vector<int> mBitmapFlags;
 
-   ArrayOfColours mColours;
+   std::vector<wxColour> mColours;
    wxArrayString mColourNames;
    FlowPacker mFlow;
 };

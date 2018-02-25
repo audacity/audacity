@@ -44,8 +44,6 @@ public:
    int laststages;
 };
 
-WX_DECLARE_OBJARRAY(EffectPhaserState, EffectPhaserStateArray);
-
 class EffectPhaser final : public Effect
 {
 public:
@@ -58,7 +56,7 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    bool SupportsRealtime() override;
@@ -76,8 +74,9 @@ public:
                                        float **inbuf,
                                        float **outbuf,
                                        size_t numSamples) override;
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool DefineParams( ShuttleParams & S ) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // Effect implementation
 
@@ -120,7 +119,7 @@ private:
 
 private:
    EffectPhaserState mMaster;
-   EffectPhaserStateArray mSlaves;
+   std::vector<EffectPhaserState> mSlaves;
 
    // parameters
    int mStages;

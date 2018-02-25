@@ -46,6 +46,12 @@ enum NyqControlType
 class NyqControl
 {
 public:
+   NyqControl() = default;
+   NyqControl( const NyqControl& ) = default;
+   NyqControl &operator = ( const NyqControl & ) = default;
+   //NyqControl( NyqControl && ) = default;
+   //NyqControl &operator = ( NyqControl && ) = default;
+
    int type;
    wxString var;
    wxString name;
@@ -58,8 +64,6 @@ public:
    double high;
    int ticks;
 };
-
-WX_DECLARE_USER_EXPORTED_OBJARRAY(NyqControl,  NyqControlArray, AUDACITY_DLL_API);
 
 class AUDACITY_DLL_API NyquistEffect final : public Effect
 {
@@ -83,17 +87,19 @@ public:
    wxString ManualPage() override;
    wxString HelpPage() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamily() override;
+   wxString GetFamilyId() override;
+   wxString GetFamilyName() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 
    // EffectClientInterface implementation
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool DefineParams( ShuttleParams & S ) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // Effect implementation
    
@@ -214,7 +220,7 @@ private:
    wxString          mDebugOutput;
 
    int               mVersion;
-   NyqControlArray   mControls;
+   std::vector<NyqControl>   mControls;
 
    unsigned          mCurNumChannels;
    WaveTrack         *mCurTrack[2];

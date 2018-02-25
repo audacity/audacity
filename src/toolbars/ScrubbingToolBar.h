@@ -56,8 +56,10 @@ public:
 
 private:
 
-   AButton *AddButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-                      int id, const wxChar *label, bool toggle = false);
+   static AButton *AddButton(
+      ScrubbingToolBar *pBar,
+      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+      int id, const wxChar *label, bool toggle = false);
 
    void MakeButtons();
 

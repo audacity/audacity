@@ -480,9 +480,6 @@ enum FieldTypes
    FT_Name           // type, name length, name
 };
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(IdMapArray);
-
 AutoSaveFile::AutoSaveFile(size_t allocSize)
 {
    mAllocSize = allocSize;
@@ -762,7 +759,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       XMLFileWriter out{ fileName, _("Error Decoding File") };
 
       IdMap mIds;
-      IdMapArray mIdStack;
+      std::vector<IdMap> mIdStack;
 
       mIds.clear();
 
@@ -774,15 +771,15 @@ bool AutoSaveFile::Decode(const wxString & fileName)
          {
             case FT_Push:
             {
-               mIdStack.Add(mIds);
+               mIdStack.push_back(mIds);
                mIds.clear();
             }
             break;
 
             case FT_Pop:
             {
-               mIds = mIdStack[mIdStack.GetCount() - 1];
-               mIdStack.RemoveAt(mIdStack.GetCount() - 1);
+               mIds = mIdStack.back();
+               mIdStack.pop_back();
             }
             break;
 

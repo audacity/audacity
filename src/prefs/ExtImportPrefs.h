@@ -46,7 +46,7 @@ private:
 class ExtImportPrefs final : public PrefsPanel
 {
  public:
-   ExtImportPrefs(wxWindow * parent);
+   ExtImportPrefs(wxWindow * parent, wxWindowID winid);
    ~ExtImportPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -111,6 +111,6 @@ class ExtImportPrefs final : public PrefsPanel
 class ExtImportPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

@@ -97,6 +97,7 @@ array of Ruler::Label.
 #include "../prefs/TracksPrefs.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
 #include "../widgets/Grabber.h"
+#include "../commands/CommandContext.h"
 
 //#define SCRUB_ABOVE
 
@@ -1606,10 +1607,37 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
+                       wxOrientation orientation,
+                       const wxSize &bounds,
+                       const Range &range,
+                       Ruler::RulerFormat format,
+                       const wxString &units,
+                       const Options &options,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):
    wxPanelWrapper(parent, id, pos, size)
 {
+   ruler.SetBounds( 0, 0, bounds.x, bounds.y );
+   ruler.SetOrientation(orientation);
+   ruler.SetRange( range.first, range.second );
+   ruler.SetLog( options.log );
+   ruler.SetFormat(format);
+   ruler.SetUnits( units );
+   ruler.SetFlip( options.flip );
+   ruler.SetLabelEdges( options.labelEdges );
+   ruler.mbTicksAtExtremes = options.ticksAtExtremes;
+   if (orientation == wxVERTICAL) {
+      wxCoord w;
+      ruler.GetMaxSize(&w, NULL);
+      SetMinSize(wxSize(w, 150));  // height needed for wxGTK
+   }
+   else if (orientation == wxHORIZONTAL) {
+      wxCoord h;
+      ruler.GetMaxSize(NULL, &h);
+      SetMinSize(wxSize(wxDefaultCoord, h));
+   }
+   if (options.hasTickColour)
+      ruler.SetTickColour( options.tickColour );
 }
 
 RulerPanel::~RulerPanel()
@@ -1994,9 +2022,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxToolTip::Enable(true);
 #endif
 
-   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(AdornedRulerPanel::OnCapture),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &AdornedRulerPanel::OnCapture,
                      this);
 }
 
@@ -2004,11 +2031,6 @@ AdornedRulerPanel::~AdornedRulerPanel()
 {
    if(HasCapture())
       ReleaseMouse();
-
-   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
-                        wxCommandEventHandler(AdornedRulerPanel::OnCapture),
-                        NULL,
-                        this);
 }
 
 #if 1
@@ -2614,7 +2636,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
       case mesDraggingPlayRegionStart:
          HideQuickPlayIndicator();
 
-         // Don't start dragging until beyond tollerance initial playback start
+         // Don't start dragging until beyond tolerance initial playback start
          if (!mIsDragging && isWithinStart)
             mQuickPlayPos = mOldPlayRegionStart;
          else

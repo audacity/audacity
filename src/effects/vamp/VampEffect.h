@@ -51,18 +51,19 @@ public:
    wxString GetVersion() override;
    wxString GetDescription() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamily() override;
+   wxString GetFamilyId() override;
+   wxString GetFamilyName() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 
    // EffectClientInterface implementation
 
    unsigned GetAudioInCount() override;
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // Effect implementation
 

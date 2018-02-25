@@ -17,7 +17,6 @@
 #include "xml/XMLWriter.h"
 
 #include <wx/debug.h>
-#include <wx/dynarray.h>
 #include <wx/ffile.h>
 #include <wx/hashmap.h>
 #include <wx/mstream.h>
@@ -74,7 +73,6 @@ private:
 
 using NameMap = std::unordered_map<wxString, short>;
 using IdMap = std::unordered_map<short, wxString>;
-WX_DECLARE_OBJARRAY_WITH_DECL(IdMap, IdMapArray, class AUDACITY_DLL_API);
 
 // This class's overrides do NOT throw AudacityException.
 class AUDACITY_DLL_API AutoSaveFile final : public XMLWriter

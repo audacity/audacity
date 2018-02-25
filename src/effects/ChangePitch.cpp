@@ -130,7 +130,7 @@ wxString EffectChangePitch::ManualPage()
    return wxT("Change_Pitch");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectChangePitch::GetType()
 {
@@ -138,8 +138,13 @@ EffectType EffectChangePitch::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectChangePitch::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( m_dPercentChange, Percentage );
+   S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
+   return true;
+}
 
-bool EffectChangePitch::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangePitch::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_dPercentChange);
    parms.Write(KEY_UseSBSMS, mUseSBSMS);
@@ -147,7 +152,7 @@ bool EffectChangePitch::GetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
-bool EffectChangePitch::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangePitch::SetAutomationParameters(CommandParameters & parms)
 {
    // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
    // Only m_dSemitonesChange is used in Process().
@@ -187,12 +192,11 @@ bool EffectChangePitch::Process()
    if (mUseSBSMS)
    {
       double pitchRatio = 1.0 + m_dPercentChange / 100.0;
-      SelectedRegion region(mT0, mT1);
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
 
-      return Delegate(proxy, mUIParent, &region, false);
+      return Delegate(proxy, mUIParent, false);
    }
    else
 #endif
@@ -269,7 +273,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            FloatingPointValidator<double> vldSemitones(2, &m_dSemitonesChange, NUM_VAL_TWO_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldSemitones(2, &m_dSemitonesChange, NumValidatorStyle::TWO_TRAILING_ZEROES);
             m_pTextCtrl_SemitonesChange =
                S.Id(ID_SemitonesChange).AddTextBox(_("Semitones (half-steps):"), wxT(""), 12);
             m_pTextCtrl_SemitonesChange->SetName(_("Semitones (half-steps)"));
@@ -283,13 +287,13 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(5, wxALIGN_CENTER); // 5, because AddTextBox adds a wxStaticText and a wxTextCtrl.
          {
-            FloatingPointValidator<double> vldFromFrequency(3, &m_FromFrequency, NUM_VAL_THREE_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldFromFrequency(3, &m_FromFrequency, NumValidatorStyle::THREE_TRAILING_ZEROES);
             vldFromFrequency.SetMin(0.0);
             m_pTextCtrl_FromFrequency = S.Id(ID_FromFrequency).AddTextBox(_("from"), wxT(""), 12);
             m_pTextCtrl_FromFrequency->SetName(_("from (Hz)"));
             m_pTextCtrl_FromFrequency->SetValidator(vldFromFrequency);
 
-            FloatingPointValidator<double> vldToFrequency(3, &m_ToFrequency, NUM_VAL_THREE_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldToFrequency(3, &m_ToFrequency, NumValidatorStyle::THREE_TRAILING_ZEROES);
             vldToFrequency.SetMin(0.0);
             m_pTextCtrl_ToFrequency = S.Id(ID_ToFrequency).AddTextBox(_("to"), wxT(""), 12);
             m_pTextCtrl_ToFrequency->SetName(_("to (Hz)"));
@@ -301,7 +305,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            FloatingPointValidator<double> vldPercentage(3, &m_dPercentChange, NUM_VAL_THREE_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldPercentage(3, &m_dPercentChange, NumValidatorStyle::THREE_TRAILING_ZEROES);
             vldPercentage.SetRange(MIN_Percentage, MAX_Percentage);
             m_pTextCtrl_PercentChange = S.Id(ID_PercentChange).AddTextBox(_("Percent Change:"), wxT(""), 12);
             m_pTextCtrl_PercentChange->SetValidator(vldPercentage);

@@ -72,9 +72,10 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_TIMER(FilterTimerID, KeyConfigPrefs::OnFilterTimer)
 END_EVENT_TABLE()
 
-KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, const wxString &name)
+KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
+                               const wxString &name)
 /* i18n-hint: as in computer keyboard (not musical!) */
-:  PrefsPanel(parent, _("Keyboard")),
+:  PrefsPanel(parent, winid, _("Keyboard")),
    mView(NULL),
    mKey(NULL),
    mFilter(NULL),
@@ -85,37 +86,6 @@ KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, const wxString &name)
    if (!name.empty()) {
       auto index = mView->GetIndexByName(name);
       mView->SelectNode(index);
-   }
-}
-
-KeyConfigPrefs::~KeyConfigPrefs()
-{
-   if (mKey)
-   {
-      mKey->Disconnect(wxEVT_KEY_DOWN,
-            wxKeyEventHandler(KeyConfigPrefs::OnHotkeyKeyDown),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_CHAR,
-            wxKeyEventHandler(KeyConfigPrefs::OnHotkeyChar),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_KILL_FOCUS,
-            wxFocusEventHandler(KeyConfigPrefs::OnHotkeyKillFocus),
-            NULL,
-            this);
-   }
-
-   if (mFilter)
-   {
-      mKey->Disconnect(wxEVT_KEY_DOWN,
-            wxKeyEventHandler(KeyConfigPrefs::OnFilterKeyDown),
-            NULL,
-            this);
-      mKey->Disconnect(wxEVT_CHAR,
-            wxKeyEventHandler(KeyConfigPrefs::OnFilterChar),
-            NULL,
-            this);
    }
 }
 
@@ -216,13 +186,11 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
                                         wxTE_PROCESS_ENTER);
                mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
-               mFilter->Connect(wxEVT_KEY_DOWN,
-                                wxKeyEventHandler(KeyConfigPrefs::OnFilterKeyDown),
-                                NULL,
+               mFilter->Bind(wxEVT_KEY_DOWN,
+                                &KeyConfigPrefs::OnFilterKeyDown,
                                 this);
-               mFilter->Connect(wxEVT_CHAR,
-                                wxKeyEventHandler(KeyConfigPrefs::OnFilterChar),
-                                NULL,
+               mFilter->Bind(wxEVT_CHAR,
+                                &KeyConfigPrefs::OnFilterChar,
                                 this);
             }
             S.AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
@@ -258,17 +226,14 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                   wxTE_PROCESS_ENTER);
 
             mKey->SetName(_("Short cut"));
-            mKey->Connect(wxEVT_KEY_DOWN,
-                          wxKeyEventHandler(KeyConfigPrefs::OnHotkeyKeyDown),
-                          NULL,
+            mKey->Bind(wxEVT_KEY_DOWN,
+                          &KeyConfigPrefs::OnHotkeyKeyDown,
                           this);
-            mKey->Connect(wxEVT_CHAR,
-                          wxKeyEventHandler(KeyConfigPrefs::OnHotkeyChar),
-                          NULL,
+            mKey->Bind(wxEVT_CHAR,
+                          &KeyConfigPrefs::OnHotkeyChar,
                           this);
-            mKey->Connect(wxEVT_KILL_FOCUS,
-                          wxFocusEventHandler(KeyConfigPrefs::OnHotkeyKillFocus),
-                          NULL,
+            mKey->Bind(wxEVT_KILL_FOCUS,
+                          &KeyConfigPrefs::OnHotkeyKillFocus,
                           this);
          }
          S.AddWindow(mKey);
@@ -711,8 +676,9 @@ bool KeyConfigPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   bool bFull = gPrefs->ReadBool(wxT("/GUI/Shortcuts/FullDefaults"), false);
    for (size_t i = 0; i < mNames.GetCount(); i++) {
-      wxString dkey = KeyStringNormalize(mStandardDefaultKeys[i]);
+      wxString dkey = bFull ? KeyStringNormalize(mDefaultKeys[i]) : KeyStringNormalize(mStandardDefaultKeys[i]);
       wxString name = wxT("/NewKeys/") + mNames[i];
       wxString key = KeyStringNormalize(mNewKeys[i]);
 
@@ -749,9 +715,9 @@ wxString KeyConfigPrefs::HelpPageName()
    return "Keyboard_Preferences";
 }
 
-PrefsPanel *KeyConfigPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *KeyConfigPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   auto result = safenew KeyConfigPrefs{ parent, mName };
+   auto result = safenew KeyConfigPrefs{ parent, winid, mName };
    return result;
 }

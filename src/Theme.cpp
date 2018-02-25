@@ -82,12 +82,6 @@ can't be.
 #include "ImageManipulation.h"
 #include "widgets/ErrorDialog.h"
 
-#include <wx/arrimpl.cpp>
-
-WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfImages )
-WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfBitmaps )
-WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
-
 // JKC: First get the MAC specific images.
 // As we've disabled USE_AQUA_THEME, we need to name each file we use.
 //
@@ -477,7 +471,7 @@ void ThemeBase::RegisterImage( int &iIndex, char const ** pXpm, const wxString &
 void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
-   mImages.Add( Image );
+   mImages.push_back( Image );
 
 #ifdef __APPLE__
    // On Mac, bitmaps with alpha don't work.
@@ -487,23 +481,23 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
    // the blending ourselves anyway.]
    wxImage TempImage( Image );
    TempImage.ConvertAlphaToMask();
-   mBitmaps.Add( wxBitmap( TempImage ) );
+   mBitmaps.push_back( wxBitmap( TempImage ) );
 #else
-   mBitmaps.Add( wxBitmap( Image ) );
+   mBitmaps.push_back( wxBitmap( Image ) );
 #endif
 
    mBitmapNames.Add( Name );
-   mBitmapFlags.Add( mFlow.mFlags );
+   mBitmapFlags.push_back( mFlow.mFlags );
    mFlow.mFlags &= ~resFlagSkip;
-   iIndex = mBitmaps.GetCount()-1;
+   iIndex = mBitmaps.size() - 1;
 }
 
 void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same colour twice!
-   mColours.Add( Clr );
+   mColours.push_back( Clr );
    mColourNames.Add( Name );
-   iIndex = mColours.GetCount()-1;
+   iIndex = mColours.size() - 1;
 }
 
 void FlowPacker::Init(int width)
@@ -689,7 +683,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 #endif
 
    // Save the bitmaps
-   for(i=0;i<(int)mImages.GetCount();i++)
+   for(i = 0;i < (int)mImages.size();i++)
    {
       wxImage &SrcImage = mImages[i];
       mFlow.mFlags = mBitmapFlags[i];
@@ -718,7 +712,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 
    mFlow.SetColourGroup();
    const int iColSize = 10;
-   for(i=0;i<(int)mColours.GetCount();i++)
+   for(i = 0; i < (int)mColours.size(); i++)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
       wxColour c = mColours[i];
@@ -839,7 +833,7 @@ void ThemeBase::WriteImageMap( )
    File.Write( Temp );
    File.Write( wxT("<map name=\"map1\">\r\n") );
 
-   for(i=0;i<(int)mImages.GetCount();i++)
+   for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &SrcImage = mImages[i];
       mFlow.mFlags = mBitmapFlags[i];
@@ -857,7 +851,7 @@ void ThemeBase::WriteImageMap( )
    // Now save the colours.
    mFlow.SetColourGroup();
    const int iColSize = 10;
-   for(i=0;i<(int)mColours.GetCount();i++)
+   for(i = 0; i < (int)mColours.size(); i++)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
       // No href in html.  Uses title not alt.
@@ -883,7 +877,7 @@ void ThemeBase::WriteImageDefs( )
    if( !File.IsOpened() )
       return;
    teResourceFlags PrevFlags = (teResourceFlags)-1;
-   for(i=0;i<(int)mImages.GetCount();i++)
+   for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &SrcImage = mImages[i];
       // No href in html.  Uses title not alt.
@@ -1029,7 +1023,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    mFlow.Init(ImageCacheWidth);
    mFlow.mBorderWidth = 1;
    // Load the bitmaps
-   for(i=0;i<(int)mImages.GetCount();i++)
+   for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &Image = mImages[i];
       mFlow.mFlags = mBitmapFlags[i];
@@ -1048,7 +1042,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    mFlow.SetColourGroup();
    wxColour TempColour;
    const int iColSize=10;
-   for(i=0;i<(int)mColours.GetCount();i++)
+   for(i = 0; i < (int)mColours.size(); i++)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
       mFlow.RectMid( x, y );
@@ -1081,7 +1075,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
    int i;
    int n=0;
    wxString FileName;
-   for(i=0;i<(int)mImages.GetCount();i++)
+   for(i = 0; i < (int)mImages.size(); i++)
    {
 
       if( (mBitmapFlags[i] & resFlagInternal)==0)
@@ -1150,7 +1144,7 @@ void ThemeBase::SaveComponents()
    int i;
    int n=0;
    wxString FileName;
-   for(i=0;i<(int)mImages.GetCount();i++)
+   for(i = 0; i < (int)mImages.size(); i++)
    {
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
@@ -1176,7 +1170,7 @@ void ThemeBase::SaveComponents()
          return;
    }
 
-   for(i=0;i<(int)mImages.GetCount();i++)
+   for(i = 0; i < (int)mImages.size(); i++)
    {
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {

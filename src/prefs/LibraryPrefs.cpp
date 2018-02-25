@@ -46,9 +46,9 @@ BEGIN_EVENT_TABLE(LibraryPrefs, PrefsPanel)
    EVT_BUTTON(ID_FFMPEG_DOWN_BUTTON, LibraryPrefs::OnFFmpegDownButton)
 END_EVENT_TABLE()
 
-LibraryPrefs::LibraryPrefs(wxWindow * parent)
+LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
 /* i18-hint: refers to optional plug-in software libraries */
-:   PrefsPanel(parent, _("Libraries"))
+:   PrefsPanel(parent, winid, _("Libraries"))
 {
    Populate();
 }
@@ -250,8 +250,8 @@ wxString LibraryPrefs::HelpPageName()
    return "Libraries_Preferences";
 }
 
-PrefsPanel *LibraryPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *LibraryPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew LibraryPrefs(parent);
+   return safenew LibraryPrefs(parent, winid);
 }

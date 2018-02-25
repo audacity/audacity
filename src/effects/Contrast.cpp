@@ -152,6 +152,20 @@ BEGIN_EVENT_TABLE(ContrastDialog,wxDialogWrapper)
    EVT_BUTTON(wxID_CANCEL, ContrastDialog::OnClose)
 END_EVENT_TABLE()
 
+static void OnChar(wxKeyEvent & event)
+{
+   // Is this still required?
+   if (event.GetKeyCode() == WXK_TAB) {
+      // pass to next handler
+      event.Skip();
+      return;
+   }
+
+   // ignore any other key
+   event.Skip(false);
+   return;
+}
+
 /* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
 ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                            const wxString & title,
@@ -200,85 +214,74 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText( {} );   // spacer
          S.AddFixedText(_("Volume    "));
 
+         const auto options = NumericTextCtrl::Options{}
+            .AutoPos(true)
+            .MenuEnabled(false)
+            .ReadOnly(true);
+
          //Foreground
          S.AddFixedText(_("&Foreground:"), false);
          if (S.GetMode() == eIsCreating)
          {
             mForegroundStartT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_FOREGROUNDSTART_T,
+               NumericTextCtrl(this, ID_FOREGROUNDSTART_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mForegroundStartT->SetName(_("Foreground start time"));
-            mForegroundStartT->EnableMenu(false);
-            mForegroundStartT->SetReadOnly(true);
          }
          S.AddWindow(mForegroundStartT);
 
          if (S.GetMode() == eIsCreating)
          {
             mForegroundEndT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_FOREGROUNDEND_T,
+               NumericTextCtrl(this, ID_FOREGROUNDEND_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mForegroundEndT->SetName(_("Foreground end time"));
-            mForegroundEndT->EnableMenu(false);
-            mForegroundEndT->SetReadOnly(true);
          }
          S.AddWindow(mForegroundEndT);
 
          m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
          mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
-         mForegroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mForegroundRMSText->Bind(wxEVT_KEY_DOWN, OnChar);
 
          //Background
          S.AddFixedText(_("&Background:"));
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundStartT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_BACKGROUNDSTART_T,
+               NumericTextCtrl(this, ID_BACKGROUNDSTART_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mBackgroundStartT->SetName(_("Background start time"));
-            mBackgroundStartT->EnableMenu(false);
-            mBackgroundStartT->SetReadOnly(true);
          }
          S.AddWindow(mBackgroundStartT);
 
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundEndT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_BACKGROUNDEND_T,
+               NumericTextCtrl(this, ID_BACKGROUNDEND_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mBackgroundEndT->SetName(_("Background end time"));
-            mBackgroundEndT->EnableMenu(false);
-            mBackgroundEndT->SetReadOnly(true);
          }
          S.AddWindow(mBackgroundEndT);
 
          m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
          mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
-         mBackgroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mBackgroundRMSText->Bind(wxEVT_KEY_DOWN, OnChar);
       }
       S.EndMultiColumn();
    }
@@ -291,11 +294,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       {
          S.AddFixedText(_("Co&ntrast Result:"));
          mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox( {}, wxT(""), 50);
-         mPassFailText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mPassFailText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
          S.AddFixedText(_("&Difference:"));
          mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox( {}, wxT(""), 50);
-         mDiffText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
+         mDiffText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }
       S.EndMultiColumn();
@@ -316,14 +319,6 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    Fit();
    SetMinSize(GetSize());
    Center();
-}
-
-ContrastDialog::~ContrastDialog()
-{
-   mForegroundRMSText->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
-   mBackgroundRMSText->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
-   mPassFailText->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
-   mDiffText->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
 }
 
 void ContrastDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
@@ -606,16 +601,4 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
    mBackgroundRMSText->ChangeValue(wxT(""));
    mPassFailText->ChangeValue(wxT(""));
    mDiffText->ChangeValue(wxT(""));
-}
-
-void ContrastDialog::OnChar(wxKeyEvent & event)
-{
-   // Is this still required?
-   if (event.GetKeyCode() == WXK_TAB) {
-      event.Skip();
-      return;
-   }
-
-   event.Skip(false);
-   return;
 }

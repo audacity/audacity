@@ -45,11 +45,11 @@ namespace {
 }
 
 
-TracksPrefs::TracksPrefs(wxWindow * parent)
+TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
  * notes */
-:  PrefsPanel(parent, _("Tracks"))
+:  PrefsPanel(parent, winid, _("Tracks"))
 {
    // Bugs 1043, 1044
    // First rewrite legacy preferences
@@ -69,41 +69,41 @@ void TracksPrefs::Populate()
    // we don't display them by increasing integer values.
 
    mViewChoices.Add(_("Waveform"));
-   mViewCodes.Add((int)(WaveTrack::Waveform));
+   mViewCodes.push_back((int)(WaveTrack::Waveform));
 
    mViewChoices.Add(_("Waveform (dB)"));
-   mViewCodes.Add((int)(WaveTrack::obsoleteWaveformDBDisplay));
+   mViewCodes.push_back((int)(WaveTrack::obsoleteWaveformDBDisplay));
 
    mViewChoices.Add(_("Spectrogram"));
-   mViewCodes.Add(WaveTrack::Spectrum);
+   mViewCodes.push_back(WaveTrack::Spectrum);
 
 
    // How samples are displayed when zoomed in:
 
    mSampleDisplayChoices.Add(_("Connect dots"));
-   mSampleDisplayCodes.Add((int) WaveTrack::LinearInterpolate);
+   mSampleDisplayCodes.push_back((int) WaveTrack::LinearInterpolate);
 
    mSampleDisplayChoices.Add(_("Stem plot"));
-   mSampleDisplayCodes.Add((int) WaveTrack::StemPlot);
+   mSampleDisplayCodes.push_back((int) WaveTrack::StemPlot);
 
    mZoomChoices.Add( _("Fit to Width") );
-   mZoomCodes.Add( WaveTrack::kZoomToFit );
+   mZoomCodes.push_back( WaveTrack::kZoomToFit );
    mZoomChoices.Add( _("Zoom to Selection") );
-   mZoomCodes.Add( WaveTrack::kZoomToSelection );
+   mZoomCodes.push_back( WaveTrack::kZoomToSelection );
    mZoomChoices.Add( _("Zoom Default") );
-   mZoomCodes.Add( WaveTrack::kZoomDefault );
+   mZoomCodes.push_back( WaveTrack::kZoomDefault );
    mZoomChoices.Add( _("Minutes") );
-   mZoomCodes.Add( WaveTrack::kZoomMinutes );
+   mZoomCodes.push_back( WaveTrack::kZoomMinutes );
    mZoomChoices.Add( _("Seconds") );
-   mZoomCodes.Add( WaveTrack::kZoomSeconds );
+   mZoomCodes.push_back( WaveTrack::kZoomSeconds );
    mZoomChoices.Add( _("MilliSeconds") );
-   mZoomCodes.Add( WaveTrack::kZoomMilliSeconds );
+   mZoomCodes.push_back( WaveTrack::kZoomMilliSeconds );
    mZoomChoices.Add( _("Samples") );
-   mZoomCodes.Add( WaveTrack::kZoomSamples );
+   mZoomCodes.push_back( WaveTrack::kZoomSamples );
    mZoomChoices.Add( _("4 Pixels per Sample") );
-   mZoomCodes.Add( WaveTrack::kZoom4To1 );
+   mZoomCodes.push_back( WaveTrack::kZoom4To1 );
    mZoomChoices.Add( _("Max Zoom") );
-   mZoomCodes.Add( WaveTrack::kMaxZoom );
+   mZoomCodes.push_back( WaveTrack::kMaxZoom );
 
 
 
@@ -239,8 +239,8 @@ wxString TracksPrefs::HelpPageName()
    return "Tracks_Preferences";
 }
 
-PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *TracksPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew TracksPrefs(parent);
+   return safenew TracksPrefs(parent, winid);
 }

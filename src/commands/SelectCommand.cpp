@@ -5,145 +5,168 @@
    License: wxwidgets
 
    Dan Horgan
+   James Crook
 
 ******************************************************************//**
 
 \file SelectCommand.cpp
-\brief Definitions for SelectCommand and SelectCommandType classes
+\brief Definitions for SelectCommand classes
+
+\class SelectTimeCommand
+\brief Command for changing the time selection
+
+\class SelectFrequenciesCommand
+\brief Command for changing the frequency selection
+
+\class SelectTracksCommand
+\brief Command for changing the selection of tracks
 
 \class SelectCommand
-\brief Command for changing the selection
+\brief Command for changing time, frequency and track selection. This
+class is a little baroque, as it uses the SelectTimeCommand, 
+SelectFrequenciesCommand and SelectTracksCommand, when it could just
+explicitly code all three.
 
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "SelectCommand.h"
 #include <wx/string.h>
+#include <float.h>
+
+#include "SelectCommand.h"
 #include "../Project.h"
 #include "../Track.h"
+#include "../ShuttleGui.h"
+#include "CommandContext.h"
 
-wxString SelectCommandType::BuildName()
-{
-   return wxT("Select");
+bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
+   S.OptionalY( bHasT0     ).Define( mT0, wxT("Start"), 0.0, 0.0, (double)FLT_MAX);
+   S.OptionalY( bHasT1     ).Define( mT1, wxT("End"), 0.0, 0.0, (double)FLT_MAX);
+   S.OptionalY( bHasFromEnd).Define( mFromEnd, wxT("FromEnd"),   false );
+   return true;
 }
 
-void SelectCommandType::BuildSignature(CommandSignature &signature)
+void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   auto modeValidator = make_movable<OptionValidator>();
-   modeValidator->AddOption(wxT("None"));
-   modeValidator->AddOption(wxT("All"));
-   modeValidator->AddOption(wxT("Range"));
-   modeValidator->AddOption(wxT("Name"));
-   signature.AddParameter(wxT("Mode"), wxT("All"), std::move(modeValidator));
+   S.AddSpace(0, 5);
 
-   auto startTimeValidator = make_movable<DoubleValidator>();
-   signature.AddParameter(wxT("StartTime"), 0.0, std::move(startTimeValidator));
-   auto endTimeValidator = make_movable<DoubleValidator>();
-   signature.AddParameter(wxT("EndTime"), 0.0, std::move(endTimeValidator));
-
-   auto firstTrackValidator = make_movable<IntValidator>();
-   signature.AddParameter(wxT("FirstTrack"), 0, std::move(firstTrackValidator));
-   auto lastTrackValidator = make_movable<IntValidator>();
-   signature.AddParameter(wxT("LastTrack"), 0, std::move(lastTrackValidator));
-
-   auto trackNameValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("TrackName"), 0, std::move(trackNameValidator));
-}
-
-CommandHolder SelectCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
-{
-   return std::make_shared<SelectCommand>(*this, std::move(target));
-}
-
-bool SelectCommand::Apply(CommandExecutionContext context)
-{
-   wxString mode = GetString(wxT("Mode"));
-   if (mode.IsSameAs(wxT("None")))
+   S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      // select none
-      auto project = context.GetProject();
-      project->OnSelectNone(*project);
+      S.Optional( bHasT0 ).TieTextBox(_("Start Time:"), mT0);
+      S.Optional( bHasT1 ).TieTextBox(_("End Time:"),   mT1);
    }
-   else if (mode.IsSameAs(wxT("All")))
+   S.EndMultiColumn();
+   S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      // select all
-      auto project = context.GetProject();
-      project->OnSelectAll(*project);
+      // Always used, so no optional checkbox.
+      S.TieCheckBox(_("From End:"), mFromEnd );
    }
-   else if (mode.IsSameAs(wxT("Range")))
+   S.EndMultiColumn();
+}
+
+bool SelectTimeCommand::Apply(const CommandContext & context){
+   if( !bHasT0 && !bHasT1 )
+      return true;
+
+   if( mFromEnd ){
+      double TEnd = context.GetProject()->GetTracks()->GetEndTime();
+      context.GetProject()->mViewInfo.selectedRegion.setTimes(TEnd - mT0, TEnd - mT1);
+      return true;
+   }
+   context.GetProject()->mViewInfo.selectedRegion.setTimes(mT0, mT1);
+   return true;
+}
+
+bool SelectFrequenciesCommand::DefineParams( ShuttleParams & S ){
+   S.OptionalN( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
+   S.OptionalN( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
+   return true;
+}
+
+void SelectFrequenciesCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      // select range
-      double t0 = GetDouble(wxT("StartTime"));
-      double t1 = GetDouble(wxT("EndTime"));
+      S.Optional( bHasTop    ).TieTextBox(_("High:"), mTop);
+      S.Optional( bHasBottom ).TieTextBox(_("Low:"),  mBottom);
+   }
+   S.EndMultiColumn();
+}
 
-      TrackList *tracks = context.GetProject()->GetTracks();
+bool SelectFrequenciesCommand::Apply(const CommandContext & context){
+   if( !bHasBottom && !bHasTop )
+      return true;
 
-      if (t0 < context.GetProject()->GetTracks()->GetMinOffset())
-      {
-         Error(wxT("Start time is before start of track!"));
-         return false;
-      }
+   context.GetProject()->SSBL_ModifySpectralSelection(
+      mBottom, mTop, false);// false for not done.
+   return true;
+}
 
-      // PRL: to do: only setting time boundaries of current selection.
-      // Should other fields be left alone, or rather
-      // defaulted, as in the second branch?
-      // Or should this command take more parameters?
-#if 1
-      context.GetProject()->mViewInfo.selectedRegion.setTimes(t0, t1);
-#else
-      context.GetProject()->mViewInfo.selectedRegion = SelectedRegion(t0, t1);
-#endif
+const int nModes =3;
+static const wxString kModes[nModes] =
+{
+   XO("Set"),
+   XO("Add"),
+   XO("Remove")
+};
 
-      // select specified tracks
-      long firstTrack = GetLong(wxT("FirstTrack"));
-      long lastTrack = GetLong(wxT("LastTrack"));
+bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
+   wxArrayString modes( nModes, kModes );
+   S.OptionalN( bHasFirstTrack).Define( mFirstTrack, wxT("First"), 0, 0, 100);
+   S.OptionalN( bHasLastTrack ).Define( mLastTrack,  wxT("Last"),  0, 0, 100);
+   S.OptionalY( bHasMode      ).DefineEnum( mMode,   wxT("Mode"), 0, modes );
+   
+   return true;
+}
 
-      if (firstTrack < 0)
-      {
-         Error(wxT("Trying to select a negatively numbered track!"));
-         return false;
-      }
-      if (lastTrack >= (long)tracks->size())
-      {
-         Error(wxT("Trying to select higher number track than exists!"));
-         return false;
-      }
+void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   wxArrayString modes( nModes, kModes );
+   S.AddSpace(0, 5);
 
-      int index = 0;
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-      while (t) {
-         bool sel = firstTrack <= index && index <= lastTrack;
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasFirstTrack).TieTextBox(_("First Track:"),mFirstTrack);
+      S.Optional( bHasLastTrack).TieTextBox(_("Last Track:"),mLastTrack);
+   }
+   S.EndMultiColumn();
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      // Always used, so no check box.
+      S.TieChoice( _("Mode:"), mMode, &modes);
+   }
+   S.EndMultiColumn();
+}
+
+bool SelectTracksCommand::Apply(const CommandContext &context)
+{
+   if( !bHasFirstTrack && !bHasLastTrack )
+      return true;
+
+   int index = 0;
+   TrackList *tracks = context.GetProject()->GetTracks();
+   int last = wxMax( mFirstTrack, mLastTrack );
+
+   TrackListIterator iter(tracks);
+   Track *t = iter.First();
+   while (t) {
+      bool sel = mFirstTrack <= index && index <= last;
+      if( mMode == 0 ){ // Set
          t->SetSelected(sel);
-
-         if (sel)
-            Status(wxT("Selected track '") + t->GetName() + wxT("'"));
-
-         t = iter.Next();
+      }
+      else if( mMode == 1 && sel ){ // Add
+         t->SetSelected(sel);
+      }
+      else if( mMode == 2 && sel ){ // Remove
+         t->SetSelected(!sel);
+      }
+      // Do second channel in stereo track too.
+      if( !t->GetLinked() )
          ++index;
-      }
-      wxASSERT(index >= lastTrack);
-   }
-   else if (mode.IsSameAs(wxT("Name")))
-   {
-      wxString name = GetString(wxT("TrackName"));
-      TrackList *tracks = context.GetProject()->GetTracks();
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-      while (t) {
-         bool sel = t->GetName().IsSameAs(name);
-         t->SetSelected(sel);
-
-         if (sel)
-            Status(wxT("Selected track '") + t->GetName() + wxT("'"));
-
-         t = iter.Next();
-      }
-   }
-   else
-   {
-      Error(wxT("Invalid selection mode!"));
-      return false;
+      t = iter.Next();
    }
    return true;
 }
+

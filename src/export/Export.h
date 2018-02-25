@@ -14,7 +14,6 @@
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/dialog.h>
-#include <wx/dynarray.h>
 #include <wx/filename.h>
 #include <wx/simplebook.h>
 #include "../Tags.h"
@@ -39,8 +38,13 @@ enum class ProgressResult : unsigned;
 class AUDACITY_DLL_API FormatInfo
 {
    public:
-      FormatInfo(){};
-      ~FormatInfo(){};
+      FormatInfo() {}
+      FormatInfo( const FormatInfo & ) = default;
+      FormatInfo &operator = ( const FormatInfo & ) = default;
+      //FormatInfo( FormatInfo && ) = default;
+      //FormatInfo &operator = ( FormatInfo && ) = default;
+      ~FormatInfo() {}
+
       wxString mFormat;
       wxString mDescription;
       // wxString mExtension;
@@ -49,8 +53,6 @@ class AUDACITY_DLL_API FormatInfo
       unsigned mMaxChannels;
       bool mCanMetaData;
 };
-
-WX_DECLARE_USER_EXPORTED_OBJARRAY(FormatInfo, FormatInfoArray, AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -141,7 +143,7 @@ protected:
          const wxString &title, const wxString &message);
 
 private:
-   FormatInfoArray mFormatInfos;
+   std::vector<FormatInfo> mFormatInfos;
 };
 
 using ExportPluginArray = std::vector < movable_ptr< ExportPlugin > > ;
@@ -233,8 +235,9 @@ private:
 class ExportMixerPanel final : public wxPanelWrapper
 {
 public:
-   ExportMixerPanel( MixerSpec *mixerSpec, wxArrayString trackNames,
-         wxWindow *parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition,
+   ExportMixerPanel( wxWindow *parent, wxWindowID id,
+         MixerSpec *mixerSpec, wxArrayString trackNames,
+         const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize);
    virtual ~ExportMixerPanel();
 

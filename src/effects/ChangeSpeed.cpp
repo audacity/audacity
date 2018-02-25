@@ -47,10 +47,10 @@ enum kVinyl
    kVinyl_45,
    kVinyl_78,
    kVinyl_NA,
-   kNumVinyl
+   nVinyl
 };
 
-static const wxChar *kVinylStrings[kNumVinyl] =
+static const wxChar *kVinylStrings[nVinyl] =
 {
    wxT("33\u2153"),
    wxT("45"),
@@ -121,7 +121,7 @@ wxString EffectChangeSpeed::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectChangeSpeed::GetType()
 {
@@ -129,15 +129,19 @@ EffectType EffectChangeSpeed::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectChangeSpeed::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
+   return true;
+}
 
-bool EffectChangeSpeed::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeSpeed::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Percentage, m_PercentChange);
 
    return true;
 }
 
-bool EffectChangeSpeed::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectChangeSpeed::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
 
@@ -304,13 +308,13 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       // Speed multiplier and percent change controls.
       S.StartMultiColumn(4, wxCENTER);
       {
-         FloatingPointValidator<double> vldMultiplier(3, &mMultiplier, NUM_VAL_THREE_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldMultiplier(3, &mMultiplier, NumValidatorStyle::THREE_TRAILING_ZEROES);
          vldMultiplier.SetRange(MIN_Percentage / 100.0, ((MAX_Percentage / 100.0) + 1));
          mpTextCtrl_Multiplier =
             S.Id(ID_Multiplier).AddTextBox(_("Speed Multiplier:"), wxT(""), 12);
          mpTextCtrl_Multiplier->SetValidator(vldMultiplier);
 
-         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NUM_VAL_THREE_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NumValidatorStyle::THREE_TRAILING_ZEROES);
          vldPercentage.SetRange(MIN_Percentage, MAX_Percentage);
          mpTextCtrl_PercentChange =
             S.Id(ID_PercentChange).AddTextBox(_("Percent Change:"), wxT(""), 12);
@@ -334,10 +338,10 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          /* i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute". */
          S.AddUnits(_("Standard Vinyl rpm:"));
 
-         wxASSERT(kNumVinyl == WXSIZEOF(kVinylStrings));
+         wxASSERT(nVinyl == WXSIZEOF(kVinylStrings));
 
          wxArrayString vinylChoices;
-         for (int i = 0; i < kNumVinyl; i++)
+         for (int i = 0; i < nVinyl; i++)
          {
             if (i == kVinyl_NA)
             {
@@ -369,31 +373,29 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
             S.AddPrompt(_("Current Length:"));
 
             mpFromLengthCtrl = safenew
-                  NumericTextCtrl(NumericConverter::TIME,
-                                 S.GetParent(),
-                                 wxID_ANY,
+                  NumericTextCtrl(S.GetParent(), wxID_ANY,
+                                 NumericConverter::TIME,
                                  mFormat,
                                  mFromLength,
-                                 mProjectRate);
+                                 mProjectRate,
+                                 NumericTextCtrl::Options{}
+                                  .ReadOnly(true)
+                                  .MenuEnabled(false));
 
             mpFromLengthCtrl->SetName(_("from"));
             mpFromLengthCtrl->SetToolTip(_("Current length of selection."));
-            mpFromLengthCtrl->SetReadOnly(true);
-            mpFromLengthCtrl->EnableMenu(false);
             S.AddWindow(mpFromLengthCtrl, wxALIGN_LEFT);
 
             S.AddPrompt(_("New Length:"));
 
             mpToLengthCtrl = safenew
-                  NumericTextCtrl(NumericConverter::TIME,
-                                 S.GetParent(),
-                                 ID_ToLength,
+                  NumericTextCtrl(S.GetParent(), ID_ToLength,
+                                 NumericConverter::TIME,
                                  mFormat,
                                  mToLength,
                                  mProjectRate);
 
             mpToLengthCtrl->SetName(_("to"));
-            mpToLengthCtrl->EnableMenu();
             S.AddWindow(mpToLengthCtrl, wxALIGN_LEFT);
          }
          S.EndMultiColumn();

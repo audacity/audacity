@@ -72,7 +72,7 @@ wxString EffectRepeat::ManualPage()
    return wxT("Repeat");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectRepeat::GetType()
 {
@@ -80,15 +80,19 @@ EffectType EffectRepeat::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectRepeat::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( repeatCount, Count );
+   return true;
+}
 
-bool EffectRepeat::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectRepeat::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Count, repeatCount);
 
    return true;
 }
 
-bool EffectRepeat::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Count);
 

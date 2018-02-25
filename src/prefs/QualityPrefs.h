@@ -12,11 +12,11 @@
 #ifndef __AUDACITY_QUALITY_PREFS__
 #define __AUDACITY_QUALITY_PREFS__
 
+#include <vector>
 #include <wx/defs.h>
 
 #include <wx/arrstr.h>
 #include <wx/choice.h>
-#include <wx/dynarray.h>
 #include <wx/textctrl.h>
 
 #include "PrefsPanel.h"
@@ -26,7 +26,7 @@ class ShuttleGui;
 class QualityPrefs final : public PrefsPanel
 {
  public:
-   QualityPrefs(wxWindow * parent);
+   QualityPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~QualityPrefs();
 
    bool Commit() override;
@@ -39,13 +39,13 @@ class QualityPrefs final : public PrefsPanel
    void OnSampleRateChoice(wxCommandEvent & e);
 
    wxArrayString mDitherNames;
-   wxArrayInt    mDitherLabels;
+   std::vector<int> mDitherLabels;
    wxArrayString mSampleRateNames;
-   wxArrayInt    mSampleRateLabels;
+   std::vector<int> mSampleRateLabels;
    wxArrayString mSampleFormatNames;
-   wxArrayInt    mSampleFormatLabels;
+   std::vector<int> mSampleFormatLabels;
    wxArrayString mConverterNames;
-   wxArrayInt    mConverterLabels;
+   std::vector<int> mConverterLabels;
 
    wxChoice *mSampleRates;
    wxTextCtrl *mOtherSampleRate;
@@ -57,6 +57,6 @@ class QualityPrefs final : public PrefsPanel
 class QualityPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

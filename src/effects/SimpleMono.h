@@ -10,7 +10,7 @@
   monaural effect.  Inherit from it if your effect doesn't just
   modifies a track in place and doesn't care how many samples
   it gets at a time.  Your derived class only needs to implement
-  GetEffectName, GetEffectAction, and ProcessSimpleMono.
+  GetCommandName, GetEffectAction, and ProcessSimpleMono.
 
 **********************************************************************/
 

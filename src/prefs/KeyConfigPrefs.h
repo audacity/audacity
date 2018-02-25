@@ -35,8 +35,7 @@ class wxStaticText;
 class KeyConfigPrefs final : public PrefsPanel
 {
 public:
-   KeyConfigPrefs(wxWindow * parent, const wxString &name);
-   ~KeyConfigPrefs();
+   KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const wxString &name);
    bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;
@@ -99,8 +98,8 @@ class KeyConfigPrefsFactory final : public PrefsPanelFactory
 public:
    KeyConfigPrefsFactory(const wxString &name = wxString{})
       : mName{ name } {}
-   PrefsPanel *Create(wxWindow *parent) override;
-   
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
+
 private:
    wxString mName;
 };

@@ -21,6 +21,7 @@
 #include <utility>
 #include <vector>
 #include <wx/atomic.h>
+#include <wx/weakref.h>
 
 #ifdef USE_MIDI
 
@@ -55,7 +56,7 @@ class Mixer;
 class Resample;
 class TimeTrack;
 class AudioThread;
-class Meter;
+class MeterPanel;
 class SelectedRegion;
 
 class AudacityProject;
@@ -90,9 +91,12 @@ class AudioIOListener;
    #define AILA_DEF_NUMBER_ANALYSIS 5
 #endif
 
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_AUDIOIO_CAPTURE, wxCommandEvent);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_AUDIOIO_MONITOR, wxCommandEvent);
 
 // PRL:
 // If we always run a portaudio output stream (even just to produce silence)
@@ -314,7 +318,7 @@ class AUDACITY_DLL_API AudioIO final {
     * You may also specify a rate for which to check in addition to the
     * standard rates.
     */
-   static wxArrayLong GetSupportedPlaybackRates(int DevIndex = -1,
+   static std::vector<long> GetSupportedPlaybackRates(int DevIndex = -1,
                                                 double rate = 0.0);
 
    /** \brief Get a list of sample rates the input (recording) device
@@ -329,7 +333,7 @@ class AUDACITY_DLL_API AudioIO final {
     * You may also specify a rate for which to check in addition to the
     * standard rates.
     */
-   static wxArrayLong GetSupportedCaptureRates(int devIndex = -1,
+   static std::vector<long> GetSupportedCaptureRates(int devIndex = -1,
                                                double rate = 0.0);
 
    /** \brief Get a list of sample rates the current input/output device
@@ -346,7 +350,7 @@ class AUDACITY_DLL_API AudioIO final {
     * You may also specify a rate for which to check in addition to the
     * standard rates.
     */
-   static wxArrayLong GetSupportedSampleRates(int playDevice = -1,
+   static std::vector<long> GetSupportedSampleRates(int playDevice = -1,
                                               int recDevice = -1,
                                        double rate = 0.0);
 
@@ -408,9 +412,8 @@ class AUDACITY_DLL_API AudioIO final {
    #endif
 
    bool IsAvailable(AudacityProject *projecT);
-   void SetCaptureMeter(AudacityProject *project, Meter *meter);
-   void SetPlaybackMeter(AudacityProject *project, Meter *meter);
-   Meter * GetCaptureMeter();
+   void SetCaptureMeter(AudacityProject *project, MeterPanel *meter);
+   void SetPlaybackMeter(AudacityProject *project, MeterPanel *meter);
 
 private:
    /** \brief Set the current VU meters - this should be done once after
@@ -694,8 +697,8 @@ private:
    PaError             mLastPaError;
 
    AudacityProject    *mOwningProject;
-   Meter              *mInputMeter;
-   Meter              *mOutputMeter;
+   wxWeakRef<MeterPanel> mInputMeter{};
+   MeterPanel         *mOutputMeter;
    bool                mUpdateMeters;
    volatile bool       mUpdatingMeters;
 
@@ -742,10 +745,10 @@ private:
 
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;
-   static wxArrayLong mCachedPlaybackRates;
+   static std::vector<long> mCachedPlaybackRates;
    static int mCachedCaptureIndex;
-   static wxArrayLong mCachedCaptureRates;
-   static wxArrayLong mCachedSampleRates;
+   static std::vector<long> mCachedCaptureRates;
+   static std::vector<long> mCachedSampleRates;
    static double mCachedBestRateIn;
    static double mCachedBestRateOut;
 

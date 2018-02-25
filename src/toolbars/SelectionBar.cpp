@@ -205,10 +205,9 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
 NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * pSizer ){
    wxString formatName = mListener ? mListener->AS_GetSelectionFormat() 
       : wxString(wxEmptyString);
-   NumericTextCtrl * pCtrl = safenew NumericTextCtrl(
-      NumericConverter::TIME, this, id, formatName, 0.0, mRate);
+   auto pCtrl = safenew NumericTextCtrl(
+      this, id, NumericConverter::TIME, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
-   pCtrl->EnableMenu();
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
    return pCtrl;
 }
@@ -324,13 +323,11 @@ void SelectionBar::Populate()
    }
 #endif
 
-   mRateText->Connect(wxEVT_SET_FOCUS,
-                      wxFocusEventHandler(SelectionBar::OnFocus),
-                      NULL,
+   mRateText->Bind(wxEVT_SET_FOCUS,
+                      &SelectionBar::OnFocus,
                       this);
-   mRateText->Connect(wxEVT_KILL_FOCUS,
-                      wxFocusEventHandler(SelectionBar::OnFocus),
-                      NULL,
+   mRateText->Bind(wxEVT_KILL_FOCUS,
+                      &SelectionBar::OnFocus,
                       this);
 
 #ifdef __WXGTK__
@@ -362,13 +359,11 @@ void SelectionBar::Populate()
    //mSnapTo->SetForegroundColour( clrText2 );
    mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
 
-   mSnapTo->Connect(wxEVT_SET_FOCUS,
-                    wxFocusEventHandler(SelectionBar::OnFocus),
-                    NULL,
+   mSnapTo->Bind(wxEVT_SET_FOCUS,
+                    &SelectionBar::OnFocus,
                     this);
-   mSnapTo->Connect(wxEVT_KILL_FOCUS,
-                    wxFocusEventHandler(SelectionBar::OnFocus),
-                    NULL,
+   mSnapTo->Bind(wxEVT_KILL_FOCUS,
+                    &SelectionBar::OnFocus,
                     this);
 
    AddVLine( mainSizer );

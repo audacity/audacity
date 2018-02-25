@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Experimental.h"
 #include "../../widgets/Overlay.h"
 #include "../../commands/CommandFunctors.h"
+#include "../../commands/CommandContext.h"
 #include "../../../include/audacity/Types.h"
 
 class AudacityProject;
@@ -209,7 +210,6 @@ class ScrubbingOverlay final : public wxEvtHandler, public Overlay
 {
 public:
    ScrubbingOverlay(AudacityProject *project);
-   virtual ~ScrubbingOverlay();
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;

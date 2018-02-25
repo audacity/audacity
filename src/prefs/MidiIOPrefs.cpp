@@ -55,9 +55,9 @@ BEGIN_EVENT_TABLE(MidiIOPrefs, PrefsPanel)
 //   EVT_CHOICE(RecordID, MidiIOPrefs::OnDevice)
 END_EVENT_TABLE()
 
-MidiIOPrefs::MidiIOPrefs(wxWindow * parent)
+MidiIOPrefs::MidiIOPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: untranslatable acronym for "Musical Instrument Device Interface" */
-:  PrefsPanel(parent, _("MIDI Devices"))
+:  PrefsPanel(parent, winid, _("MIDI Devices"))
 {
    Populate();
 }
@@ -296,10 +296,10 @@ wxString MidiIOPrefs::HelpPageName()
    return "MIDI_Devices_Preferences";
 }
 
-PrefsPanel *MidiIOPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *MidiIOPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew MidiIOPrefs(parent);
+   return safenew MidiIOPrefs(parent, winid);
 }
 
 #endif

@@ -20,7 +20,6 @@
 #include <wx/button.h>
 #include <wx/panel.h>
 #include <wx/dialog.h>
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
 #include <wx/stattext.h>
@@ -57,15 +56,20 @@ class EQPoint
 {
 public:
    EQPoint( const double f, const double d ) { Freq = f; dB = d; }
+
+   bool operator < (const EQPoint &p1) const
+   {
+      return Freq < p1.Freq;
+   }
+
    double Freq;
    double dB;
 };
-WX_DECLARE_OBJARRAY( EQPoint, EQPointArray);
 
 //
 // One curve in a list
 //
-// LLL:  This "really" isn't needed as the EQPointArray could be
+// LLL:  This "really" isn't needed as the array of points could be
 //       attached as wxClientData to the wxChoice entries.  I
 //       didn't realize this until after the fact and am too
 //       lazy to change it.  (But, hollar if you want me to.)
@@ -75,10 +79,17 @@ class EQCurve
 public:
    EQCurve( const wxString & name = wxEmptyString ) { Name = name; }
    EQCurve( const wxChar * name ) { Name = name; }
+
+   bool operator < (const EQCurve &that) const
+   {
+      return Name.CmpNoCase(that.Name) < 0;
+   }
+
    wxString Name;
-   EQPointArray points;
+   std::vector<EQPoint> points;
 };
-WX_DECLARE_OBJARRAY( EQCurve, EQCurveArray );
+
+using EQCurveArray = std::vector<EQCurve>;
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 class EffectEqualization48x;
@@ -97,14 +108,15 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
 
    // EffectClientInterface implementation
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool DefineParams( ShuttleParams & S ) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
    // EffectUIClientInterface implementation
@@ -172,7 +184,6 @@ private:
    double splint(double x[], double y[], size_t n, double y2[], double xr);
 
    void OnSize( wxSizeEvent & event );
-   void OnErase( wxEraseEvent & event );
    void OnSlider( wxCommandEvent & event );
    void OnInterp( wxCommandEvent & event );
    void OnSliderM( wxCommandEvent & event );
@@ -258,21 +269,6 @@ private:
    wxSlider *mdBMaxSlider;
    wxSlider *mSliders[NUMBER_OF_BANDS];
 
-   static int wxCMPFUNC_CONV SortCurvesByName (EQCurve **first, EQCurve **second)
-   {
-      return (*first)->Name.CmpNoCase((*second)->Name);
-   }
-
-   static int wxCMPFUNC_CONV SortCurvePoints (EQPoint **p0, EQPoint **p1)
-   {
-      auto diff = (*p0)->Freq - (*p1)->Freq;
-      if (diff < 0)
-         return -1;
-      if (diff > 0)
-         return 1;
-      return 0;
-   }
-
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
    wxBoxSizer *szrM;
@@ -287,7 +283,8 @@ private:
 class EqualizationPanel final : public wxPanelWrapper
 {
 public:
-   EqualizationPanel(EffectEqualization *effect, wxWindow *parent);
+   EqualizationPanel(
+      wxWindow *parent, wxWindowID winid, EffectEqualization *effect);
    ~EqualizationPanel();
 
    // We don't need or want to accept focus.

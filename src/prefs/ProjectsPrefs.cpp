@@ -29,8 +29,8 @@ handling.
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ProjectsPrefs::ProjectsPrefs(wxWindow * parent)
-:   PrefsPanel(parent,
+ProjectsPrefs::ProjectsPrefs(wxWindow * parent, wxWindowID winid)
+:   PrefsPanel(parent, winid,
    /* i18n-hint: (noun) i.e Audacity projects. */
                _("Projects"))
 {
@@ -89,8 +89,8 @@ wxString ProjectsPrefs::HelpPageName()
    return "Projects_Preferences";
 }
 
-PrefsPanel *ProjectsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ProjectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ProjectsPrefs(parent);
+   return safenew ProjectsPrefs(parent, winid);
 }

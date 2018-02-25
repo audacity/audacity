@@ -382,15 +382,13 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    };
 
    // Hook the creation event...only needed on GTK, but doesn't hurt for all
-   mIndicator->Connect( wxEVT_CREATE,
-                        wxWindowCreateEventHandler( ToolManager::OnIndicatorCreate ),
-                        NULL,
+   mIndicator->Bind( wxEVT_CREATE,
+                        &ToolManager::OnIndicatorCreate,
                         this );
 
    // Hook the paint event...needed for all
-   mIndicator->Connect( wxEVT_PAINT,
-                        wxPaintEventHandler( ToolManager::OnIndicatorPaint ),
-                        NULL,
+   mIndicator->Bind( wxEVT_PAINT,
+                        &ToolManager::OnIndicatorPaint,
                         this );
 
    // It's a little shy
@@ -398,17 +396,14 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 
    // Hook the parents mouse events...using the parent helps greatly
    // under GTK
-   mParent->Connect( wxEVT_LEFT_UP,
-                     wxMouseEventHandler( ToolManager::OnMouse ),
-                     NULL,
+   mParent->Bind( wxEVT_LEFT_UP,
+                     &ToolManager::OnMouse,
                      this );
-   mParent->Connect( wxEVT_MOTION,
-                     wxMouseEventHandler( ToolManager::OnMouse ),
-                     NULL,
+   mParent->Bind( wxEVT_MOTION,
+                     &ToolManager::OnMouse,
                      this );
-   mParent->Connect( wxEVT_MOUSE_CAPTURE_LOST,
-                     wxMouseCaptureLostEventHandler( ToolManager::OnCaptureLost ),
-                     NULL,
+   mParent->Bind( wxEVT_MOUSE_CAPTURE_LOST,
+                     &ToolManager::OnCaptureLost,
                      this );
 
    // Create the top and bottom docks
@@ -458,30 +453,6 @@ ToolManager::~ToolManager()
    // crashing when running with Jaws on Windows 10 1703.
    mTopDock->GetConfiguration().Clear();
    mBotDock->GetConfiguration().Clear();
-
-   // Remove handlers from parent
-   mParent->Disconnect( wxEVT_LEFT_UP,
-                        wxMouseEventHandler( ToolManager::OnMouse ),
-                        NULL,
-                        this );
-   mParent->Disconnect( wxEVT_MOTION,
-                        wxMouseEventHandler( ToolManager::OnMouse ),
-                        NULL,
-                        this );
-   mParent->Disconnect( wxEVT_MOUSE_CAPTURE_LOST,
-                        wxMouseCaptureLostEventHandler( ToolManager::OnCaptureLost ),
-                        NULL,
-                        this );
-
-   // Remove our event handlers
-   mIndicator->Disconnect( wxEVT_CREATE,
-                           wxWindowCreateEventHandler( ToolManager::OnIndicatorCreate ),
-                           NULL,
-                           this );
-   mIndicator->Disconnect( wxEVT_PAINT,
-                           wxPaintEventHandler( ToolManager::OnIndicatorPaint ),
-                           NULL,
-                           this );
 }
 
 // This table describes the default configuration of the toolbars as
@@ -682,7 +653,7 @@ int ToolManager::FilterEvent(wxEvent &event)
 void ToolManager::ReadConfig()
 {
    wxString oldpath = gPrefs->GetPath();
-   wxArrayInt unordered[ DockCount ];
+   std::vector<int> unordered[ DockCount ];
    std::vector<ToolBar*> dockedAndHidden;
    bool show[ ToolBarCount ];
    int width[ ToolBarCount ];
@@ -835,7 +806,7 @@ void ToolManager::ReadConfig()
          if (!ordered)
          {
             // These must go at the end
-            unordered[ dock - 1 ].Add( ndx );
+            unordered[ dock - 1 ].push_back( ndx );
          }
       }
       else
@@ -888,7 +859,7 @@ void ToolManager::ReadConfig()
 
       // Add all unordered toolbars
       bool deviceWasPositioned = false;
-      for( int ord = 0; ord < (int) unordered[ dock ].GetCount(); ord++ )
+      for( int ord = 0; ord < (int) unordered[ dock ].size(); ord++ )
       {
          ToolBar *t = mBars[ unordered[ dock ][ ord ] ].get();
 
@@ -1542,7 +1513,7 @@ bool ToolManager::RestoreFocus()
    if (mLastFocus) {
       auto temp1 = AButton::TemporarilyAllowFocus();
       auto temp2 = ASlider::TemporarilyAllowFocus();
-      auto temp3 = Meter::TemporarilyAllowFocus();
+      auto temp3 = MeterPanel::TemporarilyAllowFocus();
       mLastFocus->SetFocus();
       return true;
    }

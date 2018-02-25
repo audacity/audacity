@@ -122,7 +122,8 @@ class TranscriptionToolBar final : public ToolBar {
  private:
 
    void InitializeTranscriptionToolBar();
-   AButton *AddButton(
+   static AButton *AddButton(
+      TranscriptionToolBar *pBar,
       teBmps eFore, teBmps eDisabled,
       int id,
       const wxChar *label);

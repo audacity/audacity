@@ -516,18 +516,22 @@ void AButton::Disable()
 
 void AButton::PushDown()
 {
-   mButtonIsDown = true;
-   this->Refresh(false);
+   if (!mButtonIsDown) {
+      mButtonIsDown = true;
+      this->Refresh(false);
+   }
 }
 
 void AButton::PopUp()
 {
-   mButtonIsDown = false;
+   if (mButtonIsDown) {
+      mButtonIsDown = false;
+
+      this->Refresh(false);
+   }
 
    if (GetCapture()==this)
       ReleaseMouse();
-
-   this->Refresh(false);
 }
 
 void AButton::Click()

@@ -81,8 +81,6 @@ scroll information.  It also has some status flags.
 #include <wx/timer.h>
 #include <wx/display.h>
 
-#include <wx/arrimpl.cpp>       // this allows for creation of wxObjArray
-
 #if defined(__WXMAC__)
 #if !wxCHECK_VERSION(3, 0, 0)
 #include <CoreServices/CoreServices.h>
@@ -163,10 +161,10 @@ scroll information.  It also has some status flags.
 #include "tracks/ui/Scrubbing.h"
 
 #include "commands/ScriptCommandRelay.h"
-#include "commands/CommandDirectory.h"
 #include "commands/CommandTargets.h"
 #include "commands/Command.h"
 #include "commands/CommandType.h"
+#include "commands/CommandContext.h"
 
 #include "../images/AudacityLogoAlpha.xpm"
 
@@ -460,10 +458,11 @@ public:
          } );
 
          for (const auto &name : sortednames) {
-
+#ifdef USE_MIDI
             if (Importer::IsMidi(name))
                AudacityProject::DoImportMIDI(mProject, name);
             else
+#endif
                mProject->Import(name);
          }
 
@@ -1098,9 +1097,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // because it must
    // attach its timer event handler later (so that its handler is invoked
    // earlier)
-   this->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ViewInfo::OnTimer),
-      NULL,
+   this->Bind(EVT_TRACK_PANEL_TIMER,
+      &ViewInfo::OnTimer,
       &mViewInfo);
 
    // Add the overlays, in the sequence in which they will be painted
@@ -1227,9 +1225,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mTrackPanel->SetDropTarget(safenew DropTarget(this));
 #endif
 
-   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(AudacityProject::OnCapture),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &AudacityProject::OnCapture,
                      this);
 
    //Initialize the last selection adjustment time.
@@ -1258,11 +1255,6 @@ AudacityProject::~AudacityProject()
       mTrackPanel->RemoveOverlay(mCursorOverlay.get());
       mTrackPanel->RemoveOverlay(mIndicatorOverlay.get());
    }
-
-   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(AudacityProject::OnCapture),
-                     NULL,
-                     this);
 }
 
 void AudacityProject::ApplyUpdatedTheme()
@@ -1896,8 +1888,20 @@ void AudacityProject::FixScrollbars()
       panelHeight = 0;
    }
 
-   double LastTime =
-      std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
+   auto LastTime = -std::numeric_limits<double>::max();
+   auto &tracks = *GetTracks();
+   for (auto track : tracks) {
+      // Iterate over pending changed tracks if present.
+      {
+         auto other =
+         tracks.FindPendingChangedTrack(track->GetId());
+         if (other)
+            track = other.get();
+      }
+      LastTime = std::max( LastTime, track->GetEndTime() );
+   }
+   LastTime =
+      std::max(LastTime, mViewInfo.selectedRegion.t1());
 
    const double screen = GetScreenEndTime() - mViewInfo.h;
    const double halfScreen = screen / 2.0;
@@ -2703,11 +2707,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 #endif
    }
 
-   this->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ViewInfo::OnTimer),
-      NULL,
-      &mViewInfo);
-
    // Destroys this
    pSelf.reset();
    mRuler = nullptr;
@@ -3046,9 +3045,11 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 #endif
 
       {
+#ifdef USE_MIDI
          if (Importer::IsMidi(fileName))
             DoImportMIDI(this, fileName);
          else
+#endif
             Import(fileName);
 
          ZoomAfterImport(nullptr);
@@ -3584,6 +3585,10 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
    if (!wxStrcmp(tag, wxT("tags"))) {
       return mTags.get();
    }
+
+   // Note that TrackList::Add includes assignment of unique in-session TrackId
+   // to a reloaded track, though no promise that it equals the id it originally
+   // had
 
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
       return mTracks->Add(mTrackFactory->NewWaveTrack());
@@ -4299,8 +4304,10 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       //TODO: All we want is a SelectAll()
       SelectNone();
       SelectAllIfNone();
+      const CommandContext context( *this);
       DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
-               OnEffectFlags::kConfigured);
+         context,
+         OnEffectFlags::kConfigured);
    }
 
    // This is a no-fail:
@@ -4483,6 +4490,20 @@ void AudacityProject::InitialState()
    this->UpdateMixerBoard();
 }
 
+bool AudacityProject::UndoAvailable()
+{
+   auto trackList = GetTracks();
+   return GetUndoManager()->UndoAvailable() &&
+      !GetTracks()->HasPendingTracks();
+}
+
+bool AudacityProject::RedoAvailable()
+{
+   auto trackList = GetTracks();
+   return GetUndoManager()->RedoAvailable() &&
+      !GetTracks()->HasPendingTracks();
+}
+
 void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
 {
    PushState(desc, shortDesc, UndoPush::AUTOSAVE);
@@ -4628,7 +4649,7 @@ void AudacityProject::UpdateLyrics()
    if( !mLyricsWindow->IsVisible() )
       return;
 
-   Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
+   LyricsPanel* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
    pLyricsPanel->Clear();
    pLyricsPanel->AddLabels(pLabelTrack);
    pLyricsPanel->Finish(pLabelTrack->GetEndTime());
@@ -4871,12 +4892,12 @@ TranscriptionToolBar *AudacityProject::GetTranscriptionToolBar()
            NULL);
 }
 
-Meter *AudacityProject::GetPlaybackMeter()
+MeterPanel *AudacityProject::GetPlaybackMeter()
 {
    return mPlaybackMeter;
 }
 
-void AudacityProject::SetPlaybackMeter(Meter *playback)
+void AudacityProject::SetPlaybackMeter(MeterPanel *playback)
 {
    mPlaybackMeter = playback;
    if (gAudioIO)
@@ -4885,12 +4906,12 @@ void AudacityProject::SetPlaybackMeter(Meter *playback)
    }
 }
 
-Meter *AudacityProject::GetCaptureMeter()
+MeterPanel *AudacityProject::GetCaptureMeter()
 {
    return mCaptureMeter;
 }
 
-void AudacityProject::SetCaptureMeter(Meter *capture)
+void AudacityProject::SetCaptureMeter(MeterPanel *capture)
 {
    mCaptureMeter = capture;
 
@@ -5145,25 +5166,6 @@ void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
       return;
 
    mStatusBar->SetStatusText(msg, mainStatusBarField);
-   mLastStatusUpdateTime = ::wxGetUTCTime();
-}
-
-// Set the status indirectly, using the command system
-// (more overhead, but can be used from a non-GUI thread)
-void AudacityProject::SafeDisplayStatusMessage(const wxChar *msg)
-{
-   auto target
-      = std::make_unique<CommandOutputTarget>(TargetFactory::ProgressDefault(),
-                                std::make_shared<StatusBarTarget>(*mStatusBar),
-                                TargetFactory::MessageDefault());
-   CommandType *type = CommandDirectory::Get()->LookUp(wxT("Message"));
-   wxASSERT_MSG(type != NULL, wxT("Message command not found!"));
-   CommandHolder statusCmd = type->Create(std::move(target));
-   statusCmd->SetParameter(wxT("MessageString"), msg);
-   ScriptCommandRelay::PostCommand(this, statusCmd);
-
-   // Although the status hasn't actually been set yet, updating the time now
-   // is probably accurate enough
    mLastStatusUpdateTime = ::wxGetUTCTime();
 }
 
@@ -6002,18 +6004,9 @@ double AudacityProject::GetZoomOfPref( const wxString & PresetPrefName, int defa
 AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-                     wxCommandEventHandler(PlaybackScroller::OnTimer),
-                     NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+                     &PlaybackScroller::OnTimer,
                      this);
-}
-
-AudacityProject::PlaybackScroller::~PlaybackScroller()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-                        wxCommandEventHandler(PlaybackScroller::OnTimer),
-                        NULL,
-                        this);
 }
 
 void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)

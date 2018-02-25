@@ -9,6 +9,9 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "../../../../Audacity.h"
+
+#ifdef USE_MIDI
+
 #include "NoteTrackVZoomHandle.h"
 #include "../../../../Experimental.h"
 #include "NoteTrackVRulerControls.h"
@@ -331,3 +334,5 @@ void NoteTrackVZoomHandle::DrawExtras
       TrackVRulerControls::DrawZooming
          ( dc, mRect, panelRect, mZoomStart, mZoomEnd );
 }
+
+#endif

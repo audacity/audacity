@@ -194,7 +194,7 @@ enum InfoKeys
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTSubProcess final : public wxProcess,
-                      public EffectIdentInterface
+                      public EffectDefinitionInterface
 {
 public:
    VSTSubProcess()
@@ -234,7 +234,12 @@ public:
       return mDescription;
    }
 
-   wxString GetFamily() override
+   wxString GetFamilyId() override
+   {
+      return VSTPLUGINTYPE;
+   }
+
+   wxString GetFamilyName() override
    {
       return VSTPLUGINTYPE;
    }
@@ -697,14 +702,14 @@ void VSTEffectsModule::Check(const wxChar *path)
    VSTEffect effect(path);
    if (effect.SetHost(NULL))
    {
-      wxArrayInt effectIDs = effect.GetEffectIDs();
+      auto effectIDs = effect.GetEffectIDs();
       wxString out;
 
-      if (effectIDs.GetCount() > 0)
+      if (effectIDs.size() > 0)
       {
          wxString subids;
 
-         for (size_t i = 0, cnt = effectIDs.GetCount(); i < cnt; i++)
+         for (size_t i = 0, cnt = effectIDs.size(); i < cnt; i++)
          {
             subids += wxString::Format(wxT("%d;"), effectIDs[i]);
          }
@@ -1222,7 +1227,7 @@ wxString VSTEffect::GetDescription()
 }
 
 // ============================================================================
-// EffectIdentInterface Implementation
+// EffectDefinitionInterface Implementation
 // ============================================================================
 
 EffectType VSTEffect::GetType()
@@ -1246,7 +1251,12 @@ EffectType VSTEffect::GetType()
 }
 
 
-wxString VSTEffect::GetFamily()
+wxString VSTEffect::GetFamilyId()
+{
+   return VSTPLUGINTYPE;
+}
+
+wxString VSTEffect::GetFamilyName()
 {
    return VSTPLUGINTYPE;
 }
@@ -1621,7 +1631,7 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool VSTEffect::GetAutomationParameters(EffectAutomationParameters & parms)
+bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1641,7 +1651,7 @@ bool VSTEffect::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
+bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
 {
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
@@ -2269,9 +2279,9 @@ void VSTEffect::Unload()
    }
 }
 
-wxArrayInt VSTEffect::GetEffectIDs()
+std::vector<int> VSTEffect::GetEffectIDs()
 {
-   wxArrayInt effectIDs;
+   std::vector<int> effectIDs;
 
    // Are we a shell?
    if (mVstVersion >= 2 && (VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
@@ -2282,7 +2292,7 @@ wxArrayInt VSTEffect::GetEffectIDs()
       effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
       while (effectID)
       {
-         effectIDs.Add(effectID);
+         effectIDs.push_back(effectID);
          effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
       }
    }
@@ -2325,7 +2335,7 @@ bool VSTEffect::LoadParameters(const wxString & group)
       return false;
    }
 
-   EffectAutomationParameters eap;
+   CommandParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -2353,7 +2363,7 @@ bool VSTEffect::SaveParameters(const wxString & group)
       return true;
    }
 
-   EffectAutomationParameters eap;
+   CommandParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;
@@ -2755,6 +2765,24 @@ void VSTEffect::RemoveHandler()
 {
 }
 
+static void OnSize(wxSizeEvent & evt)
+{
+   evt.Skip();
+
+   // Once the parent dialog reaches its final size as indicated by
+   // a non-default minimum size, we set the maximum size to match.
+   // This is a bit of a hack to prevent VSTs GUI windows from resizing
+   // there's no real reason to allow it.  But, there should be a better
+   // way of handling it.
+   wxWindow *w = (wxWindow *) evt.GetEventObject();
+   wxSize sz = w->GetMinSize();
+
+   if (sz != wxDefaultSize)
+   {
+      w->SetMaxSize(sz);
+   }
+}
+
 void VSTEffect::BuildFancy()
 {
    // Turn the power on...some effects need this when the editor is open
@@ -2782,7 +2810,7 @@ void VSTEffect::BuildFancy()
 
    NeedEditIdle(true);
 
-   mDialog->Connect(wxEVT_SIZE, wxSizeEventHandler(VSTEffect::OnSize));
+   mDialog->Bind(wxEVT_SIZE, OnSize);
 
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -2836,17 +2864,14 @@ void VSTEffect::BuildPlain()
             wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
             mDuration = safenew
-               NumericTextCtrl(NumericConverter::TIME,
-               scroller,
-               ID_Duration,
-               mHost->GetDurationFormat(),
-               mHost->GetDuration(),
-               mSampleRate,
-               wxDefaultPosition,
-               wxDefaultSize,
-               true);
+               NumericTextCtrl(scroller, ID_Duration,
+                  NumericConverter::TIME,
+                  mHost->GetDurationFormat(),
+                  mHost->GetDuration(),
+                  mSampleRate,
+                  NumericTextCtrl::Options{}
+                     .AutoPos(true));
             mDuration->SetName(_("Duration"));
-            mDuration->EnableMenu();
             gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
@@ -2968,24 +2993,6 @@ void VSTEffect::RefreshParameters(int skip)
       }
 
       mSliders[i]->SetName(name);
-   }
-}
-
-void VSTEffect::OnSize(wxSizeEvent & evt)
-{
-   evt.Skip();
-
-   // Once the parent dialog reaches it's final size as indicated by
-   // a non-default minimum size, we set the maximum size to match.
-   // This is a bit of a hack to prevent VSTs GUI windows from resizing
-   // there's no real reason to allow it.  But, there should be a better
-   // way of handling it.
-   wxWindow *w = (wxWindow *) evt.GetEventObject();
-   wxSize sz = w->GetMinSize();
-
-   if (sz != wxDefaultSize)
-   {
-      w->SetMaxSize(sz);
    }
 }
 

@@ -62,6 +62,8 @@ enum {
    ETBNumButtons
 };
 
+const int first_ETB_ID = 11300;
+
 // flags so 1,2,4,8 etc.
 enum {
    ETBActTooltips = 1,
@@ -86,7 +88,9 @@ class EditToolBar final : public ToolBar {
 
  private:
 
-   AButton *AddButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+   static AButton *AddButton(
+      EditToolBar *pBar,
+      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id, const wxChar *label, bool toggle = false);
 
    void AddSeparator();

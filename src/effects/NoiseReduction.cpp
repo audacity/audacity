@@ -436,7 +436,7 @@ wxString EffectNoiseReduction::GetDescription()
    return _("Removes background noise such as fans, tape noise, or hums");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectNoiseReduction::GetType()
 {

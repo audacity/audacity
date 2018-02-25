@@ -106,7 +106,7 @@ wxString EffectDtmf::ManualPage()
    return wxT("DTMF_Tones");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectDtmf::GetType()
 {
@@ -229,8 +229,14 @@ size_t EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t 
 
    return processed;
 }
+bool EffectDtmf::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( dtmfSequence, Sequence );
+   S.SHUTTLE_PARAM( dtmfDutyCycle, DutyCycle );
+   S.SHUTTLE_PARAM( dtmfAmplitude, Amplitude );
+   return true;
+}
 
-bool EffectDtmf::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectDtmf::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Sequence, dtmfSequence);
    parms.Write(KEY_DutyCycle, dtmfDutyCycle);
@@ -239,7 +245,7 @@ bool EffectDtmf::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectDtmf::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(DutyCycle);
    ReadAndVerifyDouble(Amplitude);
@@ -320,23 +326,20 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       mDtmfSequenceT = S.Id(ID_Sequence).AddTextBox(_("DTMF sequence:"), wxT(""), 10);
       mDtmfSequenceT->SetValidator(vldDtmf);
 
-      FloatingPointValidator<double> vldAmp(3, &dtmfAmplitude, NUM_VAL_NO_TRAILING_ZEROES);
+      FloatingPointValidator<double> vldAmp(3, &dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES);
       vldAmp.SetRange(MIN_Amplitude, MAX_Amplitude);
       S.Id(ID_Amplitude).AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
 
       S.AddPrompt(_("Duration:"));
       mDtmfDurationT = safenew
-         NumericTextCtrl(NumericConverter::TIME,
-                         S.GetParent(),
-                         ID_Duration,
+         NumericTextCtrl(S.GetParent(), ID_Duration,
+                         NumericConverter::TIME,
                          GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         NumericTextCtrl::Options{}
+                            .AutoPos(true));
       mDtmfDurationT->SetName(_("Duration"));
-      mDtmfDurationT->EnableMenu();
       S.AddWindow(mDtmfDurationT);
 
       S.AddFixedText(_("Tone/silence ratio:"), false);

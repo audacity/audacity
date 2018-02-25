@@ -100,9 +100,6 @@ static const wxChar *KEY_Command = wxT("Command");
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(NyqControlArray);
-
 BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
    EVT_BUTTON(ID_Load, NyquistEffect::OnLoad)
    EVT_BUTTON(ID_Save, NyquistEffect::OnSave)
@@ -248,14 +245,19 @@ wxString NyquistEffect::HelpPage()
    return wxEmptyString;
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType NyquistEffect::GetType()
 {
    return mType;
 }
 
-wxString NyquistEffect::GetFamily()
+wxString NyquistEffect::GetFamilyId()
+{
+   return NYQUISTEFFECTS_FAMILY;
+}
+
+wxString NyquistEffect::GetFamilyName()
 {
    return NYQUISTEFFECTS_FAMILY;
 }
@@ -267,7 +269,7 @@ bool NyquistEffect::IsInteractive()
       return true;
    }
 
-   return mControls.GetCount() != 0;
+   return mControls.size() != 0;
 }
 
 bool NyquistEffect::IsDefault()
@@ -276,8 +278,72 @@ bool NyquistEffect::IsDefault()
 }
 
 // EffectClientInterface implementation
+bool NyquistEffect::DefineParams( ShuttleParams & S )
+{
+   // For now we assume Nyquist can do get and set better than DefineParams can,
+   // And so we ONLY use it for geting the signature.
+   auto pGa = dynamic_cast<ShuttleGetAutomation*>(&S);
+   if( pGa ){
+      GetAutomationParameters( *(pGa->mpEap) );
+      return true;
+   }
+   auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
+   if( pSa ){
+      SetAutomationParameters( *(pSa->mpEap) );
+      return true;
+   }
+   auto pSd  = dynamic_cast<ShuttleGetDefinition*>(&S);
+   if( pSd == nullptr )
+      return true;
+   //wxASSERT( pSd );
 
-bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
+   if (mExternal)
+      return true;
+
+   if (mIsPrompt)
+   {
+      S.Define( mInputCmd, KEY_Command, "" );
+      S.Define( mVersion, KEY_Version, 3 );
+      return true;
+   }
+
+   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
+   {
+      NyqControl & ctrl = mControls[c];
+      double d = ctrl.val;
+
+      if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
+      {
+         d = GetCtrlValue(ctrl.valStr);
+      }
+
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+      {
+         S.Define( d, static_cast<const wxChar*>( ctrl.var.c_str() ), (double)0.0, ctrl.low, ctrl.high, 1.0);
+      }
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
+      {
+         int x=d;
+         S.Define( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, ctrl.low, ctrl.high, 1);
+         //parms.Write(ctrl.var, (int) d);
+      }
+      else if (ctrl.type == NYQ_CTRL_CHOICE)
+      {
+         wxArrayString choices = ParseChoice(ctrl);
+         int x=d;
+         //parms.WriteEnum(ctrl.var, (int) d, choices);
+         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, choices );
+      }
+      else if (ctrl.type == NYQ_CTRL_STRING)
+      {
+         S.Define( ctrl.valStr, ctrl.var, "" , ctrl.lowStr, ctrl.highStr );
+         //parms.Write(ctrl.var, ctrl.valStr);
+      }
+   }
+   return true;
+}
+
+bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 {
    if (mExternal)
    {
@@ -292,7 +358,7 @@ bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
       return true;
    }
 
-   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
       NyqControl & ctrl = mControls[c];
       double d = ctrl.val;
@@ -324,7 +390,7 @@ bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
+bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 {
    if (mExternal)
    {
@@ -340,7 +406,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
    }
 
    // First pass verifies values
-   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
       NyqControl & ctrl = mControls[c];
       bool good = false;
@@ -379,7 +445,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
    }
 
    // Second pass sets the variables
-   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
       NyqControl & ctrl = mControls[c];
 
@@ -485,12 +551,13 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 {
    // If we're a prompt and we have controls, then we've already processed
    // the audio, so skip further processing.
-   return (mIsPrompt && mControls.GetCount() > 0);
+   return (mIsPrompt && mControls.size() > 0);
 }
 
 bool NyquistEffect::Process()
 {
    bool success = true;
+
    mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
@@ -779,7 +846,7 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
       mT1 = mT0 + mOutputTime;
    }
 
- finish:
+finish:
 
    // Show debug window if trace set in plug-in header and something to show.
    mDebug = (mTrace && !mDebugOutput.IsEmpty())? true : mDebug;
@@ -811,7 +878,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
 
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
-   if (!res || !mIsPrompt || mControls.GetCount() == 0)
+   if (!res || !mIsPrompt || mControls.size() == 0)
    {
       return res;
    }
@@ -821,12 +888,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
    effect.SetCommand(mInputCmd);
    effect.mDebug = (mUIResultID == eDebugID);
 
-   SelectedRegion region(mT0, mT1);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   region.setF0(mF0);
-   region.setF1(mF1);
-#endif
-   return Delegate(effect, parent, &region, true);
+   return Delegate(effect, parent, true);
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
@@ -1096,7 +1158,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *tracenable* NIL)\n");
    }
 
-   for (unsigned int j = 0; j < mControls.GetCount(); j++) {
+   for (unsigned int j = 0; j < mControls.size(); j++) {
       if (mControls[j].type == NYQ_CTRL_REAL || mControls[j].type == NYQ_CTRL_FLOAT_TEXT) {
          // We use Internat::ToString() rather than "%f" here because we
          // always have to use the dot as decimal separator when giving
@@ -1780,7 +1842,7 @@ void NyquistEffect::Parse(const wxString &line)
 
       if( mPresetNames.Index( ctrl.var ) == wxNOT_FOUND )
       {
-         mControls.Add(ctrl);
+         mControls.push_back(ctrl);
       }
    }
 
@@ -1803,7 +1865,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
 
    mCmd = wxT("");
    mIsSal = false;
-   mControls.Clear();
+   mControls.clear();
    mCategories.Clear();
    mIsSpectral = false;
    mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
@@ -2052,7 +2114,7 @@ bool NyquistEffect::TransferDataToPromptWindow()
 
 bool NyquistEffect::TransferDataToEffectWindow()
 {
-   for (size_t i = 0, cnt = mControls.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mControls.size(); i < cnt; i++)
    {
       NyqControl & ctrl = mControls[i];
 
@@ -2092,12 +2154,12 @@ bool NyquistEffect::TransferDataFromPromptWindow()
 
 bool NyquistEffect::TransferDataFromEffectWindow()
 {
-   if (mControls.GetCount() == 0)
+   if (mControls.size() == 0)
    {
       return true;
    }
 
-   for (unsigned int i = 0; i < mControls.GetCount(); i++)
+   for (unsigned int i = 0; i < mControls.size(); i++)
    {
       NyqControl *ctrl = &mControls[i];
 
@@ -2205,7 +2267,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
    {
       S.StartMultiColumn(4);
       {
-         for (size_t i = 0; i < mControls.GetCount(); i++)
+         for (size_t i = 0; i < mControls.size(); i++)
          {
             NyqControl & ctrl = mControls[i];
 
@@ -2246,9 +2308,9 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   vld.SetRange(ctrl.low, ctrl.high);
 
                   // Set number of decimal places
-                  int style = range < 10 ? NUM_VAL_THREE_TRAILING_ZEROES :
-                              range < 100 ? NUM_VAL_TWO_TRAILING_ZEROES :
-                              NUM_VAL_ONE_TRAILING_ZERO;
+                  auto style = range < 10 ? NumValidatorStyle::THREE_TRAILING_ZEROES :
+                              range < 100 ? NumValidatorStyle::TWO_TRAILING_ZEROES :
+                              NumValidatorStyle::ONE_TRAILING_ZERO;
                   vld.SetStyle(style);
 
                   item->SetValidator(vld);

@@ -41,10 +41,10 @@ enum kActions
 {
    kTruncate,
    kCompress,
-   kNumActions
+   nActions
 };
 
-static const wxChar *kActionStrings[kNumActions] =
+static const wxChar *kActionStrings[nActions] =
 {
    XO("Truncate Detected Silence"),
    XO("Compress Excess Silence")
@@ -60,7 +60,7 @@ static const wxChar *kActionStrings[kNumActions] =
 //
 //     Name       Type     Key               Def         Min      Max                        Scale
 Param( DbIndex,   int,     wxT("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
-Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       kNumActions - 1,           1  );
+Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       nActions - 1,           1  );
 Param( Minimum,   double,  wxT("Minimum"),    0.5,        0.001,   10000.0,                   1  );
 Param( Truncate,  double,  wxT("Truncate"),   0.5,        0.0,     10000.0,                   1  );
 Param( Compress,  double,  wxT("Compress"),   50.0,       0.0,     99.9,                      1  );
@@ -125,7 +125,7 @@ wxString EffectTruncSilence::ManualPage()
    return wxT("Truncate_Silence");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectTruncSilence::GetType()
 {
@@ -134,7 +134,21 @@ EffectType EffectTruncSilence::GetType()
 
 // EffectClientInterface implementation
 
-bool EffectTruncSilence::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
+   wxArrayString actions(nActions, kActionStrings);
+   //actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before
+   //actions.Insert(wxT("1"), 1); // Compatible with 2.1.0 and before
+
+   S.SHUTTLE_ENUM_PARAM( mTruncDbChoiceIndex, DbIndex, mDbChoices );
+   S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, actions );
+   S.SHUTTLE_PARAM( mInitialAllowedSilence, Minimum );
+   S.SHUTTLE_PARAM( mTruncLongestAllowedSilence, Truncate );
+   S.SHUTTLE_PARAM( mSilenceCompressPercent, Compress );
+   S.SHUTTLE_PARAM( mbIndependent, Independent );
+   return true;
+}
+
+bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_DbIndex, Enums::DbChoices[mTruncDbChoiceIndex]);
    parms.Write(KEY_ActIndex, kActionStrings[mActionIndex]);
@@ -146,9 +160,9 @@ bool EffectTruncSilence::GetAutomationParameters(EffectAutomationParameters & pa
    return true;
 }
 
-bool EffectTruncSilence::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
 {
-   wxArrayString actions(kNumActions, kActionStrings);
+   wxArrayString actions(nActions, kActionStrings);
    actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before
    actions.Insert(wxT("1"), 1); // Compatible with 2.1.0 and before
 
@@ -167,9 +181,9 @@ bool EffectTruncSilence::SetAutomationParameters(EffectAutomationParameters & pa
    mbIndependent = Independent;
 
    // Readjust for 2.1.0 or before
-   if (mActionIndex >= kNumActions)
+   if (mActionIndex >= nActions)
    {
-      mActionIndex -= kNumActions;
+      mActionIndex -= nActions;
    }
 
    return true;
@@ -699,10 +713,10 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 
 void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
 {
-   wxASSERT(kNumActions == WXSIZEOF(kActionStrings));
+   wxASSERT(nActions == WXSIZEOF(kActionStrings));
 
    wxArrayString actionChoices;
-   for (int i = 0; i < kNumActions; i++)
+   for (int i = 0; i < nActions; i++)
    {
       actionChoices.Add(wxGetTranslation(kActionStrings[i]));
    }
@@ -720,7 +734,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
          S.AddSpace(0); // 'choices' already includes units.
 
          // Ignored silence
-         FloatingPointValidator<double> vldDur(3, &mInitialAllowedSilence, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldDur(3, &mInitialAllowedSilence, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldDur.SetRange(MIN_Minimum, MAX_Minimum);
          mInitialAllowedSilenceT = S.AddTextBox(_("Duration:"), wxT(""), 12);
          mInitialAllowedSilenceT->SetValidator(vldDur);
@@ -744,13 +758,13 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       {
          // Truncation / Compression factor
 
-         FloatingPointValidator<double> vldTrunc(3, &mTruncLongestAllowedSilence, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldTrunc(3, &mTruncLongestAllowedSilence, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldTrunc.SetRange(MIN_Truncate, MAX_Truncate);
          mTruncLongestAllowedSilenceT = S.AddTextBox(_("Truncate to:"), wxT(""), 12);
          mTruncLongestAllowedSilenceT->SetValidator(vldTrunc);
          S.AddUnits(_("seconds"));
 
-         FloatingPointValidator<double> vldComp(3, &mSilenceCompressPercent, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldComp(3, &mSilenceCompressPercent, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldComp.SetRange(MIN_Compress, MAX_Compress);
          mSilenceCompressPercentT = S.AddTextBox(_("Compress to:"), wxT(""), 12);
          mSilenceCompressPercentT->SetValidator(vldComp);

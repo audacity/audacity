@@ -20,7 +20,6 @@
 #include <wx/event.h>
 #include <wx/font.h>
 #include <wx/pen.h>
-#include <wx/dynarray.h>
 #include <wx/string.h>
 #include <wx/clipbrd.h>
 
@@ -322,6 +321,8 @@ private:
 protected:
    std::shared_ptr<TrackControls> GetControls() override;
    std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
+   friend class GetInfoCommand; // to get labels.
+   friend class SetLabelCommand; // to set labels.
 };
 
 #endif

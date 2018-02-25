@@ -53,9 +53,6 @@ Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 30
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(EffectWahwahStateArray);
-
 //
 // EffectWahwah
 //
@@ -108,7 +105,7 @@ wxString EffectWahwah::ManualPage()
    return wxT("Wahwah");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectWahwah::GetType()
 {
@@ -157,7 +154,7 @@ bool EffectWahwah::RealtimeInitialize()
 {
    SetBlockSize(512);
 
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -168,14 +165,14 @@ bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
 
    InstanceInit(slave, sampleRate);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool EffectWahwah::RealtimeFinalize()
 {
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -189,7 +186,17 @@ size_t EffectWahwah::RealtimeProcess(int group,
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectWahwah::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectWahwah::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mFreq, Freq );
+   S.SHUTTLE_PARAM( mPhase, Phase );
+   S.SHUTTLE_PARAM( mDepth, Depth );
+   S.SHUTTLE_PARAM( mRes, Res );
+   S.SHUTTLE_PARAM( mFreqOfs, FreqOfs );
+   S.SHUTTLE_PARAM( mOutGain, OutGain );
+   return true;
+}
+
+bool EffectWahwah::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Freq, mFreq);
    parms.Write(KEY_Phase, mPhase);
@@ -201,7 +208,7 @@ bool EffectWahwah::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectWahwah::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectWahwah::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Freq);
    ReadAndVerifyDouble(Phase);
@@ -231,7 +238,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol(2);
 
-      FloatingPointValidator<double> vldfreq(5, &mFreq, NUM_VAL_ONE_TRAILING_ZERO);
+      FloatingPointValidator<double> vldfreq(5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO);
       vldfreq.SetRange(MIN_Freq, MAX_Freq);
       mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 12);
       mFreqT->SetValidator(vldfreq);

@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <vector>
 
-#include <wx/dynarray.h>
 #include <wx/brush.h>
 #include <wx/pen.h>
 
@@ -272,6 +271,8 @@ private:
    int mDragPoint { -1 };
 
    mutable int mSearchGuess { -2 };
+   friend class GetInfoCommand;
+   friend class SetEnvelopeCommand;
 };
 
 inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )

@@ -112,9 +112,17 @@ class ControlToolBar final : public ToolBar {
    void StartScrolling();
    void StopScrolling();
 
+   // Commit the addition of temporary recording tracks into the project
+   void CommitRecording();
+
+   // Cancel the addition of temporary recording tracks into the project
+   void CancelRecording();
+
  private:
 
-   AButton *MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+   static AButton *MakeButton(
+      ControlToolBar *pBar,
+      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id,
       bool processdownevents,
       const wxChar *label);
@@ -133,12 +141,12 @@ class ControlToolBar final : public ToolBar {
 
    enum
    {
-      ID_PLAY_BUTTON = 11000,
-      ID_RECORD_BUTTON,
-      ID_PAUSE_BUTTON,
+      ID_PAUSE_BUTTON = 11000,
+      ID_PLAY_BUTTON,
       ID_STOP_BUTTON,
       ID_FF_BUTTON,
       ID_REW_BUTTON,
+      ID_RECORD_BUTTON,
       BUTTON_COUNT,
    };
 

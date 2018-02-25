@@ -28,10 +28,8 @@
 class AudacityLogger final : public wxEvtHandler, public wxLog {
  public:
    AudacityLogger();
-   virtual ~AudacityLogger();
 
    void Show(bool show = true);
-   void Destroy();
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
    wxString GetLog();

@@ -119,7 +119,7 @@ private:
    wxChoice *mEncodingChoice;
    int mHeaderFromChoice;
    int mEncodingFromChoice;
-   wxArrayInt mEncodingFormats;
+   std::vector<int> mEncodingFormats;
 
    DECLARE_EVENT_TABLE()
 };
@@ -157,7 +157,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
       if (valid)
       {
          mEncodingNames.Add(sf_encoding_index_name(i));
-         mEncodingFormats.Add(enc);
+         mEncodingFormats.push_back(enc);
          if ((format & SF_FORMAT_SUBMASK) == (int)sf_encoding_index_to_subtype(i))
             mEncodingFromChoice = sel;
          else
@@ -234,17 +234,17 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
 
    mEncodingNames.Clear();
    mEncodingChoice->Clear();
-   mEncodingFormats.Clear();
+   mEncodingFormats.clear();
    int sel = wxNOT_FOUND;
    int i,j;
 
    int sfnum = sf_num_simple_formats();
-   wxArrayInt sfs;
+   std::vector<int> sfs;
 
    for (i = 0; i < sfnum; i++)
    {
       SF_FORMAT_INFO *fi = sf_simple_format(i);
-      sfs.Add(fi->format);
+      sfs.push_back(fi->format);
    }
 
    int num = sf_num_encodings();
@@ -258,13 +258,13 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
          const auto name = sf_encoding_index_name(i);
          mEncodingNames.Add(name);
          mEncodingChoice->Append(name);
-         mEncodingFormats.Add(enc);
+         mEncodingFormats.push_back(enc);
          for (j = 0; j < sfnum; j++)
          {
             int enc = sfs[j];
             if ((sel == wxNOT_FOUND) && (fmt == enc))
             {
-               sel = mEncodingFormats.GetCount()-1;
+               sel = mEncodingFormats.size() - 1;
                break;
             }
          }

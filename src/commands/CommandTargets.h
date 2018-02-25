@@ -17,6 +17,39 @@ objects needn't be concerned with what happens to the information.
 Note: currently, reusing target objects is not generally safe - perhaps they
 should be reference-counted.
 
+\class CommandMessageTargetDecorator
+\brief CommandMessageTargetDecorator is a CommandOutputTarget that forwards
+its work on to another one.  Typically we derive from it to modify some 
+functionality and forward the rest.
+
+\class BriefCommandMessageTarget
+\brief BriefCommandMessageTarget is a CommandOutputTarget that provides
+status in a briefer listing 
+
+\class LispyCommandMessageTarget
+\brief LispyCommandMessageTarget is a CommandOutputTarget that provides status 
+in a lispy style.
+
+\class MessageDialogTarget
+\brief MessageDialogTarget is a CommandOutputTarget that sends its status
+to the LongMessageDialog.
+
+\class CommandOutputTargets
+\brief CommandOutputTargets a mix of three output classes to output 
+progress indication, status messages and errors.
+
+\class BriefCommandOutputTargets
+\brief BriefCommandOutputTargets is a CommandOutputTargets that  replaces the 
+status message target with the BriefCommandMessageTarget version.
+
+\class LispifiedCommandOutputTargets
+\brief LispifiedCommandOutputTargets is a CommandOutputTargets that  replaces the 
+status message target with the LispyCommandMessageTarget version.
+
+\class ProgressToMessageTarget
+\brief ProgressToMessageTarget formats the percentage complete text as a message
+and sends it to that message target.
+
 *//*******************************************************************/
 
 #ifndef __COMMANDTARGETS__
@@ -25,9 +58,9 @@ should be reference-counted.
 #include "../MemoryX.h"
 #include <wx/string.h>
 #include <wx/statusbr.h>
+//#include "../src/Project.h"
 #include "../widgets/ProgressDialog.h"
 #include "../commands/ResponseQueue.h"
-#include "../src/Project.h"
 #include "../widgets/ErrorDialog.h"
 
 /// Interface for objects that can receive command progress information
@@ -36,6 +69,76 @@ class CommandProgressTarget /* not final */
 public:
    virtual ~CommandProgressTarget() {}
    virtual void Update(double completed) = 0;
+};
+
+/// Interface for objects that can receive (string) messages from a command
+class CommandMessageTarget /* not final */
+{
+public:
+   CommandMessageTarget() {mCounts.push_back(0);}
+   virtual ~CommandMessageTarget() { Flush();}
+   virtual void Update(const wxString &message) = 0;
+   virtual void StartArray();
+   virtual void EndArray();
+   virtual void StartStruct();
+   virtual void EndStruct();
+   virtual void AddItem(const wxString &value , const wxString &name="" );
+   virtual void AddBool(const bool value      , const wxString &name="" );
+   virtual void AddItem(const double value    , const wxString &name="" );
+   virtual void StartField( const wxString &name="" );
+   virtual void EndField( );
+   virtual void Flush();
+   wxString Escaped( const wxString & str);
+   wxArrayInt mCounts;
+};
+
+class CommandMessageTargetDecorator : public CommandMessageTarget
+{
+public:
+   CommandMessageTargetDecorator( CommandMessageTarget & target): mTarget(target) {};
+   virtual ~CommandMessageTargetDecorator() { };
+   virtual void Update(const wxString &message) { mTarget.Update( message );};
+   virtual void StartArray() { mTarget.StartArray();};
+   virtual void EndArray(){ mTarget.EndArray();};
+   virtual void StartStruct(){ mTarget.StartStruct();};
+   virtual void EndStruct(){ mTarget.EndStruct();};
+   virtual void AddItem(const wxString &value , const wxString &name="" ){ mTarget.AddItem(value,name);};
+   virtual void AddBool(const bool value      , const wxString &name="" ){ mTarget.AddBool(value,name);};
+   virtual void AddItem(const double value    , const wxString &name="" ){ mTarget.AddItem(value,name);};
+   virtual void StartField( const wxString &name="" ){ mTarget.StartField(name);};
+   virtual void EndField( ){ mTarget.EndField();};
+   virtual void Flush(){ mTarget.Flush();};
+   CommandMessageTarget & mTarget;
+};
+
+class LispyCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
+{
+public:
+   LispyCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   virtual void StartArray() override;
+   virtual void EndArray() override;
+   virtual void StartStruct() override;
+   virtual void EndStruct() override;
+   virtual void AddItem(const wxString &value , const wxString &name="" )override;
+   virtual void AddBool(const bool value      , const wxString &name="" )override;
+   virtual void AddItem(const double value    , const wxString &name="" )override;
+   virtual void StartField( const wxString &name="" )override;
+   virtual void EndField( ) override;
+};
+
+class BriefCommandMessageTarget : public CommandMessageTargetDecorator /* not final */
+{
+public:
+   BriefCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   virtual void StartArray() override;
+   virtual void EndArray() override;
+   virtual void StartStruct() override;
+   virtual void EndStruct() override;
+   virtual void AddItem(const wxString &value , const wxString &name="" )override;
+   virtual void AddBool(const bool value      , const wxString &name="" )override;
+   virtual void AddItem(const double value    , const wxString &name="" )override;
+   virtual void StartField( const wxString &name="" )override;
+   virtual void EndField( ) override;
 };
 
 /// Used to ignore a command's progress updates
@@ -62,13 +165,6 @@ public:
    }
 };
 
-/// Interface for objects that can receive (string) messages from a command
-class CommandMessageTarget /* not final */
-{
-public:
-   virtual ~CommandMessageTarget() {}
-   virtual void Update(const wxString &message) = 0;
-};
 
 ///
 class ProgressToMessageTarget final : public CommandProgressTarget
@@ -127,17 +223,25 @@ class ResponseQueueTarget final : public CommandMessageTarget
 {
 private:
    ResponseQueue &mResponseQueue;
+   wxString mBuffer;
 public:
    ResponseQueueTarget(ResponseQueue &responseQueue)
-      : mResponseQueue(responseQueue)
+      : mResponseQueue(responseQueue),
+       mBuffer( wxEmptyString )
    { }
    virtual ~ResponseQueueTarget()
    {
+      if( mBuffer.StartsWith("\n" ) )
+         mBuffer = mBuffer.Mid( 1 );
+      mResponseQueue.AddResponse( mBuffer  );
       mResponseQueue.AddResponse(wxString(wxT("\n")));
    }
    void Update(const wxString &message) override
    {
-      mResponseQueue.AddResponse(message);
+      mBuffer += message;
+#if 0
+         mResponseQueue.AddResponse(message);
+#endif
    }
 };
 
@@ -165,8 +269,11 @@ public:
 };
 
 
-// By default, we ignore progress updates but display all other messages
-// directly
+/** 
+\class TargetFactory
+\brief TargetFactory makes Command output targets.  By default, we ignore progress 
+updates but display all other messages directly
+*/
 class TargetFactory
 {
 public:
@@ -183,36 +290,116 @@ public:
 
 /// Used to aggregate the various output targets a command may have.
 /// Assumes responsibility for pointers passed into it.
-class CommandOutputTarget
+/// mProgressTarget is a unique pointer, but mStatusTraget and
+/// mErrorTarget are shared ones, because they may both point to the same 
+/// output 
+class CommandOutputTargets
 {
-private:
+public:
    std::unique_ptr<CommandProgressTarget> mProgressTarget;
    std::shared_ptr<CommandMessageTarget> mStatusTarget;
    std::shared_ptr<CommandMessageTarget> mErrorTarget;
 public:
-   CommandOutputTarget(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
+   // && is not a reference to a reference, but rather a way to allow reference to a temporary
+   // that will be gone or transfered after we have taken it.  It's a reference to an xvalue, 
+   // or 'expiring value'.
+   CommandOutputTargets(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
                        std::shared_ptr<CommandMessageTarget>  &&st = TargetFactory::MessageDefault(),
                        std::shared_ptr<CommandMessageTarget> &&et = TargetFactory::MessageDefault())
       : mProgressTarget(std::move(pt)), mStatusTarget(st), mErrorTarget(et)
    { }
-   ~CommandOutputTarget()
+   ~CommandOutputTargets()
    {
    }
+   // Lots of forwarding...
    void Progress(double completed)
    {
       if (mProgressTarget)
          mProgressTarget->Update(completed);
    }
-   void Status(const wxString &status)
+   void Status(const wxString &status, bool bFlush=false)
    {
-      if (mStatusTarget)
+      if (mStatusTarget){
          mStatusTarget->Update(status);
+         if( bFlush )
+            mStatusTarget->Flush();
+      }
    }
    void Error(const wxString &message)
    {
       if (mErrorTarget)
          mErrorTarget->Update(message);
    }
+   void StartArray()
+   {
+      if (mStatusTarget)
+         mStatusTarget->StartArray();
+   }
+   void EndArray()
+   {
+      if (mStatusTarget)
+         mStatusTarget->EndArray();
+   }
+   void StartStruct()
+   {
+      if (mStatusTarget)
+         mStatusTarget->StartStruct();
+   }
+   void EndStruct()
+   {
+      if (mStatusTarget)
+         mStatusTarget->EndStruct();
+   }
+   void StartField(const wxString &name)
+   {
+      if (mStatusTarget)
+         mStatusTarget->StartField(name);
+   }
+   void EndField()
+   {
+      if (mStatusTarget)
+         mStatusTarget->EndField();
+   }
+   void AddItem(const wxString &value , const wxString &name="" )
+   {
+      if (mStatusTarget)
+         mStatusTarget->AddItem( value, name );
+   }
+   void AddBool(const bool value      , const wxString &name="" )
+   {
+      if (mStatusTarget)
+         mStatusTarget->AddItem( value, name );
+   }
+   void AddItem(const double value    , const wxString &name="" )
+   {
+      if (mStatusTarget)
+         mStatusTarget->AddItem( value, name );
+   }
+};
+
+class LispifiedCommandOutputTargets : public CommandOutputTargets
+{
+public :
+   LispifiedCommandOutputTargets( CommandOutputTargets & target );
+   ~LispifiedCommandOutputTargets();
+private:
+   CommandOutputTargets * pToRestore;
+};
+
+class BriefCommandOutputTargets : public CommandOutputTargets
+{
+public :
+   BriefCommandOutputTargets( CommandOutputTargets & target );
+   ~BriefCommandOutputTargets();
+private:
+   CommandOutputTargets * pToRestore;
+};
+
+class InteractiveOutputTargets : public CommandOutputTargets
+{
+public:
+   InteractiveOutputTargets();
+
 };
 
 #endif /* End of include guard: __COMMANDTARGETS__ */

@@ -22,7 +22,7 @@ class wxGridBagSizer;
 class wxSizeEvent;
 class wxWindow;
 
-class Meter;
+class MeterPanel;
 
 
 // Constants used as bit pattern
@@ -58,8 +58,8 @@ class MeterToolBar final : public ToolBar {
    AudacityProject *mProject;
    int mWhichMeters;
    wxGridBagSizer *mSizer;
-   Meter *mPlayMeter;
-   Meter *mRecordMeter;
+   MeterPanel *mPlayMeter;
+   MeterPanel *mRecordMeter;
 
  public:
 

@@ -76,7 +76,7 @@ private:
 
    FormatVectorT        mClasses;
    MultiFormatReader    mReader;
-   SpecPowerMeter       mMeter;
+   SpecPowerCalculation mMeter;
 
 #ifdef FORMATCLASSIFIER_SIGNAL_DEBUG
    std::unique_ptr<DebugWriter> mpWriter;

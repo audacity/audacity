@@ -18,7 +18,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 *//*******************************************************************/
 
-#include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
@@ -43,8 +42,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "ModuleManager.h"
 #include "widgets/MultiDialog.h"
-
-#include <wx/arrimpl.cpp>
 
 #include "Experimental.h"
 #include "widgets/ErrorDialog.h"
@@ -542,7 +539,7 @@ wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
    return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
-bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
+bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
 {
    errMsg.clear();
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -550,7 +547,7 @@ bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString &
       return false;
    }
 
-   auto nFound = mDynModules[providerID]->DiscoverPluginsAtPath(path, errMsg);
+   auto nFound = mDynModules[providerID]->DiscoverPluginsAtPath(path, errMsg, PluginManagerInterface::DefaultRegistrationCallback);
 
    return nFound > 0;
 }

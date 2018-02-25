@@ -371,14 +371,9 @@ visit our [[https://forum.audacityteam.org/|forum]].");
 #ifdef EXPERIMENTAL_DA
       wxT("<br>DarkAudacity website: [[https://www.darkaudacity.com/|https://www.darkaudacity.com/]]") +
 #else
-      []{
-         // Will this post-translation substitution work in all locales?
-         // As of 2.2.2, yes for all of the up-to-date languages.
-         auto str =
-      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>");
-         str.Replace( wxT("2017"), wxT("2018") );
-         return str;
-      }() +
+      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>")
+
+      +
 
       _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
 #endif

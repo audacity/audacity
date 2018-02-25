@@ -33,8 +33,8 @@
 #include "../Experimental.h"
 #include "../widgets/ErrorDialog.h"
 
-SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
-:  PrefsPanel(parent, wt ? _("Spectrogram Settings") : _("Spectrograms"))
+SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
+:  PrefsPanel(parent, winid, wt ? _("Spectrogram Settings") : _("Spectrograms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -585,8 +585,8 @@ SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)
 {
 }
 
-PrefsPanel *SpectrumPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *SpectrumPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew SpectrumPrefs(parent, mWt);
+   return safenew SpectrumPrefs(parent, winid, mWt);
 }

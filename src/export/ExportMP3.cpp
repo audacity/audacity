@@ -283,7 +283,7 @@ public:
 
    void LoadNames(CHOICES *choices, int count);
    wxArrayString GetNames(CHOICES *choices, int count);
-   wxArrayInt GetLabels(CHOICES *choices, int count);
+   std::vector<int> GetLabels(CHOICES *choices, int count);
    int FindIndex(CHOICES *choices, int cnt, int needle, int def);
 
 private:
@@ -552,12 +552,12 @@ wxArrayString ExportMP3Options::GetNames(CHOICES *choices, int count)
    return names;
 }
 
-wxArrayInt ExportMP3Options::GetLabels(CHOICES *choices, int count)
+std::vector<int> ExportMP3Options::GetLabels(CHOICES *choices, int count)
 {
-   wxArrayInt labels;
+   std::vector<int> labels;
 
    for (int i = 0; i < count; i++) {
-      labels.Add(choices[i].label);
+      labels.push_back(choices[i].label);
    }
 
    return labels;

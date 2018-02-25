@@ -24,7 +24,7 @@ class ShuttleGui;
 class ProjectsPrefs final : public PrefsPanel
 {
  public:
-   ProjectsPrefs(wxWindow * parent);
+   ProjectsPrefs(wxWindow * parent, wxWindowID winid);
    ~ProjectsPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -37,6 +37,6 @@ class ProjectsPrefs final : public PrefsPanel
 class ProjectsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

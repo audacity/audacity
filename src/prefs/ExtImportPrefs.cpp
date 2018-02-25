@@ -56,10 +56,10 @@ BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
    EVT_BUTTON(EIPMoveFilterDown,ExtImportPrefs::OnFilterMoveDown)
 END_EVENT_TABLE()
 
-ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
+ExtImportPrefs::ExtImportPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint:  Title of dialog governing "Extended", or "advanced,"
  * audio file import options */
-:   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
+:   PrefsPanel(parent, winid, _("Extended Import")), RuleTable(NULL),
     PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
     mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)
 {
@@ -298,13 +298,13 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
       PluginList->SetItemState (itemIndex, 0, wxLIST_STATE_SELECTED);
       PluginList->SetItemState (itemIndex2, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
    }
-   int fcount = item->filter_objects.Count();
+   int fcount = item->filter_objects.size();
    if (item->divider >= fcount)
    {
       item->divider = -1;
    }
    if (item->divider < -1)
-      item->divider = item->filter_objects.Count() - 1;
+      item->divider = item->filter_objects.size() - 1;
 
    return true;
 }
@@ -811,8 +811,8 @@ void ExtImportPrefsDropTarget::OnLeave()
 {
 }
 
-PrefsPanel *ExtImportPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ExtImportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ExtImportPrefs(parent);
+   return safenew ExtImportPrefs(parent, winid);
 }

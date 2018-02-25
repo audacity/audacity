@@ -6,7 +6,10 @@
 
   Dominic Mazzoni
 
-**********************************************************************/
+/**************************************************************************//**
+\class BuiltinEffectsModule
+\brief Internal module to auto register all built in effects.  
+********************************************************************************/
 
 #include "../Audacity.h"
 #include "../Prefs.h"

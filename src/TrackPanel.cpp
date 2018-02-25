@@ -186,7 +186,7 @@ is time to refresh some aspect of the screen.
 #include "widgets/Ruler.h"
 #include <algorithm>
 
-DEFINE_EVENT_TYPE(EVT_TRACK_PANEL_TIMER)
+wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 /*
 
@@ -341,17 +341,14 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    GetProject()->Bind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTracks->Connect(EVT_TRACKLIST_RESIZING,
-                    wxCommandEventHandler(TrackPanel::OnTrackListResizing),
-                    NULL,
+   mTracks->Bind(EVT_TRACKLIST_RESIZING,
+                    &TrackPanel::OnTrackListResizing,
                     this);
-   mTracks->Connect(EVT_TRACKLIST_DELETION,
-                    wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
-                    NULL,
+   mTracks->Bind(EVT_TRACKLIST_DELETION,
+                    &TrackPanel::OnTrackListDeletion,
                     this);
-   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-                     wxCommandEventHandler(TrackPanel::OnPlayback),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                     &TrackPanel::OnPlayback,
                      this);
 }
 
@@ -359,20 +356,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 TrackPanel::~TrackPanel()
 {
    mTimer.Stop();
-
-   // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
-                       wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
-                       NULL,
-                       this);
-   mTracks->Disconnect(EVT_TRACKLIST_RESIZING,
-                       wxCommandEventHandler(TrackPanel::OnTrackListResizing),
-                       NULL,
-                       this);
-   wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
-                        wxCommandEventHandler(TrackPanel::OnPlayback),
-                        NULL,
-                        this);
 
    // This can happen if a label is being edited and the user presses
    // ALT+F4 or Command+Q
@@ -654,6 +637,10 @@ namespace
    {
       // TODO:  make a finer distinction between refreshing the track control area,
       // and the waveform area.  As it is, redraw both whenever you must redraw either.
+
+      // Copy data from the underlying tracks to the pending tracks that are
+      // really displayed
+      panel->GetProject()->GetTracks()->UpdatePendingTracks();
 
       using namespace RefreshCode;
 
@@ -1867,6 +1854,9 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
    VisibleTrackIterator iter(GetProject());
    for (Track *t = iter.First(); t; t = iter.Next()) {
+      auto other = GetTracks()->FindPendingChangedTrack(t->GetId());
+      if (other)
+         t = other.get();
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
@@ -2207,6 +2197,8 @@ void TrackInfo::GainSliderDrawFunction
    auto target = dynamic_cast<GainSliderHandle*>( context.target.get() );
    auto dc = &context.dc;
    bool hit = target && target->GetTrack().get() == pTrack;
+   if( hit )
+      hit=hit;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
       ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);
@@ -2862,15 +2854,15 @@ void TrackPanel::SetFocusedTrack( Track *t )
    if (t && !t->GetLinked() && t->GetLink())
       t = (WaveTrack*)t->GetLink();
 
-   if (t && AudacityProject::GetKeyboardCaptureHandler()) {
+   if ( !mAx->SetFocus( Track::Pointer( t ) ) )
+      return;
+
+   if (t && AudacityProject::GetKeyboardCaptureHandler())
       AudacityProject::ReleaseKeyboard(this);
-   }
 
-   if (t) {
+   if (t)
       AudacityProject::CaptureKeyboard(this);
-   }
 
-   mAx->SetFocus( Track::Pointer( t ) );
    Refresh( false );
 }
 

@@ -15,7 +15,6 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/choice.h>
-#include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/grid.h>
 #include <wx/string.h>
@@ -167,13 +166,15 @@ public:
    public:
       void ConnectEvent(wxWindow *w)
       {
-         w->GetEventHandler()->Connect(wxEVT_KILL_FOCUS, wxFocusEventHandler(FocusHandler::OnKillFocus));
+         // Need to use a named function pointer, not a lambda, so that we
+         // can unbind the same later
+         w->GetEventHandler()->Bind(wxEVT_KILL_FOCUS, OnKillFocus);
       };
       void DisconnectEvent(wxWindow *w)
       {
-         w->GetEventHandler()->Disconnect(wxEVT_KILL_FOCUS, wxFocusEventHandler(FocusHandler::OnKillFocus));
+         w->GetEventHandler()->Unbind(wxEVT_KILL_FOCUS, OnKillFocus);
       };
-      void OnKillFocus(wxFocusEvent & WXUNUSED(event))
+      static void OnKillFocus(wxFocusEvent & WXUNUSED(event))
       {
          return;
       };

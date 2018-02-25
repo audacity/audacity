@@ -67,8 +67,8 @@ IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
-   EVT_COMMAND_RANGE(firstTool,
-                     lastTool,
+   EVT_COMMAND_RANGE(firstTool+FirstToolID,
+                     lastTool+FirstToolID,
                      wxEVT_COMMAND_BUTTON_CLICKED,
                      ToolsToolBar::OnTool)
 END_EVENT_TABLE()
@@ -155,20 +155,21 @@ void ToolsToolBar::UpdatePrefs()
    ToolBar::UpdatePrefs();
 }
 
-AButton * ToolsToolBar::MakeTool( teBmps eTool,
+AButton * ToolsToolBar::MakeTool(
+   ToolsToolBar *pBar, teBmps eTool,
    int id, const wxChar *label)
 {
-   AButton *button = ToolBar::MakeButton(this,
+   AButton *button = ToolBar::MakeButton(pBar,
       bmpRecoloredUpSmall, 
       bmpRecoloredDownSmall, 
       bmpRecoloredUpHiliteSmall, 
       bmpRecoloredDownSmall, // Not bmpRecoloredHiliteSmall as down is inactive.
       eTool, eTool, eTool,
-      wxWindowID(id),
+      wxWindowID(id + FirstToolID),
       wxDefaultPosition, true,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
    button->SetLabel( label );
-   mToolSizer->Add( button );
+   pBar->mToolSizer->Add( button );
    return button;
 }
 
@@ -180,12 +181,12 @@ void ToolsToolBar::Populate()
    Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
 
    /* Tools */
-   mTool[ selectTool   ] = MakeTool( bmpIBeam, selectTool, _("Selection Tool") );
-   mTool[ envelopeTool ] = MakeTool( bmpEnvelope, envelopeTool, _("Envelope Tool") );
-   mTool[ drawTool     ] = MakeTool( bmpDraw, drawTool, _("Draw Tool") );
-   mTool[ zoomTool     ] = MakeTool( bmpZoom, zoomTool, _("Zoom Tool") );
-   mTool[ slideTool    ] = MakeTool( bmpTimeShift, slideTool, _("Slide Tool") );
-   mTool[ multiTool    ] = MakeTool( bmpMulti, multiTool, _("Multi Tool") );
+   mTool[ selectTool   ] = MakeTool( this, bmpIBeam, selectTool, _("Selection Tool") );
+   mTool[ envelopeTool ] = MakeTool( this, bmpEnvelope, envelopeTool, _("Envelope Tool") );
+   mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, _("Draw Tool") );
+   mTool[ zoomTool     ] = MakeTool( this, bmpZoom, zoomTool, _("Zoom Tool") );
+   mTool[ slideTool    ] = MakeTool( this, bmpTimeShift, slideTool, _("Slide Tool") );
+   mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, _("Multi Tool") );
 
    mTool[mCurrentTool]->PushDown();
 
@@ -249,7 +250,7 @@ int ToolsToolBar::GetDownTool()
 
 void ToolsToolBar::OnTool(wxCommandEvent & evt)
 {
-   mCurrentTool = evt.GetId() - firstTool;
+   mCurrentTool = evt.GetId() - firstTool - FirstToolID;
    for (int i = 0; i < numTools; i++)
       if (i == mCurrentTool)
          mTool[i]->PushDown();

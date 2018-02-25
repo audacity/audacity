@@ -149,7 +149,7 @@ ExportFFmpegAC3Options::ExportFFmpegAC3Options(wxWindow *parent, int WXUNUSED(fo
    for (unsigned int i=0; i < (sizeof(iAC3BitRates)/sizeof(int)); i++)
    {
       mBitRateNames.Add(wxString::Format(_("%i kbps"),iAC3BitRates[i]/1000));
-      mBitRateLabels.Add(iAC3BitRates[i]);
+      mBitRateLabels.push_back(iAC3BitRates[i]);
    }
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
@@ -275,7 +275,7 @@ ExportFFmpegAMRNBOptions::ExportFFmpegAMRNBOptions(wxWindow *parent, int WXUNUSE
    for (unsigned int i=0; i < (sizeof(iAMRNBBitRate)/sizeof(int)); i++)
    {
       mBitRateNames.Add(wxString::Format(_("%.2f kbps"),(float)iAMRNBBitRate[i]/1000));
-      mBitRateLabels.Add(iAMRNBBitRate[i]);
+      mBitRateLabels.push_back(iAMRNBBitRate[i]);
    }
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
@@ -345,7 +345,7 @@ ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent, int WXUNUSED(fo
    for (unsigned int i=0; i < (sizeof(iWMABitRate)/sizeof(int)); i++)
    {
       mBitRateNames.Add(wxString::Format(wxT("%i kbps"),iWMABitRate[i]/1000));
-      mBitRateLabels.Add(iWMABitRate[i]);
+      mBitRateLabels.push_back(iWMABitRate[i]);
    }
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
@@ -1380,14 +1380,14 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
 
       for (unsigned int i = 0; i < 6; i++)
       {
-         mPredictionOrderMethodLabels.Add(i);
+         mPredictionOrderMethodLabels.push_back(i);
          mPredictionOrderMethodNames.Add(wxString::Format(wxT("%s"),PredictionOrderMethodNames(i)));
       }
 
       for (unsigned int i=0; i < (sizeof(iAACProfileValues)/sizeof(int)); i++)
       {
          mProfileNames.Add(wxString::Format(wxT("%s"),iAACProfileNames(i)));
-         mProfileLabels.Add(iAACProfileValues[i]);
+         mProfileLabels.push_back(iAACProfileValues[i]);
       }
 
       PopulateOrExchange(S);

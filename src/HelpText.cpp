@@ -200,27 +200,6 @@ wxString TitleText( const wxString & Key )
    return Key;
 }
 
-namespace {
-   // This is ugly transitional stuff for 2.2.0 only
-   // The target string may have been localized but contains a link that we
-   // need to change to fix remote help, while preserving the translated
-   // material.
-   // In future we should not put Wiki and HTML markup inside
-   // internationalized strings!  Descriptive text for the link should be
-   // localized separately, then replaced using string formatting.
-   wxString Substitute(wxString target,
-                   const wxString &given,
-                       const wxString &replacement) {
-      target.Replace(given, replacement);
-      return target;
-
-   }
-   wxString EditLink( const wxString &str )
-   {
-      return Substitute( str, wxT("http:"), wxT("https:") );
-   }
-}
-
 static wxString HelpTextBuiltIn( const wxString & Key )
 {
    // PRL:  Is it necessary to define these outside of conditional compilation so that both get into the .pot file?
@@ -244,16 +223,16 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 #endif
          + " " +
          _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>") +
-         EditLink (_("You can help us get Audacity ready for release by joining our [[http://www.audacityteam.org/community/|community]].<hr><br><br>") )+
+         _("You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>") +
 #endif
 
 // DA: Support methods text.
 #ifdef EXPERIMENTAL_DA
          wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
          _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
-         EditLink( _(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") ) +
+         _(" [[https://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") +
          _(" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.") + wxT("</li><li>") +
-         EditLink( _(" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") ) +
+         _(" [[https://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
 
          wxT("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
          wxT(" [[https://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
@@ -262,10 +241,10 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
          _("How to get help") + wxT("</h3></center>") + 
          _("These are our support methods:") + wxT("<p><ul><li>") +
-         EditLink( _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://manual.audacityteam.org/quick_help.html|view online]]") ) + wxT("</li><li>") +
-         EditLink( _(" [[file:index.html|Manual]] - if not installed locally, [[http://manual.audacityteam.org/|view online]]") ) + wxT("</li><li>") +
-         EditLink( _(" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, online.") ) + wxT("</li></ul></p><p>") + wxT("<b>") +
-         EditLink( _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") ) + wxT("</p>");
+         _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
+         _(" [[file:index.html|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]") + wxT("</li><li>") +
+         _(" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") +
+         _("More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>");
 #endif
 
 #ifdef USE_ALPHA_MANUAL
@@ -279,18 +258,15 @@ static wxString HelpTextBuiltIn( const wxString & Key )
    {
       return WrapText(
          wxString(wxT("<p>"))+
-         EditLink( _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
+         _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
-the optional [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| \
-FFmpeg library]] to your computer.") ) + wxT("</p><p>") +
-EditLink( Substitute(
+the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| \
+FFmpeg library]] to your computer.") + wxT("</p><p>") +
          _("You can also read our help on importing \
-[[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI files]] \
+[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] \
 and tracks from [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| \
-audio CDs]]."),
-                       wxT("faq_opening_and_saving_files.html#midi"),
-                       wxT("playing_and_recording.html#midi")
-) ) + wxT("</p>")
+audio CDs]].")
+    + wxT("</p>")
       );
    }
 
@@ -307,12 +283,12 @@ Please [[*URL*|view the Manual online]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\"."));
 #else
-      return WrapText( EditLink( _("The Manual does not appear to be installed. \
+      return WrapText( _("The Manual does not appear to be installed. \
 Please [[*URL*|view the Manual online]] or \
-[[http://manual.audacityteam.org/man/unzipping_the_manual.html| \
+[[https://manual.audacityteam.org/man/unzipping_the_manual.html| \
 download the Manual]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
-Interface Preferences to \"From Internet\".")));
+Interface Preferences to \"From Internet\"."));
 #endif
    }
    return wxT("");

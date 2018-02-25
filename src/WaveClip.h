@@ -255,7 +255,7 @@ public:
    void MarkChanged() // NOFAIL-GUARANTEE
       { mDirty++; }
 
-   /** Getting high-level data from the for screen display and clipping
+   /** Getting high-level data for screen display and clipping
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
                        double t0, double pixelsPerSecond, bool &isLoadingOD) const;

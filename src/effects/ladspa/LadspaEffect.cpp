@@ -645,7 +645,7 @@ wxString LadspaEffect::GetDescription()
 }
 
 // ============================================================================
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 // ============================================================================
 
 EffectType LadspaEffect::GetType()
@@ -668,7 +668,12 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-wxString LadspaEffect::GetFamily()
+wxString LadspaEffect::GetFamilyId()
+{
+   return LADSPAEFFECTS_FAMILY;
+}
+
+wxString LadspaEffect::GetFamilyName()
 {
    return LADSPAEFFECTS_FAMILY;
 }
@@ -980,18 +985,18 @@ bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
       return false;
    }
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool LadspaEffect::RealtimeFinalize()
 {
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       FreeInstance(mSlaves[i]);
    }
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -1071,7 +1076,7 @@ bool LadspaEffect::ShowInterface(wxWindow *parent, bool forceModal)
    return res;
 }
 
-bool LadspaEffect::GetAutomationParameters(EffectAutomationParameters & parms)
+bool LadspaEffect::GetAutomationParameters(CommandParameters & parms)
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1089,7 +1094,7 @@ bool LadspaEffect::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool LadspaEffect::SetAutomationParameters(EffectAutomationParameters & parms)
+bool LadspaEffect::SetAutomationParameters(CommandParameters & parms)
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1210,17 +1215,14 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             item = safenew wxStaticText(w, 0, _("Duration:"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
             mDuration = safenew
-               NumericTextCtrl(NumericConverter::TIME,
-               w,
-               ID_Duration,
-               mHost->GetDurationFormat(),
-               mHost->GetDuration(),
-               mSampleRate,
-               wxDefaultPosition,
-               wxDefaultSize,
-               true);
+               NumericTextCtrl(w, ID_Duration,
+                  NumericConverter::TIME,
+                  mHost->GetDurationFormat(),
+                  mHost->GetDuration(),
+                  mSampleRate,
+                  NumericTextCtrl::Options{}
+                     .AutoPos(true));
             mDuration->SetName(_("Duration"));
-            mDuration->EnableMenu();
             gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
@@ -1367,15 +1369,15 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                // Set number of decimal places
                if (upper - lower < 10.0)
                {
-                  vld.SetStyle(NUM_VAL_THREE_TRAILING_ZEROES);
+                  vld.SetStyle(NumValidatorStyle::THREE_TRAILING_ZEROES);
                }
                else if (upper - lower < 100.0)
                {
-                  vld.SetStyle(NUM_VAL_TWO_TRAILING_ZEROES);
+                  vld.SetStyle(NumValidatorStyle::TWO_TRAILING_ZEROES);
                }
                else
                {
-                  vld.SetStyle(NUM_VAL_ONE_TRAILING_ZERO);
+                  vld.SetStyle(NumValidatorStyle::ONE_TRAILING_ZERO);
                }
 
                mFields[p]->SetValidator(vld);
@@ -1602,7 +1604,7 @@ bool LadspaEffect::LoadParameters(const wxString & group)
       return false;
    }
 
-   EffectAutomationParameters eap;
+   CommandParameters eap;
    if (!eap.SetParameters(parms))
    {
       return false;
@@ -1613,7 +1615,7 @@ bool LadspaEffect::LoadParameters(const wxString & group)
 
 bool LadspaEffect::SaveParameters(const wxString & group)
 {
-   EffectAutomationParameters eap;
+   CommandParameters eap;
    if (!GetAutomationParameters(eap))
    {
       return false;

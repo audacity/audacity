@@ -95,7 +95,7 @@ wxString EffectAmplify::ManualPage()
    return wxT("Amplify");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectAmplify::GetType()
 {
@@ -123,15 +123,19 @@ size_t EffectAmplify::ProcessBlock(float **inBlock, float **outBlock, size_t blo
 
    return blockLen;
 }
+bool EffectAmplify::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mRatio, Ratio );
+   return true;
+}
 
-bool EffectAmplify::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
 {
    parms.WriteFloat(KEY_Ratio, mRatio);
 
    return true;
 }
 
-bool EffectAmplify::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectAmplify::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Ratio);
 
@@ -217,7 +221,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Amplitude
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldAmp(precission, &mAmp, NUM_VAL_ONE_TRAILING_ZERO);
+         FloatingPointValidator<double> vldAmp(precission, &mAmp, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldAmp.SetRange(MIN_Amp, MAX_Amp);
          mAmpT = S.Id(ID_Amp).AddTextBox(_("Amplification (dB):"), wxT(""), 12);
          mAmpT->SetValidator(vldAmp);
@@ -237,7 +241,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxCENTER);
       {
          // One extra decimal place so that rounding is visible to user (see: bug 958)
-         FloatingPointValidator<double> vldNewPeak(precission + 1, &mNewPeak, NUM_VAL_ONE_TRAILING_ZERO);
+         FloatingPointValidator<double> vldNewPeak(precission + 1, &mNewPeak, NumValidatorStyle::ONE_TRAILING_ZERO);
          double minAmp = MIN_Amp + LINEAR_TO_DB(mPeak);
          double maxAmp = MAX_Amp + LINEAR_TO_DB(mPeak);
 

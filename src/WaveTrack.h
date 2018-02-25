@@ -74,6 +74,12 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    void Init(const WaveTrack &orig);
 
+public:
+   // overwrite data excluding the sample sequence but including display
+   // settings
+   void Reinit(const WaveTrack &orig);
+
+private:
    Track::Holder Duplicate() const override;
 
    friend class TrackFactory;
@@ -132,7 +138,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;
 
-   void SetMinimized(bool isMinimized) override;
+   void DoSetMinimized(bool isMinimized) override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
@@ -149,7 +155,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    WaveformSettings &GetWaveformSettings();
    WaveformSettings &GetIndependentWaveformSettings();
    void SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings);
-
+   void UseSpectralPrefs( bool bUse=true );
    //
    // High-level editing
    //

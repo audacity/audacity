@@ -13,7 +13,6 @@
 
 #include <wx/defs.h>
 #include <wx/arrstr.h>
-#include <wx/dynarray.h>
 #include <wx/string.h>
 #include <wx/vlbox.h>
 
@@ -32,6 +31,10 @@ public:
       isparent = false;
       isopen = false;
    }
+   KeyNode( const KeyNode & ) = default;
+   KeyNode &operator = ( const KeyNode & ) = default;
+   //KeyNode( KeyNode && ) = default;
+   //KeyNode &operator = ( KeyNode && ) = default;
 
 public:
    wxString name;
@@ -49,8 +52,6 @@ public:
 };
 
 // Declare the KeyNode arrays
-WX_DECLARE_OBJARRAY(KeyNode, KeyNodeArray);
-WX_DECLARE_OBJARRAY(KeyNode *, KeyNodeArrayPtr);
 
 // Types of view currently supported
 enum ViewByType
@@ -131,9 +132,9 @@ private:
 
 
    static wxString CommandTranslated;
-   static int CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2);
-   static int CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2);
-   static int CmpKeyNodeByKey(KeyNode ***n1, KeyNode ***n2);
+   static bool CmpKeyNodeByTree(KeyNode *n1, KeyNode *n2);
+   static bool CmpKeyNodeByName(KeyNode *n1, KeyNode *n2);
+   static bool CmpKeyNodeByKey(KeyNode *n1, KeyNode *n2);
 
 #if wxUSE_ACCESSIBILITY
    friend class KeyViewAx;
@@ -146,8 +147,8 @@ private:
 #endif
 
 private:
-   KeyNodeArray mNodes;
-   KeyNodeArrayPtr mLines;
+   std::vector<KeyNode> mNodes;
+   std::vector<KeyNode*> mLines;
 
    ViewByType mViewType;
    wxString mFilter;

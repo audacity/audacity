@@ -700,7 +700,7 @@ bool ExportFFmpeg::Finalize()
          // Fill audio buffer with zeroes. If codec tries to read the whole buffer,
          // it will just read silence. If not - who cares?
          memset(mEncAudioFifoOutBuf.get(), 0, mEncAudioFifoOutBufSiz);
-         const AVCodec *codec = mEncAudioCodecCtx->codec;
+         //const AVCodec *codec = mEncAudioCodecCtx->codec;
 
          // Pull the bytes out from the FIFO and feed them to the encoder.
          if (av_fifo_generic_read(mEncAudioFifo.get(), mEncAudioFifoOutBuf.get(), nFifoBytes, NULL) == 0)

@@ -19,7 +19,6 @@
 #include "../MemoryX.h"
 #include <wx/bmpbuttn.h>
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/string.h>
 #include <wx/tglbtn.h>
@@ -43,6 +42,7 @@ class wxWindow;
 #include "../Track.h"
 
 class ShuttleGui;
+class AudacityCommand;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
@@ -79,16 +79,21 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // IdentInterface implementation
 
    wxString GetPath() override;
+
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
    wxString GetSymbol() override;
+
    wxString GetName() override;
    wxString GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamily() override; // returns UNTRANSLATED
+   wxString GetFamilyId() override;
+   wxString GetFamilyName() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -130,8 +135,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    bool LoadUserPreset(const wxString & name) override;
    bool SaveUserPreset(const wxString & name) override;
@@ -248,8 +253,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                  TrackFactory *factory, SelectedRegion *selectedRegion,
                  bool shouldPrompt = true);
 
-   bool Delegate( Effect &delegate,
-      wxWindow *parent, SelectedRegion *selectedRegion, bool shouldPrompt);
+   bool Delegate( Effect &delegate, wxWindow *parent, bool shouldPrompt);
 
    // Realtime Effect Processing
    /* not virtual */ bool RealtimeAddProcessor(int group, unsigned chans, float rate);
@@ -453,6 +457,7 @@ protected:
    double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
    double         mSampleRate;
+   SelectedRegion *mpSelectedRegion{};
    TrackFactory   *mFactory;
    TrackList *inputTracks() const { return mTracks; }
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
@@ -531,7 +536,7 @@ private:
    size_t mBlockSize;
    unsigned mNumChannels;
 
-   wxArrayInt mGroupProcessor;
+   std::vector<int> mGroupProcessor;
    int mCurrentProcessor;
 
    wxCriticalSection mRealtimeSuspendLock;
@@ -594,6 +599,9 @@ public:
    EffectUIHost(wxWindow *parent,
                 Effect *effect,
                 EffectUIClientInterface *client);
+   EffectUIHost(wxWindow *parent,
+                AudacityCommand *command,
+                EffectUIClientInterface *client);
    virtual ~EffectUIHost();
 
    bool TransferDataToWindow() override;
@@ -641,6 +649,7 @@ private:
    AudacityProject *mProject;
    wxWindow *mParent;
    Effect *mEffect;
+   AudacityCommand * mCommand;
    EffectUIClientInterface *mClient;
 
    wxArrayString mUserPresets;

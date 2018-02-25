@@ -45,8 +45,6 @@ public:
    double queuetotal;
 };
 
-WX_DECLARE_OBJARRAY(EffectDistortionState, EffectDistortionStateArray);
-
 class EffectDistortion final : public Effect
 {
 public:
@@ -70,7 +68,7 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    bool SupportsRealtime() override;
@@ -88,8 +86,9 @@ public:
                                float **inbuf,
                                float **outbuf,
                                size_t numSamples) override;
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool DefineParams( ShuttleParams & S ) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
    wxArrayString GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
 
@@ -171,7 +170,7 @@ private:
 
 private:
    EffectDistortionState mMaster;
-   EffectDistortionStateArray mSlaves;
+   std::vector<EffectDistortionState> mSlaves;
 
    double mTable[TABLESIZE];
    double mThreshold;

@@ -113,48 +113,14 @@ void SplashDialog::Populate( ShuttleGui & S )
 
    S.Prop(0).AddWindow( icon );
 
-   icon
-#if  ((((AUDACITY_VERSION % 10) ^ 1) >> 1) == 1)
-   ->Bind(wxEVT_LEFT_DOWN
-
-                                    ,[this](
-
-   wxMouseEvent const
-   & tneve
-                                )->void{(void)((
-        tneve.ShiftDown   (
-   )&&  tneve.ControlDown (
-                                  ))?([this]{
-   decltype(GetName(
-
-                                    ))L1{wxT(
-
-
-                          "\256Ovrairavqb9-Yhvtv\056\
-")};for(    auto
-
-   c:L1)    c
-   =((      wxChar
-   )c&~     0x1fu
-   )|       ((((
-   wxChar)  c&0x1fu
-   )+0xdu)%                           0x1AU
-   );static_assert(
-
-                                   /**********/
-
-                                     !!!!!!
-
-0                                     <3 <3
-
-,"                                    !!!!!!                                  "
-
-                                   /**********/
-
-   );AudacityMessageBox(wxT(1)
-                                 );}(),!0):!1);})
+#if  (0)
+   icon->Bind(wxEVT_LEFT_DOWN,
+              [this]( wxMouseEvent const & event ) ->void {
+                 if ( event.ShiftDown() && event.ControlDown())
+                    wxLaunchDefaultBrowser("https://www.audacityteam.org");
+              }
+         );
 #endif
-                                        ;
 
    mpHtml = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,

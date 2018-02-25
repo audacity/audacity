@@ -68,6 +68,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "DirManager.h"
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
+#include "commands/CommandContext.h"
 #include "effects/Contrast.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
@@ -240,7 +241,7 @@ It handles initialization and termination by subclassing wxApp.
 ////////////////////////////////////////////////////////////
 
 DEFINE_EVENT_TYPE(EVT_OPEN_AUDIO_FILE);
-DEFINE_EVENT_TYPE(EVT_LANGUAGE_CHANGE);
+wxDEFINE_EVENT(EVT_LANGUAGE_CHANGE, wxCommandEvent);
 
 #if 0
 #ifdef __WXGTK__
@@ -1090,6 +1091,9 @@ bool AudacityApp::OnExceptionInMainLoop()
          // failed operation
          pProject->RollbackState();
 
+         // Forget pending changes in the TrackList
+         pProject->GetTracks()->ClearPendingTracks();
+
          pProject->RedrawProject();
 
          // Give the user an alert
@@ -1645,7 +1649,7 @@ bool AudacityApp::OnInit()
 
 void AudacityApp::InitCommandHandler()
 {
-   mCmdHandler = std::make_unique<CommandHandler>(*this);
+   mCmdHandler = std::make_unique<CommandHandler>();
    //SetNextHandler(mCmdHandler);
 }
 

@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    File License: wxWidgets
 
    Dan Horgan
@@ -25,6 +25,7 @@ code out of ModuleManager.
 #include "AppCommandEvent.h"
 #include "ResponseQueue.h"
 #include "../Project.h"
+#include "../AudacityApp.h"
 #include <wx/string.h>
 
 // Declare static class members
@@ -51,7 +52,7 @@ void ScriptCommandRelay::Run()
 }
 
 /// Send a command to a project, to be applied in that context.
-void ScriptCommandRelay::PostCommand(AudacityProject *project, const CommandHolder &cmd)
+void ScriptCommandRelay::PostCommand(AudacityProject *project, const OldStyleCommandPointer &cmd)
 {
    wxASSERT(project != NULL);
    wxASSERT(cmd != NULL);
@@ -71,8 +72,7 @@ int ExecCommand(wxString *pIn, wxString *pOut)
       if (builder.WasValid())
       {
          AudacityProject *project = GetActiveProject();
-         project->SafeDisplayStatusMessage(wxT("Received script command"));
-         CommandHolder cmd = builder.GetCommand();
+         OldStyleCommandPointer cmd = builder.GetCommand();
          ScriptCommandRelay::PostCommand(project, cmd);
 
          *pOut = wxEmptyString;
@@ -89,6 +89,7 @@ int ExecCommand(wxString *pIn, wxString *pOut)
    wxString msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
    while (msg != wxT("\n"))
    {
+      //wxLogDebug( "Msg: %s", msg );
       *pOut += msg + wxT("\n");
       msg = ScriptCommandRelay::ReceiveResponse().GetMessage();
    }

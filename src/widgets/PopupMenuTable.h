@@ -36,11 +36,11 @@ struct PopupMenuTableEntry
    Type type;
    int id;
    wxString caption;
-   wxObjectEventFunction func;
+   wxCommandEventFunction func;
    PopupMenuTable *subTable;
 
    PopupMenuTableEntry(Type type_, int id_, wxString caption_,
-      wxObjectEventFunction func_, PopupMenuTable *subTable_)
+      wxCommandEventFunction func_, PopupMenuTable *subTable_)
       : type(type_)
       , id(id_)
       , caption(caption_)
@@ -165,8 +165,7 @@ void HandlerClass::Populate() { \
       type, \
       id, \
       string, \
-      (wxObjectEventFunction)(wxEventFunction)(wxCommandEventFunction) \
-         (&My::memFn), \
+      (wxCommandEventFunction) (&My::memFn), \
       nullptr )
 
 #define POPUP_MENU_ITEM(id, string, memFn) \

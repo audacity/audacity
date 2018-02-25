@@ -125,37 +125,29 @@ void DeviceToolBar::Populate()
 
 
 
-   mHost->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mHost->Bind(wxEVT_SET_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
-   mHost->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mHost->Bind(wxEVT_KILL_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
-   mOutput->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mOutput->Bind(wxEVT_SET_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
-   mOutput->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mOutput->Bind(wxEVT_KILL_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
-   mInput->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mInput->Bind(wxEVT_SET_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
-   mInput->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mInput->Bind(wxEVT_KILL_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
-   mInputChannels->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mInputChannels->Bind(wxEVT_SET_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
-   mInputChannels->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(DeviceToolBar::OnFocus),
-                 NULL,
+   mInputChannels->Bind(wxEVT_KILL_FOCUS,
+                 &DeviceToolBar::OnFocus,
                  this);
 
    SetNames();

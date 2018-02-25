@@ -63,12 +63,11 @@ class ODLock;
 class RecordingRecoveryHandler;
 class TrackList;
 class Tags;
-class EffectPlugs;
 
 class TrackPanel;
 class FreqWindow;
 class ContrastDialog;
-class Meter;
+class MeterPanel;
 
 // toolbar classes
 class ControlToolBar;
@@ -121,8 +120,6 @@ using AProjectArray = std::vector< AProjectHolder >;
 extern AProjectArray gAudacityProjects;
 
 
-WX_DEFINE_ARRAY(wxMenu *, MenuArray);
-
 enum class PlayMode : int {
    normalPlay,
    oneSecondPlay, // Disables auto-scrolling
@@ -157,6 +154,22 @@ class ImportXMLTagHandler final : public XMLTagHandler
  private:
    AudacityProject* mProject;
 };
+
+class EffectPlugs;
+typedef wxArrayString PluginIDList;
+class CommandContext;
+class CommandManager;
+class Track;
+class TrackHolder;
+class TrackList;
+class WaveClip;
+class WaveTrack;
+
+#include "./commands/CommandFlag.h"
+#include "../include/audacity/EffectInterface.h"
+
+#include "./commands/CommandManager.h"
+
 
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
@@ -446,8 +459,6 @@ public:
    void FinishAutoScroll();
    void FixScrollbars();
 
-   void SafeDisplayStatusMessage(const wxChar *msg);
-
    bool MayScrollBeyondZero() const;
    double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
@@ -494,10 +505,10 @@ public:
    const ToolsToolBar *GetToolsToolBar() const;
    TranscriptionToolBar *GetTranscriptionToolBar();
 
-   Meter *GetPlaybackMeter();
-   void SetPlaybackMeter(Meter *playback);
-   Meter *GetCaptureMeter();
-   void SetCaptureMeter(Meter *capture);
+   MeterPanel *GetPlaybackMeter();
+   void SetPlaybackMeter(MeterPanel *playback);
+   MeterPanel *GetCaptureMeter();
+   void SetCaptureMeter(MeterPanel *capture);
 
    LyricsWindow* GetLyricsWindow() { return mLyricsWindow; }
    MixerBoard* GetMixerBoard() { return mMixerBoard; }
@@ -555,6 +566,9 @@ public:
       ( const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
    bool TryToMakeActionAllowed
       ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+
+   bool UndoAvailable();
+   bool RedoAvailable();
 
    void PushState(const wxString &desc, const wxString &shortDesc); // use UndoPush::AUTOSAVE
    void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
@@ -679,8 +693,8 @@ private:
    bool mShownOnce{ false };
 
    // Project owned meters
-   Meter *mPlaybackMeter{};
-   Meter *mCaptureMeter{};
+   MeterPanel *mPlaybackMeter{};
+   MeterPanel *mCaptureMeter{};
 
    std::unique_ptr<ToolManager> mToolManager;
 
@@ -790,7 +804,6 @@ public:
    {
    public:
       explicit PlaybackScroller(AudacityProject *project);
-      ~PlaybackScroller();
 
       enum class Mode {
          Off,

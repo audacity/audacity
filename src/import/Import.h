@@ -44,7 +44,6 @@ public:
 class ExtImportItem;
 
 using FormatList = std::vector<Format> ;
-WX_DEFINE_ARRAY_PTR(ImportPlugin *, ImportPluginPtrArray);
 using ExtImportItems = std::vector< movable_ptr<ExtImportItem> >;
 
 class ExtImportItem
@@ -71,7 +70,7 @@ class ExtImportItem
   /**
    * Array of pointers to import plugins (members of FormatList)
    */
-  ImportPluginPtrArray filter_objects;
+  std::vector<ImportPlugin*> filter_objects;
 
   /**
    * File extensions. Each one is a string with simple wildcards,

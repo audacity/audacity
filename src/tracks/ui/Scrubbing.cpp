@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
-#include "../../commands/CommandFunctors.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
@@ -29,6 +28,8 @@ Paul Licameli split from TrackPanel.cpp
 #endif
 
 #include "../../widgets/Ruler.h"
+#include "../../commands/CommandFunctors.h"
+#include "../../commands/CommandContext.h"
 
 #include <algorithm>
 
@@ -198,9 +199,9 @@ Scrubber::Scrubber(AudacityProject *project)
 
 {
    if (wxTheApp)
-      wxTheApp->Connect
+      wxTheApp->Bind
       (wxEVT_ACTIVATE_APP,
-      wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
+       &Scrubber::OnActivateOrDeactivateApp, this);
    mProject->PushEventHandler(&mForwarder);
 }
 
@@ -212,10 +213,6 @@ Scrubber::~Scrubber()
 #endif
 
    mProject->PopEventHandler();
-   if (wxTheApp)
-      wxTheApp->Disconnect
-      (wxEVT_ACTIVATE_APP,
-      wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
 }
 
 namespace {
@@ -730,17 +727,8 @@ ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
    , mLastScrubSpeedText()
    , mNextScrubSpeedText()
 {
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ScrubbingOverlay::OnTimer),
-      NULL,
-      this);
-}
-
-ScrubbingOverlay::~ScrubbingOverlay()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ScrubbingOverlay::OnTimer),
-      NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+      &ScrubbingOverlay::OnTimer,
       this);
 }
 

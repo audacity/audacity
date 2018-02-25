@@ -59,9 +59,6 @@ Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 20
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(EffectPhaserStateArray);
-
 //
 // EffectPhaser
 //
@@ -117,7 +114,7 @@ wxString EffectPhaser::ManualPage()
    return wxT("Phaser");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectPhaser::GetType()
 {
@@ -165,7 +162,7 @@ bool EffectPhaser::RealtimeInitialize()
 {
    SetBlockSize(512);
 
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -176,14 +173,14 @@ bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
 
    InstanceInit(slave, sampleRate);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool EffectPhaser::RealtimeFinalize()
 {
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -196,8 +193,18 @@ size_t EffectPhaser::RealtimeProcess(int group,
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
+bool EffectPhaser::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mStages,    Stages );
+   S.SHUTTLE_PARAM( mDryWet,    DryWet );
+   S.SHUTTLE_PARAM( mFreq,      Freq );
+   S.SHUTTLE_PARAM( mPhase,     Phase );
+   S.SHUTTLE_PARAM( mDepth,     Depth );
+   S.SHUTTLE_PARAM( mFeedback,  Feedback );
+   S.SHUTTLE_PARAM( mOutGain,   OutGain );
+   return true;
+}
 
-bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPhaser::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Stages, mStages);
    parms.Write(KEY_DryWet, mDryWet);
@@ -210,7 +217,7 @@ bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectPhaser::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPhaser::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Stages);
    ReadAndVerifyInt(DryWet);
@@ -268,7 +275,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDryWetS->SetName(_("Dry Wet"));
       mDryWetS->SetMinSize(wxSize(100, -1));
 
-      FloatingPointValidator<double> vldFreq(5, &mFreq, NUM_VAL_ONE_TRAILING_ZERO);
+      FloatingPointValidator<double> vldFreq(5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO);
       vldFreq.SetRange(MIN_Freq, MAX_Freq);
       mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
       mFreqT->SetValidator(vldFreq);

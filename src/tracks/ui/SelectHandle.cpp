@@ -1044,18 +1044,8 @@ public:
       , mConnectedProject{ pProject }
    {
       if (mConnectedProject)
-         mConnectedProject->Connect(EVT_TRACK_PANEL_TIMER,
-            wxCommandEventHandler(SelectHandle::TimerHandler::OnTimer),
-            NULL,
-            this);
-   }
-
-   ~TimerHandler()
-   {
-      if (mConnectedProject)
-         mConnectedProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-            wxCommandEventHandler(SelectHandle::TimerHandler::OnTimer),
-            NULL,
+         mConnectedProject->Bind(EVT_TRACK_PANEL_TIMER,
+            &SelectHandle::TimerHandler::OnTimer,
             this);
    }
 

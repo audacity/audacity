@@ -20,15 +20,12 @@
 #include "Project.h" // for GetActiveProject
 #include "LabelTrack.h"
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(SyllableArray);
-
 
 BEGIN_EVENT_TABLE(HighlightTextCtrl, wxTextCtrl)
    EVT_MOUSE_EVENTS(HighlightTextCtrl::OnMouseEvent)
 END_EVENT_TABLE()
 
-HighlightTextCtrl::HighlightTextCtrl(Lyrics* parent,
+HighlightTextCtrl::HighlightTextCtrl(LyricsPanel* parent,
                                        wxWindowID id,
                                        const wxString& value /*= ""*/,
                                        const wxPoint& pos /*= wxDefaultPosition*/,
@@ -38,7 +35,7 @@ HighlightTextCtrl::HighlightTextCtrl(Lyrics* parent,
                pos, // const wxPoint& pos = wxDefaultPosition,
                size, // const wxSize& size = wxDefaultSize,
                wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | wxTE_AUTO_URL | wxTE_NOHIDESEL), //v | wxHSCROLL)
-   mLyrics(parent)
+   mLyricsPanel(parent)
 {
 }
 
@@ -49,11 +46,11 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
       long from, to;
       this->GetSelection(&from, &to);
 
-      int nCurSyl = mLyrics->GetCurrentSyllableIndex();
-      int nNewSyl = mLyrics->FindSyllable(from);
+      int nCurSyl = mLyricsPanel->GetCurrentSyllableIndex();
+      int nNewSyl = mLyricsPanel->FindSyllable(from);
       if (nNewSyl != nCurSyl)
       {
-         Syllable* pCurSyl = mLyrics->GetSyllable(nNewSyl);
+         Syllable* pCurSyl = mLyricsPanel->GetSyllable(nNewSyl);
          AudacityProject* pProj = GetActiveProject();
          pProj->SetSel0(pCurSyl->t);
 
@@ -69,18 +66,18 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
 
 //v static const kHighlightTextCtrlID = 7654;
 
-BEGIN_EVENT_TABLE(Lyrics, wxPanelWrapper)
-   EVT_KEY_DOWN(Lyrics::OnKeyEvent)
-   EVT_PAINT(Lyrics::OnPaint)
-   EVT_SIZE(Lyrics::OnSize)
+BEGIN_EVENT_TABLE(LyricsPanel, wxPanelWrapper)
+   EVT_KEY_DOWN(LyricsPanel::OnKeyEvent)
+   EVT_PAINT(LyricsPanel::OnPaint)
+   EVT_SIZE(LyricsPanel::OnSize)
 
    //v Doesn't seem to be a way to capture a selection event in a read-only wxTextCtrl.
-   //    EVT_COMMAND_LEFT_CLICK(kHighlightTextCtrlID, Lyrics::OnHighlightTextCtrl)
+   //    EVT_COMMAND_LEFT_CLICK(kHighlightTextCtrlID, LyricsPanel::OnHighlightTextCtrl)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(Lyrics, wxPanel)
+IMPLEMENT_CLASS(LyricsPanel, wxPanel)
 
-Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
+LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
                const wxPoint& pos /*= wxDefaultPosition*/,
                const wxSize& size /*= wxDefaultSize*/):
    wxPanelWrapper(parent, id, pos, size, wxWANTS_CHARS),
@@ -88,7 +85,7 @@ Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
 {
    mKaraokeHeight = mHeight;
    mLyricsStyle = kBouncingBallLyrics; // default
-   mKaraokeFontSize = this->GetDefaultFontSize(); // Call only after mLyricsStyle is set.
+   mKaraokeFontSize = this->GetDefaultFontSize(); // Call only after mLyricsPanelStyle is set.
 
    this->SetBackgroundColour(*wxWHITE);
 
@@ -112,27 +109,27 @@ Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
    #endif
 }
 
-Lyrics::~Lyrics()
+LyricsPanel::~LyricsPanel()
 {
 }
 
 #define I_FIRST_REAL_SYLLABLE 2
 
-void Lyrics::Clear()
+void LyricsPanel::Clear()
 {
-   mSyllables.Clear();
+   mSyllables.clear();
    mText = wxT("");
 
    // Add two dummy syllables at the beginning
-   mSyllables.Add(Syllable());
+   mSyllables.push_back(Syllable());
    mSyllables[0].t = -2.0;
-   mSyllables.Add(Syllable());
+   mSyllables.push_back(Syllable());
    mSyllables[1].t = -1.0;
 
    mHighlightTextCtrl->Clear();
 }
 
-void Lyrics::AddLabels(const LabelTrack *pLT)
+void LyricsPanel::AddLabels(const LabelTrack *pLT)
 {
    const size_t numLabels = pLT->GetNumLabels();
    wxString highlightText;
@@ -143,9 +140,9 @@ void Lyrics::AddLabels(const LabelTrack *pLT)
    mHighlightTextCtrl->AppendText(highlightText);
 }
 
-void Lyrics::Add(double t, const wxString &syllable, wxString &highlightText)
+void LyricsPanel::Add(double t, const wxString &syllable, wxString &highlightText)
 {
-   int i = mSyllables.GetCount();
+   int i = mSyllables.size();
 
    {
       Syllable &prevSyllable = mSyllables[i - 1];
@@ -161,7 +158,7 @@ void Lyrics::Add(double t, const wxString &syllable, wxString &highlightText)
       }
    }
 
-   mSyllables.Add(Syllable());
+   mSyllables.push_back(Syllable());
    Syllable &thisSyllable = mSyllables[i];
    thisSyllable.t = t;
    thisSyllable.text = syllable;
@@ -187,15 +184,15 @@ void Lyrics::Add(double t, const wxString &syllable, wxString &highlightText)
       highlightText += thisSyllable.textWithSpace;
 }
 
-void Lyrics::Finish(double finalT)
+void LyricsPanel::Finish(double finalT)
 {
    // Add 3 dummy syllables at the end
-   int i = mSyllables.GetCount();
-   mSyllables.Add(Syllable());
+   int i = mSyllables.size();
+   mSyllables.push_back(Syllable());
    mSyllables[i].t = finalT + 1.0;
-   mSyllables.Add(Syllable());
+   mSyllables.push_back(Syllable());
    mSyllables[i+1].t = finalT + 2.0;
-   mSyllables.Add(Syllable());
+   mSyllables.push_back(Syllable());
    mSyllables[i+2].t = finalT + 3.0;
 
    // Mark measurements as invalid
@@ -205,12 +202,12 @@ void Lyrics::Finish(double finalT)
 }
 
 // Binary-search for the syllable syllable whose char0 <= startChar <= char1.
-int Lyrics::FindSyllable(long startChar)
+int LyricsPanel::FindSyllable(long startChar)
 {
    int i1, i2;
 
    i1 = 0;
-   i2 = mSyllables.GetCount();
+   i2 = mSyllables.size();
    while (i2 > i1+1) {
       int pmid = (i1+i2)/2;
       if (mSyllables[pmid].char0 > startChar)
@@ -221,13 +218,13 @@ int Lyrics::FindSyllable(long startChar)
 
    if (i1 < 2)
       i1 = 2;
-   if (i1 > (int)(mSyllables.GetCount()) - 3)
-      i1 = mSyllables.GetCount() - 3;
+   if (i1 > (int)(mSyllables.size()) - 3)
+      i1 = mSyllables.size() - 3;
 
    return i1;
 }
 
-void Lyrics::SetLyricsStyle(const LyricsStyle newLyricsStyle)
+void LyricsPanel::SetLyricsStyle(const LyricsStyle newLyricsStyle)
 {
    if (mLyricsStyle == newLyricsStyle)
       return;
@@ -240,17 +237,17 @@ void Lyrics::SetLyricsStyle(const LyricsStyle newLyricsStyle)
 }
 
 
-unsigned int Lyrics::GetDefaultFontSize() const
+unsigned int LyricsPanel::GetDefaultFontSize() const
 {
    return (mLyricsStyle == kBouncingBallLyrics) ? 48 : 10;
 }
 
-void Lyrics::SetDrawnFont(wxDC *dc)
+void LyricsPanel::SetDrawnFont(wxDC *dc)
 {
    dc->SetFont(wxFont(mKaraokeFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 }
 
-void Lyrics::SetHighlightFont() // for kHighlightLyrics
+void LyricsPanel::SetHighlightFont() // for kHighlightLyrics
 {
    wxFont newFont(mKaraokeFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    mHighlightTextCtrl->SetDefaultStyle(wxTextAttr(wxNullColour, wxNullColour, newFont));
@@ -258,7 +255,7 @@ void Lyrics::SetHighlightFont() // for kHighlightLyrics
                                  wxTextAttr(wxNullColour, wxNullColour, newFont));
 }
 
-void Lyrics::Measure(wxDC *dc) // only for drawn text
+void LyricsPanel::Measure(wxDC *dc) // only for drawn text
 {
    this->SetDrawnFont(dc);
    int width = 0, height = 0;
@@ -267,9 +264,9 @@ void Lyrics::Measure(wxDC *dc) // only for drawn text
    int x = 2*kIndent;
 
    unsigned int i;
-   for(i=0; i<mSyllables.GetCount(); i++) {
+   for(i = 0; i < mSyllables.size(); i++) {
       if ((i < I_FIRST_REAL_SYLLABLE) || // Clear() starts the list with I_FIRST_REAL_SYLLABLE dummies.
-            (i >= mSyllables.GetCount()-3)) // Finish() ends with 3 dummies.
+            (i >= mSyllables.size() - 3)) // Finish() ends with 3 dummies.
       {
          dc->GetTextExtent(wxT("DUMMY"), &width, &height); // Get the correct height even if we're at i=0.
          width = 0;
@@ -282,7 +279,7 @@ void Lyrics::Measure(wxDC *dc) // only for drawn text
       // when there's a long pause relative to the previous word, insert
       // extra space.
       int extraWidth;
-      if (i >= I_FIRST_REAL_SYLLABLE && i < mSyllables.GetCount()-2)
+      if (i >= I_FIRST_REAL_SYLLABLE && i < mSyllables.size() - 2)
       {
          double deltaThis = mSyllables[i+1].t - mSyllables[i].t;
          double deltaPrev = mSyllables[i].t - mSyllables[i-1].t;
@@ -313,12 +310,12 @@ void Lyrics::Measure(wxDC *dc) // only for drawn text
 }
 
 // Binary-search for the syllable with the largest time not greater than t
-int Lyrics::FindSyllable(double t)
+int LyricsPanel::FindSyllable(double t)
 {
    int i1, i2;
 
    i1 = 0;
-   i2 = mSyllables.GetCount();
+   i2 = mSyllables.size();
    while (i2 > i1+1) {
       int pmid = (i1+i2)/2;
       if (mSyllables[pmid].t > t)
@@ -329,8 +326,8 @@ int Lyrics::FindSyllable(double t)
 
    if (i1 < 2)
       i1 = 2;
-   if (i1 > (int)(mSyllables.GetCount()) - 3)
-      i1 = mSyllables.GetCount() - 3;
+   if (i1 > (int)(mSyllables.size()) - 3)
+      i1 = mSyllables.size() - 3;
 
    return i1;
 }
@@ -342,13 +339,13 @@ int Lyrics::FindSyllable(double t)
 // In-between words, outX is interpolated using smooth acceleration
 // between the two neighboring words, and y is a positive number indicating
 // the bouncing ball height
-void Lyrics::GetKaraokePosition(double t,
+void LyricsPanel::GetKaraokePosition(double t,
                                 int *outX, double *outY)
 {
    *outX = 0;
    *outY = 0;
 
-   if (t < mSyllables[I_FIRST_REAL_SYLLABLE].t || t > mSyllables[mSyllables.GetCount()-3].t)
+   if (t < mSyllables[I_FIRST_REAL_SYLLABLE].t || t > mSyllables[mSyllables.size() - 3].t)
       return;
 
    int i0, i1, i2, i3;
@@ -417,7 +414,7 @@ void Lyrics::GetKaraokePosition(double t,
    *outY = height * sin(M_PI * t);
 }
 
-void Lyrics::Update(double t)
+void LyricsPanel::Update(double t)
 {
    if (t < 0.0)
    {
@@ -457,20 +454,20 @@ void Lyrics::Update(double t)
    }
 }
 
-void Lyrics::OnKeyEvent(wxKeyEvent & event)
+void LyricsPanel::OnKeyEvent(wxKeyEvent & event)
 {
    AudacityProject *project = GetActiveProject();
    project->GetCommandManager()->FilterKeyEvent(project, event, true);
    event.Skip();
 }
 
-void Lyrics::OnPaint(wxPaintEvent & WXUNUSED(event))
+void LyricsPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
    DoPaint(dc);
 }
 
-void Lyrics::DoPaint(wxDC &dc)
+void LyricsPanel::DoPaint(wxDC &dc)
 {
    if (!this->GetParent()->IsShown())
       return;
@@ -499,7 +496,7 @@ void Lyrics::DoPaint(wxDC &dc)
    }
 }
 
-void Lyrics::OnSize(wxSizeEvent & WXUNUSED(event))
+void LyricsPanel::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    GetClientSize(&mWidth, &mHeight);
 
@@ -527,7 +524,7 @@ void Lyrics::OnSize(wxSizeEvent & WXUNUSED(event))
 }
 
 //v Doesn't seem to be a way to capture a selection event in a read-only wxTextCtrl.
-//void Lyrics::OnHighlightTextCtrl(wxCommandEvent & event)
+//void LyricsPanel::OnHighlightTextCtrl(wxCommandEvent & event)
 //{
 //   long from, to;
 //
@@ -535,7 +532,7 @@ void Lyrics::OnSize(wxSizeEvent & WXUNUSED(event))
 //   // TODO: Find the start time of the corresponding syllable and set playback to start there.
 //}
 
-void Lyrics::HandlePaint(wxDC &dc)
+void LyricsPanel::HandlePaint(wxDC &dc)
 {
    wxASSERT(mLyricsStyle == kBouncingBallLyrics);
    dc.SetBrush(*wxWHITE_BRUSH);
@@ -544,7 +541,7 @@ void Lyrics::HandlePaint(wxDC &dc)
    this->HandlePaint_BouncingBall(dc);
 }
 
-void Lyrics::HandlePaint_BouncingBall(wxDC &dc)
+void LyricsPanel::HandlePaint_BouncingBall(wxDC &dc)
 {
    int ctr = mWidth / 2;
    int x;
@@ -557,7 +554,7 @@ void Lyrics::HandlePaint_BouncingBall(wxDC &dc)
    SetDrawnFont(&dc);
    unsigned int i;
    wxCoord yTextTop = mKaraokeHeight - mTextHeight - 4;
-   for(i=0; i<mSyllables.GetCount(); i++) {
+   for(i = 0; i < mSyllables.size(); i++) {
       if (mSyllables[i].x + mSyllables[i].width < (x - ctr))
          continue;
       if (mSyllables[i].x > x + ctr)

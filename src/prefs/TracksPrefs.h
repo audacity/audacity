@@ -18,6 +18,7 @@
 //#include <wx/arrstr.h>
 //#include <wx/window.h>
 
+#include <vector>
 #include "PrefsPanel.h"
 
 class ShuttleGui;
@@ -25,7 +26,7 @@ class ShuttleGui;
 class TracksPrefs final : public PrefsPanel
 {
  public:
-   TracksPrefs(wxWindow * parent);
+   TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -41,17 +42,17 @@ class TracksPrefs final : public PrefsPanel
 
    static int iPreferencePinned;
 
-   wxArrayInt    mViewCodes;
+   std::vector<int> mViewCodes;
    wxArrayString mViewChoices;
-   wxArrayInt    mSampleDisplayCodes;
+   std::vector<int> mSampleDisplayCodes;
    wxArrayString mSampleDisplayChoices;
-   wxArrayInt    mZoomCodes;
+   std::vector<int> mZoomCodes;
    wxArrayString mZoomChoices;
 };
 
 class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif
