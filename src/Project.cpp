@@ -4490,14 +4490,16 @@ void AudacityProject::InitialState()
 
 bool AudacityProject::UndoAvailable()
 {
+   TrackList* trackList = GetTracks();
    return GetUndoManager()->UndoAvailable() &&
-      !GetTracks()->HasPendingTracks();
+       !(trackList != nullptr && trackList->HasPendingTracks());
 }
 
 bool AudacityProject::RedoAvailable()
 {
+   TrackList* trackList = GetTracks();
    return GetUndoManager()->RedoAvailable() &&
-      !GetTracks()->HasPendingTracks();
+       !(trackList != nullptr && trackList->HasPendingTracks());
 }
 
 void AudacityProject::PushState(const wxString &desc, const wxString &shortDesc)
