@@ -332,9 +332,11 @@ bool ShuttleParams::ExchangeWithMaster(const wxString & WXUNUSED(Name))
    return true;
 }
 
-
+#ifdef _MSC_VER
+// If this is compiled with MSVC (Visual Studio)
 #pragma warning( push )
 #pragma warning( disable: 4100 ) // unused parameters.
+#endif //_MSC_VER
 
 
 // The ShouldSet and CouldGet functions have an important side effect
@@ -698,7 +700,10 @@ void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vd
    EndStruct();
 }
 
+#ifdef _MSC_VER
+// If this is compiled with MSVC (Visual Studio)
 #pragma warning( pop )
+#endif //_MSC_VER
 
 
 
