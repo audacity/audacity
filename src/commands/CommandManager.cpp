@@ -1121,31 +1121,32 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
          // Dummy accelerator that looks Ok in menus but is non functional.
          // Note the space before the key.
 #ifdef __WXMSW__
-         Accel = wxString("\t ") + entry->key;
-         if( entry->key.StartsWith("Left" )) break;
-         if( entry->key.StartsWith("Right")) break;
-         if( entry->key.StartsWith("Up" )) break;
-         if( entry->key.StartsWith("Down")) break;
-         if( entry->key.StartsWith("Return")) break;
-         if( entry->key.StartsWith("Tab")) break;
-         if( entry->key.StartsWith("Shift+Tab")) break;
-         if( entry->key.StartsWith("0")) break;
-         if( entry->key.StartsWith("1")) break;
-         if( entry->key.StartsWith("2")) break;
-         if( entry->key.StartsWith("3")) break;
-         if( entry->key.StartsWith("4")) break;
-         if( entry->key.StartsWith("5")) break;
-         if( entry->key.StartsWith("6")) break;
-         if( entry->key.StartsWith("7")) break;
-         if( entry->key.StartsWith("8")) break;
-         if( entry->key.StartsWith("9")) break;
+         auto key = entry->key.Raw();
+         Accel = wxString("\t ") + key;
+         if( key.StartsWith("Left" )) break;
+         if( key.StartsWith("Right")) break;
+         if( key.StartsWith("Up" )) break;
+         if( key.StartsWith("Down")) break;
+         if( key.StartsWith("Return")) break;
+         if( key.StartsWith("Tab")) break;
+         if( key.StartsWith("Shift+Tab")) break;
+         if( key.StartsWith("0")) break;
+         if( key.StartsWith("1")) break;
+         if( key.StartsWith("2")) break;
+         if( key.StartsWith("3")) break;
+         if( key.StartsWith("4")) break;
+         if( key.StartsWith("5")) break;
+         if( key.StartsWith("6")) break;
+         if( key.StartsWith("7")) break;
+         if( key.StartsWith("8")) break;
+         if( key.StartsWith("9")) break;
          // Uncomment the below so as not to add the illegal accelerators.
          // Accel = "";
          //if( entry->key.StartsWith("Space" )) break;
          // These ones appear to be illegal already and mess up accelerator processing.
-         if( entry->key.StartsWith("NUMPAD_ENTER" )) break;
-         if( entry->key.StartsWith("Backspace" )) break;
-         if( entry->key.StartsWith("Delete" )) break;
+         if( key.StartsWith("NUMPAD_ENTER" )) break;
+         if( key.StartsWith("Backspace" )) break;
+         if( key.StartsWith("Delete" )) break;
 #endif
          //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
          // Normal accelerator.
