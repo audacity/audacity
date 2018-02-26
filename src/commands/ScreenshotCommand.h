@@ -50,7 +50,6 @@ private:
    bool mbBringToTop;
    bool bHasBackground;
    bool bHasBringToTop;
-   friend class ScreenshotCommand;
    friend class ScreenFrame;
 
 public:
