@@ -222,7 +222,7 @@ void convolve_toss_fetch(susp, snd_list)
     susp->x_snd_ptr += n;
     susp_took(x_snd_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))((snd_susp_type)susp, snd_list);
 }
 
 
@@ -264,7 +264,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     susp->x_buf_len = 2 * susp->h_len;
     susp->x_buffer_pointer = calloc((2 * (susp->h_len)), sizeof(float));
     susp->x_buffer_current = susp->x_buffer_pointer;
-    susp->susp.fetch = convolve_s_fetch;
+    susp->susp.fetch = (snd_fetch_fn)convolve_s_fetch;
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < x_snd->t0) sound_prepend_zeros(x_snd, t0);
@@ -273,16 +273,16 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
+	susp->susp.keep_fetch = (snd_fetch_fn)susp->susp.fetch;
 	susp->susp.fetch = convolve_toss_fetch;
     }
 
     /* initialize susp state */
-    susp->susp.free = convolve_free;
+    susp->susp.free = (snd_free_fn)convolve_free;
     susp->susp.sr = sr;
     susp->susp.t0 = t0;
-    susp->susp.mark = convolve_mark;
-    susp->susp.print_tree = convolve_print_tree;
+    susp->susp.mark = (snd_mark_fn)convolve_mark;
+    susp->susp.print_tree = (snd_print_tree_fn)convolve_print_tree;
     susp->susp.name = "convolve";
     susp->logically_stopped = false;
     susp->susp.log_stop_cnt = logical_stop_cnt_cvt(x_snd);
