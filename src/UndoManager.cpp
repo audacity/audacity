@@ -280,12 +280,6 @@ void UndoManager::PushState(const TrackList * l,
       tracksCopy->Add(t->Duplicate());
    }
 
-   // Quit with no effects if the change looks vacuous
-   // (Don't examine track contents to decide vacuity)
-   if (current >= 0 &&
-       tags == stack[current]->state.tags && tracksCopy->empty())
-      return;
-
    mayConsolidate = true;
 
    i = current + 1;
