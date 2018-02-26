@@ -397,7 +397,7 @@ and may be recursive.  'Send' is the top level.
 *******************************************************************/
 
 void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth ){
-   Id;//compiler food.
+   static_cast<void>(Id);//compiler food.
    if( !pMenu )
       return;
 
@@ -553,7 +553,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
 void GetInfoCommand::ExploreWindows( const CommandContext &context,
    wxPoint P, wxWindow * pWin, int Id, int depth )
 {
-   Id;//Compiler food.
+   static_cast<void>(Id);//Compiler food.
 
    if( pWin->GetName() == "Track Panel" )
    {
