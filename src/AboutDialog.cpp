@@ -369,7 +369,7 @@ visit our [[https://forum.audacityteam.org/|forum]].");
 
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
-      wxT("<br>DarkAudacity website: [[https://www.darkaudacity.com/|https://www.darkaudacity.com/]]") +
+      wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]") +
 #else
       _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>")
 

@@ -228,11 +228,12 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 
 // DA: Support methods text.
 #ifdef EXPERIMENTAL_DA
+         // Deliberately not translated.
          wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
-         _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
-         _(" [[https://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") +
-         _(" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.") + wxT("</li><li>") +
-         _(" [[https://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
+         wxT("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
+         wxT(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") +
+         wxT(" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.") + wxT("</li><li>") +
+         wxT(" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
 
          wxT("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
          wxT(" [[https://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
