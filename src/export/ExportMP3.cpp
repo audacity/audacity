@@ -810,7 +810,7 @@ public:
    };
 
    MP3Exporter();
-   virtual ~MP3Exporter();
+   ~MP3Exporter();
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    bool FindLibrary(wxWindow *parent);
@@ -1625,7 +1625,7 @@ private:
    int FindValue(CHOICES *choices, int cnt, int needle, int def);
    wxString FindName(CHOICES *choices, int cnt, int needle);
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
-   int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+   id3_length_t AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -1806,9 +1806,8 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    }
 
    ArrayOf<char> id3buffer;
-   int id3len;
    bool endOfFile;
-   id3len = AddTags(project, id3buffer, &endOfFile, metadata);
+   id3_length_t id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
       if (id3len > outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
@@ -1819,7 +1818,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    wxFileOffset pos = outFile.Tell();
    auto updateResult = ProgressResult::Success;
-   long bytes;
+   int bytes = 0;
 
    size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
    if (bufferSize <= 0) {
@@ -1897,7 +1896,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         if (bytes > outFile.Write(buffer.get(), bytes)) {
+         if (bytes > static_cast<int>(outFile.Write(buffer.get(), bytes))) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
@@ -1919,7 +1918,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       }
 
       if (bytes > 0) {
-         if (bytes > outFile.Write(buffer.get(), bytes)) {
+         if (bytes > static_cast<int>(outFile.Write(buffer.get(), bytes))) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             return ProgressResult::Cancelled;
@@ -1928,7 +1927,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
       // Write ID3 tag if it was supposed to be at the end of the file
       if (id3len > 0 && endOfFile) {
-         if (bytes > outFile.Write(id3buffer.get(), id3len)) {
+         if (bytes > static_cast<int>(outFile.Write(id3buffer.get(), id3len))) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             return ProgressResult::Cancelled;
@@ -2058,7 +2057,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
 // returns buffer len; caller frees
-int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
+id3_length_t ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
    id3_tag_holder tp { id3_tag_new() };
