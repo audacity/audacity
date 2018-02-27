@@ -195,23 +195,23 @@ void BriefCommandMessageTarget::EndStruct(){
    if( mCounts.GetCount() <= 3 )
       Update( " " );
 }
-void BriefCommandMessageTarget::AddItem(const wxString &value, const wxString &name){
+void BriefCommandMessageTarget::AddItem(const wxString &value, const wxString &WXUNUSED(name)){
    if( mCounts.GetCount() <= 3 )
       Update( wxString::Format( "%s\"%s\"", (mCounts.Last()>0)?" ":"",Escaped(value)));
    mCounts.Last() += 1;
 }
-void BriefCommandMessageTarget::AddBool(const bool value,      const wxString &name){
+void BriefCommandMessageTarget::AddBool(const bool value,      const wxString &WXUNUSED(name)){
    if( mCounts.GetCount() <= 3 )
       Update( wxString::Format( "%s%s", (mCounts.Last()>0)?" ":"",value?"True":"False"));
    mCounts.Last() += 1;
 }
-void BriefCommandMessageTarget::AddItem(const double value,    const wxString &name){
+void BriefCommandMessageTarget::AddItem(const double value,    const wxString &WXUNUSED(name)){
    if( mCounts.GetCount() <= 3 )
       Update( wxString::Format( "%s%g", (mCounts.Last()>0)?" ":"", value));
    mCounts.Last() += 1;
 }
 
-void BriefCommandMessageTarget::StartField(const wxString &name){
+void BriefCommandMessageTarget::StartField(const wxString &WXUNUSED(name)){
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }

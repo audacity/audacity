@@ -73,7 +73,7 @@ public:
    virtual ~ShuttleParams() {}
    bool ExchangeWithMaster(const wxString & Name) override;
    bool ShouldSet();
-   virtual ShuttleParams & Optional( bool & var ){ pOptionalFlag = NULL;return *this;};
+   virtual ShuttleParams & Optional( bool & WXUNUSED(var) ){ pOptionalFlag = NULL;return *this;};
    virtual ShuttleParams & OptionalY( bool & var ){ return Optional( var );};
    virtual ShuttleParams & OptionalN( bool & var ){ return Optional( var );};
    virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false );
