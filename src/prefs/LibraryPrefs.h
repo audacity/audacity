@@ -29,10 +29,10 @@ class LibraryPrefs final : public PrefsPanel
    ~LibraryPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void SetMP3VersionText(bool prompt = false);
    void SetFFmpegVersionText();
 

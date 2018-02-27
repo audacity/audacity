@@ -29,10 +29,10 @@ class DevicePrefs final : public PrefsPanel
    virtual ~DevicePrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void GetNamesAndLabels();
 
    void OnHost(wxCommandEvent & e);

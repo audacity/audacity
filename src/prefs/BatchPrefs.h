@@ -26,10 +26,10 @@ public:
    BatchPrefs(wxWindow * parent, wxWindowID winid);
    ~BatchPrefs();
    bool Commit() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
 private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 
    DECLARE_EVENT_TABLE()
 };

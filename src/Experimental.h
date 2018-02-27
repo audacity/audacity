@@ -48,12 +48,6 @@
 // feature to link audio tracks to a label track
 #define EXPERIMENTAL_SYNC_LOCK
 
-// JKC: Enable to get extra buttons in the screenshot tools.
-//#define EXPERIMENTAL_DOCS_AUTOMATION
-// JKC: Enable to get experiemental code to move
-// mod-script-pipe towards being mainstream.
-//#define EXPERIMENTAL_AUTOMATION
-
 // DA: Enables dark audacity theme and customisations.
 //#define EXPERIMENTAL_DA
 

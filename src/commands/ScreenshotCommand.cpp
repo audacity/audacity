@@ -53,8 +53,8 @@ enum kCaptureTypes
    kwindowplus,
    kfullscreen,
    ktoolbars,
-   kmenus,
    keffects,
+   kscriptables,
    kpreferences,
    kselectionbar,
    kspectralselection,
@@ -90,8 +90,8 @@ static const wxString kCaptureWhatStrings[nCaptureWhats] =
    XO("Window_Plus"),
    XO("Fullscreen"),
    XO("Toolbars"),
-   XO("Menus"),
    XO("Effects"),
+   XO("Scriptables"),
    XO("Preferences"),
    XO("Selectionbar"),
    XO("Spectral_Selection"),
@@ -408,38 +408,6 @@ void ExploreMenu(
    }
 }
 
-void ScreenshotCommand::CaptureMenus(
-   const CommandContext & context,
-   wxMenuBar*pBar, const wxString &mFileName)
-{
-   mFileName;//compiler food.
-   if(!pBar ){
-      wxLogDebug("No menus");
-      return;
-   }
-
-   size_t cnt = pBar->GetMenuCount();
-   size_t i;
-   wxString Label;
-   for(i=0;i<cnt;i++)
-   {
-      Label = pBar->GetMenuLabelText( i );
-      wxLogDebug( "\nT.Add(  0,  0,  0, \"%s¬\" );", Label);
-      ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
-   }
-
-#if 0
-   int x = 0, y = 0;
-   int width, height;
-
-   win->ClientToScreen(&x, &y);
-   win->GetParent()->ScreenToClient(&x, &y);
-   win->GetClientSize(&width, &height);
-
-   Capture(mFileName, win, wxRect(x, y, width, height));
-#endif
-}
-
 // Handed a dialog, which it is given the option to capture.
 bool ScreenshotCommand::MayCapture( wxDialog * pDlg )
 {
@@ -474,7 +442,7 @@ void ScreenshotCommand::CaptureWindowOnIdle(
    wxLogDebug("Taking screenshot of window %s (%i,%i,%i,%i)", Name, 
          Pos.x, Pos.y, Siz.x, Siz.y );
    // This delay is needed, as dialogs take a moment or two to fade in.
-   wxMilliSleep( 200 );
+   wxMilliSleep( 400 );
    // JKC: The border of 7 pixels was determined from a trial capture and then measuring
    // in the GIMP.  I'm unsure where the border comes from.
    Capture( context, Name, pDlg, wxRect((int)Pos.x+7, (int)Pos.y, (int)Siz.x-14, (int)Siz.y-7) );
@@ -516,22 +484,16 @@ void ScreenshotCommand::CapturePreferences(
 
 void ScreenshotCommand::CaptureEffects( 
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName ){
+   AudacityProject * pProject, const wxString &mFileName )
+{
+   (void)pProject;
    (void)&mFileName;//compiler food.
    (void)&context;
-   CommandManager * pMan = pProject->GetCommandManager();
-   wxString Str;
-   // Yucky static variables.  Is there a better way?  The problem is that we need the
-   // idle callback to know more about what to do.
-   mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
-   mpShooter = this;
-
 #define TRICKY_CAPTURE
 #define CAPTURE_NYQUIST_TOO
    // Commented out the effects that don't have dialogs.
    // Also any problematic ones, 
    const wxString EffectNames[] = {
-
 #ifdef TRICKY_CAPTURE
       //"Contrast...", // renamed
       "ContrastAnalyser",
@@ -609,17 +571,65 @@ void ScreenshotCommand::CaptureEffects(
       "Sound Finder...",
 #endif
    };
+   wxArrayString Commands( sizeof(EffectNames)/sizeof(EffectNames[0]), EffectNames );
+   CaptureCommands( context, Commands );
+}
 
-   for( int i=0;i<sizeof(EffectNames)/sizeof(EffectNames[0]);i++){
+void ScreenshotCommand::CaptureScriptables( 
+   const CommandContext & context,
+   AudacityProject * pProject, const wxString &mFileName )
+{
+   (void)pProject;
+   (void)&mFileName;//compiler food.
+   (void)&context;
+
+   const wxString ScriptablesNames[] = {
+      "Select",
+      "GetInfo",
+      "Help", // Help on individual commands
+      "Import2",
+      "Export2",
+      "OpenProject2",
+      "SaveProject2",
+      "Message",
+      "Screenshot",
+      "Drag",
+      "CompareAudio",
+      "GetPreference",
+      "SetPreference",
+      "SetClip",
+      "SetEnvelope",
+      "SetLabel",
+      "SetProject",
+      "SetTrack",
+   };
+   
+   wxArrayString Commands( sizeof(ScriptablesNames)/sizeof(ScriptablesNames[0]), ScriptablesNames );
+   CaptureCommands( context, Commands );
+
+}
+
+
+void ScreenshotCommand::CaptureCommands( 
+   const CommandContext & context, wxArrayString & Commands ){
+   AudacityProject * pProject = context.GetProject();
+   CommandManager * pMan = pProject->GetCommandManager();
+   wxString Str;
+   // Yucky static variables.  Is there a better way?  The problem is that we need the
+   // idle callback to know more about what to do.
+   mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+   mpShooter = this;
+
+   for( size_t i=0;i<Commands.GetCount();i++){
       // The handler is cleared each time it is used.
       SetIdleHandler( IdleHandler );
-      Str = EffectNames[i];
+      Str = Commands[i];
       const CommandContext context( *pProject );
       if( !pMan->HandleTextualCommand( Str, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Str);
       }
-      // This sleep is not needed, but gives user a chance to see the
+      // This particular sleep is not needed, but gives user a chance to see the
       // dialogs as they whizz by.
       wxMilliSleep( 200 );
    }
@@ -842,8 +852,8 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       return Capture(context, mFileName, w,GetScreenRect());
    else if (mCaptureMode.IsSameAs(wxT("Toolbars")))
       return CaptureDock(context, context.GetProject()->GetToolManager()->GetTopDock(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Menus")))
-      CaptureMenus(context, context.GetProject()->GetMenuBar(), mFileName);
+   else if (mCaptureMode.IsSameAs(wxT("Scriptables")))
+      CaptureScriptables(context, context.GetProject(), mFileName);
    else if (mCaptureMode.IsSameAs(wxT("Effects")))
       CaptureEffects(context, context.GetProject(), mFileName);
    else if (mCaptureMode.IsSameAs(wxT("Preferences")))

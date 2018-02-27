@@ -28,10 +28,10 @@ public:
    bool Commit() override;
    bool ShowsPreviewButton() override;
    bool Validate() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
 private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 
    void OnControl(wxCommandEvent&);
    void OnScale(wxCommandEvent&);
