@@ -554,8 +554,12 @@ bool NyquistEffect::CheckWhetherSkipEffect()
    return (mIsPrompt && mControls.size() > 0);
 }
 
+static void RegisterFunctions();
+
 bool NyquistEffect::Process()
 {
+   RegisterFunctions();
+
    bool success = true;
 
    mProjectChanged = false;
@@ -2532,3 +2536,39 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
    EndModal(wxID_OK);
 }
 
+// Registration of extra functions in XLisp.
+#include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
+
+static LVAL gettext()
+{
+   auto string = UTF8CTOWX(getstring(xlgastring()));
+   xllastarg();
+   return cvstring(GetCustomTranslation(string).mb_str(wxConvUTF8));
+}
+
+static LVAL ngettext()
+{
+   auto string1 = UTF8CTOWX(getstring(xlgastring()));
+   auto string2 = UTF8CTOWX(getstring(xlgastring()));
+   auto number = getfixnum(xlgafixnum());
+   xllastarg();
+   return cvstring(
+      wxGetTranslation(string1, string2, number).mb_str(wxConvUTF8));
+}
+
+static void RegisterFunctions()
+{
+   // Add functions to XLisp.  Do this only once,
+   // before the first call to nyx_init.
+   static bool firstTime = true;
+   if (firstTime) {
+      firstTime = false;
+
+      static const FUNDEF functions[] = {
+         { "_", SUBR, gettext },
+         { "ngettext", SUBR, ngettext },
+      };
+
+      xlbindfunctions( functions, sizeof(functions)/sizeof(*functions) );
+   }
+}
