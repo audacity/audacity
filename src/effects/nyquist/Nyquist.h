@@ -56,6 +56,7 @@ public:
    wxString var;
    wxString name;
    wxString label;
+   wxArrayString choices;
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -141,7 +142,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-   wxArrayString ParseChoice(const NyqControl & ctrl);
+   static wxArrayString ParseChoice(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,
@@ -162,9 +163,13 @@ private:
    void ParseFile();
    bool ParseCommand(const wxString & cmd);
    bool ParseProgram(wxInputStream & stream);
+   static void Tokenize(
+      const wxString &line, wxArrayString &tokens,
+      size_t trimStart, size_t trimEnd);
    void Parse(const wxString &line);
 
-   wxString UnQuote(const wxString &s);
+   static wxString UnQuote(const wxString &s,
+                           bool allowParens = true, bool translate = true);
    double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
