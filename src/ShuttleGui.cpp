@@ -2323,8 +2323,8 @@ void ShuttleGui::SetSizeHints( int minX, int minY )
 
 ShuttleGuiGetDefinition::ShuttleGuiGetDefinition(
    wxWindow * pParent,CommandMessageTarget & target )
-: CommandMessageTargetDecorator( target ),
-ShuttleGui( pParent, eIsGettingMetadata ) 
+: ShuttleGui( pParent, eIsGettingMetadata ),
+  CommandMessageTargetDecorator( target )
 {
 
 }
