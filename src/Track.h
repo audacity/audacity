@@ -63,6 +63,12 @@ using ListOfTracks = std::list< std::shared_ptr< Track > >;
 using TrackNodePointer =
 std::pair< ListOfTracks::iterator, ListOfTracks* >;
 
+inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
+{ return a.second == b.second && a.first == b.first; }
+
+inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
+{ return !(a == b); }
+
 class ViewInfo;
 
 // This is an in-session identifier of track objects across undo states
