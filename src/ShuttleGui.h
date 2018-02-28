@@ -78,7 +78,7 @@ class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:
    ShuttleGuiBase(wxWindow * pParent,teShuttleMode ShuttleMode);
-   ~ShuttleGuiBase(void);
+   virtual ~ShuttleGuiBase();
    void Init();
    void ResetId();
 
@@ -401,7 +401,7 @@ class ShuttleGuiGetDefinition : public ShuttleGui, public CommandMessageTargetDe
 {
 public:
    ShuttleGuiGetDefinition(wxWindow * pParent,CommandMessageTarget & target );
-   ~ShuttleGuiGetDefinition(void);
+   virtual ~ShuttleGuiGetDefinition();
 
    wxCheckBox * TieCheckBox(
       const wxString &Prompt,
@@ -455,9 +455,6 @@ public:
       const int Value,
       const int max,
       const int min) override;
-
-
-
 };
 
 #endif
