@@ -1861,7 +1861,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
       return false;
    }
 
-   wxTextInputStream pgm(stream);
+   wxTextInputStream pgm(stream, wxT(" \t"), wxConvUTF8);
 
    mCmd = wxT("");
    mIsSal = false;

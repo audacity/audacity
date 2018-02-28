@@ -440,6 +440,71 @@ CommandManager::~CommandManager()
    PurgeData();
 }
 
+const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
+{
+   static const auto list = [] {
+      // These short cuts are for the max list only....
+      const char *const strings[] = {
+         "Ctrl+I",
+         "Ctrl+Alt+I",
+         "Ctrl+J",
+         "Ctrl+Alt+J",
+         "Ctrl+Alt+V",
+         "Alt+X",
+         "Alt+K",
+         "Shift+Alt+X",
+         "Shift+Alt+K",
+         "Alt+L",
+         "Shift+Alt+C",
+         "Alt+I",
+         "Alt+J",
+         "Shift+Alt+J",
+         "Ctrl+Shift+A",
+         "Q",
+         //"Shift+J",
+         //"Shift+K",
+         //"Shift+Home",
+         //"Shift+End",
+         "Ctrl+[",
+         "Ctrl+]",
+         "1",
+         "Shift+F5",
+         "Shift+F6",
+         "Shift+F7",
+         "Shift+F8",
+         "Ctrl+Shift+F5",
+         "Ctrl+Shift+F7",
+         "Ctrl+Shift+N",
+         "Ctrl+Shift+M",
+         "Ctrl+Home",
+         "Ctrl+End",
+         "Shift+C",
+         "Alt+Shift+Up",
+         "Alt+Shift+Down",
+         "Shift+P",
+         "Alt+Shift+Left",
+         "Alt+Shift+Right",
+         "Ctrl+Shift+T",
+         //"Command+M",
+         //"Option+Command+M",
+         "Shift+H",
+         "Shift+O",
+         "Shift+I",
+         "Shift+N",
+         "D",
+         "A",
+         "Alt+Shift+F6",
+         "Alt+F6",
+      };
+
+      std::vector<NormalizedKeyString> result(
+         strings, strings + sizeof(strings)/sizeof(*strings) );
+      std::sort( result.begin(), result.end() );
+      return result;
+   }();
+   return list;
+}
+
 // CommandManager needs to know which defaults are standard and which are in the 
 // full (max) list.
 void CommandManager::SetMaxList()
@@ -452,68 +517,14 @@ void CommandManager::SetMaxList()
    // instead use flags in the menu entrys to indicate whether the default 
    // shortcut is standard or full.
 
-   mMaxListOnly.Clear();
+   mMaxListOnly.clear();
 
    // if the full list, don't exclude any.
    bool bFull = gPrefs->ReadBool(wxT("/GUI/Shortcuts/FullDefaults"),false);
    if( bFull )
       return;
 
-   // These short cuts are for the max list only....
-   //mMaxListOnly.Add( "Ctrl+I" );
-   mMaxListOnly.Add( "Ctrl+Alt+I" );
-   mMaxListOnly.Add( "Ctrl+J" );
-   mMaxListOnly.Add( "Ctrl+Alt+J" );
-   mMaxListOnly.Add( "Ctrl+Alt+V" );
-   mMaxListOnly.Add( "Alt+X" );
-   mMaxListOnly.Add( "Alt+K" );
-   mMaxListOnly.Add( "Shift+Alt+X" );
-   mMaxListOnly.Add( "Shift+Alt+K" );
-   mMaxListOnly.Add( "Alt+L" );
-   mMaxListOnly.Add( "Shift+Alt+C" );
-   mMaxListOnly.Add( "Alt+I" );
-   mMaxListOnly.Add( "Alt+J" );
-   mMaxListOnly.Add( "Shift+Alt+J" );
-   mMaxListOnly.Add( "Ctrl+Shift+A" );
-   mMaxListOnly.Add( "Q" );
-   //mMaxListOnly.Add( "Shift+J" );
-   //mMaxListOnly.Add( "Shift+K" );
-   //mMaxListOnly.Add( "Shift+Home" );
-   //mMaxListOnly.Add( "Shift+End" );
-   mMaxListOnly.Add( "Ctrl+[" );
-   mMaxListOnly.Add( "Ctrl+]" );
-   mMaxListOnly.Add( "1" );
-   mMaxListOnly.Add( "Shift+F5" );
-   mMaxListOnly.Add( "Shift+F6" );
-   mMaxListOnly.Add( "Shift+F7" );
-   mMaxListOnly.Add( "Shift+F8" );
-   mMaxListOnly.Add( "Ctrl+Shift+F5" );
-   mMaxListOnly.Add( "Ctrl+Shift+F7" );
-   mMaxListOnly.Add( "Ctrl+Shift+N" );
-   mMaxListOnly.Add( "Ctrl+Shift+M" );
-   mMaxListOnly.Add( "Ctrl+Home" );
-   mMaxListOnly.Add( "Ctrl+End" );
-   mMaxListOnly.Add( "Shift+C" );
-   mMaxListOnly.Add( "Alt+Shift+Up" );
-   mMaxListOnly.Add( "Alt+Shift+Down" );
-   mMaxListOnly.Add( "Shift+P" );
-   mMaxListOnly.Add( "Alt+Shift+Left" );
-   mMaxListOnly.Add( "Alt+Shift+Right" );
-   mMaxListOnly.Add( "Ctrl+Shift+T" );
-   //mMaxListOnly.Add( "Command+M" );
-   //mMaxListOnly.Add( "Option+Command+M" );
-   mMaxListOnly.Add( "Shift+H" );
-   mMaxListOnly.Add( "Shift+O" );
-   mMaxListOnly.Add( "Shift+I" );
-   mMaxListOnly.Add( "Shift+N" );
-   mMaxListOnly.Add( "D" );
-   mMaxListOnly.Add( "A" );
-   mMaxListOnly.Add( "Alt+Shift+F6" );
-   mMaxListOnly.Add( "Alt+F6" );
-
-   std::transform( mMaxListOnly.begin(), mMaxListOnly.end(), mMaxListOnly.begin(),
-                   KeyStringNormalize );
-   mMaxListOnly.Sort();
+   mMaxListOnly = ExcludedList();
 }
 
 
@@ -1013,7 +1024,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 
       entry->name = name;
       entry->label = label;
-      entry->key = KeyStringNormalize(accel.BeforeFirst(wxT('\t')));
+      entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
       entry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName);
@@ -1035,13 +1046,15 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
       // Note that the default is unaffected, intentionally so.
       // There are effectively two levels of default, the full (max) list
       // and the normal reduced list.
-      if( mMaxListOnly.Index( entry->key ) !=-1) 
-         entry->key = wxT("");
+      if( std::binary_search( mMaxListOnly.begin(), mMaxListOnly.end(),
+                              entry->key ) )
+         entry->key = {};
 
-      // Key from preferences overridse the default key given
+      // Key from preferences overrides the default key given
       gPrefs->SetPath(wxT("/NewKeys"));
       if (gPrefs->HasEntry(entry->name)) {
-         entry->key = KeyStringNormalize(gPrefs->Read(entry->name, entry->key));
+         entry->key =
+            NormalizedKeyString{ gPrefs->Read(entry->name, entry->key.Raw()) };
       }
       gPrefs->SetPath(wxT("/"));
 
@@ -1074,7 +1087,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 #endif
    mCommandNameHash[entry->name] = entry;
 
-   if (entry->key != wxT("")) {
+   if (!entry->key.empty()) {
       mCommandKeyHash[entry->key] = entry;
    }
 
@@ -1084,9 +1097,9 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 wxString CommandManager::GetLabel(const CommandListEntry *entry) const
 {
    wxString label = entry->label;
-   if (!entry->key.IsEmpty())
+   if (!entry->key.empty())
    {
-      label += wxT("\t") + entry->key;
+      label += wxT("\t") + entry->key.Raw();
    }
 
    return label;
@@ -1103,40 +1116,41 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
 #if 1
    wxString Accel = "";
    do{
-      if (!entry->key.IsEmpty())
+      if (!entry->key.empty())
       {
          // Dummy accelerator that looks Ok in menus but is non functional.
          // Note the space before the key.
 #ifdef __WXMSW__
-         Accel = wxString("\t ") + entry->key;
-         if( entry->key.StartsWith("Left" )) break;
-         if( entry->key.StartsWith("Right")) break;
-         if( entry->key.StartsWith("Up" )) break;
-         if( entry->key.StartsWith("Down")) break;
-         if( entry->key.StartsWith("Return")) break;
-         if( entry->key.StartsWith("Tab")) break;
-         if( entry->key.StartsWith("Shift+Tab")) break;
-         if( entry->key.StartsWith("0")) break;
-         if( entry->key.StartsWith("1")) break;
-         if( entry->key.StartsWith("2")) break;
-         if( entry->key.StartsWith("3")) break;
-         if( entry->key.StartsWith("4")) break;
-         if( entry->key.StartsWith("5")) break;
-         if( entry->key.StartsWith("6")) break;
-         if( entry->key.StartsWith("7")) break;
-         if( entry->key.StartsWith("8")) break;
-         if( entry->key.StartsWith("9")) break;
+         auto key = entry->key.Raw();
+         Accel = wxString("\t ") + key;
+         if( key.StartsWith("Left" )) break;
+         if( key.StartsWith("Right")) break;
+         if( key.StartsWith("Up" )) break;
+         if( key.StartsWith("Down")) break;
+         if( key.StartsWith("Return")) break;
+         if( key.StartsWith("Tab")) break;
+         if( key.StartsWith("Shift+Tab")) break;
+         if( key.StartsWith("0")) break;
+         if( key.StartsWith("1")) break;
+         if( key.StartsWith("2")) break;
+         if( key.StartsWith("3")) break;
+         if( key.StartsWith("4")) break;
+         if( key.StartsWith("5")) break;
+         if( key.StartsWith("6")) break;
+         if( key.StartsWith("7")) break;
+         if( key.StartsWith("8")) break;
+         if( key.StartsWith("9")) break;
          // Uncomment the below so as not to add the illegal accelerators.
          // Accel = "";
          //if( entry->key.StartsWith("Space" )) break;
          // These ones appear to be illegal already and mess up accelerator processing.
-         if( entry->key.StartsWith("NUMPAD_ENTER" )) break;
-         if( entry->key.StartsWith("Backspace" )) break;
-         if( entry->key.StartsWith("Delete" )) break;
+         if( key.StartsWith("NUMPAD_ENTER" )) break;
+         if( key.StartsWith("Backspace" )) break;
+         if( key.StartsWith("Delete" )) break;
 #endif
          //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
          // Normal accelerator.
-         Accel = wxString("\t") + entry->key;
+         Accel = wxString("\t") + entry->key.Raw();
       }
    } while (false );
    label += Accel;
@@ -1251,18 +1265,19 @@ void CommandManager::Modify(const wxString &name, const wxString &newLabel)
    }
 }
 
-void CommandManager::SetKeyFromName(const wxString &name, const wxString &key)
+void CommandManager::SetKeyFromName(const wxString &name,
+                                    const NormalizedKeyString &key)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry) {
-      entry->key = KeyStringNormalize(key);
+      entry->key = key;
    }
 }
 
-void CommandManager::SetKeyFromIndex(int i, const wxString &key)
+void CommandManager::SetKeyFromIndex(int i, const NormalizedKeyString &key)
 {
    const auto &entry = mCommandList[i];
-   entry->key = KeyStringNormalize(key);
+   entry->key = key;
 }
 
 void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag flagsGot, CommandMask flagsRequired )
@@ -1352,7 +1367,7 @@ wxString CommandManager::DescribeCommandsAndShortcuts
       if (!name.empty()) {
          auto keyStr = GetKeyFromName(name);
          if (!keyStr.empty()){
-            auto keyString = KeyStringDisplay(keyStr, true);
+            auto keyString = keyStr.Display(true);
             auto format = wxT("%s %s(%s)");
 #ifdef __WXMAC__
             // The unicode controls push and pop left-to-right embedding.
@@ -1649,8 +1664,8 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
 
 void CommandManager::GetAllCommandData(
    wxArrayString &names,
-   wxArrayString &keys,
-   wxArrayString &default_keys,
+   std::vector<NormalizedKeyString> &keys,
+   std::vector<NormalizedKeyString> &default_keys,
    wxArrayString &labels,
    wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
@@ -1662,8 +1677,8 @@ void CommandManager::GetAllCommandData(
       if (!entry->multi)
       {
          names.Add(entry->name);
-         keys.Add(entry->key);
-         default_keys.Add(entry->defaultKey);
+         keys.push_back(entry->key);
+         default_keys.push_back(entry->defaultKey);
          labels.Add(entry->label);
          categories.Add(entry->labelTop);
 #if defined(EXPERIMENTAL_KEY_VIEW)
@@ -1673,8 +1688,8 @@ void CommandManager::GetAllCommandData(
       else if( includeMultis )
       {
          names.Add(entry->name);
-         keys.Add(entry->key);
-         default_keys.Add(entry->defaultKey);
+         keys.push_back(entry->key);
+         default_keys.push_back(entry->defaultKey);
          labels.Add(entry->label);
          categories.Add(entry->labelTop);
 #if defined(EXPERIMENTAL_KEY_VIEW)
@@ -1727,22 +1742,22 @@ wxString CommandManager::GetCategoryFromName(const wxString &name)
    return entry->labelTop;
 }
 
-wxString CommandManager::GetKeyFromName(const wxString &name) const
+NormalizedKeyString CommandManager::GetKeyFromName(const wxString &name) const
 {
    CommandListEntry *entry =
       // May create a NULL entry
       const_cast<CommandManager*>(this)->mCommandNameHash[name];
    if (!entry)
-      return wxT("");
+      return {};
 
    return entry->key;
 }
 
-wxString CommandManager::GetDefaultKeyFromName(const wxString &name)
+NormalizedKeyString CommandManager::GetDefaultKeyFromName(const wxString &name)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (!entry)
-      return wxT("");
+      return {};
 
    return entry->defaultKey;
 }
@@ -1755,7 +1770,7 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (!wxStrcmp(tag, wxT("command"))) {
       wxString name;
-      wxString key;
+      NormalizedKeyString key;
 
       while(*attrs) {
          const wxChar *attr = *attrs++;
@@ -1767,12 +1782,12 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(value))
             name = value;
          if (!wxStrcmp(attr, wxT("key")) && XMLValueChecker::IsGoodString(value))
-            key = KeyStringNormalize(value);
+            key = NormalizedKeyString{ value };
       }
 
       if (mCommandNameHash[name]) {
          if (GetDefaultKeyFromName(name) != key) {
-            mCommandNameHash[name]->key = KeyStringNormalize(key);
+            mCommandNameHash[name]->key = key;
             mXMLKeysRead++;
          }
       }
@@ -1809,7 +1824,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
       xmlFile.StartTag(wxT("command"));
       xmlFile.WriteAttr(wxT("name"), entry->name);
       xmlFile.WriteAttr(wxT("label"), label);
-      xmlFile.WriteAttr(wxT("key"), entry->key);
+      xmlFile.WriteAttr(wxT("key"), entry->key.Raw());
       xmlFile.EndTag(wxT("command"));
    }
 
@@ -1865,7 +1880,7 @@ void CommandManager::CheckDups()
 {
    int cnt = mCommandList.size();
    for (size_t j = 0;  (int)j < cnt; j++) {
-      if (mCommandList[j]->key.IsEmpty()) {
+      if (mCommandList[j]->key.empty()) {
          continue;
       }
 
@@ -1881,7 +1896,7 @@ void CommandManager::CheckDups()
          if (mCommandList[i]->key == mCommandList[j]->key) {
             wxString msg;
             msg.Printf(wxT("key combo '%s' assigned to '%s' and '%s'"),
-                       mCommandList[i]->key,
+                       mCommandList[i]->key.Raw(),
                        mCommandList[i]->label.BeforeFirst(wxT('\t')),
                        mCommandList[j]->label.BeforeFirst(wxT('\t')));
             wxASSERT_MSG(mCommandList[i]->key != mCommandList[j]->key, msg);

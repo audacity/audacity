@@ -31,7 +31,7 @@ class TracksBehaviorsPrefs final : public PrefsPanel
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    wxArrayString mSoloCodes;
    wxArrayString mSoloChoices;

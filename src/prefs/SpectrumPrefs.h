@@ -46,6 +46,7 @@ class SpectrumPrefs final : public PrefsPanel
    virtual ~SpectrumPrefs();
    void Preview() override;
    bool Commit() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
    void Rollback();
    bool ShowsPreviewButton() override;
    bool Validate() override;
@@ -54,7 +55,6 @@ class SpectrumPrefs final : public PrefsPanel
  private:
    void Populate(size_t windowSize);
    void PopulatePaddingChoices(size_t windowSize);
-   void PopulateOrExchange(ShuttleGui & S);
 
    void OnControl(wxCommandEvent &event);
    void OnWindowSize(wxCommandEvent &event);

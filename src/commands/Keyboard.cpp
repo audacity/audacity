@@ -13,7 +13,7 @@
 
 #include "Keyboard.h"
 
-wxString KeyStringNormalize(const wxString & key)
+NormalizedKeyString::NormalizedKeyString(const wxString & key)
 {
 #if defined(__WXMAC__)
    wxString newkey;
@@ -44,16 +44,16 @@ wxString KeyStringNormalize(const wxString & key)
       newkey += wxT("Ctrl+");
    }
 
-   return newkey + temp.AfterLast(wxT('+'));
+   (wxString&)*this = newkey + temp.AfterLast(wxT('+'));
 #else
-   return key;
+   (wxString&)*this = key;
 #endif
 }
 
-wxString KeyStringDisplay(const wxString & key, bool usesSpecialChars)
+wxString NormalizedKeyString::Display(bool usesSpecialChars) const
 {
    (void)usesSpecialChars;//compiler food
-   wxString newkey = KeyStringNormalize(key);
+   wxString newkey = *this;
 #if defined(__WXMAC__)
 
    if (!usesSpecialChars) {
@@ -75,7 +75,7 @@ wxString KeyStringDisplay(const wxString & key, bool usesSpecialChars)
    return newkey;
 }
 
-wxString KeyEventToKeyString(const wxKeyEvent & event)
+NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & event)
 {
    wxString newStr = wxT("");
 
@@ -332,9 +332,9 @@ wxString KeyEventToKeyString(const wxKeyEvent & event)
          newStr += wxT("NUMPAD_DIVIDE");
          break;
       default:
-         return wxT(""); // Don't do anything if we don't recognize the key
+         return {}; // Don't do anything if we don't recognize the key
       }
    }
 
-   return KeyStringNormalize(newStr);
+   return NormalizedKeyString{ newStr };
 }

@@ -38,6 +38,7 @@ class ModulePrefs final : public PrefsPanel
    ~ModulePrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    static int GetModuleStatus( const wxString &fname );
    static void SetModuleStatus( const wxString &fname, int iStatus );
@@ -45,7 +46,6 @@ class ModulePrefs final : public PrefsPanel
  private:
    void GetAllModuleStatuses();
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    wxArrayString mModules;
    std::vector<int> mStatuses;
    wxArrayString mPaths;

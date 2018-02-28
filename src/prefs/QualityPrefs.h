@@ -31,10 +31,10 @@ class QualityPrefs final : public PrefsPanel
 
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void GetNamesAndLabels();
    void OnSampleRateChoice(wxCommandEvent & e);
 

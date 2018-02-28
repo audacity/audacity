@@ -39,10 +39,14 @@ This class now lists
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
+#include "../prefs/PrefsDialog.h"
+#include "../ShuttleGui.h"
+
 enum {
    kCommands,
    kCommandsPlus,
    kMenus,
+   kPreferences,
    kTracks,
    kClips,
    kEnvelopes,
@@ -56,6 +60,7 @@ static const wxString kTypes[nTypes] =
    XO("Commands"),
    XO("Commands+"),
    XO("Menus"),
+   XO("Preferences"),
    XO("Tracks"),
    XO("Clips"),
    XO("Envelopes"),
@@ -133,6 +138,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
       case kCommands     : return SendCommands( context, 0 );
       case kCommandsPlus : return SendCommands( context, 1 );
       case kMenus        : return SendMenus( context );
+      case kPreferences  : return SendPreferences( context );
       case kTracks       : return SendTracks( context );
       case kClips        : return SendClips( context );
       case kEnvelopes    : return SendEnvelopes( context );
@@ -167,6 +173,19 @@ bool GetInfoCommand::SendMenus(const CommandContext &context)
       context.EndArray();
       ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
    }
+   context.EndArray();
+   return true;
+}
+
+bool GetInfoCommand::SendPreferences(const CommandContext &context)
+{
+   context.StartArray();
+   GlobalPrefsDialog dialog( context.GetProject() );
+   // wxCommandEvent Evt;
+   //dialog.Show();
+   wxWindow * pWin = context.GetProject();
+   ShuttleGuiGetDefinition S(pWin, *((context.pOutput)->mStatusTarget) );
+   dialog.ShuttleAll( S );
    context.EndArray();
    return true;
 }

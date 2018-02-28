@@ -138,8 +138,10 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                                               wxT("/GUI/TrackNames/RecodingTrackName"),
                                              _("Recorded_Audio"),
                                              30);
-            mToggleCustomName->SetName(_("Custom name text"));
-            mToggleCustomName->Enable(mUseCustomTrackName);
+            if( mToggleCustomName ) {
+               mToggleCustomName->SetName(_("Custom name text"));
+               mToggleCustomName->Enable(mUseCustomTrackName);
+            }
          }
          S.EndMultiColumn();
 

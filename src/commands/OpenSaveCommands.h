@@ -21,7 +21,7 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define OPEN_PROJECT_PLUGIN_SYMBOL XO("Open Project")
+#define OPEN_PROJECT_PLUGIN_SYMBOL XO("Open Project2")
 
 class OpenProjectCommand : public AudacityCommand
 {
@@ -41,7 +41,7 @@ public:
    bool bHasAddToHistory;
 };
 
-#define SAVE_PROJECT_PLUGIN_SYMBOL XO("Save Project")
+#define SAVE_PROJECT_PLUGIN_SYMBOL XO("Save Project2")
 
 class SaveProjectCommand : public AudacityCommand
 {

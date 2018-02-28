@@ -129,7 +129,7 @@ ApplyAndSendResponse::ApplyAndSendResponse(const OldStyleCommandPointer &cmd, st
 }
 
 
-bool ApplyAndSendResponse::Apply(const CommandContext &context)
+bool ApplyAndSendResponse::Apply(const CommandContext &WXUNUSED(context))
 {
    wxLogMessage( "Context was passed in, but was ignored.  ApplyAndSendResponse has its own one");
    return Apply();

@@ -123,7 +123,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                                    wxT("name"),
                                    visualgroups,
                                    prefsgroups);
-         c->SetMinSize(c->GetBestSize());
+         if( c ) c->SetMinSize(c->GetBestSize());
 
          S.TieNumericTextBox(_("&Maximum effects per group (0 to disable):"),
                              wxT("/Effects/MaxPerGroup"),

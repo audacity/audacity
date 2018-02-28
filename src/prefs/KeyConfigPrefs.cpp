@@ -154,11 +154,11 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             S.StartRadioButtonGroup(wxT("/Prefs/KeyConfig/ViewBy"), wxT("tree"));
             {
                mViewByTree = S.Id(ViewByTreeID).TieRadioButton(_("&Tree"), wxT("tree"));
-               mViewByTree->SetName(_("View by tree"));
+               if( mViewByTree ) mViewByTree->SetName(_("View by tree"));
                mViewByName = S.Id(ViewByNameID).TieRadioButton(_("&Name"), wxT("name"));
-               mViewByName->SetName(_("View by name"));
+               if( mViewByName ) mViewByName->SetName(_("View by name"));
                mViewByKey = S.Id(ViewByKeyID).TieRadioButton(_("&Key"), wxT("key"));
-               mViewByKey->SetName(_("View by key"));
+               if( mViewByKey ) mViewByKey->SetName(_("View by key"));
             }
             S.EndRadioButtonGroup();
          }
@@ -271,9 +271,9 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
    wxArrayString Prefixes;
 
    mNames.Clear();
-   mKeys.Clear();
-   mDefaultKeys.Clear();
-   mStandardDefaultKeys.Clear();
+   mKeys.clear();
+   mDefaultKeys.clear();
+   mStandardDefaultKeys.clear();
    mManager->GetAllCommandData(
       mNames,
       mKeys,
@@ -363,69 +363,14 @@ void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
    PopupMenu(&Menu);//, wxPoint(0, 0));
 }
 
-void KeyConfigPrefs::FilterKeys( wxArrayString & arr )
+void KeyConfigPrefs::FilterKeys( std::vector<NormalizedKeyString> & arr )
 {
-   wxSortedArrayString MaxListOnly;
+   const auto &MaxListOnly = CommandManager::ExcludedList();
 
-   // These short cuts are for the max list only....
-   //MaxListOnly.Add( "Ctrl+I" );
-   MaxListOnly.Add( "Ctrl+Alt+I" );
-   MaxListOnly.Add( "Ctrl+J" );
-   MaxListOnly.Add( "Ctrl+Alt+J" );
-   MaxListOnly.Add( "Ctrl+Alt+V" );
-   MaxListOnly.Add( "Alt+X" );
-   MaxListOnly.Add( "Alt+K" );
-   MaxListOnly.Add( "Shift+Alt+X" );
-   MaxListOnly.Add( "Shift+Alt+K" );
-   MaxListOnly.Add( "Alt+L" );
-   MaxListOnly.Add( "Shift+Alt+C" );
-   MaxListOnly.Add( "Alt+I" );
-   MaxListOnly.Add( "Alt+J" );
-   MaxListOnly.Add( "Shift+Alt+J" );
-   MaxListOnly.Add( "Ctrl+Shift+A" );
-   MaxListOnly.Add( "Q" );
-   //MaxListOnly.Add( "Shift+J" );
-   //MaxListOnly.Add( "Shift+K" );
-   //MaxListOnly.Add( "Shift+Home" );
-   //MaxListOnly.Add( "Shift+End" );
-   MaxListOnly.Add( "Ctrl+[" );
-   MaxListOnly.Add( "Ctrl+]" );
-   MaxListOnly.Add( "1" );
-   MaxListOnly.Add( "Shift+F5" );
-   MaxListOnly.Add( "Shift+F6" );
-   MaxListOnly.Add( "Shift+F7" );
-   MaxListOnly.Add( "Shift+F8" );
-   MaxListOnly.Add( "Ctrl+Shift+F5" );
-   MaxListOnly.Add( "Ctrl+Shift+F7" );
-   MaxListOnly.Add( "Ctrl+Shift+N" );
-   MaxListOnly.Add( "Ctrl+Shift+M" );
-   MaxListOnly.Add( "Ctrl+Home" );
-   MaxListOnly.Add( "Ctrl+End" );
-   MaxListOnly.Add( "Shift+C" );
-   MaxListOnly.Add( "Alt+Shift+Up" );
-   MaxListOnly.Add( "Alt+Shift+Down" );
-   MaxListOnly.Add( "Shift+P" );
-   MaxListOnly.Add( "Alt+Shift+Left" );
-   MaxListOnly.Add( "Alt+Shift+Right" );
-   MaxListOnly.Add( "Ctrl+Shift+T" );
-   //MaxListOnly.Add( "Command+M" );
-   //MaxListOnly.Add( "Option+Command+M" );
-   MaxListOnly.Add( "Shift+H" );
-   MaxListOnly.Add( "Shift+O" );
-   MaxListOnly.Add( "Shift+I" );
-   MaxListOnly.Add( "Shift+N" );
-   MaxListOnly.Add( "D" );
-   MaxListOnly.Add( "A" );
-   MaxListOnly.Add( "Alt+Shift+F6" );
-   MaxListOnly.Add( "Alt+F6" );
-
-   std::transform( MaxListOnly.begin(), MaxListOnly.end(), MaxListOnly.begin(),
-                   KeyStringNormalize );
-   MaxListOnly.Sort();
    // Remove items that are in MaxList.
-   for (size_t i = 0; i < arr.GetCount(); i++) {
-      if( MaxListOnly.Index( arr[i] ) != wxNOT_FOUND )
-         arr[i]= wxT("");
+   for (size_t i = 0; i < arr.size(); i++) {
+      if( std::binary_search(MaxListOnly.begin(), MaxListOnly.end(), arr[i]) )
+         arr[i] = {};
    }
 }
 
@@ -438,7 +383,7 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
    if( event.GetId() == 1 )
       FilterKeys( mNewKeys );
 
-   for (size_t i = 0; i < mNewKeys.GetCount(); i++) {
+   for (size_t i = 0; i < mNewKeys.size(); i++) {
       mManager->SetKeyFromIndex(i, mNewKeys[i]);
    }
 
@@ -464,7 +409,7 @@ void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
       return;
    }
 
-   t->SetValue(KeyStringDisplay(KeyEventToKeyString(e)));
+   t->SetValue(KeyEventToKeyString(e).Display());
 }
 
 void KeyConfigPrefs::OnHotkeyChar(wxKeyEvent & WXUNUSED(e))
@@ -475,7 +420,7 @@ void KeyConfigPrefs::OnHotkeyChar(wxKeyEvent & WXUNUSED(e))
 void KeyConfigPrefs::OnHotkeyKillFocus(wxFocusEvent & e)
 {
    if (mKey->GetValue().IsEmpty() && mCommandSelected != wxNOT_FOUND) {
-      mKey->AppendText(mView->GetKey(mCommandSelected));
+      mKey->AppendText(mView->GetKey(mCommandSelected).Display());
    }
 
    e.Skip();
@@ -511,7 +456,7 @@ void KeyConfigPrefs::OnFilterKeyDown(wxKeyEvent & e)
    }
 
    if (mViewType == ViewByKey) {
-      wxString key = KeyStringDisplay(KeyEventToKeyString(e));
+      wxString key = KeyEventToKeyString(e).Display();
       t->SetValue(key);
 
       if (key != wxEmptyString) {
@@ -543,14 +488,14 @@ void KeyConfigPrefs::OnFilterChar(wxKeyEvent & e)
 
 // Given a hotkey combination, returns the name (description) of the
 // corresponding command, or the empty string if none is found.
-wxString KeyConfigPrefs::NameFromKey(const wxString & key)
+wxString KeyConfigPrefs::NameFromKey(const NormalizedKeyString & key)
 {
    return mView->GetNameByKey(key);
 }
 
 // Sets the selected command to have this key
 // This is not yet a committed change, which will happen on a save.
-void KeyConfigPrefs::SetKeyForSelected(const wxString & key)
+void KeyConfigPrefs::SetKeyForSelected(const NormalizedKeyString & key)
 {
    wxString name = mView->GetName(mCommandSelected);
 
@@ -575,7 +520,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   wxString key = mKey->GetValue();
+   NormalizedKeyString key { mKey->GetValue() };
    wxString oldname = mView->GetNameByKey(key);
    wxString newname = mView->GetName(mCommandSelected);
 
@@ -595,7 +540,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
       if (AudacityMessageBox(
             wxString::Format(
             _("The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead.  Otherwise, click Cancel."),
-            key,
+            mKey->GetValue(),
             oldlabel,
             newlabel),
             _("Error"), wxOK | wxCANCEL | wxICON_STOP | wxCENTRE, this) == wxCANCEL)
@@ -603,9 +548,9 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
          return;
       }
 
-      mView->SetKeyByName(oldname, wxEmptyString);
-      mManager->SetKeyFromName(oldname, wxEmptyString);
-      mNewKeys[mNames.Index(oldname)].Empty();
+      mView->SetKeyByName(oldname, {});
+      mManager->SetKeyFromName(oldname, {});
+      mNewKeys[mNames.Index(oldname)] = {};
 
    }
 
@@ -617,7 +562,7 @@ void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))
    mKey->Clear();
 
    if (mCommandSelected != wxNOT_FOUND) {
-      SetKeyForSelected(wxEmptyString);
+      SetKeyForSelected({});
    }
 }
 
@@ -629,7 +574,7 @@ void KeyConfigPrefs::OnSelected(wxCommandEvent & WXUNUSED(e))
    if (mCommandSelected != wxNOT_FOUND) {
       bool canset = mView->CanSetKey(mCommandSelected);
       if (canset) {
-         mKey->AppendText(mView->GetKey(mCommandSelected));
+         mKey->AppendText(mView->GetKey(mCommandSelected).Display());
       }
 
       mKey->Enable(canset);
@@ -678,13 +623,13 @@ bool KeyConfigPrefs::Commit()
 
    bool bFull = gPrefs->ReadBool(wxT("/GUI/Shortcuts/FullDefaults"), false);
    for (size_t i = 0; i < mNames.GetCount(); i++) {
-      wxString dkey = bFull ? KeyStringNormalize(mDefaultKeys[i]) : KeyStringNormalize(mStandardDefaultKeys[i]);
+      const auto &dkey = bFull ? mDefaultKeys[i] : mStandardDefaultKeys[i];
       wxString name = wxT("/NewKeys/") + mNames[i];
-      wxString key = KeyStringNormalize(mNewKeys[i]);
+      const auto &key = mNewKeys[i];
 
       if (gPrefs->HasEntry(name)) {
-         if (key != KeyStringNormalize(gPrefs->Read(name, key))) {
-            gPrefs->Write(name, key);
+         if (key != NormalizedKeyString{ gPrefs->Read(name, key.Raw()) } ) {
+            gPrefs->Write(name, key.Raw());
          }
          if (key == dkey) {
             gPrefs->DeleteEntry(name);
@@ -692,7 +637,7 @@ bool KeyConfigPrefs::Commit()
       }
       else {
          if (key != dkey) {
-            gPrefs->Write(name, key);
+            gPrefs->Write(name, key.Raw());
          }
       }
    }

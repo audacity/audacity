@@ -179,14 +179,14 @@ enum
 
    IdCaptureFirst,
    // No point delaying the capture of sets of things.
-   IdCaptureMenus= IdCaptureFirst,
-   IdCaptureEffects,
+   IdCaptureEffects= IdCaptureFirst,
+   IdCaptureScriptables,
    IdCapturePreferences,
+   IdCaptureToolbars,
 
    // Put all events that need delay between AllDelayed and LastDelayed.
    IdAllDelayedEvents,
-   IdCaptureToolbars  =IdAllDelayedEvents,
-   IdCaptureWindowContents,
+   IdCaptureWindowContents=IdAllDelayedEvents,
    IdCaptureFullWindow,
    IdCaptureWindowPlus,
    IdCaptureFullScreen,
@@ -380,11 +380,9 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay();
          {
             S.Id(IdCaptureToolbars).AddButton(_("All Toolbars"));
-#ifdef EXPERIMENTAL_DOCS_AUTOMATION
-            S.Id(IdCaptureMenus).AddButton(_("All Menus"));
             S.Id(IdCaptureEffects).AddButton(_("All Effects"));
+            S.Id(IdCaptureScriptables).AddButton(_("All Scriptables"));
             S.Id(IdCapturePreferences).AddButton(_("All Preferences"));
-#endif
          }
          S.EndHorizontalLay();
 
@@ -603,11 +601,11 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 
    wxArrayString Names;
 
-   Names.Add(wxT("Menus"));
    Names.Add(wxT("Effects"));
+   Names.Add(wxT("Scriptables"));
    Names.Add(wxT("Preferences"));
-
    Names.Add(wxT("Toolbars"));
+
    Names.Add(wxT("Window"));
    Names.Add(wxT("Full_Window"));
    Names.Add(wxT("Window_Plus"));

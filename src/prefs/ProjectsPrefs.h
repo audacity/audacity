@@ -28,10 +28,10 @@ class ProjectsPrefs final : public PrefsPanel
    ~ProjectsPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 };
 
 class ProjectsPrefsFactory final : public PrefsPanelFactory

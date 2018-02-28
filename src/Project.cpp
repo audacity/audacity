@@ -4261,18 +4261,16 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
                                             errorMessage);
 
       if (!errorMessage.IsEmpty()) {
-         // Version that goes to internet...
-         //      ShowErrorDialog(this, _("Error Importing"),
-         //                 errorMessage, wxT("http://audacity.sourceforge.net/help/faq?s=files&i=wma-proprietary"));
-         // Version that looks locally for the text.
+         // Error message derived from Importer::Import
+         // Additional help via a Help button links to the manual.
          ShowErrorDialog(this, _("Error Importing"),
-                         errorMessage, wxT("innerlink:wma-proprietary"));
+                         errorMessage, wxT("Importing_Audio"));
       }
       if (!success)
          return false;
-      
+
       wxGetApp().AddFileToHistory(fileName);
-      
+
       // no more errors, commit
       cleanup.release();
    }

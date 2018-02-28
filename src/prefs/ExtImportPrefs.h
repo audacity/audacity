@@ -50,6 +50,7 @@ class ExtImportPrefs final : public PrefsPanel
    ~ExtImportPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    void OnPluginKeyDown(wxListEvent& event);
    void OnPluginBeginDrag(wxListEvent& event);
@@ -103,7 +104,6 @@ class ExtImportPrefs final : public PrefsPanel
    void DoOnRuleTableSelect (int toprow);
    void AddItemToTable (int index, const ExtImportItem *item);
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    DECLARE_EVENT_TABLE()
 };
 

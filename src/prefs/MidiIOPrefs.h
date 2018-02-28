@@ -34,10 +34,10 @@ class MidiIOPrefs final : public PrefsPanel
    bool Commit() override;
    bool Validate() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void GetNamesAndLabels();
 
    void OnHost(wxCommandEvent & e);
