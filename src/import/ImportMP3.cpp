@@ -535,7 +535,7 @@ enum mad_flow output_cb(void *_data,
                                      floatSample,
                                      samples);
 
-         return MAD_FLOW_CONTINUE;
+      return MAD_FLOW_CONTINUE;
    }, MakeSimpleGuard(MAD_FLOW_BREAK) );
 }
 
