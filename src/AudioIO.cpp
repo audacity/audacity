@@ -5065,7 +5065,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
                   callbackReturn = paComplete;
             }
-            
+
             if (cut) // no samples to process, they've been discarded
                continue;
 
@@ -5116,8 +5116,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // Poke: If there are no playback tracks, then the earlier check
          // about the time indicator being passed the end won't happen;
          // do it here instead (but not if looping or scrubbing)
-         if (numPlaybackTracks == 0
-            && gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT)
+         if (numPlaybackTracks == 0 &&
+            gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT)
          {
             if ((gAudioIO->ReversedTime()
                ? gAudioIO->mTime <= gAudioIO->mT1
@@ -5176,6 +5176,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
       if( inputBuffer && (numCaptureChannels > 0) )
       {
+         // If there are no playback tracks, and we are recording, then the
+         // earlier checks for being passed the end won't happen, so do it here.
+         if (gAudioIO->mTime >= gAudioIO->mT1) {
+            callbackReturn = paComplete;
+         }
+
          // The error likely from a too-busy CPU falling behind real-time data
          // is paInputOverflow
          bool inputError =

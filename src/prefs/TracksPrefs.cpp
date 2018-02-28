@@ -213,6 +213,7 @@ wxString TracksPrefs::GetDefaultAudioTrackNamePreference()
    if (name.empty())
       // When nothing was specified,
       // the default-default is whatever translation of...
+      /* i18n-hint: The default name for an audio track. */
       return _("Audio Track");
    else
       return name;

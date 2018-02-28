@@ -951,12 +951,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
    bool success = false;
 
-   bool shifted = mRecord->WasShiftDown();
+   bool appendRecord = mRecord->WasShiftDown();
 
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
    if( !bPreferNewTrack )
-      shifted = !shifted;
+      appendRecord = !appendRecord;
 
    TrackList *trackList = p->GetTracks();
 
@@ -986,7 +986,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       if(!hasWave)
          // Treat append-record like record, when there was no given wave track
          // to append onto.
-         shifted = false;
+         appendRecord = false;
 
       double t0 = p->GetSel0();
       double t1 = p->GetSel1();
@@ -1018,9 +1018,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 #endif
       }
 
-      // If SHIFT key was down, the user wants append to tracks
       int recordingChannels = 0;
-      if (shifted) {
+      if (appendRecord) {
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
          bool sel = false;
          double allt0 = t0;
@@ -1044,11 +1043,14 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
+         // t0 is now: max(selection-start, end-of-selected-wavetracks)
+         // allt0 is:  max(selection-start, end-of-all-tracks)
          // Use end time of all wave tracks if none selected
          if (!sel) {
             t0 = allt0;
          }
 
+         // Append recording:
          // Pad selected/all wave tracks to make them all the same length
          // Remove recording tracks from the list of tracks for duplex ("overdub")
          // playback.
@@ -1062,8 +1064,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                      playbackTracks.erase(it);
                }
                t1 = wt->GetEndTime();
-               // less than or equal, not just less than, to ensure a clip boundary.
-               // when append recording.
 
                // A function that copies all the non-sample data between
                // wave tracks; in case the track recorded to changes scale
@@ -1080,6 +1080,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   p->GetTracks()->RegisterPendingChangedTrack(
                      updater, wt.get() ) );
 
+               // End of current track is before or at recording start time.
+               // Less than or equal, not just less than, to ensure a clip boundary.
+               // when append recording.
                if (t1 <= t0) {
 
                   // Pad the recording track with silence, up to the
@@ -1099,9 +1102,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
-         t1 = DBL_MAX;     // record for a long, long time
+         if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
+            t1 = p->GetSel1();   // record within the selection
+         } else {
+            t1 = DBL_MAX;        // record for a long, long time
+         }
       }
-      else {
+      else {   // recording to new track.
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
 
@@ -1120,7 +1127,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
          gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
-         /* i18n-hint: The default name for an audio track. */
          defaultTrackName = TracksPrefs::GetDefaultAudioTrackNamePreference();
          gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 
