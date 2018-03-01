@@ -111,8 +111,10 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
-         S.Id(ApplyToProjectID).AddButton(_("Apply to Current &Project"));
-         S.Id(ApplyToFilesID).AddButton(_("Apply to &Files..."));
+         S.AddPrompt( _("Apply Chain to:") );
+         S.Id(ApplyToProjectID).AddButton(_("&Project"));
+         S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+         S.AddSpace( 40 );
          S.Id(wxID_CANCEL).AddButton(_("&Cancel"));
       }
       S.EndHorizontalLay();
@@ -475,9 +477,6 @@ enum {
 /// Constructor
 EditChainsDialog::EditChainsDialog(wxWindow * parent):
    BatchProcessDialog(parent, true)
-//   , wxID_ANY, _("Edit Chains"),
-//            wxDefaultPosition, wxDefaultSize,
-//            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    SetLabel(_("Edit Chains"));         // Provide visual label
    SetName(_("Edit Chains"));          // Provide audible label
@@ -563,49 +562,52 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("C&hain (Double-Click or press SPACE to edit)"), true);
+      S.StartVerticalLay( 1 );
       {
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
-                    wxLC_SINGLE_SEL);
-         mList = S.Id(CommandsListID).AddListControlReportMode();
-
-         //An empty first column is a workaround - under Win98 the first column
-         //can't be right aligned.
-         mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
-         /* i18n-hint: This is the number of the command in the list */
-         mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
-         mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
-         mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
-
-         S.StartHorizontalLay(wxCENTER, false);
+         S.StartStatic(_("C&hain (Double-Click or press SPACE to edit)"), true);
          {
-            S.AddPrompt( _("Command:") );
-            S.StartHorizontalLay(wxCENTER, false);
+            S.StartHorizontalLay(wxEXPAND,1);
             {
-               S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
-               S.Id(EditButtonID).AddButton(_("&Edit"), wxALIGN_LEFT);
-               S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
-               S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
-               S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
-               mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
-            }
-            S.EndHorizontalLay();
-            S.AddSpace( 40 );
-            S.AddPrompt( _("Apply Chain to:") );
-            S.StartHorizontalLay(wxCENTER, false);
-            {
-               S.Id(ApplyToProjectButtonID).AddButton(_("&Project"), wxALIGN_LEFT);
-               S.Id(ApplyToFilesButtonID).AddButton(_("&Files"), wxALIGN_LEFT);
+            
+               S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
+                          wxLC_SINGLE_SEL);
+               mList = S.Id(CommandsListID).AddListControlReportMode();
+
+               //An empty first column is a workaround - under Win98 the first column
+               //can't be right aligned.
+               mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
+               /* i18n-hint: This is the number of the command in the list */
+               mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
+               mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
+               mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
+
+               S.StartVerticalLay(0);
+               {
+                  S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
+                  S.Id(EditButtonID).AddButton(_("&Edit"), wxALIGN_LEFT);
+                  S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
+                  S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
+                  S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
+                  mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
+               }
+               S.EndVerticalLay();
             }
             S.EndHorizontalLay();
          }
+         S.EndStatic();
+         S.StartHorizontalLay(wxALIGN_RIGHT, false);
+         {
+            S.AddPrompt( _("Apply Chain to:") );
+            S.Id(ApplyToProjectButtonID).AddButton(_("&Project"), wxALIGN_LEFT);
+            S.Id(ApplyToFilesButtonID).AddButton(_("&Files..."), wxALIGN_LEFT);
+            S.AddSpace( 40 );
+            S.AddStandardButtons();
+         }
          S.EndHorizontalLay();
       }
-      S.EndStatic();
+      S.EndVerticalLay();
    }
    S.EndHorizontalLay();
-
-   S.AddStandardButtons();
 
    return;
 }
