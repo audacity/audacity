@@ -4,7 +4,7 @@
 $name (_"Crossfade Tracks...")
 ;manpage "Crossfade_Tracks"
 ;debugbutton disabled
-;action "Crossfading..."
+$action (_"Crossfading...")
 ;preview selection
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"

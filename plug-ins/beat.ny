@@ -4,7 +4,7 @@
 ;categories "https://audacityteam.org/namespace#OnsetDetector"
 $name (_"Beat Finder...")
 ;manpage "Beat_Finder"
-;action "Finding beats..."
+$action (_"Finding beats...")
 ;author "Audacity"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

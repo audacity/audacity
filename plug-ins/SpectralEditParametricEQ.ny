@@ -4,7 +4,7 @@
 ;preview linear
 $name (_"Spectral edit parametric EQ...")
 ;manpage "Spectral_edit_parametric_EQ"
-;action "Filtering..."
+$action (_"Filtering...")
 ;author "Paul Licameli"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

@@ -3,7 +3,7 @@
 ;type analyze
 $name (_"Sample Data Export...")
 ;manpage "Sample_Data_Export"
-;action "Analyzing..."
+$action (_"Analyzing...")
 ;maxlen 1000001
 ;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
 ;author "Steve Daulton"

@@ -5,7 +5,7 @@
 ;categories "http://lv2plug.in/ns/lv2core#DelayPlugin"
 $name (_"Delay...")
 ;manpage "Delay"
-;action "Applying Delay Effect..."
+$action (_"Applying Delay Effect...")
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

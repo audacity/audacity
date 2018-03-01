@@ -5,7 +5,7 @@
 $name (_"Notch Filter...")
 ;manpage "Notch_Filter"
 ;debugbutton false
-;action "Applying Notch Filter..."
+$action (_"Applying Notch Filter...")
 ;author "Steve Daulton and Bill Wharrie"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

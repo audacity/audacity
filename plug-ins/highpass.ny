@@ -5,7 +5,7 @@
 $name (_"High Pass Filter...")
 ;manpage "High_Pass_Filter"
 ;debugbutton disabled
-;action "Performing High Pass Filter..."
+$action (_"Performing High Pass Filter...")
 ;author "Dominic Mazzoni"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

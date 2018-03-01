@@ -5,7 +5,7 @@
 $name (_"Rhythm Track...")
 ;manpage "Rhythm_Track"
 ;preview linear
-;action "Generating Rhythm..."
+$action (_"Generating Rhythm...")
 ;author "Dominic Mazzoni"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

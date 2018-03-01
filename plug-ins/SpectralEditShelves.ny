@@ -4,7 +4,7 @@
 ;preview linear
 $name (_"Spectral edit shelves...")
 ;manpage "Spectral_edit_shelves"
-;action "Filtering..."
+$action (_"Filtering...")
 ;author "Paul Licameli"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

@@ -6,7 +6,7 @@
 ;i18n-hint named for Jean-Claude Risset (silent t)
 $name (_"Risset Drum...")
 ;manpage "Risset_Drum"
-;action "Generating Risset Drum..."
+$action (_"Generating Risset Drum...")
 ;author "Steven Jones"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

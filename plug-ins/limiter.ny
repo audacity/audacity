@@ -5,7 +5,7 @@
 $name (_"Limiter...")
 ;manpage "Limiter"
 ;debugbutton false
-;action "Limiting..."
+$action (_"Limiting...")
 ;preview enabled
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"

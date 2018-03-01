@@ -3,7 +3,7 @@
 ;type analyze
 $name (_"Regular Interval Labels...")
 ;manpage "Regular_Interval_Labels"
-;action "Adding equally-spaced labels to the label track..."
+$action (_"Adding equally-spaced labels to the label track...")
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

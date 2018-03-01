@@ -5,7 +5,7 @@
 ;restoresplits 0
 $name (_"Crossfade Clips")
 ;manpage "Crossfade_Clips"
-;action "Crossfading..."
+$action (_"Crossfading...")
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2" 
 

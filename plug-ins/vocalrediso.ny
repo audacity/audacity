@@ -4,7 +4,7 @@
 ;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
 $name (_"Vocal Reduction and Isolation...")
 ;manpage "Vocal_Reduction_and_Isolation"
-;action "Applying Action..."
+$action (_"Applying Action...")
 ;author "Robert Haenggi"
 ;copyright "Released under terms of the GNU General Public License version 2"
 ;;

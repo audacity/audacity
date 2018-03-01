@@ -6,7 +6,7 @@
 $name (_"Tremolo...")
 ;manpage "Tremolo"
 ;debugbutton disabled
-;action "Applying Tremolo..."
+$action (_"Applying Tremolo...")
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

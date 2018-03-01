@@ -3,7 +3,7 @@
 ;type generate
 $name (_"Sample Data Import...")
 ;manpage "Sample_Data_Import"
-;action "Reading and rendering samples..."
+$action (_"Reading and rendering samples...")
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
 
