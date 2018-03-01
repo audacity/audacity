@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 4
 ;type analyze
-;name "Regular Interval Labels..."
+$name (_"Regular Interval Labels...")
 ;manpage "Regular_Interval_Labels"
 ;action "Adding equally-spaced labels to the label track..."
 ;author "Steve Daulton"

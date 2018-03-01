@@ -3,7 +3,7 @@
 ;type process
 ;mergeclips 1
 ;restoresplits 0
-;name "Crossfade Clips"
+$name (_"Crossfade Clips")
 ;manpage "Crossfade_Clips"
 ;action "Crossfading..."
 ;author "Steve Daulton"

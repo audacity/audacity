@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 4
 ;type process
-;name "Crossfade Tracks..."
+$name (_"Crossfade Tracks...")
 ;manpage "Crossfade_Tracks"
 ;debugbutton disabled
 ;action "Crossfading..."

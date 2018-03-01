@@ -2,7 +2,7 @@
 ;version 4
 ;type process
 ;preview linear
-;name "High Pass Filter..."
+$name (_"High Pass Filter...")
 ;manpage "High_Pass_Filter"
 ;debugbutton disabled
 ;action "Performing High Pass Filter..."

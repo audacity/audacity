@@ -4,7 +4,7 @@
 ;preview linear
 ;preview selection
 ;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
-;name "Adjustable Fade..."
+$name (_"Adjustable Fade...")
 ;manpage "Adjustable_Fade"
 ;debugbutton false
 ;action "Applying Fade..."

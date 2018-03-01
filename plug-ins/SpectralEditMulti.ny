@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 4
 ;type process spectral
-;name "Spectral edit multi tool"
+$name (_"Spectral edit multi tool")
 ;manpage "Spectral_edit_multi_tool"
 ;action "Filtering..."
 ;author "Paul Licameli"

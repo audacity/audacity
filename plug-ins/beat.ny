@@ -2,7 +2,7 @@
 ;version 1
 ;type analyze
 ;categories "https://audacityteam.org/namespace#OnsetDetector"
-;name "Beat Finder..."
+$name (_"Beat Finder...")
 ;manpage "Beat_Finder"
 ;action "Finding beats..."
 ;author "Audacity"

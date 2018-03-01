@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 3
 ;type analyze
-;name "Sample Data Export..."
+$name (_"Sample Data Export...")
 ;manpage "Sample_Data_Export"
 ;action "Analyzing..."
 ;maxlen 1000001

@@ -3,7 +3,7 @@
 ;type process
 ;preview linear
 ;categories "http://lv2plug.in/ns/lv2core#DelayPlugin"
-;name "Delay..."
+$name (_"Delay...")
 ;manpage "Delay"
 ;action "Applying Delay Effect..."
 ;author "Steve Daulton"

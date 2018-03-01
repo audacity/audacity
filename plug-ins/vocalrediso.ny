@@ -2,7 +2,7 @@
 ;version 4
 ;type process
 ;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
-;name "Vocal Reduction and Isolation..."
+$name (_"Vocal Reduction and Isolation...")
 ;manpage "Vocal_Reduction_and_Isolation"
 ;action "Applying Action..."
 ;author "Robert Haenggi"

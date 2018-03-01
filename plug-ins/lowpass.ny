@@ -2,7 +2,7 @@
 ;version 4
 ;type process
 ;preview linear
-;name "Low Pass Filter..."
+$name (_"Low Pass Filter...")
 ;manpage "Low_Pass_Filter"
 ;debugbutton disabled
 ;action "Performing Low Pass Filter..."
