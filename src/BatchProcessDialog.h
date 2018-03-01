@@ -39,40 +39,45 @@ class wxButton;
 class wxTextCtrl;
 class ShuttleGui;
 
-class BatchProcessDialog final : public wxDialogWrapper {
+class BatchProcessDialog : public wxDialogWrapper {
  public:
    // constructors and destructors
-   BatchProcessDialog(wxWindow * parent);
+   BatchProcessDialog(wxWindow * parent, bool bInherited=false);
    virtual ~BatchProcessDialog();
  public:
-   void Populate();
-   void PopulateOrExchange( ShuttleGui & S );
+   virtual void Populate();
+   virtual void PopulateOrExchange( ShuttleGui & S );
+   virtual void OnApplyToProject(wxCommandEvent & event);
+   virtual void OnApplyToFiles(wxCommandEvent & event);
+   virtual void OnCancel(wxCommandEvent & event);
 
-   void OnApplyToProject(wxCommandEvent & event);
-   void OnApplyToFiles(wxCommandEvent & event);
-   void OnCancel(wxCommandEvent & event);
+   // These will be reused in the derived class...
+   wxListCtrl *mList;
+   wxListCtrl *mChains;
+   BatchCommands mBatchCommands; /// Provides list of available commands.
 
    wxButton *mOK;
    wxButton *mCancel;
-   wxListCtrl *mChains;
-   wxListCtrl *mList;
-   BatchCommands mBatchCommands;
    wxTextCtrl *mResults;
-
    bool mAbort;
 
    DECLARE_EVENT_TABLE()
 };
 
-class EditChainsDialog final : public wxDialogWrapper
+class EditChainsDialog final : public BatchProcessDialog
 {
 public:
    EditChainsDialog(wxWindow * parent);
    ~EditChainsDialog();
 
 private:
-   void Populate();
-   void PopulateOrExchange(ShuttleGui &S);
+   void Populate() override;
+   void PopulateOrExchange(ShuttleGui &S) override;
+   void OnApplyToProject(wxCommandEvent & event) override;
+   void OnApplyToFiles(wxCommandEvent & event) override;
+   void OnCancel(wxCommandEvent &event) override;
+
+
    void PopulateChains();
    void PopulateList();
    void AddItem(const wxString &command, wxString const &params);
@@ -89,25 +94,33 @@ private:
 
    void OnCommandActivated(wxListEvent &event);
    void OnInsert(wxCommandEvent &event);
+   void OnEditCommandParams(wxCommandEvent &event);
+
    void OnDelete(wxCommandEvent &event);
    void OnUp(wxCommandEvent &event);
    void OnDown(wxCommandEvent &event);
    void OnDefaults(wxCommandEvent &event);
 
+   //void OnApplyToProject(wxCommandEvent &event);
+   //void OnApplyToFiles(wxCommandEvent &event);
+
    void OnOK(wxCommandEvent &event);
-   void OnCancel(wxCommandEvent &event);
 
    void OnKeyDown(wxKeyEvent &event);
    void FitColumns();
+   void InsertCommandAt(int item);
+   bool SaveChanges();
 
-   wxListCtrl *mChains; /// List of chains.
-   wxListCtrl *mList;   /// List of commands in current command chain.
+   // These are already provided by BatchProcessDialog
+   //wxListCtrl *mList;   /// List of commands in current command chain.
+   //BatchCommands mBatchCommands;  /// Provides list of available commands.
+   //wxListCtrl *mChains; /// List of chains.
+
    wxButton *mRemove;
    wxButton *mRename;
    wxButton *mDefaults;
 
 
-   BatchCommands mBatchCommands;  /// Provides list of available commands.
    wxString mActiveChain;
 
    int mSelectedCommand;
