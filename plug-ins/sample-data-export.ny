@@ -17,7 +17,7 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control number (_"Limit output to first") string "samples" "100" 
+$control number (_"Limit output to first") string (_"samples") "100" 
 $control units (_"Measurement scale") choice ((_"dB") (_"Linear")) 0 
 $control fileformat (_"File data format") choice (
    (_"Sample List (txt)")
