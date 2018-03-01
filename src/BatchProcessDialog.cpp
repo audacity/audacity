@@ -655,11 +655,11 @@ void EditChainsDialog::AddItem(const wxString &Action, const wxString &Params)
 {
    // Translate internal command name to a friendly form
    auto item = make_iterator_range(mCommandNames).index_if(
-      [&](const CommandName &name){ return Action == name.second; }
+      [&](const CommandName &name){ return Action == std::get<1>(name); }
    );
    auto friendlyName = item >= 0
       ? // wxGetTranslation
-                           ( mCommandNames[item].first )
+      std::get<0>( mCommandNames[item] )
       : Action;
 
    int i = mList->GetItemCount();

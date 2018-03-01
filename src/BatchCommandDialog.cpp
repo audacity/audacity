@@ -95,10 +95,13 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
          S.SetStretchyCol(1);
          mParameters = S.AddTextBox(_("&Parameters"), wxT(""), 0);
          mParameters->SetEditable(false);
+         S.Prop(0).AddPrompt( _("&Details" ) );
+         mDetails = S.AddTextWindow( wxT(""));
+         mDetails->SetEditable(false);
       }
       S.EndMultiColumn();
 
-      S.StartStatic(_("C&hoose command"), true);
+      S.Prop(10).StartStatic(_("C&hoose command"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_LIST | wxLC_SINGLE_SEL);
          mChoices = S.Id(CommandsListID).AddListControl();
@@ -111,7 +114,7 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
 
    PopulateCommandList();
 
-   SetMinSize(wxSize(500, 400));
+   SetMinSize(wxSize(780, 560));
    Fit();
    Center();
 }
@@ -123,25 +126,8 @@ void BatchCommandDialog::PopulateCommandList()
    mChoices->DeleteAllItems();
    for (size_t ii = 0, size = mCommandNames.size(); ii < size; ++ii)
       // insert the user-facing string
-      mChoices->InsertItem( ii, mCommandNames[ii].first );
+      mChoices->InsertItem( ii, std::get<0>( mCommandNames[ii] ) );
 }
-
-#if 0
-int BatchCommandDialog::GetSelectedItem()
-{
-   int i;
-   mSelectedCommand = wxT("");
-   for(i=0;i<mChoices->GetItemCount();i++)
-   {
-      if( mChoices->GetItemState( i, wxLIST_STATE_FOCUSED) != 0)
-      {
-         mSelectedCommand = mChoices->GetItemText( i );
-         return i;
-      }
-   }
-   return -1;
-}
-#endif
 
 void BatchCommandDialog::ValidateChoices()
 {
@@ -168,25 +154,28 @@ void BatchCommandDialog::OnItemSelected(wxListEvent &event)
    const auto &command = mCommandNames[ event.GetIndex() ];
 
    EffectManager & em = EffectManager::Get();
-   PluginID ID = em.GetEffectByIdentifier(command.second);
+   PluginID ID = em.GetEffectByIdentifier( std::get<1>( command ));
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
    mEditParams->Enable(!ID.IsEmpty());
    mUsePreset->Enable(em.HasPresets(ID));
 
-   if (command.first == mCommand->GetValue())
+   if (std::get<0>( command ) == mCommand->GetValue())
       return;
 
-   mCommand->SetValue(command.first);
-   mInternalCommandName = command.second;
+   mCommand->SetValue(std::get<0> (command));
+   mInternalCommandName = std::get<1>( command );
 
-   wxString params = BatchCommands::GetCurrentParamsFor(command.second);
+   wxString params = BatchCommands::GetCurrentParamsFor(mInternalCommandName);
    if (params.IsEmpty())
    {
       params = em.GetDefaultPreset(ID);
    }
 
+   // Cryptic command and category.
+   // Later we can put help information there, perhaps.
+   mDetails->SetValue( mInternalCommandName + "\r\n" + std::get<2>(command)  );
    mParameters->SetValue(params);
 }
 
@@ -215,7 +204,7 @@ void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
 void BatchCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
 {
    auto item = make_iterator_range(mCommandNames).index_if(
-      [&](const CommandName &name){ return Command == name.second; }
+      [&](const CommandName &name){ return Command == std::get<1>( name); }
    );
 
    mParameters->SetValue( Params );
@@ -224,7 +213,8 @@ void BatchCommandDialog::SetCommandAndParams(const wxString &Command, const wxSt
    if (item < 0)
       mCommand->SetValue( Command );
    else {
-      mCommand->SetValue( mCommandNames[item].first );
+      mCommand->SetValue( std::get<0>( mCommandNames[item]) );
+      mDetails->SetValue( std::get<1>(mCommandNames[item]) + "\r\n" + std::get<2>(mCommandNames[item])  );
       mChoices->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 
       EffectManager & em = EffectManager::Get();

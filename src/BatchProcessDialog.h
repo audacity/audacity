@@ -126,7 +126,7 @@ private:
    int mSelectedCommand;
    bool mChanged;
 
-   using CommandName = std::pair<wxString, wxString>;
+   using CommandName = std::tuple<wxString, wxString,wxString>;
    using CommandNameVector = std::vector<CommandName>;
    CommandNameVector mCommandNames;
    
