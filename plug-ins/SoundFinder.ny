@@ -7,7 +7,7 @@ $name (_"Sound Finder...")
 $action (_"Finding sound...")
 $info (_"Adds region labels for areas of sound according to the specified level\nand duration of surrounding silence. If too many labels are produced,\nincrease the silence level and duration; if too few are produced,\nreduce the level and duration.")
 $author (_"Jeremy R. Brown")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; by Jeremy R. Brown (http://www.jeremy-brown.com/)
 ;; based on the Silence Finder script by Alex S. Brown (http://www.alexsbrown.com)

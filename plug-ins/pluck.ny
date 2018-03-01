@@ -9,7 +9,7 @@ $name (_"Pluck...")
 $action (_"Generating pluck sound...")
 $info (_"MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96.")
 $author (_"David R.Sky")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .

@@ -7,7 +7,7 @@ $name (_"Notch Filter...")
 ;debugbutton false
 $action (_"Applying Notch Filter...")
 $author (_"Steve Daulton and Bill Wharrie")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; notch.ny by Steve Daulton and Bill Wharrie
 ;; Released under terms of the GNU General Public License version 2:

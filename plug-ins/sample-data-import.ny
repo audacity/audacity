@@ -5,7 +5,7 @@ $name (_"Sample Data Import...")
 ;manpage "Sample_Data_Import"
 $action (_"Reading and rendering samples...")
 $author (_"Steve Daulton")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; sample-data-import.ny by Steve Daulton November 2016.
 ;; Released under terms of the GNU General Public License version 2:

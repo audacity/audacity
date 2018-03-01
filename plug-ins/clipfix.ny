@@ -6,7 +6,7 @@ $name (_"Clip Fix...")
 ;manpage "Clip_Fix"
 $action (_"Reconstructing clips...")
 $author (_"Benjamin Schwartz and Steve Daulton")
-;copyright "Licensing confirmed under terms of the GNU General Public License version 2"
+$copyright (_"Licensing confirmed under terms of the GNU General Public License version 2")
 
 ;; Algorithm by Benjamin Schwartz
 ;; Clip Fix is a simple, stupid (but not blind) digital-clipping-corrector

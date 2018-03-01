@@ -8,7 +8,7 @@ $name (_"Tremolo...")
 ;debugbutton disabled
 $action (_"Applying Tremolo...")
 $author (_"Steve Daulton")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; tremolo.ny by Steve Daulton (www.easyspacepro.com) July 2012.
 ;; Based on Tremolo by Dominic Mazzoni and David R. Sky."

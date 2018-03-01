@@ -7,7 +7,7 @@ $name (_"Delay...")
 ;manpage "Delay"
 $action (_"Applying Delay Effect...")
 $author (_"Steve Daulton")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; by Steve Daulton, July 2012.
 ;; based on 'Delay' by David R. Sky

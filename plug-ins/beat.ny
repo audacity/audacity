@@ -6,7 +6,7 @@ $name (_"Beat Finder...")
 ;manpage "Beat_Finder"
 $action (_"Finding beats...")
 $author (_"Audacity")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html 

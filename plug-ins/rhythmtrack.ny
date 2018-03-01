@@ -7,7 +7,7 @@ $name (_"Rhythm Track...")
 ;preview linear
 $action (_"Generating Rhythm...")
 $author (_"Dominic Mazzoni")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; by Dominic Mazzoni, David R. Sky and Steve Daulton.
 ;; Drip sound generator by Paul Beach

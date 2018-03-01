@@ -7,7 +7,7 @@ $name (_"Crossfade Tracks...")
 $action (_"Crossfading...")
 ;preview selection
 $author (_"Steve Daulton")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; crossfadetracks.ny by Steve Daulton Nov 2014 / Sep 2015
 ;; Released under terms of the GNU General Public License version 2:

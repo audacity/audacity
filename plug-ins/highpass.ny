@@ -7,7 +7,7 @@ $name (_"High Pass Filter...")
 ;debugbutton disabled
 $action (_"Performing High Pass Filter...")
 $author (_"Dominic Mazzoni")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; highpass.ny by Dominic Mazzoni
 ;; Last updated August 2015

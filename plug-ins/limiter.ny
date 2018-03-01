@@ -8,7 +8,7 @@ $name (_"Limiter...")
 $action (_"Limiting...")
 ;preview enabled
 $author (_"Steve Daulton")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; limiter.ny by Steve Daulton November 2011, updated May 2015.
 ;; Released under terms of the GNU General Public License version 2:

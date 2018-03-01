@@ -7,7 +7,7 @@ $name (_"Vocal Remover...")
 $action (_"Removing center-panned audio...")
 $info (_"For reducing center-panned vocals")
 $author (_"Steve Daulton")
-;copyright "Released under terms of the GNU General Public License version 2"
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; This version of vocalremover.ny by Steve Daulton June 2013.
 ;;
