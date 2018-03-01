@@ -19,7 +19,7 @@ $control mode (_"Use 'Number of labels' OR 'Label interval'") choice ((_"Number 
 $control totalnum (_"Number of labels") int-text "" 10 1 1000
 $control interval (_"Label interval (seconds)") float-text "" 60 0.001 3600
 $control adjust (_"Adjust label interval to fit length") choice ((_"No") (_"Yes")) 0
-$control labeltext (_"Label text") string "" "Label" ""
+$control labeltext (_"Label text") string "" (_"Label")
 $control zeros (_"Minimum number of digits in label") choice (
    (_"None - text only")
    (_"1 (before label)") (_"2 (before label)") (_"3 (before label)")

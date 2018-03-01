@@ -43,8 +43,8 @@ $control messages (_"Show messages") choice (
    (_"Errors Only")
    (_"None")
 ) 0 
-$control filename (_"File name") string "" "sample-data"
-$control path (_"Output folder") string "" "Home directory"
+$control filename (_"File name") string "" (_"sample-data")
+$control path (_"Output folder") string "" (_"Home directory")
 $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0 
 
 
