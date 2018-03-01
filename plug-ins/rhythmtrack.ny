@@ -6,7 +6,7 @@ $name (_"Rhythm Track...")
 ;manpage "Rhythm_Track"
 ;preview linear
 $action (_"Generating Rhythm...")
-;author "Dominic Mazzoni"
+$author (_"Dominic Mazzoni")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; by Dominic Mazzoni, David R. Sky and Steve Daulton.

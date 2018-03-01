@@ -5,7 +5,7 @@
 $name (_"Clip Fix...")
 ;manpage "Clip_Fix"
 $action (_"Reconstructing clips...")
-;author "Benjamin Schwartz and Steve Daulton"
+$author (_"Benjamin Schwartz and Steve Daulton")
 ;copyright "Licensing confirmed under terms of the GNU General Public License version 2"
 
 ;; Algorithm by Benjamin Schwartz

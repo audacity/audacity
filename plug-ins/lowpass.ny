@@ -6,7 +6,7 @@ $name (_"Low Pass Filter...")
 ;manpage "Low_Pass_Filter"
 ;debugbutton disabled
 $action (_"Performing Low Pass Filter...")
-;author "Dominic Mazzoni"
+$author (_"Dominic Mazzoni")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; lowpass.ny by Dominic Mazzoni

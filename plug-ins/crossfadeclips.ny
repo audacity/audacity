@@ -6,7 +6,7 @@
 $name (_"Crossfade Clips")
 ;manpage "Crossfade_Clips"
 $action (_"Crossfading...")
-;author "Steve Daulton"
+$author (_"Steve Daulton")
 ;copyright "Released under terms of the GNU General Public License version 2" 
 
 

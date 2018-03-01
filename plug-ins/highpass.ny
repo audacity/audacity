@@ -6,7 +6,7 @@ $name (_"High Pass Filter...")
 ;manpage "High_Pass_Filter"
 ;debugbutton disabled
 $action (_"Performing High Pass Filter...")
-;author "Dominic Mazzoni"
+$author (_"Dominic Mazzoni")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; highpass.ny by Dominic Mazzoni

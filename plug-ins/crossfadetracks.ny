@@ -6,7 +6,7 @@ $name (_"Crossfade Tracks...")
 ;debugbutton disabled
 $action (_"Crossfading...")
 ;preview selection
-;author "Steve Daulton"
+$author (_"Steve Daulton")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; crossfadetracks.ny by Steve Daulton Nov 2014 / Sep 2015

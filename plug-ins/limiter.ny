@@ -7,7 +7,7 @@ $name (_"Limiter...")
 ;debugbutton false
 $action (_"Limiting...")
 ;preview enabled
-;author "Steve Daulton"
+$author (_"Steve Daulton")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; limiter.ny by Steve Daulton November 2011, updated May 2015.

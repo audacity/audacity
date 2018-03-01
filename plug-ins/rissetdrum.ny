@@ -7,7 +7,7 @@
 $name (_"Risset Drum...")
 ;manpage "Risset_Drum"
 $action (_"Generating Risset Drum...")
-;author "Steven Jones"
+$author (_"Steven Jones")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; rissetdrum.ny by Steven Jones, after Jean Claude Risset.

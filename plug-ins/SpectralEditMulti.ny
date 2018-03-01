@@ -4,7 +4,7 @@
 $name (_"Spectral edit multi tool")
 ;manpage "Spectral_edit_multi_tool"
 $action (_"Filtering...")
-;author "Paul Licameli"
+$author (_"Paul Licameli")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; SpectralEditMulti.ny by Paul Licameli, November 2014.

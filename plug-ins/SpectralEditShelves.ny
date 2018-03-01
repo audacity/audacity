@@ -5,7 +5,7 @@
 $name (_"Spectral edit shelves...")
 ;manpage "Spectral_edit_shelves"
 $action (_"Filtering...")
-;author "Paul Licameli"
+$author (_"Paul Licameli")
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 
