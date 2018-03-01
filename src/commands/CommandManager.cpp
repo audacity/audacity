@@ -760,7 +760,7 @@ void CommandManager::InsertItem(const wxString & name,
       }
    }
 
-   CommandListEntry *entry = NewIdentifier(name, label_in, menu, finder, callback, false, 0, 0);
+   CommandListEntry *entry = NewIdentifier(name, label_in, menu, finder, callback, false, 0, 0, false);
    int ID = entry->id;
    wxString label = GetLabel(entry);
 
@@ -804,9 +804,10 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
                              CommandMask mask,
+                             bool bIsEffect, 
                              const CommandParameter &parameter)
 {
-   AddItem(name, label, finder, callback, wxT(""), flags, mask, -1, parameter);
+   AddItem(name, label, finder, callback, wxT(""), flags, mask, -1, bIsEffect, parameter);
 }
 
 void CommandManager::AddItem(const wxChar *name,
@@ -817,6 +818,7 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFlag flags,
                              CommandMask mask,
                              int checkmark,
+                             bool bIsEffect, 
                              const CommandParameter &parameter)
 {
    wxString cookedParameter;
@@ -826,7 +828,7 @@ void CommandManager::AddItem(const wxChar *name,
       cookedParameter = parameter;
    CommandListEntry *entry =
       NewIdentifier(name, label_in, accel, CurrentMenu(), finder, callback,
-                    false, 0, 0, cookedParameter);
+                    false, 0, 0, bIsEffect, cookedParameter);
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
@@ -855,7 +857,8 @@ void CommandManager::AddItem(const wxChar *name,
 void CommandManager::AddItemList(const wxString & name,
                                  const wxArrayString & labels,
                                  CommandHandlerFinder finder,
-                                 CommandFunctorPointer callback)
+                                 CommandFunctorPointer callback,
+                                 bool bIsEffect)
 {
    for (size_t i = 0, cnt = labels.GetCount(); i < cnt; i++) {
       CommandListEntry *entry = NewIdentifier(name,
@@ -865,7 +868,8 @@ void CommandManager::AddItemList(const wxString & name,
                                               callback,
                                               true,
                                               i,
-                                              cnt);
+                                              cnt,
+                                              bIsEffect);
       CurrentMenu()->Append(entry->id, GetLabel(entry));
       mbSeparatorAllowed = true;
    }
@@ -892,7 +896,7 @@ void CommandManager::AddCommand(const wxChar *name,
                                 CommandFlag flags,
                                 CommandMask mask)
 {
-   NewIdentifier(name, label_in, accel, NULL, finder, callback, false, 0, 0, {});
+   NewIdentifier(name, label_in, accel, NULL, finder, callback, false, 0, 0, false, {});
 
    if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
       SetCommandFlags(name, flags, mask);
@@ -907,7 +911,7 @@ void CommandManager::AddGlobalCommand(const wxChar *name,
 {
    CommandListEntry *entry =
       NewIdentifier(name, label_in, accel, NULL, finder, callback,
-                    false, 0, 0, {});
+                    false, 0, 0, false, {});
 
    entry->enabled = false;
    entry->isGlobal = true;
@@ -945,7 +949,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                                                 CommandFunctorPointer callback,
                                                 bool multi,
                                                 int index,
-                                                int count)
+                                                int count,
+                                                bool bIsEffect)
 {
    return NewIdentifier(name,
                         label.BeforeFirst(wxT('\t')),
@@ -955,7 +960,9 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                         callback,
                         multi,
                         index,
-                        count, {});
+                        count,
+                        bIsEffect,
+                        {});
 }
 
 CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
@@ -967,6 +974,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
    bool multi,
    int index,
    int count,
+   bool bIsEffect,
    const CommandParameter &parameter)
 {
    wxString name = nameIn;
@@ -1031,6 +1039,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
       entry->menu = menu;
       entry->finder = finder;
       entry->callback = callback;
+      entry->isEffect = bIsEffect;
       entry->multi = multi;
       entry->index = index;
       entry->count = count;
@@ -1644,6 +1653,8 @@ void CommandManager::GetAllCommandNames(wxArrayString &names,
                                         bool includeMultis)
 {
    for(const auto &entry : mCommandList) {
+      if ( entry->isEffect )
+         continue;
       if (!entry->multi)
          names.Add(entry->name);
       else if( includeMultis )
@@ -1655,6 +1666,12 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
                                         bool includeMultis)
 {
    for(const auto &entry : mCommandList) {
+      // This is fetching commands from the menus, for use as batch commands.
+      // Until we have properly merged EffectManager and CommandManager
+      // we explicitly exclude effects, as they are already handled by the 
+      // effects Manager.
+      if ( entry->isEffect )
+         continue;
       if (!entry->multi)
          names.Add(entry->label);
       else if( includeMultis )
@@ -1674,6 +1691,8 @@ void CommandManager::GetAllCommandData(
    bool includeMultis)
 {
    for(const auto &entry : mCommandList) {
+      if ( entry->isEffect )
+         continue;
       if (!entry->multi)
       {
          names.Add(entry->name);

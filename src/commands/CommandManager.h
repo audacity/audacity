@@ -81,6 +81,7 @@ struct CommandListEntry
    bool wantKeyup;
    bool isGlobal;
    bool isOccult;
+   bool isEffect;
    CommandFlag flags;
    CommandMask mask;
 };
@@ -162,7 +163,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void AddItemList(const wxString & name,
                     const wxArrayString & labels,
                     CommandHandlerFinder finder,
-                    CommandFunctorPointer callback);
+                    CommandFunctorPointer callback,
+                    bool bIsEffect = false);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
@@ -184,6 +186,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 CommandFunctorPointer callback,
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
+                bool bIsEffect = false, 
                 const CommandParameter &parameter = CommandParameter{});
 
    void AddItem(const wxChar *name,
@@ -194,6 +197,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
                 int checkmark = -1,
+                bool bIsEffect = false, 
                 const CommandParameter &parameter = CommandParameter{});
 
    void AddSeparator();
@@ -335,7 +339,8 @@ protected:
                                    CommandFunctorPointer callback,
                                    bool multi,
                                    int index,
-                                   int count);
+                                   int count,
+                                   bool bIsEffect);
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
                                    const wxString & accel,
@@ -345,6 +350,7 @@ protected:
                                    bool multi,
                                    int index,
                                    int count,
+                                   bool bIsEffect,
                                    const CommandParameter &parameter);
 
    //
