@@ -14,7 +14,16 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; Plug-in version 1.56, June 2015
 ;; Requires Audacity 2.1.1  or later, developed under Audacity 2.1.1
 ;;
-$control action (_"Action") choice "Remove Vocals,Isolate Vocals,Isolate Vocals and Invert,Remove Center,Isolate Center,Isolate Center and Invert,Remove Center Classic: Mono,Analyze" 0
+$control action (_"Action") choice (
+   (_"Remove Vocals")
+   (_"Isolate Vocals")
+   (_"Isolate Vocals and Invert")
+   (_"Remove Center")
+   (_"Isolate Center")
+   (_"Isolate Center and Invert")
+   (_"Remove Center Classic: Mono")
+   (_"Analyze")
+) 0
 (setf rotation 0.0)
 ;;control rotation "Rotation (Degrees)" real "" 0 -180 180
 $control strength (_"Strength") real "" 1.0 0.0 50.0

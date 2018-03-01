@@ -14,7 +14,7 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 
 $control filename (_"File name") string "" "sample-data.txt"
 $control path (_"File location (path to file)") string "" "Home directory"
-$control bad-data (_"Invalid data handling") choice "Throw error,Read as zero" 0
+$control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as zero")) 0
 
 
 ;; Documentation.

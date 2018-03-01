@@ -13,9 +13,9 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
-$control type (_"Fade type") choice "Constant Gain,Constant Power 1,Constant Power 2,Custom Curve" 0
+$control type (_"Fade type") choice ((_"Constant Gain") (_"Constant Power 1") (_"Constant Power 2") (_"Custom Curve")) 0
 $control curve (_"Custom curve") real "" 0 0 1
-$control direction (_"Fade direction") choice "Automatic,Alternating Out / In,Alternating In / Out" 0
+$control direction (_"Fade direction") choice ((_"Automatic") (_"Alternating Out / In") (_"Alternating In / Out")) 0
 
 
 (defun crossfade (type dir curve)

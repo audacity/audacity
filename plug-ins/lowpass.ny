@@ -16,7 +16,7 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 
 
 $control frequency (_"Frequency (Hz)") float-text "" 1000 0 nil
-$control rolloff (_"Rolloff (dB per octave)") choice "  6 dB,12 dB,24 dB,36 dB,48 dB" 0
+$control rolloff (_"Rolloff (dB per octave)") choice ((_"6 dB") (_"12 dB") (_"24 dB") (_"36 dB") (_"48 dB")) 0
 
 
 (cond

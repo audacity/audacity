@@ -18,12 +18,20 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control type (_"Fade Type") choice "Fade Up,Fade Down,S-Curve Up,S-Curve Down" 0
+$control type (_"Fade Type") choice ((_"Fade Up") (_"Fade Down") (_"S-Curve Up") (_"S-Curve Down")) 0
 $control curve (_"Mid-fade Adjust (%)") real "" 0 -100 100
-$control units (_"Start/End as") choice "% of Original,dB Gain" 0 
+$control units (_"Start/End as") choice ((_"% of Original") (_"dB Gain")) 0 
 $control gain0 (_"Start (or end)") float-text "" 0 nil nil
 $control gain1 (_"End (or start)") float-text "" 100 nil nil
-$control preset (_"   Handy Presets\n(override controls)") choice "None Selected,Linear In,Linear Out,Exponential In,Exponential Out,Logarithmic In,Logarithmic Out,Rounded In,Rounded Out,Cosine In,Cosine Out,S-Curve In,S-Curve Out" 0
+$control preset (_"   Handy Presets\n(override controls)") choice (
+   (_"None Selected")
+   (_"Linear In") (_"Linear Out")
+   (_"Exponential In") (_"Exponential Out")
+   (_"Logarithmic In") (_"Logarithmic Out")
+   (_"Rounded In") (_"Rounded Out")
+   (_"Cosine In") (_"Cosine Out")
+   (_"S-Curve In") (_"S-Curve Out")
+ ) 0
 
 
 (defun get-input (sig)

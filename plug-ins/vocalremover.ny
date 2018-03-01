@@ -20,8 +20,15 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-$control action (_"Remove vocals or view Help") choice "Remove vocals,View Help" 0
-$control band-choice (_"Removal choice") choice "Simple (entire spectrum),Remove frequency band,Retain frequency band" 0
+$control action (_"Remove vocals or view Help") choice (
+   (_"Remove vocals")
+   (_"View Help")
+) 0
+$control band-choice (_"Removal choice") choice (
+   (_"Simple (entire spectrum)")
+   (_"Remove frequency band")
+   (_"Retain frequency band")
+) 0
 $control low-range (_"Frequency band from (Hz)") float-text "" 500 0 nil
 $control high-range (_"Frequency band to (Hz)") float-text "" 2000 0 nil
 

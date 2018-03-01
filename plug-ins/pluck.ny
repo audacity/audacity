@@ -15,7 +15,7 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
 $control pitch (_"Pluck MIDI pitch") int "" 60 1 120
-$control fade (_"Fade-out type") choice "abrupt,gradual" 0
+$control fade (_"Fade-out type") choice ((_"abrupt") (_"gradual")) 0
 $control dur (_"Duration [seconds]") real "" 1 0.1 30
 
 ; original pluck.ny modified by David R.Sky October 2007
