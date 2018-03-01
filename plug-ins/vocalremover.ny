@@ -5,7 +5,7 @@
 $name (_"Vocal Remover...")
 ;manpage "Vocal_Remover"
 $action (_"Removing center-panned audio...")
-;info "For reducing center-panned vocals"
+$info (_"For reducing center-panned vocals")
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

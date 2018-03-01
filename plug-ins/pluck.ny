@@ -7,7 +7,7 @@ $name (_"Pluck...")
 ;debugbutton false
 ;preview linear
 $action (_"Generating pluck sound...")
-;info "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+$info (_"MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96.")
 ;author "David R.Sky"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

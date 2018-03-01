@@ -5,7 +5,7 @@
 $name (_"Sound Finder...")
 ;manpage "Sound_Finder"
 $action (_"Finding sound...")
-;info "Adds region labels for areas of sound according to the specified level\nand duration of surrounding silence. If too many labels are produced,\nincrease the silence level and duration; if too few are produced,\nreduce the level and duration."
+$info (_"Adds region labels for areas of sound according to the specified level\nand duration of surrounding silence. If too many labels are produced,\nincrease the silence level and duration; if too few are produced,\nreduce the level and duration.")
 ;author "Jeremy R. Brown"
 ;copyright "Released under terms of the GNU General Public License version 2"
 
