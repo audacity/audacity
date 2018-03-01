@@ -18,6 +18,7 @@ $control thresval (_"Threshold Percentage") int "" 65 5 100
 (setq thres (* (/ thresval 100.0) max))
 (setq s2 (signal))
 (do ((c 0.0) (l NIL) (p T) (v (snd-fetch s2))) ((not v) l)
+; "B" seems too short to put into the i18n catalog.  Make it a control?
  (if (and p (> v thres)) (setq l (cons (list c "B") l)))
  (setq p (< v thres))
  (setq c (+ c 0.001))

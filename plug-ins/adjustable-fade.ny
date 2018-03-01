@@ -53,14 +53,14 @@ selection length, but preview only needs to process preview length."
   (if (= units 0)  ;percentage values
     (cond
       ((or (< x 0)(< y 0))
-        (throw 'err (format nil "~aPercentage values cannot be negative." err)))
+        (throw 'err (format nil (_"~aPercentage values cannot be negative.") err)))
       ((or (> x 1000)(> y 1000))
-        (throw 'err (format nil "~aPercentage values cannot be more than 1000 %." err))))
+        (throw 'err (format nil (_"~aPercentage values cannot be more than 1000 %.") err))))
     (cond   ;dB values
       ((or (> x 100)(> y 100))
-        (throw 'err (format nil "~adB values cannot be more than +100 dB.~%~%~
+        (throw 'err (format nil (_"~adB values cannot be more than +100 dB.~%~%~
                                  Hint: 6 dB doubles the amplitude~%~
-                                 \t-6 dB halves the amplitude." err))))))
+                                 \t-6 dB halves the amplitude." err)))))))
 
 ;;; select and apply fade
 (defun fade (sig type curve g0 g1)
@@ -192,7 +192,7 @@ selection length, but preview only needs to process preview length."
 (setf curve (/ curve 100.0))
 (setf gain0 (gainscale gain0 units))
 (setf gain1 (gainscale gain1 units))
-(setf err "Error\n\n")
+(setf err (_"Error\n\n"))
 
 
 (catch 'err (fade *track* type curve gain0 gain1))

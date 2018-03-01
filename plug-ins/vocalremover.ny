@@ -35,7 +35,7 @@ $control high-range (_"Frequency band to (Hz)") float-text "" 2000 0 nil
 
 (defun help ()
   (let ((msg (format nil
-"Vocal Remover requires a stereo track. It works best with
+(_"Vocal Remover requires a stereo track. It works best with
 lossless files like WAV or AIFF, rather than MP3 or
 other compressed formats. It only removes vocals or other
 audio that is panned to center (sounds equally loud in left
@@ -59,7 +59,7 @@ sounds like the most significant frequency range of the
 original vocals. If the other choices remove too much
 audio in a particular frequency range (such as low drums
 or bass), try 'Retain frequency band'. This only removes
-frequencies outside the limits, retaining the others.")))
+frequencies outside the limits, retaining the others."))))
     (format t "~a" msg) ;print to debug (coppying supported on all platforms)
     msg)) ;return message
 
@@ -67,10 +67,10 @@ frequencies outside the limits, retaining the others.")))
 (defun check-stereo ()
   (when (soundp *track*)
     (throw 'err (format nil
-"~%Vocal Remover requires an unsplit, stereo track.~%~
+(_"~%Vocal Remover requires an unsplit, stereo track.~%~
 If you have a stereo track split into left and right~%~
 channels, use 'Make Stereo Track' on the Track~%~
-Drop-Down Menu, then run Vocal Remover again.~%"))))
+Drop-Down Menu, then run Vocal Remover again.~%")))))
 
 (defmacro validate (Hz)
 ;; Filters become unstable when very close to 0 Hz or
@@ -100,11 +100,11 @@ Drop-Down Menu, then run Vocal Remover again.~%"))))
 
 (defun bandstop (sig low high)
   (if (and low high (< (/ (- high low) low) 0.1))
-      (format t "Warning:~%~
+      (format t (_"Warning:~%~
               Selected band-stop filter is~%~
               ~a Hz to ~a Hz.~%~
               A very narrow stop-band filter may have~%~
-              unexpected results.~%~%"
+              unexpected results.~%~%")
               low high))
   (let ((low-sig (if low (lowpass8 sig low)(s-rest 1))))
     (sum
@@ -121,7 +121,7 @@ Drop-Down Menu, then run Vocal Remover again.~%"))))
            (bandstop (aref *track* 1) low-range high-range)))
     ; Nothing to remove - skip effect.
     ((and (= band-choice 2)(not low-range)(not high-range))
-      (format t "Current settings returned the original audio.")
+      (format t (_"Current settings returned the original audio."))
       nil)
     ((= band-choice 2) ; remove frequencies inside range
           (sum (aref *track* 0)

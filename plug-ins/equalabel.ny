@@ -49,12 +49,12 @@ $control firstnum (_"Begin numbering from") int-text "" 1 0 nil
 "Throw error if excessive number of labels ('Interval' mode only)"
   (when (> totalnum 1000)
     (throw 'err
-      (format nil "Too many labels.~%~%~
+      (format nil ("Too many labels.~%~%~
         Selection length is ~a seconds and~%~
         Label interval is ~a seconds~%~
         giving a total of ~a labels.~%~
         Maximum number of labels from this effect is 1000.~%~
-        Please use a shorter selection, or a longer Label interval."
+        Please use a shorter selection, or a longer Label interval.")
         (formatgg (get-duration 1))
         (formatgg interval)
         (if (= adjust 1)

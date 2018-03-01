@@ -49,15 +49,15 @@ $control control-gain (_"Gain (dB)") real "" 0 -24 24
        (env (snd-pwl 0.0 rate breakpoints)))
     (cond
       ((not (or f0 f1)) ; This should never happen for a 'spectral' effect.
-          (throw 'error-message (format nil "~aPlease select frequencies." p-err)))
+          (throw 'error-message (format nil (_"~aPlease select frequencies.") p-err)))
       ((and f0 (>= f0 (/ *sound-srate* 2.0)))
           ; Shelf is above Nyquist frequency so do nothing.
           nil)
       ((and f0 f1 (= f0 f1))
           (throw 'error-message
-            (format nil "~aBandwidth is zero (the upper and lower~%~
+            (format nil (_"~aBandwidth is zero (the upper and lower~%~
                          frequencies are both ~a Hz).~%~
-                         Please select a frequency range."
+                         Please select a frequency range.")
                     p-err f0)))
       (T  (if f0 (validate f0))
           (if f1 (validate f1))
@@ -67,7 +67,7 @@ $control control-gain (_"Gain (dB)") real "" 0 -24 24
                   (prod (diff 1.0 env) sig)))))))
 
 (catch 'error-message
-  (setf p-err "Error.\n")
+  (setf p-err (_"Error.\n"))
   (if (= control-gain 0)
       nil ; Do nothing
       (multichan-expand #'result *track*)))

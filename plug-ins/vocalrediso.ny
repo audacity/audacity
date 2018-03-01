@@ -70,14 +70,14 @@ $control high-transition (_"High Cut for Vocals (Hz)") real "" 9000 1 24000
                (t (/ s-xy s-x2))))
          (a0 (- bar-y (* a1 bar-x)))) 
    (if show (format t 
-"Average x: ~a, y: ~a
+(_"Average x: ~a, y: ~a
 Covariance x y: ~a
 Average variance x: ~a, y: ~a
 Standard deviation x: ~a, y: ~a
 Coefficient of correlation: ~a
 Coefficient of determination: ~a 
 Variation of residuals: ~a
-y equals ~a plus ~a times x~%"
+y equals ~a plus ~a times x~%")
 bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)) 
    (list r r2 pos-xy  a0 a1)))
 ;;
@@ -86,34 +86,34 @@ bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)
 ;;
 ;; Summary for "Analyse", fed with coeff. of correlation
 (defun summary (analysis &aux (corr (car analysis)) (pan-position (third analysis)))
-  (format nil "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%" 
+  (format nil (_"Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%") 
             pan-position
             (round (* corr 100))
             (cond
              ((between corr 0.97 1.1)
-              " - The two channels are identical, i.e. dual mono.
+              (_" - The two channels are identical, i.e. dual mono.
    The center can't be removed.
-      Any remaining  difference may be caused by lossy encoding.")
+      Any remaining  difference may be caused by lossy encoding."))
              ((between corr 0.9 0.97)  
-              " - The two Channels are strongly related, i.e. nearly mono or extremely panned.
-   Most likely, the center extraction will be poor.")
+              (_" - The two Channels are strongly related, i.e. nearly mono or extremely panned.
+   Most likely, the center extraction will be poor."))
              ((between corr 0.5 0.9)
-              " - A fairly good value, at least stereo in average and not too wide spread.")
+              (_" - A fairly good value, at least stereo in average and not too wide spread."))
              ((between corr 0.2 0.5)
-              " - An ideal value for Stereo.
-  However, the center extraction depends also on the used reverb.")
+              (_" - An ideal value for Stereo.
+  However, the center extraction depends also on the used reverb."))
              ((between  corr -0.2 0.2)
-              " - The two channels are almost not related.
+              (_" - The two channels are almost not related.
    Either you have only noise or the piece is mastered in a unbalanced manner.
-   The center extraction can still be good though.")
+   The center extraction can still be good though."))
              ((between corr -0.8 -0.2)
-              " - Although the Track is stereo, the field  is obviously extra wide.
+              (_" - Although the Track is stereo, the field  is obviously extra wide.
    This can cause strange effects.
-   Especially when played by only one speaker.")
-             (t " - The two channels are nearly identical.
+   Especially when played by only one speaker."))
+             (t (_" - The two channels are nearly identical.
    Obviously, a pseudo stereo effect has been used
    to spread the signal over the physical distance between the speakers.
- Don't expect good results from a center removal."))))
+ Don't expect good results from a center removal.")))))
 ;;;
 ;;; FFT Functionality
 ;;
@@ -128,7 +128,7 @@ bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)
              (progn (setf cut (truncate (- fs zeros 1)))
                     (snd-pwl 0 fs
                              (list 0 (/ (float hop))(- cut hop) 1.0 cut 0.0 fs 0.0 fs)))))
-        ; Han
+        ; Hann
         ((= type 1)
          (seq (cue (control-srate-abs fs
           (mult 0.5 (sum 1 (lfo (/ fs (* 2.0 hop)) (/ (- fs zeros)            (get-duration fs)) *table* 270)))))
@@ -195,7 +195,7 @@ bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)
 ;;; main procedure
 (defun catalog  (&aux  snd
 (original-len (/ (+ len hop) *sr*)) (dur (get-duration 1)))
-  (if (soundp *track*) (return-from catalog  "This plug-in works only with stereo tracks.")
+  (if (soundp *track*) (return-from catalog  (_"This plug-in works only with stereo tracks."))
       (setf snd (vector (snd-copy (: *track* 0)) (snd-copy (: *track* 1)))))
   (cond
          ((= action 7)

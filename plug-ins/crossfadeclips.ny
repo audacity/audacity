@@ -37,8 +37,8 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; 2) The selection may not start or end in white-space.
 
 
-(setf err1 "Error.\nInvalid selection.\nMore than 2 audio clips selected.")
-(setf err2 "Error.\nInvalid selection.\nEmpty space at start/ end of the selection.")
+(setf err1 (_"Error.\nInvalid selection.\nMore than 2 audio clips selected."))
+(setf err2 (_"Error.\nInvalid selection.\nEmpty space at start/ end of the selection."))
 
 
 (defun find-ends (T0 T1 clips)
@@ -128,4 +128,4 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
                (get '*selection* 'start) 
                (get '*selection* 'end)
                (get '*track* 'clips)))
-    "Error.\nCrossfade Clips may only be applied to one track.")
+    (_"Error.\nCrossfade Clips may only be applied to one track."))

@@ -149,7 +149,7 @@ s-in))
 ;If no sound markers were found, return a message
 ;Otherwise, if some sounds were found, also optionally place a label at the end of the file.
 (if (null l)
- (setq l "No sounds found. Try reducing the silence\nlevel and minimum silence duration.")
- (if (= finallabel 1) (add-label (/ s1-length s1-srate) (/ s1-length s1-srate) "[End]"))
+ (setq l (_"No sounds found. Try reducing the silence\nlevel and minimum silence duration."))
+ (if (= finallabel 1) (add-label (/ s1-length s1-srate) (/ s1-length s1-srate) (_"[End]")))
 )
 l

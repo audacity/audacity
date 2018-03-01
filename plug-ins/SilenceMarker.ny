@@ -88,6 +88,7 @@ s-in))
    (if (and (> v thres) (> sil-c sil-length))
  	  ;Mark the user-set number of seconds BEFORE this point to avoid clipping the start
  	  ;of the material.
+; Should "S" be translated or become a control value?
     (add-label (- (/ n s1-srate) labelbeforedur) "S")
    )
    ;If this sample is NOT silent, then reset the silence counter
@@ -110,6 +111,6 @@ s-in))
 
 ;If no silence markers were found, return a message
 (if (null l)
- (setq l "No silences found. Try reducing the silence\nlevel and minimum silence duration.")
+ (setq l (_"No silences found. Try reducing the silence\nlevel and minimum silence duration."))
 )
 l

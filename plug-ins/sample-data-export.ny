@@ -109,9 +109,9 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 (defun checknumber ()
   (setq number (min number len))
   (if (< number 1)
-      (add-error "No samples selected."))
+      (add-error (_"No samples selected.")))
   (if (> number 1000000)
-      (add-error "Cannot export more than 1 million samples."))
+      (add-error (_"Cannot export more than 1 million samples.")))
   (setq number (truncate number)))
 
 
@@ -215,15 +215,15 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
   (if (and (arrayp s)(= chan 2))
       (progn
         (unless (= header 0)                ; Don't print 'channel' if no header
-          (format fp "Left Channel.~%~%"))
+          (format fp (_"Left Channel.~%~%")))
         (print-text (aref s 0))
         (if (= header 0)                    ; Don't print 'channel' if no header
             (format fp "~%")
-            (format fp "~%~%Right Channel.~%~%"))
+            (format fp (_"~%~%Right Channel.~%~%")))
         (print-text (aref s 1))
         (close fp)
         (if (= messages 0)
-            (format nil "~aData written to:~%~a~a~a" 
+            (format nil (_"~aData written to:~%~a~a~a") 
                     (normhead) path fileseparator filename)
             nil))
       ;; mono or alternate
@@ -231,7 +231,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
         (print-text s)
         (close fp)
         (if (= messages 0)
-            (format nil "~aData written to:~%~a~a~a"
+            (format nil (_"~aData written to:~%~a~a~a")
                     (normhead) path fileseparator filename)
             nil))))
 
@@ -275,7 +275,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
                   (string-equal path realdir)))
         ;; makefilename or error
         (setq filename (makefilename filename FileExt))
-        (add-error (format nil "Output folder \"~a~a\" cannot be accessed." 
+        (add-error (format nil (_"Output folder \"~a~a\" cannot be accessed.") 
                            path fileseparator))))
   ;; check if file is writeable
   (when (= (length err) 0)
@@ -283,7 +283,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
     (setq fp (open filename :direction :output))
     ;check file is writeable
     (if (not fp)
-        (add-error (format nil "\"~a~a~a\" cannot be written."
+        (add-error (format nil (_"\"~a~a~a\" cannot be written.")
                            path fileseparator filename)))))
 
 
@@ -299,7 +299,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 
 (defun minhead ()
   (format nil 
-"Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a" 
+(_"Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a") 
   (get 'info 'srate)                        ; sample rate
   (get 'info 'units)                        ; units
   (get 'info 'chan-order)                   ; Channel Order
@@ -311,7 +311,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 (defun normhead ()
   (if (= fileformat 4)                      ; html
     (format nil
-"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a" 
+(_"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a") 
       filename                              ; file name
       (get 'info 'channels)                 ; mono/stereo
       (get 'info 'chan-order)               ; Channel Order
@@ -322,8 +322,8 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
           (format nil "~%~a~%~%~%" optext)  ; optional text
           (format nil "~%~%~%")))           ; no optional text
     (format nil
-"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
-Length processed: ~a samples ~a seconds.~a" 
+(_"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
+Length processed: ~a samples ~a seconds.~a") 
       filename                              ; file name
       (get 'info 'channels)                 ; mono/stereo
       (get 'info 'chan-order)               ; Channel Order
@@ -338,9 +338,9 @@ Length processed: ~a samples ~a seconds.~a"
 
 (defun fullhead ()
   (format nil
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
+(_"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
 samples, ~a seconds.~%Peak amplitude: ~a (lin) ~a dB.  Unweighted RMS: ~a dB.~%~
-DC offset: ~a~a" 
+DC offset: ~a~a") 
   filename                                  ; file name
   (get 'info 'srate)                        ; sample rate
   (get 'info 'units)                        ; units
@@ -353,9 +353,9 @@ DC offset: ~a~a"
   (srms s)                                  ; rms
   (let ((vals (dc-off s)))                  ; DC offset
     (if (= (length vals) 2) ; mono
-        (format nil "~a linear, ~a dB." 
+        (format nil (_"~a linear, ~a dB.") 
                 (first vals)(second vals))
-        (format nil "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
+        (format nil (_"Left: ~a lin, ~a dB | Right: ~a lin, ~a dB.")
                 (first vals)(second vals)(third vals)(fourth vals))))
   (if (> (length optext)0)
       (format nil "~%~a~%~%~%" optext)      ; optional text
@@ -481,9 +481,9 @@ ul {
   (srms s)                                  ; rms
   (let ((vals (dc-off s)))                  ; DC offset
     (if (= (length vals) 2) ; mono
-        (format nil "~a linear, &nbsp;&nbsp;~a dB." 
+        (format nil (_"~a linear, &nbsp;&nbsp;~a dB.") 
                 (first vals)(second vals))
-        (format nil "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
+        (format nil (_"Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB.")
                 (first vals)(second vals)(third vals)(fourth vals))))))
 
 
@@ -561,7 +561,7 @@ Daulton") " (<a href=
   (format fp (html-foot))
   (close fp)
     (if (= messages 0)
-        (format nil "~aData written to:~%~a~a~a"
+        (format nil (_"~aData written to:~%~a~a~a")
                (normhead) path fileseparator filename)
         nil))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -598,14 +598,14 @@ Daulton") " (<a href=
 (setq number (read (make-string-input-stream number)))
 (if (numberp number)
     (checknumber)
-    (add-error (format nil "~a is not a number." number)))
+    (add-error (format nil (_"~a is not a number.") number)))
 
 (filewriter)
 (if (> (length err) 0)
   ;; output error message if enabled
   (if (= messages 2)
     nil                                     ; return nil
-    (format nil "Error.~%~a" err))          ; return errors
+    (format nil (_"Error.~%~a") err))          ; return errors
   ;; else print to file
   (progn
     (put-head-info)                         ; put basic info for headers

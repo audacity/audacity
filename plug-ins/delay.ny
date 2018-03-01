@@ -42,19 +42,19 @@ $control constrain (_"Allow duration to change") choice ((_"Yes") (_"No")) 0
     T nil))
 
 (when (err-chk number 1 50)(setq err (format nil
-  "Number of echoes '~a' outside valid range 1 to 50.~%~a"  
+  (_"Number of echoes '~a' outside valid range 1 to 50.~%~a")  
   number err)))
 
 (when (err-chk shift -12 12)(setq err (format nil
-  "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a" 
+  (_"Pitch change '~a' outside valid range -12 to +12 semitones.~%~a") 
   shift err)))
 
 (when (err-chk delay 0 10)(setq err (format nil
-  "Delay time '~a' outside valid range 0 to 10 seconds.~%~a" 
+  (_"Delay time '~a' outside valid range 0 to 10 seconds.~%~a") 
   delay err)))
  
 (when (err-chk dgain -30 6)(setq err (format nil
-  "Delay level '~a' outside valid range -30 to +6 dB.~%~a" 
+  (_"Delay level '~a' outside valid range -30 to +6 dB.~%~a") 
   dgain err)))
 
 
@@ -121,7 +121,7 @@ $control constrain (_"Allow duration to change") choice ((_"Yes") (_"No")) 0
 
 ;;; return errors or process
 (if (> (length err) 0)
-  (format nil "Error.~%~a" err)               ; return error
+  (format nil (_"Error.~%~a") err)               ; return error
   (let* ((delay (if (= delay-type 0) delay (/ delay number)))
          (output 
           (multichan-expand #'delays 

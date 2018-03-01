@@ -18,11 +18,11 @@ $control frequency (_"Frequency (Hz)") float-text "" 60 0 nil
 $control q (_"Q (higher value reduces width)") float-text "" 1 0.1 1000
 
 (cond
-  ((< frequency 0.1) "Frequency must be at least 0.1 Hz.")
+  ((< frequency 0.1) (_"Frequency must be at least 0.1 Hz."))
   ((>= frequency (/ *sound-srate* 2.0))
-    (format nil "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
+    (format nil (_"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
                  Track sample rate is ~a Hz.~%~
-                 Frequency must be less than ~a Hz."
+                 Frequency must be less than ~a Hz.")
             frequency
             *sound-srate*
             (/ *sound-srate* 2.0)))
