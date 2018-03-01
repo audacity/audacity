@@ -73,6 +73,8 @@ static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
    /* i18n-hint: FLAC names an audio file format */
    { XO("Export as FLAC"),          wxT("ExportFLAC") },
 
+// MP3 OGG and WAV already handled by menu items.
+#if 0
    /* i18n-hint: MP3 names an audio file format */
    { XO("Export as MP3"),           wxT("ExportMP3") },
 
@@ -81,6 +83,7 @@ static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
 
    /* i18n-hint: WAV names an audio file format */
    { XO("Export as WAV"),           wxT("ExportWAV") },
+#endif
 };
 // end CLEANSPEECH remnant
 
@@ -325,11 +328,18 @@ auto BatchCommands::GetAllCommands() -> CommandNameVector
          { return std::get<0>(a) <  std::get<0>(b); }
    );
 
-
-
-   return commands;
+   // JKC: Gave up on trying to use std::unique on this.
+   CommandNameVector uniqueCommands;
+   unsigned size = commands.size();
+   wxString oldName = "";
+   for( unsigned i = 0; i < size; ++i ) 
+   {
+      if( std::get<0>( commands[i] ) != oldName )
+         uniqueCommands.push_back( commands[i] );
+      oldName = std::get<0>( commands[i] );
+   }
+   return uniqueCommands;
 }
-
 
 wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
 {
