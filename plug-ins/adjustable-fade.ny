@@ -16,7 +16,7 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html 
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control type "Fade Type" choice "Fade Up,Fade Down,S-Curve Up,S-Curve Down" 0
 ;control curve "Mid-fade Adjust (%)" real "" 0 -100 100

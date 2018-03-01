@@ -16,7 +16,7 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control wave "Waveform type" choice "sine,triangle,sawtooth,inverse sawtooth,square" 0
 ;control phase "Starting phase (degrees)" int "" 0 -180 180

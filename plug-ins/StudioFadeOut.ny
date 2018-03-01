@@ -17,7 +17,7 @@
 ;; filter from full spectrum at start to 100 Hz at end.
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;;; sweeping low pass filter 
  (defun filter (sig dur)

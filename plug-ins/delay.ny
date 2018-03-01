@@ -15,7 +15,7 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control delay-type "Delay type" choice "regular,bouncing ball,reverse bouncing ball" 0
 ;control dgain "Delay level per echo (dB)" real "" -6 -30 1

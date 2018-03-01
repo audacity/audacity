@@ -19,7 +19,7 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control dst "Distance: (1 to 120, default = 20)" real "" 20 1 120
 ;control mst "Output choice" choice "both channels, right only" 0
