@@ -14,7 +14,7 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-;control control-gain "Gain (dB)" real "" 0 -24 24
+$control control-gain (_"Gain (dB)") real "" 0 -24 24
 
 (defmacro validate (hz)
 "If frequency is above Nyquist, don't use it"

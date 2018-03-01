@@ -17,12 +17,12 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control type "Type" choice "Soft Limit,Hard Limit,Soft Clip,Hard Clip" 0
-;control gain-L "Input Gain (dB)\nmono/Left" real "" 0 0 10
-;control gain-R "Input Gain (dB)\nRight channel" real "" 0 0 10
-;control thresh "Limit to (dB)" real "" -3 -10 0
-;control hold "Hold (ms)" real "" 10 1 50
-;control makeup "Apply Make-up Gain" choice "No,Yes" 0
+$control type (_"Type") choice "Soft Limit,Hard Limit,Soft Clip,Hard Clip" 0
+$control gain-L (_"Input Gain (dB)\nmono/Left") real "" 0 0 10
+$control gain-R (_"Input Gain (dB)\nRight channel") real "" 0 0 10
+$control thresh (_"Limit to (dB)") real "" -3 -10 0
+$control hold (_"Hold (ms)") real "" 10 1 50
+$control makeup (_"Apply Make-up Gain") choice "No,Yes" 0
 
 (if (not (boundp 'type))
     (setf type 0))

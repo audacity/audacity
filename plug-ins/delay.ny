@@ -17,13 +17,13 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control delay-type "Delay type" choice "regular,bouncing ball,reverse bouncing ball" 0
-;control dgain "Delay level per echo (dB)" real "" -6 -30 1
-;control delay "Delay time (seconds)" real "" 0.3 0 5
-;control pitch-type "Pitch change effect" choice "Pitch/Tempo,LQ Pitch Shift" 0 
-;control shift "Pitch change per echo (semitones)" real "" 0 -2 2
-;control number "Number of echoes" int "" 5 1 30
-;control constrain "Allow duration to change" choice "Yes,No" 0 
+$control delay-type (_"Delay type") choice "regular,bouncing ball,reverse bouncing ball" 0
+$control dgain (_"Delay level per echo (dB)") real "" -6 -30 1
+$control delay (_"Delay time (seconds)") real "" 0.3 0 5
+$control pitch-type (_"Pitch change effect") choice "Pitch/Tempo,LQ Pitch Shift" 0 
+$control shift (_"Pitch change per echo (semitones)") real "" 0 -2 2
+$control number (_"Number of echoes") int "" 5 1 30
+$control constrain (_"Allow duration to change") choice "Yes,No" 0 
 
 
 ;; The default pitch shift effect is a simple resampling, 

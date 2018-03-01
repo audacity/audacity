@@ -14,8 +14,8 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
 
-;control frequency "Frequency (Hz)" float-text "" 60 0 nil
-;control q "Q (higher value reduces width)" float-text "" 1 0.1 1000
+$control frequency (_"Frequency (Hz)") float-text "" 60 0 nil
+$control q (_"Q (higher value reduces width)") float-text "" 1 0.1 1000
 
 (cond
   ((< frequency 0.1) "Frequency must be at least 0.1 Hz.")

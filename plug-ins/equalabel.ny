@@ -15,13 +15,13 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; Alex S.Brown, Dominic Mazzoni, Pierre M.I., Gale Andrews, Steve Daulton.
 ;; This version by Steve Daulton (http://easyspacepro.com) 2016
 
-;control mode "Use 'Number of labels' OR 'Label interval'" choice "Number of labels,Label interval" 0
-;control totalnum "Number of labels" int-text "" 10 1 1000
-;control interval "Label interval (seconds)" float-text "" 60 0.001 3600
-;control adjust "Adjust label interval to fit length" choice "No,Yes" 0
-;control labeltext "Label text" string "" "Label" ""
-;control zeros "Minimum number of digits in label" choice "None - text only,1 (before label),2 (before label),3 (before label),1 (after label),2 (after label),3 (after label)" 2
-;control firstnum "Begin numbering from" int-text "" 1 0 nil
+$control mode (_"Use 'Number of labels' OR 'Label interval'") choice "Number of labels,Label interval" 0
+$control totalnum (_"Number of labels") int-text "" 10 1 1000
+$control interval (_"Label interval (seconds)") float-text "" 60 0.001 3600
+$control adjust (_"Adjust label interval to fit length") choice "No,Yes" 0
+$control labeltext (_"Label text") string "" "Label" ""
+$control zeros (_"Minimum number of digits in label") choice "None - text only,1 (before label),2 (before label),3 (before label),1 (after label),2 (after label),3 (after label)" 2
+$control firstnum (_"Begin numbering from") int-text "" 1 0 nil
 
 
 (defun make-labels ()

@@ -16,8 +16,8 @@ $copyright (_"Licensing confirmed under terms of the GNU General Public License 
 ;; 3. Do a cubic spline interpolation.
 ;; 4. Go to next region
 
-;control threshold "Threshold of Clipping (%)" float "" 95 0 100
-;control gain "Reduce amplitude to allow for restored peaks (dB)" float "" -9 -30 0
+$control threshold (_"Threshold of Clipping (%)") float "" 95 0 100
+$control gain (_"Reduce amplitude to allow for restored peaks (dB)") float "" -9 -30 0
 
 (setf threshold (/ threshold 100))
 (setf gain (db-to-linear gain))

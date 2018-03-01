@@ -13,9 +13,9 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-;control sil-lev "Treat audio below this level as silence [ -dB]" real "" 26 0 100
-;control sil-dur "Minimum duration of silence [seconds]" real "" 1.0 0.1 5.0
-;control labelbeforedur "Label placement [seconds before silence ends]" real "" 0.3 0.0 1.0
+$control sil-lev (_"Treat audio below this level as silence [ -dB]") real "" 26 0 100
+$control sil-dur (_"Minimum duration of silence [seconds]") real "" 1.0 0.1 5.0
+$control labelbeforedur (_"Label placement [seconds before silence ends]") real "" 0.3 0.0 1.0
 
 ;Create a function to make the sum the two channels if they are stereo
 (defun mono-s (s-in) (if (arrayp s-in) (snd-add (aref s-in 0) (aref s-in 1))

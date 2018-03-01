@@ -15,22 +15,22 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
 
-;control action "Action choice" choice "Generate track, Help screen 1, Help screen 2" 0
-;control tempo "Tempo (beats per minute)" real "30 - 300 beats/minute" 120 30 300
-;control timesig "Beats per measure (bar)" int "1 - 20 beats/measure" 4 1 20
-;control swing "Swing amount" float "+/- 1" 0 -1 1
-;control measures "Number of measures (bars)" int "1 - 1000 bars" 16 1 1000
-;control click-track-dur "Optional rhythm track duration (minutes seconds)" string "Whole numbers only" ""  
+$control action (_"Action choice") choice "Generate track, Help screen 1, Help screen 2" 0
+$control tempo (_"Tempo (beats per minute)") real "30 - 300 beats/minute" 120 30 300
+$control timesig (_"Beats per measure (bar)") int "1 - 20 beats/measure" 4 1 20
+$control swing (_"Swing amount") float "+/- 1" 0 -1 1
+$control measures (_"Number of measures (bars)") int "1 - 1000 bars" 16 1 1000
+$control click-track-dur (_"Optional rhythm track duration (minutes seconds)") string "Whole numbers only" ""  
 
 ;;control ticklen "Individual beat duration (milliseconds)" int "1 - 100 ms" 10 1 100
 
-;control offset "Start time offset (seconds)" real "0 - 30 seconds" 0 0 30
-;control click-type "Beat sound" choice "Metronome tick,Ping,Cowbell,Resonant noise,Noise click,Drip" 0
+$control offset (_"Start time offset (seconds)") real "0 - 30 seconds" 0 0 30
+$control click-type (_"Beat sound") choice "Metronome tick,Ping,Cowbell,Resonant noise,Noise click,Drip" 0
 
 ;;control q "Noise click resonance - discernable pitch (q)" int "1 - 20" 1 1 20
 
-;control high "MIDI pitch of strong beat" int "18 - 116" 84 18 116
-;control low "MIDI pitch of weak beat" int "18 - 116" 80 18 116
+$control high (_"MIDI pitch of strong beat") int "18 - 116" 84 18 116
+$control low (_"MIDI pitch of weak beat") int "18 - 116" 80 18 116
 
 ;; allow q control to be commented out.
 (if (not (boundp 'q))

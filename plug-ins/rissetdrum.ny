@@ -18,12 +18,12 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control freq "Frequency (Hz)" real "" 100 50 2000
-;control decay "Decay (seconds)" real "" 2 0.1 60
-;control cf "Center frequency of noise (Hz)" real "" 500 100 5000
-;control bw "Width of noise band (Hz)" real "" 400 10 1000
-;control noise "Amount of noise in mix (percent)" real "" 25 0 100
-;control gain "Amplitude (0 - 1)" real "" 0.8 0 1
+$control freq (_"Frequency (Hz)") real "" 100 50 2000
+$control decay (_"Decay (seconds)") real "" 2 0.1 60
+$control cf (_"Center frequency of noise (Hz)") real "" 500 100 5000
+$control bw (_"Width of noise band (Hz)") real "" 400 10 1000
+$control noise (_"Amount of noise in mix (percent)") real "" 25 0 100
+$control gain (_"Amplitude (0 - 1)") real "" 0.8 0 1
 
 
 (defun sanitise (val minx maxx)

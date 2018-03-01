@@ -18,10 +18,10 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control wave "Waveform type" choice "sine,triangle,sawtooth,inverse sawtooth,square" 0
-;control phase "Starting phase (degrees)" int "" 0 -180 180
-;control wet "Wet level (percent)" int "" 40 1 100
-;control lfo "Frequency (Hz)" float-text "" 4 0.001 1000
+$control wave (_"Waveform type") choice "sine,triangle,sawtooth,inverse sawtooth,square" 0
+$control phase (_"Starting phase (degrees)") int "" 0 -180 180
+$control wet (_"Wet level (percent)") int "" 40 1 100
+$control lfo (_"Frequency (Hz)") float-text "" 4 0.001 1000
 
 ; Convert % to linear
 (setq wet (/ wet 200.0))

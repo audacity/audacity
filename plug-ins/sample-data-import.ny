@@ -12,9 +12,9 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 
-;control filename "File name" string "" "sample-data.txt"
-;control path "File location (path to file)" string "" "Home directory"
-;control bad-data "Invalid data handling" choice "Throw error,Read as zero" 0
+$control filename (_"File name") string "" "sample-data.txt"
+$control path (_"File location (path to file)") string "" "Home directory"
+$control bad-data (_"Invalid data handling") choice "Throw error,Read as zero" 0
 
 
 ;; Documentation.

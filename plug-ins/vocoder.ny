@@ -21,13 +21,13 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control dst "Distance: (1 to 120, default = 20)" real "" 20 1 120
-;control mst "Output choice" choice "both channels, right only" 0
-;control bands "Number of vocoder bands" int "" 40 10 240
-;control track-vl "Amplitude of original audio (percent)" real "" 100 0 100
-;control noise-vl "Amplitude of white noise (percent)" real "" 0 0 100
-;control radar-vl "Amplitude of Radar Needles (percent)" real "" 0 0 100
-;control radar-f "Frequency of Radar Needles (Hz)" real "" 30 1 100
+$control dst (_"Distance: (1 to 120, default = 20)") real "" 20 1 120
+$control mst (_"Output choice") choice "both channels, right only" 0
+$control bands (_"Number of vocoder bands") int "" 40 10 240
+$control track-vl (_"Amplitude of original audio (percent)") real "" 100 0 100
+$control noise-vl (_"Amplitude of white noise (percent)") real "" 0 0 100
+$control radar-vl (_"Amplitude of Radar Needles (percent)") real "" 0 0 100
+$control radar-f (_"Frequency of Radar Needles (Hz)") real "" 30 1 100
 
 ; maybe the code once again has to be changed into _one_ local let-binding
 ; if you have lots of nyquist "[gc:" messages try this:

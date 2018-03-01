@@ -17,16 +17,16 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control number "Limit output to first" string "samples" "100" 
-;control units "Measurement scale" choice "dB,Linear" 0 
-;control fileformat "File data format" choice "Sample List (txt),Indexed List (txt),Time Indexed (txt),Data (csv),Web Page (html)" 0 
-;control header "Include header information" choice "None,Minimal,Standard,All" 2 
-;control optext "Optional header text" string ""  
-;control chan "Channel layout for stereo" choice "L-R on Same Line,Alternate Lines,L Channel First" 0   
-;control messages "Show messages" choice "Yes,Errors Only,None" 0 
-;control filename "File name" string "" "sample-data"
-;control path "Output folder" string "" "Home directory"
-;control owrite "Allow files to be overwritten" choice "No,Yes" 0 
+$control number (_"Limit output to first") string "samples" "100" 
+$control units (_"Measurement scale") choice "dB,Linear" 0 
+$control fileformat (_"File data format") choice "Sample List (txt),Indexed List (txt),Time Indexed (txt),Data (csv),Web Page (html)" 0 
+$control header (_"Include header information") choice "None,Minimal,Standard,All" 2 
+$control optext (_"Optional header text") string ""  
+$control chan (_"Channel layout for stereo") choice "L-R on Same Line,Alternate Lines,L Channel First" 0   
+$control messages (_"Show messages") choice "Yes,Errors Only,None" 0 
+$control filename (_"File name") string "" "sample-data"
+$control path (_"Output folder") string "" "Home directory"
+$control owrite (_"Allow files to be overwritten") choice "No,Yes" 0 
 
 
 ;; To enable L/R prefix before alternate L/R channels 
