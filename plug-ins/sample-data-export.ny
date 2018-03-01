@@ -55,7 +55,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 
 (when (not (boundp 'LR-prefix))(setq LR-prefix nil))
 
-(setq default-filename "sample-data")       ; default filename
+(setq default-filename (_"sample-data"))       ; default filename
 (setq err "")                               ; initialise error mesaage
 
 (setq *float-format* "%1.5f")               ; 5 decimal places
@@ -131,7 +131,8 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 (setf ln10over20 (/ (log 10.0) 20))
 (defun lin-to-db (val)
   (if (= val 0)
-    "[-inf]"
+    ;i18n-hint abbreviates negative infinity
+    (_"[-inf]")
     (/ (log val) ln10over20)))
 
 
@@ -259,7 +260,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
       (if (string-equal path "~/" :end1 2)
           (setq path (strcat (home)(subseq path 1)))))
   ;; If path not set use home directory
-  (if (or (string-equal path "Home directory")
+  (if (or (string-equal path (_"Home directory"))
           (string-equal path ""))
       (setq path (home)))
   ;; if file name not set use default
@@ -365,7 +366,7 @@ DC offset: ~a~a"
 ;;        HTML Output         ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun html-head ()
+(defun html-head () (strcat
 "<!DOCTYPE html>
 <html>
 <head>
@@ -446,26 +447,29 @@ ul {
   color: blue;
   }
 </style>
-<title>Sample Data Export</title>
+<title>" (_"Sample Data Export") "</title>
 </head>
-")
+"))
 
 
 ;;; document headings
 (defun doc-head ()
   (format nil
-"<body>
-<h1>Sample Data Export - ~a</h1>
+(strcat "<body>
+<h1>" (_"Sample Data Export") " - ~a</h1>
 ~a
-<h4>~a. &nbsp;&nbsp;~a samples. &nbsp;&nbsp; ~a seconds.<br></h4>
-<h3>Audio data analysis:</h3>
+<h4>~a. &nbsp;&nbsp;" (_"~a samples.") " &nbsp;&nbsp; " (_"~a seconds.") "<br></h4>
+<h3>" (_"Audio data analysis:") "</h3>
 <ul>
-<li><b>Sample Rate:</b> &nbsp;&nbsp;~a Hz.</li>
-<li><b>Peak Amplitude:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB.</li>
-<li><b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB.</li>
-<li><b>DC Offset:</b> &nbsp;&nbsp;~a</li>
+<li>" (_"<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz.") "</li>"
+; i18n-hint: abbreviates "linear" and "decibels"
+"<li>" (_"<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB.") "</li>"
+; i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+"<li>" (_"<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB.") "</li>"
+; i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+"<li>" (_"<b>DC Offset:</b> &nbsp;&nbsp;~a") "</li>
 </ul>
-"
+") ; end concatenated format string with inserted translations
   (string-right-trim ".html" filename)
   (format nil "<h2>~a</h2>" optext)         ; Optional heading
   (get 'info 'channels)                     ; mono/stereo
@@ -485,36 +489,37 @@ ul {
 
 ;;; table headings  (mono)
 (defun table-head-mono ()
-"<table title=\"sample data\">
+(strcat "<table title=\"" (_"sample data") "\">
 <tr>
-<th>Sample #</th>
-<th>Seconds</th>
-<th>Value (linear)</th>
-<th>Value (dB)</th>
-</tr>")
+<th>" (_"Sample #") "</th>
+<th>" (_"Seconds") "</th>
+<th>" (_"Value (linear)") "</th>
+<th>" (_"Value (dB)") "</th>
+</tr>"))
 
 
 ;;; table headings (stereo)
 (defun table-head-stereo ()
-"<table title=\"audio sample value analysis\">
+(strcat "<table title=\"" (_"audio sample value analysis") "\">
 <tr>
-<th>Sample #</th>
-<th>Seconds </th>
-<th>Left (linear)</th>
-<th>Right (linear)</th>
-<th>Left (dB)</th>
-<th>Right (dB)</th>
-</tr>")
+<th>" (_"Sample #") "</th>
+<th>" (_"Seconds") "</th>
+<th>" (_"Left (linear)") "</th>
+<th>" (_"Right (linear)") "</th>
+<th>" (_"Left (dB)") "</th>
+<th>" (_"Right (dB)") "</th>
+</tr>"))
 
 
 (defun html-foot ()
+  (format nil (strcat
 "</table>
-<p id=\"footer\">Produced with <span>Sample Data Export</span> for
-<a href=\"https://www.audacityteam.org/\">Audacity</a> by Steve
-Daulton (<a href=
+<p id=\"footer\">" (_"Produced with <span>Sample Data Export</span> for
+<a href=\"~a\">Audacity</a> by Steve
+Daulton") " (<a href=
 \"http://www.easyspacepro.com\">www.easyspacepro.com</a>)</p>
 </body>
-</html>")
+</html>") "https://www.audacityteam.org/"))
 
 
 ;;; html generator
@@ -567,25 +572,25 @@ Daulton (<a href=
 ;;; basic info for headers
 (defun put-head-info ()
   (putprop 'info (truncate *sound-srate*) 'srate)
-  (putprop 'info (if (= units 0) "dB" "linear") 'units)
+  (putprop 'info (if (= units 0) (_"dB") (_"linear")) 'units)
   (putprop 'info (/ number *sound-srate*) 'duration)
   (putprop 'info 
     (if (arrayp s) 
-        "2 channels (stereo)""1 channel (mono)")
+        (_"2 channels (stereo)") (_"1 channel (mono)"))
         'channels)
   ;; stereo sample order
   (putprop 'info
     (cond
       ((and (= fileformat 3)(= chan 0))     ; csv, channel in column
-        "One column per channel.\n")
+        (_"One column per channel.\n"))
       ((and (= fileformat 3)(= chan 2))     ; csv, channel in row
-        "One row per channel.\n")
+        (_"One row per channel.\n"))
       ((or (soundp s)(= fileformat 4))      ; mono soundor HTML
         "")
-      ((= chan 0) "Left channel then Right channel on same line.\n")
-      ((= chan 1) "Left and right channels on alternate lines.\n")
-      ((= chan 2) "Left channel first then right channel.\n")
-      (T "Unspecified channel order"))
+      ((= chan 0) (_"Left channel then Right channel on same line.\n"))
+      ((= chan 1) (_"Left and right channels on alternate lines.\n"))
+      ((= chan 2) (_"Left channel first then right channel.\n"))
+      (T (_"Unspecified channel order")))
     'chan-order))
 
 
