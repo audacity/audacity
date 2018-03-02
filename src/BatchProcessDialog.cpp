@@ -170,7 +170,6 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
          S.SetBorder(20);
          S.AddFixedText(wxString::Format(_("Applying '%s' to current project"),
                                          name));
-         mResults = S.AddTextWindow( wxT("") );
       }
       S.EndStatic();
    }
