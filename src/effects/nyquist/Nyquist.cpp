@@ -1471,26 +1471,27 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
 
 wxArrayString NyquistEffect::ParseChoice(const wxString & text)
 {
-   wxArrayString choices;
    if (text[0] == wxT('(')) {
       // New style:  expecting a Lisp-like list of strings
-      Tokenize(text, choices, 1, 1);
+      Tokenizer tzer;
+      tzer.Tokenize(text, true, 1, 1);
+      auto &choices = tzer.tokens;
       for (auto &choice : choices)
          choice = UnQuote(choice);
+      return choices;
    }
    else {
       // Old style: expecting a comma-separated list of
       // un-internationalized names, ignoring leading and trailing spaces
       // on each; and the whole may be quoted
-      choices = wxStringTokenize(
+      auto choices = wxStringTokenize(
          text[0] == wxT('"') ? text.Mid(1, text.Length() - 2) : text,
          wxT(",")
       );
       for (auto &choice : choices)
          choice = choice.Trim(true).Trim(false);
+      return choices;
    }
-
-   return choices;
 }
 
 void NyquistEffect::RedirectOutput()
@@ -1530,8 +1531,9 @@ wxString NyquistEffect::UnQuote(
    }
    else if (allowParens &&
             len >= 2 && s[0] == wxT('(') && s[len - 1] == wxT(')')) {
-      wxArrayString tokens;
-      Tokenize(s, tokens, 1, 1);
+      Tokenizer tzer;
+      tzer.Tokenize(s, true, 1, 1);
+      auto &tokens = tzer.tokens;
       if (tokens.size() > 1)
          // Assume the first token was _ -- we don't check that
          // And the second is the string, which is internationalized
@@ -1564,15 +1566,10 @@ double NyquistEffect::GetCtrlValue(const wxString &s)
    return Internat::CompatibleToDouble(s);
 }
 
-void NyquistEffect::Tokenize(
-   const wxString &line, wxArrayString &tokens,
+bool NyquistEffect::Tokenizer::Tokenize(
+   const wxString &line, bool eof,
    size_t trimStart, size_t trimEnd)
 {
-   bool sl = false;
-   bool q = false;
-   wxString tok = wxT("");
-   int paren = 0;
-
    auto endToken = [&]{
       if (!tok.empty()) {
          tokens.push_back(tok);
@@ -1587,8 +1584,6 @@ void NyquistEffect::Tokenize(
          sl = true;
          continue;
       }
-      else if (sl && c == wxT('n'))
-         c = wxT('\n');
 
       if (!sl && !paren && c == wxT('"')) {
          if (!q)
@@ -1626,18 +1621,29 @@ void NyquistEffect::Tokenize(
       sl = false;
    }
 
-   // Finish -- this just forgives unbalanced open quotes or left parens
-   endToken();
+   if (eof || (!q && !paren)) {
+      endToken();
+      return true;
+   }
+   else {
+      // End of line but not of file, and a string or list is yet unclosed
+      // If a string, accumulate a newline character
+      if (q)
+         tok += wxT('\n');
+      return false;
+   }
 }
 
-void NyquistEffect::Parse(const wxString &line)
+bool NyquistEffect::Parse(
+   Tokenizer &tzer, const wxString &line, bool eof, bool first)
 {
-   wxArrayString tokens;
-   Tokenize(line, tokens, 1, 0);
+   if ( !tzer.Tokenize(line, eof, first ? 1 : 0, 0) )
+      return false;
 
+   const auto &tokens = tzer.tokens;
    int len = tokens.size();
    if (len < 1) {
-      return;
+      return true;
    }
 
    // Consistency decision is for "plug-in" as the correct spelling
@@ -1645,7 +1651,7 @@ void NyquistEffect::Parse(const wxString &line)
    if (len == 2 && tokens[0] == wxT("nyquist") &&
       (tokens[1] == wxT("plug-in") || tokens[1] == wxT("plugin"))) {
       mOK = true;
-      return;
+      return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("type")) {
@@ -1661,7 +1667,7 @@ void NyquistEffect::Parse(const wxString &line)
       if (len >= 3 && tokens[2] == wxT("spectral")) {;
          mIsSpectral = true;
       }
-      return;
+      return true;
    }
 
    if (len == 2 && tokens[0] == wxT("codetype")) {
@@ -1674,7 +1680,7 @@ void NyquistEffect::Parse(const wxString &line)
          mIsSal = true;
          mFoundType = true;
       }
-      return;
+      return true;
    }
 
    // TODO: Update documentation.
@@ -1696,7 +1702,7 @@ void NyquistEffect::Parse(const wxString &line)
             mCompiler = false;
          }
       }
-      return;
+      return true;
    }
 
    // We support versions 1, 2 and 3
@@ -1713,7 +1719,7 @@ void NyquistEffect::Parse(const wxString &line)
             _("This version of Audacity does not support Nyquist plug-in version %ld"),
             v
          );
-         return;
+         return true;
       }
       mVersion = (int) v;
    }
@@ -1722,17 +1728,17 @@ void NyquistEffect::Parse(const wxString &line)
       mName = UnQuote(tokens[1]);
       if (mName.EndsWith(wxT("...")))
          mName = mName.RemoveLast(3);
-      return;
+      return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("action")) {
       mAction = UnQuote(tokens[1]);
-      return;
+      return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("info")) {
       mInfo = UnQuote(tokens[1]);
-      return;
+      return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("preview")) {
@@ -1751,7 +1757,7 @@ void NyquistEffect::Parse(const wxString &line)
       else if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
          mEnablePreview = false;
       }
-      return;
+      return true;
    }
 
    // Maximum number of samples to be processed. This can help the
@@ -1768,7 +1774,7 @@ void NyquistEffect::Parse(const wxString &line)
       // -1 = auto (default), 0 = don't merge clips, 1 = do merge clips
       tokens[1].ToLong(&v);
       mMergeClips = v;
-      return;
+      return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("restoresplits")) {
@@ -1776,18 +1782,18 @@ void NyquistEffect::Parse(const wxString &line)
       // Splits are restored by default. Set to 0 to prevent.
       tokens[1].ToLong(&v);
       mRestoreSplits = !!v;
-      return;
+      return true;
    }
 #endif
 
    if (len >= 2 && tokens[0] == wxT("author")) {
       mAuthor = UnQuote(tokens[1]);
-      return;
+      return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("copyright")) {
       mCopyright = UnQuote(tokens[1]);
-      return;
+      return true;
    }
 
    // TODO: Document.
@@ -1795,7 +1801,7 @@ void NyquistEffect::Parse(const wxString &line)
    if (len >= 2 && tokens[0] == wxT("manpage")) {
       // do not translate
       mManPage = UnQuote(tokens[1], false, false);
-      return;
+      return true;
    }
 
    // TODO: Document.
@@ -1803,7 +1809,7 @@ void NyquistEffect::Parse(const wxString &line)
    if (len >= 2 && tokens[0] == wxT("helpfile")) {
       // do not translate
       mHelpFile = UnQuote(tokens[1], false, false);
-      return;
+      return true;
    }
 
    // TODO: Document.
@@ -1812,7 +1818,7 @@ void NyquistEffect::Parse(const wxString &line)
       if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
          mDebugButton = false;
       }
-      return;
+      return true;
    }
 
    if (len >= 6 && tokens[0] == wxT("control")) {
@@ -1845,7 +1851,7 @@ void NyquistEffect::Parse(const wxString &line)
          ctrl.label = UnQuote( ctrl.label );
 
          if (len < 8) {
-            return;
+            return true;
          }
 
          if ((tokens[3] == wxT("float")) ||
@@ -1869,7 +1875,7 @@ void NyquistEffect::Parse(const wxString &line)
             // Note that the AudacityApp's mLogger has not yet been created,
             // so this brings up an alert box, but after the Audacity frame is up.
             wxLogWarning(str);
-            return;
+            return true;
          }
 
          ctrl.lowStr = tokens[6];
@@ -1924,6 +1930,7 @@ void NyquistEffect::Parse(const wxString &line)
          mCategories.Add(tokens[i]);
       }
    }
+   return true;
 }
 
 bool NyquistEffect::ParseProgram(wxInputStream & stream)
@@ -1952,18 +1959,29 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
    {
+      bool dollar = false;
       wxString line = pgm.ReadLine().Trim(false);
       if (line.Length() > 1 &&
           // New in 2.3.0:  allow magic comment lines to start with $
           // The trick is that xgettext will not consider such lines comments
           // and will extract the strings they contain
-          (line[0] == wxT(';') || line[0] == wxT('$')))
+          (line[0] == wxT(';') ||
+           (dollar = (line[0] == wxT('$')))))
       {
-         Parse(line);
-         // Don't pass this line to the interpreter, so it doesn't get confused
-         // by $, but pass a blank,
+         Tokenizer tzer;
+         unsigned nLines = 1;
+         bool done;
+         do
+            // Allow run-ons only for new $ format header lines
+            done = Parse(tzer, line, !dollar || stream.Eof(), nLines == 1);
+         while(!done &&
+            (line = pgm.ReadLine().Trim(false), ++nLines, true));
+
+         // Don't pass these lines to the interpreter, so it doesn't get confused
+         // by $, but pass blanks,
          // so that SAL effects compile with proper line numbers
-         mCmd += wxT('\n');
+         while (nLines --)
+            mCmd += wxT('\n');
       }
       else
       {

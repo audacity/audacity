@@ -163,10 +163,18 @@ private:
    void ParseFile();
    bool ParseCommand(const wxString & cmd);
    bool ParseProgram(wxInputStream & stream);
-   static void Tokenize(
-      const wxString &line, wxArrayString &tokens,
-      size_t trimStart, size_t trimEnd);
-   void Parse(const wxString &line);
+   struct Tokenizer {
+      bool sl { false };
+      bool q { false };
+      int paren{ 0 };
+      wxString tok;
+      wxArrayString tokens;
+
+      bool Tokenize(
+         const wxString &line, bool eof,
+         size_t trimStart, size_t trimEnd);
+   };
+   bool Parse(Tokenizer &tokenizer, const wxString &line, bool eof, bool first);
 
    static wxString UnQuote(const wxString &s,
                            bool allowParens = true, bool translate = true);
