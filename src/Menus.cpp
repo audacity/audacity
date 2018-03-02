@@ -822,7 +822,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowClipping"), _("&Show Clipping (on/off)"), FN(OnShowClipping),
          gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag, AlwaysEnabledFlag);
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-      c->AddCheck(wxT("ShowEffectsRack"), _("Show EffectsRack"), FN(OnShowEffectsRack), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowEffectsRack"), _("Show Effects Rack"), FN(OnShowEffectsRack), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
 
 
