@@ -1,11 +1,11 @@
 ;nyquist plug-in
 ;version 4
 ;type analyze
-;name "Regular Interval Labels..."
+$name (_"Regular Interval Labels")
 ;manpage "Regular_Interval_Labels"
-;action "Adding equally-spaced labels to the label track..."
-;author "Steve Daulton"
-;copyright "Released under terms of the GNU General Public License version 2"
+$action (_"Adding equally-spaced labels to the label track...")
+$author (_"Steve Daulton")
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -15,13 +15,17 @@
 ;; Alex S.Brown, Dominic Mazzoni, Pierre M.I., Gale Andrews, Steve Daulton.
 ;; This version by Steve Daulton (http://easyspacepro.com) 2016
 
-;control mode "Use 'Number of labels' OR 'Label interval'" choice "Number of labels,Label interval" 0
-;control totalnum "Number of labels" int-text "" 10 1 1000
-;control interval "Label interval (seconds)" float-text "" 60 0.001 3600
-;control adjust "Adjust label interval to fit length" choice "No,Yes" 0
-;control labeltext "Label text" string "" "Label" ""
-;control zeros "Minimum number of digits in label" choice "None - text only,1 (before label),2 (before label),3 (before label),1 (after label),2 (after label),3 (after label)" 2
-;control firstnum "Begin numbering from" int-text "" 1 0 nil
+$control mode (_"Use 'Number of labels' OR 'Label interval'") choice ((_"Number of labels") (_"Label interval")) 0
+$control totalnum (_"Number of labels") int-text "" 10 1 1000
+$control interval (_"Label interval (seconds)") float-text "" 60 0.001 3600
+$control adjust (_"Adjust label interval to fit length") choice ((_"No") (_"Yes")) 0
+$control labeltext (_"Label text") string "" (_"Label")
+$control zeros (_"Minimum number of digits in label") choice (
+   (_"None - text only")
+   (_"1 (before label)") (_"2 (before label)") (_"3 (before label)")
+   (_"1 (after label)") (_"2 (after label)") (_"3 (after label)")
+) 2
+$control firstnum (_"Begin numbering from") int-text "" 1 0 nil
 
 
 (defun make-labels ()
@@ -45,12 +49,12 @@
 "Throw error if excessive number of labels ('Interval' mode only)"
   (when (> totalnum 1000)
     (throw 'err
-      (format nil "Too many labels.~%~%~
+      (format nil ("Too many labels.~%~%~
         Selection length is ~a seconds and~%~
         Label interval is ~a seconds~%~
         giving a total of ~a labels.~%~
         Maximum number of labels from this effect is 1000.~%~
-        Please use a shorter selection, or a longer Label interval."
+        Please use a shorter selection, or a longer Label interval.")
         (formatgg (get-duration 1))
         (formatgg interval)
         (if (= adjust 1)
