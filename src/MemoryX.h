@@ -39,6 +39,8 @@ using std::isinf;
 // To define unordered_map and hash
 #include <tr1/unordered_map>
 
+#include <tr1/tuple>
+
 namespace std {
    using std::tr1::unordered_set;
    using std::tr1::hash;
@@ -53,6 +55,8 @@ namespace std {
    using std::tr1::add_const;
    using std::tr1::add_pointer;
    using std::tr1::remove_pointer;
+   using std::tr1::tuple;
+   using std::tr1::get;
 
    template<typename T> struct add_rvalue_reference {
       using type = T&&;

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_BATCH_COMMAND_DIALOG__
 #define __AUDACITY_BATCH_COMMAND_DIALOG__
 
-#include <tuple>
+#include "MemoryX.h"
 #include <wx/defs.h>
 #include <wx/string.h>
 
