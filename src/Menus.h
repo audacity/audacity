@@ -24,7 +24,7 @@
 
 private:
 void CreateMenusAndCommands();
-
+void PopulateChainsMenu( CommandManager* c, CommandFlag flags );
 void PopulateEffectsMenu(CommandManager *c, EffectType type,
                          CommandFlag batchflags, CommandFlag realflags);
 void AddEffectMenuItems(CommandManager *c,
@@ -494,6 +494,7 @@ void OnEffect(const CommandContext &context );
 void OnRepeatLastEffect(const CommandContext &context );
 bool DoAudacityCommand(const PluginID & ID, const CommandContext &, int flags);
 void OnApplyChain(const CommandContext &context );
+void OnApplyChainDirectly(const CommandContext &context );
 void OnEditChains(const CommandContext &context );
 void OnStereoToMono(const CommandContext &context );
 void OnAudacityCommand(const CommandContext &context );

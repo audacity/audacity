@@ -161,11 +161,18 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    long item = mChains->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
+
    if (item == -1) {
       AudacityMessageBox(_("No chain selected"));
       return;
    }
-   wxString name = mChains->GetItemText(item);
+}
+
+void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
+{
+   wxString name = mChains->GetItemText(iChain);
+   if( name.IsEmpty() )
+      return;
 
    wxDialog * pD = safenew wxDialogWrapper(this, wxID_ANY, GetTitle());
    pD->SetName(pD->GetTitle());
@@ -197,7 +204,8 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    // the 'Hide' converts us from a Modal into a regular dialog,
    // as far as closing is concerned.  On Linux we can't close with
    // EndModal() anymore after this.
-   Hide();
+   if( bHasGui )
+      Hide();
 
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
    gPrefs->Flush();
@@ -212,6 +220,10 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
       success = GuardedCall< bool >(
          [this]{ return mBatchCommands.ApplyChain(); } );
    }
+
+   if( !bHasGui )
+      return;
+
 
    if (!success) {
       Show();

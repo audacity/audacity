@@ -167,6 +167,10 @@ enum {
 
 #include "commands/CommandContext.h"
 #include "commands/ScreenshotCommand.h"
+
+#include "BatchCommands.h"
+
+
 //
 // Effects menu arrays
 //
@@ -1194,6 +1198,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("EditChains"), _("Edit C&hains..."), FN(OnEditChains));
 
       c->AddSeparator();
+      PopulateChainsMenu( c, AudioIONotBusyFlag );
+      c->AddSeparator();
 
       PopulateEffectsMenu(c,
          EffectTypeTool,
@@ -1697,6 +1703,22 @@ void AudacityProject::CreateMenusAndCommands()
 //   c->CheckDups();
 #endif
 }
+
+
+
+void AudacityProject::PopulateChainsMenu( CommandManager* c, CommandFlag flags  )
+{
+   wxArrayString names = BatchCommands::GetNames();
+   int i;
+
+   for (i = 0; i < (int)names.GetCount(); i++) {
+      c->AddItem(wxString::Format("Chain%03i", i ), names[i], FN(OnApplyChainDirectly),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+   }
+
+}
+
 
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into
@@ -8454,6 +8476,18 @@ void AudacityProject::OnApplyChain(const CommandContext &WXUNUSED(context) )
 {
    BatchProcessDialog dlg(this);
    dlg.ShowModal();
+   ModifyUndoMenuItems();
+}
+
+void AudacityProject::OnApplyChainDirectly(const CommandContext &context )
+{
+   //wxLogDebug( "Chain was: %s", context.parameter);
+   BatchProcessDialog dlg(this);
+   wxString Name = context.parameter;
+   long item=0;
+   // Take last three letters (of e.g. Chain007) and convert to a number.
+   Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
+   dlg.ApplyChainToProject( item, false );
    ModifyUndoMenuItems();
 }
 

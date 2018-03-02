@@ -55,6 +55,9 @@ class BatchProcessDialog : public wxDialogWrapper {
    virtual wxString GetHelpPageName() {return "Tools_Menu#chains_compact_dialog";};
 
 
+   void ApplyChainToProject( int iChain, bool bHasGui=true );
+
+
    // These will be reused in the derived class...
    wxListCtrl *mList;
    wxListCtrl *mChains;
