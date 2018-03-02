@@ -2,11 +2,11 @@
 ;version 4
 ;type process
 ;preview enabled
-;name "Clip Fix..."
+$name (_"Clip Fix")
 ;manpage "Clip_Fix"
-;action "Reconstructing clips..."
-;author "Benjamin Schwartz and Steve Daulton"
-;copyright "Licensing confirmed under terms of the GNU General Public License version 2"
+$action (_"Reconstructing clips...")
+$author (_"Benjamin Schwartz and Steve Daulton")
+$copyright (_"Licensing confirmed under terms of the GNU General Public License version 2")
 
 ;; Algorithm by Benjamin Schwartz
 ;; Clip Fix is a simple, stupid (but not blind) digital-clipping-corrector
@@ -16,8 +16,8 @@
 ;; 3. Do a cubic spline interpolation.
 ;; 4. Go to next region
 
-;control threshold "Threshold of Clipping (%)" float "" 95 0 100
-;control gain "Reduce amplitude to allow for restored peaks (dB)" float "" -9 -30 0
+$control threshold (_"Threshold of Clipping (%)") float "" 95 0 100
+$control gain (_"Reduce amplitude to allow for restored peaks (dB)") float "" -9 -30 0
 
 (setf threshold (/ threshold 100))
 (setf gain (db-to-linear gain))

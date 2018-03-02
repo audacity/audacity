@@ -2,12 +2,12 @@
 ;version 4
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
-;name "Rhythm Track..."
+$name (_"Rhythm Track")
 ;manpage "Rhythm_Track"
 ;preview linear
-;action "Generating Rhythm..."
-;author "Dominic Mazzoni"
-;copyright "Released under terms of the GNU General Public License version 2"
+$action (_"Generating Rhythm...")
+$author (_"Dominic Mazzoni")
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; by Dominic Mazzoni, David R. Sky and Steve Daulton.
 ;; Drip sound generator by Paul Beach
@@ -15,22 +15,24 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
 
-;control action "Action choice" choice "Generate track, Help screen 1, Help screen 2" 0
-;control tempo "Tempo (beats per minute)" real "30 - 300 beats/minute" 120 30 300
-;control timesig "Beats per measure (bar)" int "1 - 20 beats/measure" 4 1 20
-;control swing "Swing amount" float "+/- 1" 0 -1 1
-;control measures "Number of measures (bars)" int "1 - 1000 bars" 16 1 1000
-;control click-track-dur "Optional rhythm track duration (minutes seconds)" string "Whole numbers only" ""  
+$control action (_"Action choice") choice ((_"Generate track") (_"Help screen 1") (_"Help screen 2")) 0
+$control tempo (_"Tempo (beats per minute)") real (_"30 - 300 beats/minute") 120 30 300
+$control timesig (_"Beats per measure (bar)") int (_"1 - 20 beats/measure") 4 1 20
+$control swing (_"Swing amount") float (_"+/- 1") 0 -1 1
+$control measures (_"Number of measures (bars)") int (_"1 - 1000 bars") 16 1 1000
+$control click-track-dur (_"Optional rhythm track duration (minutes seconds)") string (_"Whole numbers only") ""  
 
 ;;control ticklen "Individual beat duration (milliseconds)" int "1 - 100 ms" 10 1 100
 
-;control offset "Start time offset (seconds)" real "0 - 30 seconds" 0 0 30
-;control click-type "Beat sound" choice "Metronome tick,Ping,Cowbell,Resonant noise,Noise click,Drip" 0
+$control offset (_"Start time offset (seconds)") real (_"0 - 30 seconds") 0 0 30
+$control click-type (_"Beat sound") choice (
+   (_"Metronome tick") (_"Ping") (_"Cowbell") (_"Resonant noise") (_"Noise click") (_"Drip")
+) 0
 
 ;;control q "Noise click resonance - discernable pitch (q)" int "1 - 20" 1 1 20
 
-;control high "MIDI pitch of strong beat" int "18 - 116" 84 18 116
-;control low "MIDI pitch of weak beat" int "18 - 116" 80 18 116
+$control high (_"MIDI pitch of strong beat") int (_"18 - 116") 84 18 116
+$control low (_"MIDI pitch of weak beat") int (_"18 - 116") 80 18 116
 
 ;; allow q control to be commented out.
 (if (not (boundp 'q))
@@ -46,7 +48,7 @@
 
 (defun help1 ()
   (format nil
-"Rhythm Track Generator help - screen 1 of 2
+(_"Rhythm Track Generator help - screen 1 of 2
 
 Generates a rhythm track at the selected tempo, beats per
 measure, and either number of measures or track duration,
@@ -73,12 +75,12 @@ If you enter a value into this field, the 'number of measures'
 value will be ignored.
 
 To generate rhythm track or view help screen 2,
-restart Rhythm Track and select from 'Action choice'.")) ;end of help1
+restart Rhythm Track and select from 'Action choice'."))) ;end of help1
 
 
 (defun help2 ()
   (format nil
-"Rhythm Track Generator help - screen 2 of 2
+(_"Rhythm Track Generator help - screen 2 of 2
 
 'Start time offset': makes the rhythm track start at a later
 time than the very beginning (zero seconds), maximum
@@ -93,7 +95,7 @@ what pitch to use. C-notes are:
 C# (C-sharp) above middle C is 61.
 
 To generate rhythm track or view help screen 1,
-restart Rhythm Track and select from 'Action choice'.")) ;end of help 2
+restart Rhythm Track and select from 'Action choice'."))) ;end of help 2
 
 
 ;Check function: returns 1 on error
@@ -154,44 +156,44 @@ restart Rhythm Track and select from 'Action choice'.")) ;end of help 2
   ; tempo
   (if (= (check tempo 30 300) 1)
     (setq error-msg (strcat error-msg (format nil
-"Tempo ~a outside valid range 30 to 300 bpm
-" tempo))))
+(_"Tempo ~a outside valid range 30 to 300 bpm
+") tempo))))
 
   ;beats per measure
   (if (= (check timesig 1 20) 1)
     (setq error-msg (strcat error-msg (format nil
-"Beats per measure ~a outside valid range 1 to 20
-" timesig))))
+(_"Beats per measure ~a outside valid range 1 to 20
+") timesig))))
 
   ;number of measures
   (if (= (check measures 1 1000) 1)
     (setq error-msg (strcat error-msg (format nil
-"Number of measures ~a outside valid range 1 to 1000
-" measures))))
+(_"Number of measures ~a outside valid range 1 to 1000
+") measures))))
 
   ;time start offset
   (if (= (check offset 0 30) 1)
     (setq error-msg (strcat error-msg (format nil
-"Time offset ~a outside valid range 0 to 30 seconds
-" offset))))
+(_"Time offset ~a outside valid range 0 to 30 seconds
+") offset))))
 
   ; q
   (if (= (check q 1 20) 1)
     (setq error-msg (strcat error-msg (format nil
-"Filter quality q ~a outside valid range 1 to 20
-" q))))
+(_"Filter quality q ~a outside valid range 1 to 20
+") q))))
 
   ;high MIDI pitch
   (if (= (check high 18 116) 1)
     (setq error-msg (strcat error-msg (format nil
-"High MIDI pitch ~a outside valid range 18 to 116
-" high))))
+(_"High MIDI pitch ~a outside valid range 18 to 116
+") high))))
 
   ;low MIDI pitch
   (if (= (check low 18 116) 1)
     (setq error-msg (strcat error-msg (format nil
-"Low MIDI pitch ~a outside valid range 18 to 116
-" low))))
+(_"Low MIDI pitch ~a outside valid range 18 to 116
+") low))))
 
   ;validate string
   (if (> (length m-s) 0) ;if at least one item
@@ -201,16 +203,16 @@ restart Rhythm Track and select from 'Action choice'.")) ;end of help 2
         (not (integerp (first m-s))) ;first is not an integer or
         (and (= (length m-s) 2)(not (integerp (second m-s))))) ;second is not an integer
       (setq error-msg (strcat error-msg (format nil 
-"If used, 'Optional rhythm track duration' must be 
+(_"If used, 'Optional rhythm track duration' must be 
 entered as either one number (seconds0, or two 
 numbers (minutes seconds) separated by a space.
-Use whole numbers only.~%"))))
+Use whole numbers only.~%")))))
       ;one or two integers
       ((and 
           (= (length m-s) 1) ;one integer and
           (= (check (first m-s) 0 3660) 1)) ;outside valid range
         (setq error-msg (strcat error-msg (format nil 
-"~a seconds is outside valid range 0 to 3660~%" (first m-s)))))
+(_"~a seconds is outside valid range 0 to 3660~%") (first m-s)))))
       ;one or two integers
       ((and
         (= (length m-s) 2) ;2 integers and
@@ -218,7 +220,7 @@ Use whole numbers only.~%"))))
           (= (check (first m-s) 0 60) 1) ;1st is outside valid range or
           (= (check (second m-s) 0 59) 1))) ;2nd is outside valid range or
         (setq error-msg (strcat error-msg (format nil 
-"~a is outside valid range 0 to (60 59)~%"
+(_"~a is outside valid range 0 to (60 59)~%")
     m-s))))))) ;end of error checking
 
 (defun metronome-tick (hz peak)
@@ -364,4 +366,4 @@ Use whole numbers only.~%"))))
           (make-click-track measures (* timesig beatlen)))) ;click track
       ;Else error message
       (setq error-msg (strcat (format nil
-"Error.~%You have entered at least one invalid value:~%~%") error-msg)))))
+(_"Error.~%You have entered at least one invalid value:~%~%")) error-msg)))))

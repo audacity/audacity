@@ -1,20 +1,20 @@
 ;nyquist plug-in
 ;version 4
 ;type generate
-;name "Sample Data Import..."
+$name (_"Sample Data Import")
 ;manpage "Sample_Data_Import"
-;action "Reading and rendering samples..."
-;author "Steve Daulton"
-;copyright "Released under terms of the GNU General Public License version 2"
+$action (_"Reading and rendering samples...")
+$author (_"Steve Daulton")
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; sample-data-import.ny by Steve Daulton November 2016.
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 
-;control filename "File name" string "" "sample-data.txt"
-;control path "File location (path to file)" string "" "Home directory"
-;control bad-data "Invalid data handling" choice "Throw error,Read as zero" 0
+$control filename (_"File name") string "" "sample-data.txt"
+$control path (_"File location (path to file)") string "" "Home directory"
+$control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as zero")) 0
 
 
 ;; Documentation.
@@ -107,23 +107,25 @@
 (defun fileopensp (path fname)
   (let ((path (string-trim " " path)))
     (if (string-equal fname "")
-        (throw 'err "Error\nNo file name."))
+        (throw 'err (format nil (_"Error~%No file name."))))
     (if (string-not-equal fname ".txt" :start1 (- (length fname) 4))
-        (throw 'err "Error\nThe file must be a plain ASCII text file\nwith '.txt' file extension."))
+        (throw 'err (format nil (_"Error~%The file must be a plain ASCII text file~%with '.txt' file extension."))))
     ;; Handle special 'path' formats:
     (cond
       ; "~" without "/" is not recommended (or documented)
       ; but more user friendly to allow it.
       ((string= path "~")
           (if (windowsp)
-              "Error\n'~/' is not valid on Windows"
+	  ;i18n-hint: ~~ format directive must be preserved; displays as one ~
+              (format nil (_"Error~%'~~/' is not valid on Windows"))
               (setq path (home))))
       ;; replace "~/" on Linux/Mac
       ((and (>= (length path) 2) (string= path "~/" :end1 2))
           (if (windowsp)
-              "Error\n'~/' is not valid on Windows"
+	  ;i18n-hint: ~~ format directive must be preserved; displays as one ~
+              (format nil (_"Error~%'~~/' is not valid on Windows"))
               (setq path (strcat (home)(subseq path 1)))))
-      ((string-equal path "Home directory")
+      ((string-equal path (_"Home directory"))
           (setf path (home)))
       ;; If empty, use 'Home'
       ((string-equal path "")
@@ -131,26 +133,26 @@
     ;; Now check that the file can be opened:
     (cond
       ((not (setdir path))
-          (throw 'err (format nil "Error~%~
-                          Directory '~a' could not be opened." path)))
+          (throw 'err (format nil (_"Error~%~
+                          Directory '~a' could not be opened.") path)))
       ((not (setf fstream (open fname)))
-          (throw 'err (format nil "Error~%~
+          (throw 'err (format nil (_"Error~%~
                           '~a~a~a' could not be opened.~%~
-                          Check that file exists."
+                          Check that file exists.")
                           path *file-separator* fname)))
       ; File opened OK, so check for normal ASCII, then close it and return 'true'
       (t  (do ((j 0 (1+ j))(b (read-byte fstream)(read-byte fstream)))
               ((or (> j 100000)(not b)))
             (when (> b 127)
-              (throw 'err (format nil "Error:~%~
+              (throw 'err (format nil (_"Error:~%~
                 The file must contain only plain ASCII text.~%~
-                (Invalid byte '~a' at byte number: ~a)" b (1+ j) ))))
+                (Invalid byte '~a' at byte number: ~a)") b (1+ j) ))))
           (close fstream)
           t))))
 
 ;; ':new' creates a new class 'streamreader'
 ;; 'filestream' and 'chanel' are its instance variables.
-;; (every objet of class 'streamreader' has it's own
+;; (every object of class 'streamreader' has its own
 ;; copy of these variables)
 (setq streamreader
   (send class :new '(filestream chanel)))
@@ -183,9 +185,9 @@
       ((not val) nil) ;end of file
       ((numberp val)  (float val)) ;valid.
       ((= bad-data 0) ;invalid. Throw error and quit
-          (throw 'err (format nil "Error~%~
+          (throw 'err (format nil (_"Error~%~
               Data must be numbers in plain ASCII text.~%~
-              '~a' is not a numeric value." val)))
+              '~a' is not a numeric value.") val)))
       (t  0.0)))) ;invalid. Replace with zero.
 
 ;; Instantiate a new sound object
@@ -195,7 +197,7 @@
 (defun sound-from-file (filename)
   ;; Set path. fileopenp should return 'true'
   (if (not (fileopensp path filename))
-      (throw 'err "Error.\nUnable to open file"))
+      (throw 'err (format nil (_"Error.~%Unable to open file"))))
   ; Note: we can't use (arrayp *track*) because
   ; *track* is nil in generate type plug-ins.
   (cond 

@@ -708,6 +708,7 @@ AC_CONFIG_FILES([
    images/Makefile
    lib-src/Makefile
    po/Makefile.in
+   nyq-po/Makefile.in
    src/audacity.desktop
    src/Makefile
    tests/Makefile

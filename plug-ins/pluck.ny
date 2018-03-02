@@ -2,21 +2,21 @@
 ;version 4
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
-;name "Pluck..."
+$name (_"Pluck")
 ;manpage "Pluck"
 ;debugbutton false
 ;preview linear
-;action "Generating pluck sound..."
-;info "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-;author "David R.Sky"
-;copyright "Released under terms of the GNU General Public License version 2"
+$action (_"Generating pluck sound...")
+$info (_"MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96.")
+$author (_"David R.Sky")
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
-;control pitch "Pluck MIDI pitch" int "" 60 1 120
-;control fade "Fade-out type" choice "abrupt,gradual" 0
-;control dur "Duration [seconds]" real "" 1 0.1 30
+$control pitch (_"Pluck MIDI pitch") int "" 60 1 120
+$control fade (_"Fade-out type") choice ((_"abrupt") (_"gradual")) 0
+$control dur (_"Duration [seconds]") real "" 1 0.1 30
 
 ; original pluck.ny modified by David R.Sky October 2007
 ; [vastly simplified later]

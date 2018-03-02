@@ -1,11 +1,11 @@
 ;nyquist plug-in
 ;version 4
 ;type process spectral
-;name "Spectral edit multi tool"
+$name (_"Spectral edit multi tool")
 ;manpage "Spectral_edit_multi_tool"
-;action "Filtering..."
-;author "Paul Licameli"
-;copyright "Released under terms of the GNU General Public License version 2"
+$action (_"Filtering...")
+$author (_"Paul Licameli")
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; SpectralEditMulti.ny by Paul Licameli, November 2014.
 ;; Updated by Steve Daulton 2014 / 2015.
@@ -33,20 +33,21 @@
         (env (snd-pwl 0.0 rate breakpoints)))
     (cond
       ((not (or f0 f1)) ; This should never happen for a 'spectral' effect.
-        (throw 'error-message "Please select frequencies."))
+        (throw 'error-message
+	  (format nil (_"~aPlease select frequencies.") p-err)))
       ((and f0 f1 (= f0 f1))
         (throw 'error-message
-          (format nil "~aBandwidth is zero (the upper and lower~%~
+          (format nil (_"~aBandwidth is zero (the upper and lower~%~
                        frequencies are both ~a Hz).~%~
-                       Please select a frequency range."
+                       Please select a frequency range.")
                   p-err f0)))
       ;; Biqud filter fails if centre frequency is very low and bandwidth very high.
       ;; 'Magic numbers' 10 Hz and 10 octaves are experimental.
       ((and f0 (< f0 10) (or (not bw)(> bw 10)))
         (throw 'error-message
-          (format nil "~aNotch filter parameters cannot be applied.~%~
+          (format nil (_"~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
-                      or reduce the filter 'Width'."
+                      or reduce the filter 'Width'.")
                   p-err)))
       ;; low pass frequency is above Nyquist so do nothing
       ((and (not f1) (>= f0 (/ *sound-srate* 2.0)))
@@ -61,5 +62,5 @@
                (prod (diff 1.0 env) sig))))))
 
 (catch 'error-message
-  (setf p-err "Error.\n")
+  (setf p-err (format nil (_"Error.~%")))
   (multichan-expand #'result *track*))

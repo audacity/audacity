@@ -3,11 +3,12 @@
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;preview linear
-;name "Risset Drum..."
+;i18n-hint named for Jean-Claude Risset (silent t)
+$name (_"Risset Drum")
 ;manpage "Risset_Drum"
-;action "Generating Risset Drum..."
-;author "Steven Jones"
-;copyright "Released under terms of the GNU General Public License version 2"
+$action (_"Generating Risset Drum...")
+$author (_"Steven Jones")
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; rissetdrum.ny by Steven Jones, after Jean Claude Risset.
 ;; Updated by Steve Daulton July 2012 and May 2015.
@@ -17,12 +18,12 @@
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control freq "Frequency (Hz)" real "" 100 50 2000
-;control decay "Decay (seconds)" real "" 2 0.1 60
-;control cf "Center frequency of noise (Hz)" real "" 500 100 5000
-;control bw "Width of noise band (Hz)" real "" 400 10 1000
-;control noise "Amount of noise in mix (percent)" real "" 25 0 100
-;control gain "Amplitude (0 - 1)" real "" 0.8 0 1
+$control freq (_"Frequency (Hz)") real "" 100 50 2000
+$control decay (_"Decay (seconds)") real "" 2 0.1 60
+$control cf (_"Center frequency of noise (Hz)") real "" 500 100 5000
+$control bw (_"Width of noise band (Hz)") real "" 400 10 1000
+$control noise (_"Amount of noise in mix (percent)") real "" 25 0 100
+$control gain (_"Amplitude (0 - 1)") real "" 0.8 0 1
 
 
 (defun sanitise (val minx maxx)
