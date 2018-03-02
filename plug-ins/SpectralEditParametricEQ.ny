@@ -2,7 +2,7 @@
 ;version 4
 ;type process spectral
 ;preview linear
-$name (_"Spectral edit parametric EQ...")
+$name (_"Spectral edit parametric EQ")
 ;manpage "Spectral_edit_parametric_EQ"
 $action (_"Filtering...")
 $author (_"Paul Licameli")

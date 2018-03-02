@@ -4,7 +4,7 @@
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;preview linear
 ;i18n-hint named for Jean-Claude Risset (silent t)
-$name (_"Risset Drum...")
+$name (_"Risset Drum")
 ;manpage "Risset_Drum"
 $action (_"Generating Risset Drum...")
 $author (_"Steven Jones")

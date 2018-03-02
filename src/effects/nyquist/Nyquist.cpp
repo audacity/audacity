@@ -1726,8 +1726,6 @@ bool NyquistEffect::Parse(
 
    if (len >= 2 && tokens[0] == wxT("name")) {
       mName = UnQuote(tokens[1]);
-      if (mName.EndsWith(wxT("...")))
-         mName = mName.RemoveLast(3);
       return true;
    }
 

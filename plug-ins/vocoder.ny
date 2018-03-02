@@ -3,7 +3,7 @@
 ;type process
 ;preview enabled
 ;categories "http://lv2plug.in/ns/lv2core#SpectralPlugin"
-$name (_"Vocoder...")
+$name (_"Vocoder")
 ;manpage "Vocoder"
 $action (_"Processing Vocoder...")
 $author (_"Edgar-RFT")

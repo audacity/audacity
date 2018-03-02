@@ -2,7 +2,7 @@
 ;version 4
 ;type process
 ;preview linear
-$name (_"Vocal Remover...")
+$name (_"Vocal Remover")
 ;manpage "Vocal_Remover"
 $action (_"Removing center-panned audio...")
 $info (_"For reducing center-panned vocals")

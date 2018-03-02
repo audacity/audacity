@@ -2,7 +2,7 @@
 ;version 4
 ;type process
 ;preview enabled
-$name (_"Clip Fix...")
+$name (_"Clip Fix")
 ;manpage "Clip_Fix"
 $action (_"Reconstructing clips...")
 $author (_"Benjamin Schwartz and Steve Daulton")

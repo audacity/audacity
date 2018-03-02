@@ -2,7 +2,7 @@
 ;version 4
 ;type process
 ;preview linear
-$name (_"Notch Filter...")
+$name (_"Notch Filter")
 ;manpage "Notch_Filter"
 ;debugbutton false
 $action (_"Applying Notch Filter...")

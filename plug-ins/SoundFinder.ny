@@ -2,7 +2,7 @@
 ;version 1
 ;type analyze
 ;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
-$name (_"Sound Finder...")
+$name (_"Sound Finder")
 ;manpage "Sound_Finder"
 $action (_"Finding sound...")
 $info (_"Adds region labels for areas of sound according to the specified level\nand duration of surrounding silence. If too many labels are produced,\nincrease the silence level and duration; if too few are produced,\nreduce the level and duration.")

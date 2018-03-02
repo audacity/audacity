@@ -2,7 +2,7 @@
 ;version 4
 ;type process
 ;categories "http://lv2plug.in/ns/lv2core/#DynamicsPlugin"
-$name (_"Limiter...")
+$name (_"Limiter")
 ;manpage "Limiter"
 ;debugbutton false
 $action (_"Limiting...")

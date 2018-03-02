@@ -3,7 +3,7 @@
 ;type process
 ;preview linear
 ;categories "http://lv2plug.in/ns/lv2core#ModulatorPlugin"
-$name (_"Tremolo...")
+$name (_"Tremolo")
 ;manpage "Tremolo"
 ;debugbutton disabled
 $action (_"Applying Tremolo...")

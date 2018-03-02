@@ -2,7 +2,7 @@
 ;version 4
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
-$name (_"Pluck...")
+$name (_"Pluck")
 ;manpage "Pluck"
 ;debugbutton false
 ;preview linear

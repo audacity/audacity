@@ -2,7 +2,7 @@
 ;version 4
 ;type process spectral
 ;preview linear
-$name (_"Spectral edit shelves...")
+$name (_"Spectral edit shelves")
 ;manpage "Spectral_edit_shelves"
 $action (_"Filtering...")
 $author (_"Paul Licameli")

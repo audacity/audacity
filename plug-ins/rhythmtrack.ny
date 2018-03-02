@@ -2,7 +2,7 @@
 ;version 4
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
-$name (_"Rhythm Track...")
+$name (_"Rhythm Track")
 ;manpage "Rhythm_Track"
 ;preview linear
 $action (_"Generating Rhythm...")
