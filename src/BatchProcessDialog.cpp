@@ -199,6 +199,9 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
    pD->Move(wxMax(0,x-300), 0);
    pD->Show();
 
+   // Without this the newly created dialog may not show completely.
+   wxYield();
+
    // The Hide() on the next line seems to tickle a bug in wx3,
    // giving rise to our Bug #1221.  The problem is that on Linux 
    // the 'Hide' converts us from a Modal into a regular dialog,
