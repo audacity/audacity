@@ -107,21 +107,23 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
 (defun fileopensp (path fname)
   (let ((path (string-trim " " path)))
     (if (string-equal fname "")
-        (throw 'err (_"Error\nNo file name.")))
+        (throw 'err (format nil (_"Error~%No file name."))))
     (if (string-not-equal fname ".txt" :start1 (- (length fname) 4))
-        (throw 'err (_"Error\nThe file must be a plain ASCII text file\nwith '.txt' file extension.")))
+        (throw 'err (format nil (_"Error~%The file must be a plain ASCII text file~%with '.txt' file extension."))))
     ;; Handle special 'path' formats:
     (cond
       ; "~" without "/" is not recommended (or documented)
       ; but more user friendly to allow it.
       ((string= path "~")
           (if (windowsp)
-              (_"Error\n'~/' is not valid on Windows")
+	  ;i18n-hint: ~~ format directive must be preserved; displays as one ~
+              (format nil (_"Error~%'~~/' is not valid on Windows"))
               (setq path (home))))
       ;; replace "~/" on Linux/Mac
       ((and (>= (length path) 2) (string= path "~/" :end1 2))
           (if (windowsp)
-              (_"Error\n'~/' is not valid on Windows")
+	  ;i18n-hint: ~~ format directive must be preserved; displays as one ~
+              (format nil (_"Error~%'~~/' is not valid on Windows"))
               (setq path (strcat (home)(subseq path 1)))))
       ((string-equal path (_"Home directory"))
           (setf path (home)))
@@ -195,7 +197,7 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
 (defun sound-from-file (filename)
   ;; Set path. fileopenp should return 'true'
   (if (not (fileopensp path filename))
-      (throw 'err (_"Error.\nUnable to open file")))
+      (throw 'err (format nil (_"Error.~%Unable to open file"))))
   ; Note: we can't use (arrayp *track*) because
   ; *track* is nil in generate type plug-ins.
   (cond 

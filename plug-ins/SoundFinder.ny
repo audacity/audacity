@@ -5,7 +5,10 @@
 $name (_"Sound Finder")
 ;manpage "Sound_Finder"
 $action (_"Finding sound...")
-$info (_"Adds region labels for areas of sound according to the specified level\nand duration of surrounding silence. If too many labels are produced,\nincrease the silence level and duration; if too few are produced,\nreduce the level and duration.")
+$info (_"Adds region labels for areas of sound according to the specified level
+and duration of surrounding silence. If too many labels are produced,
+increase the silence level and duration; if too few are produced,
+reduce the level and duration.")
 $author (_"Jeremy R. Brown")
 $copyright (_"Released under terms of the GNU General Public License version 2")
 
@@ -149,7 +152,7 @@ s-in))
 ;If no sound markers were found, return a message
 ;Otherwise, if some sounds were found, also optionally place a label at the end of the file.
 (if (null l)
- (setq l (_"No sounds found. Try reducing the silence\nlevel and minimum silence duration."))
+ (setq l (format nil (_"No sounds found. Try reducing the silence~%level and minimum silence duration.")))
  (if (= finallabel 1) (add-label (/ s1-length s1-srate) (/ s1-length s1-srate) (_"[End]")))
 )
 l

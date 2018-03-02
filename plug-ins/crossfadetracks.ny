@@ -72,5 +72,5 @@ audio clip, fade in, otherwise fade out."
     (if (< in-dist out-dist) 'in 'out)))
 
 (if (< (length (get '*selection* 'tracks)) 2)
-    (_"Error.\nSelect 2 (or more) tracks to crossfade.")
+    (format nil (_"Error.~%Select 2 (or more) tracks to crossfade."))
     (crossfade type direction curve))

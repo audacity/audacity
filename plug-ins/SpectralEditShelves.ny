@@ -67,7 +67,7 @@ $control control-gain (_"Gain (dB)") real "" 0 -24 24
                   (prod (diff 1.0 env) sig)))))))
 
 (catch 'error-message
-  (setf p-err (_"Error.\n"))
+  (setf p-err (format nil (_"Error.~%")))
   (if (= control-gain 0)
       nil ; Do nothing
       (multichan-expand #'result *track*)))

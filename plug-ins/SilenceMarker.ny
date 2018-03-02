@@ -5,7 +5,10 @@
 $name (_"Silence Finder")
 ;manpage "Silence_Finder"
 $action (_"Finding silence...")
-$info (_"Adds point labels in areas of silence according to the specified\nlevel and duration of silence. If too many silences are detected,\nincrease the silence level and duration; if too few are detected,\nreduce the level and duration.")
+$info (_"Adds point labels in areas of silence according to the specified
+level and duration of silence. If too many silences are detected,
+increase the silence level and duration; if too few are detected,
+reduce the level and duration.")
 $author (_"Alex S. Brown")
 $copyright (_"Released under terms of the GNU General Public License version 2")
 
@@ -111,6 +114,6 @@ s-in))
 
 ;If no silence markers were found, return a message
 (if (null l)
- (setq l (_"No silences found. Try reducing the silence\nlevel and minimum silence duration."))
+ (setq l (format nil (_"No silences found. Try reducing the silence~%level and minimum silence duration.")))
 )
 l

@@ -23,7 +23,8 @@ $control curve (_"Mid-fade Adjust (%)") real "" 0 -100 100
 $control units (_"Start/End as") choice ((_"% of Original") (_"dB Gain")) 0 
 $control gain0 (_"Start (or end)") float-text "" 0 nil nil
 $control gain1 (_"End (or start)") float-text "" 100 nil nil
-$control preset (_"   Handy Presets\n(override controls)") choice (
+$control preset (_"   Handy Presets
+(override controls)") choice (
    (_"None Selected")
    (_"Linear In") (_"Linear Out")
    (_"Exponential In") (_"Exponential Out")
@@ -192,7 +193,7 @@ selection length, but preview only needs to process preview length."
 (setf curve (/ curve 100.0))
 (setf gain0 (gainscale gain0 units))
 (setf gain1 (gainscale gain1 units))
-(setf err (_"Error\n\n"))
+(setf err (format nil (_"Error~%~%")))
 
 
 (catch 'err (fade *track* type curve gain0 gain1))

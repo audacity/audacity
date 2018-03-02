@@ -62,5 +62,5 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
                (prod (diff 1.0 env) sig))))))
 
 (catch 'error-message
-  (setf p-err (_"Error.\n"))
+  (setf p-err (format nil (_"Error.~%")))
   (multichan-expand #'result *track*))

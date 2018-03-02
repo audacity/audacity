@@ -39,7 +39,7 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 
 (let ((dur (get-duration 1)))
   (cond
-    ((< len 3) (_"Selection too short.\nIt must be more than 2 samples."))
+    ((< len 3) (format nil (_"Selection too short.~%It must be more than 2 samples.")))
     ((< dur 0.2) (mult s (r-cos dur)))
     (t (mult (filter s dur)(r-cos dur)))))
   

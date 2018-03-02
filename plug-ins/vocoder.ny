@@ -136,4 +136,4 @@ $control radar-f (_"Frequency of Radar Needles (Hz)") real "" 30 1 100
           (0 s)             ; let Audacity coerce back to stereo
           (1 (vector original s)))))
  (t                         ; this effect isn't meant for mono
-  (_"Error.\nStereo track required.")))
+  (format nil (_"Error.~%Stereo track required."))))

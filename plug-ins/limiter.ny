@@ -18,8 +18,10 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 $control type (_"Type") choice ((_"Soft Limit") (_"Hard Limit") (_"Soft Clip") (_"Hard Clip")) 0
-$control gain-L (_"Input Gain (dB)\nmono/Left") real "" 0 0 10
-$control gain-R (_"Input Gain (dB)\nRight channel") real "" 0 0 10
+$control gain-L (_"Input Gain (dB)
+mono/Left") real "" 0 0 10
+$control gain-R (_"Input Gain (dB)
+Right channel") real "" 0 0 10
 $control thresh (_"Limit to (dB)") real "" -3 -10 0
 $control hold (_"Hold (ms)") real "" 10 1 50
 $control makeup (_"Apply Make-up Gain") choice ((_"No") (_"Yes")) 0

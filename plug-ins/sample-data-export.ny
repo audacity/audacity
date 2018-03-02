@@ -582,14 +582,14 @@ Daulton") " (<a href=
   (putprop 'info
     (cond
       ((and (= fileformat 3)(= chan 0))     ; csv, channel in column
-        (_"One column per channel.\n"))
+        (format nil (_"One column per channel.~%")))
       ((and (= fileformat 3)(= chan 2))     ; csv, channel in row
-        (_"One row per channel.\n"))
+        (format nil (_"One row per channel.~%")))
       ((or (soundp s)(= fileformat 4))      ; mono soundor HTML
         "")
-      ((= chan 0) (_"Left channel then Right channel on same line.\n"))
-      ((= chan 1) (_"Left and right channels on alternate lines.\n"))
-      ((= chan 2) (_"Left channel first then right channel.\n"))
+      ((= chan 0) (format nil (_"Left channel then Right channel on same line.~%")))
+      ((= chan 1) (format nil (_"Left and right channels on alternate lines.~%")))
+      ((= chan 2) (format nil (_"Left channel first then right channel.~%")))
       (T (_"Unspecified channel order")))
     'chan-order))
 
