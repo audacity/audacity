@@ -903,33 +903,10 @@ void EditChainsDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 
 /// An item in the list has been selected.
 /// Bring up a dialog to allow its parameters to be edited.
-void EditChainsDialog::OnCommandActivated(wxListEvent &event)
+void EditChainsDialog::OnCommandActivated(wxListEvent & WXUNUSED(event))
 {
    wxCommandEvent dummy;
    OnEditCommandParams( dummy );
-
-#if 0
-   int item = event.GetIndex();
-
-   BatchCommandDialog d(this, wxID_ANY);
-   d.SetCommandAndParams(mBatchCommands.GetCommand(item),
-                         mBatchCommands.GetParams(item));
-
-   if (!d.ShowModal()) {
-      return;
-   }
-
-   mBatchCommands.DeleteFromChain(item);
-   mBatchCommands.AddToChain(d.mSelectedCommand,
-                             d.mSelectedParameters,
-                             item);
-
-   mChanged = true;
-
-   mSelectedCommand = item;
-
-   PopulateList();
-#endif
 }
 
 ///

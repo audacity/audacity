@@ -4490,14 +4490,12 @@ void AudacityProject::InitialState()
 
 bool AudacityProject::UndoAvailable()
 {
-   auto trackList = GetTracks();
    return GetUndoManager()->UndoAvailable() &&
       !GetTracks()->HasPendingTracks();
 }
 
 bool AudacityProject::RedoAvailable()
 {
-   auto trackList = GetTracks();
    return GetUndoManager()->RedoAvailable() &&
       !GetTracks()->HasPendingTracks();
 }

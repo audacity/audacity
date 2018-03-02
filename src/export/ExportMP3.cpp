@@ -1810,7 +1810,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    bool endOfFile;
    id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
-      if (id3len > outFile.Write(id3buffer.get(), id3len)) {
+      if (id3len > (int)outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
          AudacityMessageBox(_("Unable to export"));
          return ProgressResult::Cancelled;
@@ -1897,7 +1897,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         if (bytes > outFile.Write(buffer.get(), bytes)) {
+         if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
@@ -1919,7 +1919,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       }
 
       if (bytes > 0) {
-         if (bytes > outFile.Write(buffer.get(), bytes)) {
+         if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             return ProgressResult::Cancelled;
@@ -1928,7 +1928,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
       // Write ID3 tag if it was supposed to be at the end of the file
       if (id3len > 0 && endOfFile) {
-         if (bytes > outFile.Write(id3buffer.get(), id3len)) {
+         if (bytes > (int)outFile.Write(id3buffer.get(), id3len)) {
             // TODO: more precise message
             AudacityMessageBox(_("Unable to export"));
             return ProgressResult::Cancelled;

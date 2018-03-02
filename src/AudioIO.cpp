@@ -1872,7 +1872,7 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    mLostSamples = 0;
    mLostCaptureIntervals.clear();
    mDetectDropouts =
-      gPrefs->Read( WarningDialogKey(wxT("DropoutDetected")), (long)true );
+      gPrefs->Read( WarningDialogKey(wxT("DropoutDetected")), true ) != 0;
    auto cleanup = finally ( [this] { ClearRecordingException(); } );
 
    if( IsBusy() )
