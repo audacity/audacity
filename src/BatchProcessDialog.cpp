@@ -699,6 +699,14 @@ void EditChainsDialog::AddItem(const wxString &Action, const wxString &Params)
    mList->SetItem(i, ParamsColumn, Params );
 }
 
+void EditChainsDialog::UpdateMenus()
+{
+// Mac won't tolerate a menus update during a modal dialog.
+#ifndef __WXMAC__
+   GetActiveProject()->RebuildMenuBar();
+#endif
+}
+
 bool EditChainsDialog::ChangeOK()
 {
    if (mChanged) {
@@ -879,6 +887,7 @@ void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
       mActiveChain = name;
 
       PopulateChains();
+      UpdateMenus();
 
       break;
    }
@@ -913,6 +922,7 @@ void EditChainsDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    mActiveChain = mChains->GetItemText(item);
 
    PopulateChains();
+   UpdateMenus();
 }
 
 ///
@@ -926,6 +936,7 @@ void EditChainsDialog::OnRename(wxCommandEvent & WXUNUSED(event))
    }
 
    mChains->EditLabel(item);
+   UpdateMenus();
 }
 
 /// An item in the list has been selected.

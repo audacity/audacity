@@ -90,6 +90,7 @@ private:
    void PopulateList();
    void AddItem(const wxString &command, wxString const &params);
    bool ChangeOK();
+   void UpdateMenus();
 
    void OnChainSelected(wxListEvent &event);
    void OnListSelected(wxListEvent &event);
