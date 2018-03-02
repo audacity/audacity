@@ -15,7 +15,7 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control freq "Frequency (Hz)" real "" 100 50 2000
 ;control decay "Decay (seconds)" real "" 2 0.1 60

@@ -65,18 +65,19 @@ BEGIN_EVENT_TABLE(BatchProcessDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_CANCEL, BatchProcessDialog::OnCancel)
 END_EVENT_TABLE()
 
-BatchProcessDialog::BatchProcessDialog(wxWindow * parent):
+BatchProcessDialog::BatchProcessDialog(wxWindow * parent, bool bInherited):
    wxDialogWrapper(parent, wxID_ANY, _("Apply Chain"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    //AudacityProject * p = GetActiveProject();
-
+   mAbort = false;
+   if( bInherited )
+      return;
    SetLabel(_("Apply Chain"));         // Provide visual label
    SetName(_("Apply Chain"));          // Provide audible label
    Populate();
 
-   mAbort = false;
 }
 
 BatchProcessDialog::~BatchProcessDialog()
@@ -110,8 +111,10 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
-         S.Id(ApplyToProjectID).AddButton(_("Apply to Current &Project"));
-         S.Id(ApplyToFilesID).AddButton(_("Apply to &Files..."));
+         S.AddPrompt( _("Apply Chain to:") );
+         S.Id(ApplyToProjectID).AddButton(_("&Project"));
+         S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+         S.AddSpace( 40 );
          S.Id(wxID_CANCEL).AddButton(_("&Cancel"));
       }
       S.EndHorizontalLay();
@@ -422,21 +425,25 @@ void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 #include "BatchCommandDialog.h"
 
 enum {
-// ChainsListID             7005
    AddButtonID = 10000,
    RemoveButtonID,
-// CommandsListID,       7002
    ImportButtonID,
    ExportButtonID,
    DefaultsButtonID,
    InsertButtonID,
+   EditButtonID,
    DeleteButtonID,
    UpButtonID,
    DownButtonID,
-   RenameButtonID
+   RenameButtonID,
+// ChainsListID             7005
+// CommandsListID,       7002
+// Re-Use IDs from BatchProcessDialog.
+   ApplyToProjectButtonID = ApplyToProjectID,
+   ApplyToFilesButtonID = ApplyToFilesID,
 };
 
-BEGIN_EVENT_TABLE(EditChainsDialog, wxDialogWrapper)
+BEGIN_EVENT_TABLE(EditChainsDialog, BatchProcessDialog)
    EVT_LIST_ITEM_SELECTED(ChainsListID, EditChainsDialog::OnChainSelected)
    EVT_LIST_ITEM_SELECTED(CommandsListID, EditChainsDialog::OnListSelected)
    EVT_LIST_BEGIN_LABEL_EDIT(ChainsListID, EditChainsDialog::OnChainsBeginEdit)
@@ -448,6 +455,7 @@ BEGIN_EVENT_TABLE(EditChainsDialog, wxDialogWrapper)
 
    EVT_LIST_ITEM_ACTIVATED(CommandsListID, EditChainsDialog::OnCommandActivated)
    EVT_BUTTON(InsertButtonID, EditChainsDialog::OnInsert)
+   EVT_BUTTON(EditButtonID, EditChainsDialog::OnEditCommandParams)
    EVT_BUTTON(DeleteButtonID, EditChainsDialog::OnDelete)
    EVT_BUTTON(UpButtonID, EditChainsDialog::OnUp)
    EVT_BUTTON(DownButtonID, EditChainsDialog::OnDown)
@@ -468,12 +476,11 @@ enum {
 
 /// Constructor
 EditChainsDialog::EditChainsDialog(wxWindow * parent):
-   wxDialogWrapper(parent, wxID_ANY, _("Edit Chains"),
-            wxDefaultPosition, wxDefaultSize,
-            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+   BatchProcessDialog(parent, true)
 {
    SetLabel(_("Edit Chains"));         // Provide visual label
    SetName(_("Edit Chains"));          // Provide audible label
+   SetTitle(_("Edit Chains"));
 
    mChanged = false;
    mSelectedCommand = 0;
@@ -555,35 +562,52 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("C&hain (Double-Click or press SPACE to edit)"), true);
+      S.StartVerticalLay( 1 );
       {
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
-                    wxLC_SINGLE_SEL);
-         mList = S.Id(CommandsListID).AddListControlReportMode();
-
-         //An empty first column is a workaround - under Win98 the first column
-         //can't be right aligned.
-         mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
-         /* i18n-hint: This is the number of the command in the list */
-         mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
-         mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
-         mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
-
-         S.StartHorizontalLay(wxCENTER, false);
+         S.StartStatic(_("C&hain (Double-Click or press SPACE to edit)"), true);
          {
-            S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
-            S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
-            S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
-            S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
-            mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
+            S.StartHorizontalLay(wxEXPAND,1);
+            {
+            
+               S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
+                          wxLC_SINGLE_SEL);
+               mList = S.Id(CommandsListID).AddListControlReportMode();
+
+               //An empty first column is a workaround - under Win98 the first column
+               //can't be right aligned.
+               mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
+               /* i18n-hint: This is the number of the command in the list */
+               mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
+               mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
+               mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
+
+               S.StartVerticalLay(0);
+               {
+                  S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
+                  S.Id(EditButtonID).AddButton(_("&Edit"), wxALIGN_LEFT);
+                  S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
+                  S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
+                  S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
+                  mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
+               }
+               S.EndVerticalLay();
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndStatic();
+         S.StartHorizontalLay(wxALIGN_RIGHT, false);
+         {
+            S.AddPrompt( _("Apply Chain to:") );
+            S.Id(ApplyToProjectButtonID).AddButton(_("&Project"), wxALIGN_LEFT);
+            S.Id(ApplyToFilesButtonID).AddButton(_("&Files..."), wxALIGN_LEFT);
+            S.AddSpace( 40 );
+            S.AddStandardButtons();
          }
          S.EndHorizontalLay();
       }
-      S.EndStatic();
+      S.EndVerticalLay();
    }
    S.EndHorizontalLay();
-
-   S.AddStandardButtons();
 
    return;
 }
@@ -633,11 +657,11 @@ void EditChainsDialog::AddItem(const wxString &Action, const wxString &Params)
 {
    // Translate internal command name to a friendly form
    auto item = make_iterator_range(mCommandNames).index_if(
-      [&](const CommandName &name){ return Action == name.second; }
+      [&](const CommandName &name){ return Action == std::get<1>(name); }
    );
    auto friendlyName = item >= 0
       ? // wxGetTranslation
-                           ( mCommandNames[item].first )
+      std::get<0>( mCommandNames[item] )
       : Action;
 
    int i = mList->GetItemCount();
@@ -881,6 +905,10 @@ void EditChainsDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 /// Bring up a dialog to allow its parameters to be edited.
 void EditChainsDialog::OnCommandActivated(wxListEvent &event)
 {
+   wxCommandEvent dummy;
+   OnEditCommandParams( dummy );
+
+#if 0
    int item = event.GetIndex();
 
    BatchCommandDialog d(this, wxID_ANY);
@@ -901,6 +929,7 @@ void EditChainsDialog::OnCommandActivated(wxListEvent &event)
    mSelectedCommand = item;
 
    PopulateList();
+#endif
 }
 
 ///
@@ -909,6 +938,14 @@ void EditChainsDialog::OnInsert(wxCommandEvent & WXUNUSED(event))
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
                                   wxLIST_STATE_SELECTED);
+   if (item == -1) {
+      item = mList->GetItemCount()-1;
+   }
+   InsertCommandAt( item );
+}
+
+void EditChainsDialog::InsertCommandAt(int item)
+{
    if (item == -1) {
       return;
    }
@@ -925,11 +962,40 @@ void EditChainsDialog::OnInsert(wxCommandEvent & WXUNUSED(event))
                                 d.mSelectedParameters,
                                 item);
       mChanged = true;
-
       mSelectedCommand = item + 1;
-
       PopulateList();
    }
+}
+
+void EditChainsDialog::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
+{
+   int item = mList->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+
+   // LAST command in list is END.
+   // If nothing selected, add at END.
+   // If END selected, add at END.
+   // When adding at end we use InsertCommandAt, so that a new command
+   // can be chosen.
+   int lastItem = mList->GetItemCount()-1;
+   if( (item<0) || (item+1) == mList->GetItemCount() )
+   {
+      InsertCommandAt( lastItem );
+      return;
+   }
+
+   // Just edit the parameters, and not the command.
+   wxString command = mBatchCommands.GetCommand(item);
+   wxString params  = mBatchCommands.GetParams(item);
+
+   params = BatchCommands::PromptForParamsFor(command, params, this).Trim();
+
+   mBatchCommands.DeleteFromChain(item);
+   mBatchCommands.AddToChain(command,
+                             params,
+                             item);
+   mChanged = true;
+   mSelectedCommand = item;
+   PopulateList();
 }
 
 ///
@@ -943,15 +1009,12 @@ void EditChainsDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    }
 
    mBatchCommands.DeleteFromChain(item);
-
    mChanged = true;
 
    if (item >= (mList->GetItemCount() - 2) && item >= 0) {
       item--;
    }
-
    mSelectedCommand = item;
-
    PopulateList();
 }
 
@@ -969,11 +1032,8 @@ void EditChainsDialog::OnUp(wxCommandEvent & WXUNUSED(event))
                              mBatchCommands.GetParams(item),
                              item - 1);
    mBatchCommands.DeleteFromChain(item + 1);
-
    mChanged = true;
-
    mSelectedCommand = item - 1;
-
    PopulateList();
 }
 
@@ -991,12 +1051,23 @@ void EditChainsDialog::OnDown(wxCommandEvent & WXUNUSED(event))
                              mBatchCommands.GetParams(item),
                              item + 2);
    mBatchCommands.DeleteFromChain(item);
-
    mChanged = true;
-
    mSelectedCommand = item + 1;
-
    PopulateList();
+}
+
+void EditChainsDialog::OnApplyToProject(wxCommandEvent & event)
+{
+   if( !SaveChanges() )
+      return;
+   BatchProcessDialog::OnApplyToProject( event );
+}
+
+void EditChainsDialog::OnApplyToFiles(wxCommandEvent & event)
+{
+   if( !SaveChanges() )
+      return;
+   BatchProcessDialog::OnApplyToFiles( event );
 }
 
 /// Select the empty Command chain.
@@ -1009,29 +1080,35 @@ void EditChainsDialog::OnDefaults(wxCommandEvent & WXUNUSED(event))
    PopulateList();
 }
 
-/// Send changed values back to Prefs, and update Audacity.
-void EditChainsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
-{
+bool EditChainsDialog::SaveChanges(){
    gPrefs->Write(wxT("/Batch/ActiveChain"), mActiveChain);
    gPrefs->Flush();
 
    if (mChanged) {
       if (!mBatchCommands.WriteChain(mActiveChain)) {
-         return;
+         return false;
       }
    }
+   mChanged = false;
+   return true;
+}
 
+/// Send changed values back to Prefs, and update Audacity.
+void EditChainsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
+{
+   if( !SaveChanges() )
+      return;
    EndModal(true);
 }
 
 ///
-void EditChainsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
+void EditChainsDialog::OnCancel(wxCommandEvent & event)
 {
    if (!ChangeOK()) {
       return;
    }
-
-   EndModal(false);
+   BatchProcessDialog::OnCancel( event );
+   //EndModal(false);
 }
 
 ///

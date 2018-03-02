@@ -822,7 +822,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowClipping"), _("&Show Clipping (on/off)"), FN(OnShowClipping),
          gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag, AlwaysEnabledFlag);
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-      c->AddCheck(wxT("ShowEffectsRack"), _("Show EffectsRack"), FN(OnShowEffectsRack), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowEffectsRack"), _("Show Effects Rack"), FN(OnShowEffectsRack), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
 
 
@@ -1230,8 +1230,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("QuickHelp"), _("&Getting Started"), FN(OnQuickHelp));
       c->AddItem(wxT("Manual"), wxT("Audacity &Manual"), FN(OnManual));
 #else
-      c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
-      c->AddItem(wxT("Manual"), _("&Manual"), FN(OnManual));
+      c->AddItem(wxT("QuickHelp"), _("&Quick Help..."), FN(OnQuickHelp));
+      c->AddItem(wxT("Manual"), _("&Manual..."), FN(OnManual));
 #endif
 
 
@@ -1371,10 +1371,10 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu(_("Mi&xer"));
 
-      c->AddItem(wxT("OutputGain"), _("Ad&just Playback Volume"), FN(OnOutputGain));
+      c->AddItem(wxT("OutputGain"), _("Ad&just Playback Volume..."), FN(OnOutputGain));
       c->AddItem(wxT("OutputGainInc"), _("&Increase Playback Volume"), FN(OnOutputGainInc));
       c->AddItem(wxT("OutputGainDec"), _("&Decrease Playback Volume"), FN(OnOutputGainDec));
-      c->AddItem(wxT("InputGain"), _("Adj&ust Recording Volume"), FN(OnInputGain));
+      c->AddItem(wxT("InputGain"), _("Adj&ust Recording Volume..."), FN(OnInputGain));
       c->AddItem(wxT("InputGainInc"), _("I&ncrease Recording Volume"), FN(OnInputGainInc));
       c->AddItem(wxT("InputGainDec"), _("D&ecrease Recording Volume"), FN(OnInputGainDec));
       c->EndSubMenu();
@@ -1401,7 +1401,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("PlayAtSpeed"), _("Pl&ay-at-Speed"), FN(OnPlayAtSpeed));
       c->AddItem(wxT("PlayAtSpeedLooped"), _("&Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped));
       c->AddItem(wxT("PlayAtSpeedCutPreview"), _("Play C&ut Preview-at-Speed"), FN(OnPlayAtSpeedCutPreview));
-      c->AddItem(wxT("SetPlaySpeed"), _("Ad&just Playback Speed"), FN(OnSetPlaySpeed));
+      c->AddItem(wxT("SetPlaySpeed"), _("Ad&just Playback Speed..."), FN(OnSetPlaySpeed));
       c->AddItem(wxT("PlaySpeedInc"), _("&Increase Playback Speed"), FN(OnPlaySpeedInc));
       c->AddItem(wxT("PlaySpeedDec"), _("&Decrease Playback Speed"), FN(OnPlaySpeedDec));
 
@@ -1429,16 +1429,16 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu(_("De&vice"));
 
-      c->AddItem(wxT("InputDevice"), _("Change &Recording Device"), FN(OnInputDevice), wxT("Shift+I"),
+      c->AddItem(wxT("InputDevice"), _("Change &Recording Device..."), FN(OnInputDevice), wxT("Shift+I"),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
-      c->AddItem(wxT("OutputDevice"), _("Change &Playback Device"), FN(OnOutputDevice), wxT("Shift+O"),
+      c->AddItem(wxT("OutputDevice"), _("Change &Playback Device..."), FN(OnOutputDevice), wxT("Shift+O"),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
-      c->AddItem(wxT("AudioHost"), _("Change Audio &Host"), FN(OnAudioHost), wxT("Shift+H"),
+      c->AddItem(wxT("AudioHost"), _("Change Audio &Host..."), FN(OnAudioHost), wxT("Shift+H"),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
-      c->AddItem(wxT("InputChannels"), _("Change Recording Cha&nnels"), FN(OnInputChannels), wxT("Shift+N"),
+      c->AddItem(wxT("InputChannels"), _("Change Recording Cha&nnels..."), FN(OnInputChannels), wxT("Shift+N"),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
       c->EndSubMenu();
@@ -1543,7 +1543,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu(_("&Track"));
 
-      c->AddItem(wxT("TrackPan"), _("Change P&an on Focused Track"), FN(OnTrackPan), wxT("Shift+P"),
+      c->AddItem(wxT("TrackPan"), _("Change P&an on Focused Track..."), FN(OnTrackPan), wxT("Shift+P"),
                  TrackPanelHasFocus | TracksExistFlag,
                  TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackPanLeft"), _("Pan &Left on Focused Track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"),
@@ -1552,7 +1552,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("TrackPanRight"), _("Pan &Right on Focused Track"), FN(OnTrackPanRight), wxT("Alt+Shift+Right"),
                  TrackPanelHasFocus | TracksExistFlag,
                  TrackPanelHasFocus | TracksExistFlag);
-      c->AddItem(wxT("TrackGain"), _("Change Gai&n on Focused Track"), FN(OnTrackGain), wxT("Shift+G"),
+      c->AddItem(wxT("TrackGain"), _("Change Gai&n on Focused Track..."), FN(OnTrackGain), wxT("Shift+G"),
                  TrackPanelHasFocus | TracksExistFlag,
                  TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackGainInc"), _("&Increase Gain on Focused Track"), FN(OnTrackGainInc), wxT("Alt+Shift+Up"),
@@ -1561,7 +1561,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("TrackGainDec"), _("&Decrease Gain on Focused Track"), FN(OnTrackGainDec), wxT("Alt+Shift+Down"),
                  TrackPanelHasFocus | TracksExistFlag,
                  TrackPanelHasFocus | TracksExistFlag);
-      c->AddItem(wxT("TrackMenu"), _("Op&en Menu on Focused Track"), FN(OnTrackMenu), wxT("Shift+M\tskipKeydown"),
+      c->AddItem(wxT("TrackMenu"), _("Op&en Menu on Focused Track..."), FN(OnTrackMenu), wxT("Shift+M\tskipKeydown"),
                  TracksExistFlag | TrackPanelHasFocus,
                  TracksExistFlag | TrackPanelHasFocus);
       c->AddItem(wxT("TrackMute"), _("M&ute/Unmute Focused Track"), FN(OnTrackMute), wxT("Shift+U"),
@@ -1945,7 +1945,7 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
                           item,
                           FN(OnEffect),
                           flags[i],
-                          flags[i], plugs[i]);
+                          flags[i], true, plugs[i]);
 
             i++;
          }
@@ -1960,7 +1960,7 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
                        names[i],
                        FN(OnEffect),
                        flags[i],
-                       flags[i], plugs[i]);
+                       flags[i], true, plugs[i]);
       }
 
       if (max > 0)

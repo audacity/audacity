@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_BATCH_COMMAND_DIALOG__
 #define __AUDACITY_BATCH_COMMAND_DIALOG__
 
+#include "MemoryX.h"
 #include <wx/defs.h>
 #include <wx/string.h>
 
@@ -63,10 +64,11 @@ class BatchCommandDialog final : public wxDialogWrapper {
    wxListCtrl *mChoices;
    wxTextCtrl * mCommand;
    wxTextCtrl * mParameters;
+   wxTextCtrl * mDetails;
 
    wxString mInternalCommandName;
 
-   using CommandName = std::pair<wxString, wxString>;
+   using CommandName = std::tuple<wxString, wxString,wxString>;
    using CommandNameVector = std::vector<CommandName>;
    CommandNameVector mCommandNames;
 

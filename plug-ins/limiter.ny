@@ -15,7 +15,7 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html 
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control type "Type" choice "Soft Limit,Hard Limit,Soft Clip,Hard Clip" 0
 ;control gain-L "Input Gain (dB)\nmono/Left" real "" 0 0 10

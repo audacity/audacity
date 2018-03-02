@@ -88,7 +88,7 @@
 ;;    will produce a zero (silent) sample value.
 ;; 
 ;; Further information:
-;; http://manual.audacityteam.org/man/sample_data_import.html
+;; https://manual.audacityteam.org/man/sample_data_import.html
 
 
 ;; home directory

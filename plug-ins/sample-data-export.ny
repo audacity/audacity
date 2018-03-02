@@ -15,7 +15,7 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control number "Limit output to first" string "samples" "100" 
 ;control units "Measurement scale" choice "dB,Linear" 0 
@@ -491,7 +491,7 @@ ul {
 (defun html-foot ()
 "</table>
 <p id=\"footer\">Produced with <span>Sample Data Export</span> for
-<a href=\"http://www.audacityteam.org/\">Audacity</a> by Steve
+<a href=\"https://www.audacityteam.org/\">Audacity</a> by Steve
 Daulton (<a href=
 \"http://www.easyspacepro.com\">www.easyspacepro.com</a>)</p>
 </body>

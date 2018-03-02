@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 1
 ;type analyze
-;categories "http://audacityteam.org/namespace#OnsetDetector"
+;categories "https://audacityteam.org/namespace#OnsetDetector"
 ;name "Beat Finder..."
 ;manpage "Beat_Finder"
 ;action "Finding beats..."
