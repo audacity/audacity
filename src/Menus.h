@@ -502,6 +502,7 @@ static void RebuildAllMenuBars();
 void OnManageGenerators(const CommandContext &context );
 void OnManageEffects(const CommandContext &context );
 void OnManageAnalyzers(const CommandContext &context );
+void OnManageTools(const CommandContext &context );
 
 
 

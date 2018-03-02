@@ -396,15 +396,6 @@ void AudacityProject::CreateMenusAndCommands()
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("C&hains"));
-      c->AddItem(wxT("ApplyChain"), _("Appl&y Chain..."), FN(OnApplyChain),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-      c->AddItem(wxT("EditChains"), _("Edit C&hains..."), FN(OnEditChains));
-      c->EndSubMenu();
-
-      c->AddSeparator();
-
       c->AddItem(wxT("PageSetup"), _("Pa&ge Setup..."), FN(OnPageSetup),
          AudioIONotBusyFlag | TracksExistFlag,
          AudioIONotBusyFlag | TracksExistFlag);
@@ -1185,6 +1176,32 @@ void AudacityProject::CreateMenusAndCommands()
          IsRealtimeNotActiveFlag);
 
       c->EndMenu();
+
+      //////////////////////////////////////////////////////////////////////////
+      // Tools Menu
+      //////////////////////////////////////////////////////////////////////////
+
+      c->BeginMenu(_("&Tools"));
+
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+      c->AddItem(wxT("ManageTools"), _("Add / Remove Plug-ins..."), FN(OnManageTools));
+      c->AddSeparator();
+#endif
+
+      c->AddItem(wxT("ApplyChain"), _("Appl&y Chain..."), FN(OnApplyChain),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+      c->AddItem(wxT("EditChains"), _("Edit C&hains..."), FN(OnEditChains));
+
+      c->AddSeparator();
+
+      PopulateEffectsMenu(c,
+         EffectTypeTool,
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+
+      c->EndMenu();
+
 
 #ifdef __WXMAC__
       /////////////////////////////////////////////////////////////////////////////
@@ -4596,6 +4613,10 @@ void AudacityProject::OnManageAnalyzers(const CommandContext &WXUNUSED(context) 
    OnManagePluginsMenu(EffectTypeAnalyze);
 }
 
+void AudacityProject::OnManageTools(const CommandContext &WXUNUSED(context) )
+{
+   OnManagePluginsMenu(EffectTypeTool);
+}
 
 
 void AudacityProject::OnStereoToMono(const CommandContext &context)

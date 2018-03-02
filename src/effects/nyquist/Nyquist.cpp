@@ -152,7 +152,15 @@ NyquistEffect::NyquistEffect(const wxString &fName)
       mType = EffectTypeProcess;
       mOK = true;
       mIsPrompt = true;
+      return;
+   }
 
+   // Interactive Nyquist
+   if (fName == NYQUIST_TOOLS_PROMPT_ID) {
+      mName = XO("Nyquist Tools Prompt");
+      mType = EffectTypeTool;
+      mOK = true;
+      mIsPrompt = true;
       return;
    }
 
@@ -181,9 +189,9 @@ NyquistEffect::~NyquistEffect()
 wxString NyquistEffect::GetPath()
 {
    if (mIsPrompt)
-   {
-      return NYQUIST_PROMPT_ID;
-   }
+      return (mType == EffectTypeTool) ? 
+         NYQUIST_TOOLS_PROMPT_ID :
+         NYQUIST_PROMPT_ID;
 
    return mFileName.GetFullPath();
 }
@@ -191,9 +199,9 @@ wxString NyquistEffect::GetPath()
 wxString NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-   {
-      return XO("Nyquist Prompt");
-   }
+      return (mType == EffectTypeTool) ? 
+         XO("Nyquist Tools Prompt") :
+         XO("Nyquist Prompt");
 
    return mName;
 }
@@ -1663,6 +1671,9 @@ bool NyquistEffect::Parse(
       }
       else if (tokens[1] == wxT("analyze")) {
          mType = EffectTypeAnalyze;
+      }
+      else if (tokens[1] == wxT("tool")) {
+         mType = EffectTypeTool;
       }
       if (len >= 3 && tokens[2] == wxT("spectral")) {;
          mIsSpectral = true;
