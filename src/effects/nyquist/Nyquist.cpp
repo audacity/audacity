@@ -1953,26 +1953,35 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    while (!stream.Eof() && stream.IsOk())
    {
       wxString line = pgm.ReadLine().Trim(false);
-      if (line.Length() > 1 && line[0] == wxT(';'))
+      if (line.Length() > 1 &&
+          // New in 2.3.0:  allow magic comment lines to start with $
+          // The trick is that xgettext will not consider such lines comments
+          // and will extract the strings they contain
+          (line[0] == wxT(';') || line[0] == wxT('$')))
       {
          Parse(line);
+         // Don't pass this line to the interpreter, so it doesn't get confused
+         // by $, but pass a blank,
+         // so that SAL effects compile with proper line numbers
+         mCmd += wxT('\n');
       }
-      else if (!mFoundType && line.Length() > 0)
+      else
       {
-         if (line[0] == wxT('(') ||
-            (line[0] == wxT('#') && line.Length() > 1 && line[1] == wxT('|')))
-         {
-            mIsSal = false;
-            mFoundType = true;
+         if(!mFoundType && line.Length() > 0) {
+            if (line[0] == wxT('(') ||
+                (line[0] == wxT('#') && line.Length() > 1 && line[1] == wxT('|')))
+            {
+               mIsSal = false;
+               mFoundType = true;
+            }
+            else if (line.Upper().Find(wxT("RETURN")) != wxNOT_FOUND)
+            {
+               mIsSal = true;
+               mFoundType = true;
+            }
          }
-         else if (line.Upper().Find(wxT("RETURN")) != wxNOT_FOUND)
-         {
-            mIsSal = true;
-            mFoundType = true;
-         }
+         mCmd += line + wxT("\n");
       }
-      // preserve comments so that SAL effects compile with proper line numbers
-      mCmd += line + wxT("\n");
    }
    if (!mFoundType && mIsPrompt)
    {
