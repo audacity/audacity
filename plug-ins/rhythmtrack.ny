@@ -42,7 +42,7 @@ $control low (_"MIDI pitch of weak beat") int (_"18 - 116") 80 18 116
 (if (not (boundp 'ticklen))
     (setf ticklen 10))
 
-;; TODO: Hard code tick length (long and short versions
+;; TODO: Hard code tick length (long and short versions)
 ;; TODO: add drum sounds
 
 
