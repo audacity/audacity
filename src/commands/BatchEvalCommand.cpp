@@ -28,8 +28,8 @@ void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
    signature.AddParameter(wxT("CommandName"), wxT(""), std::move(commandNameValidator));
    auto paramValidator = make_movable<DefaultValidator>();
    signature.AddParameter(wxT("ParamString"), wxT(""), std::move(paramValidator));
-   auto chainValidator = make_movable<DefaultValidator>();
-   signature.AddParameter(wxT("ChainName"), wxT(""), std::move(chainValidator));
+   auto macroValidator = make_movable<DefaultValidator>();
+   signature.AddParameter(wxT("MacroName"), wxT(""), std::move(macroValidator));
 }
 
 OldStyleCommandPointer BatchEvalCommandType::Create(std::unique_ptr<CommandOutputTargets> && WXUNUSED(target))
@@ -40,19 +40,19 @@ OldStyleCommandPointer BatchEvalCommandType::Create(std::unique_ptr<CommandOutpu
 bool BatchEvalCommand::Apply(const CommandContext & context)
 {
 
-   wxString chainName = GetString(wxT("ChainName"));
-   if (chainName != wxT(""))
+   wxString macroName = GetString(wxT("MacroName"));
+   if (macroName != wxT(""))
    {
-      BatchCommands batch;
-      batch.ReadChain(chainName);
-      return batch.ApplyChain();
+      MacroCommands batch;
+      batch.ReadMacro(macroName);
+      return batch.ApplyMacro();
    }
 
    wxString cmdName = GetString(wxT("CommandName"));
    wxString cmdParams = GetString(wxT("ParamString"));
 
    // Create a Batch that will have just one command in it...
-   BatchCommands Batch;
+   MacroCommands Batch;
    bool bResult = Batch.ApplyCommand(cmdName, cmdParams, &context);
    // Relay messages, if any.
    wxString Message = Batch.GetMessage();

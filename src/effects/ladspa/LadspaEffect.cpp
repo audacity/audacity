@@ -652,7 +652,7 @@ EffectType LadspaEffect::GetType()
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {
-      return EffectTypeNone;
+      return EffectTypeTool;
    }
 
    if (mAudioIns == 0)

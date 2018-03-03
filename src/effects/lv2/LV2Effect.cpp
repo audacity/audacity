@@ -370,7 +370,7 @@ EffectType LV2Effect::GetType()
 {
    if (GetAudioInCount() == 0 && GetAudioOutCount() == 0)
    {
-      return EffectTypeNone;
+      return EffectTypeTool;
    }
 
    if (GetAudioInCount() == 0)

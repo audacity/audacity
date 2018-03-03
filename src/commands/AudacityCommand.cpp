@@ -225,7 +225,7 @@ bool AudacityCommand::DoAudacityCommand(wxWindow *parent,
    return returnVal;
 }
 
-// This is used from Chains.
+// This is used from Macros.
 bool AudacityCommand::PromptUser(wxWindow *parent)
 {
    return ShowInterface(parent, IsBatchProcessing());

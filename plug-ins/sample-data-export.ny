@@ -1,6 +1,6 @@
 ;nyquist plug-in
 ;version 3
-;type analyze
+;type tool
 $name (_"Sample Data Export")
 ;manpage "Sample_Data_Export"
 $action (_"Analyzing...")

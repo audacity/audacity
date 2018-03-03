@@ -31,6 +31,7 @@
 #define NYQUISTEFFECTS_FAMILY wxT("Nyquist")
 
 #define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
+#define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Tools Prompt")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 enum NyqControlType
@@ -206,7 +207,7 @@ private:
    bool              mExternal;
    bool              mIsSpectral;
    /** True if the code to execute is obtained interactively from the user via
-    * the "Nyquist Prompt", false for all other effects (lisp code read from
+    * the "Nyquist Prompt", or "Nyquist Tools Prompt", false for all other effects (lisp code read from
     * files)
     */
    bool              mIsPrompt;

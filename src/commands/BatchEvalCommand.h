@@ -10,10 +10,10 @@
 ******************************************************************//**
 
 \class BatchEvalCommand
-\brief Given a string representing a command, pass it to the BatchCommands
+\brief Given a string representing a command, pass it to the MacroCommands
 system.
 
-The eventual aim is to move the code from BatchCommands out into separate
+The eventual aim is to move the code from MacroCommands out into separate
 command classes, but until this happens, BatchEvalCommand can act as a 'bridge'
 to that system.
 

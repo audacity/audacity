@@ -1364,6 +1364,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 #define KEY_EFFECTTYPE_ANALYZE         wxT("Analyze")
 #define KEY_EFFECTTYPE_GENERATE        wxT("Generate")
 #define KEY_EFFECTTYPE_PROCESS         wxT("Process")
+#define KEY_EFFECTTYPE_TOOL            wxT("Tool")
 #define KEY_EFFECTTYPE_HIDDEN          wxT("Hidden")
 #define KEY_IMPORTERIDENT              wxT("ImporterIdent")
 #define KEY_IMPORTERFILTER             wxT("ImporterFilter")
@@ -2071,34 +2072,22 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
          {
             // Get the effect type and bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTTYPE, &strVal))
-            {
                continue;
-            }
 
             if (strVal.IsSameAs(KEY_EFFECTTYPE_NONE))
-            {
                plug.SetEffectType(EffectTypeNone);
-            }
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_ANALYZE))
-            {
                plug.SetEffectType(EffectTypeAnalyze);
-            }
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_GENERATE))
-            {
                plug.SetEffectType(EffectTypeGenerate);
-            }
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_PROCESS))
-            {
                plug.SetEffectType(EffectTypeProcess);
-            }
+            else if (strVal.IsSameAs(KEY_EFFECTTYPE_TOOL))
+               plug.SetEffectType(EffectTypeTool);
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_HIDDEN))
-            {
                plug.SetEffectType(EffectTypeHidden);
-            }
             else
-            {
                continue;
-            }
 
             // Get the effect family and bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTFAMILY, &strVal))
@@ -2258,25 +2247,18 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
             EffectType etype = plug.GetEffectType();
             wxString stype;
             if (etype == EffectTypeNone)
-            {
                stype = KEY_EFFECTTYPE_NONE;
-            }
             else if (etype == EffectTypeAnalyze)
-            {
                stype = KEY_EFFECTTYPE_ANALYZE;
-            }
             else if (etype == EffectTypeGenerate)
-            {
                stype = KEY_EFFECTTYPE_GENERATE;
-            }
             else if (etype == EffectTypeProcess)
-            {
                stype = KEY_EFFECTTYPE_PROCESS;
-            }
+            else if (etype == EffectTypeTool)
+               stype = KEY_EFFECTTYPE_TOOL;
             else if (etype == EffectTypeHidden)
-            {
                stype = KEY_EFFECTTYPE_HIDDEN;
-            }
+
             pRegistry->Write(KEY_EFFECTTYPE, stype);
             pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamilyId());
             pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());

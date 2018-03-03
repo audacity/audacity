@@ -13,7 +13,7 @@
 ApplyAndSendResponse, and CommandImplementation classes.  These are
 remnants of Dan Horgans external scripting commands.  We now use 
 AudacityCommand and a shuttle system.  This allows commands to be used
-from within chains too, to have settings dialogs, using ShuttleGui and
+from within macros too, to have settings dialogs, using ShuttleGui and
 without need for validators.
 
 Here's the doxygen for the still-remaining going-away classes.
@@ -36,8 +36,8 @@ We in effect merge the <something>CommandType classes into the
 <something>Command classes.
 
 \class BatchEvalCommand
-\brief Command to make processing of chains available to scripting.  It can either
-make a one command chain, or invoke an existing chain.  It will become redundant
+\brief Command to make processing of macros available to scripting.  It can either
+make a one command macro, or invoke an existing macro.  It will become redundant
 when menu commands are integrated into scripting.
 
 \class HelpCommand

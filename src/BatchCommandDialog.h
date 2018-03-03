@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_BATCH_COMMAND_DIALOG__
-#define __AUDACITY_BATCH_COMMAND_DIALOG__
+#ifndef __AUDACITY_MACRO_COMMAND_DIALOG__
+#define __AUDACITY_MACRO_COMMAND_DIALOG__
 
 #include "MemoryX.h"
 #include <wx/defs.h>
@@ -37,10 +37,10 @@ class wxListEvent;
 class wxButton;
 class ShuttleGui;
 
-class BatchCommandDialog final : public wxDialogWrapper {
+class MacroCommandDialog final : public wxDialogWrapper {
  public:
    // constructors and destructors
-   BatchCommandDialog(wxWindow *parent, wxWindowID id);
+   MacroCommandDialog(wxWindow *parent, wxWindowID id);
    void SetCommandAndParams(const wxString &Command, const wxString &Params);
  public:
    wxString   mSelectedCommand;

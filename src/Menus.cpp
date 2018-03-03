@@ -167,6 +167,10 @@ enum {
 
 #include "commands/CommandContext.h"
 #include "commands/ScreenshotCommand.h"
+
+#include "BatchCommands.h"
+
+
 //
 // Effects menu arrays
 //
@@ -395,15 +399,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
       /////////////////////////////////////////////////////////////////////////////
-
-      c->BeginSubMenu(_("C&hains"));
-      c->AddItem(wxT("ApplyChain"), _("Appl&y Chain..."), FN(OnApplyChain),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-      c->AddItem(wxT("EditChains"), _("Edit C&hains..."), FN(OnEditChains));
-      c->EndSubMenu();
-
-      c->AddSeparator();
 
       c->AddItem(wxT("PageSetup"), _("Pa&ge Setup..."), FN(OnPageSetup),
          AudioIONotBusyFlag | TracksExistFlag,
@@ -1186,6 +1181,35 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->EndMenu();
 
+      //////////////////////////////////////////////////////////////////////////
+      // Tools Menu
+      //////////////////////////////////////////////////////////////////////////
+
+      c->BeginMenu(_("&Tools"));
+
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+      c->AddItem(wxT("ManageTools"), _("Add / Remove Plug-ins..."), FN(OnManageTools));
+      //c->AddSeparator();
+#endif
+
+      //Not needed anymore as ManageMacros does both.
+      //c->AddItem(wxT("ApplyMacro"), _("Appl&y Macro..."), FN(OnApplyMacro),
+      //   AudioIONotBusyFlag,
+      //   AudioIONotBusyFlag);
+      c->AddItem(wxT("ManageMacros"), _("&Macros..."), FN(OnManageMacros));
+
+      c->AddSeparator();
+      PopulateMacrosMenu( c, AudioIONotBusyFlag );
+      c->AddSeparator();
+
+      PopulateEffectsMenu(c,
+         EffectTypeTool,
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+
+      c->EndMenu();
+
+
 #ifdef __WXMAC__
       /////////////////////////////////////////////////////////////////////////////
       // poor imitation of the Mac Windows Menu
@@ -1680,6 +1704,22 @@ void AudacityProject::CreateMenusAndCommands()
 //   c->CheckDups();
 #endif
 }
+
+
+
+void AudacityProject::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
+{
+   wxArrayString names = MacroCommands::GetNames();
+   int i;
+
+   for (i = 0; i < (int)names.GetCount(); i++) {
+      c->AddItem(wxString::Format("Macro%03i", i ), names[i], FN(OnApplyMacroDirectly),
+         flags,
+         flags);
+   }
+
+}
+
 
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into
@@ -4596,6 +4636,10 @@ void AudacityProject::OnManageAnalyzers(const CommandContext &WXUNUSED(context) 
    OnManagePluginsMenu(EffectTypeAnalyze);
 }
 
+void AudacityProject::OnManageTools(const CommandContext &WXUNUSED(context) )
+{
+   OnManagePluginsMenu(EffectTypeTool);
+}
 
 
 void AudacityProject::OnStereoToMono(const CommandContext &context)
@@ -6811,6 +6855,38 @@ void AudacityProject::OnShowExtraMenus(const CommandContext &WXUNUSED(context) )
    RebuildAllMenuBars();
 }
 
+void AudacityProject::OnApplyMacroDirectly(const CommandContext &context )
+{
+   //wxLogDebug( "Macro was: %s", context.parameter);
+   ApplyMacroDialog dlg(this);
+   wxString Name = context.parameter;
+   long item=0;
+   // Take last three letters (of e.g. Macro007) and convert to a number.
+   Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
+   dlg.ApplyMacroToProject( item, false );
+   ModifyUndoMenuItems();
+}
+
+void AudacityProject::OnApplyMacro(const CommandContext &WXUNUSED(context) )
+{
+   const bool bExpanded = false;
+   if (!mMacrosWindow)
+      mMacrosWindow = safenew MacrosWindow(this, bExpanded);
+   mMacrosWindow->Show();
+   mMacrosWindow->Raise();
+   mMacrosWindow->UpdateDisplay( bExpanded);
+}
+
+void AudacityProject::OnManageMacros(const CommandContext &WXUNUSED(context) )
+{
+   const bool bExpanded = true;
+   if (!mMacrosWindow)
+      mMacrosWindow = safenew MacrosWindow(this, bExpanded);
+   mMacrosWindow->Show();
+   mMacrosWindow->Raise();
+   mMacrosWindow->UpdateDisplay( bExpanded);
+}
+
 void AudacityProject::OnHistory(const CommandContext &WXUNUSED(context) )
 {
    if (!mHistoryWindow)
@@ -6819,7 +6895,6 @@ void AudacityProject::OnHistory(const CommandContext &WXUNUSED(context) )
    mHistoryWindow->Raise();
    mHistoryWindow->UpdateDisplay();
 }
-
 void AudacityProject::OnKaraoke(const CommandContext &WXUNUSED(context) )
 {
    if (!mLyricsWindow)
@@ -8429,18 +8504,6 @@ void AudacityProject::OnToggleTypeToCreateLabel(const CommandContext &WXUNUSED(c
    ModifyAllProjectToolbarMenus();
 }
 
-void AudacityProject::OnApplyChain(const CommandContext &WXUNUSED(context) )
-{
-   BatchProcessDialog dlg(this);
-   dlg.ShowModal();
-   ModifyUndoMenuItems();
-}
-
-void AudacityProject::OnEditChains(const CommandContext &WXUNUSED(context) )
-{
-   EditChainsDialog dlg(this);
-   dlg.ShowModal();
-}
 
 void AudacityProject::OnRemoveTracks(const CommandContext &WXUNUSED(context) )
 {

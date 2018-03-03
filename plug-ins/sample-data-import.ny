@@ -1,6 +1,6 @@
 ;nyquist plug-in
 ;version 4
-;type generate
+;type tool
 $name (_"Sample Data Import")
 ;manpage "Sample_Data_Import"
 $action (_"Reading and rendering samples...")
