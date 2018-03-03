@@ -88,6 +88,7 @@ static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
 // end CLEANSPEECH remnant
 
 static const wxString MP3Conversion = wxT("MP3 Conversion");
+static const wxString FadeEnds      = wxT("Fade Ends");
 
 MacroCommands::MacroCommands()
 {
@@ -96,10 +97,34 @@ MacroCommands::MacroCommands()
 
    wxArrayString names = GetNames();
 
-   if (names.Index(MP3Conversion) == wxNOT_FOUND) {
-      AddMacro(MP3Conversion);
-      RestoreMacro(MP3Conversion);
-      WriteMacro(MP3Conversion);
+   wxArrayString defaults;
+   defaults.Add( MP3Conversion );
+   defaults.Add( FadeEnds  );
+
+   for( size_t i = 0;i<defaults.Count();i++){
+      wxString name = defaults[i];
+      if (names.Index(name) == wxNOT_FOUND) {
+         AddMacro(name);
+         RestoreMacro(name);
+         WriteMacro(name);
+      }
+   }
+}
+
+void MacroCommands::RestoreMacro(const wxString & name)
+{
+// TIDY-ME: Effects change their name with localisation.
+// Commands (at least currently) don't.  Messy.
+   ResetMacro();
+   if (name == MP3Conversion){
+        AddToMacro( wxT("Normalize") );
+        AddToMacro( wxT("ExportMP3") );
+   } else if (name == FadeEnds ){
+        AddToMacro( wxT("Select: Start=\"0\" End=\"1\"") );
+        AddToMacro( wxT("FadeIn") );
+        AddToMacro( wxT("Select: Start=\"0\" End=\"1\" FromEnd=\"1\"") );
+        AddToMacro( wxT("FadeOut") );
+        AddToMacro( wxT("Select: Start=\"0\" End=\"0\"") );
    }
 }
 
@@ -240,14 +265,6 @@ bool MacroCommands::RenameMacro(const wxString & oldchain, const wxString & newc
 
    // Rename it...wxRenameFile will display errors
    return wxRenameFile(oname.GetFullPath(), nname.GetFullPath());
-}
-
-void MacroCommands::SetWavToMp3Macro() // a function per default chain?  This is flawed design!  MJS
-{
-   ResetMacro();
-
-   AddToMacro( wxT("Normalize") );
-   AddToMacro( wxT("ExportMP3") );
 }
 
 // Gets all commands that are valid for this mode.
@@ -865,14 +882,7 @@ bool MacroCommands::IsFixed(const wxString & name)
    return false;
 }
 
-void MacroCommands::RestoreMacro(const wxString & name)
-{
-// TIDY-ME: Effects change their name with localisation.
-// Commands (at least currently) don't.  Messy.
 
-   if (name == MP3Conversion)
-      SetWavToMp3Macro();
-}
 
 void MacroCommands::Split(const wxString & str, wxString & command, wxString & param)
 {

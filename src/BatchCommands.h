@@ -43,7 +43,7 @@ class MacroCommands final {
    // These commands do not depend on the command list.
    static wxArrayString GetNames();
 
-   // A pair of user-visible name, and internal string identifier
+   // A triple of user-visible name, internal string identifier and type/help string.
    using CommandName = std::tuple<wxString, wxString, wxString>;
    using CommandNameVector = std::vector<CommandName>;
    // Result is sorted by user-visible name
@@ -56,6 +56,7 @@ class MacroCommands final {
    // These commands do depend on the command list.
    void ResetMacro();
 
+   void RestoreMacro(const wxString & name);
    bool ReadMacro(const wxString & macro);
    bool WriteMacro(const wxString & macro);
    bool AddMacro(const wxString & macro);
@@ -71,11 +72,7 @@ class MacroCommands final {
    wxString GetMessage(){ return mMessage;};
    void AddToMessage(const wxString & msgIn ){ mMessage += msgIn;};
 
-   void SetWavToMp3Macro();
-
    bool IsFixed(const wxString & name);
-
-   void RestoreMacro(const wxString & name);
 
    void Split(const wxString & str, wxString & command, wxString & param);
    wxString Join(const wxString & command, const wxString & param);
