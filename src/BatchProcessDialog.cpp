@@ -117,7 +117,6 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
          S.Id(ApplyToProjectID).AddButton(_("&Project"));
          S.Id(ApplyToFilesID).AddButton(_("&Files..."));
          S.AddSpace( 40 );
-         //S.Id(wxID_CANCEL).AddButton(_("&Cancel"));
          S.AddStandardButtons( eCancelButton | eHelpButton);
       }
       S.EndHorizontalLay();
@@ -187,7 +186,10 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    pD->Layout();
    pD->Fit();
    pD->CenterOnScreen();
-   pD->Move(-1, 0);
+   // Avoid overlap with progress.
+   int x,y;
+   pD->GetPosition( &x, &y );
+   pD->Move(wxMax(0,x-300), 0);
    pD->Show();
 
    // The Hide() on the next line seems to tickle a bug in wx3,
@@ -358,8 +360,13 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    pD->Fit();
    pD->SetSizeHints(pD->GetSize());
    pD->CenterOnScreen();
-   pD->Move(-1, 0);
+   // Avoid overlap with progress.
+   int x,y;
+   pD->GetPosition( &x, &y );
+   pD->Move(wxMax(0,x-300), 0);
    pD->Show();
+   // Give dialog a chance to actually show.
+   wxYield();
    Hide();
 
    mBatchCommands.ReadChain(name);
