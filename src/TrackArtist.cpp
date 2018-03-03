@@ -488,7 +488,7 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
           // Exclude right channel of stereo track 
           !(!wt->GetLinked() && wt->GetLink())) {
          wxBrush Brush;
-         long x,y;
+         wxCoord x,y;
          wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
          dc.SetFont(labelFont);
          dc.GetTextExtent( wt->GetName(), &x, &y );
