@@ -119,6 +119,8 @@ public:
    void StartHorizontalLay(int PositionFlags=wxALIGN_CENTRE, int iProp=1);
    void EndHorizontalLay();
    void StartVerticalLay(int iProp=1);
+   void StartVerticalLay(int PositionFlags, int iProp);
+
    void EndVerticalLay();
    wxScrolledWindow * StartScroller(int iStyle=0);
    void EndScroller();

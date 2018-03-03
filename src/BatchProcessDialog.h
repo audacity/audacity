@@ -53,7 +53,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    virtual void OnCancel(wxCommandEvent & event);
    virtual void OnHelp(wxCommandEvent & event);
 
-   virtual wxString GetHelpPageName() {return "Tools_Menu#chains_compact_dialog";};
+   virtual wxString GetHelpPageName() {return "Tools_Menu#macros_compact_dialog";};
 
    void PopulateMacros();
    void ApplyMacroToProject( int iMacro, bool bHasGui=true );
@@ -68,6 +68,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    wxButton *mCancel;
    wxTextCtrl *mResults;
    bool mAbort;
+   bool mbExpanded;
    wxString mActiveMacro;
 
    DECLARE_EVENT_TABLE()
@@ -87,7 +88,9 @@ private:
    void OnApplyToFiles(wxCommandEvent & event) override;
    void OnCancel(wxCommandEvent &event) override;
 
-   virtual wxString GetHelpPageName() override {return "Tools_Menu#chains_full_dialog";};
+   virtual wxString GetHelpPageName() override {return 
+      mbExpanded ? "Tools_Menu#macross_full_dialog"
+         : "Tools_Menu#macros_compact_dialog";};
 
    void PopulateList();
    void AddItem(const wxString &command, wxString const &params);
@@ -101,6 +104,8 @@ private:
    void OnAdd(wxCommandEvent &event);
    void OnRemove(wxCommandEvent &event);
    void OnRename(wxCommandEvent &event);
+   void OnExpand(wxCommandEvent &event);
+   void OnShrink(wxCommandEvent &event);
    void OnSize(wxSizeEvent &event);
 
    void OnCommandActivated(wxListEvent &event);
@@ -133,7 +138,6 @@ private:
 
    int mSelectedCommand;
    bool mChanged;
-   bool mbExpanded;
 
    using CommandName = std::tuple<wxString, wxString,wxString>;
    using CommandNameVector = std::vector<CommandName>;

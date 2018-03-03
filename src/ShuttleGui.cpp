@@ -993,6 +993,15 @@ void ShuttleGuiBase::StartVerticalLay(int iProp)
    UpdateSizers();
 }
 
+void ShuttleGuiBase::StartVerticalLay(int PositionFlags, int iProp)
+{
+   if( mShuttleMode != eIsCreating )
+      return;
+   miSizerProp=iProp;
+   mpSubSizer = std::make_unique<wxBoxSizer>( wxVERTICAL );
+   UpdateSizersCore( false, PositionFlags | wxALL );
+}
+
 void ShuttleGuiBase::EndVerticalLay()
 {
    if( mShuttleMode != eIsCreating )

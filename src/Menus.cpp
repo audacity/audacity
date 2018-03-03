@@ -1189,12 +1189,13 @@ void AudacityProject::CreateMenusAndCommands()
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       c->AddItem(wxT("ManageTools"), _("Add / Remove Plug-ins..."), FN(OnManageTools));
-      c->AddSeparator();
+      //c->AddSeparator();
 #endif
 
-      c->AddItem(wxT("ApplyMacro"), _("Appl&y Macro..."), FN(OnApplyMacro),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
+      //Not needed anymore as ManageMacros does both.
+      //c->AddItem(wxT("ApplyMacro"), _("Appl&y Macro..."), FN(OnApplyMacro),
+      //   AudioIONotBusyFlag,
+      //   AudioIONotBusyFlag);
       c->AddItem(wxT("ManageMacros"), _("&Macros..."), FN(OnManageMacros));
 
       c->AddSeparator();
@@ -1713,8 +1714,8 @@ void AudacityProject::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  
 
    for (i = 0; i < (int)names.GetCount(); i++) {
       c->AddItem(wxString::Format("Macro%03i", i ), names[i], FN(OnApplyMacroDirectly),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
+         flags,
+         flags);
    }
 
 }

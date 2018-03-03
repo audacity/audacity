@@ -59,6 +59,8 @@
 #define CommandsListID     7002
 #define ApplyToProjectID   7003
 #define ApplyToFilesID     7004
+#define ExpandID           7005
+#define ShrinkID           7006
 
 BEGIN_EVENT_TABLE(ApplyMacroDialog, wxDialogWrapper)
    EVT_BUTTON(ApplyToProjectID, ApplyMacroDialog::OnApplyToProject)
@@ -74,6 +76,7 @@ ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
 {
    //AudacityProject * p = GetActiveProject();
    mAbort = false;
+   mbExpanded = false;
    if( bInherited )
       return;
    SetLabel(_("Apply Macro"));         // Provide visual label
@@ -114,6 +117,13 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: A macro is a sequence of commands that can be applied
        * to one or more audio files.*/
+
+      S.StartHorizontalLay(wxALIGN_RIGHT, false);
+      {
+         S.Id(ExpandID).AddButton(_("&Expand"));
+      }
+      S.EndHorizontalLay();
+
       S.StartStatic(_("&Select Macro"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
@@ -244,7 +254,10 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
       Show();
       return;
    }
-   Hide();
+   if( mbExpanded )
+      Hide();
+   else
+      Show();
 }
 
 void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -415,7 +428,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       project->OnRemoveTracks(*project);
    }
    project->OnRemoveTracks(*project);
-   Hide();
+   if( mbExpanded )
+      Hide();
+   else
+      Show();
 }
 
 void ApplyMacroDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
@@ -454,6 +470,9 @@ BEGIN_EVENT_TABLE(MacrosWindow, ApplyMacroDialog)
    EVT_BUTTON(AddButtonID, MacrosWindow::OnAdd)
    EVT_BUTTON(RemoveButtonID, MacrosWindow::OnRemove)
    EVT_BUTTON(RenameButtonID, MacrosWindow::OnRename)
+   EVT_BUTTON(ExpandID, MacrosWindow::OnExpand)
+   EVT_BUTTON(ShrinkID, MacrosWindow::OnShrink)
+
    EVT_SIZE(MacrosWindow::OnSize)
 
    EVT_LIST_ITEM_ACTIVATED(CommandsListID, MacrosWindow::OnCommandActivated)
@@ -540,33 +559,31 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 1);
    {
-      S.StartStatic(_("&Macros"));
+      S.StartVerticalLay( wxEXPAND, 0 );
       {
-         // JKC: Experimenting with an alternative way to get multiline
-         // translated strings to work correctly without very long lines.
-         // My appologies Alexandre if this way didn't work either.
-         //
-         // With this method:
-         //   1) it compiles fine under windows unicode and normal mode.
-         //   2) xgettext source code has handling for the trailing '\'
-         //
-         // It remains to see if linux and mac can cope and if xgettext
-         // actually does do fine with strings presented like this.
-         // If it doesn't work out, revert to all-on-one-line.
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
-                    wxLC_EDIT_LABELS);
-         mMacros = S.Id(MacrosListID).AddListControlReportMode();
-         // i18n-hint: This is the heading for a column in the edit macros dialog
-         mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
-         S.StartHorizontalLay(wxCENTER, false);
+         S.Prop(0).StartHorizontalLay(wxALIGN_RIGHT, false);
          {
-            S.Id(AddButtonID).AddButton(_("&Add"));
-            mRemove = S.Id(RemoveButtonID).AddButton(_("&Remove"));
-            mRename = S.Id(RenameButtonID).AddButton(_("Re&name"));
+            S.Id(ShrinkID).AddButton(_("&Shrink"));
          }
          S.EndHorizontalLay();
+         S.StartStatic(_("&Macros"),1);
+         {
+            S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
+                       wxLC_EDIT_LABELS);
+            mMacros = S.Id(MacrosListID).Prop(1).AddListControlReportMode();
+            // i18n-hint: This is the heading for a column in the edit macros dialog
+            mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
+            S.StartHorizontalLay(wxCENTER, false);
+            {
+               S.Id(AddButtonID).AddButton(_("&Add"));
+               mRemove = S.Id(RemoveButtonID).AddButton(_("&Remove"));
+               mRename = S.Id(RenameButtonID).AddButton(_("Re&name"));
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndStatic();
       }
-      S.EndStatic();
+      S.EndVerticalLay();
 
       S.StartVerticalLay( 1 );
       {
@@ -663,11 +680,30 @@ void MacrosWindow::UpdateMenus()
    GetActiveProject()->RebuildMenuBar();
 }
 
-void MacrosWindow::UpdateDisplay( bool WXUNUSED(bExpanded) )
+void MacrosWindow::UpdateDisplay( bool bExpanded )
 {
-   //if(IsShown())
-   //   DoUpdate();
+   if( bExpanded == mbExpanded )
+      return;
+   mbExpanded = bExpanded;
+   DestroyChildren();
+   SetSizer( nullptr );
+   
+   mChanged = false;
+   mSelectedCommand = 0;
+   SetMinSize( wxSize( 200,200 ));
+
+   if( mbExpanded )
+      Populate();
+   else
+      ApplyMacroDialog::Populate();
 }
+
+void MacrosWindow::OnExpand(wxCommandEvent &WXUNUSED(event))
+{  UpdateDisplay( true );}
+
+void MacrosWindow::OnShrink(wxCommandEvent &WXUNUSED(event))
+{  UpdateDisplay( false );}
+
 
 bool MacrosWindow::ChangeOK()
 {
@@ -1084,7 +1120,7 @@ void MacrosWindow::OnOK(wxCommandEvent & WXUNUSED(event))
 }
 
 ///
-void MacrosWindow::OnCancel(wxCommandEvent & event)
+void MacrosWindow::OnCancel(wxCommandEvent &WXUNUSED(event))
 {
    if (!ChangeOK()) {
       return;
