@@ -92,6 +92,19 @@ void BatchProcessDialog::Populate()
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
+   // Get and validate the currently active chain
+   mActiveChain = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT(""));
+   // Go populate the chains list.
+   PopulateChains();
+
+   Layout();
+   Fit();
+   SetSizeHints(GetSize());
+   Center();
+
+   // Set the column size for the chains list.
+   wxSize sz = mChains->GetClientSize();
+   mChains->SetColumnWidth(0, sz.x);
 }
 
 /// Defines the dialog and does data exchange with it.
@@ -122,33 +135,31 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
+}
 
+/// This clears and updates the contents of mChains, the list of chains.
+void BatchProcessDialog::PopulateChains()
+{
    wxArrayString names = mBatchCommands.GetNames();
-   for (int i = 0; i < (int)names.GetCount(); i++) {
+   int i;
+
+   mChains->DeleteAllItems();
+   for (i = 0; i < (int)names.GetCount(); i++) {
       mChains->InsertItem(i, names[i]);
    }
 
-   // Get and validate the currently active chain
-   wxString name = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT(""));
-
-   int item = mChains->FindItem(-1, name);
+   int item = mChains->FindItem(-1, mActiveChain);
    if (item == -1) {
       item = 0;
-      name = mChains->GetItemText(0);
+      mActiveChain = mChains->GetItemText(0);
    }
 
    // Select the name in the list...this will fire an event.
    mChains->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-
-   Layout();
-   Fit();
-   SetSizeHints(GetSize());
-   Center();
-
-   // Set the column size for the chains list.
-   wxSize sz = mChains->GetClientSize();
-   mChains->SetColumnWidth(0, sz.x);
 }
+
+
+
 
 void BatchProcessDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
@@ -166,6 +177,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
       AudacityMessageBox(_("No chain selected"));
       return;
    }
+   ApplyChainToProject( item );
 }
 
 void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
@@ -174,9 +186,9 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
    if( name.IsEmpty() )
       return;
 
-   wxDialog * pD = safenew wxDialogWrapper(this, wxID_ANY, GetTitle());
-   pD->SetName(pD->GetTitle());
-   ShuttleGui S(pD, eIsCreating);
+   wxDialogWrapper activityWin( this, wxID_ANY, GetTitle());
+   activityWin.SetName(activityWin.GetTitle());
+   ShuttleGui S(&activityWin, eIsCreating);
 
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -190,14 +202,14 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
    }
    S.EndHorizontalLay();
 
-   pD->Layout();
-   pD->Fit();
-   pD->CenterOnScreen();
+   activityWin.Layout();
+   activityWin.Fit();
+   activityWin.CenterOnScreen();
    // Avoid overlap with progress.
    int x,y;
-   pD->GetPosition( &x, &y );
-   pD->Move(wxMax(0,x-300), 0);
-   pD->Show();
+   activityWin.GetPosition( &x, &y );
+   activityWin.Move(wxMax(0,x-300), 0);
+   activityWin.Show();
 
    // Without this the newly created dialog may not show completely.
    wxYield();
@@ -219,7 +231,7 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
    // the menus on OSX will remain disabled.
    bool success;
    {
-      wxWindowDisabler wd(pD);
+      wxWindowDisabler wd(&activityWin);
       success = GuardedCall< bool >(
          [this]{ return mBatchCommands.ApplyChain(); } );
    }
@@ -232,20 +244,7 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
       Show();
       return;
    }
-
-#if !defined(__WXMAC__)
-   // Under Linux an EndModal() here crashes (Bug #1221).
-   // But sending a close message instead is OK.
-   wxCloseEvent Evt;
-   Evt.SetId( wxID_OK );
-   Evt.SetEventObject( this);
-   ProcessWindowEvent( Evt );
-#else
-   EndModal(wxID_OK);
-#endif
-
-   // Raise myself again, and the parent window with me
-   Show();
+   Hide();
 }
 
 void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -327,9 +326,9 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
-   wxDialog * pD = safenew wxDialogWrapper(this, wxID_ANY, GetTitle());
-   pD->SetName(pD->GetTitle());
-   ShuttleGui S(pD, eIsCreating);
+   wxDialogWrapper activityWin(this, wxID_ANY, GetTitle());
+   activityWin.SetName(activityWin.GetTitle());
+   ShuttleGui S(&activityWin, eIsCreating);
 
    S.StartVerticalLay(false);
    {
@@ -371,22 +370,22 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       mList->SetInitialSize(sz);
    }
 
-   pD->Layout();
-   pD->Fit();
-   pD->SetSizeHints(pD->GetSize());
-   pD->CenterOnScreen();
+   activityWin.Layout();
+   activityWin.Fit();
+   activityWin.CenterOnScreen();
    // Avoid overlap with progress.
    int x,y;
-   pD->GetPosition( &x, &y );
-   pD->Move(wxMax(0,x-300), 0);
-   pD->Show();
-   // Give dialog a chance to actually show.
+   activityWin.GetPosition( &x, &y );
+   activityWin.Move(wxMax(0,x-300), 0);
+   activityWin.Show();
+
+   // Without this the newly created dialog may not show completely.
    wxYield();
    Hide();
 
    mBatchCommands.ReadChain(name);
    for (i = 0; i < (int)files.GetCount(); i++) {
-      wxWindowDisabler wd(pD);
+      wxWindowDisabler wd(&activityWin);
       if (i > 0) {
          //Clear the arrow in previous item.
          mList->SetItemImage(i - 1, 0, 0);
@@ -401,7 +400,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          if (!mBatchCommands.ApplyChain())
             return false;
 
-         if (!pD->IsShown() || mAbort)
+         if (!activityWin.IsShown() || mAbort)
             return false;
 
          return true;
@@ -416,38 +415,12 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       project->OnRemoveTracks(*project);
    }
    project->OnRemoveTracks(*project);
-
-   // Under Linux an EndModal() here crashes (Bug #1221).
-   // But sending a close message instead is OK.
-#if !defined(__WXMAC__)
-   wxCloseEvent Evt;
-   Evt.SetId( wxID_OK );
-   Evt.SetEventObject( this);
-   ProcessWindowEvent( Evt );
-#else
-   EndModal(wxID_OK);
-#endif 
-
-   // Raise myself again, and the parent window with me
-   Show();
+   Hide();
 }
 
 void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-#if !defined(__WXMAC__)
-   // It is possible that we could just do EndModal()
-   // here even on Linux.  However, we know the alternative way of
-   // closing works, if we are hidden, so we hide and then do that.
    Hide();
-   // Under Linux an EndModal() here potentially crashes (Bug #1221).
-   // But sending a close message instead is OK.
-   wxCloseEvent Evt;
-   Evt.SetId( wxID_CANCEL );
-   Evt.SetEventObject( this);
-   ProcessWindowEvent( Evt );
-#else
-   EndModal(wxID_CANCEL);
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -505,9 +478,10 @@ enum {
 };
 
 /// Constructor
-EditChainsDialog::EditChainsDialog(wxWindow * parent):
+EditChainsDialog::EditChainsDialog(wxWindow * parent, bool bExpanded):
    BatchProcessDialog(parent, true)
 {
+   mbExpanded = bExpanded;
    SetLabel(_("Edit Chains"));         // Provide visual label
    SetName(_("Edit Chains"));          // Provide audible label
    SetTitle(_("Edit Chains"));
@@ -515,7 +489,10 @@ EditChainsDialog::EditChainsDialog(wxWindow * parent):
    mChanged = false;
    mSelectedCommand = 0;
 
-   Populate();
+   if( mbExpanded )
+      Populate();
+   else
+      BatchProcessDialog::Populate();
 }
 
 EditChainsDialog::~EditChainsDialog()
@@ -534,7 +511,6 @@ void EditChainsDialog::Populate()
 
    // Get and validate the currently active chain
    mActiveChain = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT(""));
-
    // Go populate the chains list.
    PopulateChains();
 
@@ -642,28 +618,7 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-/// This clears and updates the contents of mChains
-void EditChainsDialog::PopulateChains()
-{
-   wxArrayString names = mBatchCommands.GetNames();
-   int i;
-
-   mChains->DeleteAllItems();
-   for (i = 0; i < (int)names.GetCount(); i++) {
-      mChains->InsertItem(i, names[i]);
-   }
-
-   int item = mChains->FindItem(-1, mActiveChain);
-   if (item == -1) {
-      item = 0;
-      mActiveChain = mChains->GetItemText(0);
-   }
-
-   // Select the name in the list...this will fire an event.
-   mChains->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-}
-
-/// This clears and updates the contents of mList
+/// This clears and updates the contents of mList, the commands for the current chain.
 void EditChainsDialog::PopulateList()
 {
    mList->DeleteAllItems();
@@ -704,10 +659,14 @@ void EditChainsDialog::AddItem(const wxString &Action, const wxString &Params)
 
 void EditChainsDialog::UpdateMenus()
 {
-// Mac won't tolerate a menus update during a modal dialog.
-#ifndef __WXMAC__
+   // OK even on mac, as dialog is modal.
    GetActiveProject()->RebuildMenuBar();
-#endif
+}
+
+void EditChainsDialog::UpdateDisplay( bool WXUNUSED(bExpanded) )
+{
+   //if(IsShown())
+   //   DoUpdate();
 }
 
 bool EditChainsDialog::ChangeOK()
@@ -748,7 +707,9 @@ void EditChainsDialog::OnChainSelected(wxListEvent & event)
 
    mActiveChain = mChains->GetItemText(item);
    mBatchCommands.ReadChain(mActiveChain);
-
+   if( !mbExpanded )
+      return;
+   
    if (mBatchCommands.IsFixed(mActiveChain)) {
       mRemove->Disable();
       mRename->Disable();
@@ -774,6 +735,8 @@ void EditChainsDialog::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    // Refrsh the layout and re-fit the columns.
    Layout();
+   if( !mbExpanded )
+      return;
    FitColumns();
 }
 
@@ -1116,7 +1079,8 @@ void EditChainsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    if( !SaveChanges() )
       return;
-   EndModal(true);
+   Hide();
+   //EndModal(true);
 }
 
 ///
@@ -1125,8 +1089,7 @@ void EditChainsDialog::OnCancel(wxCommandEvent & event)
    if (!ChangeOK()) {
       return;
    }
-   BatchProcessDialog::OnCancel( event );
-   //EndModal(false);
+   Hide();
 }
 
 ///

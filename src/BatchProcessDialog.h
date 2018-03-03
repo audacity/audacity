@@ -45,8 +45,9 @@ class BatchProcessDialog : public wxDialogWrapper {
    BatchProcessDialog(wxWindow * parent, bool bInherited=false);
    virtual ~BatchProcessDialog();
  public:
-   virtual void Populate();
-   virtual void PopulateOrExchange( ShuttleGui & S );
+   // Populate methods NOT virtual.
+   void Populate();
+   void PopulateOrExchange( ShuttleGui & S );
    virtual void OnApplyToProject(wxCommandEvent & event);
    virtual void OnApplyToFiles(wxCommandEvent & event);
    virtual void OnCancel(wxCommandEvent & event);
@@ -54,7 +55,7 @@ class BatchProcessDialog : public wxDialogWrapper {
 
    virtual wxString GetHelpPageName() {return "Tools_Menu#chains_compact_dialog";};
 
-
+   void PopulateChains();
    void ApplyChainToProject( int iChain, bool bHasGui=true );
 
 
@@ -67,6 +68,7 @@ class BatchProcessDialog : public wxDialogWrapper {
    wxButton *mCancel;
    wxTextCtrl *mResults;
    bool mAbort;
+   wxString mActiveChain;
 
    DECLARE_EVENT_TABLE()
 };
@@ -74,19 +76,19 @@ class BatchProcessDialog : public wxDialogWrapper {
 class EditChainsDialog final : public BatchProcessDialog
 {
 public:
-   EditChainsDialog(wxWindow * parent);
+   EditChainsDialog(wxWindow * parent, bool bExpanded=true);
    ~EditChainsDialog();
+   void UpdateDisplay( bool bExpanded );
 
 private:
-   void Populate() override;
-   void PopulateOrExchange(ShuttleGui &S) override;
+   void Populate();
+   void PopulateOrExchange(ShuttleGui &S);
    void OnApplyToProject(wxCommandEvent & event) override;
    void OnApplyToFiles(wxCommandEvent & event) override;
    void OnCancel(wxCommandEvent &event) override;
 
    virtual wxString GetHelpPageName() override {return "Tools_Menu#chains_full_dialog";};
 
-   void PopulateChains();
    void PopulateList();
    void AddItem(const wxString &command, wxString const &params);
    bool ChangeOK();
@@ -129,11 +131,9 @@ private:
    wxButton *mRename;
    wxButton *mDefaults;
 
-
-   wxString mActiveChain;
-
    int mSelectedCommand;
    bool mChanged;
+   bool mbExpanded;
 
    using CommandName = std::tuple<wxString, wxString,wxString>;
    using CommandNameVector = std::vector<CommandName>;

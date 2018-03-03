@@ -6854,6 +6854,38 @@ void AudacityProject::OnShowExtraMenus(const CommandContext &WXUNUSED(context) )
    RebuildAllMenuBars();
 }
 
+void AudacityProject::OnApplyChainDirectly(const CommandContext &context )
+{
+   //wxLogDebug( "Chain was: %s", context.parameter);
+   BatchProcessDialog dlg(this);
+   wxString Name = context.parameter;
+   long item=0;
+   // Take last three letters (of e.g. Chain007) and convert to a number.
+   Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
+   dlg.ApplyChainToProject( item, false );
+   ModifyUndoMenuItems();
+}
+
+void AudacityProject::OnApplyChain(const CommandContext &WXUNUSED(context) )
+{
+   const bool bExpanded = false;
+   if (!mChainsWindow)
+      mChainsWindow = safenew EditChainsDialog(this, bExpanded);
+   mChainsWindow->Show();
+   mChainsWindow->Raise();
+   mChainsWindow->UpdateDisplay( bExpanded);
+}
+
+void AudacityProject::OnEditChains(const CommandContext &WXUNUSED(context) )
+{
+   const bool bExpanded = true;
+   if (!mChainsWindow)
+      mChainsWindow = safenew EditChainsDialog(this, bExpanded);
+   mChainsWindow->Show();
+   mChainsWindow->Raise();
+   mChainsWindow->UpdateDisplay( bExpanded);
+}
+
 void AudacityProject::OnHistory(const CommandContext &WXUNUSED(context) )
 {
    if (!mHistoryWindow)
@@ -6862,7 +6894,6 @@ void AudacityProject::OnHistory(const CommandContext &WXUNUSED(context) )
    mHistoryWindow->Raise();
    mHistoryWindow->UpdateDisplay();
 }
-
 void AudacityProject::OnKaraoke(const CommandContext &WXUNUSED(context) )
 {
    if (!mLyricsWindow)
@@ -8472,30 +8503,6 @@ void AudacityProject::OnToggleTypeToCreateLabel(const CommandContext &WXUNUSED(c
    ModifyAllProjectToolbarMenus();
 }
 
-void AudacityProject::OnApplyChain(const CommandContext &WXUNUSED(context) )
-{
-   BatchProcessDialog dlg(this);
-   dlg.ShowModal();
-   ModifyUndoMenuItems();
-}
-
-void AudacityProject::OnApplyChainDirectly(const CommandContext &context )
-{
-   //wxLogDebug( "Chain was: %s", context.parameter);
-   BatchProcessDialog dlg(this);
-   wxString Name = context.parameter;
-   long item=0;
-   // Take last three letters (of e.g. Chain007) and convert to a number.
-   Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
-   dlg.ApplyChainToProject( item, false );
-   ModifyUndoMenuItems();
-}
-
-void AudacityProject::OnEditChains(const CommandContext &WXUNUSED(context) )
-{
-   EditChainsDialog dlg(this);
-   dlg.ShowModal();
-}
 
 void AudacityProject::OnRemoveTracks(const CommandContext &WXUNUSED(context) )
 {
