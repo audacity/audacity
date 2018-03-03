@@ -53,6 +53,7 @@
 #include "FileNames.h"
 #include "import/Import.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/HelpSystem.h"
 
 #define ChainsListID       7001
 #define CommandsListID     7002
@@ -63,6 +64,7 @@ BEGIN_EVENT_TABLE(BatchProcessDialog, wxDialogWrapper)
    EVT_BUTTON(ApplyToProjectID, BatchProcessDialog::OnApplyToProject)
    EVT_BUTTON(ApplyToFilesID, BatchProcessDialog::OnApplyToFiles)
    EVT_BUTTON(wxID_CANCEL, BatchProcessDialog::OnCancel)
+   EVT_BUTTON(wxID_HELP, BatchProcessDialog::OnHelp)
 END_EVENT_TABLE()
 
 BatchProcessDialog::BatchProcessDialog(wxWindow * parent, bool bInherited):
@@ -115,7 +117,8 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
          S.Id(ApplyToProjectID).AddButton(_("&Project"));
          S.Id(ApplyToFilesID).AddButton(_("&Files..."));
          S.AddSpace( 40 );
-         S.Id(wxID_CANCEL).AddButton(_("&Cancel"));
+         //S.Id(wxID_CANCEL).AddButton(_("&Cancel"));
+         S.AddStandardButtons( eCancelButton | eHelpButton);
       }
       S.EndHorizontalLay();
    }
@@ -146,6 +149,12 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
    // Set the column size for the chains list.
    wxSize sz = mChains->GetClientSize();
    mChains->SetColumnWidth(0, sz.x);
+}
+
+void BatchProcessDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   wxString page = GetHelpPageName();
+   HelpSystem::ShowHelp(this, page, true);
 }
 
 void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
@@ -600,7 +609,7 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
             S.Id(ApplyToProjectButtonID).AddButton(_("&Project"), wxALIGN_LEFT);
             S.Id(ApplyToFilesButtonID).AddButton(_("&Files..."), wxALIGN_LEFT);
             S.AddSpace( 40 );
-            S.AddStandardButtons();
+            S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
          }
          S.EndHorizontalLay();
       }

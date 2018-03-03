@@ -41,6 +41,7 @@ selected command.
 #include "effects/EffectManager.h"
 #include "BatchCommands.h"
 #include "ShuttleGui.h"
+#include "widgets/HelpSystem.h"
 
 
 #define CommandsListID        7001
@@ -50,6 +51,7 @@ selected command.
 BEGIN_EVENT_TABLE(BatchCommandDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK,                     BatchCommandDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL,                 BatchCommandDialog::OnCancel)
+   EVT_BUTTON(wxID_HELP,                   BatchCommandDialog::OnHelp)
    EVT_BUTTON(EditParamsButtonID,          BatchCommandDialog::OnEditParams)
    EVT_BUTTON(UsePresetButtonID,           BatchCommandDialog::OnUsePreset)
    EVT_LIST_ITEM_ACTIVATED(CommandsListID, BatchCommandDialog::OnItemSelected)
@@ -110,7 +112,7 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons();
+   S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
 
    PopulateCommandList();
 
@@ -147,6 +149,12 @@ void BatchCommandDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 void BatchCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(false);
+}
+
+void BatchCommandDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   wxString page = GetHelpPageName();
+   HelpSystem::ShowHelp(this, page, true);
 }
 
 void BatchCommandDialog::OnItemSelected(wxListEvent &event)

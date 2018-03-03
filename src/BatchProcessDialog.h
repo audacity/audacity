@@ -50,6 +50,10 @@ class BatchProcessDialog : public wxDialogWrapper {
    virtual void OnApplyToProject(wxCommandEvent & event);
    virtual void OnApplyToFiles(wxCommandEvent & event);
    virtual void OnCancel(wxCommandEvent & event);
+   virtual void OnHelp(wxCommandEvent & event);
+
+   virtual wxString GetHelpPageName() {return "Tools_Menu#chains_compact_dialog";};
+
 
    // These will be reused in the derived class...
    wxListCtrl *mList;
@@ -77,6 +81,7 @@ private:
    void OnApplyToFiles(wxCommandEvent & event) override;
    void OnCancel(wxCommandEvent &event) override;
 
+   virtual wxString GetHelpPageName() override {return "Tools_Menu#chains_full_dialog";};
 
    void PopulateChains();
    void PopulateList();
