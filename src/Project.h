@@ -86,7 +86,7 @@ class TranscriptionToolBar;
 // windows and frames
 class AdornedRulerPanel;
 class HistoryWindow;
-class EditChainsDialog;
+class MacrosWindow;
 class LyricsWindow;
 class MixerBoard;
 class MixerBoardFrame;
@@ -680,7 +680,7 @@ private:
    bool mActive{ true };
    bool mIconized;
 
-   EditChainsDialog *mChainsWindow{};
+   MacrosWindow *mMacrosWindow{};
    HistoryWindow *mHistoryWindow{};
    LyricsWindow* mLyricsWindow{};
    MixerBoardFrame* mMixerBoardFrame{};

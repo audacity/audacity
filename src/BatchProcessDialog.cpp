@@ -2,15 +2,15 @@
 
   Audacity: A Digital Audio Editor
 
-  BatchProcessDialog.cpp
+  ApplyMacroDialog.cpp
 
   Dominic Mazzoni
   James Crook
 
 *******************************************************************//*!
 
-\class BatchProcessDialog
-\brief Shows progress in executing commands in BatchCommands.
+\class ApplyMacroDialog
+\brief Shows progress in executing commands in MacroCommands.
 
 *//*******************************************************************/
 
@@ -55,20 +55,20 @@
 #include "widgets/ErrorDialog.h"
 #include "widgets/HelpSystem.h"
 
-#define ChainsListID       7001
+#define MacrosListID       7001
 #define CommandsListID     7002
 #define ApplyToProjectID   7003
 #define ApplyToFilesID     7004
 
-BEGIN_EVENT_TABLE(BatchProcessDialog, wxDialogWrapper)
-   EVT_BUTTON(ApplyToProjectID, BatchProcessDialog::OnApplyToProject)
-   EVT_BUTTON(ApplyToFilesID, BatchProcessDialog::OnApplyToFiles)
-   EVT_BUTTON(wxID_CANCEL, BatchProcessDialog::OnCancel)
-   EVT_BUTTON(wxID_HELP, BatchProcessDialog::OnHelp)
+BEGIN_EVENT_TABLE(ApplyMacroDialog, wxDialogWrapper)
+   EVT_BUTTON(ApplyToProjectID, ApplyMacroDialog::OnApplyToProject)
+   EVT_BUTTON(ApplyToFilesID, ApplyMacroDialog::OnApplyToFiles)
+   EVT_BUTTON(wxID_CANCEL, ApplyMacroDialog::OnCancel)
+   EVT_BUTTON(wxID_HELP, ApplyMacroDialog::OnHelp)
 END_EVENT_TABLE()
 
-BatchProcessDialog::BatchProcessDialog(wxWindow * parent, bool bInherited):
-   wxDialogWrapper(parent, wxID_ANY, _("Apply Chain"),
+ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
+   wxDialogWrapper(parent, wxID_ANY, _("Apply Macro"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
@@ -76,57 +76,57 @@ BatchProcessDialog::BatchProcessDialog(wxWindow * parent, bool bInherited):
    mAbort = false;
    if( bInherited )
       return;
-   SetLabel(_("Apply Chain"));         // Provide visual label
-   SetName(_("Apply Chain"));          // Provide audible label
+   SetLabel(_("Apply Macro"));         // Provide visual label
+   SetName(_("Apply Macro"));          // Provide audible label
    Populate();
 
 }
 
-BatchProcessDialog::~BatchProcessDialog()
+ApplyMacroDialog::~ApplyMacroDialog()
 {
 }
 
-void BatchProcessDialog::Populate()
+void ApplyMacroDialog::Populate()
 {
    //------------------------- Main section --------------------
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
-   // Get and validate the currently active chain
-   mActiveChain = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT(""));
-   // Go populate the chains list.
-   PopulateChains();
+   // Get and validate the currently active macro
+   mActiveMacro = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxT(""));
+   // Go populate the macros list.
+   PopulateMacros();
 
    Layout();
    Fit();
    SetSizeHints(GetSize());
    Center();
 
-   // Set the column size for the chains list.
-   wxSize sz = mChains->GetClientSize();
-   mChains->SetColumnWidth(0, sz.x);
+   // Set the column size for the macros list.
+   wxSize sz = mMacros->GetClientSize();
+   mMacros->SetColumnWidth(0, sz.x);
 }
 
 /// Defines the dialog and does data exchange with it.
-void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
+void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.StartVerticalLay(true);
    {
-      /*i18n-hint: A chain is a sequence of commands that can be applied
+      /*i18n-hint: A macro is a sequence of commands that can be applied
        * to one or more audio files.*/
-      S.StartStatic(_("&Select Chain"), true);
+      S.StartStatic(_("&Select Macro"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                      wxLC_SINGLE_SEL);
-         mChains = S.Id(ChainsListID).AddListControlReportMode();
-         mChains->InsertColumn(0, _("Chain"), wxLIST_FORMAT_LEFT);
+         mMacros = S.Id(MacrosListID).AddListControlReportMode();
+         mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
       }
       S.EndStatic();
 
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.SetBorder(10);
-         S.AddPrompt( _("Apply Chain to:") );
+         S.AddPrompt( _("Apply Macro to:") );
          S.Id(ApplyToProjectID).AddButton(_("&Project"));
          S.Id(ApplyToFilesID).AddButton(_("&Files..."));
          S.AddSpace( 40 );
@@ -137,52 +137,52 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
    S.EndVerticalLay();
 }
 
-/// This clears and updates the contents of mChains, the list of chains.
-void BatchProcessDialog::PopulateChains()
+/// This clears and updates the contents of mMacros, the list of macros.
+void ApplyMacroDialog::PopulateMacros()
 {
-   wxArrayString names = mBatchCommands.GetNames();
+   wxArrayString names = mMacroCommands.GetNames();
    int i;
 
-   mChains->DeleteAllItems();
+   mMacros->DeleteAllItems();
    for (i = 0; i < (int)names.GetCount(); i++) {
-      mChains->InsertItem(i, names[i]);
+      mMacros->InsertItem(i, names[i]);
    }
 
-   int item = mChains->FindItem(-1, mActiveChain);
+   int item = mMacros->FindItem(-1, mActiveMacro);
    if (item == -1) {
       item = 0;
-      mActiveChain = mChains->GetItemText(0);
+      mActiveMacro = mMacros->GetItemText(0);
    }
 
    // Select the name in the list...this will fire an event.
-   mChains->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+   mMacros->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 }
 
 
 
 
-void BatchProcessDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+void ApplyMacroDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
    wxString page = GetHelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 
-void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
+void ApplyMacroDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 {
-   long item = mChains->GetNextItem(-1,
+   long item = mMacros->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
 
    if (item == -1) {
-      AudacityMessageBox(_("No chain selected"));
+      AudacityMessageBox(_("No macro selected"));
       return;
    }
-   ApplyChainToProject( item );
+   ApplyMacroToProject( item );
 }
 
-void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
+void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 {
-   wxString name = mChains->GetItemText(iChain);
+   wxString name = mMacros->GetItemText(iMacro);
    if( name.IsEmpty() )
       return;
 
@@ -222,10 +222,10 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
    if( bHasGui )
       Hide();
 
-   gPrefs->Write(wxT("/Batch/ActiveChain"), name);
+   gPrefs->Write(wxT("/Batch/ActiveMacro"), name);
    gPrefs->Flush();
 
-   mBatchCommands.ReadChain(name);
+   mMacroCommands.ReadMacro(name);
 
    // The disabler must get deleted before the EndModal() call.  Otherwise,
    // the menus on OSX will remain disabled.
@@ -233,7 +233,7 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
    {
       wxWindowDisabler wd(&activityWin);
       success = GuardedCall< bool >(
-         [this]{ return mBatchCommands.ApplyChain(); } );
+         [this]{ return mMacroCommands.ApplyMacro(); } );
    }
 
    if( !bHasGui )
@@ -247,18 +247,18 @@ void BatchProcessDialog::ApplyChainToProject( int iChain, bool bHasGui )
    Hide();
 }
 
-void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
+void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 {
-   long item = mChains->GetNextItem(-1,
+   long item = mMacros->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
    if (item == -1) {
-      AudacityMessageBox(_("No chain selected"));
+      AudacityMessageBox(_("No macro selected"));
       return;
    }
 
-   wxString name = mChains->GetItemText(item);
-   gPrefs->Write(wxT("/Batch/ActiveChain"), name);
+   wxString name = mMacros->GetItemText(item);
+   gPrefs->Write(wxT("/Batch/ActiveMacro"), name);
    gPrefs->Flush();
 
    AudacityProject *project = GetActiveProject();
@@ -383,7 +383,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    wxYield();
    Hide();
 
-   mBatchCommands.ReadChain(name);
+   mMacroCommands.ReadMacro(name);
    for (i = 0; i < (int)files.GetCount(); i++) {
       wxWindowDisabler wd(&activityWin);
       if (i > 0) {
@@ -397,7 +397,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          project->Import(files[i]);
          project->ZoomAfterImport(nullptr);
          project->OnSelectAll(*project);
-         if (!mBatchCommands.ApplyChain())
+         if (!mMacroCommands.ApplyMacro())
             return false;
 
          if (!activityWin.IsShown() || mAbort)
@@ -418,7 +418,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    Hide();
 }
 
-void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
+void ApplyMacroDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    Hide();
 }
@@ -439,35 +439,35 @@ enum {
    UpButtonID,
    DownButtonID,
    RenameButtonID,
-// ChainsListID             7005
+// MacrosListID             7005
 // CommandsListID,       7002
-// Re-Use IDs from BatchProcessDialog.
+// Re-Use IDs from ApplyMacroDialog.
    ApplyToProjectButtonID = ApplyToProjectID,
    ApplyToFilesButtonID = ApplyToFilesID,
 };
 
-BEGIN_EVENT_TABLE(EditChainsDialog, BatchProcessDialog)
-   EVT_LIST_ITEM_SELECTED(ChainsListID, EditChainsDialog::OnChainSelected)
-   EVT_LIST_ITEM_SELECTED(CommandsListID, EditChainsDialog::OnListSelected)
-   EVT_LIST_BEGIN_LABEL_EDIT(ChainsListID, EditChainsDialog::OnChainsBeginEdit)
-   EVT_LIST_END_LABEL_EDIT(ChainsListID, EditChainsDialog::OnChainsEndEdit)
-   EVT_BUTTON(AddButtonID, EditChainsDialog::OnAdd)
-   EVT_BUTTON(RemoveButtonID, EditChainsDialog::OnRemove)
-   EVT_BUTTON(RenameButtonID, EditChainsDialog::OnRename)
-   EVT_SIZE(EditChainsDialog::OnSize)
+BEGIN_EVENT_TABLE(MacrosWindow, ApplyMacroDialog)
+   EVT_LIST_ITEM_SELECTED(MacrosListID, MacrosWindow::OnMacroSelected)
+   EVT_LIST_ITEM_SELECTED(CommandsListID, MacrosWindow::OnListSelected)
+   EVT_LIST_BEGIN_LABEL_EDIT(MacrosListID, MacrosWindow::OnMacrosBeginEdit)
+   EVT_LIST_END_LABEL_EDIT(MacrosListID, MacrosWindow::OnMacrosEndEdit)
+   EVT_BUTTON(AddButtonID, MacrosWindow::OnAdd)
+   EVT_BUTTON(RemoveButtonID, MacrosWindow::OnRemove)
+   EVT_BUTTON(RenameButtonID, MacrosWindow::OnRename)
+   EVT_SIZE(MacrosWindow::OnSize)
 
-   EVT_LIST_ITEM_ACTIVATED(CommandsListID, EditChainsDialog::OnCommandActivated)
-   EVT_BUTTON(InsertButtonID, EditChainsDialog::OnInsert)
-   EVT_BUTTON(EditButtonID, EditChainsDialog::OnEditCommandParams)
-   EVT_BUTTON(DeleteButtonID, EditChainsDialog::OnDelete)
-   EVT_BUTTON(UpButtonID, EditChainsDialog::OnUp)
-   EVT_BUTTON(DownButtonID, EditChainsDialog::OnDown)
-   EVT_BUTTON(DefaultsButtonID, EditChainsDialog::OnDefaults)
+   EVT_LIST_ITEM_ACTIVATED(CommandsListID, MacrosWindow::OnCommandActivated)
+   EVT_BUTTON(InsertButtonID, MacrosWindow::OnInsert)
+   EVT_BUTTON(EditButtonID, MacrosWindow::OnEditCommandParams)
+   EVT_BUTTON(DeleteButtonID, MacrosWindow::OnDelete)
+   EVT_BUTTON(UpButtonID, MacrosWindow::OnUp)
+   EVT_BUTTON(DownButtonID, MacrosWindow::OnDown)
+   EVT_BUTTON(DefaultsButtonID, MacrosWindow::OnDefaults)
 
-   EVT_BUTTON(wxID_OK, EditChainsDialog::OnOK)
-   EVT_BUTTON(wxID_CANCEL, EditChainsDialog::OnCancel)
+   EVT_BUTTON(wxID_OK, MacrosWindow::OnOK)
+   EVT_BUTTON(wxID_CANCEL, MacrosWindow::OnCancel)
 
-   EVT_KEY_DOWN(EditChainsDialog::OnKeyDown)
+   EVT_KEY_DOWN(MacrosWindow::OnKeyDown)
 END_EVENT_TABLE()
 
 enum {
@@ -478,13 +478,13 @@ enum {
 };
 
 /// Constructor
-EditChainsDialog::EditChainsDialog(wxWindow * parent, bool bExpanded):
-   BatchProcessDialog(parent, true)
+MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
+   ApplyMacroDialog(parent, true)
 {
    mbExpanded = bExpanded;
-   SetLabel(_("Edit Chains"));         // Provide visual label
-   SetName(_("Edit Chains"));          // Provide audible label
-   SetTitle(_("Edit Chains"));
+   SetLabel(_("Macros"));         // Provide visual label
+   SetName(_("Macros"));          // Provide audible label
+   SetTitle(_("Macros"));
 
    mChanged = false;
    mSelectedCommand = 0;
@@ -492,27 +492,27 @@ EditChainsDialog::EditChainsDialog(wxWindow * parent, bool bExpanded):
    if( mbExpanded )
       Populate();
    else
-      BatchProcessDialog::Populate();
+      ApplyMacroDialog::Populate();
 }
 
-EditChainsDialog::~EditChainsDialog()
+MacrosWindow::~MacrosWindow()
 {
 }
 
 /// Creates the dialog and its contents.
-void EditChainsDialog::Populate()
+void MacrosWindow::Populate()
 {
-   mCommandNames = BatchCommands::GetAllCommands();
+   mCommandNames = MacroCommands::GetAllCommands();
 
    //------------------------- Main section --------------------
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
 
-   // Get and validate the currently active chain
-   mActiveChain = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT(""));
-   // Go populate the chains list.
-   PopulateChains();
+   // Get and validate the currently active macro
+   mActiveMacro = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxT(""));
+   // Go populate the macros list.
+   PopulateMacros();
 
    // We have a bare list.  We need to add columns and content.
    PopulateList();
@@ -527,20 +527,20 @@ void EditChainsDialog::Populate()
            wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) * 4 / 5);
    Center();
 
-   // Set the column size for the chains list.
-   wxSize sz = mChains->GetClientSize();
-   mChains->SetColumnWidth(0, sz.x);
+   // Set the column size for the macros list.
+   wxSize sz = mMacros->GetClientSize();
+   mMacros->SetColumnWidth(0, sz.x);
 
    // Size columns properly
    FitColumns();
 }
 
 /// Defines the dialog and does data exchange with it.
-void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
+void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 1);
    {
-      S.StartStatic(_("&Chains"));
+      S.StartStatic(_("&Macros"));
       {
          // JKC: Experimenting with an alternative way to get multiline
          // translated strings to work correctly without very long lines.
@@ -555,9 +555,9 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
          // If it doesn't work out, revert to all-on-one-line.
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
                     wxLC_EDIT_LABELS);
-         mChains = S.Id(ChainsListID).AddListControlReportMode();
-         // i18n-hint: This is the heading for a column in the edit chains dialog
-         mChains->InsertColumn(0, _("Chain"), wxLIST_FORMAT_LEFT);
+         mMacros = S.Id(MacrosListID).AddListControlReportMode();
+         // i18n-hint: This is the heading for a column in the edit macros dialog
+         mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
          S.StartHorizontalLay(wxCENTER, false);
          {
             S.Id(AddButtonID).AddButton(_("&Add"));
@@ -570,7 +570,7 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
 
       S.StartVerticalLay( 1 );
       {
-         S.StartStatic(_("C&hain (Double-Click or press SPACE to edit)"), true);
+         S.StartStatic(_("Ma&cro (Double-Click or press SPACE to edit)"), true);
          {
             S.StartHorizontalLay(wxEXPAND,1);
             {
@@ -603,7 +603,7 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
          S.EndStatic();
          S.StartHorizontalLay(wxALIGN_RIGHT, false);
          {
-            S.AddPrompt( _("Apply Chain to:") );
+            S.AddPrompt( _("Apply Macro to:") );
             S.Id(ApplyToProjectButtonID).AddButton(_("&Project"), wxALIGN_LEFT);
             S.Id(ApplyToFilesButtonID).AddButton(_("&Files..."), wxALIGN_LEFT);
             S.AddSpace( 40 );
@@ -618,14 +618,14 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-/// This clears and updates the contents of mList, the commands for the current chain.
-void EditChainsDialog::PopulateList()
+/// This clears and updates the contents of mList, the commands for the current macro.
+void MacrosWindow::PopulateList()
 {
    mList->DeleteAllItems();
 
-   for (int i = 0; i < mBatchCommands.GetCount(); i++) {
-      AddItem(mBatchCommands.GetCommand(i),
-              mBatchCommands.GetParams(i));
+   for (int i = 0; i < mMacroCommands.GetCount(); i++) {
+      AddItem(mMacroCommands.GetCommand(i),
+              mMacroCommands.GetParams(i));
    }
    /*i18n-hint: This is the last item in a list.*/
    AddItem(_("- END -"), wxT(""));
@@ -638,7 +638,7 @@ void EditChainsDialog::PopulateList()
 }
 
 /// Add one item into mList
-void EditChainsDialog::AddItem(const wxString &Action, const wxString &Params)
+void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
 {
    // Translate internal command name to a friendly form
    auto item = make_iterator_range(mCommandNames).index_if(
@@ -657,26 +657,26 @@ void EditChainsDialog::AddItem(const wxString &Action, const wxString &Params)
    mList->SetItem(i, ParamsColumn, Params );
 }
 
-void EditChainsDialog::UpdateMenus()
+void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
    GetActiveProject()->RebuildMenuBar();
 }
 
-void EditChainsDialog::UpdateDisplay( bool WXUNUSED(bExpanded) )
+void MacrosWindow::UpdateDisplay( bool WXUNUSED(bExpanded) )
 {
    //if(IsShown())
    //   DoUpdate();
 }
 
-bool EditChainsDialog::ChangeOK()
+bool MacrosWindow::ChangeOK()
 {
    if (mChanged) {
       wxString title;
       wxString msg;
       int id;
 
-      title.Printf(_("%s changed"), mActiveChain);
+      title.Printf(_("%s changed"), mActiveMacro);
       msg = _("Do you want to save the changes?");
 
       id = AudacityMessageBox(msg, title, wxYES_NO | wxCANCEL);
@@ -685,7 +685,7 @@ bool EditChainsDialog::ChangeOK()
       }
 
       if (id == wxYES) {
-         if (!mBatchCommands.WriteChain(mActiveChain)) {
+         if (!mMacroCommands.WriteMacro(mActiveMacro)) {
             return false;
          }
       }
@@ -695,8 +695,8 @@ bool EditChainsDialog::ChangeOK()
 
    return true;
 }
-/// An item in the chains list has been selected.
-void EditChainsDialog::OnChainSelected(wxListEvent & event)
+/// An item in the macros list has been selected.
+void MacrosWindow::OnMacroSelected(wxListEvent & event)
 {
    if (!ChangeOK()) {
       event.Veto();
@@ -705,12 +705,12 @@ void EditChainsDialog::OnChainSelected(wxListEvent & event)
 
    int item = event.GetIndex();
 
-   mActiveChain = mChains->GetItemText(item);
-   mBatchCommands.ReadChain(mActiveChain);
+   mActiveMacro = mMacros->GetItemText(item);
+   mMacroCommands.ReadMacro(mActiveMacro);
    if( !mbExpanded )
       return;
    
-   if (mBatchCommands.IsFixed(mActiveChain)) {
+   if (mMacroCommands.IsFixed(mActiveMacro)) {
       mRemove->Disable();
       mRename->Disable();
       mDefaults->Enable();
@@ -724,14 +724,14 @@ void EditChainsDialog::OnChainSelected(wxListEvent & event)
    PopulateList();
 }
 
-/// An item in the chains list has been selected.
-void EditChainsDialog::OnListSelected(wxListEvent & WXUNUSED(event))
+/// An item in the macros list has been selected.
+void MacrosWindow::OnListSelected(wxListEvent & WXUNUSED(event))
 {
    FitColumns();
 }
 
 /// The window has been resized.
-void EditChainsDialog::OnSize(wxSizeEvent & WXUNUSED(event))
+void MacrosWindow::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    // Refrsh the layout and re-fit the columns.
    Layout();
@@ -740,7 +740,7 @@ void EditChainsDialog::OnSize(wxSizeEvent & WXUNUSED(event))
    FitColumns();
 }
 
-void EditChainsDialog::FitColumns()
+void MacrosWindow::FitColumns()
 {
    mList->SetColumnWidth(0, 0);  // First column width is zero, to hide it.
 
@@ -785,20 +785,20 @@ void EditChainsDialog::FitColumns()
 }
 
 ///
-void EditChainsDialog::OnChainsBeginEdit(wxListEvent &event)
+void MacrosWindow::OnMacrosBeginEdit(wxListEvent &event)
 {
    int itemNo = event.GetIndex();
 
-   wxString chain = mChains->GetItemText(itemNo);
+   wxString macro = mMacros->GetItemText(itemNo);
 
-   if (mBatchCommands.IsFixed(mActiveChain)) {
+   if (mMacroCommands.IsFixed(mActiveMacro)) {
       wxBell();
       event.Veto();
    }
 }
 
 ///
-void EditChainsDialog::OnChainsEndEdit(wxListEvent &event)
+void MacrosWindow::OnMacrosEndEdit(wxListEvent &event)
 {
    if (event.IsEditCancelled()) {
       return;
@@ -806,20 +806,20 @@ void EditChainsDialog::OnChainsEndEdit(wxListEvent &event)
 
    wxString newname = event.GetLabel();
 
-   mBatchCommands.RenameChain(mActiveChain, newname);
+   mMacroCommands.RenameMacro(mActiveMacro, newname);
 
-   mActiveChain = newname;
+   mActiveMacro = newname;
 
-   PopulateChains();
+   PopulateMacros();
 }
 
 ///
-void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    while (true) {
       AudacityTextEntryDialog d(this,
-                          _("Enter name of new chain"),
-                          _("Name of new chain"));
+                          _("Enter name of new macro"),
+                          _("Name of new macro"));
       d.SetName(d.GetTitle());
       wxString name;
 
@@ -848,11 +848,11 @@ void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
          continue;
       }
 
-      mBatchCommands.AddChain(name);
+      mMacroCommands.AddMacro(name);
 
-      mActiveChain = name;
+      mActiveMacro = name;
 
-      PopulateChains();
+      PopulateMacros();
       UpdateMenus();
 
       break;
@@ -860,16 +860,16 @@ void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
 }
 
 ///
-void EditChainsDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
-   long item = mChains->GetNextItem(-1,
+   long item = mMacros->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
    if (item == -1) {
       return;
    }
 
-   wxString name = mChains->GetItemText(item);
+   wxString name = mMacros->GetItemText(item);
    AudacityMessageDialog m(this,
    /*i18n-hint: %s will be replaced by the name of a file.*/
                      wxString::Format(_("Are you sure you want to delete %s?"), name),
@@ -879,42 +879,42 @@ void EditChainsDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   mBatchCommands.DeleteChain(name);
+   mMacroCommands.DeleteMacro(name);
 
-   if (item >= (mChains->GetItemCount() - 1) && item >= 0) {
+   if (item >= (mMacros->GetItemCount() - 1) && item >= 0) {
       item--;
    }
 
-   mActiveChain = mChains->GetItemText(item);
+   mActiveMacro = mMacros->GetItemText(item);
 
-   PopulateChains();
+   PopulateMacros();
    UpdateMenus();
 }
 
 ///
-void EditChainsDialog::OnRename(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnRename(wxCommandEvent & WXUNUSED(event))
 {
-   long item = mChains->GetNextItem(-1,
+   long item = mMacros->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
                                     wxLIST_STATE_SELECTED);
    if (item == -1) {
       return;
    }
 
-   mChains->EditLabel(item);
+   mMacros->EditLabel(item);
    UpdateMenus();
 }
 
 /// An item in the list has been selected.
 /// Bring up a dialog to allow its parameters to be edited.
-void EditChainsDialog::OnCommandActivated(wxListEvent & WXUNUSED(event))
+void MacrosWindow::OnCommandActivated(wxListEvent & WXUNUSED(event))
 {
    wxCommandEvent dummy;
    OnEditCommandParams( dummy );
 }
 
 ///
-void EditChainsDialog::OnInsert(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnInsert(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -925,13 +925,13 @@ void EditChainsDialog::OnInsert(wxCommandEvent & WXUNUSED(event))
    InsertCommandAt( item );
 }
 
-void EditChainsDialog::InsertCommandAt(int item)
+void MacrosWindow::InsertCommandAt(int item)
 {
    if (item == -1) {
       return;
    }
 
-   BatchCommandDialog d(this, wxID_ANY);
+   MacroCommandDialog d(this, wxID_ANY);
 
    if (!d.ShowModal()) {
       return;
@@ -939,7 +939,7 @@ void EditChainsDialog::InsertCommandAt(int item)
 
    if(d.mSelectedCommand != wxT(""))
    {
-      mBatchCommands.AddToChain(d.mSelectedCommand,
+      mMacroCommands.AddToMacro(d.mSelectedCommand,
                                 d.mSelectedParameters,
                                 item);
       mChanged = true;
@@ -948,7 +948,7 @@ void EditChainsDialog::InsertCommandAt(int item)
    }
 }
 
-void EditChainsDialog::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
 {
    int item = mList->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
 
@@ -965,13 +965,13 @@ void EditChainsDialog::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    }
 
    // Just edit the parameters, and not the command.
-   wxString command = mBatchCommands.GetCommand(item);
-   wxString params  = mBatchCommands.GetParams(item);
+   wxString command = mMacroCommands.GetCommand(item);
+   wxString params  = mMacroCommands.GetParams(item);
 
-   params = BatchCommands::PromptForParamsFor(command, params, this).Trim();
+   params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
 
-   mBatchCommands.DeleteFromChain(item);
-   mBatchCommands.AddToChain(command,
+   mMacroCommands.DeleteFromMacro(item);
+   mMacroCommands.AddToMacro(command,
                              params,
                              item);
    mChanged = true;
@@ -980,7 +980,7 @@ void EditChainsDialog::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
 }
 
 ///
-void EditChainsDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnDelete(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -989,7 +989,7 @@ void EditChainsDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   mBatchCommands.DeleteFromChain(item);
+   mMacroCommands.DeleteFromMacro(item);
    mChanged = true;
 
    if (item >= (mList->GetItemCount() - 2) && item >= 0) {
@@ -1000,7 +1000,7 @@ void EditChainsDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 }
 
 ///
-void EditChainsDialog::OnUp(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnUp(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -1009,17 +1009,17 @@ void EditChainsDialog::OnUp(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   mBatchCommands.AddToChain(mBatchCommands.GetCommand(item),
-                             mBatchCommands.GetParams(item),
+   mMacroCommands.AddToMacro(mMacroCommands.GetCommand(item),
+                             mMacroCommands.GetParams(item),
                              item - 1);
-   mBatchCommands.DeleteFromChain(item + 1);
+   mMacroCommands.DeleteFromMacro(item + 1);
    mChanged = true;
    mSelectedCommand = item - 1;
    PopulateList();
 }
 
 ///
-void EditChainsDialog::OnDown(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnDown(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -1028,45 +1028,45 @@ void EditChainsDialog::OnDown(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   mBatchCommands.AddToChain(mBatchCommands.GetCommand(item),
-                             mBatchCommands.GetParams(item),
+   mMacroCommands.AddToMacro(mMacroCommands.GetCommand(item),
+                             mMacroCommands.GetParams(item),
                              item + 2);
-   mBatchCommands.DeleteFromChain(item);
+   mMacroCommands.DeleteFromMacro(item);
    mChanged = true;
    mSelectedCommand = item + 1;
    PopulateList();
 }
 
-void EditChainsDialog::OnApplyToProject(wxCommandEvent & event)
+void MacrosWindow::OnApplyToProject(wxCommandEvent & event)
 {
    if( !SaveChanges() )
       return;
-   BatchProcessDialog::OnApplyToProject( event );
+   ApplyMacroDialog::OnApplyToProject( event );
 }
 
-void EditChainsDialog::OnApplyToFiles(wxCommandEvent & event)
+void MacrosWindow::OnApplyToFiles(wxCommandEvent & event)
 {
    if( !SaveChanges() )
       return;
-   BatchProcessDialog::OnApplyToFiles( event );
+   ApplyMacroDialog::OnApplyToFiles( event );
 }
 
-/// Select the empty Command chain.
-void EditChainsDialog::OnDefaults(wxCommandEvent & WXUNUSED(event))
+/// Select the empty Command macro.
+void MacrosWindow::OnDefaults(wxCommandEvent & WXUNUSED(event))
 {
-   mBatchCommands.RestoreChain(mActiveChain);
+   mMacroCommands.RestoreMacro(mActiveMacro);
 
    mChanged = true;
 
    PopulateList();
 }
 
-bool EditChainsDialog::SaveChanges(){
-   gPrefs->Write(wxT("/Batch/ActiveChain"), mActiveChain);
+bool MacrosWindow::SaveChanges(){
+   gPrefs->Write(wxT("/Batch/ActiveMacro"), mActiveMacro);
    gPrefs->Flush();
 
    if (mChanged) {
-      if (!mBatchCommands.WriteChain(mActiveChain)) {
+      if (!mMacroCommands.WriteMacro(mActiveMacro)) {
          return false;
       }
    }
@@ -1075,7 +1075,7 @@ bool EditChainsDialog::SaveChanges(){
 }
 
 /// Send changed values back to Prefs, and update Audacity.
-void EditChainsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
+void MacrosWindow::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    if( !SaveChanges() )
       return;
@@ -1084,7 +1084,7 @@ void EditChainsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 }
 
 ///
-void EditChainsDialog::OnCancel(wxCommandEvent & event)
+void MacrosWindow::OnCancel(wxCommandEvent & event)
 {
    if (!ChangeOK()) {
       return;
@@ -1093,7 +1093,7 @@ void EditChainsDialog::OnCancel(wxCommandEvent & event)
 }
 
 ///
-void EditChainsDialog::OnKeyDown(wxKeyEvent &event)
+void MacrosWindow::OnKeyDown(wxKeyEvent &event)
 {
    if (event.GetKeyCode() == WXK_DELETE) {
       wxLogDebug(wxT("wxKeyEvent"));

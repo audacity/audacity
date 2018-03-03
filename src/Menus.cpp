@@ -1192,13 +1192,13 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 #endif
 
-      c->AddItem(wxT("ApplyChain"), _("Appl&y Chain..."), FN(OnApplyChain),
+      c->AddItem(wxT("ApplyMacro"), _("Appl&y Macro..."), FN(OnApplyMacro),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
-      c->AddItem(wxT("EditChains"), _("Edit C&hains..."), FN(OnEditChains));
+      c->AddItem(wxT("ManageMacros"), _("&Macros..."), FN(OnManageMacros));
 
       c->AddSeparator();
-      PopulateChainsMenu( c, AudioIONotBusyFlag );
+      PopulateMacrosMenu( c, AudioIONotBusyFlag );
       c->AddSeparator();
 
       PopulateEffectsMenu(c,
@@ -1706,13 +1706,13 @@ void AudacityProject::CreateMenusAndCommands()
 
 
 
-void AudacityProject::PopulateChainsMenu( CommandManager* c, CommandFlag flags  )
+void AudacityProject::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
 {
-   wxArrayString names = BatchCommands::GetNames();
+   wxArrayString names = MacroCommands::GetNames();
    int i;
 
    for (i = 0; i < (int)names.GetCount(); i++) {
-      c->AddItem(wxString::Format("Chain%03i", i ), names[i], FN(OnApplyChainDirectly),
+      c->AddItem(wxString::Format("Macro%03i", i ), names[i], FN(OnApplyMacroDirectly),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
    }
@@ -6854,36 +6854,36 @@ void AudacityProject::OnShowExtraMenus(const CommandContext &WXUNUSED(context) )
    RebuildAllMenuBars();
 }
 
-void AudacityProject::OnApplyChainDirectly(const CommandContext &context )
+void AudacityProject::OnApplyMacroDirectly(const CommandContext &context )
 {
-   //wxLogDebug( "Chain was: %s", context.parameter);
-   BatchProcessDialog dlg(this);
+   //wxLogDebug( "Macro was: %s", context.parameter);
+   ApplyMacroDialog dlg(this);
    wxString Name = context.parameter;
    long item=0;
-   // Take last three letters (of e.g. Chain007) and convert to a number.
+   // Take last three letters (of e.g. Macro007) and convert to a number.
    Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
-   dlg.ApplyChainToProject( item, false );
+   dlg.ApplyMacroToProject( item, false );
    ModifyUndoMenuItems();
 }
 
-void AudacityProject::OnApplyChain(const CommandContext &WXUNUSED(context) )
+void AudacityProject::OnApplyMacro(const CommandContext &WXUNUSED(context) )
 {
    const bool bExpanded = false;
-   if (!mChainsWindow)
-      mChainsWindow = safenew EditChainsDialog(this, bExpanded);
-   mChainsWindow->Show();
-   mChainsWindow->Raise();
-   mChainsWindow->UpdateDisplay( bExpanded);
+   if (!mMacrosWindow)
+      mMacrosWindow = safenew MacrosWindow(this, bExpanded);
+   mMacrosWindow->Show();
+   mMacrosWindow->Raise();
+   mMacrosWindow->UpdateDisplay( bExpanded);
 }
 
-void AudacityProject::OnEditChains(const CommandContext &WXUNUSED(context) )
+void AudacityProject::OnManageMacros(const CommandContext &WXUNUSED(context) )
 {
    const bool bExpanded = true;
-   if (!mChainsWindow)
-      mChainsWindow = safenew EditChainsDialog(this, bExpanded);
-   mChainsWindow->Show();
-   mChainsWindow->Raise();
-   mChainsWindow->UpdateDisplay( bExpanded);
+   if (!mMacrosWindow)
+      mMacrosWindow = safenew MacrosWindow(this, bExpanded);
+   mMacrosWindow->Show();
+   mMacrosWindow->Raise();
+   mMacrosWindow->UpdateDisplay( bExpanded);
 }
 
 void AudacityProject::OnHistory(const CommandContext &WXUNUSED(context) )

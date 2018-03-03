@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  BatchCommands.h
+  MacroCommands.h
 
   Dominic Mazzoni
   James Crook
@@ -21,12 +21,12 @@
 class Effect;
 class CommandContext;
 
-class BatchCommands final {
+class MacroCommands final {
  public:
    // constructors and destructors
-   BatchCommands();
+   MacroCommands();
  public:
-   bool ApplyChain(const wxString & filename = wxT(""));
+   bool ApplyMacro(const wxString & filename = wxT(""));
    bool ApplyCommand( const wxString & command, const wxString & params, CommandContext const * pContext=NULL );
    bool ApplyCommandInBatchMode(const wxString & command, const wxString &params);
    bool ApplySpecialCommand(int iCommand, const wxString & command,const wxString & params);
@@ -54,34 +54,34 @@ class BatchCommands final {
    static wxString PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent);
 
    // These commands do depend on the command list.
-   void ResetChain();
+   void ResetMacro();
 
-   bool ReadChain(const wxString & chain);
-   bool WriteChain(const wxString & chain);
-   bool AddChain(const wxString & chain);
-   bool DeleteChain(const wxString & name);
-   bool RenameChain(const wxString & oldchain, const wxString & newchain);
+   bool ReadMacro(const wxString & macro);
+   bool WriteMacro(const wxString & macro);
+   bool AddMacro(const wxString & macro);
+   bool DeleteMacro(const wxString & name);
+   bool RenameMacro(const wxString & oldmacro, const wxString & newmacro);
 
-   void AddToChain(const wxString & command, int before = -1);
-   void AddToChain(const wxString & command, const wxString & params, int before = -1);
-   void DeleteFromChain(int index);
+   void AddToMacro(const wxString & command, int before = -1);
+   void AddToMacro(const wxString & command, const wxString & params, int before = -1);
+   void DeleteFromMacro(int index);
    wxString GetCommand(int index);
    wxString GetParams(int index);
    int GetCount();
    wxString GetMessage(){ return mMessage;};
    void AddToMessage(const wxString & msgIn ){ mMessage += msgIn;};
 
-   void SetWavToMp3Chain();
+   void SetWavToMp3Macro();
 
    bool IsFixed(const wxString & name);
 
-   void RestoreChain(const wxString & name);
+   void RestoreMacro(const wxString & name);
 
    void Split(const wxString & str, wxString & command, wxString & param);
    wxString Join(const wxString & command, const wxString & param);
 
-   wxArrayString mCommandChain;
-   wxArrayString mParamsChain;
+   wxArrayString mCommandMacro;
+   wxArrayString mParamsMacro;
    bool mAbort;
    wxString mMessage;
 

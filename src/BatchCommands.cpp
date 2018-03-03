@@ -2,16 +2,16 @@
 
   Audacity: A Digital Audio Editor
 
-  BatchCommands.cpp
+  MacroCommands.cpp
 
   Dominic Mazzoni
   James Crook
 
 ********************************************************************//*!
 
-\class BatchCommands
+\class MacroCommands
 \brief Maintains the chain of commands used in batch processing.
-See also BatchCommandDialog and BatchProcessDialog.
+See also MacroCommandDialog and ApplyMacroDialog.
 
 *//*******************************************************************/
 
@@ -89,50 +89,50 @@ static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
 
 static const wxString MP3Conversion = wxT("MP3 Conversion");
 
-BatchCommands::BatchCommands()
+MacroCommands::MacroCommands()
 {
    mMessage = "";
-   ResetChain();
+   ResetMacro();
 
    wxArrayString names = GetNames();
 
    if (names.Index(MP3Conversion) == wxNOT_FOUND) {
-      AddChain(MP3Conversion);
-      RestoreChain(MP3Conversion);
-      WriteChain(MP3Conversion);
+      AddMacro(MP3Conversion);
+      RestoreMacro(MP3Conversion);
+      WriteMacro(MP3Conversion);
    }
 }
 
-wxString BatchCommands::GetCommand(int index)
+wxString MacroCommands::GetCommand(int index)
 {
-   if (index < 0 || index >= (int)mCommandChain.GetCount()) {
+   if (index < 0 || index >= (int)mCommandMacro.GetCount()) {
       return wxT("");
    }
 
-   return mCommandChain[index];
+   return mCommandMacro[index];
 }
 
-wxString BatchCommands::GetParams(int index)
+wxString MacroCommands::GetParams(int index)
 {
-   if (index < 0 || index >= (int)mParamsChain.GetCount()) {
+   if (index < 0 || index >= (int)mParamsMacro.GetCount()) {
       return wxT("");
    }
 
-   return mParamsChain[index];
+   return mParamsMacro[index];
 }
 
-int BatchCommands::GetCount()
+int MacroCommands::GetCount()
 {
-   return (int)mCommandChain.GetCount();
+   return (int)mCommandMacro.GetCount();
 }
 
-bool BatchCommands::ReadChain(const wxString & chain)
+bool MacroCommands::ReadMacro(const wxString & chain)
 {
    // Clear any previous chain
-   ResetChain();
+   ResetMacro();
 
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -160,8 +160,8 @@ bool BatchCommands::ReadChain(const wxString & chain)
          wxString parm = tf[i].Mid(splitAt + 1).Strip(wxString::trailing);
 
          // Add to lists
-         mCommandChain.Add(cmd);
-         mParamsChain.Add(parm);
+         mCommandMacro.Add(cmd);
+         mParamsMacro.Add(parm);
       }
    }
 
@@ -172,10 +172,10 @@ bool BatchCommands::ReadChain(const wxString & chain)
 }
 
 
-bool BatchCommands::WriteChain(const wxString & chain)
+bool MacroCommands::WriteMacro(const wxString & chain)
 {
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -197,9 +197,9 @@ bool BatchCommands::WriteChain(const wxString & chain)
    tf.Clear();
 
    // Copy over the commands
-   int lines = mCommandChain.GetCount();
+   int lines = mCommandMacro.GetCount();
    for (int i = 0; i < lines; i++) {
-      tf.AddLine(mCommandChain[i] + wxT(":") + mParamsChain[ i ]);
+      tf.AddLine(mCommandMacro[i] + wxT(":") + mParamsMacro[ i ]);
    }
 
    // Write the chain
@@ -211,10 +211,10 @@ bool BatchCommands::WriteChain(const wxString & chain)
    return true;
 }
 
-bool BatchCommands::AddChain(const wxString & chain)
+bool MacroCommands::AddMacro(const wxString & chain)
 {
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -223,35 +223,35 @@ bool BatchCommands::AddChain(const wxString & chain)
    return tf.Create();
 }
 
-bool BatchCommands::DeleteChain(const wxString & chain)
+bool MacroCommands::DeleteMacro(const wxString & chain)
 {
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
 
    // Delete it...wxRemoveFile will display errors
    return wxRemoveFile(name.GetFullPath());
 }
 
-bool BatchCommands::RenameChain(const wxString & oldchain, const wxString & newchain)
+bool MacroCommands::RenameMacro(const wxString & oldchain, const wxString & newchain)
 {
    // Build the filenames
-   wxFileName oname(FileNames::ChainDir(), oldchain, wxT("txt"));
-   wxFileName nname(FileNames::ChainDir(), newchain, wxT("txt"));
+   wxFileName oname(FileNames::MacroDir(), oldchain, wxT("txt"));
+   wxFileName nname(FileNames::MacroDir(), newchain, wxT("txt"));
 
    // Rename it...wxRenameFile will display errors
    return wxRenameFile(oname.GetFullPath(), nname.GetFullPath());
 }
 
-void BatchCommands::SetWavToMp3Chain() // a function per default chain?  This is flawed design!  MJS
+void MacroCommands::SetWavToMp3Macro() // a function per default chain?  This is flawed design!  MJS
 {
-   ResetChain();
+   ResetMacro();
 
-   AddToChain( wxT("Normalize") );
-   AddToChain( wxT("ExportMP3") );
+   AddToMacro( wxT("Normalize") );
+   AddToMacro( wxT("ExportMP3") );
 }
 
 // Gets all commands that are valid for this mode.
-auto BatchCommands::GetAllCommands() -> CommandNameVector
+auto MacroCommands::GetAllCommands() -> CommandNameVector
 {
    CommandNameVector commands;
 
@@ -341,7 +341,7 @@ auto BatchCommands::GetAllCommands() -> CommandNameVector
    return uniqueCommands;
 }
 
-wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
+wxString MacroCommands::GetCurrentParamsFor(const wxString & command)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
@@ -352,7 +352,7 @@ wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
    return EffectManager::Get().GetEffectParameters(ID);
 }
 
-wxString BatchCommands::PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent)
+wxString MacroCommands::PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
@@ -375,7 +375,7 @@ wxString BatchCommands::PromptForParamsFor(const wxString & command, const wxStr
    return res;
 }
 
-wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
+wxString MacroCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
@@ -395,7 +395,7 @@ wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxStr
    return preset;
 }
 
-double BatchCommands::GetEndTime()
+double MacroCommands::GetEndTime()
 {
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
@@ -414,7 +414,7 @@ double BatchCommands::GetEndTime()
    return endTime;
 }
 
-bool BatchCommands::IsMono()
+bool MacroCommands::IsMono()
 {
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
@@ -444,7 +444,7 @@ bool BatchCommands::IsMono()
    return mono;
 }
 
-wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
+wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
 {
    const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();
@@ -493,7 +493,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
 }
 
 // TODO Move this out of Batch Commands
-bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
+bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
 {  //check if current project is mono or stereo
    unsigned numChannels = 2;
    if (IsMono()) {
@@ -541,7 +541,7 @@ bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
 // and think again.
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
-bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString & command,const wxString & params)
+bool MacroCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString & command,const wxString & params)
 {
    if (ReportAndSkip(command, params))
       return true;
@@ -625,7 +625,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
 }
 // end CLEANSPEECH remnant
 
-bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params, const CommandContext & Context)
+bool MacroCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params, const CommandContext & Context)
 {
    //Possibly end processing here, if in batch-debug
    if( ReportAndSkip(command, params))
@@ -669,7 +669,7 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    return res;
 }
 
-bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params, CommandContext const * pContext)
+bool MacroCommands::ApplyCommand(const wxString & command, const wxString & params, CommandContext const * pContext)
 {
 
    unsigned int i;
@@ -714,7 +714,7 @@ bool BatchCommands::ApplyCommand(const wxString & command, const wxString & para
    return false;
 }
 
-bool BatchCommands::ApplyCommandInBatchMode(const wxString & command, const wxString &params)
+bool MacroCommands::ApplyCommandInBatchMode(const wxString & command, const wxString &params)
 {
    AudacityProject *project = GetActiveProject();
 
@@ -728,10 +728,10 @@ bool BatchCommands::ApplyCommandInBatchMode(const wxString & command, const wxSt
    return ApplyCommand( command, params );
 }
 
-// ApplyChain returns true on success, false otherwise.
+// ApplyMacro returns true on success, false otherwise.
 // Any error reporting to the user in setting up the chain
 // has already been done.
-bool BatchCommands::ApplyChain(const wxString & filename)
+bool MacroCommands::ApplyMacro(const wxString & filename)
 {
    mFileName = filename;
 
@@ -740,7 +740,7 @@ bool BatchCommands::ApplyChain(const wxString & filename)
    auto cleanup = finally( [&] {
       if (!res) {
          if(proj) {
-            // Chain failed or was cancelled; revert to the previous state
+            // Macro failed or was cancelled; revert to the previous state
             proj->RollbackState();
          }
       }
@@ -749,20 +749,20 @@ bool BatchCommands::ApplyChain(const wxString & filename)
    mAbort = false;
 
    size_t i = 0;
-   for (; i < mCommandChain.GetCount(); i++) {
-      if (!ApplyCommandInBatchMode(mCommandChain[i], mParamsChain[i]) || mAbort)
+   for (; i < mCommandMacro.GetCount(); i++) {
+      if (!ApplyCommandInBatchMode(mCommandMacro[i], mParamsMacro[i]) || mAbort)
          break;
    }
 
-   res = (i == mCommandChain.GetCount());
+   res = (i == mCommandMacro.GetCount());
    if (!res)
       return false;
 
    mFileName.Empty();
 
-   // Chain was successfully applied; save the NEW project state
+   // Macro was successfully applied; save the NEW project state
    wxString longDesc, shortDesc;
-   wxString name = gPrefs->Read(wxT("/Batch/ActiveChain"), wxEmptyString);
+   wxString name = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxEmptyString);
    if (name.IsEmpty())
    {
       /* i18n-hint: active verb in past tense */
@@ -783,45 +783,45 @@ bool BatchCommands::ApplyChain(const wxString & filename)
 }
 
 // AbortBatch() allows a premature terminatation of a batch.
-void BatchCommands::AbortBatch()
+void MacroCommands::AbortBatch()
 {
    mAbort = true;
 }
 
-void BatchCommands::AddToChain(const wxString &command, int before)
+void MacroCommands::AddToMacro(const wxString &command, int before)
 {
-   AddToChain(command, GetCurrentParamsFor(command), before);
+   AddToMacro(command, GetCurrentParamsFor(command), before);
 }
 
-void BatchCommands::AddToChain(const wxString &command, const wxString &params, int before)
+void MacroCommands::AddToMacro(const wxString &command, const wxString &params, int before)
 {
    if (before == -1) {
-      before = (int)mCommandChain.GetCount();
+      before = (int)mCommandMacro.GetCount();
    }
 
-   mCommandChain.Insert(command, before);
-   mParamsChain.Insert(params, before);
+   mCommandMacro.Insert(command, before);
+   mParamsMacro.Insert(params, before);
 }
 
-void BatchCommands::DeleteFromChain(int index)
+void MacroCommands::DeleteFromMacro(int index)
 {
-   if (index < 0 || index >= (int)mCommandChain.GetCount()) {
+   if (index < 0 || index >= (int)mCommandMacro.GetCount()) {
       return;
    }
 
-   mCommandChain.RemoveAt(index);
-   mParamsChain.RemoveAt(index);
+   mCommandMacro.RemoveAt(index);
+   mParamsMacro.RemoveAt(index);
 }
 
-void BatchCommands::ResetChain()
+void MacroCommands::ResetMacro()
 {
-   mCommandChain.Clear();
-   mParamsChain.Clear();
+   mCommandMacro.Clear();
+   mParamsMacro.Clear();
 }
 
 // ReportAndSkip() is a diagnostic function that avoids actually
 // applying the requested effect if in batch-debug mode.
-bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & params)
+bool MacroCommands::ReportAndSkip(const wxString & command, const wxString & params)
 {
    int bDebug;
    gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);
@@ -842,11 +842,11 @@ bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & par
    return true;
 }
 
-wxArrayString BatchCommands::GetNames()
+wxArrayString MacroCommands::GetNames()
 {
    wxArrayString names;
    wxArrayString files;
-   wxDir::GetAllFiles(FileNames::ChainDir(), &files, wxT("*.txt"), wxDIR_FILES);
+   wxDir::GetAllFiles(FileNames::MacroDir(), &files, wxT("*.txt"), wxDIR_FILES);
    size_t i;
 
    wxFileName ff;
@@ -858,23 +858,23 @@ wxArrayString BatchCommands::GetNames()
    return names;
 }
 
-bool BatchCommands::IsFixed(const wxString & name)
+bool MacroCommands::IsFixed(const wxString & name)
 {
    if (name == MP3Conversion)
       return true;
    return false;
 }
 
-void BatchCommands::RestoreChain(const wxString & name)
+void MacroCommands::RestoreMacro(const wxString & name)
 {
 // TIDY-ME: Effects change their name with localisation.
 // Commands (at least currently) don't.  Messy.
 
    if (name == MP3Conversion)
-      SetWavToMp3Chain();
+      SetWavToMp3Macro();
 }
 
-void BatchCommands::Split(const wxString & str, wxString & command, wxString & param)
+void MacroCommands::Split(const wxString & str, wxString & command, wxString & param)
 {
    int splitAt;
 
@@ -896,7 +896,7 @@ void BatchCommands::Split(const wxString & str, wxString & command, wxString & p
    return;
 }
 
-wxString BatchCommands::Join(const wxString & command, const wxString & param)
+wxString MacroCommands::Join(const wxString & command, const wxString & param)
 {
    return command + wxT(": ") + param;
 }
