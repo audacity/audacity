@@ -192,6 +192,27 @@ void ApplyMacroDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    ApplyMacroToProject( item );
 }
 
+wxString ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
+{
+   wxString Temp = MacroName;
+   Temp.Replace(" ","");
+   Temp = wxString( "Macro_" ) + Temp;
+   return Temp;
+}
+
+
+// Does nothing if not found, rather than returning an error.
+void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasGui )
+{
+   for( size_t i=0;i<mMacros->GetItemCount();i++){
+      wxString name = mMacros->GetItemText(i);
+      if( MacroIdOfName( name ) == MacroID ){
+         ApplyMacroToProject( i, bHasGui );
+         return;
+      }
+   }
+}
+
 void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 {
    wxString name = mMacros->GetItemText(iMacro);

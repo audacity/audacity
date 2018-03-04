@@ -1713,7 +1713,8 @@ void AudacityProject::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  
    int i;
 
    for (i = 0; i < (int)names.GetCount(); i++) {
-      c->AddItem(wxString::Format("Macro%03i", i ), names[i], FN(OnApplyMacroDirectly),
+      wxString MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
+      c->AddItem(MacroID, names[i], FN(OnApplyMacroDirectly),
          flags,
          flags);
    }
@@ -6860,10 +6861,17 @@ void AudacityProject::OnApplyMacroDirectly(const CommandContext &context )
    //wxLogDebug( "Macro was: %s", context.parameter);
    ApplyMacroDialog dlg(this);
    wxString Name = context.parameter;
+
+// We used numbers previously, but macros could get renumbered, making
+// macros containing macros unpredictable.
+#ifdef MACROS_BY_NUMBERS
    long item=0;
    // Take last three letters (of e.g. Macro007) and convert to a number.
    Name.Mid( Name.Length() - 3 ).ToLong( &item, 10 );
    dlg.ApplyMacroToProject( item, false );
+#else
+   dlg.ApplyMacroToProject( Name, false );
+#endif
    ModifyUndoMenuItems();
 }
 

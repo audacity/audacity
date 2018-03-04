@@ -56,7 +56,9 @@ class ApplyMacroDialog : public wxDialogWrapper {
    virtual wxString GetHelpPageName() {return "Tools_Menu#macros_compact_dialog";};
 
    void PopulateMacros();
+   static wxString MacroIdOfName( const wxString & MacroName );
    void ApplyMacroToProject( int iMacro, bool bHasGui=true );
+   void ApplyMacroToProject( const wxString & MacroID, bool bHasGui=true );
 
 
    // These will be reused in the derived class...
