@@ -8787,10 +8787,14 @@ void AudacityProject::OnPanTracks(float PanValue)
       t = iter.Next();
    }
 
-   ModifyState(true);
    RedrawProject();
    if (mMixerBoard)
       mMixerBoard->UpdatePan();
+
+   auto flags = UndoPush::AUTOSAVE;
+   /*i18n-hint: One or more audio tracks have been panned*/
+   PushState(_("Panned audio track(s)"), _("Pan Track"), flags);
+         flags = flags | UndoPush::CONSOLIDATE;
 }
 
 void AudacityProject::OnPanLeft(const CommandContext &WXUNUSED(context) ){ OnPanTracks( -1.0);}
