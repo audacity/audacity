@@ -200,7 +200,7 @@ wxString ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
    return Temp;
 }
 
-
+// Apply macro, given its ID.
 // Does nothing if not found, rather than returning an error.
 void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasGui )
 {
@@ -213,6 +213,7 @@ void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasG
    }
 }
 
+// Apply macro, given its number in the list.
 void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 {
    wxString name = mMacros->GetItemText(iMacro);
@@ -711,6 +712,10 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
 {
    if( bExpanded == mbExpanded )
       return;
+
+   if( !SaveChanges() )
+      return;
+
    mbExpanded = bExpanded;
    DestroyChildren();
    SetSizer( nullptr );
