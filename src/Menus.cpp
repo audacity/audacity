@@ -977,7 +977,7 @@ void AudacityProject::CreateMenusAndCommands()
          const PluginID ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
          const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
          if (plug && plug->IsEnabled())
-            c->AddItem(wxT("Stereo to Mono"), _("Mix Stereo down to &Mono"), FN(OnStereoToMono),
+            c->AddItem(wxT("Stereo to Mono"), _("Mix Stereo Down to &Mono"), FN(OnStereoToMono),
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
       }

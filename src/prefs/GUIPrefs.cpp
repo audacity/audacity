@@ -176,12 +176,13 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Show"));
+   S.StartStatic(_("Options"));
    {
-      S.TieCheckBox(_("'How to Get &Help' at launch"),
+      // Start wording of options with a verb, if possible.
+      S.TieCheckBox(_("Show 'How to Get &Help' at launch"),
                     wxT("/GUI/ShowSplashScreen"),
                     true);
-      S.TieCheckBox(_("E&xtra menus"),
+      S.TieCheckBox(_("Show e&xtra menus"),
                     wxT("/GUI/ShowExtraMenus"),
                     false);
 #ifdef EXPERIMENTAL_THEME_PREFS
@@ -191,11 +192,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/GUI/ShowMac"),
                     false);
 #endif
-   }
-   S.EndStatic();
-
-   S.StartStatic(_("Behaviors"));
-   {
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);
@@ -207,6 +203,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
    }
    S.EndStatic();
+
    S.EndScroller();
 }
 
