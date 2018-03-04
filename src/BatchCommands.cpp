@@ -751,16 +751,27 @@ bool MacroCommands::ApplyCommandInBatchMode(const wxString & command, const wxSt
    return ApplyCommand( command, params );
 }
 
+static int MacroReentryCount = 0;
 // ApplyMacro returns true on success, false otherwise.
 // Any error reporting to the user in setting up the chain
 // has already been done.
 bool MacroCommands::ApplyMacro(const wxString & filename)
 {
+   // Check for reentrant ApplyMacro commands.
+   // We'll allow 1 level of reentry, but not more.
+   // And we treat ignoring deeper levels as a success.
+   if( MacroReentryCount > 1 )
+      return true;
+
+   // Restore the reentry counter (to zero) when we exit.
+   auto cleanup1 = valueRestorer( MacroReentryCount);
+   MacroReentryCount++;
+
    mFileName = filename;
 
    AudacityProject *proj = GetActiveProject();
    bool res = false;
-   auto cleanup = finally( [&] {
+   auto cleanup2 = finally( [&] {
       if (!res) {
          if(proj) {
             // Macro failed or was cancelled; revert to the previous state
@@ -801,7 +812,8 @@ bool MacroCommands::ApplyMacro(const wxString & filename)
 
    if (!proj)
       return false;
-   proj->PushState(longDesc, shortDesc);
+   if( MacroReentryCount <= 1 )
+      proj->PushState(longDesc, shortDesc);
    return true;
 }
 
