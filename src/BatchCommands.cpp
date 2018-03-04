@@ -87,19 +87,13 @@ static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
 };
 // end CLEANSPEECH remnant
 
-static const wxString MP3Conversion = wxT("MP3 Conversion");
-static const wxString FadeEnds      = wxT("Fade Ends");
-
 MacroCommands::MacroCommands()
 {
    mMessage = "";
    ResetMacro();
 
    wxArrayString names = GetNames();
-
-   wxArrayString defaults;
-   defaults.Add( MP3Conversion );
-   defaults.Add( FadeEnds  );
+   wxArrayString defaults = GetNamesOfDefaultMacros();
 
    for( size_t i = 0;i<defaults.Count();i++){
       wxString name = defaults[i];
@@ -111,6 +105,18 @@ MacroCommands::MacroCommands()
    }
 }
 
+static const wxString MP3Conversion = wxT("MP3 Conversion");
+static const wxString FadeEnds      = wxT("Fade Ends");
+
+
+wxArrayString MacroCommands::GetNamesOfDefaultMacros()
+{
+   wxArrayString defaults;
+   defaults.Add( MP3Conversion );
+   defaults.Add( FadeEnds  );
+   return defaults;
+}
+
 void MacroCommands::RestoreMacro(const wxString & name)
 {
 // TIDY-ME: Effects change their name with localisation.
@@ -120,11 +126,11 @@ void MacroCommands::RestoreMacro(const wxString & name)
         AddToMacro( wxT("Normalize") );
         AddToMacro( wxT("ExportMP3") );
    } else if (name == FadeEnds ){
-        AddToMacro( wxT("Select: Start=\"0\" End=\"1\"") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\"") );
         AddToMacro( wxT("FadeIn") );
-        AddToMacro( wxT("Select: Start=\"0\" End=\"1\" FromEnd=\"1\"") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" FromEnd=\"1\"") );
         AddToMacro( wxT("FadeOut") );
-        AddToMacro( wxT("Select: Start=\"0\" End=\"0\"") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"0\"") );
    }
 }
 
@@ -877,12 +883,11 @@ wxArrayString MacroCommands::GetNames()
 
 bool MacroCommands::IsFixed(const wxString & name)
 {
-   if (name == MP3Conversion)
+   wxArrayString defaults = GetNamesOfDefaultMacros();
+   if( defaults.Index( name ) != wxNOT_FOUND )
       return true;
    return false;
 }
-
-
 
 void MacroCommands::Split(const wxString & str, wxString & command, wxString & param)
 {
