@@ -42,6 +42,7 @@ class MacroCommands final {
 
    // These commands do not depend on the command list.
    static wxArrayString GetNames();
+   static wxArrayString GetNamesOfDefaultMacros();
 
    // A triple of user-visible name, internal string identifier and type/help string.
    using CommandName = std::tuple<wxString, wxString, wxString>;
