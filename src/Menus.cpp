@@ -8321,6 +8321,15 @@ void AudacityProject::OnTimerRecord(const CommandContext &WXUNUSED(context) )
    }
    else
    {
+      // Timer Record should not record into a selection.
+      bool bPreferNewTrack;
+      gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+      if (bPreferNewTrack) {
+         Rewind(false);
+      } else {
+         SkipEnd(false);
+      }
+
       int iTimerRecordingOutcome = dialog.RunWaitDialog();
       switch (iTimerRecordingOutcome) {
       case POST_TIMER_RECORD_CANCEL_WAIT:
