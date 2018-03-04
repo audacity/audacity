@@ -123,6 +123,14 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
          S.Id(ExpandID).AddButton(_("&Expand"));
       }
       S.EndHorizontalLay();
+      S.StartHorizontalLay(wxALIGN_RIGHT, false);
+      {
+         S.AddSpace( 40 );
+         S.AddPrompt( _("Apply Macro to:") );
+         S.Id(ApplyToProjectID).AddButton(_("&Project"));
+         S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      }
+      S.EndHorizontalLay();
 
       S.StartStatic(_("&Select Macro"), true);
       {
@@ -132,14 +140,8 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
          mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
       }
       S.EndStatic();
-
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
-         S.SetBorder(10);
-         S.AddPrompt( _("Apply Macro to:") );
-         S.Id(ApplyToProjectID).AddButton(_("&Project"));
-         S.Id(ApplyToFilesID).AddButton(_("&Files..."));
-         S.AddSpace( 40 );
          S.AddStandardButtons( eCancelButton | eHelpButton);
       }
       S.EndHorizontalLay();
@@ -501,9 +503,9 @@ MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
    ApplyMacroDialog(parent, true)
 {
    mbExpanded = bExpanded;
-   SetLabel(_("Macros"));         // Provide visual label
-   SetName(_("Macros"));          // Provide audible label
-   SetTitle(_("Macros"));
+   SetLabel(_("Edit Macros"));         // Provide visual label
+   SetName(_("Edit Macros"));          // Provide audible label
+   SetTitle(_("Edit Macros"));
 
    mChanged = false;
    mSelectedCommand = 0;
@@ -563,10 +565,18 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       {
          S.Prop(0).StartHorizontalLay(wxALIGN_RIGHT, false);
          {
-            S.Id(ShrinkID).AddButton(_("&Shrink"));
+            S.Id(ShrinkID).AddButton(_("Shrin&k"));
          }
          S.EndHorizontalLay();
-         S.StartStatic(_("&Macros"),1);
+         S.StartHorizontalLay(wxALIGN_RIGHT, false);
+         {
+            S.AddSpace( 40 );
+            S.AddPrompt( _("Apply Macro to:") );
+            S.Id(ApplyToProjectID).AddButton(_("&Project"));
+            S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+         }
+         S.EndHorizontalLay();
+         S.StartStatic(_("&Select Macros"),1);
          {
             S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
                        wxLC_EDIT_LABELS);
@@ -587,7 +597,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
       S.StartVerticalLay( 1 );
       {
-         S.StartStatic(_("Ma&cro (Double-Click or press SPACE to edit)"), true);
+         S.StartStatic(_("&Macro (Double-Click or press SPACE to edit)"), true);
          {
             S.StartHorizontalLay(wxEXPAND,1);
             {
@@ -620,10 +630,6 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
          S.EndStatic();
          S.StartHorizontalLay(wxALIGN_RIGHT, false);
          {
-            S.AddPrompt( _("Apply Macro to:") );
-            S.Id(ApplyToProjectButtonID).AddButton(_("&Project"), wxALIGN_LEFT);
-            S.Id(ApplyToFilesButtonID).AddButton(_("&Files..."), wxALIGN_LEFT);
-            S.AddSpace( 40 );
             S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
          }
          S.EndHorizontalLay();
@@ -692,10 +698,22 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    mSelectedCommand = 0;
    SetMinSize( wxSize( 200,200 ));
 
+   // Get and set position for optical stability.
+   // Expanded and shrunk dialogs 'stay where they were'.
+   // That's OK , and what we want, even if we exapnd off-screen.
+   // We won't shrink to being off-screen, since the shrink button 
+   // was clicked, so must have been on screen.
+   wxPoint p = GetPosition( );
    if( mbExpanded )
       Populate();
    else
       ApplyMacroDialog::Populate();
+   SetPosition( p );
+
+   wxString Title = mbExpanded ? _("Edit Macros") : _("Apply Macro");
+   SetLabel( Title );         // Provide visual label
+   SetName( Title );          // Provide audible label
+   SetTitle( Title );
 }
 
 void MacrosWindow::OnExpand(wxCommandEvent &WXUNUSED(event))
