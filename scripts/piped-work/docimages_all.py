@@ -36,6 +36,7 @@ exec( inner( 'envelopes' ) )
 exec( inner( 'cut_n_paste' ) )
 exec( inner( 'clip_boundaries' ) )
 exec( inner( 'oddments' ) )
+exec( inner( 'named_tracks' ) )
 
 #report on timing.
 inner( "" )
