@@ -527,9 +527,9 @@ MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
    ApplyMacroDialog(parent, true)
 {
    mbExpanded = bExpanded;
-   SetLabel(_("Edit Macros"));         // Provide visual label
-   SetName(_("Edit Macros"));          // Provide audible label
-   SetTitle(_("Edit Macros"));
+   SetLabel(_("Manage Macros"));         // Provide visual label
+   SetName(_("Manage Macros"));          // Provide audible label
+   SetTitle(_("Manage Macros"));
 
    mChanged = false;
    mSelectedCommand = 0;
@@ -742,7 +742,7 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    SetPosition( p );
    mResize->SetFocus();
 
-   wxString Title = mbExpanded ? _("Edit Macros") : _("Apply Macro");
+   wxString Title = mbExpanded ? _("Manage Macros") : _("Apply Macro");
    SetLabel( Title );         // Provide visual label
    SetName( Title );          // Provide audible label
    SetTitle( Title );
