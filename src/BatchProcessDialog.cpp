@@ -123,14 +123,6 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
          S.Id(ExpandID).AddButton(_("&Expand"));
       }
       S.EndHorizontalLay();
-      S.StartHorizontalLay(wxALIGN_RIGHT, false);
-      {
-         S.AddSpace( 40 );
-         S.AddPrompt( _("Apply Macro to:") );
-         S.Id(ApplyToProjectID).AddButton(_("&Project"));
-         S.Id(ApplyToFilesID).AddButton(_("&Files..."));
-      }
-      S.EndHorizontalLay();
 
       S.StartStatic(_("&Select Macro"), true);
       {
@@ -140,6 +132,16 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
          mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
       }
       S.EndStatic();
+
+      S.StartHorizontalLay(wxALIGN_RIGHT, false);
+      {
+         S.AddSpace( 40 );
+         S.AddPrompt( _("Apply Macro to:") );
+         S.Id(ApplyToProjectID).AddButton(_("&Project"));
+         S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      }
+      S.EndHorizontalLay();
+
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
          S.AddStandardButtons( eCancelButton | eHelpButton);
@@ -590,30 +592,24 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
             S.Id(ShrinkID).AddButton(_("Shrin&k"));
          }
          S.EndHorizontalLay();
-         S.StartHorizontalLay(wxALIGN_RIGHT, false);
-         {
-            S.AddSpace( 40 );
-            S.AddPrompt( _("Apply Macro to:") );
-            S.Id(ApplyToProjectID).AddButton(_("&Project"));
-            S.Id(ApplyToFilesID).AddButton(_("&Files..."));
-         }
-         S.EndHorizontalLay();
-         S.StartStatic(_("&Select Macros"),1);
+         S.StartStatic(_("&Select Macro"),1);
          {
             S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
                        wxLC_EDIT_LABELS);
             mMacros = S.Id(MacrosListID).Prop(1).AddListControlReportMode();
             // i18n-hint: This is the heading for a column in the edit macros dialog
             mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
-            S.StartHorizontalLay(wxCENTER, false);
-            {
-               S.Id(AddButtonID).AddButton(_("&Add"));
-               mRemove = S.Id(RemoveButtonID).AddButton(_("&Remove"));
-               mRename = S.Id(RenameButtonID).AddButton(_("Re&name"));
-            }
-            S.EndHorizontalLay();
          }
          S.EndStatic();
+         S.StartHorizontalLay(wxALIGN_RIGHT, false);
+         {  S.AddSpace( 40 );
+            S.SetBorder( 12 );
+            S.AddPrompt( _("Apply Macro to:") );
+            S.SetBorder( 5 );
+            S.Id(ApplyToProjectID).AddButton(_("&Project"));
+            S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+         }
+         S.EndHorizontalLay();
       }
       S.EndVerticalLay();
 
@@ -636,14 +632,23 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
                mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
 
-               S.StartVerticalLay(0);
+               S.StartVerticalLay(wxALIGN_TOP, 0);
                {
+                  S.AddPrompt( "Command" );
                   S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
-                  S.Id(EditButtonID).AddButton(_("&Edit"), wxALIGN_LEFT);
+                  S.Id(EditButtonID).AddButton(_("&Edit..."), wxALIGN_LEFT);
                   S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
                   S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
                   S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
                   mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
+
+                  S.AddSpace( 30 );
+                  S.AddPrompt( "Macro" );
+                  S.Id(AddButtonID).AddButton(_("&New"));
+                  mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
+                  mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
+                  S.Id(ImportButtonID).AddButton(_("I&mport..."))->Enable( false);
+                  S.Id(ExportButtonID).AddButton(_("E&xport..."))->Enable( false);
                }
                S.EndVerticalLay();
             }
