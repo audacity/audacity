@@ -37,6 +37,7 @@
 #include "ViewInfo.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/HelpSystem.h"
 
 #include "FileNames.h"
 #include <limits>
@@ -87,6 +88,7 @@ BEGIN_EVENT_TABLE(LabelDialog, wxDialogWrapper)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, LabelDialog::OnUpdate)
    EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED,
                LabelDialog::OnFreqUpdate)
+   EVT_BUTTON(wxID_HELP, LabelDialog::OnHelp)
 END_EVENT_TABLE()
 
 LabelDialog::LabelDialog(wxWindow *parent,
@@ -113,44 +115,15 @@ LabelDialog::LabelDialog(wxWindow *parent,
   , mFreqFormat(freqFormat)
 {
    SetName(GetTitle());
+   Populate();
+}
 
-   {
-      // Create the main sizer
-      auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+LabelDialog::~LabelDialog()
+{
+}
 
-      // A little instruction
-      wxStaticText *instruct =
-         safenew wxStaticText(this,
-         wxID_ANY,
-         _("Press F2 or double click to edit cell contents."));
-      instruct->SetName(instruct->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      vs->Add(instruct,
-         0,
-         wxALIGN_LEFT | wxALL,
-         5);
-
-      // Create the main sizer
-      mGrid = safenew Grid(this, wxID_ANY);
-      vs->Add(mGrid, 1, wxEXPAND | wxALL, 5);
-
-      // Create the action buttons
-      {
-         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         hs->Add(safenew wxButton(this, ID_INSERTA, _("Insert &After")), 1, wxCENTER | wxALL, 5);
-         hs->Add(safenew wxButton(this, ID_INSERTB, _("Insert &Before")), 1, wxCENTER | wxALL, 5);
-         hs->Add(safenew wxButton(this, ID_REMOVE, _("&Remove")), 1, wxCENTER | wxALL, 5);
-         hs->Add(safenew wxButton(this, ID_IMPORT, _("&Import...")), 1, wxCENTER | wxALL, 5);
-         hs->Add(safenew wxButton(this, ID_EXPORT, _("&Export...")), 1, wxCENTER | wxALL, 5);
-         vs->Add(hs.release(), 0, wxEXPAND | wxCENTER | wxALL, 5);
-      }
-
-      // Create the exit buttons
-      vs->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
-
-      // Make it so
-      SetSizer(vs.release());
-   }
-
+void LabelDialog::PopulateLabels()
+{
    // Build the initial (empty) grid
    mGrid->CreateGrid(0, Col_Max);
    mGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
@@ -227,13 +200,36 @@ LabelDialog::LabelDialog(wxWindow *parent,
    mGrid->SetColSize(Col_Label, wxMax(150, mGrid->GetColSize(Col_Label)));
    mGrid->SetColMinimalWidth(Col_Label, mGrid->GetColSize(Col_Label));
 
+}
+
+
+/// Creates the dialog and its contents.
+void LabelDialog::Populate()
+{
+
+   //------------------------- Main section --------------------
+   ShuttleGui S(this, eIsCreating);
+   PopulateOrExchange(S);
+   // ----------------------- End of main section --------------
+
+   // Go populate the macros list.
+   PopulateLabels();
+
    // Layout the works
    Layout();
+   //Fit();
 
    // Resize width based on width of columns and the vertical scrollbar
    wxRect r = mGrid->GetGridColLabelWindow()->GetRect();
    wxScrollBar sb(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL);
    r.width += sb.GetSize().GetWidth() + 6;
+
+   // Add the size of the right column of buttons too...
+   wxWindow * w = FindWindowById( ID_IMPORT, this );
+   wxASSERT( w );
+   if( w )
+      r.width += w->GetSize().GetWidth();
+
    SetClientSize(r.width, 300);
 
    // Make sure it doesn't go below this size
@@ -242,11 +238,51 @@ LabelDialog::LabelDialog(wxWindow *parent,
 
    // Center on display
    Center();
+
+// Size and place window
+//   SetSize(wxSystemSettings::GetMetric(wxSYS_SCREEN_X) * 3 / 4,
+//           wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) * 4 / 5);
+//   Center();
+
 }
 
-LabelDialog::~LabelDialog()
+void LabelDialog::PopulateOrExchange( ShuttleGui & S )
 {
+   S.AddFixedText(_("Press F2 or double click to edit cell contents."));
+   S.StartHorizontalLay(wxEXPAND,1);
+   {
+      S.StartVerticalLay(wxEXPAND,1);
+      {
+         mGrid = safenew Grid(this, wxID_ANY);
+         S.Prop(1).AddWindow( mGrid );
+      }
+      S.EndVerticalLay();
+      S.StartVerticalLay(0);
+      {
+         //S.Id(ID_INSERTA).AddButton(_("&Insert"), wxALIGN_LEFT);
+         S.Id(ID_INSERTB).AddButton(_("&Insert"), wxALIGN_LEFT);
+         //S.Id(EditButtonID).AddButton(_("&Edit"), wxALIGN_LEFT);
+         S.Id(ID_REMOVE).AddButton(_("De&lete"), wxALIGN_LEFT);
+         S.Id(ID_IMPORT).AddButton(_("I&mport..."), wxALIGN_LEFT);
+         S.Id(ID_EXPORT).AddButton(_("&Export..."), wxALIGN_LEFT);
+      }
+      S.EndVerticalLay();
+   }
+   S.EndHorizontalLay();
+
+   S.StartHorizontalLay(wxALIGN_RIGHT, false);
+   {
+      S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
+   }
+   S.EndHorizontalLay();
 }
+
+void LabelDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   wxString page = GetHelpPageName();
+   HelpSystem::ShowHelp(this, page, true);
+}
+
 
 bool LabelDialog::TransferDataToWindow()
 {

@@ -27,6 +27,7 @@ class RowData;
 class EmptyLabelRenderer;
 class LabelTrack;
 class ViewInfo;
+class ShuttleGui;
 
 typedef std::vector<RowData> RowDataArray;
 
@@ -53,6 +54,12 @@ class LabelDialog final : public wxDialogWrapper
     bool Show(bool show = true) override;
 
  private:
+
+   void Populate();
+   void PopulateOrExchange( ShuttleGui & S );
+   void PopulateLabels();
+   virtual void OnHelp(wxCommandEvent & event);
+   virtual wxString GetHelpPageName() {return "Labels_Editor";};
 
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
