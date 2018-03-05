@@ -1385,7 +1385,8 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
    CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
-   return "";
+   static wxString empty;
+   return empty;
 }
 
 const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
@@ -1394,7 +1395,8 @@ const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
    CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
-   return "";
+   static wxString empty;
+   return empty;
 }
 
 
