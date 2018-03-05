@@ -66,6 +66,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    wxListCtrl *mMacros;
    MacroCommands mMacroCommands; /// Provides list of available commands.
 
+   wxButton *mResize;
    wxButton *mOK;
    wxButton *mCancel;
    wxTextCtrl *mResults;

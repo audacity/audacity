@@ -120,7 +120,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 
       S.StartHorizontalLay(wxALIGN_RIGHT, false);
       {
-         S.Id(ExpandID).AddButton(_("&Expand"));
+         mResize = S.Id(ExpandID).AddButton(_("&Expand"));
       }
       S.EndHorizontalLay();
 
@@ -589,7 +589,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       {
          S.Prop(0).StartHorizontalLay(wxALIGN_RIGHT, false);
          {
-            S.Id(ShrinkID).AddButton(_("Shrin&k"));
+            mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
          }
          S.EndHorizontalLay();
          S.StartStatic(_("&Select Macro"),1);
@@ -740,6 +740,7 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    else
       ApplyMacroDialog::Populate();
    SetPosition( p );
+   mResize->SetFocus();
 
    wxString Title = mbExpanded ? _("Edit Macros") : _("Apply Macro");
    SetLabel( Title );         // Provide visual label
