@@ -107,7 +107,7 @@ bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)
    Either you have only noise or the piece is mastered in a unbalanced manner.
    The center extraction can still be good though."))
              ((between corr -0.8 -0.2)
-              (_" - Although the Track is stereo, the field  is obviously extra wide.
+              (_" - Although the Track is stereo, the field is obviously extra wide.
    This can cause strange effects.
    Especially when played by only one speaker."))
              (t (_" - The two channels are nearly identical.
