@@ -204,7 +204,7 @@ restart Rhythm Track and select from 'Action choice'."))) ;end of help 2
         (and (= (length m-s) 2)(not (integerp (second m-s))))) ;second is not an integer
       (setq error-msg (strcat error-msg (format nil 
 (_"If used, 'Optional rhythm track duration' must be 
-entered as either one number (seconds0, or two 
+entered as either one number (seconds), or two 
 numbers (minutes seconds) separated by a space.
 Use whole numbers only.~%")))))
       ;one or two integers
