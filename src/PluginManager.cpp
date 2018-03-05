@@ -1842,14 +1842,15 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, IdentInterface *ident){
+               [&](ModuleInterface *provider, IdentInterface *ident)
+                                                     -> const PluginID& {
                   // Register as by default, but also collecting the PluginIDs
                   // and names
-                  const PluginID * id = &PluginManagerInterface::DefaultRegistrationCallback(
+                  auto &id = PluginManagerInterface::DefaultRegistrationCallback(
                         provider, ident);
-                  ids.push_back(*id);
+                  ids.push_back(id);
                   names.push_back( wxGetTranslation( ident->GetName() ) );
-                  return *id;
+                  return id;
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded
