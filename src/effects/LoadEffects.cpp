@@ -6,7 +6,8 @@
 
   Dominic Mazzoni
 
-/**************************************************************************//**
+***********************************************************************/
+/*******************************************************************************
 \class BuiltinEffectsModule
 \brief Internal module to auto register all built in effects.  
 ********************************************************************************/
@@ -334,7 +335,7 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
 bool BuiltinEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
-   bFast;
+   static_cast<void>(bFast);
    return mNames.Index(path) != wxNOT_FOUND;
 }
 

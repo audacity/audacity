@@ -53,7 +53,8 @@ public:
    // Do not assume that this enumeration will remain the
    // same as NumberScaleType in future.  That enum may become
    // more general purpose.
-   enum ScaleType {
+   typedef int ScaleType;
+   enum ScaleTypeValues : int {
       stLinear,
       stLogarithmic,
       stMel,
@@ -131,7 +132,8 @@ public:
    bool spectralSelection; // But should this vary per track? -- PRL
 #endif
 
-   enum Algorithm {
+   typedef int Algorithm;
+   enum AlgorithmValues : int {
       algSTFT = 0,
       algReassignment,
       algPitchEAC,

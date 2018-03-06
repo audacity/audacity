@@ -775,7 +775,7 @@ inline long TrapLong(long x, long min, long max)
    static const type SCL_ ## name = (scale);
 
 #define ReadParam(type, name) \
-   type name; \
+   type name = DEF_ ## name; \
    if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, MIN_ ## name, MAX_ ## name)) \
       return false;
 

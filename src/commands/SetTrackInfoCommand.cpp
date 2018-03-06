@@ -167,7 +167,7 @@ bool SetTrackCommand::Apply(const CommandContext & context)
    bool bIsSecondChannel = false;
    while (t )
    {
-      bool bThisTrack = 
+      bool bThisTrack =
          (bHasTrackIndex && (i==mTrackIndex)) ||
          (bHasChannelIndex && (j==mChannelIndex ) ) ||
          (!bHasTrackIndex && !bHasChannelIndex) ;
@@ -191,9 +191,9 @@ bool SetTrackCommand::Apply(const CommandContext & context)
 
          if( wt && bHasDisplayType  )
             wt->SetDisplay(
-               (mDisplayType == kWaveform) ? 
-                  WaveTrack::WaveTrackDisplay::Waveform
-                  : WaveTrack::WaveTrackDisplay::Spectrum
+               (mDisplayType == kWaveform) ?
+                  WaveTrack::WaveTrackDisplayValues::Waveform
+                  : WaveTrack::WaveTrackDisplayValues::Spectrum
                );
          if( wt && bHasScaleType )
             wt->GetIndependentWaveformSettings().scaleType = 

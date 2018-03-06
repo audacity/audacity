@@ -250,7 +250,7 @@ bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // Ignores bFast parameter, since checking file exists is fast enough for
    // the small number of Nyquist plug-ins that we have.
-   bFast;
+   static_cast<void>(bFast);
    if((path == NYQUIST_PROMPT_ID) ||  (path == NYQUIST_TOOLS_PROMPT_ID))
       return true;
 

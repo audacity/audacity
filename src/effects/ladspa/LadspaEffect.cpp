@@ -192,7 +192,7 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    wxArrayString files;
    wxString ignoredErrMsg;
 
-   for (int i = 0; i < WXSIZEOF(kShippedEffects); i++)
+   for (int i = 0; i < (int)WXSIZEOF(kShippedEffects); i++)
    {
       files.Clear();
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
