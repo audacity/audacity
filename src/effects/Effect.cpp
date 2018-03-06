@@ -3458,7 +3458,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
                   ::wxGetTranslation( mEffect->GetFamilyName() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
-      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor()));
+      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), GetCustomTranslation(mEffect->GetVendor())));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription()));
 
       menu.Append(0, _("About"), sub.release());

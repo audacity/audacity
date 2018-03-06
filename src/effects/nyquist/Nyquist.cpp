@@ -215,7 +215,7 @@ wxString NyquistEffect::GetVendor()
 {
    if (mIsPrompt)
    {
-      return _("Audacity");
+      return XO("Audacity");
    }
 
    return mAuthor;
