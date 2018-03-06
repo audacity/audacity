@@ -206,7 +206,7 @@ wxString ApplyMacroDialog::MacroIdOfName( const wxString & MacroName )
 // Does nothing if not found, rather than returning an error.
 void ApplyMacroDialog::ApplyMacroToProject( const wxString & MacroID, bool bHasGui )
 {
-   for( size_t i=0;i<mMacros->GetItemCount();i++){
+   for( int i=0;i<mMacros->GetItemCount();i++){
       wxString name = mMacros->GetItemText(i);
       if( MacroIdOfName( name ) == MacroID ){
          ApplyMacroToProject( i, bHasGui );
