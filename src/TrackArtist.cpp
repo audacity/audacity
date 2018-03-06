@@ -487,10 +487,16 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
       if (mbShowTrackNameInWaveform &&
           // Exclude right channel of stereo track 
           !(!wt->GetLinked() && wt->GetLink())) {
+         wxBrush Brush;
+         wxCoord x,y;
          wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
          dc.SetFont(labelFont);
-         dc.SetTextForeground(theTheme.Colour( clrTrackNameText ));
-         dc.DrawText (wt->GetName(), rect.x+10, rect.y);  // move right 10 pixels to avoid overwriting <- symbol
+         dc.GetTextExtent( wt->GetName(), &x, &y );
+         dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
+         // A nice improvement would be to draw the shield / background translucently.
+         AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText );
+         dc.DrawRoundedRectangle( wxPoint( rect.x+7, rect.y+1 ), wxSize( x+16, y+4), 8.0 );
+         dc.DrawText (wt->GetName(), rect.x+15, rect.y+3);  // move right 15 pixels to avoid overwriting <- symbol
       }
       break;              // case Wave
    }

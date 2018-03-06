@@ -31,6 +31,7 @@
 #define NYQUISTEFFECTS_FAMILY wxT("Nyquist")
 
 #define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
+#define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Tools Prompt")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 enum NyqControlType
@@ -52,10 +53,13 @@ public:
    //NyqControl( NyqControl && ) = default;
    //NyqControl &operator = ( NyqControl && ) = default;
 
+   wxArrayString GetTranslatedChoices() const;
+
    int type;
    wxString var;
    wxString name;
    wxString label;
+   wxArrayString choices; // translatable
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -141,7 +145,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-   wxArrayString ParseChoice(const NyqControl & ctrl);
+   static wxArrayString ParseChoice(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,
@@ -162,9 +166,20 @@ private:
    void ParseFile();
    bool ParseCommand(const wxString & cmd);
    bool ParseProgram(wxInputStream & stream);
-   void Parse(const wxString &line);
+   struct Tokenizer {
+      bool sl { false };
+      bool q { false };
+      int paren{ 0 };
+      wxString tok;
+      wxArrayString tokens;
 
-   wxString UnQuote(const wxString &s);
+      bool Tokenize(
+         const wxString &line, bool eof,
+         size_t trimStart, size_t trimEnd);
+   };
+   bool Parse(Tokenizer &tokenizer, const wxString &line, bool eof, bool first);
+
+   static wxString UnQuote(const wxString &s, bool allowParens = true);
    double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
@@ -193,7 +208,7 @@ private:
    bool              mExternal;
    bool              mIsSpectral;
    /** True if the code to execute is obtained interactively from the user via
-    * the "Nyquist Prompt", false for all other effects (lisp code read from
+    * the "Nyquist Prompt", or "Nyquist Tools Prompt", false for all other effects (lisp code read from
     * files)
     */
    bool              mIsPrompt;
@@ -202,8 +217,8 @@ private:
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
    wxString          mName;   ///< Name of the Effect (untranslated)
-   wxString          mAction;
-   wxString          mInfo;
+   wxString          mAction; // translatable
+   wxString          mInfo;   // translatable
    wxString          mAuthor;
    wxString          mCopyright;
    wxString          mManPage;   // ONLY use if a help page exists in the manual.

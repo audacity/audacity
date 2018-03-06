@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class BatchPrefs
-\brief A PrefsPanel that builds up a chain of effects in BatchCommands
+\brief A PrefsPanel that builds up a chain of effects in MacroCommands
 
 *//*******************************************************************/
 

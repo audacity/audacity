@@ -132,6 +132,9 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Auto-&fit track height"),
                     wxT("/GUI/TracksFitVerticallyZoomed"),
                     false);
+      S.TieCheckBox(_("Sho&w audio track name as overlay"),
+                  wxT("/GUI/ShowTrackNameInWaveform"),
+                  false);
 
       S.AddSpace(10);
 
@@ -157,10 +160,6 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                       30);
       }
       S.EndMultiColumn();
-
-      S.TieCheckBox(_("Sho&w audio track name as overlay"),
-                  wxT("/GUI/ShowTrackNameInWaveform"),
-                  false);
    }
    S.EndStatic();
 

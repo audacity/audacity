@@ -2720,7 +2720,7 @@ void EffectDialog::Init()
       PopulateOrExchange(S);
 
       long buttons = eOkButton;
-      if (mType != EffectTypeAnalyze)
+      if ((mType != EffectTypeAnalyze) && (mType != EffectTypeTool))
       {
          buttons |= eCancelButton;
          if (mType == EffectTypeProcess)
@@ -3087,7 +3087,10 @@ bool EffectUIHost::Initialize()
                   mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
                   bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
                }
-               else if (mEffect && mEffect->GetType() != EffectTypeAnalyze)
+               else if (mEffect && 
+                  (mEffect->GetType() != EffectTypeAnalyze) && 
+                  (mEffect->GetType() != EffectTypeTool)
+                  ) 
                {
                   wxASSERT(bar); // To justify safenew
                   mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
@@ -3455,7 +3458,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
                   ::wxGetTranslation( mEffect->GetFamilyName() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
-      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor()));
+      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), GetCustomTranslation(mEffect->GetVendor())));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription()));
 
       menu.Append(0, _("About"), sub.release());
@@ -3835,7 +3838,7 @@ void EffectUIHost::UpdateControls()
    }
 
    mApplyBtn->Enable(!mCapturing);
-   if (mEffect && mEffect->GetType() != EffectTypeAnalyze)
+   if (mEffect && (mEffect->GetType() != EffectTypeAnalyze) && (mEffect->GetType() != EffectTypeTool) )
    {
       (!mIsGUI ? mPlayToggleBtn : mPlayBtn)->Enable(!(mCapturing || mDisableTransport));
    }

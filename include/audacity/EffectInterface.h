@@ -55,7 +55,8 @@ typedef enum EffectType
    EffectTypeHidden,
    EffectTypeGenerate,
    EffectTypeProcess,
-   EffectTypeAnalyze
+   EffectTypeAnalyze,
+   EffectTypeTool,
 } EffectType;
 
 class ShuttleParams;

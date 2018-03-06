@@ -1234,7 +1234,7 @@ EffectType VSTEffect::GetType()
 {
    if (mAudioIns == 0 && mAudioOuts == 0 && mMidiIns == 0 && mMidiOuts == 0)
    {
-      return EffectTypeNone;
+      return EffectTypeTool;
    }
 
    if (mAudioIns == 0 && mMidiIns == 0)

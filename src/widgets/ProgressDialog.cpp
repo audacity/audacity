@@ -1286,7 +1286,13 @@ bool ProgressDialog::Create(const wxString & title,
    }
    Layout();
 
-   Centre(wxCENTER_FRAME | wxBOTH);
+   // Center progress bar on Parent if it is nice and wide, otherwise Center on screen.
+   int parentWidth = -1, parentHeight=-1;
+   if( GetParent() )  GetParent()->GetSize( &parentWidth, &parentHeight );
+   if (parentWidth > 400) 
+      CenterOnParent();
+   else
+      CenterOnScreen();
 
    Reinit();
 

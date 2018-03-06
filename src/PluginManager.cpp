@@ -481,7 +481,7 @@ END_EVENT_TABLE()
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
 :  wxDialogWrapper(parent,
             wxID_ANY,
-            _("Plug-in Manager: Effects, Generators and Analyzers"),
+            _("Manage Plug-ins"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
@@ -1364,6 +1364,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 #define KEY_EFFECTTYPE_ANALYZE         wxT("Analyze")
 #define KEY_EFFECTTYPE_GENERATE        wxT("Generate")
 #define KEY_EFFECTTYPE_PROCESS         wxT("Process")
+#define KEY_EFFECTTYPE_TOOL            wxT("Tool")
 #define KEY_EFFECTTYPE_HIDDEN          wxT("Hidden")
 #define KEY_IMPORTERIDENT              wxT("ImporterIdent")
 #define KEY_IMPORTERFILTER             wxT("ImporterFilter")
@@ -1384,7 +1385,8 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
    CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
-   return "";
+   static wxString empty;
+   return empty;
 }
 
 const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
@@ -1393,7 +1395,8 @@ const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
    CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
-   return "";
+   static wxString empty;
+   return empty;
 }
 
 
@@ -1839,14 +1842,15 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, IdentInterface *ident){
+               [&](ModuleInterface *provider, IdentInterface *ident)
+                                                     -> const PluginID& {
                   // Register as by default, but also collecting the PluginIDs
                   // and names
-                  const PluginID * id = &PluginManagerInterface::DefaultRegistrationCallback(
+                  auto &id = PluginManagerInterface::DefaultRegistrationCallback(
                         provider, ident);
-                  ids.push_back(*id);
+                  ids.push_back(id);
                   names.push_back( wxGetTranslation( ident->GetName() ) );
-                  return *id;
+                  return id;
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded
@@ -2071,34 +2075,22 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
          {
             // Get the effect type and bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTTYPE, &strVal))
-            {
                continue;
-            }
 
             if (strVal.IsSameAs(KEY_EFFECTTYPE_NONE))
-            {
                plug.SetEffectType(EffectTypeNone);
-            }
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_ANALYZE))
-            {
                plug.SetEffectType(EffectTypeAnalyze);
-            }
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_GENERATE))
-            {
                plug.SetEffectType(EffectTypeGenerate);
-            }
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_PROCESS))
-            {
                plug.SetEffectType(EffectTypeProcess);
-            }
+            else if (strVal.IsSameAs(KEY_EFFECTTYPE_TOOL))
+               plug.SetEffectType(EffectTypeTool);
             else if (strVal.IsSameAs(KEY_EFFECTTYPE_HIDDEN))
-            {
                plug.SetEffectType(EffectTypeHidden);
-            }
             else
-            {
                continue;
-            }
 
             // Get the effect family and bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTFAMILY, &strVal))
@@ -2258,25 +2250,18 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
             EffectType etype = plug.GetEffectType();
             wxString stype;
             if (etype == EffectTypeNone)
-            {
                stype = KEY_EFFECTTYPE_NONE;
-            }
             else if (etype == EffectTypeAnalyze)
-            {
                stype = KEY_EFFECTTYPE_ANALYZE;
-            }
             else if (etype == EffectTypeGenerate)
-            {
                stype = KEY_EFFECTTYPE_GENERATE;
-            }
             else if (etype == EffectTypeProcess)
-            {
                stype = KEY_EFFECTTYPE_PROCESS;
-            }
+            else if (etype == EffectTypeTool)
+               stype = KEY_EFFECTTYPE_TOOL;
             else if (etype == EffectTypeHidden)
-            {
                stype = KEY_EFFECTTYPE_HIDDEN;
-            }
+
             pRegistry->Write(KEY_EFFECTTYPE, stype);
             pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamilyId());
             pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());

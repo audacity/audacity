@@ -1809,7 +1809,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    bool endOfFile;
    id3_length_t id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
-      if (id3len > outFile.Write(id3buffer.get(), id3len)) {
+      if (id3len > (int)outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
          AudacityMessageBox(_("Unable to export"));
          return ProgressResult::Cancelled;

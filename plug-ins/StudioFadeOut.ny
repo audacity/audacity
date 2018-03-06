@@ -2,11 +2,11 @@
 ;version 1
 ;type process
 ;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
-;name "Studio Fade Out"
+$name (_"Studio Fade Out")
 ;manpage "Fades#studio_fadeout"
-;action "Applying Fade..."
-;author "Steve Daulton"
-;copyright "Released under terms of the GNU General Public License version 2"
+$action (_"Applying Fade...")
+$author (_"Steve Daulton")
+$copyright (_"Released under terms of the GNU General Public License version 2")
 
 ;; StudioFadeOut.ny by Steve Daulton December 2012.
 ;; Released under terms of the GNU General Public License version 2:
@@ -39,7 +39,7 @@
 
 (let ((dur (get-duration 1)))
   (cond
-    ((< len 3) "Selection too short.\nIt must be more than 2 samples.")
+    ((< len 3) (format nil (_"Selection too short.~%It must be more than 2 samples.")))
     ((< dur 0.2) (mult s (r-cos dur)))
     (t (mult (filter s dur)(r-cos dur)))))
   
