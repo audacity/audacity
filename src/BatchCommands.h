@@ -12,7 +12,6 @@
 #ifndef __AUDACITY_BATCH_COMMANDS_DIALOG__
 #define __AUDACITY_BATCH_COMMANDS_DIALOG__
 
-#include "MemoryX.h"
 #include <wx/defs.h>
 #include <wx/string.h>
 
@@ -20,7 +19,37 @@
 
 class Effect;
 class CommandContext;
+class AudacityProject;
 
+class MacroCommandsCatalog {
+public:
+   // A triple of user-visible name, internal string identifier and type/help string.
+   struct Entry {
+      wxString friendly;
+      wxString internal;
+      wxString category;
+   };
+   using Entries = std::vector<Entry>;
+
+   MacroCommandsCatalog( const AudacityProject *project );
+
+   // binary search
+   Entries::const_iterator ByFriendlyName( const wxString &friendlyName ) const;
+   // linear search
+   Entries::const_iterator ByCommandId( const wxString &commandId ) const;
+
+   // Lookup by position as sorted by friendly name
+   const Entry &operator[] ( size_t index ) const { return mCommands[index]; }
+
+   Entries::const_iterator begin() const { return mCommands.begin(); }
+   Entries::const_iterator end() const { return mCommands.end(); }
+
+private:
+   // Sorted by friendly name
+   Entries mCommands;
+};
+
+// Stores information for one chain
 class MacroCommands final {
  public:
    // constructors and destructors
@@ -43,12 +72,6 @@ class MacroCommands final {
    // These commands do not depend on the command list.
    static wxArrayString GetNames();
    static wxArrayString GetNamesOfDefaultMacros();
-
-   // A triple of user-visible name, internal string identifier and type/help string.
-   using CommandName = std::tuple<wxString, wxString, wxString>;
-   using CommandNameVector = std::vector<CommandName>;
-   // Result is sorted by user-visible name
-   static CommandNameVector GetAllCommands();
 
    static wxString GetCurrentParamsFor(const wxString & command);
    static wxString PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent);

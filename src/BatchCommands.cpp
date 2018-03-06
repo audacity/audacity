@@ -274,19 +274,19 @@ bool MacroCommands::RenameMacro(const wxString & oldchain, const wxString & newc
 }
 
 // Gets all commands that are valid for this mode.
-auto MacroCommands::GetAllCommands() -> CommandNameVector
+MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 {
-   CommandNameVector commands;
-
-   AudacityProject *project = GetActiveProject();
    if (!project)
-      return commands;
+      return;
 
    // CLEANSPEECH remnant
+   Entries commands;
    for( const auto &command : SpecialCommands )
-      commands.push_back(
-         CommandName( command.first, command.second, _("Special Command") )
-      );
+      commands.push_back( {
+         command.first /* .Translation() */,
+         command.second,
+         _("Special Command")
+      } );
 
    // end CLEANSPEECH remnant
 
@@ -298,71 +298,102 @@ auto MacroCommands::GetAllCommands() -> CommandNameVector
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty())
-            commands.push_back( 
-               CommandName( 
-                  plug->GetUntranslatedName(), // plug->GetTranslatedName(),
-                  command,
-                  plug->GetPluginType() == PluginTypeEffect ?
-                     _("Effect") : _("Menu Command (With Parameters)") 
-               )
-            );
+            commands.push_back( {
+               plug->GetUntranslatedName(), // plug->GetTranslatedName(),
+               command,
+               plug->GetPluginType() == PluginTypeEffect ?
+                  _("Effect") : _("Menu Command (With Parameters)")
+            } );
          plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       }
    }
 
-   CommandManager * mManager = project->GetCommandManager();
+   auto mManager = project->GetCommandManager();
    wxArrayString mLabels;
    wxArrayString mNames;
    mLabels.Clear();
    mNames.Clear();
    mManager->GetAllCommandLabels(mLabels, false);
    mManager->GetAllCommandNames(mNames, false);
+
+   const bool english = wxGetLocale()->GetCanonicalName().StartsWith(wxT("en"));
+
    for(size_t i=0; i<mNames.GetCount(); i++) {
       wxString label = mLabels[i];
       if( !label.Contains( "..." ) ){
          label.Replace( "&", "" );
-         wxString squashed = label;
-         squashed.Replace( " ", "" );
+         bool suffix;
+         if (!english)
+            suffix = true;
+         else {
+            // We'll disambiguate if the squashed name is short and shorter than the internal name.
+            // Otherwise not.
+            // This means we won't have repetitive items like "Cut (Cut)" 
+            // But we will show important disambiguation like "All (SelectAll)" and "By Date (SortByDate)"
+            // Disambiguation is no longer essential as the details box will show it.
+            // PRL:  I think this reasoning applies only when locale is English.
+            // For other locales, show the (CamelCaseCodeName) always.  Or, never?
+            wxString squashed = label;
+            squashed.Replace( " ", "" );
 
-         // We'll disambiguate if the squashed name is short and shorter than the internal name.
-         // Otherwise not.
-         // This means we won't have repetitive items like "Cut (Cut)" 
-         // But we will show important disambiguation like "All (SelectAll)" and "By Date (SortByDate)"
-         // Disambiguation is no longer essential as the details box will show it.
-         if( squashed.Length() < wxMin( 18, mNames[i].Length()) )
+            suffix = squashed.Length() < wxMin( 18, mNames[i].Length());
+         }
+
+         if( suffix )
             label = label + " (" + mNames[i] + ")";
 
-         commands.push_back( 
-            CommandName(
-               label, // User readable name 
+         commands.push_back(
+            {
+               label, // User readable name
                mNames[i], // Internal name.
                _("Menu Command (No Parameters)")
-            )
+            }
          );
       }
    }
 
    // Sort commands by their user-visible names.
-   // PRL:  What should happen if first members of pairs are not unique?
-   // Sort stably?
-   std::sort(
-      commands.begin(), commands.end(),
-      [](const CommandName &a, const CommandName &b)
-         { return std::get<0>(a) <  std::get<0>(b); }
-   );
+   // PRL:  What exactly should happen if first members of pairs are not unique?
+   // I'm not sure, but at least I can sort stably for a better defined result,
+   // keeping specials before effects and menu items, and lastly commands.
+   auto less =
+      [](const Entry &a, const Entry &b) { return a.friendly < b.friendly; };
+   std::stable_sort(commands.begin(), commands.end(), less);
 
-   // JKC: Gave up on trying to use std::unique on this.
-   CommandNameVector uniqueCommands;
-   unsigned size = commands.size();
-   wxString oldName = "";
-   for( unsigned i = 0; i < size; ++i ) 
-   {
-      if( std::get<0>( commands[i] ) != oldName )
-         uniqueCommands.push_back( commands[i] );
-      oldName = std::get<0>( commands[i] );
-   }
-   return uniqueCommands;
+   // Now uniquify by friendly name
+   auto equal =
+      [](const Entry &a, const Entry &b) { return a.friendly == b.friendly; };
+   std::unique_copy(
+      commands.begin(), commands.end(), std::back_inserter(mCommands), equal);
 }
+
+// binary search
+auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
+   -> Entries::const_iterator
+{
+   const auto less = [&](const Entry &entryA, const Entry &entryB)
+      { return entryA.friendly < entryB.friendly; };
+   auto range = std::equal_range(
+      begin(), end(), Entry{ friendlyName }, less);
+   if (range.first != range.second) {
+      wxASSERT_MSG( range.first + 1 == range.second,
+                    "Non-unique user-visible command name" );
+      return range.first;
+   }
+   else
+      return end();
+}
+
+// linear search
+auto MacroCommandsCatalog::ByCommandId( const wxString &commandId ) const
+   -> Entries::const_iterator
+{
+   // Maybe this too should have a uniqueness check?
+   return std::find_if( begin(), end(),
+      [&](const Entry &entry){ return entry.internal == commandId; });
+}
+
+
 
 wxString MacroCommands::GetCurrentParamsFor(const wxString & command)
 {

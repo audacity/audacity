@@ -525,6 +525,7 @@ enum {
 /// Constructor
 MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
    ApplyMacroDialog(parent, true)
+   , mCatalog( GetActiveProject() )
 {
    mbExpanded = bExpanded;
    SetLabel(_("Manage Macros"));         // Provide visual label
@@ -547,8 +548,6 @@ MacrosWindow::~MacrosWindow()
 /// Creates the dialog and its contents.
 void MacrosWindow::Populate()
 {
-   mCommandNames = MacroCommands::GetAllCommands();
-
    //------------------------- Main section --------------------
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -690,14 +689,13 @@ void MacrosWindow::PopulateList()
 /// Add one item into mList
 void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
 {
-   // Translate internal command name to a friendly form
-   auto item = make_iterator_range(mCommandNames).index_if(
-      [&](const CommandName &name){ return Action == std::get<1>(name); }
-   );
-   auto friendlyName = item >= 0
-      ? // wxGetTranslation
-      std::get<0>( mCommandNames[item] )
-      : Action;
+   auto entry = mCatalog.ByCommandId(Action);
+   auto friendlyName = entry != mCatalog.end()
+      ? entry->friendly  /* .Translation() */
+      :
+         // Expose an internal name to the user in default of any friendly name
+         // -- AVOID THIS!
+        Action;
 
    int i = mList->GetItemCount();
 

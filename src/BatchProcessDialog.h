@@ -142,9 +142,7 @@ private:
    int mSelectedCommand;
    bool mChanged;
 
-   using CommandName = std::tuple<wxString, wxString,wxString>;
-   using CommandNameVector = std::vector<CommandName>;
-   CommandNameVector mCommandNames;
+   const MacroCommandsCatalog mCatalog;
    
    DECLARE_EVENT_TABLE()
 };
