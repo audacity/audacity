@@ -176,7 +176,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartTwoColumn();
       {
          S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
-            *(int*)&mTempSettings.scaleType,
+            mTempSettings.scaleType,
             &mScaleChoices);
 
          mMinFreq =
@@ -226,7 +226,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          mAlgorithmChoice =
             S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm") + wxString(wxT(":")),
-            *(int*)&mTempSettings.algorithm,
+            mTempSettings.algorithm,
             &mAlgorithmChoices);
 
          S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
