@@ -53,11 +53,13 @@ public:
    //NyqControl( NyqControl && ) = default;
    //NyqControl &operator = ( NyqControl && ) = default;
 
+   wxArrayString GetTranslatedChoices() const;
+
    int type;
    wxString var;
    wxString name;
    wxString label;
-   wxArrayString choices;
+   wxArrayString choices; // translatable
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -177,8 +179,7 @@ private:
    };
    bool Parse(Tokenizer &tokenizer, const wxString &line, bool eof, bool first);
 
-   static wxString UnQuote(const wxString &s,
-                           bool allowParens = true, bool translate = true);
+   static wxString UnQuote(const wxString &s, bool allowParens = true);
    double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
@@ -216,8 +217,8 @@ private:
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
    wxString          mName;   ///< Name of the Effect (untranslated)
-   wxString          mAction;
-   wxString          mInfo;
+   wxString          mAction; // translatable
+   wxString          mInfo;   // translatable
    wxString          mAuthor;
    wxString          mCopyright;
    wxString          mManPage;   // ONLY use if a help page exists in the manual.

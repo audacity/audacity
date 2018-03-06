@@ -94,6 +94,15 @@ enum
 static const wxChar *KEY_Version = wxT("Version");
 static const wxChar *KEY_Command = wxT("Command");
 
+wxArrayString NyqControl::GetTranslatedChoices() const
+{
+   wxArrayString results;
+   std::transform(
+      choices.begin(), choices.end(), std::back_inserter(results),
+                  GetCustomTranslation);
+   return results;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // NyquistEffect
@@ -116,7 +125,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 {
    mOutputTrack[0] = mOutputTrack[1] = nullptr;
 
-   mAction = _("Applying Nyquist Effect...");
+   mAction = XO("Applying Nyquist Effect...");
    mInputCmd = wxEmptyString;
    mCmd = wxEmptyString;
    mIsPrompt = false;
@@ -337,6 +346,7 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
+         // untranslated
          const wxArrayString &choices = ctrl.choices;
          int x=d;
          //parms.WriteEnum(ctrl.var, (int) d, choices);
@@ -386,6 +396,7 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
+         // untranslated
          const wxArrayString &choices = ctrl.choices;
          parms.WriteEnum(ctrl.var, (int) d, choices);
       }
@@ -436,6 +447,7 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          int val;
+         // untranslated
          const wxArrayString &choices = ctrl.choices;
          good = parms.ReadEnum(ctrl.var, &val, choices) &&
                 val != wxNOT_FOUND;
@@ -476,6 +488,7 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          int val {0};
+         // untranslated
          const wxArrayString &choices = ctrl.choices;
          parms.ReadEnum(ctrl.var, &val, choices);
          ctrl.val = (double) val;
@@ -1529,13 +1542,12 @@ void NyquistEffect::Stop()
    mStop = true;
 }
 
-wxString NyquistEffect::UnQuote(
-   const wxString &s, bool allowParens, bool translate)
+wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens)
 {
    int len = s.Length();
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
-      return translate ? GetCustomTranslation( unquoted ) : unquoted;
+      return unquoted;
    }
    else if (allowParens &&
             len >= 2 && s[0] == wxT('(') && s[len - 1] == wxT(')')) {
@@ -1545,7 +1557,7 @@ wxString NyquistEffect::UnQuote(
       if (tokens.size() > 1)
          // Assume the first token was _ -- we don't check that
          // And the second is the string, which is internationalized
-         return UnQuote( tokens[1], false, true );
+         return UnQuote( tokens[1], false );
       else
          return {};
    }
@@ -1809,7 +1821,7 @@ bool NyquistEffect::Parse(
    // Page name in Audacity development manual
    if (len >= 2 && tokens[0] == wxT("manpage")) {
       // do not translate
-      mManPage = UnQuote(tokens[1], false, false);
+      mManPage = UnQuote(tokens[1], false);
       return true;
    }
 
@@ -1817,7 +1829,7 @@ bool NyquistEffect::Parse(
    // Local Help file
    if (len >= 2 && tokens[0] == wxT("helpfile")) {
       // do not translate
-      mHelpFile = UnQuote(tokens[1], false, false);
+      mHelpFile = UnQuote(tokens[1], false);
       return true;
    }
 
@@ -2229,10 +2241,10 @@ bool NyquistEffect::TransferDataToEffectWindow()
 
       if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         const wxArrayString &choices = ctrl.choices;
+         const auto count = ctrl.choices.GetCount();
 
          int val = (int)ctrl.val;
-         if (val < 0 || val >= (int)choices.GetCount())
+         if (val < 0 || val >= (int)count)
          {
             val = 0;
          }
@@ -2393,7 +2405,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             {
                S.AddSpace(10, 10);
 
-               const wxArrayString &choices = ctrl.choices;
+               const wxArrayString &choices = ctrl.GetTranslatedChoices();
                S.Id(ID_Choice + i).AddChoice( {}, wxT(""), &choices);
             }
             else
