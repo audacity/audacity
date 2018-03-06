@@ -183,7 +183,8 @@ void Scrubber::ScrubPoller::Notify()
 }
 
 Scrubber::Scrubber(AudacityProject *project)
-   : mScrubToken(-1)
+   : mInOneShotMode( false )
+   , mScrubToken(-1)
    , mPaused(true)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
@@ -195,7 +196,6 @@ Scrubber::Scrubber(AudacityProject *project)
    , mProject(project)
    , mPoller { std::make_unique<ScrubPoller>(*this) }
    , mOptions {}
-   , mInOneShotMode( false )
 
 {
    if (wxTheApp)

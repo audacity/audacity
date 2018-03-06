@@ -133,7 +133,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 {
    int format;
 
-   if (selformat < 0 || selformat >= WXSIZEOF(kFormats))
+   if (selformat < 0 || static_cast<unsigned int>(selformat) >= WXSIZEOF(kFormats))
    {
       format = ReadExportFormatPref();
    }
@@ -405,7 +405,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
    const TrackList   *tracks = project->GetTracks();
    int sf_format;
 
-   if (subformat < 0 || subformat >= WXSIZEOF(kFormats))
+   if (subformat < 0 || static_cast<unsigned int>(subformat) >= WXSIZEOF(kFormats))
    {
       sf_format = ReadExportFormatPref();
    }
@@ -501,7 +501,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
          while (updateResult == ProgressResult::Success) {
             sf_count_t samplesWritten;
-            auto numSamples = mixer->Process(maxBlockLen);
+            size_t numSamples = mixer->Process(maxBlockLen);
 
             if (numSamples == 0)
                break;
@@ -513,7 +513,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
             else
                samplesWritten = SFCall<sf_count_t>(sf_writef_float, sf.get(), (float *)mixed, numSamples);
 
-            if (samplesWritten != numSamples) {
+            if (static_cast<size_t>(samplesWritten) != numSamples) {
                char buffer2[1000];
                sf_error_str(sf.get(), buffer2, 1000);
                AudacityMessageBox(wxString::Format(
@@ -871,7 +871,7 @@ wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
 {
    wxASSERT(parent); // to justify safenew
    // default, full user control
-   if (format < 0 || format >= WXSIZEOF(kFormats))
+   if (format < 0 || static_cast<unsigned int>(format) >= WXSIZEOF(kFormats))
    {
       return safenew ExportPCMOptions(parent, format);
    }

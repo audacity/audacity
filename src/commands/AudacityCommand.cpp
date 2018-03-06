@@ -155,6 +155,7 @@ bool AudacityCommand::GetAutomationParameters(wxString & parms)
    S.mpEap = &eap;
    bool bResult = DefineParams( S );
    wxASSERT_MSG( bResult, "You did not define DefineParameters() for this command" );
+   static_cast<void>(bResult); // fix unused variable warning in release mode
 
    return eap.GetParameters(parms);
 }
@@ -169,6 +170,7 @@ bool AudacityCommand::SetAutomationParameters(const wxString & parms)
    S.SetForWriting( &eap );
    bool bResult = DefineParams( S );
    wxASSERT_MSG( bResult, "You did not define DefineParameters() for this command" );
+   static_cast<void>(bResult); // fix unused variable warning in release mode
    if (!S.bOK)
    {
       AudacityCommand::MessageBox(

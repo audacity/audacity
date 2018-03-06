@@ -861,7 +861,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // The check intended here was already done in DirManager::HandleXMLTag(), where
             // it let the block be built, then checked against mMaxSamples, and deleted the block
             // if the size of the block is bigger than mMaxSamples.
-            if (nValue > mMaxSamples)
+            if (static_cast<unsigned long long>(nValue) > mMaxSamples)
             {
                mErrorOpening = true;
                return false;

@@ -66,11 +66,11 @@ public:
    bool StopsOnKeystroke() override { return true; }
 
 private:
+   std::shared_ptr<WaveTrack> mpTrack{};
    enum Operation { Merge, Expand, Remove };
    Operation mOperation{ Merge };
    double mStartTime{}, mEndTime{};
    WaveTrackLocation mLocation {};
-   std::shared_ptr<WaveTrack> mpTrack{};
 };
 
 #endif

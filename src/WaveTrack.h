@@ -527,7 +527,9 @@ private:
    // and will be taken out of the WaveTrack class:
    //
 
-   enum WaveTrackDisplay {
+
+   typedef int WaveTrackDisplay;
+   enum WaveTrackDisplayValues : int {
 
       // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
 

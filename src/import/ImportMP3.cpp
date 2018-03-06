@@ -86,7 +86,7 @@ extern "C" {
 
 #include "../WaveTrack.h"
 
-#define INPUT_BUFFER_SIZE 65535u
+#define INPUT_BUFFER_SIZE 65535
 #define PROGRESS_SCALING_FACTOR 100000
 
 /* this is a private structure we can use for whatever we like, and it will get
@@ -94,7 +94,7 @@ extern "C" {
  * things. */
 struct private_data {
    wxFile *file;            /* the file containing the mp3 data we're feeding the encoder */
-   ArrayOf<unsigned char> inputBuffer{ INPUT_BUFFER_SIZE };
+   ArrayOf<unsigned char> inputBuffer{ static_cast<unsigned int>(INPUT_BUFFER_SIZE) };
    int inputBufferFill;     /* amount of data in inputBuffer */
    TrackFactory *trackFactory;
    TrackHolders channels;
@@ -535,7 +535,7 @@ enum mad_flow output_cb(void *_data,
                                      floatSample,
                                      samples);
 
-         return MAD_FLOW_CONTINUE;
+      return MAD_FLOW_CONTINUE;
    }, MakeSimpleGuard(MAD_FLOW_BREAK) );
 }
 

@@ -7,11 +7,11 @@
   Dominic Mazzoni
   James Crook
 
-/**************************************************************************//**
+**************************************************************************//**
 \class BuiltinCommandsModule
 \brief Internal module to auto register all built in commands.  It is closely
 modelled on BuiltinEffectsModule
-********************************************************************************/
+*****************************************************************************/
 
 #include "../Audacity.h"
 #include "../Prefs.h"
@@ -271,7 +271,7 @@ unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
 bool BuiltinCommandsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
-   bFast;
+   static_cast<void>(bFast); // avoid unused variable warning
    return mNames.Index(path) != wxNOT_FOUND;
 }
 
