@@ -46,7 +46,7 @@ void SetProjectCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
       S.Optional( bHasName      ).TieTextBox(         _("Name:"),     mName );
-      S.TieCheckBox( "Resize:", bHasSizing    );
+      S.TieCheckBox( _("Resize:"), bHasSizing    );
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
