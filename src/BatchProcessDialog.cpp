@@ -633,7 +633,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
                S.StartVerticalLay(wxALIGN_TOP, 0);
                {
-                  S.AddPrompt( "Command" );
+                  S.AddPrompt( _("Command") );
                   S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
                   S.Id(EditButtonID).AddButton(_("&Edit..."), wxALIGN_LEFT);
                   S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
@@ -642,7 +642,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                   mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
 
                   S.AddSpace( 30 );
-                  S.AddPrompt( "Macro" );
+                  S.AddPrompt( _("Macro") );
                   S.Id(AddButtonID).AddButton(_("&New"));
                   mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
                   mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
