@@ -107,6 +107,7 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
 const int nModes =3;
 static const wxString kModes[nModes] =
 {
+   /* i18n-hint verb, imperative */
    XO("Set"),
    XO("Add"),
    XO("Remove")
@@ -123,7 +124,7 @@ bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
 
 void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString modes( nModes, kModes );
+   auto modes = LocalizedStrings( kModes, nModes );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxALIGN_CENTER);

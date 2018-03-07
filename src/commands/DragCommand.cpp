@@ -61,7 +61,7 @@ bool DragCommand::DefineParams( ShuttleParams & S ){
 
 void DragCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString coords( nCoordTypes, kCoordTypeStrings );
+   auto coords = LocalizedStrings( kCoordTypeStrings, nCoordTypes );
 
    S.AddSpace(0, 5);
 

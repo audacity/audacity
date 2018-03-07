@@ -48,7 +48,7 @@ bool GetTrackInfoCommand::DefineParams( ShuttleParams & S ){
 
 void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString types( nTypes, kTypes );
+   auto types = LocalizedStrings( kTypes, nTypes );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
