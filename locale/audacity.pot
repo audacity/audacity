@@ -9,7 +9,7 @@ msgstr ""
 "#-#-#-#-#  audacity.pot (audacity 2.2.2)  #-#-#-#-#\n"
 "Project-Id-Version: audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-03-01 20:00-0500\n"
+"POT-Creation-Date: 2018-03-08 16:43-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "#-#-#-#-#  audacity.pot (audacity 2.2.2)  #-#-#-#-#\n"
 "Project-Id-Version: audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-03-02 15:12-0500\n"
+"POT-Creation-Date: 2018-03-08 16:40-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -747,7 +747,7 @@ msgid "Audacity is starting up..."
 msgstr ""
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
 msgid "&New"
 msgstr ""
 
@@ -1071,6 +1071,10 @@ msgid "&Parameters"
 msgstr ""
 
 #: src/BatchCommandDialog.cpp
+msgid "&Details"
+msgstr ""
+
+#: src/BatchCommandDialog.cpp
 msgid "C&hoose command"
 msgstr ""
 
@@ -1106,6 +1110,22 @@ msgstr ""
 #. i18n-hint: WAV names an audio file format
 #: src/BatchCommands.cpp
 msgid "Export as WAV"
+msgstr ""
+
+#: src/BatchCommands.cpp
+msgid "Special Command"
+msgstr ""
+
+#: src/BatchCommands.cpp
+msgid "Effect"
+msgstr ""
+
+#: src/BatchCommands.cpp
+msgid "Menu Command (With Parameters)"
+msgstr ""
+
+#: src/BatchCommands.cpp
+msgid "Menu Command (No Parameters)"
 msgstr ""
 
 #: src/BatchCommands.cpp
@@ -1185,34 +1205,36 @@ msgid "Apply %s"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply Chain"
-msgstr ""
-
-#. i18n-hint: A chain is a sequence of commands that can be applied
-#. * to one or more audio files.
-#: src/BatchProcessDialog.cpp
-msgid "&Select Chain"
-msgstr ""
-
-#. i18n-hint: This is the heading for a column in the edit chains dialog
-#: src/BatchProcessDialog.cpp
-msgid "Chain"
+msgid "Apply Macro"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to Current &Project"
+msgid "&Expand"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to &Files..."
+msgid "&Select Macro"
+msgstr ""
+
+#. i18n-hint: This is the heading for a column in the edit macros dialog
+#: src/BatchProcessDialog.cpp
+msgid "Macro"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "&Cancel"
+msgid "Apply Macro to:"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "No chain selected"
+msgid "&Project"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+msgid "&Files..."
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+msgid "No macro selected"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
@@ -1242,27 +1264,19 @@ msgid "File"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Edit Chains"
+msgid "&Cancel"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "&Chains"
-msgstr ""
-
-#: src/BatchProcessDialog.cpp src/Tags.cpp
-msgid "&Add"
-msgstr ""
-
-#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/Tags.cpp
-msgid "&Remove"
+msgid "Manage Macros"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Re&name"
+msgid "Shrin&k"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "C&hain (Double-Click or press SPACE to edit)"
+msgid "&Macro (Double-Click or press SPACE to edit)"
 msgstr ""
 
 #. i18n-hint: This is the number of the command in the list
@@ -1278,11 +1292,20 @@ msgstr ""
 msgid "Parameters"
 msgstr ""
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "&Insert"
 msgstr ""
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/LabelTrack.cpp
+msgid "&Edit..."
+msgstr ""
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "De&lete"
 msgstr ""
 
@@ -1296,6 +1319,23 @@ msgstr ""
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "De&faults"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+msgid "Remo&ve"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+msgid "&Rename..."
+msgstr ""
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
+msgid "I&mport..."
+msgstr ""
+
+#: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
+#: src/effects/Equalization.cpp
+msgid "E&xport..."
 msgstr ""
 
 #. i18n-hint: This is the last item in a list.
@@ -1313,11 +1353,11 @@ msgid "Do you want to save the changes?"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Enter name of new chain"
+msgid "Enter name of new macro"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Name of new chain"
+msgid "Name of new macro"
 msgstr ""
 
 #: src/BatchProcessDialog.cpp
@@ -2436,22 +2476,6 @@ msgstr ""
 msgid "Edit Labels"
 msgstr ""
 
-#: src/LabelDialog.cpp
-msgid "Press F2 or double click to edit cell contents."
-msgstr ""
-
-#: src/LabelDialog.cpp
-msgid "Insert &After"
-msgstr ""
-
-#: src/LabelDialog.cpp
-msgid "Insert &Before"
-msgstr ""
-
-#: src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "&Import..."
-msgstr ""
-
 #. i18n-hint: (noun).  A track contains waves, audio etc.
 #: src/LabelDialog.cpp
 msgid "Track"
@@ -2485,6 +2509,10 @@ msgstr ""
 
 #: src/LabelDialog.cpp
 msgid "New..."
+msgstr ""
+
+#: src/LabelDialog.cpp
+msgid "Press F2 or double click to edit cell contents."
 msgstr ""
 
 #: src/LabelDialog.cpp src/Menus.cpp
@@ -2553,10 +2581,6 @@ msgstr ""
 
 #: src/LabelTrack.cpp
 msgid "&Delete Label"
-msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "&Edit..."
 msgstr ""
 
 #: src/LabelTrack.cpp
@@ -2676,18 +2700,6 @@ msgstr ""
 
 #: src/Menus.cpp
 msgid "&Raw Data..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "C&hains"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Appl&y Chain..."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Edit C&hains..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3232,7 +3244,7 @@ msgid "Mi&x"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Mix Stereo down to &Mono"
+msgid "Mix Stereo Down to &Mono"
 msgstr ""
 
 #: src/Menus.cpp
@@ -3375,6 +3387,14 @@ msgid "Plot Spectrum..."
 msgstr ""
 
 #: src/Menus.cpp
+msgid "&Tools"
+msgstr ""
+
+#: src/Menus.cpp
+msgid "&Macros..."
+msgstr ""
+
+#: src/Menus.cpp
 msgid "&Window"
 msgstr ""
 
@@ -3397,15 +3417,11 @@ msgid "&Getting Started"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "&Quick Help"
+msgid "&Quick Help..."
 msgstr ""
 
 #: src/Menus.cpp
-msgid "&Manual"
-msgstr ""
-
-#: src/Menus.cpp
-msgid "&Tools"
+msgid "&Manual..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3539,7 +3555,7 @@ msgid "Mi&xer"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Ad&just Playback Volume"
+msgid "Ad&just Playback Volume..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3551,7 +3567,7 @@ msgid "&Decrease Playback Volume"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Adj&ust Recording Volume"
+msgid "Adj&ust Recording Volume..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3587,7 +3603,7 @@ msgid "Play C&ut Preview-at-Speed"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Ad&just Playback Speed"
+msgid "Ad&just Playback Speed..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3631,19 +3647,19 @@ msgid "De&vice"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Change &Recording Device"
+msgid "Change &Recording Device..."
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Change &Playback Device"
+msgid "Change &Playback Device..."
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Change Audio &Host"
+msgid "Change Audio &Host..."
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Change Recording Cha&nnels"
+msgid "Change Recording Cha&nnels..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3787,7 +3803,7 @@ msgid "&Track"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Change P&an on Focused Track"
+msgid "Change P&an on Focused Track..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3799,7 +3815,7 @@ msgid "Pan &Right on Focused Track"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Change Gai&n on Focused Track"
+msgid "Change Gai&n on Focused Track..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -3811,7 +3827,7 @@ msgid "&Decrease Gain on Focused Track"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Op&en Menu on Focused Track"
+msgid "Op&en Menu on Focused Track..."
 msgstr ""
 
 #: src/Menus.cpp
@@ -4665,6 +4681,15 @@ msgstr ""
 msgid "Unable to save MIDI device info"
 msgstr ""
 
+#. i18n-hint: One or more audio tracks have been panned
+#: src/Menus.cpp
+msgid "Panned audio track(s)"
+msgstr ""
+
+#: src/Menus.cpp
+msgid "Pan Track"
+msgstr ""
+
 #: src/Menus.cpp
 msgid ""
 "Cannot lock region beyond\n"
@@ -4942,7 +4967,7 @@ msgid "A♯/B♭"
 msgstr ""
 
 #: src/PluginManager.cpp
-msgid "Plug-in Manager: Effects, Generators and Analyzers"
+msgid "Manage Plug-ins"
 msgstr ""
 
 #: src/PluginManager.cpp
@@ -5722,6 +5747,11 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr ""
 
+#. i18n-hint verb, imperative
+#: src/ShuttleGui.cpp src/commands/SelectCommand.cpp
+msgid "Set"
+msgstr ""
+
 #: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
 #: src/widgets/ErrorDialog.cpp
 msgid "Help"
@@ -5809,6 +5839,14 @@ msgstr ""
 
 #: src/Tags.cpp
 msgid "Value"
+msgstr ""
+
+#: src/Tags.cpp
+msgid "&Add"
+msgstr ""
+
+#: src/Tags.cpp
+msgid "&Remove"
 msgstr ""
 
 #: src/Tags.cpp
@@ -6188,7 +6226,8 @@ msgstr ""
 msgid "Export Project As:"
 msgstr ""
 
-#: src/TimerRecordDialog.cpp src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp
+#: src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr ""
 
@@ -6378,11 +6417,6 @@ msgstr ""
 #: src/effects/vamp/VampEffect.cpp src/widgets/ASlider.cpp
 #, c-format
 msgid "%s: %s"
-msgstr ""
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
 msgstr ""
 
 #: src/commands/CommandManager.cpp
@@ -6876,10 +6910,6 @@ msgid "Low:"
 msgstr ""
 
 #: src/commands/SelectCommand.cpp
-msgid "Set"
-msgstr ""
-
-#: src/commands/SelectCommand.cpp
 msgid "Add"
 msgstr ""
 
@@ -7016,6 +7046,10 @@ msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Project"
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+msgid "Resize:"
 msgstr ""
 
 #: src/commands/SetProjectCommand.cpp
@@ -7652,10 +7686,6 @@ msgstr ""
 
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
-msgstr ""
-
-#: src/effects/Contrast.cpp src/effects/Equalization.cpp
-msgid "E&xport..."
 msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
@@ -8614,15 +8644,7 @@ msgid "Curve Name"
 msgstr ""
 
 #: src/effects/Equalization.cpp
-msgid "&Rename..."
-msgstr ""
-
-#: src/effects/Equalization.cpp
 msgid "D&elete..."
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "I&mport..."
 msgstr ""
 
 #: src/effects/Equalization.cpp
@@ -10120,6 +10142,10 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Tools Prompt"
 msgstr ""
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
@@ -11923,8 +11949,7 @@ msgstr ""
 msgid "Batch"
 msgstr ""
 
-#: src/prefs/BatchPrefs.cpp src/prefs/GUIPrefs.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
 msgstr ""
 
@@ -12298,16 +12323,12 @@ msgstr ""
 msgid "Meter dB &range:"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp src/toolbars/SelectionBar.cpp
-msgid "Show"
+#: src/prefs/GUIPrefs.cpp
+msgid "Show 'How to Get &Help' at launch"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
-msgid "'How to Get &Help' at launch"
-msgstr ""
-
-#: src/prefs/GUIPrefs.cpp
-msgid "E&xtra menus"
+msgid "Show e&xtra menus"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
@@ -12442,6 +12463,10 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "&Import..."
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
@@ -12937,19 +12962,24 @@ msgid "Dit&her:"
 msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "Playthrough"
+msgid "Play &other tracks while recording (overdub)"
 msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Other tracks while recording (overdub)"
+msgid "Use &hardware to play other tracks"
 msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Hardware Playthrough of input"
+msgid "Use &software to play other tracks"
 msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Software Playthrough of input"
+msgid "Record on a new track"
+msgstr ""
+
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
 msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
@@ -12990,15 +13020,6 @@ msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "System T&ime"
-msgstr ""
-
-#: src/prefs/RecordingPrefs.cpp
-msgid "Always record on a new track"
-msgstr ""
-
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
-#: src/prefs/RecordingPrefs.cpp
-msgid "Detect dropouts"
 msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
@@ -13417,6 +13438,10 @@ msgid "Auto-&fit track height"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
+msgid "Sho&w audio track name as overlay"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
 msgstr ""
 
@@ -13428,12 +13453,9 @@ msgstr ""
 msgid "Default audio track &name:"
 msgstr ""
 
+#. i18n-hint: The default name for an audio track.
 #: src/prefs/TracksPrefs.cpp
 msgid "Audio Track"
-msgstr ""
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Sho&w audio track name as overlay"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
@@ -13778,6 +13800,10 @@ msgstr ""
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Length and Center of Selection"
+msgstr ""
+
+#: src/toolbars/SelectionBar.cpp
+msgid "Show"
 msgstr ""
 
 #: src/toolbars/SelectionBar.cpp
@@ -16181,7 +16207,7 @@ msgstr ""
 #, lisp-format
 msgid ""
 "If used, 'Optional rhythm track duration' must be \n"
-"entered as either one number (seconds0, or two \n"
+"entered as either one number (seconds), or two \n"
 "numbers (minutes seconds) separated by a space.\n"
 "Use whole numbers only.~%"
 msgstr ""
@@ -16775,7 +16801,7 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - Although the Track is stereo, the field  is obviously extra wide.\n"
+" - Although the Track is stereo, the field is obviously extra wide.\n"
 "   This can cause strange effects.\n"
 "   Especially when played by only one speaker."
 msgstr ""
