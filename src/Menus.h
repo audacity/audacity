@@ -546,15 +546,19 @@ void OnResample(const CommandContext &context );
 private:
 void OnCursorLeft(bool shift, bool ctrl, bool keyup = false);
 void OnCursorRight(bool shift, bool ctrl, bool keyup = false);
-void OnCursorMove(bool forward, bool jump, bool longjump);
+void OnCursorMove(bool forward, bool longjump);
 void OnBoundaryMove(bool left, bool boundaryContract);
 
 // Handle small cursor and play head movements
 void SeekLeftOrRight
-(bool left, bool shift, bool ctrl, bool keyup,
- int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
- double quietSeekStepPositive, bool quietStepIsPixels,
- double audioSeekStepPositive, bool audioStepIsPixels);
+(bool left, bool shift, bool ctrl, bool keyup);
+
+void SeekAudio(double seekStep);
+
+void SeekQuiet
+(double seekStep, bool isPixels, bool snapToTime, bool shift, bool ctrl);
+
+double OffsetTime(double t, double offset, bool isPixels, bool snapToTime);
 
 // Helper for moving by keyboard with snap-to-grid enabled
 double GridMove(double t, int minPix);
