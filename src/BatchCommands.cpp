@@ -371,10 +371,10 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
    -> Entries::const_iterator
 {
-   const auto less = [&](const Entry &entryA, const Entry &entryB)
+   const auto less = [](const Entry &entryA, const Entry &entryB)
       { return entryA.friendly < entryB.friendly; };
    auto range = std::equal_range(
-      begin(), end(), Entry{ friendlyName }, less);
+      begin(), end(), Entry{ friendlyName, {}, {} }, less);
    if (range.first != range.second) {
       wxASSERT_MSG( range.first + 1 == range.second,
                     "Non-unique user-visible command name" );
