@@ -3,8 +3,8 @@
 
 /* Concurrent Control with "Readers" and "Writers", P.J. Courtois et al, 1971 */
 
-#if !defined ccrw2_included
-#define ccrw2_included
+#if !defined soxr_ccrw2_included
+#define soxr_ccrw2_included
 
 #if defined SOXR_LIB
 #include "internal.h"

@@ -1,15 +1,15 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-16 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
-#include "simd.h"
-#include "simd-dev.h"
 
-#define SIMD_ALIGNMENT (sizeof(float) * 4)
+#include "soxr-config.h"
 
-void * _soxr_simd_aligned_malloc(size_t size)
+#define SIMD_ALIGNMENT (sizeof(float) * (1 + (PFFFT_DOUBLE|AVCODEC_FOUND)) * 4)
+
+void * SIMD_ALIGNED_MALLOC(size_t size)
 {
   char * p1 = 0, * p = malloc(size + SIMD_ALIGNMENT);
   if (p) {
@@ -21,9 +21,9 @@ void * _soxr_simd_aligned_malloc(size_t size)
 
 
 
-void * _soxr_simd_aligned_calloc(size_t nmemb, size_t size)
+void * SIMD_ALIGNED_CALLOC(size_t nmemb, size_t size)
 {
-  void * p = _soxr_simd_aligned_malloc(nmemb * size);
+  void * p = SIMD_ALIGNED_MALLOC(nmemb * size);
   if (p)
     memset(p, 0, nmemb * size);
   return p;
@@ -31,7 +31,7 @@ void * _soxr_simd_aligned_calloc(size_t nmemb, size_t size)
 
 
 
-void _soxr_simd_aligned_free(void * p1)
+void SIMD_ALIGNED_FREE(void * p1)
 {
   if (p1)
     free(*((void * *)p1 - 1));
@@ -39,11 +39,16 @@ void _soxr_simd_aligned_free(void * p1)
 
 
 
-void _soxr_ordered_convolve_simd(int n, void * not_used, float * a, const float * b)
+#define PFFT_MACROS_ONLY
+#include "pffft.c"
+
+
+
+void ORDERED_CONVOLVE_SIMD(int n, void * not_used, float * a, float const * b)
 {
   int i;
   float ab0, ab1;
-  v4sf       * /*RESTRICT*/ va = (v4sf       *)a;
+  v4sf       *   RESTRICT   va = (v4sf       *)a;
   v4sf const *   RESTRICT   vb = (v4sf const *)b;
   assert(VALIGNED(a) && VALIGNED(b));
   ab0 = a[0] * b[0], ab1 = a[1] * b[1];
@@ -62,11 +67,11 @@ void _soxr_ordered_convolve_simd(int n, void * not_used, float * a, const float 
 
 
 
-void _soxr_ordered_partial_convolve_simd(int n, float * a, const float * b)
+void ORDERED_PARTIAL_CONVOLVE_SIMD(int n, float * a, float const * b)
 {
   int i;
   float ab0;
-  v4sf       * /*RESTRICT*/ va = (v4sf       *)a;
+  v4sf       *   RESTRICT   va = (v4sf       *)a;
   v4sf const *   RESTRICT   vb = (v4sf const *)b;
   assert(VALIGNED(a) && VALIGNED(b));
   ab0 = a[0] * b[0];

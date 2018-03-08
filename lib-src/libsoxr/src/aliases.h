@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-16 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #if defined SOXR_LIB
@@ -18,8 +18,10 @@
 #define lsx_dfst_f                     _soxr_dfst_f
 #define lsx_dfst                       _soxr_dfst
 #define lsx_fir_to_phase               _soxr_fir_to_phase
+#define lsx_f_resp                     _soxr_f_resp
 #define lsx_init_fft_cache_f           _soxr_init_fft_cache_f
 #define lsx_init_fft_cache             _soxr_init_fft_cache
+#define lsx_inv_f_resp                 _soxr_inv_f_resp
 #define lsx_kaiser_beta                _soxr_kaiser_beta
 #define lsx_kaiser_params              _soxr_kaiser_params
 #define lsx_make_lpf                   _soxr_make_lpf

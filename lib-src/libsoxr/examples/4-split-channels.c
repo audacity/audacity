@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-18 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Example 4: variant of examples 2 & 3, demonstrating I/O with split channels.
@@ -13,6 +13,8 @@
  *
  * Note also (not shown in the examples) that split/interleaved channels may
  * be used for input and output independently.
+ *
+ * Arguments are as example 3.
  */
 
 #include <soxr.h>
@@ -73,13 +75,17 @@ int main(int n, char const * arg[])
   double          const orate = n? --n, atof(*arg++) : 44100.;
   unsigned        const chans = n? --n, (unsigned)atoi(*arg++) : 1;
   soxr_datatype_t const itype = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
-  soxr_datatype_t const otype = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
+  unsigned        const ospec = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
   unsigned long const q_recipe= n? --n, strtoul(*arg++, 0, 16) : SOXR_HQ;
   unsigned long const q_flags = n? --n, strtoul(*arg++, 0, 16) : 0;
+  double   const passband_end = n? --n, atof(*arg++) : 0;
+  double const stopband_begin = n? --n, atof(*arg++) : 0;
+  double const phase_response = n? --n, atof(*arg++) : -1;
   int       const use_threads = n? --n, atoi(*arg++) : 1;
+  soxr_datatype_t const otype = ospec & 3;
 
-  soxr_quality_spec_t const q_spec = soxr_quality_spec(q_recipe, q_flags);
-  soxr_io_spec_t const io_spec=soxr_io_spec(itype|SOXR_SPLIT, otype|SOXR_SPLIT);
+  soxr_quality_spec_t  q_spec = soxr_quality_spec(q_recipe, q_flags);
+  soxr_io_spec_t       io_spec=soxr_io_spec(itype|SOXR_SPLIT, otype|SOXR_SPLIT);
   soxr_runtime_spec_t const runtime_spec = soxr_runtime_spec(!use_threads);
 
   /* Allocate resampling input and output buffers in proportion to the input
@@ -102,11 +108,18 @@ int main(int n, char const * arg[])
 
   size_t odone, written, need_input = 1, clips = 0;
   soxr_error_t error;
+  soxr_t soxr;
+  unsigned i;
 
-  soxr_t soxr = soxr_create(
+  /* Overrides (if given): */
+  if (passband_end   > 0) q_spec.passband_end   = passband_end / 100;
+  if (stopband_begin > 0) q_spec.stopband_begin = stopband_begin / 100;
+  if (phase_response >=0) q_spec.phase_response = phase_response;
+  io_spec.flags = ospec & ~7u;
+
+  soxr = soxr_create(
       irate, orate, chans, &error, &io_spec, &q_spec, &runtime_spec);
 
-  unsigned i;
   for (i = 0; i < chans; ++i) {
     ibuf_ptrs[i] = iptr;
     obuf_ptrs[i] = optr;
@@ -141,7 +154,8 @@ int main(int n, char const * arg[])
   free(obuf), free(ibuf), free(obufs), free(ibufs);
   free(obuf_ptrs), free(ibuf_ptrs);
                                                               /* Diagnostics: */
-  fprintf(stderr, "%-26s %s; %lu clips; I/O: %s\n", arg0, soxr_strerror(error),
-      (long unsigned)clips, errno? strerror(errno) : "no error");
-  return error || errno;
+  fprintf(stderr, "%-26s %s; %lu clips; I/O: %s\n",
+      arg0, soxr_strerror(error), (long unsigned)clips,
+      ferror(stdin) || ferror(stdout)? strerror(errno) : "no error");
+  return !!error;
 }

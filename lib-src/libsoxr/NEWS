@@ -1,3 +1,25 @@
+Version 0.1.3 (2018-02-24)
+  * SIMD enhancements: SSE, AVX, Neon.
+  * Improve support for clang, ARM, and cross-compilation.
+  * Provide env. var. override of runtime parameters.
+  * Build fix re cmake variables AVCODEC_INCLUDE_DIRS & AVUTIL_INCLUDE_DIRS.
+  * Build options WITH_SINGLE_PRECISION, WITH_DOUBLE_PRECISION & WITH_SIMD have
+    been removed; replacement options are detailed in INSTALL, `Resampling
+    engines'.
+
+Version 0.1.2 (2015-09-05)
+  * Fix conversion failure when I/O types differ but I/O rates don't.
+  * Fix #defines for interpolation order selection.
+  * Fix ineffectual SOXR_MINIMUM_PHASE and SOXR_INTERMEDIATE_PHASE in
+    soxr_quality_spec recipe.
+  * Fix soxr_delay() returning a negative number after end-of-input has been
+    indicated.
+  * Fix crash when using soxr_process() after calling soxr_clear().
+  * Be more POSIX compliant w.r.t. errno in the examples; fixes erroneous
+    reporting of errors on FreeBSD.
+  * Quality improvement for variable-rate.
+  * Various fixes/improvements to build/tests/documentation.
+
 Version 0.1.1 (2013-03-03)
   * Minor fixes/improvements to build/tests.
   * Fix crash (e.g. with k3b) when null error pointer passed to src_create (lsr

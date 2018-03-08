@@ -1,27 +1,21 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-16 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
-/* Experimental variable-rate resampling. */
+/* Variable-rate resampling. */
 
 #include <assert.h>
-#include <math.h>
-#if !defined M_PI
-#define M_PI    3.14159265358979323846
-#endif
-#if !defined M_LN2
-#define M_LN2   0.69314718055994530942
-#endif
+#include "math-wrap.h"
 #include <string.h>
 #include <stdlib.h>
 #include "internal.h"
 #define FIFO_SIZE_T int
 #define FIFO_MIN 0x8000
 #include "fifo.h"
+#include "vr-coefs.h"
 
 #define FADE_LEN_BITS     9
-#define PHASE_BITS_D      (8 + PHASE_MORE)
-#define PHASE_BITS_U      (7 + PHASE_MORE)
-#define PHASE_MORE        0 /* 2 improves small int, and large u, ratios. */
+#define PHASE_BITS_D      10
+#define PHASE_BITS_U      9
 
 #define PHASES0_D         12
 #define POLY_FIR_LEN_D    20
@@ -31,50 +25,6 @@
 #define MULT32            (65536. * 65536.)
 #define PHASES_D          (1 << PHASE_BITS_D)
 #define PHASES_U          (1 << PHASE_BITS_U)
-
-static float const half_fir_coefs[] = {
-  4.7111692735253413e-1f, 3.1690797657656167e-1f, 2.8691667164678896e-2f,
-  -1.0192825848403946e-1f, -2.8122856237424654e-2f, 5.6804928137780292e-2f,
-  2.7192768359197508e-2f, -3.6082309197154230e-2f, -2.5927789156038026e-2f,
-  2.3644444384060669e-2f, 2.4363075319345607e-2f, -1.5127630198606428e-2f,
-  -2.2541790286342567e-2f, 8.8733836742880233e-3f, 2.0513077413933017e-2f,
-  -4.1186431656279818e-3f, -1.8330444480421631e-2f, 4.6288071358217028e-4f,
-  1.6049769308921290e-2f, 2.3282106680446069e-3f, -1.3727327353082214e-2f,
-  -4.4066375505196096e-3f, 1.1417847550661287e-2f, 5.8817724081355978e-3f,
-  -9.1727580349157123e-3f, -6.8404638339394346e-3f, 7.0385357033205332e-3f,
-  7.3574525331962567e-3f, -5.0554197628506353e-3f, -7.5008330890673153e-3f,
-  3.2563575907277676e-3f, 7.3346538206330259e-3f, -1.6663208501478607e-3f,
-  -6.9199171108861694e-3f, 3.0196567996023190e-4f, 6.3146436955438768e-3f,
-  8.2835711466756098e-4f, -5.5734271982033918e-3f, -1.7242765658561860e-3f,
-  4.7467223803576682e-3f, 2.3927523666941205e-3f, -3.8801054688632139e-3f,
-  -2.8472115748114728e-3f, 3.0135659731132642e-3f, 3.1064651802365259e-3f,
-  -2.1809660142807748e-3f, -3.1935061143485862e-3f, 1.4096923923208671e-3f,
-  3.1342382222281609e-3f, -7.2053095076414931e-4f, -2.9561940489039682e-3f,
-  1.2777585046118889e-4f, 2.6873033434313882e-3f, 3.6043554054680685e-4f,
-  -2.3547716396561816e-3f, -7.4160208709749312e-4f, 1.9840894915230177e-3f,
-  1.0181606831615856e-3f, -1.5982325266851590e-3f, -1.1966774804490967e-3f,
-  1.2170528733224913e-3f, 1.2869618709883193e-3f, -8.5687504489877664e-4f,
-  -1.3011452950496001e-3f, 5.3030588389885972e-4f, 1.2527854026453923e-3f,
-  -2.4622758430821288e-4f, -1.1560181289625195e-3f, 9.9661643910782316e-6f,
-  1.0247989665318426e-3f, 1.7639297561664703e-4f, -8.7226452073196350e-4f,
-  -3.1358436147401782e-4f, 7.1022054657665971e-4f, 4.0466151692224986e-4f,
-  -5.4877022848030636e-4f, -4.5444807961399138e-4f, 3.9609542800868769e-4f,
-  4.6899779918507020e-4f, -2.5835154936239735e-4f, -4.5505391611721792e-4f,
-  1.3970512544147175e-4f, 4.1957352577882777e-4f, -4.2458993694471047e-5f,
-  -3.6930861782460262e-4f, -3.2738549063278822e-5f, 3.1046609224355927e-4f,
-  8.6624679037202785e-5f, -2.4845427128026068e-4f, -1.2101300074995281e-4f,
-  1.8773208187021294e-4f, 1.3849844077872591e-4f, -1.3170611080827864e-4f,
-  -1.4212373327156217e-4f, 8.2758595879431528e-5f, 1.3513059684140468e-4f,
-  -4.2284127775471251e-5f, -1.2070298779675768e-4f, 1.0811692847491609e-5f,
-  1.0178008299781669e-4f, 1.1852545451857104e-5f, -8.0914539313342186e-5f,
-  -2.6454558961220653e-5f, 6.0208388858339534e-5f, 3.4169979203255580e-5f,
-  -4.1203296686185329e-5f, -3.6353143441156863e-5f, 2.4999186627094098e-5f,
-  3.4542829080466582e-5f, -1.2148053427488782e-5f, -3.0260855999161159e-5f,
-  2.7687092952335852e-6f, 2.5095689880235108e-5f, 3.6223160417538916e-6f,
-  -2.0960977068565079e-5f, -9.3312292092513232e-6f, 2.0711288605113663e-5f,
-  3.1992093654438569e-5f, 1.9772538588596925e-5f, 4.8667740603532560e-6f,
-  -5.3495033191567977e-7f,
-};
 
 #define CONVOLVE \
     _ _ _ _ _ _ _ _ _ _  _ _ _ _ _ _ _ _ _ _ \
@@ -119,25 +69,14 @@ static float double_fir1(float const * input)
 
 static float fast_half_fir(float const * input)
 {
-  static const float coefs[] = {
-    .3094188462713818f, -.08198144615199748f, .03055232105456833f,
-    -.01015890277986387f, .002513237297525149f, -.0003469672050347395f,
-  };
   int i = 0;
   float sum = input[0] * .5f;
-#define _ sum += (input[-(2*i+1)] + input[2*i+1]) * coefs[i], ++i;
+#define _ sum += (input[-(2*i+1)] + input[2*i+1]) * fast_half_fir_coefs[i], ++i;
   _ _ _ _ _ _
 #undef _
   return (float)sum;
 }
 
-static const float iir_coefs[] = {
-  .0262852045255816f, .0998310478296204f, .2068650611060755f,
-  .3302241336172489f, .4544203620946318f, .5685783569471244f,
-  .6669444657994612f, .7478697711807407f, .8123244036799226f,
-  .8626000999654434f, .9014277444199280f, .9314860567781748f,
-  .9551915287878752f, .9746617828910630f, .9917763050166036f,
-  };
 #define IIR_FILTER _ _ _ _ _ _ _
 #define _ in1=(in1-p->y[i])*iir_coefs[i]+tmp1;tmp1=p->y[i],p->y[i]=in1;++i;\
           in0=(in0-p->y[i])*iir_coefs[i]+tmp0;tmp0=p->y[i],p->y[i]=in0;++i;
@@ -175,77 +114,18 @@ static void half_phase(half_iir_t * p, float * buf, int len)
 #undef _
 }
 
-#define raw_coef_t float
-static const raw_coef_t coefs0_d[POLY_FIR_LEN_D / 2 * PHASES0_D + 1] = {
-  0.f, 1.4057457935754080e-5f, 2.3302768424632188e-5f, 4.0084897378442095e-5f,
-  6.1916773126231636e-5f, 8.7973434034929016e-5f, 1.1634847507082481e-4f,
-  1.4391931654629385e-4f, 1.6635470822160746e-4f, 1.7830838562749493e-4f,
-  1.7382737311735053e-4f, 1.4698011689178234e-4f, 9.2677933545427018e-5f,
-  7.6288745483685147e-6f, -1.0867156553965507e-4f, -2.5303924530322309e-4f,
-  -4.1793463959360433e-4f, -5.9118012513731508e-4f, -7.5619603440508576e-4f,
-  -8.9285245696990080e-4f, -9.7897684238178358e-4f, -9.9248131798952959e-4f,
-  -9.1398576537725926e-4f, -7.2972364732199553e-4f, -4.3443557115962946e-4f,
-  -3.3895523979487613e-5f, 4.5331297364457429e-4f, 9.9513966802111057e-4f,
-  1.5468348913161652e-3f, 2.0533350794358640e-3f, 2.4533031436958950e-3f,
-  2.6846707315385087e-3f, 2.6913237051575155e-3f, 2.4303724507982708e-3f,
-  1.8792817173578587e-3f, 1.0420231121204950e-3f, -4.6617252898486750e-5f,
-  -1.3193786988492551e-3f, -2.6781478874181100e-3f, -3.9992272197487003e-3f,
-  -5.1422613336274056e-3f, -5.9624224517967755e-3f, -6.3250283969908542e-3f,
-  -6.1213677360236101e-3f, -5.2841872043022185e-3f, -3.8011036067186429e-3f,
-  -1.7241752288145494e-3f, 8.2596463599396213e-4f, 3.6626436307478369e-3f,
-  6.5430316636724021e-3f, 9.1853404499045010e-3f, 1.1292516396583619e-2f,
-  1.2580791345879052e-2f, 1.2810714562937180e-2f, 1.1817712330677889e-2f,
-  9.5388893881204976e-3f, 6.0327678128662696e-3f, 1.4889921444742027e-3f,
-  -3.7742770128030593e-3f, -9.3265389310393538e-3f, -1.4654680466977541e-2f,
-  -1.9204813565928323e-2f, -2.2433342812570076e-2f, -2.3863084249865732e-2f,
-  -2.3139248817097825e-2f, -2.0079526147977360e-2f, -1.4712465100990968e-2f,
-  -7.2989072959128900e-3f, 1.6676055337427264e-3f, 1.1483818597217116e-2f,
-  2.1283378291010333e-2f, 3.0104924254589629e-2f, 3.6977102234817580e-2f,
-  4.1013752396638667e-2f, 4.1510805491867378e-2f, 3.8035383354576423e-2f,
-  3.0497421566956902e-2f, 1.9194910514469185e-2f, 4.8255960959712636e-3f,
-  -1.1539393212932630e-2f, -2.8521204184392364e-2f, -4.4535662544571142e-2f,
-  -5.7926040870466614e-2f, -6.7116245375785713e-2f, -7.0771566186484461e-2f,
-  -6.7952220045636696e-2f, -5.8244261062898019e-2f, -4.1853211028450271e-2f,
-  -1.9648003905967236e-2f, 6.8535507014343263e-3f, 3.5561844452076982e-2f,
-  6.3953651316164553e-2f, 8.9264185854578418e-2f, 1.0872025112127688e-1f,
-  1.1979689474056175e-1f, 1.2047646491371326e-1f, 1.0948710929592399e-1f,
-  8.6497869185231543e-2f, 5.2249701648862154e-2f, 8.6059406690018377e-3f,
-  -4.1488376792262582e-2f, -9.4141677945723271e-2f, -1.4474093381170536e-1f,
-  -1.8825408052888104e-1f, -2.1958987927558168e-1f, -2.3398931875783419e-1f,
-  -2.2741860176576378e-1f, -1.9693206642095332e-1f, -1.4097432039328661e-1f,
-  -5.9594435654526039e-2f, 4.5448949025739843e-2f, 1.7070477403312445e-1f,
-  3.1117273816011837e-1f, 4.6056631075658744e-1f, 6.1167961235662682e-1f,
-  7.5683349228721264e-1f, 8.8836924234920911e-1f, 9.9915393319190682e-1f,
-  1.0830597619389459e+0f, 1.1353812335460003e+0f, 1.1531583819295732e+0f,
-};
-
-static const raw_coef_t coefs0_u[POLY_FIR_LEN_U / 2 * PHASES0_U + 1] = {
-  0.f, 2.4376543962047211e-5f, 9.7074354091545404e-5f, 2.5656573977863553e-4f,
-  5.2734092391248152e-4f, 8.9078135146855391e-4f, 1.2494786883827907e-3f,
-  1.4060353542261659e-3f, 1.0794576035695273e-3f, -2.1547711862939183e-5f,
- -2.0658693124381805e-3f, -4.9333908355966233e-3f, -8.0713165910440213e-3f,
- -1.0451560117817383e-2f, -1.0703998868319438e-2f, -7.4626412699536097e-3f,
-  1.0898921033926621e-4f, 1.1734475997741493e-2f, 2.5579413661660957e-2f,
-  3.8168952738129619e-2f, 4.4846162998312754e-2f, 4.0821915377309274e-2f,
-  2.2679961923658700e-2f, -9.9957152600624218e-3f, -5.3343924460223908e-2f,
- -9.8792607573741240e-2f, -1.3382736970823086e-1f, -1.4404307655147228e-1f,
- -1.1619851747063137e-1f, -4.1649695271274462e-2f, 8.0680482815468343e-2f,
-  2.4264355486537642e-1f, 4.2712782955601925e-1f, 6.1041328492424185e-1f,
-  7.6625948559498691e-1f, 8.7088876549652772e-1f, 9.0774244518772884e-1f,
-};
-
 #define coef(coef_p, interp_order, fir_len, phase_num, coef_interp_num, \
     fir_coef_num) coef_p[(fir_len) * ((interp_order) + 1) * (phase_num) + \
     ((interp_order) + 1) * (fir_coef_num) + (interp_order - coef_interp_num)]
 
 #define COEF(h,l,i) ((i)<0||(i)>=(l)?0:(h)[(i)>(l)/2?(l)-(i):(i)])
 static void prepare_coefs(float * coefs, int n, int phases0, int phases,
-    raw_coef_t const * coefs0, double multiplier)
+    float const * coefs0, double multiplier)
 {
   double k[6];
   int length0 = n * phases0, length = n * phases, K0 = iAL(k)/2 - 1, i, j, pos;
-  raw_coef_t * coefs1 = malloc(((size_t)length / 2  + 1) * sizeof(*coefs1));
-  raw_coef_t * p = coefs1, f0, f1 = 0;
+  float * coefs1 = malloc(((size_t)length / 2  + 1) * sizeof(*coefs1));
+  float * p = coefs1, f0, f1 = 0;
 
   for (j = 0; j < iAL(k); k[j] = COEF(coefs0, length0, j - K0), ++j);
   for (pos = i = 0; i < length0 / 2; ++i) {
@@ -254,18 +134,18 @@ static void prepare_coefs(float * coefs, int n, int phases0, int phases,
     double c=(1/12.)*(k[4]-k[0]-2*(k[3]-k[1])-60*a),e=.5*(k[3]-k[1])-a-c;
     for (; pos / phases == i; pos += phases0) {
       double x = (double)(pos % phases) / phases;
-      *p++ = (raw_coef_t)(k[K0] + ((((a*x + b)*x + c)*x + d)*x + e)*x);
+      *p++ = (float)(k[K0] + ((((a*x + b)*x + c)*x + d)*x + e)*x);
     }
     for (j = 0; j < iAL(k) - 1; k[j] = k[j + 1], ++j);
     k[j] = COEF(coefs0, length0, i + iAL(k) / 2 + 1);
   }
   if (!(length & 1))
-    *p++ = (raw_coef_t)k[K0];
+    *p++ = (float)k[K0];
   assert(p - coefs1 == length / 2  + 1);
 
   for (i = 0; i < n; ++i) for (j = phases - 1; j >= 0; --j, f1 = f0) {
     pos = (n - 1 - i) * phases + j;
-    f0 = COEF(coefs1, length, pos) * (raw_coef_t)multiplier;
+    f0 = COEF(coefs1, length, pos) * (float)multiplier;
     coef(coefs, 1, n, j, 0, i) = (float)f0;
     coef(coefs, 1, n, j, 1, i) = (float)(f1 - f0);
   }
@@ -311,7 +191,7 @@ static float poly_fir1_u(float const * input, uint32_t frac)
 typedef struct {
   union {
     int64_t all;
-#if WORDS_BIGENDIAN
+#if HAVE_BIGENDIAN
     struct {int32_t integer; uint32_t frac;} part;
 #else
     struct {uint32_t frac; int32_t integer;} part;
@@ -430,7 +310,7 @@ static void vr_init(rate_t * p, double default_io_ratio, int num_stages, double 
   }
   fifo_create(&p->output_fifo, sizeof(float));
   p->default_io_ratio = default_io_ratio;
-  if (!fade_coefs[0]) {
+  if (fade_coefs[0]==0) {
     for (i = 0; i < iAL(fade_coefs); ++i)
       fade_coefs[i] = (float)(.5 * (1 + cos(M_PI * i / (AL(fade_coefs) - 1))));
     prepare_coefs(poly_fir_coefs_u, POLY_FIR_LEN_U, PHASES0_U, PHASES_U, coefs0_u, mult);
@@ -481,7 +361,7 @@ static void vr_set_io_ratio(rate_t * p, double io_ratio, size_t slew_len)
     }
   }
   else {
-    if (p->default_io_ratio) { /* Then this is the first call to this fn. */
+    if (p->default_io_ratio!=0) { /* Then this is the first call to this fn. */
       int octave = (int)floor(log(io_ratio) / M_LN2);
       p->current.stage_num = octave < 0? -1 : min(octave, p->num_stages0-1);
       enter_new_stage(p, 0);
@@ -489,7 +369,7 @@ static void vr_set_io_ratio(rate_t * p, double io_ratio, size_t slew_len)
     else if (p->fade_len)
       set_step(&p->fadeout, io_ratio);
     set_step(&p->current, io_ratio);
-    if (p->default_io_ratio) FRAC(p->current.at) = FRAC(p->current.step) >> 1;
+    if (p->default_io_ratio!=0) FRAC(p->current.at) = FRAC(p->current.step) >> 1;
     p->default_io_ratio = 0;
   }
 }
@@ -544,7 +424,7 @@ static bool do_input_stage(rate_t * p, int stage_num, int sign, int min_stage_nu
 static int vr_process(rate_t * p, int olen0)
 {
   assert(p->num_stages > 0);
-  if (p->default_io_ratio)
+  if (p->default_io_ratio!=0)
     vr_set_io_ratio(p, p->default_io_ratio, 0);
   {
     float * output = fifo_reserve(&p->output_fifo, olen0);
@@ -576,7 +456,7 @@ static int vr_process(rate_t * p, int olen0)
       olen = min(olen, (int)(AL(buf) >> 1));
       if (p->slew_len)
         olen = min(olen, p->slew_len);
-      else if (p->new_io_ratio) {
+      else if (p->new_io_ratio!=0) {
         set_step(&p->current, p->new_io_ratio);
         set_step(&p->fadeout, p->new_io_ratio);
         p->fadeout.step_step.all = p->current.step_step.all = 0;
@@ -753,7 +633,7 @@ static char const * vr_create(void * channel, void * shared,double max_io_ratio,
 
 static char const * vr_id(void)
 {
-  return "single-precision variable-rate";
+  return "vr32";
 }
 
 typedef void (* fn_t)(void);

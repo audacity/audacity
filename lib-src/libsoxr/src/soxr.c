@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-18 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #include <math.h>
@@ -10,12 +10,37 @@
 #include "data-io.h"
 #include "internal.h"
 
+#if AVUTIL_FOUND
+  #include <libavutil/cpu.h>
+#endif
+
+
+
+#if WITH_DEV_TRACE
+
+#include <stdarg.h>
+#include <stdio.h>
+
+int _soxr_trace_level;
+
+void _soxr_trace(char const * fmt, ...)
+{
+  va_list args;
+  va_start(args, fmt);
+  vfprintf(stderr, fmt, args);
+  fputc('\n', stderr);
+  va_end(args);
+}
+
+#endif
+
 
 
 char const * soxr_version(void)
 {
   return "libsoxr-" SOXR_THIS_VERSION_STR;
 }
+
 
 
 
@@ -67,42 +92,52 @@ struct soxr {
 
 
 
-/* TODO: these should not be here. */
-#define TO_3dB(a)       ((1.6e-6*a-7.5e-4)*a+.646)
-#define LOW_Q_BW0       (1385 / 2048.) /* 0.67625 rounded to be a FP exact. */
+#if WITH_CR32 || WITH_CR32S || WITH_CR64 || WITH_CR64S
+  #include "filter.h"
+#else
+  #define lsx_to_3dB(x) ((x)/(x))
+#endif
+
+
 
 soxr_quality_spec_t soxr_quality_spec(unsigned long recipe, unsigned long flags)
 {
   soxr_quality_spec_t spec, * p = &spec;
-  unsigned quality = recipe & 0xf;
+  unsigned q = recipe & 0xf;                         /* TODO: move to soxr-lsr.c: */
+  unsigned quality = q > SOXR_LSR2Q+2? SOXR_VHQ : q > SOXR_LSR2Q? SOXR_QQ : q;
   double rej;
   memset(p, 0, sizeof(*p));
-  if (quality > 13) {
+  if (quality > SOXR_PRECISIONQ) {
     p->e = "invalid quality type";
     return spec;
   }
-  if (quality == 13)
-    quality = 6;
-  else if (quality > 10)
-    quality = 0;
-  p->phase_response = "\62\31\144"[(recipe & 0x30)>>8];
+  flags |= quality < SOXR_LSR0Q ? RESET_ON_CLEAR : 0;
+  p->phase_response = "\62\31\144"[(recipe & 0x30)>>4];
   p->stopband_begin = 1;
-  p->precision = !quality? 0: quality < 3? 16 : quality < 8? 4 + quality * 4 : 55 - quality * 4;
+  p->precision =
+    quality == SOXR_QQ      ?  0 :
+    quality <= SOXR_16_BITQ ? 16 :
+    quality <= SOXR_32_BITQ ?  4 + quality * 4 :
+    quality <= SOXR_LSR2Q   ? 55 - quality * 4 : /* TODO: move to soxr-lsr.c */
+    0;
   rej = p->precision * linear_to_dB(2.);
   p->flags = flags;
-  if (quality < 8) {
-    p->passband_end = quality == 1? LOW_Q_BW0 : 1 - .05 / TO_3dB(rej);
+  if (quality <= SOXR_32_BITQ || quality == SOXR_PRECISIONQ) {
+    #define LOW_Q_BW0     (1385 / 2048.) /* 0.67625 rounded to be a FP exact. */
+    p->passband_end = quality == 1? LOW_Q_BW0 : 1 - .05 / lsx_to_3dB(rej);
     if (quality <= 2)
       p->flags &= ~SOXR_ROLLOFF_NONE, p->flags |= SOXR_ROLLOFF_MEDIUM;
   }
-  else {
+  else { /* TODO: move to soxr-lsr.c */
     static float const bw[] = {.931f, .832f, .663f};
-    p->passband_end = bw[quality - 8];
-    if (quality - 8 == 2)
-      p->flags &= ~SOXR_ROLLOFF_NONE, p->flags |= SOXR_ROLLOFF_MEDIUM;
+    p->passband_end = bw[quality - SOXR_LSR0Q];
+    if (quality == SOXR_LSR2Q) {
+      p->flags &= ~SOXR_ROLLOFF_NONE;
+      p->flags |= SOXR_ROLLOFF_LSR2Q | SOXR_PROMOTE_TO_LQ;
+    }
   }
   if (recipe & SOXR_STEEP_FILTER)
-    p->passband_end = 1 - .01 / TO_3dB(rej);
+    p->passband_end = 1 - .01 / lsx_to_3dB(rej);
   return spec;
 }
 
@@ -160,39 +195,165 @@ soxr_io_spec_t soxr_io_spec(
 
 
 
-#if HAVE_SIMD
-static bool cpu_has_simd(void)
-{
-#if defined __x86_64__ || defined _M_X64
-  return true;
-#elif defined __GNUC__ && defined i386
-  uint32_t eax, ebx, ecx, edx;
-  __asm__ __volatile__ (
-      "pushl %%ebx   \n\t"
-      "cpuid         \n\t"
-      "movl %%ebx, %1\n\t"
-      "popl %%ebx    \n\t"
-      : "=a"(eax), "=r"(ebx), "=c"(ecx), "=d"(edx)
-      : "a"(1)
-      : "cc" );
-  return !!(edx & 0x06000000);
-#elif defined _MSC_VER && defined _M_IX86
-  uint32_t d;
-  __asm {
-    xor     eax, eax
-    inc     eax
-    push    ebx
-    cpuid
-    pop     ebx
-    mov     d, edx
-  }
-  return !!(d & 0x06000000);
-#endif
-  return false;
-}
+#if (WITH_CR32S && WITH_CR32) || (WITH_CR64S && WITH_CR64)
+  #if defined __GNUC__ && defined __x86_64__
+    #define CPUID(type, eax_, ebx_, ecx_, edx_) \
+      __asm__ __volatile__ ( \
+        "cpuid \n\t" \
+        : "=a" (eax_), "=b" (ebx_), "=c" (ecx_), "=d" (edx_) \
+        : "a" (type), "c" (0));
+  #elif defined __GNUC__ && defined __i386__
+    #define CPUID(type, eax_, ebx_, ecx_, edx_) \
+      __asm__ __volatile__ ( \
+        "mov %%ebx, %%edi \n\t" \
+        "cpuid \n\t" \
+        "xchg %%edi, %%ebx \n\t" \
+        : "=a" (eax_), "=D" (ebx_), "=c" (ecx_), "=d" (edx_) \
+        : "a" (type), "c" (0));
+  #elif defined _M_X64 && defined _MSC_VER && _MSC_VER > 1500
+     void __cpuidex(int CPUInfo[4], int info_type, int ecxvalue);
+     #pragma intrinsic(__cpuidex)
+     #define CPUID(type, eax_, ebx_, ecx_, edx_) do { \
+       int regs[4]; \
+       __cpuidex(regs, type, 0); \
+       eax_ = regs[0], ebx_ = regs[1], ecx_ = regs[2], edx_ = regs[3]; \
+     } while(0)
+  #elif defined _M_X64 && defined _MSC_VER
+     void __cpuidex(int CPUInfo[4], int info_type);
+     #pragma intrinsic(__cpuidex)
+     #define CPUID(type, eax_, ebx_, ecx_, edx_) do { \
+       int regs[4]; \
+       __cpuidex(regs, type); \
+       eax_ = regs[0], ebx_ = regs[1], ecx_ = regs[2], edx_ = regs[3]; \
+     } while(0)
+  #elif defined _M_IX86 && defined _MSC_VER
+    #define CPUID(type, eax_, ebx_, ecx_, edx_) \
+      __asm pushad \
+      __asm mov eax, type \
+      __asm xor ecx, ecx \
+      __asm cpuid \
+      __asm mov eax_, eax \
+      __asm mov ebx_, ebx \
+      __asm mov ecx_, ecx \
+      __asm mov edx_, edx \
+      __asm popad
+  #endif
 #endif
 
-extern control_block_t _soxr_rate32s_cb, _soxr_rate32_cb, _soxr_rate64_cb, _soxr_vr32_cb;
+
+
+#if WITH_CR32S && WITH_CR32
+  static bool cpu_has_simd32(void)
+  {
+  #if defined __x86_64__ || defined _M_X64
+    return true;
+  #elif defined __i386__ || defined _M_IX86
+    enum {SSE = 1 << 25, SSE2 = 1 << 26};
+    unsigned eax_, ebx_, ecx_, edx_;
+    CPUID(1, eax_, ebx_, ecx_, edx_);
+    return (edx_ & (SSE|SSE2)) != 0;
+  #elif defined AV_CPU_FLAG_NEON
+    return !!(av_get_cpu_flags() & AV_CPU_FLAG_NEON);
+  #else
+    return false;
+  #endif
+  }
+
+  static bool should_use_simd32(void)
+  {
+    char const * e;
+    return ((e = getenv("SOXR_USE_SIMD"  )))? !!atoi(e) :
+           ((e = getenv("SOXR_USE_SIMD32")))? !!atoi(e) : cpu_has_simd32();
+  }
+#else
+  #define should_use_simd32() true
+#endif
+
+
+
+#if WITH_CR64S && WITH_CR64
+  #if defined __GNUC__
+    #define XGETBV(type, eax_, edx_) \
+      __asm__ __volatile__ ( \
+        ".byte 0x0f, 0x01, 0xd0\n" \
+        : "=a"(eax_), "=d"(edx_) : "c" (type));
+  #elif defined _M_X64 && defined _MSC_FULL_VER && _MSC_FULL_VER >= 160040219
+    #include <immintrin.h>
+    #define XGETBV(type, eax_, edx_) do { \
+      union {uint64_t x; uint32_t y[2];} a = {_xgetbv(0)}; \
+      eax_ = a.y[0], edx_ = a.y[1]; \
+     } while(0)
+  #elif defined _M_IX86 && defined _MSC_VER
+    #define XGETBV(type, eax_, edx_) \
+      __asm pushad \
+      __asm mov ecx, type \
+      __asm _emit 0x0f \
+      __asm _emit 0x01 \
+      __asm _emit 0xd0 \
+      __asm mov eax_, eax \
+      __asm mov edx_, edx \
+      __asm popad
+  #else
+    #define XGETBV(type, eax_, edx_) eax_ = edx_ = 0
+  #endif
+
+  static bool cpu_has_simd64(void)
+  {
+    enum {OSXSAVE = 1 << 27, AVX = 1 << 28};
+    unsigned eax_, ebx_, ecx_, edx_;
+    CPUID(1, eax_, ebx_, ecx_, edx_);
+    if ((ecx_ & (OSXSAVE|AVX)) == (OSXSAVE|AVX)) {
+      XGETBV(0, eax_, edx_);
+      return (eax_ & 6) == 6;
+    }
+    return false;
+  }
+
+  static bool should_use_simd64(void)
+  {
+    char const * e;
+    return ((e = getenv("SOXR_USE_SIMD"  )))? !!atoi(e) :
+           ((e = getenv("SOXR_USE_SIMD64")))? !!atoi(e) : cpu_has_simd64();
+  }
+#else
+  #define should_use_simd64() true
+#endif
+
+
+
+extern control_block_t
+  _soxr_rate32_cb,
+  _soxr_rate32s_cb,
+  _soxr_rate64_cb,
+  _soxr_rate64s_cb,
+  _soxr_vr32_cb;
+
+
+
+static void runtime_num(char const * env_name,
+    int min, int max, unsigned * field)
+{
+  char const * e = getenv(env_name);
+  if (e) {
+    int i = atoi(e);
+    if (i >= min && i <= max)
+      *field = (unsigned)i;
+  }
+}
+
+
+
+static void runtime_flag(char const * env_name,
+    unsigned n_bits, unsigned n_shift, unsigned long * flags)
+{
+  char const * e = getenv(env_name);
+  if (e) {
+    int i = atoi(e);
+    unsigned long mask = (1UL << n_bits) - 1;
+    if (i >= 0 && i <= (int)mask)
+      *flags &= ~(mask << n_shift), *flags |= ((unsigned long)i << n_shift);
+  }
+}
 
 
 
@@ -204,10 +365,29 @@ soxr_t soxr_create(
   soxr_quality_spec_t const * q_spec,
   soxr_runtime_spec_t const * runtime_spec)
 {
-  double io_ratio = output_rate? input_rate? input_rate / output_rate : -1 : input_rate? -1 : 0;
+  double io_ratio = output_rate!=0? input_rate!=0?
+    input_rate / output_rate : -1 : input_rate!=0? -1 : 0;
   static const float datatype_full_scale[] = {1, 1, 65536.*32768, 32768};
   soxr_t p = 0;
   soxr_error_t error = 0;
+
+#if WITH_DEV_TRACE
+#define _(x) (char)(sizeof(x)>=10? 'a'+(char)(sizeof(x)-10):'0'+(char)sizeof(x))
+  char const * e = getenv("SOXR_TRACE");
+  _soxr_trace_level = e? atoi(e) : 0;
+  {
+    static char const arch[] = {_(char), _(short), _(int), _(long), _(long long)
+      , ' ', _(float), _(double), _(long double)
+      , ' ', _(int *), _(int (*)(int))
+      , ' ', HAVE_BIGENDIAN ? 'B' : 'L'
+#if defined _OPENMP
+      , ' ', 'O', 'M', 'P'
+#endif
+      , 0};
+#undef _
+    lsx_debug("arch: %s", arch);
+  }
+#endif
 
   if (q_spec && q_spec->e)  error = q_spec->e;
   else if (io_spec && (io_spec->itype | io_spec->otype) >= SOXR_SPLIT * 2)
@@ -216,6 +396,8 @@ soxr_t soxr_create(
   if (!error && !(p = calloc(sizeof(*p), 1))) error = "malloc failed";
 
   if (p) {
+    control_block_t * control_block;
+
     p->q_spec = q_spec? *q_spec : soxr_quality_spec(SOXR_HQ, 0);
 
     if (q_spec) { /* Backwards compatibility with original API: */
@@ -233,35 +415,59 @@ soxr_t soxr_create(
       p->io_spec.scale = 1;
 
     p->runtime_spec = runtime_spec? *runtime_spec : soxr_runtime_spec(1);
+
+    runtime_num("SOXR_MIN_DFT_SIZE", 8, 15, &p->runtime_spec.log2_min_dft_size);
+    runtime_num("SOXR_LARGE_DFT_SIZE", 8, 20, &p->runtime_spec.log2_large_dft_size);
+    runtime_num("SOXR_COEFS_SIZE", 100, 800, &p->runtime_spec.coef_size_kbytes);
+    runtime_num("SOXR_NUM_THREADS", 0, 64, &p->runtime_spec.num_threads);
+    runtime_flag("SOXR_COEF_INTERP", 2, 0, &p->runtime_spec.flags);
+
+    runtime_flag("SOXR_STRICT_BUF", 1, 2, &p->runtime_spec.flags);
+    runtime_flag("SOXR_NOSMALLINTOPT", 1, 3, &p->runtime_spec.flags);
+
     p->io_spec.scale *= datatype_full_scale[p->io_spec.otype & 3] /
                         datatype_full_scale[p->io_spec.itype & 3];
+
     p->seed = (unsigned long)time(0) ^ (unsigned long)(size_t)p;
 
-#if HAVE_SINGLE_PRECISION
-    if (!HAVE_DOUBLE_PRECISION || (p->q_spec.precision <= 20 && !(p->q_spec.flags & SOXR_DOUBLE_PRECISION))
-        || (p->q_spec.flags & SOXR_VR)) {
+#if WITH_CR32 || WITH_CR32S || WITH_VR32
+    if (0
+#if WITH_VR32
+        || ((!WITH_CR32 && !WITH_CR32S) || (p->q_spec.flags & SOXR_VR))
+#endif
+#if WITH_CR32 || WITH_CR32S
+        || !(WITH_CR64 || WITH_CR64S) || (p->q_spec.precision <= 20 && !(p->q_spec.flags & SOXR_DOUBLE_PRECISION))
+#endif
+        ) {
       p->deinterleave = (deinterleave_t)_soxr_deinterleave_f;
       p->interleave = (interleave_t)_soxr_interleave_f;
-      memcpy(&p->control_block,
-          (p->q_spec.flags & SOXR_VR)? &_soxr_vr32_cb :
-#if HAVE_SIMD
-          cpu_has_simd()? &_soxr_rate32s_cb :
+      control_block =
+#if WITH_VR32
+          ((!WITH_CR32 && !WITH_CR32S) || (p->q_spec.flags & SOXR_VR))? &_soxr_vr32_cb :
 #endif
-          &_soxr_rate32_cb, sizeof(p->control_block));
+#if WITH_CR32S
+          !WITH_CR32 || should_use_simd32()? &_soxr_rate32s_cb :
+#endif
+          &_soxr_rate32_cb;
     }
-#if HAVE_DOUBLE_PRECISION
+#if WITH_CR64 || WITH_CR64S
     else
 #endif
 #endif
-#if HAVE_DOUBLE_PRECISION
+#if WITH_CR64 || WITH_CR64S
     {
       p->deinterleave = (deinterleave_t)_soxr_deinterleave;
       p->interleave = (interleave_t)_soxr_interleave;
-      memcpy(&p->control_block, &_soxr_rate64_cb, sizeof(p->control_block));
+      control_block =
+#if WITH_CR64S
+          !WITH_CR64 || should_use_simd64()? &_soxr_rate64s_cb :
+#endif
+          &_soxr_rate64_cb;
     }
 #endif
+    memcpy(&p->control_block, control_block, sizeof(p->control_block));
 
-    if (p->num_channels && io_ratio)
+    if (p->num_channels && io_ratio!=0)
       error = soxr_set_io_ratio(p, io_ratio, 0);
   }
   if (error)
@@ -304,7 +510,8 @@ static void soxr_delete0(soxr_t p)
 
 double soxr_delay(soxr_t p)
 {
-  return (p && !p->error && p->resamplers)? resampler_delay(p->resamplers[0]) : 0;
+  return
+    (p && !p->error && p->resamplers)? resampler_delay(p->resamplers[0]) : 0;
 }
 
 
@@ -378,7 +585,7 @@ soxr_error_t soxr_set_io_ratio(soxr_t p, double io_ratio, size_t slew_len)
     return error;
   }
   return fabs(p->io_ratio - io_ratio) < 1e-15? 0 :
-    "Varying O/I ratio is not supported with this quality level";
+    "varying O/I ratio is not supported with this quality level";
 }
 
 
@@ -406,7 +613,8 @@ soxr_error_t soxr_clear(soxr_t p) /* TODO: this, properly. */
     memcpy(p->control_block, tmp.control_block, sizeof(p->control_block));
     p->deinterleave = tmp.deinterleave;
     p->interleave = tmp.interleave;
-    return 0;
+    return (p->q_spec.flags & RESET_ON_CLEAR)?
+      soxr_set_io_ratio(p, tmp.io_ratio, 0) : 0;
   }
   return "invalid soxr_t pointer";
 }

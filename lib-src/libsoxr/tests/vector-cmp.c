@@ -1,53 +1,56 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-16 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Utility used to help test the library; not for general consumption.
  *
- * Compare two swept-sine files.  */
+ * Measure the peak bit difference between two files.  */
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 #include "../src/rint.h"
+#include "../examples/examples-common.h"
 
-int main(int bit, char const * arg[])
+#define TYPE 0 /* As vector-gen */
+
+#if TYPE
+  #define sample_t double
+  #define N 50
+  #define DIFF(s1,s2) abs(rint32((s1-s2)*ldexp(1,N-1)))
+#else
+  #define sample_t int32_t
+  #define N 32
+  #define DIFF(s1,s2) abs((int)(s1-s2))
+#endif
+
+int main(int argc, char const * arg[])
 {
-  FILE    * f1       = fopen(arg[1], "rb"),
-          * f2       = fopen(arg[2], "rb");
-  double  rate       = atof (arg[3]), /* Rate for this vector */
-          leader_len = atof (arg[4]), /* Leader length in seconds */
-          len        = atof (arg[5]), /* Sweep length (excl. leader_len) */
-          expect_bits= atof (arg[6]),
-          expect_bw  = atof (arg[7]);
+  int     two      = !!arg[2][0];
+  FILE    * f1 = fopen(arg[1], "rb"), * f2 = two? fopen(arg[2], "rb") : 0;
+  double  rate     = atof (arg[3]), /* Sample-rate */
+          skip_len = atof (arg[4]), /* Skip length in seconds */
+          len      = atof (arg[5]), /* Compare length in seconds */ r;
+  int i = 0, count = rint32(rate * len), max = 0, diff;
+  sample_t s1, s2;
 
-  int32_t s1, s2;
-  long count = 0;
-  static long thresh[32];
-  double bw, prev = 0;
-
-  for (; fread(&s1, sizeof(s1), 1, f1) == 1 &&
-         fread(&s2, sizeof(s2), 1, f2) == 1; ++count) {
-    long diff = abs((int)(s1 - s2));
-    for (bit = 0; diff && bit < 32; bit++, diff >>= 1)
-      if ((diff & 1) && !thresh[bit])
-        thresh[bit] = count + 1;
-  }
-
-  if (count != (long)((leader_len + len) * rate + .5)) {
-    printf("incorrect file length\n");
-    exit(1);
-  }
-
-  for (bit = 0; bit < 32; ++bit) {
-    bw = ((double)thresh[bit] - 1) / rate - leader_len;
-    if (bit && bw >= 0 && (bw - prev) * 100 / len < .08) {
-      --bit;
-      break;
+  fseek(f1, rint32(rate * skip_len) * (int)sizeof(s1), SEEK_CUR);
+  if (two) {
+    fseek(f2, rint32(rate * skip_len) * (int)sizeof(s2), SEEK_CUR);
+    for (; i < count &&
+        fread(&s1, sizeof(s1), 1, f1) &&
+        fread(&s2, sizeof(s2), 1, f2); ++i) {
+      diff = DIFF(s1, s2);
+      max = max(max, diff);
     }
-    prev = bw;
   }
-  bit = 32 - bit;
-  bw = bw * 100 / len;
-  printf("Bit perfect to %i bits, from DC to %.2f%% nyquist.\n", bit, bw);
-  return !(bit >= expect_bits && bw >= expect_bw);
+  else for (; i < count && fread(&s1, sizeof(s1), 1, f1); ++i) {
+    diff = DIFF(s1, 0);
+    max = max(max, diff);
+  }
+
+  if (i != count) {
+    fprintf(stderr, "incorrect file length\n");
+    return 1;
+  }
+  printf("%f\n", r = N-log(max)/log(2));
+  return argc>6? r<atof(arg[6]) : 0;
 }

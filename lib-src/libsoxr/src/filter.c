@@ -1,12 +1,9 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-16 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #include "filter.h"
 
-#include <math.h>
-#if !defined M_PI
-#define M_PI    3.14159265358979323846
-#endif
+#include "math-wrap.h"
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
@@ -14,7 +11,7 @@
 #include "fft4g.h"
 #include "ccrw2.h"
 
-#if 1 || HAVE_DOUBLE_PRECISION /* Always need this, for lsx_fir_to_phase. */
+#if 1 || WITH_CR64 || WITH_CR64S /* Always need this, for lsx_fir_to_phase. */
 #define DFT_FLOAT double
 #define DONE_WITH_FFT_CACHE done_with_fft_cache
 #define FFT_CACHE_CCRW fft_cache_ccrw
@@ -31,7 +28,7 @@
 #include "fft4g_cache.h"
 #endif
 
-#if HAVE_SINGLE_PRECISION && !HAVE_AVFFT
+#if (WITH_CR32 && !AVCODEC_FOUND) || (WITH_CR32S && !AVCODEC_FOUND && !WITH_PFFFT)
 #define DFT_FLOAT float
 #define DONE_WITH_FFT_CACHE done_with_fft_cache_f
 #define FFT_CACHE_CCRW fft_cache_ccrw_f
@@ -48,14 +45,14 @@
 #include "fft4g_cache.h"
 #endif
 
-#if HAVE_DOUBLE_PRECISION || !SOXR_LIB
+#if WITH_CR64 || WITH_CR64S || !SOXR_LIB
 #define DFT_FLOAT double
 #define ORDERED_CONVOLVE lsx_ordered_convolve
 #define ORDERED_PARTIAL_CONVOLVE lsx_ordered_partial_convolve
 #include "rdft.h"
 #endif
 
-#if HAVE_SINGLE_PRECISION
+#if WITH_CR32
 #define DFT_FLOAT float
 #define ORDERED_CONVOLVE lsx_ordered_convolve_f
 #define ORDERED_PARTIAL_CONVOLVE lsx_ordered_partial_convolve_f
@@ -96,12 +93,12 @@ double * lsx_make_lpf(
   double * h = malloc((size_t)num_taps * sizeof(*h));
   double mult = scale / lsx_bessel_I_0(beta), mult1 = 1 / (.5 * m + rho);
   assert(Fc >= 0 && Fc <= 1);
-  lsx_debug("make_lpf(n=%i Fc=%.7g β=%g ρ=%g scale=%g)",
+  lsx_debug("make_lpf(n=%i Fc=%.7g beta=%g rho=%g scale=%g)",
       num_taps, Fc, beta, rho, scale);
 
   if (h) for (i = 0; i <= m / 2; ++i) {
     double z = i - .5 * m, x = z * M_PI, y = z * mult1;
-    h[i] = x? sin(Fc * x) / x : Fc;
+    h[i] = x!=0? sin(Fc * x) / x : Fc;
     h[i] *= lsx_bessel_I_0(beta * sqrt(1 - y * y)) * mult;
     if (m - i != i)
       h[m - i] = h[i];
@@ -123,11 +120,14 @@ double * lsx_design_lpf(
     double Fn,      /* Nyquist freq; e.g. 0.5, 1, PI */
     double att,     /* Stop-band attenuation in dB */
     int * num_taps, /* 0: value will be estimated */
-    int k,          /* >0: number of phases; <0: num_taps ≡ 1 (mod -k) */
+    int k,          /* >0: number of phases; <0: num_taps = 1 (mod -k) */
     double beta)    /* <0: value will be estimated */
 {
   int n = *num_taps, phases = max(k, 1), modulo = max(-k, 1);
   double tr_bw, Fc, rho = phases == 1? .5 : att < 120? .63 : .75;
+
+  lsx_debug_more("./sinctest %-12.7g %-12.7g %g 0 %-5g %i %i 50 %g %g -4 >1",
+      Fp, Fs, Fn, att, *num_taps, k, beta, rho);
 
   Fp /= fabs(Fn), Fs /= fabs(Fn);        /* Normalise to Fn = 1 */
   tr_bw = .5 * (Fs - Fp); /* Transition band-width: 6dB to stop points */
@@ -145,7 +145,7 @@ double * lsx_design_lpf(
 static double safe_log(double x)
 {
   assert(x >= 0);
-  if (x)
+  if (x!=0)
     return log(x);
   lsx_debug("log(0)");
   return -26;
@@ -222,7 +222,7 @@ void lsx_fir_to_phase(double * * h, int * len, int * post_len, double phase)
   while (peak && fabs(work[peak-1]) > fabs(work[peak]) && work[peak-1] * work[peak] > 0)
     --peak;
 
-  if (!phase1)
+  if (phase1==0)
     begin = 0;
   else if (phase1 == 1)
     begin = peak - *len / 2;
@@ -242,4 +242,36 @@ void lsx_fir_to_phase(double * * h, int * len, int * post_len, double phase)
       pi_wraps[work_len >> 1] / M_PI, peak, peak_imp_sum, imp_peak,
       work[imp_peak], *len, *post_len, 100 - 100. * *post_len / (*len - 1));
   free(pi_wraps), free(work);
+}
+
+#define F_x(F,expr) static double F(double x) {return expr;}
+F_x(sinePhi, ((2.0517e-07*x-1.1303e-04)*x+.023154)*x+.55924 )
+F_x(sinePsi, ((9.0667e-08*x-5.6114e-05)*x+.013658)*x+1.0977 )
+F_x(sinePow, log(.5)/log(sin(x*.5)) )
+#define dB_to_linear(x) exp((x) * (M_LN10 * 0.05))
+
+double lsx_f_resp(double t, double a)
+{
+  double x;
+  if (t > (a <= 160? .8 : .82)) {
+    double a1 = a+15;
+    double p = .00035*a+.375;
+    double w = 1/(1-.597)*asin(pow((a1-10.6)/a1,1/p));
+    double c = 1+asin(pow(1-a/a1,1/p))/w;
+    return a1*(pow(sin((c-t)*w),p)-1);
+  }
+  if (t > .5)
+    x = sinePsi(a), x = pow(sin((1-t) * x), sinePow(x));
+  else
+    x = sinePhi(a), x = 1 - pow(sin(t * x), sinePow(x));
+  return linear_to_dB(x);
+}
+
+double lsx_inv_f_resp(double drop, double a)
+{
+  double x = sinePhi(a), s;
+  drop = dB_to_linear(drop);
+  s = drop > .5 ? 1 - drop : drop;
+  x = asin(pow(s, 1/sinePow(x))) / x;
+  return drop > .5? x : 1 -x;
 }

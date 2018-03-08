@@ -1,11 +1,10 @@
 /* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
-/* Example 5:  Variable-rate resampling (N.B. experimental).  A test signal
- * (held in a buffer) is resampled over a wide range of octaves.  Resampled
- * data is sent to stdout as raw, float32 samples.  Choices of 2 test-signals
- * and of 2 ways of varying the sample-rate are combined in a command-line
- * option:
+/* Example 5:  Variable-rate resampling.  A test signal (held in a buffer) is
+ * resampled over a wide range of octaves.  Resampled data is sent to stdout as
+ * raw, float32 samples.  Choices of 2 test-signals and of 2 ways of varying
+ * the sample-rate are combined in a command-line option:
  *
  * Usage: ./5-variable-rate [0|1|2|3]
  */
@@ -30,7 +29,7 @@ int main(int argc, char *arg[])
   int opt = argc <= 1? 2 : (atoi(arg[1]) & 3), saw = opt & 1, fm = opt & 2;
   float ibuf[10 << OCTAVES], obuf[AL(ibuf)];
   int i, wl = 2 << OCTAVES;
-  size_t ilen = AL(ibuf), need_input = 1;
+  size_t ilen = AL(ibuf), need_input = 1, written;
   size_t odone, total_odone, total_olen = OLEN * FS;
   size_t olen1 = fm? 10 : AL(obuf); /* Small block-len if fast-changing ratio */
   soxr_error_t error;
@@ -70,7 +69,7 @@ int main(int argc, char *arg[])
       do {
         size_t len = need_input? ilen : 0;
         error = soxr_process(soxr, ibuf, len, NULL, obuf, block_len, &odone);
-        fwrite(obuf, sizeof(float), odone, stdout);
+        written = fwrite(obuf, sizeof(float), odone, stdout);
 
         /* Update counters for the current block and for the total length: */
         block_len -= odone;
@@ -80,7 +79,7 @@ int main(int argc, char *arg[])
          * again, supplying more input samples: */
         need_input = block_len != 0;
 
-      } while (need_input && !error);
+      } while (need_input && !error && written == odone);
 
       /* Now that the block for the current ioratio is complete, go back
        * round the main `for' loop in order to process the next block. */
@@ -88,7 +87,7 @@ int main(int argc, char *arg[])
     soxr_delete(soxr);
   }
                                                               /* Diagnostics: */
-  fprintf(stderr, "%-26s %s; I/O: %s\n", arg[0],
-      soxr_strerror(error), errno? strerror(errno) : "no error");
-  return error || errno;
+  fprintf(stderr, "%-26s %s; I/O: %s\n", arg[0], soxr_strerror(error),
+      ferror(stdin) || ferror(stdout)? strerror(errno) : "no error");
+  return !!error;
 }

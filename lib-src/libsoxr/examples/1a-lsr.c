@@ -12,7 +12,7 @@ float in[] = {  /* Input: 12 cycles of a sine wave with freq. = irate/4 */
 
 int main(int argc, char const * arg[])
 {
-  double irate = argc > 1? atof(arg[1]) : 1;         /* Default to upsampling */
+  double irate = argc > 1? atof(arg[1]) : 1;      /* Default to interpolation */
   double orate = argc > 2? atof(arg[2]) : 2;             /* by a factor of 2. */
 
   size_t olen = (size_t)(AL(in) * orate / irate + .5);   /* Assay output len. */
