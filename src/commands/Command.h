@@ -64,7 +64,7 @@ public:
 
 // Decorator command that performs the given command and then outputs a status
 // message according to the result
-class ApplyAndSendResponse final : public DecoratedCommand
+class ApplyAndSendResponse : public DecoratedCommand
 {
 public:
    ApplyAndSendResponse(const OldStyleCommandPointer &cmd, std::unique_ptr<CommandOutputTargets> &target);
@@ -108,18 +108,18 @@ public:
    wxString GetName();
 
    /// Get the signature of the command
-   CommandSignature &GetSignature();
+   CommandSignature &GetSignature() override;
 
    /// Attempt to one of the command's parameters to a particular value.
    /// (Note: wxVariant is reference counted)
-   bool SetParameter(const wxString &paramName, const wxVariant &paramValue);
+   bool SetParameter(const wxString &paramName, const wxVariant &paramValue) override;
 
    // Subclasses should override the following:
    // =========================================
 
    /// Actually carry out the command. Return true if successful and false
    /// otherwise.
-   bool Apply() { return false;};// No longer supported.
+   bool Apply() override { return false;};// No longer supported.
    bool Apply(const CommandContext &context) override;
 };
 
