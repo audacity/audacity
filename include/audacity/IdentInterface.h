@@ -43,6 +43,59 @@
 #define __AUDACITY_IDENTINTERFACE_H__
 
 #include "audacity/Types.h"
+extern const wxString& GetCustomTranslation(const wxString& str1 );
+
+/**************************************************************************//**
+
+\brief IdentInterfaceSymbol pairs a persistent string identifier used internally
+with an optional, different string as msgid for lookup in a translation catalog.
+\details  If there is need to change a msgid in a later version of the
+program, change the constructor call to supply a second argument but leave the
+first the same, so that compatibility of older configuration files containing
+that internal string is not broken.
+********************************************************************************/
+class IdentInterfaceSymbol
+{
+public:
+   IdentInterfaceSymbol() = default;
+
+   // Allows implicit construction from a msgid re-used as an internal string
+   IdentInterfaceSymbol( const wxString &msgid )
+      : mInternal{ msgid }, mMsgid{ msgid }
+   {}
+
+   // Allows implicit construction from a msgid re-used as an internal string
+   IdentInterfaceSymbol( const wxChar *msgid )
+      : mInternal{ msgid }, mMsgid{ msgid }
+   {}
+
+   // Two-argument version distinguishes internal from translatable string
+   // such as when the first squeezes spaces out
+   IdentInterfaceSymbol( const wxString &internal, const wxString &msgid )
+      : mInternal{ internal }
+      // Do not permit non-empty msgid with empty internal
+      , mMsgid{ internal.empty() ? wxString{} : msgid }
+   {}
+
+   const wxString &Internal() const { return mInternal; }
+   const wxString &Msgid() const { return mMsgid; }
+   const wxString &Translation() const
+      { return GetCustomTranslation( mMsgid ); }
+
+   bool empty() const { return mInternal.empty(); }
+
+   friend inline bool operator == (
+      const IdentInterfaceSymbol &a, const IdentInterfaceSymbol &b )
+   { return a.mInternal == b.mInternal; }
+
+   friend inline bool operator != (
+      const IdentInterfaceSymbol &a, const IdentInterfaceSymbol &b )
+   { return !( a == b ); }
+
+private:
+   wxString mInternal;
+   wxString mMsgid;
+};
 
 /**************************************************************************//**
 
