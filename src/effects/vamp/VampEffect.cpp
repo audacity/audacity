@@ -447,10 +447,11 @@ bool VampEffect::Process()
          }
       }
 
+      const auto effectName = GetCustomTranslation( GetName() );
       addedTracks.push_back(AddAnalysisTrack(
          multiple
-         ? wxString::Format(_("%s: %s"), left->GetName(), GetName())
-         : GetName()
+         ? wxString::Format( _("%s: %s"), left->GetName(), effectName )
+         : effectName
       ));
       LabelTrack *ltrack = addedTracks.back()->get();
 

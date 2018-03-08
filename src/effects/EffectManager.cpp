@@ -144,7 +144,7 @@ bool EffectManager::DoAudacityCommand(const PluginID & ID,
 
 wxString EffectManager::GetCommandName(const PluginID & ID)
 {
-   return PluginManager::Get().GetName(ID);
+   return GetCustomTranslation( PluginManager::Get().GetName(ID) );
 }
 
 wxString EffectManager::GetEffectFamilyName(const PluginID & ID)
@@ -865,7 +865,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
       auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
       if( !command )
          AudacityMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
-                                    PluginManager::Get().GetName(ID)),
+                                    GetCommandName(ID)),
                    _("Effect failed to initialize"));
 
       return NULL;
@@ -921,7 +921,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
       }
 */
       AudacityMessageBox(wxString::Format(_("Attempting to initialize the following command failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
-                                    PluginManager::Get().GetName(ID)),
+                                    GetCommandName(ID)),
                    _("Command failed to initialize"));
 
       return NULL;

@@ -2905,7 +2905,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 EffectUIHost::EffectUIHost(wxWindow *parent,
                            AudacityCommand *command,
                            EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, "Some Command"/*command->GetTranslatedName()*/,
+:  wxDialogWrapper(parent, wxID_ANY, _("Some Command") /*command->GetTranslatedName()*/,
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {

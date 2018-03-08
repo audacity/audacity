@@ -29,7 +29,7 @@ class CompareAudioCommand final : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return "Compare Audio";};
+   wxString GetSymbol() override {return XO("Compare Audio");}
    wxString GetDescription() override {return _("Compares a range on two tracks.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
