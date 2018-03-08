@@ -94,15 +94,6 @@ enum
 static const wxChar *KEY_Version = wxT("Version");
 static const wxChar *KEY_Command = wxT("Command");
 
-wxArrayString NyqControl::GetTranslatedChoices() const
-{
-   wxArrayString results;
-   std::transform(
-      choices.begin(), choices.end(), std::back_inserter(results),
-                  GetCustomTranslation);
-   return results;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // NyquistEffect
@@ -2405,7 +2396,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             {
                S.AddSpace(10, 10);
 
-               const wxArrayString &choices = ctrl.GetTranslatedChoices();
+               auto choices = LocalizedStrings(ctrl.choices);
                S.Id(ID_Choice + i).AddChoice( {}, wxT(""), &choices);
             }
             else

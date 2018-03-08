@@ -12,7 +12,6 @@
 #ifndef __AUDACITY_MACRO_COMMAND_DIALOG__
 #define __AUDACITY_MACRO_COMMAND_DIALOG__
 
-#include "MemoryX.h"
 #include <wx/defs.h>
 #include <wx/string.h>
 
@@ -25,6 +24,8 @@
 #include  <wx/sizer.h>
 #include  <wx/menuitem.h>
 #include  <wx/checklst.h>
+
+#include "BatchCommands.h"
 
 class wxWindow;
 class wxCheckBox;
@@ -70,9 +71,7 @@ class MacroCommandDialog final : public wxDialogWrapper {
 
    wxString mInternalCommandName;
 
-   using CommandName = std::tuple<wxString, wxString,wxString>;
-   using CommandNameVector = std::vector<CommandName>;
-   CommandNameVector mCommandNames;
+   const MacroCommandsCatalog mCatalog;
 
    DECLARE_EVENT_TABLE()
 };

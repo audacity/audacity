@@ -2077,7 +2077,8 @@ ShuttleGui & ShuttleGui::Id(int id )
 }
 
 ShuttleGui & ShuttleGui::Optional( bool &bVar ){
- TieCheckBox( "Set", bVar );
+   /* i18n-hint verb, imperative */
+ TieCheckBox( _("Set"), bVar );
  return *this;
 };
 

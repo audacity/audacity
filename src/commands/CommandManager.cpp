@@ -1650,7 +1650,7 @@ void CommandManager::GetCategories(wxArrayString &cats)
 }
 
 void CommandManager::GetAllCommandNames(wxArrayString &names,
-                                        bool includeMultis)
+                                        bool includeMultis) const
 {
    for(const auto &entry : mCommandList) {
       if ( entry->isEffect )
@@ -1663,7 +1663,7 @@ void CommandManager::GetAllCommandNames(wxArrayString &names,
 }
 
 void CommandManager::GetAllCommandLabels(wxArrayString &names,
-                                        bool includeMultis)
+                                        bool includeMultis) const
 {
    for(const auto &entry : mCommandList) {
       // This is fetching commands from the menus, for use as batch commands.

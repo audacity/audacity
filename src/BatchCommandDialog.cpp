@@ -62,6 +62,7 @@ MacroCommandDialog::MacroCommandDialog(wxWindow * parent, wxWindowID id):
    wxDialogWrapper(parent, id, _("Select Command"),
             wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)
+   , mCatalog( GetActiveProject() )
 {
    SetLabel(_("Select Command"));         // Provide visual label
    SetName(_("Select Command"));          // Provide audible label
@@ -123,12 +124,11 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
 
 void MacroCommandDialog::PopulateCommandList()
 {
-   mCommandNames = MacroCommands::GetAllCommands();
-
    mChoices->DeleteAllItems();
-   for (size_t ii = 0, size = mCommandNames.size(); ii < size; ++ii)
+   long ii = 0;
+   for ( const auto &entry : mCatalog )
       // insert the user-facing string
-      mChoices->InsertItem( ii, std::get<0>( mCommandNames[ii] ) );
+      mChoices->InsertItem( ii++, entry.friendly /* .Translation() */ );
 }
 
 void MacroCommandDialog::ValidateChoices()
@@ -159,21 +159,21 @@ void MacroCommandDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 
 void MacroCommandDialog::OnItemSelected(wxListEvent &event)
 {
-   const auto &command = mCommandNames[ event.GetIndex() ];
+   const auto &command = mCatalog[ event.GetIndex() ];
 
    EffectManager & em = EffectManager::Get();
-   PluginID ID = em.GetEffectByIdentifier( std::get<1>( command ));
+   PluginID ID = em.GetEffectByIdentifier( command.internal );
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
    mEditParams->Enable(!ID.IsEmpty());
    mUsePreset->Enable(em.HasPresets(ID));
 
-   if (std::get<0>( command ) == mCommand->GetValue())
+   if ( command.friendly == mCommand->GetValue() )
       return;
 
-   mCommand->SetValue(std::get<0> (command));
-   mInternalCommandName = std::get<1>( command );
+   mCommand->SetValue(command.friendly);
+   mInternalCommandName = command.internal;
 
    wxString params = MacroCommands::GetCurrentParamsFor(mInternalCommandName);
    if (params.IsEmpty())
@@ -183,7 +183,7 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
 
    // Cryptic command and category.
    // Later we can put help information there, perhaps.
-   mDetails->SetValue( mInternalCommandName + "\r\n" + std::get<2>(command)  );
+   mDetails->SetValue( mInternalCommandName + "\r\n" + command.category  );
    mParameters->SetValue(params);
 }
 
@@ -211,19 +211,20 @@ void MacroCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
 
 void MacroCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
 {
-   auto item = make_iterator_range(mCommandNames).index_if(
-      [&](const CommandName &name){ return Command == std::get<1>( name); }
-   );
+   auto iter = mCatalog.ByCommandId( Command );
 
    mParameters->SetValue( Params );
 
    mInternalCommandName = Command;
-   if (item < 0)
+   if (iter == mCatalog.end())
+      // Expose an internal name to the user in default of any friendly name
+      // -- AVOID THIS!
       mCommand->SetValue( Command );
    else {
-      mCommand->SetValue( std::get<0>( mCommandNames[item]) );
-      mDetails->SetValue( std::get<1>(mCommandNames[item]) + "\r\n" + std::get<2>(mCommandNames[item])  );
-      mChoices->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      mCommand->SetValue( iter->friendly /* .Translation() */ );
+      mDetails->SetValue( iter->internal + "\r\n" + iter->category  );
+      mChoices->SetItemState(iter - mCatalog.begin(),
+                             wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 
       EffectManager & em = EffectManager::Get();
       PluginID ID = em.GetEffectByIdentifier(Command);

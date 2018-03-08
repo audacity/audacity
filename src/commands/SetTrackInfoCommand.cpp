@@ -123,10 +123,10 @@ bool SetTrackCommand::DefineParams( ShuttleParams & S ){
 
 void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString colours(  nColours,      kColourStrings );
-   wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
-   wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
-   wxArrayString vzooms(   nZoomTypes,    kZoomTypeStrings );
+   auto colours = LocalizedStrings(  kColourStrings, nColours );
+   auto displays = LocalizedStrings( kDisplayTypeStrings, nDisplayTypes );
+   auto scales = LocalizedStrings( kScaleTypeStrings, nScaleTypes );
+   auto vzooms = LocalizedStrings( kZoomTypeStrings, nZoomTypes );
 
    S.AddSpace(0, 5);
 

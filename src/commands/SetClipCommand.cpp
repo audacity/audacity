@@ -61,7 +61,7 @@ bool SetClipCommand::DefineParams( ShuttleParams & S ){
 
 void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString colours( nColours, kColourStrings );
+   auto colours = LocalizedStrings( kColourStrings, nColours );
 
    S.AddSpace(0, 5);
 

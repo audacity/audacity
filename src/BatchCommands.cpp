@@ -274,19 +274,19 @@ bool MacroCommands::RenameMacro(const wxString & oldchain, const wxString & newc
 }
 
 // Gets all commands that are valid for this mode.
-auto MacroCommands::GetAllCommands() -> CommandNameVector
+MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 {
-   CommandNameVector commands;
-
-   AudacityProject *project = GetActiveProject();
    if (!project)
-      return commands;
+      return;
 
    // CLEANSPEECH remnant
+   Entries commands;
    for( const auto &command : SpecialCommands )
-      commands.push_back(
-         CommandName( command.first, command.second, _("Special Command") )
-      );
+      commands.push_back( {
+         command.first /* .Translation() */,
+         command.second,
+         _("Special Command")
+      } );
 
    // end CLEANSPEECH remnant
 
@@ -298,71 +298,102 @@ auto MacroCommands::GetAllCommands() -> CommandNameVector
       {
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty())
-            commands.push_back( 
-               CommandName( 
-                  plug->GetUntranslatedName(), // plug->GetTranslatedName(),
-                  command,
-                  plug->GetPluginType() == PluginTypeEffect ?
-                     _("Effect") : _("Menu Command (With Parameters)") 
-               )
-            );
+            commands.push_back( {
+               plug->GetUntranslatedName(), // plug->GetTranslatedName(),
+               command,
+               plug->GetPluginType() == PluginTypeEffect ?
+                  _("Effect") : _("Menu Command (With Parameters)")
+            } );
          plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       }
    }
 
-   CommandManager * mManager = project->GetCommandManager();
+   auto mManager = project->GetCommandManager();
    wxArrayString mLabels;
    wxArrayString mNames;
    mLabels.Clear();
    mNames.Clear();
    mManager->GetAllCommandLabels(mLabels, false);
    mManager->GetAllCommandNames(mNames, false);
+
+   const bool english = wxGetLocale()->GetCanonicalName().StartsWith(wxT("en"));
+
    for(size_t i=0; i<mNames.GetCount(); i++) {
       wxString label = mLabels[i];
       if( !label.Contains( "..." ) ){
          label.Replace( "&", "" );
-         wxString squashed = label;
-         squashed.Replace( " ", "" );
+         bool suffix;
+         if (!english)
+            suffix = true;
+         else {
+            // We'll disambiguate if the squashed name is short and shorter than the internal name.
+            // Otherwise not.
+            // This means we won't have repetitive items like "Cut (Cut)" 
+            // But we will show important disambiguation like "All (SelectAll)" and "By Date (SortByDate)"
+            // Disambiguation is no longer essential as the details box will show it.
+            // PRL:  I think this reasoning applies only when locale is English.
+            // For other locales, show the (CamelCaseCodeName) always.  Or, never?
+            wxString squashed = label;
+            squashed.Replace( " ", "" );
 
-         // We'll disambiguate if the squashed name is short and shorter than the internal name.
-         // Otherwise not.
-         // This means we won't have repetitive items like "Cut (Cut)" 
-         // But we will show important disambiguation like "All (SelectAll)" and "By Date (SortByDate)"
-         // Disambiguation is no longer essential as the details box will show it.
-         if( squashed.Length() < wxMin( 18, mNames[i].Length()) )
+            suffix = squashed.Length() < wxMin( 18, mNames[i].Length());
+         }
+
+         if( suffix )
             label = label + " (" + mNames[i] + ")";
 
-         commands.push_back( 
-            CommandName(
-               label, // User readable name 
+         commands.push_back(
+            {
+               label, // User readable name
                mNames[i], // Internal name.
                _("Menu Command (No Parameters)")
-            )
+            }
          );
       }
    }
 
    // Sort commands by their user-visible names.
-   // PRL:  What should happen if first members of pairs are not unique?
-   // Sort stably?
-   std::sort(
-      commands.begin(), commands.end(),
-      [](const CommandName &a, const CommandName &b)
-         { return std::get<0>(a) <  std::get<0>(b); }
-   );
+   // PRL:  What exactly should happen if first members of pairs are not unique?
+   // I'm not sure, but at least I can sort stably for a better defined result,
+   // keeping specials before effects and menu items, and lastly commands.
+   auto less =
+      [](const Entry &a, const Entry &b) { return a.friendly < b.friendly; };
+   std::stable_sort(commands.begin(), commands.end(), less);
 
-   // JKC: Gave up on trying to use std::unique on this.
-   CommandNameVector uniqueCommands;
-   unsigned size = commands.size();
-   wxString oldName = "";
-   for( unsigned i = 0; i < size; ++i ) 
-   {
-      if( std::get<0>( commands[i] ) != oldName )
-         uniqueCommands.push_back( commands[i] );
-      oldName = std::get<0>( commands[i] );
-   }
-   return uniqueCommands;
+   // Now uniquify by friendly name
+   auto equal =
+      [](const Entry &a, const Entry &b) { return a.friendly == b.friendly; };
+   std::unique_copy(
+      commands.begin(), commands.end(), std::back_inserter(mCommands), equal);
 }
+
+// binary search
+auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
+   -> Entries::const_iterator
+{
+   const auto less = [&](const Entry &entryA, const Entry &entryB)
+      { return entryA.friendly < entryB.friendly; };
+   auto range = std::equal_range(
+      begin(), end(), Entry{ friendlyName }, less);
+   if (range.first != range.second) {
+      wxASSERT_MSG( range.first + 1 == range.second,
+                    "Non-unique user-visible command name" );
+      return range.first;
+   }
+   else
+      return end();
+}
+
+// linear search
+auto MacroCommandsCatalog::ByCommandId( const wxString &commandId ) const
+   -> Entries::const_iterator
+{
+   // Maybe this too should have a uniqueness check?
+   return std::find_if( begin(), end(),
+      [&](const Entry &entry){ return entry.internal == commandId; });
+}
+
+
 
 wxString MacroCommands::GetCurrentParamsFor(const wxString & command)
 {
@@ -564,9 +595,11 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
 // and think again.
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
-bool MacroCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString & command,const wxString & params)
+bool MacroCommands::ApplySpecialCommand(
+   int WXUNUSED(iCommand), const wxString &friendlyCommand,
+   const wxString & command, const wxString & params)
 {
-   if (ReportAndSkip(command, params))
+   if (ReportAndSkip(friendlyCommand, params))
       return true;
 
    AudacityProject *project = GetActiveProject();
@@ -643,15 +676,19 @@ bool MacroCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       return false;
 #endif
    }
-   AudacityMessageBox(wxString::Format(_("Command %s not implemented yet"),command));
+   AudacityMessageBox(
+      wxString::Format(_("Command %s not implemented yet"), friendlyCommand));
    return false;
 }
 // end CLEANSPEECH remnant
 
-bool MacroCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params, const CommandContext & Context)
+bool MacroCommands::ApplyEffectCommand(
+   const PluginID & ID, const wxString &friendlyCommand,
+   const wxString & command, const wxString & params,
+   const CommandContext & Context)
 {
    //Possibly end processing here, if in batch-debug
-   if( ReportAndSkip(command, params))
+   if( ReportAndSkip(friendlyCommand, params))
       return true;
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
@@ -692,7 +729,9 @@ bool MacroCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    return res;
 }
 
-bool MacroCommands::ApplyCommand(const wxString & command, const wxString & params, CommandContext const * pContext)
+bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
+   const wxString & command, const wxString & params,
+   CommandContext const * pContext)
 {
 
    unsigned int i;
@@ -700,7 +739,7 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
    // CLEANSPEECH remnant
    for( i = 0; i < sizeof(SpecialCommands)/sizeof(*SpecialCommands); ++i ) {
       if( command.IsSameAs( SpecialCommands[i].second, false) )
-         return ApplySpecialCommand( i, command, params );
+         return ApplySpecialCommand( i, friendlyCommand, command, params );
    }
    // end CLEANSPEECH remnant
 
@@ -709,9 +748,11 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
    if (!ID.empty())
    {
       if( pContext )
-         return ApplyEffectCommand(ID, command, params, *pContext);
+         return ApplyEffectCommand(
+            ID, friendlyCommand, command, params, *pContext);
       const CommandContext context(  *GetActiveProject() );
-      return ApplyEffectCommand(ID, command, params, context);
+      return ApplyEffectCommand(
+         ID, friendlyCommand, command, params, context);
    }
 
    AudacityProject *project = GetActiveProject();
@@ -720,7 +761,7 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
       if( pManager->HandleTextualCommand( command, *pContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
          return true;
       pContext->Status( wxString::Format(
-         _("Your batch command of %s was not recognized."), command ));
+         _("Your batch command of %s was not recognized."), friendlyCommand ));
       return false;
    }
    else
@@ -732,12 +773,13 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
 
    AudacityMessageBox(
       wxString::Format(
-      _("Your batch command of %s was not recognized."), command ));
+      _("Your batch command of %s was not recognized."), friendlyCommand ));
 
    return false;
 }
 
-bool MacroCommands::ApplyCommandInBatchMode(const wxString & command, const wxString &params)
+bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
+   const wxString & command, const wxString &params)
 {
    AudacityProject *project = GetActiveProject();
 
@@ -748,14 +790,15 @@ bool MacroCommands::ApplyCommandInBatchMode(const wxString & command, const wxSt
       project->SetShowId3Dialog(prevShowMode);
    } );
 
-   return ApplyCommand( command, params );
+   return ApplyCommand( friendlyCommand, command, params );
 }
 
 static int MacroReentryCount = 0;
 // ApplyMacro returns true on success, false otherwise.
 // Any error reporting to the user in setting up the chain
 // has already been done.
-bool MacroCommands::ApplyMacro(const wxString & filename)
+bool MacroCommands::ApplyMacro(
+   const MacroCommandsCatalog &catalog, const wxString & filename)
 {
    // Check for reentrant ApplyMacro commands.
    // We'll allow 1 level of reentry, but not more.
@@ -783,12 +826,17 @@ bool MacroCommands::ApplyMacro(const wxString & filename)
    mAbort = false;
 
    size_t i = 0;
-   for (; i < mCommandMacro.GetCount(); i++) {
-      if (!ApplyCommandInBatchMode(mCommandMacro[i], mParamsMacro[i]) || mAbort)
+   for (; i < mCommandMacro.size(); i++) {
+      const auto &command = mCommandMacro[i];
+      auto iter = catalog.ByCommandId(command);
+      auto friendly = (iter == catalog.end())
+         ? command // Expose internal name to user, in default of a better one!
+         : iter->friendly;
+      if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;
    }
 
-   res = (i == mCommandMacro.GetCount());
+   res = (i == mCommandMacro.size());
    if (!res)
       return false;
 
@@ -856,7 +904,8 @@ void MacroCommands::ResetMacro()
 
 // ReportAndSkip() is a diagnostic function that avoids actually
 // applying the requested effect if in batch-debug mode.
-bool MacroCommands::ReportAndSkip(const wxString & command, const wxString & params)
+bool MacroCommands::ReportAndSkip(
+   const wxString & friendlyCommand, const wxString & params)
 {
    int bDebug;
    gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);
@@ -866,12 +915,12 @@ bool MacroCommands::ReportAndSkip(const wxString & command, const wxString & par
    //TODO: Add a cancel button to these, and add the logic so that we can abort.
    if( params != wxT("") )
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),command, params),
+      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),friendlyCommand, params),
          _("Test Mode"));
    }
    else
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s"),command),
+      AudacityMessageBox( wxString::Format(_("Apply %s"), friendlyCommand),
          _("Test Mode"));
    }
    return true;

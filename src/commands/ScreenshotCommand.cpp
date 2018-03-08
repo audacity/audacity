@@ -148,8 +148,8 @@ bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
 
 void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
-   wxArrayString backs(nBackgrounds, kBackgroundStrings);
+   auto whats = LocalizedStrings(kCaptureWhatStrings, nCaptureWhats);
+   auto backs = LocalizedStrings(kBackgroundStrings, nBackgrounds);
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);

@@ -53,8 +53,6 @@ public:
    //NyqControl( NyqControl && ) = default;
    //NyqControl &operator = ( NyqControl && ) = default;
 
-   wxArrayString GetTranslatedChoices() const;
-
    int type;
    wxString var;
    wxString name;

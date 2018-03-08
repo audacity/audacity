@@ -16,6 +16,8 @@
 #include <wx/string.h>
 #include <wx/longlong.h>
 
+#include <algorithm>
+
 #ifndef IN_RC
 
 class wxString;
@@ -166,5 +168,20 @@ private:
 // Convert C strings to wxString
 #define UTF8CTOWX(X) wxString((X), wxConvUTF8)
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
+
+inline wxArrayString LocalizedStrings(const wxString strings[], size_t nStrings)
+{
+   wxArrayString results;
+   std::transform( strings, strings + nStrings, std::back_inserter(results),
+                   GetCustomTranslation );
+   return results;
+}
+
+inline wxArrayString LocalizedStrings(const wxArrayString &strings)
+{
+   if (strings.empty())
+      return {};
+   return LocalizedStrings( &strings[0], strings.size() );
+}
 
 #endif

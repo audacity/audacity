@@ -73,6 +73,7 @@ ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
    wxDialogWrapper(parent, wxID_ANY, _("Apply Macro"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+   , mCatalog( GetActiveProject() )
 {
    //AudacityProject * p = GetActiveProject();
    mAbort = false;
@@ -269,7 +270,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    {
       wxWindowDisabler wd(&activityWin);
       success = GuardedCall< bool >(
-         [this]{ return mMacroCommands.ApplyMacro(); } );
+         [this]{ return mMacroCommands.ApplyMacro(mCatalog); } );
    }
 
    if( !bHasGui )
@@ -436,7 +437,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          project->Import(files[i]);
          project->ZoomAfterImport(nullptr);
          project->OnSelectAll(*project);
-         if (!mMacroCommands.ApplyMacro())
+         if (!mMacroCommands.ApplyMacro(mCatalog))
             return false;
 
          if (!activityWin.IsShown() || mAbort)
@@ -547,8 +548,6 @@ MacrosWindow::~MacrosWindow()
 /// Creates the dialog and its contents.
 void MacrosWindow::Populate()
 {
-   mCommandNames = MacroCommands::GetAllCommands();
-
    //------------------------- Main section --------------------
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -634,7 +633,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
                S.StartVerticalLay(wxALIGN_TOP, 0);
                {
-                  S.AddPrompt( "Command" );
+                  S.AddPrompt( _("Command") );
                   S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
                   S.Id(EditButtonID).AddButton(_("&Edit..."), wxALIGN_LEFT);
                   S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
@@ -643,7 +642,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                   mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
 
                   S.AddSpace( 30 );
-                  S.AddPrompt( "Macro" );
+                  S.AddPrompt( _("Macro") );
                   S.Id(AddButtonID).AddButton(_("&New"));
                   mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
                   mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
@@ -690,14 +689,13 @@ void MacrosWindow::PopulateList()
 /// Add one item into mList
 void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
 {
-   // Translate internal command name to a friendly form
-   auto item = make_iterator_range(mCommandNames).index_if(
-      [&](const CommandName &name){ return Action == std::get<1>(name); }
-   );
-   auto friendlyName = item >= 0
-      ? // wxGetTranslation
-      std::get<0>( mCommandNames[item] )
-      : Action;
+   auto entry = mCatalog.ByCommandId(Action);
+   auto friendlyName = entry != mCatalog.end()
+      ? entry->friendly  /* .Translation() */
+      :
+         // Expose an internal name to the user in default of any friendly name
+         // -- AVOID THIS!
+        Action;
 
    int i = mList->GetItemCount();
 

@@ -94,8 +94,8 @@ bool GetInfoCommand::DefineParams( ShuttleParams & S ){
 
 void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString types( nTypes, kTypes );
-   wxArrayString formats( nFormats, kFormats );
+   auto types = LocalizedStrings( kTypes, nTypes );
+   auto formats = LocalizedStrings( kFormats, nFormats );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);

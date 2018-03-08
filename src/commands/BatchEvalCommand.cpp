@@ -39,21 +39,29 @@ OldStyleCommandPointer BatchEvalCommandType::Create(std::unique_ptr<CommandOutpu
 
 bool BatchEvalCommand::Apply(const CommandContext & context)
 {
+   // Uh oh, I need to build a catalog, expensively
+   // Maybe it can be built in one long-lived place and shared among command
+   // objects instead?
+   MacroCommandsCatalog catalog(&context.project);
 
    wxString macroName = GetString(wxT("MacroName"));
    if (macroName != wxT(""))
    {
       MacroCommands batch;
       batch.ReadMacro(macroName);
-      return batch.ApplyMacro();
+      return batch.ApplyMacro(catalog);
    }
 
    wxString cmdName = GetString(wxT("CommandName"));
    wxString cmdParams = GetString(wxT("ParamString"));
+   auto iter = catalog.ByCommandId(cmdName);
+   const wxString &friendly = (iter == catalog.end())
+      ? cmdName // Expose internal name to user, in default of a better one!
+      : iter->friendly;
 
    // Create a Batch that will have just one command in it...
    MacroCommands Batch;
-   bool bResult = Batch.ApplyCommand(cmdName, cmdParams, &context);
+   bool bResult = Batch.ApplyCommand(friendly, cmdName, cmdParams, &context);
    // Relay messages, if any.
    wxString Message = Batch.GetMessage();
    if( !Message.IsEmpty() )
