@@ -73,6 +73,7 @@ ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
    wxDialogWrapper(parent, wxID_ANY, _("Apply Macro"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+   , mCatalog( GetActiveProject() )
 {
    //AudacityProject * p = GetActiveProject();
    mAbort = false;
@@ -269,7 +270,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    {
       wxWindowDisabler wd(&activityWin);
       success = GuardedCall< bool >(
-         [this]{ return mMacroCommands.ApplyMacro(); } );
+         [this]{ return mMacroCommands.ApplyMacro(mCatalog); } );
    }
 
    if( !bHasGui )
@@ -436,7 +437,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          project->Import(files[i]);
          project->ZoomAfterImport(nullptr);
          project->OnSelectAll(*project);
-         if (!mMacroCommands.ApplyMacro())
+         if (!mMacroCommands.ApplyMacro(mCatalog))
             return false;
 
          if (!activityWin.IsShown() || mAbort)
@@ -525,7 +526,6 @@ enum {
 /// Constructor
 MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
    ApplyMacroDialog(parent, true)
-   , mCatalog( GetActiveProject() )
 {
    mbExpanded = bExpanded;
    SetLabel(_("Manage Macros"));         // Provide visual label

@@ -74,6 +74,9 @@ class ApplyMacroDialog : public wxDialogWrapper {
    bool mbExpanded;
    wxString mActiveMacro;
 
+protected:
+   const MacroCommandsCatalog mCatalog;
+
    DECLARE_EVENT_TABLE()
 };
 
@@ -142,8 +145,6 @@ private:
    int mSelectedCommand;
    bool mChanged;
 
-   const MacroCommandsCatalog mCatalog;
-   
    DECLARE_EVENT_TABLE()
 };
 

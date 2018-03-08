@@ -55,12 +55,21 @@ class MacroCommands final {
    // constructors and destructors
    MacroCommands();
  public:
-   bool ApplyMacro(const wxString & filename = wxT(""));
-   bool ApplyCommand( const wxString & command, const wxString & params, CommandContext const * pContext=NULL );
-   bool ApplyCommandInBatchMode(const wxString & command, const wxString &params);
-   bool ApplySpecialCommand(int iCommand, const wxString & command,const wxString & params);
-   bool ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params, const CommandContext & Context);
-   bool ReportAndSkip( const wxString & command, const wxString & params );
+   bool ApplyMacro( const MacroCommandsCatalog &catalog,
+      const wxString & filename = wxT(""));
+   bool ApplyCommand( const wxString &friendlyCommand,
+      const wxString & command, const wxString & params,
+      CommandContext const * pContext=NULL );
+   bool ApplyCommandInBatchMode( const wxString &friendlyCommand,
+      const wxString & command, const wxString &params);
+   bool ApplySpecialCommand(
+      int iCommand, const wxString &friendlyCommand,
+      const wxString & command, const wxString & params);
+   bool ApplyEffectCommand(
+      const PluginID & ID, const wxString &friendlyCommand,
+      const wxString & command,
+      const wxString & params, const CommandContext & Context);
+   bool ReportAndSkip( const wxString & friendlyCommand, const wxString & params );
    void AbortBatch();
 
    // Utility functions for the special commands.

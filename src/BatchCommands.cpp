@@ -595,9 +595,11 @@ bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
 // and think again.
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
-bool MacroCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString & command,const wxString & params)
+bool MacroCommands::ApplySpecialCommand(
+   int WXUNUSED(iCommand), const wxString &friendlyCommand,
+   const wxString & command, const wxString & params)
 {
-   if (ReportAndSkip(command, params))
+   if (ReportAndSkip(friendlyCommand, params))
       return true;
 
    AudacityProject *project = GetActiveProject();
@@ -674,15 +676,19 @@ bool MacroCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       return false;
 #endif
    }
-   AudacityMessageBox(wxString::Format(_("Command %s not implemented yet"),command));
+   AudacityMessageBox(
+      wxString::Format(_("Command %s not implemented yet"), friendlyCommand));
    return false;
 }
 // end CLEANSPEECH remnant
 
-bool MacroCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params, const CommandContext & Context)
+bool MacroCommands::ApplyEffectCommand(
+   const PluginID & ID, const wxString &friendlyCommand,
+   const wxString & command, const wxString & params,
+   const CommandContext & Context)
 {
    //Possibly end processing here, if in batch-debug
-   if( ReportAndSkip(command, params))
+   if( ReportAndSkip(friendlyCommand, params))
       return true;
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
@@ -723,7 +729,9 @@ bool MacroCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    return res;
 }
 
-bool MacroCommands::ApplyCommand(const wxString & command, const wxString & params, CommandContext const * pContext)
+bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
+   const wxString & command, const wxString & params,
+   CommandContext const * pContext)
 {
 
    unsigned int i;
@@ -731,7 +739,7 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
    // CLEANSPEECH remnant
    for( i = 0; i < sizeof(SpecialCommands)/sizeof(*SpecialCommands); ++i ) {
       if( command.IsSameAs( SpecialCommands[i].second, false) )
-         return ApplySpecialCommand( i, command, params );
+         return ApplySpecialCommand( i, friendlyCommand, command, params );
    }
    // end CLEANSPEECH remnant
 
@@ -740,9 +748,11 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
    if (!ID.empty())
    {
       if( pContext )
-         return ApplyEffectCommand(ID, command, params, *pContext);
+         return ApplyEffectCommand(
+            ID, friendlyCommand, command, params, *pContext);
       const CommandContext context(  *GetActiveProject() );
-      return ApplyEffectCommand(ID, command, params, context);
+      return ApplyEffectCommand(
+         ID, friendlyCommand, command, params, context);
    }
 
    AudacityProject *project = GetActiveProject();
@@ -751,7 +761,7 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
       if( pManager->HandleTextualCommand( command, *pContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
          return true;
       pContext->Status( wxString::Format(
-         _("Your batch command of %s was not recognized."), command ));
+         _("Your batch command of %s was not recognized."), friendlyCommand ));
       return false;
    }
    else
@@ -763,12 +773,13 @@ bool MacroCommands::ApplyCommand(const wxString & command, const wxString & para
 
    AudacityMessageBox(
       wxString::Format(
-      _("Your batch command of %s was not recognized."), command ));
+      _("Your batch command of %s was not recognized."), friendlyCommand ));
 
    return false;
 }
 
-bool MacroCommands::ApplyCommandInBatchMode(const wxString & command, const wxString &params)
+bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
+   const wxString & command, const wxString &params)
 {
    AudacityProject *project = GetActiveProject();
 
@@ -779,14 +790,15 @@ bool MacroCommands::ApplyCommandInBatchMode(const wxString & command, const wxSt
       project->SetShowId3Dialog(prevShowMode);
    } );
 
-   return ApplyCommand( command, params );
+   return ApplyCommand( friendlyCommand, command, params );
 }
 
 static int MacroReentryCount = 0;
 // ApplyMacro returns true on success, false otherwise.
 // Any error reporting to the user in setting up the chain
 // has already been done.
-bool MacroCommands::ApplyMacro(const wxString & filename)
+bool MacroCommands::ApplyMacro(
+   const MacroCommandsCatalog &catalog, const wxString & filename)
 {
    // Check for reentrant ApplyMacro commands.
    // We'll allow 1 level of reentry, but not more.
@@ -814,12 +826,17 @@ bool MacroCommands::ApplyMacro(const wxString & filename)
    mAbort = false;
 
    size_t i = 0;
-   for (; i < mCommandMacro.GetCount(); i++) {
-      if (!ApplyCommandInBatchMode(mCommandMacro[i], mParamsMacro[i]) || mAbort)
+   for (; i < mCommandMacro.size(); i++) {
+      const auto &command = mCommandMacro[i];
+      auto iter = catalog.ByCommandId(command);
+      auto friendly = (iter == catalog.end())
+         ? command // Expose internal name to user, in default of a better one!
+         : iter->friendly;
+      if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;
    }
 
-   res = (i == mCommandMacro.GetCount());
+   res = (i == mCommandMacro.size());
    if (!res)
       return false;
 
@@ -887,7 +904,8 @@ void MacroCommands::ResetMacro()
 
 // ReportAndSkip() is a diagnostic function that avoids actually
 // applying the requested effect if in batch-debug mode.
-bool MacroCommands::ReportAndSkip(const wxString & command, const wxString & params)
+bool MacroCommands::ReportAndSkip(
+   const wxString & friendlyCommand, const wxString & params)
 {
    int bDebug;
    gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);
@@ -897,12 +915,12 @@ bool MacroCommands::ReportAndSkip(const wxString & command, const wxString & par
    //TODO: Add a cancel button to these, and add the logic so that we can abort.
    if( params != wxT("") )
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),command, params),
+      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),friendlyCommand, params),
          _("Test Mode"));
    }
    else
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s"),command),
+      AudacityMessageBox( wxString::Format(_("Apply %s"), friendlyCommand),
          _("Test Mode"));
    }
    return true;
