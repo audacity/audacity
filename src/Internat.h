@@ -16,6 +16,8 @@
 #include <wx/string.h>
 #include <wx/longlong.h>
 
+#include <algorithm>
+
 #ifndef IN_RC
 
 class wxString;
