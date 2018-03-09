@@ -96,14 +96,9 @@ wxString VampEffect::GetPath()
    return mPath;
 }
 
-wxString VampEffect::GetSymbol()
+IdentInterfaceSymbol VampEffect::GetSymbol()
 {
    return mName;
-}
-
-wxString VampEffect::GetName()
-{
-   return GetSymbol();
 }
 
 IdentInterfaceSymbol VampEffect::GetVendor()
@@ -442,7 +437,7 @@ bool VampEffect::Process()
          }
       }
 
-      const auto effectName = GetCustomTranslation( GetName() );
+      const auto effectName = GetSymbol().Translation();
       addedTracks.push_back(AddAnalysisTrack(
          multiple
          ? wxString::Format( _("%s: %s"), left->GetName(), effectName )

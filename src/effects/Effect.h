@@ -80,11 +80,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    wxString GetPath() override;
 
-   // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
 
-   wxString GetName() override;
    IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;

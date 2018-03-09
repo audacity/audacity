@@ -102,7 +102,7 @@ EffectAutoDuck::~EffectAutoDuck()
 
 // IdentInterface implementation
 
-wxString EffectAutoDuck::GetSymbol()
+IdentInterfaceSymbol EffectAutoDuck::GetSymbol()
 {
    return AUTODUCK_PLUGIN_SYMBOL;
 }

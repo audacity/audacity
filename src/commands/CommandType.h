@@ -50,7 +50,7 @@ private:
 public:
    OldStyleCommandType();
    virtual ~OldStyleCommandType();
-   wxString GetName() override;
+   IdentInterfaceSymbol GetSymbol() override;
    CommandSignature &GetSignature();
    wxString Describe(); // for debugging only ?
 

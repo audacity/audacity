@@ -192,7 +192,7 @@ wxString NyquistEffect::GetPath()
    return mFileName.GetFullPath();
 }
 
-wxString NyquistEffect::GetSymbol()
+IdentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
       return (mType == EffectTypeTool) ? 
@@ -200,11 +200,6 @@ wxString NyquistEffect::GetSymbol()
          XO("Nyquist Prompt");
 
    return mName;
-}
-
-wxString NyquistEffect::GetName()
-{
-   return GetSymbol();
 }
 
 IdentInterfaceSymbol NyquistEffect::GetVendor()

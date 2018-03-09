@@ -20,14 +20,14 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define SET_PROJECT_PLUGIN_SYMBOL XO("Set Project")
+#define SET_PROJECT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Project") }
 
 class SetProjectCommand : public AudacityCommand
 {
 public:
    SetProjectCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_PROJECT_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SET_PROJECT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

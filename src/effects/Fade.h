@@ -15,8 +15,8 @@
 
 #include "Effect.h"
 
-#define FADEIN_PLUGIN_SYMBOL XO("Fade In")
-#define FADEOUT_PLUGIN_SYMBOL XO("Fade Out")
+#define FADEIN_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Fade In") }
+#define FADEOUT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Fade Out") }
 
 class EffectFade final : public Effect
 {
@@ -26,7 +26,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

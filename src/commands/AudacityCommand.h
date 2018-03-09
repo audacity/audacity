@@ -64,14 +64,12 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
 
    //These four can be defaulted....
    wxString GetPath() override;
-   wxString GetName() override;
    IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    //  virtual wxString GetFamily();
 
    //These two must be implemented by instances.
-   virtual wxString GetSymbol() override
-   { wxFAIL_MSG( "Implement a Symbol for this command");return "FAIL";};
+   IdentInterfaceSymbol GetSymbol() override = 0;
    virtual wxString GetDescription() override
    {wxFAIL_MSG( "Implement a Description for this command");return "FAIL";};
 

@@ -1845,7 +1845,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                   auto &id = PluginManagerInterface::DefaultRegistrationCallback(
                         provider, ident);
                   ids.push_back(id);
-                  names.push_back( wxGetTranslation( ident->GetName() ) );
+                  names.push_back( ident->GetSymbol().Translation() );
                   return id;
                });
             if ( ! nPlugIns ) {
@@ -2609,7 +2609,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
                            GetPluginTypeString(PluginTypeModule),
                            wxEmptyString,
                            module->GetVendor().Internal(),
-                           module->GetName(),
+                           module->GetSymbol().Translation(),
                            module->GetPath());
 }
 
@@ -2619,7 +2619,7 @@ PluginID PluginManager::GetID(CommandDefinitionInterface *command)
                            GetPluginTypeString(PluginTypeAudacityCommand),
                            wxEmptyString,
                            command->GetVendor().Internal(),
-                           command->GetName(),
+                           command->GetSymbol().Translation(),
                            command->GetPath());
 }
 
@@ -2629,7 +2629,7 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
                            GetPluginTypeString(PluginTypeEffect),
                            effect->GetFamilyId().Internal(),
                            effect->GetVendor().Internal(),
-                           effect->GetName(),
+                           effect->GetSymbol().Translation(),
                            effect->GetPath());
 }
 
@@ -2639,7 +2639,7 @@ PluginID PluginManager::GetID(ImporterInterface *importer)
                            GetPluginTypeString(PluginTypeImporter),
                            wxEmptyString,
                            importer->GetVendor().Internal(),
-                           importer->GetName(),
+                           importer->GetSymbol().Translation(),
                            importer->GetPath());
 }
 
@@ -2689,7 +2689,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
 
    plug.SetID(id);
    plug.SetPath(ident->GetPath());
-   plug.SetSymbol( { ident->GetSymbol(), ident->GetName() } );
+   plug.SetSymbol(ident->GetSymbol());
    plug.SetVendor(ident->GetVendor().Internal());
    plug.SetVersion(ident->GetVersion());
 
@@ -3150,5 +3150,5 @@ int PluginManager::b64decode(const wxString &in, void *out)
 // #include directives.
 const wxString& IdentInterface::GetTranslatedName()
 {
-   return wxGetTranslation( GetName() );
+   return GetSymbol().Translation();
 }

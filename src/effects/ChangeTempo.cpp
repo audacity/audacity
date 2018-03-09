@@ -92,7 +92,7 @@ EffectChangeTempo::~EffectChangeTempo()
 
 // IdentInterface implementation
 
-wxString EffectChangeTempo::GetSymbol()
+IdentInterfaceSymbol EffectChangeTempo::GetSymbol()
 {
    return CHANGETEMPO_PLUGIN_SYMBOL;
 }

@@ -164,27 +164,17 @@ wxString Effect::GetPath()
       return mClient->GetPath();
    }
 
-   return BUILTIN_EFFECT_PREFIX + GetSymbol();
+   return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
-wxString Effect::GetSymbol()
+IdentInterfaceSymbol Effect::GetSymbol()
 {
    if (mClient)
    {
       return mClient->GetSymbol();
    }
 
-   return wxEmptyString;
-}
-
-wxString Effect::GetName()
-{
-   if (mClient)
-   {
-      return mClient->GetName();
-   }
-
-   return GetSymbol();
+   return {};
 }
 
 IdentInterfaceSymbol Effect::GetVendor()

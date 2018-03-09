@@ -101,14 +101,9 @@ wxString NyquistEffectsModule::GetPath()
    return mPath;
 }
 
-wxString NyquistEffectsModule::GetSymbol()
+IdentInterfaceSymbol NyquistEffectsModule::GetSymbol()
 {
    return XO("Nyquist Effects");
-}
-
-wxString NyquistEffectsModule::GetName()
-{
-   return GetSymbol();
 }
 
 IdentInterfaceSymbol NyquistEffectsModule::GetVendor()

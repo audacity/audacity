@@ -130,7 +130,7 @@ EffectReverb::~EffectReverb()
 
 // IdentInterface implementation
 
-wxString EffectReverb::GetSymbol()
+IdentInterfaceSymbol EffectReverb::GetSymbol()
 {
    return REVERB_PLUGIN_SYMBOL;
 }

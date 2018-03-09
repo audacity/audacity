@@ -25,7 +25,7 @@
 
 class ShuttleGui;
 
-#define DTMFTONES_PLUGIN_SYMBOL XO("DTMF Tones")
+#define DTMFTONES_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("DTMF Tones") }
 
 class EffectDtmf final : public Effect
 {
@@ -35,7 +35,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

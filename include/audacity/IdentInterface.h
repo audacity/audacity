@@ -109,13 +109,10 @@ public:
 
    // These should return an untranslated value
    virtual wxString GetPath() = 0;
-   // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
-   virtual wxString GetSymbol() = 0;
 
-   // These should return an untranslated value whose translation
-   // will be determined at runtime (if available)
-   virtual wxString GetName() = 0;
+   // The internal string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
+   virtual IdentInterfaceSymbol GetSymbol() = 0;
 
    virtual IdentInterfaceSymbol GetVendor() = 0;
 

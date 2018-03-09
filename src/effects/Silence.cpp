@@ -32,7 +32,7 @@ EffectSilence::~EffectSilence()
 
 // IdentInterface implementation
 
-wxString EffectSilence::GetSymbol()
+IdentInterfaceSymbol EffectSilence::GetSymbol()
 {
    return SILENCE_PLUGIN_SYMBOL;
 }

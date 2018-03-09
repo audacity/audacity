@@ -23,7 +23,7 @@
 
 #include "Effect.h"
 
-#define AMPLIFY_PLUGIN_SYMBOL XO("Amplify")
+#define AMPLIFY_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Amplify") }
 
 class ShuttleGui;
 
@@ -35,7 +35,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

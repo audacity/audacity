@@ -116,17 +116,12 @@ wxString LadspaEffectsModule::GetPath()
    return mPath;
 }
 
-wxString LadspaEffectsModule::GetSymbol()
+IdentInterfaceSymbol LadspaEffectsModule::GetSymbol()
 {
    /* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
       (Application programming interface)
     */
    return XO("LADSPA Effects");
-}
-
-wxString LadspaEffectsModule::GetName()
-{
-   return GetSymbol();
 }
 
 IdentInterfaceSymbol LadspaEffectsModule::GetVendor()
@@ -626,14 +621,9 @@ wxString LadspaEffect::GetPath()
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-wxString LadspaEffect::GetSymbol()
+IdentInterfaceSymbol LadspaEffect::GetSymbol()
 {
    return LAT1CTOWX(mData->Name);
-}
-
-wxString LadspaEffect::GetName()
-{
-   return GetSymbol();
 }
 
 IdentInterfaceSymbol LadspaEffect::GetVendor()

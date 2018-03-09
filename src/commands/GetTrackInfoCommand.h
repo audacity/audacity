@@ -19,14 +19,14 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define GET_TRACK_INFO_PLUGIN_SYMBOL XO("Get Track Info")
+#define GET_TRACK_INFO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Get Track Info") }
 
 class GetTrackInfoCommand final : public AudacityCommand
 {
 public:
    GetTrackInfoCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return GET_TRACK_INFO_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return GET_TRACK_INFO_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Gets track values as JSON.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

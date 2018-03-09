@@ -75,12 +75,7 @@ wxString VampEffectsModule::GetPath()
    return mPath;
 }
 
-wxString VampEffectsModule::GetSymbol()
-{
-   return wxT("Vamp Effects");
-}
-
-wxString VampEffectsModule::GetName()
+IdentInterfaceSymbol VampEffectsModule::GetSymbol()
 {
    return XO("Vamp Effects");
 }

@@ -79,7 +79,7 @@ EffectBassTreble::~EffectBassTreble()
 
 // IdentInterface implementation
 
-wxString EffectBassTreble::GetSymbol()
+IdentInterfaceSymbol EffectBassTreble::GetSymbol()
 {
    return BASSTREBLE_PLUGIN_SYMBOL;
 }

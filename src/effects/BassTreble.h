@@ -23,7 +23,7 @@
 
 class ShuttleGui;
 
-#define BASSTREBLE_PLUGIN_SYMBOL XO("Bass and Treble")
+#define BASSTREBLE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Bass and Treble") }
 
 class EffectBassTrebleState
 {
@@ -47,7 +47,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

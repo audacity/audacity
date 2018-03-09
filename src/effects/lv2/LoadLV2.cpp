@@ -100,14 +100,9 @@ wxString LV2EffectsModule::GetPath()
    return mPath;
 }
 
-wxString LV2EffectsModule::GetSymbol()
+IdentInterfaceSymbol LV2EffectsModule::GetSymbol()
 {
    return XO("LV2 Effects");
-}
-
-wxString LV2EffectsModule::GetName()
-{
-   return GetSymbol();
 }
 
 IdentInterfaceSymbol LV2EffectsModule::GetVendor()

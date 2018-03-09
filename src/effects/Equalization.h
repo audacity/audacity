@@ -43,7 +43,7 @@
 #include "../RealFFTf.h"
 #include "../SampleFormat.h"
 
-#define EQUALIZATION_PLUGIN_SYMBOL XO("Equalization")
+#define EQUALIZATION_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Equalization") }
 
 
 class Envelope;
@@ -105,7 +105,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

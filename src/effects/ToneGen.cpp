@@ -111,7 +111,7 @@ EffectToneGen::~EffectToneGen()
 
 // IdentInterface implementation
 
-wxString EffectToneGen::GetSymbol()
+IdentInterfaceSymbol EffectToneGen::GetSymbol()
 {
    return mChirp
       ? CHIRP_PLUGIN_SYMBOL

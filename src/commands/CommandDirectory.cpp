@@ -81,7 +81,7 @@ void CommandDirectory::AddCommand(movable_ptr<OldStyleCommandType> &&type)
 {
    wxASSERT(type != NULL);
    // Internal string is shown but only in assertion message
-   auto cmdName = type->GetName();
+   auto cmdName = type->GetSymbol().Internal();
    wxASSERT_MSG(mCmdMap.find(cmdName) == mCmdMap.end()
          , wxT("A command named ") + cmdName
          + wxT(" already exists."));

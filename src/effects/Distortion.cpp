@@ -190,7 +190,7 @@ EffectDistortion::~EffectDistortion()
 
 // IdentInterface implementation
 
-wxString EffectDistortion::GetSymbol()
+IdentInterfaceSymbol EffectDistortion::GetSymbol()
 {
    return DISTORTION_PLUGIN_SYMBOL;
 }

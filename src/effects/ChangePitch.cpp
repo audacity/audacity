@@ -115,7 +115,7 @@ EffectChangePitch::~EffectChangePitch()
 
 // IdentInterface implementation
 
-wxString EffectChangePitch::GetSymbol()
+IdentInterfaceSymbol EffectChangePitch::GetSymbol()
 {
    return CHANGEPITCH_PLUGIN_SYMBOL;
 }

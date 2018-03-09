@@ -17,7 +17,7 @@
 
 #include "Effect.h"
 
-#define REVERSE_PLUGIN_SYMBOL XO("Reverse")
+#define REVERSE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Reverse") }
 
 class EffectReverse final : public Effect
 {
@@ -27,7 +27,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

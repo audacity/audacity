@@ -110,7 +110,7 @@ EffectNoiseRemoval::~EffectNoiseRemoval()
 
 // IdentInterface implementation
 
-wxString EffectNoiseRemoval::GetSymbol()
+IdentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
 {
    return XO("Noise Removal");
 }

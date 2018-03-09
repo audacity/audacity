@@ -91,7 +91,7 @@ EffectDtmf::~EffectDtmf()
 
 // IdentInterface implementation
 
-wxString EffectDtmf::GetSymbol()
+IdentInterfaceSymbol EffectDtmf::GetSymbol()
 {
    return DTMFTONES_PLUGIN_SYMBOL;
 }

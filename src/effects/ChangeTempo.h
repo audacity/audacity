@@ -30,7 +30,7 @@
 
 class ShuttleGui;
 
-#define CHANGETEMPO_PLUGIN_SYMBOL XO("Change Tempo")
+#define CHANGETEMPO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Change Tempo") }
 
 class EffectChangeTempo final : public EffectSoundTouch
 {
@@ -40,7 +40,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

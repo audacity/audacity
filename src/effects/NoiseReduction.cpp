@@ -429,7 +429,7 @@ EffectNoiseReduction::~EffectNoiseReduction()
 
 // IdentInterface implementation
 
-wxString EffectNoiseReduction::GetSymbol()
+IdentInterfaceSymbol EffectNoiseReduction::GetSymbol()
 {
    return NOISEREDUCTION_PLUGIN_SYMBOL;
 }
