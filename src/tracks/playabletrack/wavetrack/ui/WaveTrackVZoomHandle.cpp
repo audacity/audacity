@@ -65,13 +65,11 @@ void WaveTrackVZoomHandle::Enter(bool)
 // the zoomKind and cause a drag-zoom-in.
 void WaveTrackVZoomHandle::DoZoom
    (AudacityProject *pProject,
-    WaveTrack *pTrack, int ZoomKind,
+    WaveTrack *pTrack, WaveTrack *partner, int ZoomKind,
     const wxRect &rect, int zoomStart, int zoomEnd,
     bool fixedMousePoint)
 {
    static const float ZOOMLIMIT = 0.001f;
-   // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack *>(pTrack->GetLink());
    int height = rect.height;
    int ypos = rect.y;
 
@@ -398,8 +396,11 @@ void WaveTrackVRulerMenuTable::InitMenu(Menu *, void *pUserData)
 
 void WaveTrackVRulerMenuTable::OnZoom( int iZoomCode )
 {
+   // Assume linked track is wave or null
+   const auto partner = static_cast<WaveTrack *>(mpData->pTrack->GetLink());
    WaveTrackVZoomHandle::DoZoom
-      (::GetActiveProject(), mpData->pTrack, iZoomCode, mpData->rect, mpData->yy, mpData->yy, false);
+      (::GetActiveProject(), mpData->pTrack, partner,
+       iZoomCode, mpData->rect, mpData->yy, mpData->yy, false);
 
    using namespace RefreshCode;
    mpData->result = UpdateVRuler | RefreshAll;
@@ -684,7 +685,9 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       if( bVZoom ){
          if( shiftDown )
             mZoomStart=mZoomEnd;
-         DoZoom(pProject, pTrack.get(), shiftDown ? (rightUp ? kZoom1to1 : kZoomOut)  : kZoomIn, 
+         const auto partner = static_cast<WaveTrack *>(pTrack->GetLink());
+         DoZoom(pProject, pTrack.get(), partner,
+                shiftDown ? (rightUp ? kZoom1to1 : kZoomOut)  : kZoomIn,
             mRect, mZoomStart, mZoomEnd, false);
       }
    }
