@@ -60,13 +60,10 @@ public:
    const wxString & GetID() const;
    const wxString & GetProviderID() const;
    const wxString & GetPath() const;
-   const wxString & GetSymbol() const;
+   const IdentInterfaceSymbol & GetSymbol() const;
 
    wxString GetUntranslatedVersion() const;
    // There is no translated version
-
-   wxString GetUntranslatedName() const;
-   wxString GetTranslatedName() const;
 
    wxString GetUntranslatedVendor() const;
    wxString GetTranslatedVendor() const;
@@ -77,11 +74,10 @@ public:
    void SetID(const PluginID & ID);
    void SetProviderID(const PluginID & providerID);
    void SetPath(const wxString & path);
-   void SetSymbol(const wxString & symbol);
+   void SetSymbol(const IdentInterfaceSymbol & symbol);
 
    // These should be passed an untranslated value wrapped in XO() so
    // the value will still be extracted for translation
-   void SetName(const wxString & name);
    void SetVersion(const wxString & version);
    void SetVendor(const wxString & vendor);
 
@@ -137,8 +133,7 @@ private:
 
    wxString mID;
    wxString mPath;
-   wxString mSymbol;
-   wxString mName;
+   IdentInterfaceSymbol mSymbol;
    wxString mVersion;
    wxString mVendor;
    wxString mProviderID;
@@ -258,10 +253,7 @@ public:
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
-   // Returns untranslated string
-   const wxString & GetSymbol(const PluginID & ID);
-   // Returns translated string
-   wxString GetName(const PluginID & ID);
+   const IdentInterfaceSymbol & GetSymbol(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
 
    void CheckForUpdates(bool bFast = false);

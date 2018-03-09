@@ -643,7 +643,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
       if (plugType == PluginTypeEffect)
       {
-         item.name = plug.GetTranslatedName();
+         item.name = plug.GetSymbol().Translation();
       }
       // This is not right and will not work when other plugin types are added.
       // But it's presumed that the plugin manager dialog will be fully developed
@@ -1151,29 +1151,14 @@ const wxString & PluginDescriptor::GetPath() const
    return mPath;
 }
 
-const wxString & PluginDescriptor::GetSymbol() const
+const IdentInterfaceSymbol & PluginDescriptor::GetSymbol() const
 {
-   if (mSymbol.IsEmpty())
-   {
-      return mName;
-   }
-
    return mSymbol;
-}
-
-wxString PluginDescriptor::GetUntranslatedName() const
-{
-   return mName;
 }
 
 wxString PluginDescriptor::GetUntranslatedVersion() const
 {
    return mVersion;
-}
-
-wxString PluginDescriptor::GetTranslatedName() const
-{
-   return wxGetTranslation(mName);
 }
 
 wxString PluginDescriptor::GetUntranslatedVendor() const
@@ -1216,14 +1201,9 @@ void PluginDescriptor::SetPath(const wxString & path)
    mPath = path;
 }
 
-void PluginDescriptor::SetSymbol(const wxString & symbol)
+void PluginDescriptor::SetSymbol(const IdentInterfaceSymbol & symbol)
 {
    mSymbol = symbol;
-}
-
-void PluginDescriptor::SetName(const wxString & name)
-{
-   mName = name;
 }
 
 void PluginDescriptor::SetVersion(const wxString & version)
@@ -2035,18 +2015,25 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
          continue;
       plug.SetPath(strVal);
 
+      /*
+       // PRL: Ignore names  written in configs before 2.3.0!
+       // use Internal string only!  Let the present version of Audacity map
+       // that to a user-visible string.
       // Get the name and bypass group if not found
       if (!pRegistry->Read(KEY_NAME, &strVal))
       {
          continue;
       }
       plug.SetName(strVal);
+       */
 
-      // Get the symbol...use name if not found
+      // Get the symbol...Audacity 2.3.0 or later requires it
+      // bypass group if not found
+      // Note, KEY_SYMBOL started getting written to config files in 2.1.0.
+      // KEY_NAME (now ignored) was written before that, but only for VST
+      // effects.
       if (!pRegistry->Read(KEY_SYMBOL, &strVal))
-      {
-         strVal = plug.GetTranslatedName();
-      }
+         continue;
       plug.SetSymbol(strVal);
 
       // Get the version and bypass group if not found
@@ -2251,8 +2238,12 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
       pRegistry->SetPath(REGROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
 
       pRegistry->Write(KEY_PATH, plug.GetPath());
-      pRegistry->Write(KEY_SYMBOL, plug.GetSymbol());
-      pRegistry->Write(KEY_NAME, plug.GetUntranslatedName());
+      pRegistry->Write(KEY_SYMBOL, plug.GetSymbol().Internal());
+
+      // PRL:  Writing KEY_NAME which is no longer read, but older Audacity
+      // versions expect to find it.
+      pRegistry->Write(KEY_NAME, plug.GetSymbol().Msgid());
+
       pRegistry->Write(KEY_VERSION, plug.GetUntranslatedVersion());
       pRegistry->Write(KEY_VENDOR, plug.GetUntranslatedVendor());
       // Write a blank -- see comments in LoadGroup:
@@ -2583,25 +2574,15 @@ void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
    return mPlugins[ID].SetEnabled(enable);
 }
 
-const wxString & PluginManager::GetSymbol(const PluginID & ID)
+const IdentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
-      static wxString empty;
+      static IdentInterfaceSymbol empty;
       return empty;
    }
 
    return mPlugins[ID].GetSymbol();
-}
-
-wxString PluginManager::GetName(const PluginID & ID)
-{
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return wxEmptyString;
-   }
-
-   return mPlugins[ID].GetTranslatedName();
 }
 
 IdentInterface *PluginManager::GetInstance(const PluginID & ID)
@@ -2713,8 +2694,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
 
    plug.SetID(id);
    plug.SetPath(ident->GetPath());
-   plug.SetSymbol(ident->GetSymbol());
-   plug.SetName(ident->GetName());
+   plug.SetSymbol( { ident->GetSymbol(), ident->GetName() } );
    plug.SetVendor(ident->GetVendor());
    plug.SetVersion(ident->GetVersion());
 
@@ -2963,7 +2943,7 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
                  wxT("_") +
                  plug.GetUntranslatedVendor() +
                  wxT("_") +
-                 (shared ? wxT("") : plug.GetSymbol());
+                 (shared ? wxT("") : plug.GetSymbol().Internal());
 
    return SETROOT +
           ConvertID(id) +

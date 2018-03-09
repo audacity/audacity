@@ -310,7 +310,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty())
             commands.push_back( {
-               { command, plug->GetTranslatedName() },
+               { command, plug->GetSymbol().Translation() },
                plug->GetPluginType() == PluginTypeEffect ?
                   _("Effect") : _("Menu Command (With Parameters)")
             } );
