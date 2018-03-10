@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audacity", "Projects\Audacity\Audacity.vcxproj", "{1D64095C-F936-4FCF-B609-56E9DDF941FA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -142,7 +142,6 @@ Global
 		{D5AB2D87-51DC-4277-A9AB-2A6018D0E947}.Release|Win32.Build.0 = Release|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Release|Win32.ActiveCfg = Release|Win32
-		{02F94A40-586A-4403-8464-13B50801FFEC}.Release|Win32.Build.0 = Release|Win32
 		{AF9AD75C-4785-4432-BAC3-ADAB1E7F1192}.Debug|Win32.ActiveCfg = Debug|Win32
 		{AF9AD75C-4785-4432-BAC3-ADAB1E7F1192}.Debug|Win32.Build.0 = Debug|Win32
 		{AF9AD75C-4785-4432-BAC3-ADAB1E7F1192}.Release|Win32.ActiveCfg = Release|Win32
@@ -164,5 +163,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48F6F343-F239-4EE3-9411-16E51A125684}
 	EndGlobalSection
 EndGlobal

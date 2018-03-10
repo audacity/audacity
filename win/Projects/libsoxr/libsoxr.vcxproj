@@ -75,18 +75,21 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\data-io.c" />
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\dbesi0.c" />
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\fft4g32.c" />
+    <ClCompile Include="..\..\..\lib-src\libsoxr\src\cr.c" />
+	<ClCompile Include="..\..\..\lib-src\libsoxr\src\cr32.c" />
+	<ClCompile Include="..\..\..\lib-src\libsoxr\src\cr32s.c" />
+	<ClCompile Include="..\..\..\lib-src\libsoxr\src\cr64.c" />
+	<!-- <ClCompile Include="..\..\..\lib-src\libsoxr\src\cr64s.c" /> -->
+	<ClCompile Include="..\..\..\lib-src\libsoxr\src\data-io.c" />
+	<ClCompile Include="..\..\..\lib-src\libsoxr\src\dbesi0.c" />
+	<ClCompile Include="..\..\..\lib-src\libsoxr\src\fft4g32.c" />
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\fft4g64.c" />
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\filter.c" />
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\lsr.c" />
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\pffft32s.c" />
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\rate32.c" />
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\rate32s.c" />
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\rate64.c" />
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\simd.c" />
+	<!-- <ClCompile Include="..\..\..\lib-src\libsoxr\src\pffft64s.c" /> -->
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\soxr.c" />
+	<ClCompile Include="..\..\..\lib-src\libsoxr\src\util32s.c" />
+	<!-- <ClCompile Include="..\..\..\lib-src\libsoxr\src\util64s.c" /> -->
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\vr32.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
