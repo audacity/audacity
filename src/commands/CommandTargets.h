@@ -293,7 +293,7 @@ public:
 /// mProgressTarget is a unique pointer, but mStatusTraget and
 /// mErrorTarget are shared ones, because they may both point to the same 
 /// output 
-class CommandOutputTargets
+class CommandOutputTargets /* not final */
 {
 public:
    std::unique_ptr<CommandProgressTarget> mProgressTarget;
