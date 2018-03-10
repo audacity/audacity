@@ -277,11 +277,13 @@ Track *Track::GetLink() const
             return next.first->get();
       }
 
-      auto prev = pList->getPrev( mNode );
-      if ( !pList->isNull( prev ) ) {
-         auto track = prev.first->get();
-         if (track && track->GetLinked())
-            return track;
+      if (mNode.first != mNode.second->begin()) {
+         auto prev = pList->getPrev( mNode );
+         if ( !pList->isNull( prev ) ) {
+            auto track = prev.first->get();
+            if (track && track->GetLinked())
+               return track;
+         }
       }
    }
 
