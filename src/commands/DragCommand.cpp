@@ -67,6 +67,7 @@ void DragCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
+      /* i18n-hint abbreviates "Identity" or "Identifier" */
       S.Optional( bHasId         ).TieNumericTextBox(  _("Id:"),          mId );
       S.Optional( bHasWinName    ).TieTextBox(         _("Window Name:"), mWinName );
       S.Optional( bHasFromX      ).TieNumericTextBox(  _("From X:"),      mFromX );
