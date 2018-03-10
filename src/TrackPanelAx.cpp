@@ -642,4 +642,63 @@ wxAccStatus TrackPanelAx::GetFocus( int *childId, wxAccessible **child )
 #endif
 }
 
+// Navigates from fromId to toId/toObject
+wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAccessible** toObject)
+{
+   int childCount;
+   GetChildCount( &childCount );
+
+   if (fromId > childCount)
+      return wxACC_FAIL;
+
+   switch (navDir) {
+   case wxNAVDIR_FIRSTCHILD:
+      if (fromId == CHILDID_SELF && childCount > 0 )
+         *toId = 1;
+      else
+         return wxACC_FALSE;
+      break;
+
+   case wxNAVDIR_LASTCHILD:
+      if (fromId == CHILDID_SELF && childCount > 0 )
+         *toId = childCount;
+      else
+         return wxACC_FALSE;
+      break;
+
+   case wxNAVDIR_NEXT:
+   case wxNAVDIR_DOWN:
+      if (fromId != CHILDID_SELF) {
+         *toId = fromId + 1;
+         if (*toId > childCount)
+            return wxACC_FALSE;
+      }
+      else
+         return wxACC_NOT_IMPLEMENTED;
+      break;
+
+   case wxNAVDIR_PREVIOUS:
+   case wxNAVDIR_UP:
+      if (fromId != CHILDID_SELF) {
+         *toId = fromId - 1;
+         if (*toId < 1)
+            return wxACC_FALSE;
+      }
+      else
+         return wxACC_NOT_IMPLEMENTED;
+      break;
+
+   case wxNAVDIR_LEFT:
+   case wxNAVDIR_RIGHT:
+      if (fromId != CHILDID_SELF)
+         return wxACC_FALSE;
+      else
+         return wxACC_NOT_IMPLEMENTED;
+      break;
+   }
+
+   *toObject = nullptr;
+   return wxACC_OK;
+}
+
 #endif // wxUSE_ACCESSIBILITY

@@ -104,6 +104,9 @@ public:
    // Returns a localized string representing the value for the object
    // or child.
    wxAccStatus GetValue(int childId, wxString* strValue) override;
+
+   // Navigates from fromId to toId/toObject
+   wxAccStatus Navigate(wxNavDir navDir, int fromId, int* toId, wxAccessible** toObject) override;
 #endif
 
 private:
