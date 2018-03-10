@@ -105,7 +105,7 @@ wxString EffectPaulstretch::GetSymbol()
 
 wxString EffectPaulstretch::GetDescription()
 {
-   return _("Use Paulstretch only for an extreme time-stretch or \"stasis\" effect");
+   return _("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
 wxString EffectPaulstretch::ManualPage()
