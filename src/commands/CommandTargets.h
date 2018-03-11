@@ -95,19 +95,25 @@ public:
 class CommandMessageTargetDecorator : public CommandMessageTarget
 {
 public:
-   CommandMessageTargetDecorator( CommandMessageTarget & target): mTarget(target) {};
-   virtual ~CommandMessageTargetDecorator() { };
-   virtual void Update(const wxString &message) { mTarget.Update( message );};
-   virtual void StartArray() { mTarget.StartArray();};
-   virtual void EndArray(){ mTarget.EndArray();};
-   virtual void StartStruct(){ mTarget.StartStruct();};
-   virtual void EndStruct(){ mTarget.EndStruct();};
-   virtual void AddItem(const wxString &value , const wxString &name="" ){ mTarget.AddItem(value,name);};
-   virtual void AddBool(const bool value      , const wxString &name="" ){ mTarget.AddBool(value,name);};
-   virtual void AddItem(const double value    , const wxString &name="" ){ mTarget.AddItem(value,name);};
-   virtual void StartField( const wxString &name="" ){ mTarget.StartField(name);};
-   virtual void EndField( ){ mTarget.EndField();};
-   virtual void Flush(){ mTarget.Flush();};
+   CommandMessageTargetDecorator( CommandMessageTarget & target): mTarget(target) {}
+   ~CommandMessageTargetDecorator() override { }
+   void Update(const wxString &message) override { mTarget.Update( message );}
+   void StartArray() override { mTarget.StartArray();}
+   void EndArray() override { mTarget.EndArray();}
+   void StartStruct() override { mTarget.StartStruct();}
+   void EndStruct() override { mTarget.EndStruct();}
+   void AddItem(const wxString &value , const wxString &name="" ) override
+      { mTarget.AddItem(value,name);}
+   void AddBool(const bool value      , const wxString &name="" ) override
+      { mTarget.AddBool(value,name);}
+   void AddItem(const double value    , const wxString &name="" ) override
+      { mTarget.AddItem(value,name);}
+   void StartField( const wxString &name="" ) override
+      { mTarget.StartField(name);}
+   void EndField( ) override
+      { mTarget.EndField();}
+   void Flush() override
+      { mTarget.Flush();}
    CommandMessageTarget & mTarget;
 };
 
