@@ -184,4 +184,36 @@ inline wxArrayString LocalizedStrings(const wxArrayString &strings)
    return LocalizedStrings( &strings[0], strings.size() );
 }
 
+// This object pairs an internal string, maybe empty, with a translated string.
+// Any internal string may be written to configuration or other files and,
+// for compatibility, should not vary between Audacity versions.
+// The translated string may be shown to users and may vary with locale, and
+// Audacity version if it is decided to use a different user-visible message.
+// Sometimes the translated string is derived from a msgid identical
+// to the internal string.  The translated string is not meant to persist.
+class TranslatedInternalString
+{
+public:
+
+   TranslatedInternalString() = default;
+
+   // One-argument constructor from a msgid
+   explicit TranslatedInternalString( const wxString &internal )
+   : mInternal{ internal }, mTranslated{ GetCustomTranslation( internal ) }
+   {}
+
+   // Two-argument version, when translated does not derive from internal
+   TranslatedInternalString( const wxString &internal,
+                             const wxString &translated )
+   : mInternal{ internal }, mTranslated{ translated }
+   {}
+
+   const wxString &Internal() const { return mInternal; }
+   const wxString &Translated() const { return mTranslated; }
+
+private:
+   wxString mInternal;
+   wxString mTranslated;
+};
+
 #endif
