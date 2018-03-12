@@ -653,14 +653,14 @@ wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAcc
 
    switch (navDir) {
    case wxNAVDIR_FIRSTCHILD:
-      if (fromId == CHILDID_SELF && childCount > 0 )
+      if (fromId == wxACC_SELF && childCount > 0 )
          *toId = 1;
       else
          return wxACC_FALSE;
       break;
 
    case wxNAVDIR_LASTCHILD:
-      if (fromId == CHILDID_SELF && childCount > 0 )
+      if (fromId == wxACC_SELF && childCount > 0 )
          *toId = childCount;
       else
          return wxACC_FALSE;
@@ -668,7 +668,7 @@ wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAcc
 
    case wxNAVDIR_NEXT:
    case wxNAVDIR_DOWN:
-      if (fromId != CHILDID_SELF) {
+      if (fromId != wxACC_SELF) {
          *toId = fromId + 1;
          if (*toId > childCount)
             return wxACC_FALSE;
@@ -679,7 +679,7 @@ wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAcc
 
    case wxNAVDIR_PREVIOUS:
    case wxNAVDIR_UP:
-      if (fromId != CHILDID_SELF) {
+      if (fromId != wxACC_SELF) {
          *toId = fromId - 1;
          if (*toId < 1)
             return wxACC_FALSE;
@@ -690,7 +690,7 @@ wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAcc
 
    case wxNAVDIR_LEFT:
    case wxNAVDIR_RIGHT:
-      if (fromId != CHILDID_SELF)
+      if (fromId != wxACC_SELF)
          return wxACC_FALSE;
       else
          return wxACC_NOT_IMPLEMENTED;
@@ -708,7 +708,7 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
    if (selectFlags != wxACC_SEL_TAKEFOCUS)
       return wxACC_NOT_IMPLEMENTED;
    
-   if (childId != CHILDID_SELF) {
+   if (childId != wxACC_SELF) {
       int childCount;
       GetChildCount( &childCount );
       if (childId > childCount)
