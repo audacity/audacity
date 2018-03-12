@@ -701,4 +701,32 @@ wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAcc
    return wxACC_OK;
 }
 
+// Modify focus or selection
+wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
+{
+   // Only support change of focus
+   if (selectFlags != wxACC_SEL_TAKEFOCUS)
+      return wxACC_NOT_IMPLEMENTED;
+   
+   if (childId != CHILDID_SELF) {
+      int childCount;
+      GetChildCount( &childCount );
+      if (childId > childCount)
+           return wxACC_FAIL;
+
+      Track* t = FindTrack(childId).get();
+      if (t) {
+         mTrackPanel->SetFocusedTrack(t);
+         mTrackPanel->EnsureVisible(t);
+         AudacityProject* p = GetActiveProject();
+         if (p)
+            p->ModifyState(false);
+      }
+   }
+   else
+      return wxACC_NOT_IMPLEMENTED;
+
+   return wxACC_OK;
+}
+
 #endif // wxUSE_ACCESSIBILITY

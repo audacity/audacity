@@ -107,6 +107,9 @@ public:
 
    // Navigates from fromId to toId/toObject
    wxAccStatus Navigate(wxNavDir navDir, int fromId, int* toId, wxAccessible** toObject) override;
+
+   // Modify focus or selection
+   wxAccStatus Select(int childId, wxAccSelectionFlags selectFlags) override;
 #endif
 
 private:
