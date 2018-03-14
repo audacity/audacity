@@ -275,12 +275,16 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 
    if (!success) {
       Show();
+      Raise();
       return;
    }
    if( mbExpanded )
       Hide();
    else
+   {
       Show();
+      Raise();
+   }
 }
 
 void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -354,8 +358,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    dlog.SetFilterIndex(index);
    if (dlog.ShowModal() != wxID_OK) {
+      Raise();
       return;
    }
+   Raise();
    
    wxArrayString files;
    dlog.GetPaths(files);
@@ -454,7 +460,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    if( mbExpanded )
       Hide();
    else
+   {
       Show();
+      Raise();
+   }
 }
 
 void ApplyMacroDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
@@ -894,8 +903,10 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
       wxString name;
 
       if (d.ShowModal() == wxID_CANCEL) {
+         Raise();
          return;
       }
+      Raise();
 
       name = d.GetValue().Strip(wxString::both);
 
@@ -946,8 +957,10 @@ void MacrosWindow::OnRemove(wxCommandEvent & WXUNUSED(event))
                      GetTitle(),
                      wxYES_NO | wxICON_QUESTION);
    if (m.ShowModal() == wxID_NO) {
+      Raise();
       return;
    }
+   Raise();
 
    mMacroCommands.DeleteMacro(name);
 
@@ -1004,8 +1017,10 @@ void MacrosWindow::InsertCommandAt(int item)
    MacroCommandDialog d(this, wxID_ANY);
 
    if (!d.ShowModal()) {
+      Raise();
       return;
    }
+   Raise();
 
    if(d.mSelectedCommand != wxT(""))
    {
@@ -1016,6 +1031,7 @@ void MacrosWindow::InsertCommandAt(int item)
       mSelectedCommand = item + 1;
       PopulateList();
    }
+
 }
 
 void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
@@ -1039,6 +1055,7 @@ void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    wxString params  = mMacroCommands.GetParams(item);
 
    params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
+   Raise();
 
    mMacroCommands.DeleteFromMacro(item);
    mMacroCommands.AddToMacro(command,
