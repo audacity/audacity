@@ -324,7 +324,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          label.Replace( "&", "" );
          bool suffix;
          if (!english)
-            suffix = true;
+            suffix = false;
          else {
             // We'll disambiguate if the squashed name is short and shorter than the internal name.
             // Otherwise not.
