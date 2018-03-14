@@ -283,7 +283,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    Entries commands;
    for( const auto &command : SpecialCommands )
       commands.push_back( {
-         command.first /* .Translation() */,
+         GetCustomTranslation( command.first ),
          command.second,
          _("Special Command")
       } );
@@ -299,7 +299,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty())
             commands.push_back( {
-               plug->GetUntranslatedName(), // plug->GetTranslatedName(),
+               plug->GetTranslatedName(),
                command,
                plug->GetPluginType() == PluginTypeEffect ?
                   _("Effect") : _("Menu Command (With Parameters)")
