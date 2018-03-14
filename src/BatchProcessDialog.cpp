@@ -103,53 +103,49 @@ void ApplyMacroDialog::Populate()
 
    Layout();
    Fit();
-   SetSizeHints(GetSize());
+   wxSize sz = GetSize();
+   SetSizeHints( sz );
+
+   // Size and place window
+   SetSize(std::min(wxSystemSettings::GetMetric(wxSYS_SCREEN_X) * 3 / 4, sz.GetWidth()),
+           std::min(wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) * 4 / 5, 400));
+
    Center();
 
    // Set the column size for the macros list.
-   wxSize sz = mMacros->GetClientSize();
+   sz = mMacros->GetClientSize();
    mMacros->SetColumnWidth(0, sz.x);
 }
 
 /// Defines the dialog and does data exchange with it.
 void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 {
-   S.StartVerticalLay(true);
+   /*i18n-hint: A macro is a sequence of commands that can be applied
+      * to one or more audio files.*/
+   S.StartStatic(_("&Select Macro"), 1);
    {
-      /*i18n-hint: A macro is a sequence of commands that can be applied
-       * to one or more audio files.*/
-
-      S.StartHorizontalLay(wxALIGN_RIGHT, false);
-      {
-         mResize = S.Id(ExpandID).AddButton(_("&Expand"));
-      }
-      S.EndHorizontalLay();
-
-      S.StartStatic(_("&Select Macro"), true);
-      {
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
-                     wxLC_SINGLE_SEL);
-         mMacros = S.Id(MacrosListID).AddListControlReportMode();
-         mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
-      }
-      S.EndStatic();
-
-      S.StartHorizontalLay(wxALIGN_RIGHT, false);
-      {
-         S.AddSpace( 40 );
-         S.AddPrompt( _("Apply Macro to:") );
-         S.Id(ApplyToProjectID).AddButton(_("&Project"));
-         S.Id(ApplyToFilesID).AddButton(_("&Files..."));
-      }
-      S.EndHorizontalLay();
-
-      S.StartHorizontalLay(wxALIGN_RIGHT, false);
-      {
-         S.AddStandardButtons( eCancelButton | eHelpButton);
-      }
-      S.EndHorizontalLay();
+      S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
+                  wxLC_SINGLE_SEL);
+      mMacros = S.Id(MacrosListID).Prop(1).AddListControlReportMode();
+      mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
    }
-   S.EndVerticalLay();
+   S.EndStatic();
+
+   S.StartHorizontalLay(wxEXPAND, 0);
+   {
+      S.AddPrompt( _("Apply Macro to:") );
+      S.Id(ApplyToProjectID).AddButton(_("&Project"));
+      S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+   }
+   S.EndHorizontalLay();
+
+   S.StartHorizontalLay(wxEXPAND, 0);
+   {
+      mResize = S.Id(ExpandID).AddButton(_("&Expand"));
+      S.Prop(1).AddSpace( 10 );
+      S.AddStandardButtons( eCancelButton | eHelpButton);
+   }
+   S.EndHorizontalLay();
 }
 
 /// This clears and updates the contents of mMacros, the list of macros.
@@ -279,12 +275,16 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 
    if (!success) {
       Show();
+      Raise();
       return;
    }
    if( mbExpanded )
       Hide();
    else
+   {
       Show();
+      Raise();
+   }
 }
 
 void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -358,8 +358,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    dlog.SetFilterIndex(index);
    if (dlog.ShowModal() != wxID_OK) {
+      Raise();
       return;
    }
+   Raise();
    
    wxArrayString files;
    dlog.GetPaths(files);
@@ -458,7 +460,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    if( mbExpanded )
       Hide();
    else
+   {
       Show();
+      Raise();
+   }
 }
 
 void ApplyMacroDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
@@ -567,8 +572,8 @@ void MacrosWindow::Populate()
    SetSizeHints(GetSize());
 
    // Size and place window
-   SetSize(wxSystemSettings::GetMetric(wxSYS_SCREEN_X) * 3 / 4,
-           wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) * 4 / 5);
+   SetSize(std::min(wxSystemSettings::GetMetric(wxSYS_SCREEN_X) * 3 / 4, 800),
+           std::min(wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) * 4 / 5, 400));
    Center();
 
    // Set the column size for the macros list.
@@ -584,85 +589,75 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 1);
    {
-      S.StartVerticalLay( wxEXPAND, 0 );
+      S.StartStatic(_("&Select Macro"),0);
       {
-         S.Prop(0).StartHorizontalLay(wxALIGN_RIGHT, false);
-         {
-            mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
-         }
-         S.EndHorizontalLay();
-         S.StartStatic(_("&Select Macro"),1);
+         S.StartHorizontalLay(wxEXPAND,1);
          {
             S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
-                       wxLC_EDIT_LABELS);
+                        wxLC_EDIT_LABELS);
             mMacros = S.Id(MacrosListID).Prop(1).AddListControlReportMode();
             // i18n-hint: This is the heading for a column in the edit macros dialog
             mMacros->InsertColumn(0, _("Macro"), wxLIST_FORMAT_LEFT);
-         }
-         S.EndStatic();
-         S.StartHorizontalLay(wxALIGN_RIGHT, false);
-         {  S.AddSpace( 40 );
-            S.SetBorder( 12 );
-            S.AddPrompt( _("Apply Macro to:") );
-            S.SetBorder( 5 );
-            S.Id(ApplyToProjectID).AddButton(_("&Project"));
-            S.Id(ApplyToFilesID).AddButton(_("&Files..."));
-         }
-         S.EndHorizontalLay();
-      }
-      S.EndVerticalLay();
-
-      S.StartVerticalLay( 1 );
-      {
-         S.StartStatic(_("&Macro (Double-Click or press SPACE to edit)"), true);
-         {
-            S.StartHorizontalLay(wxEXPAND,1);
+            S.StartVerticalLay(wxALIGN_TOP, 0);
             {
-            
-               S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
-                          wxLC_SINGLE_SEL);
-               mList = S.Id(CommandsListID).AddListControlReportMode();
-
-               //An empty first column is a workaround - under Win98 the first column
-               //can't be right aligned.
-               mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
-               /* i18n-hint: This is the number of the command in the list */
-               mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
-               mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
-               mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
-
-               S.StartVerticalLay(wxALIGN_TOP, 0);
-               {
-                  S.AddPrompt( _("Command") );
-                  S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
-                  S.Id(EditButtonID).AddButton(_("&Edit..."), wxALIGN_LEFT);
-                  S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
-                  S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
-                  S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
-                  mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
-
-                  S.AddSpace( 30 );
-                  S.AddPrompt( _("Macro") );
-                  S.Id(AddButtonID).AddButton(_("&New"));
-                  mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
-                  mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
-                  S.Id(ImportButtonID).AddButton(_("I&mport..."))->Enable( false);
-                  S.Id(ExportButtonID).AddButton(_("E&xport..."))->Enable( false);
-               }
-               S.EndVerticalLay();
+               S.Id(AddButtonID).AddButton(_("&New"));
+               mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
+               mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
+               S.Id(ImportButtonID).AddButton(_("I&mport..."))->Enable( false);
+               S.Id(ExportButtonID).AddButton(_("E&xport..."))->Enable( false);
             }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-         S.StartHorizontalLay(wxALIGN_RIGHT, false);
-         {
-            S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
+            S.EndVerticalLay();
          }
          S.EndHorizontalLay();
       }
-      S.EndVerticalLay();
+      S.EndStatic();
+
+      S.StartStatic(_("Edit S&teps"), true);
+      {
+         S.StartHorizontalLay(wxEXPAND,1);
+         {
+            
+            S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
+                        wxLC_SINGLE_SEL);
+            mList = S.Id(CommandsListID).AddListControlReportMode();
+
+            //An empty first column is a workaround - under Win98 the first column
+            //can't be right aligned.
+            mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
+            /* i18n-hint: This is the number of the command in the list */
+            mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
+            mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
+            mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
+
+            S.StartVerticalLay(wxALIGN_TOP, 0);
+            {
+               S.Id(InsertButtonID).AddButton(_("&Insert"), wxALIGN_LEFT);
+               S.Id(EditButtonID).AddButton(_("&Edit..."), wxALIGN_LEFT);
+               S.Id(DeleteButtonID).AddButton(_("De&lete"), wxALIGN_LEFT);
+               S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
+               S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
+               mDefaults = S.Id(DefaultsButtonID).AddButton(_("De&faults"));
+            }
+            S.EndVerticalLay();
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndStatic();
    }
    S.EndHorizontalLay();
+
+   S.StartHorizontalLay(wxEXPAND, 0);
+   {  
+      mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
+      // Using variable text just to get the positioning options.
+      S.Prop(0).AddVariableText( _("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
+      S.Id(ApplyToProjectID).AddButton(_("&Project"));
+      S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      S.Prop(1).AddSpace( 10 );
+      S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
+   }
+   S.EndHorizontalLay();
+
 
    return;
 }
@@ -908,8 +903,10 @@ void MacrosWindow::OnAdd(wxCommandEvent & WXUNUSED(event))
       wxString name;
 
       if (d.ShowModal() == wxID_CANCEL) {
+         Raise();
          return;
       }
+      Raise();
 
       name = d.GetValue().Strip(wxString::both);
 
@@ -960,8 +957,10 @@ void MacrosWindow::OnRemove(wxCommandEvent & WXUNUSED(event))
                      GetTitle(),
                      wxYES_NO | wxICON_QUESTION);
    if (m.ShowModal() == wxID_NO) {
+      Raise();
       return;
    }
+   Raise();
 
    mMacroCommands.DeleteMacro(name);
 
@@ -1018,8 +1017,10 @@ void MacrosWindow::InsertCommandAt(int item)
    MacroCommandDialog d(this, wxID_ANY);
 
    if (!d.ShowModal()) {
+      Raise();
       return;
    }
+   Raise();
 
    if(d.mSelectedCommand != wxT(""))
    {
@@ -1030,6 +1031,7 @@ void MacrosWindow::InsertCommandAt(int item)
       mSelectedCommand = item + 1;
       PopulateList();
    }
+
 }
 
 void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
@@ -1053,6 +1055,7 @@ void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    wxString params  = mMacroCommands.GetParams(item);
 
    params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
+   Raise();
 
    mMacroCommands.DeleteFromMacro(item);
    mMacroCommands.AddToMacro(command,
