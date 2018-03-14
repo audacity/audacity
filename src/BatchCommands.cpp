@@ -313,8 +313,8 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    wxArrayString mNames;
    mLabels.Clear();
    mNames.Clear();
-   mManager->GetAllCommandLabels(mLabels, false);
-   mManager->GetAllCommandNames(mNames, false);
+   mManager->GetAllCommandLabels(mLabels, true);
+   mManager->GetAllCommandNames(mNames, true);
 
    const bool english = wxGetLocale()->GetCanonicalName().StartsWith(wxT("en"));
 

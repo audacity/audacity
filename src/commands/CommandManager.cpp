@@ -1658,7 +1658,7 @@ void CommandManager::GetAllCommandNames(wxArrayString &names,
       if (!entry->multi)
          names.Add(entry->name);
       else if( includeMultis )
-         names.Add(entry->name + wxT(":")/*+ mCommandList[i]->label*/);
+         names.Add(entry->name );// + wxT(":")/*+ mCommandList[i]->label*/);
    }
 }
 
