@@ -544,17 +544,40 @@ void NextWindow(const CommandContext &context );
 void OnResample(const CommandContext &context );
 
 private:
-void OnCursorLeft(bool shift, bool ctrl, bool keyup = false);
-void OnCursorRight(bool shift, bool ctrl, bool keyup = false);
-void OnCursorMove(bool forward, bool jump, bool longjump);
-void OnBoundaryMove(bool left, bool boundaryContract);
+enum SelectionOperation {
+    SELECTION_EXTEND,
+    SELECTION_CONTRACT,
+    CURSOR_MOVE
+};
+
+enum CursorDirection {
+   DIRECTION_LEFT = -1,
+   DIRECTION_RIGHT = +1
+};
+
+enum TimeUnit {
+    TIME_UNIT_SECONDS,
+    TIME_UNIT_PIXELS
+};
+
+bool OnlyHandleKeyUp( const CommandContext &context );
+void OnCursorMove(double seekStep);
+void OnBoundaryMove(int step);
 
 // Handle small cursor and play head movements
 void SeekLeftOrRight
-(bool left, bool shift, bool ctrl, bool keyup,
- int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
- double quietSeekStepPositive, bool quietStepIsPixels,
- double audioSeekStepPositive, bool audioStepIsPixels);
+(double direction, SelectionOperation operation);
+
+void SeekWhenAudioActive(double seekStep);
+void SeekWhenAudioInactive
+(double seekStep, TimeUnit timeUnit,
+ SelectionOperation operation);
+void MoveWhenAudioInactive
+(double seekStep, TimeUnit timeUnit);
+
+
+
+double OffsetTime(double t, double offset, TimeUnit timeUnit, int snapToTime);
 
 // Helper for moving by keyboard with snap-to-grid enabled
 double GridMove(double t, int minPix);
