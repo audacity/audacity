@@ -550,25 +550,32 @@ enum SelectionOperation {
     CURSOR_MOVE
 };
 
+enum CursorDirection {
+   DIRECTION_LEFT = -1,
+   DIRECTION_RIGHT = +1
+};
+
 enum TimeUnit {
     TIME_UNIT_SECONDS,
     TIME_UNIT_PIXELS
 };
 
-void OnCursorLeft(SelectionOperation operation, bool keyup = false);
-void OnCursorRight(SelectionOperation operation, bool keyup = false);
+bool OnlyHandleKeyUp( const CommandContext &context );
 void OnCursorMove(double seekStep);
-void OnBoundaryMove(bool left, bool boundaryContract);
+void OnBoundaryMove(int step);
 
 // Handle small cursor and play head movements
 void SeekLeftOrRight
-(double direction, SelectionOperation operation, bool keyup);
+(double direction, SelectionOperation operation);
 
-void SeekAudio(double seekStep);
-
-void SeekQuiet
-(double seekStep, TimeUnit timeUnit, int snapToTime,
+void SeekWhenAudioActive(double seekStep);
+void SeekWhenAudioInactive
+(double seekStep, TimeUnit timeUnit,
  SelectionOperation operation);
+void MoveWhenAudioInactive
+(double seekStep, TimeUnit timeUnit);
+
+
 
 double OffsetTime(double t, double offset, TimeUnit timeUnit, int snapToTime);
 
