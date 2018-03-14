@@ -1198,8 +1198,31 @@ void AudacityProject::CreateMenusAndCommands()
       //   AudioIONotBusyFlag);
       c->AddItem(wxT("ManageMacros"), _("&Macros..."), FN(OnManageMacros));
 
-      c->AddSeparator();
+      c->BeginSubMenu(_("&Apply Macro"));
       PopulateMacrosMenu( c, AudioIONotBusyFlag );
+      c->EndSubMenu();
+      c->AddSeparator();
+
+      c->AddItem(wxT("FancyScreenshot"), _("&Screenshot..."), FN(OnScreenshot));
+
+// PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
+// as they used to in 1.3.x
+//#ifdef IS_ALPHA
+      // TODO: What should we do here?  Make benchmark a plug-in?
+      // Easy enough to do.  We'd call it mod-self-test.
+      c->AddItem(wxT("Benchmark"), _("&Run Benchmark..."), FN(OnBenchmark));
+//#endif
+
+#ifdef IS_ALPHA
+      c->AddCheck(wxT("SimulateRecordingErrors"),
+                  _("Simulate Recording Errors"),
+                  FN(OnSimulateRecordingErrors),
+                  gAudioIO->mSimulateRecordingErrors);
+      c->AddCheck(wxT("DetectUpstreamDropouts"),
+                  _("Detect Upstream Dropouts"),
+                  FN(OnDetectUpstreamDropouts),
+                  gAudioIO->mDetectUpstreamDropouts);
+#endif
       c->AddSeparator();
 
       PopulateEffectsMenu(c,
@@ -1257,35 +1280,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("QuickHelp"), _("&Quick Help..."), FN(OnQuickHelp));
       c->AddItem(wxT("Manual"), _("&Manual..."), FN(OnManual));
 #endif
-
-
-      c->AddSeparator();
-
-      c->BeginSubMenu( _("&Tools") );
-
-#ifdef IS_ALPHA
-      c->AddCheck(wxT("SimulateRecordingErrors"),
-                  _("Simulate Recording Errors"),
-                  FN(OnSimulateRecordingErrors),
-                  gAudioIO->mSimulateRecordingErrors);
-      c->AddCheck(wxT("DetectUpstreamDropouts"),
-                  _("Detect Upstream Dropouts"),
-                  FN(OnDetectUpstreamDropouts),
-                  gAudioIO->mDetectUpstreamDropouts);
-#endif
-
-      c->AddItem(wxT("FancyScreenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
-
-// PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
-// as they used to in 1.3.x
-//#ifdef IS_ALPHA
-      // TODO: What should we do here?  Make benchmark a plug-in?
-      // Easy enough to do.  We'd call it mod-self-test.
-
-      c->AddItem(wxT("Benchmark"), _("&Run Benchmark..."), FN(OnBenchmark));
-//#endif
-
-      c->EndSubMenu();
       c->AddSeparator();
 
       c->BeginSubMenu(_("&Diagnostics"));
