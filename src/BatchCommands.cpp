@@ -105,15 +105,15 @@ MacroCommands::MacroCommands()
    }
 }
 
-static const wxString MP3Conversion = wxT("MP3 Conversion");
-static const wxString FadeEnds      = wxT("Fade Ends");
+static const wxString MP3Conversion = XO("MP3 Conversion");
+static const wxString FadeEnds      = XO("Fade Ends");
 
 
 wxArrayString MacroCommands::GetNamesOfDefaultMacros()
 {
    wxArrayString defaults;
-   defaults.Add( MP3Conversion );
-   defaults.Add( FadeEnds  );
+   defaults.Add( GetCustomTranslation( MP3Conversion ) );
+   defaults.Add( GetCustomTranslation( FadeEnds )  );
    return defaults;
 }
 
@@ -122,10 +122,10 @@ void MacroCommands::RestoreMacro(const wxString & name)
 // TIDY-ME: Effects change their name with localisation.
 // Commands (at least currently) don't.  Messy.
    ResetMacro();
-   if (name == MP3Conversion){
+   if (name == GetCustomTranslation( MP3Conversion ) ){
         AddToMacro( wxT("Normalize") );
         AddToMacro( wxT("ExportMP3") );
-   } else if (name == FadeEnds ){
+   } else if (name == GetCustomTranslation( FadeEnds ) ){
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\"") );
         AddToMacro( wxT("FadeIn") );
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" FromEnd=\"1\"") );
@@ -283,7 +283,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    Entries commands;
    for( const auto &command : SpecialCommands )
       commands.push_back( {
-         command.first /* .Translation() */,
+         GetCustomTranslation( command.first ),
          command.second,
          _("Special Command")
       } );
@@ -299,7 +299,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty())
             commands.push_back( {
-               plug->GetUntranslatedName(), // plug->GetTranslatedName(),
+               plug->GetTranslatedName(),
                command,
                plug->GetPluginType() == PluginTypeEffect ?
                   _("Effect") : _("Menu Command (With Parameters)")
@@ -324,7 +324,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          label.Replace( "&", "" );
          bool suffix;
          if (!english)
-            suffix = true;
+            suffix = false;
          else {
             // We'll disambiguate if the squashed name is short and shorter than the internal name.
             // Otherwise not.
