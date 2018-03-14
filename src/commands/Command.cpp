@@ -260,16 +260,17 @@ bool CommandImplementation::SetParameter(const wxString &paramName, const wxVari
    ParamValueMap::iterator iter = mParams.find(paramName);
    if (iter == mParams.end())
    {
-      context.Error(paramName + wxT(" is not a parameter accepted by ") + GetName());
+      context.Error( wxString::Format(
+         _("%s is not a parameter accepted by %s"), paramName, GetName() ) );
       return false;
    }
 
    Validator &validator = mType.GetSignature().GetValidator(iter->first);
    if (!validator.Validate(paramValue))
    {
-      context.Error(wxT("Invalid value for parameter '")
-            + paramName + wxT("': should be ")
-            + validator.GetDescription());
+      context.Error( wxString::Format(
+         _("Invalid value for parameter '%s': should be %s"),
+            paramName, validator.GetDescription() ) );
       return false;
    }
    mParams[paramName] = validator.GetConverted();
