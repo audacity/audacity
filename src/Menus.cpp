@@ -9175,7 +9175,6 @@ void AudacityProject::MoveWhenAudioInactive
    // If TIME_UNIT_SECONDS, snap-to will be off.
    int snapToTime = GetSnapTo();
    const double t0 = mViewInfo.selectedRegion.t0();
-   const double t1 = mViewInfo.selectedRegion.t1();
    const double end = mTracks->GetEndTime();
 
    // Move the cursor
