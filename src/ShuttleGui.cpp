@@ -2261,8 +2261,8 @@ wxSizerItem * ShuttleGui::AddSpace( int width, int height )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
-
-   return mpSizer->Add( width, height, 0);
+   SetProportions(0);
+   return mpSizer->Add( width, height, miProp);
 }
 
 void ShuttleGui::SetSizeHints( wxWindow *window, const wxArrayString & items )
