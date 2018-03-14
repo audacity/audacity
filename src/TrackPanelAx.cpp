@@ -718,9 +718,7 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
       if (t) {
          mTrackPanel->SetFocusedTrack(t);
          mTrackPanel->EnsureVisible(t);
-         AudacityProject* p = GetActiveProject();
-         if (p)
-            p->ModifyState(false);
+         mTrackPanel->MakeParentModifyState(false);
       }
    }
    else
