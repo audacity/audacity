@@ -1,5 +1,5 @@
 /* XPM */
-static const char * TopFrequencyCursorXpm[] = {
+static const char * TopFrequencyCursor_xpm[] = {
 "32 32 3 1",
 ".	c #FF0000", // mask color = RGB:255,0,0
 "#	c #000000",

@@ -121,6 +121,7 @@ audacity_SOURCES = \
 	BatchProcessDialog.h \
 	Benchmark.cpp \
 	Benchmark.h \
+    Cursors.cpp \
 	Dependencies.cpp \
 	Dependencies.h \
 	DeviceChange.cpp \

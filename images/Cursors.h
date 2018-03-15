@@ -7,24 +7,22 @@
 // the color palette.  To cater for Win2K a mask
 // color of saturated red was used.  (middle grey 
 
+#include "../src/MemoryX.h"
 
+extern const char ** DisabledCursorXpm;
+extern const char ** EnvCursorXpm;
+extern const char ** TimeCursorXpm;
+extern const char ** IBeamCursorXpm;
+extern const char ** DrawCursorXpm;
+extern const char ** ZoomInCursorXpm;
+extern const char ** ZoomOutCursorXpm;
+extern const char ** LabelCursorLeftXpm;
+extern const char ** LabelCursorRightXpm;
+extern const char ** BottomFrequencyCursorXpm;
+extern const char ** TopFrequencyCursorXpm;
+extern const char ** BandWidthCursorXpm;
+extern const char ** StretchCursorXpm;
+extern const char ** StretchLeftCursorXpm;
+extern const char ** StretchRightCursorXpm;
 
-#include "Cursors32/DisabledCursor.xpm"
-#include "Cursors32/EnvCursor.xpm"
-#include "Cursors32/TimeCursor.xpm"
-#include "Cursors32/IBeamCursor.xpm"
-#include "Cursors32/DrawCursor.xpm"
-#include "Cursors32/ZoomInCursor.xpm"
-#include "Cursors32/ZoomOutCursor.xpm"
-#include "Cursors32/LabelCursorLeft.xpm"
-#include "Cursors32/LabelCursorRight.xpm"
-#include "Cursors32/BottomFrequencyCursor.xpm"
-#include "Cursors32/TopFrequencyCursor.xpm"
-#include "Cursors32/BandWidthCursor.xpm"
-#ifdef USE_MIDI
-#include "Cursors32/StretchCursor.xpm"
-#include "Cursors32/StretchLeftCursor.xpm"
-#include "Cursors32/StretchRightCursor.xpm"
-#endif
-
-std::unique_ptr<wxCursor> MakeCursor(int WXUNUSED(CursorId), const char * pXpm[36], int HotX, int HotY);
+std::unique_ptr<wxCursor> MakeCursor(int WXUNUSED(CursorId), const char ** pXpm, int HotX, int HotY);
