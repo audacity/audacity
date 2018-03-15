@@ -1046,7 +1046,7 @@ bool EffectEqualization::TransferDataFromWindow()
       mM = m;
       ForceRecalc();
 
-      tip.Printf(wxT("%d"), mM);
+      tip.Printf(wxT("%d"), (int)mM);
       mMText->SetLabel(tip);
       mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mMSlider->SetToolTip(tip);
