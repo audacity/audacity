@@ -79,6 +79,7 @@ class MacroCommands final {
    bool IsMono();
 
    // These commands do not depend on the command list.
+   static void MigrateLegacyChains();
    static wxArrayString GetNames();
    static wxArrayString GetNamesOfDefaultMacros();
 

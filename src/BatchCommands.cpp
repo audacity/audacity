@@ -260,7 +260,13 @@ bool MacroCommands::DeleteMacro(const wxString & chain)
    wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
 
    // Delete it...wxRemoveFile will display errors
-   return wxRemoveFile(name.GetFullPath());
+   auto result = wxRemoveFile(name.GetFullPath());
+
+   // Delete any legacy chain that it shadowed
+   auto oldPath = wxFileName{ FileNames::LegacyChainDir(), chain, wxT("txt") };
+   wxRemoveFile(oldPath.GetFullPath()); // Don't care about this return value
+
+   return result;
 }
 
 bool MacroCommands::RenameMacro(const wxString & oldchain, const wxString & newchain)
@@ -928,8 +934,43 @@ bool MacroCommands::ReportAndSkip(
    return true;
 }
 
+void MacroCommands::MigrateLegacyChains()
+{
+   static bool done = false;
+   if (!done) {
+      // Check once per session at most
+
+      // Copy chain files from the old Chains into the new Macros directory,
+      // but only if like-named files are not already present in Macros.
+
+      // Leave the old copies in place, in case a user wants to go back to
+      // an old Audacity version.  They will have their old chains intact, but
+      // won't have any edits they made to the copy that now lives in Macros
+      // which old Audacity will not read.
+
+      const auto oldDir = FileNames::LegacyChainDir();
+      wxArrayString files;
+      wxDir::GetAllFiles(oldDir, &files, wxT("*.txt"), wxDIR_FILES);
+
+      // add a dummy path component to be overwritten by SetFullName
+      wxFileName newDir{ FileNames::MacroDir(), wxT("x") };
+
+      for (const auto &file : files) {
+         auto name = wxFileName{file}.GetFullName();
+         newDir.SetFullName(name);
+         const auto newPath = newDir.GetFullPath();
+         if (!wxFileExists(newPath))
+            FileNames::CopyFile(file, newPath);
+      }
+      done = true;
+   }
+   // To do:  use std::once
+}
+
 wxArrayString MacroCommands::GetNames()
 {
+   MigrateLegacyChains();
+
    wxArrayString names;
    wxArrayString files;
    wxDir::GetAllFiles(FileNames::MacroDir(), &files, wxT("*.txt"), wxDIR_FILES);
