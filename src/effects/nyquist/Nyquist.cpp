@@ -1740,6 +1740,13 @@ bool NyquistEffect::Parse(
 
    if (len >= 2 && tokens[0] == wxT("name")) {
       mName = UnQuote(tokens[1]);
+      // Strip ... from name if it's present, perhaps in third party plug-ins
+      // Menu system puts ... back if there are any controls
+      // This redundant naming convention must NOT be followed for
+      // shipped Nyquist effects with internationalization.  Else the msgid
+      // later looked up will lack the ... and will not be found.
+      if (mName.EndsWith(wxT("...")))
+         mName = mName.RemoveLast(3);
       return true;
    }
 
