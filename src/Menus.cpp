@@ -1020,17 +1020,19 @@ void AudacityProject::CreateMenusAndCommands()
 
       //////////////////////////////////////////////////////////////////////////
 
-      wxArrayString alignLabelsNoSync;
-      alignLabelsNoSync.Add(_("&Align End to End"));
-      alignLabelsNoSync.Add(_("Align &Together"));
+      const TranslatedInternalString alignLabelsNoSync[] = {
+         { wxT("EndToEnd"),     _("&Align End to End") },
+         { wxT("Together"),     _("Align &Together") },
+      };
 
-      wxArrayString alignLabels;
-      alignLabels.Add(_("Start to &Zero"));
-      alignLabels.Add(_("Start to &Cursor/Selection Start"));
-      alignLabels.Add(_("Start to Selection &End"));
-      alignLabels.Add(_("End to Cu&rsor/Selection Start"));
-      alignLabels.Add(_("End to Selection En&d"));
-      mAlignLabelsCount = alignLabels.GetCount();
+      const TranslatedInternalString alignLabels[] = {
+         { wxT("StartToZero"),  _("Start to &Zero") },
+         { wxT("StartToSelStart"), _("Start to &Cursor/Selection Start") },
+         { wxT("StartToSelEnd"),   _("Start to Selection &End") },
+         { wxT("EndToSelStart"),   _("End to Cu&rsor/Selection Start") },
+         { wxT("EndToSelEnd"),     _("End to Selection En&d") },
+      };
+      mAlignLabelsCount = sizeof(alignLabels) / sizeof(alignLabels[0]);
 
       // Calling c->SetCommandFlags() after AddItemList for "Align" and "AlignMove"
       // does not correctly set flags for submenus, so do it this way.
@@ -1040,9 +1042,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginSubMenu(_("&Align Tracks"));
 
       //c->BeginSubMenu(_("Just Move Tracks"));
-      c->AddItemList(wxT("Align"), alignLabelsNoSync, FN(OnAlignNoSync));
+      c->AddItemList(wxT("Align"), alignLabelsNoSync, 2u, FN(OnAlignNoSync));
       c->AddSeparator();
-      c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
+      c->AddItemList(wxT("Align"), alignLabels, mAlignLabelsCount, FN(OnAlign));
       c->AddSeparator();
       c->AddCheck(wxT("MoveSelectionWithTracks"), _("&Move Selection with Tracks (on/off)"),
          FN(OnMoveSelectionWithTracks),
@@ -1054,7 +1056,7 @@ void AudacityProject::CreateMenusAndCommands()
       // TODO: Can these labels be made clearer? Do we need this sub-menu at all?
       c->BeginSubMenu(_("Move Sele&ction and Tracks"));
 
-      c->AddItemList(wxT("AlignMove"), alignLabels, FN(OnAlignMoveSel));
+      c->AddItemList(wxT("AlignMove"), alignLabels, mAlignLabelsCount, FN(OnAlignMoveSel));
       c->SetCommandFlags(wxT("AlignMove"),
          AudioIONotBusyFlag | TracksSelectedFlag,
          AudioIONotBusyFlag | TracksSelectedFlag);

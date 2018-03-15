@@ -33,6 +33,7 @@
 #endif
 
 using CommandParameter = wxString;
+class TranslatedInternalString;
 
 struct MenuBarListEntry
 {
@@ -161,7 +162,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    int checkmark = -1);
 
    void AddItemList(const wxString & name,
-                    const wxArrayString & labels,
+                    const TranslatedInternalString items[],
+                    size_t nItems,
                     CommandHandlerFinder finder,
                     CommandFunctorPointer callback,
                     bool bIsEffect = false);
@@ -334,7 +336,7 @@ protected:
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
-                                   bool multi,
+                                   const wxString &nameSuffix,
                                    int index,
                                    int count,
                                    bool bIsEffect);
@@ -344,7 +346,7 @@ protected:
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
-                                   bool multi,
+                                   const wxString &nameSuffix,
                                    int index,
                                    int count,
                                    bool bIsEffect,
