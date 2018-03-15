@@ -169,9 +169,6 @@ bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 // MeterPanel class
 //
 
-#include "../../images/SpeakerMenu.xpm"
-#include "../../images/MicMenu.xpm"
-
 // How many pixels between items?
 const static int gap = 2;
 
@@ -243,8 +240,6 @@ MeterPanel::MeterPanel(AudacityProject *project,
    // i18n-hint: Noun (the meter is used for playback or record level monitoring)
    SetName( _("Meter") );
    // Suppress warnings about the header file
-   wxUnusedVar(SpeakerMenu_xpm);
-   wxUnusedVar(MicMenu_xpm);
    wxUnusedVar(PrefStyles);
 
    mStyle = mDesiredStyle;
@@ -313,12 +308,10 @@ MeterPanel::MeterPanel(AudacityProject *project,
    {
       if(mIsInput)
       {
-         //mIcon = NEW wxBitmap(MicMenuNarrow_xpm);
          mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpMic)));
       }
       else
       {
-         //mIcon = NEW wxBitmap(SpeakerMenuNarrow_xpm);
          mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpSpeaker)));
       }
    }
