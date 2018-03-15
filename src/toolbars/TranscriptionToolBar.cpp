@@ -312,16 +312,12 @@ void TranscriptionToolBar::RegenerateTooltips()
       },
    };
 
-   LocalizedCommandNameVector commands;
    for (const auto &entry : table) {
-      commands.clear();
-      commands.push_back( LocalizedCommandName(
-         wxGetTranslation(entry.untranslatedLabel), entry.commandName
-      ) );
-      commands.push_back( LocalizedCommandName(
-         wxGetTranslation(entry.untranslatedLabel2), entry.commandName2
-      ) );
-      ToolBar::SetButtonToolTip(*mButtons[entry.tool], commands);
+      TranslatedInternalString commands[] = {
+         { entry.commandName,  wxGetTranslation(entry.untranslatedLabel)  },
+         { entry.commandName2, wxGetTranslation(entry.untranslatedLabel2) },
+      };
+      ToolBar::SetButtonToolTip( *mButtons[entry.tool], commands, 2u );
    }
 
 

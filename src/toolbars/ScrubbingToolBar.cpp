@@ -136,10 +136,10 @@ void ScrubbingToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    auto fn = [&]
-   (AButton &button, const wxString &label, const wxString &command)
+   (AButton &button, const wxString &label, const wxString &cmd)
    {
-      LocalizedCommandNameVector commands( 1u, { label, command } );
-      ToolBar::SetButtonToolTip(button, commands);
+      TranslatedInternalString command{ cmd, label };
+      ToolBar::SetButtonToolTip( button, &command, 1u );
    };
 
    auto project = GetActiveProject();

@@ -249,27 +249,27 @@ void ControlToolBar::RegenerateTooltips()
             name = wxT("CursProjectStart");
             break;
       }
-      LocalizedCommandNameVector commands( 1u, { pCtrl->GetLabel(), name } );
+      std::vector<TranslatedInternalString> commands(
+         1u, { name, pCtrl->GetLabel() } );
 
       // Some have a second
       switch (iWinID)
       {
          case ID_PLAY_BUTTON:
             // With shift
-            commands.push_back(
-               LocalizedCommandName( _("Loop Play"), wxT("PlayLooped") ) );
+            commands.push_back( { wxT("PlayLooped"), _("Loop Play") } );
             break;
          case ID_RECORD_BUTTON:
             // With shift
             {  bool bPreferNewTrack;
                gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
                // For the shortcut tooltip.
-               commands.push_back( LocalizedCommandName(
+               commands.push_back( {
+                  wxT("Record2ndChoice"),
                   !bPreferNewTrack
                      ? _("Record New Track")
-                     : _("Append Record"),
-                  wxT("Record2ndChoice")
-               ));
+                     : _("Append Record")
+               } );
             }
             break;
          case ID_PAUSE_BUTTON:
@@ -278,16 +278,16 @@ void ControlToolBar::RegenerateTooltips()
             break;
          case ID_FF_BUTTON:
             // With shift
-            commands.push_back( LocalizedCommandName(
-               _("Select to End"), wxT("SelEnd") ) );
+            commands.push_back( {
+               wxT("SelEnd"), _("Select to End") } );
             break;
          case ID_REW_BUTTON:
             // With shift
-            commands.push_back( LocalizedCommandName(
-               _("Select to Start"), wxT("SelStart") ) );
+            commands.push_back( {
+               wxT("SelStart"), _("Select to Start") } );
             break;
       }
-      ToolBar::SetButtonToolTip(*pCtrl, commands);
+      ToolBar::SetButtonToolTip(*pCtrl, commands.data(), commands.size());
    }
 #endif
 }

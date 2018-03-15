@@ -1353,7 +1353,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
 }
 
 wxString CommandManager::DescribeCommandsAndShortcuts
-(const LocalizedCommandNameVector &commands) const
+(const TranslatedInternalString commands[], size_t nCommands) const
 {
    wxString mark;
    // This depends on the language setting and may change in-session after
@@ -1364,15 +1364,16 @@ wxString CommandManager::DescribeCommandsAndShortcuts
 
    static const wxString &separatorFormat = wxT("%s / %s");
    wxString result;
-   for (const auto &pair : commands) {
+   for (size_t ii = 0; ii < nCommands; ++ii) {
+      const auto &pair = commands[ii];
       // If RTL, then the control character forces right-to-left sequencing of
       // "/" -separated command names, and puts any "(...)" shortcuts to the
       // left, consistently with accelerators in menus (assuming matching
       // operating system prefernces for language), even if the command name
       // was missing from the translation file and defaulted to the English.
-      auto piece = wxString::Format(wxT("%s%s"), mark, pair.first);
+      auto piece = wxString::Format(wxT("%s%s"), mark, pair.Translated());
 
-      wxString name{ pair.second };
+      wxString name{ pair.Internal() };
       if (!name.empty()) {
          auto keyStr = GetKeyFromName(name);
          if (!keyStr.empty()){

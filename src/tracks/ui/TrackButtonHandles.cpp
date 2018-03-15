@@ -115,9 +115,8 @@ wxString CloseButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   CommandManager::LocalizedCommandNameVector commands( 1u,
-      { name, wxT("TrackClose") } );
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackClose"), name };
+   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr CloseButtonHandle::HitTest
@@ -175,9 +174,8 @@ wxString MenuButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   CommandManager::LocalizedCommandNameVector commands( 1u,
-      { name, wxT("TrackMenu") } );
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackMenu"), name };
+   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr MenuButtonHandle::HitTest
