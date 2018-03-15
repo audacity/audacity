@@ -44,6 +44,7 @@ public:
    static wxString AutoSaveDir();
    static wxString HtmlHelpDir();
    static wxString HtmlHelpIndexFile(bool quick);
+   static wxString LegacyChainDir();
    static wxString MacroDir();
    static wxString NRPDir();
    static wxString NRPFile();
