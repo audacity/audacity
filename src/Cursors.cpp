@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  TrackPanel.cpp
+  Cursors.cpp
 
   Dominic Mazzoni
   and lots of other contributors
