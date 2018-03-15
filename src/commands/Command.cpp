@@ -106,9 +106,9 @@ DecoratedCommand::~DecoratedCommand()
 {
 }
 
-wxString DecoratedCommand::GetName()
+IdentInterfaceSymbol DecoratedCommand::GetSymbol()
 {
-   return mCommand->GetName();
+   return mCommand->GetSymbol();
 }
 
 CommandSignature &DecoratedCommand::GetSignature()
@@ -150,7 +150,11 @@ bool ApplyAndSendResponse::Apply()
       return bResult; }
    );
    wxString response = wxT( "\n" );
-   response += GetName();
+
+   // PRL: it's all right to send untranslated strings to this channel
+   // I don't see _("") used with literal strings.
+   response += GetSymbol().Internal();
+
    // These three strings are deliberately not localised.
    // They are used in script responses and always happen in English.
    response += wxT(" finished: ");
@@ -183,7 +187,7 @@ void CommandImplementation::TypeCheck(const wxString &typeName,
 {
    // this macro is empty if wxWidgets is not compiled in debug mode
    wxASSERT_MSG(param.IsType(typeName),
-                GetName()
+                GetSymbol().Internal()
                 + wxT("command tried to get '")
                 + paramName
                 + wxT("' parameter as a ")
@@ -195,7 +199,7 @@ void CommandImplementation::CheckParam(const wxString &paramName)
 {
    // this macro is empty if wxWidgets is not compiled in debug mode
    wxASSERT_MSG(mParams.find(paramName) != mParams.end(),
-                GetName()
+                GetSymbol().Internal()
                 + wxT("command tried to get '")
                 + paramName
                 + wxT("' parameter, but that parameter doesn't exist in the command signature!"));
@@ -242,9 +246,9 @@ wxString CommandImplementation::GetString(const wxString &paramName)
 }
 
 /// Get the name of the command
-wxString CommandImplementation::GetName()
+IdentInterfaceSymbol CommandImplementation::GetSymbol()
 {
-   return mType.GetName();
+   return mType.GetSymbol();
 }
 
 /// Get the signature of the command
@@ -260,8 +264,11 @@ bool CommandImplementation::SetParameter(const wxString &paramName, const wxVari
    ParamValueMap::iterator iter = mParams.find(paramName);
    if (iter == mParams.end())
    {
+      // Translated format, but untranslated command name substituted into it?
+      // Perhaps these formats that don't need translating.
       context.Error( wxString::Format(
-         _("%s is not a parameter accepted by %s"), paramName, GetName() ) );
+         _("%s is not a parameter accepted by %s"),
+            paramName, GetSymbol().Internal() ) );
       return false;
    }
 

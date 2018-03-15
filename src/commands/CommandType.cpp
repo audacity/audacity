@@ -24,7 +24,7 @@ Also acts as a factory.
 #include <wx/string.h>
 
 OldStyleCommandType::OldStyleCommandType()
-   : mName{}, mSignature{}
+   : mSymbol{}, mSignature{}
 { }
 
 OldStyleCommandType::~OldStyleCommandType()
@@ -33,9 +33,9 @@ OldStyleCommandType::~OldStyleCommandType()
 
 wxString OldStyleCommandType::GetName()
 {
-   if (mName.empty())
-      mName = BuildName();
-   return mName;
+   if (mSymbol.empty())
+      mSymbol = BuildName();
+   return mSymbol.Internal();
 }
 
 CommandSignature &OldStyleCommandType::GetSignature()
@@ -50,6 +50,8 @@ CommandSignature &OldStyleCommandType::GetSignature()
 
 wxString OldStyleCommandType::Describe()
 {
+   // PRL: Is this intended for end-user visibility or just debugging?  It did not
+   // use _(""), so I assume it is meant to use internal strings
    wxString desc = GetName() + wxT("\nParameters:");
    GetSignature();
    ParamValueMap::iterator iter;

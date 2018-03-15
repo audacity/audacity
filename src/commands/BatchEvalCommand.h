@@ -29,7 +29,7 @@ to that system.
 class BatchEvalCommandType final : public OldStyleCommandType
 {
 public:
-   wxString BuildName() override;
+   IdentInterfaceSymbol BuildName() override;
    void BuildSignature(CommandSignature &signature) override;
    OldStyleCommandPointer Create(std::unique_ptr<CommandOutputTargets> &&target) override;
 };
