@@ -53,7 +53,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    virtual void OnCancel(wxCommandEvent & event);
    virtual void OnHelp(wxCommandEvent & event);
 
-   virtual wxString GetHelpPageName() {return "Tools_Menu#macros_compact_dialog";};
+   virtual wxString GetHelpPageName() {return "Apply_Macro";};
 
    void PopulateMacros();
    static wxString MacroIdOfName( const wxString & MacroName );
@@ -95,8 +95,8 @@ private:
    void OnCancel(wxCommandEvent &event) override;
 
    virtual wxString GetHelpPageName() override {return 
-      mbExpanded ? "Tools_Menu#macross_full_dialog"
-         : "Tools_Menu#macros_compact_dialog";};
+      mbExpanded ? "Manage_Macros"
+         : "Apply_Macro";};
 
    void PopulateList();
    void AddItem(const wxString &command, wxString const &params);
