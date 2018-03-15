@@ -289,8 +289,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    Entries commands;
    for( const auto &command : SpecialCommands )
       commands.push_back( {
-         GetCustomTranslation( command.first ),
-         command.second,
+         { command.second, GetCustomTranslation( command.first ) },
          _("Special Command")
       } );
 
@@ -305,8 +304,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty())
             commands.push_back( {
-               plug->GetTranslatedName(),
-               command,
+               { command, plug->GetTranslatedName() },
                plug->GetPluginType() == PluginTypeEffect ?
                   _("Effect") : _("Menu Command (With Parameters)")
             } );
@@ -350,8 +348,10 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 
          commands.push_back(
             {
-               label, // User readable name
-               mNames[i], // Internal name.
+               {
+                  mNames[i], // Internal name.
+                  label // User readable name
+               },
                _("Menu Command (No Parameters)")
             }
          );
@@ -363,12 +363,14 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    // I'm not sure, but at least I can sort stably for a better defined result,
    // keeping specials before effects and menu items, and lastly commands.
    auto less =
-      [](const Entry &a, const Entry &b) { return a.friendly < b.friendly; };
+      [](const Entry &a, const Entry &b)
+         { return a.name.Translated() < b.name.Translated(); };
    std::stable_sort(commands.begin(), commands.end(), less);
 
    // Now uniquify by friendly name
    auto equal =
-      [](const Entry &a, const Entry &b) { return a.friendly == b.friendly; };
+      [](const Entry &a, const Entry &b)
+         { return a.name.Translated() == b.name.Translated(); };
    std::unique_copy(
       commands.begin(), commands.end(), std::back_inserter(mCommands), equal);
 }
@@ -378,9 +380,10 @@ auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
    -> Entries::const_iterator
 {
    const auto less = [](const Entry &entryA, const Entry &entryB)
-      { return entryA.friendly < entryB.friendly; };
+      { return entryA.name.Translated() < entryB.name.Translated(); };
    auto range = std::equal_range(
-      begin(), end(), Entry{ friendlyName, {}, {} }, less);
+      begin(), end(), Entry{ { {}, friendlyName }, {} }, less
+   );
    if (range.first != range.second) {
       wxASSERT_MSG( range.first + 1 == range.second,
                     "Non-unique user-visible command name" );
@@ -396,7 +399,8 @@ auto MacroCommandsCatalog::ByCommandId( const wxString &commandId ) const
 {
    // Maybe this too should have a uniqueness check?
    return std::find_if( begin(), end(),
-      [&](const Entry &entry){ return entry.internal == commandId; });
+      [&](const Entry &entry)
+         { return entry.name.Internal() == commandId; });
 }
 
 
@@ -839,7 +843,7 @@ bool MacroCommands::ApplyMacro(
       auto iter = catalog.ByCommandId(command);
       auto friendly = (iter == catalog.end())
          ? command // Expose internal name to user, in default of a better one!
-         : iter->friendly;
+         : iter->name.Translated();
       if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;
    }

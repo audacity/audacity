@@ -25,8 +25,7 @@ class MacroCommandsCatalog {
 public:
    // A triple of user-visible name, internal string identifier and type/help string.
    struct Entry {
-      wxString friendly;
-      wxString internal;
+      TranslatedInternalString name;
       wxString category;
    };
    using Entries = std::vector<Entry>;

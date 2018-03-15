@@ -128,7 +128,7 @@ void MacroCommandDialog::PopulateCommandList()
    long ii = 0;
    for ( const auto &entry : mCatalog )
       // insert the user-facing string
-      mChoices->InsertItem( ii++, entry.friendly /* .Translation() */ );
+      mChoices->InsertItem( ii++, entry.name.Translated() );
 }
 
 void MacroCommandDialog::ValidateChoices()
@@ -162,18 +162,19 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
    const auto &command = mCatalog[ event.GetIndex() ];
 
    EffectManager & em = EffectManager::Get();
-   PluginID ID = em.GetEffectByIdentifier( command.internal );
+   PluginID ID = em.GetEffectByIdentifier( command.name.Internal() );
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
    mEditParams->Enable(!ID.IsEmpty());
    mUsePreset->Enable(em.HasPresets(ID));
 
-   if ( command.friendly == mCommand->GetValue() )
+   if ( command.name.Translated() == mCommand->GetValue() )
+      // This uses the assumption of uniqueness of translated names!
       return;
 
-   mCommand->SetValue(command.friendly);
-   mInternalCommandName = command.internal;
+   mCommand->SetValue(command.name.Translated());
+   mInternalCommandName = command.name.Internal();
 
    wxString params = MacroCommands::GetCurrentParamsFor(mInternalCommandName);
    if (params.IsEmpty())
@@ -221,8 +222,8 @@ void MacroCommandDialog::SetCommandAndParams(const wxString &Command, const wxSt
       // -- AVOID THIS!
       mCommand->SetValue( Command );
    else {
-      mCommand->SetValue( iter->friendly /* .Translation() */ );
-      mDetails->SetValue( iter->internal + "\r\n" + iter->category  );
+      mCommand->SetValue( iter->name.Translated() );
+      mDetails->SetValue( iter->name.Internal() + "\r\n" + iter->category  );
       mChoices->SetItemState(iter - mCatalog.begin(),
                              wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 

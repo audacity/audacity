@@ -57,7 +57,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
    auto iter = catalog.ByCommandId(cmdName);
    const wxString &friendly = (iter == catalog.end())
       ? cmdName // Expose internal name to user, in default of a better one!
-      : iter->friendly;
+      : iter->name.Translated();
 
    // Create a Batch that will have just one command in it...
    MacroCommands Batch;
