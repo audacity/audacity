@@ -19,8 +19,6 @@
 #include "../images/Cursors32/DrawCursor.xpm"
 #include "../images/Cursors32/ZoomInCursor.xpm"
 #include "../images/Cursors32/ZoomOutCursor.xpm"
-#include "../images/Cursors32/LabelCursorLeft.xpm"
-#include "../images/Cursors32/LabelCursorRight.xpm"
 #include "../images/Cursors32/BottomFrequencyCursor.xpm"
 #include "../images/Cursors32/TopFrequencyCursor.xpm"
 #include "../images/Cursors32/BandWidthCursor.xpm"
@@ -41,8 +39,6 @@ const char ** IBeamCursorXpm = IBeamCursor_xpm;
 const char ** DrawCursorXpm = DrawCursor_xpm;
 const char ** ZoomInCursorXpm = ZoomInCursor_xpm;
 const char ** ZoomOutCursorXpm = ZoomOutCursor_xpm;
-const char ** LabelCursorLeftXpm = LabelCursorLeft_xpm;
-const char ** LabelCursorRightXpm = LabelCursorRight_xpm;
 const char ** BottomFrequencyCursorXpm = BottomFrequencyCursor_xpm;
 const char ** TopFrequencyCursorXpm = TopFrequencyCursor_xpm;
 const char ** BandWidthCursorXpm = BandWidthCursor_xpm;

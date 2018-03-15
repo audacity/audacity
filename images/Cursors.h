@@ -16,8 +16,6 @@ extern const char ** IBeamCursorXpm;
 extern const char ** DrawCursorXpm;
 extern const char ** ZoomInCursorXpm;
 extern const char ** ZoomOutCursorXpm;
-extern const char ** LabelCursorLeftXpm;
-extern const char ** LabelCursorRightXpm;
 extern const char ** BottomFrequencyCursorXpm;
 extern const char ** TopFrequencyCursorXpm;
 extern const char ** BandWidthCursorXpm;
