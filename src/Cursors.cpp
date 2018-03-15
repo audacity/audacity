@@ -9,7 +9,6 @@
 
 ********************************************************************/
 
-#include "Audacity.h"
 #include "../images/Cursors.h"
 
 #include "../images/Cursors32/DisabledCursor.xpm"
@@ -26,7 +25,7 @@
 #include "../images/Cursors32/StretchCursor.xpm"
 #include "../images/Cursors32/StretchLeftCursor.xpm"
 #include "../images/Cursors32/StretchRightCursor.xpm"
-#endif
+#endif // USE_MIDI
 
 #include <wx/image.h>
 #include <wx/bitmap.h>
@@ -42,9 +41,11 @@ const char ** ZoomOutCursorXpm = ZoomOutCursor_xpm;
 const char ** BottomFrequencyCursorXpm = BottomFrequencyCursor_xpm;
 const char ** TopFrequencyCursorXpm = TopFrequencyCursor_xpm;
 const char ** BandWidthCursorXpm = BandWidthCursor_xpm;
+#ifdef USE_MIDI
 const char ** StretchCursorXpm = StretchCursor_xpm;
 const char ** StretchLeftCursorXpm = StretchLeftCursor_xpm;
 const char ** StretchRightCursorXpm = StretchRightCursor_xpm;
+#endif // USE_MIDI
 
 std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char ** pXpm,  int HotX, int HotY )
 {
