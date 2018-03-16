@@ -277,10 +277,9 @@ void EditToolBar::ForAllButtons(int Action)
    for (const auto &entry : EditToolbarButtonList) {
 #if wxUSE_TOOLTIPS
       if( Action & ETBActTooltips ){
-         LocalizedCommandNameVector commands( 1u,
-            { wxGetTranslation(entry.untranslatedLabel), entry.commandName }
-         );
-         ToolBar::SetButtonToolTip(*mButtons[entry.tool], commands);
+         TranslatedInternalString command{
+            entry.commandName, wxGetTranslation(entry.untranslatedLabel) };
+         ToolBar::SetButtonToolTip( *mButtons[entry.tool], &command, 1u );
       }
 #endif
       if (cm) {

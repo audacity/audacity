@@ -760,7 +760,7 @@ void CommandManager::InsertItem(const wxString & name,
       }
    }
 
-   CommandListEntry *entry = NewIdentifier(name, label_in, menu, finder, callback, false, 0, 0, false);
+   CommandListEntry *entry = NewIdentifier(name, label_in, menu, finder, callback, {}, 0, 0, false);
    int ID = entry->id;
    wxString label = GetLabel(entry);
 
@@ -828,7 +828,7 @@ void CommandManager::AddItem(const wxChar *name,
       cookedParameter = parameter;
    CommandListEntry *entry =
       NewIdentifier(name, label_in, accel, CurrentMenu(), finder, callback,
-                    false, 0, 0, bIsEffect, cookedParameter);
+                    {}, 0, 0, bIsEffect, cookedParameter);
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
@@ -855,18 +855,19 @@ void CommandManager::AddItem(const wxChar *name,
 /// When you call Enable on this command name, it will enable or disable
 /// all of the items at once.
 void CommandManager::AddItemList(const wxString & name,
-                                 const wxArrayString & labels,
+                                 const TranslatedInternalString items[],
+                                 size_t nItems,
                                  CommandHandlerFinder finder,
                                  CommandFunctorPointer callback,
                                  bool bIsEffect)
 {
-   for (size_t i = 0, cnt = labels.GetCount(); i < cnt; i++) {
+   for (size_t i = 0, cnt = nItems; i < cnt; i++) {
       CommandListEntry *entry = NewIdentifier(name,
-                                              labels[i],
+                                              items[i].Translated(),
                                               CurrentMenu(),
                                               finder,
                                               callback,
-                                              true,
+                                              items[i].Internal(),
                                               i,
                                               cnt,
                                               bIsEffect);
@@ -896,7 +897,7 @@ void CommandManager::AddCommand(const wxChar *name,
                                 CommandFlag flags,
                                 CommandMask mask)
 {
-   NewIdentifier(name, label_in, accel, NULL, finder, callback, false, 0, 0, false, {});
+   NewIdentifier(name, label_in, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
    if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
       SetCommandFlags(name, flags, mask);
@@ -911,7 +912,7 @@ void CommandManager::AddGlobalCommand(const wxChar *name,
 {
    CommandListEntry *entry =
       NewIdentifier(name, label_in, accel, NULL, finder, callback,
-                    false, 0, 0, false, {});
+                    {}, 0, 0, false, {});
 
    entry->enabled = false;
    entry->isGlobal = true;
@@ -947,7 +948,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                                                 wxMenu *menu,
                                                 CommandHandlerFinder finder,
                                                 CommandFunctorPointer callback,
-                                                bool multi,
+                                                const wxString &nameSuffix,
                                                 int index,
                                                 int count,
                                                 bool bIsEffect)
@@ -958,7 +959,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                         menu,
                         finder,
                         callback,
-                        multi,
+                        nameSuffix,
                         index,
                         count,
                         bIsEffect,
@@ -971,12 +972,13 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
    wxMenu *menu,
    CommandHandlerFinder finder,
    CommandFunctorPointer callback,
-   bool multi,
+   const wxString &nameSuffix,
    int index,
    int count,
    bool bIsEffect,
    const CommandParameter &parameter)
 {
+   const bool multi = !nameSuffix.empty();
    wxString name = nameIn;
 
    // If we have the identifier already, reuse it.
@@ -1001,7 +1003,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
       // This feature is not used for built-in effects.
       if (multi) {
          // The name needs to be clean for use by automation.
-         wxString cleanedName = wxString::Format(wxT("%s_%s"), name, label);
+         wxString cleanedName = wxString::Format(wxT("%s_%s"), name, nameSuffix);
          cleanedName.Replace( "/", "" );
          cleanedName.Replace( "&", "" );
          cleanedName.Replace( " ", "" );
@@ -1353,7 +1355,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
 }
 
 wxString CommandManager::DescribeCommandsAndShortcuts
-(const LocalizedCommandNameVector &commands) const
+(const TranslatedInternalString commands[], size_t nCommands) const
 {
    wxString mark;
    // This depends on the language setting and may change in-session after
@@ -1364,15 +1366,16 @@ wxString CommandManager::DescribeCommandsAndShortcuts
 
    static const wxString &separatorFormat = wxT("%s / %s");
    wxString result;
-   for (const auto &pair : commands) {
+   for (size_t ii = 0; ii < nCommands; ++ii) {
+      const auto &pair = commands[ii];
       // If RTL, then the control character forces right-to-left sequencing of
       // "/" -separated command names, and puts any "(...)" shortcuts to the
       // left, consistently with accelerators in menus (assuming matching
       // operating system prefernces for language), even if the command name
       // was missing from the translation file and defaulted to the English.
-      auto piece = wxString::Format(wxT("%s%s"), mark, pair.first);
+      auto piece = wxString::Format(wxT("%s%s"), mark, pair.Translated());
 
-      wxString name{ pair.second };
+      wxString name{ pair.Internal() };
       if (!name.empty()) {
          auto keyStr = GetKeyFromName(name);
          if (!keyStr.empty()){

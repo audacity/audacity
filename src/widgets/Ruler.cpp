@@ -2897,9 +2897,8 @@ void AdornedRulerPanel::UpdateButtonStates()
 {
    auto common = [this]
    (AButton &button, const wxString &commandName, const wxString &label) {
-      CommandManager::LocalizedCommandNameVector commands( 1u,
-         { label, commandName } );
-      ToolBar::SetButtonToolTip(button, commands);
+      TranslatedInternalString command{ commandName, label };
+      ToolBar::SetButtonToolTip( button, &command, 1u );
       button.SetLabel(button.GetToolTipText());
 
       button.UpdateStatus();

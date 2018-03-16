@@ -825,7 +825,7 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 }
 
 void ToolBar::SetButtonToolTip
-(AButton &button, const LocalizedCommandNameVector &commands)
+(AButton &button, const TranslatedInternalString commands[], size_t nCommands)
 {
    wxString result;
    const auto project = GetActiveProject();
@@ -833,7 +833,7 @@ void ToolBar::SetButtonToolTip
       project ? project->GetCommandManager() : nullptr;
    if (commandManager)
       result =
-         commandManager->DescribeCommandsAndShortcuts(commands);
+         commandManager->DescribeCommandsAndShortcuts(commands, nCommands);
    button.SetToolTip(result);
 }
 

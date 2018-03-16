@@ -48,9 +48,8 @@ wxString MuteButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   CommandManager::LocalizedCommandNameVector commands( 1u,
-      { name, wxT("TrackMute") } );
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackMute"), name };
+   return commandManager->DescribeCommandsAndShortcuts(&command, 1u);
 }
 
 UIHandlePtr MuteButtonHandle::HitTest
@@ -105,9 +104,8 @@ wxString SoloButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   CommandManager::LocalizedCommandNameVector commands( 1u,
-      { name, wxT("TrackSolo")  } );
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackSolo"), name };
+   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr SoloButtonHandle::HitTest

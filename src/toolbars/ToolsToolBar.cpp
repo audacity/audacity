@@ -138,9 +138,9 @@ void ToolsToolBar::RegenerateTooltips()
    };
 
    for (const auto &entry : table) {
-      LocalizedCommandNameVector commands( 1u,
-         { wxGetTranslation(entry.untranslatedLabel), entry.commandName } );
-      ToolBar::SetButtonToolTip(*mTool[entry.tool], commands);
+      TranslatedInternalString command{
+         entry.commandName, wxGetTranslation(entry.untranslatedLabel) };
+      ToolBar::SetButtonToolTip( *mTool[entry.tool], &command, 1u );
    }
 
    #endif
