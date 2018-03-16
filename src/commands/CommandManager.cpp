@@ -979,7 +979,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 
 CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
    const wxString & label,
-   bool WXUNUSED(hasDialog),
+   bool hasDialog,
    const wxString & accel,
    wxMenu *menu,
    CommandHandlerFinder finder,
@@ -1046,6 +1046,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 
       entry->name = name;
       entry->label = label;
+      entry->hasDialog = hasDialog;
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
@@ -1678,8 +1679,10 @@ void CommandManager::GetAllCommandNames(wxArrayString &names,
 }
 
 void CommandManager::GetAllCommandLabels(wxArrayString &names,
+                                         std::vector<bool> &vHasDialog,
                                         bool includeMultis) const
 {
+   vHasDialog.clear();
    for(const auto &entry : mCommandList) {
       // This is fetching commands from the menus, for use as batch commands.
       // Until we have properly merged EffectManager and CommandManager
@@ -1688,9 +1691,9 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
       if ( entry->isEffect )
          continue;
       if (!entry->multi)
-         names.Add(entry->label);
+         names.Add(entry->label), vHasDialog.push_back(entry->hasDialog);
       else if( includeMultis )
-         names.Add(entry->label);
+         names.Add(entry->label), vHasDialog.push_back(entry->hasDialog);
    }
 }
 

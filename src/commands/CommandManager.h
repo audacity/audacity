@@ -83,6 +83,7 @@ struct CommandListEntry
    bool isGlobal;
    bool isOccult;
    bool isEffect;
+   bool hasDialog;
    CommandFlag flags;
    CommandMask mask;
 };
@@ -288,7 +289,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void GetCategories(wxArrayString &cats);
    void GetAllCommandNames(wxArrayString &names, bool includeMultis) const;
-   void GetAllCommandLabels(wxArrayString &labels, bool includeMultis) const;
+   void GetAllCommandLabels(
+      wxArrayString &labels, std::vector<bool> &vHasDialog,
+      bool includeMultis) const;
    void GetAllCommandData(
       wxArrayString &names,
       std::vector<NormalizedKeyString> &keys,
