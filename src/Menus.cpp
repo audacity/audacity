@@ -1195,13 +1195,11 @@ void AudacityProject::CreateMenusAndCommands()
       //c->AddSeparator();
 #endif
 
-      //Not needed anymore as ManageMacros does both.
-      //c->AddItem(wxT("ApplyMacro"), _("Appl&y Macro..."), FN(OnApplyMacro),
-      //   AudioIONotBusyFlag,
-      //   AudioIONotBusyFlag);
       c->AddItem(wxT("ManageMacros"), XXO("&Macros..."), FN(OnManageMacros));
 
       c->BeginSubMenu(_("&Apply Macro"));
+      c->AddItem(wxT("ApplyMacrosPalette"), XXO("&Palette..."), FN(OnApplyMacrosPalette));
+      c->AddSeparator();
       PopulateMacrosMenu( c, AudioIONotBusyFlag );
       c->EndSubMenu();
       c->AddSeparator();
@@ -6896,7 +6894,7 @@ void AudacityProject::OnApplyMacroDirectly(const CommandContext &context )
    ModifyUndoMenuItems();
 }
 
-void AudacityProject::OnApplyMacro(const CommandContext &WXUNUSED(context) )
+void AudacityProject::OnApplyMacrosPalette(const CommandContext &WXUNUSED(context) )
 {
    const bool bExpanded = false;
    if (!mMacrosWindow)
