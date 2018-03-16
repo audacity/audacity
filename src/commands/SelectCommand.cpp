@@ -36,44 +36,91 @@ explicitly code all three.
 #include "SelectCommand.h"
 #include "../Project.h"
 #include "../Track.h"
+#include "../TrackPanel.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
+
+// Relative to project and relative to selection cover MOST options, since you can already
+// set a selection to a clip.
+const int nRelativeTos =6;
+static const wxString kRelativeTo[nRelativeTos] =
+{
+   XO("ProjectStart"),
+   XO("Project"),
+   XO("ProjectEnd"),
+   XO("SelectionStart"),
+   XO("Selection"),
+   XO("SelectionEnd")
+};
+
 bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
-   S.OptionalY( bHasT0     ).Define( mT0, wxT("Start"), 0.0, 0.0, (double)FLT_MAX);
-   S.OptionalY( bHasT1     ).Define( mT1, wxT("End"), 0.0, 0.0, (double)FLT_MAX);
-   S.OptionalY( bHasFromEnd).Define( mFromEnd, wxT("FromEnd"),   false );
+   wxArrayString relativeSpec( nRelativeTos, kRelativeTo );
+   // Allow selection down to -ve 100seconds.
+   // Typically used to expand/contract selections by a small amount.
+   S.OptionalY( bHasT0           ).Define( mT0, wxT("Start"), 0.0, -100.0, (double)FLT_MAX);
+   S.OptionalY( bHasT1           ).Define( mT1, wxT("End"), 0.0, -100.0, (double)FLT_MAX);
+   S.OptionalN( bHasRelativeSpec ).DefineEnum( mRelativeTo,   wxT("RelativeTo"), 0, relativeSpec );
    return true;
 }
 
 void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 {
+   wxArrayString relativeSpec( nRelativeTos, kRelativeTo );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
       S.Optional( bHasT0 ).TieTextBox(_("Start Time:"), mT0);
       S.Optional( bHasT1 ).TieTextBox(_("End Time:"),   mT1);
-   }
-   S.EndMultiColumn();
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      // Always used, so no optional checkbox.
-      S.TieCheckBox(_("From End:"), mFromEnd );
+      // Chooses what time is relative to.
+      S.Optional( bHasRelativeSpec ).TieChoice( 
+         _("Relative To:"), mRelativeTo, &relativeSpec);
    }
    S.EndMultiColumn();
 }
 
 bool SelectTimeCommand::Apply(const CommandContext & context){
+   // Many commands need focus on track panel.
+   // No harm in setting it with a scripted select.
+   context.GetProject()->GetTrackPanel()->SetFocus();
    if( !bHasT0 && !bHasT1 )
       return true;
 
-   if( mFromEnd ){
-      double TEnd = context.GetProject()->GetTracks()->GetEndTime();
-      context.GetProject()->mViewInfo.selectedRegion.setTimes(TEnd - mT0, TEnd - mT1);
-      return true;
+   AudacityProject * p = context.GetProject();
+   double end = p->GetTracks()->GetEndTime();
+   double t0;
+   double t1;
+
+   switch( bHasRelativeSpec ? mRelativeTo : 0 ){
+   default:
+   case 0: //project start
+      t0 = mT0;
+      t1 = mT1;
+      break;
+   case 1: //project
+      t0 = mT0;
+      t1 = end + mT1;
+      break;
+   case 2: //project end;
+      t0 = end - mT0;
+      t1 = end - mT1;
+      break;
+   case 3: //selection start
+      t0 = mT0 + p->GetSel0();
+      t1 = mT1 + p->GetSel0();
+      break;
+   case 4: //selection
+      t0 = mT0 + p->GetSel0();
+      t1 = mT1 + p->GetSel1();
+      break;
+   case 5: //selection end
+      t0 =  p->GetSel1() - mT0;
+      t1 =  p->GetSel1() - mT1;
+      break;
    }
-   context.GetProject()->mViewInfo.selectedRegion.setTimes(mT0, mT1);
+
+   p->mViewInfo.selectedRegion.setTimes( t0, t1);
    return true;
 }
 

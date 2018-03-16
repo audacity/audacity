@@ -46,9 +46,11 @@ public:
    bool bHasT0;
    bool bHasT1;
    bool bHasFromEnd;
+   bool bHasRelativeSpec;
 
    double mT0;
    double mT1;
+   int mRelativeTo;
    bool mFromEnd;
 };
 
