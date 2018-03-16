@@ -704,6 +704,7 @@ void CommandManager::ClearCurrentMenu()
    mCurrentMenu = nullptr;
 }
 
+#if 0
 ///
 /// Add a menu item to the current menu.  When the user selects it, the
 /// given functor will be called
@@ -760,7 +761,7 @@ void CommandManager::InsertItem(const wxString & name,
       }
    }
 
-   CommandListEntry *entry = NewIdentifier(name, label_in, menu, finder, callback, {}, 0, 0, false);
+   CommandListEntry *entry = NewIdentifier(name, label_in, false, menu, finder, callback, {}, 0, 0, false);
    int ID = entry->id;
    wxString label = GetLabel(entry);
 
@@ -774,32 +775,36 @@ void CommandManager::InsertItem(const wxString & name,
 
    mbSeparatorAllowed = true;
 }
+#endif
 
 
 
 void CommandManager::AddCheck(const wxChar *name,
                               const wxChar *label,
+                              bool hasDialog,
                               CommandHandlerFinder finder,
                               CommandFunctorPointer callback,
                               int checkmark)
 {
-   AddItem(name, label, finder, callback, wxT(""),
+   AddItem(name, label, hasDialog, finder, callback, wxT(""),
            NoFlagsSpecifed, NoFlagsSpecifed, checkmark);
 }
 
 void CommandManager::AddCheck(const wxChar *name,
                               const wxChar *label,
+                              bool hasDialog,
                               CommandHandlerFinder finder,
                               CommandFunctorPointer callback,
                               int checkmark,
                               CommandFlag flags,
                               CommandMask mask)
 {
-   AddItem(name, label, finder, callback, wxT(""), flags, mask, checkmark);
+   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, checkmark);
 }
 
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label,
+                             bool hasDialog,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
@@ -807,11 +812,12 @@ void CommandManager::AddItem(const wxChar *name,
                              bool bIsEffect, 
                              const CommandParameter &parameter)
 {
-   AddItem(name, label, finder, callback, wxT(""), flags, mask, -1, bIsEffect, parameter);
+   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, -1, bIsEffect, parameter);
 }
 
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label_in,
+                             bool hasDialog,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
                              const wxChar *accel,
@@ -827,7 +833,7 @@ void CommandManager::AddItem(const wxChar *name,
    else 
       cookedParameter = parameter;
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, accel, CurrentMenu(), finder, callback,
+      NewIdentifier(name, label_in, hasDialog, accel, CurrentMenu(), finder, callback,
                     {}, 0, 0, bIsEffect, cookedParameter);
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
@@ -864,6 +870,8 @@ void CommandManager::AddItemList(const wxString & name,
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
       CommandListEntry *entry = NewIdentifier(name,
                                               items[i].Translated(),
+                                              // No means yet to specify !
+                                              false,
                                               CurrentMenu(),
                                               finder,
                                               callback,
@@ -897,7 +905,7 @@ void CommandManager::AddCommand(const wxChar *name,
                                 CommandFlag flags,
                                 CommandMask mask)
 {
-   NewIdentifier(name, label_in, accel, NULL, finder, callback, {}, 0, 0, false, {});
+   NewIdentifier(name, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
    if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
       SetCommandFlags(name, flags, mask);
@@ -906,12 +914,13 @@ void CommandManager::AddCommand(const wxChar *name,
 
 void CommandManager::AddGlobalCommand(const wxChar *name,
                                       const wxChar *label_in,
+                                      bool hasDialog,
                                       CommandHandlerFinder finder,
                                       CommandFunctorPointer callback,
                                       const wxChar *accel)
 {
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, accel, NULL, finder, callback,
+      NewIdentifier(name, label_in, hasDialog, accel, NULL, finder, callback,
                     {}, 0, 0, false, {});
 
    entry->enabled = false;
@@ -945,6 +954,7 @@ int CommandManager::NextIdentifier(int ID)
 ///and keep menus above wxID_HIGHEST
 CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                                                 const wxString & label,
+                                                bool hasDialog,
                                                 wxMenu *menu,
                                                 CommandHandlerFinder finder,
                                                 CommandFunctorPointer callback,
@@ -955,6 +965,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 {
    return NewIdentifier(name,
                         label.BeforeFirst(wxT('\t')),
+                        hasDialog,
                         label.AfterFirst(wxT('\t')),
                         menu,
                         finder,
@@ -968,6 +979,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 
 CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
    const wxString & label,
+   bool hasDialog,
    const wxString & accel,
    wxMenu *menu,
    CommandHandlerFinder finder,
@@ -1034,6 +1046,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 
       entry->name = name;
       entry->label = label;
+      entry->hasDialog = hasDialog;
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
@@ -1666,8 +1679,10 @@ void CommandManager::GetAllCommandNames(wxArrayString &names,
 }
 
 void CommandManager::GetAllCommandLabels(wxArrayString &names,
+                                         std::vector<bool> &vHasDialog,
                                         bool includeMultis) const
 {
+   vHasDialog.clear();
    for(const auto &entry : mCommandList) {
       // This is fetching commands from the menus, for use as batch commands.
       // Until we have properly merged EffectManager and CommandManager
@@ -1676,9 +1691,9 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
       if ( entry->isEffect )
          continue;
       if (!entry->multi)
-         names.Add(entry->label);
+         names.Add(entry->label), vHasDialog.push_back(entry->hasDialog);
       else if( includeMultis )
-         names.Add(entry->label);
+         names.Add(entry->label), vHasDialog.push_back(entry->hasDialog);
    }
 }
 
