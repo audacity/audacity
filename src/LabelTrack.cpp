@@ -2725,7 +2725,11 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
 
    mLabels.insert(mLabels.begin() + pos, l);
 
-   if( restoreFocus == -1 )
+   // restoreFocus is -2 e.g. from Nyquist label creation, when we should not
+   // even lose the focus and open the label to edit in the first place.
+   // -1 means we don't need to restore it to anywhere.
+   // 0 or above is the track to restore to afetr editing the label is complete.
+   if( restoreFocus >= -1 )
       mSelIndex = pos;
 
    // Make sure the caret is visible
