@@ -154,12 +154,14 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    wxMenu* BeginSubMenu(const wxString & tName);
    void EndSubMenu();
 
+   /*
    void InsertItem(const wxString & name,
                    const wxString & label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
                    const wxString & after,
                    int checkmark = -1);
+    */
 
    void AddItemList(const wxString & name,
                     const TranslatedInternalString items[],
@@ -170,12 +172,14 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
+                 bool hasDialog,
                  CommandHandlerFinder finder,
                  CommandFunctorPointer callback,
                  int checkmark = 0);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
+                 bool hasDialog,
                  CommandHandlerFinder finder,
                  CommandFunctorPointer callback,
                  int checkmark,
@@ -184,6 +188,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void AddItem(const wxChar *name,
                 const wxChar *label,
+                bool hasDialog,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags = NoFlagsSpecifed,
@@ -193,6 +198,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void AddItem(const wxChar *name,
                 const wxChar *label_in,
+                bool hasDialog,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 const wxChar *accel,
@@ -223,6 +229,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
+                         bool hasDialog,
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
                          const wxChar *accel);
@@ -333,6 +340,7 @@ protected:
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
+                                   bool hasDialog,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
                                    CommandFunctorPointer callback,
@@ -342,6 +350,7 @@ protected:
                                    bool bIsEffect);
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
+                                   bool hasDialog,
                                    const wxString & accel,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,

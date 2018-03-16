@@ -296,7 +296,7 @@ static bool SortEffectsByType(const PluginDescriptor *a, const PluginDescriptor 
 static CommandHandlerObject &ident(AudacityProject &project) { return project; }
 
 #define FN(X) ident, static_cast<CommandFunctorPointer>(& AudacityProject :: X)
-#define XXO _
+#define XXO(X) _(X), wxString{X}.Contains("...")
 
 void AudacityProject::CreateMenusAndCommands()
 {
@@ -855,7 +855,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(  wxT("Record2ndChoice"),
          // Our first choice is bound to R (by default) and gets the prime position.
          // We supply the name for the 'other one' here.  It should be bound to Shift+R
-         bPreferNewTrack ? _("&Append Record") : _("Record &New Track"),
+         (bPreferNewTrack ? _("&Append Record") : _("Record &New Track")), false,
          FN(OnRecord2ndChoice),
          wxT("Shift+R")
       );
@@ -1145,7 +1145,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 #endif
 
-      c->AddItem(wxT("RepeatLastEffect"), buildMenuLabel, FN(OnRepeatLastEffect), wxT("Ctrl+R"),
+      c->AddItem(wxT("RepeatLastEffect"), buildMenuLabel, false, FN(OnRepeatLastEffect), wxT("Ctrl+R"),
          AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | HasLastEffectFlag,
          AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | HasLastEffectFlag);
 
@@ -1713,7 +1713,7 @@ void AudacityProject::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  
 
    for (i = 0; i < (int)names.GetCount(); i++) {
       wxString MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
-      c->AddItem(MacroID, names[i], FN(OnApplyMacroDirectly),
+      c->AddItem(MacroID, names[i], false, FN(OnApplyMacroDirectly),
          flags,
          flags);
    }
@@ -1800,6 +1800,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       grouped = true;
    }
 
+   std::vector<bool> vHasDialog;
    wxArrayString groupNames;
    PluginIDList groupPlugs;
    std::vector<CommandFlag> groupFlags;
@@ -1812,6 +1813,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          const PluginDescriptor *plug = plugs[i];
 
+         bool hasDialog = plug->GetUntranslatedName().Contains("...");
          wxString name = plug->GetTranslatedName();
 
          if (plug->IsEffectInteractive())
@@ -1843,7 +1845,8 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
                c->BeginSubMenu(last);
             }
 
-            AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags, isDefault);
+            AddEffectMenuItemGroup(c, groupNames, vHasDialog,
+                                   groupPlugs, groupFlags, isDefault);
 
             if (!last.IsEmpty())
             {
@@ -1851,12 +1854,14 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
             }
 
             groupNames.Clear();
+            vHasDialog.clear();
             groupPlugs.Clear();
             groupFlags.clear();
             last = current;
          }
 
          groupNames.Add(name);
+         vHasDialog.push_back(hasDialog);
          groupPlugs.Add(plug->GetID());
          groupFlags.push_back(plug->IsEffectRealtime() ? realflags : batchflags);
       }
@@ -1865,7 +1870,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          c->BeginSubMenu(current);
 
-         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags, isDefault);
+         AddEffectMenuItemGroup(c, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
 
          c->EndSubMenu();
       }
@@ -1876,6 +1881,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          const PluginDescriptor *plug = plugs[i];
 
+         bool hasDialog = plug->GetUntranslatedName().Contains("...");
          wxString name = plug->GetTranslatedName();
 
          if (plug->IsEffectInteractive())
@@ -1904,13 +1910,14 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          }
 
          groupNames.Add(group + name);
+         vHasDialog.push_back(hasDialog);
          groupPlugs.Add(plug->GetID());
          groupFlags.push_back(plug->IsEffectRealtime() ? realflags : batchflags);
       }
 
       if (groupNames.GetCount() > 0)
       {
-         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags, isDefault);
+         AddEffectMenuItemGroup(c, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
       }
 
    }
@@ -1920,6 +1927,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
 void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
                                              const wxArrayString & names,
+                                             const std::vector<bool> &vHasDialog,
                                              const PluginIDList & plugs,
                                              const std::vector<CommandFlag> & flags,
                                              bool isDefault)
@@ -1983,6 +1991,7 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
             if( plug->GetPluginType() == PluginTypeEffect )
                c->AddItem(item,
                           item,
+                          item.Contains("..."),
                           FN(OnEffect),
                           flags[i],
                           flags[i], true, plugs[i]);
@@ -1998,6 +2007,7 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
          if( plug->GetPluginType() == PluginTypeEffect )
             c->AddItem(names[i],
                        names[i],
+                       vHasDialog[i],
                        FN(OnEffect),
                        flags[i],
                        flags[i], true, plugs[i]);
