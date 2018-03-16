@@ -182,26 +182,19 @@ void WaveTrackVZoomHandle::DoZoom
       break;
    case kZoomIn:
       {
-         // Zoom in centered on cursor
-         if (min < -1.0 || max > 1.0) {
-            min = -1.0;
-            max = 1.0;
-         }
-         else {
-            // Enforce maximum vertical zoom
-            const float oldRange = max - min;
-            const float l = std::max(ZOOMLIMIT, 0.5f * oldRange);
-            const float ratio = l / (max - min);
+         // Enforce maximum vertical zoom
+         const float oldRange = max - min;
+         const float l = std::max(ZOOMLIMIT, 0.5f * oldRange);
+         const float ratio = l / (max - min);
 
-            const float p1 = (zoomStart - ypos) / (float)height;
-            const float c = (max * (1.0 - p1) + min * p1);
-            if (fixedMousePoint)
-               min = c - ratio * (1.0f - p1) * oldRange,
-               max = c + ratio * p1 * oldRange;
-            else
-               min = c - 0.5 * l,
-               max = c + 0.5 * l;
-         }
+         const float p1 = (zoomStart - ypos) / (float)height;
+         float c = (max * (1.0 - p1) + min * p1);
+         if (fixedMousePoint)
+            min = c - ratio * (1.0f - p1) * oldRange,
+            max = c + ratio * p1 * oldRange;
+         else
+            min = c - 0.5 * l,
+            max = c + 0.5 * l;
       }
       break;
    case kZoomOut:
@@ -688,7 +681,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
          const auto partner = static_cast<WaveTrack *>(pTrack->GetLink());
          DoZoom(pProject, pTrack.get(), partner,
                 shiftDown ? (rightUp ? kZoom1to1 : kZoomOut)  : kZoomIn,
-            mRect, mZoomStart, mZoomEnd, false);
+            mRect, mZoomStart, mZoomEnd, !shiftDown);
       }
    }
 
