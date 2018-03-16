@@ -96,6 +96,18 @@ void TracksPrefs::Populate()
    mZoomCodes.push_back( WaveTrack::kZoomMinutes );
    mZoomChoices.Add( _("Seconds") );
    mZoomCodes.push_back( WaveTrack::kZoomSeconds );
+   mZoomChoices.Add( _("5ths of Seconds") );
+   mZoomCodes.push_back( WaveTrack::kZoom5ths );
+   mZoomChoices.Add( _("10ths of Seconds") );
+   mZoomCodes.push_back( WaveTrack::kZoom10ths );
+   mZoomChoices.Add( _("20ths of Seconds") );
+   mZoomCodes.push_back( WaveTrack::kZoom20ths );
+   mZoomChoices.Add( _("50ths of Seconds") );
+   mZoomCodes.push_back( WaveTrack::kZoom50ths );
+   mZoomChoices.Add( _("100ths of Seconds") );
+   mZoomCodes.push_back( WaveTrack::kZoom100ths );
+   mZoomChoices.Add( _("500ths of Seconds") );
+   mZoomCodes.push_back( WaveTrack::kZoom500ths );
    mZoomChoices.Add( _("MilliSeconds") );
    mZoomCodes.push_back( WaveTrack::kZoomMilliSeconds );
    mZoomChoices.Add( _("Samples") );

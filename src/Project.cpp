@@ -5975,6 +5975,24 @@ double AudacityProject::GetZoomOfPreset( int preset ){
       case WaveTrack::kZoomSeconds:
          result = pixelsPerUnit * 1.0;
          break;
+      case WaveTrack::kZoom5ths:
+         result = pixelsPerUnit * 5.0;
+         break;
+      case WaveTrack::kZoom10ths:
+         result = pixelsPerUnit * 10.0;
+         break;
+      case WaveTrack::kZoom20ths:
+         result = pixelsPerUnit * 20.0;
+         break;
+      case WaveTrack::kZoom50ths:
+         result = pixelsPerUnit * 50.0;
+         break;
+      case WaveTrack::kZoom100ths:
+         result = pixelsPerUnit * 100.0;
+         break;
+      case WaveTrack::kZoom500ths:
+         result = pixelsPerUnit * 500.0;
+         break;
       case WaveTrack::kZoomMilliSeconds:
          result = pixelsPerUnit * 1000.0;
          break;
