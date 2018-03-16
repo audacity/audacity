@@ -123,20 +123,12 @@ private:
    void OnDown(wxCommandEvent &event);
    void OnDefaults(wxCommandEvent &event);
 
-   //void OnApplyToProject(wxCommandEvent &event);
-   //void OnApplyToFiles(wxCommandEvent &event);
-
    void OnOK(wxCommandEvent &event);
 
    void OnKeyDown(wxKeyEvent &event);
    void FitColumns();
    void InsertCommandAt(int item);
    bool SaveChanges();
-
-   // These are already provided by ApplyMacroDialog
-   //wxListCtrl *mList;   /// List of commands in current command chain.
-   //MacroCommands mMacroCommands;  /// Provides list of available commands.
-   //wxListCtrl *mMacros; /// List of chains.
 
    wxButton *mRemove;
    wxButton *mRename;

@@ -10,8 +10,8 @@
 ********************************************************************//*!
 
 \class MacroCommands
-\brief Maintains the chain of commands used in batch processing.
-See also MacroCommandDialog and ApplyMacroDialog.
+\brief Maintains the list of commands for batch/macro 
+processing.  See also MacrosWindow and ApplyMacroDialog.
 
 *//*******************************************************************/
 
@@ -157,13 +157,13 @@ int MacroCommands::GetCount()
    return (int)mCommandMacro.GetCount();
 }
 
-bool MacroCommands::ReadMacro(const wxString & chain)
+bool MacroCommands::ReadMacro(const wxString & macro)
 {
-   // Clear any previous chain
+   // Clear any previous macro
    ResetMacro();
 
    // Build the filename
-   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -203,10 +203,10 @@ bool MacroCommands::ReadMacro(const wxString & chain)
 }
 
 
-bool MacroCommands::WriteMacro(const wxString & chain)
+bool MacroCommands::WriteMacro(const wxString & macro)
 {
    // Build the filename
-   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -233,7 +233,7 @@ bool MacroCommands::WriteMacro(const wxString & chain)
       tf.AddLine(mCommandMacro[i] + wxT(":") + mParamsMacro[ i ]);
    }
 
-   // Write the chain
+   // Write the macro
    tf.Write();
 
    // Done with the file
@@ -242,10 +242,10 @@ bool MacroCommands::WriteMacro(const wxString & chain)
    return true;
 }
 
-bool MacroCommands::AddMacro(const wxString & chain)
+bool MacroCommands::AddMacro(const wxString & macro)
 {
    // Build the filename
-   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -254,26 +254,26 @@ bool MacroCommands::AddMacro(const wxString & chain)
    return tf.Create();
 }
 
-bool MacroCommands::DeleteMacro(const wxString & chain)
+bool MacroCommands::DeleteMacro(const wxString & macro)
 {
    // Build the filename
-   wxFileName name(FileNames::MacroDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Delete it...wxRemoveFile will display errors
    auto result = wxRemoveFile(name.GetFullPath());
 
    // Delete any legacy chain that it shadowed
-   auto oldPath = wxFileName{ FileNames::LegacyChainDir(), chain, wxT("txt") };
+   auto oldPath = wxFileName{ FileNames::LegacyChainDir(), macro, wxT("txt") };
    wxRemoveFile(oldPath.GetFullPath()); // Don't care about this return value
 
    return result;
 }
 
-bool MacroCommands::RenameMacro(const wxString & oldchain, const wxString & newchain)
+bool MacroCommands::RenameMacro(const wxString & oldmacro, const wxString & newmacro)
 {
    // Build the filenames
-   wxFileName oname(FileNames::MacroDir(), oldchain, wxT("txt"));
-   wxFileName nname(FileNames::MacroDir(), newchain, wxT("txt"));
+   wxFileName oname(FileNames::MacroDir(), oldmacro, wxT("txt"));
+   wxFileName nname(FileNames::MacroDir(), newmacro, wxT("txt"));
 
    // Rename it...wxRenameFile will display errors
    return wxRenameFile(oname.GetFullPath(), nname.GetFullPath());
@@ -808,7 +808,7 @@ bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
 
 static int MacroReentryCount = 0;
 // ApplyMacro returns true on success, false otherwise.
-// Any error reporting to the user in setting up the chain
+// Any error reporting to the user in setting up the macro
 // has already been done.
 bool MacroCommands::ApplyMacro(
    const MacroCommandsCatalog &catalog, const wxString & filename)
@@ -861,13 +861,13 @@ bool MacroCommands::ApplyMacro(
    if (name.IsEmpty())
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = _("Applied batch chain");
-      shortDesc = _("Apply chain");
+      longDesc = _("Applied macro");
+      shortDesc = _("Apply macro");
    }
    else
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = wxString::Format(_("Applied batch chain '%s'"), name);
+      longDesc = wxString::Format(_("Applied macro '%s'"), name);
       shortDesc = wxString::Format(_("Apply '%s'"), name);
    }
 

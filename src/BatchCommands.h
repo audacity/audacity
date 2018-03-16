@@ -48,7 +48,7 @@ private:
    Entries mCommands;
 };
 
-// Stores information for one chain
+// Stores information for one macro
 class MacroCommands final {
  public:
    // constructors and destructors

@@ -372,14 +372,14 @@ bool EffectEqualization::LoadFactoryDefaults()
 
 bool EffectEqualization::ValidateUI()
 {
-   // If editing a batch chain, we don't want to be using the unnamed curve so
+   // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
 
    if (mDisallowCustom && mCurveName.IsSameAs(wxT("unnamed")))
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
-      Effect::MessageBox(_("To use this EQ curve in a batch chain, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
+      Effect::MessageBox(_("To use this EQ curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          wxOK | wxCENTRE,
          _("EQ Curve needs a different name"));
       return false;
