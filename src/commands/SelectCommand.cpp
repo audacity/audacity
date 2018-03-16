@@ -66,7 +66,7 @@ bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
 
 void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 {
-   wxArrayString relativeSpec( nRelativeTos, kRelativeTo );
+   auto relativeSpec = LocalizedStrings( kRelativeTo, nRelativeTos );
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
