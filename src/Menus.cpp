@@ -1188,7 +1188,7 @@ void AudacityProject::CreateMenusAndCommands()
       // Tools Menu
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("&Tools"));
+      c->BeginMenu(_("T&ools"));
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       c->AddItem(wxT("ManageTools"), XXO("Add / Remove Plug-ins..."), FN(OnManageTools));
