@@ -674,14 +674,14 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginSubMenu(_("Clip B&oundaries"));
       c->AddItem(wxT("SelPrevClipBoundaryToCursor"), XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor), wxT(""),
-         TrackPanelHasFocus | WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
+         WaveTracksExistFlag, WaveTracksExistFlag);
       c->AddItem(wxT("SelCursorToNextClipBoundary"), XXO("Cursor to Ne&xt Clip Boundary"),
          FN(OnSelectCursorToNextClipBoundary), wxT(""),
-         TrackPanelHasFocus |WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
+         WaveTracksExistFlag, WaveTracksExistFlag);
       c->AddItem(wxT("SelPrevClip"), XXO("Previo&us Clip"), FN(OnSelectPrevClip), wxT("Alt+P"),
-         WaveTracksExistFlag | TrackPanelHasFocus, WaveTracksExistFlag | TrackPanelHasFocus);
+         WaveTracksExistFlag, WaveTracksExistFlag);
       c->AddItem(wxT("SelNextClip"), XXO("N&ext Clip"), FN(OnSelectNextClip), wxT("Alt+N"),
-         WaveTracksExistFlag | TrackPanelHasFocus, WaveTracksExistFlag | TrackPanelHasFocus);
+         WaveTracksExistFlag, WaveTracksExistFlag);
 
       c->EndSubMenu();
       /////////////////////////////////////////////////////////////////////////////
@@ -887,9 +887,9 @@ void AudacityProject::CreateMenusAndCommands()
          TracksSelectedFlag, TracksSelectedFlag);
 
       c->AddItem(wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"), FN(OnCursorPrevClipBoundary), wxT(""),
-         TrackPanelHasFocus | WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
+         WaveTracksExistFlag, WaveTracksExistFlag);
       c->AddItem(wxT("CursNextClipBoundary"), XXO("Ne&xt Clip Boundary"), FN(OnCursorNextClipBoundary), wxT(""),
-         TrackPanelHasFocus | WaveTracksExistFlag,  TrackPanelHasFocus | WaveTracksExistFlag);
+         WaveTracksExistFlag, WaveTracksExistFlag);
 
       c->AddItem(wxT("CursProjectStart"), XXO("&Project Start"), FN(OnSkipStart), wxT("Home"));
       c->AddItem(wxT("CursProjectEnd"), XXO("Project E&nd"), FN(OnSkipEnd), wxT("End"));
