@@ -1709,8 +1709,10 @@ void CommandManager::GetAllCommandData(
    bool includeMultis)
 {
    for(const auto &entry : mCommandList) {
-      if ( entry->isEffect )
-         continue;
+      // GetAllCommandData is used by KeyConfigPrefs.
+      // It does need the effects.
+      //if ( entry->isEffect )
+      //   continue;
       if (!entry->multi)
       {
          names.Add(entry->name);
