@@ -70,7 +70,7 @@ BEGIN_EVENT_TABLE(ApplyMacroDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
-   wxDialogWrapper(parent, wxID_ANY, _("Apply Macros"),
+   wxDialogWrapper(parent, wxID_ANY, _("Macros Palette"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
    , mCatalog( GetActiveProject() )
@@ -80,8 +80,8 @@ ApplyMacroDialog::ApplyMacroDialog(wxWindow * parent, bool bInherited):
    mbExpanded = false;
    if( bInherited )
       return;
-   SetLabel(_("Apply Macros"));         // Provide visual label
-   SetName(_("Apply Macros"));          // Provide audible label
+   SetLabel(_("Macros Palette"));         // Provide visual label
+   SetName(_("Macros Palette"));          // Provide audible label
    Populate();
 
 }
@@ -530,7 +530,7 @@ MacrosWindow::MacrosWindow(wxWindow * parent, bool bExpanded):
    ApplyMacroDialog(parent, true)
 {
    mbExpanded = bExpanded;
-   wxString Title = mbExpanded ? _("Manage Macros") : _("Apply Macros");
+   wxString Title = mbExpanded ? _("Manage Macros") : _("Macros Palette");
    SetLabel( Title );   // Provide visual label
    SetName(  Title );   // Provide audible label
    SetTitle( Title );
@@ -743,7 +743,7 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    SetPosition( p );
    mResize->SetFocus();
 
-   wxString Title = mbExpanded ? _("Manage Macros") : _("Apply Macros");
+   wxString Title = mbExpanded ? _("Manage Macros") : _("Macros Palette");
    SetLabel( Title );         // Provide visual label
    SetName( Title );          // Provide audible label
    SetTitle( Title );
