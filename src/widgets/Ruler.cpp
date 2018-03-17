@@ -3075,8 +3075,8 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 
    if (start >= 0)
    {
-      const int x1 = Time2Pos(start) + 1;
-      const int x2 = Time2Pos(end);
+      const int x1 = Time2Pos(start);
+      const int x2 = Time2Pos(end)-2;
       int y = mInner.y - TopMargin + mInner.height/2;
 
       bool isLocked = mProject->IsPlayRegionLocked();
@@ -3202,8 +3202,8 @@ void AdornedRulerPanel::DrawSelection()
 void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
 {
    // Draw selection
-   const int p0 = 1 + max(0, Time2Pos(mViewInfo->selectedRegion.t0()));
-   const int p1 = 2 + min(mInner.width, Time2Pos(mViewInfo->selectedRegion.t1()));
+   const int p0 = max(1, Time2Pos(mViewInfo->selectedRegion.t0()));
+   const int p1 = min(mInner.width, Time2Pos(mViewInfo->selectedRegion.t1()));
 
    dc->SetBrush( wxBrush( theTheme.Colour( clrRulerBackground )) );
    dc->SetPen(   wxPen(   theTheme.Colour( clrRulerBackground )) );

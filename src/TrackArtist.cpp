@@ -3417,10 +3417,6 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
    //MM: Draw background. We should optimize that a bit more.
-   //AWD: "+ 1.5" and "+ 2.5" throughout match code in
-   //AdornedRulerPanel::DoDrawSelection() and make selection line up with ruler.
-   //I don't know if/why this is correct.
-
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
@@ -3432,7 +3428,7 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
       wxRect within = rect;
       wxRect after = rect;
 
-      before.width = (int)(zoomInfo.TimeToPosition(sel0) + 2);
+      before.width = (int)(zoomInfo.TimeToPosition(sel0) );
       if (before.GetRight() > rect.GetRight()) {
          before.width = rect.width;
       }
@@ -3443,7 +3439,7 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
 
          within.x = 1 + before.GetRight();
       }
-      within.width = rect.x + (int)(zoomInfo.TimeToPosition(sel1) + 2) - within.x;
+      within.width = rect.x + (int)(zoomInfo.TimeToPosition(sel1) ) - within.x -1;
 
       if (within.GetRight() > rect.GetRight()) {
          within.width = 1 + rect.GetRight() - within.x;
