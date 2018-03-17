@@ -46,12 +46,12 @@ explicitly code all three.
 const int nRelativeTos =6;
 static const wxString kRelativeTo[nRelativeTos] =
 {
-   XO("ProjectStart"),
+   XO("Project Start"),
    XO("Project"),
-   XO("ProjectEnd"),
-   XO("SelectionStart"),
+   XO("Project End"),
+   XO("Selection Start"),
    XO("Selection"),
-   XO("SelectionEnd")
+   XO("Selection End")
 };
 
 bool SelectTimeCommand::DefineParams( ShuttleParams & S ){

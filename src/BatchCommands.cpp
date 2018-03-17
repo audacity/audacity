@@ -107,6 +107,7 @@ MacroCommands::MacroCommands()
 
 static const wxString MP3Conversion = XO("MP3 Conversion");
 static const wxString FadeEnds      = XO("Fade Ends");
+static const wxString SelectToEnds  = XO("Select to Ends");
 
 
 wxArrayString MacroCommands::GetNamesOfDefaultMacros()
@@ -114,6 +115,7 @@ wxArrayString MacroCommands::GetNamesOfDefaultMacros()
    wxArrayString defaults;
    defaults.Add( GetCustomTranslation( MP3Conversion ) );
    defaults.Add( GetCustomTranslation( FadeEnds )  );
+   defaults.Add( GetCustomTranslation( SelectToEnds )  );
    return defaults;
 }
 
@@ -128,10 +130,13 @@ void MacroCommands::RestoreMacro(const wxString & name)
    } else if (name == GetCustomTranslation( FadeEnds ) ){
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\"") );
         AddToMacro( wxT("FadeIn") );
-        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" FromEnd=\"1\"") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" RelativeTo=\"Project End\"") );
         AddToMacro( wxT("FadeOut") );
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"0\"") );
-   }
+   } else if (name == GetCustomTranslation( SelectToEnds ) ){
+        AddToMacro( wxT("SelCursorEnd") );
+        AddToMacro( wxT("SelStartCursor") );
+   } 
 }
 
 wxString MacroCommands::GetCommand(int index)
