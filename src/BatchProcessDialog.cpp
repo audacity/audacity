@@ -149,17 +149,21 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 }
 
 /// This clears and updates the contents of mMacros, the list of macros.
+/// It has cut-and-paste code from PopulateList, and both should call 
+/// a shared function.
 void ApplyMacroDialog::PopulateMacros()
 {
    wxArrayString names = mMacroCommands.GetNames();
    int i;
 
+   int topItem = mMacros->GetTopItem();
    mMacros->DeleteAllItems();
    for (i = 0; i < (int)names.GetCount(); i++) {
       mMacros->InsertItem(i, names[i]);
    }
 
    int item = mMacros->FindItem(-1, mActiveMacro);
+   bool bFound = item >=0;
    if (item == -1) {
       item = 0;
       mActiveMacro = mMacros->GetItemText(0);
@@ -167,10 +171,18 @@ void ApplyMacroDialog::PopulateMacros()
 
    // Select the name in the list...this will fire an event.
    mMacros->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+
+   if( 0 <= topItem && topItem < (int)mMacros->GetItemCount())
+   {
+      // Workaround for scrolling being windows only.
+      // Try to scroll back to where we once were...
+      mMacros->EnsureVisible( (int)mMacros->GetItemCount() -1 );
+      mMacros->EnsureVisible( topItem );
+      // And then make sure whatever is selected is still visible...
+      if( bFound )
+         mMacros->EnsureVisible( item );
+   }
 }
-
-
-
 
 void ApplyMacroDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
@@ -651,6 +663,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 /// This clears and updates the contents of mList, the commands for the current macro.
 void MacrosWindow::PopulateList()
 {
+   int topItem = mList->GetTopItem();
    mList->DeleteAllItems();
 
    for (int i = 0; i < mMacroCommands.GetCount(); i++) {
@@ -665,6 +678,15 @@ void MacrosWindow::PopulateList()
       mSelectedCommand = 0;
    }
    mList->SetItemState(mSelectedCommand, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+   if( 0 <= topItem && topItem < (int)mList->GetItemCount())
+   {
+      // Workaround for scrolling being windows only.
+      // Try to scroll back to where we once were...
+      mList->EnsureVisible( (int)mList->GetItemCount() -1 );
+      mList->EnsureVisible( topItem );
+      // And then make sure whatever is selected is still visible...
+      mList->EnsureVisible( mSelectedCommand );
+   }
 }
 
 /// Add one item into mList
@@ -950,6 +972,7 @@ void MacrosWindow::OnRemove(wxCommandEvent & WXUNUSED(event))
 
    mMacroCommands.DeleteMacro(name);
 
+   item++;
    if (item >= (mMacros->GetItemCount() - 1) && item >= 0) {
       item--;
    }
