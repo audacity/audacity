@@ -1743,6 +1743,11 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
       if (IsGoodLabelFirstKey(event) && typeToCreateLabel) {
          AudacityProject * pProj = GetActiveProject();
 
+
+// The commented out code can prevent label creation, causing bug 1551
+// We should only be in DoCaptureKey IF this label track has focus,
+// and in that case creating a Label is the expected/intended thing.
+#if 0
          // If we're playing, don't capture if the selection is the same as the
          // playback region (this helps prevent label track creation from
          // stealing unmodified kbd. shortcuts)
@@ -1756,6 +1761,7 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
                return false;
             }
          }
+#endif
 
          // If there's a label there already don't capture
          if( GetLabelIndex(pProj->mViewInfo.selectedRegion.t0(),
@@ -1803,7 +1809,7 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *W
       bkpSel1 != viewInfo.selectedRegion.t1())
       return RefreshCode::RefreshAll;
    else if (!event.GetSkipped())
-      return RefreshCode::RefreshCell;
+      return  RefreshCode::RefreshCell;
 
    return RefreshCode::RefreshNone;
 }
