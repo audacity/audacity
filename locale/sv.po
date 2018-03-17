@@ -10210,7 +10210,7 @@ msgstr ""
 #: src/export/Export.cpp
 #, c-format
 msgid "A file named \"%s\" already exists.  Replace?"
-msgstr "En fil med namn \"%s\" finns redan.  Ersätt?"
+msgstr "En fil med namnet \"%s\" finns redan.  Ersätt?"
 
 #: src/export/Export.cpp
 msgid ""
