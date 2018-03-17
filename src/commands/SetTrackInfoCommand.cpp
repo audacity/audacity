@@ -216,14 +216,20 @@ bool SetTrackCommand::Apply(const CommandContext & context)
                case kHalfWave: wt->SetDisplayBounds(0,1); break;
             }
          }
+
+         // In stereo tracks, both channels need selecting/deselecting.
+         if( bHasSelected )
+            t->SetSelected(bSelected);
+
          // These ones don't make sense on the second channel of a stereo track.
          if( !bIsSecondChannel ){
-            if( bHasSelected )
-               t->SetSelected(bSelected);
-            if( bHasFocused && bFocused)
+            if( bHasFocused )
             {
                TrackPanel *panel = context.GetProject()->GetTrackPanel();
-               panel->SetFocusedTrack( t );
+               if( bFocused)
+                  panel->SetFocusedTrack( t );
+               else if( t== panel->GetFocusedTrack() )
+                  panel->SetFocusedTrack( nullptr );
             }
             if( pt && bHasSolo )
                pt->SetSolo(bSolo);
