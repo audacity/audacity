@@ -272,19 +272,8 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    if( !bHasGui )
       return;
 
-
-   if (!success) {
-      Show();
-      Raise();
-      return;
-   }
-   if( mbExpanded )
-      Hide();
-   else
-   {
-      Show();
-      Raise();
-   }
+   Show();
+   Raise();
 }
 
 void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
@@ -457,13 +446,9 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       project->OnRemoveTracks(*project);
    }
    project->OnRemoveTracks(*project);
-   if( mbExpanded )
-      Hide();
-   else
-   {
-      Show();
-      Raise();
-   }
+   
+   Show();
+   Raise();
 }
 
 void ApplyMacroDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
