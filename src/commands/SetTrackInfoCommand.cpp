@@ -111,10 +111,10 @@ void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
       S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),          mTrackName );
-   }
-   S.EndMultiColumn();
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
+//   }
+//   S.EndMultiColumn();
+//   S.StartMultiColumn(3, wxALIGN_CENTER);
+//   {
       S.Optional( bHasSelected       ).TieCheckBox( _("Selected:"),           bSelected );
       S.Optional( bHasFocused        ).TieCheckBox( _("Focused:"),            bFocused);
    }
@@ -169,10 +169,10 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  1.0, -1.0);
       S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 10.0, 0.0);
-   }
-   S.EndMultiColumn();
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
+//   }
+//   S.EndMultiColumn();
+//   S.StartMultiColumn(3, wxALIGN_CENTER);
+//   {
       S.Optional( bHasSolo           ).TieCheckBox( _("Solo:"),               bSolo);
       S.Optional( bHasMute           ).TieCheckBox( _("Mute:"),               bMute);
    }

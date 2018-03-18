@@ -83,6 +83,7 @@ public:
    void ResetId();
 
 //-- Add functions.  These only add a widget or 2.
+   void HandleOptionality(const wxString &Prompt);
    void AddPrompt(const wxString &Prompt);
    void AddUnits(const wxString &Prompt);
    void AddTitle(const wxString &Prompt);
@@ -317,6 +318,8 @@ protected:
    int miIdSetByUser;
    // Proportion set by user rather than default.
    int miPropSetByUser;
+
+   bool * mpbOptionalFlag;
 
    std::unique_ptr<wxSizer> mpSubSizer;
    wxSizer * mpSizer;
