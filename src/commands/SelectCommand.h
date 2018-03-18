@@ -26,7 +26,7 @@
 
 
 #define SELECT_TIME_PLUGIN_SYMBOL XO("Select Time")
-#define SELECT_FREQUENCY_PLUGIN_SYMBOL XO("Select Frequency")
+#define SELECT_FREQUENCIES_PLUGIN_SYMBOL XO("Select Frequencies")
 #define SELECT_TRACKS_PLUGIN_SYMBOL XO("Select Tracks")
 #define SELECT_PLUGIN_SYMBOL XO("Select")
 
@@ -58,7 +58,7 @@ class SelectFrequenciesCommand : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SELECT_FREQUENCY_PLUGIN_SYMBOL;};
+   wxString GetSymbol() override {return SELECT_FREQUENCIES_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Selects a frequency range.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
