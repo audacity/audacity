@@ -10,10 +10,26 @@
 ******************************************************************//**
 
 \file SetTrackCommand.cpp
-\brief Definitions for SetTrackCommand
+\brief Definitions for SetTrackCommand built up from 
+SetTrackBase, SetTrackStatusCommand, SetTrackAudioCommand and
+SetTrackVisualsCommand
+
+\class SetTrackBase
+\brief Base class for the various SetTrackCommand classes.  
+Sbclasses provide the settings that are relevant to them.
+
+\class SetTrackStatusCommand
+\brief A SetTrackBase that sets name, selected and focus.
+
+\class SetTrackAudioCommand
+\brief A SetTrackBase that sets pan, gain, mute and solo.
+
+\class SetTrackVisualsCommand
+\brief A SetTrackBase that sets appearance of a track.
 
 \class SetTrackCommand
-\brief Command that sets track information, name, mute/solo etc.
+\brief A SetTrackBase that combines SetTrackStatusCommand,
+SetTrackAudioCommand and SetTrackVisualsCommand.
 
 *//*******************************************************************/
 
@@ -28,9 +44,164 @@
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 
-SetTrackCommand::SetTrackCommand()
-{
+SetTrackBase::SetTrackBase(){
+   mbPromptForTracks = true;
 }
+
+bool SetTrackBase::DefineParams( ShuttleParams & S )
+{
+   S.OptionalY( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
+   S.OptionalN( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
+   return true;
+}
+
+void SetTrackBase::PopulateOrExchange(ShuttleGui & S)
+{
+   if( !mbPromptForTracks )
+      return;
+   S.AddSpace(0, 5);
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
+      S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
+   }
+   S.EndMultiColumn();
+}
+
+bool SetTrackBase::Apply(const CommandContext & context  )
+{
+   long i = 0;// track counter
+   long j = 0;// channel counter
+   TrackListIterator iter(context.GetProject()->GetTracks());
+   Track *t = iter.First();
+   bIsSecondChannel = false;
+   while (t )
+   {
+      bool bThisTrack =
+         (bHasTrackIndex && (i==mTrackIndex)) ||
+         (bHasChannelIndex && (j==mChannelIndex ) ) ||
+         (!bHasTrackIndex && !bHasChannelIndex) ;
+
+      if( bThisTrack ){
+         ApplyInner( context, t );
+      }
+      bIsSecondChannel = t->GetLinked();
+      if( !bIsSecondChannel )
+         ++i;
+      j++;
+      t = iter.Next();
+   }
+   return true;
+}
+
+
+
+bool SetTrackStatusCommand::DefineParams( ShuttleParams & S ){ 
+   SetTrackBase::DefineParams( S );
+   S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       wxT("Unnamed") );
+   // There is also a select command.  This is an alternative.
+   S.OptionalN( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
+   S.OptionalN( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );
+   return true;
+};
+
+void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   SetTrackBase::PopulateOrExchange( S );
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),          mTrackName );
+   }
+   S.EndMultiColumn();
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.Optional( bHasSelected       ).TieCheckBox( _("Selected:"),           bSelected );
+      S.Optional( bHasFocused        ).TieCheckBox( _("Focused:"),            bFocused);
+   }
+   S.EndMultiColumn();
+}
+
+bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t )
+{
+   auto wt = dynamic_cast<WaveTrack *>(t);
+   auto pt = dynamic_cast<PlayableTrack *>(t);
+
+   // You can get some intriguing effects by setting R and L channels to 
+   // different values.
+   if( bHasTrackName )
+      t->SetName(mTrackName);
+
+   // In stereo tracks, both channels need selecting/deselecting.
+   if( bHasSelected )
+      t->SetSelected(bSelected);
+
+   // These ones don't make sense on the second channel of a stereo track.
+   if( !bIsSecondChannel ){
+      if( bHasFocused )
+      {
+         TrackPanel *panel = context.GetProject()->GetTrackPanel();
+         if( bFocused)
+            panel->SetFocusedTrack( t );
+         else if( t== panel->GetFocusedTrack() )
+            panel->SetFocusedTrack( nullptr );
+      }
+   }
+   return true;
+}
+
+
+
+bool SetTrackAudioCommand::DefineParams( ShuttleParams & S ){ 
+   SetTrackBase::DefineParams( S );
+   S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -1.0, 1.0);
+   S.OptionalN( bHasGain           ).Define(     mGain,           wxT("Gain"),       1.0,  0.0, 10.0);
+
+   // There is also a select command.  This is an alternative.
+   S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
+   S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
+   return true;
+};
+
+void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   SetTrackBase::PopulateOrExchange( S );
+   S.StartMultiColumn(3, wxALIGN_CENTER);
+   {
+      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  1.0, -1.0);
+      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 10.0, 0.0);
+   }
+   S.EndMultiColumn();
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.Optional( bHasSolo           ).TieCheckBox( _("Solo:"),               bSolo);
+      S.Optional( bHasMute           ).TieCheckBox( _("Mute:"),               bMute);
+   }
+   S.EndMultiColumn();
+}
+
+bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t )
+{
+   auto wt = dynamic_cast<WaveTrack *>(t);
+   auto pt = dynamic_cast<PlayableTrack *>(t);
+
+   // You can get some intriguing effects by setting R and L channels to 
+   // different values.
+   if( wt && bHasPan )
+      wt->SetPan(mPan);
+   if( wt && bHasGain )
+      wt->SetGain(mGain);
+
+   // These ones don't make sense on the second channel of a stereo track.
+   if( !bIsSecondChannel ){
+      if( pt && bHasSolo )
+         pt->SetSolo(bSolo);
+      if( pt && bHasMute )
+         pt->SetMute(bMute);
+   }
+   return true;
+}
+
+
 
 enum kColours
 {
@@ -76,7 +247,6 @@ static const wxString kScaleTypeStrings[nScaleTypes] =
    XO("dB"),
 };
 
-
 enum kZoomTypes
 {
    kReset,
@@ -92,158 +262,98 @@ static const wxString kZoomTypeStrings[nZoomTypes] =
    XO("HalfWave"),
 };
 
-
-bool SetTrackCommand::DefineParams( ShuttleParams & S ){ 
+bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString colours(  nColours,      kColourStrings );
    wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
    wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
    wxArrayString vzooms(   nZoomTypes,    kZoomTypeStrings );
 
-   S.OptionalY( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
-   S.OptionalN( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
-   S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       wxT("Unnamed") );
-   S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -1.0, 1.0);
-   S.OptionalN( bHasGain           ).Define(     mGain,           wxT("Gain"),       1.0,  0.0, 10.0);
+   SetTrackBase::DefineParams( S );
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 700 );
    S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, displays );
    S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   scales );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
-   S.OptionalN( bHasUseSpecPrefs   ).Define(     bUseSpecPrefs,   wxT("SpecPrefs"),  false );
    S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    vzooms );
 
+   S.OptionalN( bHasUseSpecPrefs   ).Define(     bUseSpecPrefs,   wxT("SpecPrefs"),  false );
    S.OptionalN( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
    S.OptionalN( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
-   // There is also a select command.  This is an alternative.
-   S.OptionalN( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
-   S.OptionalN( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );
-   S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
-   S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
+
    return true;
 };
 
-void SetTrackCommand::PopulateOrExchange(ShuttleGui & S)
+void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
 {
    auto colours = LocalizedStrings(  kColourStrings, nColours );
    auto displays = LocalizedStrings( kDisplayTypeStrings, nDisplayTypes );
    auto scales = LocalizedStrings( kScaleTypeStrings, nScaleTypes );
    auto vzooms = LocalizedStrings( kZoomTypeStrings, nZoomTypes );
 
-   S.AddSpace(0, 5);
-
+   SetTrackBase::PopulateOrExchange( S );
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
-      S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
-      S.Optional( bHasTrackName   ).TieTextBox(         _("Name:"),          mTrackName );
-      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  1.0, -1.0);
-      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 10.0, 0.0);
       S.Optional( bHasHeight      ).TieNumericTextBox(  _("Height:"),        mHeight );
       S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour,      &colours );
       S.Optional( bHasDisplayType ).TieChoice(          _("Display:"),       mDisplayType, &displays );
       S.Optional( bHasScaleType   ).TieChoice(          _("Scale:"),         mScaleType,   &scales );
       S.Optional( bHasVZoom       ).TieChoice(          _("VZoom:"),         mVZoom,       &vzooms );
-   }
-   S.EndMultiColumn();
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
+
       S.Optional( bHasUseSpecPrefs   ).TieCheckBox( _("Use Spectral Prefs:"), bUseSpecPrefs );
       S.Optional( bHasSpectralSelect ).TieCheckBox( _("Spectral Select:"),    bSpectralSelect);
       S.Optional( bHasGrayScale      ).TieCheckBox( _("Gray Scale:"),         bGrayScale );
-      S.Optional( bHasSelected       ).TieCheckBox( _("Selected:"),           bSelected );
-      S.Optional( bHasFocused        ).TieCheckBox( _("Focused:"),            bFocused);
-      S.Optional( bHasSolo           ).TieCheckBox( _("Solo:"),               bSolo);
-      S.Optional( bHasMute           ).TieCheckBox( _("Mute:"),               bMute);
    }
    S.EndMultiColumn();
 }
 
-bool SetTrackCommand::Apply(const CommandContext & context)
+bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * t )
 {
+   auto wt = dynamic_cast<WaveTrack *>(t);
+   auto pt = dynamic_cast<PlayableTrack *>(t);
 
-   long i = 0;// track counter
-   long j = 0;// channel counter
-   TrackListIterator iter(context.GetProject()->GetTracks());
-   Track *t = iter.First();
-   bool bIsSecondChannel = false;
-   while (t )
-   {
-      bool bThisTrack =
-         (bHasTrackIndex && (i==mTrackIndex)) ||
-         (bHasChannelIndex && (j==mChannelIndex ) ) ||
-         (!bHasTrackIndex && !bHasChannelIndex) ;
+   // You can get some intriguing effects by setting R and L channels to 
+   // different values.
+   if( wt && bHasColour )
+      wt->SetWaveColorIndex( mColour );
+   if( t && bHasHeight )
+      t->SetHeight( mHeight );
 
-      if( bThisTrack ){
-         auto wt = dynamic_cast<WaveTrack *>(t);
-         auto pt = dynamic_cast<PlayableTrack *>(t);
+   if( wt && bHasDisplayType  )
+      wt->SetDisplay(
+         (mDisplayType == kWaveform) ?
+            WaveTrack::WaveTrackDisplayValues::Waveform
+            : WaveTrack::WaveTrackDisplayValues::Spectrum
+         );
+   if( wt && bHasScaleType )
+      wt->GetIndependentWaveformSettings().scaleType = 
+         (mScaleType==kLinear) ? 
+            WaveformSettings::stLinear
+            : WaveformSettings::stLogarithmic;
 
-         // You can get some intriguing effects by setting R and L channels to 
-         // different values.
-         if( bHasTrackName )
-            t->SetName(mTrackName);
-         if( wt && bHasPan )
-            wt->SetPan(mPan);
-         if( wt && bHasGain )
-            wt->SetGain(mGain);
-         if( wt && bHasColour )
-            wt->SetWaveColorIndex( mColour );
-         if( t && bHasHeight )
-            t->SetHeight( mHeight );
-
-         if( wt && bHasDisplayType  )
-            wt->SetDisplay(
-               (mDisplayType == kWaveform) ?
-                  WaveTrack::WaveTrackDisplayValues::Waveform
-                  : WaveTrack::WaveTrackDisplayValues::Spectrum
-               );
-         if( wt && bHasScaleType )
-            wt->GetIndependentWaveformSettings().scaleType = 
-               (mScaleType==kLinear) ? 
-                  WaveformSettings::stLinear
-                  : WaveformSettings::stLogarithmic;
-
-         if( wt && bHasUseSpecPrefs   ){
-            wt->UseSpectralPrefs( bUseSpecPrefs );
-         }
-         if( wt && bHasSpectralSelect )
-            wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
-         if( wt && bHasGrayScale )
-            wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
-         if( wt && bHasVZoom ){
-            switch( mVZoom ){
-               default:
-               case kReset: wt->SetDisplayBounds(-1,1); break;
-               case kTimes2: wt->SetDisplayBounds(-2,2); break;
-               case kHalfWave: wt->SetDisplayBounds(0,1); break;
-            }
-         }
-
-         // In stereo tracks, both channels need selecting/deselecting.
-         if( bHasSelected )
-            t->SetSelected(bSelected);
-
-         // These ones don't make sense on the second channel of a stereo track.
-         if( !bIsSecondChannel ){
-            if( bHasFocused )
-            {
-               TrackPanel *panel = context.GetProject()->GetTrackPanel();
-               if( bFocused)
-                  panel->SetFocusedTrack( t );
-               else if( t== panel->GetFocusedTrack() )
-                  panel->SetFocusedTrack( nullptr );
-            }
-            if( pt && bHasSolo )
-               pt->SetSolo(bSolo);
-            if( pt && bHasMute )
-               pt->SetMute(bMute);
-         }
+   if( wt && bHasVZoom ){
+      switch( mVZoom ){
+         default:
+         case kReset: wt->SetDisplayBounds(-1,1); break;
+         case kTimes2: wt->SetDisplayBounds(-2,2); break;
+         case kHalfWave: wt->SetDisplayBounds(0,1); break;
       }
-      bIsSecondChannel = t->GetLinked();
-      if( !bIsSecondChannel )
-         ++i;
-      j++;
-      t = iter.Next();
    }
+
+   if( wt && bHasUseSpecPrefs   ){
+      wt->UseSpectralPrefs( bUseSpecPrefs );
+   }
+   if( wt && bHasSpectralSelect )
+      wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
+   if( wt && bHasGrayScale )
+      wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
+
    return true;
 }
 
+
+SetTrackCommand::SetTrackCommand()
+{
+   mSetStatus.mbPromptForTracks = false;
+   mSetAudio.mbPromptForTracks = false;
+   mSetVisuals.mbPromptForTracks = false;
+}
 
