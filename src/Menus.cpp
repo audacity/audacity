@@ -638,8 +638,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SetLeftSelection"), XXO("&Left at Playback Position"), FN(OnSetLeftSelection), wxT("["));
       c->AddItem(wxT("SetRightSelection"), XXO("&Right at Playback Position"), FN(OnSetRightSelection), wxT("]"));
       c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
-      c->AddItem(wxT("SelStartCursor"), XXO("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"),AlwaysEnabledFlag,AlwaysEnabledFlag);
-      c->AddItem(wxT("SelCursorEnd"), XXO("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"),AlwaysEnabledFlag,AlwaysEnabledFlag);
+      c->AddItem(wxT("SelectTrackStartToCursor"), XXO("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"),AlwaysEnabledFlag,AlwaysEnabledFlag);
+      c->AddItem(wxT("SelectCursorToTrackEnd"), XXO("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"),AlwaysEnabledFlag,AlwaysEnabledFlag);
+      c->AddItem(wxT("SelectTrackStartToEnd"), XXO("Track Start to En&d"), FN(OnSelectTrackStartToEnd), wxT(""),AlwaysEnabledFlag,AlwaysEnabledFlag);
       c->AddSeparator();
       // GA: Audacity had 'Store Re&gion' here previously. There is no one-step
       // way to restore the 'Saved Cursor Position' in Select Menu, so arguably
@@ -6365,8 +6366,8 @@ void AudacityProject::OnSelectStartCursor(const CommandContext &WXUNUSED(context
 
    while (t) {
       if (t->GetSelected()) {
-         if (t->GetOffset() < minOffset)
-            minOffset = t->GetOffset();
+         if (t->GetStartTime() < minOffset)
+            minOffset = t->GetStartTime();
       }
 
       t = iter.Next();
@@ -6381,6 +6382,39 @@ void AudacityProject::OnSelectStartCursor(const CommandContext &WXUNUSED(context
 
    mTrackPanel->Refresh(false);
 }
+
+void AudacityProject::OnSelectTrackStartToEnd(const CommandContext &WXUNUSED(context) )
+{
+   double kWayOverToLeft = -1000000.0;
+   double maxEndOffset = kWayOverToLeft;
+   double kWayOverToRight = 1000000.0;
+   double minOffset = kWayOverToRight;
+
+   TrackListIterator iter(GetTracks());
+   Track *t = iter.First();
+
+   while (t) {
+      if (t->GetSelected()) {
+         if (t->GetEndTime() > maxEndOffset)
+            maxEndOffset = t->GetEndTime();
+         if (t->GetStartTime() < minOffset)
+            minOffset = t->GetStartTime();
+      }
+
+      t = iter.Next();
+   }
+
+   if( maxEndOffset <= (kWayOverToLeft +1))
+      return;
+   if( minOffset >= (kWayOverToRight -1 ))
+      return;
+
+   mViewInfo.selectedRegion.setTimes( minOffset, maxEndOffset );
+   ModifyState(false);
+
+   mTrackPanel->Refresh(false);
+}
+
 
 void AudacityProject::OnSelectPrevClipBoundaryToCursor(const CommandContext &WXUNUSED(context) )
 {

@@ -309,6 +309,7 @@ void OnNextLowerPeakFrequency(const CommandContext &context );
 #endif
 void OnSelectCursorEnd(const CommandContext &context );
 void OnSelectStartCursor(const CommandContext &context );
+void OnSelectTrackStartToEnd(const CommandContext &context );
 void OnSelectPrevClipBoundaryToCursor(const CommandContext &context );
 void OnSelectCursorToNextClipBoundary(const CommandContext &context );
 void OnSelectClipBoundary(bool next);
