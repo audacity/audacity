@@ -70,10 +70,11 @@ RingBuffer::~RingBuffer()
 
 size_t RingBuffer::Len()
 {
-#ifdef REWRITE_RING_BUFFER
+#ifndef REWRITE_RING_BUFFER
    return (mEnd + mBufferSize - mStart) % mBufferSize;
 #else
    assert(false);
+   return 0;
 #endif
 }
 
