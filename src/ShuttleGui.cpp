@@ -295,8 +295,8 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString
    wxString realPrompt = Prompt;
    if( mpbOptionalFlag )
    {
-      AddPrompt( Prompt);
-      realPrompt = wxT("");
+      AddPrompt( "");
+      //realPrompt = wxT("");
    }
 
    UseUpId();

@@ -69,8 +69,9 @@ void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
    auto relativeSpec = LocalizedStrings( kRelativeTo, nRelativeTos );
    S.AddSpace(0, 5);
 
-   S.StartMultiColumn(3, wxALIGN_CENTER);
+   S.StartMultiColumn(3, wxEXPAND);
    {
+      S.SetStretchyCol( 2 );
       S.Optional( bHasT0 ).TieTextBox(_("Start Time:"), mT0);
       S.Optional( bHasT1 ).TieTextBox(_("End Time:"),   mT1);
       // Chooses what time is relative to.
@@ -134,8 +135,9 @@ void SelectFrequenciesCommand::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
-   S.StartMultiColumn(3, wxALIGN_CENTER);
+   S.StartMultiColumn(3, wxEXPAND);
    {
+      S.SetStretchyCol( 2 );
       S.Optional( bHasTop    ).TieTextBox(_("High:"), mTop);
       S.Optional( bHasBottom ).TieTextBox(_("Low:"),  mBottom);
    }
@@ -174,8 +176,9 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
    auto modes = LocalizedStrings( kModes, nModes );
    S.AddSpace(0, 5);
 
-   S.StartMultiColumn(3, wxALIGN_CENTER);
+   S.StartMultiColumn(3, wxEXPAND);
    {
+      S.SetStretchyCol( 2 );
       S.Optional( bHasFirstTrack).TieTextBox(_("First Track:"),mFirstTrack);
       S.Optional( bHasLastTrack).TieTextBox(_("Last Track:"),mLastTrack);
    }
