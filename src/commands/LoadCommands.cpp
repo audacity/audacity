@@ -43,25 +43,31 @@ modelled on BuiltinEffectsModule
 // Define the list of COMMANDs that will be autoregistered and how to instantiate each
 //
 #define COMMAND_LIST \
-   COMMAND( DEMO,              DemoCommand, () )           \
-   COMMAND( MESSAGE,           MessageCommand,   () )      \
-   COMMAND( SCREENSHOT,        ScreenshotCommand,   () )   \
-   COMMAND( DRAG,              DragCommand, () )           \
-   COMMAND( COMPARE_AUDIO,     CompareAudioCommand, () )   \
-   COMMAND( SET_TRACK,         SetTrackCommand, () )       \
-   COMMAND( SET_ENVELOPE,      SetEnvelopeCommand, () )    \
-   COMMAND( SET_CLIP,          SetClipCommand, () )        \
-   COMMAND( SET_LABEL,         SetLabelCommand, () )       \
-   COMMAND( SET_PROJECT,       SetProjectCommand, () )     \
-   COMMAND( SELECT,            SelectCommand, () )         \
-   COMMAND( GET_PREFERENCE,    GetPreferenceCommand, () )  \
-   COMMAND( SET_PREFERENCE,    SetPreferenceCommand, () )  \
-   COMMAND( GET_INFO,          GetInfoCommand, () )        \
-   COMMAND( HELP,              HelpCommand, () )           \
-   COMMAND( IMPORT,            ImportCommand, () )         \
-   COMMAND( EXPORT,            ExportCommand, () )         \
-   COMMAND( OPEN_PROJECT,      OpenProjectCommand, () )    \
-   COMMAND( SAVE_PROJECT,      SaveProjectCommand, () )    \
+   COMMAND( DEMO,                DemoCommand, () )             \
+   COMMAND( MESSAGE,             MessageCommand,   () )        \
+   COMMAND( SCREENSHOT,          ScreenshotCommand,   () )     \
+   COMMAND( DRAG,                DragCommand, () )             \
+   COMMAND( COMPARE_AUDIO,       CompareAudioCommand, () )     \
+   COMMAND( SET_TRACK,           SetTrackCommand, () )         \
+   COMMAND( SET_TRACK_STATUS,    SetTrackStatusCommand, () )   \
+   COMMAND( SET_TRACK_AUDIO,     SetTrackAudioCommand, () )    \
+   COMMAND( SET_TRACK_VISUALS,   SetTrackVisualsCommand, () )  \
+   COMMAND( SET_ENVELOPE,        SetEnvelopeCommand, () )      \
+   COMMAND( SET_CLIP,            SetClipCommand, () )          \
+   COMMAND( SET_LABEL,           SetLabelCommand, () )         \
+   COMMAND( SET_PROJECT,         SetProjectCommand, () )       \
+   COMMAND( SELECT,              SelectCommand, () )           \
+   COMMAND( SELECT_TIME,         SelectTimeCommand, () )       \
+   COMMAND( SELECT_FREQUENCIES,  SelectFrequenciesCommand, () )\
+   COMMAND( SELECT_TRACKS,       SelectTracksCommand, () )     \
+   COMMAND( GET_PREFERENCE,      GetPreferenceCommand, () )    \
+   COMMAND( SET_PREFERENCE,      SetPreferenceCommand, () )    \
+   COMMAND( GET_INFO,            GetInfoCommand, () )          \
+   COMMAND( HELP,                HelpCommand, () )             \
+   COMMAND( IMPORT,              ImportCommand, () )           \
+   COMMAND( EXPORT,              ExportCommand, () )           \
+   COMMAND( OPEN_PROJECT,        OpenProjectCommand, () )      \
+   COMMAND( SAVE_PROJECT,        SaveProjectCommand, () )      \
 
    // GET_TRACK_INFO subsumed by GET_INFO
    //COMMAND( GET_TRACK_INFO,    GetTrackInfoCommand, () )   
