@@ -13,6 +13,8 @@
 
 #include "SampleFormat.h"
 
+#include "../lib-src/portaudio-v19/src/common/pa_ringbuffer.h"
+
 class RingBuffer {
  public:
    RingBuffer(sampleFormat format, size_t size);
@@ -24,7 +26,7 @@ class RingBuffer {
 
    size_t AvailForPut();
    size_t Put(samplePtr buffer, sampleFormat format, size_t samples);
-   size_t Clear(sampleFormat format, size_t samples);
+//   size_t Clear(sampleFormat format, size_t samples);
 
    //
    // For the reader only:
@@ -42,6 +44,8 @@ class RingBuffer {
    size_t        mEnd { 0 };
    size_t        mBufferSize;
    SampleBuffer  mBuffer;
+
+   PaUtilRingBuffer mRingBuffer;
 };
 
 #endif /*  __AUDACITY_RING_BUFFER__ */

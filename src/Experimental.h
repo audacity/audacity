@@ -245,4 +245,10 @@
 // Easy change of keystroke bindings for menu items
 #define EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 
+// PRL 17 Mar 2018
+// Hoping to commit to use of this branch before 2.3.0 is out.
+// Don't use our own RingBuffer class, but reuse PortAudio's which includes
+// proper memory fences.
+#undef EXPERIMENTAL_REWRITE_RING_BUFFER
+
 #endif
