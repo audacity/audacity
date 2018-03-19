@@ -65,6 +65,7 @@ struct CommandListEntry
 {
    int id;
    wxString name;
+   wxString longLabel;
    NormalizedKeyString key;
    NormalizedKeyString defaultKey;
    wxString label;
@@ -244,6 +245,10 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    CommandMask GetDefaultMask() const { return mDefaultMask; }
 
    void SetOccultCommands( bool bOccult);
+   CommandManager * SetLongName( const wxString & name ){ 
+      mLongNameForItem = name; 
+      return this;
+   }
 
 
    void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
@@ -343,6 +348,7 @@ protected:
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
+                                   const wxString & longLabel,
                                    bool hasDialog,
                                    wxMenu *menu,
                                    CommandHandlerFinder finder,
@@ -353,6 +359,7 @@ protected:
                                    bool bIsEffect);
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
+                                   const wxString & longLabel,
                                    bool hasDialog,
                                    const wxString & accel,
                                    wxMenu *menu,
@@ -414,6 +421,8 @@ private:
    wxString mCurrentMenuName;
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
+
+   wxString mLongNameForItem;
 
    CommandFlag mDefaultFlags;
    CommandMask mDefaultMask;

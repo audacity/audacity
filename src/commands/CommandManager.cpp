@@ -428,6 +428,7 @@ CommandManager::CommandManager():
    bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
+   mLongNameForItem = "";
    SetMaxList();
 }
 
@@ -833,8 +834,13 @@ void CommandManager::AddItem(const wxChar *name,
    else 
       cookedParameter = parameter;
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, hasDialog, accel, CurrentMenu(), finder, callback,
-                    {}, 0, 0, bIsEffect, cookedParameter);
+      NewIdentifier(name, 
+         label_in, 
+         mLongNameForItem, 
+         hasDialog, 
+         accel, CurrentMenu(), finder, callback,
+         {}, 0, 0, bIsEffect, cookedParameter);
+   mLongNameForItem = "";
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
@@ -869,6 +875,7 @@ void CommandManager::AddItemList(const wxString & name,
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
       CommandListEntry *entry = NewIdentifier(name,
+                                              items[i].Translated(),
                                               items[i].Translated(),
                                               // No means yet to specify !
                                               false,
@@ -905,7 +912,7 @@ void CommandManager::AddCommand(const wxChar *name,
                                 CommandFlag flags,
                                 CommandMask mask)
 {
-   NewIdentifier(name, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
+   NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
    if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
       SetCommandFlags(name, flags, mask);
@@ -920,7 +927,7 @@ void CommandManager::AddGlobalCommand(const wxChar *name,
                                       const wxChar *accel)
 {
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, hasDialog, accel, NULL, finder, callback,
+      NewIdentifier(name, label_in, label_in, hasDialog, accel, NULL, finder, callback,
                     {}, 0, 0, false, {});
 
    entry->enabled = false;
@@ -954,6 +961,7 @@ int CommandManager::NextIdentifier(int ID)
 ///and keep menus above wxID_HIGHEST
 CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                                                 const wxString & label,
+                                                const wxString & longLabel,
                                                 bool hasDialog,
                                                 wxMenu *menu,
                                                 CommandHandlerFinder finder,
@@ -965,6 +973,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 {
    return NewIdentifier(name,
                         label.BeforeFirst(wxT('\t')),
+                        longLabel.BeforeFirst(wxT('\t')),
                         hasDialog,
                         label.AfterFirst(wxT('\t')),
                         menu,
@@ -979,6 +988,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 
 CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
    const wxString & label,
+   const wxString & longLabel,
    bool hasDialog,
    const wxString & accel,
    wxMenu *menu,
@@ -1046,6 +1056,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 
       entry->name = name;
       entry->label = label;
+      entry->longLabel = longLabel.IsEmpty() ? label : longLabel;
       entry->hasDialog = hasDialog;
       entry->key = NormalizedKeyString{ accel.BeforeFirst(wxT('\t')) };
       entry->defaultKey = entry->key;
@@ -1691,9 +1702,9 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
       if ( entry->isEffect )
          continue;
       if (!entry->multi)
-         names.Add(entry->label), vHasDialog.push_back(entry->hasDialog);
+         names.Add(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
       else if( includeMultis )
-         names.Add(entry->label), vHasDialog.push_back(entry->hasDialog);
+         names.Add(entry->longLabel), vHasDialog.push_back(entry->hasDialog);
    }
 }
 
@@ -1752,7 +1763,7 @@ wxString CommandManager::GetLabelFromName(const wxString &name)
    if (!entry)
       return wxT("");
 
-   return entry->label;
+   return entry->longLabel;
 }
 
 wxString CommandManager::GetPrefixedLabelFromName(const wxString &name)
