@@ -867,13 +867,13 @@ bool MacroCommands::ApplyMacro(
    if (name.IsEmpty())
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = _("Applied macro");
-      shortDesc = _("Apply macro");
+      longDesc = _("Applied Macro");
+      shortDesc = _("Apply Macro");
    }
    else
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = wxString::Format(_("Applied macro '%s'"), name);
+      longDesc = wxString::Format(_("Applied Macro '%s'"), name);
       shortDesc = wxString::Format(_("Apply '%s'"), name);
    }
 
