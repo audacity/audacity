@@ -115,7 +115,8 @@ wxArrayString MacroCommands::GetNamesOfDefaultMacros()
    wxArrayString defaults;
    defaults.Add( GetCustomTranslation( MP3Conversion ) );
    defaults.Add( GetCustomTranslation( FadeEnds )  );
-   defaults.Add( GetCustomTranslation( SelectToEnds )  );
+   //Don't add this one anymore, as there is a new menu command for it.
+   //defaults.Add( GetCustomTranslation( SelectToEnds )  );
    return defaults;
 }
 
