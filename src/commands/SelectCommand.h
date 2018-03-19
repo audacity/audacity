@@ -88,11 +88,11 @@ public:
    wxString ManualPage() override {return wxT("Audio_Selection");};
 
    bool bHasFirstTrack;
-   bool bHasLastTrack;
+   bool bHasNumTracks;
    bool bHasMode;
 
-   int mFirstTrack;
-   int mLastTrack;
+   double mFirstTrack;
+   double mNumTracks;
    int mMode;
 };
 

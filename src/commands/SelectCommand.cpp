@@ -164,8 +164,8 @@ static const wxString kModes[nModes] =
 
 bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
    wxArrayString modes( nModes, kModes );
-   S.OptionalN( bHasFirstTrack).Define( mFirstTrack, wxT("First"), 0, 0, 100);
-   S.OptionalN( bHasLastTrack ).Define( mLastTrack,  wxT("Last"),  0, 0, 100);
+   S.OptionalN( bHasFirstTrack).Define( mFirstTrack, wxT("Track"), 0.0, 0.0, 100.0);
+   S.OptionalN( bHasNumTracks ).Define( mNumTracks,  wxT("TrackCount"),  1.0, 0.0, 100.0);
    S.OptionalY( bHasMode      ).DefineEnum( mMode,   wxT("Mode"), 0, modes );
    
    return true;
@@ -180,7 +180,7 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol( 2 );
       S.Optional( bHasFirstTrack).TieTextBox(_("First Track:"),mFirstTrack);
-      S.Optional( bHasLastTrack).TieTextBox(_("Last Track:"),mLastTrack);
+      S.Optional( bHasNumTracks).TieTextBox(_("Track Count:"),mNumTracks);
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxALIGN_CENTER);
@@ -193,17 +193,19 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SelectTracksCommand::Apply(const CommandContext &context)
 {
-   if( !bHasFirstTrack && !bHasLastTrack )
-      return true;
-
    int index = 0;
    TrackList *tracks = context.GetProject()->GetTracks();
-   int last = wxMax( mFirstTrack, mLastTrack );
-
+   // Stereo second tracks count as 0.5 of a track.
+   double last = mFirstTrack+mNumTracks;
+   double first = mFirstTrack;
+   bool bIsSecondChannel = false;
    TrackListIterator iter(tracks);
    Track *t = iter.First();
    while (t) {
-      bool sel = mFirstTrack <= index && index <= last;
+      // Add 0.01 so we are free of rounding errors in comparisons.
+      // Optionally add 0.5 for second track which counts as is half a track
+      double track = index + 0.01 + (bIsSecondChannel ? 0.5 : 0.0);
+      bool sel = first <= track && track <= last;
       if( mMode == 0 ){ // Set
          t->SetSelected(sel);
       }
@@ -214,7 +216,8 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
          t->SetSelected(!sel);
       }
       // Do second channel in stereo track too.
-      if( !t->GetLinked() )
+      bIsSecondChannel = t->GetLinked();
+      if( !bIsSecondChannel )
          ++index;
       t = iter.Next();
    }
