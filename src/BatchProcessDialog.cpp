@@ -259,13 +259,10 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    // Without this the newly created dialog may not show completely.
    wxYield();
 
-   // The Hide() on the next line seems to tickle a bug in wx3,
-   // giving rise to our Bug #1221.  The problem is that on Linux 
-   // the 'Hide' converts us from a Modal into a regular dialog,
-   // as far as closing is concerned.  On Linux we can't close with
-   // EndModal() anymore after this.
-   if( bHasGui )
-      Hide();
+   //Since we intend to keep this dialog open, there is no reason to hide it 
+   //and then show it again.
+   //if( bHasGui )
+   //   Hide();
 
    gPrefs->Write(wxT("/Batch/ActiveMacro"), name);
    gPrefs->Flush();
@@ -424,6 +421,8 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    // Without this the newly created dialog may not show completely.
    wxYield();
+   // We could avoid hiding, but there are many dialogs on screen,
+   // and hiding this one temporarily has some advantages.
    Hide();
 
    mMacroCommands.ReadMacro(name);
