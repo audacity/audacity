@@ -585,24 +585,31 @@ void ScreenshotCommand::CaptureScriptables(
    (void)&context;
 
    const wxString ScriptablesNames[] = {
-      "Select",
-      "GetInfo",
-      "Help", // Help on individual commands
-      "Import2",
-      "Export2",
-      "OpenProject2",
-      "SaveProject2",
-      "Message",
-      "Screenshot",
-      "Drag",
-      "CompareAudio",
+      "SelectTime",
+      "SelectFrequencies",
+      "SelectTracks",
+      "SetTrackStatus",
+      "SetTrackAudio",
+      "SetTrackVisuals",
       "GetPreference",
       "SetPreference",
       "SetClip",
       "SetEnvelope",
       "SetLabel",
       "SetProject",
+
+      "Select",
       "SetTrack",
+      "GetInfo",
+      "Message",
+      "Help", // Help on individual commands
+      "Import2",
+      "Export2",
+      "OpenProject2",
+      "SaveProject2",
+      "Drag",
+      "CompareAudio",
+      "Screenshot",
    };
    
    wxArrayString Commands( sizeof(ScriptablesNames)/sizeof(ScriptablesNames[0]), ScriptablesNames );
