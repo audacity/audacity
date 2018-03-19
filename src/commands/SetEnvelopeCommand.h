@@ -18,10 +18,11 @@
 
 #include "Command.h"
 #include "CommandType.h"
+#include "SetTrackInfoCommand.h"
 
 #define SET_ENVELOPE_PLUGIN_SYMBOL XO("Set Envelope")
 
-class SetEnvelopeCommand : public AudacityCommand
+class SetEnvelopeCommand : public SetTrackBase
 {
 public:
    SetEnvelopeCommand();
@@ -33,18 +34,13 @@ public:
 
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_label");};
-
-   bool Apply(const CommandContext & context) override;
+   bool ApplyInner( const CommandContext & context, Track * t ) override;
 
 public:
-   int mTrackIndex;
-   int mChannelIndex;
    double mT;
    double mV;
    bool mbDelete;
 
-   bool bHasTrackIndex;
-   bool bHasChannelIndex;
    bool bHasT;
    bool bHasV;
    bool bHasDelete;

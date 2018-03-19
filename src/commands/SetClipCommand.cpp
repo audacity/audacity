@@ -49,8 +49,6 @@ static const wxString kColourStrings[nColours] =
 
 bool SetClipCommand::DefineParams( ShuttleParams & S ){ 
    wxArrayString colours( nColours, kColourStrings );
-   S.OptionalY( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
-   S.OptionalN( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
    S.OptionalY( bHasContainsTime   ).Define(     mContainsTime,   wxT("At"),         0.0, 0.0, 100000.0 );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0, colours );
    // Allowing a negative start time is not a mistake.
@@ -67,8 +65,6 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(3, wxALIGN_CENTER);
    {
-      S.Optional( bHasTrackIndex  ).TieNumericTextBox(  _("Track Index:"),   mTrackIndex );
-      S.Optional( bHasChannelIndex).TieNumericTextBox(  _("Channel Index:"), mChannelIndex );
       S.Optional( bHasContainsTime).TieNumericTextBox(  _("At:"),            mContainsTime );
       S.Optional( bHasColour      ).TieChoice(          _("Colour:"),        mColour, &colours );
       S.Optional( bHasT0          ).TieNumericTextBox(  _("Start:"),         mT0 );
@@ -76,53 +72,33 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetClipCommand::Apply(const CommandContext & context)
+bool SetClipCommand::ApplyInner( const CommandContext & context, Track * t )
 {
-   TrackList *tracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   WaveClip * pClip = NULL;
-   int i=0;
-   int j=0;
+   if( t->GetKind() != Track::Wave) 
+      return true;
+   
+   WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
+   wxASSERT( waveTrack );
+   WaveClipPointers ptrs( waveTrack->SortedClipArray());
+   for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
+      WaveClip * pClip = *it;
+      bool bFound = 
+         !bHasContainsTime || (
+            ( pClip->GetStartTime() <= mContainsTime ) &&
+            ( pClip->GetEndTime() >= mContainsTime )
+         );
+      if( bFound )
+      {
+         // Inside this IF is where we actually apply the command
 
-   bool bIsSecondChannel = false;
-   while (t )
-   {
-      bool bThisTrack = 
-         (bHasTrackIndex && (i==mTrackIndex)) ||
-         (bHasChannelIndex && (j==mChannelIndex ) ) ||
-         (!bHasTrackIndex && !bHasChannelIndex) ;
+         if( bHasColour )
+            pClip->SetColourIndex(mColour);
+         // No validation of overlap yet.  We assume the user is sensible!
+         if( bHasT0 )
+            pClip->SetOffset(mT0);
+         // \todo Use SetClip to move a clip between tracks too.
 
-      if( bThisTrack && (t->GetKind() == Track::Wave)) {
-         bool bFound = false;
-         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         WaveClipPointers ptrs( waveTrack->SortedClipArray());
-         for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
-            pClip = *it;
-            bFound = 
-               !bHasContainsTime || (
-                  ( pClip->GetStartTime() <= mContainsTime ) &&
-                  ( pClip->GetEndTime() >= mContainsTime )
-               );
-            if( bFound )
-            {
-               // Inside this IF is where we actually apply the command
-
-               if( bHasColour )
-                  pClip->SetColourIndex(mColour);
-               // No validation of overlap yet.  We assume the user is sensible!
-               if( bHasT0 )
-                  pClip->SetOffset(mT0);
-               // \todo Use SetClip to move a clip between tracks too.
-
-            }
-         }
       }
-      bIsSecondChannel = t->GetLinked();
-      if( !bIsSecondChannel )
-         ++i;
-      j++;
-      t = iter.Next();
    }
    return true;
 }

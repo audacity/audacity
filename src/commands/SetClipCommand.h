@@ -18,10 +18,11 @@
 
 #include "Command.h"
 #include "CommandType.h"
+#include "SetTrackInfoCommand.h"
 
 #define SET_CLIP_PLUGIN_SYMBOL XO("Set Clip")
 
-class SetClipCommand : public AudacityCommand
+class SetClipCommand : public SetTrackBase
 {
 public:
    SetClipCommand();
@@ -33,19 +34,14 @@ public:
 
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_clip");};
-
-   bool Apply(const CommandContext & context) override;
+   bool ApplyInner( const CommandContext & context, Track * t ) override;
 
 public:
-   int mTrackIndex;
-   int mChannelIndex;
    double mContainsTime;
    int mColour;
    double mT0;
 
 // For tracking optional parameters.
-   bool bHasTrackIndex;
-   bool bHasChannelIndex;
    bool bHasContainsTime;
    bool bHasColour;
    bool bHasT0;
