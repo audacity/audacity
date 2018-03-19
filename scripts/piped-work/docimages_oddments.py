@@ -31,6 +31,8 @@ def oddments_imagesA():
         capture( "Button" + str(id) +"Hover.png", "Edit" )
         do( "Drag: Id="+str( id) + " FromX=1000 FromY=10" )
     do( 'SetPreference: Name="/GUI/Theme" Value="light"')
+    #Restore default tool.
+    do('SelectTool')
 
 
 def oddments_imagesB():

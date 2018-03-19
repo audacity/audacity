@@ -45,58 +45,59 @@ def addLabels2():
     do( 'SetLabel: Label=7 Text="Mozart" Start=60 End=60 ')
     do( 'SetLabel: Label=8 Text="Satie" Start=90 End=90 ')
     do( 'SetLabel: Label=9 Text="Chopin" Start=120 End=120 ')
-    do( 'Select: First=3 Last=3' )
+    do( 'Select: Track=3' )
 
 
 def label_image1and2() :
     makeStereoTracks(1)
     addLabels()
-    # A stero track with four labels.
+    # A stereo track with four labels.
     do( "Select: Start=0 End=0" )
     capture( 'AutoLabels001.png', 'First_Two_Tracks' )
     # Removing a label with delete (fraud - we used split delete)
-    do( "Select: Start=44.5 End=60.5 First=2 Last=2" )
+    do( "Select: Start=44.5 End=60.5 Track=1" )
     do( "SplitDelete" )
-    do( "Select: Start=0 End=0 First=0 Last=2" )
+    do( "Select: Start=0 End=0 TrackCount=2" )
     capture( 'AutoLabels002.png','First_Two_Tracks' )
 
 def label_image3and4() :
     makeStereoTracks(1)
     addLabels()
     # Removing a label with split-delete step 1
-    do( "Select: Start=44.5 End=60.5 First=2 Last=2" )
+    do( "Select: Start=44.5 End=60.5 Track=1" )
     capture( 'AutoLabels003.png','First_Two_Tracks' )
-    # Removing a label with split-delete step 1
-    do( "Select: Start=44.5 End=60.5 First=2 Last=2" )
+    # Removing a label with split-delete step 2
+    do( "Select: Start=44.5 End=60.5 Track=1" )
     do( "SplitDelete" )
+    do( "Select: Start=0 End=0 TrackCount=0" )
     capture( 'AutoLabels004.png','First_Two_Tracks' )
 
 def label_image5and6and7() :
     makeStereoTracks(1)
     addLabels2()
     # Nothing selected
-    do( "Select: Start=0 End=0" )
+    do( "Select: Start=0 End=0 TrackCount=0" )
     capture( 'AutoLabels005.png','First_Three_Tracks' )
     # A range selected in label track.
-    do( "Select: Start=28.5 End=58.5" )
+    do( "Select: Start=28.5 End=58.5 Track=1" )
     capture( 'AutoLabels006.png','First_Three_Tracks' )
     # Deleting in label track only.
     do( "Delete" )
-    do( "Select: Start=0 End=0" )
+    do( "Select: Start=0 End=0 TrackCount=0" )
     capture( 'AutoLabels007.png','First_Three_Tracks' )
 
 def label_image8and9and10() :
     makeStereoTracks(1)
     addLabels2()
     # Select nothing in all three tracks.
-    do( "Select: First=2 Last=2 Start=100 End=125" )
+    do( "Select: TrackCount=2 Start=100 End=125" )
     do( "AddLabel" )
-    do( 'SetLabel: Label=9 Text="Clap" selected=0 Start=110 End=118 ')
-    do( 'Select: First=0 Last=3 Start=0 End=0')
+    do( 'SetLabel: Label=9 Text="Clap" Selected=0 Start=110 End=118 ')
+    do( 'Select: TrackCount=2 Start=0 End=0')
     capture( 'AutoLabels008.png','First_Three_Tracks' )
     # Select label and all three tracks
-    do( 'SetLabel: Label=9 Text="Clap" selected=1 Start=110 End=118 ')
-    do( 'Select: First=0 Last=3 Start=110 End=118')
+    do( 'SetLabel: Label=9 Text="Clap" Selected=1 Start=110 End=118 ')
+    do( 'Select: TrackCount=3 Start=110 End=118')
     capture( 'AutoLabels009.png','First_Three_Tracks' )
     # Delete label and from all three tracks.
     do( 'Delete' )

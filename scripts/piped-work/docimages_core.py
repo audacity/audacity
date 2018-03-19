@@ -82,13 +82,13 @@ def setup() :
     sample ='C:\\Users\\James Crook\\Music\\The Poodle Podcast.wav'
     sample2 ='C:\\Users\\James Crook\\Music\\PoodlePodStereo.wav'
     startPipes()
-    do( 'SetProject: X=10 Y=10 Width=850 Height=800' )
+    do( 'SetProject: X=10 Y=10 Width=910 Height=800' )
 
 def imageSet(name):
     print("****************** " + name + " ***************************")
 
 def makeWayForTracks(  ) :
-    do( 'Select: First=0 Last=20' )
+    do( 'Select: TrackCount=20' )
     do( 'RemoveTracks' )
 
 def capture( name, what ) :
@@ -101,14 +101,14 @@ def loadExample( name ):
     global sample_path
     makeWayForTracks( )
     do( 'Import2: Filename="'+sample_path+name+'"' )
-    do( 'Select: First=0 Last=0 Start=0 End=0')
+    do( 'Select: Start=0 End=0')
     do( 'FitInWindow' )
 
 def loadMonoTrack():
     global sample
     makeWayForTracks( )
     do( 'Import2: Filename="'+sample+'"' )
-    do( 'Select: First=0 Last=0 Start=0 End=150')
+    do( 'Select: Start=0 End=150')
     do( 'Trim')
     do( 'ZoomSel' )
 
@@ -116,36 +116,37 @@ def loadStereoTrack():
     global sample2
     makeWayForTracks( )
     do( 'Import2: Filename="'+sample2+'"' )
-    do( 'Select: First=0 Last=0 Start=0 End=150')
+    do( 'Select: Start=0 End=150')
     do( 'Trim')
     do( 'ZoomSel' )
     
 def loadMonoTracks( num ) :
     makeWayForTracks( )
     loadMonoTrack()
-    do( 'SetTrack: Track=0 Name="Foxy Lady"')
+    do( 'Select: Track=0')
+    do( 'SetTrack: Name="Foxy Lady"')
     for i in range( 0, num-1 ):
-        do( 'Select: First=0 Last=0')
+        do( 'Select')
         do( 'Duplicate' )
     do( 'FitInWindow' )
-    do( 'Select: Start=55 End=70')
+    do( 'Select: Start=55 End=70 TrackCount=' + str(num))
 
 def loadStereoTracks( num ) :
     makeWayForTracks( )
     loadStereoTrack()
     do( 'SetTrack: Track=0 Name="Foxy Lady"')
     for i in range( 0, num-1 ):
-        do( 'Select: First=0 Last=0')
+        do( 'Select')
         do( 'Duplicate' )
     do( 'FitInWindow' )
-    do( 'Select: Start=55 End=70 First=0 Last=' + str(num*2-1) )
+    do( 'Select: Start=55 End=70 TrackCount=' + str(num) )
 
 def makeMonoTracks( num ) :
     makeWayForTracks( )
     for i in range( 0, num ):
         do( 'NewMonoTrack' )
     do( 'SetTrack: Track=0 Name="Foxy Lady"')
-    do( 'Select: Start=0 End=150 First=0 Last=' + str(num-1) )
+    do( 'Select: Start=0 End=150 TrackCount=' + str(num) )
     do( 'Chirp: StartAmp=0.5' )
     do( 'Wahwah' )
     do( 'FitInWindow' )
@@ -155,8 +156,9 @@ def makeStereoTracks( num ) :
     makeWayForTracks( )
     for i in range( 0, num ):
        do( 'NewStereoTrack' )
-    do( 'SetTrack: Track=0 Name="Voodoo Children IN STEREO"')
-    do( 'Select: Start=0 End=150 First=0 Last=' + str(num*2-1) )
+    do( 'Select' )
+    do( 'SetTrack: Name="Voodoo Children IN STEREO"')
+    do( 'Select: Start=0 End=150 TrackCount=' + str(num) )
     do( 'Chirp: StartAmp=0.5' )
     do( 'Wahwah' )
     do( 'FitInWindow' )

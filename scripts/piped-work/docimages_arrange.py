@@ -13,20 +13,24 @@ import time
 
 def loadFourColours() :
     loadMonoTracks( 4 )
-    do( 'SetTrack: Track=0 Name="Claire" Height=60 Color=Color0')
+    do( 'SelectTrack: Track=0' )
+    do( 'SetTrack: Name="Claire" Height=60 Color=Color0')
+    do( 'SetClip: At=1 Start=25')
+    do( 'SelectTrack: Track=1' )
     do( 'SetTrack: Track=1 Name="Ann" Height=60 Color=Color1')
+    do( 'SetClip: At=1 Start=15')
+    do( 'SelectTrack: Track=2' )
     do( 'SetTrack: Track=2 Name="Bob" Height=60 Color=Color2')
+    do( 'SetClip: At=1 Start=20')
+    do( 'SelectTrack: Track=3' )
     do( 'SetTrack: Track=3 Name="David" Height=60 Color=Color3')
-    do( 'SetClip: Track=0 At=1 Start=25')
-    do( 'SetClip: Track=1 At=1 Start=15')
-    do( 'SetClip: Track=2 At=1 Start=20')
-    do( 'SetClip: Track=3 At=1 Start=10')
-    do( 'Select: First=0 Last=100 Mode=Remove' )
+    do( 'SetClip: At=1 Start=10')
+    do( 'Select: TrackCount=100 Mode=Remove' )
 
 def loadFourColoursSelected() :
     loadFourColours()
     do( 'ZoomOut' )
-    do( 'Select: Start=90 End=135 First=0 Last=100' )
+    do( 'Select: Start=90 End=135 Track=0 TrackCount=100' )
 
 def blockMoves( name ):
     # These are the align commands that move tracks 'en block'.

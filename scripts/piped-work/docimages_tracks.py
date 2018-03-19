@@ -23,35 +23,51 @@ def track_image2and6() :
     # A stereo track, with its name on the track    
     capture( 'AutoTracks002.png', 'First_Track' )
     # A stereo track, with different sized channels
-    do( 'SetTrack: Channel=0 Height=80')
-    do( 'SetTrack: Channel=1 Height=180')
+    do( 'Select: Track=0 TrackCount=0.5' );
+    do( 'SetTrack: Height=80')
+    do( 'Select: Track=0.5 TrackCount=0.5' );
+    do( 'SetTrack: Height=180')
+    do( 'Select' );
     capture( 'AutoTracks006.png', 'First_Track' )
 
 # Four colours of track
 def track_image3() :
     loadMonoTracks( 4 )
-    do( 'SetTrack: Track=0 Name="Instrument 1" Height=122 Color=Color0')
-    do( 'SetTrack: Track=1 Name="Instrument 2" Height=122 Color=Color1')
-    do( 'SetTrack: Track=2 Name="Instrument 3" Height=122 Color=Color2')
-    do( 'SetTrack: Track=3 Name="Instrument 4" Height=122 Color=Color3')
+    do( 'Select: Track=0' );
+    do( 'SetTrack: Name="Instrument 1" Height=122 Color=Color0')
+    do( 'Select: Track=1' );
+    do( 'SetTrack: Name="Instrument 2" Height=122 Color=Color1')
+    do( 'Select: Track=2' );
+    do( 'SetTrack: Name="Instrument 3" Height=122 Color=Color2')
+    do( 'Select: Track=3' );
+    do( 'SetTrack: Name="Instrument 4" Height=122 Color=Color3')
+    do( 'Select: TrackCount=4' );
     capture( 'AutoTracks003.png', 'First_Four_Tracks' )
 
 def track_image7and4and5():
     loadMonoTracks(2)
     # Two mono tracks of different sizes
-    do( 'SetTrack: Track=0 Height=180')
-    do( 'SetTrack: Track=1 Height=80')
+    do( 'Select: Track=0' );
+    do( 'SetTrack: Height=180')
+    do( 'Select: Track=1' );
+    do( 'SetTrack: Height=80')
+    do( 'Select: TrackCount=2' );
     capture( 'AutoTracks007.png', 'First_Two_Tracks' )
     # Two Tracks, ready to make stereo
-    do( 'SetTrack: Channel=0 Name="Left Track" Height=80')
-    do( 'SetTrack: Channel=1 Name="Right Track" Height=80')
+    do( 'Select: Track=0' );
+    do( 'SetTrack: Name="Left Track" Height=80')
+    do( 'Select: Track=1' );
+    do( 'SetTrack: Name="Right Track" Height=80')
+    do( 'Select: TrackCount=2' );
     capture( 'AutoTracks004.png', 'First_Two_Tracks' )
     # Combined Stereo Track
-    do( 'SetTrack: Track=0 Pan=-1 Height=80')
-    do( 'SetTrack: Track=1 Pan=1 Height=80')
+    do( 'Select: Track=0' );
+    do( 'SetTrack: Pan=-1 Height=80')
+    do( 'Select: Track=1' );
+    do( 'SetTrack: Pan=1 Height=80')
     do( 'MixAndRender' )
-    do( 'SetTrack: Track=0 Name="Combined" Height=80')
-    do( 'Select: First=0 Last=1' )
+    do( 'Select: Track=0' );
+    do( 'SetTrack: Name="Combined" Height=80')
     capture( 'AutoTracks005.png', 'First_Track' )
 
 
@@ -63,9 +79,11 @@ def track_image9and10() :
     do( 'ZoomSel' );
     do( 'Amplify: Ratio=3.0' )
     do( 'SetPreference: Name=/GUI/SampleView Value=1 Reload=1')
+    do( 'Select: TrackCount=3' );
     capture( 'AutoTracks009.png', 'First_Track' )
     # Zoomed in to show points stem-plot and then no stem plot
     do( 'SetPreference: Name=/GUI/SampleView Value=0 Reload=1')
+    do( 'Select: TrackCount=3' );
     capture( 'AutoTracks010.png', 'First_Track' )
 
 imageSet("Tracks")    

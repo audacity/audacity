@@ -69,14 +69,16 @@ def quickTest() :
 # You will need to modify the paths in this function and the next.
 def playRecord( name ) :
     do("Import: Filename='C:\\Users\\James Crook\\Documents\\Audacity\\" + name + ".wav'")
-    do("Select: FirstTrack=0 LastTrack=0 Mode=All")
+    do("Select: Track=0")
+    do("SelectTrackStartToEnd")
     do("MenuCommand: CommandName=Record2ndChoice")
 
 def exportIt( name ):
-    do("Select: FirstTrack=0 LastTrack=1 Mode=All")
-    do("SetTrackInfo: TrackIndex=0 Selected=False")
+    do("Select: Track=1")
+    do("SelectTrackStartToEnd")
     do("Export: Filename='C:\\Users\\James Crook\\Documents\\Audacity\\" + name + ".wav' Mode=Selection Channels=1.0")
-    do("Select: FirstTrack=0 LastTrack=1 Mode=All")
+    do("Select: Track=0")
+    do("SelectTrackStartToEnd")
     do("MenuCommand: CommandName=RemoveTracks")
 
 def doOneFile( name ):

@@ -28,10 +28,10 @@ def makeStepper():
     do( 'FitInWindow')
     do( 'AddLabelTrack' )
     for i in range( 0, 11 ):
-        do( 'Select: Start='+str(i*2)+' End='+str(i*2+2) )
+        do( 'Select: Track=1 Start='+str(i*2)+' End='+str(i*2+2) )
         do( 'AddLabel' )
         do( 'SetLabel: Label=' + str(i)+' Selected=0 Text='+str( -(i*10) ))
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
   
 
 def spectro_imagesA() :
@@ -39,16 +39,19 @@ def spectro_imagesA() :
     # A stereo track
     capture( 'Spectral001.png', 'First_Track' )
     # As spectrogram.
-    do( 'SetTrack: Track=0 Display=Spectrogram')
-    do( 'Select: Start=55 End=70 First=0 Last=1')
+    do( 'Select' );
+    do( 'SetTrack: Display=Spectrogram')
+    do( 'Select: Start=55 End=70')
     capture( 'Spectral002.png', 'All_Tracks' )
     # Half spectrogram, half wave.
-    do( 'SetTrack: Channel=1 Display=Waveform')
+    do( 'Select: Track=0.5 TrackCount=0.5' );
+    do( 'SetTrack: Display=Waveform')
     capture( 'MixedMode.png', 'All_Tracks' )
 
 def spectro_imagesB():
     makeStepper();
     # Stepper tone, viewed in dB.
+    do( 'Select: Start=0 End=0' );
     do( 'SetTrack: Scale=dB')
     capture( 'Spectral003.png', 'All_Tracks' )
     # As spectrogram.
@@ -58,6 +61,7 @@ def spectro_imagesB():
 def spectro_imagesC():
     # A chirp and the word 'Audacity'
     loadExample( 'AudacitySpectral.wav' )
+    do( 'Select: Start=0 End=0' );
     capture( 'Spectral005.png', 'All_Tracks' )
     do( 'SetTrack: Scale=dB')
     capture( 'Spectral006.png', 'All_Tracks' )
@@ -72,9 +76,11 @@ def spectro_imagesC():
     multiWindow( "SpectralVocal" )
 
 def setWindow( name, value ):
+    do( 'Select: Start=0 End=0' );
     do( 'SetTrack: SpecPrefs=1 Name="Window Size '+value+'"' )
     do( 'SetPreference: Name="/Spectrum/FFTSize" Reload=1 Value='+value )
-    do( 'SetTrack: Track=0 Display=Spectrogram' )
+    do( 'SetTrack: Display=Spectrogram' )
+    do( 'Select: TrackCount=0 Start=0 End=0' );
     capture( name + postfix + value + '.png', 'All_Tracks' )
 
 
@@ -134,12 +140,13 @@ def makeScale( start, end, count ) :
     do( 'FitInWindow' )
     #do( 'Select: Start=0 End=' + str( count/10 ))
     #do( 'Join' )
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
         
 
 def spectro_imagesF():
     makeScale( 200, 4000, 100 )
-    do( 'SetTrack: Track=0 Display=Spectrogram' )
+    do( 'Select: Start=0 End=0' )
+    do( 'SetTrack: Display=Spectrogram' )
     capture( 'ScaleLin.png', 'All_Tracks' )
     do( 'SetPreference: Name=/Spectrum/ScaleType Value=1 Reload=1')
     capture( 'ScaleLog.png', 'All_Tracks' )
@@ -168,5 +175,6 @@ spectro_imagesC()
 spectro_imagesD()
 spectro_imagesE()
 spectro_imagesF()
-    
+
+postfix = ''
 do( 'SetPreference: Name="/GUI/Theme" Value=light Reload=1' )

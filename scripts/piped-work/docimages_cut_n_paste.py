@@ -25,7 +25,7 @@ def cut_n_paste_imagesA() :
     capture( 'CutAndPaste002.png', 'All_Tracks' )
     do( 'SetClip: At=55 Start=60')
     capture( 'CutAndPaste003.png', 'All_Tracks' )
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
     capture( 'CutAndPaste004.png', 'All_Tracks' )
 
 def cut_n_paste_imagesB() :
@@ -34,7 +34,7 @@ def cut_n_paste_imagesB() :
     capture( 'CutAndPaste005.png', 'All_Tracks' )
     do( 'SplitNew' )
     capture( 'CutAndPaste006.png', 'All_Tracks' )
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
     capture( 'CutAndPaste007.png', 'All_Tracks' )
 
 def cut_n_paste_imagesC() :
@@ -46,7 +46,7 @@ def cut_n_paste_imagesC() :
     capture( 'CutAndPaste008.png', 'All_Tracks' )
     do( 'Join' )
     capture( 'CutAndPaste009.png', 'All_Tracks' )
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
     capture( 'CutAndPaste010.png', 'All_Tracks' )
     # Detach at silences
     do( 'Select: Start=0 End=150')
@@ -69,7 +69,7 @@ def cut_n_paste_imagesD() :
     capture( 'CutAndPaste015.png', 'All_Tracks' )
     do( 'Paste' )
     capture( 'CutAndPaste016.png', 'All_Tracks' )
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
     capture( 'CutAndPaste017.png', 'All_Tracks' )
 
     gappyTrack()
@@ -80,7 +80,7 @@ def cut_n_paste_imagesD() :
     capture( 'CutAndPaste018.png', 'All_Tracks' )
     do( 'Paste' )
     capture( 'CutAndPaste019.png', 'All_Tracks' )
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
     capture( 'CutAndPaste030.png', 'All_Tracks' )
 
     #pasting before with no movement (cheat)
@@ -98,7 +98,7 @@ def cut_n_paste_imagesE() :
     capture( 'CutAndPaste033.png', 'All_Tracks' )
     do( 'Duplicate' )
     capture( 'CutAndPaste034.png', 'All_Tracks' )
-    do( 'Select: Start=0 End=0')
+    do( 'Select: TrackCount=0 Start=0 End=0')
     capture( 'CutAndPaste035.png', 'All_Tracks' )
     
 
