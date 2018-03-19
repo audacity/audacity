@@ -685,7 +685,9 @@ void MacrosWindow::PopulateList()
       mList->EnsureVisible( (int)mList->GetItemCount() -1 );
       mList->EnsureVisible( topItem );
       // And then make sure whatever is selected is still visible...
-      mList->EnsureVisible( mSelectedCommand );
+      if (mSelectedCommand >= 0) {
+         mList->EnsureVisible( mSelectedCommand );
+      }
    }
 }
 
