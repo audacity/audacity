@@ -341,3 +341,90 @@ void FinishPreferences()
       gPrefs = NULL;
    }
 }
+
+//////////
+wxString EnumSetting::Read() const
+{
+   const auto &defaultValue = Default().Internal();
+   wxString value;
+   if ( !gPrefs->Read(mKey, &value, defaultValue) )
+      if (!mMigrated) {
+         const_cast<EnumSetting*>(this)->Migrate( value );
+         mMigrated = true;
+      }
+
+   // Remap to default if the string is not known -- this avoids surprises
+   // in case we try to interpret config files from future versions
+   auto index = Find( value );
+   if ( index >= mnSymbols )
+      value = defaultValue;
+   return value;
+}
+
+size_t EnumSetting::Find( const wxString &value ) const
+{
+   return size_t(
+      std::find( begin(), end(), IdentInterfaceSymbol{ value, {} } )
+         - mSymbols );
+}
+
+void EnumSetting::Migrate( wxString &value )
+{
+}
+
+bool EnumSetting::Write( const wxString &value )
+{
+   auto index = Find( value );
+   if (index >= mnSymbols)
+      return false;
+
+   auto result = gPrefs->Write( mKey, value );
+   mMigrated = true;
+   return result;
+}
+
+int EncodedEnumSetting::ReadInt() const
+{
+   if (!mIntValues)
+      return 0;
+
+   auto index = Find( Read() );
+   wxASSERT( index < mnSymbols );
+   return mIntValues[ index ];
+}
+
+size_t EncodedEnumSetting::FindInt( int code ) const
+{
+   if (!mIntValues)
+      return mnSymbols;
+
+   return size_t(
+      std::find( mIntValues, mIntValues + mnSymbols, code )
+         - mIntValues );
+}
+
+void EncodedEnumSetting::Migrate( wxString &value )
+{
+   int intValue = 0;
+   if ( !mOldKey.empty() &&
+        gPrefs->Read(mOldKey, &intValue, 0) ) {
+      // Make the migration, only once and persistently.
+      // Do not DELETE the old key -- let that be read if user downgrades
+      // Audacity.  But further changes will be stored only to the NEW key
+      // and won't be seen then.
+      auto index = FindInt( intValue );
+      if ( index >= mnSymbols )
+         index = mDefaultSymbol;
+      value = mSymbols[index].Internal();
+      Write(value);
+      gPrefs->Flush();
+   }
+}
+
+bool EncodedEnumSetting::WriteInt( int code ) // you flush gPrefs afterward
+{
+   auto index = FindInt( code );
+   if ( index >= mnSymbols )
+      return false;
+   return Write( mSymbols[index].Internal() );
+}
