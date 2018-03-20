@@ -600,7 +600,6 @@ public:
    double GetZoomOfToFit();
    double GetZoomOfSelection();
    double GetZoomOfPreset(int preset );
-   double GetZoomOfPref( const wxString & PresetPrefName, int defaultPreset );
 
  public:
    bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }

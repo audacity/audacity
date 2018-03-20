@@ -6014,12 +6014,6 @@ double AudacityProject::GetZoomOfPreset( int preset ){
    return result;
 }
 
-double AudacityProject::GetZoomOfPref( const wxString & PresetPrefName, int defaultPreset ){
-   int preset=defaultPreset;
-   gPrefs->Read( PresetPrefName, &preset, defaultPreset );
-   return GetZoomOfPreset( preset );
-}
-
 AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {

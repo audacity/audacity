@@ -147,6 +147,74 @@ WaveTrack::SampleDisplay TracksPrefs::SampleViewChoice()
 }
 
 //////////
+static const IdentInterfaceSymbol choicesZoom[] = {
+   { wxT("FitToWidth"), XO("Fit to Width") },
+   { wxT("ZoomToSelection"), XO("Zoom to Selection") },
+   { wxT("ZoomDefault"), XO("Zoom Default") },
+   { XO("Minutes") },
+   { XO("Seconds") },
+   { wxT("FifthsOfSeconds"), XO("5ths of Seconds") },
+   { wxT("TenthsOfSeconds"), XO("10ths of Seconds") },
+   { wxT("TwentiethsOfSeconds"), XO("20ths of Seconds") },
+   { wxT("FiftiethsOfSeconds"), XO("50ths of Seconds") },
+   { wxT("HundredthsOfSeconds"), XO("100ths of Seconds") },
+   { wxT("FiveHundredthsOfSeconds"), XO("500ths of Seconds") },
+   { XO("MilliSeconds") },
+   { XO("Samples") },
+   { wxT("FourPixelsPerSample"), XO("4 Pixels per Sample") },
+   { wxT("MaxZoom"), XO("Max Zoom") },
+};
+static const size_t nChoicesZoom = WXSIZEOF( choicesZoom );
+static const int intChoicesZoom[] = {
+   WaveTrack::kZoomToFit,
+   WaveTrack::kZoomToSelection,
+   WaveTrack::kZoomDefault,
+   WaveTrack::kZoomMinutes,
+   WaveTrack::kZoomSeconds,
+   WaveTrack::kZoom5ths,
+   WaveTrack::kZoom10ths,
+   WaveTrack::kZoom20ths,
+   WaveTrack::kZoom50ths,
+   WaveTrack::kZoom100ths,
+   WaveTrack::kZoom500ths,
+   WaveTrack::kZoomMilliSeconds,
+   WaveTrack::kZoomSamples,
+   WaveTrack::kZoom4To1,
+   WaveTrack::kMaxZoom,
+};
+static_assert( nChoicesZoom == WXSIZEOF(intChoicesZoom), "size mismatch" );
+
+static const size_t defaultChoiceZoom1 = 2; // kZoomDefault
+
+static EncodedEnumSetting zoom1Setting{
+   wxT("/GUI/ZoomPreset1Choice"),
+   choicesZoom, nChoicesZoom, defaultChoiceZoom1,
+
+   intChoicesZoom,
+   wxT("/GUI/ZoomPreset1")
+};
+
+static const size_t defaultChoiceZoom2 = 13; // kZoom4To1
+
+static EncodedEnumSetting zoom2Setting{
+   wxT("/GUI/ZoomPreset2Choice"),
+   choicesZoom, nChoicesZoom, defaultChoiceZoom2,
+
+   intChoicesZoom,
+   wxT("/GUI/ZoomPreset2")
+};
+
+WaveTrack::ZoomPresets TracksPrefs::Zoom1Choice()
+{
+   return (WaveTrack::ZoomPresets) zoom1Setting.ReadInt();
+}
+
+WaveTrack::ZoomPresets TracksPrefs::Zoom2Choice()
+{
+   return (WaveTrack::ZoomPresets) zoom2Setting.ReadInt();
+}
+
+//////////
 TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
@@ -167,38 +235,6 @@ void TracksPrefs::Populate()
 
 
    // How samples are displayed when zoomed in:
-
-   mZoomChoices.Add( _("Fit to Width") );
-   mZoomCodes.push_back( WaveTrack::kZoomToFit );
-   mZoomChoices.Add( _("Zoom to Selection") );
-   mZoomCodes.push_back( WaveTrack::kZoomToSelection );
-   mZoomChoices.Add( _("Zoom Default") );
-   mZoomCodes.push_back( WaveTrack::kZoomDefault );
-   mZoomChoices.Add( _("Minutes") );
-   mZoomCodes.push_back( WaveTrack::kZoomMinutes );
-   mZoomChoices.Add( _("Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoomSeconds );
-   mZoomChoices.Add( _("5ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom5ths );
-   mZoomChoices.Add( _("10ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom10ths );
-   mZoomChoices.Add( _("20ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom20ths );
-   mZoomChoices.Add( _("50ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom50ths );
-   mZoomChoices.Add( _("100ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom100ths );
-   mZoomChoices.Add( _("500ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom500ths );
-   mZoomChoices.Add( _("MilliSeconds") );
-   mZoomCodes.push_back( WaveTrack::kZoomMilliSeconds );
-   mZoomChoices.Add( _("Samples") );
-   mZoomCodes.push_back( WaveTrack::kZoomSamples );
-   mZoomChoices.Add( _("4 Pixels per Sample") );
-   mZoomCodes.push_back( WaveTrack::kZoom4To1 );
-   mZoomChoices.Add( _("Max Zoom") );
-   mZoomCodes.push_back( WaveTrack::kMaxZoom );
-
 
 
    //------------------------- Main section --------------------
@@ -254,16 +290,10 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(4);
       {
          S.TieChoice(_("Preset 1:"),
-                     wxT("/GUI/ZoomPreset1"),
-                     WaveTrack::kZoomDefault,
-                     mZoomChoices,
-                     mZoomCodes);
+                     zoom1Setting );
 
          S.TieChoice(_("Preset 2:"),
-                     wxT("/GUI/ZoomPreset2"),
-                     WaveTrack::kZoom4To1,
-                     mZoomChoices,
-                     mZoomCodes);
+                     zoom2Setting );
       }
    }
    S.EndStatic();
