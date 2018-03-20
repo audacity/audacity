@@ -38,6 +38,7 @@ class TracksPrefs final : public PrefsPanel
    static wxString GetDefaultAudioTrackNamePreference();
 
    static WaveTrack::WaveTrackDisplay ViewModeChoice();
+   static WaveTrack::SampleDisplay SampleViewChoice();
 
  private:
    void Populate();
@@ -45,8 +46,6 @@ class TracksPrefs final : public PrefsPanel
 
    static int iPreferencePinned;
 
-   std::vector<int> mSampleDisplayCodes;
-   wxArrayString mSampleDisplayChoices;
    std::vector<int> mZoomCodes;
    wxArrayString mZoomChoices;
 };

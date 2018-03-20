@@ -119,6 +119,34 @@ WaveTrack::WaveTrackDisplay TracksPrefs::ViewModeChoice()
 }
 
 //////////
+static const IdentInterfaceSymbol choicesSampleDisplay[] = {
+   { wxT("ConnectDots"), XO("Connect dots") },
+   { wxT("StemPlot"), XO("Stem plot") }
+};
+static const size_t nChoicesSampleDisplay = WXSIZEOF( choicesSampleDisplay );
+static const int intChoicesSampleDisplay[] = {
+   (int) WaveTrack::LinearInterpolate,
+   (int) WaveTrack::StemPlot
+};
+static_assert(
+   nChoicesSampleDisplay == WXSIZEOF(intChoicesSampleDisplay), "size mismatch" );
+
+static const size_t defaultChoiceSampleDisplay = 1;
+
+static EncodedEnumSetting sampleDisplaySetting{
+   wxT("/GUI/SampleViewChoice"),
+   choicesSampleDisplay, nChoicesSampleDisplay, defaultChoiceSampleDisplay,
+
+   intChoicesSampleDisplay,
+   wxT("/GUI/SampleView")
+};
+
+WaveTrack::SampleDisplay TracksPrefs::SampleViewChoice()
+{
+   return (WaveTrack::SampleDisplay) sampleDisplaySetting.ReadInt();
+}
+
+//////////
 TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
@@ -139,12 +167,6 @@ void TracksPrefs::Populate()
 
 
    // How samples are displayed when zoomed in:
-
-   mSampleDisplayChoices.Add(_("Connect dots"));
-   mSampleDisplayCodes.push_back((int) WaveTrack::LinearInterpolate);
-
-   mSampleDisplayChoices.Add(_("Stem plot"));
-   mSampleDisplayCodes.push_back((int) WaveTrack::StemPlot);
 
    mZoomChoices.Add( _("Fit to Width") );
    mZoomCodes.push_back( WaveTrack::kZoomToFit );
@@ -216,10 +238,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                      viewModeSetting );
 
          S.TieChoice(_("Display &samples:"),
-                     wxT("/GUI/SampleView"),
-                     1,
-                     mSampleDisplayChoices,
-                     mSampleDisplayCodes);
+                     sampleDisplaySetting );
 
          S.TieTextBox(_("Default audio track &name:"),
                       wxT("/GUI/TrackNames/DefaultTrackName"),
