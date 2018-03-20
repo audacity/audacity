@@ -95,6 +95,7 @@ for registering for changes.
 
 #include "Audacity.h"
 #include "Experimental.h"
+#include "Prefs.h"
 #include "Shuttle.h"
 #include "ShuttleGui.h"
 
@@ -106,6 +107,7 @@ for registering for changes.
 #include <wx/treectrl.h>
 #include <wx/spinctrl.h>
 #include <wx/bmpbuttn.h>
+#include "../include/audacity/IdentInterface.h"
 #include "Internat.h"
 #include "WrappedType.h"
 #include "widgets/wxPanelWrapper.h"
@@ -1850,29 +1852,52 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
 /// Variant of the standard TieChoice which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 ///   @param Prompt             The prompt shown beside the control.
+///   @param Setting            Encapsulates setting name, internal and visible
+///                             choice strings, and a designation of one of
+///                             those as default.
+wxChoice *ShuttleGuiBase::TieChoice(
+   const wxString &Prompt,
+   EnumSetting &enumSetting )
+{
+   // Do this to force any needed migrations first
+   enumSetting.Read();
+
+   wxArrayString visibleChoices, internalChoices;
+   for (const auto &ident : enumSetting) {
+      visibleChoices.push_back( ident.Translation() );
+      internalChoices.push_back( ident.Internal() );
+   }
+   return TieChoice(
+      Prompt, enumSetting.Key(), enumSetting.Default().Translation(),
+         visibleChoices, internalChoices );
+}
+
+/// Variant of the standard TieChoice which does the two step exchange
+/// between gui and stack variable and stack variable and shuttle.
+///   @param Prompt             The prompt shown beside the control.
 ///   @param SettingName        The setting name as stored in gPrefs
 ///   @param Default            The default value for this control (translated)
 ///   @param Choices            An array of choices that appear on screen.
-///   @param TranslatedChoices  The corresponding values (as a string array)
+///   @param InternalChoices    The corresponding values (as a string array)
 wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const wxString &Default,
    const wxArrayString & Choices,
-   const wxArrayString & TranslatedChoices)
+   const wxArrayString & InternalChoices)
 {
    wxChoice * pChoice=(wxChoice*)NULL;
 
    int TempIndex=0;
-//   int TempIndex = TranslateToIndex( Default, TranslatedChoices );
+//   int TempIndex = TranslateToIndex( Default, InternalChoices );
    wxString TempStr = Default;
    WrappedType WrappedRef( TempStr );
    // Get from prefs does 1 and 2.
    // Put to prefs does 2 and 3.
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Index from Prefs.
-   if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, TranslatedChoices ); // To an index
+   if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, InternalChoices ); // To an index
    if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, &Choices ); // Get/Put index from GUI.
-   if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, TranslatedChoices ); // To a string
+   if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, InternalChoices ); // To a string
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;
 }
@@ -1885,13 +1910,13 @@ wxChoice * ShuttleGuiBase::TieChoice(
 ///   @param SettingName        The setting name as stored in gPrefs
 ///   @param Default            The default value for this control (translated)
 ///   @param Choices            An array of choices that appear on screen.
-///   @param TranslatedChoices  The correcponding values (as an integer array)
+///   @param InternalChoices    The corresponding values (as an integer array)
 wxChoice * ShuttleGuiBase::TieChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
    const wxArrayString & Choices,
-   const std::vector<int> & TranslatedChoices)
+   const std::vector<int> & InternalChoices)
 {
    wxChoice * pChoice=(wxChoice*)NULL;
 
@@ -1901,9 +1926,9 @@ wxChoice * ShuttleGuiBase::TieChoice(
    // Get from prefs does 1 and 2.
    // Put to prefs does 2 and 3.
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef ); // Get Int from Prefs.
-   if( DoStep(1) ) TempIndex = TranslateToIndex( TranslatedInt, TranslatedChoices ); // Int to an index.
+   if( DoStep(1) ) TempIndex = TranslateToIndex( TranslatedInt, InternalChoices ); // Int to an index.
    if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, &Choices ); // Get/Put index from GUI.
-   if( DoStep(3) ) TranslatedInt = TranslateFromIndex( TempIndex, TranslatedChoices ); // Index to int
+   if( DoStep(3) ) TranslatedInt = TranslateFromIndex( TempIndex, InternalChoices ); // Index to int
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
    return pChoice;
 }
@@ -2391,7 +2416,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    const wxString &SettingName,
    const wxString &Default,
    const wxArrayString &Choices,
-   const wxArrayString & TranslatedChoices ) 
+   const wxArrayString & InternalChoices )
 {
    StartStruct();
    AddItem( SettingName, "id" );
@@ -2405,14 +2430,14 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    EndArray();
    EndField();
    EndStruct();
-   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, TranslatedChoices );
+   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, InternalChoices );
 }
 wxChoice * ShuttleGuiGetDefinition::TieChoice(
    const wxString &Prompt,
    const wxString &SettingName,
    const int Default,
    const wxArrayString & Choices,
-   const std::vector<int> & TranslatedChoices) 
+   const std::vector<int> & InternalChoices)
 {
    StartStruct();
    AddItem( SettingName, "id" );
@@ -2426,7 +2451,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    EndArray();
    EndField();
    EndStruct();
-   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, TranslatedChoices );
+   return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, InternalChoices );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const wxString &Prompt,

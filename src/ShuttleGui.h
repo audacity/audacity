@@ -27,6 +27,9 @@
 // For ShuttleGuiGetDefinitions.
 #include "commands/CommandTargets.h"
 
+class EnumSetting;
+
+
 const int nMaxNestedSizers = 20;
 
 enum teShuttleMode
@@ -209,18 +212,24 @@ public:
       const wxString &Prompt,
       const wxString &SettingName,
       const bool bDefault);
+
+   // This one is defined in terms of the next and not virtual
+   virtual wxChoice *TieChoice(
+      const wxString &Prompt,
+      EnumSetting &enumSetting );
+
    virtual wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
       const wxArrayString &Choices,
-      const wxArrayString & TranslatedChoices );
+      const wxArrayString & InternalChoices );
    virtual wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
       const wxArrayString & Choices,
-      const std::vector<int> & TranslatedChoices);
+      const std::vector<int> & InternalChoices );
    virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
@@ -421,13 +430,13 @@ public:
       const wxString &SettingName,
       const wxString &Default,
       const wxArrayString &Choices,
-      const wxArrayString & TranslatedChoices ) override;
+      const wxArrayString & InternalChoices ) override;
    wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
       const wxArrayString & Choices,
-      const std::vector<int> & TranslatedChoices) override;
+      const std::vector<int> & InternalChoices) override;
    wxTextCtrl * TieTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
