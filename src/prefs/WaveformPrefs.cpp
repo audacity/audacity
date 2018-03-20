@@ -99,7 +99,6 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
                S.Id(ID_RANGE).TieChoice(_("Waveform dB &range") + wxString(wxT(":")),
                mTempSettings.dBRange,
                &mRangeChoices);
-            S.SetSizeHints(mRangeChoices);
          }
          S.EndTwoColumn();
       }

@@ -123,7 +123,6 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
                              wxT(""),
                              mHostNames,
                              mHostLabels);
-         S.SetSizeHints(mHostNames);
 
          S.AddPrompt(_("Using:"));
          S.AddFixedText(wxString(wxSafeConvertMB2WX(Pa_GetVersionText())));

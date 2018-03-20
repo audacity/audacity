@@ -140,7 +140,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                                        AudioIO::GetOptimalSupportedSampleRate(),
                                        mSampleRateNames,
                                        mSampleRateLabels);
-            S.SetSizeHints(mSampleRateNames);
 
             // Now do the edit box...
             mOtherSampleRate = S.TieNumericTextBox( {},
@@ -154,7 +153,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      floatSample,
                      mSampleFormatNames,
                      mSampleFormatLabels);
-         S.SetSizeHints(mSampleFormatNames);
       }
       S.EndMultiColumn();
    }
@@ -169,7 +167,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      Resample::GetFastMethodDefault(),
                      mConverterNames,
                      mConverterLabels);
-         S.SetSizeHints(mConverterNames);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("&Dither:"),
@@ -177,7 +174,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      Dither::none,
                      mDitherNames,
                      mDitherLabels);
-         S.SetSizeHints(mDitherNames);
       }
       S.EndMultiColumn();
    }
@@ -192,7 +188,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      Resample::GetBestMethodDefault(),
                      mConverterNames,
                      mConverterLabels);
-         S.SetSizeHints(mConverterNames);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("Dit&her:"),
@@ -200,7 +195,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      Dither::shaped,
                      mDitherNames,
                      mDitherLabels);
-         S.SetSizeHints(mDitherNames);
       }
       S.EndMultiColumn();
    }

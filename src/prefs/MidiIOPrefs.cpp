@@ -128,7 +128,6 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
                              wxT(""),
                              mHostNames,
                              mHostLabels);
-         S.SetSizeHints(mHostNames);
 
          S.AddPrompt(_("Using: PortMidi"));
       }

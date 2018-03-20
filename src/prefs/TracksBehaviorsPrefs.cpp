@@ -100,7 +100,6 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                      wxT("Standard"),
                      mSoloChoices,
                      mSoloCodes);
-         S.SetSizeHints(mSoloChoices);
       }
       S.EndMultiColumn();
    }

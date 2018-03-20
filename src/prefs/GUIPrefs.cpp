@@ -142,28 +142,24 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                      wxT(""),
                      mLangNames,
                      mLangCodes);
-         S.SetSizeHints(mLangNames);
 
          S.TieChoice(_("Location of &Manual:"),
                      wxT("/GUI/Help"),
                      wxT("Local"),
                      mHtmlHelpChoices,
                      mHtmlHelpCodes);
-         S.SetSizeHints(mHtmlHelpChoices);
 
          S.TieChoice(_("Th&eme:"),
                      wxT("/GUI/Theme"),
                      defaultTheme,
                      mThemeChoices,
                      mThemeCodes);
-         S.SetSizeHints(mThemeChoices);
 
          S.TieChoice(_("Meter dB &range:"),
                      ENV_DB_KEY,
                      defaultRange,
                      mRangeChoices,
                      mRangeCodes);
-         S.SetSizeHints(mRangeChoices);
       }
       S.EndMultiColumn();
 //      S.AddSpace(10);

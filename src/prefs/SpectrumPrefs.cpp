@@ -232,19 +232,16 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
             mTempSettings.windowSize,
             &mSizeChoices);
-         S.SetSizeHints(mSizeChoices);
 
          S.Id(ID_WINDOW_TYPE).TieChoice(_("Window &type:"),
             mTempSettings.windowType,
             &mTypeChoices);
-         S.SetSizeHints(mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
             S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
             mTempSettings.zeroPaddingFactor,
             &mZeroPaddingChoices);
-         S.SetSizeHints(mZeroPaddingChoices);
 #endif
       }
       S.EndMultiColumn();

@@ -1396,6 +1396,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
       wxASSERT( false );
       break;
    }
+   SetSizeHints(*pChoices);
    return pChoice;
 }
 
@@ -2307,7 +2308,7 @@ wxSizerItem * ShuttleGui::AddSpace( int width, int height )
    return mpSizer->Add( width, height, miProp);
 }
 
-void ShuttleGui::SetSizeHints( wxWindow *window, const wxArrayString & items )
+void ShuttleGuiBase::SetSizeHints( wxWindow *window, const wxArrayString & items )
 {
    int maxw = 0;
 
@@ -2338,37 +2339,12 @@ void ShuttleGui::SetSizeHints( wxWindow *window, const wxArrayString & items )
    window->SetSizeHints( maxw, -1 );
 }
 
-void ShuttleGui::SetSizeHints( wxWindow *window, const std::vector<int> & items )
-{
-   wxArrayString strs;
-
-   for( size_t i = 0; i < items.size(); i++ )
-   {
-      strs.Add( wxString::Format( wxT("%d"), items[i] ) );
-   }
-
-   SetSizeHints( window, strs );
-}
-
-void ShuttleGui::SetSizeHints( const wxArrayString & items )
+void ShuttleGuiBase::SetSizeHints( const wxArrayString & items )
 {
    if( mShuttleMode != eIsCreating )
       return;
 
    SetSizeHints( mpLastWind, items );
-}
-
-void ShuttleGui::SetSizeHints( const std::vector<int> & items )
-{
-   if( mShuttleMode != eIsCreating )
-      return;
-
-   SetSizeHints( mpLastWind, items );
-}
-
-void ShuttleGui::SetSizeHints( int minX, int minY )
-{
-   ShuttleGuiBase::SetSizeHints( minX, minY );
 }
 
 /********************************* GetDefinition ******************************/

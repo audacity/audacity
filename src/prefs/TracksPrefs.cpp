@@ -157,14 +157,12 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                      0,
                      mViewChoices,
                      mViewCodes);
-         S.SetSizeHints(mViewChoices);
 
          S.TieChoice(_("Display &samples:"),
                      wxT("/GUI/SampleView"),
                      1,
                      mSampleDisplayChoices,
                      mSampleDisplayCodes);
-         S.SetSizeHints(mSampleDisplayChoices);
 
          S.TieTextBox(_("Default audio track &name:"),
                       wxT("/GUI/TrackNames/DefaultTrackName"),
@@ -184,14 +182,12 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                      WaveTrack::kZoomDefault,
                      mZoomChoices,
                      mZoomCodes);
-         S.SetSizeHints(mZoomChoices);
 
          S.TieChoice(_("Preset 2:"),
                      wxT("/GUI/ZoomPreset2"),
                      WaveTrack::kZoom4To1,
                      mZoomChoices,
                      mZoomCodes);
-         S.SetSizeHints(mZoomChoices);
       }
    }
    S.EndStatic();

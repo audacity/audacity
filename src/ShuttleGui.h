@@ -288,6 +288,12 @@ protected:
 
    long Style( long Style );
 
+private:
+   void SetSizeHints( const wxArrayString & items );
+public:
+   static void SetSizeHints( wxWindow *window, const wxArrayString & items );
+
+protected:
    wxWindow * mpLastWind;
    wxWindow * mpDlg;
    wxSizer * pSizerStack[ nMaxNestedSizers ];
@@ -388,12 +394,6 @@ public:
    void AddStandardButtons( long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
    wxSizerItem * AddSpace( int width, int height );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
-
-   void SetSizeHints( int minX = -1, int minY = -1 );
-   void SetSizeHints( const wxArrayString & items );
-   void SetSizeHints( const std::vector<int> & items );
-   static void SetSizeHints( wxWindow *window, const wxArrayString & items );
-   static void SetSizeHints( wxWindow *window, const std::vector<int> & items );
 
    teShuttleMode GetMode() { return  mShuttleMode; };
 };
