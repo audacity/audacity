@@ -96,7 +96,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    // Force creation always:
    WaveformSettings &settings = GetIndependentWaveformSettings();
 
-   mDisplay = FindDefaultViewMode();
+   mDisplay = TracksPrefs::ViewModeChoice();
    if (mDisplay == obsoleteWaveformDBDisplay) {
       mDisplay = Waveform;
       settings.scaleType = WaveformSettings::stLogarithmic;
@@ -253,32 +253,6 @@ void WaveTrack::SetPanFromChannelType()
       SetPan( 1.0f );
 };
 
-
-//static
-WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
-{
-   // PRL:  Bugs 1043, 1044
-   // 2.1.1 writes a NEW key for this preference, which got NEW values,
-   // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
-   // Prefer the NEW preference key if it is present
-
-   WaveTrack::WaveTrackDisplay viewMode;
-   gPrefs->Read(wxT("/GUI/DefaultViewModeNew"), &viewMode, -1);
-
-   // Default to the old key only if not, default the value if it's not there either
-   wxASSERT(WaveTrack::MinDisplay >= 0);
-   if (viewMode < 0) {
-      int oldMode;
-      gPrefs->Read(wxT("/GUI/DefaultViewMode"), &oldMode,
-         (int)(WaveTrack::Waveform));
-      viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
-   }
-
-   // Now future-proof 2.1.1 against a recurrence of this sort of bug!
-   viewMode = WaveTrack::ValidateWaveTrackDisplay(viewMode);
-
-   return viewMode;
-}
 
 // static
 WaveTrack::WaveTrackDisplay

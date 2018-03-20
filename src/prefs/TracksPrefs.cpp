@@ -45,17 +45,86 @@ namespace {
 }
 
 
+//////////
+static const IdentInterfaceSymbol choicesView[] = {
+   { XO("Waveform") },
+   { wxT("WaveformDB"), XO("Waveform (dB)") },
+   { XO("Spectrogram") }
+};
+static const int intChoicesView[] = {
+   (int)(WaveTrack::Waveform),
+   (int)(WaveTrack::obsoleteWaveformDBDisplay),
+   (int)(WaveTrack::Spectrum)
+};
+static const size_t nChoicesView = WXSIZEOF(choicesView);
+static_assert( nChoicesView == WXSIZEOF(intChoicesView), "size mismatch" );
+
+static const size_t defaultChoiceView = 0;
+
+class TracksViewModeSetting : public EncodedEnumSetting {
+public:
+   TracksViewModeSetting(
+      const wxString &key,
+      const IdentInterfaceSymbol symbols[], size_t nSymbols,
+      size_t defaultSymbol,
+
+      const int intValues[],
+      const wxString &oldKey
+   )
+      : EncodedEnumSetting{
+         key, symbols, nSymbols, defaultSymbol, intValues, oldKey }
+   {}
+
+   void Migrate( wxString &value ) override
+   {
+      // Special logic for this preference which was twice migrated!
+
+      // First test for the older but not oldest key:
+      EncodedEnumSetting::Migrate(value);
+      if (!value.empty())
+         return;
+
+      // PRL:  Bugs 1043, 1044
+      // 2.1.1 writes a NEW key for this preference, which got NEW values,
+      // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
+      // Prefer the NEW preference key if it is present
+
+      int oldMode;
+      gPrefs->Read(wxT("/GUI/DefaultViewMode"), // The very old key
+         &oldMode,
+         (int)(WaveTrack::Waveform));
+      auto viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
+
+      // Now future-proof 2.1.1 against a recurrence of this sort of bug!
+      viewMode = WaveTrack::ValidateWaveTrackDisplay(viewMode);
+
+      const_cast<TracksViewModeSetting*>(this)->WriteInt( viewMode );
+      gPrefs->Flush();
+
+      value = mSymbols[ FindInt(viewMode) ].Internal();
+   }
+};
+
+static TracksViewModeSetting viewModeSetting{
+   wxT("/GUI/DefaultViewModeChoice"),
+   choicesView, nChoicesView, defaultChoiceView,
+
+   intChoicesView,
+   wxT("/GUI/DefaultViewModeNew")
+};
+
+WaveTrack::WaveTrackDisplay TracksPrefs::ViewModeChoice()
+{
+   return (WaveTrack::WaveTrackDisplay) viewModeSetting.ReadInt();
+}
+
+//////////
 TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
  * notes */
 :  PrefsPanel(parent, winid, _("Tracks"))
 {
-   // Bugs 1043, 1044
-   // First rewrite legacy preferences
-   gPrefs->Write(wxT("/GUI/DefaultViewModeNew"),
-      (int) WaveTrack::FindDefaultViewMode());
-
    Populate();
 }
 
@@ -67,15 +136,6 @@ void TracksPrefs::Populate()
 {
    // Keep view choices and codes in proper correspondence --
    // we don't display them by increasing integer values.
-
-   mViewChoices.Add(_("Waveform"));
-   mViewCodes.push_back((int)(WaveTrack::Waveform));
-
-   mViewChoices.Add(_("Waveform (dB)"));
-   mViewCodes.push_back((int)(WaveTrack::obsoleteWaveformDBDisplay));
-
-   mViewChoices.Add(_("Spectrogram"));
-   mViewCodes.push_back(WaveTrack::Spectrum);
 
 
    // How samples are displayed when zoomed in:
@@ -153,10 +213,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.TieChoice(_("Default &view mode:"),
-                     wxT("/GUI/DefaultViewModeNew"),
-                     0,
-                     mViewChoices,
-                     mViewCodes);
+                     viewModeSetting );
 
          S.TieChoice(_("Display &samples:"),
                      wxT("/GUI/SampleView"),
