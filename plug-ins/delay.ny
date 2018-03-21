@@ -1,29 +1,29 @@
-;nyquist plug-in
-;version 3
-;type process
-;preview linear
-;categories "http://lv2plug.in/ns/lv2core#DelayPlugin"
-$name (_"Delay")
-;manpage "Delay"
-$action (_"Applying Delay Effect...")
-$author (_"Steve Daulton")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 3
+$type process
+$preview linear
+$name (_ "Delay")
+$manpage "Delay"
+$action (_ "Applying Delay Effect...")
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; by Steve Daulton, July 2012.
 ;; based on 'Delay' by David R. Sky
+
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control delay-type (_"Delay type") choice ((_"regular") (_"bouncing ball") (_"reverse bouncing ball")) 0
-$control dgain (_"Delay level per echo (dB)") real "" -6 -30 1
-$control delay (_"Delay time (seconds)") real "" 0.3 0 5
-$control pitch-type (_"Pitch change effect") choice ((_"Pitch/Tempo") (_"LQ Pitch Shift")) 0 
-$control shift (_"Pitch change per echo (semitones)") real "" 0 -2 2
-$control number (_"Number of echoes") int "" 5 1 30
-$control constrain (_"Allow duration to change") choice ((_"Yes") (_"No")) 0 
+$control delay-type (_ "Delay type") choice ((_ "regular") (_ "bouncing ball") (_ "reverse bouncing ball")) 0
+$control dgain (_ "Delay level per echo (dB)") real "" -6 -30 1
+$control delay (_ "Delay time (seconds)") real "" 0.3 0 5
+$control pitch-type (_ "Pitch change effect") choice ((_ "Pitch/Tempo") (_ "LQ Pitch Shift")) 0 
+$control shift (_ "Pitch change per echo (semitones)") real "" 0 -2 2
+$control number (_ "Number of echoes") int "" 5 1 30
+$control constrain (_ "Allow duration to change") choice ((_ "Yes") (_ "No")) 0 
 
 
 ;; The default pitch shift effect is a simple resampling, 
@@ -42,19 +42,19 @@ $control constrain (_"Allow duration to change") choice ((_"Yes") (_"No")) 0
     T nil))
 
 (when (err-chk number 1 50)(setq err (format nil
-  (_"Number of echoes '~a' outside valid range 1 to 50.~%~a")  
+  (_ "Number of echoes '~a' outside valid range 1 to 50.~%~a")  
   number err)))
 
 (when (err-chk shift -12 12)(setq err (format nil
-  (_"Pitch change '~a' outside valid range -12 to +12 semitones.~%~a") 
+  (_ "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a") 
   shift err)))
 
 (when (err-chk delay 0 10)(setq err (format nil
-  (_"Delay time '~a' outside valid range 0 to 10 seconds.~%~a") 
+  (_ "Delay time '~a' outside valid range 0 to 10 seconds.~%~a") 
   delay err)))
  
 (when (err-chk dgain -30 6)(setq err (format nil
-  (_"Delay level '~a' outside valid range -30 to +6 dB.~%~a") 
+  (_ "Delay level '~a' outside valid range -30 to +6 dB.~%~a") 
   dgain err)))
 
 
@@ -121,7 +121,7 @@ $control constrain (_"Allow duration to change") choice ((_"Yes") (_"No")) 0
 
 ;;; return errors or process
 (if (> (length err) 0)
-  (format nil (_"Error.~%~a") err)               ; return error
+  (format nil (_ "Error.~%~a") err)               ; return error
   (let* ((delay (if (= delay-type 0) delay (/ delay number)))
          (output 
           (multichan-expand #'delays 

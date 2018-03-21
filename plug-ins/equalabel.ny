@@ -1,31 +1,34 @@
-;nyquist plug-in
-;version 4
-;type tool
-$name (_"Regular Interval Labels")
-;manpage "Regular_Interval_Labels"
-$action (_"Adding equally-spaced labels to the label track...")
-$author (_"Steve Daulton")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 4
+$type tool
+$name (_ "Regular Interval Labels")
+$manpage "Regular_Interval_Labels"
+$action (_ "Adding equally-spaced labels to the label track...")
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
-;; Released under terms of the GNU General Public License version 2:
-;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-;;
 ;; Original version by David R. Sky (http://www.garyallendj.com/davidsky/) 2007.
 ;; Based on an idea by Sami Jumppanen, with contributions from
 ;; Alex S.Brown, Dominic Mazzoni, Pierre M.I., Gale Andrews, Steve Daulton.
 ;; This version by Steve Daulton (http://easyspacepro.com) 2016
 
-$control mode (_"Use 'Number of labels' OR 'Label interval'") choice ((_"Number of labels") (_"Label interval")) 0
-$control totalnum (_"Number of labels") int-text "" 10 1 1000
-$control interval (_"Label interval (seconds)") float-text "" 60 0.001 3600
-$control adjust (_"Adjust label interval to fit length") choice ((_"No") (_"Yes")) 0
-$control labeltext (_"Label text") string "" (_"Label")
-$control zeros (_"Minimum number of digits in label") choice (
-   (_"None - text only")
-   (_"1 (before label)") (_"2 (before label)") (_"3 (before label)")
-   (_"1 (after label)") (_"2 (after label)") (_"3 (after label)")
-) 2
-$control firstnum (_"Begin numbering from") int-text "" 1 0 nil
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
+
+$control mode (_ "Use 'Number of labels' OR 'Label interval'") choice ((_ "Number of labels") (_ "Label interval")) 0
+$control totalnum (_ "Number of labels") int-text "" 10 1 1000
+$control interval (_ "Label interval (seconds)") float-text "" 60 0.001 3600
+$control adjust (_ "Adjust label interval to fit length") choice ((_ "No") (_ "Yes")) 0
+$control labeltext (_ "Label text") string "" (_ "Label")
+$control zeros (_ "Minimum number of digits in label") choice (
+   (_ "None - text only")
+   (_ "1 (before label)") (_ "2 (before label)") (_ "3 (before label)")
+   (_ "1 (after label)") (_ "2 (after label)") (_ "3 (after label)")) 2
+$control firstnum (_ "Begin numbering from") int-text "" 1 0 nil
 
 
 (defun make-labels ()

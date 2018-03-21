@@ -1,20 +1,21 @@
-;nyquist plug-in
-;version 4
-;type tool
-$name (_"Sample Data Import")
-;manpage "Sample_Data_Import"
-$action (_"Reading and rendering samples...")
-$author (_"Steve Daulton")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 4
+$type tool
+$name (_ "Sample Data Import")
+$manpage "Sample_Data_Import"
+$action (_ "Reading and rendering samples...")
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; sample-data-import.ny by Steve Daulton November 2016.
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-
-$control filename (_"File name") string "" "sample-data.txt"
-$control path (_"File location (path to file)") string "" "Home directory"
-$control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as zero")) 0
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
 ;; Documentation.
@@ -91,6 +92,11 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
 ;; https://manual.audacityteam.org/man/sample_data_import.html
 
 
+$control filename (_ "File name") string "" "sample-data.txt"
+$control path (_ "File location (path to file)") string "" "Home directory"
+$control bad-data (_ "Invalid data handling") choice ((_ "Throw error") (_ "Read as zero")) 0
+
+
 ;; home directory
 (defun home ()
   (if (windowsp)
@@ -107,9 +113,9 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
 (defun fileopensp (path fname)
   (let ((path (string-trim " " path)))
     (if (string-equal fname "")
-        (throw 'err (format nil (_"Error~%No file name."))))
+        (throw 'err (format nil (_ "Error~%No file name."))))
     (if (string-not-equal fname ".txt" :start1 (- (length fname) 4))
-        (throw 'err (format nil (_"Error~%The file must be a plain ASCII text file~%with '.txt' file extension."))))
+        (throw 'err (format nil (_ "Error~%The file must be a plain ASCII text file~%with '.txt' file extension."))))
     ;; Handle special 'path' formats:
     (cond
       ; "~" without "/" is not recommended (or documented)
@@ -117,15 +123,15 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
       ((string= path "~")
           (if (windowsp)
 	  ;i18n-hint: ~~ format directive must be preserved; displays as one ~
-              (format nil (_"Error~%'~~/' is not valid on Windows"))
+              (format nil (_ "Error~%'~~/' is not valid on Windows"))
               (setq path (home))))
       ;; replace "~/" on Linux/Mac
       ((and (>= (length path) 2) (string= path "~/" :end1 2))
           (if (windowsp)
 	  ;i18n-hint: ~~ format directive must be preserved; displays as one ~
-              (format nil (_"Error~%'~~/' is not valid on Windows"))
+              (format nil (_ "Error~%'~~/' is not valid on Windows"))
               (setq path (strcat (home)(subseq path 1)))))
-      ((string-equal path (_"Home directory"))
+      ((string-equal path (_ "Home directory"))
           (setf path (home)))
       ;; If empty, use 'Home'
       ((string-equal path "")
@@ -133,10 +139,10 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
     ;; Now check that the file can be opened:
     (cond
       ((not (setdir path))
-          (throw 'err (format nil (_"Error~%~
+          (throw 'err (format nil (_ "Error~%~
                           Directory '~a' could not be opened.") path)))
       ((not (setf fstream (open fname)))
-          (throw 'err (format nil (_"Error~%~
+          (throw 'err (format nil (_ "Error~%~
                           '~a~a~a' could not be opened.~%~
                           Check that file exists.")
                           path *file-separator* fname)))
@@ -144,7 +150,7 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
       (t  (do ((j 0 (1+ j))(b (read-byte fstream)(read-byte fstream)))
               ((or (> j 100000)(not b)))
             (when (> b 127)
-              (throw 'err (format nil (_"Error:~%~
+              (throw 'err (format nil (_ "Error:~%~
                 The file must contain only plain ASCII text.~%~
                 (Invalid byte '~a' at byte number: ~a)") b (1+ j) ))))
           (close fstream)
@@ -185,7 +191,7 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
       ((not val) nil) ;end of file
       ((numberp val)  (float val)) ;valid.
       ((= bad-data 0) ;invalid. Throw error and quit
-          (throw 'err (format nil (_"Error~%~
+          (throw 'err (format nil (_ "Error~%~
               Data must be numbers in plain ASCII text.~%~
               '~a' is not a numeric value.") val)))
       (t  0.0)))) ;invalid. Replace with zero.
@@ -197,7 +203,7 @@ $control bad-data (_"Invalid data handling") choice ((_"Throw error") (_"Read as
 (defun sound-from-file (filename)
   ;; Set path. fileopenp should return 'true'
   (if (not (fileopensp path filename))
-      (throw 'err (format nil (_"Error.~%Unable to open file"))))
+      (throw 'err (format nil (_ "Error.~%Unable to open file"))))
   ; Note: we can't use (arrayp *track*) because
   ; *track* is nil in generate type plug-ins.
   (cond 

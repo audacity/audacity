@@ -1,13 +1,12 @@
-;nyquist plug-in
-;version 3
-;type process
-;preview enabled
-;categories "http://lv2plug.in/ns/lv2core#SpectralPlugin"
-$name (_"Vocoder")
-;manpage "Vocoder"
-$action (_"Processing Vocoder...")
-$author (_"Edgar-RFT")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 3
+$type process
+$preview enabled
+$name (_ "Vocoder")
+$manpage "Vocoder"
+$action (_ "Processing Vocoder...")
+$author (_ "Edgar-RFT")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; vocoder.ny by Edgar-RFT
 ;; a bit of code added by David R. Sky
@@ -21,13 +20,13 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control dst (_"Distance: (1 to 120, default = 20)") real "" 20 1 120
-$control mst (_"Output choice") choice ((_"both channels") (_"right only")) 0
-$control bands (_"Number of vocoder bands") int "" 40 10 240
-$control track-vl (_"Amplitude of original audio (percent)") real "" 100 0 100
-$control noise-vl (_"Amplitude of white noise (percent)") real "" 0 0 100
-$control radar-vl (_"Amplitude of Radar Needles (percent)") real "" 0 0 100
-$control radar-f (_"Frequency of Radar Needles (Hz)") real "" 30 1 100
+$control dst (_ "Distance: (1 to 120, default = 20)") real "" 20 1 120
+$control mst (_ "Output choice") choice ((_ "both channels") (_ "right only")) 0
+$control bands (_ "Number of vocoder bands") int "" 40 10 240
+$control track-vl (_ "Amplitude of original audio (percent)") real "" 100 0 100
+$control noise-vl (_ "Amplitude of white noise (percent)") real "" 0 0 100
+$control radar-vl (_ "Amplitude of Radar Needles (percent)") real "" 0 0 100
+$control radar-f (_ "Frequency of Radar Needles (Hz)") real "" 30 1 100
 
 ; maybe the code once again has to be changed into _one_ local let-binding
 ; if you have lots of nyquist "[gc:" messages try this:
@@ -136,4 +135,4 @@ $control radar-f (_"Frequency of Radar Needles (Hz)") real "" 30 1 100
           (0 s)             ; let Audacity coerce back to stereo
           (1 (vector original s)))))
  (t                         ; this effect isn't meant for mono
-  (format nil (_"Error.~%Stereo track required."))))
+  (format nil (_ "Error.~%Stereo track required."))))

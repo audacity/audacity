@@ -1,22 +1,20 @@
-;nyquist plug-in
-;version 4
-;type generate
-;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
-$name (_"Pluck")
-;manpage "Pluck"
-;debugbutton false
-;preview linear
-$action (_"Generating pluck sound...")
-$info (_"MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96.")
-$author (_"David R.Sky")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 4
+$type generate
+$name (_ "Pluck")
+$manpage "Pluck"
+$debugbutton false
+$preview linear
+$action (_ "Generating pluck sound...")
+$info (_ "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96.")
+$author (_ "David R.Sky")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:
-;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
-
-$control pitch (_"Pluck MIDI pitch") int "" 60 1 120
-$control fade (_"Fade-out type") choice ((_"abrupt") (_"gradual")) 0
-$control dur (_"Duration [seconds]") real "" 1 0.1 30
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ; original pluck.ny modified by David R.Sky October 2007
 ; [vastly simplified later]
@@ -29,6 +27,11 @@ $control dur (_"Duration [seconds]") real "" 1 0.1 30
 ; rise to DC offset. Using 'snd-pluck' avoids the clipping and 
 ; reduces offset so we don't need the highpass8 filter that we used before.
 ; Updated to v4 by Steve Daulton May 2015
+
+
+$control pitch (_ "Pluck MIDI pitch") int "" 60 1 120
+$control fade (_ "Fade-out type") choice ((_ "abrupt") (_ "gradual")) 0
+$control dur (_ "Duration [seconds]") real "" 1 0.1 30
 
 
 ; set final-amp for abrupt or gradual fade

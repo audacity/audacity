@@ -1,27 +1,31 @@
-;nyquist plug-in
-;version 1
-;type analyze
-;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
-$name (_"Sound Finder")
-;manpage "Sound_Finder"
-$action (_"Finding sound...")
-$info (_"Adds region labels for areas of sound according to the specified level
-and duration of surrounding silence. If too many labels are produced,
-increase the silence level and duration; if too few are produced,
-reduce the level and duration.")
-$author (_"Jeremy R. Brown")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 1
+$type analyze
+$name (_ "Sound Finder")
+$manpage "Sound_Finder"
+$action (_ "Finding sound...")
+$author (_ "Jeremy R. Brown")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; by Jeremy R. Brown (http://www.jeremy-brown.com/)
 ;; based on the Silence Finder script by Alex S. Brown (http://www.alexsbrown.com)
+;;
+;; Adds region labels for areas of sound according to the specified level
+;; and duration of surrounding silence. If too many labels are produced,
+;; increase the silence level and duration$ if too few are produced,
+;; reduce the level and duration.
+
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control sil-lev (_"Treat audio below this level as silence [ -dB]") real "" 26 0 100
-$control sil-dur (_"Minimum duration of silence between sounds [seconds]") real "" 1.0 0.1 5.0
-$control labelbeforedur (_"Label starting point [seconds before sound starts]") real "" 0.1 0.0 1.0
-$control labelafterdur (_"Label ending point [seconds after sound ends]") real "" 0.1 0.0 1.0
-$control finallabel (_"Add a label at the end of the track? [No=0, Yes=1]") int "" 0 0 1
+$control sil-lev (_ "Treat audio below this level as silence [ -dB]") real "" 26 0 100
+$control sil-dur (_ "Minimum duration of silence between sounds [seconds]") real "" 1.0 0.1 5.0
+$control labelbeforedur (_ "Label starting point [seconds before sound starts]") real "" 0.1 0.0 1.0
+$control labelafterdur (_ "Label ending point [seconds after sound ends]") real "" 0.1 0.0 1.0
+$control finallabel (_ "Add a label at the end of the track? [No=0, Yes=1]") int "" 0 0 1
 
 ;30Dec09: couple of changes made to default control values by Gale Andrews 
 
@@ -152,7 +156,7 @@ s-in))
 ;If no sound markers were found, return a message
 ;Otherwise, if some sounds were found, also optionally place a label at the end of the file.
 (if (null l)
- (setq l (format nil (_"No sounds found. Try reducing the silence~%level and minimum silence duration.")))
- (if (= finallabel 1) (add-label (/ s1-length s1-srate) (/ s1-length s1-srate) (_"[End]")))
+ (setq l (format nil (_ "No sounds found. Try reducing the silence~%level and minimum silence duration.")))
+ (if (= finallabel 1) (add-label (/ s1-length s1-srate) (/ s1-length s1-srate) (_ "[End]")))
 )
 l

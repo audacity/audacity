@@ -1,12 +1,18 @@
-;nyquist plug-in
-;version 4
-;type process
-;preview enabled
-$name (_"Clip Fix")
-;manpage "Clip_Fix"
-$action (_"Reconstructing clips...")
-$author (_"Benjamin Schwartz and Steve Daulton")
-$copyright (_"Licensing confirmed under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 4
+$type process
+$preview enabled
+$name (_ "Clip Fix")
+$manpage "Clip_Fix"
+$action (_ "Reconstructing clips...")
+$author (_ "Benjamin Schwartz and Steve Daulton")
+$copyright (_ "Licensing confirmed under terms of the GNU General Public License version 2")
+
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;; Algorithm by Benjamin Schwartz
 ;; Clip Fix is a simple, stupid (but not blind) digital-clipping-corrector
@@ -16,8 +22,9 @@ $copyright (_"Licensing confirmed under terms of the GNU General Public License 
 ;; 3. Do a cubic spline interpolation.
 ;; 4. Go to next region
 
-$control threshold (_"Threshold of Clipping (%)") float "" 95 0 100
-$control gain (_"Reduce amplitude to allow for restored peaks (dB)") float "" -9 -30 0
+
+$control threshold (_ "Threshold of Clipping (%)") float "" 95 0 100
+$control gain (_ "Reduce amplitude to allow for restored peaks (dB)") float "" -9 -30 0
 
 (setf threshold (/ threshold 100))
 (setf gain (db-to-linear gain))

@@ -1,38 +1,36 @@
-;nyquist plug-in
-;version 4
-;type process
-;preview linear
-;preview selection
-;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
-$name (_"Adjustable Fade")
-;manpage "Adjustable_Fade"
-;debugbutton false
-$action (_"Applying Fade...")
-$author (_"Steve Daulton")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 4
+$type process
+$preview linear
+$preview selection
+$name (_ "Adjustable Fade")
+$manpage "Adjustable_Fade"
+$debugbutton false
+$action (_ "Applying Fade...")
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; adjustable-fade.ny by Steve Daulton Dec 2012
+
 ;; Released under terms of the GNU General Public License version 2:
-;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html 
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control type (_"Fade Type") choice ((_"Fade Up") (_"Fade Down") (_"S-Curve Up") (_"S-Curve Down")) 0
-$control curve (_"Mid-fade Adjust (%)") real "" 0 -100 100
-$control units (_"Start/End as") choice ((_"% of Original") (_"dB Gain")) 0 
-$control gain0 (_"Start (or end)") float-text "" 0 nil nil
-$control gain1 (_"End (or start)") float-text "" 100 nil nil
-$control preset (_"   Handy Presets
-(override controls)") choice (
-   (_"None Selected")
-   (_"Linear In") (_"Linear Out")
-   (_"Exponential In") (_"Exponential Out")
-   (_"Logarithmic In") (_"Logarithmic Out")
-   (_"Rounded In") (_"Rounded Out")
-   (_"Cosine In") (_"Cosine Out")
-   (_"S-Curve In") (_"S-Curve Out")
- ) 0
+$control type (_ "Fade Type") choice ((_ "Fade Up") (_ "Fade Down") (_ "S-Curve Up") (_ "S-Curve Down")) 0
+$control curve (_ "Mid-fade Adjust (%)") real "" 0 -100 100
+$control units (_ "Start/End as") choice ((_ "% of Original") (_ "dB Gain")) 0 
+$control gain0 (_ "Start (or end)") float-text "" 0 nil nil
+$control gain1 (_ "End (or start)") float-text "" 100 nil nil
+$control preset (_ "Handy Presets (override controls)") choice (
+   (_ "None Selected")
+   (_ "Linear In") (_ "Linear Out")
+   (_ "Exponential In") (_ "Exponential Out")
+   (_ "Logarithmic In") (_ "Logarithmic Out")
+   (_ "Rounded In") (_ "Rounded Out")
+   (_ "Cosine In") (_ "Cosine Out")
+   (_ "S-Curve In") (_ "S-Curve Out")) 0
 
 
 (defun get-input (sig)
@@ -54,12 +52,12 @@ selection length, but preview only needs to process preview length."
   (if (= units 0)  ;percentage values
     (cond
       ((or (< x 0)(< y 0))
-        (throw 'err (format nil (_"~aPercentage values cannot be negative.") err)))
+        (throw 'err (format nil (_ "~aPercentage values cannot be negative.") err)))
       ((or (> x 1000)(> y 1000))
-        (throw 'err (format nil (_"~aPercentage values cannot be more than 1000 %.") err))))
+        (throw 'err (format nil (_ "~aPercentage values cannot be more than 1000 %.") err))))
     (cond   ;dB values
       ((or (> x 100)(> y 100))
-        (throw 'err (format nil (_"~adB values cannot be more than +100 dB.~%~%~
+        (throw 'err (format nil (_ "~adB values cannot be more than +100 dB.~%~%~
                                  Hint: 6 dB doubles the amplitude~%~
                                  \t-6 dB halves the amplitude." err)))))))
 
@@ -193,7 +191,7 @@ selection length, but preview only needs to process preview length."
 (setf curve (/ curve 100.0))
 (setf gain0 (gainscale gain0 units))
 (setf gain1 (gainscale gain1 units))
-(setf err (format nil (_"Error~%~%")))
+(setf err (format nil (_ "Error~%~%")))
 
 
 (catch 'err (fade *track* type curve gain0 gain1))

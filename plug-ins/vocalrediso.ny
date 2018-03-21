@@ -1,37 +1,41 @@
-;nyquist plug-in
-;version 4
-;type process
-;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
-$name (_"Vocal Reduction and Isolation")
-;manpage "Vocal_Reduction_and_Isolation"
-$action (_"Applying Action...")
-$author (_"Robert Haenggi")
-$copyright (_"Released under terms of the GNU General Public License version 2")
-;;
+$nyquist plug-in
+$version 4
+$type process
+$preview linear
+$name (_ "Vocal Reduction and Isolation")
+$manpage "Vocal_Reduction_and_Isolation"
+$action (_ "Applying Action...")
+$author (_ "Robert Haenggi")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
+
 ;; vocrediso.ny, based on rjh-stereo-tool.ny
-;; Released under terms of the GNU General Public License version 2:
-;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
 ;; Plug-in version 1.56, June 2015
 ;; Requires Audacity 2.1.1  or later, developed under Audacity 2.1.1
+
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
-$control action (_"Action") choice (
-   (_"Remove Vocals")
-   (_"Isolate Vocals")
-   (_"Isolate Vocals and Invert")
-   (_"Remove Center")
-   (_"Isolate Center")
-   (_"Isolate Center and Invert")
-   (_"Remove Center Classic: Mono")
-   (_"Analyze")
-) 0
-(setf rotation 0.0)
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
+$control action (_ "Action") choice (
+   (_ "Remove Vocals")
+   (_ "Isolate Vocals")
+   (_ "Isolate Vocals and Invert")
+   (_ "Remove Center")
+   (_ "Isolate Center")
+   (_ "Isolate Center and Invert")
+   (_ "Remove Center Classic: Mono")
+   (_ "Analyze")) 0
+$control strength (_ "Strength") real "" 1.0 0.0 50.0
+$control low-transition (_ "Low Cut for Vocals (Hz)") real "" 120 1 24000
+$control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
+
 ;;control rotation "Rotation (Degrees)" real "" 0 -180 180
-$control strength (_"Strength") real "" 1.0 0.0 50.0
-$control low-transition (_"Low Cut for Vocals (Hz)") real "" 120 1 24000
-$control high-transition (_"High Cut for Vocals (Hz)") real "" 9000 1 24000
-;
-;preview linear
-; 
+(setf rotation 0.0)
+
+
 ;; make aref shorter
 (defmacro  : (array index) (backquote (aref ,array ,index)))
 ;;
@@ -70,7 +74,7 @@ $control high-transition (_"High Cut for Vocals (Hz)") real "" 9000 1 24000
                (t (/ s-xy s-x2))))
          (a0 (- bar-y (* a1 bar-x)))) 
    (if show (format t 
-(_"Average x: ~a, y: ~a
+(_ "Average x: ~a, y: ~a
 Covariance x y: ~a
 Average variance x: ~a, y: ~a
 Standard deviation x: ~a, y: ~a
@@ -86,31 +90,31 @@ bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)
 ;;
 ;; Summary for "Analyse", fed with coeff. of correlation
 (defun summary (analysis &aux (corr (car analysis)) (pan-position (third analysis)))
-  (format nil (_"Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%") 
+  (format nil (_ "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%") 
             pan-position
             (round (* corr 100))
             (cond
              ((between corr 0.97 1.1)
-              (_" - The two channels are identical, i.e. dual mono.
+              (_ " - The two channels are identical, i.e. dual mono.
    The center can't be removed.
       Any remaining  difference may be caused by lossy encoding."))
              ((between corr 0.9 0.97)  
-              (_" - The two Channels are strongly related, i.e. nearly mono or extremely panned.
+              (_ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.
    Most likely, the center extraction will be poor."))
              ((between corr 0.5 0.9)
-              (_" - A fairly good value, at least stereo in average and not too wide spread."))
+              (_ " - A fairly good value, at least stereo in average and not too wide spread."))
              ((between corr 0.2 0.5)
-              (_" - An ideal value for Stereo.
+              (_ " - An ideal value for Stereo.
   However, the center extraction depends also on the used reverb."))
              ((between  corr -0.2 0.2)
-              (_" - The two channels are almost not related.
+              (_ " - The two channels are almost not related.
    Either you have only noise or the piece is mastered in a unbalanced manner.
    The center extraction can still be good though."))
              ((between corr -0.8 -0.2)
-              (_" - Although the Track is stereo, the field is obviously extra wide.
+              (_ " - Although the Track is stereo, the field is obviously extra wide.
    This can cause strange effects.
    Especially when played by only one speaker."))
-             (t (_" - The two channels are nearly identical.
+             (t (_ " - The two channels are nearly identical.
    Obviously, a pseudo stereo effect has been used
    to spread the signal over the physical distance between the speakers.
  Don't expect good results from a center removal.")))))
@@ -195,7 +199,7 @@ bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)
 ;;; main procedure
 (defun catalog  (&aux  snd
 (original-len (/ (+ len hop) *sr*)) (dur (get-duration 1)))
-  (if (soundp *track*) (return-from catalog  (_"This plug-in works only with stereo tracks."))
+  (if (soundp *track*) (return-from catalog  (_ "This plug-in works only with stereo tracks."))
       (setf snd (vector (snd-copy (: *track* 0)) (snd-copy (: *track* 1)))))
   (cond
          ((= action 7)

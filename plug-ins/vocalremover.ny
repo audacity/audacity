@@ -1,13 +1,12 @@
-;nyquist plug-in
-;version 4
-;type process
-;preview linear
-$name (_"Vocal Remover")
-;manpage "Vocal_Remover"
-$action (_"Removing center-panned audio...")
-$info (_"For reducing center-panned vocals")
-$author (_"Steve Daulton")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 4
+$type process
+$preview linear
+$name (_ "Vocal Remover")
+$manpage "Vocal_Remover"
+$action (_ "Removing center-panned audio...")
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; This version of vocalremover.ny by Steve Daulton June 2013.
 ;;
@@ -16,26 +15,29 @@ $copyright (_"Released under terms of the GNU General Public License version 2")
 ;; the default, restore a single Help screen and restore error checking.
 ;; Thanks to David Hostetler for notes in his own vocal remover plug-in,
 ;; http://www.freelists.org/archives/audacity4blind/06-2006/msg00049.html
-;;
+
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control action (_"Remove vocals or view Help") choice (
-   (_"Remove vocals")
-   (_"View Help")
+$control action (_ "Remove vocals or view Help") choice (
+   (_ "Remove vocals")
+   (_ "View Help")
 ) 0
-$control band-choice (_"Removal choice") choice (
-   (_"Simple (entire spectrum)")
-   (_"Remove frequency band")
-   (_"Retain frequency band")
+$control band-choice (_ "Removal choice") choice (
+   (_ "Simple (entire spectrum)")
+   (_ "Remove frequency band")
+   (_ "Retain frequency band")
 ) 0
-$control low-range (_"Frequency band from (Hz)") float-text "" 500 0 nil
-$control high-range (_"Frequency band to (Hz)") float-text "" 2000 0 nil
+$control low-range (_ "Frequency band from (Hz)") float-text "" 500 0 nil
+$control high-range (_ "Frequency band to (Hz)") float-text "" 2000 0 nil
 
 
 (defun help ()
   (let ((msg (format nil
-(_"Vocal Remover requires a stereo track. It works best with
+(_ "Vocal Remover requires a stereo track. It works best with
 lossless files like WAV or AIFF, rather than MP3 or
 other compressed formats. It only removes vocals or other
 audio that is panned to center (sounds equally loud in left
@@ -67,7 +69,7 @@ frequencies outside the limits, retaining the others."))))
 (defun check-stereo ()
   (when (soundp *track*)
     (throw 'err (format nil
-(_"~%Vocal Remover requires an unsplit, stereo track.~%~
+(_ "~%Vocal Remover requires an unsplit, stereo track.~%~
 If you have a stereo track split into left and right~%~
 channels, use 'Make Stereo Track' on the Track~%~
 Drop-Down Menu, then run Vocal Remover again.~%")))))
@@ -100,7 +102,7 @@ Drop-Down Menu, then run Vocal Remover again.~%")))))
 
 (defun bandstop (sig low high)
   (if (and low high (< (/ (- high low) low) 0.1))
-      (format t (_"Warning:~%~
+      (format t (_ "Warning:~%~
               Selected band-stop filter is~%~
               ~a Hz to ~a Hz.~%~
               A very narrow stop-band filter may have~%~
@@ -121,7 +123,7 @@ Drop-Down Menu, then run Vocal Remover again.~%")))))
            (bandstop (aref *track* 1) low-range high-range)))
     ; Nothing to remove - skip effect.
     ((and (= band-choice 2)(not low-range)(not high-range))
-      (format t (_"Current settings returned the original audio."))
+      (format t (_ "Current settings returned the original audio."))
       nil)
     ((= band-choice 2) ; remove frequencies inside range
           (sum (aref *track* 0)

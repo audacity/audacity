@@ -1,51 +1,52 @@
-;nyquist plug-in
-;version 3
-;type tool
-$name (_"Sample Data Export")
-;manpage "Sample_Data_Export"
-$action (_"Analyzing...")
-;maxlen 1000001
-;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
-$author (_"Steve Daulton")
-$copyright (_"Released under terms of the GNU General Public License version 2")
+$nyquist plug-in
+$version 3
+$type tool
+$name (_ "Sample Data Export")
+$manpage "Sample_Data_Export"
+$action (_ "Analyzing...")
+$maxlen 1000001
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; sample-data-export.ny by Steve Daulton June 2012.
 ;; Updated July 16 2012.
+
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control number (_"Limit output to first") string (_"samples") "100" 
-$control units (_"Measurement scale") choice ((_"dB") (_"Linear")) 0 
-$control fileformat (_"File data format") choice (
-   (_"Sample List (txt)")
-   (_"Indexed List (txt)")
-   (_"Time Indexed (txt)")
-   (_"Data (csv)")
-   (_"Web Page (html)")
+
+$control number (_ "Limit output to first") string (_ "samples") "100" 
+$control units (_ "Measurement scale") choice ((_ "dB") (_ "Linear")) 0 
+$control fileformat (_ "File data format") choice (
+   (_ "Sample List (txt)")
+   (_ "Indexed List (txt)")
+   (_ "Time Indexed (txt)")
+   (_ "Data (csv)")
+   (_ "Web Page (html)")
 ) 0 
-$control header (_"Include header information") choice (
-   (_"None")
-   (_"Minimal")
-   (_"Standard")
-   (_"All")
+$control header (_ "Include header information") choice (
+   (_ "None")
+   (_ "Minimal")
+   (_ "Standard")
+   (_ "All")
 ) 2 
-$control optext (_"Optional header text") string ""  
-$control chan (_"Channel layout for stereo") choice (
-   (_"L-R on Same Line")
-   (_"Alternate Lines")
-   (_"L Channel First")
+$control optext (_ "Optional header text") string ""  
+$control chan (_ "Channel layout for stereo") choice (
+   (_ "L-R on Same Line")
+   (_ "Alternate Lines")
+   (_ "L Channel First")
 ) 0   
-$control messages (_"Show messages") choice (
-   (_"Yes")
-   (_"Errors Only")
-   (_"None")
+$control messages (_ "Show messages") choice (
+   (_ "Yes")
+   (_ "Errors Only")
+   (_ "None")
 ) 0 
-$control filename (_"File name") string "" (_"sample-data")
-$control path (_"Output folder") string "" (_"Home directory")
-$control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0 
+$control filename (_ "File name") string "" (_ "sample-data")
+$control path (_ "Output folder") string "" (_ "Home directory")
+$control owrite (_ "Allow files to be overwritten") choice ((_ "No") (_ "Yes")) 0 
 
 
 ;; To enable L/R prefix before alternate L/R channels 
@@ -55,7 +56,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 
 (when (not (boundp 'LR-prefix))(setq LR-prefix nil))
 
-(setq default-filename (_"sample-data"))       ; default filename
+(setq default-filename (_ "sample-data"))       ; default filename
 (setq err "")                               ; initialise error mesaage
 
 (setq *float-format* "%1.5f")               ; 5 decimal places
@@ -109,9 +110,9 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 (defun checknumber ()
   (setq number (min number len))
   (if (< number 1)
-      (add-error (_"No samples selected.")))
+      (add-error (_ "No samples selected.")))
   (if (> number 1000000)
-      (add-error (_"Cannot export more than 1 million samples.")))
+      (add-error (_ "Cannot export more than 1 million samples.")))
   (setq number (truncate number)))
 
 
@@ -132,7 +133,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 (defun lin-to-db (val)
   (if (= val 0)
     ;i18n-hint abbreviates negative infinity
-    (_"[-inf]")
+    (_ "[-inf]")
     (/ (log val) ln10over20)))
 
 
@@ -215,15 +216,15 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
   (if (and (arrayp s)(= chan 2))
       (progn
         (unless (= header 0)                ; Don't print 'channel' if no header
-          (format fp (_"Left Channel.~%~%")))
+          (format fp (_ "Left Channel.~%~%")))
         (print-text (aref s 0))
         (if (= header 0)                    ; Don't print 'channel' if no header
             (format fp "~%")
-            (format fp (_"~%~%Right Channel.~%~%")))
+            (format fp (_ "~%~%Right Channel.~%~%")))
         (print-text (aref s 1))
         (close fp)
         (if (= messages 0)
-            (format nil (_"~aData written to:~%~a~a~a") 
+            (format nil (_ "~aData written to:~%~a~a~a") 
                     (normhead) path fileseparator filename)
             nil))
       ;; mono or alternate
@@ -231,7 +232,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
         (print-text s)
         (close fp)
         (if (= messages 0)
-            (format nil (_"~aData written to:~%~a~a~a")
+            (format nil (_ "~aData written to:~%~a~a~a")
                     (normhead) path fileseparator filename)
             nil))))
 
@@ -260,7 +261,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
       (if (string-equal path "~/" :end1 2)
           (setq path (strcat (home)(subseq path 1)))))
   ;; If path not set use home directory
-  (if (or (string-equal path (_"Home directory"))
+  (if (or (string-equal path (_ "Home directory"))
           (string-equal path ""))
       (setq path (home)))
   ;; if file name not set use default
@@ -275,7 +276,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
                   (string-equal path realdir)))
         ;; makefilename or error
         (setq filename (makefilename filename FileExt))
-        (add-error (format nil (_"Output folder \"~a~a\" cannot be accessed.") 
+        (add-error (format nil (_ "Output folder \"~a~a\" cannot be accessed.") 
                            path fileseparator))))
   ;; check if file is writeable
   (when (= (length err) 0)
@@ -283,7 +284,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
     (setq fp (open filename :direction :output))
     ;check file is writeable
     (if (not fp)
-        (add-error (format nil (_"\"~a~a~a\" cannot be written.")
+        (add-error (format nil (_ "\"~a~a~a\" cannot be written.")
                            path fileseparator filename)))))
 
 
@@ -299,7 +300,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 
 (defun minhead ()
   (format nil 
-(_"Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a") 
+(_ "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a") 
   (get 'info 'srate)                        ; sample rate
   (get 'info 'units)                        ; units
   (get 'info 'chan-order)                   ; Channel Order
@@ -311,7 +312,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
 (defun normhead ()
   (if (= fileformat 4)                      ; html
     (format nil
-(_"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a") 
+(_ "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a") 
       filename                              ; file name
       (get 'info 'channels)                 ; mono/stereo
       (get 'info 'chan-order)               ; Channel Order
@@ -322,7 +323,7 @@ $control owrite (_"Allow files to be overwritten") choice ((_"No") (_"Yes")) 0
           (format nil "~%~a~%~%~%" optext)  ; optional text
           (format nil "~%~%~%")))           ; no optional text
     (format nil
-(_"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
+(_ "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
 Length processed: ~a samples ~a seconds.~a") 
       filename                              ; file name
       (get 'info 'channels)                 ; mono/stereo
@@ -338,7 +339,7 @@ Length processed: ~a samples ~a seconds.~a")
 
 (defun fullhead ()
   (format nil
-(_"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
+(_ "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
 samples, ~a seconds.~%Peak amplitude: ~a (lin) ~a dB.  Unweighted RMS: ~a dB.~%~
 DC offset: ~a~a") 
   filename                                  ; file name
@@ -353,9 +354,9 @@ DC offset: ~a~a")
   (srms s)                                  ; rms
   (let ((vals (dc-off s)))                  ; DC offset
     (if (= (length vals) 2) ; mono
-        (format nil (_"~a linear, ~a dB.") 
+        (format nil (_ "~a linear, ~a dB.") 
                 (first vals)(second vals))
-        (format nil (_"Left: ~a lin, ~a dB | Right: ~a lin, ~a dB.")
+        (format nil (_ "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB.")
                 (first vals)(second vals)(third vals)(fourth vals))))
   (if (> (length optext)0)
       (format nil "~%~a~%~%~%" optext)      ; optional text
@@ -447,7 +448,7 @@ ul {
   color: blue;
   }
 </style>
-<title>" (_"Sample Data Export") "</title>
+<title>" (_ "Sample Data Export") "</title>
 </head>
 "))
 
@@ -456,18 +457,18 @@ ul {
 (defun doc-head ()
   (format nil
 (strcat "<body>
-<h1>" (_"Sample Data Export") " - ~a</h1>
+<h1>" (_ "Sample Data Export") " - ~a</h1>
 ~a
-<h4>~a. &nbsp;&nbsp;" (_"~a samples.") " &nbsp;&nbsp; " (_"~a seconds.") "<br></h4>
-<h3>" (_"Audio data analysis:") "</h3>
+<h4>~a. &nbsp;&nbsp;" (_ "~a samples.") " &nbsp;&nbsp; " (_ "~a seconds.") "<br></h4>
+<h3>" (_ "Audio data analysis:") "</h3>
 <ul>
-<li>" (_"<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz.") "</li>"
+<li>" (_ "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz.") "</li>"
 ; i18n-hint: abbreviates "linear" and "decibels"
-"<li>" (_"<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB.") "</li>"
+"<li>" (_ "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB.") "</li>"
 ; i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
-"<li>" (_"<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB.") "</li>"
+"<li>" (_ "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB.") "</li>"
 ; i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
-"<li>" (_"<b>DC Offset:</b> &nbsp;&nbsp;~a") "</li>
+"<li>" (_ "<b>DC Offset:</b> &nbsp;&nbsp;~a") "</li>
 </ul>
 ") ; end concatenated format string with inserted translations
   (string-right-trim ".html" filename)
@@ -481,40 +482,40 @@ ul {
   (srms s)                                  ; rms
   (let ((vals (dc-off s)))                  ; DC offset
     (if (= (length vals) 2) ; mono
-        (format nil (_"~a linear, &nbsp;&nbsp;~a dB.") 
+        (format nil (_ "~a linear, &nbsp;&nbsp;~a dB.") 
                 (first vals)(second vals))
-        (format nil (_"Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB.")
+        (format nil (_ "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB.")
                 (first vals)(second vals)(third vals)(fourth vals))))))
 
 
 ;;; table headings  (mono)
 (defun table-head-mono ()
-(strcat "<table title=\"" (_"sample data") "\">
+(strcat "<table title=\"" (_ "sample data") "\">
 <tr>
-<th>" (_"Sample #") "</th>
-<th>" (_"Seconds") "</th>
-<th>" (_"Value (linear)") "</th>
-<th>" (_"Value (dB)") "</th>
+<th>" (_ "Sample #") "</th>
+<th>" (_ "Seconds") "</th>
+<th>" (_ "Value (linear)") "</th>
+<th>" (_ "Value (dB)") "</th>
 </tr>"))
 
 
 ;;; table headings (stereo)
 (defun table-head-stereo ()
-(strcat "<table title=\"" (_"audio sample value analysis") "\">
+(strcat "<table title=\"" (_ "audio sample value analysis") "\">
 <tr>
-<th>" (_"Sample #") "</th>
-<th>" (_"Seconds") "</th>
-<th>" (_"Left (linear)") "</th>
-<th>" (_"Right (linear)") "</th>
-<th>" (_"Left (dB)") "</th>
-<th>" (_"Right (dB)") "</th>
+<th>" (_ "Sample #") "</th>
+<th>" (_ "Seconds") "</th>
+<th>" (_ "Left (linear)") "</th>
+<th>" (_ "Right (linear)") "</th>
+<th>" (_ "Left (dB)") "</th>
+<th>" (_ "Right (dB)") "</th>
 </tr>"))
 
 
 (defun html-foot ()
   (format nil (strcat
 "</table>
-<p id=\"footer\">" (_"Produced with <span>Sample Data Export</span> for
+<p id=\"footer\">" (_ "Produced with <span>Sample Data Export</span> for
 <a href=\"~a\">Audacity</a> by Steve
 Daulton") " (<a href=
 \"http://www.easyspacepro.com\">www.easyspacepro.com</a>)</p>
@@ -561,7 +562,7 @@ Daulton") " (<a href=
   (format fp (html-foot))
   (close fp)
     (if (= messages 0)
-        (format nil (_"~aData written to:~%~a~a~a")
+        (format nil (_ "~aData written to:~%~a~a~a")
                (normhead) path fileseparator filename)
         nil))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -572,25 +573,25 @@ Daulton") " (<a href=
 ;;; basic info for headers
 (defun put-head-info ()
   (putprop 'info (truncate *sound-srate*) 'srate)
-  (putprop 'info (if (= units 0) (_"dB") (_"linear")) 'units)
+  (putprop 'info (if (= units 0) (_ "dB") (_ "linear")) 'units)
   (putprop 'info (/ number *sound-srate*) 'duration)
   (putprop 'info 
     (if (arrayp s) 
-        (_"2 channels (stereo)") (_"1 channel (mono)"))
+        (_ "2 channels (stereo)") (_ "1 channel (mono)"))
         'channels)
   ;; stereo sample order
   (putprop 'info
     (cond
       ((and (= fileformat 3)(= chan 0))     ; csv, channel in column
-        (format nil (_"One column per channel.~%")))
+        (format nil (_ "One column per channel.~%")))
       ((and (= fileformat 3)(= chan 2))     ; csv, channel in row
-        (format nil (_"One row per channel.~%")))
+        (format nil (_ "One row per channel.~%")))
       ((or (soundp s)(= fileformat 4))      ; mono soundor HTML
         "")
-      ((= chan 0) (format nil (_"Left channel then Right channel on same line.~%")))
-      ((= chan 1) (format nil (_"Left and right channels on alternate lines.~%")))
-      ((= chan 2) (format nil (_"Left channel first then right channel.~%")))
-      (T (_"Unspecified channel order")))
+      ((= chan 0) (format nil (_ "Left channel then Right channel on same line.~%")))
+      ((= chan 1) (format nil (_ "Left and right channels on alternate lines.~%")))
+      ((= chan 2) (format nil (_ "Left channel first then right channel.~%")))
+      (T (_ "Unspecified channel order")))
     'chan-order))
 
 
@@ -598,14 +599,14 @@ Daulton") " (<a href=
 (setq number (read (make-string-input-stream number)))
 (if (numberp number)
     (checknumber)
-    (add-error (format nil (_"~a is not a number.") number)))
+    (add-error (format nil (_ "~a is not a number.") number)))
 
 (filewriter)
 (if (> (length err) 0)
   ;; output error message if enabled
   (if (= messages 2)
     nil                                     ; return nil
-    (format nil (_"Error.~%~a") err))          ; return errors
+    (format nil (_ "Error.~%~a") err))          ; return errors
   ;; else print to file
   (progn
     (put-head-info)                         ; put basic info for headers
