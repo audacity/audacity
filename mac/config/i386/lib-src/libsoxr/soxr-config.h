@@ -1,52 +1,27 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-16 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #if !defined soxr_config_included
 #define soxr_config_included
 
-#define HAVE_SINGLE_PRECISION 1
-#define HAVE_DOUBLE_PRECISION 1
-#define HAVE_AVFFT            0
-#define HAVE_SIMD             1
-#define HAVE_FENV_H           1
-#define HAVE_LRINT            1
-#define WORDS_BIGENDIAN       0
+#define AVCODEC_FOUND 0
+#define AVUTIL_FOUND 0
+#define WITH_PFFFT 1
 
-#include <limits.h>
+#define HAVE_FENV_H 1
+#define HAVE_STDBOOL_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_LRINT 1
+#define HAVE_BIGENDIAN 0
 
-#undef bool
-#undef false
-#undef true
-#define bool int
-#define false 0
-#define true 1
+#define WITH_CR32 1
+#define WITH_CR32S 1
+#define WITH_CR64 1
+#define WITH_CR64S 0
+#define WITH_VR32 1
 
-#undef int16_t
-#undef int32_t
-#undef int64_t
-#undef uint32_t
-#undef uint64_t
-#define int16_t short
-#if LONG_MAX > 2147483647L
-  #define int32_t int
-  #define int64_t long
-#elif LONG_MAX < 2147483647L
-#error this library requires that 'long int' has at least 32-bits
-#else
-  #define int32_t long
-  #if defined _MSC_VER
-    #define int64_t __int64
-  #else
-    #define int64_t long long
-  #endif
-#endif
-#define uint32_t unsigned int32_t
-#define uint64_t unsigned int64_t
+#define WITH_HI_PREC_CLOCK 1
+#define WITH_FLOAT_STD_PREC_CLOCK 0
+#define WITH_DEV_TRACE 1
 
 #endif
-#if defined(__BIG_ENDIAN__)
-#undef WORDS_BIGENDIAN
-#define WORDS_BIGENDIAN 1
-#endif
-#undef HAVE_SIMD
-#define HAVE_SIMD 0
