@@ -11,11 +11,7 @@
 // std:: containers knowing about rvalue references
 #undef __AUDACITY_OLD_STD__
 
-
-// Clang 5.0 on OSX 10.6 CAN handle C++11, if built with -std=c++11
-// So use "< __MAC_10_6" rather than "<= __MAC_10_6"
-// Requested by macports.org https://trac.macports.org/ticket/56114
-#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_6
+#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_10_6
 
 #define __AUDACITY_OLD_STD__
 
