@@ -49,6 +49,7 @@ CommandFlag GetUpdateFlags(bool checkActive = false);
 
 //Adds label and returns index of label in labeltrack.
 int DoAddLabel(const SelectedRegion& region, bool preserveFocus = false);
+int DialogForLabelName(const wxString& initialValue, wxString& value);
 
 private:
 double NearestZeroCrossing(double t0);

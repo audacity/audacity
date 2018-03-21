@@ -2098,10 +2098,24 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
          event.Skip();
          return false;
       }
-      SetSelected(true);
+      bool useDialog;
       AudacityProject *p = GetActiveProject();
-      AddLabel(p->mViewInfo.selectedRegion);
-      p->PushState(_("Added label"), _("Label"));
+      gPrefs->Read(wxT("/Gui/DialogForNameNewLabel"), &useDialog, false);
+      if (useDialog) {
+         wxString title;
+         if (p->DialogForLabelName(charCode, title) == wxID_CANCEL) {
+            return false;
+         }
+         SetSelected(true);
+         AddLabel(p->mViewInfo.selectedRegion, title, -2);
+         p->PushState(_("Added label"), _("Label"));
+         return false;
+      }
+      else {
+         SetSelected(true);
+         AddLabel(p->mViewInfo.selectedRegion);
+         p->PushState(_("Added label"), _("Label"));
+      }
    }
 
    //

@@ -8461,8 +8461,54 @@ void AudacityProject::OnRescanDevices(const CommandContext &WXUNUSED(context) )
    DeviceManager::Instance()->Rescan();
 }
 
+int AudacityProject::DialogForLabelName(const wxString& initialValue, wxString& value)
+{
+   wxPoint position = mTrackPanel->FindTrackRect(mTrackPanel->GetFocusedTrack(), false).GetBottomLeft();
+   // the start of the text in the text box will be roughly in line with Audacity's edit cursor 
+   position.x += mTrackPanel->GetLabelWidth() + mViewInfo.TimeToPosition(mViewInfo.selectedRegion.t0()) - 40;
+   position.y += 2;  // just below the bottom of the track
+   position = mTrackPanel->ClientToScreen(position);
+   AudacityTextEntryDialog dialog{ this,
+      _("Name:"),
+      _("New label"),
+      initialValue,
+      wxOK | wxCANCEL,
+      position };
+
+   // keep the dialog within Audacity's window, so that the dialog is always fully visible
+   wxRect dialogScreenRect = dialog.GetScreenRect();
+   wxRect projScreenRect = GetScreenRect();
+   wxPoint max = projScreenRect.GetBottomRight() + wxPoint{ -dialogScreenRect.width, -dialogScreenRect.height };
+   if (dialogScreenRect.x > max.x) {
+      position.x = max.x;
+      dialog.Move(position);
+   }
+   if (dialogScreenRect.y > max.y) {
+      position.y = max.y;
+      dialog.Move(position);
+   }
+
+   dialog.SetInsertionPointEnd();      // because, by default, initial text is selected
+   int status = dialog.ShowModal();
+   if (status != wxID_CANCEL) {
+      value = dialog.GetValue();
+      value.Trim(true).Trim(false);
+   }
+
+   return status;
+}
+
 int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus)
 {
+   wxString title;      // of label
+
+   bool useDialog;
+   gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
+   if (useDialog) {
+      if (DialogForLabelName(wxEmptyString, title) == wxID_CANCEL)
+         return -1;     // index
+   }
+
    LabelTrack *lt = NULL;
 
    // If the focused track is a label track, use that
@@ -8502,28 +8548,36 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
 //   SelectNone();
    lt->SetSelected(true);
 
-   int focusTrackNumber = -1;
-   if (pFocusedTrack && preserveFocus) {
-      // Must remember the track to re-focus after finishing a label edit.
-      // do NOT identify it by a pointer, which might dangle!  Identify
-      // by position.
-      TrackListIterator iter(GetTracks());
-      Track *track = iter.First();
-      do
-         ++focusTrackNumber;
-      while (track != pFocusedTrack &&
-             NULL != (track = iter.Next()));
-      if (!track)
-         // How could we not find it?
-         focusTrackNumber = -1;
+   int focusTrackNumber;
+   if (useDialog) {
+      focusTrackNumber = -2;
+   }
+   else {
+      focusTrackNumber = -1;
+      if (pFocusedTrack && preserveFocus) {
+         // Must remember the track to re-focus after finishing a label edit.
+         // do NOT identify it by a pointer, which might dangle!  Identify
+         // by position.
+         TrackListIterator iter(GetTracks());
+         Track *track = iter.First();
+         do
+            ++focusTrackNumber;
+         while (track != pFocusedTrack &&
+                NULL != (track = iter.Next()));
+         if (!track)
+            // How could we not find it?
+            focusTrackNumber = -1;
+      }
    }
 
-   int index = lt->AddLabel(region, wxString(), focusTrackNumber);
+   int index = lt->AddLabel(region, title, focusTrackNumber);
 
    PushState(_("Added label"), _("Label"));
 
    RedrawProject();
-   mTrackPanel->EnsureVisible((Track *)lt);
+   if (!useDialog) {
+      mTrackPanel->EnsureVisible((Track *)lt);
+   }
    mTrackPanel->SetFocus();
 
    return index;

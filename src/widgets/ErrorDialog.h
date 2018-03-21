@@ -118,6 +118,8 @@ public:
    : wxTabTraversalWrapper< wxTextEntryDialog>
       ( parent, message, caption, value, style, pos )
    {}
+   
+   void SetInsertionPointEnd();
 };
 
 /**************************************************************************//**
