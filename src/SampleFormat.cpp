@@ -90,7 +90,7 @@ void ReverseSamples(samplePtr dst, sampleFormat format,
    samplePtr first = dst + start * size;
    samplePtr last = dst + (start + len - 1) * size;
    enum : size_t { fixedSize = SAMPLE_SIZE(floatSample) };
-   wxASSERT(size <= fixedSize);
+   wxASSERT(static_cast<size_t>(size) <= fixedSize);
    char temp[fixedSize];
    while (first < last) {
       memcpy(temp, first, size);
