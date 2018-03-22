@@ -3464,8 +3464,8 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
 
    wxMemoryBuffer buf;
    wxInt32 subType;
-   void *chunkPtr;
-   int chunkSize;
+   void *chunkPtr = nullptr;
+   int chunkSize = 0;
    int dataSize = 148;
    wxInt32 tab[8];
    int curProg = 0 ; //mProgram->GetCurrentSelection();
