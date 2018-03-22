@@ -88,6 +88,14 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    if( !bHasT0 && !bHasT1 )
       return true;
 
+   // Defaults if no value...
+   if( !bHasT0 )
+      mT0 = 0.0;
+   if( !bHasT1 )
+      mT1 = 0.0;
+   if( !bHasRelativeSpec )
+      mRelativeTo = 0;
+
    AudacityProject * p = context.GetProject();
    double end = p->GetTracks()->GetEndTime();
    double t0;
@@ -148,6 +156,12 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
    if( !bHasBottom && !bHasTop )
       return true;
 
+   // Defaults if no value...
+   if( !bHasTop )
+      mTop = 0.0;
+   if( !bHasBottom )
+      mBottom = 0.0;
+
    context.GetProject()->SSBL_ModifySpectralSelection(
       mBottom, mTop, false);// false for not done.
    return true;
@@ -195,6 +209,13 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
 {
    int index = 0;
    TrackList *tracks = context.GetProject()->GetTracks();
+
+   // Defaults if no value...
+   if( !bHasNumTracks ) 
+      mNumTracks = 1.0;
+   if( !bHasFirstTrack ) 
+      mFirstTrack = 0.0;
+
    // Stereo second tracks count as 0.5 of a track.
    double last = mFirstTrack+mNumTracks;
    double first = mFirstTrack;

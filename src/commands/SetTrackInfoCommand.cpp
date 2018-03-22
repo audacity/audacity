@@ -109,7 +109,7 @@ bool SetTrackBase::Apply(const CommandContext & context  )
 
 bool SetTrackStatusCommand::DefineParams( ShuttleParams & S ){ 
    SetTrackBase::DefineParams( S );
-   S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       wxT("Unnamed") );
+   S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       _("Unnamed") );
    // There is also a select command.  This is an alternative.
    S.OptionalN( bHasSelected       ).Define(     bSelected,       wxT("Selected"),   false );
    S.OptionalN( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );

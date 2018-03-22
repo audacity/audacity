@@ -77,6 +77,8 @@ bool SetClipCommand::ApplyInner( const CommandContext & context, Track * t )
    if( t->GetKind() != Track::Wave) 
       return true;
    
+   // if no 'At' is specified, then any clip in any selected track will be set.
+
    WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
    wxASSERT( waveTrack );
    WaveClipPointers ptrs( waveTrack->SortedClipArray());

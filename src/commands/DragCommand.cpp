@@ -81,6 +81,16 @@ void DragCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool DragCommand::Apply(const CommandContext & context)
 {
+   // Defaults if no value...
+   if( !bHasFromX )
+      mFromX = 200.0;
+   if( !bHasFromY )
+      mFromY = 10;
+   if( !bHasToX )
+      mToX = 400;
+   if( !bHasToY )
+      mToY = 10;
+
    wxWindow * pWin = context.GetProject();
    wxWindow * pWin1 = nullptr;
    wxMouseEvent Evt( wxEVT_MOTION );
