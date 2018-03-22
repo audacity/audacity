@@ -102,7 +102,7 @@
 
 static float reinterpretAsFloat(uint32_t x)
 {
-    static_assert(sizeof(float) == sizeof(uint32_t));
+    static_assert(sizeof(float) == sizeof(uint32_t), "Cannot reinterpret uint32_t to float since sizes are different.");
     float f;
     std::memcpy(&f, &x, sizeof(float));
     return f;
@@ -110,7 +110,8 @@ static float reinterpretAsFloat(uint32_t x)
 
 static uint32_t reinterpretAsUint32(float f)
 {
-    static_assert(sizeof(float) == sizeof(uint32_t));
+    static_assert(sizeof(float) == sizeof(uint32_t), "Cannot reinterpret float to uint32_t since sizes are different.");
+
     uint32_t x;
     std::memcpy(&x, &f, sizeof(uint32_t));
     return x;
