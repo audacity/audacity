@@ -4369,6 +4369,7 @@ double AudacityProject::NearestZeroCrossing(double t0)
 
    TrackListIterator iter(GetTracks());
    Track *track = iter.First();
+   int nTracks = 0;
    while (track) {
       if (!track->GetSelected() || track->GetKind() != (Track::Wave)) {
          track = iter.Next();
@@ -4383,25 +4384,18 @@ double AudacityProject::NearestZeroCrossing(double t0)
       one->Get((samplePtr)oneDist.get(), floatSample,
                s - (int)oneWindowSize/2, oneWindowSize, fillTwo);
 
-      // Start by penalizing downward motion.  We prefer upward
-      // zero crossings.
-      if (oneDist[1] - oneDist[0] < 0)
-         oneDist[0] = oneDist[0]*6 + (oneDist[0] > 0 ? 0.3 : -0.3);
-      for(size_t i=1; i<oneWindowSize; i++)
-         if (oneDist[i] - oneDist[i-1] < 0)
-            oneDist[i] = oneDist[i]*6 + (oneDist[i] > 0 ? 0.3 : -0.3);
 
-      // Taking the absolute value -- apply a tiny LPF so square waves work.
-      float newVal, oldVal = oneDist[0];
-      oneDist[0] = fabs(.75 * oneDist[0] + .25 * oneDist[1]);
-      for(size_t i=1; i + 1 < oneWindowSize; i++)
-      {
-         newVal = fabs(.25 * oldVal + .5 * oneDist[i] + .25 * oneDist[i+1]);
-         oldVal = oneDist[i];
-         oneDist[i] = newVal;
+      // Looking for actual crossings.
+      double prev = 2.0;
+      for(size_t i=0; i<oneWindowSize; i++){
+         float fDist = fabs( oneDist[i]); // score is absolute value
+         if( prev * oneDist[i] > 0 ) // both same sign?  No good.
+            fDist = fDist + 0.4; // No good if same sign.
+         else if( prev > 0.0 )
+            fDist = fDist + 0.1; // medium penalty for downward crossing.
+         prev = oneDist[i];
+         oneDist[i] = fDist;
       }
-      oneDist[oneWindowSize-1] = fabs(.25 * oldVal +
-            .75 * oneDist[oneWindowSize-1]);
 
       // TODO: The mixed rate zero crossing code is broken,
       // if oneWindowSize > windowSize we'll miss out some
@@ -4415,9 +4409,10 @@ double AudacityProject::NearestZeroCrossing(double t0)
 
          dist[i] += oneDist[j];
          // Apply a small penalty for distance from the original endpoint
+         // We'll always prefer an upward  
          dist[i] += 0.1 * (abs(int(i) - int(windowSize/2))) / float(windowSize/2);
       }
-
+      nTracks++;
       track = iter.Next();
    }
 
@@ -4431,6 +4426,13 @@ double AudacityProject::NearestZeroCrossing(double t0)
       }
    }
 
+   // If we're worse than 0.2 on average, on one track, then no good.
+   if(( nTracks == 1 ) && ( min > (0.2*nTracks) ))
+      return t0;
+   // If we're worse than 0.6 on average, on multi-track, then no good.
+   if(( nTracks > 1 ) && ( min > (0.6*nTracks) ))
+      return t0;
+
    return t0 + (argmin - (int)windowSize/2)/GetRate();
 }
 
@@ -4441,7 +4443,9 @@ void AudacityProject::OnZeroCrossing(const CommandContext &WXUNUSED(context) )
       mViewInfo.selectedRegion.setTimes(t0, t0);
    else {
       const double t1 = NearestZeroCrossing(mViewInfo.selectedRegion.t1());
-      mViewInfo.selectedRegion.setTimes(t0, t1);
+      // Empty selection is generally not much use, so do not make it if empty.
+      if( fabs( t1 - t0 ) * GetRate() > 1.5 )
+         mViewInfo.selectedRegion.setTimes(t0, t1);
    }
 
    ModifyState(false);
