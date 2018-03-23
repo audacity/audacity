@@ -370,6 +370,8 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    activityWin.SetName(activityWin.GetTitle());
    ShuttleGui S(&activityWin, eIsCreating);
 
+   wxListCtrl * fileList = NULL;
+
    S.StartVerticalLay(false);
    {
       S.StartStatic(_("Applying..."), 1);
@@ -380,10 +382,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                     wxLC_SINGLE_SEL);
-         mList = S.Id(CommandsListID).AddListControlReportMode();
+         fileList = S.Id(CommandsListID).AddListControlReportMode();
          // AssignImageList takes ownership
-         mList->AssignImageList(imageList.release(), wxIMAGE_LIST_SMALL);
-         mList->InsertColumn(0, _("File"), wxLIST_FORMAT_LEFT);
+         fileList->AssignImageList(imageList.release(), wxIMAGE_LIST_SMALL);
+         fileList->InsertColumn(0, _("File"), wxLIST_FORMAT_LEFT);
       }
       S.EndStatic();
 
@@ -397,17 +399,17 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    int i;
    for (i = 0; i < (int)files.GetCount(); i++ ) {
-      mList->InsertItem(i, files[i], i == 0);
+      fileList->InsertItem(i, files[i], i == 0);
    }
 
    // Set the column size for the files list.
-   mList->SetColumnWidth(0, wxLIST_AUTOSIZE);
+   fileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 
-   int width = mList->GetColumnWidth(0);
-   wxSize sz = mList->GetClientSize();
+   int width = fileList->GetColumnWidth(0);
+   wxSize sz = fileList->GetClientSize();
    if (width > sz.GetWidth() && width < 500) {
       sz.SetWidth(width);
-      mList->SetInitialSize(sz);
+      fileList->SetInitialSize(sz);
    }
 
    activityWin.Layout();
@@ -430,10 +432,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       wxWindowDisabler wd(&activityWin);
       if (i > 0) {
          //Clear the arrow in previous item.
-         mList->SetItemImage(i - 1, 0, 0);
+         fileList->SetItemImage(i - 1, 0, 0);
       }
-      mList->SetItemImage(i, 1, 1);
-      mList->EnsureVisible(i);
+      fileList->SetItemImage(i, 1, 1);
+      fileList->EnsureVisible(i);
 
       auto success = GuardedCall< bool >( [&] {
          project->Import(files[i]);
