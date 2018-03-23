@@ -217,7 +217,8 @@ wxString TracksPrefs::GetDefaultAudioTrackNamePreference()
 {
    const auto name =
       gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), wxT(""));
-   if (name.empty())
+
+   if (name.empty() || ( name == "Audio Track" ))
       // When nothing was specified,
       // the default-default is whatever translation of...
       /* i18n-hint: The default name for an audio track. */
@@ -233,8 +234,9 @@ bool TracksPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
-   if (gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"),
-                    _("Audio Track")) == _("Audio Track")) {
+   // Bug 1661: Don't store the name for new tracks if the name is the
+   // default in that language.
+   if (GetDefaultAudioTrackNamePreference() == _("Audio Track")) {
       gPrefs->DeleteEntry(wxT("/GUI/TrackNames/DefaultTrackName"));
       gPrefs->Flush();
    }

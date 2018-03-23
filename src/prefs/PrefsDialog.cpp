@@ -478,7 +478,9 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    gPrefs->Flush();
    if (mCategories) {
       // Now apply the changes
-      for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
+      // Reverse order - so Track Name is updated before language change
+      // A workaround for Bug 1661
+      for (int i = (int)mCategories->GetPageCount()-1; i>= 0; i--) {
          PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
 
          panel->Preview();
