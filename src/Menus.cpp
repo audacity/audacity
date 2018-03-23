@@ -831,7 +831,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       /*i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
-      c->BeginMenu(_("T&ransport"));
+      c->BeginMenu(_("Tra&nsport"));
       c->SetDefaultFlags(CanStopAudioStreamFlag, CanStopAudioStreamFlag);
       c->BeginSubMenu(_("Pl&ay"));
       /* i18n-hint: (verb) Start or Stop audio playback*/
@@ -1334,7 +1334,7 @@ void AudacityProject::CreateMenusAndCommands()
       /////////////////////////////////////////////////////////////////////////////
 
       // i18n-hint: Extra is a menu with extra commands
-      c->BeginMenu(_("E&xtra"));
+      c->BeginMenu(_("Ext&ra"));
 
       //////////////////////////////////////////////////////////////////////////
 
