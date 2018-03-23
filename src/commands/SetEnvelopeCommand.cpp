@@ -53,6 +53,7 @@ void SetEnvelopeCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SetEnvelopeCommand::ApplyInner( const CommandContext & context, Track * t )
 {
+   static_cast<void>(context);
    if( (t->GetKind() != Track::Wave)) 
       return true;
 

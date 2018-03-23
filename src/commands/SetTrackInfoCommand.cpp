@@ -52,8 +52,18 @@ SetTrackBase::SetTrackBase(){
 //rather than using the current selection.
 //#define USE_OWN_TRACK_SELECTION
 
-bool SetTrackBase::DefineParams( ShuttleParams & S )
+
+bool SetTrackBase::ApplyInner( const CommandContext &context, Track *t  )
 {
+      static_cast<void>(&context);
+      static_cast<void>(&t);
+      return true;
+};
+
+
+bool SetTrackBase::DefineParams( ShuttleParams & S)
+{
+   static_cast<void>(S);
 #ifdef USE_OWN_TRACK_SELECTION
    S.OptionalY( bHasTrackIndex     ).Define(     mTrackIndex,     wxT("Track"),      0, 0, 100 );
    S.OptionalN( bHasChannelIndex   ).Define(     mChannelIndex,   wxT("Channel"),    0, 0, 100 );
@@ -63,6 +73,7 @@ bool SetTrackBase::DefineParams( ShuttleParams & S )
 
 void SetTrackBase::PopulateOrExchange(ShuttleGui & S)
 {
+   static_cast<void>(S);
 #ifdef USE_OWN_TRACK_SELECTION
    if( !mbPromptForTracks )
       return;
@@ -136,8 +147,8 @@ void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t )
 {
-   auto wt = dynamic_cast<WaveTrack *>(t);
-   auto pt = dynamic_cast<PlayableTrack *>(t);
+   //auto wt = dynamic_cast<WaveTrack *>(t);
+   //auto pt = dynamic_cast<PlayableTrack *>(t);
 
    // You can get some intriguing effects by setting R and L channels to 
    // different values.
@@ -169,8 +180,8 @@ bool SetTrackAudioCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
 
-   S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -1.0, 1.0);
-   S.OptionalN( bHasGain           ).Define(     mGain,           wxT("Gain"),       1.0,  0.0, 10.0);
+   S.OptionalN( bHasGain           ).Define(     mGain,           wxT("Gain"),       0.0,  -36.0, 36.0);
+   S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -100.0, 100.0);
    return true;
 };
 
@@ -187,23 +198,22 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  1.0, -1.0);
-      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 10.0, 0.0);
+      S.Optional( bHasGain        ).TieSlider(          _("Gain:"),          mGain, 36.0,-36.0);
+      S.Optional( bHasPan         ).TieSlider(          _("Pan:"),           mPan,  100.0, -100.0);
    }
    S.EndMultiColumn();
 }
 
 bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t )
 {
+   static_cast<void>(context);
    auto wt = dynamic_cast<WaveTrack *>(t);
    auto pt = dynamic_cast<PlayableTrack *>(t);
 
-   // You can get some intriguing effects by setting R and L channels to 
-   // different values.
-   if( wt && bHasPan )
-      wt->SetPan(mPan);
    if( wt && bHasGain )
-      wt->SetGain(mGain);
+      wt->SetGain(DB_TO_LINEAR(mGain));
+   if( wt && bHasPan )
+      wt->SetPan(mPan/100.0);
 
    // These ones don't make sense on the second channel of a stereo track.
    if( !bIsSecondChannel ){
@@ -326,8 +336,9 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * t )
 {
+   static_cast<void>(context);
    auto wt = dynamic_cast<WaveTrack *>(t);
-   auto pt = dynamic_cast<PlayableTrack *>(t);
+   //auto pt = dynamic_cast<PlayableTrack *>(t);
 
    // You can get some intriguing effects by setting R and L channels to 
    // different values.

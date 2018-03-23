@@ -32,7 +32,7 @@ class SetTrackBase : public AudacityCommand
 public:
    SetTrackBase();
    bool Apply(const CommandContext & context) override;
-   virtual bool ApplyInner( const CommandContext & context, Track * t ){return true;};
+   virtual bool ApplyInner( const CommandContext &context, Track *t  );
    virtual bool DefineParams( ShuttleParams & S ) override;
    virtual void PopulateOrExchange(ShuttleGui & S) override;
 

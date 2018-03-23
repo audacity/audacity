@@ -74,6 +74,7 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SetClipCommand::ApplyInner( const CommandContext & context, Track * t )
 {
+   static_cast<void>(context);
    if( t->GetKind() != Track::Wave) 
       return true;
    
