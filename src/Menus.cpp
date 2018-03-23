@@ -679,9 +679,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SelCursorToNextClipBoundary"), XXO("Cursor to Ne&xt Clip Boundary"),
          FN(OnSelectCursorToNextClipBoundary), wxT(""),
          WaveTracksExistFlag, WaveTracksExistFlag);
-      c->SetLongName( _("Select Previous Clip"))->AddItem(wxT("SelPrevClip"), XXO("Previo&us Clip"), FN(OnSelectPrevClip), wxT("Alt+P"),
+      c->SetLongName( _("Select Previous Clip"))->AddItem(wxT("SelPrevClip"), XXO("Previo&us Clip"), FN(OnSelectPrevClip), wxT("Ctrl+Alt+P"),
          WaveTracksExistFlag, WaveTracksExistFlag);
-      c->SetLongName( _("Select Next Clip"))->AddItem(wxT("SelNextClip"), XXO("N&ext Clip"), FN(OnSelectNextClip), wxT("Alt+N"),
+      c->SetLongName( _("Select Next Clip"))->AddItem(wxT("SelNextClip"), XXO("N&ext Clip"), FN(OnSelectNextClip), wxT("Ctrl+Alt+N"),
          WaveTracksExistFlag, WaveTracksExistFlag);
 
       c->EndSubMenu();
