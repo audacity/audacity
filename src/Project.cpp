@@ -2941,6 +2941,9 @@ AudacityProject *AudacityProject::OpenProject(
    auto cleanup = finally( [&] { if( pNewProject ) pNewProject->Close(true); } );
    pProject->OpenFile( fileNameArg, addtohistory );
    pNewProject = nullptr;
+   if( pProject && pProject->mIsRecovered )
+      pProject->Zoom( pProject->GetZoomOfToFit() );
+
    return pProject;
 }
 
