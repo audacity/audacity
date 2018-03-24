@@ -74,6 +74,7 @@
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/TracksPrefs.h"
 #include "../toolbars/ToolManager.h"
+#include "../TrackPanel.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
@@ -1189,6 +1190,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
             p->GetTracks()->RegisterPendingNewTrack( newTrack );
             recordingTracks.push_back( newTrack );
+            // Bug 1548.  New track needs the focus.
+            p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
          }
       }
 
