@@ -48,7 +48,7 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name          Type     Key               Def   Min      Max      Scale
-Param( Percentage,   double,  wxT("Percentage"), 0.0,  -99.0,   3000.0,  1  );
+Param( Percentage,   double,  wxT("Percentage"), 0.0,  -95.0,   3000.0,  1  );
 Param( UseSBSMS,     bool,    wxT("SBSMS"),     false, false,   true,    1  );
 
 // We warp the slider to go up to 400%, but user can enter higher values.
