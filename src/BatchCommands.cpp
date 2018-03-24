@@ -704,7 +704,7 @@ bool MacroCommands::ApplyEffectCommand(
    const wxString & command, const wxString & params,
    const CommandContext & Context)
 {
-   (void*)&command;//compiler food.
+   static_cast<void>(command);//compiler food.
 
    //Possibly end processing here, if in batch-debug
    if( ReportAndSkip(friendlyCommand, params))

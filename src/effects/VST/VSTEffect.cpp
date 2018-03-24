@@ -98,6 +98,24 @@
 
 #include "VSTEffect.h"
 #include "../../MemoryX.h"
+#include <cstring>
+
+static float reinterpretAsFloat(uint32_t x)
+{
+    static_assert(sizeof(float) == sizeof(uint32_t), "Cannot reinterpret uint32_t to float since sizes are different.");
+    float f;
+    std::memcpy(&f, &x, sizeof(float));
+    return f;
+}
+
+static uint32_t reinterpretAsUint32(float f)
+{
+    static_assert(sizeof(float) == sizeof(uint32_t), "Cannot reinterpret float to uint32_t since sizes are different.");
+
+    uint32_t x;
+    std::memcpy(&x, &f, sizeof(uint32_t));
+    return x;
+}
 
 // NOTE:  To debug the subprocess, use wxLogDebug and, on Windows, Debugview
 //        from TechNet (Sysinternals).
@@ -503,7 +521,6 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    size_t idCnt = 0;
    size_t idNdx = 0;
 
-   bool valid = false;
    bool cont = true;
 
    while (effectTzr.HasMoreTokens() && cont)
@@ -526,7 +543,6 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
       {
          wxLogMessage(_("VST plugin registration failed for %s\n"), path);
          error = true;
-         valid = false;
       }
 
       wxString output;
@@ -641,7 +657,6 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
 
                if (!skip && cont)
                {
-                  valid = true;
                   if (callback)
                      callback( this, &proc );
                   ++nFound;
@@ -3322,7 +3337,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
       for (int i = 0; i < numParams; i++)
       {
          uint32_t ival = wxUINT32_SWAP_ON_LE(iptr[14 + i]);
-         float val = *((float *) &ival);
+         float val = reinterpretAsFloat(ival);
          if (val < 0.0 || val > 1.0)
          {
             return false;
@@ -3343,7 +3358,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
          for (int i = 0; i < numParams; i++)
          {
             wxUint32 val = wxUINT32_SWAP_ON_LE(iptr[14 + i]);
-            callSetParameter(i, *((float *) &val));
+            callSetParameter(i, reinterpretAsFloat(val));
          }
          callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
       }
@@ -3450,8 +3465,8 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
 
    wxMemoryBuffer buf;
    wxInt32 subType;
-   void *chunkPtr;
-   int chunkSize;
+   void *chunkPtr = nullptr;
+   int chunkSize = 0;
    int dataSize = 148;
    wxInt32 tab[8];
    int curProg = 0 ; //mProgram->GetCurrentSelection();
@@ -3602,7 +3617,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
       for (int i = 0; i < mAEffect->numParams; i++)
       {
          float val = callGetParameter(i);
-         wxUint32 ival = wxUINT32_SWAP_ON_LE(*((wxUint32 *) &val));
+         wxUint32 ival = wxUINT32_SWAP_ON_LE(reinterpretAsUint32(val));
          buf.AppendData(&ival, sizeof(ival));
       }
    }
