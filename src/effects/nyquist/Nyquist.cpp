@@ -1865,7 +1865,7 @@ bool NyquistEffect::Parse(
       return true;
    }
 
-   if (len >= 6 && tokens[0] == wxT("control")) {
+   if (len >= 5 && tokens[0] == wxT("control")) {
       NyqControl ctrl;
 
       ctrl.var = tokens[1];
@@ -1874,7 +1874,7 @@ bool NyquistEffect::Parse(
       ctrl.label = tokens[4];
 
       // valStr may or may not be a quoted string
-      ctrl.valStr = tokens[5];
+      ctrl.valStr = len > 5 ? tokens[5] : wxT("");
       ctrl.val = GetCtrlValue(ctrl.valStr);
       if (ctrl.valStr[0] == wxT('(') || ctrl.valStr[0] == wxT('"'))
          ctrl.valStr = UnQuote( ctrl.valStr );
