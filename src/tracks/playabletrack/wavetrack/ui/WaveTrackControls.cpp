@@ -811,6 +811,10 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
       // Redraw
       AudacityProject *const project = ::GetActiveProject();
       project->ModifyState(true);
+      //Bug 1725 Toolbar was left greyed out.
+      //This solution is overkill, but does fix the problem and is what the
+      //prefs dialog normally does.
+      AudacityProject::RebuildAllMenuBars();
       mpData->result = RefreshCode::RefreshAll;
    }
 }
