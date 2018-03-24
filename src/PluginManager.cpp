@@ -1809,7 +1809,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             if ( dst.Exists() ) {
                // Query whether to overwrite
                bool overwrite = (wxYES == ::AudacityMessageBox(
-                  wxString::Format(_("Overwrite the plug-in file %s ?"),
+                  wxString::Format(_("Overwrite the plug-in file %s?"),
                                    dst.GetFullPath() ),
                   _("Plug-in already exists"),
                   wxYES_NO
