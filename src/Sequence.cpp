@@ -1040,7 +1040,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
    xmlFile.StartTag(wxT("sequence"));
 
    xmlFile.WriteAttr(wxT("maxsamples"), mMaxSamples);
-   xmlFile.WriteAttr(wxT("sampleformat"), mSampleFormat);
+   xmlFile.WriteAttr(wxT("sampleformat"), (size_t)mSampleFormat);
    xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {

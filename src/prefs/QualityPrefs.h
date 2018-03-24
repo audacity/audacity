@@ -22,6 +22,7 @@
 #include "PrefsPanel.h"
 
 class ShuttleGui;
+enum sampleFormat : unsigned;
 
 class QualityPrefs final : public PrefsPanel
 {
@@ -33,6 +34,8 @@ class QualityPrefs final : public PrefsPanel
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
+   static sampleFormat SampleFormatChoice();
+
  private:
    void Populate();
    void GetNamesAndLabels();
@@ -42,8 +45,6 @@ class QualityPrefs final : public PrefsPanel
    std::vector<int> mDitherLabels;
    wxArrayString mSampleRateNames;
    std::vector<int> mSampleRateLabels;
-   wxArrayString mSampleFormatNames;
-   std::vector<int> mSampleFormatLabels;
    wxArrayString mConverterNames;
    std::vector<int> mConverterLabels;
 

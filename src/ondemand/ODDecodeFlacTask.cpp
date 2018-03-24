@@ -225,8 +225,7 @@ bool ODFlacDecoder::ReadHeader()
 {
    mFormat = int16Sample;//start with the smallest and move up in the metadata_callback.
                          //we want to use the native flac type for quick conversion.
-      /* (sampleFormat)
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);*/
+      /* QualityPrefs::SampleFormatChoice(); */
    mFile = std::make_unique<ODFLACFile>(this);
 
 

@@ -42,6 +42,7 @@
 #include "ImportPlugin.h"
 
 #include "../Tags.h"
+#include "../prefs/QualityPrefs.h"
 
 #include "../Experimental.h"
 
@@ -350,8 +351,7 @@ FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
    mStreamInfoDone(false),
    mUpdateResult(ProgressResult::Success)
 {
-   mFormat = (sampleFormat)
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   mFormat = QualityPrefs::SampleFormatChoice();
    mFile = std::make_unique<MyFLACFile>(this);
 }
 

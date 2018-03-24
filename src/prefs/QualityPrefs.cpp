@@ -30,6 +30,33 @@
 
 #define ID_SAMPLE_RATE_CHOICE           7001
 
+//////////
+
+static const IdentInterfaceSymbol choicesFormat[] = {
+   { wxT("Format16Bit"), XO("16-bit") },
+   { wxT("Format24Bit"), XO("24-bit") },
+   { wxT("Format32BitFloat"), XO("32-bit float") }
+};
+static const size_t nChoicesFormat = WXSIZEOF( choicesFormat );
+static const int intChoicesFormat[] = {
+   int16Sample,
+   int24Sample,
+   floatSample
+};
+static_assert( nChoicesFormat == WXSIZEOF(intChoicesFormat), "size mismatch" );
+
+static const size_t defaultChoiceFormat = 2; // floatSample
+
+static EncodedEnumSetting formatSetting{
+   wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
+   choicesFormat, nChoicesFormat, defaultChoiceFormat,
+   
+   intChoicesFormat,
+   wxT("/SamplingRate/DefaultProjectSampleFormat"),
+};
+
+//////////
+
 BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
    EVT_CHOICE(ID_SAMPLE_RATE_CHOICE, QualityPrefs::OnSampleRateChoice)
 END_EVENT_TABLE()
@@ -102,11 +129,6 @@ void QualityPrefs::GetNamesAndLabels()
    // The label for the 'Other...' case can be any value at all.
    mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten
 
-   //------------- Sample Format Names
-   mSampleFormatNames.Add(wxT("16-bit"));       mSampleFormatLabels.push_back(int16Sample);
-   mSampleFormatNames.Add(wxT("24-bit"));       mSampleFormatLabels.push_back(int24Sample);
-   mSampleFormatNames.Add(wxT("32-bit float")); mSampleFormatLabels.push_back(floatSample);
-
    //------------- Converter Names
    int numConverters = Resample::GetNumMethods();
    for (int i = 0; i < numConverters; i++) {
@@ -149,10 +171,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          S.EndHorizontalLay();
 
          S.TieChoice(_("Default Sample &Format:"),
-                     wxT("/SamplingRate/DefaultProjectSampleFormat"),
-                     floatSample,
-                     mSampleFormatNames,
-                     mSampleFormatLabels);
+                     formatSetting);
       }
       S.EndMultiColumn();
    }
@@ -239,3 +258,9 @@ PrefsPanel *QualityPrefsFactory::operator () (wxWindow *parent, wxWindowID winid
    wxASSERT(parent); // to justify safenew
    return safenew QualityPrefs(parent, winid);
 }
+
+sampleFormat QualityPrefs::SampleFormatChoice()
+{
+   return (sampleFormat)formatSetting.ReadInt();
+}
+
