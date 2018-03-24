@@ -702,6 +702,7 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
       min = tt->GetRangeLower() * 100.0;
       max = tt->GetRangeUpper() * 100.0;
 
+      vruler->SetDbMirrorValue( 0.0 );
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
@@ -753,6 +754,7 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                wt->SetDisplayBounds(min, max);
             }
 
+            vruler->SetDbMirrorValue( 0.0 );
             vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetRange(max, min);
@@ -792,13 +794,17 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                      max = 0.0;
                   max *= sign;
                }
-               wt->SetDisplayBounds(min, max);
+               wt->SetDisplayBounds(min, max );
             }
             else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
                wt->SetLastdBRange();
                // Remap the max of the scale
                const float sign = (max >= 0 ? 1 : -1);
                float newMax = max;
+
+// This commented out code is problematic.
+// min and max may be correct, and this code cause them to change.
+#ifdef ONLY_LABEL_POSITIVE
                if (max != 0.) {
 
 // Ugh, duplicating from TrackPanel.cpp
@@ -815,16 +821,24 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                   if (min != 0.)
                      min = std::max(-extreme, newMax * min / max);
                }
-
-               wt->SetDisplayBounds(min, newMax);
+#endif
+               wt->SetDisplayBounds(min, newMax );
             }
 
+
+// Old code was if ONLY_LABEL_POSITIVE were defined.  
+// it uses the +1 to 0 range only.
+// the enabled code uses +1 to -1, and relies on set ticks labelling knowing about 
+// the dB scale.
+#ifdef ONLY_LABEL_POSITIVE
             if (max > 0) {
+#endif
                int top = 0;
                float topval = 0;
                int bot = rect.height;
                float botval = -dBRange;
 
+#ifdef ONLY_LABEL_POSITIVE
                if (min < 0) {
                   bot = top + (int)((max / (max - min))*(bot - top));
                   min = 0;
@@ -841,13 +855,19 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                if (min > 0) {
                   botval = -((1 - min) * dBRange);
                }
-
+#else
+               topval = -((1 - max) * dBRange);
+               botval = -((1 - min) * dBRange);
+               vruler->SetDbMirrorValue( dBRange );
+#endif
                vruler->SetBounds(rect.x, rect.y + top, rect.x + rect.width, rect.y + bot - 1);
                vruler->SetOrientation(wxVERTICAL);
                vruler->SetRange(topval, botval);
+#ifdef ONLY_LABEL_POSITIVE
             }
             else
                vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
+#endif
             vruler->SetFormat(Ruler::RealLogFormat);
             vruler->SetLabelEdges(true);
             vruler->SetLog(false);
@@ -858,6 +878,7 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
          const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
          float minFreq, maxFreq;
          wt->GetSpectrumBounds(&minFreq, &maxFreq);
+         vruler->SetDbMirrorValue( 0.0 );
 
          switch (settings.scaleType) {
          default:

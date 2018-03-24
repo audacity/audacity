@@ -139,6 +139,7 @@ Ruler::Ruler()
    mbTicksAtExtremes = false;
    mTickColour = wxColour( theTheme.Colour( clrTrackPanelText ));
    mPen.SetColour(mTickColour);
+   mDbMirrorValue = 0.0;
 
    // Note: the font size is now adjusted automatically whenever
    // Invalidate is called on a horizontal Ruler, unless the user
@@ -768,7 +769,7 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    wxCoord strW, strH, strD, strL;
    int strPos, strLen, strLeft, strTop;
 
-   // FIXME: We don't draw a tick if of end of our label arrays
+   // FIXME: We don't draw a tick if off end of our label arrays
    // But we shouldn't have an array of labels.
    if( mNumMinorMinor >= mLength )
       return;
@@ -792,6 +793,9 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    label->text = wxT("");
 
    mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
+   // Bug 521.  dB view for waveforms needs a 2-sided scale.
+   if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
+      d = -2*mDbMirrorValue - d;
    l = LabelString(d, major);
    mDC->GetTextExtent(l, &strW, &strH, &strD, &strL);
 
