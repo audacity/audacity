@@ -6559,7 +6559,7 @@ msgstr "Mono, %dHz"
 #: src/TrackPanel.cpp
 #, c-format
 msgid "Left, %dHz"
-msgstr "Linkus, %dHz"
+msgstr "Links, %dHz"
 
 #: src/TrackPanel.cpp
 #, c-format
