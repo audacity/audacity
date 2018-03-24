@@ -1590,24 +1590,38 @@ bool NyquistEffect::Tokenizer::Tokenize(
 
    for (auto c :
         make_iterator_range(line.begin() + trimStart, line.end() - trimEnd)) {
-      if (q && c == wxT('\\')) {
+      if (q && !sl && c == wxT('\\')) {
          // begin escaped character, only within quotes
          sl = true;
          continue;
       }
 
-      if (!sl && !paren && c == wxT('"')) {
-         if (!q)
-            // finish previous token; begin token, including the delimiter
-            endToken(), q = true, tok += c;
-         else
-            // end token, including the delimiter
-            tok += c, q = false, endToken();
+      if (!sl && c == wxT('"')) {
+         // Unescaped quote
+         if (!q) {
+            // start of string
+            if (!paren)
+               // finish previous token
+               endToken();
+            // Include the delimiter in the token
+            tok += c;
+            q = true;
+         }
+         else {
+            // end of string
+            // Include the delimiter in the token
+            tok += c;
+            if (!paren)
+               endToken();
+            q = false;
+         }
       }
       else if (!q && !paren && (c == wxT(' ') || c == wxT('\t')))
+         // Unenclosed whitespace
          // Separate tokens; don't accumulate this character
          endToken();
       else if (!q && c == wxT('(')) {
+         // Start of list or sublist
          if (++paren == 1)
             // finish previous token; begin list, including the delimiter
             endToken(), tok += c;
@@ -1616,6 +1630,7 @@ bool NyquistEffect::Tokenizer::Tokenize(
             tok += c;
       }
       else if (!q && c == wxT(')')) {
+         // End of list or sublist
          if (--paren == 0)
             // finish list, including the delimiter
             tok += c, endToken();
@@ -1626,8 +1641,13 @@ bool NyquistEffect::Tokenizer::Tokenize(
             // nested list; deferred tokenizing
             tok += c;
       }
-      else
+      else {
+         if (sl && paren)
+            // Escaped character in string inside list, to be parsed again
+            // Put the escape back for the next pass
+            tok += wxT('\\');
          tok += c;
+      }
 
       sl = false;
    }
