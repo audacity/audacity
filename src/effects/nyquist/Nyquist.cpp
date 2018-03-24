@@ -1646,6 +1646,11 @@ bool NyquistEffect::Tokenizer::Tokenize(
             // Escaped character in string inside list, to be parsed again
             // Put the escape back for the next pass
             tok += wxT('\\');
+         if (sl && !paren && c == 'n')
+            // Convert \n to newline, the only special escape besides \\ or \"
+            // But this should not be used if a string needs to localize.
+            // Instead, simply put a line break in the string.
+            c = '\n';
          tok += c;
       }
 
