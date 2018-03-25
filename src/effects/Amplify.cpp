@@ -50,6 +50,7 @@ enum
 //     Name       Type     Key                     Def         Min         Max            Scale
 Param( Ratio,     float,   wxT("Ratio"),            0.9f,       0.003162f,  316.227766f,   1.0f  );
 Param( Amp,       float,   wxT(""),                -0.91515f,  -50.0f,     50.0f,         10.0f );
+Param( Clipping,  bool,    wxT("AllowClipping"),    false,    false,  true,    1  );
 
 //
 // EffectAmplify
@@ -125,12 +126,16 @@ size_t EffectAmplify::ProcessBlock(float **inBlock, float **outBlock, size_t blo
 }
 bool EffectAmplify::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mRatio, Ratio );
+   S.SHUTTLE_PARAM( mCanClip, Clipping );
    return true;
 }
 
 bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
 {
+   if (IsBatchProcessing())
+      mCanClip = true;
    parms.WriteFloat(KEY_Ratio, mRatio);
+   parms.WriteFloat(KEY_Clipping, mCanClip);
 
    return true;
 }
@@ -138,9 +143,12 @@ bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
 bool EffectAmplify::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Ratio);
+   ReadAndVerifyBool(Clipping);
 
    mRatio = Ratio;
-
+   mCanClip = Clipping;
+   if (IsBatchProcessing())
+      mCanClip = true;
    return true;
 }
 
