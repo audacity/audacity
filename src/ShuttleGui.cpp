@@ -1933,6 +1933,27 @@ wxChoice * ShuttleGuiBase::TieChoice(
    return pChoice;
 }
 
+/// Variant of the standard TieChoice which does the two step exchange
+/// between gui and stack variable and stack variable and shuttle.
+/// The Translated choices and default are integers, not Strings.
+/// Behaves identically to the previous, but is meant for use when the choices
+/// are non-exhaustive and there is a companion control for abitrary entry.
+///   @param Prompt             The prompt shown beside the control.
+///   @param SettingName        The setting name as stored in gPrefs
+///   @param Default            The default value for this control (translated)
+///   @param Choices            An array of choices that appear on screen.
+///   @param InternalChoices    The corresponding values (as an integer array)
+wxChoice * ShuttleGuiBase::TieNumberAsChoice(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const int Default,
+   const wxArrayString & Choices,
+   const std::vector<int> & InternalChoices)
+{
+   return ShuttleGuiBase::TieChoice(
+      Prompt, SettingName, Default, Choices, InternalChoices );
+}
+
 /// Integer specific version of StartRadioButtonGroup.
 /// All 'TieRadioButton()' enclosed must be ints.
 void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const int iDefaultValue )
@@ -2439,6 +2460,13 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    const wxArrayString & Choices,
    const std::vector<int> & InternalChoices)
 {
+   // Should no longer come here!
+   // Choice controls in Preferences that really are exhaustive choices among
+   // non-numerical options must now encode the internal choices as strings,
+   // not numbers.
+   wxASSERT(false);
+
+   // But if we do get here anyway, proceed sub-optimally as before.
    StartStruct();
    AddItem( SettingName, "id" );
    AddItem( Prompt, "prompt" );
@@ -2452,6 +2480,25 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    EndField();
    EndStruct();
    return ShuttleGui::TieChoice( Prompt, SettingName, Default, Choices, InternalChoices );
+}
+wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const int Default,
+   const wxArrayString & Choices,
+   const std::vector<int> & InternalChoices)
+{
+   // Come here for controls that present non-exhaustive choices among some
+   //  numbers, with an associated control that allows arbitrary entry of an
+   // "Other..."
+   StartStruct();
+   AddItem( SettingName, "id" );
+   AddItem( Prompt, "prompt" );
+   AddItem( "number", "type" ); // not "enum" !
+   AddItem( Default, "default"  );
+   EndStruct();
+   return ShuttleGui::TieNumberAsChoice(
+      Prompt, SettingName, Default, Choices, InternalChoices );
 }
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const wxString &Prompt,

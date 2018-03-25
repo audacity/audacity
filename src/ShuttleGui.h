@@ -224,12 +224,30 @@ public:
       const wxString &Default,
       const wxArrayString &Choices,
       const wxArrayString & InternalChoices );
+
+   // This overload of TieChoice should no longer be used in Preferences!
+   // Some uses do remain in export settings dialogs.
    virtual wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
       const wxArrayString & Choices,
       const std::vector<int> & InternalChoices );
+
+   // This overload presents what is really a numerical setting as a choice among
+   // commonly used values, but the choice is not exhaustive because there is
+   // also an associated control that allows entry of a user-specified value
+   // that is arbitrary (within some bounds).
+   // This behaves just like the previous for building dialogs, but the
+   // behavior is different when the call is intercepted for purposes of
+   // emitting scripting information about Preferences.
+   virtual wxChoice * TieNumberAsChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const int Default,
+      const wxArrayString & Choices,
+      const std::vector<int> & InternalChoices );
+
    virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
@@ -431,12 +449,22 @@ public:
       const wxString &Default,
       const wxArrayString &Choices,
       const wxArrayString & InternalChoices ) override;
+
+   // An assertion will be violated if this override is reached!
    wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
       const wxArrayString & Choices,
       const std::vector<int> & InternalChoices) override;
+
+   wxChoice * TieNumberAsChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const int Default,
+      const wxArrayString & Choices,
+      const std::vector<int> & InternalChoices) override;
+
    wxTextCtrl * TieTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
