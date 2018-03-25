@@ -412,6 +412,9 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
    mSum = 0.0; // dc offset inits
    mCount = 0;
 
+   sampleCount blockSamples;
+   sampleCount totalSamples = 0;
+
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
    auto s = start;
@@ -424,7 +427,8 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, s, block, fillZero, true, &blockSamples);
+      totalSamples += blockSamples;
 
       //Process the buffer.
       AnalyzeData(buffer.get(), block);
@@ -439,8 +443,10 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
          break;
       }
    }
-
-   offset = -mSum / mCount.as_double();  // calculate actual offset (amount that needs to be added on)
+   if( totalSamples > 0 )
+      offset = -mSum / totalSamples.as_double();  // calculate actual offset (amount that needs to be added on)
+   else
+      offset = 0.0;
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;

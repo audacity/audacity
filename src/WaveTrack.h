@@ -253,7 +253,7 @@ private:
    ///
    bool Get(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len,
-                   fillFormat fill = fillZero, bool mayThrow = true) const;
+                   fillFormat fill = fillZero, bool mayThrow = true, sampleCount * pNumCopied = nullptr) const;
    void Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
