@@ -56,7 +56,6 @@ static EncodedEnumSetting formatSetting{
 };
 
 //////////
-
 BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
    EVT_CHOICE(ID_SAMPLE_RATE_CHOICE, QualityPrefs::OnSampleRateChoice)
 END_EVENT_TABLE()
@@ -128,13 +127,6 @@ void QualityPrefs::GetNamesAndLabels()
 
    // The label for the 'Other...' case can be any value at all.
    mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten
-
-   //------------- Converter Names
-   int numConverters = Resample::GetNumMethods();
-   for (int i = 0; i < numConverters; i++) {
-      mConverterNames.Add(Resample::GetMethodName(i));
-      mConverterLabels.push_back(i);
-   }
 }
 
 void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
@@ -182,10 +174,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxEXPAND);
       {
          S.TieChoice(_("Sample Rate Con&verter:"),
-                     Resample::GetFastMethodKey(),
-                     Resample::GetFastMethodDefault(),
-                     mConverterNames,
-                     mConverterLabels);
+                     Resample::FastMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("&Dither:"),
@@ -203,10 +192,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.TieChoice(_("Sample Rate Conver&ter:"),
-                     Resample::GetBestMethodKey(),
-                     Resample::GetBestMethodDefault(),
-                     mConverterNames,
-                     mConverterLabels);
+                     Resample::BestMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("Dit&her:"),

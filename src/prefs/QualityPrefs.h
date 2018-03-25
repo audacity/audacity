@@ -45,8 +45,6 @@ class QualityPrefs final : public PrefsPanel
    std::vector<int> mDitherLabels;
    wxArrayString mSampleRateNames;
    std::vector<int> mSampleRateLabels;
-   wxArrayString mConverterNames;
-   std::vector<int> mConverterLabels;
 
    wxChoice *mSampleRates;
    wxTextCtrl *mOtherSampleRate;
