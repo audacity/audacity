@@ -357,6 +357,7 @@ class SliderDialog final : public wxDialogWrapper
    bool TransferDataFromWindow() override;
 
    void OnSlider(wxCommandEvent &event);
+   void OnTextChange(wxCommandEvent &event);  
 
    ASlider * mSlider;
    wxTextCtrl * mTextCtrl;

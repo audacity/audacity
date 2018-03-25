@@ -186,6 +186,7 @@ void TipPanel::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
 //
 
 BEGIN_EVENT_TABLE(SliderDialog, wxDialogWrapper)
+   EVT_TEXT( wxID_ANY, SliderDialog::OnTextChange )
    EVT_SLIDER(wxID_ANY,SliderDialog::OnSlider)
 END_EVENT_TABLE();
 
@@ -255,7 +256,12 @@ bool SliderDialog::TransferDataFromWindow()
 void SliderDialog::OnSlider(wxCommandEvent & event)
 {
    TransferDataToWindow();
+   event.Skip(false);
+}
 
+void SliderDialog::OnTextChange(wxCommandEvent & event)
+{
+   TransferDataFromWindow();
    event.Skip(false);
 }
 
