@@ -126,16 +126,16 @@ size_t EffectAmplify::ProcessBlock(float **inBlock, float **outBlock, size_t blo
 }
 bool EffectAmplify::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mRatio, Ratio );
-   S.SHUTTLE_PARAM( mCanClip, Clipping );
+   if (!IsBatchProcessing())
+      S.SHUTTLE_PARAM( mCanClip, Clipping );
    return true;
 }
 
 bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
 {
-   if (IsBatchProcessing())
-      mCanClip = true;
    parms.WriteFloat(KEY_Ratio, mRatio);
-   parms.WriteFloat(KEY_Clipping, mCanClip);
+   if (!IsBatchProcessing())
+      parms.WriteFloat(KEY_Clipping, mCanClip);
 
    return true;
 }
@@ -143,12 +143,15 @@ bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
 bool EffectAmplify::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Ratio);
-   ReadAndVerifyBool(Clipping);
-
    mRatio = Ratio;
-   mCanClip = Clipping;
-   if (IsBatchProcessing())
+
+   if (!IsBatchProcessing()){
+      ReadAndVerifyBool(Clipping);
+      mCanClip = Clipping;
+   } else {
       mCanClip = true;
+   }
+
    return true;
 }
 
