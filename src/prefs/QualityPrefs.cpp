@@ -74,7 +74,7 @@ static_assert(
    "size mismatch"
 );
 
-static const int defaultFastDither = 0; // none
+static const size_t defaultFastDither = 0; // none
 
 static EncodedEnumSetting fastDitherSetting{
    wxT("Quality/DitherAlgorithmChoice"),
@@ -83,7 +83,7 @@ static EncodedEnumSetting fastDitherSetting{
    wxT("Quality/DitherAlgorithm")
 };
 
-static const int defaultBestDither = 3; // shaped
+static const size_t defaultBestDither = 3; // shaped
 
 static EncodedEnumSetting bestDitherSetting{
    wxT("Quality/HQDitherAlgorithmChoice"),

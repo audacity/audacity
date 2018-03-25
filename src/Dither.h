@@ -14,7 +14,7 @@
 
 
 /// These ditherers are currently available:
-enum class DitherType : unsigned {
+enum DitherType : unsigned {
    none = 0, rectangle = 1, triangle = 2, shaped = 3 };
 
 class Dither
