@@ -160,6 +160,8 @@ scroll information.  It also has some status flags.
 #include "tracks/ui/PlayIndicatorOverlay.h"
 #include "tracks/ui/Scrubbing.h"
 
+#include "widgets/ErrorDialog.h"
+
 #include "commands/ScriptCommandRelay.h"
 #include "commands/CommandTargets.h"
 #include "commands/Command.h"
@@ -3297,9 +3299,14 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       SetProjectTitle();
 
       wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, xmlFile.GetErrorStr());
-      AudacityMessageBox(xmlFile.GetErrorStr(),
-                   _("Error Opening Project"),
-                   wxOK | wxCENTRE, this);
+      ShowErrorDialog(
+         this,
+         _("Error Opening Project"),
+         xmlFile.GetErrorStr(),
+         wxT("FAQ:Errors_on_opening_or_recovering_an_Audacity_project"));
+//      AudacityMessageBox(
+//                   _("Error Opening Project"),
+//                   wxOK | wxCENTRE, this);
    }
 }
 
