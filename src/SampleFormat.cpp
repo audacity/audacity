@@ -44,6 +44,7 @@
 #include "Prefs.h"
 #include "Dither.h"
 #include "Internat.h"
+#include "prefs/QualityPrefs.h"
 
 static DitherType gLowQualityDither = DitherType::none;
 static DitherType gHighQualityDither = DitherType::none;
@@ -52,11 +53,8 @@ static Dither gDitherAlgorithm;
 void InitDitherers()
 {
    // Read dither preferences
-   gLowQualityDither = (DitherType)
-   gPrefs->Read(wxT("/Quality/DitherAlgorithm"), (long)DitherType::none);
-
-   gHighQualityDither = (DitherType)
-   gPrefs->Read(wxT("/Quality/HQDitherAlgorithm"), (long)DitherType::shaped);
+   gLowQualityDither = QualityPrefs::FastDitherChoice();
+   gHighQualityDither = QualityPrefs::BestDitherChoice();
 }
 
 const wxChar *GetSampleFormatStr(sampleFormat format)

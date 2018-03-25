@@ -56,6 +56,44 @@ static EncodedEnumSetting formatSetting{
 };
 
 //////////
+static const IdentInterfaceSymbol choicesDither[] = {
+   { XO("None") },
+   { XO("Rectangle") },
+   { XO("Triangle") },
+   { XO("Shaped") },
+};
+static const size_t nChoicesDither = WXSIZEOF( choicesDither );
+static const int intChoicesDither[] = {
+   (int) DitherType::none,
+   (int) DitherType::rectangle,
+   (int) DitherType::triangle,
+   (int) DitherType::shaped,
+};
+static_assert(
+   nChoicesDither == WXSIZEOF( intChoicesDither ),
+   "size mismatch"
+);
+
+static const int defaultFastDither = 0; // none
+
+static EncodedEnumSetting fastDitherSetting{
+   wxT("Quality/DitherAlgorithmChoice"),
+   choicesDither, nChoicesDither, defaultFastDither,
+   intChoicesDither,
+   wxT("Quality/DitherAlgorithm")
+};
+
+static const int defaultBestDither = 3; // shaped
+
+static EncodedEnumSetting bestDitherSetting{
+   wxT("Quality/HQDitherAlgorithmChoice"),
+   choicesDither, nChoicesDither, defaultBestDither,
+
+   intChoicesDither,
+   wxT("Quality/HQDitherAlgorithm")
+};
+
+//////////
 BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
    EVT_CHOICE(ID_SAMPLE_RATE_CHOICE, QualityPrefs::OnSampleRateChoice)
 END_EVENT_TABLE()
@@ -97,12 +135,6 @@ void QualityPrefs::Populate()
 /// The corresponding labels are what gets stored.
 void QualityPrefs::GetNamesAndLabels()
 {
-   //------------ Dither Names
-   mDitherNames.Add(_("None"));        mDitherLabels.push_back((int) DitherType::none);
-   mDitherNames.Add(_("Rectangle"));   mDitherLabels.push_back((int) DitherType::rectangle);
-   mDitherNames.Add(_("Triangle"));    mDitherLabels.push_back((int) DitherType::triangle);
-   mDitherNames.Add(_("Shaped"));      mDitherLabels.push_back((int) DitherType::shaped);
-
    //------------ Sample Rate Names
    // JKC: I don't understand the following comment.
    //      Can someone please explain or correct it?
@@ -178,10 +210,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("&Dither:"),
-                     wxT("/Quality/DitherAlgorithm"),
-                     (int) DitherType::none,
-                     mDitherNames,
-                     mDitherLabels);
+                     fastDitherSetting);
       }
       S.EndMultiColumn();
    }
@@ -196,10 +225,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("Dit&her:"),
-                     wxT("/Quality/HQDitherAlgorithm"),
-                     (int) DitherType::shaped,
-                     mDitherNames,
-                     mDitherLabels);
+                     bestDitherSetting);
       }
       S.EndMultiColumn();
    }
@@ -248,5 +274,15 @@ PrefsPanel *QualityPrefsFactory::operator () (wxWindow *parent, wxWindowID winid
 sampleFormat QualityPrefs::SampleFormatChoice()
 {
    return (sampleFormat)formatSetting.ReadInt();
+}
+
+DitherType QualityPrefs::FastDitherChoice()
+{
+   return (DitherType) fastDitherSetting.ReadInt();
+}
+
+DitherType QualityPrefs::BestDitherChoice()
+{
+   return (DitherType) bestDitherSetting.ReadInt();
 }
 
