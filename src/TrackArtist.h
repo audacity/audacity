@@ -179,7 +179,7 @@ class AUDACITY_DLL_API TrackArtist {
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
    long mShowClipping;        // "/GUI/ShowClipping"
-   int  mSampleDisplay;       // "/GUI/SampleView"
+   int  mSampleDisplay;
    bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
 
    int mMarginLeft;

@@ -30,6 +30,70 @@
 
 #define ID_SAMPLE_RATE_CHOICE           7001
 
+//////////
+
+static const IdentInterfaceSymbol choicesFormat[] = {
+   { wxT("Format16Bit"), XO("16-bit") },
+   { wxT("Format24Bit"), XO("24-bit") },
+   { wxT("Format32BitFloat"), XO("32-bit float") }
+};
+static const size_t nChoicesFormat = WXSIZEOF( choicesFormat );
+static const int intChoicesFormat[] = {
+   int16Sample,
+   int24Sample,
+   floatSample
+};
+static_assert( nChoicesFormat == WXSIZEOF(intChoicesFormat), "size mismatch" );
+
+static const size_t defaultChoiceFormat = 2; // floatSample
+
+static EncodedEnumSetting formatSetting{
+   wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
+   choicesFormat, nChoicesFormat, defaultChoiceFormat,
+   
+   intChoicesFormat,
+   wxT("/SamplingRate/DefaultProjectSampleFormat"),
+};
+
+//////////
+static const IdentInterfaceSymbol choicesDither[] = {
+   { XO("None") },
+   { XO("Rectangle") },
+   { XO("Triangle") },
+   { XO("Shaped") },
+};
+static const size_t nChoicesDither = WXSIZEOF( choicesDither );
+static const int intChoicesDither[] = {
+   (int) DitherType::none,
+   (int) DitherType::rectangle,
+   (int) DitherType::triangle,
+   (int) DitherType::shaped,
+};
+static_assert(
+   nChoicesDither == WXSIZEOF( intChoicesDither ),
+   "size mismatch"
+);
+
+static const int defaultFastDither = 0; // none
+
+static EncodedEnumSetting fastDitherSetting{
+   wxT("Quality/DitherAlgorithmChoice"),
+   choicesDither, nChoicesDither, defaultFastDither,
+   intChoicesDither,
+   wxT("Quality/DitherAlgorithm")
+};
+
+static const int defaultBestDither = 3; // shaped
+
+static EncodedEnumSetting bestDitherSetting{
+   wxT("Quality/HQDitherAlgorithmChoice"),
+   choicesDither, nChoicesDither, defaultBestDither,
+
+   intChoicesDither,
+   wxT("Quality/HQDitherAlgorithm")
+};
+
+//////////
 BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
    EVT_CHOICE(ID_SAMPLE_RATE_CHOICE, QualityPrefs::OnSampleRateChoice)
 END_EVENT_TABLE()
@@ -71,12 +135,6 @@ void QualityPrefs::Populate()
 /// The corresponding labels are what gets stored.
 void QualityPrefs::GetNamesAndLabels()
 {
-   //------------ Dither Names
-   mDitherNames.Add(_("None"));        mDitherLabels.push_back(Dither::none);
-   mDitherNames.Add(_("Rectangle"));   mDitherLabels.push_back(Dither::rectangle);
-   mDitherNames.Add(_("Triangle"));    mDitherLabels.push_back(Dither::triangle);
-   mDitherNames.Add(_("Shaped"));      mDitherLabels.push_back(Dither::shaped);
-
    //------------ Sample Rate Names
    // JKC: I don't understand the following comment.
    //      Can someone please explain or correct it?
@@ -101,18 +159,6 @@ void QualityPrefs::GetNamesAndLabels()
 
    // The label for the 'Other...' case can be any value at all.
    mSampleRateLabels.push_back(44100); // If chosen, this value will be overwritten
-
-   //------------- Sample Format Names
-   mSampleFormatNames.Add(wxT("16-bit"));       mSampleFormatLabels.push_back(int16Sample);
-   mSampleFormatNames.Add(wxT("24-bit"));       mSampleFormatLabels.push_back(int24Sample);
-   mSampleFormatNames.Add(wxT("32-bit float")); mSampleFormatLabels.push_back(floatSample);
-
-   //------------- Converter Names
-   int numConverters = Resample::GetNumMethods();
-   for (int i = 0; i < numConverters; i++) {
-      mConverterNames.Add(Resample::GetMethodName(i));
-      mConverterLabels.push_back(i);
-   }
 }
 
 void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
@@ -135,7 +181,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
             // We make sure it uses the ID we want, so that we get changes
             S.Id(ID_SAMPLE_RATE_CHOICE);
             // We make sure we have a pointer to it, so that we can drive it.
-            mSampleRates = S.TieChoice( {},
+            mSampleRates = S.TieNumberAsChoice( {},
                                        wxT("/SamplingRate/DefaultProjectSampleRate"),
                                        AudioIO::GetOptimalSupportedSampleRate(),
                                        mSampleRateNames,
@@ -149,10 +195,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          S.EndHorizontalLay();
 
          S.TieChoice(_("Default Sample &Format:"),
-                     wxT("/SamplingRate/DefaultProjectSampleFormat"),
-                     floatSample,
-                     mSampleFormatNames,
-                     mSampleFormatLabels);
+                     formatSetting);
       }
       S.EndMultiColumn();
    }
@@ -163,17 +206,11 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxEXPAND);
       {
          S.TieChoice(_("Sample Rate Con&verter:"),
-                     Resample::GetFastMethodKey(),
-                     Resample::GetFastMethodDefault(),
-                     mConverterNames,
-                     mConverterLabels);
+                     Resample::FastMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("&Dither:"),
-                     wxT("/Quality/DitherAlgorithm"),
-                     Dither::none,
-                     mDitherNames,
-                     mDitherLabels);
+                     fastDitherSetting);
       }
       S.EndMultiColumn();
    }
@@ -184,17 +221,11 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.TieChoice(_("Sample Rate Conver&ter:"),
-                     Resample::GetBestMethodKey(),
-                     Resample::GetBestMethodDefault(),
-                     mConverterNames,
-                     mConverterLabels);
+                     Resample::BestMethodSetting);
 
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("Dit&her:"),
-                     wxT("/Quality/HQDitherAlgorithm"),
-                     Dither::shaped,
-                     mDitherNames,
-                     mDitherLabels);
+                     bestDitherSetting);
       }
       S.EndMultiColumn();
    }
@@ -239,3 +270,19 @@ PrefsPanel *QualityPrefsFactory::operator () (wxWindow *parent, wxWindowID winid
    wxASSERT(parent); // to justify safenew
    return safenew QualityPrefs(parent, winid);
 }
+
+sampleFormat QualityPrefs::SampleFormatChoice()
+{
+   return (sampleFormat)formatSetting.ReadInt();
+}
+
+DitherType QualityPrefs::FastDitherChoice()
+{
+   return (DitherType) fastDitherSetting.ReadInt();
+}
+
+DitherType QualityPrefs::BestDitherChoice()
+{
+   return (DitherType) bestDitherSetting.ReadInt();
+}
+

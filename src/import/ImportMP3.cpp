@@ -45,6 +45,7 @@
 #include "ImportPlugin.h"
 #include "../Internat.h"
 #include "../Tags.h"
+#include "../prefs/QualityPrefs.h"
 
 #define DESC _("MP3 files")
 
@@ -498,8 +499,7 @@ enum mad_flow output_cb(void *_data,
       if(data->channels.empty()) {
          data->channels.resize(channels);
 
-         sampleFormat format = (sampleFormat) gPrefs->
-            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+         auto format = QualityPrefs::SampleFormatChoice();
 
          for(auto &channel: data->channels) {
             channel = data->trackFactory->NewWaveTrack(format, samplerate);

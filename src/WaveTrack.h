@@ -578,9 +578,6 @@ private:
       kMaxZoom,
    };
 
-   // Read appropriate value from preferences
-   static WaveTrackDisplay FindDefaultViewMode();
-
    // Handle remapping of enum values from 2.1.0 and earlier
    static WaveTrackDisplay ConvertLegacyDisplayValue(int oldValue);
 

@@ -22,6 +22,8 @@
 #include "PrefsPanel.h"
 
 class ShuttleGui;
+enum sampleFormat : unsigned;
+enum class DitherType : unsigned;
 
 class QualityPrefs final : public PrefsPanel
 {
@@ -33,19 +35,18 @@ class QualityPrefs final : public PrefsPanel
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
+   static sampleFormat SampleFormatChoice();
+
+   static DitherType FastDitherChoice();
+   static DitherType BestDitherChoice();
+
  private:
    void Populate();
    void GetNamesAndLabels();
    void OnSampleRateChoice(wxCommandEvent & e);
 
-   wxArrayString mDitherNames;
-   std::vector<int> mDitherLabels;
    wxArrayString mSampleRateNames;
    std::vector<int> mSampleRateLabels;
-   wxArrayString mSampleFormatNames;
-   std::vector<int> mSampleFormatLabels;
-   wxArrayString mConverterNames;
-   std::vector<int> mConverterLabels;
 
    wxChoice *mSampleRates;
    wxTextCtrl *mOtherSampleRate;

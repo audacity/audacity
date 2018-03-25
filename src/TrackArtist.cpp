@@ -176,6 +176,7 @@ audio tracks.
 #include "Prefs.h"
 #include "prefs/GUISettings.h"
 #include "prefs/SpectrogramSettings.h"
+#include "prefs/TracksPrefs.h"
 #include "prefs/WaveformSettings.h"
 #include "Spectrum.h"
 #include "ViewInfo.h"
@@ -3311,7 +3312,7 @@ void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
-   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 1);
+   mSampleDisplay = TracksPrefs::SampleViewChoice();
    SetColours(0);
 }
 

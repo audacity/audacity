@@ -184,12 +184,12 @@ inline size_t limitSampleBufferSize( size_t bufferSize, sampleCount limit )
 // ----------------------------------------------------------------------------
 // Supported sample formats
 // ----------------------------------------------------------------------------
-typedef enum
+enum sampleFormat : unsigned
 {
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
    floatSample = 0x0004000F
-} sampleFormat;
+};
 
 // ----------------------------------------------------------------------------
 // Provide the number of bytes a specific sample will take

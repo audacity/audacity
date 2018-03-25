@@ -44,19 +44,17 @@
 #include "Prefs.h"
 #include "Dither.h"
 #include "Internat.h"
+#include "prefs/QualityPrefs.h"
 
-static Dither::DitherType gLowQualityDither = Dither::none;
-static Dither::DitherType gHighQualityDither = Dither::none;
+static DitherType gLowQualityDither = DitherType::none;
+static DitherType gHighQualityDither = DitherType::none;
 static Dither gDitherAlgorithm;
 
 void InitDitherers()
 {
    // Read dither preferences
-   gLowQualityDither = (Dither::DitherType)
-   gPrefs->Read(wxT("/Quality/DitherAlgorithm"), (long)Dither::none);
-
-   gHighQualityDither = (Dither::DitherType)
-   gPrefs->Read(wxT("/Quality/HQDitherAlgorithm"), (long)Dither::shaped);
+   gLowQualityDither = QualityPrefs::FastDitherChoice();
+   gHighQualityDither = QualityPrefs::BestDitherChoice();
 }
 
 const wxChar *GetSampleFormatStr(sampleFormat format)
@@ -120,6 +118,6 @@ void CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
                  unsigned int dstStride /* = 1 */)
 {
    gDitherAlgorithm.Apply(
-      Dither::none,
+      DitherType::none,
       src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
 }

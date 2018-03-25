@@ -166,6 +166,8 @@ scroll information.  It also has some status flags.
 #include "commands/CommandType.h"
 #include "commands/CommandContext.h"
 
+#include "prefs/QualityPrefs.h"
+
 #include "../images/AudacityLogoAlpha.xpm"
 
 std::shared_ptr<TrackList> AudacityProject::msClipboard{ TrackList::Create() };
@@ -917,8 +919,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
      mbLoadedFromAup( false ),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
-     mDefaultFormat((sampleFormat) gPrefs->
-           Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
+     mDefaultFormat(QualityPrefs::SampleFormatChoice()),
      mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
@@ -1305,7 +1306,7 @@ void AudacityProject::UpdatePrefsVariables()
    //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"), &mViewInfo.bUpdateSpectrogram, true);
 
    gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
-   mDefaultFormat = (sampleFormat) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   mDefaultFormat = QualityPrefs::SampleFormatChoice();
 
    gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);
    gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekLong, 15.0);
@@ -5887,8 +5888,7 @@ wxString AudacityProject::GetHoursMinsString(int iMinutes)
 int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
 
    // Obtain the current settings
-   sampleFormat oCaptureFormat = (sampleFormat)
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   auto oCaptureFormat = QualityPrefs::SampleFormatChoice();
    if (lCaptureChannels == 0) {
       gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
    }
@@ -6012,12 +6012,6 @@ double AudacityProject::GetZoomOfPreset( int preset ){
    if( result < (zoomToFit/maxZoomOutFactor) )
       result = zoomToFit / maxZoomOutFactor;
    return result;
-}
-
-double AudacityProject::GetZoomOfPref( const wxString & PresetPrefName, int defaultPreset ){
-   int preset=defaultPreset;
-   gPrefs->Read( PresetPrefName, &preset, defaultPreset );
-   return GetZoomOfPreset( preset );
 }
 
 AudacityProject::PlaybackScroller::PlaybackScroller(AudacityProject *project)

@@ -45,17 +45,182 @@ namespace {
 }
 
 
+//////////
+static const IdentInterfaceSymbol choicesView[] = {
+   { XO("Waveform") },
+   { wxT("WaveformDB"), XO("Waveform (dB)") },
+   { XO("Spectrogram") }
+};
+static const int intChoicesView[] = {
+   (int)(WaveTrack::Waveform),
+   (int)(WaveTrack::obsoleteWaveformDBDisplay),
+   (int)(WaveTrack::Spectrum)
+};
+static const size_t nChoicesView = WXSIZEOF(choicesView);
+static_assert( nChoicesView == WXSIZEOF(intChoicesView), "size mismatch" );
+
+static const size_t defaultChoiceView = 0;
+
+class TracksViewModeSetting : public EncodedEnumSetting {
+public:
+   TracksViewModeSetting(
+      const wxString &key,
+      const IdentInterfaceSymbol symbols[], size_t nSymbols,
+      size_t defaultSymbol,
+
+      const int intValues[],
+      const wxString &oldKey
+   )
+      : EncodedEnumSetting{
+         key, symbols, nSymbols, defaultSymbol, intValues, oldKey }
+   {}
+
+   void Migrate( wxString &value ) override
+   {
+      // Special logic for this preference which was twice migrated!
+
+      // First test for the older but not oldest key:
+      EncodedEnumSetting::Migrate(value);
+      if (!value.empty())
+         return;
+
+      // PRL:  Bugs 1043, 1044
+      // 2.1.1 writes a NEW key for this preference, which got NEW values,
+      // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
+      // Prefer the NEW preference key if it is present
+
+      int oldMode;
+      gPrefs->Read(wxT("/GUI/DefaultViewMode"), // The very old key
+         &oldMode,
+         (int)(WaveTrack::Waveform));
+      auto viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
+
+      // Now future-proof 2.1.1 against a recurrence of this sort of bug!
+      viewMode = WaveTrack::ValidateWaveTrackDisplay(viewMode);
+
+      const_cast<TracksViewModeSetting*>(this)->WriteInt( viewMode );
+      gPrefs->Flush();
+
+      value = mSymbols[ FindInt(viewMode) ].Internal();
+   }
+};
+
+static TracksViewModeSetting viewModeSetting{
+   wxT("/GUI/DefaultViewModeChoice"),
+   choicesView, nChoicesView, defaultChoiceView,
+
+   intChoicesView,
+   wxT("/GUI/DefaultViewModeNew")
+};
+
+WaveTrack::WaveTrackDisplay TracksPrefs::ViewModeChoice()
+{
+   return (WaveTrack::WaveTrackDisplay) viewModeSetting.ReadInt();
+}
+
+//////////
+static const IdentInterfaceSymbol choicesSampleDisplay[] = {
+   { wxT("ConnectDots"), XO("Connect dots") },
+   { wxT("StemPlot"), XO("Stem plot") }
+};
+static const size_t nChoicesSampleDisplay = WXSIZEOF( choicesSampleDisplay );
+static const int intChoicesSampleDisplay[] = {
+   (int) WaveTrack::LinearInterpolate,
+   (int) WaveTrack::StemPlot
+};
+static_assert(
+   nChoicesSampleDisplay == WXSIZEOF(intChoicesSampleDisplay), "size mismatch" );
+
+static const size_t defaultChoiceSampleDisplay = 1;
+
+static EncodedEnumSetting sampleDisplaySetting{
+   wxT("/GUI/SampleViewChoice"),
+   choicesSampleDisplay, nChoicesSampleDisplay, defaultChoiceSampleDisplay,
+
+   intChoicesSampleDisplay,
+   wxT("/GUI/SampleView")
+};
+
+WaveTrack::SampleDisplay TracksPrefs::SampleViewChoice()
+{
+   return (WaveTrack::SampleDisplay) sampleDisplaySetting.ReadInt();
+}
+
+//////////
+static const IdentInterfaceSymbol choicesZoom[] = {
+   { wxT("FitToWidth"), XO("Fit to Width") },
+   { wxT("ZoomToSelection"), XO("Zoom to Selection") },
+   { wxT("ZoomDefault"), XO("Zoom Default") },
+   { XO("Minutes") },
+   { XO("Seconds") },
+   { wxT("FifthsOfSeconds"), XO("5ths of Seconds") },
+   { wxT("TenthsOfSeconds"), XO("10ths of Seconds") },
+   { wxT("TwentiethsOfSeconds"), XO("20ths of Seconds") },
+   { wxT("FiftiethsOfSeconds"), XO("50ths of Seconds") },
+   { wxT("HundredthsOfSeconds"), XO("100ths of Seconds") },
+   { wxT("FiveHundredthsOfSeconds"), XO("500ths of Seconds") },
+   { XO("MilliSeconds") },
+   { XO("Samples") },
+   { wxT("FourPixelsPerSample"), XO("4 Pixels per Sample") },
+   { wxT("MaxZoom"), XO("Max Zoom") },
+};
+static const size_t nChoicesZoom = WXSIZEOF( choicesZoom );
+static const int intChoicesZoom[] = {
+   WaveTrack::kZoomToFit,
+   WaveTrack::kZoomToSelection,
+   WaveTrack::kZoomDefault,
+   WaveTrack::kZoomMinutes,
+   WaveTrack::kZoomSeconds,
+   WaveTrack::kZoom5ths,
+   WaveTrack::kZoom10ths,
+   WaveTrack::kZoom20ths,
+   WaveTrack::kZoom50ths,
+   WaveTrack::kZoom100ths,
+   WaveTrack::kZoom500ths,
+   WaveTrack::kZoomMilliSeconds,
+   WaveTrack::kZoomSamples,
+   WaveTrack::kZoom4To1,
+   WaveTrack::kMaxZoom,
+};
+static_assert( nChoicesZoom == WXSIZEOF(intChoicesZoom), "size mismatch" );
+
+static const size_t defaultChoiceZoom1 = 2; // kZoomDefault
+
+static EncodedEnumSetting zoom1Setting{
+   wxT("/GUI/ZoomPreset1Choice"),
+   choicesZoom, nChoicesZoom, defaultChoiceZoom1,
+
+   intChoicesZoom,
+   wxT("/GUI/ZoomPreset1")
+};
+
+static const size_t defaultChoiceZoom2 = 13; // kZoom4To1
+
+static EncodedEnumSetting zoom2Setting{
+   wxT("/GUI/ZoomPreset2Choice"),
+   choicesZoom, nChoicesZoom, defaultChoiceZoom2,
+
+   intChoicesZoom,
+   wxT("/GUI/ZoomPreset2")
+};
+
+WaveTrack::ZoomPresets TracksPrefs::Zoom1Choice()
+{
+   return (WaveTrack::ZoomPresets) zoom1Setting.ReadInt();
+}
+
+WaveTrack::ZoomPresets TracksPrefs::Zoom2Choice()
+{
+   return (WaveTrack::ZoomPresets) zoom2Setting.ReadInt();
+}
+
+//////////
 TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
  * notes */
 :  PrefsPanel(parent, winid, _("Tracks"))
 {
-   // Bugs 1043, 1044
-   // First rewrite legacy preferences
-   gPrefs->Write(wxT("/GUI/DefaultViewModeNew"),
-      (int) WaveTrack::FindDefaultViewMode());
-
    Populate();
 }
 
@@ -68,55 +233,8 @@ void TracksPrefs::Populate()
    // Keep view choices and codes in proper correspondence --
    // we don't display them by increasing integer values.
 
-   mViewChoices.Add(_("Waveform"));
-   mViewCodes.push_back((int)(WaveTrack::Waveform));
-
-   mViewChoices.Add(_("Waveform (dB)"));
-   mViewCodes.push_back((int)(WaveTrack::obsoleteWaveformDBDisplay));
-
-   mViewChoices.Add(_("Spectrogram"));
-   mViewCodes.push_back(WaveTrack::Spectrum);
-
 
    // How samples are displayed when zoomed in:
-
-   mSampleDisplayChoices.Add(_("Connect dots"));
-   mSampleDisplayCodes.push_back((int) WaveTrack::LinearInterpolate);
-
-   mSampleDisplayChoices.Add(_("Stem plot"));
-   mSampleDisplayCodes.push_back((int) WaveTrack::StemPlot);
-
-   mZoomChoices.Add( _("Fit to Width") );
-   mZoomCodes.push_back( WaveTrack::kZoomToFit );
-   mZoomChoices.Add( _("Zoom to Selection") );
-   mZoomCodes.push_back( WaveTrack::kZoomToSelection );
-   mZoomChoices.Add( _("Zoom Default") );
-   mZoomCodes.push_back( WaveTrack::kZoomDefault );
-   mZoomChoices.Add( _("Minutes") );
-   mZoomCodes.push_back( WaveTrack::kZoomMinutes );
-   mZoomChoices.Add( _("Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoomSeconds );
-   mZoomChoices.Add( _("5ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom5ths );
-   mZoomChoices.Add( _("10ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom10ths );
-   mZoomChoices.Add( _("20ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom20ths );
-   mZoomChoices.Add( _("50ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom50ths );
-   mZoomChoices.Add( _("100ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom100ths );
-   mZoomChoices.Add( _("500ths of Seconds") );
-   mZoomCodes.push_back( WaveTrack::kZoom500ths );
-   mZoomChoices.Add( _("MilliSeconds") );
-   mZoomCodes.push_back( WaveTrack::kZoomMilliSeconds );
-   mZoomChoices.Add( _("Samples") );
-   mZoomCodes.push_back( WaveTrack::kZoomSamples );
-   mZoomChoices.Add( _("4 Pixels per Sample") );
-   mZoomCodes.push_back( WaveTrack::kZoom4To1 );
-   mZoomChoices.Add( _("Max Zoom") );
-   mZoomCodes.push_back( WaveTrack::kMaxZoom );
-
 
 
    //------------------------- Main section --------------------
@@ -153,16 +271,10 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.TieChoice(_("Default &view mode:"),
-                     wxT("/GUI/DefaultViewModeNew"),
-                     0,
-                     mViewChoices,
-                     mViewCodes);
+                     viewModeSetting );
 
          S.TieChoice(_("Display &samples:"),
-                     wxT("/GUI/SampleView"),
-                     1,
-                     mSampleDisplayChoices,
-                     mSampleDisplayCodes);
+                     sampleDisplaySetting );
 
          S.TieTextBox(_("Default audio track &name:"),
                       wxT("/GUI/TrackNames/DefaultTrackName"),
@@ -178,16 +290,10 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(4);
       {
          S.TieChoice(_("Preset 1:"),
-                     wxT("/GUI/ZoomPreset1"),
-                     WaveTrack::kZoomDefault,
-                     mZoomChoices,
-                     mZoomCodes);
+                     zoom1Setting );
 
          S.TieChoice(_("Preset 2:"),
-                     wxT("/GUI/ZoomPreset2"),
-                     WaveTrack::kZoom4To1,
-                     mZoomChoices,
-                     mZoomCodes);
+                     zoom2Setting );
       }
    }
    S.EndStatic();

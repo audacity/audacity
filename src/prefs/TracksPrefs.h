@@ -20,6 +20,7 @@
 
 #include <vector>
 #include "PrefsPanel.h"
+#include "../WaveTrack.h"
 
 class ShuttleGui;
 
@@ -36,18 +37,16 @@ class TracksPrefs final : public PrefsPanel
 
    static wxString GetDefaultAudioTrackNamePreference();
 
+   static WaveTrack::WaveTrackDisplay ViewModeChoice();
+   static WaveTrack::SampleDisplay SampleViewChoice();
+   static WaveTrack::ZoomPresets Zoom1Choice();
+   static WaveTrack::ZoomPresets Zoom2Choice();
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S) override;
 
    static int iPreferencePinned;
-
-   std::vector<int> mViewCodes;
-   wxArrayString mViewChoices;
-   std::vector<int> mSampleDisplayCodes;
-   wxArrayString mSampleDisplayChoices;
-   std::vector<int> mZoomCodes;
-   wxArrayString mZoomChoices;
 };
 
 class TracksPrefsFactory final : public PrefsPanelFactory

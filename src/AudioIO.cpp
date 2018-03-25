@@ -447,6 +447,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
 
+#include "prefs/QualityPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
 #include "widgets/ErrorDialog.h"
@@ -1825,8 +1826,7 @@ void AudioIO::StartMonitoring(double sampleRate)
 
    bool success;
    long captureChannels;
-   sampleFormat captureFormat = (sampleFormat)
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   auto captureFormat = QualityPrefs::SampleFormatChoice();
    gPrefs->Read(wxT("/AudioIO/RecordChannels"), &captureChannels, 2L);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
    int playbackChannels = 0;
