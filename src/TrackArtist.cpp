@@ -486,7 +486,9 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
 
       if (mbShowTrackNameInWaveform &&
           // Exclude right channel of stereo track 
-          !(!wt->GetLinked() && wt->GetLink())) {
+          !(!wt->GetLinked() && wt->GetLink()) && 
+          // Exclude empty name.
+          !wt->GetName().IsEmpty()) {
          wxBrush Brush;
          wxCoord x,y;
          wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);

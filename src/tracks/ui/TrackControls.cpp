@@ -20,6 +20,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelMouseEvent.h"
 #include "../../Track.h"
 #include <wx/textdlg.h>
+#include "../../commands/CommandType.h"
+#include "../../commands/Command.h"
+#include "../../ShuttleGui.h"
+
 
 TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
    : mwTrack{ pTrack }
@@ -153,6 +157,42 @@ BEGIN_POPUP_MENU(TrackMenuTable)
       OnMoveTrack)
 END_POPUP_MENU()
 
+
+
+
+#define SET_TRACK_NAME_PLUGIN_SYMBOL XO("Set Track Name")
+
+// An example of using an AudacityCommand simply to create a dialog.
+// We can add additional functions later, if we want to make it
+// available to scripting.
+// However there is no reason to, as SetTrackStatus is already provided.
+class SetTrackNameCommand : public AudacityCommand
+{
+public:
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return SET_TRACK_NAME_PLUGIN_SYMBOL;};
+   //wxString GetDescription() override {return _("Sets the track name.");};
+   //bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   //bool Apply(const CommandContext & context) override;
+
+   // Provide an override, if we want the help button.
+   // wxString ManualPage() override {return wxT("");};
+public:
+   wxString mName;
+};
+
+void SetTrackNameCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("Name:"),mName);
+   }
+   S.EndMultiColumn();
+}
+
 void TrackMenuTable::OnSetName(wxCommandEvent &)
 {
    Track *const pTrack = mpData->pTrack;
@@ -160,11 +200,14 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
    {
       AudacityProject *const proj = ::GetActiveProject();
       const wxString oldName = pTrack->GetName();
-      const wxString newName =
-         wxGetTextFromUser(_("Change track name to:"),
-         _("Track Name"), oldName);
-      if (newName != wxT("")) // wxGetTextFromUser returns empty string on Cancel.
+
+      SetTrackNameCommand Command;
+      Command.mName = oldName;
+      // Bug 1837 : We need an OK/Cancel result if we are to enter a blank string.
+      bool bResult = Command.PromptUser( proj );
+      if (bResult) 
       {
+         wxString newName = Command.mName;
          pTrack->SetName(newName);
          // if we have a linked channel this name should change as well
          // (otherwise sort by name and time will crash).
