@@ -1876,7 +1876,9 @@ bool NyquistEffect::Parse(
       // valStr may or may not be a quoted string
       ctrl.valStr = len > 5 ? tokens[5] : wxT("");
       ctrl.val = GetCtrlValue(ctrl.valStr);
-      if (ctrl.valStr[0] == wxT('(') || ctrl.valStr[0] == wxT('"'))
+      if (ctrl.valStr.Len() > 0 && 
+            (ctrl.valStr[0] == wxT('(') || 
+            ctrl.valStr[0] == wxT('"')))
          ctrl.valStr = UnQuote( ctrl.valStr );
 
       // 6 is minimum, below
