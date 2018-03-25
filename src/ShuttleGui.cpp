@@ -2447,7 +2447,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
    StartField( "enum" );
    StartArray();
    for( size_t i=0;i<Choices.Count(); i++ )
-      AddItem( Choices[i] );
+      AddItem( InternalChoices[i] );
    EndArray();
    EndField();
    EndStruct();
