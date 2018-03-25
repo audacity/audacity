@@ -325,17 +325,17 @@ void Dither::Apply(enum DitherType ditherType,
         // We must do dithering
         switch (ditherType)
         {
-        case none:
+        case DitherType::none:
             DITHER(NoDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
-        case rectangle:
+        case DitherType::rectangle:
             DITHER(RectangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
-        case triangle:
+        case DitherType::triangle:
             Reset(); // reset dither filter for this NEW conversion
             DITHER(TriangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
-        case shaped:
+        case DitherType::shaped:
             Reset(); // reset dither filter for this NEW conversion
             DITHER(ShapedDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;

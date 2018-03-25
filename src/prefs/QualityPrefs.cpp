@@ -98,10 +98,10 @@ void QualityPrefs::Populate()
 void QualityPrefs::GetNamesAndLabels()
 {
    //------------ Dither Names
-   mDitherNames.Add(_("None"));        mDitherLabels.push_back(Dither::none);
-   mDitherNames.Add(_("Rectangle"));   mDitherLabels.push_back(Dither::rectangle);
-   mDitherNames.Add(_("Triangle"));    mDitherLabels.push_back(Dither::triangle);
-   mDitherNames.Add(_("Shaped"));      mDitherLabels.push_back(Dither::shaped);
+   mDitherNames.Add(_("None"));        mDitherLabels.push_back((int) DitherType::none);
+   mDitherNames.Add(_("Rectangle"));   mDitherLabels.push_back((int) DitherType::rectangle);
+   mDitherNames.Add(_("Triangle"));    mDitherLabels.push_back((int) DitherType::triangle);
+   mDitherNames.Add(_("Shaped"));      mDitherLabels.push_back((int) DitherType::shaped);
 
    //------------ Sample Rate Names
    // JKC: I don't understand the following comment.
@@ -179,7 +179,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("&Dither:"),
                      wxT("/Quality/DitherAlgorithm"),
-                     Dither::none,
+                     (int) DitherType::none,
                      mDitherNames,
                      mDitherLabels);
       }
@@ -197,7 +197,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("Dit&her:"),
                      wxT("/Quality/HQDitherAlgorithm"),
-                     Dither::shaped,
+                     (int) DitherType::shaped,
                      mDitherNames,
                      mDitherLabels);
       }

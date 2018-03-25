@@ -23,6 +23,7 @@
 
 class ShuttleGui;
 enum sampleFormat : unsigned;
+enum class DitherType : unsigned;
 
 class QualityPrefs final : public PrefsPanel
 {
