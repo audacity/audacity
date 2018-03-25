@@ -9177,10 +9177,12 @@ void AudacityProject::OnBoundaryMove(int step)
 
    const double t0 = mViewInfo.selectedRegion.t0();
    const double t1 = mViewInfo.selectedRegion.t1();
-   const double end = mTracks->GetEndTime();
+   const double end = std::max( 
+      mTracks->GetEndTime(),
+      mTrackPanel->GetScreenEndTime());
 
    double newT = mViewInfo.OffsetTimeByPixels( bMoveT0 ? t0 : t1, pixels);
-   // constrain to be in the track limits.
+   // constrain to be in the track/screen limits.
    newT = std::max( 0.0, newT );
    newT = std::min( newT, end);
    // optionally constrain to be a contraction, i.e. so t0/t1 do not cross over
@@ -9213,13 +9215,15 @@ SelectionOperation operation)
    int snapToTime = GetSnapTo();
    const double t0 = mViewInfo.selectedRegion.t0();
    const double t1 = mViewInfo.selectedRegion.t1();
-   const double end = mTracks->GetEndTime();
+   const double end = std::max( 
+      mTracks->GetEndTime(),
+      mTrackPanel->GetScreenEndTime());
 
    // Is it t0 or t1 moving?
    bool bMoveT0 = ( operation == SELECTION_CONTRACT ) ^ ( seekStep < 0 );
    // newT is where we want to move to
    double newT = OffsetTime( bMoveT0 ? t0 : t1, seekStep, timeUnit, snapToTime);
-   // constrain to be in the track limits.
+   // constrain to be in the track/screen limits.
    newT = std::max( 0.0, newT );
    newT = std::min( newT, end);
    // optionally constrain to be a contraction, i.e. so t0/t1 do not cross over
@@ -9244,7 +9248,9 @@ void AudacityProject::MoveWhenAudioInactive
    // If TIME_UNIT_SECONDS, snap-to will be off.
    int snapToTime = GetSnapTo();
    const double t0 = mViewInfo.selectedRegion.t0();
-   const double end = mTracks->GetEndTime();
+   const double end = std::max( 
+      mTracks->GetEndTime(),
+      mTrackPanel->GetScreenEndTime());
 
    // Move the cursor
    // Already in cursor mode?
