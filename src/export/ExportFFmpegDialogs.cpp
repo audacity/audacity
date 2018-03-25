@@ -344,7 +344,8 @@ ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent, int WXUNUSED(fo
 {
    for (unsigned int i=0; i < (sizeof(iWMABitRate)/sizeof(int)); i++)
    {
-      mBitRateNames.Add(wxString::Format(wxT("%i kbps"),iWMABitRate[i]/1000));
+      /* i18n-hint: abbreviates thousands of bits per second */
+      mBitRateNames.Add(wxString::Format(_("%i kbps"),iWMABitRate[i]/1000));
       mBitRateLabels.push_back(iWMABitRate[i]);
    }
 
