@@ -249,7 +249,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-   S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble Spectral Selection"),
+   S.Id(ID_SPECTRAL_SELECTION).TieCheckBox(_("Ena&ble Frequency Selection"),
       mTempSettings.spectralSelection);
 #endif
 
@@ -289,7 +289,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
    S.StartStatic(_("Global settings"));
    {
-      S.TieCheckBox(_("Ena&ble spectral selection"),
+      S.TieCheckBox(_("Ena&ble frequency selection"),
          SpectrogramSettings::Globals::Get().spectralSelection);
    }
    S.EndStatic();

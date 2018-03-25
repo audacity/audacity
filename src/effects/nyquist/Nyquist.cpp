@@ -529,7 +529,7 @@ bool NyquistEffect::Init()
       }
 
       if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-         Effect::MessageBox(_("To use 'Spectral effects', enable 'Spectral Selection'\n"
+         Effect::MessageBox(_("To use 'Spectral effects', enable 'Frequency Selection'\n"
                         "in the track Spectrogram settings and select the\n"
                         "frequency range for the effect to act on."), 
             wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));

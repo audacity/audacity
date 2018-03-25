@@ -65,7 +65,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Spectral_Selection");};
+   wxString ManualPage() override {return wxT("Frequency_Selection");};
 
    bool bHasBottom;
    bool bHasTop;

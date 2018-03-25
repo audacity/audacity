@@ -662,7 +662,7 @@ void AudacityProject::CreateMenusAndCommands()
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       c->BeginSubMenu(_("S&pectral"));
-      c->AddItem(wxT("ToggleSpectralSelection"), XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection), wxT("Q"));
+      c->AddItem(wxT("ToggleFrequencySelection"), XXO("To&ggle Frequency Selection"), FN(OnToggleSpectralSelection), wxT("Q"));
       c->AddItem(wxT("NextHigherPeakFrequency"), XXO("Next &Higher Peak Frequency"), FN(OnNextHigherPeakFrequency));
       c->AddItem(wxT("NextLowerPeakFrequency"), XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency));
       c->EndSubMenu();
@@ -807,7 +807,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowSelectionTB"), XXO("&Selection Toolbar"), FN(OnShowSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio*/
-      c->AddCheck(wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowFrequencySelectionTB"), XXO("Fre&quency Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
 
       c->EndSubMenu();
@@ -2380,7 +2380,7 @@ void AudacityProject::ModifyToolbarMenus()
    mCommandManager.Check(wxT("ShowSelectionTB"),
                          mToolManager->IsVisible(SelectionBarID));
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   mCommandManager.Check(wxT("ShowSpectralSelectionTB"),
+   mCommandManager.Check(wxT("ShowFrequencySelectionTB"),
                          mToolManager->IsVisible(SpectralSelectionBarID));
 #endif
    mCommandManager.Check(wxT("ShowToolsTB"),
