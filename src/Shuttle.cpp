@@ -690,7 +690,7 @@ void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vd
    if( IsOptional() )
       AddItem( "unchanged", "default" );
    else
-      AddItem( (double)vdefault, "default"  );
+      AddItem( strings[vdefault], "default"  );
    StartField( "enum" );
    StartArray();
    for( size_t i=0;i<strings.Count(); i++ )
