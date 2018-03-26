@@ -636,7 +636,7 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
    IdCaptureLast = IdCaptureSecondTrack,
     */
 
-   static int codes[] = {
+   static const int codes[] = {
       ScreenshotCommand::keffects,
       ScreenshotCommand::kscriptables,
       ScreenshotCommand::kpreferences,
