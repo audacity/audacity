@@ -46,44 +46,7 @@ small calculations of rectangles.
 #include "CommandContext.h"
 
 
-enum kCaptureTypes
-{
-   kwindow,
-   kfullwindow,
-   kwindowplus,
-   kfullscreen,
-   ktoolbars,
-   keffects,
-   kscriptables,
-   kpreferences,
-   kselectionbar,
-   kspectralselection,
-   ktools,
-   ktransport,
-   kmixer,
-   kmeter,
-   kplaymeter,
-   krecordmeter,
-   kedit,
-   kdevice,
-   kscrub,
-   ktranscription,
-   ktrackpanel,
-   kruler,
-   ktracks,
-   kfirsttrack,
-   kfirsttwotracks,
-   kfirstthreetracks,
-   kfirstfourtracks,
-   ksecondtrack,
-   ktracksplus,
-   kfirsttrackplus,
-   kalltracks,
-   kalltracksplus,
-   nCaptureWhats
-};
-
-static const wxString kCaptureWhatStrings[nCaptureWhats] =
+static const wxString kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 {
    XO("Window"),
    XO("Full_Window"),
@@ -120,15 +83,7 @@ static const wxString kCaptureWhatStrings[nCaptureWhats] =
 };
 
 
-enum kBackgrounds
-{
-   kBlue,
-   kWhite,
-   kNone,
-   nBackgrounds
-};
-
-static const wxString kBackgroundStrings[nBackgrounds] =
+static const wxString kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
    XO("Blue"),
    XO("White"),
@@ -140,8 +95,8 @@ bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
    wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
    wxArrayString backs(nBackgrounds, kBackgroundStrings);
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
-   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  wxT("Window"), whats );
-   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   wxT("None"), backs );
+   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow, whats );
+   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   kNone, backs );
    S.OptionalN(bHasBringToTop).Define(     mbBringToTop, wxT("ToTop"), true );
    return true;
 };
@@ -671,17 +626,17 @@ void ScreenshotCommand::GetDerivedParams()
       // Read the parameters that were passed in
    mFilePath    = mPath;
    mCaptureMode = mWhat;
-   wxString background  = mBack;
 
    // Build a suitable filename
-   mFileName = MakeFileName(mFilePath, mCaptureMode);
+   mFileName = MakeFileName(mFilePath,
+      GetCustomTranslation( kCaptureWhatStrings[ mCaptureMode ] ));
 
-   if (background.IsSameAs(wxT("Blue")))
+   if (mBack == kBlue)
    {
       mBackground = true;
       mBackColor = wxColour(51, 102, 153);
    }
-   else if (background.IsSameAs(wxT("White")))
+   else if (mBack == kWhite)
    {
       mBackground = true;
       mBackColor = wxColour(255, 255, 255);
@@ -714,7 +669,7 @@ wxRect ScreenshotCommand::GetFullWindowRect(wxTopLevelWindow *w){
    r.height += wxSystemSettings::GetMetric(wxSYS_CAPTION_Y, w) +
       wxSystemSettings::GetMetric(wxSYS_BORDER_Y, w);
 #endif
-   if (!mBackground && mCaptureMode.IsSameAs(wxT("Window_Plus")))
+   if (!mBackground && mCaptureMode == kwindowplus )
    {
       // background colour not selected but we want a background
       wxRect b = GetBackgroundRect();
@@ -824,7 +779,8 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
 wxString ScreenshotCommand::WindowFileName(AudacityProject * proj, wxTopLevelWindow *w){
    if (w != proj && w->GetTitle() != wxT("")) {
       mFileName = MakeFileName(mFilePath,
-            mCaptureMode + (wxT("-") + w->GetTitle() + wxT("-")));
+         GetCustomTranslation( kCaptureWhatStrings[ mCaptureMode ] ) +
+            (wxT("-") + w->GetTitle() + wxT("-")));
    }
    return mFileName;
 }
@@ -851,96 +807,101 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
 
    wxPoint p( x2-x1, y2-y1);
 
-   if (mCaptureMode.IsSameAs(wxT("Window")))
+   switch (mCaptureMode) {
+   case kwindow:
       return Capture(context,  WindowFileName( context.GetProject(), w ) , w, GetWindowRect(w));
-   else if (mCaptureMode.IsSameAs(wxT("Fullwindow"))
-         || mCaptureMode.IsSameAs(wxT("Window_Plus")))
+   case kfullwindow:
+   case kwindowplus:
       return Capture(context,  WindowFileName( context.GetProject(), w ) , w, GetFullWindowRect(w));
-   else if (mCaptureMode.IsSameAs(wxT("Fullscreen")))
+   case kfullscreen:
       return Capture(context, mFileName, w,GetScreenRect());
-   else if (mCaptureMode.IsSameAs(wxT("Toolbars")))
+   case ktoolbars:
       return CaptureDock(context, context.GetProject()->GetToolManager()->GetTopDock(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Scriptables")))
+   case kscriptables:
       CaptureScriptables(context, context.GetProject(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Effects")))
+      break;
+   case keffects:
       CaptureEffects(context, context.GetProject(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Preferences")))
+      break;
+   case kpreferences:
       CapturePreferences(context, context.GetProject(), mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Selectionbar")))
+      break;
+   case kselectionbar:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), SelectionBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Frequency_Selection")))
+   case kspectralselection:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), SpectralSelectionBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Tools")))
+   case ktools:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), ToolsBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Transport")))
+   case ktransport:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), TransportBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Mixer")))
+   case kmixer:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), MixerBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Meter")))
+   case kmeter:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), MeterBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Recordmeter")))
+   case krecordmeter:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), RecordMeterBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Playmeter")))
+   case kplaymeter:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), PlayMeterBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Edit")))
+   case kedit:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), EditBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Device")))
+   case kdevice:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), DeviceBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Transcription")))
+   case ktranscription:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), TranscriptionBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Scrub")))
+   case kscrub:
       return CaptureToolbar(context, context.GetProject()->GetToolManager(), ScrubbingBarID, mFileName);
-   else if (mCaptureMode.IsSameAs(wxT("Trackpanel")))
+   case ktrackpanel:
       return Capture(context, mFileName, panel, GetPanelRect(panel));
-   else if (mCaptureMode.IsSameAs(wxT("Ruler")))
+   case kruler:
       return Capture(context, mFileName, ruler, GetRulerRect(ruler) );
-   else if (mCaptureMode.IsSameAs(wxT("Tracks")))
+   case ktracks:
       return Capture(context, mFileName, panel, GetTracksRect(panel));
-   else if (mCaptureMode.IsSameAs(wxT("First_Track")))
+   case kfirsttrack:
       return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 0 ) );
-   else if (mCaptureMode.IsSameAs(wxT("Second_Track")))
+   case ksecondtrack:
       return Capture(context, mFileName, panel, GetTrackRect( context.GetProject(), panel, 1 ) );
-   else if (mCaptureMode.IsSameAs(wxT("Tracks_Plus")))
+   case ktracksplus:
    {  wxRect r = GetTracksRect(panel);
       r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
       r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
       return Capture(context, mFileName, panel, r);
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Track_Plus")))
+   case kfirsttrackplus:
    {  wxRect r = GetTrackRect(context.GetProject(), panel, 0 );
       r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
       r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
       return Capture(context, mFileName, panel, r );
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Two_Tracks")))
+   case kfirsttwotracks:
    {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
       r = r.Union( GetTrackRect( context.GetProject(), panel, 1 ));
       return Capture(context, mFileName, panel, r );
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Three_Tracks")))
+   case kfirstthreetracks:
    {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
       r = r.Union( GetTrackRect( context.GetProject(), panel, 2 ));
       return Capture(context, mFileName, panel, r );
    }
-   else if (mCaptureMode.IsSameAs(wxT("First_Four_Tracks")))
+   case kfirstfourtracks:
    {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
       r = r.Union( GetTrackRect( context.GetProject(), panel, 3 ));
       return Capture(context, mFileName, panel, r );
    }
-   else if (mCaptureMode.IsSameAs(wxT("All_Tracks")))
+   case kalltracks:
    {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
       r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
       return Capture(context, mFileName, panel, r );
    }
-   else if (mCaptureMode.IsSameAs(wxT("All_Tracks_Plus")))
+   case kalltracksplus:
    {  wxRect r = GetTrackRect( context.GetProject(), panel, 0 );
       r.SetTop( r.GetTop() - ruler->GetRulerHeight() );
       r.SetHeight( r.GetHeight() + ruler->GetRulerHeight() );
       r = r.Union( GetTrackRect( context.GetProject(), panel, nTracks-1 ));
       return Capture(context, mFileName, panel, r );
    }
-   else
+   default:
       return false;
+   }
 
    return true;
 }

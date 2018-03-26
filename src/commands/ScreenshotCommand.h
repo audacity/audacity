@@ -33,6 +33,51 @@ class CommandContext;
 class ScreenshotCommand : public AudacityCommand
 {
 public:
+   enum kBackgrounds
+   {
+      kBlue,
+      kWhite,
+      kNone,
+      nBackgrounds
+   };
+
+   enum kCaptureTypes
+   {
+      kwindow,
+      kfullwindow,
+      kwindowplus,
+      kfullscreen,
+      ktoolbars,
+      keffects,
+      kscriptables,
+      kpreferences,
+      kselectionbar,
+      kspectralselection,
+      ktools,
+      ktransport,
+      kmixer,
+      kmeter,
+      kplaymeter,
+      krecordmeter,
+      kedit,
+      kdevice,
+      kscrub,
+      ktranscription,
+      ktrackpanel,
+      kruler,
+      ktracks,
+      kfirsttrack,
+      kfirsttwotracks,
+      kfirstthreetracks,
+      kfirstfourtracks,
+      ksecondtrack,
+      ktracksplus,
+      kfirsttrackplus,
+      kalltracks,
+      kalltracksplus,
+      nCaptureWhats
+   };
+
    ScreenshotCommand(){ mbBringToTop=true;};
    // CommandDefinitionInterface overrides
    wxString GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
@@ -44,8 +89,8 @@ public:
    wxString ManualPage() override {return wxT("Help_Menu:_Tools#screenshot_tools");};
 
 private:
-   wxString mWhat;
-   wxString mBack;
+   int mWhat;
+   int mBack;
    wxString mPath;
    bool mbBringToTop;
    bool bHasBackground;
@@ -66,7 +111,7 @@ private:
 
    wxString mFilePath;
    wxString mFileName;
-   wxString mCaptureMode;
+   int mCaptureMode;
 
    wxString MakeFileName(const wxString &path, const wxString &basename);
 

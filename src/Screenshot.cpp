@@ -73,7 +73,7 @@ class ScreenFrame final : public wxFrame
    void OnToggleBackgroundBlue(wxCommandEvent & event);
    void OnToggleBackgroundWhite(wxCommandEvent & event);
 
-   void DoCapture(wxString captureMode);
+   void DoCapture(int captureMode);
    void OnCaptureSomething(wxCommandEvent & event);
 
    void TimeZoom(double seconds);
@@ -582,12 +582,15 @@ void ScreenFrame::OnMainWindowLarge(wxCommandEvent & WXUNUSED(event))
    SizeMainWindow(900, 600);
 }
 
-void ScreenFrame::DoCapture(wxString captureMode)
+void ScreenFrame::DoCapture(int captureMode)
 {
    Hide();
    //mCommand->SetParameter(wxT("FilePath"), mDirectoryTextBox->GetValue());
    //mCommand->SetParameter(wxT("CaptureMode"), captureMode);
-   mCommand->mBack = mWhite->GetValue() ? "White" : mBlue->GetValue() ? "Blue" : "None";
+   mCommand->mBack = mWhite->GetValue()
+      ? ScreenshotCommand::kWhite
+      : mBlue->GetValue()
+         ? ScreenshotCommand::kBlue : ScreenshotCommand::kNone;
    mCommand->mPath = mDirectoryTextBox->GetValue();
    mCommand->mWhat = captureMode;
    if (!mCommand->Apply(mContext))
@@ -599,36 +602,70 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 {
    int i = event.GetId() - IdCaptureFirst;
 
-   wxArrayString Names;
+   /*
+   IdCaptureEffects= IdCaptureFirst,
+   IdCaptureScriptables,
+   IdCapturePreferences,
+   IdCaptureToolbars,
 
-   Names.Add(wxT("Effects"));
-   Names.Add(wxT("Scriptables"));
-   Names.Add(wxT("Preferences"));
-   Names.Add(wxT("Toolbars"));
+   // Put all events that need delay between AllDelayed and LastDelayed.
+   IdAllDelayedEvents,
+   IdCaptureWindowContents=IdAllDelayedEvents,
+   IdCaptureFullWindow,
+   IdCaptureWindowPlus,
+   IdCaptureFullScreen,
+  
+   IdCaptureSelectionBar,
+   IdCaptureSpectralSelection,
+   IdCaptureTools,
+   IdCaptureTransport,
+   IdCaptureMixer,
+   IdCaptureMeter,
+   IdCapturePlayMeter,
+   IdCaptureRecordMeter,
+   IdCaptureEdit,
+   IdCaptureDevice,
+   IdCaptureTranscription,
+   IdCaptureScrub,
 
-   Names.Add(wxT("Window"));
-   Names.Add(wxT("Full_Window"));
-   Names.Add(wxT("Window_Plus"));
-   Names.Add(wxT("Fullscreen"));
-   Names.Add(wxT("Selectionbar"));
-   Names.Add(wxT("Spectral_Selection"));
-   Names.Add(wxT("Tools"));
-   Names.Add(wxT("Transport"));
-   Names.Add(wxT("Mixer"));
-   Names.Add(wxT("Meter"));
-   Names.Add(wxT("Play_Meter"));
-   Names.Add(wxT("Record_Meter"));
-   Names.Add(wxT("Edit"));
-   Names.Add(wxT("Device"));
-   Names.Add(wxT("Transcription"));
-   Names.Add(wxT("Scrub"));
-   Names.Add(wxT("Trackpanel"));
-   Names.Add(wxT("Ruler"));
-   Names.Add(wxT("Tracks"));
-   Names.Add(wxT("First_Track"));
-   Names.Add(wxT("Second_Track"));
+   IdCaptureTrackPanel,
+   IdCaptureRuler,
+   IdCaptureTracks,
+   IdCaptureFirstTrack,
+   IdCaptureSecondTrack,
+   IdCaptureLast = IdCaptureSecondTrack,
+    */
 
-   DoCapture(Names[i]);
+   static int codes[] = {
+      ScreenshotCommand::keffects,
+      ScreenshotCommand::kscriptables,
+      ScreenshotCommand::kpreferences,
+      ScreenshotCommand::ktoolbars,
+
+      ScreenshotCommand::kwindow,
+      ScreenshotCommand::kfullwindow,
+      ScreenshotCommand::kwindowplus,
+      ScreenshotCommand::kfullscreen,
+      ScreenshotCommand::kselectionbar,
+      ScreenshotCommand::kspectralselection,
+      ScreenshotCommand::ktools,
+      ScreenshotCommand::ktransport,
+      ScreenshotCommand::kmixer,
+      ScreenshotCommand::kmeter,
+      ScreenshotCommand::kplaymeter,
+      ScreenshotCommand::krecordmeter,
+      ScreenshotCommand::kedit,
+      ScreenshotCommand::kdevice,
+      ScreenshotCommand::ktranscription,
+      ScreenshotCommand::kscrub,
+      ScreenshotCommand::ktrackpanel,
+      ScreenshotCommand::kruler,
+      ScreenshotCommand::ktracks,
+      ScreenshotCommand::kfirsttrack,
+      ScreenshotCommand::ksecondtrack,
+   };
+
+   DoCapture(codes[i]);
 }
 
 void ScreenFrame::TimeZoom(double seconds)
