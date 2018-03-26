@@ -2882,7 +2882,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 #endif
 
    SetName( effect->GetTranslatedName() );
-   SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+   SetExtraStyle(GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
 
    mParent = parent;
    mEffect = effect;
