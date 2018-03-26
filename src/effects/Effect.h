@@ -792,6 +792,12 @@ inline long TrapLong(long x, long min, long max)
    if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list)) \
       return false;
 
+#define ReadAndVerifyEnumWithObsoletes(name, list, obsoleteList, nObsolete) \
+   int name; \
+   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, \
+                            list, obsoleteList, nObsolete)) \
+      return false;
+
 #define ReadAndVerifyInt(name) ReadParam(int, name)
 #define ReadAndVerifyDouble(name) ReadParam(double, name)
 #define ReadAndVerifyFloat(name) ReadParam(float, name)

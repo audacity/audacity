@@ -155,7 +155,14 @@ public:
       return Write(key, f);
    }
 
-   bool ReadEnum(const wxString & key, int *pi, const wxArrayString & choices) const
+   // For reading old config files with enumeration names that have been
+   // changed in later versions.  Pair a string with an index into the other
+   // list of non-obsolete names.
+   using ObsoleteMap = std::pair< wxString, size_t >;
+
+   bool ReadEnum(const wxString & key, int *pi, const wxArrayString & choices,
+                 const ObsoleteMap obsoletes[] = nullptr,
+                 size_t nObsoletes = 0) const
    {
       wxString s;
       if (!wxFileConfig::Read(key, &s))
@@ -163,10 +170,21 @@ public:
          return false;
       }
       *pi = choices.Index(s);
+      if (*pi < 0 && obsoletes) {
+         auto index = std::find_if(obsoletes, obsoletes + nObsoletes,
+                                   [&](const ObsoleteMap &entry){
+                                      return entry.first == s; })
+            - obsoletes;
+         if (index < nObsoletes)
+            *pi = (int)obsoletes[index].second;
+      }
       return true;
    }
 
-   bool ReadEnum(const wxString & key, int *pi, int defVal, const wxArrayString & choices) const
+   bool ReadEnum(const wxString & key, int *pi, int defVal,
+                 const wxArrayString & choices,
+                 const ObsoleteMap obsoletes[] = nullptr,
+                 size_t nObsoletes = 0) const
    {
       if (!ReadEnum(key, pi, choices))
       {
@@ -175,7 +193,10 @@ public:
       return true;
    }
 
-   bool ReadEnum(const wxString & key, int *pi, const wxString & defVal, const wxArrayString & choices) const
+   bool ReadEnum(const wxString & key, int *pi, const wxString & defVal,
+                 const wxArrayString & choices,
+                 const ObsoleteMap obsoletes[] = nullptr,
+                 size_t nObsoletes = 0) const
    {
       if (!ReadEnum(key, pi, choices))
       {
@@ -230,15 +251,21 @@ public:
       return true;
    }
 
-   bool ReadAndVerify(const wxString & key, int *val, int defVal, const wxArrayString & choices) const
+   bool ReadAndVerify(const wxString & key, int *val, int defVal,
+                      const wxArrayString & choices,
+                      const ObsoleteMap obsoletes[] = nullptr,
+                      size_t nObsoletes = 0) const
    {
-      ReadEnum(key, val, defVal, choices);
+      ReadEnum(key, val, defVal, choices, obsoletes, nObsoletes);
       return (*val != wxNOT_FOUND);
    }
 
-   bool ReadAndVerify(const wxString & key, int *val, const wxString & defVal, const wxArrayString & choices) const
+   bool ReadAndVerify(const wxString & key, int *val, const wxString & defVal,
+                      const wxArrayString & choices,
+                      const ObsoleteMap obsoletes[] = nullptr,
+                      size_t nObsoletes = 0) const
    {
-      ReadEnum(key, val, defVal, choices);
+      ReadEnum(key, val, defVal, choices, obsoletes, nObsoletes);
       return (*val != wxNOT_FOUND);
    }
 

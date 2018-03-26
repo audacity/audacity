@@ -50,6 +50,14 @@ static const wxChar *kActionStrings[nActions] =
    XO("Compress Excess Silence")
 };
 
+static CommandParameters::ObsoleteMap kObsoleteActions[] = {
+   // Compatible with 2.1.0 and before
+   { wxT("0"), 0 }, // Remap to Truncate Detected Silence
+   { wxT("1"), 1 }, // Remap to Compress Excess Silence
+};
+
+static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
+
 // Define defaults, minimums, and maximums for each parameter
 #define DefaultAndLimits(name, def, min, max) \
    static const double DEF_ ## name = (def); \
@@ -136,8 +144,6 @@ EffectType EffectTruncSilence::GetType()
 
 bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
    wxArrayString actions(nActions, kActionStrings);
-   //actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before
-   //actions.Insert(wxT("1"), 1); // Compatible with 2.1.0 and before
 
    S.SHUTTLE_ENUM_PARAM( mTruncDbChoiceIndex, DbIndex, mDbChoices );
    S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, actions );
@@ -163,14 +169,13 @@ bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
 bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
 {
    wxArrayString actions(nActions, kActionStrings);
-   actions.Insert(wxT("0"), 0); // Compatible with 2.1.0 and before
-   actions.Insert(wxT("1"), 1); // Compatible with 2.1.0 and before
 
    ReadAndVerifyDouble(Minimum);
    ReadAndVerifyDouble(Truncate);
    ReadAndVerifyDouble(Compress);
    ReadAndVerifyEnum(DbIndex, mDbChoices);
-   ReadAndVerifyEnum(ActIndex, actions);
+   ReadAndVerifyEnumWithObsoletes(ActIndex, actions,
+                                  kObsoleteActions, nObsoleteActions);
    ReadAndVerifyBool(Independent);
 
    mInitialAllowedSilence = Minimum;
