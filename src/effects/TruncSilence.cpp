@@ -185,12 +185,6 @@ bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
    mActionIndex = ActIndex;
    mbIndependent = Independent;
 
-   // Readjust for 2.1.0 or before
-   if (mActionIndex >= nActions)
-   {
-      mActionIndex -= nActions;
-   }
-
    return true;
 }
 
