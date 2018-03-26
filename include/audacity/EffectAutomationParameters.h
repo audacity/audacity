@@ -194,18 +194,6 @@ public:
       return true;
    }
 
-   bool ReadEnum(const wxString & key, int *pi, const wxString & defVal,
-                 const wxArrayString & choices,
-                 const ObsoleteMap obsoletes[] = nullptr,
-                 size_t nObsoletes = 0) const
-   {
-      if (!ReadEnum(key, pi, choices, obsoletes, nObsoletes))
-      {
-         *pi = choices.Index(defVal);
-      }
-      return true;
-   }
-
    bool WriteEnum(const wxString & key, int value, const wxArrayString & choices)
    {
       if (value < 0 || value >= (int) choices.GetCount())
@@ -253,15 +241,6 @@ public:
    }
 
    bool ReadAndVerify(const wxString & key, int *val, int defVal,
-                      const wxArrayString & choices,
-                      const ObsoleteMap obsoletes[] = nullptr,
-                      size_t nObsoletes = 0) const
-   {
-      ReadEnum(key, val, defVal, choices, obsoletes, nObsoletes);
-      return (*val != wxNOT_FOUND);
-   }
-
-   bool ReadAndVerify(const wxString & key, int *val, const wxString & defVal,
                       const wxArrayString & choices,
                       const ObsoleteMap obsoletes[] = nullptr,
                       size_t nObsoletes = 0) const
