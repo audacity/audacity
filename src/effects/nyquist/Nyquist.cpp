@@ -1489,8 +1489,14 @@ std::vector<IdentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & te
       Tokenizer tzer;
       tzer.Tokenize(text, true, 1, 1);
       auto &choices = tzer.tokens;
-      for (auto &choice : choices)
-         results.push_back( { UnQuote(choice) } );
+      wxString extra;
+      for (auto &choice : choices) {
+         auto label = UnQuote(choice, true, &extra);
+         if (extra.empty())
+            results.push_back( { label } );
+         else
+            results.push_back( { extra, label } );
+      }
    }
    else {
       // Old style: expecting a comma-separated list of
@@ -1533,8 +1539,12 @@ void NyquistEffect::Stop()
    mStop = true;
 }
 
-wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens)
+wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
+                                wxString *pExtraString)
 {
+   if (pExtraString)
+      *pExtraString = wxString{};
+
    int len = s.Length();
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
@@ -1545,10 +1555,20 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens)
       Tokenizer tzer;
       tzer.Tokenize(s, true, 1, 1);
       auto &tokens = tzer.tokens;
-      if (tokens.size() > 1)
-         // Assume the first token was _ -- we don't check that
-         // And the second is the string, which is internationalized
-         return UnQuote( tokens[1], false );
+      if (tokens.size() > 1) {
+         if (pExtraString && tokens[1][0] == '(') {
+            // A choice with a distinct internal string form like
+            // ("InternalString" (_ "Visible string"))
+            // Recur to find the two strings
+            *pExtraString = UnQuote(tokens[0], false);
+            return UnQuote(tokens[1]);
+         }
+         else {
+            // Assume the first token was _ -- we don't check that
+            // And the second is the string, which is internationalized
+            return UnQuote( tokens[1], false );
+         }
+      }
       else
          return {};
    }

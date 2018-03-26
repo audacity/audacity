@@ -177,7 +177,8 @@ private:
    };
    bool Parse(Tokenizer &tokenizer, const wxString &line, bool eof, bool first);
 
-   static wxString UnQuote(const wxString &s, bool allowParens = true);
+   static wxString UnQuote(const wxString &s, bool allowParens = true,
+                           wxString *pExtraString = nullptr);
    double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
