@@ -1868,7 +1868,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
       internalChoices.push_back( ident.Internal() );
    }
    return TieChoice(
-      Prompt, enumSetting.Key(), enumSetting.Default().Translation(),
+      Prompt, enumSetting.Key(), enumSetting.Default().Internal(),
          visibleChoices, internalChoices );
 }
 
