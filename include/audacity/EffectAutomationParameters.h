@@ -186,7 +186,7 @@ public:
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
-      if (!ReadEnum(key, pi, choices))
+      if (!ReadEnum(key, pi, choices, obsoletes, nObsoletes))
       {
          *pi = defVal;
       }
@@ -198,7 +198,7 @@ public:
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
-      if (!ReadEnum(key, pi, choices))
+      if (!ReadEnum(key, pi, choices, obsoletes, nObsoletes))
       {
          *pi = choices.Index(defVal);
       }
