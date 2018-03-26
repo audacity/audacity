@@ -640,9 +640,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                   .TickColour( { 0, 0, 0 } )
             );
 
-            S.Prop(1);
             S.AddSpace(0, 1);
-            S.AddWindow(mdBRuler, wxEXPAND | wxALIGN_RIGHT);
+            S.Prop(1).AddWindow(mdBRuler, wxEXPAND | wxALIGN_RIGHT);
             S.AddSpace(0, 1);
          }
          S.EndVerticalLay();
@@ -695,10 +694,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                .TickColour( { 0, 0, 0 } )
          );
 
-
-         S.Prop(1);
          S.SetBorder(1);
-         S.AddWindow(mFreqRuler, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT);
+         S.Prop(1).AddWindow(mFreqRuler, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT);
          S.SetBorder(0);
 
          // Column 3 is empty
