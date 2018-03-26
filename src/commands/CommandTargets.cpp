@@ -59,20 +59,33 @@ void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    wxString Padding;
    Padding.Pad( mCounts.GetCount() *2 -2);
    Padding = (( value.length() < 15 ) || (mCounts.Last()<=0))  ? "" : wxString("\n") + Padding;
-   Update( wxString::Format( "%s%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", Padding, name, !name.IsEmpty()?":":"",Escaped(value)));
+   if( name.IsEmpty() )
+      Update( wxString::Format( "%s%s\"%s\"", (mCounts.Last()>0)?", ":"", Padding, Escaped(value)));
+   else
+      Update( wxString::Format( "%s%s\"%s\":\"%s\"", (mCounts.Last()>0)?", ":"", Padding, name, Escaped(value)));
    mCounts.Last() += 1;
 }
+
 void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
-   Update( wxString::Format( "%s%s%s\"%s\"", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value?"true":"false"));
+   if( name.IsEmpty() )
+      Update( wxString::Format( "%s\"%s\"", (mCounts.Last()>0)?", ":"", value?"true":"false"));
+   else
+      Update( wxString::Format( "%s\"%s\":\"%s\"", (mCounts.Last()>0)?", ":"", name,value?"true":"false"));
    mCounts.Last() += 1;
 }
 void CommandMessageTarget::AddItem(const double value,    const wxString &name){
-   Update( wxString::Format( "%s%s%s%g", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":"",value));
+   if( name.IsEmpty() )
+      Update( wxString::Format( "%s%g", (mCounts.Last()>0)?", ":"", value));
+   else
+      Update( wxString::Format( "%s\"%s\":%g", (mCounts.Last()>0)?", ":"", name,value));
    mCounts.Last() += 1;
 }
 
 void CommandMessageTarget::StartField(const wxString &name){
-   Update( wxString::Format( "%s%s%s", (mCounts.Last()>0)?", ":"", name, !name.IsEmpty()?":":""));
+   if( name.IsEmpty() )
+      Update( wxString::Format( "%s", (mCounts.Last()>0)? ", " : ""));
+   else
+      Update( wxString::Format( "%s\"%s\":", (mCounts.Last()>0) ?", ":"", name));
    mCounts.Last() += 1;
    mCounts.push_back( 0 );
 }
