@@ -84,10 +84,10 @@ BEGIN_EVENT_TABLE(SpectralSelectionBar, ToolBar)
 END_EVENT_TABLE()
 
 static const wxString preferencePath
-(wxT("/GUI/Toolbars/FrequencySelection/CenterAndWidthChoice"));
+(wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
 
 SpectralSelectionBar::SpectralSelectionBar()
-: ToolBar(SpectralSelectionBarID, _("Frequency Selection"), wxT("FrequencySelection"))
+: ToolBar(SpectralSelectionBarID, _("Spectral Selection"), wxT("SpectralSelection"))
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
@@ -146,7 +146,7 @@ void SpectralSelectionBar::Populate()
    };
    mChoice = safenew wxChoice
       (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
-       0, wxDefaultValidator, _("Frequency Selection"));
+       0, wxDefaultValidator, _("Spectral Selection"));
    mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);
 #ifdef __WXGTK__
    // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
@@ -232,7 +232,7 @@ void SpectralSelectionBar::UpdatePrefs()
    }
 
    // Set label to pull in language change
-   SetLabel(_("Frequency Selection"));
+   SetLabel(_("Spectral Selection"));
 
    RegenerateTooltips();
 

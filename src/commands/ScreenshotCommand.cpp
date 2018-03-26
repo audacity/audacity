@@ -57,7 +57,7 @@ static const wxString kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
    XO("Scriptables"),
    XO("Preferences"),
    XO("Selectionbar"),
-   XO("Frequency_Selection"),
+   XO("Spectral_Selection"),
    XO("Tools"),
    XO("Transport"),
    XO("Mixer"),

@@ -389,7 +389,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay();
          {
             S.Id(IdCaptureSelectionBar).AddButton(_("SelectionBar"));
-            S.Id(IdCaptureSpectralSelection).AddButton(_("Frequency Selection"));
+            S.Id(IdCaptureSpectralSelection).AddButton(_("Spectral Selection"));
             S.Id(IdCaptureTools).AddButton(_("Tools"));
             S.Id(IdCaptureTransport).AddButton(_("Transport"));
          }

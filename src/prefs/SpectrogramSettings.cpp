@@ -38,7 +38,7 @@ SpectrogramSettings::Globals::Globals()
 void SpectrogramSettings::Globals::SavePrefs()
 {
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
-   gPrefs->Write(wxT("/Spectrum/EnableFrequencySelection"), spectralSelection);
+   gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
 #endif
 }
 
@@ -46,7 +46,7 @@ void SpectrogramSettings::Globals::LoadPrefs()
 {
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
    spectralSelection
-      = (gPrefs->Read(wxT("/Spectrum/EnableFrequencySelection"), 0L) != 0);
+      = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
 #endif
 }
 
@@ -272,7 +272,7 @@ void SpectrogramSettings::LoadPrefs()
    scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-   spectralSelection = (gPrefs->Read(wxT("/Spectrum/EnableFrequencySelection"), 0L) != 0);
+   spectralSelection = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
 #endif
 
    algorithm = Algorithm(gPrefs->Read(wxT("/Spectrum/Algorithm"), 0L));
@@ -320,7 +320,7 @@ void SpectrogramSettings::SavePrefs()
    gPrefs->Write(wxT("/Spectrum/ScaleType"), (int) scaleType);
 
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-   gPrefs->Write(wxT("/Spectrum/EnableFrequencySelection"), spectralSelection);
+   gPrefs->Write(wxT("/Spectrum/EnableSpectralSelection"), spectralSelection);
 #endif
 
    gPrefs->Write(wxT("/Spectrum/Algorithm"), (int) algorithm);
