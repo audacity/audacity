@@ -91,7 +91,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/AudioIO/Playthrough"),
                     false);
 #endif
-      S.TieCheckBox(_("Use &software to play other tracks"),
+      S.TieCheckBox(_("&Software playthrough of input"),
                     wxT("/AudioIO/SWPlaythrough"),
                     false);
 #if !defined(__WXMAC__)
