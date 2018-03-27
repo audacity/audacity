@@ -180,7 +180,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         wxArrayString choices;
+         std::vector<IdentInterfaceSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
@@ -227,7 +227,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         wxArrayString choices;
+         std::vector<IdentInterfaceSymbol> choices;
          int val;
 
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
@@ -273,7 +273,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         wxArrayString choices;
+         std::vector<IdentInterfaceSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)

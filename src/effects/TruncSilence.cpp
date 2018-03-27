@@ -38,23 +38,23 @@ class Enums {
 public:
    static const size_t    NumDbChoices;
    static const double Db2Signal[];
-   static const wxString DbChoices[];
+   static const IdentInterfaceSymbol DbChoices[];
 };
 
-const wxString Enums::DbChoices[] = {
-   wxT("-20 dB"),
-   wxT("-25 dB"),
-   wxT("-30 dB"),
-   wxT("-35 dB"),
-   wxT("-40 dB"),
-   wxT("-45 dB"),
-   wxT("-50 dB"),
-   wxT("-55 dB"),
-   wxT("-60 dB"),
-   wxT("-65 dB"),
-   wxT("-70 dB"),
-   wxT("-75 dB"),
-   wxT("-80 dB")
+const IdentInterfaceSymbol Enums::DbChoices[] = {
+   { wxT("-20 dB") },
+   { wxT("-25 dB") },
+   { wxT("-30 dB") },
+   { wxT("-35 dB") },
+   { wxT("-40 dB") },
+   { wxT("-45 dB") },
+   { wxT("-50 dB") },
+   { wxT("-55 dB") },
+   { wxT("-60 dB") },
+   { wxT("-65 dB") },
+   { wxT("-70 dB") },
+   { wxT("-75 dB") },
+   { wxT("-80 dB") }
 };
 
 const double Enums::Db2Signal[] =
@@ -77,10 +77,10 @@ enum kActions
    nActions
 };
 
-static const wxString kActionStrings[nActions] =
+static const IdentInterfaceSymbol kActionStrings[nActions] =
 {
-   XO("Truncate Detected Silence"),
-   XO("Compress Excess Silence")
+   { XO("Truncate Detected Silence") },
+   { XO("Compress Excess Silence") }
 };
 
 static CommandParameters::ObsoleteMap kObsoleteActions[] = {
@@ -186,8 +186,8 @@ bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
 
 bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_DbIndex, Enums::DbChoices[mTruncDbChoiceIndex]);
-   parms.Write(KEY_ActIndex, kActionStrings[mActionIndex]);
+   parms.Write(KEY_DbIndex, Enums::DbChoices[mTruncDbChoiceIndex].Internal());
+   parms.Write(KEY_ActIndex, kActionStrings[mActionIndex].Internal());
    parms.Write(KEY_Minimum, mInitialAllowedSilence);
    parms.Write(KEY_Truncate, mTruncLongestAllowedSilence);
    parms.Write(KEY_Compress, mSilenceCompressPercent);

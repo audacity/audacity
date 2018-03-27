@@ -39,10 +39,10 @@ enum kInterpolations
    nInterpolations
 };
 
-static const wxString kInterStrings[nInterpolations] =
+static const IdentInterfaceSymbol kInterStrings[nInterpolations] =
 {
-   XO("Linear"),
-   XO("Logarithmic")
+   { XO("Linear") },
+   { XO("Logarithmic") }
 };
 
 enum kWaveforms
@@ -54,12 +54,12 @@ enum kWaveforms
    nWaveforms
 };
 
-static const wxString kWaveStrings[nWaveforms] =
+static const IdentInterfaceSymbol kWaveStrings[nWaveforms] =
 {
-   XO("Sine"),
-   XO("Square"),
-   XO("Sawtooth"),
-   XO("Square, no alias")
+   { XO("Sine") },
+   { XO("Square") },
+   { XO("Sawtooth") },
+   { XO("Square, no alias") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -284,8 +284,8 @@ bool EffectToneGen::GetAutomationParameters(CommandParameters & parms)
       parms.Write(KEY_Amplitude, mAmplitude[0]);
    }
 
-   parms.Write(KEY_Waveform, kWaveStrings[mWaveform]);
-   parms.Write(KEY_Interp, kInterStrings[mInterpolation]);
+   parms.Write(KEY_Waveform, kWaveStrings[mWaveform].Internal());
+   parms.Write(KEY_Interp, kInterStrings[mInterpolation].Internal());
 
    return true;
 }

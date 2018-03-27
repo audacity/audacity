@@ -50,6 +50,8 @@
 #include <wx/intl.h>
 #include <algorithm>
 
+#include "IdentInterface.h"
+
 
 /**
 \brief CommandParameters, derived from wxFileConfig, is essentially doing 
@@ -162,7 +164,7 @@ public:
    using ObsoleteMap = std::pair< wxString, size_t >;
 
    bool ReadEnum(const wxString & key, int *pi,
-                 const wxString choices[], size_t nChoices,
+                 const IdentInterfaceSymbol choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
@@ -172,7 +174,7 @@ public:
          return false;
       }
       *pi = std::find( choices, choices + nChoices,
-                       s ) - choices;
+                       IdentInterfaceSymbol{ s, {} } ) - choices;
       if (*pi == nChoices)
          *pi = -1;
       if (*pi < 0 && obsoletes) {
@@ -187,7 +189,7 @@ public:
    }
 
    bool ReadEnum(const wxString & key, int *pi, int defVal,
-                 const wxString choices[], size_t nChoices,
+                 const IdentInterfaceSymbol choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
@@ -199,14 +201,14 @@ public:
    }
 
    bool WriteEnum(const wxString & key, int value,
-                  const wxString choices[], size_t nChoices)
+                  const IdentInterfaceSymbol choices[], size_t nChoices)
    {
       if (value < 0 || value >= nChoices)
       {
          return false;
       }
 
-      return wxFileConfig::Write(key, choices[value]);
+      return wxFileConfig::Write(key, choices[value].Internal());
    }
 
    bool ReadAndVerify(const wxString & key, float *val, float defVal, float min, float max) const
@@ -246,7 +248,7 @@ public:
    }
 
    bool ReadAndVerify(const wxString & key, int *val, int defVal,
-                      const wxString choices[], size_t nChoices,
+                      const IdentInterfaceSymbol choices[], size_t nChoices,
                       const ObsoleteMap obsoletes[] = nullptr,
                       size_t nObsoletes = 0) const
    {

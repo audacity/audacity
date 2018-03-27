@@ -44,14 +44,14 @@ explicitly code all three.
 // Relative to project and relative to selection cover MOST options, since you can already
 // set a selection to a clip.
 const int nRelativeTos =6;
-static const wxString kRelativeTo[nRelativeTos] =
+static const IdentInterfaceSymbol kRelativeTo[nRelativeTos] =
 {
-   XO("Project Start"),
-   XO("Project"),
-   XO("Project End"),
-   XO("Selection Start"),
-   XO("Selection"),
-   XO("Selection End")
+   { XO("Project Start") },
+   { XO("Project") },
+   { XO("Project End") },
+   { XO("Selection Start") },
+   { XO("Selection") },
+   { XO("Selection End") }
 };
 
 bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
@@ -167,12 +167,12 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
 }
 
 const int nModes =3;
-static const wxString kModes[nModes] =
+static const IdentInterfaceSymbol kModes[nModes] =
 {
    /* i18n-hint verb, imperative */
-   XO("Set"),
-   XO("Add"),
-   XO("Remove")
+   { XO("Set") },
+   { XO("Add") },
+   { XO("Remove") },
 };
 
 bool SelectTracksCommand::DefineParams( ShuttleParams & S ){

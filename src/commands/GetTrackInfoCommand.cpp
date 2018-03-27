@@ -26,11 +26,11 @@
 #include "CommandContext.h"
 
 const int nTypes =3;
-static const wxString kTypes[nTypes] =
+static const IdentInterfaceSymbol kTypes[nTypes] =
 {
-   XO("Tracks"),
-   XO("Clips"),
-   XO("Labels")
+   { XO("Tracks") },
+   { XO("Clips") },
+   { XO("Labels") },
 };
 
 

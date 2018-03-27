@@ -86,14 +86,14 @@ enum kTypes
    nTypes
 };
 
-static const wxString kTypeStrings[nTypes] =
+static const IdentInterfaceSymbol kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
-   XO("Butterworth"),
+   { XO("Butterworth") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   XO("Chebyshev Type I"),
+   { XO("Chebyshev Type I") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   XO("Chebyshev Type II")
+   { XO("Chebyshev Type II") }
 };
 
 enum kSubTypes
@@ -103,10 +103,10 @@ enum kSubTypes
    nSubTypes
 };
 
-static const wxString kSubTypeStrings[nSubTypes] =
+static const IdentInterfaceSymbol kSubTypeStrings[nSubTypes] =
 {
-   XO("Lowpass"),
-   XO("Highpass")
+   { XO("Lowpass") },
+   { XO("Highpass") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -252,8 +252,8 @@ bool EffectScienFilter::DefineParams( ShuttleParams & S ){
 
 bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_Type, kTypeStrings[mFilterType]);
-   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype]);
+   parms.Write(KEY_Type, kTypeStrings[mFilterType].Internal());
+   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype].Internal());
    parms.Write(KEY_Order, mOrder);
    parms.WriteFloat(KEY_Cutoff, mCutoff);
    parms.WriteFloat(KEY_Passband, mRipple);

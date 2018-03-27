@@ -38,12 +38,12 @@ enum kCoordTypes
    nCoordTypes
 };
 
-static const wxString kCoordTypeStrings[nCoordTypes] =
+static const IdentInterfaceSymbol kCoordTypeStrings[nCoordTypes] =
 {
-   XO("Panel"),
-   XO("App"),
-   XO("Track0"),
-   XO("Track1"),
+   { XO("Panel") },
+   { XO("App") },
+   { XO("Track0") },
+   { XO("Track1") },
 };
 
 

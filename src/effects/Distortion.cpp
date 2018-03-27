@@ -57,19 +57,19 @@ enum kTableType
    nTableTypes
 };
 
-static const wxString kTableTypeStrings[nTableTypes] =
+static const IdentInterfaceSymbol kTableTypeStrings[nTableTypes] =
 {
-   XO("Hard Clipping"),
-   XO("Soft Clipping"),
-   XO("Soft Overdrive"),
-   XO("Medium Overdrive"),
-   XO("Hard Overdrive"),
-   XO("Cubic Curve (odd harmonics)"),
-   XO("Even Harmonics"),
-   XO("Expand and Compress"),
-   XO("Leveller"),
-   XO("Rectifier Distortion"),
-   XO("Hard Limiter 1413")
+   { XO("Hard Clipping") },
+   { XO("Soft Clipping") },
+   { XO("Soft Overdrive") },
+   { XO("Medium Overdrive") },
+   { XO("Hard Overdrive") },
+   { XO("Cubic Curve (odd harmonics)") },
+   { XO("Even Harmonics") },
+   { XO("Expand and Compress") },
+   { XO("Leveller") },
+   { XO("Rectifier Distortion") },
+   { XO("Hard Limiter 1413") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -293,7 +293,8 @@ bool EffectDistortion::DefineParams( ShuttleParams & S ){
 
 bool EffectDistortion::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_TableTypeIndx, kTableTypeStrings[mParams.mTableChoiceIndx]);
+   parms.Write(KEY_TableTypeIndx,
+               kTableTypeStrings[mParams.mTableChoiceIndx].Internal());
    parms.Write(KEY_DCBlock, mParams.mDCBlock);
    parms.Write(KEY_Threshold_dB, mParams.mThreshold_dB);
    parms.Write(KEY_NoiseFloor, mParams.mNoiseFloor);

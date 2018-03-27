@@ -1481,16 +1481,16 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
    return str;
 }
 
-wxArrayString NyquistEffect::ParseChoice(const wxString & text)
+std::vector<IdentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & text)
 {
+   std::vector<IdentInterfaceSymbol> results;
    if (text[0] == wxT('(')) {
       // New style:  expecting a Lisp-like list of strings
       Tokenizer tzer;
       tzer.Tokenize(text, true, 1, 1);
       auto &choices = tzer.tokens;
       for (auto &choice : choices)
-         choice = UnQuote(choice);
-      return choices;
+         results.push_back( { UnQuote(choice) } );
    }
    else {
       // Old style: expecting a comma-separated list of
@@ -1501,9 +1501,9 @@ wxArrayString NyquistEffect::ParseChoice(const wxString & text)
          wxT(",")
       );
       for (auto &choice : choices)
-         choice = choice.Trim(true).Trim(false);
-      return choices;
+         results.push_back( { choice.Trim(true).Trim(false) } );
    }
+   return results;
 }
 
 void NyquistEffect::RedirectOutput()
@@ -2266,7 +2266,7 @@ bool NyquistEffect::TransferDataToEffectWindow()
 
       if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         const auto count = ctrl.choices.GetCount();
+         const auto count = ctrl.choices.size();
 
          int val = (int)ctrl.val;
          if (val < 0 || val >= (int)count)
@@ -2430,7 +2430,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             {
                S.AddSpace(10, 10);
 
-               auto choices = LocalizedStrings(ctrl.choices);
+               auto choices =
+                  LocalizedStrings(ctrl.choices.data(), ctrl.choices.size());
                S.Id(ID_Choice + i).AddChoice( {}, wxT(""), &choices);
             }
             else

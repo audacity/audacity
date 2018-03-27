@@ -57,7 +57,7 @@ public:
    wxString var;
    wxString name;
    wxString label;
-   wxArrayString choices; // translatable
+   std::vector<IdentInterfaceSymbol> choices;
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -143,7 +143,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-   static wxArrayString ParseChoice(const wxString & text);
+   static std::vector<IdentInterfaceSymbol> ParseChoice(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,

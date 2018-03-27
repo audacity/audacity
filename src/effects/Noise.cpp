@@ -35,11 +35,11 @@ enum kTypes
    nTypes
 };
 
-static const wxString kTypeStrings[nTypes] =
+static const IdentInterfaceSymbol kTypeStrings[nTypes] =
 {
-   XO("White"),
-   XO("Pink"),
-   XO("Brownian")
+   { XO("White") },
+   { XO("Pink") },
+   { XO("Brownian") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -169,7 +169,7 @@ bool EffectNoise::DefineParams( ShuttleParams & S ){
 
 bool EffectNoise::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_Type, kTypeStrings[mType]);
+   parms.Write(KEY_Type, kTypeStrings[mType].Internal());
    parms.Write(KEY_Amp, mAmp);
 
    return true;

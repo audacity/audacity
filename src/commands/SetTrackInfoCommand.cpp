@@ -236,12 +236,12 @@ enum kColours
    nColours
 };
 
-static const wxString kColourStrings[nColours] =
+static const IdentInterfaceSymbol kColourStrings[nColours] =
 {
-   XO("Color0"),
-   XO("Color1"),
-   XO("Color2"),
-   XO("Color3"),
+   { XO("Color0") },
+   { XO("Color1") },
+   { XO("Color2") },
+   { XO("Color3") },
 };
 
 
@@ -252,10 +252,10 @@ enum kDisplayTypes
    nDisplayTypes
 };
 
-static const wxString kDisplayTypeStrings[nDisplayTypes] =
+static const IdentInterfaceSymbol kDisplayTypeStrings[nDisplayTypes] =
 {
-   XO("Waveform"),
-   XO("Spectrogram"),
+   { XO("Waveform") },
+   { XO("Spectrogram") },
 };
 
 enum kScaleTypes
@@ -265,10 +265,10 @@ enum kScaleTypes
    nScaleTypes
 };
 
-static const wxString kScaleTypeStrings[nScaleTypes] =
+static const IdentInterfaceSymbol kScaleTypeStrings[nScaleTypes] =
 {
-   XO("Linear"),
-   XO("dB"),
+   { XO("Linear") },
+   { XO("dB") },
 };
 
 enum kZoomTypes
@@ -279,11 +279,11 @@ enum kZoomTypes
    nZoomTypes
 };
 
-static const wxString kZoomTypeStrings[nZoomTypes] =
+static const IdentInterfaceSymbol kZoomTypeStrings[nZoomTypes] =
 {
-   XO("Reset"),
-   XO("Times2"),
-   XO("HalfWave"),
+   { XO("Reset") },
+   { XO("Times2") },
+   { XO("HalfWave") },
 };
 
 bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){ 

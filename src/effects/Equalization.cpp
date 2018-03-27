@@ -144,12 +144,12 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const wxString kInterpStrings[nInterpolations] =
+static const IdentInterfaceSymbol kInterpStrings[nInterpolations] =
 {
    /* i18n-hint: Technical term for a kind of curve.*/
-   XO("B-spline"),
-   XO("Cosine"),
-   XO("Cubic")
+   { XO("B-spline") },
+   { XO("Cosine") },
+   { XO("Cubic") }
 };
 
 static const double kThirdOct[] =

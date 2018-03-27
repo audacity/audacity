@@ -38,12 +38,12 @@ enum kColours
    nColours
 };
 
-static const wxString kColourStrings[nColours] =
+static const IdentInterfaceSymbol kColourStrings[nColours] =
 {
-   XO("Color0"),
-   XO("Color1"),
-   XO("Color2"),
-   XO("Color3"),
+   { XO("Color0") },
+   { XO("Color1") },
+   { XO("Color2") },
+   { XO("Color3") },
 };
 
 
