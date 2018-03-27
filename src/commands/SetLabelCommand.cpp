@@ -65,6 +65,7 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    // this code could be put in subroutines/reduced.
 
    //wxString mode = GetString(wxT("Type"));
+   AudacityProject * p = context.GetProject();
    TrackList *tracks = context.GetProject()->GetTracks();
    TrackListIterator iter(tracks);
    Track *t = iter.First();
@@ -107,7 +108,12 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    // Only one label can be selected.
    if( bHasSelected ){
       if( mbSelected )
+      {
          labelTrack->mSelIndex = nn-1;
+         double t0 = pLabel->selectedRegion.t0();
+         double t1 = pLabel->selectedRegion.t1();
+         p->mViewInfo.selectedRegion.setTimes( t0, t1);
+      }
       else if( labelTrack->mSelIndex == (nn-1) )
          labelTrack->mSelIndex = -1;
    }
