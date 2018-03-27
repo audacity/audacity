@@ -238,10 +238,10 @@ enum kColours
 
 static const IdentInterfaceSymbol kColourStrings[nColours] =
 {
-   { XO("Color0") },
-   { XO("Color1") },
-   { XO("Color2") },
-   { XO("Color3") },
+   { wxT("Color0"), XO("Color 0") },
+   { wxT("Color1"), XO("Color 1") },
+   { wxT("Color2"), XO("Color 2") },
+   { wxT("Color3"), XO("Color 3") },
 };
 
 
@@ -254,6 +254,7 @@ enum kDisplayTypes
 
 static const IdentInterfaceSymbol kDisplayTypeStrings[nDisplayTypes] =
 {
+   // These are acceptable dual purpose internal/visible names
    { XO("Waveform") },
    { XO("Spectrogram") },
 };
@@ -267,7 +268,9 @@ enum kScaleTypes
 
 static const IdentInterfaceSymbol kScaleTypeStrings[nScaleTypes] =
 {
+   // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
+   /* i18n-hint: abbreviates decibels */
    { XO("dB") },
 };
 
@@ -282,7 +285,7 @@ enum kZoomTypes
 static const IdentInterfaceSymbol kZoomTypeStrings[nZoomTypes] =
 {
    { XO("Reset") },
-   { XO("Times2") },
+   { wxT("Times2"), XO("Times 2") },
    { XO("HalfWave") },
 };
 

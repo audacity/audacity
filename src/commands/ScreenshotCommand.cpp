@@ -50,21 +50,21 @@ static const IdentInterfaceSymbol
 kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 {
    { XO("Window") },
-   { XO("Full_Window") },
-   { XO("Window_Plus") },
+   { wxT("FullWindow"), XO("Full Window") },
+   { wxT("WindowPlus"), XO("Window Plus") },
    { XO("Fullscreen") },
    { XO("Toolbars") },
    { XO("Effects") },
    { XO("Scriptables") },
    { XO("Preferences") },
    { XO("Selectionbar") },
-   { XO("Spectral_Selection") },
+   { wxT("SpectralSelection"), XO("Spectral Selection") },
    { XO("Tools") },
    { XO("Transport") },
    { XO("Mixer") },
    { XO("Meter") },
-   { XO("Play_Meter") },
-   { XO("Record_Meter") },
+   { wxT("PlayMeter"), XO("Play Meter") },
+   { wxT("RecordMeter"), XO("Record Meter") },
    { XO("Edit") },
    { XO("Device") },
    { XO("Scrub") },
@@ -72,21 +72,22 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
    { XO("Trackpanel") },
    { XO("Ruler") },
    { XO("Tracks") },
-   { XO("First_Track") },
-   { XO("First_Two_Tracks") },
-   { XO("First_Three_Tracks") },
-   { XO("First_Four_Tracks") },
-   { XO("Second_Track") },
-   { XO("Tracks_Plus") },
-   { XO("First_Track_Plus") },
-   { XO("All_Tracks") },
-   { XO("All_Tracks_Plus") },
+   { wxT("FirstTrack"),       XO("First Track") },
+   { wxT("FirstTwoTracks"),   XO("First Two Tracks") },
+   { wxT("FirstThreeTracks"), XO("First Three Tracks") },
+   { wxT("FirstFourTracks"),  XO("First Four Tracks") },
+   { wxT("SecondTrack"),      XO("Second Track") },
+   { wxT("TracksPlus"),       XO("Tracks Plus") },
+   { wxT("FirstTrackPlus"),   XO("First Track Plus") },
+   { wxT("AllTracks"),        XO("All Tracks") },
+   { wxT("AllTracksPlus"),    XO("All Tracks Plus") },
 };
 
 
 static const IdentInterfaceSymbol
 kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
+   // These are acceptable dual purpose internal/visible names
    { XO("Blue") },
    { XO("White") },
    { XO("None") },

@@ -19,13 +19,17 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 $control number (_ "Limit output to first") string (_ "samples") "100" 
-$control units (_ "Measurement scale") choice ((_ "dB") (_ "Linear")) 0 
+$control units (_ "Measurement scale") choice (
+   (_ "dB")
+   (_ "Linear")
+) 0 
 $control fileformat (_ "File data format") choice (
-   (_ "Sample List (txt)")
-   (_ "Indexed List (txt)")
-   (_ "Time Indexed (txt)")
-   (_ "Data (csv)")
-   (_ "Web Page (html)")
+   ("SampleList" (_ "Sample List (txt)"))
+   ("IndexedList" (_ "Indexed List (txt)"))
+   ("TimeIndexed" (_ "Time Indexed (txt)"))
+   ;i18n-hint: "comma separated values"
+   ("CSV" (_ "Data (csv)"))
+   ("Web" (_ "Web Page (html)"))
 ) 0 
 $control header (_ "Include header information") choice (
    (_ "None")
@@ -35,18 +39,23 @@ $control header (_ "Include header information") choice (
 ) 2 
 $control optext (_ "Optional header text") string ""  
 $control chan (_ "Channel layout for stereo") choice (
-   (_ "L-R on Same Line")
-   (_ "Alternate Lines")
-   (_ "L Channel First")
+   ;i18n-hint: Left and Right
+   ("SameLine" (_ "L-R on Same Line"))
+   ("Alternate" (_ "Alternate Lines"))
+   ;i18n-hint: L for Left
+   ("LFirst" (_ "L Channel First"))
 ) 0   
 $control messages (_ "Show messages") choice (
    (_ "Yes")
-   (_ "Errors Only")
+   ("Errors" (_ "Errors Only"))
    (_ "None")
 ) 0 
 $control filename (_ "File name") string "" (_ "sample-data")
 $control path (_ "Output folder") string "" (_ "Home directory")
-$control owrite (_ "Allow files to be overwritten") choice ((_ "No") (_ "Yes")) 0 
+$control owrite (_ "Allow files to be overwritten") choice (
+   (_ "No")
+   (_ "Yes")
+) 0 
 
 
 ;; To enable L/R prefix before alternate L/R channels 

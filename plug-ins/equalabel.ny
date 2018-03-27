@@ -19,15 +19,26 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control mode (_ "Use 'Number of labels' OR 'Label interval'") choice ((_ "Number of labels") (_ "Label interval")) 0
+$control mode (_ "Use 'Number of labels' OR 'Label interval'") choice (
+   ("Number" (_ "Number of Labels"))
+   ("Interval" (_ "Label Interval"))
+) 0
 $control totalnum (_ "Number of labels") int-text "" 10 1 1000
 $control interval (_ "Label interval (seconds)") float-text "" 60 0.001 3600
-$control adjust (_ "Adjust label interval to fit length") choice ((_ "No") (_ "Yes")) 0
+$control adjust (_ "Adjust label interval to fit length") choice (
+   (_ "No")
+   (_ "Yes")
+) 0
 $control labeltext (_ "Label text") string "" (_ "Label")
 $control zeros (_ "Minimum number of digits in label") choice (
-   (_ "None - text only")
-   (_ "1 (before label)") (_ "2 (before label)") (_ "3 (before label)")
-   (_ "1 (after label)") (_ "2 (after label)") (_ "3 (after label)")) 2
+   ("TextOnly" (_ "None - Text Only"))
+   ("OneBefore" (_ "1 (Before Label)"))
+   ("TwoBefore" (_ "2 (Before Label)"))
+   ("ThreeBefore" (_ "3 (Before Label)"))
+   ("OneAfter" (_ "1 (After Label)"))
+   ("TwoAfter" (_ "2 (After Label)"))
+   ("ThreeAfter" (_ "3 (After Label)"))
+) 2
 $control firstnum (_ "Begin numbering from") int-text "" 1 0 nil
 
 

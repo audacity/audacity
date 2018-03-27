@@ -41,9 +41,9 @@ enum kCoordTypes
 static const IdentInterfaceSymbol kCoordTypeStrings[nCoordTypes] =
 {
    { XO("Panel") },
-   { XO("App") },
-   { XO("Track0") },
-   { XO("Track1") },
+   { wxT("App"),    XO("Application") },
+   { wxT("Track0"), XO("Track 0") },
+   { wxT("Track1"), XO("Track 1") },
 };
 
 

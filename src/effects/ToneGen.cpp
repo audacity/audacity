@@ -41,6 +41,7 @@ enum kInterpolations
 
 static const IdentInterfaceSymbol kInterStrings[nInterpolations] =
 {
+   // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
    { XO("Logarithmic") }
 };
@@ -59,7 +60,7 @@ static const IdentInterfaceSymbol kWaveStrings[nWaveforms] =
    { XO("Sine") },
    { XO("Square") },
    { XO("Sawtooth") },
-   { XO("Square, no alias") }
+   { wxT("SquareNoAlias"), XO("Square, no alias") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters

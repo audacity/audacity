@@ -37,6 +37,7 @@ enum kTypes
 
 static const IdentInterfaceSymbol kTypeStrings[nTypes] =
 {
+   // These are acceptable dual purpose internal/visible names
    { XO("White") },
    { XO("Pink") },
    { XO("Brownian") }

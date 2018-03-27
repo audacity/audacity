@@ -18,19 +18,34 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control type (_ "Fade Type") choice ((_ "Fade Up") (_ "Fade Down") (_ "S-Curve Up") (_ "S-Curve Down")) 0
+$control type (_ "Fade Type") choice (
+   ("Up" (_ "Fade Up"))
+   ("Down" (_ "Fade Down"))
+   ("SCurveUp" (_ "S-Curve Up"))
+   ("SCurveDown" (_ "S-Curve Down"))
+) 0
 $control curve (_ "Mid-fade Adjust (%)") real "" 0 -100 100
-$control units (_ "Start/End as") choice ((_ "% of Original") (_ "dB Gain")) 0 
+$control units (_ "Start/End as") choice (
+   ("Percent" (_ "% of Original"))
+   ("dB" (_ "dB Gain"))
+) 0 
 $control gain0 (_ "Start (or end)") float-text "" 0 nil nil
 $control gain1 (_ "End (or start)") float-text "" 100 nil nil
 $control preset (_ "Handy Presets (override controls)") choice (
-   (_ "None Selected")
-   (_ "Linear In") (_ "Linear Out")
-   (_ "Exponential In") (_ "Exponential Out")
-   (_ "Logarithmic In") (_ "Logarithmic Out")
-   (_ "Rounded In") (_ "Rounded Out")
-   (_ "Cosine In") (_ "Cosine Out")
-   (_ "S-Curve In") (_ "S-Curve Out")) 0
+   ("None" (_ "None Selected"))
+   ("LinearIn" (_ "Linear In"))
+   ("LinearOut" (_ "Linear Out"))
+   ("ExponentialIn" (_ "Exponential In"))
+   ("ExponentialOut" (_ "Exponential Out"))
+   ("LogarithmicIn" (_ "Logarithmic In"))
+   ("LogarithmicOut" (_ "Logarithmic Out"))
+   ("RoundedIn" (_ "Rounded In"))
+   ("RoundedOut" (_ "Rounded Out"))
+   ("CosineIn" (_ "Cosine In"))
+   ("CosineOut" (_ "Cosine Out"))
+   ("SCurveIn" (_ "S-Curve In"))
+   ("SCurveOut" (_ "S-Curve Out"))
+) 0
 
 
 (defun get-input (sig)

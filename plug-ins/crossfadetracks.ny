@@ -17,9 +17,18 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control type (_ "Fade type") choice ((_ "Constant Gain") (_ "Constant Power 1") (_ "Constant Power 2") (_ "Custom Curve")) 0
+$control type (_ "Fade type") choice (
+   ("ConstantGain" (_ "Constant Gain"))
+   ("ConstantPower1" (_ "Constant Power 1"))
+   ("ConstantPower2" (_ "Constant Power 2"))
+   ("CustomCurve" (_ "Custom Curve"))
+) 0
 $control curve (_ "Custom curve") real "" 0 0 1
-$control direction (_ "Fade direction") choice ((_ "Automatic") (_ "Alternating Out / In") (_ "Alternating In / Out")) 0
+$control direction (_ "Fade direction") choice (
+   (_ "Automatic")
+   ("OutIn" (_ "Alternating Out / In"))
+   ("InOut" (_ "Alternating In / Out"))
+) 0
 
 
 (defun crossfade (type dir curve)
