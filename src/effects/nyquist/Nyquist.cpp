@@ -1640,6 +1640,12 @@ bool NyquistEffect::Tokenizer::Tokenize(
          // Unenclosed whitespace
          // Separate tokens; don't accumulate this character
          endToken();
+      else if (!q && c == wxT(';'))
+         // semicolon not in quotes, but maybe in parentheses
+         // Lisp style comments with ; (but not with #| ... |#) are allowed
+         // within a wrapped header multi-line, so that i18n hint comments may
+         // be placed before strings and found by xgettext
+         break;
       else if (!q && c == wxT('(')) {
          // Start of list or sublist
          if (++paren == 1)
