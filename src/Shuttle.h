@@ -13,14 +13,6 @@
 
 #include "commands/CommandTargets.h"
 
-class Enums {
-public:
-   static const wxString * GetDbChoices();
-   static const int    NumDbChoices;
-   static const double Db2Signal[];
-   static const wxString DbChoices[];
-};
-
 class WrappedType;
 
 class Shuttle /* not final */ {

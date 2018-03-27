@@ -34,6 +34,39 @@
 #include "../widgets/valnum.h"
 #include "../widgets/ErrorDialog.h"
 
+class Enums {
+public:
+   static const size_t    NumDbChoices;
+   static const double Db2Signal[];
+   static const wxString DbChoices[];
+};
+
+const wxString Enums::DbChoices[] = {
+   wxT("-20 dB"),
+   wxT("-25 dB"),
+   wxT("-30 dB"),
+   wxT("-35 dB"),
+   wxT("-40 dB"),
+   wxT("-45 dB"),
+   wxT("-50 dB"),
+   wxT("-55 dB"),
+   wxT("-60 dB"),
+   wxT("-65 dB"),
+   wxT("-70 dB"),
+   wxT("-75 dB"),
+   wxT("-80 dB")
+};
+
+const double Enums::Db2Signal[] =
+//     -20dB    -25dB    -30dB    -35dB    -40dB    -45dB    -50dB    -55dB    -60dB    -65dB     -70dB     -75dB     -80dB
+{ 0.10000, 0.05620, 0.03160, 0.01780, 0.01000, 0.00562, 0.00316, 0.00178, 0.00100, 0.000562, 0.000316, 0.000178, 0.0001000 };
+
+
+const size_t Enums::NumDbChoices = WXSIZEOF(Enums::DbChoices);
+
+static_assert( Enums::NumDbChoices == WXSIZEOF( Enums::Db2Signal ),
+              "size mismatch" );
+
 // Declaration of RegionList
 class RegionList : public std::list < Region > {};
 
@@ -90,7 +123,7 @@ END_EVENT_TABLE()
 
 EffectTruncSilence::EffectTruncSilence()
 {
-   mDbChoices = wxArrayString(Enums::NumDbChoices, Enums::GetDbChoices());
+   mDbChoices = wxArrayString(Enums::NumDbChoices, Enums::DbChoices);
 
    mInitialAllowedSilence = DEF_Minimum;
    mTruncLongestAllowedSilence = DEF_Truncate;
