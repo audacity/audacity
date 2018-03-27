@@ -42,6 +42,8 @@ public:
 };
 
 const IdentInterfaceSymbol Enums::DbChoices[] = {
+   // Yuck, why is this a choice control and not a slider?  I'm leaving this
+   // table of names alone for now -- PRL
    { wxT("-20 dB") },
    { wxT("-25 dB") },
    { wxT("-30 dB") },
@@ -79,8 +81,8 @@ enum kActions
 
 static const IdentInterfaceSymbol kActionStrings[nActions] =
 {
-   { XO("Truncate Detected Silence") },
-   { XO("Compress Excess Silence") }
+   { wxT("Truncate"), XO("Truncate Detected Silence") },
+   { wxT("Compress"), XO("Compress Excess Silence") }
 };
 
 static CommandParameters::ObsoleteMap kObsoleteActions[] = {

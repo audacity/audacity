@@ -40,10 +40,10 @@ enum kColours
 
 static const IdentInterfaceSymbol kColourStrings[nColours] =
 {
-   { XO("Color0") },
-   { XO("Color1") },
-   { XO("Color2") },
-   { XO("Color3") },
+   { wxT("Color0"), XO("Color 0") },
+   { wxT("Color1"), XO("Color 1") },
+   { wxT("Color2"), XO("Color 2") },
+   { wxT("Color3"), XO("Color 3") },
 };
 
 

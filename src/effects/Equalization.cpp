@@ -146,6 +146,8 @@ enum kInterpolations
 
 static const IdentInterfaceSymbol kInterpStrings[nInterpolations] =
 {
+   // These are acceptable dual purpose internal/visible names
+
    /* i18n-hint: Technical term for a kind of curve.*/
    { XO("B-spline") },
    { XO("Cosine") },

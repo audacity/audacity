@@ -46,12 +46,12 @@ explicitly code all three.
 const int nRelativeTos =6;
 static const IdentInterfaceSymbol kRelativeTo[nRelativeTos] =
 {
-   { XO("Project Start") },
+   { wxT("ProjectStart"), XO("Project Start") },
    { XO("Project") },
-   { XO("Project End") },
-   { XO("Selection Start") },
+   { wxT("ProjectEnd"), XO("Project End") },
+   { wxT("SelectionStart"), XO("Selection Start") },
    { XO("Selection") },
-   { XO("Selection End") }
+   { wxT("SelectionEnd"), XO("Selection End") }
 };
 
 bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
@@ -169,6 +169,8 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
 const int nModes =3;
 static const IdentInterfaceSymbol kModes[nModes] =
 {
+   // These are acceptable dual purpose internal/visible names
+
    /* i18n-hint verb, imperative */
    { XO("Set") },
    { XO("Add") },

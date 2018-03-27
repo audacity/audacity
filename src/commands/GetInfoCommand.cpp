@@ -58,7 +58,7 @@ enum {
 static const IdentInterfaceSymbol kTypes[nTypes] =
 {
    { XO("Commands") },
-   { XO("Commands+") },
+   { wxT("CommandsPlus"), XO("Commands Plus") },
    { XO("Menus") },
    { XO("Preferences") },
    { XO("Tracks") },
@@ -77,7 +77,11 @@ enum {
 
 static const IdentInterfaceSymbol kFormats[nFormats] =
 {
+   // These are acceptable dual purpose internal/visible names
+   
+   /* i18n-hint JavaScript Object Notation */
    { XO("JSON") },
+   /* i18n-hint name of a computer programming language */
    { XO("LISP") },
    { XO("Brief") }
 };
