@@ -467,12 +467,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       {
          wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
-         wxArrayString typeChoices;
-         for (int i = 0; i < nTypes; i++)
-         {
-            typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
-         }
-
+         auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
          mFilterTypeCtl = S.Id(ID_Type).AddChoice(_("&Filter Type:"), wxT(""), &typeChoices);
          mFilterTypeCtl->SetValidator(wxGenericValidator(&mFilterType));
          S.SetSizeHints(-1, -1);
@@ -499,12 +494,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          wxASSERT(nSubTypes == WXSIZEOF(kSubTypeStrings));
 
-         wxArrayString subTypeChoices;
-         for (int i = 0; i < nSubTypes; i++)
-         {
-            subTypeChoices.Add(wxGetTranslation(kSubTypeStrings[i]));
-         }
-
+         auto subTypeChoices = LocalizedStrings(kSubTypeStrings, nSubTypes);
          mFilterSubTypeCtl = S.Id(ID_SubType).AddChoice(_("&Subtype:"), wxT(""), &subTypeChoices);
          mFilterSubTypeCtl->SetValidator(wxGenericValidator(&mFilterSubtype));
          S.SetSizeHints(-1, -1);

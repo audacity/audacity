@@ -96,15 +96,6 @@ EffectToneGen::EffectToneGen(bool isChirp)
    mAmplitude[1] = DEF_EndAmp;
    mInterpolation = DEF_Interp;
 
-   for (int i = 0; i < nWaveforms; i++)
-   {
-      mWaveforms.Add(wxGetTranslation(kWaveStrings[i]));
-   }
-
-   for (int i = 0; i < nInterpolations; i++)
-   {
-      mInterpolations.Add(wxGetTranslation(kInterStrings[i]));
-   }
    // Chirp varies over time so must use selected duration.
    // TODO: When previewing, calculate only the first 'preview length'.
    if (isChirp)
@@ -341,7 +332,8 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxCENTER);
    {
-      wxChoice *c = S.AddChoice(_("Waveform:"), wxT(""), &mWaveforms);
+      auto waveforms = LocalizedStrings(kWaveStrings, nWaveforms);
+      wxChoice *c = S.AddChoice(_("Waveform:"), wxT(""), &waveforms);
       c->SetValidator(wxGenericValidator(&mWaveform));
 
       if (mChirp)
@@ -413,7 +405,8 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         c = S.AddChoice(_("Interpolation:"), wxT(""), &mInterpolations);
+         auto interpolations = LocalizedStrings(kInterStrings, nInterpolations);
+         c = S.AddChoice(_("Interpolation:"), wxT(""), &interpolations);
          c->SetValidator(wxGenericValidator(&mInterpolation));
       }
       else

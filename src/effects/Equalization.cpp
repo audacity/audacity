@@ -229,11 +229,6 @@ EffectEqualization::EffectEqualization()
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
-   for (int i = 0; i < nInterpolations; i++)
-   {
-      mInterpolations.Add(wxGetTranslation(kInterpStrings[i]));
-   }
-
    mLogEnvelope = std::make_unique<Envelope>
       (false,
        MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
@@ -331,11 +326,6 @@ bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
 {
    // Pretty sure the interpolation name shouldn't have been interpreted when
    // specified in chains, but must keep it that way for compatibility.
-   wxArrayString interpolations(mInterpolations);
-   for (int i = 0; i < nInterpolations; i++)
-   {
-      interpolations.Add(kInterpStrings[i]);
-   }
 
    ReadAndVerifyInt(FilterLength);
    ReadAndVerifyString(CurveName);
@@ -774,7 +764,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrI = S.GetSizer();
 
-               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &mInterpolations);
+               auto interpolations =
+                  LocalizedStrings(kInterpStrings, nInterpolations);
+               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &interpolations);
                mInterpChoice->SetName(_("Interpolation type"));
                mInterpChoice->SetSelection(0);
             }

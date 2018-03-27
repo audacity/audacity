@@ -104,8 +104,6 @@ private:
    double mSilenceCompressPercent;
    bool mbIndependent;
 
-   wxArrayString mDbChoices;
-
    size_t mBlendFrameCount;
 
    wxChoice *mTruncDbChoice;

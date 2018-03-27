@@ -181,7 +181,6 @@ private:
    double mMakeupGain;
 
    int mTypChoiceIndex;
-   wxArrayString mTableTypes;
 
    wxChoice *mTypeChoiceCtrl;
    wxTextCtrl *mThresholdT;

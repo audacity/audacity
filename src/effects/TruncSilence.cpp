@@ -123,8 +123,6 @@ END_EVENT_TABLE()
 
 EffectTruncSilence::EffectTruncSilence()
 {
-   mDbChoices = wxArrayString(Enums::NumDbChoices, Enums::DbChoices);
-
    mInitialAllowedSilence = DEF_Minimum;
    mTruncLongestAllowedSilence = DEF_Truncate;
    mSilenceCompressPercent = DEF_Compress;
@@ -744,12 +742,6 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
 {
    wxASSERT(nActions == WXSIZEOF(kActionStrings));
 
-   wxArrayString actionChoices;
-   for (int i = 0; i < nActions; i++)
-   {
-      actionChoices.Add(wxGetTranslation(kActionStrings[i]));
-   }
-
    S.AddSpace(0, 5);
 
    S.StartStatic(_("Detect Silence"));
@@ -757,7 +749,9 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxALIGN_CENTER_HORIZONTAL);
       {
          // Threshold
-         mTruncDbChoice = S.AddChoice(_("Level:"), wxT(""), &mDbChoices);
+         auto dbChoices =
+            LocalizedStrings( Enums::DbChoices, Enums::NumDbChoices );
+         mTruncDbChoice = S.AddChoice(_("Level:"), wxT(""), &dbChoices);
          mTruncDbChoice->SetValidator(wxGenericValidator(&mTruncDbChoiceIndex));
          S.SetSizeHints(-1, -1);
          S.AddSpace(0); // 'choices' already includes units.
@@ -778,6 +772,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay();
       {
          // Action choices
+         auto actionChoices = LocalizedStrings(kActionStrings, nActions);
          mActionChoice = S.AddChoice( {}, wxT(""), &actionChoices);
          mActionChoice->SetValidator(wxGenericValidator(&mActionIndex));
          S.SetSizeHints(-1, -1);
