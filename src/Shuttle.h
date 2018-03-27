@@ -12,15 +12,9 @@
 #define __AUDACITY_SHUTTLE__
 
 #include "commands/CommandTargets.h"
+#include "../include/audacity/IdentInterface.h"
 
-class Enums {
-public:
-   static const wxString * GetDbChoices();
-   static const int    NumDbChoices;
-   static const double Db2Signal[];
-   static const wxString DbChoices[];
-};
-
+class IdentInterfaceSymbol;
 class WrappedType;
 
 class Shuttle /* not final */ {
@@ -83,7 +77,8 @@ public:
    virtual void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f );
    virtual void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl=1.0f );
    virtual void Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin="", const wxString vmax="", const wxString vscl="" );
-   virtual void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings );
+   virtual void DefineEnum( int &var, const wxChar * key, const int vdefault,
+      const IdentInterfaceSymbol strings[], size_t nStrings );
 };
 
 /**************************************************************************//**
@@ -100,7 +95,8 @@ public:
    void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
    void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
    void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
-   void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )override;
+   void DefineEnum( int &var, const wxChar * key, const int vdefault,
+      const IdentInterfaceSymbol strings[], size_t nStrings ) override;
 };
 
 /**************************************************************************//**
@@ -123,7 +119,8 @@ public:
    void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
    void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
    void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
-   void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )override;
+   void DefineEnum( int &var, const wxChar * key, const int vdefault,
+      const IdentInterfaceSymbol strings[], size_t nStrings ) override;
 };
 
 /**************************************************************************//**
@@ -143,7 +140,8 @@ public:
    void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
    void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
    void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
-   void DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )override;
+   void DefineEnum( int &var, const wxChar * key, const int vdefault,
+      const IdentInterfaceSymbol strings[], size_t nStrings ) override;
 };
 
 
@@ -179,8 +177,8 @@ public:
    void Define( wxString &var,       const wxChar * WXUNUSED(key),  const wxString vdefault, 
       const wxString WXUNUSED(vmin), const wxString WXUNUSED(vmax), const wxString WXUNUSED(vscl) ) 
       override { var = vdefault;};
-   void DefineEnum( int &var,        const wxChar * WXUNUSED(key),  const int vdefault, 
-      wxArrayString  WXUNUSED(strings) )
+   void DefineEnum( int &var,        const wxChar * WXUNUSED(key),  const int vdefault,
+      const IdentInterfaceSymbol WXUNUSED(strings) [], size_t WXUNUSED( nStrings ) )
       override { var = vdefault;};
 };
 
@@ -192,7 +190,7 @@ public:
 #define SHUTTLE_PARAM( var, name ) \
   Define( var, KEY_ ## name, DEF_ ## name, MIN_ ## name, MAX_ ## name, SCL_ ## name )
 
-#define SHUTTLE_ENUM_PARAM( var, name, strings ) \
-  DefineEnum( var, KEY_ ## name, DEF_ ## name, strings )
+#define SHUTTLE_ENUM_PARAM( var, name, strings, nStrings ) \
+  DefineEnum( var, KEY_ ## name, DEF_ ## name, strings, nStrings )
 
 #endif

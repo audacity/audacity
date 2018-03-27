@@ -35,11 +35,11 @@ enum kTypes
    nTypes
 };
 
-static const wxChar *kTypeStrings[nTypes] =
+static const IdentInterfaceSymbol kTypeStrings[nTypes] =
 {
-   XO("White"),
-   XO("Pink"),
-   XO("Brownian")
+   { XO("White") },
+   { XO("Pink") },
+   { XO("Brownian") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -162,15 +162,14 @@ size_t EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t
    return size;
 }
 bool EffectNoise::DefineParams( ShuttleParams & S ){
-   wxArrayString types( nTypes, kTypeStrings );
-   S.SHUTTLE_ENUM_PARAM( mType, Type, types );
+   S.SHUTTLE_ENUM_PARAM( mType, Type, kTypeStrings, nTypes );
    S.SHUTTLE_PARAM( mAmp, Amp );
    return true;
 }
 
 bool EffectNoise::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_Type, kTypeStrings[mType]);
+   parms.Write(KEY_Type, kTypeStrings[mType].Internal());
    parms.Write(KEY_Amp, mAmp);
 
    return true;
@@ -178,7 +177,7 @@ bool EffectNoise::GetAutomationParameters(CommandParameters & parms)
 
 bool EffectNoise::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(Type, wxArrayString(nTypes, kTypeStrings));
+   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
    ReadAndVerifyDouble(Amp);
 
    mType = Type;
@@ -221,14 +220,9 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
-   wxArrayString typeChoices;
-   for (int i = 0; i < nTypes; i++)
-   {
-      typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
-   }
-
    S.StartMultiColumn(2, wxCENTER);
    {
+      auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
       S.AddChoice(_("Noise type:"), wxT(""), &typeChoices)->SetValidator(wxGenericValidator(&mType));
 
       FloatingPointValidator<double> vldAmp(6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES);

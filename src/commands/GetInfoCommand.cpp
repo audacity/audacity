@@ -55,17 +55,17 @@ enum {
    nTypes
 };
 
-static const wxString kTypes[nTypes] =
+static const IdentInterfaceSymbol kTypes[nTypes] =
 {
-   XO("Commands"),
-   XO("Commands+"),
-   XO("Menus"),
-   XO("Preferences"),
-   XO("Tracks"),
-   XO("Clips"),
-   XO("Envelopes"),
-   XO("Labels"),
-   XO("Boxes")
+   { XO("Commands") },
+   { XO("Commands+") },
+   { XO("Menus") },
+   { XO("Preferences") },
+   { XO("Tracks") },
+   { XO("Clips") },
+   { XO("Envelopes") },
+   { XO("Labels") },
+   { XO("Boxes") },
 };
 
 enum {
@@ -75,20 +75,18 @@ enum {
    nFormats
 };
 
-static const wxString kFormats[nFormats] =
+static const IdentInterfaceSymbol kFormats[nFormats] =
 {
-   XO("JSON"),
-   XO("LISP"),
-   XO("Brief")
+   { XO("JSON") },
+   { XO("LISP") },
+   { XO("Brief") }
 };
 
 
 
 bool GetInfoCommand::DefineParams( ShuttleParams & S ){
-   wxArrayString types( nTypes, kTypes );
-   wxArrayString formats( nFormats, kFormats );
-   S.DefineEnum( mInfoType, wxT("Type"), 0, types );
-   S.DefineEnum( mFormat, wxT("Format"), 0, formats );
+   S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
+   S.DefineEnum( mFormat, wxT("Format"), 0, kFormats, nFormats );
    return true;
 }
 

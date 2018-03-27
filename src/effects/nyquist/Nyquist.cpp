@@ -338,10 +338,10 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
          int x=d;
          //parms.WriteEnum(ctrl.var, (int) d, choices);
-         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, choices );
+         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0,
+                       ctrl.choices.data(), ctrl.choices.size() );
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
       {
@@ -388,8 +388,8 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
-         parms.WriteEnum(ctrl.var, (int) d, choices);
+         parms.WriteEnum(ctrl.var, (int) d,
+                         ctrl.choices.data(), ctrl.choices.size());
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
       {
@@ -439,8 +439,8 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       {
          int val;
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
-         good = parms.ReadEnum(ctrl.var, &val, choices) &&
+         good = parms.ReadEnum(ctrl.var, &val,
+                               ctrl.choices.data(), ctrl.choices.size()) &&
                 val != wxNOT_FOUND;
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
@@ -480,8 +480,8 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       {
          int val {0};
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
-         parms.ReadEnum(ctrl.var, &val, choices);
+         parms.ReadEnum(ctrl.var, &val,
+                        ctrl.choices.data(), ctrl.choices.size());
          ctrl.val = (double) val;
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
@@ -1481,16 +1481,22 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
    return str;
 }
 
-wxArrayString NyquistEffect::ParseChoice(const wxString & text)
+std::vector<IdentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & text)
 {
+   std::vector<IdentInterfaceSymbol> results;
    if (text[0] == wxT('(')) {
       // New style:  expecting a Lisp-like list of strings
       Tokenizer tzer;
       tzer.Tokenize(text, true, 1, 1);
       auto &choices = tzer.tokens;
-      for (auto &choice : choices)
-         choice = UnQuote(choice);
-      return choices;
+      wxString extra;
+      for (auto &choice : choices) {
+         auto label = UnQuote(choice, true, &extra);
+         if (extra.empty())
+            results.push_back( { label } );
+         else
+            results.push_back( { extra, label } );
+      }
    }
    else {
       // Old style: expecting a comma-separated list of
@@ -1501,9 +1507,9 @@ wxArrayString NyquistEffect::ParseChoice(const wxString & text)
          wxT(",")
       );
       for (auto &choice : choices)
-         choice = choice.Trim(true).Trim(false);
-      return choices;
+         results.push_back( { choice.Trim(true).Trim(false) } );
    }
+   return results;
 }
 
 void NyquistEffect::RedirectOutput()
@@ -1533,8 +1539,12 @@ void NyquistEffect::Stop()
    mStop = true;
 }
 
-wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens)
+wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
+                                wxString *pExtraString)
 {
+   if (pExtraString)
+      *pExtraString = wxString{};
+
    int len = s.Length();
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
@@ -1545,10 +1555,20 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens)
       Tokenizer tzer;
       tzer.Tokenize(s, true, 1, 1);
       auto &tokens = tzer.tokens;
-      if (tokens.size() > 1)
-         // Assume the first token was _ -- we don't check that
-         // And the second is the string, which is internationalized
-         return UnQuote( tokens[1], false );
+      if (tokens.size() > 1) {
+         if (pExtraString && tokens[1][0] == '(') {
+            // A choice with a distinct internal string form like
+            // ("InternalString" (_ "Visible string"))
+            // Recur to find the two strings
+            *pExtraString = UnQuote(tokens[0], false);
+            return UnQuote(tokens[1]);
+         }
+         else {
+            // Assume the first token was _ -- we don't check that
+            // And the second is the string, which is internationalized
+            return UnQuote( tokens[1], false );
+         }
+      }
       else
          return {};
    }
@@ -2266,7 +2286,7 @@ bool NyquistEffect::TransferDataToEffectWindow()
 
       if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         const auto count = ctrl.choices.GetCount();
+         const auto count = ctrl.choices.size();
 
          int val = (int)ctrl.val;
          if (val < 0 || val >= (int)count)
@@ -2430,7 +2450,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             {
                S.AddSpace(10, 10);
 
-               auto choices = LocalizedStrings(ctrl.choices);
+               auto choices =
+                  LocalizedStrings(ctrl.choices.data(), ctrl.choices.size());
                S.Id(ID_Choice + i).AddChoice( {}, wxT(""), &choices);
             }
             else

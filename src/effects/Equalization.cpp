@@ -144,12 +144,12 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const wxString kInterpStrings[nInterpolations] =
+static const IdentInterfaceSymbol kInterpStrings[nInterpolations] =
 {
    /* i18n-hint: Technical term for a kind of curve.*/
-   XO("B-spline"),
-   XO("Cosine"),
-   XO("Cubic")
+   { XO("B-spline") },
+   { XO("Cosine") },
+   { XO("Cubic") }
 };
 
 static const double kThirdOct[] =
@@ -229,11 +229,6 @@ EffectEqualization::EffectEqualization()
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
-   for (int i = 0; i < nInterpolations; i++)
-   {
-      mInterpolations.Add(wxGetTranslation(kInterpStrings[i]));
-   }
-
    mLogEnvelope = std::make_unique<Envelope>
       (false,
        MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
@@ -309,11 +304,10 @@ EffectType EffectEqualization::GetType()
 
 // EffectClientInterface implementation
 bool EffectEqualization::DefineParams( ShuttleParams & S ){
-   wxArrayString interp(nInterpolations, kInterpStrings);
    S.SHUTTLE_PARAM( mM, FilterLength );
    S.SHUTTLE_PARAM( mCurveName, CurveName);
    S.SHUTTLE_PARAM( mLin, InterpLin);
-   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, interp );
+   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, kInterpStrings, nInterpolations );
 
    return true;
 }
@@ -323,7 +317,7 @@ bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
    parms.Write(KEY_FilterLength, (unsigned long)mM);
    parms.Write(KEY_CurveName, mCurveName);
    parms.Write(KEY_InterpLin, mLin);
-   parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(nInterpolations, kInterpStrings));
+   parms.WriteEnum(KEY_InterpMeth, mInterp, kInterpStrings, nInterpolations);
 
    return true;
 }
@@ -332,16 +326,11 @@ bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
 {
    // Pretty sure the interpolation name shouldn't have been interpreted when
    // specified in chains, but must keep it that way for compatibility.
-   wxArrayString interpolations(mInterpolations);
-   for (int i = 0; i < nInterpolations; i++)
-   {
-      interpolations.Add(kInterpStrings[i]);
-   }
 
    ReadAndVerifyInt(FilterLength);
    ReadAndVerifyString(CurveName);
    ReadAndVerifyBool(InterpLin);
-   ReadAndVerifyEnum(InterpMeth, interpolations);
+   ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
 
    mM = FilterLength;
    mCurveName = CurveName;
@@ -775,7 +764,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrI = S.GetSizer();
 
-               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &mInterpolations);
+               auto interpolations =
+                  LocalizedStrings(kInterpStrings, nInterpolations);
+               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &interpolations);
                mInterpChoice->SetName(_("Interpolation type"));
                mInterpChoice->SetSelection(0);
             }

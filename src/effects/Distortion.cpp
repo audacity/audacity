@@ -57,19 +57,19 @@ enum kTableType
    nTableTypes
 };
 
-static const wxString kTableTypeStrings[nTableTypes] =
+static const IdentInterfaceSymbol kTableTypeStrings[nTableTypes] =
 {
-   XO("Hard Clipping"),
-   XO("Soft Clipping"),
-   XO("Soft Overdrive"),
-   XO("Medium Overdrive"),
-   XO("Hard Overdrive"),
-   XO("Cubic Curve (odd harmonics)"),
-   XO("Even Harmonics"),
-   XO("Expand and Compress"),
-   XO("Leveller"),
-   XO("Rectifier Distortion"),
-   XO("Hard Limiter 1413")
+   { XO("Hard Clipping") },
+   { XO("Soft Clipping") },
+   { XO("Soft Overdrive") },
+   { XO("Medium Overdrive") },
+   { XO("Hard Overdrive") },
+   { XO("Cubic Curve (odd harmonics)") },
+   { XO("Even Harmonics") },
+   { XO("Expand and Compress") },
+   { XO("Leveller") },
+   { XO("Rectifier Distortion") },
+   { XO("Hard Limiter 1413") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -280,8 +280,8 @@ size_t EffectDistortion::RealtimeProcess(int group,
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
 bool EffectDistortion::DefineParams( ShuttleParams & S ){
-   wxArrayString tables( nTableTypes, kTableTypeStrings );
-   S.SHUTTLE_ENUM_PARAM( mParams.mTableChoiceIndx, TableTypeIndx, tables );
+   S.SHUTTLE_ENUM_PARAM( mParams.mTableChoiceIndx, TableTypeIndx,
+      kTableTypeStrings, nTableTypes );
    S.SHUTTLE_PARAM( mParams.mDCBlock,       DCBlock       );
    S.SHUTTLE_PARAM( mParams.mThreshold_dB,  Threshold_dB  );
    S.SHUTTLE_PARAM( mParams.mNoiseFloor,    NoiseFloor    );
@@ -293,7 +293,8 @@ bool EffectDistortion::DefineParams( ShuttleParams & S ){
 
 bool EffectDistortion::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_TableTypeIndx, kTableTypeStrings[mParams.mTableChoiceIndx]);
+   parms.Write(KEY_TableTypeIndx,
+               kTableTypeStrings[mParams.mTableChoiceIndx].Internal());
    parms.Write(KEY_DCBlock, mParams.mDCBlock);
    parms.Write(KEY_Threshold_dB, mParams.mThreshold_dB);
    parms.Write(KEY_NoiseFloor, mParams.mNoiseFloor);
@@ -306,7 +307,7 @@ bool EffectDistortion::GetAutomationParameters(CommandParameters & parms)
 
 bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(TableTypeIndx,  wxArrayString(nTableTypes, kTableTypeStrings));
+   ReadAndVerifyEnum(TableTypeIndx, kTableTypeStrings, nTableTypes);
    ReadAndVerifyBool(DCBlock);
    ReadAndVerifyDouble(Threshold_dB);
    ReadAndVerifyDouble(NoiseFloor);
@@ -360,17 +361,13 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
 void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 {
-   for (int i = 0; i < nTableTypes; i++)
-   {
-      mTableTypes.Add(wxGetTranslation(kTableTypeStrings[i]));
-   }
-
    S.AddSpace(0, 5);
    S.StartVerticalLay();
    {
       S.StartMultiColumn(4, wxCENTER);
       {
-         mTypeChoiceCtrl = S.Id(ID_Type).AddChoice(_("Distortion type:"), wxT(""), &mTableTypes);
+         auto tableTypes = LocalizedStrings(kTableTypeStrings, nTableTypes);
+         mTypeChoiceCtrl = S.Id(ID_Type).AddChoice(_("Distortion type:"), wxT(""), &tableTypes);
          mTypeChoiceCtrl->SetValidator(wxGenericValidator(&mParams.mTableChoiceIndx));
          S.SetSizeHints(-1, -1);
 

@@ -57,7 +57,7 @@ public:
    wxString var;
    wxString name;
    wxString label;
-   wxArrayString choices; // translatable
+   std::vector<IdentInterfaceSymbol> choices;
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -143,7 +143,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-   static wxArrayString ParseChoice(const wxString & text);
+   static std::vector<IdentInterfaceSymbol> ParseChoice(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,
@@ -177,7 +177,8 @@ private:
    };
    bool Parse(Tokenizer &tokenizer, const wxString &line, bool eof, bool first);
 
-   static wxString UnQuote(const wxString &s, bool allowParens = true);
+   static wxString UnQuote(const wxString &s, bool allowParens = true,
+                           wxString *pExtraString = nullptr);
    double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);

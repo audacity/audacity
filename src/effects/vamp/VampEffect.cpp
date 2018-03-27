@@ -180,7 +180,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         wxArrayString choices;
+         std::vector<IdentInterfaceSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
@@ -190,10 +190,10 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
             {
                val = i;
             }
-            choices.Add(choice);
+            choices.push_back(choice);
          }
 
-         parms.WriteEnum(key, val, choices);
+         parms.WriteEnum(key, val, choices.data(), choices.size());
       }
       else
       {
@@ -227,16 +227,16 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         wxArrayString choices;
+         std::vector<IdentInterfaceSymbol> choices;
          int val;
 
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
          {
             wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
-            choices.Add(choice);
+            choices.push_back(choice);
          }
 
-         good = parms.ReadEnum(key, &val, choices) && val != wxNOT_FOUND;
+         good = parms.ReadEnum(key, &val, choices.data(), choices.size()) && val != wxNOT_FOUND;
       }
       else
       {
@@ -273,16 +273,16 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         wxArrayString choices;
+         std::vector<IdentInterfaceSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
          {
             wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
-            choices.Add(choice);
+            choices.push_back(choice);
          }
 
-         parms.ReadEnum(key, &val, choices);
+         parms.ReadEnum(key, &val, choices.data(), choices.size());
 
          mPlugin->setParameter(mParameters[p].identifier, (float) val);
       }

@@ -38,24 +38,23 @@ enum kCoordTypes
    nCoordTypes
 };
 
-static const wxString kCoordTypeStrings[nCoordTypes] =
+static const IdentInterfaceSymbol kCoordTypeStrings[nCoordTypes] =
 {
-   XO("Panel"),
-   XO("App"),
-   XO("Track0"),
-   XO("Track1"),
+   { XO("Panel") },
+   { XO("App") },
+   { XO("Track0") },
+   { XO("Track1") },
 };
 
 
 bool DragCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString coords( nCoordTypes, kCoordTypeStrings );
    S.OptionalN( bHasId         ).Define(     mId,          wxT("Id"),         11000.0, -100000.0, 1000000.0);
    S.OptionalY( bHasWinName    ).Define(     mWinName,     wxT("Window"),     "Timeline");
    S.OptionalY( bHasFromX      ).Define(     mFromX,       wxT("FromX"),      200.0, 0.0, 1000000.0);
    S.OptionalY( bHasFromY      ).Define(     mFromY,       wxT("FromY"),      10.0,  0.0, 1000000.0);
    S.OptionalN( bHasToX        ).Define(     mToX,         wxT("ToX"),        400.0, 0.0, 1000000.0);
    S.OptionalN( bHasToY        ).Define(     mToY,         wxT("ToY"),        10.0,  0.0, 1000000.0);
-   S.OptionalN( bHasRelativeTo ).DefineEnum( mRelativeTo,  wxT("RelativeTo"), kPanel, coords );
+   S.OptionalN( bHasRelativeTo ).DefineEnum( mRelativeTo,  wxT("RelativeTo"), kPanel, kCoordTypeStrings, nCoordTypes );
    return true;
 };
 

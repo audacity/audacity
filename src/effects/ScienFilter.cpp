@@ -86,14 +86,14 @@ enum kTypes
    nTypes
 };
 
-static const wxChar *kTypeStrings[nTypes] =
+static const IdentInterfaceSymbol kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
-   XO("Butterworth"),
+   { XO("Butterworth") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   XO("Chebyshev Type I"),
+   { XO("Chebyshev Type I") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   XO("Chebyshev Type II")
+   { XO("Chebyshev Type II") }
 };
 
 enum kSubTypes
@@ -103,10 +103,10 @@ enum kSubTypes
    nSubTypes
 };
 
-static const wxChar *kSubTypeStrings[nSubTypes] =
+static const IdentInterfaceSymbol kSubTypeStrings[nSubTypes] =
 {
-   XO("Lowpass"),
-   XO("Highpass")
+   { XO("Lowpass") },
+   { XO("Highpass") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -241,10 +241,8 @@ size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t
    return blockLen;
 }
 bool EffectScienFilter::DefineParams( ShuttleParams & S ){
-   wxArrayString filters( nTypes, kTypeStrings );
-   wxArrayString subtypes( nSubTypes, kSubTypeStrings );
-   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, filters );
-   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, subtypes );
+   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, kTypeStrings, nTypes );
+   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, kSubTypeStrings, nSubTypes );
    S.SHUTTLE_PARAM( mOrder, Order );
    S.SHUTTLE_PARAM( mCutoff, Cutoff );
    S.SHUTTLE_PARAM( mRipple, Passband );
@@ -254,8 +252,8 @@ bool EffectScienFilter::DefineParams( ShuttleParams & S ){
 
 bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_Type, kTypeStrings[mFilterType]);
-   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype]);
+   parms.Write(KEY_Type, kTypeStrings[mFilterType].Internal());
+   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype].Internal());
    parms.Write(KEY_Order, mOrder);
    parms.WriteFloat(KEY_Cutoff, mCutoff);
    parms.WriteFloat(KEY_Passband, mRipple);
@@ -266,8 +264,8 @@ bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
 
 bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(Type, wxArrayString(nTypes, kTypeStrings));
-   ReadAndVerifyEnum(Subtype, wxArrayString(nSubTypes, kSubTypeStrings));
+   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
+   ReadAndVerifyEnum(Subtype, kSubTypeStrings, nSubTypes);
    ReadAndVerifyInt(Order);
    ReadAndVerifyFloat(Cutoff);
    ReadAndVerifyFloat(Passband);
@@ -469,12 +467,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       {
          wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
-         wxArrayString typeChoices;
-         for (int i = 0; i < nTypes; i++)
-         {
-            typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
-         }
-
+         auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
          mFilterTypeCtl = S.Id(ID_Type).AddChoice(_("&Filter Type:"), wxT(""), &typeChoices);
          mFilterTypeCtl->SetValidator(wxGenericValidator(&mFilterType));
          S.SetSizeHints(-1, -1);
@@ -501,12 +494,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          wxASSERT(nSubTypes == WXSIZEOF(kSubTypeStrings));
 
-         wxArrayString subTypeChoices;
-         for (int i = 0; i < nSubTypes; i++)
-         {
-            subTypeChoices.Add(wxGetTranslation(kSubTypeStrings[i]));
-         }
-
+         auto subTypeChoices = LocalizedStrings(kSubTypeStrings, nSubTypes);
          mFilterSubTypeCtl = S.Id(ID_SubType).AddChoice(_("&Subtype:"), wxT(""), &subTypeChoices);
          mFilterSubTypeCtl->SetValidator(wxGenericValidator(&mFilterSubtype));
          S.SetSizeHints(-1, -1);

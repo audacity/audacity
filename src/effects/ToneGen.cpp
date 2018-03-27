@@ -39,10 +39,10 @@ enum kInterpolations
    nInterpolations
 };
 
-static const wxString kInterStrings[nInterpolations] =
+static const IdentInterfaceSymbol kInterStrings[nInterpolations] =
 {
-   XO("Linear"),
-   XO("Logarithmic")
+   { XO("Linear") },
+   { XO("Logarithmic") }
 };
 
 enum kWaveforms
@@ -54,12 +54,12 @@ enum kWaveforms
    nWaveforms
 };
 
-static const wxString kWaveStrings[nWaveforms] =
+static const IdentInterfaceSymbol kWaveStrings[nWaveforms] =
 {
-   XO("Sine"),
-   XO("Square"),
-   XO("Sawtooth"),
-   XO("Square, no alias")
+   { XO("Sine") },
+   { XO("Square") },
+   { XO("Sawtooth") },
+   { XO("Square, no alias") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -96,15 +96,6 @@ EffectToneGen::EffectToneGen(bool isChirp)
    mAmplitude[1] = DEF_EndAmp;
    mInterpolation = DEF_Interp;
 
-   for (int i = 0; i < nWaveforms; i++)
-   {
-      mWaveforms.Add(wxGetTranslation(kWaveStrings[i]));
-   }
-
-   for (int i = 0; i < nInterpolations; i++)
-   {
-      mInterpolations.Add(wxGetTranslation(kInterStrings[i]));
-   }
    // Chirp varies over time so must use selected duration.
    // TODO: When previewing, calculate only the first 'preview length'.
    if (isChirp)
@@ -267,10 +258,8 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
       mFrequency[1] = mFrequency[0];
       mAmplitude[1] = mAmplitude[0];
    }
-   wxArrayString waves( nWaveforms, kWaveStrings );
-   wxArrayString interps( nInterpolations ,kInterStrings );
-   S.SHUTTLE_ENUM_PARAM( mWaveform, Waveform, waves  );
-   S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, interps  );
+   S.SHUTTLE_ENUM_PARAM( mWaveform, Waveform, kWaveStrings, nWaveforms  );
+   S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, kInterStrings, nInterpolations  );
 
 
 //   double freqMax = (GetActiveProject() ? GetActiveProject()->GetRate() : 44100.0) / 2.0;
@@ -295,16 +284,16 @@ bool EffectToneGen::GetAutomationParameters(CommandParameters & parms)
       parms.Write(KEY_Amplitude, mAmplitude[0]);
    }
 
-   parms.Write(KEY_Waveform, kWaveStrings[mWaveform]);
-   parms.Write(KEY_Interp, kInterStrings[mInterpolation]);
+   parms.Write(KEY_Waveform, kWaveStrings[mWaveform].Internal());
+   parms.Write(KEY_Interp, kInterStrings[mInterpolation].Internal());
 
    return true;
 }
 
 bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(Waveform,  wxArrayString(nWaveforms, kWaveStrings));
-   ReadAndVerifyEnum(Interp, wxArrayString(nInterpolations, kInterStrings));
+   ReadAndVerifyEnum(Waveform,  kWaveStrings, nWaveforms);
+   ReadAndVerifyEnum(Interp, kInterStrings, nInterpolations);
    if (mChirp)
    {
       ReadAndVerifyDouble(StartFreq);
@@ -343,7 +332,8 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxCENTER);
    {
-      wxChoice *c = S.AddChoice(_("Waveform:"), wxT(""), &mWaveforms);
+      auto waveforms = LocalizedStrings(kWaveStrings, nWaveforms);
+      wxChoice *c = S.AddChoice(_("Waveform:"), wxT(""), &waveforms);
       c->SetValidator(wxGenericValidator(&mWaveform));
 
       if (mChirp)
@@ -415,7 +405,8 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         c = S.AddChoice(_("Interpolation:"), wxT(""), &mInterpolations);
+         auto interpolations = LocalizedStrings(kInterStrings, nInterpolations);
+         c = S.AddChoice(_("Interpolation:"), wxT(""), &interpolations);
          c->SetValidator(wxGenericValidator(&mInterpolation));
       }
       else

@@ -72,25 +72,6 @@ preferences.
 //#include "commands/CommandManager.h"
 //#include "effects/Effect.h"
 
-const int Enums::NumDbChoices = 13;
-
-const wxString Enums::DbChoices[] =
-   {wxT("-20 dB"), wxT("-25 dB"), wxT("-30 dB"),
-    wxT("-35 dB"), wxT("-40 dB"), wxT("-45 dB"),
-    wxT("-50 dB"), wxT("-55 dB"), wxT("-60 dB"),
-    wxT("-65 dB"), wxT("-70 dB"), wxT("-75 dB"),
-    wxT("-80 dB")};
-
-const double Enums::Db2Signal[] =
-//     -20dB    -25dB    -30dB    -35dB    -40dB    -45dB    -50dB    -55dB    -60dB    -65dB     -70dB     -75dB     -80dB    Off
-   { 0.10000, 0.05620, 0.03160, 0.01780, 0.01000, 0.00562, 0.00316, 0.00178, 0.00100, 0.000562, 0.000316, 0.000178, 0.0001000, 0.0 };
-
-
-const wxString * Enums::GetDbChoices()
-{
-   return DbChoices;
-}
-
 
 Shuttle::Shuttle()
 {
@@ -362,12 +343,12 @@ void ShuttleParams::Define( float & var,    const wxChar * key, const float vdef
 void ShuttleParams::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
 void ShuttleParams::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ){;};
 void ShuttleParams::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ){;};
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings ){;};
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings ){;};
 
 
 
 /*
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings )
 {
 }
 */
@@ -421,10 +402,11 @@ void ShuttleGetAutomation::Define( wxString &var, const wxChar * key, const wxSt
    mpEap->Write(key, var);
 }
 
-void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+
+void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings )
 {
    if( !ShouldSet() ) return;
-   mpEap->Write(key, strings[var]);
+   mpEap->Write(key, strings[var].Internal());
 }
 
 
@@ -531,13 +513,13 @@ void ShuttleSetAutomation::Define( wxString &var, const wxChar * key, const wxSt
 }
 
 
-void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings )
 {
    CouldGet( key );
    if( !bOK )
       return;
    int temp = var;
-   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings);
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings, nStrings);
    if( bWrite && bOK)
       var = temp;
 }
@@ -646,7 +628,9 @@ void ShuttleGetDefinition::Define( wxString &var, const wxChar * key, const wxSt
 }
 
 
-void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vdefault, wxArrayString strings )
+void ShuttleGetDefinition::DefineEnum( int &var,
+   const wxChar * key, const int vdefault,
+   const IdentInterfaceSymbol strings[], size_t nStrings )
 {
    StartStruct();
    AddItem( wxString(key), "key" );
@@ -654,11 +638,11 @@ void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vd
    if( IsOptional() )
       AddItem( "unchanged", "default" );
    else
-      AddItem( strings[vdefault], "default"  );
+      AddItem( strings[vdefault].Internal(), "default"  );
    StartField( "enum" );
    StartArray();
-   for( size_t i=0;i<strings.Count(); i++ )
-      AddItem( strings[i] );
+   for( size_t i = 0; i < nStrings; i++ )
+      AddItem( strings[i].Internal() );
    EndArray();
    EndField();
    EndStruct();

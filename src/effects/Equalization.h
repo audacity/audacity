@@ -220,7 +220,6 @@ private:
    RulerPanel *mdBRuler;
    RulerPanel *mFreqRuler;
 
-   wxArrayString mInterpolations;
    bool mDisallowCustom;
    double mLoFreq;
    double mHiFreq;

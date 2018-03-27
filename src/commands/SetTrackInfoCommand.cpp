@@ -236,12 +236,12 @@ enum kColours
    nColours
 };
 
-static const wxString kColourStrings[nColours] =
+static const IdentInterfaceSymbol kColourStrings[nColours] =
 {
-   XO("Color0"),
-   XO("Color1"),
-   XO("Color2"),
-   XO("Color3"),
+   { XO("Color0") },
+   { XO("Color1") },
+   { XO("Color2") },
+   { XO("Color3") },
 };
 
 
@@ -252,10 +252,10 @@ enum kDisplayTypes
    nDisplayTypes
 };
 
-static const wxString kDisplayTypeStrings[nDisplayTypes] =
+static const IdentInterfaceSymbol kDisplayTypeStrings[nDisplayTypes] =
 {
-   XO("Waveform"),
-   XO("Spectrogram"),
+   { XO("Waveform") },
+   { XO("Spectrogram") },
 };
 
 enum kScaleTypes
@@ -265,10 +265,10 @@ enum kScaleTypes
    nScaleTypes
 };
 
-static const wxString kScaleTypeStrings[nScaleTypes] =
+static const IdentInterfaceSymbol kScaleTypeStrings[nScaleTypes] =
 {
-   XO("Linear"),
-   XO("dB"),
+   { XO("Linear") },
+   { XO("dB") },
 };
 
 enum kZoomTypes
@@ -279,25 +279,20 @@ enum kZoomTypes
    nZoomTypes
 };
 
-static const wxString kZoomTypeStrings[nZoomTypes] =
+static const IdentInterfaceSymbol kZoomTypeStrings[nZoomTypes] =
 {
-   XO("Reset"),
-   XO("Times2"),
-   XO("HalfWave"),
+   { XO("Reset") },
+   { XO("Times2") },
+   { XO("HalfWave") },
 };
 
 bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString colours(  nColours,      kColourStrings );
-   wxArrayString displays( nDisplayTypes, kDisplayTypeStrings );
-   wxArrayString scales(   nScaleTypes,   kScaleTypeStrings );
-   wxArrayString vzooms(   nZoomTypes,    kZoomTypeStrings );
-
    SetTrackBase::DefineParams( S );
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 700 );
-   S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, displays );
-   S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   scales );
-   S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  colours );
-   S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    vzooms );
+   S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    kWaveform, kDisplayTypeStrings, nDisplayTypes );
+   S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   kScaleTypeStrings, nScaleTypes );
+   S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  kColourStrings, nColours );
+   S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    kZoomTypeStrings, nZoomTypes );
 
    S.OptionalN( bHasUseSpecPrefs   ).Define(     bUseSpecPrefs,   wxT("SpecPrefs"),  false );
    S.OptionalN( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );

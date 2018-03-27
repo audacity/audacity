@@ -46,57 +46,57 @@ small calculations of rectangles.
 #include "CommandContext.h"
 
 
-static const wxString kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
+static const IdentInterfaceSymbol
+kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 {
-   XO("Window"),
-   XO("Full_Window"),
-   XO("Window_Plus"),
-   XO("Fullscreen"),
-   XO("Toolbars"),
-   XO("Effects"),
-   XO("Scriptables"),
-   XO("Preferences"),
-   XO("Selectionbar"),
-   XO("Spectral_Selection"),
-   XO("Tools"),
-   XO("Transport"),
-   XO("Mixer"),
-   XO("Meter"),
-   XO("Play_Meter"),
-   XO("Record_Meter"),
-   XO("Edit"),
-   XO("Device"),
-   XO("Scrub"),
-   XO("Transcription"),
-   XO("Trackpanel"),
-   XO("Ruler"),
-   XO("Tracks"),
-   XO("First_Track"),
-   XO("First_Two_Tracks"),
-   XO("First_Three_Tracks"),
-   XO("First_Four_Tracks"),
-   XO("Second_Track"),
-   XO("Tracks_Plus"),
-   XO("First_Track_Plus"),
-   XO("All_Tracks"),
-   XO("All_Tracks_Plus"),
+   { XO("Window") },
+   { XO("Full_Window") },
+   { XO("Window_Plus") },
+   { XO("Fullscreen") },
+   { XO("Toolbars") },
+   { XO("Effects") },
+   { XO("Scriptables") },
+   { XO("Preferences") },
+   { XO("Selectionbar") },
+   { XO("Spectral_Selection") },
+   { XO("Tools") },
+   { XO("Transport") },
+   { XO("Mixer") },
+   { XO("Meter") },
+   { XO("Play_Meter") },
+   { XO("Record_Meter") },
+   { XO("Edit") },
+   { XO("Device") },
+   { XO("Scrub") },
+   { XO("Transcription") },
+   { XO("Trackpanel") },
+   { XO("Ruler") },
+   { XO("Tracks") },
+   { XO("First_Track") },
+   { XO("First_Two_Tracks") },
+   { XO("First_Three_Tracks") },
+   { XO("First_Four_Tracks") },
+   { XO("Second_Track") },
+   { XO("Tracks_Plus") },
+   { XO("First_Track_Plus") },
+   { XO("All_Tracks") },
+   { XO("All_Tracks_Plus") },
 };
 
 
-static const wxString kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
+static const IdentInterfaceSymbol
+kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
-   XO("Blue"),
-   XO("White"),
-   XO("None")
+   { XO("Blue") },
+   { XO("White") },
+   { XO("None") },
 };
 
 
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
-   wxArrayString backs(nBackgrounds, kBackgroundStrings);
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
-   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow, whats );
-   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   kNone, backs );
+   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow,kCaptureWhatStrings, nCaptureWhats );
+   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
    S.OptionalN(bHasBringToTop).Define(     mbBringToTop, wxT("ToTop"), true );
    return true;
 };
@@ -629,7 +629,7 @@ void ScreenshotCommand::GetDerivedParams()
 
    // Build a suitable filename
    mFileName = MakeFileName(mFilePath,
-      GetCustomTranslation( kCaptureWhatStrings[ mCaptureMode ] ));
+      kCaptureWhatStrings[ mCaptureMode ].Translation() );
 
    if (mBack == kBlue)
    {
@@ -779,7 +779,7 @@ wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * pa
 wxString ScreenshotCommand::WindowFileName(AudacityProject * proj, wxTopLevelWindow *w){
    if (w != proj && w->GetTitle() != wxT("")) {
       mFileName = MakeFileName(mFilePath,
-         GetCustomTranslation( kCaptureWhatStrings[ mCaptureMode ] ) +
+         kCaptureWhatStrings[ mCaptureMode ].Translation() +
             (wxT("-") + w->GetTitle() + wxT("-")));
    }
    return mFileName;

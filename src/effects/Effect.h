@@ -787,15 +787,15 @@ inline long TrapLong(long x, long min, long max)
    if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name)) \
       return false;
 
-#define ReadAndVerifyEnum(name, list) \
+#define ReadAndVerifyEnum(name, list, listSize) \
    int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list)) \
+   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list, listSize)) \
       return false;
 
-#define ReadAndVerifyEnumWithObsoletes(name, list, obsoleteList, nObsolete) \
+#define ReadAndVerifyEnumWithObsoletes(name, list, listSize, obsoleteList, nObsolete) \
    int name; \
    if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, \
-                            list, obsoleteList, nObsolete)) \
+                            list, listSize, obsoleteList, nObsolete)) \
       return false;
 
 #define ReadAndVerifyInt(name) ReadParam(int, name)

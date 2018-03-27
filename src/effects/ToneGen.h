@@ -77,8 +77,6 @@ private:
    double mAmplitude[2];
    double mLogFrequency[2];
 
-   wxArrayString mWaveforms;
-   wxArrayString mInterpolations;
    NumericTextCtrl *mToneDurationT;
 
    DECLARE_EVENT_TABLE()
