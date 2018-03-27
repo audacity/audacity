@@ -21,8 +21,8 @@ def bug_test_1844():
     do( 'SetEnvelope: Time=10 Value=1.0' )
     do( 'SetEnvelope: Time=12 Value=0.5' )
     do( 'Select: Start=0 End=4' )
-    do( 'AdjustableFade: curve="0" gain0="0" gain1="100" preset="None Selected" type="Fade Up" units="% of Original" ' )
-    capture( "Bug1844.png", "All_Tracks" )
+    do( 'AdjustableFade: curve="0" gain0="0" gain1="100" preset="None" type="Up" units="% of Original" ' )
+    capture( "Bug1844.png", "AllTracks" )
     do( 'SelectTool' )
         
 # Should have envelop points at 0s, 2x4s, 10s and 12s and no others.

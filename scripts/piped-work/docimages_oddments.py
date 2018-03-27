@@ -44,7 +44,7 @@ def oddments_imagesB():
     do( "Drag: Window=Timeline FromX=200 FromY=10 ToX=600 ToY=10" )
     time.sleep(3.0)
     #Disable bringing to top, so as not to destroy quick play.
-    capture( "QuikPlay001.png", "First_Track_Plus ToTop=0" )
+    capture( "QuikPlay001.png", "FirstTrackPlus ToTop=0" )
 
 oddments_imagesA()
 oddments_imagesB()

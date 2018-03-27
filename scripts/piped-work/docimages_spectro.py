@@ -37,38 +37,38 @@ def makeStepper():
 def spectro_imagesA() :
     loadStereoTracks(1)
     # A stereo track
-    capture( 'Spectral001.png', 'First_Track' )
+    capture( 'Spectral001.png', 'FirstTrack' )
     # As spectrogram.
     do( 'Select' );
     do( 'SetTrack: Display=Spectrogram')
     do( 'Select: Start=55 End=70')
-    capture( 'Spectral002.png', 'All_Tracks' )
+    capture( 'Spectral002.png', 'AllTracks' )
     # Half spectrogram, half wave.
     do( 'Select: Track=0.5 TrackCount=0.5' );
     do( 'SetTrack: Display=Waveform')
-    capture( 'MixedMode.png', 'All_Tracks' )
+    capture( 'MixedMode.png', 'AllTracks' )
 
 def spectro_imagesB():
     makeStepper();
     # Stepper tone, viewed in dB.
     do( 'Select: Start=0 End=0' );
     do( 'SetTrack: Scale=dB')
-    capture( 'Spectral003.png', 'All_Tracks' )
+    capture( 'Spectral003.png', 'AllTracks' )
     # As spectrogram.
     do( 'SetTrack: Display=Spectrogram')
-    capture( 'Spectral004.png', 'All_Tracks' )
+    capture( 'Spectral004.png', 'AllTracks' )
 
 def spectro_imagesC():
     # A chirp and the word 'Audacity'
     loadExample( 'AudacitySpectral.wav' )
     do( 'Select: Start=0 End=0' );
-    capture( 'Spectral005.png', 'All_Tracks' )
+    capture( 'Spectral005.png', 'AllTracks' )
     do( 'SetTrack: Scale=dB')
-    capture( 'Spectral006.png', 'All_Tracks' )
+    capture( 'Spectral006.png', 'AllTracks' )
     do( 'SetTrack: Display=Spectrogram')
-    capture( 'Spectral007.png', 'All_Tracks' )
+    capture( 'Spectral007.png', 'AllTracks' )
     do( 'Select: Start=1.5 End=2.1 Low=3000 High=6000') 
-    capture( 'Spectral008.png', 'All_Tracks' )
+    capture( 'Spectral008.png', 'AllTracks' )
     do( 'Select: Start=1.1 End=2.5' )
     do( 'ZoomSel' )
     do( 'Select: Start=1.5 End=2.1 Low=3000 High=6000')
@@ -81,7 +81,7 @@ def setWindow( name, value ):
     do( 'SetPreference: Name="/Spectrum/FFTSize" Reload=1 Value='+value )
     do( 'SetTrack: Display=Spectrogram' )
     do( 'Select: TrackCount=0 Start=0 End=0' );
-    capture( name + postfix + value + '.png', 'All_Tracks' )
+    capture( name + postfix + value + '.png', 'AllTracks' )
 
 
 def multiWindow( name ) :
@@ -147,7 +147,7 @@ def spectro_imagesF():
     makeScale( 200, 4000, 100 )
     do( 'Select: Start=0 End=0' )
     do( 'SetTrack: Display=Spectrogram' )
-    capture( 'ScaleLin.png', 'All_Tracks' )
+    capture( 'ScaleLin.png', 'AllTracks' )
     do( 'SetPreference: Name=/Spectrum/ScaleType Value=1 Reload=1')
     capture( 'ScaleLog.png', 'All_Tracks' )
     do( 'SetPreference: Name=/Spectrum/ScaleType Value=0 Reload=1')

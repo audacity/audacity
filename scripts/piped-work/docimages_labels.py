@@ -53,38 +53,38 @@ def label_image1and2() :
     addLabels()
     # A stereo track with four labels.
     do( "Select: Start=0 End=0" )
-    capture( 'AutoLabels001.png', 'First_Two_Tracks' )
+    capture( 'AutoLabels001.png', 'FirstTwoTracks' )
     # Removing a label with delete (fraud - we used split delete)
     do( "Select: Start=44.5 End=60.5 Track=1" )
     do( "SplitDelete" )
     do( "Select: Start=0 End=0 TrackCount=2" )
-    capture( 'AutoLabels002.png','First_Two_Tracks' )
+    capture( 'AutoLabels002.png','FirstTwoTracks' )
 
 def label_image3and4() :
     makeStereoTracks(1)
     addLabels()
     # Removing a label with split-delete step 1
     do( "Select: Start=44.5 End=60.5 Track=1" )
-    capture( 'AutoLabels003.png','First_Two_Tracks' )
+    capture( 'AutoLabels003.png','FirstTwoTracks' )
     # Removing a label with split-delete step 2
     do( "Select: Start=44.5 End=60.5 Track=1" )
     do( "SplitDelete" )
     do( "Select: Start=0 End=0 TrackCount=0" )
-    capture( 'AutoLabels004.png','First_Two_Tracks' )
+    capture( 'AutoLabels004.png','FirstTwoTracks' )
 
 def label_image5and6and7() :
     makeStereoTracks(1)
     addLabels2()
     # Nothing selected
     do( "Select: Start=0 End=0 TrackCount=0" )
-    capture( 'AutoLabels005.png','First_Three_Tracks' )
+    capture( 'AutoLabels005.png','FirstThreeTracks' )
     # A range selected in label track.
     do( "Select: Start=28.5 End=58.5 Track=1" )
-    capture( 'AutoLabels006.png','First_Three_Tracks' )
+    capture( 'AutoLabels006.png','FirstThreeTracks' )
     # Deleting in label track only.
     do( "Delete" )
     do( "Select: Start=0 End=0 TrackCount=0" )
-    capture( 'AutoLabels007.png','First_Three_Tracks' )
+    capture( 'AutoLabels007.png','FirstThreeTracks' )
 
 def label_image8and9and10() :
     makeStereoTracks(1)
@@ -94,14 +94,14 @@ def label_image8and9and10() :
     do( "AddLabel" )
     do( 'SetLabel: Label=9 Text="Clap" Selected=0 Start=110 End=118 ')
     do( 'Select: TrackCount=2 Start=0 End=0')
-    capture( 'AutoLabels008.png','First_Three_Tracks' )
+    capture( 'AutoLabels008.png','FirstThreeTracks' )
     # Select label and all three tracks
     do( 'SetLabel: Label=9 Text="Clap" Selected=1 Start=110 End=118 ')
     do( 'Select: TrackCount=3 Start=110 End=118')
-    capture( 'AutoLabels009.png','First_Three_Tracks' )
+    capture( 'AutoLabels009.png','FirstThreeTracks' )
     # Delete label and from all three tracks.
     do( 'Delete' )
-    capture( 'AutoLabels010.png','First_Three_Tracks' )
+    capture( 'AutoLabels010.png','FirstThreeTracks' )
 
 imageSet("Labels")    
 label_image1and2()

@@ -91,7 +91,7 @@ def spaceyTrack() :
 
 def imageAfters( commands, doWhat):
     starterTrack()
-    capture( 'BeforeEffect.png', 'All_Tracks_Plus' )
+    capture( 'BeforeEffect.png', 'AllTracksPlus' )
     for name in commands :
         starterTrack()
         do( 'SetTrack: Name="'+name+'"')
@@ -110,33 +110,33 @@ def generators():
         do( name )
         do( 'ZoomSel' )
         do( 'Select: TrackCount=0 Start=0 End=0' )
-        capture( 'After' + name + '.png' , 'All_Tracks_Plus' )
+        capture( 'After' + name + '.png' , 'AllTracksPlus' )
 
 
 def spaceDemo():
     spaceyTrack()
-    capture( 'BeforeTruncateSilence.png' , 'All_Tracks' )
+    capture( 'BeforeTruncateSilence.png' , 'AllTracks' )
     do( 'Select: Start=0 End=0')
-    capture( 'SpaceyTrack.png' , 'All_Tracks' )
+    capture( 'SpaceyTrack.png' , 'AllTracks' )
     do( 'TruncateSilence' )
-    capture( 'AfterTruncateSilence1.png' , 'All_Tracks' )
+    capture( 'AfterTruncateSilence1.png' , 'AllTracks' )
     do( 'Select: Start=0 End=0')
-    capture( 'AfterTruncateSilence2.png' , 'All_Tracks' )
+    capture( 'AfterTruncateSilence2.png' , 'AllTracks' )
     spaceyTrack()
     do( 'Disjoin' )
-    capture( 'AfterDisjoin1.png' , 'All_Tracks' )
+    capture( 'AfterDisjoin1.png' , 'AllTracks' )
     do( 'Select: Start=0 End=0')
-    capture( 'AfterDisjoin2.png' , 'All_Tracks' )
+    capture( 'AfterDisjoin2.png' , 'AllTracks' )
     
 
 def biasDemo():
     withDcBias( 0.1 )
-    capture( 'DcBias.png' , 'All_Tracks' )
+    capture( 'DcBias.png' , 'AllTracks' )
 
 imageSet("After")    
-imageAfters( Commands, 'All_Tracks_Plus' ) # With ruler
-imageAfters( Effects, 'All_Tracks' ) # Without ruler
-imageAfters( Slow, 'All_Tracks' ) # Without ruler
+imageAfters( Commands, 'AllTracksPlus' ) # With ruler
+imageAfters( Effects, 'AllTracks' ) # Without ruler
+imageAfters( Slow, 'AllTracks' ) # Without ruler
 generators()
 spaceDemo()
 biasDemo()    

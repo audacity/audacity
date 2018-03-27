@@ -20,7 +20,7 @@ def ntrack_stereo() :
     do( 'Select: Track=0' )
     do( 'SetTrack: Height=80')
     do( 'SetTrack: Name="Voodoo Child (Slight Return)' )
-    capture( 'Audio Track with track name superimposed.png', 'All_Tracks' )
+    capture( 'Audio Track with track name superimposed.png', 'AllTracks' )
 
 # Four colours of track
 def ntrack_colour() :
@@ -34,7 +34,7 @@ def ntrack_colour() :
     do( 'Select: Track=3' )
     do( 'SetTrack: Name="Instrument 4 colorway" Height=90 Color=Color3')
     do( 'Select: Track=0 TrackCount=4 Start=50 End=70')
-    capture( 'Waveform colorways.png', 'All_Tracks' )
+    capture( 'Waveform colorways.png', 'AllTracks' )
 
 # Showing the pin...
 def ntrack_pinned() :
@@ -44,7 +44,7 @@ def ntrack_pinned() :
     do( 'SetPreference: Name="/AudioIO/PinnedHead" Value=1 Reload=1')
     do( 'Play' )
     time.sleep( 1 )
-    capture( 'Pinned head playback annotated trackname.png', 'All_Tracks_Plus' )
+    capture( 'Pinned head playback annotated trackname.png', 'AllTracksPlus' )
     do( 'Stop')
     do( 'SetPreference: Name="/AudioIO/PinnedHead" Value=0 Reload=1')
 
@@ -91,9 +91,9 @@ def ntrack_punch():
     do( 'Select: Track=1' )
     do( 'SetTrack: Solo=1')
     do( 'Select: Track=1 Start=40 End=80' )
-    capture( 'Punch-in tracks001.png', 'All_Tracks' )
+    capture( 'Punch-in tracks001.png', 'AllTracks' )
     do( 'Select: Track=1 Start=50 End=70' )
-    capture( 'Punch-in tracks000.png', 'All_Tracks' )
+    capture( 'Punch-in tracks000.png', 'AllTracks' )
 
 imageSet("NamedTracks")
 do( 'SetPreference: Name="/GUI/ShowTrackNameInWaveform" Value=1')

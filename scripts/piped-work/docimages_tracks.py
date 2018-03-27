@@ -28,7 +28,7 @@ def track_image2and6() :
     do( 'Select: Track=0.5 TrackCount=0.5' );
     do( 'SetTrack: Height=180')
     do( 'Select' );
-    capture( 'AutoTracks006.png', 'First_Track' )
+    capture( 'AutoTracks006.png', 'FirstTrack' )
 
 # Four colours of track
 def track_image3() :
@@ -42,7 +42,7 @@ def track_image3() :
     do( 'Select: Track=3' );
     do( 'SetTrack: Name="Instrument 4" Height=122 Color=Color3')
     do( 'Select: TrackCount=4' );
-    capture( 'AutoTracks003.png', 'First_Four_Tracks' )
+    capture( 'AutoTracks003.png', 'FirstFourTracks' )
 
 def track_image7and4and5():
     loadMonoTracks(2)
@@ -52,14 +52,14 @@ def track_image7and4and5():
     do( 'Select: Track=1' );
     do( 'SetTrack: Height=80')
     do( 'Select: TrackCount=2' );
-    capture( 'AutoTracks007.png', 'First_Two_Tracks' )
+    capture( 'AutoTracks007.png', 'FirstTwoTracks' )
     # Two Tracks, ready to make stereo
     do( 'Select: Track=0' );
     do( 'SetTrack: Name="Left Track" Height=80')
     do( 'Select: Track=1' );
     do( 'SetTrack: Name="Right Track" Height=80')
     do( 'Select: TrackCount=2' );
-    capture( 'AutoTracks004.png', 'First_Two_Tracks' )
+    capture( 'AutoTracks004.png', 'FirstTwoTracks' )
     # Combined Stereo Track
     do( 'Select: Track=0' );
     do( 'SetTrack: Pan=-1 Height=80')
@@ -68,7 +68,7 @@ def track_image7and4and5():
     do( 'MixAndRender' )
     do( 'Select: Track=0' );
     do( 'SetTrack: Name="Combined" Height=80')
-    capture( 'AutoTracks005.png', 'First_Track' )
+    capture( 'AutoTracks005.png', 'FirstTrack' )
 
 
 def track_image9and10() :
@@ -80,11 +80,11 @@ def track_image9and10() :
     do( 'Amplify: Ratio=3.0' )
     do( 'SetPreference: Name=/GUI/SampleView Value=1 Reload=1')
     do( 'Select: TrackCount=3' );
-    capture( 'AutoTracks009.png', 'First_Track' )
+    capture( 'AutoTracks009.png', 'FirstTrack' )
     # Zoomed in to show points stem-plot and then no stem plot
     do( 'SetPreference: Name=/GUI/SampleView Value=0 Reload=1')
     do( 'Select: TrackCount=3' );
-    capture( 'AutoTracks010.png', 'First_Track' )
+    capture( 'AutoTracks010.png', 'FirstTrack' )
 
 imageSet("Tracks")    
 track_image1and8()
