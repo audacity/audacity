@@ -193,7 +193,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
             choices.push_back(choice);
          }
 
-         parms.WriteEnum(key, val, &choices[0], choices.size());
+         parms.WriteEnum(key, val, choices.data(), choices.size());
       }
       else
       {
@@ -236,7 +236,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
             choices.push_back(choice);
          }
 
-         good = parms.ReadEnum(key, &val, &choices[0], choices.size()) && val != wxNOT_FOUND;
+         good = parms.ReadEnum(key, &val, choices.data(), choices.size()) && val != wxNOT_FOUND;
       }
       else
       {
@@ -282,7 +282,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
             choices.push_back(choice);
          }
 
-         parms.ReadEnum(key, &val, &choices[0], choices.size());
+         parms.ReadEnum(key, &val, choices.data(), choices.size());
 
          mPlugin->setParameter(mParameters[p].identifier, (float) val);
       }
