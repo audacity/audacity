@@ -267,10 +267,8 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
       mFrequency[1] = mFrequency[0];
       mAmplitude[1] = mAmplitude[0];
    }
-   wxArrayString waves( nWaveforms, kWaveStrings );
-   wxArrayString interps( nInterpolations ,kInterStrings );
-   S.SHUTTLE_ENUM_PARAM( mWaveform, Waveform, waves  );
-   S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, interps  );
+   S.SHUTTLE_ENUM_PARAM( mWaveform, Waveform, kWaveStrings, nWaveforms  );
+   S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, kInterStrings, nInterpolations  );
 
 
 //   double freqMax = (GetActiveProject() ? GetActiveProject()->GetRate() : 44100.0) / 2.0;
@@ -303,8 +301,8 @@ bool EffectToneGen::GetAutomationParameters(CommandParameters & parms)
 
 bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(Waveform,  wxArrayString(nWaveforms, kWaveStrings));
-   ReadAndVerifyEnum(Interp, wxArrayString(nInterpolations, kInterStrings));
+   ReadAndVerifyEnum(Waveform,  kWaveStrings, nWaveforms);
+   ReadAndVerifyEnum(Interp, kInterStrings, nInterpolations);
    if (mChirp)
    {
       ReadAndVerifyDouble(StartFreq);

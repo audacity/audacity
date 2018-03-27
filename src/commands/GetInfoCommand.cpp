@@ -85,10 +85,8 @@ static const wxString kFormats[nFormats] =
 
 
 bool GetInfoCommand::DefineParams( ShuttleParams & S ){
-   wxArrayString types( nTypes, kTypes );
-   wxArrayString formats( nFormats, kFormats );
-   S.DefineEnum( mInfoType, wxT("Type"), 0, types );
-   S.DefineEnum( mFormat, wxT("Format"), 0, formats );
+   S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
+   S.DefineEnum( mFormat, wxT("Format"), 0, kFormats, nFormats );
    return true;
 }
 

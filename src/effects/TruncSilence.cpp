@@ -77,7 +77,7 @@ enum kActions
    nActions
 };
 
-static const wxChar *kActionStrings[nActions] =
+static const wxString kActionStrings[nActions] =
 {
    XO("Truncate Detected Silence"),
    XO("Compress Excess Silence")
@@ -176,10 +176,9 @@ EffectType EffectTruncSilence::GetType()
 // EffectClientInterface implementation
 
 bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
-   wxArrayString actions(nActions, kActionStrings);
-
-   S.SHUTTLE_ENUM_PARAM( mTruncDbChoiceIndex, DbIndex, mDbChoices );
-   S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, actions );
+   S.SHUTTLE_ENUM_PARAM( mTruncDbChoiceIndex, DbIndex,
+                         Enums::DbChoices, Enums::NumDbChoices );
+   S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, kActionStrings, nActions );
    S.SHUTTLE_PARAM( mInitialAllowedSilence, Minimum );
    S.SHUTTLE_PARAM( mTruncLongestAllowedSilence, Truncate );
    S.SHUTTLE_PARAM( mSilenceCompressPercent, Compress );
@@ -201,13 +200,11 @@ bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
 
 bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
 {
-   wxArrayString actions(nActions, kActionStrings);
-
    ReadAndVerifyDouble(Minimum);
    ReadAndVerifyDouble(Truncate);
    ReadAndVerifyDouble(Compress);
-   ReadAndVerifyEnum(DbIndex, mDbChoices);
-   ReadAndVerifyEnumWithObsoletes(ActIndex, actions,
+   ReadAndVerifyEnum(DbIndex, Enums::DbChoices, Enums::NumDbChoices);
+   ReadAndVerifyEnumWithObsoletes(ActIndex, kActionStrings, nActions,
                                   kObsoleteActions, nObsoleteActions);
    ReadAndVerifyBool(Independent);
 

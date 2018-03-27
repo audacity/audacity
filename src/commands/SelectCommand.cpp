@@ -55,12 +55,11 @@ static const wxString kRelativeTo[nRelativeTos] =
 };
 
 bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
-   wxArrayString relativeSpec( nRelativeTos, kRelativeTo );
    // Allow selection down to -ve 100seconds.
    // Typically used to expand/contract selections by a small amount.
    S.OptionalY( bHasT0           ).Define( mT0, wxT("Start"), 0.0, -100.0, (double)FLT_MAX);
    S.OptionalY( bHasT1           ).Define( mT1, wxT("End"), 0.0, -100.0, (double)FLT_MAX);
-   S.OptionalN( bHasRelativeSpec ).DefineEnum( mRelativeTo,   wxT("RelativeTo"), 0, relativeSpec );
+   S.OptionalN( bHasRelativeSpec ).DefineEnum( mRelativeTo,   wxT("RelativeTo"), 0, kRelativeTo, nRelativeTos );
    return true;
 }
 
@@ -177,10 +176,9 @@ static const wxString kModes[nModes] =
 };
 
 bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
-   wxArrayString modes( nModes, kModes );
    S.OptionalN( bHasFirstTrack).Define( mFirstTrack, wxT("Track"), 0.0, 0.0, 100.0);
    S.OptionalN( bHasNumTracks ).Define( mNumTracks,  wxT("TrackCount"),  1.0, 0.0, 100.0);
-   S.OptionalY( bHasMode      ).DefineEnum( mMode,   wxT("Mode"), 0, modes );
+   S.OptionalY( bHasMode      ).DefineEnum( mMode,   wxT("Mode"), 0, kModes, nModes );
    
    return true;
 }

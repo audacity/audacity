@@ -92,11 +92,9 @@ static const wxString kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 
 
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString whats(nCaptureWhats, kCaptureWhatStrings);
-   wxArrayString backs(nBackgrounds, kBackgroundStrings);
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
-   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow, whats );
-   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   kNone, backs );
+   S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow,kCaptureWhatStrings, nCaptureWhats );
+   S.OptionalN(bHasBackground).DefineEnum( mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );
    S.OptionalN(bHasBringToTop).Define(     mbBringToTop, wxT("ToTop"), true );
    return true;
 };

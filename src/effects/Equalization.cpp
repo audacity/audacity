@@ -309,11 +309,10 @@ EffectType EffectEqualization::GetType()
 
 // EffectClientInterface implementation
 bool EffectEqualization::DefineParams( ShuttleParams & S ){
-   wxArrayString interp(nInterpolations, kInterpStrings);
    S.SHUTTLE_PARAM( mM, FilterLength );
    S.SHUTTLE_PARAM( mCurveName, CurveName);
    S.SHUTTLE_PARAM( mLin, InterpLin);
-   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, interp );
+   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, kInterpStrings, nInterpolations );
 
    return true;
 }
@@ -323,7 +322,7 @@ bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
    parms.Write(KEY_FilterLength, (unsigned long)mM);
    parms.Write(KEY_CurveName, mCurveName);
    parms.Write(KEY_InterpLin, mLin);
-   parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(nInterpolations, kInterpStrings));
+   parms.WriteEnum(KEY_InterpMeth, mInterp, kInterpStrings, nInterpolations);
 
    return true;
 }
@@ -341,7 +340,7 @@ bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyInt(FilterLength);
    ReadAndVerifyString(CurveName);
    ReadAndVerifyBool(InterpLin);
-   ReadAndVerifyEnum(InterpMeth, interpolations);
+   ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
 
    mM = FilterLength;
    mCurveName = CurveName;

@@ -338,10 +338,10 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
          int x=d;
          //parms.WriteEnum(ctrl.var, (int) d, choices);
-         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, choices );
+         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0,
+                       &ctrl.choices[0], ctrl.choices.size() );
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
       {
@@ -388,8 +388,8 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
-         parms.WriteEnum(ctrl.var, (int) d, choices);
+         parms.WriteEnum(ctrl.var, (int) d,
+                         &ctrl.choices[0], ctrl.choices.size());
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
       {
@@ -439,8 +439,8 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       {
          int val;
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
-         good = parms.ReadEnum(ctrl.var, &val, choices) &&
+         good = parms.ReadEnum(ctrl.var, &val,
+                               &ctrl.choices[0], ctrl.choices.size()) &&
                 val != wxNOT_FOUND;
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
@@ -480,8 +480,8 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       {
          int val {0};
          // untranslated
-         const wxArrayString &choices = ctrl.choices;
-         parms.ReadEnum(ctrl.var, &val, choices);
+         parms.ReadEnum(ctrl.var, &val,
+                        &ctrl.choices[0], ctrl.choices.size());
          ctrl.val = (double) val;
       }
       else if (ctrl.type == NYQ_CTRL_STRING)

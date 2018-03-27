@@ -161,7 +161,8 @@ public:
    // list of non-obsolete names.
    using ObsoleteMap = std::pair< wxString, size_t >;
 
-   bool ReadEnum(const wxString & key, int *pi, const wxArrayString & choices,
+   bool ReadEnum(const wxString & key, int *pi,
+                 const wxString choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
@@ -170,7 +171,10 @@ public:
       {
          return false;
       }
-      *pi = choices.Index(s);
+      *pi = std::find( choices, choices + nChoices,
+                       s ) - choices;
+      if (*pi == nChoices)
+         *pi = -1;
       if (*pi < 0 && obsoletes) {
          auto index = std::find_if(obsoletes, obsoletes + nObsoletes,
                                    [&](const ObsoleteMap &entry){
@@ -183,20 +187,21 @@ public:
    }
 
    bool ReadEnum(const wxString & key, int *pi, int defVal,
-                 const wxArrayString & choices,
+                 const wxString choices[], size_t nChoices,
                  const ObsoleteMap obsoletes[] = nullptr,
                  size_t nObsoletes = 0) const
    {
-      if (!ReadEnum(key, pi, choices, obsoletes, nObsoletes))
+      if (!ReadEnum(key, pi, choices, nChoices, obsoletes, nObsoletes))
       {
          *pi = defVal;
       }
       return true;
    }
 
-   bool WriteEnum(const wxString & key, int value, const wxArrayString & choices)
+   bool WriteEnum(const wxString & key, int value,
+                  const wxString choices[], size_t nChoices)
    {
-      if (value < 0 || value >= (int) choices.GetCount())
+      if (value < 0 || value >= nChoices)
       {
          return false;
       }
@@ -241,11 +246,11 @@ public:
    }
 
    bool ReadAndVerify(const wxString & key, int *val, int defVal,
-                      const wxArrayString & choices,
+                      const wxString choices[], size_t nChoices,
                       const ObsoleteMap obsoletes[] = nullptr,
                       size_t nObsoletes = 0) const
    {
-      ReadEnum(key, val, defVal, choices, obsoletes, nObsoletes);
+      ReadEnum(key, val, defVal, choices, nChoices, obsoletes, nObsoletes);
       return (*val != wxNOT_FOUND);
    }
 

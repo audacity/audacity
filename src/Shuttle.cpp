@@ -343,12 +343,12 @@ void ShuttleParams::Define( float & var,    const wxChar * key, const float vdef
 void ShuttleParams::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
 void ShuttleParams::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ){;};
 void ShuttleParams::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ){;};
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings ){;};
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const wxString strings[], size_t nStrings ){;};
 
 
 
 /*
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings )
 {
 }
 */
@@ -402,7 +402,8 @@ void ShuttleGetAutomation::Define( wxString &var, const wxChar * key, const wxSt
    mpEap->Write(key, var);
 }
 
-void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+
+void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const wxString strings[], size_t nStrings )
 {
    if( !ShouldSet() ) return;
    mpEap->Write(key, strings[var]);
@@ -512,13 +513,13 @@ void ShuttleSetAutomation::Define( wxString &var, const wxChar * key, const wxSt
 }
 
 
-void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, wxArrayString strings )
+void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const wxString strings[], size_t nStrings )
 {
    CouldGet( key );
    if( !bOK )
       return;
    int temp = var;
-   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings);
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings, nStrings);
    if( bWrite && bOK)
       var = temp;
 }
@@ -627,7 +628,9 @@ void ShuttleGetDefinition::Define( wxString &var, const wxChar * key, const wxSt
 }
 
 
-void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vdefault, wxArrayString strings )
+void ShuttleGetDefinition::DefineEnum( int &var,
+   const wxChar * key, const int vdefault,
+   const wxString strings[], size_t nStrings )
 {
    StartStruct();
    AddItem( wxString(key), "key" );
@@ -638,7 +641,7 @@ void ShuttleGetDefinition::DefineEnum( int&var, const wxChar * key, const int vd
       AddItem( strings[vdefault], "default"  );
    StartField( "enum" );
    StartArray();
-   for( size_t i=0;i<strings.Count(); i++ )
+   for( size_t i = 0; i < nStrings; i++ )
       AddItem( strings[i] );
    EndArray();
    EndField();

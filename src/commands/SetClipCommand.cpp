@@ -48,9 +48,8 @@ static const wxString kColourStrings[nColours] =
 
 
 bool SetClipCommand::DefineParams( ShuttleParams & S ){ 
-   wxArrayString colours( nColours, kColourStrings );
    S.OptionalY( bHasContainsTime   ).Define(     mContainsTime,   wxT("At"),         0.0, 0.0, 100000.0 );
-   S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0, colours );
+   S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0, kColourStrings, nColours );
    // Allowing a negative start time is not a mistake.
    // It will be used in demonstrating time before zero.
    S.OptionalN( bHasT0             ).Define(     mT0,             wxT("Start"),      0.0, -5.0, 1000000.0);

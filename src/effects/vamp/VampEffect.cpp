@@ -190,10 +190,10 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
             {
                val = i;
             }
-            choices.Add(choice);
+            choices.push_back(choice);
          }
 
-         parms.WriteEnum(key, val, choices);
+         parms.WriteEnum(key, val, &choices[0], choices.size());
       }
       else
       {
@@ -233,10 +233,10 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
          {
             wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
-            choices.Add(choice);
+            choices.push_back(choice);
          }
 
-         good = parms.ReadEnum(key, &val, choices) && val != wxNOT_FOUND;
+         good = parms.ReadEnum(key, &val, &choices[0], choices.size()) && val != wxNOT_FOUND;
       }
       else
       {
@@ -279,10 +279,10 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
          for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
          {
             wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
-            choices.Add(choice);
+            choices.push_back(choice);
          }
 
-         parms.ReadEnum(key, &val, choices);
+         parms.ReadEnum(key, &val, &choices[0], choices.size());
 
          mPlugin->setParameter(mParameters[p].identifier, (float) val);
       }
