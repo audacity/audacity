@@ -265,6 +265,11 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Sho&w audio track name as overlay"),
                   wxT("/GUI/ShowTrackNameInWaveform"),
                   false);
+#ifdef EXPERIMENTAL_HALF_WAVE
+      S.TieCheckBox(_("Use &half-wave display when collapsed"),
+                  wxT("/GUI/CollapseToHalfWave"),
+                  false);
+#endif
 
       S.AddSpace(10);
 
