@@ -18,7 +18,11 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-$control action (_ "Action choice") choice ((_ "Generate track") (_ "Help screen 1") (_ "Help screen 2")) 0
+$control action (_ "Action choice") choice (
+   ("Generate" (_ "Generate Track"))
+   ("Help1" (_ "Help Screen 1"))
+   ("Help2" (_ "Help Screen 2"))
+) 0
 $control tempo (_ "Tempo (beats per minute)") real (_ "30 - 300 beats/minute") 120 30 300
 $control timesig (_ "Beats per measure (bar)") int (_ "1 - 20 beats/measure") 4 1 20
 $control swing (_ "Swing amount") float (_ "+/- 1") 0 -1 1
@@ -29,7 +33,13 @@ $control click-track-dur (_ "Optional rhythm track duration (minutes seconds)") 
 
 $control offset (_ "Start time offset (seconds)") real (_ "0 - 30 seconds") 0 0 30
 $control click-type (_ "Beat sound") choice (
-   (_ "Metronome tick") (_ "Ping") (_ "Cowbell") (_ "Resonant noise") (_ "Noise click") (_ "Drip")) 0
+   ("Metronome" (_ "Metronome Tick"))
+   (_ "Ping")
+   (_ "Cowbell")
+   ("ResonantNoise" (_ "Resonant Noise"))
+   ("NoiseClick" (_ "Noise Click"))
+   (_ "Drip")
+) 0
 
 ;;control q "Noise click resonance - discernable pitch (q)" int "1 - 20" 1 1 20
 

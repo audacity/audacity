@@ -23,13 +23,13 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 $control action (_ "Remove vocals or view Help") choice (
-   (_ "Remove vocals")
+   (_ "Remove Vocals")
    (_ "View Help")
 ) 0
 $control band-choice (_ "Removal choice") choice (
-   (_ "Simple (entire spectrum)")
-   (_ "Remove frequency band")
-   (_ "Retain frequency band")
+   ("Simple" (_ "Simple (Entire Spectrum)"))
+   ("Remove" (_ "Remove Frequency Band"))
+   ("Retain" (_ "Retain Frequency Band"))
 ) 0
 $control low-range (_ "Frequency band from (Hz)") float-text "" 500 0 nil
 $control high-range (_ "Frequency band to (Hz)") float-text "" 2000 0 nil

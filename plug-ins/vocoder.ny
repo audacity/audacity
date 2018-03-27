@@ -21,7 +21,10 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 $control dst (_ "Distance: (1 to 120, default = 20)") real "" 20 1 120
-$control mst (_ "Output choice") choice ((_ "both channels") (_ "right only")) 0
+$control mst (_ "Output choice") choice (
+   ("BothChannels" (_ "Both Channels"))
+   ("RightOnly" (_ "Right Only"))
+) 0
 $control bands (_ "Number of vocoder bands") int "" 40 10 240
 $control track-vl (_ "Amplitude of original audio (percent)") real "" 100 0 100
 $control noise-vl (_ "Amplitude of white noise (percent)") real "" 0 0 100

@@ -30,7 +30,10 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 $control pitch (_ "Pluck MIDI pitch") int "" 60 1 120
-$control fade (_ "Fade-out type") choice ((_ "abrupt") (_ "gradual")) 0
+$control fade (_ "Fade-out type") choice (
+   (_ "Abrupt")
+   (_ "Gradual")
+) 0
 $control dur (_ "Duration [seconds]") real "" 1 0.1 30
 
 

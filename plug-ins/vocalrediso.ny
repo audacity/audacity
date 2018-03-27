@@ -20,14 +20,15 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 $control action (_ "Action") choice (
-   (_ "Remove Vocals")
-   (_ "Isolate Vocals")
-   (_ "Isolate Vocals and Invert")
-   (_ "Remove Center")
-   (_ "Isolate Center")
-   (_ "Isolate Center and Invert")
-   (_ "Remove Center Classic: Mono")
-   (_ "Analyze")) 0
+   ("Remove" (_ "Remove Vocals"))
+   ("Isolate" (_ "Isolate Vocals"))
+   ("IsolateInvert" (_ "Isolate Vocals and Invert"))
+   ("RemoveCenter" (_ "Remove Center"))
+   ("IsolateCenter" (_ "Isolate Center"))
+   ("IsolateCenterInvert" (_ "Isolate Center and Invert"))
+   ("RemoveCenter" (_ "Remove Center Classic: Mono"))
+   (_ "Analyze")
+) 0
 $control strength (_ "Strength") real "" 1.0 0.0 50.0
 $control low-transition (_ "Low Cut for Vocals (Hz)") real "" 120 1 24000
 $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
