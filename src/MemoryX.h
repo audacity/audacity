@@ -1177,6 +1177,7 @@ namespace std
    namespace tr1
    {
 #endif
+#if !wxCHECK_VERSION(3, 1, 0)
       template<typename T> struct hash;
       template<> struct hash< wxString > {
          size_t operator () (const wxString &str) const // noexcept
@@ -1186,6 +1187,7 @@ namespace std
             return Hasher{}( stdstr );
          }
       };
+#endif
 #ifdef __AUDACITY_OLD_STD__
    }
 #endif
