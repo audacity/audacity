@@ -187,8 +187,9 @@ static bool SortEffectsByName(const PluginDescriptor *a, const PluginDescriptor 
 
 static bool SortEffectsByPublisher(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = a->GetTranslatedVendor();
-   wxString bkey = b->GetTranslatedVendor();
+   auto &em = EffectManager::Get();
+   auto akey = em.GetVendorName(a->GetID());
+   auto bkey = em.GetVendorName(b->GetID());
 
    if (akey.IsEmpty())
    {
@@ -210,8 +211,9 @@ static bool SortEffectsByPublisher(const PluginDescriptor *a, const PluginDescri
 
 static bool SortEffectsByPublisherAndName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = a->GetTranslatedVendor();
-   wxString bkey = b->GetTranslatedVendor();
+   auto &em = EffectManager::Get();
+   auto akey = em.GetVendorName(a->GetID());
+   auto bkey = em.GetVendorName(b->GetID());
 
    if (a->IsEffectDefault())
    {
@@ -1844,7 +1846,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
          if (groupBy == wxT("groupby:publisher"))
          {
-            current = plug->GetTranslatedVendor();
+            current = EffectManager::Get().GetVendorName(plug->GetID());
             if (current.IsEmpty())
             {
                current = _("Unknown");
@@ -1913,7 +1915,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          wxString group = wxEmptyString;
          if (groupBy == wxT("sortby:publisher:name"))
          {
-            group = plug->GetTranslatedVendor();
+            group = EffectManager::Get().GetVendorName(plug->GetID());
          }
          else if (groupBy == wxT("sortby:type:name"))
          {

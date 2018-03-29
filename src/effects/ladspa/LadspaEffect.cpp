@@ -638,7 +638,7 @@ wxString LadspaEffect::GetName()
 
 IdentInterfaceSymbol LadspaEffect::GetVendor()
 {
-   return LAT1CTOWX(mData->Maker);
+   return { LAT1CTOWX(mData->Maker) };
 }
 
 wxString LadspaEffect::GetVersion()

@@ -243,7 +243,7 @@ public:
 
    IdentInterfaceSymbol GetVendor() override
    {
-      return mVendor;
+      return { mVendor };
    }
 
    wxString GetVersion() override
@@ -1210,7 +1210,7 @@ wxString VSTEffect::GetName()
 
 IdentInterfaceSymbol VSTEffect::GetVendor()
 {
-   return mVendor;
+   return { mVendor };
 }
 
 wxString VSTEffect::GetVersion()

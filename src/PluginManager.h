@@ -65,8 +65,8 @@ public:
    wxString GetUntranslatedVersion() const;
    // There is no translated version
 
-   wxString GetUntranslatedVendor() const;
-   wxString GetTranslatedVendor() const;
+   wxString GetVendor() const;
+
    bool IsEnabled() const;
    bool IsValid() const;
 

@@ -160,6 +160,14 @@ wxString EffectManager::GetEffectFamilyName(const PluginID & ID)
    return {};
 }
 
+wxString EffectManager::GetVendorName(const PluginID & ID)
+{
+   auto effect = GetEffect(ID);
+   if (effect)
+      return effect->GetVendor().Translation();
+   return {};
+}
+
 wxString EffectManager::GetCommandIdentifier(const PluginID & ID)
 {
    wxString name = PluginManager::Get().GetSymbol(ID).Internal();

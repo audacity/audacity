@@ -897,7 +897,7 @@ wxString AudioUnitEffect::GetName()
 
 IdentInterfaceSymbol AudioUnitEffect::GetVendor()
 {
-   return mVendor;
+   return { mVendor };
 }
 
 wxString AudioUnitEffect::GetVersion()

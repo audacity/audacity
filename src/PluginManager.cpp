@@ -1161,14 +1161,9 @@ wxString PluginDescriptor::GetUntranslatedVersion() const
    return mVersion;
 }
 
-wxString PluginDescriptor::GetUntranslatedVendor() const
+wxString PluginDescriptor::GetVendor() const
 {
    return mVendor;
-}
-
-wxString PluginDescriptor::GetTranslatedVendor() const
-{
-   return wxGetTranslation(mVendor);
 }
 
 bool PluginDescriptor::IsEnabled() const
@@ -2048,7 +2043,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
       {
          continue;
       }
-      plug.SetVendor(strVal);
+      plug.SetVendor( strVal );
 
 #if 0
       // This was done before version 2.2.2, but the value was not really used
@@ -2245,7 +2240,7 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
       pRegistry->Write(KEY_NAME, plug.GetSymbol().Msgid());
 
       pRegistry->Write(KEY_VERSION, plug.GetUntranslatedVersion());
-      pRegistry->Write(KEY_VENDOR, plug.GetUntranslatedVendor());
+      pRegistry->Write(KEY_VENDOR, plug.GetVendor());
       // Write a blank -- see comments in LoadGroup:
       pRegistry->Write(KEY_DESCRIPTION, wxString{});
       pRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
@@ -2941,7 +2936,7 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
                  wxT("_") +
                  plug.GetEffectFamilyId() + // is empty for non-Effects
                  wxT("_") +
-                 plug.GetUntranslatedVendor() +
+                 plug.GetVendor() +
                  wxT("_") +
                  (shared ? wxT("") : plug.GetSymbol().Internal());
 

@@ -349,7 +349,7 @@ IdentInterfaceSymbol LV2Effect::GetVendor()
       vendor = XO("n/a");
    }
 
-   return vendor;
+   return { vendor };
 }
 
 wxString LV2Effect::GetVersion()

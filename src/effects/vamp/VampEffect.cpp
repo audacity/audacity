@@ -108,7 +108,7 @@ wxString VampEffect::GetName()
 
 IdentInterfaceSymbol VampEffect::GetVendor()
 {
-   return wxString::FromUTF8(mPlugin->getMaker().c_str());
+   return { wxString::FromUTF8(mPlugin->getMaker().c_str()) };
 }
 
 wxString VampEffect::GetVersion()
