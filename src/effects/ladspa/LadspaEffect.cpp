@@ -672,12 +672,7 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-wxString LadspaEffect::GetFamilyId()
-{
-   return LADSPAEFFECTS_FAMILY;
-}
-
-wxString LadspaEffect::GetFamilyName()
+IdentInterfaceSymbol LadspaEffect::GetFamilyId()
 {
    return LADSPAEFFECTS_FAMILY;
 }

@@ -1443,7 +1443,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
    plug.SetProviderID(PluginManager::GetID(provider));
 
    plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamilyId(effect->GetFamilyId());
+   plug.SetEffectFamilyId(effect->GetFamilyId().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -2414,7 +2414,7 @@ const PluginID & PluginManager::RegisterPlugin(EffectDefinitionInterface *effect
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, type);
 
    plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamilyId(effect->GetFamilyId());
+   plug.SetEffectFamilyId(effect->GetFamilyId().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -2632,7 +2632,7 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),
-                           effect->GetFamilyId(),
+                           effect->GetFamilyId().Internal(),
                            effect->GetVendor(),
                            effect->GetName(),
                            effect->GetPath());

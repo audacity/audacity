@@ -256,12 +256,7 @@ public:
       return mDescription;
    }
 
-   wxString GetFamilyId() override
-   {
-      return VSTPLUGINTYPE;
-   }
-
-   wxString GetFamilyName() override
+   IdentInterfaceSymbol GetFamilyId() override
    {
       return VSTPLUGINTYPE;
    }
@@ -1270,12 +1265,7 @@ EffectType VSTEffect::GetType()
 }
 
 
-wxString VSTEffect::GetFamilyId()
-{
-   return VSTPLUGINTYPE;
-}
-
-wxString VSTEffect::GetFamilyName()
+IdentInterfaceSymbol VSTEffect::GetFamilyId()
 {
    return VSTPLUGINTYPE;
 }

@@ -941,12 +941,7 @@ EffectType AudioUnitEffect::GetType()
    return EffectTypeProcess;
 }
 
-wxString AudioUnitEffect::GetFamilyId()
-{
-   return AUDIOUNITEFFECTS_FAMILY;
-}
-
-wxString AudioUnitEffect::GetFamilyName()
+IdentInterfaceSymbol AudioUnitEffect::GetFamilyId()
 {
    return AUDIOUNITEFFECTS_FAMILY;
 }

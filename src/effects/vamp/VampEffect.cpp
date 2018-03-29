@@ -130,12 +130,7 @@ EffectType VampEffect::GetType()
    return EffectTypeAnalyze;
 }
 
-wxString VampEffect::GetFamilyId()
-{
-   return VAMPEFFECTS_FAMILY;
-}
-
-wxString VampEffect::GetFamilyName()
+IdentInterfaceSymbol VampEffect::GetFamilyId()
 {
    return VAMPEFFECTS_FAMILY;
 }

@@ -28,7 +28,7 @@
 #include "nyx.h"
 
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
-#define NYQUISTEFFECTS_FAMILY wxT("Nyquist")
+#define NYQUISTEFFECTS_FAMILY ( IdentInterfaceSymbol{ wxT("Nyquist") } )
 
 #define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
 #define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Tools Prompt")
@@ -92,8 +92,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 

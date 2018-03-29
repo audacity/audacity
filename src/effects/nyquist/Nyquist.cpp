@@ -260,12 +260,7 @@ EffectType NyquistEffect::GetType()
    return mType;
 }
 
-wxString NyquistEffect::GetFamilyId()
-{
-   return NYQUISTEFFECTS_FAMILY;
-}
-
-wxString NyquistEffect::GetFamilyName()
+IdentInterfaceSymbol NyquistEffect::GetFamilyId()
 {
    return NYQUISTEFFECTS_FAMILY;
 }
