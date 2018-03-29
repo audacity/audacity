@@ -85,7 +85,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    wxString GetSymbol() override;
 
    wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

@@ -122,7 +122,7 @@ wxString AudioUnitEffectsModule::GetName()
    return XO("Audio Unit Effects");
 }
 
-wxString AudioUnitEffectsModule::GetVendor()
+IdentInterfaceSymbol AudioUnitEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -895,7 +895,7 @@ wxString AudioUnitEffect::GetName()
    return GetSymbol();
 }
 
-wxString AudioUnitEffect::GetVendor()
+IdentInterfaceSymbol AudioUnitEffect::GetVendor()
 {
    return mVendor;
 }

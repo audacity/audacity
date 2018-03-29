@@ -241,7 +241,7 @@ public:
       return GetSymbol();
    }
 
-   wxString GetVendor() override
+   IdentInterfaceSymbol GetVendor() override
    {
       return mVendor;
    }
@@ -341,7 +341,7 @@ wxString VSTEffectsModule::GetName()
    return GetSymbol();
 }
 
-wxString VSTEffectsModule::GetVendor()
+IdentInterfaceSymbol VSTEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -735,7 +735,8 @@ void VSTEffectsModule::Check(const wxChar *path)
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect.GetPath());
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect.GetName());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect.GetVendor());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor,
+                                 effect.GetVendor().Internal());
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect.GetVersion());
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect.GetType());
@@ -1207,7 +1208,7 @@ wxString VSTEffect::GetName()
    return GetSymbol();
 }
 
-wxString VSTEffect::GetVendor()
+IdentInterfaceSymbol VSTEffect::GetVendor()
 {
    return mVendor;
 }

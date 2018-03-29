@@ -2613,7 +2613,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeModule),
                            wxEmptyString,
-                           module->GetVendor(),
+                           module->GetVendor().Internal(),
                            module->GetName(),
                            module->GetPath());
 }
@@ -2623,7 +2623,7 @@ PluginID PluginManager::GetID(CommandDefinitionInterface *command)
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeAudacityCommand),
                            wxEmptyString,
-                           command->GetVendor(),
+                           command->GetVendor().Internal(),
                            command->GetName(),
                            command->GetPath());
 }
@@ -2633,7 +2633,7 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),
                            effect->GetFamilyId().Internal(),
-                           effect->GetVendor(),
+                           effect->GetVendor().Internal(),
                            effect->GetName(),
                            effect->GetPath());
 }
@@ -2643,7 +2643,7 @@ PluginID PluginManager::GetID(ImporterInterface *importer)
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeImporter),
                            wxEmptyString,
-                           importer->GetVendor(),
+                           importer->GetVendor().Internal(),
                            importer->GetName(),
                            importer->GetPath());
 }
@@ -2695,7 +2695,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
    plug.SetID(id);
    plug.SetPath(ident->GetPath());
    plug.SetSymbol( { ident->GetSymbol(), ident->GetName() } );
-   plug.SetVendor(ident->GetVendor());
+   plug.SetVendor(ident->GetVendor().Internal());
    plug.SetVersion(ident->GetVersion());
 
    return plug;

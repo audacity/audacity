@@ -116,9 +116,9 @@ public:
    // These should return an untranslated value whose translation
    // will be determined at runtime (if available)
    virtual wxString GetName() = 0;
-   // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
-   virtual wxString GetVendor() = 0;
+
+   virtual IdentInterfaceSymbol GetVendor() = 0;
+
    virtual wxString GetVersion() = 0;
 
    // This returns a translated string

@@ -249,7 +249,7 @@ wxString BuiltinEffectsModule::GetName()
    return XO("Builtin Effects");
 }
 
-wxString BuiltinEffectsModule::GetVendor()
+IdentInterfaceSymbol BuiltinEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

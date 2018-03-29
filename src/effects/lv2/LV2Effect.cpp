@@ -340,7 +340,7 @@ wxString LV2Effect::GetName()
    return GetSymbol();
 }
 
-wxString LV2Effect::GetVendor()
+IdentInterfaceSymbol LV2Effect::GetVendor()
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 

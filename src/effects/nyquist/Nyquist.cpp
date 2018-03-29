@@ -207,7 +207,7 @@ wxString NyquistEffect::GetName()
    return GetSymbol();
 }
 
-wxString NyquistEffect::GetVendor()
+IdentInterfaceSymbol NyquistEffect::GetVendor()
 {
    if (mIsPrompt)
    {

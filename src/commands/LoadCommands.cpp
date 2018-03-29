@@ -186,7 +186,7 @@ wxString BuiltinCommandsModule::GetName()
    return XO("Builtin Commands");
 }
 
-wxString BuiltinCommandsModule::GetVendor()
+IdentInterfaceSymbol BuiltinCommandsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

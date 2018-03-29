@@ -85,7 +85,7 @@ wxString VampEffectsModule::GetName()
    return XO("Vamp Effects");
 }
 
-wxString VampEffectsModule::GetVendor()
+IdentInterfaceSymbol VampEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

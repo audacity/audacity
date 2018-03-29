@@ -129,7 +129,7 @@ wxString LadspaEffectsModule::GetName()
    return GetSymbol();
 }
 
-wxString LadspaEffectsModule::GetVendor()
+IdentInterfaceSymbol LadspaEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -636,7 +636,7 @@ wxString LadspaEffect::GetName()
    return GetSymbol();
 }
 
-wxString LadspaEffect::GetVendor()
+IdentInterfaceSymbol LadspaEffect::GetVendor()
 {
    return LAT1CTOWX(mData->Maker);
 }
