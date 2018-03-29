@@ -1432,14 +1432,14 @@ struct ControlInfo {
          vld2.SetPrecision( 0 );
       vld2.SetRange( valueMin, valueMax );
       wxTextCtrl *const text =
-         S.Id(id + 1).AddTextBox(textBoxCaption(), wxT(""), 0);
+         S.Id(id + 1).AddTextBox(textBoxCaption.Translation(), wxT(""), 0);
       S.SetStyle(wxSL_HORIZONTAL);
       text->SetValidator(vld2);
 
       wxSlider *const slider =
          S.Id(id)
             .AddSlider( {}, 0, sliderMax);
-      slider->SetName(sliderName());
+      slider->SetName(sliderName.Translation());
       slider->SetSizeHints(150, -1);
    }
 
@@ -1450,13 +1450,13 @@ struct ControlInfo {
    // (valueMin - valueMax) / sliderMax is the value increment of the slider
    const wxChar* format;
    bool formatAsInt;
-   const wxString textBoxCaption_;  wxString textBoxCaption() const { return wxGetTranslation(textBoxCaption_); }
-   const wxString sliderName_;  wxString sliderName() const { return wxGetTranslation(sliderName_); }
+   const TranslatableString textBoxCaption;
+   const TranslatableString sliderName;
 
    ControlInfo(MemberPointer f, double vMin, double vMax, long sMax, const wxChar* fmt, bool fAsInt,
-      const wxString &caption, const wxString &name)
+      const TranslatableString &caption, const TranslatableString &name)
       : field(f), valueMin(vMin), valueMax(vMax), sliderMax(sMax), format(fmt), formatAsInt(fAsInt)
-      , textBoxCaption_(caption), sliderName_(name)
+      , textBoxCaption(caption), sliderName(name)
    {
    }
 };

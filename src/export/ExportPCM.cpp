@@ -53,7 +53,7 @@ struct
 {
    int format;
    const wxChar *name;
-   const wxChar *desc; // untranslated
+   const TranslatableString desc;
 }
 static const kFormats[] =
 {

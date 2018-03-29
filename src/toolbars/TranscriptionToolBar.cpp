@@ -336,9 +336,9 @@ void TranscriptionToolBar::RegenerateTooltips()
    static const struct Entry {
       int tool;
       CommandID commandName;
-      wxString untranslatedLabel;
+      TranslatableString untranslatedLabel;
       CommandID commandName2;
-      wxString untranslatedLabel2;
+      TranslatableString untranslatedLabel2;
    } table[] = {
       { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed"),
       wxT("PlayAtSpeedLooped"),    XO("Looped-Play-at-Speed")

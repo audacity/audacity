@@ -223,7 +223,7 @@ VendorSymbol NyquistEffect::GetVendor()
       return XO("Audacity");
    }
 
-   return mAuthor;
+   return TranslatableString{ mAuthor };
 }
 
 wxString NyquistEffect::GetVersion()
@@ -1890,12 +1890,12 @@ bool NyquistEffect::Parse(
    }
 
    if (len >= 2 && tokens[0] == wxT("action")) {
-      mAction = UnQuote(tokens[1]);
+      mAction = TranslatableString{ UnQuote(tokens[1]) };
       return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("info")) {
-      mInfo = UnQuote(tokens[1]);
+      mInfo = TranslatableString{ UnQuote(tokens[1]) };
       return true;
    }
 
@@ -1945,18 +1945,18 @@ bool NyquistEffect::Parse(
 #endif
 
    if (len >= 2 && tokens[0] == wxT("author")) {
-      mAuthor = UnQuote(tokens[1]);
+      mAuthor = TranslatableString{ UnQuote(tokens[1]) };
       return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("release")) {
       // Value must be quoted if the release version string contains spaces.
-      mReleaseVersion = UnQuote(tokens[1]);
+      mReleaseVersion = TranslatableString{ UnQuote(tokens[1]) };
       return true;
    }
 
    if (len >= 2 && tokens[0] == wxT("copyright")) {
-      mCopyright = UnQuote(tokens[1]);
+      mCopyright = TranslatableString{ UnQuote(tokens[1]) };
       return true;
    }
 

@@ -97,7 +97,7 @@ const double MIN_Threshold_Linear DB_TO_LINEAR(MIN_Threshold_dB);
 
 static const struct
 {
-   const wxChar *name;
+   const TranslatableString name;
    EffectDistortion::Params params;
 }
 FactoryPresets[] =
@@ -131,7 +131,7 @@ FactoryPresets[] =
 
 wxString defaultLabel(int index)
 {
-   static const wxString names[] = {
+   static const TranslatableString names[] = {
       XO("Upper Threshold"),
       XO("Noise Floor"),
       XO("Parameter 1"),

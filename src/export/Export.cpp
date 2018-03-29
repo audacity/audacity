@@ -118,7 +118,7 @@ void ExportPlugin::SetFormat(const wxString & format, int index)
    mFormatInfos[index].mFormat = format;
 }
 
-void ExportPlugin::SetDescription(const wxString & description, int index)
+void ExportPlugin::SetDescription(const TranslatableString & description, int index)
 {
    mFormatInfos[index].mDescription = description;
 }
@@ -153,7 +153,7 @@ wxString ExportPlugin::GetFormat(int index)
    return mFormatInfos[index].mFormat;
 }
 
-wxString ExportPlugin::GetUntranslatedDescription(int index)
+TranslatableString ExportPlugin::GetUntranslatedDescription(int index)
 {
    return mFormatInfos[index].mDescription;
 }

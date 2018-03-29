@@ -92,7 +92,7 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_IDLE(ControlToolBar::OnIdle)
 END_EVENT_TABLE()
 
-static const wxString
+static const TranslatableString
      sStatePlay = XO("Playing")
    , sStateStop = XO("Stopped")
    , sStateRecord = XO("Recording")
@@ -712,9 +712,9 @@ wxString ControlToolBar::StateForStatusBar()
    auto pProject = &mProject;
    auto scrubState = pProject
       ? Scrubber::Get( *pProject ).GetUntranslatedStateString()
-      : wxString();
+      : TranslatableString{};
    if (!scrubState.empty())
-      state = wxGetTranslation(scrubState);
+      state = scrubState.Translation();
    else if (mPlay->IsDown())
       state = wxGetTranslation(sStatePlay);
    else if (projectAudioManager.Recording())

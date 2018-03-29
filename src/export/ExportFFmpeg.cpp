@@ -225,7 +225,7 @@ ExportFFmpeg::ExportFFmpeg()
       }
 
       SetMaxChannels(ExportFFmpegOptions::fmts[newfmt].maxchannels,fmtindex);
-      SetDescription(ExportFFmpegOptions::fmts[newfmt].description_, fmtindex);
+      SetDescription(ExportFFmpegOptions::fmts[newfmt].description, fmtindex);
 
       int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
       if (canmeta && (canmeta == AV_CANMETA || canmeta <= avfver))
@@ -911,9 +911,9 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
       InitProgress( pDialog, wxFileName(fName).GetName(),
          selectionOnly
             ? wxString::Format(_("Exporting selected audio as %s"),
-               ExportFFmpegOptions::fmts[mSubFormat].Description())
+               ExportFFmpegOptions::fmts[mSubFormat].description.Translation())
             : wxString::Format(_("Exporting the audio as %s"),
-               ExportFFmpegOptions::fmts[mSubFormat].Description()) );
+               ExportFFmpegOptions::fmts[mSubFormat].description.Translation()) );
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {

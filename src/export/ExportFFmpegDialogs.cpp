@@ -1339,11 +1339,6 @@ ExposedFormat ExportFFmpegOptions::fmts[] =
    {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_CANMETA,             true,  XO("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
 };
 
-wxString ExposedFormat::Description() const
-{
-   return wxGetTranslation(description_);
-}
-
 /// Sample rates supported by AAC encoder (must end with zero-element)
 const int ExportFFmpegOptions::iAACSampleRates[] = { 7350, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 64000, 88200, 0 };
 

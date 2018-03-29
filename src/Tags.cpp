@@ -737,7 +737,7 @@ private:
 
 static wxArrayString names()
 {
-   static wxString theNames[] =
+   static TranslatableString theNames[] =
    {
       LABEL_ARTIST,
       LABEL_TITLE,
@@ -765,7 +765,7 @@ static wxArrayString names()
 
 static const struct
 {
-   wxString label;
+   TranslatableString label;
    wxString name;
 }
 labelmap[] =

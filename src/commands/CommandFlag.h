@@ -16,6 +16,8 @@
 #include <utility>
 #include <wx/string.h>
 
+#include "audacity/Types.h"
+
 class AudacityProject;
 
 // Increase the template parameter as needed to allow more flags
@@ -42,7 +44,7 @@ struct CommandFlagOptions{
    CommandFlagOptions(
       const MessageFormatter &message_,
       const wxString &helpPage_ = {},
-      const wxString &title_ = {}
+      const TranslatableString &title_ = {}
    ) : message{ message_ }, helpPage{ helpPage_ }, title{ title_ }
    {}
 
@@ -63,7 +65,7 @@ struct CommandFlagOptions{
    // Empty, or non-default title for the dialog box when the
    // condition is not satisfied for the selected command
    // This string must be given UN-translated.
-   wxString title;
+   TranslatableString title;
 
    // Conditions with higher "priority" are preferred over others in choosing
    // the help message

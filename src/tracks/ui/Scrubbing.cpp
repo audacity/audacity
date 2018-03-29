@@ -260,8 +260,8 @@ static const ReservedCommandFlag
 namespace {
    const struct MenuItem {
       CommandID name;
-      wxString label;
-      wxString status;
+      TranslatableString label;
+      TranslatableString status;
       CommandFlag flags;
       void (Scrubber::*memFn)(const CommandContext&);
       bool seek;
@@ -283,7 +283,7 @@ namespace {
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
-      { wxT("ToggleScrubRuler"),            XO("Scrub &Ruler"),   wxT(""),
+      { wxT("ToggleScrubRuler"),            XO("Scrub &Ruler"),   {},
          AlwaysEnabledFlag,
          &Scrubber::OnToggleScrubRuler, false,    &Scrubber::ShowsBar,
       },
@@ -961,11 +961,11 @@ END_EVENT_TABLE()
 
 static_assert(nMenuItems == 3, "wrong number of items");
 
-static wxString sPlayAtSpeedStatus = XO("Playing at Speed");
+static auto sPlayAtSpeedStatus = XO("Playing at Speed");
 
-const wxString &Scrubber::GetUntranslatedStateString() const
+const TranslatableString &Scrubber::GetUntranslatedStateString() const
 {
-   static wxString empty;
+   static TranslatableString empty;
 
    if (IsSpeedPlaying()) {
       return sPlayAtSpeedStatus;
