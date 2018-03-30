@@ -31,6 +31,10 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s)  wxT(s)
 
+#ifdef _
+   #undef _
+#endif
+
 #if defined( __WXDEBUG__ )
    // Force a crash if you misuse _ in a static initializer, so that translation
    // is looked up too early and not found.
@@ -52,6 +56,11 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 #else
    #define _(s) GetCustomTranslation((s))
 #endif
+
+#ifdef wxPLURAL
+   #undef wxPLURAL
+#endif
+
 
 // The two string arugments will go to the .pot file, as
 // msgid sing
