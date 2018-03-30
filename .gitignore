@@ -67,6 +67,7 @@ lib-src/libsoxr/*.cmake
 CMakeFiles/
 CTestTestfile.cmake
 cmake_install.cmake
+build/*
 
 # Waf build output
 lib-src/lv2/.buildvars
