@@ -1,6 +1,9 @@
 #directory audacity top level
-cmake_minimum_required (VERSION 2.8.12) # so we can use cotire
+cmake_minimum_required (VERSION 3.8) # so we can use cotire and source_group
 cmake_policy(SET CMP0043 NEW) # just hide an annoying warning in 3.0.2
+
+# There must be a symbol for this already, surely?
+set( top_dir ${CMAKE_SOURCE_DIR} )
 
 # These stop the results being mixed in with our source tree.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -20,5 +23,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 
 add_subdirectory( "lib-src" )
-#add_subdirectory( "src" )
+add_subdirectory( "src" )
+
+# Uncomment what follows for symbol values.
+#[[
+get_cmake_property(_variableNames VARIABLES)
+foreach (_variableName ${_variableNames})
+message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+]]#
 
