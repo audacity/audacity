@@ -71,18 +71,12 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
       S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
          wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL );
       S.AddTextWindow(message);
+
+      S.SetBorder( 0 );
+      S.StartHorizontalLay(wxALIGN_CENTER_HORIZONTAL, 0);
+         S.AddStandardButtons(eOkButton);
+      S.EndHorizontalLay();
    }
-   S.SetBorder( 0 );
-   S.StartHorizontalLay(wxALIGN_CENTER|wxALIGN_BOTTOM, 0);
-   S.AddStandardButtons(eOkButton);
-
-   S.EndHorizontalLay();
-
-   // Next three lines add a tiny dragger.
-   wxStatusBar * pBar = safenew wxStatusBar( &dlog );
-   pBar->SetSize( 18, 38);
-   S.AddWindow( pBar, wxALIGN_BOTTOM|wxALIGN_RIGHT );
-
    S.EndVerticalLay();
 
    // Smallest size is half default size.  Seems reasonable.
