@@ -175,14 +175,14 @@ public:
       }
       *pi = std::find( choices, choices + nChoices,
                        IdentInterfaceSymbol{ s, {} } ) - choices;
-      if (*pi == nChoices)
+      if (*pi == (int)nChoices)
          *pi = -1;
       if (*pi < 0 && obsoletes) {
          auto index = std::find_if(obsoletes, obsoletes + nObsoletes,
                                    [&](const ObsoleteMap &entry){
                                       return entry.first == s; })
             - obsoletes;
-         if (index < nObsoletes)
+         if (index < (int)nObsoletes)
             *pi = (int)obsoletes[index].second;
       }
       return true;
@@ -203,7 +203,7 @@ public:
    bool WriteEnum(const wxString & key, int value,
                   const IdentInterfaceSymbol choices[], size_t nChoices)
    {
-      if (value < 0 || value >= nChoices)
+      if (value < 0 || value >= (int)nChoices)
       {
          return false;
       }

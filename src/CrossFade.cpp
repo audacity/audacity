@@ -12,6 +12,8 @@ been abandoned.
 
 *//********************************************************************/
 
+#pragma message( "--- CrossFade.cpp: This is abandoned code, not included in Audacity builds")
+
 #include "CrossFade.h"
 
 #include "SampleFormat.h"
@@ -142,7 +144,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
       int clips;
       double f;
       //now, shortSeq contains the samples to mix together.
-      for (int j = 0; j < len; j++)
+      for (int j = 0; j < (int)len; j++)
       {
 
          //Go through each clip
@@ -192,7 +194,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
       int clips=0;
       double f;
       //Go through each sample position
-      for (int j = 0; j < len; j++) {
+      for (int j = 0; j < (int)len; j++) {
 
          //go through each clip.
          for(int i= 0; i < numclips; i++)
@@ -233,7 +235,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
       float f;
 
       //go through each sample position
-      for (int j = 0; j < len; j++) {
+      for (int j = 0; j < (int)len; j++) {
 
 
          clips = 0;

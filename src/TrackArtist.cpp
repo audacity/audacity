@@ -802,12 +802,12 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
             else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
                wt->SetLastdBRange();
                // Remap the max of the scale
-               const float sign = (max >= 0 ? 1 : -1);
                float newMax = max;
 
 // This commented out code is problematic.
 // min and max may be correct, and this code cause them to change.
 #ifdef ONLY_LABEL_POSITIVE
+               const float sign = (max >= 0 ? 1 : -1);
                if (max != 0.) {
 
 // Ugh, duplicating from TrackPanel.cpp

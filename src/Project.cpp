@@ -3815,8 +3815,7 @@ bool AudacityProject::DoSave
    // See explanation above
    // ProjectDisabler disabler(this);
 
-   if (bWantSaveCompressed)
-      wxASSERT(fromSaveAs);
+   wxASSERT_MSG(!bWantSaveCompressed || fromSaveAs, "Compressed SHOULD only be availabele from SaveAs");
 
    // Some confirmation dialogs
    if (!bWantSaveCompressed)

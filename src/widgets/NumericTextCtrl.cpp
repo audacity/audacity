@@ -1074,7 +1074,7 @@ wxString NumericConverter::GetBuiltinFormat(const NumericFormatId &name)
       std::find( mBuiltinFormatStrings, mBuiltinFormatStrings + mNBuiltins,
          BuiltinFormatString{ name, {} } )
             - mBuiltinFormatStrings;
-   if (ndx == mNBuiltins)
+   if (ndx == (int)mNBuiltins)
       ndx = mDefaultNdx;
 
    return GetBuiltinFormat(ndx);
