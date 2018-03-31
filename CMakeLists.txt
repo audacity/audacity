@@ -5,6 +5,9 @@ cmake_policy(SET CMP0043 NEW) # just hide an annoying warning in 3.0.2
 # There must be a symbol for this already, surely?
 set( top_dir ${CMAKE_SOURCE_DIR} )
 
+set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
+include(cotire)
+
 # These stop the results being mixed in with our source tree.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

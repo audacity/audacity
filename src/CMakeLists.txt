@@ -80,11 +80,11 @@ add_compile_options(/wd4996)
 
 
 set( SOURCE 
+   ${CMAKE_SOURCE_DIRECTORY}AudacityHeaders.cpp  #first so cotire can precompile
    ${CMAKE_SOURCE_DIRECTORY}AboutDialog.cpp
    ${CMAKE_SOURCE_DIRECTORY}AColor.cpp
    ${CMAKE_SOURCE_DIRECTORY}AudacityApp.cpp
    ${CMAKE_SOURCE_DIRECTORY}AudacityException.cpp
-   ${CMAKE_SOURCE_DIRECTORY}AudacityHeaders.cpp
    ${CMAKE_SOURCE_DIRECTORY}AudacityLogger.cpp
    ${CMAKE_SOURCE_DIRECTORY}AudioIO.cpp
    ${CMAKE_SOURCE_DIRECTORY}AutoRecovery.cpp
@@ -489,3 +489,32 @@ set( SOURCE
 add_executable( Audacity ${SOURCE} )
 
 target_link_libraries(Audacity ${wxWidgets_LIBRARIES})
+#Use cotire to get precompiled headers, and a unity build.
+set_target_properties(Audacity 
+PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT 
+"AudacityHeaders.h")
+cotire(Audacity)
+
+# (commented out) Debugging info for the curious about Cotire.
+#[[
+
+# cotire sets the following properties
+get_target_property(_unitySource Audacity COTIRE_CXX_UNITY_SOURCE)
+get_target_property(_prefixHeader Audacity COTIRE_CXX_PREFIX_HEADER)
+get_target_property(_precompiledHeader Audacity COTIRE_CXX_PRECOMPILED_HEADER)
+get_target_property(_unityTargetName Audacity COTIRE_UNITY_TARGET_NAME)
+
+if (_unitySource)
+	message(STATUS "Audacity unity source: ${_unitySource}")
+endif()
+if (_prefixHeader)
+	message(STATUS "Audacity prefix header: ${_prefixHeader}")
+endif()
+if (_precompiledHeader)
+	message(STATUS "Audacity precompiled header: ${_precompiledHeader}")
+endif()
+if (TARGET ${_unityTargetName})
+	message(STATUS "Audacity unity target: ${_unityTargetName}")
+endif()
+
+]]#
