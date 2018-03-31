@@ -1,7 +1,7 @@
 #directory src
 project (Audacity)
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
-
+include(${wxWidgets_USE_FILE})
 
 set_property(GLOBAL PROPERTY USE_FOLDERS On) 
 
@@ -50,7 +50,7 @@ include_directories(${top_dir}/lib-src/lame)
 #    add_definitions(-include AudacityHeaders.h)
 #endif()
 
-include(${wxWidgets_USE_FILE})
+
 
 
 # Consider moving many of these # defines to Audacity.h.
