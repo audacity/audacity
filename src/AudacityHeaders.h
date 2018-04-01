@@ -23,7 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#ifdef __WXMSW__
 #include <initializer_list>
+#endif
 
 
 
