@@ -1,10 +1,13 @@
 #directory audacity top level
-cmake_minimum_required (VERSION 3.8) # so we can use cotire and source_group
+# 3.8 so we can use source_group
+# cotire only needs 2.8.12
+cmake_minimum_required (VERSION 3.8) 
 cmake_policy(SET CMP0043 NEW) # just hide an annoying warning in 3.0.2
 
-# There must be a symbol for this already, surely?
+# Renaming.  Could just use the official name throughout.
 set( top_dir ${CMAKE_SOURCE_DIR} )
 
+# Path for cotire.cmake, and later for our wxwidgets.cmake.
 set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
 include(cotire)
 
@@ -25,7 +28,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #set( wxWidgets_CONFIGURATION "mswud" )
 
 
-add_subdirectory( "lib-src" )
+#add_subdirectory( "lib-src" ) #All lib building happens via the proxies.
 add_subdirectory( "cmake-proxies" )
 add_subdirectory( "src" )
 
