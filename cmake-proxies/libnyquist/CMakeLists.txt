@@ -48,8 +48,8 @@ ${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Sitar.cpp
 ${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/Stk.cpp
 ${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/WaveLoop.cpp
 ${LIB_SRC_DIRECTORY}libnyquist/nyquist/nyqstk/src/WvIn.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/longque.cpp
-${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/textio.cpp
+#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/longque.cpp
+#${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/textio.cpp
 #${LIB_SRC_DIRECTORY}libnyquist/nyquist/sys/win/wingui/winmain.cpp
 
 ${LIB_SRC_DIRECTORY}libnyquist/nyx.c
@@ -75,7 +75,7 @@ ${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/seqread.c
 ${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/seqwrite.c
 ${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/tempomap.c
 ${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/timebase.c
-#${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/userio.c #??using textio instead
+${LIB_SRC_DIRECTORY}libnyquist/nyquist/cmt/userio.c
 #${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Matlab-testing/conv2dTest.c
 #${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Matlab-testing/convTest.c
 #${LIB_SRC_DIRECTORY}libnyquist/nyquist/ffts/Matlab-testing/rfft2dTestML.c

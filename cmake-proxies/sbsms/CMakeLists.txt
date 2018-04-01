@@ -17,11 +17,15 @@ ${LIB_SRC_DIRECTORY}sbsms/src/track.cpp
 ${LIB_SRC_DIRECTORY}sbsms/src/trackpoint.cpp
 )
 # This defines the #define on both Windows and Linux.
-add_definitions(  )
-add_library( ${TARGET} MODULE ${SOURCES})
+add_definitions( 
+-D_LIB
+-DNDEBUG
+ )
+add_library( ${TARGET} STATIC ${SOURCES})
 
 target_include_directories( ${TARGET} PRIVATE 
-
+${TARGET_SOURCE}/include
+${TARGET_SOURCE}/win
 )
 
 target_link_libraries( ${TARGET} )

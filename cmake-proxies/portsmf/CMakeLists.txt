@@ -12,15 +12,17 @@ ${LIB_SRC_DIRECTORY}portsmf/allegrosmfwr.cpp
 ${LIB_SRC_DIRECTORY}portsmf/allegrowr.cpp
 ${LIB_SRC_DIRECTORY}portsmf/mfmidi.cpp
 ${LIB_SRC_DIRECTORY}portsmf/strparse.cpp
-${LIB_SRC_DIRECTORY}portsmf/trace.cpp
-${LIB_SRC_DIRECTORY}portsmf/apps/allegroconvert.cpp
-${LIB_SRC_DIRECTORY}portsmf/apps/allegroplay.cpp
-${LIB_SRC_DIRECTORY}portsmf/apps/seq2midi.cpp
-${LIB_SRC_DIRECTORY}portsmf/portsmf_test/portsmf_test.cpp
+#${LIB_SRC_DIRECTORY}portsmf/trace.cpp
+#${LIB_SRC_DIRECTORY}portsmf/apps/allegroconvert.cpp
+#${LIB_SRC_DIRECTORY}portsmf/apps/allegroplay.cpp
+#${LIB_SRC_DIRECTORY}portsmf/apps/seq2midi.cpp
+#${LIB_SRC_DIRECTORY}portsmf/portsmf_test/portsmf_test.cpp
 )
 # This defines the #define on both Windows and Linux.
-add_definitions(  )
-add_library( ${TARGET} MODULE ${SOURCES})
+add_definitions( 
+-D_LIB
+ )
+add_library( ${TARGET} STATIC ${SOURCES})
 
 target_include_directories( ${TARGET} PRIVATE 
 

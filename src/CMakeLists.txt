@@ -1,6 +1,6 @@
 #directory src
 project (Audacity)
-find_package(wxWidgets REQUIRED COMPONENTS net core base)
+find_package(wxWidgets REQUIRED COMPONENTS net core base html qa adv)
 include(${wxWidgets_USE_FILE})
 
 set_property(GLOBAL PROPERTY USE_FOLDERS On) 
@@ -29,6 +29,7 @@ include_directories(${top_dir}/win/Projects/libsndfile)
 include_directories(${top_dir}/lib-src/libsoxr/src) #really?  Src?
 include_directories(${top_dir}/lib-src/libvamp)
 include_directories(${top_dir}/lib-src/libvorbis/include)
+include_directories(${top_dir}/lib-src/lib-widget-extra)
 include_directories(${top_dir}/lib-src/portaudio-v19/include)
 include_directories(${top_dir}/lib-src/portmixer/include)
 include_directories(${top_dir}/lib-src/portsmf)
@@ -172,6 +173,8 @@ set( SOURCE
    ${CMAKE_SOURCE_DIRECTORY}WaveClip.cpp
    ${CMAKE_SOURCE_DIRECTORY}WaveTrack.cpp
    ${CMAKE_SOURCE_DIRECTORY}WrappedType.cpp
+   #An anomoly - a source file plucked from a lib.
+   ${top_dir}/lib-src/lib-widget-extra/NonGuiThread.cpp
 )
 
 # We're not yet adding each subdirectory.
@@ -488,7 +491,22 @@ set( SOURCE
 
 add_executable( Audacity ${SOURCE} )
 
-target_link_libraries(Audacity ${wxWidgets_LIBRARIES})
+message( STATUS "link directory is: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug" )
+message( STATUS "wxWidgets libraries in: ${wxWidgets_LIBRARIES}" )
+
+target_link_libraries(Audacity 
+${wxWidgets_LIBRARIES}
+expat.lib
+FileDialog.lib
+libsndfile.lib
+libsoxr.lib
+portaudio-v19.lib
+)
+if(MSVC)
+    set_property(TARGET Audacity APPEND PROPERTY LINK_FLAGS "/SUBSYSTEM:WINDOWS /LIBPATH:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
+    #set_property(TARGET Audacity APPEND PROPERTY LINK_FLAGS )
+endif()
+
 #Use cotire to get precompiled headers, and a unity build.
 set_target_properties(Audacity 
 PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT 

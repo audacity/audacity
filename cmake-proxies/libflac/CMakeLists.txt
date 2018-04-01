@@ -1,5 +1,4 @@
 #directory cmake-proxies/libflac
-#UNUSED
 set( TARGET libflac )
 set( TARGET_SOURCE ${LIB_SRC_DIRECTORY}${TARGET} )
 project( ${TARGET} )

@@ -23,11 +23,16 @@ ${LIB_SRC_DIRECTORY}libid3tag/util.c
 ${LIB_SRC_DIRECTORY}libid3tag/version.c
 )
 # This defines the #define on both Windows and Linux.
-add_definitions(  )
-add_library( ${TARGET} MODULE ${SOURCES})
+add_definitions( 
+-D_LIB
+)
+add_library( ${TARGET} STATIC ${SOURCES})
+
+find_package(wxWidgets REQUIRED COMPONENTS net core base)
+#include( ${wxWidgets_USE_FILE} )
 
 target_include_directories( ${TARGET} PRIVATE 
-
+${wxWidgets_ROOT_DIR}/src/zlib
 )
 
 target_link_libraries( ${TARGET} )
