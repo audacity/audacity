@@ -183,10 +183,10 @@ int ExportMultiple::ShowModal()
       return wxID_CANCEL;
    }
 
-   if ((mNumWaveTracks == 1) && (mNumLabels < 1))
+   if ((mNumWaveTracks < 1) && (mNumLabels < 1))
    {
       ::AudacityMessageBox(_(
-"You have only one unmuted Audio Track and no applicable \
+"You have no unmuted Audio Tracks and no applicable \
 \nlabels, so you cannot export to separate audio files."),
                      _("Cannot Export Multiple"),
                      wxOK | wxCENTRE, this);
@@ -199,7 +199,7 @@ int ExportMultiple::ShowModal()
       mLabel->SetValue(false);
    }
 
-   if (mNumWaveTracks < 2) {
+   if (mNumWaveTracks < 1) {
       mTrack->Enable(false);
       mLabel->SetValue(true);
       mTrack->SetValue(false);
