@@ -2,6 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libFileDialog.la
 
+libFileDialog_la_LIBTOOLFLAGS = --tag=CXX
 libFileDialog_la_CPPFLAGS = $(WX_CXXFLAGS) -Wno-deprecated-declarations
 libFileDialog_la_LIBADD = $(WX_LIBS)
 libFileDialog_la_SOURCES = FileDialog.cpp FileDialog.h
