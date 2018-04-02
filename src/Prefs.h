@@ -99,7 +99,7 @@ public:
       size_t defaultSymbol,
 
       const int intValues[] = nullptr, // must have same size as symbols
-      const wxString &oldKey = {}
+      const wxString &oldKey = wxString("")
    )
       : EnumSetting{ key, symbols, nSymbols, defaultSymbol }
       , mIntValues{ intValues }
