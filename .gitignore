@@ -183,6 +183,7 @@ win/Projects/*/Debug
 win/Projects/*/Release
 win/.vs/
 win/packages
+win/.nuget
 win-alt-build
 
 # All those help files
