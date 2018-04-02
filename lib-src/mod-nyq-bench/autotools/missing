@@ -1,7 +1,7 @@
 #! /bin/sh
 # Common wrapper for a few potentially missing GNU programs.
 
-scriptversion=2012-06-26.16; # UTC
+scriptversion=2013-10-28.13; # UTC
 
 # Copyright (C) 1996-2013 Free Software Foundation, Inc.
 # Originally written by Fran,cois Pinard <pinard@iro.umontreal.ca>, 1996.
@@ -160,7 +160,7 @@ give_advice ()
       ;;
    autom4te*)
       echo "You might have modified some maintainer files that require"
-      echo "the 'automa4te' program to be rebuilt."
+      echo "the 'autom4te' program to be rebuilt."
       program_details 'autom4te'
       ;;
     bison*|yacc*)
