@@ -28,6 +28,10 @@ around to NEW positions.
 #include <wx/defs.h>
 #include <wx/html/htmlwin.h>
 
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+#endif
+
 ////////////////////////////////////////////////////////////
 /// HtmlWindow Class
 ////////////////////////////////////////////////////////////
@@ -46,7 +50,7 @@ public:
 
 #if wxUSE_ACCESSIBILITY
 
-class HtmlWindowAx final : public wxWindowAccessible
+class HtmlWindowAx final : public WindowAccessible
 {
 public:
    HtmlWindowAx(wxWindow * window);

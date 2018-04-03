@@ -33,7 +33,7 @@
 
 TrackPanelAx::TrackPanelAx( wxWindow *window )
 #if wxUSE_ACCESSIBILITY
-   :wxWindowAccessible( window )
+   :WindowAccessible( window )
 #endif
 {
    mTrackPanel = wxDynamicCast( window, TrackPanel );

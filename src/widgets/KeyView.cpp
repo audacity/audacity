@@ -1779,7 +1779,7 @@ KeyView::GetViewType()
 // Accessibility provider for the KeyView class
 // ============================================================================
 KeyViewAx::KeyViewAx(KeyView *view)
-: wxWindowAccessible(view)
+: WindowAccessible(view)
 {
    mView = view;
    mLastId = -1;

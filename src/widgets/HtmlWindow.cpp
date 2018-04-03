@@ -56,7 +56,7 @@ HtmlWindow::~HtmlWindow()
 #if wxUSE_ACCESSIBILITY
 
 HtmlWindowAx::HtmlWindowAx( wxWindow *window ):
-   wxWindowAccessible( window )
+   WindowAccessible( window )
 {
 }
 

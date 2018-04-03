@@ -561,7 +561,7 @@ auto AButton::TemporarilyAllowFocus() -> TempAllowFocus {
 #if wxUSE_ACCESSIBILITY
 
 AButtonAx::AButtonAx( wxWindow *window ):
-   wxWindowAccessible( window )
+   WindowAccessible( window )
 {
 }
 

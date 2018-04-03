@@ -290,6 +290,7 @@
     <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Overlay.cpp" />
     <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\WindowAccessible.cpp" />
     <ClCompile Include="..\..\..\src\widgets\wxPanelWrapper.cpp" />
     <ClCompile Include="..\..\..\src\widgets\PopupMenuTable.cpp" />
     <ClCompile Include="..\..\..\src\WrappedType.cpp" />
@@ -575,6 +576,7 @@
     <ClInclude Include="..\..\..\src\widgets\NumericTextCtrl.h" />
     <ClInclude Include="..\..\..\src\widgets\Overlay.h" />
     <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h" />
+    <ClInclude Include="..\..\..\src\widgets\WindowAccessible.h" />
     <ClInclude Include="..\..\..\src\widgets\wxPanelWrapper.h" />
     <ClInclude Include="..\..\..\src\wxFileNameWrapper.h" />
     <ClInclude Include="..\..\..\src\widgets\PopupMenuTable.h" />

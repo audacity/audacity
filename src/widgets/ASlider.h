@@ -24,6 +24,7 @@
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "WindowAccessible.h"
 #endif
 
 class wxBitmap;
@@ -370,7 +371,7 @@ class SliderDialog final : public wxDialogWrapper
 
 #if wxUSE_ACCESSIBILITY
 
-class ASliderAx final : public wxWindowAccessible
+class ASliderAx final : public WindowAccessible
 {
 public:
    ASliderAx(wxWindow * window);

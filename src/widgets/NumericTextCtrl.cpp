@@ -1890,7 +1890,7 @@ void NumericTextCtrl::ControlsToValue()
 #if wxUSE_ACCESSIBILITY
 
 NumericTextCtrlAx::NumericTextCtrlAx(NumericTextCtrl *ctrl)
-:  wxWindowAccessible(ctrl)
+:  WindowAccessible(ctrl)
 {
    mCtrl = ctrl;
    mLastField = -1;

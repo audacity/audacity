@@ -17,6 +17,7 @@
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "WindowAccessible.h"
 #endif
 
 #include <wx/image.h>
@@ -202,7 +203,7 @@ public:
 
 #if wxUSE_ACCESSIBILITY
 
-class AButtonAx final : public wxWindowAccessible
+class AButtonAx final : public WindowAccessible
 {
 public:
    AButtonAx(wxWindow * window);

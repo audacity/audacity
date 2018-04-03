@@ -33,6 +33,7 @@
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "../widgets/WindowAccessible.h"
 #endif
 
 #include "Effect.h"
@@ -377,7 +378,7 @@ private:
 
 #if wxUSE_ACCESSIBILITY
 
-class SliderAx final : public wxWindowAccessible
+class SliderAx final : public WindowAccessible
 {
 public:
    SliderAx(wxWindow * window, const wxString &fmt);

@@ -1769,7 +1769,7 @@ void ASlider::SetFocusFromKbd()
 #if wxUSE_ACCESSIBILITY
 
 ASliderAx::ASliderAx( wxWindow * window ) :
-   wxWindowAccessible( window )
+   WindowAccessible( window )
 {
 }
 

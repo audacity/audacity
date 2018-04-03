@@ -24,6 +24,7 @@
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "WindowAccessible.h"
 
 class GridAx;
 
@@ -245,7 +246,7 @@ class Grid final : public wxGrid
 // wxAccessible object providing grid information for Grid.
 // ----------------------------------------------------------------------------
 
-class GridAx final : public wxWindowAccessible
+class GridAx final : public WindowAccessible
 {
 
  public:

@@ -3606,7 +3606,7 @@ void EditCurvesDialog::OnListSelectionChange( wxListEvent & )
 #if wxUSE_ACCESSIBILITY
 
 SliderAx::SliderAx(wxWindow * window, const wxString &fmt) :
-wxWindowAccessible( window )
+WindowAccessible( window )
 {
    mParent = window;
    mFmt = fmt;

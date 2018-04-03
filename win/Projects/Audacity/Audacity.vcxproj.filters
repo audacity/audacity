@@ -1079,6 +1079,9 @@
     <ClCompile Include="..\..\..\src\commands\DragCommand.cpp">
       <Filter>src\commands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\WindowAccessible.cpp">
+      <Filter>src\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2151,6 +2154,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\DragCommand.h">
       <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\WindowAccessible.h">
+      <Filter>src\widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

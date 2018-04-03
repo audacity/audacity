@@ -42,6 +42,10 @@
 #include "widgets/ErrorDialog.h"
 #include "commands/CommandContext.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 #define TIMER_ID 7000
 
 enum { // control IDs
@@ -93,10 +97,10 @@ static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
 
 #if wxUSE_ACCESSIBILITY
 
-class DatePickerCtrlAx final : public wxWindowAccessible
+class DatePickerCtrlAx final : public WindowAccessible
 {
 public:
-   DatePickerCtrlAx(wxDatePickerCtrl * ctrl) : wxWindowAccessible(ctrl), mCtrl(ctrl) {};
+   DatePickerCtrlAx(wxDatePickerCtrl * ctrl) : WindowAccessible(ctrl), mCtrl(ctrl) {};
 
    virtual ~ DatePickerCtrlAx() {};
 

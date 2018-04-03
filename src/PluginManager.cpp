@@ -64,8 +64,9 @@ using ProviderMap = std::unordered_map<wxString, wxArrayString>;
 //
 // ============================================================================
 #if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
 
-class CheckListAx final : public wxWindowAccessible
+class CheckListAx final : public WindowAccessible
 {
 public:
    CheckListAx(wxListCtrl * window);
@@ -138,7 +139,7 @@ private:
 };
 
 CheckListAx::CheckListAx( wxListCtrl * window )
-:  wxWindowAccessible( window )
+:  WindowAccessible( window )
 {
    mParent = window;
    mLastId = -1;

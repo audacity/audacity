@@ -30,6 +30,7 @@
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "WindowAccessible.h"
 #endif
 
 // One event type for each type of control.  Event is raised when a control
@@ -271,7 +272,7 @@ private:
 
 #if wxUSE_ACCESSIBILITY
 
-class NumericTextCtrlAx final : public wxWindowAccessible
+class NumericTextCtrlAx final : public WindowAccessible
 {
 public:
    NumericTextCtrlAx(NumericTextCtrl * ctrl);

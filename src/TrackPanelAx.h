@@ -16,6 +16,7 @@
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "widgets/WindowAccessible.h"
 #endif
 
 #include "Track.h"
@@ -23,7 +24,7 @@
 
 class TrackPanelAx final
 #if wxUSE_ACCESSIBILITY
-   : public wxWindowAccessible
+   : public WindowAccessible
 #endif
 {
 public:

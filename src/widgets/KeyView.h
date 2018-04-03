@@ -63,6 +63,7 @@ enum ViewByType
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "WindowAccessible.h"
 
 // Forward reference accessibility provideer
 class KeyViewAx;
@@ -177,7 +178,7 @@ private:
 // wxAccessible object providing information for KeyView.
 // ----------------------------------------------------------------------------
 
-class KeyViewAx final : public wxWindowAccessible
+class KeyViewAx final : public WindowAccessible
 {
 public:
 

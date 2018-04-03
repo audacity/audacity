@@ -22,6 +22,10 @@
 #include "../SampleFormat.h"
 #include "Ruler.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+#endif
+
 // Event used to notify all meters of preference changes
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_METER_PREFERENCES_CHANGED, wxCommandEvent);
@@ -302,7 +306,7 @@ class MeterPanel final : public wxPanelWrapper
 
 #if wxUSE_ACCESSIBILITY
 
-class MeterAx final : public wxWindowAccessible
+class MeterAx final : public WindowAccessible
 {
 public:
    MeterAx(wxWindow * window);

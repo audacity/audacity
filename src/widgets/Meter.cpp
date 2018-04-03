@@ -2058,7 +2058,7 @@ void MeterPanel::SetFocusFromKbd()
 #if wxUSE_ACCESSIBILITY
 
 MeterAx::MeterAx(wxWindow *window):
-   wxWindowAccessible(window)
+   WindowAccessible(window)
 {
 }
 

@@ -624,7 +624,7 @@ bool Grid::DeleteCols(int pos, int numCols, bool updateLabels)
 }
 
 GridAx::GridAx(Grid *grid)
-: wxWindowAccessible(grid->GetGridWindow())
+: WindowAccessible(grid->GetGridWindow())
 {
    mGrid = grid;
    mLastId = -1;
