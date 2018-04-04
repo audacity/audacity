@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="msgfmt">
+      <Targets>_msgfmt</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="msgfmt"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_msgfmt"
+    BeforeTargets="$(msgfmtBeforeTargets)"
+    AfterTargets="$(msgfmtAfterTargets)"
+    Condition="'@(msgfmt)' != ''"
+    DependsOnTargets="$(msgfmtDependsOn);ComputemsgfmtOutput"
+    Outputs="@(msgfmt-&gt;Metadata('Outputs')-&gt;Distinct())"
+    Inputs="@(msgfmt);%(msgfmt.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <msgfmt
+        Remove="@(msgfmt)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <msgfmt_tlog
+        Include="%(msgfmt.Outputs)"
+        Condition="'%(msgfmt.Outputs)' != '' and '%(msgfmt.ExcludedFromBuild)' != 'true'">
+        <Source>@(msgfmt, '|')</Source>
+      </msgfmt_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(msgfmt.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(msgfmt_tlog)' != '' and '%(msgfmt_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(TLogLocation)$(ProjectName).write.1.tlog"
+      Lines="^%(msgfmt_tlog.Source);@(msgfmt_tlog-&gt;'%(Fullpath)')" />
+    <msgfmt
+      Condition="'@(msgfmt)' != '' and '%(msgfmt.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(msgfmt.CommandLineTemplate)"
+      Verbose="%(msgfmt.Verbose)"
+      OutputName="%(msgfmt.OutputName)"
+      AdditionalOptions="%(msgfmt.AdditionalOptions)"
+      Inputs="@(msgfmt)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputemsgfmtOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputemsgfmtOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputemsgfmtOutput"
+    Condition="'@(msgfmt)' != ''">
+    <ItemGroup>
+      <msgfmtDirsToMake
+        Condition="'@(msgfmt)' != '' and '%(msgfmt.ExcludedFromBuild)' != 'true'"
+        Include="%(msgfmt.Outputs)" />
+      <Link
+        Include="%(msgfmtDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(msgfmtDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(msgfmtDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(msgfmtDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>
