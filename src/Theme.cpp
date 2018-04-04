@@ -735,6 +735,18 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
 #endif
    }
+#if TEST_CARD
+   int j;
+   for(i=0;i<ImageCacheWidth;i++)
+      for(j=0;j<ImageCacheHeight;j++){
+         int r = j &0xff;
+         int g = i &0xff;
+         int b = (j >> 8) | ((i>>4)&0xf0);
+         wxRect R( i,j, 1, 1);
+         ImageCache.SetRGB( R, r, g, b );
+         ImageCache.SetAlpha( i,j, 255);
+   }
+#endif
 
 #ifdef IMAGE_MAP
    wxLogDebug( "</map>" );
@@ -1030,11 +1042,14 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
          mFlow.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
-         //      wxLogDebug(wxT("Copy at %i %i (%i,%i)"), mxPos, myPos, xWidth1, yHeight1 );
+         wxRect R = mFlow.RectInner();
+         //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mBitmapNames[i].c_str() );
          Image = GetSubImageWithAlpha( ImageCache, mFlow.RectInner() );
          mBitmaps[i] = wxBitmap(Image);
       }
    }
+   if( !ImageCache.HasAlpha() )
+      ImageCache.InitAlpha();
 
 //   return true; //To not load colours..
    // Now load the colours.
@@ -1046,6 +1061,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
       mFlow.RectMid( x, y );
+      wxRect R = mFlow.RectInner();
+      //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mColourNames[i].c_str() );
       // Only change the colour if the alpha is opaque.
       // This allows us to add NEW colours more easily.
       if( ImageCache.GetAlpha(x,y ) > 128 )
