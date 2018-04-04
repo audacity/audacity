@@ -1274,6 +1274,7 @@
 		5EF3E65F203FDFE9006C6882 /* SetEnvelopeCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E65D203FDFE9006C6882 /* SetEnvelopeCommand.cpp */; };
 		5EF3E662203FE73C006C6882 /* DragCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3E660203FE73C006C6882 /* DragCommand.cpp */; };
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
+		659B26C5207501970039894A /* WindowAccessible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 659B26C3207501970039894A /* WindowAccessible.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA0084181EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp */; };
@@ -3190,6 +3191,8 @@
 		5EF3E661203FE73C006C6882 /* DragCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragCommand.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
+		659B26C3207501970039894A /* WindowAccessible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WindowAccessible.cpp; sourceTree = "<group>"; };
+		659B26C4207501970039894A /* WindowAccessible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowAccessible.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -4546,6 +4549,8 @@
 		1790B0FD09883BFD008A330A /* widgets */ = {
 			isa = PBXGroup;
 			children = (
+				659B26C3207501970039894A /* WindowAccessible.cpp */,
+				659B26C4207501970039894A /* WindowAccessible.h */,
 				1790B0FE09883BFD008A330A /* AButton.cpp */,
 				1790B0FF09883BFD008A330A /* AButton.h */,
 				1790B10009883BFD008A330A /* ASlider.cpp */,
@@ -7963,6 +7968,7 @@
 				5E73966B1DAFDB5600BA0A4D /* LabelTextHandle.cpp in Sources */,
 				284B27E40FC66CCD005EAC96 /* TracksPrefs.cpp in Sources */,
 				284B27E50FC66CCD005EAC96 /* WarningsPrefs.cpp in Sources */,
+				659B26C5207501970039894A /* WindowAccessible.cpp in Sources */,
 				5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */,
 				5E667A691F0D723A00C942A5 /* TrackPanelResizerCell.cpp in Sources */,
 				28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */,

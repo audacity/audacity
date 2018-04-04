@@ -20,7 +20,7 @@
 class WindowAccessible: public wxAccessible
 {
 public:
-   WindowAccessible(wxWindow* win): wxAccessible(win) { if (win) win->SetAccessible(this); }
+   WindowAccessible(wxWindow* win);
    virtual ~WindowAccessible() {}
 
    wxAccStatus GetName(int childId, wxString* name) override;

@@ -19,6 +19,12 @@ contained GetParent() which was incorrect.
 
 #if wxUSE_ACCESSIBILITY
 
+WindowAccessible::WindowAccessible(wxWindow* win)
+    : wxAccessible(win)
+{
+    if (win) win->SetAccessible(this);
+}
+
 wxAccStatus WindowAccessible::GetName(int childId, wxString* name)
 {
    wxCHECK( GetWindow() != nullptr, wxACC_FAIL);
