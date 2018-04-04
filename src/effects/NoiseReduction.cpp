@@ -42,6 +42,7 @@
 #include "EffectManager.h"
 
 #include "../ShuttleGui.h"
+#include "../widgets/HelpSystem.h"
 #include "../Prefs.h"
 
 #include "../WaveTrack.h"
@@ -388,6 +389,7 @@ private:
    void OnPreview(wxCommandEvent &event);
    void OnReduceNoise( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
+   void OnHelp( wxCommandEvent &event );
 
    void OnText(wxCommandEvent &event);
    void OnSlider(wxCommandEvent &event);
@@ -1492,6 +1494,7 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialogWrapper)
    EVT_BUTTON(wxID_CANCEL, EffectNoiseReduction::Dialog::OnCancel)
    EVT_BUTTON(ID_EFFECT_PREVIEW, EffectNoiseReduction::Dialog::OnPreview)
    EVT_BUTTON(ID_BUTTON_GETPROFILE, EffectNoiseReduction::Dialog::OnGetProfile)
+   EVT_BUTTON(wxID_HELP, EffectNoiseReduction::Dialog::OnHelp)
 
    EVT_RADIOBUTTON(ID_RADIOBUTTON_KEEPSIGNAL, EffectNoiseReduction::Dialog::OnNoiseReductionChoice)
 #ifdef ISOLATE_CHOICE
@@ -1533,7 +1536,7 @@ EffectNoiseReduction::Dialog::Dialog
 (EffectNoiseReduction *effect,
  EffectNoiseReduction::Settings *settings,
  wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
-   : EffectDialog( parent, _("Noise Reduction"), EffectTypeProcess)
+   : EffectDialog( parent, _("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
    , m_pEffect(effect)
    , m_pSettings(settings) // point to
    , mTempSettings(*settings)  // copy
@@ -1676,6 +1679,11 @@ void EffectNoiseReduction::Dialog::OnReduceNoise( wxCommandEvent & WXUNUSED(even
 void EffectNoiseReduction::Dialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(0);
+}
+
+void EffectNoiseReduction::Dialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, "Noise_Reduction", true);
 }
 
 void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
