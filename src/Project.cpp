@@ -172,6 +172,10 @@ scroll information.  It also has some status flags.
 
 #include "../images/AudacityLogoAlpha.xpm"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 std::shared_ptr<TrackList> AudacityProject::msClipboard{ TrackList::Create() };
 double AudacityProject::msClipT0 = 0.0;
 double AudacityProject::msClipT1 = 0.0;
@@ -947,6 +951,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // field. Currently there are no such help strings, but it they were introduced, then
    // there would need to be an event handler to send them to the appropriate field.
    mStatusBar = CreateStatusBar(4);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mStatusBar->SetAccessible(safenew WindowAccessible(mStatusBar));
+#endif
+   mStatusBar->SetName(wxT("status_line"));     // not localized
    mProjectNo = mProjectCounter++; // Bug 322
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
@@ -990,7 +999,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       this, wxID_ANY, wxDefaultPosition,
       wxSize{ this->GetSize().GetWidth(), -1 }
    };
-   mTopPanel->SetName( "Top Panel" );// Not localised
+   mTopPanel->SetLabel( "Top Panel" );// Not localised
    mTopPanel->SetAutoLayout(true);
 #ifdef EXPERIMENTAL_DA2
    mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -1040,7 +1049,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       wxDefaultSize,
       wxNO_BORDER);
    mMainPanel->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
-   mMainPanel->SetName("Main Panel");// Not localised.
+   mMainPanel->SetLabel("Main Panel");// Not localised.
    pPage = mMainPanel;
    // Set the colour here to the track panel background to avoid
    // flicker when Audacity starts up.
@@ -1128,6 +1137,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //      several focus problems.
    mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
    mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mHsbar->SetAccessible(safenew WindowAccessible(mHsbar));
+   mVsbar->SetAccessible(safenew WindowAccessible(mVsbar));
+#endif
    mHsbar->SetName(_("Horizontal Scrollbar"));
    mVsbar->SetName(_("Vertical Scrollbar"));
 

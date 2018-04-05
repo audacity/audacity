@@ -71,6 +71,10 @@
 #include "../Theme.h"
 #include "../widgets/HelpSystem.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
+
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
@@ -245,6 +249,10 @@ PrefsDialog::PrefsDialog
       wxASSERT(factories.size() > 0);
       if (!uniquePage) {
          mCategories = safenew wxTreebookExt(this, wxID_ANY, mTitlePrefix);
+#if wxUSE_ACCESSIBILITY
+         // so that name can be set on a standard control
+         mCategories->GetTreeCtrl()->SetAccessible(safenew WindowAccessible(mCategories->GetTreeCtrl()));
+#endif
          // RJH: Prevent NVDA from reading "treeCtrl"
          mCategories->GetTreeCtrl()->SetName(_("Category"));
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);

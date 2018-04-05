@@ -57,6 +57,10 @@ with changes in the SelectionBar.
 #include "../widgets/NumericTextCtrl.h"
 #include "../AllThemeResources.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
+
 IMPLEMENT_CLASS(SelectionBar, ToolBar);
 
 const static wxChar *numbers[] =
@@ -276,6 +280,10 @@ void SelectionBar::Populate()
       (this, ChoiceID, wxDefaultPosition, wxDefaultSize, 4, choices,
        0, wxDefaultValidator, _("Show"));
    mChoice->SetSelection(0);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mChoice->SetAccessible(safenew WindowAccessible(mChoice));
+#endif
 #ifdef __WXGTK__
    // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
    // be three units high.
@@ -293,6 +301,10 @@ void SelectionBar::Populate()
    mRateBox = safenew wxComboBox(this, RateID,
                              wxT(""),
                              wxDefaultPosition, wxSize(80, -1));
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mRateBox->SetAccessible(safenew WindowAccessible(mRateBox));
+#endif
    mRateBox->SetName(_("Project Rate (Hz)"));
    //mRateBox->SetForegroundColour( clrText2 );
    wxTextValidator vld(wxFILTER_INCLUDE_CHAR_LIST);
@@ -352,6 +364,10 @@ void SelectionBar::Populate()
 
    mainSizer->Add(mSnapTo,
                   0, wxALIGN_TOP | wxRIGHT, 5);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mSnapTo->SetAccessible(safenew WindowAccessible(mSnapTo));
+#endif
    mSnapTo->SetName(_("Snap To"));
    //mSnapTo->SetForegroundColour( clrText2 );
    mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);

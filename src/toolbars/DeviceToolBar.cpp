@@ -45,6 +45,10 @@
 #include "../DeviceManager.h"
 #include "../widgets/ErrorDialog.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
+
 IMPLEMENT_CLASS(DeviceToolBar, ToolBar);
 
 ////////////////////////////////////////////////////////////
@@ -93,7 +97,10 @@ void DeviceToolBar::Populate()
                         wxID_ANY,
                         wxDefaultPosition,
                         wxDefaultSize);
-
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mHost->SetAccessible(safenew WindowAccessible(mHost));
+#endif
    Add(mHost, 0, wxALIGN_CENTER);
 
    // Input device
@@ -104,12 +111,20 @@ void DeviceToolBar::Populate()
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mInput->SetAccessible(safenew WindowAccessible(mInput));
+#endif
    // Input channels
    Add(mInput, 0, wxALIGN_CENTER);
    mInputChannels = safenew wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mInputChannels->SetAccessible(safenew WindowAccessible(mInputChannels));
+#endif
    Add(mInputChannels, 0, wxALIGN_CENTER);
 
    // Output device
@@ -120,6 +135,10 @@ void DeviceToolBar::Populate()
                                wxID_ANY,
                                wxDefaultPosition,
                                wxDefaultSize);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mOutput->SetAccessible(safenew WindowAccessible(mOutput));
+#endif
    Add(mOutput, 0, wxALIGN_CENTER);
 
 

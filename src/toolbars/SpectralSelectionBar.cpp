@@ -59,6 +59,10 @@ with changes in the SpectralSelectionBar.
 #include "../Experimental.h"
 #include "../Internat.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 
 IMPLEMENT_CLASS(SpectralSelectionBar, ToolBar);
@@ -148,6 +152,10 @@ void SpectralSelectionBar::Populate()
       (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
        0, wxDefaultValidator, _("Spectral Selection"));
    mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mChoice->SetAccessible(safenew WindowAccessible(mChoice));
+#endif
 #ifdef __WXGTK__
    // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
    // be three units high.

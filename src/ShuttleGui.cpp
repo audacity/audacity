@@ -113,6 +113,10 @@ for registering for changes.
 #include "widgets/wxPanelWrapper.h"
 #include "AllThemeResources.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 ShuttleGuiBase::ShuttleGuiBase(wxWindow * pParent, teShuttleMode ShuttleMode )
 {
    wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
@@ -503,6 +507,10 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
       wxDefaultPosition, wxDefaultSize,
       Style( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
       );
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    mpWind->SetName(wxStripMenuCodes(Prompt));
    miProp=1;
    UpdateSizers();
@@ -552,6 +560,10 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString 
 
    mpWind = pTextCtrl = safenew wxTextCtrl(GetParent(), miId, Value,
       wxDefaultPosition, Size, Style( flags ));
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    mpWind->SetName(wxStripMenuCodes(Caption));
    UpdateSizers();
    return pTextCtrl;
@@ -583,6 +595,10 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(const wxString &Caption, const wx
       wxDefaultPosition, Size, Style( flags ),
       Validator // It's OK to pass this.  It will be cloned.
       );
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    mpWind->SetName(wxStripMenuCodes(Caption));
    UpdateSizers();
    return pTextCtrl;
@@ -598,6 +614,10 @@ wxTextCtrl * ShuttleGuiBase::AddTextWindow(const wxString &Value)
    SetProportions( 1 );
    mpWind = pTextCtrl = safenew wxTextCtrl(GetParent(), miId, Value,
       wxDefaultPosition, wxDefaultSize, Style( wxTE_MULTILINE ));
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    UpdateSizers();
    // Start off at start of window...
    pTextCtrl->SetInsertionPoint( 0 );
@@ -2274,6 +2294,10 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       // bs->AddButton(safenew wxButton(parent, wxID_HELP));
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( _("Help") );
+#if wxUSE_ACCESSIBILITY
+      b->SetAccessible(safenew WindowAccessible(b));  // so that name can be set on a standard control
+      b->SetName(_("Help"));
+#endif
       bs->AddButton( b );
    }
 
