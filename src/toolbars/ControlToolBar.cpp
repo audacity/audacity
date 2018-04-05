@@ -1020,10 +1020,15 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       }
 
       int recordingChannels = 0;
+      // These count channels sellected/existing skipping tracks that 
+      // are too big for the number of channels left.  e.g don't count a stereo 
+      // track when only one channel left to record.
+      int selectedChannels = 0;
+      int existingChannels = 0;
+      double allt0 = t0;
+
       if (appendRecord) {
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
-         bool sel = false;
-         double allt0 = t0;
 
          // Find the maximum end time of selected and all wave tracks
          // Find whether any tracks were selected.  (If any are selected,
@@ -1034,9 +1039,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                if (wt->GetEndTime() > allt0) {
                   allt0 = wt->GetEndTime();
                }
-
+               int nChannelsThisTrack = wt->GetLinked() ? 2:1;
+               if( recordingChannels >= existingChannels + nChannelsThisTrack)
+                  existingChannels += nChannelsThisTrack;
                if (tt->GetSelected()) {
-                  sel = true;
+                  if( recordingChannels >= selectedChannels + nChannelsThisTrack)
+                     selectedChannels += nChannelsThisTrack;
                   if (wt->GetEndTime() > t0) {
                      t0 = wt->GetEndTime();
                   }
@@ -1044,10 +1052,20 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
+         // Number of channels to record into is number selected, or all.
+         int nChannelsAvailable = ( selectedChannels > 0 ) ? selectedChannels : existingChannels;
+         // If that is not enough to record without losing a channel, flip over to
+         // recording to new tracks.
+         if( nChannelsAvailable < recordingChannels )
+            appendRecord = false;
+      }
+
+      if (appendRecord) {
+
          // t0 is now: max(selection-start, end-of-selected-wavetracks)
          // allt0 is:  max(selection-start, end-of-all-tracks)
          // Use end time of all wave tracks if none selected
-         if (!sel) {
+         if (selectedChannels == 0) {
             t0 = allt0;
          }
 
@@ -1056,9 +1074,15 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // Remove recording tracks from the list of tracks for duplex ("overdub")
          // playback.
          for (Track *tt = it.First(); tt; tt = it.Next()) {
-            if (tt->GetKind() == Track::Wave && (tt->GetSelected() || !sel)) {
+            if (tt->GetKind() == Track::Wave && 
+                  (tt->GetSelected() || 
+                   (selectedChannels == 0)
+                  )) {
                auto wt = Track::Pointer<WaveTrack>(tt);
                // Don't record into one track of a stereo track...
+               // We're in fact here refusing to record the last channel, 
+               // if there are no more channels after it,  into a stereo 
+               // track - which comes to the same thing.
                if( ((int)recordingTracks.size() >= recordingChannels -1) && 
                    wt->GetLinked() )
                {   tt = it.Next();
