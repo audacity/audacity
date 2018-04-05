@@ -19,11 +19,12 @@
 #include <algorithm>
 
 #ifndef IN_RC
+#include "Audacity.h"
 
 class wxString;
 
-extern const wxString& GetCustomTranslation(const wxString& str1 );
-extern const wxString& GetCustomSubstitution(const wxString& str1 );
+extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
+extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str1 );
 
 // Marks string for substitution only.
 #define _TS( s ) GetCustomSubstitution( s )

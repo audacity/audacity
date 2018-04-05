@@ -193,6 +193,7 @@ extern "C"
             c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
             c->AddItem(wxT("NyqBench"),
                _("&Nyquist Workbench..."),
+               true,
                findme,
                static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench));
 

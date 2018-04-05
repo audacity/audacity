@@ -43,7 +43,7 @@
 #define __AUDACITY_IDENTINTERFACE_H__
 
 #include "audacity/Types.h"
-extern const wxString& GetCustomTranslation(const wxString& str1 );
+extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
 
 /**************************************************************************//**
 

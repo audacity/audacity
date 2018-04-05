@@ -46,7 +46,7 @@ wxCharBuffer Internat::mFilename;
 // This function allows us to replace Audacity by DarkAudacity without peppering 
 // the source code with changes.  We split out this step, the customisation, as 
 // it is used on its own (without translation) in the wxTS macro.
-const wxString& GetCustomSubstitution(const wxString& str2)
+AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str2)
 {
    // If contains 'DarkAudacity, already converted.
    if( str2.Contains( "DarkAudacity" ))
@@ -64,7 +64,7 @@ const wxString& GetCustomSubstitution(const wxString& str2)
    return wxTranslations::GetUntranslatedString(str3);
 }
 #else 
-const wxString& GetCustomSubstitution(const wxString& str1)
+AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str1)
 {
    return str1 ;
 }
@@ -72,7 +72,7 @@ const wxString& GetCustomSubstitution(const wxString& str1)
 
 // In any translated string, we can replace the name 'Audacity' by 'DarkAudacity'
 // without requiring translators to see extra strings for the two versions.
-const wxString& GetCustomTranslation(const wxString& str1)
+AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1)
 {
    const wxString& str2 = wxGetTranslation( str1 );
    return GetCustomSubstitution( str2 );

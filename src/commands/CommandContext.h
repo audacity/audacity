@@ -22,7 +22,7 @@ class wxEvent;
 class CommandOutputTargets;
 using CommandParameter = wxString;
 
-class CommandContext {
+class AUDACITY_DLL_API CommandContext {
 public:
    CommandContext(
       AudacityProject &p
