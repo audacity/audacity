@@ -18,6 +18,7 @@
 #include "../Audacity.h"
 
 #include <wx/defs.h>
+#include "../Experimental.h"
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
@@ -52,7 +53,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-#if 0
+#ifndef EXPERIMENTAL_DA
    S.StartStatic(_("When importing audio files"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
