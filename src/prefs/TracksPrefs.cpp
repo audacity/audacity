@@ -228,13 +228,6 @@ TracksPrefs::~TracksPrefs()
 {
 }
 
-
-const wxChar *TracksPrefs::ScrollingPreferenceKey()
-{
-   static auto string = wxT("/GUI/ScrollBeyondZero");
-   return string;
-}
-
 void TracksPrefs::Populate()
 {
    // Keep view choices and codes in proper correspondence --
@@ -266,11 +259,6 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Auto-scroll"),
                     wxT("/GUI/AutoScroll"),
                     true);
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-      S.TieCheckBox(_("Scroll left of &zero"),
-                    ScrollingPreferenceKey(),
-                    ScrollingPreferenceDefault());
-#endif
       S.TieCheckBox(_("Auto-&height for tracks"),
                     wxT("/GUI/TracksFitVerticallyZoomed"),
                     false);

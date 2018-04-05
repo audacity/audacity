@@ -19,7 +19,7 @@ Paul Licameli
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "xml/XMLWriter.h"
-#include "prefs/TracksPrefs.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 #include "Snap.h"
 
 namespace {
@@ -152,8 +152,8 @@ void ViewInfo::UpdatePrefs()
 {
    ZoomInfo::UpdatePrefs();
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   gPrefs->Read(TracksPrefs::ScrollingPreferenceKey(), &bScrollBeyondZero,
-                TracksPrefs::ScrollingPreferenceDefault());
+   gPrefs->Read(TracksBehaviorsPrefs::ScrollingPreferenceKey(), &bScrollBeyondZero,
+                TracksBehaviorsPrefs::ScrollingPreferenceDefault());
 #endif
    gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &bAdjustSelectionEdges,
       true);

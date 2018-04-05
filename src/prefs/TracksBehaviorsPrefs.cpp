@@ -33,6 +33,12 @@ TracksBehaviorsPrefs::~TracksBehaviorsPrefs()
 {
 }
 
+const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
+{
+   static auto string = wxT("/GUI/ScrollBeyondZero");
+   return string;
+}
+
 void TracksBehaviorsPrefs::Populate()
 {
    mSoloCodes.Add(wxT("Simple"));
@@ -72,6 +78,10 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Enable &dragging selection edges"),
                     wxT("/GUI/AdjustSelectionEdges"),
                     true);
+      S.TieCheckBox(_("Editing a clip can &move other clips"),
+                    wxT("/GUI/EditClipCanMove"),
+                    true);
+
 /* Stopping at either end is best (DA decision) 
    Works for VI users and regular users alike.
 */
@@ -84,9 +94,9 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/GUI/TypeToCreateLabel"),
                     true);
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
-//      S.TieCheckBox(_("Enable scrolling left of &zero"),
-//                    ScrollingPreferenceKey(),
-//                    ScrollingPreferenceDefault());
+      S.TieCheckBox(_("Enable scrolling left of &zero"),
+                    ScrollingPreferenceKey(),
+                    ScrollingPreferenceDefault());
 #endif
       S.TieCheckBox(_("Advanced &vertical zooming"),
                     wxT("/GUI/VerticalZooming"),

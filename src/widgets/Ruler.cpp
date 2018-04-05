@@ -2069,8 +2069,8 @@ void AdornedRulerPanel::UpdatePrefs()
 #ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
    {
       bool scrollBeyondZero = false;
-      gPrefs->Read(TracksPrefs::ScrollingPreferenceKey(), &scrollBeyondZero,
-                   TracksPrefs::ScrollingPreferenceDefault());
+      gPrefs->Read(TracksBehaviorsPrefs::ScrollingPreferenceKey(), &scrollBeyondZero,
+                   TracksBehaviorsPrefs::ScrollingPreferenceDefault());
       mRuler.SetTwoTone(scrollBeyondZero);
    }
 #endif

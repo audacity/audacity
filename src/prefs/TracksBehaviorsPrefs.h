@@ -26,6 +26,9 @@ class TracksBehaviorsPrefs final : public PrefsPanel
    bool Commit() override;
    wxString HelpPageName() override;
 
+   static const wxChar *ScrollingPreferenceKey();
+   static inline bool ScrollingPreferenceDefault() { return false; }
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S) override;
