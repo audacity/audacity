@@ -3,9 +3,10 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="libsoxr"
-	ProjectGUID="{af9ad75c-4785-4432-bac3-adab1e7f1192}"
+	ProjectGUID="{4916B0C1-2F99-433A-B88A-A99CB4E1E0AB}"
 	RootNamespace="libsoxr"
-	TargetFrameworkVersion="131072"
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform Name="Win32" />
@@ -17,63 +18,79 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
-			WholeProgramOptimization="0"
+			ConfigurationType="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="."
-				PreprocessorDefinitions="_DEBUG;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;SOXR_LIB"
-				StringPooling="true"
+				PreprocessorDefinitions="_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;SOXR_LIB;SOXR_DLL;soxr_EXPORTS"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
-				CompileAs="0"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="1"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
+			ConfigurationType="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="."
-				PreprocessorDefinitions="NDEBUG;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;SOXR_LIB"
-				StringPooling="true"
+				PreprocessorDefinitions="NDEBUG;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;SOXR_LIB;SOXR_DLL;soxr_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				CompileAs="0"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 		</Configuration>
 	</Configurations>
 	<References>
 	</References>
 	<Files>
-		<Filter Name="Source Files" >
-			<File RelativePath="../src/data-io.c" />
-			<File RelativePath="../src/dbesi0.c" />
-			<File RelativePath="../src/fft4g32.c" />
-			<File RelativePath="../src/fft4g64.c" />
-			<File RelativePath="../src/filter.c" />
-			<File RelativePath="../src/lsr.c" />
-			<File RelativePath="../src/pffft32s.c" />
-			<File RelativePath="../src/rate32.c" />
-			<File RelativePath="../src/rate32s.c" />
-			<File RelativePath="../src/rate64.c" />
-			<File RelativePath="../src/simd.c" />
-			<File RelativePath="../src/soxr.c" />
-			<File RelativePath="../src/vr32.c" />
-		</Filter>
+		<File RelativePath="..\src\cr.c" />
+		<File RelativePath="..\src\cr32.c" />
+		<File RelativePath="..\src\cr32s.c" />
+		<File RelativePath="..\src\cr64.c" />
+		<File RelativePath="..\src\cr64s.c" />
+		<File RelativePath="..\src\data-io.c" />
+		<File RelativePath="..\src\dbesi0.c" />
+		<File RelativePath="..\src\fft4g32.c" />
+		<File RelativePath="..\src\fft4g64.c" />
+		<File RelativePath="..\src\filter.c" />
+		<File RelativePath="..\src\pffft32s.c" />
+		<File RelativePath="..\src\pffft64s.c" />
+		<File RelativePath="..\src\util32s.c" />
+		<File RelativePath="..\src\util64s.c" />
+		<File RelativePath="..\src\soxr.c" />
+		<File RelativePath="..\src\vr32.c" />
 	</Files>
 	<Globals>
 	</Globals>

@@ -13,14 +13,15 @@
 #include "SampleFormat.h"
 
 
+/// These ditherers are currently available:
+enum DitherType : unsigned {
+   none = 0, rectangle = 1, triangle = 2, shaped = 3 };
+
 class Dither
 {
 public:
     /// Default constructor
     Dither();
-
-    /// These ditherers are currently available:
-    enum DitherType { none = 0, rectangle = 1, triangle = 2, shaped = 3};
 
     /// Reset state of the dither.
     void Reset();

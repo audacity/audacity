@@ -20,6 +20,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelMouseEvent.h"
 #include "../../Track.h"
 #include <wx/textdlg.h>
+#include "../../commands/CommandType.h"
+#include "../../commands/Command.h"
+#include "../../ShuttleGui.h"
+
 
 TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
    : mwTrack{ pTrack }
@@ -37,7 +41,7 @@ std::shared_ptr<Track> TrackControls::FindTrack()
 
 std::vector<UIHandlePtr> TrackControls::HitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *project)
+ const AudacityProject *WXUNUSED(project))
 {
    // Hits are mutually exclusive, results single
 
@@ -125,32 +129,69 @@ BEGIN_POPUP_MENU(TrackMenuTable)
    POPUP_MENU_ITEM(OnSetNameID, _("&Name..."), OnSetName)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(
-      // It is not correct to use KeyStringDisplay here -- wxWidgets will apply
-      // its equivalent to the key names passed to menu functions.
+      // It is not correct to use NormalizedKeyString::Display here --
+      // wxWidgets will apply its equivalent to the key names passed to menu
+      // functions.
       OnMoveUpID,
       _("Move Track &Up") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveUp"))),
+          GetKeyFromName(wxT("TrackMoveUp")).Raw()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveDownID,
       _("Move Track &Down") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveDown"))),
+          GetKeyFromName(wxT("TrackMoveDown")).Raw()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveTopID,
       _("Move Track to &Top") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveTop"))),
+          GetKeyFromName(wxT("TrackMoveTop")).Raw()),
       OnMoveTrack)
    POPUP_MENU_ITEM(
       OnMoveBottomID,
       _("Move Track to &Bottom") + wxT("\t") +
          (GetActiveProject()->GetCommandManager()->
-          GetKeyFromName(wxT("TrackMoveBottom"))),
+          GetKeyFromName(wxT("TrackMoveBottom")).Raw()),
       OnMoveTrack)
 END_POPUP_MENU()
+
+
+
+
+#define SET_TRACK_NAME_PLUGIN_SYMBOL XO("Set Track Name")
+
+// An example of using an AudacityCommand simply to create a dialog.
+// We can add additional functions later, if we want to make it
+// available to scripting.
+// However there is no reason to, as SetTrackStatus is already provided.
+class SetTrackNameCommand : public AudacityCommand
+{
+public:
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return SET_TRACK_NAME_PLUGIN_SYMBOL;};
+   //wxString GetDescription() override {return _("Sets the track name.");};
+   //bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   //bool Apply(const CommandContext & context) override;
+
+   // Provide an override, if we want the help button.
+   // wxString ManualPage() override {return wxT("");};
+public:
+   wxString mName;
+};
+
+void SetTrackNameCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(_("Name:"),mName);
+   }
+   S.EndMultiColumn();
+}
 
 void TrackMenuTable::OnSetName(wxCommandEvent &)
 {
@@ -159,11 +200,14 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
    {
       AudacityProject *const proj = ::GetActiveProject();
       const wxString oldName = pTrack->GetName();
-      const wxString newName =
-         wxGetTextFromUser(_("Change track name to:"),
-         _("Track Name"), oldName);
-      if (newName != wxT("")) // wxGetTextFromUser returns empty string on Cancel.
+
+      SetTrackNameCommand Command;
+      Command.mName = oldName;
+      // Bug 1837 : We need an OK/Cancel result if we are to enter a blank string.
+      bool bResult = Command.PromptUser( proj );
+      if (bResult) 
       {
+         wxString newName = Command.mName;
          pTrack->SetName(newName);
          // if we have a linked channel this name should change as well
          // (otherwise sort by name and time will crash).
@@ -176,8 +220,8 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
             pMixerBoard->UpdateName(pt);
 
          proj->PushState(wxString::Format(_("Renamed '%s' to '%s'"),
-            oldName.c_str(),
-            newName.c_str()),
+            oldName,
+            newName),
             _("Name Change"));
 
          mpData->result = RefreshCode::RefreshAll;

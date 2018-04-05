@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * LabelCursorLeftXpm[] = {
+static const char * const LabelCursorLeftXpm[] = {
 "16 16 4 1",
 " 	c None",
 ".	c #FF0000",

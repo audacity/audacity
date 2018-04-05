@@ -26,9 +26,10 @@
 #include "Grid.h"
 #include "NumericTextCtrl.h"
 #include "../SelectedRegion.h"
+#include "../Internat.h"
 
 NumericEditor::NumericEditor
-   (NumericConverter::Type type, const wxString &format, double rate)
+   (NumericConverter::Type type, const NumericFormatId &format, double rate)
 {
    mType = type;
    mFormat = format;
@@ -43,16 +44,17 @@ NumericEditor::~NumericEditor()
 void NumericEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
    wxASSERT(parent); // to justify safenew
-   auto control = safenew NumericTextCtrl(mType, parent,
-                                wxID_ANY,
-                                mFormat,
-                                mOld,
-                                mRate,
-                                wxDefaultPosition,
-                                wxDefaultSize,
-                                true);
-   if (mType == NumericTextCtrl::FREQUENCY)
-      control->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+   auto control = safenew NumericTextCtrl(
+      parent, wxID_ANY,
+      mType,
+      mFormat,
+      mOld,
+      mRate,
+      NumericTextCtrl::Options{}
+         .AutoPos(true)
+         .InvalidValue(mType == NumericTextCtrl::FREQUENCY,
+                       SelectedRegion::UndefinedFrequency)
+   );
    m_control = control;
 
    wxGridCellEditor::Create(parent, id, handler);
@@ -129,7 +131,7 @@ wxString NumericEditor::GetValue() const
    return wxString::Format(wxT("%g"), GetNumericTextControl()->GetValue());
 }
 
-wxString NumericEditor::GetFormat() const
+NumericFormatId NumericEditor::GetFormat() const
 {
    return mFormat;
 }
@@ -139,7 +141,7 @@ double NumericEditor::GetRate() const
    return mRate;
 }
 
-void NumericEditor::SetFormat(const wxString &format)
+void NumericEditor::SetFormat(const NumericFormatId &format)
 {
    mFormat = format;
 }
@@ -173,14 +175,13 @@ void NumericRenderer::Draw(wxGrid &grid,
 
       table->GetValue(row, col).ToDouble(&value);
 
-      NumericTextCtrl tt(mType, &grid,
-                      wxID_ANY,
+      NumericTextCtrl tt(&grid, wxID_ANY,
+                      mType,
                       ne->GetFormat(),
                       value,
                       ne->GetRate(),
-                      wxPoint(10000, 10000),  // create offscreen
-                      wxDefaultSize,
-                      true);
+                      NumericTextCtrl::Options{}.AutoPos(true),
+                      wxPoint(10000, 10000));  // create offscreen
       tstr = tt.GetString();
 
       ne->DecRef();
@@ -230,14 +231,13 @@ wxSize NumericRenderer::GetBestSize(wxGrid &grid,
    if (ne) {
       double value;
       table->GetValue(row, col).ToDouble(&value);
-      NumericTextCtrl tt(mType, &grid,
-                      wxID_ANY,
+      NumericTextCtrl tt(&grid, wxID_ANY,
+                      mType,
                       ne->GetFormat(),
                       value,
                       ne->GetRate(),
-                      wxPoint(10000, 10000),  // create offscreen
-                      wxDefaultSize,
-                      true);
+                      NumericTextCtrl::Options{}.AutoPos(true),
+                      wxPoint(10000, 10000));  // create offscreen
       sz = tt.GetSize();
 
       ne->DecRef();
@@ -396,12 +396,14 @@ Grid::Grid(wxWindow *parent,
    RegisterDataType(GRID_VALUE_TIME,
                     safenew NumericRenderer{ NumericConverter::TIME },
                     safenew NumericEditor
-                      { NumericTextCtrl::TIME, wxT("seconds"), 44100.0 });
+                      { NumericTextCtrl::TIME,
+                        NumericConverter::SecondsFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_FREQUENCY,
                     safenew NumericRenderer{ NumericConverter::FREQUENCY },
                     safenew NumericEditor
-                    { NumericTextCtrl::FREQUENCY, wxT("Hz"), 44100.0 });
+                    { NumericTextCtrl::FREQUENCY,
+                      NumericConverter::HertzFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_CHOICE,
                     safenew wxGridCellStringRenderer,
@@ -622,7 +624,7 @@ bool Grid::DeleteCols(int pos, int numCols, bool updateLabels)
 }
 
 GridAx::GridAx(Grid *grid)
-: wxWindowAccessible(grid->GetGridWindow())
+: WindowAccessible(grid->GetGridWindow())
 {
    mGrid = grid;
    mLastId = -1;

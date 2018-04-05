@@ -15,6 +15,7 @@
 #include "Nyquist.h"
 
 #include "LoadNyquist.h"
+#include "../../FileNames.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
@@ -123,7 +124,7 @@ wxString NyquistEffectsModule::GetVersion()
 
 wxString NyquistEffectsModule::GetDescription()
 {
-   return XO("Provides Nyquist Effects support to Audacity");
+   return _("Provides Nyquist Effects support to Audacity");
 }
 
 // ============================================================================
@@ -159,16 +160,37 @@ void NyquistEffectsModule::Terminate()
    return;
 }
 
+wxArrayString NyquistEffectsModule::FileExtensions()
+{
+   static const wxString ext[] = { _T("ny") };
+   static const wxArrayString result{ sizeof(ext)/sizeof(*ext), ext };
+   return result;
+}
+
+wxString NyquistEffectsModule::InstallPath()
+{
+   return FileNames::PlugInDir();
+}
+
 bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
    wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
    wxArrayString files;
+   wxString ignoredErrMsg;
 
    if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
    {
-      RegisterPlugin(pm, NYQUIST_PROMPT_ID);
+      // No checking of error ?
+      DiscoverPluginsAtPath(NYQUIST_PROMPT_ID, ignoredErrMsg,
+         PluginManagerInterface::DefaultRegistrationCallback);
+   }
+   if (!pm.IsPluginRegistered(NYQUIST_TOOLS_PROMPT_ID))
+   {
+      // No checking of error ?
+      DiscoverPluginsAtPath(NYQUIST_TOOLS_PROMPT_ID, ignoredErrMsg,
+         PluginManagerInterface::DefaultRegistrationCallback);
    }
 
    for (size_t i = 0; i < WXSIZEOF(kShippedEffects); i++)
@@ -179,7 +201,9 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       {
          if (!pm.IsPluginRegistered(files[j]))
          {
-            RegisterPlugin(pm, files[j]);
+            // No checking of error ?
+            DiscoverPluginsAtPath(files[j], ignoredErrMsg,
+               PluginManagerInterface::DefaultRegistrationCallback);
          }
       }
    }
@@ -188,13 +212,14 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
+wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
 {
    wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
    wxArrayString files;
 
    // Add the Nyquist prompt effect
    files.Add(NYQUIST_PROMPT_ID);
+   files.Add(NYQUIST_TOOLS_PROMPT_ID);
    
    // Load .ny plug-ins
    pm.FindFilesInPathList(wxT("*.ny"), pathList, files);
@@ -204,27 +229,30 @@ wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
    return files;
 }
 
-bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
+   errMsg.clear();
    NyquistEffect effect(path);
    if (effect.IsOk())
    {
-      pm.RegisterPlugin(this, &effect);
-      return true;
+      if (callback)
+         callback(this, &effect);
+      return 1;
    }
 
-   return false;
+   errMsg = effect.InitializationError();
+   return 0;
 }
 
 bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // Ignores bFast parameter, since checking file exists is fast enough for
    // the small number of Nyquist plug-ins that we have.
-   bFast;
-   if (path == NYQUIST_PROMPT_ID)
-   {
+   static_cast<void>(bFast);
+   if((path == NYQUIST_PROMPT_ID) ||  (path == NYQUIST_TOOLS_PROMPT_ID))
       return true;
-   }
 
    return wxFileName::FileExists(path);
 }

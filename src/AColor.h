@@ -21,6 +21,7 @@
 class wxDC;
 class wxRect;
 
+/// Used to restore pen, brush and logical-op in a DC back to what they were.
 struct DCUnchanger {
 public:
    DCUnchanger() {}
@@ -36,9 +37,8 @@ public:
    long logicalOperation {};
 };
 
-// Like wxDCPenChanger, etc., but simple and general
-// Make temporary drawing context changes that you back out of, RAII style
-
+/// Makes temporary drawing context changes that you back out of, RAII style
+//  It's like wxDCPenChanger, etc., but simple and general
 class ADCChanger : public std::unique_ptr<wxDC, ::DCUnchanger>
 {
    using Base = std::unique_ptr<wxDC, ::DCUnchanger>;

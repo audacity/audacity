@@ -22,17 +22,17 @@ or "OFF" point
 
 #include "VoiceKey.h"
 #include <wx/string.h>
-#include <wx/msgdlg.h>
 #include <math.h>
 #include <stdio.h>
 
 #include <wx/filedlg.h>
-#include <wx/msgdlg.h>
 #include <wx/textfile.h>
 #include <wx/intl.h>
 #include <iostream>
 
 #include "WaveTrack.h"
+#include "widgets/ErrorDialog.h"
+#include "Internat.h"
 
 using std::cout;
 using std::endl;
@@ -96,7 +96,7 @@ sampleCount VoiceKey::OnForward (
          backwards by words.  So 'key' is being used in the sense of an index.
          This error message means that you've selected too short
          a region of audio to be able to use this feature.*/
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
       return start;
    }
    else {
@@ -244,7 +244,7 @@ sampleCount VoiceKey::OnBackward (
 
    if((mWindowSize) >= (len + 10).as_double() ){
 
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
       return end;
    }
    else {
@@ -306,8 +306,15 @@ sampleCount VoiceKey::OnBackward (
          //Initialize these trend markers atrend and ztrend.  They keep track of the
          //up/down trends at the start and end of the evaluation window.
          int atrend = sgn(buffer[remaining - 2]-buffer[remaining - 1]);
+
          int ztrend = sgn(buffer[remaining - WindowSizeInt - 2] -
-                          buffer[remaining - WindowSizeInt - 2]);
+                          buffer[remaining - WindowSizeInt
+                                 // PVS-Studio detected a probable error here
+                                 // when it read - 2.
+                                 // is - 1 correct?
+                                 // This code is unused. I didn't study further.
+                                  - 1
+                           ]);
 
          double erg=0;
          double sc = 0;
@@ -381,7 +388,7 @@ sampleCount VoiceKey::OffForward (
 {
 
    if((mWindowSize) >= (len + 10).as_double() ){
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
 
       return start;
    }
@@ -519,7 +526,7 @@ sampleCount VoiceKey::OffBackward (
 
    if((mWindowSize) >= (len + 10).as_double() ){
 
-      wxMessageBox(_("Selection is too small to use voice key."));
+      AudacityMessageBox(_("Selection is too small to use voice key."));
       return end;
    }
    else {
@@ -812,12 +819,12 @@ void VoiceKey::CalibrateNoise(const WaveTrack & t, sampleCount start, sampleCoun
    mDirectionChangesMean = sumdc / samples;
    mDirectionChangesSD =sqrt(sumdc2 / samples - mDirectionChangesMean * mDirectionChangesMean) ;
 
-   wxString text =   wxString::Format(_("Calibration Results\n"));
+   wxString text = _("Calibration Results\n");
    /* i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'*/
    text +=           wxString::Format(_("Energy                  -- mean: %1.4f  sd: (%1.4f)\n"),mEnergyMean,mEnergySD);
    text+=            wxString::Format(_("Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"),mSignChangesMean,mSignChangesSD);
    text += wxString::Format(_("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"), mDirectionChangesMean, mDirectionChangesSD);
-   wxMessageDialog{ NULL, text,
+   AudacityMessageDialog{ NULL, text,
       _("Calibration Complete"),
       wxOK | wxICON_INFORMATION,
       wxPoint(-1, -1) }

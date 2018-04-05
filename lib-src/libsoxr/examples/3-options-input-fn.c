@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-16 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Example 3: extends example 2 with multiple channels, multiple datatypes,
@@ -14,7 +14,7 @@
  *   OUTPUT-RATE      Ditto
  *   NUM-CHANNELS     Number of interleaved channels
  *   IN-DATATYPE#     0:float32 1:float64 2:int32 3:int16
- *   OUT-DATATYPE#    Ditto
+ *   OUT-DATATYPE#    Ditto; or 11 for un-dithered int16
  *   Q-RECIPE         Quality recipe (in hex) See soxr.h
  *   Q-FLAGS          Quality flags  (in hex) See soxr.h
  *   PASSBAND-END     %
@@ -42,21 +42,22 @@ static size_t input_fn(input_context_t * p, soxr_cbuf_t * buf, size_t len)
 
 int main(int n, char const * arg[])
 {
-  char const *     const arg0 = n? --n, *arg++ : "";
+  char const *     const arg0 = n? --n, *arg++ : "", * engine = "";
   double          const irate = n? --n, atof(*arg++) : 96000.;
   double          const orate = n? --n, atof(*arg++) : 44100.;
   unsigned        const chans = n? --n, (unsigned)atoi(*arg++) : 1;
   soxr_datatype_t const itype = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
-  soxr_datatype_t const otype = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
+  unsigned        const ospec = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
   unsigned long const q_recipe= n? --n, strtoul(*arg++, 0, 16) : SOXR_HQ;
   unsigned long const q_flags = n? --n, strtoul(*arg++, 0, 16) : 0;
   double   const passband_end = n? --n, atof(*arg++) : 0;
   double const stopband_begin = n? --n, atof(*arg++) : 0;
   double const phase_response = n? --n, atof(*arg++) : -1;
   int       const use_threads = n? --n, atoi(*arg++) : 1;
+  soxr_datatype_t const otype = ospec & 3;
 
   soxr_quality_spec_t       q_spec = soxr_quality_spec(q_recipe, q_flags);
-  soxr_io_spec_t      const io_spec = soxr_io_spec(itype, otype);
+  soxr_io_spec_t            io_spec = soxr_io_spec(itype, otype);
   soxr_runtime_spec_t const runtime_spec = soxr_runtime_spec(!use_threads);
 
   /* Allocate resampling input and output buffers in proportion to the input
@@ -79,6 +80,7 @@ int main(int n, char const * arg[])
   if (passband_end   > 0) q_spec.passband_end   = passband_end / 100;
   if (stopband_begin > 0) q_spec.stopband_begin = stopband_begin / 100;
   if (phase_response >=0) q_spec.phase_response = phase_response;
+  io_spec.flags = ospec & ~7u;
 
   /* Create a stream resampler: */
   soxr = soxr_create(
@@ -92,6 +94,7 @@ int main(int n, char const * arg[])
   }
 
   if (!error) {                         /* If all is well, run the resampler: */
+    engine = soxr_engine(soxr);
     USE_STD_STDIO;
                                                        /* Resample in blocks: */
     do odone = soxr_output(soxr, obuf, olen);
@@ -104,7 +107,8 @@ int main(int n, char const * arg[])
   soxr_delete(soxr);
   free(obuf), free(ibuf);
                                                               /* Diagnostics: */
-  fprintf(stderr, "%-26s %s; %lu clips; I/O: %s\n", arg0, soxr_strerror(error),
-      (long unsigned)clips, errno? strerror(errno) : "no error");
-  return error || errno;
+  fprintf(stderr, "%-26s %s; %lu clips; I/O: %s (%s)\n",
+      arg0, soxr_strerror(error), (long unsigned)clips,
+      ferror(stdin) || ferror(stdout)? strerror(errno) : "no error", engine);
+  return !!error;
 }

@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
-#include "../../commands/CommandFunctors.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
@@ -29,6 +28,8 @@ Paul Licameli split from TrackPanel.cpp
 #endif
 
 #include "../../widgets/Ruler.h"
+#include "../../commands/CommandFunctors.h"
+#include "../../commands/CommandContext.h"
 
 #include <algorithm>
 
@@ -182,7 +183,8 @@ void Scrubber::ScrubPoller::Notify()
 }
 
 Scrubber::Scrubber(AudacityProject *project)
-   : mScrubToken(-1)
+   : mInOneShotMode( false )
+   , mScrubToken(-1)
    , mPaused(true)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
@@ -194,13 +196,12 @@ Scrubber::Scrubber(AudacityProject *project)
    , mProject(project)
    , mPoller { std::make_unique<ScrubPoller>(*this) }
    , mOptions {}
-   , mInOneShotMode( false )
 
 {
    if (wxTheApp)
-      wxTheApp->Connect
+      wxTheApp->Bind
       (wxEVT_ACTIVATE_APP,
-      wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
+       &Scrubber::OnActivateOrDeactivateApp, this);
    mProject->PushEventHandler(&mForwarder);
 }
 
@@ -212,10 +213,6 @@ Scrubber::~Scrubber()
 #endif
 
    mProject->PopEventHandler();
-   if (wxTheApp)
-      wxTheApp->Disconnect
-      (wxEVT_ACTIVATE_APP,
-      wxActivateEventHandler(Scrubber::OnActivateOrDeactivateApp), NULL, this);
 }
 
 namespace {
@@ -224,7 +221,7 @@ namespace {
       wxString label;
       wxString status;
       CommandFlag flags;
-      void (Scrubber::*memFn)(wxCommandEvent&);
+      void (Scrubber::*memFn)(const CommandContext&);
       bool seek;
       bool (Scrubber::*StatusTest)() const;
 
@@ -730,17 +727,8 @@ ScrubbingOverlay::ScrubbingOverlay(AudacityProject *project)
    , mLastScrubSpeedText()
    , mNextScrubSpeedText()
 {
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ScrubbingOverlay::OnTimer),
-      NULL,
-      this);
-}
-
-ScrubbingOverlay::~ScrubbingOverlay()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(ScrubbingOverlay::OnTimer),
-      NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+      &ScrubbingOverlay::OnTimer,
       this);
 }
 
@@ -921,19 +909,19 @@ void Scrubber::OnScrubOrSeek(bool seek)
    scrubbingToolBar->RegenerateTooltips();
 }
 
-void Scrubber::OnScrub(wxCommandEvent&)
+void Scrubber::OnScrub(const CommandContext&)
 {
    OnScrubOrSeek(false);
    CheckMenuItems();
 }
 
-void Scrubber::OnSeek(wxCommandEvent&)
+void Scrubber::OnSeek(const CommandContext&)
 {
    OnScrubOrSeek(true);
    CheckMenuItems();
 }
 
-void Scrubber::OnToggleScrubRuler(wxCommandEvent&)
+void Scrubber::OnToggleScrubRuler(const CommandContext&)
 {
    mProject->GetRulerPanel()->OnToggleScrubRuler();
    const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
@@ -943,10 +931,12 @@ void Scrubber::OnToggleScrubRuler(wxCommandEvent&)
 
 enum { CMD_ID = 8000 };
 
+#define THUNK(Name) Scrubber::Thunk<&Scrubber::Name>
+
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
-   EVT_MENU(CMD_ID,     Scrubber::OnScrub)
-   EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
-   EVT_MENU(CMD_ID + 2, Scrubber::OnToggleScrubRuler)
+   EVT_MENU(CMD_ID,     THUNK(OnScrub))
+   EVT_MENU(CMD_ID + 1, THUNK(OnSeek))
+   EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)
@@ -1000,6 +990,10 @@ bool Scrubber::CanScrub() const
    return cm->GetEnabled(menuItems[ 0 ].name);
 }
 
+// To supply the "finder" argument
+static CommandHandlerObject &findme(AudacityProject &project)
+{ return project.GetScrubber(); }
+
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
@@ -1008,13 +1002,17 @@ void Scrubber::AddMenuItems()
    for (const auto &item : menuItems) {
       if (item.StatusTest)
          cm->AddCheck(item.name, wxGetTranslation(item.label),
-                      FNT(Scrubber, this, item.memFn),
+                      // No menu items yet have dialogs
+                      false,
+                      findme, static_cast<CommandFunctorPointer>(item.memFn),
                       false,
                       item.flags, item.flags);
       else
          // The start item
          cm->AddItem(item.name, wxGetTranslation(item.label),
-                     FNT(Scrubber, this, item.memFn),
+                     // No menu items yet have dialogs
+                     false,
+                     findme, static_cast<CommandFunctorPointer>(item.memFn),
                      item.flags, item.flags);
    }
    cm->EndSubMenu();

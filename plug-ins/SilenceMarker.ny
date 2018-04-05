@@ -1,21 +1,28 @@
-;nyquist plug-in
-;version 1
-;type analyze
-;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
-;name "Silence Finder..."
-;manpage "Silence_Finder"
-;action "Finding silence..."
-;info "Adds point labels in areas of silence according to the specified\nlevel and duration of silence. If too many silences are detected,\nincrease the silence level and duration; if too few are detected,\nreduce the level and duration."
-;author "Alex S. Brown"
-;copyright "Released under terms of the GNU General Public License version 2"
+$nyquist plug-in
+$version 1
+$type analyze
+$name (_ "Silence Finder")
+$manpage "Silence_Finder"
+$action (_ "Finding silence...")
+$author (_ "Alex S. Brown")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; by Alex S. Brown, PMP (http://www.alexsbrown.com)
+;;
+;; Adds point labels in areas of silence according to the specified
+;; level and duration of silence. If too many silences are detected,
+;; increase the silence level and duration; if too few are detected,
+;; reduce the level and duration."
+
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control sil-lev "Treat audio below this level as silence [ -dB]" real "" 26 0 100
-;control sil-dur "Minimum duration of silence [seconds]" real "" 1.0 0.1 5.0
-;control labelbeforedur "Label placement [seconds before silence ends]" real "" 0.3 0.0 1.0
+$control sil-lev (_ "Treat audio below this level as silence [ -dB]") real "" 26 0 100
+$control sil-dur (_ "Minimum duration of silence [seconds]") real "" 1.0 0.1 5.0
+$control labelbeforedur (_ "Label placement [seconds before silence ends]") real "" 0.3 0.0 1.0
 
 ;Create a function to make the sum the two channels if they are stereo
 (defun mono-s (s-in) (if (arrayp s-in) (snd-add (aref s-in 0) (aref s-in 1))
@@ -88,6 +95,7 @@ s-in))
    (if (and (> v thres) (> sil-c sil-length))
  	  ;Mark the user-set number of seconds BEFORE this point to avoid clipping the start
  	  ;of the material.
+; Should "S" be translated or become a control value?
     (add-label (- (/ n s1-srate) labelbeforedur) "S")
    )
    ;If this sample is NOT silent, then reset the silence counter
@@ -110,6 +118,6 @@ s-in))
 
 ;If no silence markers were found, return a message
 (if (null l)
- (setq l "No silences found. Try reducing the silence\nlevel and minimum silence duration.")
+ (setq l (format nil (_ "No silences found. Try reducing the silence~%level and minimum silence duration.")))
 )
 l

@@ -18,6 +18,8 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #include "MemoryX.h"
 
+#include "Internat.h"
+
 // TODO: Determine whether the libav* headers come from the FFmpeg or libav
 // project and set IS_FFMPEG_PROJECT depending on it.
 #define IS_FFMPEG_PROJECT 1
@@ -126,6 +128,19 @@ extern "C" {
       }
       #endif
    #endif
+
+   #if LIBAVCODEC_VERSION_MAJOR < 58
+      #ifndef AV_CODEC_FLAG_QSCALE
+         #define AV_CODEC_FLAG_QSCALE CODEC_FLAG_QSCALE
+      #endif
+      #ifndef AV_CODEC_FLAG_GLOBAL_HEADER
+         #define AV_CODEC_FLAG_GLOBAL_HEADER CODEC_FLAG_GLOBAL_HEADER
+      #endif
+      #ifndef AV_CODEC_CAP_SMALL_LAST_FRAME
+         #define AV_CODEC_CAP_SMALL_LAST_FRAME CODEC_CAP_SMALL_LAST_FRAME
+      #endif
+   #endif
+
 }
 #endif
 
@@ -137,7 +152,6 @@ extern "C" {
 #include <wx/string.h>
 #include <wx/dynlib.h>
 #include <wx/log.h>      // for wxLogNull
-#include <wx/msgdlg.h>   // for wxMessageBox
 #include <wx/utils.h>
 #include "widgets/LinkingHtmlWindow.h"
 #include "ShuttleGui.h"
@@ -266,7 +280,7 @@ public:
    ///\return libavformat library version or empty string?
    wxString GetLibraryVersion()
    {
-      return wxString::Format(wxT("F(%s),C(%s),U(%s)"),mAVFormatVersion.c_str(),mAVCodecVersion.c_str(),mAVUtilVersion.c_str());
+      return wxString::Format(wxT("F(%s),C(%s),U(%s)"),mAVFormatVersion,mAVCodecVersion,mAVUtilVersion);
    }
 
 #if defined(__WXMSW__)
@@ -534,6 +548,12 @@ extern "C" {
       (void *ptr),
       (ptr)
    );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int64_t,
+      av_get_default_channel_layout,
+      (int nb_channels),
+      (nb_channels)
+   );
 
    //
    // libavcodec
@@ -559,6 +579,12 @@ extern "C" {
    FFMPEG_FUNCTION_WITH_RETURN(
       AVCodec*,
       avcodec_find_decoder,
+      (enum AVCodecID id),
+      (id)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      const char*,
+      avcodec_get_name,
       (enum AVCodecID id),
       (id)
    );
@@ -927,6 +953,18 @@ private:
 
 // Deleter adaptor for functions like av_free that take a pointer
 template<typename T, typename R, R(*Fn)(T*)> struct AV_Deleter {
+   inline R operator() (T* p) const
+   {
+      R result{};
+      if (p)
+         result = Fn(p);
+      return result;
+   }
+};
+
+// Specialization of previous for void return
+template<typename T, void(*Fn)(T*)>
+struct AV_Deleter<T, void, Fn> {
    inline void operator() (T* p) const
    {
       if (p)
@@ -958,9 +996,26 @@ using AVCodecContextHolder = std::unique_ptr<
 using AVDictionaryCleanup = std::unique_ptr<
    AVDictionary*, AV_Deleter<AVDictionary*, void, av_dict_free>
 >;
-using UFileHolder = std::unique_ptr<
-   AVIOContext, AV_Deleter<AVIOContext, int, ufile_close>
->;
+struct UFileHolder : public std::unique_ptr<
+   AVIOContext, ::AV_Deleter<AVIOContext, int, ufile_close>
+>
+{
+   UFileHolder() = default;
+   UFileHolder( UFileHolder &&that )
+   : std::unique_ptr< AVIOContext, ::AV_Deleter<AVIOContext, int, ufile_close> >(
+        std::move(that) )
+   {
+   }
+
+   // Close explicitly, not ignoring return values.
+   int close()
+   {
+      auto result = get_deleter() ( get() );
+      release();
+      return result;
+   }
+};
+
 template<typename T> using AVMallocHolder = std::unique_ptr<
    T, AV_Deleter<void, void, av_free>
 >;

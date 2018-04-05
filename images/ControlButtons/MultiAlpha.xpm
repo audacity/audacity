@@ -1,5 +1,5 @@
 /* XPM */
-static const char * MultiAlpha[] = {
+static const char * const MultiAlpha[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 2 1",
 ". c #000000",

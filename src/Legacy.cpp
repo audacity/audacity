@@ -36,12 +36,12 @@ On failure the old version is put back in place.
 #include <wx/ffile.h>
 #include <wx/filefn.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/string.h>
 #include <wx/textfile.h>
 
 #include "Internat.h"
 #include "Legacy.h"
+#include "widgets/ErrorDialog.h"
 #include "xml/XMLWriter.h"
 
 static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
@@ -301,7 +301,7 @@ bool ConvertLegacyProjectFile(const wxFileName &filename)
       xmlFile.EndTag(wxT("audacityproject"));
       xmlFile.Commit();
 
-      ::wxMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), xmlFile.GetBackupName().c_str()),
+      ::AudacityMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), xmlFile.GetBackupName()),
                      _("Opening Audacity Project"));
 
       return true;

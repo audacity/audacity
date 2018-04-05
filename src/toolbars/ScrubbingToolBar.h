@@ -43,12 +43,12 @@ public:
    ScrubbingToolBar();
    virtual ~ScrubbingToolBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
    void OnButton(wxCommandEvent & event);
 
-   void Populate();
-   void Repaint(wxDC * WXUNUSED(dc)) {};
+   void Populate() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
    void EnableDisableButtons() override;
    void UpdatePrefs() override;
 
@@ -56,8 +56,10 @@ public:
 
 private:
 
-   AButton *AddButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-                      int id, const wxChar *label, bool toggle = false);
+   static AButton *AddButton(
+      ScrubbingToolBar *pBar,
+      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+      int id, const wxChar *label, bool toggle = false);
 
    void MakeButtons();
 

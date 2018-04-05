@@ -16,12 +16,19 @@
 
 #include "Audacity.h"
 
+#include <vector>
 #include "MemoryX.h"
 #include <wx/grid.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
 
 #include "WrappedType.h"
+
+// For ShuttleGuiGetDefinitions.
+#include "commands/CommandTargets.h"
+
+class EnumSetting;
+
 
 const int nMaxNestedSizers = 20;
 
@@ -32,6 +39,7 @@ enum teShuttleMode
    eIsSettingToDialog,
    eIsSavingViaShuttle,
    eIsGettingViaShuttle,
+   eIsGettingMetadata,
 
    // Next two are only ever seen in constructor.
    // After that they revert to one of the modes above.
@@ -41,7 +49,6 @@ enum teShuttleMode
    eIsSavingToPrefs
 };
 
-class wxArrayInt;
 class wxListCtrl;
 class wxCheckBox;
 class wxChoice;
@@ -74,10 +81,12 @@ class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:
    ShuttleGuiBase(wxWindow * pParent,teShuttleMode ShuttleMode);
-   ~ShuttleGuiBase(void);
+   virtual ~ShuttleGuiBase();
    void Init();
+   void ResetId();
 
 //-- Add functions.  These only add a widget or 2.
+   void HandleOptionality(const wxString &Prompt);
    void AddPrompt(const wxString &Prompt);
    void AddUnits(const wxString &Prompt);
    void AddTitle(const wxString &Prompt);
@@ -114,6 +123,8 @@ public:
    void StartHorizontalLay(int PositionFlags=wxALIGN_CENTRE, int iProp=1);
    void EndHorizontalLay();
    void StartVerticalLay(int iProp=1);
+   void StartVerticalLay(int PositionFlags, int iProp);
+
    void EndVerticalLay();
    wxScrolledWindow * StartScroller(int iStyle=0);
    void EndScroller();
@@ -149,8 +160,8 @@ public:
    bool DoStep( int iStep );
    int TranslateToIndex( const wxString &Value, const wxArrayString &Choices );
    wxString TranslateFromIndex( const int nIn, const wxArrayString &Choices );
-   int TranslateToIndex( const int Value, const wxArrayInt &Choices );
-   int TranslateFromIndex( const int nIn, const wxArrayInt &Choices );
+   int TranslateToIndex( const int Value, const std::vector<int> &Choices );
+   int TranslateFromIndex( const int nIn, const std::vector<int> &Choices );
 
 //-- Tie functions both add controls and also read/write to them.
 // The ones taking a 'WrappedType' are type-generic and are used by the type specific ones.
@@ -193,53 +204,77 @@ public:
 // Note that unlike the other Tie functions, ALL the arguments are const.
 // That's because the data is being exchanged between the dialog and mpShuttle
 // so it doesn't need an argument that is writeable.
-   wxCheckBox * TieCheckBox(
+   virtual wxCheckBox * TieCheckBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const bool bDefault);
-   wxCheckBox * TieCheckBoxOnRight(
+   virtual wxCheckBox * TieCheckBoxOnRight(
       const wxString &Prompt,
       const wxString &SettingName,
       const bool bDefault);
-   wxChoice * TieChoice(
+
+   // This one is defined in terms of the next and not virtual
+   virtual wxChoice *TieChoice(
+      const wxString &Prompt,
+      EnumSetting &enumSetting );
+
+   virtual wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
       const wxArrayString &Choices,
-      const wxArrayString & TranslatedChoices );
-   wxChoice * TieChoice(
+      const wxArrayString & InternalChoices );
+
+   // This overload of TieChoice should no longer be used in Preferences!
+   // Some uses do remain in export settings dialogs.
+   virtual wxChoice * TieChoice(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Default,
       const wxArrayString & Choices,
-      const wxArrayInt & TranslatedChoices);
-   wxTextCtrl * TieTextBox(
+      const std::vector<int> & InternalChoices );
+
+   // This overload presents what is really a numerical setting as a choice among
+   // commonly used values, but the choice is not exhaustive because there is
+   // also an associated control that allows entry of a user-specified value
+   // that is arbitrary (within some bounds).
+   // This behaves just like the previous for building dialogs, but the
+   // behavior is different when the call is intercepted for purposes of
+   // emitting scripting information about Preferences.
+   virtual wxChoice * TieNumberAsChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const int Default,
+      const wxArrayString & Choices,
+      const std::vector<int> & InternalChoices );
+
+   virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
       const int nChars);
-   wxTextCtrl * TieTextBox(
+   virtual wxTextCtrl * TieTextBox(
       const wxString & Prompt,
       const wxString & SettingName,
       const double & Default,
       const int nChars);
-   wxTextCtrl * TieNumericTextBox(
+   virtual wxTextCtrl * TieNumericTextBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const wxString &Default,
       const int nChars);
-   wxTextCtrl * TieNumericTextBox(
+   virtual wxTextCtrl * TieNumericTextBox(
       const wxString & Prompt,
       const wxString & SettingName,
       const double & Default,
       const int nChars);
-   wxSlider * TieSlider(
+   virtual wxSlider * TieSlider(
       const wxString & Prompt,
       const wxString & SettingName,
       const int iDefault,
       const int max,
       const int min = 0);
-   wxSpinCtrl * TieSpinCtrl(
+   virtual wxSpinCtrl * TieSpinCtrl(
       const wxString &Prompt,
       const wxString &SettingName,
       const int Value,
@@ -264,7 +299,6 @@ public:
       return mpParent;
    }
    ShuttleGuiBase & Prop( int iProp );
-   int GetId() {return miIdNext;};
    void UseUpId();
 
    wxSizer * GetSizer() {return mpSizer;}
@@ -281,10 +315,15 @@ protected:
 
    long Style( long Style );
 
+private:
+   void SetSizeHints( const wxArrayString & items );
+public:
+   static void SetSizeHints( wxWindow *window, const wxArrayString & items );
+
+protected:
    wxWindow * mpLastWind;
    wxWindow * mpDlg;
    wxSizer * pSizerStack[ nMaxNestedSizers ];
-   wxString mBoxName;
 
    std::unique_ptr<Shuttle> mpShuttle; /*! Controls source/destination of shuttled data.  You can
    leave this NULL if you are shuttling to variables */
@@ -313,6 +352,8 @@ protected:
    // Proportion set by user rather than default.
    int miPropSetByUser;
 
+   bool * mpbOptionalFlag;
+
    std::unique_ptr<wxSizer> mpSubSizer;
    wxSizer * mpSizer;
    wxWindow * mpParent;
@@ -328,7 +369,6 @@ extern void SetIfCreated( wxTextCtrl *&Var, wxTextCtrl * Val );
 extern void SetIfCreated( wxStaticText *&Var, wxStaticText * Val );
 
 class GuiWaveTrack;
-class RulerPanel;
 class AttachableScrollBar;
 class ViewInfo;
 #include <wx/scrolbar.h>  // to get wxSB_HORIZONTAL
@@ -372,23 +412,91 @@ public:
    ShuttleGui(wxWindow * pParent,teShuttleMode ShuttleMode);
    ~ShuttleGui(void);
 public:
+   ShuttleGui & Optional( bool & bVar );
    ShuttleGui & Id(int id );
    // Prop() sets the proportion value, defined as in wxSizer::Add().
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
-   RulerPanel * AddRulerVertical( float low, float hi, const wxString & Units );
    AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
    void AddStandardButtons( long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
    wxSizerItem * AddSpace( int width, int height );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
-   int GetBorder() { return miBorder; };
-
-   void SetSizeHints( int minX = -1, int minY = -1 );
-   void SetSizeHints( const wxArrayString & items );
-   void SetSizeHints( const wxArrayInt & items );
-   static void SetSizeHints( wxWindow *window, const wxArrayString & items );
-   static void SetSizeHints( wxWindow *window, const wxArrayInt & items );
 
    teShuttleMode GetMode() { return  mShuttleMode; };
 };
+
+
+/**************************************************************************//**
+\brief Shuttle that retrieves a JSON format definition of a command's parameters.
+********************************************************************************/
+class ShuttleGuiGetDefinition : public ShuttleGui, public CommandMessageTargetDecorator
+{
+public:
+   ShuttleGuiGetDefinition(wxWindow * pParent,CommandMessageTarget & target );
+   virtual ~ShuttleGuiGetDefinition();
+
+   wxCheckBox * TieCheckBox(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const bool bDefault) override;
+   wxCheckBox * TieCheckBoxOnRight(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const bool bDefault) override;
+   wxChoice * TieChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const wxString &Default,
+      const wxArrayString &Choices,
+      const wxArrayString & InternalChoices ) override;
+
+   // An assertion will be violated if this override is reached!
+   wxChoice * TieChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const int Default,
+      const wxArrayString & Choices,
+      const std::vector<int> & InternalChoices) override;
+
+   wxChoice * TieNumberAsChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const int Default,
+      const wxArrayString & Choices,
+      const std::vector<int> & InternalChoices) override;
+
+   wxTextCtrl * TieTextBox(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const wxString &Default,
+      const int nChars) override;
+   wxTextCtrl * TieTextBox(
+      const wxString & Prompt,
+      const wxString & SettingName,
+      const double & Default,
+      const int nChars) override;
+   wxTextCtrl * TieNumericTextBox(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const wxString &Default,
+      const int nChars) override;
+   wxTextCtrl * TieNumericTextBox(
+      const wxString & Prompt,
+      const wxString & SettingName,
+      const double & Default,
+      const int nChars) override;
+   wxSlider * TieSlider(
+      const wxString & Prompt,
+      const wxString & SettingName,
+      const int iDefault,
+      const int max,
+      const int min = 0) override;
+   wxSpinCtrl * TieSpinCtrl(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const int Value,
+      const int max,
+      const int min) override;
+};
+
 #endif

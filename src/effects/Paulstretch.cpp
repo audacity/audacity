@@ -28,6 +28,7 @@
 #include "../ShuttleGui.h"
 #include "../FFT.h"
 #include "../widgets/valnum.h"
+#include "../widgets/ErrorDialog.h"
 #include "../Prefs.h"
 
 #include "../WaveTrack.h"
@@ -35,8 +36,8 @@
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type     Key                     Def      Min      Max      Scale
-Param( Amount, float,   XO("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
-Param( Time,   float,   XO("Time Resolution"),  0.25f,   0.00099f,  FLT_MAX, 1   );
+Param( Amount, float,   wxT("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
+Param( Time,   float,   wxT("Time Resolution"),  0.25f,   0.00099f,  FLT_MAX, 1   );
 
 class PaulStretch
 {
@@ -104,7 +105,7 @@ wxString EffectPaulstretch::GetSymbol()
 
 wxString EffectPaulstretch::GetDescription()
 {
-   return XO("Use Paulstretch only for an extreme time-stretch or \"stasis\" effect");
+   return _("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
 wxString EffectPaulstretch::ManualPage()
@@ -112,7 +113,7 @@ wxString EffectPaulstretch::ManualPage()
    return wxT("Paulstretch");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectPaulstretch::GetType()
 {
@@ -120,8 +121,13 @@ EffectType EffectPaulstretch::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectPaulstretch::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mAmount, Amount );
+   S.SHUTTLE_PARAM( mTime_resolution, Time );
+   return true;
+}
 
-bool EffectPaulstretch::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPaulstretch::GetAutomationParameters(CommandParameters & parms)
 {
    parms.WriteFloat(KEY_Amount, mAmount);
    parms.WriteFloat(KEY_Time, mTime_resolution);
@@ -129,7 +135,7 @@ bool EffectPaulstretch::GetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
-bool EffectPaulstretch::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPaulstretch::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Amount);
    ReadAndVerifyFloat(Time);
@@ -197,7 +203,7 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
        */
       S.AddTextBox(_("Stretch Factor:"), wxT(""), 10)->SetValidator(vldAmount);
 
-      FloatingPointValidator<float> vldTime(3, &mTime_resolution, NUM_VAL_ONE_TRAILING_ZERO);
+      FloatingPointValidator<float> vldTime(3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO);
       vldTime.SetMin(MIN_Time);
       S.AddTextBox(_("Time Resolution (seconds):"), wxT(""), 10)->SetValidator(vldTime);
    }
@@ -255,7 +261,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
    const auto stretch_buf_size = GetBufferSize(track->GetRate());
    if (stretch_buf_size == 0) {
-      ::wxMessageBox( badAllocMessage );
+      ::Effect::MessageBox( badAllocMessage );
       return false;
    }
 
@@ -268,7 +274,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    const auto minDuration = stretch_buf_size * 2 + 1;
    if (minDuration < stretch_buf_size) {
       // overflow!
-      ::wxMessageBox( badAllocMessage );
+      ::Effect::MessageBox( badAllocMessage );
       return false;
    }
 
@@ -284,30 +290,30 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
          /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
          if ((minDuration / mProjectRate) < defaultPreviewLen) {
-            ::wxMessageBox (wxString::Format(_("Audio selection too short to preview.\n\n"
+            ::Effect::MessageBox (wxString::Format(_("Audio selection too short to preview.\n\n"
                                                "Try increasing the audio selection to at least %.1f seconds,\n"
                                                "or reducing the 'Time Resolution' to less than %.1f seconds."),
                                              (minDuration / track->GetRate()) + 0.05, // round up to 1/10 s.
                                              floor(maxTimeRes * 10.0) / 10.0),
-                            GetName(), wxOK | wxICON_EXCLAMATION);
+                            wxOK | wxICON_EXCLAMATION);
          }
          else {
             /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
-            ::wxMessageBox (wxString::Format(_("Unable to Preview.\n\n"
+            ::Effect::MessageBox (wxString::Format(_("Unable to Preview.\n\n"
                                                "For the current audio selection, the maximum\n"
                                                "'Time Resolution' is %.1f seconds."),
                                              floor(maxTimeRes * 10.0) / 10.0),
-                            GetName(), wxOK | wxICON_EXCLAMATION);
+                            wxOK | wxICON_EXCLAMATION);
          }
       }
       else {
          /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
-         ::wxMessageBox (wxString::Format(_("The 'Time Resolution' is too long for the selection.\n\n"
+         ::Effect::MessageBox (wxString::Format(_("The 'Time Resolution' is too long for the selection.\n\n"
                                             "Try increasing the audio selection to at least %.1f seconds,\n"
                                             "or reducing the 'Time Resolution' to less than %.1f seconds."),
                                           (minDuration / track->GetRate()) + 0.05, // round up to 1/10 s.
                                           floor(maxTimeRes * 10.0) / 10.0),
-                         GetName(), wxOK | wxICON_EXCLAMATION);
+                         wxOK | wxICON_EXCLAMATION);
       }
 
       return false;
@@ -394,7 +400,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
       return !cancelled;
    }
    catch ( const std::bad_alloc& ) {
-      ::wxMessageBox( badAllocMessage );
+      ::Effect::MessageBox( badAllocMessage );
       return false;
    }
 };
@@ -413,8 +419,8 @@ PaulStretch::PaulStretch(float rap_, size_t in_bufsize_, float samplerate_ )
    , in_pool { poolsize, true }
    , remained_samples { 0.0 }
    , fft_smps { poolsize, true }
-   , fft_s { poolsize, true }
    , fft_c { poolsize, true }
+   , fft_s { poolsize, true }
    , fft_freq { poolsize, true }
    , fft_tmp { poolsize }
 {

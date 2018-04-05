@@ -411,7 +411,7 @@ void ODPCMAliasBlockFile::WriteSummary()
       // Never silence the Log w.r.t write errors; they always count
       //however, this is going to be called from a non-main thread,
       //and wxLog calls are not thread safe.
-      printf("Unable to write summary data to file: %s", fileNameChar.get());
+      wxPrintf("Unable to write summary data to file: %s", fileNameChar.get());
 
       throw FileException{
          FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
@@ -426,7 +426,7 @@ void ODPCMAliasBlockFile::WriteSummary()
    fclose(summaryFile);
 
 
-    //     printf("write successful. filename: %s\n", fileNameChar);
+    //     wxPrintf("write successful. filename: %s\n", fileNameChar);
 
    mSummaryAvailableMutex.Lock();
    mSummaryAvailable=true;

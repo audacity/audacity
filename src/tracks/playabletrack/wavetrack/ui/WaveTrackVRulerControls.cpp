@@ -31,12 +31,15 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
  const AudacityProject *pProject)
 {
    std::vector<UIHandlePtr> results;
-   auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
-   if (pTrack) {
-      auto result = std::make_shared<WaveTrackVZoomHandle>(
-         pTrack, st.rect, st.state.m_y );
-      result = AssignUIHandlePtr(mVZoomHandle, result);
-      results.push_back(result);
+
+   if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
+      auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
+      if (pTrack) {
+         auto result = std::make_shared<WaveTrackVZoomHandle>(
+            pTrack, st.rect, st.state.m_y );
+         result = AssignUIHandlePtr(mVZoomHandle, result);
+         results.push_back(result);
+      }
    }
 
    auto more = TrackVRulerControls::HitTest(st, pProject);
@@ -44,6 +47,27 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
 
    return results;
 }
+
+void WaveTrackVRulerControls::DoZoomPreset( int i)
+{
+
+   const auto pTrack = FindTrack();
+   if (!pTrack)
+      return;
+   wxASSERT(pTrack->GetKind() == Track::Wave);
+
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
+
+   // Don't pass the partner, that causes problems when updating display
+   // during recording and there are special pending tracks.
+   // This function implements WaveTrack::DoSetMinimized which is always
+   // called in a context that loops over linked tracks too and reinvokes.
+   auto partner = nullptr;
+   WaveTrackVZoomHandle::DoZoom(
+         NULL, wt, partner, (i==1)?kZoomHalfWave: kZoom1to1,
+         wxRect(0,0,0,0), 0,0, true);
+}
+
 
 unsigned WaveTrackVRulerControls::HandleWheelRotation
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
@@ -121,8 +145,9 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    }
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
+      const auto partner = static_cast<WaveTrack *>(wt);
       WaveTrackVZoomHandle::DoZoom(
-         pProject, wt, false, (steps < 0),
+         pProject, wt, partner, (steps < 0)?kZoomOut:kZoomIn,
          evt.rect, yy, yy, true);
    }
    else if (!event.CmdDown() && event.ShiftDown()) {

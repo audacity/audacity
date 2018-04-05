@@ -34,10 +34,11 @@ enum {
 class ModulePrefs final : public PrefsPanel
 {
  public:
-   ModulePrefs(wxWindow * parent);
+   ModulePrefs(wxWindow * parent, wxWindowID winid);
    ~ModulePrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    static int GetModuleStatus( const wxString &fname );
    static void SetModuleStatus( const wxString &fname, int iStatus );
@@ -45,15 +46,14 @@ class ModulePrefs final : public PrefsPanel
  private:
    void GetAllModuleStatuses();
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    wxArrayString mModules;
-   wxArrayInt    mStatuses;
+   std::vector<int> mStatuses;
    wxArrayString mPaths;
 };
 
 class ModulePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

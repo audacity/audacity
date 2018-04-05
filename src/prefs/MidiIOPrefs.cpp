@@ -39,6 +39,7 @@ other settings.
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "MidiIOPrefs.h"
 
@@ -54,8 +55,9 @@ BEGIN_EVENT_TABLE(MidiIOPrefs, PrefsPanel)
 //   EVT_CHOICE(RecordID, MidiIOPrefs::OnDevice)
 END_EVENT_TABLE()
 
-MidiIOPrefs::MidiIOPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("MIDI Devices"))
+MidiIOPrefs::MidiIOPrefs(wxWindow * parent, wxWindowID winid)
+/* i18n-hint: untranslatable acronym for "Musical Instrument Device Interface" */
+:  PrefsPanel(parent, winid, _("MIDI Devices"))
 {
    Populate();
 }
@@ -113,6 +115,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    wxArrayString empty;
 
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Interface"));
    {
@@ -125,7 +128,6 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
                              wxT(""),
                              mHostNames,
                              mHostLabels);
-         S.SetSizeHints(mHostNames);
 
          S.AddPrompt(_("Using: PortMidi"));
       }
@@ -171,13 +173,15 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    }
    S.EndStatic();
 #endif
+   S.EndScroller();
+
 }
 
-void MidiIOPrefs::OnHost(wxCommandEvent & e)
+void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
 {
    wxString itemAtIndex;
    int index = mHost->GetCurrentSelection();
-   if (index >= 0 && index < mHostNames.Count())
+   if (index >= 0 && index < (int)mHostNames.Count())
       itemAtIndex = mHostNames.Item(index);
    int nDevices = Pm_CountDevices();
 
@@ -201,8 +205,8 @@ void MidiIOPrefs::OnHost(wxCommandEvent & e)
       if (itemAtIndex.IsSameAs(interf)) {
          wxString name = wxSafeConvertMB2WX(info->name);
          wxString device = wxString::Format(wxT("%s: %s"),
-                                            interf.c_str(),
-                                            name.c_str());
+                                            interf,
+                                            name);
          int index;
 
          if (info->output) {
@@ -261,16 +265,16 @@ bool MidiIOPrefs::Commit()
    if (info) {
       gPrefs->Write(wxT("/MidiIO/PlaybackDevice"),
                     wxString::Format(wxT("%s: %s"),
-                                     wxString(wxSafeConvertMB2WX(info->interf)).c_str(),
-                                     wxString(wxSafeConvertMB2WX(info->name)).c_str()));
+                                     wxString(wxSafeConvertMB2WX(info->interf)),
+                                     wxString(wxSafeConvertMB2WX(info->name))));
    }
 #ifdef EXPERIMENTAL_MIDI_IN
    info = (const PmDeviceInfo *) mRecord->GetClientData(mRecord->GetSelection());
    if (info) {
       gPrefs->Write(wxT("/MidiIO/RecordingDevice"),
                     wxString::Format(wxT("%s: %s"),
-                                     wxString(wxSafeConvertMB2WX(info->interf)).c_str(),
-                                     wxString(wxSafeConvertMB2WX(info->name)).c_str()));
+                                     wxString(wxSafeConvertMB2WX(info->interf)),
+                                     wxString(wxSafeConvertMB2WX(info->name))));
    }
 #endif
    return gPrefs->Flush();
@@ -280,7 +284,7 @@ bool MidiIOPrefs::Validate()
 {
    long latency;
    if (!mLatency->GetValue().ToLong(&latency)) {
-      wxMessageBox(_("The MIDI Synthesizer Latency must be an integer"));
+      AudacityMessageBox(_("The MIDI Synthesizer Latency must be an integer"));
       return false;
    }
    return true;
@@ -291,10 +295,10 @@ wxString MidiIOPrefs::HelpPageName()
    return "MIDI_Devices_Preferences";
 }
 
-PrefsPanel *MidiIOPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *MidiIOPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew MidiIOPrefs(parent);
+   return safenew MidiIOPrefs(parent, winid);
 }
 
 #endif

@@ -21,15 +21,15 @@ class ShuttleGui;
 class DirectoriesPrefs final : public PrefsPanel
 {
  public:
-   DirectoriesPrefs(wxWindow * parent);
+   DirectoriesPrefs(wxWindow * parent, wxWindowID winid);
    ~DirectoriesPrefs();
    bool Commit() override;
    bool Validate() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void UpdateFreeSpace(wxCommandEvent & e);
    void OnChooseTempDir(wxCommandEvent & e);
 
@@ -42,6 +42,6 @@ class DirectoriesPrefs final : public PrefsPanel
 class DirectoriesPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

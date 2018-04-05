@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * kick_xpm[] = {
+static const char * const kick_xpm[] = {
 "48 48 256 2",
 "  	c #FFFFFF",
 ". 	c #636363",

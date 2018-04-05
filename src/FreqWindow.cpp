@@ -51,7 +51,6 @@ and in the spectrogram spectral selection.
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/dcmemory.h>
-#include <wx/msgdlg.h>
 #include <wx/file.h>
 #include <wx/filedlg.h>
 #include <wx/intl.h>
@@ -84,6 +83,7 @@ and in the spectrogram spectral selection.
 
 #include "./widgets/LinkingHtmlWindow.h"
 #include "./widgets/HelpSystem.h"
+#include "widgets/ErrorDialog.h"
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
@@ -231,9 +231,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    wxArrayString funcChoices;
    for (int i = 0, cnt = NumWindowFuncs(); i < cnt; i++)
    {
-      /* i18n-hint: This refers to a "window function", used in the
+      /* i18n-hint: This refers to a "window function",
+       * such as Hann or Rectangular, used in the
        * Frequency analyze dialog box. */
-      funcChoices.Add(wxString(WindowFuncName(i)) + wxT(" ") + _("window"));
+      funcChoices.Add(wxString::Format("%s window",  WindowFuncName(i) ) );
    }
 
    wxArrayString axisChoices;
@@ -279,17 +280,16 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.StartVerticalLay(2);
       {
-         vRuler = safenew RulerPanel(this, wxID_ANY);
-         vRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         vRuler->ruler.SetOrientation(wxVERTICAL);
-         vRuler->ruler.SetRange(0.0, -dBRange);
-         vRuler->ruler.SetFormat(Ruler::LinearDBFormat);
-         vRuler->ruler.SetUnits(_("dB"));
-         vRuler->ruler.SetLabelEdges(true);
-         int w;
-         vRuler->ruler.GetMaxSize(&w, NULL);
-         vRuler->SetMinSize(wxSize(w, 150));  // height needed for wxGTK
-         vRuler->SetTickColour( theTheme.Colour( clrGraphLabels ));
+         vRuler = safenew RulerPanel(
+            this, wxID_ANY, wxVERTICAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ 0.0, -dBRange },
+            Ruler::LinearDBFormat,
+            _("dB"),
+            RulerPanel::Options{}
+               .LabelEdges(true)
+               .TickColour( theTheme.Colour( clrGraphLabels ) )
+         );
 
          S.AddSpace(wxDefaultCoord, 1);
          S.Prop(1);
@@ -298,7 +298,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       }
       S.EndVerticalLay();
 
-      mFreqPlot = safenew FreqPlot(this);
+      mFreqPlot = safenew FreqPlot(this, wxID_ANY);
       mFreqPlot->SetMinSize(wxSize(wxDefaultCoord, FREQ_WINDOW_HEIGHT));
       S.Prop(1);
       S.AddWindow(mFreqPlot, wxEXPAND);
@@ -347,19 +347,18 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
-         hRuler  = safenew RulerPanel(this, wxID_ANY);
-         hRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         hRuler->ruler.SetOrientation(wxHORIZONTAL);
-         hRuler->ruler.SetLog(true);
-         hRuler->ruler.SetRange(10, 20000);
-         hRuler->ruler.SetFormat(Ruler::RealFormat);
-         hRuler->ruler.SetUnits(_("Hz"));
-         hRuler->ruler.SetFlip(true);
-         hRuler->ruler.SetLabelEdges(true);
-         int h;
-         hRuler->ruler.GetMaxSize(NULL, &h);
-         hRuler->SetMinSize(wxSize(wxDefaultCoord, h));
-         hRuler->SetTickColour( theTheme.Colour( clrGraphLabels ));
+         hRuler  = safenew RulerPanel(
+            this, wxID_ANY, wxHORIZONTAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ 10, 20000 },
+            Ruler::RealFormat,
+            _("Hz"),
+            RulerPanel::Options{}
+               .Log(true)
+               .Flip(true)
+               .LabelEdges(true)
+               .TickColour( theTheme.Colour( clrGraphLabels ) )
+         );
 
          S.AddSpace(1, wxDefaultCoord);
          S.Prop(1);
@@ -393,12 +392,12 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             S.AddPrompt(_("Cursor:"));
 
             S.SetStyle(wxTE_READONLY);
-            mCursorText = S.AddTextBox(wxT(""), wxT(""), 10);
+            mCursorText = S.AddTextBox( {}, wxT(""), 10);
 
             S.AddPrompt(_("Peak:"));
 
             S.SetStyle(wxTE_READONLY);
-            mPeakText = S.AddTextBox(wxT(""), wxT(""), 10);
+            mPeakText = S.AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
             mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), wxT("false"));
@@ -482,7 +481,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    S.AddSpace(5);
 
-   mProgress = safenew FreqGauge(this); //, wxID_ANY, wxST_SIZEGRIP);
+   mProgress = safenew FreqGauge(this, wxID_ANY); //, wxST_SIZEGRIP);
    S.AddWindow(mProgress, wxEXPAND);
 
    // Log-frequency axis works for spectrum plots only.
@@ -590,7 +589,7 @@ void FreqWindow::GetAudio()
          }
          else {
             if (track->GetRate() != mRate) {
-               wxMessageBox(_("To plot the spectrum, all selected tracks must be the same sample rate."));
+               AudacityMessageBox(_("To plot the spectrum, all selected tracks must be the same sample rate."));
                mData.reset();
                mDataLen = 0;
                return;
@@ -615,7 +614,7 @@ void FreqWindow::GetAudio()
       wxString msg;
       msg.Printf(_("Too much audio was selected.  Only the first %.1f seconds of audio will be analyzed."),
                           (mDataLen / mRate));
-      wxMessageBox(msg);
+      AudacityMessageBox(msg);
    }
 }
 
@@ -937,16 +936,16 @@ void FreqWindow::PlotPaint(wxPaintEvent & event)
       if (mAlg == SpectrumAnalyst::Spectrum) {
          xpitch = PitchName_Absolute(FreqToMIDInote(xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(bestpeak));
-         xp = xpitch.c_str();
-         pp = peakpitch.c_str();
+         xp = xpitch;
+         pp = peakpitch;
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
          cursor.Printf(_("%d Hz (%s) = %d dB"), (int)(xPos + 0.5), xp, (int)(value + 0.5));
          peak.Printf(_("%d Hz (%s) = %.1f dB"), (int)(bestpeak + 0.5), pp, bestValue);
       } else if (xPos > 0.0 && bestpeak > 0.0) {
          xpitch = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
-         xp = xpitch.c_str();
-         pp = peakpitch.c_str();
+         xp = xpitch;
+         pp = peakpitch;
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
           * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
          cursor.Printf(_("%.4f sec (%d Hz) (%s) = %f"),
@@ -1055,7 +1054,8 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      wxMessageBox(_("Couldn't write to file: ") + fName);
+      AudacityMessageBox( wxString::Format(
+         _("Couldn't write to file: %s"), fName ) );
       return;
    }
 
@@ -1109,8 +1109,8 @@ BEGIN_EVENT_TABLE(FreqPlot, wxWindow)
    EVT_MOUSE_EVENTS(FreqPlot::OnMouseEvent)
 END_EVENT_TABLE()
 
-FreqPlot::FreqPlot(wxWindow *parent)
-:  wxWindow(parent, wxID_ANY)
+FreqPlot::FreqPlot(wxWindow *parent, wxWindowID winid)
+:  wxWindow(parent, winid)
 {
    freqWindow = (FreqWindow *) parent;
 }
@@ -1135,8 +1135,8 @@ void FreqPlot::OnMouseEvent(wxMouseEvent & event)
    freqWindow->PlotMouseEvent(event);
 }
 
-FreqGauge::FreqGauge(wxWindow * parent)
-:  wxStatusBar(parent, wxID_ANY, wxST_SIZEGRIP)
+FreqGauge::FreqGauge(wxWindow * parent, wxWindowID winid)
+:  wxStatusBar(parent, winid, wxST_SIZEGRIP)
 {
    mRange = 0;
 }

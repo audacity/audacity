@@ -14,7 +14,9 @@
 
 #include "../Audacity.h"
 #include <wx/defs.h>
+#include <wx/msgdlg.h>
 #include <wx/window.h>
+#include "LinkingHtmlWindow.h"
 #include "wxPanelWrapper.h"
 
 class AudacityProject;
@@ -83,5 +85,57 @@ void ShowAliasMissingDialog(AudacityProject *parent,
                      const wxString &message,
                      const wxString &helpPage,
                      const bool Close = true);
+
+extern wxString AudacityMessageBoxCaptionStr();
+
+// Do not use wxMessageBox!!  Its default window title does not translate!
+inline int AudacityMessageBox(const wxString& message,
+   const wxString& caption = AudacityMessageBoxCaptionStr(),
+   long style = wxOK | wxCENTRE,
+   wxWindow *parent = NULL,
+   int x = wxDefaultCoord, int y = wxDefaultCoord)
+{
+   return ::wxMessageBox(message, caption, style, parent, x, y);
+}
+
+
+#include <wx/textdlg.h>
+
+/**************************************************************************//**
+\class AudacityTextEntryDialog
+\brief Wrap wxTextEntryDialog so that caption IS translatable.
+********************************************************************************/
+class AudacityTextEntryDialog : public wxTabTraversalWrapper< wxTextEntryDialog >
+{
+public:
+    AudacityTextEntryDialog(
+         wxWindow *parent,
+         const wxString& message,
+         const wxString& caption, // don't use = wxGetTextFromUserPromptStr,
+         const wxString& value = wxEmptyString,
+         long style = wxTextEntryDialogStyle,
+         const wxPoint& pos = wxDefaultPosition)
+   : wxTabTraversalWrapper< wxTextEntryDialog>
+      ( parent, message, caption, value, style, pos )
+   {}
+};
+
+/**************************************************************************//**
+
+\brief Wrap wxMessageDialog so that caption IS translatable.
+********************************************************************************/
+class AudacityMessageDialog : public wxTabTraversalWrapper< wxMessageDialog >
+{
+public:
+    AudacityMessageDialog(
+         wxWindow *parent,
+         const wxString& message,
+         const wxString& caption, // don't use = wxMessageBoxCaptionStr,
+         long style = wxOK|wxCENTRE,
+         const wxPoint& pos = wxDefaultPosition)
+   : wxTabTraversalWrapper< wxMessageDialog>
+      ( parent, message, caption, style, pos )
+   {}
+};
 
 #endif // __AUDACITY_ERRORDIALOG__

@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * TrimDisabled[] = {
+static const char * const TrimDisabled[] = {
 "26 24 3 1",
 " 	c None",
 ".	c #6B6B6B",

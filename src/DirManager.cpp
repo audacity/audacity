@@ -73,7 +73,6 @@
 #include <wx/log.h>
 #include <wx/filefn.h>
 #include <wx/hash.h>
-#include <wx/msgdlg.h>
 #include <wx/progdlg.h>
 #include <wx/timer.h>
 #include <wx/intl.h>
@@ -91,6 +90,7 @@
 #include "AudacityException.h"
 #include "BlockFile.h"
 #include "FileException.h"
+#include "FileNames.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
 #include "blockfile/SimpleBlockFile.h"
@@ -105,6 +105,7 @@
 #include "Sequence.h"
 #include "widgets/Warning.h"
 #include "widgets/MultiDialog.h"
+#include "widgets/ErrorDialog.h"
 
 #include "ondemand/ODManager.h"
 
@@ -312,8 +313,8 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
       progress.create( _("Progress"), message );
 
    auto nn = filePathArray.size();
-   for (int i = 0; i < nn; i++) {
-      const wxChar *file = filePathArray[i].c_str();
+   for (unsigned int i = 0; i < nn; i++) {
+      const wxChar *file = filePathArray[i];
       if (bFiles)
          ::wxRemoveFile(file);
       if (bDirs) {
@@ -475,7 +476,7 @@ void DirManager::CleanDir(
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
 {
-   bool copying = false;
+   bool moving = true;
    wxString oldPath = this->projPath;
    wxString oldName = this->projName;
    wxString oldFull = projFull;
@@ -496,10 +497,19 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    wxString cleanupLoc1=oldLoc;
    wxString cleanupLoc2=projFull;
 
+   bool created = false;
+
    if (bCreate) {
-      if (!wxDirExists(projFull))
-         if (!wxMkdir(projFull))
+      if (!wxDirExists(projFull)) {
+         if (!wxMkdir(projFull)) {
+            this->projFull = oldFull;
+            this->projPath = oldPath;
+            this->projName = oldName;
             return false;
+         }
+         else
+            created = true;
+      }
 
       #ifdef __UNIX__
       chmod(OSFILENAME(projFull), 0775);
@@ -510,8 +520,12 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       #endif
 
    } else {
-      if (!wxDirExists(projFull))
+      if (!wxDirExists(projFull)) {
+         this->projFull = oldFull;
+         this->projPath = oldPath;
+         this->projName = oldName;
          return false;
+      }
    }
 
    /* Move all files into this NEW directory.  Files which are
@@ -529,12 +543,13 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
 
       int total = mBlockFileHash.size();
 
-      BlockHash::iterator iter = mBlockFileHash.begin();
       bool success = true;
       int count = 0;
-      while ((iter != mBlockFileHash.end()) && success)
+      wxArrayString newPaths;
+      for (const auto &pair : mBlockFileHash)
       {
-         BlockFilePtr b = iter->second.lock();
+         wxString newPath;
+         BlockFilePtr b = pair.second.lock();
          if (b) {
             // FIXME: TRAP_ERR
             // JKC: The 'success' variable and recovery strategy looks 
@@ -542,47 +557,85 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
             // failure in one of the copies/moves.  Besides which,
             // our temporary files are going to be deleted when we exit 
             // anyway, if saving from temporary to named project.
-            if (b->IsLocked())
-               success = CopyToNewProjectDirectory( &*b ), copying = true;
-            else{
-               success = MoveToNewProjectDirectory( &*b );
+
+            if( progress.Update(count, total) != ProgressResult::Success )
+               success = false;
+            else {
+               moving = moving && !b->IsLocked();
+               auto result = CopyToNewProjectDirectory( &*b );
+               success = result.first;
+               newPath = result.second;
             }
 
-            progress.Update(count, total);
-            count++;
+            if (success) {
+               count++;
+            }
+            else
+               break;
          }
-         ++iter;
+
+         newPaths.push_back( newPath );
       }
 
       // in case there are any nulls
       trueTotal = count;
 
-      if (!success) {
-         // If the move failed, we try to move/copy as many files
-         // back as possible so that no damage was done.  (No sense
-         // in checking for errors this time around - there's nothing
-         // that could be done about it.)
-         // Likely causes: directory was not writeable, disk was full
+      if (success) {
+         auto size = newPaths.size();
+         wxASSERT( size == mBlockFileHash.size() );
 
-         projFull = oldLoc;
+         // Commit changes to filenames in the BlockFile objects, and removal
+         // of files at old paths, ONLY NOW!  This must be nothrow.
 
-         BlockHash::iterator iter = mBlockFileHash.begin();
-         while (iter != mBlockFileHash.end())
+         // This copy-then-delete procedure is needed to make it safe to
+         // attempt save to another storage device, but fail.
+
+         // It has the consequence that saving a project from one part of
+         // the device to another will not succeed unless there is sufficient
+         // space to hold originals and copies at the same time.  Perhaps the
+         // extra cautions are not needed in that case, and the old procedure
+         // of renaming first, and reversing the renamings in case of failure,
+         // could still work safely.
+
+         // But I don't know whether wxWidgets gives us a reliable means to
+         // distinguish that case.
+
+         // I will err on the side of safety and simplicity and follow the
+         // same procedure in all cases.
+
+         size_t ii = 0;
+         for (const auto &pair : mBlockFileHash)
          {
-            BlockFilePtr b = iter->second.lock();
+            BlockFilePtr b = pair.second.lock();
+
             if (b) {
-               MoveToNewProjectDirectory(&*b);
+               if (moving || !b->IsLocked()) {
+                  auto result = b->GetFileName();
+                  auto oldPath = result.name.GetFullPath();
+                  if (!oldPath.empty())
+                     wxRemoveFile( oldPath );
+               }
 
-               if (count >= 0)
-                  progress.Update(count, total);
-               count--;
+               if (ii < size)
+                  b->SetFileName(
+                     wxFileNameWrapper{ wxFileName{ newPaths[ii] } } );
             }
-            ++iter;
-         }
 
+            ++ii;
+         }
+      }
+      else {
          this->projFull = oldFull;
          this->projPath = oldPath;
          this->projName = oldName;
+
+         if (created)
+            CleanDir(
+               cleanupLoc2,
+               wxEmptyString,
+               wxEmptyString,
+               _("Cleaning up after failed save"),
+               kCleanTopDirToo);
 
          return false;
       }
@@ -596,7 +649,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
 
    // Do the cleanup of the temporary directory only if not saving-as, which we
    // detect by having done copies rather than moves.
-   if (!copying && trueTotal > 0) {
+   if (moving && trueTotal > 0) {
       // Clean up after ourselves; boldly remove all files and directories
       // in the tree.  (Unlike what the earlier version of this comment said.)
       // Because this is a relocation of the project, not the case of closing
@@ -715,14 +768,14 @@ bool DirManager::AssignFile(wxFileNameWrapper &fileName,
       // set to true only if called from MakeFileBlockName().
 
       wxString filespec;
-      filespec.Printf(wxT("%s.*"),value.c_str());
+      filespec.Printf(wxT("%s.*"),value);
       if(checkit.HasFiles(filespec)){
          // collision with on-disk state!
          wxString collision;
          checkit.GetFirst(&collision,filespec);
 
          wxLogWarning(_("Audacity found an orphan block file: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
-                      collision.c_str());
+                      collision);
 
          return FALSE;
       }
@@ -791,7 +844,7 @@ void DirManager::BalanceFileAdd(int midkey)
 
 void DirManager::BalanceInfoAdd(const wxString &file)
 {
-   const wxChar *s=file.c_str();
+   const wxChar *s=file;
    if(s[0]==wxT('e')){
       // this is one of the modern two-deep managed files
       // convert filename to keys
@@ -846,7 +899,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
    auto &dirTopPool = balanceInfo.dirTopPool;
    auto &dirTopFull = balanceInfo.dirTopFull;
 
-   const wxChar *s=file.c_str();
+   const wxChar *s=file;
    if(s[0]==wxT('e')){
       // this is one of the modern two-deep managed files
 
@@ -1152,7 +1205,7 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       //a summary file, so we should check before we copy.
       if(b->IsSummaryAvailable())
       {
-         if( !wxCopyFile(fn.GetFullPath(),
+         if( !FileNames::CopyFile(fn.GetFullPath(),
                   newFile.GetFullPath()) )
             // Disk space exhaustion, maybe
             throw FileException{
@@ -1276,8 +1329,9 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
+std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
 {
+   wxString newPath;
    auto result = f->GetFileName();
    const auto &oldFileNameRef = result.name;
 
@@ -1285,27 +1339,33 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
    //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case
    //    (!oldFileName.IsOk()) is a more correct check?
    if (oldFileNameRef.GetName().IsEmpty()) {
-      return true;
+      return { true, newPath };
    }
 
    wxFileNameWrapper newFileName;
-   if (!this->AssignFile(newFileName, oldFileNameRef.GetFullName(), false))
-      return false;
+   if (!this->AssignFile(newFileName, oldFileNameRef.GetFullName(), false)
+       // Another sanity check against blockfiles getting reassigned an empty
+       // name, as apparently happened in
+       // http://forum.audacityteam.org/viewtopic.php?f=47&t=97787 :
+       || newFileName.GetFullName().empty() )
+      return { false, {} };
+
+   newPath = newFileName.GetFullPath();
 
    if (newFileName != oldFileNameRef) {
       //check to see that summary exists before we copy.
       bool summaryExisted = f->IsSummaryAvailable();
       auto oldPath = oldFileNameRef.GetFullPath();
-      auto newPath = newFileName.GetFullPath();
       if (summaryExisted) {
-         auto success = copy
-         ? wxCopyFile(oldPath, newPath)
-         : wxRenameFile(oldPath, newPath);
+         auto success = FileNames::CopyFile(oldPath, newPath);
          if (!success)
-            return false;
+            return { false, {} };
       }
 
       if (!summaryExisted && (f->IsSummaryAvailable() || f->IsSummaryBeingComputed())) {
+         // PRL:  These steps apply only in case of "on-demand" files that have
+         // not completed their asynchronous loading yet -- a very unusual
+         // circumstance.
 
          // We will need to remember the old file name, so copy it
          wxFileName oldFileName{ oldFileNameRef };
@@ -1328,31 +1388,14 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
          //if it doesn't, we can assume it was written to the NEW name, which is fine.
          if (oldFileName.FileExists())
          {
-            bool ok = wxCopyFile(oldPath, newPath);
-            if(ok && !copy)
-               wxRemoveFile(oldPath);
-            else if (!ok)
-               return false;
+            bool ok = FileNames::CopyFile(oldPath, newPath);
+            if (!ok)
+               return { false, {} };
          }
-      }
-      else {
-         // Can free this now, and must, because of nonrecursive mutexes
-         result.mLocker.reset();
-         f->SetFileName(std::move(newFileName));
       }
    }
 
-   return true;
-}
-
-bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
-{
-   return MoveOrCopyToNewProjectDirectory(f, false);
-}
-
-bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
-{
-   return MoveOrCopyToNewProjectDirectory(f, true);
+   return { true, newPath };
 }
 
 bool DirManager::EnsureSafeFilename(const wxFileName &fName)
@@ -1376,7 +1419,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       /* i18n-hint: This is the pattern for filenames that are created
        * when a file needs to be backed up to a different name.  For
        * example, mysong would become mysong-old1, mysong-old2, etc. */
-      renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName().c_str(), i));
+      renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName(), i));
    } while (renamedFileName.FileExists());
 
    // Test creating a file by that name to make sure it will
@@ -1387,7 +1430,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    if (!testFile.IsOpened()) {
       { // need braces to avoid compiler warning about ambiguous else, see the macro
          wxLogSysError(_("Unable to open/create test file."),
-               renamedFullPath.c_str());
+               renamedFullPath);
       }
       return false;
    }
@@ -1399,12 +1442,12 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       /* i18n-hint: %s is the name of a file.*/
       { // need braces to avoid compiler warning about ambiguous else, see the macro
          wxLogSysError(_("Unable to remove '%s'."),
-            renamedFullPath.c_str());
+            renamedFullPath);
       }
       return false;
    }
 
-   wxPrintf(_("Renamed file: %s\n"), renamedFullPath.c_str());
+   wxPrintf(_("Renamed file: %s\n"), renamedFullPath);
 
    // Go through our block files and see if any indeed point to
    // the file we're concerned about.  If so, point the block file
@@ -1454,8 +1497,8 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
 
          // Print error message and cancel the export
          wxLogSysError(_("Unable to rename '%s' to '%s'."),
-                       fullPath.c_str(),
-                       renamedFullPath.c_str());
+                       fullPath,
+                       renamedFullPath);
 
          // Destruction of readLocks puts things back where they were
          return false;
@@ -1475,7 +1518,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
                {
                   ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
                   wxPrintf(_("Changed block %s to new alias name\n"),
-                           b->GetFileName().name.GetFullName().c_str());
+                           b->GetFileName().name.GetFullName());
 
                }
                else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
@@ -1579,7 +1622,7 @@ _("Project check of \"%s\" folder \
 \nproject in its current state, unless you \"Close \
 \nproject immediately\" on further error alerts.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (long long) missingAliasedFilePathHash.size());
+         msg.Printf(msgA, this->projName, (long long) missingAliasedFilePathHash.size());
          const wxChar *buttons[] =
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"),
@@ -1617,7 +1660,7 @@ _("Project check of \"%s\" folder \
                   // and don't try to recover other files but
                   // silence them too.  GuardedCall will cause an appropriate
                   // error message for the user.
-                  GuardedCall<void>(
+                  GuardedCall(
                      [&] { ab->Recover(); },
                      [&] (AudacityException*) { action = 1; }
                   );
@@ -1657,7 +1700,7 @@ _("Project check of \"%s\" folder \
 \nAudacity can fully regenerate these files \
 \nfrom the current audio in the project.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (long long) missingAUFHash.size());
+         msg.Printf(msgA, this->projName, (long long) missingAUFHash.size());
          const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
                                     _("Fill in silence for missing display data (this session only)"),
                                     _("Close project immediately with no further changes"),
@@ -1683,7 +1726,7 @@ _("Project check of \"%s\" folder \
                   // and don't try to recover other files but
                   // silence them too.  GuardedCall will cause an appropriate
                   // error message for the user.
-                  GuardedCall<void>(
+                  GuardedCall(
                      [&] {
                         b->Recover();
                         nResult |= FSCKstatus_CHANGED;
@@ -1729,7 +1772,7 @@ _("Project check of \"%s\" folder \
 \n\nNote that for the second option, the waveform \
 \nmay not show silence.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (long long) missingAUHash.size());
+         msg.Printf(msgA, this->projName, (long long) missingAUHash.size());
          const wxChar *buttons[] =
             {_("Close project immediately with no further changes"),
                _("Treat missing audio as silence (this session only)"),
@@ -1757,7 +1800,7 @@ _("Project check of \"%s\" folder \
                   // and don't try to recover other files but
                   // silence them too.  GuardedCall will cause an appropriate
                   // error message for the user.
-                  GuardedCall<void>(
+                  GuardedCall(
                      [&] {
                         //regenerate with zeroes
                         b->Recover();
@@ -1801,7 +1844,7 @@ _("Project check of \"%s\" folder \
 other projects. \
 \nThey are doing no harm and are small.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (int)orphanFilePathArray.GetCount());
+         msg.Printf(msgA, this->projName, (int)orphanFilePathArray.GetCount());
 
          const wxChar *buttons[] =
             {_("Continue without deleting; ignore the extra files this session"),
@@ -1850,7 +1893,7 @@ other projects. \
 
       // In auto-recover mode, we didn't do any ShowMultiDialog calls above, so put up an alert.
       if (bAutoRecoverMode)
-         ::wxMessageBox(
+         ::AudacityMessageBox(
             _("Project check found file inconsistencies during automatic recovery.\n\nSelect 'Show Log...' in the Help menu to see details."),
             _("Warning: Problems in Automatic Recovery"),
             wxOK  | wxICON_EXCLAMATION);
@@ -1894,7 +1937,7 @@ void DirManager::FindMissingAliasedFiles(
    iter = missingAliasedFilePathHash.begin();
    while (iter != missingAliasedFilePathHash.end())
    {
-      wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first.c_str());
+      wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first);
       ++iter;
    }
 }
@@ -1919,7 +1962,7 @@ void DirManager::FindMissingAUFs(
             {
                missingAUFHash[key] = b;
                wxLogWarning(_("Missing alias (.auf) block file: '%s'"),
-                            fileName.GetFullPath().c_str());
+                            fileName.GetFullPath());
             }
          }
       }
@@ -1941,11 +1984,12 @@ void DirManager::FindMissingAUs(
             wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
             fileName.SetName(key);
             fileName.SetExt(wxT("au"));
-            if (!fileName.FileExists())
+            const auto path = fileName.GetFullPath();
+            if (!fileName.FileExists() ||
+                wxFile{ path }.Length() == 0)
             {
                missingAUHash[key] = b;
-               wxLogWarning(_("Missing data block file: '%s'"),
-                            fileName.GetFullPath().c_str());
+               wxLogWarning(_("Missing data block file: '%s'"), path);
             }
          }
       }
@@ -1988,7 +2032,7 @@ void DirManager::FindOrphanBlockFiles(
       }
    }
    for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
-      wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i].c_str());
+      wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i]);
 }
 
 

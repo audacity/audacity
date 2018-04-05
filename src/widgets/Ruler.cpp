@@ -44,6 +44,16 @@
 
 *//***************************************************************//**
 
+\class AdornedRulerPanel
+\brief This is an Audacity Specific ruler panel which additionally
+  has border, selection markers, play marker.
+  
+  Once TrackPanel uses wxSizers, we will derive it from some
+  wxWindow and the GetSize and SetSize functions
+  will then be wxWidgets functions instead.
+
+*//***************************************************************//**
+
 \class Ruler::Label
 \brief An array of these created by the Ruler is used to determine
 what and where text annotations to the numbers on the Ruler get drawn.
@@ -79,7 +89,6 @@ array of Ruler::Label.
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelCellIterator.h"
-#include "../Menus.h"
 #include "../NumberScale.h"
 #include "../Prefs.h"
 #include "../Snap.h"
@@ -88,6 +97,7 @@ array of Ruler::Label.
 #include "../prefs/TracksPrefs.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
 #include "../widgets/Grabber.h"
+#include "../commands/CommandContext.h"
 
 //#define SCRUB_ABOVE
 
@@ -129,6 +139,7 @@ Ruler::Ruler()
    mbTicksAtExtremes = false;
    mTickColour = wxColour( theTheme.Colour( clrTrackPanelText ));
    mPen.SetColour(mTickColour);
+   mDbMirrorValue = 0.0;
 
    // Note: the font size is now adjusted automatically whenever
    // Invalidate is called on a horizontal Ruler, unless the user
@@ -659,7 +670,7 @@ wxString Ruler::LabelString(double d, bool major)
             wxString t1, t2, format;
             t1.Printf(wxT("%d:%02d:"), secs/3600, (secs/60)%60);
             format.Printf(wxT("%%0%d.%dlf"), mDigits+3, mDigits);
-            t2.Printf(format.c_str(), fmod(d, 60.0));
+            t2.Printf(format, fmod(d, 60.0));
             s += t1 + t2;
          }
          break;
@@ -712,7 +723,7 @@ wxString Ruler::LabelString(double d, bool major)
                format.Printf(wxT("%%%d.%dlf"), mDigits+3, mDigits);
             // The casting to float is working around an issue where 59 seconds
             // would show up as 60 when using g++ (Ubuntu 4.3.3-5ubuntu4) 4.3.3.
-            t2.Printf(format.c_str(), fmod((float)d, (float)60.0));
+            t2.Printf(format, fmod((float)d, (float)60.0));
 #else
             // For d in the range of hours, d is just very slightly below the value it should 
             // have, because of using a double, which in turn yields values like 59:59:999999 
@@ -737,7 +748,7 @@ wxString Ruler::LabelString(double d, bool major)
             // doesn't round up 59.9999999 to 60.
             double multiplier = pow( 10, mDigits);
             dd = ((int)(dd * multiplier))/multiplier;
-            t2.Printf(format.c_str(), dd);
+            t2.Printf(format, dd);
 #endif
             s += t1 + t2;
          }
@@ -758,7 +769,7 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    wxCoord strW, strH, strD, strL;
    int strPos, strLen, strLeft, strTop;
 
-   // FIXME: We don't draw a tick if of end of our label arrays
+   // FIXME: We don't draw a tick if off end of our label arrays
    // But we shouldn't have an array of labels.
    if( mNumMinorMinor >= mLength )
       return;
@@ -782,6 +793,9 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    label->text = wxT("");
 
    mDC->SetFont(major? *mMajorFont: minor? *mMinorFont : *mMinorMinorFont);
+   // Bug 521.  dB view for waveforms needs a 2-sided scale.
+   if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
+      d = -2*mDbMirrorValue - d;
    l = LabelString(d, major);
    mDC->GetTextExtent(l, &strW, &strH, &strD, &strL);
 
@@ -1597,10 +1611,37 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
+                       wxOrientation orientation,
+                       const wxSize &bounds,
+                       const Range &range,
+                       Ruler::RulerFormat format,
+                       const wxString &units,
+                       const Options &options,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/):
    wxPanelWrapper(parent, id, pos, size)
 {
+   ruler.SetBounds( 0, 0, bounds.x, bounds.y );
+   ruler.SetOrientation(orientation);
+   ruler.SetRange( range.first, range.second );
+   ruler.SetLog( options.log );
+   ruler.SetFormat(format);
+   ruler.SetUnits( units );
+   ruler.SetFlip( options.flip );
+   ruler.SetLabelEdges( options.labelEdges );
+   ruler.mbTicksAtExtremes = options.ticksAtExtremes;
+   if (orientation == wxVERTICAL) {
+      wxCoord w;
+      ruler.GetMaxSize(&w, NULL);
+      SetMinSize(wxSize(w, 150));  // height needed for wxGTK
+   }
+   else if (orientation == wxHORIZONTAL) {
+      wxCoord h;
+      ruler.GetMaxSize(NULL, &h);
+      SetMinSize(wxSize(wxDefaultCoord, h));
+   }
+   if (options.hasTickColour)
+      ruler.SetTickColour( options.tickColour );
 }
 
 RulerPanel::~RulerPanel()
@@ -1985,9 +2026,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxToolTip::Enable(true);
 #endif
 
-   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(AdornedRulerPanel::OnCapture),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &AdornedRulerPanel::OnCapture,
                      this);
 }
 
@@ -1995,11 +2035,6 @@ AdornedRulerPanel::~AdornedRulerPanel()
 {
    if(HasCapture())
       ReleaseMouse();
-
-   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
-                        wxCommandEventHandler(AdornedRulerPanel::OnCapture),
-                        NULL,
-                        this);
 }
 
 #if 1
@@ -2087,7 +2122,8 @@ void AdornedRulerPanel::ReCreateButtons()
       const auto button =
       ToolBar::MakeButton(
          this,
-         bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+         bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
+         bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
          bitmap, bitmap, bitmap,
          id, position, toggle, size
       );
@@ -2099,7 +2135,8 @@ void AdornedRulerPanel::ReCreateButtons()
    auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
    ToolBar::MakeAlternateImages(
       *button, 1,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
+      bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
+      bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
       //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
       bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
       size);
@@ -2403,7 +2440,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
          if (switchToQP && evt.LeftDown()) {
             // We can't stop scrubbing yet (see comments in Bug 1391), but we can pause it.
-            mProject->OnPause();
+            mProject->OnPause(*mProject);
             // Don't return, fall through
          }
          else if (scrubber.IsPaused())
@@ -2416,10 +2453,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             // Do this hack so scrubber can detect mouse drags anywhere
             evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
 
-            if (scrubber.IsScrubbing())
+            //if (scrubber.IsScrubbing())
                evt.Skip();
-            else
-               evt.Skip();
+            //else
+               //evt.Skip();
 
             // Don't do this, it slows down drag-scrub on Mac.
             // Timer updates of display elsewhere make it unnecessary.
@@ -2542,7 +2579,7 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Temporarily unlock locked play region
    if (mPlayRegionLock && evt.LeftDown()) {
       //mPlayRegionLock = true;
-      mProject->OnUnlockPlayRegion();
+      mProject->OnUnlockPlayRegion(*mProject);
    }
 
    mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
@@ -2603,7 +2640,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
       case mesDraggingPlayRegionStart:
          HideQuickPlayIndicator();
 
-         // Don't start dragging until beyond tollerance initial playback start
+         // Don't start dragging until beyond tolerance initial playback start
          if (!mIsDragging && isWithinStart)
             mQuickPlayPos = mOldPlayRegionStart;
          else
@@ -2722,7 +2759,7 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       if (mPlayRegionLock) {
          // Restore Locked Play region
          SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
-         mProject->OnLockPlayRegion();
+         mProject->OnLockPlayRegion(*mProject);
          // and release local lock
          mPlayRegionLock = false;
       }
@@ -2770,8 +2807,9 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
       options.playLooped = (loopEnabled && looped);
 
+      auto oldStart = mPlayRegionStart;
       if (!cutPreview)
-         options.pStartTime = &mPlayRegionStart;
+         options.pStartTime = &oldStart;
       else
          options.timeTrack = NULL;
 
@@ -2832,10 +2870,10 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
 // This version toggles ruler state indirectly via the scrubber
 // to ensure that all the places where the state is shown update.
 // For example buttons and menus must update.
-void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent& Evt)
+void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
 {
    auto &scrubber = mProject->GetScrubber();
-   scrubber.OnToggleScrubRuler( Evt );
+   scrubber.OnToggleScrubRuler(*mProject);
 }
 
 void AdornedRulerPanel::OnToggleScrubRuler(/*wxCommandEvent&*/)
@@ -2863,10 +2901,8 @@ void AdornedRulerPanel::UpdateButtonStates()
 {
    auto common = [this]
    (AButton &button, const wxString &commandName, const wxString &label) {
-      std::vector<wxString> commands;
-      commands.push_back(label);
-      commands.push_back(commandName);
-      ToolBar::SetButtonToolTip(button, commands);
+      TranslatedInternalString command{ commandName, label };
+      ToolBar::SetButtonToolTip( button, &command, 1u );
       button.SetLabel(button.GetToolTipText());
 
       button.UpdateStatus();
@@ -2890,7 +2926,7 @@ void AdornedRulerPanel::UpdateButtonStates()
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 {
-   mProject->OnTogglePinnedHead();
+   mProject->OnTogglePinnedHead(*mProject);
    UpdateButtonStates();
 }
 
@@ -3029,9 +3065,9 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
 {
    if (mProject->IsPlayRegionLocked())
-      mProject->OnUnlockPlayRegion();
+      mProject->OnUnlockPlayRegion(*mProject);
    else
-      mProject->OnLockPlayRegion();
+      mProject->OnLockPlayRegion(*mProject);
 }
 
 
@@ -3043,8 +3079,8 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 
    if (start >= 0)
    {
-      const int x1 = Time2Pos(start) + 1;
-      const int x2 = Time2Pos(end);
+      const int x1 = Time2Pos(start);
+      const int x2 = Time2Pos(end)-2;
       int y = mInner.y - TopMargin + mInner.height/2;
 
       bool isLocked = mProject->IsPlayRegionLocked();
@@ -3170,8 +3206,8 @@ void AdornedRulerPanel::DrawSelection()
 void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
 {
    // Draw selection
-   const int p0 = 1 + max(0, Time2Pos(mViewInfo->selectedRegion.t0()));
-   const int p1 = 2 + min(mInner.width, Time2Pos(mViewInfo->selectedRegion.t1()));
+   const int p0 = max(1, Time2Pos(mViewInfo->selectedRegion.t0()));
+   const int p1 = min(mInner.width, Time2Pos(mViewInfo->selectedRegion.t1()));
 
    dc->SetBrush( wxBrush( theTheme.Colour( clrRulerBackground )) );
    dc->SetPen(   wxPen(   theTheme.Colour( clrRulerBackground )) );

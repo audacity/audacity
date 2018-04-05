@@ -74,6 +74,7 @@
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/TracksPrefs.h"
 #include "../toolbars/ToolManager.h"
+#include "../TrackPanel.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
@@ -129,13 +130,14 @@ void ControlToolBar::Create(wxWindow * parent)
 
 // This is a convenience function that allows for button creation in
 // MakeButtons() with fewer arguments
-AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+AButton *ControlToolBar::MakeButton(ControlToolBar *pBar,
+                                    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
                                     int id,
                                     bool processdownevents,
                                     const wxChar *label)
 {
-   AButton *r = ToolBar::MakeButton(this,
-      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
+   AButton *r = ToolBar::MakeButton(pBar,
+      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
       wxDefaultPosition, processdownevents,
@@ -160,7 +162,7 @@ void ControlToolBar::MakeAlternateImages(AButton &button, int idx,
                                          teBmps eDisabled)
 {
    ToolBar::MakeAlternateImages(button, idx,
-      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
+      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
 }
@@ -170,10 +172,10 @@ void ControlToolBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsLarge();
 
-   mPause = MakeButton(bmpPause, bmpPause, bmpPauseDisabled,
+   mPause = MakeButton(this, bmpPause, bmpPause, bmpPauseDisabled,
       ID_PAUSE_BUTTON,  true,  _("Pause"));
 
-   mPlay = MakeButton( bmpPlay, bmpPlay, bmpPlayDisabled,
+   mPlay = MakeButton(this, bmpPlay, bmpPlay, bmpPlayDisabled,
       ID_PLAY_BUTTON, true, _("Play"));
    MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
    MakeAlternateImages(*mPlay, 2,
@@ -184,17 +186,17 @@ void ControlToolBar::Populate()
                        bmpSeek, bmpSeek, bmpSeekDisabled);
    mPlay->FollowModifierKeys();
 
-   mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
+   mStop = MakeButton(this, bmpStop, bmpStop, bmpStopDisabled ,
       ID_STOP_BUTTON, false, _("Stop"));
 
-   mRewind = MakeButton(bmpRewind, bmpRewind, bmpRewindDisabled,
+   mRewind = MakeButton(this, bmpRewind, bmpRewind, bmpRewindDisabled,
       ID_REW_BUTTON, false, _("Skip to Start"));
 
-   mFF = MakeButton(bmpFFwd, bmpFFwd, bmpFFwdDisabled,
+   mFF = MakeButton(this, bmpFFwd, bmpFFwd, bmpFFwdDisabled,
       ID_FF_BUTTON, false, _("Skip to End"));
 
-   mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
-      ID_RECORD_BUTTON, true, _("Record"));
+   mRecord = MakeButton(this, bmpRecord, bmpRecord, bmpRecordDisabled,
+      ID_RECORD_BUTTON, false, _("Record"));
 
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
@@ -220,59 +222,73 @@ void ControlToolBar::Populate()
 void ControlToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   std::vector<wxString> commands;
    for (long iWinID = ID_PLAY_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
-      commands.clear();
       auto pCtrl = static_cast<AButton*>(this->FindWindow(iWinID));
-      commands.push_back(pCtrl->GetLabel());
+      const wxChar *name = nullptr;
       switch (iWinID)
       {
          case ID_PLAY_BUTTON:
             // Without shift
-            commands.push_back(wxT("PlayStop"));
-            // With shift
-            commands.push_back(_("Loop Play"));
-            // For the shortcut tooltip.
-            commands.push_back(wxT("PlayLooped"));
+            name = wxT("PlayStop");
             break;
          case ID_RECORD_BUTTON:
             // Without shift
-            //commands.push_back(wxT("Record"));
-            commands.push_back(wxT("Record1stChoice"));
+            //name = wxT("Record");
+            name = wxT("Record1stChoice");
+            break;
+         case ID_PAUSE_BUTTON:
+            name = wxT("Pause");
+            break;
+         case ID_STOP_BUTTON:
+            name = wxT("Stop");
+            break;
+         case ID_FF_BUTTON:
+            name = wxT("CursProjectEnd");
+            break;
+         case ID_REW_BUTTON:
+            name = wxT("CursProjectStart");
+            break;
+      }
+      std::vector<TranslatedInternalString> commands(
+         1u, { name, pCtrl->GetLabel() } );
+
+      // Some have a second
+      switch (iWinID)
+      {
+         case ID_PLAY_BUTTON:
+            // With shift
+            commands.push_back( { wxT("PlayLooped"), _("Loop Play") } );
+            break;
+         case ID_RECORD_BUTTON:
+            // With shift
             {  bool bPreferNewTrack;
                gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
-               if( !bPreferNewTrack ){
-                  commands.push_back(_("Record New Track"));
-               } else {
-                  commands.push_back(_("Append Record"));
-               }
                // For the shortcut tooltip.
-               commands.push_back(wxT("Record2ndChoice"));
+               commands.push_back( {
+                  wxT("Record2ndChoice"),
+                  !bPreferNewTrack
+                     ? _("Record New Track")
+                     : _("Append Record")
+               } );
             }
             break;
          case ID_PAUSE_BUTTON:
-            commands.push_back(wxT("Pause"));
             break;
          case ID_STOP_BUTTON:
-            commands.push_back(wxT("Stop"));
             break;
          case ID_FF_BUTTON:
-            commands.push_back(wxT("CursProjectEnd"));
             // With shift
-            commands.push_back(_("Select to End"));
-            // For the shortcut tooltip.
-            commands.push_back(wxT("SelEnd"));
+            commands.push_back( {
+               wxT("SelEnd"), _("Select to End") } );
             break;
          case ID_REW_BUTTON:
-            commands.push_back(wxT("CursProjectStart"));
             // With shift
-            commands.push_back(_("Select to Start"));
-            // For the shortcut tooltip.
-            commands.push_back(wxT("SelStart"));
+            commands.push_back( {
+               wxT("SelStart"), _("Select to Start") } );
             break;
       }
-      ToolBar::SetButtonToolTip(*pCtrl, commands);
+      ToolBar::SetButtonToolTip(*pCtrl, commands.data(), commands.size());
    }
 #endif
 }
@@ -867,7 +883,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    if( project ) {
       project->MayStartMonitoring();
 
-      Meter *meter = project->GetPlaybackMeter();
+      MeterPanel *meter = project->GetPlaybackMeter();
       if( meter ) {
          meter->Clear();
       }
@@ -936,32 +952,19 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
    bool success = false;
 
-   bool shifted = mRecord->WasShiftDown();
+   bool appendRecord = mRecord->WasShiftDown();
 
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
    if( !bPreferNewTrack )
-      shifted = !shifted;
+      appendRecord = !appendRecord;
 
    TrackList *trackList = p->GetTracks();
-   auto pTracksCopy = TrackList::Create();
-   auto &tracksCopy = *pTracksCopy;
-   bool tracksCopied = false;
 
    WaveTrackArray recordingTracks;
 
    auto cleanup = finally( [&] {
       if (!success) {
-         if (tracksCopied)
-            // Restore the tracks to remove any inserted silence
-            *trackList = std::move(tracksCopy);
-
-         if ( ! shifted ) {
-            // msmeyer: Delete recently added tracks if opening stream fails
-            for ( auto track : recordingTracks )
-               trackList->Remove(track);
-         }
-
          SetPlay(false);
          SetStop(false);
          SetRecord(false);
@@ -984,7 +987,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       if(!hasWave)
          // Treat append-record like record, when there was no given wave track
          // to append onto.
-         shifted = false;
+         appendRecord = false;
 
       double t0 = p->GetSel0();
       double t1 = p->GetSel1();
@@ -1008,20 +1011,24 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 #ifdef EXPERIMENTAL_MIDI_OUT
          midiTracks = trackList->GetNoteTrackArray(false);
 #endif
-     }
+      }
       else {
          playbackTracks = WaveTrackConstArray();
 #ifdef EXPERIMENTAL_MIDI_OUT
          midiTracks = NoteTrackArray();
 #endif
-     }
+      }
 
-      // If SHIFT key was down, the user wants append to tracks
       int recordingChannels = 0;
-      if (shifted) {
+      // These count channels sellected/existing skipping tracks that 
+      // are too big for the number of channels left.  e.g don't count a stereo 
+      // track when only one channel left to record.
+      int selectedChannels = 0;
+      int existingChannels = 0;
+      double allt0 = t0;
+
+      if (appendRecord) {
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
-         bool sel = false;
-         double allt0 = t0;
 
          // Find the maximum end time of selected and all wave tracks
          // Find whether any tracks were selected.  (If any are selected,
@@ -1032,9 +1039,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                if (wt->GetEndTime() > allt0) {
                   allt0 = wt->GetEndTime();
                }
-
+               int nChannelsThisTrack = wt->GetLinked() ? 2:1;
+               if( recordingChannels >= existingChannels + nChannelsThisTrack)
+                  existingChannels += nChannelsThisTrack;
                if (tt->GetSelected()) {
-                  sel = true;
+                  if( recordingChannels >= selectedChannels + nChannelsThisTrack)
+                     selectedChannels += nChannelsThisTrack;
                   if (wt->GetEndTime() > t0) {
                      t0 = wt->GetEndTime();
                   }
@@ -1042,17 +1052,43 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
+         // Number of channels to record into is number selected, or all.
+         int nChannelsAvailable = ( selectedChannels > 0 ) ? selectedChannels : existingChannels;
+         // If that is not enough to record without losing a channel, flip over to
+         // recording to new tracks.
+         if( nChannelsAvailable < recordingChannels )
+            appendRecord = false;
+      }
+
+      if (appendRecord) {
+
+         // t0 is now: max(selection-start, end-of-selected-wavetracks)
+         // allt0 is:  max(selection-start, end-of-all-tracks)
          // Use end time of all wave tracks if none selected
-         if (!sel) {
+         if (selectedChannels == 0) {
             t0 = allt0;
          }
 
+         // Append recording:
          // Pad selected/all wave tracks to make them all the same length
          // Remove recording tracks from the list of tracks for duplex ("overdub")
          // playback.
          for (Track *tt = it.First(); tt; tt = it.Next()) {
-            if (tt->GetKind() == Track::Wave && (tt->GetSelected() || !sel)) {
-               WaveTrack *wt = static_cast<WaveTrack *>(tt);
+            if (tt->GetKind() == Track::Wave && 
+                  (tt->GetSelected() || 
+                   (selectedChannels == 0)
+                  )) {
+               auto wt = Track::Pointer<WaveTrack>(tt);
+               // Don't record into one track of a stereo track...
+               // We're in fact here refusing to record the last channel, 
+               // if there are no more channels after it,  into a stereo 
+               // track - which comes to the same thing.
+               if( ((int)recordingTracks.size() >= recordingChannels -1) && 
+                   wt->GetLinked() )
+               {   tt = it.Next();
+                   continue;
+               }
+
                if (duplex) {
                   auto end = playbackTracks.end();
                   auto it = std::find(playbackTracks.begin(), end, wt);
@@ -1060,26 +1096,37 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                      playbackTracks.erase(it);
                }
                t1 = wt->GetEndTime();
-               // less than or equal, not just less than, to ensure a clip boundary.
+
+               // A function that copies all the non-sample data between
+               // wave tracks; in case the track recorded to changes scale
+               // type (for instance), during the recording.
+               auto updater = [](Track &d, const Track &s){
+                  auto &dst = static_cast<WaveTrack&>(d);
+                  auto &src = static_cast<const WaveTrack&>(s);
+                  dst.Reinit(src);
+               };
+
+               // Get a copy of the track to be appended, to be pushed into
+               // undo history only later.
+               auto pending = std::static_pointer_cast<WaveTrack>(
+                  p->GetTracks()->RegisterPendingChangedTrack(
+                     updater, wt.get() ) );
+
+               // End of current track is before or at recording start time.
+               // Less than or equal, not just less than, to ensure a clip boundary.
                // when append recording.
                if (t1 <= t0) {
-                  if (!tracksCopied) {
-                     // Duplicate all tracks before modifying any of them.
-                     // The duplicates are used to restore state in case
-                     // of failure.
-                     tracksCopied = true;
-                     tracksCopy = *trackList;
-                  }
 
                   // Pad the recording track with silence, up to the
                   // maximum time.
                   auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+                  newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
                   newTrack->InsertSilence(0.0, t0 - t1);
                   newTrack->Flush();
-                  wt->Clear(t1, t0);
-                  wt->Paste(t1, newTrack.get());
+                  pending->Clear(t1, t0);
+                  pending->Paste(t1, newTrack.get());
                }
-               recordingTracks.push_back(wt);
+               recordingTracks.push_back(pending);
                // Don't record more channels than configured recording pref.
                if( (int)recordingTracks.size() >= recordingChannels ){
                   break;
@@ -1087,9 +1134,15 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
-         t1 = DBL_MAX;     // record for a long, long time
+         if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
+            t1 = p->GetSel1();   // record within the selection
+         } else {
+            t1 = DBL_MAX;        // record for a long, long time
+         }
       }
-      else {
+
+      if( recordingTracks.empty() )
+      {   // recording to new track.
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
 
@@ -1108,14 +1161,15 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
          gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
-         /* i18n-hint: The default name for an audio track. */
          defaultTrackName = TracksPrefs::GetDefaultAudioTrackNamePreference();
          gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
          for (int c = 0; c < recordingChannels; c++) {
-            auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+            std::shared_ptr<WaveTrack> newTrack{
+               p->GetTrackFactory()->NewWaveTrack().release()
+            };
 
             newTrack->SetOffset(t0);
             wxString nameSuffix = wxString(wxT(""));
@@ -1167,11 +1221,10 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                newTrack->SetChannel( Track::MonoChannel );
             }
 
-            // Let the list hold the track, and keep a pointer to it
-            recordingTracks.push_back(
-               static_cast<WaveTrack*>(
-                  trackList->Add(
-                     std::move(newTrack))));
+            p->GetTracks()->RegisterPendingNewTrack( newTrack );
+            recordingTracks.push_back( newTrack );
+            // Bug 1548.  New track needs the focus.
+            p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
          }
       }
 
@@ -1197,6 +1250,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          StartScrollingIfPreferred();
       }
       else {
+         CancelRecording();
+
          // Show error message if stream could not be opened
          ShowErrorDialog(this, _("Error"),
                          _("Error opening sound device.\nTry changing the audio host, recording device and the project sample rate."),
@@ -1437,4 +1492,16 @@ void ControlToolBar::StopScrolling()
    if(project)
       project->GetPlaybackScroller().Activate
          (AudacityProject::PlaybackScroller::Mode::Off);
+}
+
+void ControlToolBar::CommitRecording()
+{
+   const auto project = GetActiveProject();
+   project->GetTracks()->ApplyPendingTracks();
+}
+
+void ControlToolBar::CancelRecording()
+{
+   const auto project = GetActiveProject();
+   project->GetTracks()->ClearPendingTracks();
 }

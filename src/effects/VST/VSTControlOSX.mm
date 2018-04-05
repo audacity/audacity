@@ -171,7 +171,7 @@ void VSTControl::CreateCarbon()
 {
    OSStatus result;
 
-   Connect(wxEVT_SIZE, wxSizeEventHandler(VSTControl::OnSize));
+   Bind(wxEVT_SIZE, &VSTControl::OnSize, this);
 
    VstRect *rect;
 

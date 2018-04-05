@@ -45,6 +45,8 @@ enum
    DockCount = 2
 };
 
+// A description of a layout of toolbars, as a forest of trees that root
+// at the left edge of the tool dock and grow rightward
 class ToolBarConfiguration
 {
    struct Tree;
@@ -62,6 +64,10 @@ public:
       mForest.clear();
    }
 
+   // Describe one toolbar's position in terms of its parent and preceding
+   // sibling
+   // When specifying a place at which to insert, "adopt" means insertion of
+   // an internal node displacing other nodes deeper as its children
    struct Position {
       ToolBar *rightOf {};
       ToolBar *below {};
@@ -71,7 +77,7 @@ public:
       // Default constructor
       Position() {}
 
-      Position(
+      explicit Position(
          ToolBar *r,
          ToolBar *b = nullptr,
          bool shouldAdopt = true
@@ -99,13 +105,14 @@ public:
 
    static const Position UnspecifiedPosition;
 
+   // Point to a node in the forest and describe its position
    struct Place {
       Tree *pTree {};
       Position position;
    };
 
    // This iterator visits the nodes of the forest in pre-order, and at each
-   // stop, makes the parent, previous sibling, and children accessible.
+   // stop, reports its Place
    class Iterator
       : public std::iterator<std::forward_iterator_tag, Place>
    {
@@ -116,7 +123,7 @@ public:
       {
          // This is a feature:  advance position even at the end
          mPlace.position =
-            { mPlace.pTree ? mPlace.pTree->pBar : nullptr };
+            Position{ mPlace.pTree ? mPlace.pTree->pBar : nullptr };
 
          if (!mIters.empty())
          {
@@ -212,7 +219,7 @@ public:
             return
                // lhs.begin == rhs.begin &&
                lhs.current == rhs.current
-               // lhs.end == rhs.end
+               // && lhs.end == rhs.end
             ;
          }
       };
@@ -275,7 +282,7 @@ private:
    };
 
    Iterator FindPlace(const ToolBar *bar) const;
-   std::pair<Forest*, Forest::iterator> FindParent(const ToolBar *bar);
+   std::pair<Forest*, Forest::iterator> FindPeers(const ToolBar *bar);
 
    Forest mForest;
 };
@@ -325,9 +332,6 @@ public:
                     ToolBarConfiguration *pWrappedConfiguration = nullptr);
 
 
-
-   int mTotalToolBarHeight;
-   wxWindow *mParent;
 
    ToolManager *mManager;
 

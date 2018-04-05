@@ -42,6 +42,7 @@
 #include "../Prefs.h"
 #include "../Internat.h"
 #include "../Tags.h"
+#include "../prefs/QualityPrefs.h"
 
 
 #define DESC _("Ogg Vorbis files")
@@ -108,8 +109,7 @@ public:
       mVorbisFile(std::move(vorbisFile))
       , mStreamUsage{ static_cast<size_t>(mVorbisFile->links) }
    {
-      mFormat = (sampleFormat)
-         gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+      mFormat = QualityPrefs::SampleFormatChoice();
 
       for (int i = 0; i < mVorbisFile->links; i++)
       {
@@ -325,7 +325,7 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
          if (bytesRead == OV_HOLE) {
             wxFileName ff(mFilename);
             wxLogError(wxT("Ogg Vorbis importer: file %s is malformed, ov_read() reported a hole"),
-               ff.GetFullName().c_str());
+               ff.GetFullName());
             /* http://lists.xiph.org/pipermail/vorbis-dev/2001-February/003223.html
              * is the justification for doing this - best effort for malformed file,
              * hence the message.

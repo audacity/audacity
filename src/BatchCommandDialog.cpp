@@ -9,8 +9,8 @@
 
 *******************************************************************//*!
 
-\class BatchCommandDialog
-\brief Provides a list of configurable commands for use with BatchCommands
+\class MacroCommandDialog
+\brief Provides a list of configurable commands for use with MacroCommands
 
 Provides a list of commands, mostly effects, which can be chained
 together in a simple linear sequence.  Can configure parameters on each
@@ -41,32 +41,35 @@ selected command.
 #include "effects/EffectManager.h"
 #include "BatchCommands.h"
 #include "ShuttleGui.h"
+#include "widgets/HelpSystem.h"
 
 
 #define CommandsListID        7001
 #define EditParamsButtonID    7002
 #define UsePresetButtonID     7003
 
-BEGIN_EVENT_TABLE(BatchCommandDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK,                     BatchCommandDialog::OnOk)
-   EVT_BUTTON(wxID_CANCEL,                 BatchCommandDialog::OnCancel)
-   EVT_BUTTON(EditParamsButtonID,          BatchCommandDialog::OnEditParams)
-   EVT_BUTTON(UsePresetButtonID,           BatchCommandDialog::OnUsePreset)
-   EVT_LIST_ITEM_ACTIVATED(CommandsListID, BatchCommandDialog::OnItemSelected)
-   EVT_LIST_ITEM_SELECTED(CommandsListID,  BatchCommandDialog::OnItemSelected)
+BEGIN_EVENT_TABLE(MacroCommandDialog, wxDialogWrapper)
+   EVT_BUTTON(wxID_OK,                     MacroCommandDialog::OnOk)
+   EVT_BUTTON(wxID_CANCEL,                 MacroCommandDialog::OnCancel)
+   EVT_BUTTON(wxID_HELP,                   MacroCommandDialog::OnHelp)
+   EVT_BUTTON(EditParamsButtonID,          MacroCommandDialog::OnEditParams)
+   EVT_BUTTON(UsePresetButtonID,           MacroCommandDialog::OnUsePreset)
+   EVT_LIST_ITEM_ACTIVATED(CommandsListID, MacroCommandDialog::OnItemSelected)
+   EVT_LIST_ITEM_SELECTED(CommandsListID,  MacroCommandDialog::OnItemSelected)
 END_EVENT_TABLE();
 
-BatchCommandDialog::BatchCommandDialog(wxWindow * parent, wxWindowID id):
+MacroCommandDialog::MacroCommandDialog(wxWindow * parent, wxWindowID id):
    wxDialogWrapper(parent, id, _("Select Command"),
             wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)
+   , mCatalog( GetActiveProject() )
 {
    SetLabel(_("Select Command"));         // Provide visual label
    SetName(_("Select Command"));          // Provide audible label
    Populate();
 }
 
-void BatchCommandDialog::Populate()
+void MacroCommandDialog::Populate()
 {
    //------------------------- Main section --------------------
    ShuttleGui S(this, eIsCreating);
@@ -74,7 +77,7 @@ void BatchCommandDialog::Populate()
    // ----------------------- End of main section --------------
 }
 
-void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
+void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.StartVerticalLay(true);
    {
@@ -95,10 +98,13 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
          S.SetStretchyCol(1);
          mParameters = S.AddTextBox(_("&Parameters"), wxT(""), 0);
          mParameters->SetEditable(false);
+         S.Prop(0).AddPrompt( _("&Details" ) );
+         mDetails = S.AddTextWindow( wxT(""));
+         mDetails->SetEditable(false);
       }
       S.EndMultiColumn();
 
-      S.StartStatic(_("C&hoose command"), true);
+      S.Prop(10).StartStatic(_("C&hoose command"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_LIST | wxLC_SINGLE_SEL);
          mChoices = S.Id(CommandsListID).AddListControl();
@@ -107,121 +113,119 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons();
+   S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
 
    PopulateCommandList();
 
-   SetMinSize(wxSize(500, 400));
+   SetMinSize(wxSize(780, 560));
    Fit();
    Center();
 }
 
-void BatchCommandDialog::PopulateCommandList()
+void MacroCommandDialog::PopulateCommandList()
 {
-   wxArrayString commandList = BatchCommands::GetAllCommands();
-
-   unsigned int i;
    mChoices->DeleteAllItems();
-   for( i=0;i<commandList.GetCount();i++)
-   {
-      mChoices->InsertItem( i, commandList[i]);
-   }
+   long ii = 0;
+   for ( const auto &entry : mCatalog )
+      // insert the user-facing string
+      mChoices->InsertItem( ii++, entry.name.Translated() );
 }
 
-int BatchCommandDialog::GetSelectedItem()
-{
-   int i;
-   mSelectedCommand = wxT("");
-   for(i=0;i<mChoices->GetItemCount();i++)
-   {
-      if( mChoices->GetItemState( i, wxLIST_STATE_FOCUSED) != 0)
-      {
-         mSelectedCommand = mChoices->GetItemText( i );
-         return i;
-      }
-   }
-   return -1;
-}
-
-void BatchCommandDialog::ValidateChoices()
+void MacroCommandDialog::ValidateChoices()
 {
 }
 
-void BatchCommandDialog::OnChoice(wxCommandEvent & WXUNUSED(event))
+void MacroCommandDialog::OnChoice(wxCommandEvent & WXUNUSED(event))
 {
 }
 
-void BatchCommandDialog::OnOk(wxCommandEvent & WXUNUSED(event))
+void MacroCommandDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
-   mSelectedCommand = mCommand->GetValue().Strip(wxString::both);
+   mSelectedCommand = mInternalCommandName.Strip(wxString::both);
    mSelectedParameters = mParameters->GetValue().Strip(wxString::trailing);
    EndModal(true);
 }
 
-void BatchCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
+void MacroCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(false);
 }
 
-void BatchCommandDialog::OnItemSelected(wxListEvent &event)
+void MacroCommandDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mChoices->GetItemText(event.GetIndex());
+   wxString page = GetHelpPageName();
+   HelpSystem::ShowHelp(this, page, true);
+}
+
+void MacroCommandDialog::OnItemSelected(wxListEvent &event)
+{
+   const auto &command = mCatalog[ event.GetIndex() ];
 
    EffectManager & em = EffectManager::Get();
-   PluginID ID = em.GetEffectByIdentifier(command);
+   PluginID ID = em.GetEffectByIdentifier( command.name.Internal() );
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
    mEditParams->Enable(!ID.IsEmpty());
    mUsePreset->Enable(em.HasPresets(ID));
 
-   if (command == mCommand->GetValue())
-   {
+   if ( command.name.Translated() == mCommand->GetValue() )
+      // This uses the assumption of uniqueness of translated names!
       return;
-   }
 
-   mCommand->SetValue(command);
+   mCommand->SetValue(command.name.Translated());
+   mInternalCommandName = command.name.Internal();
 
-   wxString params = BatchCommands::GetCurrentParamsFor(command);
+   wxString params = MacroCommands::GetCurrentParamsFor(mInternalCommandName);
    if (params.IsEmpty())
    {
       params = em.GetDefaultPreset(ID);
    }
 
+   // Cryptic command and category.
+   // Later we can put help information there, perhaps.
+   mDetails->SetValue( mInternalCommandName + "\r\n" + command.category  );
    mParameters->SetValue(params);
 }
 
-void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
+void MacroCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mCommand->GetValue();
+   wxString command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
-   params = BatchCommands::PromptForParamsFor(command, params, this).Trim();
+   params = MacroCommands::PromptForParamsFor(command, params, this).Trim();
 
    mParameters->SetValue(params);
    mParameters->Refresh();
 }
 
-void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
+void MacroCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
 {
-   wxString command = mCommand->GetValue();
+   wxString command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
-   wxString preset = BatchCommands::PromptForPresetFor(command, params, this).Trim();
+   wxString preset = MacroCommands::PromptForPresetFor(command, params, this).Trim();
 
    mParameters->SetValue(preset);
    mParameters->Refresh();
 }
 
-void BatchCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
+void MacroCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
 {
-   mCommand->SetValue( Command );
+   auto iter = mCatalog.ByCommandId( Command );
+
    mParameters->SetValue( Params );
 
-   int item = mChoices->FindItem(-1, Command);
-   if (item != wxNOT_FOUND)
-   {
-      mChoices->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+   mInternalCommandName = Command;
+   if (iter == mCatalog.end())
+      // Expose an internal name to the user in default of any friendly name
+      // -- AVOID THIS!
+      mCommand->SetValue( Command );
+   else {
+      mCommand->SetValue( iter->name.Translated() );
+      mDetails->SetValue( iter->name.Internal() + "\r\n" + iter->category  );
+      mChoices->SetItemState(iter - mCatalog.begin(),
+                             wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 
       EffectManager & em = EffectManager::Get();
       PluginID ID = em.GetEffectByIdentifier(Command);

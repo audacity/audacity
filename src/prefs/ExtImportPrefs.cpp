@@ -19,12 +19,12 @@
 
 #include <wx/defs.h>
 #include <wx/listctrl.h>
-#include <wx/msgdlg.h>
 #include <wx/dnd.h>
 
 #include "../Audacity.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
 
 #define EXTIMPORT_MIME_SUPPORT 0
 
@@ -56,8 +56,10 @@ BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
    EVT_BUTTON(EIPMoveFilterDown,ExtImportPrefs::OnFilterMoveDown)
 END_EVENT_TABLE()
 
-ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
-:   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
+ExtImportPrefs::ExtImportPrefs(wxWindow * parent, wxWindowID winid)
+/* i18n-hint:  Title of dialog governing "Extended", or "advanced,"
+ * audio file import options */
+:   PrefsPanel(parent, winid, _("Extended Import")), RuleTable(NULL),
     PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
     mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)
 {
@@ -83,6 +85,7 @@ void ExtImportPrefs::Populate()
 void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.TieCheckBox(_("A&ttempt to use filter in OpenFile dialog first"),
          wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"),
@@ -180,6 +183,8 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndStatic();
+   S.EndScroller();
+
    Layout();
    Fit();
    SetMinSize(GetSize());
@@ -293,13 +298,13 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
       PluginList->SetItemState (itemIndex, 0, wxLIST_STATE_SELECTED);
       PluginList->SetItemState (itemIndex2, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
    }
-   int fcount = item->filter_objects.Count();
+   int fcount = item->filter_objects.size();
    if (item->divider >= fcount)
    {
       item->divider = -1;
    }
    if (item->divider < -1)
-      item->divider = item->filter_objects.Count() - 1;
+      item->divider = item->filter_objects.size() - 1;
 
    return true;
 }
@@ -504,7 +509,7 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
       {
          if (!askedAboutSpaces)
          {
-            fixSpaces = wxMessageBox(_(
+            fixSpaces = AudacityMessageBox(_(
 "There are space characters (spaces, newlines, tabs or linefeeds) in one of \
 the items. They are likely to break the pattern matching. Unless you know \
 what you are doing, it is recommended to trim spaces. Do you want \
@@ -595,9 +600,10 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
       return;
    auto &items = Importer::Get().GetImportItems();
 
-   int msgres = wxMessageBox (_("Do you really want to delete selected rule?"),
+   int msgres = AudacityMessageBox (_("Do you really want to delete selected rule?"),
       _("Rule deletion confirmation"), wxYES_NO, RuleTable);
-   if (msgres == wxNO || msgres != wxYES)
+   // Yes or no, there is no third!
+   if (msgres != wxYES)
       return;
 
    RuleTable->DeleteRows (last_selected);
@@ -805,8 +811,8 @@ void ExtImportPrefsDropTarget::OnLeave()
 {
 }
 
-PrefsPanel *ExtImportPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ExtImportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ExtImportPrefs(parent);
+   return safenew ExtImportPrefs(parent, winid);
 }

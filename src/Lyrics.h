@@ -14,7 +14,7 @@
 
 #include "Audacity.h"
 
-#include <wx/dynarray.h>
+#include <vector>
 #include <wx/textctrl.h>
 #include "widgets/wxPanelWrapper.h"
 
@@ -25,25 +25,29 @@ class LabelTrack;
 #define LYRICS_DEFAULT_HEIGHT 280
 
 struct Syllable {
+   Syllable() = default;
+   Syllable( const Syllable& ) = default;
+   Syllable& operator= ( const Syllable& ) = default;
+   //Syllable( Syllable && ) = default;
+   //Syllable& operator= ( Syllable&& ) = default;
+
    double t;
    wxString text;
    wxString textWithSpace;
-   int char0; // index of first char of syllable in Lyrics::mText, used only for kHighlightLyrics
-   int char1; // index of last  char of syllable in Lyrics::mText, used only for kHighlightLyrics
+   int char0; // index of first char of syllable in LyricsPanel::mText, used only for kHighlightLyrics
+   int char1; // index of last  char of syllable in LyricsPanel::mText, used only for kHighlightLyrics
    int width;
    int leftX;
    int x; // centerX, used only for kBouncingBallLyrics
 };
 
-WX_DECLARE_OBJARRAY(Syllable, SyllableArray);
-
-class Lyrics;
+class LyricsPanel;
 
 // Override wxTextCtrl to handle selection events, which the parent ignores if the control is read-only.
 class HighlightTextCtrl final : public wxTextCtrl
 {
 public:
-   HighlightTextCtrl(Lyrics* parent,
+   HighlightTextCtrl(LyricsPanel* parent,
                      wxWindowID id,
                      const wxString& value = wxT(""),
                      const wxPoint& pos = wxDefaultPosition,
@@ -53,14 +57,20 @@ public:
    void OnMouseEvent(wxMouseEvent &evt);
 
 private:
-   Lyrics* mLyrics;
+   LyricsPanel* mLyricsPanel;
 
    DECLARE_EVENT_TABLE()
 };
 
-class Lyrics final : public wxPanelWrapper
+
+/**************************************************************//**
+
+\brief LyricsPanel is a panel that paints the bouncing
+ball and the lyrics text.
+*******************************************************************/
+class LyricsPanel final : public wxPanelWrapper
 {
-   DECLARE_DYNAMIC_CLASS(Lyrics)
+   DECLARE_DYNAMIC_CLASS(LyricsPanel)
 
    enum LyricsStyle {
       kBouncingBallLyrics, // Lyrics move from right to left with bouncing ball.
@@ -69,10 +79,10 @@ class Lyrics final : public wxPanelWrapper
    };
 
  public:
-   Lyrics(wxWindow* parent, wxWindowID id,
+   LyricsPanel(wxWindow* parent, wxWindowID id,
           const wxPoint& pos = wxDefaultPosition,
           const wxSize& size = wxDefaultSize);
-   virtual ~Lyrics();
+   virtual ~LyricsPanel();
 
    void Clear();
    void AddLabels(const LabelTrack *pLT);
@@ -130,7 +140,7 @@ private:
    double         mT;
 
    int            mCurrentSyllable;
-   SyllableArray  mSyllables;
+   std::vector<Syllable>  mSyllables;
    wxString       mText;
 
    int            mTextHeight; // only for drawn text

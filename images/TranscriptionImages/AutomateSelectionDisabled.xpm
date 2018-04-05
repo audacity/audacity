@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * AutomateSelectionDisabled[] = {
+static const char * const AutomateSelectionDisabled[] = {
 "27 27 6 1",
 " 	c None",
 ".	c #FFFFFF",

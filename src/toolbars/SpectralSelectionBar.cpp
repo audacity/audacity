@@ -57,6 +57,7 @@ with changes in the SpectralSelectionBar.
 #include "../widgets/NumericTextCtrl.h"
 
 #include "../Experimental.h"
+#include "../Internat.h"
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 
@@ -125,12 +126,12 @@ void SpectralSelectionBar::Populate()
    * look-ups static because they depend on translations which are done at
    * runtime */
 
-   wxString frequencyFormatName = mListener
+   auto frequencyFormatName = mListener
       ? mListener->SSBL_GetFrequencySelectionFormatName()
-      : wxString(wxEmptyString);
-   wxString bandwidthFormatName = mListener
+      : NumericFormatId{};
+   auto bandwidthFormatName = mListener
       ? mListener->SSBL_GetBandwidthSelectionFormatName()
-      : wxString(wxEmptyString);
+      : NumericFormatId{};
 
    wxFlexGridSizer *mainSizer;
    Add((mainSizer = safenew wxFlexGridSizer(1, 1, 1)), 0,wxALIGN_TOP | wxLEFT | wxTOP, 5);
@@ -165,31 +166,39 @@ void SpectralSelectionBar::Populate()
       auto subSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       mCenterCtrl = safenew NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
-      mCenterCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
-      mCenterCtrl->SetName(_("Center Frequency:"));
-      mCenterCtrl->EnableMenu();
+         this, OnCenterID,
+         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, SelectedRegion::UndefinedFrequency )
+      );
+      mCenterCtrl->SetName(_("Center Frequency"));
       subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mWidthCtrl = safenew NumericTextCtrl(
-         NumericConverter::BANDWIDTH, this, OnWidthID, bandwidthFormatName, 0.0);
-      mWidthCtrl->SetInvalidValue(-1.0);
-      mWidthCtrl->SetName(wxString(_("Bandwidth:")));
-      mWidthCtrl->EnableMenu();
+         this, OnWidthID,
+         NumericConverter::BANDWIDTH, bandwidthFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, -1.0 )
+      );
+      mWidthCtrl->SetName(wxString(_("Bandwidth")));
       subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mLowCtrl = safenew NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
-      mLowCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
-      mLowCtrl->SetName(_("Low Frequency:"));
-      mLowCtrl->EnableMenu();
+         this, OnLowID,
+         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, SelectedRegion::UndefinedFrequency )
+      );
+      mLowCtrl->SetName(_("Low Frequency"));
       subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mHighCtrl = safenew NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
-      mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
-      mHighCtrl->SetName(wxString(_("High Frequency:")));
-      mHighCtrl->EnableMenu();
+         this, OnHighID,
+         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, SelectedRegion::UndefinedFrequency )
+      );
+      mHighCtrl->SetName(wxString(_("High Frequency")));
       subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mCenterCtrl->Show(mbCenterAndWidth);
@@ -343,12 +352,12 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
    wxEventType type = evt.GetEventType();
    if (type == EVT_FREQUENCYTEXTCTRL_UPDATED) {
       NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
-      wxString frequencyFormatName = frequencyCtrl->GetBuiltinName(index);
+      auto frequencyFormatName = frequencyCtrl->GetBuiltinName(index);
       mListener->SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
    }
    else if (mbCenterAndWidth &&
             type == EVT_BANDWIDTHTEXTCTRL_UPDATED) {
-      wxString bandwidthFormatName = mWidthCtrl->GetBuiltinName(index);
+      auto bandwidthFormatName = mWidthCtrl->GetBuiltinName(index);
       mListener->SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
    }
 
@@ -422,7 +431,7 @@ void SpectralSelectionBar::SetFrequencies(double bottom, double top)
    ValuesToControls();
 }
 
-void SpectralSelectionBar::SetFrequencySelectionFormatName(const wxString & formatName)
+void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatId & formatName)
 {
    NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
    frequencyCtrl->SetFormatName(formatName);
@@ -432,7 +441,7 @@ void SpectralSelectionBar::SetFrequencySelectionFormatName(const wxString & form
    OnUpdate(e);
 }
 
-void SpectralSelectionBar::SetBandwidthSelectionFormatName(const wxString & formatName)
+void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatId & formatName)
 {
    if (mbCenterAndWidth) {
       mWidthCtrl->SetFormatName(formatName);

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod-script-pipe", "mod-script-pipe.vcxproj", "{85774A29-EA2F-4A40-994F-6BE593D847A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod-script-pipe", "mod-script-pipe.vcxproj", "{73BF0B4D-6EC3-49ED-87AE-E629F1CA2737}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug|Win32.Build.0 = Debug|Win32
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Release|Win32.ActiveCfg = Release|Win32
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Release|Win32.Build.0 = Release|Win32
+		{73BF0B4D-6EC3-49ED-87AE-E629F1CA2737}.Debug|Win32.ActiveCfg = Debug|Win32
+		{73BF0B4D-6EC3-49ED-87AE-E629F1CA2737}.Debug|Win32.Build.0 = Debug|Win32
+		{73BF0B4D-6EC3-49ED-87AE-E629F1CA2737}.Release|Win32.ActiveCfg = Release|Win32
+		{73BF0B4D-6EC3-49ED-87AE-E629F1CA2737}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

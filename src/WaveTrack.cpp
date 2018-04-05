@@ -61,12 +61,12 @@ Track classes.
 #include "Experimental.h"
 
 #include "TrackPanel.h" // for TrackInfo
+// Assumptions in objects separation were wrong.  We need to activate
+// VZooming (that lives in WaveTrackVRulerHandle) from an action on the
+// TCP collapse/expand.  So we need visibility here.
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h"
 
 using std::max;
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-bool WaveTrack::mMonoAsVirtualStereo;
-#endif
 
 WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {
@@ -96,7 +96,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    // Force creation always:
    WaveformSettings &settings = GetIndependentWaveformSettings();
 
-   mDisplay = FindDefaultViewMode();
+   mDisplay = TracksPrefs::ViewModeChoice();
    if (mDisplay == obsoleteWaveformDBDisplay) {
       mDisplay = Waveform;
       settings.scaleType = WaveformSettings::stLogarithmic;
@@ -163,6 +163,33 @@ void WaveTrack::Init(const WaveTrack &orig)
    mDisplayLocationsCache.clear();
 }
 
+void WaveTrack::Reinit(const WaveTrack &orig)
+{
+   Init(orig);
+
+   {
+      auto &settings = orig.mpSpectrumSettings;
+      if (settings)
+         mpSpectrumSettings = std::make_unique<SpectrogramSettings>(*settings);
+      else
+         mpSpectrumSettings.reset();
+   }
+
+   {
+      auto &settings = orig.mpWaveformSettings;
+      if (settings)
+         mpWaveformSettings = std::make_unique<WaveformSettings>(*settings);
+      else
+         mpWaveformSettings.reset();
+   }
+
+   this->SetOffset(orig.GetOffset());
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   // To do:  mYv, mHeightV, mPerY, mVirtualStereo
+#endif
+}
+
 void WaveTrack::Merge(const Track &orig)
 {
    if (orig.GetKind() == Wave)
@@ -226,32 +253,6 @@ void WaveTrack::SetPanFromChannelType()
       SetPan( 1.0f );
 };
 
-
-//static
-WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
-{
-   // PRL:  Bugs 1043, 1044
-   // 2.1.1 writes a NEW key for this preference, which got NEW values,
-   // to avoid confusing version 2.1.0 if it reads the preference file afterwards.
-   // Prefer the NEW preference key if it is present
-
-   WaveTrack::WaveTrackDisplay viewMode;
-   gPrefs->Read(wxT("/GUI/DefaultViewModeNew"), (int*)&viewMode, -1);
-
-   // Default to the old key only if not, default the value if it's not there either
-   wxASSERT(WaveTrack::MinDisplay >= 0);
-   if (viewMode < 0) {
-      int oldMode;
-      gPrefs->Read(wxT("/GUI/DefaultViewMode"), &oldMode,
-         (int)(WaveTrack::Waveform));
-      viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
-   }
-
-   // Now future-proof 2.1.1 against a recurrence of this sort of bug!
-   viewMode = WaveTrack::ValidateWaveTrackDisplay(viewMode);
-
-   return viewMode;
-}
 
 // static
 WaveTrack::WaveTrackDisplay
@@ -426,41 +427,6 @@ float WaveTrack::GetPan() const
    return mPan;
 }
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-bool WaveTrack::SetPan(float newPan)
-{
-   float p=mPan;
-   bool panZero=false;
-   int temp;
-
-   if (newPan > 1.0)
-      mPan = 1.0;
-   else if (newPan < -1.0)
-      mPan = -1.0;
-   else
-      mPan = newPan;
-
-   if(mDisplay == WaveTrack::Waveform &&
-      mChannel == Track::MonoChannel &&
-      ((p == 0.0f) != (newPan == 0.0f)) &&
-      mMonoAsVirtualStereo)
-   {
-      panZero=true;
-      if(!mPan) {
-         mHeight = mHeight + mHeightv;
-      }
-      else {
-         temp = mHeight;
-         mHeight = temp*mPerY;
-         mHeightv = temp - mHeight;
-      }
-      ReorderList();
-   }
-
-   return panZero;
-}
-
-#else // EXPERIMENTAL_OUTPUT_DISPLAY
 void WaveTrack::SetPan(float newPan)
 {
    if (newPan > 1.0)
@@ -470,64 +436,11 @@ void WaveTrack::SetPan(float newPan)
    else
       mPan = newPan;
 }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-void WaveTrack::SetVirtualState(bool state, bool half)
-{
-   int temp;
-
-   if(half)
-      mPerY = 0.5;
-
-   if(state){
-      if(mPan){
-         temp = mHeight;
-         mHeight = temp*mPerY;
-         mHeightv = temp - mHeight;
-      }
-      ReorderList();
-   }else{
-      if(mPan){
-         mHeight = mHeight + mHeightv;
-      }
-   }
-}
-
-int WaveTrack::GetMinimizedHeight() const
-{
-   if (GetLink()) {
-      return 20;
-   }
-
-   if(GetChannel() == MonoChannel && GetPan() != 0 && mMonoAsVirtualStereo &&  mDisplay == Waveform)
-      return 20;
-   else
-      return 40;
-}
-
-void WaveTrack::VirtualStereoInit()
-{
-   int temp;
-
-   if(mChannel == Track::MonoChannel && mPan != 0.0f && mMonoAsVirtualStereo){
-      temp = mHeight;
-      mHeight = temp*mPerY;
-      mHeightv = temp - mHeight;
-      ReorderList(false);
-   }
-}
-#endif
 
 float WaveTrack::GetChannelGain(int channel) const
 {
    float left = 1.0;
    float right = 1.0;
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if(mVirtualStereo)
-      channel = 3;
-#endif
 
    if (mPan < 0)
       right = (mPan + 1.0);
@@ -538,6 +451,27 @@ float WaveTrack::GetChannelGain(int channel) const
       return left*mGain;
    else
       return right*mGain;
+}
+
+void WaveTrack::DoSetMinimized(bool isMinimized){
+
+#ifdef EXPERIMENTAL_HALF_WAVE
+   bool bHalfWave;
+   gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
+   if( bHalfWave )
+   {
+      // Show half wave on collapse, full on restore.
+      std::shared_ptr<TrackVRulerControls> pTvc = GetVRulerControls();
+
+      // An awkward workaround for a function that lives 'in the wrong place'.
+      // We use magic numbers, 0 and 1, to tell it to zoom reset or zoom half-wave.
+      WaveTrackVRulerControls * pWtvc = reinterpret_cast<WaveTrackVRulerControls*>(pTvc.get());
+      if( pWtvc )
+         pWtvc->DoZoomPreset( isMinimized ? 1:0);
+   }
+#endif
+
+   PlayableTrack::DoSetMinimized( isMinimized );
 }
 
 void WaveTrack::SetWaveColorIndex(int colorIndex)
@@ -560,18 +494,21 @@ void WaveTrack::ConvertToSampleFormat(sampleFormat format)
 
 bool WaveTrack::IsEmpty(double t0, double t1) const
 {
-   //printf("Searching for overlap in %.6f...%.6f\n", t0, t1);
+   if (t0 > t1)
+      return true;
+
+   //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
    for (const auto &clip : mClips)
    {
       if (!clip->BeforeClip(t1) && !clip->AfterClip(t0)) {
-         //printf("Overlapping clip: %.6f...%.6f\n",
+         //wxPrintf("Overlapping clip: %.6f...%.6f\n",
          //       clip->GetStartTime(),
          //       clip->GetEndTime());
          // We found a clip that overlaps this region
          return false;
       }
    }
-   //printf("No overlap found\n");
+   //wxPrintf("No overlap found\n");
 
    // Otherwise, no clips overlap this region
    return true;
@@ -658,8 +595,8 @@ void WaveTrack::Trim (double t0, double t1)
    if(!inside1 && t1 < GetEndTime())
       Clear(t1,GetEndTime());
 
-   if(!inside0)
-      SplitDelete(0,t0);
+   if(!inside0 && t0 > GetStartTime())
+      SplitDelete(GetStartTime(), t0);
 }
 
 
@@ -685,7 +622,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       if (t0 <= clip->GetStartTime() && t1 >= clip->GetEndTime())
       {
          // Whole clip is in copy region
-         //printf("copy: clip %i is in copy region\n", (int)clip);
+         //wxPrintf("copy: clip %i is in copy region\n", (int)clip);
 
          newTrack->mClips.push_back
             (make_movable<WaveClip>(*clip, mDirManager, ! forClipboard));
@@ -695,7 +632,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       else if (t1 > clip->GetStartTime() && t0 < clip->GetEndTime())
       {
          // Clip is affected by command
-         //printf("copy: clip %i is affected by command\n", (int)clip);
+         //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
 
          const double clip_t0 = std::max(t0, clip->GetStartTime());
          const double clip_t1 = std::min(t1, clip->GetEndTime());
@@ -703,7 +640,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          auto newClip = make_movable<WaveClip>
             (*clip, mDirManager, ! forClipboard, clip_t0, clip_t1);
 
-         //printf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
+         //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
          newClip->Offset(-t0);
          if (newClip->GetOffset() < 0)
@@ -781,6 +718,23 @@ void WaveTrack::SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pS
    }
 }
 
+void WaveTrack::UseSpectralPrefs( bool bUse )
+{  
+   if( bUse ){
+      if( !mpSpectrumSettings )
+         return;
+      // reset it, and next we will be getting the defaults.
+      mpSpectrumSettings.reset();
+   }
+   else {
+      if( mpSpectrumSettings )
+         return;
+      GetIndependentSpectrogramSettings();
+   }
+}
+
+
+
 const WaveformSettings &WaveTrack::GetWaveformSettings() const
 {
    if (mpWaveformSettings)
@@ -845,7 +799,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       return;
    }
 
-   wxArrayDouble splits;
+   std::vector<double> splits;
    WaveClipHolders cuts;
 
    // If provided time warper was NULL, use a default one that does nothing
@@ -864,13 +818,13 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
       // Remember clip boundaries as locations to split
       st = LongSamplesToTime(TimeToLongSamples(clip->GetStartTime()));
-      if (st >= t0 && st <= t1 && splits.Index(st) == wxNOT_FOUND) {
-         splits.Add(st);
+      if (st >= t0 && st <= t1 && !make_iterator_range(splits).contains(st)) {
+         splits.push_back(st);
       }
 
       st = LongSamplesToTime(TimeToLongSamples(clip->GetEndTime()));
-      if (st >= t0 && st <= t1 && splits.Index(st) == wxNOT_FOUND) {
-         splits.Add(st);
+      if (st >= t0 && st <= t1 && !make_iterator_range(splits).contains(st)) {
+         splits.push_back(st);
       }
 
       // Search for cut lines
@@ -904,7 +858,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       Paste(t0, src);
       {
          // First, merge the NEW clip(s) in with the existing clips
-         if (merge && splits.GetCount() > 0)
+         if (merge && splits.size() > 0)
          {
             // Now t1 represents the absolute end of the pasted data.
             t1 = t0 + src->GetEndTime();
@@ -1276,13 +1230,20 @@ void WaveTrack::Paste(double t0, const Track *src)
    if (other->GetNumClips() == 0)
       return;
 
-   //printf("paste: we have at least one clip\n");
+   //wxPrintf("paste: we have at least one clip\n");
 
    bool singleClipMode = (other->GetNumClips() == 1 &&
          other->GetStartTime() == 0.0);
 
-   double insertDuration = other->GetEndTime();
-   //printf("Check if we need to make room for the pasted data\n");
+   const double insertDuration = other->GetEndTime();
+   if( insertDuration != 0 && insertDuration < 1.0/mRate )
+      // PRL:  I added this check to avoid violations of preconditions in other WaveClip and Sequence
+      // methods, but allow the value 0 so I don't subvert the purpose of commit
+      // 739422ba70ceb4be0bb1829b6feb0c5401de641e which causes append-recording always to make
+      // a new clip.
+      return;
+
+   //wxPrintf("Check if we need to make room for the pasted data\n");
 
    // Make room for the pasted data
    if (editClipCanMove) {
@@ -1308,7 +1269,7 @@ void WaveTrack::Paste(double t0, const Track *src)
    if (singleClipMode)
    {
       // Single clip mode
-      // printf("paste: checking for single clip mode!\n");
+      // wxPrintf("paste: checking for single clip mode!\n");
 
       WaveClip *insideClip = NULL;
 
@@ -1318,7 +1279,7 @@ void WaveTrack::Paste(double t0, const Track *src)
          {
             if (clip->WithinClip(t0))
             {
-               //printf("t0=%.6f: inside clip is %.6f ... %.6f\n",
+               //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
                //       t0, clip->GetStartTime(), clip->GetEndTime());
                insideClip = clip.get();
                break;
@@ -1339,7 +1300,7 @@ void WaveTrack::Paste(double t0, const Track *src)
       if (insideClip)
       {
          // Exhibit traditional behaviour
-         //printf("paste: traditional behaviour\n");
+         //wxPrintf("paste: traditional behaviour\n");
          if (!editClipCanMove)
          {
             // We did not move other clips out of the way already, so
@@ -1365,7 +1326,7 @@ void WaveTrack::Paste(double t0, const Track *src)
    }
 
    // Insert NEW clips
-   //printf("paste: multi clip mode!\n");
+   //wxPrintf("paste: multi clip mode!\n");
 
    if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
       // STRONG-GUARANTEE in case of this path
@@ -1396,7 +1357,6 @@ void WaveTrack::Silence(double t0, double t1)
 
    auto start = (sampleCount)floor(t0 * mRate + 0.5);
    auto len = (sampleCount)floor(t1 * mRate + 0.5) - start;
-   bool result = true;
 
    for (const auto &clip : mClips)
    {
@@ -1437,7 +1397,7 @@ void WaveTrack::InsertSilence(double t, double len)
    if (mClips.empty())
    {
       // Special case if there is no clip yet
-      auto clip = make_movable<WaveClip>(mDirManager, mFormat, mRate, 0 /*colourindex*/);
+      auto clip = make_movable<WaveClip>(mDirManager, mFormat, mRate, this->GetWaveColorIndex());
       clip->InsertSilence(0, len);
       // use NOFAIL-GUARANTEE
       mClips.push_back( std::move( clip ) );
@@ -1560,7 +1520,7 @@ void WaveTrack::Join(double t0, double t1)
          for (; it != end; ++it)
             if ((*it)->GetStartTime() > clip->GetStartTime())
                break;
-         //printf("Insert clip %.6f at position %d\n", clip->GetStartTime(), i);
+         //wxPrintf("Insert clip %.6f at position %d\n", clip->GetStartTime(), i);
          clipsToDelete.insert(it, clip.get());
       }
    }
@@ -1574,19 +1534,19 @@ void WaveTrack::Join(double t0, double t1)
    newClip->SetOffset(t);
    for (const auto &clip : clipsToDelete)
    {
-      //printf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
+      //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(), clip->GetEndTime());
 
       if (clip->GetOffset() - t > (1.0 / mRate)) {
          double addedSilence = (clip->GetOffset() - t);
-         //printf("Adding %.6f seconds of silence\n");
+         //wxPrintf("Adding %.6f seconds of silence\n");
          auto offset = clip->GetOffset();
          auto value = clip->GetEnvelope()->GetValue( offset );
          newClip->AppendSilence( addedSilence, value );
          t += addedSilence;
       }
 
-      //printf("Pasting at %.6f\n", t);
+      //wxPrintf("Pasting at %.6f\n", t);
       newClip->Paste(t, clip);
 
       t = newClip->GetEndTime();
@@ -1771,9 +1731,6 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // Don't use SetWaveColorIndex as it sets the clips too.
             mWaveColorIndex  = nValue;
       } // while
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      VirtualStereoInit();
-#endif
       return true;
    }
 
@@ -1835,16 +1792,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("channel"), mChannel);
    xmlFile.WriteAttr(wxT("linked"), mLinked);
    this->PlayableTrack::WriteXMLAttributes(xmlFile);
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   int height;
-   if(MONO_PAN)
-      height = mHeight + mHeightv;
-   else
-      height = this->GetActualHeight();
-   xmlFile.WriteAttr(wxT("height"), height);
-#else
    xmlFile.WriteAttr(wxT("height"), this->GetActualHeight());
-#endif
    xmlFile.WriteAttr(wxT("minimized"), this->GetMinimized());
    xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    xmlFile.WriteAttr(wxT("rate"), mRate);
@@ -2024,13 +1972,14 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len, fillFormat fill,
-                    bool mayThrow) const
+                    bool mayThrow, sampleCount * pNumCopied) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
    // everything to be on the safe side.
    bool doClear = true;
    bool result = true;
+   sampleCount samplesCopied = 0;
    for (const auto &clip: mClips)
    {
       if (start >= clip->GetStartSample() && start+len <= clip->GetEndSample())
@@ -2041,7 +1990,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
    }
    if (doClear)
    {
-      // Usually we fill in empty sapce with zero
+      // Usually we fill in empty space with zero
       if( fill == fillZero )
          ClearSamples(buffer, format, 0, len);
       // but we don't have to.
@@ -2049,7 +1998,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       {
          wxASSERT( format==floatSample );
          float * pBuffer = (float*)buffer;
-         for(int i=0;i<len;i++)
+         for(size_t i=0;i<len;i++)
             pBuffer[i]=2.0f;
       }
       else
@@ -2093,9 +2042,12 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
                            SAMPLE_SIZE(format)),
                format, inclipDelta, samplesToCopy.as_size_t(), mayThrow ))
             result = false;
+         else
+            samplesCopied += samplesToCopy;
       }
    }
-
+   if( pNumCopied )
+      *pNumCopied = samplesCopied;
    return result;
 }
 
@@ -2249,7 +2201,7 @@ WaveClip* WaveTrack::GetClipAtTime(double time)
    // If "time" is the end time of the first of two such clips, and the end time is slightly
    // less than the start time of the second clip, then the first rather than the
    // second clip is found by the above code. So correct this.
-   if (p != clips.rend() & p != clips.rbegin() &&
+   if (p != clips.rend() && p != clips.rbegin() &&
       time == (*p)->GetEndTime() &&
       (*p)->SharesBoundaryWithNextClip(*(p-1))) {
       p--;
@@ -2437,7 +2389,6 @@ void WaveTrack::SplitAt(double t)
    {
       if (c->WithinClip(t))
       {
-         double val;
          t = LongSamplesToTime(TimeToLongSamples(t)); // put t on a sample
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
          c->Clear(t, c->GetEndTime());
@@ -2663,7 +2614,7 @@ WaveTrackCache::~WaveTrackCache()
 {
 }
 
-void WaveTrackCache::SetTrack(const WaveTrack *pTrack)
+void WaveTrackCache::SetTrack(const std::shared_ptr<const WaveTrack> &pTrack)
 {
    if (mPTrack != pTrack) {
       if (pTrack) {
@@ -2761,7 +2712,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             if (start1 == end0) {
                const auto len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
-               if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1))
+               if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1, fillZero, mayThrow))
                   return 0;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
@@ -2786,7 +2737,8 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          mOverlapBuffer.Resize(len, format);
          // initLen is not more than len:
          auto sinitLen = initLen.as_size_t();
-         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen))
+         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen,
+                           fillZero, mayThrow))
             return 0;
          wxASSERT( sinitLen <= remaining );
          remaining -= sinitLen;
@@ -2835,7 +2787,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             mOverlapBuffer.Resize(len, format);
             buffer = mOverlapBuffer.ptr();
          }
-         if (!mPTrack->Get(buffer, format, start, remaining))
+         if (!mPTrack->Get(buffer, format, start, remaining, fillZero, mayThrow))
             return 0;
       }
 
@@ -2844,7 +2796,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
 
    // Cache works only for float format.
    mOverlapBuffer.Resize(len, format);
-   if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len))
+   if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
       return mOverlapBuffer.ptr();
    else
       return 0;

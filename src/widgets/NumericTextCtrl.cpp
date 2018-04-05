@@ -149,7 +149,7 @@ in sanpping without having a window created each time.
 \class BuiltinFormatString
 \brief BuiltinFormatString is a structure used in the NumericTextCtrl
 and holds both a descriptive name for the string format and a
-printf inspired style format string, optimised for displaying time in
+wxPrintf inspired style format string, optimised for displaying time in
 different formats.
 
 *//****************************************************************//**
@@ -198,27 +198,12 @@ different formats.
  * to the user */
 struct BuiltinFormatString
 {
-   wxString name;
-   wxString formatStr;
-};
-
-//
-// ----------------------------------------------------------------------------
-// UntranslatedBuiltinFormatString Struct
-// ----------------------------------------------------------------------------
-//
-/** \brief struct to hold a formatting control string and its untranslated name
- * Used in an array to hold the built-in time formats that are always available
- * to the user */
-struct UntranslatedBuiltinFormatString
-{
-   wxString name;
+   NumericFormatId name;
    wxString formatStr;
 
-   BuiltinFormatString Translate() const
-   {
-      return { wxGetTranslation( name ), wxGetTranslation( formatStr ) };
-   }
+   friend inline bool operator ==
+      (const BuiltinFormatString &a, const BuiltinFormatString &b)
+         { return a.name == b.name; }
 };
 
 //
@@ -237,6 +222,10 @@ public:
       zeropad = _zeropad;
       digits = 0;
    }
+   NumericField( const NumericField & ) = default;
+   NumericField &operator = ( const NumericField & ) = default;
+   //NumericField( NumericField && ) = default;
+   //NumericField &operator = ( NumericField && ) = default;
    void CreateDigitFormatStr()
    {
       if (range > 1)
@@ -284,22 +273,16 @@ public:
    wxRect digitBox;
 };
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(NumericFieldArray);
-WX_DEFINE_OBJARRAY(DigitInfoArray);
-
 namespace {
-
-const std::vector<BuiltinFormatString> &TimeConverterFormats() {
 
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control.          */
-static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
+static const BuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in seconds */
-   XO("seconds"),
+   { XO("seconds") },
    /* i18n-hint: Format string for displaying time in seconds. Change the comma
     * in the middle to the 1000s separator for your locale, and the 'seconds'
     * on the end to the word for seconds. Don't change the numbers. */
@@ -309,7 +292,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes
     * and seconds */
-   XO("hh:mm:ss"),
+   { XO("hh:mm:ss") },
    /* i18n-hint: Format string for displaying time in hours, minutes and
     * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
@@ -321,7 +304,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in days, hours,
     * minutes and seconds */
-   XO("dd:hh:mm:ss"),
+   { XO("dd:hh:mm:ss") },
    /* i18n-hint: Format string for displaying time in days, hours, minutes and
     * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes and 's' to the
@@ -333,7 +316,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and hundredths of a second (1/100 second) */
-   XO("hh:mm:ss + hundredths"),
+   { XO("hh:mm:ss + hundredths") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and hundredths of a second. Change the 'h' to the abbreviation for hours,
     * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
@@ -345,7 +328,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and milliseconds (1/1000 second) */
-   XO("hh:mm:ss + milliseconds"),
+   { XO("hh:mm:ss + milliseconds") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -357,7 +340,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and samples (at the current project sample rate) */
-   XO("hh:mm:ss + samples"),
+   { XO("hh:mm:ss + samples") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes, 's' to the abbreviation for seconds and
@@ -371,7 +354,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
     * current project sample rate).  For example the number of a sample at 1
     * second into a recording at 44.1KHz would be 44,100.
     */
-   XO("samples"),
+   { XO("samples") },
    /* i18n-hint: Format string for displaying time in samples (lots of samples).
     * Change the ',' to the 1000s separator for your locale, and translate
     * samples. If 1000s aren't a base multiple for your number system, then you
@@ -382,7 +365,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at 24 frames per second (commonly used for films) */
-   XO("hh:mm:ss + film frames (24 fps)"),
+   { XO("hh:mm:ss + film frames (24 fps)") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames at 24 frames per second. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -394,7 +377,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames (lots of
     * frames) at 24 frames per second (commonly used for films) */
-   XO("film frames (24 fps)"),
+   { XO("film frames (24 fps)") },
    /* i18n-hint: Format string for displaying time in frames at 24 frames per
     * second. Change the comma
     * in the middle to the 1000s separator for your locale,
@@ -406,7 +389,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at NTSC TV drop-frame rate (used for American /
     * Japanese TV, and very odd) */
-   XO("hh:mm:ss + NTSC drop frames"),
+   { XO("hh:mm:ss + NTSC drop frames") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -418,7 +401,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at NTSC TV non-drop-frame rate (used for American /
     * Japanese TV, and doesn't quite match wall time */
-   XO("hh:mm:ss + NTSC non-drop frames"),
+   { XO("hh:mm:ss + NTSC non-drop frames") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -430,7 +413,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames at NTSC
     * TV frame rate (used for American / Japanese TV */
-   XO("NTSC frames"),
+   { XO("NTSC frames") },
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
     * in the middle to the 1000s separator for your locale, 
@@ -442,7 +425,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at PAL TV frame rate (used for European TV) */
-   XO("hh:mm:ss + PAL frames (25 fps)"),
+   { XO("hh:mm:ss + PAL frames (25 fps)") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with PAL TV frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -453,7 +436,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames at PAL
     * TV frame rate (used for European TV) */
-   XO("PAL frames (25 fps)"),
+   { XO("PAL frames (25 fps)") },
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
     * in the middle to the 1000s separator for your locale, 
@@ -464,7 +447,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at CD Audio frame rate (75 frames per second) */
-   XO("hh:mm:ss + CDDA frames (75 fps)"),
+   { XO("hh:mm:ss + CDDA frames (75 fps)") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with CD Audio frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -475,7 +458,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames at CD
     * Audio frame rate (75 frames per second) */
-   XO("CDDA frames (75 fps)"),
+   { XO("CDDA frames (75 fps)") },
    /* i18n-hint: Format string for displaying time in frames with CD Audio
     * frames. Change the comma
     * in the middle to the 1000s separator for your locale, 
@@ -484,70 +467,36 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    },
 };
 
-class FormatsArray final
-   : public TranslatableArray< std::vector< BuiltinFormatString > >
-{
-   void Populate() override
-   {
-      for (auto &format : TimeConverterFormats_)
-         mContents.push_back( format.Translate() );
-   }
-};
-
-static FormatsArray theArray;
-return theArray.Get();
-
-} // end function
-
-const std::vector<BuiltinFormatString> &FrequencyConverterFormats() {
-
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-static const UntranslatedBuiltinFormatString FrequencyConverterFormats_[] =  {
+static const BuiltinFormatString FrequencyConverterFormats_[] = {
    /* i18n-hint: Name of display format that shows frequency in hertz */
    {
-      XO("Hz"),
+      { XO("Hz") },
          /* i18n-hint: Format string for displaying frequency in hertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
          XO("0100000.0100 Hz")
    },
 
    {
-      XO("kHz"),
+      { XO("kHz") },
          /* i18n-hint: Format string for displaying frequency in kilohertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
          XO("01000.01000 kHz|0.001")
    },
 };
 
-class FormatsArray final
-   : public TranslatableArray< std::vector< BuiltinFormatString > >
-{
-   void Populate() override
-   {
-      for (auto &format : FrequencyConverterFormats_)
-         mContents.push_back( format.Translate() );
-   }
-};
-
-static FormatsArray theArray;
-return theArray.Get();
-
-} // end function
-
-const std::vector<BuiltinFormatString> &BandwidthConverterFormats() {
-
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
+static const BuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
-   XO("octaves"),
+   { XO("octaves") },
    /* i18n-hint: Format string for displaying log of frequency in octaves.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 1 / ln (2)
@@ -557,7 +506,7 @@ static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in semitones and cents */
-   XO("semitones + cents"),
+   { XO("semitones + cents") },
    /* i18n-hint: Format string for displaying log of frequency in semitones
     * and cents.
     * Change the decimal points for your locale. Don't change the numbers. */
@@ -568,7 +517,7 @@ static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in decades */
-   XO("decades"),
+   { XO("decades") },
    /* i18n-hint: Format string for displaying log of frequency in decades.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 1 / ln (10)
@@ -576,32 +525,31 @@ static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
    },
 };
 
-
-class FormatsArray final
-   : public TranslatableArray< std::vector< BuiltinFormatString > >
-{
-   void Populate() override
-   {
-      for (auto &format : BandwidthConverterFormats_)
-         mContents.push_back( format.Translate() );
-   }
-};
-
-static FormatsArray theArray;
-return theArray.Get();
-
-} // end function
-
-   const std::vector<BuiltinFormatString> &ChooseBuiltinFormatStrings
+   const BuiltinFormatString *ChooseBuiltinFormatStrings
       (NumericConverter::Type type)
    {
       switch (type) {
+         default:
          case NumericConverter::TIME:
-            return TimeConverterFormats();
+            return TimeConverterFormats_;
          case NumericConverter::FREQUENCY:
-            return FrequencyConverterFormats();
+            return FrequencyConverterFormats_;
          case NumericConverter::BANDWIDTH:
-            return BandwidthConverterFormats();
+            return BandwidthConverterFormats_;
+      }
+   }
+
+   size_t ChooseNBuiltinFormatStrings
+      (NumericConverter::Type type)
+   {
+      switch (type) {
+         default:
+         case NumericConverter::TIME:
+            return WXSIZEOF(TimeConverterFormats_);
+         case NumericConverter::FREQUENCY:
+            return WXSIZEOF(FrequencyConverterFormats_);
+         case NumericConverter::BANDWIDTH:
+            return WXSIZEOF(BandwidthConverterFormats_);
       }
    }
 }
@@ -611,11 +559,42 @@ return theArray.Get();
 // NumericConverter Class
 // ----------------------------------------------------------------------------
 //
+NumericFormatId NumericConverter::DefaultSelectionFormat()
+{ return TimeConverterFormats_[4].name; }
+NumericFormatId NumericConverter::TimeAndSampleFormat()
+{ return TimeConverterFormats_[5].name; }
+NumericFormatId NumericConverter::SecondsFormat()
+{ return TimeConverterFormats_[0].name; }
+NumericFormatId NumericConverter::HundredthsFormat()
+{ return TimeConverterFormats_[3].name; }
+
+NumericFormatId NumericConverter::HertzFormat()
+{ return FrequencyConverterFormats_[0].name; }
+
+NumericFormatId NumericConverter::LookupFormat( Type type, const wxString& id)
+{
+   if (id.empty()) {
+      if (type == TIME)
+         return DefaultSelectionFormat();
+      else
+         return ChooseBuiltinFormatStrings(type)[0].name;
+   }
+   else {
+      auto begin = ChooseBuiltinFormatStrings(type);
+      auto end = begin + ChooseNBuiltinFormatStrings(type);
+      auto iter = std::find( begin, end, BuiltinFormatString{ id, {} } );
+      if (iter == end)
+         iter = begin;
+      return iter->name;
+   }
+}
+
 NumericConverter::NumericConverter(Type type,
-                                   const wxString & formatName,
+                                   const NumericFormatId & formatName,
                                    double value,
                                    double sampleRate)
    : mBuiltinFormatStrings( ChooseBuiltinFormatStrings( type ) )
+   , mNBuiltins( ChooseNBuiltinFormatStrings( type ) )
 {
    ResetMinValue();
    ResetMaxValue();
@@ -627,8 +606,6 @@ NumericConverter::NumericConverter(Type type,
 
    if (type == NumericConverter::TIME )
       mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
-
-   mNBuiltins = mBuiltinFormatStrings.size();
 
    mPrefix = wxT("");
    mValueTemplate = wxT("");
@@ -651,8 +628,8 @@ NumericConverter::NumericConverter(Type type,
 void NumericConverter::ParseFormatString( const wxString & format)
 {
    mPrefix = wxT("");
-   mFields.Clear();
-   mDigits.Clear();
+   mFields.clear();
+   mDigits.clear();
    mScalingFactor = 1.0;
 
    bool inFrac = false;
@@ -720,15 +697,15 @@ void NumericConverter::ParseFormatString( const wxString & format)
 
          if (inFrac) {
             int base = fracMult * range;
-            mFields.Add(NumericField(inFrac, base, range, zeropad));
+            mFields.push_back(NumericField(inFrac, base, range, zeropad));
             fracMult *= range;
             numFracFields++;
          }
          else {
             unsigned int j;
-            for(j=0; j<mFields.GetCount(); j++)
+            for(j=0; j<mFields.size(); j++)
                mFields[j].base *= range;
-            mFields.Add(NumericField(inFrac, 1, range, zeropad));
+            mFields.push_back(NumericField(inFrac, 1, range, zeropad));
             numWholeFields++;
          }
          numStr = wxT("");
@@ -749,9 +726,9 @@ void NumericConverter::ParseFormatString( const wxString & format)
                return;
             }
             if (handleNum && numFracFields > 1)
-               mFields[mFields.GetCount()-2].label = delimStr;
+               mFields[mFields.size()-2].label = delimStr;
             else
-               mFields[mFields.GetCount()-1].label = delimStr;
+               mFields[mFields.size()-1].label = delimStr;
          }
          else {
             if (numWholeFields == 0)
@@ -767,7 +744,7 @@ void NumericConverter::ParseFormatString( const wxString & format)
       }
    }
 
-   for(i=0; i<mFields.GetCount(); i++) {
+   for(i = 0; i < mFields.size(); i++) {
       mFields[i].CreateDigitFormatStr();
    }
 
@@ -781,11 +758,11 @@ void NumericConverter::ParseFormatString( const wxString & format)
       mValueMask += wxT(".");
    pos += mPrefix.Length();
 
-   for(i=0; i<mFields.GetCount(); i++) {
+   for(i = 0; i < mFields.size(); i++) {
       mFields[i].pos = pos;
 
       for(j=0; j<mFields[i].digits; j++) {
-         mDigits.Add(DigitInfo(i, j, pos, wxRect()));
+         mDigits.push_back(DigitInfo(i, j, pos, wxRect()));
          mValueTemplate += wxT("0");
          mValueMask += wxT("0");
          pos++;
@@ -802,25 +779,25 @@ void NumericConverter::PrintDebugInfo()
 {
    unsigned int i;
 
-   printf("%s", (const char *)mPrefix.mb_str());
+   wxPrintf("%s", (const char *)mPrefix.mb_str());
 
-   for(i=0; i<mFields.GetCount(); i++) {
+   for(i = 0; i < mFields.size(); i++) {
       if (mFields[i].frac) {
-         printf("(t * %d) %% %d '%s' ",
+         wxPrintf("(t * %d) %% %d '%s' ",
                 mFields[i].base,
                 mFields[i].range,
                 (const char *)mFields[i].label.mb_str());
 
       }
       else {
-         printf("(t / %d) %% %d '%s' ",
+         wxPrintf("(t / %d) %% %d '%s' ",
                 mFields[i].base,
                 mFields[i].range,
                 (const char *)mFields[i].label.mb_str());
       }
    }
 
-   printf("\n");
+   wxPrintf("\n");
 }
 
 NumericConverter::~NumericConverter()
@@ -840,12 +817,15 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
          floor(rawValue * mSampleRate + (nearest ? 0.5f : 0.0f))
             / mSampleRate; // put on a sample
    double theValue =
-      rawValue * mScalingFactor + .000001; // what's this .000001 for? // well, no log of 0
+      rawValue * mScalingFactor
+         // PRL:  what WAS this .000001 for?  Nobody could explain.
+         // + .000001
+      ;
    sampleCount t_int;
    bool round = true;
    // We round on the last field.  If we have a fractional field we round using it.
    // Otherwise we round to nearest integer.
-   for(unsigned int i=0; i<mFields.GetCount(); i++) {
+   for(unsigned int i = 0; i < mFields.size(); i++) {
       if (mFields[i].frac)
          round = false;
    }
@@ -855,8 +835,8 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
       t_int = sampleCount(theValue + (nearest ? 0.5f : 0.0f));
    else
    {
-      wxASSERT( mFields[mFields.GetCount()-1].frac );
-      theValue += (nearest ? 0.5f : 0.0f) / mFields[mFields.GetCount()-1].base;
+      wxASSERT( mFields.back().frac );
+      theValue += (nearest ? 0.5f : 0.0f) / mFields.back().base;
       t_int = sampleCount(theValue);
    }
    double t_frac;
@@ -900,7 +880,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
       t_frac = frames / 30.;
    }
 
-   for(i=0; i<mFields.GetCount(); i++) {
+   for(i = 0; i < mFields.size(); i++) {
       int value = -1;
 
       if (mFields[i].frac) {
@@ -942,13 +922,13 @@ void NumericConverter::ControlsToValue()
    unsigned int i;
    double t = 0.0;
 
-   if (mFields.GetCount() > 0 &&
+   if (mFields.size() > 0 &&
       mValueString.Mid(mFields[0].pos, 1) == wxChar('-')) {
       mValue = mInvalidValue;
       return;
    }
 
-   for(i=0; i<mFields.GetCount(); i++) {
+   for(i = 0; i < mFields.size(); i++) {
       long val;
       mFields[i].str = mValueString.Mid(mFields[i].pos,
                                         mFields[i].digits);
@@ -988,7 +968,7 @@ void NumericConverter::ControlsToValue()
    mValue = std::max(mMinValue, std::min(mMaxValue, t));
 }
 
-void NumericConverter::SetFormatName(const wxString & formatName)
+void NumericConverter::SetFormatName(const NumericFormatId & formatName)
 {
    SetFormatString(GetBuiltinFormat(formatName));
 }
@@ -1051,11 +1031,6 @@ double NumericConverter::GetValue()
    return mValue;
 }
 
-wxString NumericConverter::GetFormatString()
-{
-   return mFormatString;
-}
-
 int NumericConverter::GetFormatIndex()
 {
    // int ndx = 1;
@@ -1077,12 +1052,12 @@ int NumericConverter::GetNumBuiltins()
    return mNBuiltins;
 }
 
-wxString NumericConverter::GetBuiltinName(const int index)
+NumericFormatId NumericConverter::GetBuiltinName(const int index)
 {
    if (index >= 0 && index < GetNumBuiltins())
       return mBuiltinFormatStrings[index].name;
 
-   return wxEmptyString;
+   return {};
 }
 
 wxString NumericConverter::GetBuiltinFormat(const int index)
@@ -1090,20 +1065,17 @@ wxString NumericConverter::GetBuiltinFormat(const int index)
    if (index >= 0 && index < GetNumBuiltins())
       return mBuiltinFormatStrings[index].formatStr;
 
-   return wxEmptyString;
+   return {};
 }
 
-wxString NumericConverter::GetBuiltinFormat(const wxString &name)
+wxString NumericConverter::GetBuiltinFormat(const NumericFormatId &name)
 {
-   int ndx = mDefaultNdx;
-   int i;
-
-   for (i = 0; i < GetNumBuiltins(); i++) {
-      if (name == GetBuiltinName(i)) {
-         ndx = i;
-         break;
-      }
-   }
+   int ndx =
+      std::find( mBuiltinFormatStrings, mBuiltinFormatStrings + mNBuiltins,
+         BuiltinFormatString{ name, {} } )
+            - mBuiltinFormatStrings;
+   if (ndx == (int)mNBuiltins)
+      ndx = mDefaultNdx;
 
    return GetBuiltinFormat(ndx);
 }
@@ -1117,13 +1089,13 @@ wxString NumericConverter::GetString()
 
 void NumericConverter::Increment()
 {
-   mFocusedDigit = mDigits.GetCount() - 1;
+   mFocusedDigit = mDigits.size() - 1;
    Adjust(1, 1);
 }
 
 void NumericConverter::Decrement()
 {
-   mFocusedDigit = mDigits.GetCount() - 1;
+   mFocusedDigit = mDigits.size() - 1;
    Adjust(1, -1);
 }
 
@@ -1142,7 +1114,7 @@ void NumericConverter::Adjust(int steps, int dir)
 
    while (steps != 0)
    {
-      for (size_t i = 0; i < mFields.GetCount(); i++)
+      for (size_t i = 0; i < mFields.size(); i++)
       {
          if ((mDigits[mFocusedDigit].pos >= mFields[i].pos) &&
              (mDigits[mFocusedDigit].pos < mFields[i].pos + mFields[i].digits))
@@ -1235,22 +1207,21 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(NumericTextCtrl, wxControl)
 
-NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
-                           wxWindow *parent,
-                           wxWindowID id,
-                           const wxString &formatName,
+NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
+                           NumericConverter::Type type,
+                           const NumericFormatId &formatName,
                            double timeValue,
                            double sampleRate,
+                           const Options &options,
                            const wxPoint &pos,
-                           const wxSize &size,
-                           bool autoPos):
+                           const wxSize &size):
    wxControl(parent, id, pos, size, wxSUNKEN_BORDER | wxWANTS_CHARS),
    NumericConverter(type, formatName, timeValue, sampleRate),
    mBackgroundBitmap{},
    mDigitFont{},
    mLabelFont{},
    mLastField(1),
-   mAutoPos(autoPos),
+   mAutoPos(options.autoPos),
    mScaleFactor(1.0),
    mType(type)
 {
@@ -1259,8 +1230,8 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    mDigitBoxW = 10;
    mDigitBoxH = 16;
 
-   mReadOnly = false;
-   mMenuEnabled = true;
+   mReadOnly = options.readOnly;
+   mMenuEnabled = options.menuEnabled;
    mButtonWidth = 9;
 
    Layout();
@@ -1279,6 +1250,15 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    SetName(wxT(""));
    SetAccessible(safenew NumericTextCtrlAx(this));
 #endif
+
+   if (options.hasInvalidValue)
+      SetInvalidValue( options.invalidValue );
+
+   if (!options.format.empty())
+      SetFormatString( options.format );
+
+   if (options.hasValue)
+      SetValue( options.value );
 }
 
 NumericTextCtrl::~NumericTextCtrl()
@@ -1304,7 +1284,7 @@ void NumericTextCtrl::UpdateAutoFocus()
       return;
 
    mFocusedDigit = 0;
-   while (mFocusedDigit < ((int)mDigits.GetCount() - 1)) {
+   while (mFocusedDigit < ((int)mDigits.size() - 1)) {
       wxChar dgt = mValueString[mDigits[mFocusedDigit].pos];
       if (dgt != '0') {
          break;
@@ -1313,7 +1293,7 @@ void NumericTextCtrl::UpdateAutoFocus()
    }
 }
 
-void NumericTextCtrl::SetFormatName(const wxString & formatName)
+void NumericTextCtrl::SetFormatName(const NumericFormatId & formatName)
 {
    SetFormatString(GetBuiltinFormat(formatName));
 }
@@ -1387,7 +1367,7 @@ bool NumericTextCtrl::Layout()
    mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1);
    memDC.SelectObject(*mBackgroundBitmap);
 
-   mDigits.Clear();
+   mDigits.clear();
 
    mBorderLeft = 1;
    mBorderTop = 1;
@@ -1427,10 +1407,10 @@ bool NumericTextCtrl::Layout()
    x += strW;
    pos += mPrefix.Length();
 
-   for(i=0; i<mFields.GetCount(); i++) {
+   for(i = 0; i < mFields.size(); i++) {
       mFields[i].fieldX = x;
       for(j=0; j<(unsigned int)mFields[i].digits; j++) {
-         mDigits.Add(DigitInfo(i, j, pos, wxRect(x, mBorderTop,
+         mDigits.push_back(DigitInfo(i, j, pos, wxRect(x, mBorderTop,
                                                  mDigitBoxW, mDigitBoxH)));
          x += mDigitBoxW;
          pos++;
@@ -1471,11 +1451,11 @@ bool NumericTextCtrl::Layout()
    theTheme.SetBrushColour( Brush, clrTimeBack );
    memDC.SetBrush(Brush);
    //memDC.SetBrush(*wxLIGHT_GREY_BRUSH);
-   for(i=0; i<mDigits.GetCount(); i++)
+   for(i = 0; i < mDigits.size(); i++)
       memDC.DrawRectangle(mDigits[i].digitBox);
    memDC.SetBrush( wxNullBrush );
 
-   for(i=0; i<mFields.GetCount(); i++)
+   for(i = 0; i < mFields.size(); i++)
       memDC.DrawText(mFields[i].label,
                      mFields[i].labelX, labelTop);
 
@@ -1534,7 +1514,7 @@ void NumericTextCtrl::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.SetBrush( Brush );
 
    int i;
-   for(i=0; i<(int)mDigits.GetCount(); i++) {
+   for(i = 0; i < (int)mDigits.size(); i++) {
       wxRect box = mDigits[i].digitBox;
       if (focused && mFocusedDigit == i) {
          dc.DrawRectangle(box);
@@ -1569,7 +1549,7 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 
    int currentSelection = -1;
    for (i = 0; i < GetNumBuiltins(); i++) {
-      menu.AppendRadioItem(ID_MENU + i, GetBuiltinName(i));
+      menu.AppendRadioItem(ID_MENU + i, GetBuiltinName(i).Translation());
       if (mFormatString == GetBuiltinFormat(i)) {
          menu.Check(ID_MENU + i, true);
          currentSelection = i;
@@ -1605,7 +1585,7 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
       
          wxCommandEvent e(eventType, GetId());
          e.SetInt(i);
-         e.SetString(GetBuiltinName(i));
+         e.SetString(GetBuiltinName(i).Internal());
          GetParent()->GetEventHandler()->AddPendingEvent(e);
       }
    }
@@ -1625,7 +1605,7 @@ void NumericTextCtrl::OnMouse(wxMouseEvent &event)
       unsigned int i;
 
       mFocusedDigit = 0;
-      for(i=0; i<mDigits.GetCount(); i++) {
+      for(i = 0; i < mDigits.size(); i++) {
          int dist = abs(event.m_x - (mDigits[i].digitBox.x +
                                      mDigits[i].digitBox.width/2));
          if (dist < bestDist) {
@@ -1718,7 +1698,7 @@ void NumericTextCtrl::OnKeyUp(wxKeyEvent &event)
 
 void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
 {
-   if (mDigits.GetCount() == 0)
+   if (mDigits.size() == 0)
    {
       mFocusedDigit = 0;
       return;
@@ -1731,8 +1711,8 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
 
    if (mFocusedDigit < 0)
       mFocusedDigit = 0;
-   if (mFocusedDigit >= (int)mDigits.GetCount())
-      mFocusedDigit = mDigits.GetCount()-1;
+   if (mFocusedDigit >= (int)mDigits.size())
+      mFocusedDigit = mDigits.size() - 1;
 
    // Convert numeric keypad entries.
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9))
@@ -1750,7 +1730,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       ControlsToValue();
       Refresh();// Force an update of the control. [Bug 1497]
       ValueToControls();
-      mFocusedDigit = (mFocusedDigit + 1) % (mDigits.GetCount());
+      mFocusedDigit = (mFocusedDigit + 1) % (mDigits.size());
       Updated();
    }
 
@@ -1762,8 +1742,8 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    else if (!mReadOnly && keyCode == WXK_BACK) {
       // Moves left, replaces that char with '0', stays there...
       mFocusedDigit--;
-      mFocusedDigit += mDigits.GetCount();
-      mFocusedDigit %= mDigits.GetCount();
+      mFocusedDigit += mDigits.size();
+      mFocusedDigit %= mDigits.size();
       wxString::reference theDigit = mValueString[mDigits[mFocusedDigit].pos];
       if (theDigit != wxChar('-'))
          theDigit = '0';
@@ -1775,14 +1755,14 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
 
    else if (keyCode == WXK_LEFT) {
       mFocusedDigit--;
-      mFocusedDigit += mDigits.GetCount();
-      mFocusedDigit %= mDigits.GetCount();
+      mFocusedDigit += mDigits.size();
+      mFocusedDigit %= mDigits.size();
       Refresh();
    }
 
    else if (keyCode == WXK_RIGHT) {
       mFocusedDigit++;
-      mFocusedDigit %= mDigits.GetCount();
+      mFocusedDigit %= mDigits.size();
       Refresh();
    }
 
@@ -1792,7 +1772,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    }
 
    else if (keyCode == WXK_END) {
-      mFocusedDigit = mDigits.GetCount() - 1;
+      mFocusedDigit = mDigits.size() - 1;
       Refresh();
    }
 
@@ -1847,7 +1827,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
 void NumericTextCtrl::SetFieldFocus(int  digit)
 {
 #if wxUSE_ACCESSIBILITY
-   if (mDigits.GetCount() == 0)
+   if (mDigits.size() == 0)
    {
       mFocusedDigit = 0;
       return;
@@ -1921,7 +1901,7 @@ void NumericTextCtrl::ControlsToValue()
 #if wxUSE_ACCESSIBILITY
 
 NumericTextCtrlAx::NumericTextCtrlAx(NumericTextCtrl *ctrl)
-:  wxWindowAccessible(ctrl)
+:  WindowAccessible(ctrl)
 {
    mCtrl = ctrl;
    mLastField = -1;
@@ -1958,7 +1938,7 @@ wxAccStatus NumericTextCtrlAx::GetChild(int childId, wxAccessible **child)
 // Gets the number of children.
 wxAccStatus NumericTextCtrlAx::GetChildCount(int *childCount)
 {
-   *childCount = mCtrl->mDigits.GetCount();
+   *childCount = mCtrl->mDigits.size();
 
    return wxACC_OK;
 }
@@ -2050,7 +2030,7 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
 wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
 {
    // Slightly messy trick to save us some prefixing.
-   NumericFieldArray & mFields = mCtrl->mFields;
+   std::vector<NumericField> & mFields = mCtrl->mFields;
 
    wxString value = mCtrl->GetString();
    int field = mCtrl->GetFocusedField();
@@ -2075,7 +2055,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
    // report the value of the field and the field's label.
    else if (mLastField != field) {
       wxString label = mFields[field - 1].label;
-      int cnt = mFields.GetCount();
+      int cnt = mFields.size();
       wxString decimal = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
 
       // If the NEW field is the last field, then check it to see if

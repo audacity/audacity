@@ -23,9 +23,10 @@
 #include "../ShuttleGui.h"
 
 #include "ImportExportPrefs.h"
+#include "../Internat.h"
 
-ImportExportPrefs::ImportExportPrefs(wxWindow * parent)
-:   PrefsPanel(parent, _("Import / Export"))
+ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
+:   PrefsPanel(parent, winid, _("Import / Export"))
 {
    Populate();
 }
@@ -49,6 +50,7 @@ void ImportExportPrefs::Populate()
 void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
 #if 0
    S.StartStatic(_("When importing audio files"));
@@ -102,6 +104,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
+   S.EndScroller();
 }
 
 bool ImportExportPrefs::Commit()
@@ -117,8 +120,8 @@ wxString ImportExportPrefs::HelpPageName()
    return "Import_-_Export_Preferences";
 }
 
-PrefsPanel *ImportExportPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ImportExportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ImportExportPrefs(parent);
+   return safenew ImportExportPrefs(parent, winid);
 }

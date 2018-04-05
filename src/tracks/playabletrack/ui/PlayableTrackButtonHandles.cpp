@@ -48,10 +48,8 @@ wxString MuteButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackMute"));
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackMute"), name };
+   return commandManager->DescribeCommandsAndShortcuts(&command, 1u);
 }
 
 UIHandlePtr MuteButtonHandle::HitTest
@@ -87,7 +85,7 @@ SoloButtonHandle::~SoloButtonHandle()
 }
 
 UIHandle::Result SoloButtonHandle::CommitChanges
-(const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
+(const wxMouseEvent &event, AudacityProject *pProject, wxWindow *WXUNUSED(pParent))
 {
    auto pTrack = mpTrack.lock();
    if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
@@ -106,10 +104,8 @@ wxString SoloButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackSolo"));
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackSolo"), name };
+   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr SoloButtonHandle::HitTest

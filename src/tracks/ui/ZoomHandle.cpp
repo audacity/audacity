@@ -40,7 +40,7 @@ ZoomHandle::ZoomHandle()
 {}
 
 HitTestPreview ZoomHandle::HitPreview
-   (const wxMouseState &state, const AudacityProject *pProject)
+   (const wxMouseState &state, const AudacityProject *WXUNUSED(pProject))
 {
    static auto zoomInCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);

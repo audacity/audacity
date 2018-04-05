@@ -25,6 +25,8 @@
 #include "Resample.h"
 #include "Prefs.h"
 #include "TranslatableStringArray.h"
+#include "Internat.h"
+#include "../include/audacity/IdentInterface.h"
 
 #include <soxr.h>
 
@@ -49,47 +51,57 @@ Resample::~Resample()
 {
 }
 
-int Resample::GetNumMethods() { return 4; }
+//////////
+static const IdentInterfaceSymbol methodNames[] = {
+   { wxT("LowQuality"), XO("Low Quality (Fastest)") },
+   { wxT("MediumQuality"), XO("Medium Quality") },
+   { wxT("HighQuality"), XO("High Quality") },
+   { wxT("BestQuality"), XO("Best Quality (Slowest)") }
+};
 
-wxString Resample::GetMethodName(int index)
+static const size_t numMethods = WXSIZEOF(methodNames);
+
+static const wxString fastMethodKey =
+   wxT("/Quality/LibsoxrSampleRateConverterChoice");
+
+static const wxString bestMethodKey =
+   wxT("/Quality/LibsoxrHQSampleRateConverterChoice");
+
+static const wxString oldFastMethodKey =
+   wxT("/Quality/LibsoxrSampleRateConverter");
+
+static const wxString oldBestMethodKey =
+   wxT("/Quality/LibsoxrHQSampleRateConverter");
+
+static const size_t fastMethodDefault = 1; // Medium Quality
+static const size_t bestMethodDefault = 3; // Best Quality
+
+static const int intChoicesMethod[] = {
+   0, 1, 2, 3
+};
+
+static_assert( WXSIZEOF(intChoicesMethod) == numMethods, "size mismatch" );
+
+EncodedEnumSetting Resample::FastMethodSetting{
+   fastMethodKey,
+   methodNames, numMethods,
+   fastMethodDefault,
+
+   intChoicesMethod,
+   oldFastMethodKey
+};
+
+EncodedEnumSetting Resample::BestMethodSetting
 {
-   static const wxString soxr_method_names[] = {
-      XO("Low Quality (Fastest)"),
-      XO("Medium Quality"),
-      XO("High Quality"),
-      XO("Best Quality (Slowest)")
-   };
+   bestMethodKey,
+   methodNames, numMethods,
+   bestMethodDefault,
 
-   wxASSERT( GetNumMethods() ==
-      sizeof(soxr_method_names) / sizeof(*soxr_method_names) );
+   intChoicesMethod,
+   oldBestMethodKey
+};
 
-   class MethodNamesArray final : public TranslatableStringArray
-   {
-      void Populate() override
-      {
-         for (auto &name : soxr_method_names)
-            mContents.push_back( wxGetTranslation( name ) );
-      }
-   };
-
-   static MethodNamesArray theArray;
-
-   return theArray.Get()[ index ];
-}
-
-const wxString Resample::GetFastMethodKey()
-{
-   return wxT("/Quality/LibsoxrSampleRateConverter");
-}
-
-const wxString Resample::GetBestMethodKey()
-{
-   return wxT("/Quality/LibsoxrHQSampleRateConverter");
-}
-
-int Resample::GetFastMethodDefault() {return 1;}
-int Resample::GetBestMethodDefault() {return 3;}
-
+//////////
 std::pair<size_t, size_t>
       Resample::Process(double  factor,
                         float  *inBuffer,
@@ -120,7 +132,7 @@ std::pair<size_t, size_t>
 void Resample::SetMethod(const bool useBestMethod)
 {
    if (useBestMethod)
-      mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+      mMethod = BestMethodSetting.ReadInt();
    else
-      mMethod = gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
+      mMethod = FastMethodSetting.ReadInt();
 }

@@ -65,20 +65,8 @@ struct TrackPanelDrawingContext;
 
 enum class UndoPush : unsigned char;
 
-// JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
-// and only a worry when there are DLLs using the structures.
-// Array classes are private in TrackInfo, so we will not
-// access them directly from the DLL.
-// TrackClipArray in TrackPanel needs to be handled with care in the derived
-// class, but the C4251 warning is no worry in core Audacity.
-// wxWidgets doesn't cater to the exact details we need in
-// WX_DECLARE_EXPORTED_OBJARRAY to be able to use that for these two arrays.
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable: 4251 )
-#endif
-
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACK_PANEL_TIMER, -1);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+                         EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 enum {
    kTimerInterval = 50, // milliseconds
@@ -332,6 +320,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    bool IsMouseCaptured();
 
    void EnsureVisible(Track * t);
+   void VerticalScroll( float fracPosition);
 
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
@@ -435,10 +424,6 @@ public:
    void SetBackgroundCell
       (const std::shared_ptr< TrackPanelCell > &pCell);
    std::shared_ptr< TrackPanelCell > GetBackgroundCell();
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void UpdateVirtualStereoOrder();
-#endif
 
 public:
    // Accessors...
@@ -564,6 +549,10 @@ protected:
    bool mEnableTab{};
 
    DECLARE_EVENT_TABLE()
+
+   // friending GetInfoCommand allow automation to get sizes of the 
+   // tracks, track control panel and such.
+   friend class GetInfoCommand;
 };
 
 // See big pictorial comment in TrackPanel for explanation of these numbers
@@ -593,10 +582,6 @@ enum : int {
    kMidiCellWidth = (kTrackInfoWidth / 4) - 2,
    kMidiCellHeight = kTrackInfoBtnSize
 };
-#endif
-
-#ifdef _MSC_VER
-#pragma warning( pop )
 #endif
 
 #endif

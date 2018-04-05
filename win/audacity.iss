@@ -7,7 +7,7 @@
 ;
 
 ; This requires that the ISS Preprocessor be installed
-#define AppExe "..\win\release\darkaudacity.exe" 
+#define AppExe ".\release\darkaudacity.exe" 
 #define AppMajor ""
 #define AppMinor ""
 #define AppRev ""
@@ -103,13 +103,13 @@ Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; Don't use the WXWIN environment variable, because...
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
-Source: "..\win\release\wxbase30u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxbase30u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxbase30u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw30u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw30u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw30u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw30u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\wxbase311u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\wxbase311u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\wxbase311u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\wxmsw311u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\wxmsw311u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\wxmsw311u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\wxmsw311u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
@@ -120,14 +120,14 @@ Source: "..\win\release\wxmsw30u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ign
 ; "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; or "C:\Program Files\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; according to your system 
-Source: "..\win\release\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-;Source: "..\win\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
+;Source: ".\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't currently ship any modules, so the next line is commented out
-; Source: "..\win\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: "..\win\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
-Source: "..\win\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
+; Source: ".\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: ".\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
+Source: ".\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
 
 [Icons]
 Name: "{commonprograms}\DarkAudacity"; Filename: "{app}\darkaudacity.exe"
@@ -298,7 +298,7 @@ en.ResetPrefs=Reset Preferences
 ;eu.ResetPrefs=Berrezarri Hobespenak?
 ;fa.ResetPrefs=Reset Preferences
 ;fi.ResetPrefs=Reset Preferences
-;fr.ResetPrefs=Réinitialiser les  Préférences ?
+;fr.ResetPrefs=Réinitialiser les préférences ?
 ;ga.ResetPrefs=Reset Preferences
 ;gl.ResetPrefs=Restabelecer as preferencias?
 ;he.ResetPrefs=?אתה רוצה לשחזר העדפות
@@ -308,7 +308,7 @@ en.ResetPrefs=Reset Preferences
 ;hy.ResetPrefs=Վերափոխե՞լ կարգավորումները:
 ;id.ResetPrefs=Reset Preferences
 ;it.ResetPrefs=Ripristino Preferenze?
-;ja.ResetPrefs=設定をリセットしますか?
+;ja.ResetPrefs=設定をリセットする
 ;ka.ResetPrefs=Reset Preferences
 ;km.ResetPrefs=Reset Preferences
 ;ko.ResetPrefs=기본 설정을 재설정하시겠습니까?
@@ -321,7 +321,7 @@ en.ResetPrefs=Reset Preferences
 ;oc.ResetPrefs=Reset Preferences
 ;pl.ResetPrefs=Zresetować ustawienia?
 ;pt_PT.ResetPrefs=Reconfigurar as Preferências?
-;pt_BR.ResetPrefs=Redefinir Preferências?
+;pt_BR.ResetPrefs=Repor Preferências?
 ;ro.ResetPrefs=Reset Preferences
 ;ru.ResetPrefs=Сбросить Параметры?
 ;sk.ResetPrefs=Obnoviť nastavenia?
@@ -334,5 +334,5 @@ en.ResetPrefs=Reset Preferences
 ;tr.ResetPrefs=Ayarlar Sıfırlansın mı?
 ;uk.ResetPrefs=Відновити початкові значення параметрів?
 ;vi.ResetPrefs=Reset Preferences
-;zh_CN.ResetPrefs=重置配置吗？
-;zh_TW.ResetPrefs=是否重設偏好設定？
+;zh_CN.ResetPrefs=重置偏好设置
+;zh_TW.ResetPrefs=重置偏好設定

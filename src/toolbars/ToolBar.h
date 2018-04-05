@@ -125,7 +125,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
    void SetVisible( bool bVisible );
    void SetPositioned(){ mPositioned = true;};
 
-   /// Resizable toolbars should implement this.
+   /// Resizable toolbars should implement these.
    // NEW virtuals:
    virtual int GetInitialWidth() { return -1; }
    virtual int GetMinToolbarWidth() { return GetInitialWidth(); }
@@ -137,6 +137,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
                        teBmps eUp,
                        teBmps eDown,
                        teBmps eHilite,
+                       teBmps eDownHi,
                        teBmps eStandardUp,
                        teBmps eStandardDown,
                        teBmps eDisabled,
@@ -150,6 +151,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
                             teBmps eUp,
                             teBmps eDown,
                             teBmps eHilite,
+                            teBmps eDownHi,
                             teBmps eStandardUp,
                             teBmps eStandardDown,
                             teBmps eDisabled,
@@ -158,11 +160,9 @@ class ToolBar /* not final */ : public wxPanelWrapper
    static
    void SetButtonToolTip
       (AButton &button,
-       // An array, alternating user-visible strings, and
-       // non-user-visible command names.  If a shortcut key is defined
-       // for the command, then it is appended, parenthesized, after the
-       // user-visible string.
-       const std::vector<wxString> &commands);
+       // If a shortcut key is defined for the command, then it is appended,
+       // parenthesized, after the translated name.
+       const TranslatedInternalString commands[], size_t nCommands);
 
  protected:
    void SetButton(bool down, AButton *button);
@@ -225,7 +225,6 @@ class ToolBar /* not final */ : public wxPanelWrapper
    ToolBarResizer *mResizer;
 
    wxBoxSizer *mHSizer;
-   wxSizerItem *mSpacer;
 
    bool mVisible;
    bool mResizable;

@@ -20,7 +20,6 @@ and on Mac OS X for the filesystem.
 
 *//*******************************************************************/
 
-#include <wx/msgdlg.h>
 #include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
@@ -28,9 +27,11 @@ and on Mac OS X for the filesystem.
 #include <locale.h>
 #include <math.h> // for pow()
 
-#include "Internat.h"
 #include "Experimental.h"
 #include "FileNames.h"
+#include "widgets/ErrorDialog.h"
+#include "Internat.h"
+#include "../include/audacity/IdentInterface.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -243,7 +244,7 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
       wxFileName ff(name);
       wxString ext;
       while ((char *) (const char *)name.mb_str() == NULL) {
-         wxMessageBox(_("The specified filename could not be converted due to Unicode character use."));
+         AudacityMessageBox(_("The specified filename could not be converted due to Unicode character use."));
 
          ext = ff.GetExt();
          name = FileNames::SelectFile(FileNames::Operation::_None,
@@ -297,4 +298,13 @@ wxString Internat::StripAccelerators(const wxString &s)
          result += s[i];
    }
    return result;
+}
+
+wxArrayString LocalizedStrings(
+   const IdentInterfaceSymbol strings[], size_t nStrings)
+{
+   wxArrayString results;
+   std::transform( strings, strings + nStrings, std::back_inserter(results),
+                   std::mem_fun_ref( &IdentInterfaceSymbol::Translation ) );
+   return results;
 }

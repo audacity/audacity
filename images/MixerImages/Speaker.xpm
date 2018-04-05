@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Speaker[] = {
+static const char * const Speaker[] = {
 "25 25 17 1",
 " 	c None",
 ".	c #DEDEDE",

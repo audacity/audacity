@@ -26,11 +26,12 @@ whether they are warnings or just useful information/tips.
 #include "../ShuttleGui.h"
 
 #include "WarningsPrefs.h"
+#include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-WarningsPrefs::WarningsPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Warnings"))
+WarningsPrefs::WarningsPrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Warnings"))
 {
    Populate();
 }
@@ -53,6 +54,7 @@ void WarningsPrefs::Populate()
 void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Show Warnings/Prompts for"));
    {
@@ -74,7 +76,8 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Mixing on export (&Custom FFmpeg or external program)"),
                     wxT("/Warnings/MixUnknownChannels"),
                     true);
-#if 0
+#ifndef EXPERIMENTAL_DA
+// DA does not support audio by reference.  Too dangerous.
       S.TieCheckBox(_("&Importing uncompressed audio files"),
                     wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
                     true);
@@ -89,6 +92,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
    }
    S.EndStatic();
+   S.EndScroller();
 
 }
 
@@ -105,8 +109,8 @@ wxString WarningsPrefs::HelpPageName()
    return "Warnings_Preferences";
 }
 
-PrefsPanel *WarningsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *WarningsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew WarningsPrefs(parent);
+   return safenew WarningsPrefs(parent, winid);
 }

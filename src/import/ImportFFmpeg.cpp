@@ -306,7 +306,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
       //officially supported by this plugin.
       //If we don't have FFmpeg configured - tell the user about it.
       //Since this will be happening often, use disableable "FFmpeg not found" dialog
-      //insdead of usual wxMessageBox()
+      //insdead of usual AudacityMessageBox()
       bool newsession = false;
       gPrefs->Read(wxT("/NewImportingSession"), &newsession);
       if (!FFmpegLibsInst()->ValidLibsLoaded())
@@ -365,7 +365,7 @@ bool FFmpegImportFileHandle::Init()
    err = ufile_fopen_input(tempContext, mName);
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName.c_str());
+      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName);
       return false;
    }
    wxASSERT(tempContext.get());
@@ -374,7 +374,7 @@ bool FFmpegImportFileHandle::Init()
    err = avformat_find_stream_info(mFormatContext, NULL);
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName);
       return false;
    }
 
@@ -404,23 +404,27 @@ bool FFmpegImportFileHandle::InitCodecs()
          sc->m_stream = mFormatContext->streams[i];
          sc->m_codecCtx = sc->m_stream->codec;
 
-         AVCodec *codec = avcodec_find_decoder(sc->m_codecCtx->codec_id);
+         const AVCodecID id   = sc->m_codecCtx->codec_id;
+         const char*     name = avcodec_get_name(id);
+         const AVCodec *codec = avcodec_find_decoder(id);
+
          if (codec == NULL)
          {
-            wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,id,name);
             //FFmpeg can't decode this stream, skip it
             continue;
          }
+
          if (codec->type != sc->m_codecCtx->codec_type)
          {
-            wxLogError(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,id,name);
             //Non-audio codec reported as audio? Nevertheless, we don't need THIS.
             continue;
          }
 
          if (avcodec_open2(sc->m_codecCtx, codec, NULL) < 0)
          {
-            wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,id,name);
             //Can't open decoder - skip this stream
             continue;
          }
@@ -434,7 +438,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             duration = mFormatContext->duration / AV_TIME_BASE;
          wxString bitrate = wxT("");
          if (sc->m_codecCtx->bit_rate > 0)
-            bitrate.Printf(wxT("%d"),sc->m_codecCtx->bit_rate);
+            bitrate.Printf(wxT("%d"),(int)sc->m_codecCtx->bit_rate);
          else
             bitrate.Printf(wxT("?"));
 
@@ -444,7 +448,8 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             lang.FromUTF8(tag->value);
          }
-         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
+         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),
+                        sc->m_stream->id,codec->name,lang,bitrate,(int)sc->m_stream->codec->channels,(int)duration);
          mStreamInfo.Add(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }
@@ -557,7 +562,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          stream_delay = sc->m_stream->start_time;
          wxLogDebug(wxT("Stream %d start_time = %lld, that would be %f milliseconds."), s, (long long) sc->m_stream->start_time, double(sc->m_stream->start_time)/AV_TIME_BASE*1000);
       }
-      if (stream_delay != 0)
+      if (stream_delay > 0)
       {
          int c = -1;
          for (auto &channel : stream)
@@ -596,7 +601,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          else
             sampleDuration = ((sampleCount)mFormatContext->duration *sc->m_stream->codec->sample_rate) / AV_TIME_BASE;
 
-         //      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)sc->m_stream->codec->sample_rate, (int)sampleDuration/sc->m_stream->codec->sample_rate);
+         //      wxPrintf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)sc->m_stream->codec->sample_rate, (int)sampleDuration/sc->m_stream->codec->sample_rate);
 
          //for each wavetrack within the stream add coded blockfiles
          for (int c = 0; c < sc->m_stream->codec->channels; c++) {
@@ -740,10 +745,10 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
    // Separate the channels and convert input sample format to 16-bit
    uint8_t *in = sc->m_decodedAudioSamples.get();
    int index = 0;
-   int pos = 0;
+   unsigned int pos = 0;
    while (pos < insamples)
    {
-      for (int chn = 0; chn < sc->m_stream->codec->channels; chn++)
+      for (size_t chn = 0; (int)chn < sc->m_stream->codec->channels; chn++)
       {
          if (chn < nChannels)
          {
@@ -788,7 +793,7 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
 
    // Write audio into WaveTracks
    auto iter2 = iter->begin();
-   for (int chn=0; chn < nChannels; ++iter2, ++chn)
+   for (size_t chn=0; chn < nChannels; ++iter2, ++chn)
    {
       iter2->get()->Append((samplePtr)tmp[chn].get(), sc->m_osamplefmt, index);
    }

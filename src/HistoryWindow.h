@@ -28,7 +28,6 @@ class HistoryWindow final : public wxDialogWrapper {
 
  public:
    HistoryWindow(AudacityProject * parent, UndoManager *manager);
-   ~HistoryWindow();
 
    void UpdateDisplay();
 
@@ -39,7 +38,6 @@ class HistoryWindow final : public wxDialogWrapper {
 
    void OnSize(wxSizeEvent & event);
    void OnCloseWindow(wxCloseEvent & WXUNUSED(event));
-   void OnChar(wxKeyEvent & event);
    void OnItemSelected(wxListEvent & event);
    void OnDiscard(wxCommandEvent & event);
    void OnDiscardClipboard(wxCommandEvent & event);

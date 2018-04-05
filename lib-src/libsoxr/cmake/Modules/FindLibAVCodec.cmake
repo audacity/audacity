@@ -1,23 +1,23 @@
-# SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
+# SoX Resampler Library       Copyright (c) 2007-18 robs@users.sourceforge.net
 # Licence for this file: LGPL v2.1                  See LICENCE for details.
 
 # - Find AVCODEC
-# Find the native installation of this package: includes and libraries.
+# Find the installation of this package: include-dirs and libraries.
 #
-#  AVCODEC_INCLUDES    - where to find headers for this package.
-#  AVCODEC_LIBRARIES   - List of libraries when using this package.
-#  AVCODEC_FOUND       - True if this package can be found.
+#  AVCODEC_INCLUDE_DIRS - where to find headers for this package.
+#  AVCODEC_LIBRARIES    - libraries to link to when using this package.
+#  AVCODEC_FOUND        - true iff this package can be found.
 
-if (AVCODEC_INCLUDES)
+if (AVCODEC_INCLUDE_DIRS)
   set (AVCODEC_FIND_QUIETLY TRUE)
-endif (AVCODEC_INCLUDES)
+endif ()
 
-find_path (AVCODEC_INCLUDES libavcodec/avcodec.h)
+find_path (AVCODEC_INCLUDE_DIRS libavcodec/avcodec.h)
 
 find_library (AVCODEC_LIBRARIES NAMES avcodec)
 
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (
-  AVCODEC DEFAULT_MSG AVCODEC_LIBRARIES AVCODEC_INCLUDES)
+  AVCODEC DEFAULT_MSG AVCODEC_LIBRARIES AVCODEC_INCLUDE_DIRS)
 
-mark_as_advanced (AVCODEC_LIBRARIES AVCODEC_INCLUDES)
+mark_as_advanced (AVCODEC_LIBRARIES AVCODEC_INCLUDE_DIRS)

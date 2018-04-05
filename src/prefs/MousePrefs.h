@@ -22,14 +22,14 @@ class ShuttleGui;
 class MousePrefs final : public PrefsPanel
 {
  public:
-   MousePrefs(wxWindow * parent);
+   MousePrefs(wxWindow * parent, wxWindowID winid);
    ~MousePrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void CreateList();
    void AddItem(wxString const & buttons,
                 wxString const & tool,
@@ -42,6 +42,6 @@ class MousePrefs final : public PrefsPanel
 class MousePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

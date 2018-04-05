@@ -1,4 +1,4 @@
-/* SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-18 robs@users.sourceforge.net
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
@@ -37,13 +37,12 @@
 #endif
 
 typedef float   SRC_SAMPLE;
-#if !defined SOXR_LIB
 enum SRC_SRCTYPE_e {SRC_SINC_BEST_QUALITY, SRC_SINC_MEDIUM_QUALITY,
                     SRC_SINC_FASTEST, SRC_ZERO_ORDER_HOLD, SRC_LINEAR};
 typedef int     SRC_SRCTYPE;
 typedef int     SRC_ERROR;
 typedef long    (* src_callback_t)(void *, SRC_SAMPLE * *);
-typedef struct  SRC_STATE SRC_STATE;
+typedef struct  soxr SRC_STATE;
 typedef struct  SRC_DATA {
   SRC_SAMPLE    * data_in, * data_out;
   long          input_frames, output_frames;
@@ -51,7 +50,6 @@ typedef struct  SRC_DATA {
   int           end_of_input;
   double        src_ratio;
 } SRC_DATA;
-#endif
 SOXR SRC_STATE *   src_new(SRC_SRCTYPE, int num_channels, SRC_ERROR *);
 SOXR SRC_ERROR     src_process  (SRC_STATE *, SRC_DATA *);
 SOXR SRC_ERROR     src_set_ratio(SRC_STATE *, double);

@@ -83,7 +83,7 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
       // FIXME: TRAP_ERR no report to user of absent summary files.
       if (!summaryFile.IsOpened()) {
          wxLogWarning(wxT("Unable to access summary file %s; substituting silence for remainder of session"),
-            fullPath.c_str());
+            fullPath);
 
          read = info->frames64K * info->bytesPerFrame;
          memset(data.ptr(), 0, read);

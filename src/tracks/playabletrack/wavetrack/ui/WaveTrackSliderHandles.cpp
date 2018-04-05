@@ -131,12 +131,7 @@ UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newV
    auto pTrack = GetWaveTrack();
 
    if (pTrack) {
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      bool panZero = false;
-      panZero = static_cast<WaveTrack*>(mpTrack)->SetPan(newValue);
-#else
       pTrack->SetPan(newValue);
-#endif
 
       // Assume linked track is wave or null
       const auto link = static_cast<WaveTrack*>(pTrack->GetLink());
@@ -146,11 +141,6 @@ UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newV
       MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
       if (pMixerBoard)
          pMixerBoard->UpdatePan(pTrack.get());
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(panZero)
-         result |= FixScrollbars;
-#endif
    }
 
    return result;

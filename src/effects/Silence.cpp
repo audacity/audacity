@@ -39,7 +39,7 @@ wxString EffectSilence::GetSymbol()
 
 wxString EffectSilence::GetDescription()
 {
-   return XO("Creates audio of zero amplitude");
+   return _("Creates audio of zero amplitude");
 }
 
 wxString EffectSilence::ManualPage()
@@ -48,7 +48,7 @@ wxString EffectSilence::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectSilence::GetType()
 {
@@ -65,17 +65,14 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddPrompt(_("Duration:"));
          mDurationT = safenew
-            NumericTextCtrl(NumericConverter::TIME,
-                              S.GetParent(),
-                              wxID_ANY,
+            NumericTextCtrl(S.GetParent(), wxID_ANY,
+                              NumericConverter::TIME,
                               GetDurationFormat(),
                               GetDuration(),
-                              mProjectRate,
-                              wxDefaultPosition,
-                              wxDefaultSize,
-                              true);
+                               mProjectRate,
+                               NumericTextCtrl::Options{}
+                                  .AutoPos(true));
          mDurationT->SetName(_("Duration"));
-         mDurationT->EnableMenu();
          S.AddWindow(mDurationT, wxALIGN_CENTER | wxALL);
       }
       S.EndHorizontalLay();

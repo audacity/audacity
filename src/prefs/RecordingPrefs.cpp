@@ -31,6 +31,9 @@
 #include "../ShuttleGui.h"
 
 #include "../Experimental.h"
+#include "../Internat.h"
+
+#include "../widgets/Warning.h"
 
 using std::min;
 
@@ -42,8 +45,8 @@ BEGIN_EVENT_TABLE(RecordingPrefs, PrefsPanel)
    EVT_CHECKBOX(UseCustomTrackNameID, RecordingPrefs::OnToggleCustomName)
 END_EVENT_TABLE()
 
-RecordingPrefs::RecordingPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Recording"))
+RecordingPrefs::RecordingPrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Recording"))
 {
    gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &mUseCustomTrackName, false);
    mOldNameChoice = mUseCustomTrackName;
@@ -68,10 +71,12 @@ void RecordingPrefs::Populate()
 void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
-   S.StartStatic(_("Playthrough"));
+   S.StartStatic(_("Options"));
    {
-      S.TieCheckBox(_("Overdub"),
+      // Start wording of options with a verb, if possible.
+      S.TieCheckBox(_("Play &other tracks while recording (overdub)"),
                     wxT("/AudioIO/Duplex"),
 #ifdef EXPERIMENTAL_DA
                     false);
@@ -82,16 +87,27 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 //#if defined(__WXMAC__)
 // Bug 388.  Feature not supported on any Mac Hardware.
 #if 0
-      S.TieCheckBox(_("&Hardware Playthrough"),
+      S.TieCheckBox(_("Use &hardware to play other tracks"),
                     wxT("/AudioIO/Playthrough"),
                     false);
 #endif
-      S.TieCheckBox(_("&Software Playthrough"),
+      S.TieCheckBox(_("&Software playthrough of input"),
                     wxT("/AudioIO/SWPlaythrough"),
                     false);
 #if !defined(__WXMAC__)
       //S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
 #endif
+
+       S.TieCheckBox(_("Record on a new track"),
+                    wxT("/GUI/PreferNewTrackRecord"),
+                    false);
+
+/* i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording */
+       S.TieCheckBox(_("Detect dropouts"),
+                     WarningDialogKey(wxT("DropoutDetected")),
+                     true);
+
+
    }
    S.EndStatic();
 
@@ -130,16 +146,18 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                                             wxT("/GUI/TrackNames/RecordingNameCustom"),
                                             mUseCustomTrackName ? true : false);
 
-            mToggleCustomName = S.TieTextBox(wxT(""),
+            mToggleCustomName = S.TieTextBox( {},
                                               wxT("/GUI/TrackNames/RecodingTrackName"),
                                              _("Recorded_Audio"),
                                              30);
-            mToggleCustomName->SetName(_("Custom name text"));
-            mToggleCustomName->Enable(mUseCustomTrackName);
+            if( mToggleCustomName ) {
+               mToggleCustomName->SetName(_("Custom name text"));
+               mToggleCustomName->Enable(mUseCustomTrackName);
+            }
          }
          S.EndMultiColumn();
 
-         S.AddFixedText( "" );
+         S.AddFixedText(  {} );
          S.StartMultiColumn(3);
          {
             S.TieCheckBox(_("&Track Number"),
@@ -157,14 +175,6 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          S.EndMultiColumn();
       }
       S.EndMultiColumn();
-   }
-   S.EndStatic();
-
-   S.StartStatic(_("Options"));
-   {
-       S.TieCheckBox(_("Record on a new track"),
-                    wxT("/GUI/PreferNewTrackRecord"),
-                    false);
    }
    S.EndStatic();
 
@@ -212,6 +222,8 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
    #endif
+   S.EndScroller();
+
 }
 
 bool RecordingPrefs::Commit()
@@ -257,8 +269,8 @@ wxString RecordingPrefs::HelpPageName()
    return "Recording_Preferences";
 }
 
-PrefsPanel *RecordingPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *RecordingPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew RecordingPrefs(parent);
+   return safenew RecordingPrefs(parent, winid);
 }

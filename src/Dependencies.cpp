@@ -19,7 +19,20 @@
    presents a dialog to the user and lets them copy those block
    files into the project, making it self-contained.
 
-**********************************************************************/
+********************************************************************//**
+
+\class AliasedFile
+\brief An audio file that is referenced (pointed into) directly from
+an Audacity .aup file rather thna Audacity having its own copies of the
+data.
+
+*//*****************************************************************//**
+
+\class DependencyDialog
+\brief DependencyDialog shows dependencies of an AudacityProject on 
+AliasedFile s.
+
+*//********************************************************************/
 
 #include "Audacity.h"
 #include "Dependencies.h"
@@ -41,16 +54,18 @@
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
+#include "widgets/ErrorDialog.h"
 
-WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
-                    wxStringHash, wxStringEqual, AliasedFileHash);
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
+using AliasedFileHash = std::unordered_map<wxString, AliasedFile*>;
 
 // These two hash types are used only inside short scopes
 // so it is safe to key them by plain pointers.
-WX_DECLARE_HASH_MAP(BlockFile *, BlockFilePtr,
-                    wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
-WX_DECLARE_HASH_MAP(BlockFile *, bool,
-                    wxPointerHash, wxPointerEqual, BoolBlockFileHash);
+using ReplacedBlockFileHash = std::unordered_map<BlockFile *, BlockFilePtr>;
+using BoolBlockFileHash = std::unordered_map<BlockFile *, bool>;
 
 // Given a project, returns a single array of all SeqBlocks
 // in the current set of tracks.  Enumerating that array allows
@@ -417,7 +432,8 @@ void DependencyDialog::PopulateList()
       }
       else
       {
-         mFileListCtrl->InsertItem(i, _("MISSING ") + fileName.GetFullPath());
+         mFileListCtrl->InsertItem(i,
+            wxString::Format( _("MISSING %s"), fileName.GetFullPath() ) );
          mHasMissingFiles = true;
          mFileListCtrl->SetItemState(i, 0, wxLIST_STATE_SELECTED); // Deselect.
          mFileListCtrl->SetItemTextColour(i, *wxRED);
@@ -510,7 +526,7 @@ void DependencyDialog::OnCancel(wxCommandEvent& WXUNUSED(event))
 {
    if (mIsSaving)
    {
-      int ret = wxMessageBox(
+      int ret = AudacityMessageBox(
          _("If you proceed, your project will not be saved to disk. Is this what you want?"),
          _("Cancel Save"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
       if (ret != wxYES)
@@ -555,7 +571,7 @@ _("Your project is currently self-contained; it does not depend on any external 
 \n\nIf you change the project to a state that has external dependencies on imported \
 files, it will no longer be self-contained. If you then Save without copying those files in, \
 you may lose data.");
-         wxMessageBox(msg,
+         AudacityMessageBox(msg,
                       _("Dependency Check"),
                       wxOK | wxICON_INFORMATION,
                       project);

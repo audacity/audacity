@@ -46,10 +46,11 @@ private:
 class ExtImportPrefs final : public PrefsPanel
 {
  public:
-   ExtImportPrefs(wxWindow * parent);
+   ExtImportPrefs(wxWindow * parent, wxWindowID winid);
    ~ExtImportPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    void OnPluginKeyDown(wxListEvent& event);
    void OnPluginBeginDrag(wxListEvent& event);
@@ -103,7 +104,6 @@ class ExtImportPrefs final : public PrefsPanel
    void DoOnRuleTableSelect (int toprow);
    void AddItemToTable (int index, const ExtImportItem *item);
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    DECLARE_EVENT_TABLE()
 };
 
@@ -111,6 +111,6 @@ class ExtImportPrefs final : public PrefsPanel
 class ExtImportPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

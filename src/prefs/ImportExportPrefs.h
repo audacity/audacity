@@ -24,19 +24,19 @@ class ShuttleGui;
 class ImportExportPrefs final : public PrefsPanel
 {
  public:
-   ImportExportPrefs(wxWindow * parent);
+   ImportExportPrefs(wxWindow * parent, wxWindowID winid);
    ~ImportExportPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 };
 
 class ImportExportPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

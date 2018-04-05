@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * SelectSoundAlpha[] = {
+static const char * const SelectSoundAlpha[] = {
 "24 24 3 1",
 " 	c None",
 ".	c #000000",

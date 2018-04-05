@@ -98,7 +98,7 @@ UIHandle::Result ButtonHandle::Release
    return result;
 }
 
-UIHandle::Result ButtonHandle::Cancel(AudacityProject *pProject)
+UIHandle::Result ButtonHandle::Cancel(AudacityProject *WXUNUSED(pProject))
 {
    using namespace RefreshCode;
    return RefreshCell; // perhaps unnecessarily if pointer is out of the box

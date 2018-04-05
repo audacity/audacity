@@ -18,4 +18,4 @@ DYLD_LIBRARY_PATH=""
 export DYLD_LIBRARY_PATH
 
 dir=$(dirname "$0")
-"$dir/Audacity"
+exec "$dir/Audacity"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -46,17 +46,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\suil;..\..\..\lib-src\lame;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;wxDEBUG_LEVEL=0;NDEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXINTL_NO_GETTEXT_MACRO;WXUSINGDLL;__WXMSW__;wxDEBUG_LEVEL=0;NDEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -87,7 +89,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\suil;..\..\..\lib-src\lame;&amp;quot;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\gstreamer-1.0\include;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXINTL_NO_GETTEXT_MACRO;WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -135,7 +137,17 @@
     <ClCompile Include="..\..\..\src\Benchmark.cpp" />
     <ClCompile Include="..\..\..\src\BlockFile.cpp" />
     <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp" />
+    <ClCompile Include="..\..\..\src\commands\AudacityCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandContext.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp" />
+    <ClCompile Include="..\..\..\src\commands\Demo.cpp" />
+    <ClCompile Include="..\..\..\src\commands\DragCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\LoadCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetClipCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetEnvelopeCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetLabelCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetProjectCommand.cpp" />
     <ClCompile Include="..\..\..\src\Dependencies.cpp" />
     <ClCompile Include="..\..\..\src\DeviceChange.cpp" />
     <ClCompile Include="..\..\..\src\DeviceManager.cpp" />
@@ -279,6 +291,7 @@
     <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Overlay.cpp" />
     <ClCompile Include="..\..\..\src\widgets\OverlayPanel.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\WindowAccessible.cpp" />
     <ClCompile Include="..\..\..\src\widgets\wxPanelWrapper.cpp" />
     <ClCompile Include="..\..\..\src\widgets\PopupMenuTable.cpp" />
     <ClCompile Include="..\..\..\src\WrappedType.cpp" />
@@ -399,10 +412,7 @@
     <ClCompile Include="..\..\..\src\commands\CommandSignature.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandType.cpp" />
     <ClCompile Include="..\..\..\src\commands\CompareAudioCommand.cpp" />
-    <ClCompile Include="..\..\..\src\commands\ExecMenuCommand.cpp" />
-    <ClCompile Include="..\..\..\src\commands\GetAllMenuCommands.cpp" />
-    <ClCompile Include="..\..\..\src\commands\GetProjectInfoCommand.cpp" />
-    <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\GetInfoCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\ImportExportCommands.cpp" />
     <ClCompile Include="..\..\..\src\commands\Keyboard.cpp" />
@@ -412,7 +422,6 @@
     <ClCompile Include="..\..\..\src\commands\ScreenshotCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\ScriptCommandRelay.cpp" />
     <ClCompile Include="..\..\..\src\commands\SelectCommand.cpp" />
-    <ClCompile Include="..\..\..\src\commands\SetProjectInfoCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\SetTrackInfoCommand.cpp" />
     <ClCompile Include="..\..\..\src\blockfile\LegacyAliasBlockFile.cpp" />
     <ClCompile Include="..\..\..\src\blockfile\LegacyBlockFile.cpp" />
@@ -472,9 +481,18 @@
     <ClInclude Include="..\..\..\src\Benchmark.h" />
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h" />
+    <ClInclude Include="..\..\..\src\commands\AudacityCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandContext.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h" />
+    <ClInclude Include="..\..\..\src\commands\Demo.h" />
+    <ClInclude Include="..\..\..\src\commands\DragCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\LoadCommands.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
+    <ClInclude Include="..\..\..\src\commands\SetClipCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\SetEnvelopeCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\SetLabelCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\SetProjectCommand.h" />
     <ClInclude Include="..\..\..\src\DeviceChange.h" />
     <ClInclude Include="..\..\..\src\Diags.h" />
     <ClInclude Include="..\..\..\src\effects\Distortion.h" />
@@ -501,6 +519,7 @@
     <ClInclude Include="..\..\..\src\prefs\WaveformSettings.h" />
     <ClInclude Include="..\..\..\src\RealFFTf48x.h" />
     <ClInclude Include="..\..\..\src\RefreshCode.h" />
+    <ClInclude Include="..\..\..\src\Registrar.h" />
     <ClInclude Include="..\..\..\src\RevisionIdent.h" />
     <ClInclude Include="..\..\..\src\SelectedRegion.h" />
     <ClInclude Include="..\..\..\src\SelectionState.h" />
@@ -560,6 +579,7 @@
     <ClInclude Include="..\..\..\src\widgets\NumericTextCtrl.h" />
     <ClInclude Include="..\..\..\src\widgets\Overlay.h" />
     <ClInclude Include="..\..\..\src\widgets\OverlayPanel.h" />
+    <ClInclude Include="..\..\..\src\widgets\WindowAccessible.h" />
     <ClInclude Include="..\..\..\src\widgets\wxPanelWrapper.h" />
     <ClInclude Include="..\..\..\src\wxFileNameWrapper.h" />
     <ClInclude Include="..\..\..\src\widgets\PopupMenuTable.h" />
@@ -751,10 +771,7 @@
     <ClInclude Include="..\..\..\src\commands\CommandTargets.h" />
     <ClInclude Include="..\..\..\src\commands\CommandType.h" />
     <ClInclude Include="..\..\..\src\commands\CompareAudioCommand.h" />
-    <ClInclude Include="..\..\..\src\commands\ExecMenuCommand.h" />
-    <ClInclude Include="..\..\..\src\commands\GetAllMenuCommands.h" />
-    <ClInclude Include="..\..\..\src\commands\GetProjectInfoCommand.h" />
-    <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\GetInfoCommand.h" />
     <ClInclude Include="..\..\..\src\commands\HelpCommand.h" />
     <ClInclude Include="..\..\..\src\commands\ImportExportCommands.h" />
     <ClInclude Include="..\..\..\src\commands\Keyboard.h" />
@@ -764,7 +781,6 @@
     <ClInclude Include="..\..\..\src\commands\ScreenshotCommand.h" />
     <ClInclude Include="..\..\..\src\commands\ScriptCommandRelay.h" />
     <ClInclude Include="..\..\..\src\commands\SelectCommand.h" />
-    <ClInclude Include="..\..\..\src\commands\SetProjectInfoCommand.h" />
     <ClInclude Include="..\..\..\src\commands\SetTrackInfoCommand.h" />
     <ClInclude Include="..\..\..\src\commands\Validators.h" />
     <ClInclude Include="..\..\..\src\blockfile\LegacyAliasBlockFile.h" />
@@ -1216,6 +1232,9 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
+    <Manifest Include="..\..\Audacity.exe.manifest">
+      <SubType>Designer</SubType>
+    </Manifest>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

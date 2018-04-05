@@ -115,10 +115,8 @@ wxString CloseButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackClose"));
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackClose"), name };
+   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr CloseButtonHandle::HitTest
@@ -152,7 +150,7 @@ MenuButtonHandle::~MenuButtonHandle()
 }
 
 UIHandle::Result MenuButtonHandle::CommitChanges
-(const wxMouseEvent &, AudacityProject *pProject, wxWindow *pParent)
+(const wxMouseEvent &, AudacityProject *pProject, wxWindow *WXUNUSED(pParent))
 {
    auto pPanel = pProject->GetTrackPanel();
    auto pCell = mpCell.lock();
@@ -176,10 +174,8 @@ wxString MenuButtonHandle::Tip(const wxMouseState &) const
       return name;
 
    auto commandManager = project->GetCommandManager();
-   std::vector<wxString> commands;
-   commands.push_back(name);
-   commands.push_back(wxT("TrackMenu"));
-   return commandManager->DescribeCommandsAndShortcuts(commands);
+   TranslatedInternalString command{ wxT("TrackMenu"), name };
+   return commandManager->DescribeCommandsAndShortcuts( &command, 1u );
 }
 
 UIHandlePtr MenuButtonHandle::HitTest

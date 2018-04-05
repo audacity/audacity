@@ -26,10 +26,10 @@ the audio, rather than actually finding the clicks.
 #include <math.h>
 
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 
 #include "../InterpolateAudio.h"
 #include "../WaveTrack.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "Repair.h"
 
@@ -50,10 +50,10 @@ wxString EffectRepair::GetSymbol()
 
 wxString EffectRepair::GetDescription()
 {
-   return XO("Sets the peak amplitude of a one or more tracks");
+   return _("Sets the peak amplitude of a one or more tracks");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectRepair::GetType()
 {
@@ -91,7 +91,7 @@ bool EffectRepair::Process()
          const auto repair1 = track->TimeToLongSamples(repair_t1);
          const auto repairLen = repair1 - repair0;
          if (repairLen > 128) {
-            ::wxMessageBox(_("The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair."));
+            ::Effect::MessageBox(_("The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair."));
             bGoodResult = false;
             break;
          }
@@ -108,7 +108,7 @@ bool EffectRepair::Process()
          const auto len = s1 - s0;
 
          if (s0 == repair0 && s1 == repair1) {
-            ::wxMessageBox(_("Repair works by using audio data outside the selection region.\n\nPlease select a region that has audio touching at least one side of it.\n\nThe more surrounding audio, the better it performs."));
+            ::Effect::MessageBox(_("Repair works by using audio data outside the selection region.\n\nPlease select a region that has audio touching at least one side of it.\n\nThe more surrounding audio, the better it performs."));
    ///            The Repair effect needs some data to go on.\n\nPlease select an area to repair with some audio on at least one side (the more the better)."));
             bGoodResult = false;
             break;

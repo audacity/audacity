@@ -675,11 +675,11 @@ void nyx_set_input_audio(nyx_audio_callback callback,
       susp->len = len;
       susp->channel = ch;
 
-      susp->susp.fetch = nyx_susp_fetch;
+      susp->susp.fetch = (snd_fetch_fn)nyx_susp_fetch;
       susp->susp.keep_fetch = NULL;
-      susp->susp.free = nyx_susp_free;
+      susp->susp.free = (snd_free_fn)nyx_susp_free;
       susp->susp.mark = NULL;
-      susp->susp.print_tree = nyx_susp_print_tree;
+      susp->susp.print_tree = (snd_print_tree_fn)nyx_susp_print_tree;
       susp->susp.name = "nyx";
       susp->susp.toss_cnt = 0;
       susp->susp.current = 0;

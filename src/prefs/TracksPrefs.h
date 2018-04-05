@@ -18,14 +18,16 @@
 //#include <wx/arrstr.h>
 //#include <wx/window.h>
 
+#include <vector>
 #include "PrefsPanel.h"
+#include "../WaveTrack.h"
 
 class ShuttleGui;
 
 class TracksPrefs final : public PrefsPanel
 {
  public:
-   TracksPrefs(wxWindow * parent);
+   TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -37,21 +39,21 @@ class TracksPrefs final : public PrefsPanel
 
    static wxString GetDefaultAudioTrackNamePreference();
 
+   static WaveTrack::WaveTrackDisplay ViewModeChoice();
+   static WaveTrack::SampleDisplay SampleViewChoice();
+   static WaveTrack::ZoomPresets Zoom1Choice();
+   static WaveTrack::ZoomPresets Zoom2Choice();
+
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    static int iPreferencePinned;
-
-   wxArrayInt    mViewCodes;
-   wxArrayString mViewChoices;
-   wxArrayInt    mSampleDisplayCodes;
-   wxArrayString mSampleDisplayChoice;
 };
 
 class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

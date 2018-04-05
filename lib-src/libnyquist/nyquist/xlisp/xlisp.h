@@ -13,6 +13,13 @@ HISTORY
 
 /* system specific definitions */
 
+#ifndef __XLISP__
+#define __XLISP__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h> /* needed for getenv(); note that this was a problem
     for PMAX implementation, but I assume PMAX is obsolete now. 
     - RBD 16apr04 */
@@ -366,7 +373,7 @@ void dbg_gc_xlsave(LVAL *n);
 
 /* function definition structure */
 typedef struct {
-    char *fd_name;	/* function name */
+    const char *fd_name;	/* function name */
     int fd_type;	/* function type */
     LVAL (*fd_subr)(void);	/* function entry point */
 } FUNDEF;
@@ -670,6 +677,13 @@ int xlirestore(const char *fname);
 void xlinit(void);
 void xlsymbols(void);
 
+
+/* xlftab.c */
+/* returns true on success,
+   false if table limits would be exceeded and the table remains unchanged
+   Call this, any number of times, before calling xlisp_main_init
+ */
+int xlbindfunctions(const FUNDEF *functions, size_t nfunctions);
 
 /* xlio.c */
 
@@ -1025,3 +1039,8 @@ void localinit(void);
 void localsymbols(void);
 void print_local_gc_info(void);
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif

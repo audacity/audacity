@@ -29,6 +29,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/SpectrumPrefs.h"
 #include "../../../../prefs/TracksBehaviorsPrefs.h"
 #include "../../../../prefs/WaveformPrefs.h"
+#include "../../../../widgets/ErrorDialog.h"
 
 #include <wx/combobox.h>
 
@@ -222,14 +223,14 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
       partner->SetWaveColorIndex(newWaveColor);
 
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName().
-      c_str(),
+      pTrack->GetName(),
       GetWaveColorStr(newWaveColor)),
       _("WaveColor Change"));
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
 }
+
 
 
 
@@ -336,8 +337,6 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
       return; // Nothing to do.
 
    AudacityProject *const project = ::GetActiveProject();
-   TrackList *const tracks = project->GetTracks();
-
    pTrack->ConvertToSampleFormat(newFormat);
 
    // Assume partner is wave or null
@@ -345,9 +344,9 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
    if (partner)
       partner->ConvertToSampleFormat(newFormat);
 
+   /* i18n-hint: The strings name a track and a format */
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName().
-      c_str(),
+      pTrack->GetName(),
       GetSampleFormatStr(newFormat)),
       _("Format Change"));
 
@@ -441,7 +440,6 @@ int RateMenuTable::IdOfRate(int rate)
 void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 {
    AudacityProject *const project = ::GetActiveProject();
-   TrackList *const tracks = project->GetTracks();
    pTrack->SetRate(rate);
    // Assume linked track is wave or null
    const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
@@ -449,8 +447,9 @@ void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
       partner->SetRate(rate);
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
+   /* i18n-hint: The string names a track */
    project->PushState(wxString::Format(_("Changed '%s' to %s Hz"),
-      pTrack->GetName().c_str(), rateString.c_str()),
+      pTrack->GetName(), rateString),
       _("Rate Change"));
 }
 
@@ -536,7 +535,7 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
          break;
       }
 
-      wxMessageBox(_("The entered value is invalid"), _("Error"),
+      AudacityMessageBox(_("The entered value is invalid"), _("Error"),
          wxICON_ERROR, mpData->pParent);
    }
 
@@ -551,10 +550,11 @@ void RateMenuTable::OnRateOther(wxCommandEvent &)
 class WaveTrackMenuTable : public PopupMenuTable
 {
 public:
-   static WaveTrackMenuTable &Instance();
+   static WaveTrackMenuTable &Instance( Track * pTrack);
+   Track * mpTrack;
 
 protected:
-   WaveTrackMenuTable() : mpData(NULL) {}
+   WaveTrackMenuTable() : mpData(NULL) {mpTrack=NULL;}
 
    void InitMenu(Menu *pMenu, void *pUserData) override;
 
@@ -580,9 +580,16 @@ protected:
    void OnSplitStereoMono(wxCommandEvent & event);
 };
 
-WaveTrackMenuTable &WaveTrackMenuTable::Instance()
+WaveTrackMenuTable &WaveTrackMenuTable::Instance( Track * pTrack )
 {
    static WaveTrackMenuTable instance;
+   wxCommandEvent evt;
+   // Clear it out so we force a repopulate
+   instance.Invalidate( evt );
+   // Ensure we know how to poulate.
+   // Messy, but the design does not seem to offer an alternative.
+   // We won't use pTrack after populate.
+   instance.mpTrack = pTrack;
    return instance;
 }
 
@@ -691,6 +698,12 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_SUB_MENU(0, _("&Wave Color"), WaveColorMenuTable)
 #endif
+
+   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpTrack);
+   if( pTrack && pTrack->GetDisplay() != WaveTrack::Spectrum  ){
+      POPUP_MENU_SEPARATOR()
+      POPUP_MENU_SUB_MENU(OnWaveColorID, _("&Wave Color"), WaveColorMenuTable)
+   }
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_SUB_MENU(0, _("&Format"), FormatMenuTable)
    POPUP_MENU_SEPARATOR()
@@ -740,14 +753,6 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
             ? WaveformSettings::stLinear
             : WaveformSettings::stLogarithmic;
       }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if (pTrack->GetDisplay() == WaveTrack::Waveform) {
-         pTrack->SetVirtualState(false);
-      }
-      else if (id == WaveTrack::Waveform) {
-         pTrack->SetVirtualState(true);
-      }
-#endif
 
       AudacityProject *const project = ::GetActiveProject();
       project->ModifyState(true);
@@ -784,7 +789,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    };
 
    if (gAudioIO->IsBusy()){
-      wxMessageBox(_("To change Spectrogram Settings, stop any\n"
+      AudacityMessageBox(_("To change Spectrogram Settings, stop any\n"
                      "playing or recording first."),
                    _("Stop the Audio First"), wxOK | wxICON_EXCLAMATION | wxCENTRE);
       return;
@@ -809,6 +814,10 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
       // Redraw
       AudacityProject *const project = ::GetActiveProject();
       project->ModifyState(true);
+      //Bug 1725 Toolbar was left greyed out.
+      //This solution is overkill, but does fix the problem and is what the
+      //prefs dialog normally does.
+      AudacityProject::RebuildAllMenuBars();
       mpData->result = RefreshCode::RefreshAll;
    }
 }
@@ -838,8 +847,9 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
    }
    pTrack->SetChannel(channel);
    AudacityProject *const project = ::GetActiveProject();
+   /* i18n-hint: The strings name a track and a channel choice (mono, left, or right) */
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName().c_str(),
+      pTrack->GetName(),
       channelmsg),
       _("Channel"));
    mpData->result = RefreshCode::RefreshAll;
@@ -853,13 +863,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    pTrack->SetLinked(true);
    // Assume partner is wave or null
    const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (MONO_WAVE_PAN(pTrack))
-      pTrack->SetVirtualState(false);
-   if (MONO_WAVE_PAN(partner))
-      static_cast<WaveTrack*>(partner)->SetVirtualState(false);
-#endif
 
    if (partner) {
       // Set partner's parameters to match target.
@@ -892,9 +895,9 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
          }
 
       AudacityProject *const project = ::GetActiveProject();
+      /* i18n-hint: The string names a track */
       project->PushState(wxString::Format(_("Made '%s' a stereo track"),
-         pTrack->GetName().
-         c_str()),
+         pTrack->GetName()),
          _("Make Stereo"));
    }
    else
@@ -918,13 +921,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    wxASSERT(partner);
    if (!partner)
       return;
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (!stereo && MONO_WAVE_PAN(pTrack))
-      pTrack->SetVirtualState(true, true);
-   if (!stereo && MONO_WAVE_PAN(partner))
-      partner->SetVirtualState(true, true);
-#endif
 
    if (partner)
    {
@@ -986,8 +982,9 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    if (hasFocus)
       project->GetTrackPanel()->SetFocusedTrack(partner);
 
+   /* i18n-hint: The string names a track  */
    project->PushState(wxString::Format(_("Swapped Channels in '%s'"),
-      pTrack->GetName().c_str()),
+      pTrack->GetName()),
       _("Swap Channels"));
 
    mpData->result = RefreshCode::RefreshAll;
@@ -999,8 +996,9 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
    SplitStereo(true);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
+   /* i18n-hint: The string names a track  */
    project->PushState(wxString::Format(_("Split stereo track '%s'"),
-      pTrack->GetName().c_str()),
+      pTrack->GetName()),
       _("Split"));
 
    mpData->result = RefreshCode::RefreshAll;
@@ -1012,15 +1010,18 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
    SplitStereo(false);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
+   /* i18n-hint: The string names a track  */
    project->PushState(wxString::Format(_("Split Stereo to Mono '%s'"),
-      pTrack->GetName().c_str()),
+      pTrack->GetName()),
       _("Split to Mono"));
 
    mpData->result = RefreshCode::RefreshAll;
 }
 
 //=============================================================================
-PopupMenuTable *WaveTrackControls::GetMenuExtension(Track *pTrack)
+PopupMenuTable *WaveTrackControls::GetMenuExtension(Track * pTrack)
 {
-   return &WaveTrackMenuTable::Instance();
+
+   WaveTrackMenuTable & result = WaveTrackMenuTable::Instance( pTrack );
+   return &result;
 }

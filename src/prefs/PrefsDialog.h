@@ -20,9 +20,11 @@
 #include <wx/treebook.h>
 #include <wx/window.h>
 #include "../widgets/wxPanelWrapper.h"
+#include "../Internat.h"
 
 class PrefsPanel;
 class PrefsPanelFactory;
+class ShuttleGui;
 
 #ifdef __GNUC__
 #define CONST
@@ -55,6 +57,7 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
 
    // Defined this so a protected virtual can be invoked after the constructor
    int ShowModal() override;
+   void ShuttleAll( ShuttleGui & S);
 
    void OnCategoryChange(wxCommandEvent & e);
    void OnOK(wxCommandEvent & e);

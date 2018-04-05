@@ -43,19 +43,18 @@
 #include "SampleFormat.h"
 #include "Prefs.h"
 #include "Dither.h"
+#include "Internat.h"
+#include "prefs/QualityPrefs.h"
 
-static Dither::DitherType gLowQualityDither = Dither::none;
-static Dither::DitherType gHighQualityDither = Dither::none;
+static DitherType gLowQualityDither = DitherType::none;
+static DitherType gHighQualityDither = DitherType::none;
 static Dither gDitherAlgorithm;
 
 void InitDitherers()
 {
    // Read dither preferences
-   gLowQualityDither = (Dither::DitherType)
-   gPrefs->Read(wxT("/Quality/DitherAlgorithm"), (long)Dither::none);
-
-   gHighQualityDither = (Dither::DitherType)
-   gPrefs->Read(wxT("/Quality/HQDitherAlgorithm"), (long)Dither::shaped);
+   gLowQualityDither = QualityPrefs::FastDitherChoice();
+   gHighQualityDither = QualityPrefs::BestDitherChoice();
 }
 
 const wxChar *GetSampleFormatStr(sampleFormat format)
@@ -75,21 +74,21 @@ const wxChar *GetSampleFormatStr(sampleFormat format)
 }
 
 // TODO: Risky?  Assumes 0.0f is represented by 0x00000000;
-void ClearSamples(samplePtr src, sampleFormat format,
+void ClearSamples(samplePtr dst, sampleFormat format,
                   size_t start, size_t len)
 {
    auto size = SAMPLE_SIZE(format);
-   memset(src + start*size, 0, len*size);
+   memset(dst + start*size, 0, len*size);
 }
 
-void ReverseSamples(samplePtr src, sampleFormat format,
+void ReverseSamples(samplePtr dst, sampleFormat format,
                   int start, int len)
 {
    auto size = SAMPLE_SIZE(format);
-   samplePtr first = src + start * size;
-   samplePtr last = src + (start + len - 1) * size;
+   samplePtr first = dst + start * size;
+   samplePtr last = dst + (start + len - 1) * size;
    enum : size_t { fixedSize = SAMPLE_SIZE(floatSample) };
-   wxASSERT(size <= fixedSize);
+   wxASSERT(static_cast<size_t>(size) <= fixedSize);
    char temp[fixedSize];
    while (first < last) {
       memcpy(temp, first, size);
@@ -119,6 +118,6 @@ void CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
                  unsigned int dstStride /* = 1 */)
 {
    gDitherAlgorithm.Apply(
-      Dither::none,
+      DitherType::none,
       src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
 }

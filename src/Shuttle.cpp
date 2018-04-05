@@ -50,7 +50,7 @@ preferences.
 
 *//*******************************************************************/
 
-//#include "Audacity.h"
+#include "Audacity.h"
 
 #include <wx/defs.h>
 #include <wx/checkbox.h>
@@ -64,30 +64,13 @@ preferences.
 #include <wx/radiobut.h>
 #include <wx/button.h>
 
+#include "../include/audacity/EffectAutomationParameters.h" // for command automation
+
 //#include "Project.h"
 #include "Shuttle.h"
 #include "WrappedType.h"
 //#include "commands/CommandManager.h"
 //#include "effects/Effect.h"
-
-const int Enums::NumDbChoices = 13;
-
-const wxString Enums::DbChoices[] =
-   {wxT("-20 dB"), wxT("-25 dB"), wxT("-30 dB"),
-    wxT("-35 dB"), wxT("-40 dB"), wxT("-45 dB"),
-    wxT("-50 dB"), wxT("-55 dB"), wxT("-60 dB"),
-    wxT("-65 dB"), wxT("-70 dB"), wxT("-75 dB"),
-    wxT("-80 dB")};
-
-const double Enums::Db2Signal[] =
-//     -20dB    -25dB    -30dB    -35dB    -40dB    -45dB    -50dB    -55dB    -60dB    -65dB     -70dB     -75dB     -80dB    Off
-   { 0.10000, 0.05620, 0.03160, 0.01780, 0.01000, 0.00562, 0.00316, 0.00178, 0.00100, 0.000562, 0.000316, 0.000178, 0.0001000, 0.0 };
-
-
-const wxString * Enums::GetDbChoices()
-{
-   return DbChoices;
-}
 
 
 Shuttle::Shuttle()
@@ -245,6 +228,8 @@ bool Shuttle::TransferString( const wxString & Name, wxString & strValue, const 
       {
          strValue = mValueString;
       }
+      else
+         return false;
    }
    else
    {
@@ -306,6 +291,11 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
             terminator = wxT('"');
             j++;
          }
+         else if(mParams.GetChar(j) == wxT('\'')) // or by single quotes.
+         {
+            terminator = wxT('\'');
+            j++;
+         }         
          i=j;
          while( j<(int)mParams.Length() && mParams.GetChar(j) != terminator )
             j++;
@@ -316,3 +306,354 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
    }
    return true;
 }
+
+
+bool ShuttleParams::ExchangeWithMaster(const wxString & WXUNUSED(Name))
+{
+   return true;
+}
+
+#ifdef _MSC_VER
+// If this is compiled with MSVC (Visual Studio)
+#pragma warning( push )
+#pragma warning( disable: 4100 ) // unused parameters.
+#endif //_MSC_VER
+
+
+// The ShouldSet and CouldGet functions have an important side effect
+// on the pOptionalFlag.  They 'use it up' and clear it down for the next parameter.
+
+
+// Tests for parameter being optional.
+// Prepares for next parameter by clearing the pointer.
+// Reports on whether the parameter should be set, i.e. should set 
+// if it was chosen to be set, or was not optional.
+bool ShuttleParams::ShouldSet(){
+   if( !pOptionalFlag )
+      return true;
+   bool result = *pOptionalFlag;
+   pOptionalFlag = NULL;
+   return result;
+}
+// These are functions to override.  They do nothing.
+void ShuttleParams::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl){;};
+void ShuttleParams::Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
+void ShuttleParams::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
+void ShuttleParams::Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
+void ShuttleParams::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
+void ShuttleParams::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ){;};
+void ShuttleParams::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ){;};
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings ){;};
+
+
+
+/*
+void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings )
+{
+}
+*/
+
+// ShuttleGetAutomation gets from the shuttle into typically a string.
+ShuttleParams & ShuttleGetAutomation::Optional( bool & var ){ 
+   pOptionalFlag = &var;
+   return *this;
+};
+
+void ShuttleGetAutomation::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
+{
+   if( !ShouldSet() ) return;
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   if( !ShouldSet() ) return;
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   if( !ShouldSet() ) return;
+   mpEap->Write(key, var);
+}
+
+void ShuttleGetAutomation::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   if( !ShouldSet() ) return;
+   mpEap->WriteFloat(key, var);
+}
+
+void ShuttleGetAutomation::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   if( !ShouldSet() ) return;
+   mpEap->WriteFloat(key, var);
+}
+
+void ShuttleGetAutomation::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
+{
+   if( !ShouldSet() ) return;
+   mpEap->Write(key, var);
+}
+
+
+void ShuttleGetAutomation::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
+{
+   if( !ShouldSet() ) return;
+   mpEap->Write(key, var);
+}
+
+
+void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings )
+{
+   if( !ShouldSet() ) return;
+   mpEap->Write(key, strings[var].Internal());
+}
+
+
+
+ShuttleParams & ShuttleSetAutomation::Optional( bool & var ){ 
+   pOptionalFlag = &var;
+   return *this;
+};
+
+// Tests for parameter being optional.
+// Prepares for next parameter by clearing the pointer.
+// If the parameter is optional, finds out if it was actually provided.
+// i.e. could it be got from automation?
+// The result goes into the flag variable, so we typically ignore the result.
+bool ShuttleSetAutomation::CouldGet( const wxString &key ){
+   // Not optional?  Can get as we will get the default, at worst.
+   if( !pOptionalFlag )
+      return true;
+   bool result = mpEap->HasEntry( key );
+   *pOptionalFlag = result;
+   pOptionalFlag = NULL;
+   return result;
+}
+
+void ShuttleSetAutomation::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   // Use of temp in this and related functions is to handle the case of 
+   // only committing values if all values pass verification.
+   bool temp =var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   int temp =var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   int temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK )
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   float temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK )
+      var = temp;
+}
+
+
+void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   double temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+void ShuttleSetAutomation::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   double temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, vmin, vmax);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+
+void ShuttleSetAutomation::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   wxString temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault);
+   if( bWrite && bOK )
+      var = temp;
+}
+
+
+void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int vdefault, const IdentInterfaceSymbol strings[], size_t nStrings )
+{
+   CouldGet( key );
+   if( !bOK )
+      return;
+   int temp = var;
+   bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings, nStrings);
+   if( bWrite && bOK)
+      var = temp;
+}
+
+bool ShuttleGetDefinition::IsOptional(){
+   bool result = pOptionalFlag !=NULL;
+   pOptionalFlag = NULL;
+   return result;
+}
+
+// Definition distinguishes optional from not.
+ShuttleParams & ShuttleGetDefinition::Optional( bool & var ){ 
+   pOptionalFlag = &var;
+   return *this;
+};
+
+ShuttleGetDefinition::ShuttleGetDefinition( CommandMessageTarget & target ) : CommandMessageTargetDecorator( target )
+{
+}
+
+// JSON definitions.
+void ShuttleGetDefinition::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "bool", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( vdefault ? "True" : "False", "default" );
+   EndStruct();
+}
+
+void ShuttleGetDefinition::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "int", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
+   EndStruct();
+}
+
+void ShuttleGetDefinition::Define( size_t & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "size_t", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
+   EndStruct();
+
+}
+
+void ShuttleGetDefinition::Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "float", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
+   EndStruct();
+}
+
+void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "float", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
+   EndStruct();
+}
+
+void ShuttleGetDefinition::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "double", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( (double)vdefault, "default"  );
+   EndStruct();
+}
+
+
+void ShuttleGetDefinition::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "string", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( vdefault, "default"  );
+   EndStruct();
+}
+
+
+void ShuttleGetDefinition::DefineEnum( int &var,
+   const wxChar * key, const int vdefault,
+   const IdentInterfaceSymbol strings[], size_t nStrings )
+{
+   StartStruct();
+   AddItem( wxString(key), "key" );
+   AddItem( "enum", "type" );
+   if( IsOptional() )
+      AddItem( "unchanged", "default" );
+   else
+      AddItem( strings[vdefault].Internal(), "default"  );
+   StartField( "enum" );
+   StartArray();
+   for( size_t i = 0; i < nStrings; i++ )
+      AddItem( strings[i].Internal() );
+   EndArray();
+   EndField();
+   EndStruct();
+}
+
+#ifdef _MSC_VER
+// If this is compiled with MSVC (Visual Studio)
+#pragma warning( pop )
+#endif //_MSC_VER
+
+
+
+
+

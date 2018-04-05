@@ -46,9 +46,9 @@ class ControlToolBar final : public ToolBar {
    ControlToolBar();
    virtual ~ControlToolBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
    void OnKeyEvent(wxKeyEvent & event);
 
    // msmeyer: These are public, but it's far better to
@@ -97,7 +97,7 @@ class ControlToolBar final : public ToolBar {
    // Pause - used by AudioIO to pause sound activate recording
    void Pause();
 
-   void Populate();
+   void Populate() override;
    void Repaint(wxDC *dc) override;
    void EnableDisableButtons() override;
 
@@ -112,9 +112,17 @@ class ControlToolBar final : public ToolBar {
    void StartScrolling();
    void StopScrolling();
 
+   // Commit the addition of temporary recording tracks into the project
+   void CommitRecording();
+
+   // Cancel the addition of temporary recording tracks into the project
+   void CancelRecording();
+
  private:
 
-   AButton *MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+   static AButton *MakeButton(
+      ControlToolBar *pBar,
+      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id,
       bool processdownevents,
       const wxChar *label);
@@ -133,12 +141,12 @@ class ControlToolBar final : public ToolBar {
 
    enum
    {
-      ID_PLAY_BUTTON = 11000,
-      ID_RECORD_BUTTON,
-      ID_PAUSE_BUTTON,
+      ID_PAUSE_BUTTON = 11000,
+      ID_PLAY_BUTTON,
       ID_STOP_BUTTON,
       ID_FF_BUTTON,
       ID_REW_BUTTON,
+      ID_RECORD_BUTTON,
       BUTTON_COUNT,
    };
 

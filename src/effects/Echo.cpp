@@ -27,14 +27,16 @@
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
+#include "../Shuttle.h"
+#include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
 #include "../SampleFormat.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type     Key            Def   Min      Max      Scale
-Param( Delay,  float,   XO("Delay"),   1.0f, 0.001f,  FLT_MAX, 1.0f );
-Param( Decay,  float,   XO("Decay"),   0.5f, 0.0f,    FLT_MAX, 1.0f );
+Param( Delay,  float,   wxT("Delay"),   1.0f, 0.001f,  FLT_MAX, 1.0f );
+Param( Decay,  float,   wxT("Decay"),   0.5f, 0.0f,    FLT_MAX, 1.0f );
 
 EffectEcho::EffectEcho()
 {
@@ -57,7 +59,7 @@ wxString EffectEcho::GetSymbol()
 
 wxString EffectEcho::GetDescription()
 {
-   return XO("Repeats the selected audio again and again");
+   return _("Repeats the selected audio again and again");
 }
 
 wxString EffectEcho::ManualPage()
@@ -65,7 +67,7 @@ wxString EffectEcho::ManualPage()
    return wxT("Echo");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectEcho::GetType()
 {
@@ -104,7 +106,7 @@ bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
       history.reinit(histLen, true);
    }
    catch ( const std::bad_alloc& ) {
-      wxMessageBox(_("Requested value exceeds memory capacity."));
+      Effect::MessageBox(_("Requested value exceeds memory capacity."));
       return false;
    }
 
@@ -134,7 +136,14 @@ size_t EffectEcho::ProcessBlock(float **inBlock, float **outBlock, size_t blockL
    return blockLen;
 }
 
-bool EffectEcho::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectEcho::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( delay, Delay );
+   S.SHUTTLE_PARAM( decay, Decay );
+   return true;
+}
+
+
+bool EffectEcho::GetAutomationParameters(CommandParameters & parms)
 {
    parms.WriteFloat(KEY_Delay, delay);
    parms.WriteFloat(KEY_Decay, decay);
@@ -142,7 +151,7 @@ bool EffectEcho::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectEcho::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Delay);
    ReadAndVerifyFloat(Decay);
@@ -159,11 +168,11 @@ void EffectEcho::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      FloatingPointValidator<double> vldDelay(3, &delay, NUM_VAL_NO_TRAILING_ZEROES);
+      FloatingPointValidator<double> vldDelay(3, &delay, NumValidatorStyle::NO_TRAILING_ZEROES);
       vldDelay.SetRange(MIN_Delay, MAX_Delay);
       S.AddTextBox(_("Delay time (seconds):"), wxT(""), 10)->SetValidator(vldDelay);
 
-      FloatingPointValidator<double> vldDecay(3, &decay, NUM_VAL_NO_TRAILING_ZEROES);
+      FloatingPointValidator<double> vldDecay(3, &decay, NumValidatorStyle::NO_TRAILING_ZEROES);
       vldDecay.SetRange(MIN_Decay, MAX_Decay);
       S.AddTextBox(_("Decay factor:"), wxT(""), 10)->SetValidator(vldDecay);
    }

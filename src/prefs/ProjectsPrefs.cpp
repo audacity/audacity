@@ -25,11 +25,12 @@ handling.
 #include "../ShuttleGui.h"
 
 #include "ProjectsPrefs.h"
+#include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ProjectsPrefs::ProjectsPrefs(wxWindow * parent)
-:   PrefsPanel(parent,
+ProjectsPrefs::ProjectsPrefs(wxWindow * parent, wxWindowID winid)
+:   PrefsPanel(parent, winid,
    /* i18n-hint: (noun) i.e Audacity projects. */
                _("Projects"))
 {
@@ -54,8 +55,10 @@ void ProjectsPrefs::Populate()
 
 void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
-   S.SetBorder(2);
-#if 0
+   S.SetBorder(2);   
+   S.StartScroller();
+#ifndef EXPERIMENTAL_DA 
+// DA always copies.  Using a reference is dangerous.  
    S.StartStatic(_("When saving a project that depends on other audio files"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/SaveProjectWithDependencies"), wxT("ask"));
@@ -70,7 +73,9 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndRadioButtonGroup();
    }
    S.EndStatic();
-#endif
+   S.EndScroller();
+#endif   
+
 }
 
 bool ProjectsPrefs::Commit()
@@ -86,8 +91,8 @@ wxString ProjectsPrefs::HelpPageName()
    return "Projects_Preferences";
 }
 
-PrefsPanel *ProjectsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ProjectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ProjectsPrefs(parent);
+   return safenew ProjectsPrefs(parent, winid);
 }

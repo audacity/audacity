@@ -38,7 +38,7 @@
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type  Key             Def  Min   Max      Scale
-Param( Count,  int,  XO("Count"),    1,  1,    INT_MAX, 1  );
+Param( Count,  int,  wxT("Count"),    1,  1,    INT_MAX, 1  );
 
 BEGIN_EVENT_TABLE(EffectRepeat, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)
@@ -64,7 +64,7 @@ wxString EffectRepeat::GetSymbol()
 
 wxString EffectRepeat::GetDescription()
 {
-   return XO("Repeats the selection the specified number of times");
+   return _("Repeats the selection the specified number of times");
 }
 
 wxString EffectRepeat::ManualPage()
@@ -72,7 +72,7 @@ wxString EffectRepeat::ManualPage()
    return wxT("Repeat");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectRepeat::GetType()
 {
@@ -80,15 +80,19 @@ EffectType EffectRepeat::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectRepeat::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( repeatCount, Count );
+   return true;
+}
 
-bool EffectRepeat::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectRepeat::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Count, repeatCount);
 
    return true;
 }
 
-bool EffectRepeat::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Count);
 
@@ -227,7 +231,7 @@ void EffectRepeat::DisplayNewTime()
                        mT1 - mT0,
                        mProjectRate);
 
-   str = _("Current selection length: ") + nc.GetString();
+   str = wxString::Format( _("Current selection length: %s"), nc.GetString() );
 
    mCurrentTime->SetLabel(str);
    mCurrentTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
@@ -237,7 +241,7 @@ void EffectRepeat::DisplayNewTime()
       repeatCount = l;
 
       nc.SetValue((mT1 - mT0) * (repeatCount + 1));
-      str = _("New selection length: ") + nc.GetString();
+      str = wxString::Format( _("New selection length: %s"), nc.GetString() );
    }
    else {
       str = _("Warning: No repeats.");

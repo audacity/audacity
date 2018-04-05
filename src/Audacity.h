@@ -39,7 +39,7 @@
 // Its value may be more than 0 for pre-release "Beta" builds that differ only
 // in the welcome screen, and hiding of some development menu commands, but
 // still link to the alpha manual online.
-#define AUDACITY_BUILD_LEVEL 2
+#define AUDACITY_BUILD_LEVEL 0
 
 // used #ifdef not #if for IS_ALPHA, IS_BETA, IS_RELEASE, USE_ALPHA_MANUAL
 #undef IS_ALPHA
@@ -212,37 +212,6 @@ void QuitAudacity();
 #define MAX_AUDIO (1. - 1./(1<<15))
 #define JUST_BELOW_MAX_AUDIO (1.f - 1.f/(1<<14))
 
-
-#ifndef IN_RC
-//#include <wx/defs.h>
-//#include <wx/string.h>
-class wxString;
-
-extern const wxString& GetCustomTranslation(const wxString& str1 );
-extern const wxString& GetCustomSubstitution(const wxString& str1 );
-
-// Marks strings for extraction only...must use wxGetTranslation() to translate.
-#define XO(s)  wxT(s)
-// Marks string for substitution only.
-#define _TS( s ) GetCustomSubstitution( s )
-
-
-#define WXINTL_NO_GETTEXT_MACRO
-
-#ifdef wxPLURAL
-#undef wxPLURAL
-#endif
-
-// Note:  The strings will go to the .pot file (do not use _(...)).
-#define wxPLURAL(sing, plur, n)  wxGetTranslation((sing), (plur), n)
-
-
-#ifdef _
-#undef _
-#endif
-
-#define _(s) GetCustomTranslation((s))
-#endif
 
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete

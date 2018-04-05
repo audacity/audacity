@@ -1,5 +1,5 @@
 /* XPM */
-static const char *Multi[] = {
+static const char * const Multi[] = {
 /* columns rows colors chars-per-pixel */
 "27 27 3 1",
 ". c #FFFFFF",

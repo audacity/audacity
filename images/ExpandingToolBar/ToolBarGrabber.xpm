@@ -1,5 +1,5 @@
 /* XPM */
-static const char *ToolBarGrabber[] = {
+static const char * const ToolBarGrabber[] = {
 /* columns rows colors chars-per-pixel */
 "17 8 6 1",
 "  c cyan",

@@ -18,15 +18,22 @@
 #include "CommandFlag.h"
 
 #include "../MemoryX.h"
+#include "Keyboard.h"
 #include <vector>
 #include <wx/string.h>
-#include <wx/dynarray.h>
 #include <wx/menu.h>
 #include <wx/hashmap.h>
 
 #include "../xml/XMLTagHandler.h"
 
 #include "audacity/Types.h"
+
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
+using CommandParameter = wxString;
+class TranslatedInternalString;
 
 struct MenuBarListEntry
 {
@@ -58,13 +65,16 @@ struct CommandListEntry
 {
    int id;
    wxString name;
-   wxString key;
-   wxString defaultKey;
+   wxString longLabel;
+   NormalizedKeyString key;
+   NormalizedKeyString defaultKey;
    wxString label;
    wxString labelPrefix;
    wxString labelTop;
    wxMenu *menu;
+   CommandHandlerFinder finder;
    CommandFunctorPointer callback;
+   CommandParameter parameter;
    bool multi;
    int index;
    int count;
@@ -73,6 +83,8 @@ struct CommandListEntry
    bool wantKeyup;
    bool isGlobal;
    bool isOccult;
+   bool isEffect;
+   bool hasDialog;
    CommandFlag flags;
    CommandMask mask;
 };
@@ -86,10 +98,32 @@ using SubMenuList = std::vector < movable_ptr<SubMenuListEntry> >;
 // so we don't want the structures to relocate with vector operations.
 using CommandList = std::vector<movable_ptr<CommandListEntry>>;
 
-WX_DECLARE_STRING_HASH_MAP_WITH_DECL(CommandListEntry *, CommandNameHash, class AUDACITY_DLL_API);
-WX_DECLARE_HASH_MAP_WITH_DECL(int, CommandListEntry *, wxIntegerHash, wxIntegerEqual, CommandIDHash, class AUDACITY_DLL_API);
+namespace std
+{
+#ifdef __AUDACITY_OLD_STD__
+   namespace tr1
+   {
+#endif
+      template<typename T> struct hash;
+      template<> struct hash< NormalizedKeyString > {
+         size_t operator () (const NormalizedKeyString &str) const // noexcept
+         {
+            auto &stdstr = str.Raw(); // no allocations, a cheap fetch
+            using Hasher = hash< wxString >;
+            return Hasher{}( stdstr );
+         }
+      };
+#ifdef __AUDACITY_OLD_STD__
+   }
+#endif
+}
+
+using CommandKeyHash = std::unordered_map<NormalizedKeyString, CommandListEntry*>;
+using CommandNameHash = std::unordered_map<wxString, CommandListEntry*>;
+using CommandIDHash = std::unordered_map<int, CommandListEntry*>;
 
 class AudacityProject;
+class CommandContext;
 
 class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 {
@@ -122,41 +156,59 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    wxMenu* BeginSubMenu(const wxString & tName);
    void EndSubMenu();
 
+   /*
    void InsertItem(const wxString & name,
                    const wxString & label,
-                   const CommandFunctorPointer &callback,
+                   CommandHandlerFinder finder,
+                   CommandFunctorPointer callback,
                    const wxString & after,
                    int checkmark = -1);
+    */
 
    void AddItemList(const wxString & name,
-                    const wxArrayString & labels,
-                    const CommandFunctorPointer &callback);
+                    const TranslatedInternalString items[],
+                    size_t nItems,
+                    CommandHandlerFinder finder,
+                    CommandFunctorPointer callback,
+                    bool bIsEffect = false);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
-                 const CommandFunctorPointer &callback,
+                 bool hasDialog,
+                 CommandHandlerFinder finder,
+                 CommandFunctorPointer callback,
                  int checkmark = 0);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
-                 const CommandFunctorPointer &callback,
+                 bool hasDialog,
+                 CommandHandlerFinder finder,
+                 CommandFunctorPointer callback,
                  int checkmark,
                  CommandFlag flags,
                  CommandMask mask);
 
    void AddItem(const wxChar *name,
                 const wxChar *label,
-                const CommandFunctorPointer &callback,
+                bool hasDialog,
+                CommandHandlerFinder finder,
+                CommandFunctorPointer callback,
                 CommandFlag flags = NoFlagsSpecifed,
-                CommandMask mask   = NoFlagsSpecifed);
+                CommandMask mask   = NoFlagsSpecifed,
+                bool bIsEffect = false, 
+                const CommandParameter &parameter = CommandParameter{});
 
    void AddItem(const wxChar *name,
                 const wxChar *label_in,
-                const CommandFunctorPointer &callback,
+                bool hasDialog,
+                CommandHandlerFinder finder,
+                CommandFunctorPointer callback,
                 const wxChar *accel,
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
-                int checkmark = -1);
+                int checkmark = -1,
+                bool bIsEffect = false, 
+                const CommandParameter &parameter = CommandParameter{});
 
    void AddSeparator();
 
@@ -164,20 +216,24 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // keyboard shortcut.
    void AddCommand(const wxChar *name,
                    const wxChar *label,
-                   const CommandFunctorPointer &callback,
+                   CommandHandlerFinder finder,
+                   CommandFunctorPointer callback,
                    CommandFlag flags = NoFlagsSpecifed,
                    CommandMask mask   = NoFlagsSpecifed);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
-                   const CommandFunctorPointer &callback,
+                   CommandHandlerFinder finder,
+                   CommandFunctorPointer callback,
                    const wxChar *accel,
                    CommandFlag flags = NoFlagsSpecifed,
                    CommandMask mask   = NoFlagsSpecifed);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
-                         const CommandFunctorPointer &callback,
+                         bool hasDialog,
+                         CommandHandlerFinder finder,
+                         CommandFunctorPointer callback,
                          const wxChar *accel);
    //
    // Command masks
@@ -189,6 +245,10 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    CommandMask GetDefaultMask() const { return mDefaultMask; }
 
    void SetOccultCommands( bool bOccult);
+   CommandManager * SetLongName( const wxString & name ){ 
+      mLongNameForItem = name; 
+      return this;
+   }
 
 
    void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
@@ -215,8 +275,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Modifying accelerators
    //
 
-   void SetKeyFromName(const wxString &name, const wxString &key);
-   void SetKeyFromIndex(int i, const wxString &key);
+   void SetKeyFromName(const wxString &name, const NormalizedKeyString &key);
+   void SetKeyFromIndex(int i, const NormalizedKeyString &key);
 
    //
    // Executing commands
@@ -226,28 +286,33 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(int id, CommandFlag flags, CommandMask mask);
-   bool HandleTextualCommand(const wxString & Str, CommandFlag flags, CommandMask mask);
+   bool HandleTextualCommand(const wxString & Str, const CommandContext & context, CommandFlag flags, CommandMask mask);
 
    //
    // Accessing
    //
 
    void GetCategories(wxArrayString &cats);
-   void GetAllCommandNames(wxArrayString &names, bool includeMultis);
-   void GetAllCommandLabels(wxArrayString &labels, bool includeMultis);
+   void GetAllCommandNames(wxArrayString &names, bool includeMultis) const;
+   void GetAllCommandLabels(
+      wxArrayString &labels, std::vector<bool> &vHasDialog,
+      bool includeMultis) const;
    void GetAllCommandData(
-      wxArrayString &names, wxArrayString &keys, wxArrayString &default_keys,
+      wxArrayString &names,
+      std::vector<NormalizedKeyString> &keys,
+      std::vector<NormalizedKeyString> &default_keys,
       wxArrayString &labels, wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
       wxArrayString &prefixes,
 #endif
       bool includeMultis);
 
+   wxString GetNameFromID( int id );
    wxString GetLabelFromName(const wxString &name);
    wxString GetPrefixedLabelFromName(const wxString &name);
    wxString GetCategoryFromName(const wxString &name);
-   wxString GetKeyFromName(const wxString &name) const;
-   wxString GetDefaultKeyFromName(const wxString &name);
+   NormalizedKeyString GetKeyFromName(const wxString &name) const;
+   NormalizedKeyString GetDefaultKeyFromName(const wxString &name);
 
    bool GetEnabled(const wxString &name);
 
@@ -266,11 +331,13 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    /// Formatting summaries that include shortcut keys
    ///
    wxString DescribeCommandsAndShortcuts
-      (// An array, alternating user-visible strings, and
-       // non-user-visible command names.  If a shortcut key is defined
-       // for the command, then it is appended, parenthesized, after the
-       // user-visible string.
-       const std::vector<wxString> &commands) const;
+   (
+       // If a shortcut key is defined for the command, then it is appended,
+       // parenthesized, after the translated name.
+       const TranslatedInternalString commands[], size_t nCommands) const;
+
+   // Sorted list of the shortcut keys to be exluded from the standard defaults
+   static const std::vector<NormalizedKeyString> &ExcludedList();
 
 protected:
 
@@ -281,19 +348,28 @@ protected:
    int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
+                                   const wxString & longLabel,
+                                   bool hasDialog,
                                    wxMenu *menu,
-                                   const CommandFunctorPointer &callback,
-                                   bool multi,
+                                   CommandHandlerFinder finder,
+                                   CommandFunctorPointer callback,
+                                   const wxString &nameSuffix,
                                    int index,
-                                   int count);
+                                   int count,
+                                   bool bIsEffect);
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
+                                   const wxString & longLabel,
+                                   bool hasDialog,
                                    const wxString & accel,
                                    wxMenu *menu,
-                                   const CommandFunctorPointer &callback,
-                                   bool multi,
+                                   CommandHandlerFinder finder,
+                                   CommandFunctorPointer callback,
+                                   const wxString &nameSuffix,
                                    int index,
-                                   int count);
+                                   int count,
+                                   bool bIsEffect,
+                                   const CommandParameter &parameter);
 
    //
    // Executing commands
@@ -327,14 +403,15 @@ protected:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
 private:
-   // mMaxList only holds shortcuts that should not be added (by default).
-   wxSortedArrayString mMaxListOnly;
+   // mMaxList only holds shortcuts that should not be added (by default)
+   // and is sorted.
+   std::vector<NormalizedKeyString> mMaxListOnly;
 
    MenuBarList  mMenuBarList;
    SubMenuList  mSubMenuList;
    CommandList  mCommandList;
    CommandNameHash  mCommandNameHash;
-   CommandNameHash  mCommandKeyHash;
+   CommandKeyHash mCommandKeyHash;
    CommandIDHash  mCommandIDHash;
    int mCurrentID;
    int mXMLKeysRead;
@@ -344,6 +421,8 @@ private:
    wxString mCurrentMenuName;
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
+
+   wxString mLongNameForItem;
 
    CommandFlag mDefaultFlags;
    CommandMask mDefaultMask;

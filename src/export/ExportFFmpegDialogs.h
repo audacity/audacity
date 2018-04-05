@@ -22,6 +22,10 @@ LRN
 #include "../FileNames.h"
 #include "../widgets/wxPanelWrapper.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 
 /// Identifiers for pre-set export types.
 enum FFmpegExposedFormat
@@ -34,6 +38,8 @@ enum FFmpegExposedFormat
    FMT_LAST
 };
 
+#define AV_CANMETA (AV_VERSION_INT(255, 255, 255))
+
 /// Describes export type
 struct ExposedFormat
 {
@@ -42,7 +48,7 @@ struct ExposedFormat
    const wxChar *extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
    const wxChar *shortname;   //!< used to guess the format
    unsigned maxchannels;      //!< how many channels this format could handle
-   int canmetadata;           //!< !=0 if format supports metadata, -1 any avformat version, otherwise version support added
+   const int canmetadata;           //!< !=0 if format supports metadata, AV_CANMETA any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
    const wxChar *description_; //!< format description (will be shown in export dialog) (untranslated!)
    AVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)
@@ -69,8 +75,8 @@ public:
    virtual ~ExportFFmpegAC3Options();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    /// Bit Rates supported by AC3 encoder
    static const int iAC3BitRates[];
@@ -81,7 +87,7 @@ public:
 private:
 
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -95,8 +101,8 @@ public:
    virtual ~ExportFFmpegAACOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
 
@@ -111,15 +117,15 @@ public:
    virtual ~ExportFFmpegAMRNBOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    static int iAMRNBBitRate[];
 
 private:
 
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -133,8 +139,8 @@ public:
    ~ExportFFmpegWMAOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    static const int iWMASampleRates[];
    static const int iWMABitRate[];
@@ -142,7 +148,7 @@ public:
 private:
 
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int>    mBitRateLabels;
 
    wxChoice *mBitRateChoice;
    int mBitRateFromChoice;
@@ -156,8 +162,8 @@ public:
    ~ExportFFmpegCustomOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    void OnOpen(wxCommandEvent & evt);
 
@@ -216,9 +222,9 @@ private:
    wxArrayString mCodecNames;
    wxArrayString mCodecLongNames;
    wxArrayString mProfileNames;
-   wxArrayInt    mProfileLabels;
+   std::vector<int> mProfileLabels;
    wxArrayString mPredictionOrderMethodNames;
-   wxArrayInt    mPredictionOrderMethodLabels;
+   std::vector<int> mPredictionOrderMethodLabels;
 
    wxChoice *mFormatChoice;
    wxChoice *mCodecChoice;
@@ -316,7 +322,7 @@ public:
 
 };
 
-WX_DECLARE_STRING_HASH_MAP(FFmpegPreset, FFmpegPresetMap);
+using FFmpegPresetMap = std::unordered_map<wxString, FFmpegPreset>;
 
 class FFmpegPresets : XMLTagHandler
 {

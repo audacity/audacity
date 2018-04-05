@@ -34,17 +34,18 @@ and sample size to help you importing data of an unknown format.
 #include "../ShuttleGui.h"
 #include "../UserException.h"
 #include "../WaveTrack.h"
+#include "../prefs/QualityPrefs.h"
 
 #include <cmath>
 #include <cstdio>
 #include <stdint.h>
 #include <vector>
 
+#include <wx/crt.h>
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/panel.h>
 #include <wx/progdlg.h>
 #include <wx/sizer.h>
@@ -165,7 +166,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       if (!sndFile){
          char str[1000];
          sf_error_str((SNDFILE *)NULL, str, 1000);
-         printf("%s\n", str);
+         wxPrintf("%s\n", str);
 
          throw FileException{ FileException::Cause::Open, fileName };
       }
@@ -174,7 +175,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       if (result != 0) {
          char str[1000];
          sf_error_str(sndFile.get(), str, 1000);
-         printf("%s\n", str);
+         wxPrintf("%s\n", str);
 
          throw FileException{ FileException::Cause::Read, fileName };
       }
@@ -193,8 +194,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       // the quality of the original file.
       //
 
-      format = (sampleFormat)
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+      format = QualityPrefs::SampleFormatChoice();
 
       if (format != floatSample &&
           sf_subtype_more_than_16_bits(encoding))
@@ -238,7 +238,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
 
       wxString msg;
 
-      msg.Printf(_("Importing %s"), wxFileName::FileName(fileName).GetFullName().c_str());
+      msg.Printf(_("Importing %s"), wxFileName::FileName(fileName).GetFullName());
 
       /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.*/
       ProgressDialog progress(_("Import Raw"), msg);
@@ -490,8 +490,9 @@ void ImportRawDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       mPercent = 100.0;
    if (mRate < 100.0)
       mRate = 100.0;
-   if (mRate > 100000.0)
-      mRate = 100000.0;
+   // Highest preset sample rate supported in Audacity 2.3.0 is 384 kHz
+   if (mRate > 384000.0)
+      mRate = 384000.0;
 
    EndModal(true);
 }

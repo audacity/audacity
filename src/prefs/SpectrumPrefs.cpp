@@ -19,7 +19,6 @@
 
 #include <wx/defs.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/checkbox.h>
 
 #include "../FFT.h"
@@ -32,9 +31,10 @@
 #include <algorithm>
 
 #include "../Experimental.h"
+#include "../widgets/ErrorDialog.h"
 
-SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
-:  PrefsPanel(parent, wt ? _("Spectrogram Settings") : _("Spectrograms"))
+SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
+:  PrefsPanel(parent, winid, wt ? _("Spectrogram Settings") : _("Spectrograms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -158,13 +158,12 @@ void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
 void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    mPopulating = true;
-
    S.SetBorder(2);
+   S.StartScroller(); {
 
    // S.StartStatic(_("Track Settings"));
    // {
 
-   S.StartScroller(); {
 
    mDefaultsCheckbox = 0;
    if (mWt) {
@@ -177,7 +176,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartTwoColumn();
       {
          S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
-            *(int*)&mTempSettings.scaleType,
+            mTempSettings.scaleType,
             &mScaleChoices);
 
          mMinFreq =
@@ -227,25 +226,22 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          mAlgorithmChoice =
             S.Id(ID_ALGORITHM).TieChoice(_("A&lgorithm") + wxString(wxT(":")),
-            *(int*)&mTempSettings.algorithm,
+            mTempSettings.algorithm,
             &mAlgorithmChoices);
 
          S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
             mTempSettings.windowSize,
             &mSizeChoices);
-         S.SetSizeHints(mSizeChoices);
 
          S.Id(ID_WINDOW_TYPE).TieChoice(_("Window &type:"),
             mTempSettings.windowType,
             &mTypeChoices);
-         S.SetSizeHints(mTypeChoices);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
             S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
             mTempSettings.zeroPaddingFactor,
             &mZeroPaddingChoices);
-         S.SetSizeHints(mZeroPaddingChoices);
 #endif
       }
       S.EndMultiColumn();
@@ -301,7 +297,9 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 
    } S.EndScroller();
    
-   EnableDisableSTFTOnlyControls();
+   // Enabling and disabling belongs outside this function.
+   if( S.GetMode() != eIsGettingMetadata )
+      EnableDisableSTFTOnlyControls();
 
    mPopulating = false;
 }
@@ -314,48 +312,48 @@ bool SpectrumPrefs::Validate()
 
    long maxFreq;
    if (!mMaxFreq->GetValue().ToLong(&maxFreq)) {
-      wxMessageBox(_("The maximum frequency must be an integer"));
+      AudacityMessageBox(_("The maximum frequency must be an integer"));
       return false;
    }
 
    long minFreq;
    if (!mMinFreq->GetValue().ToLong(&minFreq)) {
-      wxMessageBox(_("The minimum frequency must be an integer"));
+      AudacityMessageBox(_("The minimum frequency must be an integer"));
       return false;
    }
 
    long gain;
    if (!mGain->GetValue().ToLong(&gain)) {
-      wxMessageBox(_("The gain must be an integer"));
+      AudacityMessageBox(_("The gain must be an integer"));
       return false;
    }
 
    long range;
    if (!mRange->GetValue().ToLong(&range)) {
-      wxMessageBox(_("The range must be a positive integer"));
+      AudacityMessageBox(_("The range must be a positive integer"));
       return false;
    }
 
    long frequencygain;
    if (!mFrequencyGain->GetValue().ToLong(&frequencygain)) {
-      wxMessageBox(_("The frequency gain must be an integer"));
+      AudacityMessageBox(_("The frequency gain must be an integer"));
       return false;
    }
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    long findNotesMinA;
    if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
-      wxMessageBox(_("The minimum amplitude (dB) must be an integer"));
+      AudacityMessageBox(_("The minimum amplitude (dB) must be an integer"));
       return false;
    }
 
    long findNotesN;
    if (!mFindNotesN->GetValue().ToLong(&findNotesN)) {
-      wxMessageBox(_("The maximum number of notes must be an integer"));
+      AudacityMessageBox(_("The maximum number of notes must be an integer"));
       return false;
    }
    if (findNotesN < 1 || findNotesN > 128) {
-      wxMessageBox(_("The maximum number of notes must be in the range 1..128"));
+      AudacityMessageBox(_("The maximum number of notes must be in the range 1..128"));
       return false;
    }
 #endif //EXPERIMENTAL_FIND_NOTES
@@ -586,8 +584,8 @@ SpectrumPrefsFactory::SpectrumPrefsFactory(WaveTrack *wt)
 {
 }
 
-PrefsPanel *SpectrumPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *SpectrumPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew SpectrumPrefs(parent, mWt);
+   return safenew SpectrumPrefs(parent, winid, mWt);
 }

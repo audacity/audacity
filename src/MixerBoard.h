@@ -39,11 +39,7 @@ public:
                      const wxString &name,
                      const wxPoint & pos,
                      const wxSize & size,
-                     int style = FRAC_SLIDER,
-                     bool popup = true,
-                     bool canUseShift = true,
-                     float stepValue = STEP_CONTINUOUS,
-                     int orientation = wxHORIZONTAL);
+                     const ASlider::Options &options = ASlider::Options{});
    virtual ~MixerTrackSlider() {}
 
    void OnMouseEvent(wxMouseEvent & event);
@@ -60,7 +56,7 @@ public:
 
 
 class AudacityProject;
-class Meter;
+class MeterPanel;
 class MixerBoard;
 
 class Track;
@@ -77,7 +73,7 @@ class MixerTrackCluster final : public wxPanelWrapper
 public:
    MixerTrackCluster(wxWindow* parent,
                      MixerBoard* grandParent, AudacityProject* project,
-                     PlayableTrack* pTrack,
+                     const std::shared_ptr<PlayableTrack> &pTrack,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
    virtual ~MixerTrackCluster() {}
@@ -134,7 +130,7 @@ private:
 
 
 public:
-   PlayableTrack * mTrack;
+   std::shared_ptr<PlayableTrack>   mTrack;
 
 private:
    MixerBoard* mMixerBoard;
@@ -150,13 +146,11 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    MixerTrackSlider* mSlider_Velocity;
 #endif
-   Meter* mMeter;
+   MeterPanel* mMeter;
 
 public:
    DECLARE_EVENT_TABLE()
 };
-
-WX_DEFINE_ARRAY(MixerTrackCluster*, MixerTrackClusterArray);
 
 
 class MusicalInstrument
@@ -210,7 +204,6 @@ public:
                wxFrame* parent,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize);
-   virtual ~MixerBoard();
 
    void UpdatePrefs();
 
@@ -270,7 +263,7 @@ public:
 
 private:
    // Track clusters are maintained in the same order as the WaveTracks.
-   MixerTrackClusterArray     mMixerTrackClusters;
+   std::vector<MixerTrackCluster*> mMixerTrackClusters;
 
    MusicalInstrumentArray     mMusicalInstruments;
    AudacityProject*           mProject;

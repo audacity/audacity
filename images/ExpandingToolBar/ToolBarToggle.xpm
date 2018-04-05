@@ -1,5 +1,5 @@
 /* XPM */
-static const char *ToolBarToggle[] = {
+static const char * const ToolBarToggle[] = {
 /* columns rows colors chars-per-pixel */
 "43 35 14 1",
 "  c #777777",

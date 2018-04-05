@@ -41,7 +41,6 @@ a graph for EffectScienFilter.
 #include <wx/brush.h>
 #include <wx/dcmemory.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/utils.h>
 #include <wx/valgen.h>
@@ -55,6 +54,7 @@ a graph for EffectScienFilter.
 #include "../Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "Equalization.h" // For SliderAx
 
@@ -83,41 +83,42 @@ enum kTypes
    kButterworth,
    kChebyshevTypeI,
    kChebyshevTypeII,
-   kNumTypes
+   nTypes
 };
 
-static const wxChar *kTypeStrings[] =
+static const IdentInterfaceSymbol kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
-   XO("Butterworth"),
+   { XO("Butterworth") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   XO("Chebyshev Type I"),
+   { wxT("ChebyshevTypeI"), XO("Chebyshev Type I") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   XO("Chebyshev Type II")
+   { wxT("ChebyshevTypeII"), XO("Chebyshev Type II") }
 };
 
 enum kSubTypes
 {
    kLowPass,
    kHighPass,
-   kNumSubTypes
+   nSubTypes
 };
 
-static const wxChar *kSubTypeStrings[] =
+static const IdentInterfaceSymbol kSubTypeStrings[nSubTypes] =
 {
-   XO("Lowpass"),
-   XO("Highpass")
+   // These are acceptable dual purpose internal/visible names
+   { XO("Lowpass") },
+   { XO("Highpass") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key                     Def            Min   Max               Scale
-Param( Type,      int,     XO("FilterType"),       kButterworth,  0,    kNumTypes - 1,    1  );
-Param( Subtype,   int,     XO("FilterSubtype"),    kLowPass,      0,    kNumSubTypes - 1, 1  );
-Param( Order,     int,     XO("Order"),            1,             1,    10,               1  );
-Param( Cutoff,    float,   XO("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
-Param( Passband,  float,   XO("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
-Param( Stopband,  float,   XO("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
+Param( Type,      int,     wxT("FilterType"),       kButterworth,  0,    nTypes - 1,    1  );
+Param( Subtype,   int,     wxT("FilterSubtype"),    kLowPass,      0,    nSubTypes - 1, 1  );
+Param( Order,     int,     wxT("Order"),            1,             1,    10,               1  );
+Param( Cutoff,    float,   wxT("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
+Param( Passband,  float,   wxT("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
+Param( Stopband,  float,   wxT("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
 
 static const double s_fChebyCoeffs[MAX_Order][MAX_Order + 1] =
 {
@@ -186,7 +187,7 @@ wxString EffectScienFilter::GetSymbol()
 
 wxString EffectScienFilter::GetDescription()
 {
-   return XO("Performs IIR filtering that emulates analog filters");
+   return _("Performs IIR filtering that emulates analog filters");
 }
 
 wxString EffectScienFilter::ManualPage()
@@ -195,7 +196,7 @@ wxString EffectScienFilter::ManualPage()
 }
 
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectScienFilter::GetType()
 {
@@ -240,11 +241,20 @@ size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t
 
    return blockLen;
 }
+bool EffectScienFilter::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, kTypeStrings, nTypes );
+   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, kSubTypeStrings, nSubTypes );
+   S.SHUTTLE_PARAM( mOrder, Order );
+   S.SHUTTLE_PARAM( mCutoff, Cutoff );
+   S.SHUTTLE_PARAM( mRipple, Passband );
+   S.SHUTTLE_PARAM( mStopbandRipple, Stopband );
+   return true;
+}
 
-bool EffectScienFilter::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_Type, kTypeStrings[mFilterType]);
-   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype]);
+   parms.Write(KEY_Type, kTypeStrings[mFilterType].Internal());
+   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype].Internal());
    parms.Write(KEY_Order, mOrder);
    parms.WriteFloat(KEY_Cutoff, mCutoff);
    parms.WriteFloat(KEY_Passband, mRipple);
@@ -253,10 +263,10 @@ bool EffectScienFilter::GetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
-bool EffectScienFilter::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyEnum(Type, wxArrayString(kNumTypes, kTypeStrings));
-   ReadAndVerifyEnum(Subtype, wxArrayString(kNumSubTypes, kSubTypeStrings));
+   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
+   ReadAndVerifyEnum(Subtype, kSubTypeStrings, nSubTypes);
    ReadAndVerifyInt(Order);
    ReadAndVerifyFloat(Cutoff);
    ReadAndVerifyFloat(Passband);
@@ -348,7 +358,7 @@ bool EffectScienFilter::Init()
          {
             if (t->GetRate() != rate)
             {
-               wxMessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
+               Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
                return false;
             }
          }
@@ -377,16 +387,15 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.StartVerticalLay();
       {
-         mdBRuler = safenew RulerPanel(parent, wxID_ANY);
-         mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         mdBRuler->ruler.SetOrientation(wxVERTICAL);
-         mdBRuler->ruler.SetRange(30.0, -120.0);
-         mdBRuler->ruler.SetFormat(Ruler::LinearDBFormat);
-         mdBRuler->ruler.SetUnits(_("dB"));
-         mdBRuler->ruler.SetLabelEdges(true);
-         int w;
-         mdBRuler->ruler.GetMaxSize(&w, NULL);
-         mdBRuler->SetSize(wxSize(w, 150));  // height needed for wxGTK
+         mdBRuler = safenew RulerPanel(
+            parent, wxID_ANY, wxVERTICAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ 30.0, -120.0 },
+            Ruler::LinearDBFormat,
+            _("dB"),
+            RulerPanel::Options{}
+               .LabelEdges(true)
+         );
 
          S.SetBorder(1);
          S.AddSpace(1, 1);
@@ -396,8 +405,10 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndVerticalLay();
 
-      mPanel = safenew EffectScienFilterPanel(this, parent);
-      mPanel->SetFreqRange(mLoFreq, mNyquist);
+      mPanel = safenew EffectScienFilterPanel(
+         parent, wxID_ANY,
+         this, mLoFreq, mNyquist
+      );
 
       S.SetBorder(5);
       S.Prop(1);
@@ -408,18 +419,18 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddVariableText(_("+ dB"), false, wxCENTER);
          S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-         mdBMaxSlider = S.Id(ID_dBMax).AddSlider(wxT(""), 10, 20, 0);
+         mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 10, 20, 0);
 #if wxUSE_ACCESSIBILITY
          mdBMaxSlider->SetName(_("Max dB"));
-         mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
+         mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
 #endif
 
          S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-         mdBMinSlider = S.Id(ID_dBMin).AddSlider(wxT(""), -10, -10, -120);
+         mdBMinSlider = S.Id(ID_dBMin).AddSlider( {}, -10, -10, -120);
          S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
          mdBMinSlider->SetName(_("Min dB"));
-         mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
+         mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
       }
       S.EndVerticalLay();
@@ -430,18 +441,17 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.AddSpace(1, 1);
 
-      mfreqRuler  = safenew RulerPanel(parent, wxID_ANY);
-      mfreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-      mfreqRuler->ruler.SetOrientation(wxHORIZONTAL);
-      mfreqRuler->ruler.SetLog(true);
-      mfreqRuler->ruler.SetRange(mLoFreq, mNyquist);
-      mfreqRuler->ruler.SetFormat(Ruler::IntFormat);
-      mfreqRuler->ruler.SetUnits(wxT(""));
-      mfreqRuler->ruler.SetFlip(true);
-      mfreqRuler->ruler.SetLabelEdges(true);
-      int h;
-      mfreqRuler->ruler.GetMaxSize(NULL, &h);
-      mfreqRuler->SetMinSize(wxSize(-1, h));
+      mfreqRuler  = safenew RulerPanel(
+         parent, wxID_ANY, wxHORIZONTAL,
+         wxSize{ 100, 100 }, // Ruler can't handle small sizes
+         RulerPanel::Range{ mLoFreq, mNyquist },
+         Ruler::IntFormat,
+         wxT(""),
+         RulerPanel::Options{}
+            .Log(true)
+            .Flip(true)
+            .LabelEdges(true)
+      );
 
       S.Prop(1);
       S.AddWindow(mfreqRuler, wxEXPAND | wxALIGN_LEFT | wxRIGHT);
@@ -456,14 +466,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       S.SetSizerProportion(0);
       S.StartMultiColumn(8, wxALIGN_CENTER);
       {
-         wxASSERT(kNumTypes == WXSIZEOF(kTypeStrings));
+         wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
-         wxArrayString typeChoices;
-         for (int i = 0; i < kNumTypes; i++)
-         {
-            typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
-         }
-
+         auto typeChoices = LocalizedStrings(kTypeStrings, nTypes);
          mFilterTypeCtl = S.Id(ID_Type).AddChoice(_("&Filter Type:"), wxT(""), &typeChoices);
          mFilterTypeCtl->SetValidator(wxGenericValidator(&mFilterType));
          S.SetSizeHints(-1, -1);
@@ -483,19 +488,14 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          vldRipple.SetRange(MIN_Passband, MAX_Passband);
          
          mRippleCtlP = S.AddVariableText(_("&Passband Ripple:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mRippleCtl = S.Id(ID_Ripple).AddTextBox(wxT(""), wxT(""), 10);
+         mRippleCtl = S.Id(ID_Ripple).AddTextBox( {}, wxT(""), 10);
          mRippleCtl->SetName(_("Passband Ripple (dB)"));
          mRippleCtl->SetValidator(vldRipple);
          mRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         wxASSERT(kNumSubTypes == WXSIZEOF(kSubTypeStrings));
+         wxASSERT(nSubTypes == WXSIZEOF(kSubTypeStrings));
 
-         wxArrayString subTypeChoices;
-         for (int i = 0; i < kNumSubTypes; i++)
-         {
-            subTypeChoices.Add(wxGetTranslation(kSubTypeStrings[i]));
-         }
-
+         auto subTypeChoices = LocalizedStrings(kSubTypeStrings, nSubTypes);
          mFilterSubTypeCtl = S.Id(ID_SubType).AddChoice(_("&Subtype:"), wxT(""), &subTypeChoices);
          mFilterSubTypeCtl->SetValidator(wxGenericValidator(&mFilterSubtype));
          S.SetSizeHints(-1, -1);
@@ -512,7 +512,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          vldStopbandRipple.SetRange(MIN_Stopband, MAX_Stopband);
          
          mStopbandRippleCtlP = S.AddVariableText(_("Minimum S&topband Attenuation:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mStopbandRippleCtl = S.Id(ID_StopbandRipple).AddTextBox(wxT(""), wxT(""), 10);
+         mStopbandRippleCtl = S.Id(ID_StopbandRipple).AddTextBox( {}, wxT(""), 10);
          mStopbandRippleCtl->SetName(_("Minimum S&topband Attenuation (dB)"));
          mStopbandRippleCtl->SetValidator(vldStopbandRipple);
          mStopbandRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -579,7 +579,7 @@ bool EffectScienFilter::TransferGraphLimitsFromWindow()
    if (dB != mdBMin) {
       rr = true;
       mdBMin = dB;
-      tip.Printf(wxString(wxT("%d ")) + _("dB"), (int)mdBMin);
+      tip.Printf(_("%d dB"), (int)mdBMin);
       mdBMinSlider->SetToolTip(tip);
    }
 
@@ -587,7 +587,7 @@ bool EffectScienFilter::TransferGraphLimitsFromWindow()
    if (dB != mdBMax) {
       rr = true;
       mdBMax = dB;
-      tip.Printf(wxString(wxT("%d ")) + _("dB"),(int)mdBMax);
+      tip.Printf(_("%d dB"),(int)mdBMax);
       mdBMaxSlider->SetToolTip(tip);
    }
 
@@ -1012,8 +1012,10 @@ BEGIN_EVENT_TABLE(EffectScienFilterPanel, wxPanelWrapper)
     EVT_SIZE(EffectScienFilterPanel::OnSize)
 END_EVENT_TABLE()
 
-EffectScienFilterPanel::EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent)
-:  wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 200))
+EffectScienFilterPanel::EffectScienFilterPanel(
+   wxWindow *parent, wxWindowID winid,
+   EffectScienFilter *effect, double lo, double hi)
+:  wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(400, 200))
 {
    mEffect = effect;
    mParent = parent;
@@ -1025,6 +1027,8 @@ EffectScienFilterPanel::EffectScienFilterPanel(EffectScienFilter *effect, wxWind
    mHiFreq = 0.0;
    mDbMin = 0.0;
    mDbMax = 0.0;
+
+   SetFreqRange(lo, hi);
 }
 
 EffectScienFilterPanel::~EffectScienFilterPanel()

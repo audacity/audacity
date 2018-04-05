@@ -1,19 +1,20 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: GPL v2 - see LICENSE.txt
 
    Dominic Mazzoni
    Dan Horgan
+   James Crook
 
 **********************************************************************/
 
-#ifndef __SCREENSHOTCOMMAND__
-#define __SCREENSHOTCOMMAND__
+#ifndef __SCREENSHOT_COMMAND__
+#define __SCREENSHOT_COMMAND__
 
 #include "Command.h"
-#include "CommandType.h"
+#include "../commands/AudacityCommand.h"
 
 #include <wx/colour.h>
 class wxWindow;
@@ -21,18 +22,85 @@ class wxTopLevelWindow;
 class wxCommandEvent;
 class wxRect;
 class ToolManager;
-class CommandOutputTarget;
+class CommandOutputTargets;
+class TrackPanel;
+class AdornedRulerPanel;
+class AudacityProject;
+class CommandContext;
 
-class ScreenshotCommandType final : public CommandType
+#define SCREENSHOT_PLUGIN_SYMBOL XO("Screenshot")
+
+class ScreenshotCommand : public AudacityCommand
 {
 public:
-   wxString BuildName() override;
-   void BuildSignature(CommandSignature &signature) override;
-   CommandHolder Create(std::unique_ptr<CommandOutputTarget> &&target) override;
-};
+   enum kBackgrounds
+   {
+      kBlue,
+      kWhite,
+      kNone,
+      nBackgrounds
+   };
 
-class ScreenshotCommand final : public CommandImplementation
-{
+   enum kCaptureTypes
+   {
+      kwindow,
+      kfullwindow,
+      kwindowplus,
+      kfullscreen,
+      ktoolbars,
+      keffects,
+      kscriptables,
+      kpreferences,
+      kselectionbar,
+      kspectralselection,
+      ktools,
+      ktransport,
+      kmixer,
+      kmeter,
+      kplaymeter,
+      krecordmeter,
+      kedit,
+      kdevice,
+      kscrub,
+      ktranscription,
+      ktrackpanel,
+      kruler,
+      ktracks,
+      kfirsttrack,
+      kfirsttwotracks,
+      kfirstthreetracks,
+      kfirstfourtracks,
+      ksecondtrack,
+      ktracksplus,
+      kfirsttrackplus,
+      kalltracks,
+      kalltracksplus,
+      nCaptureWhats
+   };
+
+   ScreenshotCommand(){ mbBringToTop=true;};
+   // CommandDefinitionInterface overrides
+   wxString GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
+   wxString GetDescription() override {return _("Takes screenshots.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Help_Menu:_Tools#screenshot_tools");};
+
+private:
+   int mWhat;
+   int mBack;
+   wxString mPath;
+   bool mbBringToTop;
+   bool bHasBackground;
+   bool bHasBringToTop;
+   friend class ScreenFrame;
+
+public:
+   bool Apply(const CommandContext & context) override;
+   void GetDerivedParams();
+
 private:
    // May need to ignore the screenshot dialog
    wxWindow *mIgnore;
@@ -41,19 +109,33 @@ private:
    wxColour mBackColor;
    wxString mDirToWriteTo;
 
+   wxString mFilePath;
+   wxString mFileName;
+   int mCaptureMode;
+
    wxString MakeFileName(const wxString &path, const wxString &basename);
 
    wxRect GetBackgroundRect();
 
-   void CaptureToolbar(ToolManager *man, int type, const wxString &name);
-   void CaptureDock(wxWindow *win, const wxString &fileName);
-   void CaptureMenus(wxMenuBar*pBar, const wxString &fileName);
-   void CaptureEffects( AudacityProject * pProject, const wxString &fileName );
-   void CapturePreferences( AudacityProject * pProject, const wxString &fileName );
-   void Capture(const wxString &basename,
-         wxWindow *window,
-         int x, int y, int width, int height,
+   bool CaptureToolbar(const CommandContext & Context, ToolManager *man, int type, const wxString &name);
+   bool CaptureDock(const CommandContext & Context, wxWindow *win, const wxString &fileName);
+   void CaptureCommands(const CommandContext & Context, wxArrayString &Commands  );
+   void CaptureEffects(const CommandContext & Context, AudacityProject * pProject, const wxString &fileName );
+   void CaptureScriptables(const CommandContext & Context, AudacityProject * pProject, const wxString &fileName );
+   void CapturePreferences(const CommandContext & Context, AudacityProject * pProject, const wxString &fileName );
+   bool Capture(
+      const CommandContext & Context,
+      const wxString &basename,
+         wxWindow *window, wxRect rect, 
          bool bg = false);
+   wxRect GetWindowRect(wxTopLevelWindow *w);
+   wxRect GetFullWindowRect(wxTopLevelWindow *w);
+   wxRect GetScreenRect();
+   wxRect GetPanelRect(TrackPanel * panel);
+   wxRect GetRulerRect(AdornedRulerPanel *ruler);
+   wxRect GetTracksRect(TrackPanel * panel);
+   wxRect GetTrackRect( AudacityProject * pProj, TrackPanel * panel,int n);
+   wxString WindowFileName(AudacityProject * proj, wxTopLevelWindow *w);
 
 public:
    static ScreenshotCommand * mpShooter;
@@ -61,16 +143,8 @@ public:
    static void SetIdleHandler( void (*pHandler)(wxIdleEvent& event) ){mIdleHandler=pHandler;};
    static bool MayCapture( wxDialog * pDlg );
 
-   void CaptureWindowOnIdle( wxWindow * pWin );
+   void CaptureWindowOnIdle( const CommandContext & context, wxWindow * pWin );
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);
-   ScreenshotCommand(CommandType &type,
-                     std::unique_ptr<CommandOutputTarget> &&output,
-                     wxWindow *ignore = NULL)
-      : CommandImplementation(type, std::move(output)),
-        mIgnore(ignore),
-        mBackground(false)
-   { }
-   bool Apply(CommandExecutionContext context);
 };
 
-#endif /* End of include guard: __SCREENSHOTCOMMAND__ */
+#endif /* End of include guard: __SCREENSHOT_COMMAND__ */

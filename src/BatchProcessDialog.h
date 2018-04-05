@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_BATCH_PROCESS_DIALOG__
-#define __AUDACITY_BATCH_PROCESS_DIALOG__
+#ifndef __AUDACITY_MACROS_WINDOW__
+#define __AUDACITY_MACROS_WINDOW__
 
 #include <wx/defs.h>
 #include <wx/string.h>
@@ -36,76 +36,103 @@ class wxRadioButton;
 class wxListCtrl;
 class wxListEvent;
 class wxButton;
+class wxTextCtrl;
 class ShuttleGui;
 
-class BatchProcessDialog final : public wxDialogWrapper {
+class ApplyMacroDialog : public wxDialogWrapper {
  public:
    // constructors and destructors
-   BatchProcessDialog(wxWindow * parent);
-   virtual ~BatchProcessDialog();
+   ApplyMacroDialog(wxWindow * parent, bool bInherited=false);
+   virtual ~ApplyMacroDialog();
  public:
+   // Populate methods NOT virtual.
    void Populate();
    void PopulateOrExchange( ShuttleGui & S );
+   virtual void OnApplyToProject(wxCommandEvent & event);
+   virtual void OnApplyToFiles(wxCommandEvent & event);
+   virtual void OnCancel(wxCommandEvent & event);
+   virtual void OnHelp(wxCommandEvent & event);
 
-   void OnApplyToProject(wxCommandEvent & event);
-   void OnApplyToFiles(wxCommandEvent & event);
-   void OnCancel(wxCommandEvent & event);
+   virtual wxString GetHelpPageName() {return "Apply_Macro";};
 
+   void PopulateMacros();
+   static wxString MacroIdOfName( const wxString & MacroName );
+   void ApplyMacroToProject( int iMacro, bool bHasGui=true );
+   void ApplyMacroToProject( const wxString & MacroID, bool bHasGui=true );
+
+
+   // These will be reused in the derived class...
+   wxListCtrl *mList;
+   wxListCtrl *mMacros;
+   MacroCommands mMacroCommands; /// Provides list of available commands.
+
+   wxButton *mResize;
    wxButton *mOK;
    wxButton *mCancel;
-   wxListCtrl *mChains;
-   wxListCtrl *mList;
-   BatchCommands mBatchCommands;
-
+   wxTextCtrl *mResults;
    bool mAbort;
+   bool mbExpanded;
+   wxString mActiveMacro;
+
+protected:
+   const MacroCommandsCatalog mCatalog;
 
    DECLARE_EVENT_TABLE()
 };
 
-class EditChainsDialog final : public wxDialogWrapper
+class MacrosWindow final : public ApplyMacroDialog
 {
 public:
-   EditChainsDialog(wxWindow * parent);
-   ~EditChainsDialog();
+   MacrosWindow(wxWindow * parent, bool bExpanded=true);
+   ~MacrosWindow();
+   void UpdateDisplay( bool bExpanded );
 
 private:
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
-   void PopulateChains();
+   void OnApplyToProject(wxCommandEvent & event) override;
+   void OnApplyToFiles(wxCommandEvent & event) override;
+   void OnCancel(wxCommandEvent &event) override;
+
+   virtual wxString GetHelpPageName() override {return 
+      mbExpanded ? "Manage_Macros"
+         : "Apply_Macro";};
+
    void PopulateList();
    void AddItem(const wxString &command, wxString const &params);
    bool ChangeOK();
+   void UpdateMenus();
 
-   void OnChainSelected(wxListEvent &event);
+   void OnMacroSelected(wxListEvent &event);
    void OnListSelected(wxListEvent &event);
-   void OnChainsBeginEdit(wxListEvent &event);
-   void OnChainsEndEdit(wxListEvent &event);
+   void OnMacrosBeginEdit(wxListEvent &event);
+   void OnMacrosEndEdit(wxListEvent &event);
    void OnAdd(wxCommandEvent &event);
    void OnRemove(wxCommandEvent &event);
    void OnRename(wxCommandEvent &event);
+   void OnExpand(wxCommandEvent &event);
+   void OnShrink(wxCommandEvent &event);
    void OnSize(wxSizeEvent &event);
 
    void OnCommandActivated(wxListEvent &event);
    void OnInsert(wxCommandEvent &event);
+   void OnEditCommandParams(wxCommandEvent &event);
+
    void OnDelete(wxCommandEvent &event);
    void OnUp(wxCommandEvent &event);
    void OnDown(wxCommandEvent &event);
    void OnDefaults(wxCommandEvent &event);
 
    void OnOK(wxCommandEvent &event);
-   void OnCancel(wxCommandEvent &event);
 
    void OnKeyDown(wxKeyEvent &event);
    void FitColumns();
+   void InsertCommandAt(int item);
+   bool SaveChanges();
 
-   wxListCtrl *mChains; /// List of chains.
-   wxListCtrl *mList;   /// List of commands in current command chain.
    wxButton *mRemove;
    wxButton *mRename;
    wxButton *mDefaults;
-
-   BatchCommands mBatchCommands;  /// Provides list of available commands.
-   wxString mActiveChain;
 
    int mSelectedCommand;
    bool mChanged;

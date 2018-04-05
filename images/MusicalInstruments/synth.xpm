@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * synth_xpm[] = {
+static const char * const synth_xpm[] = {
 "48 48 363 2",
 "  	c None",
 ". 	c #969696",

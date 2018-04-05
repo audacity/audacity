@@ -23,8 +23,8 @@
 #include "../commands/Keyboard.h"
 #include "KeyView.h"
 
-#include <wx/arrimpl.cpp>
 #include <wx/dc.h>
+#include "../Internat.h"
 
 // Various drawing constants
 #define KV_BITMAP_SIZE 16
@@ -33,8 +33,6 @@
 #define KV_VSCROLL_WIDTH 16   /* figure this out automatically? */
 
 // Define the KeyNode arrays
-WX_DEFINE_OBJARRAY(KeyNodeArray);
-WX_DEFINE_OBJARRAY(KeyNodeArrayPtr);
 
 // Define the event table
 BEGIN_EVENT_TABLE(KeyView, wxVListBox)
@@ -65,6 +63,8 @@ KeyView::KeyView(wxWindow *parent,
    // Create and set accessibility object
    SetAccessible(mAx = safenew KeyViewAx(this));
 #endif
+
+   SetMinSize({-1, 150});
 
    // The default view
    mViewType = ViewByTree;
@@ -103,7 +103,7 @@ wxString
 KeyView::GetLabel(int index) const
 {
    // Make sure index is valid
-   if (index < 0 || index >= (int) mNodes.GetCount())
+   if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
       return wxEmptyString;
@@ -119,14 +119,14 @@ wxString
 KeyView::GetFullLabel(int index) const
 {
    // Make sure index is valid
-   if (index < 0 || index >= (int) mNodes.GetCount())
+   if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
       return wxEmptyString;
    }
 
    // Cache the node and label
-   KeyNode & node = mNodes[index];
+   const KeyNode & node = mNodes[index];
    wxString label = node.label;
 
    // Prepend the prefix if available
@@ -144,7 +144,7 @@ KeyView::GetFullLabel(int index) const
 int
 KeyView::GetIndexByName(const wxString & name) const
 {
-   int cnt = (int) mNodes.GetCount();
+   int cnt = (int) mNodes.size();
 
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
@@ -165,7 +165,7 @@ wxString
 KeyView::GetName(int index) const
 {
    // Make sure index is valid
-   if (index < 0 || index >= (int) mNodes.GetCount())
+   if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
       return wxEmptyString;
@@ -178,14 +178,14 @@ KeyView::GetName(int index) const
 // Returns the command manager index for the given key combination
 //
 wxString
-KeyView::GetNameByKey(const wxString & key) const
+KeyView::GetNameByKey(const NormalizedKeyString & key) const
 {
-   int cnt = (int) mNodes.GetCount();
+   int cnt = (int) mNodes.size();
 
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.CmpNoCase(mNodes[i].key) == 0)
+      if (key.NoCaseEqual( mNodes[i].key))
       {
          return mNodes[i].name;
       }
@@ -198,14 +198,14 @@ KeyView::GetNameByKey(const wxString & key) const
 // Returns the index for the given key
 //
 int
-KeyView::GetIndexByKey(const wxString & key) const
+KeyView::GetIndexByKey(const NormalizedKeyString & key) const
 {
-   int cnt = (int) mNodes.GetCount();
+   int cnt = (int) mNodes.size();
 
    // Search the nodes for the key
    for (int i = 0; i < cnt; i++)
    {
-      if (key.CmpNoCase(mNodes[i].key) == 0)
+      if (key.NoCaseEqual( mNodes[i].key))
       {
          return mNodes[i].index;
       }
@@ -217,14 +217,14 @@ KeyView::GetIndexByKey(const wxString & key) const
 //
 // Returns the key for the given index
 //
-wxString
+NormalizedKeyString
 KeyView::GetKey(int index) const
 {
    // Make sure index is valid
-   if (index < 0 || index >= (int) mNodes.GetCount())
+   if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
-      return wxEmptyString;
+      return {};
    }
 
    return mNodes[index].key;
@@ -237,7 +237,7 @@ bool
 KeyView::CanSetKey(int index) const
 {
    // Make sure index is valid
-   if (index < 0 || index >= (int) mNodes.GetCount())
+   if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
       return false;
@@ -251,10 +251,10 @@ KeyView::CanSetKey(int index) const
 // Sets the key for the given index
 //
 bool
-KeyView::SetKey(int index, const wxString & key)
+KeyView::SetKey(int index, const NormalizedKeyString & key)
 {
    // Make sure index is valid
-   if (index < 0 || index >= (int) mNodes.GetCount())
+   if (index < 0 || index >= (int) mNodes.size())
    {
       wxASSERT(false);
       return false;
@@ -274,7 +274,7 @@ KeyView::SetKey(int index, const wxString & key)
 
    // Check to see if the key column needs to be expanded
    int x, y;
-   GetTextExtent(node.key, &x, &y);
+   GetTextExtent(node.key.Display(), &x, &y);
    if (x > mKeyWidth || y > mLineHeight)
    {
       // New key is wider than column so recalc extents (will refresh view)
@@ -292,7 +292,7 @@ KeyView::SetKey(int index, const wxString & key)
 // Sets the key for the given name
 //
 bool
-KeyView::SetKeyByName(const wxString & name, const wxString & key)
+KeyView::SetKeyByName(const wxString & name, const NormalizedKeyString & key)
 {
    int index = GetIndexByName(name);
 
@@ -396,7 +396,7 @@ KeyView::SetFilter(const wxString & filter)
 void
 KeyView::ExpandAll()
 {
-   int cnt = (int) mNodes.GetCount();
+   int cnt = (int) mNodes.size();
 
    // Set all parent nodes to open
    for (int i = 0; i < cnt; i++)
@@ -418,7 +418,7 @@ KeyView::ExpandAll()
 void
 KeyView::CollapseAll()
 {
-   int cnt = (int) mNodes.GetCount();
+   int cnt = (int) mNodes.size();
 
    // Set all parent nodes to closed
    for (int i = 0; i < cnt; i++)
@@ -446,7 +446,7 @@ KeyView::RecalcExtents()
    mKeyWidth = 0;
 
    // Examine all nodes
-   int cnt = (int) mNodes.GetCount();
+   int cnt = (int) mNodes.size();
    for (int i = 0; i < cnt; i++)
    {
       KeyNode & node = mNodes[i];
@@ -465,7 +465,7 @@ KeyView::RecalcExtents()
       else
       {
          // Measure the key
-         GetTextExtent(node.key, &x, &y);
+         GetTextExtent(node.key.Display(), &x, &y);
          mLineHeight = wxMax(mLineHeight, y);
          mKeyWidth = wxMax(mKeyWidth, x);
 
@@ -531,14 +531,12 @@ KeyView::RefreshBindings(const wxArrayString & names,
                          const wxArrayString & categories,
                          const wxArrayString & prefixes,
                          const wxArrayString & labels,
-                         const wxArrayString & keys,
+                         const std::vector<NormalizedKeyString> & keys,
                          bool bSort
                          )
 {
-   bool firsttime = mNodes.GetCount() == 0;
-
    // Start clean
-   mNodes.Clear();
+   mNodes.clear();
 
    // Same as in RecalcExtents() but do it inline
    mLineHeight = 0;
@@ -609,7 +607,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
             node.isopen = true;
 
             // Add it to the tree
-            mNodes.Add(node);
+            mNodes.push_back(node);
             incat = true;
 
             // Measure category
@@ -649,7 +647,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
             node.isopen = true;
 
             // Add it to the tree
-            mNodes.Add(node);
+            mNodes.push_back(node);
             inpfx = true;
          }
       }
@@ -678,15 +676,15 @@ KeyView::RefreshBindings(const wxArrayString & names,
 
       // Fill in remaining info
       node.name = name;
-      node.key = KeyStringDisplay(keys[i]);
+      node.key = keys[i];
       node.index = nodecnt++;
       node.depth = depth;
 
       // Add it to the tree
-      mNodes.Add(node);
+      mNodes.push_back(node);
 
       // Measure key
-      GetTextExtent(node.key, &x, &y);
+      GetTextExtent(node.key.Display(), &x, &y);
       mLineHeight = wxMax(mLineHeight, y);
       mKeyWidth = wxMax(mKeyWidth, x);
 
@@ -717,10 +715,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
          node.isparent,
          node.iscat,
          node.ispfx,
-         node.name.c_str(),
-         node.category.c_str(),
-         node.prefix.c_str(),
-         node.label.c_str());
+         node.name,
+         node.category,
+         node.prefix,
+         node.label);
    }
 #endif
 
@@ -743,9 +741,9 @@ KeyView::RefreshBindings(const wxArrayString & names,
 void
 KeyView::RefreshLines(bool bSort)
 {
-   int cnt = (int) mNodes.GetCount();
+   int cnt = (int) mNodes.size();
    int linecnt = 0;
-   mLines.Empty();
+   mLines.clear();
 
    // Process a filter if one is set
    if (!mFilter.IsEmpty())
@@ -769,7 +767,7 @@ KeyView::RefreshLines(bool bSort)
             case ViewByTree:
                searchit = node.label.Lower() +
                           wxT("\01x") +
-                          node.key.Lower();
+                          node.key.Display().Lower();
             break;
 
             case ViewByName:
@@ -777,7 +775,7 @@ KeyView::RefreshLines(bool bSort)
             break;
 
             case ViewByKey:
-               searchit = node.key.Lower();
+               searchit = node.key.Display().Lower();
             break;
          }
          if (searchit.Find(mFilter) == wxNOT_FOUND)
@@ -803,7 +801,7 @@ KeyView::RefreshLines(bool bSort)
          // whether they match the filter or not.
          if (mViewType == ViewByTree)
          {
-            KeyNodeArrayPtr queue;
+            std::vector<KeyNode*> queue;
             int depth = node.depth;
 
             // This node is a category or prefix node, so always mark them
@@ -826,7 +824,7 @@ KeyView::RefreshLines(bool bSort)
                   // Examine all previously added nodes to see if this nodes
                   // ancestors need to be added prior to adding this node.
                   bool found = false;
-                  for (int k = (int) mLines.GetCount() - 1; k >= 0; k--)
+                  for (int k = (int) mLines.size() - 1; k >= 0; k--)
                   {
                      // The node indexes match, so we've found the parent of the
                      // child node.
@@ -842,7 +840,7 @@ KeyView::RefreshLines(bool bSort)
                   // they will wind up in reverse order.
                   if (!found)
                   {
-                     queue.Add(&mNodes[j]);
+                     queue.push_back(&mNodes[j]);
                   }
 
                   // Traverse up the tree
@@ -852,17 +850,17 @@ KeyView::RefreshLines(bool bSort)
 
             // Add any queues nodes to list.  This will all be
             // parent nodes, so mark them as open.
-            for (int j = (int) queue.GetCount() - 1; j >= 0; j--)
+            for (int j = (int) queue.size() - 1; j >= 0; j--)
             {
                queue[j]->isopen = true;
                queue[j]->line = linecnt++;
-               mLines.Add(queue[j]);
+               mLines.push_back(queue[j]);
             }
          }
 
          // Finally add the child node
          node.line = linecnt++;
-         mLines.Add(&node);
+         mLines.push_back(&node);
       }
    }
    else
@@ -886,7 +884,7 @@ KeyView::RefreshLines(bool bSort)
 
             // Add the node
             node.line = linecnt++;
-            mLines.Add(&node);
+            mLines.push_back(&node);
 
             // If this node is not open, then skip all of it's decendants
             if (!node.isopen)
@@ -919,7 +917,7 @@ KeyView::RefreshLines(bool bSort)
 
          // Add child node to list
          node.line = linecnt++;
-         mLines.Add(&node);
+         mLines.push_back(&node);
       }
    }
 
@@ -939,21 +937,21 @@ KeyView::RefreshLines(bool bSort)
       switch (mViewType)
       {
          case ViewByTree:
-            mLines.Sort(CmpKeyNodeByTree);
+            std::sort(mLines.begin(), mLines.end(), CmpKeyNodeByTree);
          break;
 
          case ViewByName:
-            mLines.Sort(CmpKeyNodeByName);
+            std::sort(mLines.begin(), mLines.end(), CmpKeyNodeByName);
          break;
 
          case ViewByKey:
-            mLines.Sort(CmpKeyNodeByKey);
+            std::sort(mLines.begin(), mLines.end(), CmpKeyNodeByKey);
          break;
       }
    }
 
    // Now, reassign the line numbers
-   for (int i = 0; i < (int) mLines.GetCount(); i++)
+   for (int i = 0; i < (int) mLines.size(); i++)
    {
       mLines[i]->line = i;
    }
@@ -971,15 +969,15 @@ KeyView::RefreshLines(bool bSort)
          node.isparent,
          node.iscat,
          node.ispfx,
-         node.name.c_str(),
-         node.category.c_str(),
-         node.prefix.c_str(),
-         node.label.c_str());
+         node.name,
+         node.category,
+         node.prefix,
+         node.label);
    }
 #endif
 
    // Tell listbox the NEW count and refresh the entire view
-   SetItemCount(mLines.GetCount());
+   SetItemCount(mLines.size());
    RefreshAll();
 
 #if wxUSE_ACCESSIBILITY
@@ -1024,7 +1022,7 @@ KeyView::SelectNode(int index)
 int
 KeyView::LineToIndex(int line) const
 {
-   if (line < 0 || line >= (int) mLines.GetCount())
+   if (line < 0 || line >= (int) mLines.size())
    {
       return wxNOT_FOUND;
    }
@@ -1038,7 +1036,7 @@ KeyView::LineToIndex(int line) const
 int
 KeyView::IndexToLine(int index) const
 {
-   if (index < 0 || index >= (int) mNodes.GetCount())
+   if (index < 0 || index >= (int) mNodes.size())
    {
       return wxNOT_FOUND;
    }
@@ -1177,7 +1175,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       x += KV_LEFT_MARGIN;
 
       // Draw the key and command columns
-      dc.DrawText(node->key, x , rect.y);
+      dc.DrawText(node->key.Display(), x , rect.y);
       dc.DrawText(label, x + mKeyWidth  + KV_COLUMN_SPACER + node->depth * KV_BITMAP_SIZE, rect.y);
    }
    else
@@ -1195,7 +1193,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       if((mViewType == ViewByName) || (mViewType == ViewByKey))
       {
          // Draw key columnd and then command column
-         dc.DrawText(node->key, x, rect.y);
+         dc.DrawText(node->key.Display(), x, rect.y);
          dc.DrawText(label, x + mKeyWidth + KV_COLUMN_SPACER, rect.y);
       }
    }
@@ -1388,7 +1386,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
             if (node->isopen)
             {
                // But only if there is one
-               if (line < (int) mLines.GetCount() - 1)
+               if (line < (int) mLines.size() - 1)
                {
                   SelectNode(LineToIndex(line + 1));
                }
@@ -1422,7 +1420,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
       // the keycode
       default:
       {
-         int cnt = (int) mLines.GetCount();
+         int cnt = (int) mLines.size();
          bool found = false;
 
          // Search the entire list if none is currently selected
@@ -1448,7 +1446,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                }
                else if (mViewType == ViewByKey)
                {
-                  label = GetKey(LineToIndex(i));
+                  label = GetKey(LineToIndex(i)).Display();
                }
 
                // Move selection if they match
@@ -1482,7 +1480,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                }
                else if (mViewType == ViewByKey)
                {
-                  label = GetKey(LineToIndex(i));
+                  label = GetKey(LineToIndex(i)).Display();
                }
 
                // Move selection if they match
@@ -1573,12 +1571,9 @@ KeyView::OnLeftDown(wxMouseEvent & event)
 // We prefix all "command" nodes with "ffffffff" (highest hex value)
 // to allow the sort to reorder them as needed.
 //
-int
-KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
+bool
+KeyView::CmpKeyNodeByTree(KeyNode *t1, KeyNode *t2)
 {
-   KeyNode *t1 = (**n1);
-   KeyNode *t2 = (**n2);
-
    unsigned int k1UInt= 0xffffffff;
    unsigned int k2UInt= 0xffffffff;
 
@@ -1594,15 +1589,11 @@ KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
       k2UInt = (unsigned int) t2->line;
 
    if( k1UInt < k2UInt ) 
-      return -1;
+      return true;
    if( k1UInt > k2UInt )
-      return +1;
+      return false;
 
-   if( t1->label < t2->label )
-      return -1;
-   if( t1->label > t2->label )
-      return 1;
-   return 0;
+   return ( t1->label < t2->label );
 }
 
 //
@@ -1610,11 +1601,9 @@ KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
 //
 // Nothing special here, just a standard ascending sort.
 //
-int
-KeyView::CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2)
+bool
+KeyView::CmpKeyNodeByName(KeyNode *t1, KeyNode *t2)
 {
-   KeyNode *t1 = (**n1);
-   KeyNode *t2 = (**n2);
    wxString k1 = t1->label;
    wxString k2 = t2->label;
 
@@ -1630,19 +1619,7 @@ KeyView::CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2)
       k2 = t2->prefix + wxT(" - ") + k2;
    }
 
-   // See wxWidgets documentation for explanation of comparison results.
-   // These will produce an ascending order.
-   if (k1 < k2)
-   {
-      return -1;
-   }
-
-   if (k1 > k2)
-   {
-      return 1;
-   }
-
-   return 0;
+   return (k1 < k2);
 }
 
 //
@@ -1658,13 +1635,11 @@ KeyView::CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2)
 //
 // The assigned entries simply get sorted as normal.
 //
-int
-KeyView::CmpKeyNodeByKey(KeyNode ***n1, KeyNode ***n2)
+bool
+KeyView::CmpKeyNodeByKey(KeyNode *t1, KeyNode *t2)
 {
-   KeyNode *t1 = (**n1);
-   KeyNode *t2 = (**n2);
-   wxString k1 = t1->key;
-   wxString k2 = t2->key;
+   wxString k1 = t1->key.Display();
+   wxString k2 = t2->key.Display();
 
    // Left node is unassigned, so prefix it
    if(k1.IsEmpty())
@@ -1694,19 +1669,7 @@ KeyView::CmpKeyNodeByKey(KeyNode ***n1, KeyNode ***n2)
    k1 += t1->label;
    k2 += t2->label;
 
-   // See wxWidgets documentation for explanation of comparison results.
-   // These will produce an ascending order.
-   if (k1 < k2)
-   {
-      return -1;
-   }
-
-   if (k1 > k2)
-   {
-      return 1;
-   }
-
-   return 0;
+   return (k1 < k2);
 }
 
 #if wxUSE_ACCESSIBILITY
@@ -1718,7 +1681,7 @@ bool
 KeyView::HasChildren(int line)
 {
    // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   if (line < 0 || line >= (int) mLines.size())
    {
       wxASSERT(false);
       return false;
@@ -1734,7 +1697,7 @@ bool
 KeyView::IsExpanded(int line)
 {
    // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   if (line < 0 || line >= (int) mLines.size())
    {
       wxASSERT(false);
       return false;
@@ -1750,7 +1713,7 @@ wxCoord
 KeyView::GetLineHeight(int line)
 {
    // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   if (line < 0 || line >= (int) mLines.size())
    {
       wxASSERT(false);
       return 0;
@@ -1768,7 +1731,7 @@ wxString
 KeyView::GetValue(int line)
 {
    // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   if (line < 0 || line >= (int) mLines.size())
    {
       wxASSERT(false);
       return wxEmptyString;
@@ -1785,7 +1748,7 @@ KeyView::GetValue(int line)
    {
       value = GetFullLabel(index);
    }
-   wxString key = GetKey(index);
+   wxString key = GetKey(index).Display();
 
    // Add the key if it isn't empty
    if (!key.IsEmpty())
@@ -1816,7 +1779,7 @@ KeyView::GetViewType()
 // Accessibility provider for the KeyView class
 // ============================================================================
 KeyViewAx::KeyViewAx(KeyView *view)
-: wxWindowAccessible(view)
+: WindowAccessible(view)
 {
    mView = view;
    mLastId = -1;

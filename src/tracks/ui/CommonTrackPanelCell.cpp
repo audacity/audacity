@@ -29,7 +29,7 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
 {
    using namespace RefreshCode;
 
-   if (pProject->GetTracks()->IsEmpty())
+   if (pProject->GetTracks()->empty())
       // Scrolling and Zoom in and out commands are disabled when there are no tracks.
       // This should be disabled too for consistency.  Otherwise
       // you do see changes in the time ruler.
@@ -74,16 +74,28 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
       // Time corresponding to mouse position
       wxCoord xx;
       double center_h;
-      if (scrubber.IsScrollScrubbing()) {
-         // Expand or contract about the center, ignoring mouse position
+      double mouse_h = viewInfo.PositionToTime(event.m_x, trackLeftEdge);
+
+      // Scrubbing? Expand or contract about the center, ignoring mouse position
+      if (scrubber.IsScrollScrubbing())
          center_h = viewInfo.h + (pProject->GetScreenEndTime() - viewInfo.h) / 2.0;
-         xx = viewInfo.TimeToPosition(center_h, trackLeftEdge);
-      }
+      // Zooming out? Focus on mouse.
+      else if( steps <= 0 )
+         center_h = mouse_h;
+      // No Selection? Focus on mouse.
+      else if((viewInfo.selectedRegion.t1() - viewInfo.selectedRegion.t0() ) < 0.00001  )
+         center_h = mouse_h;
+      // Before Selection? Focus on left
+      else if( mouse_h < viewInfo.selectedRegion.t0() )
+         center_h = viewInfo.selectedRegion.t0();
+      // After Selection? Focus on right
+      else if( mouse_h > viewInfo.selectedRegion.t1() )
+         center_h = viewInfo.selectedRegion.t1();
+      // Inside Selection? Focus on mouse
       else
-      {
-         xx = event.m_x;
-         center_h = viewInfo.PositionToTime(xx, trackLeftEdge);
-      }
+         center_h = mouse_h;
+
+      xx = viewInfo.TimeToPosition(center_h, trackLeftEdge);
 
       // Time corresponding to last (most far right) audio.
       double audioEndTime = pProject->GetTracks()->GetEndTime();

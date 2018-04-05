@@ -31,23 +31,23 @@ class ShuttleGui;
 #include "PrefsPanel.h"
 
 class wxStaticText;
+struct NormalizedKeyString;
 
 class KeyConfigPrefs final : public PrefsPanel
 {
 public:
-   KeyConfigPrefs(wxWindow * parent);
-   ~KeyConfigPrefs();
+   KeyConfigPrefs(wxWindow * parent, wxWindowID winid, const wxString &name);
    bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
 private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void RefreshBindings(bool bSort);
-   void FilterKeys( wxArrayString & arr );
-   wxString NameFromKey(const wxString & key);
-   void SetKeyForSelected(const wxString & key);
+   void FilterKeys( std::vector<NormalizedKeyString> & arr );
+   wxString NameFromKey(const NormalizedKeyString & key);
+   void SetKeyForSelected(const NormalizedKeyString & key);
 
    void OnViewBy(wxCommandEvent & e);
    void OnDefaults(wxCommandEvent & e);
@@ -85,10 +85,10 @@ private:
    int mCommandSelected;
 
    wxArrayString mNames;
-   wxArrayString mDefaultKeys; // The full set.
-   wxArrayString mStandardDefaultKeys; // The reduced set.
-   wxArrayString mKeys;
-   wxArrayString mNewKeys; // Used for work in progress.
+   std::vector<NormalizedKeyString> mDefaultKeys; // The full set.
+   std::vector<NormalizedKeyString> mStandardDefaultKeys; // The reduced set.
+   std::vector<NormalizedKeyString> mKeys;
+   std::vector<NormalizedKeyString> mNewKeys; // Used for work in progress.
 
    DECLARE_EVENT_TABLE()
 };
@@ -97,6 +97,11 @@ private:
 class KeyConfigPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   KeyConfigPrefsFactory(const wxString &name = wxString{})
+      : mName{ name } {}
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
+
+private:
+   wxString mName;
 };
 #endif

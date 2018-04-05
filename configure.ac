@@ -34,7 +34,7 @@ dnl Require autoconf >= 2.59
 AC_PREREQ([2.59])
 
 dnl Init autoconf
-AC_INIT([audacity], [2.2.0])
+AC_INIT([audacity], [2.3.0])
 dnl Check for existence of Audacity.h
 AC_CONFIG_SRCDIR([src/Audacity.h])
 AC_CONFIG_AUX_DIR([autotools])
@@ -186,7 +186,7 @@ AC_ARG_ENABLE(dynamic-loading,
 
 AC_ARG_WITH(wx-version,
            [AS_HELP_STRING([--with-wx-version],
-                           [select wxWidgets version (if both installed) [3.0,]])],
+                           [select wxWidgets version (if both installed) [3.1,]])],
            wx_preference="--version=$withval",
            wx_preference="")
 
@@ -288,7 +288,7 @@ dnl there isn't a way to turn them off.
 dnl-------------------------------------------------------------
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, $WX_CONFIG wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+AC_PATH_PROGS(WX_CONFIG, $WX_CONFIG wx-config wx-config-3.1, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR([Could not find wx-config: is wxWidgets installed? is wx-config in your path?])
 fi
@@ -305,15 +305,16 @@ dnl more things we always pass to wx-config
 wxconfigargs="$static_wx_preference $unicode_preference $wxconfigargs $wx_preference"
 wx_version=`${WX_CONFIG} $wxconfigargs --version`
 
-AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 3.0.x])
+AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 3.1.x (or 3.0.x)])
 
 case "${wx_version}" in
-  3.0.*)
+  3.1.* | 3.0.*)
     echo "Great, you're using wxWidgets ${wx_version}!"
     ;;
   *)
   wx_list=`${WX_CONFIG} --list`
-  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v3.0.x or higher.
+  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v3.1.x 
+or higher (or even of 3.0.x).  We recommend building with 3.1.x.
 The currently available configurations are listed below.  If necessary, either
 install the package for your distribution or download the latest version of
 wxWidgets
@@ -708,6 +709,7 @@ AC_CONFIG_FILES([
    images/Makefile
    lib-src/Makefile
    po/Makefile.in
+   nyq-po/Makefile.in
    src/audacity.desktop
    src/Makefile
    tests/Makefile

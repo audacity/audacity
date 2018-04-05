@@ -13,6 +13,7 @@
 #include "Experimental.h"
 
 
+
 // These are all member functions of class AudacityProject.
 // Vaughan, 2010-08-05:
 //    Note that this file is included in a "public" section of Project.h.
@@ -23,12 +24,14 @@
 
 private:
 void CreateMenusAndCommands();
-
+void PopulateMacrosMenu( CommandManager* c, CommandFlag flags );
 void PopulateEffectsMenu(CommandManager *c, EffectType type,
                          CommandFlag batchflags, CommandFlag realflags);
-void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs,
+void AddEffectMenuItems(CommandManager *c,
+                        std::vector<const PluginDescriptor*> & plugs,
                         CommandFlag batchflags, CommandFlag realflags, bool isDefault);
 void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names,
+                            const std::vector<bool> &vHasDialog,
                             const PluginIDList & plugs,
                             const std::vector<CommandFlag> & flags, bool isDefault);
 void CreateRecentFilesMenu(CommandManager *c);
@@ -53,115 +56,115 @@ double NearestZeroCrossing(double t0);
         // Selecting a tool from the keyboard
 
 void SetTool(int tool);
-void OnSelectTool();
-void OnZoomTool();
-void OnEnvelopeTool();
-void OnTimeShiftTool();
-void OnDrawTool();
-void OnMultiTool();
+void OnSelectTool(const CommandContext &context );
+void OnZoomTool(const CommandContext &context );
+void OnEnvelopeTool(const CommandContext &context );
+void OnTimeShiftTool(const CommandContext &context );
+void OnDrawTool(const CommandContext &context );
+void OnMultiTool(const CommandContext &context );
 
-void OnNextTool();
-void OnPrevTool();
+void OnNextTool(const CommandContext &context );
+void OnPrevTool(const CommandContext &context );
 
 public:
         // Audio I/O Commands
 
-void OnStop();
-void OnPause();
-void OnRecord();
-void OnRecord2ndChoice();
-void OnStopSelect();
-void OnSkipStart();
-void OnSkipEnd();
-void OnSeekLeftShort();
-void OnSeekRightShort();
-void OnSeekLeftLong();
-void OnSeekRightLong();
+void OnStop(const CommandContext &context );
+void OnPause(const CommandContext &context );
+void OnRecord(const CommandContext &context );
+void OnRecord2ndChoice(const CommandContext &context );
+void OnStopSelect(const CommandContext &context );
+void OnSkipStart(const CommandContext &context );
+void OnSkipEnd(const CommandContext &context );
+void OnSeekLeftShort(const CommandContext &context );
+void OnSeekRightShort(const CommandContext &context );
+void OnSeekLeftLong(const CommandContext &context );
+void OnSeekRightLong(const CommandContext &context );
 
         // Different posibilities for playing sound
 
 bool MakeReadyToPlay(bool loop = false, bool cutpreview = false); // Helper function that sets button states etc.
-void OnPlayStop();
+void OnPlayStop(const CommandContext &context );
 bool DoPlayStopSelect(bool click, bool shift);
-void OnPlayStopSelect();
-void OnPlayOneSecond();
-void OnPlayToSelection();
-void OnPlayBeforeSelectionStart();
-void OnPlayAfterSelectionStart();
-void OnPlayBeforeSelectionEnd();
-void OnPlayAfterSelectionEnd();
-void OnPlayBeforeAndAfterSelectionStart();
-void OnPlayBeforeAndAfterSelectionEnd();
-void OnPlayLooped();
-void OnPlayCutPreview();
+void OnPlayStopSelect(const CommandContext &context );
+void OnPlayOneSecond(const CommandContext &context );
+void OnPlayToSelection(const CommandContext &context );
+void OnPlayBeforeSelectionStart(const CommandContext &context );
+void OnPlayAfterSelectionStart(const CommandContext &context );
+void OnPlayBeforeSelectionEnd(const CommandContext &context );
+void OnPlayAfterSelectionEnd(const CommandContext &context );
+void OnPlayBeforeAndAfterSelectionStart(const CommandContext &context );
+void OnPlayBeforeAndAfterSelectionEnd(const CommandContext &context );
+void OnPlayLooped(const CommandContext &context );
+void OnPlayCutPreview(const CommandContext &context );
 
         // Wave track control
 
-void OnTrackPan();
-void OnTrackPanLeft();
-void OnTrackPanRight();
-void OnTrackGain();
-void OnTrackGainInc();
-void OnTrackGainDec();
-void OnTrackMenu();
-void OnTrackMute();
-void OnTrackSolo();
-void OnTrackClose();
-void OnTrackMoveUp();
-void OnTrackMoveDown();
-void OnTrackMoveTop();
-void OnTrackMoveBottom();
+void OnTrackPan(const CommandContext &context );
+void OnTrackPanLeft(const CommandContext &context );
+void OnTrackPanRight(const CommandContext &context );
+void OnTrackGain(const CommandContext &context );
+void OnTrackGainInc(const CommandContext &context );
+void OnTrackGainDec(const CommandContext &context );
+void OnTrackMenu(const CommandContext &context );
+void OnTrackMute(const CommandContext &context );
+void OnTrackSolo(const CommandContext &context );
+void OnTrackClose(const CommandContext &context );
+void OnTrackMoveUp(const CommandContext &context );
+void OnTrackMoveDown(const CommandContext &context );
+void OnTrackMoveTop(const CommandContext &context );
+void OnTrackMoveBottom(const CommandContext &context );
 
 enum MoveChoice { OnMoveUpID, OnMoveDownID, OnMoveTopID, OnMoveBottomID };
 void MoveTrack(Track* target, MoveChoice choice);
 
         // Device control
-void OnInputDevice();
-void OnOutputDevice();
-void OnAudioHost();
-void OnInputChannels();
+void OnInputDevice(const CommandContext &context );
+void OnOutputDevice(const CommandContext &context );
+void OnAudioHost(const CommandContext &context );
+void OnInputChannels(const CommandContext &context );
 
         // Mixer control
 
-void OnOutputGain();
-void OnInputGain();
-void OnOutputGainInc();
-void OnOutputGainDec();
-void OnInputGainInc();
-void OnInputGainDec();
+void OnOutputGain(const CommandContext &context );
+void OnInputGain(const CommandContext &context );
+void OnOutputGainInc(const CommandContext &context );
+void OnOutputGainDec(const CommandContext &context );
+void OnInputGainInc(const CommandContext &context );
+void OnInputGainDec(const CommandContext &context );
 
         // Transcription control
 
-void OnPlayAtSpeed();
-void OnPlayAtSpeedLooped();
-void OnPlayAtSpeedCutPreview();
-void OnSetPlaySpeed();
-void OnPlaySpeedInc();
-void OnPlaySpeedDec();
+void OnPlayAtSpeed(const CommandContext &context );
+void OnPlayAtSpeedLooped(const CommandContext &context );
+void OnPlayAtSpeedCutPreview(const CommandContext &context );
+void OnSetPlaySpeed(const CommandContext &context );
+void OnPlaySpeedInc(const CommandContext &context );
+void OnPlaySpeedDec(const CommandContext &context );
 
         // Moving track focus commands
 
 void OnPrevTrack( bool shift );
 void OnNextTrack( bool shift );
-void OnCursorUp();
-void OnCursorDown();
-void OnFirstTrack();
-void OnLastTrack();
+void OnCursorUp(const CommandContext &context );
+void OnCursorDown(const CommandContext &context );
+void OnFirstTrack(const CommandContext &context );
+void OnLastTrack(const CommandContext &context );
 
         // Selection-Editing Commands
 
-void OnShiftUp();
-void OnShiftDown();
-void OnToggle();
+void OnShiftUp(const CommandContext &context );
+void OnShiftDown(const CommandContext &context );
+void OnToggle(const CommandContext &context );
 
 void HandleListSelection(Track *t, bool shift, bool ctrl, bool modifyState);
 
-void OnCursorLeft(const wxEvent * evt);
-void OnCursorRight(const wxEvent * evt);
-void OnSelExtendLeft(const wxEvent * evt);
-void OnSelExtendRight(const wxEvent * evt);
-void OnSelContractLeft(const wxEvent * evt);
-void OnSelContractRight(const wxEvent * evt);
+void OnCursorLeft(const CommandContext &context );
+void OnCursorRight(const CommandContext &context );
+void OnSelExtendLeft(const CommandContext &context );
+void OnSelExtendRight(const CommandContext &context );
+void OnSelContractLeft(const CommandContext &context );
+void OnSelContractRight(const CommandContext &context );
 
 public:
 static double OnClipMove
@@ -169,127 +172,128 @@ static double OnClipMove
     TrackList &trackList, bool syncLocked, bool right);
 
 void DoClipLeftOrRight(bool right, bool keyUp );
-void OnClipLeft(const wxEvent* evt);
-void OnClipRight(const wxEvent* evt);
+void OnClipLeft(const CommandContext &context );
+void OnClipRight(const CommandContext &context );
 
-void OnCursorShortJumpLeft();
-void OnCursorShortJumpRight();
-void OnCursorLongJumpLeft();
-void OnCursorLongJumpRight();
-void OnSelSetExtendLeft();
-void OnSelSetExtendRight();
+void OnCursorShortJumpLeft(const CommandContext &context );
+void OnCursorShortJumpRight(const CommandContext &context );
+void OnCursorLongJumpLeft(const CommandContext &context );
+void OnCursorLongJumpRight(const CommandContext &context );
+void OnSelSetExtendLeft(const CommandContext &context );
+void OnSelSetExtendRight(const CommandContext &context );
 
-void OnSetLeftSelection();
-void OnSetRightSelection();
+void OnSetLeftSelection(const CommandContext &context );
+void OnSetRightSelection(const CommandContext &context );
 
-void OnSelToStart();
-void OnSelToEnd();
+void OnSelToStart(const CommandContext &context );
+void OnSelToEnd(const CommandContext &context );
 
-void OnMoveToNextLabel();
-void OnMoveToPrevLabel();
+void OnMoveToNextLabel(const CommandContext &context );
+void OnMoveToPrevLabel(const CommandContext &context );
 void OnMoveToLabel(bool next);
 
-void OnZeroCrossing();
+void OnZeroCrossing(const CommandContext &context );
 
-void OnLockPlayRegion();
-void OnUnlockPlayRegion();
+void OnLockPlayRegion(const CommandContext &context );
+void OnUnlockPlayRegion(const CommandContext &context );
 
 double GetTime(const Track *t);
-void OnSortTime();
-void OnSortName();
+void OnSortTime(const CommandContext &context );
+void OnSortName(const CommandContext &context );
 
-void OnSnapToOff();
-void OnSnapToNearest();
-void OnSnapToPrior();
-void OnFullScreen();
+void OnSnapToOff(const CommandContext &context );
+void OnSnapToNearest(const CommandContext &context );
+void OnSnapToPrior(const CommandContext &context );
+void OnFullScreen(const CommandContext &context );
 
 static void DoMacMinimize(AudacityProject *project);
-void OnMacMinimize();
-void OnMacMinimizeAll();
-void OnMacZoom();
-void OnMacBringAllToFront();
+void OnMacMinimize(const CommandContext &context );
+void OnMacMinimizeAll(const CommandContext &context );
+void OnMacZoom(const CommandContext &context );
+void OnMacBringAllToFront(const CommandContext &context );
 
         // File Menu
 
-void OnNew();
-void OnOpen();
-void OnClose();
-void OnSave();
-void OnSaveAs();
+void OnNew(const CommandContext &context );
+void OnOpen(const CommandContext &context );
+void OnClose(const CommandContext &context );
+void OnSave(const CommandContext &context );
+void OnSaveAs(const CommandContext &context );
 #ifdef USE_LIBVORBIS
-   void OnSaveCompressed();
+   void OnSaveCompressed(const CommandContext &context );
 #endif
 
-void OnCheckDependencies();
+void OnCheckDependencies(const CommandContext &context );
 
 void OnExport(const wxString & Format);
-void OnExportAudio();
-void OnExportMp3();
-void OnExportWav();
-void OnExportOgg();
-void OnExportSelection();
-void OnExportMultiple();
-void OnExportLabels();
-void OnExportMIDI();
+void OnExportAudio(const CommandContext &context );
+void OnExportMp3(const CommandContext &context );
+void OnExportWav(const CommandContext &context );
+void OnExportOgg(const CommandContext &context );
+void OnExportSelection(const CommandContext &context );
+void OnExportMultiple(const CommandContext &context );
+void OnExportLabels(const CommandContext &context );
+void OnExportMIDI(const CommandContext &context );
 
-void OnPreferences();
+void OnPreferences(const CommandContext &context );
+void OnReloadPreferences(const CommandContext &context );
 
-void OnPageSetup();
-void OnPrint();
+void OnPageSetup(const CommandContext &context );
+void OnPrint(const CommandContext &context );
 
-void OnExit();
+void OnExit(const CommandContext &context );
 
         // Edit Menu
 
 public:
-void OnUndo();
-void OnRedo();
+void OnUndo(const CommandContext &context );
+void OnRedo(const CommandContext &context );
 
 private:
 static void FinishCopy(const Track *n, Track *dest);
 static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
 
 public:
-void OnCut();
-void OnSplitCut();
-void OnCopy();
+void OnCut(const CommandContext &context );
+void OnSplitCut(const CommandContext &context );
+void OnCopy(const CommandContext &context );
 
-void OnPaste();
+void OnPaste(const CommandContext &context );
 private:
 bool HandlePasteText(); // Handle text paste (into active label), if any. Return true if pasted.
 bool HandlePasteNothingSelected(); // Return true if nothing selected, regardless of paste result.
 public:
 
-void OnPasteNewLabel();
-void OnPasteOver();
-void OnTrim();
+void OnPasteNewLabel(const CommandContext &context );
+void OnPasteOver(const CommandContext &context );
+void OnTrim(const CommandContext &context );
 
-void OnDelete();
-void OnSplitDelete();
-void OnSilence();
+void OnDelete(const CommandContext &context );
+void OnSplitDelete(const CommandContext &context );
+void OnSilence(const CommandContext &context );
 
-void OnSplit();
-void OnSplitNew();
-void OnJoin();
-void OnDisjoin();
-void OnDuplicate();
+void OnSplit(const CommandContext &context );
+void OnSplitNew(const CommandContext &context );
+void OnJoin(const CommandContext &context );
+void OnDisjoin(const CommandContext &context );
+void OnDuplicate(const CommandContext &context );
 
-void OnCutLabels();
-void OnSplitCutLabels();
-void OnCopyLabels();
-void OnDeleteLabels();
-void OnSplitDeleteLabels();
-void OnSilenceLabels();
-void OnSplitLabels();
-void OnJoinLabels();
-void OnDisjoinLabels();
+void OnCutLabels(const CommandContext &context );
+void OnSplitCutLabels(const CommandContext &context );
+void OnCopyLabels(const CommandContext &context );
+void OnDeleteLabels(const CommandContext &context );
+void OnSplitDeleteLabels(const CommandContext &context );
+void OnSilenceLabels(const CommandContext &context );
+void OnSplitLabels(const CommandContext &context );
+void OnJoinLabels(const CommandContext &context );
+void OnDisjoinLabels(const CommandContext &context );
 
 void OnSelectTimeAndTracks(bool bAllTime, bool bAllTracks);
-void OnSelectAllTime();
-void OnSelectAllTracks();
-void OnSelectAll();
-void OnSelectSomething();
-void OnSelectNone();
+void OnSelectAllTime(const CommandContext &context );
+void OnSelectAllTracks(const CommandContext &context );
+void OnSelectAll(const CommandContext &context );
+void OnSelectSomething(const CommandContext &context );
+void OnSelectNone(const CommandContext &context );
 private:
 int CountSelectedWaveTracks();
 int CountSelectedTracks();
@@ -298,116 +302,123 @@ public:
 // For toggling of spectral seletion
 double mLastF0;
 double mLastF1;
-void OnToggleSpectralSelection();
+void OnToggleSpectralSelection(const CommandContext &context );
 void DoNextPeakFrequency(bool up);
-void OnNextHigherPeakFrequency();
-void OnNextLowerPeakFrequency();
+void OnNextHigherPeakFrequency(const CommandContext &context );
+void OnNextLowerPeakFrequency(const CommandContext &context );
 #endif
-void OnSelectCursorEnd();
-void OnSelectStartCursor();
-void OnSelectPrevClipBoundaryToCursor();
-void OnSelectCursorToNextClipBoundary();
+void OnSelectCursorEnd(const CommandContext &context );
+void OnSelectStartCursor(const CommandContext &context );
+void OnSelectTrackStartToEnd(const CommandContext &context );
+void OnSelectPrevClipBoundaryToCursor(const CommandContext &context );
+void OnSelectCursorToNextClipBoundary(const CommandContext &context );
 void OnSelectClipBoundary(bool next);
-typedef struct FoundClip {
-   const WaveTrack* waveTrack;
-   int trackNumber;
-   bool channel;
-   bool found;
-   double startTime;
-   double endTime;
-   int index;
-} FoundClip;
+struct FoundTrack {
+   const WaveTrack* waveTrack{};
+   int trackNum{};
+   bool channel{};
+
+   wxString ComposeTrackName() const;
+};
+struct FoundClip : FoundTrack {
+   bool found{};
+   double startTime{};
+   double endTime{};
+   int index{};
+};
 FoundClip FindNextClip(const WaveTrack* wt, double t0, double t1);
 FoundClip FindPrevClip(const WaveTrack* wt, double t0, double t1);
 int FindClips(double t0, double t1, bool next, std::vector<FoundClip>& results);
 bool ChannelsHaveSameClipBoundaries(const WaveTrack* wt);
-void OnSelectPrevClip();
-void OnSelectNextClip();
+void OnSelectPrevClip(const CommandContext &context );
+void OnSelectNextClip(const CommandContext &context );
 void OnSelectClip(bool next);
-void OnSelectCursorStoredCursor();
-void OnSelectSyncLockSel();
+void OnSelectCursorStoredCursor(const CommandContext &context );
+void OnSelectSyncLockSel(const CommandContext &context );
 
-        // View Menu
-
-void OnZoomIn();
-void OnZoomOut();
-// void OnZoomToggle();
-void OnZoomNormal();
-void OnZoomFit();
-void OnZoomFitV();
+void OnZoomIn(const CommandContext &context );
+void OnZoomOut(const CommandContext &context );
+void OnZoomToggle(const CommandContext &context );
+void OnZoomNormal(const CommandContext &context );
+void OnZoomFit(const CommandContext &context );
+void OnZoomFitV(const CommandContext &context );
 void DoZoomFitV();
-void OnZoomSel();
-void OnGoSelStart();
-void OnGoSelEnd();
+void OnZoomSel(const CommandContext &context );
+void OnGoSelStart(const CommandContext &context );
+void OnGoSelEnd(const CommandContext &context );
 
-void OnExpandAllTracks();
-void OnCollapseAllTracks();
+void OnExpandAllTracks(const CommandContext &context );
+void OnCollapseAllTracks(const CommandContext &context );
 
 void OnPanTracks(float PanValue);
-void OnPanLeft();
-void OnPanRight();
-void OnPanCenter();
+void OnPanLeft(const CommandContext &context );
+void OnPanRight(const CommandContext &context );
+void OnPanCenter(const CommandContext &context );
 
-void OnMuteAllTracks();
-void OnUnMuteAllTracks();
+void OnMuteAllTracks(const CommandContext &context );
+void OnUnmuteAllTracks(const CommandContext &context );
 
-void OnShowClipping();
-void OnShowExtraMenus();
+void OnShowClipping(const CommandContext &context );
+void OnShowExtraMenus(const CommandContext &context );
 
-void OnHistory();
+void OnHistory(const CommandContext &context );
 
-void OnKaraoke();
-void OnMixerBoard();
+void OnKaraoke(const CommandContext &context );
+void OnMixerBoard(const CommandContext &context );
 
-void OnPlotSpectrum();
-void OnContrast();
+void OnPlotSpectrum(const CommandContext &context );
+void OnContrast(const CommandContext &context );
 
-void OnShowTransportToolBar();
-void OnShowDeviceToolBar();
-void OnShowEditToolBar();
-void OnShowMeterToolBar();
-void OnShowRecordMeterToolBar();
-void OnShowPlayMeterToolBar();
-void OnShowMixerToolBar();
-void OnShowSelectionToolBar();
+void OnShowTransportToolBar(const CommandContext &context );
+void OnShowDeviceToolBar(const CommandContext &context );
+void OnShowEditToolBar(const CommandContext &context );
+void OnShowMeterToolBar(const CommandContext &context );
+void OnShowRecordMeterToolBar(const CommandContext &context );
+void OnShowPlayMeterToolBar(const CommandContext &context );
+void OnShowMixerToolBar(const CommandContext &context );
+void OnShowSelectionToolBar(const CommandContext &context );
 void OnShowTimeToolBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-void OnShowSpectralSelectionToolBar();
+void OnShowSpectralSelectionToolBar(const CommandContext &context );
 #endif
-void OnShowScrubbingToolBar();
-void OnShowToolsToolBar();
-void OnShowTranscriptionToolBar();
-void OnResetToolBars();
+void OnShowScrubbingToolBar(const CommandContext &context );
+void OnShowToolsToolBar(const CommandContext &context );
+void OnShowTranscriptionToolBar(const CommandContext &context );
+void OnResetToolBars(const CommandContext &context );
+
+#if defined(EXPERIMENTAL_EFFECTS_RACK)
+void OnShowEffectsRack(const CommandContext &context );
+#endif
 
         // Transport Menu
 
-void OnSoundActivated();
-void OnToggleSoundActivated();
-void OnTogglePinnedHead();
-void OnTogglePlayRecording();
-void OnToggleSWPlaythrough();
+void OnSoundActivated(const CommandContext &context );
+void OnToggleSoundActivated(const CommandContext &context );
+void OnTogglePinnedHead(const CommandContext &context );
+void OnTogglePlayRecording(const CommandContext &context );
+void OnToggleSWPlaythrough(const CommandContext &context );
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   void OnToggleAutomatedInputLevelAdjustment();
+   void OnToggleAutomatedInputLevelAdjustment(const CommandContext &context );
 #endif
-void OnRescanDevices();
+void OnRescanDevices(const CommandContext &context );
 
 // Import Submenu
-void OnImport();
-void OnImportLabels();
-void OnImportMIDI();
+void OnImport(const CommandContext &context );
+void OnImportLabels(const CommandContext &context );
+void OnImportMIDI(const CommandContext &context );
 
 // return null on failure; if success, return the given project, or a NEW
 // one, if the given was null; create no NEW project if failure
 static AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName);
 
-void OnImportRaw();
+void OnImportRaw(const CommandContext &context );
 
-void OnEditMetadata();
+void OnEditMetadata(const CommandContext &context );
 bool DoEditMetadata(const wxString &title, const wxString &shortUndoDescription, bool force);
 
-void OnMixAndRender();
-void OnMixAndRenderToNewTrack();
+void OnMixAndRender(const CommandContext &context );
+void OnMixAndRenderToNewTrack(const CommandContext &context );
 void HandleMixAndRender(bool toNewTrack);
 
 private:
@@ -415,59 +426,56 @@ private:
    bool mCursorPositionHasBeenStored{false};
    double mCursorPositionStored;
 public:
-void OnSelectionSave();
-void OnSelectionRestore();
-void OnCursorPositionStore();
+void OnSelectionSave(const CommandContext &context );
+void OnSelectionRestore(const CommandContext &context );
+void OnCursorPositionStore(const CommandContext &context );
 
-void OnCursorTrackStart();
-void OnCursorTrackEnd();
-void OnCursorSelStart();
-void OnCursorSelEnd();
-typedef struct FoundClipBoundary {
-   const WaveTrack* waveTrack;
-   int trackNumber;
-   bool channel;
-   int nFound;    // 0, 1, or 2
-   double time;
-   int index1;
-   bool clipStart1;
-   int index2;
-   bool clipStart2;
-} FoundClipBoundary;
+void OnCursorTrackStart(const CommandContext &context );
+void OnCursorTrackEnd(const CommandContext &context );
+void OnCursorSelStart(const CommandContext &context );
+void OnCursorSelEnd(const CommandContext &context );
+   struct FoundClipBoundary : FoundTrack {
+   int nFound{};    // 0, 1, or 2
+   double time{};
+   int index1{};
+   bool clipStart1{};
+   int index2{};
+   bool clipStart2{};
+};
 FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time);
 FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time);
 double AdjustForFindingStartTimes(const std::vector<const WaveClip*>& clips, double time);
 double AdjustForFindingEndTimes(const std::vector<const WaveClip*>& clips, double time);
 int FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& results);
-void OnCursorNextClipBoundary();
-void OnCursorPrevClipBoundary();
+void OnCursorNextClipBoundary(const CommandContext &context );
+void OnCursorPrevClipBoundary(const CommandContext &context );
 void OnCursorClipBoundary(bool next);
-wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results);
+static wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results);
 
-void OnAlignNoSync(int index);
-void OnAlign(int index);
+void OnAlignNoSync(const CommandContext &context );
+void OnAlign(const CommandContext &context );
 //void OnAlignMoveSel(int index);
 void HandleAlign(int index, bool moveSel);
 size_t mAlignLabelsCount;
 
 #ifdef EXPERIMENTAL_SCOREALIGN
-void OnScoreAlign();
+void OnScoreAlign(const CommandContext &context );
 #endif // EXPERIMENTAL_SCOREALIGN
 
 // Tracks menu
-void OnNewWaveTrack();
-void OnNewStereoTrack();
-void OnNewLabelTrack();
-void OnNewTimeTrack();
-void OnTimerRecord();
-void OnRemoveTracks();
-void OnMoveSelectionWithTracks();
-void OnSyncLock();
-void OnAddLabel();
-void OnAddLabelPlaying();
+void OnNewWaveTrack(const CommandContext &context );
+void OnNewStereoTrack(const CommandContext &context );
+void OnNewLabelTrack(const CommandContext &context );
+void OnNewTimeTrack(const CommandContext &context );
+void OnTimerRecord(const CommandContext &context );
+void OnRemoveTracks(const CommandContext &context );
+void OnMoveSelectionWithTracks(const CommandContext &context );
+void OnSyncLock(const CommandContext &context );
+void OnAddLabel(const CommandContext &context );
+void OnAddLabelPlaying(const CommandContext &context );
 void DoEditLabels(LabelTrack *lt = nullptr, int index = -1);
-void OnEditLabels();
-void OnToggleTypeToCreateLabel();
+void OnEditLabels(const CommandContext &context );
+void OnToggleTypeToCreateLabel(const CommandContext &context );
 
         // Effect Menu
 
@@ -484,71 +492,102 @@ public:
    static const int kDontRepeatLast = 0x04;
 };
 
-bool OnEffect(const PluginID & ID, int flags = OnEffectFlags::kNone);
-void OnRepeatLastEffect(int index);
-void OnApplyChain();
-void OnEditChains();
-void OnStereoToMono(int index);
+bool DoEffect(const PluginID & ID, const CommandContext & context, int flags);
+void OnEffect(const CommandContext &context );
+void OnRepeatLastEffect(const CommandContext &context );
+bool DoAudacityCommand(const PluginID & ID, const CommandContext &, int flags);
+void OnApplyMacroDirectly(const CommandContext &context );
+void OnApplyMacrosPalette(const CommandContext &context );
+void OnManageMacros(const CommandContext &context );
+void OnStereoToMono(const CommandContext &context );
+void OnAudacityCommand(const CommandContext &context );
 void OnManagePluginsMenu(EffectType Type);
-void RebuildAllMenuBars();
-void OnManageGenerators();
-void OnManageEffects();
-void OnManageAnalyzers();
+static void RebuildAllMenuBars();
+void OnManageGenerators(const CommandContext &context );
+void OnManageEffects(const CommandContext &context );
+void OnManageAnalyzers(const CommandContext &context );
+void OnManageTools(const CommandContext &context );
 
 
 
         // Help Menu
 
-void OnAbout();
-void OnQuickHelp();
-void OnManual();
-void OnCheckForUpdates();
+void OnAbout(const CommandContext &context );
+void OnQuickHelp(const CommandContext &context );
+void OnManual(const CommandContext &context );
+void OnCheckForUpdates(const CommandContext &context );
 void MayCheckForUpdates();
-void OnShowLog();
-void OnHelpWelcome();
-void OnBenchmark();
+void OnShowLog(const CommandContext &context );
+void OnHelpWelcome(const CommandContext &context );
+void OnBenchmark(const CommandContext &context );
 #if defined(EXPERIMENTAL_CRASH_REPORT)
-void OnCrashReport();
+void OnCrashReport(const CommandContext &context );
 #endif
-void OnScreenshot();
-void OnAudioDeviceInfo();
+void OnSimulateRecordingErrors(const CommandContext &context );
+void OnDetectUpstreamDropouts(const CommandContext &context );
+void OnScreenshot(const CommandContext &context );
+void OnAudioDeviceInfo(const CommandContext &context );
 #ifdef EXPERIMENTAL_MIDI_OUT
-void OnMidiDeviceInfo();
+void OnMidiDeviceInfo(const CommandContext &context );
 #endif
 
        //
 
-void OnSeparator();
+void OnSeparator(const CommandContext &context );
 
       // Keyboard navigation
 
 void NextOrPrevFrame(bool next);
-void PrevFrame();
-void NextFrame();
+void PrevFrame(const CommandContext &context );
+void NextFrame(const CommandContext &context );
 
-void PrevWindow();
-void NextWindow();
+void PrevWindow(const CommandContext &context );
+void NextWindow(const CommandContext &context );
 
-void OnResample();
+void OnResample(const CommandContext &context );
 
 private:
-void OnCursorLeft(bool shift, bool ctrl, bool keyup = false);
-void OnCursorRight(bool shift, bool ctrl, bool keyup = false);
-void OnCursorMove(bool forward, bool jump, bool longjump);
-void OnBoundaryMove(bool left, bool boundaryContract);
+enum SelectionOperation {
+    SELECTION_EXTEND,
+    SELECTION_CONTRACT,
+    CURSOR_MOVE
+};
+
+enum CursorDirection {
+   DIRECTION_LEFT = -1,
+   DIRECTION_RIGHT = +1
+};
+
+enum TimeUnit {
+    TIME_UNIT_SECONDS,
+    TIME_UNIT_PIXELS
+};
+
+bool OnlyHandleKeyUp( const CommandContext &context );
+void OnCursorMove(double seekStep);
+void OnBoundaryMove(int step);
 
 // Handle small cursor and play head movements
 void SeekLeftOrRight
-(bool left, bool shift, bool ctrl, bool keyup,
- int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
- double quietSeekStepPositive, bool quietStepIsPixels,
- double audioSeekStepPositive, bool audioStepIsPixels);
+(double direction, SelectionOperation operation);
+
+void SeekWhenAudioActive(double seekStep);
+void SeekWhenAudioInactive
+(double seekStep, TimeUnit timeUnit,
+ SelectionOperation operation);
+void MoveWhenAudioInactive
+(double seekStep, TimeUnit timeUnit);
+
+
+
+double OffsetTime(double t, double offset, TimeUnit timeUnit, int snapToTime);
 
 // Helper for moving by keyboard with snap-to-grid enabled
 double GridMove(double t, int minPix);
 
 // Make sure we return to "public" for subsequent declarations in Project.h.
 public:
+
 
 #endif
 

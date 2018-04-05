@@ -1,5 +1,5 @@
 /* XPM */
-static const char * ZoomFitAlpha[] = {
+static const char * const ZoomFitAlpha[] = {
 "27 27 4 1",
 " 	c None",
 ".	c #000000",

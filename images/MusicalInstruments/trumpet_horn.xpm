@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * trumpet_horn_xpm[] = {
+static const char * const trumpet_horn_xpm[] = {
 "48 48 46 1",
 " 	c #969696",
 ".	c #C7A179",

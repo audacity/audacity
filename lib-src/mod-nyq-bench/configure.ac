@@ -54,7 +54,7 @@ AC_ARG_WITH(wx-config,
             wx_config="")
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.1, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
 fi

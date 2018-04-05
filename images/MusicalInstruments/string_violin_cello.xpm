@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * string_violin_cello_xpm[] = {
+static const char * const string_violin_cello_xpm[] = {
 "48 48 599 2",
 "  	c None",
 ". 	c #969696",

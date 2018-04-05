@@ -23,15 +23,15 @@ class wxChoice;
 class WaveformPrefs final : public PrefsPanel
 {
 public:
-   WaveformPrefs(wxWindow * parent, WaveTrack *wt);
+   WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~WaveformPrefs();
    bool Commit() override;
    bool ShowsPreviewButton() override;
    bool Validate() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
 private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 
    void OnControl(wxCommandEvent&);
    void OnScale(wxCommandEvent&);
@@ -60,7 +60,7 @@ class WaveformPrefsFactory final : public PrefsPanelFactory
 {
 public:
    explicit WaveformPrefsFactory(WaveTrack *wt = 0);
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 
 private:
    WaveTrack *const mWt;

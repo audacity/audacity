@@ -40,6 +40,8 @@
 */
 
 #include "Audacity.h"
+#include "Internat.h"
+
 #include "FFT.h"
 #include "MemoryX.h"
 #include "SampleFormat.h"
@@ -72,7 +74,7 @@ static bool IsPowerOfTwo(size_t x)
 static size_t NumberOfBitsNeeded(size_t PowerOfTwo)
 {
    if (PowerOfTwo < 2) {
-      fprintf(stderr, "Error: FFT called with size %ld\n", PowerOfTwo);
+      wxFprintf(stderr, "Error: FFT called with size %ld\n", PowerOfTwo);
       exit(1);
    }
 
@@ -136,7 +138,7 @@ void FFT(size_t NumSamples,
    double tr, ti;                /* temp real, temp imaginary */
 
    if (!IsPowerOfTwo(NumSamples)) {
-      fprintf(stderr, "%ld is not a power of two\n", NumSamples);
+      wxFprintf(stderr, "%ld is not a power of two\n", NumSamples);
       exit(1);
    }
 
@@ -357,8 +359,9 @@ const wxChar *WindowFuncName(int whichFunction)
    }
 }
 
-void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float *in)
+void NewWindowFunc(int whichFunction, size_t NumSamplesIn, bool extraSample, float *in)
 {
+   int NumSamples = (int)NumSamplesIn;
    if (extraSample) {
       wxASSERT(NumSamples > 0);
       --NumSamples;
@@ -367,7 +370,7 @@ void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float
 
    switch (whichFunction) {
    default:
-      fprintf(stderr, "FFT::WindowFunc - Invalid window function: %d\n", whichFunction);
+      wxFprintf(stderr, "FFT::WindowFunc - Invalid window function: %d\n", whichFunction);
       break;
    case eWinFuncRectangular:
       // Multiply all by 1.0f -- do nothing
@@ -533,7 +536,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       wxASSERT(NumSamples > 0);
       --NumSamples;
       // in[0] *= 1.0f;
-      for (int ii = 1; ii < NumSamples; ++ii)
+      for (int ii = 1; ii < (int)NumSamples; ++ii)
          in[ii] = 0.0f;
       in[NumSamples] *= -1.0f;
       return;
@@ -585,7 +588,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       in[0] *= coeff0;
       if (!extraSample)
          --NumSamples;
-      for (int ii = 0; ii < NumSamples; ++ii)
+      for (int ii = 0; ii < (int)NumSamples; ++ii)
          in[ii] *= - coeff1 * sin(ii * multiplier);
       if (extraSample)
          in[NumSamples] *= - coeff0;
@@ -599,7 +602,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       // Hanning
       const double multiplier = 2 * M_PI / NumSamples;
       const double coeff1 = -0.5 * multiplier;
-      for (int ii = 0; ii < NumSamples; ++ii)
+      for (int ii = 0; ii < (int)NumSamples; ++ii)
          in[ii] *= - coeff1 * sin(ii * multiplier);
       if (extraSample)
          in[NumSamples] = 0.0f;
@@ -611,7 +614,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       const double multiplier = 2 * M_PI / NumSamples;
       const double multiplier2 = 2 * multiplier;
       const double coeff1 = -0.5 * multiplier, coeff2 = 0.08 * multiplier2;
-      for (int ii = 0; ii < NumSamples; ++ii)
+      for (int ii = 0; ii < (int)NumSamples; ++ii)
          in[ii] *= - coeff1 * sin(ii * multiplier) - coeff2 * sin(ii * multiplier2);
       if (extraSample)
          in[NumSamples] = 0.0f;
@@ -625,7 +628,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       const double multiplier3 = 3 * multiplier;
       const double coeff1 = -0.48829 * multiplier,
          coeff2 = 0.14128 * multiplier2, coeff3 = -0.01168 * multiplier3;
-      for (int ii = 0; ii < NumSamples; ++ii)
+      for (int ii = 0; ii < (int)NumSamples; ++ii)
          in[ii] *= - coeff1 * sin(ii * multiplier) - coeff2 * sin(ii * multiplier2) - coeff3 * sin(ii * multiplier3);
       if (extraSample)
          in[NumSamples] = 0.0f;
@@ -636,7 +639,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       // Welch
       const float N = NumSamples;
       const float NN = NumSamples * NumSamples;
-      for (int ii = 0; ii < NumSamples; ++ii) {
+      for (int ii = 0; ii < (int)NumSamples; ++ii) {
          in[ii] *= 4 * (N - ii - ii) / NN;
       }
       if (extraSample)
@@ -668,7 +671,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
       in[0] *= exp(A * 0.25) * (1 - invN);
       if (!extraSample)
          --NumSamples;
-      for (int ii = 1; ii < NumSamples; ++ii) {
+      for (int ii = 1; ii < (int)NumSamples; ++ii) {
          const float iOverN = ii * invN;
          in[ii] *= exp(A * (0.25 + (iOverN * iOverN) - iOverN)) * (2 * ii * invNN - invN);
       }
@@ -682,6 +685,6 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
    }
       break;
    default:
-      fprintf(stderr, "FFT::DerivativeOfWindowFunc - Invalid window function: %d\n", whichFunction);
+      wxFprintf(stderr, "FFT::DerivativeOfWindowFunc - Invalid window function: %d\n", whichFunction);
    }
 }

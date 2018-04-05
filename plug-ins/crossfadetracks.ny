@@ -1,21 +1,34 @@
-;nyquist plug-in
-;version 4
-;type process
-;name "Crossfade Tracks..."
-;manpage "Crossfade_Tracks"
-;debugbutton disabled
-;action "Crossfading..."
-;preview selection
-;author "Steve Daulton"
-;copyright "Released under terms of the GNU General Public License version 2"
+$nyquist plug-in
+$version 4
+$type process
+$name (_ "Crossfade Tracks")
+$manpage "Crossfade_Tracks"
+$debugbutton disabled
+$action (_ "Crossfading...")
+$preview selection
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; crossfadetracks.ny by Steve Daulton Nov 2014 / Sep 2015
-;; Released under terms of the GNU General Public License version 2:
-;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
-;control type "Fade type" choice "Constant Gain,Constant Power 1,Constant Power 2,Custom Curve" 0
-;control curve "Custom curve" real "" 0 0 1
-;control direction "Fade direction" choice "Automatic,Alternating Out / In,Alternating In / Out" 0
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
+$control type (_ "Fade type") choice (
+   ("ConstantGain" (_ "Constant Gain"))
+   ("ConstantPower1" (_ "Constant Power 1"))
+   ("ConstantPower2" (_ "Constant Power 2"))
+   ("CustomCurve" (_ "Custom Curve"))
+) 0
+$control curve (_ "Custom curve") real "" 0 0 1
+$control direction (_ "Fade direction") choice (
+   (_ "Automatic")
+   ("OutIn" (_ "Alternating Out / In"))
+   ("InOut" (_ "Alternating In / Out"))
+) 0
 
 
 (defun crossfade (type dir curve)
@@ -72,5 +85,5 @@ audio clip, fade in, otherwise fade out."
     (if (< in-dist out-dist) 'in 'out)))
 
 (if (< (length (get '*selection* 'tracks)) 2)
-    "Error.\nSelect 2 (or more) tracks to crossfade."
+    (format nil (_ "Error.~%Select 2 (or more) tracks to crossfade."))
     (crossfade type direction curve))

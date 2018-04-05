@@ -19,6 +19,8 @@
 // headers
 // ----------------------------------------------------------------------------
 
+#undef WXINTL_NO_GETTEXT_MACRO
+
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
 

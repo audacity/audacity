@@ -38,6 +38,7 @@
 
 #include "../ondemand/ODManager.h"
 #include "../ondemand/ODComputeSummaryTask.h"
+#include "../prefs/QualityPrefs.h"
 
 //If OD is enabled, he minimum number of samples a file has to use it.
 //Otherwise, we use the older PCMAliasBlockFile method since it should be fast enough.
@@ -204,8 +205,7 @@ PCMImportFileHandle::PCMImportFileHandle(wxString name,
    // the quality of the original file.
    //
 
-   mFormat = (sampleFormat)
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+   mFormat = QualityPrefs::SampleFormatChoice();
 
    if (mFormat != floatSample &&
        sf_subtype_more_than_16_bits(mInfo.format))
@@ -250,17 +250,28 @@ static wxString AskCopyOrEdit()
       wxBoxSizer *vbox;
       dialog.SetSizer(vbox = safenew wxBoxSizer(wxVERTICAL));
 
-      wxStaticText *message = safenew wxStaticText(&dialog, -1, wxString::Format(_("\
-When importing uncompressed audio files you can either copy them \
-into the project, or read them directly from their current location (without copying).\n\n\
-Your current preference is set to %s.\n\n\
-\
-Reading the files directly allows you to play or edit them almost immediately.  \
-This is less safe than copying in, because you must retain the files with their \
-original names in their original location.\n\
-File > Check Dependencies will show the original names and location of any files that you are reading directly.\n\n\
-\
-How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _("copy in") : _("read directly")));
+      wxString clause1 = _(
+"When importing uncompressed audio files you can either copy them into the project,"
+" or read them directly from their current location (without copying).\n\n"
+      );
+
+      wxString clause2 = oldCopyPref == wxT("copy")
+         ? _("Your current preference is set to copy in.\n\n")
+         : _("Your current preference is set to read directly.\n\n")
+      ;
+
+      wxString clause3 = _(
+"Reading the files directly allows you to play or edit them almost immediately.  "
+"This is less safe than copying in, because you must retain the files with their "
+"original names in their original locations.\n"
+"Help > Diagnostics > Check Dependencies will show the original names and locations of any files "
+"that you are reading directly.\n\n"
+"How do you want to import the current file(s)?"
+      );
+
+      wxStaticText *message =
+         safenew wxStaticText(&dialog, -1, clause1 + clause2 + clause3);
+
       message->Wrap(500);
       message->SetName(message->GetLabel());
 
@@ -324,10 +335,12 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
    return oldCopyPref;
 }
 
+#ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
    void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
 };
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+#endif
 
 ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                                 TrackHolders &outTracks,
@@ -478,7 +491,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
          else
             block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float *)srcbuffer.ptr(), block);
 
-         if(block < 0 || block > maxBlock) {
+         if(block < 0 || block > (long)maxBlock) {
             wxASSERT(false);
             block = maxBlock;
          }
@@ -615,14 +628,14 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
             for (int i = 0; i < (int) tp->nframes; i++) {
                struct id3_frame *frame = tp->frames[i];
 
-               // printf("ID: %08x '%4s'\n", (int) *(int *)frame->id, frame->id);
-               // printf("Desc: %s\n", frame->description);
-               // printf("Num fields: %d\n", frame->nfields);
+               // wxPrintf("ID: %08x '%4s'\n", (int) *(int *)frame->id, frame->id);
+               // wxPrintf("Desc: %s\n", frame->description);
+               // wxPrintf("Num fields: %d\n", frame->nfields);
 
                // for (int j = 0; j < (int) frame->nfields; j++) {
-               //    printf("field %d type %d\n", j, frame->fields[j].type );
+               //    wxPrintf("field %d type %d\n", j, frame->fields[j].type );
                //    if (frame->fields[j].type == ID3_FIELD_TYPE_STRINGLIST) {
-               //       printf("num strings %d\n", frame->fields[j].stringlist.nstrings);
+               //       wxPrintf("num strings %d\n", frame->fields[j].stringlist.nstrings);
                //    }
                // }
 

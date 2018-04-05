@@ -1,0 +1,56 @@
+af Afrikaans
+ar العربية
+be Беларуская
+bg Български
+bn বাংলা
+bs Bosanski
+ca Català
+ca_ES@valencia Valencià
+cs Čeština
+cy Cymraeg
+da Dansk
+de Deutsch
+el Ελληνικά
+en English
+es Español
+eu Euskara
+eu_ES Euskara (Espainiako)
+fa فارسی
+fi Suomi
+fr Français
+ga Gaeilge
+gl Galego
+he עברית
+hi हिन्दी
+hr Hrvatski
+hu Magyar
+hy Հայերեն
+id Bahasa Indonesia
+it Italiano
+ja 日本語
+ka ქართული
+km ខេមរភាសា
+ko 한국어
+lt Lietuvių
+mk Македонски
+my မြန်မာစာ
+nb Norsk
+nl Nederlands
+oc Occitan
+pl Polski
+pt Português
+pt_BR Português (Brasil)
+ro Română
+ru Русский
+sk Slovenčina
+sl Slovenščina
+sr_RS Српски
+sr_RS@latin Srpski
+sv Svenska
+ta தமிழ்
+tg Тоҷикӣ
+tr Türkçe
+uk Українська
+vi Tiếng Việt
+zh_CN 中文（简体）
+zh_TW 中文（繁體）

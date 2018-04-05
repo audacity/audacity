@@ -64,7 +64,7 @@ public:
    ScoreAlignDialog(ScoreAlignParams &params);
    ~ScoreAlignDialog();
 
-   bool TransferDataFromWindow();
+   bool TransferDataFromWindow() override;
 
 private:
    enum {

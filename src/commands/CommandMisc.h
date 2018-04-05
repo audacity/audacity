@@ -20,11 +20,12 @@
 #include <wx/string.h>
 #include <wx/variant.h>
 #include "Validators.h"
-class CommandType;
+class OldStyleCommandType;
 
 // Map from parameter name to the value of the parameter
 // to do: use hash
 typedef std::map<wxString, wxVariant> ParamValueMap;
+typedef std::map<wxString, bool> ParamBoolMap;
 
 // Map from parameter name to a suitable Validator
 // to do: use hash
@@ -32,6 +33,6 @@ typedef std::map<wxString, movable_ptr<Validator>> ValidatorMap;
 
 // Map from command name to type
 // to do: use hash
-typedef std::map<wxString, movable_ptr<CommandType>> CommandMap;
+typedef std::map<wxString, movable_ptr<OldStyleCommandType>> CommandMap;
 
 #endif /* End of include guard: __COMMANDMISC__ */

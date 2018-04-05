@@ -20,9 +20,11 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../Experimental.h"
+#include "../Internat.h"
 
-TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Tracks Behaviors"))
+TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
+/* i18n-hint: two nouns */
+:  PrefsPanel(parent, winid, _("Tracks Behaviors"))
 {
    Populate();
 }
@@ -51,21 +53,23 @@ void TracksBehaviorsPrefs::Populate()
 void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Behaviors"));
    {
       /* i18n-hint: auto-select makes a selection if there was none.*/
-      S.TieCheckBox(_("&Auto-select"),
+      S.TieCheckBox(_("A&uto-select, if selection required"),
                     wxT("/GUI/SelectAllOnNone"),
                     false);
       /* i18n-hint: auto-move moves clips out the way if necessary.*/
       S.TieCheckBox(_("&Auto-move for clips"),
                     wxT("/GUI/EditClipCanMove"),
                     true);
-      S.TieCheckBox(_("Cut &lines"),
+      /* i18n-hint: Cut-lines are lines that can expand to show the cut audio.*/
+      S.TieCheckBox(_("Enable cut &lines"),
                     wxT("/GUI/EnableCutLines"),
                     false);
-      S.TieCheckBox(_("&Drag selection edges"),
+      S.TieCheckBox(_("Enable &dragging selection edges"),
                     wxT("/GUI/AdjustSelectionEdges"),
                     true);
 /* Stopping at either end is best (DA decision) 
@@ -79,6 +83,14 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Type to create a label"),
                     wxT("/GUI/TypeToCreateLabel"),
                     true);
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+//      S.TieCheckBox(_("Enable scrolling left of &zero"),
+//                    ScrollingPreferenceKey(),
+//                    ScrollingPreferenceDefault());
+#endif
+      S.TieCheckBox(_("Advanced &vertical zooming"),
+                    wxT("/GUI/VerticalZooming"),
+                    false);
 
       S.AddSpace(10);
 
@@ -89,11 +101,11 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                      wxT("Standard"),
                      mSoloChoices,
                      mSoloCodes);
-         S.SetSizeHints(mSoloChoices);
       }
       S.EndMultiColumn();
    }
    S.EndStatic();
+   S.EndScroller();
 }
 
 bool TracksBehaviorsPrefs::Commit()
@@ -113,8 +125,8 @@ TracksBehaviorsPrefsFactory::TracksBehaviorsPrefsFactory()
 {
 }
 
-PrefsPanel *TracksBehaviorsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *TracksBehaviorsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew TracksBehaviorsPrefs(parent);
+   return safenew TracksBehaviorsPrefs(parent, winid);
 }

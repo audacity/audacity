@@ -36,8 +36,12 @@ UndoManager
 
 #include "UndoManager.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_set>
+#endif
+
 using ConstBlockFilePtr = const BlockFile*;
-WX_DECLARE_HASH_SET(ConstBlockFilePtr, wxPointerHash, wxPointerEqual, Set );
+using Set = std::unordered_set<ConstBlockFilePtr>;
 
 struct UndoStackElem {
 
@@ -232,11 +236,11 @@ void UndoManager::ModifyState(const TrackList * l,
 
    // Duplicate
    auto tracksCopy = TrackList::Create();
-   TrackListConstIterator iter(l);
-   const Track *t = iter.First();
-   while (t) {
+   for (auto t : *l) {
+      if ( t->GetId() == TrackId{} )
+         // Don't copy a pending added track
+         continue;
       tracksCopy->Add(t->Duplicate());
-      t = iter.Next();
    }
 
    // Replace
@@ -268,19 +272,19 @@ void UndoManager::PushState(const TrackList * l,
       return;
    }
 
+   auto tracksCopy = TrackList::Create();
+   for (auto t : *l) {
+      if ( t->GetId() == TrackId{} )
+         // Don't copy a pending added track
+         continue;
+      tracksCopy->Add(t->Duplicate());
+   }
+
    mayConsolidate = true;
 
    i = current + 1;
    while (i < stack.size()) {
       RemoveStateAt(i);
-   }
-
-   auto tracksCopy = TrackList::Create();
-   TrackListConstIterator iter(l);
-   const Track *t = iter.First();
-   while (t) {
-      tracksCopy->Add(t->Duplicate());
-      t = iter.Next();
    }
 
    // Assume tags was duplicted before any changes.

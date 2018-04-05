@@ -48,18 +48,22 @@
 // feature to link audio tracks to a label track
 #define EXPERIMENTAL_SYNC_LOCK
 
-// JKC: Enable to get extra buttons in the screenshot tools.
-//#define EXPERIMENTAL_DOCS_AUTOMATION
-// JKC: Enable to get experiemental code to move
-// mod-script-pipe towards being mainstream.
-//#define EXPERIMENTAL_AUTOMATION
-
 // DA: Enables dark audacity theme and customisations.
 #define EXPERIMENTAL_DA
 
 #ifdef EXPERIMENTAL_DA
 #define EXPERIMENTAL_METER_SLIDERS
 #endif
+
+// These CFG macros allow easy distinction between Audacity and DA defaults.
+#ifdef EXPERIMENTAL_DA
+#define CFG_A( x ) 
+#define CFG_DA( x ) x
+#else
+#define CFG_A( x ) x
+#define CFG_DA( x ) 
+#endif
+
 
 // Define this so that sync-lock tiles shine through spectrogram.
 // The spectrogram pastes a bitmap over the tiles.
@@ -71,6 +75,10 @@
 // Wavetrack, and draws its notes and lines over the top.
 #define EXPERIMENTAL_NOTETRACK_OVERLAY
 
+// Define this, and the option to zoom to half wave is added in the VZoom menu.
+// Also we go to half wave on collapse, full wave on restore.
+#define EXPERIMENTAL_HALF_WAVE
+
 // EXPERIMENTAL_THEMING is mostly mainstream now.
 // the define is still present to mark out old code before theming, that we might
 // conceivably need.
@@ -80,6 +88,9 @@
 //August 2009 - Theming not locked down enough for a stable release.
 // This turns on the Theme panel in Prefs dialog. It is independent of EXPERIMENTAL_THEMING.
 //#define EXPERIMENTAL_THEME_PREFS
+
+// This shows the zoom toggle button on the edit toolbar.
+#define EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
 
 //Next line enables Mic monitoring at times when it was previously off.
 //More work is needed as after recording or playing it results in an
@@ -166,10 +177,6 @@
    //#define EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 #endif
 
-// John (Thales) work to make the display show the result of the pan and gain sliders, rather than their input.
-// First committed by Martyn, 30th May 2013.
-//#define EXPERIMENTAL_OUTPUT_DISPLAY
-
 // Module prefs provides a panel in prefs where users can choose which modules
 // to enable.
 #define EXPERIMENTAL_MODULE_PREFS
@@ -233,5 +240,19 @@
 // using delibrately ugly pens and brushes until there is better cooperation
 // with themes
 //#define EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+
+// Paul Licameli (PRL) 28 Dec 2017
+// Easy drag-and-drop to add Nyquist, LADSPA, and VST plug-ins
+// #define EXPERIMENTAL_DRAG_DROP_PLUG_INS
+
+// PRL 5 Jan 2018
+// Easy change of keystroke bindings for menu items
+#define EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+
+// PRL 17 Mar 2018
+// Hoping to commit to use of this branch before 2.3.0 is out.
+// Don't use our own RingBuffer class, but reuse PortAudio's which includes
+// proper memory fences.
+#undef EXPERIMENTAL_REWRITE_RING_BUFFER
 
 #endif

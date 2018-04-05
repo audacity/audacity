@@ -45,7 +45,6 @@ or ASlider.
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
 #include <wx/image.h>
-#include <wx/msgdlg.h>
 #include <wx/panel.h>
 #include <wx/tooltip.h>
 #include <wx/debug.h>
@@ -89,7 +88,7 @@ const int sliderFontSize = 12;
 class TipPanel final : public wxFrame
 {
  public:
-   TipPanel(wxWindow *parent, const wxString & label);
+   TipPanel(wxWindow *parent, const wxArrayString & labels);
    virtual ~TipPanel() {}
 
    wxSize GetSize() const;
@@ -103,7 +102,6 @@ private:
 #endif
 
 private:
-   wxString mMaxLabel;
    wxString mLabel;
    int mWidth;
    int mHeight;
@@ -118,15 +116,20 @@ BEGIN_EVENT_TABLE(TipPanel, wxFrame)
 #endif
 END_EVENT_TABLE()
 
-TipPanel::TipPanel(wxWindow *parent, const wxString & maxLabel)
+TipPanel::TipPanel(wxWindow *parent, const wxArrayString & labels)
 :  wxFrame(parent, wxID_ANY, wxString{}, wxDefaultPosition, wxDefaultSize,
            wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT)
 {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-   mMaxLabel = maxLabel;
    wxFont labelFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL);
-   GetTextExtent(mMaxLabel, &mWidth, &mHeight, NULL, NULL, &labelFont);
+   mWidth = mHeight = 0;
+   for ( const auto &label : labels ) {
+      int width, height;
+      GetTextExtent(label, &width, &height, NULL, NULL, &labelFont);
+      mWidth =  std::max( mWidth,  width );
+      mHeight = std::max( mHeight, height );
+   }
 
    mWidth += 8;
    mHeight += 8;
@@ -183,6 +186,7 @@ void TipPanel::OnCreate(wxWindowCreateEvent & WXUNUSED(event))
 //
 
 BEGIN_EVENT_TABLE(SliderDialog, wxDialogWrapper)
+   EVT_TEXT( wxID_ANY, SliderDialog::OnTextChange )
    EVT_SLIDER(wxID_ANY,SliderDialog::OnSlider)
 END_EVENT_TABLE();
 
@@ -202,7 +206,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
 
    S.StartVerticalLay();
    {
-      mTextCtrl = S.AddTextBox(wxEmptyString,
+      mTextCtrl = S.AddTextBox( {},
                                wxEmptyString,
                                15);
       mTextCtrl->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
@@ -212,9 +216,8 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                             title,
                             wxDefaultPosition,
                             size,
-                            style,
-                            false);
-      mSlider->SetScroll(line, page);
+                            ASlider::Options{}
+                               .Style( style ).Line( line ).Page( page ) );
       S.AddWindow(mSlider, wxEXPAND);
    }
    S.EndVerticalLay();
@@ -253,7 +256,12 @@ bool SliderDialog::TransferDataFromWindow()
 void SliderDialog::OnSlider(wxCommandEvent & event)
 {
    TransferDataToWindow();
+   event.Skip(false);
+}
 
+void SliderDialog::OnTextChange(wxCommandEvent & event)
+{
+   TransferDataFromWindow();
    event.Skip(false);
 }
 
@@ -388,10 +396,10 @@ LWSlider::LWSlider(wxWindow *parent,
       break;
    case DB_SLIDER:
       minValue = -36.0f;
-      if (orientation == wxHORIZONTAL)
+      //if (orientation == wxHORIZONTAL)
          maxValue = 36.0f;
-      else
-         maxValue = 36.0f; // for MixerBoard //v Previously was 6dB for MixerBoard, but identical for now.
+      //else
+         //maxValue = 36.0f; // for MixerBoard //v Previously was 6dB for MixerBoard, but identical for now.
       stepValue = 1.0f;
       speed = 0.5;
       break;
@@ -924,7 +932,7 @@ void LWSlider::ShowTip(bool show)
 
 void LWSlider::CreatePopWin()
 {
-   mTipPanel = std::make_unique<TipPanel>(mParent, GetMaxTip());
+   mTipPanel = std::make_unique<TipPanel>(mParent, GetWidestTips());
 }
 
 void LWSlider::SetPopWinPosition()
@@ -971,15 +979,22 @@ wxString LWSlider::GetTip(float value) const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         val.Printf(wxT("%.2f"), value);
+         val.Printf( wxT("%.2f"), value );
          break;
    
       case DB_SLIDER:
-         val.Printf(wxT("%+.1f dB"), value);
+         val.Printf( wxT("%+.1f dB"), value );
+
+            /*
+             // PRL:  This erroneous code never had effect because
+             // the condition was always false (at least for the English format
+             // string), and the body had no side effect
          if (val.Right(1) == wxT("0"))
          {
             val.Left(val.Length() - 2);
          }
+             */
+
          break;
 
       case PAN_SLIDER:
@@ -989,26 +1004,34 @@ wxString LWSlider::GetTip(float value) const
          }
          else
          {
-            val.Printf(wxT("%.0f%% %s"),
-               value * (value < 0.0 ? -100.0f : 100.0f),
-               value < 0.0 ? _("Left") : _("Right"));
+            const auto v = 100.0f * fabsf(value);
+            if (value < 0.0)
+               /* i18n-hint: Stereo pan setting */
+               val = wxString::Format( _("%.0f%% Left"), v );
+            else
+               /* i18n-hint: Stereo pan setting */
+               val = wxString::Format( _("%.0f%% Right"), v );
          }
          break;
 
       case SPEED_SLIDER:
-         val.Printf(wxT("%.2fx"), value);
+         /* i18n-hint: "x" suggests a multiplicative factor */
+         val.Printf( wxT("%.2fx"), value );
          break;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       case VEL_SLIDER:
-          val.Printf(wxT("%s%d"),
-                     (value > 0.0f ? _("+") : wxT("")),
-                     (int) value);
-          break;
+         if (value > 0.0f)
+            // Signed
+            val.Printf( wxT("%+d"), (int) value );
+         else
+            // Zero, or signed negative
+            val.Printf( wxT("%d"), (int) value );
+         break;
 #endif
       }
 
-      label.Printf(wxT("%s: %s"), mName.c_str(), val.c_str());
+      label.Printf(_("%s: %s"), mName, val);
    }
    else
    {
@@ -1018,9 +1041,9 @@ wxString LWSlider::GetTip(float value) const
    return label;
 }
 
-wxString LWSlider::GetMaxTip() const
+wxArrayString LWSlider::GetWidestTips() const
 {
-   wxString label;
+   wxArrayString results;
 
    if (mTipTemplate.IsEmpty())
    {
@@ -1029,36 +1052,38 @@ wxString LWSlider::GetMaxTip() const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         val.Printf(wxT("%d.99"), (int) (mMinValue - mMaxValue));
+         results.push_back( GetTip( -1.99f ) );
          break;
 
       case DB_SLIDER:
-         val = wxT("-99.999 dB");
+         results.push_back( GetTip( -99.9f ) );
          break;
 
       case PAN_SLIDER:
-         val = wxT("-100% Right");
+         // Don't assume we know which of "Left", "Right", or "Center"
+         // is the longest string, when localized
+         results.push_back( GetTip(  0.f ) );
+         results.push_back( GetTip(  1.f ) );
+         results.push_back( GetTip( -1.f ) );
          break;
 
       case SPEED_SLIDER:
-         val = wxT("9.99x");
+         results.push_back( GetTip( 9.99f ) );
          break;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       case VEL_SLIDER:
-          val = wxT("+127");
+          results.push_back( GetTip( 999.f ) );
           break;
 #endif
       }
-
-      label.Printf(wxT("%s: %s"), mName.c_str(), val.c_str());
    }
    else
    {
-      label.Printf(mTipTemplate, floor(mMaxValue - mMinValue) + 0.999);
+      results.push_back( GetTip( floor(mMaxValue - mMinValue) + 0.999 ) );
    }
 
-   return label;
+   return results;
 }
 
 bool LWSlider::ShowDialog()
@@ -1545,11 +1570,7 @@ ASlider::ASlider( wxWindow * parent,
                   const wxString &name,
                   const wxPoint & pos,
                   const wxSize & size,
-                  int style,
-                  bool popup,
-                  bool canUseShift,
-                  float stepValue,
-                  int orientation /*= wxHORIZONTAL*/)
+                  const Options &options)
 : wxPanelWrapper( parent, id, pos, size, wxWANTS_CHARS | wxTAB_TRAVERSAL | wxNO_BORDER)
 {
    //wxColour Col(parent->GetBackgroundColour());
@@ -1559,24 +1580,26 @@ ASlider::ASlider( wxWindow * parent,
                              name,
                              wxPoint(0,0),
                              size,
-                             style,
-                             canUseShift,
-                             popup,
-                             orientation);
-   mLWSlider->mStepValue = stepValue;
+                             options.style,
+                             options.canUseShift,
+                             options.popup,
+                             options.orientation);
+   mLWSlider->mStepValue = options.stepValue;
    mLWSlider->SetId( id );
    SetName( name );
    SetOverdraw( false );
 
    mSliderIsFocused = false;
 
-   mStyle = style;
+   mStyle = options.style;
 
    mTimer.SetOwner(this);
 
 #if wxUSE_ACCESSIBILITY
    SetAccessible( safenew ASliderAx( this ) );
 #endif
+
+   mLWSlider->SetScroll( options.line, options.page );
 }
 
 
@@ -1766,7 +1789,7 @@ void ASlider::SetFocusFromKbd()
 #if wxUSE_ACCESSIBILITY
 
 ASliderAx::ASliderAx( wxWindow * window ) :
-   wxWindowAccessible( window )
+   WindowAccessible( window )
 {
 }
 

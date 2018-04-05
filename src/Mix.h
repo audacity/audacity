@@ -7,7 +7,15 @@
   Dominic Mazzoni
   Markus Meyer
 
-**********************************************************************/
+********************************************************************//**
+
+\class ArrayOf
+\brief Memory.h template class for making an array of float, bool, etc.
+
+\class ArraysOf
+\brief memory.h template class for making an array of arrays.
+
+*//********************************************************************/
 
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
@@ -15,6 +23,7 @@
 #include "MemoryX.h"
 #include <wx/string.h>
 #include "SampleFormat.h"
+#include <vector>
 
 class Resample;
 class DirManager;
@@ -22,7 +31,7 @@ class TimeTrack;
 class TrackFactory;
 class TrackList;
 class WaveTrack;
-class WaveTrackConstArray;
+using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 class WaveTrackCache;
 
 /** @brief Mixes together all input tracks, applying any envelopes, amplitude

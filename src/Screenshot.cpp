@@ -6,13 +6,21 @@
 
   Dominic Mazzoni
 
-*******************************************************************/
+*******************************************************************//**
+
+\class ScreenFrame
+\brief ScreenFrame provides an alternative Gui for ScreenshotCommand.
+It adds a timer that allows a delay before taking a screenshot,
+provides lots of one-click buttons, options to resize the screen.
+It forwards the actual work of doing the commands to the ScreenshotCommand.
+
+***********************************************************************/
 
 #include "Screenshot.h"
 #include "MemoryX.h"
 #include "commands/ScreenshotCommand.h"
 #include "commands/CommandTargets.h"
-#include "commands/CommandDirectory.h"
+#include "commands/CommandContext.h"
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/frame.h>
@@ -35,9 +43,10 @@
 #include "Prefs.h"
 #include "toolbars/ToolManager.h"
 
+
 #include "Track.h"
 
-class CommandType;
+class OldStyleCommandType;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +73,7 @@ class ScreenFrame final : public wxFrame
    void OnToggleBackgroundBlue(wxCommandEvent & event);
    void OnToggleBackgroundWhite(wxCommandEvent & event);
 
-   void DoCapture(wxString captureMode);
+   void DoCapture(int captureMode);
    void OnCaptureSomething(wxCommandEvent & event);
 
    void TimeZoom(double seconds);
@@ -88,7 +97,7 @@ class ScreenFrame final : public wxFrame
    wxStatusBar *mStatus;
 
    std::unique_ptr<ScreenshotCommand> mCommand;
-   CommandExecutionContext mContext;
+   CommandContext mContext;
 
    DECLARE_EVENT_TABLE()
 };
@@ -170,20 +179,22 @@ enum
 
    IdCaptureFirst,
    // No point delaying the capture of sets of things.
-   IdCaptureMenus= IdCaptureFirst,
-   IdCaptureEffects,
+   IdCaptureEffects= IdCaptureFirst,
+   IdCaptureScriptables,
    IdCapturePreferences,
+   IdCaptureToolbars,
 
    // Put all events that need delay between AllDelayed and LastDelayed.
    IdAllDelayedEvents,
-   IdCaptureToolbars  =IdAllDelayedEvents,
-   IdCaptureWindowContents,
+   IdCaptureWindowContents=IdAllDelayedEvents,
    IdCaptureFullWindow,
    IdCaptureWindowPlus,
    IdCaptureFullScreen,
   
    IdCaptureSelectionBar,
-   IdCaptureTimeBar,
+#ifdef EXPERIMENTAL_DA
+//   IdCaptureTimeBar,  // TODO
+#endif  
    IdCaptureSpectralSelection,
    IdCaptureTools,
    IdCaptureTransport,
@@ -239,12 +250,10 @@ std::unique_ptr<ScreenshotCommand> ScreenFrame::CreateCommand()
 {
    wxASSERT(mStatus != NULL);
    auto output =
-      std::make_unique<CommandOutputTarget>(std::make_unique<NullProgressTarget>(),
+      std::make_unique<CommandOutputTargets>(std::make_unique<NullProgressTarget>(),
                               std::make_shared<StatusBarTarget>(*mStatus),
                               std::make_shared<MessageBoxTarget>());
-   CommandType *type = CommandDirectory::Get()->LookUp(wxT("Screenshot"));
-   wxASSERT_MSG(type != NULL, wxT("Screenshot command doesn't exist!"));
-   return std::make_unique<ScreenshotCommand>(*type, std::move(output), this);
+   return std::make_unique<ScreenshotCommand>();//*type, std::move(output), this);
 }
 
 ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
@@ -264,12 +273,12 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 #endif
 
            wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX),
-   mContext(&wxGetApp(), GetActiveProject())
+   mContext( *GetActiveProject() )
 {
    mDelayCheckBox = NULL;
    mDirectoryTextBox = NULL;
 
-   mStatus = CreateStatusBar();
+   mStatus = CreateStatusBar(3);
    mCommand = CreateCommand();
 
    Populate();
@@ -374,18 +383,15 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay();
          {
             S.Id(IdCaptureToolbars).AddButton(_("All Toolbars"));
-#ifdef EXPERIMENTAL_DOCS_AUTOMATION
-            S.Id(IdCaptureMenus).AddButton(_("All Menus"));
             S.Id(IdCaptureEffects).AddButton(_("All Effects"));
+            S.Id(IdCaptureScriptables).AddButton(_("All Scriptables"));
             S.Id(IdCapturePreferences).AddButton(_("All Preferences"));
-#endif
          }
          S.EndHorizontalLay();
 
          S.StartHorizontalLay();
          {
             S.Id(IdCaptureSelectionBar).AddButton(_("SelectionBar"));
-            S.Id(IdCaptureTimeBar).AddButton(_("TimeBar"));
             S.Id(IdCaptureSpectralSelection).AddButton(_("Spectral Selection"));
             S.Id(IdCaptureTools).AddButton(_("Tools"));
             S.Id(IdCaptureTransport).AddButton(_("Transport"));
@@ -533,7 +539,7 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
 {
    wxString current = mDirectoryTextBox->GetValue();
 
-   wxDirDialog dlog(this,
+   wxDirDialogWrapper dlog(this,
                     _("Choose a location to save screenshot images"),
                     current);
 
@@ -545,21 +551,18 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
       mDirectoryTextBox->SetValue(path);
       gPrefs->Write(wxT("/ScreenshotPath"), path);
       gPrefs->Flush();
+      mCommand->mPath = path;
    }
 }
 
 void ScreenFrame::OnToggleBackgroundBlue(wxCommandEvent & WXUNUSED(event))
 {
    mWhite->SetValue(false);
-   mCommand->SetParameter(wxT("Background"),
-         mBlue->GetValue() ? wxT("Blue") : wxT("None"));
 }
 
 void ScreenFrame::OnToggleBackgroundWhite(wxCommandEvent & WXUNUSED(event))
 {
    mBlue->SetValue(false);
-   mCommand->SetParameter(wxT("Background"),
-         mWhite->GetValue() ? wxT("White") : wxT("None"));
 }
 
 void ScreenFrame::SizeMainWindow(int w, int h)
@@ -582,14 +585,19 @@ void ScreenFrame::OnMainWindowLarge(wxCommandEvent & WXUNUSED(event))
    SizeMainWindow(900, 600);
 }
 
-void ScreenFrame::DoCapture(wxString captureMode)
+void ScreenFrame::DoCapture(int captureMode)
 {
    Hide();
-   mCommand->SetParameter(wxT("FilePath"), mDirectoryTextBox->GetValue());
-
-   mCommand->SetParameter(wxT("CaptureMode"), captureMode);
+   //mCommand->SetParameter(wxT("FilePath"), mDirectoryTextBox->GetValue());
+   //mCommand->SetParameter(wxT("CaptureMode"), captureMode);
+   mCommand->mBack = mWhite->GetValue()
+      ? ScreenshotCommand::kWhite
+      : mBlue->GetValue()
+         ? ScreenshotCommand::kBlue : ScreenshotCommand::kNone;
+   mCommand->mPath = mDirectoryTextBox->GetValue();
+   mCommand->mWhat = captureMode;
    if (!mCommand->Apply(mContext))
-      mStatus->SetStatusText(wxT("Capture failed!"), mainStatusBarField);
+      mStatus->SetStatusText(_("Capture failed!"), mainStatusBarField);
    Show();
 }
 
@@ -597,37 +605,70 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 {
    int i = event.GetId() - IdCaptureFirst;
 
-   wxArrayString Names;
+   /*
+   IdCaptureEffects= IdCaptureFirst,
+   IdCaptureScriptables,
+   IdCapturePreferences,
+   IdCaptureToolbars,
 
-   Names.Add(wxT("menus"));
-   Names.Add(wxT("effects"));
-   Names.Add(wxT("preferences"));
+   // Put all events that need delay between AllDelayed and LastDelayed.
+   IdAllDelayedEvents,
+   IdCaptureWindowContents=IdAllDelayedEvents,
+   IdCaptureFullWindow,
+   IdCaptureWindowPlus,
+   IdCaptureFullScreen,
+  
+   IdCaptureSelectionBar,
+   IdCaptureSpectralSelection,
+   IdCaptureTools,
+   IdCaptureTransport,
+   IdCaptureMixer,
+   IdCaptureMeter,
+   IdCapturePlayMeter,
+   IdCaptureRecordMeter,
+   IdCaptureEdit,
+   IdCaptureDevice,
+   IdCaptureTranscription,
+   IdCaptureScrub,
 
-   Names.Add(wxT("toolbars"));
-   Names.Add(wxT("window"));
-   Names.Add(wxT("fullwindow"));
-   Names.Add(wxT("windowplus"));
-   Names.Add(wxT("fullscreen"));
-   Names.Add(wxT("selectionbar"));
-   Names.Add(wxT("timebar"));
-   Names.Add(wxT("spectralselection"));
-   Names.Add(wxT("tools"));
-   Names.Add(wxT("transport"));
-   Names.Add(wxT("mixer"));
-   Names.Add(wxT("meter"));
-   Names.Add(wxT("playmeter"));
-   Names.Add(wxT("recordmeter"));
-   Names.Add(wxT("edit"));
-   Names.Add(wxT("device"));
-   Names.Add(wxT("transcription"));
-   Names.Add(wxT("scrub"));
-   Names.Add(wxT("trackpanel"));
-   Names.Add(wxT("ruler"));
-   Names.Add(wxT("tracks"));
-   Names.Add(wxT("firsttrack"));
-   Names.Add(wxT("secondtrack"));
+   IdCaptureTrackPanel,
+   IdCaptureRuler,
+   IdCaptureTracks,
+   IdCaptureFirstTrack,
+   IdCaptureSecondTrack,
+   IdCaptureLast = IdCaptureSecondTrack,
+    */
 
-   DoCapture(Names[i]);
+   static const int codes[] = {
+      ScreenshotCommand::keffects,
+      ScreenshotCommand::kscriptables,
+      ScreenshotCommand::kpreferences,
+      ScreenshotCommand::ktoolbars,
+
+      ScreenshotCommand::kwindow,
+      ScreenshotCommand::kfullwindow,
+      ScreenshotCommand::kwindowplus,
+      ScreenshotCommand::kfullscreen,
+      ScreenshotCommand::kselectionbar,
+      ScreenshotCommand::kspectralselection,
+      ScreenshotCommand::ktools,
+      ScreenshotCommand::ktransport,
+      ScreenshotCommand::kmixer,
+      ScreenshotCommand::kmeter,
+      ScreenshotCommand::kplaymeter,
+      ScreenshotCommand::krecordmeter,
+      ScreenshotCommand::kedit,
+      ScreenshotCommand::kdevice,
+      ScreenshotCommand::ktranscription,
+      ScreenshotCommand::kscrub,
+      ScreenshotCommand::ktrackpanel,
+      ScreenshotCommand::kruler,
+      ScreenshotCommand::ktracks,
+      ScreenshotCommand::kfirsttrack,
+      ScreenshotCommand::ksecondtrack,
+   };
+
+   DoCapture(codes[i]);
 }
 
 void ScreenFrame::TimeZoom(double seconds)

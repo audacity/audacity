@@ -1,5 +1,5 @@
 /* XPM */
-static const char * Rewind[] = {
+static const char * const Rewind[] = {
 "16 16 82 1",
 " 	c None",
 ".	c #000000",

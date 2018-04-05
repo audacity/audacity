@@ -16,7 +16,6 @@
 #include "Audacity.h"
 
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
@@ -31,7 +30,7 @@ END_EVENT_TABLE()
 
 TimeDialog::TimeDialog(wxWindow *parent,
                        const wxString &title,
-                       const wxString &format,
+                       const NumericFormatId &format,
                        double rate,
                        double time,
                        const wxString &prompt)
@@ -56,17 +55,15 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
       {
          mTimeCtrl = safenew
             NumericTextCtrl(
-               NumericConverter::TIME, this,
-                         wxID_ANY,
+               this, wxID_ANY,
+                         NumericConverter::TIME,
                          mFormat,
                          mTime,
                          mRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         NumericTextCtrl::Options{}
+                            .AutoPos(true));
          mTimeCtrl->SetName(mPrompt);
          S.AddWindow(mTimeCtrl);
-         mTimeCtrl->EnableMenu();
       }
       S.EndStatic();
    }
@@ -103,7 +100,7 @@ const double TimeDialog::GetTimeValue()
    return mTime;
 }
 
-void TimeDialog::SetFormatString(const wxString &formatString)
+void TimeDialog::SetFormatString(const NumericFormatId &formatString)
 {
    mFormat = formatString;
    TransferDataToWindow();

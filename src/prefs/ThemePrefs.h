@@ -24,13 +24,13 @@ class ShuttleGui;
 class ThemePrefs final : public PrefsPanel
 {
  public:
-   ThemePrefs(wxWindow * parent);
+   ThemePrefs(wxWindow * parent, wxWindowID winid);
    ~ThemePrefs(void);
    bool Commit() override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
    void OnLoadThemeComponents(wxCommandEvent & e);
    void OnSaveThemeComponents(wxCommandEvent & e);
    void OnLoadThemeCache(wxCommandEvent & e);
@@ -44,6 +44,6 @@ class ThemePrefs final : public PrefsPanel
 class ThemePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

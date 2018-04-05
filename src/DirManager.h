@@ -22,22 +22,24 @@
 #include "xml/XMLTagHandler.h"
 #include "wxFileNameWrapper.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 class wxHashTable;
 class BlockArray;
 class BlockFile;
-class SequenceTest;
 
 #define FSCKstatus_CLOSE_REQ 0x1
 #define FSCKstatus_CHANGED   0x2
 #define FSCKstatus_SAVE_AUP  0x4 // used in combination with FSCKstatus_CHANGED
 
-WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
+using DirHash = std::unordered_map<int, int>;
 
 class BlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 
-WX_DECLARE_HASH_MAP(wxString, std::weak_ptr<BlockFile>, wxStringHash,
-                    wxStringEqual, BlockHash);
+using BlockHash = std::unordered_map< wxString, std::weak_ptr<BlockFile> >;
 
 wxMemorySize GetFreeMemory();
 
@@ -107,8 +109,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    void SaveBlockFile(BlockFile * f, wxTextFile * out);
 #endif
 
-   bool MoveToNewProjectDirectory(BlockFile *f);
-   bool CopyToNewProjectDirectory(BlockFile *f);
+   std::pair<bool, wxString> CopyToNewProjectDirectory(BlockFile *f);
 
    bool EnsureSafeFilename(const wxFileName &fName);
 
@@ -189,8 +190,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    wxFileNameWrapper MakeBlockFileName();
    wxFileNameWrapper MakeBlockFilePath(const wxString &value);
 
-   bool MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy);
-
    BlockHash mBlockFileHash; // repository for blockfiles
 
    // Hashes for management of the sub-directory tree of _data
@@ -232,8 +231,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    wxString mytemp;
    static int numDirManagers;
    static bool dontDeleteTempFiles;
-
-   friend class SequenceTest;
 };
 
 #endif

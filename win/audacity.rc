@@ -8,6 +8,9 @@ AudacityLogo ICON "darkaudacity.ico"
 AudacityLogo ICON "audacity.ico"
 #endif
 
+#include <winuser.h>
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Audacity.exe.manifest"
+
 #include "wx/msw/wx.rc"
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -35,7 +38,7 @@ BEGIN
             VALUE "FileDescription", "A customised Audacity® Cross-Platform Sound Editor"
             VALUE "FileVersion", AUDACITY_FILE_VERSION
             VALUE "InternalName", "DarkAudacity"
-            VALUE "LegalCopyright", "Copyright © 2017. All rights reserved."
+            VALUE "LegalCopyright", "Copyright © 2018. All rights reserved."
             VALUE "LegalTrademarks", "Audacity® is a registered trademark of Dominic Mazzoni."
             VALUE "OriginalFilename", "DarkAudacity.exe"
             VALUE "ProductName", "DarkAudacity"
@@ -45,7 +48,7 @@ BEGIN
             VALUE "FileDescription", "Audacity® Cross-Platform Sound Editor"
             VALUE "FileVersion", AUDACITY_FILE_VERSION
             VALUE "InternalName", "Audacity"
-            VALUE "LegalCopyright", "Copyright © 2017. All rights reserved."
+            VALUE "LegalCopyright", "Copyright © 2018. All rights reserved."
             VALUE "LegalTrademarks", "Audacity® is a registered trademark of Dominic Mazzoni."
             VALUE "OriginalFilename", "Audacity.exe"
             VALUE "ProductName", "Audacity"

@@ -52,9 +52,11 @@ BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
    EVT_CHOICE(RecordID, DevicePrefs::OnDevice)
 END_EVENT_TABLE()
 
-DevicePrefs::DevicePrefs(wxWindow * parent, int Options)
-:  PrefsPanel(parent, _("Devices")), mOptions( Options )
+DevicePrefs::DevicePrefs(wxWindow * parent, wxWindowID winid, int Options)
+:  PrefsPanel(parent, winid, _("Devices")), mOptions( Options )
 {
+   mRecord = nullptr;
+   mPlay = nullptr;
    Populate();
 }
 
@@ -108,12 +110,15 @@ void DevicePrefs::GetNamesAndLabels()
 
 void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
 {
+
    bool bHasPlay = (mOptions==0) || (mOptions==1);
    bool bHasRecord = (mOptions==0) || (mOptions==2);
    bool bHasLatency = (mOptions==0);
+
    wxArrayString empty;
 
    S.SetBorder(2);
+   if( bHasLatency ) S.StartScroller();
 
    S.StartStatic(_("Interface"));
    {
@@ -125,7 +130,6 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
                              wxT(""),
                              mHostNames,
                              mHostLabels);
-         S.SetSizeHints(mHostNames);
 
          S.AddPrompt(_("Using:"));
          S.AddFixedText(wxString(wxSafeConvertMB2WX(Pa_GetVersionText())));
@@ -134,8 +138,8 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   mPlay=NULL;
-   if( bHasPlay ){
+   if( bHasPlay )
+   {
       S.StartStatic(_("Playback"));
       {
          S.StartMultiColumn(2);
@@ -150,8 +154,6 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
    }
 
-   mRecord = NULL;
-   mChannels = NULL;
    if( bHasRecord )
    {
       S.StartStatic(_("Recording"));
@@ -173,8 +175,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
    }
 
-   if( bHasLatency )
-   {
+   if( bHasLatency ) {
       // These previously lived in recording preferences.
       // However they are liable to become device specific.
       // Buffering also affects playback, not just recording, so is a device characteristic.
@@ -190,19 +191,21 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
                                     DEFAULT_LATENCY_DURATION,
                                     9);
             S.AddUnits(_("milliseconds"));
-            w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
+            if( w ) w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
 
-            w = S.TieNumericTextBox(_("&Offset:"),
+            w = S.TieNumericTextBox(_("Track &shift after record:"),
                                     wxT("/AudioIO/LatencyCorrection"),
                                     DEFAULT_LATENCY_CORRECTION,
                                     9);
             S.AddUnits(_("milliseconds"));
-            w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
+            if( w ) w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
          }
          S.EndThreeColumn();
       }
       S.EndStatic();
    }
+   if( bHasLatency ) S.EndScroller();
+
 }
 
 void DevicePrefs::OnHost(wxCommandEvent & e)
@@ -308,7 +311,8 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       }
    }
 
-   if( mRecord && mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
+
+   if (mRecord && mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
       DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(index);
       if (defaultMap)
          mRecord->SetStringSelection(MakeDeviceSourceString(defaultMap));
@@ -436,8 +440,8 @@ wxString DevicePrefs::HelpPageName()
    return "Devices_Preferences";
 }
 
-PrefsPanel *DevicePrefsFactory::Create(wxWindow *parent)
+PrefsPanel *DevicePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew DevicePrefs(parent);
+   return safenew DevicePrefs(parent, winid);
 }

@@ -26,8 +26,9 @@ Paul Licameli
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
-WaveformPrefs::WaveformPrefs(wxWindow * parent, WaveTrack *wt)
-: PrefsPanel(parent, _("Waveforms"))
+WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
+/* i18n-hint: A waveform is a visual representation of vibration */
+: PrefsPanel(parent, winid, _("Waveforms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -75,6 +76,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    mPopulating = true;
 
    S.SetBorder(2);
+   S.StartScroller();
 
    // S.StartStatic(_("Track Settings"));
    {
@@ -90,14 +92,13 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             mScaleChoice =
                S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
-                  *(int*)&mTempSettings.scaleType,
+                  mTempSettings.scaleType,
                   &mScaleChoices);
 
             mRangeChoice =
                S.Id(ID_RANGE).TieChoice(_("Waveform dB &range") + wxString(wxT(":")),
-               *(int*)&mTempSettings.dBRange,
+               mTempSettings.dBRange,
                &mRangeChoices);
-            S.SetSizeHints(mRangeChoices);
          }
          S.EndTwoColumn();
       }
@@ -111,6 +112,8 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
    */
+
+   S.EndScroller();
 
    EnableDisableRange();
 
@@ -246,8 +249,8 @@ WaveformPrefsFactory::WaveformPrefsFactory(WaveTrack *wt)
 {
 }
 
-PrefsPanel *WaveformPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *WaveformPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew WaveformPrefs(parent, mWt);
+   return safenew WaveformPrefs(parent, winid, mWt);
 }

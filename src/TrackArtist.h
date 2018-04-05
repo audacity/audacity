@@ -160,11 +160,7 @@ class AUDACITY_DLL_API TrackArtist {
                       float zoomMin, float zoomMax,
                       bool dB, float dBRange,
                       const float *min, const float *max, const float *rms, const int *bl,
-                      bool /* showProgress */, bool muted
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-                      , const float gain
-#endif
-   );
+                      bool /* showProgress */, bool muted);
    void DrawIndividualSamples(wxDC & dc, int leftOffset, const wxRect & rect,
                               float zoomMin, float zoomMax,
                               bool dB, float dBRange,
@@ -183,7 +179,7 @@ class AUDACITY_DLL_API TrackArtist {
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
    long mShowClipping;        // "/GUI/ShowClipping"
-   int  mSampleDisplay;       // "/GUI/SampleView"
+   int  mSampleDisplay;
    bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
 
    int mMarginLeft;

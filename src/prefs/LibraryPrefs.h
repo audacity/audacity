@@ -25,14 +25,14 @@ class ShuttleGui;
 class LibraryPrefs final : public PrefsPanel
 {
  public:
-   LibraryPrefs(wxWindow * parent);
+   LibraryPrefs(wxWindow * parent, wxWindowID winid);
    ~LibraryPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
    void SetMP3VersionText(bool prompt = false);
    void SetFFmpegVersionText();
 
@@ -50,6 +50,6 @@ class LibraryPrefs final : public PrefsPanel
 class LibraryPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

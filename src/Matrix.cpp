@@ -303,7 +303,7 @@ bool InvertMatrix(const Matrix& input, Matrix& Minv)
       // Pivot the row with the largest absolute value in
       // column i, into row i
       double absmax = 0.0;
-      int argmax = 0;
+      unsigned int argmax = 0;
 
       for(unsigned j = i; j < N; j++)
          if (fabs(M[j][i]) > absmax) {

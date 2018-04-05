@@ -23,13 +23,13 @@ class ShuttleGui;
 class BatchPrefs final : public PrefsPanel
 {
 public:
-   BatchPrefs(wxWindow * parent);
+   BatchPrefs(wxWindow * parent, wxWindowID winid);
    ~BatchPrefs();
    bool Commit() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
 private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 
    DECLARE_EVENT_TABLE()
 };
@@ -37,6 +37,6 @@ private:
 class BatchPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

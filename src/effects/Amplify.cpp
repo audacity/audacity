@@ -48,8 +48,9 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key                     Def         Min         Max            Scale
-Param( Ratio,     float,   XO("Ratio"),            0.9f,       0.003162f,  316.227766f,   1.0f  );
+Param( Ratio,     float,   wxT("Ratio"),            0.9f,       0.003162f,  316.227766f,   1.0f  );
 Param( Amp,       float,   wxT(""),                -0.91515f,  -50.0f,     50.0f,         10.0f );
+Param( Clipping,  bool,    wxT("AllowClipping"),    false,    false,  true,    1  );
 
 //
 // EffectAmplify
@@ -87,7 +88,7 @@ wxString EffectAmplify::GetSymbol()
 wxString EffectAmplify::GetDescription()
 {
    // Note: This is useful only after ratio has been set.
-   return XO("Increases or decreases the volume of the audio you have selected");
+   return _("Increases or decreases the volume of the audio you have selected");
 }
 
 wxString EffectAmplify::ManualPage()
@@ -95,7 +96,7 @@ wxString EffectAmplify::ManualPage()
    return wxT("Amplify");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectAmplify::GetType()
 {
@@ -123,19 +124,33 @@ size_t EffectAmplify::ProcessBlock(float **inBlock, float **outBlock, size_t blo
 
    return blockLen;
 }
+bool EffectAmplify::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mRatio, Ratio );
+   if (!IsBatchProcessing())
+      S.SHUTTLE_PARAM( mCanClip, Clipping );
+   return true;
+}
 
-bool EffectAmplify::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
 {
    parms.WriteFloat(KEY_Ratio, mRatio);
+   if (!IsBatchProcessing())
+      parms.WriteFloat(KEY_Clipping, mCanClip);
 
    return true;
 }
 
-bool EffectAmplify::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectAmplify::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyFloat(Ratio);
-
    mRatio = Ratio;
+
+   if (!IsBatchProcessing()){
+      ReadAndVerifyBool(Clipping);
+      mCanClip = Clipping;
+   } else {
+      mCanClip = true;
+   }
 
    return true;
 }
@@ -217,7 +232,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Amplitude
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldAmp(precission, &mAmp, NUM_VAL_ONE_TRAILING_ZERO);
+         FloatingPointValidator<double> vldAmp(precission, &mAmp, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldAmp.SetRange(MIN_Amp, MAX_Amp);
          mAmpT = S.Id(ID_Amp).AddTextBox(_("Amplification (dB):"), wxT(""), 12);
          mAmpT->SetValidator(vldAmp);
@@ -228,7 +243,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND);
       {
          S.SetStyle(wxSL_HORIZONTAL);
-         mAmpS = S.Id(ID_Amp).AddSlider(wxT(""), 0, MAX_Amp * SCL_Amp, MIN_Amp * SCL_Amp);
+         mAmpS = S.Id(ID_Amp).AddSlider( {}, 0, MAX_Amp * SCL_Amp, MIN_Amp * SCL_Amp);
          mAmpS->SetName(_("Amplification dB"));
       }
       S.EndHorizontalLay();
@@ -237,13 +252,13 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxCENTER);
       {
          // One extra decimal place so that rounding is visible to user (see: bug 958)
-         FloatingPointValidator<double> vldNewPeak(precission + 1, &mNewPeak, NUM_VAL_ONE_TRAILING_ZERO);
+         FloatingPointValidator<double> vldNewPeak(precission + 1, &mNewPeak, NumValidatorStyle::ONE_TRAILING_ZERO);
          double minAmp = MIN_Amp + LINEAR_TO_DB(mPeak);
          double maxAmp = MAX_Amp + LINEAR_TO_DB(mPeak);
 
          // min and max need same precision as what we're validating (bug 963)
-         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precission));
-         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precission));
+         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precission +1));
+         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precission +1));
 
          vldNewPeak.SetRange(minAmp, maxAmp);
          mNewPeakT = S.Id(ID_Peak).AddTextBox(_("New Peak Amplitude (dB):"), wxT(""), 12);

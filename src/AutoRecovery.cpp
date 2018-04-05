@@ -12,6 +12,10 @@
 \brief The AutoRecoveryDialog prompts the user whether to
 recover previous Audacity projects that were closed incorrectly.
 
+\class AutoSaveFile
+\brief a class wrapping reading and writing of arbitrary data in 
+text or binary format to a file.
+
 *//********************************************************************/
 
 #include "AutoRecovery.h"
@@ -28,6 +32,7 @@ recover previous Audacity projects that were closed incorrectly.
 #include <wx/app.h>
 
 #include "WaveTrack.h"
+#include "widgets/ErrorDialog.h"
 
 enum {
    ID_RECOVER_ALL = 10000,
@@ -134,7 +139,7 @@ void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent & WXUNUSED(event))
 
 void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent & WXUNUSED(event))
 {
-   int ret = wxMessageBox(
+   int ret = AudacityMessageBox(
       _("Are you sure you want to discard all recoverable projects?\n\nChoosing \"Yes\" discards all recoverable projects immediately."),
       _("Confirm Discard Projects"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
 
@@ -154,7 +159,7 @@ static bool HaveFilesToRecover()
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened())
    {
-      wxMessageBox(_("Could not enumerate files in auto save directory."),
+      AudacityMessageBox(_("Could not enumerate files in auto save directory."),
                    _("Error"), wxICON_STOP);
       return false;
    }
@@ -177,7 +182,7 @@ static bool RemoveAllAutoSaveFiles()
       {
          // I don't think this error message is actually useful.
          // -dmazzoni
-         //wxMessageBox(wxT("Could not remove auto save file: " + files[i]),
+         //AudacityMessageBox(wxT("Could not remove auto save file: " + files[i]),
          //             _("Error"), wxICON_STOP);
          return false;
       }
@@ -191,7 +196,7 @@ static bool RecoverAllProjects(AudacityProject** pproj)
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened())
    {
-      wxMessageBox(_("Could not enumerate files in auto save directory."),
+      AudacityMessageBox(_("Could not enumerate files in auto save directory."),
                    _("Error"), wxICON_STOP);
       return false;
    }
@@ -322,7 +327,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
 
-      WaveTrack* track = tracks[index];
+      WaveTrack* track = tracks[index].get();
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
@@ -407,7 +412,7 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
       wxASSERT(false);
    }
    else {
-      WaveTrack* track = tracks[index];
+      WaveTrack* track = tracks[index].get();
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
@@ -474,9 +479,6 @@ enum FieldTypes
    FT_Pop,           // type only
    FT_Name           // type, name length, name
 };
-
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(IdMapArray);
 
 AutoSaveFile::AutoSaveFile(size_t allocSize)
 {
@@ -757,7 +759,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       XMLFileWriter out{ fileName, _("Error Decoding File") };
 
       IdMap mIds;
-      IdMapArray mIdStack;
+      std::vector<IdMap> mIdStack;
 
       mIds.clear();
 
@@ -769,15 +771,15 @@ bool AutoSaveFile::Decode(const wxString & fileName)
          {
             case FT_Push:
             {
-               mIdStack.Add(mIds);
+               mIdStack.push_back(mIds);
                mIds.clear();
             }
             break;
 
             case FT_Pop:
             {
-               mIds = mIdStack[mIdStack.GetCount() - 1];
-               mIdStack.RemoveAt(mIdStack.GetCount() - 1);
+               mIds = mIdStack.back();
+               mIdStack.pop_back();
             }
             break;
 

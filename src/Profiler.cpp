@@ -24,6 +24,7 @@ but it will probably work fine if you use it on a high level.
 #include "Profiler.h"
 #include <stdio.h>
 #include <string.h>
+#include <wx/crt.h>
 
 ///write to a profile at the end of the test.
 Profiler::~Profiler()
@@ -35,24 +36,24 @@ Profiler::~Profiler()
       time_t now;
 
       time(&now);
-      fprintf(log,"Audacity Profiler Run, Ended at ");
-      fprintf(log,"%s",ctime(&now));
-      fprintf(log,"****************************************\n");
+      wxFprintf(log,"Audacity Profiler Run, Ended at ");
+      wxFprintf(log,"%s",ctime(&now));
+      wxFprintf(log,"****************************************\n");
       //print out the tasks
       for(int i=0;i<(int)mTasks.size();i++)
       {
          if(mTasks[i]->mNumHits>0)
          {
-            fprintf(log,"Task: %s\n(begins at line %d in %s)\n\n",mTasks[i]->mDescription.get(), mTasks[i]->mLine, mTasks[i]->mFileName.get());
-            fprintf(log,"Number of times run: %d\n",mTasks[i]->mNumHits);
-            fprintf(log,"Total run time (seconds): %f\n", (double)mTasks[i]->mCumTime/CLOCKS_PER_SEC);
-            fprintf(log,"Average run time (seconds): %f\n",mTasks[i]->ComputeAverageRunTime());
+            wxFprintf(log,"Task: %s\n(begins at line %d in %s)\n\n",mTasks[i]->mDescription.get(), mTasks[i]->mLine, mTasks[i]->mFileName.get());
+            wxFprintf(log,"Number of times run: %d\n",mTasks[i]->mNumHits);
+            wxFprintf(log,"Total run time (seconds): %f\n", (double)mTasks[i]->mCumTime/CLOCKS_PER_SEC);
+            wxFprintf(log,"Average run time (seconds): %f\n",mTasks[i]->ComputeAverageRunTime());
 
             if(i < ((int)mTasks.size()) -1)
-               fprintf(log,"----------------------------\n");
+               wxFprintf(log,"----------------------------\n");
          }
       }
-      fprintf(log,"\n****************************************\n\n\n");
+      wxFprintf(log,"\n****************************************\n\n\n");
 
       fclose(log);
    }

@@ -282,22 +282,16 @@ Appendix :
 */
 
 
-#include <math.h>
+#include "math-wrap.h"
 #include "fft4g.h"
 
 #ifdef FFT4G_FLOAT
   #define double float
   #define one_half 0.5f
 
-#if defined _MSC_VER
-  #define sin   (float)sin
-  #define cos   (float)cos
-  #define atan  (float)atan
-#else
-  #define sin   sinf
-  #define cos   cosf
-  #define atan  atanf
-#endif
+  #define sin(x)   sinf(x)
+  #define cos(x)   cosf(x)
+  #define atan(x)  atanf(x)
 
   #define cdft  lsx_cdft_f
   #define rdft  lsx_rdft_f
@@ -818,7 +812,7 @@ static void bitrv2(int n, int *ip0, double *a)
 
 static void bitrv2conj(int n, int *ip0, double *a)
 {
-    int j, j1, k, k1, l, m, m2, ip[256];
+    int j, j1, k, k1, l, m, m2, ip[512];
     double xr, xi, yr, yi;
 
     (void)ip0;

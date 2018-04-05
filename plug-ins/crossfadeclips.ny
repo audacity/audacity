@@ -1,18 +1,22 @@
-;nyquist plugin
-;version 4
-;type process
-;mergeclips 1
-;restoresplits 0
-;name "Crossfade Clips"
-;manpage "Crossfade_Clips"
-;action "Crossfading..."
-;author "Steve Daulton"
-;copyright "Released under terms of the GNU General Public License version 2" 
+$nyquist plugin
+$version 4
+$type process
+$mergeclips 1
+$restoresplits 0
+$name (_ "Crossfade Clips")
+$manpage "Crossfade_Clips"
+$action (_ "Crossfading...")
+$author (_ "Steve Daulton")
+$copyright (_ "Released under terms of the GNU General Public License version 2") 
 
 
 ;; crossfadeclips.ny by Steve Daulton Dec 2014.
+
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;; Instructions:
 ;; Place two audio clips into the same track.
@@ -37,8 +41,8 @@
 ;; 2) The selection may not start or end in white-space.
 
 
-(setf err1 "Error.\nInvalid selection.\nMore than 2 audio clips selected.")
-(setf err2 "Error.\nInvalid selection.\nEmpty space at start/ end of the selection.")
+(setf err1 (format nil (_ "Error.~%Invalid selection.~%More than 2 audio clips selected.")))
+(setf err2 (format nil (_ "Error.~%Invalid selection.~%Empty space at start/ end of the selection.")))
 
 
 (defun find-ends (T0 T1 clips)
@@ -128,4 +132,4 @@
                (get '*selection* 'start) 
                (get '*selection* 'end)
                (get '*track* 'clips)))
-    "Error.\nCrossfade Clips may only be applied to one track.")
+    (format nil (_ "Error.~%Crossfade Clips may only be applied to one track.")))

@@ -35,7 +35,6 @@
 #include <float.h>
 #include <math.h>
 
-#include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/ffile.h>
@@ -51,6 +50,8 @@
 #include "blockfile/SilentBlockFile.h"
 
 #include "InconsistencyException.h"
+
+#include "widgets/ErrorDialog.h"
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 
@@ -129,6 +130,31 @@ bool Sequence::SetSampleFormat(sampleFormat format)
 }
 */
 
+namespace {
+   void ensureSampleBufferSize(SampleBuffer &buffer, sampleFormat format,
+                               size_t &size, size_t required,
+                               SampleBuffer *pSecondBuffer = nullptr)
+   {
+      // This should normally do nothing, but it is a defense against corrupt
+      // projects than might have inconsistent block files bigger than the
+      // expected maximum size.
+      if (size < required) {
+         // reallocate
+         buffer.Allocate(required, format);
+         if (pSecondBuffer && pSecondBuffer->ptr())
+            pSecondBuffer->Allocate(required, format);
+         if (!buffer.ptr() || (pSecondBuffer && !pSecondBuffer->ptr())) {
+            // malloc failed
+            // Perhaps required is a really crazy value,
+            // and perhaps we should throw an AudacityException, but that is
+            // a second-order concern
+            THROW_INCONSISTENCY_EXCEPTION;
+         }
+         size = required;
+      }
+   }
+}
+
 bool Sequence::ConvertToSampleFormat(sampleFormat format)
 // STRONG-GUARANTEE
 {
@@ -167,16 +193,20 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
       (1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
 
    {
-      SampleBuffer bufferOld(oldMaxSamples, oldFormat);
-      SampleBuffer bufferNew(oldMaxSamples, format);
+      size_t oldSize = oldMaxSamples;
+      SampleBuffer bufferOld(oldSize, oldFormat);
+      size_t newSize = oldMaxSamples;
+      SampleBuffer bufferNew(newSize, format);
 
       for (size_t i = 0, nn = mBlock.size(); i < nn; i++)
       {
          SeqBlock &oldSeqBlock = mBlock[i];
          const auto &oldBlockFile = oldSeqBlock.f;
          const auto len = oldBlockFile->GetLength();
+         ensureSampleBufferSize(bufferOld, oldFormat, oldSize, len);
          Read(bufferOld.ptr(), oldFormat, oldSeqBlock, 0, len, true);
 
+         ensureSampleBufferSize(bufferNew, format, newSize, len);
          CopySamples(bufferOld.ptr(), oldFormat, bufferNew.ptr(), format, len);
 
          // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451,
@@ -190,7 +220,6 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
 
          // Using Blockify will handle the cases where len > the NEW mMaxSamples. Previous code did not.
          const auto blockstart = oldSeqBlock.start;
-         const unsigned prevSize = newBlockArray.size();
          Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                   newBlockArray, blockstart, bufferNew.ptr(), len);
       }
@@ -377,7 +406,8 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 
    dest->mBlock.reserve(b1 - b0 + 1);
 
-   SampleBuffer buffer(mMaxSamples, mSampleFormat);
+   auto bufferSize = mMaxSamples;
+   SampleBuffer buffer(bufferSize, mSampleFormat);
 
    int blocklen;
 
@@ -389,7 +419,8 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       // Nonnegative result is length of block0 or less:
       blocklen =
          ( std::min(s1, block0.start + file->GetLength()) - s0 ).as_size_t();
-      wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
+      wxASSERT(file->IsAlias() || (blocklen <= (int)mMaxSamples)); // Vaughan, 2012-02-29
+      ensureSampleBufferSize(buffer, mSampleFormat, bufferSize, blocklen);
       Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen, true);
 
       dest->Append(buffer.ptr(), mSampleFormat, blocklen);
@@ -408,8 +439,9 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       const auto &file = block.f;
       // s1 is within block:
       blocklen = (s1 - block.start).as_size_t();
-      wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
-      if (blocklen < file->GetLength()) {
+      wxASSERT(file->IsAlias() || (blocklen <= (int)mMaxSamples)); // Vaughan, 2012-02-29
+      if (blocklen < (int)file->GetLength()) {
+         ensureSampleBufferSize(buffer, mSampleFormat, bufferSize, blocklen);
          Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen, true);
          dest->Append(buffer.ptr(), mSampleFormat, blocklen);
       }
@@ -439,8 +471,8 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       wxLogError(
          wxT("Sequence::Paste: sampleCount s %s is < 0 or > mNumSamples %s)."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(s.as_double(), 0).c_str(),
-         Internat::ToString(mNumSamples.as_double(), 0).c_str());
+         Internat::ToString(s.as_double(), 0),
+         Internat::ToString(mNumSamples.as_double(), 0));
       THROW_INCONSISTENCY_EXCEPTION;
    }
 
@@ -450,8 +482,8 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       wxLogError(
          wxT("Sequence::Paste: mNumSamples %s + src->mNumSamples %s would overflow."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(mNumSamples.as_double(), 0).c_str(),
-         Internat::ToString(src->mNumSamples.as_double(), 0).c_str());
+         Internat::ToString(mNumSamples.as_double(), 0),
+         Internat::ToString(src->mNumSamples.as_double(), 0));
       THROW_INCONSISTENCY_EXCEPTION;
    }
 
@@ -812,7 +844,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mErrorOpening = true;
             wxLogWarning(
                wxT("   Sequence has bad %s attribute value, %s, that should be a positive integer."),
-               attr, strValue.c_str());
+               attr, strValue);
             return false;
          }
 
@@ -829,7 +861,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // The check intended here was already done in DirManager::HandleXMLTag(), where
             // it let the block be built, then checked against mMaxSamples, and deleted the block
             // if the size of the block is bigger than mMaxSamples.
-            if (nValue > mMaxSamples)
+            if (static_cast<unsigned long long>(nValue) > mMaxSamples)
             {
                mErrorOpening = true;
                return false;
@@ -943,8 +975,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             wxLogWarning(
                wxT("   Sequence has missing block file with length %s > mMaxSamples %s.\n      Setting length to mMaxSamples. This will likely cause some block files to be considered orphans."),
                // PRL:  Why bother with Internat when the above is just wxT?
-               Internat::ToString(len.as_double(), 0).c_str(),
-               Internat::ToString((double)mMaxSamples, 0).c_str());
+               Internat::ToString(len.as_double(), 0),
+               Internat::ToString((double)mMaxSamples, 0));
             len = mMaxSamples;
          }
          // len is at most mMaxSamples:
@@ -970,9 +1002,9 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             wxT("   Start (%s) for block file %s is not one sample past end of previous block (%s).\n")
             wxT("   Moving start so blocks are contiguous."),
             // PRL:  Why bother with Internat when the above is just wxT?
-            Internat::ToString(block.start.as_double(), 0).c_str(),
-            sFileAndExtension.c_str(),
-            Internat::ToString(numSamples.as_double(), 0).c_str());
+            Internat::ToString(block.start.as_double(), 0),
+            sFileAndExtension,
+            Internat::ToString(numSamples.as_double(), 0));
          block.start = numSamples;
          mErrorOpening = true;
       }
@@ -982,8 +1014,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
       wxLogWarning(
          wxT("Gap detected in project file. Correcting sequence sample count from %s to %s."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(mNumSamples.as_double(), 0).c_str(),
-         Internat::ToString(numSamples.as_double(), 0).c_str());
+         Internat::ToString(mNumSamples.as_double(), 0),
+         Internat::ToString(numSamples.as_double(), 0));
       mNumSamples = numSamples;
       mErrorOpening = true;
    }
@@ -1008,7 +1040,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
    xmlFile.StartTag(wxT("sequence"));
 
    xmlFile.WriteAttr(wxT("maxsamples"), mMaxSamples);
-   xmlFile.WriteAttr(wxT("sampleformat"), mSampleFormat);
+   xmlFile.WriteAttr(wxT("sampleformat"), (size_t)mSampleFormat);
    xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {
@@ -1028,8 +1060,8 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
          wxString sMsg =
             wxString::Format(
                _("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length."),
-               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
-         wxMessageBox(sMsg, _("Warning - Truncating Overlong Block File"), wxICON_EXCLAMATION | wxOK);
+               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
+         AudacityMessageBox(sMsg, _("Warning - Truncating Overlong Block File"), wxICON_EXCLAMATION | wxOK);
          wxLogWarning(sMsg);
          bb.f->SetLength(mMaxSamples);
       }
@@ -1123,8 +1155,7 @@ bool Sequence::Get(samplePtr buffer, sampleFormat format,
       return len == 0;
    }
 
-   if (start < 0 || start > mNumSamples ||
-       start + len > mNumSamples) {
+   if (start < 0 || start + len > mNumSamples) {
       if (mayThrow)
          THROW_INCONSISTENCY_EXCEPTION;
       ClearSamples( buffer, floatSample, 0, len );
@@ -1162,34 +1193,62 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
 // STRONG-GUARANTEE
 {
-   if (start < 0 || start >= mNumSamples ||
-       start + len > mNumSamples)
+   const auto size = mBlock.size();
+
+   if (start < 0 || start + len > mNumSamples)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   SampleBuffer scratch(mMaxSamples, mSampleFormat);
+   size_t tempSize = mMaxSamples;
+   // to do:  allocate this only on demand
+   SampleBuffer scratch(tempSize, mSampleFormat);
 
    SampleBuffer temp;
    if (buffer && format != mSampleFormat) {
-      const auto size = limitSampleBufferSize( mMaxSamples, len );
-      temp.Allocate(size, mSampleFormat);
+      temp.Allocate(tempSize, mSampleFormat);
    }
 
    int b = FindBlock(start);
    BlockArray newBlock;
    std::copy( mBlock.begin(), mBlock.begin() + b, std::back_inserter(newBlock) );
 
-   while (len != 0) {
+   while (len > 0
+      // Redundant termination condition,
+      // but it guards against infinite loop in case of inconsistencies
+      // (too-small files, not yet seen?)
+      // that cause the loop to make no progress because blen == 0
+      && b < (int)size
+   ) {
       newBlock.push_back( mBlock[b] );
       SeqBlock &block = newBlock.back();
       // start is within block
       const auto bstart = ( start - block.start ).as_size_t();
       const auto fileLength = block.f->GetLength();
-      const auto blen = limitSampleBufferSize( fileLength - bstart, len );
+
+      // the std::min is a guard against inconsistent Sequence
+      const auto blen =
+         limitSampleBufferSize( fileLength - std::min( bstart, fileLength ),
+                                len );
+      wxASSERT(blen == 0 || bstart + blen <= fileLength);
+
+#if 0
+      // PRL:  This inconsistency (too-big file) has been seen in "the wild"
+      // in 2.2.0.  It is the least problematic kind of inconsistency.
+      // We will tolerate it for 2.2.1.
+      // Not known whether it is only in projects saved in earlier versions.
+      // After 2.2.1, we should detect and correct it at file loading time.
+      if (fileLength > mMaxSamples) {
+         THROW_INCONSISTENCY_EXCEPTION;
+      }
+#endif
+
+      ensureSampleBufferSize(scratch, mSampleFormat, tempSize, fileLength,
+                             &temp);
 
       samplePtr useBuffer = buffer;
       if (buffer && format != mSampleFormat)
       {
          // To do: remove the extra movement.
+         // Note: we ensured temp can hold fileLength.  blen is not more
          CopySamples(buffer, format, temp.ptr(), mSampleFormat, blen);
          useBuffer = temp.ptr();
       }
@@ -1198,11 +1257,8 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
       // we copy the old block entirely into memory, dereference it,
       // make the change, and then write the NEW block to disk.
 
-      if (!(fileLength <= mMaxSamples &&
-            bstart + blen <= fileLength))
-         THROW_INCONSISTENCY_EXCEPTION;
-
       if ( bstart > 0 || blen < fileLength ) {
+         // First or last block is only partially overwritten
          Read(scratch.ptr(), mSampleFormat, block, 0, fileLength, true);
 
          if (useBuffer) {
@@ -1225,11 +1281,14 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
             block.f = make_blockfile<SilentBlockFile>(fileLength);
       }
 
+      // blen might be zero for inconsistent Sequence...
       if( buffer )
          buffer += (blen * SAMPLE_SIZE(format));
 
       len -= blen;
       start += blen;
+
+      // ... but this, at least, always guarantees some loop progress:
       b++;
    }
 
@@ -1464,7 +1523,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          wxASSERT(rmsDenom > 0);
          const float *const pv =
             temp.get() + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
-         MinMaxSumsq values(pv, rmsDenom, divisor);
+         MinMaxSumsq values(pv, std::max(0, rmsDenom), divisor);
 
          // Assign results
          std::fill(&min[pixel], &min[pixelX], values.min);
@@ -1497,7 +1556,7 @@ size_t Sequence::GetIdealAppendLen() const
       return max;
 
    const auto lastBlockLen = mBlock.back().f->GetLength();
-   if (lastBlockLen == max)
+   if (lastBlockLen >= max)
       return max;
    else
       return max - lastBlockLen;
@@ -1521,7 +1580,8 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
    int numBlocks = mBlock.size();
    SeqBlock *pLastBlock;
    decltype(pLastBlock->f->GetLength()) length;
-   SampleBuffer buffer2(mMaxSamples, mSampleFormat);
+   size_t bufferSize = mMaxSamples;
+   SampleBuffer buffer2(bufferSize, mSampleFormat);
    bool replaceLast = false;
    if (numBlocks > 0 &&
        (length =
@@ -1627,7 +1687,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
    if (len == 0)
       return;
 
-   if (len < 0 || start < 0 || start >= mNumSamples)
+   if (len < 0 || start < 0 || start + len > mNumSamples)
       THROW_INCONSISTENCY_EXCEPTION;
 
    //TODO: add a ref-deref mechanism to SeqBlock/BlockArray so we don't have to make this a critical section.
@@ -1647,8 +1707,8 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
    // One buffer for reuse in various branches here
    SampleBuffer scratch;
-   // The maximum size that will ever be needed
-   const auto scratchSize = mMaxSamples + mMinSamples;
+   // The maximum size that should ever be needed
+   auto scratchSize = mMaxSamples + mMinSamples;
 
    // Special case: if the samples to DELETE are all within a single
    // block and the resulting length is not too small, perform the
@@ -1658,12 +1718,16 @@ void Sequence::Delete(sampleCount start, sampleCount len)
       SeqBlock &b = *pBlock;
       // start is within block
       auto pos = ( start - b.start ).as_size_t();
+
+      // Guard against failure of this anyway below with limitSampleBufferSize
       wxASSERT(len < length);
+
       // len must be less than length
       // because start + len - 1 is also in the block...
-      auto newLen = ( length - len ).as_size_t();
+      auto newLen = ( length - limitSampleBufferSize( length, len ) );
 
       scratch.Allocate(scratchSize, mSampleFormat);
+      ensureSampleBufferSize(scratch, mSampleFormat, scratchSize, newLen);
 
       Read(scratch.ptr(), mSampleFormat, b, 0, pos, true);
       Read(scratch.ptr() + (pos * sampleSize), mSampleFormat,
@@ -1714,6 +1778,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
       if (preBufferLen >= mMinSamples || b0 == 0) {
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
+         ensureSampleBufferSize(scratch, mSampleFormat, scratchSize, preBufferLen);
          Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen, true);
          auto pFile =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), preBufferLen, mSampleFormat);
@@ -1726,12 +1791,14 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
+         ensureSampleBufferSize(scratch, mSampleFormat, scratchSize,
+                                sum);
 
          Read(scratch.ptr(), mSampleFormat, prepreBlock, 0, prepreLen, true);
          Read(scratch.ptr() + prepreLen*sampleSize, mSampleFormat,
               preBlock, 0, preBufferLen, true);
 
-         newBlock.erase(newBlock.end() - 1);
+         newBlock.pop_back();
          Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                   newBlock, prepreBlock.start, scratch.ptr(), sum);
       }
@@ -1803,7 +1870,7 @@ void Sequence::ConsistencyCheck(const wxChar *whereStr, bool mayThrow) const
 void Sequence::ConsistencyCheck
    (const BlockArray &mBlock, size_t maxSamples, size_t from,
     sampleCount mNumSamples, const wxChar *whereStr,
-    bool mayThrow)
+    bool WXUNUSED(mayThrow))
 {
    bool bError = false;
    // Construction of the exception at the appropriate line of the function
@@ -1836,17 +1903,18 @@ void Sequence::ConsistencyCheck
 
    if ( bError )
    {
-      wxLogError(wxT("*** Consistency check failed after %s. ***"), whereStr);
+      wxLogError(wxT("*** Consistency check failed at %d after %s. ***"),
+                 ex.GetLine(), whereStr);
       wxString str;
       DebugPrintf(mBlock, mNumSamples, &str);
-      wxLogError(wxT("%s"), str.c_str());
+      wxLogError(wxT("%s"), str);
       wxLogError(wxT("*** Please report this error to https://forum.audacityteam.org/. ***\n\n")
                  wxT("Recommended course of action:\n")
                  wxT("Undo the failed operation(s), then export or save your work and quit."));
 
-      if (mayThrow)
-         throw ex;
-      else
+      //if (mayThrow)
+         //throw ex;
+      //else
          wxASSERT(false);
    }
 }

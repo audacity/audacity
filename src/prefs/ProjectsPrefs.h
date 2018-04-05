@@ -24,19 +24,19 @@ class ShuttleGui;
 class ProjectsPrefs final : public PrefsPanel
 {
  public:
-   ProjectsPrefs(wxWindow * parent);
+   ProjectsPrefs(wxWindow * parent, wxWindowID winid);
    ~ProjectsPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
 };
 
 class ProjectsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

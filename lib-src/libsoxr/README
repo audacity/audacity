@@ -1,4 +1,4 @@
-SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
+SoX Resampler Library       Copyright (c) 2007-18 robs@users.sourceforge.net
 
 The SoX Resampler library `libsoxr' performs one-dimensional sample-rate
 conversion -- it may be used, for example, to resample PCM-encoded audio.
@@ -8,8 +8,8 @@ should look elsewhere.
 It aims to give fast¹ and very high quality² results for any constant
 (rational or irrational) resampling ratio.  Phase-response, preserved
 bandwidth, aliasing, and rejection level parameters are all configurable;
-alternatively, simple `preset' configurations may be selected.  An
-experimental, variable-rate resampling mode of operation is also included.
+alternatively, simple `preset' configurations may be selected.  A
+variable-rate resampling mode of operation is also included.
 
 The resampler is currently available either as part of `libsox' (the audio
 file-format and effect library), or stand-alone as `libsoxr' (this package).
@@ -46,7 +46,7 @@ size configuration parameters may be used to reduce this figure).
 For build and installation instructions, see the file `INSTALL'; for
 copyright and licensing information, see the file `LICENCE'.
 
-For support and new versions, see http://soxr.sourceforge.net
+For support and new versions, see https://soxr.sourceforge.net
 ________
 ¹ For example, multi-channel resampling can utilise multiple CPU-cores.
 ² Bit-perfect within practical occupied-bandwidth limits.

@@ -40,11 +40,13 @@ ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
+class ShuttleGui;
+
 class PrefsPanel /* not final */ : public wxPanelWrapper
 {
  public:
-   PrefsPanel(wxWindow * parent, const wxString &title)
-   :  wxPanelWrapper(parent, wxID_ANY)
+   PrefsPanel(wxWindow * parent, wxWindowID winid, const wxString &title)
+   :  wxPanelWrapper(parent, winid)
    {
       SetLabel(title);     // Provide visual label
       SetName(title);      // Provide audible label
@@ -59,6 +61,7 @@ class PrefsPanel /* not final */ : public wxPanelWrapper
    // If it returns True, the Preview button is added below the panel
    // Default returns false
    virtual bool ShowsPreviewButton();
+   virtual void PopulateOrExchange( ShuttleGui & WXUNUSED(S) ){};
 
    // If not empty string, the Help button is added below the panel
    // Default returns empty string.
@@ -71,7 +74,7 @@ class PrefsPanelFactory /* not final */
 {
 public:
    // Precondition: parent != NULL
-   virtual PrefsPanel *Create(wxWindow *parent) = 0;
+   virtual PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) = 0;
 };
 
 #endif

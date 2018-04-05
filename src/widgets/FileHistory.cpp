@@ -20,6 +20,7 @@
 #include <wx/menu.h>
 
 #include "FileHistory.h"
+#include "../Internat.h"
 
 FileHistory::FileHistory(size_t maxfiles, wxWindowID base)
 {
@@ -170,7 +171,9 @@ void FileHistory::AddFilesToMenu(wxMenu *menu)
       menu->Destroy(*iter++);
 
    for (size_t i = 0; i < mHistory.GetCount(); i++) {
-      menu->Append(mIDBase + 1 + i, mHistory[i]);
+      wxString item =  mHistory[i];
+      item.Replace( "&", "&&" );
+      menu->Append(mIDBase + 1 + i,item);
    }
 
    if (mHistory.GetCount() > 0) {

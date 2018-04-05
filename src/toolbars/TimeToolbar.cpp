@@ -109,7 +109,7 @@ NumericTextCtrl * TimeToolbar::AddTime( const wxString Name, int id, wxSizer * p
    wxString formatName = mListener ? mListener->ATTB_GetSelectionFormat() 
       : wxString(wxEmptyString);
    NumericTextCtrl * pCtrl = safenew NumericTextCtrl(
-      NumericConverter::TIME, this, id, formatName, 0.0, mRate);
+      this, id, NumericConverter::TIME, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
    pCtrl->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
    pCtrl->EnableMenu();
@@ -219,8 +219,8 @@ void TimeToolbar::OnUpdate(wxCommandEvent &evt)
    wxString format;
 
    // Save format name before recreating the controls so they resize properly
-   format = mAudioTime->GetBuiltinName(index);
-   mListener->ATTB_SetSelectionFormat(format);
+   auto formatId = mAudioTime->GetBuiltinName(index);
+   mListener->ATTB_SetSelectionFormat(formatId.Internal());
 
    RegenerateTooltips();
 

@@ -43,7 +43,8 @@ public:
    friend inline bool operator==
       (const TrackPanelCellIterator &lhs, const TrackPanelCellIterator &rhs)
    {
-      return lhs.mpCell == rhs.mpCell;
+      return lhs.mpCell == rhs.mpCell &&
+         lhs.mDidBackground == rhs.mDidBackground;
    }
 
    value_type operator * () const;

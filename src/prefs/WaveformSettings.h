@@ -50,7 +50,8 @@ public:
    void NextLowerDBRange();
    void NextHigherDBRange();
 
-   enum ScaleType {
+   typedef int ScaleType;
+   enum ScaleTypeValues : int {
       stLinear,
       stLogarithmic,
 

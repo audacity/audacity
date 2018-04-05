@@ -95,12 +95,16 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
          {
             // FIXME: Textbox labels have inconsistent capitalization
             mTotal = S.Id(ID_TOTAL).AddTextBox(_("&Total space used"), wxT("0"), 10);
-            mTotal->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
-            S.AddVariableText(wxT(""))->Hide();
+            mTotal->Bind(wxEVT_KEY_DOWN,
+                            // ignore it
+                            [](wxEvent&){});
+            S.AddVariableText( {} )->Hide();
 
             mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo Levels Available"), wxT("0"), 10);
-            mAvail->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
-            S.AddVariableText(wxT(""))->Hide();
+            mAvail->Bind(wxEVT_KEY_DOWN,
+                            // ignore it
+                            [](wxEvent&){});
+            S.AddVariableText( {} )->Hide();
 
             S.AddPrompt(_("&Levels To Discard"));
             mLevels = safenew wxSpinCtrl(this,
@@ -117,7 +121,9 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
             mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
 
             mClipboard = S.AddTextBox(_("Clipboard space used"), wxT("0"), 10);
-            mClipboard->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
+            mClipboard->Bind(wxEVT_KEY_DOWN,
+                                // ignore it
+                                [](wxEvent&){});
             S.Id(ID_DISCARD_CLIPBOARD).AddButton(_("Discard"));
          }
          S.EndMultiColumn();
@@ -141,30 +147,13 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    mList->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 
-   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-                     wxCommandEventHandler(HistoryWindow::OnAudioIO),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                     &HistoryWindow::OnAudioIO,
                      this);
 
-   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
-                     wxCommandEventHandler(HistoryWindow::OnAudioIO),
-                     NULL,
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &HistoryWindow::OnAudioIO,
                      this);
-}
-
-HistoryWindow::~HistoryWindow()
-{
-   wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
-                        wxCommandEventHandler(HistoryWindow::OnAudioIO),
-                        NULL,
-                        this);
-
-   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
-                        wxCommandEventHandler(HistoryWindow::OnAudioIO),
-                        NULL,
-                        this);
-
-   mAvail->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
 }
 
 void HistoryWindow::OnAudioIO(wxCommandEvent& evt)
@@ -242,7 +231,7 @@ void HistoryWindow::UpdateLevels()
    }
 
    mLevels->Enable(mSelected > 0);
-   mDiscard->Enable(mSelected > 0);
+   mDiscard->Enable(!mAudioIOBusy && mSelected > 0);
 }
 
 void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
@@ -308,10 +297,4 @@ void HistoryWindow::OnSize(wxSizeEvent & WXUNUSED(event))
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    if (mList->GetItemCount() > 0)
       mList->EnsureVisible(mSelected);
-}
-
-void HistoryWindow::OnChar(wxKeyEvent &event)
-{
-   event.Skip(false);
-   return;
 }

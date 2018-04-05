@@ -18,11 +18,9 @@ i.e. an alternative to the usual interface, for Audacity.
 
 *//*******************************************************************/
 
-#include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/string.h>
 #include <wx/filename.h>
 
@@ -45,9 +43,8 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "ModuleManager.h"
 #include "widgets/MultiDialog.h"
 
-#include <wx/arrimpl.cpp>
-
 #include "Experimental.h"
+#include "widgets/ErrorDialog.h"
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
@@ -116,8 +113,8 @@ bool Module::Load()
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName.c_str()), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName.c_str()));
+      AudacityMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName));
       mLib->Unload();
       return false;
    }
@@ -125,8 +122,8 @@ bool Module::Load()
    wxString moduleVersion = versionFn();
    if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName.c_str(), moduleVersion.c_str()), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName.c_str(), moduleVersion.c_str()));
+      AudacityMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName, moduleVersion), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName, moduleVersion));
       mLib->Unload();
       return false;
    }
@@ -268,7 +265,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       {
          wxString ShortName = wxFileName( files[i] ).GetName();
          wxString msg;
-         msg.Printf(_("Module \"%s\" found."), ShortName.c_str());
+         msg.Printf(_("Module \"%s\" found."), ShortName);
          msg += _("\n\nOnly use modules from trusted sources");
          const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
          int action;
@@ -513,8 +510,11 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
 
       ModuleInterface *module =
          static_cast<ModuleInterface *>(CreateProviderInstance(providerID, modPaths[i]));
-      
-      wxArrayString newpaths = module->FindPlugins(pm);
+
+      if (!module)
+         continue;
+
+      wxArrayString newpaths = module->FindPluginPaths(pm);
       for (size_t i = 0, cnt = newpaths.size(); i < cnt; i++)
       {
          providers.push_back(providerID);
@@ -536,17 +536,20 @@ wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
       }
    }
 
-   return mDynModules[providerID]->FindPlugins(PluginManager::Get());
+   return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
-bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString & path)
+bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxString & path, wxString &errMsg)
 {
+   errMsg.clear();
    if (mDynModules.find(providerID) == mDynModules.end())
    {
       return false;
    }
 
-   return mDynModules[providerID]->RegisterPlugin(PluginManager::Get(), path);
+   auto nFound = mDynModules[providerID]->DiscoverPluginsAtPath(path, errMsg, PluginManagerInterface::DefaultRegistrationCallback);
+
+   return nFound > 0;
 }
 
 IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,

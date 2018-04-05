@@ -67,7 +67,7 @@ bool Envelope::ConsistencyCheck()
       for ( size_t ii = 0, count = mEnv.size(); ii < count; ) {
          // Find range of points with equal T
          const double thisT = mEnv[ii].GetT();
-         double nextT;
+         double nextT = 0.0f;
          auto nextI = ii + 1;
          while ( nextI < count && thisT == ( nextT = mEnv[nextI].GetT() ) )
             ++nextI;
@@ -77,14 +77,14 @@ bool Envelope::ConsistencyCheck()
 
          while ( nextI - ii > 2 ) {
             // too many coincident time values
-            if (ii == mDragPoint || nextI - 1 == mDragPoint)
+            if ((int)ii == mDragPoint || (int)nextI - 1 == mDragPoint)
                // forgivable
                ;
             else {
                consistent = false;
                // repair it
                Delete( nextI - 2 );
-               if (mDragPoint >= nextI - 2)
+               if (mDragPoint >= (int)nextI - 2)
                   --mDragPoint;
                --nextI, --count;
                // wxLogError
@@ -167,7 +167,7 @@ void Envelope::SetDragPointValid(bool valid)
          mEnv[mDragPoint].SetVal( this, mDefaultValue );
          return;
       }
-      else if ( mDragPoint + 1 == size ) {
+      else if ( mDragPoint + 1 == (int)size ) {
          // Put the point at the height of the last point, but also off screen.
          mEnv[mDragPoint].SetT(big);
          mEnv[mDragPoint].SetVal( this, mEnv[ size - 1 ].GetVal() );
@@ -196,7 +196,7 @@ void Envelope::MoveDragPoint(double newWhen, double value)
 
    if (mDragPoint > 0)
       limitLo = std::max(limitLo, mEnv[mDragPoint - 1].GetT());
-   if (mDragPoint + 1 < mEnv.size())
+   if (mDragPoint + 1 < (int)mEnv.size())
       limitHi = std::min(limitHi, mEnv[mDragPoint + 1].GetT());
 
    EnvPoint &dragPoint = mEnv[mDragPoint];
@@ -272,8 +272,8 @@ Envelope::Envelope(const Envelope &orig)
 
 void Envelope::CopyRange(const Envelope &orig, size_t begin, size_t end)
 {
-   int len = orig.mEnv.size();
-   int i = begin;
+   size_t len = orig.mEnv.size();
+   size_t i = begin;
 
    // Create the point at 0 if it needs interpolated representation
    if ( i > 0 )
@@ -292,6 +292,7 @@ void Envelope::CopyRange(const Envelope &orig, size_t begin, size_t end)
       AddPointAtEnd( mTrackLen, orig.GetValue(mOffset + mTrackLen));
 }
 
+#if 0
 /// Limit() limits a double value to a range.
 /// TODO: Move to a general utilities source file.
 static double Limit( double Lo, double Value, double Hi )
@@ -302,6 +303,7 @@ static double Limit( double Lo, double Value, double Hi )
       return Hi;
    return Value;
 }
+#endif
 
 /// TODO: This should probably move to track artist.
 static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
@@ -729,7 +731,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    auto len = mEnv.size();
    for ( size_t i = begin; i < len; ++i ) {
       auto &point = mEnv[i];
-      if (rightPoint && i == begin)
+      if (rightPoint && (int)i == begin)
          // Avoid roundoff error.
          // Make exactly equal times of neighboring points so that we have
          // a real discontinuity.
@@ -878,11 +880,11 @@ void Envelope::RemoveUnneededPoints
    // points removable?
 
    int index = startAt + ( rightward ? 1 : -1 );
-   while ( index >= 0 && index < len ) {
+   while ( index >= 0 && index < (int)len ) {
       // Stop at any discontinuity
       if ( index > 0       && isDiscontinuity( index - 1 ) )
          break;
-      if ( index + 1 < len && isDiscontinuity( index ) )
+      if ( (index + 1) < (int)len && isDiscontinuity( index ) )
          break;
 
       if ( ! remove( index, false ) )
@@ -915,7 +917,7 @@ std::pair< int, int > Envelope::ExpandRegion
 
    // Shift points.
    auto len = mEnv.size();
-   for ( int ii = index; ii < len; ++ii ) {
+   for ( unsigned int ii = index; ii < len; ++ii ) {
       auto &point = mEnv[ ii ];
       point.SetT( point.GetT() + tlen );
    }
@@ -1027,7 +1029,6 @@ int Envelope::InsertOrReplaceRelative(double when, double value)
    }
 #endif
 
-   int len = mEnv.size();
    when = std::max( 0.0, std::min( mTrackLen, when ) );
 
    auto range = EqualRange( when, 0 );
@@ -1079,7 +1080,7 @@ void Envelope::SetTrackLen( double trackLen, double sampleDur )
    // Preserve the left-side limit at trackLen.
    auto range = EqualRange( trackLen, sampleDur );
    bool needPoint = ( range.first == range.second && trackLen < mTrackLen );
-   double value;
+   double value=0.0;
    if ( needPoint )
       value = GetValueRelative( trackLen );
 
@@ -1135,9 +1136,9 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
    // Optimizations for the usual pattern of repeated calls with
    // small increases of t.
    {
-      if (mSearchGuess >= 0 && mSearchGuess < mEnv.size()) {
+      if (mSearchGuess >= 0 && mSearchGuess < (int)mEnv.size()) {
          if (t >= mEnv[mSearchGuess].GetT() &&
-             (1 + mSearchGuess == mEnv.size() ||
+             (1 + mSearchGuess == (int)mEnv.size() ||
               t < mEnv[1 + mSearchGuess].GetT())) {
             Lo = mSearchGuess;
             Hi = 1 + mSearchGuess;
@@ -1146,9 +1147,9 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
       }
 
       ++mSearchGuess;
-      if (mSearchGuess >= 0 && mSearchGuess < mEnv.size()) {
+      if (mSearchGuess >= 0 && mSearchGuess < (int)mEnv.size()) {
          if (t >= mEnv[mSearchGuess].GetT() &&
-             (1 + mSearchGuess == mEnv.size() ||
+             (1 + mSearchGuess == (int)mEnv.size() ||
               t < mEnv[1 + mSearchGuess].GetT())) {
             Lo = mSearchGuess;
             Hi = 1 + mSearchGuess;
@@ -1343,7 +1344,7 @@ void Envelope::GetValues
    // Getting many envelope values, corresponding to pixel columns, which may
    // not be uniformly spaced in time when there is a fisheye.
 
-   double prevDiscreteTime, prevSampleVal, nextSampleVal;
+   double prevDiscreteTime=0.0, prevSampleVal=0.0, nextSampleVal=0.0;
    for ( int xx = 0; xx < bufferLen; ++xx ) {
       auto time = zoomInfo.PositionToTime( xx, -leftOffset );
       if ( sampleDur <= 0 )
@@ -1390,7 +1391,7 @@ double Envelope::NextPointAfter(double t) const
 {
    int lo,hi;
    BinarySearchForTime( lo, hi, t );
-   if (hi >= mEnv.size())
+   if (hi >= (int)mEnv.size())
       return t;
    else
       return mEnv[hi].GetT();
@@ -1626,7 +1627,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
    if(area == 0.0)
       return t0;
 
-   unsigned int count = mEnv.size();
+   const auto count = mEnv.size();
    if(count == 0) // 'empty' envelope
       return t0 + area * mDefaultValue;
 
@@ -1654,7 +1655,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
       else if(t0 >= mEnv[count - 1].GetT()) // t0 at or following the last point
       {
          if (area < 0) {
-            i = count - 2;
+            i = (int)count - 2;
             lastT = mEnv[count - 1].GetT();
             lastVal = mEnv[count - 1].GetVal();
             double added = (lastT - t0) / lastVal; // negative
@@ -1705,7 +1706,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
          // loop through the rest of the envelope points until we get to t1
          while (1)
          {
-            if(i >= count) // the requested range extends beyond the last point
+            if(i >= (int)count) // the requested range extends beyond the last point
             {
                return lastT + area * lastVal;
             }
@@ -1727,14 +1728,14 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
 void Envelope::print() const
 {
    for( unsigned int i = 0; i < mEnv.size(); i++ )
-      printf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );
+      wxPrintf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );
 }
 
 static void checkResult( int n, double a, double b )
 {
    if( (a-b > 0 ? a-b : b-a) > 0.0000001 )
    {
-      printf( "Envelope:  Result #%d is: %f, should be %f\n", n, a, b );
+      wxPrintf( "Envelope:  Result #%d is: %f, should be %f\n", n, a, b );
       //exit( -1 );
    }
 }

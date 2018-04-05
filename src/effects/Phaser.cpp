@@ -45,22 +45,19 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key               Def   Min   Max         Scale
-Param( Stages,    int,     XO("Stages"),     2,    2,    NUM_STAGES, 1  );
-Param( DryWet,    int,     XO("DryWet"),     128,  0,    255,        1  );
-Param( Freq,      double,  XO("Freq"),       0.4,  0.001,4.0,        10.0 );
-Param( Phase,     double,  XO("Phase"),      0.0,  0.0,  360.0,      1  );
-Param( Depth,     int,     XO("Depth"),      100,  0,    255,        1  );
-Param( Feedback,  int,     XO("Feedback"),   0,    -100, 100,        1  );
-Param( OutGain,   double,  XO("Gain"),      -6.0,    -30.0,    30.0,    1   );
+Param( Stages,    int,     wxT("Stages"),     2,    2,    NUM_STAGES, 1  );
+Param( DryWet,    int,     wxT("DryWet"),     128,  0,    255,        1  );
+Param( Freq,      double,  wxT("Freq"),       0.4,  0.001,4.0,        10.0 );
+Param( Phase,     double,  wxT("Phase"),      0.0,  0.0,  360.0,      1  );
+Param( Depth,     int,     wxT("Depth"),      100,  0,    255,        1  );
+Param( Feedback,  int,     wxT("Feedback"),   0,    -100, 100,        1  );
+Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 
 //
 #define phaserlfoshape 4.0
 
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 20
-
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(EffectPhaserStateArray);
 
 //
 // EffectPhaser
@@ -109,7 +106,7 @@ wxString EffectPhaser::GetSymbol()
 
 wxString EffectPhaser::GetDescription()
 {
-   return XO("Combines phase-shifted signals with the original signal");
+   return _("Combines phase-shifted signals with the original signal");
 }
 
 wxString EffectPhaser::ManualPage()
@@ -117,7 +114,7 @@ wxString EffectPhaser::ManualPage()
    return wxT("Phaser");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectPhaser::GetType()
 {
@@ -165,7 +162,7 @@ bool EffectPhaser::RealtimeInitialize()
 {
    SetBlockSize(512);
 
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -176,14 +173,14 @@ bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
 
    InstanceInit(slave, sampleRate);
 
-   mSlaves.Add(slave);
+   mSlaves.push_back(slave);
 
    return true;
 }
 
 bool EffectPhaser::RealtimeFinalize()
 {
-   mSlaves.Clear();
+   mSlaves.clear();
 
    return true;
 }
@@ -196,8 +193,18 @@ size_t EffectPhaser::RealtimeProcess(int group,
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
+bool EffectPhaser::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mStages,    Stages );
+   S.SHUTTLE_PARAM( mDryWet,    DryWet );
+   S.SHUTTLE_PARAM( mFreq,      Freq );
+   S.SHUTTLE_PARAM( mPhase,     Phase );
+   S.SHUTTLE_PARAM( mDepth,     Depth );
+   S.SHUTTLE_PARAM( mFeedback,  Feedback );
+   S.SHUTTLE_PARAM( mOutGain,   OutGain );
+   return true;
+}
 
-bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPhaser::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Stages, mStages);
    parms.Write(KEY_DryWet, mDryWet);
@@ -210,7 +217,7 @@ bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
-bool EffectPhaser::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectPhaser::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyInt(Stages);
    ReadAndVerifyInt(DryWet);
@@ -253,7 +260,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mStagesT->SetValidator(vldStages);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mStagesS = S.Id(ID_Stages).AddSlider(wxT(""), DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
+      mStagesS = S.Id(ID_Stages).AddSlider( {}, DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
       mStagesS->SetName(_("Stages"));
       mStagesS->SetLineSize(2);
       mStagesS->SetMinSize(wxSize(100, -1));
@@ -264,17 +271,17 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDryWetT->SetValidator(vldDryWet);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mDryWetS = S.Id(ID_DryWet).AddSlider(wxT(""), DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
+      mDryWetS = S.Id(ID_DryWet).AddSlider( {}, DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
       mDryWetS->SetName(_("Dry Wet"));
       mDryWetS->SetMinSize(wxSize(100, -1));
 
-      FloatingPointValidator<double> vldFreq(5, &mFreq, NUM_VAL_ONE_TRAILING_ZERO);
+      FloatingPointValidator<double> vldFreq(5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO);
       vldFreq.SetRange(MIN_Freq, MAX_Freq);
       mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
       mFreqT->SetValidator(vldFreq);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mFreqS = S.Id(ID_Freq).AddSlider(wxT(""), DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
+      mFreqS = S.Id(ID_Freq).AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
       mFreqS ->SetName(_("LFO frequency in hertz"));
       mFreqS ->SetMinSize(wxSize(100, -1));
 
@@ -284,7 +291,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mPhaseT->SetValidator(vldPhase);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mPhaseS = S.Id(ID_Phase).AddSlider(wxT(""), DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
+      mPhaseS = S.Id(ID_Phase).AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetName(_("LFO start phase in degrees"));
       mPhaseS->SetLineSize(10);
       mPhaseS->SetMinSize(wxSize(100, -1));
@@ -295,7 +302,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDepthT->SetValidator(vldDepth);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mDepthS = S.Id(ID_Depth).AddSlider(wxT(""), DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
+      mDepthS = S.Id(ID_Depth).AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetName(_("Depth in percent"));
       mDepthS->SetMinSize(wxSize(100, -1));
 
@@ -305,7 +312,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFeedbackT->SetValidator(vldFeedback);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mFeedbackS = S.Id(ID_Feedback).AddSlider(wxT(""), DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
+      mFeedbackS = S.Id(ID_Feedback).AddSlider( {}, DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
       mFeedbackS->SetName(_("Feedback in percent"));
       mFeedbackS->SetLineSize(10);
       mFeedbackS->SetMinSize(wxSize(100, -1));
@@ -316,7 +323,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mOutGainT->SetValidator(vldoutgain);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mOutGainS = S.Id(ID_OutGain).AddSlider(wxT(""), DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
+      mOutGainS = S.Id(ID_OutGain).AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
       mOutGainS->SetName(_("Output gain (dB)"));
       mOutGainS->SetMinSize(wxSize(100, -1));
    }

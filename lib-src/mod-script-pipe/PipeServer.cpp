@@ -54,13 +54,17 @@ void PipeServer()
 
    for(;;)
    {
+      // open to (incoming) pipe first.  
       printf( "Obtaining pipe\n" );
       bConnected = ConnectNamedPipe(hPipeToSrv, NULL) ? 
          TRUE : (GetLastError()==ERROR_PIPE_CONNECTED );
       printf( "Obtained to-srv %i\n", bConnected );
+
+      // open from (outgoing) pipe second.  This could block if there is no reader.
       bConnected = ConnectNamedPipe(hPipeFromSrv, NULL) ? 
          TRUE : (GetLastError()==ERROR_PIPE_CONNECTED );
       printf( "Obtained from-srv %i\n", bConnected );
+
       if( bConnected )
       {
          for(;;)
@@ -142,19 +146,21 @@ void PipeServer()
 //      return;
    }
 
-   fromFifo = fopen(fromFifoName, "w");
-   if (fromFifo == NULL)
-   {
-      perror("Unable to open fifo from server to script");
-      return;
-   }
-
+   // open to (incoming) pipe first.  
    toFifo = fopen(toFifoName, "r");
    if (toFifo == NULL)
    {
       perror("Unable to open fifo to server from script");
       if (fromFifo != NULL)
          fclose(fromFifo);
+      return;
+   }
+
+   // open from (outgoing) pipe second.  This could block if there is no reader.
+   fromFifo = fopen(fromFifoName, "w");
+   if (fromFifo == NULL)
+   {
+      perror("Unable to open fifo from server to script");
       return;
    }
 

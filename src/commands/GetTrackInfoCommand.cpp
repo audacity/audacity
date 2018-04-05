@@ -12,139 +12,54 @@
 \brief Definitions for GetTrackInfoCommand and GetTrackInfoCommandType classes
 
 \class GetTrackInfoCommand
-\brief Command that returns requested track information
+\brief Obsolete.  GetInfo now does it.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "GetTrackInfoCommand.h"
-#include "../TrackPanel.h"
 #include "../Project.h"
+#include "../Track.h"
+#include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../ShuttleGui.h"
+#include "CommandContext.h"
 
-wxString GetTrackInfoCommandType::BuildName()
+const int nTypes =3;
+static const IdentInterfaceSymbol kTypes[nTypes] =
 {
-   return wxT("GetTrackInfo");
+   { XO("Tracks") },
+   { XO("Clips") },
+   { XO("Labels") },
+};
+
+
+GetTrackInfoCommand::GetTrackInfoCommand()
+{
+   mInfoType = 0;
 }
 
-void GetTrackInfoCommandType::BuildSignature(CommandSignature &signature)
-{
-   auto trackIndexValidator = make_movable<IntValidator>();
-   signature.AddParameter(wxT("TrackIndex"), 0, std::move(trackIndexValidator));
-
-   auto infoTypeValidator = make_movable<OptionValidator>();
-   infoTypeValidator->AddOption(wxT("Name"));
-   infoTypeValidator->AddOption(wxT("StartTime"));
-   infoTypeValidator->AddOption(wxT("EndTime"));
-   infoTypeValidator->AddOption(wxT("Pan"));
-   infoTypeValidator->AddOption(wxT("Gain"));
-   infoTypeValidator->AddOption(wxT("Selected"));
-   infoTypeValidator->AddOption(wxT("Linked"));
-   infoTypeValidator->AddOption(wxT("Solo"));
-   infoTypeValidator->AddOption(wxT("Mute"));
-   infoTypeValidator->AddOption(wxT("Focused"));
-
-   signature.AddParameter(wxT("Type"), wxT("Name"), std::move(infoTypeValidator));
-}
-
-CommandHolder GetTrackInfoCommandType::Create(std::unique_ptr<CommandOutputTarget> &&target)
-{
-   return std::make_shared<GetTrackInfoCommand>(*this, std::move(target));
-}
-
-
-
-//******************* Private Member Functions ********************************
-void GetTrackInfoCommand::SendBooleanStatus(bool boolValue)
-{
-   if(boolValue)
-      Status(wxT("1"));
-   else
-      Status(wxT("0"));
-}
-
-
-
-
-// ===================== Public Member Functions =================================
-
-bool GetTrackInfoCommand::Apply(CommandExecutionContext context)
-{
-   wxString mode = GetString(wxT("Type"));
-
-   long trackIndex = GetLong(wxT("TrackIndex"));
-
-   // Get the track indicated by the TrackIndex parameter
-   // (Note: this ought to be somewhere else)
-   long i = 0;
-   TrackListIterator iter(context.GetProject()->GetTracks());
-   Track *t = iter.First();
-   while (t && i != trackIndex)
-   {
-      t = iter.Next();
-      ++i;
-   }
-   if (i != trackIndex || !t)
-   {
-      Error(wxT("TrackIndex was invalid."));
-      return false;
-   }
-
-   // Now get the particular desired item about the track of interest
-   if (mode.IsSameAs(wxT("Name")))
-   {
-      Status(t->GetName());
-   }
-   else if (mode.IsSameAs(wxT("StartTime")))
-   {
-      Status(wxString::Format(wxT("%f"), t->GetStartTime()));
-   }
-   else if (mode.IsSameAs(wxT("EndTime")))
-   {
-      Status(wxString::Format(wxT("%f"), t->GetEndTime()));
-   }
-   else if (mode.IsSameAs(wxT("Pan")))
-   {
-     if(t->GetKind() == Track::Wave)
-       Status(wxString::Format(wxT("%f"), static_cast<WaveTrack*>(t)->GetPan()));
-   }
-   else if (mode.IsSameAs(wxT("Gain")))
-   {
-      if(t->GetKind() == Track::Wave)
-         Status(wxString::Format(wxT("%f"), static_cast<WaveTrack*>(t)->GetGain()));
-   }
-   else if (mode.IsSameAs(wxT("Focused")))
-   {
-      TrackPanel *panel = context.GetProject()->GetTrackPanel();
-      SendBooleanStatus(panel->GetFocusedTrack() == t);
-   }
-   else if (mode.IsSameAs(wxT("Selected")))
-   {
-      SendBooleanStatus(t->GetSelected());
-   }
-   else if (mode.IsSameAs(wxT("Linked")))
-   {
-      SendBooleanStatus(t->GetLinked());
-   }
-   else if (mode.IsSameAs(wxT("Solo")))
-   {
-      auto pt = dynamic_cast<const PlayableTrack *>(t);
-      if (pt)
-         SendBooleanStatus(pt->GetSolo());
-      else
-         SendBooleanStatus(false);
-   }
-   else if (mode.IsSameAs(wxT("Mute")))
-   {
-      auto pt = dynamic_cast<const PlayableTrack *>(t);
-      if (pt)
-         SendBooleanStatus(pt->GetMute());
-      else
-         SendBooleanStatus(false);
-   }
-   else
-   {
-      Error(wxT("Invalid info type!"));
-      return false;
-   }
+bool GetTrackInfoCommand::DefineParams( ShuttleParams & S ){ 
+   S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
+   
    return true;
+}
+
+void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   auto types = LocalizedStrings( kTypes, nTypes );
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieChoice( _("Types:"), mInfoType, &types);
+   }
+   S.EndMultiColumn();
+}
+
+
+
+bool GetTrackInfoCommand::Apply(const CommandContext &context)
+{
+   return false;
 }

@@ -12,7 +12,6 @@
 #define __AUDACITY_PLUGINMANAGER_H__
 
 #include <wx/defs.h>
-#include <wx/dynarray.h>
 #include <wx/fileconf.h>
 #include <wx/string.h>
 
@@ -32,12 +31,13 @@
 
 typedef enum
 {
-   PluginTypeNone = -1,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
-   PluginTypeStub,               // Used for plugins that have not yet been registered
-   PluginTypeEffect,
-   PluginTypeExporter,
-   PluginTypeImporter,
-   PluginTypeModule,
+   PluginTypeNone = 0,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
+   PluginTypeStub =1,               // Used for plugins that have not yet been registered
+   PluginTypeEffect =1<<1,
+   PluginTypeAudacityCommand=1<<2,
+   PluginTypeExporter=1<<3,
+   PluginTypeImporter=1<<4,
+   PluginTypeModule=1<<5,
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
@@ -62,11 +62,14 @@ public:
    const wxString & GetPath() const;
    const wxString & GetSymbol() const;
 
-   // These return translated strings (if available and if requested)
-   wxString GetName(bool translate = true) const;
-   wxString GetVersion(bool translate = true) const;
-   wxString GetVendor(bool translate = true) const;
-   wxString GetDescription(bool translate = true) const;
+   wxString GetUntranslatedVersion() const;
+   // There is no translated version
+
+   wxString GetUntranslatedName() const;
+   wxString GetTranslatedName() const;
+
+   wxString GetUntranslatedVendor() const;
+   wxString GetTranslatedVendor() const;
    bool IsEnabled() const;
    bool IsValid() const;
 
@@ -81,15 +84,18 @@ public:
    void SetName(const wxString & name);
    void SetVersion(const wxString & version);
    void SetVendor(const wxString & vendor);
-   void SetDescription(const wxString & description);
 
    void SetEnabled(bool enable);
    void SetValid(bool valid);
 
    // Effect plugins only
 
-   // Will return an untranslated string
-   wxString GetEffectFamily(bool translate = true) const;
+   // Internal string only, no translated counterpart!
+   // (Use Effect::GetFamilyName instead)
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
+   wxString GetEffectFamilyId() const;
+
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;
@@ -98,7 +104,7 @@ public:
    bool IsEffectAutomatable() const;
 
    // "family" should be an untranslated string wrapped in wxT()
-   void SetEffectFamily(const wxString & family);
+   void SetEffectFamilyId(const wxString & family);
    void SetEffectType(EffectType type);
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);
@@ -135,7 +141,6 @@ private:
    wxString mName;
    wxString mVersion;
    wxString mVendor;
-   wxString mDescription;
    wxString mProviderID;
    bool mEnabled;
    bool mValid;
@@ -167,7 +172,6 @@ typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
 typedef wxArrayString PluginIDList;
 
-class ProviderMap;
 class PluginRegistrationDialog;
 
 class PluginManager final : public PluginManagerInterface
@@ -179,7 +183,8 @@ public:
    bool IsPluginRegistered(const wxString & path) override;
 
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
-   const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect) override;
+   const PluginID & RegisterPlugin(ModuleInterface *provider, CommandDefinitionInterface *command);
+   const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) override;
 
    void FindFilesInPathList(const wxString & pattern,
@@ -228,19 +233,24 @@ public:
    void Initialize();
    void Terminate();
 
+   bool DropFile(const wxString &fileName);
+
    static PluginManager & Get();
 
    static PluginID GetID(ModuleInterface *module);
-   static PluginID GetID(EffectIdentInterface *effect);
+   static PluginID GetID(CommandDefinitionInterface *command);
+   static PluginID GetID(EffectDefinitionInterface *effect);
    static PluginID GetID(ImporterInterface *importer);
 
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);
    const PluginDescriptor *GetPlugin(const PluginID & ID);
 
-   const PluginDescriptor *GetFirstPlugin(PluginType type);
-   const PluginDescriptor *GetNextPlugin(PluginType type);
+   const PluginDescriptor *GetFirstPlugin(int type); // possible or of several PlugInTypes.
+   const PluginDescriptor *GetNextPlugin( int type);
 
    const PluginDescriptor *GetFirstPluginForEffectType(EffectType type);
    const PluginDescriptor *GetNextPluginForEffectType(EffectType type);
@@ -258,9 +268,7 @@ public:
 
    bool ShowManager(wxWindow *parent, EffectType type = EffectTypeNone);
 
-   // Here solely for the purpose of Nyquist Workbench until
-   // a better solution is devised.
-   const PluginID & RegisterPlugin(EffectIdentInterface *effect);
+   const PluginID & RegisterPlugin(EffectDefinitionInterface *effect, PluginType type );
    void UnregisterPlugin(const PluginID & ID);
 
 private:
@@ -292,6 +300,7 @@ private:
    bool SetConfig(const wxString & key, const float & value);
    bool SetConfig(const wxString & key, const double & value);
 
+   /* Return values are keys for lookup in a config file */
    wxString SettingsPath(const PluginID & ID, bool shared);
    wxString SharedGroup(const PluginID & ID, const wxString & group);
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);

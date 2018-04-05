@@ -43,6 +43,10 @@ Functions that find and load all LV2 plugins on the system.
 
 #include "LoadLV2.h"
 
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
 // ============================================================================
 // Module registration entry point
 //
@@ -69,7 +73,7 @@ DECLARE_BUILTIN_MODULE(LV2sEffectBuiltin);
 // LV2EffectsModule
 //
 ///////////////////////////////////////////////////////////////////////////////
-WX_DECLARE_STRING_HASH_MAP(LilvNode *, UriHash);
+using UriHash = std::unordered_map<wxString, LilvNode*>;
 
 LilvWorld *gWorld = NULL;
 
@@ -119,7 +123,7 @@ wxString LV2EffectsModule::GetVersion()
 
 wxString LV2EffectsModule::GetDescription()
 {
-   return XO("Provides LV2 Effects support to Audacity");
+   return _("Provides LV2 Effects support to Audacity");
 }
 
 // ============================================================================
@@ -218,7 +222,7 @@ bool LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm)
    return false;
 }
 
-wxArrayString LV2EffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
+wxArrayString LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    // Retrieve data about all LV2 plugins
    const LilvPlugins *plugs = lilv_world_get_all_plugins(gWorld);
@@ -242,21 +246,25 @@ wxArrayString LV2EffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm
    return plugins;
 }
 
-bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+unsigned LV2EffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
+   errMsg.clear();
    const LilvPlugin *plug = GetPlugin(path);
-   if (!plug)
+   if (plug)
    {
-      return false;
+      LV2Effect effect(plug);
+      if (effect.SetHost(NULL))
+      {
+         if (callback)
+            callback( this, &effect );
+         return 1;
+      }
    }
 
-   LV2Effect effect(plug);
-   if (effect.SetHost(NULL))
-   {
-      pm.RegisterPlugin(this, &effect);
-   }
-
-   return true;
+   errMsg = _("Could not load the library");
+   return 0;
 }
 
 bool LV2EffectsModule::IsPluginValid(const wxString & path, bool bFast)

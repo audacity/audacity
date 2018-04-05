@@ -20,7 +20,7 @@ build_examples() {
   if [ x"$arg" = x ]; then
     echo "Examples in `pwd`; using local headers:" # for when dev pkg not installed
     libs=-l$1
-    cflags=-I$dir/src 
+    cflags=-I$dir/src
   else
     echo "Examples in `pwd`; using pkg-config:"
     libs=$(pkg-config --libs $1)
@@ -29,7 +29,7 @@ build_examples() {
   for f in ?$2-*.[cC]; do
     cc=cc; echo $f | grep -q C$ && cc=c++
     out=$tmp/`echo $f | sed "s/.[cC]$//"`
-    cmd="$cc $cflags -o $out $f $libs"
+    cmd="$cc $cflags -o $out $f $libs -lm"
     echo $cmd; $cmd
   done
 }

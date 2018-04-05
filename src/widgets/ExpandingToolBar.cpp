@@ -76,7 +76,6 @@ ExpandingToolBar.
 #include <wx/dcmemory.h>
 #include <wx/log.h>
 #include <wx/dragimag.h>
-#include <wx/arrimpl.cpp>
 #include <wx/dialog.h>
 
 #include "ExpandingToolBar.h"
@@ -93,14 +92,12 @@ enum {
    kTimerID
 };
 
-WX_DEFINE_OBJARRAY(wxArrayRect);
-
 class ToolBarArrangement
 {
 public:
-   ExpandingToolBarArray    childArray;
-   wxArrayRect              rectArray;
-   wxArrayInt               rowArray;
+   std::vector<ExpandingToolBar*> childArray;
+   std::vector<wxRect>      rectArray;
+   std::vector<int>         rowArray;
 };
 
 //
@@ -291,10 +288,10 @@ class ExpandingToolBarEvtHandler final : public wxEvtHandler
 
    bool ProcessEvent(wxEvent& evt) override
    {
-      if (mToolBar->IsCursorInWindow())
+//      if (mToolBar->IsCursorInWindow())
          mToolBar->TryAutoExpand();
-      else
-         mToolBar->TryAutoExpand();
+//      else
+//         mToolBar->TryAutoExpand();
 
       return mInheritedEvtHandler->ProcessEvent(evt);
    }
@@ -576,7 +573,7 @@ void ExpandingToolBar::UpdateMoving()
    int best_dist_sq = 99999;
    int i;
 
-   for(i=0; i<(int)mDropTargets.GetCount(); i++) {
+   for(i = 0; i < (int)mDropTargets.size(); i++) {
       int x = (mDropTargets[i].x + (mDropTargets[i].width/2))-cursorPos.x;
       int y = (mDropTargets[i].y + (mDropTargets[i].height/2))-cursorPos.y;
       int dist_sq = (x*x) + (y*y);
@@ -867,7 +864,7 @@ void ToolBarArea::ContractRow(int rowIndex)
    int i;
    int x = 0;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++)
+   for(i = 0; i < (int)mChildArray.size(); i++)
       if (mRowArray[i] == rowIndex) {
          wxPoint childPos = mChildArray[i]->GetPosition();
          wxSize childMin = mChildArray[i]->GetMinSize();
@@ -893,7 +890,7 @@ bool ToolBarArea::ExpandRow(int rowIndex)
    int expandableCount = 0;
    int toolbarCount = 0;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++)
+   for(i = 0; i < (int)mChildArray.size(); i++)
       if (mRowArray[i] == rowIndex) {
          ExpandingToolBar *child = mChildArray[i];
          wxSize childMin = child->GetMinSize();
@@ -917,7 +914,7 @@ bool ToolBarArea::ExpandRow(int rowIndex)
 
    j = 0;
    x = 0;
-   for(i=0; i<(int)mChildArray.GetCount(); i++)
+   for(i = 0; i < (int)mChildArray.size(); i++)
       if (mRowArray[i] == rowIndex) {
          ExpandingToolBar *child = mChildArray[i];
          wxPoint childPos = child->GetPosition();
@@ -955,7 +952,7 @@ void ToolBarArea::LayoutOne(int childIndex)
       wxPoint p = mChildArray[childIndex]->GetPosition();
       wxSize s = mChildArray[childIndex]->GetSize();
 
-      printf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
+      wxPrintf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
              childIndex, mRowArray[childIndex],
              p.x, p.y, s.x, s.y);
       #endif
@@ -1007,7 +1004,7 @@ void ToolBarArea::LayoutOne(int childIndex)
    wxPoint p = mChildArray[childIndex]->GetPosition();
    wxSize s = mChildArray[childIndex]->GetSize();
 
-   printf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
+   wxPrintf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
           childIndex, mRowArray[childIndex],
           p.x, p.y, s.x, s.y);
    #endif
@@ -1020,10 +1017,10 @@ bool ToolBarArea::Layout()
 
    int i;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++)
+   for(i = 0; i < (int)mChildArray.size(); i++)
       mRowArray[i] = -1;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++)
+   for(i = 0; i < (int)mChildArray.size(); i++)
       LayoutOne(i);
 
    Refresh(true);
@@ -1039,13 +1036,13 @@ void ToolBarArea::AdjustLayout()
    int row = -1;
    int i, j;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++) {
+   for(i = 0; i < (int)mChildArray.size(); i++) {
       if (mRowArray[i] > row) {
          row = mRowArray[i];
          bool success = ExpandRow(row);
          if (!success) {
             // Re-layout all toolbars from this row on
-            for(j=i; j<(int)mChildArray.GetCount(); j++)
+            for(j = i; j < (int)mChildArray.size(); j++)
                LayoutOne(j);
             return;
          }
@@ -1070,7 +1067,7 @@ void ToolBarArea::Fit(bool horizontal, bool vertical)
    minSize.y = 0;
    maxSize.x = 9999;
    maxSize.y = 0;
-   for(i=0; i<(int)mChildArray.GetCount(); i++) {
+   for(i = 0; i < (int)mChildArray.size(); i++) {
       wxPoint childPos = mChildArray[i]->GetPosition();
       wxSize childSize = mChildArray[i]->GetSize();
 
@@ -1150,15 +1147,15 @@ void ToolBarArea::CollapseAll(bool now)
 {
    int i;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++)
+   for(i = 0; i < (int)mChildArray.size(); i++)
       mChildArray[i]->Collapse(now);
 }
 
 void ToolBarArea::AddChild(ExpandingToolBar *child)
 {
-   mChildArray.Add(child);
-   mRowArray.Add(-1); // unknown row
-   LayoutOne(mChildArray.GetCount()-1);
+   mChildArray.push_back(child);
+   mRowArray.push_back(-1); // unknown row
+   LayoutOne(mChildArray.size() - 1);
    Fit(false, true);
 }
 
@@ -1166,17 +1163,17 @@ void ToolBarArea::RemoveChild(ExpandingToolBar *child)
 {
    int i, j;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++) {
+   for(i = 0; i < (int)mChildArray.size(); i++) {
       if (mChildArray[i] == child) {
          child->Hide();
 
-         mChildArray.RemoveAt(i);
-         mRowArray.RemoveAt(i);
+         mChildArray.erase(mChildArray.begin() + i);
+         mRowArray.erase(mRowArray.begin() + i);
 
-         for(j=i; j<(int)mChildArray.GetCount(); j++)
+         for(j = i; j < (int)mChildArray.size(); j++)
             mRowArray[j] = -1;
 
-         for(j=i; j<(int)mChildArray.GetCount(); j++)
+         for(j = i; j < (int)mChildArray.size(); j++)
             LayoutOne(j);
 
          Fit(false, true);
@@ -1192,8 +1189,8 @@ std::unique_ptr<ToolBarArrangement> ToolBarArea::SaveArrangement()
    arrangement->childArray = mChildArray;
    arrangement->rowArray = mRowArray;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++)
-      arrangement->rectArray.Add(mChildArray[i]->GetRect());
+   for(i = 0; i < (int)mChildArray.size(); i++)
+      arrangement->rectArray.push_back(mChildArray[i]->GetRect());
 
    return arrangement;
 }
@@ -1205,7 +1202,7 @@ void ToolBarArea::RestoreArrangement(std::unique_ptr<ToolBarArrangement>&& arran
    mChildArray = arrangement->childArray;
    mRowArray = arrangement->rowArray;
 
-   for(i=0; i<(int)mChildArray.GetCount(); i++) {
+   for(i = 0; i < (int)mChildArray.size(); i++) {
       mChildArray[i]->SetSize(arrangement->rectArray[i]);
       mChildArray[i]->Show();
    }
@@ -1215,13 +1212,13 @@ void ToolBarArea::RestoreArrangement(std::unique_ptr<ToolBarArrangement>&& arran
    arrangement.reset();
 }
 
-wxArrayRect ToolBarArea::GetDropTargets()
+std::vector<wxRect> ToolBarArea::GetDropTargets()
 {
-   mDropTargets.Clear();
-   mDropTargetIndices.Clear();
-   mDropTargetRows.Clear();
+   mDropTargets.clear();
+   mDropTargetIndices.clear();
+   mDropTargetRows.clear();
 
-   int numChildren = (int)mChildArray.GetCount();
+   int numChildren = (int)mChildArray.size();
    int i;
    int row = -1;
 
@@ -1235,16 +1232,16 @@ wxArrayRect ToolBarArea::GetDropTargets()
       if (childRow != row) {
          // Add a target before this child (at beginning of row only)
          row = childRow;
-         mDropTargetIndices.Add(i);
-         mDropTargetRows.Add(row);
-         mDropTargets.Add(wxRect(childRect.x, childRect.y,
+         mDropTargetIndices.push_back(i);
+         mDropTargetRows.push_back(row);
+         mDropTargets.push_back(wxRect(childRect.x, childRect.y,
                                  0, childRect.height));
       }
 
       // Add a target after this child (always)
-      mDropTargetIndices.Add(i+1);
-      mDropTargetRows.Add(row);
-      mDropTargets.Add(wxRect(childRect.x+childRect.width, childRect.y,
+      mDropTargetIndices.push_back(i+1);
+      mDropTargetRows.push_back(row);
+      mDropTargets.push_back(wxRect(childRect.x+childRect.width, childRect.y,
                               0, childRect.height));
    }
 
@@ -1255,22 +1252,22 @@ void ToolBarArea::MoveChild(ExpandingToolBar *toolBar, wxRect dropTarget)
 {
    int i, j;
 
-   for(i=0; i<(int)mDropTargets.GetCount(); i++) {
+   for(i = 0; i < (int)mDropTargets.size(); i++) {
       if (dropTarget == mDropTargets[i]) {
          int newIndex = mDropTargetIndices[i];
          int newRow = mDropTargetRows[i];
 
-         mChildArray.Insert(toolBar, newIndex);
-         mRowArray.Insert(newRow, newIndex);
+         mChildArray.insert(mChildArray.begin() + newIndex, toolBar);
+         mRowArray.insert(mRowArray.begin() + newIndex, newRow);
 
-         for(j=newIndex+1; j<(int)mChildArray.GetCount(); j++)
+         for(j = newIndex+1; j < (int)mChildArray.size(); j++)
             mRowArray[j] = -1;
 
          ContractRow(newRow);
 
          mChildArray[newIndex]->Show();
 
-         for(j=newIndex; j<(int)mChildArray.GetCount(); j++)
+         for(j = newIndex; j < (int)mChildArray.size(); j++)
             LayoutOne(j);
 
          Fit(false, true);

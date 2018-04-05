@@ -17,10 +17,13 @@
 #include "xml/XMLWriter.h"
 
 #include <wx/debug.h>
-#include <wx/dynarray.h>
 #include <wx/ffile.h>
 #include <wx/hashmap.h>
 #include <wx/mstream.h>
+
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
 
 //
 // Show auto recovery dialog if there are projects to recover. Should be
@@ -68,9 +71,8 @@ private:
 // Should be plain ASCII
 #define AutoSaveIdent "<?xml autosave>"
 
-WX_DECLARE_STRING_HASH_MAP_WITH_DECL(short, NameMap, class AUDACITY_DLL_API);
-WX_DECLARE_HASH_MAP_WITH_DECL(short, wxString, wxIntegerHash, wxIntegerEqual, IdMap, class AUDACITY_DLL_API);
-WX_DECLARE_OBJARRAY_WITH_DECL(IdMap, IdMapArray, class AUDACITY_DLL_API);
+using NameMap = std::unordered_map<wxString, short>;
+using IdMap = std::unordered_map<short, wxString>;
 
 // This class's overrides do NOT throw AudacityException.
 class AUDACITY_DLL_API AutoSaveFile final : public XMLWriter

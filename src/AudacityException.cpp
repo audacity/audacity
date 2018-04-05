@@ -1,8 +1,30 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  AudacityException
+
+  Paul Licameli
+
+********************************************************************//**
+
+\class AudacityException
+\brief root of a hierarchy of classes that are thrown and caught
+ by Audacity.
+
+\class MessageBoxException
+\brief an AudacityException that pops up a single message box even if
+there were multiple exceptions of the same kind before it actually 
+got to show.
+
+*//********************************************************************/
+
 #include "Audacity.h"
 #include "AudacityException.h"
 
 #include <wx/atomic.h>
-#include <wx/msgdlg.h>
+
+#include "widgets/ErrorDialog.h"
 
 AudacityException::~AudacityException()
 {
@@ -13,7 +35,11 @@ wxAtomicInt sOutstandingMessages {};
 MessageBoxException::MessageBoxException( const wxString &caption_ )
    : caption{ caption_ }
 {
-   wxAtomicInc( sOutstandingMessages );
+   if (!caption.empty())
+      wxAtomicInc( sOutstandingMessages );
+   else
+      // invalidate me
+      moved = true;
 }
 
 // The class needs a copy constructor to be throwable
@@ -75,9 +101,9 @@ void MessageBoxException::DelayedHandlerAction()
       // common cause such as exhaustion of disk space so that the others
       // give the user no useful added information.
       if ( wxAtomicDec( sOutstandingMessages ) == 0 )
-         ::wxMessageBox(
+         ::AudacityMessageBox(
             ErrorMessage(),
-            caption.IsEmpty() ? wxMessageBoxCaptionStr : caption,
+            caption.IsEmpty() ? AudacityMessageBoxCaptionStr() : caption,
             wxICON_ERROR
          );
       moved = true;

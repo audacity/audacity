@@ -38,7 +38,7 @@ void TimeShiftHandle::Enter(bool)
 }
 
 HitTestPreview TimeShiftHandle::HitPreview
-(const AudacityProject *pProject, bool unsafe)
+(const AudacityProject *WXUNUSED(pProject), bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
@@ -604,7 +604,7 @@ UIHandle::Result TimeShiftHandle::Drag
       {
          trySnap = true;
          if (pTrack->GetKind() == Track::Wave) {
-            auto wt = static_cast<const WaveTrack *>(pTrack);
+            auto wt = static_cast<const WaveTrack *>(pTrack.get());
             const double rate = wt->GetRate();
             // set it to a sample point
             desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
@@ -875,18 +875,15 @@ UIHandle::Result TimeShiftHandle::Release
    wxString msg;
    bool consolidate;
    if (mDidSlideVertically) {
-      msg.Printf(_("Moved clips to another track"));
+      msg = _("Moved clips to another track");
       consolidate = false;
    }
    else {
-      wxString direction = mClipMoveState.hSlideAmount > 0 ?
-         /* i18n-hint: a direction as in left or right.*/
-         _("right") :
-         /* i18n-hint: a direction as in left or right.*/
-         _("left");
-      /* i18n-hint: %s is a direction like left or right */
-      msg.Printf(_("Time shifted tracks/clips %s %.02f seconds"),
-         direction.c_str(), fabs( mClipMoveState.hSlideAmount ));
+      msg.Printf(
+         ( mClipMoveState.hSlideAmount > 0
+           ? _("Time shifted tracks/clips right %.02f seconds")
+           : _("Time shifted tracks/clips left %.02f seconds") ),
+         fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
    pProject->PushState(msg, _("Time-Shift"),

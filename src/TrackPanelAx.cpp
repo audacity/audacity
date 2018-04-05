@@ -29,10 +29,11 @@
 #include <wx/intl.h>
 
 #include "Track.h"
+#include "Internat.h"
 
 TrackPanelAx::TrackPanelAx( wxWindow *window )
 #if wxUSE_ACCESSIBILITY
-   :wxWindowAccessible( window )
+   :WindowAccessible( window )
 #endif
 {
    mTrackPanel = wxDynamicCast( window, TrackPanel );
@@ -130,8 +131,14 @@ bool TrackPanelAx::IsFocused( Track *track )
    if( !focusedTrack )
       focusedTrack = SetFocus();
 
+   // Remap track pointer if there are oustanding pending updates
+   auto origTrack =
+      mTrackPanel->GetTracks()->FindById( track->GetId() );
+   if (origTrack)
+      track = origTrack;
+
    if( ( track == focusedTrack.get() ) ||
-       ( track == focusedTrack->GetLink() ) )
+       ( focusedTrack && track == focusedTrack->GetLink() ) )
    {
       return true;
    }
@@ -141,6 +148,8 @@ bool TrackPanelAx::IsFocused( Track *track )
 
 int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
 {
+   // Find 1-based position of the target in the visible tracks, or 0 if not
+   // found
    TrackListIterator iter( mTrackPanel->GetTracks() );
    Track *t = iter.First();
    int ndx = 0;
@@ -631,6 +640,91 @@ wxAccStatus TrackPanelAx::GetFocus( int *childId, wxAccessible **child )
 
    return wxACC_NOT_IMPLEMENTED;
 #endif
+}
+
+// Navigates from fromId to toId/toObject
+wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAccessible** toObject)
+{
+   int childCount;
+   GetChildCount( &childCount );
+
+   if (fromId > childCount)
+      return wxACC_FAIL;
+
+   switch (navDir) {
+   case wxNAVDIR_FIRSTCHILD:
+      if (fromId == wxACC_SELF && childCount > 0 )
+         *toId = 1;
+      else
+         return wxACC_FALSE;
+      break;
+
+   case wxNAVDIR_LASTCHILD:
+      if (fromId == wxACC_SELF && childCount > 0 )
+         *toId = childCount;
+      else
+         return wxACC_FALSE;
+      break;
+
+   case wxNAVDIR_NEXT:
+   case wxNAVDIR_DOWN:
+      if (fromId != wxACC_SELF) {
+         *toId = fromId + 1;
+         if (*toId > childCount)
+            return wxACC_FALSE;
+      }
+      else
+         return wxACC_NOT_IMPLEMENTED;
+      break;
+
+   case wxNAVDIR_PREVIOUS:
+   case wxNAVDIR_UP:
+      if (fromId != wxACC_SELF) {
+         *toId = fromId - 1;
+         if (*toId < 1)
+            return wxACC_FALSE;
+      }
+      else
+         return wxACC_NOT_IMPLEMENTED;
+      break;
+
+   case wxNAVDIR_LEFT:
+   case wxNAVDIR_RIGHT:
+      if (fromId != wxACC_SELF)
+         return wxACC_FALSE;
+      else
+         return wxACC_NOT_IMPLEMENTED;
+      break;
+   }
+
+   *toObject = nullptr;
+   return wxACC_OK;
+}
+
+// Modify focus or selection
+wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
+{
+   // Only support change of focus
+   if (selectFlags != wxACC_SEL_TAKEFOCUS)
+      return wxACC_NOT_IMPLEMENTED;
+   
+   if (childId != wxACC_SELF) {
+      int childCount;
+      GetChildCount( &childCount );
+      if (childId > childCount)
+           return wxACC_FAIL;
+
+      Track* t = FindTrack(childId).get();
+      if (t) {
+         mTrackPanel->SetFocusedTrack(t);
+         mTrackPanel->EnsureVisible(t);
+         mTrackPanel->MakeParentModifyState(false);
+      }
+   }
+   else
+      return wxACC_NOT_IMPLEMENTED;
+
+   return wxACC_OK;
 }
 
 #endif // wxUSE_ACCESSIBILITY

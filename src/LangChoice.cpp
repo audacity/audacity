@@ -21,7 +21,6 @@ of languages for Audacity.
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
@@ -29,6 +28,8 @@ of languages for Audacity.
 #include "Languages.h"
 #include "ShuttleGui.h"
 #include "widgets/wxPanelWrapper.h"
+#include "widgets/ErrorDialog.h"
+#include "Internat.h"
 
 class LangChoiceDialog final : public wxDialogWrapper {
 public:
@@ -128,11 +129,11 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
       /* i18n-hint: The %s's are replaced by translated and untranslated
        * versions of language names. */
       msg.Printf(_("The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."),
-                 mLangNames[ndx].c_str(),
-                 mLang.c_str(),
-                 sname.c_str(),
-                 slang.c_str());
-      if (wxMessageBox(msg, _("Confirm"), wxYES_NO) == wxNO) {
+                 mLangNames[ndx],
+                 mLang,
+                 sname,
+                 slang);
+      if (AudacityMessageBox(msg, _("Confirm"), wxYES_NO) == wxNO) {
          return;
       }
    }

@@ -45,10 +45,10 @@ wxString EffectReverse::GetSymbol()
 
 wxString EffectReverse::GetDescription()
 {
-   return XO("Reverses the selected audio");
+   return _("Reverses the selected audio");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectReverse::GetType()
 {
@@ -114,7 +114,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // perform a split at the start and/or end of the reverse selection
    const auto &clips = track->GetClips();
    // Beware, the array grows as we loop over it.  Use integer subscripts, not iterators.
-   for (int ii = 0; ii < clips.size(); ++ii) {
+   for (size_t ii = 0; ii < clips.size(); ++ii) {
       const auto &clip = clips[ii].get();
       auto clipStart = clip->GetStartSample();
       auto clipEnd = clip->GetEndSample();

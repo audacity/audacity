@@ -3,7 +3,6 @@
 
 // C++ standard header <memory> with a few extensions
 #include <memory>
-
 #ifndef safenew
 #define safenew new
 #endif
@@ -31,12 +30,37 @@ using std::isinf;
 // To define make_shared
 #include <tr1/memory>
 
+// To define function
+#include <tr1/functional>
+
+// To define unordered_set
+#include <tr1/unordered_set>
+
+// To define unordered_map and hash
+#include <tr1/unordered_map>
+
+#include <tr1/tuple>
+
 namespace std {
+   using std::tr1::unordered_set;
+   using std::tr1::hash;
+   using std::tr1::unordered_map;
+   using std::tr1::function;
    using std::tr1::shared_ptr;
    using std::tr1::weak_ptr;
    using std::tr1::static_pointer_cast;
    using std::tr1::remove_reference;
    using std::tr1::is_unsigned;
+   using std::tr1::is_const;
+   using std::tr1::add_const;
+   using std::tr1::add_pointer;
+   using std::tr1::remove_pointer;
+   using std::tr1::tuple;
+   using std::tr1::get;
+
+   template<typename T> struct add_rvalue_reference {
+      using type = T&&;
+   };
 
    template<typename X> struct default_delete
    {
@@ -312,6 +336,11 @@ namespace std {
    template<typename T> inline T&& forward(typename remove_reference<T>::type&& t)
    { return static_cast<T&&>(t); }
 
+   // Declared but never defined, and typically used in decltype constructs
+   template<typename T>
+   typename std::add_rvalue_reference<T>::type declval() //noexcept
+   ;
+
    // We need make_shared for ourselves, because the library doesn't use variadics
    template<typename X, typename... Args> inline shared_ptr<X> make_shared(Args&&... args)
    {
@@ -365,6 +394,11 @@ namespace std {
        return __il.end();
    }
 }
+
+#else
+
+// To define function
+#include <functional>
 
 #endif
 
@@ -448,7 +482,8 @@ public:
       reinit(count, initialize);
    }
 
-   ArrayOf(const ArrayOf&) PROHIBITED;
+   //ArrayOf(const ArrayOf&) PROHIBITED;
+   ArrayOf(const ArrayOf&) = delete;
    ArrayOf(ArrayOf&& that)
       : std::unique_ptr < X[] >
          (std::move((std::unique_ptr < X[] >&)(that)))
@@ -506,7 +541,8 @@ public:
          (*this)[ii] = ArrayOf<X>{ M, initialize };
    }
 
-   ArraysOf(const ArraysOf&) PROHIBITED;
+   //ArraysOf(const ArraysOf&) PROHIBITED;
+   ArraysOf(const ArraysOf&) =delete;
    ArraysOf& operator= (ArraysOf&& that)
    {
       ArrayOf<ArrayOf<X>>::operator=(std::move(that));
@@ -806,6 +842,9 @@ Final_action<F> finally (F f)
    return Final_action<F>(f);
 }
 
+#include <wx/utils.h> // for wxMin, wxMax
+#include <algorithm>
+
 /*
  * Set a variable temporarily in a scope
  */
@@ -851,11 +890,307 @@ ValueRestorer< T > valueRestorer( T& var, const T& newValue )
  */
 template <typename Iterator>
 struct IteratorRange : public std::pair<Iterator, Iterator> {
+   using iterator = Iterator;
+   using reverse_iterator = std::reverse_iterator<Iterator>;
+
+   IteratorRange (const Iterator &a, const Iterator &b)
+   : std::pair<Iterator, Iterator> ( a, b ) {}
+
    IteratorRange (Iterator &&a, Iterator &&b)
-      : std::pair<Iterator, Iterator> ( std::move(a), std::move(b) ) {}
+   : std::pair<Iterator, Iterator> ( std::move(a), std::move(b) ) {}
+
+   IteratorRange< reverse_iterator > reversal () const
+   { return { this->rbegin(), this->rend() }; }
 
    Iterator begin() const { return this->first; }
    Iterator end() const { return this->second; }
+
+   reverse_iterator rbegin() const { return reverse_iterator{ this->second }; }
+   reverse_iterator rend() const { return reverse_iterator{ this->first }; }
+
+   bool empty() const { return this->begin() == this->end(); }
+   explicit operator bool () const { return !this->empty(); }
+   size_t size() const { return std::distance(this->begin(), this->end()); }
+
+   template <typename T> iterator find(const T &t) const
+   { return std::find(this->begin(), this->end(), t); }
+
+   template <typename T> long index(const T &t) const
+   {
+      auto iter = this->find(t);
+      if (iter == this->end())
+         return -1;
+      return std::distance(this->begin(), iter);
+   }
+
+   template <typename T> bool contains(const T &t) const
+   { return this->end() != this->find(t); }
+
+   template <typename F> iterator find_if(const F &f) const
+   { return std::find_if(this->begin(), this->end(), f); }
+
+   template <typename F> long index_if(const F &f) const
+   {
+      auto iter = this->find_if(f);
+      if (iter == this->end())
+         return -1;
+      return std::distance(this->begin(), iter);
+   }
+
+   // to do: use std::all_of, any_of, none_of when available on all platforms
+   template <typename F> bool all_of(const F &f) const
+   {
+      auto notF =
+         [&](typename std::iterator_traits<Iterator>::reference v)
+            { return !f(v); };
+      return !this->any_of( notF );
+   }
+
+   template <typename F> bool any_of(const F &f) const
+   { return this->end() != this->find_if(f); }
+
+   template <typename F> bool none_of(const F &f) const
+   { return !this->any_of(f); }
+
+   template<typename T> struct identity
+      { const T&& operator () (T &&v) const { return std::forward(v); } };
+
+   // Like std::accumulate, but the iterators implied, and with another
+   // unary operation on the iterator value, pre-composed
+   template<
+      typename R,
+      typename Binary = std::plus< R >,
+      typename Unary = identity< decltype( *std::declval<Iterator>() ) >
+   >
+   R accumulate(
+      R init,
+      Binary binary_op = {},
+      Unary unary_op = {}
+   ) const
+   {
+      R result = init;
+      for (auto&& v : *this)
+         result = binary_op(result, unary_op(v));
+      return result;
+   }
+
+   // An overload making it more convenient to use with pointers to member
+   // functions
+   template<
+      typename R,
+      typename Binary = std::plus< R >,
+      typename R2, typename C
+   >
+   R accumulate(
+      R init,
+      Binary binary_op,
+      R2 (C :: * pmf) () const
+   ) const
+   {
+      return this->accumulate( init, binary_op, std::mem_fun( pmf ) );
+   }
+
+   // Some accumulations frequent enough to be worth abbreviation:
+   template<
+      typename Unary = identity< decltype( *std::declval<Iterator>() ) >,
+      typename R = decltype( std::declval<Unary>()( *std::declval<Iterator>() ) )
+   >
+   R min( Unary unary_op = {} ) const
+   {
+      return this->accumulate(
+         std::numeric_limits< R >::max(),
+         (const R&(*)(const R&, const R&)) std::min,
+         unary_op
+      );
+   }
+
+   template<
+      typename R2, typename C,
+      typename R = R2
+   >
+   R min( R2 (C :: * pmf) () const ) const
+   {
+      return this->min( std::mem_fun( pmf ) );
+   }
+
+   template<
+      typename Unary = identity< decltype( *std::declval<Iterator>() ) >,
+      typename R = decltype( std::declval<Unary>()( *std::declval<Iterator>() ) )
+   >
+   R max( Unary unary_op = {} ) const
+   {
+      return this->accumulate(
+         -std::numeric_limits< R >::max(),
+         // std::numeric_limits< R >::lowest(), // TODO C++11
+         (const R&(*)(const R&, const R&)) std::max,
+         unary_op
+      );
+   }
+
+   template<
+      typename R2, typename C,
+      typename R = R2
+   >
+   R max( R2 (C :: * pmf) () const ) const
+   {
+      return this->max( std::mem_fun( pmf ) );
+   }
+
+   template<
+      typename Unary = identity< decltype( *std::declval<Iterator>() ) >,
+      typename R = decltype( std::declval<Unary>()( *std::declval<Iterator>() ) )
+   >
+   R sum( Unary unary_op = {} ) const
+   {
+      return this->accumulate(
+         R{ 0 },
+         std::plus< R >{},
+         unary_op
+      );
+   }
+
+   template<
+      typename R2, typename C,
+      typename R = R2
+   >
+   R sum( R2 (C :: * pmf) () const ) const
+   {
+      return this->sum( std::mem_fun( pmf ) );
+   }
 };
+
+template< typename Iterator>
+IteratorRange< Iterator >
+make_iterator_range( const Iterator &i1, const Iterator &i2 )
+{
+   return { i1, i2 };
+}
+
+template< typename Container >
+IteratorRange< typename Container::iterator >
+make_iterator_range( Container &container )
+{
+   return { container.begin(), container.end() };
+}
+
+template< typename Container >
+IteratorRange< typename Container::const_iterator >
+make_iterator_range( const Container &container )
+{
+   return { container.begin(), container.end() };
+}
+
+/*
+ * Transform an iterator sequence, as another iterator sequence
+ */
+template <
+   typename Result,
+   typename Iterator
+>
+class transform_iterator
+   : public std::iterator<
+      typename std::iterator_traits<Iterator>::iterator_category,
+      const Result
+   >
+{
+   // This takes a function on iterators themselves, not on the
+   // dereference of those iterators, in case you ever need the generality.
+   using Function = std::function< Result( const Iterator& ) >;
+
+private:
+   Iterator mIterator;
+   Function mFunction;
+
+public:
+   transform_iterator(const Iterator &iterator, const Function &function)
+      : mIterator( iterator )
+      , mFunction( function )
+   {}
+
+   transform_iterator &operator ++ ()
+      { ++this->mIterator; return *this; }
+   transform_iterator operator ++ (int)
+      { auto copy{*this}; ++this->mIterator; return copy; }
+   transform_iterator &operator -- ()
+      { --this->mIterator; return *this; }
+   transform_iterator operator -- (int)
+      { auto copy{*this}; --this->mIterator; return copy; }
+
+   typename transform_iterator::reference operator * ()
+      { return this->mFunction(this->mIterator); }
+
+   friend inline bool operator == (
+      const transform_iterator &a, const transform_iterator &b)
+      { return a.mIterator == b.mIterator; }
+   friend inline bool operator != (
+      const transform_iterator &a, const transform_iterator &b)
+      { return !(a == b); }
+};
+
+template <
+   typename Iterator,
+   typename Function
+>
+transform_iterator<
+   decltype( std::declval<Function>() ( std::declval<Iterator>() ) ),
+   Iterator
+>
+make_transform_iterator(const Iterator &iterator, Function function)
+{
+   return { iterator, function };
+}
+
+template < typename Function, typename Iterator > struct value_transformer
+{
+   // Adapts a function on values to a function on iterators.
+   Function function;
+
+   auto operator () (const Iterator &iterator)
+      -> decltype( function( *iterator ) ) const
+   { return this->function( *iterator ); }
+};
+
+template <
+   typename Function,
+   typename Iterator
+>
+using value_transform_iterator = transform_iterator<
+   decltype( std::declval<Function>()( *std::declval<Iterator>() ) ),
+   Iterator
+>;
+
+template <
+   typename Function,
+   typename Iterator
+>
+value_transform_iterator< Function, Iterator >
+make_value_transform_iterator(const Iterator &iterator, Function function)
+{
+   using NewFunction = value_transformer<Function, Iterator>;
+   return { iterator, NewFunction{ function } };
+}
+
+// For using std::unordered_map on wxString
+namespace std
+{
+#ifdef __AUDACITY_OLD_STD__
+   namespace tr1
+   {
+#endif
+#if !wxCHECK_VERSION(3, 1, 0)
+      template<typename T> struct hash;
+      template<> struct hash< wxString > {
+         size_t operator () (const wxString &str) const // noexcept
+         {
+            auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
+            using Hasher = hash< decltype(stdstr) >;
+            return Hasher{}( stdstr );
+         }
+      };
+#endif
+#ifdef __AUDACITY_OLD_STD__
+   }
+#endif
+}
 
 #endif // __AUDACITY_MEMORY_X_H__

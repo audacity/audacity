@@ -23,11 +23,12 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/log.h>
 #include <wx/frame.h>
 #include <wx/icon.h>
-#include <wx/msgdlg.h>
 #include <wx/settings.h>
 
 #include "../images/AudacityLogoAlpha.xpm"
 #include "Experimental.h"
+#include "widgets/ErrorDialog.h"
+#include "Internat.h"
 
 //
 // AudacityLogger class
@@ -54,11 +55,6 @@ AudacityLogger::AudacityLogger()
 {
    mText = NULL;
    mUpdated = false;
-}
-
-AudacityLogger::~AudacityLogger()
-{
-   Destroy();
 }
 
 void AudacityLogger::Flush()
@@ -91,50 +87,6 @@ void AudacityLogger::DoLogText(const wxString & str)
 
    if (!wxIsMainThread()) {
       wxMutexGuiLeave();
-   }
-}
-
-void AudacityLogger::Destroy()
-{
-   if (mFrame) {
-      mFrame->Disconnect(LoggerID_Save,
-                        wxEVT_COMMAND_BUTTON_CLICKED,
-                        wxCommandEventHandler(AudacityLogger::OnSave),
-                        NULL,
-                        this);
-      mFrame->Disconnect(LoggerID_Clear,
-                        wxEVT_COMMAND_BUTTON_CLICKED,
-                        wxCommandEventHandler(AudacityLogger::OnClear),
-                        NULL,
-                        this);
-      mFrame->Disconnect(LoggerID_Close,
-                        wxEVT_COMMAND_BUTTON_CLICKED,
-                        wxCommandEventHandler(AudacityLogger::OnClose),
-                        NULL,
-                        this);
-
-      mFrame->Disconnect(LoggerID_Save,
-                        wxEVT_COMMAND_MENU_SELECTED,
-                        wxCommandEventHandler(AudacityLogger::OnSave),
-                        NULL,
-                        this);
-      mFrame->Disconnect(LoggerID_Clear,
-                        wxEVT_COMMAND_MENU_SELECTED,
-                        wxCommandEventHandler(AudacityLogger::OnClear),
-                        NULL,
-                        this);
-      mFrame->Disconnect(LoggerID_Close,
-                        wxEVT_COMMAND_MENU_SELECTED,
-                        wxCommandEventHandler(AudacityLogger::OnClose),
-                        NULL,
-                        this);
-
-      mFrame->Disconnect(wxEVT_CLOSE_WINDOW,
-                        wxCloseEventHandler(AudacityLogger::OnCloseWindow),
-                        NULL,
-                        this);
-
-      mFrame.reset();
    }
 }
 
@@ -214,42 +166,28 @@ void AudacityLogger::Show(bool show)
    frame->Layout();
 
    // Hook into the frame events
-   frame->Connect(wxEVT_CLOSE_WINDOW,
+   frame->Bind(wxEVT_CLOSE_WINDOW,
                   wxCloseEventHandler(AudacityLogger::OnCloseWindow),
-                  NULL,
                   this);
 
-   frame->Connect(LoggerID_Save,
-                  wxEVT_COMMAND_MENU_SELECTED,
-                  wxCommandEventHandler(AudacityLogger::OnSave),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Clear,
-                  wxEVT_COMMAND_MENU_SELECTED,
-                  wxCommandEventHandler(AudacityLogger::OnClear),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Close,
-                  wxEVT_COMMAND_MENU_SELECTED,
-                  wxCommandEventHandler(AudacityLogger::OnClose),
-                  NULL,
-                  this);
-
-   frame->Connect(LoggerID_Save,
-                  wxEVT_COMMAND_BUTTON_CLICKED,
-                  wxCommandEventHandler(AudacityLogger::OnSave),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Clear,
-                  wxEVT_COMMAND_BUTTON_CLICKED,
-                  wxCommandEventHandler(AudacityLogger::OnClear),
-                  NULL,
-                  this);
-   frame->Connect(LoggerID_Close,
-                  wxEVT_COMMAND_BUTTON_CLICKED,
-                  wxCommandEventHandler(AudacityLogger::OnClose),
-                  NULL,
-                  this);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
+                  &AudacityLogger::OnSave,
+                  this, LoggerID_Save);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
+                  &AudacityLogger::OnClear,
+                  this, LoggerID_Clear);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
+                  &AudacityLogger::OnClose,
+                  this, LoggerID_Close);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
+                  &AudacityLogger::OnSave,
+                  this, LoggerID_Save);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
+                  &AudacityLogger::OnClear,
+                  this, LoggerID_Clear);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
+                  &AudacityLogger::OnClose,
+                  this, LoggerID_Close);
 
    mFrame = std::move( frame );
 
@@ -271,7 +209,7 @@ void AudacityLogger::OnCloseWindow(wxCloseEvent & WXUNUSED(e))
    // On the Mac, destroy the window rather than hiding it since the
    // log menu will override the root windows menu if there is no
    // project window open.
-   Destroy();
+   mFrame.reset();
 #else
    Show(false);
 #endif
@@ -307,10 +245,11 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
    }
 
    if (!mText->SaveFile(fName)) {
-      wxMessageBox(_("Couldn't save log to file: ") + fName,
-                   _("Warning"),
-                   wxICON_EXCLAMATION,
-                   mFrame.get());
+      AudacityMessageBox(
+         wxString::Format( _("Couldn't save log to file: %s"), fName ),
+         _("Warning"),
+         wxICON_EXCLAMATION,
+         mFrame.get());
       return;
    }
 }

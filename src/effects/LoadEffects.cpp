@@ -6,7 +6,10 @@
 
   Dominic Mazzoni
 
-**********************************************************************/
+**************************************************************************//**
+\class BuiltinEffectsModule
+\brief Internal module to auto register all built in effects.  
+*****************************************************************************/
 
 #include "../Audacity.h"
 #include "../Prefs.h"
@@ -259,7 +262,7 @@ wxString BuiltinEffectsModule::GetVersion()
 
 wxString BuiltinEffectsModule::GetDescription()
 {
-   return XO("Provides builtin effects to Audacity");
+   return _("Provides builtin effects to Audacity");
 }
 
 // ============================================================================
@@ -289,13 +292,16 @@ void BuiltinEffectsModule::Terminate()
 
 bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
+   wxString ignoredErrMsg;
    for (size_t i = 0; i < WXSIZEOF(kEffectNames); i++)
    {
       wxString path(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
 
       if (!pm.IsPluginRegistered(path))
       {
-         RegisterPlugin(pm, path);
+         // No checking of error ?
+         DiscoverPluginsAtPath(path, ignoredErrMsg,
+            PluginManagerInterface::DefaultRegistrationCallback);
       }
    }
 
@@ -303,27 +309,32 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return false;
 }
 
-wxArrayString BuiltinEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
+wxArrayString BuiltinEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
 {
    return mNames;
 }
 
-bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
+   const wxString & path, wxString &errMsg,
+   const RegistrationCallback &callback)
 {
+   errMsg.clear();
    auto effect = Instantiate(path);
    if (effect)
    {
-      pm.RegisterPlugin(this, effect.get());
-      return true;
+      if (callback)
+         callback(this, effect.get());
+      return 1;
    }
 
-   return false;
+   errMsg = _("Unknown built-in effect name");
+   return 0;
 }
 
 bool BuiltinEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    // bFast is unused as checking in the list is fast.
-   bFast;
+   static_cast<void>(bFast);
    return mNames.Index(path) != wxNOT_FOUND;
 }
 

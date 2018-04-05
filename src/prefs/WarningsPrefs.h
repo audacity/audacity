@@ -24,19 +24,19 @@ class ShuttleGui;
 class WarningsPrefs final : public PrefsPanel
 {
  public:
-   WarningsPrefs(wxWindow * parent);
+   WarningsPrefs(wxWindow * parent, wxWindowID winid);
    ~WarningsPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
 
  private:
    void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
 };
 
 class WarningsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

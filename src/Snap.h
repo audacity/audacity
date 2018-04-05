@@ -19,6 +19,7 @@
 #include <wx/defs.h>
 #include <wx/string.h>
 #include "widgets/NumericTextCtrl.h"
+#include "Internat.h"
 
 class AudacityProject;
 class Track;
@@ -136,7 +137,7 @@ private:
 
    int mSnapTo;
    double mRate;
-   wxString mFormat;
+   NumericFormatId mFormat;
 };
 
 #endif

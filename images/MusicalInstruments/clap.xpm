@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * clap_xpm[] = {
+static const char * const clap_xpm[] = {
 "48 48 587 2",
 "  	c #969696",
 ". 	c #57575F",

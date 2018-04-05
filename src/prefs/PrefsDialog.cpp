@@ -25,7 +25,6 @@
 #include <wx/gdicmn.h>
 #include <wx/intl.h>
 #include <wx/listbox.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 
 #include <wx/listbook.h>
@@ -265,7 +264,7 @@ PrefsDialog::PrefsDialog
                {
                   const PrefsNode &node = *it;
                   PrefsPanelFactory &factory = *node.pFactory;
-                  wxWindow *const w = factory.Create(mCategories);
+                  wxWindow *const w = factory(mCategories, wxID_ANY);
                   if (stack.empty())
                      // Parameters are: AddPage(page, name, IsSelected, imageId).
                      mCategories->AddPage(w, w->GetName(), false, 0);
@@ -293,7 +292,7 @@ PrefsDialog::PrefsDialog
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
-         mUniquePage = factory.Create(this);
+         mUniquePage = factory(this, wxID_ANY);
          wxWindow * uniquePageWindow = S.Prop(1).AddWindow(mUniquePage, wxEXPAND);
          // We're not in the wxTreebook, so add the accelerator here
          wxAcceleratorEntry entries[1];
@@ -336,33 +335,25 @@ PrefsDialog::PrefsDialog
          mCategories->ExpandNode(iPage, it->expanded);
    }
 
-   // This ASSERT used to limit us to 800 x 600.
-   // However, we think screens have got bigger now, and that was a bit too restrictive.
-   // The impetus for increasing the limit (before we ASSERT) was that this ASSERT
-   // was firing with wxWidgets 3.0, which has slightly different sizer behaviour.
-   wxASSERT_MSG(sz.x <= 1000 && sz.y <= 750, wxT("Preferences dialog exceeds max size"));
+   // This ASSERT was originally used to limit us to 800 x 600.
+   // However, the range of screen sizes and dpi of modern (2018) displays
+   // makes pixel dimensions an inadequate measure of usability, so
+   // now we only ASSERT that preferences will fit in the client display
+   // rectangle of the developer / tester's monitor.
+   // Use scrollers when necessary to ensure that preference pages will
+   // be fully visible.
+   wxRect screenRect(wxGetClientDisplayRect());
+   wxASSERT_MSG(sz.x <= screenRect.width && sz.y <= screenRect.height, wxT("Preferences dialog exceeds max size"));
 
-   if (sz.x > 800) {
-      sz.x = 800;
-   }
+   sz.DecTo(screenRect.GetSize());
 
-   if (sz.y > 600) {
-      sz.y = 600;
-   }
+   int prefWidth, prefHeight;
+   gPrefs->Read(wxT("/Prefs/Width"), &prefWidth, sz.x);
+   gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, sz.y);
 
-   // Set the minimum height to be slightly bigger than default, as fix for bug 161.
-   // The magic number 7 was determined by Ed's experimentation.
-   // Frankly, this is a hack to work around a bug in wxTreebook, and
-   // will have to be revisited if we add another category to mCategories.
-   // JKC later added a category and 20 onto the 7.
-
-   sz.y += 7 + 20;
-
-   // PRL:  Bug 161 is an obsolete concern with wx3; bug 1183 is a problem
-   // of minimum size being too great at low resolution.
-   sz.DecTo( ::wxGetDisplaySize() );
-
-   SetSize(sz);
+   wxSize prefSize = wxSize(prefWidth, prefHeight);
+   prefSize.DecTo(screenRect.GetSize());
+   SetSize(prefSize);
    SetMinSize(sz);
 
    // Center after all that resizing, but make sure it doesn't end up
@@ -440,6 +431,23 @@ void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    HelpSystem::ShowHelp(this, page, true);
 }
 
+void PrefsDialog::ShuttleAll( ShuttleGui & S)
+{
+   // Validate all pages first
+   if (mCategories) {
+      for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
+         S.ResetId();
+         PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
+         panel->PopulateOrExchange( S );
+      }
+   }
+   else
+   {
+      S.ResetId();
+      mUniquePage->PopulateOrExchange( S );
+   }
+}
+
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
 {
    if(event.GetKeyCode() == WXK_RETURN)
@@ -473,7 +481,9 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    gPrefs->Flush();
    if (mCategories) {
       // Now apply the changes
-      for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
+      // Reverse order - so Track Name is updated before language change
+      // A workaround for Bug 1661
+      for (int i = (int)mCategories->GetPageCount()-1; i>= 0; i--) {
          PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
 
          panel->Preview();
@@ -485,6 +495,9 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       mUniquePage->Commit();
    }
 
+   wxSize sz = GetSize();
+   gPrefs->Write(wxT("/Prefs/Width"), sz.x);
+   gPrefs->Write(wxT("/Prefs/Height"), sz.y);
    gPrefs->Flush();
 
    // Reads preference /GUI/Theme
@@ -526,8 +539,12 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    }
 
    WaveformSettings::defaults().LoadPrefs();
+   SpectrogramSettings::defaults().LoadPrefs();
 
-   EndModal(true);
+   if( IsModal() )
+      EndModal(true);
+   else
+      Destroy();
 }
 
 void PrefsDialog::SelectPageByName(const wxString &pageName)

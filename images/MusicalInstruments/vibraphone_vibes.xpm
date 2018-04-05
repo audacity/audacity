@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * vibraphone_vibes_xpm[] = {
+static const char * const vibraphone_vibes_xpm[] = {
 "48 48 714 2",
 "  	c #969696",
 ". 	c #444E59",

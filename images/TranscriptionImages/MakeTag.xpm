@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * MakeTag[] = {
+static const char * const MakeTag[] = {
 "27 27 4 1",
 " 	c None",
 ".	c #000000",

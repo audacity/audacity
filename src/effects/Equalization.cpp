@@ -60,7 +60,6 @@
 
 #include <wx/bitmap.h>
 #include <wx/button.h>
-#include <wx/msgdlg.h>
 #include <wx/brush.h>
 #include <wx/button.h>  // not really needed here
 #include <wx/dcmemory.h>
@@ -137,7 +136,7 @@ enum kInterpolations
    kBspline,
    kCosine,
    kCubic,
-   kNumInterpolations
+   nInterpolations
 };
 
 // Increment whenever EQCurves.xml is updated
@@ -145,12 +144,14 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const wxString kInterpStrings[kNumInterpolations] =
+static const IdentInterfaceSymbol kInterpStrings[nInterpolations] =
 {
+   // These are acceptable dual purpose internal/visible names
+
    /* i18n-hint: Technical term for a kind of curve.*/
-   XO("B-spline"),
-   XO("Cosine"),
-   XO("Cubic")
+   { XO("B-spline") },
+   { XO("Cosine") },
+   { XO("Cubic") }
 };
 
 static const double kThirdOct[] =
@@ -163,18 +164,14 @@ static const double kThirdOct[] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name          Type        Key                     Def      Min      Max      Scale
-Param( FilterLength, int,     XO("FilterLength"),        4001,    21,      8191,    0      );
-Param( CurveName,    wxChar*, XO("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
-Param( InterpLin,    bool,    XO("InterpolateLin"),      false,   false,   true,    false  );
-Param( InterpMeth,   int,     XO("InterpolationMethod"), 0,       0,       0,       0      );
+Param( FilterLength, int,     wxT("FilterLength"),        4001,    21,      8191,    0      );
+Param( CurveName,    wxChar*, wxT("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
+Param( InterpLin,    bool,    wxT("InterpolateLin"),      false,   false,   true,    false  );
+Param( InterpMeth,   int,     wxT("InterpolationMethod"), 0,       0,       0,       0      );
 Param( DrawMode,     bool,    wxT(""),                   true,    false,   true,    false  );
 Param( DrawGrid,     bool,    wxT(""),                   true,    false,   true,    false  );
 Param( dBMin,        float,   wxT(""),                   -30.0,   -120.0,  -10.0,   0      );
 Param( dBMax,        float,   wxT(""),                   30.0,    0.0,     60.0,    0      );
-
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY( EQPointArray );
-WX_DEFINE_OBJARRAY( EQCurveArray );
 
 ///----------------------------------------------------------------------------
 // EffectEqualization
@@ -234,11 +231,6 @@ EffectEqualization::EffectEqualization()
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
-   for (int i = 0; i < kNumInterpolations; i++)
-   {
-      mInterpolations.Add(wxGetTranslation(kInterpStrings[i]));
-   }
-
    mLogEnvelope = std::make_unique<Envelope>
       (false,
        MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
@@ -297,7 +289,7 @@ wxString EffectEqualization::GetSymbol()
 
 wxString EffectEqualization::GetDescription()
 {
-   return XO("Adjusts the volume levels of particular frequencies");
+   return _("Adjusts the volume levels of particular frequencies");
 }
 
 wxString EffectEqualization::ManualPage()
@@ -305,7 +297,7 @@ wxString EffectEqualization::ManualPage()
    return wxT("Equalization");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectEqualization::GetType()
 {
@@ -313,40 +305,43 @@ EffectType EffectEqualization::GetType()
 }
 
 // EffectClientInterface implementation
-
-bool EffectEqualization::GetAutomationParameters(EffectAutomationParameters & parms)
-{
-   parms.Write(KEY_FilterLength, (unsigned long)mM);
-   parms.Write(KEY_CurveName, mCurveName);
-   parms.Write(KEY_InterpLin, mLin);
-   parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(kNumInterpolations, kInterpStrings));
+bool EffectEqualization::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mM, FilterLength );
+   S.SHUTTLE_PARAM( mCurveName, CurveName);
+   S.SHUTTLE_PARAM( mLin, InterpLin);
+   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, kInterpStrings, nInterpolations );
 
    return true;
 }
 
-bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
+{
+   parms.Write(KEY_FilterLength, (unsigned long)mM);
+   parms.Write(KEY_CurveName, mCurveName);
+   parms.Write(KEY_InterpLin, mLin);
+   parms.WriteEnum(KEY_InterpMeth, mInterp, kInterpStrings, nInterpolations);
+
+   return true;
+}
+
+bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
 {
    // Pretty sure the interpolation name shouldn't have been interpreted when
    // specified in chains, but must keep it that way for compatibility.
-   wxArrayString interpolations(mInterpolations);
-   for (int i = 0; i < kNumInterpolations; i++)
-   {
-      interpolations.Add(kInterpStrings[i]);
-   }
 
    ReadAndVerifyInt(FilterLength);
    ReadAndVerifyString(CurveName);
    ReadAndVerifyBool(InterpLin);
-   ReadAndVerifyEnum(InterpMeth, interpolations);
+   ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
 
    mM = FilterLength;
    mCurveName = CurveName;
    mLin = InterpLin;
    mInterp = InterpMeth;
 
-   if (InterpMeth >= kNumInterpolations)
+   if (InterpMeth >= nInterpolations)
    {
-      InterpMeth -= kNumInterpolations;
+      InterpMeth -= nInterpolations;
    }
 
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
@@ -368,14 +363,16 @@ bool EffectEqualization::LoadFactoryDefaults()
 
 bool EffectEqualization::ValidateUI()
 {
-   // If editing a batch chain, we don't want to be using the unnamed curve so
+   // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
-   while (mDisallowCustom && mCurveName.IsSameAs(wxT("unnamed")))
+
+   if (mDisallowCustom && mCurveName.IsSameAs(wxT("unnamed")))
    {
-      wxMessageBox(_("To use this EQ curve in a batch chain, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
-         _("EQ Curve needs a different name"),
+      // PRL:  This is unreachable.  mDisallowCustom is always false.
+
+      Effect::MessageBox(_("To use this EQ curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
          wxOK | wxCENTRE,
-         mUIParent);
+         _("EQ Curve needs a different name"));
       return false;
    }
 
@@ -397,7 +394,7 @@ bool EffectEqualization::ValidateUI()
             j--;
          }
       }
-      Select((int) mCurves.GetCount() - 1);
+      Select((int) mCurves.size() - 1);
    }
    SaveCurves();
 
@@ -484,7 +481,7 @@ bool EffectEqualization::Init()
          }
          else {
             if (track->GetRate() != rate) {
-               wxMessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
+               Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
                return(false);
             }
          }
@@ -496,9 +493,9 @@ bool EffectEqualization::Init()
    mHiFreq = rate / 2.0;
    // Unlikely, but better than crashing.
    if (mHiFreq <= loFreqI) {
-      wxMessageBox( _("Track sample rate is too low for this effect."),
-                    _("Effect Unavailable"),
-                    wxOK | wxCENTRE);
+      Effect::MessageBox( _("Track sample rate is too low for this effect."),
+                    wxOK | wxCENTRE,
+                    _("Effect Unavailable"));
       return(false);
    }
 
@@ -622,27 +619,25 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // -------------------------------------------------------------------
          S.StartVerticalLay();
          {
-            mdBRuler = safenew RulerPanel(parent, wxID_ANY);
-            mdBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-            mdBRuler->ruler.SetOrientation(wxVERTICAL);
-            mdBRuler->ruler.SetRange(60.0, -120.0);
-            mdBRuler->ruler.SetFormat(Ruler::LinearDBFormat);
-            mdBRuler->ruler.SetUnits(_("dB"));
-            mdBRuler->ruler.SetLabelEdges(true);
-            mdBRuler->ruler.mbTicksAtExtremes = true;
-            int w;
-            mdBRuler->ruler.GetMaxSize(&w, NULL);
-            mdBRuler->SetMinSize(wxSize(w, 150));  // height needed for wxGTK
-            mdBRuler->ruler.SetTickColour( wxColour(0,0,0) );
+            mdBRuler = safenew RulerPanel(
+               parent, wxID_ANY, wxVERTICAL,
+               wxSize{ 100, 100 }, // Ruler can't handle small sizes
+               RulerPanel::Range{ 60.0, -120.0 },
+               Ruler::LinearDBFormat,
+               _("dB"),
+               RulerPanel::Options{}
+                  .LabelEdges(true)
+                  .TicksAtExtremes(true)
+                  .TickColour( { 0, 0, 0 } )
+            );
 
-            S.Prop(1);
             S.AddSpace(0, 1);
-            S.AddWindow(mdBRuler, wxEXPAND | wxALIGN_RIGHT);
+            S.Prop(1).AddWindow(mdBRuler, wxEXPAND | wxALIGN_RIGHT);
             S.AddSpace(0, 1);
          }
          S.EndVerticalLay();
 
-         mPanel = safenew EqualizationPanel(this, parent);
+         mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
          S.Prop(1);
          S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
@@ -652,18 +647,18 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddVariableText(_("+ dB"), false, wxCENTER);
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMaxSlider = S.Id(ID_dBMax).AddSlider(wxT(""), 30, 60, 0);
+            mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
             mdBMaxSlider->SetName(_("Max dB"));
-            mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
+            mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
 #endif
 
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMinSlider = S.Id(ID_dBMin).AddSlider(wxT(""), -30, -10, -120);
+            mdBMinSlider = S.Id(ID_dBMin).AddSlider( {}, -30, -10, -120);
             S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
             mdBMinSlider->SetName(_("Min dB"));
-            mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, wxString(wxT("%d ")) + _("dB")));
+            mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
          }
          S.EndVerticalLay();
@@ -676,25 +671,22 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          // Column 1 is empty
          S.AddSpace(1, 1);
 
-         mFreqRuler  = safenew RulerPanel(parent, wxID_ANY);
-         mFreqRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         mFreqRuler->ruler.SetOrientation(wxHORIZONTAL);
-         mFreqRuler->ruler.SetLog(true);
-         mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
-         mFreqRuler->ruler.SetFormat(Ruler::IntFormat);
-         mFreqRuler->ruler.SetUnits(_("Hz"));
-         mFreqRuler->ruler.SetFlip(true);
-         mFreqRuler->ruler.SetLabelEdges(true);
-         mFreqRuler->ruler.mbTicksAtExtremes = true;
-         int h;
-         mFreqRuler->ruler.GetMaxSize(NULL, &h);
-         mFreqRuler->SetMinSize(wxSize(wxDefaultCoord, h));
-         mFreqRuler->ruler.SetTickColour( wxColour(0,0,0) );
+         mFreqRuler  = safenew RulerPanel(
+            parent, wxID_ANY, wxHORIZONTAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ mLoFreq, mHiFreq },
+            Ruler::IntFormat,
+            _("Hz"),
+            RulerPanel::Options{}
+               .Log(true)
+               .Flip(true)
+               .LabelEdges(true)
+               .TicksAtExtremes(true)
+               .TickColour( { 0, 0, 0 } )
+         );
 
-
-         S.Prop(1);
          S.SetBorder(1);
-         S.AddWindow(mFreqRuler, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT);
+         S.Prop(1).AddWindow(mFreqRuler, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT);
          S.SetBorder(0);
 
          // Column 3 is empty
@@ -718,15 +710,17 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             mSliders[i] = safenew wxSlider(mGraphicPanel, ID_Slider + i, 0, -20, +20,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL | wxSL_INVERSE);
 
-            mSliders[i]->Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(EffectEqualization::OnErase));
+            mSliders[i]->Bind(wxEVT_ERASE_BACKGROUND,
+                              // ignore it
+                              [](wxEvent&){});
 #if wxUSE_ACCESSIBILITY
             wxString name;
             if( kThirdOct[i] < 1000.)
-               name.Printf(wxString(wxT("%d ")) + _("Hz"), (int)kThirdOct[i]);
+               name.Printf(_("%d Hz"), (int)kThirdOct[i]);
             else
-               name.Printf(wxString(wxT("%g ")) + _("kHz"), kThirdOct[i]/1000.);
+               name.Printf(_("%g kHz"), kThirdOct[i]/1000.);
             mSliders[i]->SetName(name);
-            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], wxString(wxT("%d ")) + _("dB")));
+            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], _("%d dB")));
 #endif
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
@@ -772,7 +766,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrI = S.GetSizer();
 
-               mInterpChoice = S.Id(ID_Interp).AddChoice(wxT(""), wxT(""), &mInterpolations);
+               auto interpolations =
+                  LocalizedStrings(kInterpStrings, nInterpolations);
+               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &interpolations);
                mInterpChoice->SetName(_("Interpolation type"));
                mInterpChoice->SetSelection(0);
             }
@@ -804,7 +800,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxEXPAND, 1);
             {
                S.SetStyle(wxSL_HORIZONTAL);
-               mMSlider = S.Id(ID_Length).AddSlider(wxT(""), (mM - 1) / 2, 4095, 10);
+               mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
                mMSlider->SetName(_("Length of Filter"));
             }
             S.EndHorizontalLay();
@@ -841,12 +837,12 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
             {
                wxArrayString curves;
-               for (size_t i = 0, cnt = mCurves.GetCount(); i < cnt; i++)
+               for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
                {
                   curves.Add(mCurves[ i ].Name);
                }
 
-               mCurve = S.Id(ID_Curve).AddChoice(wxT(""), wxT(""), &curves);
+               mCurve = S.Id(ID_Curve).AddChoice( {}, wxT(""), &curves);
                mCurve->SetName(_("Select Curve"));
             }
             S.EndHorizontalLay();
@@ -1006,7 +1002,7 @@ bool EffectEqualization::TransferDataFromWindow()
    if (dB != mdBMin) {
       rr = true;
       mdBMin = dB;
-      tip.Printf(wxString(wxT("%d ")) + _("dB"),(int)mdBMin);
+      tip.Printf(_("%d dB"), (int)mdBMin);
       mdBMinSlider->SetToolTip(tip);
    }
 
@@ -1014,7 +1010,7 @@ bool EffectEqualization::TransferDataFromWindow()
    if (dB != mdBMax) {
       rr = true;
       mdBMax = dB;
-      tip.Printf(wxString(wxT("%d ")) + _("dB"),(int)mdBMax);
+      tip.Printf(_("%d dB"), (int)mdBMax);
       mdBMaxSlider->SetToolTip(tip);
    }
 
@@ -1040,7 +1036,7 @@ bool EffectEqualization::TransferDataFromWindow()
       mM = m;
       ForceRecalc();
 
-      tip.Printf(wxT("%d"), mM);
+      tip.Printf(wxT("%d"), (int)mM);
       mMText->SetLabel(tip);
       mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mMSlider->SetToolTip(tip);
@@ -1371,18 +1367,18 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 
    // If requested file doesn't exist...
    if( !fn.FileExists() && !GetDefaultFileName(fn) ) {
-      mCurves.Clear();
-      mCurves.Add( _("unnamed") );   // we still need a default curve to use
+      mCurves.clear();
+      mCurves.push_back( _("unnamed") );   // we still need a default curve to use
       return;
    }
 
    EQCurve tempCustom(wxT("temp"));
    if( append == false ) // Start from scratch
-      mCurves.Clear();
+      mCurves.clear();
    else  // appending so copy and remove 'unnamed', to replace later
    {
-      tempCustom.points = mCurves.Last().points;
-      mCurves.RemoveAt(mCurves.Count()-1);
+      tempCustom.points = mCurves.back().points;
+      mCurves.pop_back();
    }
 
    // Load the curves
@@ -1392,17 +1388,17 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    {
       wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fullPath.c_str(), reader.GetErrorStr().c_str());
+      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fullPath, reader.GetErrorStr());
       // Inform user of load failure
-      wxMessageBox( msg,
-         _("Error Loading EQ Curves"),
-         wxOK | wxCENTRE);
-      mCurves.Add( _("unnamed") );  // we always need a default curve to use
+      Effect::MessageBox( msg,
+         wxOK | wxCENTRE,
+         _("Error Loading EQ Curves"));
+      mCurves.push_back( _("unnamed") );  // we always need a default curve to use
       return;
    }
 
    // Move "unnamed" to end, if it exists in current language.
-   int numCurves = mCurves.GetCount();
+   int numCurves = mCurves.size();
    int curve;
    EQCurve tempUnnamed(wxT("tempUnnamed"));
    for( curve = 0; curve < numCurves-1; curve++ )
@@ -1410,17 +1406,17 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
       if( mCurves[curve].Name == _("unnamed") )
       {
          tempUnnamed.points = mCurves[curve].points;
-         mCurves.RemoveAt(curve);
-         mCurves.Add( _("unnamed") );   // add 'unnamed' back at the end
-         mCurves.Last().points = tempUnnamed.points;
+         mCurves.erase(mCurves.begin() + curve);
+         mCurves.push_back( _("unnamed") );   // add 'unnamed' back at the end
+         mCurves.back().points = tempUnnamed.points;
       }
    }
 
-   if( mCurves.Last().Name != _("unnamed") )
-      mCurves.Add( _("unnamed") );   // we always need a default curve to use
+   if( mCurves.back().Name != _("unnamed") )
+      mCurves.push_back( _("unnamed") );   // we always need a default curve to use
    if( append == true )
    {
-      mCurves.Last().points = tempCustom.points;
+      mCurves.back().points = tempCustom.points;
    }
 
    return;
@@ -1431,7 +1427,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 //
 void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
 {
-   if (mCurves.GetCount() == 0)
+   if (mCurves.size() == 0)
       return;
 
    /* i18n-hint: name of the 'unnamed' custom curve */
@@ -1439,14 +1435,14 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
 
    // Save the "unnamed" curve and remove it so we can add it back as the final curve.
    EQCurve userUnnamed(wxT("temp"));
-   userUnnamed = mCurves.Last();
-   mCurves.RemoveAt(mCurves.Count()-1);
+   userUnnamed = mCurves.back();
+   mCurves.pop_back();
 
    EQCurveArray userCurves = mCurves;
-   mCurves.Clear();
+   mCurves.clear();
    // We only wamt to look for the shipped EQDefaultCurves.xml
    wxFileName fn = wxFileName(FileNames::ResourcesDir(), wxT("EQDefaultCurves.xml"));
-   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),fn.GetFullPath().c_str());
+   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),fn.GetFullPath());
    XMLFileReader reader;
 
    if(!reader.Parse(this, fn.GetFullPath())) {
@@ -1458,25 +1454,25 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    }
 
    EQCurveArray defaultCurves = mCurves;
-   mCurves.Clear(); // clear now so that we can sort then add back.
+   mCurves.clear(); // clear now so that we can sort then add back.
 
    // Remove "unnamed" if it exists.
-   if (defaultCurves.Last().Name == unnamed) {
-      defaultCurves.RemoveAt(defaultCurves.Count()-1);
+   if (defaultCurves.back().Name == unnamed) {
+      defaultCurves.pop_back();
    }
    else {
       wxLogError(wxT("Error in EQDefaultCurves.xml"));
    }
 
-   int numUserCurves = userCurves.GetCount();
-   int numDefaultCurves = defaultCurves.GetCount();
+   int numUserCurves = userCurves.size();
+   int numDefaultCurves = defaultCurves.size();
    EQCurve tempCurve(wxT("test"));
 
    if (updateAll) {
       // Update all factory preset curves.
       // Sort and add factory defaults first;
       mCurves = defaultCurves;
-      mCurves.Sort(SortCurvesByName);
+      std::sort(mCurves.begin(), mCurves.end());
       // then add remaining user curves:
       for (int curveCount = 0; curveCount < numUserCurves; curveCount++) {
          bool isCustom = true;
@@ -1490,7 +1486,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
          }
          // if tempCurve is not in the default set, add it to mCurves.
          if (isCustom) {
-            mCurves.Add(tempCurve);
+            mCurves.push_back(tempCurve);
          }
       }
    }
@@ -1502,15 +1498,15 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
          for (int userCurveCount = 0; userCurveCount < numUserCurves; userCurveCount++) {
             if (userCurves[userCurveCount].Name == defaultCurves[defCurveCount].Name) {
                isUserCurve = true;
-               mCurves.Add(userCurves[userCurveCount]);
+               mCurves.push_back(userCurves[userCurveCount]);
                break;
             }
          }
          if (!isUserCurve) {
-            mCurves.Add(defaultCurves[defCurveCount]);
+            mCurves.push_back(defaultCurves[defCurveCount]);
          }
       }
-      mCurves.Sort(SortCurvesByName);
+      std::sort(mCurves.begin(), mCurves.end());
       // now add the rest of the user's curves.
       for (int userCurveCount = 0; userCurveCount < numUserCurves; userCurveCount++) {
          bool isDefaultCurve = false;
@@ -1522,16 +1518,16 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
             }
          }
          if (!isDefaultCurve) {
-            mCurves.Add(tempCurve);
+            mCurves.push_back(tempCurve);
          }
       }
    }
-   defaultCurves.Clear();
-   userCurves.Clear();
+   defaultCurves.clear();
+   userCurves.clear();
 
    // Add back old "unnamed"
    if(userUnnamed.Name == unnamed) {
-      mCurves.Add( userUnnamed );   // we always need a default curve to use
+      mCurves.push_back( userUnnamed );   // we always need a default curve to use
    }
 
    SaveCurves();
@@ -1561,7 +1557,7 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
    {
       // LLL:  Is there really a need for an error message at all???
       //wxString errorMessage;
-      //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
+      //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir());
       //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
       //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
 
@@ -1602,7 +1598,7 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
    else
       fn = fileName;
 
-   GuardedCall< void >( [&] {
+   GuardedCall( [&] {
       // Create/Open the file
       const wxString fullPath{ fn.GetFullPath() };
       XMLFileWriter eqFile{ fullPath, _("Error Saving Equalization Curves") };
@@ -1620,11 +1616,11 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
 void EffectEqualization::setCurve(int currentCurve)
 {
    // Set current choice
-   wxASSERT( currentCurve < (int) mCurves.GetCount() );
+   wxASSERT( currentCurve < (int) mCurves.size() );
    Select(currentCurve);
 
    Envelope *env;
-   int numPoints = (int) mCurves[currentCurve].points.GetCount();
+   int numPoints = (int) mCurves[currentCurve].points.size();
 
    if (mLin) {  // linear freq mode
       env = mLinEnvelope.get();
@@ -1664,7 +1660,8 @@ void EffectEqualization::setCurve(int currentCurve)
    }
 
    // We have at least two points, so ensure they are in frequency order.
-   mCurves[currentCurve].points.Sort(SortCurvePoints);
+   std::sort(mCurves[currentCurve].points.begin(),
+             mCurves[currentCurve].points.end());
 
    if (mCurves[currentCurve].points[0].Freq < 0) {
       // Corrupt or invalid curve, so bail.
@@ -1779,19 +1776,21 @@ void EffectEqualization::setCurve(int currentCurve)
 
 void EffectEqualization::setCurve()
 {
-   setCurve((int) mCurves.GetCount()-1);
+   setCurve((int) mCurves.size() - 1);
 }
 
 void EffectEqualization::setCurve(const wxString &curveName)
 {
    unsigned i = 0;
-   for( i = 0; i < mCurves.GetCount(); i++ )
+   for( i = 0; i < mCurves.size(); i++ )
       if( curveName == mCurves[ i ].Name )
          break;
-   if( i == mCurves.GetCount())
+   if( i == mCurves.size())
    {
-      wxMessageBox( _("Requested curve not found, using 'unnamed'"), _("Curve not found"), wxOK|wxICON_ERROR );
-      setCurve((int) mCurves.GetCount()-1);
+      Effect::MessageBox( _("Requested curve not found, using 'unnamed'"),
+         wxOK|wxICON_ERROR,
+         _("Curve not found") );
+      setCurve((int) mCurves.size() - 1);
    }
    else
       setCurve( i );
@@ -1845,8 +1844,8 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
    env->GetPoints( when.get(), value.get(), numPoints );
 
    // Clear the unnamed curve
-   int curve = mCurves.GetCount()-1;
-   mCurves[ curve ].points.Clear();
+   int curve = mCurves.size() - 1;
+   mCurves[ curve ].points.clear();
 
    if(lin)
    {
@@ -1857,7 +1856,7 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
          double db = value[ point ];
 
          // Add it to the curve
-         mCurves[ curve ].points.Add( EQPoint( freq, db ) );
+         mCurves[ curve ].points.push_back( EQPoint( freq, db ) );
       }
    }
    else
@@ -1873,14 +1872,14 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
          double db = value[ point ];
 
          // Add it to the curve
-         mCurves[ curve ].points.Add( EQPoint( freq, db ) );
+         mCurves[ curve ].points.push_back( EQPoint( freq, db ) );
       }
    }
    // Remember that we've updated the unnamed curve
    mDirty = true;
 
    // set 'unnamed' as the selected curve
-   Select( (int) mCurves.GetCount()-1 );
+   Select( (int) mCurves.size() - 1 );
 }
 
 //
@@ -1954,10 +1953,10 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             do
             {
                exists = false;
-               for(size_t i=0;i<mCurves.GetCount();i++)
+               for(size_t i = 0; i < mCurves.size(); i++)
                {
                   if(n>0)
-                     strValueTemp.Printf(wxT("%s (%d)"),strValue.c_str(),n);
+                     strValueTemp.Printf(wxT("%s (%d)"),strValue,n);
                   if(mCurves[i].Name == strValueTemp)
                   {
                      exists = true;
@@ -1968,7 +1967,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             }
             while(exists == true);
 
-            mCurves.Add( EQCurve( strValueTemp ) );
+            mCurves.push_back( EQCurve( strValueTemp ) );
          }
       }
 
@@ -2011,7 +2010,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       // Create a NEW point
-      mCurves[ mCurves.GetCount() - 1 ].points.Add( EQPoint( f, d ) );
+      mCurves[ mCurves.size() - 1 ].points.push_back( EQPoint( f, d ) );
 
       // Tell caller it was processed
       return true;
@@ -2054,7 +2053,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
    xmlFile.StartTag( wxT( "equalizationeffect" ) );
 
    // Write all curves
-   int numCurves = mCurves.GetCount();
+   int numCurves = mCurves.size();
    int curve;
    for( curve = 0; curve < numCurves; curve++ )
    {
@@ -2063,7 +2062,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
       xmlFile.WriteAttr( wxT( "name" ), mCurves[ curve ].Name );
 
       // Write all points
-      int numPoints = mCurves[ curve ].points.GetCount();
+      int numPoints = mCurves[ curve ].points.size();
       int point;
       for( point = 0; point < numPoints; point++ )
       {
@@ -2118,7 +2117,7 @@ void EffectEqualization::UpdateCurves()
 {
    // Reload the curve names
    mCurve->Clear();
-   for (size_t i = 0, cnt = mCurves.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
    {
       mCurve->Append(mCurves[ i ].Name);
    }
@@ -2379,7 +2378,7 @@ void EffectEqualization::ErrMin(void)
             error += err*err;
          }
       }
-      while( (error < oldError) & flag );
+      while( (error < oldError) && flag );
       if( error > oldError )
       {
          mEQVals[i] = mEQValsOld;   //last one didn't work
@@ -2393,7 +2392,7 @@ void EffectEqualization::ErrMin(void)
    }
    if( error > .0025 * mBandsInUse ) // not within 0.05dB on each slider, on average
    {
-      Select( (int) mCurves.GetCount()-1 );
+      Select( (int) mCurves.size() - 1 );
       EnvelopeUpdated(&testEnvelope, false);
    }
 }
@@ -2415,7 +2414,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          int minF = 0;
          for(size_t i = 0; i < NUM_PTS; i++)
          {
-            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < mBandsInUse) )
+            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < (int)mBandsInUse) )
                minF++;
             minF--;
             if( minF < 0 ) //before first slider
@@ -2453,7 +2452,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                   if(s < .5 )
                   {
                      value = mEQVals[minF]*(0.75 - s*s);
-                     if( minF+1 < mBandsInUse )
+                     if( minF+1 < (int)mBandsInUse )
                         value += mEQVals[minF+1]*(s+.5)*(s+.5)/2.;
                      if( minF-1 >= 0 )
                         value += mEQVals[minF-1]*(s-.5)*(s-.5)/2.;
@@ -2461,9 +2460,9 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                   else
                   {
                      value = mEQVals[minF]*(s-1.5)*(s-1.5)/2.;
-                     if( minF+1 < mBandsInUse )
+                     if( minF+1 < (int)mBandsInUse )
                         value += mEQVals[minF+1]*(.75-(1.-s)*(1.-s));
-                     if( minF+2 < mBandsInUse )
+                     if( minF+2 < (int)mBandsInUse )
                         value += mEQVals[minF+2]*(s-.5)*(s-.5)/2.;
                   }
                }
@@ -2481,7 +2480,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          int minF = 0;
          for(size_t i = 0; i < NUM_PTS; i++)
          {
-            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < mBandsInUse) )
+            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < (int)mBandsInUse) )
                minF++;
             minF--;
             if( minF < 0 ) //before first slider
@@ -2589,11 +2588,6 @@ void EffectEqualization::OnSize(wxSizeEvent & event)
    }
 
    event.Skip();
-}
-
-void EffectEqualization::OnErase(wxEraseEvent & WXUNUSED(event))
-{
-   // Ignore it
 }
 
 void EffectEqualization::OnSlider(wxCommandEvent & event)
@@ -2843,8 +2837,9 @@ BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
    EVT_SIZE(EqualizationPanel::OnSize)
 END_EVENT_TABLE()
 
-EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *parent)
-:  wxPanelWrapper(parent)
+EqualizationPanel::EqualizationPanel(
+   wxWindow *parent, wxWindowID winid, EffectEqualization *effect)
+:  wxPanelWrapper(parent, winid)
 {
    mParent = parent;
    mEffect = effect;
@@ -3133,10 +3128,10 @@ wxDialogWrapper(parent, wxID_ANY, _("Manage Curves List"),
    mEffect = effect;
    mPosition = position;
    // make a copy of mEffect->mCurves here to muck about with.
-   mEditCurves.Clear();
-   for (unsigned int i = 0; i < mEffect->mCurves.GetCount(); i++)
+   mEditCurves.clear();
+   for (unsigned int i = 0; i < mEffect->mCurves.size(); i++)
    {
-      mEditCurves.Add(mEffect->mCurves[i].Name);
+      mEditCurves.push_back(mEffect->mCurves[i].Name);
       mEditCurves[i].points = mEffect->mCurves[i].points;
    }
 
@@ -3185,7 +3180,7 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
    S.AddStandardButtons();
    S.StartStatic(_("Help"));
-   S.AddConstTextBox(wxT(""), _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
+   S.AddConstTextBox( {}, _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
    S.EndStatic();
    PopulateList(mPosition);
    Fit();
@@ -3196,7 +3191,7 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
 void EditCurvesDialog::PopulateList(int position)
 {
    mList->DeleteAllItems();
-   for (unsigned int i = 0; i < mEditCurves.GetCount(); i++)
+   for (unsigned int i = 0; i < mEditCurves.size(); i++)
       mList->InsertItem(i, mEditCurves[i].Name);
    mList->SetColumnWidth(0, wxLIST_AUTOSIZE);
    int curvesWidth = mList->GetColumnWidth(0);
@@ -3220,7 +3215,9 @@ void EditCurvesDialog::OnUp(wxCommandEvent & WXUNUSED(event))
    {
       if ( item == mList->GetItemCount()-1)
       {  // 'unnamed' always stays at the bottom
-         wxMessageBox(_("'unnamed' always stays at the bottom of the list"), _("'unnamed' is special"));   // these could get tedious!
+         mEffect->Effect::MessageBox(_("'unnamed' always stays at the bottom of the list"),
+                            Effect::DefaultMessageBoxStyle,
+                            _("'unnamed' is special"));   // these could get tedious!
          return;
       }
       state = mList->GetItemState(item-1, wxLIST_STATE_SELECTED);
@@ -3291,7 +3288,7 @@ long EditCurvesDialog::GetPreviousItem(long item)  // wx doesn't have this
 void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 {
    wxString name;
-   int numCurves = mEditCurves.GetCount();
+   int numCurves = mEditCurves.size();
    int curve = 0;
 
    // Setup list of characters that aren't allowed
@@ -3313,11 +3310,12 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
       {   // Show the dialog and bail if the user cancels
          bad = false;
          // build the dialog
-         wxTextEntryDialog dlg( this,
-            _("Rename '") + mEditCurves[ item ].Name + _("' to..."),
+         AudacityTextEntryDialog dlg( this,
+            wxString::Format( _("Rename '%s' to..."), mEditCurves[ item ].Name ),
             _("Rename...") );
          dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );
-         dlg.SetName( _("Rename '") + mEditCurves[ item ].Name );
+         dlg.SetName(
+            wxString::Format( _("Rename '%s'"), mEditCurves[ item ].Name ) );
          wxTextValidator *tv = dlg.GetTextValidator();
          tv->SetExcludes( exclude );   // Tell the validator about excluded chars
          if( dlg.ShowModal() == wxID_CANCEL )
@@ -3338,11 +3336,12 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
                bad = true;
                if( curve == item )  // trying to rename a curve with the same name
                {
-                  wxMessageBox( _("Name is the same as the original one"), _("Same name"), wxOK );
+                  mEffect->Effect::MessageBox( _("Name is the same as the original one"), wxOK, _("Same name") );
                   break;
                }
-               int answer = wxMessageBox( _("Overwrite existing curve '") + name +_("'?"),
-                  _("Curve exists"), wxYES_NO );
+               int answer = mEffect->Effect::MessageBox(
+                  wxString::Format( _("Overwrite existing curve '%s'?"), name ),
+                  wxYES_NO, _("Curve exists") );
                if (answer == wxYES)
                {
                   bad = false;
@@ -3370,13 +3369,13 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
             mList->SetItem(curve, 0, name);
          else
          {
-            mEditCurves.RemoveAt( item );
+            mEditCurves.erase( mEditCurves.begin() + item );
             numCurves--;
          }
       }
       else if( item == (numCurves-1) ) // renaming 'unnamed'
       {  // Create a NEW entry
-         mEditCurves.Add( EQCurve( wxT("unnamed") ) );
+         mEditCurves.push_back( EQCurve( wxT("unnamed") ) );
          // Copy over the points
          mEditCurves[ numCurves ].points = mEditCurves[ numCurves - 1 ].points;
          // Give the original unnamed entry the NEW name
@@ -3413,17 +3412,18 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    {
       if(item == mList->GetItemCount()-1)   //unnamed
       {
-         wxMessageBox(_("You cannot delete the 'unnamed' curve."),
-            _("Can't delete 'unnamed'"), wxOK | wxCENTRE, this);
+         mEffect->Effect::MessageBox(_("You cannot delete the 'unnamed' curve."),
+             wxOK | wxCENTRE, _("Can't delete 'unnamed'"));
       }
       else
       {
          // Create the prompt
          wxString quest;
-         quest = wxString(_("Delete '")) + mEditCurves[ item-deleted ].Name + _("' ?");
+         quest = wxString::Format(_("Delete '%s'?"),
+                                  mEditCurves[ item-deleted ].Name);
 
          // Ask for confirmation before removal
-         int ans = wxMessageBox( quest, _("Confirm Deletion"), wxYES_NO | wxCENTRE, this );
+         int ans = mEffect->Effect::MessageBox( quest, wxYES_NO | wxCENTRE, _("Confirm Deletion") );
          if( ans == wxYES )
          {  // Remove the curve from the array
             mEditCurves.RemoveAt( item-deleted );
@@ -3446,14 +3446,14 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    // Create the prompt
    wxString quest;
    if( count > 1 )
-      quest.Printf(_("Delete ") + wxString(wxT("%d ")) + _("items?"), count);
+      quest = wxString::Format(_("Delete %d items?"), count);
    else
       if( count == 1 )
-         quest = wxString(_("Delete '")) + mEditCurves[ item ].Name + _("' ?");
+         quest = wxString::Format(_("Delete '%s'?"), mEditCurves[ item ].Name);
       else
          return;
    // Ask for confirmation before removal
-   int ans = wxMessageBox( quest, _("Confirm Deletion"), wxYES_NO | wxCENTRE, this );
+   int ans = mEffect->Effect::MessageBox( quest, wxYES_NO | wxCENTRE, _("Confirm Deletion") );
    if( ans == wxYES )
    {  // Remove the curve(s) from the array
       // Take care, mList and mEditCurves will get out of sync as curves are deleted
@@ -3462,24 +3462,25 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       {
          if(item == mList->GetItemCount()-1)   //unnamed
          {
-            wxMessageBox(_("You cannot delete the 'unnamed' curve, it is special."),
-               _("Can't delete 'unnamed'"), wxOK | wxCENTRE, this);
+            mEffect->Effect::MessageBox(_("You cannot delete the 'unnamed' curve, it is special."),
+               Effect::DefaultMessageBoxStyle,
+               _("Can't delete 'unnamed'"));
          }
          else
          {
-            mEditCurves.RemoveAt( item-deleted );
+            mEditCurves.erase( mEditCurves.begin() + item - deleted );
             deleted++;
          }
          item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
       }
-      PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
+      PopulateList(mEditCurves.size() - 1);   // set 'unnamed' as the selected curve
    }
 #endif
 }
 
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
-   FileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
+   FileDialogWrapper filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3499,7 +3500,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
-   FileDialog filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
+   FileDialogWrapper filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3509,19 +3510,21 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
    EQCurveArray temp;
    temp = mEffect->mCurves;   // backup the parent's curves
    EQCurveArray exportCurves;   // Copy selected curves to export
-   exportCurves.Clear();
+   exportCurves.clear();
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    int i=0;
    while(item >= 0)
    {
       if(item != mList->GetItemCount()-1)   // not 'unnamed'
       {
-         exportCurves.Add(mEditCurves[item].Name);
+         exportCurves.push_back(mEditCurves[item].Name);
          exportCurves[i].points = mEditCurves[item].points;
          i++;
       }
       else
-         wxMessageBox(_("You cannot export 'unnamed' curve, it is special."), _("Cannot Export 'unnamed'"));
+         mEffect->Effect::MessageBox(_("You cannot export 'unnamed' curve, it is special."),
+                            Effect::DefaultMessageBoxStyle,
+                            _("Cannot Export 'unnamed'"));
       // get next selected item
       item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
@@ -3531,11 +3534,15 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
       mEffect->SaveCurves(fileName);
       mEffect->mCurves = temp;
       wxString message;
-      message.Printf(_("%d curves exported to %s"), i, fileName.c_str());
-      wxMessageBox(message, _("Curves exported"));
+      message.Printf(_("%d curves exported to %s"), i, fileName);
+      mEffect->Effect::MessageBox(message,
+                                  Effect::DefaultMessageBoxStyle,
+                                  _("Curves exported"));
    }
    else
-      wxMessageBox(_("No curves exported"), _("No curves exported"));
+      mEffect->Effect::MessageBox(_("No curves exported"),
+                                  Effect::DefaultMessageBoxStyle,
+                                  _("No curves exported"));
 }
 
 void EditCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))
@@ -3561,10 +3568,10 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    wxString backupPlace = wxFileName( FileNames::DataDir(), wxT("EQBackup.xml") ).GetFullPath();
    mEffect->SaveCurves(backupPlace);
    // Load back into the main dialog
-   mEffect->mCurves.Clear();
-   for (unsigned int i = 0; i < mEditCurves.GetCount(); i++)
+   mEffect->mCurves.clear();
+   for (unsigned int i = 0; i < mEditCurves.size(); i++)
    {
-      mEffect->mCurves.Add(mEditCurves[i].Name);
+      mEffect->mCurves.push_back(mEditCurves[i].Name);
       mEffect->mCurves[i].points = mEditCurves[i].points;
    }
    mEffect->SaveCurves();
@@ -3599,7 +3606,7 @@ void EditCurvesDialog::OnListSelectionChange( wxListEvent & )
 #if wxUSE_ACCESSIBILITY
 
 SliderAx::SliderAx(wxWindow * window, const wxString &fmt) :
-wxWindowAccessible( window )
+WindowAccessible( window )
 {
    mParent = window;
    mFmt = fmt;

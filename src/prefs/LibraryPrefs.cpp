@@ -26,6 +26,7 @@ MP3 and FFmpeg encoding libraries.
 #include "../export/ExportMP3.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "LibraryPrefs.h"
 
@@ -45,8 +46,9 @@ BEGIN_EVENT_TABLE(LibraryPrefs, PrefsPanel)
    EVT_BUTTON(ID_FFMPEG_DOWN_BUTTON, LibraryPrefs::OnFFmpegDownButton)
 END_EVENT_TABLE()
 
-LibraryPrefs::LibraryPrefs(wxWindow * parent)
-:   PrefsPanel(parent, _("Libraries"))
+LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
+/* i18-hint: refers to optional plug-in software libraries */
+:   PrefsPanel(parent, winid, _("Libraries"))
 {
    Populate();
 }
@@ -79,6 +81,8 @@ void LibraryPrefs::Populate()
 void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
+
    S.StartStatic(_("MP3 Export Library"));
    {
       S.StartTwoColumn();
@@ -154,11 +158,13 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/Library/FFmpegOnDemand"),
                     false);
 #if !defined(USE_FFMPEG)
-      checkbox->Enable(FALSE);
+      if( checkbox ) checkbox->Enable(FALSE);
 #endif
 #endif
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 /// Sets the a text area on the dialog to have the name
@@ -180,7 +186,7 @@ void LibraryPrefs::OnMP3FindButton(wxCommandEvent & WXUNUSED(event))
 void LibraryPrefs::OnMP3DownButton(wxCommandEvent & WXUNUSED(event))
 {
    // Modal help dialogue required here
-   HelpSystem::ShowHelp(this, wxT("FAQ:Installation_and_Plug-Ins#lame"), true);
+   HelpSystem::ShowHelp(this, wxT("FAQ:Installing_the_LAME_MP3_Encoder"), true);
 }
 
 void LibraryPrefs::SetFFmpegVersionText()
@@ -206,7 +212,7 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
    // Libs are fine, don't show "locate" dialog unless user really wants it
    if (!locate) {
-      int response = wxMessageBox(_("Audacity has automatically detected valid FFmpeg libraries.\nDo you still want to locate them manually?"),
+      int response = AudacityMessageBox(_("Audacity has automatically detected valid FFmpeg libraries.\nDo you still want to locate them manually?"),
                                   wxT("Success"),
                                   wxCENTRE | wxYES_NO | wxNO_DEFAULT |wxICON_QUESTION);
       if (response == wxYES) {
@@ -228,7 +234,7 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
 void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("FAQ:Installation_and_Plug-Ins#ffdown"), true);
+   HelpSystem::ShowHelp(this, wxT("FAQ:Installing_the_FFmpeg_Import_Export_Library"), true);
 }
 
 bool LibraryPrefs::Commit()
@@ -244,8 +250,8 @@ wxString LibraryPrefs::HelpPageName()
    return "Libraries_Preferences";
 }
 
-PrefsPanel *LibraryPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *LibraryPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew LibraryPrefs(parent);
+   return safenew LibraryPrefs(parent, winid);
 }

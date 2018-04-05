@@ -128,7 +128,7 @@ void TimeTrack::Paste(double t, const Track * src)
       (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
 }
 
-void TimeTrack::Silence(double t0, double t1)
+void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
 {
 }
 
@@ -331,11 +331,11 @@ void TimeTrack::testMe()
    double expected2 = (5.0 - 2.0) / 0.2 + (13.0 - 5.0) / 1.3;
    if( fabs(value1 - expected1) > 0.01 )
      {
-       printf( "TimeTrack:  Integral failed! expected %f got %f\n", expected1, value1);
+       wxPrintf( "TimeTrack:  Integral failed! expected %f got %f\n", expected1, value1);
      }
    if( fabs(value2 - expected2) > 0.01 )
      {
-       printf( "TimeTrack:  IntegralOfInverse failed! expected %f got %f\n", expected2, value2);
+       wxPrintf( "TimeTrack:  IntegralOfInverse failed! expected %f got %f\n", expected2, value2);
      }
 
    /*double reqt0 = 10.0 - .1;
@@ -344,7 +344,7 @@ void TimeTrack::testMe()
    double t1 = warp( reqt1 );
    if( t0 > t1 )
      {
-       printf( "TimeTrack:  Warping reverses an interval! [%.2f,%.2f] -> [%.2f,%.2f]\n",
+       wxPrintf( "TimeTrack:  Warping reverses an interval! [%.2f,%.2f] -> [%.2f,%.2f]\n",
           reqt0, reqt1,
           t0, t1 );
      }*/

@@ -81,6 +81,7 @@ class AUDACITY_DLL_API Ruler {
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
    void SetUnits(const wxString &units);
+   void SetDbMirrorValue( const double d ){ mDbMirrorValue = d ; };
 
    // Logarithmic
    void SetLog(bool log);
@@ -223,6 +224,7 @@ private:
    private:
    int          mOrientation;
    int          mSpacing;
+   double       mDbMirrorValue;
    bool         mHasSetSpacing;
    bool         mLabelEdges;
    RulerFormat  mFormat;
@@ -245,7 +247,41 @@ class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
    DECLARE_DYNAMIC_CLASS(RulerPanel)
 
  public:
+   using Range = std::pair<double, double>;
+
+   struct Options {
+      bool log { false };
+      bool flip { false };
+      bool labelEdges { false };
+      bool ticksAtExtremes { false };
+      bool hasTickColour{ false };
+      wxColour tickColour;
+
+      Options() {}
+
+      Options &Log( bool l )
+      { log = l; return *this; }
+
+      Options &Flip( bool f )
+      { flip = f; return *this; }
+
+      Options &LabelEdges( bool l )
+      { labelEdges = l; return *this; }
+
+      Options &TicksAtExtremes( bool t )
+      { ticksAtExtremes = t; return *this; }
+
+      Options &TickColour( const wxColour c )
+      { tickColour = c; hasTickColour = true; return *this; }
+   };
+
    RulerPanel(wxWindow* parent, wxWindowID id,
+              wxOrientation orientation,
+              const wxSize &bounds,
+              const Range &range,
+              Ruler::RulerFormat format,
+              const wxString &units,
+              const Options &options = {},
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize);
 
@@ -276,11 +312,7 @@ private:
 class QuickPlayIndicatorOverlay;
 class QuickPlayRulerOverlay;
 
-// This is an Audacity Specific ruler panel which additionally
-// has border, selection markers, play marker.
-// Once TrackPanel uses wxSizers, we will derive it from some
-// wxWindow and the GetSize and SetSize functions
-// will then be wxWidgets functions instead.
+// This is an Audacity Specific ruler panel.
 class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
 public:

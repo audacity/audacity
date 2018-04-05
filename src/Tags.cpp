@@ -47,6 +47,7 @@
 #include "ShuttleGui.h"
 #include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
+#include "widgets/ErrorDialog.h"
 #include "xml/XMLFileReader.h"
 
 #include <wx/button.h>
@@ -55,7 +56,6 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
-#include <wx/msgdlg.h>
 #include <wx/notebook.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
@@ -306,18 +306,17 @@ void Tags::Clear()
 namespace {
    bool EqualMaps(const TagMap &map1, const TagMap &map2)
    {
-      for (auto it1 = map1.begin(), end1 = map1.end(),
-           it2 = map2.begin(), end2 = map2.end();
-           it1 != end1 || it2 != end2;) {
-         if (it1 == end1 || it2 == end2)
+      // Maps are unordered, hash maps; can't just iterate in tandem and
+      // compare.
+      if (map1.size() != map2.size())
+         return false;
+
+      for (const auto &pair : map2) {
+         auto iter = map1.find(pair.first);
+         if (iter == map1.end() || iter->second != pair.second)
             return false;
-         else if (it1->first != it2->first)
-            return false;
-         else if (it1->second != it2->second)
-            return false;
-         else
-            ++it1, ++it2;
       }
+
       return true;
    }
 }
@@ -526,7 +525,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       if (n == wxT("id3v2")) {
-         // LLL:  This is obsolute, but it must be handled and ignored.
+         // LLL:  This is obsolete, but it must be handled and ignored.
       }
       else {
          SetTag(n, v);
@@ -587,6 +586,8 @@ class ComboEditor final : public wxGridCellChoiceEditor
 public:
    ComboEditor(const wxArrayString& choices, bool allowOthers = false)
    :  wxGridCellChoiceEditor(choices, allowOthers)
+   ,  m_choices{ choices }
+   ,  m_allowOthers{ allowOthers }
    {
    }
 
@@ -595,7 +596,7 @@ public:
       // Ignore it (a must on the Mac as the erasure causes problems.)
    }
 
-   void SetParameters(const wxString& params)
+   void SetParameters(const wxString& params) override
    {
       wxGridCellChoiceEditor::SetParameters(params);
 
@@ -606,7 +607,7 @@ public:
       }
    }
 
-   void SetSize(const wxRect& rectOrig)
+   void SetSize(const wxRect& rectOrig) override
    {
       wxRect rect(rectOrig);
       wxRect r = Combo()->GetRect();
@@ -620,7 +621,7 @@ public:
 
    // Fix for Bug 1389
    // July 2016: ANSWER-ME: Does this need reporting upstream to wxWidgets?
-   virtual void StartingKey(wxKeyEvent& event)
+   virtual void StartingKey(wxKeyEvent& event) override
    {
        // Lifted from wxGridCellTextEditor and adapted to combo.
 
@@ -670,6 +671,15 @@ public:
        }
    }
 
+   // Clone is required by wxwidgets; implemented via copy constructor
+   wxGridCellEditor *Clone() const override
+   {
+      return safenew ComboEditor{ m_choices, m_allowOthers };
+   }
+
+private:
+   wxArrayString   m_choices;
+   bool            m_allowOthers;
 };
 
 //
@@ -712,7 +722,7 @@ static wxArrayString names()
    return theArray.Get();
 }
 
-static struct
+static const struct
 {
    wxString label;
    wxString name;
@@ -768,22 +778,6 @@ TagsEditor::TagsEditor(wxWindow * parent,
    mEditTrack(editTrack)
 {
    SetName(GetTitle());
-
-   labelmap[0].label = LABEL_ARTIST;
-   labelmap[1].label = LABEL_TITLE;
-   labelmap[2].label = LABEL_ALBUM;
-   labelmap[3].label = LABEL_TRACK;
-   labelmap[4].label = LABEL_YEAR;
-   labelmap[5].label = LABEL_GENRE;
-   labelmap[6].label = LABEL_COMMENTS;
-
-   labelmap[0].name = TAG_ARTIST;
-   labelmap[1].name = TAG_TITLE;
-   labelmap[2].name = TAG_ALBUM;
-   labelmap[3].name = TAG_TRACK;
-   labelmap[4].name = TAG_YEAR;
-   labelmap[5].name = TAG_GENRE;
-   labelmap[6].name = TAG_COMMENTS;
 
    mGrid = NULL;
 
@@ -889,7 +883,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
       {
          S.Id(AddID).AddButton(_("&Add"));
          S.Id(RemoveID).AddButton(_("&Remove"));
-         S.AddTitle(wxT(" "));
+         S.AddTitle( {} );
          S.Id(ClearID).AddButton(_("Cl&ear"));
       }
       S.EndMultiColumn();
@@ -912,7 +906,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
             {
                S.Id(LoadID).AddButton(_("&Load..."));
                S.Id(SaveID).AddButton(_("&Save..."));
-               S.AddTitle(wxT(" "));
+               S.AddTitle( {} );
                S.Id(SaveDefaultsID).AddButton(_("Set De&fault"));
             }
             S.EndMultiColumn();
@@ -937,6 +931,8 @@ bool TagsEditor::TransferDataFromWindow()
 
    mLocal.Clear();
    for (i = 0; i < cnt; i++) {
+      // Get tag name from the grid
+
       wxString n = mGrid->GetCellValue(i, 0);
       wxString v = mGrid->GetCellValue(i, 1);
 
@@ -944,25 +940,26 @@ bool TagsEditor::TransferDataFromWindow()
          continue;
       }
 
-      if (n.CmpNoCase(LABEL_ARTIST) == 0) {
+      // Map special tag names back to internal keys
+      if (n.CmpNoCase(wxGetTranslation(LABEL_ARTIST)) == 0) {
          n = TAG_ARTIST;
       }
-      else if (n.CmpNoCase(LABEL_TITLE) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
          n = TAG_TITLE;
       }
-      else if (n.CmpNoCase(LABEL_ALBUM) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_ALBUM)) == 0) {
          n = TAG_ALBUM;
       }
-      else if (n.CmpNoCase(LABEL_TRACK) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
          n = TAG_TRACK;
       }
-      else if (n.CmpNoCase(LABEL_YEAR) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_YEAR)) == 0) {
          n = TAG_YEAR;
       }
-      else if (n.CmpNoCase(LABEL_GENRE) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_GENRE)) == 0) {
          n = TAG_GENRE;
       }
-      else if (n.CmpNoCase(LABEL_COMMENTS) == 0) {
+      else if (n.CmpNoCase(wxGetTranslation(LABEL_COMMENTS)) == 0) {
          n = TAG_COMMENTS;
       }
 
@@ -990,14 +987,18 @@ bool TagsEditor::TransferDataToWindow()
       mGrid->AppendRows();
 
       mGrid->SetReadOnly(i, 0);
-      mGrid->SetCellValue(i, 0, labelmap[i].label);
+      // The special tag name that's displayed and translated may not match
+      // the key string used for internal lookup.
+      mGrid->SetCellValue(i, 0, wxGetTranslation( labelmap[i].label ) );
       mGrid->SetCellValue(i, 1, mLocal.GetTag(labelmap[i].name));
 
-      if (!mEditTitle && mGrid->GetCellValue(i, 0).CmpNoCase(LABEL_TITLE) == 0) {
+      if (!mEditTitle &&
+          mGrid->GetCellValue(i, 0).CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
          mGrid->SetReadOnly(i, 1);
       }
 
-      if (!mEditTrack && mGrid->GetCellValue(i, 0).CmpNoCase(LABEL_TRACK) == 0) {
+      if (!mEditTrack &&
+          mGrid->GetCellValue(i, 0).CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
          mGrid->SetReadOnly(i, 1);
       }
 
@@ -1045,12 +1046,19 @@ void TagsEditor::OnChange(wxGridEvent & event)
       return;
    }
 
-   wxString n = mGrid->GetCellValue(event.GetRow(), 0);
-   for (size_t i = 0; i < STATICCNT; i++) {
-      if (n.CmpNoCase(labelmap[i].label) == 0) {
+   // Do not permit duplication of any of the tags.
+   // Tags differing only in case are nondistinct.
+   auto row = event.GetRow();
+   const wxString key0 = mGrid->GetCellValue(row, 0).Upper();
+   auto nn = mGrid->GetNumberRows();
+   for (decltype(nn) ii = 0; ii < nn; ++ii) {
+      if (ii == row)
+         continue;
+      auto key = mGrid->GetCellValue(ii, 0).Upper();
+      if (key0.CmpNoCase(key) == 0) {
          ischanging = true;
          wxBell();
-         mGrid->SetGridCursor(i, 0);
+         mGrid->SetGridCursor(ii, 0);
          event.Veto();
          ischanging = false;
          break;
@@ -1101,7 +1109,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
    wxFileName fn(FileNames::DataDir(), wxT("genres.txt"));
    wxFile f(fn.GetFullPath(), wxFile::write);
    if (!f.IsOpened() || !f.Write(tc->GetValue())) {
-      wxMessageBox(_("Unable to save genre file."), _("Reset Genres"));
+      AudacityMessageBox(_("Unable to save genre file."), _("Reset Genres"));
       return;
    }
 
@@ -1112,7 +1120,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
 {
-   int id = wxMessageBox(_("Are you sure you want to reset the genre list to defaults?"),
+   int id = AudacityMessageBox(_("Are you sure you want to reset the genre list to defaults?"),
                          _("Reset Genres"),
                          wxYES_NO);
 
@@ -1128,7 +1136,7 @@ void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
                (!tf.Exists() && tf.Create());
 
    if (!open) {
-      wxMessageBox(_("Unable to open genre file."), _("Reset Genres"));
+      AudacityMessageBox(_("Unable to open genre file."), _("Reset Genres"));
       mLocal.LoadGenres();
       return;
    }
@@ -1140,7 +1148,7 @@ void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
    }
 
    if (!tf.Write()) {
-      wxMessageBox(_("Unable to save genre file."), _("Reset Genres"));
+      AudacityMessageBox(_("Unable to save genre file."), _("Reset Genres"));
       mLocal.LoadGenres();
       return;
    }
@@ -1187,7 +1195,7 @@ void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
    XMLFileReader reader;
    if (!reader.Parse(&mLocal, fn)) {
       // Inform user of load failure
-      wxMessageBox(reader.GetErrorStr(),
+      AudacityMessageBox(reader.GetErrorStr(),
                    _("Error Loading Metadata"),
                    wxOK | wxCENTRE,
                    this);
@@ -1231,7 +1239,7 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   GuardedCall< void >( [&] {
+   GuardedCall( [&] {
       // Create/Open the file
       XMLFileWriter writer{ fn, _("Error Saving Tags File") };
 
@@ -1318,10 +1326,13 @@ void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
    size_t row = mGrid->GetGridCursorRow();
 
-   if (!mEditTitle && mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TITLE) == 0) {
+   if (!mEditTitle &&
+       mGrid->GetCellValue(row, 0).CmpNoCase(wxGetTranslation(LABEL_TITLE)) == 0) {
       return;
    }
-   else if (!mEditTrack && mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TRACK) == 0) {
+   else if (!mEditTrack &&
+            mGrid->GetCellValue(row, 0)
+               .CmpNoCase(wxGetTranslation(LABEL_TRACK)) == 0) {
       return;
    }
    else if (row < STATICCNT) {
@@ -1395,7 +1406,7 @@ void TagsEditor::SetEditors()
 
    for (int i = 0; i < cnt; i++) {
       wxString label = mGrid->GetCellValue(i, 0);
-      if (label.CmpNoCase(LABEL_GENRE) == 0) {
+      if (label.CmpNoCase(wxGetTranslation(LABEL_GENRE)) == 0) {
          // This use of GetDefaultEditorForType does not require DecRef.
          mGrid->SetCellEditor(i, 1, mGrid->GetDefaultEditorForType(wxT("Combo")));
       }

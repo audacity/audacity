@@ -45,6 +45,7 @@ private:
    
    
    DECLARE_EVENT_TABLE()
+   friend class GetInfoCommand;
 };
 
 #endif

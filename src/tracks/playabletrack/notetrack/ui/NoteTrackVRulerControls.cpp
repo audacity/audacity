@@ -33,11 +33,14 @@ std::vector<UIHandlePtr> NoteTrackVRulerControls::HitTest
 {
    std::vector<UIHandlePtr> results;
    UIHandlePtr result;
-   auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
-   result = NoteTrackVZoomHandle::HitTest(
-      mVZoomHandle, st.state, track, st.rect);
-   if (result)
-      results.push_back(result);
+
+   if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
+      auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
+      result = NoteTrackVZoomHandle::HitTest(
+         mVZoomHandle, st.state, track, st.rect);
+      if (result)
+         results.push_back(result);
+   }
 
    auto more = TrackVRulerControls::HitTest(st, pProject);
    std::copy(more.begin(), more.end(), std::back_inserter(results));

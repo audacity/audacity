@@ -3,6 +3,7 @@
    Audacity: A Digital Audio Editor
 
    EffectAutomationParameters.h
+   (defining CommandParameters)
 
    Leland Lucius
 
@@ -39,19 +40,34 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECTAUTOMATIONPARAMETERS_H__
-#define __AUDACITY_EFFECTAUTOMATIONPARAMETERS_H__
+#ifndef __AUDACITY_COMMAND_PARAMETERS_H__
+#define __AUDACITY_COMMAND_PARAMETERS_H__
 
 #include <locale.h>
 
 #include <wx/cmdline.h>
 #include <wx/fileconf.h>
 #include <wx/intl.h>
+#include <algorithm>
 
-class EffectAutomationParameters : public wxFileConfig
+#include "IdentInterface.h"
+
+
+/**
+\brief CommandParameters, derived from wxFileConfig, is essentially doing 
+the same things as the Shuttle classes.  It does text <-> binary conversions of
+parameters.  It does not seem to be using actual file read/writing.  
+
+Should it be converted to using Shuttle?  Probably yes.  Shuttle leads to shorter code.  
+And Shuttle is more multi-functional since Shuttle can report on signature, do the work of 
+wxWidget validators, and can create default dialogs.  However until that conversion is 
+done, we need this class, and we use a pointer to one from within a Shuttle when interfacing
+with the code that still uses it.
+*/
+class CommandParameters final : public wxFileConfig
 {
 public:
-   EffectAutomationParameters(const wxString & parms = wxEmptyString)
+   CommandParameters(const wxString & parms = wxEmptyString)
    :  wxFileConfig(wxEmptyString,
                    wxEmptyString,
                    wxEmptyString,
@@ -61,31 +77,31 @@ public:
       SetParameters(parms);
    }
 
-   virtual ~EffectAutomationParameters()
+   virtual ~CommandParameters()
    {
    }
 
-   virtual bool HasGroup(const wxString & strName) const
+   virtual bool HasGroup(const wxString & strName) const override
    {
       return wxFileConfig::HasGroup(NormalizeName(strName));
    }
 
-   virtual bool HasEntry(const wxString& strName) const
+   virtual bool HasEntry(const wxString& strName) const override
    {
       return wxFileConfig::HasEntry(NormalizeName(strName));
    }
 
-   virtual bool DoReadString(const wxString & key, wxString *pStr) const
+   virtual bool DoReadString(const wxString & key, wxString *pStr) const override
    {
       return wxFileConfig::DoReadString(NormalizeName(key), pStr);
    }
 
-   virtual bool DoReadLong(const wxString & key, long *pl) const
+   virtual bool DoReadLong(const wxString & key, long *pl) const override
    {
       return wxFileConfig::DoReadLong(NormalizeName(key), pl);
    }
 
-   virtual bool DoReadDouble(const wxString & key, double *pd) const
+   virtual bool DoReadDouble(const wxString & key, double *pd) const override
    {
       wxString str;
       if (Read(key, &str))
@@ -102,19 +118,19 @@ public:
       return false;
    }
 
-   virtual bool DoWriteString(const wxString & key, const wxString & szValue)
+   virtual bool DoWriteString(const wxString & key, const wxString & szValue) override
    {
       return wxFileConfig::DoWriteString(NormalizeName(key), szValue);
    }
 
-   virtual bool DoWriteLong(const wxString & key, long lValue)
+   virtual bool DoWriteLong(const wxString & key, long lValue) override
    {
       return wxFileConfig::DoWriteLong(NormalizeName(key), lValue);
    }
 
-   virtual bool DoWriteDouble(const wxString & key, double value)
+   virtual bool DoWriteDouble(const wxString & key, double value) override
    {
-      return DoWriteString(key, wxString::Format(wxT("%.12f"), value));
+      return DoWriteString(key, wxString::Format(wxT("%g"), value));
    }
 
    bool ReadFloat(const wxString & key, float *pf) const
@@ -142,43 +158,57 @@ public:
       return Write(key, f);
    }
 
-   bool ReadEnum(const wxString & key, int *pi, const wxArrayString & choices) const
+   // For reading old config files with enumeration names that have been
+   // changed in later versions.  Pair a string with an index into the other
+   // list of non-obsolete names.
+   using ObsoleteMap = std::pair< wxString, size_t >;
+
+   bool ReadEnum(const wxString & key, int *pi,
+                 const IdentInterfaceSymbol choices[], size_t nChoices,
+                 const ObsoleteMap obsoletes[] = nullptr,
+                 size_t nObsoletes = 0) const
    {
       wxString s;
       if (!wxFileConfig::Read(key, &s))
       {
          return false;
       }
-      *pi = choices.Index(s);
+      *pi = std::find( choices, choices + nChoices,
+                       IdentInterfaceSymbol{ s, {} } ) - choices;
+      if (*pi == (int)nChoices)
+         *pi = -1;
+      if (*pi < 0 && obsoletes) {
+         auto index = std::find_if(obsoletes, obsoletes + nObsoletes,
+                                   [&](const ObsoleteMap &entry){
+                                      return entry.first == s; })
+            - obsoletes;
+         if (index < (int)nObsoletes)
+            *pi = (int)obsoletes[index].second;
+      }
       return true;
    }
 
-   bool ReadEnum(const wxString & key, int *pi, int defVal, const wxArrayString & choices) const
+   bool ReadEnum(const wxString & key, int *pi, int defVal,
+                 const IdentInterfaceSymbol choices[], size_t nChoices,
+                 const ObsoleteMap obsoletes[] = nullptr,
+                 size_t nObsoletes = 0) const
    {
-      if (!ReadEnum(key, pi, choices))
+      if (!ReadEnum(key, pi, choices, nChoices, obsoletes, nObsoletes))
       {
          *pi = defVal;
       }
       return true;
    }
 
-   bool ReadEnum(const wxString & key, int *pi, const wxString & defVal, const wxArrayString & choices) const
+   bool WriteEnum(const wxString & key, int value,
+                  const IdentInterfaceSymbol choices[], size_t nChoices)
    {
-      if (!ReadEnum(key, pi, choices))
-      {
-         *pi = choices.Index(defVal);
-      }
-      return true;
-   }
-
-   bool WriteEnum(const wxString & key, int value, const wxArrayString & choices)
-   {
-      if (value < 0 || value >= (int) choices.GetCount())
+      if (value < 0 || value >= (int)nChoices)
       {
          return false;
       }
 
-      return wxFileConfig::Write(key, choices[value]);
+      return wxFileConfig::Write(key, choices[value].Internal());
    }
 
    bool ReadAndVerify(const wxString & key, float *val, float defVal, float min, float max) const
@@ -217,15 +247,12 @@ public:
       return true;
    }
 
-   bool ReadAndVerify(const wxString & key, int *val, int defVal, const wxArrayString & choices) const
+   bool ReadAndVerify(const wxString & key, int *val, int defVal,
+                      const IdentInterfaceSymbol choices[], size_t nChoices,
+                      const ObsoleteMap obsoletes[] = nullptr,
+                      size_t nObsoletes = 0) const
    {
-      ReadEnum(key, val, defVal, choices);
-      return (*val != wxNOT_FOUND);
-   }
-
-   bool ReadAndVerify(const wxString & key, int *val, const wxString & defVal, const wxArrayString & choices) const
-   {
-      ReadEnum(key, val, defVal, choices);
+      ReadEnum(key, val, defVal, choices, nChoices, obsoletes, nObsoletes);
       return (*val != wxNOT_FOUND);
    }
 

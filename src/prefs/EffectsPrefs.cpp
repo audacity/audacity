@@ -30,9 +30,10 @@
 #include "EffectsPrefs.h"
 
 #include "../Experimental.h"
+#include "../Internat.h"
 
-EffectsPrefs::EffectsPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Effects"))
+EffectsPrefs::EffectsPrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Effects"))
 {
    Populate();
 }
@@ -55,6 +56,7 @@ void EffectsPrefs::Populate()
 void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Enable Effects"));
    {
@@ -84,7 +86,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
 #if USE_VAMP
-      S.TieCheckBox(wxT("&VAMP"),
+      S.TieCheckBox(wxT("&Vamp"),
                     wxT("/VAMP/Enable"),
                     true);
 #endif
@@ -103,13 +105,13 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          wxArrayString visualgroups;
          wxArrayString prefsgroups;
-      
+
          visualgroups.Add(_("Sorted by Effect Name"));
          visualgroups.Add(_("Sorted by Publisher and Effect Name"));
          visualgroups.Add(_("Sorted by Type and Effect Name"));
          visualgroups.Add(_("Grouped by Publisher"));
          visualgroups.Add(_("Grouped by Type"));
-      
+
          prefsgroups.Add(wxT("sortby:name"));
          prefsgroups.Add(wxT("sortby:publisher:name"));
          prefsgroups.Add(wxT("sortby:type:name"));
@@ -121,8 +123,8 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                                    wxT("name"),
                                    visualgroups,
                                    prefsgroups);
-         c->SetMinSize(c->GetBestSize());
-                     
+         if( c ) c->SetMinSize(c->GetBestSize());
+
          S.TieNumericTextBox(_("&Group size (0 to disable):"),
                              wxT("/Effects/MaxPerGroup"),
 #if defined(__WXGTK__)
@@ -162,6 +164,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
+   S.EndScroller();
 }
 
 bool EffectsPrefs::Commit()
@@ -177,8 +180,8 @@ wxString EffectsPrefs::HelpPageName()
    return "Effects_Preferences";
 }
 
-PrefsPanel *EffectsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *EffectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew EffectsPrefs(parent);
+   return safenew EffectsPrefs(parent, winid);
 }

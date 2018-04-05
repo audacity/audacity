@@ -66,8 +66,6 @@ UIHandle::Result LabelDefaultClickHandle::Click
    // Redraw to show the change of text box selection status
    UIHandle::Result result = RefreshAll;
 
-   auto pLT = static_cast<LabelTrack*>(evt.pCell.get());
-
    if (evt.event.LeftDown())
    {
       SaveState( pProject );
@@ -90,14 +88,14 @@ UIHandle::Result LabelDefaultClickHandle::Click
 }
 
 UIHandle::Result LabelDefaultClickHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &WXUNUSED(evt), AudacityProject *WXUNUSED(pProject))
 {
    return RefreshCode::RefreshNone;
 }
 
 UIHandle::Result LabelDefaultClickHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
- wxWindow *pParent)
+(const TrackPanelMouseEvent &WXUNUSED(evt), AudacityProject *WXUNUSED(pProject),
+ wxWindow *WXUNUSED(pParent))
 {
    mLabelState.reset();
    return RefreshCode::RefreshNone;

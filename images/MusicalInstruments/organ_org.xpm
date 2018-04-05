@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * organ_org_xpm[] = {
+static const char * const organ_org_xpm[] = {
 "48 48 862 2",
 "  	c None",
 ". 	c #969696",

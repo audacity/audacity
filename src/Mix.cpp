@@ -27,7 +27,6 @@
 #include <math.h>
 
 #include <wx/textctrl.h>
-#include <wx/msgdlg.h>
 #include <wx/progdlg.h>
 #include <wx/timer.h>
 #include <wx/intl.h>
@@ -93,7 +92,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         waveArray.push_back(static_cast<const WaveTrack *>(t));
+         waveArray.push_back(Track::Pointer<const WaveTrack>(t));
          tstart = t->GetStartTime();
          tend = t->GetEndTime();
          if (tend > mixEndTime)
@@ -212,10 +211,10 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    // Note: these shouldn't be translated - they're for debugging
    // and profiling only.
-   printf("      Tracks: %d\n", numWaves);
-   printf("  Mix length: %f sec\n", totalTime);
-   printf("Elapsed time: %f sec\n", elapsedTime);
-   printf("Max number of tracks to mix in real time: %f\n", maxTracks);
+   wxPrintf("      Tracks: %d\n", numWaves);
+   wxPrintf("  Mix length: %f sec\n", totalTime);
+   wxPrintf("Elapsed time: %f sec\n", elapsedTime);
+   wxPrintf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
    }
 }
@@ -297,7 +296,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
 
    mBuffer.reinit(mNumBuffers);
    mTemp.reinit(mNumBuffers);
-   for (int c = 0; c < mNumBuffers; c++) {
+   for (unsigned int c = 0; c < mNumBuffers; c++) {
       mBuffer[c].Allocate(mInterleavedBufferSize, mFormat);
       mTemp[c].Allocate(mInterleavedBufferSize, floatSample);
    }
@@ -355,7 +354,7 @@ void Mixer::ApplyTrackGains(bool apply)
 
 void Mixer::Clear()
 {
-   for (int c = 0; c < mNumBuffers; c++) {
+   for (unsigned int c = 0; c < mNumBuffers; c++) {
       memset(mTemp[c].ptr(), 0, mInterleavedBufferSize * SAMPLE_SIZE(floatSample));
    }
 }
@@ -364,7 +363,7 @@ void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
                 samplePtr src, SampleBuffer *dests,
                 int len, bool interleaved)
 {
-   for (int c = 0; c < numChannels; c++) {
+   for (unsigned int c = 0; c < numChannels; c++) {
       if (!channelFlags[c])
          continue;
 
@@ -426,7 +425,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                (backwards ? *queueLen : - *queueLen)) / trackRate;
 
    while (out < mMaxOut) {
-      if (*queueLen < mProcessLen) {
+      if (*queueLen < (int)mProcessLen) {
          // Shift pending portion to start of the buffer
          memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
          *queueStart = 0;
@@ -477,7 +476,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
       }
 
       auto thisProcessLen = mProcessLen;
-      bool last = (*queueLen < mProcessLen);
+      bool last = (*queueLen < (int)mProcessLen);
       if (last) {
          thisProcessLen = *queueLen;
       }
@@ -747,8 +746,8 @@ MixerSpec::MixerSpec( unsigned numTracks, unsigned maxNumChannels )
 
    Alloc();
 
-   for( int i = 0; i < mNumTracks; i++ )
-      for( int j = 0; j < mNumChannels; j++ )
+   for( unsigned int i = 0; i < mNumTracks; i++ )
+      for( unsigned int j = 0; j < mNumChannels; j++ )
          mMap[ i ][ j ] = ( i == j );
 }
 
@@ -760,8 +759,8 @@ MixerSpec::MixerSpec( const MixerSpec &mixerSpec )
 
    Alloc();
 
-   for( int i = 0; i < mNumTracks; i++ )
-      for( int j = 0; j < mNumChannels; j++ )
+   for( unsigned int i = 0; i < mNumTracks; i++ )
+      for( unsigned int j = 0; j < mNumChannels; j++ )
          mMap[ i ][ j ] = mixerSpec.mMap[ i ][ j ];
 }
 
@@ -782,12 +781,12 @@ bool MixerSpec::SetNumChannels( unsigned newNumChannels )
    if( newNumChannels > mMaxNumChannels )
       return false;
 
-   for( int i = 0; i < mNumTracks; i++ )
+   for( unsigned int i = 0; i < mNumTracks; i++ )
    {
-      for( int j = newNumChannels; j < mNumChannels; j++ )
+      for( unsigned int j = newNumChannels; j < mNumChannels; j++ )
          mMap[ i ][ j ] = false;
 
-      for( int j = mNumChannels; j < newNumChannels; j++ )
+      for( unsigned int j = mNumChannels; j < newNumChannels; j++ )
          mMap[ i ][ j ] = false;
    }
 
@@ -803,8 +802,8 @@ MixerSpec& MixerSpec::operator=( const MixerSpec &mixerSpec )
 
    Alloc();
 
-   for( int i = 0; i < mNumTracks; i++ )
-      for( int j = 0; j < mNumChannels; j++ )
+   for( unsigned int i = 0; i < mNumTracks; i++ )
+      for( unsigned int j = 0; j < mNumChannels; j++ )
          mMap[ i ][ j ] = mixerSpec.mMap[ i ][ j ];
 
    return *this;

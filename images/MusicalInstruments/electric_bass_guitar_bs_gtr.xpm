@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * electric_bass_guitar_bs_gtr_xpm[] = {
+static const char * const electric_bass_guitar_bs_gtr_xpm[] = {
 "48 48 866 2",
 "  	c None",
 ". 	c #969696",

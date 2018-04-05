@@ -16,6 +16,7 @@
 #include "../Audacity.h"
 #include "ImportQT.h"
 #include "ImportPlugin.h"
+#include "../widgets/ErrorDialog.h"
 
 #define DESC _("QuickTime files")
 
@@ -42,8 +43,6 @@ void GetQTImportPlugin(ImportPluginList &importPluginList,
 }
 
 #else /* USE_QUICKTIME */
-
-#include <wx/msgdlg.h>
 
 // There's a name collision between our Track and QuickTime's...workaround it
 #define Track XTrack
@@ -259,7 +258,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    {
       err = MovieAudioExtractionBegin(mMovie, 0, &maer);
       if (err != noErr) {
-         wxMessageBox(_("Unable to start QuickTime extraction"));
+         AudacityMessageBox(_("Unable to start QuickTime extraction"));
          break;
       }
    
@@ -269,7 +268,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             sizeof(quality),
                                             &quality);
       if (err != noErr) {
-         wxMessageBox(_("Unable to set QuickTime render quality"));
+         AudacityMessageBox(_("Unable to set QuickTime render quality"));
          break;
       }
    
@@ -279,7 +278,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             sizeof(discrete),
                                             &discrete);
       if (err != noErr) {
-         wxMessageBox(_("Unable to set QuickTime discrete channels property"));
+         AudacityMessageBox(_("Unable to set QuickTime discrete channels property"));
          break;
       }
    
@@ -290,7 +289,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             &maxSampleSize,
                                             NULL);
       if (err != noErr) {
-         wxMessageBox(_("Unable to get QuickTime sample size property"));
+         AudacityMessageBox(_("Unable to get QuickTime sample size property"));
          break;
       }
    
@@ -301,7 +300,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             &desc,
                                             NULL);
       if (err != noErr) {
-         wxMessageBox(_("Unable to retrieve stream description"));
+         AudacityMessageBox(_("Unable to retrieve stream description"));
          break;
       }
    
@@ -370,7 +369,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                               abl.get(),
                                               &flags);
          if (err != noErr) {
-            wxMessageBox(_("Unable to get fill buffer"));
+            AudacityMessageBox(_("Unable to get fill buffer"));
             break;
          }
    

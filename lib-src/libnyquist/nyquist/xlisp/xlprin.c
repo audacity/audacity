@@ -21,7 +21,7 @@
 /* external variables */
 extern LVAL s_printcase,k_downcase,k_const,k_nmacro;
 extern LVAL s_ifmt,s_ffmt;
-extern FUNDEF funtab[];
+extern FUNDEF *funtab;
 extern char buf[];
 
 LOCAL void putsymbol(LVAL fptr, char *str, int escflag);

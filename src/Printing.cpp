@@ -20,7 +20,6 @@
 #include <wx/defs.h>
 #include <wx/dc.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/print.h>
 #include <wx/printdlg.h>
 
@@ -29,10 +28,12 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/Ruler.h"
+#include "widgets/ErrorDialog.h"
 
 #include "Experimental.h"
 
 #include "TrackPanelDrawingContext.h"
+#include "Internat.h"
 
 // Globals, so that we remember settings from session to session
 wxPrintData &gPrintData()
@@ -106,19 +107,6 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       dc->SetPen(*wxBLACK_PEN);
       AColor::Line(*dc, 0, r.y, width, r.y);
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(MONO_WAVE_PAN(n)){
-         y += r.height;
-         r.x = 0;
-         r.y = y;
-         r.width = width;
-         r.height = (int)(n->GetHeight(true) * scale);
-         artist.DrawTrack(
-            n, *dc, r, SelectedRegion{}, zoomInfo, false, false, false, false);
-         dc->SetPen(*wxBLACK_PEN);
-         AColor::Line(*dc, 0, r.y, width, r.y);
-      }
-#endif
       n = iter.Next();
       y += r.height;
    };
@@ -163,7 +151,7 @@ void HandlePrint(wxWindow *parent, const wxString &name, TrackList *tracks)
    AudacityPrintout printout(name, tracks);
    if (!printer.Print(parent, &printout, true)) {
       if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
-         wxMessageBox(_("There was a problem printing."),
+         AudacityMessageBox(_("There was a problem printing."),
                       _("Print"), wxOK);
       }
       else {

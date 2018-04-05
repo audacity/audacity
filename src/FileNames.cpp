@@ -43,6 +43,32 @@ used throughout Audacity into this one place.
 
 static wxString gDataDir;
 
+bool FileNames::CopyFile(
+   const wxString& file1, const wxString& file2, bool overwrite)
+{
+#ifdef __WXMSW__
+
+   // workaround not needed
+   return wxCopyFile(file1, file2, overwrite);
+
+#else
+   // PRL:  Compensate for buggy wxCopyFile that returns false success,
+   // which was a cause of case 4 in comment 10 of
+   // http://bugzilla.audacityteam.org/show_bug.cgi?id=1759
+   // Destination file was created, but was empty
+   // Bug was introduced after wxWidgets 2.8.12 at commit
+   // 0597e7f977c87d107e24bf3e95ebfa3d60efc249 of wxWidgets repo
+
+   bool existed = wxFileExists(file2);
+   bool result = wxCopyFile(file1, file2, overwrite) &&
+      wxFile{ file1 }.Length() == wxFile{ file2 }.Length();
+   if (!result && !existed)
+      wxRemoveFile(file2);
+   return result;
+
+#endif
+}
+
 wxString FileNames::MkDir(const wxString &Str)
 {
    // Behaviour of wxFileName::DirExists() and wxFileName::MkDir() has
@@ -69,7 +95,7 @@ void FileNames::MakeNameUnique(wxArrayString &otherNames, wxFileName &newName)
       int i=2;
       wxString orig = newName.GetName();
       do {
-         newName.SetName(wxString::Format(wxT("%s-%d"), orig.c_str(), i));
+         newName.SetName(wxString::Format(wxT("%s-%d"), orig, i));
          i++;
       } while (otherNames.Index(newName.GetFullName(), false) >= 0);
    }
@@ -164,9 +190,15 @@ wxString FileNames::HtmlHelpDir()
 #endif
 }
 
-wxString FileNames::ChainDir()
+wxString FileNames::LegacyChainDir()
 {
-   return FileNames::MkDir( wxFileName( DataDir(), wxT("Chains") ).GetFullPath() );
+   // Don't force creation of it
+   return wxFileName{ DataDir(), wxT("Chains") }.GetFullPath();
+}
+
+wxString FileNames::MacroDir()
+{
+   return FileNames::MkDir( wxFileName( DataDir(), wxT("Macros") ).GetFullPath() );
 }
 
 wxString FileNames::NRPDir()

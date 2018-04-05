@@ -36,6 +36,7 @@ for drawing different aspects of the label and its text box.
 #include <stdio.h>
 #include <algorithm>
 #include <limits.h>
+#include <float.h>
 
 #include <wx/bitmap.h>
 #include <wx/brush.h>
@@ -46,7 +47,6 @@ for drawing different aspects of the label and its text box.
 #include <wx/event.h>
 #include <wx/intl.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/pen.h>
 #include <wx/string.h>
 #include <wx/textfile.h>
@@ -68,6 +68,7 @@ for drawing different aspects of the label and its text box.
 #include "commands/CommandManager.h"
 
 #include "effects/TimeWarper.h"
+#include "widgets/ErrorDialog.h"
 
 enum
 {
@@ -842,8 +843,8 @@ void LabelTrack::Draw
 
    // Draw the label boxes.
    {
-      bool highlightTrack = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+      bool highlightTrack = false;
       auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
       highlightTrack = target && target->GetTrack().get() == this;
 #endif
@@ -1301,7 +1302,7 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
    // Advance index over all continuation lines first, before we might throw
    // any exceptions.
    int index2 = index;
-   while (index < file.GetLineCount() &&
+   while (index < (int)file.GetLineCount() &&
           file.GetLine(index).StartsWith(continuation))
       ++index;
 
@@ -1329,10 +1330,10 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
 
 void LabelStruct::Export(wxTextFile &file) const
 {
-   file.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
-      getT0(),
-      getT1(), 
-      title.c_str()
+   file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
+      Internat::ToString(getT0(), FLT_DIG),
+      Internat::ToString(getT1(), FLT_DIG),
+      title
    ));
 
    // Do we need more lines?
@@ -1344,9 +1345,9 @@ void LabelStruct::Export(wxTextFile &file) const
 
    // Write a \ character at the start of a second line,
    // so that earlier versions of Audacity ignore it.
-   file.AddLine(wxString::Format(wxT("\\\t%f\t%f"),
-      f0,
-      f1
+   file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
+      Internat::ToString(f0, FLT_DIG),
+      Internat::ToString(f1, FLT_DIG)
    ));
 
    // Additional lines in future formats should also start with '\'.
@@ -1581,7 +1582,7 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
 void LabelTrack::HandleGlyphClick
 (LabelTrackHit &hit, const wxMouseEvent & evt,
  const wxRect & r, const ZoomInfo &zoomInfo,
- SelectedRegion *newSel)
+ SelectedRegion *WXUNUSED(newSel))
 {
    if (evt.ButtonDown())
    {
@@ -1595,7 +1596,7 @@ void LabelTrack::HandleGlyphClick
          float t = 0.0;
          // We move if we hit the centre, we adjust one edge if we hit a chevron.
          // This is if we are moving just one edge.
-         hit.mbIsMoving = hit.mEdge & 4;
+         hit.mbIsMoving = (hit.mEdge & 4)!=0;
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays
@@ -1637,6 +1638,8 @@ void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
+   static_cast<void>(r);//compiler food.
+   static_cast<void>(zoomInfo);//compiler food.
    if (evt.ButtonDown())
    {
 
@@ -1740,6 +1743,11 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
       if (IsGoodLabelFirstKey(event) && typeToCreateLabel) {
          AudacityProject * pProj = GetActiveProject();
 
+
+// The commented out code can prevent label creation, causing bug 1551
+// We should only be in DoCaptureKey IF this label track has focus,
+// and in that case creating a Label is the expected/intended thing.
+#if 0
          // If we're playing, don't capture if the selection is the same as the
          // playback region (this helps prevent label track creation from
          // stealing unmodified kbd. shortcuts)
@@ -1753,6 +1761,7 @@ bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
                return false;
             }
          }
+#endif
 
          // If there's a label there already don't capture
          if( GetLabelIndex(pProj->mViewInfo.selectedRegion.t0(),
@@ -1773,7 +1782,7 @@ unsigned LabelTrack::CaptureKey(wxKeyEvent & event, ViewInfo &, wxWindow *)
    return RefreshCode::RefreshNone;
 }
 
-unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent)
+unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *WXUNUSED(pParent))
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
@@ -1800,7 +1809,7 @@ unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *p
       bkpSel1 != viewInfo.selectedRegion.t1())
       return RefreshCode::RefreshAll;
    else if (!event.GetSkipped())
-      return RefreshCode::RefreshCell;
+      return  RefreshCode::RefreshCell;
 
    return RefreshCode::RefreshNone;
 }
@@ -2163,6 +2172,7 @@ void LabelTrack::ShowContextMenu()
       int x = 0;
       bool success = CalcCursorX(&x);
       wxASSERT(success);
+      static_cast<void>(success); // Suppress unused variable warning if debug mode is disabled
 
       parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
    }
@@ -2282,7 +2292,7 @@ void LabelTrack::Import(wxTextFile & in)
       catch(const LabelStruct::BadFormatException&) { error = true; }
    }
    if (error)
-      ::wxMessageBox( _("One or more saved labels could not be read.") );
+      ::AudacityMessageBox( _("One or more saved labels could not be read.") );
    SortLabels();
 }
 
@@ -2542,7 +2552,6 @@ bool LabelTrack::PasteOver(double t, const Track * src)
          labelStruct.title
       };
       mLabels.insert(mLabels.begin() + pos++, l);
-      len++;
    }
 
    return true;
@@ -2704,6 +2713,10 @@ int LabelTrack::GetLabelIndex(double t, double t1)
    return wxNOT_FOUND;
 }
 
+
+// restoreFocus of -1 is the default, and sets the focus to this label.
+// restoreFocus of -2 or other value leaves the focus unchanged.
+// restoreFocus >= 0 will later cause focus to move to that track.
 int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
                          const wxString &title, int restoreFocus)
 {
@@ -2718,7 +2731,12 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
 
    mLabels.insert(mLabels.begin() + pos, l);
 
-   mSelIndex = pos;
+   // restoreFocus is -2 e.g. from Nyquist label creation, when we should not
+   // even lose the focus and open the label to edit in the first place.
+   // -1 means we don't need to restore it to anywhere.
+   // 0 or above is the track to restore to afetr editing the label is complete.
+   if( restoreFocus >= -1 )
+      mSelIndex = pos;
 
    // Make sure the caret is visible
    //

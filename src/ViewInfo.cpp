@@ -20,6 +20,7 @@ Paul Licameli
 #include "Prefs.h"
 #include "xml/XMLWriter.h"
 #include "prefs/TracksPrefs.h"
+#include "Snap.h"
 
 namespace {
 static const double gMaxZoom = 6000000;
@@ -87,6 +88,10 @@ bool ZoomInfo::ZoomOutAvailable() const
    return zoom > gMinZoom;
 }
 
+double ZoomInfo::GetZoom( ){ return zoom;};
+double ZoomInfo::GetMaxZoom( ){ return gMaxZoom;};
+double ZoomInfo::GetMinZoom( ){ return gMinZoom;};
+
 void ZoomInfo::SetZoom(double pixelsPerSecond)
 {
    zoom = std::max(gMinZoom, std::min(gMaxZoom, pixelsPerSecond));
@@ -100,7 +105,7 @@ void ZoomInfo::SetZoom(double pixelsPerSecond)
    {
       AudacityProject * project = GetActiveProject();
       if( project )
-         project->OnSnapToOff();
+         project->SetSnapTo(SNAP_OFF);
    }
 #endif
 }

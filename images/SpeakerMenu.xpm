@@ -1,5 +1,5 @@
 /* XPM */
-static const char * SpeakerMenu_xpm[] = {
+static const char * const SpeakerMenu_xpm[] = {
 "24 19 14 1",
 " 	c None",
 ".	c #C1C1C1",
@@ -36,7 +36,7 @@ static const char * SpeakerMenu_xpm[] = {
 "                    $   "};
 
 /* XPM */
-static const char * SpeakerMenuNarrow_xpm[] = {
+static const char * const SpeakerMenuNarrow_xpm[] = {
 "19 19 14 1",
 " 	c None",
 ".	c #C1C1C1",

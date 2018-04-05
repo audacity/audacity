@@ -1,13 +1,12 @@
-;nyquist plug-in
-;version 3
-;type process
-;preview enabled
-;categories "http://lv2plug.in/ns/lv2core#SpectralPlugin"
-;name "Vocoder..."
-;manpage "Vocoder"
-;action "Processing Vocoder..."
-;author "Edgar-RFT"
-;copyright "Released under terms of the GNU General Public License version 2"
+$nyquist plug-in
+$version 3
+$type process
+$preview enabled
+$name (_ "Vocoder")
+$manpage "Vocoder"
+$action (_ "Processing Vocoder...")
+$author (_ "Edgar-RFT")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; vocoder.ny by Edgar-RFT
 ;; a bit of code added by David R. Sky
@@ -19,15 +18,18 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
-;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control dst "Distance: (1 to 120, default = 20)" real "" 20 1 120
-;control mst "Output choice" choice "both channels, right only" 0
-;control bands "Number of vocoder bands" int "" 40 10 240
-;control track-vl "Amplitude of original audio (percent)" real "" 100 0 100
-;control noise-vl "Amplitude of white noise (percent)" real "" 0 0 100
-;control radar-vl "Amplitude of Radar Needles (percent)" real "" 0 0 100
-;control radar-f "Frequency of Radar Needles (Hz)" real "" 30 1 100
+$control dst (_ "Distance: (1 to 120, default = 20)") real "" 20 1 120
+$control mst (_ "Output choice") choice (
+   ("BothChannels" (_ "Both Channels"))
+   ("RightOnly" (_ "Right Only"))
+) 0
+$control bands (_ "Number of vocoder bands") int "" 40 10 240
+$control track-vl (_ "Amplitude of original audio (percent)") real "" 100 0 100
+$control noise-vl (_ "Amplitude of white noise (percent)") real "" 0 0 100
+$control radar-vl (_ "Amplitude of Radar Needles (percent)") real "" 0 0 100
+$control radar-f (_ "Frequency of Radar Needles (Hz)") real "" 30 1 100
 
 ; maybe the code once again has to be changed into _one_ local let-binding
 ; if you have lots of nyquist "[gc:" messages try this:
@@ -136,4 +138,4 @@
           (0 s)             ; let Audacity coerce back to stereo
           (1 (vector original s)))))
  (t                         ; this effect isn't meant for mono
-  "Error.\nStereo track required."))
+  (format nil (_ "Error.~%Stereo track required."))))

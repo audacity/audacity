@@ -54,7 +54,7 @@ enum {
 
 bool SelectHandle::IsClicked() const
 {
-   return mSelectionStateChanger.get();
+   return mSelectionStateChanger.get() != NULL;
 }
 
 namespace
@@ -81,7 +81,6 @@ namespace
       wxInt64 trackTopEdge,
       int trackHeight)
    {
-      const double rate = wt->GetRate();
       const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
       float minFreq, maxFreq;
       wt->GetSpectrumBounds(&minFreq, &maxFreq);
@@ -412,6 +411,8 @@ UIHandlePtr SelectHandle::HitTest
       wxInt64 rightSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t1(), rect.x);
       // Something is wrong if right edge comes before left edge
       wxASSERT(!(rightSel < leftSel));
+      static_cast<void>(leftSel); // Suppress unused variable warnings if not in debug-mode
+      static_cast<void>(rightSel);
    }
 
    return result;
@@ -783,8 +784,10 @@ UIHandle::Result SelectHandle::Click
       Connect(pProject);
       return RefreshAll | UpdateSelection;
    }
-
-   return RefreshAll;
+   else {
+      Connect(pProject);
+      return RefreshAll;
+   }
 }
 
 UIHandle::Result SelectHandle::Drag
@@ -912,18 +915,18 @@ HitTestPreview SelectHandle::Preview
       if (bMultiToolMode) {
          // Look up the current key binding for Preferences.
          // (Don't assume it's the default!)
-         wxString keyStr
-            (pProject->GetCommandManager()->GetKeyFromName(wxT("Preferences")));
-         if (keyStr.IsEmpty())
+         auto keyStr =
+            pProject->GetCommandManager()->GetKeyFromName(wxT("Preferences"))
+            .Display( true );
+         if (keyStr.empty())
             // No keyboard preference defined for opening Preferences dialog
             /* i18n-hint: These are the names of a menu and a command in that menu */
             keyStr = _("Edit, Preferences...");
-         else
-            keyStr = KeyStringDisplay(keyStr);
+         
          /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
          tip = wxString::Format(
             _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
-            keyStr.c_str());
+            keyStr);
          // Later in this function we may point to some other string instead.
          if (!pTrack->GetSelected() ||
              !viewInfo.bAdjustSelectionEdges)
@@ -1041,18 +1044,8 @@ public:
       , mConnectedProject{ pProject }
    {
       if (mConnectedProject)
-         mConnectedProject->Connect(EVT_TRACK_PANEL_TIMER,
-            wxCommandEventHandler(SelectHandle::TimerHandler::OnTimer),
-            NULL,
-            this);
-   }
-
-   ~TimerHandler()
-   {
-      if (mConnectedProject)
-         mConnectedProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-            wxCommandEventHandler(SelectHandle::TimerHandler::OnTimer),
-            NULL,
+         mConnectedProject->Bind(EVT_TRACK_PANEL_TIMER,
+            &SelectHandle::TimerHandler::OnTimer,
             this);
    }
 

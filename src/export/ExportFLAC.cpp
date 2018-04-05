@@ -28,7 +28,6 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include <wx/progdlg.h>
 #include <wx/ffile.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 
 #include "FLAC++/encoder.h"
 
@@ -42,6 +41,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Tags.h"
 
 #include "../Track.h"
+#include "../widgets/ErrorDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
@@ -55,8 +55,8 @@ public:
    virtual ~ExportFLACOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 };
 
 ///
@@ -189,8 +189,9 @@ public:
 
    // Required
 
-   wxWindow *OptionsCreate(wxWindow *parent, int format);
+   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
    ProgressResult Export(AudacityProject *project,
+               std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -222,6 +223,7 @@ ExportFLAC::ExportFLAC()
 }
 
 ProgressResult ExportFLAC::Export(AudacityProject *project,
+                        std::unique_ptr<ProgressDialog> &pDialog,
                         unsigned numChannels,
                         const wxString &fName,
                         bool selectionOnly,
@@ -245,22 +247,26 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    FLAC::Encoder::File encoder;
 
+   bool success = true;
+   success = success &&
 #ifdef LEGACY_FLAC
-   encoder.set_filename(OSOUTPUT(fName));
+   encoder.set_filename(OSOUTPUT(fName)) &&
 #endif
-   encoder.set_channels(numChannels);
+   encoder.set_channels(numChannels) &&
    encoder.set_sample_rate(lrint(rate));
 
    // See note in GetMetadata() about a bug in libflac++ 1.1.2
-   if (!GetMetadata(project, metadata)) {
+   if (success && !GetMetadata(project, metadata)) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
       return ProgressResult::Cancelled;
    }
 
-   if (mMetadata) {
+   if (success && mMetadata) {
       // set_metadata expects an array of pointers to metadata and a size.
       // The size is 1.
       FLAC__StreamMetadata *p = mMetadata.get();
-      encoder.set_metadata(&p, 1);
+      success = encoder.set_metadata(&p, 1);
    }
 
    auto cleanup1 = finally( [&] {
@@ -270,38 +276,51 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    sampleFormat format;
    if (bitDepthPref == wxT("24")) {
       format = int24Sample;
-      encoder.set_bits_per_sample(24);
+      success = success && encoder.set_bits_per_sample(24);
    } else { //convert float to 16 bits
       format = int16Sample;
-      encoder.set_bits_per_sample(16);
+      success = success && encoder.set_bits_per_sample(16);
    }
+
 
    // Duplicate the flac command line compression levels
    if (levelPref < 0 || levelPref > 8) {
       levelPref = 5;
    }
-   encoder.set_do_exhaustive_model_search(flacLevels[levelPref].do_exhaustive_model_search);
+   success = success &&
+   encoder.set_do_exhaustive_model_search(flacLevels[levelPref].do_exhaustive_model_search) &&
    encoder.set_do_escape_coding(flacLevels[levelPref].do_escape_coding);
+
    if (numChannels != 2) {
-      encoder.set_do_mid_side_stereo(false);
+      success = success &&
+      encoder.set_do_mid_side_stereo(false) &&
       encoder.set_loose_mid_side_stereo(false);
    }
    else {
-      encoder.set_do_mid_side_stereo(flacLevels[levelPref].do_mid_side_stereo);
+      success = success &&
+      encoder.set_do_mid_side_stereo(flacLevels[levelPref].do_mid_side_stereo) &&
       encoder.set_loose_mid_side_stereo(flacLevels[levelPref].loose_mid_side_stereo);
    }
-   encoder.set_qlp_coeff_precision(flacLevels[levelPref].qlp_coeff_precision);
-   encoder.set_min_residual_partition_order(flacLevels[levelPref].min_residual_partition_order);
-   encoder.set_max_residual_partition_order(flacLevels[levelPref].max_residual_partition_order);
-   encoder.set_rice_parameter_search_dist(flacLevels[levelPref].rice_parameter_search_dist);
+
+   success = success &&
+   encoder.set_qlp_coeff_precision(flacLevels[levelPref].qlp_coeff_precision) &&
+   encoder.set_min_residual_partition_order(flacLevels[levelPref].min_residual_partition_order) &&
+   encoder.set_max_residual_partition_order(flacLevels[levelPref].max_residual_partition_order) &&
+   encoder.set_rice_parameter_search_dist(flacLevels[levelPref].rice_parameter_search_dist) &&
    encoder.set_max_lpc_order(flacLevels[levelPref].max_lpc_order);
+
+   if (!success) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
 #ifdef LEGACY_FLAC
    encoder.init();
 #else
    wxFFile f;     // will be closed when it goes out of scope
    if (!f.Open(fName, wxT("w+b"))) {
-      wxMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName.c_str()));
+      AudacityMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName));
       return ProgressResult::Cancelled;
    }
 
@@ -310,7 +329,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    // libflac can't (under Windows).
    int status = encoder.init(f.fp());
    if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-      wxMessageBox(wxString::Format(_("FLAC encoder failed to initialize\nStatus: %d"), status));
+      AudacityMessageBox(wxString::Format(_("FLAC encoder failed to initialize\nStatus: %d"), status));
       return ProgressResult::Cancelled;
    }
 #endif
@@ -318,10 +337,13 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    mMetadata.reset();
 
    auto cleanup2 = finally( [&] {
+      if (!(updateResult == ProgressResult::Success ||
+            updateResult == ProgressResult::Stopped)) {
 #ifndef LEGACY_FLAC
-      f.Detach(); // libflac closes the file
+         f.Detach(); // libflac closes the file
 #endif
-      encoder.finish();
+         encoder.finish();
+      }
    } );
 
    const WaveTrackConstArray waveTracks =
@@ -334,10 +356,11 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
-   ProgressDialog progress(wxFileName(fName).GetName(),
-                           selectionOnly ?
-                           _("Exporting the selected audio as FLAC") :
-                           _("Exporting the entire project as FLAC"));
+   InitProgress( pDialog, wxFileName(fName).GetName(),
+      selectionOnly
+         ? _("Exporting the selected audio as FLAC")
+         : _("Exporting the audio as FLAC") );
+   auto &progress = *pDialog;
 
    while (updateResult == ProgressResult::Success) {
       auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
@@ -361,13 +384,30 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
          if (! encoder.process(
                reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
                samplesThisRun) ) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
             break;
          }
+         if (updateResult == ProgressResult::Success)
+            updateResult =
+               progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-   if (updateResult == ProgressResult::Success)
-      updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+
+   if (updateResult == ProgressResult::Success ||
+       updateResult == ProgressResult::Stopped) {
+#ifndef LEGACY_FLAC
+      f.Detach(); // libflac closes the file
+#endif
+      if (!encoder.finish())
+         // Do not reassign updateResult, see cleanup2
+         return ProgressResult::Failed;
+#ifdef LEGACY_FLAC
+      if (!f.Flush() || !f.Close())
+         return ProgressResult::Failed;
+#endif
+   }
 
    return updateResult;
 }
@@ -401,9 +441,10 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
       }
       FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
                                                  v.mb_str(wxConvUTF8));
-      ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
+      if (! ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
                                                            entry.get_entry(),
-                                                           true);
+                                                           true) )
+         return false;
    }
 
    return true;

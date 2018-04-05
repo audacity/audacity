@@ -40,7 +40,6 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 #include <wx/dynlib.h>
-#include <wx/msgdlg.h>
 #include <wx/utils.h>
 #include <wx/timer.h>
 #include <wx/window.h>
@@ -56,6 +55,7 @@
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
+#include "../widgets/ErrorDialog.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
@@ -89,12 +89,12 @@ public:
    virtual ~ExportMP2Options();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
+   std::vector<int> mBitRateLabels;
 };
 
 ///
@@ -105,7 +105,7 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
    for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)
    {
       mBitRateNames.Add(wxString::Format(_("%i kbps"),iBitrates[i]));
-      mBitRateLabels.Add(iBitrates[i]);
+      mBitRateLabels.push_back(iBitrates[i]);
    }
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
@@ -172,8 +172,9 @@ public:
 
    // Required
 
-   wxWindow *OptionsCreate(wxWindow *parent, int format);
+   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
    ProgressResult Export(AudacityProject *project,
+               std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -204,6 +205,7 @@ ExportMP2::ExportMP2()
 }
 
 ProgressResult ExportMP2::Export(AudacityProject *project,
+   std::unique_ptr<ProgressDialog> &pDialog,
    unsigned channels, const wxString &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
    int WXUNUSED(subformat))
@@ -226,7 +228,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    if (twolame_init_params(encodeOptions) != 0)
    {
-      wxMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
+      AudacityMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
          _("Error"), wxICON_STOP);
       return ProgressResult::Cancelled;
    }
@@ -237,7 +239,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
-      wxMessageBox(_("Unable to open target file for writing"));
+      AudacityMessageBox(_("Unable to open target file for writing"));
       return ProgressResult::Cancelled;
    }
 
@@ -245,8 +247,13 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    int id3len;
    bool endOfFile;
    id3len = AddTags(project, id3buffer, &endOfFile, metadata);
-   if (id3len && !endOfFile)
-      outFile.Write(id3buffer.get(), id3len);
+   if (id3len && !endOfFile) {
+      if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
+   }
 
    // Values taken from the twolame simple encoder sample
    const size_t pcmBufferSize = 9216 / 2; // number of samples
@@ -267,10 +274,13 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
          stereo ? 2 : 1, pcmBufferSize, true,
          rate, int16Sample, true, mixerSpec);
 
-      ProgressDialog progress(wxFileName(fName).GetName(),
-         selectionOnly ?
-         wxString::Format(_("Exporting selected audio at %ld kbps"), bitrate) :
-         wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
+      InitProgress( pDialog, wxFileName(fName).GetName(),
+         selectionOnly
+            ? wxString::Format(_("Exporting selected audio at %ld kbps"),
+               bitrate)
+            : wxString::Format(_("Exporting the audio at %ld kbps"),
+               bitrate) );
+      auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);
@@ -288,11 +298,17 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
             mp2BufferSize);
 
          if (mp2BufferNumBytes < 0) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
             updateResult = ProgressResult::Cancelled;
             break;
          }
 
-         outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
+         if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
+            // TODO: more precise message
+            AudacityMessageBox(_("Unable to export"));
+            return ProgressResult::Cancelled;
+         }
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
@@ -304,14 +320,26 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       mp2BufferSize);
 
    if (mp2BufferNumBytes > 0)
-      outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
+      if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
 
    /* Write ID3 tag if it was supposed to be at the end of the file */
 
    if (id3len && endOfFile)
-      outFile.Write(id3buffer.get(), id3len);
+      if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
+         // TODO: more precise message
+         AudacityMessageBox(_("Unable to export"));
+         return ProgressResult::Cancelled;
+      }
 
-   outFile.Close();
+   if ( !outFile.Close() ) {
+      // TODO: more precise message
+      AudacityMessageBox(_("Unable to export"));
+      return ProgressResult::Cancelled;
+   }
 
    return updateResult;
 }
@@ -322,10 +350,13 @@ wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportMP2Options(parent, format);
 }
 
+
+#ifdef USE_LIBID3TAG
 struct id3_tag_deleter {
    void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
 };
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+#endif
 
 // returns buffer len; caller frees
 int ExportMP2::AddTags(

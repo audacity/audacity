@@ -53,10 +53,10 @@ AC_ARG_ENABLE(debug,
 
 AC_ARG_WITH(wx-version,
             [AS_HELP_STRING([--with-wx-version],
-                           [select wxWidgets version (if both installed) [2.8,]])],
+                           [select wxWidgets version (if both installed) [3.1,]])],
            wx_preference="--version=$withval",
            wx_preference="")
-dnl Right now only support wx 3.0
+dnl Right now only support wx 3.1
 
 dnl ----------------------------------------------------
 dnl If user asked for debug, put debug in compiler flags
@@ -99,12 +99,12 @@ fi
 dnl --- check for required libraries ---
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.1, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
 fi
 
-dnl --- Check that the wx version is at least 2.8.x ---
+dnl --- Check that the wx version is at least 3.1.x---
 
 if test "x$debug_preference" = "xyes"; then
    dnl want debug wx as well
@@ -119,15 +119,15 @@ wxconfigargs="$static_wx_preference $unicode_preference $wxconfigargs $wx_prefer
 
 wx_version=`${WX_CONFIG} $wxconfigargs --version`
 
-AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 2.8.x])
+AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 3.1.x (or 3.0.x)])
 
 case "${wx_version}" in
-  2.8.* | 3.0.*)
+  3.1.* | 3.0.*)
     echo "Great, you're using wxWidgets ${wx_version}!"
     ;;
   *)
   wx_list=`${WX_CONFIG} --list`
-  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v2.8.x or higher.
+  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v3.0.x or higher.
 The currently available configurations are listed below.  If necessary, either
 install the package for your distribution or download the latest version of
 wxWidgets

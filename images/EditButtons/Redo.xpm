@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * Redo[] = {
+static const char * const Redo[] = {
 "26 24 4 1",
 " 	c None",
 ".	c #686868",

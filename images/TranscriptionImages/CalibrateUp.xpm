@@ -1,5 +1,5 @@
 /* XPM */
-static const char  * CalibrateUp[] = {
+static const char * const CalibrateUp[] = {
 "27 27 14 1",
 " 	c None",
 ".	c #FFFFFF",

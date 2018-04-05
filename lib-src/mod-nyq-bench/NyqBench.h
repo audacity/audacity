@@ -111,7 +111,7 @@ class NyqBench:public wxFrame
 
    virtual bool Validate();
 
-   void ShowNyqBench();
+   void ShowNyqBench(const CommandContext&);
 
    static NyqBench *GetBench();
 

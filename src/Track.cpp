@@ -13,6 +13,12 @@
 Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 
+\class AudioTrack
+\brief A Track that can load/save audio data to/from XML.
+
+\class PlayableTrack
+\brief An AudioTrack that can be played and stopped.
+
 *//*******************************************************************/
 
 #include <algorithm>
@@ -56,12 +62,6 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
    mY = 0;
    mHeight = DefaultHeight;
    mIndex = 0;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   mYv = mHeight;
-   mHeightv = mHeight;
-   mPerY = 0.5;
-   mVirtualStereo = false;
-#endif
 
    mMinimized = false;
 
@@ -75,9 +75,6 @@ Track::Track(const Track &orig)
 {
    mY = 0;
    mIndex = 0;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   mPerY = 0.5;
-#endif
    Init(orig);
    mOffset = orig.mOffset;
 }
@@ -85,6 +82,8 @@ Track::Track(const Track &orig)
 // Copy all the track properties except the actual contents
 void Track::Init(const Track &orig)
 {
+   mId = orig.mId;
+
    mDefaultName = orig.mDefaultName;
    mName = orig.mName;
 
@@ -95,11 +94,6 @@ void Track::Init(const Track &orig)
    mHeight = orig.mHeight;
    mMinimized = orig.mMinimized;
    mChannel = orig.mChannel;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   mVirtualStereo = orig.mVirtualStereo;
-   mHeightv = orig.mHeightv;
-   mYv = orig.mYv;
-#endif
 }
 
 void Track::SetSelected(bool s)
@@ -119,13 +113,15 @@ Track::~Track()
 
 TrackNodePointer Track::GetNode() const
 {
-   wxASSERT(mList.lock() == NULL || this == mNode->get());
+   wxASSERT(mList.lock() == NULL || this == mNode.first->get());
    return mNode;
 }
 
 void Track::SetOwner
 (const std::weak_ptr<TrackList> &list, TrackNodePointer node)
 {
+   // BUG: When using this function to clear an owner, we may need to clear 
+   // focussed track too.  Otherwise focus could remain on an invisible (or deleted) track.
    mList = list;
    mNode = node;
 }
@@ -155,49 +151,28 @@ void Track::SetIndex(int index)
    mIndex = index;
 }
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-int Track::GetY(bool vStereo) const
-{
-   if(vStereo && mChannel == Track::MonoChannel) return mYv;
-   return mY;
-}
-
-void Track::SetY(int y, bool vStereo)
-{
-   if(vStereo && mChannel == Track::MonoChannel) mYv = y;
-   else mY = y;
-}
-
-int Track::GetHeight(bool vStereo) const
-{
-   if (mMinimized) {
-      return GetMinimizedHeight();
-   }
-
-   if(vStereo && mChannel == Track::MonoChannel) return mHeightv;
-   return mHeight;
-}
-
-void Track::SetHeight(int h, bool vStereo)
-{
-
-   if(vStereo && mChannel == Track::MonoChannel) mHeightv = h;
-   else mHeight = h;
-
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      mList->ResizedEvent(mNode);
-   }
-}
-
-#else // EXPERIMENTAL_OUTPUT_DISPLAY
-
 int Track::GetY() const
 {
    return mY;
 }
 
 void Track::SetY(int y)
+{
+   auto pList = mList.lock();
+   if (pList && !pList->mPendingUpdates.empty()) {
+      auto orig = pList->FindById( GetId() );
+      if (orig && orig != this) {
+         // delegate, and rely on the update to copy back
+         orig->SetY(y);
+         pList->UpdatePendingTracks();
+         return;
+      }
+   }
+
+   DoSetY(y);
+}
+
+void Track::DoSetY(int y)
 {
    mY = y;
 }
@@ -213,14 +188,28 @@ int Track::GetHeight() const
 
 void Track::SetHeight(int h)
 {
-   mHeight = h;
    auto pList = mList.lock();
+   if (pList && !pList->mPendingUpdates.empty()) {
+      auto orig = pList->FindById( GetId() );
+      if (orig && orig != this) {
+         // delegate, and rely on RecalcPositions to copy back
+         orig->SetHeight(h);
+         return;
+      }
+   }
+
+   DoSetHeight(h);
+
    if (pList) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
 }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
+
+void Track::DoSetHeight(int h)
+{
+   mHeight = h;
+}
 
 bool Track::GetMinimized() const
 {
@@ -230,21 +219,51 @@ bool Track::GetMinimized() const
 void Track::SetMinimized(bool isMinimized)
 {
    auto pList = mList.lock();
-   mMinimized = isMinimized;
+   if (pList && !pList->mPendingUpdates.empty()) {
+      auto orig = pList->FindById( GetId() );
+      if (orig && orig != this) {
+         // delegate, and rely on RecalcPositions to copy back
+         orig->SetMinimized(isMinimized);
+         return;
+      }
+   }
+
+   DoSetMinimized(isMinimized);
+
    if (pList) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
 }
 
+void Track::DoSetMinimized(bool isMinimized)
+{
+   mMinimized = isMinimized;
+}
+
 void Track::SetLinked(bool l)
 {
    auto pList = mList.lock();
-   mLinked = l;
+   if (pList && !pList->mPendingUpdates.empty()) {
+      auto orig = pList->FindById( GetId() );
+      if (orig && orig != this) {
+         // delegate, and rely on RecalcPositions to copy back
+         orig->SetLinked(l);
+         return;
+      }
+   }
+
+   DoSetLinked(l);
+
    if (pList) {
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
+}
+
+void Track::DoSetLinked(bool l)
+{
+   mLinked = l;
 }
 
 Track *Track::GetLink() const
@@ -255,36 +274,23 @@ Track *Track::GetLink() const
 
    if (!pList->isNull(mNode)) {
       if (mLinked) {
-         auto next = mNode;
-         ++next;
-         if (!pList->isNull(next)) {
-            return next->get();
-         }
+         auto next = pList->getNext( mNode );
+         if ( !pList->isNull( next ) )
+            return next.first->get();
       }
 
-      if (pList->hasPrev(mNode)) {
-         auto prev = mNode;
-         --prev;
-         auto track = prev->get();
-         if (track && track->GetLinked()) {
-            return track;
+      if (mNode.first != mNode.second->begin()) {
+         auto prev = pList->getPrev( mNode );
+         if ( !pList->isNull( prev ) ) {
+            auto track = prev.first->get();
+            if (track && track->GetLinked())
+               return track;
          }
       }
    }
 
    return nullptr;
 }
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-void Track::ReorderList(bool resize)
-{
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      if(resize)
-         mList->ResizedEvent(mNode);
-   }
-}
-#endif
 
 bool Track::IsSyncLockSelected() const
 {
@@ -378,12 +384,18 @@ bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
 }
 
 // TrackListIterator
+TrackListIterator::TrackListIterator(TrackList * val, TrackNodePointer p)
+   : l{ val }
+   , cur{ p }
+{
+}
+
 TrackListIterator::TrackListIterator(TrackList * val)
-   : l(val)
+   : l{ val }
    , cur{}
 {
    if (l)
-      cur = l->begin();
+      cur = l->getBegin();
 }
 
 Track *TrackListIterator::StartWith(Track * val)
@@ -400,7 +412,7 @@ Track *TrackListIterator::StartWith(Track * val)
       return nullptr;
 
    cur = val->GetNode();
-   return cur->get();
+   return cur.first->get();
 }
 
 Track *TrackListIterator::First(TrackList * val)
@@ -413,13 +425,13 @@ Track *TrackListIterator::First(TrackList * val)
       return NULL;
    }
 
-   cur = l->begin();
+   cur = l->getBegin();
 
    if (!l->isNull(cur)) {
-      return cur->get();
+      return cur.first->get();
    }
 
-   return NULL;
+   return nullptr;
 }
 
 Track *TrackListIterator::Last(bool skiplinked)
@@ -428,20 +440,21 @@ Track *TrackListIterator::Last(bool skiplinked)
       return NULL;
    }
 
-   cur = l->end();
-   if (l->hasPrev(cur))
-      --cur;
-   else
-      return NULL;
+   cur = l->getPrev( l->getEnd() );
+   if ( l->isNull( cur ) )
+      return nullptr;
 
    // With skiplinked set, we won't return the second channel of a linked pair
-   if (skiplinked &&
-       l->hasPrev(cur) &&
-       !(*cur)->GetLinked() &&
-       (*cur)->GetLink())
-      --cur;
+   if (skiplinked) {
+      auto prev = l->getPrev( cur );
+      if ( !l->isNull( prev ) &&
+           !(*cur.first)->GetLinked() &&
+           (*cur.first)->GetLink()
+      )
+         cur = prev;
+   }
 
-   return cur->get();
+   return cur.first->get();
 }
 
 Track *TrackListIterator::Next(bool skipLinked)
@@ -454,27 +467,24 @@ Track *TrackListIterator::Next(bool skipLinked)
       return nullptr;
 
    if (skipLinked &&
-       (*cur)->GetLinked()) {
-      ++cur;
-   }
+       (*cur.first)->GetLinked())
+      cur = l->getNext( cur );
 
    #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after skipping linked tracks."));   // check that cur is in the list
    #endif
 
-   if (!l->isNull(cur)) {
-      ++cur;
-   }
+   if (!l->isNull(cur))
+      cur = l->getNext( cur );
 
    #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after moving to next track."));   // check that cur is in the list if it is not null
    #endif
 
-   if (!l->isNull(cur)) {
-      return cur->get();
-   }
+   if (!l->isNull(cur))
+      return cur.first->get();
 
-   return NULL;
+   return nullptr;
 }
 
 Track *TrackListIterator::Prev(bool skiplinked)
@@ -482,39 +492,52 @@ Track *TrackListIterator::Prev(bool skiplinked)
    if (!l || l->isNull(cur))
       return nullptr;
 
-   if (!l->hasPrev(cur)) {
-      l->setNull(cur);
+   cur = l->getPrev( cur );
+   if ( l->isNull( cur ) )
       return nullptr;
-   }
 
-   --cur;
-
-   if (skiplinked && l->hasPrev(cur)) {
-      auto prev = cur;
-      --prev;
-      if ((*prev)->GetLinked())
+   if ( skiplinked ) {
+      auto prev = l->getPrev( cur );
+      if( !l->isNull( prev ) && (*prev.first)->GetLinked() )
          cur = prev;
    }
 
-   return cur->get();
+   return cur.first->get();
+}
+
+Track *TrackListIterator::operator *() const
+{
+   if ( !l || l->isNull( cur ) )
+      return nullptr;
+   else
+      return cur.first->get();
 }
 
 Track *TrackListIterator::RemoveCurrent()
 {
-   if (!l || l->isNull(cur))
+   if ( !l || l->isNull( cur ) )
       return nullptr;
 
-   cur = l->Remove(cur->get());
+   cur = l->Remove( cur.first->get() );
 
    #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after deletion of track."));   // check that cur is in the list
    #endif
 
-   if (!l->isNull(cur)) {
-      return cur->get();
-   }
+   if ( !l->isNull( cur ) )
+      return cur.first->get();
 
-   return NULL;
+   return nullptr;
+}
+
+bool TrackListIterator::operator == (const TrackListIterator &other) const
+{
+   // Order these steps so as not to use operator == on default-constructed
+   // std::list::iterator -- that crashes in the MSVC 2013 standard library
+   bool isEnd = !l || l->isNull( cur );
+   bool otherIsEnd = !other.l || other.l->isNull( other.cur );
+
+   return (isEnd == otherIsEnd && (isEnd || cur == other.cur));
 }
 
 //
@@ -527,7 +550,7 @@ Track *TrackListCondIterator::StartWith(Track *val)
    Track *t = TrackListIterator::StartWith(val);
 
    if (t && !this->Condition(t))
-      return NULL;
+      return nullptr;
 
    return t;
 }
@@ -688,11 +711,11 @@ Track *SyncLockedTracksIterator::Next(bool skiplinked)
    Track *t = TrackListIterator::Next(skiplinked);
 
    if (!t)
-      return NULL;
+      return nullptr;
 
    if ( ! IsGoodNextTrack(t) ) {
-      l->setNull(cur);
-      return NULL;
+      cur = l->getEnd();
+      return nullptr;
    }
 
    mInLabelSection = ( t->GetKind() == Track::Label );
@@ -710,19 +733,19 @@ Track *SyncLockedTracksIterator::Prev(bool skiplinked)
 
    // Beginning of tracks
    if (!t)
-      return NULL;
+      return nullptr;
 
    const bool isLabel = ( t->GetKind() == Track::Label );
    const bool isSyncLockable = IsSyncLockableNonLabelTrack( t );
 
    if ( !( isLabel || isSyncLockable ) ) {
-      l->setNull(cur);
-      return NULL;
+      cur = l->getEnd();
+      return nullptr;
    }
 
    if ( !mInLabelSection && isLabel ) {
-      l->setNull(cur);
-      return NULL;
+      cur = l->getEnd();
+      return nullptr;
    }
 
    mInLabelSection = isLabel;
@@ -732,10 +755,10 @@ Track *SyncLockedTracksIterator::Prev(bool skiplinked)
 
 Track *SyncLockedTracksIterator::Last(bool skiplinked)
 {
-   if (!l || l->isNull(cur))
-      return NULL;
+   if ( !l || l->isNull( cur ) )
+      return nullptr;
 
-   Track *t = cur->get();
+   Track *t = cur.first->get();
 
    while (const auto next = l->GetNext(t, skiplinked)) {
       if ( ! IsGoodNextTrack(next) )
@@ -751,11 +774,14 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 //
 // The TrackList sends events whenever certain updates occur to the list it
 // is managing.  Any other classes that may be interested in get these updates
-// should use TrackList::Connect() and TrackList::Disconnect().
+// should use TrackList::Connect() or TrackList::Bind().
 //
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_PERMUTED);
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZING);
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_DELETION);
+wxDEFINE_EVENT(EVT_TRACKLIST_PERMUTED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_TRACKLIST_RESIZING, wxCommandEvent);
+wxDEFINE_EVENT(EVT_TRACKLIST_DELETION, wxCommandEvent);
+
+// same value as in the default constructed TrackId:
+long TrackList::sCounter = -1;
 
 TrackList::TrackList()
 :  wxEvtHandler()
@@ -770,15 +796,6 @@ std::shared_ptr<TrackList> TrackList::Create()
    return result;
 }
 
-TrackList& TrackList::operator= (const TrackList &that)
-{
-   if (this != &that) {
-      this->Clear();
-      DoAssign(that);
-   }
-   return *this;
-}
-
 TrackList &TrackList::operator= (TrackList &&that)
 {
    if (this != &that) {
@@ -788,20 +805,22 @@ TrackList &TrackList::operator= (TrackList &&that)
    return *this;
 }
 
-void TrackList::DoAssign(const TrackList &that)
-{
-   TrackListConstIterator it(&that);
-   for (const Track *track = it.First(); track; track = it.Next())
-      Add(track->Duplicate());
-}
-
 void TrackList::Swap(TrackList &that)
 {
-   ListOfTracks::swap(that);
-   for (auto it = begin(), last = end(); it != last; ++it)
-      (*it)->SetOwner(this->mSelf, it);
-   for (auto it = that.begin(), last = that.end(); it != last; ++it)
-      (*it)->SetOwner(that.mSelf, it);
+   auto SwapLOTs = [](
+      ListOfTracks &a, const std::weak_ptr< TrackList > &aSelf,
+      ListOfTracks &b, const std::weak_ptr< TrackList > &bSelf )
+   {
+      a.swap(b);
+      for (auto it = a.begin(), last = a.end(); it != last; ++it)
+         (*it)->SetOwner(aSelf, {it, &a});
+      for (auto it = b.begin(), last = b.end(); it != last; ++it)
+         (*it)->SetOwner(bSelf, {it, &b});
+   };
+
+   SwapLOTs( *this, mSelf, that, that.mSelf );
+   SwapLOTs( this->mPendingUpdates, mSelf, that.mPendingUpdates, that.mSelf );
+   mUpdaters.swap(that.mUpdaters);
 }
 
 TrackList::~TrackList()
@@ -811,59 +830,29 @@ TrackList::~TrackList()
 
 void TrackList::RecalcPositions(TrackNodePointer node)
 {
-   if (isNull(node)) {
+   if ( isNull( node ) )
       return;
-   }
+
    Track *t;
    int i = 0;
    int y = 0;
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   int cnt = 0;
-   if (hasPrev(node)) {
-      auto prev = node;
-      --prev;
-      t = prev->get();
-      i = t->GetIndex() + 1;
-      if(MONO_WAVE_PAN(t))
-         y = t->GetY(true) + t->GetHeight(true);
-      else
-         y = t->GetY() + t->GetHeight();
-   }
-
-   for (auto n = node; n != end(); ++n) {
-      t = n->get();
-      if(MONO_WAVE_PAN(t))
-         cnt++;
-
-      if(cnt != 2){
-         t->SetIndex(i++);
-         t->SetY(y);
-         y += t->GetHeight();
-      }
-      if(cnt != 0){
-         t->SetY(y,true);
-         y += t->GetHeight(true);
-      }
-      cnt = 0;
-   }
-#else // EXPERIMENTAL_OUTPUT_DISPLAY
-   if (hasPrev(node)) {
-      auto prev = node;
-      --prev;
-      t = prev->get();
+   auto prev = getPrev( node );
+   if ( !isNull( prev ) ) {
+      t = prev.first->get();
       i = t->GetIndex() + 1;
       y = t->GetY() + t->GetHeight();
    }
 
    const auto theEnd = end();
-   for (auto n = node; n != theEnd; ++n) {
-      t = n->get();
+   for (auto n = TrackListIterator{ this, node }; n != theEnd; ++n) {
+      t = *n;
       t->SetIndex(i++);
-      t->SetY(y);
+      t->DoSetY(y);
       y += t->GetHeight();
    }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
+
+   UpdatePendingTracks();
 }
 
 void TrackList::PermutationEvent()
@@ -882,9 +871,8 @@ void TrackList::DeletionEvent()
 
 void TrackList::ResizingEvent(TrackNodePointer node)
 {
-   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_RESIZING);
-   if (!isNull(node))
-      e->SetClientData(node->get());
+   auto e = std::make_unique<TrackListEvent>(EVT_TRACKLIST_RESIZING);
+   e->mpTrack = *node.first;
    // wxWidgets will own the event object
    QueueEvent(e.release());
 }
@@ -892,24 +880,38 @@ void TrackList::ResizingEvent(TrackNodePointer node)
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
 {
    for (const auto iter : permutation) {
-      value_type track = std::move(*iter);
-      erase(iter);
+      ListOfTracks::value_type track = std::move(*iter.first);
+      erase(iter.first);
       Track *pTrack = track.get();
-      pTrack->SetOwner(mSelf, insert(end(), std::move(track)));
+      pTrack->SetOwner(mSelf,
+                       { insert(ListOfTracks::end(), std::move(track)), this });
    }
-   auto n = begin();
+   auto n = getBegin();
    RecalcPositions(n);
    PermutationEvent();
+}
+
+Track *TrackList::FindById( TrackId id )
+{
+   // Linear search.  Tracks in a project are usually very few.
+   // Search only the non-pending tracks.
+   auto it = std::find_if( ListOfTracks::begin(), ListOfTracks::end(),
+      [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
+   if (it == ListOfTracks::end())
+      return {};
+   return it->get();
 }
 
 template<typename TrackKind>
 Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
 {
    Track *pTrack;
-   push_back(value_type(pTrack = t.release()));
-   auto n = end();
-   --n;
+   push_back(ListOfTracks::value_type(pTrack = t.release()));
+
+   auto n = getPrev( getEnd() );
+
    pTrack->SetOwner(mSelf, n);
+   pTrack->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
    ResizingEvent(n);
    return back().get();
@@ -928,9 +930,10 @@ template<typename TrackKind>
 Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
 {
    Track *pTrack;
-   push_front(value_type(pTrack = t.release()));
-   auto n = begin();
+   push_front(ListOfTracks::value_type(pTrack = t.release()));
+   auto n = getBegin();
    pTrack->SetOwner(mSelf, n);
+   pTrack->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
    ResizingEvent(n);
    return front().get();
@@ -943,9 +946,11 @@ template<typename TrackKind>
 Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 {
    push_back(t);
-   auto n = end();
-   --n;
+
+   auto n = getPrev( getEnd() );
+
    t->SetOwner(mSelf, n);
+   t->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
    ResizingEvent(n);
    return back().get();
@@ -955,18 +960,20 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 template Track *TrackList::Add<Track>(std::shared_ptr<Track> &&);
 template Track *TrackList::Add<WaveTrack>(std::shared_ptr<WaveTrack> &&);
 
-auto TrackList::Replace(Track * t, value_type &&with) -> value_type
+auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
+   ListOfTracks::value_type
 {
-   value_type holder;
+   ListOfTracks::value_type holder;
    if (t && with) {
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
-      holder = std::move(*node);
+      holder = std::move(*node.first);
 
       Track *pTrack = with.get();
-      *node = std::move(with);
+      *node.first = std::move(with);
       pTrack->SetOwner(mSelf, node);
+      pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
       DeletionEvent();
@@ -977,18 +984,18 @@ auto TrackList::Replace(Track * t, value_type &&with) -> value_type
 
 TrackNodePointer TrackList::Remove(Track *t)
 {
-   TrackNodePointer result(end());
+   auto result = getEnd();
    if (t) {
       auto node = t->GetNode();
       t->SetOwner({}, {});
 
-      if (!isNull(node)) {
-         value_type holder = std::move( *node );
+      if ( !isNull( node ) ) {
+         ListOfTracks::value_type holder = std::move( *node.first );
 
-         result = erase(node);
-         if (!isNull(result)) {
+         result = getNext( node );
+         erase(node.first);
+         if ( !isNull( result ) )
             RecalcPositions(result);
-         }
 
          DeletionEvent();
       }
@@ -1002,9 +1009,17 @@ void TrackList::Clear(bool sendEvent)
    // shared_ptrs to those tracks.
    for ( auto pTrack: *this )
       pTrack->SetOwner( {}, {} );
+   for ( auto pTrack: mPendingUpdates )
+      pTrack->SetOwner( {}, {} );
 
    ListOfTracks tempList;
    tempList.swap( *this );
+
+   ListOfTracks updating;
+   updating.swap( mPendingUpdates );
+
+   mUpdaters.clear();
+
    if (sendEvent)
       DeletionEvent();
 }
@@ -1013,19 +1028,17 @@ void TrackList::Select(Track * t, bool selected /* = true */ )
 {
    if (t) {
       const auto node = t->GetNode();
-      if (!isNull(node)) {
-         t->SetSelected(selected);
-         auto next = node;
-         ++next;
-         if (t->GetLinked() && !isNull(next)) {
-            (*next)->SetSelected(selected);
+      if ( !isNull( node ) ) {
+         t->SetSelected( selected );
+         if ( t->GetLinked() ) {
+            auto next = getNext( node );
+            if ( !isNull( next ) )
+               (*next.first)->SetSelected( selected );
          }
-         else if (hasPrev(node)) {
-            auto prev = node;
-            --prev;
-            if ((*prev)->GetLinked()) {
-               (*prev)->SetSelected(selected);
-            }
+         else {
+            auto prev = getPrev( node );
+            if ( !isNull( prev ) && (*prev.first)->GetLinked() )
+               (*prev.first)->SetSelected( selected );
          }
       }
    }
@@ -1036,50 +1049,55 @@ Track *TrackList::GetNext(Track * t, bool linked) const
 {
    if (t) {
       auto node = t->GetNode();
-      if (!isNull(node)) {
-         if (linked && t->GetLinked()) {
-            ++node;
-         }
+      if ( !isNull( node ) ) {
+         if ( linked && t->GetLinked() )
+            node = getNext( node );
 
-         if (!isNull(node)) {
-            ++node;
-         }
+         if ( !isNull( node ) )
+            node = getNext( node );
 
-         if (!isNull(node)) {
-            return node->get();
-         }
+         if ( !isNull( node ) )
+            return node.first->get();
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 Track *TrackList::GetPrev(Track * t, bool linked) const
 {
    if (t) {
+      TrackNodePointer prev;
       auto node = t->GetNode();
-      if (!isNull(node)) {
+      if ( !isNull( node ) ) {
          // linked is true and input track second in team?
-         if (linked && hasPrev(node) &&
-             !t->GetLinked() && t->GetLink())
+         if (linked) {
+            prev = getPrev( node );
+            if( !isNull( prev ) &&
+                !t->GetLinked() && t->GetLink() )
                // Make it the first
-            --node;
+               node = prev;
+         }
 
-         if (hasPrev(node)) {
+         prev = getPrev( node );
+         if ( !isNull( prev ) ) {
             // Back up once
-            --node;
+            node = prev;
 
             // Back up twice sometimes when linked is true
-            if (linked && hasPrev(node) &&
-                !(*node)->GetLinked() && (*node)->GetLink())
-               --node;
+            if (linked) {
+               prev = getPrev( node );
+               if( !isNull( prev ) &&
+                   !(*node.first)->GetLinked() && (*node.first)->GetLink() )
+                  node = prev;
+            }
 
-            return node->get();
+            return node.first->get();
          }
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 /// For mono track height of track
@@ -1092,11 +1110,6 @@ int TrackList::GetGroupHeight(Track * t) const
    if (t) {
       height += t->GetHeight();
    }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   else if(MONO_WAVE_PAN(t)){
-      height += t->GetHeight(true);
-   }
-#endif
    return height;
 }
 
@@ -1123,15 +1136,15 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
 
    // Deal with first track in each team
    Track *link;
-   link = (*s1)->GetLink();
+   link = (*s1.first)->GetLink();
    bool linked1 = link != nullptr;
-   if (linked1 && !(*s1)->GetLinked()) {
+   if (linked1 && !(*s1.first)->GetLinked()) {
       s1 = link->GetNode();
    }
 
-   link = (*s2)->GetLink();
+   link = (*s2.first)->GetLink();
    bool linked2 = link != nullptr;
-   if (linked2 && !(*s2)->GetLinked()) {
+   if (linked2 && !(*s2.first)->GetLinked()) {
       s2 = link->GetNode();
    }
 
@@ -1140,24 +1153,24 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       return;
 
    // Be sure s1 is the earlier iterator
-   if ((*s1)->GetIndex() >= (*s2)->GetIndex()) {
+   if ((*s1.first)->GetIndex() >= (*s2.first)->GetIndex()) {
       std::swap(s1, s2);
       std::swap(linked1, linked2);
    }
 
    // Remove tracks
-   value_type save11 = std::move(*s1), save12{};
-   s1 = erase(s1);
+   ListOfTracks::value_type save11 = std::move(*s1.first), save12{};
+   s1.first = erase(s1.first);
    if (linked1) {
       wxASSERT(s1 != s2);
-      save12 = std::move(*s1), s1 = erase(s1);
+      save12 = std::move(*s1.first), s1.first = erase(s1.first);
    }
    const bool same = (s1 == s2);
 
-   value_type save21 = std::move(*s2), save22{};
-   s2 = erase(s2);
+   ListOfTracks::value_type save21 = std::move(*s2.first), save22{};
+   s2.first = erase(s2.first);
    if (linked2)
-      save22 = std::move(*s2), s2 = erase(s2);
+      save22 = std::move(*s2.first), s2.first = erase(s2.first);
 
    if (same)
       // We invalidated s1!
@@ -1166,12 +1179,16 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    // Reinsert them
    Track *pTrack;
    if (save22)
-      pTrack = save22.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save22)));
-   pTrack = save21.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save21)));
+      pTrack = save22.get(),
+      pTrack->SetOwner(mSelf, s1 = { insert(s1.first, std::move(save22)), this });
+   pTrack = save21.get(),
+   pTrack->SetOwner(mSelf, s1 = { insert(s1.first, std::move(save21)), this });
 
    if (save12)
-      pTrack = save12.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save12)));
-   pTrack = save11.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save11)));
+      pTrack = save12.get(),
+      pTrack->SetOwner(mSelf, s2 = { insert(s2.first, std::move(save12)), this });
+   pTrack = save11.get(),
+   pTrack->SetOwner(mSelf, s2 = { insert(s2.first, std::move(save11)), this });
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
@@ -1206,23 +1223,20 @@ bool TrackList::MoveDown(Track * t)
 
 bool TrackList::Contains(const Track * t) const
 {
-   return std::find_if(begin(), end(),
-      [=](const value_type &track) { return t == track.get(); }
-   ) != end();
+   return make_iterator_range( *this ).contains( t );
 }
 
-bool TrackList::IsEmpty() const
+bool TrackList::empty() const
 {
-   return empty();
+   return begin() == end();
 }
 
-int TrackList::GetCount() const
+size_t TrackList::size() const
 {
    int cnt = 0;
 
-   if (!empty()) {
-      cnt = back()->GetIndex() + 1;
-   }
+   if (!empty())
+      cnt = getPrev( getEnd() ).first->get()->GetIndex() + 1;
 
    return cnt;
 }
@@ -1230,12 +1244,12 @@ int TrackList::GetCount() const
 TimeTrack *TrackList::GetTimeTrack()
 {
    auto iter = std::find_if(begin(), end(),
-      [] (const value_type &t) { return t->GetKind() == Track::Time; }
+      [] ( Track *t ) { return t->GetKind() == Track::Time; }
    );
    if (iter == end())
       return nullptr;
    else
-      return static_cast<TimeTrack*>(iter->get());
+      return static_cast<TimeTrack*>(*iter);
 }
 
 const TimeTrack *TrackList::GetTimeTrack() const
@@ -1248,7 +1262,7 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
    /* counters for tracks panned different places */
    int numLeft = 0;
    int numRight = 0;
-   int numMono = 0;
+   //int numMono = 0;
    /* track iteration kit */
    const Track *tr;
    TrackListConstIterator iter;
@@ -1289,7 +1303,7 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
             numRight++;
          }
          else if (pan == 0) { // panned dead center
-            numMono++;
+            // numMono++;
          }
          else {   // panned somewhere else
             numLeft++;
@@ -1308,7 +1322,7 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
 
 namespace {
    template<typename Array>
-   Array GetWaveTracks(ListOfTracks::const_iterator p, ListOfTracks::const_iterator end,
+   Array GetWaveTracks(TrackListIterator p, const TrackListIterator end,
                        bool selectionOnly, bool includeMuted)
    {
       Array waveTrackArray;
@@ -1319,7 +1333,7 @@ namespace {
          if (track->GetKind() == Track::Wave &&
             (includeMuted || !wt->GetMute()) &&
             (track->GetSelected() || !selectionOnly)) {
-            waveTrackArray.push_back(static_cast<WaveTrack*>(track.get()));
+            waveTrackArray.push_back( Track::Pointer< WaveTrack >( track ) );
          }
       }
 
@@ -1334,7 +1348,9 @@ WaveTrackArray TrackList::GetWaveTrackArray(bool selectionOnly, bool includeMute
 
 WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool includeMuted) const
 {
-   return GetWaveTracks<WaveTrackConstArray>(begin(), end(), selectionOnly, includeMuted);
+   auto list = const_cast<TrackList*>(this);
+   return GetWaveTracks<WaveTrackConstArray>(
+      list->begin(), list->end(), selectionOnly, includeMuted);
 }
 
 #if defined(USE_MIDI)
@@ -1345,7 +1361,7 @@ NoteTrackArray TrackList::GetNoteTrackArray(bool selectionOnly)
    for(const auto &track : *this) {
       if (track->GetKind() == Track::Note &&
          (track->GetSelected() || !selectionOnly)) {
-         noteTrackArray.push_back(static_cast<NoteTrack*>(track.get()));
+         noteTrackArray.push_back( Track::Pointer<NoteTrack>(track) );
       }
    }
 
@@ -1357,20 +1373,11 @@ int TrackList::GetHeight() const
 {
    int height = 0;
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    if (!empty()) {
-      const Track *t = rbegin()->get();
-      if(MONO_WAVE_PAN(t))
-         height = t->GetY(true) + t->GetHeight(true);
-      else
-         height = t->GetY() + t->GetHeight();
-   }
-#else
-   if (!empty()) {
-      const auto &track = back();
+      auto track = getPrev( getEnd() ).first->get();
       height = track->GetY() + track->GetHeight();
    }
-#endif
+
    return height;
 }
 
@@ -1379,7 +1386,7 @@ namespace {
    double doubleMin(double a, double b) { return std::min(a, b); }
    double doubleMax(double a, double b) { return std::max(a, b); }
    inline double Accumulate
-      (const ListOfTracks &list,
+      (const TrackList &list,
        double (Track::*memfn)() const,
        double (*combine)(double, double))
    {
@@ -1392,8 +1399,8 @@ namespace {
       auto iter = list.begin();
       double acc = (**iter++.*memfn)();
       return std::accumulate(iter, list.end(), acc,
-         [=](double acc, const ListOfTracks::value_type &pTrack) {
-         return combine(acc, (*pTrack.*memfn)());
+         [=](double acc, const Track *pTrack) {
+            return combine(acc, (*pTrack.*memfn)());
       });
    }
 }
@@ -1411,4 +1418,158 @@ double TrackList::GetStartTime() const
 double TrackList::GetEndTime() const
 {
    return Accumulate(*this, &Track::GetEndTime, doubleMax);
+}
+
+std::shared_ptr<Track>
+TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
+{
+   std::shared_ptr<Track> pTrack;
+   if (src)
+      // convert from unique_ptr to shared_ptr
+      pTrack.reset( src->Duplicate().release() );
+
+   if (pTrack) {
+      mUpdaters.push_back( updater );
+      mPendingUpdates.push_back( pTrack );
+      auto n = mPendingUpdates.end();
+      --n;
+      pTrack->SetOwner(mSelf, {n, &mPendingUpdates});
+   }
+
+   return pTrack;
+}
+
+void TrackList::RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack )
+{
+   auto copy = pTrack;
+   Add<Track>( std::move( copy ) );
+   pTrack->SetId( TrackId{} );
+}
+
+void TrackList::UpdatePendingTracks()
+{
+   auto pUpdater = mUpdaters.begin();
+   for (const auto &pendingTrack : mPendingUpdates) {
+      // Copy just a part of the track state, according to the update
+      // function
+      const auto &updater = *pUpdater;
+      auto src = FindById( pendingTrack->GetId() );
+      if (pendingTrack && src) {
+         if (updater)
+            updater( *pendingTrack, *src );
+         pendingTrack->DoSetY(src->GetY());
+         pendingTrack->DoSetHeight(src->GetHeight());
+         pendingTrack->DoSetMinimized(src->GetMinimized());
+         pendingTrack->DoSetLinked(src->GetLinked());
+      }
+      ++pUpdater;
+   }
+}
+
+void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
+// NOFAIL-GUARANTEE
+{
+   for (const auto &pTrack: mPendingUpdates)
+      pTrack->SetOwner( {}, {} );
+   mPendingUpdates.clear();
+   mUpdaters.clear();
+
+   if (pAdded)
+      pAdded->clear();
+
+   for (auto it = ListOfTracks::begin(), stop = ListOfTracks::end();
+        it != stop;) {
+      if (it->get()->GetId() == TrackId{}) {
+         if (pAdded)
+            pAdded->push_back( *it );
+         it = erase( it );
+      }
+      else
+         ++it;
+   }
+
+   if (!empty())
+      RecalcPositions(getBegin());
+}
+
+bool TrackList::ApplyPendingTracks()
+{
+   bool result = false;
+
+   ListOfTracks additions;
+   ListOfTracks updates;
+   {
+      // Always clear, even if one of the update functions throws
+      auto cleanup = finally( [&] { ClearPendingTracks( &additions ); } );
+      UpdatePendingTracks();
+      updates.swap( mPendingUpdates );
+   }
+
+   // Remaining steps must be NOFAIL-GUARANTEE so that this function
+   // gives STRONG-GUARANTEE
+
+   std::vector< std::shared_ptr<Track> > reinstated;
+
+   for (auto &pendingTrack : updates) {
+      if (pendingTrack) {
+         auto src = FindById( pendingTrack->GetId() );
+         if (src)
+            this->Replace(src, std::move(pendingTrack)), result = true;
+         else
+            // Perhaps a track marked for pending changes got deleted by
+            // some other action.  Recreate it so we don't lose the
+            // accumulated changes.
+            reinstated.push_back(pendingTrack);
+      }
+   }
+
+   // If there are tracks to reinstate, append them to the list.
+   for (auto &pendingTrack : reinstated)
+      if (pendingTrack)
+         this->Add(std::move(pendingTrack)), result = true;
+
+   // Put the pending added tracks back into the list, preserving their
+   // positions.
+   bool inserted = false;
+   ListOfTracks::iterator first;
+   for (auto &pendingTrack : additions) {
+      if (pendingTrack) {
+         auto iter = ListOfTracks::begin();
+         std::advance( iter, pendingTrack->GetIndex() );
+         iter = ListOfTracks::insert( iter, pendingTrack );
+         pendingTrack->SetOwner( mSelf, {iter, this} );
+         pendingTrack->SetId( TrackId{ ++sCounter } );
+         if (!inserted) {
+            first = iter;
+            inserted = true;
+         }
+      }
+   }
+   if (inserted) {
+      RecalcPositions({first, this});
+      result = true;
+   }
+
+   return result;
+}
+
+std::shared_ptr<Track> TrackList::FindPendingChangedTrack(TrackId id) const
+{
+   // Linear search.  Tracks in a project are usually very few.
+   auto it = std::find_if( mPendingUpdates.begin(), mPendingUpdates.end(),
+      [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
+   if (it == mPendingUpdates.end())
+      return {};
+   return *it;
+}
+
+bool TrackList::HasPendingTracks() const
+{
+   if ( !mPendingUpdates.empty() )
+      return true;
+   if (end() != std::find_if(begin(), end(), [](const Track *t){
+      return t->GetId() == TrackId{};
+   }))
+      return true;
+   return false;
 }

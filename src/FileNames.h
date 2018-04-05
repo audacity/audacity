@@ -23,6 +23,10 @@ class wxArrayString;
 class AUDACITY_DLL_API FileNames
 {
 public:
+   // This exists to compensate for bugs in wxCopyFile:
+   static bool CopyFile(
+      const wxString& file1, const wxString& file2, bool overwrite = true);
+
    static wxString MkDir(const wxString &Str);
    static wxString TempDir();
 
@@ -40,7 +44,8 @@ public:
    static wxString AutoSaveDir();
    static wxString HtmlHelpDir();
    static wxString HtmlHelpIndexFile(bool quick);
-   static wxString ChainDir();
+   static wxString LegacyChainDir();
+   static wxString MacroDir();
    static wxString NRPDir();
    static wxString NRPFile();
    static wxString PluginRegistry();

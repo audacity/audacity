@@ -24,12 +24,13 @@ with names like mnod-script-pipe that add NEW features.
 
 #include "ModulePrefs.h"
 #include "../Prefs.h"
+#include "../Internat.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /* i18n-hint: Modules are optional extensions to Audacity that add NEW features.*/
-ModulePrefs::ModulePrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Modules"))
+ModulePrefs::ModulePrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Modules"))
 {
    Populate();
 }
@@ -52,7 +53,7 @@ void ModulePrefs::GetAllModuleStatuses(){
    // TODO: On an Audacity upgrade we should (?) actually untick modules.
    // The old modules might be still around, and we do not want to use them.
    mModules.Clear();
-   mStatuses.Clear();
+   mStatuses.clear();
    mPaths.Clear();
 
 
@@ -70,9 +71,9 @@ void ModulePrefs::GetAllModuleStatuses(){
             iStatus = kModuleNew;
             gPrefs->Write( str, iStatus );
          }
-         //wxLogDebug( wxT("Entry: %s Value: %i"), str.c_str(), iStatus );
+         //wxLogDebug( wxT("Entry: %s Value: %i"), str, iStatus );
          mModules.Add( str );
-         mStatuses.Add( iStatus );
+         mStatuses.push_back( iStatus );
          mPaths.Add( fname );
       }
       bCont = gPrefs->GetNextEntry(str, dummy);
@@ -100,16 +101,17 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
    StatusChoices.Add( _("Ask" ) );
    StatusChoices.Add( _("Failed" ) );
    StatusChoices.Add( _("New" ) );
-   S.SetBorder(2);
 
-   S.StartStatic(wxT(""));
+   S.SetBorder(2);
+   S.StartScroller();
+
+   S.StartStatic( {} );
    {
       S.AddFixedText(_("These are experimental modules. Enable them only if you've read the Audacity Manual\nand know what you are doing.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Ask' means Audacity will ask if you want to load the module each time it starts.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Failed' means Audacity thinks the module is broken and won't run it.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'New' means no choice has been made yet.") );
       S.AddFixedText(_("Changes to these settings only take effect when Audacity starts up."));
-      S.StartScroller();
       {
         S.StartMultiColumn( 2 );
         int i;
@@ -121,9 +123,9 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
       {
         S.AddFixedText( _("No modules were found") );
       }
-      S.EndScroller();
    }
    S.EndStatic();
+   S.EndScroller();
 }
 
 bool ModulePrefs::Commit()
@@ -166,8 +168,8 @@ wxString ModulePrefs::HelpPageName()
    return "Modules_Preferences";
 }
 
-PrefsPanel *ModulePrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ModulePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ModulePrefs(parent);
+   return safenew ModulePrefs(parent, winid);
 }

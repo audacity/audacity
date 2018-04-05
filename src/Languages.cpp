@@ -35,29 +35,35 @@
 #include <wx/defs.h>
 #include <wx/hashmap.h>
 #include <wx/intl.h>
+#include <wx/textfile.h>
 
 #include "Languages.h"
+#include "FileNames.h"
 
 #include "AudacityApp.h"
 
-WX_DECLARE_STRING_HASH_MAP(wxString, LangHash);
+#ifndef __AUDACITY_OLD_STD__
+#include <unordered_map>
+#endif
+
+using LangHash = std::unordered_map<wxString, wxString>;
 
 static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
 {
    wxArrayString results;
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/audacity.mo"),
-                                                   code.c_str()),
+                                                   code),
                                   audacityPathList,
                                   results);
 #if defined(__WXMAC__)
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s.lproj/audacity.mo"),
-                                                   code.c_str()),
+                                                   code),
                                   audacityPathList,
                                   results);
 #endif
 
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/LC_MESSAGES/audacity.mo"),
-                                                   code.c_str()),
+                                                   code),
                                   audacityPathList,
                                   results);
 
@@ -125,72 +131,78 @@ wxString GetSystemLanguageCode()
 
 void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
 {
+   static const char *const utf8Names[] = {
+"af Afrikaans",
+"ar \330\247\331\204\330\271\330\261\330\250\331\212\330\251",
+"be \320\221\320\265\320\273\320\260\321\200\321\203\321\201\320\272\320\260\321\217",
+"bg \320\221\321\212\320\273\320\263\320\260\321\200\321\201\320\272\320\270",
+"bn \340\246\254\340\246\276\340\246\202\340\246\262\340\246\276",
+"bs Bosanski",
+"ca Catal\303\240",
+"ca_ES@valencia Valenci\303\240",
+"cs \304\214e\305\241tina",
+"cy Cymraeg",
+"da Dansk",
+"de Deutsch",
+"el \316\225\316\273\316\273\316\267\316\275\316\271\316\272\316\254",
+"en English",
+"es Espa\303\261ol",
+"eu Euskara",
+"eu_ES Euskara (Espainiako)",
+"fa \331\201\330\247\330\261\330\263\333\214",
+"fi Suomi",
+"fr Fran\303\247ais",
+"ga Gaeilge",
+"gl Galego",
+"he \327\242\327\221\327\250\327\231\327\252",
+"hi \340\244\271\340\244\277\340\244\250\340\245\215\340\244\246\340\245\200",
+"hr Hrvatski",
+"hu Magyar",
+"hy \325\200\325\241\325\265\325\245\326\200\325\245\325\266",
+"id Bahasa Indonesia",
+"it Italiano",
+"ja \346\227\245\346\234\254\350\252\236",
+"ka \341\203\245\341\203\220\341\203\240\341\203\227\341\203\243\341\203\232\341\203\230",
+"km \341\236\201\341\237\201\341\236\230\341\236\232\341\236\227\341\236\266\341\236\237\341\236\266",
+"ko \355\225\234\352\265\255\354\226\264",
+"lt Lietuvi\305\263",
+"mk \320\234\320\260\320\272\320\265\320\264\320\276\320\275\321\201\320\272\320\270",
+"my \341\200\231\341\200\274\341\200\224\341\200\272\341\200\231\341\200\254\341\200\205\341\200\254",
+"nb Norsk",
+"nl Nederlands",
+"oc Occitan",
+"pl Polski",
+"pt Portugu\303\252s",
+"pt_BR Portugu\303\252s (Brasil)",
+"ro Rom\303\242n\304\203",
+"ru \320\240\321\203\321\201\321\201\320\272\320\270\320\271",
+"sk Sloven\304\215ina",
+"sl Sloven\305\241\304\215ina",
+"sr_RS \320\241\321\200\320\277\321\201\320\272\320\270",
+"sr_RS@latin Srpski",
+"sv Svenska",
+"ta \340\256\244\340\256\256\340\256\277\340\256\264\340\257\215",
+"tg \320\242\320\276\322\267\320\270\320\272\323\243",
+"tr T\303\274rk\303\247e",
+"uk \320\243\320\272\321\200\320\260\321\227\320\275\321\201\321\214\320\272\320\260",
+"vi Ti\341\272\277ng Vi\341\273\207t",
+"zh_CN \344\270\255\346\226\207\357\274\210\347\256\200\344\275\223\357\274\211",
+"zh_TW \344\270\255\346\226\207\357\274\210\347\271\201\351\253\224\357\274\211",
+   };
+
    wxArrayString tempNames;
    wxArrayString tempCodes;
    LangHash localLanguageName;
    LangHash reverseHash;
    LangHash tempHash;
 
-   // MM: Use only ASCII characters here to avoid problems with
-   //     charset conversion on Linux platforms
-   localLanguageName[wxT("af")] = wxT("Afrikaans");
-   localLanguageName[wxT("ar")] = wxT("Arabic");
-   localLanguageName[wxT("be")] = wxT("Belarusian");
-   localLanguageName[wxT("bg")] = wxT("Balgarski");
-   localLanguageName[wxT("bn")] = wxT("Bengali");
-   localLanguageName[wxT("bs")] = wxT("Bosnian");
-   localLanguageName[wxT("ca")] = wxT("Catalan");
-   localLanguageName[wxT("ca_ES@valencia")] = wxT("Valencian (southern Catalan)");
-   localLanguageName[wxT("cs")] = wxT("Czech");
-   localLanguageName[wxT("cy")] = wxT("Welsh");
-   localLanguageName[wxT("da")] = wxT("Dansk");
-   localLanguageName[wxT("de")] = wxT("Deutsch");
-   localLanguageName[wxT("el")] = wxT("Ellinika");
-   localLanguageName[wxT("en")] = wxT("English");
-   localLanguageName[wxT("es")] = wxT("Espanol");
-   localLanguageName[wxT("eu")] = wxT("Euskara");
-   localLanguageName[wxT("eu_ES")] = wxT("Euskara (Espainiako)");
-   localLanguageName[wxT("fa")] = wxT("Farsi");
-   localLanguageName[wxT("fi")] = wxT("Suomi");
-   localLanguageName[wxT("fr")] = wxT("Francais");
-   localLanguageName[wxT("ga")] = wxT("Gaeilge");
-   localLanguageName[wxT("gl")] = wxT("Galician");
-   localLanguageName[wxT("he")] = wxT("Hebrew");
-   localLanguageName[wxT("hi")] = wxT("Hindi");
-   localLanguageName[wxT("hr")] = wxT("Croatian");
-   localLanguageName[wxT("hu")] = wxT("Magyar");
-   localLanguageName[wxT("hy")] = wxT("Armenian");
-   localLanguageName[wxT("id")] = wxT("Bahasa Indonesia"); // aka Indonesian
-   localLanguageName[wxT("it")] = wxT("Italiano");
-   localLanguageName[wxT("ja")] = wxT("Nihongo");
-   localLanguageName[wxT("ka")] = wxT("Georgian");
-   localLanguageName[wxT("km")] = wxT("Khmer");
-   localLanguageName[wxT("ko")] = wxT("Korean");
-   localLanguageName[wxT("lt")] = wxT("Lietuviu");
-   localLanguageName[wxT("mk")] = wxT("Makedonski");
-   localLanguageName[wxT("my")] = wxT("Burmese");
-   localLanguageName[wxT("nb")] = wxT("Norsk");
-   localLanguageName[wxT("nl")] = wxT("Nederlands");
-   localLanguageName[wxT("oc")] = wxT("Occitan");
-   localLanguageName[wxT("pl")] = wxT("Polski");
-   localLanguageName[wxT("pt")] = wxT("Portugues");
-   localLanguageName[wxT("pt_BR")] = wxT("Portugues (Brasil)");
-   localLanguageName[wxT("ro")] = wxT("Romanian");
-   localLanguageName[wxT("ru")] = wxT("Russky");
-   localLanguageName[wxT("sk")] = wxT("Slovak");
-   localLanguageName[wxT("sl")] = wxT("Slovenscina");
-   localLanguageName[wxT("sr_RS")] = wxT("Serbian (Cyrillic)");
-   localLanguageName[wxT("sr_RS@latin")] = wxT("Serbian (Latin)");
-   localLanguageName[wxT("sv")] = wxT("Svenska");
-   localLanguageName[wxT("tg")] = wxT("Tajik");
-   localLanguageName[wxT("ta")] = wxT("Tamil");
-   localLanguageName[wxT("tr")] = wxT("Turkce");
-   localLanguageName[wxT("uk")] = wxT("Ukrainska");
-   localLanguageName[wxT("vi")] = wxT("Vietnamese");
-   // If we look up zh in wxLocale we get zh_TW hence we MUST look
-   // for zh_CN.
-   localLanguageName[wxT("zh_CN")] = wxT("Chinese (Simplified)");
-   localLanguageName[wxT("zh_TW")] = wxT("Chinese (Traditional)");
+   for ( auto utf8Name : utf8Names )
+   {
+      auto str = wxString::FromUTF8(utf8Name);
+      auto code = str.BeforeFirst(' ');
+      auto name = str.AfterFirst(' ');
+      localLanguageName[code] = name;
+   }
 
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
 
@@ -251,9 +263,9 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
          tempHash[code] = name;
 
 /*         wxLogDebug(wxT("code=%s name=%s fullCode=%s name=%s -> %s"),
-                      code.c_str(), localLanguageName[code].c_str(),
-                      fullCode.c_str(), localLanguageName[fullCode].c_str(),
-                      name.c_str());*/
+                      code, localLanguageName[code],
+                      fullCode, localLanguageName[fullCode],
+                      name);*/
       }
    }
 

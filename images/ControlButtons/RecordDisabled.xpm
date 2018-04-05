@@ -1,5 +1,5 @@
 /* XPM */
-static const char * RecordDisabled[] = {
+static const char * const RecordDisabled[] = {
 "16 16 50 1",
 " 	c None",
 ".	c #6B6B6B",

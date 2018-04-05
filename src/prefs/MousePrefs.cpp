@@ -34,6 +34,7 @@
 
 #include "../Audacity.h"
 #include "../Experimental.h"
+#include "MousePrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -41,7 +42,7 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "MousePrefs.h"
+#include "../Internat.h"
 
 // The numbers of the columns of the mList.
 enum
@@ -60,8 +61,8 @@ enum
 #endif
 
 /// Constructor
-MousePrefs::MousePrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Mouse"))
+MousePrefs::MousePrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Mouse"))
 {
    Populate();
 }
@@ -202,8 +203,8 @@ wxString MousePrefs::HelpPageName()
    return "Mouse_Preferences";
 }
 
-PrefsPanel *MousePrefsFactory::Create(wxWindow *parent)
+PrefsPanel *MousePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew MousePrefs(parent);
+   return safenew MousePrefs(parent, winid);
 }

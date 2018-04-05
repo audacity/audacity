@@ -42,10 +42,11 @@ class WaveTrack;
 class SpectrumPrefs final : public PrefsPanel
 {
  public:
-   SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
+   SpectrumPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt);
    virtual ~SpectrumPrefs();
    void Preview() override;
    bool Commit() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
    void Rollback();
    bool ShowsPreviewButton() override;
    bool Validate() override;
@@ -54,7 +55,6 @@ class SpectrumPrefs final : public PrefsPanel
  private:
    void Populate(size_t windowSize);
    void PopulatePaddingChoices(size_t windowSize);
-   void PopulateOrExchange(ShuttleGui & S);
 
    void OnControl(wxCommandEvent &event);
    void OnWindowSize(wxCommandEvent &event);
@@ -108,7 +108,7 @@ class SpectrumPrefsFactory final : public PrefsPanelFactory
 {
 public:
    explicit SpectrumPrefsFactory(WaveTrack *wt = 0);
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 
 private:
    WaveTrack *const mWt;

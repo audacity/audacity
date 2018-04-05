@@ -176,6 +176,7 @@ audio tracks.
 #include "Prefs.h"
 #include "prefs/GUISettings.h"
 #include "prefs/SpectrogramSettings.h"
+#include "prefs/TracksPrefs.h"
 #include "prefs/WaveformSettings.h"
 #include "Spectrum.h"
 #include "ViewInfo.h"
@@ -357,6 +358,9 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 
    bool hasSolo = false;
    for (t = iter.First(); t; t = iter.Next()) {
+      auto other = tracks->FindPendingChangedTrack(t->GetId());
+      if (other)
+         t = other.get();
       auto pt = dynamic_cast<const PlayableTrack *>(t);
       if (pt && pt->GetSolo()) {
          hasSolo = true;
@@ -381,6 +385,9 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 
    t = iter.StartWith(start);
    while (t) {
+      auto other = tracks->FindPendingChangedTrack(t->GetId());
+      if (other)
+         t = other.get();
       trackRect.y = t->GetY() - zoomInfo.vpos;
       trackRect.height = t->GetHeight();
 
@@ -419,12 +426,6 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
             stereoTrackRect.height += link->GetHeight();
          }
       }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(MONO_WAVE_PAN(t)){
-         stereoTrackRect.height += t->GetHeight(true);
-         t->SetVirtualStereo(false);
-      }
-#endif
 
       if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
          wxRect rr = trackRect;
@@ -436,26 +437,6 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
                    selectedRegion, zoomInfo,
                    drawEnvelope, bigPoints, drawSliders, hasSolo);
       }
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(MONO_WAVE_PAN(t)){
-         trackRect.y = t->GetY(true) - zoomInfo.vpos;
-         trackRect.height = t->GetHeight(true);
-         stereoTrackRect = trackRect;
-         stereoTrackRect.y -= t->GetHeight();
-         stereoTrackRect.height += t->GetHeight();
-         t->SetVirtualStereo(true);
-         if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
-            wxRect rr = trackRect;
-            rr.x += mMarginLeft;
-            rr.y += mMarginTop;
-            rr.width -= (mMarginLeft + mMarginRight);
-            rr.height -= (mMarginTop + mMarginBottom);
-            DrawTrack(t, dc, rr, selectedRegion, zoomInfo,
-                      drawEnvelope, bigPoints, drawSliders, hasSolo);
-         }
-      }
-#endif
 
       t = iter.Next();
    }
@@ -506,11 +487,19 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
 
       if (mbShowTrackNameInWaveform &&
           // Exclude right channel of stereo track 
-          !(!wt->GetLinked() && wt->GetLink())) {
+          !(!wt->GetLinked() && wt->GetLink()) && 
+          // Exclude empty name.
+          !wt->GetName().IsEmpty()) {
+         wxBrush Brush;
+         wxCoord x,y;
          wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
          dc.SetFont(labelFont);
-         dc.SetTextForeground(theTheme.Colour( clrTrackNameText ));
-         dc.DrawText (wt->GetName(), rect.x+10, rect.y);  // move right 10 pixels to avoid overwriting <- symbol
+         dc.GetTextExtent( wt->GetName(), &x, &y );
+         dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
+         // A nice improvement would be to draw the shield / background translucently.
+         AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText );
+         dc.DrawRoundedRectangle( wxPoint( rect.x+7, rect.y+1 ), wxSize( x+16, y+4), 8.0 );
+         dc.DrawText (wt->GetName(), rect.x+15, rect.y+3);  // move right 15 pixels to avoid overwriting <- symbol
       }
       break;              // case Wave
    }
@@ -716,6 +705,7 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
       min = tt->GetRangeLower() * 100.0;
       max = tt->GetRangeUpper() * 100.0;
 
+      vruler->SetDbMirrorValue( 0.0 );
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
@@ -767,6 +757,7 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                wt->SetDisplayBounds(min, max);
             }
 
+            vruler->SetDbMirrorValue( 0.0 );
             vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
             vruler->SetOrientation(wxVERTICAL);
             vruler->SetRange(max, min);
@@ -806,13 +797,17 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                      max = 0.0;
                   max *= sign;
                }
-               wt->SetDisplayBounds(min, max);
+               wt->SetDisplayBounds(min, max );
             }
             else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
                wt->SetLastdBRange();
                // Remap the max of the scale
-               const float sign = (max >= 0 ? 1 : -1);
                float newMax = max;
+
+// This commented out code is problematic.
+// min and max may be correct, and this code cause them to change.
+#ifdef ONLY_LABEL_POSITIVE
+               const float sign = (max >= 0 ? 1 : -1);
                if (max != 0.) {
 
 // Ugh, duplicating from TrackPanel.cpp
@@ -829,16 +824,24 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                   if (min != 0.)
                      min = std::max(-extreme, newMax * min / max);
                }
-
-               wt->SetDisplayBounds(min, newMax);
+#endif
+               wt->SetDisplayBounds(min, newMax );
             }
 
+
+// Old code was if ONLY_LABEL_POSITIVE were defined.  
+// it uses the +1 to 0 range only.
+// the enabled code uses +1 to -1, and relies on set ticks labelling knowing about 
+// the dB scale.
+#ifdef ONLY_LABEL_POSITIVE
             if (max > 0) {
+#endif
                int top = 0;
                float topval = 0;
                int bot = rect.height;
                float botval = -dBRange;
 
+#ifdef ONLY_LABEL_POSITIVE
                if (min < 0) {
                   bot = top + (int)((max / (max - min))*(bot - top));
                   min = 0;
@@ -855,13 +858,19 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
                if (min > 0) {
                   botval = -((1 - min) * dBRange);
                }
-
+#else
+               topval = -((1 - max) * dBRange);
+               botval = -((1 - min) * dBRange);
+               vruler->SetDbMirrorValue( dBRange );
+#endif
                vruler->SetBounds(rect.x, rect.y + top, rect.x + rect.width, rect.y + bot - 1);
                vruler->SetOrientation(wxVERTICAL);
                vruler->SetRange(topval, botval);
+#ifdef ONLY_LABEL_POSITIVE
             }
             else
                vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
+#endif
             vruler->SetFormat(Ruler::RealLogFormat);
             vruler->SetLabelEdges(true);
             vruler->SetLog(false);
@@ -872,6 +881,7 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
          const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
          float minFreq, maxFreq;
          wt->GetSpectrumBounds(&minFreq, &maxFreq);
+         vruler->SetDbMirrorValue( 0.0 );
 
          switch (settings.scaleType) {
          default:
@@ -1192,11 +1202,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
    float zoomMin, float zoomMax,
    bool dB, float dBRange,
    const float *min, const float *max, const float *rms, const int *bl,
-   bool /* showProgress */, bool muted
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   , const float gain
-#endif
-)
+   bool /* showProgress */, bool muted)
 {
    // Display a line representing the
    // min and max of the samples in this region
@@ -1223,12 +1229,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int xx = rect.x + x0;
       double v;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-     //JWA: "gain" variable passed to function includes the pan value and is used below 4/14/13
-      v = min[x0] * env[x0] * gain;
-#else
       v = min[x0] * env[x0];
-#endif
       if (clipped && mShowClipping && (v <= -MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -1238,11 +1239,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
       h1 = GetWaveYPos(v, zoomMin, zoomMax,
                        rect.height, dB, true, dBRange, true);
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      v = max[x0] * env[x0] * gain;
-#else
       v = max[x0] * env[x0];
-#endif
       if (clipped && mShowClipping && (v >= MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -1265,17 +1262,10 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
       lasth1 = h1;
       lasth2 = h2;
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      r1[x0] = GetWaveYPos(-rms[x0] * env[x0]*gain, zoomMin, zoomMax,
-                          rect.height, dB, true, dBRange, true);
-      r2[x0] = GetWaveYPos(rms[x0] * env[x0]*gain, zoomMin, zoomMax,
-                          rect.height, dB, true, dBRange, true);
-#else
       r1[x0] = GetWaveYPos(-rms[x0] * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
       r2[x0] = GetWaveYPos(rms[x0] * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
-#endif
       // Make sure the rms isn't larger than the waveform min/max
       if (r1[x0] > h1 - 1) {
          r1[x0] = h1 - 1;
@@ -2012,11 +2002,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
                zoomMin, zoomMax,
                dB, dBRange,
                useMin, useMax, useRms, useBl,
-               isLoadingOD, muted
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-               , track->GetChannelGain(track->GetChannel())
-#endif
-            );
+               isLoadingOD, muted);
          }
          else {
             bool highlight = false;
@@ -2126,7 +2112,7 @@ void TrackArtist::DrawSpectrum(const WaveTrack *track,
    DrawBackgroundWithSelection(&dc, rect, track, blankSelectedBrush, blankBrush,
          selectedRegion, zoomInfo);
 
-   WaveTrackCache cache(track);
+   WaveTrackCache cache(Track::Pointer<const WaveTrack>(track));
    for (const auto &clip: track->GetClips()) {
       DrawClipSpectrum(cache, clip.get(), dc, rect, selectedRegion, zoomInfo);
    }
@@ -2209,7 +2195,7 @@ AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBin
    if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0))
       return  AColor::ColorGradientTimeAndFrequencySelected;
 
-      return  AColor::ColorGradientTimeSelected;
+   return  AColor::ColorGradientTimeSelected;
 }
 
 
@@ -2347,7 +2333,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
    if (!updated && clip->mSpecPxCache->valid &&
-      (clip->mSpecPxCache->len == hiddenMid.height * hiddenMid.width)
+      ((int)clip->mSpecPxCache->len == hiddenMid.height * hiddenMid.width)
       && scaleType == clip->mSpecPxCache->scaleType
       && gain == clip->mSpecPxCache->gain
       && range == clip->mSpecPxCache->range
@@ -2581,7 +2567,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       }
       else {
           int specIndex = (xx - fisheyeLeft) * nBins;
-          wxASSERT(specIndex >= 0 && specIndex < specCache.freq.size());
+          wxASSERT(specIndex >= 0 && specIndex < (int)specCache.freq.size());
           uncached = &specCache.freq[specIndex];
       }
 
@@ -3326,7 +3312,7 @@ void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
-   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 1);
+   mSampleDisplay = TracksPrefs::SampleViewChoice();
    SetColours(0);
 }
 
@@ -3455,10 +3441,6 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
    //MM: Draw background. We should optimize that a bit more.
-   //AWD: "+ 1.5" and "+ 2.5" throughout match code in
-   //AdornedRulerPanel::DoDrawSelection() and make selection line up with ruler.
-   //I don't know if/why this is correct.
-
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
@@ -3470,7 +3452,7 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
       wxRect within = rect;
       wxRect after = rect;
 
-      before.width = (int)(zoomInfo.TimeToPosition(sel0) + 2);
+      before.width = (int)(zoomInfo.TimeToPosition(sel0) );
       if (before.GetRight() > rect.GetRight()) {
          before.width = rect.width;
       }
@@ -3481,7 +3463,7 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
 
          within.x = 1 + before.GetRight();
       }
-      within.width = rect.x + (int)(zoomInfo.TimeToPosition(sel1) + 2) - within.x;
+      within.width = rect.x + (int)(zoomInfo.TimeToPosition(sel1) ) - within.x -1;
 
       if (within.GetRight() > rect.GetRight()) {
          within.width = 1 + rect.GetRight() - within.x;

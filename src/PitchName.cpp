@@ -20,7 +20,9 @@
 #include <math.h>
 #include <stdio.h>
 
+#include "Audacity.h"
 #include "PitchName.h"
+#include "Internat.h"
 
 
 double FreqToMIDInote(const double freq)
@@ -54,96 +56,105 @@ int PitchOctave(const double dMIDInote)
 }
 
 
-static wxChar gPitchName[10];
-static wxChar * pPitchName;
-
-wxChar * PitchName(const double dMIDInote, const bool bWantFlats /* = false */)
+wxString PitchName(const double dMIDInote, const PitchNameChoice choice)
 {
-   pPitchName = gPitchName;
+   static const wxString sharpnames[12] = {
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("C"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("C\u266f"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("D"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("D\u266f"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("E"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("F"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("F\u266f"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("G"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("G\u266f"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("A"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("A\u266f"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("B"),
+   };
 
-   switch (PitchIndex(dMIDInote)) {
-   case 0:
-      *pPitchName++ = wxT('C');
-      break;
-   case 1:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('D');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('C');
-         *pPitchName++ = wxT('#');
-      }
-      break;
-   case 2:
-      *pPitchName++ = wxT('D');
-      break;
-   case 3:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('E');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('D');
-         *pPitchName++ = wxT('#');
-      }
-      break;
-   case 4:
-      *pPitchName++ = wxT('E');
-      break;
-   case 5:
-      *pPitchName++ = wxT('F');
-      break;
-   case 6:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('G');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('F');
-         *pPitchName++ = wxT('#');
-      }
-      break;
-   case 7:
-      *pPitchName++ = wxT('G');
-      break;
-   case 8:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('A');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('G');
-         *pPitchName++ = wxT('#');
-      }
-      break;
-   case 9:
-      *pPitchName++ = wxT('A');
-      break;
-   case 10:
-      if (bWantFlats) {
-         *pPitchName++ = wxT('B');
-         *pPitchName++ = wxT('b');
-      } else {
-         *pPitchName++ = wxT('A');
-         *pPitchName++ = wxT('#');
-      }
-      break;
-   case 11:
-      *pPitchName++ = wxT('B');
-      break;
+   static const wxString flatnames[12] = {
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("C"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("D\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("D"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("E\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("E"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("F"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("G\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("G"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("A\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("A"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("B\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("B"),
+   };
+
+   static const wxString bothnames[12] = {
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("C"),
+     /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
+      XO("C\u266f/D\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("D"),
+      /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
+      XO("D\u266f/E\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("E"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("F"),
+      /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
+      XO("F\u266f/G\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("G"),
+      /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
+      XO("G\u266f/A\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("A"),
+      /* i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale */
+      XO("A\u266f/B\u266d"),
+      /* i18n-hint: Name of a musical note in the 12-tone chromatic scale */
+      XO("B"),
+   };
+
+   const wxString *table = nullptr;
+   switch ( choice ) {
+      case PitchNameChoice::Sharps: table = sharpnames; break;
+      case PitchNameChoice::Flats: table = flatnames; break;
+      case PitchNameChoice::Both: table = bothnames; break;
+      default: wxASSERT(false); break;
    }
 
-   *pPitchName = wxT('\0');
-
-   return gPitchName;
+   return table[PitchIndex(dMIDInote)];
 }
 
-wxChar * PitchName_Absolute(const double dMIDInote, const bool bWantFlats /* = false */)
+wxString PitchName_Absolute(const double dMIDInote, const PitchNameChoice choice)
 {
-   PitchName(dMIDInote, bWantFlats);
-
-   // PitchName sets pPitchName to the next available char in gPitchName,
-   // so it's ready to append the register number.
-   wxSnprintf(pPitchName, 8, wxT("%d"), PitchOctave(dMIDInote));
-
-   return gPitchName;
+   // The format string is not localized.  Should it be?
+   return wxString::Format(
+      wxT("%s%d"), PitchName(dMIDInote, choice), PitchOctave(dMIDInote) );
 }
 
 double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave)

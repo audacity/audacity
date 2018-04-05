@@ -1,5 +1,5 @@
 /* XPM */
-static const char * CopyDisabled[] = {
+static const char * const CopyDisabled[] = {
 "26 24 11 1",
 " 	c None",
 ".	c #A8A8A8",

@@ -27,6 +27,7 @@ class RowData;
 class EmptyLabelRenderer;
 class LabelTrack;
 class ViewInfo;
+class ShuttleGui;
 
 typedef std::vector<RowData> RowDataArray;
 
@@ -47,15 +48,22 @@ class LabelDialog final : public wxDialogWrapper
 
                ViewInfo &viewinfo,
                double rate,
-               const wxString & format, const wxString &freqFormat);
+               const NumericFormatId & format,
+               const NumericFormatId &freqFormat);
    ~LabelDialog();
 
     bool Show(bool show = true) override;
 
  private:
 
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   void Populate();
+   void PopulateOrExchange( ShuttleGui & S );
+   void PopulateLabels();
+   virtual void OnHelp(wxCommandEvent & event);
+   virtual wxString GetHelpPageName() {return "Labels_Editor";};
+
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
    bool Validate();
    void FindAllLabels();
    void AddLabels(const LabelTrack *t);
@@ -95,8 +103,7 @@ class LabelDialog final : public wxDialogWrapper
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;
    double mRate;
-   wxString mFormat;
-   wxString mFreqFormat;
+   NumericFormatId mFormat, mFreqFormat;
 
    int mInitialRow;
 

@@ -32,10 +32,10 @@
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key                        Def      Min      Max   Scale
-Param( Level,     double,  XO("Level"),               -1.0,    -145.0,  0.0,  1  );
-Param( RemoveDC,  bool,    XO("RemoveDcOffset"),      true,    false,   true, 1  );
-Param( ApplyGain, bool,    XO("ApplyGain"),           true,    false,   true, 1  );
-Param( StereoInd, bool,    XO("StereoIndependent"),   false,   false,   true, 1  );
+Param( Level,     double,  wxT("Level"),               -1.0,    -145.0,  0.0,  1  );
+Param( RemoveDC,  bool,    wxT("RemoveDcOffset"),      true,    false,   true, 1  );
+Param( ApplyGain, bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
+Param( StereoInd, bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
@@ -65,7 +65,7 @@ wxString EffectNormalize::GetSymbol()
 
 wxString EffectNormalize::GetDescription()
 {
-   return XO("Sets the peak amplitude of one or more tracks");
+   return _("Sets the peak amplitude of one or more tracks");
 }
 
 wxString EffectNormalize::ManualPage()
@@ -73,7 +73,7 @@ wxString EffectNormalize::ManualPage()
    return wxT("Normalize");
 }
 
-// EffectIdentInterface implementation
+// EffectDefinitionInterface implementation
 
 EffectType EffectNormalize::GetType()
 {
@@ -81,8 +81,15 @@ EffectType EffectNormalize::GetType()
 }
 
 // EffectClientInterface implementation
+bool EffectNormalize::DefineParams( ShuttleParams & S ){
+   S.SHUTTLE_PARAM( mLevel, Level );
+   S.SHUTTLE_PARAM( mGain, ApplyGain );
+   S.SHUTTLE_PARAM( mDC, RemoveDC );
+   S.SHUTTLE_PARAM( mStereoInd, StereoInd );
+   return true;
+}
 
-bool EffectNormalize::GetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_Level, mLevel);
    parms.Write(KEY_ApplyGain, mGain);
@@ -92,7 +99,7 @@ bool EffectNormalize::GetAutomationParameters(EffectAutomationParameters & parms
    return true;
 }
 
-bool EffectNormalize::SetAutomationParameters(EffectAutomationParameters & parms)
+bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(Level);
    ReadAndVerifyBool(ApplyGain);
@@ -177,7 +184,7 @@ bool EffectNormalize::Process()
    else if(!mDC && mGain)
       topMsg = _("Normalizing without removing DC offset...\n");
    else if(!mDC && !mGain)
-      topMsg = wxT("Not doing anything)...\n");   // shouldn't get here
+      topMsg = _("Not doing anything...\n");   // shouldn't get here
 
    while (track) {
       //Get start and end times from track
@@ -192,15 +199,17 @@ bool EffectNormalize::Process()
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
          wxString msg;
-         wxString trackName = track->GetName();
+         auto trackName = track->GetName();
 
          if(!track->GetLinked() || mStereoInd)
-            msg = topMsg + _("Analyzing: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Analyzing: %s"), trackName );
          else
-            msg = topMsg + _("Analyzing first track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName );
          float offset, min, max;
-         if (! ( bGoodResult =
-                 AnalyseTrack(track, msg, curTrackNum, offset, min, max) ) )
+         bGoodResult = AnalyseTrack(track, msg, curTrackNum, offset, min, max); 
+         if (!bGoodResult )
              break;
          if(!track->GetLinked() || mStereoInd) {
             // mono or 'stereo tracks independently'
@@ -209,9 +218,11 @@ bool EffectNormalize::Process()
                mMult = ratio / extent;
             else
                mMult = 1.0;
-            msg = topMsg + _("Processing: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Processing: %s"), trackName );
             if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
-               msg = topMsg + _("Processing stereo channels independently: ") + trackName;
+               msg =
+                  topMsg + wxString::Format( _("Processing stereo channels independently: %s"), trackName );
 
             if (!ProcessOne(track, msg, curTrackNum, offset))
             {
@@ -225,10 +236,11 @@ bool EffectNormalize::Process()
             // so we need to find it's min, max and offset
             // as they are needed to calc the multiplier for both tracks
             track = (WaveTrack *) iter.Next();  // get the next one
-            msg = topMsg + _("Analyzing second track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
             float offset2, min2, max2;
-            if ( ! ( bGoodResult =
-                     AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2) ) )
+            bGoodResult = AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2);
+            if ( !bGoodResult )
                 break;
             float extent = wxMax(fabs(min), fabs(max));
             extent = wxMax(extent, fabs(min2));
@@ -238,7 +250,8 @@ bool EffectNormalize::Process()
             else
                mMult = 1.0;
             track = (WaveTrack *) iter.Prev();  // go back to the first linked one
-            msg = topMsg + _("Processing first track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Processing first track of stereo pair: %s"), trackName );
             if (!ProcessOne(track, msg, curTrackNum, offset))
             {
                bGoodResult = false;
@@ -246,7 +259,8 @@ bool EffectNormalize::Process()
             }
             track = (WaveTrack *) iter.Next();  // go to the second linked one
             curTrackNum++;   // keeps progress bar correct
-            msg = topMsg + _("Processing second track of stereo pair: ") + trackName;
+            msg =
+               topMsg + wxString::Format( _("Processing second track of stereo pair: %s"), trackName );
             if (!ProcessOne(track, msg, curTrackNum, offset2))
             {
                bGoodResult = false;
@@ -285,14 +299,14 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
 
-               FloatingPointValidator<double> vldLevel(2, &mLevel, NUM_VAL_ONE_TRAILING_ZERO);
+               FloatingPointValidator<double> vldLevel(2, &mLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
                vldLevel.SetRange(MIN_Level, MAX_Level);
-               mLevelTextCtrl = S.AddTextBox(wxT(""), wxT(""), 10);
+               mLevelTextCtrl = S.AddTextBox( {}, wxT(""), 10);
                mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
                mLevelTextCtrl->SetValidator(vldLevel);
                mLeveldB = S.AddVariableText(_("dB"), false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               mWarning = S.AddVariableText( wxT(""), false,
+               mWarning = S.AddVariableText( {}, false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();
@@ -345,7 +359,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
       while (track->GetODFlags()) {
          // update the gui
          if (ProgressResult::Cancelled == mProgress->Update(
-            0, wxT("Waiting for waveform to finish computing...")) )
+            0, _("Waiting for waveform to finish computing...")) )
             return false;
          wxMilliSleep(100);
       }
@@ -398,6 +412,9 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
    mSum = 0.0; // dc offset inits
    mCount = 0;
 
+   sampleCount blockSamples;
+   sampleCount totalSamples = 0;
+
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
    auto s = start;
@@ -410,7 +427,8 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, s, block, fillZero, true, &blockSamples);
+      totalSamples += blockSamples;
 
       //Process the buffer.
       AnalyzeData(buffer.get(), block);
@@ -425,8 +443,10 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
          break;
       }
    }
-
-   offset = -mSum / mCount.as_double();  // calculate actual offset (amount that needs to be added on)
+   if( totalSamples > 0 )
+      offset = -mSum / totalSamples.as_double();  // calculate actual offset (amount that needs to be added on)
+   else
+      offset = 0.0;
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;

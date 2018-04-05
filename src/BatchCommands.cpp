@@ -2,16 +2,16 @@
 
   Audacity: A Digital Audio Editor
 
-  BatchCommands.cpp
+  MacroCommands.cpp
 
   Dominic Mazzoni
   James Crook
 
 ********************************************************************//*!
 
-\class BatchCommands
-\brief Maintains the chain of commands used in batch processing.
-See also BatchCommandDialog and BatchProcessDialog.
+\class MacroCommands
+\brief Maintains the list of commands for batch/macro 
+processing.  See also MacrosWindow and ApplyMacroDialog.
 
 *//*******************************************************************/
 
@@ -21,7 +21,6 @@ See also BatchCommandDialog and BatchProcessDialog.
 
 #include <wx/defs.h>
 #include <wx/dir.h>
-#include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include <wx/textfile.h>
 
@@ -43,6 +42,10 @@ See also BatchCommandDialog and BatchProcessDialog.
 #include "AllThemeResources.h"
 
 #include "Track.h"
+#include "widgets/ErrorDialog.h"
+
+#include "commands/CommandFunctors.h"
+#include "commands/CommandContext.h"
 
 // KLUDGE: All commands should be on the same footing
 // however, for historical reasons we distinguish between
@@ -54,63 +57,119 @@ enum eCommandType { CtEffect, CtMenu, CtSpecial };
 // TIDY-ME: Not currently translated,
 // but there are issues to address if we do.
 // CLEANSPEECH remnant
-static wxString SpecialCommands[] = {
-   wxT("NoAction"),
-   // wxT("Import"),   // non-functioning
-   wxT("ExportMP3_56k_before"),
-   wxT("ExportMP3_56k_after"),
-   wxT("ExportFLAC"),
-   wxT("ExportMP3"),
-   wxT("ExportOgg"),
-   wxT("ExportWAV")
+static const std::pair<const wxChar*, const wxChar*> SpecialCommands[] = {
+   // Use translations of the first members, some other day.
+   // For 2.2.2 we'll get them into the catalog at least.
+
+   { XO("No Action"),            wxT("NoAction") },
+
+   // { wxT("Import"), wxT("Import") },   // non-functioning
+   /* i18n-hint: before is adverb; MP3 names an audio file format */
+   { XO("Export as MP3 56k before"), wxT("ExportMP3_56k_before") },
+
+   /* i18n-hint: after is adverb; MP3 names an audio file format */
+   { XO("Export as MP3 56k after"),  wxT("ExportMP3_56k_after") },
+
+   /* i18n-hint: FLAC names an audio file format */
+   { XO("Export as FLAC"),          wxT("ExportFLAC") },
+
+// MP3 OGG and WAV already handled by menu items.
+#if 0
+   /* i18n-hint: MP3 names an audio file format */
+   { XO("Export as MP3"),           wxT("ExportMP3") },
+
+   /* i18n-hint: Ogg names an audio file format */
+   { XO("Export as Ogg"),           wxT("ExportOgg") },
+
+   /* i18n-hint: WAV names an audio file format */
+   { XO("Export as WAV"),           wxT("ExportWAV") },
+#endif
 };
 // end CLEANSPEECH remnant
 
-static const wxString MP3Conversion = wxT("MP3 Conversion");
-
-BatchCommands::BatchCommands()
+MacroCommands::MacroCommands()
 {
-   ResetChain();
+   mMessage = "";
+   ResetMacro();
 
    wxArrayString names = GetNames();
+   wxArrayString defaults = GetNamesOfDefaultMacros();
 
-   if (names.Index(MP3Conversion) == wxNOT_FOUND) {
-      AddChain(MP3Conversion);
-      RestoreChain(MP3Conversion);
-      WriteChain(MP3Conversion);
+   for( size_t i = 0;i<defaults.Count();i++){
+      wxString name = defaults[i];
+      if (names.Index(name) == wxNOT_FOUND) {
+         AddMacro(name);
+         RestoreMacro(name);
+         WriteMacro(name);
+      }
    }
 }
 
-wxString BatchCommands::GetCommand(int index)
+static const wxString MP3Conversion = XO("MP3 Conversion");
+static const wxString FadeEnds      = XO("Fade Ends");
+static const wxString SelectToEnds  = XO("Select to Ends");
+
+
+wxArrayString MacroCommands::GetNamesOfDefaultMacros()
 {
-   if (index < 0 || index >= (int)mCommandChain.GetCount()) {
+   wxArrayString defaults;
+   defaults.Add( GetCustomTranslation( MP3Conversion ) );
+   defaults.Add( GetCustomTranslation( FadeEnds )  );
+   //Don't add this one anymore, as there is a new menu command for it.
+   //defaults.Add( GetCustomTranslation( SelectToEnds )  );
+   return defaults;
+}
+
+void MacroCommands::RestoreMacro(const wxString & name)
+{
+// TIDY-ME: Effects change their name with localisation.
+// Commands (at least currently) don't.  Messy.
+   ResetMacro();
+   if (name == GetCustomTranslation( MP3Conversion ) ){
+        AddToMacro( wxT("Normalize") );
+        AddToMacro( wxT("ExportMP3") );
+   } else if (name == GetCustomTranslation( FadeEnds ) ){
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\"") );
+        AddToMacro( wxT("FadeIn") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" RelativeTo=\"Project End\"") );
+        AddToMacro( wxT("FadeOut") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"0\"") );
+   } else if (name == GetCustomTranslation( SelectToEnds ) ){
+        AddToMacro( wxT("SelCursorEnd") );
+        AddToMacro( wxT("SelStartCursor") );
+   } 
+}
+
+wxString MacroCommands::GetCommand(int index)
+{
+   if (index < 0 || index >= (int)mCommandMacro.GetCount()) {
       return wxT("");
    }
 
-   return mCommandChain[index];
+   return mCommandMacro[index];
 }
 
-wxString BatchCommands::GetParams(int index)
+wxString MacroCommands::GetParams(int index)
 {
-   if (index < 0 || index >= (int)mParamsChain.GetCount()) {
+   if (index < 0 || index >= (int)mParamsMacro.GetCount()) {
       return wxT("");
    }
 
-   return mParamsChain[index];
+   return mParamsMacro[index];
 }
 
-int BatchCommands::GetCount()
+int MacroCommands::GetCount()
 {
-   return (int)mCommandChain.GetCount();
+   return (int)mCommandMacro.GetCount();
 }
 
-bool BatchCommands::ReadChain(const wxString & chain)
+bool MacroCommands::ReadMacro(const wxString & macro)
 {
-   // Clear any previous chain
-   ResetChain();
+   // Clear any previous macro
+   ResetMacro();
 
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -137,26 +196,9 @@ bool BatchCommands::ReadChain(const wxString & chain)
          wxString cmd = tf[i].Left(splitAt).Strip(wxString::both);
          wxString parm = tf[i].Mid(splitAt + 1).Strip(wxString::trailing);
 
-         // Backward compatibility for old Chain scripts
-         // Please comment the version of audacity these are introduced in, so
-         // that old ones can easily be removed once users have had a chance to
-         // migrate
-         if (cmd == wxT("SaveMP3_56k_before"))
-            cmd = wxT("ExportMP3_56k_before");
-         else if (cmd == wxT("SaveMP3_56k_after"))
-            cmd = wxT("ExportMP3_56k_after");
-         else if (cmd == wxT("ExportFlac"))
-            cmd = wxT("ExportFLAC");
-         else if (cmd == wxT("ExportMp3"))
-            cmd = wxT("ExportMP3");
-         else if (cmd == wxT("ExportWav"))
-            cmd = wxT("ExportWAV");
-         else if (cmd == wxT("Compressor") && (parm.find(wxT("DecayTime")) != parm.npos))
-            parm.Replace(wxT("DecayTime"), wxT("ReleaseTime"), NULL);   // 2.0.6
-
          // Add to lists
-         mCommandChain.Add(cmd);
-         mParamsChain.Add(parm);
+         mCommandMacro.Add(cmd);
+         mParamsMacro.Add(parm);
       }
    }
 
@@ -167,10 +209,10 @@ bool BatchCommands::ReadChain(const wxString & chain)
 }
 
 
-bool BatchCommands::WriteChain(const wxString & chain)
+bool MacroCommands::WriteMacro(const wxString & macro)
 {
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -192,24 +234,12 @@ bool BatchCommands::WriteChain(const wxString & chain)
    tf.Clear();
 
    // Copy over the commands
-   int lines = mCommandChain.GetCount();
+   int lines = mCommandMacro.GetCount();
    for (int i = 0; i < lines; i++) {
-      // restore deprecated commands in chain script
-      if (mCommandChain[i] == wxT("ExportMP3_56k_before"))
-         mCommandChain[i] = wxT("SaveMP3_56k_before");
-      else if (mCommandChain[i] == wxT("ExportMP3_56k_after"))
-         mCommandChain[i] = wxT("SaveMP3_56k_after");
-      else if (mCommandChain[i] == wxT("ExportFLAC"))
-         mCommandChain[i] = wxT("ExportFlac");
-      else if (mCommandChain[i] == wxT("ExportMP3"))
-         mCommandChain[i] = wxT("ExportMp3");
-      else if (mCommandChain[i] == wxT("ExportWAV"))
-         mCommandChain[i] = wxT("ExportWav");
-
-      tf.AddLine(mCommandChain[i] + wxT(":") + mParamsChain[ i ]);
+      tf.AddLine(mCommandMacro[i] + wxT(":") + mParamsMacro[ i ]);
    }
 
-   // Write the chain
+   // Write the macro
    tf.Write();
 
    // Done with the file
@@ -218,10 +248,10 @@ bool BatchCommands::WriteChain(const wxString & chain)
    return true;
 }
 
-bool BatchCommands::AddChain(const wxString & chain)
+bool MacroCommands::AddMacro(const wxString & macro)
 {
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -230,84 +260,159 @@ bool BatchCommands::AddChain(const wxString & chain)
    return tf.Create();
 }
 
-bool BatchCommands::DeleteChain(const wxString & chain)
+bool MacroCommands::DeleteMacro(const wxString & macro)
 {
    // Build the filename
-   wxFileName name(FileNames::ChainDir(), chain, wxT("txt"));
+   wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
 
    // Delete it...wxRemoveFile will display errors
-   return wxRemoveFile(name.GetFullPath());
+   auto result = wxRemoveFile(name.GetFullPath());
+
+   // Delete any legacy chain that it shadowed
+   auto oldPath = wxFileName{ FileNames::LegacyChainDir(), macro, wxT("txt") };
+   wxRemoveFile(oldPath.GetFullPath()); // Don't care about this return value
+
+   return result;
 }
 
-bool BatchCommands::RenameChain(const wxString & oldchain, const wxString & newchain)
+bool MacroCommands::RenameMacro(const wxString & oldmacro, const wxString & newmacro)
 {
    // Build the filenames
-   wxFileName oname(FileNames::ChainDir(), oldchain, wxT("txt"));
-   wxFileName nname(FileNames::ChainDir(), newchain, wxT("txt"));
+   wxFileName oname(FileNames::MacroDir(), oldmacro, wxT("txt"));
+   wxFileName nname(FileNames::MacroDir(), newmacro, wxT("txt"));
 
    // Rename it...wxRenameFile will display errors
    return wxRenameFile(oname.GetFullPath(), nname.GetFullPath());
 }
 
-void BatchCommands::SetWavToMp3Chain() // a function per default chain?  This is flawed design!  MJS
-{
-   ResetChain();
-
-   AddToChain( wxT("Normalize") );
-   AddToChain( wxT("ExportMP3") );
-}
-
 // Gets all commands that are valid for this mode.
-wxArrayString BatchCommands::GetAllCommands()
+MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
 {
-   wxArrayString commands;
-   wxString command;
-   commands.Clear();
-
-   AudacityProject *project = GetActiveProject();
    if (!project)
-   {
-      return commands;
-   }
-
-   unsigned int i;
+      return;
 
    // CLEANSPEECH remnant
-   for(i=0;i<sizeof(SpecialCommands)/sizeof(SpecialCommands[0]);i++)
-   {
-      commands.Add( SpecialCommands[i] );
-   }
+   Entries commands;
+   for( const auto &command : SpecialCommands )
+      commands.push_back( {
+         { command.second, GetCustomTranslation( command.first ) },
+         _("Special Command")
+      } );
+
    // end CLEANSPEECH remnant
 
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
-   while (plug)
    {
-      command = em.GetEffectIdentifier(plug->GetID());
-      if (!command.IsEmpty())
+      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
+      while (plug)
       {
-         commands.Add(command);
+         auto command = em.GetCommandIdentifier(plug->GetID());
+         if (!command.IsEmpty())
+            commands.push_back( {
+               { command, plug->GetTranslatedName() },
+               plug->GetPluginType() == PluginTypeEffect ?
+                  _("Effect") : _("Menu Command (With Parameters)")
+            } );
+         plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       }
-      plug = pm.GetNextPlugin(PluginTypeEffect);
    }
 
-   commands.Sort();
+   auto mManager = project->GetCommandManager();
+   wxArrayString mLabels;
+   wxArrayString mNames;
+   std::vector<bool> vHasDialog;
+   mLabels.Clear();
+   mNames.Clear();
+   mManager->GetAllCommandLabels(mLabels, vHasDialog, true);
+   mManager->GetAllCommandNames(mNames, true);
 
-   /* This is for later in development: include the menu commands.
-         CommandManager * mManager = project->GetCommandManager();
-         wxArrayString mNames;
-         mNames.Clear();
-         mManager->GetAllCommandNames(mNames, false);
-         for(i=0; i<mNames.GetCount(); i++) {
-            commands.Add( mNames[i] );
+   const bool english = wxGetLocale()->GetCanonicalName().StartsWith(wxT("en"));
+
+   for(size_t i=0; i<mNames.GetCount(); i++) {
+      wxString label = mLabels[i];
+      if( !vHasDialog[i] ){
+         label.Replace( "&", "" );
+         bool suffix;
+         if (!english)
+            suffix = false;
+         else {
+            // We'll disambiguate if the squashed name is short and shorter than the internal name.
+            // Otherwise not.
+            // This means we won't have repetitive items like "Cut (Cut)" 
+            // But we will show important disambiguation like "All (SelectAll)" and "By Date (SortByDate)"
+            // Disambiguation is no longer essential as the details box will show it.
+            // PRL:  I think this reasoning applies only when locale is English.
+            // For other locales, show the (CamelCaseCodeName) always.  Or, never?
+            wxString squashed = label;
+            squashed.Replace( " ", "" );
+
+            suffix = squashed.Length() < wxMin( 18, mNames[i].Length());
          }
-   */
-   return commands;
+
+         if( suffix )
+            label = label + " (" + mNames[i] + ")";
+
+         commands.push_back(
+            {
+               {
+                  mNames[i], // Internal name.
+                  label // User readable name
+               },
+               _("Menu Command (No Parameters)")
+            }
+         );
+      }
+   }
+
+   // Sort commands by their user-visible names.
+   // PRL:  What exactly should happen if first members of pairs are not unique?
+   // I'm not sure, but at least I can sort stably for a better defined result,
+   // keeping specials before effects and menu items, and lastly commands.
+   auto less =
+      [](const Entry &a, const Entry &b)
+         { return a.name.Translated() < b.name.Translated(); };
+   std::stable_sort(commands.begin(), commands.end(), less);
+
+   // Now uniquify by friendly name
+   auto equal =
+      [](const Entry &a, const Entry &b)
+         { return a.name.Translated() == b.name.Translated(); };
+   std::unique_copy(
+      commands.begin(), commands.end(), std::back_inserter(mCommands), equal);
+}
+
+// binary search
+auto MacroCommandsCatalog::ByFriendlyName( const wxString &friendlyName ) const
+   -> Entries::const_iterator
+{
+   const auto less = [](const Entry &entryA, const Entry &entryB)
+      { return entryA.name.Translated() < entryB.name.Translated(); };
+   auto range = std::equal_range(
+      begin(), end(), Entry{ { {}, friendlyName }, {} }, less
+   );
+   if (range.first != range.second) {
+      wxASSERT_MSG( range.first + 1 == range.second,
+                    "Non-unique user-visible command name" );
+      return range.first;
+   }
+   else
+      return end();
+}
+
+// linear search
+auto MacroCommandsCatalog::ByCommandId( const wxString &commandId ) const
+   -> Entries::const_iterator
+{
+   // Maybe this too should have a uniqueness check?
+   return std::find_if( begin(), end(),
+      [&](const Entry &entry)
+         { return entry.name.Internal() == commandId; });
 }
 
 
-wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
+
+wxString MacroCommands::GetCurrentParamsFor(const wxString & command)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
@@ -318,7 +423,7 @@ wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
    return EffectManager::Get().GetEffectParameters(ID);
 }
 
-wxString BatchCommands::PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent)
+wxString MacroCommands::PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
@@ -341,7 +446,7 @@ wxString BatchCommands::PromptForParamsFor(const wxString & command, const wxStr
    return res;
 }
 
-wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
+wxString MacroCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
@@ -361,18 +466,18 @@ wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxStr
    return preset;
 }
 
-double BatchCommands::GetEndTime()
+double MacroCommands::GetEndTime()
 {
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( _("No project to process!") );
+      //AudacityMessageBox( _("No project to process!") );
       return -1.0;
    }
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( _("No tracks to process!") );
+      //AudacityMessageBox( _("No tracks to process!") );
       return -1.0;
    }
 
@@ -380,19 +485,19 @@ double BatchCommands::GetEndTime()
    return endTime;
 }
 
-bool BatchCommands::IsMono()
+bool MacroCommands::IsMono()
 {
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( _("No project and no Audio to process!") );
+      //AudacityMessageBox( _("No project and no Audio to process!") );
       return false;
    }
 
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( _("No tracks to process!") );
+      //AudacityMessageBox( _("No tracks to process!") );
       return false;
    }
 
@@ -410,7 +515,7 @@ bool BatchCommands::IsMono()
    return mono;
 }
 
-wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
+wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)
 {
    const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();
@@ -427,7 +532,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
       int minute = now.GetMinute();
       int second = now.GetSecond();
       justName = wxString::Format(wxT("%d-%s-%02d-%02d-%02d-%02d"),
-           year, monthName.c_str(), dom, hour, minute, second);
+           year, monthName, dom, hour, minute, second);
 
 //      SetName(cleanedFileName);
 //      bool isStereo;
@@ -435,8 +540,8 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
 //      double startTime = 0.0;
       //OnSelectAll();
       pathName = FileNames::FindDefaultPath(FileNames::Operation::Export);
-      ::wxMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
-            pathName.c_str(), cleanedString.c_str(), justName.c_str(), extension.c_str()),
+      ::AudacityMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
+            pathName, cleanedString, justName, extension),
          _("Export recording"),
          wxOK | wxCENTRE);
       pathName += wxFileName::GetPathSeparator();
@@ -445,7 +550,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
    cleanedName += cleanedString;
    bool flag  = ::wxFileName::FileExists(cleanedName);
    if (flag == true) {
-      ::wxMessageBox(_("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
+      ::AudacityMessageBox(_("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
       return wxString{};
    }
    ::wxFileName::Mkdir(cleanedName, 0777, wxPATH_MKDIR_FULL); // make sure it exists
@@ -458,7 +563,8 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
    return cleanedName;
 }
 
-bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
+// TODO Move this out of Batch Commands
+bool MacroCommands::WriteMp3File( const wxString & Name, int bitrate )
 {  //check if current project is mono or stereo
    unsigned numChannels = 2;
    if (IsMono()) {
@@ -506,9 +612,11 @@ bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
 // and think again.
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
-bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString & command,const wxString & params)
+bool MacroCommands::ApplySpecialCommand(
+   int WXUNUSED(iCommand), const wxString &friendlyCommand,
+   const wxString & command, const wxString & params)
 {
-   if (ReportAndSkip(command, params))
+   if (ReportAndSkip(friendlyCommand, params))
       return true;
 
    AudacityProject *project = GetActiveProject();
@@ -569,7 +677,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       }
       return mExporter.Process(project, numChannels, wxT("OGG"), filename, false, 0.0, endTime);
 #else
-      wxMessageBox(_("Ogg Vorbis support is not included in this build of Audacity"));
+      AudacityMessageBox(_("Ogg Vorbis support is not included in this build of Audacity"));
       return false;
 #endif
    } else if (command == wxT("ExportFLAC")) {
@@ -581,27 +689,38 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       }
       return mExporter.Process(project, numChannels, wxT("FLAC"), filename, false, 0.0, endTime);
 #else
-      wxMessageBox(_("FLAC support is not included in this build of Audacity"));
+      AudacityMessageBox(_("FLAC support is not included in this build of Audacity"));
       return false;
 #endif
    }
-   wxMessageBox(wxString::Format(_("Command %s not implemented yet"),command.c_str()));
+   AudacityMessageBox(
+      wxString::Format(_("Command %s not implemented yet"), friendlyCommand));
    return false;
 }
 // end CLEANSPEECH remnant
 
-bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params)
+bool MacroCommands::ApplyEffectCommand(
+   const PluginID & ID, const wxString &friendlyCommand,
+   const wxString & command, const wxString & params,
+   const CommandContext & Context)
 {
+   static_cast<void>(command);//compiler food.
+
    //Possibly end processing here, if in batch-debug
-   if( ReportAndSkip(command, params))
+   if( ReportAndSkip(friendlyCommand, params))
       return true;
+
+   const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
+   if (!plug)
+      return false;
 
    AudacityProject *project = GetActiveProject();
 
    // FIXME: for later versions may want to not select-all in batch mode.
    // IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
-   project->SelectAllIfNone();
+   if( plug->GetPluginType() != PluginTypeAudacityCommand )
+      project->SelectAllIfNone();
 
    bool res = false;
 
@@ -610,25 +729,36 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    // transfer the parameters to the effect...
    if (EffectManager::Get().SetEffectParameters(ID, params))
    {
-      // and apply the effect...
-      res = project->OnEffect(ID, AudacityProject::OnEffectFlags::kConfigured |
-                                  AudacityProject::OnEffectFlags::kSkipState |
-                                  AudacityProject::OnEffectFlags::kDontRepeatLast);
+      if( plug->GetPluginType() == PluginTypeAudacityCommand )
+         // and apply the effect...
+         res = project->DoAudacityCommand(ID, 
+            Context,
+            AudacityProject::OnEffectFlags::kConfigured |
+            AudacityProject::OnEffectFlags::kSkipState |
+            AudacityProject::OnEffectFlags::kDontRepeatLast);
+      else
+         // and apply the effect...
+         res = project->DoEffect(ID, 
+            Context,
+            AudacityProject::OnEffectFlags::kConfigured |
+            AudacityProject::OnEffectFlags::kSkipState |
+            AudacityProject::OnEffectFlags::kDontRepeatLast);
    }
 
    return res;
 }
 
-bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params)
+bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
+   const wxString & command, const wxString & params,
+   CommandContext const * pContext)
 {
 
    unsigned int i;
    // Test for a special command.
    // CLEANSPEECH remnant
-   for(i=0;i<sizeof(SpecialCommands)/sizeof(SpecialCommands[0]);i++)
-   {
-      if( command == SpecialCommands[i] )
-         return ApplySpecialCommand( i, command, params );
+   for( i = 0; i < sizeof(SpecialCommands)/sizeof(*SpecialCommands); ++i ) {
+      if( command.IsSameAs( SpecialCommands[i].second, false) )
+         return ApplySpecialCommand( i, friendlyCommand, command, params );
    }
    // end CLEANSPEECH remnant
 
@@ -636,20 +766,43 @@ bool BatchCommands::ApplyCommand(const wxString & command, const wxString & para
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier( command );
    if (!ID.empty())
    {
-      return ApplyEffectCommand(ID, command, params);
+      if( pContext )
+         return ApplyEffectCommand(
+            ID, friendlyCommand, command, params, *pContext);
+      const CommandContext context(  *GetActiveProject() );
+      return ApplyEffectCommand(
+         ID, friendlyCommand, command, params, context);
    }
 
-   wxMessageBox(
+   AudacityProject *project = GetActiveProject();
+   CommandManager * pManager = project->GetCommandManager();
+   if( pContext ){
+      if( pManager->HandleTextualCommand( command, *pContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+         return true;
+      pContext->Status( wxString::Format(
+         _("Your batch command of %s was not recognized."), friendlyCommand ));
+      return false;
+   }
+   else
+   {
+      const CommandContext context(  *GetActiveProject() );
+      if( pManager->HandleTextualCommand( command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+         return true;
+   }
+
+   AudacityMessageBox(
       wxString::Format(
-      _("Your batch command of %s was not recognized."), command.c_str() ));
+      _("Your batch command of %s was not recognized."), friendlyCommand ));
 
    return false;
 }
 
-bool BatchCommands::ApplyCommandInBatchMode(const wxString & command, const wxString &params)
+bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
+   const wxString & command, const wxString &params)
 {
    AudacityProject *project = GetActiveProject();
-
+   // Recalc flags and enable items that may have become enabled.
+   project->UpdateMenus(false);
    // enter batch mode...
    bool prevShowMode = project->GetShowId3Dialog();
    auto cleanup = finally( [&] {
@@ -657,21 +810,34 @@ bool BatchCommands::ApplyCommandInBatchMode(const wxString & command, const wxSt
       project->SetShowId3Dialog(prevShowMode);
    } );
 
-   return ApplyCommand( command, params );
+   return ApplyCommand( friendlyCommand, command, params );
 }
 
-// ApplyChain returns true on success, false otherwise.
-// Any error reporting to the user has already been done.
-bool BatchCommands::ApplyChain(const wxString & filename)
+static int MacroReentryCount = 0;
+// ApplyMacro returns true on success, false otherwise.
+// Any error reporting to the user in setting up the macro
+// has already been done.
+bool MacroCommands::ApplyMacro(
+   const MacroCommandsCatalog &catalog, const wxString & filename)
 {
+   // Check for reentrant ApplyMacro commands.
+   // We'll allow 1 level of reentry, but not more.
+   // And we treat ignoring deeper levels as a success.
+   if( MacroReentryCount > 1 )
+      return true;
+
+   // Restore the reentry counter (to zero) when we exit.
+   auto cleanup1 = valueRestorer( MacroReentryCount);
+   MacroReentryCount++;
+
    mFileName = filename;
 
    AudacityProject *proj = GetActiveProject();
    bool res = false;
-   auto cleanup = finally( [&] {
+   auto cleanup2 = finally( [&] {
       if (!res) {
          if(proj) {
-            // Chain failed or was cancelled; revert to the previous state
+            // Macro failed or was cancelled; revert to the previous state
             proj->RollbackState();
          }
       }
@@ -680,77 +846,86 @@ bool BatchCommands::ApplyChain(const wxString & filename)
    mAbort = false;
 
    size_t i = 0;
-   for (; i < mCommandChain.GetCount(); i++) {
-      if (!ApplyCommandInBatchMode(mCommandChain[i], mParamsChain[i]) || mAbort)
+   for (; i < mCommandMacro.size(); i++) {
+      const auto &command = mCommandMacro[i];
+      auto iter = catalog.ByCommandId(command);
+      auto friendly = (iter == catalog.end())
+         ? command // Expose internal name to user, in default of a better one!
+         : iter->name.Translated();
+      if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
          break;
    }
 
-   res = (i == mCommandChain.GetCount());
+   res = (i == mCommandMacro.size());
    if (!res)
       return false;
 
    mFileName.Empty();
 
-   // Chain was successfully applied; save the NEW project state
+   // Macro was successfully applied; save the NEW project state
    wxString longDesc, shortDesc;
-   wxString name = gPrefs->Read(wxT("/Batch/ActiveChain"), wxEmptyString);
+   wxString name = gPrefs->Read(wxT("/Batch/ActiveMacro"), wxEmptyString);
    if (name.IsEmpty())
    {
-      longDesc = wxT("Applied batch chain");
-      shortDesc = wxT("Apply chain");
+      /* i18n-hint: active verb in past tense */
+      longDesc = _("Applied Macro");
+      shortDesc = _("Apply Macro");
    }
    else
    {
-      longDesc = wxString::Format(wxT("Applied batch chain '%s'"), name.c_str());
-      shortDesc = wxString::Format(wxT("Apply '%s'"), name.c_str());
+      /* i18n-hint: active verb in past tense */
+      longDesc = wxString::Format(_("Applied Macro '%s'"), name);
+      shortDesc = wxString::Format(_("Apply '%s'"), name);
    }
 
    if (!proj)
       return false;
-   proj->PushState(longDesc, shortDesc);
+   if( MacroReentryCount <= 1 )
+      proj->PushState(longDesc, shortDesc);
    return true;
 }
 
 // AbortBatch() allows a premature terminatation of a batch.
-void BatchCommands::AbortBatch()
+void MacroCommands::AbortBatch()
 {
    mAbort = true;
 }
 
-void BatchCommands::AddToChain(const wxString &command, int before)
+void MacroCommands::AddToMacro(const wxString &command, int before)
 {
-   AddToChain(command, GetCurrentParamsFor(command), before);
+   AddToMacro(command, GetCurrentParamsFor(command), before);
 }
 
-void BatchCommands::AddToChain(const wxString &command, const wxString &params, int before)
+void MacroCommands::AddToMacro(const wxString &command, const wxString &params, int before)
 {
    if (before == -1) {
-      before = (int)mCommandChain.GetCount();
+      before = (int)mCommandMacro.GetCount();
    }
 
-   mCommandChain.Insert(command, before);
-   mParamsChain.Insert(params, before);
+   mCommandMacro.Insert(command, before);
+   mParamsMacro.Insert(params, before);
 }
 
-void BatchCommands::DeleteFromChain(int index)
+void MacroCommands::DeleteFromMacro(int index)
 {
-   if (index < 0 || index >= (int)mCommandChain.GetCount()) {
+   if (index < 0 || index >= (int)mCommandMacro.GetCount()) {
       return;
    }
 
-   mCommandChain.RemoveAt(index);
-   mParamsChain.RemoveAt(index);
+   mCommandMacro.RemoveAt(index);
+   mParamsMacro.RemoveAt(index);
 }
 
-void BatchCommands::ResetChain()
+void MacroCommands::ResetMacro()
 {
-   mCommandChain.Clear();
-   mParamsChain.Clear();
+   mCommandMacro.Clear();
+   mParamsMacro.Clear();
 }
 
 // ReportAndSkip() is a diagnostic function that avoids actually
 // applying the requested effect if in batch-debug mode.
-bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & params)
+bool MacroCommands::ReportAndSkip(
+   const wxString & friendlyCommand, const wxString & params)
 {
    int bDebug;
    gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);
@@ -760,22 +935,57 @@ bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & par
    //TODO: Add a cancel button to these, and add the logic so that we can abort.
    if( params != wxT("") )
    {
-      wxMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),command.c_str(), params.c_str()),
+      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),friendlyCommand, params),
          _("Test Mode"));
    }
    else
    {
-      wxMessageBox( wxString::Format(_("Apply %s"),command.c_str()),
+      AudacityMessageBox( wxString::Format(_("Apply %s"), friendlyCommand),
          _("Test Mode"));
    }
    return true;
 }
 
-wxArrayString BatchCommands::GetNames()
+void MacroCommands::MigrateLegacyChains()
 {
+   static bool done = false;
+   if (!done) {
+      // Check once per session at most
+
+      // Copy chain files from the old Chains into the new Macros directory,
+      // but only if like-named files are not already present in Macros.
+
+      // Leave the old copies in place, in case a user wants to go back to
+      // an old Audacity version.  They will have their old chains intact, but
+      // won't have any edits they made to the copy that now lives in Macros
+      // which old Audacity will not read.
+
+      const auto oldDir = FileNames::LegacyChainDir();
+      wxArrayString files;
+      wxDir::GetAllFiles(oldDir, &files, wxT("*.txt"), wxDIR_FILES);
+
+      // add a dummy path component to be overwritten by SetFullName
+      wxFileName newDir{ FileNames::MacroDir(), wxT("x") };
+
+      for (const auto &file : files) {
+         auto name = wxFileName{file}.GetFullName();
+         newDir.SetFullName(name);
+         const auto newPath = newDir.GetFullPath();
+         if (!wxFileExists(newPath))
+            FileNames::CopyFile(file, newPath);
+      }
+      done = true;
+   }
+   // To do:  use std::once
+}
+
+wxArrayString MacroCommands::GetNames()
+{
+   MigrateLegacyChains();
+
    wxArrayString names;
    wxArrayString files;
-   wxDir::GetAllFiles(FileNames::ChainDir(), &files, wxT("*.txt"), wxDIR_FILES);
+   wxDir::GetAllFiles(FileNames::MacroDir(), &files, wxT("*.txt"), wxDIR_FILES);
    size_t i;
 
    wxFileName ff;
@@ -787,23 +997,15 @@ wxArrayString BatchCommands::GetNames()
    return names;
 }
 
-bool BatchCommands::IsFixed(const wxString & name)
+bool MacroCommands::IsFixed(const wxString & name)
 {
-   if (name == MP3Conversion)
+   wxArrayString defaults = GetNamesOfDefaultMacros();
+   if( defaults.Index( name ) != wxNOT_FOUND )
       return true;
    return false;
 }
 
-void BatchCommands::RestoreChain(const wxString & name)
-{
-// TIDY-ME: Effects change their name with localisation.
-// Commands (at least currently) don't.  Messy.
-
-   if (name == MP3Conversion)
-      SetWavToMp3Chain();
-}
-
-void BatchCommands::Split(const wxString & str, wxString & command, wxString & param)
+void MacroCommands::Split(const wxString & str, wxString & command, wxString & param)
 {
    int splitAt;
 
@@ -825,7 +1027,7 @@ void BatchCommands::Split(const wxString & str, wxString & command, wxString & p
    return;
 }
 
-wxString BatchCommands::Join(const wxString & command, const wxString & param)
+wxString MacroCommands::Join(const wxString & command, const wxString & param)
 {
    return command + wxT(": ") + param;
 }

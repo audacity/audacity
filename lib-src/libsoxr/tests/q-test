@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -e
+
+# SoX Resampler Library       Copyright (c) 2007-15 robs@users.sourceforge.net
+# Licence for this file: LGPL v2.1                  See LICENCE for details.
+
+# Tests conversion qualities 0..7 & variable-rate.
+
+
+
+tool=./3-options-input-fn
+w=$(echo -e "`sox --ver |sed 's/.*SoX v//'` d\n14.4.1 k"|sort -Vr|head -1|sed 's/.* //')
+ext=f64; e=1
+c=1
+q1=0; q2=7
+rates=48000
+zs=(50 87 87 87 111 135 159 180 95)
+
+zz() {
+	echo "spectrogram -z${zs[$1]} -Z-30 -w$w -ho"
+}
+
+for rate0 in $rates; do
+
+rate1=$rate0
+rate2=44100
+
+for n in 1 2; do
+
+rate1n=`expr $rate1 / 2`
+
+
+
+# Convert sweep, for spectrogram:
+
+sox -r $rate1 -n -c $c 0.$ext synth 8 sin 0:$rate1n gain -1
+
+for q in `seq $q1 $q2`; do
+	f=qa-$rate1-$rate2-$q
+	$tool $rate1 $rate2 $c $e $e $q  0 < 0.$ext | sox -c$c -r$rate2 -t $ext - -n $(zz $q) $f-$w.png -c $f
+done
+q=8
+f=qa-$rate1-$rate2-v
+$tool $rate1 $rate2 $c $e $e 4 20 < 0.$ext | sox -c$c -r$rate2 -t $ext - -n $(zz $q) $f-$w.png -c $f
+
+
+
+# Convert impulse, for spectrogram:
+
+#: << :
+sox -r $rate1 -n 0.$ext synth 1s sq pad .03 .03  gain -1
+
+for q in `seq $q1 $q2`; do
+	f=qb-$rate1-$rate2-$q
+	$tool $rate1 $rate2 1 $e $e $q  0 < 0.$ext | sox -c1 -r$rate2 -t $ext - $f.wav
+done
+q=8
+f=qb-$rate1-$rate2-v
+$tool $rate1 $rate2 1 $e $e 4 20 < 0.$ext | sox -c1 -r$rate2 -t $ext - $f.wav
+
+# Combine impuse responses into multi-channel file (for inspection in Audacity):
+sox -M qb-$rate1-$rate2-?.wav q$rate1-$rate2.wav
+
+rm qb-$rate1-$rate2-?.wav
+:
+
+rate1=44100
+rate2=$rate0
+
+done
+done
+
+rm 0.$ext

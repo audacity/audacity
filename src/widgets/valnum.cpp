@@ -24,6 +24,7 @@
 
 #include "../Audacity.h"
 #include "valnum.h"
+#include "ErrorDialog.h"
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -32,7 +33,6 @@
 #if wxUSE_VALIDATORS && wxUSE_TEXTCTRL
 
 #ifndef WX_PRECOMP
-    #include <wx/msgdlg.h>
     #include <wx/textctrl.h>
 #endif
 
@@ -40,6 +40,7 @@
 #include <wx/dataobj.h>
 
 #include "numformatter.h"
+#include "../Internat.h"
 
 // ============================================================================
 // NumValidatorBase implementation
@@ -54,15 +55,15 @@ END_EVENT_TABLE()
 int NumValidatorBase::GetFormatFlags() const
 {
    int flags = NumberFormatter::Style_None;
-   if ( m_style & NUM_VAL_THOUSANDS_SEPARATOR )
+   if ( m_style & NumValidatorStyle::THOUSANDS_SEPARATOR )
       flags |= NumberFormatter::Style_WithThousandsSep;
-   if ( m_style & NUM_VAL_NO_TRAILING_ZEROES )
+   if ( m_style & NumValidatorStyle::NO_TRAILING_ZEROES )
       flags |= NumberFormatter::Style_NoTrailingZeroes;
-   if ( m_style & NUM_VAL_ONE_TRAILING_ZERO )
+   if ( m_style & NumValidatorStyle::ONE_TRAILING_ZERO )
       flags |= NumberFormatter::Style_OneTrailingZero;
-   if ( m_style & NUM_VAL_TWO_TRAILING_ZEROES )
+   if ( m_style & NumValidatorStyle::TWO_TRAILING_ZEROES )
       flags |= NumberFormatter::Style_TwoTrailingZeroes;
-   if ( m_style & NUM_VAL_THREE_TRAILING_ZEROES )
+   if ( m_style & NumValidatorStyle::THREE_TRAILING_ZEROES )
       flags |= NumberFormatter::Style_ThreeTrailingZeroes;
 
    return flags;
@@ -91,7 +92,7 @@ bool NumValidatorBase::Validate(wxWindow *parent)
 
    if ( !res )
    {
-      wxMessageBox(errmsg, _("Validation error"),
+      AudacityMessageBox(errmsg, _("Validation error"),
                   wxOK | wxICON_ERROR, parent);
       wxTextEntry *te = GetTextEntry();
       if ( te )
@@ -352,7 +353,7 @@ bool IntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
    if ( s.empty() )
    {
       // Is blank, but allowed. Stop here
-      if ( HasFlag(NUM_VAL_ZERO_AS_BLANK) )
+      if ( HasFlag(NumValidatorStyle::ZERO_AS_BLANK) )
       {
          return true;
       }
@@ -477,7 +478,7 @@ bool FloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
 
    if ( s.empty() )
    {
-      if ( HasFlag(NUM_VAL_ZERO_AS_BLANK) )
+      if ( HasFlag(NumValidatorStyle::ZERO_AS_BLANK) )
          return true; //Is blank, but allowed. Stop here
       else
       {

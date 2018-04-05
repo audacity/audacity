@@ -37,22 +37,6 @@ class EnvelopeHandle;
 //
 #define WAVETRACK_MERGE_POINT_TOLERANCE 0.01
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-#define MONO_WAVE_PAN(T) \
-   (T != NULL && \
-    T->GetChannel() == Track::MonoChannel && \
-    T->GetKind() == Track::Wave && \
-    ((const WaveTrack *)T)->GetPan() != 0 && \
-    WaveTrack::mMonoAsVirtualStereo && \
-    ((const WaveTrack *)T)->GetDisplay() == WaveTrack::Waveform)
-
-#define MONO_PAN \
-   (mPan != 0.0 && \
-    mChannel == MonoChannel && \
-    mDisplay == Waveform && \
-    mMonoAsVirtualStereo)
-#endif
-
 /// \brief Structure to hold region of a wavetrack and a comparison function
 /// for sortability.
 struct Region
@@ -90,17 +74,17 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    void Init(const WaveTrack &orig);
 
+public:
+   // overwrite data excluding the sample sequence but including display
+   // settings
+   void Reinit(const WaveTrack &orig);
+
+private:
    Track::Holder Duplicate() const override;
 
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void VirtualStereoInit();
-#endif
    friend class TrackFactory;
 
  public:
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   static bool mMonoAsVirtualStereo;
-#endif
 
    typedef WaveTrackLocation Location;
    using Holder = std::unique_ptr<WaveTrack>;
@@ -135,9 +119,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    //
 
    int GetKind() const override { return Wave; }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   int GetMinimizedHeight() const override;
-#endif
+
    //
    // WaveTrack parameters
    //
@@ -151,16 +133,12 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    // -1.0 (left) -> 1.0 (right)
    float GetPan() const;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   bool SetPan(float newPan);
-#else
    void SetPan(float newPan) override;
-#endif
+
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void SetVirtualState(bool state, bool half=false);
-#endif
+
+   void DoSetMinimized(bool isMinimized) override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
@@ -177,7 +155,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    WaveformSettings &GetWaveformSettings();
    WaveformSettings &GetIndependentWaveformSettings();
    void SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings);
-
+   void UseSpectralPrefs( bool bUse=true );
    //
    // High-level editing
    //
@@ -193,6 +171,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    void Clear(double t0, double t1) override;
    void Paste(double t0, const Track *src) override;
+   // May assume precondition: t0 <= t1
    void ClearAndPaste(double t0, double t1,
                               const Track *src,
                               bool preserve = true,
@@ -205,15 +184,20 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    void SplitAt(double t) /* not override */;
    void Split(double t0, double t1) /* not override */;
    // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
+   // May assume precondition: t0 <= t1
    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
    Track::Holder SplitCut(double t0, double t1) /* not override */;
+   // May assume precondition: t0 <= t1
    void SplitDelete(double t0, double t1) /* not override */;
    void Join(double t0, double t1) /* not override */;
+   // May assume precondition: t0 <= t1
    void Disjoin(double t0, double t1) /* not override */;
 
+   // May assume precondition: t0 <= t1
    void Trim(double t0, double t1) /* not override */;
 
+   // May assume precondition: t0 <= t1
    void HandleClear(double t0, double t1, bool addCutLines, bool split);
 
    void SyncLockAdjust(double oldT1, double newT1) override;
@@ -269,7 +253,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    ///
    bool Get(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len,
-                   fillFormat fill = fillZero, bool mayThrow = true) const;
+                   fillFormat fill = fillZero, bool mayThrow = true, sampleCount * pNumCopied = nullptr) const;
    void Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
@@ -278,8 +262,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
 
+   // May assume precondition: t0 <= t1
    std::pair<float, float> GetMinMax(
       double t0, double t1, bool mayThrow = true) const;
+   // May assume precondition: t0 <= t1
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //
@@ -541,7 +527,9 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    // and will be taken out of the WaveTrack class:
    //
 
-   enum WaveTrackDisplay {
+
+   typedef int WaveTrackDisplay;
+   enum WaveTrackDisplayValues : int {
 
       // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
 
@@ -567,12 +555,28 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    // Only two types of sample display for now, but
    // others (eg sinc interpolation) may be added later.
    enum SampleDisplay {
-      LinarInterpolate = 0,
+      LinearInterpolate = 0,
       StemPlot
    };
 
-   // Read appropriate value from preferences
-   static WaveTrackDisplay FindDefaultViewMode();
+   // Various preset zooming levels.
+   enum ZoomPresets {
+      kZoomToFit = 0,
+      kZoomToSelection,
+      kZoomDefault,
+      kZoomMinutes,
+      kZoomSeconds,
+      kZoom5ths,
+      kZoom10ths,
+      kZoom20ths,
+      kZoom50ths,
+      kZoom100ths,
+      kZoom500ths,
+      kZoomMilliSeconds,
+      kZoomSamples,
+      kZoom4To1,
+      kMaxZoom,
+   };
 
    // Handle remapping of enum values from 2.1.0 and earlier
    static WaveTrackDisplay ConvertLegacyDisplayValue(int oldValue);
@@ -661,16 +665,14 @@ protected:
 class WaveTrackCache {
 public:
    WaveTrackCache()
-      : mPTrack(0)
-      , mBufferSize(0)
+      : mBufferSize(0)
       , mOverlapBuffer()
       , mNValidBuffers(0)
    {
    }
 
-   explicit WaveTrackCache(const WaveTrack *pTrack)
-      : mPTrack(0)
-      , mBufferSize(0)
+   explicit WaveTrackCache(const std::shared_ptr<const WaveTrack> &pTrack)
+      : mBufferSize(0)
       , mOverlapBuffer()
       , mNValidBuffers(0)
    {
@@ -678,8 +680,8 @@ public:
    }
    ~WaveTrackCache();
 
-   const WaveTrack *GetTrack() const { return mPTrack; }
-   void SetTrack(const WaveTrack *pTrack);
+   const WaveTrack *GetTrack() const { return mPTrack.get(); }
+   void SetTrack(const std::shared_ptr<const WaveTrack> &pTrack);
 
    // Uses fillZero always
    // Returns null on failure
@@ -708,7 +710,7 @@ private:
       }
    };
 
-   const WaveTrack *mPTrack;
+   std::shared_ptr<const WaveTrack> mPTrack;
    size_t mBufferSize;
    Buffer mBuffers[2];
    GrowableSampleBuffer mOverlapBuffer;

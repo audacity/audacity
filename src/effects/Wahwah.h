@@ -41,8 +41,6 @@ public:
    double b0, b1, b2, a0, a1, a2;
 };
 
-WX_DECLARE_OBJARRAY(EffectWahwahState, EffectWahwahStateArray);
-
 class EffectWahwah final : public Effect
 {
 public:
@@ -55,7 +53,7 @@ public:
    wxString GetDescription() override;
    wxString ManualPage() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    bool SupportsRealtime() override;
@@ -73,8 +71,9 @@ public:
                                        float **inbuf,
                                        float **outbuf,
                                        size_t numSamples) override;
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool DefineParams( ShuttleParams & S ) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // Effect implementation
 
@@ -104,7 +103,7 @@ private:
 
 private:
    EffectWahwahState mMaster;
-   EffectWahwahStateArray mSlaves;
+   std::vector<EffectWahwahState> mSlaves;
 
    /* Parameters:
    mFreq - LFO frequency

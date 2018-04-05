@@ -20,6 +20,7 @@ information.
 #include <wx/arrstr.h>
 #include <wx/intl.h>
 #include "sndfile.h"
+#include "widgets/ErrorDialog.h"
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
@@ -285,18 +286,18 @@ OSType sf_header_mactype(int format)
 
 #endif // __WXMAC__
 
-#include <wx/msgdlg.h>
 ODLock libSndFileMutex;
 
-void SFFileCloser::operator() (SNDFILE *sf) const
+int SFFileCloser::operator() (SNDFILE *sf) const
 {
    auto err = SFCall<int>(sf_close, sf);
    if (err) {
       char buffer[1000];
       sf_error_str(sf, buffer, 1000);
-      wxMessageBox(wxString::Format
+      AudacityMessageBox(wxString::Format
          /* i18n-hint: %s will be the error message from libsndfile */
          (_("Error (file may not have been written): %s"),
          buffer));
    }
+   return err;
 }

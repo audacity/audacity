@@ -10,7 +10,12 @@
 *******************************************************************//**
 
 \class ErrorDialog
-Gives an Error message with an option for help.
+\brief Gives an Error message with an option for help.
+
+*//*****************************************************************//**
+
+\class AliasedFileMissingDialog
+\brief Special case of ErrorDialog for reporting missing alias files.
 
 *//********************************************************************/
 
@@ -226,4 +231,9 @@ void ShowAliasMissingDialog(AudacityProject *parent,
    // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak.
    // PRL: answer is that the parent window guarantees destruction of the dialog
    // but in practice Destroy() in OnOK does that
+}
+
+extern wxString AudacityMessageBoxCaptionStr()
+{
+   return _("Message");
 }

@@ -13,7 +13,6 @@
 
 #include <wx/defs.h>
 #include <wx/arrstr.h>
-#include <wx/dynarray.h>
 #include <wx/string.h>
 #include <wx/vlbox.h>
 
@@ -32,13 +31,17 @@ public:
       isparent = false;
       isopen = false;
    }
+   KeyNode( const KeyNode & ) = default;
+   KeyNode &operator = ( const KeyNode & ) = default;
+   //KeyNode( KeyNode && ) = default;
+   //KeyNode &operator = ( KeyNode && ) = default;
 
 public:
    wxString name;
    wxString category;
    wxString prefix;
    wxString label;
-   wxString key;
+   NormalizedKeyString key;
    int index;
    int line;
    int depth;
@@ -49,8 +52,6 @@ public:
 };
 
 // Declare the KeyNode arrays
-WX_DECLARE_OBJARRAY(KeyNode, KeyNodeArray);
-WX_DECLARE_OBJARRAY(KeyNode *, KeyNodeArrayPtr);
 
 // Types of view currently supported
 enum ViewByType
@@ -62,6 +63,7 @@ enum ViewByType
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
+#include "WindowAccessible.h"
 
 // Forward reference accessibility provideer
 class KeyViewAx;
@@ -82,7 +84,7 @@ public:
                         const wxArrayString & categories,
                         const wxArrayString & prefixes,
                         const wxArrayString & labels,
-                        const wxArrayString & keys,
+                        const std::vector<NormalizedKeyString> & keys,
                         bool bSort);
 
    int GetSelected() const;
@@ -92,13 +94,13 @@ public:
 
    int GetIndexByName(const wxString & name) const;
    wxString GetName(int index) const;
-   wxString GetNameByKey(const wxString & key) const;
+   wxString GetNameByKey(const NormalizedKeyString & key) const;
 
-   int GetIndexByKey(const wxString & key) const;
-   wxString GetKey(int index) const;
+   int GetIndexByKey(const NormalizedKeyString & key) const;
+   NormalizedKeyString GetKey(int index) const;
    bool CanSetKey(int index) const;
-   bool SetKey(int index, const wxString & key);
-   bool SetKeyByName(const wxString & name, const wxString & key);
+   bool SetKey(int index, const NormalizedKeyString & key);
+   bool SetKeyByName(const wxString & name, const NormalizedKeyString & key);
 
    void SetView(ViewByType type);
 
@@ -107,12 +109,12 @@ public:
    void ExpandAll();
    void CollapseAll();
 
+   void SelectNode(int index);
+
 private:
    void RecalcExtents();
    void UpdateHScroll();
    void RefreshLines(bool bSort = true);
-
-   void SelectNode(int index);
 
    int LineToIndex(int line) const;
    int IndexToLine(int index) const;
@@ -131,9 +133,9 @@ private:
 
 
    static wxString CommandTranslated;
-   static int CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2);
-   static int CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2);
-   static int CmpKeyNodeByKey(KeyNode ***n1, KeyNode ***n2);
+   static bool CmpKeyNodeByTree(KeyNode *n1, KeyNode *n2);
+   static bool CmpKeyNodeByName(KeyNode *n1, KeyNode *n2);
+   static bool CmpKeyNodeByKey(KeyNode *n1, KeyNode *n2);
 
 #if wxUSE_ACCESSIBILITY
    friend class KeyViewAx;
@@ -146,8 +148,8 @@ private:
 #endif
 
 private:
-   KeyNodeArray mNodes;
-   KeyNodeArrayPtr mLines;
+   std::vector<KeyNode> mNodes;
+   std::vector<KeyNode*> mLines;
 
    ViewByType mViewType;
    wxString mFilter;
@@ -176,7 +178,7 @@ private:
 // wxAccessible object providing information for KeyView.
 // ----------------------------------------------------------------------------
 
-class KeyViewAx final : public wxWindowAccessible
+class KeyViewAx final : public WindowAccessible
 {
 public:
 

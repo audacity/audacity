@@ -56,9 +56,8 @@ but little else.
 #define __AUDACITY_IMPORTER__
 
 #include "../Audacity.h"
-#include <wx/arrstr.h>
+#include "../Internat.h"
 #include <wx/filename.h>
-#include <wx/string.h>
 #include "../MemoryX.h"
 
 #include "../widgets/ProgressDialog.h"
@@ -137,7 +136,7 @@ public:
       wxFileName ff(mFilename);
       wxString title;
 
-      title.Printf(_("Importing %s"), GetFileDescription().c_str());
+      title.Printf(_("Importing %s"), GetFileDescription());
       mProgress.create(title, ff.GetFullName());
    }
 

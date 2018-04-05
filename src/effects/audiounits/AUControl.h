@@ -6,8 +6,15 @@
 
   Leland Lucius
 
-**********************************************************************/
+********************************************************************//**
 
+\class AUControl
+\brief a wxControl with Cocoa/Carbon support
+
+\class AUControlImpl
+\brief a wxWidgetCocoaImpl 
+
+*//********************************************************************/
 #ifndef AUDACITY_AUCONTROL_H
 #define AUDACITY_AUCONTROL_H
 

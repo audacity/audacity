@@ -113,32 +113,23 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //
    //pToolBar->Realize();
 
-   mLyricsPanel = safenew Lyrics(this, -1, panelPos, panelSize);
+   mLyricsPanel = safenew LyricsPanel(this, -1, panelPos, panelSize);
 
    //vvv Highlight style is broken in ported version.
    //switch (mLyricsPanel->GetLyricsStyle())
    //{
-   //   case Lyrics::kBouncingBallLyrics:
+   //   case LyricsPanel::kBouncingBallLyrics:
    //      pRadioButton_BouncingBall->SetValue(true); break;
-   //   case Lyrics::kHighlightLyrics:
+   //   case LyricsPanel::kHighlightLyrics:
    //   default:
    //      pRadioButton_Highlight->SetValue(true); break;
    //}
 
    // Events from the project don't propagate directly to this other frame, so...
-   mProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(LyricsWindow::OnTimer),
-      NULL,
+   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+      &LyricsWindow::OnTimer,
       this);
    Center();
-}
-
-LyricsWindow::~LyricsWindow()
-{
-   mProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(LyricsWindow::OnTimer),
-      NULL,
-      this);
 }
 
 void LyricsWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
@@ -148,12 +139,12 @@ void LyricsWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 
 void LyricsWindow::OnStyle_BouncingBall(wxCommandEvent & WXUNUSED(event))
 {
-   mLyricsPanel->SetLyricsStyle(Lyrics::kBouncingBallLyrics);
+   mLyricsPanel->SetLyricsStyle(LyricsPanel::kBouncingBallLyrics);
 }
 
 void LyricsWindow::OnStyle_Highlight(wxCommandEvent & WXUNUSED(event))
 {
-   mLyricsPanel->SetLyricsStyle(Lyrics::kHighlightLyrics);
+   mLyricsPanel->SetLyricsStyle(LyricsPanel::kHighlightLyrics);
 }
 
 void LyricsWindow::OnTimer(wxCommandEvent &event)

@@ -67,6 +67,12 @@ using VSTEffectArray = std::vector < movable_ptr<VSTEffect> > ;
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
+///////////////////////////////////////////////////////////////////////////////
+///
+/// VSTEffect is an Audacity EffectClientInterface that forwards actual 
+/// audio processing via a VSTEffectLink
+///
+///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final : public wxEvtHandler,
                   public EffectClientInterface,
                   public EffectUIClientInterface,
@@ -86,10 +92,11 @@ class VSTEffect final : public wxEvtHandler,
    wxString GetVersion() override;
    wxString GetDescription() override;
 
-   // EffectIdentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamily() override;
+   wxString GetFamilyId() override;
+   wxString GetFamilyName() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -131,8 +138,8 @@ class VSTEffect final : public wxEvtHandler,
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
 
-   bool GetAutomationParameters(EffectAutomationParameters & parms) override;
-   bool SetAutomationParameters(EffectAutomationParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    bool LoadUserPreset(const wxString & name) override;
    bool SaveUserPreset(const wxString & name) override;
@@ -173,7 +180,7 @@ private:
    // Plugin loading and unloading
    bool Load();
    void Unload();
-   wxArrayInt GetEffectIDs();
+   std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
    bool LoadParameters(const wxString & group);
@@ -189,7 +196,6 @@ private:
 
    // UI
    void OnSlider(wxCommandEvent & evt);
-   void OnSize(wxSizeEvent & evt);
    void OnSizeWindow(wxCommandEvent & evt);
    void OnUpdateDisplay(wxCommandEvent & evt);
 
@@ -360,11 +366,11 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-//
-// VSTEffectsModule
-//
+///
+/// VSTEffectsModule is an Audacity ModuleInterface, in other words it 
+/// represents one plug in.
+///
 ///////////////////////////////////////////////////////////////////////////////
-
 class VSTEffectsModule final : public ModuleInterface
 {
 public:
@@ -385,9 +391,15 @@ public:
    bool Initialize() override;
    void Terminate() override;
 
+   wxArrayString FileExtensions() override;
+   wxString InstallPath() override;
+
    bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   wxArrayString FindPlugins(PluginManagerInterface & pm) override;
-   bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path) override;
+   wxArrayString FindPluginPaths(PluginManagerInterface & pm) override;
+   unsigned DiscoverPluginsAtPath(
+      const wxString & path, wxString &errMsg,
+      const RegistrationCallback &callback)
+         override;
 
    bool IsPluginValid(const wxString & path, bool bFast) override;
 

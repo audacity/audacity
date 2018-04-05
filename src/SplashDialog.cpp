@@ -35,6 +35,7 @@ most commonly asked questions about Audacity.
 #include "FileNames.h"
 #include "Internat.h"
 #include "ShuttleGui.h"
+#include "widgets/ErrorDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
 
 #include "Theme.h"
@@ -111,6 +112,15 @@ void SplashDialog::Populate( ShuttleGui & S )
                           wxSize((int)(LOGOWITHNAME_WIDTH*fScale), (int)(LOGOWITHNAME_HEIGHT*fScale)));
 
    S.Prop(0).AddWindow( icon );
+
+#if  (0)
+   icon->Bind(wxEVT_LEFT_DOWN,
+              [this]( wxMouseEvent const & event ) ->void {
+                 if ( event.ShiftDown() && event.ControlDown())
+                    wxLaunchDefaultBrowser("https://www.audacityteam.org");
+              }
+         );
+#endif
 
    mpHtml = safenew LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,

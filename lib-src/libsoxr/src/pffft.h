@@ -1,4 +1,9 @@
-/* Copyright (c) 2011  Julien Pommier ( pommier@modartt.com )
+/* https://bitbucket.org/jpommier/pffft/raw/483453d8f7661058e74aa4e7cf5c27bcd7887e7a/pffft.h
+ * with minor changes for libsoxr. */
+
+#if !defined PFFT_MACROS_ONLY
+
+/* Copyright (c) 2013  Julien Pommier ( pommier@modartt.com )
 
    Based on original fortran 77 code from FFTPACKv4 from NETLIB,
    authored by Dr Paul Swarztrauber of NCAR, in 1985.
@@ -60,8 +65,9 @@
    - 1D transforms only, with 32-bit single precision.
 
    - supports only transforms for inputs of length N of the form
-   N=(2^a)*(3^b), a >= 5 and b >=0 (32, 48, 64, 96, 128, 144 etc
-   are all acceptable lengths). Performance is best for 128<=N<=8192.
+   N=(2^a)*(3^b)*(5^c), a >= 5, b >=0, c >= 0 (32, 48, 64, 96, 128,
+   144, 160, etc are all acceptable lengths). Performance is best for
+   128<=N<=8192.
 
    - all (float*) pointers in the functions below are expected to
    have an "simd-compatible" alignment, that is 16 bytes on x86 and
@@ -82,6 +88,10 @@
 extern "C" {
 #endif
 
+#if PFFFT_DOUBLE
+#define float double
+#endif
+
   /* opaque struct holding internal stuff (precomputed twiddle factors)
      this struct can be shared by many threads as it contains only
      read-only data.
@@ -99,8 +109,10 @@ extern "C" {
     PFFFT_Setup structure is read-only so it can safely be shared by
     multiple concurrent threads.
   */
-  static PFFFT_Setup *pffft_new_setup(int N, pffft_transform_t transform);
-  static void pffft_destroy_setup(PFFFT_Setup *);
+  static
+  PFFFT_Setup *pffft_new_setup(int N, pffft_transform_t transform);
+  static
+  void pffft_destroy_setup(PFFFT_Setup *);
   /*
      Perform a Fourier transform , The z-domain data is stored in the
      most efficient order for transforming it back, or using it for
@@ -113,13 +125,14 @@ extern "C" {
      Typically you will want to scale the backward transform by 1/N.
 
      The 'work' pointer should point to an area of N (2*N for complex
-     fft) floats, properly aligned. [del]If 'work' is NULL, then stack will
-     be used instead (this is probably the beest strategy for small
-     FFTs, say for N < 16384).[/del]
+     fft) floats, properly aligned. If 'work' is NULL, then stack will
+     be used instead (this is probably the best strategy for small
+     FFTs, say for N < 16384).
 
      input and output may alias.
   */
-  static void pffft_transform(PFFFT_Setup *setup, const float *input, float *output, float *work, pffft_direction_t direction);
+  static
+  void pffft_transform(PFFFT_Setup *setup, const float *input, float *output, float *work, pffft_direction_t direction);
 
   /*
      Similar to pffft_transform, but makes sure that the output is
@@ -128,7 +141,8 @@ extern "C" {
 
      input and output may alias.
   */
-  static void pffft_transform_ordered(PFFFT_Setup *setup, const float *input, float *output, float *work, pffft_direction_t direction);
+  static
+  void pffft_transform_ordered(PFFFT_Setup *setup, const float *input, float *output, float *work, pffft_direction_t direction);
 
   /*
      call pffft_zreorder(.., PFFFT_FORWARD) after pffft_transform(...,
@@ -142,7 +156,8 @@ extern "C" {
 
      input and output should not alias.
   */
-  static void pffft_zreorder(PFFFT_Setup *setup, const float *input, float *output, pffft_direction_t direction);
+  static
+  void pffft_zreorder(PFFFT_Setup *setup, const float *input, float *output, pffft_direction_t direction);
 
   /*
      Perform a multiplication of the frequency components of dft_a and
@@ -155,23 +170,28 @@ extern "C" {
      the operation performed is: dft_ab += (dft_a * fdt_b)*scaling
 
      The dft_a, dft_b and dft_ab pointers may alias.
-  void pffft_zconvolve_accumulate(PFFFT_Setup *setup, const float *dft_a, const float *dft_b, float *dft_ab, float scaling);
   */
+  void pffft_zconvolve_accumulate(PFFFT_Setup *setup, const float *dft_a, const float *dft_b, float *dft_ab, float scaling);
 
   /*
-     the operation performed is: dft_ab = (dft_a * fdt_b)
-
-     The dft_a, dft_b and dft_ab pointers may alias.
+    the float buffers must have the correct alignment (16-byte boundary
+    on intel and powerpc). This function may be used to obtain such
+    correctly aligned buffers.
   */
-  static void pffft_zconvolve(PFFFT_Setup *setup, const float *dft_a, const float *dft_b, float *dft_ab);
+#if 0
+  void *pffft_aligned_malloc(size_t nb_bytes);
+  void pffft_aligned_free(void *);
 
   /* return 4 or 1 wether support SSE/Altivec instructions was enable when building pffft.c */
-  int pffft_simd_size(void);
+  int pffft_simd_size();
+#endif
 
-  static void pffft_reorder_back(int length, void * setup, float * data, float * work);
+#undef float
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif

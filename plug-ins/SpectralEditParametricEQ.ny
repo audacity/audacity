@@ -1,19 +1,23 @@
-;nyquist plug-in
-;version 4
-;type process spectral
-;preview linear
-;name "Spectral edit parametric EQ..."
-;manpage "Spectral_edit_parametric_EQ"
-;action "Filtering..."
-;author "Paul Licameli"
-;copyright "Released under terms of the GNU General Public License version 2"
+$nyquist plug-in
+$version 4
+$type process spectral
+$preview linear
+$name (_ "Spectral edit parametric EQ")
+$manpage "Spectral_edit_parametric_EQ"
+$action (_ "Filtering...")
+$author (_ "Paul Licameli")
+$copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; SpectralEditParametricEQ.ny by Paul Licameli, November 2014.
 ;; Updated by Steve Daulton 2014 / 2015.
+
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-;control control-gain "Gain (dB)" real "" 0 -24 24
+$control control-gain (_ "Gain (dB)") real "" 0 -24 24
 
 (defun wet (sig gain fc bw)
   (eq-band sig fc gain (/ bw 2)))
@@ -33,24 +37,24 @@
        (env (snd-pwl 0.0 rate breakpoints)))
     (cond
       ((not (or f0 f1)) ; This should never happen for a 'spectral' effect.
-          (throw 'error-message (format nil "~aPlease select frequencies." p-err)))
+          (throw 'error-message (format nil (_ "~aPlease select frequencies.") p-err)))
       ((not f0)
-          (throw 'error-message (format nil "~aLow frequency is undefined." p-err)))
+          (throw 'error-message (format nil (_ "~aLow frequency is undefined.") p-err)))
       ((not f1)
-          (throw 'error-message (format nil "~aHigh frequency is undefined." p-err)))
+          (throw 'error-message (format nil (_ "~aHigh frequency is undefined.") p-err)))
       ((and fc (= fc 0))
-          (throw 'error-message (format nil "~aCenter frequency must be above 0 Hz." p-err)))
+          (throw 'error-message (format nil (_ "~aCenter frequency must be above 0 Hz.") p-err)))
       ((and f1 (> f1 (/ *sound-srate* 2)))
           (throw 'error-message
-            (format nil "~aFrequency selection is too high for track sample rate.
+            (format nil (_ "~aFrequency selection is too high for track sample rate.~%~
                         For the current track, the high frequency setting cannot~%~
-                        be greater than ~a Hz"
+                        be greater than ~a Hz")
                     p-err (/ *sound-srate* 2))))
       ((and bw (= bw 0))
           (throw 'error-message
-            (format nil "~aBandwidth is zero (the upper and lower~%~
+            (format nil (_ "~aBandwidth is zero (the upper and lower~%~
                          frequencies are both ~a Hz).~%~
-                         Please select a frequency range."
+                         Please select a frequency range.")
                     p-err f0)))
       ;; If centre frequency band is above Nyquist, do nothing.
       ((and fc (>= fc (/ *sound-srate* 2.0)))
@@ -59,7 +63,7 @@
                (prod (diff 1.0 env) sig))))))
 
 (catch 'error-message
-  (setf p-err "Error.\n")
+  (setf p-err (format nil (_ "Error.~%")))
   (if (= control-gain 0)
       nil ; Do nothing
       (multichan-expand #'result *track*)))

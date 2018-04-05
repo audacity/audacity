@@ -56,8 +56,12 @@ BEGIN_EVENT_TABLE(ThemePrefs, PrefsPanel)
    EVT_BUTTON(idSaveThemeAsCode,     ThemePrefs::OnSaveThemeAsCode)
 END_EVENT_TABLE()
 
-ThemePrefs::ThemePrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Theme"))
+ThemePrefs::ThemePrefs(wxWindow * parent, wxWindowID winid)
+/* i18n-hint: A theme is a consistent visual style across an application's
+ graphical user interface, including choices of colors, and similarity of images
+ such as those on button controls.  Audacity can load and save alternative
+ themes. */
+:  PrefsPanel(parent, winid, _("Theme"))
 {
    Populate();
 }
@@ -84,6 +88,7 @@ void ThemePrefs::Populate()
 void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
+   S.StartScroller();
 
    S.StartStatic(_("Info"));
    {
@@ -142,6 +147,8 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndStatic();
+   S.EndScroller();
+
 }
 
 /// Load Theme from multiple png files.
@@ -194,8 +201,8 @@ bool ThemePrefs::Commit()
    return true;
 }
 
-PrefsPanel *ThemePrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ThemePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ThemePrefs(parent);
+   return safenew ThemePrefs(parent, winid);
 }

@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/fontenum.h>
 #include <wx/listbox.h>
 #include <wx/spinctrl.h>
+#include "../../../Internat.h"
 
 LabelTrackControls::~LabelTrackControls()
 {

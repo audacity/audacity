@@ -45,7 +45,7 @@
 #include "audacity/Types.h"
 #include "audacity/IdentInterface.h"
 #include "audacity/ConfigInterface.h"
-#include "audacity/EffectAutomationParameters.h"
+#include "audacity/EffectAutomationParameters.h" // for command automation
 
 #include <wx/dialog.h>
 
@@ -55,16 +55,62 @@ typedef enum EffectType
    EffectTypeHidden,
    EffectTypeGenerate,
    EffectTypeProcess,
-   EffectTypeAnalyze
+   EffectTypeAnalyze,
+   EffectTypeTool,
 } EffectType;
 
-class AUDACITY_DLL_API EffectIdentInterface  /* not final */ : public IdentInterface
+using NumericFormatId = IdentInterfaceSymbol;
+class ShuttleParams;
+
+/*************************************************************************************//**
+
+\class ParamsInterface 
+\brief ParamsInterface provides a DefineParameters virtual function, 
+that defines the parameters of the command.
+
+*******************************************************************************************/
+class AUDACITY_DLL_API ParamsInterface  /* not final */ 
 {
 public:
-   virtual ~EffectIdentInterface() {};
+   virtual ~ParamsInterface() {};
+   // returns true if implemented.
+   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};
+};
+
+/*************************************************************************************//**
+
+\class CommandDefinitionInterface 
+\brief CommandDefinitionInterface is an IdentInterface (to name the command) along with a
+DefineParameters virtual function, that defines the parameters of the command.
+
+*******************************************************************************************/
+class AUDACITY_DLL_API CommandDefinitionInterface  /* not final */ : public IdentInterface, public ParamsInterface
+{
+public:
+   virtual ~CommandDefinitionInterface() {};
+};
+
+/*************************************************************************************//**
+
+\class EffectDefinitionInterface 
+
+\brief EffectDefinitionInterface is a CommandDefinitionInterface that additionally tracks
+flag-functions for interactivity, play-preview and whether the effect can run without a GUI.
+
+*******************************************************************************************/
+class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public IdentInterface, public ParamsInterface
+{
+public:
+   virtual ~EffectDefinitionInterface() {};
 
    virtual EffectType GetType() = 0;
-   virtual wxString GetFamily() = 0;
+
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
+   virtual wxString GetFamilyId() = 0;
+
+   // Returns a user-visible string:
+   virtual wxString GetFamilyName() = 0;
 
    // These should move to the "EffectClientInterface" class once all
    // effects have been converted.
@@ -88,6 +134,15 @@ public:
 class EffectUIHostInterface;
 class EffectUIClientInterface;
 
+/*************************************************************************************//**
+
+\class EffectHostInterface 
+
+\brief EffectHostInterface is a decorator of a EffectUIClientInterface.  It adds 
+virtual (abstract) functions to get presets and actually apply the effect.  It uses
+ConfigClientInterface to add Getters/setters for private and shared configs. 
+
+*******************************************************************************************/
 class AUDACITY_DLL_API EffectHostInterface  /* not final */ : public ConfigClientInterface
 {
 public:
@@ -95,7 +150,7 @@ public:
 
    virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
-   virtual wxString GetDurationFormat() = 0;
+   virtual NumericFormatId GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 
    virtual bool Apply() = 0;
@@ -110,7 +165,16 @@ public:
    virtual wxString GetFactoryDefaultsGroup() = 0;
 };
 
-class AUDACITY_DLL_API EffectClientInterface  /* not final */ : public EffectIdentInterface
+/*************************************************************************************//**
+
+\class EffectClientInterface 
+
+\brief EffectClientInterface provides the ident interface to Effect, and is what makes
+Effect into a plug-in command.  It has functions for realtime that are not part of 
+AudacityCommand.
+
+*******************************************************************************************/
+class AUDACITY_DLL_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
 {
 public:
    virtual ~EffectClientInterface() {};
@@ -145,9 +209,15 @@ public:
    virtual bool RealtimeProcessEnd() = 0;
 
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false) = 0;
-
-   virtual bool GetAutomationParameters(EffectAutomationParameters & parms) = 0;
-   virtual bool SetAutomationParameters(EffectAutomationParameters & parms) = 0;
+   // Some effects will use define params to define what parameters they take.
+   // If they do, they won't need to implement Get or SetAutomation parameters.
+   // since the Effect class can do it.  Or at least that is how things happen
+   // in AudacityCommand.  IF we do the same in class Effect, then Effect maybe 
+   // should derive by some route from AudacityCommand to pick up that 
+   // functionality.
+   //virtual bool DefineParams( ShuttleParams & S){ return false;};
+   virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
+   virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
 
    virtual bool LoadUserPreset(const wxString & name) = 0;
    virtual bool SaveUserPreset(const wxString & name) = 0;
@@ -157,12 +227,29 @@ public:
    virtual bool LoadFactoryDefaults() = 0;
 };
 
+/*************************************************************************************//**
+
+\class EffectUIHostInterface
+
+\brief EffectUIHostInterface has nothing in it.  It is provided so that an Effect
+can call SetHostUI passing in a pointer to an EffectUIHostInterface.  It contains no 
+functionality and is provided, apparently, for type checking.  Since only EffectUIHost
+uses it, EffectUIHost could be used instead.
+*******************************************************************************************/
 class AUDACITY_DLL_API EffectUIHostInterface
 {
 public:
    virtual ~EffectUIHostInterface() {};
 };
 
+/*************************************************************************************//**
+
+\class EffectUIClientInterface
+
+\brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
+values.  It can import and export presets.
+
+*******************************************************************************************/
 class AUDACITY_DLL_API EffectUIClientInterface /* not final */
 {
 public:
@@ -183,6 +270,15 @@ public:
    virtual void ShowOptions() = 0;
 };
 
+
+/*************************************************************************************//**
+
+\class EffectManagerInterface
+
+\brief UNUSED.  EffectManagerInterface provides a single function to find files matching 
+a pattern in a list.
+
+*******************************************************************************************/
 class AUDACITY_DLL_API EffectManagerInterface
 {
 public:

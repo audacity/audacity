@@ -45,19 +45,19 @@ void AudacityProject::DoMacMinimize(AudacityProject *project)
    }
 }
 
-void AudacityProject::OnMacMinimize()
+void AudacityProject::OnMacMinimize(const CommandContext &)
 {
    DoMacMinimize(this);
 }
 
-void AudacityProject::OnMacMinimizeAll()
+void AudacityProject::OnMacMinimizeAll(const CommandContext &)
 {
    for (const auto project : gAudacityProjects) {
       DoMacMinimize(project.get());
    }
 }
 
-void AudacityProject::OnMacZoom()
+void AudacityProject::OnMacZoom(const CommandContext &)
 {
    auto window = this;
    auto topWindow = static_cast<wxTopLevelWindow*>(window);
@@ -77,7 +77,7 @@ void AudacityProject::OnMacZoom()
    }
 }
 
-void AudacityProject::OnMacBringAllToFront()
+void AudacityProject::OnMacBringAllToFront(const CommandContext &)
 {
    // Reall this de-miniaturizes all, which is not exactly the standard
    // behavior.

@@ -1,57 +1,102 @@
 Compilation and install instructions for GNU/Linux
 
-Download wxWidgets. Audacity 2.1.3 requires wxWidgets 3.0.x, preferably 3.0.2, 
-which can be obtained from:
-https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.2/wxWidgets-3.0.2.tar.bz2 .
+Note: Audacity 2.2.2 requires gcc 4.9 or later. For Ubuntu 14.04 which only
+has up to 4.8.4, see here for upgrade instructions:
+   http://wiki.audacityteam.org/wiki/Upgrade_to_gcc_4.9
 
-Don't be tempted to use the Widgets version already installed on Linux because 
-this will cause problems.
+Audacity 2.2.2 requires wxWidgets 3.0.x, preferably 3.0.2, built with gtk2.
+If not available in your distribution repository, it may be  downloaded from:
+   https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.2/wxWidgets-3.0.2.tar.bz2 .
 
-The libsndfile library is also required and is included in Audacity obtained 
-from GitHub. Obtain the latest Audacity alpha development source code from 
-https://github.com/audacity/audacity then use the green "Clone or download" 
-button to git clone Audacity. You may need to install git first.  
+On openSUSE, be sure to install wxWidgets without STL.
 
-If you are not planning to do any development, you may be better to download
-the Audacity 2.1.3 release minimal source tarball from 
+The latest Audacity development source code is available from:
+   https://github.com/audacity/audacity
+
+If you are not planning to do any development, the Audacity 2.2.2 release
+minimal source tarball is recommended from:
 http://www.audacityteam.org/download/source/ .
- 
-CMake ( http://www.cmake.org/ ) is required to build the local copy of 
-the libsoxr resampling library used by Audacity, unless you install 
-libsoxr-dev and use that system library.
 
-Installation of other libraries is optional, see:
-http://wiki.audacityteam.org/wiki/Developing_On_Linux#optional . 
+Other required dependencies:
+
+Audacity 2.2.2 requires the local (included) versions of PortAudio and PortMidi.
+Attempting to build with system library versions will fail.
+
+libsndfile library is required and is included in the Audacity source.
+
+libsoxr resampling library. If libsoxr-dev is not available as a system library,
+the source code is included in the Audacity tarball.
+CMake ( http://www.cmake.org/ ) is required to build a local copy of libsoxr.
+
+Information about optional libraries may be available on:
+   http://wiki.audacityteam.org/wiki/Developing_On_Linux#optional . 
 
 If you install libraries using a package management system like Apt or RPM,
 you need to install the "dev" (development) packages for each library.
 
-Compile wxWidgets with the default gtk2 option, not with gtk3:
 
-   ./configure
+Compiling wxWidgets:
+
+wxWidgets must be built with the default gtk2 option, not with gtk3, and
+without STL (also default). Full instructions for compilation can be found in:
+   wxWidgets-3.0.2/docs/gtk/
+
+
+Compiling and installing Audacity:
+
+As there have been fixes to several of the included libraries, compiling with
+the included ('local') libraries is recommended. This also reduces the number of
+dependencies that need to be installed. One common exception to this is the optional
+FFmpeg library (see below)
+
+From the root of the source tree, create a build directory, then change directory into it:
+   mkdir build
+   cd build
+
+To see the compile-time options you can set:
+   ../configure -h
+
+Run the configure command with your preferred options, then 'make'
+   ../configure -with-lib-preference="local system"
    make
 
-Install wxWidgets (this defaults to installation in /usr/local/). 
+On a multi-core system, build time can be considerably reduced by setting the -j (jobs)
+switch equal to the number of cores. For example, on a quad core processor:
+   make -j4
 
-   make install # as root
-   ldconfig  # as root 
-
-The root command is often sudo on GNU/Linux, for example 'sudo make install'.
-
-Then to compile and install Audacity: 
-
-   ./configure -with-lib-preference="local system"
-   make
+To install:
    make install  # as root
-
-To see the compile-time options you can set, type
-   ./configure --help
+(The root command is often sudo on GNU/Linux, for example 'sudo make install'.)
 
 If you want to do any development, you might want to generate a configure cache
 and header dependencies:
-
    ./configure -C
    make dep
 
+To uninstall:
+   make uninstall #as root
+
+To clean the build after modifying code:
+   make clean
+
+To clean and remove previous configure options:
+   make distclean
+
+
+FFmpeg support::
+
+Audacity should be able to link dynamically to FFmpeg 1.2 to 2.3.x (libav 0.8 to 10),
+but many distributions have more recent versions that fail to link dynamically.
+To work around this issue, Audacity may be configured to use the system
+FFmpeg library and disable dynamic loading. If this is done for both FFmpeg
+and the optional LAME library, the "Libraries" option in Audacity's Preferences
+is not required and is automatically removed.
+   ../configure --with-lib-preference="local system" --with-ffmpeg=system \
+                --with-lame=system --disable-dynamic-loading
+
+
+Additional information about compiling on Linux may be found on the Audacity wiki:
+   http://wiki.audacityteam.org/wiki/Developing_On_Linux
+
 You can ask for help with compilation problems at:
-http://forum.audacityteam.org/viewforum.php?f=19 .
+   http://forum.audacityteam.org/viewforum.php?f=19 .

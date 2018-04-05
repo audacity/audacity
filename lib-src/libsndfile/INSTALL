@@ -12,8 +12,8 @@ without warranty of any kind.
 Basic Installation
 ==================
 
-   Briefly, the shell commands `./configure; make; make install' should
-configure, build, and install this package.  The following
+   Briefly, the shell command `./configure && make && make install'
+should configure, build, and install this package.  The following
 more-detailed instructions are generic; see the `README' file for
 instructions specific to this package.  Some packages provide this
 `INSTALL' file but do not implement all of the features documented

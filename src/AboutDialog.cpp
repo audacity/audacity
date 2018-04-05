@@ -62,7 +62,7 @@ hold information about one contributor to Audacity.
 #endif
 
 #ifdef REV_LONG
-#define REV_IDENT wxString( "[[http://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
+#define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
 #else
 #define REV_IDENT wxT("No revision identifier was provided")
 #endif
@@ -83,7 +83,7 @@ const wxString VerCheckArgs(){
 // Url with Version check args attached.
 const wxString VerCheckUrl(){
    //The version we intend to use for live Audacity.
-#define VER_CHECK_URL "http://www.audacityteam.org/download/?"
+#define VER_CHECK_URL "https://www.audacityteam.org/download/?"
 //For testing of our scriptlet.
 //#define VER_CHECK_URL "http://www.audacityteam.org/slug/?"
 //For testing locally
@@ -104,11 +104,6 @@ const wxString VerCheckHtml(){
 
 void AboutDialog::CreateCreditsList()
 {
-#ifndef EXPERIMENTAL_DA
-   // Deceased team members
-   AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleDeceased);
-#endif
-
    // The Audacity Team: developers and support
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
@@ -118,15 +113,12 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
-   AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Bill Wharrie, ")) + _("documentation and support"), roleTeamMember);
 
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
-#ifdef EXPERIMENTAL_DA
-   AddCredit(wxString(wxT("Gale Andrews, ")) + _("quality assurance"), roleEmeritusTeam);
-#endif
+   AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Richard Ash, ")) + _("developer"), roleEmeritusTeam); 
    AddCredit(wxString(wxT("Christian Brochec, ")) + _("documentation and support, French"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Matt Brubeck, ")) + _("developer"), roleEmeritusTeam);
@@ -142,6 +134,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Shane Mueller, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Tony Oetzmann, ")) + _("documentation and support"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Alexandre Prokoudine, ")) + _("documentation and support"), roleEmeritusTeam);
+   AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleEmeritusTeam);
 
    // Contributors
    AddCredit(wxString(wxT("Lynn Allan, ")) + _("developer"), roleContributor);
@@ -177,6 +170,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Jean Claude Risset, ")) + _("composer"), roleContributor);
    AddCredit(wxString(wxT("Augustus Saunders, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Benjamin Schwartz, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Cliff Scott, ")) + _("tester"), roleContributor);
    AddCredit(wxString(wxT("David R. Sky, ")) + _("Nyquist plug-ins"), roleContributor);
    AddCredit(wxString(wxT("Rob Sykes, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Mike Underwood, ")) + _("developer"), roleContributor);
@@ -189,78 +183,25 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Mark Young, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Wing Yu, ")) + _("developer"), roleContributor);
 
-#if 1
-   // Translators
-   // This list is not current, so should it be commented out?
-   // Also translators get a translation credit in Audacity about box by a special
-   // mechanism that shows it when their translation is being used - unlike
-   // on the website credits.
-   // Translators who are currently helping have queried our showing this inaccurate list,
-   // and in all languages.
-   AddCredit(wxT("Mikhail Balabanov (bg)"), roleTranslators);
-   AddCredit(wxT("Francesc Busquets (ca)"), roleTranslators);
-   AddCredit(wxT("Pau Crespo (ca)"), roleTranslators);
-   AddCredit(wxT("Ale\u0161 To\u0161ovsk\u00FD (cs)"), roleTranslators);
-   AddCredit(wxT("Henrik Clausen (da)"), roleTranslators);
-   AddCredit(wxT("Christoph Kobe (de)"), roleTranslators);
-   AddCredit(wxT("Daniel Winzen (de)"), roleTranslators);
-   AddCredit(wxT("Karsten Zeller (de)"), roleTranslators);
-   AddCredit(wxT("Antonio Paniagua (es)"), roleTranslators);
-   AddCredit(wxT("Ezequiel Plaza (es)"), roleTranslators);
-   AddCredit(wxT("Waldo Ramirez (es)"), roleTranslators);
-   AddCredit(wxT("Xabier Aramendi (eu)"), roleTranslators);
-   AddCredit(wxT("Petri Vuorio (fi)"), roleTranslators);
-   AddCredit(wxT("Lionel Allorge (fr)"), roleTranslators);
-   AddCredit(wxT("Olivier Ballestraz (fr)"), roleTranslators);
-   AddCredit(wxT("Christian Brochec (fr)"), roleTranslators);
-   AddCredit(wxT("Fabrice Silva (fr)"), roleTranslators);
-   AddCredit(wxT("Micil Sheain Mhicil (ga)"), roleTranslators);
-   AddCredit(wxT("Xos\u00E9 Ant\u00F3n Vicente Rodr\u00EDguez (gl)"), roleTranslators);
-   AddCredit(wxT("M\u00E1rton Bal\u00E1zs (hu)"), roleTranslators);
-   AddCredit(wxT("Jozsef Herczeg (hu)"), roleTranslators);
-   AddCredit(wxT("Aldo Boccacci (it)"), roleTranslators);
-   AddCredit(wxT("Ohkubo Kohei (ja)"), roleTranslators);
-   AddCredit(wxT("\u0160ar\u016Bnas Gliebus (lt)"), roleTranslators);
-   AddCredit(wxT("Ilija Iliev (mk)"), roleTranslators);
-   AddCredit(wxT("Kevin Brubeck Unhammer (nb)"), roleTranslators);
-   AddCredit(wxT("Tino Meinen (nl)"), roleTranslators);
-   AddCredit(wxT("Tomasz Bandura (pl)"), roleTranslators);
-   AddCredit(wxT("Marek Mularczyk (pl)"), roleTranslators);
-   AddCredit(wxT("Sebastian Pacholski (pl)"), roleTranslators);
-   AddCredit(wxT("Cleber Tavano (pt_BR)"), roleTranslators);
-   AddCredit(wxT("Victor Westmann (pt_BR)"), roleTranslators);
-   AddCredit(wxT("Manuel Ciosici (ro)"), roleTranslators);
-   AddCredit(wxT("Yuri Ilyin (ru)"), roleTranslators);
-   AddCredit(wxT("Alexandre Prokoudine (ru)"), roleTranslators);
-   AddCredit(wxT("Joe Yeti (sk)"), roleTranslators);
-   AddCredit(wxT("Rok Hecl (sl)"), roleTranslators);
-   AddCredit(wxT("Martin Srebotnjak (sl)"), roleTranslators);
-   AddCredit(wxT("Lars Carlsson (sv)"), roleTranslators);
-   AddCredit(wxT("Kaya Zeren (tr)"), roleTranslators);
-   AddCredit(wxT("Maxim Dziumanenko (uk)"), roleTranslators);
-   AddCredit(wxT("XiaoXi Liu (zh_CN)"), roleTranslators);
-   AddCredit(wxT("Chido (zh_TW)"), roleTranslators);
-   AddCredit(wxT("Panming Zhong (zh_TW)"), roleTranslators);
-#endif
    // Libraries
 
-   AddCredit(wxT("[[http://libexpat.github.io/|expat]]"), roleLibrary);
-   AddCredit(wxT("[[http://xiph.org/flac/|FLAC]]"), roleLibrary);
+   AddCredit(wxT("[[https://libexpat.github.io/|expat]]"), roleLibrary);
+   AddCredit(wxT("[[https://xiph.org/flac/|FLAC]]"), roleLibrary);
    AddCredit(wxT("[[http://lame.sourceforge.net/|LAME]]"), roleLibrary);
-   AddCredit(wxT("[[http://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
+   AddCredit(wxT("[[https://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
    AddCredit(wxT("[[http://www.mega-nerd.com/libsndfile/|libsndfile]]"), roleLibrary);
-   AddCredit(wxT("[[http://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
+   AddCredit(wxT("[[https://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
    AddCredit(wxT("[[http://lv2plug.in/|lv2]] (") + _("incorporating") + wxT(" lilv, msinttypes, serd, sord and sratom)"), roleLibrary);
-   AddCredit(wxT("[[http://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
-   AddCredit(wxT("[[http://vorbis.com/|Ogg Vorbis]]"), roleLibrary);
+   AddCredit(wxT("[[https://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
+   AddCredit(wxT("[[https://xiph.org/vorbis/|Ogg Vorbis]]"), roleLibrary);
    AddCredit(wxT("[[http://www.portaudio.com/|PortAudio]]"), roleLibrary);
    AddCredit(wxT("[[http://www.portmedia.sourceforge.net/portmidi/|PortMidi]]"), roleLibrary);
-   AddCredit(wxT("[[http://sourceforge.net/p/portmedia/wiki/portsmf/|portsmf]]"), roleLibrary);
+   AddCredit(wxT("[[https://sourceforge.net/p/portmedia/wiki/portsmf/|portsmf]]"), roleLibrary);
    AddCredit(wxT("[[http://sbsms.sourceforge.net/|sbsms]]"), roleLibrary);
-   AddCredit(wxT("[[http://www.surina.net/soundtouch/|SoundTouch]]"), roleLibrary);
+   AddCredit(wxT("[[https://www.surina.net/soundtouch/|SoundTouch]]"), roleLibrary);
    AddCredit(wxT("[[http://www.twolame.org/|TwoLAME]]"), roleLibrary);
    AddCredit(wxT("[[http://www.vamp-plugins.org/|Vamp]]"), roleLibrary);
-   AddCredit(wxT("[[http://wxwidgets.org/|wxWidgets]]"), roleLibrary);
+   AddCredit(wxT("[[https://wxwidgets.org/|wxWidgets]]"), roleLibrary);
 
    // Thanks
 
@@ -342,24 +283,24 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 // DA: Says that it is a customised version.
 #ifdef EXPERIMENTAL_DA
       wxT(
-"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 #else
       _(
-"Audacity is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 #endif
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    wxString par2StrUntranslated = wxT(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
-For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
-visit our [[http://forum.audacityteam.org/|forum]].");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[https://forum.audacityteam.org/|forum]]. \
+For help, view the tips and tricks on our [[https://wiki.audacityteam.org/|wiki]] or \
+visit our [[https://forum.audacityteam.org/|forum]].");
    wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
-For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
-visit our [[http://forum.audacityteam.org/|forum]].");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[https://forum.audacityteam.org/|forum]]. \
+For help, view the tips and tricks on our [[https://wiki.audacityteam.org/|wiki]] or \
+visit our [[https://forum.audacityteam.org/|forum]].");
 
    if( par2Str == par2StrUntranslated )
       par2Str.Replace( wxT(", in English,"), wxT("") );
@@ -381,10 +322,10 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 #ifdef EXPERIMENTAL_DA
       #undef _
       #define _(s) wxGetTranslation((s))
-      wxT("<h3>Dark Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("x </center></h3>") +
-      wxT("Customised version of Audacity<sup>&reg;</sup> the free, open source, cross-platform software " ) +
+      wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
+      wxT("Customised version of the Audacity free, open source, cross-platform software " ) +
       wxT("for recording and editing sounds.") +
-      wxT("<p><br>&nbsp; &nbsp; <b>Audacity</b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>") +
       wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
 
 #else
@@ -402,13 +343,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("James Crook, art, coding &amp; design<br>") +
 #endif
 
-#ifndef EXPERIMENTAL_DA
-      /* i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages */
-      wxT("<p><b>") + wxString::Format(_("In Memoriam")) + wxT("</b><br>") +
-      GetCreditsByRole(roleDeceased) +
-#endif
-
-      wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
+      wxT("<p><b>") + _("Audacity Team Members") + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
 
       wxT("<p><b> ") + _("Emeritus:") + wxT("</b><br>") +
@@ -418,12 +353,10 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
 
-#ifndef EXPERIMENTAL_DA
-      // DarkAudacity is not officially translated.  Besides this list of translators is anything but current.
-      wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
-      translatorCredits +
-      GetCreditsByRole(roleTranslators) +
-#endif
+      (translatorCredits.empty()
+         ? wxT("")
+         : (wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
+            translatorCredits)) +
 
       wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
       _("Audacity includes code from the following projects:") + wxT("<br><br>") +
@@ -432,13 +365,16 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
-      wxT("<p><br>") + _("Audacity website: ") + wxT("[[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
+      wxT("<p><br>") + _("Audacity website: ") + wxT("[[https://www.audacityteam.org/|https://www.audacityteam.org/]]") +
 
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
-      wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
+      wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]") +
 #else
-      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>")
+
+      +
+
       _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
 #endif
 

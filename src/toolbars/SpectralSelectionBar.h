@@ -34,7 +34,7 @@ public:
    SpectralSelectionBar();
    virtual ~SpectralSelectionBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};
@@ -42,8 +42,8 @@ public:
    void UpdatePrefs() override;
 
    void SetFrequencies(double bottom, double top);
-   void SetFrequencySelectionFormatName(const wxString & formatName);
-   void SetBandwidthSelectionFormatName(const wxString & formatName);
+   void SetFrequencySelectionFormatName(const NumericFormatId & formatName);
+   void SetBandwidthSelectionFormatName(const NumericFormatId & formatName);
    void SetListener(SpectralSelectionBarListener *l);
 
    void RegenerateTooltips() override {};
