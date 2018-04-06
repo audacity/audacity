@@ -40,6 +40,15 @@ and replace the main project window with our own wxFrame.
 
 */
 
+#ifdef _MSC_VER
+   #define DLL_API _declspec(dllexport)
+   #define DLL_IMPORT _declspec(dllimport)
+#else
+   #define DLL_API __attribute__ ((visibility("default")))
+   #define DLL_IMPORT
+#endif
+
+
 // HACK!
 // This must match the enum in LoadModules.h
 // We do NOT include LoadModules.h, because we want
@@ -59,14 +68,14 @@ typedef enum
 
 
 extern void PipeServer();
-typedef SCRIPT_PIPE_DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
+typedef DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
 static tpExecScriptServerFunc pScriptServerFn=NULL;
 
 
 extern "C" {
 
 
-SCRIPT_PIPE_DLL_API wxChar * GetVersionString()
+DLL_API wxChar * GetVersionString()
 {
    // Make sure that this version of the module requires the version 
    // of Audacity it is built with. 
@@ -75,7 +84,7 @@ SCRIPT_PIPE_DLL_API wxChar * GetVersionString()
    return AUDACITY_VERSION_STRING;
 }
 
-extern int SCRIPT_PIPE_DLL_API  ModuleDispatch(ModuleDispatchTypes type);
+extern int DLL_API  ModuleDispatch(ModuleDispatchTypes type);
 // ModuleDispatch
 // is called by Audacity to initialize/terminmate the module,
 // and ask if it has anything for the menus.
@@ -100,7 +109,7 @@ int ModuleDispatch(ModuleDispatchTypes type){
 }   
 
 // And here is our special registration function.
-int SCRIPT_PIPE_DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
+int DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
 {
    if( pFn )
    {
