@@ -1,9 +1,9 @@
 #
-# mod-nyq-bench
+# mod-null
 #
 
 AC_PREREQ([2.59])
-AC_INIT([mod-nyq-bench],[1.0],[feedback@audacityteam.org],[mod-nyq-bench])
+AC_INIT([mod-null],[1.0],[feedback@audacityteam.org],[mod-null])
 AC_CONFIG_AUX_DIR([autotools])
 AC_CONFIG_MACRO_DIR([m4])
 AX_CXX_COMPILE_STDCXX(11)

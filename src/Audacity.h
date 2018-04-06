@@ -124,7 +124,11 @@ void QuitAudacity();
 #endif
 
 #ifdef __WXGTK__
-#include "configunix.h"
+#ifndef __CONFIG_UNIX_INCLUDED
+   #define __CONFIG_UNIX_INCLUDED
+   #include "configunix.h"
+#endif
+
 // Some systems do not restrict the path length and therefore PATH_MAX is undefined
 #ifdef PATH_MAX
 #undef PLATFORM_MAX_PATH
@@ -133,7 +137,10 @@ void QuitAudacity();
 #endif
 
 #ifdef __WXX11__
-#include "configunix.h"
+#ifndef __CONFIG_UNIX_INCLUDED
+   #define __CONFIG_UNIX_INCLUDED
+   #include "configunix.h"
+#endif
 // wxX11 should also get the platform-specific definition of PLATFORM_MAX_PATH, so do not declare here.
 #endif
 

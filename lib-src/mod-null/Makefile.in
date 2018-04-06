@@ -133,17 +133,16 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(pkglibdir)"
 LTLIBRARIES = $(pkglib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-mod_nyq_bench_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_mod_nyq_bench_la_OBJECTS = mod_nyq_bench_la-NyqBench.lo
-mod_nyq_bench_la_OBJECTS = $(am_mod_nyq_bench_la_OBJECTS)
+mod_null_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+am_mod_null_la_OBJECTS = mod_null_la-ModNullCallback.lo
+mod_null_la_OBJECTS = $(am_mod_null_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-mod_nyq_bench_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) $(mod_nyq_bench_la_LDFLAGS) \
-	$(LDFLAGS) -o $@
+mod_null_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(mod_null_la_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -196,8 +195,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(mod_nyq_bench_la_SOURCES)
-DIST_SOURCES = $(mod_nyq_bench_la_SOURCES)
+SOURCES = $(mod_null_la_SOURCES)
+DIST_SOURCES = $(mod_null_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -365,14 +364,14 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-pkglib_LTLIBRARIES = mod-nyq-bench.la
+pkglib_LTLIBRARIES = mod-null.la
 ACLOCAL_AMFLAGS = ${ACLOCAL_AMFLAGS} -I m4
-mod_nyq_bench_la_CPPFLAGS = $(WX_CXXFLAGS) -I$(top_srcdir)/../../include -I$(top_srcdir)/../../src -I$(top_builddir)/../../src -I$(top_srcdir)/../portaudio-v19/include -I$(top_srcdir)/../portmixer/include -I$(top_srcdir)/../libnyquist
-mod_nyq_bench_la_LIBADD = $(WX_LIBS)
-mod_nyq_bench_la_LDFLAGS = -module
-mod_nyq_bench_la_SOURCES = \
-	NyqBench.cpp \
-	NyqBench.h
+mod_null_la_CPPFLAGS = $(WX_CXXFLAGS) -I$(top_srcdir)/../../include -I$(top_srcdir)/../../src -I$(top_builddir)/../../src -I$(top_srcdir)/../portaudio-v19/include 
+mod_null_la_LIBADD = $(WX_LIBS)
+mod_null_la_LDFLAGS = -module
+mod_null_la_SOURCES = \
+	ModNullCallback.cpp \
+	ModNullCallback.h
 
 all: all-am
 
@@ -448,8 +447,8 @@ clean-pkglibLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-mod-nyq-bench.la: $(mod_nyq_bench_la_OBJECTS) $(mod_nyq_bench_la_DEPENDENCIES) $(EXTRA_mod_nyq_bench_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(mod_nyq_bench_la_LINK) -rpath $(pkglibdir) $(mod_nyq_bench_la_OBJECTS) $(mod_nyq_bench_la_LIBADD) $(LIBS)
+mod-null.la: $(mod_null_la_OBJECTS) $(mod_null_la_DEPENDENCIES) $(EXTRA_mod_null_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(mod_null_la_LINK) -rpath $(pkglibdir) $(mod_null_la_OBJECTS) $(mod_null_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -457,7 +456,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_nyq_bench_la-NyqBench.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_null_la-ModNullCallback.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -483,12 +482,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
-mod_nyq_bench_la-NyqBench.lo: NyqBench.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mod_nyq_bench_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mod_nyq_bench_la-NyqBench.lo -MD -MP -MF $(DEPDIR)/mod_nyq_bench_la-NyqBench.Tpo -c -o mod_nyq_bench_la-NyqBench.lo `test -f 'NyqBench.cpp' || echo '$(srcdir)/'`NyqBench.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mod_nyq_bench_la-NyqBench.Tpo $(DEPDIR)/mod_nyq_bench_la-NyqBench.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='NyqBench.cpp' object='mod_nyq_bench_la-NyqBench.lo' libtool=yes @AMDEPBACKSLASH@
+mod_null_la-ModNullCallback.lo: ModNullCallback.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mod_null_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mod_null_la-ModNullCallback.lo -MD -MP -MF $(DEPDIR)/mod_null_la-ModNullCallback.Tpo -c -o mod_null_la-ModNullCallback.lo `test -f 'ModNullCallback.cpp' || echo '$(srcdir)/'`ModNullCallback.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mod_null_la-ModNullCallback.Tpo $(DEPDIR)/mod_null_la-ModNullCallback.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ModNullCallback.cpp' object='mod_null_la-ModNullCallback.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mod_nyq_bench_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mod_nyq_bench_la-NyqBench.lo `test -f 'NyqBench.cpp' || echo '$(srcdir)/'`NyqBench.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mod_null_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mod_null_la-ModNullCallback.lo `test -f 'ModNullCallback.cpp' || echo '$(srcdir)/'`ModNullCallback.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

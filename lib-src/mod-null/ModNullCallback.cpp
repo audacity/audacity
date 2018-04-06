@@ -84,28 +84,43 @@ and replace the main project window with our own wxFrame.
 
 */
 
-class ModNullCallback
+#ifdef _MSC_VER
+   #define DLL_API _declspec(dllexport)
+   #define DLL_IMPORT _declspec(dllimport)
+#else
+   #define DLL_API __attribute__ ((visibility("default")))
+   #define DLL_IMPORT
+#endif
+
+// derived from wxFrame as it needs to be some kind of event handler.
+class ModNullCallback : public wxFrame
 {
 public:
 // Name these OnFuncXXX functions by whatever they will do.
-   void OnFuncFirst();
-   void OnFuncSecond();
+   void OnFuncFirst(const CommandContext &);
+   void OnFuncSecond(const CommandContext &);
 };
 
-void ModNullCallback::OnFuncFirst()
+void ModNullCallback::OnFuncFirst(const CommandContext &)
 {
    int k=32;
 }
 
-void ModNullCallback::OnFuncSecond()
+void ModNullCallback::OnFuncSecond(const CommandContext &)
 {
    int k=42;
 }
 ModNullCallback * pModNullCallback=NULL;
 
-#define ModNullFN(X) FNT(ModNullCallback, pModNullCallback, &ModNullCallback:: X)
+#define ModNullFN(X) ident, static_cast<CommandFunctorPointer>(&ModNullCallback:: X)
 
 extern "C" {
+
+static CommandHandlerObject &ident(AudacityProject&project)
+{
+// no specific command handler object ...  use the project.
+return project;
+}
 
 // GetVersionString
 // REQUIRED for the module to be accepted by Audacity.
@@ -138,15 +153,22 @@ int ModuleDispatch(ModuleDispatchTypes type)
             return 0;
 
          wxMenuBar * pBar = p->GetMenuBar();
-         wxMenu * pMenu = pBar->GetMenu( 7 );  // Menu 7 is the Analyze Menu.
+         wxMenu * pMenu = pBar->GetMenu( 8 );  // Menu 8 is the Analyze Menu.
          CommandManager * c = p->GetCommandManager();
 
          c->SetCurrentMenu( pMenu );
          c->AddSeparator();
+         c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
          // We add two new commands into the Analyze menu.
-         c->AddItem( _T("A New Command..."), _T("1st Experimental Command"),
+         c->AddItem( 
+            _T("A New Command"), // internal name
+            _T("1st Experimental Command"), //displayed name
+            true, // has dialog
             ModNullFN( OnFuncFirst ) );
-         c->AddItem( _T("Another New Command..."), _T("2nd Experimental Command"),
+         c->AddItem( 
+            _T("Another New Command"), 
+            _T("2nd Experimental Command"),
+            false, // no dialog
             ModNullFN( OnFuncSecond ) );
          c->ClearCurrentMenu();
    }
@@ -161,7 +183,7 @@ int ModuleDispatch(ModuleDispatchTypes type)
 //Example code commented out.
 #if 0
 // This is an example function to hijack the main panel
-int MOD_NULL_DLL_API MainPanelFunc(int ix)
+int DLL_API MainPanelFunc(int ix)
 {
    ix=ix;//compiler food
    // If we wanted to hide Audacity's Project, 
