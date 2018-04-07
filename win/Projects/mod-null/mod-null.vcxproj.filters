@@ -7,12 +7,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ModNullCallback.cpp">
+    <ClCompile Include="..\..\..\lib-src\mod-null\ModNullCallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ModNullCallback.h">
+    <ClInclude Include="..\..\..\lib-src\mod-null\ModNullCallback.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
