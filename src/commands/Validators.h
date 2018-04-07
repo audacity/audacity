@@ -153,7 +153,7 @@ public:
 class BoolArrayValidator final : public Validator
 {
 public:
-   virtual bool Validate(const wxVariant &v)
+   virtual bool Validate(const wxVariant &v) override
    {
       wxString val;         // Validate a string of chars containing only 0, 1 and x.
       if (!v.Convert(&val))

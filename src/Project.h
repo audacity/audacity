@@ -226,7 +226,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
-   bool IsActive();
+   bool IsActive() override;
 
    // File I/O
 

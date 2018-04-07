@@ -80,7 +80,7 @@ public:
 
    // Effect implementation
 
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

@@ -83,7 +83,7 @@ void ODFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
 
       // FIXME: not declared when compiling on Ubuntu.
       //case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
-
+      default:
       break;
    }
 }

@@ -105,14 +105,14 @@ private:
     *
     * @return time in seconds, or zero if there are no clips in the track
     */
-   double GetStartTime() const;
+   double GetStartTime() const override;
 
    /** @brief Get the time at which the last clip in the track ends, plus
     * recorded stuff
     *
     * @return time in seconds, or zero if there are no clips in the track.
     */
-   double GetEndTime() const;
+   double GetEndTime() const override;
 
    //
    // Identifying the type of track

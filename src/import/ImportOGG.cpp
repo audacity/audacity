@@ -92,8 +92,8 @@ public:
 
    ~OggImportPlugin() { }
 
-   wxString GetPluginStringID() { return wxT("liboggvorbis"); }
-   wxString GetPluginFormatDescription();
+   wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
+   wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 

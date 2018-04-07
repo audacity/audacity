@@ -80,8 +80,8 @@ public:
 
    ~PCMImportPlugin() { }
 
-   wxString GetPluginStringID() { return wxT("libsndfile"); }
-   wxString GetPluginFormatDescription();
+   wxString GetPluginStringID() override { return wxT("libsndfile"); }
+   wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 

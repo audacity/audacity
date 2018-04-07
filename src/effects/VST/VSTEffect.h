@@ -247,7 +247,8 @@ private:
 
    // VST methods
 
-   intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt);
+   intptr_t callDispatcher(int opcode, int index,
+                           intptr_t value, void *ptr, float opt) override;
    void callProcessReplacing(float **inputs, float **outputs, int sampleframes);
    void callSetParameter(int index, float value);
    float callGetParameter(int index);

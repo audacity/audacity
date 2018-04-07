@@ -6820,7 +6820,7 @@ void AudacityProject::OnZoomToggle(const CommandContext &WXUNUSED(context) )
    double Zoom1 = GetZoomOfPreset( TracksPrefs::Zoom1Choice() );
    double Zoom2 = GetZoomOfPreset( TracksPrefs::Zoom2Choice() );
    double Z = mViewInfo.GetZoom();// Current Zoom.
-   double ChosenZoom = abs(log(Zoom1 / Z)) > abs(log( Z / Zoom2)) ? Zoom1:Zoom2;
+   double ChosenZoom = fabs(log(Zoom1 / Z)) > fabs(log( Z / Zoom2)) ? Zoom1:Zoom2;
 
    Zoom(ChosenZoom);
    mTrackPanel->Refresh(false);

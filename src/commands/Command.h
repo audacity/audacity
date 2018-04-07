@@ -105,7 +105,7 @@ public:
    virtual ~CommandImplementation();
 
    /// An instance method for getting the command name (for consistency)
-   wxString GetName();
+   wxString GetName() override;
 
    /// Get the signature of the command
    CommandSignature &GetSignature() override;

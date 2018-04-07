@@ -96,10 +96,10 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    sampleCount GetStart() const {return mStart;}
 
    /// Locks the blockfile only if it has a file that exists.
-   void Lock();
+   void Lock() override;
 
    /// Unlocks the blockfile only if it has a file that exists.
-   void Unlock();
+   void Unlock() override;
 
    ///sets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting)
    void SetClipOffset(sampleCount numSamples){mClipOffset= numSamples;}

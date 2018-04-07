@@ -116,8 +116,8 @@ public:
 
    ~MP3ImportPlugin() { }
 
-   wxString GetPluginStringID() { return wxT("libmad"); }
-   wxString GetPluginFormatDescription();
+   wxString GetPluginStringID() override { return wxT("libmad"); }
+   wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 

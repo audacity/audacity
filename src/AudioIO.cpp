@@ -992,7 +992,7 @@ static double SystemTime(bool usingAlsa)
       return (now.tv_sec + now.tv_nsec * 0.000000001) - streamStartTime;
    }
 #else
-   usingAlsa;//compiler food.
+   static_cast<void>(usingAlsa);//compiler food.
 #endif
 
    return PaUtil_GetTime() - streamStartTime;
@@ -4421,7 +4421,7 @@ void AudioIO::AllNotesOff(bool looping)
    bool doDelay = !looping;
 #else
    bool doDelay = false;
-   looping;// compiler food.
+   static_cast<void>(looping);// compiler food.
 #endif
 
    // to keep track of when MIDI should all be delivered,

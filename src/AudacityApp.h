@@ -65,7 +65,7 @@ class AudacityApp final : public wxApp {
    void OnFatalException() override;
    bool OnExceptionInMainLoop() override;
 
-   int FilterEvent(wxEvent & event);
+   int FilterEvent(wxEvent & event) override;
 
    // Returns the language actually used which is not lang if lang cannot be found.
    wxString InitLang( const wxString & lang );

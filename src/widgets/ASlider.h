@@ -307,7 +307,7 @@ class ASlider /* not final */ : public wxPanel
    void OnTimer(wxTimerEvent & event);
 
    // Overrides of the wxWindow functions with the same semantics
-   bool Enable(bool enable = true);
+   bool Enable(bool enable = true) override;
    bool IsEnabled() const;
 
 private:

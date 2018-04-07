@@ -329,7 +329,7 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
    // optional
-   wxString GetExtension(int index);
+   wxString GetExtension(int index) override;
    bool CheckFileName(wxFileName &filename, int format) override;
 
 private:

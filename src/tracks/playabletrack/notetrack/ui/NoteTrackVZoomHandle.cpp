@@ -194,7 +194,7 @@ private:
       mpData = nullptr;
    }
 
-   virtual void InitMenu(Menu *pMenu, void *pUserData);
+   virtual void InitMenu(Menu *pMenu, void *pUserData) override;
 
    void OnWaveformScaleType(wxCommandEvent &evt);
 };

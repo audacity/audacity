@@ -366,7 +366,7 @@ public:
        wxWindow *parent, bool bHasProfile,
        bool bAllowTwiddleSettings);
 
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -386,7 +386,7 @@ private:
 #ifdef ADVANCED_SETTINGS
    void OnMethodChoice(wxCommandEvent &);
 #endif
-   void OnPreview(wxCommandEvent &event);
+   void OnPreview(wxCommandEvent &event) override;
    void OnReduceNoise( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
    void OnHelp( wxCommandEvent &event );

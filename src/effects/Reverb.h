@@ -71,8 +71,8 @@ public:
 
    // Effect implementation
 
-   bool Startup();
-   void PopulateOrExchange(ShuttleGui & S);
+   bool Startup() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

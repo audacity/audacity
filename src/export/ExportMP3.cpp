@@ -1599,7 +1599,7 @@ class ExportMP3 final : public ExportPlugin
 public:
 
    ExportMP3();
-   bool CheckFileName(wxFileName & filename, int format);
+   bool CheckFileName(wxFileName & filename, int format) override;
 
    // Required
 
