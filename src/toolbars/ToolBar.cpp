@@ -88,7 +88,7 @@ private:
 
 private:
    ToolBar *mBar;
-   wxPoint mResizeStart;
+   wxPoint mResizeOffset;
    wxSize mOrigSize;
    wxWindow *mOrigFocus{};
 
@@ -164,7 +164,7 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
    event.Skip();
 
    // Retrieve the mouse position
-   mResizeStart = ClientToScreen( event.GetPosition() );
+   mResizeOffset = ClientToScreen( event.GetPosition() )-mBar->GetRect().GetBottomRight();
 
    mOrigSize = mBar->GetSize();
 
@@ -221,7 +221,7 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
 
       // Adjust the size by the difference between the
       // last mouse and current mouse positions.
-      r.width += ( pos.x - mResizeStart.x );
+      r.width = ( pos.x - mResizeOffset.x ) - r.x;
 
       // Constrain
       if( r.width < msz.x )
@@ -237,11 +237,6 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
          // calculations in ToolDock::LayoutToolBars() even though I'm
          // the one that set them up.  :-)
          r.SetRight( psz.x - 3 );
-      }
-      else
-      {
-         // Remember for next go round
-         mResizeStart = pos;
       }
 
       ResizeBar( r.GetSize() );
