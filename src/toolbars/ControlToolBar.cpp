@@ -1022,7 +1022,40 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       int recordingChannels = 0;
       double allt0 = t0;
 
-      WaveTrack *candidate{}, *selectedCandidate{};
+      using Candidates = std::vector<WaveTrack*>;
+      Candidates candidates, selectedCandidates;
+      auto addCandidates = [&](Candidates &candidates, WaveTrack *candidate){
+         if (candidates.size() == recordingChannels)
+            // nothing left to do
+            return;
+
+         if (candidate->GetLink() && !candidate->GetLinked())
+            return;
+
+         // This is written with odd seeming generality, looking forward to
+         // the rewrite that removes assumption of at-most-stereo
+
+         // count channels
+         unsigned nChannels = 0;
+         for (auto channel = candidate; channel;
+              channel = channel->GetLinked()
+                 ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
+            ++nChannels;
+
+         // Accumulate consecutive single channel tracks, or else one track of
+         // the exact number of channels
+         if (nChannels > 1)
+            candidates.clear();
+
+         if (nChannels == 1 || // <- comment this out to disallow recording
+                               // stereo into two adjacent mono tracks
+             nChannels == recordingChannels) {
+            for (auto channel = candidate; channel;
+                 channel = channel->GetLinked()
+                    ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
+               candidates.push_back(channel);
+         }
+      };
       if (appendRecord) {
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
 
@@ -1035,22 +1068,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                if (wt->GetEndTime() > allt0) {
                   allt0 = wt->GetEndTime();
                }
-               int nChannelsThisTrack = 1;
-               if (wt->GetLink()) {
-                  if (wt->GetLinked())
-                     nChannelsThisTrack = 2;
-                  else
-                     continue;
-               }
-               if( recordingChannels == nChannelsThisTrack) {
-                  if (!candidate)
-                     candidate = wt;
-                  if (wt->GetSelected())
-                     if (!selectedCandidate) {
-                        selectedCandidate = wt;
-                        break;
-                     }
-               }
+               addCandidates( candidates, wt );
+               if (wt->GetSelected())
+                  addCandidates( selectedCandidates, wt );
                if (wt->GetSelected()) {
                   if (wt->GetEndTime() > t0) {
                      t0 = wt->GetEndTime();
@@ -1060,7 +1080,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
 
          // candidate null implies selectedCandidate also null
-         if( !candidate )
+         if( candidates.empty() )
             appendRecord = false;
       }
 
@@ -1069,7 +1089,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // t0 is now: max(selection-start, end-of-selected-wavetracks)
          // allt0 is:  max(selection-start, end-of-all-tracks)
          // Use end time of all wave tracks if none selected
-         if (!selectedCandidate) {
+         if (selectedCandidates.empty()) {
             t0 = allt0;
          }
 
@@ -1077,10 +1097,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // Pad selected/all wave tracks to make them all the same length
          // Remove recording tracks from the list of tracks for duplex ("overdub")
          // playback.
-         auto tt = selectedCandidate ? selectedCandidate : candidate;
-         for (auto channel = tt; channel;
-              channel = static_cast<WaveTrack*>(
-                  (channel->GetLinked()) ? channel->GetLink() : nullptr))
+         for (auto channel :
+              selectedCandidates.empty() ? candidates : selectedCandidates)
          {
             auto wt = Track::Pointer<WaveTrack>(channel);
 
