@@ -5412,13 +5412,10 @@ void AudacityProject::OnPaste(const CommandContext &WXUNUSED(context) )
          else if (c->GetKind() == Track::Label &&
                   n->GetKind() == Track::Label)
          {
+            // Per Bug 293, users expect labels to move on a paste into 
+            // a label track.
             ((LabelTrack *)n)->Clear(t0, t1);
-
-            // To be (sort of) consistent with Clear behavior, we'll only shift
-            // them if sync-lock is on.
-            if (IsSyncLocked())
-               ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipT1 - msClipT0, t0);
-
+            ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipT1 - msClipT0, t0);
             bPastedSomething |= ((LabelTrack *)n)->PasteOver(t0, c);
          }
          else
