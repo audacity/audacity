@@ -131,7 +131,7 @@ void MacroCommands::RestoreMacro(const wxString & name)
    } else if (name == GetCustomTranslation( FadeEnds ) ){
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\"") );
         AddToMacro( wxT("FadeIn") );
-        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" RelativeTo=\"Project End\"") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" RelativeTo=\"ProjectEnd\"") );
         AddToMacro( wxT("FadeOut") );
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"0\"") );
    } else if (name == GetCustomTranslation( SelectToEnds ) ){
