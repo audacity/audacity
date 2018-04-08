@@ -437,11 +437,25 @@ void DeviceToolBar::RepositionCombos()
       // and if smaller then we don't use the dock size (because we take the min).
       window = GetDock();
       window->GetClientSize(&dockw, &dockh);
+      // The fudge factor here is because the docked toolbar is 2 pixels smaller.
+      int kFudge1 = -2;
+      // Grabber is Included, but not resizer if docked.
+      w-= grabberWidth + kFudge1; 
       if (dockw < w)
          w = dockw;
+   } else {
+      // If not docked, we have a holding window.
+      wxWindow *pParent = GetParent();
+      if( pParent ){
+         int w1, h1;
+         pParent->GetSize( &w1, &h1 );
+         // This Resizer is considerably bigger than the 4px docked version.
+         // It's the diagonal striped resizer, not the veertical bars.
+         int kStripyResizerSize = 15;
+         // Grabber AND resizer included.
+         w = w1- (kStripyResizerSize + grabberWidth );
+      }
    }
-   // subtract the main grabber on the left and the resizer as well
-   w -= grabberWidth + GetResizeGrabberWidth();
    if (w <= 0)
       return;
 
@@ -453,13 +467,13 @@ void DeviceToolBar::RepositionCombos()
    outputRatio   = kOutputWidthRatio;
    channelsRatio = kChannelsWidthRatio;
 
-   desiredHost.x     = mHost->GetBestSize().x;
+   desiredHost.x     = mHost->GetBestSize().x *4;
    desiredHost.y     = mHost->GetSize().y;
-   desiredInput.x    = mInput->GetBestSize().x;
+   desiredInput.x    = mInput->GetBestSize().x *4;
    desiredInput.y    = mInput->GetSize().y;
-   desiredOutput.x   = mOutput->GetBestSize().x;
+   desiredOutput.x   = mOutput->GetBestSize().x *4;
    desiredOutput.y   = mOutput->GetSize().y;
-   desiredChannels.x = mInputChannels->GetBestSize().x;
+   desiredChannels.x = mInputChannels->GetBestSize().x *4;
    desiredChannels.y = mInputChannels->GetSize().y;
 
    // wxGtk (Gnome) has larger comboboxes than the other platforms.  For DeviceToolBar this prevents
@@ -474,6 +488,7 @@ void DeviceToolBar::RepositionCombos()
    ratioUnused = 0.995f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
    int i = 0;
    // limit the amount of times we solve contraints to 5
+   // As we now ask for more than is available, we only do this iteration once.
    while (constrained && ratioUnused > 0.01f && i < 5) {
       i++;
       constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused, 0, true);
@@ -507,7 +522,7 @@ void DeviceToolBar::FillHosts()
       mHost->Enable(false);
 
    mHost->InvalidateBestSize();
-   mHost->SetMaxSize(mHost->GetBestSize());
+   mHost->SetMaxSize(mHost->GetBestSize()*4);
 }
 
 void DeviceToolBar::FillHostDevices()
@@ -571,7 +586,7 @@ void DeviceToolBar::FillHostDevices()
    mInput->Enable(mInput->GetCount() ? true : false);
 
    mInput->InvalidateBestSize();
-   mInput->SetMaxSize(mInput->GetBestSize());
+   mInput->SetMaxSize(mInput->GetBestSize()*4);
 
    for (i = 0; i < outMaps.size(); i++) {
       if (foundHostIndex == outMaps[i].hostIndex) {
@@ -587,7 +602,7 @@ void DeviceToolBar::FillHostDevices()
    mOutput->Enable(mOutput->GetCount() ? true : false);
 
    mOutput->InvalidateBestSize();
-   mOutput->SetMaxSize(mOutput->GetBestSize());
+   mOutput->SetMaxSize(mOutput->GetBestSize()*4);
 
    // The setting of the Device is left up to OnChoice
 }
@@ -662,7 +677,7 @@ void DeviceToolBar::FillInputChannels()
       mInputChannels->Enable(false);
 
    mInputChannels->InvalidateBestSize();
-   mInputChannels->SetMaxSize(mInputChannels->GetBestSize());
+   mInputChannels->SetMaxSize(mInputChannels->GetBestSize()*4);
 }
 
 void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out)

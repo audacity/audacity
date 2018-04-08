@@ -110,8 +110,6 @@ class ToolBar /* not final */ : public wxPanelWrapper
    ToolDock *GetDock();
 
    void SetLabel(const wxString & label) override;
-   void SetDock( ToolDock *dock);
-
    void SetDocked(ToolDock *dock, bool pushed);
 
    // NEW virtual:
