@@ -1020,13 +1020,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       }
 
       int recordingChannels = 0;
-      // These count channels sellected/existing skipping tracks that 
-      // are too big for the number of channels left.  e.g don't count a stereo 
-      // track when only one channel left to record.
-      int selectedChannels = 0;
-      int existingChannels = 0;
       double allt0 = t0;
 
+      WaveTrack *candidate{}, *selectedCandidate{};
       if (appendRecord) {
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
 
@@ -1039,12 +1035,19 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                if (wt->GetEndTime() > allt0) {
                   allt0 = wt->GetEndTime();
                }
-               int nChannelsThisTrack = wt->GetLinked() ? 2:1;
-               if( recordingChannels >= existingChannels + nChannelsThisTrack)
-                  existingChannels += nChannelsThisTrack;
-               if (tt->GetSelected()) {
-                  if( recordingChannels >= selectedChannels + nChannelsThisTrack)
-                     selectedChannels += nChannelsThisTrack;
+               int nChannelsThisTrack = 1;
+               if (wt->GetLink()) {
+                  if (wt->GetLinked())
+                     nChannelsThisTrack = 2;
+                  else
+                     continue;
+               }
+               if( recordingChannels == nChannelsThisTrack) {
+                  candidate = wt;
+                  if (wt->GetSelected())
+                     selectedCandidate = wt;
+               }
+               if (wt->GetSelected()) {
                   if (wt->GetEndTime() > t0) {
                      t0 = wt->GetEndTime();
                   }
@@ -1052,11 +1055,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
-         // Number of channels to record into is number selected, or all.
-         int nChannelsAvailable = ( selectedChannels > 0 ) ? selectedChannels : existingChannels;
-         // If that is not enough to record without losing a channel, flip over to
-         // recording to new tracks.
-         if( nChannelsAvailable < recordingChannels )
+         // candidate null implies selectedCandidate also null
+         if( !candidate )
             appendRecord = false;
       }
 
@@ -1065,7 +1065,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // t0 is now: max(selection-start, end-of-selected-wavetracks)
          // allt0 is:  max(selection-start, end-of-all-tracks)
          // Use end time of all wave tracks if none selected
-         if (selectedChannels == 0) {
+         if (!selectedCandidate) {
             t0 = allt0;
          }
 
@@ -1073,65 +1073,51 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // Pad selected/all wave tracks to make them all the same length
          // Remove recording tracks from the list of tracks for duplex ("overdub")
          // playback.
-         for (Track *tt = it.First(); tt; tt = it.Next()) {
-            if (tt->GetKind() == Track::Wave && 
-                  (tt->GetSelected() || 
-                   (selectedChannels == 0)
-                  )) {
-               auto wt = Track::Pointer<WaveTrack>(tt);
-               // Don't record into one track of a stereo track...
-               // We're in fact here refusing to record the last channel, 
-               // if there are no more channels after it,  into a stereo 
-               // track - which comes to the same thing.
-               if( ((int)recordingTracks.size() >= recordingChannels -1) && 
-                   wt->GetLinked() )
-               {   tt = it.Next();
-                   continue;
-               }
+         auto tt = selectedCandidate ? selectedCandidate : candidate;
+         for (auto channel = tt; channel;
+              channel = static_cast<WaveTrack*>(
+                  (channel->GetLinked()) ? channel->GetLink() : nullptr))
+         {
+            auto wt = Track::Pointer<WaveTrack>(channel);
 
-               if (duplex) {
-                  auto end = playbackTracks.end();
-                  auto it = std::find(playbackTracks.begin(), end, wt);
-                  if (it != end)
-                     playbackTracks.erase(it);
-               }
-               t1 = wt->GetEndTime();
-
-               // A function that copies all the non-sample data between
-               // wave tracks; in case the track recorded to changes scale
-               // type (for instance), during the recording.
-               auto updater = [](Track &d, const Track &s){
-                  auto &dst = static_cast<WaveTrack&>(d);
-                  auto &src = static_cast<const WaveTrack&>(s);
-                  dst.Reinit(src);
-               };
-
-               // Get a copy of the track to be appended, to be pushed into
-               // undo history only later.
-               auto pending = std::static_pointer_cast<WaveTrack>(
-                  p->GetTracks()->RegisterPendingChangedTrack(
-                     updater, wt.get() ) );
-
-               // End of current track is before or at recording start time.
-               // Less than or equal, not just less than, to ensure a clip boundary.
-               // when append recording.
-               if (t1 <= t0) {
-
-                  // Pad the recording track with silence, up to the
-                  // maximum time.
-                  auto newTrack = p->GetTrackFactory()->NewWaveTrack();
-                  newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
-                  newTrack->InsertSilence(0.0, t0 - t1);
-                  newTrack->Flush();
-                  pending->Clear(t1, t0);
-                  pending->Paste(t1, newTrack.get());
-               }
-               recordingTracks.push_back(pending);
-               // Don't record more channels than configured recording pref.
-               if( (int)recordingTracks.size() >= recordingChannels ){
-                  break;
-               }
+            if (duplex) {
+               auto end = playbackTracks.end();
+               auto it = std::find(playbackTracks.begin(), end, wt);
+               if (it != end)
+                  playbackTracks.erase(it);
             }
+            t1 = wt->GetEndTime();
+
+            // A function that copies all the non-sample data between
+            // wave tracks; in case the track recorded to changes scale
+            // type (for instance), during the recording.
+            auto updater = [](Track &d, const Track &s){
+               auto &dst = static_cast<WaveTrack&>(d);
+               auto &src = static_cast<const WaveTrack&>(s);
+               dst.Reinit(src);
+            };
+
+            // Get a copy of the track to be appended, to be pushed into
+            // undo history only later.
+            auto pending = std::static_pointer_cast<WaveTrack>(
+               p->GetTracks()->RegisterPendingChangedTrack(
+                  updater, wt.get() ) );
+
+            // End of current track is before or at recording start time.
+            // Less than or equal, not just less than, to ensure a clip boundary.
+            // when append recording.
+            if (t1 <= t0) {
+
+               // Pad the recording track with silence, up to the
+               // maximum time.
+               auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+               newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
+               newTrack->InsertSilence(0.0, t0 - t1);
+               newTrack->Flush();
+               pending->Clear(t1, t0);
+               pending->Paste(t1, newTrack.get());
+            }
+            recordingTracks.push_back(pending);
          }
 
          if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
