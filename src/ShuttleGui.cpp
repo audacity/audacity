@@ -814,11 +814,7 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
    }
    else
    {
-      mpWind->SetBackgroundColour(
-         iStyle==0
-         ? wxColour( 245,244,240) :
-         wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)
-         );
+     // mpWind->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
       UpdateSizers();  // adds window in to current sizer.
    }
 
