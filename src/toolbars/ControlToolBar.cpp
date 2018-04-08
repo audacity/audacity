@@ -1043,9 +1043,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                      continue;
                }
                if( recordingChannels == nChannelsThisTrack) {
-                  candidate = wt;
+                  if (!candidate)
+                     candidate = wt;
                   if (wt->GetSelected())
-                     selectedCandidate = wt;
+                     if (!selectedCandidate) {
+                        selectedCandidate = wt;
+                        break;
+                     }
                }
                if (wt->GetSelected()) {
                   if (wt->GetEndTime() > t0) {
