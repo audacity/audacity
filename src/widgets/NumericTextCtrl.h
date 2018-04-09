@@ -157,7 +157,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    DECLARE_DYNAMIC_CLASS(NumericTextCtrl)
 
    struct Options {
-      bool autoPos { false };
+      bool autoPos { true };
       bool readOnly { false };
       bool menuEnabled { true };
       bool hasInvalidValue { false };
