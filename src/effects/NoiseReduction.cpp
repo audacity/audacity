@@ -47,6 +47,7 @@
 
 #include "../WaveTrack.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/valnum.h"
 
 #include <algorithm>
 #include <vector>
@@ -1423,12 +1424,16 @@ struct ControlInfo {
          return wxString::Format(format, value);
    }
 
-   void CreateControls(int id, wxTextValidator &vld, ShuttleGui &S) const
+   void CreateControls(int id, ShuttleGui &S) const
    {
+      FloatingPointValidator<double> vld2(2);// precision.
+      if (formatAsInt)
+         vld2.SetPrecision( 0 );
+      vld2.SetRange( valueMin, valueMax );
       wxTextCtrl *const text =
          S.Id(id + 1).AddTextBox(textBoxCaption(), wxT(""), 0);
       S.SetStyle(wxSL_HORIZONTAL);
-      text->SetValidator(vld);
+      text->SetValidator(vld2);
 
       wxSlider *const slider =
          S.Id(id).AddSlider( {}, 0, sliderMax);
@@ -1705,10 +1710,9 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-         wxTextValidator vld(wxFILTER_NUMERIC);
          for (int id = FIRST_SLIDER; id < END_OF_BASIC_SLIDERS; id += 2) {
             const ControlInfo &info = controlInfo()[(id - FIRST_SLIDER) / 2];
-            info.CreateControls(id, vld, S);
+            info.CreateControls(id, S);
          }
       }
       S.EndMultiColumn();
@@ -1806,10 +1810,9 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-         wxTextValidator vld(wxFILTER_NUMERIC);
          for (int id = END_OF_BASIC_SLIDERS; id < END_OF_ADVANCED_SLIDERS; id += 2) {
             const ControlInfo &info = controlInfo[(id - FIRST_SLIDER) / 2];
-            info.CreateControls(id, vld, S);
+            info.CreateControls(id, S);
          }
       }
       S.EndMultiColumn();
@@ -1854,6 +1857,8 @@ bool EffectNoiseReduction::Dialog::TransferDataToWindow()
 
 bool EffectNoiseReduction::Dialog::TransferDataFromWindow()
 {
+   if( !wxWindow::Validate() )
+      return false;
    // Do the choice controls:
    if (!EffectDialog::TransferDataFromWindow())
       return false;
