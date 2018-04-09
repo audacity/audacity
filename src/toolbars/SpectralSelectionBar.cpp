@@ -311,11 +311,20 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
          top = std::min(nyq, top);
       else
          top = SelectedRegion::UndefinedFrequency;
+      // These have to be in the right order.
+      if( bottom > top ){
+         // Oops.  We must fix the order.
+         if( mLowCtrl->HasFocus() )
+            top = bottom;
+         else
+            bottom = top;
+      }
    }
+
 
    mLow = bottom;
    mHigh = top;
-   SetBounds();
+   //SetBounds();
 
    // Notify project and track panel, which may change
    // the values again, and call back to us in SetFrequencies()
