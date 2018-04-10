@@ -1023,11 +1023,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       double allt0 = t0;
 
       using Candidates = std::vector<WaveTrack*>;
-      Candidates *candidates{};
-      Candidates greedy, best;
-      Candidates selectedGreedy, selectedBest;
-      auto addCandidates = [&](Candidates &greedy, Candidates &best,
-                               WaveTrack *candidate){
+      Candidates candidates, selectedCandidates;
+      auto addCandidates = [&](Candidates &candidates, WaveTrack *candidate){
+         if (candidates.size() == recordingChannels)
+            // nothing left to do
+            return;
+
          if (candidate->GetLink() && !candidate->GetLinked())
             return;
 
@@ -1041,25 +1042,18 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                  ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
             ++nChannels;
 
-         // Greedy looks either for a single best-fit or for enough mono
-         // channels, even if we choose more
-         // than one and they are not successive, but this partially accumulated
-         // result might not become complete
-         if (greedy.size() + nChannels <= recordingChannels &&
-             ( nChannels == 1 || nChannels == recordingChannels )) {
-            for (auto channel = candidate; channel;
-                 channel = channel->GetLinked()
-                    ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
-               greedy.push_back(channel);
-         }
+         // Accumulate consecutive single channel tracks, or else one track of
+         // the exact number of channels
+         if (nChannels > 1)
+            candidates.clear();
 
-         // Best-fit looks for the exact number of channels in one place
-         if (best.empty() &&
+         if (nChannels == 1 || // <- comment this out to disallow recording
+                               // stereo into two adjacent mono tracks
              nChannels == recordingChannels) {
             for (auto channel = candidate; channel;
                  channel = channel->GetLinked()
                     ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
-               best.push_back(channel);
+               candidates.push_back(channel);
          }
       };
       if (appendRecord) {
@@ -1074,9 +1068,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                if (wt->GetEndTime() > allt0) {
                   allt0 = wt->GetEndTime();
                }
-               addCandidates( greedy, best, wt );
+               addCandidates( candidates, wt );
                if (wt->GetSelected())
-                  addCandidates( selectedGreedy, selectedBest, wt );
+                  addCandidates( selectedCandidates, wt );
                if (wt->GetSelected()) {
                   if (wt->GetEndTime() > t0) {
                      t0 = wt->GetEndTime();
@@ -1085,40 +1079,26 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
-         // Which tracks will be appended?
-         // First, prefer selected to non-selected if we can.  Then,
-         // if enough were found the "greedy" way, and they may begin earlier
-         // in the track list than the "best," prefer them
-
-         if (selectedGreedy.size() == recordingChannels)
-            candidates = &selectedGreedy;
-         else if (!selectedBest.empty())
-            candidates = &selectedBest;
-
-         if (!candidates) {
-//          if (greedy.size() == recordingChannels)
-//             candidates = &greedy;
-//          else
-            if (!best.empty())
-               candidates = &best;
-            if (candidates) {
-               // t0 is now: max(selection-start, end-of-selected-wavetracks)
-               // allt0 is:  max(selection-start, end-of-all-tracks)
-               // Use end time of all wave tracks if none selected
-               t0 = allt0;
-            }
-         }
-
-         if( !candidates )
+         // candidate null implies selectedCandidate also null
+         if( candidates.empty() )
             appendRecord = false;
       }
 
       if (appendRecord) {
+
+         // t0 is now: max(selection-start, end-of-selected-wavetracks)
+         // allt0 is:  max(selection-start, end-of-all-tracks)
+         // Use end time of all wave tracks if none selected
+         if (selectedCandidates.empty()) {
+            t0 = allt0;
+         }
+
          // Append recording:
          // Pad selected/all wave tracks to make them all the same length
          // Remove recording tracks from the list of tracks for duplex ("overdub")
          // playback.
-         for (auto channel : *candidates)
+         for (auto channel :
+              selectedCandidates.empty() ? candidates : selectedCandidates)
          {
             auto wt = Track::Pointer<WaveTrack>(channel);
 
