@@ -85,6 +85,10 @@ and in the spectrogram spectral selection.
 #include "./widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
 enum {
@@ -309,6 +313,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          {
             mPanScroller = safenew wxScrollBar(this, FreqPanScrollerID,
                wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL);
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mPanScroller->SetAccessible(safenew WindowAccessible(mPanScroller));
+#endif
             mPanScroller->SetName(_("Scroll"));
             S.Prop(1);
             S.AddWindow(mPanScroller, wxALIGN_LEFT | wxTOP);
@@ -326,6 +334,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL);
             S.Prop(1);
             S.AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mZoomSlider->SetAccessible(safenew WindowAccessible(mZoomSlider));
+#endif
             mZoomSlider->SetName(_("Zoom"));
 
             S.AddSpace(5);

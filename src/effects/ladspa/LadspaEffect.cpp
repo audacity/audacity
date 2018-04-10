@@ -54,6 +54,10 @@ effects from this one class.
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../../widgets/WindowAccessible.h"
+#endif
+
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
 // ============================================================================
@@ -1328,6 +1332,10 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                0, 0, 1000,
                wxDefaultPosition,
                wxSize(200, -1));
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mSliders[p]->SetAccessible(safenew WindowAccessible(mSliders[p]));
+#endif
             mSliders[p]->SetName(labelText);
             gridSizer->Add(mSliders[p], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
 
@@ -1450,7 +1458,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
 
             mMeters[p] = safenew LadspaEffectMeter(w, mOutputControls[p], lower, upper);
-            mMeters[p]->SetName(labelText);
+            mMeters[p]->SetLabel(labelText);    // for screen readers
             gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          }
 

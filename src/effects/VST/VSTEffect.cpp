@@ -94,6 +94,10 @@
 #include "../../xml/XMLFileReader.h"
 #include "../../xml/XMLWriter.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../../widgets/WindowAccessible.h"
+#endif
+
 #include "audacity/ConfigInterface.h"
 
 #include "VSTEffect.h"
@@ -2932,6 +2936,10 @@ void VSTEffect::BuildPlain()
                wxDefaultPosition,
                wxSize(200, -1));
             gridSizer->Add(mSliders[i], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mSliders[i]->SetAccessible(safenew WindowAccessible(mSliders[i]));
+#endif
 
             mDisplays[i] = safenew wxStaticText(scroller,
                wxID_ANY,

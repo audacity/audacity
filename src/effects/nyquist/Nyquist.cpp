@@ -2443,7 +2443,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
          {
             NyqControl & ctrl = mControls[i];
 
-            S.AddPrompt(ctrl.name + wxT(":"));
+            wxString prompt = ctrl.name + wxT(" ");
+            S.AddPrompt(prompt);
 
             if (ctrl.type == NYQ_CTRL_STRING)
             {
@@ -2451,6 +2452,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             
                wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox( {}, wxT(""), 12);
                item->SetValidator(wxGenericValidator(&ctrl.valStr));
+               item->SetName(prompt);
             }
             else if (ctrl.type == NYQ_CTRL_CHOICE)
             {
@@ -2471,6 +2473,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox( {}, wxT(""),
                                                              (ctrl.type == NYQ_CTRL_INT_TEXT ||
                                                               ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
+               item->SetName(prompt);
 
                double range = ctrl.high - ctrl.low;
 

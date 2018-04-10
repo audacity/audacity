@@ -48,6 +48,10 @@ for shared and private configs - which need to move out.
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 #include "PluginManager.h"
 
 #include "Experimental.h"
@@ -540,15 +544,31 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                S.AddPrompt(_("Show:"));
                /* i18n-hint: Radio button to show all effects */
                rb = S.Id(ID_ShowAll).AddRadioButton(_("&All"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show all"));
                /* i18n-hint: Radio button to show just the currently disabled effects */
                rb = S.Id(ID_ShowDisabled).AddRadioButtonToGroup(_("D&isabled"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show disabled"));
                /* i18n-hint: Radio button to show just the currently enabled effects */
                rb = S.Id(ID_ShowEnabled).AddRadioButtonToGroup(_("E&nabled"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show enabled"));
                /* i18n-hint: Radio button to show just the newly discovered effects */
                rb = S.Id(ID_ShowNew).AddRadioButtonToGroup(_("Ne&w"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show new"));
             }
             S.EndHorizontalLay();
