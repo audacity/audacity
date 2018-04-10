@@ -352,13 +352,15 @@ PrefsDialog::PrefsDialog
 
    sz.DecTo(screenRect.GetSize());
 
-   int prefWidth, prefHeight;
-   gPrefs->Read(wxT("/Prefs/Width"), &prefWidth, sz.x);
-   gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, sz.y);
+   if( !mUniquePage ){
+      int prefWidth, prefHeight;
+      gPrefs->Read(wxT("/Prefs/Width"), &prefWidth, sz.x);
+      gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, sz.y);
 
-   wxSize prefSize = wxSize(prefWidth, prefHeight);
-   prefSize.DecTo(screenRect.GetSize());
-   SetSize(prefSize);
+      wxSize prefSize = wxSize(prefWidth, prefHeight);
+      prefSize.DecTo(screenRect.GetSize());
+      SetSize(prefSize);
+   }
    SetMinSize(sz);
 
    // Center after all that resizing, but make sure it doesn't end up
@@ -500,9 +502,11 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       mUniquePage->Commit();
    }
 
-   wxSize sz = GetSize();
-   gPrefs->Write(wxT("/Prefs/Width"), sz.x);
-   gPrefs->Write(wxT("/Prefs/Height"), sz.y);
+   if( !mUniquePage ){
+      wxSize sz = GetSize();
+      gPrefs->Write(wxT("/Prefs/Width"), sz.x);
+      gPrefs->Write(wxT("/Prefs/Height"), sz.y);
+   }
    gPrefs->Flush();
 
    // Reads preference /GUI/Theme

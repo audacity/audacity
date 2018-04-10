@@ -171,54 +171,60 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(_("&Use Preferences"), mDefaulted);
    }
 
-   S.StartStatic(_("Scale"));
+   S.StartMultiColumn(2,wxEXPAND);
    {
-      S.StartTwoColumn();
+      S.SetStretchyCol( 0 );
+      S.SetStretchyCol( 1 );
+      S.StartStatic(_("Scale"),1);
       {
-         S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
-            mTempSettings.scaleType,
-            &mScaleChoices);
-
-         mMinFreq =
-            S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
-            mTempSettings.minFreq,
-            12);
-
-         mMaxFreq =
-            S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
-            mTempSettings.maxFreq,
-            12);
+         S.StartMultiColumn(2,wxEXPAND);
+         {
+            S.SetStretchyCol( 0 );
+            S.SetStretchyCol( 1 );
+            S.Id(ID_SCALE).TieChoice(_("S&cale") + wxString(wxT(":")),
+               mTempSettings.scaleType,
+               &mScaleChoices);
+            mMinFreq =
+               S.Id(ID_MINIMUM).TieNumericTextBox(_("Mi&n Frequency (Hz):"),
+               mTempSettings.minFreq,
+               12);
+            mMaxFreq =
+               S.Id(ID_MAXIMUM).TieNumericTextBox(_("Ma&x Frequency (Hz):"),
+               mTempSettings.maxFreq,
+               12);
+         }
+         S.EndMultiColumn();
       }
-      S.EndTwoColumn();
-   }
-   S.EndStatic();
+      S.EndStatic();
 
-   S.StartStatic(_("Colors"));
-   {
-      S.StartTwoColumn();
+      S.StartStatic(_("Colors"),1);
       {
-         mGain =
-            S.Id(ID_GAIN).TieNumericTextBox(_("&Gain (dB):"),
-            mTempSettings.gain,
-            8);
+         S.StartMultiColumn(2,wxEXPAND);
+         {
+            S.SetStretchyCol( 0 );
+            S.SetStretchyCol( 1 );
+            mGain =
+               S.Id(ID_GAIN).TieNumericTextBox(_("&Gain (dB):"),
+               mTempSettings.gain,
+               8);
+            mRange =
+               S.Id(ID_RANGE).TieNumericTextBox(_("&Range (dB):"),
+               mTempSettings.range,
+               8);
 
-         mRange =
-            S.Id(ID_RANGE).TieNumericTextBox(_("&Range (dB):"),
-            mTempSettings.range,
-            8);
+            mFrequencyGain =
+               S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(_("High &boost (dB/dec):"),
+               mTempSettings.frequencyGain,
+               8);
+         }
+         S.EndMultiColumn();
 
-         mFrequencyGain =
-            S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
-            mTempSettings.frequencyGain,
-            4);
+         S.Id(ID_GRAYSCALE).TieCheckBox(_("Gra&yscale"),
+            mTempSettings.isGrayscale);
       }
-
-      S.Id(ID_GRAYSCALE).TieCheckBox(_("Gra&yscale"),
-         mTempSettings.isGrayscale);
-
-      S.EndTwoColumn();
+      S.EndStatic();
    }
-   S.EndStatic();
+   S.EndMultiColumn();
 
    S.StartStatic(_("Algorithm"));
    {
