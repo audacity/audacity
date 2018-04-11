@@ -406,6 +406,14 @@ void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    else
       mUniquePage->Cancel();
 
+   // Remember modified dialog size, even if cancelling.
+   if( !mUniquePage ){
+      wxSize sz = GetSize();
+      gPrefs->Write(wxT("/Prefs/Width"), sz.x);
+      gPrefs->Write(wxT("/Prefs/Height"), sz.y);
+   }
+   gPrefs->Flush();
+
    EndModal(false);
 }
 
