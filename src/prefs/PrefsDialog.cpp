@@ -355,11 +355,13 @@ PrefsDialog::PrefsDialog
    if( !mUniquePage ){
       int prefWidth, prefHeight;
       gPrefs->Read(wxT("/Prefs/Width"), &prefWidth, sz.x);
-      gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, sz.y);
+      gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, wxMax(480,sz.y));
 
       wxSize prefSize = wxSize(prefWidth, prefHeight);
       prefSize.DecTo(screenRect.GetSize());
       SetSize(prefSize);
+      InvalidateBestSize();
+      Layout();
    }
    SetMinSize(sz);
 
