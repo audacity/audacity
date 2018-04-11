@@ -118,6 +118,7 @@ wxString AudioUnitEffectsModule::GetSymbol()
 
 wxString AudioUnitEffectsModule::GetName()
 {
+   /* 18n-hint: Audio Unit is the name of an Apple audio software protocol */
    return XO("Audio Unit Effects");
 }
 

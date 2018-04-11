@@ -22,7 +22,9 @@
 #include "VSTControl.h"
 
 #define VSTCMDKEY wxT("-checkvst")
-#define VSTPLUGINTYPE wxT("VST")
+/* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+   developed by Steinberg GmbH */
+#define VSTPLUGINTYPE XO("VST")
 
 #define audacityVSTID CCONST('a', 'u', 'D', 'y');
 

@@ -28,7 +28,11 @@
 #include "nyx.h"
 
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
-#define NYQUISTEFFECTS_FAMILY ( IdentInterfaceSymbol{ wxT("Nyquist") } )
+/* i18n-hint: "Nyquist" is an embedded interpreted programming language in
+ Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+ In the translations of this and other strings, you may transliterate the
+ name into another alphabet.  */
+#define NYQUISTEFFECTS_FAMILY ( IdentInterfaceSymbol{ XO("Nyquist") } )
 
 #define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
 #define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Tools Prompt")

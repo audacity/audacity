@@ -26,7 +26,10 @@ class wxCheckBox;
 #include "../../SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
-#define LADSPAEFFECTS_FAMILY wxT("LADSPA")
+/* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+   (Application programming interface)
+ */
+#define LADSPAEFFECTS_FAMILY XO("LADSPA")
 
 ///////////////////////////////////////////////////////////////////////////////
 //

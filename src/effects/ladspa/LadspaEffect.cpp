@@ -118,6 +118,9 @@ wxString LadspaEffectsModule::GetPath()
 
 wxString LadspaEffectsModule::GetSymbol()
 {
+   /* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+      (Application programming interface)
+    */
    return XO("LADSPA Effects");
 }
 

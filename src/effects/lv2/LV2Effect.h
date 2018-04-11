@@ -43,7 +43,9 @@
 #endif
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
-#define LV2EFFECTS_FAMILY wxT("LV2")
+/* i18n-hint: abbreviates
+   "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
+#define LV2EFFECTS_FAMILY XO("LV2")
 
 /** A structure that contains information about a single LV2 plugin port. */
 class LV2Port
