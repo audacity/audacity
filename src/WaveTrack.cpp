@@ -1014,8 +1014,7 @@ void WaveTrack::HandleClear(double t0, double t1,
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   bool editClipCanMove = true;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
+   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
 
    WaveClipPointers clipsToDelete;
    WaveClipHolders clipsToAdd;
@@ -1193,9 +1192,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 void WaveTrack::Paste(double t0, const Track *src)
 // WEAK-GUARANTEE
 {
-   bool editClipCanMove = true;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
-
+   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
+   
    if( src == NULL )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       return;
@@ -2476,8 +2474,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
 // STRONG-GUARANTEE
 {
-   bool editClipCanMove = true;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
+   bool editClipCanMove = gPrefs->GetEditClipsCanMove();
 
    // Find clip which contains this cut line
    double start = 0, end = 0;

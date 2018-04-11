@@ -68,8 +68,9 @@
 #include "widgets/ErrorDialog.h"
 #include "Internat.h"
 
-std::unique_ptr<wxFileConfig> ugPrefs {};
-wxFileConfig *gPrefs = NULL;
+std::unique_ptr<AudacityPrefs> ugPrefs {};
+
+AudacityPrefs *gPrefs = NULL;
 int gMenusDirty = 0;
 
 #if 0
@@ -133,13 +134,45 @@ static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase 
 }
 #endif
 
+AudacityPrefs::AudacityPrefs(const wxString& appName,
+               const wxString& vendorName,
+               const wxString& localFilename,
+               const wxString& globalFilename,
+               long style,
+               const wxMBConv& conv) :
+   wxFileConfig(appName,
+               vendorName,
+               localFilename,
+               globalFilename,
+               style,
+               conv)
+{
+}
+
+
+
+// Bug 825 is essentially that SyncLock requires EditClipsCanMove.
+// SyncLock needs rethinking, but meanwhile this function 
+// fixes the issues of Bug 825 by allowing clips to move when in 
+// SyncLock.
+bool AudacityPrefs::GetEditClipsCanMove()
+{
+   bool mIsSyncLocked;
+   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
+   if( mIsSyncLocked )
+      return true;
+   bool editClipsCanMove;
+   Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, true);
+   return editClipsCanMove;
+}
+
 void InitPreferences()
 {
    wxString appName = wxTheApp->GetAppName();
 
    wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
 
-   ugPrefs = std::make_unique<wxFileConfig>
+   ugPrefs = std::make_unique<AudacityPrefs>
       (appName, wxEmptyString,
        configFileName.GetFullPath(),
        wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
