@@ -80,7 +80,6 @@ void MixerToolBar::Populate()
    mInputSlider = safenew ASlider(this, wxID_ANY, _("Recording Volume"),
                               wxDefaultPosition, wxSize(130, 25),
                               ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
-   mInputSlider->SetName(_("Slider Recording"));
    Add(mInputSlider, 0, wxALIGN_CENTER);
 
    // Playback icon and slider
@@ -90,7 +89,6 @@ void MixerToolBar::Populate()
    mOutputSlider = safenew ASlider(this, wxID_ANY, _("Playback Volume"),
                                wxDefaultPosition, wxSize(130, 25),
                                ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
-   mOutputSlider->SetName(_("Slider Playback"));
    Add(mOutputSlider, 0, wxALIGN_CENTER);
 
    // this bit taken from SelectionBar::Populate()
