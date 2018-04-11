@@ -77,9 +77,8 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

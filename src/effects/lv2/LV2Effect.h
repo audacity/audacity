@@ -43,7 +43,9 @@
 #endif
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
-#define LV2EFFECTS_FAMILY wxT("LV2")
+/* i18n-hint: abbreviates
+   "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
+#define LV2EFFECTS_FAMILY XO("LV2")
 
 /** A structure that contains information about a single LV2 plugin port. */
 class LV2Port
@@ -110,17 +112,15 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;

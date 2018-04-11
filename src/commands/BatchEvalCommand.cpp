@@ -17,9 +17,9 @@
 #include "BatchEvalCommand.h"
 #include "CommandContext.h"
 
-wxString BatchEvalCommandType::BuildName()
+IdentInterfaceSymbol BatchEvalCommandType::BuildName()
 {
-   return wxT("BatchCommand");
+   return { wxT("BatchCommand"), XO("Batch Command") };
 }
 
 void BatchEvalCommandType::BuildSignature(CommandSignature &signature)

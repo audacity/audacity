@@ -17,7 +17,7 @@
 
 #include "../MemoryX.h"
 
-#define NOISEREDUCTION_PLUGIN_SYMBOL XO("Noise Reduction")
+#define NOISEREDUCTION_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Noise Reduction") }
 
 class EffectNoiseReduction final : public Effect {
 public:
@@ -29,7 +29,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

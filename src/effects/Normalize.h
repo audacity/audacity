@@ -22,7 +22,7 @@
 
 class ShuttleGui;
 
-#define NORMALIZE_PLUGIN_SYMBOL XO("Normalize")
+#define NORMALIZE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Normalize") }
 
 class EffectNormalize final : public Effect
 {
@@ -32,7 +32,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

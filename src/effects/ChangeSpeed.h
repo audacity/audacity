@@ -25,7 +25,7 @@
 
 class ShuttleGui;
 
-#define CHANGESPEED_PLUGIN_SYMBOL XO("Change Speed")
+#define CHANGESPEED_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Change Speed") }
 
 class EffectChangeSpeed final : public Effect
 {
@@ -35,7 +35,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

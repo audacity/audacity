@@ -100,17 +100,12 @@ wxString LV2EffectsModule::GetPath()
    return mPath;
 }
 
-wxString LV2EffectsModule::GetSymbol()
+IdentInterfaceSymbol LV2EffectsModule::GetSymbol()
 {
    return XO("LV2 Effects");
 }
 
-wxString LV2EffectsModule::GetName()
-{
-   return GetSymbol();
-}
-
-wxString LV2EffectsModule::GetVendor()
+IdentInterfaceSymbol LV2EffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

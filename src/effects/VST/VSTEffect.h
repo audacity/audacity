@@ -22,7 +22,9 @@
 #include "VSTControl.h"
 
 #define VSTCMDKEY wxT("-checkvst")
-#define VSTPLUGINTYPE wxT("VST")
+/* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+   developed by Steinberg GmbH */
+#define VSTPLUGINTYPE XO("VST")
 
 #define audacityVSTID CCONST('a', 'u', 'D', 'y');
 
@@ -86,17 +88,15 @@ class VSTEffect final : public wxEvtHandler,
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -381,9 +381,8 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

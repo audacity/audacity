@@ -31,7 +31,7 @@ EffectStereoToMono::~EffectStereoToMono()
 
 // IdentInterface implementation
 
-wxString EffectStereoToMono::GetSymbol()
+IdentInterfaceSymbol EffectStereoToMono::GetSymbol()
 {
    return STEREOTOMONO_PLUGIN_SYMBOL;
 }

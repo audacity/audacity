@@ -81,6 +81,7 @@ public:
                  bool shouldPrompt = true);
 
    wxString GetEffectFamilyName(const PluginID & ID);
+   wxString GetVendorName(const PluginID & ID);
 
    /** Run a command given the plugin ID */
    // Returns true on success. 
@@ -90,6 +91,7 @@ public:
                          bool shouldPrompt  = true );
 
    // Renamed from 'Effect' to 'Command' prior to moving out of this class.
+   IdentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
    wxString GetCommandName(const PluginID & ID); // translated
    wxString GetCommandIdentifier(const PluginID & ID);
    wxString GetCommandDescription(const PluginID & ID);

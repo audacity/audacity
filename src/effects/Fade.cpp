@@ -30,7 +30,7 @@ EffectFade::~EffectFade()
 
 // IdentInterface implementation
 
-wxString EffectFade::GetSymbol()
+IdentInterfaceSymbol EffectFade::GetSymbol()
 {
    return mFadeIn
       ? FADEIN_PLUGIN_SYMBOL

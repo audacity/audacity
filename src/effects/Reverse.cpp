@@ -38,7 +38,7 @@ EffectReverse::~EffectReverse()
 
 // IdentInterface implementation
 
-wxString EffectReverse::GetSymbol()
+IdentInterfaceSymbol EffectReverse::GetSymbol()
 {
    return REVERSE_PLUGIN_SYMBOL;
 }

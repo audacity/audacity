@@ -96,19 +96,14 @@ wxString VampEffect::GetPath()
    return mPath;
 }
 
-wxString VampEffect::GetSymbol()
+IdentInterfaceSymbol VampEffect::GetSymbol()
 {
    return mName;
 }
 
-wxString VampEffect::GetName()
+IdentInterfaceSymbol VampEffect::GetVendor()
 {
-   return GetSymbol();
-}
-
-wxString VampEffect::GetVendor()
-{
-   return wxString::FromUTF8(mPlugin->getMaker().c_str());
+   return { wxString::FromUTF8(mPlugin->getMaker().c_str()) };
 }
 
 wxString VampEffect::GetVersion()
@@ -130,12 +125,7 @@ EffectType VampEffect::GetType()
    return EffectTypeAnalyze;
 }
 
-wxString VampEffect::GetFamilyId()
-{
-   return VAMPEFFECTS_FAMILY;
-}
-
-wxString VampEffect::GetFamilyName()
+IdentInterfaceSymbol VampEffect::GetFamilyId()
 {
    return VAMPEFFECTS_FAMILY;
 }
@@ -447,7 +437,7 @@ bool VampEffect::Process()
          }
       }
 
-      const auto effectName = GetCustomTranslation( GetName() );
+      const auto effectName = GetSymbol().Translation();
       addedTracks.push_back(AddAnalysisTrack(
          multiple
          ? wxString::Format( _("%s: %s"), left->GetName(), effectName )

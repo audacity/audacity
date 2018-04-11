@@ -98,7 +98,7 @@ EffectPaulstretch::~EffectPaulstretch()
 
 // IdentInterface implementation
 
-wxString EffectPaulstretch::GetSymbol()
+IdentInterfaceSymbol EffectPaulstretch::GetSymbol()
 {
    return PAULSTRETCH_PLUGIN_SYMBOL;
 }

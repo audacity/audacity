@@ -26,7 +26,10 @@ class wxCheckBox;
 #include "../../SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
-#define LADSPAEFFECTS_FAMILY wxT("LADSPA")
+/* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+   (Application programming interface)
+ */
+#define LADSPAEFFECTS_FAMILY XO("LADSPA")
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -47,17 +50,15 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -211,9 +212,8 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

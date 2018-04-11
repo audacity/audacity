@@ -75,7 +75,7 @@ EffectClickRemoval::~EffectClickRemoval()
 
 // IdentInterface implementation
 
-wxString EffectClickRemoval::GetSymbol()
+IdentInterfaceSymbol EffectClickRemoval::GetSymbol()
 {
    return CLICKREMOVAL_PLUGIN_SYMBOL;
 }

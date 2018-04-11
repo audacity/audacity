@@ -24,7 +24,11 @@
 
 class ShuttleGui;
 
-#define TIMESCALE_PLUGIN_SYMBOL XO("Time Scale")
+// two strings here
+// unusual case
+#define TIMESCALE_PLUGIN_SYMBOL \
+   IdentInterfaceSymbol{ wxT("Time Scale"), \
+                         XO("Sliding Time Scale/Pitch Shift") }
 
 class EffectTimeScale final : public EffectSBSMS
 {
@@ -34,8 +38,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
-   wxString GetName() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

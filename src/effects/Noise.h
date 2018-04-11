@@ -21,7 +21,7 @@
 
 class ShuttleGui;
 
-#define NOISE_PLUGIN_SYMBOL XO("Noise")
+#define NOISE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Noise") }
 
 class EffectNoise final : public Effect
 {
@@ -31,7 +31,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

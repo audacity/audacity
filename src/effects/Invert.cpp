@@ -30,7 +30,7 @@ EffectInvert::~EffectInvert()
 
 // IdentInterface implementation
 
-wxString EffectInvert::GetSymbol()
+IdentInterfaceSymbol EffectInvert::GetSymbol()
 {
    return INVERT_PLUGIN_SYMBOL;
 }

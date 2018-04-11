@@ -144,10 +144,6 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
-      /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
-       Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-       In the translations of this and other strings, you may transliterate the
-       name into another alphabet.  */
       mName = XO("Nyquist Prompt");
       mType = EffectTypeProcess;
       mOK = true;
@@ -196,7 +192,7 @@ wxString NyquistEffect::GetPath()
    return mFileName.GetFullPath();
 }
 
-wxString NyquistEffect::GetSymbol()
+IdentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
       return (mType == EffectTypeTool) ? 
@@ -206,12 +202,7 @@ wxString NyquistEffect::GetSymbol()
    return mName;
 }
 
-wxString NyquistEffect::GetName()
-{
-   return GetSymbol();
-}
-
-wxString NyquistEffect::GetVendor()
+IdentInterfaceSymbol NyquistEffect::GetVendor()
 {
    if (mIsPrompt)
    {
@@ -260,12 +251,7 @@ EffectType NyquistEffect::GetType()
    return mType;
 }
 
-wxString NyquistEffect::GetFamilyId()
-{
-   return NYQUISTEFFECTS_FAMILY;
-}
-
-wxString NyquistEffect::GetFamilyName()
+IdentInterfaceSymbol NyquistEffect::GetFamilyId()
 {
    return NYQUISTEFFECTS_FAMILY;
 }

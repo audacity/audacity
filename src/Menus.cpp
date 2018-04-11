@@ -176,8 +176,8 @@ enum {
 //
 static bool SortEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = a->GetTranslatedName();
-   wxString bkey = b->GetTranslatedName();
+   auto akey = a->GetSymbol().Translation();
+   auto bkey = b->GetSymbol().Translation();
 
    akey += a->GetPath();
    bkey += b->GetPath();
@@ -187,8 +187,9 @@ static bool SortEffectsByName(const PluginDescriptor *a, const PluginDescriptor 
 
 static bool SortEffectsByPublisher(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = a->GetTranslatedVendor();
-   wxString bkey = b->GetTranslatedVendor();
+   auto &em = EffectManager::Get();
+   auto akey = em.GetVendorName(a->GetID());
+   auto bkey = em.GetVendorName(b->GetID());
 
    if (akey.IsEmpty())
    {
@@ -199,8 +200,8 @@ static bool SortEffectsByPublisher(const PluginDescriptor *a, const PluginDescri
       bkey = _("Uncategorized");
    }
 
-   akey += a->GetTranslatedName();
-   bkey += b->GetTranslatedName();
+   akey += a->GetSymbol().Translation();
+   bkey += b->GetSymbol().Translation();
 
    akey += a->GetPath();
    bkey += b->GetPath();
@@ -210,8 +211,9 @@ static bool SortEffectsByPublisher(const PluginDescriptor *a, const PluginDescri
 
 static bool SortEffectsByPublisherAndName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
-   wxString akey = a->GetTranslatedVendor();
-   wxString bkey = b->GetTranslatedVendor();
+   auto &em = EffectManager::Get();
+   auto akey = em.GetVendorName(a->GetID());
+   auto bkey = em.GetVendorName(b->GetID());
 
    if (a->IsEffectDefault())
    {
@@ -222,8 +224,8 @@ static bool SortEffectsByPublisherAndName(const PluginDescriptor *a, const Plugi
       bkey = wxEmptyString;
    }
 
-   akey += a->GetTranslatedName();
-   bkey += b->GetTranslatedName();
+   akey += a->GetSymbol().Translation();
+   bkey += b->GetSymbol().Translation();
 
    akey += a->GetPath();
    bkey += b->GetPath();
@@ -255,8 +257,8 @@ static bool SortEffectsByTypeAndName(const PluginDescriptor *a, const PluginDesc
       bkey = wxEmptyString;
    }
 
-   akey += a->GetTranslatedName();
-   bkey += b->GetTranslatedName();
+   akey += a->GetSymbol().Translation();
+   bkey += b->GetSymbol().Translation();
 
    akey += a->GetPath();
    bkey += b->GetPath();
@@ -279,8 +281,8 @@ static bool SortEffectsByType(const PluginDescriptor *a, const PluginDescriptor 
       bkey = _("Uncategorized");
    }
 
-   akey += a->GetTranslatedName();
-   bkey += b->GetTranslatedName();
+   akey += a->GetSymbol().Translation();
+   bkey += b->GetSymbol().Translation();
 
    akey += a->GetPath();
    bkey += b->GetPath();
@@ -1834,8 +1836,8 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          const PluginDescriptor *plug = plugs[i];
 
-         bool hasDialog = plug->GetUntranslatedName().Contains("...");
-         wxString name = plug->GetTranslatedName();
+         bool hasDialog = plug->GetSymbol().Msgid().Contains("...");
+         auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())
          {
@@ -1844,7 +1846,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
          if (groupBy == wxT("groupby:publisher"))
          {
-            current = plug->GetTranslatedVendor();
+            current = EffectManager::Get().GetVendorName(plug->GetID());
             if (current.IsEmpty())
             {
                current = _("Unknown");
@@ -1902,8 +1904,8 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          const PluginDescriptor *plug = plugs[i];
 
-         bool hasDialog = plug->GetUntranslatedName().Contains("...");
-         wxString name = plug->GetTranslatedName();
+         bool hasDialog = plug->GetSymbol().Msgid().Contains("...");
+         auto name = plug->GetSymbol().Translation();
 
          if (plug->IsEffectInteractive())
          {
@@ -1913,7 +1915,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          wxString group = wxEmptyString;
          if (groupBy == wxT("sortby:publisher:name"))
          {
-            group = plug->GetTranslatedVendor();
+            group = EffectManager::Get().GetVendorName(plug->GetID());
          }
          else if (groupBy == wxT("sortby:type:name"))
          {

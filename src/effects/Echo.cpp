@@ -52,7 +52,7 @@ EffectEcho::~EffectEcho()
 
 // IdentInterface implementation
 
-wxString EffectEcho::GetSymbol()
+IdentInterfaceSymbol EffectEcho::GetSymbol()
 {
    return ECHO_PLUGIN_SYMBOL;
 }

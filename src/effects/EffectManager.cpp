@@ -142,22 +142,35 @@ bool EffectManager::DoAudacityCommand(const PluginID & ID,
    return res;
 }
 
+IdentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
+{
+   return PluginManager::Get().GetSymbol(ID);
+}
+
 wxString EffectManager::GetCommandName(const PluginID & ID)
 {
-   return GetCustomTranslation( PluginManager::Get().GetName(ID) );
+   return GetCommandSymbol(ID).Translation();
 }
 
 wxString EffectManager::GetEffectFamilyName(const PluginID & ID)
 {
    auto effect = GetEffect(ID);
    if (effect)
-      return effect->GetFamilyName();
+      return effect->GetFamilyId().Translation();
+   return {};
+}
+
+wxString EffectManager::GetVendorName(const PluginID & ID)
+{
+   auto effect = GetEffect(ID);
+   if (effect)
+      return effect->GetVendor().Translation();
    return {};
 }
 
 wxString EffectManager::GetCommandIdentifier(const PluginID & ID)
 {
-   wxString name = (PluginManager::Get().GetSymbol(ID));
+   wxString name = PluginManager::Get().GetSymbol(ID).Internal();
 
    // Get rid of leading and trailing white space
    name.Trim(true).Trim(false);

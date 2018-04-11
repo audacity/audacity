@@ -100,7 +100,7 @@ enum
 // Redefine COMMAND() to add the COMMAND's name to an array
 //
 #undef COMMAND
-#define COMMAND(n, i, args) n ## _PLUGIN_SYMBOL,
+#define COMMAND(n, i, args) (n ## _PLUGIN_SYMBOL).Internal(),
 
 //
 // Create the COMMAND name array
@@ -176,17 +176,12 @@ wxString BuiltinCommandsModule::GetPath()
    return mPath;
 }
 
-wxString BuiltinCommandsModule::GetSymbol()
+IdentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
 {
    return XO("Builtin Commands");
 }
 
-wxString BuiltinCommandsModule::GetName()
-{
-   return XO("Builtin Commands");
-}
-
-wxString BuiltinCommandsModule::GetVendor()
+IdentInterfaceSymbol BuiltinCommandsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

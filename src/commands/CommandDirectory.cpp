@@ -80,7 +80,8 @@ OldStyleCommandType *CommandDirectory::LookUp(const wxString &cmdName) const
 void CommandDirectory::AddCommand(movable_ptr<OldStyleCommandType> &&type)
 {
    wxASSERT(type != NULL);
-   wxString cmdName = type->GetName();
+   // Internal string is shown but only in assertion message
+   auto cmdName = type->GetSymbol().Internal();
    wxASSERT_MSG(mCmdMap.find(cmdName) == mCmdMap.end()
          , wxT("A command named ") + cmdName
          + wxT(" already exists."));

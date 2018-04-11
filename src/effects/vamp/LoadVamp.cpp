@@ -75,17 +75,12 @@ wxString VampEffectsModule::GetPath()
    return mPath;
 }
 
-wxString VampEffectsModule::GetSymbol()
-{
-   return wxT("Vamp Effects");
-}
-
-wxString VampEffectsModule::GetName()
+IdentInterfaceSymbol VampEffectsModule::GetSymbol()
 {
    return XO("Vamp Effects");
 }
 
-wxString VampEffectsModule::GetVendor()
+IdentInterfaceSymbol VampEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

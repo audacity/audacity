@@ -58,7 +58,7 @@ EffectNormalize::~EffectNormalize()
 
 // IdentInterface implementation
 
-wxString EffectNormalize::GetSymbol()
+IdentInterfaceSymbol EffectNormalize::GetSymbol()
 {
    return NORMALIZE_PLUGIN_SYMBOL;
 }

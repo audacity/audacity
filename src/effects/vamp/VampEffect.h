@@ -31,7 +31,9 @@
 class LabelTrack;
 
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")
-#define VAMPEFFECTS_FAMILY wxT("Vamp")
+/* i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
+   It is not an abbreviation for anything.  see http://vamp-plugins.org */
+#define VAMPEFFECTS_FAMILY XO("Vamp")
 
 class VampEffect final : public Effect
 {
@@ -45,17 +47,15 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 

@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-#define REPAIR_PLUGIN_SYMBOL XO("Repair")
+#define REPAIR_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Repair") }
 
 class WaveTrack;
 
@@ -27,7 +27,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

@@ -44,21 +44,21 @@ class wxString;
 class OldStyleCommandType : public AudacityCommand
 {
 private:
-   wxString mName;
+   IdentInterfaceSymbol mSymbol;
    Maybe<CommandSignature> mSignature;
 
 public:
    OldStyleCommandType();
    virtual ~OldStyleCommandType();
-   wxString GetName() override;
+   IdentInterfaceSymbol GetSymbol() override;
    CommandSignature &GetSignature();
-   wxString Describe();
+   wxString Describe(); // for debugging only ?
 
    // Subclasses should override the following:
    // =========================================
 
    // Return the name of the command type
-   virtual wxString BuildName() = 0;
+   virtual IdentInterfaceSymbol BuildName() = 0;
 
    /// Postcondition: signature is a 'signature' map containing parameter
    // names, validators and default values.

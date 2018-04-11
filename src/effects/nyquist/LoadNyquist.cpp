@@ -101,17 +101,12 @@ wxString NyquistEffectsModule::GetPath()
    return mPath;
 }
 
-wxString NyquistEffectsModule::GetSymbol()
+IdentInterfaceSymbol NyquistEffectsModule::GetSymbol()
 {
    return XO("Nyquist Effects");
 }
 
-wxString NyquistEffectsModule::GetName()
-{
-   return GetSymbol();
-}
-
-wxString NyquistEffectsModule::GetVendor()
+IdentInterfaceSymbol NyquistEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

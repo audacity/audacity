@@ -164,7 +164,7 @@ enum
 // Redefine EFFECT() to add the effect's name to an array
 //
 #undef EFFECT
-#define EFFECT(n, i, args) n ## _PLUGIN_SYMBOL,
+#define EFFECT(n, i, args) (n ## _PLUGIN_SYMBOL).Internal(),
 
 //
 // Create the effect name array
@@ -239,17 +239,12 @@ wxString BuiltinEffectsModule::GetPath()
    return mPath;
 }
 
-wxString BuiltinEffectsModule::GetSymbol()
+IdentInterfaceSymbol BuiltinEffectsModule::GetSymbol()
 {
    return XO("Builtin Effects");
 }
 
-wxString BuiltinEffectsModule::GetName()
-{
-   return XO("Builtin Effects");
-}
-
-wxString BuiltinEffectsModule::GetVendor()
+IdentInterfaceSymbol BuiltinEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

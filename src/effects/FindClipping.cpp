@@ -52,7 +52,7 @@ EffectFindClipping::~EffectFindClipping()
 
 // IdentInterface implementation
 
-wxString EffectFindClipping::GetSymbol()
+IdentInterfaceSymbol EffectFindClipping::GetSymbol()
 {
    return FINDCLIPPING_PLUGIN_SYMBOL;
 }

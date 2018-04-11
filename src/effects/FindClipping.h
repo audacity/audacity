@@ -20,7 +20,7 @@ class LabelTrack;
 
 #include "Effect.h"
 
-#define FINDCLIPPING_PLUGIN_SYMBOL XO("Find Clipping")
+#define FINDCLIPPING_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Find Clipping") }
 
 class EffectFindClipping final : public Effect
 {
@@ -30,7 +30,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

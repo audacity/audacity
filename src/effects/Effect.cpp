@@ -164,30 +164,20 @@ wxString Effect::GetPath()
       return mClient->GetPath();
    }
 
-   return BUILTIN_EFFECT_PREFIX + GetSymbol();
+   return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
-wxString Effect::GetSymbol()
+IdentInterfaceSymbol Effect::GetSymbol()
 {
    if (mClient)
    {
       return mClient->GetSymbol();
    }
 
-   return wxEmptyString;
+   return {};
 }
 
-wxString Effect::GetName()
-{
-   if (mClient)
-   {
-      return mClient->GetName();
-   }
-
-   return GetSymbol();
-}
-
-wxString Effect::GetVendor()
+IdentInterfaceSymbol Effect::GetVendor()
 {
    if (mClient)
    {
@@ -217,33 +207,16 @@ wxString Effect::GetDescription()
    return wxEmptyString;
 }
 
-wxString Effect::GetFamilyId()
+IdentInterfaceSymbol Effect::GetFamilyId()
 {
    if (mClient)
    {
       return mClient->GetFamilyId();
    }
 
-   // PRL:  In 2.2.2 we wanted to change the user-visible name to
-   // "Built-in" but we did not do it the obvious way by just changing this
-   // string, because of problems with compatibility of pluginsettings.cfg
-   // See PluginDescriptor::GetTranslatedEffectFamily and
-   // EffectUIHost::OnMenu
-   // See PluginManager::RegisterPlugin and PluginManager::GetID, where the
-   // return value is also (mis?)used for internal identification purposes,
-   // NOT as a user-visible  string!
-   // Thereby affecting configuration file contents!
-   return XO("Audacity");
-}
-
-wxString Effect::GetFamilyName()
-{
-   if (mClient)
-   {
-      return mClient->GetFamilyName();
-   }
-
-   return XO("Built-in");
+   // Unusually, the internal and visible strings differ for the built-in
+   // effect family.
+   return { wxT("Audacity"), XO("Built-in") };
 }
 
 bool Effect::IsInteractive()
@@ -2516,7 +2489,7 @@ void Effect::Preview(bool dryOnly)
    wxWindow *FocusDialog = wxWindow::FindFocus();
 
    double previewDuration;
-   bool isNyquist = GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY);
+   bool isNyquist = GetFamilyId() == NYQUISTEFFECTS_FAMILY;
    bool isGenerator = GetType() == EffectTypeGenerate;
 
    // Mix a few seconds of audio from all of the tracks
@@ -3366,7 +3339,7 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect && mEffect->GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
+   if (mEffect && mEffect->GetFamilyId() == NYQUISTEFFECTS_FAMILY && (mEffect->ManualPage().IsEmpty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
       HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
@@ -3458,10 +3431,10 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       auto sub = std::make_unique<wxMenu>();
 
       sub->Append(kDummyID, wxString::Format(_("Type: %s"),
-                  ::wxGetTranslation( mEffect->GetFamilyName() )));
+                  ::wxGetTranslation( mEffect->GetFamilyId().Translation() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
-      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), GetCustomTranslation(mEffect->GetVendor())));
+      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription()));
 
       menu.Append(0, _("About"), sub.release());

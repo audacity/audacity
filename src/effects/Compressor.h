@@ -27,7 +27,7 @@
 class EffectCompressorPanel;
 class ShuttleGui;
 
-#define COMPRESSOR_PLUGIN_SYMBOL XO("Compressor")
+#define COMPRESSOR_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Compressor") }
 
 class EffectCompressor final : public EffectTwoPassSimpleMono
 {
@@ -38,7 +38,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

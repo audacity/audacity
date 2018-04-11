@@ -116,17 +116,15 @@ wxString LadspaEffectsModule::GetPath()
    return mPath;
 }
 
-wxString LadspaEffectsModule::GetSymbol()
+IdentInterfaceSymbol LadspaEffectsModule::GetSymbol()
 {
+   /* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+      (Application programming interface)
+    */
    return XO("LADSPA Effects");
 }
 
-wxString LadspaEffectsModule::GetName()
-{
-   return GetSymbol();
-}
-
-wxString LadspaEffectsModule::GetVendor()
+IdentInterfaceSymbol LadspaEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -623,19 +621,14 @@ wxString LadspaEffect::GetPath()
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-wxString LadspaEffect::GetSymbol()
+IdentInterfaceSymbol LadspaEffect::GetSymbol()
 {
    return LAT1CTOWX(mData->Name);
 }
 
-wxString LadspaEffect::GetName()
+IdentInterfaceSymbol LadspaEffect::GetVendor()
 {
-   return GetSymbol();
-}
-
-wxString LadspaEffect::GetVendor()
-{
-   return LAT1CTOWX(mData->Maker);
+   return { LAT1CTOWX(mData->Maker) };
 }
 
 wxString LadspaEffect::GetVersion()
@@ -672,12 +665,7 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-wxString LadspaEffect::GetFamilyId()
-{
-   return LADSPAEFFECTS_FAMILY;
-}
-
-wxString LadspaEffect::GetFamilyName()
+IdentInterfaceSymbol LadspaEffect::GetFamilyId()
 {
    return LADSPAEFFECTS_FAMILY;
 }

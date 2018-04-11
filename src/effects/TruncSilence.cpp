@@ -151,7 +151,7 @@ EffectTruncSilence::~EffectTruncSilence()
 
 // IdentInterface implementation
 
-wxString EffectTruncSilence::GetSymbol()
+IdentInterfaceSymbol EffectTruncSilence::GetSymbol()
 {
    return TRUNCATESILENCE_PLUGIN_SYMBOL;
 }

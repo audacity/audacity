@@ -20,14 +20,14 @@
 #include "CommandType.h"
 #include "SetTrackInfoCommand.h"
 
-#define SET_CLIP_PLUGIN_SYMBOL XO("Set Clip")
+#define SET_CLIP_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Clip") }
 
 class SetClipCommand : public SetTrackBase
 {
 public:
    SetClipCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_CLIP_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SET_CLIP_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a clip.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

@@ -90,7 +90,7 @@ EffectWahwah::~EffectWahwah()
 
 // IdentInterface implementation
 
-wxString EffectWahwah::GetSymbol()
+IdentInterfaceSymbol EffectWahwah::GetSymbol()
 {
    return WAHWAH_PLUGIN_SYMBOL;
 }

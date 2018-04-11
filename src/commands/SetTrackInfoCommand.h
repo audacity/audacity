@@ -20,10 +20,10 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define SET_TRACK_PLUGIN_SYMBOL XO("Set Track")
-#define SET_TRACK_STATUS_PLUGIN_SYMBOL XO("Set Track Status")
-#define SET_TRACK_AUDIO_PLUGIN_SYMBOL XO("Set Track Audio")
-#define SET_TRACK_VISUALS_PLUGIN_SYMBOL XO("Set Track Visuals")
+#define SET_TRACK_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Track") }
+#define SET_TRACK_STATUS_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Track Status") }
+#define SET_TRACK_AUDIO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Track Audio") }
+#define SET_TRACK_VISUALS_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Track Visuals") }
 
 class Track;
 
@@ -51,7 +51,7 @@ class SetTrackStatusCommand : public SetTrackBase
 public:
    //SetTrackStatusCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_TRACK_STATUS_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SET_TRACK_STATUS_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -76,7 +76,7 @@ class SetTrackAudioCommand : public SetTrackBase
 public:
    //SetTrackAudioCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_TRACK_AUDIO_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SET_TRACK_AUDIO_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -103,7 +103,7 @@ class SetTrackVisualsCommand : public SetTrackBase
 public:
    //SetTrackVisualsCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_TRACK_VISUALS_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SET_TRACK_VISUALS_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -140,7 +140,7 @@ class SetTrackCommand : public SetTrackBase
 public:
    SetTrackCommand();
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_TRACK_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SET_TRACK_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a track.");};
    // AudacityCommand overrides
    wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_track");};

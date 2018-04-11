@@ -21,13 +21,13 @@
 #include "Command.h"
 #include "CommandType.h"
 
-#define OPEN_PROJECT_PLUGIN_SYMBOL XO("Open Project2")
+#define OPEN_PROJECT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Open Project2") }
 
 class OpenProjectCommand : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return OPEN_PROJECT_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return OPEN_PROJECT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Opens a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -41,13 +41,13 @@ public:
    bool bHasAddToHistory;
 };
 
-#define SAVE_PROJECT_PLUGIN_SYMBOL XO("Save Project2")
+#define SAVE_PROJECT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Save Project2") }
 
 class SaveProjectCommand : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SAVE_PROJECT_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SAVE_PROJECT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Saves a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
