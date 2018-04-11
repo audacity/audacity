@@ -90,7 +90,11 @@ CommandManager.  It holds the callback for one command.
 #include "../AudacityException.h"
 #include "../Prefs.h"
 #include "../Project.h"
+
+// LyricsPanel and MixerBoard both intercept keys, as if they were the TrackPanel.
+// The mechanism of checking for the type of window here is klunky.
 #include "../Lyrics.h"
+#include "../MixerBoard.h"
 
 #include "Keyboard.h"
 #include "../PluginManager.h"
@@ -98,6 +102,7 @@ CommandManager.  It holds the callback for one command.
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/HelpSystem.h"
+
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
@@ -1452,10 +1457,19 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
    }
 
-   // Any other keypresses must be destined for this project window.
-   if (!permit && 
-       (wxGetTopLevelParent(wxWindow::FindFocus()) != project ||
-        !wxEventLoop::GetActive()->IsMain()))
+   wxWindow * pFocus = wxWindow::FindFocus();
+   wxWindow * pParent = wxGetTopLevelParent( pFocus );
+   bool validTarget = pParent == project;
+   // Bug 1557.  MixerBoard should count as 'destined for project'
+   // MixerBoard IS a TopLevelWindow, and its parent is the project.
+   if( pParent && pParent->GetParent() == project){
+      if( dynamic_cast<MixerBoardFrame*>( pParent) != NULL )
+         validTarget = true;
+   }
+   validTarget = validTarget && wxEventLoop::GetActive()->IsMain();
+
+   // Any other keypresses must be destined for this project window
+   if (!permit && !validTarget )
    {
       return false;
    }
