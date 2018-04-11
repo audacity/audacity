@@ -2609,7 +2609,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
                            GetPluginTypeString(PluginTypeModule),
                            wxEmptyString,
                            module->GetVendor().Internal(),
-                           module->GetSymbol().Translation(),
+                           module->GetSymbol().Internal(),
                            module->GetPath());
 }
 
@@ -2619,7 +2619,7 @@ PluginID PluginManager::GetID(CommandDefinitionInterface *command)
                            GetPluginTypeString(PluginTypeAudacityCommand),
                            wxEmptyString,
                            command->GetVendor().Internal(),
-                           command->GetSymbol().Translation(),
+                           command->GetSymbol().Internal(),
                            command->GetPath());
 }
 
@@ -2629,7 +2629,7 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
                            GetPluginTypeString(PluginTypeEffect),
                            effect->GetFamilyId().Internal(),
                            effect->GetVendor().Internal(),
-                           effect->GetSymbol().Translation(),
+                           effect->GetSymbol().Internal(),
                            effect->GetPath());
 }
 
@@ -2639,7 +2639,7 @@ PluginID PluginManager::GetID(ImporterInterface *importer)
                            GetPluginTypeString(PluginTypeImporter),
                            wxEmptyString,
                            importer->GetVendor().Internal(),
-                           importer->GetSymbol().Translation(),
+                           importer->GetSymbol().Internal(),
                            importer->GetPath());
 }
 
