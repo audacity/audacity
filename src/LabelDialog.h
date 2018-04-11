@@ -87,6 +87,9 @@ class LabelDialog final : public wxDialogWrapper
    void OnOK(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
 
+   void ReadSize();
+   void WriteSize();
+
  private:
 
    Grid *mGrid;
