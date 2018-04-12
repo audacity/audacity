@@ -1625,7 +1625,6 @@ void NumericTextCtrl::OnFocus(wxFocusEvent &event)
 {
    if (event.GetEventType() == wxEVT_KILL_FOCUS) {
       AudacityProject::ReleaseKeyboard(this);
-      mFocusedDigit =0;
    }
    else {
       AudacityProject::CaptureKeyboard(this);
