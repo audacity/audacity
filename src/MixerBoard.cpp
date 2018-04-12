@@ -697,18 +697,23 @@ void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
 
 void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
+   auto selected = mTrack->GetSelected();
+
+   wxColour col = theTheme.Colour(selected ? clrTrackInfoSelected : clrTrackInfo) ;
+   SetBackgroundColour( col );
+   mMeter->SetBackgroundColour( col );
+   mSlider_Gain->SetBackgroundColour( col );
+   mSlider_Pan->SetBackgroundColour( col );
+   mStaticText_TrackName->SetBackgroundColour( col );
+
    wxPaintDC dc(this);
 
-   #ifdef __WXMAC__
-      // Fill with correct color, not scroller background. Done automatically on Windows.
-      AColor::Medium(&dc, false);
-      dc.DrawRectangle(this->GetClientRect());
-   #endif
+   AColor::MediumTrackInfo(&dc, selected);
+   dc.DrawRectangle(this->GetClientRect());
 
    wxSize clusterSize = this->GetSize();
    wxRect bev(0, 0, clusterSize.GetWidth() - 1, clusterSize.GetHeight() - 1);
 
-   auto selected = mTrack->GetSelected();
 
    for (unsigned int i = 0; i < 4; i++) // 4 gives a big bevel, but there were complaints about visibility otherwise.
    {

@@ -265,6 +265,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
 
    wxColour backgroundColour = theTheme.Colour( clrMedium);
    mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
+   SetBackgroundColour( backgroundColour );
 
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxSOLID);
    mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxSOLID);
@@ -396,7 +397,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    wxColour clrText = theTheme.Colour( clrTrackPanelText );
    wxColour clrBoxFill = theTheme.Colour( clrMedium );
 
-   if (mLayoutValid == false)
+   if (mLayoutValid == false || (mStyle == MixerTrackCluster ))
    {
       // Create a NEW one using current size and select into the DC
       mBitmap = std::make_unique<wxBitmap>();
@@ -416,7 +417,8 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
       //}
 #endif
-   
+     
+      mBkgndBrush.SetColour( GetBackgroundColour() );
       dc.SetPen(*wxTRANSPARENT_PEN);
       dc.SetBrush(mBkgndBrush);
       dc.DrawRectangle(0, 0, mWidth, mHeight);
