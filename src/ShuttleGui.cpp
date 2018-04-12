@@ -2290,10 +2290,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       // bs->AddButton(safenew wxButton(parent, wxID_HELP));
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( _("Help") );
-#if wxUSE_ACCESSIBILITY
-      b->SetAccessible(safenew WindowAccessible(b));  // so that name can be set on a standard control
-      b->SetName(_("Help"));
-#endif
+      b->SetLabel(_("Help"));       // for screen readers
       bs->AddButton( b );
    }
 
