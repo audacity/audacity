@@ -103,7 +103,6 @@ namespace std
 #ifdef __AUDACITY_OLD_STD__
    namespace tr1
    {
-#endif
       template<typename T> struct hash;
       template<> struct hash< NormalizedKeyString > {
          size_t operator () (const NormalizedKeyString &str) const // noexcept
@@ -113,8 +112,17 @@ namespace std
             return Hasher{}( stdstr );
          }
       };
-#ifdef __AUDACITY_OLD_STD__
    }
+#else
+   // in std, not in tr1.
+   template<> struct hash< NormalizedKeyString > {
+      size_t operator () (const NormalizedKeyString &str) const // noexcept
+      {
+         auto &stdstr = str.Raw(); // no allocations, a cheap fetch
+         using Hasher = std::hash< wxString >;
+         return Hasher{}( stdstr );
+      }
+   };
 #endif
 }
 

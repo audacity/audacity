@@ -31,6 +31,10 @@ static const wxChar *exts[] =
    wxT("mp4")
 };
 
+#if defined(__WXMAC__)
+#undef USE_QUICKTIME
+#endif
+
 #ifndef USE_QUICKTIME
 
 void GetQTImportPlugin(ImportPluginList &importPluginList,

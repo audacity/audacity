@@ -3,6 +3,7 @@
 
 // C++ standard header <memory> with a few extensions
 #include <memory>
+#include <cstdlib> // Needed for free.
 #ifndef safenew
 #define safenew new
 #endif

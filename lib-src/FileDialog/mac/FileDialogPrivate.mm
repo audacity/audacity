@@ -49,6 +49,8 @@
 // implementation
 // ============================================================================
 
+#define NSObject wxOSX_10_6_AND_LATER( x ) x
+
 @interface OSPanelDelegate : NSObject wxOSX_10_6_AND_LATER(<NSOpenSavePanelDelegate>)
 {
     FileDialog* _dialog;
