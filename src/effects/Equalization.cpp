@@ -632,14 +632,14 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             );
 
             S.AddSpace(0, 1);
-            S.Prop(1).AddWindow(mdBRuler, wxEXPAND | wxALIGN_RIGHT);
+            S.Prop(1).AddWindow(mdBRuler, wxEXPAND );
             S.AddSpace(0, 1);
          }
          S.EndVerticalLay();
 
          mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
          S.Prop(1);
-         S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
+         S.AddWindow(mPanel, wxEXPAND );
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
          S.SetBorder(5);
