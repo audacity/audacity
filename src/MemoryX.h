@@ -12,6 +12,20 @@
 // std:: containers knowing about rvalue references
 #undef __AUDACITY_OLD_STD__
 
+
+// JKC:
+// This is completely the wrong way to test for new stdlib (supporting std::hash etc)
+// We should instead use configure checks or test if __cplusplus is bigger that some value.
+//
+// On the other hand, as we are moving to wxWidgets 3.1.1, macOSX 10.7+ is required.
+// And we could just assume/require building with C++11 and remove the body of this
+// ifdef - i.e. no longer support those workarounds.
+//
+// Macports have provided some really useful information about possibilities for
+// building with newer compilers and older SDKs.  So the option of building with old
+// compilers and old SDKs may not be needed at all, making the shift to requiring
+// C++11 have little to no downside.  So as of 13th April 2018 the code in this
+// ifdef's days are numbered.
 #if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_10_6
 
 #define __AUDACITY_OLD_STD__
