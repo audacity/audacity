@@ -15,18 +15,12 @@ feel.
 It allows you to use images for the slider background and
 the thumb.
 
-*//****************************************************************//**
-
 \class LWSlider
 \brief Lightweight version of ASlider.  In other words it does not
 have a window permanently associated with it.
 
-*//****************************************************************//**
-
 \class SliderDialog
 \brief Pop up dialog used with an LWSlider.
-
-*//****************************************************************//**
 
 \class TipPanel
 \brief A wxPopupWindow used to give the numerical value of an LWSlider
@@ -556,9 +550,10 @@ void LWSlider::AdjustSize(const wxSize & sz)
 
 void LWSlider::OnPaint(wxDC &dc, bool highlight)
 {
+   // The dc will be a paint DC
    if (!mBitmap || !mThumbBitmap || !mThumbBitmapHilited)
    {
-      Draw(dc);
+      DrawToBitmap(dc);
    }
 
    //thumbPos should be in pixels
@@ -576,9 +571,7 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    // Previously not done on mac, but with wx3.1.1. it
    // needs to be.
    if( mHW )
-   {
       dc.Clear();
-   }
 
    dc.DrawBitmap(*mBitmap, mLeft, mTop, true);
    const auto &thumbBitmap =
@@ -606,19 +599,12 @@ void LWSlider::OnSize( wxSizeEvent & event )
    Refresh();
 }
 
-void LWSlider::Draw(wxDC & paintDC)
+// This function only uses the paintDC to determine what kind of bitmap
+// to draw to and nothing else.  It does not draw to the paintDC.
+void LWSlider::DrawToBitmap(wxDC & paintDC)
 {
-   // The color we'll use to create the mask
-   wxColour transparentColour(255, 254, 255);
-
-   // Set up the memory DC
-   wxMemoryDC dc;
-
-
+   // Get correctly oriented thumb.
    if (mOrientation == wxVERTICAL){
-//      wxImage img(theTheme.Bitmap( bmpSliderThumb ).ConvertToImage() );
-//      wxImage img2 = img.Rotate90(false);
-//      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( img2));
       mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotated )));
       mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotatedHilited )));
    }
@@ -627,98 +613,20 @@ void LWSlider::Draw(wxDC & paintDC)
       mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbHilited )));
    }
 
-
-// This code draws the (old) slider thumb.
-#if 0
-   // Create the bitmap
-   mThumbBitmap = std::make_unique<wxBitmap>();
-   mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);
-   dc.SelectObject(*mThumbBitmap);
-
-#if !defined(__WXMAC__)
-   // Clear the background for our mask
-   dc.SetBackground(transparentColour);
-   dc.Clear();
-#endif
-
-   {
-      // Create the graphics contexxt
-      std::unique_ptr<wxGraphicsContext> gc{ wxGraphicsContext::Create(dc) };
-
-      // For vertical, we use the same downward pointing thumb, but rotate and flip it
-      if (mOrientation == wxVERTICAL)
-      {
-         gc->Translate(0, 3);
-         gc->Scale(1, -1);
-         gc->Rotate((-90 * M_PI) / 180);
-      }
-      else
-      {
-         gc->Translate(1.5, 0);
-      }
-
-      // Draw the thumb outline
-      gc->SetBrush(wxBrush(mEnabled ? wxColour(192, 192, 216) : wxColour(238, 238, 238)));
-      gc->SetPen(wxPen(mEnabled ? wxColour(0, 0, 0) : wxColour(119, 119, 119)));
-      gc->DrawLines(WXSIZEOF(outer), outer);
-
-      // The interior is based on whether the slider is enabled or not
-      if (mEnabled)
-      {
-         // Draw the left and top interior components
-         gc->SetPen(wxPen(wxColour(255, 255, 255)));
-         gc->StrokeLines(WXSIZEOF(enabledLeftBegin), enabledLeftBegin, enabledLeftEnd);
-
-         // Draw the right and bottom interior components
-         gc->SetPen(wxPen(wxColour(141, 141, 178)));
-         gc->StrokeLines(WXSIZEOF(enabledRightBegin), enabledRightBegin, enabledRightEnd);
-      }
-      else
-      {
-         // Draw the interior stripes
-         gc->SetPen(wxPen(wxColour(200, 200, 200)));
-         gc->StrokeLines(WXSIZEOF(disabledStripesBegin), disabledStripesBegin, disabledStripesEnd);
-
-         // Draw the right and bottom interior components
-         gc->SetPen(wxPen(wxColour(153, 153, 153)));
-         gc->StrokeLines(WXSIZEOF(disabledRightBegin), disabledRightBegin, disabledRightEnd);
-      }
-   }
-   dc.SelectObject(wxNullBitmap);
-
-#if !defined(__WXMAC__)
-   // Now create and set the mask
-   // SetMask takes ownership
-   mThumbBitmap->SetMask(safenew wxMask(*mThumbBitmap, transparentColour));
-#endif
-
-#endif
-   //
    // Now the background bitmap
-   //
-
    mBitmap = std::make_unique<wxBitmap>();
    mBitmap->Create(mWidth, mHeight, paintDC);
+
+   // Set up the memory DC
+   // We draw to it, not the paintDC.
+   wxMemoryDC dc;
    dc.SelectObject(*mBitmap);
 
-   // DO-THEME Mask colour!!  JC-Aug-2007
-   // Needed with experimental theming!
-   //  ... because windows blends against this colour.
-#ifdef EXPERIMENTAL_THEMING
-   transparentColour = theTheme.Colour(clrTrackInfo);
-#else
-   transparentColour = wxColour(255, 254, 255);
-#endif
-
-#if !defined(__WXMAC__)
-   dc.SetBackground(transparentColour);
+   wxColour backgroundColour = theTheme.Colour(clrTrackInfo);
+   dc.SetBackground(backgroundColour);
    dc.Clear();
-#endif
 
    // Draw the line along which the thumb moves.
-   //AColor::Light(&dc, false);
-   //AColor::UseThemeColour( &dc, clrTrackPanelText );
-   //AColor::Dark(&dc, false);
    AColor::UseThemeColour(&dc, clrSliderMain );
 
    if (mOrientation == wxHORIZONTAL)
@@ -726,17 +634,16 @@ void LWSlider::Draw(wxDC & paintDC)
       AColor::Line(dc, mLeftX, mCenterY, mRightX+2, mCenterY);
       AColor::Line(dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
    }
-   else //v if (mStyle != DB_SLIDER) // Let the ruler do it for vertical DB_SLIDER.
+   else 
    {
       AColor::Line(dc, mCenterX, mTopY, mCenterX, mBottomY+2);
       AColor::Line(dc, mCenterX+1, mTopY, mCenterX+1, mBottomY+2);
    }
 
-
    // Draw +/- or L/R first.  We need to draw these before the tick marks.
    if (mStyle == PAN_SLIDER)
    {
-      //v Vertical PAN_SLIDER currently not handled, forced to horizontal.
+      //VJ Vertical PAN_SLIDER currently not handled, forced to horizontal.
 
       // sliderFontSize is for the tooltip.
       // we need something smaller here...
@@ -745,21 +652,16 @@ void LWSlider::Draw(wxDC & paintDC)
       dc.SetFont(labelFont);
 
       // Colors
-#ifdef EXPERIMENTAL_THEMING
       dc.SetTextForeground( theTheme.Colour( clrTrackPanelText ));
 
-      // TransparentColour should be same as clrTrackInfo.
-      // This may have been necessary at one time to avoid 
+      // backgroundColour should be same as clrTrackInfo.
+      // This setting of colours may have been necessary at one time to avoid 
       // antialiasing the font against white, even on dark background.
       dc.SetTextBackground( theTheme.Colour( clrTrackInfo ) );
       dc.SetBackground( theTheme.Colour( clrTrackInfo ) );
       // Used to use wxSOLID here, but wxTRANSPARENT is better for mac, and 
       // works fine on windows.
       dc.SetBackgroundMode( wxTRANSPARENT );
-#else
-      dc.SetTextForeground(mEnabled ? wxColour(0, 0, 0) : wxColour(128, 128, 128));
-      dc.SetTextBackground(wxColour(255,255,255));
-#endif
 
       /* i18n-hint: One-letter abbreviation for Left, in the Pan slider */
       dc.DrawText(_("L"), mLeftX, 0);
@@ -770,11 +672,8 @@ void LWSlider::Draw(wxDC & paintDC)
    else
    {
       // draw the '-' and the '+'
-#ifdef EXPERIMENTAL_THEMING
+      // These are drawn with lines, rather tha nwith a font.
       AColor::UseThemeColour(&dc, clrTrackPanelText );
-#else
-      dc.SetPen(mEnabled ? *wxBLACK : wxColour(128, 128, 128));
-#endif
 
       if (mOrientation == wxHORIZONTAL)
       {
@@ -800,34 +699,6 @@ void LWSlider::Draw(wxDC & paintDC)
    wxColour TickColour = theTheme.Colour( clrSliderLight );
    bool bTicks = TickColour != wxColour(60,60,60);
 
-   //v 20090820: Ruler doesn't align with slider correctly -- yet.
-   //if ((mOrientation == wxVERTICAL) && (mStyle == DB_SLIDER))
-   //{
-   //   if (!mpRuler)
-   //   {
-   //      mpRuler = std::make_unique<Ruler>();
-   //      mpRuler->mbTicksOnly = false;
-   //      mpRuler->mbTicksAtExtremes = true;
-
-   //      #ifdef __WXMSW__
-   //         const int kFontSize = 8;
-   //      #else
-   //         const int kFontSize = 10;
-   //      #endif
-   //      wxFont rulerFont(kFontSize, wxSWISS, wxNORMAL, wxNORMAL);
-   //      mpRuler->SetFonts(rulerFont, rulerFont, rulerFont);
-
-   //      mpRuler->SetFlip(false);
-   //      mpRuler->SetLabelEdges(true);
-
-   //      mpRuler->SetOrientation(wxVERTICAL);
-   //      mpRuler->SetRange(mMaxValue, mMinValue);
-   //      mpRuler->SetFormat(Ruler::LinearDBFormat);
-   //   }
-   //   mpRuler->SetBounds(mLeft, mTop,  mWidth, mHeightY); //v Why the magic number reqd on height to get it to line up?    + 9);
-   //   mpRuler->Draw(*dc);
-   //}
-   //else
    if( bTicks ) {
       // tick marks
       int divs = 10;
@@ -863,7 +734,6 @@ void LWSlider::Draw(wxDC & paintDC)
                AColor::Line(dc, mCenterX-tickLength, mTopY+p, mCenterX-1, mTopY+p); // ticks at left
             }
 
-//          AColor::Dark(&dc, false);
             AColor::UseThemeColour(&dc, clrSliderDark );
 
             if (mOrientation == wxHORIZONTAL)
@@ -882,10 +752,13 @@ void LWSlider::Draw(wxDC & paintDC)
 
    dc.SelectObject(wxNullBitmap);
 
-#if !defined(__WXMAC__)
-   // SetMask takes ownership
-   mBitmap->SetMask(safenew wxMask(*mBitmap, transparentColour));
-#endif
+   // safenew, because SetMask takes ownership
+   // On toolbars (etc) we have a HeavyWeight control, with fixed colour background.
+   // So we do not need a mask.
+   // On the TrackPanel we use as a LightWeight control, the background colour is 
+   // not guaranteed to be the same, so we use a mask
+   if( !mHW )
+      mBitmap->SetMask(safenew wxMask(*mBitmap, backgroundColour));
 }
 
 void LWSlider::SetToolTipTemplate(const wxString & tip)
@@ -973,20 +846,9 @@ wxString LWSlider::GetTip(float value) const
       case FRAC_SLIDER:
          val.Printf( wxT("%.2f"), value );
          break;
-   
+
       case DB_SLIDER:
          val.Printf( wxT("%+.1f dB"), value );
-
-            /*
-             // PRL:  This erroneous code never had effect because
-             // the condition was always false (at least for the English format
-             // string), and the body had no side effect
-         if (val.Right(1) == wxT("0"))
-         {
-            val.Left(val.Length() - 2);
-         }
-             */
-
          break;
 
       case PAN_SLIDER:
@@ -1573,7 +1435,7 @@ ASlider::ASlider( wxWindow * parent,
                              wxPoint(0,0),
                              size,
                              options.style,
-                             options.canUseShift,
+                             true, // ASlider is always a heavyweight LWSlider
                              options.popup,
                              options.orientation);
    mLWSlider->mStepValue = options.stepValue;
@@ -1581,7 +1443,6 @@ ASlider::ASlider( wxWindow * parent,
    SetName( name );
 
    mSliderIsFocused = false;
-
    mStyle = options.style;
 
    mTimer.SetOwner(this);
@@ -1880,16 +1741,16 @@ wxAccStatus ASliderAx::GetRole(int childId, wxAccRole* role)
    {
       case 0:
          *role = wxROLE_SYSTEM_SLIDER;
-      break;
+         break;
 
       case 1:
       case 3:
          *role = wxROLE_SYSTEM_PUSHBUTTON;
-      break;
+         break;
 
       case 2:
          *role = wxROLE_SYSTEM_INDICATOR;
-      break;
+         break;
    }
 
    return wxACC_OK;
@@ -1917,21 +1778,21 @@ wxAccStatus ASliderAx::GetState(int childId, long* state)
    {
       case 0:
          *state = wxACC_STATE_SYSTEM_FOCUSABLE;
-      break;
+         break;
 
       case 1:
          if ( as->mLWSlider->mCurrentValue == as->mLWSlider->mMinValue )
          {
             *state = wxACC_STATE_SYSTEM_INVISIBLE;
          }
-      break;
+         break;
 
       case 3:
          if ( as->mLWSlider->mCurrentValue == as->mLWSlider->mMaxValue )
          {
             *state = wxACC_STATE_SYSTEM_INVISIBLE;
          }
-      break;
+         break;
    }
 
    // Do not use mSliderIsFocused is not set until after this method
@@ -1971,9 +1832,7 @@ wxAccStatus ASliderAx::GetValue(int childId, wxString* strValue)
             strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue);
             break;
 #endif
-
       }
-
       return wxACC_OK;
    }
 

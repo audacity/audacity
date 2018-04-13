@@ -166,7 +166,7 @@ class LWSlider
    void FormatPopWin();
    void SetPopWinPosition();
    void CreatePopWin();
-   void Draw(wxDC & dc);
+   void DrawToBitmap(wxDC & dc);
 
    bool DoShowDialog(wxPoint pos);
 
