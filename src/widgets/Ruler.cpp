@@ -1138,6 +1138,7 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
 
       double sg = UPP > 0.0? 1.0: -1.0;
 
+      int nDroppedMinorLabels=0;
       // Major and minor ticks
       for (int jj = 0; jj < 2; ++jj) {
          const double denom = jj == 0 ? mMajor : mMinor;
@@ -1181,8 +1182,15 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
                step = floor(sg * warpedD / denom);
                bool major = jj == 0;
                Tick(i, sg * step * denom, major, !major);
+               if( !major && mMinorLabels[mNumMinor-1].lx < mLeft )
+                  nDroppedMinorLabels++;
             }
          }
+         // If we've dropped minor labels through overcrowding, then don't show
+         // any of them.  We're allowed though to drop ones which correspond to the
+         // major numbers.
+         if( nDroppedMinorLabels > mNumMajor )
+            mNumMinor = 0;
       }
 
       // Left and Right Edges
