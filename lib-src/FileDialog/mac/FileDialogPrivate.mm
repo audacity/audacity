@@ -50,7 +50,7 @@
 // ============================================================================
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6
-   #define NSObject wxOSX_10_6_AND_LATER( x ) x
+   #define wxOSX_10_6_AND_LATER( x ) x
 #endif
 
 @interface OSPanelDelegate : NSObject wxOSX_10_6_AND_LATER(<NSOpenSavePanelDelegate>)
