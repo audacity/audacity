@@ -44,6 +44,7 @@
 #include "../widgets/Grabber.h"
 #include "../DeviceManager.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/Grabber.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -104,7 +105,7 @@ void DeviceToolBar::Populate()
    Add(mHost, 0, wxALIGN_CENTER);
 
    // Input device
-   Add(safenew wxStaticBitmap(this,
+   Add(safenew AStaticBitmap(this,
                           wxID_ANY,
                           theTheme.Bitmap(bmpMic)), 0, wxALIGN_CENTER);
    mInput = safenew wxChoice(this,
@@ -128,7 +129,7 @@ void DeviceToolBar::Populate()
    Add(mInputChannels, 0, wxALIGN_CENTER);
 
    // Output device
-   Add(safenew wxStaticBitmap(this,
+   Add(safenew AStaticBitmap(this,
                           wxID_ANY,
                           theTheme.Bitmap(bmpSpeaker)), 0, wxALIGN_CENTER);
    mOutput = safenew wxChoice(this,

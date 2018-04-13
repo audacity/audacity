@@ -39,6 +39,7 @@
 #include "../Project.h"
 #include "../Theme.h"
 #include "../widgets/ASlider.h"
+#include "../widgets/Grabber.h"
 
 IMPLEMENT_CLASS(MixerToolBar, ToolBar);
 
@@ -74,7 +75,7 @@ void MixerToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    // Recording icon and slider
-   Add(safenew wxStaticBitmap(this,
+   Add(safenew AStaticBitmap(this,
                           wxID_ANY,
                           theTheme.Bitmap(bmpMic)), 0, wxALIGN_CENTER);
    mInputSlider = safenew ASlider(this, wxID_ANY, _("Recording Volume"),
@@ -83,7 +84,7 @@ void MixerToolBar::Populate()
    Add(mInputSlider, 0, wxALIGN_CENTER);
 
    // Playback icon and slider
-   Add(safenew wxStaticBitmap(this,
+   Add(safenew AStaticBitmap(this,
                           wxID_ANY,
                           theTheme.Bitmap(bmpSpeaker)), 0, wxALIGN_CENTER);
    mOutputSlider = safenew ASlider(this, wxID_ANY, _("Playback Volume"),

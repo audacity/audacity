@@ -860,8 +860,8 @@ void ToolBar::OnErase( wxEraseEvent & WXUNUSED(event) )
 //
 void ToolBar::OnPaint( wxPaintEvent & event )
 {
-   wxPaintDC dc( (wxWindow *) event.GetEventObject() );
-
+   //wxPaintDC dc( (wxWindow *) event.GetEventObject() );
+   wxPaintDC dc( this );
    // Start with a clean background
    //
    // Under GTK, we specifically set the toolbar background to the background

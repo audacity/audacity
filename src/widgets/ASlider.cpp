@@ -573,12 +573,12 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
       thumbPos += 8-mThumbHeight/2;
    }
 
-#if !defined(__WXMAC__)
+   // Previously not done on mac, but with wx3.1.1. it
+   // needs to be.
    if( mHW )
    {
       dc.Clear();
    }
-#endif
 
    dc.DrawBitmap(*mBitmap, mLeft, mTop, true);
    const auto &thumbBitmap =
