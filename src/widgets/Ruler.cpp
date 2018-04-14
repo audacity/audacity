@@ -397,9 +397,11 @@ void Ruler::FindLinearTickSizes(double UPP)
 
    double d;
 
-   // As a heuristic, we want at least 16 pixels
-   // between each minor tick
-   double units = 16 * fabs(UPP);
+   // As a heuristic, we want at least 22 pixels between each 
+   // minor tick.  We want to show numbers like "-48"
+   // in that space.
+   // If vertical, we don't need as much space.
+   double units = ((mOrientation == wxHORIZONTAL) ? 22 : 12) * fabs(UPP);
 
    mDigits = 0;
 
