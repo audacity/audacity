@@ -1299,6 +1299,7 @@ void ThemeBase::RotateImageInto( int iTo, int iFrom, bool bClockwise )
 
 BEGIN_EVENT_TABLE(auStaticText, wxWindow)
     EVT_PAINT(auStaticText::OnPaint)
+    EVT_ERASE_BACKGROUND(auStaticText::OnErase)
 END_EVENT_TABLE()
 
  
@@ -1326,6 +1327,7 @@ void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
    //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));
+   dc.Clear();
    dc.DrawText( GetLabel(), 0,0);
 }
 

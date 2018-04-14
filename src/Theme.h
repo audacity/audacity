@@ -180,6 +180,9 @@ public:
    auStaticText(wxWindow* parent, wxString text);
    void OnPaint(wxPaintEvent & evt);
    bool AcceptsFocus() const override { return false; }
+   void OnErase(wxEraseEvent& event) {
+      static_cast<void>(event);
+   };
    DECLARE_EVENT_TABLE();
 };
 
