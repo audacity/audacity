@@ -8493,10 +8493,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.6]" = "c++11";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.7]" = "c++1z";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.6]" = "libstdc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
@@ -8515,7 +8512,7 @@
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.7;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WARNING_CFLAGS = "";
@@ -8525,7 +8522,7 @@
 				WX_FLAVOR = debug;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = /usr/local;
-				WX_VER = 3.0;
+				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
 			name = Debug;
@@ -8820,10 +8817,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.6]" = "c++11";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.7]" = "c++1z";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.6]" = "libstdc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
@@ -8842,7 +8836,7 @@
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.7;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WARNING_CFLAGS = "";
@@ -8852,7 +8846,7 @@
 				WX_FLAVOR = release;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = /usr/local;
-				WX_VER = 3.0;
+				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
 			name = Release;
