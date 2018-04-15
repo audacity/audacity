@@ -117,19 +117,19 @@ void MixerTrackSlider::OnCaptureKey(wxCommandEvent &event)
 
 // class MixerTrackCluster
 
-#define kInset             4
-#define kDoubleInset       (2 * kInset)
-#define kTripleInset       (3 * kInset)
-#define kQuadrupleInset    (4 * kInset)
+const int kInset = 4;
+const int kDoubleInset    = (2 * kInset);
+const int kTripleInset    = (3 * kInset);
+const int kQuadrupleInset = (4 * kInset);
 
-#define TRACK_NAME_HEIGHT                    18
-#define MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH  48
-#define MUTE_SOLO_HEIGHT                     19
-#define PAN_HEIGHT                           24
+const int TRACK_NAME_HEIGHT                   = 18;
+const int MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH = 48;
+const int MUTE_SOLO_HEIGHT                    = 19;
+const int  PAN_HEIGHT                         = 24;
 
-#define kLeftSideStackWidth         MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - kDoubleInset //vvv Change when numbers shown on slider scale.
-#define kRightSideStackWidth        MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset
-#define kMixerTrackClusterWidth     kLeftSideStackWidth + kRightSideStackWidth + kQuadrupleInset // kDoubleInset margin on both sides
+const int kLeftSideStackWidth     = MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - kDoubleInset; //vvv Change when numbers shown on slider scale.
+const int kRightSideStackWidth    = MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset;
+const int kMixerTrackClusterWidth = kLeftSideStackWidth + kRightSideStackWidth + kQuadrupleInset; // kDoubleInset margin on both sides
 
 enum {
    ID_BITMAPBUTTON_MUSICAL_INSTRUMENT = 13000,
@@ -714,12 +714,8 @@ void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
    wxSize clusterSize = this->GetSize();
    wxRect bev(0, 0, clusterSize.GetWidth() - 1, clusterSize.GetHeight() - 1);
 
-
-   for (unsigned int i = 0; i < 4; i++) // 4 gives a big bevel, but there were complaints about visibility otherwise.
-   {
-      bev.Inflate(-1, -1);
-      AColor::Bevel(dc, !selected, bev);
-   }
+   //bev.Inflate(-1, -1);
+   AColor::Bevel(dc, true, bev);// same bevel whether selected or not.
 }
 
 
@@ -1004,10 +1000,7 @@ void MixerBoard::UpdateTrackClusters()
          {
             // Not already showing it. Add a NEW MixerTrackCluster.
             wxPoint clusterPos(
-               (kInset +                                       // extra inset to left for first one, so it's double
-                  (nClusterIndex *
-                     (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each to its left
-                  kInset),                                     // plus left margin for NEW cluster
+               kInset + nClusterIndex * kMixerTrackClusterWidth,
                kInset);
             wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
             pMixerTrackCluster =
