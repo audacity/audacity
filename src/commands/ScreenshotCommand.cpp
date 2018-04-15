@@ -357,7 +357,6 @@ void ExploreMenu(
       if (item->IsCheck() && item->IsChecked())
          flags +=2;
 
-      wxLogDebug("T.Add( %2i, %2i,  0, \"%s¬%s\" );", depth, flags, Label,Accel ); 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
          ExploreMenu( context, pMenu, item->GetId(), depth+1 );
