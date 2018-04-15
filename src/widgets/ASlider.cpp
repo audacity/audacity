@@ -568,10 +568,12 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
       thumbPos += 8-mThumbHeight/2;
    }
 
-   // Previously not done on mac, but with wx3.1.1. it
-   // needs to be.
-   if( mHW )
+   // Draw the background.
+   // If we are lightweight, this has already been done for us.
+   if( mHW ){
+      dc.SetBackground( wxBrush(mParent->GetBackgroundColour()) );
       dc.Clear();
+   }
 
    dc.DrawBitmap(*mBitmap, mLeft, mTop, true);
    const auto &thumbBitmap =
@@ -622,8 +624,14 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    wxMemoryDC dc;
    dc.SelectObject(*mBitmap);
 
+
+   // The backgroundColour is the expected background colour.
+   // This bitmap is masked, so the colour affects anti-aliassing
+   // at the edges.  
    wxColour backgroundColour = theTheme.Colour(clrTrackInfo);
-   dc.SetBackground(backgroundColour);
+   if( mHW )
+      backgroundColour = mParent->GetBackgroundColour();
+   dc.SetBackground(wxBrush(backgroundColour));
    dc.Clear();
 
    // Draw the line along which the thumb moves.
@@ -653,12 +661,7 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
 
       // Colors
       dc.SetTextForeground( theTheme.Colour( clrTrackPanelText ));
-
-      // backgroundColour should be same as clrTrackInfo.
-      // This setting of colours may have been necessary at one time to avoid 
-      // antialiasing the font against white, even on dark background.
-      dc.SetTextBackground( theTheme.Colour( clrTrackInfo ) );
-      dc.SetBackground( theTheme.Colour( clrTrackInfo ) );
+      dc.SetTextBackground( backgroundColour );
       // Used to use wxSOLID here, but wxTRANSPARENT is better for mac, and 
       // works fine on windows.
       dc.SetBackgroundMode( wxTRANSPARENT );
@@ -753,12 +756,9 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    dc.SelectObject(wxNullBitmap);
 
    // safenew, because SetMask takes ownership
-   // On toolbars (etc) we have a HeavyWeight control, with fixed colour background.
-   // So we do not need a mask.
-   // On the TrackPanel we use as a LightWeight control, the background colour is 
-   // not guaranteed to be the same, so we use a mask
-   if( !mHW )
-      mBitmap->SetMask(safenew wxMask(*mBitmap, backgroundColour));
+   // We always mask.  If we are HeavyWeight, the ASlider draws the
+   // background.
+   mBitmap->SetMask(safenew wxMask(*mBitmap, backgroundColour));
 }
 
 void LWSlider::SetToolTipTemplate(const wxString & tip)

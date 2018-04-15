@@ -702,9 +702,9 @@ void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
    wxColour col = theTheme.Colour(selected ? clrTrackInfoSelected : clrTrackInfo) ;
    SetBackgroundColour( col );
    mMeter->SetBackgroundColour( col );
+   mStaticText_TrackName->SetBackgroundColour( col );
    mSlider_Gain->SetBackgroundColour( col );
    mSlider_Pan->SetBackgroundColour( col );
-   mStaticText_TrackName->SetBackgroundColour( col );
 
    wxPaintDC dc(this);
 
