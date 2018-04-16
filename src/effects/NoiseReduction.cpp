@@ -343,7 +343,7 @@ private:
       FloatVector mRealFFTs;
       FloatVector mImagFFTs;
    };
-   std::vector<movable_ptr<Record>> mQueue;
+   std::vector<std::unique_ptr<Record>> mQueue;
 };
 
 /****************************************************************//**

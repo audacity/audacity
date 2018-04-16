@@ -44,7 +44,7 @@ public:
    OldStyleCommandType *LookUp(const wxString &cmdName) const;
 
    /// Register a type of command with the directory.
-   void AddCommand(movable_ptr<OldStyleCommandType> &&type);
+   void AddCommand(std::unique_ptr<OldStyleCommandType> &&type);
 
    /// Get a pointer to the singleton instance
    static CommandDirectory *Get();

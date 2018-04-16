@@ -35,7 +35,7 @@ ODComputeSummaryTask::ODComputeSummaryTask()
    mHasUpdateRan=false;
 }
 
-movable_ptr<ODTask> ODComputeSummaryTask::Clone() const
+std::unique_ptr<ODTask> ODComputeSummaryTask::Clone() const
 {
    auto clone = std::make_unique<ODComputeSummaryTask>();
    clone->mDemandSample = GetDemandSample();

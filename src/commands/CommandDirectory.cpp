@@ -77,7 +77,7 @@ OldStyleCommandType *CommandDirectory::LookUp(const wxString &cmdName) const
    return iter->second.get();
 }
 
-void CommandDirectory::AddCommand(movable_ptr<OldStyleCommandType> &&type)
+void CommandDirectory::AddCommand(std::unique_ptr<OldStyleCommandType> &&type)
 {
    wxASSERT(type != NULL);
    // Internal string is shown but only in assertion message

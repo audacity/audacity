@@ -584,7 +584,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    //at this point we know the file is good and that we have to load the number of channels in mScs[s]->m_stream->codec->channels;
    //so for OD loading we create the tracks and releasee the modal lock after starting the ODTask.
    if (mUsingOD) {
-      std::vector<movable_ptr<ODDecodeFFmpegTask>> tasks;
+      std::vector<std::unique_ptr<ODDecodeFFmpegTask>> tasks;
       //append blockfiles to each stream and add an individual ODDecodeTask for each one.
       s = -1;
       for (const auto &stream : mChannels) {

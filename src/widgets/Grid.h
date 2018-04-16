@@ -226,7 +226,7 @@ class Grid final : public wxGrid
 
 #if wxUSE_ACCESSIBILITY
    GridAx *mAx;
-   std::vector<movable_ptr<GridAx>> mChildren;
+   std::vector<std::unique_ptr<GridAx>> mChildren;
    int mObjNdx;
 #endif
 

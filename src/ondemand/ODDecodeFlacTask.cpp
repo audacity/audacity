@@ -33,7 +33,7 @@ ODDecodeFlacTask::~ODDecodeFlacTask()
 }
 
 
-movable_ptr<ODTask> ODDecodeFlacTask::Clone() const
+std::unique_ptr<ODTask> ODDecodeFlacTask::Clone() const
 {
    auto clone = std::make_unique<ODDecodeFlacTask>();
    clone->mDemandSample = GetDemandSample();

@@ -64,7 +64,7 @@ struct __CFBundle;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-using VSTEffectArray = std::vector < movable_ptr<VSTEffect> > ;
+using VSTEffectArray = std::vector < std::unique_ptr<VSTEffect> > ;
 
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);

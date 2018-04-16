@@ -82,7 +82,7 @@ public:
    bool SeekingAllowed() ;
 
 private:
-   void InsertCache(movable_ptr<FFMpegDecodeCache> &&cache);
+   void InsertCache(std::unique_ptr<FFMpegDecodeCache> &&cache);
 
    //puts the actual audio samples into the blockfile's data array
    int FillDataFromCache(samplePtr & data, sampleFormat outFormat, sampleCount & start, size_t& len, unsigned int channel);
@@ -100,7 +100,7 @@ private:
    ScsPtr mScs;           //!< Pointer to array of pointers to stream contexts.
    ODDecodeFFmpegTask::Streams mChannels;
    std::shared_ptr<FFmpegContext> mContext; //!< Format description, also contains metadata and some useful info
-   std::vector<movable_ptr<FFMpegDecodeCache>> mDecodeCache;
+   std::vector<std::unique_ptr<FFMpegDecodeCache>> mDecodeCache;
    int                  mNumSamplesInCache;
    sampleCount                  mCurrentPos;     //the index of the next sample to be decoded
    size_t                       mCurrentLen;     //length of the last packet decoded
@@ -140,7 +140,7 @@ ODDecodeFFmpegTask::~ODDecodeFFmpegTask()
 }
 
 
-movable_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
+std::unique_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
 {
    auto clone = std::make_unique<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mContext, mStreamIndex);
    clone->mDemandSample=GetDemandSample();
@@ -623,7 +623,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
    return ret;
 }
 
-void ODFFmpegDecoder::InsertCache(movable_ptr<FFMpegDecodeCache> &&cache) {
+void ODFFmpegDecoder::InsertCache(std::unique_ptr<FFMpegDecodeCache> &&cache) {
    int searchStart = 0;
    int searchEnd = mDecodeCache.size(); //size() is also a valid insert index.
    int guess = 0;

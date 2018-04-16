@@ -19,7 +19,7 @@ class ExportPlugin;
  * factory method New_ExportMP2() which creates a NEW ExportMP2 object and
  * returns a pointer to it. The rest of the class declaration is in ExportMP2.cpp
  */
-movable_ptr<ExportPlugin> New_ExportMP2();
+std::unique_ptr<ExportPlugin> New_ExportMP2();
 
 #endif
 

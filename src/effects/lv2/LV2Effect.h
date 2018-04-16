@@ -292,7 +292,7 @@ private:
 
    bool mUseGUI;
 
-   std::vector< movable_ptr_with_deleter<char, freer> > mURIMap;
+   std::vector< std::unique_ptr<char, freer> > mURIMap;
 
    LV2_URI_Map_Feature mUriMapFeature;
    LV2_URID_Map mURIDMapFeature;
@@ -306,7 +306,7 @@ private:
    LV2_Options_Interface *mOptionsInterface;
    std::vector<LV2_Options_Option> mOptions;
 
-   std::vector<movable_ptr<LV2_Feature>> mFeatures;
+   std::vector<std::unique_ptr<LV2_Feature>> mFeatures;
 
    LV2_Feature *mInstanceAccessFeature;
    LV2_Feature *mParentFeature;

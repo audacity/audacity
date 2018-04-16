@@ -400,7 +400,7 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
    return true;
 }
 
-movable_ptr<ExportPlugin> New_ExportOGG()
+std::unique_ptr<ExportPlugin> New_ExportOGG()
 {
    return std::make_unique<ExportOGG>();
 }

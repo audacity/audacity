@@ -909,7 +909,7 @@ bool ExportPCM::CheckFileName(wxFileName &filename, int format)
    return ExportPlugin::CheckFileName(filename, format);
 }
 
-movable_ptr<ExportPlugin> New_ExportPCM()
+std::unique_ptr<ExportPlugin> New_ExportPCM()
 {
    return std::make_unique<ExportPCM>();
 }

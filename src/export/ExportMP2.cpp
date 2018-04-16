@@ -464,7 +464,7 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-movable_ptr<ExportPlugin> New_ExportMP2()
+std::unique_ptr<ExportPlugin> New_ExportMP2()
 {
    return std::make_unique<ExportMP2>();
 }

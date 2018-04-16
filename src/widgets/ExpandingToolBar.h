@@ -123,7 +123,7 @@ class ExpandingToolBar final : public wxPanelWrapper
    DECLARE_EVENT_TABLE()
 
    friend class ExpandingToolBarEvtHandler;
-   std::vector< movable_ptr< ExpandingToolBarEvtHandler > > mHandlers;
+   std::vector< std::unique_ptr< ExpandingToolBarEvtHandler > > mHandlers;
 };
 
 class ToolBarGrabber final : public wxPanelWrapper

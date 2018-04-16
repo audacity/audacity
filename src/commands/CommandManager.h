@@ -90,11 +90,11 @@ struct CommandListEntry
 using MenuBarList = std::vector < MenuBarListEntry >;
 
 // to do: remove the extra indirection when Mac compiler moves to newer version
-using SubMenuList = std::vector < movable_ptr<SubMenuListEntry> >;
+using SubMenuList = std::vector < std::unique_ptr<SubMenuListEntry> >;
 
 // This is an array of pointers, not structures, because the hash maps also point to them,
 // so we don't want the structures to relocate with vector operations.
-using CommandList = std::vector<movable_ptr<CommandListEntry>>;
+using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
 
 namespace std
 {

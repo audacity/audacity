@@ -180,7 +180,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    struct ReadUnlocker { void operator () ( const BlockFile *p ) const {
       if (p) p->UnlockRead(); } };
    using ReadLockBase =
-      movable_ptr_with_deleter< const BlockFile, ReadUnlocker >;
+      std::unique_ptr< const BlockFile, ReadUnlocker >;
 
  public:
    class ReadLock : public ReadLockBase

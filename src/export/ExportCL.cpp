@@ -545,7 +545,7 @@ wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportCLOptions(parent, format);
 }
 
-movable_ptr<ExportPlugin> New_ExportCL()
+std::unique_ptr<ExportPlugin> New_ExportCL()
 {
    return std::make_unique<ExportCL>();
 }

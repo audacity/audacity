@@ -325,7 +325,7 @@ int Exporter::FindFormatIndex(int exportindex)
    return 0;
 }
 
-void Exporter::RegisterPlugin(movable_ptr<ExportPlugin> &&ExportPlugin)
+void Exporter::RegisterPlugin(std::unique_ptr<ExportPlugin> &&ExportPlugin)
 {
    mPlugins.push_back(std::move(ExportPlugin));
 }

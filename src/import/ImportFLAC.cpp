@@ -182,7 +182,7 @@ private:
    bool                  mStreamInfoDone;
    ProgressResult        mUpdateResult;
    TrackHolders          mChannels;
-   movable_ptr<ODDecodeFlacTask> mDecoderTask;
+   std::unique_ptr<ODDecodeFlacTask> mDecoderTask;
 };
 
 

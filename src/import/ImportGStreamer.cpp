@@ -232,7 +232,7 @@ private:
    bool                    mAsyncDone;    //!< true = 1st async-done message received
 
    GMutex                  mStreamsLock;  //!< Mutex protecting the mStreams array
-   std::vector<movable_ptr<GStreamContext>> mStreams;      //!< Array of pointers to stream contexts
+   std::vector<std::unique_ptr<GStreamContext>> mStreams;      //!< Array of pointers to stream contexts
 };
 
 /// A representative of GStreamer loader in

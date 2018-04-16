@@ -307,7 +307,7 @@ void Importer::WriteImportItems()
    } while( true );
 }
 
-movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
+std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 {
    auto new_item = std::make_unique<ExtImportItem>();
    new_item->extensions.Add(wxT("*"));

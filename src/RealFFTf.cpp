@@ -102,7 +102,7 @@ HFFT InitializeFFT(size_t fftlen)
 enum : size_t { MAX_HFFT = 10 };
 
 // Maintain a pool:
-static std::vector< movable_ptr<FFTParam> > hFFTArray(MAX_HFFT);
+static std::vector< std::unique_ptr<FFTParam> > hFFTArray(MAX_HFFT);
 wxCriticalSection getFFTMutex;
 
 /* Get a handle to the FFT tables of the desired length */

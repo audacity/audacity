@@ -146,7 +146,7 @@ private:
    std::vector<FormatInfo> mFormatInfos;
 };
 
-using ExportPluginArray = std::vector < movable_ptr< ExportPlugin > > ;
+using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(wxWindow *, WindowPtrArray, class AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
@@ -161,7 +161,7 @@ public:
 
    void SetFileDialogTitle( const wxString & DialogTitle );
    void SetDefaultFormat( const wxString & Format ){ mFormatName = Format;};
-   void RegisterPlugin(movable_ptr<ExportPlugin> &&plugin);
+   void RegisterPlugin(std::unique_ptr<ExportPlugin> &&plugin);
 
    bool Process(AudacityProject *project, bool selectedOnly,
                 double t0, double t1);

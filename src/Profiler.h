@@ -60,7 +60,7 @@ class Profiler
    TaskProfile* GetTaskProfileByDescription(const char* description);
 
    //List of current Task to do.
-   std::vector<movable_ptr<TaskProfile>> mTasks;
+   std::vector<std::unique_ptr<TaskProfile>> mTasks;
    //mutex for above variable
    ODLock mTasksMutex;
 
