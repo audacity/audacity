@@ -13,12 +13,6 @@ UserException::~UserException()
 {
 }
 
-std::unique_ptr< AudacityException > UserException::Move()
-{
-   return std::unique_ptr< AudacityException >
-   { safenew UserException{ std::move( *this ) } };
-}
-
 void UserException::DelayedHandlerAction()
 {
 }

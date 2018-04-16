@@ -14,12 +14,6 @@ NotYetAvailableException::~NotYetAvailableException()
 {
 }
 
-std::unique_ptr< AudacityException > NotYetAvailableException::Move()
-{
-   return std::unique_ptr< AudacityException >
-   { safenew NotYetAvailableException{ std::move( *this ) } };
-}
-
 wxString NotYetAvailableException::ErrorMessage() const
 {
    return wxString::Format(

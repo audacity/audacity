@@ -37,8 +37,6 @@ public:
    ~FileException() override;
 
 protected:
-   std::unique_ptr< AudacityException > Move() override;
-
    // Format a default, internationalized error message for this exception.
    wxString ErrorMessage() const override;
 
