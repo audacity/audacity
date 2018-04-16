@@ -275,8 +275,7 @@ private:
    wxTextCtrl *mCommandText;
    wxCheckBox *mVersionCheckBox;
 
-   bool              mError{ false };
-   wxFileName        mFailedFileName;
+   std::exception_ptr mpException {};
 
    DECLARE_EVENT_TABLE()
 

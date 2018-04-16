@@ -62,8 +62,7 @@ public:
    std::unique_ptr<WaveTrack> outputLeftTrack;
    std::unique_ptr<WaveTrack> outputRightTrack;
 
-   wxFileName failedFileName;
-   bool error{ false };
+   std::exception_ptr mpException {};
 };
 
 class SBSMSEffectInterface final : public SBSMSInterfaceSliding {
@@ -100,23 +99,16 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    // I don't know if we can safely propagate errors through sbsms, and it
    // does not seem to let us report error codes, so use this roundabout to
    // stop the effect early.
-   // This would be easier with std::exception_ptr but we don't have that yet.
    try {
       r->leftTrack->Get(
          (samplePtr)(r->leftBuffer.get()), floatSample, r->offset, blockSize);
       r->rightTrack->Get(
          (samplePtr)(r->rightBuffer.get()), floatSample, r->offset, blockSize);
    }
-   catch ( const FileException& e ) {
-      if ( e.cause == FileException::Cause::Read )
-         r->failedFileName = e.fileName;
-      data->size = 0;
-      r->error = true;
-      return 0;
-   }
    catch ( ... ) {
+      // Save the exception object for re-throw when out of the library
+      r->mpException = std::current_exception();
       data->size = 0;
-      r->error = true;
       return 0;
    }
 
@@ -425,15 +417,13 @@ bool EffectSBSMS::Process()
                if (TrackProgress(nWhichTrack, frac))
                   return false;
             }
-            if (rb.failedFileName.IsOk())
-               // re-construct an exception
-               // I wish I had std::exception_ptr instead
-               // and could re-throw any AudacityException
-               throw FileException{
-                  FileException::Cause::Read, rb.failedFileName };
-            else if (rb.error)
-               // well, what?
-               bGoodResult = false;
+
+            {
+               auto pException = rb.mpException;
+               rb.mpException = {};
+               if (pException)
+                  std::rethrow_exception(pException);
+            }
 
             if (bGoodResult) {
                rb.outputLeftTrack->Flush();
