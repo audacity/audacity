@@ -36,9 +36,7 @@ UndoManager
 
 #include "UndoManager.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_set>
-#endif
 
 using ConstBlockFilePtr = const BlockFile*;
 using Set = std::unordered_set<ConstBlockFilePtr>;

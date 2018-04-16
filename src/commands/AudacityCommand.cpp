@@ -59,9 +59,7 @@ ShuttleGui.
 #include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 #include "../commands/CommandContext.h"
 
 AudacityCommand::AudacityCommand()

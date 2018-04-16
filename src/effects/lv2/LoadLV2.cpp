@@ -43,9 +43,7 @@ Functions that find and load all LV2 plugins on the system.
 
 #include "LoadLV2.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 // ============================================================================
 // Module registration entry point

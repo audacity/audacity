@@ -124,13 +124,8 @@ void Importer::GetSupportedImportFormats(FormatList *formatList)
 {
    for(const auto &importPlugin : mImportPluginList)
    {
-#ifdef __AUDACITY_OLD_STD__
-      formatList->push_back(Format{importPlugin->GetPluginFormatDescription(),
-                               importPlugin->GetSupportedExtensions()});
-#else
       formatList->emplace_back(importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions());
-#endif
    }
 }
 

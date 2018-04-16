@@ -566,11 +566,7 @@ std::unique_ptr<wxMenuBar> CommandManager::AddMenuBar(const wxString & sMenu)
    }
 
    auto result = std::make_unique<wxMenuBar>();
-#ifdef __AUDACITY_OLD_STD__
-   mMenuBarList.push_back(MenuBarListEntry{sMenu, result.get()});
-#else
    mMenuBarList.emplace_back(sMenu, result.get());
-#endif
 
    return result;
 }

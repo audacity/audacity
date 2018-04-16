@@ -58,9 +58,7 @@ AliasedFile s.
 #include "WaveClip.h"
 #include "widgets/ErrorDialog.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 using AliasedFileHash = std::unordered_map<wxString, AliasedFile*>;
 

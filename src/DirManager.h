@@ -22,9 +22,7 @@
 #include "xml/XMLTagHandler.h"
 #include "wxFileNameWrapper.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 class wxHashTable;
 class BlockArray;

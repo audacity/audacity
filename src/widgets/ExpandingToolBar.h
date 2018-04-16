@@ -23,9 +23,7 @@
 #include "ImageRoll.h"
 #include "wxPanelWrapper.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 class wxDragImage;
 

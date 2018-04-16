@@ -38,9 +38,7 @@
 
 #include "LoadLV2.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates

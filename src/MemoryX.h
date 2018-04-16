@@ -1185,27 +1185,20 @@ make_value_transform_iterator(const Iterator &iterator, Function function)
    return { iterator, NewFunction{ function } };
 }
 
+#if !wxCHECK_VERSION(3, 1, 0)
 // For using std::unordered_map on wxString
 namespace std
 {
-#ifdef __AUDACITY_OLD_STD__
-   namespace tr1
-   {
-#endif
-#if !wxCHECK_VERSION(3, 1, 0)
-      template<typename T> struct hash;
-      template<> struct hash< wxString > {
-         size_t operator () (const wxString &str) const // noexcept
-         {
-            auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
-            using Hasher = hash< decltype(stdstr) >;
-            return Hasher{}( stdstr );
-         }
-      };
-#endif
-#ifdef __AUDACITY_OLD_STD__
-   }
-#endif
+   template<typename T> struct hash;
+   template<> struct hash< wxString > {
+      size_t operator () (const wxString &str) const // noexcept
+      {
+         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
+         using Hasher = hash< decltype(stdstr) >;
+         return Hasher{}( stdstr );
+      }
+   };
 }
+#endif
 
 #endif // __AUDACITY_MEMORY_X_H__

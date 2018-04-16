@@ -28,9 +28,7 @@
 
 #include "audacity/Types.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 using CommandParameter = wxString;
 class TranslatedInternalString;
@@ -100,21 +98,6 @@ using CommandList = std::vector<movable_ptr<CommandListEntry>>;
 
 namespace std
 {
-#ifdef __AUDACITY_OLD_STD__
-   namespace tr1
-   {
-      template<typename T> struct hash;
-      template<> struct hash< NormalizedKeyString > {
-         size_t operator () (const NormalizedKeyString &str) const // noexcept
-         {
-            auto &stdstr = str.Raw(); // no allocations, a cheap fetch
-            using Hasher = hash< wxString >;
-            return Hasher{}( stdstr );
-         }
-      };
-   }
-#else
-   // in std, not in tr1.
    template<> struct hash< NormalizedKeyString > {
       size_t operator () (const NormalizedKeyString &str) const // noexcept
       {
@@ -123,7 +106,6 @@ namespace std
          return Hasher{}( stdstr );
       }
    };
-#endif
 }
 
 using CommandKeyHash = std::unordered_map<NormalizedKeyString, CommandListEntry*>;

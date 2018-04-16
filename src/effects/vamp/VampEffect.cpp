@@ -43,10 +43,6 @@
 #include "../../LabelTrack.h"
 #include "../../WaveTrack.h"
 
-#ifdef __AUDACITY_OLD_STD__
-#include <list>
-#endif
-
 enum
 {
    ID_Program  =  10000,

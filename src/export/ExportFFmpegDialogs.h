@@ -22,9 +22,7 @@ LRN
 #include "../FileNames.h"
 #include "../widgets/wxPanelWrapper.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 
 /// Identifiers for pre-set export types.
