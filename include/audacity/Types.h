@@ -45,6 +45,7 @@
 #include <algorithm>
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <type_traits>
 
 // ----------------------------------------------------------------------------
 // TODO:  I'd imagine this header may be replaced by other public headers. But,
@@ -90,7 +91,7 @@ public:
 
    size_t as_size_t() const {
       wxASSERT(value >= 0);
-      wxASSERT(value <= std::numeric_limits<size_t>::max());
+      wxASSERT(static_cast<std::make_unsigned<type>::type>(value) <= std::numeric_limits<size_t>::max());
       return value;
    }
 
