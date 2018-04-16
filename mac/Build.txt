@@ -48,7 +48,7 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
 10) Change directory to the folder wxWidgets was extracted to then build/install 
     wxWidgets:
 
-   sudo <path to Audacity source>/mac/build_wxwidgets
+   sudo <path to Audacity source>/mac/scripts/build_wxwidgets
 
 You should now be able to build Audacity using either the Xcode application or 
 the Xcodebuild command line tool. 
