@@ -168,7 +168,7 @@ void ODManager::AddNewTask(movable_ptr<ODTask> &&mtask, bool lockMutex)
    {
       //Make a NEW one, add it to the local track queue, and to the immediate running task list,
       //since this task is definitely at the head
-      auto newqueue = make_movable<ODWaveTrackTaskQueue>();
+      auto newqueue = std::make_unique<ODWaveTrackTaskQueue>();
       newqueue->AddTask(std::move(mtask));
       mQueues.push_back(std::move(newqueue));
       if(lockMutex)

@@ -35,7 +35,7 @@ ODDecodeFlacTask::~ODDecodeFlacTask()
 
 movable_ptr<ODTask> ODDecodeFlacTask::Clone() const
 {
-   auto clone = make_movable<ODDecodeFlacTask>();
+   auto clone = std::make_unique<ODDecodeFlacTask>();
    clone->mDemandSample = GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
@@ -304,7 +304,7 @@ ODFileDecoder* ODDecodeFlacTask::CreateFileDecoder(const wxString & fileName)
    }
 
    // Open the file for import
-   auto decoder = std::make_movable<ODFlacDecoder>(fileName);
+   auto decoder = std::std::make_unique<ODFlacDecoder>(fileName);
 */
 /*
    bool success = decoder->Init();
@@ -313,7 +313,7 @@ ODFileDecoder* ODDecodeFlacTask::CreateFileDecoder(const wxString & fileName)
    }
 */
    // Open the file for import
-   auto decoder = make_movable<ODFlacDecoder>(fileName);
+   auto decoder = std::make_unique<ODFlacDecoder>(fileName);
 
    mDecoders.push_back(std::move(decoder));
    return mDecoders.back().get();

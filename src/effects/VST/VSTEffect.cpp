@@ -1455,7 +1455,7 @@ bool VSTEffect::RealtimeInitialize()
 
 bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
-   mSlaves.push_back(make_movable<VSTEffect>(mPath, this));
+   mSlaves.push_back(std::make_unique<VSTEffect>(mPath, this));
    VSTEffect *const slave = mSlaves.back().get();
 
    slave->SetBlockSize(mBlockSize);

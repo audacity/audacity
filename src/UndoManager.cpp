@@ -288,7 +288,7 @@ void UndoManager::PushState(const TrackList * l,
    // Assume tags was duplicted before any changes.
    // Just save a NEW shared_ptr to it.
    stack.push_back(
-      make_movable<UndoStackElem>
+      std::make_unique<UndoStackElem>
          (std::move(tracksCopy),
             longDescription, shortDescription, selectedRegion, tags)
    );

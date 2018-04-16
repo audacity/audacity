@@ -62,7 +62,7 @@ void GetFLACImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList &unusableImportPluginList)
 {
    unusableImportPluginList.push_back(
-      make_movable<UnusableImportPlugin>
+      std::make_unique<UnusableImportPlugin>
          (DESC, wxArrayString(WXSIZEOF(exts), exts))
    );
 }
@@ -293,7 +293,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 void GetFLACImportPlugin(ImportPluginList &importPluginList,
                          UnusableImportPluginList &WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( make_movable<FLACImportPlugin>() );
+   importPluginList.push_back( std::make_unique<FLACImportPlugin>() );
 }
 
 
@@ -358,7 +358,7 @@ FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
 bool FLACImportFileHandle::Init()
 {
 #ifdef EXPERIMENTAL_OD_FLAC
-   mDecoderTask = make_movable<ODDecodeFlacTask>();
+   mDecoderTask = std::make_unique<ODDecodeFlacTask>();
 
    ODFlacDecoder* odDecoder = (ODFlacDecoder*)mDecoderTask->CreateFileDecoder(mFilename);
    if(!odDecoder || !odDecoder->ReadHeader())
@@ -522,7 +522,7 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
          {
             //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
             ODManager::Instance()->AddNewTask(std::move(mDecoderTask));
-            mDecoderTask = make_movable<ODDecodeFlacTask>(); //TODO: see if we need to use clone to keep the metadata.
+            mDecoderTask = std::make_unique<ODDecodeFlacTask>(); //TODO: see if we need to use clone to keep the metadata.
          }
       }
       //if we have mono or a linked track (stereo), we add ONE task for the one linked wave track

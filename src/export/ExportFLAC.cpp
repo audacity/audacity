@@ -452,7 +452,7 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
 
 movable_ptr<ExportPlugin> New_ExportFLAC()
 {
-   return make_movable<ExportFLAC>();
+   return std::make_unique<ExportFLAC>();
 }
 
 #endif // USE_LIBFLAC

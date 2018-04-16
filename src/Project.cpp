@@ -3425,13 +3425,13 @@ void AudacityProject::EnqueueODTasks()
                movable_ptr<ODTask> newTask;
 #ifdef EXPERIMENTAL_OD_FLAC
                if(!(createdODTasks&ODTask::eODFLAC) && (odFlags & ODTask::eODFLAC)) {
-                  newTask = make_movable<ODDecodeFlacTask>();
+                  newTask = std::make_unique<ODDecodeFlacTask>();
                   createdODTasks = createdODTasks | ODTask::eODFLAC;
                }
                else
 #endif
                if(!(createdODTasks&ODTask::eODPCMSummary) && (odFlags & ODTask::eODPCMSummary)) {
-                  newTask = make_movable<ODComputeSummaryTask>();
+                  newTask = std::make_unique<ODComputeSummaryTask>();
                   createdODTasks= createdODTasks | ODTask::eODPCMSummary;
                }
                else {
@@ -4047,7 +4047,7 @@ bool AudacityProject::DoSave
          while (t) {
             if (t->GetKind() == Track::Wave)
                lockers.push_back(
-                  make_movable<WaveTrack::Locker>(
+                  std::make_unique<WaveTrack::Locker>(
                      static_cast<const WaveTrack*>(t)));
             t = iter.Next();
          }
@@ -4686,7 +4686,7 @@ void AudacityProject::PopState(const UndoState &state)
          {
             if(!odUsed)
             {
-               computeTask = make_movable<ODComputeSummaryTask>();
+               computeTask = std::make_unique<ODComputeSummaryTask>();
                odUsed=true;
             }
             // PRL:  Is it correct to add all tracks to one task, even if they

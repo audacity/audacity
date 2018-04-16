@@ -117,7 +117,7 @@ private:
 void GetPCMImportPlugin(ImportPluginList & importPluginList,
                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( make_movable<PCMImportPlugin>() );
+   importPluginList.push_back( std::make_unique<PCMImportPlugin>() );
 }
 
 wxString PCMImportPlugin::GetPluginFormatDescription()
@@ -436,7 +436,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
       if(useOD)
       {
-         auto computeTask = make_movable<ODComputeSummaryTask>();
+         auto computeTask = std::make_unique<ODComputeSummaryTask>();
          bool moreThanStereo = mInfo.channels>2;
          for (const auto &channel : channels)
          {
@@ -445,7 +445,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
             {
                //if we have 3 more channels, they get imported on seperate tracks, so we add individual tasks for each.
                ODManager::Instance()->AddNewTask(std::move(computeTask));
-               computeTask = make_movable<ODComputeSummaryTask>();
+               computeTask = std::make_unique<ODComputeSummaryTask>();
             }
          }
          //if we have a linked track, we add ONE task.

@@ -62,7 +62,7 @@ void GetMP3ImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList &unusableImportPluginList)
 {
    unusableImportPluginList.push_back(
-      make_movable<UnusableImportPlugin>
+      std::make_unique<UnusableImportPlugin>
          (DESC, wxArrayString(WXSIZEOF(exts), exts))
   );
 }
@@ -159,7 +159,7 @@ private:
 void GetMP3ImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( make_movable<MP3ImportPlugin>() );
+   importPluginList.push_back( std::make_unique<MP3ImportPlugin>() );
 }
 
 /* The MAD callbacks */

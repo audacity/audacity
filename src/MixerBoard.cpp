@@ -1437,7 +1437,7 @@ void MixerBoard::LoadMusicalInstruments()
       auto bmp = std::make_unique<wxBitmap>(data.bitmap);
       dc.SelectObject(*bmp);
       AColor::Bevel(dc, false, bev);
-      mMusicalInstruments.push_back(make_movable<MusicalInstrument>(
+      mMusicalInstruments.push_back(std::make_unique<MusicalInstrument>(
          std::move(bmp), data.name
       ));
    };

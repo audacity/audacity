@@ -24,11 +24,11 @@ IdentInterfaceSymbol BatchEvalCommandType::BuildName()
 
 void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
 {
-   auto commandNameValidator = make_movable<DefaultValidator>();
+   auto commandNameValidator = std::make_unique<DefaultValidator>();
    signature.AddParameter(wxT("CommandName"), wxT(""), std::move(commandNameValidator));
-   auto paramValidator = make_movable<DefaultValidator>();
+   auto paramValidator = std::make_unique<DefaultValidator>();
    signature.AddParameter(wxT("ParamString"), wxT(""), std::move(paramValidator));
-   auto macroValidator = make_movable<DefaultValidator>();
+   auto macroValidator = std::make_unique<DefaultValidator>();
    signature.AddParameter(wxT("MacroName"), wxT(""), std::move(macroValidator));
 }
 

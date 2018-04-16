@@ -801,7 +801,7 @@ EffectNoiseReduction::Worker::Worker
 
    mQueue.resize(mHistoryLen);
    for (unsigned ii = 0; ii < mHistoryLen; ++ii)
-      mQueue[ii] = make_movable<Record>(mSpectrumSize);
+      mQueue[ii] = std::make_unique<Record>(mSpectrumSize);
 
    // Create windows
 

@@ -142,7 +142,7 @@ ODDecodeFFmpegTask::~ODDecodeFFmpegTask()
 
 movable_ptr<ODTask> ODDecodeFFmpegTask::Clone() const
 {
-   auto clone = make_movable<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mContext, mStreamIndex);
+   auto clone = std::make_unique<ODDecodeFFmpegTask>(mScs, Streams{ mChannels }, mContext, mStreamIndex);
    clone->mDemandSample=GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
@@ -157,7 +157,7 @@ ODFileDecoder* ODDecodeFFmpegTask::CreateFileDecoder(const wxString & fileName)
 {
    // Open the file for import
    auto decoder =
-      make_movable<ODFFmpegDecoder>(fileName, mScs, ODDecodeFFmpegTask::Streams{ mChannels },
+      std::make_unique<ODFFmpegDecoder>(fileName, mScs, ODDecodeFFmpegTask::Streams{ mChannels },
       mContext, mStreamIndex);
 
    mDecoders.push_back(std::move(decoder));
@@ -394,7 +394,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             // Is there a proof size_t will not overflow size_t?
             // Result is surely nonnegative.
             auto amt = (actualDecodeStart - start).as_size_t();
-            auto cache = make_movable<FFMpegDecodeCache>();
+            auto cache = std::make_unique<FFMpegDecodeCache>();
 
             //wxPrintf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%lu, start %llu, len %lu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
 
@@ -607,7 +607,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       //TODO- consider growing/unioning a few cache buffers like WaveCache does.
       //however we can't use wavecache as it isn't going to handle our stereo interleaved part, and isn't for samples
       //However if other ODDecode tasks need this, we should do a NEW class for caching.
-      auto cache = make_movable<FFMpegDecodeCache>();
+      auto cache = std::make_unique<FFMpegDecodeCache>();
       //len is number of samples per channel
       // wxASSERT(sc->m_stream->codec->channels > 0);
       cache->numChannels = std::max<unsigned>(0, sc->m_stream->codec->channels);

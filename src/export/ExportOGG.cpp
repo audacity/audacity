@@ -402,7 +402,7 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, c
 
 movable_ptr<ExportPlugin> New_ExportOGG()
 {
-   return make_movable<ExportOGG>();
+   return std::make_unique<ExportOGG>();
 }
 
 #endif // USE_LIBVORBIS

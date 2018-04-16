@@ -299,7 +299,7 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
                 nano);
 
    // Instantiate plugin
-   auto plug = make_movable<GStreamerImportPlugin>();
+   auto plug = std::make_unique<GStreamerImportPlugin>();
 
    // No supported extensions...no gstreamer plugins installed
    if (plug->GetSupportedExtensions().GetCount() == 0)
@@ -569,7 +569,7 @@ GStreamerImportFileHandle::OnPadAdded(GstPad *pad)
 
       {
          // Allocate a NEW stream context
-         auto uc = make_movable<GStreamContext>();
+         auto uc = std::make_unique<GStreamContext>();
          c = uc.get();
          if (!c)
          {

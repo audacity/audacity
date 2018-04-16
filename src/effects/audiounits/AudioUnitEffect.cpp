@@ -1346,7 +1346,7 @@ bool AudioUnitEffect::RealtimeInitialize()
 
 bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
-   auto slave = make_movable<AudioUnitEffect>(mPath, mName, mComponent, this);
+   auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
    if (!slave->SetHost(NULL))
       return false;
 

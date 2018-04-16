@@ -162,7 +162,7 @@ void Importer::ReadImportItems()
       if (toker.CountTokens() != 2)
         break;
 
-      auto new_item = make_movable<ExtImportItem>();
+      auto new_item = std::make_unique<ExtImportItem>();
 
       /* First token is the filtering condition, second - the filter list */
       condition = toker.GetNextToken();
@@ -309,7 +309,7 @@ void Importer::WriteImportItems()
 
 movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 {
-   auto new_item = make_movable<ExtImportItem>();
+   auto new_item = std::make_unique<ExtImportItem>();
    new_item->extensions.Add(wxT("*"));
    new_item->mime_types.Add(wxT("*"));
 

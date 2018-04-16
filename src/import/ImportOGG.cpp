@@ -60,7 +60,7 @@ void GetOGGImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList &unusableImportPluginList)
 {
    unusableImportPluginList.push_back(
-      make_movable<UnusableImportPlugin>
+      std::make_unique<UnusableImportPlugin>
          (DESC, wxArrayString(WXSIZEOF(exts), exts))
    );
 }
@@ -163,7 +163,7 @@ private:
 void GetOGGImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( make_movable<OggImportPlugin>() );
+   importPluginList.push_back( std::make_unique<OggImportPlugin>() );
 }
 
 wxString OggImportPlugin::GetPluginFormatDescription()
