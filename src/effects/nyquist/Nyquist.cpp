@@ -483,15 +483,16 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 
 bool NyquistEffect::Init()
 {
-   // TODO: Document: Init() is called each time the effect is called but
-   // AFTER the UI (if any) has been created, so headers that affect the UI
-   // are only initialised at the start of the session.
+   // When Nyquist Prompt spawns an effect GUI, Init() is called for Nyquist Prompt,
+   // and then again for the spawned (mExternal) effect.
 
    // EffectType may not be defined in script, so
    // reset each time we call the Nyquist Prompt.
    if (mIsPrompt) {
-      mType = EffectTypeProcess;
       mName = XO("Nyquist Prompt");
+      // Reset effect type each time we call the Nyquist Prompt.
+      mType = EffectTypeProcess;
+      mIsSpectral = false;
       mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
       mEnablePreview = true;  // Preview button always enabled for Nyquist Prompt.
    }
@@ -954,10 +955,6 @@ bool NyquistEffect::ProcessOne()
    nyx_rval rval;
 
    wxString cmd;
-
-   // TODO: Document.
-   // Nyquist default latency is 300 ms, which is rather conservative and
-   // too long when playback set to ALSA (bug 570), so we'll use 100 ms like Audacity.
    cmd += wxT("(snd-set-latency  0.1)");
 
    if (mVersion >= 4) {
@@ -1734,8 +1731,6 @@ bool NyquistEffect::Parse(
       return true;
    }
 
-   // TODO: Update documentation.
-
    if (len >= 2 && tokens[0] == wxT("debugflags")) {
       for (int i = 1; i < len; i++) {
          // "trace" sets *tracenable* (LISP) or *sal-traceback* (SAL)
@@ -1852,7 +1847,6 @@ bool NyquistEffect::Parse(
       return true;
    }
 
-   // TODO: Document.
    // Page name in Audacity development manual
    if (len >= 2 && tokens[0] == wxT("manpage")) {
       // do not translate
@@ -1860,7 +1854,6 @@ bool NyquistEffect::Parse(
       return true;
    }
 
-   // TODO: Document.
    // Local Help file
    if (len >= 2 && tokens[0] == wxT("helpfile")) {
       // do not translate
@@ -1868,7 +1861,6 @@ bool NyquistEffect::Parse(
       return true;
    }
 
-   // TODO: Document.
    // Debug button may be disabled for release plug-ins.
    if (len >= 2 && tokens[0] == wxT("debugbutton")) {
       if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
