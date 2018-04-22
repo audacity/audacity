@@ -923,23 +923,28 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartStatic(_("Options"), true);
          {
 
-            wxArrayString arrayOptions;
-            arrayOptions.Add(_("Do nothing"));
-            arrayOptions.Add(_("Exit Audacity"));
-            arrayOptions.Add(_("Restart system"));
-            arrayOptions.Add(_("Shutdown system"));
+            S.StartMultiColumn(1, wxEXPAND);
+            {
+               S.SetStretchyCol( 0 );
+               wxArrayString arrayOptions;
+               arrayOptions.Add(_("Do nothing"));
+               arrayOptions.Add(_("Exit Audacity"));
+               arrayOptions.Add(_("Restart system"));
+               arrayOptions.Add(_("Shutdown system"));
 
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(0));
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(1));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(0));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(1));
 #ifdef __WINDOWS__
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(2));
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(3));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(2));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(3));
 #endif
-            m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
+               m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
 
-            m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
-                                                          m_sTimerAfterCompleteOption,
-                                                          &m_sTimerAfterCompleteOptionsArray);
+               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
+                                                             m_sTimerAfterCompleteOption,
+                                                             &m_sTimerAfterCompleteOptionsArray);
+            }
+            S.EndMultiColumn();
          }
          S.EndStatic();
 
