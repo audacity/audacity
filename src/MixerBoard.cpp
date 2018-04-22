@@ -862,7 +862,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
 #define MIXER_BOARD_MIN_HEIGHT      460
 
 // Min width is one cluster wide, plus margins.
-#define MIXER_BOARD_MIN_WIDTH       kTripleInset + kMixerTrackClusterWidth + kTripleInset
+#define MIXER_BOARD_MIN_WIDTH       kTripleInset + kMixerTrackClusterWidth*2 + kTripleInset
 
 
 BEGIN_EVENT_TABLE(MixerBoard, wxWindow)
