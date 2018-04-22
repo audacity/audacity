@@ -880,8 +880,8 @@ void CommandManager::AddItemList(const wxString & name,
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
       CommandListEntry *entry = NewIdentifier(name,
-                                              items[i].Translated(),
-                                              items[i].Translated(),
+                                              items[i].TranslatedForMenu(),
+                                              items[i].TranslatedForMenu(),
                                               // No means yet to specify !
                                               false,
                                               CurrentMenu(),

@@ -208,7 +208,13 @@ public:
    {}
 
    const wxString &Internal() const { return mInternal; }
-   const wxString &Translated() const { return mTranslated; }
+   const wxString Translated() const 
+   {  
+      wxString Temp = mTranslated;
+      Temp.Replace( "&","" );
+      return Temp;
+   }
+   const wxString &TranslatedForMenu() const { return mTranslated; }
 
 private:
    wxString mInternal;
