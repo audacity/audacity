@@ -466,6 +466,7 @@ void MixerTrackCluster::UpdateName()
    #endif
    mBitmapButton_MusicalInstrument->SetBitmapLabel(
       *(mMixerBoard->GetMusicalInstrumentBitmap(mTrack.get())));
+   Refresh();
 }
 
 void MixerTrackCluster::UpdateMute()
