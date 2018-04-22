@@ -1064,7 +1064,7 @@ ProgressResult TimerRecordDialog::WaitForStart()
    while (updateResult == ProgressResult::Success && !bIsRecording)
    {
       updateResult = progress.UpdateProgress();
-      wxMilliSleep(10);
+      wxMilliSleep(kTimerInterval);
       bIsRecording = (m_DateTime_Start <= wxDateTime::UNow());
    }
    return updateResult;
@@ -1111,7 +1111,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    while (iUpdateResult == ProgressResult::Success && !bIsTime)
    {
       iUpdateResult = dlgAction.UpdateProgress();
-      wxMilliSleep(10);
+      wxMilliSleep(kTimerInterval);
       bIsTime = (dtActionTime <= wxDateTime::UNow());
    }
    return iUpdateResult;
