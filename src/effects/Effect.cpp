@@ -2515,6 +2515,18 @@ void Effect::Preview(bool dryOnly)
       return;
 
    bool success = true;
+
+   auto cleanup = finally( [&] {
+
+      // Effect is already inited; we will call Process, End, and then Init
+      // again, so the state is exactly the way it was before Preview
+      // was called.
+      if (!dryOnly) {
+         End();
+         GuardedCall( [&]{ Init(); } );
+      }
+   } );
+
    auto vr0 = valueRestorer( mT0 );
    auto vr1 = valueRestorer( mT1 );
    // Most effects should stop at t1.
@@ -2524,17 +2536,8 @@ void Effect::Preview(bool dryOnly)
    // Save the original track list
    TrackList *saveTracks = mTracks;
 
-   auto cleanup = finally( [&] {
+   auto cleanup2 = finally( [&] {
       mTracks = saveTracks;
-
-      // Effect is already inited; we will call Process, End, and then Init
-      // again, so the state is exactly the way it was before Preview
-      // was called.
-      if (!dryOnly) {
-         End();
-         GuardedCall( [&]{ Init(); } );
-      }
-
       if (FocusDialog) {
          FocusDialog->SetFocus();
       }
