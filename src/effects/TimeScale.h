@@ -27,8 +27,8 @@ class ShuttleGui;
 // two strings here
 // unusual case
 #define TIMESCALE_PLUGIN_SYMBOL \
-   IdentInterfaceSymbol{ wxT("Time Scale"), \
-                         XO("Sliding Time Scale/Pitch Shift") }
+   IdentInterfaceSymbol{ wxT("Sliding Stretch"), \
+                         XO("Sliding Stretch") }
 
 class EffectTimeScale final : public EffectSBSMS
 {

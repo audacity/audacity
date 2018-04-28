@@ -484,7 +484,7 @@ void ScreenshotCommand::CaptureEffects(
       "Repeat...",
       "Reverb...",
       //"Reverse",
-      "Sliding Time Scale/Pitch Shift...",
+      "Sliding Stretch...",
       "Truncate Silence...",
       "Wahwah...",
       // Sole LADSPA effect...

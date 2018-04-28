@@ -96,7 +96,7 @@ wxString EffectTimeScale::GetDescription()
 
 wxString EffectTimeScale::ManualPage()
 {
-   return wxT("Sliding_Time_Scale_-_Pitch_Shift");
+   return wxT("Sliding_Stretch");
 }
 
 // EffectDefinitionInterface implementation
