@@ -45,7 +45,9 @@ enum NyqControlType
    NYQ_CTRL_STRING,
    NYQ_CTRL_CHOICE,
    NYQ_CTRL_INT_TEXT,
-   NYQ_CTRL_FLOAT_TEXT
+   NYQ_CTRL_FLOAT_TEXT,
+   NYQ_CTRL_TEXT,
+   NYQ_CTRL_TIME,
 };
 
 class NyqControl
@@ -190,6 +192,9 @@ private:
    void OnText(wxCommandEvent & evt);
    void OnSlider(wxCommandEvent & evt);
    void OnChoice(wxCommandEvent & evt);
+   void OnTime(wxCommandEvent & evt);
+
+   wxString ToTimeFormat(double t);
 
 private:
 

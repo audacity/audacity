@@ -57,6 +57,7 @@ effects from this one class.
 #include "../../widgets/ErrorDialog.h"
 #include "../../Prefs.h"
 #include "../../prefs/WaveformSettings.h"
+#include "../../widgets/NumericTextCtrl.h"
 
 #include "FileDialog.h"
 
@@ -83,7 +84,8 @@ enum
 
    ID_Slider = 11000,
    ID_Text = 12000,
-   ID_Choice = 13000
+   ID_Choice = 13000,
+   ID_Time = 14000
 };
 
 // Protect Nyquist from selections greater than 2^31 samples (bug 439)
@@ -110,6 +112,8 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
                      wxEVT_COMMAND_TEXT_UPDATED, NyquistEffect::OnText)
    EVT_COMMAND_RANGE(ID_Choice, ID_Choice + 99,
                      wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice)
+   EVT_COMMAND_RANGE(ID_Time, ID_Time + 99,
+                     wxEVT_COMMAND_TEXT_UPDATED, NyquistEffect::OnTime)
 END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
@@ -311,7 +315,8 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+          ctrl.type == NYQ_CTRL_TIME)
       {
          S.Define( d, static_cast<const wxChar*>( ctrl.var.c_str() ), (double)0.0, ctrl.low, ctrl.high, 1.0);
       }
@@ -363,7 +368,8 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+          ctrl.type == NYQ_CTRL_TIME)
       {
          parms.Write(ctrl.var, d);
       }
@@ -407,7 +413,8 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       NyqControl & ctrl = mControls[c];
       bool good = false;
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+          ctrl.type == NYQ_CTRL_TIME)
       {
          double val;
          good = parms.Read(ctrl.var, &val) &&
@@ -452,7 +459,8 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+          ctrl.type == NYQ_CTRL_TIME)
       {
          parms.Read(ctrl.var, &ctrl.val);
       }
@@ -1158,7 +1166,8 @@ bool NyquistEffect::ProcessOne()
    }
 
    for (unsigned int j = 0; j < mControls.size(); j++) {
-      if (mControls[j].type == NYQ_CTRL_REAL || mControls[j].type == NYQ_CTRL_FLOAT_TEXT) {
+      if (mControls[j].type == NYQ_CTRL_REAL || mControls[j].type == NYQ_CTRL_FLOAT_TEXT ||
+          mControls[j].type == NYQ_CTRL_TIME) {
          // We use Internat::ToString() rather than "%f" here because we
          // always have to use the dot as decimal separator when giving
          // numbers to Nyquist, whereas using "%f" will use the user's
@@ -1869,103 +1878,119 @@ bool NyquistEffect::Parse(
       return true;
    }
 
-   if (len >= 5 && tokens[0] == wxT("control")) {
+
+   if (len >= 3 && tokens[0] == wxT("control")) {
       NyqControl ctrl;
 
-      ctrl.var = tokens[1];
-      ctrl.name = UnQuote( tokens[2] );
-      // 3 is type, below
-      ctrl.label = tokens[4];
-
-      // valStr may or may not be a quoted string
-      ctrl.valStr = len > 5 ? tokens[5] : wxT("");
-      ctrl.val = GetCtrlValue(ctrl.valStr);
-      if (ctrl.valStr.Len() > 0 && 
-            (ctrl.valStr[0] == wxT('(') || 
-            ctrl.valStr[0] == wxT('"')))
-         ctrl.valStr = UnQuote( ctrl.valStr );
-
-      // 6 is minimum, below
-      // 7 is maximum, below
-
-      if (tokens[3] == wxT("string")) {
-         ctrl.type = NYQ_CTRL_STRING;
-         ctrl.label = UnQuote( ctrl.label );
+      if (len == 3 && tokens[1] == wxT("text")) {
+         ctrl.var = tokens[1];
+         ctrl.label = UnQuote( tokens[2] );
+         ctrl.type = NYQ_CTRL_TEXT;
       }
-      else if (tokens[3] == wxT("choice")) {
-         ctrl.type = NYQ_CTRL_CHOICE;
-         ctrl.choices = ParseChoice(ctrl.label);
-         ctrl.label = wxT("");
-      }
-      else {
-         ctrl.label = UnQuote( ctrl.label );
+      else if (len >= 5)
+      {
+         ctrl.var = tokens[1];
+         ctrl.name = UnQuote( tokens[2] );
+         // 3 is type, below
+         ctrl.label = tokens[4];
 
-         if (len < 8) {
-            return true;
+         // valStr may or may not be a quoted string
+         ctrl.valStr = len > 5 ? tokens[5] : wxT("");
+         ctrl.val = GetCtrlValue(ctrl.valStr);
+         if (ctrl.valStr.Len() > 0 && 
+               (ctrl.valStr[0] == wxT('(') || 
+               ctrl.valStr[0] == wxT('"')))
+            ctrl.valStr = UnQuote( ctrl.valStr );
+
+         // 6 is minimum, below
+         // 7 is maximum, below
+
+         if (tokens[3] == wxT("string")) {
+            ctrl.type = NYQ_CTRL_STRING;
+            ctrl.label = UnQuote( ctrl.label );
          }
-
-         if ((tokens[3] == wxT("float")) ||
-               (tokens[3] == wxT("real"))) // Deprecated
-            ctrl.type = NYQ_CTRL_REAL;
-         else if (tokens[3] == wxT("int"))
-            ctrl.type = NYQ_CTRL_INT;
-         else if (tokens[3] == wxT("float-text"))
-            ctrl.type = NYQ_CTRL_FLOAT_TEXT;
-         else if (tokens[3] == wxT("int-text"))
-            ctrl.type = NYQ_CTRL_INT_TEXT;
-         else
-         {
-            wxString str;
-            str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
-                       tokens[3], mFileName.GetFullPath());
-
-            // Too disturbing to show alert before Audacity frame is up.
-            //    Effect::MessageBox(str, wxT("Nyquist Warning"), wxOK | wxICON_EXCLAMATION);
-
-            // Note that the AudacityApp's mLogger has not yet been created,
-            // so this brings up an alert box, but after the Audacity frame is up.
-            wxLogWarning(str);
-            return true;
-         }
-
-         ctrl.lowStr = tokens[6];
-         if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
-            ctrl.low = INT_MIN;
-         }
-         else if (ctrl.type == NYQ_CTRL_FLOAT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
-            ctrl.low = -(FLT_MAX);
+         else if (tokens[3] == wxT("choice")) {
+            ctrl.type = NYQ_CTRL_CHOICE;
+            ctrl.choices = ParseChoice(ctrl.label);
+            ctrl.label = wxT("");
          }
          else {
-            ctrl.low = GetCtrlValue(ctrl.lowStr);
-         }
+            ctrl.label = UnQuote( ctrl.label );
 
-         ctrl.highStr = tokens[7];
-         if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
-            ctrl.high = INT_MAX;
-         }
-         else if (ctrl.type == NYQ_CTRL_FLOAT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
-            ctrl.high = FLT_MAX;
-         }
-         else {
-            ctrl.high = GetCtrlValue(ctrl.highStr);
-         }
+            if (len < 8) {
+               return true;
+            }
 
-         if (ctrl.high < ctrl.low) {
-            ctrl.high = ctrl.low;
-         }
+            if ((tokens[3] == wxT("float")) ||
+                  (tokens[3] == wxT("real"))) // Deprecated
+               ctrl.type = NYQ_CTRL_REAL;
+            else if (tokens[3] == wxT("int"))
+               ctrl.type = NYQ_CTRL_INT;
+            else if (tokens[3] == wxT("float-text"))
+               ctrl.type = NYQ_CTRL_FLOAT_TEXT;
+            else if (tokens[3] == wxT("int-text"))
+               ctrl.type = NYQ_CTRL_INT_TEXT;
+            else if (tokens[3] == wxT("time"))
+                ctrl.type = NYQ_CTRL_TIME;
+            else
+            {
+               wxString str;
+               str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
+                        tokens[3], mFileName.GetFullPath());
 
-         if (ctrl.val < ctrl.low) {
-            ctrl.val = ctrl.low;
-         }
+               // Too disturbing to show alert before Audacity frame is up.
+               //    Effect::MessageBox(str, wxT("Nyquist Warning"), wxOK | wxICON_EXCLAMATION);
 
-         if (ctrl.val > ctrl.high) {
-            ctrl.val = ctrl.high;
-         }
+               // Note that the AudacityApp's mLogger has not yet been created,
+               // so this brings up an alert box, but after the Audacity frame is up.
+               wxLogWarning(str);
+               return true;
+            }
 
-         ctrl.ticks = 1000;
-         if (ctrl.type == NYQ_CTRL_INT &&
-             (ctrl.high - ctrl.low < ctrl.ticks)) {
-            ctrl.ticks = (int)(ctrl.high - ctrl.low);
+            ctrl.lowStr = tokens[6];
+            if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
+               ctrl.low = INT_MIN;
+            }
+            else if (ctrl.type == NYQ_CTRL_FLOAT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
+               ctrl.low = -(FLT_MAX);
+            }
+            else if (ctrl.type == NYQ_CTRL_TIME && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
+                ctrl.low = 0.0;
+            }
+            else {
+               ctrl.low = GetCtrlValue(ctrl.lowStr);
+            }
+
+            ctrl.highStr = tokens[7];
+            if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
+               ctrl.high = INT_MAX;
+            }
+            else if ((ctrl.type == NYQ_CTRL_FLOAT_TEXT || ctrl.type == NYQ_CTRL_TIME) &&
+                      ctrl.highStr.IsSameAs(wxT("nil"), false))
+            {
+               ctrl.high = FLT_MAX;
+            }
+            else {
+               ctrl.high = GetCtrlValue(ctrl.highStr);
+            }
+
+            if (ctrl.high < ctrl.low) {
+               ctrl.high = ctrl.low;
+            }
+
+            if (ctrl.val < ctrl.low) {
+               ctrl.val = ctrl.low;
+            }
+
+            if (ctrl.val > ctrl.high) {
+               ctrl.val = ctrl.high;
+            }
+
+            ctrl.ticks = 1000;
+            if (ctrl.type == NYQ_CTRL_INT &&
+               (ctrl.high - ctrl.low < ctrl.ticks)) {
+               ctrl.ticks = (int)(ctrl.high - ctrl.low);
+            }
          }
       }
 
@@ -1975,6 +2000,7 @@ bool NyquistEffect::Parse(
       }
    }
 
+   // Deprecated
    if (len >= 2 && tokens[0] == wxT("categories")) {
       for (size_t i = 1; i < tokens.GetCount(); ++i) {
          mCategories.Add(tokens[i]);
@@ -2328,23 +2354,35 @@ bool NyquistEffect::TransferDataFromEffectWindow()
          continue;
       }
 
+      if (ctrl->type == NYQ_CTRL_TIME)
+      {
+         NumericTextCtrl *n = (NumericTextCtrl *) mUIParent->FindWindow(ID_Time + i);
+         ctrl->val = n->GetValue();
+      }
+
       if (ctrl->type == NYQ_CTRL_INT_TEXT && ctrl->lowStr.IsSameAs(wxT("nil"), false)) {
          ctrl->low = INT_MIN;
       }
-      else if (ctrl->type == NYQ_CTRL_FLOAT_TEXT && ctrl->lowStr.IsSameAs(wxT("nil"), false)) {
+      else if ((ctrl->type == NYQ_CTRL_FLOAT_TEXT || ctrl->type == NYQ_CTRL_TIME) &&
+               ctrl->lowStr.IsSameAs(wxT("nil"), false))
+      {
          ctrl->low = -(FLT_MAX);
       }
-      else {
+      else
+      {
          ctrl->low = GetCtrlValue(ctrl->lowStr);
       }
 
       if (ctrl->type == NYQ_CTRL_INT_TEXT && ctrl->highStr.IsSameAs(wxT("nil"), false)) {
          ctrl->high = INT_MAX;
       }
-      else if (ctrl->type == NYQ_CTRL_FLOAT_TEXT && ctrl->highStr.IsSameAs(wxT("nil"), false)) {
+      else if ((ctrl->type == NYQ_CTRL_FLOAT_TEXT || ctrl->type == NYQ_CTRL_TIME) &&
+               ctrl->highStr.IsSameAs(wxT("nil"), false))
+      {
          ctrl->high = FLT_MAX;
       }
-      else {
+      else
+      {
          ctrl->high = GetCtrlValue(ctrl->highStr);
       }
 
@@ -2421,76 +2459,109 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
          {
             NyqControl & ctrl = mControls[i];
 
-            wxString prompt = ctrl.name + wxT(" ");
-            S.AddPrompt(prompt);
-
-            if (ctrl.type == NYQ_CTRL_STRING)
+            if (ctrl.type == NYQ_CTRL_TEXT)
             {
-               S.AddSpace(10, 10);
-            
-               wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox( {}, wxT(""), 12);
-               item->SetValidator(wxGenericValidator(&ctrl.valStr));
-               item->SetName(prompt);
-            }
-            else if (ctrl.type == NYQ_CTRL_CHOICE)
-            {
-               S.AddSpace(10, 10);
-
-               auto choices =
-                  LocalizedStrings(ctrl.choices.data(), ctrl.choices.size());
-               S.Id(ID_Choice + i).AddChoice( {}, wxT(""), &choices);
+               S.EndMultiColumn();
+               S.StartHorizontalLay(wxALIGN_LEFT, 0);
+               {
+                  S.AddSpace(0, 10);
+                  S.AddFixedText( ctrl.label, false );
+               }
+               S.EndHorizontalLay();
+               S.StartMultiColumn(4);
             }
             else
             {
-               // Integer or Real
-               if (ctrl.type == NYQ_CTRL_INT_TEXT || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+               wxString prompt = ctrl.name + wxT(":");
+               S.AddPrompt(prompt);
+
+               if (ctrl.type == NYQ_CTRL_STRING)
                {
                   S.AddSpace(10, 10);
+
+                  wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox( {}, wxT(""), 12);
+                  item->SetValidator(wxGenericValidator(&ctrl.valStr));
+                  item->SetName(prompt);
                }
-
-               wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox( {}, wxT(""),
-                                                             (ctrl.type == NYQ_CTRL_INT_TEXT ||
-                                                              ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
-               item->SetName(prompt);
-
-               double range = ctrl.high - ctrl.low;
-
-               if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+               else if (ctrl.type == NYQ_CTRL_CHOICE)
                {
-                  // > 12 decimal places can cause rounding errors in display.
-                  FloatingPointValidator<double> vld(12, &ctrl.val);
-                  vld.SetRange(ctrl.low, ctrl.high);
+                  S.AddSpace(10, 10);
 
-                  // Set number of decimal places
-                  auto style = range < 10 ? NumValidatorStyle::THREE_TRAILING_ZEROES :
-                              range < 100 ? NumValidatorStyle::TWO_TRAILING_ZEROES :
-                              NumValidatorStyle::ONE_TRAILING_ZERO;
-                  vld.SetStyle(style);
+                  auto choices =
+                     LocalizedStrings(ctrl.choices.data(), ctrl.choices.size());
+                  S.Id(ID_Choice + i).AddChoice( {}, wxT(""), &choices);
+               }
+               else if (ctrl.type == NYQ_CTRL_TIME)
+               {
+                  S.AddSpace(10, 10);
 
-                  item->SetValidator(vld);
+                  const auto options = NumericTextCtrl::Options{}
+                                          .AutoPos(true)
+                                          .MenuEnabled(true)
+                                          .ReadOnly(false);
+
+                  NumericTextCtrl *time = new
+                     NumericTextCtrl(S.GetParent(), (ID_Time + i),
+                                     NumericConverter::TIME,
+                                     GetSelectionFormat(),
+                                     ctrl.val,
+                                     mProjectRate,
+                                     options);
+                  time->SetName(prompt);
+                  S.AddWindow(time, wxALIGN_LEFT | wxALL);
                }
                else
                {
-                  IntegerValidator<double> vld(&ctrl.val);
-                  vld.SetRange((int) ctrl.low, (int) ctrl.high);
-                  item->SetValidator(vld);
+                  // Integer or Real
+                  if (ctrl.type == NYQ_CTRL_INT_TEXT || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+                  {
+                     S.AddSpace(10, 10);
+                  }
+
+                  wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox( {}, wxT(""),
+                                                               (ctrl.type == NYQ_CTRL_INT_TEXT ||
+                                                               ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
+                  item->SetName(prompt);
+
+                  double range = ctrl.high - ctrl.low;
+
+                  if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+                  {
+                     // > 12 decimal places can cause rounding errors in display.
+                     FloatingPointValidator<double> vld(12, &ctrl.val);
+                     vld.SetRange(ctrl.low, ctrl.high);
+
+                     // Set number of decimal places
+                     auto style = range < 10 ? NumValidatorStyle::THREE_TRAILING_ZEROES :
+                                 range < 100 ? NumValidatorStyle::TWO_TRAILING_ZEROES :
+                                 NumValidatorStyle::ONE_TRAILING_ZERO;
+                     vld.SetStyle(style);
+
+                     item->SetValidator(vld);
+                  }
+                  else
+                  {
+                     IntegerValidator<double> vld(&ctrl.val);
+                     vld.SetRange((int) ctrl.low, (int) ctrl.high);
+                     item->SetValidator(vld);
+                  }
+
+                  if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_REAL)
+                  {
+                     S.SetStyle(wxSL_HORIZONTAL);
+                     S.Id(ID_Slider + i).AddSlider( {}, 0, ctrl.ticks, 0);
+                     S.SetSizeHints(150, -1);
+                  }
                }
 
-               if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_REAL)
+               if (ctrl.type == NYQ_CTRL_CHOICE || ctrl.label.IsEmpty())
                {
-                  S.SetStyle(wxSL_HORIZONTAL);
-                  S.Id(ID_Slider + i).AddSlider( {}, 0, ctrl.ticks, 0);
-                  S.SetSizeHints(150, -1);
+                  S.AddSpace(10, 10);
                }
-            }
-
-            if (ctrl.type == NYQ_CTRL_CHOICE || ctrl.label.IsEmpty())
-            {
-               S.AddSpace(10, 10);
-            }
-            else
-            {
-               S.AddUnits(ctrl.label);
+               else
+               {
+                  S.AddUnits(ctrl.label);
+               }
             }
          }
       }
@@ -2601,6 +2672,44 @@ void NyquistEffect::OnChoice(wxCommandEvent & evt)
 {
    mControls[evt.GetId() - ID_Choice].val = (double) evt.GetInt();
 }
+
+void NyquistEffect::OnTime(wxCommandEvent& evt)
+{
+   int i = evt.GetId() - ID_Time;
+   static double value = 0.0;
+   NyqControl & ctrl = mControls[i];
+
+   NumericTextCtrl *n = (NumericTextCtrl *) mUIParent->FindWindow(ID_Time + i);
+   double val = n->GetValue();
+
+   // Observed that two events transmitted on each control change (Linux)
+   // so skip if value has not changed.
+   if (val != value) {
+      if (val < ctrl.low || val > ctrl.high) {
+         const auto message = wxString::Format(_("Value range:\n%s to %s"),
+                                               ToTimeFormat(ctrl.low), ToTimeFormat(ctrl.high));
+         Effect::MessageBox(message, wxOK | wxCENTRE, _("Value Error"));
+      }
+
+      if (val < ctrl.low)
+         val = ctrl.low;
+      else if (val > ctrl.high)
+         val = ctrl.high;
+
+      n->SetValue(val);
+      value = val;
+   }
+}
+
+wxString NyquistEffect::ToTimeFormat(double t)
+{
+   int seconds = static_cast<int>(t);
+   int hh = seconds / 3600;
+   int mm = seconds % 3600;
+   mm = mm / 60;
+   return wxString::Format("%d:%d:%.3f", hh, mm, t - (hh * 3600 + mm * 60));
+}
+
 
 void NyquistEffect::OnText(wxCommandEvent & evt)
 {
