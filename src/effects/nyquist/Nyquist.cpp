@@ -441,6 +441,12 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
          wxString val;
          good = parms.Read(ctrl.var, &val);
       }
+      else if (ctrl.type == NYQ_CTRL_TEXT)
+      {
+         // This "control" is just fixed text (nothing to save or restore),
+         // so control is always "good".
+         good = true;
+      }
 
       if (!good)
       {
