@@ -315,7 +315,7 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
           ctrl.type == NYQ_CTRL_TIME)
       {
          S.Define( d, static_cast<const wxChar*>( ctrl.var.c_str() ), (double)0.0, ctrl.low, ctrl.high, 1.0);
@@ -368,7 +368,7 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
           ctrl.type == NYQ_CTRL_TIME)
       {
          parms.Write(ctrl.var, d);
@@ -413,7 +413,7 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
       NyqControl & ctrl = mControls[c];
       bool good = false;
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
           ctrl.type == NYQ_CTRL_TIME)
       {
          double val;
@@ -465,7 +465,7 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
          d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
           ctrl.type == NYQ_CTRL_TIME)
       {
          parms.Read(ctrl.var, &ctrl.val);
@@ -1172,7 +1172,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    for (unsigned int j = 0; j < mControls.size(); j++) {
-      if (mControls[j].type == NYQ_CTRL_REAL || mControls[j].type == NYQ_CTRL_FLOAT_TEXT ||
+      if (mControls[j].type == NYQ_CTRL_FLOAT || mControls[j].type == NYQ_CTRL_FLOAT_TEXT ||
           mControls[j].type == NYQ_CTRL_TIME) {
          // We use Internat::ToString() rather than "%f" here because we
          // always have to use the dot as decimal separator when giving
@@ -1929,7 +1929,7 @@ bool NyquistEffect::Parse(
 
             if ((tokens[3] == wxT("float")) ||
                   (tokens[3] == wxT("real"))) // Deprecated
-               ctrl.type = NYQ_CTRL_REAL;
+               ctrl.type = NYQ_CTRL_FLOAT;
             else if (tokens[3] == wxT("int"))
                ctrl.type = NYQ_CTRL_INT;
             else if (tokens[3] == wxT("float-text"))
@@ -2313,7 +2313,7 @@ bool NyquistEffect::TransferDataToEffectWindow()
          wxChoice *c = (wxChoice *) mUIParent->FindWindow(ID_Choice + i);
          c->SetSelection(val);
       }
-      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_REAL)
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_FLOAT)
       {
          // wxTextCtrls are handled by the validators
          double range = ctrl.high - ctrl.low;
@@ -2531,7 +2531,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
 
                   double range = ctrl.high - ctrl.low;
 
-                  if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
+                  if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
                   {
                      // > 12 decimal places can cause rounding errors in display.
                      FloatingPointValidator<double> vld(12, &ctrl.val);
@@ -2552,7 +2552,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                      item->SetValidator(vld);
                   }
 
-                  if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_REAL)
+                  if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_FLOAT)
                   {
                      S.SetStyle(wxSL_HORIZONTAL);
                      S.Id(ID_Slider + i).AddSlider( {}, 0, ctrl.ticks, 0);
@@ -2725,7 +2725,7 @@ void NyquistEffect::OnText(wxCommandEvent & evt)
 
    if (wxDynamicCast(evt.GetEventObject(), wxWindow)->GetValidator()->TransferFromWindow())
    {
-      if (ctrl.type == NYQ_CTRL_REAL || ctrl.type == NYQ_CTRL_INT)
+      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_INT)
       {
          int pos = (int)floor((ctrl.val - ctrl.low) /
                               (ctrl.high - ctrl.low) * ctrl.ticks + 0.5);
