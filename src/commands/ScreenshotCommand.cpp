@@ -417,7 +417,11 @@ void ScreenshotCommand::CapturePreferences(
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
+#ifdef __WXMSW__
    mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+#else
+   mDirToWriteTo = mFileName.BeforeLast('/') + "/";
+#endif
    mpShooter = this;
    const int nPrefsPages = 19;
 
@@ -580,7 +584,11 @@ void ScreenshotCommand::CaptureCommands(
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
+#ifdef __WXMSW__
    mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+#else
+   mDirToWriteTo = mFileName.BeforeLast('/') + "/";
+#endif
    mpShooter = this;
 
    for( size_t i=0;i<Commands.GetCount();i++){
