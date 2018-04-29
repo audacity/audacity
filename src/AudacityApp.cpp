@@ -1903,14 +1903,22 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             sock->Connect(addr, true);
             if (sock->IsConnected())
             {
-               for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+               if (parser->GetParamCount() > 0)
                {
-                  // Send the filename
-                  wxString param = parser->GetParam(i);
-                  sock->WriteMsg((const wxChar *) param, (param.Len() + 1) * sizeof(wxChar));
+                  for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+                  {
+                     // Send the filename
+                     wxString param = parser->GetParam(i);
+                     sock->WriteMsg((const wxChar *) param, (param.Len() + 1) * sizeof(wxChar));
+                  }
+               }
+               else
+               {
+                  // Send an empty string to force existing Audacity to front
+                  sock->WriteMsg(wxEmptyString, sizeof(wxChar));
                }
 
-               return false;
+               return sock->Error();
             }
 
             wxMilliSleep(100);
