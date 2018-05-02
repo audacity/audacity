@@ -174,7 +174,6 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    pFrame->CreateStatusBar();
    pFrame->Centre();
    pFrame->Layout();
-   pFrame->Fit();
    pFrame->SetSizeHints(pWnd->GetSize());
 
    pFrame->SetName(Title);
