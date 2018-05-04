@@ -785,14 +785,14 @@ bool Exporter::CheckMix()
          if (exportedChannels == 1) {
             if (ShowWarningDialog(mProject,
                                   wxT("MixMono"),
-                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  _("Your tracks will be mixed down and exported as one mono file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else if (exportedChannels == 2) {
             if (ShowWarningDialog(mProject,
                                   wxT("MixStereo"),
-                                  _("Your tracks will be mixed down to two stereo channels in the exported file."),
+                                  _("Your tracks will be mixed down and exported as one stereo file."),
                                   true) == wxID_CANCEL)
                return false;
          }
