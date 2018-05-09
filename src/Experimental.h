@@ -249,6 +249,6 @@
 // Hoping to commit to use of this branch before 2.3.0 is out.
 // Don't use our own RingBuffer class, but reuse PortAudio's which includes
 // proper memory fences.
-#undef EXPERIMENTAL_REWRITE_RING_BUFFER
+#define EXPERIMENTAL_REWRITE_RING_BUFFER
 
 #endif
