@@ -37,13 +37,13 @@
 class Enums {
 public:
    static const size_t    NumDbChoices;
-   static const double Db2Signal[];
    static const IdentInterfaceSymbol DbChoices[];
 };
 
 const IdentInterfaceSymbol Enums::DbChoices[] = {
-   // Yuck, why is this a choice control and not a slider?  I'm leaving this
-   // table of names alone for now -- PRL
+   // Table of text values, only for reading what was stored in legacy config
+   // files.
+   // It was inappropriate to make this a discrete choice control.
    { wxT("-20 dB") },
    { wxT("-25 dB") },
    { wxT("-30 dB") },
@@ -59,15 +59,10 @@ const IdentInterfaceSymbol Enums::DbChoices[] = {
    { wxT("-80 dB") }
 };
 
-const double Enums::Db2Signal[] =
-//     -20dB    -25dB    -30dB    -35dB    -40dB    -45dB    -50dB    -55dB    -60dB    -65dB     -70dB     -75dB     -80dB
-{ 0.10000, 0.05620, 0.03160, 0.01780, 0.01000, 0.00562, 0.00316, 0.00178, 0.00100, 0.000562, 0.000316, 0.000178, 0.0001000 };
-
+// Map from position in table above to numerical value.
+static inline double enumToDB( int val ) { return -( 5.0 * val + 20.0 ); }
 
 const size_t Enums::NumDbChoices = WXSIZEOF(Enums::DbChoices);
-
-static_assert( Enums::NumDbChoices == WXSIZEOF( Enums::Db2Signal ),
-              "size mismatch" );
 
 // Declaration of RegionList
 class RegionList : public std::list < Region > {};
@@ -102,7 +97,11 @@ static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key               Def         Min      Max                        Scale
+
+// This one is legacy and is intentionally not reported by DefineParams:
 Param( DbIndex,   int,     wxT("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
+
+Param( Threshold, double,  wxT("Threshold"),  -20.0,      -80.0,   -20.0,                     1  );
 Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       nActions - 1,           1  );
 Param( Minimum,   double,  wxT("Minimum"),    0.5,        0.001,   10000.0,                   1  );
 Param( Truncate,  double,  wxT("Truncate"),   0.5,        0.0,     10000.0,                   1  );
@@ -128,7 +127,7 @@ EffectTruncSilence::EffectTruncSilence()
    mInitialAllowedSilence = DEF_Minimum;
    mTruncLongestAllowedSilence = DEF_Truncate;
    mSilenceCompressPercent = DEF_Compress;
-   mTruncDbChoiceIndex = DEF_DbIndex;
+   mThresholdDB = DEF_Threshold;
    mActionIndex = DEF_ActIndex;
    mbIndependent = DEF_Independent;
 
@@ -176,8 +175,7 @@ EffectType EffectTruncSilence::GetType()
 // EffectClientInterface implementation
 
 bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_ENUM_PARAM( mTruncDbChoiceIndex, DbIndex,
-                         Enums::DbChoices, Enums::NumDbChoices );
+   S.SHUTTLE_PARAM( mThresholdDB, Threshold );
    S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, kActionStrings, nActions );
    S.SHUTTLE_PARAM( mInitialAllowedSilence, Minimum );
    S.SHUTTLE_PARAM( mTruncLongestAllowedSilence, Truncate );
@@ -188,13 +186,13 @@ bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
 
 bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_DbIndex, Enums::DbChoices[mTruncDbChoiceIndex].Internal());
+   parms.Write(KEY_Threshold, mThresholdDB);
    parms.Write(KEY_ActIndex, kActionStrings[mActionIndex].Internal());
    parms.Write(KEY_Minimum, mInitialAllowedSilence);
    parms.Write(KEY_Truncate, mTruncLongestAllowedSilence);
    parms.Write(KEY_Compress, mSilenceCompressPercent);
    parms.Write(KEY_Independent, mbIndependent);
-   
+
    return true;
 }
 
@@ -203,7 +201,21 @@ bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyDouble(Minimum);
    ReadAndVerifyDouble(Truncate);
    ReadAndVerifyDouble(Compress);
-   ReadAndVerifyEnum(DbIndex, Enums::DbChoices, Enums::NumDbChoices);
+
+   // This control migrated from a choice to a text box in version 2.3.0
+   double myThreshold {};
+   bool newParams = [&] {
+      ReadAndVerifyDouble(Threshold); // macro may return false
+      myThreshold = Threshold;
+      return true;
+   } ();
+
+   if ( !newParams ) {
+      // Use legacy param:
+      ReadAndVerifyEnum(DbIndex, Enums::DbChoices, Enums::NumDbChoices);
+      myThreshold = enumToDB( DbIndex );
+   }
+
    ReadAndVerifyEnumWithObsoletes(ActIndex, kActionStrings, nActions,
                                   kObsoleteActions, nObsoleteActions);
    ReadAndVerifyBool(Independent);
@@ -211,7 +223,7 @@ bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
    mInitialAllowedSilence = Minimum;
    mTruncLongestAllowedSilence = Truncate;
    mSilenceCompressPercent = Compress;
-   mTruncDbChoiceIndex = DbIndex;
+   mThresholdDB = myThreshold;
    mActionIndex = ActIndex;
    mbIndependent = Independent;
 
@@ -265,11 +277,12 @@ bool EffectTruncSilence::Startup()
    // Load the old "current" settings
    if (gPrefs->Exists(base))
    {
-      mTruncDbChoiceIndex = gPrefs->Read(base + wxT("DbChoiceIndex"), 4L);
-      if ((mTruncDbChoiceIndex < 0) || (mTruncDbChoiceIndex >= Enums::NumDbChoices))
+      int truncDbChoiceIndex = gPrefs->Read(base + wxT("DbChoiceIndex"), 4L);
+      if ((truncDbChoiceIndex < 0) || (truncDbChoiceIndex >= Enums::NumDbChoices))
       {  // corrupted Prefs?
-         mTruncDbChoiceIndex = 4L;
+         truncDbChoiceIndex = 4L;
       }
+      mThresholdDB = enumToDB( truncDbChoiceIndex );
       mActionIndex = gPrefs->Read(base + wxT("ProcessChoice"), 0L);
       if ((mActionIndex < 0) || (mActionIndex > 1))
       {  // corrupted Prefs?
@@ -595,7 +608,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
    // Smallest silent region to detect in frames
    auto minSilenceFrames = sampleCount(std::max( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
 
-   double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
+   double truncDbSilenceThreshold = DB_TO_LINEAR( mThresholdDB );
    auto blockLen = wt->GetMaxBlockSize();
    auto start = wt->TimeToLongSamples(mT0);
    auto end = wt->TimeToLongSamples(mT1);
@@ -751,12 +764,12 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxALIGN_CENTER_HORIZONTAL);
       {
          // Threshold
-         auto dbChoices =
-            LocalizedStrings( Enums::DbChoices, Enums::NumDbChoices );
-         mTruncDbChoice = S.AddChoice(_("Level:"), wxT(""), &dbChoices);
-         mTruncDbChoice->SetValidator(wxGenericValidator(&mTruncDbChoiceIndex));
-         S.SetSizeHints(-1, -1);
-         S.AddSpace(0); // 'choices' already includes units.
+         FloatingPointValidator<double> vldThreshold(3, &mThresholdDB,
+            NumValidatorStyle::NO_TRAILING_ZEROES);
+         vldThreshold.SetRange(MIN_Threshold, MAX_Threshold);
+         mThresholdText = S.AddTextBox(_("Threshold:"), wxT(""), 0);
+         mThresholdText->SetValidator(vldThreshold);
+         S.AddUnits(_("dB"));
 
          // Ignored silence
          FloatingPointValidator<double> vldDur(3, &mInitialAllowedSilence, NumValidatorStyle::NO_TRAILING_ZEROES);

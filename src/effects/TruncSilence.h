@@ -97,7 +97,7 @@ private:
 
 private:
 
-   int mTruncDbChoiceIndex;
+   double mThresholdDB {} ;
    int mActionIndex;
    double mInitialAllowedSilence;
    double mTruncLongestAllowedSilence;
@@ -106,7 +106,7 @@ private:
 
    size_t mBlendFrameCount;
 
-   wxChoice *mTruncDbChoice;
+   wxTextCtrl *mThresholdText;
    wxChoice *mActionChoice;
    wxTextCtrl *mInitialAllowedSilenceT;
    wxTextCtrl *mTruncLongestAllowedSilenceT;
