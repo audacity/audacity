@@ -44,7 +44,7 @@ public:
 class ExtImportItem;
 
 using FormatList = std::vector<Format> ;
-using ExtImportItems = std::vector< movable_ptr<ExtImportItem> >;
+using ExtImportItems = std::vector< std::unique_ptr<ExtImportItem> >;
 
 class ExtImportItem
 {
@@ -134,7 +134,7 @@ public:
     * Allocates NEW ExtImportItem, fills it with default data
     * and returns a pointer to it.
     */
-    movable_ptr<ExtImportItem> CreateDefaultImportItem();
+    std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
    static bool IsMidi(const wxString &fName);
 

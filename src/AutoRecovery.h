@@ -21,9 +21,7 @@
 #include <wx/hashmap.h>
 #include <wx/mstream.h>
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 //
 // Show auto recovery dialog if there are projects to recover. Should be

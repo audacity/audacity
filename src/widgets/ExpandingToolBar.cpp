@@ -312,7 +312,7 @@ protected:
 void ExpandingToolBar::RecursivelyPushEventHandlers(wxWindow *win)
 {
    if (!mWindowHash[win]) {
-      mHandlers.push_back(make_movable<ExpandingToolBarEvtHandler>
+      mHandlers.push_back(std::make_unique<ExpandingToolBarEvtHandler>
          (this, win, win->GetEventHandler()));
       mWindowHash[win] = 1;
    }

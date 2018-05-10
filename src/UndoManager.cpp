@@ -36,9 +36,7 @@ UndoManager
 
 #include "UndoManager.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_set>
-#endif
 
 using ConstBlockFilePtr = const BlockFile*;
 using Set = std::unordered_set<ConstBlockFilePtr>;
@@ -290,7 +288,7 @@ void UndoManager::PushState(const TrackList * l,
    // Assume tags was duplicted before any changes.
    // Just save a NEW shared_ptr to it.
    stack.push_back(
-      make_movable<UndoStackElem>
+      std::make_unique<UndoStackElem>
          (std::move(tracksCopy),
             longDescription, shortDescription, selectedRegion, tags)
    );

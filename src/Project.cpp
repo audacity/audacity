@@ -3402,7 +3402,7 @@ void AudacityProject::EnqueueODTasks()
       TrackListIterator triter(GetTracks());
       tr = triter.First();
 
-      std::vector<movable_ptr<ODTask>> newTasks;
+      std::vector<std::unique_ptr<ODTask>> newTasks;
       //std::vector<ODDecodeTask*> decodeTasks;
       unsigned int createdODTasks=0;
       while (tr) {
@@ -3422,16 +3422,16 @@ void AudacityProject::EnqueueODTasks()
             //we want at most one instance of each class for the project
             while((odFlags|createdODTasks) != createdODTasks)
             {
-               movable_ptr<ODTask> newTask;
+               std::unique_ptr<ODTask> newTask;
 #ifdef EXPERIMENTAL_OD_FLAC
                if(!(createdODTasks&ODTask::eODFLAC) && (odFlags & ODTask::eODFLAC)) {
-                  newTask = make_movable<ODDecodeFlacTask>();
+                  newTask = std::make_unique<ODDecodeFlacTask>();
                   createdODTasks = createdODTasks | ODTask::eODFLAC;
                }
                else
 #endif
                if(!(createdODTasks&ODTask::eODPCMSummary) && (odFlags & ODTask::eODPCMSummary)) {
-                  newTask = make_movable<ODComputeSummaryTask>();
+                  newTask = std::make_unique<ODComputeSummaryTask>();
                   createdODTasks= createdODTasks | ODTask::eODPCMSummary;
                }
                else {
@@ -4039,7 +4039,7 @@ bool AudacityProject::DoSave
       // (Otherwise the NEW project would be fine, but the old one would
       // be empty of all of its files.)
 
-      std::vector<movable_ptr<WaveTrack::Locker>> lockers;
+      std::vector<std::unique_ptr<WaveTrack::Locker>> lockers;
       if (mLastSavedTracks) {
          lockers.reserve(mLastSavedTracks->size());
          TrackListIterator iter(mLastSavedTracks.get());
@@ -4047,7 +4047,7 @@ bool AudacityProject::DoSave
          while (t) {
             if (t->GetKind() == Track::Wave)
                lockers.push_back(
-                  make_movable<WaveTrack::Locker>(
+                  std::make_unique<WaveTrack::Locker>(
                      static_cast<const WaveTrack*>(t)));
             t = iter.Next();
          }
@@ -4666,7 +4666,7 @@ void AudacityProject::PopState(const UndoState &state)
    TrackListIterator iter(tracks);
    Track *t = iter.First();
    bool odUsed = false;
-   movable_ptr<ODComputeSummaryTask> computeTask;
+   std::unique_ptr<ODComputeSummaryTask> computeTask;
 
    while (t)
    {
@@ -4686,7 +4686,7 @@ void AudacityProject::PopState(const UndoState &state)
          {
             if(!odUsed)
             {
-               computeTask = make_movable<ODComputeSummaryTask>();
+               computeTask = std::make_unique<ODComputeSummaryTask>();
                odUsed=true;
             }
             // PRL:  Is it correct to add all tracks to one task, even if they

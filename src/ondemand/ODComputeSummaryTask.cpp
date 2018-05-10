@@ -35,9 +35,9 @@ ODComputeSummaryTask::ODComputeSummaryTask()
    mHasUpdateRan=false;
 }
 
-movable_ptr<ODTask> ODComputeSummaryTask::Clone() const
+std::unique_ptr<ODTask> ODComputeSummaryTask::Clone() const
 {
-   auto clone = make_movable<ODComputeSummaryTask>();
+   auto clone = std::make_unique<ODComputeSummaryTask>();
    clone->mDemandSample = GetDemandSample();
    // This std::move is needed to "upcast" the pointer type
    return std::move(clone);

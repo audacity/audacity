@@ -1095,9 +1095,9 @@ wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
    return ExportPlugin::OptionsCreate(parent, format);
 }
 
-movable_ptr<ExportPlugin> New_ExportFFmpeg()
+std::unique_ptr<ExportPlugin> New_ExportFFmpeg()
 {
-   return make_movable<ExportFFmpeg>();
+   return std::make_unique<ExportFFmpeg>();
 }
 
 #endif

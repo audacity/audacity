@@ -18,7 +18,7 @@ class ExportPlugin;
  * factory method New_ExportPCM() which creates a NEW ExportPCM object and
  * returns a pointer to it. The rest of the class declaration is in ExportPCM.cpp
  */
-movable_ptr<ExportPlugin> New_ExportPCM();
+std::unique_ptr<ExportPlugin> New_ExportPCM();
 
 #endif
 

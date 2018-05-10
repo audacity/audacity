@@ -72,7 +72,7 @@ struct UndoState {
    SelectedRegion selectedRegion; // by value
 };
 
-using UndoStack = std::vector <movable_ptr<UndoStackElem>>;
+using UndoStack = std::vector <std::unique_ptr<UndoStackElem>>;
 
 using SpaceArray = std::vector <unsigned long long> ;
 

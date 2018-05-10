@@ -124,13 +124,8 @@ void Importer::GetSupportedImportFormats(FormatList *formatList)
 {
    for(const auto &importPlugin : mImportPluginList)
    {
-#ifdef __AUDACITY_OLD_STD__
-      formatList->push_back(Format{importPlugin->GetPluginFormatDescription(),
-                               importPlugin->GetSupportedExtensions()});
-#else
       formatList->emplace_back(importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions());
-#endif
    }
 }
 
@@ -167,7 +162,7 @@ void Importer::ReadImportItems()
       if (toker.CountTokens() != 2)
         break;
 
-      auto new_item = make_movable<ExtImportItem>();
+      auto new_item = std::make_unique<ExtImportItem>();
 
       /* First token is the filtering condition, second - the filter list */
       condition = toker.GetNextToken();
@@ -312,9 +307,9 @@ void Importer::WriteImportItems()
    } while( true );
 }
 
-movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
+std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 {
-   auto new_item = make_movable<ExtImportItem>();
+   auto new_item = std::make_unique<ExtImportItem>();
    new_item->extensions.Add(wxT("*"));
    new_item->mime_types.Add(wxT("*"));
 

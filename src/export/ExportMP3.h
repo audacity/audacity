@@ -20,7 +20,7 @@ class wxWindow;
 /** Factory method New_ExportMP3() which creates a NEW ExportMP3 object and
  * returns a pointer to it. The rest of the class declaration is in ExportMP3.cpp
  */
-movable_ptr<ExportPlugin> New_ExportMP3();
+std::unique_ptr<ExportPlugin> New_ExportMP3();
 
 //----------------------------------------------------------------------------
 // Get MP3 library versioqn

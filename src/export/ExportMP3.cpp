@@ -2158,9 +2158,9 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-movable_ptr<ExportPlugin> New_ExportMP3()
+std::unique_ptr<ExportPlugin> New_ExportMP3()
 {
-   return make_movable<ExportMP3>();
+   return std::make_unique<ExportMP3>();
 }
 
 //----------------------------------------------------------------------------

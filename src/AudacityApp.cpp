@@ -1083,7 +1083,7 @@ bool AudacityApp::OnExceptionInMainLoop()
       // Use CallAfter to delay this to the next pass of the event loop,
       // rather than risk doing it inside stack unwinding.
       auto pProject = ::GetActiveProject();
-      std::shared_ptr< AudacityException > pException { e.Move().release() };
+      auto pException = std::current_exception();
       CallAfter( [=]      // Capture pException by value!
       {
 
@@ -1097,7 +1097,9 @@ bool AudacityApp::OnExceptionInMainLoop()
          pProject->RedrawProject();
 
          // Give the user an alert
-         pException->DelayedHandlerAction();
+         try { std::rethrow_exception( pException ); }
+         catch( AudacityException &e )
+            { e.DelayedHandlerAction(); }
 
       } );
 

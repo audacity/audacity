@@ -34,7 +34,7 @@
 
 class AudioUnitEffect;
 
-using AudioUnitEffectArray = std::vector<movable_ptr<AudioUnitEffect>>;
+using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;

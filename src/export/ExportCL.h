@@ -19,6 +19,6 @@ class ExportPlugin;
  * factory method New_ExportCL() which creates a NEW ExportCL object and
  * returns a pointer to it. The rest of the class declaration is in ExportCL.cpp
  */
-movable_ptr<ExportPlugin> New_ExportCL();
+std::unique_ptr<ExportPlugin> New_ExportCL();
 
 #endif

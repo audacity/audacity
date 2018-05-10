@@ -68,9 +68,7 @@ greater use in future.
 #include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
@@ -2127,12 +2125,7 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
    // So it's okay that we cast it back to const
    mpOrigTrack =
       pEffect->mTracks->Replace(const_cast<LabelTrack*>(pOrigTrack),
-#ifdef __AUDACITY_OLD_STD__
-      std::shared_ptr<Track>(newTrack.release())
-#else
-      std::move(newTrack)
-#endif
-   );
+         std::move(newTrack) );
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)

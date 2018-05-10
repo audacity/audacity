@@ -967,8 +967,7 @@ bool NyquistEffect::TransferDataFromWindow()
 
 bool NyquistEffect::ProcessOne()
 {
-   mError = false;
-   mFailedFileName.Clear();
+   mpException = {};
 
    nyx_rval rval;
 
@@ -1393,15 +1392,12 @@ bool NyquistEffect::ProcessOne()
    }
 
    // See if GetCallback found read errors
-   if (mFailedFileName.IsOk())
-      // re-construct an exception
-      // I wish I had std::exception_ptr instead
-      // and could re-throw any AudacityException
-      throw FileException{
-         FileException::Cause::Read, mFailedFileName };
-   else if (mError)
-      // what, then?
-      success = false;
+   {
+      auto pException = mpException;
+      mpException = {};
+      if (pException)
+         std::rethrow_exception( pException );
+   }
 
    if (!success)
       return false;
@@ -2156,14 +2152,9 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
             mCurBuffer[ch].ptr(), floatSample,
             mCurBufferStart[ch], mCurBufferLen[ch]);
       }
-      catch ( const FileException& e ) {
-         if ( e.cause == FileException::Cause::Read )
-            mFailedFileName = e.fileName;
-         mError = true;
-         return -1;
-      }
       catch ( ... ) {
-         mError = true;
+         // Save the exception object for re-throw when out of the library
+         mpException = std::current_exception();
          return -1;
       }
    }

@@ -36,7 +36,7 @@ threshold of difference in two selected tracks
 #include "CommandContext.h"
 
 extern void RegisterCompareAudio( Registrar & R){
-   R.AddCommand( make_movable<CompareAudioCommand>() );
+   R.AddCommand( std::make_unique<CompareAudioCommand>() );
 // std::unique_ptr<CommandOutputTargets> &&target
 //   return std::make_shared<CompareAudioCommand>(*this, std::move(target));
 

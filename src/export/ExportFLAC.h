@@ -18,7 +18,7 @@ class ExportPlugin;
  * factory method New_ExportFLAC() which creates a NEW ExportFLAC object and
  * returns a pointer to it. The rest of the class declaration is in ExportFLAC.cpp
  */
-movable_ptr<ExportPlugin> New_ExportFLAC();
+std::unique_ptr<ExportPlugin> New_ExportFLAC();
 
 #endif
 

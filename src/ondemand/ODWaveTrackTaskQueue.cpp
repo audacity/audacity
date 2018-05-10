@@ -101,7 +101,7 @@ void ODWaveTrackTaskQueue::AddWaveTrack(WaveTrack* track)
    mTracksMutex.Unlock();
 }
 
-void ODWaveTrackTaskQueue::AddTask(movable_ptr<ODTask> &&mtask)
+void ODWaveTrackTaskQueue::AddTask(std::unique_ptr<ODTask> &&mtask)
 {
    ODTask *task = mtask.get();
 

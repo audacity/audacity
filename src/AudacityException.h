@@ -30,11 +30,6 @@ public:
    AudacityException() {}
    virtual ~AudacityException() = 0;
 
-   // This is intended as a "polymorphic move copy constructor"
-   // which leaves this "empty".
-   // We would not need this if we had std::exception_ptr
-   virtual std::unique_ptr< AudacityException > Move() = 0;
-
    // Action to do in the main thread at idle time of the event loop.
    virtual void DelayedHandlerAction() = 0;
 
@@ -87,8 +82,6 @@ public:
    SimpleMessageBoxException( const SimpleMessageBoxException& ) = default;
    SimpleMessageBoxException &operator = (
       SimpleMessageBoxException && ) PROHIBITED;
-
-   std::unique_ptr< AudacityException > Move() override;
 
    // Format a default, internationalized error message for this exception.
    virtual wxString ErrorMessage() const override;
@@ -170,11 +163,15 @@ R GuardedCall
    catch ( AudacityException &e ) {
 
       auto end = finally([&]{
+         // At this point, e is the "current" exception, but not "uncaught"
+         // unless it was rethrown by handler.  handler might also throw some
+         // other exception object.
          if (!std::uncaught_exception()) {
-            auto pException =
-               std::shared_ptr< AudacityException > { e.Move().release() };
+            auto pException = std::current_exception(); // This points to e
             wxTheApp->CallAfter( [=] { // capture pException by value
-               delayedHandler( pException.get() );
+               try { std::rethrow_exception(pException); }
+               catch( AudacityException &e )
+                  { delayedHandler( &e ); }
             } );
          }
       });

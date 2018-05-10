@@ -30,9 +30,6 @@ public:
    ~UserException() override;
 
    void DelayedHandlerAction() override;
-
-private:
-   std::unique_ptr< AudacityException > Move() override;
 };
 
 #endif

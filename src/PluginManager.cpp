@@ -56,9 +56,7 @@ for shared and private configs - which need to move out.
 
 #include "Experimental.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 using ProviderMap = std::unordered_map<wxString, wxArrayString>;
 
