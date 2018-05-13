@@ -251,4 +251,7 @@
 // proper memory fences.
 #define EXPERIMENTAL_REWRITE_RING_BUFFER
 
+// PRL 1 Jun 2018
+#define EXPERIMENTAL_PUNCH_AND_ROLL
+
 #endif
