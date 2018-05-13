@@ -4517,6 +4517,17 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
+   if (bWantSaveCompressed && filename.FileExists()) {
+      // Saving a copy of the project should never overwrite an existing project.
+      AudacityMessageDialog m(
+         NULL,
+         _("Saving a copy must not overwrite an existing saved project.\nPlease try again and select an original name."),
+         _("Error Saving Copy of Project"),
+         wxOK|wxICON_ERROR);
+      m.ShowModal();
+      return false;
+   }
+
    bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==fName);
    // Check to see if the project file already exists, and if it does
    // check that the project file 'belongs' to this project.
