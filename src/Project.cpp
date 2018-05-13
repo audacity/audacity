@@ -4518,17 +4518,55 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    fName = filename.GetFullPath();
 
    bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==fName);
-   //check to see if the NEW project file already exists.
-   //We should only overwrite it if this project already has the same name, where the user
-   //simply chose to use the save as command although the save command would have the effect.
+   // Check to see if the project file already exists, and if it does
+   // check that the project file 'belongs' to this project.
+   // otherwise, prompt the user before overwriting.
    if (!bOwnsNewAupName && filename.FileExists()) {
-      AudacityMessageDialog m(
-         NULL,
-         _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
-         _("Error Saving Project"),
-         wxOK|wxICON_ERROR);
-      m.ShowModal();
-      return false;
+      // Ensure that project of same name is not open in another window.
+      // fName is the destination file.
+      // mFileName is this project.
+      // It is possible for mFileName == fName even when this project is not
+      // saved to disk, and we then need to check the destination file is not
+      // open in another window.
+      int mayOverwrite = (mFileName == fName)? 2 : 1;
+      for (auto p : gAudacityProjects) {
+         const wxFileName openProjectName(p->mFileName);
+         if (openProjectName.SameAs(fName)) {
+            mayOverwrite -= 1;
+            if (mayOverwrite == 0)
+               break;
+         }
+      }
+
+      if (mayOverwrite > 0) {
+         /* i18n-hint: In each case, %s is the name
+          of the file being overwritten.*/
+         wxString Message = wxString::Format(_("\
+Do you want to overwrite the project:\n\"%s\"?\n\n\
+If you select \"Yes\" the project\n\"%s\"\n\
+will be irreversibly overwritten."), fName, fName);
+
+         // For safety, there should NOT be an option to hide this warning.
+         int result = AudacityMessageBox(Message,
+                                         /* i18n-hint: Heading: A warning that a project is about to be overwritten.*/
+                                         _("Overwrite Project Warning"),
+                                         wxYES_NO | wxNO_DEFAULT | wxICON_WARNING,
+                                         this);
+         if (result != wxYES) {
+            return false;
+         }
+      }
+      else
+      {
+         // Overwrite disalowed. The destination project is open in another window.
+         AudacityMessageDialog m(
+            NULL,
+            _("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+            _("Error Saving Project"),
+            wxOK|wxICON_ERROR);
+         m.ShowModal();
+         return false;
+      }
    }
 
    wxString oldFileName = mFileName;

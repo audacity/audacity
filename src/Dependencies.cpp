@@ -392,7 +392,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 
       if (mIsSaving)
       {
-         S.StartHorizontalLay(wxALIGN_LEFT);
+         S.StartHorizontalLay(wxALIGN_LEFT,0);
          {
             wxArrayString choices;
             /*i18n-hint: One of the choices of what you want Audacity to do when
