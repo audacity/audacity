@@ -338,14 +338,22 @@ void AudacityProject::CreateMenusAndCommands()
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->AddSeparator();
-
       c->AddItem(wxT("Close"), XXO("&Close"), FN(OnClose), wxT("Ctrl+W"));
 
+      c->AddSeparator();
+
+      c->BeginSubMenu( _("&Save Project") );
       c->AddItem(wxT("Save"), XXO("&Save Project"), FN(OnSave), wxT("Ctrl+S"),
          AudioIONotBusyFlag | UnsavedChangesFlag,
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs));
+      // TODO: The next two items should be disabled if project is empty
+      c->AddItem(wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."), FN(OnSaveCopy));
+#ifdef USE_LIBVORBIS
+      c->AddItem(wxT("SaveCompressed"), XXO("&Save Compressed Copy of Project..."), FN(OnSaveCompressed));
+#endif
+      c->EndSubMenu();
+      c->AddSeparator();
 
       c->BeginSubMenu( _("&Export") );
 
@@ -383,12 +391,8 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | NoteTracksExistFlag,
          AudioIONotBusyFlag | NoteTracksExistFlag);
 #endif
-#ifdef USE_LIBVORBIS
-      c->AddSeparator();
-      c->AddItem(wxT("SaveCompressed"), XXO("&Save Compressed Copy of Project..."), FN(OnSaveCompressed));
-#endif
       c->EndSubMenu();
-      c->AddSeparator();
+
       c->BeginSubMenu(_("&Import"));
 
       c->AddItem(wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport), wxT("Ctrl+Shift+I"));
@@ -4734,6 +4738,11 @@ void AudacityProject::OnSave(const CommandContext &WXUNUSED(context) )
 void AudacityProject::OnSaveAs(const CommandContext &WXUNUSED(context) )
 {
    SaveAs();
+}
+
+void AudacityProject::OnSaveCopy(const CommandContext &WXUNUSED(context) )
+{
+   SaveAs(true, true);
 }
 
 #ifdef USE_LIBVORBIS

@@ -288,13 +288,13 @@ public:
                      TrackHolders &&newTracks);
 
    bool Save();
-   bool SaveAs(bool bWantSaveCompressed = false);
-   bool SaveAs(const wxString & newFileName, bool bWantSaveCompressed = false, bool addToHistory = true);
-   #ifdef USE_LIBVORBIS
-      bool SaveCompressedWaveTracks(const wxString & strProjectPathName); // full path for aup except extension
-   #endif
+   bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
+   bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false, bool addToHistory = true);
+   // strProjectPathName is full path for aup except extension
+   bool SaveCopyWaveTracks(const wxString & strProjectPathName, bool bLossless = false);
+
 private:
-   bool DoSave(bool fromSaveAs, bool bWantSaveCompressed);
+   bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 public:
 
    void Clear();
@@ -550,7 +550,7 @@ public:
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(
-      XMLWriter &xmlFile, bool bWantSaveCompressed) /* not override */;
+      XMLWriter &xmlFile, bool bWantSaveCopy) /* not override */;
 
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
