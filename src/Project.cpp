@@ -3115,7 +3115,24 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 
    XMLFileReader xmlFile;
 
+   // 'Lossless copy' projects have dependencies. We need to always copy-in
+   // these dependencies when converting to a normal project.
+   wxString oldAction = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   bool oldAsk = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true)?true:false;
+   if (oldAction != wxT("copy"))
+      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   if (oldAsk)
+      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
+   gPrefs->Flush();
+
    bool bParseSuccess = xmlFile.Parse(this, fileName);
+
+   // and restore old settings if necessary.
+   if (oldAction != wxT("copy"))
+      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), oldAction);
+   if (oldAsk)
+      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
+   gPrefs->Flush();
 
    // Clean up now unused recording recovery handler if any
    mRecordingRecoveryHandler.reset();
