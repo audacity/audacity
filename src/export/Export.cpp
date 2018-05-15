@@ -526,6 +526,7 @@ bool Exporter::GetFilename()
    {
       mFormat = 0;
       mFilterIndex = 0;
+      mSubFormat = 0;
    }
    maskString.RemoveLast();
    wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
