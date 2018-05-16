@@ -1857,10 +1857,6 @@ void NumericTextCtrl::Updated(bool keyup /* = false */)
 
 #if wxUSE_ACCESSIBILITY
    if (!keyup) {
-      GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
-                                   this,
-                                   wxOBJID_CLIENT,
-                                   mFocusedDigit + 1);
       SetFieldFocus(mFocusedDigit);
    }
 #endif
