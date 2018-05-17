@@ -1921,7 +1921,18 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
 
-   mTimeTrack = options.timeTrack;
+   if ( !captureTracks.empty() ) {
+      // It does not make sense to apply the time warp during overdub recording,
+      // which defeats the purpose of making the recording synchronized with
+      // the existing audio.  (Unless we figured out the inverse warp of the
+      // captured samples in real time.)
+      // So just quietly ignore the time track.
+      mTimeTrack = nullptr;
+   }
+   else {
+      mTimeTrack = options.timeTrack;
+   }
+
    mListener = options.listener;
    mRate    = sampleRate;
    mT0      = t0;
