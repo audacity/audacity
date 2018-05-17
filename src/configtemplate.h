@@ -143,6 +143,9 @@
 /* Define if libid3tag is present */
 #undef USE_LIBID3TAG
 
+/* Define if the LIBLO library is present */
+#undef USE_LIBLO
+
 /* Define if mp3 support is implemented with the libmad library */
 #undef USE_LIBMAD
 

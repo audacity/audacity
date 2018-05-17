@@ -52,6 +52,9 @@
 #include "ModulePrefs.h"
 #endif
 #include "PlaybackPrefs.h"
+#ifdef USE_LIBLO
+#include "TransportOSCPrefs.h"
+#endif
 #include "ProjectsPrefs.h"
 #include "QualityPrefs.h"
 #include "RecordingPrefs.h"
@@ -158,6 +161,9 @@ PrefsDialog::Factories
    // class... and thus allowing a plug-in protocol
    static DevicePrefsFactory devicePrefsFactory;
    static PlaybackPrefsFactory playbackPrefsFactory;
+#ifdef USE_LIBLO
+   static TransportOSCPrefsFactory transportOSCPrefsFactory;
+#endif
    static RecordingPrefsFactory recordingPrefsFactory;
 #ifdef EXPERIMENTAL_MIDI_OUT
    static MidiIOPrefsFactory midiIOPrefsFactory;
@@ -190,6 +196,9 @@ PrefsDialog::Factories
    static PrefsNode nodes[] = {
       &devicePrefsFactory,
       &playbackPrefsFactory,
+#ifdef USE_LIBLO
+      &transportOSCPrefsFactory,
+#endif
       &recordingPrefsFactory,
 #ifdef EXPERIMENTAL_MIDI_OUT
       &midiIOPrefsFactory,

@@ -651,6 +651,8 @@ GTK_CFLAGS
 HAVE_GTK
 USE_LADSPA_FALSE
 USE_LADSPA_TRUE
+USE_LIBLO_FALSE
+USE_LIBLO_TRUE
 USE_LOCAL_WIDGETEXTRA_FALSE
 USE_LOCAL_WIDGETEXTRA_TRUE
 USE_LOCAL_PORTMIDI_FALSE
@@ -727,6 +729,8 @@ FFMPEG_LIBS
 FFMPEG_CFLAGS
 USE_LOCAL_EXPAT_FALSE
 USE_LOCAL_EXPAT_TRUE
+LIBLO_LIBS
+LIBLO_CFLAGS
 WIDGETEXTRA_LIBS
 WIDGETEXTRA_CFLAGS
 PORTMIDI_LIBS
@@ -965,6 +969,7 @@ with_portaudio
 with_midi
 with_portmidi
 with_widgetextra
+with_liblo
 enable_audiounits
 enable_ladspa
 enable_quicktime
@@ -1025,6 +1030,8 @@ PORTMIDI_CFLAGS
 PORTMIDI_LIBS
 WIDGETEXTRA_CFLAGS
 WIDGETEXTRA_LIBS
+LIBLO_CFLAGS
+LIBLO_LIBS
 GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
@@ -1734,6 +1741,7 @@ Optional Packages:
   --with-portmidi         use PortMIDI for MIDI playback support
   --with-widgetextra      which libwidgetextra to use (required):
                           [system,local]
+  --with-liblo            use liblo for OSC(Open Sound Control) support
   --with-portmixer        compile with PortMixer [default=yes]
   --with-mod-script-pipe  compile with mod-script-pipe [default=no]
   --with-mod-nyq-bench    compile with mod-nyq-bench [default=no]
@@ -1814,6 +1822,9 @@ Some influential environment variables:
               C compiler flags for WIDGETEXTRA, overriding pkg-config
   WIDGETEXTRA_LIBS
               linker flags for WIDGETEXTRA, overriding pkg-config
+  LIBLO_CFLAGS
+              C compiler flags for LIBLO, overriding pkg-config
+  LIBLO_LIBS  linker flags for LIBLO, overriding pkg-config
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
   JACK_CFLAGS C compiler flags for JACK, overriding pkg-config
@@ -19936,7 +19947,7 @@ CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
 
 
-LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI WIDGETEXTRA LIBLO"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -22834,6 +22845,93 @@ $as_echo "$as_me: libwidgetextra library is NOT available in the local tree" >&6
 
 
 
+# Check whether --with-liblo was given.
+if test "${with_liblo+set}" = set; then :
+  withval=$with_liblo; LIBLO_ARGUMENT=$withval
+else
+  LIBLO_ARGUMENT="unspecified"
+fi
+
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBLO" >&5
+$as_echo_n "checking for LIBLO... " >&6; }
+
+if test -n "$LIBLO_CFLAGS"; then
+    pkg_cv_LIBLO_CFLAGS="$LIBLO_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"liblo >= 0.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "liblo >= 0.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBLO_CFLAGS=`$PKG_CONFIG --cflags "liblo >= 0.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBLO_LIBS"; then
+    pkg_cv_LIBLO_LIBS="$LIBLO_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"liblo >= 0.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "liblo >= 0.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBLO_LIBS=`$PKG_CONFIG --libs "liblo >= 0.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBLO_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "liblo >= 0.26" 2>&1`
+        else
+	        LIBLO_PKG_ERRORS=`$PKG_CONFIG --print-errors "liblo >= 0.26" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBLO_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                LIBLO_SYSTEM_AVAILABLE="no"
+elif test $pkg_failed = untried; then
+	LIBLO_SYSTEM_AVAILABLE="no"
+else
+	LIBLO_CFLAGS=$pkg_cv_LIBLO_CFLAGS
+	LIBLO_LIBS=$pkg_cv_LIBLO_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	LIBLO_SYSTEM_AVAILABLE="yes"
+fi
+
+   if test "$LIBLO_SYSTEM_AVAILABLE" = "yes"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: LIBLO libraries are available as system libraries" >&5
+$as_echo "$as_me: LIBLO libraries are available as system libraries" >&6;}
+      LIBLO_SYSTEM_LIBS=$LIBLO_LIBS
+   else
+      as_fn_error $? "LIBLO libraries are NOT available as system libraries" "$LINENO" 5
+   fi
+
+
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: Figuring out what libraries to enable" >&5
 $as_echo "$as_me: Figuring out what libraries to enable" >&6;}
 
@@ -23555,6 +23653,22 @@ else
   USE_LOCAL_WIDGETEXTRA_FALSE=
 fi
 
+
+
+    if test "$LIBLO_USE_SYSTEM" = yes; then
+  USE_LIBLO_TRUE=
+  USE_LIBLO_FALSE='#'
+else
+  USE_LIBLO_TRUE='#'
+  USE_LIBLO_FALSE=
+fi
+
+
+   if test "$LIBLO_USE_SYSTEM" = yes; then
+
+$as_echo "#define USE_LIBLO 1" >>confdefs.h
+
+   fi
 
 
 
@@ -24541,6 +24655,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LOCAL_WIDGETEXTRA_TRUE}" && test -z "${USE_LOCAL_WIDGETEXTRA_FALSE}"; then
   as_fn_error $? "conditional \"USE_LOCAL_WIDGETEXTRA\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_LIBLO_TRUE}" && test -z "${USE_LIBLO_FALSE}"; then
+  as_fn_error $? "conditional \"USE_LIBLO\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LADSPA_TRUE}" && test -z "${USE_LADSPA_FALSE}"; then

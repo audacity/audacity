@@ -18,6 +18,11 @@
 #include "ToolBar.h"
 #include "../Theme.h"
 
+#ifdef USE_LIBLO
+#include <lo/lo.h>
+#include <lo/lo_cpp.h>
+#endif
+
 class wxBoxSizer;
 class wxCommandEvent;
 class wxDC;
@@ -49,6 +54,10 @@ class ControlToolBar final : public ToolBar {
    void Create(wxWindow *parent) override;
 
    void UpdatePrefs() override;
+   void LoadPrefs();
+#ifdef USE_LIBLO
+   void LoadPrefsOSC(bool init=false);
+#endif
    void OnKeyEvent(wxKeyEvent & event);
 
    // msmeyer: These are public, but it's far better to
@@ -176,6 +185,27 @@ class ControlToolBar final : public ToolBar {
    wxString mStateStop;
    wxString mStateRecord;
    wxString mStatePause;
+
+#ifdef USE_LIBLO
+   // OSC configuration
+   lo::Address *mOSCAddress;
+   wxString mOSCDestinationHost;
+   wxString mOSCDestinationPort;
+   int mOSCDestinationProtocol;
+   // Triggers
+   bool mOSCRecordTriggering;
+   bool mOSCPlayTriggering;
+   bool mOSCStopTriggering;
+   bool mOSCPauseTriggering;
+   bool mOSCRewindTriggering;
+   bool mOSCFastForwardTriggering;
+   wxString mOSCRecordAddress;
+   wxString mOSCPlayAddress;
+   wxString mOSCStopAddress;
+   wxString mOSCPauseAddress;
+   wxString mOSCRewindAddress;
+   wxString mOSCFastForwardAddress;
+#endif
 
  public:
 

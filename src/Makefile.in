@@ -202,6 +202,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libexpat.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libflac.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libid3tag.m4 \
+	$(top_srcdir)/m4/audacity_checklib_liblo.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libmad.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libnyquist.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsbsms.m4 \
@@ -445,6 +446,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	prefs/SpectrumPrefs.h prefs/ThemePrefs.cpp prefs/ThemePrefs.h \
 	prefs/TracksBehaviorsPrefs.cpp prefs/TracksBehaviorsPrefs.h \
 	prefs/TracksPrefs.cpp prefs/TracksPrefs.h \
+	prefs/TransportOSCPrefs.cpp prefs/TransportOSCPrefs.h \
 	prefs/WarningsPrefs.cpp prefs/WarningsPrefs.h \
 	prefs/WaveformPrefs.cpp prefs/WaveformPrefs.h \
 	prefs/WaveformSettings.cpp prefs/WaveformSettings.h \
@@ -780,6 +782,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	prefs/audacity-ThemePrefs.$(OBJEXT) \
 	prefs/audacity-TracksBehaviorsPrefs.$(OBJEXT) \
 	prefs/audacity-TracksPrefs.$(OBJEXT) \
+	prefs/audacity-TransportOSCPrefs.$(OBJEXT) \
 	prefs/audacity-WarningsPrefs.$(OBJEXT) \
 	prefs/audacity-WaveformPrefs.$(OBJEXT) \
 	prefs/audacity-WaveformSettings.$(OBJEXT) \
@@ -1086,6 +1089,8 @@ LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
+LIBLO_CFLAGS = @LIBLO_CFLAGS@
+LIBLO_LIBS = @LIBLO_LIBS@
 LIBMAD_CFLAGS = @LIBMAD_CFLAGS@
 LIBMAD_LIBS = @LIBMAD_LIBS@
 LIBNYQUIST_CFLAGS = @LIBNYQUIST_CFLAGS@
@@ -1467,6 +1472,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	prefs/SpectrumPrefs.h prefs/ThemePrefs.cpp prefs/ThemePrefs.h \
 	prefs/TracksBehaviorsPrefs.cpp prefs/TracksBehaviorsPrefs.h \
 	prefs/TracksPrefs.cpp prefs/TracksPrefs.h \
+	prefs/TransportOSCPrefs.cpp prefs/TransportOSCPrefs.h \
 	prefs/WarningsPrefs.cpp prefs/WarningsPrefs.h \
 	prefs/WaveformPrefs.cpp prefs/WaveformPrefs.h \
 	prefs/WaveformSettings.cpp prefs/WaveformSettings.h \
@@ -2043,6 +2049,8 @@ prefs/audacity-ThemePrefs.$(OBJEXT): prefs/$(am__dirstamp) \
 prefs/audacity-TracksBehaviorsPrefs.$(OBJEXT): prefs/$(am__dirstamp) \
 	prefs/$(DEPDIR)/$(am__dirstamp)
 prefs/audacity-TracksPrefs.$(OBJEXT): prefs/$(am__dirstamp) \
+	prefs/$(DEPDIR)/$(am__dirstamp)
+prefs/audacity-TransportOSCPrefs.$(OBJEXT): prefs/$(am__dirstamp) \
 	prefs/$(DEPDIR)/$(am__dirstamp)
 prefs/audacity-WarningsPrefs.$(OBJEXT): prefs/$(am__dirstamp) \
 	prefs/$(DEPDIR)/$(am__dirstamp)
@@ -2651,6 +2659,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@prefs/$(DEPDIR)/audacity-ThemePrefs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@prefs/$(DEPDIR)/audacity-TracksBehaviorsPrefs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@prefs/$(DEPDIR)/audacity-TracksPrefs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@prefs/$(DEPDIR)/audacity-TransportOSCPrefs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@prefs/$(DEPDIR)/audacity-WarningsPrefs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@prefs/$(DEPDIR)/audacity-WaveformPrefs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@prefs/$(DEPDIR)/audacity-WaveformSettings.Po@am__quote@
@@ -5988,6 +5997,20 @@ prefs/audacity-TracksPrefs.obj: prefs/TracksPrefs.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='prefs/TracksPrefs.cpp' object='prefs/audacity-TracksPrefs.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o prefs/audacity-TracksPrefs.obj `if test -f 'prefs/TracksPrefs.cpp'; then $(CYGPATH_W) 'prefs/TracksPrefs.cpp'; else $(CYGPATH_W) '$(srcdir)/prefs/TracksPrefs.cpp'; fi`
+
+prefs/audacity-TransportOSCPrefs.o: prefs/TransportOSCPrefs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT prefs/audacity-TransportOSCPrefs.o -MD -MP -MF prefs/$(DEPDIR)/audacity-TransportOSCPrefs.Tpo -c -o prefs/audacity-TransportOSCPrefs.o `test -f 'prefs/TransportOSCPrefs.cpp' || echo '$(srcdir)/'`prefs/TransportOSCPrefs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) prefs/$(DEPDIR)/audacity-TransportOSCPrefs.Tpo prefs/$(DEPDIR)/audacity-TransportOSCPrefs.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='prefs/TransportOSCPrefs.cpp' object='prefs/audacity-TransportOSCPrefs.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o prefs/audacity-TransportOSCPrefs.o `test -f 'prefs/TransportOSCPrefs.cpp' || echo '$(srcdir)/'`prefs/TransportOSCPrefs.cpp
+
+prefs/audacity-TransportOSCPrefs.obj: prefs/TransportOSCPrefs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT prefs/audacity-TransportOSCPrefs.obj -MD -MP -MF prefs/$(DEPDIR)/audacity-TransportOSCPrefs.Tpo -c -o prefs/audacity-TransportOSCPrefs.obj `if test -f 'prefs/TransportOSCPrefs.cpp'; then $(CYGPATH_W) 'prefs/TransportOSCPrefs.cpp'; else $(CYGPATH_W) '$(srcdir)/prefs/TransportOSCPrefs.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) prefs/$(DEPDIR)/audacity-TransportOSCPrefs.Tpo prefs/$(DEPDIR)/audacity-TransportOSCPrefs.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='prefs/TransportOSCPrefs.cpp' object='prefs/audacity-TransportOSCPrefs.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o prefs/audacity-TransportOSCPrefs.obj `if test -f 'prefs/TransportOSCPrefs.cpp'; then $(CYGPATH_W) 'prefs/TransportOSCPrefs.cpp'; else $(CYGPATH_W) '$(srcdir)/prefs/TransportOSCPrefs.cpp'; fi`
 
 prefs/audacity-WarningsPrefs.o: prefs/WarningsPrefs.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT prefs/audacity-WarningsPrefs.o -MD -MP -MF prefs/$(DEPDIR)/audacity-WarningsPrefs.Tpo -c -o prefs/audacity-WarningsPrefs.o `test -f 'prefs/WarningsPrefs.cpp' || echo '$(srcdir)/'`prefs/WarningsPrefs.cpp

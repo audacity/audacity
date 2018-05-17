@@ -536,6 +536,8 @@ audacity_SOURCES = \
 	prefs/TracksBehaviorsPrefs.h \
 	prefs/TracksPrefs.cpp \
 	prefs/TracksPrefs.h \
+	prefs/TransportOSCPrefs.cpp \
+	prefs/TransportOSCPrefs.h \
 	prefs/WarningsPrefs.cpp \
 	prefs/WarningsPrefs.h \
 	prefs/WaveformPrefs.cpp \

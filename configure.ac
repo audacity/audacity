@@ -351,7 +351,7 @@ dnl Optional library support. Lots of things we could use, but
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
 dnl GSTREAMER removed for 2.0.6 release
-LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI WIDGETEXTRA LIBLO"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
 
@@ -375,6 +375,7 @@ AUDACITY_CHECKLIB_PORTAUDIO
 AUDACITY_CHECKLIB_PORTSMF
 AUDACITY_CHECKLIB_PORTMIDI
 AUDACITY_CHECKLIB_WIDGETEXTRA
+AUDACITY_CHECKLIB_LIBLO
 
 dnl Decide what libraries to build with, and whether to use system or local libraries
 dnl Set variables based on choices.
@@ -504,6 +505,7 @@ AUDACITY_CONFIG_PORTAUDIO
 AUDACITY_CONFIG_PORTSMF
 AUDACITY_CONFIG_PORTMIDI
 AUDACITY_CONFIG_WIDGETEXTRA
+AUDACITY_CONFIG_LIBLO
 
 dnl--------------------------------------------------------------------------
 dnl Optional features (which don't use libraries - just compile-time on/off)

@@ -116,12 +116,16 @@ ControlToolBar::ControlToolBar()
    mStateStop = XO("Stopped");
    mStateRecord = XO("Recording");
    mStatePause = XO("Paused");
+
+   LoadPrefs();
+#ifdef USE_LIBLO
+   LoadPrefsOSC(true);
+#endif
 }
 
 ControlToolBar::~ControlToolBar()
 {
 }
-
 
 void ControlToolBar::Create(wxWindow * parent)
 {
@@ -322,6 +326,10 @@ void ControlToolBar::UpdatePrefs()
       // always do it. (Much cheaper than calling ReCreateButtons() in all cases.
       RegenerateTooltips();
 
+#ifdef USE_LIBLO
+   // Update OSC configuration
+   LoadPrefsOSC();
+#endif
 
    // Set label to pull in language change
    SetLabel(_("Transport"));
@@ -329,6 +337,56 @@ void ControlToolBar::UpdatePrefs()
    // Give base class a chance
    ToolBar::UpdatePrefs();
 }
+
+void ControlToolBar::LoadPrefs()
+{
+}
+
+#ifdef USE_LIBLO
+void ControlToolBar::LoadPrefsOSC(bool init)
+{
+   if( mOSCAddress && !init)
+   {
+      wxString activeOSCDestinationHost,
+            activeOSCDestinationPort;
+      int activeOSCDestinationProtocol;
+
+      gPrefs->Read("/TransportOSC/Host", &activeOSCDestinationHost, wxT(""));
+      gPrefs->Read("/TransportOSC/Port", &activeOSCDestinationPort, wxT(""));
+      gPrefs->Read("/TransportOSC/Protocol", &activeOSCDestinationProtocol, LO_UDP);
+      if( activeOSCDestinationHost != mOSCDestinationHost
+          || activeOSCDestinationPort != mOSCDestinationPort
+          || activeOSCDestinationProtocol != mOSCDestinationProtocol)
+      {
+          free(mOSCAddress);
+          mOSCDestinationHost = activeOSCDestinationHost;
+          mOSCDestinationPort = activeOSCDestinationPort;
+          mOSCDestinationProtocol = activeOSCDestinationProtocol;
+      }
+   }
+   else
+   {
+      gPrefs->Read("/TransportOSC/Host", &mOSCDestinationHost, wxT("localhost"));
+      gPrefs->Read("/TransportOSC/Port", &mOSCDestinationPort, wxT("9876"));
+      gPrefs->Read("/TransportOSC/Protocol", &mOSCDestinationProtocol, LO_UDP);
+   }
+   mOSCAddress = new lo::Address(mOSCDestinationHost.ToStdString(),
+                                 mOSCDestinationPort.ToStdString(),
+                                 mOSCDestinationProtocol);
+   gPrefs->Read("/TransportOSC/Record/Triggering", &mOSCRecordTriggering, true);
+   gPrefs->Read("/TransportOSC/Record/Address", &mOSCRecordAddress, wxT(""));
+   gPrefs->Read("/TransportOSC/Play/Triggering", &mOSCPlayTriggering, true);
+   gPrefs->Read("/TransportOSC/Play/Address", &mOSCPlayAddress, wxT(""));
+   gPrefs->Read("/TransportOSC/Stop/Triggering", &mOSCStopTriggering, true);
+   gPrefs->Read("/TransportOSC/Stop/Address", &mOSCStopAddress, wxT(""));
+   gPrefs->Read("/TransportOSC/Pause/Triggering", &mOSCPauseTriggering, true);
+   gPrefs->Read("/TransportOSC/Pause/Address", &mOSCPauseAddress, wxT(""));
+   gPrefs->Read("/TransportOSC/Rewind/Triggering", &mOSCRewindTriggering, true);
+   gPrefs->Read("/TransportOSC/Rewind/Address", &mOSCRewindAddress, wxT(""));
+   gPrefs->Read("/TransportOSC/FastForward/Triggering", &mOSCFastForwardTriggering, true);
+   gPrefs->Read("/TransportOSC/FastForward/Address", &mOSCFastForwardAddress, wxT(""));
+}
+#endif
 
 void ControlToolBar::ArrangeButtons()
 {
@@ -496,8 +554,25 @@ void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
       mPlay->SetControl(appearance == PlayAppearance::CutPreview);
       mPlay->SetAlternateIdx(static_cast<int>(appearance));
       mPlay->PushDown();
+#ifdef USE_LIBLO
+      if( mOSCPlayTriggering
+          && CanStopAudioStream()
+          && !mRecord->IsDown())
+      {
+         mOSCAddress->send(mOSCPlayAddress.ToStdString(),
+                           "T", NULL);
+      }
+#endif
    }
    else {
+#ifdef USE_LIBLO
+      if( mOSCPlayTriggering
+          && mPlay->IsDown())
+      {
+         mOSCAddress->send(mOSCPlayAddress.ToStdString(),
+                           "F", NULL);
+      }
+#endif
       mPlay->PopUp();
       mPlay->SetAlternateIdx(0);
    }
@@ -507,8 +582,19 @@ void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
 
 void ControlToolBar::SetStop(bool down)
 {
+#ifdef USE_LIBLO
+   if( mOSCStopTriggering
+       && CanStopAudioStream()
+       && (mPlay->IsDown() || mRecord->IsDown() || gAudioIO->IsBusy()))
+   {
+      mOSCAddress->send(mOSCStopAddress.ToStdString(),
+                        "T", NULL);
+   }
+#endif
    if (down)
+   {
       mStop->PushDown();
+   }
    else {
       if(FindFocus() == mStop)
          mPlay->SetFocus();
@@ -523,9 +609,30 @@ void ControlToolBar::SetRecord(bool down, bool append)
    {
       mRecord->SetAlternateIdx(append ? 1 : 0);
       mRecord->PushDown();
+#ifdef USE_LIBLO
+      if( mOSCRecordTriggering
+          && CanStopAudioStream()
+          && !(!mRecord->IsDown()
+               && !mPause->IsDown())
+          && !(mPlay->IsDown()
+               && !mPause->IsDown())
+          )
+      {
+         mOSCAddress->send(mOSCRecordAddress.ToStdString(),
+                           "T", NULL);
+      }
+#endif
    }
    else
    {
+#ifdef USE_LIBLO
+      if( mOSCRecordTriggering
+          && mRecord->IsDown())
+      {
+         mOSCAddress->send(mOSCRecordAddress.ToStdString(),
+                           "F", NULL);
+      }
+#endif
       mRecord->SetAlternateIdx(0);
       mRecord->PopUp();
    }
@@ -1276,6 +1383,14 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
+#ifdef USE_LIBLO
+   if( mOSCPauseTriggering )
+   {
+      mOSCAddress->send(mOSCPauseAddress.ToStdString(),
+                        mPause->IsDown() ? "T" : "F",
+                        NULL);
+   }
+#endif
 
    if(mPaused)
    {
@@ -1302,6 +1417,14 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 
 void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
 {
+#ifdef USE_LIBLO
+   if( mOSCRewindTriggering )
+   {
+      mOSCAddress->send(mOSCRewindAddress.ToStdString(),
+                        mRewind->IsDown() ? "T" : "F",
+                        NULL);
+   }
+#endif
    mRewind->PushDown();
    mRewind->PopUp();
 
@@ -1314,6 +1437,14 @@ void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
 
 void ControlToolBar::OnFF(wxCommandEvent & WXUNUSED(evt))
 {
+#ifdef USE_LIBLO
+   if( mOSCFastForwardTriggering )
+   {
+      mOSCAddress->send(mOSCFastForwardAddress.ToStdString(),
+                        mFF->IsDown() ? "T" : "F",
+                        NULL);
+   }
+#endif
    mFF->PushDown();
    mFF->PopUp();
 

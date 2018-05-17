@@ -104,6 +104,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libexpat.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libflac.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libid3tag.m4 \
+	$(top_srcdir)/m4/audacity_checklib_liblo.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libmad.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libnyquist.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsbsms.m4 \
@@ -380,6 +381,8 @@ LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
+LIBLO_CFLAGS = @LIBLO_CFLAGS@
+LIBLO_LIBS = @LIBLO_LIBS@
 LIBMAD_CFLAGS = @LIBMAD_CFLAGS@
 LIBMAD_LIBS = @LIBMAD_LIBS@
 LIBNYQUIST_CFLAGS = @LIBNYQUIST_CFLAGS@
