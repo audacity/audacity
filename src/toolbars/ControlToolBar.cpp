@@ -959,7 +959,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       appendRecord = !appendRecord;
 
    TrackList *trackList = p->GetTracks();
-
    WaveTrackArray recordingTracks;
 
    auto cleanup = finally( [&] {
@@ -990,8 +989,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       double t0 = p->GetSel0();
       double t1 = p->GetSel1();
+      // When no time selection, recording duration is 'unlimited'.
       if (t1 == t0)
-         t1 = DBL_MAX;     // record for a long, long time
+         t1 = DBL_MAX;
 
       /* TODO: set up stereo tracks if that is how the user has set up
        * their preferences, and choose sample format based on prefs */
