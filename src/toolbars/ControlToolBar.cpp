@@ -1141,13 +1141,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
             recordingTracks.push_back(pending);
          }
-      }
 
-
-      if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
-         t1 = p->GetSel1();   // record within the selection
-      } else {
-         t1 = DBL_MAX;        // record for a long, long time
+         if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
+            t1 = p->GetSel1();   // record within the selection
+         } else {
+            t1 = DBL_MAX;        // record for a long, long time
+         }
       }
 
       if( recordingTracks.empty() )
