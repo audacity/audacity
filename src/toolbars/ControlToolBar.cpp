@@ -917,15 +917,15 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    // normally used for buttons.
 
    // Code from CommandHandler start...
-   AudacityProject * proj = GetActiveProject();
-   wxASSERT( proj );
-   if( !proj )
+   AudacityProject * p = GetActiveProject();
+   wxASSERT( p );
+   if( !p )
       return;
 
    CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
 
    // NB: The call may have the side effect of changing flags.
-   bool allowed = proj->TryToMakeActionAllowed(
+   bool allowed = p->TryToMakeActionAllowed(
       flags, 
       AudioIONotBusyFlag | CanStopAudioStreamFlag, 
       AudioIONotBusyFlag | CanStopAudioStreamFlag);
@@ -941,7 +941,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          mRecord->PushDown();
       return;
    }
-   AudacityProject *p = GetActiveProject();
 
    if( evt.GetInt() == 1 ) // used when called by keyboard shortcut. Default (0) ignored.
       mRecord->SetShift(true);
