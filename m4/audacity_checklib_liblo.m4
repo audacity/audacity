@@ -6,22 +6,23 @@ dnl for the benefit of automatic macro update systems
 
 AC_DEFUN([AUDACITY_CHECKLIB_LIBLO], [
    AC_ARG_WITH(liblo,
-               [AS_HELP_STRING([--with-liblo],
-                               [use liblo for OSC(Open Sound Control) support])],
-               LIBLO_ARGUMENT=$withval,
-               LIBLO_ARGUMENT="unspecified")
+               [AS_HELP_STRING([--without-liblo],
+                               [disable support for liblo, OSC (Open Sound Control) support])],
+               [LIBLO_ARGUMENT=$withval],
+               [LIBLO_ARGUMENT=yes])
 
    dnl See if LIBLO is installed in the system and use it
+   if test "x$LIBLO_ARGUMENT" = "xyes"; then
+      PKG_CHECK_MODULES([LIBLO], [liblo >= 0.26],
+                        [LIBLO_SYSTEM_AVAILABLE="yes"],
+                        [LIBLO_SYSTEM_AVAILABLE="no"])
 
-   PKG_CHECK_MODULES([LIBLO], [liblo >= 0.26],
-                     [LIBLO_SYSTEM_AVAILABLE="yes"],
-                     [LIBLO_SYSTEM_AVAILABLE="no"])
-
-   if test "$LIBLO_SYSTEM_AVAILABLE" = "yes"; then
-      AC_MSG_NOTICE([LIBLO libraries are available as system libraries])
-      LIBLO_SYSTEM_LIBS=$LIBLO_LIBS
-   else
-      AC_MSG_ERROR([LIBLO libraries are NOT available as system libraries])
+      if test "$LIBLO_SYSTEM_AVAILABLE" = "yes"; then
+         AC_MSG_NOTICE([LIBLO libraries are available as system libraries])
+         LIBLO_SYSTEM_LIBS=$LIBLO_LIBS
+      else
+         AC_MSG_ERROR([LIBLO libraries are NOT available as system libraries])
+      fi
    fi
 ])
 

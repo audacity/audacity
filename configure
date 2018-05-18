@@ -1741,7 +1741,8 @@ Optional Packages:
   --with-portmidi         use PortMIDI for MIDI playback support
   --with-widgetextra      which libwidgetextra to use (required):
                           [system,local]
-  --with-liblo            use liblo for OSC(Open Sound Control) support
+  --without-liblo         disable support for liblo, OSC (Open Sound Control)
+                          support
   --with-portmixer        compile with PortMixer [default=yes]
   --with-mod-script-pipe  compile with mod-script-pipe [default=no]
   --with-mod-nyq-bench    compile with mod-nyq-bench [default=no]
@@ -22849,11 +22850,11 @@ $as_echo "$as_me: libwidgetextra library is NOT available in the local tree" >&6
 if test "${with_liblo+set}" = set; then :
   withval=$with_liblo; LIBLO_ARGUMENT=$withval
 else
-  LIBLO_ARGUMENT="unspecified"
+  LIBLO_ARGUMENT=yes
 fi
 
 
-
+      if test "x$LIBLO_ARGUMENT" = "xyes"; then
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBLO" >&5
@@ -22922,12 +22923,13 @@ $as_echo "yes" >&6; }
 	LIBLO_SYSTEM_AVAILABLE="yes"
 fi
 
-   if test "$LIBLO_SYSTEM_AVAILABLE" = "yes"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: LIBLO libraries are available as system libraries" >&5
+      if test "$LIBLO_SYSTEM_AVAILABLE" = "yes"; then
+         { $as_echo "$as_me:${as_lineno-$LINENO}: LIBLO libraries are available as system libraries" >&5
 $as_echo "$as_me: LIBLO libraries are available as system libraries" >&6;}
-      LIBLO_SYSTEM_LIBS=$LIBLO_LIBS
-   else
-      as_fn_error $? "LIBLO libraries are NOT available as system libraries" "$LINENO" 5
+         LIBLO_SYSTEM_LIBS=$LIBLO_LIBS
+      else
+         as_fn_error $? "LIBLO libraries are NOT available as system libraries" "$LINENO" 5
+      fi
    fi
 
 
