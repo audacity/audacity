@@ -985,8 +985,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
       }
       if(!hasWave)
-         // Treat append-record like record, when there was no given wave track
-         // to append onto.
+         // Treat append-record like record record to new, when there are
+         // no wave tracks to append onto.
          appendRecord = false;
 
       double t0 = p->GetSel0();
