@@ -4064,13 +4064,15 @@ void AudioIO::FillBuffers()
                    * must flush any samples left in the rate conversion buffer
                    * so that they get recorded
                    */
-                  const auto results =
-                  mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail,
-                                        !IsStreamActive(), (float *)temp2.ptr(), size);
-                  size = results.second;
-                  // see comment in second handler about guarantee
-                  mCaptureTracks[i]-> Append(temp2.ptr(), floatSample, size, 1,
-                                             &appendLog);
+                  if (avail > 0 ) {
+                     const auto results =
+                     mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail,
+                                           !IsStreamActive(), (float *)temp2.ptr(), size);
+                     size = results.second;
+                     // see comment in second handler about guarantee
+                     mCaptureTracks[i]-> Append(temp2.ptr(), floatSample, size, 1,
+                                                &appendLog);
+                  }
                }
 
                if (!appendLog.IsEmpty())
