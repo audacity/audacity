@@ -1866,7 +1866,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
       bool skipBorder = false;
       Track *l = t->GetLink();
 
-      if (t->GetLinked()) {
+      if (l && t->GetLinked()) {
          rect.height += l->GetHeight();
       }
       else if (l && trackRect.y >= 0) {
