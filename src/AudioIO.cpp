@@ -1933,10 +1933,21 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
       mTimeTrack = options.timeTrack;
    }
 
-   mListener = options.listener;
-   mRate    = sampleRate;
    mT0      = t0;
    mT1      = t1;
+   mRecordingSchedule = {};
+   mRecordingSchedule.mLatencyCorrection =
+      (gPrefs->Read(wxT("/AudioIO/LatencyCorrection"),
+                   DEFAULT_LATENCY_CORRECTION))
+         / 1000.0;
+   mRecordingSchedule.mDuration = mT1 - mT0;
+   if (captureTracks.size() > 0 && playbackTracks.size() > 0)
+      // adjust mT1 so that we don't give paComplete too soon to fill up the
+      // desired length of recording
+      mT1 -= mRecordingSchedule.mLatencyCorrection;
+
+   mListener = options.listener;
+   mRate    = sampleRate;
    mTime    = t0;
    mSeek    = 0;
    mLastRecordingOffset = 0;
@@ -2150,7 +2161,12 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
                   // Don't throw for read errors, just play silence:
                   false,
                   warpOptions,
-                  mT0, mT1, 1,
+                  mT0,
+                  // Pass t1 -- not mT1 as may have been adjusted for latency
+                  // -- so that overdub recording stops playing back samples
+                  // at the right time, though transport may continue to record
+                  t1,
+                  1,
                   playbackMixBufferSize, false,
                   mRate, floatSample, false);
                mPlaybackMixers[i]->ApplyTrackGains(false);
@@ -2724,11 +2740,10 @@ void AudioIO::StopStream()
          // case that we do not apply latency correction when recording the
          // first track in a project.
          //
-         double latencyCorrection = DEFAULT_LATENCY_CORRECTION;
-         gPrefs->Read(wxT("/AudioIO/LatencyCorrection"), &latencyCorrection);
 
          double recordingOffset =
-            mLastRecordingOffset + latencyCorrection / 1000.0;
+            mLastRecordingOffset +
+            mRecordingSchedule.mLatencyCorrection;
 
          for (unsigned int i = 0; i < mCaptureTracks.size(); i++) {
             // The calls to Flush, and (less likely) Clear and InsertSilence,
@@ -4016,12 +4031,16 @@ void AudioIO::FillBuffers()
        mCaptureTracks.size() > 0)
       GuardedCall( [&] {
          // start record buffering
-         auto commonlyAvail = GetCommonlyAvailCapture();
+         const auto avail = GetCommonlyAvailCapture(); // samples
+         const auto remainingTime =
+            std::max(0.0, mRecordingSchedule.Remaining());
+         // This may be a very big double number:
+         const auto remainingSamples = remainingTime * mRate;
 
          //
          // Determine how much this will add to captured tracks
          //
-         double deltat = commonlyAvail / mRate;
+         double deltat = avail / mRate;
 
          if (mAudioThreadShouldCallFillBuffersOnce ||
              deltat >= mMinCaptureSecsToCopy)
@@ -4033,7 +4052,6 @@ void AudioIO::FillBuffers()
 
             for( i = 0; i < numChannels; i++ )
             {
-               auto avail = commonlyAvail;
                sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
 
                AutoSaveFile appendLog;
@@ -4042,12 +4060,16 @@ void AudioIO::FillBuffers()
                {
                   SampleBuffer temp(avail, trackFormat);
                   const auto got =
-                  mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, avail);
+                     mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, avail);
                   // wxASSERT(got == avail);
                   // but we can't assert in this thread
                   wxUnusedVar(got);
                   // see comment in second handler about guarantee
-                  mCaptureTracks[i]-> Append(temp.ptr(), trackFormat, avail, 1,
+                  size_t size = avail;
+                  if (double(size) > remainingSamples)
+                     size = floor(remainingSamples);
+                  mCaptureTracks[i]-> Append(temp.ptr(), trackFormat,
+                                             size, 1,
                                              &appendLog);
                }
                else
@@ -4056,7 +4078,7 @@ void AudioIO::FillBuffers()
                   SampleBuffer temp1(avail, floatSample);
                   SampleBuffer temp2(size, floatSample);
                   const auto got =
-                  mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
+                     mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
                   // wxASSERT(got == avail);
                   // but we can't assert in this thread
                   wxUnusedVar(got);
@@ -4070,7 +4092,10 @@ void AudioIO::FillBuffers()
                                            !IsStreamActive(), (float *)temp2.ptr(), size);
                      size = results.second;
                      // see comment in second handler about guarantee
-                     mCaptureTracks[i]-> Append(temp2.ptr(), floatSample, size, 1,
+                     if (double(size) > remainingSamples)
+                        size = floor(remainingSamples);
+                     mCaptureTracks[i]-> Append(temp2.ptr(), floatSample,
+                                                size, 1,
                                                 &appendLog);
                   }
                }
@@ -4084,7 +4109,9 @@ void AudioIO::FillBuffers()
                   blockFileLog.WriteSubTree(appendLog);
                   blockFileLog.EndTag(wxT("recordingrecovery"));
                }
-            }
+            } // end loop over capture channels
+
+            mRecordingSchedule.mPosition += avail / mRate;
 
             if (mListener && !blockFileLog.IsEmpty())
                mListener->OnAudioIONewBlockFiles(blockFileLog);

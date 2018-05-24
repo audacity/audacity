@@ -814,6 +814,19 @@ public:
    // Whether to check the error code passed to audacityAudioCallback to
    // detect more dropouts
    bool mDetectUpstreamDropouts{ true };
+
+private:
+   struct RecordingSchedule {
+      double mLatencyCorrection{};
+      double mDuration{};
+
+      // This is initialized to 0 by the main thread, then updated
+      // only by the thread calling FillBuffers:
+      double mPosition{};
+
+      double Remaining() const
+         { return mDuration - mLatencyCorrection - mPosition; }
+   } mRecordingSchedule{};
 };
 
 #endif
