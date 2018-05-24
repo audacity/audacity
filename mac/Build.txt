@@ -32,28 +32,22 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
 
    Xcode is now ready.
 
-8) Download audacity patched wxWidgets 3.1.1 zip from the audacity copy of the 
-   wxWidgets project: 
-      https://github.com/audacity/wxWidgets/tree/v3.1.1
+8) Clone wxWidgets 3.1.1
 
-   it's the green "clone or download" button on the right.
-   To clone into a new directory "wxWidgets":
-      git clone --recurse-submodules https://github.com/audacity/wxWidgets/tree/v3.1.1 wxWidgets
-   then checkout the v3.1.1 branch:
-      cd ./wxWidgets
-      git checkout v3.1.1
+   git clone --recurse-submodules https://github.com/audacity/wxWidgets.git
+
+   Ensure that you clone with the "--recurse-submodules" option, and do not
+   just download the Zip package, otherwise there will be required components
+   missing.
 
    Don't be tempted to use Widgets already installed by a package manager such 
-   as Homebrew because this will cause problems.   
+   as Homebrew because this will cause problems.
 
    As of 16-Apr-2018 we haven't yet applied any Audacity specific patches
-   to the official wxWidgets 3.1.1 branch, so currently it is the same.
+   to the official wxWidgets 3.1.1 branch, so currently it is the same as:
+   https://github.com/audacity/wxWidgets/tree/v3.1.1
 
-9) Once the download is complete, unzip it:
-
-   unzip wxWidgets-audacity-v3.1.1.zip
-
-10) Change directory to the folder wxWidgets was extracted to then build/install 
+9) Change directory to the folder wxWidgets was cloned to then build/install 
     wxWidgets:
 
    sudo <path to Audacity source>/mac/scripts/build_wxwidgets
