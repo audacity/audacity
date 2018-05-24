@@ -20,7 +20,6 @@
 
 #ifdef USE_LIBLO
 #include <lo/lo.h>
-#include <lo/lo_cpp.h>
 #endif
 
 class wxBoxSizer;
@@ -188,7 +187,7 @@ class ControlToolBar final : public ToolBar {
 
 #ifdef USE_LIBLO
    // OSC configuration
-   lo::Address *mOSCAddress;
+   lo_address mOSCAddress;
    wxString mOSCDestinationHost;
    wxString mOSCDestinationPort;
    int mOSCDestinationProtocol;
