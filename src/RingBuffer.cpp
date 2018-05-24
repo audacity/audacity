@@ -31,8 +31,6 @@
 
 #ifdef EXPERIMENTAL_REWRITE_RING_BUFFER
 #define REWRITE_RING_BUFFER
-#elif defined (__APPLE__)
-#define REWRITE_RING_BUFFER
 #endif
 
 namespace {
@@ -162,6 +160,7 @@ size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
                        size_t samplesToCopy)
 {
 #ifdef REWRITE_RING_BUFFER
+   samplesToCopy = std::min( samplesToCopy, AvailForGet() );
    return PaUtil_ReadRingBuffer(&mRingBuffer, buffer, samplesToCopy);
 #else
    samplesToCopy = std::min( samplesToCopy, Len() );
@@ -188,6 +187,7 @@ size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
 size_t RingBuffer::Discard(size_t samplesToDiscard)
 {
 #ifdef REWRITE_RING_BUFFER
+   samplesToDiscard = std::min( samplesToDiscard, AvailForGet() );
    PaUtil_AdvanceRingBufferReadIndex(&mRingBuffer, samplesToDiscard);
 #else
    samplesToDiscard = std::min( samplesToDiscard, Len() );
