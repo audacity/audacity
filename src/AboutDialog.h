@@ -69,6 +69,7 @@ class AboutDialog final : public wxDialogWrapper {
       roleEmeritusTeam,
       roleDeceased,
       roleContributor,
+      roleGraphics,
       roleLibrary,
       roleThanks
    };

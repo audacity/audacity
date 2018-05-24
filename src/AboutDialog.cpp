@@ -109,7 +109,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
    AddCredit(wxString(wxT("Steve Daulton")), roleTeamMember);
-   AddCredit(wxString(wxT("Vaughan Johnson, ")) + _("developer"), roleTeamMember);
+   AddCredit(wxString(wxT("Vaughan Johnson, ")), roleTeamMember);
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
@@ -182,6 +182,10 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Tom Woodhams, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Mark Young, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Wing Yu, ")) + _("developer"), roleContributor);
+
+   // Website and Graphics
+   AddCredit(wxString(wxT("Shinta Carolinasari, ")) + _("web developer"), roleGraphics);
+   AddCredit(wxString(wxT("Bayu Rizaldhan Rayes, ")) + _("graphics"), roleGraphics);
 
    // Libraries
 
@@ -352,6 +356,9 @@ visit our [[https://forum.audacityteam.org/|forum]].");
 
       wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
+
+      wxT("<p><b>") + _("Website and Graphics") + wxT("</b><br>") +
+      GetCreditsByRole(roleGraphics) +
 
       (translatorCredits.empty()
          ? wxT("")
