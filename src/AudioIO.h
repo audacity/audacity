@@ -820,12 +820,13 @@ private:
       double mLatencyCorrection{};
       double mDuration{};
 
-      // This is initialized to 0 by the main thread, then updated
+      // These are initialized by the main thread, then updated
       // only by the thread calling FillBuffers:
       double mPosition{};
+      bool mLatencyCorrected{};
 
-      double Remaining() const
-         { return mDuration - mLatencyCorrection - mPosition; }
+      double ToConsume() const;
+      double ToDiscard() const;
    } mRecordingSchedule{};
 };
 

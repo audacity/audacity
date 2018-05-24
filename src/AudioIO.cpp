@@ -2741,12 +2741,8 @@ void AudioIO::StopStream()
          // first track in a project.
          //
 
-         double recordingOffset =
-            mLastRecordingOffset +
-            mRecordingSchedule.mLatencyCorrection;
-
          for (unsigned int i = 0; i < mCaptureTracks.size(); i++) {
-            // The calls to Flush, and (less likely) Clear and InsertSilence,
+            // The calls to Flush
             // may cause exceptions because of exhaustion of disk space.
             // Stop those exceptions here, or else they propagate through too
             // many parts of Audacity that are not effects or editing
@@ -2756,8 +2752,6 @@ void AudioIO::StopStream()
             // relying on the guarantee that the track will be left in a flushed
             // state, though the append buffer may be lost.
 
-            // If the other track operations fail their strong guarantees, then
-            // the shift for latency correction may be skipped.
             GuardedCall( [&] {
                WaveTrack* track = mCaptureTracks[i].get();
 
@@ -2766,62 +2760,11 @@ void AudioIO::StopStream()
                // is saved.
                // See comments in FillBuffers().
                track->Flush();
-
-               if (mPlaybackTracks.size() > 0)
-               {  // only do latency correction if some tracks are being played back
-                  WaveTrackArray playbackTracks;
-                  AudacityProject *p = GetActiveProject();
-                  // we need to get this as mPlaybackTracks does not contain tracks being recorded into
-                  playbackTracks = p->GetTracks()->GetWaveTrackArray(false);
-                  bool appendRecord = false;
-                  for (unsigned int j = 0; j < playbackTracks.size(); j++)
-                  {  // find if we are recording into an existing track (append-record)
-                     WaveTrack* trackP = playbackTracks[j].get();
-                     if( track == trackP )
-                     {
-                        if( track->GetStartTime() != mT0 )  // in a NEW track if these are equal
-                        {
-                           appendRecord = true;
-                           break;
-                        }
-                     }
-                  }
-                  if( appendRecord )
-                  {  // append-recording
-                     if (recordingOffset < 0)
-                        // use STRONG-GUARANTEE
-                        track->Clear(mT0, mT0 - recordingOffset); // cut the latency out
-                     else
-                        // use STRONG-GUARANTEE
-                        track->InsertSilence(mT0, recordingOffset); // put silence in
-                  }
-                  else
-                  {  // recording into a NEW track
-                     // gives NOFAIL-GUARANTEE though we only need STRONG
-                     track->SetOffset(track->GetStartTime() + recordingOffset);
-                     if(track->GetEndTime() < 0.)
-                     {
-                        // Bug 96: Only warn for the first track.
-                        if( i==0 )
-                        {
-                           AudacityMessageDialog m(NULL, _(
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\nAudacity has brought it back to start at zero.\nYou may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."),
-                           _("Latency problem"), wxOK);
-                           m.ShowModal();
-                        }
-                        // gives NOFAIL-GUARANTEE though we only need STRONG
-                        track->SetOffset(0.);
-                     }
-                  }
-               }
             } );
          }
 
          for (auto &interval : mLostCaptureIntervals) {
             auto &start = interval.first;
-            if (mPlaybackTracks.size() > 0)
-               // only do latency correction if some tracks are being played back
-               start += recordingOffset;
             auto duration = interval.second;
             for (auto &track : mCaptureTracks) {
                GuardedCall([&] {
@@ -4033,13 +3976,11 @@ void AudioIO::FillBuffers()
          // start record buffering
          const auto avail = GetCommonlyAvailCapture(); // samples
          const auto remainingTime =
-            std::max(0.0, mRecordingSchedule.Remaining());
+            std::max(0.0, mRecordingSchedule.ToConsume());
          // This may be a very big double number:
          const auto remainingSamples = remainingTime * mRate;
+         bool latencyCorrected = true;
 
-         //
-         // Determine how much this will add to captured tracks
-         //
          double deltat = avail / mRate;
 
          if (mAudioThreadShouldCallFillBuffersOnce ||
@@ -4055,17 +3996,44 @@ void AudioIO::FillBuffers()
                sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
 
                AutoSaveFile appendLog;
+               size_t discarded = 0;
 
+               if (!mRecordingSchedule.mLatencyCorrected) {
+                  if(mRecordingSchedule.mLatencyCorrection >= 0) {
+                     // Rightward shift
+                     // Once only (per track per recording), insert some initial
+                     // silence.
+                     size_t size = floor(
+                        mRecordingSchedule.mLatencyCorrection * mRate * mFactor);
+                     SampleBuffer temp(size, trackFormat);
+                     ClearSamples(temp.ptr(), trackFormat, 0, size);
+                     mCaptureTracks[i]->Append(temp.ptr(), trackFormat,
+                                               size, 1, &appendLog);
+                  }
+                  else {
+                     // Leftward shift
+                     // discard some samples from the ring buffers.
+                     size_t size = floor(
+                        mRecordingSchedule.ToDiscard() * mRate );
+                     discarded = mCaptureBuffers[i]->Discard(size);
+                     if (discarded < size)
+                        // We need to visit this again to complete the
+                        // discarding.
+                        latencyCorrected = false;
+                  }
+               }
+
+               size_t toGet = avail - discarded;
                if( mFactor == 1.0 )
                {
-                  SampleBuffer temp(avail, trackFormat);
+                  SampleBuffer temp(toGet, trackFormat);
                   const auto got =
-                     mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, avail);
-                  // wxASSERT(got == avail);
+                     mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, toGet);
+                  // wxASSERT(got == toGet);
                   // but we can't assert in this thread
                   wxUnusedVar(got);
                   // see comment in second handler about guarantee
-                  size_t size = avail;
+                  size_t size = toGet;
                   if (double(size) > remainingSamples)
                      size = floor(remainingSamples);
                   mCaptureTracks[i]-> Append(temp.ptr(), trackFormat,
@@ -4074,21 +4042,21 @@ void AudioIO::FillBuffers()
                }
                else
                {
-                  size_t size = lrint(avail * mFactor);
-                  SampleBuffer temp1(avail, floatSample);
+                  size_t size = lrint(toGet * mFactor);
+                  SampleBuffer temp1(toGet, floatSample);
                   SampleBuffer temp2(size, floatSample);
                   const auto got =
-                     mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
-                  // wxASSERT(got == avail);
+                     mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, toGet);
+                  // wxASSERT(got == toGet);
                   // but we can't assert in this thread
                   wxUnusedVar(got);
                   /* we are re-sampling on the fly. The last resampling call
                    * must flush any samples left in the rate conversion buffer
                    * so that they get recorded
                    */
-                  if (avail > 0 ) {
+                  if (toGet > 0 ) {
                      const auto results =
-                     mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail,
+                     mResample[i]->Process(mFactor, (float *)temp1.ptr(), toGet,
                                            !IsStreamActive(), (float *)temp2.ptr(), size);
                      size = results.second;
                      // see comment in second handler about guarantee
@@ -4111,7 +4079,9 @@ void AudioIO::FillBuffers()
                }
             } // end loop over capture channels
 
+            // Now update the recording shedule position
             mRecordingSchedule.mPosition += avail / mRate;
+            mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
             if (mListener && !blockFileLog.IsEmpty())
                mListener->OnAudioIONewBlockFiles(blockFileLog);
@@ -5251,7 +5221,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
               len < framesPerBuffer) ) {
             // Assume that any good partial buffer should be written leftmost
             // and zeroes will be padded after; label the zeroes.
-            auto start = gAudioIO->mTime + len / gAudioIO->mRate;
+            auto start = gAudioIO->mTime + len / gAudioIO->mRate +
+                gAudioIO->mRecordingSchedule.mLatencyCorrection;
             auto duration = (framesPerBuffer - len) / gAudioIO->mRate;
             auto interval = std::make_pair( start, duration );
             gAudioIO->mLostCaptureIntervals.push_back( interval );
@@ -5430,4 +5401,19 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    }  // end playback VU meter update
 
    return callbackReturn;
+}
+
+double AudioIO::RecordingSchedule::ToConsume() const
+{
+   return mDuration - mLatencyCorrection - mPosition;
+}
+
+double AudioIO::RecordingSchedule::ToDiscard() const
+{
+   if (mLatencyCorrection >= 0)
+      return 0.0;
+   else if (mPosition >= -mLatencyCorrection)
+      return 0.0;
+   else
+      return (-mLatencyCorrection) - mPosition;
 }
