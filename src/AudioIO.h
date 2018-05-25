@@ -111,6 +111,8 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 
 struct ScrubbingOptions;
 
+using PRCrossfadeData = std::vector< std::vector < float > >;
+
 // To avoid growing the argument list of StartStream, add fields here
 struct AudioIOStartStreamOptions
 {
@@ -141,6 +143,9 @@ struct AudioIOStartStreamOptions
    //  are all incompatible with scrubbing):
    ScrubbingOptions *pScrubbingOptions {};
 #endif
+
+   // contents may get swapped with empty vector
+   PRCrossfadeData      *pCrossfadeData{};
 };
 
 struct TransportTracks {
@@ -549,6 +554,8 @@ private:
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
    void StartStreamCleanup(bool bOnlyBuffers = false);
 
+   PRCrossfadeData     mCrossfadeData{};
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
@@ -831,6 +838,7 @@ private:
       double mPreRoll{};
       double mLatencyCorrection{}; // negative value usually
       double mDuration{};
+      PRCrossfadeData mCrossfadeData;
 
       // These are initialized by the main thread, then updated
       // only by the thread calling FillBuffers:
@@ -839,6 +847,7 @@ private:
 
       double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
       double ToConsume() const;
+      double Consumed() const;
       double ToDiscard() const;
    } mRecordingSchedule{};
 };
