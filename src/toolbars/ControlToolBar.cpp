@@ -983,7 +983,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
       }
       if(!hasWave)
-         // Treat append-record like record record to new, when there are
+         // Treat append-record like record to new, when there are
          // no wave tracks to append onto.
          appendRecord = false;
 
@@ -1149,7 +1149,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       }
 
       if( recordingTracks.empty() )
-      {   // recording to new track.
+      {   // recording to new track(s).
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
 
@@ -1162,7 +1162,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
          numTracks++;
 
-         recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
+         recordingChannels = std::max(1L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
 
          gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
@@ -1177,6 +1177,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             std::shared_ptr<WaveTrack> newTrack{
                p->GetTrackFactory()->NewWaveTrack().release()
             };
+
+            // Quantize bounds to the rate of the new track.
+            if (c == 0) {
+               t0 = newTrack->LongSamplesToTime(newTrack->TimeToLongSamples(t0));
+               t1 = newTrack->LongSamplesToTime(newTrack->TimeToLongSamples(t1));
+            }
 
             newTrack->SetOffset(t0);
             wxString nameSuffix = wxString(wxT(""));
