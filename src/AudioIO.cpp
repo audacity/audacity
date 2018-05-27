@@ -1941,7 +1941,7 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
                    DEFAULT_LATENCY_CORRECTION))
          / 1000.0;
    mRecordingSchedule.mDuration = mT1 - mT0;
-   if (captureTracks.size() > 0 && playbackTracks.size() > 0)
+   if (captureTracks.size() > 0)
       // adjust mT1 so that we don't give paComplete too soon to fill up the
       // desired length of recording
       mT1 -= mRecordingSchedule.mLatencyCorrection;
