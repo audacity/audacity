@@ -51,6 +51,9 @@ class ControlToolBar final : public ToolBar {
    void UpdatePrefs() override;
    void OnKeyEvent(wxKeyEvent & event);
 
+   // Find suitable tracks to record into, or return an empty array.
+   WaveTrackArray ChooseExistingRecordingTracks(AudacityProject &proj, bool selectedOnly);
+
    // msmeyer: These are public, but it's far better to
    // call the "real" interface functions like PlayCurrentRegion() and
    // StopPlaying() which are defined below.
@@ -58,6 +61,7 @@ class ControlToolBar final : public ToolBar {
    void OnPlay(wxCommandEvent & evt);
    void OnStop(wxCommandEvent & evt);
    void OnRecord(wxCommandEvent & evt);
+   bool DoRecord(AudacityProject &project, WaveTrackArray &existingTracks, double t0, double t1);
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
 
