@@ -1937,7 +1937,7 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    mT1      = t1;
    mRecordingSchedule = {};
    mRecordingSchedule.mLatencyCorrection =
-      (gPrefs->Read(wxT("/AudioIO/LatencyCorrection"),
+      (gPrefs->ReadDouble(wxT("/AudioIO/LatencyCorrection"),
                    DEFAULT_LATENCY_CORRECTION))
          / 1000.0;
    mRecordingSchedule.mDuration = mT1 - mT0;
