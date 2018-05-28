@@ -38,6 +38,7 @@ class SelectedRegion;
 // Defined in Project.h
 enum class PlayMode : int;
 
+class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
