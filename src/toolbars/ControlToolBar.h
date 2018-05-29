@@ -41,6 +41,8 @@ enum class PlayMode : int;
 class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 
+struct TransportTracks;
+
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar final : public ToolBar {
 
@@ -55,7 +57,9 @@ class ControlToolBar final : public ToolBar {
    void OnKeyEvent(wxKeyEvent & event);
 
    // Find suitable tracks to record into, or return an empty array.
-   WaveTrackArray ChooseExistingRecordingTracks(AudacityProject &proj, bool selectedOnly);
+   static WaveTrackArray ChooseExistingRecordingTracks(AudacityProject &proj, bool selectedOnly);
+
+   static bool UseDuplex();
 
    // msmeyer: These are public, but it's far better to
    // call the "real" interface functions like PlayCurrentRegion() and
@@ -64,7 +68,10 @@ class ControlToolBar final : public ToolBar {
    void OnPlay(wxCommandEvent & evt);
    void OnStop(wxCommandEvent & evt);
    void OnRecord(wxCommandEvent & evt);
-   bool DoRecord(AudacityProject &project, WaveTrackArray &existingTracks, double t0, double t1);
+   bool DoRecord(AudacityProject &project,
+      const TransportTracks &transportTracks, // If captureTracks is empty, then tracks are created
+      double t0, double t1,
+      const AudioIOStartStreamOptions &options);
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
 

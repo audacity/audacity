@@ -1354,14 +1354,14 @@ WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool i
 }
 
 #if defined(USE_MIDI)
-NoteTrackArray TrackList::GetNoteTrackArray(bool selectionOnly)
+NoteTrackConstArray TrackList::GetNoteTrackConstArray(bool selectionOnly) const
 {
-   NoteTrackArray noteTrackArray;
+   NoteTrackConstArray noteTrackArray;
 
    for(const auto &track : *this) {
       if (track->GetKind() == Track::Note &&
          (track->GetSelected() || !selectionOnly)) {
-         noteTrackArray.push_back( Track::Pointer<NoteTrack>(track) );
+         noteTrackArray.push_back( Track::Pointer<const NoteTrack>(track) );
       }
    }
 
@@ -1572,4 +1572,18 @@ bool TrackList::HasPendingTracks() const
    }))
       return true;
    return false;
+}
+
+#include "AudioIO.h"
+TransportTracks GetAllPlaybackTracks(const TrackList &trackList, bool selectedOnly, bool useMidi)
+{
+   TransportTracks result;
+   result.playbackTracks = trackList.GetWaveTrackConstArray(selectedOnly);
+#ifdef EXPERIMENTAL_MIDI_OUT
+   if (useMidi)
+      result.midiTracks = trackList.GetNoteTrackConstArray(selectedOnly);
+#else
+   WXUNUSED(useMidi);
+#endif
+   return result;
 }

@@ -50,7 +50,8 @@ class TimeShiftHandle;
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
 using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
-using NoteTrackArray  = std::vector < std::shared_ptr < NoteTrack > >;
+
+using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #if defined(USE_MIDI)
 class NoteTrack;
@@ -721,7 +722,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    WaveTrackConstArray GetWaveTrackConstArray(bool selectionOnly, bool includeMuted = true) const;
 
 #if defined(USE_MIDI)
-   NoteTrackArray GetNoteTrackArray(bool selectionOnly);
+   NoteTrackConstArray GetNoteTrackConstArray(bool selectionOnly) const;
 #endif
 
    /// Mainly a test function. Uses a linear search, so could be slow.
@@ -885,5 +886,9 @@ class AUDACITY_DLL_API TrackFactory
    std::unique_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
+
+// global functions
+struct TransportTracks;
+TransportTracks GetAllPlaybackTracks(const TrackList &trackList, bool selectedOnly, bool useMidi = false);
 
 #endif

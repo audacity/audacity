@@ -686,13 +686,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
             myOptions.cutPreviewGapStart = t0;
             myOptions.cutPreviewGapLen = t1 - t0;
             token = gAudioIO->StartStream(
-               mCutPreviewTracks->GetWaveTrackConstArray(false),
-               WaveTrackArray(),
-#ifdef EXPERIMENTAL_MIDI_OUT
-               useMidi
-                  ? mCutPreviewTracks->GetNoteTrackArray(false)
-                  : NoteTrackArray(),
-#endif
+               GetAllPlaybackTracks(*mCutPreviewTracks, false, useMidi),
                tcp0, tcp1, myOptions);
          }
          else
@@ -706,14 +700,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
             timetrack = t->GetTimeTrack();
          }
          */
-         token = gAudioIO->StartStream(t->GetWaveTrackConstArray(false),
-                                       WaveTrackArray(),
-#ifdef EXPERIMENTAL_MIDI_OUT
-                                       useMidi
-                                          ? t->GetNoteTrackArray(false)
-                                          : NoteTrackArray(),
-#endif
-                                       t0, t1, options);
+         token = gAudioIO->StartStream(
+            GetAllPlaybackTracks(*t, false, useMidi),
+            t0, t1, options);
       }
       if (token != 0) {
          success = true;
@@ -1079,22 +1068,29 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
       }
 
-      success = DoRecord(*p, existingTracks, t0, t1);
+      TransportTracks transportTracks;
+      if (UseDuplex()) {
+         // Remove recording tracks from the list of tracks for duplex ("overdub")
+         // playback.
+         /* TODO: set up stereo tracks if that is how the user has set up
+          * their preferences, and choose sample format based on prefs */
+         transportTracks = GetAllPlaybackTracks(*p->GetTracks(), false, true);
+         for (const auto &wt : existingTracks) {
+            auto end = transportTracks.playbackTracks.end();
+            auto it = std::find(transportTracks.playbackTracks.begin(), end, wt);
+            if (it != end)
+               transportTracks.playbackTracks.erase(it);
+         }
+      }
+
+      transportTracks.captureTracks = existingTracks;
+      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
+      success = DoRecord(*p, transportTracks, t0, t1, options);
    }
 }
 
-bool ControlToolBar::DoRecord(AudacityProject &project, WaveTrackArray &existingTracks, double t0, double t1)
+bool ControlToolBar::UseDuplex()
 {
-   const auto p = &project;
-   bool success = false;
-
-   /* TODO: set up stereo tracks if that is how the user has set up
-   * their preferences, and choose sample format based on prefs */
-   WaveTrackConstArray playbackTracks;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   NoteTrackArray midiTracks;
-#endif
-
    bool duplex;
    gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex,
 #ifdef EXPERIMENTAL_DA
@@ -1103,39 +1099,30 @@ bool ControlToolBar::DoRecord(AudacityProject &project, WaveTrackArray &existing
       true
 #endif
       );
+   return duplex;
+}
 
-   if (duplex){
-      TrackList *trackList = p->GetTracks();
-      playbackTracks = trackList->GetWaveTrackConstArray(false);
-#ifdef EXPERIMENTAL_MIDI_OUT
-      midiTracks = trackList->GetNoteTrackArray(false);
-#endif
-   }
-   else {
-      playbackTracks = WaveTrackConstArray();
-#ifdef EXPERIMENTAL_MIDI_OUT
-      midiTracks = NoteTrackArray();
-#endif
-   }
+bool ControlToolBar::DoRecord(AudacityProject &project,
+   const TransportTracks &tracks,
+   double t0, double t1,
+   const AudioIOStartStreamOptions &options)
+{
+   auto transportTracks = tracks;
 
-   bool appendRecord = !existingTracks.empty();
+   // Will replace any given capture tracks with temporaries
+   transportTracks.captureTracks.clear();
+
+   const auto p = &project;
+   bool success = false;
+
+   bool appendRecord = !tracks.captureTracks.empty();
 
    {
-      WaveTrackArray recordingTracks;
-
       if (appendRecord) {
          // Append recording:
          // Pad selected/all wave tracks to make them all the same length
-         // Remove recording tracks from the list of tracks for duplex ("overdub")
-         // playback.
-         for (const auto &wt : existingTracks)
+         for (const auto &wt : tracks.captureTracks)
          {
-            if (duplex) {
-               auto end = playbackTracks.end();
-               auto it = std::find(playbackTracks.begin(), end, wt);
-               if (it != end)
-                  playbackTracks.erase(it);
-            }
             t1 = wt->GetEndTime();
 
             // A function that copies all the non-sample data between
@@ -1167,7 +1154,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project, WaveTrackArray &existing
                pending->Clear(t1, t0);
                pending->Paste(t1, newTrack.get());
             }
-            recordingTracks.push_back(pending);
+            transportTracks.captureTracks.push_back(pending);
          }
 
          if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
@@ -1177,7 +1164,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project, WaveTrackArray &existing
          }
       }
 
-      if( recordingTracks.empty() )
+      if( transportTracks.captureTracks.empty() )
       {   // recording to NEW track(s).
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
@@ -1268,7 +1255,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project, WaveTrackArray &existing
             }
 
             p->GetTracks()->RegisterPendingNewTrack( newTrack );
-            recordingTracks.push_back( newTrack );
+            transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
             p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
          }
@@ -1279,13 +1266,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project, WaveTrackArray &existing
          gAudioIO->AILAInitialize();
       #endif
 
-      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
-      int token = gAudioIO->StartStream(playbackTracks,
-                                        recordingTracks,
-#ifdef EXPERIMENTAL_MIDI_OUT
-                                        midiTracks,
-#endif
-                                        t0, t1, options);
+      int token = gAudioIO->StartStream(transportTracks, t0, t1, options);
 
       success = (token != 0);
 

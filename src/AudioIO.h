@@ -35,6 +35,7 @@
 
 class NoteTrack;
 using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
+using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #endif // EXPERIMENTAL_MIDI_OUT
 
@@ -140,6 +141,14 @@ struct AudioIOStartStreamOptions
 #endif
 };
 
+struct TransportTracks {
+   WaveTrackConstArray playbackTracks;
+   WaveTrackArray captureTracks;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   NoteTrackConstArray midiTracks;
+#endif
+};
+
 // This workaround makes pause and stop work when output is to GarageBand,
 // which seems not to implement the notes-off message correctly.
 #define AUDIO_IO_GB_MIDI_WORKAROUND
@@ -169,10 +178,7 @@ class AUDACITY_DLL_API AudioIO final {
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive() below */
 
-   int StartStream(const WaveTrackConstArray &playbackTracks, const WaveTrackArray &captureTracks,
-#ifdef EXPERIMENTAL_MIDI_OUT
-                   const NoteTrackArray &midiTracks,
-#endif
+   int StartStream(const TransportTracks &tracks,
                    double t0, double t1,
                    const AudioIOStartStreamOptions &options);
 
@@ -611,7 +617,7 @@ private:
    /// when true, mSendMidiState means send only updates, not note-on's,
    /// used to send state changes that precede the selected notes
    bool             mSendMidiState;
-   NoteTrackArray   mMidiPlaybackTracks;
+   NoteTrackConstArray mMidiPlaybackTracks;
 #endif
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT

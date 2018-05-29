@@ -2602,30 +2602,16 @@ void Effect::Preview(bool dryOnly)
 
    if (success)
    {
-      WaveTrackConstArray playbackTracks;
-      WaveTrackArray recordingTracks;
+      auto tracks = GetAllPlaybackTracks(*mTracks, true);
 
-      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
-      WaveTrack *src = (WaveTrack *) iter.First();
-      while (src) {
-         playbackTracks.push_back(Track::Pointer<WaveTrack>(src));
-         src = (WaveTrack *) iter.Next();
-      }
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.
       t1 = std::min(mT0 + previewLen, mT1);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-      NoteTrackArray empty;
-#endif
       // Start audio playing
       AudioIOStartStreamOptions options { rate };
       int token =
-         gAudioIO->StartStream(playbackTracks, recordingTracks,
-#ifdef EXPERIMENTAL_MIDI_OUT
-                            empty,
-#endif
-                            mT0, t1, options);
+         gAudioIO->StartStream(tracks, mT0, t1, options);
 
       if (token) {
          auto previewing = ProgressResult::Success;

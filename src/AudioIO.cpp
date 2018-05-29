@@ -1861,11 +1861,7 @@ void AudioIO::StartMonitoring(double sampleRate)
    }
 }
 
-int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
-                         const WaveTrackArray &captureTracks,
-#ifdef EXPERIMENTAL_MIDI_OUT
-                         const NoteTrackArray &midiPlaybackTracks,
-#endif
+int AudioIO::StartStream(const TransportTracks &tracks,
                          double t0, double t1,
                          const AudioIOStartStreamOptions &options)
 {
@@ -1921,7 +1917,7 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
 
-   if ( !captureTracks.empty() ) {
+   if ( !tracks.captureTracks.empty() ) {
       // It does not make sense to apply the time warp during overdub recording,
       // which defeats the purpose of making the recording synchronized with
       // the existing audio.  (Unless we figured out the inverse warp of the
@@ -1941,7 +1937,7 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
                    DEFAULT_LATENCY_CORRECTION))
          / 1000.0;
    mRecordingSchedule.mDuration = mT1 - mT0;
-   if (captureTracks.size() > 0)
+   if (tracks.captureTracks.size() > 0)
       // adjust mT1 so that we don't give paComplete too soon to fill up the
       // desired length of recording
       mT1 -= mRecordingSchedule.mLatencyCorrection;
@@ -1951,10 +1947,10 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    mTime    = t0;
    mSeek    = 0;
    mLastRecordingOffset = 0;
-   mCaptureTracks = captureTracks;
-   mPlaybackTracks = playbackTracks;
+   mCaptureTracks = tracks.captureTracks;
+   mPlaybackTracks = tracks.playbackTracks;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   mMidiPlaybackTracks = midiPlaybackTracks;
+   mMidiPlaybackTracks = tracks.midiTracks;
 #endif
 
    bool commit = false;
@@ -2057,9 +2053,9 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    unsigned int captureChannels = 0;
    sampleFormat captureFormat = floatSample;
 
-   if (playbackTracks.size() > 0 
+   if (tracks.playbackTracks.size() > 0 
 #ifdef EXPERIMENTAL_MIDI_OUT
-      || midiPlaybackTracks.size() > 0
+      || tracks.midiTracks.size() > 0
 #endif
       )
       playbackChannels = 2;
@@ -2067,7 +2063,7 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    if (mSoftwarePlaythrough)
       playbackChannels = 2;
 
-   if( captureTracks.size() > 0 )
+   if (tracks.captureTracks.size() > 0)
    {
       // For capture, every input channel gets its own track
       captureChannels = mCaptureTracks.size();
@@ -2424,13 +2420,15 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
    mIterator = std::make_unique<Alg_iterator>(nullptr, false);
    // Iterator not yet intialized, must add each track...
    for (i = 0; i < nTracks; i++) {
-      NoteTrack *t = mMidiPlaybackTracks[i].get();
+      const auto t = mMidiPlaybackTracks[i].get();
       Alg_seq_ptr seq = &t->GetSeq();
       // mark sequence tracks as "in use" since we're handing this
       // off to another thread and want to make sure nothing happens
       // to the data until playback finishes. This is just a sanity check.
       seq->set_in_use(true);
-      mIterator->begin_seq(seq, t, t->GetOffset() + offset);
+      mIterator->begin_seq(seq,
+         // casting away const, but allegro just uses the pointer as an opaque "cookie"
+         (void*)t, t->GetOffset() + offset);
    }
    GetNextEvent(); // prime the pump for FillMidiBuffers
 
@@ -2686,7 +2684,7 @@ void AudioIO::StopStream()
       // set in_use flags to false
       int nTracks = mMidiPlaybackTracks.size();
       for (int i = 0; i < nTracks; i++) {
-         NoteTrack *t = mMidiPlaybackTracks[i].get();
+         const auto t = mMidiPlaybackTracks[i].get();
          Alg_seq_ptr seq = &t->GetSeq();
          seq->set_in_use(false);
       }
