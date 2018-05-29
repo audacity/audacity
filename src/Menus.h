@@ -403,6 +403,10 @@ void OnToggleSWPlaythrough(const CommandContext &context );
 #endif
 void OnRescanDevices(const CommandContext &context );
 
+#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
+void OnPunchAndRoll(const CommandContext &context);
+#endif
+
 // Import Submenu
 void OnImport(const CommandContext &context );
 void OnImportLabels(const CommandContext &context );
