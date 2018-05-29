@@ -4053,13 +4053,13 @@ void AudioIO::FillBuffers()
                    * so that they get recorded
                    */
                   if (toGet > 0 ) {
+                     if (double(toGet) > remainingSamples)
+                        toGet = floor(remainingSamples);
                      const auto results =
                      mResample[i]->Process(mFactor, (float *)temp1.ptr(), toGet,
                                            !IsStreamActive(), (float *)temp2.ptr(), size);
                      size = results.second;
                      // see comment in second handler about guarantee
-                     if (double(size) > remainingSamples)
-                        size = floor(remainingSamples);
                      mCaptureTracks[i]-> Append(temp2.ptr(), floatSample,
                                                 size, 1,
                                                 &appendLog);
