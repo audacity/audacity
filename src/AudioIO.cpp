@@ -1929,14 +1929,17 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mTimeTrack = options.timeTrack;
    }
 
-   mT0      = t0;
+   // Clamp pre-roll so we don't play before time 0
+   const auto preRoll = std::max(0.0, std::min(t0, options.preRoll));
+   mT0      = t0 - preRoll;
    mT1      = t1;
    mRecordingSchedule = {};
+   mRecordingSchedule.mPreRoll = preRoll;
    mRecordingSchedule.mLatencyCorrection =
       (gPrefs->ReadDouble(wxT("/AudioIO/LatencyCorrection"),
                    DEFAULT_LATENCY_CORRECTION))
          / 1000.0;
-   mRecordingSchedule.mDuration = mT1 - mT0;
+   mRecordingSchedule.mDuration = t1 - t0;
    if (tracks.captureTracks.size() > 0)
       // adjust mT1 so that we don't give paComplete too soon to fill up the
       // desired length of recording
@@ -1944,7 +1947,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    mListener = options.listener;
    mRate    = sampleRate;
-   mTime    = t0;
+   mTime    = mT0;
    mSeek    = 0;
    mLastRecordingOffset = 0;
    mCaptureTracks = tracks.captureTracks;
@@ -3997,12 +4000,12 @@ void AudioIO::FillBuffers()
                size_t discarded = 0;
 
                if (!mRecordingSchedule.mLatencyCorrected) {
-                  if(mRecordingSchedule.mLatencyCorrection >= 0) {
+                  const auto correction = mRecordingSchedule.TotalCorrection();
+                  if (correction >= 0) {
                      // Rightward shift
                      // Once only (per track per recording), insert some initial
                      // silence.
-                     size_t size = floor(
-                        mRecordingSchedule.mLatencyCorrection * mRate * mFactor);
+                     size_t size = floor( correction * mRate * mFactor);
                      SampleBuffer temp(size, trackFormat);
                      ClearSamples(temp.ptr(), trackFormat, 0, size);
                      mCaptureTracks[i]->Append(temp.ptr(), trackFormat,
@@ -5403,15 +5406,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 double AudioIO::RecordingSchedule::ToConsume() const
 {
-   return mDuration - mLatencyCorrection - mPosition;
+   return mDuration - TotalCorrection() - mPosition;
 }
 
 double AudioIO::RecordingSchedule::ToDiscard() const
 {
-   if (mLatencyCorrection >= 0)
-      return 0.0;
-   else if (mPosition >= -mLatencyCorrection)
-      return 0.0;
-   else
-      return (-mLatencyCorrection) - mPosition;
+   return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }

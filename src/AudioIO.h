@@ -123,6 +123,7 @@ struct AudioIOStartStreamOptions
       , cutPreviewGapStart(0.0)
       , cutPreviewGapLen(0.0)
       , pStartTime(NULL)
+      , preRoll(0.0)
    {}
 
    TimeTrack *timeTrack;
@@ -132,6 +133,7 @@ struct AudioIOStartStreamOptions
    double cutPreviewGapStart;
    double cutPreviewGapLen;
    double * pStartTime;
+   double preRoll;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    // Non-null value indicates that scrubbing will happen
@@ -823,7 +825,8 @@ public:
 
 private:
    struct RecordingSchedule {
-      double mLatencyCorrection{};
+      double mPreRoll{};
+      double mLatencyCorrection{}; // negative value usually
       double mDuration{};
 
       // These are initialized by the main thread, then updated
@@ -831,6 +834,7 @@ private:
       double mPosition{};
       bool mLatencyCorrected{};
 
+      double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
       double ToConsume() const;
       double ToDiscard() const;
    } mRecordingSchedule{};
