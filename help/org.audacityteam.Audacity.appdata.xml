@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+  <id>org.audacityteam.Audacity</id>
+  <launchable type="desktop-id">audacity.desktop</launchable>
+  <project_license>GPL-2.0 and CC-BY-3.0</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>Audacity</name>
+  <summary>Record and edit audio files</summary>
+  <description>
+    <p>Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.</p>
+    <p>You can use Audacity to:</p>
+    <ul>
+      <li>Record live audio</li>
+      <li>Convert tapes and records into digital recordings or CDs</li>
+      <li>Edit WAV, AIFF, FLAC, MP2, MP3 or Ogg Vorbis sound files</li>
+      <li>Cut, copy, splice or mix sounds together</li>
+      <li>Change the speed or pitch of a recording</li>
+      <li>Apply a wide range of other effects to audio recordings</li>
+    </ul>
+  </description>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+  </categories>
+  <url type="homepage">https://www.audacityteam.org/</url>
+  <url type="bugtracker">https://bugzilla.audacityteam.org/</url>
+  <url type="faq">https://manual.audacityteam.org/man/faq.html</url>
+  <url type="help">https://manual.audacityteam.org/</url>
+  <url type="donation">https://www.audacityteam.org/donate/</url>
+  <url type="translate">https://www.audacityteam.org/community/translators/</url>
+  <releases>
+    <release version="2.2.2" date="2018-02-20">
+      <description>
+        <ul>
+          <li>New Dropout detection feature was introduced</li>
+          <li>Zooming when working with a mousewheel was improved</li>
+          <li>A context menu has been introduced for the Vertical Scale</li>
+          <li>A new Extra menu has been created from consolidating the Ext-Bar and Ext-Command menus</li>
+          <li>Theme tweaks: Hover and Icon Appearance</li>
+          <li>A new Zoom Toggle command has been introduced that toggles between two pre-defined user selectable zoom levels </li>
+          <li>Many bugfixes!! See all of them here https://wiki.audacityteam.org/wiki/Release_Notes_2.2.2/Bugs_Fixed</li>
+          <li>See the full list of changes at https://wiki.audacityteam.org/wiki/Release_Notes_2.2.2</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.2.1" date="2018-02-20">
+      <description>
+        <ul>
+          <li>You can optionally change the colorway of the waveforms displayed in your project</li>
+          <li>File menu entry File > Save Other was changed to be File > Export</li>
+          <li>Many bugfixes!! See all of them here https://wiki.audacityteam.org/wiki/Release_Notes_2.2.1/Bugs_Fixed</li>
+          <li>See the full list of changes at https://wiki.audacityteam.org/wiki/Release_Notes_2.2.1</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.2.0" date="2017-11-02">
+      <description>
+        <ul>
+          <li>Four selectable and customizable themes are now provided</li>
+          <li>The menus are Reorganized</li>
+          <li>An extended menu bar is now provided</li>
+          <li>New keyboard commands for working with clips are now in place</li>
+          <li>Major overhaul to documentation/manual including many new images and streamlined text on landing pages for in-program help</li>
+          <li>New Logo</li>
+          <li>New preferences and preference pages</li>
+          <li>The Esc key now cancels all click-and-drag actions. It also chooses among overlapping mouse click targets, which is especially useful in the Multi-Tool/</li>
+          <li>Major work on bug fixing. 198 bugs were fixed for 2.2.0, including the problems of incomplete support for macOs Sierra. See all fixed bugs in greater detail at https://wiki.audacityteam.org/wiki/Release_Notes_2.2.0/Bugs_Fixed</li>
+          <li>See the full list of changes at https://wiki.audacityteam.org/wiki/Release_Notes_2.2.0</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+  <screenshots>
+    <screenshot type="default">
+      <image type="source">https://www.audacityteam.org/wp-content/uploads/2016/01/audacity-212-linux.png</image>
+    </screenshot>
+    <screenshot>
+      <image type="source">https://www.audacityteam.org/wp-content/uploads/2015/11/Audacity-2-2-0-on-Linux.png</image>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+  <update_contact>audacity-devel@lists.sourceforge.net</update_contact>
+</component>
