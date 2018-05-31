@@ -1291,8 +1291,15 @@ bool AudacityApp::OnInit()
       * The "share" and "share/doc" directories in their install path */
    wxString home = wxGetHomeDir();
 
-   /* On Unix systems, the default temp dir is in /var/tmp. */
-   defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId());
+   wxString envTempDir = wxGetenv(wxT("TMPDIR"));
+   if (envTempDir != wxT("")) {
+      /* On Unix systems, the environment variable TMPDIR may point to
+         an unusual path when /tmp and /var/tmp are not desirable. */
+      defaultTempDir.Printf(wxT("%s/audacity-%s"), envTempDir, wxGetUserId());
+   } else {
+      /* On Unix systems, the default temp dir is in /var/tmp. */
+      defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId());
+   }
 
 // DA: Path env variable.
 #ifndef EXPERIMENTAL_DA
