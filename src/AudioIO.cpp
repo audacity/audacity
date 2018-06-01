@@ -4029,7 +4029,11 @@ void AudioIO::FillBuffers()
                      // discard some samples from the ring buffers.
                      size_t size = floor(
                         mRecordingSchedule.ToDiscard() * mRate );
-                     discarded = mCaptureBuffers[i]->Discard(size);
+
+                     // The ring buffer might have grown concurrently -- don't discard more
+                     // than the "avail" value noted above.
+                     discarded = mCaptureBuffers[i]->Discard(std::min(avail, size));
+
                      if (discarded < size)
                         // We need to visit this again to complete the
                         // discarding.
@@ -4053,6 +4057,7 @@ void AudioIO::FillBuffers()
                   }
                }
 
+               wxASSERT(discarded <= avail);
                size_t toGet = avail - discarded;
                SampleBuffer temp;
                size_t size;
