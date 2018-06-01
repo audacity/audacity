@@ -149,6 +149,9 @@ struct TransportTracks {
 #ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrackConstArray midiTracks;
 #endif
+
+   // This is a subset of playbackTracks
+   WaveTrackConstArray prerollTracks;
 };
 
 // This workaround makes pause and stop work when output is to GarageBand,

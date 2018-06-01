@@ -1125,6 +1125,13 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
          {
             t1 = wt->GetEndTime();
 
+            // If the track was chosen for recording and playback both,
+            // remember the original in preroll tracks, before making the
+            // pending replacement.
+            bool prerollTrack = make_iterator_range(transportTracks.playbackTracks).contains(wt);
+            if (prerollTrack)
+                  transportTracks.prerollTracks.push_back(wt);
+
             // A function that copies all the non-sample data between
             // wave tracks; in case the track recorded to changes scale
             // type (for instance), during the recording.

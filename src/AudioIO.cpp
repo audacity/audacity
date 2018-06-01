@@ -2153,18 +2153,26 @@ int AudioIO::StartStream(const TransportTracks &tracks,
                mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // MB: use normal time for the end time, not warped time!
-               WaveTrackConstArray tracks;
-               tracks.push_back(mPlaybackTracks[i]);
+               WaveTrackConstArray mixTracks;
+               mixTracks.push_back(mPlaybackTracks[i]);
+
+               double endTime;
+               if (make_iterator_range(tracks.prerollTracks).contains(mPlaybackTracks[i]))
+                  // Stop playing this track after pre-roll
+                  endTime = t0;
+               else
+                  // Pass t1 -- not mT1 as may have been adjusted for latency
+                  // -- so that overdub recording stops playing back samples
+                  // at the right time, though transport may continue to record
+                  endTime = t1;
+
                mPlaybackMixers[i] = std::make_unique<Mixer>
-                  (tracks,
+                  (mixTracks,
                   // Don't throw for read errors, just play silence:
                   false,
                   warpOptions,
                   mT0,
-                  // Pass t1 -- not mT1 as may have been adjusted for latency
-                  // -- so that overdub recording stops playing back samples
-                  // at the right time, though transport may continue to record
-                  t1,
+                  endTime,
                   1,
                   playbackMixBufferSize, false,
                   mRate, floatSample, false);
