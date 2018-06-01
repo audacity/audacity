@@ -868,6 +868,13 @@ void AudacityProject::CreateMenusAndCommands()
       );
 
       c->AddItem(wxT("TimerRecord"), XXO("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
+
+#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
+      c->AddItem(wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"), FN(OnPunchAndRoll), wxT("Shift+D"),
+         WaveTracksExistFlag | AudioIONotBusyFlag,
+         WaveTracksExistFlag | AudioIONotBusyFlag);
+#endif
+
       // JKC: I decided to duplicate this between play and record, rather than put it
       // at the top level.  AddItem can now cope with simple duplicated items.
       // PRL:  This second registration of wxT("Pause"), with unspecified flags,
@@ -923,12 +930,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("RescanDevices"), XXO("R&escan Audio Devices"), FN(OnRescanDevices),
                  AudioIONotBusyFlag | CanStopAudioStreamFlag,
                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
-
-#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
-      c->AddItem(wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"), FN(OnPunchAndRoll), wxT("Shift+D"),
-         WaveTracksExistFlag | AudioIONotBusyFlag,
-         WaveTracksExistFlag | AudioIONotBusyFlag);
-#endif
 
       c->BeginSubMenu(_("Transport &Options"));
       // Sound Activated recording options
