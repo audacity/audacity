@@ -85,6 +85,12 @@ class AudioIOListener;
 #define DEFAULT_LATENCY_DURATION 100.0
 #define DEFAULT_LATENCY_CORRECTION -130.0
 
+#define AUDIO_PRE_ROLL_KEY (wxT("/AudioIO/PreRoll"))
+#define DEFAULT_PRE_ROLL_SECONDS 5.0
+
+#define AUDIO_ROLL_CROSSFADE_KEY (wxT("/AudioIO/Crossfade"))
+#define DEFAULT_ROLL_CROSSFADE_MS 10.0
+
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    #define AILA_DEF_TARGET_PEAK 92
    #define AILA_DEF_DELTA_PEAK 2
@@ -111,6 +117,8 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 
 struct ScrubbingOptions;
 
+using PRCrossfadeData = std::vector< std::vector < float > >;
+
 // To avoid growing the argument list of StartStream, add fields here
 struct AudioIOStartStreamOptions
 {
@@ -123,6 +131,7 @@ struct AudioIOStartStreamOptions
       , cutPreviewGapStart(0.0)
       , cutPreviewGapLen(0.0)
       , pStartTime(NULL)
+      , preRoll(0.0)
    {}
 
    TimeTrack *timeTrack;
@@ -132,6 +141,7 @@ struct AudioIOStartStreamOptions
    double cutPreviewGapStart;
    double cutPreviewGapLen;
    double * pStartTime;
+   double preRoll;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    // Non-null value indicates that scrubbing will happen
@@ -139,6 +149,9 @@ struct AudioIOStartStreamOptions
    //  are all incompatible with scrubbing):
    ScrubbingOptions *pScrubbingOptions {};
 #endif
+
+   // contents may get swapped with empty vector
+   PRCrossfadeData      *pCrossfadeData{};
 };
 
 struct TransportTracks {
@@ -147,6 +160,9 @@ struct TransportTracks {
 #ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrackConstArray midiTracks;
 #endif
+
+   // This is a subset of playbackTracks
+   WaveTrackConstArray prerollTracks;
 };
 
 // This workaround makes pause and stop work when output is to GarageBand,
@@ -544,6 +560,8 @@ private:
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
    void StartStreamCleanup(bool bOnlyBuffers = false);
 
+   PRCrossfadeData     mCrossfadeData{};
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
@@ -823,15 +841,19 @@ public:
 
 private:
    struct RecordingSchedule {
-      double mLatencyCorrection{};
+      double mPreRoll{};
+      double mLatencyCorrection{}; // negative value usually
       double mDuration{};
+      PRCrossfadeData mCrossfadeData;
 
       // These are initialized by the main thread, then updated
       // only by the thread calling FillBuffers:
       double mPosition{};
       bool mLatencyCorrected{};
 
+      double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
       double ToConsume() const;
+      double Consumed() const;
       double ToDiscard() const;
    } mRecordingSchedule{};
 };

@@ -1929,22 +1929,27 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mTimeTrack = options.timeTrack;
    }
 
-   mT0      = t0;
+   // Clamp pre-roll so we don't play before time 0
+   const auto preRoll = std::max(0.0, std::min(t0, options.preRoll));
+   mT0      = t0 - preRoll;
    mT1      = t1;
    mRecordingSchedule = {};
+   mRecordingSchedule.mPreRoll = preRoll;
    mRecordingSchedule.mLatencyCorrection =
       (gPrefs->ReadDouble(wxT("/AudioIO/LatencyCorrection"),
                    DEFAULT_LATENCY_CORRECTION))
          / 1000.0;
-   mRecordingSchedule.mDuration = mT1 - mT0;
+   mRecordingSchedule.mDuration = t1 - t0;
    if (tracks.captureTracks.size() > 0)
       // adjust mT1 so that we don't give paComplete too soon to fill up the
       // desired length of recording
       mT1 -= mRecordingSchedule.mLatencyCorrection;
+   if (options.pCrossfadeData)
+      mRecordingSchedule.mCrossfadeData.swap( *options.pCrossfadeData );
 
    mListener = options.listener;
    mRate    = sampleRate;
-   mTime    = t0;
+   mTime    = mT0;
    mSeek    = 0;
    mLastRecordingOffset = 0;
    mCaptureTracks = tracks.captureTracks;
@@ -2150,18 +2155,26 @@ int AudioIO::StartStream(const TransportTracks &tracks,
                mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // MB: use normal time for the end time, not warped time!
-               WaveTrackConstArray tracks;
-               tracks.push_back(mPlaybackTracks[i]);
+               WaveTrackConstArray mixTracks;
+               mixTracks.push_back(mPlaybackTracks[i]);
+
+               double endTime;
+               if (make_iterator_range(tracks.prerollTracks).contains(mPlaybackTracks[i]))
+                  // Stop playing this track after pre-roll
+                  endTime = t0;
+               else
+                  // Pass t1 -- not mT1 as may have been adjusted for latency
+                  // -- so that overdub recording stops playing back samples
+                  // at the right time, though transport may continue to record
+                  endTime = t1;
+
                mPlaybackMixers[i] = std::make_unique<Mixer>
-                  (tracks,
+                  (mixTracks,
                   // Don't throw for read errors, just play silence:
                   false,
                   warpOptions,
                   mT0,
-                  // Pass t1 -- not mT1 as may have been adjusted for latency
-                  // -- so that overdub recording stops playing back samples
-                  // at the right time, though transport may continue to record
-                  t1,
+                  endTime,
                   1,
                   playbackMixBufferSize, false,
                   mRate, floatSample, false);
@@ -2548,7 +2561,10 @@ void AudioIO::SetMeters()
 
 void AudioIO::StopStream()
 {
-   auto cleanup = finally ( [this] { ClearRecordingException(); } );
+   auto cleanup = finally ( [this] {
+      ClearRecordingException();
+      mRecordingSchedule = {}; // free arrays
+   } );
 
    if( mPortStreamV19 == NULL
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -3997,12 +4013,12 @@ void AudioIO::FillBuffers()
                size_t discarded = 0;
 
                if (!mRecordingSchedule.mLatencyCorrected) {
-                  if(mRecordingSchedule.mLatencyCorrection >= 0) {
+                  const auto correction = mRecordingSchedule.TotalCorrection();
+                  if (correction >= 0) {
                      // Rightward shift
                      // Once only (per track per recording), insert some initial
                      // silence.
-                     size_t size = floor(
-                        mRecordingSchedule.mLatencyCorrection * mRate * mFactor);
+                     size_t size = floor( correction * mRate * mFactor);
                      SampleBuffer temp(size, trackFormat);
                      ClearSamples(temp.ptr(), trackFormat, 0, size);
                      mCaptureTracks[i]->Append(temp.ptr(), trackFormat,
@@ -4021,28 +4037,50 @@ void AudioIO::FillBuffers()
                   }
                }
 
+               const float *pCrossfadeSrc = nullptr;
+               size_t crossfadeStart = 0, totalCrossfadeLength = 0;
+               if (i < mRecordingSchedule.mCrossfadeData.size())
+               {
+                  // Do crossfading
+                  // The supplied crossfade samples are at the same rate as the track
+                  const auto &data = mRecordingSchedule.mCrossfadeData[i];
+                  totalCrossfadeLength = data.size();
+                  if (totalCrossfadeLength) {
+                     crossfadeStart =
+                        floor(mRecordingSchedule.Consumed() * mCaptureTracks[i]->GetRate());
+                     if (crossfadeStart < totalCrossfadeLength)
+                        pCrossfadeSrc = data.data() + crossfadeStart;
+                  }
+               }
+
                size_t toGet = avail - discarded;
+               SampleBuffer temp;
+               size_t size;
+               sampleFormat format;
                if( mFactor == 1.0 )
                {
-                  SampleBuffer temp(toGet, trackFormat);
+                  // Take captured samples directly
+                  size = toGet;
+                  if (pCrossfadeSrc)
+                     // Change to float for crossfade calculation
+                     format = floatSample;
+                  else
+                     format = trackFormat;
+                  temp.Allocate(size, format);
                   const auto got =
-                     mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, toGet);
+                     mCaptureBuffers[i]->Get(temp.ptr(), format, toGet);
                   // wxASSERT(got == toGet);
                   // but we can't assert in this thread
                   wxUnusedVar(got);
-                  // see comment in second handler about guarantee
-                  size_t size = toGet;
                   if (double(size) > remainingSamples)
                      size = floor(remainingSamples);
-                  mCaptureTracks[i]-> Append(temp.ptr(), trackFormat,
-                                             size, 1,
-                                             &appendLog);
                }
                else
                {
-                  size_t size = lrint(toGet * mFactor);
+                  size = lrint(toGet * mFactor);
+                  format = floatSample;
                   SampleBuffer temp1(toGet, floatSample);
-                  SampleBuffer temp2(size, floatSample);
+                  temp.Allocate(size, format);
                   const auto got =
                      mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, toGet);
                   // wxASSERT(got == toGet);
@@ -4057,14 +4095,33 @@ void AudioIO::FillBuffers()
                         toGet = floor(remainingSamples);
                      const auto results =
                      mResample[i]->Process(mFactor, (float *)temp1.ptr(), toGet,
-                                           !IsStreamActive(), (float *)temp2.ptr(), size);
+                                           !IsStreamActive(), (float *)temp.ptr(), size);
                      size = results.second;
-                     // see comment in second handler about guarantee
-                     mCaptureTracks[i]-> Append(temp2.ptr(), floatSample,
-                                                size, 1,
-                                                &appendLog);
                   }
                }
+
+               if (pCrossfadeSrc) {
+                  wxASSERT(format == floatSample);
+                  size_t crossfadeLength = std::min(size, totalCrossfadeLength - crossfadeStart);
+                  if (crossfadeLength) {
+                     auto ratio = double(crossfadeStart) / totalCrossfadeLength;
+                     auto ratioStep = 1.0 / totalCrossfadeLength;
+                     auto pCrossfadeDst = (float*)temp.ptr();
+
+                     // Crossfade loop here
+                     for (size_t ii = 0; ii < crossfadeLength; ++ii) {
+                        *pCrossfadeDst = ratio * *pCrossfadeDst + (1.0 - ratio) * *pCrossfadeSrc;
+                        ++pCrossfadeSrc, ++pCrossfadeDst;
+                        ratio += ratioStep;
+                     }
+                  }
+               }
+
+               // Now append
+               // see comment in second handler about guarantee
+               mCaptureTracks[i]->Append(temp.ptr(), format,
+                  size, 1,
+                  &appendLog);
 
                if (!appendLog.IsEmpty())
                {
@@ -5403,15 +5460,15 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 double AudioIO::RecordingSchedule::ToConsume() const
 {
-   return mDuration - mLatencyCorrection - mPosition;
+   return mDuration - Consumed();
+}
+
+double AudioIO::RecordingSchedule::Consumed() const
+{
+   return std::max( 0.0, mPosition + TotalCorrection() );
 }
 
 double AudioIO::RecordingSchedule::ToDiscard() const
 {
-   if (mLatencyCorrection >= 0)
-      return 0.0;
-   else if (mPosition >= -mLatencyCorrection)
-      return 0.0;
-   else
-      return (-mLatencyCorrection) - mPosition;
+   return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }

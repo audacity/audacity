@@ -924,6 +924,12 @@ void AudacityProject::CreateMenusAndCommands()
                  AudioIONotBusyFlag | CanStopAudioStreamFlag,
                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
 
+#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
+      c->AddItem(wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"), FN(OnPunchAndRoll), wxT("Shift+D"),
+         WaveTracksExistFlag | AudioIONotBusyFlag,
+         WaveTracksExistFlag | AudioIONotBusyFlag);
+#endif
+
       c->BeginSubMenu(_("Transport &Options"));
       // Sound Activated recording options
       c->AddItem(wxT("SoundActivationLevel"), XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
@@ -8506,6 +8512,93 @@ int AudacityProject::DialogForLabelName(const wxString& initialValue, wxString& 
 
    return status;
 }
+
+
+#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
+void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
+{
+   if (!gAudioIO->IsBusy()) {
+
+      // Ignore all but left edge of the selection.
+      mViewInfo.selectedRegion.collapseToT0();
+      const double t1 = std::max(0.0, mViewInfo.selectedRegion.t1());
+
+      // Decide which tracks to record in.
+      auto pBar = GetControlToolBar();
+      auto tracks = pBar->ChooseExistingRecordingTracks(*this, true);
+      if (tracks.empty()) {
+         int recordingChannels =
+            std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+         auto format = wxPLURAL(
+            "Please select at least %d channel.",
+            "Please select at least %d channels.",
+            recordingChannels
+            );
+         auto message =
+            wxString::Format(format, recordingChannels);
+         AudacityMessageBox(message);
+         return;
+      }
+
+      // Delete the portion of the target tracks right of the selection, but first,
+      // remember a part of the deletion for crossfading with the new recording.
+      PRCrossfadeData crossfadeData;
+      const double crossFadeDuration =
+         gPrefs->Read(AUDIO_ROLL_CROSSFADE_KEY, DEFAULT_ROLL_CROSSFADE_MS)
+         / 1000.0;
+      for (const auto &wt : tracks) {
+         if (!wt->GetClipAtSample(sampleCount(floor(t1 * wt->GetRate())))) {
+            auto message = _("Please select a time within a clip.");
+            AudacityMessageBox(message);
+            return;
+         }
+         const auto endTime = wt->GetEndTime();
+         const auto duration = std::max(0.0, std::min(crossFadeDuration, endTime - t1));
+         const size_t getLen = floor(duration * wt->GetRate());
+         std::vector<float> data(getLen);
+         if (getLen > 0) {
+            float *const samples = data.data();
+            const sampleCount pos = wt->TimeToLongSamples(t1);
+            wt->Get((samplePtr)samples, floatSample, pos, getLen);
+         }
+         crossfadeData.push_back(std::move(data));
+      }
+
+      // Change tracks only after passing the error checks above
+      for (const auto &wt : tracks) {
+         wt->Clear(t1, wt->GetEndTime());
+      }
+
+      // Choose the tracks for playback.
+      TransportTracks transportTracks;
+      const auto duplex = ControlToolBar::UseDuplex();
+      if (duplex)
+         // play all
+         transportTracks = GetAllPlaybackTracks(*GetTracks(), false, true);
+      else
+         // play recording tracks only
+         std::copy(tracks.begin(), tracks.end(), std::back_inserter(transportTracks.playbackTracks));
+      
+      // Unlike with the usual recording, a track may be chosen both for playback and recording.
+      transportTracks.captureTracks = std::move(tracks);
+
+      // Try to start recording
+      AudioIOStartStreamOptions options(GetDefaultPlayOptions());
+      options.preRoll = gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS);
+      options.pCrossfadeData = &crossfadeData;
+      bool success = GetControlToolBar()->DoRecord(*this,
+         transportTracks,
+         t1, DBL_MAX, options);
+
+      if (success)
+         // Undo state will get pushed elsewhere, when record finishes
+         ;
+      else
+         // Roll back the deletions
+         RollbackState();
+   }
+}
+#endif
 
 int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus)
 {
