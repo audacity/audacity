@@ -839,7 +839,7 @@ void AudacityProject::CreateMenusAndCommands()
       play, record, pause etc. */
       c->BeginMenu(_("Tra&nsport"));
       c->SetDefaultFlags(CanStopAudioStreamFlag, CanStopAudioStreamFlag);
-      c->BeginSubMenu(_("Pl&ay"));
+      c->BeginSubMenu(_("Pl&aying"));
       /* i18n-hint: (verb) Start or Stop audio playback*/
       c->AddItem(wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop), wxT("Space"));
       c->AddItem(wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("X"));
@@ -849,7 +849,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("Pause"), XXO("&Pause"), FN(OnPause), wxT("P"));
       c->EndSubMenu();
 
-      c->BeginSubMenu( _("&Record"));
+      c->BeginSubMenu( _("&Recording"));
       c->SetDefaultFlags(AudioIONotBusyFlag | CanStopAudioStreamFlag,
                          AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
