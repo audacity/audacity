@@ -165,9 +165,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                if( mViewByKey ) mViewByKey->SetName(_("View by key"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
-               mViewByTree->SetAccessible(safenew WindowAccessible(mViewByTree));
-               mViewByName->SetAccessible(safenew WindowAccessible(mViewByName));
-               mViewByKey->SetAccessible(safenew WindowAccessible(mViewByKey));
+               if (mViewByTree) mViewByTree->SetAccessible(safenew WindowAccessible(mViewByTree));
+               if (mViewByName) mViewByName->SetAccessible(safenew WindowAccessible(mViewByName));
+               if (mViewByKey) mViewByKey->SetAccessible(safenew WindowAccessible(mViewByKey));
 #endif
             }
             S.EndRadioButtonGroup();
