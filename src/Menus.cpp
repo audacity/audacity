@@ -3651,13 +3651,13 @@ void AudacityProject::OnSelExtendRight(const CommandContext &context)
 void AudacityProject::OnSelContractLeft(const CommandContext &context)
 {
    if( !OnlyHandleKeyUp( context ) )
-      SeekLeftOrRight( DIRECTION_LEFT, SELECTION_CONTRACT );
+      SeekLeftOrRight( DIRECTION_RIGHT, SELECTION_CONTRACT );
 }
 
 void AudacityProject::OnSelContractRight(const CommandContext &context)
 {
    if( !OnlyHandleKeyUp( context ) )
-      SeekLeftOrRight( DIRECTION_RIGHT, SELECTION_CONTRACT );
+      SeekLeftOrRight( DIRECTION_LEFT, SELECTION_CONTRACT );
 }
 
 #include "tracks/ui/TimeShiftHandle.h"
@@ -9374,7 +9374,8 @@ SelectionOperation operation)
       mTrackPanel->GetScreenEndTime());
 
    // Is it t0 or t1 moving?
-   bool bMoveT0 = ( operation == SELECTION_CONTRACT ) ^ ( seekStep < 0 );
+   bool bMoveT0 = (operation == SELECTION_CONTRACT && seekStep > 0) ||
+	   (operation == SELECTION_EXTEND && seekStep < 0);
    // newT is where we want to move to
    double newT = OffsetTime( bMoveT0 ? t0 : t1, seekStep, timeUnit, snapToTime);
    // constrain to be in the track/screen limits.
