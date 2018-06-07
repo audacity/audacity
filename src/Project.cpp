@@ -924,7 +924,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    : wxFrame(parent, id, _TS("Audacity"), pos, size),
      mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
      mbLoadedFromAup( false ),
-     mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat(QualityPrefs::SampleFormatChoice()),
      mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
      mSelectionFormat( NumericTextCtrl::LookupFormat(
@@ -938,6 +937,14 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
          gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) ) ),
      mUndoManager(std::make_unique<UndoManager>())
 {
+   if (!gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate())) {
+      // The default given above can vary with host/devices. So unless there is an entry for
+      // the default sample rate in audacity.cfg, Audacity can open with a rate which is different
+      // from the rate with which it closed. See bug 1879.
+      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
+      gPrefs->Flush();
+   }
+
    mTracks = TrackList::Create();
 
 #ifdef EXPERIMENTAL_DA2
