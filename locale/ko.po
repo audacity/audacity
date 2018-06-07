@@ -5,6 +5,7 @@
 # Translators:
 # Potato <sheppaul@naver.com>, 2017-2018
 # Seong-ho Cho <darkcircle.0426@gmail.com>, 2012-2014
+# Chan-Woo Hong <chanu48@naver.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
@@ -8031,7 +8032,7 @@ msgstr "EQ 곡선은 다른 이름이 필요합니다"
 msgid ""
 "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr ""
-"이퀄라이제이션을 적용하려면, 모든 선택한 트랙은 같은 샘플 속도여야 합니다."
+"균등화를 적용하려면, 모든 선택한 트랙은 같은 샘플 속도여야 합니다."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -8193,7 +8194,7 @@ msgstr "EQ 곡선 불러오는 중 오류"
 
 #: src/effects/Equalization.cpp
 msgid "Error Saving Equalization Curves"
-msgstr "이퀄라이제이션 곡선 저장 중 오류"
+msgstr "균등화 곡선 저장 중 오류"
 
 #: src/effects/Equalization.cpp
 msgid "Requested curve not found, using 'unnamed'"
@@ -8695,7 +8696,7 @@ msgstr "한 개 이상 트랙의 피크 진폭을 설정합니다"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "DC 오프셋 제거 후 노멀라이즈하는 중...\n"
+msgstr "DC 오프셋 제거 후 정규화하는 중...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset...\n"
@@ -8703,7 +8704,7 @@ msgstr "DC 오프셋 제거 중...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "DC 오프셋 제거 없이 노멀라이즈하는 중...\n"
+msgstr "DC 오프셋 제거 없이 정규화하는 중...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
@@ -8750,7 +8751,7 @@ msgstr "DC 오프셋 제거 (파형을 0.0 진폭 레벨에서 중심에 놓기)
 
 #: src/effects/Normalize.cpp
 msgid "Normalize maximum amplitude to"
-msgstr "다음 최대 진폭값으로 노멀라이즈하기:"
+msgstr "다음 최대 진폭값으로 정규화하기:"
 
 #: src/effects/Normalize.cpp
 msgid "Maximum amplitude dB"
@@ -8758,7 +8759,7 @@ msgstr "최대 진폭 dB"
 
 #: src/effects/Normalize.cpp
 msgid "Normalize stereo channels independently"
-msgstr "스테레오 채널을 독립적으로 노멀라이즈하기"
+msgstr "스테레오 채널을 독립적으로 정규화하기"
 
 #: src/effects/Normalize.cpp
 msgid "Waiting for waveform to finish computing..."
@@ -9407,7 +9408,7 @@ msgstr "에코 (메아리)"
 
 #: src/effects/Equalization.h
 msgid "Equalization"
-msgstr "이퀄라이제이션"
+msgstr "균등화"
 
 #: src/effects/Fade.h
 msgid "Fade In"
@@ -9431,7 +9432,7 @@ msgstr "노이즈"
 
 #: src/effects/Normalize.h
 msgid "Normalize"
-msgstr "노멀라이즈"
+msgstr "정규화"
 
 #: src/effects/Paulstretch.h
 msgid "Paulstretch"
@@ -12294,7 +12295,7 @@ msgstr "원래 위치에서 비압축 파일을 읽기 (더 빠름)(&R)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Normalize all tracks in project"
-msgstr "프로젝트의 모든 트랙 노멀라이즈하기(&N)"
+msgstr "프로젝트의 모든 트랙 정규화하기(&N)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
