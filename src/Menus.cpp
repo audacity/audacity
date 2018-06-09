@@ -8589,7 +8589,9 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
       options.pCrossfadeData = &crossfadeData;
       bool success = GetControlToolBar()->DoRecord(*this,
          transportTracks,
-         t1, DBL_MAX, options);
+         t1, DBL_MAX,
+         false, // altAppearance
+         options);
 
       if (success)
          // Undo state will get pushed elsewhere, when record finishes

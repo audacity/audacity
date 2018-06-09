@@ -71,6 +71,7 @@ class ControlToolBar final : public ToolBar {
    bool DoRecord(AudacityProject &project,
       const TransportTracks &transportTracks, // If captureTracks is empty, then tracks are created
       double t0, double t1,
+      bool altAppearance,
       const AudioIOStartStreamOptions &options);
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);

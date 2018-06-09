@@ -1000,50 +1000,15 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    if (!p)
       return;
 
-   CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
-
-   // NB: The call may have the side effect of changing flags.
-   bool allowed = p->TryToMakeActionAllowed(
-      flags,
-      AudioIONotBusyFlag | CanStopAudioStreamFlag,
-      AudioIONotBusyFlag | CanStopAudioStreamFlag);
-
-   if (!allowed)
-      return;
-   // ...end of code from CommandHandler.
-
-   if (gAudioIO->IsBusy()) {
-      if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
-         mRecord->PopUp();
-      else
-         mRecord->PushDown();
-      return;
-   }
-
-   if (evt.GetInt() == 1) // used when called by keyboard shortcut. Default (0) ignored.
-      mRecord->SetShift(true);
-   if (evt.GetInt() == 2)
-      mRecord->SetShift(false);
-
    bool altAppearance = mRecord->WasShiftDown();
-   SetRecord(true, altAppearance);
-
-   bool success = false;
+   if (evt.GetInt() == 1) // used when called by keyboard shortcut. Default (0) ignored.
+      altAppearance = true;
+   if (evt.GetInt() == 2)
+      altAppearance = false;
 
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
-   bool appendRecord = (altAppearance == bPreferNewTrack);
-
-   auto cleanup = finally([&] {
-      if (!success) {
-         SetPlay(false);
-         SetStop(false);
-         SetRecord(false);
-      }
-
-      // Success or not:
-      UpdateStatusBar(GetActiveProject());
-   });
+   const bool appendRecord = (altAppearance == bPreferNewTrack);
 
    if (p) {
       double t0 = p->GetSel0();
@@ -1081,7 +1046,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             existingTracks = ChooseExistingRecordingTracks(*p, false);
             if (existingTracks.empty())
                // Can't find enough suitable tracks, so record into new ones.
-               appendRecord = false;
+               ;
             else
                // t0 is now: max(selection-start, end-of-selected-wavetracks)
                // allt0 is:  max(selection-start, end-of-all-tracks)
@@ -1107,7 +1072,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       transportTracks.captureTracks = existingTracks;
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
-      success = DoRecord(*p, transportTracks, t0, t1, options);
+      DoRecord(*p, transportTracks, t0, t1, altAppearance, options);
    }
 }
 
@@ -1127,15 +1092,49 @@ bool ControlToolBar::UseDuplex()
 bool ControlToolBar::DoRecord(AudacityProject &project,
    const TransportTracks &tracks,
    double t0, double t1,
+   bool altAppearance,
    const AudioIOStartStreamOptions &options)
 {
+   CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
+
+   // NB: The call may have the side effect of changing flags.
+   bool allowed = project.TryToMakeActionAllowed(
+      flags,
+      AudioIONotBusyFlag | CanStopAudioStreamFlag,
+      AudioIONotBusyFlag | CanStopAudioStreamFlag);
+
+   if (!allowed)
+      return false;
+   // ...end of code from CommandHandler.
+
+   if (gAudioIO->IsBusy()) {
+      if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
+         mRecord->PopUp();
+      else
+         mRecord->PushDown();
+      return false;
+   }
+
+   SetRecord(true, altAppearance);
+
+   bool success = false;
+   auto cleanup = finally([&] {
+      if (!success) {
+         SetPlay(false);
+         SetStop(false);
+         SetRecord(false);
+      }
+
+      // Success or not:
+      UpdateStatusBar(GetActiveProject());
+   });
+
    auto transportTracks = tracks;
 
    // Will replace any given capture tracks with temporaries
    transportTracks.captureTracks.clear();
 
    const auto p = &project;
-   bool success = false;
 
    bool appendRecord = !tracks.captureTracks.empty();
 
