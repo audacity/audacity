@@ -517,11 +517,11 @@ void ControlToolBar::SetStop(bool down)
    EnableDisableButtons();
 }
 
-void ControlToolBar::SetRecord(bool down, bool append)
+void ControlToolBar::SetRecord(bool down, bool altAppearance)
 {
    if (down)
    {
-      mRecord->SetAlternateIdx(append ? 1 : 0);
+      mRecord->SetAlternateIdx(altAppearance ? 1 : 0);
       mRecord->PushDown();
    }
    else
@@ -1025,16 +1025,14 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    if (evt.GetInt() == 2)
       mRecord->SetShift(false);
 
-   SetRecord(true, mRecord->WasShiftDown());
+   bool altAppearance = mRecord->WasShiftDown();
+   SetRecord(true, altAppearance);
 
    bool success = false;
 
-   bool appendRecord = mRecord->WasShiftDown();
-
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
-   if (!bPreferNewTrack)
-      appendRecord = !appendRecord;
+   bool appendRecord = (altAppearance == bPreferNewTrack);
 
    auto cleanup = finally([&] {
       if (!success) {

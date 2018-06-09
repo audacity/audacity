@@ -83,7 +83,7 @@ class ControlToolBar final : public ToolBar {
    //These allow buttons to be controlled externally:
    void SetPlay(bool down, PlayAppearance appearance = PlayAppearance::Straight);
    void SetStop(bool down);
-   void SetRecord(bool down, bool append=false);
+   void SetRecord(bool down, bool altAppearance = false);
 
    bool IsPauseDown() const;
    bool IsRecordDown() const;
