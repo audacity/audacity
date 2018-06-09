@@ -897,69 +897,93 @@ void ControlToolBar::Pause()
    }
 }
 
-WaveTrackArray ControlToolBar::ChooseExistingRecordingTracks(AudacityProject &proj, bool selectedOnly)
+WaveTrackArray ControlToolBar::ChooseExistingRecordingTracks(
+   AudacityProject &proj, bool selectedOnly)
 {
    auto p = &proj;
-   TrackList *trackList = p->GetTracks();
-   TrackListIterator it(trackList);
+   size_t recordingChannels =
+      std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+   bool strictRules = (recordingChannels <= 2);
 
-   bool hasWave = false;
-   for (auto t = it.First(); t; t = it.Next()) {
-      if (t->GetKind() == Track::Wave) {
-         hasWave = true;
-         break;
-      }
-   }
-   if (!hasWave)
-      // Treat append-record like record to new, when there are
-      // no wave tracks to append onto.
+   // Iterate over all wave tracks, or over selected wave tracks only.
+   //
+   // In the usual cases of one or two recording channels, seek a first-fit
+   // unbroken sub-sequence for which the total number of channels matches the
+   // required number exactly.  Never drop inputs or fill only some channels
+   // of a track.
+   //
+   // In case of more than two recording channels, choose tracks only among the
+   // selected.  Simply take the earliest wave tracks, until the number of
+   // channels is enough.  If there are fewer channels than inputs, but at least
+   // one channel, then some of the input channels will be dropped.
+   //
+   // Resulting tracks may be non-consecutive within the list of all tracks
+   // (there may be non-wave tracks between, or non-selected tracks when
+   // considering selected tracks only.)
+
+   if (!strictRules && !selectedOnly)
       return {};
 
-   size_t recordingChannels = std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
-
+   auto trackList = p->GetTracks();
+   TrackListIterator it(trackList);
+   std::vector<unsigned> channelCounts;
    WaveTrackArray candidates;
-   auto addCandidates = [&](WaveTrack *candidate){
-      if (candidates.size() == recordingChannels)
-         // nothing left to do
-         return;
-
+   for (Track *tt = it.First(); tt; tt = it.Next()) {
+      // Eliminate certain tracks from consideration
+      if (tt->GetKind() != Track::Wave)
+         continue;
+      WaveTrack *candidate = static_cast<WaveTrack *>(tt);
       if (candidate->GetLink() && !candidate->GetLinked())
-         return;
+         // Don't re-consider right channel apart from the left
+         continue;
+      if (selectedOnly && !candidate->GetSelected())
+         continue;
 
+      // count channels in this track
+      unsigned nChannels = 0;
       // This is written with odd seeming generality, looking forward to
       // the rewrite that removes assumption of at-most-stereo
-
-      // count channels
-      unsigned nChannels = 0;
       for (auto channel = candidate; channel;
-         channel = channel->GetLinked()
-         ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
+           channel = channel->GetLinked()
+           ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
          ++nChannels;
 
-      // Accumulate consecutive single channel tracks, or else one track of
-      // the exact number of channels
-      if (nChannels > 1)
+      if (strictRules && nChannels > recordingChannels) {
+         // The recording would under-fill this track's channels
+         // Can't use any partial accumulated results
+         // either.  Keep looking.
          candidates.clear();
-
-      if (nChannels == 1 || // <- comment this out to disallow recording
-         // stereo into two adjacent mono tracks
-         nChannels == recordingChannels) {
-         for (auto channel = candidate; channel;
-            channel = channel->GetLinked()
-            ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
-            candidates.push_back(Track::Pointer<WaveTrack>(channel));
+         channelCounts.clear();
+         continue;
       }
-   };
-
-   for (Track *tt = it.First(); tt; tt = it.Next()) {
-      if (tt->GetKind() == Track::Wave) {
-         WaveTrack *wt = static_cast<WaveTrack *>(tt);
-         if (!selectedOnly || wt->GetSelected())
-            addCandidates(wt);
+      else {
+         // Might use this but may have to discard some of the accumulated
+         while(strictRules &&
+               nChannels + candidates.size() > recordingChannels) {
+            auto nOldChannels = channelCounts[0];
+            wxASSERT(nOldChannels > 0);
+            channelCounts.erase(channelCounts.begin());
+            candidates.erase(candidates.begin(),
+                             candidates.begin() + nOldChannels);
+         }
+         channelCounts.push_back(nChannels);
+         for (auto channel = candidate; channel;
+              channel = channel->GetLinked()
+              ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr) {
+            candidates.push_back(Track::Pointer<WaveTrack>(channel));
+            if(candidates.size() == recordingChannels)
+               // Done!
+               return candidates;
+         }
       }
    }
 
-   return candidates;
+   if (!strictRules && !candidates.empty())
+      // good enough
+      return candidates;
+
+   // If the loop didn't exit early, we could not find enough channels
+   return {};
 }
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
