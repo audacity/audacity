@@ -18,6 +18,7 @@
 #include "Experimental.h"
 
 #include "MemoryX.h"
+#include <atomic>
 #include <utility>
 #include <vector>
 #include <wx/atomic.h>
@@ -397,6 +398,9 @@ class AUDACITY_DLL_API AudioIO final {
    sampleFormat GetCaptureFormat() { return mCaptureFormat; }
    unsigned GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
    unsigned GetNumCaptureChannels() const { return mNumCaptureChannels; }
+
+   // Meaning really capturing, not just pre-rolling
+   bool IsCapturing() const;
 
    /** \brief Array of common audio sample rates
     *
@@ -846,16 +850,20 @@ private:
       double mDuration{};
       PRCrossfadeData mCrossfadeData;
 
-      // These are initialized by the main thread, then updated
+      // This is initialized by the main thread, then updated
       // only by the thread calling FillBuffers:
-      double mPosition{};
       bool mLatencyCorrected{};
 
       double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
-      double ToConsume() const;
-      double Consumed() const;
-      double ToDiscard() const;
+      double ToConsume(double position) const;
+      double Consumed(double position) const;
+      double ToDiscard(double position) const;
    } mRecordingSchedule{};
+
+   // This is initialized by the main thread, then updated
+   // only by the thread calling FillBuffers, but may need to be read by the
+   // main thread to draw display correctly.
+   std::atomic<double> mRecordingPosition{};
 };
 
 #endif
