@@ -1482,6 +1482,7 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
       if (it->get()->GetId() == TrackId{}) {
          if (pAdded)
             pAdded->push_back( *it );
+         (*it)->SetOwner( {}, {} );
          it = erase( it );
       }
       else
