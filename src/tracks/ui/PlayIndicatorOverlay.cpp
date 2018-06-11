@@ -60,7 +60,7 @@ std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
 {
    // Set play/record color
-   bool rec = (gAudioIO->GetNumCaptureChannels() > 0);
+   bool rec = gAudioIO->IsCapturing();
    AColor::IndicatorColor(&dc, !rec);
    mLastIndicatorX = mNewIndicatorX;
    if (!between_incexc(0, mLastIndicatorX, dc.GetSize().GetWidth()))

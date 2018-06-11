@@ -398,6 +398,9 @@ class AUDACITY_DLL_API AudioIO final {
    unsigned GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
    unsigned GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
+   // Meaning really capturing, not just pre-rolling
+   bool IsCapturing() const;
+
    /** \brief Array of common audio sample rates
     *
     * These are the rates we will always support, regardless of hardware support

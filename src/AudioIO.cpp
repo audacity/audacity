@@ -5477,3 +5477,9 @@ double AudioIO::RecordingSchedule::ToDiscard() const
 {
    return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }
+
+bool AudioIO::IsCapturing() const
+{
+   return GetNumCaptureChannels() > 0 &&
+      mTime >= mT0 + mRecordingSchedule.mPreRoll;
+}
