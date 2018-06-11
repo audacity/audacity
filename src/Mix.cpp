@@ -313,31 +313,33 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    // For each queue, the number of available samples after the queue start.
    mQueueLen.reinit(mNumInputTracks);
    mResample.reinit(mNumInputTracks);
-   for(size_t i=0; i<mNumInputTracks; i++) {
+   mMinFactor.resize(mNumInputTracks);
+   mMaxFactor.resize(mNumInputTracks);
+   for (size_t i = 0; i<mNumInputTracks; i++) {
       double factor = (mRate / mInputTrack[i].GetTrack()->GetRate());
-      double minFactor, maxFactor;
       if (mTimeTrack) {
          // variable rate resampling
          mbVariableRates = true;
-         minFactor = factor / mTimeTrack->GetRangeUpper();
-         maxFactor = factor / mTimeTrack->GetRangeLower();
+         mMinFactor[i] = factor / mTimeTrack->GetRangeUpper();
+         mMaxFactor[i] = factor / mTimeTrack->GetRangeLower();
       }
       else if (warpOptions.minSpeed > 0.0 && warpOptions.maxSpeed > 0.0) {
          // variable rate resampling
          mbVariableRates = true;
-         minFactor = factor / warpOptions.maxSpeed;
-         maxFactor = factor / warpOptions.minSpeed;
+         mMinFactor[i] = factor / warpOptions.maxSpeed;
+         mMaxFactor[i] = factor / warpOptions.minSpeed;
       }
       else {
          // constant rate resampling
          mbVariableRates = false;
-         minFactor = maxFactor = factor;
+         mMinFactor[i] = mMaxFactor[i] = factor;
       }
 
-      mResample[i] = std::make_unique<Resample>(mHighQuality, minFactor, maxFactor);
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
    }
+
+   MakeResamplers();
 
    const auto envLen = std::max(mQueueMaxLen, mInterleavedBufferSize);
    mEnvValues.reinit(envLen);
@@ -345,6 +347,12 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
 
 Mixer::~Mixer()
 {
+}
+
+void Mixer::MakeResamplers()
+{
+   for (size_t i = 0; i < mNumInputTracks; i++)
+      mResample[i] = std::make_unique<Resample>(mHighQuality, mMinFactor[i], mMaxFactor[i]);
 }
 
 void Mixer::ApplyTrackGains(bool apply)
@@ -709,6 +717,11 @@ void Mixer::Restart()
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
    }
+
+   // Bug 1887:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
+   // constant rate resampling if you try to reuse the resampler after it has
+   // flushed.  Should that be considered a bug in sox?  This works around it:
+   MakeResamplers();
 }
 
 void Mixer::Reposition(double t)
