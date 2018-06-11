@@ -1934,7 +1934,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mT0      = t0 - preRoll;
    mT1      = t1;
    mRecordingSchedule = {};
-   mRecordingPosition.store(0.0, std::memory_order_relaxed);
    mRecordingSchedule.mPreRoll = preRoll;
    mRecordingSchedule.mLatencyCorrection =
       (gPrefs->ReadDouble(wxT("/AudioIO/LatencyCorrection"),
@@ -2565,7 +2564,6 @@ void AudioIO::StopStream()
    auto cleanup = finally ( [this] {
       ClearRecordingException();
       mRecordingSchedule = {}; // free arrays
-      mRecordingPosition.store(0.0, std::memory_order_relaxed);
    } );
 
    if( mPortStreamV19 == NULL
@@ -3991,9 +3989,8 @@ void AudioIO::FillBuffers()
       GuardedCall( [&] {
          // start record buffering
          const auto avail = GetCommonlyAvailCapture(); // samples
-         const auto position = mRecordingPosition.load(std::memory_order_relaxed);
          const auto remainingTime =
-            std::max(0.0, mRecordingSchedule.ToConsume(position));
+            std::max(0.0, mRecordingSchedule.ToConsume());
          // This may be a very big double number:
          const auto remainingSamples = remainingTime * mRate;
          bool latencyCorrected = true;
@@ -4031,7 +4028,7 @@ void AudioIO::FillBuffers()
                      // Leftward shift
                      // discard some samples from the ring buffers.
                      size_t size = floor(
-                        mRecordingSchedule.ToDiscard(position) * mRate );
+                        mRecordingSchedule.ToDiscard() * mRate );
 
                      // The ring buffer might have grown concurrently -- don't discard more
                      // than the "avail" value noted above.
@@ -4054,8 +4051,7 @@ void AudioIO::FillBuffers()
                   totalCrossfadeLength = data.size();
                   if (totalCrossfadeLength) {
                      crossfadeStart =
-                        floor(mRecordingSchedule.Consumed(position) *
-                              mCaptureTracks[i]->GetRate());
+                        floor(mRecordingSchedule.Consumed() * mCaptureTracks[i]->GetRate());
                      if (crossfadeStart < totalCrossfadeLength)
                         pCrossfadeSrc = data.data() + crossfadeStart;
                   }
@@ -4143,13 +4139,8 @@ void AudioIO::FillBuffers()
                }
             } // end loop over capture channels
 
-            // Now update the recording schedule position
-            // Main thread may need to read it for drawing, so update atomically
-            // Relaxed order here, with the frequent memory fencing done by
-            // the ring buffers, should give frequent enough update in the
-            // main thread.
-            mRecordingPosition.store(
-               position + avail / mRate, std::memory_order_relaxed);
+            // Now update the recording shedule position
+            mRecordingSchedule.mPosition += avail / mRate;
             mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
             if (mListener && !blockFileLog.IsEmpty())
@@ -5472,29 +5463,17 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    return callbackReturn;
 }
 
-double AudioIO::RecordingSchedule::ToConsume(double position) const
+double AudioIO::RecordingSchedule::ToConsume() const
 {
-   return mDuration - Consumed(position);
+   return mDuration - Consumed();
 }
 
-double AudioIO::RecordingSchedule::Consumed(double position) const
+double AudioIO::RecordingSchedule::Consumed() const
 {
-   return std::max( 0.0, position + TotalCorrection() );
+   return std::max( 0.0, mPosition + TotalCorrection() );
 }
 
-double AudioIO::RecordingSchedule::ToDiscard(double position) const
+double AudioIO::RecordingSchedule::ToDiscard() const
 {
-   return std::max(0.0, -( position + TotalCorrection() ) );
-}
-
-bool AudioIO::IsCapturing() const
-{
-   // This is for purposes of choosing the color of the play indicator
-   // Returns false during a pre-roll but true when time before actual recording
-   // is less than latency
-   return
-   GetNumCaptureChannels() > 0 &&
-   mRecordingSchedule.ToDiscard(
-      mRecordingPosition.load(std::memory_order_relaxed)) <=
-         -std::min(0.0, mRecordingSchedule.mLatencyCorrection);
+   return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }
