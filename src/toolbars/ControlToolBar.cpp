@@ -1021,6 +1021,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       WaveTrackArray existingTracks;
 
+      double selt0 = t0;
       if (appendRecord) {
          TrackList *trackList = p->GetTracks();
          TrackListIterator it(trackList);
@@ -1033,8 +1034,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   allt0 = wt->GetEndTime();
 
                if (wt->GetSelected()) {
-                  if (wt->GetEndTime() > t0)
-                     t0 = wt->GetEndTime();
+                  if (wt->GetEndTime() > selt0)
+                     selt0 = wt->GetEndTime();
                }
             }
          }
@@ -1042,16 +1043,25 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // Try to find wave tracks to record into.  (If any are selected,
          // try to choose only from them; else if wave tracks exist, may record into any.)
          existingTracks = ChooseExistingRecordingTracks(*p, true);
-         if (existingTracks.empty()) {
+         if (!existingTracks.empty()) {
+            // selt0 is now: max(selection-start, end-of-selected-wavetracks)
+            t0 = selt0;
+         }
+         else {
+            // allt0 is:  max(selection-start, end-of-all-tracks)
+            // Use end time of all wave tracks if recording to non-selected
+            t0 = allt0;
             existingTracks = ChooseExistingRecordingTracks(*p, false);
-            if (existingTracks.empty())
-               // Can't find enough suitable tracks, so record into new ones.
-               ;
-            else
-               // t0 is now: max(selection-start, end-of-selected-wavetracks)
-               // allt0 is:  max(selection-start, end-of-all-tracks)
-               // Use end time of all wave tracks if recording to non-selected
-               t0 = allt0;
+            // If suitable tracks still not found, will record into NEW ones,
+            // but the choice of t0 does not depend on that.
+         }
+
+         // Whether we decided on NEW tracks or not:
+         if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
+            t1 = p->GetSel1();   // record within the selection
+         }
+         else {
+            t1 = DBL_MAX;        // record for a long, long time
          }
       }
 
@@ -1144,7 +1154,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
          // Pad selected/all wave tracks to make them all the same length
          for (const auto &wt : tracks.captureTracks)
          {
-            t1 = wt->GetEndTime();
+            auto endTime = wt->GetEndTime();
 
             // If the track was chosen for recording and playback both,
             // remember the original in preroll tracks, before making the
@@ -1171,24 +1181,18 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             // End of current track is before or at recording start time.
             // Less than or equal, not just less than, to ensure a clip boundary.
             // when append recording.
-            if (t1 <= t0) {
+            if (endTime <= t0) {
 
                // Pad the recording track with silence, up to the
                // maximum time.
                auto newTrack = p->GetTrackFactory()->NewWaveTrack();
                newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
-               newTrack->InsertSilence(0.0, t0 - t1);
+               newTrack->InsertSilence(0.0, t0 - endTime);
                newTrack->Flush();
-               pending->Clear(t1, t0);
-               pending->Paste(t1, newTrack.get());
+               pending->Clear(endTime, t0);
+               pending->Paste(endTime, newTrack.get());
             }
             transportTracks.captureTracks.push_back(pending);
-         }
-
-         if (t1 <= p->GetSel0() && p->GetSel1() > p->GetSel0()) {
-            t1 = p->GetSel1();   // record within the selection
-         } else {
-            t1 = DBL_MAX;        // record for a long, long time
          }
       }
 
