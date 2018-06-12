@@ -109,7 +109,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
    AddCredit(wxString(wxT("Steve Daulton")), roleTeamMember);
-   AddCredit(wxString(wxT("Vaughan Johnson")), roleTeamMember);
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
@@ -127,6 +126,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Benjamin Drung, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Joshua Haberman, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Ruslan Ijbulatov, ")) + _("developer"), roleEmeritusTeam);
+   AddCredit(wxString(wxT("Vaughan Johnson, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Leland Lucius, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Dominic Mazzoni, "))+_("co-founder and developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Markus Meyer, ")) + _("developer"), roleEmeritusTeam);
