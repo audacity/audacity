@@ -210,6 +210,9 @@ class AUDACITY_DLL_API AudioIO final {
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
+   void CallbackCheckCompletion(
+      int &callbackReturn, unsigned long len);
+
    AudioIOListener* GetListener() { return mListener; }
    void SetListener(AudioIOListener* listener);
 
@@ -519,7 +522,7 @@ private:
    void OutputEvent();
    void FillMidiBuffers();
    void GetNextEvent();
-   double AudioTime() { return mT0 + mNumFrames / mRate; }
+   double AudioTime() { return mPlaybackSchedule.mT0 + mNumFrames / mRate; }
    double PauseTime();
    void AllNotesOff(bool looping = false);
 #endif
@@ -572,27 +575,6 @@ private:
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
 
-   /** \brief True if the end time is before the start time */
-   bool ReversedTime() const
-   {
-      return mT1 < mT0;
-   }
-   /** \brief Clamps the given time to be between mT0 and mT1
-    *
-    * Returns the bound if the value is out of bounds; does not wrap.
-    * Returns a time in seconds.
-    * @param absoluteTime A time in seconds, usually mTime
-    */
-   double LimitStreamTime(double absoluteTime) const;
-
-   /** \brief Normalizes the given time, clamping it and handling gaps from cut preview.
-    *
-    * Clamps the time (unless scrubbing), and skips over the cut section.
-    * Returns a time in seconds.
-    * @param absoluteTime A time in seconds, usually mTime
-    */
-   double NormalizeStreamTime(double absoluteTime) const;
-
    /** \brief Clean up after StartStream if it fails.
      *
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
@@ -619,7 +601,9 @@ private:
    volatile long    mNumPauseFrames;
    /// total of backward jumps
    volatile int     mMidiLoopPasses;
-   inline double MidiLoopOffset() { return mMidiLoopPasses * (mT1 - mT0); }
+   inline double MidiLoopOffset() {
+      return mMidiLoopPasses * (mPlaybackSchedule.mT1 - mPlaybackSchedule.mT0);
+   }
 
    volatile long    mAudioFramesPerBuffer;
    /// Used by Midi process to record that pause has begun,
@@ -711,22 +695,6 @@ private:
    double              mFactor;
    /// Audio playback rate in samples per second
    double              mRate;
-   /// Playback starts at offset of mT0, which is measured in seconds.
-   double              mT0;
-   /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
-   double              mT1;
-   /// Current time position during playback, in seconds.  Between mT0 and mT1.
-   double              mTime;
-
-   /// Accumulated real time (not track position), starting at zero (unlike
-   ///  mTime), and wrapping back to zero each time around looping play.
-   /// Thus, it is the length in real seconds between mT0 and mTime.
-   double              mWarpedTime;
-
-   /// Real length to be played (if looping, for each pass) after warping via a
-   /// time track, computed just once when starting the stream.
-   /// Length in real seconds between mT0 and mT1.  Always positive.
-   double              mWarpedLength;
 
    double              mSeek;
    double              mPlaybackRingBufferSecs;
@@ -780,17 +748,6 @@ private:
    bool                mInputMixerWorks;
    float               mMixerOutputVol;
 
-   volatile enum {
-      PLAY_STRAIGHT,
-      PLAY_LOOPED,
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-      PLAY_SCRUB,
-      PLAY_AT_SPEED, // a version of PLAY_SCRUB.
-#endif
-   }                   mPlayMode;
-   double              mCutPreviewGapStart;
-   double              mCutPreviewGapLen;
-
    GrowableSampleBuffer mSilentBuf;
 
    AudioIOListener*    mListener;
@@ -801,8 +758,6 @@ private:
 #endif
 
    friend void InitAudioIO();
-
-   const TimeTrack *mTimeTrack;
 
    bool mUsingAlsa { false };
 
@@ -849,6 +804,101 @@ public:
    // Whether to check the error code passed to audacityAudioCallback to
    // detect more dropouts
    bool mDetectUpstreamDropouts{ true };
+
+   struct PlaybackSchedule {
+      /// Playback starts at offset of mT0, which is measured in seconds.
+      double              mT0;
+      /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
+      double              mT1;
+      /// Current time position during playback, in seconds.  Between mT0 and mT1.
+      double              mTime;
+
+      /// Accumulated real time (not track position), starting at zero (unlike
+      ///  mTime), and wrapping back to zero each time around looping play.
+      /// Thus, it is the length in real seconds between mT0 and mTime.
+      double              mWarpedTime;
+
+      /// Real length to be played (if looping, for each pass) after warping via a
+      /// time track, computed just once when starting the stream.
+      /// Length in real seconds between mT0 and mT1.  Always positive.
+      double              mWarpedLength;
+
+      // mWarpedTime and mWarpedLength are irrelevant when scrubbing,
+      // else they are used in updating mTime,
+      // and when not scrubbing or playing looped, mTime is also used
+      // in the test for termination of playback.
+
+      // with ComputeWarpedLength, it is now possible the calculate the warped length with 100% accuracy
+      // (ignoring accumulated rounding errors during playback) which fixes the 'missing sound at the end' bug
+      
+      const TimeTrack *mTimeTrack;
+      
+      volatile enum {
+         PLAY_STRAIGHT,
+         PLAY_LOOPED,
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+         PLAY_SCRUB,
+         PLAY_AT_SPEED, // a version of PLAY_SCRUB.
+#endif
+      }                   mPlayMode;
+      double              mCutPreviewGapStart;
+      double              mCutPreviewGapLen;
+      
+      /** \brief True if the end time is before the start time */
+      bool ReversedTime() const
+      {
+         return mT1 < mT0;
+      }
+
+      /** \brief Clamps mTime to be between mT0 and mT1
+       *
+       * Returns the bound if the value is out of bounds; does not wrap.
+       * Returns a time in seconds.
+       */
+      double LimitStreamTime() const;
+
+      /** \brief Normalizes mTime, clamping it and handling gaps from cut preview.
+       *
+       * Clamps the time (unless scrubbing), and skips over the cut section.
+       * Returns a time in seconds.
+       */
+      double NormalizeStreamTime() const;
+
+      void ResetMode() { mPlayMode = PLAY_STRAIGHT; }
+
+      bool PlayingStraight() const { return mPlayMode == PLAY_STRAIGHT; }
+      bool Looping() const         { return mPlayMode == PLAY_LOOPED; }
+      bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB; }
+      bool PlayingAtSpeed() const  { return mPlayMode == PLAY_AT_SPEED; }
+      bool Interactive() const     { return Scrubbing() || PlayingAtSpeed(); }
+
+      // Returns true if a loop pass, or the sole pass of straight play,
+      // is completed at the current value of mTime
+      bool PassIsComplete() const;
+
+      void TrackTimeUpdate(double realElapsed);
+
+      // Convert a nonnegative real duration to an increment of track time
+      // relative to mT0.
+      double TrackDuration(double realElapsed) const;
+
+      // Convert time between mT0 and argument to real duration, according to
+      // time track if one is given; result is always nonnegative
+      double RealDuration(double trackTime1) const;
+
+      // How much real ("warped") time left?
+      double RealTimeRemaining() const;
+
+      // Advance the real time position
+      void RealTimeAdvance( double increment );
+
+      // Determine starting duration within the first pass -- sometimes not
+      // zero
+      void RealTimeInit();
+      
+      void RealTimeRestart();
+
+   } mPlaybackSchedule;
 
 private:
    struct RecordingSchedule {
