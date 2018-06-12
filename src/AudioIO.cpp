@@ -2245,7 +2245,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       int group = 0;
       for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt; i++)
       {
-         const WaveTrack *vt = gAudioIO->mPlaybackTracks[i].get();
+         const WaveTrack *vt = mPlaybackTracks[i].get();
 
          unsigned chanCnt = 1;
          if (vt->GetLinked())
@@ -2464,7 +2464,7 @@ bool AudioIO::StartPortMidiStream()
       return false;
 
    //wxPrintf("StartPortMidiStream: mT0 %g mTime %g\n",
-   //       gAudioIO->mT0, gAudioIO->mTime);
+   //       mT0, mTime);
 
    /* get midi playback device */
    PmDeviceID playbackDevice = Pm_GetDefaultOutputDeviceID();
@@ -4220,7 +4220,7 @@ void AudioIO::OutputEvent()
    // The special event gAllNotesOff means "end of playback, send
    // all notes off on all channels"
    if (mNextEvent == &gAllNotesOff) {
-      bool looping = (mPlayMode == gAudioIO->PLAY_LOOPED);
+      bool looping = (mPlayMode == PLAY_LOOPED);
       AllNotesOff(looping);
       if (looping) {
          // jump back to beginning of loop
@@ -4383,28 +4383,28 @@ bool AudioIO::SetHasSolo(bool hasSolo)
 void AudioIO::FillMidiBuffers()
 {
    // Keep track of time paused. If not paused, fill buffers.
-   if (gAudioIO->IsPaused()) {
-      if (!gAudioIO->mMidiPaused) {
-         gAudioIO->mMidiPaused = true;
-         gAudioIO->AllNotesOff(); // to avoid hanging notes during pause
+   if (IsPaused()) {
+      if (!mMidiPaused) {
+         mMidiPaused = true;
+         AllNotesOff(); // to avoid hanging notes during pause
       }
       return;
    }
 
-   if (gAudioIO->mMidiPaused) {
-      gAudioIO->mMidiPaused = false;
+   if (mMidiPaused) {
+      mMidiPaused = false;
    }
 
    bool hasSolo = false;
-   auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
+   auto numPlaybackTracks = mPlaybackTracks.size();
    for(unsigned t = 0; t < numPlaybackTracks; t++ )
-      if( gAudioIO->mPlaybackTracks[t]->GetSolo() ) {
+      if( mPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
          break;
       }
-   auto numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
+   auto numMidiPlaybackTracks = mMidiPlaybackTracks.size();
    for(unsigned t = 0; t < numMidiPlaybackTracks; t++ )
-      if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() ) {
+      if( mMidiPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
          break;
       }
@@ -4428,8 +4428,8 @@ void AudioIO::FillMidiBuffers()
    }
 
    // test for end
-   double realTime = gAudioIO->MidiTime() * 0.001 -
-                      gAudioIO->PauseTime();
+   double realTime = MidiTime() * 0.001 -
+                      PauseTime();
    realTime -= 1; // MidiTime() runs ahead 1s
 
    // XXX Is this still true now?  It seems to break looping --Poke
@@ -4447,15 +4447,15 @@ void AudioIO::FillMidiBuffers()
    const double loopDelay = 0.220;
 
    double timeAtSpeed;
-   if (gAudioIO->mTimeTrack)
-      timeAtSpeed = gAudioIO->mTimeTrack->SolveWarpedLength(gAudioIO->mT0, realTime);
+   if (mTimeTrack)
+      timeAtSpeed = mTimeTrack->SolveWarpedLength(mT0, realTime);
    else
       timeAtSpeed = realTime;
 
-   gAudioIO->mMidiOutputComplete =
-      (gAudioIO->mPlayMode == gAudioIO->PLAY_STRAIGHT && // PRL:  what if scrubbing?
-       timeAtSpeed >= gAudioIO->mT1 + loopDelay);
-   // !gAudioIO->mNextEvent);
+   mMidiOutputComplete =
+      (mPlayMode == PLAY_STRAIGHT && // PRL:  what if scrubbing?
+       timeAtSpeed >= mT1 + loopDelay);
+   // !mNextEvent);
 }
 
 double AudioIO::PauseTime()
