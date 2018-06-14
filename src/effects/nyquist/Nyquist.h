@@ -48,6 +48,7 @@ enum NyqControlType
    NYQ_CTRL_FLOAT_TEXT,
    NYQ_CTRL_TEXT,
    NYQ_CTRL_TIME,
+   NYQ_CTRL_FILE,
 };
 
 class NyqControl
@@ -72,6 +73,7 @@ public:
    double high;
    int ticks;
 };
+
 
 class AUDACITY_DLL_API NyquistEffect final : public Effect
 {
@@ -193,7 +195,10 @@ private:
    void OnSlider(wxCommandEvent & evt);
    void OnChoice(wxCommandEvent & evt);
    void OnTime(wxCommandEvent & evt);
+   void OnFileButton(wxCommandEvent & evt);
 
+   void resolveFilePath(wxString & path, wxString extension = "");
+   bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 
 private:

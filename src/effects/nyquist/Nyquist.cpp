@@ -59,7 +59,7 @@ effects from this one class.
 #include "../../prefs/WaveformSettings.h"
 #include "../../widgets/NumericTextCtrl.h"
 
-#include "FileDialog.h"
+#include "../lib-src/FileDialog/FileDialog.h"
 
 #include "Nyquist.h"
 
@@ -85,7 +85,8 @@ enum
    ID_Slider = 11000,
    ID_Text = 12000,
    ID_Choice = 13000,
-   ID_Time = 14000
+   ID_Time = 14000,
+   ID_FILE = 15000
 };
 
 // Protect Nyquist from selections greater than 2^31 samples (bug 439)
@@ -114,6 +115,8 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
                      wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice)
    EVT_COMMAND_RANGE(ID_Time, ID_Time + 99,
                      wxEVT_COMMAND_TEXT_UPDATED, NyquistEffect::OnTime)
+   EVT_COMMAND_RANGE(ID_FILE, ID_FILE + 99,
+                     wxEVT_COMMAND_BUTTON_CLICKED, NyquistEffect::OnFileButton)
 END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
@@ -334,7 +337,7 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
          S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0,
                        ctrl.choices.data(), ctrl.choices.size() );
       }
-      else if (ctrl.type == NYQ_CTRL_STRING)
+      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
       {
          S.Define( ctrl.valStr, ctrl.var, "" , ctrl.lowStr, ctrl.highStr );
          //parms.Write(ctrl.var, ctrl.valStr);
@@ -383,7 +386,7 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
          parms.WriteEnum(ctrl.var, (int) d,
                          ctrl.choices.data(), ctrl.choices.size());
       }
-      else if (ctrl.type == NYQ_CTRL_STRING)
+      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
       {
          parms.Write(ctrl.var, ctrl.valStr);
       }
@@ -436,7 +439,7 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
                                ctrl.choices.data(), ctrl.choices.size()) &&
                 val != wxNOT_FOUND;
       }
-      else if (ctrl.type == NYQ_CTRL_STRING)
+      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
       {
          wxString val;
          good = parms.Read(ctrl.var, &val);
@@ -484,7 +487,7 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
                         ctrl.choices.data(), ctrl.choices.size());
          ctrl.val = (double) val;
       }
-      else if (ctrl.type == NYQ_CTRL_STRING)
+      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
       {
          parms.Read(ctrl.var, &ctrl.valStr);
       }
@@ -1192,7 +1195,7 @@ bool NyquistEffect::ProcessOne()
                                  mControls[j].var,
                                  (int)(mControls[j].val));
       }
-      else if (mControls[j].type == NYQ_CTRL_STRING) {
+      else if (mControls[j].type == NYQ_CTRL_STRING || mControls[j].type == NYQ_CTRL_FILE) {
          cmd += wxT("(setf ");
          // restrict variable names to 7-bit ASCII:
          cmd += mControls[j].var;
@@ -1938,6 +1941,8 @@ bool NyquistEffect::Parse(
                ctrl.type = NYQ_CTRL_INT_TEXT;
             else if (tokens[3] == wxT("time"))
                 ctrl.type = NYQ_CTRL_TIME;
+            else if (tokens[3] == wxT("file"))
+               ctrl.type = NYQ_CTRL_FILE;
             else
             {
                wxString str;
@@ -1953,7 +1958,7 @@ bool NyquistEffect::Parse(
                return true;
             }
 
-            ctrl.lowStr = tokens[6];
+            ctrl.lowStr = UnQuote( tokens[6] );
             if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
                ctrl.low = INT_MIN;
             }
@@ -1967,7 +1972,7 @@ bool NyquistEffect::Parse(
                ctrl.low = GetCtrlValue(ctrl.lowStr);
             }
 
-            ctrl.highStr = tokens[7];
+            ctrl.highStr = UnQuote( tokens[7] );
             if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
                ctrl.high = INT_MAX;
             }
@@ -2355,6 +2360,50 @@ bool NyquistEffect::TransferDataFromEffectWindow()
          continue;
       }
 
+      if (ctrl->type == NYQ_CTRL_FILE)
+      {
+         resolveFilePath(ctrl->valStr);
+
+         wxString path;
+         if (ctrl->valStr.StartsWith("\"", &path))
+         {
+            // Validate if a list of quoted paths.
+            if (path.EndsWith("\"", &path))
+            {
+               path.Replace("\"\"", "\"");
+               wxStringTokenizer tokenizer(path, "\"");
+               while (tokenizer.HasMoreTokens())
+               {
+                  wxString token = tokenizer.GetNextToken();
+                  if(!validatePath(token))
+                  {
+                     const auto message = wxString::Format(_("\"%s\" is not a valid file path."), token);
+                     Effect::MessageBox(message, wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));
+                     return false;
+                  }
+               }
+               continue;
+            }
+            else
+            {
+               /* i18n-hint: Warning that there is one quotation mark rather than a pair.*/
+               const auto message = wxString::Format(_("Mismatched quotes in\n%s"), ctrl->valStr);
+               Effect::MessageBox(message, wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));
+               return false;
+            }
+         }
+         // Validate a single path.
+         else if (validatePath(ctrl->valStr))
+         {
+            continue;
+         }
+
+         // Validation failed
+         const auto message = wxString::Format(_("\"%s\" is not a valid file path."), ctrl->valStr);
+         Effect::MessageBox(message, wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));
+         return false;
+      }
+
       if (ctrl->type == NYQ_CTRL_TIME)
       {
          NumericTextCtrl *n = (NumericTextCtrl *) mUIParent->FindWindow(ID_Time + i);
@@ -2511,6 +2560,34 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   time->SetName(prompt);
                   S.AddWindow(time, wxALIGN_LEFT | wxALL);
                }
+               else if (ctrl.type == NYQ_CTRL_FILE)
+               {
+                  S.AddSpace(10, 10);
+
+                  // Get default file extension if specified in wildcards
+                  wxString defaultExtension = "";
+                  size_t len = ctrl.lowStr.length();
+                  int characters = ctrl.lowStr.Find("*");
+
+                  if (characters != wxNOT_FOUND)
+                  {
+                     if (static_cast<int>(ctrl.lowStr.find("|", characters)) != wxNOT_FOUND)
+                        len = ctrl.lowStr.find("|", characters) - 1;
+                     if (static_cast<int>(ctrl.lowStr.find(";", characters)) != wxNOT_FOUND)
+                        len = std::min(static_cast<int>(len), static_cast<int>(ctrl.lowStr.find(";", characters)) - 1);
+
+                     defaultExtension = ctrl.lowStr.wxString::Mid(characters + 1, len - characters);
+                  }
+                  resolveFilePath(ctrl.valStr, defaultExtension);
+
+                  wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox( {}, wxT(""), 40);
+                  item->SetValidator(wxGenericValidator(&ctrl.valStr));
+                  item->SetName(prompt);
+
+                  if (ctrl.label == wxEmptyString)
+                     ctrl.label = wxFileSelectorPromptStr;
+                  S.Id(ID_FILE + i).AddButton(ctrl.label, wxALIGN_LEFT);
+               }
                else
                {
                   // Integer or Real
@@ -2555,13 +2632,16 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   }
                }
 
-               if (ctrl.type == NYQ_CTRL_CHOICE || ctrl.label.IsEmpty())
+               if (ctrl.type != NYQ_CTRL_FILE)
                {
-                  S.AddSpace(10, 10);
-               }
-               else
-               {
-                  S.AddUnits(ctrl.label);
+                  if (ctrl.type == NYQ_CTRL_CHOICE || ctrl.label.IsEmpty())
+                  {
+                     S.AddSpace(10, 10);
+                  }
+                  else
+                  {
+                     S.AddUnits(ctrl.label);
+                  }
                }
             }
          }
@@ -2701,6 +2781,191 @@ void NyquistEffect::OnTime(wxCommandEvent& evt)
       value = val;
    }
 }
+
+void NyquistEffect::OnFileButton(wxCommandEvent& evt)
+{
+   int i = evt.GetId() - ID_FILE;
+   NyqControl & ctrl = mControls[i];
+   ctrl.lowStr.Trim(true).Trim(false); // Wildcard filter.
+
+   // Basic sanity check of wildcard flags so that we
+   // don't show scary wxFAIL_MSG from wxParseCommonDialogsFilter.
+   if (ctrl.lowStr != wxEmptyString)
+   {
+      bool validWildcards = true;
+      size_t wildcards = 0;
+      wxStringTokenizer tokenizer(ctrl.lowStr, "|");
+      while (tokenizer.HasMoreTokens())
+      {
+         wxString token = tokenizer.GetNextToken().Trim(true).Trim(false);
+         if (token == wxEmptyString)
+         {
+            validWildcards = false;
+            break;
+         }
+         wildcards += 1;
+      }
+      // Users should not normally see this, unless they are writing Nyquist plug-ins.
+      if (wildcards % 2 != 0 || !validWildcards || ctrl.lowStr.EndsWith("|"))
+      {
+         Effect::MessageBox(_("Invalid wildcard string in 'path' control.'\n"
+                        "Using empty string instead."), 
+                        wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));
+         ctrl.lowStr = "";
+      }
+   }
+
+   // Get style flags:
+   // Ensure legal combinations so that wxWidgets does not throw an assert error.
+   unsigned char flags = 0;
+   if (ctrl.highStr != wxEmptyString)
+   {
+      wxStringTokenizer tokenizer(ctrl.highStr, ",");
+      while ( tokenizer.HasMoreTokens() )
+      {
+         wxString token = tokenizer.GetNextToken().Trim(true).Trim(false);
+         if (token.IsSameAs("open", false))
+         {
+            flags |= wxFD_OPEN;
+            flags &= ~wxFD_SAVE;
+            flags &= ~wxFD_OVERWRITE_PROMPT;
+         }
+         else if (token.IsSameAs("save", false))
+         {
+            flags |= wxFD_SAVE;
+            flags &= ~wxFD_OPEN;
+            flags &= ~wxFD_MULTIPLE;
+            flags &= ~wxFD_FILE_MUST_EXIST;
+         }
+         else if (token.IsSameAs("overwrite", false) && !(flags & wxFD_OPEN))
+         {
+            flags |= wxFD_OVERWRITE_PROMPT;
+         }
+         else if (token.IsSameAs("exists", false) && !(flags & wxFD_SAVE))
+         {
+            flags |= wxFD_FILE_MUST_EXIST;
+         }
+         else if (token.IsSameAs("multiple", false) && !(flags & wxFD_SAVE))
+         {
+            flags |= wxFD_MULTIPLE;
+         }
+      }
+   }
+
+   resolveFilePath(ctrl.valStr);
+
+   wxFileName fname = ctrl.valStr;
+   wxString defaultDir = fname.GetPath();
+   wxString defaultFile = fname.GetName();
+   wxString message = _("Select a file");
+
+   if (flags & wxFD_MULTIPLE)
+      message = _("Select one or more files");
+   else if (flags & wxFD_SAVE)
+      message = _("Save file as");
+
+   wxFileDialog openFileDialog(mUIParent->FindWindow(ID_FILE + i),
+                               message,
+                               defaultDir,
+                               defaultFile,
+                               ctrl.lowStr,  // wildcard filter
+                               flags);       // styles
+
+   if (openFileDialog.ShowModal() == wxID_CANCEL)
+   {
+      return;
+   }
+
+   wxString path = "";
+   // When multiple files selected, return file paths as a list of quoted strings.
+   if (flags & wxFD_MULTIPLE)
+   {
+      wxArrayString selectedFiles;
+      openFileDialog.GetPaths(selectedFiles);
+
+      for (size_t sf = 0; sf < selectedFiles.GetCount(); sf++) {
+         path += "\"";
+         path += selectedFiles[sf];
+         path += "\"";
+      }
+      ctrl.valStr = path;
+   }
+   else
+   {
+      ctrl.valStr = openFileDialog.GetPath();
+   }
+
+   mUIParent->FindWindow(ID_Text + i)->GetValidator()->TransferToWindow();
+}
+
+void NyquistEffect::resolveFilePath(wxString& path, wxString extension /* empty string */)
+{
+#if defined(__WXMSW__)
+   path.Replace("/", wxFileName::GetPathSeparator());
+#endif
+
+   path.Trim(true).Trim(false);
+
+   typedef std::unordered_map<wxString, wxString> map;
+   map pathKeys = {
+      {"*home*", wxGetHomeDir()},
+      {"~", wxGetHomeDir()},
+      {"*default*", FileNames::DefaultToDocumentsFolder("").GetPath()},
+      {"*export*", FileNames::DefaultToDocumentsFolder(wxT("/Export/Path")).GetPath()},
+      {"*save*", FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path")).GetPath()},
+      {"*config*", FileNames::DataDir()}
+   };
+
+   int characters = path.Find(wxFileName::GetPathSeparator());
+   if(characters == wxNOT_FOUND) // Just a path or just a file name
+   {
+      if (path.IsEmpty())
+         path = "*default*";
+
+      if (pathKeys.find(path) != pathKeys.end())
+      {
+         // Keyword found, so assume this is the intended directory.
+         path = pathKeys[path] + wxFileName::GetPathSeparator();
+      }
+      else  // Just a file name
+      {
+         path = pathKeys["*default*"] + wxFileName::GetPathSeparator() + path;
+      }
+   }
+   else  // path + file name
+   {
+      wxString firstDir = path.Left(characters);
+      wxString rest = path.Mid(characters);
+
+      if (pathKeys.find(firstDir) != pathKeys.end())
+      {
+         path = pathKeys[firstDir] + rest;
+      }
+   }
+
+   wxFileName fname = path;
+
+   // If the directory is invalid, better to leave it as is (invalid) so that
+   // the user sees the error rather than an unexpected file path.
+   if (fname.wxFileName::IsOk() && fname.GetFullName() == wxEmptyString)
+   {
+      path = fname.GetPathWithSep() + _("untitled");
+      if (!extension.IsEmpty())
+         path = path + extension;
+   }
+}
+
+
+bool NyquistEffect::validatePath(wxString path)
+{
+   wxFileName fname = path;
+   wxString dir = fname.GetPath();
+
+   return (fname.wxFileName::IsOk() &&
+           wxFileName::DirExists(dir) &&
+           fname.GetFullName() != wxEmptyString);
+}
+
 
 wxString NyquistEffect::ToTimeFormat(double t)
 {
