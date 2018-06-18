@@ -386,9 +386,13 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
          parms.WriteEnum(ctrl.var, (int) d,
                          ctrl.choices.data(), ctrl.choices.size());
       }
-      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
+      else if (ctrl.type == NYQ_CTRL_STRING)
       {
          parms.Write(ctrl.var, ctrl.valStr);
+      }
+      else if (ctrl.type == NYQ_CTRL_FILE)
+      {
+         parms.Write(ctrl.var, resolveFilePath(ctrl.valStr));
       }
    }
 
