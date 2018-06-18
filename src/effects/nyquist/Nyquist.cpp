@@ -392,7 +392,8 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
       }
       else if (ctrl.type == NYQ_CTRL_FILE)
       {
-         parms.Write(ctrl.var, resolveFilePath(ctrl.valStr));
+         resolveFilePath(ctrl.valStr);
+         parms.Write(ctrl.var, ctrl.valStr);
       }
    }
 
