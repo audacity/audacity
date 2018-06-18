@@ -98,9 +98,11 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
          S.SetStretchyCol(1);
          mParameters = S.AddTextBox(_("&Parameters"), wxT(""), 0);
          mParameters->SetEditable(false);
-         S.Prop(0).AddPrompt( _("&Details" ) );
+         wxString prompt{_("&Details")};
+         S.Prop(0).AddPrompt(prompt);
          mDetails = S.AddTextWindow( wxT(""));
          mDetails->SetEditable(false);
+         mDetails->SetName(wxStripMenuCodes(prompt));
       }
       S.EndMultiColumn();
 
