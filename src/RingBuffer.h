@@ -12,6 +12,7 @@
 #define __AUDACITY_RING_BUFFER__
 
 #include "SampleFormat.h"
+#include <atomic>
 
 class RingBuffer {
  public:
@@ -35,12 +36,13 @@ class RingBuffer {
    size_t Discard(size_t samples);
 
  private:
-   size_t Len();
+   size_t Filled( size_t start, size_t end );
+   size_t Free( size_t start, size_t end );
 
    sampleFormat  mFormat;
-   size_t        mStart { 0 };
-   size_t        mEnd { 0 };
-   size_t        mBufferSize;
+   std::atomic<size_t> mStart { 0 };
+   std::atomic<size_t> mEnd { 0 };
+   const size_t  mBufferSize;
    SampleBuffer  mBuffer;
 };
 
