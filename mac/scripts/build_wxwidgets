@@ -51,8 +51,7 @@ function bld
    pushd "${1}"
    shift
 
-   ../configure --disable-accessibility \
-                --enable-macosx-arch=i386 \
+   ../configure --enable-macosx-arch=i386 \
                 --with-expat=builtin \
                 --with-zlib=builtin \
                 --with-regex=builtin \
