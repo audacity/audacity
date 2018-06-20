@@ -47,7 +47,7 @@ GUI framework.
 Audacity 2.3.0 can on windows use wxWidgets 3.1.1 without patches.
 
 For versions of Audacity that need a patched wxWidgets,
-download our patched wxWidgets from the 'audacity-fixes'
+download our patched wxWidgets from the 'audacity-fixes-3.1.1'
 branch of https://github.com/audacity/wxWidgets
 
 ------------------------------------------------------------------------
