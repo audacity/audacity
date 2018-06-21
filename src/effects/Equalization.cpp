@@ -3460,6 +3460,15 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       int deleted = 0;
       while(item >= 0)
       {
+#if defined(__WXMSW__)
+         // TODO: Migrate to the standard "Manage" dialog.
+         if(item == mList->GetItemCount()-1)   //unnamed
+         {
+            mEffect->Effect::MessageBox(_("You cannot delete the 'unnamed' curve, it is special."),
+                                        Effect::DefaultMessageBoxStyle,
+                                        _("Can't delete 'unnamed'"));
+         }
+#else
          if(mEditCurves[ item ].Name.IsSameAs(wxT("unnamed")))
          {
             /* i18n-hint: Special EQ curve is protected against deletion.*/
@@ -3468,6 +3477,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
                                         /* i18n-hint: Special EQ curve is protected against deletion.*/
                                         wxString::Format(_("Can't delete %s"), wxT("'unnamed'")));
          }
+#endif
          else
          {
             mEditCurves.erase( mEditCurves.begin() + item - deleted );
