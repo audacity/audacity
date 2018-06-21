@@ -1790,7 +1790,7 @@ void EffectEqualization::setCurve(const wxString &curveName)
       Effect::MessageBox( _("Requested curve not found, using 'unnamed'"),
          wxOK|wxICON_ERROR,
          _("Curve not found") );
-      setCurve((int) mCurves.size() - 1);
+      setCurve();
    }
    else
       setCurve( i );
@@ -2117,10 +2117,16 @@ void EffectEqualization::UpdateCurves()
 {
    // Reload the curve names
    mCurve->Clear();
+   bool selectedCurveExists = false;
    for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
    {
+      if (mCurveName == mCurve)
+         selectedCurveExists = true;
       mCurve->Append(mCurves[ i ].Name);
    }
+   // In rare circumstances, mCurveName may not exist (bug 1891)
+   if (!selectedCurveExists)
+      mCurveName = mCurves[ (int)mCurves.size() - 1 ].Name;
    mCurve->SetStringSelection(mCurveName);
 
    // Allow the control to resize
@@ -3460,7 +3466,6 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       int deleted = 0;
       while(item >= 0)
       {
-#if defined(__WXMSW__)
          // TODO: Migrate to the standard "Manage" dialog.
          if(item == mList->GetItemCount()-1)   //unnamed
          {
@@ -3468,16 +3473,6 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
                                         Effect::DefaultMessageBoxStyle,
                                         _("Can't delete 'unnamed'"));
          }
-#else
-         if(mEditCurves[ item ].Name.IsSameAs(wxT("unnamed")))
-         {
-            /* i18n-hint: Special EQ curve is protected against deletion.*/
-            mEffect->Effect::MessageBox(wxString::Format(_("You cannot delete the %s curve, it is special."), wxT("'unnamed'")),
-                                        Effect::DefaultMessageBoxStyle,
-                                        /* i18n-hint: Special EQ curve is protected against deletion.*/
-                                        wxString::Format(_("Can't delete %s"), wxT("'unnamed'")));
-         }
-#endif
          else
          {
             mEditCurves.erase( mEditCurves.begin() + item - deleted );
