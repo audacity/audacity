@@ -8526,7 +8526,7 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
 
    // Ignore all but left edge of the selection.
    mViewInfo.selectedRegion.collapseToT0();
-   const double t1 = std::max(0.0, mViewInfo.selectedRegion.t1());
+   double t1 = std::max(0.0, mViewInfo.selectedRegion.t1());
 
    // Decide which tracks to record in.
    auto pBar = GetControlToolBar();
@@ -8547,21 +8547,45 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
 
    // Delete the portion of the target tracks right of the selection, but first,
    // remember a part of the deletion for crossfading with the new recording.
+   // We may also adjust the starting point leftward if it is too close to the
+   // end of the track, so that at least some nonzero crossfade data can be
+   // taken.
    PRCrossfadeData crossfadeData;
    const double crossFadeDuration = std::max(0.0,
       gPrefs->Read(AUDIO_ROLL_CROSSFADE_KEY, DEFAULT_ROLL_CROSSFADE_MS)
          / 1000.0
    );
 
+   // The test for t1 == 0.0 stops punch and roll deleting everything where the
+   // selection is at zero.  There wouldn't be any cued audio to play in
+   // that case, so a normal record, not a punch and roll, is called for.
+   bool error = (t1 == 0.0);
+
+   double newt1 = t1;
    for (const auto &wt : tracks) {
-      // The test for t1 == 0.0 stops punch and roll deleting everything where the 
-      // selection is at zero.  There wouldn't be any cued audio to play in 
-      // that case, so a normal record, not a punch and roll, is called for.
-      if (!wt->GetClipAtSample(sampleCount(floor(t1 * wt->GetRate()))) || t1 ==0.0) {
-         auto message = _("Please select a time within a clip.");
-         ShowErrorDialog(this, _("Error"), message, url);
-         return;
+      sampleCount testSample(floor(t1 * wt->GetRate()));
+      auto clip = wt->GetClipAtSample(testSample);
+      if (!clip)
+         // Subtract 1 to allow a selection exactly at the end time
+         clip = wt->GetClipAtSample(testSample - 1);
+      if (!clip)
+         error = true;
+      else {
+         // May adjust t1 left
+         // Let's ignore the possibilty of a clip even shorter than the
+         // crossfade duration!
+         newt1 = std::min(newt1, clip->GetEndTime() - crossFadeDuration);
       }
+   }
+
+   if (error) {
+      auto message = _("Please select a time within a clip.");
+      ShowErrorDialog(this, _("Error"), message, url);
+      return;
+   }
+
+   t1 = newt1;
+   for (const auto &wt : tracks) {
       const auto endTime = wt->GetEndTime();
       const auto duration = std::max(0.0, std::min(crossFadeDuration, endTime - t1));
       const size_t getLen = floor(duration * wt->GetRate());
