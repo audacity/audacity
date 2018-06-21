@@ -39,10 +39,32 @@ class RingBuffer {
    size_t Filled( size_t start, size_t end );
    size_t Free( size_t start, size_t end );
 
-   sampleFormat  mFormat;
-   std::atomic<size_t> mStart { 0 };
-   std::atomic<size_t> mEnd { 0 };
+   enum : size_t { CacheLine = 64 };
+   /*
+    // We will do this in C++17 instead:
+   static constexpr size_t CacheLine =
+      std::hardware_destructive_interference_size;
+    */
+
+   // Align the two atomics to avoid false sharing
+   // TODO MSVC2017: use alignas
+#ifdef __WXMSW__
+   __declspec(align(64))
+#else
+   alignas(CacheLine)
+#endif
+      std::atomic<size_t> mStart { 0 };
+
+#ifdef __WXMSW__
+   __declspec(align(64))
+#else
+   alignas(CacheLine)
+#endif
+      std::atomic<size_t> mEnd{ 0 };
+
    const size_t  mBufferSize;
+
+   sampleFormat  mFormat;
    SampleBuffer  mBuffer;
 };
 
