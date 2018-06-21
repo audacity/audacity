@@ -100,7 +100,7 @@ size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
 
 size_t RingBuffer::Clear(sampleFormat format, size_t samplesToClear)
 {
-   auto start = mStart.load( std::memory_order_relaxed );
+   auto start = mStart.load( std::memory_order_acquire );
    auto end = mEnd.load( std::memory_order_relaxed );
    samplesToClear = std::min( samplesToClear, Free( start, end ) );
    size_t cleared = 0;
@@ -165,7 +165,8 @@ size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
       copied += block;
    }
 
-   // Communicate to writer that we have consumed some data, and that's all
+   // Communicate to writer that we have consumed some data,
+   // with nonrelaxed ordering
    mStart.store( start, std::memory_order_release );
 
    return copied;
@@ -177,7 +178,7 @@ size_t RingBuffer::Discard(size_t samplesToDiscard)
    auto start = mStart.load( std::memory_order_relaxed );
    samplesToDiscard = std::min( samplesToDiscard, Filled( start, end ) );
 
-   // Communicate to writer that we have consumed some data, and that's all
+   // Communicate to writer that we have skipped some data, and that's all
    mStart.store((start + samplesToDiscard) % mBufferSize,
                 std::memory_order_relaxed);
 
