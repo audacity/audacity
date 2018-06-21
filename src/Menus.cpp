@@ -8548,9 +8548,11 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
    // Delete the portion of the target tracks right of the selection, but first,
    // remember a part of the deletion for crossfading with the new recording.
    PRCrossfadeData crossfadeData;
-   const double crossFadeDuration =
+   const double crossFadeDuration = std::max(0.0,
       gPrefs->Read(AUDIO_ROLL_CROSSFADE_KEY, DEFAULT_ROLL_CROSSFADE_MS)
-      / 1000.0;
+         / 1000.0
+   );
+
    for (const auto &wt : tracks) {
       // The test for t1 == 0.0 stops punch and roll deleting everything where the 
       // selection is at zero.  There wouldn't be any cued audio to play in 
@@ -8592,7 +8594,8 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
 
    // Try to start recording
    AudioIOStartStreamOptions options(GetDefaultPlayOptions());
-   options.preRoll = gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS);
+   options.preRoll = std::max(0L,
+      gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
    options.pCrossfadeData = &crossfadeData;
    bool success = GetControlToolBar()->DoRecord(*this,
       transportTracks,
