@@ -8531,13 +8531,13 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
    if (tracks.empty()) {
       int recordingChannels =
          std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
-      auto format = wxPLURAL(
-         "Please select at least %d channel.",
-         "Please select at least %d channels.",
-         recordingChannels
-         );
       auto message =
-         wxString::Format(format, recordingChannels);
+         (recordingChannels == 1)
+         ? _("Please select in a mono track.")
+         : (recordingChannels == 2)
+         ? _("Please select in a stereo track.")
+         : wxString::Format(
+            _("Please select at least %d channels."), recordingChannels);
       AudacityMessageBox(message);
       return;
    }
