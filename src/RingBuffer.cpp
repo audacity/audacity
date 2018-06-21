@@ -54,9 +54,8 @@ size_t RingBuffer::Free( size_t start, size_t end )
 //
 // For the writer only:
 // Only writer writes the end, so it can read it again relaxed
-// And it reads the start written by reader, but reader sends no other
-// information needing to synchronize with the start, so relaxed memory order
-// is good there too
+// And it reads the start written by reader, with acquire order,
+// so that any reading done in Get() happens-before any reuse of the space.
 //
 
 size_t RingBuffer::AvailForPut()
@@ -72,7 +71,7 @@ size_t RingBuffer::AvailForPut()
 size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
                     size_t samplesToCopy)
 {
-   auto start = mStart.load( std::memory_order_relaxed );
+   auto start = mStart.load( std::memory_order_acquire );
    auto end = mEnd.load( std::memory_order_relaxed );
    samplesToCopy = std::min( samplesToCopy, Free( start, end ) );
    auto src = buffer;
@@ -167,7 +166,7 @@ size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
    }
 
    // Communicate to writer that we have consumed some data, and that's all
-   mStart.store( start, std::memory_order_relaxed );
+   mStart.store( start, std::memory_order_release );
 
    return copied;
 }
