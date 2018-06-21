@@ -229,7 +229,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartThreeColumn();
          {
-            auto w = S.TieNumericTextBox(_("Pre-ro&ll duration:"),
+            auto w = S.TieNumericTextBox(_("Pre-ro&ll:"),
                AUDIO_PRE_ROLL_KEY,
                DEFAULT_PRE_ROLL_SECONDS,
                9);

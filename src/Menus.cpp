@@ -8518,6 +8518,9 @@ int AudacityProject::DialogForLabelName(const wxString& initialValue, wxString& 
 #ifdef EXPERIMENTAL_PUNCH_AND_ROLL
 void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
 {
+   static const auto url =
+      wxT("Punch_and_Roll_Record#Using_Punch_and_Roll_Record");
+
    if (gAudioIO->IsBusy()) 
       return;
 
@@ -8531,14 +8534,14 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
    if (tracks.empty()) {
       int recordingChannels =
          std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
-      auto format = wxPLURAL(
-         "Please select at least %d channel.",
-         "Please select at least %d channels.",
-         recordingChannels
-         );
       auto message =
-         wxString::Format(format, recordingChannels);
-      AudacityMessageBox(message);
+         (recordingChannels == 1)
+         ? _("Please select in a mono track.")
+         : (recordingChannels == 2)
+         ? _("Please select in a stereo track.")
+         : wxString::Format(
+            _("Please select at least %d channels."), recordingChannels);
+      ShowErrorDialog(this, _("Error"), message, url);
       return;
    }
 
@@ -8554,7 +8557,7 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
       // that case, so a normal record, not a punch and roll, is called for.
       if (!wt->GetClipAtSample(sampleCount(floor(t1 * wt->GetRate()))) || t1 ==0.0) {
          auto message = _("Please select a time within a clip.");
-         AudacityMessageBox(message);
+         ShowErrorDialog(this, _("Error"), message, url);
          return;
       }
       const auto endTime = wt->GetEndTime();
