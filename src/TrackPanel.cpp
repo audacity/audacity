@@ -628,80 +628,78 @@ void TrackPanel::HandleInterruptedDrag()
    }
 }
 
-namespace
+void TrackPanel::ProcessUIHandleResult
+   (Track *pClickedTrack, Track *pLatestTrack,
+    UIHandle::Result refreshResult)
 {
-   void ProcessUIHandleResult
-      (TrackPanel *panel, AdornedRulerPanel *ruler,
-       Track *pClickedTrack, Track *pLatestTrack,
-       UIHandle::Result refreshResult)
-   {
-      // TODO:  make a finer distinction between refreshing the track control area,
-      // and the waveform area.  As it is, redraw both whenever you must redraw either.
+   const auto panel = this;
 
-      // Copy data from the underlying tracks to the pending tracks that are
-      // really displayed
-      panel->GetProject()->GetTracks()->UpdatePendingTracks();
+   // TODO:  make a finer distinction between refreshing the track control area,
+   // and the waveform area.  As it is, redraw both whenever you must redraw either.
 
-      using namespace RefreshCode;
+   // Copy data from the underlying tracks to the pending tracks that are
+   // really displayed
+   panel->GetProject()->GetTracks()->UpdatePendingTracks();
 
-      if (refreshResult & DestroyedCell) {
-         panel->UpdateViewIfNoTracks();
-         // Beware stale pointer!
-         if (pLatestTrack == pClickedTrack)
-            pLatestTrack = NULL;
-         pClickedTrack = NULL;
-      }
+   using namespace RefreshCode;
 
-      if (pClickedTrack && (refreshResult & UpdateVRuler))
-         panel->UpdateVRuler(pClickedTrack);
-
-      if (refreshResult & DrawOverlays) {
-         panel->DrawOverlays(false);
-         ruler->DrawOverlays(false);
-      }
-
-      // Refresh all if told to do so, or if told to refresh a track that
-      // is not known.
-      const bool refreshAll =
-         (    (refreshResult & RefreshAll)
-          || ((refreshResult & RefreshCell) && !pClickedTrack)
-          || ((refreshResult & RefreshLatestCell) && !pLatestTrack));
-
-      if (refreshAll)
-         panel->Refresh(false);
-      else {
-         if (refreshResult & RefreshCell)
-            panel->RefreshTrack(pClickedTrack);
-         if (refreshResult & RefreshLatestCell)
-            panel->RefreshTrack(pLatestTrack);
-      }
-
-      if (refreshResult & FixScrollbars)
-         panel->MakeParentRedrawScrollbars();
-
-      if (refreshResult & Resize)
-         panel->GetListener()->TP_HandleResize();
-
-      // This flag is superfluous if you do full refresh,
-      // because TrackPanel::Refresh() does this too
-      if (refreshResult & UpdateSelection) {
-         panel->DisplaySelection();
-
-         {
-            // Formerly in TrackPanel::UpdateSelectionDisplay():
-
-            // Make sure the ruler follows suit.
-            // mRuler->DrawSelection();
-
-            // ... but that too is superfluous it does nothing but refresh
-            // the ruler, while DisplaySelection calls TP_DisplaySelection which
-            // also always refreshes the ruler.
-         }
-      }
-
-      if ((refreshResult & EnsureVisible) && pClickedTrack)
-         panel->EnsureVisible(pClickedTrack);
+   if (refreshResult & DestroyedCell) {
+      panel->UpdateViewIfNoTracks();
+      // Beware stale pointer!
+      if (pLatestTrack == pClickedTrack)
+         pLatestTrack = NULL;
+      pClickedTrack = NULL;
    }
+
+   if (pClickedTrack && (refreshResult & RefreshCode::UpdateVRuler))
+      panel->UpdateVRuler(pClickedTrack);
+
+   if (refreshResult & RefreshCode::DrawOverlays) {
+      panel->DrawOverlays(false);
+      mRuler->DrawOverlays(false);
+   }
+
+   // Refresh all if told to do so, or if told to refresh a track that
+   // is not known.
+   const bool refreshAll =
+      (    (refreshResult & RefreshAll)
+       || ((refreshResult & RefreshCell) && !pClickedTrack)
+       || ((refreshResult & RefreshLatestCell) && !pLatestTrack));
+
+   if (refreshAll)
+      panel->Refresh(false);
+   else {
+      if (refreshResult & RefreshCell)
+         panel->RefreshTrack(pClickedTrack);
+      if (refreshResult & RefreshLatestCell)
+         panel->RefreshTrack(pLatestTrack);
+   }
+
+   if (refreshResult & FixScrollbars)
+      panel->MakeParentRedrawScrollbars();
+
+   if (refreshResult & Resize)
+      panel->GetListener()->TP_HandleResize();
+
+   // This flag is superfluous if you do full refresh,
+   // because TrackPanel::Refresh() does this too
+   if (refreshResult & UpdateSelection) {
+      panel->DisplaySelection();
+
+      {
+         // Formerly in TrackPanel::UpdateSelectionDisplay():
+
+         // Make sure the ruler follows suit.
+         // mRuler->DrawSelection();
+
+         // ... but that too is superfluous it does nothing but refresh
+         // the ruler, while DisplaySelection calls TP_DisplaySelection which
+         // also always refreshes the ruler.
+      }
+   }
+
+   if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack)
+      panel->EnsureVisible(pClickedTrack);
 }
 
 void TrackPanel::Uncapture(wxMouseState *pState)
@@ -728,7 +726,7 @@ bool TrackPanel::CancelDragging()
       auto pTrack = GetTracks()->Lock(mpClickedTrack);
       if (pTrack)
          ProcessUIHandleResult(
-            this, mRuler, pTrack.get(), NULL,
+            pTrack.get(), NULL,
             refreshResult | mMouseOverUpdateFlags );
       mpClickedTrack.reset();
       mUIHandle.reset(), handle.reset(), ClearTargets();
@@ -883,7 +881,7 @@ void TrackPanel::HandleMotion
          // Re-draw any highlighting
          if (oldCell) {
             ProcessUIHandleResult(
-               this, GetRuler(), oldTrack.get(), oldTrack.get(), updateFlags);
+               oldTrack.get(), oldTrack.get(), updateFlags);
          }
       }
 
@@ -950,7 +948,7 @@ void TrackPanel::HandleMotion
       SetCursor( *pCursor );
 
    ProcessUIHandleResult(
-      this, GetRuler(), newTrack.get(), newTrack.get(), refreshCode);
+      newTrack.get(), newTrack.get(), refreshCode);
 }
 
 bool TrackPanel::HasRotation()
@@ -1371,7 +1369,7 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
       pCell->HandleWheelRotation( tpmEvent, GetProject() );
    auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
    ProcessUIHandleResult(
-      this, mRuler, pTrack.get(), pTrack.get(), result);
+      pTrack.get(), pTrack.get(), result);
 }
 
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
@@ -1389,7 +1387,7 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
    if (t) {
       const unsigned refreshResult =
          ((TrackPanelCell*)t)->CaptureKey(*kevent, *mViewInfo, this);
-      ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
+      ProcessUIHandleResult(t, t, refreshResult);
       event.Skip(kevent->GetSkipped());
    }
 
@@ -1456,7 +1454,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          ((TrackPanelCell*)t)->KeyDown(event, *mViewInfo, this);
-      ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
+      ProcessUIHandleResult(t, t, refreshResult);
    }
    else
       event.Skip();
@@ -1479,7 +1477,7 @@ void TrackPanel::OnChar(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          ((TrackPanelCell*)t)->Char(event, *mViewInfo, this);
-      ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
+      ProcessUIHandleResult(t, t, refreshResult);
    }
    else
       event.Skip();
@@ -1511,7 +1509,7 @@ void TrackPanel::OnKeyUp(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          ((TrackPanelCell*)t)->KeyUp(event, *mViewInfo, this);
-      ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
+      ProcessUIHandleResult(t, t, refreshResult);
       return;
    }
 
@@ -1631,7 +1629,7 @@ try
          const UIHandle::Result refreshResult =
             handle->Drag( tpmEvent, GetProject() );
          ProcessUIHandleResult
-            (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
+            (pClickedTrack.get(), pTrack.get(), refreshResult);
          mMouseOverUpdateFlags |= refreshResult;
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
@@ -1651,7 +1649,7 @@ try
          UIHandle::Result refreshResult =
             mUIHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
-            (this, mRuler, pClickedTrack.get(), pTrack.get(),
+            (pClickedTrack.get(), pTrack.get(),
              refreshResult | moreFlags);
          mUIHandle.reset(), ClearTargets();
          mpClickedTrack.reset();
@@ -1736,7 +1734,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
          HandleMotion( tpmState );
       }
       ProcessUIHandleResult(
-         this, mRuler, pTrack.get(), pTrack.get(), refreshResult);
+         pTrack.get(), pTrack.get(), refreshResult);
       mMouseOverUpdateFlags |= refreshResult;
    }
 }
@@ -2586,7 +2584,7 @@ void TrackPanel::OnTrackMenu(Track *t)
    const wxRect rect(FindTrackRect(t, true));
    const UIHandle::Result refreshResult =
       pCell->DoContextMenu(rect, this, NULL);
-   ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
+   ProcessUIHandleResult(t, t, refreshResult);
 }
 
 Track * TrackPanel::GetFirstSelectedTrack()

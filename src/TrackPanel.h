@@ -550,7 +550,10 @@ protected:
 
    DECLARE_EVENT_TABLE()
 
-   // friending GetInfoCommand allow automation to get sizes of the 
+   void ProcessUIHandleResult
+      (Track *pClickedTrack, Track *pLatestTrack, unsigned refreshResult);
+
+   // friending GetInfoCommand allow automation to get sizes of the
    // tracks, track control panel and such.
    friend class GetInfoCommand;
 };
