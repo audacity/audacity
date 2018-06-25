@@ -628,6 +628,15 @@ void TrackPanel::HandleInterruptedDrag()
    }
 }
 
+namespace {
+   std::shared_ptr<Track> FindTrack(TrackPanelCell *pCell )
+   {
+      if (pCell)
+         return static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
+      return {};
+   }
+}
+
 void TrackPanel::ProcessUIHandleResult
    (Track *pClickedTrack, Track *pLatestTrack,
     UIHandle::Result refreshResult)
@@ -844,10 +853,7 @@ void TrackPanel::HandleMotion
 
    auto newCell = tpmState.pCell;
 
-   std::shared_ptr<Track> newTrack;
-   if ( newCell )
-      newTrack = static_cast<CommonTrackPanelCell*>( newCell.get() )->
-         FindTrack();
+   const auto newTrack = FindTrack( newCell.get() );
 
    wxString status{}, tooltip{};
    wxCursor *pCursor{};
@@ -865,10 +871,7 @@ void TrackPanel::HandleMotion
       // Not yet dragging.
 
       auto oldCell = mLastCell.lock();
-      std::shared_ptr<Track> oldTrack;
-      if ( oldCell )
-         oldTrack = static_cast<CommonTrackPanelCell*>( oldCell.get() )->
-            FindTrack();
+      const auto oldTrack = FindTrack( oldCell.get() );
 
       unsigned updateFlags = mMouseOverUpdateFlags;
 
@@ -1540,7 +1543,7 @@ try
    const auto foundCell = FindCell( event.m_x, event.m_y );
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
-   auto &pTrack = foundCell.pTrack;
+   const auto pTrack = FindTrack( pCell.get() );
 
    const auto size = GetSize();
    TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
@@ -1677,7 +1680,7 @@ try
       wxRect rect;
 
       const auto foundCell = FindCell(event.m_x, event.m_y);
-      auto t = foundCell.pTrack;
+      const auto t = FindTrack( foundCell.pCell.get() );
       if ( t )
          EnsureVisible(t.get());
    }
@@ -2773,7 +2776,6 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       iter = prev;
    auto found = *iter;
    return {
-      static_cast<CommonTrackPanelCell*>( found.first.get() )->FindTrack(),
       found.first,
       found.second
    };

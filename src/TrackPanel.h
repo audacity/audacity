@@ -367,7 +367,6 @@ protected:
 
    // Find track info by coordinate
    struct FoundCell {
-      std::shared_ptr<Track> pTrack;
       std::shared_ptr<TrackPanelCell> pCell;
       wxRect rect;
    };
