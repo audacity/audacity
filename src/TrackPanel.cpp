@@ -638,10 +638,17 @@ namespace {
 }
 
 void TrackPanel::ProcessUIHandleResult
-   (Track *pClickedTrack, Track *pLatestTrack,
+   (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
     UIHandle::Result refreshResult)
 {
    const auto panel = this;
+   auto pLatestTrack = FindTrack( pLatestCell ).get();
+
+   // This precaution checks that the track is not only nonnull, but also
+   // really owned by the track list
+   auto pClickedTrack = GetTracks()->Lock(
+      std::weak_ptr<Track>{ FindTrack( pClickedCell ) }
+   ).get();
 
    // TODO:  make a finer distinction between refreshing the track control area,
    // and the waveform area.  As it is, redraw both whenever you must redraw either.
@@ -732,12 +739,12 @@ bool TrackPanel::CancelDragging()
       auto handle = mUIHandle;
       // UIHANDLE CANCEL
       UIHandle::Result refreshResult = handle->Cancel(GetProject());
-      auto pTrack = GetTracks()->Lock(mpClickedTrack);
-      if (pTrack)
+      auto pClickedCell = mpClickedCell.lock();
+      if (pClickedCell)
          ProcessUIHandleResult(
-            pTrack.get(), NULL,
+            pClickedCell.get(), {},
             refreshResult | mMouseOverUpdateFlags );
-      mpClickedTrack.reset();
+      mpClickedCell.reset();
       mUIHandle.reset(), handle.reset(), ClearTargets();
       Uncapture();
       return true;
@@ -853,8 +860,6 @@ void TrackPanel::HandleMotion
 
    auto newCell = tpmState.pCell;
 
-   const auto newTrack = FindTrack( newCell.get() );
-
    wxString status{}, tooltip{};
    wxCursor *pCursor{};
    unsigned refreshCode = 0;
@@ -871,7 +876,6 @@ void TrackPanel::HandleMotion
       // Not yet dragging.
 
       auto oldCell = mLastCell.lock();
-      const auto oldTrack = FindTrack( oldCell.get() );
 
       unsigned updateFlags = mMouseOverUpdateFlags;
 
@@ -884,7 +888,7 @@ void TrackPanel::HandleMotion
          // Re-draw any highlighting
          if (oldCell) {
             ProcessUIHandleResult(
-               oldTrack.get(), oldTrack.get(), updateFlags);
+               oldCell.get(), oldCell.get(), updateFlags);
          }
       }
 
@@ -951,7 +955,7 @@ void TrackPanel::HandleMotion
       SetCursor( *pCursor );
 
    ProcessUIHandleResult(
-      newTrack.get(), newTrack.get(), refreshCode);
+      newCell.get(), newCell.get(), refreshCode);
 }
 
 bool TrackPanel::HasRotation()
@@ -1370,9 +1374,8 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
 
    unsigned result =
       pCell->HandleWheelRotation( tpmEvent, GetProject() );
-   auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
    ProcessUIHandleResult(
-      pTrack.get(), pTrack.get(), result);
+      pCell.get(), pCell.get(), result);
 }
 
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
@@ -1543,7 +1546,6 @@ try
    const auto foundCell = FindCell( event.m_x, event.m_y );
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
-   const auto pTrack = FindTrack( pCell.get() );
 
    const auto size = GetSize();
    TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
@@ -1624,7 +1626,7 @@ try
    }
 
    if (mUIHandle) {
-      auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
+      auto pClickedCell = mpClickedCell.lock();
       if (event.Dragging()) {
          // UIHANDLE DRAG
          // copy shared_ptr for safety, as in HandleClick
@@ -1632,12 +1634,12 @@ try
          const UIHandle::Result refreshResult =
             handle->Drag( tpmEvent, GetProject() );
          ProcessUIHandleResult
-            (pClickedTrack.get(), pTrack.get(), refreshResult);
+            (pClickedCell.get(), pCell.get(), refreshResult);
          mMouseOverUpdateFlags |= refreshResult;
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
             mUIHandle.reset(), handle.reset(), ClearTargets();
-            mpClickedTrack.reset();
+            mpClickedCell.reset();
             Uncapture( &event );
          }
          else {
@@ -1652,10 +1654,10 @@ try
          UIHandle::Result refreshResult =
             mUIHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
-            (pClickedTrack.get(), pTrack.get(),
+            (pClickedCell.get(), pCell.get(),
              refreshResult | moreFlags);
          mUIHandle.reset(), ClearTargets();
-         mpClickedTrack.reset();
+         mpClickedCell.reset();
          // will also Uncapture() below
       }
    }
@@ -1700,7 +1702,6 @@ catch( ... )
 void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
 {
    auto pCell = tpmEvent.pCell;
-   auto pTrack = static_cast<CommonTrackPanelCell *>( pCell.get() )->FindTrack();
 
    // Do hit test once more, in case the button really pressed was not the
    // one "anticipated."
@@ -1725,7 +1726,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
-         mpClickedTrack = pTrack;
+         mpClickedCell = pCell;
 
          // Perhaps the clicked handle wants to update cursor and state message
          // after a click.
@@ -1737,7 +1738,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
          HandleMotion( tpmState );
       }
       ProcessUIHandleResult(
-         pTrack.get(), pTrack.get(), refreshResult);
+         pCell.get(), pCell.get(), refreshResult);
       mMouseOverUpdateFlags |= refreshResult;
    }
 }

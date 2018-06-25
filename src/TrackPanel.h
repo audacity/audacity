@@ -540,7 +540,7 @@ protected:
 
    bool ChangeTarget(bool forward, bool cycle);
 
-   std::weak_ptr<Track> mpClickedTrack;
+   std::weak_ptr<TrackPanelCell> mpClickedCell;
    UIHandlePtr mUIHandle;
 
    std::shared_ptr<TrackPanelCell> mpBackground;
@@ -550,7 +550,8 @@ protected:
    DECLARE_EVENT_TABLE()
 
    void ProcessUIHandleResult
-      (Track *pClickedTrack, Track *pLatestTrack, unsigned refreshResult);
+      (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
+       unsigned refreshResult);
 
    // friending GetInfoCommand allow automation to get sizes of the
    // tracks, track control panel and such.
