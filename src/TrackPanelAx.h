@@ -121,6 +121,7 @@ private:
    TrackPanel *mTrackPanel;
 
    std::weak_ptr<Track> mFocusedTrack;
+   int mNumFocusedTrack;
 
    wxString mMessage;
    bool mTrackName;

@@ -40,23 +40,36 @@ TrackPanelAx::TrackPanelAx( wxWindow *window )
 
    mTrackName = true;
    mMessageCount = 0;
+   mNumFocusedTrack = 0;
 }
 
 TrackPanelAx::~TrackPanelAx()
 {
 }
 
-// Returns currently focused track or first one if none focused
+// Returns currently focused track
+// if that track no longer exists, if there is a track at
+// the same position, use that, else if there is a first
+// track, use that.
 std::shared_ptr<Track> TrackPanelAx::GetFocus()
 {
    auto focusedTrack = mFocusedTrack.lock();
    if( !focusedTrack ) {
-      TrackListIterator iter( mTrackPanel->GetTracks() );
-      focusedTrack = Track::Pointer( iter.First() );
-      // only call SetFocus if the focus has changed to avoid
-      // unnecessary focus events
-      if (focusedTrack) 
-         focusedTrack = SetFocus();
+      if (mNumFocusedTrack >=1) {
+         // This prevents the focus from being unnecessarily set to track 1
+         // when effects are applied. (Applying an effect can change
+         // the pointers of the selected tracks.)
+         focusedTrack = FindTrack(mNumFocusedTrack);
+      }
+      if (!focusedTrack) {
+
+         TrackListIterator iter( mTrackPanel->GetTracks() );
+         focusedTrack = Track::Pointer( iter.First() );
+         // only call SetFocus if the focus has changed to avoid
+         // unnecessary focus events
+         if (focusedTrack) 
+            focusedTrack = SetFocus();
+      }
    }
 
    if( !TrackNum( focusedTrack ) )
@@ -92,23 +105,22 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
    }
 
    mFocusedTrack = track;
+   mNumFocusedTrack = TrackNum(track);
 
 #if wxUSE_ACCESSIBILITY
    if( track )
    {
-      int num = TrackNum( track );
-
       NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
                    mTrackPanel,
                    wxOBJID_CLIENT,
-                   num );
+                   mNumFocusedTrack );
 
       if( track->GetSelected() )
       {
          NotifyEvent( wxACC_EVENT_OBJECT_SELECTION,
                       mTrackPanel,
                       wxOBJID_CLIENT,
-                      num );
+                      mNumFocusedTrack );
       }
    }
    else
