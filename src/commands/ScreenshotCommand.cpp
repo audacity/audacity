@@ -315,7 +315,7 @@ bool ScreenshotCommand::CaptureToolbar(
 
 bool ScreenshotCommand::CaptureDock(
    const CommandContext & context,
-   wxWindow *win, const wxString &mFileName)
+   wxWindow *win, const wxString &FileName)
 {
    int x = 0, y = 0;
    int width, height;
@@ -324,7 +324,7 @@ bool ScreenshotCommand::CaptureDock(
    win->GetParent()->ScreenToClient(&x, &y);
    win->GetClientSize(&width, &height);
 
-   return Capture(context, mFileName, win, wxRect(x, y, width, height));
+   return Capture(context, FileName, win, wxRect(x, y, width, height));
 }
 
 void ExploreMenu(
@@ -410,17 +410,17 @@ void ScreenshotCommand::CaptureWindowOnIdle(
 
 void ScreenshotCommand::CapturePreferences( 
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName ){
-   (void)&mFileName;//compiler food.
+   AudacityProject * pProject, const wxString &FileName ){
+   (void)&FileName;//compiler food.
    (void)&context;
    CommandManager * pMan = pProject->GetCommandManager();
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
 #ifdef __WXMSW__
-   mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+   mDirToWriteTo = FileName.BeforeLast('\\') + "\\";
 #else
-   mDirToWriteTo = mFileName.BeforeLast('/') + "/";
+   mDirToWriteTo = FileName.BeforeLast('/') + "/";
 #endif
    mpShooter = this;
    const int nPrefsPages = 19;
@@ -431,8 +431,8 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)i);
       gPrefs->Flush();
       wxString Command = "Preferences";
-      const CommandContext context( *pProject );
-      if( !pMan->HandleTextualCommand( Command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      const CommandContext projectContext( *pProject );
+      if( !pMan->HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Command );
       }
@@ -444,10 +444,10 @@ void ScreenshotCommand::CapturePreferences(
 
 void ScreenshotCommand::CaptureEffects(
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName )
+   AudacityProject * pProject, const wxString &FileName )
 {
    (void)pProject;
-   (void)&mFileName;//compiler food.
+   (void)&FileName;//compiler food.
    (void)&context;
 #define TRICKY_CAPTURE
 #define CAPTURE_NYQUIST_TOO
@@ -537,10 +537,10 @@ void ScreenshotCommand::CaptureEffects(
 
 void ScreenshotCommand::CaptureScriptables( 
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName )
+   AudacityProject * pProject, const wxString &FileName )
 {
    (void)pProject;
-   (void)&mFileName;//compiler food.
+   (void)&FileName;//compiler food.
    (void)&context;
 
    const wxString ScriptablesNames[] = {
@@ -595,8 +595,8 @@ void ScreenshotCommand::CaptureCommands(
       // The handler is cleared each time it is used.
       SetIdleHandler( IdleHandler );
       Str = Commands[i];
-      const CommandContext context( *pProject );
-      if( !pMan->HandleTextualCommand( Str, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      const CommandContext projectContext( *pProject );
+      if( !pMan->HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Str);
       }

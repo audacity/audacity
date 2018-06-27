@@ -66,7 +66,7 @@ void ODComputeSummaryTask::DoSomeInternal()
    }
 
    mBlockFilesMutex.Lock();
-   for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
+   for(size_t j=0; j < mWaveTracks.size() && mBlockFiles.size();j++)
    {
       bool success = false;
       const auto bf = mBlockFiles[0].lock();

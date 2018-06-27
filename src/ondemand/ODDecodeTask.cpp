@@ -43,7 +43,7 @@ void ODDecodeTask::DoSomeInternal()
 
    ODFileDecoder* decoder;
 
-   for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
+   for(size_t j=0; j < mWaveTracks.size() && mBlockFiles.size();j++)
    {
       const auto bf = mBlockFiles[0].lock();
       sampleCount blockStartSample = 0;

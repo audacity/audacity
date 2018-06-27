@@ -650,7 +650,7 @@ EffectNoiseReduction::Worker::~Worker()
 
 bool EffectNoiseReduction::Worker::Process
 (EffectNoiseReduction &effect, Statistics &statistics, TrackFactory &factory,
- SelectedTrackListOfKindIterator &iter, double mT0, double mT1)
+ SelectedTrackListOfKindIterator &iter, double inT0, double inT1)
 {
    int count = 0;
    WaveTrack *track = (WaveTrack *) iter.First();
@@ -665,8 +665,8 @@ bool EffectNoiseReduction::Worker::Process
 
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
-      double t0 = std::max(trackStart, mT0);
-      double t1 = std::min(trackEnd, mT1);
+      double t0 = std::max(trackStart, inT0);
+      double t1 = std::min(trackEnd, inT1);
 
       if (t1 > t0) {
          auto start = track->TimeToLongSamples(t0);

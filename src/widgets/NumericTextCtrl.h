@@ -168,14 +168,14 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
       Options() {}
 
-      Options &AutoPos (bool value) { autoPos = value; return *this; }
-      Options &ReadOnly (bool value) { readOnly = value; return *this; }
-      Options &MenuEnabled (bool value) { menuEnabled = value; return *this; }
-      Options &InvalidValue (bool has, double value = -1.0)
-         { hasInvalidValue = has, invalidValue = value; return *this; }
+      Options &AutoPos (bool enable) { autoPos = enable; return *this; }
+      Options &ReadOnly (bool enable) { readOnly = enable; return *this; }
+      Options &MenuEnabled (bool enable) { menuEnabled = enable; return *this; }
+      Options &InvalidValue (bool has, double v = -1.0)
+         { hasInvalidValue = has, invalidValue = v; return *this; }
       // use a custom format not in the tables:
-      Options &Format (const wxString &value)
-         { format = value; return *this; }
+      Options &Format (const wxString &f)
+         { format = f; return *this; }
       Options &Value (bool has, double v)
          { hasValue = has, value = v; return *this; }
    };

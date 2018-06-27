@@ -1190,7 +1190,7 @@ void EffectDistortion::Leveller()
    // Here we model that more efficiently by repeated passes over a linear table.
    for (int n = STEPS; n < TABLESIZE; n++) {
       mTable[n] = ((double) (n - STEPS) / (double) STEPS);
-      for (int i = 0; i < numPasses; i++) {
+      for (int j = 0; j < numPasses; j++) {
          // Find the highest index for gain adjustment
          int index = numPoints - 1;
          for (int i = index; i >= 0 && mTable[n] < gainLimits[i]; i--) {

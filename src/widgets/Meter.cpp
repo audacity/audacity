@@ -1649,7 +1649,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // Draw the "recent" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPen);
-         int ht = (int)(bar->peakHold * (h - 1) + 0.5);
+         ht = (int)(bar->peakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
             AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
