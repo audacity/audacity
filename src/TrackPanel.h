@@ -305,6 +305,7 @@ protected:
       mTarget = 0;
       mMouseOverUpdateFlags = 0;
    }
+   void DoContextMenu( TrackPanelCell *pCell = nullptr );
    
 private:
    bool HasRotation();
@@ -319,6 +320,8 @@ private:
 
    void OnSetFocus(wxFocusEvent & event);
    void OnKillFocus(wxFocusEvent & event);
+
+   void OnContextMenu(wxContextMenuEvent & event);
 
    void HandleInterruptedDrag();
    void Uncapture( wxMouseState *pState = nullptr );
@@ -382,8 +385,6 @@ class AUDACITY_DLL_API TrackPanel final : public CellularPanel {
    void OnPaint(wxPaintEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
-
-   void OnContextMenu(wxContextMenuEvent & event);
 
    void OnPlayback(wxCommandEvent &);
    void OnTrackListResizing(wxCommandEvent & event);

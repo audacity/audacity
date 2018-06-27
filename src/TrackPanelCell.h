@@ -56,6 +56,10 @@ public:
       (const TrackPanelMouseEvent &event,
        AudacityProject *pProject);
 
+   // A cell may delegate context menu handling to another one
+   virtual std::shared_ptr<TrackPanelCell> ContextMenuDelegate()
+      { return {}; }
+
    // The pPosition parameter indicates mouse position but may be NULL
    // Return value is a bitwise OR of RefreshCode values
    // Default implementation does nothing

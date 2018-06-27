@@ -263,6 +263,7 @@ BEGIN_EVENT_TABLE(CellularPanel, OverlayPanel)
     EVT_CHAR(CellularPanel::OnChar)
     EVT_SET_FOCUS(CellularPanel::OnSetFocus)
     EVT_KILL_FOCUS(CellularPanel::OnKillFocus)
+    EVT_CONTEXT_MENU(CellularPanel::OnContextMenu)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
@@ -270,7 +271,6 @@ BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
     EVT_KEY_DOWN(TrackPanel::OnKeyDown)
 
     EVT_PAINT(TrackPanel::OnPaint)
-    EVT_CONTEXT_MENU(TrackPanel::OnContextMenu)
 
     EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
 END_EVENT_TABLE()
@@ -1167,9 +1167,9 @@ void TrackPanel::OnTrackListDeletion(wxCommandEvent & e)
    e.Skip();
 }
 
-void TrackPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
+void CellularPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 {
-   OnTrackMenu();
+   DoContextMenu();
 }
 
 struct TrackInfo::TCPLine {
@@ -2625,17 +2625,27 @@ void TrackPanel::ScrollIntoView(int x)
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
-   if(!t) {
-      t = GetFocusedTrack();
-      if(!t)
+   CellularPanel::DoContextMenu( t );
+}
+
+void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
+{
+   if( !pCell ) {
+      pCell = GetFocusedCell();
+      if( !pCell )
          return;
    }
 
-   const auto pCell = t->GetTrackControl();
-   const wxRect rect(FindTrackRect(t, true));
+   const auto delegate = pCell->ContextMenuDelegate();
+   if (!delegate)
+      return;
+
+   auto rect = FindRect( *delegate );
    const UIHandle::Result refreshResult =
-      pCell->DoContextMenu(rect, this, NULL);
-   ProcessUIHandleResult(t, t, refreshResult);
+      delegate->DoContextMenu(rect, this, NULL);
+
+   // To do: use safer shared_ptr to pCell
+   ProcessUIHandleResult(pCell, pCell, refreshResult);
 }
 
 Track * TrackPanel::GetFirstSelectedTrack()

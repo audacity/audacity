@@ -165,6 +165,10 @@ class AUDACITY_DLL_API Track /* not final */
       (const TrackPanelMouseState &, const AudacityProject *pProject)
       final override;
 
+   // Delegates the handling to the related TCP cell
+   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
+      { return GetTrackControl(); }
+
  public:
 
    // Rather override this for subclasses:
