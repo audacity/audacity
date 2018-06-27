@@ -5065,7 +5065,6 @@ void AudacityProject::OnUndo(const CommandContext &WXUNUSED(context) )
    const UndoState &state = GetUndoManager()->Undo(&mViewInfo.selectedRegion);
    PopState(state);
 
-   mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
 
    RedrawProject();
@@ -5094,7 +5093,6 @@ void AudacityProject::OnRedo(const CommandContext &WXUNUSED(context) )
    const UndoState &state = GetUndoManager()->Redo(&mViewInfo.selectedRegion);
    PopState(state);
 
-   mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
 
    RedrawProject();
