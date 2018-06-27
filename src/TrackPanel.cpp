@@ -2829,6 +2829,20 @@ auto TrackPanel::FindCell(int mouseX, int mouseY) -> FoundCell
    };
 }
 
+wxRect TrackPanel::FindRect( const TrackPanelCell &cell )
+{
+   auto range = Cells();
+   auto end = range.second,
+      iter = std::find_if( range.first, end,
+         [&]( const decltype(*end) &pair )
+            { return pair.first.get() == &cell; }
+      );
+   if (iter == end)
+      return {};
+   else
+      return (*iter).second;
+}
+
 // This finds the rectangle of a given track (including all channels),
 // either that of the label 'adornment' or the track itself
 // The given track is assumed to be the first channel
