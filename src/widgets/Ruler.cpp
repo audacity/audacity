@@ -2145,6 +2145,20 @@ void AdornedRulerPanel::ReCreateButtons()
    };
    auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
    ToolBar::MakeAlternateImages(
+	   *button, 3,
+	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
+	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
+	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
+	   bmpRecordPointer, bmpRecordPointer, bmpRecordPointer,
+	   size);
+   ToolBar::MakeAlternateImages(
+	   *button, 2,
+	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
+	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
+	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
+	   bmpRecordPointerPinned, bmpRecordPointerPinned, bmpRecordPointerPinned,
+	   size);
+   ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
       bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
@@ -2257,6 +2271,7 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
       // if recording is initiated by a modal window (Timer Record).
       SetCursor(mCursorDefault);
       mIsRecording = true;
+      UpdateButtonStates();
 
       // The quick play indicator is useless during recording
       HideQuickPlayIndicator();
@@ -2264,6 +2279,7 @@ void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
    else {
       SetCursor(mCursorHand);
       mIsRecording = false;
+      UpdateButtonStates();
    }
    RegenerateTooltips(mPrevZone);
 }
@@ -2926,7 +2942,7 @@ void AdornedRulerPanel::UpdateButtonStates()
          pinButton->PopUp();
       else
          pinButton->PushDown();
-      pinButton->SetAlternateIdx(state ? 0 : 1);
+      pinButton->SetAlternateIdx((mIsRecording ? 2 : 0) + (state ? 0 : 1));
       // Bug 1584: Toltip now shows what clicking will do.
       const auto label = state
       ? _("Click to unpin")
