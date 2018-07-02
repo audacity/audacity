@@ -7,6 +7,7 @@ $manpage "Tremolo"
 $debugbutton disabled
 $action (_ "Applying Tremolo...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; tremolo.ny by Steve Daulton (www.easyspacepro.com) July 2012.

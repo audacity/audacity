@@ -6,6 +6,7 @@ $name (_ "Spectral edit parametric EQ")
 $manpage "Spectral_edit_parametric_EQ"
 $action (_ "Filtering...")
 $author (_ "Paul Licameli")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; SpectralEditParametricEQ.ny by Paul Licameli, November 2014.

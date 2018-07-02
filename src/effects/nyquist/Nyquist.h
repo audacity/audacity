@@ -231,6 +231,10 @@ private:
    wxString          mAction; // translatable
    wxString          mInfo;   // translatable
    wxString          mAuthor;
+   // Version number of the specific plug-in (not to be confused with mVersion)
+   // For shipped plug-ins this will be the same as the Audacity release version
+   // when the plug-in was last modified.
+   wxString          mReleaseVersion;
    wxString          mCopyright;
    wxString          mManPage;   // ONLY use if a help page exists in the manual.
    wxString          mHelpFile;
@@ -245,7 +249,7 @@ private:
    bool              mProjectChanged;
    wxString          mDebugOutput;
 
-   int               mVersion;
+   int               mVersion;   // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
    std::vector<NyqControl>   mControls;
 
    unsigned          mCurNumChannels;

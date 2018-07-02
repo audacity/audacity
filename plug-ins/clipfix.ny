@@ -6,6 +6,7 @@ $name (_ "Clip Fix")
 $manpage "Clip_Fix"
 $action (_ "Reconstructing clips...")
 $author (_ "Benjamin Schwartz and Steve Daulton")
+$release 2.3.0
 $copyright (_ "Licensing confirmed under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:

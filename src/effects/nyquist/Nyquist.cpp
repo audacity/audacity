@@ -135,6 +135,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mIsSal = false;
    mOK = false;
    mAuthor = XO("n/a");
+   mReleaseVersion = XO("n/a");
    mCopyright = XO("n/a");
 
    // set clip/split handling when applying over clip boundary.
@@ -221,7 +222,7 @@ IdentInterfaceSymbol NyquistEffect::GetVendor()
 
 wxString NyquistEffect::GetVersion()
 {
-   return XO("n/a");
+   return mReleaseVersion;
 }
 
 wxString NyquistEffect::GetDescription()
@@ -1862,6 +1863,12 @@ bool NyquistEffect::Parse(
 
    if (len >= 2 && tokens[0] == wxT("author")) {
       mAuthor = UnQuote(tokens[1]);
+      return true;
+   }
+
+   if (len >= 2 && tokens[0] == wxT("release")) {
+      // Value must be quoted if the release version string contains spaces.
+      mReleaseVersion = UnQuote(tokens[1]);
       return true;
    }
 

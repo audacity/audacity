@@ -6,6 +6,7 @@ $name (_ "Vocal Reduction and Isolation")
 $manpage "Vocal_Reduction_and_Isolation"
 $action (_ "Applying Action...")
 $author (_ "Robert Haenggi")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; vocrediso.ny, based on rjh-stereo-tool.ny

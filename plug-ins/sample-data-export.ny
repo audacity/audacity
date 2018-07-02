@@ -6,6 +6,7 @@ $manpage "Sample_Data_Export"
 $debugbutton false
 $action (_ "Analyzing...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 

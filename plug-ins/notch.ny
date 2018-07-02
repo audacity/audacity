@@ -7,6 +7,7 @@ $manpage "Notch_Filter"
 $debugbutton false
 $action (_ "Applying Notch Filter...")
 $author (_ "Steve Daulton and Bill Wharrie")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; notch.ny by Steve Daulton and Bill Wharrie

@@ -8,6 +8,7 @@ $manpage "Adjustable_Fade"
 $debugbutton false
 $action (_ "Applying Fade...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; adjustable-fade.ny by Steve Daulton Dec 2012

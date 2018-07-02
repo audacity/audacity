@@ -6,6 +6,7 @@ $name (_ "Vocoder")
 $manpage "Vocoder"
 $action (_ "Processing Vocoder...")
 $author (_ "Edgar-RFT")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; vocoder.ny by Edgar-RFT

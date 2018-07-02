@@ -5,6 +5,7 @@ $name (_ "Silence Finder")
 $manpage "Silence_Finder"
 $action (_ "Finding silence...")
 $author (_ "Alex S. Brown")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; by Alex S. Brown, PMP (http://www.alexsbrown.com)

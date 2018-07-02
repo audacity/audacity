@@ -7,6 +7,7 @@ $manpage "High-Pass_Filter"
 $debugbutton disabled
 $action (_ "Performing High-Pass Filter...")
 $author (_ "Dominic Mazzoni")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:

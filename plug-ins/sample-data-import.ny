@@ -5,6 +5,7 @@ $name (_ "Sample Data Import")
 $manpage "Sample_Data_Import"
 $action (_ "Reading and rendering samples...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 $control filename (_ "Select file") file "" "*default*/sample-data.txt" "Text file|*.txt;*.TXT|All files|*.*;*" "open,exists"
