@@ -47,20 +47,8 @@ class RingBuffer {
     */
 
    // Align the two atomics to avoid false sharing
-   // TODO MSVC2017: use alignas
-#ifdef __WXMSW__
-   __declspec(align(64))
-#else
-   alignas(CacheLine)
-#endif
-      std::atomic<size_t> mStart { 0 };
-
-#ifdef __WXMSW__
-   __declspec(align(64))
-#else
-   alignas(CacheLine)
-#endif
-      std::atomic<size_t> mEnd{ 0 };
+   alignas(CacheLine) std::atomic<size_t> mStart { 0 };
+   alignas(CacheLine) std::atomic<size_t> mEnd{ 0 };
 
    const size_t  mBufferSize;
 
