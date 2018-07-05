@@ -150,7 +150,7 @@ void SpectralSelectionBar::Populate()
    };
    mChoice = safenew wxChoice
       (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
-       0, wxDefaultValidator, _("Spectral Selection"));
+       0, wxDefaultValidator, _("Show"));
    mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
