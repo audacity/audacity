@@ -234,6 +234,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    CommandFlag GetDefaultFlags() const { return mDefaultFlags; }
    CommandMask GetDefaultMask() const { return mDefaultMask; }
 
+   void SwapMenuBars();
    void SetOccultCommands( bool bOccult);
    CommandManager * SetLongName( const wxString & name ){ 
       mLongNameForItem = name; 

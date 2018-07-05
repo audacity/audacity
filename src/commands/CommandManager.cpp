@@ -598,6 +598,20 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
    return mMenuBarList.back().menubar;
 }
 
+/// 
+/// Swap the last two menu bars in the list,
+/// to make the previous menu bar 'current' again.
+/// Typically used to switch back and forth 
+/// between adding to a hidden menu bar and 
+/// adding to one that is visible,
+///
+void CommandManager::SwapMenuBars()
+{
+    int l = mMenuBarList.size();
+    wxASSERT(l >= 2);
+    std::swap(mMenuBarList[l - 2], mMenuBarList[l - 1]);
+}
+
 
 ///
 /// This starts a NEW menu
