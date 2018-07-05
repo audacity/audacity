@@ -7677,9 +7677,9 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
             results.push_back(result);
          }
          if (stereoAndDiff) {
-            auto waveTrack2 = static_cast<const WaveTrack*>(track->GetLink());
-            auto result = next ? FindNextClipBoundary(waveTrack2, time) :
-               FindPrevClipBoundary(waveTrack2, time);
+            waveTrack = static_cast<const WaveTrack*>(track->GetLink());
+            result = next ? FindNextClipBoundary(waveTrack, time) :
+               FindPrevClipBoundary(waveTrack, time);
             if (result.nFound > 0) {
                result.trackNum = trackNum;
                result.channel = stereoAndDiff;
