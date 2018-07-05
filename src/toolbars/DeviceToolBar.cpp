@@ -713,7 +713,7 @@ void DeviceToolBar::ChangeDevice(bool isInput)
    wxChoice *combo = isInput ? mInput :mOutput;
    size_t i;
 
-   int selectionIndex  = mInput->GetSelection();
+   int selectionIndex  = combo->GetSelection();
    wxString host       = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    const std::vector<DeviceSourceMap> &maps = isInput ? DeviceManager::Instance()->GetInputDeviceMaps()
                                                       : DeviceManager::Instance()->GetOutputDeviceMaps();
