@@ -60,7 +60,7 @@ static const IdentInterfaceSymbol kWaveStrings[nWaveforms] =
    { XO("Sine") },
    { XO("Square") },
    { XO("Sawtooth") },
-   { wxT("SquareNoAlias"), XO("Square, no alias") }
+   { XO("Square, no alias") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters

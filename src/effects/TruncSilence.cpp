@@ -76,8 +76,8 @@ enum kActions
 
 static const IdentInterfaceSymbol kActionStrings[nActions] =
 {
-   { wxT("Truncate"), XO("Truncate Detected Silence") },
-   { wxT("Compress"), XO("Compress Excess Silence") }
+   { XO("Truncate Detected Silence") },
+   { XO("Compress Excess Silence") }
 };
 
 static CommandParameters::ObsoleteMap kObsoleteActions[] = {

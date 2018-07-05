@@ -59,17 +59,17 @@ enum kTableType
 
 static const IdentInterfaceSymbol kTableTypeStrings[nTableTypes] =
 {
-   { wxT("HardClipping"),               XO("Hard Clipping") },
-   { wxT("SoftClipping"),               XO("Soft Clipping") },
-   { wxT("SoftOverdrive"),              XO("Soft Overdrive") },
-   { wxT("MediumOverdrive"),            XO("Medium Overdrive") },
-   { wxT("HardOverdrive"),              XO("Hard Overdrive") },
-   { wxT("CubicCurveOddHarmonics"),     XO("Cubic Curve (odd harmonics)") },
-   { wxT("EvenHarmonics"),              XO("Even Harmonics") },
-   { wxT("ExpandCompress"),             XO("Expand and Compress") },
+   { XO("Hard Clipping") },
+   { XO("Soft Clipping") },
+   { XO("Soft Overdrive") },
+   { XO("Medium Overdrive") },
+   { XO("Hard Overdrive") },
+   { XO("Cubic Curve (odd harmonics)") },
+   { XO("Even Harmonics") },
+   { XO("Expand and Compress") },
    { XO("Leveller") },
-   { wxT("RectifierDistortion"),        XO("Rectifier Distortion") },
-   { wxT("HardLimiter1413"),            XO("Hard Limiter 1413") }
+   { XO("Rectifier Distortion") },
+   { XO("Hard Limiter 1413") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters

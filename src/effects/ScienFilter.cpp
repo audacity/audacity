@@ -91,9 +91,9 @@ static const IdentInterfaceSymbol kTypeStrings[nTypes] =
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   { wxT("ChebyshevTypeI"), XO("Chebyshev Type I") },
+   { XO("Chebyshev Type I") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   { wxT("ChebyshevTypeII"), XO("Chebyshev Type II") }
+   { XO("Chebyshev Type II") }
 };
 
 enum kSubTypes
