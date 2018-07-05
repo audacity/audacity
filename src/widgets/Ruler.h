@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
-#include "OverlayPanel.h"
+#include "../CellularPanel.h"
 #include "../MemoryX.h"
 #include <wx/bitmap.h>
 #include <wx/dc.h>
@@ -310,7 +310,7 @@ private:
 };
 
 // This is an Audacity Specific ruler panel.
-class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
+class AUDACITY_DLL_API AdornedRulerPanel final : public CellularPanel
 {
 public:
    AdornedRulerPanel(AudacityProject *project,
@@ -417,7 +417,6 @@ private:
 
    Ruler mRuler;
    AudacityProject *const mProject;
-   ViewInfo *const mViewInfo;
    TrackList *mTracks;
 
    wxRect mOuter;
@@ -455,8 +454,6 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
-
    void OnTogglePinnedState(wxCommandEvent & event);
 
    bool mPlayRegionDragsSelection;
@@ -474,7 +471,6 @@ private:
    MouseEventState mMouseEventState;
    double mLeftDownClickUnsnapped;  // click position in seconds, before snap
    double mLeftDownClick;  // click position in seconds
-   int mLastMouseX;  // Pixel position
    bool mIsDragging;
 
    StatusChoice mPrevZone { StatusChoice::NoChange };
@@ -486,11 +482,37 @@ private:
    wxWindow *mButtons[3];
    bool mNeedButtonUpdate { true };
 
+   //
+   // CellularPanel implementation
+   //
+   FoundCell FindCell(int mouseX, int mouseY) override;
+   wxRect FindRect(const TrackPanelCell &cell) override;
+public:
+   AudacityProject * GetProject() const override;
+private:
+   TrackPanelCell *GetFocusedCell() override;
+   void SetFocusedCell() override;
+   void ProcessUIHandleResult
+      (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
+       unsigned refreshResult) override;
+
+   void UpdateStatusMessage( const wxString & ) override;
+
+   void CreateOverlays();
+
    // Cooperating objects
    class QuickPlayIndicatorOverlay;
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
    class QuickPlayRulerOverlay;
+   
+   class CommonCell;
+
+   class QPCell;
+   std::shared_ptr<QPCell> mQPCell;
+   
+   class ScrubbingCell;
+   std::shared_ptr<ScrubbingCell> mScrubbingCell;
 };
 
 #endif //define __AUDACITY_RULER__

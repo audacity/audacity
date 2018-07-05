@@ -2010,7 +2010,7 @@ enum {
    OnTogglePinnedStateID,
 };
 
-BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
+BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
@@ -2024,14 +2024,87 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
    EVT_MENU(OnScrubRulerID, AdornedRulerPanel::OnToggleScrubRulerFromMenu)
 
-   // Pop up menus on Windows
-   EVT_CONTEXT_MENU(AdornedRulerPanel::OnContextMenu)
-
    EVT_COMMAND( OnTogglePinnedStateID,
                wxEVT_COMMAND_BUTTON_CLICKED,
                AdornedRulerPanel::OnTogglePinnedState )
 
 END_EVENT_TABLE()
+
+class AdornedRulerPanel::CommonCell : public TrackPanelCell
+{
+public:
+   explicit
+   CommonCell( AdornedRulerPanel *parent, MenuChoice menuChoice )
+   : mParent{ parent }
+   , mMenuChoice{ menuChoice }
+   {}
+
+   unsigned DoContextMenu
+      (const wxRect &rect,
+       wxWindow *pParent, wxPoint *pPosition) final override
+   {
+      mParent->ShowContextMenu(mMenuChoice, pPosition);
+      return 0;
+   }
+
+protected:
+   AdornedRulerPanel *mParent;
+   const MenuChoice mMenuChoice;
+};
+
+class AdornedRulerPanel::QPCell final : public CommonCell
+{
+public:
+   explicit
+   QPCell( AdornedRulerPanel *parent )
+   : AdornedRulerPanel::CommonCell{ parent, MenuChoice::QuickPlay }
+   {}
+   
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject) override;
+   
+   // Return shared_ptr to self, stored in parent
+   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
+      { return mParent->mQPCell; }
+};
+
+std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest
+(const TrackPanelMouseState &state,
+ const AudacityProject *pProject)
+{
+   // Creation of overlays on demand here -- constructor of AdornedRulerPanel
+   // is too early to do it
+   mParent->CreateOverlays();
+   return {};
+}
+
+class AdornedRulerPanel::ScrubbingCell final : public CommonCell
+{
+public:
+   explicit
+   ScrubbingCell( AdornedRulerPanel *parent )
+   : AdornedRulerPanel::CommonCell{ parent, MenuChoice::Scrub }
+   {}
+   
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject) override;
+   
+   // Return shared_ptr to self, stored in parent
+   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
+      { return mParent->mScrubbingCell; }
+};
+
+std::vector<UIHandlePtr> AdornedRulerPanel::ScrubbingCell::HitTest
+(const TrackPanelMouseState &state,
+ const AudacityProject *pProject)
+{
+   // Creation of overlays on demand here -- constructor of AdornedRulerPanel
+   // is too early to do it
+   mParent->CreateOverlays();
+   return {};
+}
 
 AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
                                      wxWindow *parent,
@@ -2039,10 +2112,12 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
                                      const wxPoint& pos,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
-:  OverlayPanel(parent, id, pos, size)
+:  CellularPanel(parent, id, pos, size, viewinfo)
 , mProject(project)
-, mViewInfo(viewinfo)
 {
+   mQPCell = std::make_shared<QPCell>( this );
+   mScrubbingCell = std::make_shared<ScrubbingCell>( this );
+   
    for (auto &button : mButtons)
       button = nullptr;
 
@@ -2459,11 +2534,6 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
-   // Creation of overlays on demand here -- constructor of AdornedRulerPanel
-   // is too early to do it
-   if (!mOverlay)
-      mOverlay = std::make_unique<QuickPlayIndicatorOverlay>(mProject);
-
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording) {
       if (HasCapture())
@@ -2961,11 +3031,6 @@ void AdornedRulerPanel::DrawBothOverlays()
    DrawOverlays( false );
 }
 
-void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
-{
-   ShowContextMenu(MenuChoice::QuickPlay, nullptr);
-}
-
 void AdornedRulerPanel::UpdateButtonStates()
 {
    auto common = [this]
@@ -2999,14 +3064,13 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
    UpdateButtonStates();
 }
 
-void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
+void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & evt)
 {
    mPrevZone = StatusChoice::Leaving;
    DrawBothOverlays();
-
-   wxMouseEvent e(wxEVT_LEFT_UP);
-   e.m_x = mLastMouseX;
-   OnMouseEvents(e);
+   
+   // Do base class handler, to simulate mouse button up
+   evt.Skip();
 }
 
 void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
@@ -3018,7 +3082,6 @@ void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
    mousePosX = std::max(mousePosX, tp->GetLeftOffset());
    mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 
-   mLastMouseX = mousePosX;
    mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
 }
 
@@ -3444,4 +3507,63 @@ void AdornedRulerPanel::SetFocusFromKbd()
 {
    auto temp = TemporarilyAllowFocus();
    SetFocus();
+}
+
+// CellularPanel implementation
+auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell
+{
+   bool mayScrub = mProject->GetScrubber().CanScrub() &&
+      mShowScrubbing;
+   if (mayScrub && mScrubZone.Contains(mouseX, mouseY))
+      return { mScrubbingCell, mScrubZone };
+
+   return { mQPCell, mInner };
+}
+
+wxRect AdornedRulerPanel::FindRect(const TrackPanelCell &cell)
+{
+   if (&cell == mScrubbingCell.get())
+      return mScrubZone;
+   if (&cell == mQPCell.get())
+      return mInner;
+   
+   return {};
+}
+
+
+AudacityProject * AdornedRulerPanel::GetProject() const
+{
+   return mProject;
+}
+
+
+TrackPanelCell *AdornedRulerPanel::GetFocusedCell()
+{
+   // No switching of focus yet to the other, scrub zone
+   return mQPCell.get();
+}
+
+
+void AdornedRulerPanel::SetFocusedCell()
+{
+}
+
+
+void AdornedRulerPanel::ProcessUIHandleResult
+(TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
+ unsigned refreshResult)
+{
+   
+}
+
+void AdornedRulerPanel::UpdateStatusMessage( const wxString & )
+{
+
+}
+
+void AdornedRulerPanel::CreateOverlays()
+{
+   if (!mOverlay)
+      mOverlay =
+         std::make_unique<QuickPlayIndicatorOverlay>( mProject );
 }
