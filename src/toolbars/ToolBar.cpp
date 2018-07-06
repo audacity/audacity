@@ -164,7 +164,10 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
    event.Skip();
 
    // Retrieve the mouse position
-   mResizeOffset = ClientToScreen( event.GetPosition() )-mBar->GetRect().GetBottomRight();
+   // Bug 1896: This is at time of processing the event, rather than at time 
+   // of generation of event.  Works around event.GetPosition() giving
+   // incorrect values if position of resizer is changing.
+   mResizeOffset = wxGetMousePosition()-mBar->GetRect().GetBottomRight();
 
    mOrigSize = mBar->GetSize();
 
@@ -209,18 +212,19 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
    // Go ahead and set the event to propagate
    event.Skip();
 
-   // Retrieve the mouse position
-   wxPoint raw_pos = event.GetPosition();
-   wxPoint pos = ClientToScreen( raw_pos );
-
    if( HasCapture() && event.Dragging() )
    {
+      // Retrieve the mouse position
+      // Bug 1896: This is at time of processing the event, rather than at time 
+      // of generation of event.  Works around event.GetPosition() giving
+      // incorrect values if position of resizer is changing.
+      wxPoint pos = wxGetMousePosition();
+
       wxRect r = mBar->GetRect();
       wxSize msz = mBar->GetMinSize();
       wxSize psz = mBar->GetParent()->GetClientSize();
 
-      // Adjust the size by the difference between the
-      // last mouse and current mouse positions.
+      // Adjust the size based on updated mouse position.
       r.width = ( pos.x - mResizeOffset.x ) - r.x;
 
       // Constrain
