@@ -415,21 +415,21 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                // Because screen readers won't be affected by multiple spaces, the
                // leading spaces have not been removed, so that no NEW translations are needed.
                /* i18n-hint: This is for screen reader software and indicates that
-                  on this track mute is on.*/
-               name->Append( wxT(" ") + wxString(_( " Mute On" )) );
+                  this track is muted. (The mute button is on.)*/
+               name->Append( wxT(" ") + wxString(_( " Muted" )) );
             }
 
             if( pt && pt->GetSolo() )
             {
                /* i18n-hint: This is for screen reader software and indicates that
-                  on this track solo is on.*/
-               name->Append( wxT(" ") + wxString(_( " Solo On" )) );
+                  this track is soloed. (The Solo button is on.)*/
+               name->Append( wxT(" ") + wxString(_( " Soloed" )) );
             }
             if( t->GetSelected() )
             {
                /* i18n-hint: This is for screen reader software and indicates that
                   this track is selected.*/
-               name->Append( wxT(" ") + wxString(_( " Select On" )) );
+               name->Append( wxT(" ") + wxString(_( " Selected" )) );
             }
             if( t->IsSyncLockSelected() )
             {
@@ -437,7 +437,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                   this track is shown with a sync-locked icon.*/
                // The absence of a dash between Sync and Locked is deliberate -
                // if present, Jaws reads it as "dash".
-               name->Append( wxT(" ") + wxString(_( " Sync Lock Selected" )) );
+               name->Append( wxT(" ") + wxString(_( " Sync Locked" )) );
             }
          }
       }
