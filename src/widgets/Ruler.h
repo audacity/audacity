@@ -506,6 +506,11 @@ private:
 
    class QuickPlayRulerOverlay;
    
+private:
+   class CommonRulerHandle;
+   class QPHandle;
+   class ScrubbingHandle;
+
    class CommonCell;
 
    class QPCell;
