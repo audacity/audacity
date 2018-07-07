@@ -852,3 +852,8 @@ void CellularPanel::ClearTargets()
    state.mMouseOverUpdateFlags = 0;
 }
 
+std::shared_ptr<TrackPanelCell> CellularPanel::LastCell() const
+{
+   auto &state = *mState;
+   return state.mLastCell.lock();
+}

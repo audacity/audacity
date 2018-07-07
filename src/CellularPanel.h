@@ -61,6 +61,8 @@ public:
 public:
    UIHandlePtr Target();
    
+   std::shared_ptr<TrackPanelCell> LastCell() const;
+   
    bool IsMouseCaptured();
    
    wxCoord MostRecentXCoord() const;
