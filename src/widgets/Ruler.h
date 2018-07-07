@@ -367,6 +367,8 @@ public:
    void OnToggleScrubRulerFromMenu(wxCommandEvent& );
    void SetPanelSize();
 
+   bool ShowingScrubControl() const;
+
 
 private:
    void OnCapture(wxCommandEvent & evt);
@@ -489,8 +491,6 @@ private:
    bool mShowScrubbing { false };
 
    DECLARE_EVENT_TABLE()
-
-   friend QuickPlayRulerOverlay;
 
    wxWindow *mButtons[3];
    bool mNeedButtonUpdate { true };

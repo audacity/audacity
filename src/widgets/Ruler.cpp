@@ -1842,7 +1842,7 @@ std::pair<wxRect, bool> QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
       return {
          { xx, yy,
             indsize * 2 + 1,
-            mPartner.mProject->GetRulerPanel()->GetSize().GetHeight() },
+            GetRuler()->GetSize().GetHeight() },
          (x != mNewQPIndicatorPos)
       };
    }
@@ -1856,10 +1856,7 @@ void QuickPlayRulerOverlay::Draw(OverlayPanel & /*panel*/, wxDC &dc)
    if (mOldQPIndicatorPos >= 0) {
       auto ruler = GetRuler();
       const auto &scrubber = mPartner.mProject->GetScrubber();
-      auto scrub =
-         ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
-         (ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
-          (scrubber.HasStartedScrubbing()));
+      auto scrub = ruler->ShowingScrubControl();
       auto seek = scrub && (scrubber.Seeks() || scrubber.TemporarilySeeks());
       auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
       ruler->DoDrawIndicator(&dc, mOldQPIndicatorPos, true, width, scrub, seek);
@@ -2917,6 +2914,15 @@ void AdornedRulerPanel::SetPanelSize()
    SetSize(size);
    SetMinSize(size);
    GetParent()->PostSizeEventToParent();
+}
+
+bool AdornedRulerPanel::ShowingScrubControl() const
+{
+   const auto &scrubber = mProject->GetScrubber();
+   return
+      mMouseEventState == AdornedRulerPanel::mesNone &&
+      (mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
+       (scrubber.HasStartedScrubbing()));
 }
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
