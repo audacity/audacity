@@ -1,0 +1,17 @@
+option('override_project_name', type: 'string', value: '', description: '')
+
+
+
+option('static-wx', type: 'boolean',  value: false, description: 'link wx statically')
+option('wx-version',type: 'string',   value: '',    description: 'select wxWidgets version (if both installed)')
+
+option('lib-preference',
+  type: 'array', choices: [ 'system', 'local' ], value: [ 'system', 'local' ],
+  description: 'whether to use local and/or system libraries, in order of preference'
+)
+
+option('unicode',         type: 'boolean',  value: true,  description: 'enable unicode support')
+option('sse',             type: 'boolean',  value: true,  description: 'enable SSE optimizations')
+option('debug',           type: 'boolean',  value: true,  description: 'enable debug support')
+option('universal-binary',type: 'boolean',  value: false, description: 'enable universal binary')
+option('dynamic-loading', type: 'boolean',  value: true,  description: 'enable dynamic loading of lame and FFmpeg')
