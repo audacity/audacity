@@ -20,7 +20,7 @@
 #if USE_SOUNDTOUCH
 
 #if USE_SBSMS
-#include "../../../lib-src/header-substitutes/sbsms.h"
+#include <sbsms.h>
 #include <wx/valgen.h>
 #endif
 

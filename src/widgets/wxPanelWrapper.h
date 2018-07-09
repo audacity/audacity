@@ -139,7 +139,7 @@ public:
    }
 };
 
-#include "../lib-src/FileDialog/FileDialog.h"
+#include <FileDialog.h>
 
 class AUDACITY_DLL_API FileDialogWrapper : public wxTabTraversalWrapper<FileDialog>
 {

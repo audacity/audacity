@@ -465,8 +465,8 @@ TimeTrack and AudioIOListener and whether the playback is looped.
    #endif
    #define ROUND(x) (int) ((x)+0.5)
    //#include <string.h>
-   #include "../lib-src/portmidi/pm_common/portmidi.h"
-   #include "../lib-src/portaudio-v19/src/common/pa_util.h"
+   #include <portmidi.h>
+   #include <pa_util.h>
    #include "NoteTrack.h"
 #endif
 

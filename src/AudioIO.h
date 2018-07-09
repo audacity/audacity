@@ -28,10 +28,10 @@
 // TODO: Put the relative paths into automake.
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-#include "../lib-src/portmidi/pm_common/portmidi.h"
-#include "../lib-src/portmidi/porttime/porttime.h"
+#include <portmidi.h>
+#include <porttime.h>
 #include <cstring> // Allegro include fails if this header isn't included do to no memcpy
-#include "../lib-src/header-substitutes/allegro.h"
+#include <allegro.h>
 
 class NoteTrack;
 using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
@@ -42,7 +42,7 @@ using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 #endif // USE_MIDI
 
 #if USE_PORTMIXER
-#include "../lib-src/portmixer/include/portmixer.h"
+#include <portmixer.h>
 #endif
 
 #include <wx/event.h>

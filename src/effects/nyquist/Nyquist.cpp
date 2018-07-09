@@ -59,7 +59,7 @@ effects from this one class.
 #include "../../prefs/WaveformSettings.h"
 #include "../../widgets/NumericTextCtrl.h"
 
-#include "../lib-src/FileDialog/FileDialog.h"
+#include <FileDialog.h>
 
 #include "Nyquist.h"
 
@@ -3074,7 +3074,7 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
 }
 
 // Registration of extra functions in XLisp.
-#include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
+#include <nyquist/xlisp/xlisp.h>
 
 static LVAL gettext()
 {
