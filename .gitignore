@@ -199,3 +199,6 @@ win/resetPrefs.txt
 win/xaudacity.ico
 *.sublime-project
 *.sublime-workspace
+
+
+/_build

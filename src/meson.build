@@ -137,6 +137,7 @@ audacity_sources = files(
 # -D__STDC_CONSTANT_MACROS \
 # -DWXINTL_NO_GETTEXT_MACRO \
 
+srcInclude = include_directories('.')
 
 libaudacity_tests = static_library('audacity_testslib',
   libaudacity_tests_sources,

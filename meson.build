@@ -14,6 +14,9 @@ project('audacity',
 
 cc = meson.get_compiler('c')
 cx = meson.get_compiler('cpp')
+
+i18n = import('i18n')
+
 conf = configuration_data()
 
 ################################################################################
@@ -40,10 +43,10 @@ conf.set('BUILDING_AUDACITY', true)
 
 conf.set('VERSION', meson.project_version())
 
-
-
 conf.set_quoted('LIBDIR', join_paths(get_option('prefix'), get_option('libdir')))
 
+gettext_package = project_name
+conf.set('GETTEXT_PACKAGE', gettext_package)
 
 ################################################################################
 # Compiler opions
@@ -108,7 +111,48 @@ else
   conf.set('wxDEBUG_LEVEL', *)
 endif
 
-conf.set('HAVE_ALLOCA_H', cc.has_header('alloca.h'))
+
+check_headers = [
+  'alloca.h',
+  'dlfcn.h',
+  'inttypes.h',
+  'libudev.h',
+  'memory.h',
+  'nanosle.h',
+  'stdint.h',
+  'stdlib.h',
+  'string.h',
+  'strings.h',
+  'unistd.h',
+  'sys/stat.h',
+  'sys/types.h',
+]
+
+foreach header : check_headers
+  macro_name = 'HAVE_' + header.to_upper().underscorify()
+  conf.set(macro_name, cc.has_header(header) ? 1 : false)
+endforeach
+
+check_functions = [
+  'clock_gettime',
+  'dcgettext',
+  'gettext',
+  'iconv',
+  'lrint',
+  'lrintf',
+  'nanosleep',
+  # MacOSX specific
+  'cflocalecopycurrent',
+  'cfpreferencescopyappvalue',
+]
+
+foreach function : check_functions
+  macro_name = 'HAVE_' + function.to_upper().underscorify()
+  conf.set(macro_name, cc.has_function(function) ? 1 : false)
+endforeach
+
+conf.set('ENABLE_NLS', true)
+
 
 # todo gl_VISIBILITY
 
@@ -301,8 +345,6 @@ if platform_linux
 
   config_header = 'configunix.h'
 
-  conf.set('HAVE_LIBUDEV_H', cc.has_header('libudev.h'))
-
   dl = cc.find_library('dl')
 
   use_gtk3 = true
@@ -334,9 +376,6 @@ if platform_linux
 
 endif
 
-
-conf.set10('HAVE_LRINT',  cc.has_function('lrint'))
-conf.set10('HAVE_LRINTF', cc.has_function('lrintf'))
 
 conf.set10('USE_LADSPA', get_option('ladspa'))
 
@@ -383,10 +422,10 @@ install_data([ 'LICENSE.txt', 'README.txt' ],
 subdir('help')
 subdir('images')
 # subdir('lib-src')
-# subdir('po')
+subdir('po')
 subdir('src')
 # subdir('tests')
-#
+
 # subdir('lib-src/mod-nyq-bench')
 # subdir('lib-src/mod-script-pipe')
 # subdir('lib-src/mod-null')
