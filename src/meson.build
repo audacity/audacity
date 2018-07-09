@@ -1,7 +1,11 @@
 
-install_data('audacity.desktop.in',
+configure_file(
+  input : 'audacity.desktop.in',
+  output: 'audacity.desktop',
+  configuration: desktop_conf,
   install_dir: join_paths(get_option('datadir'), 'applications')
 )
+
 install_data('audacity.xml',
   install_dir: join_paths(get_option('datadir'), 'mime', 'packages')
 )
@@ -184,4 +188,6 @@ audacity = executable('audacity',
     portsmf,
 
   ],
+  build_by_default: false,
+  install: false,
 )

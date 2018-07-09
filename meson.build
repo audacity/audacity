@@ -18,13 +18,10 @@ cx = meson.get_compiler('cpp')
 i18n = import('i18n')
 
 conf = configuration_data()
+desktop_conf = configuration_data()
 
 ################################################################################
 # Project info
-
-
-# AC_SUBST(MIMETYPES)
-
 
 # allow the user to specify options to configure that change the
 # name "audacity" anywhere it appears in a pathname.   This allows
@@ -35,7 +32,8 @@ if project_name == ''
   project_name = meson.project_name()
 endif
 
-conf.set_quoted('AUDACITY_NAME', project_name)
+conf.set_quoted ('AUDACITY_NAME', project_name)
+desktop_conf.set('AUDACITY_NAME', project_name)
 
 conf.set_quoted('INSTALL_PREFIX', get_option('prefix'))
 
@@ -172,6 +170,9 @@ add_project_arguments([
 ################################################################################
 # Dependencies
 
+mimetypes = []
+
+
 wx_args = []
 wx_args += '--static='  + (get_option('static-wx')  ? 'yes' : 'no')
 wx_args += '--unicode=' + (get_option('unicode')    ? 'yes' : 'no')
@@ -197,6 +198,15 @@ libavutil   = dependency('libavutil',   version: '>=52.12')
 use_ffmpeg = (libavcodec.found() and libavformat.found() and libavutil.found())
 conf.set('USE_FFMPEG', use_ffmpeg)
 conf.set('DISABLE_DYNAMIC_LOADING_FFMPEG', get_option('dynamic-loading'))
+if use_ffmpeg
+  mimetypes += [
+    'audio/aac' ,
+    'audio/ac3' ,
+    'audio/mp4' ,
+    'audio/x-ms-wma',
+    'video/mpeg',
+  ]
+endif
 
 gstreamer   = dependency('gstreamer-1.0')
 gstreamerapp= dependency('gstreamer-app-1.0')
@@ -207,18 +217,36 @@ conf.set('DISABLE_DYNAMIC_LOADING_LAME', get_option('dynamic-loading'))
 
 libflac     = dependency('flac',          version: '>=1.3.0')
 libflacpp   = dependency('flac++',        version: '>=1.3.0')
-conf.set10('USE_LIBFLAC', libflac.found() and libflacpp.found())
+use_flac = libflac.found() and libflacpp.found()
+conf.set10('USE_LIBFLAC', use_flac)
+if use_flac
+  mimetypes += [
+    'audio/flac',
+    'audio/x-flac',
+  ]
+endif
 
 id3tag      = dependency('id3tag',        required: false)
 conf.set('USE_LIBID3TAG', id3tag.found())
 
 mad         = dependency('mad',           version: '>=0.14.2',required: false)
 conf.set('USE_LIBMAD', mad.found())
+if mad.found()
+  mimetypes += 'audio/mpeg'
+endif
 
 sbsms       = dependency('sbsms',         version: '>=2.0.2', required: false)
 conf.set10('USE_SBSMS', sbsms.found())
 
 sndfile     = dependency('sndfile',       version: '>=1.0.0', required: false)
+if sndfile.found()
+  mimetypes += [
+    'audio/basic',
+    'audio/x-aiff',
+    'audio/x-wav',
+  ]
+endif
+
 soundtouch  = dependency('soundtouch',    version: '>=1.3.0', required: false)
 conf.set10('USE_SOUNDTOUCH', soundtouch.found())
 
@@ -233,7 +261,12 @@ conf.set10('USE_VAMP', vamp.found() and vamphost.found())
 vorbis      = dependency('vorbis',        version: '>=0.3.9', required: false)
 vorbisenc   = dependency('vorbisenc',     version: '>=0.3.9', required: false)
 vorbisfile  = dependency('vorbisfile',    version: '>=0.3.9', required: false)
-conf.set('USE_LIBVORBIS', vorbis.found() and vorbisenc.found() and vorbisfile.found())
+use_vorbis = vorbis.found() and vorbisenc.found() and vorbisfile.found()
+conf.set('USE_LIBVORBIS', use_vorbis)
+if use_vorbis
+  mimetypes += [ 'application/ogg', 'audio/x-vorbis+ogg' ]
+endif
+
 
 libogg      = dependency('ogg',           version: '>=0.3.9', required: false)
 
@@ -384,8 +417,7 @@ conf.set('USE_QUICKTIME',   use_quicktime)
 conf.set10('USE_VST',         get_option('vst'))
 
 
-
-
+desktop_conf.set('MIMETYPES', ';'.join(mimetypes))
 
 
 configure_file(
