@@ -6,8 +6,9 @@ project('audacity',
   default_options: [
     'c_std=gnu11',
     'cpp_std=gnu++11',
-    'warning_level=2',
-  ]
+    'warning_level=1',
+  ],
+  subproject_dir: 'lib-src',
 )
 
 
@@ -19,8 +20,6 @@ conf = configuration_data()
 # Project info
 
 
-
-
 # AC_SUBST(MIMETYPES)
 
 
@@ -29,25 +28,31 @@ conf = configuration_data()
 # multiple versions of Audacity to be installed concurrently
 # without collision
 project_name = get_option('override_project_name')
+if project_name == ''
+  project_name = meson.project_name()
+endif
 
 conf.set_quoted('AUDACITY_NAME', project_name)
-
 
 conf.set_quoted('INSTALL_PREFIX', get_option('prefix'))
 
 conf.set('BUILDING_AUDACITY', true)
 
+conf.set('VERSION', meson.project_version())
 
-rdynamic_supported = cc.has_link_argument('-rdynamic')
 
-if rdynamic_supported
-  add_project_arguments('-rdynamic', language: [ 'c', 'cpp' ])
-endif
 
+conf.set_quoted('LIBDIR', join_paths(get_option('prefix'), get_option('libdir')))
 
 
 ################################################################################
 # Compiler opions
+
+rdynamic_supported = cc.has_link_argument('-rdynamic')
+if rdynamic_supported
+  add_project_arguments('-rdynamic', language: [ 'c', 'cpp' ])
+endif
+
 
 if get_option('universal-binary')
   if host_machine.os().contains('darwin')
@@ -107,6 +112,17 @@ conf.set('HAVE_ALLOCA_H', cc.has_header('alloca.h'))
 
 # todo gl_VISIBILITY
 
+conf.set('HAVE_VISIBILITY', 1)
+
+add_project_arguments([
+    '-Wno-ignored-qualifiers',
+    '-Wno-cast-function-type',
+    '-Wno-non-virtual-dtor',
+    '-Wno-misleading-indentation',
+    '-Wno-deprecated-declarations',
+  ],
+  language: [ 'c', 'cpp', ],
+)
 
 
 ################################################################################
@@ -120,18 +136,290 @@ wx_args += '--debug='   + (get_option('debug')      ? 'yes' : 'no')
 if get_option('wx-version') != ''
   wx_args += '--version=' + get_option('wx-version')
 endif
+if get_option('force-gtk3')
+  wx_args += '--toolkit=gtk3'
+endif
 
 wxwidgets = dependency('wxwidgets', modules: wx_args)
 
 
 
+expat       = dependency('expat')
+
+# FFmpeg
+libavcodec  = dependency('libavcodec',  version: '>=51.53')
+libavformat = dependency('libavformat', version: '>=52.12')
+libavutil   = dependency('libavutil',   version: '>=52.12')
+use_ffmpeg = (libavcodec.found() and libavformat.found() and libavutil.found())
+conf.set('USE_FFMPEG', use_ffmpeg)
+conf.set('DISABLE_DYNAMIC_LOADING_FFMPEG', get_option('dynamic-loading'))
+
+gstreamer   = dependency('gstreamer-1.0')
+gstreamerapp= dependency('gstreamer-app-1.0')
+conf.set('USE_GSTREAMER', gstreamer.found() and gstreamerapp.found())
+
+lame        = cc.find_library('mp3lame')
+conf.set('DISABLE_DYNAMIC_LOADING_LAME', get_option('dynamic-loading'))
+
+libflac     = dependency('flac',          version: '>=1.3.0')
+libflacpp   = dependency('flac++',        version: '>=1.3.0')
+conf.set10('USE_LIBFLAC', libflac.found() and libflacpp.found())
+
+id3tag      = dependency('id3tag',        required: false)
+conf.set('USE_LIBID3TAG', id3tag.found())
+
+mad         = dependency('mad',           version: '>=0.14.2',required: false)
+conf.set('USE_LIBMAD', mad.found())
+
+sbsms       = dependency('sbsms',         version: '>=2.0.2', required: false)
+conf.set10('USE_SBSMS', sbsms.found())
+
+sndfile     = dependency('sndfile',       version: '>=1.0.0', required: false)
+soundtouch  = dependency('soundtouch',    version: '>=1.3.0', required: false)
+conf.set10('USE_SOUNDTOUCH', soundtouch.found())
+
+soxr        = dependency('soxr',          version: '>=0.0.5', required: false)
+twolame     = dependency('twolame',       version: '>=0.3.9', required: false)
+conf.set10('USE_LIBTWOLAME', twolame.found())
+
+vamp        = dependency('vamp',          version: '>=2.0',   required: false)
+vamphost    = dependency('vamp-hostsdk',  version: '>=2.0',   required: false)
+conf.set10('USE_VAMP', vamp.found() and vamphost.found())
+
+vorbis      = dependency('vorbis',        version: '>=0.3.9', required: false)
+vorbisenc   = dependency('vorbisenc',     version: '>=0.3.9', required: false)
+vorbisfile  = dependency('vorbisfile',    version: '>=0.3.9', required: false)
+conf.set('USE_LIBVORBIS', vorbis.found() and vorbisenc.found() and vorbisfile.found())
+
+libogg      = dependency('ogg',           version: '>=0.3.9', required: false)
+
+lv2         = dependency('lv2',           version: '>=0.8.2', required: false)
+lilv        = dependency('lilv-0',        version: '>=0.16',  required: false)
+suil        = dependency('suil-0',        version: '>=0.8.2', required: false)
+conf.set10('USE_LV2', lv2.found() and lilv.found() and suil.found())
+
+portaudio   = dependency('portaudio-2.0', version: '>=19',    required: false)
+portaudiocpp= dependency('portaudiocpp',  version: '>=12',    required: false)
+portmidi    = cc.find_library('portmidi', required: false)
+conf.set('USE_PORTMIDI', portmidi.found())
+
+portsmf     = dependency('portSMF',       required: false)
+conf.set('USE_MIDI', portsmf.found())
+
+portmixer   = dependency('portmixer',     required: false)
+conf.set('USE_PORTMIXER', portmixer.found())
 
 
+filedialog  = subproject('FileDialog',
+  default_options: [ 'default_library=static', ]
+).get_variable('filedialog_dep')
 
-# subproject('lib-src/FileDialog')
+widgetextra = subproject('lib-widget-extra',
+  default_options: [ 'default_library=static', ]
+).get_variable('widgetextra_dep')
+
+libnyquist  =  subproject('libnyquist',
+  default_options: [ 'default_library=static', ]
+).get_variable('libnyquist_dep')
+conf.set10('USE_NYQUIST', libnyquist.found())
+
 # subproject('lib-src/mod-nyq-bench')
 # subproject('lib-src/mod-script-pipe')
 # subproject('lib-src/mod-null')
 
-rootInclude = include_directories('.')
+if not expat.found()
+   error('Audacity requires expat to be enabled.')
+endif
 
+# if not widgetextra.found()
+#    error('Audacity requires libwidgetextra to be enabled.')
+# endif
+
+if not sndfile.found()
+   error('Audacity requires libsndfile to be enabled')
+endif
+
+if not portaudio.found()
+   error('Audacity requires portaudio to be enabled')
+endif
+
+if not soxr.found()
+   error('Audacity requires libsoxr to be enabled')
+endif
+
+
+
+
+
+
+
+
+
+################################################################################
+# Os-specific configuration
+
+os = host_machine.system()
+
+platform_osx    = os.contains('darwin') or os.contains('rhapsody')
+platform_win32  = os.contains('cygwin') or os.contains('mingw') or os.contains('windows')
+platform_linux  = (not platform_osx and not platform_win32)
+
+if platform_osx
+  # Mac OS X configuration
+  CDEPEND = 'AudacityHeaders.h.gch'
+  PRECOMP_CFLAGS = '-include AudacityHeaders.h'
+
+  # LIBS="-framework AudioUnit -framework AudioToolbox $LIBS"
+  # LIBS="-framework CoreAudio $LIBS -lz"
+
+  extra_targets='../Audacity.app'
+  extra_include_dir = include_directories('mac')
+
+  config_header = 'configunix.h'
+
+  use_audiounits = get_option('audiounits')
+  use_quicktime  = get_option('quicktime')
+else
+  use_audiounits = false
+  use_quicktime  = false
+endif
+
+if platform_win32
+  # Windows/CygWin configuration
+
+  # LIBS="-lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32
+  # -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm"
+
+  config_header = 'configwin.h'
+
+endif
+conf.set('__CYGWIN__', platform_win32)
+conf.set('_FILE_OFFSET_BITS', platform_win32 ? 32 : false)
+
+if platform_linux
+  # Unix configuration
+
+  config_header = 'configunix.h'
+
+  conf.set('HAVE_LIBUDEV_H', cc.has_header('libudev.h'))
+
+  dl = cc.find_library('dl')
+
+  use_gtk3 = true
+  # use_gtk3 = cx.run('''
+  # #include <wx/wx.h>
+  # int main() {
+  # #if defined(__WXGTK3__)
+  #   return 0;
+  # #else
+  #   return 1;
+  # #endif
+  # }
+  # ''', dependencies: wxwidgets).returncode() == 0
+
+  gtk_dep_name    = use_gtk3 ? 'gtk+-3.0' : 'gtk+-2.0'
+  gtk_dep_version = use_gtk3 ? '>=3.10.0' : '>=2.24.0'
+
+  gtk = dependency(gtk_dep_name, version: gtk_dep_version)
+
+  conf.set('HAVE_GTK', gtk.found() ? 1 : false)
+
+  alsa  = dependency('alsa',      required: false)
+  jack  = dependency('jack',      required: false)
+  hpi   = cc.find_library('hpi',  required: false)
+
+
+  rt    = cc.find_library('rt')
+  udev  = cc.find_library('udev')
+
+endif
+
+
+conf.set10('HAVE_LRINT',  cc.has_function('lrint'))
+conf.set10('HAVE_LRINTF', cc.has_function('lrintf'))
+
+conf.set10('USE_LADSPA', get_option('ladspa'))
+
+conf.set('USE_AUDIO_UNITS', use_audiounits)
+conf.set('USE_QUICKTIME',   use_quicktime)
+conf.set10('USE_VST',         get_option('vst'))
+
+
+
+
+
+
+configure_file(
+  input : 'config.h.in',
+  output: config_header,
+  configuration: conf,
+)
+
+# Configure finished
+################################################################################
+# Build
+
+rootInclude = include_directories('.', 'include')
+
+
+install_subdir('include',
+  install_dir: join_paths(get_option('datadir'), project_name),
+)
+install_subdir('nyquist',
+  install_dir: join_paths(get_option('datadir'), project_name),
+)
+install_subdir('plug-ins',
+  install_dir: join_paths(get_option('datadir'), project_name),
+)
+install_subdir('presets',
+  install_dir: join_paths(get_option('datadir'), project_name),
+  strip_directory: true,
+)
+install_data([ 'LICENSE.txt', 'README.txt' ],
+  install_dir: join_paths(get_option('datadir'), 'doc', project_name),
+)
+
+
+subdir('help')
+subdir('images')
+# subdir('lib-src')
+# subdir('po')
+subdir('src')
+# subdir('tests')
+#
+# subdir('lib-src/mod-nyq-bench')
+# subdir('lib-src/mod-script-pipe')
+# subdir('lib-src/mod-null')
+
+
+
+
+
+
+
+message('\n'.join([
+  '',
+  'Configuration finished:',
+
+# for lib in $LIBRARIES ; do
+#    eval LIB_USE_LOCAL=\$${lib}_USE_LOCAL
+#    eval LIB_USE_SYSTEM=\$${lib}_USE_SYSTEM
+#    if test "$LIB_USE_LOCAL" = "yes" ; then
+#       echo "$lib: using LOCAL libraries"
+#    elif test "$LIB_USE_SYSTEM" = "yes" ; then
+#       echo "$lib: using SYSTEM libraries"
+#    else
+#       echo "$lib: disabled"
+#    fi
+# done
+
+  'Build module mod-nyq-pipe: @0@'.format(false),
+  '',
+  'Build module mod-nyq-bench: @0@'.format(false),
+  '',
+  'Ladspa plugin support: @0@'.format(get_option('ladspa')),
+  '',
+  'Audiounit plugin support: @0@'.format(use_audiounits),
+  '',
+  'VST plugin support: @0@'.format(get_option('vst')),
+]))

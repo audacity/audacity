@@ -1,0 +1,201 @@
+/* src/configtemplate.h.  Generated from configure.ac by autoheader.  */
+
+/* define if Audacity is being installed under a name other than "audacity",
+   so it can find the files it needs at runtime */
+#mesondefine AUDACITY_NAME
+
+/* Define we are compiling Audacity itself, not an Audacity plug-in */
+#mesondefine BUILDING_AUDACITY
+
+/* Use system FFmpeg library and disable dynamic loading of it. */
+#mesondefine DISABLE_DYNAMIC_LOADING_FFMPEG
+
+/* Define if LAME should be linked at compile time */
+#mesondefine DISABLE_DYNAMIC_LOADING_LAME
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#mesondefine ENABLE_NLS
+
+/* Define to enable sse */
+#mesondefine ENABLE_SSE
+
+/* Define to 1 if you have the <alloca.h> header file. */
+#mesondefine HAVE_ALLOCA_H
+
+/* Define to 1 if you have the MacOS X function CFLocaleCopyCurrent in the
+   CoreFoundation framework. */
+#mesondefine HAVE_CFLOCALECOPYCURRENT
+
+/* Define to 1 if you have the MacOS X function CFPreferencesCopyAppValue in
+   the CoreFoundation framework. */
+#mesondefine HAVE_CFPREFERENCESCOPYAPPVALUE
+
+/* Define to 1 if you have the `clock_gettime' function. */
+#mesondefine HAVE_CLOCK_GETTIME
+
+/* Define if the GNU dcgettext() function is already present or preinstalled.
+   */
+#mesondefine HAVE_DCGETTEXT
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#mesondefine HAVE_DLFCN_H
+
+/* Define if the GNU gettext() function is already present or preinstalled. */
+#mesondefine HAVE_GETTEXT
+
+/* Define if GTK is available */
+#mesondefine HAVE_GTK
+
+/* Define if you have the iconv() function and it works. */
+#mesondefine HAVE_ICONV
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#mesondefine HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <libudev.h> header file. */
+#mesondefine HAVE_LIBUDEV_H
+
+/* Define if you have C99's lrint function. */
+#mesondefine HAVE_LRINT
+
+/* Define if you have C99's lrintf function. */
+#mesondefine HAVE_LRINTF
+
+/* Define to 1 if you have the <memory.h> header file. */
+#mesondefine HAVE_MEMORY_H
+
+/* Define to 1 if you have the `nanosleep' function. */
+#mesondefine HAVE_NANOSLEEP
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#mesondefine HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#mesondefine HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#mesondefine HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#mesondefine HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#mesondefine HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#mesondefine HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#mesondefine HAVE_UNISTD_H
+
+/* Define to 1 or 0, depending whether the compiler supports simple visibility
+   declarations. */
+#mesondefine HAVE_VISIBILITY
+
+/* define as prefix where Audacity is installed */
+#mesondefine INSTALL_PREFIX
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#mesondefine LT_OBJDIR
+
+/* Name of package */
+#mesondefine PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#mesondefine PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#mesondefine PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#mesondefine PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#mesondefine PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#mesondefine PACKAGE_URL
+
+/* Define to the version of this package. */
+#mesondefine PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#mesondefine STDC_HEADERS
+
+/* Define if Audio Unit plug-ins are enabled (Mac OS X only) */
+#mesondefine USE_AUDIO_UNITS
+
+/* Define if ffmpeg (multi-format import and export) support should be enabled
+   */
+#mesondefine USE_FFMPEG
+
+/* Define if GStreamer 1 is present */
+#mesondefine USE_GSTREAMER
+
+/* Define if LADSPA plug-ins are enabled */
+#mesondefine USE_LADSPA
+
+/* Define if the FLAC library is present */
+#mesondefine USE_LIBFLAC
+
+/* Define if libid3tag is present */
+#mesondefine USE_LIBID3TAG
+
+/* Define if mp3 support is implemented with the libmad library */
+#mesondefine USE_LIBMAD
+
+/* Define if libtwolame (MP2 export) support should be enabled */
+#mesondefine USE_LIBTWOLAME
+
+/* Define if the ogg vorbis decoding library is present */
+#mesondefine USE_LIBVORBIS
+
+/* Define if LV2 support should be enabled */
+#mesondefine USE_LV2
+
+/* Define if midi support should be enabled */
+#mesondefine USE_MIDI
+
+/* Define if Nyquist support should be enabled */
+#mesondefine USE_NYQUIST
+
+/* Define if midi support should be enabled */
+#mesondefine USE_PORTMIDI
+
+/* Define if PortMixer support should be enabled */
+#mesondefine USE_PORTMIXER
+
+/* Define if QuickTime importing is enabled (Mac OS X only) */
+#mesondefine USE_QUICKTIME
+
+/* Define if SBSMS support should be enabled */
+#mesondefine USE_SBSMS
+
+/* Define if SoundTouch support should be enabled */
+#mesondefine USE_SOUNDTOUCH
+
+/* Define if Vamp analysis plugin support should be enabled */
+#mesondefine USE_VAMP
+
+/* Define if VST plug-in support is enabled */
+#mesondefine USE_VST
+
+/* Version number of package */
+#mesondefine VERSION
+
+/* Placeholder for large file support */
+#mesondefine _FILE_OFFSET_BITS
+
+/* We're using cygwin */
+#mesondefine __CYGWIN__
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#mesondefine const
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#mesondefine size_t
+
+
+#mesondefine LIBDIR

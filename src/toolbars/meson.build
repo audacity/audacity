@@ -1,0 +1,15 @@
+toolbars_sources = files(
+  'ControlToolBar.cpp',
+  'DeviceToolBar.cpp',
+  'EditToolBar.cpp',
+  'MeterToolBar.cpp',
+  'MixerToolBar.cpp',
+  'ScrubbingToolBar.cpp',
+  'SelectionBar.cpp',
+  'SpectralSelectionBar.cpp',
+  'ToolBar.cpp',
+  'ToolDock.cpp',
+  'ToolManager.cpp',
+  'ToolsToolBar.cpp',
+  'TranscriptionToolBar.cpp',
+)

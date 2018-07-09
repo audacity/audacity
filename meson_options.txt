@@ -4,6 +4,7 @@ option('override_project_name', type: 'string', value: '', description: '')
 
 option('static-wx', type: 'boolean',  value: false, description: 'link wx statically')
 option('wx-version',type: 'string',   value: '',    description: 'select wxWidgets version (if both installed)')
+option('force-gtk3',type: 'boolean',  value: true,  description: 'Force gtk3 wxWidgets toolkit')
 
 option('lib-preference',
   type: 'array', choices: [ 'system', 'local' ], value: [ 'system', 'local' ],
@@ -15,3 +16,42 @@ option('sse',             type: 'boolean',  value: true,  description: 'enable S
 option('debug',           type: 'boolean',  value: true,  description: 'enable debug support')
 option('universal-binary',type: 'boolean',  value: false, description: 'enable universal binary')
 option('dynamic-loading', type: 'boolean',  value: true,  description: 'enable dynamic loading of lame and FFmpeg')
+
+# Optional dependencies
+
+option('expat',           type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('ffmpeg',          type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+# option('gstreamer',       type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('lame',            type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libflac',         type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libid3tag',       type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libmad',          type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libnyquist',      type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libsbsms',        type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libsndfile',      type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libsoundtouch',   type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libsoxr',         type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libtwolame',      type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libvamp',         type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('libvorbis',       type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('lv2',             type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('portaudio',       type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('portmidi',        type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('portsmf',         type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+option('widgetextra',     type: 'combo', choices: [ 'system', 'local', 'default', ], value: 'default')
+
+
+# Optional features
+
+option('ladspa',    type: 'boolean', value: true, description: 'enable LADSPA plug-in support')
+option('vst',       type: 'boolean', value: true, description: 'enable VST plug-in support')
+option('audiounits',type: 'boolean', value: true, description: 'enable audio unit plug-in support (Mac OS X only)')
+option('quicktime', type: 'boolean', value: true, description: 'enable QuickTime import support (Mac OS X only)')
+
+# In-tree libraries (ones we write, so only options are off and local)
+
+option('portmixer', type: 'boolean', value: true, description: 'compile with PortMixer')
+
+# optional plug-in modules, so only options are off and local.
+option('mod-script-pipe', type: 'boolean', value: false, description: 'compile with mod-script-pipe')
+option('mod-nyq-bench',   type: 'boolean', value: false, description: 'compile with mod-nyq-bench')

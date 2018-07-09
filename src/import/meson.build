@@ -1,0 +1,17 @@
+import_sources = files(
+  'FormatClassifier.cpp',
+  'Import.cpp',
+  'ImportFFmpeg.cpp',
+  'ImportFLAC.cpp',
+  # 'ImportGStreamer.cpp',
+  'ImportLOF.cpp',
+  'ImportMIDI.cpp',
+  'ImportMP3.cpp',
+  'ImportOGG.cpp',
+  'ImportPCM.cpp',
+  'ImportQT.cpp',
+  'ImportRaw.cpp',
+  'MultiFormatReader.cpp',
+  'RawAudioGuess.cpp',
+  'SpecPowerMeter.cpp',
+)

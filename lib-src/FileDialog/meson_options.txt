@@ -1,0 +1,3 @@
+option('wx-config', type: 'string',   value: '',    description: 'override default wxWidgets config script')
+option('wx-version',type: 'string',   value: '',    description: 'select wxWidgets version (if both installed)')
+option('force-gtk3',type: 'boolean',  value: true,  description: 'Force gtk3 wxWidgets toolkit')
