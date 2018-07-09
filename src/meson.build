@@ -148,6 +148,8 @@ libaudacity_tests = static_library('audacity_testslib',
   include_directories: rootInclude,
   dependencies: [
     wxwidgets,
+    filedialog,
+    portsmf,
   ],
 )
 
