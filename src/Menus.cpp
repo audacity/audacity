@@ -1788,7 +1788,8 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
       else if (plug->IsEffectDefault()
 #ifdef EXPERIMENTAL_DA
          // Move Nyquist prompt into nyquist group.
-         && (plug->GetName() != _("Nyquist Prompt"))
+         && (plug->GetSymbol() != IdentInterfaceSymbol("Nyquist Effects Prompt"))
+         && (plug->GetSymbol() != IdentInterfaceSymbol("Nyquist Tools Prompt"))
 #endif
          )
          defplugs.push_back(plug);
@@ -1885,18 +1886,15 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
          if (current != last)
          {
-            if (!last.IsEmpty())
-            {
+            bool bInSubmenu = !last.IsEmpty() && (groupNames.Count() > 1);
+            if( bInSubmenu)
                c->BeginSubMenu(last);
-            }
 
             AddEffectMenuItemGroup(c, groupNames, vHasDialog,
                                    groupPlugs, groupFlags, isDefault);
 
-            if (!last.IsEmpty())
-            {
+            if (bInSubmenu)
                c->EndSubMenu();
-            }
 
             groupNames.Clear();
             vHasDialog.clear();
@@ -1913,11 +1911,14 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
       if (groupNames.GetCount() > 0)
       {
-         c->BeginSubMenu(current);
+         bool bInSubmenu = groupNames.Count() > 1;
+         if (bInSubmenu)
+            c->BeginSubMenu(current);
 
          AddEffectMenuItemGroup(c, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
 
-         c->EndSubMenu();
+         if (bInSubmenu)
+            c->EndSubMenu();
       }
    }
    else

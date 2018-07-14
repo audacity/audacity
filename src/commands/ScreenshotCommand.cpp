@@ -502,7 +502,7 @@ void ScreenshotCommand::CaptureEffects(
       "Limiter...",
       "Low Pass Filter...",
       "Notch Filter...",
-      "Nyquist Prompt...",
+      "Nyquist Effects Prompt...",
       //"Studio Fade Out",
       "Tremolo...",
       "Vocal Reduction and Isolation...",

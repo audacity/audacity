@@ -150,16 +150,16 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    mMaxLen = NYQ_MAX_LEN;
 
-   // Interactive Nyquist
+   // Interactive Nyquist (for effects)
    if (fName == NYQUIST_PROMPT_ID) {
-      mName = XO("Nyquist Prompt");
+      mName = XO("Nyquist Effects Prompt");
       mType = EffectTypeProcess;
       mOK = true;
       mIsPrompt = true;
       return;
    }
 
-   // Interactive Nyquist
+   // Interactive Nyquist (for general tools)
    if (fName == NYQUIST_TOOLS_PROMPT_ID) {
       mName = XO("Nyquist Tools Prompt");
       mType = EffectTypeTool;
@@ -205,7 +205,7 @@ IdentInterfaceSymbol NyquistEffect::GetSymbol()
    if (mIsPrompt)
       return (mType == EffectTypeTool) ? 
          XO("Nyquist Tools Prompt") :
-         XO("Nyquist Prompt");
+         XO("Nyquist Effects Prompt");
 
    return mName;
 }
@@ -512,7 +512,7 @@ bool NyquistEffect::Init()
    // EffectType may not be defined in script, so
    // reset each time we call the Nyquist Prompt.
    if (mIsPrompt) {
-      mName = XO("Nyquist Prompt");
+      mName = XO("Nyquist Effects Prompt");
       // Reset effect type each time we call the Nyquist Prompt.
       mType = EffectTypeProcess;
       mIsSpectral = false;
