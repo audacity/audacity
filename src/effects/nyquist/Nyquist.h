@@ -34,7 +34,7 @@
  name into another alphabet.  */
 #define NYQUISTEFFECTS_FAMILY ( IdentInterfaceSymbol{ XO("Nyquist") } )
 
-#define NYQUIST_PROMPT_ID wxT("Nyquist Effects Prompt")
+#define NYQUIST_EFFECTS_PROMPT_ID wxT("Nyquist Effects Prompt")
 #define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Tools Prompt")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
@@ -228,6 +228,7 @@ private:
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
    wxString          mName;   ///< Name of the Effect (untranslated)
+   wxString          mPromptName; // If a prompt, we need to remember original name.
    wxString          mAction; // translatable
    wxString          mInfo;   // translatable
    wxString          mAuthor;
@@ -240,6 +241,7 @@ private:
    wxString          mHelpFile;
    bool              mHelpFileExists;
    EffectType        mType;
+   EffectType        mPromptType; // If a prompt, need ot remember original type.
 
    bool              mEnablePreview;
    bool              mDebugButton;  // Set to false to disable Debug button.

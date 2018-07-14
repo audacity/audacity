@@ -151,9 +151,11 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mMaxLen = NYQ_MAX_LEN;
 
    // Interactive Nyquist (for effects)
-   if (fName == NYQUIST_PROMPT_ID) {
+   if (fName == NYQUIST_EFFECTS_PROMPT_ID) {
       mName = XO("Nyquist Effects Prompt");
       mType = EffectTypeProcess;
+      mPromptName = mName;
+      mPromptType = mType;
       mOK = true;
       mIsPrompt = true;
       return;
@@ -163,6 +165,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    if (fName == NYQUIST_TOOLS_PROMPT_ID) {
       mName = XO("Nyquist Tools Prompt");
       mType = EffectTypeTool;
+      mPromptName = mName;
+      mPromptType = mType;
       mOK = true;
       mIsPrompt = true;
       return;
@@ -195,7 +199,7 @@ wxString NyquistEffect::GetPath()
    if (mIsPrompt)
       return (mType == EffectTypeTool) ? 
          NYQUIST_TOOLS_PROMPT_ID :
-         NYQUIST_PROMPT_ID;
+         NYQUIST_EFFECTS_PROMPT_ID;
 
    return mFileName.GetFullPath();
 }
@@ -512,9 +516,9 @@ bool NyquistEffect::Init()
    // EffectType may not be defined in script, so
    // reset each time we call the Nyquist Prompt.
    if (mIsPrompt) {
-      mName = XO("Nyquist Effects Prompt");
+      mName = mPromptName;
       // Reset effect type each time we call the Nyquist Prompt.
-      mType = EffectTypeProcess;
+      mType = mPromptType;
       mIsSpectral = false;
       mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
       mEnablePreview = true;  // Preview button always enabled for Nyquist Prompt.
