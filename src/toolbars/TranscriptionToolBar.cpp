@@ -40,6 +40,8 @@
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
+#include "../tracks/ui/Scrubbing.h"
+#include "../Prefs.h"
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
@@ -447,12 +449,22 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    }
 
-   // Create a TimeTrack if we haven't done so already
-   if (!mTimeTrack) {
-      mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
+   // Fixed speed play is the old method, that uses a time track.
+   // VariSpeed play reuses Scrubbing.
+   bool bFixedSpeedPlay = !gPrefs->ReadBool(wxT("/AudioIO/VariSpeedPlay"), true);
+   if (bFixedSpeedPlay)
+   {
+      // Create a TimeTrack if we haven't done so already
       if (!mTimeTrack) {
-         return;
+         mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
+         if (!mTimeTrack) {
+            return;
+         }
       }
+      // Set the speed range
+      //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
+      //mTimeTrack->SetRangeLower((double)mPlaySpeed / 100.0);
+      mTimeTrack->GetEnvelope()->Flatten((double)mPlaySpeed / 100.0);
    }
 
    // Pop up the button
@@ -463,18 +475,15 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       p->GetControlToolBar()->StopPlaying();
    }
 
-   // Set the speed range
-   //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
-   //mTimeTrack->SetRangeLower((double)mPlaySpeed / 100.0);
-   mTimeTrack->GetEnvelope()->Flatten((double)mPlaySpeed / 100.0);
-
    // Get the current play region
    double playRegionStart, playRegionEnd;
    p->GetPlayRegion(&playRegionStart, &playRegionEnd);
 
    // Start playing
-   if (playRegionStart >= 0) {
-//      playRegionEnd = playRegionStart + (playRegionEnd-playRegionStart)* 100.0/mPlaySpeed;
+   if (playRegionStart < 0)
+      return;
+   if (bFixedSpeedPlay)
+   {
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
       options.timeTrack = mTimeTrack.get();
@@ -484,9 +493,14 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
          : ControlToolBar::PlayAppearance::Straight;
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
-          options,
-          PlayMode::normalPlay,
-          appearance);
+            options,
+            PlayMode::normalPlay,
+            appearance);
+   }
+   else
+   {
+      Scrubber &Scrubber = p->GetScrubber();
+      Scrubber.StartSpeedPlay(GetPlaySpeed(), playRegionStart, playRegionEnd);
    }
 }
 

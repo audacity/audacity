@@ -115,6 +115,18 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
    }
    S.EndStatic();
+
+   S.StartStatic(_("Options"));
+   {
+      S.StartTwoColumn();
+      {
+         S.TieCheckBox("&Vari-Speed Play", "/AudioIO/VariSpeedPlay", true);
+      }
+      S.EndTwoColumn();
+   }
+   S.EndStatic();
+
+
    S.EndScroller();
 
 }

@@ -80,6 +80,7 @@ public:
    // Returns true iff the event should be considered consumed by this:
    // Assume xx is relative to the left edge of TrackPanel!
    bool MaybeStartScrubbing(wxCoord xx);
+   bool StartSpeedPlay(double speed, double time0, double time1);
 
    void ContinueScrubbingUI();
    void ContinueScrubbingPoll();
@@ -168,15 +169,15 @@ private:
 
 private:
    int mScrubToken;
-   bool mPaused;
    int mScrubSpeedDisplayCountdown;
    wxCoord mScrubStartPosition;
    wxCoord mLastScrubPosition {};
    bool mScrubSeekPress {};
    bool mSmoothScrollingScrub;
 
+   bool mPaused{};
    bool mSeeking {};
-
+   bool mSpeedPlaying{true};
    bool mDragging {};
 
    bool mCancelled {};

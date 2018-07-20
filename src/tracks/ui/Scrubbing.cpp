@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
 #include "../../toolbars/ToolManager.h"
+#include "../../toolbars/TranscriptionToolBar.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
 #ifdef USE_TRANSCRIPTION_TOOLBAR
@@ -348,7 +349,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                time1 = time0 + delta;
             }
 #endif
-
+            mSpeedPlaying = false;
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
@@ -432,6 +433,80 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
    }
 }
 
+
+
+bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
+{
+   if (IsScrubbing())
+      return false;
+
+   const bool busy = gAudioIO->IsBusy();
+   if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
+      // Do not stop recording, and don't try to start scrubbing after
+      // recording stops
+      mScrubStartPosition = -1;
+      return false;
+   }
+
+   ControlToolBar * const ctb = mProject->GetControlToolBar();
+   if (busy) {
+      ctb->StopPlaying();
+   }
+   mScrubStartPosition = 0;
+   mSpeedPlaying = true;
+   mMaxSpeed = speed;
+   mDragging = false;
+
+   AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
+   options.pScrubbingOptions = &mOptions;
+   options.timeTrack = NULL;
+   mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
+   mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
+   mOptions.minSpeed = speed;
+   mOptions.maxSpeed = speed;
+
+   if (time1 == time0)
+      time1 = std::max(0.0, mProject->GetTracks()->GetEndTime());
+   mOptions.minSample = 0;
+   mOptions.maxSample = lrint(time1 * options.rate);
+   mOptions.minStutter = lrint(std::max(0.0, MinStutter) * options.rate);
+   mOptions.enqueueBySpeed = true;
+   mOptions.adjustStart = false;
+
+      
+   ControlToolBar::PlayAppearance appearance = ControlToolBar::PlayAppearance::Straight;
+
+   const bool backwards = time1 < time0;
+#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
+   static const double maxScrubSpeedBase =
+      pow(2.0, 1.0 / ScrubSpeedStepsPerOctave);
+   mLogMaxScrubSpeed = floor(0.5 +
+      log(mMaxSpeed) / log(maxScrubSpeedBase)
+   );
+#endif
+
+   mScrubSpeedDisplayCountdown = 0;
+   mScrubToken =
+      ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
+         PlayMode::normalPlay, appearance, backwards);
+
+   if (mScrubToken >= 0) {
+      mPaused = false;
+      mLastScrubPosition = 0;
+
+#ifdef USE_SCRUB_THREAD
+      // Detached thread is self-deleting, after it receives the Delete() message
+      mpThread = safenew ScrubPollerThread{ *this };
+      mpThread->Create(4096);
+      mpThread->Run();
+#endif
+
+      mPoller->Start(ScrubPollInterval_ms);
+   }
+   return true;
+}
+
+
 void Scrubber::ContinueScrubbingPoll()
 {
    // Thus scrubbing relies mostly on periodic polling of mouse and keys,
@@ -452,7 +527,20 @@ void Scrubber::ContinueScrubbingPoll()
       mOptions.enqueueBySpeed = true;
       result = gAudioIO->EnqueueScrub(0, mOptions);
    }
-   else {
+   else if (mSpeedPlaying) {
+      // default speed of 1.3 set, so that we can hear there is a problem
+      // when playAtSpeedTB not found.
+      double speed = 1.3;
+      TranscriptionToolBar *const playAtSpeedTB = mProject->GetTranscriptionToolBar();
+      if (playAtSpeedTB) {
+         speed = playAtSpeedTB->GetPlaySpeed();
+      }
+      mOptions.minSpeed = speed;
+      mOptions.maxSpeed = speed;
+      mOptions.adjustStart = false;
+      mOptions.enqueueBySpeed = true;
+      result = gAudioIO->EnqueueScrub(speed, mOptions);
+   } else {
       const wxMouseState state(::wxGetMouseState());
       const auto trackPanel = mProject->GetTrackPanel();
       const wxPoint position = trackPanel->ScreenToClient(state.GetPosition());
@@ -687,10 +775,22 @@ bool Scrubber::IsPaused() const
 
 void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
 {
-   if (event.GetActive())
-      Pause(!IsScrubbing() || mProject->GetControlToolBar()->IsPauseDown());
+   // First match priority logic...
+   // Pause if Pause down, or not scrubbing.
+   if (mProject->GetControlToolBar()->IsPauseDown())
+      Pause( true );
+   else if (!IsScrubbing())
+      Pause( true );
+
+   // Speed playing does not pause if losing focus.
+   else if (mSpeedPlaying)
+      Pause( false );
+
+   // But scrub and seek do.
+   else if (!event.GetActive())
+      Pause( true );
    else
-      Pause(true);
+      Pause(false);
 
    event.Skip();
 }
