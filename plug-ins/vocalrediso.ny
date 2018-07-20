@@ -99,7 +99,7 @@ bar-x bar-y s-xy s-x2 s-y2 (sqrt s-x2) (sqrt s-y2) r r2 (* s-y2 (- 1 r2)) a0 a1)
              ((between corr 0.97 1.1)
               (_ " - The two channels are identical, i.e. dual mono.
    The center can't be removed.
-      Any remaining  difference may be caused by lossy encoding."))
+      Any remaining difference may be caused by lossy encoding."))
              ((between corr 0.9 0.97)  
               (_ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.
    Most likely, the center extraction will be poor."))
