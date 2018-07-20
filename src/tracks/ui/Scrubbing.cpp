@@ -462,8 +462,8 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    options.timeTrack = NULL;
    mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
    mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
-   mOptions.minSpeed = speed;
-   mOptions.maxSpeed = speed;
+   mOptions.minSpeed = speed -0.01;
+   mOptions.maxSpeed = speed +0.01;
 
    if (time1 == time0)
       time1 = std::max(0.0, mProject->GetTracks()->GetEndTime());
@@ -535,8 +535,8 @@ void Scrubber::ContinueScrubbingPoll()
       if (playAtSpeedTB) {
          speed = playAtSpeedTB->GetPlaySpeed();
       }
-      mOptions.minSpeed = speed;
-      mOptions.maxSpeed = speed;
+      mOptions.minSpeed = speed -0.01;
+      mOptions.maxSpeed = speed +0.01;
       mOptions.adjustStart = false;
       mOptions.enqueueBySpeed = true;
       result = gAudioIO->EnqueueScrub(speed, mOptions);
