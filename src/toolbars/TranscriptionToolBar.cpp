@@ -90,7 +90,7 @@ END_EVENT_TABLE()
 
 ////Standard Constructor
 TranscriptionToolBar::TranscriptionToolBar()
-: ToolBar(TranscriptionBarID, _("Transcription"), wxT("Transcription"))
+: ToolBar(TranscriptionBarID, _("Transcription"), wxT("Transcription"),true)
 {
    mPlaySpeed = 1.0 * 100.0;
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -133,6 +133,11 @@ void TranscriptionToolBar::Create(wxWindow * parent)
    //then stop Audio if it is playing, so we can be playing
    //audio and open a second project.
    mPlaySpeed = (mPlaySpeedSlider->Get()) * 100;
+
+   // Simulate a size event to set initial placement/size
+   wxSizeEvent event(GetSize(), GetId());
+   event.SetEventObject(this);
+   GetEventHandler()->ProcessEvent(event);
 }
 
 /// This is a convenience function that allows for button creation in
@@ -199,9 +204,10 @@ void TranscriptionToolBar::Populate()
          .Line( 0.16667f )
          .Page( 0.16667f )
    );
+   mPlaySpeedSlider->SetSizeHints(wxSize(100, 25), wxSize(1000, 25));
    mPlaySpeedSlider->Set(mPlaySpeed / 100.0);
    mPlaySpeedSlider->SetLabel(_("Playback Speed"));
-   Add( mPlaySpeedSlider, 0, wxALIGN_CENTER );
+   Add( mPlaySpeedSlider, 1, wxALIGN_CENTER );
    mPlaySpeedSlider->Bind(wxEVT_SET_FOCUS,
                  &TranscriptionToolBar::OnFocus,
                  this);
@@ -321,7 +327,6 @@ void TranscriptionToolBar::RegenerateTooltips()
       };
       ToolBar::SetButtonToolTip( *mButtons[entry.tool], commands, 2u );
    }
-
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mButtons[TTB_StartOn]->SetToolTip(TRANSLATABLE("Left-to-On"));

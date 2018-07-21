@@ -586,7 +586,6 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
    {
       mResizer->Show(dock != NULL);
       Layout();
-      Fit();
    }
 }
 
