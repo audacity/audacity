@@ -191,11 +191,13 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                            int style,
                            float value,
                            float line,
-                           float page):
+                           float page,
+                           LWSlider * pSource):
    wxDialogWrapper(parent,id,title,position),
    mStyle(style)
 {
    SetName(GetTitle());
+   mpOrigin = pSource;
    ShuttleGui S(this, eIsCreating);
 
    S.StartVerticalLay();
@@ -229,8 +231,13 @@ SliderDialog::~SliderDialog()
 
 bool SliderDialog::TransferDataToWindow()
 {
-   mTextCtrl->SetValue(wxString::Format(wxT("%g"), mSlider->Get(false)));
+   float value = mSlider->Get(false);
+   mTextCtrl->SetValue(wxString::Format(wxT("%g"), value));
    mTextCtrl->SetSelection(-1, -1);
+   if (mpOrigin) {
+      mpOrigin->Set(value);
+      mpOrigin->SendUpdate(value);
+   }
 
    return true;
 }
@@ -243,7 +250,10 @@ bool SliderDialog::TransferDataFromWindow()
    if (mStyle == DB_SLIDER)
       value = DB_TO_LINEAR(value);
    mSlider->Set(value);
-
+   if (mpOrigin) {
+      mpOrigin->Set(value);
+      mpOrigin->SendUpdate(value);
+   }
    return true;
 }
 
@@ -952,7 +962,7 @@ bool LWSlider::ShowDialog(wxPoint pos)
 
 bool LWSlider::DoShowDialog(wxPoint pos)
 {
-   float value;
+   float value = mCurrentValue;
    bool changed = false;
 
    SliderDialog dlg( NULL,
@@ -963,21 +973,27 @@ bool LWSlider::DoShowDialog(wxPoint pos)
                      mStyle,
                      Get(),
                      mScrollLine,
-                     mScrollPage);
+                     mScrollPage,
+                     this);
    if (pos == wxPoint(-1, -1)) {
       dlg.Center();
    }
 
-   if( dlg.ShowModal() == wxID_OK )
-   {
-      value = dlg.Get();
-      if( value != mCurrentValue )
-      {
-         mCurrentValue = value;
-         changed = true;
-      }
-   }
+   float initialValue = mCurrentValue;
 
+   changed = (dlg.ShowModal() == wxID_OK);
+   if( changed )
+      value = dlg.Get();
+
+   // We now expect the pop up dialog to be 
+   // sending updates as we go.
+   // So this code is needed to possibly restore the old
+   // value, on a cancel.
+   if (mCurrentValue != value) {
+      mCurrentValue = value;
+      SendUpdate(value);
+   }
+   
    return changed;
 }
 
