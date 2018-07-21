@@ -204,7 +204,7 @@ void TranscriptionToolBar::Populate()
          .Line( 0.16667f )
          .Page( 0.16667f )
    );
-   mPlaySpeedSlider->SetSizeHints(wxSize(100, 25), wxSize(1000, 25));
+   mPlaySpeedSlider->SetSizeHints(wxSize(100, 25), wxSize(2000, 25));
    mPlaySpeedSlider->Set(mPlaySpeed / 100.0);
    mPlaySpeedSlider->SetLabel(_("Playback Speed"));
    Add( mPlaySpeedSlider, 1, wxALIGN_CENTER );

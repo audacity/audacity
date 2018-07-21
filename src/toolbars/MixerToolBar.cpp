@@ -82,6 +82,7 @@ void MixerToolBar::Populate()
                               wxDefaultPosition, wxSize(130, 25),
                               ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
    Add(mInputSlider, 1, wxALIGN_CENTER);
+   mInputSlider->SetSizeHints(wxSize(75, 25), wxSize(1000, 25));
 
    // Playback icon and slider
    Add(safenew AStaticBitmap(this,
@@ -91,9 +92,7 @@ void MixerToolBar::Populate()
                                wxDefaultPosition, wxSize(130, 25),
                                ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
    Add(mOutputSlider, 1, wxALIGN_CENTER);
-
-   mInputSlider->SetSizeHints( wxSize(75, 25), wxSize(500, 25));
-   mOutputSlider->SetSizeHints(wxSize(75, 25), wxSize(500, 25));
+   mOutputSlider->SetSizeHints(wxSize(75, 25), wxSize(1000, 25));
 
    // this bit taken from SelectionBar::Populate()
    mInputSlider->Bind(wxEVT_SET_FOCUS,
