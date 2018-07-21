@@ -2003,7 +2003,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       }
       else {
          playbackTime = lrint(scrubOptions.delay * sampleRate) / sampleRate;
-         mPlayMode = PLAY_SCRUB;
+         mPlayMode = (scrubOptions.isPlayingAtSpeed) ? PLAY_AT_SPEED : PLAY_SCRUB;
       }
    }
 #endif
@@ -2942,7 +2942,7 @@ double AudioIO::NormalizeStreamTime(double absoluteTime) const
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    // Limit the time between t0 and t1 if not scrubbing.
    // Should the limiting be necessary in any play mode if there are no bugs?
-   if (mPlayMode != PLAY_SCRUB)
+   if( (mPlayMode != PLAY_SCRUB) && (mPlayMode != PLAY_AT_SPEED))
 #endif
       absoluteTime = LimitStreamTime(absoluteTime);
 
@@ -3258,6 +3258,11 @@ AudioThread::ExitCode AudioThread::Entry()
       gAudioIO->mAudioThreadFillBuffersLoopActive = false;
 
       if (gAudioIO->mPlayMode == AudioIO::PLAY_SCRUB) {
+         // Rely on the Wait() in ScrubQueue::Transformer()
+         // This allows the scrubbing update interval to be made very short without
+         // playback becoming intermittent.
+      }
+      else if (gAudioIO->mPlayMode == AudioIO::PLAY_AT_SPEED) {
          // Rely on the Wait() in ScrubQueue::Transformer()
          // This allows the scrubbing update interval to be made very short without
          // playback becoming intermittent.
@@ -3850,7 +3855,7 @@ void AudioIO::FillBuffers()
             auto frames = available;
             bool progress = true;
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-            if (mPlayMode == PLAY_SCRUB)
+            if ((mPlayMode == PLAY_SCRUB) || (mPlayMode == PLAY_AT_SPEED))
                // scrubbing does not use warped time and length
                frames = limitSampleBufferSize(frames, mScrubDuration);
             else
@@ -3887,7 +3892,8 @@ void AudioIO::FillBuffers()
 
                // don't generate either if scrubbing at zero speed.
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-               const bool silent = (mPlayMode == PLAY_SCRUB) && mSilentScrub;
+               const bool silent = ((mPlayMode == PLAY_SCRUB)|| 
+                  (mPlayMode == PLAY_AT_SPEED)) && mSilentScrub;
 #else
                const bool silent = false;
 #endif
@@ -3930,6 +3936,7 @@ void AudioIO::FillBuffers()
             {
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             case PLAY_SCRUB:
+            case PLAY_AT_SPEED:
             {
                mScrubDuration -= frames;
                wxASSERT(mScrubDuration >= 0);
@@ -4940,6 +4947,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // While scrubbing, ignore seek requests
          if (gAudioIO->mSeek && gAudioIO->mPlayMode == AudioIO::PLAY_SCRUB)
             gAudioIO->mSeek = 0.0;
+         else if (gAudioIO->mSeek && gAudioIO->mPlayMode == AudioIO::PLAY_AT_SPEED)
+            gAudioIO->mSeek = 0.0;
          else
 #endif
          if (gAudioIO->mSeek)
@@ -5118,22 +5127,37 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             }
             group++;
 
-            // If our buffer is empty and the time indicator is past
-            // the end, then we've actually finished playing the entire
+
+            bool bDone = true;
+
+            // If the time indicator is past
+            // the end, then we may have finished playing the entire
             // selection.
-            // msmeyer: We never finish if we are playing looped
-            // PRL: or scrubbing.
-            if (len == 0 &&
-                gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT) {
-               if ((gAudioIO->ReversedTime()
+            if (bDone)
+               bDone = bDone && (gAudioIO->ReversedTime()
                   ? gAudioIO->mTime <= gAudioIO->mT1
-                  : gAudioIO->mTime >= gAudioIO->mT1))
-                  // PRL: singalling MIDI output complete is necessary if
-                  // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
+                  : gAudioIO->mTime >= gAudioIO->mT1);
+
+            // We never finish if we are playing looped or or scrubbing.
+            if (bDone) {
+               // playing straight we must have no more audio.
+               if (gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT)
+                  bDone = (len == 0);
+               // playing at speed, it is OK to have some audio left over.
+               else if (gAudioIO->mPlayMode == AudioIO::PLAY_AT_SPEED)
+                  bDone = true;
+               else
+                  bDone = false;
+            }
+
+
+            if (bDone){
+               // PRL: singalling MIDI output complete is necessary if
+               // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
 #ifdef EXPERIMENTAL_MIDI_OUT
-                  gAudioIO->mMidiOutputComplete = true,
+               gAudioIO->mMidiOutputComplete = true,
 #endif
-                  callbackReturn = paComplete;
+               callbackReturn = paComplete;
             }
 
             if (cut) // no samples to process, they've been discarded
@@ -5207,6 +5231,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // "Consume" only as much as the ring buffers produced, which may
          // be less than framesPerBuffer (during "stutter")
          if (gAudioIO->mPlayMode == AudioIO::PLAY_SCRUB)
+            gAudioIO->mTime = gAudioIO->mScrubQueue->Consumer(maxLen);
+         else if (gAudioIO->mPlayMode == AudioIO::PLAY_AT_SPEED)
             gAudioIO->mTime = gAudioIO->mScrubQueue->Consumer(maxLen);
 #endif
 
@@ -5344,7 +5370,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       // Update the current time position if not scrubbing
       // (Already did it above, for scrubbing)
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-      if (gAudioIO->mPlayMode != AudioIO::PLAY_SCRUB)
+      if( (gAudioIO->mPlayMode != AudioIO::PLAY_SCRUB) &&
+         (gAudioIO->mPlayMode != AudioIO::PLAY_AT_SPEED) )
 #endif
       {
          double delta = framesPerBuffer / gAudioIO->mRate;

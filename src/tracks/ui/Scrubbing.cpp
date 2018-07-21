@@ -354,6 +354,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
             mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
+            mOptions.isPlayingAtSpeed = false;
             mOptions.minSpeed = 0.0;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
@@ -472,7 +473,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mOptions.minStutter = lrint(std::max(0.0, MinStutter) * options.rate);
    mOptions.enqueueBySpeed = true;
    mOptions.adjustStart = false;
-
+   mOptions.isPlayingAtSpeed = true;
       
    ControlToolBar::PlayAppearance appearance = ControlToolBar::PlayAppearance::Straight;
 
@@ -486,8 +487,11 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
 #endif
 
    mScrubSpeedDisplayCountdown = 0;
+   // last buffer should not be any bigger than this.
+   double lastBuffer = (2 * ScrubPollInterval_ms) / 1000.0;
    mScrubToken =
-      ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
+      // Reduce time by 'lastBuffer' fudge factor, so that the Play will stop.
+      ctb->PlayPlayRegion(SelectedRegion(time0, time1-lastBuffer), options,
          PlayMode::normalPlay, appearance, backwards);
 
    if (mScrubToken >= 0) {

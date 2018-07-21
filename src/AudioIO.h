@@ -750,6 +750,7 @@ private:
       PLAY_LOOPED,
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
       PLAY_SCRUB,
+      PLAY_AT_SPEED, // a version of PLAY_SCRUB.
 #endif
    }                   mPlayMode;
    double              mCutPreviewGapStart;

@@ -45,6 +45,7 @@ struct ScrubbingOptions {
    sampleCount minSample {};
 
    bool enqueueBySpeed {};
+   bool isPlayingAtSpeed{};
 
    double delay {};
 
