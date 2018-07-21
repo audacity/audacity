@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 MixerToolBar::MixerToolBar()
-: ToolBar(MixerBarID, _("Mixer"), wxT("Mixer"))
+: ToolBar(MixerBarID, _("Mixer"), wxT("Mixer"), true)
 {
    mInputSliderVolume = 0.0;
    mOutputSliderVolume = 0.0;
@@ -81,7 +81,7 @@ void MixerToolBar::Populate()
    mInputSlider = safenew ASlider(this, wxID_ANY, _("Recording Volume"),
                               wxDefaultPosition, wxSize(130, 25),
                               ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
-   Add(mInputSlider, 0, wxALIGN_CENTER);
+   Add(mInputSlider, 1, wxALIGN_CENTER);
 
    // Playback icon and slider
    Add(safenew AStaticBitmap(this,
@@ -90,7 +90,10 @@ void MixerToolBar::Populate()
    mOutputSlider = safenew ASlider(this, wxID_ANY, _("Playback Volume"),
                                wxDefaultPosition, wxSize(130, 25),
                                ASlider::Options{}.Line( 0.1f ).Page( 2.0f ));
-   Add(mOutputSlider, 0, wxALIGN_CENTER);
+   Add(mOutputSlider, 1, wxALIGN_CENTER);
+
+   mInputSlider->SetSizeHints( wxSize(75, 25), wxSize(500, 25));
+   mOutputSlider->SetSizeHints(wxSize(75, 25), wxSize(500, 25));
 
    // this bit taken from SelectionBar::Populate()
    mInputSlider->Bind(wxEVT_SET_FOCUS,
@@ -168,7 +171,7 @@ void MixerToolBar::UpdatePrefs()
    Layout();
 
    // Resize the toolbar to fit the contents
-   Fit();
+   //Fit();
 
    // And make that size the minimum
    SetMinSize( wxWindow::GetSizer()->GetMinSize() );

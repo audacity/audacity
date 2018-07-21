@@ -38,6 +38,7 @@ class MixerToolBar final : public ToolBar {
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};
    void EnableDisableButtons() override {};
+   int GetMinToolbarWidth() override { return 250; }
 
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
