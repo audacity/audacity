@@ -881,6 +881,9 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    const auto ruler = mProject->GetRulerPanel();
    auto position = ::wxGetMousePosition();
 
+   if (scrubber.IsSpeedPlaying())
+      return;
+
    {
       if(scrubber.HasStartedScrubbing()) {
          auto xx = ruler->ScreenToClient(position).x;
@@ -1049,7 +1052,10 @@ const wxString &Scrubber::GetUntranslatedStateString() const
 {
    static wxString empty;
 
-   if (HasStartedScrubbing()) {
+   if (IsSpeedPlaying()) {
+      return(_("Playing at Speed"));
+   }
+   else if (HasStartedScrubbing()) {
       auto &item = FindMenuItem(Seeks() || TemporarilySeeks());
       return item.status;
    }

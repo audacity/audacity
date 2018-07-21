@@ -91,6 +91,8 @@ public:
    wxCoord GetScrubStartPosition() const
    { return mScrubStartPosition; }
 
+   bool IsSpeedPlaying() const
+   { return IsScrubbing() && mSpeedPlaying; }
    // True iff the user has clicked to start scrub and not yet stopped,
    // but IsScrubbing() may yet be false
    bool HasStartedScrubbing() const
