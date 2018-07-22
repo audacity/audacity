@@ -457,6 +457,9 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    // Fixed speed play is the old method, that uses a time track.
    // VariSpeed play reuses Scrubbing.
    bool bFixedSpeedPlay = !gPrefs->ReadBool(wxT("/AudioIO/VariSpeedPlay"), true);
+   // Scrubbing only supports straight through play.
+   // So if looped or cutPreview, we have to fall back to fixed speed.
+   bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
    if (bFixedSpeedPlay)
    {
       // Create a TimeTrack if we haven't done so already
@@ -491,6 +494,9 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    {
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
+      // No need to set cutPreview options.
+      // Due to a rather hacky approach, the appearance is used
+      // to signal use of cutpreview to code below.
       options.timeTrack = mTimeTrack.get();
       ControlToolBar::PlayAppearance appearance =
          cutPreview ? ControlToolBar::PlayAppearance::CutPreview
