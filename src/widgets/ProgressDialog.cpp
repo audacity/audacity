@@ -1722,7 +1722,21 @@ ProgressResult TimerProgressDialog::UpdateProgress()
    //      (and probably other things).  I do not yet know why this happens and
    //      I'm not too keen on having timer events processed here, but you do
    //      what you have to do.
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
+   // JKC: Added thread category, since blocking a thread message could cause things 
+   //      to gum up.  
+   //      See http://trac.wxwidgets.org/ticket/14027 for discussion of why
+   //      YieldFor is flaky.  
+   //      Conclusion...  use wxEVT_CATEGORY_ALL since with the list below, we 
+   //      are pretty much there already.
+   //           wxEVT_CATEGORY_UI |
+   //           wxEVT_CATEGORY_USER_INPUT |
+   //           wxEVT_CATEGORY_TIMER |
+   //           wxEVT_CATEGORY_THREAD
+
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_ALL );
+   // JKC: Yielding twice, because e.g. a timer can build up a lot of events, and we 
+   //      really want to make sure they are worked through.
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_ALL );
 
    // MY: Added this after the YieldFor to check we haven't changed the outcome based on buttons pressed...
    auto iReturn = ProgressResult::Success;
