@@ -1228,22 +1228,24 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("Benchmark"), XXO("&Run Benchmark..."), FN(OnBenchmark));
 //#endif
 
-#ifdef IS_ALPHA
-      c->AddCheck(wxT("SimulateRecordingErrors"),
-                  XXO("Simulate Recording Errors"),
-                  FN(OnSimulateRecordingErrors),
-                  gAudioIO->mSimulateRecordingErrors);
-      c->AddCheck(wxT("DetectUpstreamDropouts"),
-                  XXO("Detect Upstream Dropouts"),
-                  FN(OnDetectUpstreamDropouts),
-                  gAudioIO->mDetectUpstreamDropouts);
-#endif
       c->AddSeparator();
 
       PopulateEffectsMenu(c,
          EffectTypeTool,
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
+
+#ifdef IS_ALPHA
+      c->AddSeparator();
+      c->AddCheck(wxT("SimulateRecordingErrors"),
+         XXO("Simulate Recording Errors"),
+         FN(OnSimulateRecordingErrors),
+         gAudioIO->mSimulateRecordingErrors);
+      c->AddCheck(wxT("DetectUpstreamDropouts"),
+         XXO("Detect Upstream Dropouts"),
+         FN(OnDetectUpstreamDropouts),
+         gAudioIO->mDetectUpstreamDropouts);
+#endif
 
       c->EndMenu();
 
