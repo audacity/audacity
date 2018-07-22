@@ -208,7 +208,7 @@ bool BuiltinCommandsModule::Initialize()
    const auto &names = kCOMMANDNames();
    for (const auto &name : names)
    {
-      wxLogDebug("Adding %s", name );
+      //wxLogDebug("Adding %s", name );
       mNames.Add(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
    }
 
