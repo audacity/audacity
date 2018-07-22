@@ -44,9 +44,9 @@ class DeviceToolBar final : public ToolBar {
    void OnChoice(wxCommandEvent & event);
 
    /// When the prefs don't exist this value is used.
-   /// It should be small enough to work on tiny screens
-   int GetInitialWidth()  override{ return 620; }
-   int GetMinToolbarWidth() override { return 200; }
+   /// 883 takes a complete row in the default initial size of Audacity.
+   int GetInitialWidth()  override{ return 883; }
+   int GetMinToolbarWidth() override { return 350; }
 
    void ShowInputDialog();
    void ShowOutputDialog();

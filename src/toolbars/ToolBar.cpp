@@ -522,8 +522,8 @@ void ToolBar::ReCreateButtons()
       // Initial size at least as big as minimum.
       if( sz3.y < sz2.y )
          sz3.y = sz2.y;
-      if( sz3.x < sz2.x )
-         sz3.x = GetInitialWidth();
+      //if( sz3.x < sz2.x )
+      sz3.x = GetInitialWidth();
       //sz.SetWidth();
       SetSize(sz3);
    }
