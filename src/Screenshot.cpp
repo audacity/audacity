@@ -408,7 +408,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          {
             S.Id(IdCaptureEdit).AddButton(_("Edit"));
             S.Id(IdCaptureDevice).AddButton(_("Device"));
-            S.Id(IdCaptureTranscription).AddButton(_("Transcription"));
+            S.Id(IdCaptureTranscription).AddButton(_("Play-at-Speed"));
             S.Id(IdCaptureScrub).AddButton(_("Scrub"));
          }
          S.EndHorizontalLay();

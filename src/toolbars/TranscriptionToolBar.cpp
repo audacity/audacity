@@ -90,7 +90,7 @@ END_EVENT_TABLE()
 
 ////Standard Constructor
 TranscriptionToolBar::TranscriptionToolBar()
-: ToolBar(TranscriptionBarID, _("Transcription"), wxT("Transcription"),true)
+: ToolBar(TranscriptionBarID, _("Play-at-Speed"), wxT("Transcription"),true)
 {
    mPlaySpeed = 1.0 * 100.0;
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -297,7 +297,7 @@ void TranscriptionToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Transcription"));
+   SetLabel(_("Play-at-Speed"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

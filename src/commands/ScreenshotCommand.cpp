@@ -68,7 +68,7 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
    { XO("Edit") },
    { XO("Device") },
    { XO("Scrub") },
-   { XO("Transcription") },
+   { XO("Play-at-Speed") },
    { XO("Trackpanel") },
    { XO("Ruler") },
    { XO("Tracks") },

@@ -804,7 +804,7 @@ void AudacityProject::CreateMenusAndCommands()
       /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
       c->AddCheck(wxT("ShowEditTB"), XXO("&Edit Toolbar"), FN(OnShowEditToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)*/
-      c->AddCheck(wxT("ShowTranscriptionTB"), XXO("Tra&nscription Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler*/
       c->AddCheck(wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar that manages devices*/
@@ -1372,9 +1372,9 @@ void AudacityProject::CreateMenusAndCommands()
       //////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
-      c->BeginSubMenu(_("Transcri&ption"));
+      c->BeginSubMenu(_("&Play-at-Speed"));
 
-      c->AddItem(wxT("PlayAtSpeed"), XXO("Pl&ay-at-Speed"), FN(OnPlayAtSpeed));
+      c->AddItem(wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"), FN(OnPlayAtSpeed));
       c->AddItem(wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped));
       c->AddItem(wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"), FN(OnPlayAtSpeedCutPreview));
       c->AddItem(wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."), FN(OnSetPlaySpeed));
