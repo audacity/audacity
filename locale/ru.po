@@ -8968,7 +8968,7 @@ msgstr "Раздельная обработка стереоканалов: %s"
 #, c-format
 #| msgid "Analyzing second track of stereo pair: "
 msgid "Analyzing second track of stereo pair: %s"
-msgstr "Анализ второй дорожки стереопары: "
+msgstr "Анализ второй дорожки стереопары: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
