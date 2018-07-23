@@ -180,8 +180,8 @@ public:
 
    ~FFmpegImportPlugin() { }
 
-   wxString GetPluginStringID() { return wxT("libav"); }
-   wxString GetPluginFormatDescription();
+   wxString GetPluginStringID() override { return wxT("libav"); }
+   wxString GetPluginFormatDescription() override;
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;

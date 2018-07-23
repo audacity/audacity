@@ -110,8 +110,8 @@ public:
 
    ~LOFImportPlugin() { }
 
-   wxString GetPluginStringID() { return wxT("lof"); }
-   wxString GetPluginFormatDescription();
+   wxString GetPluginStringID() override { return wxT("lof"); }
+   wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
