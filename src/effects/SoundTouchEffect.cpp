@@ -25,6 +25,31 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "TimeWarper.h"
 #include "../NoteTrack.h"
 
+// Soundtouch defines these as well, which are also in generated configmac.h
+// and configunix.h, so get rid of them before including,
+// to avoid compiler warnings, and be sure to do this
+// after all other #includes, to avoid any mischief that might result
+// from doing the un-definitions before seeing any wx headers.
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE
+#undef VERSION
+#include "SoundTouch.h"
+
+#ifdef USE_MIDI
+EffectSoundTouch::EffectSoundTouch()
+{
+   mSemitones = 0;
+}
+#endif
+
+EffectSoundTouch::~EffectSoundTouch()
+{
+}
+
 bool EffectSoundTouch::ProcessLabelTrack(
    LabelTrack *lt, const TimeWarper &warper)
 {

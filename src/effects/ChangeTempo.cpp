@@ -34,6 +34,20 @@
 
 #include "ChangeTempo.h"
 
+// Soundtouch defines these as well, which are also in generated configmac.h
+// and configunix.h, so get rid of them before including,
+// to avoid compiler warnings, and be sure to do this
+// after all other #includes, to avoid any mischief that might result
+// from doing the un-definitions before seeing any wx headers.
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE
+#undef VERSION
+#include "SoundTouch.h"
+
 enum
 {
    ID_PercentChange = 10000,
@@ -189,7 +203,7 @@ bool EffectChangeTempo::Process()
    else
 #endif
    {
-      mSoundTouch = std::make_unique<SoundTouch>();
+      mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
       mSoundTouch->setTempoChange(m_PercentChange);
       double mT1Dashed = mT0 + (mT1 - mT0)/(m_PercentChange/100.0 + 1.0);
       RegionTimeWarper warper{ mT0, mT1,
