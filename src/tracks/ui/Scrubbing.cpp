@@ -858,7 +858,7 @@ void ScrubbingOverlay::Draw(OverlayPanel &, wxDC &dc)
    if (!scrubber.ShouldDrawScrubSpeed())
       return;
 
-   static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
+   static const wxFont labelFont(24, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    dc.SetFont(labelFont);
 
    // These two colors were previously saturated red and green.  However
@@ -940,7 +940,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       wxCoord width, height;
       {
          wxClientDC dc(trackPanel);
-         static const wxFont labelFont(24, wxSWISS, wxNORMAL, wxNORMAL);
+         static const wxFont labelFont(24, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
          dc.SetFont(labelFont);
          dc.GetTextExtent(mNextScrubSpeedText, &width, &height);
       }

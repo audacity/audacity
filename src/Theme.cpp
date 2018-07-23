@@ -1312,7 +1312,7 @@ auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
    #ifdef __WXMSW__
       fontSize = 9;
    #endif
-   wxFont font(fontSize, wxDEFAULT, wxNORMAL, wxNORMAL);
+   wxFont font(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    GetTextExtent(textIn, &textWidth, &textHeight, NULL, NULL, &font);
 
    SetFont( font );

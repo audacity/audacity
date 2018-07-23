@@ -1108,7 +1108,7 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    mEnvRect.Deflate(2, 2);
 
    // Pure blue x-axis line
-   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 1, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 1, wxPENSTYLE_SOLID));
    int center = (int) (mEnvRect.height * mDbMax / (mDbMax - mDbMin) + 0.5);
    AColor::Line(memDC,
                 mEnvRect.GetLeft(), mEnvRect.y + center,
@@ -1116,7 +1116,7 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    //Now draw the actual response that you will get.
    //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
-   memDC.SetPen(wxPen(theTheme.Colour(clrResponseLines), 3, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour(clrResponseLines), 3, wxPENSTYLE_SOLID));
    double scale = (double) mEnvRect.height / (mDbMax - mDbMin);    // pixels per dB
    double yF;                                                     // gain at this freq
 

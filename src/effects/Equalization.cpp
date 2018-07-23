@@ -2937,7 +2937,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    mEnvRect.Deflate(PANELBORDER, PANELBORDER);
 
    // Pure blue x-axis line
-   memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxPENSTYLE_SOLID));
    int center = (int) (mEnvRect.height * mEffect->mdBMax/(mEffect->mdBMax-mEffect->mdBMin) + .5);
    AColor::Line(memDC,
       mEnvRect.GetLeft(), mEnvRect.y + center,
@@ -2951,7 +2951,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    }
 
    // Med-blue envelope line
-   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxPENSTYLE_SOLID));
 
    // Draw envelope
    int x, y, xlast = 0, ylast = 0;
@@ -2986,7 +2986,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
    //Now draw the actual response that you will get.
    //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
-   memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxPENSTYLE_SOLID));
    double scale = (double)mEnvRect.height/(mEffect->mdBMax-mEffect->mdBMin);   //pixels per dB
    double yF;   //gain at this freq
    double delta = mEffect->mHiFreq / (((double)mEffect->mWindowSize / 2.));   //size of each freq bin

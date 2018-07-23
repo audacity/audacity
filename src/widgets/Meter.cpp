@@ -264,11 +264,11 @@ MeterPanel::MeterPanel(AudacityProject *project,
    UpdatePrefs();
 
    wxColour backgroundColour = theTheme.Colour( clrMedium);
-   mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
+   mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
    SetBackgroundColour( backgroundColour );
 
-   mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxSOLID);
-   mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxSOLID);
+   mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
+   mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
 
    // Register for our preference update event
    wxTheApp->Bind(EVT_METER_PREFERENCES_CHANGED,
@@ -283,10 +283,10 @@ MeterPanel::MeterPanel(AudacityProject *project,
                         &MeterPanel::OnAudioIOStatus,
                         this);
 
-      mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxSOLID);
-      mBrush     = wxBrush( theTheme.Colour( clrMeterInputBrush       ), wxSOLID);
-      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterInputRMSBrush    ), wxSOLID);
-      mClipBrush = wxBrush( theTheme.Colour( clrMeterInputClipBrush   ), wxSOLID);
+      mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxPENSTYLE_SOLID);
+      mBrush     = wxBrush( theTheme.Colour( clrMeterInputBrush       ), wxBRUSHSTYLE_SOLID);
+      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterInputRMSBrush    ), wxBRUSHSTYLE_SOLID);
+      mClipBrush = wxBrush( theTheme.Colour( clrMeterInputClipBrush   ), wxBRUSHSTYLE_SOLID);
 //      mLightPen  = wxPen(   theTheme.Colour( clrMeterInputLightPen    ), 1, wxSOLID);
 //      mDarkPen   = wxPen(   theTheme.Colour( clrMeterInputDarkPen     ), 1, wxSOLID);
    }
@@ -296,10 +296,10 @@ MeterPanel::MeterPanel(AudacityProject *project,
                         &MeterPanel::OnAudioIOStatus,
                         this);
 
-      mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxSOLID);
-      mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxSOLID);
-      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxSOLID);
-      mClipBrush = wxBrush( theTheme.Colour( clrMeterOutputClipBrush  ), wxSOLID);
+      mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxPENSTYLE_SOLID);
+      mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxBRUSHSTYLE_SOLID);
+      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxBRUSHSTYLE_SOLID);
+      mClipBrush = wxBrush( theTheme.Colour( clrMeterOutputClipBrush  ), wxBRUSHSTYLE_SOLID);
 //      mLightPen  = wxPen(   theTheme.Colour( clrMeterOutputLightPen   ), 1, wxSOLID);
 //      mDarkPen   = wxPen(   theTheme.Colour( clrMeterOutputDarkPen    ), 1, wxSOLID);
    }

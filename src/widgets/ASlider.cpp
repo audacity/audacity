@@ -116,7 +116,7 @@ TipPanel::TipPanel(wxWindow *parent, const wxArrayString & labels)
 {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-   wxFont labelFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL);
+   wxFont labelFont(sliderFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    mWidth = mHeight = 0;
    for ( const auto &label : labels ) {
       int width, height;
@@ -158,7 +158,7 @@ void TipPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.SetBrush(AColor::tooltipBrush);
    dc.DrawRoundedRectangle(0, 0, mWidth, mHeight, 5);
 
-   dc.SetFont(wxFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL));
+   dc.SetFont(wxFont(sliderFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
    dc.SetTextForeground(AColor::tooltipPen.GetColour());
 
    int textWidth, textHeight;
@@ -666,7 +666,7 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
       // sliderFontSize is for the tooltip.
       // we need something smaller here...
       int fontSize = 7;
-      wxFont labelFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+      wxFont labelFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
       dc.SetFont(labelFont);
 
       // Colors

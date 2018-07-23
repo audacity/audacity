@@ -1328,7 +1328,7 @@ void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & WXUNUSED(bitmap),
    #ifdef __WXMSW__
       fontSize = 8;
    #endif
-   wxFont font(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+   wxFont font(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    GetTextExtent(str, &textWidth, &textHeight, NULL, NULL, &font);
 
    AColor::UseThemeColour( &dc, clrMedium );

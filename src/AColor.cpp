@@ -571,12 +571,12 @@ void AColor::MIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
       const int *colors = AColor_midicolors[channel - 1];
 
       dc->SetPen(wxPen(wxColour(colors[0],
-                                colors[1], colors[2]), 1, wxSOLID));
+                                colors[1], colors[2]), 1, wxPENSTYLE_SOLID));
       dc->SetBrush(wxBrush(wxColour(colors[0],
-                                    colors[1], colors[2]), wxSOLID));
+                                    colors[1], colors[2]), wxBRUSHSTYLE_SOLID));
    } else {
-      dc->SetPen(wxPen(wxColour(153, 153, 153), 1, wxSOLID));
-      dc->SetBrush(wxBrush(wxColour(153, 153, 153), wxSOLID));
+      dc->SetPen(wxPen(wxColour(153, 153, 153), 1, wxPENSTYLE_SOLID));
+      dc->SetBrush(wxBrush(wxColour(153, 153, 153), wxBRUSHSTYLE_SOLID));
    }
 
 }
@@ -588,13 +588,13 @@ void AColor::LightMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
       dc->SetPen(wxPen(wxColour(127 + colors[0] / 2,
                                 127 + colors[1] / 2,
-                                127 + colors[2] / 2), 1, wxSOLID));
+                                127 + colors[2] / 2), 1, wxPENSTYLE_SOLID));
       dc->SetBrush(wxBrush(wxColour(127 + colors[0] / 2,
                                     127 + colors[1] / 2,
-                                    127 + colors[2] / 2), wxSOLID));
+                                    127 + colors[2] / 2), wxBRUSHSTYLE_SOLID));
    } else {
-      dc->SetPen(wxPen(wxColour(204, 204, 204), 1, wxSOLID));
-      dc->SetBrush(wxBrush(wxColour(204, 204, 204), wxSOLID));
+      dc->SetPen(wxPen(wxColour(204, 204, 204), 1, wxPENSTYLE_SOLID));
+      dc->SetBrush(wxBrush(wxColour(204, 204, 204), wxBRUSHSTYLE_SOLID));
    }
 
 }
@@ -606,13 +606,13 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
       dc->SetPen(wxPen(wxColour(colors[0] / 2,
                                 colors[1] / 2,
-                                colors[2] / 2), 1, wxSOLID));
+                                colors[2] / 2), 1, wxPENSTYLE_SOLID));
       dc->SetBrush(wxBrush(wxColour(colors[0] / 2,
                                     colors[1] / 2,
-                                    colors[2] / 2), wxSOLID));
+                                    colors[2] / 2), wxBRUSHSTYLE_SOLID));
    } else {
-      dc->SetPen(wxPen(wxColour(102, 102, 102), 1, wxSOLID));
-      dc->SetBrush(wxBrush(wxColour(102, 102, 102), wxSOLID));
+      dc->SetPen(wxPen(wxColour(102, 102, 102), 1, wxPENSTYLE_SOLID));
+      dc->SetBrush(wxBrush(wxColour(102, 102, 102), wxBRUSHSTYLE_SOLID));
    }
 
 }

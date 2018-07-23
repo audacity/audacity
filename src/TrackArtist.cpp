@@ -492,7 +492,7 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
           !wt->GetName().IsEmpty()) {
          wxBrush Brush;
          wxCoord x,y;
-         wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
+         wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
          dc.SetFont(labelFont);
          dc.GetTextExtent( wt->GetName(), &x, &y );
          dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
@@ -624,7 +624,7 @@ void TrackArtist::DrawVRuler
       fontSize = 8;
 #endif
 
-      wxFont labelFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+      wxFont labelFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
       dc->SetFont(labelFont);
 
       int octave = 0;
@@ -3115,7 +3115,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                         dc.SetPen(wxPen(wxColour(RED(linecolor),
                               GREEN(linecolor),
                               BLUE(linecolor)),
-                              linethick, wxSOLID));
+                              linethick, wxPENSTYLE_SOLID));
                   }
                   if (shape != line) {
                      fillcolor = LookupIntAttribute(note, fillcolori, -1);
@@ -3125,7 +3125,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                         dc.SetBrush(wxBrush(wxColour(RED(fillcolor),
                               GREEN(fillcolor),
                               BLUE(fillcolor)),
-                              wxSOLID));
+                              wxBRUSHSTYLE_SOLID));
                      if (!fillflag) dc.SetBrush(*wxTRANSPARENT_BRUSH);
                   }
                   int y1 = track->PitchToY(LookupRealAttribute(note, y1r, note->pitch));
@@ -3216,11 +3216,11 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                      int size = LookupIntAttribute(note, sizei, 8);
                      const char *justify = LookupStringAttribute(note, justifys, "ld");
                      wxFont wxfont;
-                     wxfont.SetFamily(font == roman ? wxROMAN :
-                        (font == swiss ? wxSWISS :
-                           (font == modern ? wxMODERN : wxDEFAULT)));
-                     wxfont.SetStyle(wxNORMAL);
-                     wxfont.SetWeight(weight == bold ? wxBOLD : wxNORMAL);
+                     wxfont.SetFamily(font == roman ? wxFONTFAMILY_ROMAN :
+                        (font == swiss ? wxFONTFAMILY_SWISS :
+                           (font == modern ? wxFONTFAMILY_MODERN : wxFONTFAMILY_DEFAULT)));
+                     wxfont.SetStyle(wxFONTSTYLE_NORMAL);
+                     wxfont.SetWeight(weight == bold ? wxFONTWEIGHT_BOLD : wxFONTWEIGHT_NORMAL);
                      wxfont.SetPointSize(size);
                      dc.SetFont(wxfont);
 
@@ -3246,7 +3246,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                         dc.SetPen(wxPen(wxColour(RED(fillcolor),
                               GREEN(fillcolor),
                               BLUE(fillcolor)),
-                              1, wxSOLID));
+                              1, wxPENSTYLE_SOLID));
                         dc.DrawRectangle(TIME_TO_X(xx) + hoffset, yy + voffset,
                               textWidth, textHeight);
                      }

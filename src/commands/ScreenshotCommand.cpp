@@ -260,7 +260,7 @@ bool ScreenshotCommand::Capture(
       wxBitmap back(width + b.width, height + b.height);
       fullDC.SelectObject(back);
 
-      fullDC.SetBackground(wxBrush(mBackColor, wxSOLID));
+      fullDC.SetBackground(wxBrush(mBackColor, wxBRUSHSTYLE_SOLID));
       fullDC.Clear();
 
       fullDC.DrawBitmap(part, b.x, b.y);

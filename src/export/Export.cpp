@@ -1072,7 +1072,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 
    wxColour bkgnd = GetBackgroundColour();
-   wxBrush bkgndBrush( bkgnd, wxSOLID );
+   wxBrush bkgndBrush( bkgnd, wxBRUSHSTYLE_SOLID );
 
    wxMemoryDC memDC;
    memDC.SelectObject( *mBitmap );
