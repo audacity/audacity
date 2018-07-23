@@ -18,6 +18,8 @@
 #include <wx/osx/private.h>
 #endif
 
+#include <AppKit/NSApplication.h>
+
 #include <objc/objc.h>
 #include <CoreFoundation/CoreFoundation.h>
 
