@@ -116,19 +116,19 @@ Alg_parameters_ptr Alg_reader::process_attributes(
     if (attributes) {
         Alg_parameters_ptr a;
         bool in_seconds = seq->get_units_are_seconds();
-        if (a = Alg_parameters::remove_key(&attributes, "tempor")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "tempor"))) {
             double tempo = a->parm.r;
             seq->insert_tempo(tempo, seq->get_time_map()->time_to_beat(time));
         }
-        if (a = Alg_parameters::remove_key(&attributes, "beatr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "beatr"))) {
             double beat = a->parm.r;
             seq->insert_beat(time, beat);
         }
-        if (a = Alg_parameters::remove_key(&attributes, "timesig_numr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "timesig_numr"))) {
             tsnum = a->parm.r;
             ts_flag = true;
         }
-        if (a = Alg_parameters::remove_key(&attributes, "timesig_denr")) {
+        if ((a = Alg_parameters::remove_key(&attributes, "timesig_denr"))) {
             tsden = a->parm.r;
             ts_flag = true;
         }
@@ -426,7 +426,7 @@ long Alg_reader::parse_chan(string &field)
     const char *p = int_string;
     char c;
     // check that all chars in int_string are digits or '-':
-    while (c = *p++) {
+    while ((c = *p++)) {
         if (!isdigit(c) && c != '-') {
             parse_error(field, p - field.c_str() - 1, msg);
             return 0;
@@ -453,7 +453,7 @@ long Alg_reader::parse_int(string &field)
     const char *p = int_string;
     char c;
     // check that all chars in int_string are digits:
-    while (c = *p++) {
+    while ((c = *p++)) {
         if (!isdigit(c)) {
             parse_error(field, p - field.c_str() - 1, msg);
             return 0;
@@ -535,7 +535,7 @@ double Alg_reader::parse_dur(string &field, double base)
         // convert dur from seconds to beats
         dur = seq->get_time_map()->time_to_beat(base + dur) - 
               seq->get_time_map()->time_to_beat(base);
-    } else if (p = strchr(durs, toupper(field[1]))) {
+    } else if ((p = strchr(durs, toupper(field[1])))) {
         dur = duration_lookup[p - durs];
         last = 2;
     } else {
@@ -620,7 +620,7 @@ long Alg_reader::parse_key(string &field)
         // This routine would not have been called if field = "P<number>"
         // so it must be "K<number>" so <number> must be an integer.
         return parse_int(field);
-    } else if (p = strchr(pitches, toupper(field[1]))) {
+    } else if ((p = strchr(pitches, toupper(field[1])))) {
         long key = key_lookup[p - pitches];
         key = parse_after_key(key, field, 2);
         return key;
