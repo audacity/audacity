@@ -8298,7 +8298,7 @@ msgstr "Мин. Дб"
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%d Hz"
-msgstr "&d Гц"
+msgstr "%d Гц"
 
 #: src/effects/Equalization.cpp
 #, c-format
@@ -8938,7 +8938,7 @@ msgstr "Нормировка без удаления смещения по ос�
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
-msgstr "Ничего не выполняется..."
+msgstr "Ничего не выполняется...\n"
 
 #: src/effects/Normalize.cpp
 #, c-format
