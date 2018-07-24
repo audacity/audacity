@@ -61,8 +61,7 @@ private:
    bool ProcessOne(
       WaveTrack * t, const wxString &msg, double& progress, float offset);
    bool AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                     double &progress,
-                     float &offset, float &min, float &max);
+                     double &progress, float &offset, float &extent);
    void AnalyzeData(float *buffer, size_t len);
    bool AnalyseDC(const WaveTrack * track, const wxString &msg, double &progress,
                   float &offset);

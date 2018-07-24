@@ -207,13 +207,12 @@ bool EffectNormalize::Process()
          else
             msg =
                topMsg + wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName );
-         float offset, min, max;
-         bGoodResult = AnalyseTrack(track, msg, progress, offset, min, max); 
+         float offset, extent;
+         bGoodResult = AnalyseTrack(track, msg, progress, offset, extent);
          if (!bGoodResult )
              break;
          if(!track->GetLinked() || mStereoInd) {
             // mono or 'stereo tracks independently'
-            float extent = wxMax(fabs(max), fabs(min));
             if( (extent > 0) && mGain )
                mMult = ratio / extent;
             else
@@ -238,13 +237,11 @@ bool EffectNormalize::Process()
             track = (WaveTrack *) iter.Next();  // get the next one
             msg =
                topMsg + wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
-            float offset2, min2, max2;
-            bGoodResult = AnalyseTrack(track, msg, progress, offset2, min2, max2);
+            float offset2, extent2;
+            bGoodResult = AnalyseTrack(track, msg, progress, offset2, extent2);
             if ( !bGoodResult )
                 break;
-            float extent = wxMax(fabs(min), fabs(max));
-            extent = wxMax(extent, fabs(min2));
-            extent = wxMax(extent, fabs(max2));
+            extent = fmax(extent, extent2);
             if( (extent > 0) && mGain )
                mMult = ratio / extent; // we need to use this for both linked tracks
             else
@@ -348,9 +345,11 @@ bool EffectNormalize::TransferDataFromWindow()
 // EffectNormalize implementation
 
 bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                                   double &progress,
-                                   float &offset, float &min, float &max)
+                                   double &progress, float &offset, float &extent)
 {
+   bool result = true;
+   float min, max;
+
    if(mGain) {
       // Since we need complete summary data, we need to block until the OD tasks are done for this track
       // TODO: should we restrict the flags to just the relevant block files (for selections)
@@ -371,14 +370,15 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
    }
 
    if(mDC) {
-      auto rc = AnalyseDC(track, msg, progress, offset);
+      result = AnalyseDC(track, msg, progress, offset);
       min += offset;
       max += offset;
-      return rc;
    } else {
       offset = 0.0;
-      return true;
    }
+
+   extent = fmax(fabs(min), fabs(max));
+   return result;
 }
 
 //AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
