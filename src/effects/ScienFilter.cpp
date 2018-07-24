@@ -218,12 +218,7 @@ unsigned EffectScienFilter::GetAudioOutCount()
 bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
-   {
-      mpBiquad[iPair].fPrevIn = 0;
-      mpBiquad[iPair].fPrevPrevIn = 0;
-      mpBiquad[iPair].fPrevOut = 0;
-      mpBiquad[iPair].fPrevPrevOut = 0;
-   }
+      mpBiquad[iPair].Reset();
 
    return true;
 }
@@ -235,7 +230,7 @@ size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t
    {
       mpBiquad[iPair].pfIn = ibuf;
       mpBiquad[iPair].pfOut = outBlock[0];
-      Biquad_Process(&mpBiquad[iPair], blockLen);
+      mpBiquad[iPair].Process(blockLen);
       ibuf = outBlock[0];
    }
 
