@@ -330,7 +330,7 @@ protected:
    // is okay, but don't try to undo).
 
    // Pass a fraction between 0.0 and 1.0
-   bool TotalProgress(double frac);
+   bool TotalProgress(double frac, const wxString & = wxEmptyString);
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)

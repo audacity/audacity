@@ -6,6 +6,7 @@
 
   Dominic Mazzoni
   Vaughan Johnson (Preview)
+  Max Maisel (Loudness)
 
 **********************************************************************/
 
@@ -19,6 +20,7 @@
 #include <wx/textctrl.h>
 
 #include "Effect.h"
+#include "Biquad.h"
 
 class ShuttleGui;
 
@@ -58,15 +60,24 @@ public:
 private:
    // EffectNormalize implementation
 
+   enum AnalyseOperation
+   {
+      ANALYSE_DC, ANALYSE_LOUDNESS, ANALYSE_LOUDNESS_DC
+   };
+
    bool ProcessOne(
-      WaveTrack * t, const wxString &msg, int curTrackNum, float offset);
+      WaveTrack * t, const wxString &msg, double& progress, float offset);
    bool AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                     int curTrackNum,
-                     float &offset, float &min, float &max);
-   void AnalyzeData(float *buffer, size_t len);
-   bool AnalyseDC(const WaveTrack * track, const wxString &msg, int curTrackNum,
-                  float &offset);
+                     double &progress, float &offset, float &extent);
+   bool AnalyseTrackData(const WaveTrack * track, const wxString &msg, double &progress,
+                     AnalyseOperation op, float &offset);
+   void AnalyseDataDC(float *buffer, size_t len);
+   void AnalyseDataLoudness(float *buffer, size_t len);
+   void AnalyseDataLoudnessDC(float *buffer, size_t len);
    void ProcessData(float *buffer, size_t len, float offset);
+
+   void CalcEBUR128HPF(float fs);
+   void CalcEBUR128HSF(float fs);
 
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
@@ -76,11 +87,13 @@ private:
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
+   bool   mUseLoudness;
 
    double mCurT0;
    double mCurT1;
    float  mMult;
    double mSum;
+   double mSqSum;
    sampleCount    mCount;
 
    wxCheckBox *mGainCheckBox;
@@ -88,9 +101,12 @@ private:
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
+   wxCheckBox *mUseLoudnessCheckBox;
    wxCheckBox *mStereoIndCheckBox;
 
    bool mCreating;
+   Biquad mR128HSF;
+   Biquad mR128HPF;
 
    DECLARE_EVENT_TABLE()
 };

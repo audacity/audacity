@@ -1974,10 +1974,10 @@ void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
    mPreviewWithNotSelected = includeNotSelected;
 }
 
-bool Effect::TotalProgress(double frac)
+bool Effect::TotalProgress(double frac, const wxString &msg)
 {
    auto updateResult = (mProgress ?
-      mProgress->Update(frac) :
+      mProgress->Update(frac, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }

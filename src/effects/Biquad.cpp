@@ -1,32 +1,42 @@
+/**********************************************************************
+
+Audacity: A Digital Audio Editor
+
+EffectScienFilter.h
+
+Norm C
+Max Maisel
+
+***********************************************************************/
+
 #include "Biquad.h"
 
 #define square(a) ((a)*(a))
 
-void Biquad_Process (BiquadStruct* pBQ, int iNumSamples)
+Biquad::Biquad()
 {
-   float* pfIn = pBQ->pfIn;
-   float* pfOut = pBQ->pfOut;
-   float fPrevIn = pBQ->fPrevIn;
-   float fPrevPrevIn = pBQ->fPrevPrevIn;
-   float fPrevOut = pBQ->fPrevOut;
-   float fPrevPrevOut = pBQ->fPrevPrevOut;
+   pfIn = 0;
+   pfOut = 0;
+   fNumerCoeffs[B0] = 1;
+   fNumerCoeffs[B1] = 0;
+   fNumerCoeffs[B2] = 0;
+   fDenomCoeffs[A1] = 0;
+   fDenomCoeffs[A2] = 0;
+   Reset();
+}
+
+void Biquad::Reset()
+{
+   fPrevIn = 0;
+   fPrevPrevIn = 0;
+   fPrevOut = 0;
+   fPrevPrevOut = 0;
+}
+
+void Biquad::Process(int iNumSamples)
+{
    for (int i = 0; i < iNumSamples; i++)
-   {
-      float fIn = *pfIn++;
-      *pfOut = fIn * pBQ->fNumerCoeffs [0] +
-         fPrevIn * pBQ->fNumerCoeffs [1] +
-         fPrevPrevIn * pBQ->fNumerCoeffs [2] -
-         fPrevOut * pBQ->fDenomCoeffs [0] -
-         fPrevPrevOut * pBQ->fDenomCoeffs [1];
-      fPrevPrevIn = fPrevIn;
-      fPrevIn = fIn;
-      fPrevPrevOut = fPrevOut;
-      fPrevOut = *pfOut++;
-   }
-   pBQ->fPrevIn = fPrevIn;
-   pBQ->fPrevPrevIn = fPrevPrevIn;
-   pBQ->fPrevOut = fPrevOut;
-   pBQ->fPrevPrevOut = fPrevPrevOut;
+      *pfOut++ = ProcessOne(*pfIn++);
 }
 
 void ComplexDiv (float fNumerR, float fNumerI, float fDenomR, float fDenomI, float* pfQuotientR, float* pfQuotientI)
