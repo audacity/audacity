@@ -1,3 +1,14 @@
+/**********************************************************************
+
+Audacity: A Digital Audio Editor
+
+EffectScienFilter.h
+
+Norm C
+Max Maisel
+
+***********************************************************************/
+
 #ifndef __BIQUAD_H__
 #define __BIQUAD_H__
 

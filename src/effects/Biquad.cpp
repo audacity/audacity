@@ -1,3 +1,14 @@
+/**********************************************************************
+
+Audacity: A Digital Audio Editor
+
+EffectScienFilter.h
+
+Norm C
+Max Maisel
+
+***********************************************************************/
+
 #include "Biquad.h"
 
 #define square(a) ((a)*(a))
