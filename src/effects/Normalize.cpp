@@ -175,7 +175,7 @@ bool EffectNormalize::Process()
    WaveTrack *track = (WaveTrack *) iter.First();
    WaveTrack *prevTrack;
    prevTrack = track;
-   int curTrackNum = 0;
+   double progress = 0;
    wxString topMsg;
    if(mDC && mGain)
       topMsg = _("Removing DC offset and Normalizing...\n");
@@ -208,7 +208,7 @@ bool EffectNormalize::Process()
             msg =
                topMsg + wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName );
          float offset, min, max;
-         bGoodResult = AnalyseTrack(track, msg, curTrackNum, offset, min, max); 
+         bGoodResult = AnalyseTrack(track, msg, progress, offset, min, max); 
          if (!bGoodResult )
              break;
          if(!track->GetLinked() || mStereoInd) {
@@ -224,7 +224,7 @@ bool EffectNormalize::Process()
                msg =
                   topMsg + wxString::Format( _("Processing stereo channels independently: %s"), trackName );
 
-            if (!ProcessOne(track, msg, curTrackNum, offset))
+            if (!ProcessOne(track, msg, progress, offset))
             {
                bGoodResult = false;
                break;
@@ -239,7 +239,7 @@ bool EffectNormalize::Process()
             msg =
                topMsg + wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
             float offset2, min2, max2;
-            bGoodResult = AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2);
+            bGoodResult = AnalyseTrack(track, msg, progress, offset2, min2, max2);
             if ( !bGoodResult )
                 break;
             float extent = wxMax(fabs(min), fabs(max));
@@ -252,16 +252,15 @@ bool EffectNormalize::Process()
             track = (WaveTrack *) iter.Prev();  // go back to the first linked one
             msg =
                topMsg + wxString::Format( _("Processing first track of stereo pair: %s"), trackName );
-            if (!ProcessOne(track, msg, curTrackNum, offset))
+            if (!ProcessOne(track, msg, progress, offset))
             {
                bGoodResult = false;
                break;
             }
             track = (WaveTrack *) iter.Next();  // go to the second linked one
-            curTrackNum++;   // keeps progress bar correct
             msg =
                topMsg + wxString::Format( _("Processing second track of stereo pair: %s"), trackName );
-            if (!ProcessOne(track, msg, curTrackNum, offset2))
+            if (!ProcessOne(track, msg, progress, offset2))
             {
                bGoodResult = false;
                break;
@@ -272,7 +271,6 @@ bool EffectNormalize::Process()
       //Iterate to the next track
       prevTrack = track;
       track = (WaveTrack *) iter.Next();
-      curTrackNum++;
    }
 
    this->ReplaceProcessedTracks(bGoodResult);
@@ -350,7 +348,7 @@ bool EffectNormalize::TransferDataFromWindow()
 // EffectNormalize implementation
 
 bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                                   int curTrackNum,
+                                   double &progress,
                                    float &offset, float &min, float &max)
 {
    if(mGain) {
@@ -373,7 +371,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
    }
 
    if(mDC) {
-      auto rc = AnalyseDC(track, msg, curTrackNum, offset);
+      auto rc = AnalyseDC(track, msg, progress, offset);
       min += offset;
       max += offset;
       return rc;
@@ -386,7 +384,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
 //AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
 //and executes AnalyzeData on it...
 bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
-                                int curTrackNum,
+                                double &progress,
                                 float &offset)
 {
    bool rc = true;
@@ -394,7 +392,10 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
    offset = 0.0; // we might just return
 
    if(!mDC)  // don't do analysis if not doing dc removal
+   {
+      progress += 1.0/double(2*GetNumWaveTracks());
       return(rc);
+   }
 
    //Transform the marker timepoints to samples
    auto start = track->TimeToLongSamples(mCurT0);
@@ -437,8 +438,8 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
       s += block;
 
       //Update the Progress meter
-      if (TrackProgress(curTrackNum,
-                        ((s - start).as_double() / len)/2.0, msg)) {
+      if (TotalProgress(progress +
+                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
@@ -448,6 +449,7 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
    else
       offset = 0.0;
 
+   progress += 1.0/double(2*GetNumWaveTracks());
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;
 }
@@ -457,7 +459,7 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
 bool EffectNormalize::ProcessOne(
-   WaveTrack * track, const wxString &msg, int curTrackNum, float offset)
+   WaveTrack * track, const wxString &msg, double &progress, float offset)
 {
    bool rc = true;
 
@@ -498,12 +500,13 @@ bool EffectNormalize::ProcessOne(
       s += block;
 
       //Update the Progress meter
-      if (TrackProgress(curTrackNum,
-                        0.5+((s - start).as_double() / len)/2.0, msg)) {
+      if (TotalProgress(progress +
+                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
    }
+   progress += 1.0/double(2*GetNumWaveTracks());
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;

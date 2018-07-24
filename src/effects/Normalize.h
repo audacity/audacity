@@ -59,12 +59,12 @@ private:
    // EffectNormalize implementation
 
    bool ProcessOne(
-      WaveTrack * t, const wxString &msg, int curTrackNum, float offset);
+      WaveTrack * t, const wxString &msg, double& progress, float offset);
    bool AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                     int curTrackNum,
+                     double &progress,
                      float &offset, float &min, float &max);
    void AnalyzeData(float *buffer, size_t len);
-   bool AnalyseDC(const WaveTrack * track, const wxString &msg, int curTrackNum,
+   bool AnalyseDC(const WaveTrack * track, const wxString &msg, double &progress,
                   float &offset);
    void ProcessData(float *buffer, size_t len, float offset);
 
