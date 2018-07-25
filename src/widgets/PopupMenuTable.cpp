@@ -92,5 +92,5 @@ std::unique_ptr<PopupMenuTable::Menu> PopupMenuTable::BuildMenu
    // Rebuild as needed each time.  That makes it safe in case of language change.
    std::unique_ptr<Menu> theMenu{ safenew Menu( pParent, pUserData ) };
    theMenu->Extend(pTable);
-   return std::move( theMenu );
+   return theMenu;
 }

@@ -1090,7 +1090,7 @@ std::vector<wxString> Scrubber::GetAllUntranslatedStatusStrings()
       if (!status.empty())
          results.push_back(status);
    }
-   return move(results);
+   return results;
 }
 
 bool Scrubber::CanScrub() const
