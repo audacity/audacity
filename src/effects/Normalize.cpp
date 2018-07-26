@@ -239,6 +239,11 @@ bool EffectNormalize::Process()
                mMult = ratio / extent;
             else
                mMult = 1.0;
+
+            if(mUseLoudness)
+               // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+               extent *= 0.8529037031;
+
             msg =
                topMsg + wxString::Format( _("Processing: %s"), trackName );
             if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
@@ -267,9 +272,13 @@ bool EffectNormalize::Process()
                 break;
 
             if (mUseLoudness)
+            {
                // Loudness: use sum of both tracks.
                // As a result, stereo tracks appear about 3 LUFS louder, as specified.
                extent = extent + extent2;
+               // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+               extent *= 0.8529037031;
+            }
             else
                // Peak: use maximum of both tracks.
                extent = fmax(extent, extent2);
