@@ -414,7 +414,6 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
 
          if(mDC)
          {
-            min = -1.0, max = 1.0;   // sensible defaults?
             result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
             min += offset;
             max += offset;
