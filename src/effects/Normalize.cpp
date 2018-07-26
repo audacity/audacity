@@ -615,7 +615,11 @@ void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
    }
 }
 
-// after Juha, https://hydrogenaud.io/index.php/topic,76394.0.html
+// EBU R128 parameter sampling rate adaption after
+// Mansbridge, Stuart, Saoirse Finn, and Joshua D. Reiss.
+// "Implementation and Evaluation of Autonomous Multi-track Fader Control."
+// Paper presented at the 132nd Audio Engineering Society Convention,
+// Budapest, Hungary, 2012."
 void EffectNormalize::CalcEBUR128HPF(float fs)
 {
    double f0 = 38.13547087602444;
@@ -632,7 +636,11 @@ void EffectNormalize::CalcEBUR128HPF(float fs)
    mR128HPF.fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
 }
 
-// after Juha, https://hydrogenaud.io/index.php/topic,76394.0.html
+// EBU R128 parameter sampling rate adaption after
+// Mansbridge, Stuart, Saoirse Finn, and Joshua D. Reiss.
+// "Implementation and Evaluation of Autonomous Multi-track Fader Control."
+// Paper presented at the 132nd Audio Engineering Society Convention,
+// Budapest, Hungary, 2012."
 void EffectNormalize::CalcEBUR128HSF(float fs)
 {
    double db =    3.999843853973347;
