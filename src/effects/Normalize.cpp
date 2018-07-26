@@ -260,8 +260,9 @@ bool EffectNormalize::Process()
                 break;
 
             if (mUseLoudness)
-               // Loudness: use mean of both tracks.
-               extent = (extent + extent2) / 2;
+               // Loudness: use sum of both tracks.
+               // As a result, stereo tracks appear about 3 LUFS louder, as specified.
+               extent = extent + extent2;
             else
                // Peak: use maximum of both tracks.
                extent = fmax(extent, extent2);
