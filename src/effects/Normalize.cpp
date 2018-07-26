@@ -331,19 +331,27 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
-               mGainCheckBox = S.AddCheckBox(_("Normalize maximum amplitude to"),
+               // The checkbox needs to be sized for the longer prompt, and
+               // which that is will depend on translation.  So decide that here.
+               // (strictly we should count pixels, not characters).
+               wxString prompt1 = _("Normalize peak amplitude to");
+               wxString prompt2 = _("Normalize loudness to");
+               wxString longerPrompt = ((prompt1.Length() > prompt2.Length()) ? prompt1 : prompt2) + "   ";
+
+               // Now make the checkbox.
+               mGainCheckBox = S.AddCheckBox(longerPrompt,
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
+               mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
-               FloatingPointValidator<double> vldLevel(2, mUseLoudness ? &mLUFSLevel : &mPeakLevel,
+               FloatingPointValidator<double> vldLevel(2, &mPeakLevel,
                                                        NumValidatorStyle::ONE_TRAILING_ZERO);
-               vldLevel.SetRange(mUseLoudness ? MIN_LUFSLevel : MIN_PeakLevel,
-                                 mUseLoudness ? MAX_LUFSLevel : MAX_PeakLevel);
+               vldLevel.SetRange( MIN_PeakLevel, MAX_PeakLevel);
 
                mLevelTextCtrl = S.AddTextBox( {}, wxT(""), 10);
-               mLevelTextCtrl->SetName(mUseLoudness ?  _("Maximum amplitude LUFS"): _("Maximum amplitude dB"));
+               mLevelTextCtrl->SetName( _("Peak amplitude dB"));
                mLevelTextCtrl->SetValidator(vldLevel);
-               mLeveldB = S.AddVariableText(mUseLoudness ? _("LUFS"): _("dB"), false,
+               mLeveldB = S.AddVariableText(_("dB"), false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -363,7 +371,8 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
-
+   // To ensure that the UpdateUI on creation sets the prompts correctly.
+   mUseLoudness = !mGUIUseLoudness;
    mCreating = false;
 }
 
@@ -689,6 +698,7 @@ void EffectNormalize::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 
 void EffectNormalize::UpdateUI()
 {
+
    if (!mUIParent->TransferDataFromWindow())
    {
       mWarning->SetLabel(_(".  Maximum 0dB."));
@@ -697,6 +707,8 @@ void EffectNormalize::UpdateUI()
    }
    mWarning->SetLabel(wxT(""));
 
+   // Changing the prompts causes an unwanted UpdateUI event.  
+   // This 'guard' stops that becoming an infinite recursion.
    if (mUseLoudness != mGUIUseLoudness)
    {
       mUseLoudness = mGUIUseLoudness;
@@ -705,18 +717,20 @@ void EffectNormalize::UpdateUI()
          FloatingPointValidator<double> vldLevel(2, &mLUFSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldLevel.SetRange(MIN_LUFSLevel, MAX_LUFSLevel);
          mLevelTextCtrl->SetValidator(vldLevel);
-         mLevelTextCtrl->SetName(_("Maximum amplitude LUFS"));
+         mLevelTextCtrl->SetName(_("Loudness LUFS"));
          mLevelTextCtrl->SetValue(wxString::FromDouble(mLUFSLevel));
          mLeveldB->SetLabel(_("LUFS"));
+         mGainCheckBox->SetLabelText(_("Normalize loudness to"));
       }
       else
       {
          FloatingPointValidator<double> vldLevel(2, &mPeakLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldLevel.SetRange(MIN_PeakLevel, MAX_PeakLevel);
          mLevelTextCtrl->SetValidator(vldLevel);
-         mLevelTextCtrl->SetName( _("Maximum amplitude dB"));
+         mLevelTextCtrl->SetName(_("Peak amplitude dB"));
          mLevelTextCtrl->SetValue(wxString::FromDouble(mPeakLevel));
          mLeveldB->SetLabel(_("dB"));
+         mGainCheckBox->SetLabelText(_("Normalize peak amplitude to"));
       }
    }
 
