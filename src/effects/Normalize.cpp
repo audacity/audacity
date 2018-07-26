@@ -341,9 +341,9 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                  mUseLoudness ? MAX_LUFSLevel : MAX_PeakLevel);
 
                mLevelTextCtrl = S.AddTextBox( {}, wxT(""), 10);
-               mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
+               mLevelTextCtrl->SetName(mUseLoudness ?  _("Maximum amplitude LUFS"): _("Maximum amplitude dB"));
                mLevelTextCtrl->SetValidator(vldLevel);
-               mLeveldB = S.AddVariableText(_("dB"), false,
+               mLeveldB = S.AddVariableText(mUseLoudness ? _("LUFS"): _("dB"), false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -705,6 +705,7 @@ void EffectNormalize::UpdateUI()
          FloatingPointValidator<double> vldLevel(2, &mLUFSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldLevel.SetRange(MIN_LUFSLevel, MAX_LUFSLevel);
          mLevelTextCtrl->SetValidator(vldLevel);
+         mLevelTextCtrl->SetName(_("Maximum amplitude LUFS"));
          mLevelTextCtrl->SetValue(wxString::FromDouble(mLUFSLevel));
          mLeveldB->SetLabel(_("LUFS"));
       }
@@ -713,6 +714,7 @@ void EffectNormalize::UpdateUI()
          FloatingPointValidator<double> vldLevel(2, &mPeakLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldLevel.SetRange(MIN_PeakLevel, MAX_PeakLevel);
          mLevelTextCtrl->SetValidator(vldLevel);
+         mLevelTextCtrl->SetName( _("Maximum amplitude dB"));
          mLevelTextCtrl->SetValue(wxString::FromDouble(mPeakLevel));
          mLeveldB->SetLabel(_("dB"));
       }
