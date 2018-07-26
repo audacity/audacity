@@ -263,7 +263,9 @@ void CellularPanel::HandleMotion
 
       // Now do the
       // UIHANDLE HIT TEST !
-      state.mTargets = newCell->HitTest(tpmState, GetProject());
+      state.mTargets.clear();
+      if (newCell)
+         state.mTargets = newCell->HitTest(tpmState, GetProject());
 
       state.mTarget = 0;
 
@@ -334,8 +336,18 @@ void CellularPanel::HandleMotion
    if (pCursor)
       SetCursor( *pCursor );
 
-   ProcessUIHandleResult(
-      newCell.get(), newCell.get(), refreshCode);
+   if (newCell)
+      ProcessUIHandleResult(newCell.get(), newCell.get(), refreshCode);
+}
+
+void CellularPanel::Leave()
+{
+   // Make transition into an empty CellularPanel state
+   auto state = ::wxGetMouseState();
+   const wxRect rect;
+   std::shared_ptr<TrackPanelCell> pCell;
+   TrackPanelMouseState tpmState{ state, rect, pCell };
+   HandleMotion( tpmState );
 }
 
 bool CellularPanel::HasRotation()
@@ -589,16 +601,17 @@ void CellularPanel::OnKeyUp(wxKeyEvent & event)
    event.Skip();
 }
 
-/// Should handle the case when the mouse capture is lost.
+/// Should handle the case when the mouse capture is lost. (MSW only)
 void CellularPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 {
-   ClearTargets();
+   auto &state = *mState;
+   state.mUIHandle.reset();
+   Leave();
 
    // This is bad.  We are lying abou the event by saying it is a mouse up.
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.SetId( kCaptureLostEventId );
 
-   auto &state = *mState;
    e.m_x = state.mMouseMostRecentX;
    e.m_y = state.mMouseMostRecentY;
 
@@ -660,8 +673,7 @@ try
 
    if (event.Leaving())
    {
-      if ( !state.mUIHandle )
-         ClearTargets();
+      Leave();
 
       auto buttons =
          // Bug 1325: button state in Leaving events is unreliable on Mac.

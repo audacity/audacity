@@ -103,6 +103,7 @@ private:
    void HandleMotion( wxMouseState &state, bool doHit = true );
    void HandleMotion
    ( const TrackPanelMouseState &tpmState, bool doHit = true );
+   void Leave();
    
    
 protected:
