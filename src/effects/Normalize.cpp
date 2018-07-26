@@ -33,7 +33,8 @@
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name         Type     Key                        Def      Min      Max   Scale
-Param( Level,       double,  wxT("Level"),               -23.0,   -145.0,  0.0,  1  );
+Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,    -145.0,  0.0,  1  );
+Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,   -145.0,  0.0,  1  );
 Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,    false,   true, 1  );
 Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
 Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
@@ -46,7 +47,8 @@ END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize()
 {
-   mLevel = DEF_Level;
+   mPeakLevel = DEF_PeakLevel;
+   mLUFSLevel = DEF_LUFSLevel;
    mDC = DEF_RemoveDC;
    mGain = DEF_ApplyGain;
    mStereoInd = DEF_StereoInd;
@@ -85,7 +87,8 @@ EffectType EffectNormalize::GetType()
 
 // EffectClientInterface implementation
 bool EffectNormalize::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mLevel, Level );
+   S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
+   S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
    S.SHUTTLE_PARAM( mGain, ApplyGain );
    S.SHUTTLE_PARAM( mDC, RemoveDC );
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );
@@ -95,7 +98,8 @@ bool EffectNormalize::DefineParams( ShuttleParams & S ){
 
 bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 {
-   parms.Write(KEY_Level, mLevel);
+   parms.Write(KEY_PeakLevel, mPeakLevel);
+   parms.Write(KEY_LUFSLevel, mLUFSLevel);
    parms.Write(KEY_ApplyGain, mGain);
    parms.Write(KEY_RemoveDC, mDC);
    parms.Write(KEY_StereoInd, mStereoInd);
@@ -106,13 +110,15 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 
 bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 {
-   ReadAndVerifyDouble(Level);
+   ReadAndVerifyDouble(PeakLevel);
+   ReadAndVerifyDouble(LUFSLevel);
    ReadAndVerifyBool(ApplyGain);
    ReadAndVerifyBool(RemoveDC);
    ReadAndVerifyBool(StereoInd);
    ReadAndVerifyBool(UseLoudness);
 
-   mLevel = Level;
+   mPeakLevel = PeakLevel;
+   mLUFSLevel = LUFSLevel;
    mGain = ApplyGain;
    mDC = RemoveDC;
    mStereoInd = StereoInd;
@@ -147,12 +153,13 @@ bool EffectNormalize::Startup()
       mDC = (boolProxy == 1);
       boolProxy = gPrefs->Read(base + wxT("Normalize"), 1);
       mGain = (boolProxy == 1);
-      gPrefs->Read(base + wxT("Level"), &mLevel, -1.0);
-      if(mLevel > 0.0)  // this should never happen
-         mLevel = -mLevel;
+      gPrefs->Read(base + wxT("Level"), &mPeakLevel, -1.0);
+      if(mPeakLevel > 0.0)  // this should never happen
+         mPeakLevel = -mPeakLevel;
       boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
       mStereoInd = (boolProxy == 1);
       mUseLoudness = false;
+      mLUFSLevel = DEF_LUFSLevel;
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -175,10 +182,10 @@ bool EffectNormalize::Process()
       if(mUseLoudness)
          // LU use 10*log10(...) instead of 20*log10(...)
          // so multiply level by 2 and use standard DB_TO_LINEAR macro.
-         ratio = DB_TO_LINEAR(TrapDouble(mLevel*2, MIN_Level, MAX_Level));
+         ratio = DB_TO_LINEAR(TrapDouble(mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
       else
          // same value used for all tracks
-         ratio = DB_TO_LINEAR(TrapDouble(mLevel, MIN_Level, MAX_Level));
+         ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
    }
    else
       ratio = 1.0;
@@ -232,6 +239,11 @@ bool EffectNormalize::Process()
                mMult = ratio / extent;
             else
                mMult = 1.0;
+
+            if(mUseLoudness)
+               // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+               extent *= 0.8529037031;
+
             msg =
                topMsg + wxString::Format( _("Processing: %s"), trackName );
             if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
@@ -260,8 +272,13 @@ bool EffectNormalize::Process()
                 break;
 
             if (mUseLoudness)
-               // Loudness: use mean of both tracks.
-               extent = (extent + extent2) / 2;
+            {
+               // Loudness: use sum of both tracks.
+               // As a result, stereo tracks appear about 3 LUFS louder, as specified.
+               extent = extent + extent2;
+               // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+               extent *= 0.8529037031;
+            }
             else
                // Peak: use maximum of both tracks.
                extent = fmax(extent, extent2);
@@ -318,8 +335,11 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
 
-               FloatingPointValidator<double> vldLevel(2, &mLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
-               vldLevel.SetRange(MIN_Level, MAX_Level);
+               FloatingPointValidator<double> vldLevel(2, mUseLoudness ? &mLUFSLevel : &mPeakLevel,
+                                                       NumValidatorStyle::ONE_TRAILING_ZERO);
+               vldLevel.SetRange(mUseLoudness ? MIN_LUFSLevel : MIN_PeakLevel,
+                                 mUseLoudness ? MAX_LUFSLevel : MAX_PeakLevel);
+
                mLevelTextCtrl = S.AddTextBox( {}, wxT(""), 10);
                mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
                mLevelTextCtrl->SetValidator(vldLevel);
@@ -332,7 +352,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 
             mUseLoudnessCheckBox = S.AddCheckBox(_("Use integrative loudness instead of maximum amplitude"),
                                                  mUseLoudness ? wxT("true") : wxT("false"));
-            mUseLoudnessCheckBox->SetValidator(wxGenericValidator(&mUseLoudness));
+            mUseLoudnessCheckBox->SetValidator(wxGenericValidator(&mGUIUseLoudness));
 
             mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
                                                mStereoInd ? wxT("true") : wxT("false"));
@@ -414,7 +434,6 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
 
          if(mDC)
          {
-            min = -1.0, max = 1.0;   // sensible defaults?
             result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
             min += offset;
             max += offset;
@@ -615,7 +634,11 @@ void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
    }
 }
 
-// after Juha, https://hydrogenaud.io/index.php/topic,76394.0.html
+// EBU R128 parameter sampling rate adaption after
+// Mansbridge, Stuart, Saoirse Finn, and Joshua D. Reiss.
+// "Implementation and Evaluation of Autonomous Multi-track Fader Control."
+// Paper presented at the 132nd Audio Engineering Society Convention,
+// Budapest, Hungary, 2012."
 void EffectNormalize::CalcEBUR128HPF(float fs)
 {
    double f0 = 38.13547087602444;
@@ -632,7 +655,11 @@ void EffectNormalize::CalcEBUR128HPF(float fs)
    mR128HPF.fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
 }
 
-// after Juha, https://hydrogenaud.io/index.php/topic,76394.0.html
+// EBU R128 parameter sampling rate adaption after
+// Mansbridge, Stuart, Saoirse Finn, and Joshua D. Reiss.
+// "Implementation and Evaluation of Autonomous Multi-track Fader Control."
+// Paper presented at the 132nd Audio Engineering Society Convention,
+// Budapest, Hungary, 2012."
 void EffectNormalize::CalcEBUR128HSF(float fs)
 {
    double db =    3.999843853973347;
@@ -670,10 +697,26 @@ void EffectNormalize::UpdateUI()
    }
    mWarning->SetLabel(wxT(""));
 
-   if (mUseLoudness)
-      mLeveldB->SetLabel(_("LUFS"));
-   else
-      mLeveldB->SetLabel(_("dB"));
+   if (mUseLoudness != mGUIUseLoudness)
+   {
+      mUseLoudness = mGUIUseLoudness;
+      if (mUseLoudness)
+      {
+         FloatingPointValidator<double> vldLevel(2, &mLUFSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
+         vldLevel.SetRange(MIN_LUFSLevel, MAX_LUFSLevel);
+         mLevelTextCtrl->SetValidator(vldLevel);
+         mLevelTextCtrl->SetValue(wxString::FromDouble(mLUFSLevel));
+         mLeveldB->SetLabel(_("LUFS"));
+      }
+      else
+      {
+         FloatingPointValidator<double> vldLevel(2, &mPeakLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
+         vldLevel.SetRange(MIN_PeakLevel, MAX_PeakLevel);
+         mLevelTextCtrl->SetValidator(vldLevel);
+         mLevelTextCtrl->SetValue(wxString::FromDouble(mPeakLevel));
+         mLeveldB->SetLabel(_("dB"));
+      }
+   }
 
    // Disallow level stuff if not normalizing
    mLevelTextCtrl->Enable(mGain);

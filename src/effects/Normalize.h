@@ -83,11 +83,13 @@ private:
    void UpdateUI();
 
 private:
-   double mLevel;
+   double mPeakLevel;
+   double mLUFSLevel;
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
    bool   mUseLoudness;
+   bool   mGUIUseLoudness;
 
    double mCurT0;
    double mCurT1;
