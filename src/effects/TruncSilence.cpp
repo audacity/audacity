@@ -807,7 +807,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
          vldComp.SetRange(MIN_Compress, MAX_Compress);
          mSilenceCompressPercentT = S.AddTextBox(_("Compress to:"), wxT(""), 12);
          mSilenceCompressPercentT->SetValidator(vldComp);
-         S.AddUnits(_("%"));
+         S.AddUnits(wxT("%"));
       }
       S.EndMultiColumn();
 

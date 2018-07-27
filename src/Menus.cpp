@@ -6693,7 +6693,7 @@ void AudacityProject::OnSelectClip(bool next)
          if (message.empty())
             message = str;
          else
-            message = wxString::Format(_("%s, %s"), message, str);
+            message = wxString::Format(wxT("%s, %s"), message, str);
       }
       mTrackPanel->MessageForScreenReader(message);
    }
@@ -7835,7 +7835,7 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
       if (message.empty())
          message = str;
       else
-         message = wxString::Format(_("%s, %s"), message, str);
+         message = wxString::Format(wxT("%s, %s"), message, str);
    }
 
    return message;
