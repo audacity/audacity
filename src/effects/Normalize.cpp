@@ -236,13 +236,18 @@ bool EffectNormalize::Process()
          if(!track->GetLinked() || mStereoInd) {
             // mono or 'stereo tracks independently'
             if( (extent > 0) && mGain )
+            {
                mMult = ratio / extent;
+               if(mUseLoudness)
+               {
+                  // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+                  mMult /= 0.8529037031;
+                  // LUFS are related to square values so the multiplier must be the root.
+                  mMult = sqrt(ratio / extent);
+               }
+            }
             else
                mMult = 1.0;
-
-            if(mUseLoudness)
-               // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
-               extent *= 0.8529037031;
 
             msg =
                topMsg + wxString::Format( _("Processing: %s"), trackName );
@@ -284,7 +289,12 @@ bool EffectNormalize::Process()
                extent = fmax(extent, extent2);
 
             if( (extent > 0) && mGain )
+            {
                mMult = ratio / extent; // we need to use this for both linked tracks
+               if(mUseLoudness)
+                  // LUFS are related to square values so the multiplier must be the root.
+                  mMult = sqrt(mMult);
+            }
             else
                mMult = 1.0;
             track = (WaveTrack *) iter.Prev();  // go back to the first linked one
@@ -422,7 +432,8 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
             offset = 0.0;
          }
 
-         extent = sqrt(mSqSum / mCount.as_double());
+         // EBU R128: z_i = mean square without root
+         extent = mSqSum / mCount.as_double();
       }
       else
       {
