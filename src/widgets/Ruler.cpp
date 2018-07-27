@@ -2035,7 +2035,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 #endif
 
    wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &AdornedRulerPanel::OnCapture,
+                     &AdornedRulerPanel::OnRecordStartStop,
                      this);
 }
 
@@ -2258,7 +2258,7 @@ void AdornedRulerPanel::RegenerateTooltips(StatusChoice choice)
 #endif
 }
 
-void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
+void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 {
    evt.Skip();
 

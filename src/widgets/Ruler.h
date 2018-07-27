@@ -371,7 +371,7 @@ public:
 
 
 private:
-   void OnCapture(wxCommandEvent & evt);
+   void OnRecordStartStop(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void UpdateRects();
