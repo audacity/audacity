@@ -2159,7 +2159,8 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest
    
    std::vector<UIHandlePtr> results;
 
-   if (false) {
+   // Disable mouse actions on Timeline while recording.
+   if (!mParent->mIsRecording) {
 
    auto result = std::make_shared<QPHandle>( mParent );
    result = AssignUIHandlePtr( mHolder, result );
@@ -2252,7 +2253,8 @@ std::vector<UIHandlePtr> AdornedRulerPanel::ScrubbingCell::HitTest
    
    std::vector<UIHandlePtr> results;
    
-   if (false) {
+   // Disable mouse actions on Timeline while recording.
+   if (!mParent->mIsRecording) {
 
    auto result = std::make_shared<ScrubbingHandle>( mParent );
    result = AssignUIHandlePtr( mHolder, result );
@@ -2327,8 +2329,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
 AdornedRulerPanel::~AdornedRulerPanel()
 {
-   if(HasCapture())
-      ReleaseMouse();
 }
 
 #if 1
@@ -2550,18 +2550,21 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 
    if (evt.GetInt() != 0)
    {
+      mIsRecording = true;
+      this->CellularPanel::CancelDragging();
+      this->CellularPanel::ClearTargets();
+
       // Set cursor immediately  because OnMouseEvents is not called
       // if recording is initiated by a modal window (Timer Record).
       SetCursor(mCursorDefault);
-      mIsRecording = true;
       UpdateButtonStates();
 
       // The quick play indicator is useless during recording
       CallAfter( [this]{ DrawBothOverlays(); } );
    }
    else {
-      SetCursor(mCursorHand);
       mIsRecording = false;
+      SetCursor(mCursorHand);
       UpdateButtonStates();
    }
    RegenerateTooltips(mPrevZone);
@@ -2691,12 +2694,8 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
-   // Disable mouse actions on Timeline while recording.
-   if (mIsRecording) {
-      if (HasCapture())
-         ReleaseMouse();
-      return;
-   }
+   // Will always fall through to base class handling
+   evt.Skip();
 
    const auto position = evt.GetPosition();
 
@@ -2736,47 +2735,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    mPrevZone = zone;
 
    auto &scrubber = mProject->GetScrubber();
-   if (scrubber.HasMark()) {
-      if (evt.RightDown() )
-         // Fall through to context menu handling
-         ;
-      else if ( evt.LeftUp() && inScrubZone)
-         // Fall through to seeking changes to scrubbing
-         ;
-//      else if ( evt.LeftDown() && inScrubZone)
-//         // Fall through to ready to seek
-//         ;
-      else {
-         bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
-         if (switchToQP && evt.LeftDown()) {
-            // We can't stop scrubbing yet (see comments in Bug 1391), but we can pause it.
-            mProject->OnPause(*mProject);
-            // Don't return, fall through
-         }
-         else if (scrubber.IsPaused())
-            // Just fall through
-            ;
-         else {
-            // If already clicked for scrub, preempt the usual event handling,
-            // no matter what the y coordinate.
-
-            // Do this hack so scrubber can detect mouse drags anywhere
-            evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
-
-            //if (scrubber.IsScrubbing())
-               evt.Skip();
-            //else
-               //evt.Skip();
-
-            // Don't do this, it slows down drag-scrub on Mac.
-            // Timer updates of display elsewhere make it unnecessary.
-            // Done here, it's too frequent.
-            // DrawBothOverlays();
-
-            return;
-         }
-      }
-   }
 
    // Store the initial play region state
    if(mMouseEventState == mesNone) {
@@ -2808,14 +2766,16 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
 
+   auto clicked = mQPCell->Clicked();
+
    // Handle popup menus
-   if (!HasCapture() && evt.RightDown() && !(evt.LeftIsDown())) {
+   if (evt.RightUp() && !(evt.LeftIsDown())) {
       ShowContextMenu
          (inScrubZone ? MenuChoice::Scrub : MenuChoice::QuickPlay,
           &position);
       return;
    }
-   else if( !HasCapture() && evt.LeftUp() && inScrubZone ) {
+   else if( !clicked && evt.LeftUp() && inScrubZone ) {
       if( scrubber.IsOneShotSeeking() ){
          scrubber.mInOneShotMode = false;
          return;
@@ -2828,9 +2788,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       DrawBothOverlays();
       return;
    }
-   else if ( !HasCapture() && inScrubZone) {
+   else if ( !clicked && inScrubZone) {
       // mouse going down => we are (probably) seeking
-      if (evt.LeftDown()) {
+      if (evt.LeftDown() && !scrubber.HasMark()) {
          //wxLogDebug("down");
          scrubber.mInOneShotMode = !scrubber.IsScrubbing();
          scrubber.MarkScrubStart(evt.m_x,
@@ -2865,11 +2825,11 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             DrawBothOverlays();
          }
       }
-      else if (evt.LeftIsDown() && HasCapture()) {
+      else if (evt.LeftIsDown() && clicked) {
          HandleQPDrag(evt, mousePosX);
          DrawBothOverlays();
       }
-      else if (evt.LeftUp() && HasCapture()) {
+      else if (evt.LeftUp() && clicked) {
          HandleQPRelease(evt);
          DrawBothOverlays();
       }
@@ -2883,7 +2843,17 @@ auto AdornedRulerPanel::QPHandle::Click
 {
    auto result = CommonRulerHandle::Click(event, pProject);
    if (!( result & RefreshCode::Cancelled )) {
+      
+      if (mClicked == Button::Left) {
+         auto &scrubber = pProject->GetScrubber();
+         if(scrubber.HasMark()) {
+            // We can't stop scrubbing yet (see comments in Bug 1391),
+            // but we can pause it.
+            pProject->OnPause( *pProject );
+         }
+      }
    }
+   
    return result;
 }
 
@@ -2924,8 +2894,6 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Check if we are dragging BEFORE CaptureMouse.
    if (mMouseEventState != mesNone)
       SetCursor(mCursorSizeWE);
-   if ( !HasCapture() )
-      CaptureMouse();
 }
 
 auto AdornedRulerPanel::QPHandle::Drag
@@ -3043,9 +3011,7 @@ auto AdornedRulerPanel::QPHandle::Release
 
 void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 {
-   if (HasCapture())
-      ReleaseMouse();
-   else
+   if (!mQPCell->Clicked())
       return;
 
    if (mPlayRegionEnd < mPlayRegionStart) {
@@ -3488,9 +3454,6 @@ void AdornedRulerPanel::ShowContextMenu( MenuChoice choice, const wxPoint *pPosi
    // dismiss and clear Quick-Play indicator
    mPrevZone = StatusChoice::Leaving;
    DrawBothOverlays();
-
-   if (HasCapture())
-      ReleaseMouse();
 }
 
 void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
