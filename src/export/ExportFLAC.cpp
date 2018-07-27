@@ -82,7 +82,7 @@ ExportFLACOptions::~ExportFLACOptions()
 void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
 {
    wxArrayString flacLevelNames, flacLevelLabels;
-   flacLevelLabels.Add(wxT("0")); flacLevelNames.Add(wxT("0 (fastest)"));
+   flacLevelLabels.Add(wxT("0")); flacLevelNames.Add(_("0 (fastest)"));
    flacLevelLabels.Add(wxT("1")); flacLevelNames.Add(wxT("1"));
    flacLevelLabels.Add(wxT("2")); flacLevelNames.Add(wxT("2"));
    flacLevelLabels.Add(wxT("3")); flacLevelNames.Add(wxT("3"));
