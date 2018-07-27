@@ -2930,7 +2930,13 @@ bool AudacityProject::DoPlayStopSelect(bool click, bool shift)
       // change the selection
       auto time = gAudioIO->GetStreamTime();
       auto &selection = mViewInfo.selectedRegion;
-      if (shift && click) {
+      // Test WasSpeedPlaying(), not IsSpeedPlaying()
+      // as we could be stopped now.
+      if (GetScrubber().WasSpeedPlaying())
+      {
+         ;// don't change the selection.
+      }
+      else if (shift && click) {
          // Change the region selection, as if by shift-click at the play head
          auto t0 = selection.t0(), t1 = selection.t1();
          if (time < t0)
