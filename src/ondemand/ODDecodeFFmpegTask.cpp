@@ -119,7 +119,7 @@ auto ODDecodeFFmpegTask::FromList(const std::list<TrackHolders> &channels) -> St
          Channels channels;
          channels.reserve(holders.size());
          transform(holders.begin(), holders.end(), back_inserter(channels),
-            mem_fun_ref(&TrackHolders::value_type::get)
+            mem_fn(&TrackHolders::value_type::get)
          );
          return channels;
       }

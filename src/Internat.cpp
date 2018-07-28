@@ -305,6 +305,6 @@ wxArrayString LocalizedStrings(
 {
    wxArrayString results;
    std::transform( strings, strings + nStrings, std::back_inserter(results),
-                   std::mem_fun_ref( &IdentInterfaceSymbol::Translation ) );
+                   std::mem_fn( &IdentInterfaceSymbol::Translation ) );
    return results;
 }

@@ -600,7 +600,7 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
       R2 (C :: * pmf) () const
    ) const
    {
-      return this->accumulate( init, binary_op, std::mem_fun( pmf ) );
+      return this->accumulate( init, binary_op, std::mem_fn( pmf ) );
    }
 
    // Some accumulations frequent enough to be worth abbreviation:
@@ -623,7 +623,7 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
    >
    R min( R2 (C :: * pmf) () const ) const
    {
-      return this->min( std::mem_fun( pmf ) );
+      return this->min( std::mem_fn( pmf ) );
    }
 
    template<
@@ -646,7 +646,7 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
    >
    R max( R2 (C :: * pmf) () const ) const
    {
-      return this->max( std::mem_fun( pmf ) );
+      return this->max( std::mem_fn( pmf ) );
    }
 
    template<
@@ -668,7 +668,7 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
    >
    R sum( R2 (C :: * pmf) () const ) const
    {
-      return this->sum( std::mem_fun( pmf ) );
+      return this->sum( std::mem_fn( pmf ) );
    }
 };
 
