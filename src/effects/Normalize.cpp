@@ -38,7 +38,7 @@ Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,   -145.0,  0.0, 
 Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,    false,   true, 1  );
 Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
 Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
-Param( UseLoudness, bool,    wxT("Use Loudness"),        true,    false,   true, 1  );
+Param( UseLoudness, bool,    wxT("UseLoudness"),         false,   false,   true, 1  );
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
@@ -368,7 +368,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
             }
             S.EndHorizontalLay();
 
-            mUseLoudnessCheckBox = S.AddCheckBox(_("Use integrative loudness instead of maximum amplitude"),
+            mUseLoudnessCheckBox = S.AddCheckBox(_("Use loudness instead of peak amplitude"),
                                                  mUseLoudness ? wxT("true") : wxT("false"));
             mUseLoudnessCheckBox->SetValidator(wxGenericValidator(&mGUIUseLoudness));
 
