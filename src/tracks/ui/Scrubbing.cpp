@@ -636,7 +636,7 @@ void Scrubber::StopScrubbing()
 
    mPoller->Stop();
 
-   if (HasStartedScrubbing() && !mCancelled) {
+   if (HasMark() && !mCancelled) {
       const wxMouseState state(::wxGetMouseState());
       // Stop and set cursor
       bool bShift = state.ShiftDown();
@@ -719,14 +719,14 @@ bool Scrubber::TemporarilySeeks() const
 
 bool Scrubber::Seeks() const
 {
-   return (HasStartedScrubbing() || IsScrubbing()) && ChoseSeeking();
+   return (HasMark() || IsScrubbing()) && ChoseSeeking();
 }
 
 bool Scrubber::Scrubs() const
 {
    if( Seeks() )
       return false;
-   return (HasStartedScrubbing() || IsScrubbing()) && !ChoseSeeking();
+   return (HasMark() || IsScrubbing()) && !ChoseSeeking();
 }
 
 bool Scrubber::ShouldDrawScrubSpeed()
@@ -889,7 +889,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
       return;
 
    {
-      if(scrubber.HasStartedScrubbing()) {
+      if(scrubber.HasMark()) {
          auto xx = ruler->ScreenToClient(position).x;
          ruler->UpdateQuickPlayPos(xx);
 
@@ -972,7 +972,7 @@ void Scrubber::DoScrub(bool seek)
 {
    if( !CanScrub() )
       return;
-   const bool wasScrubbing = HasStartedScrubbing() || IsScrubbing();
+   const bool wasScrubbing = HasMark() || IsScrubbing();
    const bool scroll = TracksPrefs::GetPinnedHeadPreference();
    if (!wasScrubbing) {
       auto tp = mProject->GetTrackPanel();
@@ -997,7 +997,7 @@ void Scrubber::OnScrubOrSeek(bool seek)
 {
    DoScrub(seek);
 
-   if (HasStartedScrubbing()) {
+   if (HasMark()) {
       // Show the correct status.
       const auto ctb = mProject->GetControlToolBar();
       ctb->UpdateStatusBar(mProject);
@@ -1059,7 +1059,7 @@ const wxString &Scrubber::GetUntranslatedStateString() const
    if (IsSpeedPlaying()) {
       return(_("Playing at Speed"));
    }
-   else if (HasStartedScrubbing()) {
+   else if (HasMark()) {
       auto &item = FindMenuItem(Seeks() || TemporarilySeeks());
       return item.status;
    }

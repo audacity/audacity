@@ -1496,7 +1496,7 @@ void ControlToolBar::StartScrollingIfPreferred()
    if (TracksPrefs::GetPinnedHeadPreference())
       StartScrolling();
 #ifdef __WXMAC__
-   else if (::GetActiveProject()->GetScrubber().HasStartedScrubbing()) {
+   else if (::GetActiveProject()->GetScrubber().HasMark()) {
       // PRL:  cause many "unnecessary" refreshes.  For reasons I don't understand,
       // doing this causes wheel rotation events (mapped from the double finger vertical
       // swipe) to be delivered more uniformly to the application, so that speed control

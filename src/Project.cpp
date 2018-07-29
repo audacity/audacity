@@ -1801,7 +1801,7 @@ bool AudacityProject::MayScrollBeyondZero() const
    if (mViewInfo.bScrollBeyondZero)
       return true;
 
-   if (GetScrubber().HasStartedScrubbing() ||
+   if (GetScrubber().HasMark() ||
        IsAudioActive()) {
       if (mPlaybackScroller) {
          auto mode = mPlaybackScroller->GetMode();

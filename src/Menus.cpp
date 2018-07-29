@@ -2922,7 +2922,7 @@ bool AudacityProject::DoPlayStopSelect(bool click, bool shift)
    ControlToolBar *toolbar = GetControlToolBar();
 
    //If busy, stop playing, make sure everything is unpaused.
-   if (GetScrubber().HasStartedScrubbing() ||
+   if (GetScrubber().HasMark() ||
        gAudioIO->IsStreamActive(GetAudioIOToken())) {
       toolbar->SetPlay(false);        //Pops
       toolbar->SetStop(true);         //Pushes stop down
@@ -3007,7 +3007,7 @@ void AudacityProject::OnTogglePinnedHead(const CommandContext &WXUNUSED(context)
       ruler->UpdateButtonStates();
 
    auto &scrubber = GetScrubber();
-   if (scrubber.HasStartedScrubbing())
+   if (scrubber.HasMark())
       scrubber.SetScrollScrubbing(value);
 }
 

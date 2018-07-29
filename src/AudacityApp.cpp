@@ -1676,7 +1676,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
       auto &scrubber = project->GetScrubber();
-      auto scrubbing = scrubber.HasStartedScrubbing();
+      auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();
       if((token > 0 &&

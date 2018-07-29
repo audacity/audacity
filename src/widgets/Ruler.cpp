@@ -2216,7 +2216,7 @@ namespace {
 
    const wxString ScrubbingMessage(const Scrubber &scrubber)
    {
-      if (scrubber.HasStartedScrubbing())
+      if (scrubber.HasMark())
          return ContinueScrubbingMessage(scrubber);
       else
          return StartScrubbingMessage(scrubber);
@@ -2450,7 +2450,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    mPrevZone = zone;
 
    auto &scrubber = mProject->GetScrubber();
-   if (scrubber.HasStartedScrubbing()) {
+   if (scrubber.HasMark()) {
       if (evt.RightDown() )
          // Fall through to context menu handling
          ;
@@ -2863,7 +2863,7 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
    wxString message {};
 
    const auto &scrubber = mProject->GetScrubber();
-   const bool scrubbing = scrubber.HasStartedScrubbing();
+   const bool scrubbing = scrubber.HasMark();
    if (scrubbing && choice != StatusChoice::Leaving)
       // Don't distinguish zones
       choice = StatusChoice::EnteringScrubZone;
@@ -2922,7 +2922,7 @@ bool AdornedRulerPanel::ShowingScrubControl() const
    return
       mMouseEventState == AdornedRulerPanel::mesNone &&
       (mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
-       (scrubber.HasStartedScrubbing()));
+       (scrubber.HasMark()));
 }
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))

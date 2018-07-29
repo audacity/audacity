@@ -137,7 +137,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    if (!mProject->IsAudioActive()) {
       mNewIndicatorX = -1;
       const auto &scrubber = mProject->GetScrubber();
-      if (scrubber.HasStartedScrubbing()) {
+      if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
          int width;
          trackPanel->GetTracksUsableArea(&width, nullptr);

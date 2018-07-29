@@ -98,11 +98,11 @@ public:
    { return IsScrubbing() && mSpeedPlaying; }
    // True iff the user has clicked to start scrub and not yet stopped,
    // but IsScrubbing() may yet be false
-   bool HasStartedScrubbing() const
+   bool HasMark() const
    { return GetScrubStartPosition() >= 0; }
    bool IsScrubbing() const;
 
-   bool IsScrollScrubbing() const // If true, implies HasStartedScrubbing()
+   bool IsScrollScrubbing() const // If true, implies HasMark()
    { return mSmoothScrollingScrub; }
    void SetScrollScrubbing(bool value)
    { mSmoothScrollingScrub = value; }
