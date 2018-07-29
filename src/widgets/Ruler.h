@@ -410,11 +410,6 @@ private:
 
 private:
 
-   wxCursor mCursorDefault;
-   wxCursor mCursorHand;
-   wxCursor mCursorSizeWE;
-   bool mIsWE;
-
    Ruler mRuler;
    AudacityProject *const mProject;
    TrackList *mTracks;

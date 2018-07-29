@@ -2041,6 +2041,20 @@ public:
    : mParent{ parent }
    , mMenuChoice{ menuChoice }
    {}
+   
+   HitTestPreview DefaultPreview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      override
+   {
+      // May come here when recording is in progress, so hit tests are turned
+      // off.
+      static wxCursor cursor{ wxCURSOR_DEFAULT };
+      return {
+         {},
+         &cursor,
+         {},
+      };
+   }
 
    unsigned DoContextMenu
       (const wxRect &rect,
@@ -2283,11 +2297,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    SetLabel( _("Timeline") );
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);
-
-   mCursorDefault = wxCursor(wxCURSOR_DEFAULT);
-   mCursorHand = wxCursor(wxCURSOR_HAND);
-   mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
-   mIsWE = false;
 
    mLeftOffset = 0;
    mIndTime = -1;
@@ -2554,9 +2563,6 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
       this->CellularPanel::CancelDragging();
       this->CellularPanel::ClearTargets();
 
-      // Set cursor immediately  because OnMouseEvents is not called
-      // if recording is initiated by a modal window (Timer Record).
-      SetCursor(mCursorDefault);
       UpdateButtonStates();
 
       // The quick play indicator is useless during recording
@@ -2564,9 +2570,11 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
    }
    else {
       mIsRecording = false;
-      SetCursor(mCursorHand);
       UpdateButtonStates();
    }
+   
+   CallAfter( [this]{ HandleCursorForPresentMouseState(); } );
+
    RegenerateTooltips(mPrevZone);
 }
 
@@ -2751,9 +2759,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          DrawBothOverlays();
       }
 
-      SetCursor(mCursorDefault);
-      mIsWE = false;
-
       mSnapManager.reset();
 
       if(evt.Leaving())
@@ -2761,7 +2766,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       // else, may detect a scrub click below
    }
    else if (evt.Entering() || (changeInZone && zone == StatusChoice::EnteringQP)) {
-      SetCursor(mCursorHand);
       DrawBothOverlays();
       return;
    }
@@ -2802,22 +2806,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
    else if ( mQuickPlayEnabled) {
-      bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
-      bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
-
-      if (isWithinStart || isWithinEnd) {
-         if (!mIsWE) {
-            SetCursor(mCursorSizeWE);
-            mIsWE = true;
-         }
-      }
-      else {
-         if (mIsWE) {
-            SetCursor(mCursorHand);
-            mIsWE = false;
-         }
-      }
-
       if (evt.LeftDown()) {
          if( inQPZone ){
             HandleQPClick(evt, mousePosX);
@@ -2890,10 +2878,6 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
       // Clicked but not yet dragging
       mMouseEventState = mesSelectingPlayRegionClick;
    }
-
-   // Check if we are dragging BEFORE CaptureMouse.
-   if (mMouseEventState != mesNone)
-      SetCursor(mCursorSizeWE);
 }
 
 auto AdornedRulerPanel::QPHandle::Drag
@@ -2997,7 +2981,25 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
 auto AdornedRulerPanel::QPHandle::Preview
 (const TrackPanelMouseState &state, const AudacityProject *pProject)
 -> HitTestPreview
-{ return {}; }
+{
+   static wxCursor cursorHand{ wxCURSOR_HAND };
+   static wxCursor cursorSizeWE{ wxCURSOR_SIZEWE };
+   
+   bool showArrows = false;
+   if (mParent && mParent->mQuickPlayEnabled)
+      showArrows =
+         (mClicked == Button::Left)
+         || mParent->IsWithinMarker(
+               state.state.m_x, mParent->mOldPlayRegionStart)
+         || mParent->IsWithinMarker(
+               state.state.m_x, mParent->mOldPlayRegionEnd);
+   
+   return {
+      {},
+      showArrows ? &cursorSizeWE : &cursorHand,
+      {},
+   };
+}
 
 auto AdornedRulerPanel::QPHandle::Release
 (const TrackPanelMouseEvent &event, AudacityProject *pProject,
