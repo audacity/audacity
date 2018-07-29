@@ -937,8 +937,21 @@ void TrackPanel::HandleMotion
       refreshCode |= code;
       mMouseOverUpdateFlags |= code;
    }
+   if (newCell &&
+       (!pCursor || status.empty() || tooltip.empty())) {
+      // Defaulting of cursor, tooltip, and status if there is no handle,
+      // or if the handle does not specify them
+      const auto preview = newCell->DefaultPreview( tpmState, GetProject() );
+      if (!pCursor)
+         pCursor = preview.cursor;
+      if (status.empty())
+         status = preview.message;
+      if (tooltip.empty())
+         tooltip = preview.tooltip;
+   }
    if (!pCursor) {
-      static wxCursor defaultCursor{ wxCURSOR_ARROW };
+      // Ultimate default cursor
+      static wxCursor defaultCursor{ wxCURSOR_DEFAULT };
       pCursor = &defaultCursor;
    }
 
@@ -946,11 +959,15 @@ void TrackPanel::HandleMotion
       /* i18n-hint Esc is a key on the keyboard */
       status += wxT(" "), status += _("(Esc to cancel)");
    mListener->TP_DisplayStatusMessage(status);
+   
+#if wxUSE_TOOLTIPS
    if (tooltip != GetToolTipText()) {
       // Unset first, by analogy with AButton
       UnsetToolTip();
       SetToolTip(tooltip);
    }
+#endif
+
    if (pCursor)
       SetCursor( *pCursor );
 
@@ -3529,6 +3546,12 @@ TrackPanel *(*TrackPanel::FactoryFunction)(
 
 TrackPanelCell::~TrackPanelCell()
 {
+}
+
+HitTestPreview TrackPanelCell::DefaultPreview
+(const TrackPanelMouseState &, const AudacityProject *)
+{
+   return {};
 }
 
 unsigned TrackPanelCell::HandleWheelRotation

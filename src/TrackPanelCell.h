@@ -14,6 +14,7 @@ Paul Licameli
 #include "MemoryX.h"
 
 class AudacityProject;
+struct HitTestPreview;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
 class ViewInfo;
@@ -33,6 +34,11 @@ class AUDACITY_DLL_API TrackPanelCell /* not final */
 {
 public:
    virtual ~TrackPanelCell () = 0;
+
+   // May supply default cursor, status message, and tooltip, when there is no
+   // handle to hit at the mouse position, or the handle does not supply them.
+   virtual HitTestPreview DefaultPreview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject);
 
    // Return pointers to objects that can be queried for a status
    // bar message and cursor appropriate to the point, and that dispatch
