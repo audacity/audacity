@@ -376,8 +376,6 @@ private:
    void HandleQPRelease(wxMouseEvent &event);
    void StartQPPlay(bool looped, bool cutPreview);
 
-   void OnCaptureLost(wxMouseCaptureLostEvent &evt);
-
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
@@ -464,8 +462,6 @@ private:
    double mLeftDownClickUnsnapped;  // click position in seconds, before snap
    double mLeftDownClick;  // click position in seconds
    bool mIsDragging;
-
-   StatusChoice mPrevZone { StatusChoice::NoChange };
 
    bool mShowScrubbing { false };
 
