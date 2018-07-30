@@ -353,7 +353,7 @@ public:
       NoChange
    };
 
-   void RegenerateTooltips(StatusChoice choice);
+   void RegenerateTooltips();
 
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
@@ -375,8 +375,6 @@ private:
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
    void StartQPPlay(bool looped, bool cutPreview);
-
-   void UpdateStatusBarAndTooltips(StatusChoice choice);
 
    void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 

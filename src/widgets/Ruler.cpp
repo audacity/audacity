@@ -2048,11 +2048,15 @@ public:
    {
       // May come here when recording is in progress, so hit tests are turned
       // off.
+      wxString tooltip;
+      if (mParent->mTimelineToolTip)
+         tooltip = _("Timeline actions disabled during recording");
+
       static wxCursor cursor{ wxCURSOR_DEFAULT };
       return {
          {},
          &cursor,
-         {},
+         tooltip,
       };
    }
 
@@ -2384,7 +2388,7 @@ void AdornedRulerPanel::UpdatePrefs()
    UpdateRects();
    SetPanelSize();
 
-   RegenerateTooltips(mPrevZone);
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::ReCreateButtons()
@@ -2518,39 +2522,9 @@ namespace {
    }
 }
 
-void AdornedRulerPanel::RegenerateTooltips(StatusChoice choice)
+void AdornedRulerPanel::RegenerateTooltips()
 {
-#if wxUSE_TOOLTIPS
-   if (mTimelineToolTip) {
-      if (mIsRecording) {
-         this->SetToolTip(_("Timeline actions disabled during recording"));
-      }
-      else {
-         switch(choice) {
-         case StatusChoice::EnteringQP :
-            if (!mQuickPlayEnabled) {
-               this->SetToolTip(_("Quick-Play disabled"));
-            }
-            else {
-               this->SetToolTip(_("Quick-Play enabled"));
-            }
-            break;
-         case StatusChoice::EnteringScrubZone :
-         {
-            const auto message = ScrubbingMessage(mProject->GetScrubber());
-            this->SetToolTip(message);
-         }
-            break;
-         default:
-            this->SetToolTip(NULL);
-            break;
-         }
-      }
-   }
-   else {
-      this->SetToolTip(NULL);
-   }
-#endif
+   CallAfter( [this]{ HandleCursorForPresentMouseState(); } );
 }
 
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
@@ -2573,9 +2547,7 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
       UpdateButtonStates();
    }
    
-   CallAfter( [this]{ HandleCursorForPresentMouseState(); } );
-
-   RegenerateTooltips(mPrevZone);
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -2724,7 +2696,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
           ? StatusChoice::EnteringQP
           : StatusChoice::NoChange;
    const bool changeInZone = (zone != mPrevZone);
-   const bool changing = evt.Leaving() || evt.Entering() || changeInZone;
 
    wxCoord xx = evt.GetX();
    wxCoord mousePosX = xx;
@@ -2736,9 +2707,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       const double t1 = mTracks->GetEndTime();
       mQuickPlayPos = std::min(t1, mQuickPlayPos);
    }
-
-   // Handle status bar messages
-   UpdateStatusBarAndTooltips (changing ? zone : StatusChoice::NoChange);
 
    mPrevZone = zone;
 
@@ -2788,7 +2756,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       // mouse going up => we shift to scrubbing.
       scrubber.MarkScrubStart(evt.m_x,
          TracksPrefs::GetPinnedHeadPreference(), false);
-      UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
       DrawBothOverlays();
       return;
    }
@@ -2799,8 +2766,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          scrubber.mInOneShotMode = !scrubber.IsScrubbing();
          scrubber.MarkScrubStart(evt.m_x,
             TracksPrefs::GetPinnedHeadPreference(), false);
-         UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-      } 
+      }
 
       DrawBothOverlays();
       return;
@@ -2975,13 +2941,39 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
 (const TrackPanelMouseState &state, const AudacityProject *pProject)
 -> HitTestPreview
 {
-   return {};
+   const auto &scrubber = pProject->GetScrubber();
+   auto message = ScrubbingMessage(scrubber);
+
+   return {
+      message,
+      {},
+      // Tooltip is same as status message, or blank
+      ((mParent && mParent->mTimelineToolTip) ? message : wxString{}),
+   };
 }
 
 auto AdornedRulerPanel::QPHandle::Preview
 (const TrackPanelMouseState &state, const AudacityProject *pProject)
 -> HitTestPreview
 {
+   wxString tooltip;
+   if (mParent && mParent->mTimelineToolTip) {
+      if (!mParent->mQuickPlayEnabled)
+         tooltip = _("Quick-Play disabled");
+      else
+         tooltip = _("Quick-Play enabled");
+   }
+
+   wxString message;
+   const auto &scrubber = pProject->GetScrubber();
+   const bool scrubbing = scrubber.HasMark();
+   if (scrubbing)
+      // Don't distinguish zones
+      message = ScrubbingMessage(scrubber);
+   else
+      // message = Insert timeline status bar message here
+      ;
+
    static wxCursor cursorHand{ wxCURSOR_HAND };
    static wxCursor cursorSizeWE{ wxCURSOR_SIZEWE };
    
@@ -2995,9 +2987,9 @@ auto AdornedRulerPanel::QPHandle::Preview
                state.state.m_x, mParent->mOldPlayRegionEnd);
    
    return {
-      {},
+      message,
       showArrows ? &cursorSizeWE : &cursorHand,
-      {},
+      tooltip,
    };
 }
 
@@ -3134,42 +3126,6 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
                           true);
 
    }
-}
-
-void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
-{
-   if (choice == StatusChoice::NoChange)
-      return;
-
-   wxString message {};
-
-   const auto &scrubber = mProject->GetScrubber();
-   const bool scrubbing = scrubber.HasMark();
-   if (scrubbing && choice != StatusChoice::Leaving)
-      // Don't distinguish zones
-      choice = StatusChoice::EnteringScrubZone;
-
-   switch (choice) {
-      case StatusChoice::EnteringQP:
-      {
-         // message = Insert timeline status bar message here
-      }
-         break;
-
-      case StatusChoice::EnteringScrubZone:
-      {
-         message = ScrubbingMessage(scrubber);
-      }
-         break;
-
-      default:
-         break;
-   }
-
-   // Display a message, or empty message
-   mProject->TP_DisplayStatusMessage(message);
-
-   RegenerateTooltips(choice);
 }
 
 // This version toggles ruler state indirectly via the scrubber
@@ -3319,7 +3275,7 @@ void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
    mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
    gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
    gPrefs->Flush();
-   RegenerateTooltips(mPrevZone);
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
@@ -3351,9 +3307,7 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
    mTimelineToolTip = (mTimelineToolTip)? false : true;
    gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
    gPrefs->Flush();
-#if wxUSE_TOOLTIPS
-   RegenerateTooltips(mPrevZone);
-#endif
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
@@ -3725,9 +3679,9 @@ void AdornedRulerPanel::ProcessUIHandleResult
    
 }
 
-void AdornedRulerPanel::UpdateStatusMessage( const wxString & )
+void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
 {
-
+   GetProject()->TP_DisplayStatusMessage(message);
 }
 
 void AdornedRulerPanel::CreateOverlays()
