@@ -106,7 +106,7 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
       }
       S.EndMultiColumn();
 
-      S.Prop(10).StartStatic(_("C&hoose command"), true);
+      S.Prop(10).StartStatic(_("Choose command"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_LIST | wxLC_SINGLE_SEL);
          mChoices = S.Id(CommandsListID).AddListControl();

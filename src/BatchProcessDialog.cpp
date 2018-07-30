@@ -55,6 +55,10 @@
 #include "widgets/ErrorDialog.h"
 #include "widgets/HelpSystem.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 #define MacrosListID       7001
 #define CommandsListID     7002
 #define ApplyToProjectID   7003
@@ -122,7 +126,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 {
    /*i18n-hint: A macro is a sequence of commands that can be applied
       * to one or more audio files.*/
-   S.StartStatic(_("&Select Macro"), 1);
+   S.StartStatic(_("Select Macro"), 1);
    {
       S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                   wxLC_SINGLE_SEL);
@@ -134,8 +138,15 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartHorizontalLay(wxEXPAND, 0);
    {
       S.AddPrompt( _("Apply Macro to:") );
-      S.Id(ApplyToProjectID).AddButton(_("&Project"));
-      S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      wxButton* btn = S.Id(ApplyToProjectID).AddButton(_("&Project"));
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+      btn->SetName(_("Apply macro to project"));
+
+      btn = S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+      btn->SetName(_("Apply macro to files..."));
    }
    S.EndHorizontalLay();
 
@@ -588,7 +599,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 1);
    {
-      S.StartStatic(_("&Select Macro"),0);
+      S.StartStatic(_("Select Macro"),0);
       {
          S.StartHorizontalLay(wxEXPAND,1);
          {
@@ -611,7 +622,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Edit S&teps"), true);
+      S.StartStatic(_("Edit Steps"), true);
       {
          S.StartHorizontalLay(wxEXPAND,1);
          {
@@ -650,8 +661,15 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
       // Using variable text just to get the positioning options.
       S.Prop(0).AddVariableText( _("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
-      S.Id(ApplyToProjectID).AddButton(_("&Project"));
-      S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      wxButton* btn = S.Id(ApplyToProjectID).AddButton(_("&Project"));
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+      btn->SetName(_("Apply macro to project"));
+
+      btn = S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+      btn->SetName(_("Apply macro to files..."));
       S.Prop(1).AddSpace( 10 );
       S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
    }
