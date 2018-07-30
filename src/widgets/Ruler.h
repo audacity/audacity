@@ -423,7 +423,6 @@ private:
    double mQuickPlayPosUnsnapped;
    double mQuickPlayPos;
 
-   std::unique_ptr<SnapManager> mSnapManager;
    bool mIsSnapped;
 
    bool   mPlayRegionLock;

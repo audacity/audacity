@@ -2122,6 +2122,8 @@ public:
    QPHandle( AdornedRulerPanel *pParent )
    : CommonRulerHandle( pParent )
    {}
+   
+   std::unique_ptr<SnapManager> mSnapManager;
 
 private:
    Result Click
@@ -2322,7 +2324,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mTracks = project->GetTracks();
 
-   mSnapManager = NULL;
    mIsSnapped = false;
 
    mIsRecording = false;
@@ -2700,7 +2701,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    wxCoord xx = evt.GetX();
    wxCoord mousePosX = xx;
    UpdateQuickPlayPos(mousePosX);
-   HandleSnapping();
 
    // If not looping, restrict selection to end of project
    if (zone == StatusChoice::EnteringQP && !evt.ShiftDown()) {
@@ -2721,17 +2721,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    // Handle entering and leaving of the bar, or movement from
    // one portion (quick play or scrub) to the other
-   if (evt.Leaving() || (changeInZone && zone != StatusChoice::EnteringQP)) {
-      if (evt.Leaving()) {
-         // Erase the line
-         DrawBothOverlays();
-      }
-
-      mSnapManager.reset();
-
-      if(evt.Leaving())
-         return;
-      // else, may detect a scrub click below
+   if (evt.Leaving()) {
+      // Erase the line
+      DrawBothOverlays();
+      return;
    }
    else if (evt.Entering() || (changeInZone && zone == StatusChoice::EnteringQP)) {
       DrawBothOverlays();
@@ -3211,6 +3204,8 @@ void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
    mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 
    mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
+
+   HandleSnapping();
 }
 
 // Pop-up menus
@@ -3293,13 +3288,16 @@ void AdornedRulerPanel::DragSelection()
 
 void AdornedRulerPanel::HandleSnapping()
 {
-   if (!mSnapManager) {
-      mSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
+   auto handle = mQPCell->mHolder.lock();
+   if (handle) {
+      auto &pSnapManager = handle->mSnapManager;
+      if (! pSnapManager)
+         pSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
+      
+      auto results = pSnapManager->Snap(NULL, mQuickPlayPos, false);
+      mQuickPlayPos = results.outTime;
+      mIsSnapped = results.Snapped();
    }
-
-   auto results = mSnapManager->Snap(NULL, mQuickPlayPos, false);
-   mQuickPlayPos = results.outTime;
-   mIsSnapped = results.Snapped();
 }
 
 void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
