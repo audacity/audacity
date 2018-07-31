@@ -152,9 +152,6 @@ public:
    void Pause(bool paused);
    bool IsPaused() const;
    void CheckMenuItems();
-   // Bug 1508
-   bool IsOneShotSeeking()const { return mInOneShotMode && IsScrubbing();};
-   bool mInOneShotMode;
 
 private:
    void DoScrub(bool seek);

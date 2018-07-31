@@ -2016,7 +2016,6 @@ enum {
 BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
-   EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
 
    // Context menu commands
    EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
@@ -2231,9 +2230,26 @@ public:
 
 private:
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override {
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
       auto result = CommonRulerHandle::Click(event, pProject);
       if (!( result & RefreshCode::Cancelled )) {
+         if (mClicked == Button::Left) {
+            auto &scrubber = pProject->GetScrubber();
+            // only if scrubbing is allowed now
+            bool canScrub =
+               scrubber.CanScrub() &&
+               mParent &&
+               mParent->mShowScrubbing;
+
+            if (!canScrub)
+               return RefreshCode::Cancelled;
+            if (!scrubber.HasMark()) {
+               // Asynchronous scrub poller gets activated here
+               scrubber.MarkScrubStart(
+                  event.event.m_x, TracksPrefs::GetPinnedHeadPreference(), false);
+            }
+         }
       }
       return result;
    }
@@ -2243,6 +2259,8 @@ private:
    {
       auto result = CommonRulerHandle::Drag(event, pProject);
       if (!( result & RefreshCode::Cancelled )) {
+         // Nothing needed here.  The scrubber works by polling mouse state
+         // after the start has been marked.
       }
       return result;
    }
@@ -2256,12 +2274,26 @@ private:
        wxWindow *pParent) override {
       auto result = CommonRulerHandle::Release(event, pProject, pParent);
       if (!( result & RefreshCode::Cancelled )) {
+         // Nothing needed here either.  The scrub poller may have decided to
+         // seek because a drag happened before button up, or it may decide
+         // to start a scrub, as it watches mouse movement after the button up.
       }
       return result;
    }
 
-   Result Cancel(AudacityProject *pProject) override {
+   Result Cancel(AudacityProject *pProject) override
+   {
       auto result = CommonRulerHandle::Cancel(pProject);
+
+      if (mClicked == Button::Left) {
+         auto &scrubber = pProject->GetScrubber();
+         scrubber.Cancel();
+         
+         auto ctb = pProject->GetControlToolBar();
+         wxCommandEvent evt;
+         ctb->OnStop(evt);
+      }
+
       return result;
    }
 };
@@ -2520,7 +2552,8 @@ namespace {
 #endif
    }
 
-   const wxString ContinueScrubbingMessage(const Scrubber &scrubber)
+   const wxString ContinueScrubbingMessage(
+      const Scrubber &scrubber, bool clicked)
    {
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
@@ -2532,13 +2565,14 @@ namespace {
       else
          return _("Move to Scrub");
 #else
-      wxMouseState State = wxGetMouseState();
-      if( State.LeftIsDown() ) {
+      if( clicked ) {
          // Since mouse is down, mention dragging first.
          // IsScrubbing is true if Scrubbing OR seeking.
-         if( scrubber.IsOneShotSeeking() )
+         if( scrubber.IsScrubbing() )
+            // User is dragging already, explain.
             return _("Drag to Seek.  Release to stop seeking.");
-         else 
+         else
+            // User has clicked but not yet moved or released.
             return _("Drag to Seek.  Release and move to Scrub.");
       }
       // Since mouse is up, mention moving first.
@@ -2546,10 +2580,10 @@ namespace {
 #endif
    }
 
-   const wxString ScrubbingMessage(const Scrubber &scrubber)
+   const wxString ScrubbingMessage(const Scrubber &scrubber, bool clicked)
    {
       if (scrubber.HasMark())
-         return ContinueScrubbingMessage(scrubber);
+         return ContinueScrubbingMessage(scrubber, clicked);
       else
          return StartScrubbingMessage(scrubber);
    }
@@ -2700,45 +2734,6 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
    int boundRight = pixelPos + SELECT_TOLERANCE_PIXEL;
 
    return mousePosX >= boundLeft && mousePosX < boundRight;
-}
-
-void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
-{
-   // Will always fall through to base class handling
-   evt.Skip();
-
-   const auto position = evt.GetPosition();
-
-   const bool inScrubZone =
-      // only if scrubbing is allowed now
-      mProject->GetScrubber().CanScrub() &&
-      mShowScrubbing &&
-      mScrubZone.Contains(position);
-
-   auto &scrubber = mProject->GetScrubber();
-
-   auto clicked = mQPCell->Clicked();
-
-   if( !clicked && evt.LeftUp() && inScrubZone ) {
-      if( scrubber.IsOneShotSeeking() ){
-         scrubber.mInOneShotMode = false;
-         return;
-      }
-      //wxLogDebug("up");
-      // mouse going up => we shift to scrubbing.
-      scrubber.MarkScrubStart(evt.m_x,
-         TracksPrefs::GetPinnedHeadPreference(), false);
-      return;
-   }
-   else if ( !clicked && inScrubZone) {
-      // mouse going down => we are (probably) seeking
-      if (evt.LeftDown() && !scrubber.HasMark()) {
-         //wxLogDebug("down");
-         scrubber.mInOneShotMode = !scrubber.IsScrubbing();
-         scrubber.MarkScrubStart(evt.m_x,
-            TracksPrefs::GetPinnedHeadPreference(), false);
-      }
-   }
 }
 
 auto AdornedRulerPanel::QPHandle::Click
@@ -2911,7 +2906,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
 -> HitTestPreview
 {
    const auto &scrubber = pProject->GetScrubber();
-   auto message = ScrubbingMessage(scrubber);
+   auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
 
    return {
       message,
@@ -2938,7 +2933,7 @@ auto AdornedRulerPanel::QPHandle::Preview
    const bool scrubbing = scrubber.HasMark();
    if (scrubbing)
       // Don't distinguish zones
-      message = ScrubbingMessage(scrubber);
+      message = ScrubbingMessage(scrubber, false);
    else
       // message = Insert timeline status bar message here
       ;

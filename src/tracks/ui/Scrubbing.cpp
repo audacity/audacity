@@ -184,8 +184,7 @@ void Scrubber::ScrubPoller::Notify()
 }
 
 Scrubber::Scrubber(AudacityProject *project)
-   : mInOneShotMode( false )
-   , mScrubToken(-1)
+   : mScrubToken(-1)
    , mPaused(true)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
