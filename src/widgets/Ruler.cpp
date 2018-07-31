@@ -2076,9 +2076,11 @@ class AdornedRulerPanel::CommonRulerHandle : public UIHandle
 {
 public:
    explicit
-   CommonRulerHandle( AdornedRulerPanel *pParent, wxCoord xx )
+   CommonRulerHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
       : mParent(pParent)
       , mX( xx )
+      , mChoice( menuChoice )
    {}
 
    bool Clicked() const { return mClicked != Button::None; }
@@ -2109,6 +2111,10 @@ protected:
       (const TrackPanelMouseEvent &event, AudacityProject *,
        wxWindow *) override
    {
+      if ( mParent && mClicked == Button::Right ) {
+         const auto pos = event.event.GetPosition();
+         mParent->ShowContextMenu( mChoice, &pos );
+      }
       return RefreshCode::DrawOverlays;
    }
 
@@ -2125,6 +2131,8 @@ protected:
    wxWeakRef<AdornedRulerPanel> mParent;
 
    wxCoord mX;
+   
+   MenuChoice mChoice;
 
    enum class Button { None, Left, Right };
    Button mClicked{ Button::None };
@@ -2135,7 +2143,7 @@ class AdornedRulerPanel::QPHandle final : public CommonRulerHandle
 public:
    explicit
    QPHandle( AdornedRulerPanel *pParent, wxCoord xx )
-   : CommonRulerHandle( pParent, xx )
+   : CommonRulerHandle( pParent, xx, MenuChoice::QuickPlay )
    {
    }
    
@@ -2212,7 +2220,7 @@ class AdornedRulerPanel::ScrubbingHandle final : public CommonRulerHandle
 public:
    explicit
    ScrubbingHandle( AdornedRulerPanel *pParent, wxCoord xx )
-   : CommonRulerHandle( pParent, xx )
+   : CommonRulerHandle( pParent, xx, MenuChoice::Scrub )
    {
    }
 
@@ -2732,14 +2740,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    auto clicked = mQPCell->Clicked();
 
-   // Handle popup menus
-   if (evt.RightUp() && !(evt.LeftIsDown())) {
-      ShowContextMenu
-         (inScrubZone ? MenuChoice::Scrub : MenuChoice::QuickPlay,
-          &position);
-      return;
-   }
-   else if( !clicked && evt.LeftUp() && inScrubZone ) {
+   if( !clicked && evt.LeftUp() && inScrubZone ) {
       if( scrubber.IsOneShotSeeking() ){
          scrubber.mInOneShotMode = false;
          return;
