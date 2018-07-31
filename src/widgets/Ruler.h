@@ -342,16 +342,9 @@ public:
    void UpdatePrefs();
    void ReCreateButtons();
 
-   enum class StatusChoice {
-      EnteringQP,
-      EnteringScrubZone,
-      Leaving,
-      NoChange
-   };
-
    void RegenerateTooltips();
 
-   void UpdateQuickPlayPos(wxCoord &mousPosX);
+   void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
 
    bool ShowingScrubRuler() const { return mShowScrubbing; }
    void OnToggleScrubRuler(/*wxCommandEvent& */);

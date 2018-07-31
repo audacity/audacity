@@ -891,7 +891,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    {
       if(scrubber.HasMark()) {
          auto xx = ruler->ScreenToClient(position).x;
-         ruler->UpdateQuickPlayPos(xx);
+         ruler->UpdateQuickPlayPos( xx, false );
 
          if (!isScrubbing)
             // Really start scrub if motion is far enough
