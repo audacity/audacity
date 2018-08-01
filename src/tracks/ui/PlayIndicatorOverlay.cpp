@@ -162,23 +162,25 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       mProject->TP_DisplaySelection();
 
       // BG: Scroll screen if option is set
-      // msmeyer: But only if not playing looped or in one-second mode
-      // PRL: and not scrolling with play/record head fixed right
-      if (viewInfo.bUpdateTrackIndicator &&
-          mProject->mLastPlayMode != PlayMode::loopedPlay &&
-          mProject->mLastPlayMode != PlayMode::oneSecondPlay &&
-          mProject->GetPlaybackScroller().GetMode() !=
-             AudacityProject::PlaybackScroller::Mode::Right &&
-         playPos >= 0 &&
-         !onScreen &&
-         !gAudioIO->IsPaused())
-      {
-         mProject->TP_ScrollWindow(playPos);
-         // Might yet be off screen, check it
-         onScreen = playPos >= 0.0 &&
+      if( viewInfo.bUpdateTrackIndicator &&
+          playPos >= 0 && !onScreen ) {
+         // msmeyer: But only if not playing looped or in one-second mode
+         // PRL: and not scrolling with play/record head fixed
+         using Mode = AudacityProject::PlaybackScroller::Mode;
+         const Mode mode = mProject->GetPlaybackScroller().GetMode();
+         const bool pinned = ( mode == Mode::Pinned || mode == Mode::Right );
+         if (!pinned &&
+             mProject->mLastPlayMode != PlayMode::loopedPlay &&
+             mProject->mLastPlayMode != PlayMode::oneSecondPlay &&
+             !gAudioIO->IsPaused())
+         {
+            mProject->TP_ScrollWindow(playPos);
+            // Might yet be off screen, check it
+            onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
                            playPos,
                            mProject->GetScreenEndTime());
+         }
       }
 
       // Always update scrollbars even if not scrolling the window. This is

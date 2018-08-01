@@ -169,6 +169,7 @@ scroll information.  It also has some status flags.
 #include "commands/CommandContext.h"
 
 #include "prefs/QualityPrefs.h"
+#include "prefs/TracksPrefs.h"
 
 #include "../images/AudacityLogoAlpha.xpm"
 
@@ -6287,7 +6288,8 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       trackPanel->Refresh(false);
    }
    else if (mMode != Mode::Off) {
-      // Pan the view, so that we center the play indicator.
+      // Pan the view, so that we put the play indicator at some fixed
+      // fraction of the window width.
 
       ViewInfo &viewInfo = mProject->GetViewInfo();
       TrackPanel *const trackPanel = mProject->GetTrackPanel();
@@ -6301,7 +6303,9 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
             wxASSERT(false);
             /* fallthru */
          case Mode::Pinned:
-            deltaX = posX - width / 2;    break;
+            deltaX =
+               posX - width * TracksPrefs::GetPinnedHeadPositionPreference();
+            break;
          case Mode::Right:
             deltaX = posX - width;        break;
       }

@@ -68,8 +68,10 @@ namespace {
       // with the time at the midline of the screen mapping to 0,
       // and the extremes to the maximum scrub speed.
 
-      // Width of visible track area, in time terms:
-      const double origin = viewInfo.h + screen / 2.0;
+      auto partScreen = screen * TracksPrefs::GetPinnedHeadPositionPreference();
+      const double origin = viewInfo.h + partScreen;
+      if (timeAtMouse >= origin)
+         partScreen = screen - partScreen;
 
       // There are various snapping zones that are this fraction of screen:
       const double snap = 0.05;
@@ -77,8 +79,9 @@ namespace {
       // By shrinking denom a bit, we make margins left and right
       // that snap to maximum and negative maximum speeds.
       const double factor = 1.0 - (snap * 2);
-      const double denom = factor * screen / 2.0;
-      double fraction = std::min(1.0, fabs(timeAtMouse - origin) / denom);
+      const double denom = factor * partScreen;
+      double fraction = (denom <= 0.0) ? 0.0 :
+         std::min(1.0, fabs(timeAtMouse - origin) / denom);
 
       // Snap to 1.0 and -1.0
       const double unity = 1.0 / maxScrubSpeed;
@@ -115,14 +118,16 @@ namespace {
       const double extreme = std::max(1.0, maxScrubSpeed * ARBITRARY_MULTIPLIER);
 
       // Width of visible track area, in time terms:
-      const double halfScreen = screen / 2.0;
-      const double origin = viewInfo.h + halfScreen;
+      auto partScreen = screen * TracksPrefs::GetPinnedHeadPositionPreference();
+      const double origin = viewInfo.h + partScreen;
+      if (timeAtMouse >= origin)
+         partScreen = screen - partScreen;
 
       // The snapping zone is this fraction of screen, on each side of the
       // center line:
       const double snap = 0.05;
-      const double fraction =
-         std::max(snap, std::min(1.0, fabs(timeAtMouse - origin) / halfScreen));
+      const double fraction = (partScreen <= 0.0) ? 0.0 :
+         std::max(snap, std::min(1.0, fabs(timeAtMouse - origin) / partScreen));
 
       double result = 1.0 + ((fraction - snap) / (1.0 - snap)) * (extreme - 1.0);
       if (timeAtMouse < origin)
@@ -343,7 +348,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             if (mDragging && mSmoothScrollingScrub) {
                auto delta = time0 - time1;
                time0 = std::max(0.0, std::min(maxTime,
-                  (viewInfo.h + mProject->GetScreenEndTime()) / 2
+                  viewInfo.h +
+                     (mProject->GetScreenEndTime() - viewInfo.h)
+                        * TracksPrefs::GetPinnedHeadPositionPreference()
                ));
                time1 = time0 + delta;
             }

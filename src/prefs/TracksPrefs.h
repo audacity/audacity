@@ -34,7 +34,10 @@ class TracksPrefs final : public PrefsPanel
 
    static bool GetPinnedHeadPreference();
    static void SetPinnedHeadPreference(bool value, bool flush = false);
-
+   
+   static double GetPinnedHeadPositionPreference();
+   static void SetPinnedHeadPositionPreference(double value, bool flush = false);
+   
    static wxString GetDefaultAudioTrackNamePreference();
 
    static WaveTrack::WaveTrackDisplay ViewModeChoice();

@@ -42,6 +42,16 @@ namespace {
    {
       return false;
    }
+   
+   const wxChar *PinnedHeadPositionPreferenceKey()
+   {
+      return wxT("/AudioIO/PinnedHeadPosition");
+   }
+
+   double PinnedHeadPositionPreferenceDefault()
+   {
+      return 0.5;
+   }
 }
 
 
@@ -320,6 +330,21 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
 {
    iPreferencePinned = value ? 1 :0;
    gPrefs->Write(PinnedHeadPreferenceKey(), value);
+   if(flush)
+      gPrefs->Flush();
+}
+
+double TracksPrefs::GetPinnedHeadPositionPreference()
+{
+   auto value = gPrefs->ReadDouble(
+      PinnedHeadPositionPreferenceKey(),
+      PinnedHeadPositionPreferenceDefault());
+   return std::max(0.0, std::min(1.0, value));
+}
+
+void TracksPrefs::SetPinnedHeadPositionPreference(double value, bool flush)
+{
+   gPrefs->Write(PinnedHeadPositionPreferenceKey(), value);
    if(flush)
       gPrefs->Flush();
 }
