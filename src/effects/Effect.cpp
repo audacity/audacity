@@ -3250,7 +3250,11 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
 
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
-   if (!mIsBatch && mEffect && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
+   if (!mIsBatch && 
+      mEffect && 
+      mEffect->GetType() != EffectTypeGenerate && 
+      mEffect->GetType() != EffectTypeTool && 
+      mProject->mViewInfo.selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed = mProject->ReportIfActionNotAllowed(

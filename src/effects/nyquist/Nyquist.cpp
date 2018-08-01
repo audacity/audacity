@@ -149,6 +149,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mStop = false;
    mBreak = false;
    mCont = false;
+   mIsTool = false;
 
    mMaxLen = NYQ_MAX_LEN;
 
@@ -167,6 +168,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    if (fName == NYQUIST_TOOLS_PROMPT_ID) {
       mName = XO("Nyquist Tools Prompt");
       mType = EffectTypeTool;
+      mIsTool = true;
       mPromptName = mName;
       mPromptType = mType;
       mOK = true;
@@ -262,6 +264,13 @@ wxString NyquistEffect::HelpPage()
 
 EffectType NyquistEffect::GetType()
 {
+   return mType;
+}
+
+EffectType NyquistEffect::GetClassification()
+{
+   if (mIsTool)
+      return EffectTypeTool;
    return mType;
 }
 
@@ -584,6 +593,8 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 
 static void RegisterFunctions();
 
+
+
 bool NyquistEffect::Process()
 {
    // Check for reentrant Nyquist commands.
@@ -609,12 +620,7 @@ bool NyquistEffect::Process()
       mProgress->Hide();
    }
 
-   // We must copy all the tracks, because Paste needs label tracks to ensure
-   // correct sync-lock group behavior when the timeline is affected; then we just want
-   // to operate on the selected wave tracks
-   CopyInputTracks(Track::All);
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   mCurTrack[0] = (WaveTrack *) iter.First();
+
    mOutputTime = 0;
    mCount = 0;
    mProgressIn = 0;
@@ -765,52 +771,67 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
 
+   // If in tool mode, then we don't do anything with the track and selection.
+   bool bOnePassTool = (GetType() == EffectTypeTool);
+
+
+   // We must copy all the tracks, because Paste needs label tracks to ensure
+   // correct sync-lock group behavior when the timeline is affected; then we just want
+   // to operate on the selected wave tracks
+   if( !bOnePassTool )
+      CopyInputTracks(Track::All);
+   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
+   mCurTrack[0] = (WaveTrack *)iter.First();
+
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
    // to handle sync-lock group behavior the "old" way).
    mFirstInGroup = true;
    Track *gtLast = NULL;
 
-   while (mCurTrack[0]) {
+   while (mCurTrack[0] || bOnePassTool) {
       mCurNumChannels = 1;
-      if (mT1 >= mT0) {
-         if (mCurTrack[0]->GetLinked()) {
-            mCurNumChannels = 2;
+      if ((mT1 >= mT0)||bOnePassTool) {
+         if (bOnePassTool) {
 
-            mCurTrack[1] = (WaveTrack *)iter.Next();
-            if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
-               Effect::MessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
-                            wxOK | wxCENTRE);
-               success = false;
-               goto finish;
+         } else {
+            if (mCurTrack[0]->GetLinked()) {
+               mCurNumChannels = 2;
+
+               mCurTrack[1] = (WaveTrack *)iter.Next();
+               if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
+                  Effect::MessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
+                     wxOK | wxCENTRE);
+                  success = false;
+                  goto finish;
+               }
+               mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
             }
-            mCurStart[1] = mCurTrack[1]->TimeToLongSamples(mT0);
+
+            // Check whether we're in the same group as the last selected track
+            SyncLockedTracksIterator gIter(mOutputTracks.get());
+            Track *gt = gIter.StartWith(mCurTrack[0]);
+            mFirstInGroup = !gtLast || (gtLast != gt);
+            gtLast = gt;
+
+            mCurStart[0] = mCurTrack[0]->TimeToLongSamples(mT0);
+            auto end = mCurTrack[0]->TimeToLongSamples(mT1);
+            mCurLen = end - mCurStart[0];
+
+            if (mCurLen > NYQ_MAX_LEN) {
+               float hours = (float)NYQ_MAX_LEN / (44100 * 60 * 60);
+               const auto message = wxString::Format(
+                  _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld samples\n(about %.1f hours at 44100 Hz sample rate)."),
+                  (long)NYQ_MAX_LEN, hours
+               );
+               Effect::MessageBox(message, wxOK | wxCENTRE, _("Nyquist Error"));
+               if (!mProjectChanged)
+                  em.SetSkipStateFlag(true);
+               return false;
+            }
+
+            mCurLen = std::min(mCurLen, mMaxLen);
          }
-
-         // Check whether we're in the same group as the last selected track
-         SyncLockedTracksIterator gIter(mOutputTracks.get());
-         Track *gt = gIter.StartWith(mCurTrack[0]);
-         mFirstInGroup = !gtLast || (gtLast != gt);
-         gtLast = gt;
-
-         mCurStart[0] = mCurTrack[0]->TimeToLongSamples(mT0);
-         auto end = mCurTrack[0]->TimeToLongSamples(mT1);
-         mCurLen = end - mCurStart[0];
-
-         if (mCurLen > NYQ_MAX_LEN) {
-            float hours = (float)NYQ_MAX_LEN / (44100 * 60 * 60);
-            const auto message = wxString::Format(
-_("Selection too long for Nyquist code.\nMaximum allowed selection is %ld samples\n(about %.1f hours at 44100 Hz sample rate)."),
-               (long)NYQ_MAX_LEN, hours
-            );
-            Effect::MessageBox(message, wxOK | wxCENTRE, _("Nyquist Error"));
-            if (!mProjectChanged)
-               em.SetSkipStateFlag(true);
-            return false;
-         }
-
-         mCurLen = std::min(mCurLen, mMaxLen);
-
          mProgressIn = 0.0;
          mProgressOut = 0.0;
 
@@ -879,7 +900,7 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
 
-         if (!success) {
+         if (!success || bOnePassTool) {
             goto finish;
          }
          mProgressTot += mProgressIn + mProgressOut;
@@ -908,7 +929,7 @@ finish:
    }
 
    // Has rug been pulled from under us by some effect done within Nyquist??
-   if( nEffectsSoFar == nEffectsDone )
+   if( !bOnePassTool && ( nEffectsSoFar == nEffectsDone ))
       ReplaceProcessedTracks(success);
    else{
       ReplaceProcessedTracks(false); // Do not use the results.
@@ -1006,7 +1027,11 @@ bool NyquistEffect::ProcessOne()
    wxString cmd;
    cmd += wxT("(snd-set-latency  0.1)");
 
-   if (mVersion >= 4) {
+   // A tool may be using AUD-DO which will potentially invalidate *TRACK*
+   // so tools do not get *TRACK*.
+   if (GetType() == EffectTypeTool)
+      ; // No Track.
+   else if (mVersion >= 4) {
       nyx_set_audio_name("*TRACK*");
       cmd += wxT("(setf S 0.25)\n");
    }
@@ -1015,7 +1040,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *TRACK* '*unbound*)\n");
    }
 
-   if (mVersion >= 4) {
+   if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) { 
       cmd += mProps;
       cmd += mPerTrackProps;
 
@@ -1166,7 +1191,11 @@ bool NyquistEffect::ProcessOne()
          cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'RMS)\n"), rmsString);
    }
 
-   if (GetType() == EffectTypeGenerate) {
+   // If in tool mode, then we don't do anything with the track and selection.
+   if (GetType() == EffectTypeTool) {
+      nyx_set_audio_params(44100, 0);
+   } 
+   else if (GetType() == EffectTypeGenerate) {
       nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
    }
    else {
@@ -1327,7 +1356,7 @@ bool NyquistEffect::ProcessOne()
 
       // True if not process type.
       // If not returning audio from process effect,
-      // return first reult then stop (disables preview)
+      // return first result then stop (disables preview)
       // but allow all output from Nyquist Prompt.
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
@@ -1747,18 +1776,32 @@ bool NyquistEffect::Parse(
    }
 
    if (len >= 2 && tokens[0] == wxT("type")) {
-      if (tokens[1] == wxT("process")) {
+      wxString tok = tokens[1];
+      mIsTool = false;
+      if (tok == wxT("tool")) {
+         mIsTool = true;
+         mType = EffectTypeTool;
+         // we allow
+         // ;type tool
+         // ;type tool process
+         // ;type tool generate
+         // ;type tool analyze
+         // The last three are placed in the tool menu, but are processed as
+         // process, generate or analyze.
+         if (len >= 3)
+            tok = tokens[2];
+      }
+
+      if (tok == wxT("process")) {
          mType = EffectTypeProcess;
       }
-      else if (tokens[1] == wxT("generate")) {
+      else if (tok == wxT("generate")) {
          mType = EffectTypeGenerate;
       }
-      else if (tokens[1] == wxT("analyze")) {
+      else if (tok == wxT("analyze")) {
          mType = EffectTypeAnalyze;
       }
-      else if (tokens[1] == wxT("tool")) {
-         mType = EffectTypeTool;
-      }
+
       if (len >= 3 && tokens[2] == wxT("spectral")) {;
          mIsSpectral = true;
       }

@@ -1435,7 +1435,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
 
    plug.SetProviderID(PluginManager::GetID(provider));
 
-   plug.SetEffectType(effect->GetType());
+   plug.SetEffectType(effect->GetClassification());
    plug.SetEffectFamilyId(effect->GetFamilyId().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());

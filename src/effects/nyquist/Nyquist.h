@@ -99,6 +99,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
+   EffectType GetClassification() override;
    IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
@@ -120,7 +121,6 @@ public:
    bool TransferDataFromWindow() override;
 
    // NyquistEffect implementation
-
    // For Nyquist Workbench support
    void RedirectOutput();
    void SetCommand(const wxString &cmd);
@@ -219,6 +219,7 @@ private:
    bool              mIsSal;
    bool              mExternal;
    bool              mIsSpectral;
+   bool              mIsTool;
    /** True if the code to execute is obtained interactively from the user via
     * the "Nyquist Effect Prompt", or "Nyquist Tools Prompt", false for all other effects (lisp code read from
     * files)
@@ -242,7 +243,7 @@ private:
    wxString          mHelpFile;
    bool              mHelpFileExists;
    EffectType        mType;
-   EffectType        mPromptType; // If a prompt, need ot remember original type.
+   EffectType        mPromptType; // If a prompt, need to remember original type.
 
    bool              mEnablePreview;
    bool              mDebugButton;  // Set to false to disable Debug button.
