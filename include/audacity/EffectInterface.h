@@ -103,7 +103,10 @@ class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public Ident
 public:
    virtual ~EffectDefinitionInterface() {};
 
+   // Type determines how it behaves.
    virtual EffectType GetType() = 0;
+   // Classification determines which menu it appears in.
+   virtual EffectType GetClassification() { return GetType();};
 
    virtual IdentInterfaceSymbol GetFamilyId() = 0;
 
