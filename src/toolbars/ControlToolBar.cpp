@@ -1514,7 +1514,7 @@ void ControlToolBar::StartScrolling()
    using Mode = AudacityProject::PlaybackScroller::Mode;
    const auto project = GetActiveProject();
    if (project) {
-      auto mode = Mode::Centered;
+      auto mode = Mode::Pinned;
 
 #if 0
       // Enable these lines to pin the playhead right instead of center,

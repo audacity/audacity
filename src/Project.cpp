@@ -1804,7 +1804,7 @@ bool AudacityProject::MayScrollBeyondZero() const
        IsAudioActive()) {
       if (mPlaybackScroller) {
          auto mode = mPlaybackScroller->GetMode();
-         if (mode == PlaybackScroller::Mode::Centered ||
+         if (mode == PlaybackScroller::Mode::Pinned ||
              mode == PlaybackScroller::Mode::Right)
             return true;
       }
@@ -6300,7 +6300,7 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
          default:
             wxASSERT(false);
             /* fallthru */
-         case Mode::Centered:
+         case Mode::Pinned:
             deltaX = posX - width / 2;    break;
          case Mode::Right:
             deltaX = posX - width;        break;
