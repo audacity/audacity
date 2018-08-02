@@ -35,10 +35,8 @@ public:
                  const wxSize & size,
                  ViewInfo *viewInfo,
                  // default as for wxPanel:
-                 long style = wxTAB_TRAVERSAL | wxNO_BORDER)
-   : OverlayPanel(parent, id, pos, size, style)
-   , mViewInfo( viewInfo )
-   {}
+                 long style = wxTAB_TRAVERSAL | wxNO_BORDER);
+   ~CellularPanel() override;
    
    // Overridables:
    
@@ -61,17 +59,11 @@ public:
    virtual void UpdateStatusMessage( const wxString & )  = 0;
    
 public:
-   UIHandlePtr Target()
-   {
-      if (mTargets.size())
-         return mTargets[mTarget];
-      else
-         return {};
-   }
+   UIHandlePtr Target();
    
    bool IsMouseCaptured();
    
-   wxCoord MostRecentXCoord() const { return mMouseMostRecentX; }
+   wxCoord MostRecentXCoord() const;
    
    void HandleCursorForPresentMouseState(bool doHit = true);
    
@@ -79,15 +71,7 @@ protected:
    bool HasEscape();
    bool CancelDragging();
    void DoContextMenu( TrackPanelCell *pCell = nullptr );
-   void ClearTargets()
-   {
-      // Forget the rotation of hit test candidates when the mouse moves from
-      // cell to cell or outside of the panel entirely.
-      mLastCell.reset();
-      mTargets.clear();
-      mTarget = 0;
-      mMouseOverUpdateFlags = 0;
-   }
+   void ClearTargets();
    
 private:
    bool HasRotation();
@@ -121,26 +105,13 @@ private:
    
 protected:
    ViewInfo *mViewInfo;
-   
-private:
-   UIHandlePtr mUIHandle;
-   
-   std::weak_ptr<TrackPanelCell> mLastCell;
-   std::vector<UIHandlePtr> mTargets;
-   size_t mTarget {};
-   unsigned mMouseOverUpdateFlags{};
-   
-protected:
+
    // To do: make a drawing method and make this private
    wxMouseState mLastMouseState;
-   
+
 private:
-   int mMouseMostRecentX;
-   int mMouseMostRecentY;
-   
-   std::weak_ptr<TrackPanelCell> mpClickedCell;
-   
-   bool mEnableTab{};
+   struct State;
+   std::unique_ptr<State> mState;
    
    DECLARE_EVENT_TABLE()
 };

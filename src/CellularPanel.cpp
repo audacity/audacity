@@ -35,6 +35,23 @@
 #include "HitTestResult.h"
 #include "RefreshCode.h"
 
+struct CellularPanel::State
+{
+   UIHandlePtr mUIHandle;
+   
+   std::weak_ptr<TrackPanelCell> mLastCell;
+   std::vector<UIHandlePtr> mTargets;
+   size_t mTarget {};
+   unsigned mMouseOverUpdateFlags{};
+   
+   int mMouseMostRecentX;
+   int mMouseMostRecentY;
+   
+   std::weak_ptr<TrackPanelCell> mpClickedCell;
+   
+   bool mEnableTab{};
+};
+
 
 BEGIN_EVENT_TABLE(CellularPanel, OverlayPanel)
     EVT_MOUSE_EVENTS(CellularPanel::OnMouseEvent)
@@ -48,9 +65,24 @@ BEGIN_EVENT_TABLE(CellularPanel, OverlayPanel)
     EVT_CONTEXT_MENU(CellularPanel::OnContextMenu)
 END_EVENT_TABLE()
 
+CellularPanel::CellularPanel(
+   wxWindow * parent, wxWindowID id,
+   const wxPoint & pos, const wxSize & size,
+   ViewInfo *viewInfo,
+   long style)
+: OverlayPanel(parent, id, pos, size, style)
+, mViewInfo( viewInfo )
+, mState{ std::make_unique<State>() }
+{
+}
+
+CellularPanel::~CellularPanel() = default;
+
 void CellularPanel::HandleInterruptedDrag()
 {
-   if (mUIHandle && mUIHandle->StopsOnKeystroke() ) {
+   auto &state = *mState;
+   if (state.mUIHandle &&
+       state.mUIHandle->StopsOnKeystroke() ) {
       // The bogus id isn't used anywhere, but may help with debugging.
       // as this is sending a bogus mouse up.  The mouse button is still actually down
       // and may go up again.
@@ -78,18 +110,19 @@ void CellularPanel::Uncapture(wxMouseState *pState)
 
 bool CellularPanel::CancelDragging()
 {
-   if (mUIHandle) {
+   auto &state = *mState;
+   if (state.mUIHandle) {
       // copy shared_ptr for safety, as in HandleClick
-      auto handle = mUIHandle;
+      auto handle = state.mUIHandle;
       // UIHANDLE CANCEL
       UIHandle::Result refreshResult = handle->Cancel(GetProject());
-      auto pClickedCell = mpClickedCell.lock();
+      auto pClickedCell = state.mpClickedCell.lock();
       if (pClickedCell)
          ProcessUIHandleResult(
             pClickedCell.get(), {},
-            refreshResult | mMouseOverUpdateFlags );
-      mpClickedCell.reset();
-      mUIHandle.reset(), handle.reset(), ClearTargets();
+            refreshResult | state.mMouseOverUpdateFlags );
+      state.mpClickedCell.reset();
+      state.mUIHandle.reset(), handle.reset(), ClearTargets();
       Uncapture();
       return true;
    }
@@ -109,7 +142,8 @@ bool CellularPanel::HandleEscapeKey(bool down)
       }
    }
 
-   if (mUIHandle) {
+   auto &state = *mState;
+   if (state.mUIHandle) {
       CancelDragging();
       return true;
    }
@@ -183,7 +217,8 @@ void CellularPanel::HandleMotion( wxMouseState &inState, bool doHit )
 void CellularPanel::HandleMotion
 ( const TrackPanelMouseState &tpmState, bool doHit )
 {
-   auto handle = mUIHandle;
+   auto &state = *mState;
+   auto handle = state.mUIHandle;
 
    auto newCell = tpmState.pCell;
 
@@ -196,15 +231,15 @@ void CellularPanel::HandleMotion
       handle = Target();
 
       // Assume cell does not change but target does
-      refreshCode = mMouseOverUpdateFlags;
-      mMouseOverUpdateFlags = 0;
+      refreshCode = state.mMouseOverUpdateFlags;
+      state.mMouseOverUpdateFlags = 0;
    }
-   else if ( !mUIHandle ) {
+   else if ( !state.mUIHandle ) {
       // Not yet dragging.
 
-      auto oldCell = mLastCell.lock();
+      auto oldCell = state.mLastCell.lock();
 
-      unsigned updateFlags = mMouseOverUpdateFlags;
+      unsigned updateFlags = state.mMouseOverUpdateFlags;
 
       // First check whether crossing cell to cell
       if ( newCell == oldCell )
@@ -220,29 +255,29 @@ void CellularPanel::HandleMotion
       }
 
       auto oldHandle = Target();
-      auto oldPosition = mTarget;
+      auto oldPosition = state.mTarget;
 
       // Now do the
       // UIHANDLE HIT TEST !
-      mTargets = newCell->HitTest(tpmState, GetProject());
+      state.mTargets = newCell->HitTest(tpmState, GetProject());
 
-      mTarget = 0;
+      state.mTarget = 0;
 
       // Find the old target's NEW place if we can
       if (oldHandle) {
-         auto begin = mTargets.begin(), end = mTargets.end(),
+         auto begin = state.mTargets.begin(), end = state.mTargets.end(),
             iter = std::find(begin, end, oldHandle);
          if (iter != end) {
             size_t newPosition = iter - begin;
             if (newPosition <= oldPosition)
-               mTarget = newPosition;
+               state.mTarget = newPosition;
             // else, some NEW hit and this position takes priority
          }
       }
 
       handle = Target();
 
-      mLastCell = newCell;
+      state.mLastCell = newCell;
 
       if (!oldCell && oldHandle != handle)
          // Did not move cell to cell, but did change the target
@@ -262,7 +297,7 @@ void CellularPanel::HandleMotion
       auto code = handle->GetChangeHighlight();
       handle->SetChangeHighlight(RefreshCode::RefreshNone);
       refreshCode |= code;
-      mMouseOverUpdateFlags |= code;
+      state.mMouseOverUpdateFlags |= code;
    }
    if (newCell &&
        (!pCursor || status.empty() || tooltip.empty())) {
@@ -301,8 +336,9 @@ void CellularPanel::HandleMotion
 
 bool CellularPanel::HasRotation()
 {
+   auto &state = *mState;
    // Is there a nontrivial TAB key rotation?
-   if ( mTargets.size() > 1 )
+   if ( state.mTargets.size() > 1 )
       return true;
    auto target = Target();
    return target && target->HasRotation();
@@ -313,17 +349,19 @@ bool CellularPanel::HasEscape()
    if (IsMouseCaptured())
       return true;
 
-   if (mTarget + 1 == mTargets.size() &&
+   auto &state = *mState;
+  if (state.mTarget + 1 == state.mTargets.size() &&
        Target() &&
        !Target()->HasEscape())
        return false;
 
-   return mTargets.size() > 0;
+   return state.mTargets.size() > 0;
 }
 
 bool CellularPanel::ChangeTarget(bool forward, bool cycle)
 {
-   auto size = mTargets.size();
+   auto &state = *mState;
+   auto size = state.mTargets.size();
 
    auto target = Target();
    if (target && target->HasRotation()) {
@@ -337,16 +375,16 @@ bool CellularPanel::ChangeTarget(bool forward, bool cycle)
    }
 
    if (!cycle &&
-       ((forward && mTarget + 1 == size) ||
-        (!forward && mTarget == 0)))
+       ((forward && state.mTarget + 1 == size) ||
+        (!forward && state.mTarget == 0)))
       return false;
 
    if (size > 1) {
       if (forward)
-         ++mTarget;
+         ++state.mTarget;
       else
-         mTarget += size - 1;
-      mTarget %= size;
+         state.mTarget += size - 1;
+      state.mTarget %= size;
       if (Target())
          Target()->Enter(forward);
       return true;
@@ -358,7 +396,8 @@ bool CellularPanel::ChangeTarget(bool forward, bool cycle)
 /// Determines if a modal tool is active
 bool CellularPanel::IsMouseCaptured()
 {
-   return mUIHandle != NULL;
+   auto &state = *mState;
+   return state.mUIHandle != NULL;
 }
 
 void CellularPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
@@ -415,7 +454,8 @@ void CellularPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
 
 void CellularPanel::OnCaptureKey(wxCommandEvent & event)
 {
-   mEnableTab = false;
+   auto &state = *mState;
+   state.mEnableTab = false;
    wxKeyEvent *kevent = static_cast<wxKeyEvent *>(event.GetEventObject());
    const auto code = kevent->GetKeyCode();
    if ( WXK_ESCAPE != code )
@@ -554,8 +594,9 @@ void CellularPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.SetId( kCaptureLostEventId );
 
-   e.m_x = mMouseMostRecentX;
-   e.m_y = mMouseMostRecentY;
+   auto &state = *mState;
+   e.m_x = state.mMouseMostRecentX;
+   e.m_y = state.mMouseMostRecentY;
 
    OnMouseEvent(e);
 }
@@ -602,8 +643,9 @@ try
       event.ResumePropagation(wxEVENT_PROPAGATE_MAX);
    }
 
-   mMouseMostRecentX = event.m_x;
-   mMouseMostRecentY = event.m_y;
+   auto &state = *mState;
+   state.mMouseMostRecentX = event.m_x;
+   state.mMouseMostRecentY = event.m_y;
 
    if (event.LeftDown()) {
       // The activate event is used to make the
@@ -618,7 +660,7 @@ try
 
    if (event.Leaving())
    {
-      if ( !mUIHandle )
+      if ( !state.mUIHandle )
          ClearTargets();
 
       auto buttons =
@@ -640,21 +682,21 @@ try
       }
    }
 
-   if (mUIHandle) {
-      auto pClickedCell = mpClickedCell.lock();
+   if (state.mUIHandle) {
+      auto pClickedCell = state.mpClickedCell.lock();
       if (event.Dragging()) {
          // UIHANDLE DRAG
          // copy shared_ptr for safety, as in HandleClick
-         auto handle = mUIHandle;
+         auto handle = state.mUIHandle;
          const UIHandle::Result refreshResult =
             handle->Drag( tpmEvent, GetProject() );
          ProcessUIHandleResult
             (pClickedCell.get(), pCell.get(), refreshResult);
-         mMouseOverUpdateFlags |= refreshResult;
+         state.mMouseOverUpdateFlags |= refreshResult;
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
-            mUIHandle.reset(), handle.reset(), ClearTargets();
-            mpClickedCell.reset();
+            state.mUIHandle.reset(), handle.reset(), ClearTargets();
+            state.mpClickedCell.reset();
             Uncapture( &event );
          }
          else {
@@ -665,14 +707,14 @@ try
       }
       else if (event.ButtonUp()) {
          // UIHANDLE RELEASE
-         unsigned moreFlags = mMouseOverUpdateFlags;
+         unsigned moreFlags = state.mMouseOverUpdateFlags;
          UIHandle::Result refreshResult =
-            mUIHandle->Release( tpmEvent, GetProject(), this );
+            state.mUIHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
             (pClickedCell.get(), pCell.get(),
              refreshResult | moreFlags);
-         mUIHandle.reset(), ClearTargets();
-         mpClickedCell.reset();
+         state.mUIHandle.reset(), ClearTargets();
+         state.mpClickedCell.reset();
          // will also Uncapture() below
       }
    }
@@ -720,19 +762,20 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       HandleMotion( tpmState );
    }
 
-   mUIHandle = Target();
+   auto &state = *mState;
+   state.mUIHandle = Target();
 
-   if (mUIHandle) {
+   if (state.mUIHandle) {
       // UIHANDLE CLICK
       // Make another shared pointer to the handle, in case recursive
       // event dispatching otherwise tries to delete the handle.
-      auto handle = mUIHandle;
+      auto handle = state.mUIHandle;
       UIHandle::Result refreshResult =
          handle->Click( tpmEvent, GetProject() );
       if (refreshResult & RefreshCode::Cancelled)
-         mUIHandle.reset(), handle.reset(), ClearTargets();
+         state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
-         mpClickedCell = pCell;
+         state.mpClickedCell = pCell;
 
          // Perhaps the clicked handle wants to update cursor and state message
          // after a click.
@@ -745,7 +788,7 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       }
       ProcessUIHandleResult(
          pCell.get(), pCell.get(), refreshResult);
-      mMouseOverUpdateFlags |= refreshResult;
+      state.mMouseOverUpdateFlags |= refreshResult;
    }
 }
 
@@ -782,3 +825,30 @@ void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
    }
    Refresh( false);
 }
+
+UIHandlePtr CellularPanel::Target()
+{
+   auto &state = *mState;
+   if (state.mTargets.size())
+      return state.mTargets[state.mTarget];
+   else
+      return {};
+}
+
+wxCoord CellularPanel::MostRecentXCoord() const
+{
+   auto &state = *mState;
+   return state.mMouseMostRecentX;
+}
+
+void CellularPanel::ClearTargets()
+{
+   auto &state = *mState;
+   // Forget the rotation of hit test candidates when the mouse moves from
+   // cell to cell or outside of the panel entirely.
+   state.mLastCell.reset();
+   state.mTargets.clear();
+   state.mTarget = 0;
+   state.mMouseOverUpdateFlags = 0;
+}
+
