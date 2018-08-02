@@ -138,15 +138,9 @@ int ExecCommand2(wxString *pIn, wxString *pOut)
 
 
 
-#ifdef __cplusplus
-extern "C" {
 // The void * return is actually a Lisp LVAL and will be cast to such as needed.
 extern void * ExecForLisp( char * pIn );
 extern void * nyq_make_opaque_string( int size, unsigned char *src );
-};
-
-
-#endif
 
 void * ExecForLisp( char * pIn ){
    wxString Str1( pIn );
