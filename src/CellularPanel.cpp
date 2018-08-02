@@ -106,6 +106,10 @@ void CellularPanel::Uncapture(wxMouseState *pState)
    if (HasCapture())
       ReleaseMouse();
    HandleMotion( *pState );
+
+   auto lender = GetProject()->mFocusLender.get();
+   if (lender)
+      lender->SetFocus();
 }
 
 bool CellularPanel::CancelDragging()
@@ -654,10 +658,6 @@ try
       GetParent()->GetEventHandler()->ProcessEvent(e);
    }
 
-   if (event.ButtonDown()) {
-      SetFocus();
-   }
-
    if (event.Leaving())
    {
       if ( !state.mUIHandle )
@@ -775,6 +775,9 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
+         if( !HasFocus() )
+            SetFocus();
+
          state.mpClickedCell = pCell;
 
          // Perhaps the clicked handle wants to update cursor and state message
@@ -812,13 +815,20 @@ void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
    ProcessUIHandleResult(pCell, pCell, refreshResult);
 }
 
-void CellularPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
+void CellularPanel::OnSetFocus(wxFocusEvent &event)
 {
+   auto &ptr = GetProject()->mFocusLender;
+   if ( !ptr )
+      ptr = event.GetWindow();
+   
    SetFocusedCell();
 }
 
 void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
+   // Forget any borrowing of focus
+   GetProject()->mFocusLender = NULL;
+
    if (AudacityProject::HasKeyboardCapture(this))
    {
       AudacityProject::ReleaseKeyboard(this);

@@ -1270,7 +1270,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    //     if (GetFocusedTrack() != NULL) {
    // the highlight was reportedly drawn even when something else
    // was the focus and no highlight should be drawn. -RBD
-   if (GetFocusedTrack() != NULL && wxWindow::FindFocus() == this) {
+   if (GetFocusedTrack() != NULL && GetProject()->IsFocused( this )) {
       HighlightFocusedTrack(dc, focusRect);
    }
 
