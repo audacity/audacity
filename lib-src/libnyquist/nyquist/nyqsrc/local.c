@@ -3,7 +3,6 @@
 /* CHANGE LOG
  * --------------------------------------------------------------------
  * 28Apr03  dm  changes for portability and fix compiler warnings
- * 12Feb18  jkc added aud-do function, that is only available in Audacity.
  */
 
 #include "xlisp.h"
@@ -54,50 +53,3 @@ void print_local_gc_info(void)
              max_sample_block_len) / 1024);
     stdputstr(buf);
 }
-
-
-
-
-/*--------------------Audacity Automation -------------------------*/
-/* These functions may later move to their own source file. */
-extern void * ExecForLisp( char * pIn );
-extern void * nyq_make_opaque_string( int size, unsigned char *src );
-
-
-void * nyq_make_opaque_string( int size, unsigned char *src ){
-    LVAL dst;
-    unsigned char * dstp;
-    dst = new_string((int)(size+2));
-    dstp = getstring(dst);
-
-    /* copy the source to the destination */
-    while (size-- > 0)
-        *dstp++ = *src++;
-    *dstp = '\0';
-
-    return (void*)dst;
-}
-
-/* xlc_aud_do -- interface to C routine aud_do */
-/**/
-LVAL xlc_aud_do(void)
-{
-// Based on string-trim...
-    unsigned char *leftp,*rightp;
-    LVAL src,dst;
-
-    /* get the string */
-    src = xlgastring();
-    xllastarg();
-
-    /* setup the string pointers */
-    leftp = getstring(src);
-    rightp = leftp + getslength(src) - 2;
-
-    // Go call my real function here...
-    dst = (LVAL)ExecForLisp( leftp );
-
-    /* return the new string */
-    return (dst);
-}
-
