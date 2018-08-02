@@ -933,7 +933,17 @@ finish:
       ReplaceProcessedTracks(success);
    else{
       ReplaceProcessedTracks(false); // Do not use the results.
-      mT1 = mT0 - 1.0;// And don't use the times either, in resetting the selection  (make them bogus).
+      // Selection is to be set to whatever it is in the project.
+      AudacityProject *project = GetActiveProject();
+      if (project) {
+         mT0 = project->GetSel0();
+         mT1 = project->GetSel1();
+      }
+      else {
+         mT0 = 0;
+         mT1 = -1;
+      }
+
    }
 
    if (!mProjectChanged)
@@ -961,8 +971,10 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
 
    effect.SetCommand(mInputCmd);
    effect.mDebug = (mUIResultID == eDebugID);
-
-   return Delegate(effect, parent, true);
+   bool result = Delegate(effect, parent, true);
+   mT0 = effect.mT0;
+   mT1 = effect.mT1;
+   return result;
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
