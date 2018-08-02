@@ -105,7 +105,7 @@ public:
    void SetMessage(const wxString & message);
 
 protected:
-   wxWeakRef<wxWindow> mHadFocus;
+   wxWindowRef mHadFocus;
 
    wxStaticText *mElapsed;
    wxStaticText *mRemaining;

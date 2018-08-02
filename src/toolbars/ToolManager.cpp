@@ -634,14 +634,8 @@ int ToolManager::FilterEvent(wxEvent &event)
            !dynamic_cast<Grabber*>( window ) &&
            !dynamic_cast<ToolFrame*>( window ) &&
            top == mParent )
+         // Note this is a dangle-proof wxWindowRef:
          mLastFocus = window;
-   }
-   else if (event.GetEventType() == wxEVT_DESTROY) {
-      auto &closeEvent = static_cast<wxWindowDestroyEvent&>(event);
-      auto window = closeEvent.GetEventObject();
-      if (window == mLastFocus)
-         // Avoid a dangling pointer!
-         mLastFocus = nullptr;
    }
 
    return Event_Skip;

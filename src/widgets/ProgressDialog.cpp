@@ -1043,10 +1043,8 @@ ProgressDialog::~ProgressDialog()
 
    // Restore saved focus, but only if the window still exists.
    //
-   // It is possible that it was a deferred deletion and it was deleted since
-   // we captured the focused window.  So, we need to verify that the window
-   // still exists by searching all of the wxWidgets windows.  It's the only
-   // sure way.
+   // PRL:  I'm conservatively preserving the old existence test, but I think
+   // it's redundant now that we use wxWindowRef to avoid a dangling pointer
    if (mHadFocus && SearchForWindow(wxTopLevelWindows, mHadFocus)) {
       mHadFocus->SetFocus();
    }

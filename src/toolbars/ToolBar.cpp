@@ -90,7 +90,7 @@ private:
    ToolBar *mBar;
    wxPoint mResizeOffset;
    wxSize mOrigSize;
-   wxWindow *mOrigFocus{};
+   wxWindowRef mOrigFocus{};
 
    DECLARE_EVENT_TABLE()
 };
