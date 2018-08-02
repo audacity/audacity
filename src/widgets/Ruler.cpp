@@ -3595,19 +3595,6 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
    mRuler.GetMaxSize(width, height);
 }
 
-bool AdornedRulerPanel::s_AcceptsFocus{ false };
-
-auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
-   s_AcceptsFocus = true;
-   return TempAllowFocus{ &s_AcceptsFocus };
-}
-
-void AdornedRulerPanel::SetFocusFromKbd()
-{
-   auto temp = TemporarilyAllowFocus();
-   SetFocus();
-}
-
 // CellularPanel implementation
 auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell
 {
