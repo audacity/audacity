@@ -1,6 +1,6 @@
 $nyquist plug-in
 $version 4
-$type tool
+$type tool analyze
 $name (_ "Sample Data Export")
 $manpage "Sample_Data_Export"
 $debugbutton false
