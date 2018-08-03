@@ -1068,7 +1068,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    {
       mWidth = width;
       mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>( mWidth, mHeight );
+      mBitmap = std::make_unique<wxBitmap>( mWidth, mHeight,24 );
    }
 
    wxColour bkgnd = GetBackgroundColour();
@@ -1311,7 +1311,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          mMixerSpec.get(), mTrackNames,
          wxDefaultPosition, wxSize(400, -1));
       mixerPanel->SetName(_("Mixer Panel"));
-      vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5);
+      vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALL, 5);
 
       {
          auto horSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);

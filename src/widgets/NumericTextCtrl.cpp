@@ -1353,7 +1353,7 @@ bool NumericTextCtrl::Layout()
    wxMemoryDC memDC;
 
    // Placeholder bitmap so the memDC has something to reference
-   mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1);
+   mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1, 24);
    memDC.SelectObject(*mBackgroundBitmap);
 
    mDigits.clear();
@@ -1420,7 +1420,7 @@ bool NumericTextCtrl::Layout()
 
    wxBrush Brush;
 
-   mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight);
+   mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight,24);
    memDC.SelectObject(*mBackgroundBitmap);
 
    theTheme.SetBrushColour( Brush, clrTimeHours );

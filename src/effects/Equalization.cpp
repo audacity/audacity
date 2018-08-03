@@ -2903,7 +2903,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    {
       mWidth = width;
       mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight);
+      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight,24);
    }
 
    wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));

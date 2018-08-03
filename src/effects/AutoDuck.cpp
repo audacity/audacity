@@ -657,7 +657,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    if (!mBackgroundBitmap || mBackgroundBitmap->GetWidth() != clientWidth ||
        mBackgroundBitmap->GetHeight() != clientHeight)
    {
-      mBackgroundBitmap = std::make_unique<wxBitmap>(clientWidth, clientHeight);
+      mBackgroundBitmap = std::make_unique<wxBitmap>(clientWidth, clientHeight,24);
    }
 
    wxMemoryDC dc;

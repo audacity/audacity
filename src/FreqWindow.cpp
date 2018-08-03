@@ -647,7 +647,7 @@ void FreqWindow::DrawBackground(wxMemoryDC & dc)
 
    mPlotRect = mFreqPlot->GetClientRect();
 
-   mBitmap = std::make_unique<wxBitmap>(mPlotRect.width, mPlotRect.height);
+   mBitmap = std::make_unique<wxBitmap>(mPlotRect.width, mPlotRect.height,24);
 
    dc.SelectObject(*mBitmap);
 
