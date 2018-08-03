@@ -1330,7 +1330,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 ///////////////////////////////////////////////////////////////////////////////
 
 #define REGVERKEY wxString(wxT("/pluginregistryversion"))
-#define REGVERCUR wxString(wxT("1.0"))
+#define REGVERCUR wxString(wxT("1.1"))
 #define REGROOT wxString(wxT("/pluginregistry/"))
 
 #define SETVERKEY wxString(wxT("/pluginsettingsversion"))
@@ -1898,7 +1898,16 @@ void PluginManager::Load()
    {
       // This is where we'd put in conversion code when the
       // registry version changes.
-      //
+
+      // For 2.3.0 the plugins we distribute have moved around.
+      // So we upped the registry version number to 1.1.
+      // Rather than elaborate code for upgraders, we start from scratch.
+      if (regver <= "1.0")
+      {
+         registry.DeleteAll();
+         return;
+      }
+
       // Should also check for a registry file that is newer than
       // what we can understand.
    }

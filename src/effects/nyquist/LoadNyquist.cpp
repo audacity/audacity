@@ -216,7 +216,7 @@ wxArrayString NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
    wxArrayString files;
 
    // Add the Nyquist prompt effect and tool.
-   files.Add(NYQUIST_EFFECTS_PROMPT_ID);
+   //files.Add(NYQUIST_EFFECTS_PROMPT_ID);
    files.Add(NYQUIST_TOOLS_PROMPT_ID);
    
    // Load .ny plug-ins
