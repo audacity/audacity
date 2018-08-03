@@ -2933,7 +2933,7 @@ bool AudacityProject::DoPlayStopSelect(bool click, bool shift)
       auto &selection = mViewInfo.selectedRegion;
       // Test WasSpeedPlaying(), not IsSpeedPlaying()
       // as we could be stopped now.
-      if (GetScrubber().WasSpeedPlaying())
+      if (click && GetScrubber().WasSpeedPlaying())
       {
          ;// don't change the selection.
       }
