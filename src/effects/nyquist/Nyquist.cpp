@@ -166,7 +166,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    // Interactive Nyquist (for general tools)
    if (fName == NYQUIST_TOOLS_PROMPT_ID) {
-      mName = XO("Nyquist Tools Prompt");
+      mName = XO("Nyquist Prompt");
       mType = EffectTypeTool;
       mIsTool = true;
       mPromptName = mName;
@@ -212,7 +212,7 @@ IdentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
       return (mType == EffectTypeTool) ? 
-         XO("Nyquist Tools Prompt") :
+         XO("Nyquist Prompt") :
          XO("Nyquist Effects Prompt");
 
    return mName;

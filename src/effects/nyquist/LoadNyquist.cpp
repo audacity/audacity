@@ -175,12 +175,15 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    wxArrayString files;
    wxString ignoredErrMsg;
 
+#if 0
    if (!pm.IsPluginRegistered(NYQUIST_EFFECTS_PROMPT_ID))
    {
       // No checking of error ?
       DiscoverPluginsAtPath(NYQUIST_EFFECTS_PROMPT_ID, ignoredErrMsg,
          PluginManagerInterface::DefaultRegistrationCallback);
    }
+#endif
+
    if (!pm.IsPluginRegistered(NYQUIST_TOOLS_PROMPT_ID))
    {
       // No checking of error ?
