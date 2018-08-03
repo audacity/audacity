@@ -1922,11 +1922,6 @@ void PluginManager::Load()
    LoadGroup(&registry, PluginTypeImporter);
 
    LoadGroup(&registry, PluginTypeStub);
-
-   // Not used by 2.1.1 or greater, but must load to allow users to switch between 2.1.0
-   // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
-   LoadGroup(&registry, PluginTypeNone);
-
    return;
 }
 
