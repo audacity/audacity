@@ -1329,10 +1329,12 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+// Registry has the list of plug ins
 #define REGVERKEY wxString(wxT("/pluginregistryversion"))
 #define REGVERCUR wxString(wxT("1.1"))
 #define REGROOT wxString(wxT("/pluginregistry/"))
 
+// Settings has the values of the plug in settings.
 #define SETVERKEY wxString(wxT("/pluginsettingsversion"))
 #define SETVERCUR wxString(wxT("1.0"))
 #define SETROOT wxString(wxT("/pluginsettings/"))
@@ -1893,23 +1895,58 @@ void PluginManager::Load()
    }
 
    // Check for a registry version that we can understand
+   // TODO: Should also check for a registry file that is newer than
+   // what we can understand.
    wxString regver = registry.Read(REGVERKEY);
    if (regver < REGVERCUR )
    {
-      // This is where we'd put in conversion code when the
-      // registry version changes.
+      // Conversion code here, for when registry version changes.
 
-      // For 2.3.0 the plugins we distribute have moved around.
-      // So we upped the registry version number to 1.1.
-      // Rather than elaborate code for upgraders, we start from scratch.
-      if (regver <= "1.0")
+      // We iterate through the effects, possibly updating their info.
+      wxString groupName;
+      long groupIndex;
+      wxString group = GetPluginTypeString(PluginTypeEffect);
+      wxString cfgPath = REGROOT + group + wxCONFIG_PATH_SEPARATOR;
+      wxArrayString groupsToDelete;
+
+      registry.SetPath(cfgPath);
+      for (bool cont = registry.GetFirstGroup(groupName, groupIndex);
+         cont;
+         registry.SetPath(cfgPath),
+         cont = registry.GetNextGroup(groupName, groupIndex))
       {
-         registry.DeleteAll();
-         return;
-      }
+         registry.SetPath(groupName);
+         wxString effectSymbol = registry.Read(KEY_SYMBOL, "");
+         wxString effectVersion = registry.Read(KEY_VERSION, "");
 
-      // Should also check for a registry file that is newer than
-      // what we can understand.
+
+         // For 2.3.0 the plugins we distribute have moved around.
+         // So we upped the registry version number to 1.1.
+         // These particular config edits were originally written to fix Bug 1914.
+         if (regver <= "1.0") {
+            // Nyquist prompt is a built-in that has moved to the tools menu.
+            if (effectSymbol == "Nyquist Prompt") {
+               registry.Write(KEY_EFFECTTYPE, "Tool");
+            // Old version of SDE was in Analyze menu.  Now it is in Tools.
+            // We don't want both the old and the new.
+            } else if ((effectSymbol == "Sample Data Export") && (effectVersion == "n/a")) {
+               groupsToDelete.push_back(cfgPath + groupName);
+            // Old version of SDI was in Generate menu.  Now it is in Tools.
+            } else if ((effectSymbol == "Sample Data Import") && (effectVersion == "n/a")) {
+               groupsToDelete.push_back(cfgPath + groupName);
+            }
+         }
+
+      }
+      // Doing the deletion within the search loop risked skipping some items,
+      // hence the delayed delete.
+      for (int i = 0; i < groupsToDelete.Count(); i++) {
+         registry.DeleteGroup(groupsToDelete[i]);
+      }
+      registry.SetPath("");
+      registry.Write(REGVERKEY, REGVERCUR);
+      // Updates done.  Make sure we read the updated data later.
+      registry.Flush();
    }
 
    // Load all provider plugins first
