@@ -4957,10 +4957,37 @@ void AudacityProject::OnExportMIDI(const CommandContext &WXUNUSED(context) ){
 void AudacityProject::OnExport(const wxString & Format )
 {
    Exporter e;
-   e.SetDefaultFormat( Format );
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
-   e.Process(this, false, 0.0, mTracks->GetEndTime());
+   double t0 = 0.0;
+   double t1 = mTracks->GetEndTime();
+
+   // Prompt for file name and/or extension?
+   bool bPromptingRequired = (mBatchMode == 0) || mFileName.IsEmpty() || Format.IsEmpty();
+
+   if  (bPromptingRequired) {
+      e.SetDefaultFormat(Format);
+      e.Process(this, false, 0.0, mTracks->GetEndTime());
+   }
+   else {
+      // We're in batch mode, and we have an mFileName and Format.
+      wxString extension = ".";
+      extension += Format;
+      extension.MakeLower();
+
+      wxString filename = MacroCommands::BuildCleanFileName(mFileName, extension);
+
+      int nChannels = MacroCommands::IsMono() ? 1 : 2;
+      e.Process(
+         this,       // AudacityProject
+         nChannels,  // numChannels,
+         Format,     // type, 
+         filename,   // filename,
+         false,      // selectedOnly, 
+         t0,         // t0
+         t1          // t1
+      );
+   }
 }
 
 void AudacityProject::OnExportAudio(const CommandContext &WXUNUSED(context) ){   OnExport("");}

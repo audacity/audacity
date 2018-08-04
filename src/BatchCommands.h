@@ -60,7 +60,8 @@ class MacroCommands final {
       const wxString & command, const wxString & params,
       CommandContext const * pContext=NULL );
    bool ApplyCommandInBatchMode( const wxString &friendlyCommand,
-      const wxString & command, const wxString &params);
+      const wxString & command, const wxString &params,
+      CommandContext const * pContext = NULL);
    bool ApplySpecialCommand(
       int iCommand, const wxString &friendlyCommand,
       const wxString & command, const wxString & params);
@@ -72,10 +73,10 @@ class MacroCommands final {
    void AbortBatch();
 
    // Utility functions for the special commands.
-   wxString BuildCleanFileName(const wxString &fileName, const wxString &extension);
+   static wxString BuildCleanFileName(const wxString &fileName, const wxString &extension);
    bool WriteMp3File( const wxString & Name, int bitrate );
    double GetEndTime();
-   bool IsMono();
+   static bool IsMono();
 
    // These commands do not depend on the command list.
    static void MigrateLegacyChains();

@@ -798,19 +798,22 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
 }
 
 bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
-   const wxString & command, const wxString &params)
+   const wxString & command, const wxString &params,
+   CommandContext const * pContext)
 {
    AudacityProject *project = GetActiveProject();
    // Recalc flags and enable items that may have become enabled.
    project->UpdateMenus(false);
    // enter batch mode...
    bool prevShowMode = project->GetShowId3Dialog();
+   project->mBatchMode++;
    auto cleanup = finally( [&] {
       // exit batch mode...
       project->SetShowId3Dialog(prevShowMode);
+      project->mBatchMode--;
    } );
 
-   return ApplyCommand( friendlyCommand, command, params );
+   return ApplyCommand( friendlyCommand, command, params, pContext );
 }
 
 static int MacroReentryCount = 0;
