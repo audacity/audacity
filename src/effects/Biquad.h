@@ -12,6 +12,7 @@ Max Maisel
 #ifndef __BIQUAD_H__
 #define __BIQUAD_H__
 
+#include "MemoryX.h"
 
 /// \brief Represents a biquad digital filter.
 struct Biquad
@@ -25,7 +26,11 @@ struct Biquad
       /// Numerator coefficient indices
       B0=0, B1, B2,
       /// Denominator coefficient indices
-      A1=0, A2
+      A1=0, A2,
+
+      /// Possible filter orders for the Calc...Filter(...) functions
+      MIN_Order = 1,
+      MAX_Order = 10
    };
 
    inline float ProcessOne(float fIn)
@@ -50,6 +55,20 @@ struct Biquad
    float fPrevPrevIn;
    float fPrevOut;
    float fPrevPrevOut;
+
+   enum kSubTypes
+   {
+      kLowPass,
+      kHighPass,
+      nSubTypes
+   };
+
+   static ArrayOf<Biquad> CalcButterworthFilter(int order, double fn, double fc, int type);
+   static ArrayOf<Biquad> CalcChebyshevType1Filter(int order, double fn, double fc, double ripple, int type);
+   static ArrayOf<Biquad> CalcChebyshevType2Filter(int order, double fn, double fc, double ripple, int type);
+
+   static const double s_fChebyCoeffs[MAX_Order][MAX_Order + 1];
+   static double ChebyPoly(int Order, double NormFreq);
 };
 
 void ComplexDiv (float fNumerR, float fNumerI, float fDenomR, float fDenomI, float* pfQuotientR, float* pfQuotientI);
