@@ -813,7 +813,7 @@ public:
       enum class Mode {
          Off,
          Refresh,
-         Centered,
+         Pinned,
          Right,
       };
 

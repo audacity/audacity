@@ -2168,6 +2168,121 @@ private:
    SelectedRegion mOldSelection;
 };
 
+namespace
+{
+
+wxCoord GetPlayHeadX( const AudacityProject *pProject )
+{
+   const TrackPanel *tp = pProject->GetTrackPanel();
+   int width;
+   tp->GetTracksUsableArea(&width, NULL);
+   return tp->GetLeftOffset()
+      + width * TracksPrefs::GetPinnedHeadPositionPreference();
+}
+
+double GetPlayHeadFraction( const AudacityProject *pProject, wxCoord xx )
+{
+   const TrackPanel *tp = pProject->GetTrackPanel();
+   int width;
+   tp->GetTracksUsableArea(&width, NULL);
+   auto fraction = (xx - tp->GetLeftOffset()) / double(width);
+   return std::max(0.0, std::min(1.0, fraction));
+}
+
+// Handle for dragging the pinned play head, which so far does not need
+// to be a friend of the AdornedRulerPanel class, so we don't make it nested.
+class PlayheadHandle : public UIHandle
+{
+public:
+   explicit
+   PlayheadHandle( wxCoord xx )
+      : mX( xx )
+   {}
+
+   static UIHandle::Result NeedChangeHighlight
+   (const PlayheadHandle &oldState, const PlayheadHandle &newState)
+   {
+      if (oldState.mX != newState.mX)
+         return RefreshCode::DrawOverlays;
+      return 0;
+   }
+   
+   static std::shared_ptr<PlayheadHandle>
+   HitTest( const AudacityProject *pProject, wxCoord xx )
+   {
+      if( TracksPrefs::GetPinnedHeadPreference() &&
+          pProject->IsAudioActive() )
+      {
+         const auto targetX = GetPlayHeadX( pProject );
+         if ( abs( xx - targetX ) <= SELECT_TOLERANCE_PIXEL )
+            return std::make_shared<PlayheadHandle>( xx );
+      }
+      return {};
+   }
+   
+protected:
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      if (event.event.LeftDClick()) {
+         // Restore default position on double click
+         TracksPrefs::SetPinnedHeadPositionPreference( 0.5, true );
+      
+         return RefreshCode::DrawOverlays |
+            // Do not start a drag
+            RefreshCode::Cancelled;
+      }
+
+      mOrigPreference = TracksPrefs::GetPinnedHeadPositionPreference();
+      return 0;
+   }
+
+   Result Drag
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      auto value = GetPlayHeadFraction(pProject, event.event.m_x );
+      TracksPrefs::SetPinnedHeadPositionPreference( value );
+      return RefreshCode::DrawOverlays;
+   }
+
+   HitTestPreview Preview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      override
+   {
+      static wxCursor cursor{ wxCURSOR_SIZEWE };
+      return {
+         _( "Click and drag to adjust, double-click to reset" ),
+         &cursor,
+         _( "Record/Play head" )
+      };
+   }
+
+   Result Release
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+       wxWindow *) override
+   {
+      auto value = GetPlayHeadFraction(pProject, event.event.m_x );
+      TracksPrefs::SetPinnedHeadPositionPreference( value, true );
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Cancel(AudacityProject *pProject) override
+   {
+      TracksPrefs::SetPinnedHeadPositionPreference( mOrigPreference );
+      return RefreshCode::DrawOverlays;
+   }
+   
+   void Enter(bool) override
+   {
+      mChangeHighlight = RefreshCode::DrawOverlays;
+   }
+
+   wxCoord mX;
+   double mOrigPreference {};
+};
+
+}
+
 class AdornedRulerPanel::QPCell final : public CommonCell
 {
 public:
@@ -2192,6 +2307,7 @@ public:
    }
    
    std::weak_ptr<QPHandle> mHolder;
+   std::weak_ptr<PlayheadHandle> mPlayheadHolder;
 };
 
 std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest
@@ -2203,11 +2319,21 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest
    mParent->CreateOverlays();
    
    std::vector<UIHandlePtr> results;
+   auto xx = state.state.m_x;
 
+#ifdef EXPERIMENTAL_DRAGGABLE_PLAY_HEAD
+   // Allow click and drag on the play head even while recording
+   // Make this handle more prominent then the quick play handle
+   auto result = PlayheadHandle::HitTest( pProject, xx );
+   if (result) {
+      result = AssignUIHandlePtr( mPlayheadHolder, result );
+      results.push_back( result );
+   }
+#endif
+   
    // Disable mouse actions on Timeline while recording.
    if (!mParent->mIsRecording) {
 
-   auto xx = state.state.m_x;
    mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
 
    auto result = std::make_shared<QPHandle>( mParent, xx );

@@ -169,6 +169,7 @@ scroll information.  It also has some status flags.
 #include "commands/CommandContext.h"
 
 #include "prefs/QualityPrefs.h"
+#include "prefs/TracksPrefs.h"
 
 #include "../images/AudacityLogoAlpha.xpm"
 
@@ -1804,7 +1805,7 @@ bool AudacityProject::MayScrollBeyondZero() const
        IsAudioActive()) {
       if (mPlaybackScroller) {
          auto mode = mPlaybackScroller->GetMode();
-         if (mode == PlaybackScroller::Mode::Centered ||
+         if (mode == PlaybackScroller::Mode::Pinned ||
              mode == PlaybackScroller::Mode::Right)
             return true;
       }
@@ -1818,7 +1819,7 @@ double AudacityProject::ScrollingLowerBoundTime() const
    if (!MayScrollBeyondZero())
       return 0;
    const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
-   return std::min(mTracks->GetStartTime(), -screen / 2.0);
+   return std::min(mTracks->GetStartTime(), -screen);
 }
 
 // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
@@ -6287,7 +6288,8 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       trackPanel->Refresh(false);
    }
    else if (mMode != Mode::Off) {
-      // Pan the view, so that we center the play indicator.
+      // Pan the view, so that we put the play indicator at some fixed
+      // fraction of the window width.
 
       ViewInfo &viewInfo = mProject->GetViewInfo();
       TrackPanel *const trackPanel = mProject->GetTrackPanel();
@@ -6300,8 +6302,10 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
          default:
             wxASSERT(false);
             /* fallthru */
-         case Mode::Centered:
-            deltaX = posX - width / 2;    break;
+         case Mode::Pinned:
+            deltaX =
+               posX - width * TracksPrefs::GetPinnedHeadPositionPreference();
+            break;
          case Mode::Right:
             deltaX = posX - width;        break;
       }
