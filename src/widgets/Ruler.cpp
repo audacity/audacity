@@ -1750,13 +1750,22 @@ class QuickPlayIndicatorOverlay;
 
 // This is an overlay drawn on the ruler.  It draws the little triangle or
 // the double-headed arrow.
-class QuickPlayRulerOverlay final : public Overlay
+class AdornedRulerPanel::QuickPlayRulerOverlay final : public Overlay
 {
 public:
    QuickPlayRulerOverlay(QuickPlayIndicatorOverlay &partner);
    virtual ~QuickPlayRulerOverlay();
 
-   void Update(wxCoord xx) { mNewQPIndicatorPos = xx; }
+   // Available to this and to partner
+
+   int mNewQPIndicatorPos { -1 };
+   bool mNewQPIndicatorSnapped {};
+   bool mNewPreviewingScrub {};
+
+   bool mNewScrub {};
+   bool mNewSeek {};
+
+   void Update();
 
 private:
    AdornedRulerPanel *GetRuler() const;
@@ -1765,7 +1774,11 @@ private:
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
    QuickPlayIndicatorOverlay &mPartner;
-   int mOldQPIndicatorPos { -1 }, mNewQPIndicatorPos { -1 };
+
+   // Used by this only
+   int mOldQPIndicatorPos { -1 };
+   bool mOldScrub {};
+   bool mOldSeek {};
 };
 
 /**********************************************************************
@@ -1777,7 +1790,7 @@ private:
 
 // This is an overlay drawn on a different window, the track panel.
 // It draws the pale guide line that follows mouse movement.
-class QuickPlayIndicatorOverlay final : public Overlay
+class AdornedRulerPanel::QuickPlayIndicatorOverlay final : public Overlay
 {
    friend QuickPlayRulerOverlay;
 
@@ -1785,8 +1798,6 @@ public:
    QuickPlayIndicatorOverlay(AudacityProject *project);
 
    virtual ~QuickPlayIndicatorOverlay();
-
-   void Update(int x, bool snapped = false, bool previewScrub = false);
 
 private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
@@ -1797,9 +1808,9 @@ private:
    std::unique_ptr<QuickPlayRulerOverlay> mPartner
       { std::make_unique<QuickPlayRulerOverlay>(*this) };
 
-   int mOldQPIndicatorPos { -1 }, mNewQPIndicatorPos { -1 };
-   bool mOldQPIndicatorSnapped {}, mNewQPIndicatorSnapped {};
-   bool mOldPreviewingScrub {}, mNewPreviewingScrub {};
+   int mOldQPIndicatorPos { -1 };
+   bool mOldQPIndicatorSnapped {};
+   bool mOldPreviewingScrub {};
 };
 
 /**********************************************************************
@@ -1808,26 +1819,69 @@ private:
 
  **********************************************************************/
 
-QuickPlayRulerOverlay::QuickPlayRulerOverlay(QuickPlayIndicatorOverlay &partner)
+AdornedRulerPanel::QuickPlayRulerOverlay::QuickPlayRulerOverlay(
+   QuickPlayIndicatorOverlay &partner)
 : mPartner(partner)
 {
    GetRuler()->AddOverlay(this);
 }
 
-QuickPlayRulerOverlay::~QuickPlayRulerOverlay()
+AdornedRulerPanel::QuickPlayRulerOverlay::~QuickPlayRulerOverlay()
 {
    auto ruler = GetRuler();
    if (ruler)
       ruler->RemoveOverlay(this);
 }
 
-AdornedRulerPanel *QuickPlayRulerOverlay::GetRuler() const
+AdornedRulerPanel *AdornedRulerPanel::QuickPlayRulerOverlay::GetRuler() const
 {
    return mPartner.mProject->GetRulerPanel();
 }
 
-std::pair<wxRect, bool> QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
+void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
 {
+   const auto project = mPartner.mProject;
+   auto ruler = GetRuler();
+
+   // Hide during transport, or if mouse is not in the ruler, unless scrubbing
+   if ((ruler->mPrevZone == StatusChoice::Leaving || project->IsAudioActive())
+       && !project->GetScrubber().IsScrubbing())
+      mNewQPIndicatorPos = -1;
+   else {
+      double latestEnd =
+         std::max(ruler->mTracks->GetEndTime(), project->GetSel1());
+      if (ruler->mQuickPlayPos >= latestEnd)
+         mNewQPIndicatorPos = -1;
+      else {
+         // This will determine the x coordinate of the line and of the
+         // ruler indicator
+         mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos);
+
+         // These determine which shape is drawn on the ruler, and whether
+         // in the scrub or the qp zone
+         const auto &scrubber = mPartner.mProject->GetScrubber();
+         mNewScrub =
+            ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
+            (ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
+             (scrubber.HasMark()));
+         mNewSeek = mNewScrub &&
+            (scrubber.Seeks() || scrubber.TemporarilySeeks());
+
+         // These two will determine the color of the line stroked over
+         // the track panel, green for scrub or yellow for snapped or white
+         mNewPreviewingScrub =
+            ruler->mPrevZone == StatusChoice::EnteringScrubZone &&
+            !project->GetScrubber().IsScrubbing();
+         mNewQPIndicatorSnapped = ruler->mIsSnapped;
+      }
+   }
+}
+
+std::pair<wxRect, bool>
+AdornedRulerPanel::QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
+{
+   Update();
+
    const auto x = mOldQPIndicatorPos;
    if (x >= 0) {
       // These dimensions are always sufficient, even if a little
@@ -1843,23 +1897,26 @@ std::pair<wxRect, bool> QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
          { xx, yy,
             indsize * 2 + 1,
             GetRuler()->GetSize().GetHeight() },
-         (x != mNewQPIndicatorPos)
+         (x != mNewQPIndicatorPos
+          || (mOldScrub != mNewScrub)
+          || (mOldSeek != mNewSeek) )
       };
    }
    else
       return { {}, mNewQPIndicatorPos >= 0 };
 }
 
-void QuickPlayRulerOverlay::Draw(OverlayPanel & /*panel*/, wxDC &dc)
+void AdornedRulerPanel::QuickPlayRulerOverlay::Draw(
+   OverlayPanel & /*panel*/, wxDC &dc)
 {
    mOldQPIndicatorPos = mNewQPIndicatorPos;
+   mOldScrub = mNewScrub;
+   mOldSeek = mNewSeek;
    if (mOldQPIndicatorPos >= 0) {
       auto ruler = GetRuler();
-      const auto &scrubber = mPartner.mProject->GetScrubber();
-      auto scrub = ruler->ShowingScrubControl();
-      auto seek = scrub && (scrubber.Seeks() || scrubber.TemporarilySeeks());
-      auto width = scrub ? IndicatorBigWidth() : IndicatorSmallWidth;
-      ruler->DoDrawIndicator(&dc, mOldQPIndicatorPos, true, width, scrub, seek);
+      auto width = mOldScrub ? IndicatorBigWidth() : IndicatorSmallWidth;
+      ruler->DoDrawIndicator(
+         &dc, mOldQPIndicatorPos, true, width, mOldScrub, mOldSeek);
    }
 }
 
@@ -1869,44 +1926,41 @@ void QuickPlayRulerOverlay::Draw(OverlayPanel & /*panel*/, wxDC &dc)
 
  **********************************************************************/
 
-QuickPlayIndicatorOverlay::QuickPlayIndicatorOverlay(AudacityProject *project)
+AdornedRulerPanel::QuickPlayIndicatorOverlay::QuickPlayIndicatorOverlay(
+   AudacityProject *project)
    : mProject(project)
 {
    auto tp = mProject->GetTrackPanel();
    tp->AddOverlay(this);
 }
 
-QuickPlayIndicatorOverlay::~QuickPlayIndicatorOverlay()
+AdornedRulerPanel::QuickPlayIndicatorOverlay::~QuickPlayIndicatorOverlay()
 {
    auto tp = mProject->GetTrackPanel();
    if (tp)
       tp->RemoveOverlay(this);
 }
 
-void QuickPlayIndicatorOverlay::Update(int x, bool snapped, bool previewScrub)
+std::pair<wxRect, bool>
+AdornedRulerPanel::QuickPlayIndicatorOverlay::DoGetRectangle(wxSize size)
 {
-   mNewQPIndicatorPos = x;
-   mPartner->Update(x);
-   mNewQPIndicatorSnapped = snapped;
-   mNewPreviewingScrub = previewScrub;
-}
+   mPartner->Update();
 
-std::pair<wxRect, bool> QuickPlayIndicatorOverlay::DoGetRectangle(wxSize size)
-{
    wxRect rect(mOldQPIndicatorPos, 0, 1, size.GetHeight());
    return std::make_pair(
       rect,
-      (mOldQPIndicatorPos != mNewQPIndicatorPos ||
-       mOldQPIndicatorSnapped != mNewQPIndicatorSnapped ||
-       mOldPreviewingScrub != mNewPreviewingScrub)
+      (mOldQPIndicatorPos != mPartner->mNewQPIndicatorPos ||
+       mOldQPIndicatorSnapped != mPartner->mNewQPIndicatorSnapped ||
+       mOldPreviewingScrub != mPartner->mNewPreviewingScrub)
    );
 }
 
-void QuickPlayIndicatorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
+void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
+   OverlayPanel &panel, wxDC &dc)
 {
-   mOldQPIndicatorPos = mNewQPIndicatorPos;
-   mOldQPIndicatorSnapped = mNewQPIndicatorSnapped;
-   mOldPreviewingScrub = mNewPreviewingScrub;
+   mOldQPIndicatorPos = mPartner->mNewQPIndicatorPos;
+   mOldQPIndicatorSnapped = mPartner->mNewQPIndicatorSnapped;
+   mOldPreviewingScrub = mPartner->mNewPreviewingScrub;
 
    if (mOldQPIndicatorPos >= 0) {
       mOldPreviewingScrub
@@ -2271,7 +2325,7 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
       UpdateButtonStates();
 
       // The quick play indicator is useless during recording
-      HideQuickPlayIndicator();
+      CallAfter( [this]{ DrawBothOverlays(); } );
    }
    else {
       SetCursor(mCursorHand);
@@ -2405,6 +2459,11 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
+   // Creation of overlays on demand here -- constructor of AdornedRulerPanel
+   // is too early to do it
+   if (!mOverlay)
+      mOverlay = std::make_unique<QuickPlayIndicatorOverlay>(mProject);
+
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording) {
       if (HasCapture())
@@ -2485,7 +2544,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             // Don't do this, it slows down drag-scrub on Mac.
             // Timer updates of display elsewhere make it unnecessary.
             // Done here, it's too frequent.
-            // ShowQuickPlayIndicator();
+            // DrawBothOverlays();
 
             return;
          }
@@ -2504,7 +2563,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (evt.Leaving() || (changeInZone && zone != StatusChoice::EnteringQP)) {
       if (evt.Leaving()) {
          // Erase the line
-         HideQuickPlayIndicator();
+         DrawBothOverlays();
       }
 
       SetCursor(mCursorDefault);
@@ -2518,7 +2577,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
    else if (evt.Entering() || (changeInZone && zone == StatusChoice::EnteringQP)) {
       SetCursor(mCursorHand);
-      HideQuickPlayIndicator();
+      DrawBothOverlays();
       return;
    }
 
@@ -2539,14 +2598,11 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       scrubber.MarkScrubStart(evt.m_x,
          TracksPrefs::GetPinnedHeadPreference(), false);
       UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-      // repaint_all so that the indicator changes shape.
-      bool repaint_all = true;
-      ShowQuickPlayIndicator(repaint_all);
+      DrawBothOverlays();
       return;
    }
    else if ( !HasCapture() && inScrubZone) {
       // mouse going down => we are (probably) seeking
-      bool repaint_all = false;
       if (evt.LeftDown()) {
          //wxLogDebug("down");
          scrubber.mInOneShotMode = !scrubber.IsScrubbing();
@@ -2554,11 +2610,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             TracksPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
       } 
-      else if( changeInZone ) {
-         repaint_all = true;
-      }
 
-      ShowQuickPlayIndicator(repaint_all);
+      DrawBothOverlays();
       return;
    }
    else if ( mQuickPlayEnabled) {
@@ -2582,19 +2635,19 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          if( inQPZone ){
             HandleQPClick(evt, mousePosX);
             HandleQPDrag(evt, mousePosX);
-            ShowQuickPlayIndicator();
+            DrawBothOverlays();
          }
       }
       else if (evt.LeftIsDown() && HasCapture()) {
          HandleQPDrag(evt, mousePosX);
-         ShowQuickPlayIndicator();
+         DrawBothOverlays();
       }
       else if (evt.LeftUp() && HasCapture()) {
          HandleQPRelease(evt);
-         ShowQuickPlayIndicator();
+         DrawBothOverlays();
       }
       else // if (!inScrubZone) 
-         ShowQuickPlayIndicator();
+         DrawBothOverlays();
    }
 }
 
@@ -2653,8 +2706,6 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
       case mesNone:
          // If close to either end of play region, snap to closest
          if (isWithinStart || isWithinEnd) {
-            HideQuickPlayIndicator();
-
             if (fabs(mQuickPlayPos - mOldPlayRegionStart) < fabs(mQuickPlayPos - mOldPlayRegionEnd))
                mQuickPlayPos = mOldPlayRegionStart;
             else
@@ -2662,8 +2713,6 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          }
          break;
       case mesDraggingPlayRegionStart:
-         HideQuickPlayIndicator();
-
          // Don't start dragging until beyond tolerance initial playback start
          if (!mIsDragging && isWithinStart)
             mQuickPlayPos = mOldPlayRegionStart;
@@ -2679,15 +2728,11 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          break;
       case mesDraggingPlayRegionEnd:
          if (!mIsDragging && isWithinEnd) {
-            HideQuickPlayIndicator();
-
             mQuickPlayPos = mOldPlayRegionEnd;
          }
          else
             mIsDragging = true;
          if (isWithinStart) {
-            HideQuickPlayIndicator();
-
             mQuickPlayPos = mOldPlayRegionStart;
          }
          mPlayRegionEnd = mQuickPlayPos;
@@ -2699,8 +2744,6 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
 
          // Don't start dragging until mouse is beyond tolerance of initial click.
          if (isWithinClick || mLeftDownClick == -1) {
-            HideQuickPlayIndicator();
-
             mQuickPlayPos = mLeftDownClick;
             mPlayRegionStart = mLeftDownClick;
             mPlayRegionEnd = mLeftDownClick;
@@ -2711,8 +2754,6 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          break;
       case mesSelectingPlayRegionRange:
          if (isWithinClick) {
-            HideQuickPlayIndicator();
-
             mQuickPlayPos = mLeftDownClick;
          }
 
@@ -2739,8 +2780,6 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       ReleaseMouse();
    else
       return;
-
-   HideQuickPlayIndicator();
 
    if (mPlayRegionEnd < mPlayRegionStart) {
       // Swap values to ensure mPlayRegionStart < mPlayRegionEnd
@@ -2916,13 +2955,10 @@ void AdornedRulerPanel::SetPanelSize()
    GetParent()->PostSizeEventToParent();
 }
 
-bool AdornedRulerPanel::ShowingScrubControl() const
+void AdornedRulerPanel::DrawBothOverlays()
 {
-   const auto &scrubber = mProject->GetScrubber();
-   return
-      mMouseEventState == AdornedRulerPanel::mesNone &&
-      (mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
-       (scrubber.HasMark()));
+   mProject->GetTrackPanel()->DrawOverlays( false );
+   DrawOverlays( false );
 }
 
 void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
@@ -2965,7 +3001,8 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
-   HideQuickPlayIndicator();
+   mPrevZone = StatusChoice::Leaving;
+   DrawBothOverlays();
 
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.m_x = mLastMouseX;
@@ -3182,7 +3219,8 @@ void AdornedRulerPanel::ShowContextMenu( MenuChoice choice, const wxPoint *pPosi
    }
 
    // dismiss and clear Quick-Play indicator
-   HideQuickPlayIndicator();
+   mPrevZone = StatusChoice::Leaving;
+   DrawBothOverlays();
 
    if (HasCapture())
       ReleaseMouse();
@@ -3348,43 +3386,6 @@ void AdornedRulerPanel::DoDrawIndicator
    }
 }
 
-QuickPlayIndicatorOverlay *AdornedRulerPanel::GetOverlay()
-{
-   if (!mOverlay)
-      mOverlay = std::make_unique<QuickPlayIndicatorOverlay>(mProject);
-
-   return mOverlay.get();
-}
-
-void AdornedRulerPanel::ShowQuickPlayIndicator( bool repaint_all)
-{
-   ShowOrHideQuickPlayIndicator(true, repaint_all);
-}
-
-void AdornedRulerPanel::HideQuickPlayIndicator(bool repaint_all)
-{
-   ShowOrHideQuickPlayIndicator(false, repaint_all);
-}
-
-// Draws the vertical line and green triangle indicating the Quick Play cursor position.
-void AdornedRulerPanel::ShowOrHideQuickPlayIndicator(bool show, bool repaint_all)
-{
-   double latestEnd = std::max(mTracks->GetEndTime(), mProject->GetSel1());
-   if (!show || (mQuickPlayPos >= latestEnd)) {
-      GetOverlay()->Update(-1);
-   }
-   else {
-      const int x = Time2Pos(mQuickPlayPos);
-      bool previewScrub =
-      mPrevZone == StatusChoice::EnteringScrubZone &&
-      !mProject->GetScrubber().IsScrubbing();
-      GetOverlay()->Update(x, mIsSnapped, previewScrub);
-   }
-
-   mProject->GetTrackPanel()->DrawOverlays(repaint_all);
-   DrawOverlays(repaint_all);
-}
-
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
                                       double playRegionEnd)
 {
@@ -3407,8 +3408,6 @@ void AdornedRulerPanel::ClearPlayRegion()
 
    mPlayRegionStart = -1;
    mPlayRegionEnd = -1;
-
-   HideQuickPlayIndicator();
 
    Refresh();
 }

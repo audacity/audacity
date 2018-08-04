@@ -655,7 +655,7 @@ void Scrubber::StopScrubbing()
       ctb->SetPlay(false, ControlToolBar::PlayAppearance::Straight);
    }
 
-   mProject->GetRulerPanel()->HideQuickPlayIndicator();
+   mProject->GetRulerPanel()->DrawBothOverlays();
    CheckMenuItems();
 }
 
@@ -903,7 +903,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
          return;
       }
       else
-         ruler->ShowQuickPlayIndicator();
+         ruler->DrawBothOverlays();
    }
 
    if (!scrubber.ShouldDrawScrubSpeed()) {

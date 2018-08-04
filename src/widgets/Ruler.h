@@ -309,9 +309,6 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-class QuickPlayIndicatorOverlay;
-class QuickPlayRulerOverlay;
-
 // This is an Audacity Specific ruler panel.
 class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
@@ -358,16 +355,14 @@ public:
 
    void RegenerateTooltips(StatusChoice choice);
 
-   void ShowQuickPlayIndicator( bool repaint_all=false);
-   void HideQuickPlayIndicator( bool repaint_all=false);
    void UpdateQuickPlayPos(wxCoord &mousPosX);
 
    bool ShowingScrubRuler() const { return mShowScrubbing; }
    void OnToggleScrubRuler(/*wxCommandEvent& */);
    void OnToggleScrubRulerFromMenu(wxCommandEvent& );
    void SetPanelSize();
-
-   bool ShowingScrubControl() const;
+   
+   void DrawBothOverlays();
 
 
 private:
@@ -403,8 +398,6 @@ public:
    static TempAllowFocus TemporarilyAllowFocus();
 
 private:
-   QuickPlayIndicatorOverlay *GetOverlay();
-   void ShowOrHideQuickPlayIndicator(bool show, bool repaint_all=false);
    void DoDrawPlayRegion(wxDC * dc);
 
    enum class MenuChoice { QuickPlay, Scrub };
@@ -484,8 +477,6 @@ private:
    int mLastMouseX;  // Pixel position
    bool mIsDragging;
 
-   std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
-
    StatusChoice mPrevZone { StatusChoice::NoChange };
 
    bool mShowScrubbing { false };
@@ -494,6 +485,12 @@ private:
 
    wxWindow *mButtons[3];
    bool mNeedButtonUpdate { true };
+
+   // Cooperating objects
+   class QuickPlayIndicatorOverlay;
+   std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
+
+   class QuickPlayRulerOverlay;
 };
 
 #endif //define __AUDACITY_RULER__
