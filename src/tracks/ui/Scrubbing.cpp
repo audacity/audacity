@@ -184,8 +184,7 @@ void Scrubber::ScrubPoller::Notify()
 }
 
 Scrubber::Scrubber(AudacityProject *project)
-   : mInOneShotMode( false )
-   , mScrubToken(-1)
+   : mScrubToken(-1)
    , mPaused(true)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
@@ -891,7 +890,7 @@ void ScrubbingOverlay::OnTimer(wxCommandEvent &event)
    {
       if(scrubber.HasMark()) {
          auto xx = ruler->ScreenToClient(position).x;
-         ruler->UpdateQuickPlayPos(xx);
+         ruler->UpdateQuickPlayPos( xx, false );
 
          if (!isScrubbing)
             // Really start scrub if motion is far enough

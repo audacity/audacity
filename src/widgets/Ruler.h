@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
-#include "OverlayPanel.h"
+#include "../CellularPanel.h"
 #include "../MemoryX.h"
 #include <wx/bitmap.h>
 #include <wx/dc.h>
@@ -310,7 +310,7 @@ private:
 };
 
 // This is an Audacity Specific ruler panel.
-class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
+class AUDACITY_DLL_API AdornedRulerPanel final : public CellularPanel
 {
 public:
    AdornedRulerPanel(AudacityProject *project,
@@ -321,10 +321,6 @@ public:
                      ViewInfo *viewinfo = NULL);
 
    ~AdornedRulerPanel();
-
-   bool AcceptsFocus() const override { return s_AcceptsFocus; }
-   bool AcceptsFocusFromKeyboard() const override { return true; }
-   void SetFocusFromKbd() override;
 
 public:
    int GetRulerHeight() { return GetRulerHeight(mShowScrubbing); }
@@ -346,16 +342,9 @@ public:
    void UpdatePrefs();
    void ReCreateButtons();
 
-   enum class StatusChoice {
-      EnteringQP,
-      EnteringScrubZone,
-      Leaving,
-      NoChange
-   };
+   void RegenerateTooltips();
 
-   void RegenerateTooltips(StatusChoice choice);
-
-   void UpdateQuickPlayPos(wxCoord &mousPosX);
+   void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
 
    bool ShowingScrubRuler() const { return mShowScrubbing; }
    void OnToggleScrubRuler(/*wxCommandEvent& */);
@@ -370,15 +359,10 @@ private:
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void UpdateRects();
-   void OnMouseEvents(wxMouseEvent &evt);
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
    void StartQPPlay(bool looped, bool cutPreview);
-
-   void UpdateStatusBarAndTooltips(StatusChoice choice);
-
-   void OnCaptureLost(wxMouseCaptureLostEvent &evt);
 
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
@@ -388,14 +372,6 @@ private:
 public:
    void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
    void UpdateButtonStates();
-
-private:
-   static bool s_AcceptsFocus;
-   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
-   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
-
-public:
-   static TempAllowFocus TemporarilyAllowFocus();
 
 private:
    void DoDrawPlayRegion(wxDC * dc);
@@ -410,14 +386,8 @@ private:
 
 private:
 
-   wxCursor mCursorDefault;
-   wxCursor mCursorHand;
-   wxCursor mCursorSizeWE;
-   bool mIsWE;
-
    Ruler mRuler;
    AudacityProject *const mProject;
-   ViewInfo *const mViewInfo;
    TrackList *mTracks;
 
    wxRect mOuter;
@@ -431,7 +401,6 @@ private:
    double mQuickPlayPosUnsnapped;
    double mQuickPlayPos;
 
-   std::unique_ptr<SnapManager> mSnapManager;
    bool mIsSnapped;
 
    bool   mPlayRegionLock;
@@ -455,8 +424,6 @@ private:
    void OnAutoScroll(wxCommandEvent &evt);
    void OnLockPlayRegion(wxCommandEvent &evt);
 
-   void OnContextMenu(wxContextMenuEvent & WXUNUSED(event));
-
    void OnTogglePinnedState(wxCommandEvent & event);
 
    bool mPlayRegionDragsSelection;
@@ -474,10 +441,7 @@ private:
    MouseEventState mMouseEventState;
    double mLeftDownClickUnsnapped;  // click position in seconds, before snap
    double mLeftDownClick;  // click position in seconds
-   int mLastMouseX;  // Pixel position
    bool mIsDragging;
-
-   StatusChoice mPrevZone { StatusChoice::NoChange };
 
    bool mShowScrubbing { false };
 
@@ -486,11 +450,42 @@ private:
    wxWindow *mButtons[3];
    bool mNeedButtonUpdate { true };
 
+   //
+   // CellularPanel implementation
+   //
+   FoundCell FindCell(int mouseX, int mouseY) override;
+   wxRect FindRect(const TrackPanelCell &cell) override;
+public:
+   AudacityProject * GetProject() const override;
+private:
+   TrackPanelCell *GetFocusedCell() override;
+   void SetFocusedCell() override;
+   void ProcessUIHandleResult
+      (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
+       unsigned refreshResult) override;
+
+   void UpdateStatusMessage( const wxString & ) override;
+
+   void CreateOverlays();
+
    // Cooperating objects
    class QuickPlayIndicatorOverlay;
    std::unique_ptr<QuickPlayIndicatorOverlay> mOverlay;
 
    class QuickPlayRulerOverlay;
+   
+private:
+   class CommonRulerHandle;
+   class QPHandle;
+   class ScrubbingHandle;
+
+   class CommonCell;
+
+   class QPCell;
+   std::shared_ptr<QPCell> mQPCell;
+   
+   class ScrubbingCell;
+   std::shared_ptr<ScrubbingCell> mScrubbingCell;
 };
 
 #endif //define __AUDACITY_RULER__

@@ -92,6 +92,7 @@ array of Ruler::Label.
 #include "../NumberScale.h"
 #include "../Prefs.h"
 #include "../Snap.h"
+#include "../UIHandle.h"
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/PlaybackPrefs.h"
 #include "../prefs/TracksPrefs.h"
@@ -1844,7 +1845,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
    auto ruler = GetRuler();
 
    // Hide during transport, or if mouse is not in the ruler, unless scrubbing
-   if ((ruler->mPrevZone == StatusChoice::Leaving || project->IsAudioActive())
+   if ((!ruler->LastCell() || project->IsAudioActive())
        && !project->GetScrubber().IsScrubbing())
       mNewQPIndicatorPos = -1;
    else {
@@ -1862,7 +1863,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
          const auto &scrubber = mPartner.mProject->GetScrubber();
          mNewScrub =
             ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
-            (ruler->mPrevZone == AdornedRulerPanel::StatusChoice::EnteringScrubZone ||
+            (ruler->LastCell() == ruler->mScrubbingCell ||
              (scrubber.HasMark()));
          mNewSeek = mNewScrub &&
             (scrubber.Seeks() || scrubber.TemporarilySeeks());
@@ -1870,7 +1871,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
          // These two will determine the color of the line stroked over
          // the track panel, green for scrub or yellow for snapped or white
          mNewPreviewingScrub =
-            ruler->mPrevZone == StatusChoice::EnteringScrubZone &&
+            ruler->LastCell() == ruler->mScrubbingCell &&
             !project->GetScrubber().IsScrubbing();
          mNewQPIndicatorSnapped = ruler->mIsSnapped;
       }
@@ -1998,6 +1999,8 @@ void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
 
 #include "../ViewInfo.h"
 #include "../AColor.h"
+#include "../RefreshCode.h"
+#include "../TrackPanelMouseEvent.h"
 
 enum {
    OnToggleQuickPlayID = 7000,
@@ -2010,11 +2013,9 @@ enum {
    OnTogglePinnedStateID,
 };
 
-BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
+BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
-   EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
-   EVT_MOUSE_CAPTURE_LOST(AdornedRulerPanel::OnCaptureLost)
 
    // Context menu commands
    EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
@@ -2024,14 +2025,329 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, OverlayPanel)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
    EVT_MENU(OnScrubRulerID, AdornedRulerPanel::OnToggleScrubRulerFromMenu)
 
-   // Pop up menus on Windows
-   EVT_CONTEXT_MENU(AdornedRulerPanel::OnContextMenu)
-
    EVT_COMMAND( OnTogglePinnedStateID,
                wxEVT_COMMAND_BUTTON_CLICKED,
                AdornedRulerPanel::OnTogglePinnedState )
 
 END_EVENT_TABLE()
+
+class AdornedRulerPanel::CommonCell : public TrackPanelCell
+{
+public:
+   explicit
+   CommonCell( AdornedRulerPanel *parent, MenuChoice menuChoice )
+   : mParent{ parent }
+   , mMenuChoice{ menuChoice }
+   {}
+   
+   HitTestPreview DefaultPreview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      override
+   {
+      // May come here when recording is in progress, so hit tests are turned
+      // off.
+      wxString tooltip;
+      if (mParent->mTimelineToolTip)
+         tooltip = _("Timeline actions disabled during recording");
+
+      static wxCursor cursor{ wxCURSOR_DEFAULT };
+      return {
+         {},
+         &cursor,
+         tooltip,
+      };
+   }
+
+   unsigned DoContextMenu
+      (const wxRect &rect,
+       wxWindow *pParent, wxPoint *pPosition) final override
+   {
+      mParent->ShowContextMenu(mMenuChoice, pPosition);
+      return 0;
+   }
+
+protected:
+   AdornedRulerPanel *mParent;
+   const MenuChoice mMenuChoice;
+};
+
+class AdornedRulerPanel::CommonRulerHandle : public UIHandle
+{
+public:
+   explicit
+   CommonRulerHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
+      : mParent(pParent)
+      , mX( xx )
+      , mChoice( menuChoice )
+   {}
+
+   bool Clicked() const { return mClicked != Button::None; }
+
+   static UIHandle::Result NeedChangeHighlight
+   (const CommonRulerHandle &oldState, const CommonRulerHandle &newState)
+   {
+      if (oldState.mX != newState.mX)
+         return RefreshCode::DrawOverlays;
+      return 0;
+   }
+
+protected:
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *) override
+   {
+      mClicked = event.event.LeftDown() ? Button::Left : Button::Right;
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Drag
+      (const TrackPanelMouseEvent &, AudacityProject *) override
+   {
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Release
+      (const TrackPanelMouseEvent &event, AudacityProject *,
+       wxWindow *) override
+   {
+      if ( mParent && mClicked == Button::Right ) {
+         const auto pos = event.event.GetPosition();
+         mParent->ShowContextMenu( mChoice, &pos );
+      }
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Cancel(AudacityProject *pProject) override
+   {
+      return RefreshCode::DrawOverlays;
+   }
+   
+   void Enter(bool) override
+   {
+      mChangeHighlight = RefreshCode::DrawOverlays;
+   }
+
+   wxWeakRef<AdornedRulerPanel> mParent;
+
+   wxCoord mX;
+   
+   MenuChoice mChoice;
+
+   enum class Button { None, Left, Right };
+   Button mClicked{ Button::None };
+};
+
+class AdornedRulerPanel::QPHandle final : public CommonRulerHandle
+{
+public:
+   explicit
+   QPHandle( AdornedRulerPanel *pParent, wxCoord xx )
+   : CommonRulerHandle( pParent, xx, MenuChoice::QuickPlay )
+   {
+   }
+   
+   std::unique_ptr<SnapManager> mSnapManager;
+
+private:
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+
+   Result Drag
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+
+   HitTestPreview Preview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+   override;
+
+   Result Release
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+       wxWindow *pParent) override;
+
+   Result Cancel(AudacityProject *pProject) override;
+
+   SelectedRegion mOldSelection;
+};
+
+class AdornedRulerPanel::QPCell final : public CommonCell
+{
+public:
+   explicit
+   QPCell( AdornedRulerPanel *parent )
+   : AdornedRulerPanel::CommonCell{ parent, MenuChoice::QuickPlay }
+   {}
+   
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject) override;
+   
+   // Return shared_ptr to self, stored in parent
+   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
+      { return mParent->mQPCell; }
+
+   bool Hit() const { return !mHolder.expired(); }
+   bool Clicked() const {
+      if (auto ptr = mHolder.lock())
+         return ptr->Clicked();
+      return false;
+   }
+   
+   std::weak_ptr<QPHandle> mHolder;
+};
+
+std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest
+(const TrackPanelMouseState &state,
+ const AudacityProject *pProject)
+{
+   // Creation of overlays on demand here -- constructor of AdornedRulerPanel
+   // is too early to do it
+   mParent->CreateOverlays();
+   
+   std::vector<UIHandlePtr> results;
+
+   // Disable mouse actions on Timeline while recording.
+   if (!mParent->mIsRecording) {
+
+   auto xx = state.state.m_x;
+   mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
+
+   auto result = std::make_shared<QPHandle>( mParent, xx );
+   result = AssignUIHandlePtr( mHolder, result );
+   results.push_back( result );
+
+   }
+
+   return results;
+}
+
+class AdornedRulerPanel::ScrubbingHandle final : public CommonRulerHandle
+{
+public:
+   explicit
+   ScrubbingHandle( AdornedRulerPanel *pParent, wxCoord xx )
+   : CommonRulerHandle( pParent, xx, MenuChoice::Scrub )
+   {
+   }
+
+private:
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      auto result = CommonRulerHandle::Click(event, pProject);
+      if (!( result & RefreshCode::Cancelled )) {
+         if (mClicked == Button::Left) {
+            auto &scrubber = pProject->GetScrubber();
+            // only if scrubbing is allowed now
+            bool canScrub =
+               scrubber.CanScrub() &&
+               mParent &&
+               mParent->mShowScrubbing;
+
+            if (!canScrub)
+               return RefreshCode::Cancelled;
+            if (!scrubber.HasMark()) {
+               // Asynchronous scrub poller gets activated here
+               scrubber.MarkScrubStart(
+                  event.event.m_x, TracksPrefs::GetPinnedHeadPreference(), false);
+            }
+         }
+      }
+      return result;
+   }
+
+   Result Drag
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      auto result = CommonRulerHandle::Drag(event, pProject);
+      if (!( result & RefreshCode::Cancelled )) {
+         // Nothing needed here.  The scrubber works by polling mouse state
+         // after the start has been marked.
+      }
+      return result;
+   }
+
+   HitTestPreview Preview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+   override;
+
+   Result Release
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+       wxWindow *pParent) override {
+      auto result = CommonRulerHandle::Release(event, pProject, pParent);
+      if (!( result & RefreshCode::Cancelled )) {
+         // Nothing needed here either.  The scrub poller may have decided to
+         // seek because a drag happened before button up, or it may decide
+         // to start a scrub, as it watches mouse movement after the button up.
+      }
+      return result;
+   }
+
+   Result Cancel(AudacityProject *pProject) override
+   {
+      auto result = CommonRulerHandle::Cancel(pProject);
+
+      if (mClicked == Button::Left) {
+         auto &scrubber = pProject->GetScrubber();
+         scrubber.Cancel();
+         
+         auto ctb = pProject->GetControlToolBar();
+         wxCommandEvent evt;
+         ctb->OnStop(evt);
+      }
+
+      return result;
+   }
+};
+
+class AdornedRulerPanel::ScrubbingCell final : public CommonCell
+{
+public:
+   explicit
+   ScrubbingCell( AdornedRulerPanel *parent )
+   : AdornedRulerPanel::CommonCell{ parent, MenuChoice::Scrub }
+   {}
+   
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject) override;
+   
+   // Return shared_ptr to self, stored in parent
+   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
+      { return mParent->mScrubbingCell; }
+   
+   bool Hit() const { return !mHolder.expired(); }
+   bool Clicked() const {
+      if (auto ptr = mHolder.lock())
+         return ptr->Clicked();
+      return false;
+   }
+   
+private:
+   std::weak_ptr<ScrubbingHandle> mHolder;
+};
+
+std::vector<UIHandlePtr> AdornedRulerPanel::ScrubbingCell::HitTest
+(const TrackPanelMouseState &state,
+ const AudacityProject *pProject)
+{
+   // Creation of overlays on demand here -- constructor of AdornedRulerPanel
+   // is too early to do it
+   mParent->CreateOverlays();
+   
+   std::vector<UIHandlePtr> results;
+   
+   // Disable mouse actions on Timeline while recording.
+   if (!mParent->mIsRecording) {
+
+   auto xx = state.state.m_x;
+   mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
+   auto result = std::make_shared<ScrubbingHandle>( mParent, xx );
+   result = AssignUIHandlePtr( mHolder, result );
+   results.push_back( result );
+
+   }
+   
+   return results;
+}
 
 AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
                                      wxWindow *parent,
@@ -2039,21 +2355,18 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
                                      const wxPoint& pos,
                                      const wxSize& size,
                                      ViewInfo *viewinfo)
-:  OverlayPanel(parent, id, pos, size)
+:  CellularPanel(parent, id, pos, size, viewinfo)
 , mProject(project)
-, mViewInfo(viewinfo)
 {
+   mQPCell = std::make_shared<QPCell>( this );
+   mScrubbingCell = std::make_shared<ScrubbingCell>( this );
+   
    for (auto &button : mButtons)
       button = nullptr;
 
    SetLabel( _("Timeline") );
    SetName(GetLabel());
    SetBackgroundStyle(wxBG_STYLE_PAINT);
-
-   mCursorDefault = wxCursor(wxCURSOR_DEFAULT);
-   mCursorHand = wxCursor(wxCURSOR_HAND);
-   mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
-   mIsWE = false;
 
    mLeftOffset = 0;
    mIndTime = -1;
@@ -2075,7 +2388,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mTracks = project->GetTracks();
 
-   mSnapManager = NULL;
    mIsSnapped = false;
 
    mIsRecording = false;
@@ -2095,8 +2407,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
 AdornedRulerPanel::~AdornedRulerPanel()
 {
-   if(HasCapture())
-      ReleaseMouse();
 }
 
 #if 1
@@ -2143,7 +2453,7 @@ void AdornedRulerPanel::UpdatePrefs()
    UpdateRects();
    SetPanelSize();
 
-   RegenerateTooltips(mPrevZone);
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::ReCreateButtons()
@@ -2242,7 +2552,8 @@ namespace {
 #endif
    }
 
-   const wxString ContinueScrubbingMessage(const Scrubber &scrubber)
+   const wxString ContinueScrubbingMessage(
+      const Scrubber &scrubber, bool clicked)
    {
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
@@ -2254,13 +2565,14 @@ namespace {
       else
          return _("Move to Scrub");
 #else
-      wxMouseState State = wxGetMouseState();
-      if( State.LeftIsDown() ) {
+      if( clicked ) {
          // Since mouse is down, mention dragging first.
          // IsScrubbing is true if Scrubbing OR seeking.
-         if( scrubber.IsOneShotSeeking() )
+         if( scrubber.IsScrubbing() )
+            // User is dragging already, explain.
             return _("Drag to Seek.  Release to stop seeking.");
-         else 
+         else
+            // User has clicked but not yet moved or released.
             return _("Drag to Seek.  Release and move to Scrub.");
       }
       // Since mouse is up, mention moving first.
@@ -2268,48 +2580,18 @@ namespace {
 #endif
    }
 
-   const wxString ScrubbingMessage(const Scrubber &scrubber)
+   const wxString ScrubbingMessage(const Scrubber &scrubber, bool clicked)
    {
       if (scrubber.HasMark())
-         return ContinueScrubbingMessage(scrubber);
+         return ContinueScrubbingMessage(scrubber, clicked);
       else
          return StartScrubbingMessage(scrubber);
    }
 }
 
-void AdornedRulerPanel::RegenerateTooltips(StatusChoice choice)
+void AdornedRulerPanel::RegenerateTooltips()
 {
-#if wxUSE_TOOLTIPS
-   if (mTimelineToolTip) {
-      if (mIsRecording) {
-         this->SetToolTip(_("Timeline actions disabled during recording"));
-      }
-      else {
-         switch(choice) {
-         case StatusChoice::EnteringQP :
-            if (!mQuickPlayEnabled) {
-               this->SetToolTip(_("Quick-Play disabled"));
-            }
-            else {
-               this->SetToolTip(_("Quick-Play enabled"));
-            }
-            break;
-         case StatusChoice::EnteringScrubZone :
-         {
-            const auto message = ScrubbingMessage(mProject->GetScrubber());
-            this->SetToolTip(message);
-         }
-            break;
-         default:
-            this->SetToolTip(NULL);
-            break;
-         }
-      }
-   }
-   else {
-      this->SetToolTip(NULL);
-   }
-#endif
+   CallAfter( [this]{ HandleCursorForPresentMouseState(); } );
 }
 
 void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
@@ -2318,21 +2600,18 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
 
    if (evt.GetInt() != 0)
    {
-      // Set cursor immediately  because OnMouseEvents is not called
-      // if recording is initiated by a modal window (Timer Record).
-      SetCursor(mCursorDefault);
       mIsRecording = true;
-      UpdateButtonStates();
+      this->CellularPanel::CancelDragging();
+      this->CellularPanel::ClearTargets();
 
-      // The quick play indicator is useless during recording
-      CallAfter( [this]{ DrawBothOverlays(); } );
+      UpdateButtonStates();
    }
    else {
-      SetCursor(mCursorHand);
       mIsRecording = false;
       UpdateButtonStates();
    }
-   RegenerateTooltips(mPrevZone);
+   
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -2457,198 +2736,36 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
    return mousePosX >= boundLeft && mousePosX < boundRight;
 }
 
-void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
+auto AdornedRulerPanel::QPHandle::Click
+(const TrackPanelMouseEvent &event, AudacityProject *pProject) -> Result
 {
-   // Creation of overlays on demand here -- constructor of AdornedRulerPanel
-   // is too early to do it
-   if (!mOverlay)
-      mOverlay = std::make_unique<QuickPlayIndicatorOverlay>(mProject);
+   auto result = CommonRulerHandle::Click(event, pProject);
+   if (!( result & RefreshCode::Cancelled )) {
+      if (mClicked == Button::Left) {
+         if (!(mParent && mParent->mQuickPlayEnabled))
+            return RefreshCode::Cancelled;
 
-   // Disable mouse actions on Timeline while recording.
-   if (mIsRecording) {
-      if (HasCapture())
-         ReleaseMouse();
-      return;
-   }
-
-   const auto position = evt.GetPosition();
-
-   const bool inScrubZone =
-      // only if scrubbing is allowed now
-      mProject->GetScrubber().CanScrub() &&
-      mShowScrubbing &&
-      mScrubZone.Contains(position);
-   const bool inQPZone = 
-      (!inScrubZone) && mInner.Contains(position);
-
-   const StatusChoice zone =
-      evt.Leaving()
-      ? StatusChoice::Leaving
-      : inScrubZone
-        ? StatusChoice::EnteringScrubZone
-        : inQPZone
-          ? StatusChoice::EnteringQP
-          : StatusChoice::NoChange;
-   const bool changeInZone = (zone != mPrevZone);
-   const bool changing = evt.Leaving() || evt.Entering() || changeInZone;
-
-   wxCoord xx = evt.GetX();
-   wxCoord mousePosX = xx;
-   UpdateQuickPlayPos(mousePosX);
-   HandleSnapping();
-
-   // If not looping, restrict selection to end of project
-   if (zone == StatusChoice::EnteringQP && !evt.ShiftDown()) {
-      const double t1 = mTracks->GetEndTime();
-      mQuickPlayPos = std::min(t1, mQuickPlayPos);
-   }
-
-   // Handle status bar messages
-   UpdateStatusBarAndTooltips (changing ? zone : StatusChoice::NoChange);
-
-   mPrevZone = zone;
-
-   auto &scrubber = mProject->GetScrubber();
-   if (scrubber.HasMark()) {
-      if (evt.RightDown() )
-         // Fall through to context menu handling
-         ;
-      else if ( evt.LeftUp() && inScrubZone)
-         // Fall through to seeking changes to scrubbing
-         ;
-//      else if ( evt.LeftDown() && inScrubZone)
-//         // Fall through to ready to seek
-//         ;
-      else {
-         bool switchToQP = (zone == StatusChoice::EnteringQP && mQuickPlayEnabled);
-         if (switchToQP && evt.LeftDown()) {
-            // We can't stop scrubbing yet (see comments in Bug 1391), but we can pause it.
-            mProject->OnPause(*mProject);
-            // Don't return, fall through
+         auto &scrubber = pProject->GetScrubber();
+         if(scrubber.HasMark()) {
+            // We can't stop scrubbing yet (see comments in Bug 1391),
+            // but we can pause it.
+            pProject->OnPause( *pProject );
          }
-         else if (scrubber.IsPaused())
-            // Just fall through
-            ;
-         else {
-            // If already clicked for scrub, preempt the usual event handling,
-            // no matter what the y coordinate.
 
-            // Do this hack so scrubber can detect mouse drags anywhere
-            evt.ResumePropagation(wxEVENT_PROPAGATE_MAX);
+         // Store the initial play region state
+         mParent->mOldPlayRegionStart = mParent->mPlayRegionStart;
+         mParent->mOldPlayRegionEnd =   mParent->mPlayRegionEnd;
+         mParent->mPlayRegionLock =     mParent->mProject->IsPlayRegionLocked();
 
-            //if (scrubber.IsScrubbing())
-               evt.Skip();
-            //else
-               //evt.Skip();
+         // Save old selection, in case drag of selection is cancelled
+         mOldSelection = pProject->GetViewInfo().selectedRegion;
 
-            // Don't do this, it slows down drag-scrub on Mac.
-            // Timer updates of display elsewhere make it unnecessary.
-            // Done here, it's too frequent.
-            // DrawBothOverlays();
-
-            return;
-         }
+         mParent->HandleQPClick( event.event, mX );
+         mParent->HandleQPDrag( event.event, mX );
       }
    }
-
-   // Store the initial play region state
-   if(mMouseEventState == mesNone) {
-      mOldPlayRegionStart = mPlayRegionStart;
-      mOldPlayRegionEnd = mPlayRegionEnd;
-      mPlayRegionLock = mProject->IsPlayRegionLocked();
-   }
-
-   // Handle entering and leaving of the bar, or movement from
-   // one portion (quick play or scrub) to the other
-   if (evt.Leaving() || (changeInZone && zone != StatusChoice::EnteringQP)) {
-      if (evt.Leaving()) {
-         // Erase the line
-         DrawBothOverlays();
-      }
-
-      SetCursor(mCursorDefault);
-      mIsWE = false;
-
-      mSnapManager.reset();
-
-      if(evt.Leaving())
-         return;
-      // else, may detect a scrub click below
-   }
-   else if (evt.Entering() || (changeInZone && zone == StatusChoice::EnteringQP)) {
-      SetCursor(mCursorHand);
-      DrawBothOverlays();
-      return;
-   }
-
-   // Handle popup menus
-   if (!HasCapture() && evt.RightDown() && !(evt.LeftIsDown())) {
-      ShowContextMenu
-         (inScrubZone ? MenuChoice::Scrub : MenuChoice::QuickPlay,
-          &position);
-      return;
-   }
-   else if( !HasCapture() && evt.LeftUp() && inScrubZone ) {
-      if( scrubber.IsOneShotSeeking() ){
-         scrubber.mInOneShotMode = false;
-         return;
-      }
-      //wxLogDebug("up");
-      // mouse going up => we shift to scrubbing.
-      scrubber.MarkScrubStart(evt.m_x,
-         TracksPrefs::GetPinnedHeadPreference(), false);
-      UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-      DrawBothOverlays();
-      return;
-   }
-   else if ( !HasCapture() && inScrubZone) {
-      // mouse going down => we are (probably) seeking
-      if (evt.LeftDown()) {
-         //wxLogDebug("down");
-         scrubber.mInOneShotMode = !scrubber.IsScrubbing();
-         scrubber.MarkScrubStart(evt.m_x,
-            TracksPrefs::GetPinnedHeadPreference(), false);
-         UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);
-      } 
-
-      DrawBothOverlays();
-      return;
-   }
-   else if ( mQuickPlayEnabled) {
-      bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
-      bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
-
-      if (isWithinStart || isWithinEnd) {
-         if (!mIsWE) {
-            SetCursor(mCursorSizeWE);
-            mIsWE = true;
-         }
-      }
-      else {
-         if (mIsWE) {
-            SetCursor(mCursorHand);
-            mIsWE = false;
-         }
-      }
-
-      if (evt.LeftDown()) {
-         if( inQPZone ){
-            HandleQPClick(evt, mousePosX);
-            HandleQPDrag(evt, mousePosX);
-            DrawBothOverlays();
-         }
-      }
-      else if (evt.LeftIsDown() && HasCapture()) {
-         HandleQPDrag(evt, mousePosX);
-         DrawBothOverlays();
-      }
-      else if (evt.LeftUp() && HasCapture()) {
-         HandleQPRelease(evt);
-         DrawBothOverlays();
-      }
-      else // if (!inScrubZone) 
-         DrawBothOverlays();
-   }
+   
+   return result;
 }
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
@@ -2684,12 +2801,22 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
       // Clicked but not yet dragging
       mMouseEventState = mesSelectingPlayRegionClick;
    }
+}
 
-   // Check if we are dragging BEFORE CaptureMouse.
-   if (mMouseEventState != mesNone)
-      SetCursor(mCursorSizeWE);
-   if ( !HasCapture() )
-      CaptureMouse();
+auto AdornedRulerPanel::QPHandle::Drag
+(const TrackPanelMouseEvent &event, AudacityProject *pProject) -> Result
+{
+   auto result = CommonRulerHandle::Drag(event, pProject);
+   if (!( result & RefreshCode::Cancelled )) {
+      if (mClicked == Button::Left) {
+         if ( mParent ) {
+            mX = event.event.m_x;
+            mParent->UpdateQuickPlayPos( mX, event.event.ShiftDown() );
+            mParent->HandleQPDrag( event.event, mX );
+         }
+      }
+   }
+   return result;
 }
 
 void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
@@ -2774,13 +2901,78 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
    Update();
 }
 
+auto AdornedRulerPanel::ScrubbingHandle::Preview
+(const TrackPanelMouseState &state, const AudacityProject *pProject)
+-> HitTestPreview
+{
+   const auto &scrubber = pProject->GetScrubber();
+   auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
+
+   return {
+      message,
+      {},
+      // Tooltip is same as status message, or blank
+      ((mParent && mParent->mTimelineToolTip) ? message : wxString{}),
+   };
+}
+
+auto AdornedRulerPanel::QPHandle::Preview
+(const TrackPanelMouseState &state, const AudacityProject *pProject)
+-> HitTestPreview
+{
+   wxString tooltip;
+   if (mParent && mParent->mTimelineToolTip) {
+      if (!mParent->mQuickPlayEnabled)
+         tooltip = _("Quick-Play disabled");
+      else
+         tooltip = _("Quick-Play enabled");
+   }
+
+   wxString message;
+   const auto &scrubber = pProject->GetScrubber();
+   const bool scrubbing = scrubber.HasMark();
+   if (scrubbing)
+      // Don't distinguish zones
+      message = ScrubbingMessage(scrubber, false);
+   else
+      // message = Insert timeline status bar message here
+      ;
+
+   static wxCursor cursorHand{ wxCURSOR_HAND };
+   static wxCursor cursorSizeWE{ wxCURSOR_SIZEWE };
+   
+   bool showArrows = false;
+   if (mParent && mParent->mQuickPlayEnabled)
+      showArrows =
+         (mClicked == Button::Left)
+         || mParent->IsWithinMarker(
+               state.state.m_x, mParent->mOldPlayRegionStart)
+         || mParent->IsWithinMarker(
+               state.state.m_x, mParent->mOldPlayRegionEnd);
+   
+   return {
+      message,
+      showArrows ? &cursorSizeWE : &cursorHand,
+      tooltip,
+   };
+}
+
+auto AdornedRulerPanel::QPHandle::Release
+(const TrackPanelMouseEvent &event, AudacityProject *pProject,
+ wxWindow *pParent) -> Result
+{
+   auto result = CommonRulerHandle::Release(event, pProject, pParent);
+   if (!( result & RefreshCode::Cancelled )) {
+      if (mClicked == Button::Left) {
+         if ( mParent )
+            mParent->HandleQPRelease( event.event );
+      }
+   }
+   return result;
+}
+
 void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
 {
-   if (HasCapture())
-      ReleaseMouse();
-   else
-      return;
-
    if (mPlayRegionEnd < mPlayRegionStart) {
       // Swap values to ensure mPlayRegionStart < mPlayRegionEnd
       double tmp = mPlayRegionStart;
@@ -2829,6 +3021,29 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
    } );
 
    StartQPPlay(evt.ShiftDown(), evt.ControlDown());
+}
+
+auto AdornedRulerPanel::QPHandle::Cancel
+(AudacityProject *pProject) -> Result
+{
+   auto result = CommonRulerHandle::Cancel(pProject);
+
+   if (mClicked == Button::Left) {
+      if( mParent ) {
+         pProject->GetViewInfo().selectedRegion = mOldSelection;
+         mParent->mMouseEventState = mesNone;
+         mParent->SetPlayRegion(
+            mParent->mOldPlayRegionStart, mParent->mOldPlayRegionEnd);
+         if (mParent->mPlayRegionLock) {
+            // Restore Locked Play region
+            pProject->OnLockPlayRegion(*pProject);
+            // and release local lock
+            mParent->mPlayRegionLock = false;
+         }
+      }
+   }
+
+   return result;
 }
 
 void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
@@ -2894,42 +3109,6 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
    }
 }
 
-void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
-{
-   if (choice == StatusChoice::NoChange)
-      return;
-
-   wxString message {};
-
-   const auto &scrubber = mProject->GetScrubber();
-   const bool scrubbing = scrubber.HasMark();
-   if (scrubbing && choice != StatusChoice::Leaving)
-      // Don't distinguish zones
-      choice = StatusChoice::EnteringScrubZone;
-
-   switch (choice) {
-      case StatusChoice::EnteringQP:
-      {
-         // message = Insert timeline status bar message here
-      }
-         break;
-
-      case StatusChoice::EnteringScrubZone:
-      {
-         message = ScrubbingMessage(scrubber);
-      }
-         break;
-
-      default:
-         break;
-   }
-
-   // Display a message, or empty message
-   mProject->TP_DisplayStatusMessage(message);
-
-   RegenerateTooltips(choice);
-}
-
 // This version toggles ruler state indirectly via the scrubber
 // to ensure that all the places where the state is shown update.
 // For example buttons and menus must update.
@@ -2959,11 +3138,6 @@ void AdornedRulerPanel::DrawBothOverlays()
 {
    mProject->GetTrackPanel()->DrawOverlays( false );
    DrawOverlays( false );
-}
-
-void AdornedRulerPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
-{
-   ShowContextMenu(MenuChoice::QuickPlay, nullptr);
 }
 
 void AdornedRulerPanel::UpdateButtonStates()
@@ -2999,17 +3173,7 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
    UpdateButtonStates();
 }
 
-void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
-{
-   mPrevZone = StatusChoice::Leaving;
-   DrawBothOverlays();
-
-   wxMouseEvent e(wxEVT_LEFT_UP);
-   e.m_x = mLastMouseX;
-   OnMouseEvents(e);
-}
-
-void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
+void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown)
 {
    // Keep Quick-Play within usable track area.
    TrackPanel *tp = mProject->GetTrackPanel();
@@ -3018,8 +3182,15 @@ void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
    mousePosX = std::max(mousePosX, tp->GetLeftOffset());
    mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 
-   mLastMouseX = mousePosX;
    mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
+
+   HandleSnapping();
+
+   // If not looping, restrict selection to end of project
+   if ((LastCell() == mQPCell || mQPCell->Clicked()) && !shiftDown) {
+      const double t1 = mTracks->GetEndTime();
+      mQuickPlayPos = std::min(t1, mQuickPlayPos);
+   }
 }
 
 // Pop-up menus
@@ -3084,7 +3255,7 @@ void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
    mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
    gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
    gPrefs->Flush();
-   RegenerateTooltips(mPrevZone);
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
@@ -3102,13 +3273,16 @@ void AdornedRulerPanel::DragSelection()
 
 void AdornedRulerPanel::HandleSnapping()
 {
-   if (!mSnapManager) {
-      mSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
+   auto handle = mQPCell->mHolder.lock();
+   if (handle) {
+      auto &pSnapManager = handle->mSnapManager;
+      if (! pSnapManager)
+         pSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
+      
+      auto results = pSnapManager->Snap(NULL, mQuickPlayPos, false);
+      mQuickPlayPos = results.outTime;
+      mIsSnapped = results.Snapped();
    }
-
-   auto results = mSnapManager->Snap(NULL, mQuickPlayPos, false);
-   mQuickPlayPos = results.outTime;
-   mIsSnapped = results.Snapped();
 }
 
 void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
@@ -3116,9 +3290,7 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
    mTimelineToolTip = (mTimelineToolTip)? false : true;
    gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
    gPrefs->Flush();
-#if wxUSE_TOOLTIPS
-   RegenerateTooltips(mPrevZone);
-#endif
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
@@ -3217,13 +3389,6 @@ void AdornedRulerPanel::ShowContextMenu( MenuChoice choice, const wxPoint *pPosi
       default:
          return;
    }
-
-   // dismiss and clear Quick-Play indicator
-   mPrevZone = StatusChoice::Leaving;
-   DrawBothOverlays();
-
-   if (HasCapture())
-      ReleaseMouse();
 }
 
 void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
@@ -3433,15 +3598,62 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
    mRuler.GetMaxSize(width, height);
 }
 
-bool AdornedRulerPanel::s_AcceptsFocus{ false };
+// CellularPanel implementation
+auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell
+{
+   bool mayScrub = mProject->GetScrubber().CanScrub() &&
+      mShowScrubbing;
+   if (mayScrub && mScrubZone.Contains(mouseX, mouseY))
+      return { mScrubbingCell, mScrubZone };
 
-auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
-   s_AcceptsFocus = true;
-   return TempAllowFocus{ &s_AcceptsFocus };
+   return { mQPCell, mInner };
 }
 
-void AdornedRulerPanel::SetFocusFromKbd()
+wxRect AdornedRulerPanel::FindRect(const TrackPanelCell &cell)
 {
-   auto temp = TemporarilyAllowFocus();
-   SetFocus();
+   if (&cell == mScrubbingCell.get())
+      return mScrubZone;
+   if (&cell == mQPCell.get())
+      return mInner;
+   
+   return {};
+}
+
+
+AudacityProject * AdornedRulerPanel::GetProject() const
+{
+   return mProject;
+}
+
+
+TrackPanelCell *AdornedRulerPanel::GetFocusedCell()
+{
+   // No switching of focus yet to the other, scrub zone
+   return mQPCell.get();
+}
+
+
+void AdornedRulerPanel::SetFocusedCell()
+{
+}
+
+
+void AdornedRulerPanel::ProcessUIHandleResult
+(TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
+ unsigned refreshResult)
+{
+   if (refreshResult & RefreshCode::DrawOverlays)
+      DrawBothOverlays();
+}
+
+void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
+{
+   GetProject()->TP_DisplayStatusMessage(message);
+}
+
+void AdornedRulerPanel::CreateOverlays()
+{
+   if (!mOverlay)
+      mOverlay =
+         std::make_unique<QuickPlayIndicatorOverlay>( mProject );
 }
