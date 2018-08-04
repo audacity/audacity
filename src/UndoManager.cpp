@@ -198,6 +198,8 @@ void UndoManager::RemoveStates(int num)
 void UndoManager::ClearStates()
 {
    RemoveStates(stack.size());
+   current = -1;
+   saved = -1;
 }
 
 unsigned int UndoManager::GetNumStates()

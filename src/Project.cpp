@@ -3898,7 +3898,10 @@ private:
 
 bool AudacityProject::Save()
 {
-   if ( !IsProjectSaved() )
+   // Prompt for file name?
+   bool bPromptingRequired = !IsProjectSaved();
+
+   if (bPromptingRequired)
       return SaveAs();
 
    return DoSave(false, false);
@@ -4548,27 +4551,33 @@ For an audio file that will open in other apps, use 'Export'.\n");
       return false;
    }
 
-   // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
-   // for overwrite ourselves later, and we disallow it.
-   // We disallow overwrite because we would have to DELETE the many
-   // smaller files too, or prompt to move them.
-   wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
-                                 title,
-                                 filename.GetPath(),
-                                 filename.GetFullName(),
-                                 wxT("aup"),
-                                 _("Audacity projects") + wxT(" (*.aup)|*.aup"),
-                                 wxFD_SAVE | wxRESIZE_BORDER,
-                                 this);
+   bool bPrompt = (mBatchMode == 0) || (mFileName.IsEmpty());
+   wxString fName = "";
 
-   if (fName == wxT(""))
-      return false;
+   if (bPrompt) {
+      // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
+      // for overwrite ourselves later, and we disallow it.
+      // We disallow overwrite because we would have to DELETE the many
+      // smaller files too, or prompt to move them.
+      fName = FileNames::SelectFile(FileNames::Operation::Export,
+         title,
+         filename.GetPath(),
+         filename.GetFullName(),
+         wxT("aup"),
+         _("Audacity projects") + wxT(" (*.aup)|*.aup"),
+         wxFD_SAVE | wxRESIZE_BORDER,
+         this);
 
-   filename = fName;
+      if (fName == wxT(""))
+         return false;
+
+      filename = fName;
+   };
+
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
-   if (bWantSaveCopy && filename.FileExists()) {
+   if ((bWantSaveCopy||!bPrompt) && filename.FileExists()) {
       // Saving a copy of the project should never overwrite an existing project.
       AudacityMessageDialog m(
          NULL,
@@ -5999,6 +6008,41 @@ bool AudacityProject::IsProjectSaved() {
    // in DirManager::SetProject
    wxString sProjectName = mDirManager->GetProjectName();
    return (sProjectName != wxT(""));
+}
+
+// This is done to empty out the tracks, but without creating a new project.
+void AudacityProject::ResetProjectToEmpty() {
+   OnSelectAll(*this);
+   OnRemoveTracks(*this);
+   // A new DirManager.
+   mDirManager = std::make_shared<DirManager>();
+   mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
+
+   // mLastSavedTrack code copied from OnCloseWindow.
+   // Lock all blocks in all tracks of the last saved version, so that
+   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
+   // in memory.  After it's locked, DELETE the data structure so that
+   // there's no memory leak.
+   if (mLastSavedTracks) {
+      TrackListIterator iter(mLastSavedTracks.get());
+      Track *t = iter.First();
+      while (t) {
+         if (t->GetKind() == Track::Wave)
+            ((WaveTrack *)t)->CloseLock();
+         t = iter.Next();
+      }
+
+      mLastSavedTracks->Clear(); // sends an event
+      mLastSavedTracks.reset();
+   }
+
+   //mLastSavedTracks = TrackList::Create();
+   mFileName = "";
+   mIsRecovered = false;
+   mbLoadedFromAup = false;
+   SetProjectTitle();
+   mDirty = false;
+   GetUndoManager()->ClearStates();
 }
 
 bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {

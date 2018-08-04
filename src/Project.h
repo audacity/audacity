@@ -297,7 +297,7 @@ private:
    bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 public:
 
-   void Clear();
+   void Clear();// clears a selection
 
    const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
@@ -333,6 +333,7 @@ public:
    bool ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
    int GetOpenProjectCount();
    bool IsProjectSaved();
+   void ResetProjectToEmpty();
 
    bool ProjectHasTracks();
 

@@ -468,13 +468,8 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       if (!success)
          break;
       
-      UndoManager *um = project->GetUndoManager();
-      um->ClearStates();
-      project->OnSelectAll(*project);
-      project->OnRemoveTracks(*project);
+      project->ResetProjectToEmpty();
    }
-   project->OnRemoveTracks(*project);
-   
    Show();
    Raise();
 }
