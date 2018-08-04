@@ -6258,3 +6258,8 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       trackPanel->Refresh(false);
    }
 }
+
+bool AudacityProject::IsFocused( const wxWindow *window ) const
+{
+   return window == mFocusLender || window == wxWindow::FindFocus();
+}

@@ -22,7 +22,7 @@
 
 #include "SelectedRegion.h"
 
-#include "widgets/OverlayPanel.h"
+#include "CellularPanel.h"
 
 #include "SelectionState.h"
 
@@ -34,7 +34,6 @@ class SpectrumAnalyst;
 class Track;
 class TrackList;
 class TrackPanel;
-class TrackPanelCell;
 class TrackArtist;
 class Ruler;
 class SnapManager;
@@ -43,20 +42,13 @@ class LWSlider;
 class ControlToolBar; //Needed because state of controls can affect what gets drawn.
 class ToolsToolBar; //Needed because state of controls can affect what gets drawn.
 class MixerBoard;
-class AudacityProject;
 
 class TrackPanelAx;
 class TrackPanelCellIterator;
-struct TrackPanelMouseEvent;
-struct TrackPanelMouseState;
-
-class ViewInfo;
 
 class NoteTrack;
 class WaveTrack;
 class WaveClip;
-class UIHandle;
-using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
@@ -242,9 +234,9 @@ private:
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
-class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
- public:
+class AUDACITY_DLL_API TrackPanel final : public CellularPanel {
 
+ public:
    TrackPanel(wxWindow * parent,
               wxWindowID id,
               const wxPoint & pos,
@@ -263,16 +255,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    void OnPaint(wxPaintEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
-   void OnCaptureLost(wxMouseCaptureLostEvent & event);
-   void OnCaptureKey(wxCommandEvent & event);
    void OnKeyDown(wxKeyEvent & event);
-   void OnChar(wxKeyEvent & event);
-   void OnKeyUp(wxKeyEvent & event);
-
-   void OnSetFocus(wxFocusEvent & event);
-   void OnKillFocus(wxFocusEvent & event);
-
-   void OnContextMenu(wxContextMenuEvent & event);
 
    void OnPlayback(wxCommandEvent &);
    void OnTrackListResizing(wxCommandEvent & event);
@@ -302,30 +285,23 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // void SetSelectionFormat(int iformat)
    // void SetSnapTo(int snapto)
 
-   void HandleInterruptedDrag();
-   void Uncapture( wxMouseState *pState = nullptr );
-   bool CancelDragging();
-   bool HandleEscapeKey(bool down);
-   void UpdateMouseState(const wxMouseState &state);
-   void HandleModifierKey();
    void HandlePageUpKey();
    void HandlePageDownKey();
-   AudacityProject * GetProject() const;
+   AudacityProject * GetProject() const override;
 
    void ScrollIntoView(double pos);
    void ScrollIntoView(int x);
 
    void OnTrackMenu(Track *t = NULL);
    Track * GetFirstSelectedTrack();
-   bool IsMouseCaptured();
 
    void EnsureVisible(Track * t);
    void VerticalScroll( float fracPosition);
 
+   TrackPanelCell *GetFocusedCell() override;
+   void SetFocusedCell() override;
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
-
-   void HandleCursorForPresentMouseState(bool doHit = true);
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
@@ -338,7 +314,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
  protected:
    bool IsAudioActive();
-   void HandleClick( const TrackPanelMouseEvent &tpmEvent );
 
 public:
    size_t GetTrackCount() const;
@@ -350,9 +325,6 @@ protected:
 public:
    void UpdateAccessibility();
    void MessageForScreenReader(const wxString& message);
-
-   // MM: Handle mouse wheel rotation
-   void HandleWheelRotation( TrackPanelMouseEvent &tpmEvent );
 
    void MakeParentRedrawScrollbars();
 
@@ -366,16 +338,10 @@ protected:
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
    // Find track info by coordinate
-   struct FoundCell {
-      std::shared_ptr<Track> pTrack;
-      std::shared_ptr<TrackPanelCell> pCell;
-      wxRect rect;
-   };
-   FoundCell FindCell(int mouseX, int mouseY);
+   FoundCell FindCell(int mouseX, int mouseY) override;
 
-   void HandleMotion( wxMouseState &state, bool doHit = true );
-   void HandleMotion
-      ( const TrackPanelMouseState &tpmState, bool doHit = true );
+   // Find rectangle of the given cell
+   wxRect FindRect(const TrackPanelCell &cell) override;
 
    int GetVRulerWidth() const;
    int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
@@ -448,7 +414,6 @@ protected:
    TrackPanelListener *mListener;
 
    std::shared_ptr<TrackList> mTracks;
-   ViewInfo *mViewInfo;
 
    AdornedRulerPanel *mRuler;
 
@@ -482,11 +447,6 @@ protected:
 
    bool mRedrawAfterStop;
 
-   wxMouseState mLastMouseState;
-
-   int mMouseMostRecentX;
-   int mMouseMostRecentY;
-
    friend class TrackPanelAx;
 
 #if wxUSE_ACCESSIBILITY
@@ -511,46 +471,18 @@ protected:
    wxSize vrulerSize;
 
  protected:
-   std::weak_ptr<TrackPanelCell> mLastCell;
-   std::vector<UIHandlePtr> mTargets;
-   size_t mTarget {};
-   unsigned mMouseOverUpdateFlags{};
-
- public:
-   UIHandlePtr Target()
-   {
-      if (mTargets.size())
-         return mTargets[mTarget];
-      else
-         return {};
-   }
-
- protected:
-   void ClearTargets()
-   {
-      // Forget the rotation of hit test candidates when the mouse moves from
-      // cell to cell or outside of the TrackPanel entirely.
-      mLastCell.reset();
-      mTargets.clear();
-      mTarget = 0;
-      mMouseOverUpdateFlags = 0;
-   }
-
-   bool HasRotation();
-   bool HasEscape();
-
-   bool ChangeTarget(bool forward, bool cycle);
-
-   std::weak_ptr<Track> mpClickedTrack;
-   UIHandlePtr mUIHandle;
 
    std::shared_ptr<TrackPanelCell> mpBackground;
 
-   bool mEnableTab{};
-
    DECLARE_EVENT_TABLE()
 
-   // friending GetInfoCommand allow automation to get sizes of the 
+   void ProcessUIHandleResult
+      (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
+       unsigned refreshResult) override;
+
+   void UpdateStatusMessage( const wxString &status ) override;
+
+   // friending GetInfoCommand allow automation to get sizes of the
    // tracks, track control panel and such.
    friend class GetInfoCommand;
 };

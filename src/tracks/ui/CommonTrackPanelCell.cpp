@@ -24,6 +24,13 @@ CommonTrackPanelCell::~CommonTrackPanelCell()
 {
 }
 
+HitTestPreview CommonTrackPanelCell::DefaultPreview
+(const TrackPanelMouseState &, const AudacityProject *)
+{
+   static wxCursor defaultCursor{ wxCURSOR_ARROW };
+   return { {}, &defaultCursor, {} };
+}
+
 unsigned CommonTrackPanelCell::HandleWheelRotation
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
