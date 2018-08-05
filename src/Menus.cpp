@@ -332,6 +332,13 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
 
+#ifdef EXPERIMENTAL_RESET
+      // Empty the current project and forget its name and path.
+      c->AddItem(wxT("Reset"), XXO("&Reset..."), FN(OnReset), wxT(""),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+#endif
+
       /////////////////////////////////////////////////////////////////////////////
 
       CreateRecentFilesMenu(c);
@@ -4750,6 +4757,16 @@ void AudacityProject::OnNew(const CommandContext &WXUNUSED(context) )
 void AudacityProject::OnOpen(const CommandContext &WXUNUSED(context) )
 {
    OpenFiles(this);
+}
+
+// JKC: This is like OnClose, except it emptys the project in place,
+// rather than createing a new empty project (with new toolbars etc).
+// It does not test for unsaved changes.
+// It is not in the menus by default.  Its main purpose is/was for 
+// developers checking functionality of ResetProjectToEmpty().
+void AudacityProject::OnReset(const CommandContext &WXUNUSED(context))
+{
+   ResetProjectToEmpty();
 }
 
 void AudacityProject::OnClose(const CommandContext &WXUNUSED(context) )

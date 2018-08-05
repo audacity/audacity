@@ -217,6 +217,7 @@ void OnMacBringAllToFront(const CommandContext &context );
 
 void OnNew(const CommandContext &context );
 void OnOpen(const CommandContext &context );
+void OnReset(const CommandContext &context);
 void OnClose(const CommandContext &context );
 void OnSave(const CommandContext &context );
 void OnSaveAs(const CommandContext &context );
