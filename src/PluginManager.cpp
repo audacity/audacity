@@ -1014,6 +1014,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                   {
                      pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
                   }
+                  // Bug 1893.  We've found a provider that works.
+                  // Error messages from any that failed are no longer useful.
+                  errMsgs.clear();
                   break;
                }
                else
