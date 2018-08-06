@@ -218,9 +218,7 @@ size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t
    float *ibuf = inBlock[0];
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
    {
-      mpBiquad[iPair].pfIn = ibuf;
-      mpBiquad[iPair].pfOut = outBlock[0];
-      mpBiquad[iPair].Process(blockLen);
+      mpBiquad[iPair].Process(ibuf, outBlock[0], blockLen);
       ibuf = outBlock[0];
    }
 

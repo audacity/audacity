@@ -18,8 +18,6 @@ Max Maisel
 
 Biquad::Biquad()
 {
-   pfIn = 0;
-   pfOut = 0;
    fNumerCoeffs[B0] = 1;
    fNumerCoeffs[B1] = 0;
    fNumerCoeffs[B2] = 0;
@@ -36,7 +34,7 @@ void Biquad::Reset()
    fPrevPrevOut = 0;
 }
 
-void Biquad::Process(int iNumSamples)
+void Biquad::Process(float* pfIn, float* pfOut, int iNumSamples)
 {
    for (int i = 0; i < iNumSamples; i++)
       *pfOut++ = ProcessOne(*pfIn++);
@@ -306,6 +304,26 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType2Filter(int order, double fn, double fc
    return std::move(pBiquad);
 }
 
+void Biquad::ComplexDiv (float fNumerR, float fNumerI, float fDenomR, float fDenomI, float* pfQuotientR, float* pfQuotientI)
+{
+   float fDenom = square(fDenomR) + square(fDenomI);
+   *pfQuotientR = (fNumerR * fDenomR + fNumerI * fDenomI) / fDenom;
+   *pfQuotientI = (fNumerI * fDenomR - fNumerR * fDenomI) / fDenom;
+}
+
+bool Biquad::BilinTransform (float fSX, float fSY, float* pfZX, float* pfZY)
+{
+   float fDenom = square (1 - fSX) + square (fSY);
+   *pfZX = (1 - square (fSX) - square (fSY)) / fDenom;
+   *pfZY = 2 * fSY / fDenom;
+   return true;
+}
+
+float Biquad::Calc2D_DistSqr (float fX1, float fY1, float fX2, float fY2)
+{
+   return square (fX1 - fX2) + square (fY1 - fY2);
+}
+
 double Biquad::ChebyPoly(int Order, double NormFreq)   // NormFreq = 1 at the f0 point (where response is R dB down)
 {
    // Calc cosh (Order * acosh (NormFreq));
@@ -319,24 +337,3 @@ double Biquad::ChebyPoly(int Order, double NormFreq)   // NormFreq = 1 at the f0
    }
    return fSum;
 }
-
-void ComplexDiv (float fNumerR, float fNumerI, float fDenomR, float fDenomI, float* pfQuotientR, float* pfQuotientI)
-{
-   float fDenom = square(fDenomR) + square(fDenomI);
-   *pfQuotientR = (fNumerR * fDenomR + fNumerI * fDenomI) / fDenom;
-   *pfQuotientI = (fNumerI * fDenomR - fNumerR * fDenomI) / fDenom;
-}
-
-bool BilinTransform (float fSX, float fSY, float* pfZX, float* pfZY)
-{
-   float fDenom = square (1 - fSX) + square (fSY);
-   *pfZX = (1 - square (fSX) - square (fSY)) / fDenom;
-   *pfZY = 2 * fSY / fDenom;
-   return true;
-}
-
-float Calc2D_DistSqr (float fX1, float fY1, float fX2, float fY2)
-{
-   return square (fX1 - fX2) + square (fY1 - fY2);
-}
-

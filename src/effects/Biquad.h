@@ -19,7 +19,7 @@ struct Biquad
 {
    Biquad();
    void Reset();
-   void Process(int iNumSamples);
+   void Process(float* pfIn, float* pfOut, int iNumSamples);
 
    enum
    {
@@ -47,8 +47,6 @@ struct Biquad
       return fOut;
    }
 
-   float* pfIn;
-   float* pfOut;
    float fNumerCoeffs[3]; // B0 B1 B2
    float fDenomCoeffs[2]; // A1 A2, A0 == 1.0
    float fPrevIn;
@@ -67,12 +65,12 @@ struct Biquad
    static ArrayOf<Biquad> CalcChebyshevType1Filter(int order, double fn, double fc, double ripple, int type);
    static ArrayOf<Biquad> CalcChebyshevType2Filter(int order, double fn, double fc, double ripple, int type);
 
+   static void ComplexDiv (float fNumerR, float fNumerI, float fDenomR, float fDenomI, float* pfQuotientR, float* pfQuotientI);
+   static bool BilinTransform (float fSX, float fSY, float* pfZX, float* pfZY);
+   static float Calc2D_DistSqr (float fX1, float fY1, float fX2, float fY2);
+
    static const double s_fChebyCoeffs[MAX_Order][MAX_Order + 1];
    static double ChebyPoly(int Order, double NormFreq);
 };
-
-void ComplexDiv (float fNumerR, float fNumerI, float fDenomR, float fDenomI, float* pfQuotientR, float* pfQuotientI);
-bool BilinTransform (float fSX, float fSY, float* pfZX, float* pfZY);
-float Calc2D_DistSqr (float fX1, float fY1, float fX2, float fY2);
 
 #endif
