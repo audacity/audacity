@@ -1241,10 +1241,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    GetControlToolBar()->UpdateStatusBar(this);
-   mLastStatusUpdateTime = ::wxGetUTCTime();
 
    mTimer = std::make_unique<wxTimer>(this, AudacityProjectTimerID);
-   mTimer->Start(200);
+   RestartTimer();
 
 #if wxUSE_DRAG_AND_DROP
    // We can import now, so become a drag target
@@ -2246,7 +2245,7 @@ void AudacityProject::OnODTaskComplete(wxCommandEvent & WXUNUSED(event))
 {
   if(mTrackPanel)
       mTrackPanel->Refresh(false);
- }
+}
 
 void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
@@ -5125,14 +5124,19 @@ void AudacityProject::SetCaptureMeter(MeterPanel *capture)
    }
 }
 
+void AudacityProject::RestartTimer()
+{
+   if (mTimer) {
+      // mTimer->Stop(); // not really needed
+      mTimer->Start( 3000 ); // Update messages as needed once every 3 s.
+   }
+}
+
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    MixerToolBar *mixerToolBar = GetMixerToolBar();
    if( mixerToolBar )
       mixerToolBar->UpdateControls();
-
-   if (::wxGetUTCTime() - mLastStatusUpdateTime < 3)
-      return;
 
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
@@ -5144,6 +5148,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
          sMessage.Printf(_("Disk space remaining for recording: %s"), GetHoursMinsString(iRecordingMins));
 
+         // Do not change mLastMainStatusMessage
          mStatusBar->SetStatusText(sMessage, mainStatusBarField);
       }
    }
@@ -5179,6 +5184,10 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          mStatusBar->SetStatusText(msg, mainStatusBarField);
       }
    }
+
+   // As also with the TrackPanel timer:  wxTimer may be unreliable without
+   // some restarts
+   RestartTimer();
 }
 
 //get regions selected by selected labels
@@ -5364,13 +5373,15 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 // TrackPanel callback method
 void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 {
-   // Bug1756:  If recording, let the status message for remaining disk space
-   // prevail
-   if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0)
-      return;
-
-   mStatusBar->SetStatusText(msg, mainStatusBarField);
-   mLastStatusUpdateTime = ::wxGetUTCTime();
+   if ( msg != mLastMainStatusMessage ) {
+      mLastMainStatusMessage = msg;
+      mStatusBar->SetStatusText(msg, mainStatusBarField);
+      
+      // When recording, let the NEW status message stay at least as long as
+      // the timer interval (if it is not replaced again by this function),
+      // before replacing it with the message about remaining disk capacity.
+      RestartTimer();
+   }
 }
 
 void AudacityProject::TP_DisplaySelection()

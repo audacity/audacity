@@ -663,8 +663,9 @@ private:
 
    // Window elements
 
+   wxString mLastMainStatusMessage;
    std::unique_ptr<wxTimer> mTimer;
-   long mLastStatusUpdateTime;
+   void RestartTimer();
 
    wxStatusBar *mStatusBar;
 
