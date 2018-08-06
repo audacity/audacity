@@ -64,20 +64,20 @@ ArrayOf<Biquad> Biquad::CalcButterworthFilter(int order, double fn, double fc, i
 {
    ArrayOf<Biquad> pBiquad(size_t((order+1) / 2), true);
    // Set up the coefficients in all the biquads
-   float fNorm = fc / fn;
+   double fNorm = fc / fn;
    if (fNorm >= 0.9999)
       fNorm = 0.9999F;
-   float fC = tan (PI * fNorm / 2);
-   float fDCPoleDistSqr = 1.0F;
-   float fZPoleX, fZPoleY;
+   double fC = tan (PI * fNorm / 2);
+   double fDCPoleDistSqr = 1.0F;
+   double fZPoleX, fZPoleY;
 
    if ((order & 1) == 0)
    {
       // Even order
       for (int iPair = 0; iPair < order/2; iPair++)
       {
-         float fSPoleX = fC * cos (PI - (iPair + 0.5) * PI / order);
-         float fSPoleY = fC * sin (PI - (iPair + 0.5) * PI / order);
+         double fSPoleX = fC * cos (PI - (iPair + 0.5) * PI / order);
+         double fSPoleY = fC * sin (PI - (iPair + 0.5) * PI / order);
          BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
          pBiquad[iPair].fNumerCoeffs [B0] = 1;
          if (subtype == kLowPass)     // LOWPASS
@@ -96,8 +96,8 @@ ArrayOf<Biquad> Biquad::CalcButterworthFilter(int order, double fn, double fc, i
    else
    {
       // Odd order - first do the 1st-order section
-      float fSPoleX = -fC;
-      float fSPoleY = 0;
+      double fSPoleX = -fC;
+      double fSPoleY = 0;
       BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
       pBiquad[0].fNumerCoeffs [B0] = 1;
       if (subtype == kLowPass)     // LOWPASS
@@ -113,8 +113,8 @@ ArrayOf<Biquad> Biquad::CalcButterworthFilter(int order, double fn, double fc, i
          fDCPoleDistSqr = fZPoleX + 1;    // dist from Nyquist
       for (int iPair = 1; iPair <= order/2; iPair++)
       {
-         float fSPoleX = fC * cos (PI - iPair * PI / order);
-         float fSPoleY = fC * sin (PI - iPair * PI / order);
+         double fSPoleX = fC * cos (PI - iPair * PI / order);
+         double fSPoleY = fC * sin (PI - iPair * PI / order);
          BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
          pBiquad[iPair].fNumerCoeffs [B0] = 1;
          if (subtype == kLowPass)     // LOWPASS
@@ -146,22 +146,22 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType1Filter(int order, double fn, double fc
 {
    ArrayOf<Biquad> pBiquad(size_t((order+1) / 2), true);
    // Set up the coefficients in all the biquads
-   float fNorm = fc / fn;
+   double fNorm = fc / fn;
    if (fNorm >= 0.9999)
       fNorm = 0.9999F;
-   float fC = tan (PI * fNorm / 2);
-   float fDCPoleDistSqr = 1.0F;
-   float fZPoleX, fZPoleY;
-   float fZZeroX;
-   float beta = cos (fNorm*PI);
+   double fC = tan (PI * fNorm / 2);
+   double fDCPoleDistSqr = 1.0F;
+   double fZPoleX, fZPoleY;
+   double fZZeroX;
+   double beta = cos (fNorm*PI);
 
    double eps; eps = sqrt (pow (10.0, wxMax(0.001, ripple) / 10.0) - 1);
    double a; a = log (1 / eps + sqrt(1 / square(eps) + 1)) / order;
    // Assume even order to start
    for (int iPair = 0; iPair < order/2; iPair++)
    {
-      float fSPoleX = -fC * sinh (a) * sin ((2*iPair + 1) * PI / (2 * order));
-      float fSPoleY = fC * cosh (a) * cos ((2*iPair + 1) * PI / (2 * order));
+      double fSPoleX = -fC * sinh (a) * sin ((2*iPair + 1) * PI / (2 * order));
+      double fSPoleY = fC * cosh (a) * cos ((2*iPair + 1) * PI / (2 * order));
       BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
       if (subtype == kLowPass)     // LOWPASS
       {
@@ -185,7 +185,7 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType1Filter(int order, double fn, double fc
    }
    if ((order & 1) == 0)
    {
-      float fTemp = DB_TO_LINEAR(-wxMax(0.001, ripple));      // at DC the response is down R dB (for even-order)
+      double fTemp = DB_TO_LINEAR(-wxMax(0.001, ripple));      // at DC the response is down R dB (for even-order)
       pBiquad[0].fNumerCoeffs [B0] *= fTemp;
       pBiquad[0].fNumerCoeffs [B1] *= fTemp;
       pBiquad[0].fNumerCoeffs [B2] *= fTemp;
@@ -193,8 +193,8 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType1Filter(int order, double fn, double fc
    else
    {
       // Odd order - now do the 1st-order section
-      float fSPoleX = -fC * sinh (a);
-      float fSPoleY = 0;
+      double fSPoleX = -fC * sinh (a);
+      double fSPoleY = 0;
       BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
       if (subtype == kLowPass)     // LOWPASS
       {
@@ -228,17 +228,17 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType2Filter(int order, double fn, double fc
 {
    ArrayOf<Biquad> pBiquad(size_t((order+1) / 2), true);
    // Set up the coefficients in all the biquads
-   float fNorm = fc / fn;
+   double fNorm = fc / fn;
    if (fNorm >= 0.9999)
       fNorm = 0.9999F;
-   float fC = tan (PI * fNorm / 2);
-   float fDCPoleDistSqr = 1.0F;
-   float fZPoleX, fZPoleY;
-   float fZZeroX, fZZeroY;
-   float beta = cos (fNorm*PI);
+   double fC = tan (PI * fNorm / 2);
+   double fDCPoleDistSqr = 1.0F;
+   double fZPoleX, fZPoleY;
+   double fZZeroX, fZZeroY;
+   double beta = cos (fNorm*PI);
 
-   float fSZeroX, fSZeroY;
-   float fSPoleX, fSPoleY;
+   double fSZeroX, fSZeroY;
+   double fSPoleX, fSPoleY;
    double eps = DB_TO_LINEAR(-wxMax(0.001, ripple));
    double a = log (1 / eps + sqrt(1 / square(eps) + 1)) / order;
 
@@ -304,22 +304,23 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType2Filter(int order, double fn, double fc
    return std::move(pBiquad);
 }
 
-void Biquad::ComplexDiv (float fNumerR, float fNumerI, float fDenomR, float fDenomI, float* pfQuotientR, float* pfQuotientI)
+void Biquad::ComplexDiv (double fNumerR, double fNumerI, double fDenomR, double fDenomI,
+                         double* pfQuotientR, double* pfQuotientI)
 {
-   float fDenom = square(fDenomR) + square(fDenomI);
+   double fDenom = square(fDenomR) + square(fDenomI);
    *pfQuotientR = (fNumerR * fDenomR + fNumerI * fDenomI) / fDenom;
    *pfQuotientI = (fNumerI * fDenomR - fNumerR * fDenomI) / fDenom;
 }
 
-bool Biquad::BilinTransform (float fSX, float fSY, float* pfZX, float* pfZY)
+bool Biquad::BilinTransform (double fSX, double fSY, double* pfZX, double* pfZY)
 {
-   float fDenom = square (1 - fSX) + square (fSY);
+   double fDenom = square (1 - fSX) + square (fSY);
    *pfZX = (1 - square (fSX) - square (fSY)) / fDenom;
    *pfZY = 2 * fSY / fDenom;
    return true;
 }
 
-float Biquad::Calc2D_DistSqr (float fX1, float fY1, float fX2, float fY2)
+float Biquad::Calc2D_DistSqr (double fX1, double fY1, double fX2, double fY2)
 {
    return square (fX1 - fX2) + square (fY1 - fY2);
 }
