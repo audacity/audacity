@@ -1819,7 +1819,7 @@ double AudacityProject::ScrollingLowerBoundTime() const
    if (!MayScrollBeyondZero())
       return 0;
    const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
-   return std::min(mTracks->GetStartTime(), -screen / 2.0);
+   return std::min(mTracks->GetStartTime(), -screen);
 }
 
 // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
