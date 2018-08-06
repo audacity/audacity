@@ -266,8 +266,12 @@ void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
 // Export
 //----------------------------------------------------------------------------
 
+
+wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+
 BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
    EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
+   EVT_COMMAND( wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
 END_EVENT_TABLE()
 
 Exporter::Exporter()
@@ -303,6 +307,23 @@ Exporter::Exporter()
 
 Exporter::~Exporter()
 {
+}
+
+// Beginnings of a fix for bug 1355.
+// 'Other Uncompressed Files' Header option updates do not update
+// the extension shown in the file dialog.
+// Unfortunately, although we get the new extension here, we
+// can't do anything with it as the FileDialog does not provide
+// methods for setting its standard controls.
+// We would need OS specific code that 'knows' about the system 
+// dialogs.
+void Exporter::OnExtensionChanged(wxCommandEvent &Evt) {
+   wxString ext = Evt.GetString();
+   ext = ext.BeforeFirst(' ').Lower();
+   wxLogDebug("Extension changed to '.%s'", ext);
+//   wxString Name = mDialog->GetFilename();
+//   Name = Name.BeforeLast('.')+ext;
+//   mDialog->SetFilename(Name);
 }
 
 void Exporter::SetFileDialogTitle( const wxString & DialogTitle )

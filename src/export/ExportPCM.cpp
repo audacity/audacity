@@ -280,6 +280,14 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    ValidatePair(GetFormat());
 
    TransferDataFromWindow();
+
+   // Send the event indicating a file suffix change.
+   // We pass the entire header string, which starts with the suffix.
+   wxCommandEvent event(AUDACITY_FILE_SUFFIX_EVENT, GetId());
+   event.SetEventObject(this);
+   event.SetString(mHeaderChoice->GetString(mHeaderChoice->GetSelection()));
+   ProcessWindowEvent(event);
+
 }
 
 int ExportPCMOptions::GetFormat()

@@ -152,6 +152,10 @@ WX_DEFINE_USER_EXPORTED_ARRAY_PTR(wxWindow *, WindowPtrArray, class AUDACITY_DLL
 //----------------------------------------------------------------------------
 // Exporter
 //----------------------------------------------------------------------------
+
+// For a file suffix change from the options.
+wxDECLARE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+
 class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
 {
 public:
@@ -188,6 +192,7 @@ public:
    int GetAutoExportSubFormat();
    int GetAutoExportFilterIndex();
    wxFileName GetAutoExportFileName();
+   void OnExtensionChanged(wxCommandEvent &Evt);
 
 private:
    bool ExamineTracks();
