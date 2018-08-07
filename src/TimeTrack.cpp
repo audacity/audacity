@@ -124,7 +124,7 @@ void TimeTrack::Paste(double t, const Track * src)
       return;
 
    auto sampleTime = 1.0 / GetActiveProject()->GetRate();
-   mEnvelope->Paste
+   mEnvelope->PasteEnvelope
       (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
 }
 

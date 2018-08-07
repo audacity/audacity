@@ -131,7 +131,9 @@ public:
    // Envelope has no notion of rate and control point times are not quantized;
    // but a tolerance is needed in the Paste routine, and better to inform it
    // of an appropriate number, than use hidden arbitrary constants.
-   void Paste(double t0, const Envelope *e, double sampleDur);
+   // The function is called 'PasteEnvelope' rather than 'Paste' to make it
+   // easier to find where it is used in source code.
+   void PasteEnvelope(double t0, const Envelope *e, double sampleDur);
 
    void InsertSpace(double t0, double tlen);
 
