@@ -155,7 +155,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
       // left or right
-      const auto tolerance = kTimerInterval / 1000.0;
+      const auto tolerance = 1.5 * kTimerInterval / 1000.0;
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,
