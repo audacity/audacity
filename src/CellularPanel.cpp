@@ -225,6 +225,8 @@ void CellularPanel::HandleMotion
    auto handle = state.mUIHandle;
 
    auto newCell = tpmState.pCell;
+   auto oldCell = state.mLastCell.lock();
+   auto oldHandle = Target();
 
    wxString status{}, tooltip{};
    wxCursor *pCursor{};
@@ -241,8 +243,6 @@ void CellularPanel::HandleMotion
    else if ( !state.mUIHandle ) {
       // Not yet dragging.
 
-      auto oldCell = state.mLastCell.lock();
-
       unsigned updateFlags = state.mMouseOverUpdateFlags;
 
       // First check whether crossing cell to cell
@@ -258,7 +258,6 @@ void CellularPanel::HandleMotion
          }
       }
 
-      auto oldHandle = Target();
       auto oldPosition = state.mTarget;
 
       // Now do the
@@ -266,7 +265,6 @@ void CellularPanel::HandleMotion
       state.mTargets.clear();
       if (newCell)
          state.mTargets = newCell->HitTest(tpmState, GetProject());
-
       state.mTarget = 0;
 
       // Find the old target's NEW place if we can
@@ -277,7 +275,7 @@ void CellularPanel::HandleMotion
             size_t newPosition = iter - begin;
             if (newPosition <= oldPosition)
                state.mTarget = newPosition;
-            // else, some NEW hit and this position takes priority
+            // else, some NEW hit at this position takes priority
          }
       }
 
@@ -291,6 +289,9 @@ void CellularPanel::HandleMotion
 
       if (handle && handle != oldHandle)
          handle->Enter(true);
+
+      if (oldHandle == handle)
+         oldHandle.reset();
    }
 
    // UIHANDLE PREVIEW
@@ -323,18 +324,25 @@ void CellularPanel::HandleMotion
       pCursor = &defaultCursor;
    }
 
-   UpdateStatusMessage(status);
+   // Update status, tooltip, and cursor only if we're dragging, or the mouse
+   // was in one of our cells and nobody else is dragging
+   if (handle || (newCell && !wxWindow::GetCapture())) {
+      UpdateStatusMessage(status);
 
 #if wxUSE_TOOLTIPS
-   if (tooltip != GetToolTipText()) {
-      // Unset first, by analogy with AButton
-      UnsetToolTip();
-      SetToolTip(tooltip);
-   }
+      if (tooltip != GetToolTipText()) {
+         // Unset first, by analogy with AButton
+         UnsetToolTip();
+         SetToolTip(tooltip);
+      }
 #endif
 
-   if (pCursor)
-      SetCursor( *pCursor );
+      if (pCursor)
+         SetCursor( *pCursor );
+   }
+   else if ( oldCell || oldHandle )
+      // Leaving a cell or hit test target with no replacement
+      UpdateStatusMessage( wxString{} );
 
    if (newCell)
       ProcessUIHandleResult(newCell.get(), newCell.get(), refreshCode);
