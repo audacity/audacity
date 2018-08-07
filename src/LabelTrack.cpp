@@ -2327,7 +2327,8 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             break;
 
          const wxString strValue = value;
-         if (!XMLValueChecker::IsGoodString(strValue))
+         // Bug 1905 was about long label strings.
+         if (!XMLValueChecker::IsGoodLongString(strValue))
          {
             return false;
          }
