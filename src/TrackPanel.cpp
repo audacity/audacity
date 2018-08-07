@@ -721,6 +721,11 @@ void TrackPanel::UpdateStatusMessage( const wxString &st )
    mListener->TP_DisplayStatusMessage(status);
 }
 
+bool TrackPanel::TakesFocus() const
+{
+   return true;
+}
+
 void TrackPanel::UpdateSelectionDisplay()
 {
    // Full refresh since the label area may need to indicate

@@ -466,6 +466,8 @@ private:
 
    void UpdateStatusMessage( const wxString & ) override;
 
+   bool TakesFocus() const override;
+
    void CreateOverlays();
 
    // Cooperating objects

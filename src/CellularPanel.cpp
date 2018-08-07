@@ -94,7 +94,7 @@ void CellularPanel::HandleInterruptedDrag()
    }
 }
 
-void CellularPanel::Uncapture(wxMouseState *pState)
+void CellularPanel::Uncapture(bool escaping, wxMouseState *pState)
 {
    auto state = ::wxGetMouseState();
    if (!pState) {
@@ -107,12 +107,14 @@ void CellularPanel::Uncapture(wxMouseState *pState)
       ReleaseMouse();
    HandleMotion( *pState );
 
-   auto lender = GetProject()->mFocusLender.get();
-   if (lender)
-      lender->SetFocus();
+   if (escaping || !TakesFocus()) {
+      auto lender = GetProject()->mFocusLender.get();
+      if (lender)
+         lender->SetFocus();
+   }
 }
 
-bool CellularPanel::CancelDragging()
+bool CellularPanel::CancelDragging( bool escaping )
 {
    auto &state = *mState;
    if (state.mUIHandle) {
@@ -127,7 +129,7 @@ bool CellularPanel::CancelDragging()
             refreshResult | state.mMouseOverUpdateFlags );
       state.mpClickedCell.reset();
       state.mUIHandle.reset(), handle.reset(), ClearTargets();
-      Uncapture();
+      Uncapture( escaping );
       return true;
    }
    return false;
@@ -148,7 +150,7 @@ bool CellularPanel::HandleEscapeKey(bool down)
 
    auto &state = *mState;
    if (state.mUIHandle) {
-      CancelDragging();
+      CancelDragging( true );
       return true;
    }
 
@@ -690,7 +692,7 @@ try
          ::wxGetMouseState().ButtonIsDown(wxMOUSE_BTN_ANY);
 
       if(!buttons) {
-         CancelDragging();
+         CancelDragging( false );
 
 #if defined(__WXMAC__)
 
@@ -717,7 +719,7 @@ try
             // Drag decided to abort itself
             state.mUIHandle.reset(), handle.reset(), ClearTargets();
             state.mpClickedCell.reset();
-            Uncapture( &event );
+            Uncapture( false, &event );
          }
          else {
             UpdateMouseState(event);
@@ -753,15 +755,15 @@ try
    }
 
    if (event.ButtonUp())
-      Uncapture();
+      Uncapture( false );
 }
 catch( ... )
 {
    // Abort any dragging, as if by hitting Esc
-   if ( CancelDragging() )
+   if ( CancelDragging( true ) )
       ;
    else {
-      Uncapture();
+      Uncapture( true );
       Refresh(false);
    }
    throw;

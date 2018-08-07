@@ -2727,7 +2727,7 @@ void AdornedRulerPanel::OnRecordStartStop(wxCommandEvent & evt)
    if (evt.GetInt() != 0)
    {
       mIsRecording = true;
-      this->CellularPanel::CancelDragging();
+      this->CellularPanel::CancelDragging( false );
       this->CellularPanel::ClearTargets();
 
       UpdateButtonStates();
@@ -3778,6 +3778,11 @@ void AdornedRulerPanel::ProcessUIHandleResult
 void AdornedRulerPanel::UpdateStatusMessage( const wxString &message )
 {
    GetProject()->TP_DisplayStatusMessage(message);
+}
+
+bool AdornedRulerPanel::TakesFocus() const
+{
+   return false;
 }
 
 void AdornedRulerPanel::CreateOverlays()

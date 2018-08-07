@@ -482,6 +482,8 @@ protected:
 
    void UpdateStatusMessage( const wxString &status ) override;
 
+   bool TakesFocus() const override;
+   
    // friending GetInfoCommand allow automation to get sizes of the
    // tracks, track control panel and such.
    friend class GetInfoCommand;

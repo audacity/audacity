@@ -58,6 +58,10 @@ public:
    
    virtual void UpdateStatusMessage( const wxString & )  = 0;
    
+   // Whether this panel keeps focus after a click and drag, or only borrows
+   // it.
+   virtual bool TakesFocus() const = 0;
+   
 public:
    UIHandlePtr Target();
    
@@ -71,7 +75,7 @@ public:
    
 protected:
    bool HasEscape();
-   bool CancelDragging();
+   bool CancelDragging( bool escaping );
    void DoContextMenu( TrackPanelCell *pCell = nullptr );
    void ClearTargets();
    
@@ -92,7 +96,7 @@ private:
    void OnContextMenu(wxContextMenuEvent & event);
    
    void HandleInterruptedDrag();
-   void Uncapture( wxMouseState *pState = nullptr );
+   void Uncapture( bool escaping, wxMouseState *pState = nullptr );
    bool HandleEscapeKey(bool down);
    void UpdateMouseState(const wxMouseState &state);
    void HandleModifierKey();
