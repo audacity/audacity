@@ -4729,9 +4729,16 @@ static void DoSoftwarePlaythrough(const void *inputBuffer,
 
 int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer,
-// If there were more of these conditionally used arguments, it 
-// could make sense to make a NEW macro that looks like this:
-// USEDIF( EXPERIMENTAL_MIDI_OUT, timeInfo )
+                          const PaStreamCallbackTimeInfo *timeInfo,
+                          const PaStreamCallbackFlags statusFlags, void *userData )
+{
+   return gAudioIO->AudioCallback(
+      inputBuffer, outputBuffer, framesPerBuffer,
+      timeInfo, statusFlags, userData);
+}
+
+int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
+                          unsigned long framesPerBuffer,
 #ifdef EXPERIMENTAL_MIDI_OUT
                           const PaStreamCallbackTimeInfo *timeInfo,
 #else
@@ -4739,9 +4746,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
                           const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
 {
-   auto numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
-   auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
-   auto numCaptureChannels = gAudioIO->mNumCaptureChannels;
+   auto numPlaybackChannels = mNumPlaybackChannels;
+   auto numPlaybackTracks = mPlaybackTracks.size();
+   auto numCaptureChannels = mNumCaptureChannels;
    int callbackReturn = paContinue;
    void *tempBuffer = alloca(framesPerBuffer*sizeof(float)*
                              MAX(numCaptureChannels,numPlaybackChannels));
@@ -4750,29 +4757,29 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    // output meter may need samples untouched by volume emulation
    float *outputMeterFloats;
    outputMeterFloats =
-      (outputBuffer && gAudioIO->mEmulateMixerOutputVol &&
-                       gAudioIO->mMixerOutputVol != 1.0) ?
+      (outputBuffer && mEmulateMixerOutputVol &&
+                       mMixerOutputVol != 1.0) ?
          (float *)alloca(framesPerBuffer*numPlaybackChannels * sizeof(float)) :
          (float *)outputBuffer;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   if (gAudioIO->mCallbackCount++ == 0) {
+   if (mCallbackCount++ == 0) {
        // This is effectively mSystemMinusAudioTime when the buffer is empty:
-       gAudioIO->mStartTime = SystemTime(gAudioIO->mUsingAlsa) - gAudioIO->mT0;
+       mStartTime = SystemTime(mUsingAlsa) - mT0;
        // later, mStartTime - mSystemMinusAudioTime will tell us latency
    }
 
    /* GSW: Save timeInfo in case MidiPlayback needs it */
-   gAudioIO->mAudioCallbackClockTime = PaUtil_GetTime();
+   mAudioCallbackClockTime = PaUtil_GetTime();
 
    /* for Linux, estimate a smooth audio time as a slowly-changing
       offset from system time */
    // rnow is system time as a double to simplify math
-   double rnow = SystemTime(gAudioIO->mUsingAlsa);
+   double rnow = SystemTime(mUsingAlsa);
    // anow is next-sample-to-be-computed audio time as a double
-   double anow = gAudioIO->AudioTime();
+   double anow = AudioTime();
 
-   if (gAudioIO->mUsingAlsa) {
+   if (mUsingAlsa) {
       // timeInfo's fields are not all reliable.
 
       // enow is audio time estimated from our clock synchronization protocol,
@@ -4784,54 +4791,54 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       //   so we are using enow to smooth out this jitter, in fact to < 1ms.)
       // Add worst-case clock drift using previous framesPerBuffer:
       const auto increase =
-         gAudioIO->mAudioFramesPerBuffer * 0.0002 / gAudioIO->mRate;
-      gAudioIO->mSystemMinusAudioTime += increase;
-      gAudioIO->mSystemMinusAudioTimePlusLatency += increase;
-      double enow = rnow - gAudioIO->mSystemMinusAudioTime;
+         mAudioFramesPerBuffer * 0.0002 / mRate;
+      mSystemMinusAudioTime += increase;
+      mSystemMinusAudioTimePlusLatency += increase;
+      double enow = rnow - mSystemMinusAudioTime;
 
 
       // now, use anow instead if it is ahead of enow
       if (anow > enow) {
-         gAudioIO->mSystemMinusAudioTime = rnow - anow;
+         mSystemMinusAudioTime = rnow - anow;
          // Update our mAudioOutLatency estimate during the first 20 callbacks.
          // During this period, the buffer should fill. Once we have a good
          // estimate of mSystemMinusAudioTime (expected in fewer than 20 callbacks)
          // we want to stop the updating in case there is clock drift, which would
          // cause the mAudioOutLatency estimation to drift as well. The clock drift
          // in the first 20 callbacks should be negligible, however.
-         if (gAudioIO->mCallbackCount < 20) {
-            gAudioIO->mAudioOutLatency = gAudioIO->mStartTime -
-               gAudioIO->mSystemMinusAudioTime;
+         if (mCallbackCount < 20) {
+            mAudioOutLatency = mStartTime -
+               mSystemMinusAudioTime;
          }
-         gAudioIO->mSystemMinusAudioTimePlusLatency =
-            gAudioIO->mSystemMinusAudioTime + gAudioIO->mAudioOutLatency;
+         mSystemMinusAudioTimePlusLatency =
+            mSystemMinusAudioTime + mAudioOutLatency;
       }
    }
    else {
       // If not using Alsa, rely on timeInfo to have meaningful values that are
       // more precise than the output latency value reported at stream start.
-      gAudioIO->mSystemMinusAudioTime = rnow - anow;
-      gAudioIO->mSystemMinusAudioTimePlusLatency =
-         gAudioIO->mSystemMinusAudioTime +
+      mSystemMinusAudioTime = rnow - anow;
+      mSystemMinusAudioTimePlusLatency =
+         mSystemMinusAudioTime +
             (timeInfo->outputBufferDacTime - timeInfo->currentTime);
    }
 
-   gAudioIO->mAudioFramesPerBuffer = framesPerBuffer;
-   if (gAudioIO->IsPaused()
+   mAudioFramesPerBuffer = framesPerBuffer;
+   if (IsPaused()
        // PRL:  Why was this added?  Was it only because of the mysterious
        // initial leading zeroes, now solved by setting mStreamToken early?
-       || gAudioIO->mStreamToken <= 0
+       || mStreamToken <= 0
        )
-      gAudioIO->mNumPauseFrames += framesPerBuffer;
+      mNumPauseFrames += framesPerBuffer;
 
    // PRL:  Note that when there is a separate MIDI thread, it is effectively
    // blocked until the first visit to this line during a playback, and will
-   // not read gAudioIO->mSystemMinusAudioTimePlusLatency sooner:
-   gAudioIO->mNumFrames += framesPerBuffer;
+   // not read mSystemMinusAudioTimePlusLatency sooner:
+   mNumFrames += framesPerBuffer;
 
 #ifndef USE_MIDI_THREAD
-   if (gAudioIO->mMidiStream)
-      gAudioIO->FillMidiBuffers();
+   if (mMidiStream)
+      FillMidiBuffers();
 #endif
 
 #endif
@@ -4840,8 +4847,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
    /* Send data to recording VU meter if applicable */
 
-   if (gAudioIO->mInputMeter &&
-         !gAudioIO->mInputMeter->IsMeterDisabled() &&
+   if (mInputMeter &&
+         !mInputMeter->IsMeterDisabled() &&
          inputBuffer) {
       // get here if meters are actually live , and being updated
       /* It's critical that we don't update the meters while StopStream is
@@ -4853,22 +4860,22 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
        *     is allowed to actually do the updating.
        * Note that mUpdatingMeters must be set first to avoid a race condition.
        */
-      gAudioIO->mUpdatingMeters = true;
-      if (gAudioIO->mUpdateMeters) {
-         if (gAudioIO->mCaptureFormat == floatSample)
-            gAudioIO->mInputMeter->UpdateDisplay(numCaptureChannels,
+      mUpdatingMeters = true;
+      if (mUpdateMeters) {
+         if (mCaptureFormat == floatSample)
+            mInputMeter->UpdateDisplay(numCaptureChannels,
                                                  framesPerBuffer,
                                                  (float *)inputBuffer);
          else {
-            CopySamples((samplePtr)inputBuffer, gAudioIO->mCaptureFormat,
+            CopySamples((samplePtr)inputBuffer, mCaptureFormat,
                         (samplePtr)tempFloats, floatSample,
                         framesPerBuffer * numCaptureChannels);
-            gAudioIO->mInputMeter->UpdateDisplay(numCaptureChannels,
+            mInputMeter->UpdateDisplay(numCaptureChannels,
                                                  framesPerBuffer,
                                                  tempFloats);
          }
       }
-      gAudioIO->mUpdatingMeters = false;
+      mUpdatingMeters = false;
    }  // end recording VU meter update
 
    // Stop recording if 'silence' is detected
@@ -4882,31 +4889,31 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    //
    //      By using CallAfter(), we can schedule the call to the toolbar
    //      to run in the main GUI thread after the next event loop iteration.
-   if(gAudioIO->mPauseRec && inputBuffer && gAudioIO->mInputMeter) {
-      if(gAudioIO->mInputMeter->GetMaxPeak() < gAudioIO->mSilenceLevel ) {
-         if(!gAudioIO->IsPaused()) {
+   if(mPauseRec && inputBuffer && mInputMeter) {
+      if(mInputMeter->GetMaxPeak() < mSilenceLevel ) {
+         if(!IsPaused()) {
             AudacityProject *p = GetActiveProject();
             ControlToolBar *bar = p->GetControlToolBar();
             bar->CallAfter(&ControlToolBar::Pause);
          }
       }
       else {
-         if(gAudioIO->IsPaused()) {
+         if(IsPaused()) {
             AudacityProject *p = GetActiveProject();
             ControlToolBar *bar = p->GetControlToolBar();
             bar->CallAfter(&ControlToolBar::Pause);
          }
       }
    }
-   if( gAudioIO->mPaused )
+   if( mPaused )
    {
       if (outputBuffer && numPlaybackChannels > 0)
       {
          ClearSamples((samplePtr)outputBuffer, floatSample,
                       0, framesPerBuffer * numPlaybackChannels);
 
-         if (inputBuffer && gAudioIO->mSoftwarePlaythrough) {
-            DoSoftwarePlaythrough(inputBuffer, gAudioIO->mCaptureFormat,
+         if (inputBuffer && mSoftwarePlaythrough) {
+            DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
                                   numCaptureChannels,
                                   (float *)outputBuffer, (int)framesPerBuffer);
          }
@@ -4915,7 +4922,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       return paContinue;
    }
 
-   if (gAudioIO->mStreamToken > 0)
+   if (mStreamToken > 0)
    {
       //
       // Mix and copy to PortAudio's output buffer
@@ -4930,8 +4937,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          for( i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
             outputFloats[i] = 0.0;
 
-         if (inputBuffer && gAudioIO->mSoftwarePlaythrough) {
-            DoSoftwarePlaythrough(inputBuffer, gAudioIO->mCaptureFormat,
+         if (inputBuffer && mSoftwarePlaythrough) {
+            DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
                                   numCaptureChannels,
                                   (float *)outputBuffer, (int)framesPerBuffer);
          }
@@ -4945,76 +4952,76 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
          // While scrubbing, ignore seek requests
-         if (gAudioIO->mSeek && gAudioIO->mPlayMode == AudioIO::PLAY_SCRUB)
-            gAudioIO->mSeek = 0.0;
-         else if (gAudioIO->mSeek && gAudioIO->mPlayMode == AudioIO::PLAY_AT_SPEED)
-            gAudioIO->mSeek = 0.0;
+         if (mSeek && mPlayMode == AudioIO::PLAY_SCRUB)
+            mSeek = 0.0;
+         else if (mSeek && mPlayMode == AudioIO::PLAY_AT_SPEED)
+            mSeek = 0.0;
          else
 #endif
-         if (gAudioIO->mSeek)
+         if (mSeek)
          {
-            int token = gAudioIO->mStreamToken;
-            wxMutexLocker locker(gAudioIO->mSuspendAudioThread);
-            if (token != gAudioIO->mStreamToken)
+            int token = mStreamToken;
+            wxMutexLocker locker(mSuspendAudioThread);
+            if (token != mStreamToken)
                // This stream got destroyed while we waited for it
                return paAbort;
 
             // Pause audio thread and wait for it to finish
-            gAudioIO->mAudioThreadFillBuffersLoopRunning = false;
-            while( gAudioIO->mAudioThreadFillBuffersLoopActive == true )
+            mAudioThreadFillBuffersLoopRunning = false;
+            while( mAudioThreadFillBuffersLoopActive == true )
             {
                wxMilliSleep( 50 );
             }
 
             // Calculate the NEW time position
-            gAudioIO->mTime += gAudioIO->mSeek;
-            gAudioIO->mTime = gAudioIO->LimitStreamTime(gAudioIO->mTime);
-            gAudioIO->mSeek = 0.0;
+            mTime += mSeek;
+            mTime = LimitStreamTime(mTime);
+            mSeek = 0.0;
 
             // Reset mixer positions and flush buffers for all tracks
-            if(gAudioIO->mTimeTrack)
+            if(mTimeTrack)
                // Following gives negative when mT0 > mTime
-               gAudioIO->mWarpedTime =
-                  gAudioIO->mTimeTrack->ComputeWarpedLength
-                     (gAudioIO->mT0, gAudioIO->mTime);
+               mWarpedTime =
+                  mTimeTrack->ComputeWarpedLength
+                     (mT0, mTime);
             else
-               gAudioIO->mWarpedTime = gAudioIO->mTime - gAudioIO->mT0;
-            gAudioIO->mWarpedTime = std::abs(gAudioIO->mWarpedTime);
+               mWarpedTime = mTime - mT0;
+            mWarpedTime = std::abs(mWarpedTime);
 
             // Reset mixer positions and flush buffers for all tracks
             for (i = 0; i < numPlaybackTracks; i++)
             {
-               gAudioIO->mPlaybackMixers[i]->Reposition(gAudioIO->mTime);
+               mPlaybackMixers[i]->Reposition(mTime);
                const auto toDiscard =
-                  gAudioIO->mPlaybackBuffers[i]->AvailForGet();
+                  mPlaybackBuffers[i]->AvailForGet();
                const auto discarded =
-                  gAudioIO->mPlaybackBuffers[i]->Discard( toDiscard );
+                  mPlaybackBuffers[i]->Discard( toDiscard );
                // wxASSERT( discarded == toDiscard );
                // but we can't assert in this thread
                wxUnusedVar(discarded);
             }
 
             // Reload the ring buffers
-            gAudioIO->mAudioThreadShouldCallFillBuffersOnce = true;
-            while( gAudioIO->mAudioThreadShouldCallFillBuffersOnce == true )
+            mAudioThreadShouldCallFillBuffersOnce = true;
+            while( mAudioThreadShouldCallFillBuffersOnce == true )
             {
                wxMilliSleep( 50 );
             }
 
             // Reenable the audio thread
-            gAudioIO->mAudioThreadFillBuffersLoopRunning = true;
+            mAudioThreadFillBuffersLoopRunning = true;
 
             return paContinue;
          }
 
          unsigned numSolo = 0;
          for(unsigned t = 0; t < numPlaybackTracks; t++ )
-            if( gAudioIO->mPlaybackTracks[t]->GetSolo() )
+            if( mPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
-         auto numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
+         auto numMidiPlaybackTracks = mMidiPlaybackTracks.size();
          for( unsigned t = 0; t < numMidiPlaybackTracks; t++ )
-            if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() )
+            if( mMidiPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #endif
 
@@ -5034,7 +5041,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          decltype(framesPerBuffer) maxLen = 0;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
-            const WaveTrack *vt = gAudioIO->mPlaybackTracks[t].get();
+            const WaveTrack *vt = mPlaybackTracks[t].get();
 
             chans[chanCnt] = vt;
 
@@ -5067,13 +5074,13 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             // this is original code prior to r10680 -RBD
             if (cut)
             {
-               len = gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
+               len = mPlaybackBuffers[t]->Discard(framesPerBuffer);
                // keep going here.  
                // we may still need to issue a paComplete.
             }
             else
             {
-               len = gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
+               len = mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
                                                          floatSample,
                                                          framesPerBuffer);
                if (len < framesPerBuffer)
@@ -5108,11 +5115,11 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             if (cut)
             {
                len =
-                  gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
+                  mPlaybackBuffers[t]->Discard(framesPerBuffer);
             } else
             {
                len =
-                  gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempFloats,
+                  mPlaybackBuffers[t]->Get((samplePtr)tempFloats,
                                                      floatSample,
                                                      framesPerBuffer);
             }
@@ -5134,17 +5141,17 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             // the end, then we may have finished playing the entire
             // selection.
             if (bDone)
-               bDone = bDone && (gAudioIO->ReversedTime()
-                  ? gAudioIO->mTime <= gAudioIO->mT1
-                  : gAudioIO->mTime >= gAudioIO->mT1);
+               bDone = bDone && (ReversedTime()
+                  ? mTime <= mT1
+                  : mTime >= mT1);
 
             // We never finish if we are playing looped or or scrubbing.
             if (bDone) {
                // playing straight we must have no more audio.
-               if (gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT)
+               if (mPlayMode == AudioIO::PLAY_STRAIGHT)
                   bDone = (len == 0);
                // playing at speed, it is OK to have some audio left over.
-               else if (gAudioIO->mPlayMode == AudioIO::PLAY_AT_SPEED)
+               else if (mPlayMode == AudioIO::PLAY_AT_SPEED)
                   bDone = true;
                else
                   bDone = false;
@@ -5155,7 +5162,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                // PRL: singalling MIDI output complete is necessary if
                // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
 #ifdef EXPERIMENTAL_MIDI_OUT
-               gAudioIO->mMidiOutputComplete = true,
+               mMidiOutputComplete = true,
 #endif
                callbackReturn = paComplete;
             }
@@ -5179,8 +5186,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                         outputMeterFloats[numPlaybackChannels*i] +=
                            gain*tempFloats[i];
 
-                  if (gAudioIO->mEmulateMixerOutputVol)
-                     gain *= gAudioIO->mMixerOutputVol;
+                  if (mEmulateMixerOutputVol)
+                     gain *= mMixerOutputVol;
 
                   for(decltype(len) i = 0; i < len; i++)
                      outputFloats[numPlaybackChannels*i] += gain*tempBufs[c][i];
@@ -5197,8 +5204,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                         outputMeterFloats[numPlaybackChannels*i+1] +=
                            gain*tempFloats[i];
 
-                  if (gAudioIO->mEmulateMixerOutputVol)
-                     gain *= gAudioIO->mMixerOutputVol;
+                  if (mEmulateMixerOutputVol)
+                     gain *= mMixerOutputVol;
 
                   for(decltype(len) i = 0; i < len; i++)
                      outputFloats[numPlaybackChannels*i+1] += gain*tempBufs[c][i];
@@ -5211,16 +5218,16 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // about the time indicator being passed the end won't happen;
          // do it here instead (but not if looping or scrubbing)
          if (numPlaybackTracks == 0 &&
-            gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT)
+            mPlayMode == AudioIO::PLAY_STRAIGHT)
          {
-            if ((gAudioIO->ReversedTime()
-               ? gAudioIO->mTime <= gAudioIO->mT1
-               : gAudioIO->mTime >= gAudioIO->mT1)) {
+            if ((ReversedTime()
+               ? mTime <= mT1
+               : mTime >= mT1)) {
 
                // PRL: singalling MIDI output complete is necessary if
                // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
 #ifdef EXPERIMENTAL_MIDI_OUT
-               gAudioIO->mMidiOutputComplete = true,
+               mMidiOutputComplete = true,
 #endif
                callbackReturn = paComplete;
             }
@@ -5230,15 +5237,15 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // Update the current time position, for scrubbing
          // "Consume" only as much as the ring buffers produced, which may
          // be less than framesPerBuffer (during "stutter")
-         if (gAudioIO->mPlayMode == AudioIO::PLAY_SCRUB)
-            gAudioIO->mTime = gAudioIO->mScrubQueue->Consumer(maxLen);
-         else if (gAudioIO->mPlayMode == AudioIO::PLAY_AT_SPEED)
-            gAudioIO->mTime = gAudioIO->mScrubQueue->Consumer(maxLen);
+         if (mPlayMode == AudioIO::PLAY_SCRUB)
+            mTime = mScrubQueue->Consumer(maxLen);
+         else if (mPlayMode == AudioIO::PLAY_AT_SPEED)
+            mTime = mScrubQueue->Consumer(maxLen);
 #endif
 
          em.RealtimeProcessEnd();
 
-         gAudioIO->mLastPlaybackTimeMillis = ::wxGetLocalTimeMillis();
+         mLastPlaybackTimeMillis = ::wxGetLocalTimeMillis();
 
          //
          // Clip output to [-1.0,+1.0] range (msmeyer)
@@ -5274,7 +5281,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       {
          // If there are no playback tracks, and we are recording, then the
          // earlier checks for being passed the end won't happen, so do it here.
-         if (gAudioIO->mTime >= gAudioIO->mT1) {
+         if (mTime >= mT1) {
             callbackReturn = paComplete;
          }
 
@@ -5291,9 +5298,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          size_t len = framesPerBuffer;
          for(unsigned t = 0; t < numCaptureChannels; t++)
             len = std::min( len,
-                           gAudioIO->mCaptureBuffers[t]->AvailForPut());
+                           mCaptureBuffers[t]->AvailForPut());
 
-         if (gAudioIO->mSimulateRecordingErrors && 100LL * rand() < RAND_MAX)
+         if (mSimulateRecordingErrors && 100LL * rand() < RAND_MAX)
             // Make spurious errors for purposes of testing the error
             // reporting
             len = 0;
@@ -5302,21 +5309,21 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          // the other thread, executing FillBuffers, isn't consuming fast
          // enough from mCaptureBuffers; maybe it's CPU-bound, or maybe the
          // storage device it writes is too slow
-         if (gAudioIO->mDetectDropouts &&
-             ((gAudioIO->mDetectUpstreamDropouts && inputError) ||
+         if (mDetectDropouts &&
+             ((mDetectUpstreamDropouts && inputError) ||
               len < framesPerBuffer) ) {
             // Assume that any good partial buffer should be written leftmost
             // and zeroes will be padded after; label the zeroes.
-            auto start = gAudioIO->mTime + len / gAudioIO->mRate +
-                gAudioIO->mRecordingSchedule.mLatencyCorrection;
-            auto duration = (framesPerBuffer - len) / gAudioIO->mRate;
+            auto start = mTime + len / mRate +
+                mRecordingSchedule.mLatencyCorrection;
+            auto duration = (framesPerBuffer - len) / mRate;
             auto interval = std::make_pair( start, duration );
-            gAudioIO->mLostCaptureIntervals.push_back( interval );
+            mLostCaptureIntervals.push_back( interval );
          }
 
          if (len < framesPerBuffer)
          {
-            gAudioIO->mLostSamples += (framesPerBuffer - len);
+            mLostSamples += (framesPerBuffer - len);
             wxPrintf(wxT("lost %d samples\n"), (int)(framesPerBuffer - len));
          }
 
@@ -5329,7 +5336,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                // it'd be nice to be able to call CopySamples, but it can't
                // handle multiplying by the gain and then clipping.  Bummer.
 
-               switch(gAudioIO->mCaptureFormat) {
+               switch(mCaptureFormat) {
                case floatSample: {
                   float *inputFloats = (float *)inputBuffer;
                   for( i = 0; i < len; i++)
@@ -5358,8 +5365,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                } // switch
 
                const auto put =
-                  gAudioIO->mCaptureBuffers[t]->Put(
-                     (samplePtr)tempBuffer, gAudioIO->mCaptureFormat, len);
+                  mCaptureBuffers[t]->Put(
+                     (samplePtr)tempBuffer, mCaptureFormat, len);
                // wxASSERT(put == len);
                // but we can't assert in this thread
                wxUnusedVar(put);
@@ -5370,32 +5377,32 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       // Update the current time position if not scrubbing
       // (Already did it above, for scrubbing)
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-      if( (gAudioIO->mPlayMode != AudioIO::PLAY_SCRUB) &&
-         (gAudioIO->mPlayMode != AudioIO::PLAY_AT_SPEED) )
+      if( (mPlayMode != AudioIO::PLAY_SCRUB) &&
+         (mPlayMode != AudioIO::PLAY_AT_SPEED) )
 #endif
       {
-         double delta = framesPerBuffer / gAudioIO->mRate;
-         if (gAudioIO->ReversedTime())
+         double delta = framesPerBuffer / mRate;
+         if (ReversedTime())
             delta *= -1.0;
-         if (gAudioIO->mTimeTrack)
+         if (mTimeTrack)
             // MB: this is why SolveWarpedLength is needed :)
-            gAudioIO->mTime =
-               gAudioIO->mTimeTrack->SolveWarpedLength(gAudioIO->mTime, delta);
+            mTime =
+               mTimeTrack->SolveWarpedLength(mTime, delta);
          else
-            gAudioIO->mTime += delta;
+            mTime += delta;
       }
 
       // Wrap to start if looping
-      if (gAudioIO->mPlayMode == AudioIO::PLAY_LOOPED)
+      if (mPlayMode == AudioIO::PLAY_LOOPED)
       {
-         while (gAudioIO->ReversedTime()
-            ? gAudioIO->mTime <= gAudioIO->mT1
-            : gAudioIO->mTime >= gAudioIO->mT1)
+         while (ReversedTime()
+            ? mTime <= mT1
+            : mTime >= mT1)
          {
             // LL:  This is not exactly right, but I'm at my wits end trying to
             //      figure it out.  Feel free to fix it.  :-)
             // MB: it's much easier than you think, mTime isn't warped at all!
-            gAudioIO->mTime -= gAudioIO->mT1 - gAudioIO->mT0;
+            mTime -= mT1 - mT0;
          }
       }
 
@@ -5418,11 +5425,11 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       if (numCaptureChannels > 0 && numPlaybackChannels > 0) // simultaneously playing and recording
       {
          if (timeInfo->inputBufferAdcTime > 0)
-            gAudioIO->mLastRecordingOffset = timeInfo->inputBufferAdcTime - timeInfo->outputBufferDacTime;
-         else if (gAudioIO->mLastRecordingOffset == 0.0)
+            mLastRecordingOffset = timeInfo->inputBufferAdcTime - timeInfo->outputBufferDacTime;
+         else if (mLastRecordingOffset == 0.0)
          {
-            const PaStreamInfo* si = Pa_GetStreamInfo( gAudioIO->mPortStreamV19 );
-            gAudioIO->mLastRecordingOffset = -si->inputLatency;
+            const PaStreamInfo* si = Pa_GetStreamInfo( mPortStreamV19 );
+            mLastRecordingOffset = -si->inputLatency;
          }
       }
      #endif
@@ -5436,8 +5443,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          for( i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
             outputFloats[i] = 0.0;
 
-         if (inputBuffer && gAudioIO->mSoftwarePlaythrough) {
-            DoSoftwarePlaythrough(inputBuffer, gAudioIO->mCaptureFormat,
+         if (inputBuffer && mSoftwarePlaythrough) {
+            DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
                                   numCaptureChannels,
                                   (float *)outputBuffer, (int)framesPerBuffer);
          }
@@ -5452,8 +5459,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
    }
    /* Send data to playback VU meter if applicable */
-   if (gAudioIO->mOutputMeter &&
-      !gAudioIO->mOutputMeter->IsMeterDisabled() &&
+   if (mOutputMeter &&
+      !mOutputMeter->IsMeterDisabled() &&
       outputMeterFloats) {
       // Get here if playback meter is live
       /* It's critical that we don't update the meters while StopStream is
@@ -5465,9 +5472,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
        *    is allowed to actually do the updating.
        * Note that mUpdatingMeters must be set first to avoid a race condition.
        */
-      gAudioIO->mUpdatingMeters = true;
-      if (gAudioIO->mUpdateMeters) {
-         gAudioIO->mOutputMeter->UpdateDisplay(numPlaybackChannels,
+      mUpdatingMeters = true;
+      if (mUpdateMeters) {
+         mOutputMeter->UpdateDisplay(numPlaybackChannels,
                                                framesPerBuffer,
                                                outputMeterFloats);
 
@@ -5481,10 +5488,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          //AudacityProject* pProj = GetActiveProject();
          //MixerBoard* pMixerBoard = pProj->GetMixerBoard();
          //if (pMixerBoard)
-         //   pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(),
+         //   pMixerBoard->UpdateMeters(GetStreamTime(),
          //                              (pProj->mLastPlayMode == loopedPlay));
       }
-      gAudioIO->mUpdatingMeters = false;
+      mUpdatingMeters = false;
    }  // end playback VU meter update
 
    return callbackReturn;
