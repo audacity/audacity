@@ -3606,7 +3606,10 @@ auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell
    if (mayScrub && mScrubZone.Contains(mouseX, mouseY))
       return { mScrubbingCell, mScrubZone };
 
-   return { mQPCell, mInner };
+   if (mInner.Contains(mouseX, mouseY))
+      return { mQPCell, mInner };
+
+   return {};
 }
 
 wxRect AdornedRulerPanel::FindRect(const TrackPanelCell &cell)

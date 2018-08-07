@@ -2087,15 +2087,13 @@ auto TrackPanel::FindCell(int mouseX, int mouseY) -> FoundCell
 {
    auto range = Cells();
    auto &iter = range.first, &end = range.second;
-   auto prev = iter;
    while
       ( iter != end &&
         !(*iter).second.Contains( mouseX, mouseY ) )
-      prev = iter++;
-   if ( iter == end )
-      // Default to the background cell, which is always last in the sequence,
-      // even if it does not contain the point
-      iter = prev;
+      ++iter;
+   if (iter == end)
+      return {};
+
    auto found = *iter;
    return {
       found.first,
