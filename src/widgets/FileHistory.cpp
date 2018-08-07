@@ -146,6 +146,7 @@ void FileHistory::Load(wxConfigBase & config, const wxString & group)
 
 void FileHistory::Save(wxConfigBase & config, const wxString & group)
 {
+   config.SetPath(wxT(""));
    config.DeleteGroup(group);
    config.SetPath(group);
 
@@ -155,7 +156,7 @@ void FileHistory::Save(wxConfigBase & config, const wxString & group)
       config.Write(wxString::Format(wxT("file%02d"), (int)i), mHistory[n--]);
    }
 
-   config.SetPath(wxT(".."));
+   config.SetPath(wxT(""));
 }
 
 void FileHistory::AddFilesToMenu()
