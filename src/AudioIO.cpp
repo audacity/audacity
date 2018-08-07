@@ -2299,7 +2299,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    // FillBuffers will ALWAYS get called from the Audio thread.
    mAudioThreadShouldCallFillBuffersOnce = true;
 
-   while( mAudioThreadShouldCallFillBuffersOnce == true ) {
+   while( mAudioThreadShouldCallFillBuffersOnce ) {
       if (mScrubQueue)
          mScrubQueue->Nudge();
       wxMilliSleep( 50 );
@@ -2719,7 +2719,7 @@ void AudioIO::StopStream()
       // Pa_GetStreamActive() would now return false
       mAudioThreadShouldCallFillBuffersOnce = true;
 
-      while( mAudioThreadShouldCallFillBuffersOnce == true )
+      while( mAudioThreadShouldCallFillBuffersOnce )
       {
          // LLL:  Experienced recursive yield here...once.
          wxGetApp().Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
@@ -4968,7 +4968,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
             // Pause audio thread and wait for it to finish
             mAudioThreadFillBuffersLoopRunning = false;
-            while( mAudioThreadFillBuffersLoopActive == true )
+            while( mAudioThreadFillBuffersLoopActive )
             {
                wxMilliSleep( 50 );
             }
@@ -5003,7 +5003,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
             // Reload the ring buffers
             mAudioThreadShouldCallFillBuffersOnce = true;
-            while( mAudioThreadShouldCallFillBuffersOnce == true )
+            while( mAudioThreadShouldCallFillBuffersOnce )
             {
                wxMilliSleep( 50 );
             }
