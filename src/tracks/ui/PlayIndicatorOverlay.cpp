@@ -153,10 +153,13 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;
 
+      // Use a small tolerance to avoid flicker of play head pinned all the way
+      // left or right
+      const auto tolerance = kTimerInterval / 1000.0;
       bool onScreen = playPos >= 0.0 &&
-         between_incexc(viewInfo.h,
+         between_incexc(viewInfo.h - tolerance,
          playPos,
-         mProject->GetScreenEndTime());
+         mProject->GetScreenEndTime() + tolerance);
 
       // This displays the audio time, too...
       mProject->TP_DisplaySelection();
