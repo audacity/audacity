@@ -241,6 +241,7 @@ PrefsDialog::PrefsDialog
 {
    wxASSERT(factories.size() > 0);
    const bool uniquePage = (factories.size() == 1);
+   SetLayoutDirection(wxLayout_LeftToRight);
 
    ShuttleGui S(this, eIsCreating);
 
