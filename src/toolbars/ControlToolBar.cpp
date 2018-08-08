@@ -1341,6 +1341,19 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+
+   // Bug 1494 - Pausing a seek or scrub should just STOP as
+   // it is confusing to be in a paused scrub state.
+   bool bStopInstead = mPaused && 
+      gAudioIO->IsScrubbing() && 
+      !GetActiveProject()->GetScrubber().IsSpeedPlaying();
+
+   if (bStopInstead) {
+      wxCommandEvent dummy;
+      OnStop(dummy);
+      return;
+   }
+   
    if (gAudioIO->IsScrubbing())
       GetActiveProject()->GetScrubber().Pause(mPaused);
    else
