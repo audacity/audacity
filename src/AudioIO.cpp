@@ -1206,7 +1206,6 @@ AudioIO::AudioIO()
    mLastRecordingOffset = 0.0;
    mNumCaptureChannels = 0;
    mPaused = false;
-   mPlaybackSchedule.ResetMode();
 
    mListener = NULL;
    mUpdateMeters = false;
@@ -1917,22 +1916,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
 
-   if ( !tracks.captureTracks.empty() ) {
-      // It does not make sense to apply the time warp during overdub recording,
-      // which defeats the purpose of making the recording synchronized with
-      // the existing audio.  (Unless we figured out the inverse warp of the
-      // captured samples in real time.)
-      // So just quietly ignore the time track.
-      mPlaybackSchedule.mTimeTrack = nullptr;
-   }
-   else {
-      mPlaybackSchedule.mTimeTrack = options.timeTrack;
-   }
-
    // Clamp pre-roll so we don't play before time 0
    const auto preRoll = std::max(0.0, std::min(t0, options.preRoll));
-   mPlaybackSchedule.mT0      = t0 - preRoll;
-   mPlaybackSchedule.mT1      = t1;
    mRecordingSchedule = {};
    mRecordingSchedule.mPreRoll = preRoll;
    mRecordingSchedule.mLatencyCorrection =
@@ -1940,16 +1925,12 @@ int AudioIO::StartStream(const TransportTracks &tracks,
                    DEFAULT_LATENCY_CORRECTION))
          / 1000.0;
    mRecordingSchedule.mDuration = t1 - t0;
-   if (tracks.captureTracks.size() > 0)
-      // adjust mT1 so that we don't give paComplete too soon to fill up the
-      // desired length of recording
-      mPlaybackSchedule.mT1 -= mRecordingSchedule.mLatencyCorrection;
    if (options.pCrossfadeData)
       mRecordingSchedule.mCrossfadeData.swap( *options.pCrossfadeData );
 
    mListener = options.listener;
    mRate    = sampleRate;
-   mPlaybackSchedule.mTime    = mPlaybackSchedule.mT0;
+
    mSeek    = 0;
    mLastRecordingOffset = 0;
    mCaptureTracks = tracks.captureTracks;
@@ -1967,14 +1948,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
          mMidiPlaybackTracks.clear();
 #endif
+
+         // Don't cause a busy wait in the audio thread after stopping scrubbing
+         mPlaybackSchedule.ResetMode();
       }
    });
-
-   mPlaybackSchedule.mPlayMode = options.playLooped
-      ? PlaybackSchedule::PLAY_LOOPED
-      : PlaybackSchedule::PLAY_STRAIGHT;
-   mPlaybackSchedule.mCutPreviewGapStart = options.cutPreviewGapStart;
-   mPlaybackSchedule.mCutPreviewGapLen = options.cutPreviewGapLen;
 
    mPlaybackBuffers.reset();
    mPlaybackMixers.reset();
@@ -1988,36 +1966,12 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    streamStartTime = SystemTime(mUsingAlsa);
 #endif
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   bool scrubbing = (options.pScrubbingOptions != nullptr);
-
-   // Scrubbing is not compatible with looping or recording or a time track!
+   mPlaybackSchedule.Init(
+      t0, t1, options, mCaptureTracks.empty() ? nullptr : &mRecordingSchedule );
+   const bool scrubbing = mPlaybackSchedule.Interactive();
    if (scrubbing)
-   {
-      const auto &scrubOptions = *options.pScrubbingOptions;
-
-      if (mCaptureTracks.size() > 0 ||
-          mPlaybackSchedule.Looping() ||
-          mPlaybackSchedule.mTimeTrack != NULL ||
-          scrubOptions.maxSpeed < ScrubbingOptions::MinAllowedScrubSpeed()) {
-         wxASSERT(false);
-         scrubbing = false;
-      }
-      else {
-         playbackTime = lrint(scrubOptions.delay * sampleRate) / sampleRate;
-         mPlaybackSchedule.mPlayMode = (scrubOptions.isPlayingAtSpeed) ? PlaybackSchedule::PLAY_AT_SPEED : PlaybackSchedule::PLAY_SCRUB;
-      }
-   }
-#endif
-
-   mPlaybackSchedule.mWarpedTime = 0.0;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (mPlaybackSchedule.Scrubbing())
-      mPlaybackSchedule.mWarpedLength = 0.0f;
-   else
-#endif
-      mPlaybackSchedule.mWarpedLength =
-         mPlaybackSchedule.RealDuration(mPlaybackSchedule.mT1);
+      playbackTime =
+         lrint(options.pScrubbingOptions->delay * sampleRate) / sampleRate;
 
    //
    // The RingBuffer sizes, and the max amount of the buffer to
@@ -2098,9 +2052,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       if (mListener && captureChannels > 0)
          mListener->OnAudioIOStopRecording();
       mStreamToken = 0;
-
-      // Don't cause a busy wait in the audio thread after stopping scrubbing
-      mPlaybackSchedule.ResetMode();
 
       return 0;
    }
@@ -2396,10 +2347,6 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    mScrubQueue.reset();
 #endif
-
-
-   // Don't cause a busy wait in the audio thread after stopping scrubbing
-   mPlaybackSchedule.ResetMode();
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -2903,6 +2850,69 @@ bool AudioIO::IsAudioTokenActive(int token)
 bool AudioIO::IsMonitoring()
 {
    return ( mPortStreamV19 && mStreamToken==0 );
+}
+
+void AudioIO::PlaybackSchedule::Init(
+   const double t0, const double t1,
+   const AudioIOStartStreamOptions &options,
+   const RecordingSchedule *pRecordingSchedule )
+{
+   if ( pRecordingSchedule )
+      // It does not make sense to apply the time warp during overdub recording,
+      // which defeats the purpose of making the recording synchronized with
+      // the existing audio.  (Unless we figured out the inverse warp of the
+      // captured samples in real time.)
+      // So just quietly ignore the time track.
+      mTimeTrack = nullptr;
+   else
+      mTimeTrack = options.timeTrack;
+
+   mT0      = t0;
+   if (pRecordingSchedule)
+      mT0 -= pRecordingSchedule->mPreRoll;
+
+   mT1      = t1;
+   if (pRecordingSchedule)
+      // adjust mT1 so that we don't give paComplete too soon to fill up the
+      // desired length of recording
+      mT1 -= pRecordingSchedule->mLatencyCorrection;
+
+   mTime    = mT0;
+
+   mPlayMode = options.playLooped
+      ? PlaybackSchedule::PLAY_LOOPED
+      : PlaybackSchedule::PLAY_STRAIGHT;
+   mCutPreviewGapStart = options.cutPreviewGapStart;
+   mCutPreviewGapLen = options.cutPreviewGapLen;
+
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   bool scrubbing = (options.pScrubbingOptions != nullptr);
+
+   // Scrubbing is not compatible with looping or recording or a time track!
+   if (scrubbing)
+   {
+      const auto &scrubOptions = *options.pScrubbingOptions;
+      if (pRecordingSchedule ||
+          Looping() ||
+          mTimeTrack != NULL ||
+          scrubOptions.maxSpeed < ScrubbingOptions::MinAllowedScrubSpeed()) {
+         wxASSERT(false);
+         scrubbing = false;
+      }
+      else
+         mPlayMode = (scrubOptions.isPlayingAtSpeed)
+            ? PlaybackSchedule::PLAY_AT_SPEED
+            : PlaybackSchedule::PLAY_SCRUB;
+   }
+#endif
+
+   mWarpedTime = 0.0;
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   if (Scrubbing())
+      mWarpedLength = 0.0f;
+   else
+#endif
+      mWarpedLength = RealDuration(mT1);
 }
 
 double AudioIO::PlaybackSchedule::LimitStreamTime() const
@@ -4960,7 +4970,6 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             mPlaybackSchedule.mTime = mPlaybackSchedule.LimitStreamTime();
             mSeek = 0.0;
 
-            // Reset mixer positions and flush buffers for all tracks
             mPlaybackSchedule.RealTimeInit();
 
             // Reset mixer positions and flush buffers for all tracks

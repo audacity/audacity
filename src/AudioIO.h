@@ -805,6 +805,24 @@ public:
    // detect more dropouts
    bool mDetectUpstreamDropouts{ true };
 
+private:
+   struct RecordingSchedule {
+      double mPreRoll{};
+      double mLatencyCorrection{}; // negative value usually
+      double mDuration{};
+      PRCrossfadeData mCrossfadeData;
+
+      // These are initialized by the main thread, then updated
+      // only by the thread calling FillBuffers:
+      double mPosition{};
+      bool mLatencyCorrected{};
+
+      double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
+      double ToConsume() const;
+      double Consumed() const;
+      double ToDiscard() const;
+   } mRecordingSchedule{};
+
    struct PlaybackSchedule {
       /// Playback starts at offset of mT0, which is measured in seconds.
       double              mT0;
@@ -840,10 +858,15 @@ public:
          PLAY_SCRUB,
          PLAY_AT_SPEED, // a version of PLAY_SCRUB.
 #endif
-      }                   mPlayMode;
+      }                   mPlayMode { PLAY_STRAIGHT };
       double              mCutPreviewGapStart;
       double              mCutPreviewGapLen;
-      
+
+      void Init(
+         double t0, double t1,
+         const AudioIOStartStreamOptions &options,
+         const RecordingSchedule *pRecordingSchedule );
+
       /** \brief True if the end time is before the start time */
       bool ReversedTime() const
       {
@@ -899,24 +922,6 @@ public:
       void RealTimeRestart();
 
    } mPlaybackSchedule;
-
-private:
-   struct RecordingSchedule {
-      double mPreRoll{};
-      double mLatencyCorrection{}; // negative value usually
-      double mDuration{};
-      PRCrossfadeData mCrossfadeData;
-
-      // These are initialized by the main thread, then updated
-      // only by the thread calling FillBuffers:
-      double mPosition{};
-      bool mLatencyCorrected{};
-
-      double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
-      double ToConsume() const;
-      double Consumed() const;
-      double ToDiscard() const;
-   } mRecordingSchedule{};
 };
 
 #endif
