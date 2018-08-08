@@ -4553,7 +4553,7 @@ void AudioIO::AILAInitialize() {
    mAILAGoalPoint         /= 100.0;
    mAILAAnalysisTime      /= 1000.0;
    mAILAMax                = 0.0;
-   mAILALastStartTime      = max(0.0, mT0);
+   mAILALastStartTime      = max(0.0, mPlaybackSchedule.mT0);
    mAILAClipped            = false;
    mAILAAnalysisCounter    = 0;
    mAILAChangeFactor       = 1.0;
@@ -4589,9 +4589,15 @@ void AudioIO::AILAProcess(double maxPeak) {
 
       mAILAMax = max(mAILAMax, maxPeak);
 
-      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mTime - mAILALastStartTime >= mAILAAnalysisTime) {
+      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mPlaybackSchedule.mTime - mAILALastStartTime >= mAILAAnalysisTime) {
+         auto ToLinearIfDB = [](double value, int dbRange) {
+            if (dbRange >= 0)
+               value = pow(10.0, (-(1.0-value) * dbRange)/20.0);
+            return value;
+         };
+
          putchar('\n');
-         mAILAMax = mInputMeter ? mInputMeter->ToLinearIfDB(mAILAMax) : 0.0;
+         mAILAMax = mInputMeter ? ToLinearIfDB(mAILAMax, mInputMeter->GetDBRange()) : 0.0;
          double iv = (double) Px_GetInputVolume(mPortMixer);
          unsigned short changetype = 0; //0 - no change, 1 - increase change, 2 - decrease change
          wxPrintf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);
@@ -4664,7 +4670,7 @@ void AudioIO::AILAProcess(double maxPeak) {
          mAILAMax             = 0;
          wxPrintf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
          mAILAClipped         = false;
-         mAILALastStartTime   = mTime;
+         mAILALastStartTime   = mPlaybackSchedule.mTime;
 
          if (changetype == 0)
             mAILAChangeFactor *= 0.8; //time factor

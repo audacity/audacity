@@ -189,6 +189,8 @@ class MeterPanel final : public wxPanelWrapper
    State SaveState();
    void RestoreState(const State &state);
 
+   int GetDBRange() const { return mDB ? mDBRange : -1; }
+
  private:
    static bool s_AcceptsFocus;
    struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };

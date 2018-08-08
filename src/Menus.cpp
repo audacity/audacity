@@ -3042,7 +3042,8 @@ void AudacityProject::OnToggleSWPlaythrough(const CommandContext &WXUNUSED(conte
 }
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-void AudacityProject::OnToggleAutomatedInputLevelAdjustment()
+void AudacityProject::OnToggleAutomatedInputLevelAdjustment(
+   const CommandContext &WXUNUSED(context) )
 {
    bool AVEnabled;
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
