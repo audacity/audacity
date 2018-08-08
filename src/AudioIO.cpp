@@ -5474,7 +5474,7 @@ double AudioIO::PlaybackSchedule::RealTimeRemaining() const
 
 void AudioIO::PlaybackSchedule::RealTimeAdvance( double increment )
 {
-   mWarpedLength += increment;
+   mWarpedTime += increment;
 }
 
 void AudioIO::PlaybackSchedule::RealTimeInit()
