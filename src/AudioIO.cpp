@@ -2487,8 +2487,7 @@ void AudioIO::SetMeters()
    if (mOutputMeter)
       mOutputMeter->Reset(mRate, true);
 
-   AudacityProject* pProj = GetActiveProject();
-   MixerBoard* pMixerBoard = pProj->GetMixerBoard();
+   MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
    if (pMixerBoard)
       pMixerBoard->ResetMeters(true);
 
@@ -2723,8 +2722,7 @@ void AudioIO::StopStream()
             }
          }
 
-         AudacityProject *p = GetActiveProject();
-         ControlToolBar *bar = p->GetControlToolBar();
+         ControlToolBar *bar = mOwningProject->GetControlToolBar();
          bar->CommitRecording();
       }
    }
@@ -4580,7 +4578,7 @@ double AudioIO::AILAGetLastDecisionTime() {
 }
 
 void AudioIO::AILAProcess(double maxPeak) {
-   AudacityProject *proj = GetActiveProject();
+   AudacityProject *const proj = mOwningProject);
    if (proj && mAILAActive) {
       if (mInputMeter && mInputMeter->IsClipping()) {
          mAILAClipped = true;
@@ -4892,15 +4890,13 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
    if(mPauseRec && inputBuffer && mInputMeter) {
       if(mInputMeter->GetMaxPeak() < mSilenceLevel ) {
          if(!IsPaused()) {
-            AudacityProject *p = GetActiveProject();
-            ControlToolBar *bar = p->GetControlToolBar();
+            ControlToolBar *bar = mOwningProject->GetControlToolBar();
             bar->CallAfter(&ControlToolBar::Pause);
          }
       }
       else {
          if(IsPaused()) {
-            AudacityProject *p = GetActiveProject();
-            ControlToolBar *bar = p->GetControlToolBar();
+            ControlToolBar *bar = mOwningProject->GetControlToolBar();
             bar->CallAfter(&ControlToolBar::Pause);
          }
       }
@@ -5403,8 +5399,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now.
          // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of event
          // type EVT_TRACK_PANEL_TIMER
-         //AudacityProject* pProj = GetActiveProject();
-         //MixerBoard* pMixerBoard = pProj->GetMixerBoard();
+         //MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
          //if (pMixerBoard)
          //   pMixerBoard->UpdateMeters(GetStreamTime(),
          //                              (pProj->mLastPlayMode == loopedPlay));
