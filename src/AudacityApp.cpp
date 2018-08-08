@@ -1487,6 +1487,8 @@ bool AudacityApp::OnInit()
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **)AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
+   if( GetLayoutDirection() == wxLayout_RightToLeft)
+      logoimage = logoimage.Mirror();
    wxBitmap logo(logoimage);
 
    AudacityProject *project;
@@ -1512,7 +1514,7 @@ bool AudacityApp::OnInit()
       // now appears before setting its position.
       // On a dual monitor screen it will appear on one screen and then 
       // possibly jump to the second.
-      // We could fix this by writing outr own splash screen and using Hide() 
+      // We could fix this by writing our own splash screen and using Hide() 
       // until the splash scren was correctly positioned, then Show()
 
       // Possibly move it on to the second screen...

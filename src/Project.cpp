@@ -1008,6 +1008,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       wxSize{ this->GetSize().GetWidth(), -1 }
    };
    mTopPanel->SetLabel( "Top Panel" );// Not localised
+   mTopPanel->SetLayoutDirection(wxLayout_LeftToRight);
    mTopPanel->SetAutoLayout(true);
 #ifdef EXPERIMENTAL_DA2
    mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -1031,6 +1032,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                    wxDefaultPosition,
                                    wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
                                    &mViewInfo );
+   mRuler->SetLayoutDirection(wxLayout_LeftToRight);
 
    //
    // Create the TrackPanel and the scrollbars
@@ -1066,6 +1068,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // colour, so suppress this for now.
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
 #endif
+   pPage->SetLayoutDirection(wxLayout_LeftToRight);
 
 #ifdef EXPERIMENTAL_DA2
    pPage->SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -1150,9 +1153,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mHsbar->SetAccessible(safenew WindowAccessible(mHsbar));
    mVsbar->SetAccessible(safenew WindowAccessible(mVsbar));
 #endif
+   mHsbar->SetLayoutDirection(wxLayout_LeftToRight);
    mHsbar->SetName(_("Horizontal Scrollbar"));
    mVsbar->SetName(_("Vertical Scrollbar"));
-
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By

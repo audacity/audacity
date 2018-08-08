@@ -1384,7 +1384,7 @@ void ToolManager::UndockBar( wxPoint mp )
    // Construct a NEW floater
    wxASSERT(mParent);
    mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
-
+   mDragWindow->SetLayoutDirection(wxLayout_LeftToRight);
    // Make sure the ferry is visible
    mDragWindow->Show();
 

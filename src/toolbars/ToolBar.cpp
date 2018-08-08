@@ -328,7 +328,6 @@ ToolBar::ToolBar( int type,
 
    mGrabber = NULL;
    mResizer = NULL;
-
    SetId(mType);
 }
 
@@ -473,6 +472,7 @@ void ToolBar::ReCreateButtons()
    DestroyChildren();
    mGrabber = NULL;
    mResizer = NULL;
+   SetLayoutDirection(wxLayout_LeftToRight);
 
    {
       // Create the main sizer

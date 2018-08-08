@@ -383,6 +383,7 @@ ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
    mManager = manager;
    memset(mBars, 0, sizeof(mBars)); // otherwise uninitialized
    SetBackgroundColour(theTheme.Colour( clrMedium ));
+   SetLayoutDirection(wxLayout_LeftToRight);
    // Use for testing gaps
    // SetOwnBackgroundColour( wxColour( 255, 0, 0 ) );
 }

@@ -306,6 +306,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #pragma warning( default: 4355 )
 #endif
 {
+   SetLayoutDirection(wxLayout_LeftToRight);
    SetLabel(_("Track Panel"));
    SetName(_("Track Panel"));
    SetBackgroundStyle(wxBG_STYLE_PAINT);
