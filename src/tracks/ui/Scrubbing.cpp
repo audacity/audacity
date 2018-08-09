@@ -787,7 +787,11 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
 {
    // First match priority logic...
    // Pause if Pause down, or not scrubbing.
-   if (mProject->GetControlToolBar()->IsPauseDown())
+   if (!mProject)
+      Pause(true);
+   else if (!mProject->GetControlToolBar())
+      Pause(true);
+   else if (mProject->GetControlToolBar()->IsPauseDown())
       Pause( true );
    else if (!IsScrubbing())
       Pause( true );
