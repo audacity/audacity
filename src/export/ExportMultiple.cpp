@@ -81,6 +81,7 @@ BEGIN_EVENT_TABLE(ExportMultiple, wxDialogWrapper)
    EVT_BUTTON(ChooseID, ExportMultiple::OnChoose)
    EVT_BUTTON(wxID_OK, ExportMultiple::OnExport)
    EVT_BUTTON(wxID_CANCEL, ExportMultiple::OnCancel)
+   EVT_BUTTON(wxID_HELP, ExportMultiple::OnHelp)
    EVT_RADIOBUTTON(LabelID, ExportMultiple::OnLabel)
    EVT_RADIOBUTTON(TrackID, ExportMultiple::OnTrack)
    EVT_RADIOBUTTON(ByNameAndNumberID, ExportMultiple::OnByName)
@@ -385,7 +386,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    }
    S.EndHorizontalLay();
 
-   S.AddStandardButtons();
+   S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton);
    mExport = (wxButton *)wxWindow::FindWindowById(wxID_OK, this);
    mExport->SetLabel(_("Export"));
 
@@ -523,6 +524,11 @@ void ExportMultiple::OnPrefix(wxCommandEvent& WXUNUSED(event))
 void ExportMultiple::OnCancel(wxCommandEvent& WXUNUSED(event))
 {
    EndModal(0);
+}
+
+void ExportMultiple::OnHelp(wxCommandEvent& WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Export_Multiple"), true);
 }
 
 void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
