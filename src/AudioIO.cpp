@@ -3827,7 +3827,7 @@ void AudioIO::FillBuffers()
       // The exception is if we're at the end of the selected
       // region - then we should just fill the buffer.
       //
-      const auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
+      auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
       if (nAvailable >= (int)mPlaybackSamplesToCopy ||
           (mPlaybackSchedule.PlayingStraight() &&
            nAvailable > 0 &&
@@ -3869,6 +3869,7 @@ void AudioIO::FillBuffers()
                }
                else
                   mPlaybackSchedule.RealTimeAdvance( deltat );
+               realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
             }
 
             if (!progress)
@@ -3970,11 +3971,12 @@ void AudioIO::FillBuffers()
                done = !progress || (available == 0);
                // msmeyer: If playing looped, check if we are at the end of the buffer
                // and if yes, restart from the beginning.
-               if (mPlaybackSchedule.RealTimeRemaining() <= 0)
+               if (realTimeRemaining <= 0)
                {
                   for (i = 0; i < mPlaybackTracks.size(); i++)
                      mPlaybackMixers[i]->Restart();
                   mPlaybackSchedule.RealTimeRestart();
+                  realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
                }
             }
                break;
