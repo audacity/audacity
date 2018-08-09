@@ -1233,6 +1233,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
    mMenuEnabled = options.menuEnabled;
    mButtonWidth = 9;
 
+   SetLayoutDirection(wxLayout_LeftToRight);
    Layout();
    Fit();
    ValueToControls();
