@@ -280,6 +280,9 @@ void PlaybackSchedule::Init(
    mWarpedLength = RealDuration(mT1);
 
    mPolicyValid.store(true, std::memory_order_release);
+
+   mMessageChannel.Initialize();
+   mMessageChannel.Write( { mT0, mT1 } );
 }
 
 double PlaybackSchedule::LimitTrackTime() const
@@ -438,4 +441,23 @@ void PlaybackSchedule::TimeQueue::Prime(double time)
    mLastTime = time;
    if ( !mData.empty() )
       mData[0].timeValue = time;
+}
+
+#include "ViewInfo.h"
+void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
+{
+   // This executes in the main thread
+   auto *pRegion = evt.pRegion.get();
+   if ( !pRegion )
+      return;
+   const auto &region = *pRegion;
+
+   mMessageChannel.Write( { region.GetStart(), region.GetEnd() } );
+}
+
+void PlaybackSchedule::MessageConsumer()
+{
+   // This executes in the TrackBufferExchange thread
+   auto data = mMessageChannel.Read();
+   // TODO use data
 }

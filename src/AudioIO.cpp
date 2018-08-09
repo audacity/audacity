@@ -120,6 +120,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
 #include "ProjectWindows.h"
+#include "ViewInfo.h" // for PlayRegionEvent
 #include "WaveTrack.h"
 
 #include "effects/RealtimeEffectManager.h"
@@ -351,6 +352,11 @@ AudioIO::AudioIO()
 
 AudioIO::~AudioIO()
 {
+   if ( !mOwningProject.expired() )
+      // Unlikely that this will be destroyed earlier than any projects, but
+      // be prepared anyway
+      ResetOwningProject();
+
 #if defined(USE_PORTMIXER)
    if (mPortMixer) {
       #if __WXMAC__
@@ -486,8 +492,13 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 {
    auto sampleRate = options.rate;
    mNumPauseFrames = 0;
-   mOwningProject = options.pProject;
-
+   SetOwningProject( options.pProject );
+   bool success = false;
+   auto cleanup = finally([&]{
+      if (!success)
+         ResetOwningProject();
+   });
+   
    // PRL:  Protection from crash reported by David Bailes, involving starting
    // and stopping with frequent changes of active window, hard to reproduce
    if (mOwningProject.expired())
@@ -664,12 +675,43 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    }
 #endif
 
-   return (mLastPaError == paNoError);
+   return (success = (mLastPaError == paNoError));
 }
 
 wxString AudioIO::LastPaErrorString()
 {
    return wxString::Format(wxT("%d %s."), (int) mLastPaError, Pa_GetErrorText(mLastPaError));
+}
+
+void AudioIO::SetOwningProject(
+   const std::shared_ptr<AudacityProject> &pProject )
+{
+   if ( !mOwningProject.expired() ) {
+      wxASSERT(false);
+      ResetOwningProject();
+   }
+
+   mOwningProject = pProject;
+
+   if (pProject)
+      ViewInfo::Get( *pProject ).playRegion.Bind(
+         EVT_PLAY_REGION_CHANGE, AudioIO::LoopPlayUpdate);
+}
+
+void AudioIO::ResetOwningProject()
+{
+   if ( auto pOwningProject = mOwningProject.lock() )
+      ViewInfo::Get( *pOwningProject ).playRegion.Unbind(
+         EVT_PLAY_REGION_CHANGE, AudioIO::LoopPlayUpdate);
+
+   mOwningProject.reset();
+}
+
+void AudioIO::LoopPlayUpdate( PlayRegionEvent &evt )
+{
+   evt.Skip();
+
+   AudioIO::Get()->mPlaybackSchedule.MessageProducer( evt );
 }
 
 void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
@@ -1507,7 +1549,7 @@ void AudioIO::StopStream()
 
    mInputMeter.reset();
    mOutputMeter.reset();
-   mOwningProject.reset();
+   ResetOwningProject();
 
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
@@ -1828,6 +1870,9 @@ void AudioIO::FillPlayBuffers()
 
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
+
+      // Poll for selection change events
+      mPlaybackSchedule.MessageConsumer();
 
       done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
          frames, available );
