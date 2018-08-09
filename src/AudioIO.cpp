@@ -5441,13 +5441,45 @@ bool AudioIO::PlaybackSchedule::PassIsComplete() const
 
 void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
 {
-   if (!Interactive()) {
-      if (ReversedTime())
-         realElapsed *= -1.0;
-      if (mTimeTrack)
+   if (Interactive())
+      return;
+
+   if (ReversedTime())
+      realElapsed *= -1.0;
+
+   if (mTimeTrack) {
+      // Defence against a case that might cause the do-loop not to terminate
+      if ( fabs(mT0 - mT1) < 1e-9 ) {
+         mTime = mT0;
+         return;
+      }
+
+      double total;
+      bool foundTotal = false;
+      do {
+         auto oldTime = mTime;
          mTime = mTimeTrack->SolveWarpedLength(mTime, realElapsed);
-      else
-         mTime += realElapsed;
+         if (Looping() && PassIsComplete()) {
+            // Bug1922:  The part of the time track outside the loop should not
+            // influence the result
+            double delta;
+            if (foundTotal && oldTime == mT0)
+               // Avoid integrating again
+               delta = total;
+            else {
+               delta = mTimeTrack->ComputeWarpedLength(oldTime, mT1);
+               if (oldTime == mT0)
+                  foundTotal = true, total = delta;
+            }
+            realElapsed -= delta;
+            mTime = mT0;
+         }
+         else
+            break;
+      } while ( true );
+   }
+   else {
+      mTime += realElapsed;
 
       // Wrap to start if looping
       if (Looping()) {
