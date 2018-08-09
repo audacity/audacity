@@ -292,6 +292,7 @@ private:
 private:
    void OnOk( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
+   void OnMixerPanelHelp( wxCommandEvent &event );
    void OnSlider( wxCommandEvent &event );
    void OnSize( wxSizeEvent &event );
 

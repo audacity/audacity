@@ -69,6 +69,7 @@
 #include "../AColor.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
+#include "../widgets/HelpSystem.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -916,7 +917,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
          {
             mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
-                                  
+
             for (const auto &pPlugin : mPlugins)
             {
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
@@ -1275,6 +1276,7 @@ enum
 BEGIN_EVENT_TABLE( ExportMixerDialog, wxDialogWrapper )
    EVT_BUTTON( wxID_OK, ExportMixerDialog::OnOk )
    EVT_BUTTON( wxID_CANCEL, ExportMixerDialog::OnCancel )
+   EVT_BUTTON( wxID_HELP, ExportMixerDialog::OnMixerPanelHelp )
    EVT_SIZE( ExportMixerDialog::OnSize )
    EVT_SLIDER( ID_SLIDER_CHANNEL, ExportMixerDialog::OnSlider )
 END_EVENT_TABLE()
@@ -1351,7 +1353,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          vertSizer->Add(horSizer.release(), 0, wxALIGN_CENTRE | wxALL, 5);
       }
 
-      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
+      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton | eHelpButton).release(), 0, wxEXPAND);
 
       SetAutoLayout(true);
       SetSizer(uVertSizer.release());
@@ -1397,5 +1399,10 @@ void ExportMixerDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 void ExportMixerDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal( wxID_CANCEL );
+}
+
+void ExportMixerDialog::OnMixerPanelHelp(wxCommandEvent & WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Advanced_Mixing_Options"), true);
 }
 
