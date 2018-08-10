@@ -18,6 +18,7 @@
 #include "Experimental.h"
 
 #include "MemoryX.h"
+#include <atomic>
 #include <utility>
 #include <vector>
 #include <wx/atomic.h>
@@ -832,8 +833,11 @@ private:
       double              mT0;
       /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
       double              mT1;
-      /// Current time position during playback, in seconds.  Between mT0 and mT1.
-      double              mTime;
+      /// Current track time position during playback, in seconds.
+      /// Initialized by the main thread but updated by worker threads during
+      /// playback or recording, and periodically reread by the main thread for
+      /// purposes such as display update.
+      std::atomic<double> mTime;
 
       /// Accumulated real time (not track position), starting at zero (unlike
       ///  mTime), and wrapping back to zero each time around looping play.
@@ -877,19 +881,38 @@ private:
          return mT1 < mT0;
       }
 
+      /** \brief Get current track time value, unadjusted
+       *
+       * Returns a time in seconds.
+       */
+      double GetTrackTime() const
+      { return mTime.load(std::memory_order_relaxed); }
+
+      /** \brief Set current track time value, unadjusted
+       */
+      void SetTrackTime( double time )
+      { mTime.store(time, std::memory_order_relaxed); }
+
+      /** \brief Clamps argument to be between mT0 and mT1
+       *
+       * Returns the bound if the value is out of bounds; does not wrap.
+       * Returns a time in seconds.
+       */
+      double ClampTrackTime( double trackTime ) const;
+
       /** \brief Clamps mTime to be between mT0 and mT1
        *
        * Returns the bound if the value is out of bounds; does not wrap.
        * Returns a time in seconds.
        */
-      double LimitStreamTime() const;
+      double LimitTrackTime() const;
 
       /** \brief Normalizes mTime, clamping it and handling gaps from cut preview.
        *
        * Clamps the time (unless scrubbing), and skips over the cut section.
        * Returns a time in seconds.
        */
-      double NormalizeStreamTime() const;
+      double NormalizeTrackTime() const;
 
       void ResetMode() { mPlayMode = PLAY_STRAIGHT; }
 
@@ -902,6 +925,9 @@ private:
       // Returns true if a loop pass, or the sole pass of straight play,
       // is completed at the current value of mTime
       bool PassIsComplete() const;
+
+      // Returns true if time equals t1 or is on opposite side of t1, to t0
+      bool Overruns( double trackTime ) const;
 
       void TrackTimeUpdate(double realElapsed);
 
@@ -921,7 +947,7 @@ private:
 
       // Determine starting duration within the first pass -- sometimes not
       // zero
-      void RealTimeInit();
+      void RealTimeInit( double trackTime );
       
       void RealTimeRestart();
 

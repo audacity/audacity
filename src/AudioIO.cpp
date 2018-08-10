@@ -2206,14 +2206,16 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    if (options.pStartTime)
    {
       // Calculate the NEW time position
-      mPlaybackSchedule.mTime =
-         std::max(mPlaybackSchedule.mT0,
-            std::min(mPlaybackSchedule.mT1, *options.pStartTime));
+      const auto time = mPlaybackSchedule.ClampTrackTime( *options.pStartTime );
+
+      // Main thread's initialization of mTime
+      mPlaybackSchedule.SetTrackTime( time );
+
       // Reset mixer positions for all playback tracks
       unsigned numMixers = mPlaybackTracks.size();
       for (unsigned ii = 0; ii < numMixers; ++ii)
-         mPlaybackMixers[ii]->Reposition(mPlaybackSchedule.mTime);
-      mPlaybackSchedule.RealTimeInit();
+         mPlaybackMixers[ii]->Reposition( time );
+      mPlaybackSchedule.RealTimeInit( time );
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
@@ -2875,7 +2877,8 @@ void AudioIO::PlaybackSchedule::Init(
       // desired length of recording
       mT1 -= pRecordingSchedule->mLatencyCorrection;
 
-   mTime    = mT0;
+   // Main thread's initialization of mTime
+   SetTrackTime( mT0 );
 
    mPlayMode = options.playLooped
       ? PlaybackSchedule::PLAY_LOOPED
@@ -2913,17 +2916,25 @@ void AudioIO::PlaybackSchedule::Init(
       mWarpedLength = RealDuration(mT1);
 }
 
-double AudioIO::PlaybackSchedule::LimitStreamTime() const
+double AudioIO::PlaybackSchedule::LimitTrackTime() const
 {
+   // Track time readout for the main thread
    // Allows for forward or backward play
-   if (ReversedTime())
-      return std::max(mT1, std::min(mT0, mTime));
-   else
-      return std::max(mT0, std::min(mT1, mTime));
+   return ClampTrackTime( GetTrackTime() );
 }
 
-double AudioIO::PlaybackSchedule::NormalizeStreamTime() const
+double AudioIO::PlaybackSchedule::ClampTrackTime( double trackTime ) const
 {
+   if (ReversedTime())
+      return std::max(mT1, std::min(mT0, trackTime));
+   else
+      return std::max(mT0, std::min(mT1, trackTime));
+}
+
+double AudioIO::PlaybackSchedule::NormalizeTrackTime() const
+{
+   // Track time readout for the main thread
+
    // dmazzoni: This function is needed for two reasons:
    // One is for looped-play mode - this function makes sure that the
    // position indicator keeps wrapping around.  The other reason is
@@ -2936,14 +2947,16 @@ double AudioIO::PlaybackSchedule::NormalizeStreamTime() const
    //          mode. In this case, we should jump over a defined "gap" in the
    //          audio.
 
-   auto absoluteTime = mTime;
+   double absoluteTime;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    // Limit the time between t0 and t1 if not scrubbing.
    // Should the limiting be necessary in any play mode if there are no bugs?
-   if (!Interactive())
+   if (Interactive())
+      absoluteTime = GetTrackTime();
+   else
 #endif
-      absoluteTime = LimitStreamTime();
+      absoluteTime = LimitTrackTime();
 
    if (mCutPreviewGapLen > 0)
    {
@@ -2958,10 +2971,12 @@ double AudioIO::PlaybackSchedule::NormalizeStreamTime() const
 
 double AudioIO::GetStreamTime()
 {
+   // Track time readout for the main thread
+
    if( !IsStreamActive() )
       return BAD_STREAM_TIME;
 
-   return mPlaybackSchedule.NormalizeStreamTime();
+   return mPlaybackSchedule.NormalizeTrackTime();
 }
 
 
@@ -4589,7 +4604,7 @@ void AudioIO::AILAProcess(double maxPeak) {
 
       mAILAMax = max(mAILAMax, maxPeak);
 
-      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mPlaybackSchedule.mTime - mAILALastStartTime >= mAILAAnalysisTime) {
+      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mPlaybackSchedule.GetTrackTime() - mAILALastStartTime >= mAILAAnalysisTime) {
          auto ToLinearIfDB = [](double value, int dbRange) {
             if (dbRange >= 0)
                value = pow(10.0, (-(1.0-value) * dbRange)/20.0);
@@ -4670,7 +4685,7 @@ void AudioIO::AILAProcess(double maxPeak) {
          mAILAMax             = 0;
          wxPrintf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
          mAILAClipped         = false;
-         mAILALastStartTime   = mPlaybackSchedule.mTime;
+         mAILALastStartTime   = mPlaybackSchedule.GetTrackTime();
 
          if (changetype == 0)
             mAILAChangeFactor *= 0.8; //time factor
@@ -5138,7 +5153,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          // "Consume" only as much as the ring buffers produced, which may
          // be less than framesPerBuffer (during "stutter")
          if (mPlaybackSchedule.Interactive())
-            mPlaybackSchedule.mTime = mScrubQueue->Consumer( maxLen );
+            mPlaybackSchedule.SetTrackTime( mScrubQueue->Consumer( maxLen ) );
 #endif
 
          em.RealtimeProcessEnd();
@@ -5212,7 +5227,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
               len < framesPerBuffer) ) {
             // Assume that any good partial buffer should be written leftmost
             // and zeroes will be padded after; label the zeroes.
-            auto start = mPlaybackSchedule.mTime +
+            auto start = mPlaybackSchedule.GetTrackTime() +
                 len / mRate + mRecordingSchedule.mLatencyCorrection;
             auto duration = (framesPerBuffer - len) / mRate;
             auto interval = std::make_pair( start, duration );
@@ -5384,17 +5399,18 @@ PaStreamCallbackResult AudioIO::CallbackDoSeek()
       wxMilliSleep( 50 );
    }
 
-   // Calculate the NEW time position
-   mPlaybackSchedule.mTime += mSeek;
-   mPlaybackSchedule.mTime = mPlaybackSchedule.LimitStreamTime();
+   // Calculate the NEW time position, in the PortAudio callback
+   const auto time = mPlaybackSchedule.ClampTrackTime(
+      mPlaybackSchedule.GetTrackTime() + mSeek );
+   mPlaybackSchedule.SetTrackTime( time );
    mSeek = 0.0;
-   
-   mPlaybackSchedule.RealTimeInit();
+
+   mPlaybackSchedule.RealTimeInit( time );
 
    // Reset mixer positions and flush buffers for all tracks
    for (size_t i = 0; i < numPlaybackTracks; i++)
    {
-      mPlaybackMixers[i]->Reposition( mPlaybackSchedule.mTime );
+      mPlaybackMixers[i]->Reposition( time );
       const auto toDiscard =
          mPlaybackBuffers[i]->AvailForGet();
       const auto discarded =
@@ -5439,32 +5455,41 @@ void AudioIO::CallbackCheckCompletion(
 
 bool AudioIO::PlaybackSchedule::PassIsComplete() const
 {
+   // Test mTime within the PortAudio callback
    if (Scrubbing())
-     return false; // but may be true if playing at speed
-   return (ReversedTime() ? mTime <= mT1 : mTime >= mT1);
+      return false; // but may be true if playing at speed
+   return Overruns( GetTrackTime() );
+}
+
+bool AudioIO::PlaybackSchedule::Overruns( double trackTime ) const
+{
+   return (ReversedTime() ? trackTime <= mT1 : trackTime >= mT1);
 }
 
 void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
 {
+   // Update mTime within the PortAudio callback
+
    if (Interactive())
       return;
 
    if (ReversedTime())
       realElapsed *= -1.0;
 
+   auto time = GetTrackTime();
    if (mTimeTrack) {
-      // Defence against a case that might cause the do-loop not to terminate
+      // Defense against a case that might cause the do-loop not to terminate
       if ( fabs(mT0 - mT1) < 1e-9 ) {
-         mTime = mT0;
+         SetTrackTime( mT0 );
          return;
       }
 
       double total;
       bool foundTotal = false;
       do {
-         auto oldTime = mTime;
-         mTime = mTimeTrack->SolveWarpedLength(mTime, realElapsed);
-         if (Looping() && PassIsComplete()) {
+         auto oldTime = time;
+         time = mTimeTrack->SolveWarpedLength(time, realElapsed);
+         if (Looping() && Overruns( time )) {
             // Bug1922:  The part of the time track outside the loop should not
             // influence the result
             double delta;
@@ -5477,25 +5502,26 @@ void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
                   foundTotal = true, total = delta;
             }
             realElapsed -= delta;
-            mTime = mT0;
+            time = mT0;
          }
          else
             break;
       } while ( true );
    }
    else {
-      mTime += realElapsed;
+      time += realElapsed;
 
       // Wrap to start if looping
       if (Looping()) {
-         while (PassIsComplete()) {
+         while ( Overruns( time ) ) {
             // LL:  This is not exactly right, but I'm at my wits end trying to
             //      figure it out.  Feel free to fix it.  :-)
             // MB: it's much easier than you think, mTime isn't warped at all!
-            mTime -= mT1 - mT0;
+            time -= mT1 - mT0;
          }
       }
    }
+   SetTrackTime( time );
 }
 
 double AudioIO::PlaybackSchedule::TrackDuration(double realElapsed) const
@@ -5526,12 +5552,12 @@ void AudioIO::PlaybackSchedule::RealTimeAdvance( double increment )
    mWarpedTime += increment;
 }
 
-void AudioIO::PlaybackSchedule::RealTimeInit()
+void AudioIO::PlaybackSchedule::RealTimeInit( double trackTime )
 {
    if (Scrubbing())
       mWarpedTime = 0.0;
    else
-      mWarpedTime = RealDuration(mTime);
+      mWarpedTime = RealDuration( trackTime );
 }
 
 void AudioIO::PlaybackSchedule::RealTimeRestart()
@@ -5556,7 +5582,8 @@ double AudioIO::RecordingSchedule::ToDiscard() const
 
 bool AudioIO::IsCapturing() const
 {
+   // Includes a test of mTime, used in the main thread
    return GetNumCaptureChannels() > 0 &&
-      mPlaybackSchedule.mTime >=
+      mPlaybackSchedule.GetTrackTime() >=
          mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
 }
