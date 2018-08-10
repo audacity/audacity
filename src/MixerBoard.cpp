@@ -912,6 +912,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 //      mScrolledWindow->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW));
 //   #endif
    mScrolledWindow->SetBackgroundColour( theTheme.Colour( clrMedium ) );
+   RTL_WORKAROUND(mScrolledWindow);
 
    mScrolledWindow->SetScrollRate(10, 0); // no vertical scroll
    mScrolledWindow->SetVirtualSize(size);

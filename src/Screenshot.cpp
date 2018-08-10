@@ -308,6 +308,7 @@ void ScreenFrame::Populate()
 void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
 {
    wxPanel *p = S.StartPanel();
+   RTL_WORKAROUND(p);
    {
       S.SetBorder(3);
 

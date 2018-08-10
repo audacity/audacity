@@ -2973,6 +2973,7 @@ int EffectUIHost::ShowModal()
 bool EffectUIHost::Initialize()
 {
    EffectPanel *w = safenew EffectPanel(this);
+   RTL_WORKAROUND(w);
    {
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       {
