@@ -66,6 +66,7 @@
 #include "../WaveTrack.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/Warning.h"
+#include "../widgets/HelpSystem.h"
 #include "../AColor.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
@@ -272,6 +273,7 @@ wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
 BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
    EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
+   EVT_BUTTON(wxID_HELP, Exporter::OnHelp)
    EVT_COMMAND( wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
 END_EVENT_TABLE()
 
@@ -318,13 +320,19 @@ Exporter::~Exporter()
 // methods for setting its standard controls.
 // We would need OS specific code that 'knows' about the system 
 // dialogs.
-void Exporter::OnExtensionChanged(wxCommandEvent &Evt) {
-   wxString ext = Evt.GetString();
+void Exporter::OnExtensionChanged(wxCommandEvent &evt) {
+   wxString ext = evt.GetString();
    ext = ext.BeforeFirst(' ').Lower();
    wxLogDebug("Extension changed to '.%s'", ext);
 //   wxString Name = mDialog->GetFilename();
 //   Name = Name.BeforeLast('.')+ext;
 //   mDialog->SetFilename(Name);
+}
+
+void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
+{
+   wxWindow * pWin = GetActiveProject();
+   HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
 }
 
 void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
@@ -930,6 +938,11 @@ void Exporter::CreateUserPane(wxWindow *parent)
       }
       S.EndHorizontalLay();
    }
+   S.StartHorizontalLay(wxALIGN_RIGHT, 0);
+   {
+      S.AddStandardButtons(eHelpButton);
+   }
+   S.EndHorizontalLay();
    S.EndVerticalLay();
 
    return;

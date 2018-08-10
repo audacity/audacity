@@ -192,7 +192,8 @@ public:
    int GetAutoExportSubFormat();
    int GetAutoExportFilterIndex();
    wxFileName GetAutoExportFileName();
-   void OnExtensionChanged(wxCommandEvent &Evt);
+   void OnExtensionChanged(wxCommandEvent &evt);
+   void OnHelp(wxCommandEvent &evt);
 
 private:
    bool ExamineTracks();
