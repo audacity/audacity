@@ -194,17 +194,18 @@ int ExportMultiple::ShowModal()
       return wxID_CANCEL;
    }
 
-   if (mNumLabels < 1) {
-      mLabel->Enable(false);
-      mTrack->SetValue(true);
-      mLabel->SetValue(false);
-   }
+   bool bHasLabels = (mNumLabels > 0);
+   bool bHasTracks = (mNumWaveTracks > 0);
+   
+   mLabel->Enable(bHasLabels && bHasTracks);
+   mTrack->Enable(bHasTracks);
 
-   if (mNumWaveTracks < 1) {
-      mTrack->Enable(false);
-      mLabel->SetValue(true);
-      mTrack->SetValue(false);
-   }
+   // If you have 2 or more tracks, then it is export by tracks.
+   // If you have no labels, then it is export by tracks.
+   // Otherwise it is export by labels, by default.
+   bool bPreferByLabels = bHasLabels && (mNumWaveTracks < 2);
+   mLabel->SetValue(bPreferByLabels);
+   mTrack->SetValue(!bPreferByLabels);
 
    EnableControls();
 
