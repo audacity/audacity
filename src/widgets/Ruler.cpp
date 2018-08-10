@@ -3092,6 +3092,9 @@ auto AdornedRulerPanel::QPHandle::Release
       if (mClicked == Button::Left) {
          if ( mParent )
             mParent->HandleQPRelease( event.event );
+            // Update the hot zones for cursor changes
+            mParent->mOldPlayRegionStart = mParent->mPlayRegionStart;
+            mParent->mOldPlayRegionEnd = mParent->mPlayRegionEnd;
       }
    }
    return result;
