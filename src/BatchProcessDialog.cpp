@@ -185,7 +185,8 @@ void ApplyMacroDialog::PopulateMacros()
    }
 
    // Select the name in the list...this will fire an event.
-   mMacros->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+   mMacros->SetItemState(item, wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
+      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
 
    if( 0 <= topItem && topItem < (int)mMacros->GetItemCount())
    {
@@ -703,7 +704,9 @@ void MacrosWindow::PopulateList()
    if (mSelectedCommand >= (int)mList->GetItemCount()) {
       mSelectedCommand = 0;
    }
-   mList->SetItemState(mSelectedCommand, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+   mList->SetItemState(mSelectedCommand,
+      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
+      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
    if( 0 <= topItem && topItem < (int)mList->GetItemCount())
    {
       // Workaround for scrolling being windows only.
