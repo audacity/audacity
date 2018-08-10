@@ -210,6 +210,10 @@ class AUDACITY_DLL_API AudioIO final {
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
+   // Part of the callback
+   PaStreamCallbackResult CallbackDoSeek();
+
+   // Part of the callback
    void CallbackCheckCompletion(
       int &callbackReturn, unsigned long len);
 

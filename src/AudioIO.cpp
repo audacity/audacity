@@ -4746,9 +4746,9 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
                           const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
 {
-   auto numPlaybackChannels = mNumPlaybackChannels;
-   auto numPlaybackTracks = mPlaybackTracks.size();
-   auto numCaptureChannels = mNumCaptureChannels;
+   const auto numPlaybackChannels = mNumPlaybackChannels;
+   const auto numPlaybackTracks = mPlaybackTracks.size();
+   const auto numCaptureChannels = mNumCaptureChannels;
    int callbackReturn = paContinue;
    void *tempBuffer = alloca(framesPerBuffer*sizeof(float)*
                              MAX(numCaptureChannels,numPlaybackChannels));
@@ -4955,52 +4955,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          else
 #endif
          if (mSeek)
-         {
-            int token = mStreamToken;
-            wxMutexLocker locker(mSuspendAudioThread);
-            if (token != mStreamToken)
-               // This stream got destroyed while we waited for it
-               return paAbort;
-
-            // Pause audio thread and wait for it to finish
-            mAudioThreadFillBuffersLoopRunning = false;
-            while( mAudioThreadFillBuffersLoopActive )
-            {
-               wxMilliSleep( 50 );
-            }
-
-            // Calculate the NEW time position
-            mPlaybackSchedule.mTime += mSeek;
-            mPlaybackSchedule.mTime = mPlaybackSchedule.LimitStreamTime();
-            mSeek = 0.0;
-
-            mPlaybackSchedule.RealTimeInit();
-
-            // Reset mixer positions and flush buffers for all tracks
-            for (i = 0; i < numPlaybackTracks; i++)
-            {
-               mPlaybackMixers[i]->Reposition( mPlaybackSchedule.mTime );
-               const auto toDiscard =
-                  mPlaybackBuffers[i]->AvailForGet();
-               const auto discarded =
-                  mPlaybackBuffers[i]->Discard( toDiscard );
-               // wxASSERT( discarded == toDiscard );
-               // but we can't assert in this thread
-               wxUnusedVar(discarded);
-            }
-
-            // Reload the ring buffers
-            mAudioThreadShouldCallFillBuffersOnce = true;
-            while( mAudioThreadShouldCallFillBuffersOnce )
-            {
-               wxMilliSleep( 50 );
-            }
-
-            // Reenable the audio thread
-            mAudioThreadFillBuffersLoopRunning = true;
-
-            return paContinue;
-         }
+            return CallbackDoSeek();
 
          unsigned numSolo = 0;
          for(unsigned t = 0; t < numPlaybackTracks; t++ )
@@ -5410,6 +5365,56 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
    }  // end playback VU meter update
 
    return callbackReturn;
+}
+
+PaStreamCallbackResult AudioIO::CallbackDoSeek()
+{
+   const int token = mStreamToken;
+   wxMutexLocker locker(mSuspendAudioThread);
+   if (token != mStreamToken)
+      // This stream got destroyed while we waited for it
+      return paAbort;
+
+   const auto numPlaybackTracks = mPlaybackTracks.size();
+
+   // Pause audio thread and wait for it to finish
+   mAudioThreadFillBuffersLoopRunning = false;
+   while( mAudioThreadFillBuffersLoopActive )
+   {
+      wxMilliSleep( 50 );
+   }
+
+   // Calculate the NEW time position
+   mPlaybackSchedule.mTime += mSeek;
+   mPlaybackSchedule.mTime = mPlaybackSchedule.LimitStreamTime();
+   mSeek = 0.0;
+   
+   mPlaybackSchedule.RealTimeInit();
+
+   // Reset mixer positions and flush buffers for all tracks
+   for (size_t i = 0; i < numPlaybackTracks; i++)
+   {
+      mPlaybackMixers[i]->Reposition( mPlaybackSchedule.mTime );
+      const auto toDiscard =
+         mPlaybackBuffers[i]->AvailForGet();
+      const auto discarded =
+         mPlaybackBuffers[i]->Discard( toDiscard );
+      // wxASSERT( discarded == toDiscard );
+      // but we can't assert in this thread
+      wxUnusedVar(discarded);
+   }
+
+   // Reload the ring buffers
+   mAudioThreadShouldCallFillBuffersOnce = true;
+   while( mAudioThreadShouldCallFillBuffersOnce )
+   {
+      wxMilliSleep( 50 );
+   }
+
+   // Reenable the audio thread
+   mAudioThreadFillBuffersLoopRunning = true;
+
+   return paContinue;
 }
 
 void AudioIO::CallbackCheckCompletion(
