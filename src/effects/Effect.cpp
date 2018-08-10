@@ -3028,7 +3028,8 @@ bool EffectUIHost::Initialize()
          else
          {
             wxASSERT(bar); // To justify safenew
-            mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+            mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, true));
+            mMenuBtn->SetBitmapPressed(CreateBitmap(effect_menu_xpm, false, true));
 #if defined(__WXMAC__)
             mMenuBtn->SetName(_("&Manage"));
 #else
@@ -3065,12 +3066,13 @@ bool EffectUIHost::Initialize()
             else
             {
                mPlayBM = CreateBitmap(effect_play_xpm, true, false);
-               mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
+               mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, true);
                mStopBM = CreateBitmap(effect_stop_xpm, true, false);
                mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
                wxASSERT(bar); // To justify safenew
                bb = safenew wxBitmapButton(bar, kPlayID, mPlayBM);
                bb->SetBitmapDisabled(mPlayDisabledBM);
+               bb->SetBitmapPressed(CreateBitmap(effect_play_xpm, false, true));
                mPlayBtn = bb;
                bs->Add(mPlayBtn);
                if (!mSupportsRealtime)
@@ -3096,7 +3098,8 @@ bool EffectUIHost::Initialize()
                {
                   wxASSERT(bar); // To justify safenew
                   bb = safenew wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
-                  bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+                  bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, false));
+                  bb->SetBitmapPressed(CreateBitmap(effect_rewind_xpm, false, true));
                   mRewindBtn = bb;
 #if defined(__WXMAC__)
                   mRewindBtn->SetName(_("Skip &Backward"));
@@ -3117,7 +3120,8 @@ bool EffectUIHost::Initialize()
                {
                   wxASSERT(bar); // To justify safenew
                   bb = safenew wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
-                  bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+                  bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, false));
+                  bb->SetBitmapPressed(CreateBitmap(effect_ffwd_xpm, false, true));
                   mFFwdBtn = bb;
 #if defined(__WXMAC__)
                   mFFwdBtn->SetName(_("Skip &Forward"));
@@ -3757,20 +3761,17 @@ wxBitmap EffectUIHost::CreateBitmap(const char * const xpm[], bool up, bool push
    wxMemoryDC dc;
    wxBitmap pic(xpm);
 
-   wxBitmap mod(pic.GetWidth() + 6, pic.GetHeight() + 6);
+   wxBitmap mod(pic.GetWidth() + 6, pic.GetHeight() + 6, 24);
    dc.SelectObject(mod);
-
-#if !defined(__WXMAC__)
 
 #if defined(__WXGTK__)
    wxColour newColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-#elif defined(__WXMSW__)
+#else
    wxColour newColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
 #endif
 
    dc.SetBackground(wxBrush(newColour));
    dc.Clear();
-#endif
 
    int offset = 3;
    if (pusher)
