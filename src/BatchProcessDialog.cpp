@@ -246,6 +246,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    if( name.IsEmpty() )
       return;
 
+#ifdef OPTIONAL_ACTIVITY_WINDOW
    wxDialogWrapper activityWin( this, wxID_ANY, GetTitle());
    activityWin.SetName(activityWin.GetTitle());
    ShuttleGui S(&activityWin, eIsCreating);
@@ -273,6 +274,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 
    // Without this the newly created dialog may not show completely.
    wxYield();
+#endif
 
    //Since we intend to keep this dialog open, there is no reason to hide it 
    //and then show it again.
@@ -288,7 +290,9 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    // the menus on OSX will remain disabled.
    bool success;
    {
+#ifdef OPTIONAL_ACTIVITY_WINDOW
       wxWindowDisabler wd(&activityWin);
+#endif
       success = GuardedCall< bool >(
          [this]{ return mMacroCommands.ApplyMacro(mCatalog); } );
    }
