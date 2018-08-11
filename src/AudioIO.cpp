@@ -1988,7 +1988,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    // killing performance.
    //
 
-   // (warped) playback time to produce with each filling of the buffers
+   // real playback time to produce with each filling of the buffers
    // by the Audio thread (except at the end of playback):
    // usually, make fillings fewer and longer for less CPU usage.
    // But for useful scrubbing, we can't run too far ahead without checking
@@ -2101,7 +2101,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
             {
                mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
-               // MB: use normal time for the end time, not warped time!
+               // use track time for the end time, not real time!
                WaveTrackConstArray mixTracks;
                mixTracks.push_back(mPlaybackTracks[i]);
 
@@ -3874,7 +3874,8 @@ void AudioIO::FillBuffers()
             bool progress = true;
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             if (mPlaybackSchedule.Interactive())
-               // scrubbing does not use warped time and length
+               // scrubbing and play-at-speed are not limited by the real time
+               // and length accumulators
                frames = limitSampleBufferSize(frames, mScrubDuration);
             else
 #endif
@@ -4430,7 +4431,7 @@ void AudioIO::FillMidiBuffers()
          break;
       }
    SetHasSolo(hasSolo);
-   // If we compute until mNextEventTime > current audio track time,
+   // If we compute until mNextEventTime > current audio time,
    // we would have a built-in compute-ahead of mAudioOutLatency, and
    // it's probably good to compute MIDI when we compute audio (so when
    // we stop, both stop about the same time).

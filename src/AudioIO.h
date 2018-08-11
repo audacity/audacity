@@ -429,7 +429,7 @@ class AUDACITY_DLL_API AudioIO final {
     */
    static int GetOptimalSupportedSampleRate();
 
-   /** \brief During playback, the (unwarped) track time most recently played
+   /** \brief During playback, the track time most recently played
     *
     * When playing looped, this will start from t0 again,
     * too. So the returned time should be always between
@@ -520,7 +520,7 @@ private:
    void PrepareMidiIterator(bool send = true, double offset = 0);
    bool StartPortMidiStream();
 
-   // Compute nondecreasing time stamps, accounting for pauses, but not the
+   // Compute nondecreasing real time stamps, accounting for pauses, but not the
    // synth latency.
    double UncorrectedMidiEventTime();
 
@@ -648,7 +648,7 @@ private:
    std::vector< std::pair< int, int > > mPendingNotesOff;
 #endif
 
-   /// Time at which the next event should be output, measured in seconds.
+   /// Real time at which the next event should be output, measured in seconds.
    /// Note that this could be a note's time+duration for note offs.
    double           mNextEventTime;
    /// Track of next event
@@ -840,7 +840,7 @@ private:
       std::atomic<double> mTime;
 
       /// Accumulated real time (not track position), starting at zero (unlike
-      ///  mTime), and wrapping back to zero each time around looping play.
+      /// mTime), and wrapping back to zero each time around looping play.
       /// Thus, it is the length in real seconds between mT0 and mTime.
       double              mWarpedTime;
 
@@ -939,7 +939,7 @@ private:
       // time track if one is given; result is always nonnegative
       double RealDuration(double trackTime1) const;
 
-      // How much real ("warped") time left?
+      // How much real time left?
       double RealTimeRemaining() const;
 
       // Advance the real time position
