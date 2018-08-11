@@ -558,7 +558,6 @@ wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxStr
    cleanedName += wxFileName::GetPathSeparator();
    cleanedName += justName;
    cleanedName += extension;
-   wxGetApp().AddFileToHistory(cleanedName);
 
    return cleanedName;
 }

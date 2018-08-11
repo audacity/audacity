@@ -4982,19 +4982,45 @@ void AudacityProject::OnExport(const wxString & Format )
 
    // Prompt for file name and/or extension?
    bool bPromptingRequired = (mBatchMode == 0) || mFileName.IsEmpty() || Format.IsEmpty();
+   wxString filename;
 
-   if  (bPromptingRequired) {
-      e.SetDefaultFormat(Format);
-      e.Process(this, false, 0.0, mTracks->GetEndTime());
-   }
-   else {
+   if (!bPromptingRequired) {
+
       // We're in batch mode, and we have an mFileName and Format.
       wxString extension = ".";
       extension += Format;
       extension.MakeLower();
 
-      wxString filename = MacroCommands::BuildCleanFileName(mFileName, extension);
+      filename = MacroCommands::BuildCleanFileName(mFileName, extension);
 
+      // Bug 1854, No warning of file overwrite (when export is called from Macros).
+      int counter = 0;
+      bPromptingRequired = wxFileExists(filename);
+
+      // We'll try alternative names to avoid overwriting.
+      while ( bPromptingRequired && counter < 100 ) {
+         counter++;
+         wxString number;
+         number.Printf("%03i", counter);
+         // So now the name has a number in it too.
+         filename = MacroCommands::BuildCleanFileName(mFileName, number + extension);
+         bPromptingRequired = wxFileExists(filename);
+      }
+      // If we've run out of alternative names, we will fall back to prompting - even if in a macro.
+   }
+
+
+   if (bPromptingRequired)
+   {
+      // Do export with prompting.
+      e.SetDefaultFormat(Format);
+      e.Process(this, false, t0, t1);
+   }
+   else
+   {
+      wxGetApp().AddFileToHistory(filename);
+      // We're in batch mode, the file does not exist already.
+      // We really can proceed without prompting.
       int nChannels = MacroCommands::IsMono() ? 1 : 2;
       e.Process(
          this,       // AudacityProject
@@ -5006,6 +5032,7 @@ void AudacityProject::OnExport(const wxString & Format )
          t1          // t1
       );
    }
+
 }
 
 void AudacityProject::OnExportAudio(const CommandContext &WXUNUSED(context) ){   OnExport("");}
