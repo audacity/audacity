@@ -3287,7 +3287,8 @@ void AdornedRulerPanel::UpdateButtonStates()
          pinButton->PopUp();
       else
          pinButton->PushDown();
-      pinButton->SetAlternateIdx((mIsRecording ? 2 : 0) + (state ? 0 : 1));
+      pinButton->SetAlternateIdx(
+         (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
       // Bug 1584: Toltip now shows what clicking will do.
       const auto label = state
       ? _("Click to unpin")

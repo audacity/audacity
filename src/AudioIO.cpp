@@ -5583,7 +5583,8 @@ double AudioIO::RecordingSchedule::ToDiscard() const
 bool AudioIO::IsCapturing() const
 {
    // Includes a test of mTime, used in the main thread
-   return GetNumCaptureChannels() > 0 &&
+   return IsStreamActive() &&
+      GetNumCaptureChannels() > 0 &&
       mPlaybackSchedule.GetTrackTime() >=
          mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
 }

@@ -50,10 +50,11 @@ std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 
    // May be excessive height, but little matter
    wxRect rect(mLastIndicatorX - width / 2, 0, width, size.GetHeight());
-   return std::make_pair(
+   return {
       rect,
-      mLastIndicatorX != mNewIndicatorX
-   );
+      (mLastIndicatorX != mNewIndicatorX
+       || mLastIsCapturing != mNewIsCapturing)
+   };
 }
 
 
@@ -62,6 +63,17 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
    // Set play/record color
    bool rec = gAudioIO->IsCapturing();
    AColor::IndicatorColor(&dc, !rec);
+
+   if (mIsMaster
+       && mLastIsCapturing != mNewIsCapturing) {
+      // Detect transition to recording during punch and roll; make ruler
+      // change its button color too
+      const auto ruler = mProject->GetRulerPanel();
+      ruler->UpdateButtonStates();
+      ruler->Refresh();
+   }
+   mLastIsCapturing = mNewIsCapturing;
+
    mLastIndicatorX = mNewIndicatorX;
    if (!between_incexc(0, mLastIndicatorX, dc.GetSize().GetWidth()))
       return;
@@ -136,6 +148,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
    if (!mProject->IsAudioActive()) {
       mNewIndicatorX = -1;
+      mNewIsCapturing = false;
       const auto &scrubber = mProject->GetScrubber();
       if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
@@ -195,6 +208,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          mNewIndicatorX = viewInfo.TimeToPosition(playPos, trackPanel->GetLeftOffset());
       else
          mNewIndicatorX = -1;
+
+      mNewIsCapturing = gAudioIO->IsCapturing();
    }
 
    if(mPartner)
