@@ -12,6 +12,7 @@
 #include "LyricsWindow.h"
 #include "Lyrics.h"
 #include "AudioIO.h"
+#include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 

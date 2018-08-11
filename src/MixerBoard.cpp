@@ -29,6 +29,7 @@
 #include "NoteTrack.h"
 #endif
 
+#include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
