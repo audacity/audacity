@@ -2451,7 +2451,7 @@ bool AudioIO::StartPortMidiStream()
 }
 #endif
 
-bool AudioIO::IsAvailable(AudacityProject *project)
+bool AudioIO::IsAvailable(AudacityProject *project) const
 {
    return mOwningProject == NULL || mOwningProject == project;
 }
@@ -2790,7 +2790,7 @@ void AudioIO::SetPaused(bool state)
    mPaused = state;
 }
 
-bool AudioIO::IsPaused()
+bool AudioIO::IsPaused() const
 {
    return mPaused;
 }
@@ -2815,7 +2815,7 @@ double AudioIO::GetLastTimeInScrubQueue() const
 
 #endif
 
-bool AudioIO::IsBusy()
+bool AudioIO::IsBusy() const
 {
    if (mStreamToken != 0)
       return true;
@@ -2823,7 +2823,7 @@ bool AudioIO::IsBusy()
    return false;
 }
 
-bool AudioIO::IsStreamActive()
+bool AudioIO::IsStreamActive() const
 {
    bool isActive = false;
    // JKC: Not reporting any Pa error, but that looks OK.
@@ -2837,17 +2837,17 @@ bool AudioIO::IsStreamActive()
    return isActive;
 }
 
-bool AudioIO::IsStreamActive(int token)
+bool AudioIO::IsStreamActive(int token) const
 {
    return (this->IsStreamActive() && this->IsAudioTokenActive(token));
 }
 
-bool AudioIO::IsAudioTokenActive(int token)
+bool AudioIO::IsAudioTokenActive(int token) const
 {
    return ( token > 0 && token == mStreamToken );
 }
 
-bool AudioIO::IsMonitoring()
+bool AudioIO::IsMonitoring() const
 {
    return ( mPortStreamV19 && mStreamToken==0 );
 }

@@ -252,7 +252,7 @@ class AUDACITY_DLL_API AudioIO final {
    void SeekStream(double seconds) { mSeek = seconds; }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   bool IsScrubbing() { return IsBusy() && mScrubQueue != 0; }
+   bool IsScrubbing() const { return IsBusy() && mScrubQueue != 0; }
 
    /** \brief enqueue a NEW scrub play interval, using the last end as the NEW start,
    * to be played over the same duration, as between this and the last
@@ -275,7 +275,7 @@ class AUDACITY_DLL_API AudioIO final {
     * or recording.
     *
     * When this is false, it's safe to start playing or recording */
-   bool IsBusy();
+   bool IsBusy() const;
 
    /** \brief Returns true if the audio i/o is running at all, but not during
     * cleanup
@@ -283,8 +283,8 @@ class AUDACITY_DLL_API AudioIO final {
     * Doesn't return true if the device has been closed but some disk i/o or
     * cleanup is still going on. If you want to know if it's safe to start a
     * NEW stream, use IsBusy() */
-   bool IsStreamActive();
-   bool IsStreamActive(int token);
+   bool IsStreamActive() const;
+   bool IsStreamActive(int token) const;
 
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
    AudacityProject *GetOwningProject() const { return mOwningProject; }
@@ -317,16 +317,16 @@ class AUDACITY_DLL_API AudioIO final {
     *
     * This is used by TrackPanel to determine when a track has been completely
     * recorded, and it's safe to flush to disk. */
-   bool IsAudioTokenActive(int token);
+   bool IsAudioTokenActive(int token) const;
 
    /** \brief Returns true if we're monitoring input (but not recording or
     * playing actual audio) */
-   bool IsMonitoring();
+   bool IsMonitoring() const;
 
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
    /** \brief Find out if playback / recording is currently paused */
-   bool IsPaused();
+   bool IsPaused() const;
 
    /* Mixer services are always available.  If no stream is running, these
     * methods use whatever device is specified by the preferences.  If a
@@ -479,7 +479,7 @@ class AUDACITY_DLL_API AudioIO final {
       double AILAGetLastDecisionTime();
    #endif
 
-   bool IsAvailable(AudacityProject *projecT);
+   bool IsAvailable(AudacityProject *projecT) const;
    void SetCaptureMeter(AudacityProject *project, MeterPanel *meter);
    void SetPlaybackMeter(AudacityProject *project, MeterPanel *meter);
 
