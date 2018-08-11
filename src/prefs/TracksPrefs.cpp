@@ -263,12 +263,6 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Display"));
    {
-      S.TieCheckBox(_("&Pinned Recording/Playback head"),
-                    PinnedHeadPreferenceKey(),
-                    PinnedHeadPreferenceDefault());
-      S.TieCheckBox(_("A&uto-scroll if head unpinned"),
-                    wxT("/GUI/AutoScroll"),
-                    true);
       S.TieCheckBox(_("Auto-&fit track height"),
                     wxT("/GUI/TracksFitVerticallyZoomed"),
                     false);
@@ -280,11 +274,27 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                   wxT("/GUI/CollapseToHalfWave"),
                   false);
 #endif
+#ifdef SHOW_PINNED_UNPINNED_IN_PREFS
+      S.TieCheckBox(_("&Pinned Recording/Playback head"),
+         PinnedHeadPreferenceKey(),
+         PinnedHeadPreferenceDefault());
+#endif
+      S.TieCheckBox(_("A&uto-scroll if head unpinned"),
+         wxT("/GUI/AutoScroll"),
+         true);
 
       S.AddSpace(10);
 
       S.StartMultiColumn(2);
       {
+#ifdef SHOW_PINNED_POSITION_IN_PREFS
+         S.TieNumericTextBox(
+            _("Pinned &head position"),
+            PinnedHeadPositionPreferenceKey(),
+            PinnedHeadPositionPreferenceDefault(),
+            30
+         );
+#endif
          S.TieChoice(_("Default &view mode:"),
                      viewModeSetting );
 
@@ -344,6 +354,7 @@ double TracksPrefs::GetPinnedHeadPositionPreference()
 
 void TracksPrefs::SetPinnedHeadPositionPreference(double value, bool flush)
 {
+   value = std::max(0.0, std::min(1.0, value));
    gPrefs->Write(PinnedHeadPositionPreferenceKey(), value);
    if(flush)
       gPrefs->Flush();
