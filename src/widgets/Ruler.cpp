@@ -2096,7 +2096,7 @@ protected:
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *) override
    {
-      mClicked = event.event.LeftDown() ? Button::Left : Button::Right;
+      mClicked = event.event.LeftIsDown() ? Button::Left : Button::Right;
       return RefreshCode::DrawOverlays;
    }
 
