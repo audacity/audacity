@@ -807,6 +807,7 @@ private:
    std::unique_ptr<ScrubQueue> mScrubQueue;
 
    bool mSilentScrub;
+   double mScrubSpeed;
    sampleCount mScrubDuration;
 #endif
 
@@ -989,6 +990,7 @@ private:
    struct TimeQueue {
       Doubles mData;
       size_t mSize{ 0 };
+      double mLastTime {};
       // These need not be updated atomically, because we rely on the atomics
       // in the playback ring buffers to supply the synchronization.  Still,
       // align them to avoid false sharing.
@@ -996,7 +998,12 @@ private:
          size_t mIndex {};
          size_t mRemainder {};
       } mHead, mTail;
-   } mTimeQueue;   
+
+      void Producer(
+         const PlaybackSchedule &schedule, double rate, double scrubSpeed,
+         size_t nSamples );
+      double Consumer( size_t nSamples, double rate );
+   } mTimeQueue;
 };
 
 #endif
