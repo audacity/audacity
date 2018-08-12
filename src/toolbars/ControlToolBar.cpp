@@ -1194,6 +1194,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             }
             transportTracks.captureTracks.push_back(pending);
          }
+         p->GetTracks()->UpdatePendingTracks();
       }
 
       if( transportTracks.captureTracks.empty() )
