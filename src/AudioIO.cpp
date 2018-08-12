@@ -2261,6 +2261,12 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          mPlaybackMixers[ii]->Reposition( time );
       mPlaybackSchedule.RealTimeInit( time );
    }
+   
+   // Now that we are done with SetTrackTime():
+   mTimeQueue.mLastTime = mPlaybackSchedule.GetTrackTime();
+   if (mTimeQueue.mData)
+      mTimeQueue.mData[0] = mTimeQueue.mLastTime;
+   // else recording only without overdub
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    if (scrubbing)
@@ -3959,6 +3965,15 @@ void AudioIO::FillBuffers()
                toProcess = 0;
 #endif
 
+            // Update the time queue.  This must be done before writing to the
+            // ring buffers of samples, for proper synchronization with the
+            // consumer side in the PortAudio thread, which reads the time
+            // queue after reading the sample queues.  The sample queues use
+            // atomic variables, the time queue doesn't.
+            mTimeQueue.Producer( mPlaybackSchedule, mRate,
+               (mPlaybackSchedule.Interactive() ? mScrubSpeed : 1.0),
+               frames);
+
             for (i = 0; i < mPlaybackTracks.size(); i++)
             {
                // The mixer here isn't actually mixing: it's just doing
@@ -4007,16 +4022,22 @@ void AudioIO::FillBuffers()
                   else
                   {
                      mSilentScrub = (endSample == startSample);
+                     double startTime, endTime;
+                     startTime = startSample.as_double() / mRate;
+                     endTime = endSample.as_double() / mRate;
+                     auto diff = (endSample - startSample).as_long_long();
+                     if (mScrubDuration == 0)
+                        mScrubSpeed = 0;
+                     else
+                        mScrubSpeed =
+                           double(std::abs(diff)) / mScrubDuration.as_double();
                      if (!mSilentScrub)
                      {
-                        double startTime, endTime, speed;
-                        startTime = startSample.as_double() / mRate;
-                        endTime = endSample.as_double() / mRate;
-                        auto diff = (endSample - startSample).as_long_long();
-                        speed = double(std::abs(diff)) / mScrubDuration.as_double();
                         for (i = 0; i < mPlaybackTracks.size(); i++)
-                           mPlaybackMixers[i]->SetTimesAndSpeed(startTime, endTime, speed);
+                           mPlaybackMixers[i]->SetTimesAndSpeed(
+                              startTime, endTime, mScrubSpeed);
                      }
+                     mTimeQueue.mLastTime = startTime;
                   }
                }
             }
@@ -4978,6 +4999,8 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
    if (mStreamToken > 0)
    {
+      decltype(framesPerBuffer) maxLen = 0;
+
       //
       // Mix and copy to PortAudio's output buffer
       //
@@ -5037,7 +5060,6 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          bool selected = false;
          int group = 0;
          int chanCnt = 0;
-         decltype(framesPerBuffer) maxLen = 0;
 
          // Choose a common size to take from all ring buffers
          const auto toGet =
@@ -5104,6 +5126,10 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             // PRL:  Bug1104:
             // There can be a difference of len in different loop passes if one channel
             // of a stereo track ends before the other!  Take a max!
+
+            // PRL:  More recent rewrites of FillBuffers should guarantee a
+            // padding out of the ring buffers so that equal lengths are
+            // available, so maxLen ought to increase from 0 only once
             maxLen = std::max(maxLen, len);
 
 
@@ -5135,7 +5161,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             }
 #endif
 
-            // Last channel seen now
+            // Last channel of a track seen now
             len = maxLen;
 
             if( !cut && selected )
@@ -5201,12 +5227,10 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             CallbackCheckCompletion(callbackReturn, 0);
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-         // Update the current time position, for scrubbing
-         // "Consume" only as much as the ring buffers produced, which may
-         // be less than framesPerBuffer (during "stutter")
          // wxASSERT( maxLen == toGet );
          if (mPlaybackSchedule.Interactive())
-            mPlaybackSchedule.SetTrackTime( mScrubQueue->Consumer( maxLen ) );
+            // Just do this to free space in scrub queue
+            mScrubQueue->Consumer( maxLen );
 #endif
 
          em.RealtimeProcessEnd();
@@ -5340,10 +5364,12 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          }
       }
 
-      // Update the current time position if not scrubbing
-      // (Already did it above, for scrubbing)
-
-      mPlaybackSchedule.TrackTimeUpdate( framesPerBuffer / mRate );
+      // Update the position seen by drawing code
+      if (mPlaybackSchedule.Interactive())
+         // To do: do this in all cases and remove TrackTimeUpdate
+         mPlaybackSchedule.SetTrackTime( mTimeQueue.Consumer( maxLen, mRate ) );
+      else
+         mPlaybackSchedule.TrackTimeUpdate( framesPerBuffer / mRate );
 
       // Record the reported latency from PortAudio.
       // TODO: Don't recalculate this with every callback?
@@ -5587,6 +5613,63 @@ void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
    auto time = GetTrackTime();
    auto newTime = AdvancedTrackTime( time, realElapsed, 1.0 );
    SetTrackTime( newTime );
+}
+
+void AudioIO::TimeQueue::Producer(
+   const PlaybackSchedule &schedule, double rate, double scrubSpeed,
+   size_t nSamples )
+{
+   if ( ! mData )
+      // Recording only.  Don't fill the queue.
+      return;
+
+   // Don't check available space:  assume it is enough because of coordination
+   // with RingBuffer.
+   auto index = mTail.mIndex;
+   auto time = mLastTime;
+   auto remainder = mTail.mRemainder;
+   auto space = TimeQueueGrainSize - remainder;
+
+   while ( nSamples >= space ) {
+      time = schedule.AdvancedTrackTime( time, space / rate, scrubSpeed );
+      index = (index + 1) % mSize;
+      mData[ index ] = time;
+      nSamples -= space;
+      remainder = 0;
+      space = TimeQueueGrainSize;
+   }
+
+   // Last odd lot
+   if ( nSamples > 0 )
+      time = schedule.AdvancedTrackTime( time, nSamples / rate, scrubSpeed );
+
+   mLastTime = time;
+   mTail.mRemainder = remainder + nSamples;
+   mTail.mIndex = index;
+}
+
+double AudioIO::TimeQueue::Consumer( size_t nSamples, double rate )
+{
+   if ( ! mData ) {
+      // Recording only.  No scrub or playback time warp.  Don't use the queue.
+      return ( mLastTime += nSamples / rate );
+   }
+
+   // Don't check available space:  assume it is enough because of coordination
+   // with RingBuffer.
+   auto remainder = mHead.mRemainder;
+   auto space = TimeQueueGrainSize - remainder;
+   if ( nSamples >= space ) {
+      remainder = 0,
+      mHead.mIndex = (mHead.mIndex + 1) % mSize,
+      nSamples -= space;
+      if ( nSamples >= TimeQueueGrainSize )
+         mHead.mIndex =
+            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % mSize,
+         nSamples %= TimeQueueGrainSize;
+   }
+   mHead.mRemainder = remainder + nSamples;
+   return mData[ mHead.mIndex ];
 }
 
 double AudioIO::PlaybackSchedule::TrackDuration(double realElapsed) const
