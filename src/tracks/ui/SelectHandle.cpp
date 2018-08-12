@@ -837,34 +837,36 @@ UIHandle::Result SelectHandle::Drag
          return RefreshNone;
    }
 
-   if ( auto clickedTrack =
-       static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack() ) {
-      // Handle which tracks are selected
-      Track *sTrack = pTrack.get();
-      Track *eTrack = clickedTrack.get();
-      auto trackList = pProject->GetTracks();
-      auto pMixerBoard = pProject->GetMixerBoard();
-      if ( sTrack && eTrack && !event.ControlDown() ) {
-         auto &selectionState = pProject->GetSelectionState();
-         selectionState.SelectRangeOfTracks
-         ( *trackList, *sTrack, *eTrack, pMixerBoard );
-      }
+   if (evt.pCell) {
+      if ( auto clickedTrack =
+          static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack() ) {
+         // Handle which tracks are selected
+         Track *sTrack = pTrack.get();
+         Track *eTrack = clickedTrack.get();
+         auto trackList = pProject->GetTracks();
+         auto pMixerBoard = pProject->GetMixerBoard();
+         if ( sTrack && eTrack && !event.ControlDown() ) {
+            auto &selectionState = pProject->GetSelectionState();
+            selectionState.SelectRangeOfTracks
+            ( *trackList, *sTrack, *eTrack, pMixerBoard );
+         }
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-#ifndef SPECTRAL_EDITING_ESC_KEY
-      if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-          !viewInfo.selectedRegion.isPoint())
-         MoveSnappingFreqSelection
-         (pProject, viewInfo, y, mRect.y, mRect.height, pTrack.get());
-      else
-#endif
-         if (pProject->GetTracks()->Lock(mFreqSelTrack) == pTrack)
-            AdjustFreqSelection(
-                                static_cast<WaveTrack*>(pTrack.get()),
-                                viewInfo, y, mRect.y, mRect.height);
-#endif
-      
-      AdjustSelection(pProject, viewInfo, x, mRect.x, clickedTrack.get());
+   #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   #ifndef SPECTRAL_EDITING_ESC_KEY
+         if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
+             !viewInfo.selectedRegion.isPoint())
+            MoveSnappingFreqSelection
+            (pProject, viewInfo, y, mRect.y, mRect.height, pTrack.get());
+         else
+   #endif
+            if (pProject->GetTracks()->Lock(mFreqSelTrack) == pTrack)
+               AdjustFreqSelection(
+                  static_cast<WaveTrack*>(pTrack.get()),
+                  viewInfo, y, mRect.y, mRect.height);
+   #endif
+         
+         AdjustSelection(pProject, viewInfo, x, mRect.x, clickedTrack.get());
+      }
    }
 
    return RefreshNone

@@ -178,7 +178,8 @@ UIHandle::Result EnvelopeHandle::Click
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    const auto pTrack = static_cast<Track*>(evt.pCell.get());
 
-   if (pTrack->GetKind() == Track::Wave) {
+   if (pTrack &&
+       pTrack->GetKind() == Track::Wave) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       if (wt->GetDisplay() != WaveTrack::Waveform)
          return Cancelled;
@@ -203,7 +204,8 @@ UIHandle::Result EnvelopeHandle::Click
                std::make_unique< EnvelopeEditor >( *clickedEnvelope, true );
       }
    }
-   else if (pTrack->GetKind() == Track::Time)
+   else if (pTrack &&
+            pTrack->GetKind() == Track::Time)
    {
       TimeTrack *const tt = static_cast<TimeTrack*>(pTrack);
       if (!mEnvelope)

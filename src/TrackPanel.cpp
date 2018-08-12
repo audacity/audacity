@@ -1072,7 +1072,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          const auto foundCell = FindCell(event.m_x, event.m_y);
          const auto t = FindTrack( foundCell.pCell.get() );
          if ( t )
-         EnsureVisible(t.get());
+            EnsureVisible(t.get());
       } );
    }
 
