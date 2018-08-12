@@ -261,7 +261,7 @@ bool ScoreAlignDialog::TransferDataFromWindow()
    mFramePeriodText->SetLabel(wxString::Format(_("%.2f secs"),
                                                p.mFramePeriod));
    mWindowSizeText->SetLabel(wxString::Format(_("%.2f secs"), p.mWindowSize));
-   mSilenceThresholdText->SetLabel(wxString::Format(_("%.3f"),
+   mSilenceThresholdText->SetLabel(wxString::Format(wxT("%.3f"),
                                                     p.mSilenceThreshold));
    mPresmoothText->SetLabel(p.mPresmoothTime > 0 ?
                             wxString::Format(_("%.2f secs"),
