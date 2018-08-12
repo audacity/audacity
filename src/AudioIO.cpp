@@ -503,6 +503,8 @@ enum {
    MIDI_MINIMAL_LATENCY_MS = 1
 };
 
+constexpr size_t TimeQueueGrainSize = 2000;
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 
 #include "tracks/ui/Scrubbing.h"
@@ -1992,6 +1994,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mPlaybackMixers.reset();
    mCaptureBuffers.reset();
    mResample.reset();
+   mTimeQueue.mData.reset();
 
    double playbackTime = 4.0;
 
@@ -2097,6 +2100,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    //
 
    bool bDone;
+   mTimeQueue.mHead = {};
+   mTimeQueue.mTail = {};
    do
    {
       bDone = true; // assume success
@@ -2126,6 +2131,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
             {
                mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
+               const auto timeQueueSize =
+                  (playbackBufferSize + TimeQueueGrainSize - 1)
+                     / TimeQueueGrainSize;
+               mTimeQueue.mData.reinit( timeQueueSize );
+               mTimeQueue.mSize = timeQueueSize;
 
                // use track time for the end time, not real time!
                WaveTrackConstArray mixTracks;
@@ -2376,6 +2386,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackMixers.reset();
    mCaptureBuffers.reset();
    mResample.reset();
+   mTimeQueue.mData.reset();
 
    if(!bOnlyBuffers)
    {
@@ -2713,6 +2724,7 @@ void AudioIO::StopStream()
       {
          mPlaybackBuffers.reset();
          mPlaybackMixers.reset();
+         mTimeQueue.mData.reset();
       }
 
       //

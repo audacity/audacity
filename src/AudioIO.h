@@ -961,6 +961,21 @@ private:
       void RealTimeRestart();
 
    } mPlaybackSchedule;
+
+   // Another circular buffer
+   // Holds track time values corresponding to every nth sample in the playback
+   // buffers, for some large n
+   struct TimeQueue {
+      Doubles mData;
+      size_t mSize{ 0 };
+      // These need not be updated atomically, because we rely on the atomics
+      // in the playback ring buffers to supply the synchronization.  Still,
+      // align them to avoid false sharing.
+      alignas(64) struct Cursor {
+         size_t mIndex {};
+         size_t mRemainder {};
+      } mHead, mTail;
+   } mTimeQueue;   
 };
 
 #endif
