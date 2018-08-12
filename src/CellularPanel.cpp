@@ -729,13 +729,15 @@ try
       }
       else if (event.ButtonUp()) {
          // UIHANDLE RELEASE
+         // copy shared_ptr for safety, as in HandleClick
+         auto handle = state.mUIHandle;
          unsigned moreFlags = state.mMouseOverUpdateFlags;
          UIHandle::Result refreshResult =
-            state.mUIHandle->Release( tpmEvent, GetProject(), this );
+            handle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
             (pClickedCell.get(), pCell.get(),
              refreshResult | moreFlags);
-         state.mUIHandle.reset(), ClearTargets();
+         state.mUIHandle.reset(), handle.reset(), ClearTargets();
          state.mpClickedCell.reset();
          // will also Uncapture() below
       }
