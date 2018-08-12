@@ -175,7 +175,7 @@ msgstr "Lo script non è stato salvato."
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
 #: src/export/Export.cpp src/import/ImportPCM.cpp src/widgets/Warning.cpp
 msgid "Warning"
-msgstr "Avvertimento"
+msgstr "Attenzione"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Save Nyquist script"
@@ -437,7 +437,7 @@ msgstr "Plug-in Nyquist"
 
 #: src/AboutDialog.cpp
 msgid "incorporating"
-msgstr "inorporare"
+msgstr "incorporare"
 
 #: src/AboutDialog.cpp
 msgid "About Audacity"
@@ -491,8 +491,8 @@ msgid ""
 "Audacity the free, open source, cross-platform software for recording and "
 "editing sounds."
 msgstr ""
-"Audacity il software gratuito, open source, multi-piattaforma per registrare "
-"ed elaborare l'audio."
+"Audacity il software libero, open source, multi-piattaforma per registrare "
+"ed elaborare suoni."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -862,7 +862,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Audacity is already running"
-msgstr "Audacity è già stato avviato"
+msgstr "Audacity è già in esecuzione"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
@@ -1146,10 +1146,8 @@ msgid "C&hoose command"
 msgstr "Sc&egli comando"
 
 #: src/BatchCommands.cpp
-#, fuzzy
-#| msgid "Action"
 msgid "No Action"
-msgstr "Azione"
+msgstr "Nessuna Azione"
 
 #. i18n-hint: before is adverb; MP3 names an audio file format
 #: src/BatchCommands.cpp
@@ -1167,31 +1165,23 @@ msgstr "Esporta come MP&3"
 
 #. i18n-hint: FLAC names an audio file format
 #: src/BatchCommands.cpp
-#, fuzzy
-#| msgid "Export as &WAV"
 msgid "Export as FLAC"
-msgstr "Esporta come &WAV"
+msgstr "Esporta come FLAC"
 
 #. i18n-hint: MP3 names an audio file format
 #: src/BatchCommands.cpp
-#, fuzzy
-#| msgid "Export as MP&3"
 msgid "Export as MP3"
-msgstr "Esporta come MP&3"
+msgstr "Esporta come MP3"
 
 #. i18n-hint: Ogg names an audio file format
 #: src/BatchCommands.cpp
-#, fuzzy
-#| msgid "Export as &OGG"
 msgid "Export as Ogg"
-msgstr "Esporta come &OGG"
+msgstr "Esporta come Ogg"
 
 #. i18n-hint: WAV names an audio file format
 #: src/BatchCommands.cpp
-#, fuzzy
-#| msgid "Export as &WAV"
 msgid "Export as WAV"
-msgstr "Esporta come &WAV"
+msgstr "Esporta come WAV"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1691,10 +1681,8 @@ msgid "Whenever a project depends on other files:"
 msgstr "Ogni volta che un progetto dipende da altri file:"
 
 #: src/Dependencies.cpp
-#, fuzzy, c-format
-#| msgid "MISSING "
 msgid "MISSING %s"
-msgstr "MANCANTE "
+msgstr "%s MANCANTE"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2694,7 +2682,7 @@ msgstr "Alta frequenza"
 
 #: src/LabelDialog.cpp
 msgid "New..."
-msgstr "&Nuovo..."
+msgstr "Nuovo..."
 
 #: src/LabelDialog.cpp src/Menus.cpp
 msgid "Select a text file containing labels"
@@ -2705,10 +2693,8 @@ msgid "Text files (*.txt)|*.txt|All files|*"
 msgstr "File testo (*.txt)|*.txt|Tutti i file|*"
 
 #: src/LabelDialog.cpp src/Menus.cpp src/Project.cpp
-#, fuzzy, c-format
-#| msgid "Could not open file: \"%s\""
 msgid "Could not open file: %s"
-msgstr "Impossibile aprire il file: \"%s\""
+msgstr "Impossibile aprire il file: %s"
 
 #: src/LabelDialog.cpp
 msgid "No labels to export."

@@ -1,22 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) 2018 Audacity Team
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
 # Dmitry Kiselev <dmitry.v.kiselev@gmail.com>, 2015
-# Johnny Storm <x24cm5b8c54q6szxw@yandex.ru>, 2015
+# Johnny Storm <x24cm5b8c54q6szxw@yandex.ru>, 2015, 2017
 # Lowrider <pams@imail.ru>, 2014
 # stryaponoff <stryaponoff@gmail.com>, 2014
 # Yan  Pas, 2015
-# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2011
+# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2018
 # Дмитрий Шатера <mr.bobsans@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-01-23 18:10-0500\n"
-"PO-Revision-Date: 2017-11-02 19:18+0200\n"
-"Last-Translator: Johnny Storm <x24cm5b8c54q6szxw@yandex.ru>\n"
+"PO-Revision-Date: 2018-07-23 15:09+0200\n"
+"Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/klyok/audacity/language/"
 "ru/)\n"
 "Language: ru\n"
@@ -2846,7 +2846,6 @@ msgid "Save Project &As..."
 msgstr "Сохранить проект как..."
 
 #: src/Menus.cpp
-#, fuzzy
 #| msgid "Export"
 msgid "&Export"
 msgstr "Экспортировать"
@@ -7616,27 +7615,27 @@ msgstr "Данные собраны"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Clipping"
-msgstr ""
+msgstr "Жёсткий клиппинг"
 
 #: src/effects/Distortion.cpp
 msgid "Soft Clipping"
-msgstr ""
+msgstr "Лёгкий клиппинг"
 
 #: src/effects/Distortion.cpp
 msgid "Soft Overdrive"
-msgstr ""
+msgstr "Лёгкий перегруз"
 
 #: src/effects/Distortion.cpp
 msgid "Medium Overdrive"
-msgstr ""
+msgstr "Средний перегруз"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Overdrive"
-msgstr ""
+msgstr "Жёсткий перегруз"
 
 #: src/effects/Distortion.cpp
 msgid "Cubic Curve (odd harmonics)"
-msgstr ""
+msgstr "Кубическая кривая (нечетные гармоники)"
 
 #: src/effects/Distortion.cpp
 msgid "Even Harmonics"
@@ -7644,7 +7643,7 @@ msgstr "Четные гармоники"
 
 #: src/effects/Distortion.cpp
 msgid "Expand and Compress"
-msgstr "Расширение и Сжатие"
+msgstr "Расширение и сжатие"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller"
@@ -7652,11 +7651,11 @@ msgstr "Выравнивание уровней"
 
 #: src/effects/Distortion.cpp
 msgid "Rectifier Distortion"
-msgstr ""
+msgstr "Искажение выпрямителем"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Limiter 1413"
-msgstr ""
+msgstr "Жёсткий лимитер 1413"
 
 #: src/effects/Distortion.cpp
 #, no-c-format
@@ -7798,7 +7797,7 @@ msgstr ""
 
 #: src/effects/Distortion.cpp
 msgid "Distortion amount"
-msgstr ""
+msgstr "Количество искажений"
 
 #: src/effects/Distortion.cpp
 msgid "Output level"
@@ -7810,7 +7809,7 @@ msgstr "Повторить обработку"
 
 #: src/effects/Distortion.cpp
 msgid "Harmonic brightness"
-msgstr ""
+msgstr "Гармоническая ясность"
 
 #: src/effects/Distortion.cpp
 msgid "Levelling fine adjustment"
@@ -7822,7 +7821,7 @@ msgstr "Степень выравнивания:"
 
 #: src/effects/Distortion.cpp
 msgid "dB Limit"
-msgstr "dB Уровень"
+msgstr "Предел в Дб"
 
 #: src/effects/Distortion.cpp
 msgid "Wet level"
@@ -7839,12 +7838,12 @@ msgstr " (Не используется):"
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (-100 to 0 dB):"
-msgstr ""
+msgstr " (от -100 до 0 Дб):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (-80 to -20 dB):"
-msgstr ""
+msgstr " (от -80 до -20 Дб):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
@@ -7854,7 +7853,7 @@ msgstr " (от 0 до 100):"
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
 msgid " (0 to 5):"
-msgstr ""
+msgstr " (от 0 до 5):"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -7893,10 +7892,10 @@ msgid "Silence duration:"
 msgstr "Длительность тишины:"
 
 #: src/effects/DtmfGen.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "%.0f:1"
 msgid "%.0f ms"
-msgstr "%.0f:1"
+msgstr "%.0f мс"
 
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
@@ -8283,14 +8282,14 @@ msgid "Max dB"
 msgstr "Макс. Дб"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "%3d dB"
 msgid "%d dB"
-msgstr "%3d Дб"
+msgstr "%d Дб"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
-msgstr ""
+msgstr "- Дб"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "Min dB"
@@ -8299,12 +8298,12 @@ msgstr "Мин. Дб"
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%d Hz"
-msgstr ""
+msgstr "%d Гц"
 
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%g kHz"
-msgstr ""
+msgstr "%g КГц"
 
 #: src/effects/Equalization.cpp
 msgid "&EQ Type:"
@@ -8486,20 +8485,20 @@ msgid "'unnamed' is special"
 msgstr "У 'unnamed' особая роль"
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Renamed '%s' to '%s'"
 msgid "Rename '%s' to..."
-msgstr "Название '%s' изменено на '%s'"
+msgstr "Переименовать '%s' в..."
 
 #: src/effects/Equalization.cpp
 msgid "Rename..."
 msgstr "Переименование кривой"
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Rename '"
 msgid "Rename '%s'"
-msgstr "Переименовать '"
+msgstr "Переименовать '%s'"
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -8939,49 +8938,49 @@ msgstr "Нормировка без удаления смещения по ос�
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
-msgstr ""
+msgstr "Ничего не выполняется...\n"
 
 #: src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Analyzing: "
 msgid "Analyzing: %s"
-msgstr "Анализ:"
+msgstr "Анализ: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Analyzing first track of stereo pair: "
 msgid "Analyzing first track of stereo pair: %s"
-msgstr "Анализ первой дорожки стерео пары: "
+msgstr "Анализ первой дорожки стереопары: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Processing: "
 msgid "Processing: %s"
-msgstr "Обработка:"
+msgstr "Обработка: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Processing stereo channels independently: "
 msgid "Processing stereo channels independently: %s"
-msgstr "Раздельная обработка стерео каналов: "
+msgstr "Раздельная обработка стереоканалов: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Analyzing second track of stereo pair: "
 msgid "Analyzing second track of stereo pair: %s"
-msgstr "Анализ второй дорожки стерео пары: "
+msgstr "Анализ второй дорожки стереопары: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Processing first track of stereo pair: "
 msgid "Processing first track of stereo pair: %s"
-msgstr "Обработка первой дорожки стерео пары: "
+msgstr "Обработка первой дорожки стереопары: %s"
 
 #: src/effects/Normalize.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Processing second track of stereo pair: "
 msgid "Processing second track of stereo pair: %s"
-msgstr "Обработка второй дорожки стерео пары: "
+msgstr "Обработка второй дорожки стереопары: %s"
 
 #: src/effects/Normalize.cpp
 msgid "Remove DC offset (center on 0.0 vertically)"
@@ -9001,7 +9000,7 @@ msgstr "Нормировать стереоканалы раздельно"
 
 #: src/effects/Normalize.cpp
 msgid "Waiting for waveform to finish computing..."
-msgstr ""
+msgstr "Волновая форма сигнала пока что вычисляется"
 
 #: src/effects/Normalize.cpp
 msgid ".  Maximum 0dB."
@@ -9175,16 +9174,16 @@ msgid "New selection length: dd:hh:mm:ss"
 msgstr "Новая продолжительность выделения: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Current selection length: "
 msgid "Current selection length: %s"
-msgstr "Длительность выделения: "
+msgstr "Длительность этого выделения: %s"
 
 #: src/effects/Repeat.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "New selection length: "
 msgid "New selection length: %s"
-msgstr "Новая продолжительность выделения: "
+msgstr "Новая длительность выделения: %s"
 
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
@@ -9311,12 +9310,12 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
-msgstr ""
+msgstr "Т&ип фильтра:"
 
 #. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
 #: src/effects/ScienFilter.cpp
 msgid "O&rder:"
-msgstr ""
+msgstr "&Порядок:"
 
 #: src/effects/ScienFilter.cpp
 msgid "&Passband Ripple:"
@@ -10277,7 +10276,7 @@ msgstr "Этот файл с параметрами был сохранен в %
 
 #: src/export/Export.cpp
 msgid "No format specific options"
-msgstr ""
+msgstr "Нет специфичных для формата параметров"
 
 #: src/export/Export.cpp
 msgid "Export Audio"
@@ -10577,7 +10576,7 @@ msgstr "Частоты сэмплирования"
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 #, c-format
 msgid "%i kbps"
-msgstr ""
+msgstr "%i Кбит/с"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 msgid "Bit Rate:"
@@ -10590,11 +10589,11 @@ msgstr "Качество:"
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "%.2f kbps"
-msgstr ""
+msgstr "%.2f Кбит/с"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Open custom FFmpeg format options"
-msgstr ""
+msgstr "Открыть диалог с параметрами формата FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Error Saving FFmpeg Presets"
@@ -12472,11 +12471,11 @@ msgstr "Извещать звуком о завершении &длительн�
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Re&tain labels if selection snaps to a label"
-msgstr ""
+msgstr "Со&хранять метки, если выделение прилипает к метке"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
-msgstr ""
+msgstr "О&бъединять системную тему и тему Audacity"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -12488,15 +12487,15 @@ msgstr "При импорте звуковых файлов"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Copy uncompressed files into the project (safer)"
-msgstr ""
+msgstr "&Копировать несжатые файлы в проект (безопаснее)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Read uncompressed files from original location (faster)"
-msgstr ""
+msgstr "&Читать несжатые файлы из оригинального местоположения (быстрее)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Normalize all tracks in project"
-msgstr "&Нормализовать все дорожки в проекте"
+msgstr "&Нормировать все дорожки в проекте"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
@@ -12508,15 +12507,15 @@ msgstr "Свести в стерео или моно"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Use custom mix"
-msgstr ""
+msgstr "&Выполнять заказное смешивание"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&how Metadata Tags editor before export"
-msgstr ""
+msgstr "Показывать редактор &метаданных перед экспортом"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
-msgstr ""
+msgstr "Экспортируемые файлы Allegro (.gro) сохраняют время как:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Seconds"
@@ -12629,7 +12628,7 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid "%s - %s"
-msgstr ""
+msgstr "%s - %s"
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -12712,7 +12711,7 @@ msgstr "Устройства MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
-msgstr "Используется: "
+msgstr "Используется: PortMidi"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
@@ -12772,7 +12771,7 @@ msgstr "Модули не найдены"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Mouse"
@@ -13043,7 +13042,7 @@ msgstr "&Не копировать звуковые данные"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "As&k"
-msgstr ""
+msgstr "&Спрашивать, что сделать"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Rectangle"
@@ -13105,7 +13104,7 @@ msgstr "Мониторинг записи"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Other tracks while recording (overdub)"
-msgstr ""
+msgstr "Слушать &другие дорожки при записи (перезаписи)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Hardware Playthrough of input"
@@ -13162,7 +13161,7 @@ msgstr "Всегда записывать в новую дорожку"
 #. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
-msgstr ""
+msgstr "Определять потерю сигнала при записи"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
@@ -13650,7 +13649,7 @@ msgstr "Предупреждения"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
-msgstr "Показывать предупреждения и запросы подтверждения при"
+msgstr "Показывать предупреждения и запросы на подтверждение при"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &projects"
@@ -13662,7 +13661,7 @@ msgstr "Сохранении &пустых проектов"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "&Low disk space at launch or new project"
-msgstr ""
+msgstr "&Нехватке дискового пространства при старте или создании проекта"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &mono during export"
@@ -13678,7 +13677,7 @@ msgstr "Сведении при экспорте (FFmpeg или во внешн�
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "&Importing uncompressed audio files"
-msgstr "&Импорт несжатых звуковых данных"
+msgstr "&Импорте несжатых звуковых данных"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
