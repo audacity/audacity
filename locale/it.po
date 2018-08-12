@@ -1682,7 +1682,7 @@ msgstr "Ogni volta che un progetto dipende da altri file:"
 
 #: src/Dependencies.cpp
 msgid "MISSING %s"
-msgstr "%S MANCANTE"
+msgstr "%s MANCANTE"
 
 #: src/Dependencies.cpp
 msgid ""
