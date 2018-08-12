@@ -3087,6 +3087,12 @@ auto AdornedRulerPanel::QPHandle::Release
 (const TrackPanelMouseEvent &event, AudacityProject *pProject,
  wxWindow *pParent) -> Result
 {
+   // Keep a shared pointer to self.  Otherwise *this might get deleted
+   // in HandleQPRelease on Windows!  Because there is an event-loop yield
+   // stopping playback, which caused OnCaptureLost to be called, which caused
+   // clearing of CellularPanel targets!
+   auto saveMe = mParent->mQPCell->mHolder.lock();
+
    auto result = CommonRulerHandle::Release(event, pProject, pParent);
    if (!( result & RefreshCode::Cancelled )) {
       if (mClicked == Button::Left) {
