@@ -5497,7 +5497,11 @@ void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
       bool foundTotal = false;
       do {
          auto oldTime = time;
-         time = mTimeTrack->SolveWarpedLength(time, realElapsed);
+         if (foundTotal && fabs(realElapsed) > fabs(total))
+            // Avoid SolveWarpedLength
+            time = mT1;
+         else
+            time = mTimeTrack->SolveWarpedLength(time, realElapsed);
          if (Looping() && Overruns( time )) {
             // Bug1922:  The part of the time track outside the loop should not
             // influence the result
