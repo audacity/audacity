@@ -585,8 +585,6 @@ private:
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
    void StartStreamCleanup(bool bOnlyBuffers = false);
 
-   PRCrossfadeData     mCrossfadeData{};
-
 #ifdef EXPERIMENTAL_MIDI_OUT
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
