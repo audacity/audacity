@@ -729,6 +729,10 @@ private:
    volatile double     mLastRecordingOffset;
    PaError             mLastPaError;
 
+public:
+   wxString            LastPaErrorString();
+private:
+
    AudacityProject    *mOwningProject;
    wxWeakRef<MeterPanel> mInputMeter{};
    MeterPanel         *mOutputMeter;

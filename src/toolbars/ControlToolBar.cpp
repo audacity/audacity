@@ -876,7 +876,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
       if( meter ) {
          meter->Clear();
       }
-      
+
       meter = project->GetCaptureMeter();
       if( meter ) {
          meter->Clear();
@@ -1312,9 +1312,8 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
          CancelRecording();
 
          // Show error message if stream could not be opened
-         ShowErrorDialog(this, _("Error"),
-                         _("Error opening sound device.\nTry changing the audio host, recording device and the project sample rate."),
-                         wxT("Error_opening_sound_device"));
+         wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), gAudioIO->LastPaErrorString());
+         ShowErrorDialog(this, _("Error"), msg, wxT("Error_opening_sound_device"));
       }
    }
 

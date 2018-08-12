@@ -1826,6 +1826,11 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    return (mLastPaError == paNoError);
 }
 
+wxString AudioIO::LastPaErrorString()
+{
+   return wxString::Format(wxT("%d %s."), (int) mLastPaError, Pa_GetErrorText(mLastPaError));
+}
+
 void AudioIO::StartMonitoring(double sampleRate)
 {
    if ( mPortStreamV19 || mStreamToken )
