@@ -8657,8 +8657,10 @@ void AudacityProject::OnPunchAndRoll(const CommandContext &WXUNUSED(context))
       sampleCount testSample(floor(t1 * wt->GetRate()));
       auto clip = wt->GetClipAtSample(testSample);
       if (!clip)
-         // Subtract 1 to allow a selection exactly at the end time
-         clip = wt->GetClipAtSample(testSample - 1);
+         // Bug 1890 (an enhancement request)
+         // Try again, a little to the left.
+         // Subtract 10 to allow a selection exactly at or slightly after the end time 
+         clip = wt->GetClipAtSample(testSample - 10);
       if (!clip)
          error = true;
       else {
