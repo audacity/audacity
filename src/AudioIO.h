@@ -931,6 +931,13 @@ private:
       // Returns true if time equals t1 or is on opposite side of t1, to t0
       bool Overruns( double trackTime ) const;
 
+      // Compute the NEW track time for the given one and a real duration,
+      // taking into account whether the schedule is for looping
+      double AdvancedTrackTime(
+         double trackTime, double realElapsed, double speed) const;
+
+      // Use the function above in the callback after consuming samples from the
+      // playback ring buffers, during usual straight or looping play
       void TrackTimeUpdate(double realElapsed);
 
       // Convert a nonnegative real duration to an increment of track time

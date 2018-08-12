@@ -5506,23 +5506,18 @@ bool AudioIO::PlaybackSchedule::Overruns( double trackTime ) const
    return (ReversedTime() ? trackTime <= mT1 : trackTime >= mT1);
 }
 
-void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
+double AudioIO::PlaybackSchedule::AdvancedTrackTime(
+   double time, double realElapsed, double speed ) const
 {
-   // Update mTime within the PortAudio callback
-
-   if (Interactive())
-      return;
-
    if (ReversedTime())
       realElapsed *= -1.0;
 
-   auto time = GetTrackTime();
+   // Defense against cases that might cause loops not to terminate
+   if ( fabs(mT0 - mT1) < 1e-9 )
+      return mT0;
+
    if (mTimeTrack) {
-      // Defense against a case that might cause the do-loop not to terminate
-      if ( fabs(mT0 - mT1) < 1e-9 ) {
-         SetTrackTime( mT0 );
-         return;
-      }
+       wxASSERT( speed == 1.0 );
 
       double total;
       bool foundTotal = false;
@@ -5553,7 +5548,7 @@ void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
       } while ( true );
    }
    else {
-      time += realElapsed;
+      time += realElapsed * speed;
 
       // Wrap to start if looping
       if (Looping()) {
@@ -5565,7 +5560,20 @@ void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
          }
       }
    }
-   SetTrackTime( time );
+
+   return time;
+}
+
+void AudioIO::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
+{
+   // Update mTime within the PortAudio callback
+
+   if (Interactive())
+      return;
+
+   auto time = GetTrackTime();
+   auto newTime = AdvancedTrackTime( time, realElapsed, 1.0 );
+   SetTrackTime( newTime );
 }
 
 double AudioIO::PlaybackSchedule::TrackDuration(double realElapsed) const
