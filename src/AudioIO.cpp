@@ -408,7 +408,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "Experimental.h"
 #include "AudioIO.h"
 #include "float_cast.h"
-#include "UndoManager.h"
+#include "DeviceManager.h"
 
 #include <cfloat>
 #include <math.h>
@@ -1780,11 +1780,12 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    int  userData = 24;
    int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
 
-   // (Linux, bug 1885) On first use, the device may not be ready in time, so allow retries.
+   // (Linux, bug 1885) After scanning devices it takes a little time for the
+   // ALSA device to be available, so allow retries.
    // On my test machine, no more than 3 attempts are required.
    unsigned int maxTries = 1;
 #ifdef __WXGTK__
-   if (!mOwningProject->GetUndoManager()->UnsavedChanges())
+   if (DeviceManager::Instance()->GetTimeSinceRescan() < 10)
       maxTries = 5;
 #endif
 

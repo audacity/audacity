@@ -306,7 +306,16 @@ void DeviceManager::Rescan()
       }
    }
    m_inited = true;
+   mRescanTime = std::chrono::steady_clock::now();
 }
+
+
+float DeviceManager::GetTimeSinceRescan() {
+   auto now = std::chrono::steady_clock::now();
+   auto dur = std::chrono::duration_cast<std::chrono::duration<float>>(now - mRescanTime);
+   return dur.count();
+}
+
 
 //private constructor - Singleton.
 DeviceManager::DeviceManager()
@@ -317,6 +326,7 @@ DeviceManager::DeviceManager()
 #endif
 {
    m_inited = false;
+   mRescanTime = std::chrono::steady_clock::now();
 }
 
 DeviceManager::~DeviceManager()
