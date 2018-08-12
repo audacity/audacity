@@ -408,6 +408,7 @@ TimeTrack and AudioIOListener and whether the playback is looped.
 #include "Experimental.h"
 #include "AudioIO.h"
 #include "float_cast.h"
+#include "UndoManager.h"
 
 #include <cfloat>
 #include <math.h>
@@ -1779,12 +1780,27 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    int  userData = 24;
    int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
 
-   mLastPaError = Pa_OpenStream( &mPortStreamV19,
-                                 useCapture ? &captureParameters : NULL,
-                                 usePlayback ? &playbackParameters : NULL,
-                                 mRate, paFramesPerBufferUnspecified,
-                                 paNoFlag,
-                                 audacityAudioCallback, lpUserData );
+   // (Linux, bug 1885) On first use, the device may not be ready in time, so allow retries.
+   // On my test machine, no more than 3 attempts are required.
+   unsigned int maxTries = 1;
+#ifdef __WXGTK__
+   if (!mOwningProject->GetUndoManager()->UnsavedChanges())
+      maxTries = 5;
+#endif
+
+   for (unsigned int tries = 0; tries < maxTries; tries++) {
+      mLastPaError = Pa_OpenStream( &mPortStreamV19,
+                                    useCapture ? &captureParameters : NULL,
+                                    usePlayback ? &playbackParameters : NULL,
+                                    mRate, paFramesPerBufferUnspecified,
+                                    paNoFlag,
+                                    audacityAudioCallback, lpUserData );
+      if (mLastPaError == paNoError) {
+         break;
+      }
+      wxLogDebug("Attempt %u to open capture stream failed with: %d", 1 + tries, mLastPaError);
+      wxMilliSleep(1000);
+   }
 
 
 #if USE_PORTMIXER
@@ -1852,8 +1868,12 @@ void AudioIO::StartMonitoring(double sampleRate)
    success = StartPortAudioStream(sampleRate, (unsigned int)playbackChannels,
                                   (unsigned int)captureChannels,
                                   captureFormat);
-   // TODO: Check return value of success.
-   (void)success;
+
+   if (!success) {
+      wxString msg = wxString::Format(_("Error opening recording device.\nError code: %s"), gAudioIO->LastPaErrorString());
+      ShowErrorDialog(mOwningProject, _("Error"), msg, wxT("Error_opening_sound_device"));
+      return;
+   }
 
    wxCommandEvent e(EVT_AUDIOIO_MONITOR);
    e.SetEventObject(mOwningProject);
