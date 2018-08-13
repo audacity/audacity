@@ -1345,6 +1345,12 @@ bool NyquistEffect::ProcessOne()
       }
    }
 
+   if ((rval == nyx_audio) && (GetType() == EffectTypeTool)) {
+      // Catch this first so that we can also handle other errors.
+      mDebugOutput = _("';type tool' effects cannot return audio from Nyquist.\n") + mDebugOutput;
+      rval = nyx_error;
+   }
+
    if (rval == nyx_error) {
       // Return value is not valid type.
       // Show error in debug window if trace enabled, otherwise log.
@@ -1356,7 +1362,7 @@ bool NyquistEffect::ProcessOne()
          return false;
       }
       else {
-         wxLogMessage(wxT("Nyquist returned nyx_error."));
+         wxLogMessage("Nyquist returned nyx_error:\n%s", mDebugOutput);
       }
       return true;
    }
