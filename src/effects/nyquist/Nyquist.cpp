@@ -1042,7 +1042,7 @@ bool NyquistEffect::ProcessOne()
    // A tool may be using AUD-DO which will potentially invalidate *TRACK*
    // so tools do not get *TRACK*.
    if (GetType() == EffectTypeTool)
-      ; // No Track.
+      cmd += wxT("(setf S 0.25)\n"); // No Track.
    else if (mVersion >= 4) {
       nyx_set_audio_name("*TRACK*");
       cmd += wxT("(setf S 0.25)\n");
