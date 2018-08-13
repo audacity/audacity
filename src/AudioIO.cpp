@@ -523,25 +523,18 @@ constexpr size_t TimeQueueGrainSize = 2000;
 
 
 /*
-This work queue class, with the aid of the playback ring
-buffers, coordinates three threads during scrub play:
+This work queue class coordinates two threads during scrub play:
 
 The UI thread which specifies scrubbing intervals to play,
 
-The Audio thread which consumes those specifications a first time
-and fills the ring buffers with samples for play,
-
-The PortAudio thread which consumes from the ring buffers, then
-also consumes a second time from this queue,
-to figure out how to update mTime
-
--- which the UI thread, in turn, uses to redraw the play head indicator
-in the right place.
+and the Audio thread which consumes those specifications
+and fills the ring buffers with samples for play (to be consumed by yet another
+thread, spawned by PortAudio).
 
 Audio produces samples for PortAudio, which consumes them, both in
-approximate real time.  The UI thread might go idle and so the others
+approximate real time.  The UI thread might go idle and so Audio
 might catch up, emptying the queue and causing scrub to go silent.
-The UI thread will not normally outrun the others -- because InitEntry()
+The UI thread will not normally outrun Audio -- because InitEntry()
 limits the real time duration over which each enqueued interval will play.
 So a small, fixed queue size should be adequate.
 */
@@ -571,13 +564,6 @@ struct AudioIO::ScrubQueue
       else {
          // If not, we can wait to enqueue again later
          dd.Cancel();
-      }
-
-      // So the play indicator starts out unconfused:
-      {
-         Entry &entry = mEntries[mTrailingIdx];
-         entry.mS0 = entry.mS1 = s0;
-         entry.mPlayed = entry.mDuration = 1;
       }
    }
    ~ScrubQueue() {}
@@ -657,16 +643,16 @@ struct AudioIO::ScrubQueue
       {
          // ??
          // Queue wasn't long enough.  Write side (UI thread)
-         // has overtaken the trailing read side (PortAudio thread), despite
+         // has overtaken the trailing read side (Audio thread), despite
          // my comments above!  We lose some work requests then.
          // wxASSERT(false);
          return false;
       }
    }
 
-   void Transformer(sampleCount &startSample, sampleCount &endSample,
-                    sampleCount &duration,
-                    Maybe<wxMutexLocker> &cleanup)
+   void Consumer(sampleCount &startSample, sampleCount &endSample,
+                 sampleCount &duration,
+                 Maybe<wxMutexLocker> &cleanup)
    {
       // Audio thread is ready for the next interval.
 
@@ -707,7 +693,8 @@ struct AudioIO::ScrubQueue
                // Discard entire queue entry
                mDebt -= dur;
                toDiscard -= dur;
-               dur = 0; // So Consumer() will handle abandoned entry correctly
+               dur = 0;
+               mTrailingIdx = mMiddleIdx;
                mMiddleIdx = (mMiddleIdx + 1) % Size;
             }
             else {
@@ -736,6 +723,7 @@ struct AudioIO::ScrubQueue
          startSample = entry.mS0;
          endSample = entry.mS1;
          duration = entry.mDuration;
+         mTrailingIdx = mMiddleIdx;
          mMiddleIdx = (mMiddleIdx + 1) % Size;
          mCredit += duration;
       }
@@ -748,42 +736,6 @@ struct AudioIO::ScrubQueue
          mLastTransformerTimeMillis = now;
    }
 
-   double Consumer(unsigned long frames)
-   {
-      // Portaudio thread consumes samples and must update
-      // the time for the indicator.  This finds the time value.
-
-      // MAY ADVANCE mTrailingIdx, BUT IT NEVER CATCHES UP TO mMiddleIdx.
-
-      wxMutexLocker locker(mUpdating);
-
-      // Mark entries as partly or fully "consumed" for
-      // purposes of mTime update.  It should not happen that
-      // frames exceed the total of samples to be consumed,
-      // but in that case we just use the t1 of the latest entry.
-      while (1)
-      {
-         Entry *pEntry = &mEntries[mTrailingIdx];
-         auto remaining = pEntry->mDuration - pEntry->mPlayed;
-         if (frames >= remaining)
-         {
-            // remaining is not more than frames
-            frames -= remaining.as_size_t();
-            pEntry->mPlayed = pEntry->mDuration;
-         }
-         else
-         {
-            pEntry->mPlayed += frames;
-            break;
-         }
-         const unsigned next = (mTrailingIdx + 1) % Size;
-         if (next == mMiddleIdx)
-            break;
-         mTrailingIdx = next;
-      }
-      return mEntries[mTrailingIdx].GetTime(mRate);
-   }
-
 private:
    struct Entry
    {
@@ -792,7 +744,6 @@ private:
          , mS1(0)
          , mGoal(0)
          , mDuration(0)
-         , mPlayed(0)
       {}
 
       bool Init(Entry *previous, sampleCount s0, sampleCount s1,
@@ -905,7 +856,6 @@ private:
 
          mS0 = s0;
          mS1 = s1;
-         mPlayed = 0;
          mDuration = duration;
          return true;
       }
@@ -914,16 +864,7 @@ private:
       {
          mGoal = previous.mGoal;
          mS0 = mS1 = previous.mS1;
-         mPlayed = 0;
          mDuration = duration;
-      }
-
-      double GetTime(double rate) const
-      {
-         return
-            (mS0.as_double() +
-             (mS1 - mS0).as_double() * mPlayed.as_double() / mDuration.as_double())
-            / rate;
       }
 
       // These sample counts are initialized in the UI, producer, thread:
@@ -937,10 +878,6 @@ private:
 
       // The middleman Audio thread does not change these entries, but only
       // changes indices in the queue structure.
-
-      // This increases from 0 to mDuration as the PortAudio, consumer,
-      // thread catches up.  When they are equal, this entry can be discarded:
-      sampleCount mPlayed;
    };
 
    struct Duration {
@@ -3329,7 +3266,7 @@ AudioThread::ExitCode AudioThread::Entry()
       gAudioIO->mAudioThreadFillBuffersLoopActive = false;
 
       if (gAudioIO->mPlaybackSchedule.Interactive()) {
-         // Rely on the Wait() in ScrubQueue::Transformer()
+         // Rely on the Wait() in ScrubQueue::Consumer()
          // This allows the scrubbing update interval to be made very short without
          // playback becoming intermittent.
       }
@@ -4011,7 +3948,7 @@ void AudioIO::FillBuffers()
                if (!done && mScrubDuration <= 0)
                {
                   sampleCount startSample, endSample;
-                  mScrubQueue->Transformer(startSample, endSample, mScrubDuration, cleanup);
+                  mScrubQueue->Consumer(startSample, endSample, mScrubDuration, cleanup);
                   if (mScrubDuration < 0)
                   {
                      // Can't play anything
@@ -5226,12 +5163,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          if (numPlaybackTracks == 0)
             CallbackCheckCompletion(callbackReturn, 0);
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
          // wxASSERT( maxLen == toGet );
-         if (mPlaybackSchedule.Interactive())
-            // Just do this to free space in scrub queue
-            mScrubQueue->Consumer( maxLen );
-#endif
 
          em.RealtimeProcessEnd();
 
