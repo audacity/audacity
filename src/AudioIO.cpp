@@ -3987,10 +3987,12 @@ void AudioIO::FillBuffers()
             // How many samples to produce for each channel.
             auto frames = available;
             bool progress = true;
+            auto toProcess = frames;
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             if (mPlaybackSchedule.Interactive())
                // scrubbing and play-at-speed are not limited by the real time
                // and length accumulators
+               toProcess =
                frames = limitSampleBufferSize(frames, mScrubDuration);
             else
 #endif
@@ -3999,6 +4001,7 @@ void AudioIO::FillBuffers()
                if (deltat > realTimeRemaining)
                {
                   frames = realTimeRemaining * mRate;
+                  toProcess = frames;
                   // Don't fall into an infinite loop, if loop-playing a selection
                   // that is so short, it has no samples: detect that case
                   progress =
@@ -4012,56 +4015,32 @@ void AudioIO::FillBuffers()
             }
 
             if (!progress)
-               frames = available;
+               frames = available, toProcess = 0;
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+            else if ( mPlaybackSchedule.Interactive() && mSilentScrub)
+               toProcess = 0;
+#endif
 
             for (i = 0; i < mPlaybackTracks.size(); i++)
             {
                // The mixer here isn't actually mixing: it's just doing
                // resampling, format conversion, and possibly time track
                // warping
-               decltype(mPlaybackMixers[i]->Process(frames))
-                  processed = 0;
                samplePtr warpedSamples;
-               //don't do anything if we have no length.  In particular, Process() will fail an wxAssert
-               //that causes a crash since this is not the GUI thread and wxASSERT is a GUI call.
 
-               // don't generate either if scrubbing at zero speed.
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-               const bool silent =
-                  mPlaybackSchedule.Interactive() && mSilentScrub;
-#else
-               const bool silent = false;
-#endif
-
-               if (progress && !silent && frames > 0)
+               if (frames > 0)
                {
-                  processed = mPlaybackMixers[i]->Process(frames);
-                  wxASSERT(processed <= frames);
+                  size_t processed = 0;
+                  if ( toProcess )
+                     processed = mPlaybackMixers[i]->Process( toProcess );
+                  //wxASSERT(processed <= toProcess);
                   warpedSamples = mPlaybackMixers[i]->GetBuffer();
-                  const auto put = mPlaybackBuffers[i]->Put
-                     (warpedSamples, floatSample, processed);
-                  // wxASSERT(put == processed);
+                  const auto put = mPlaybackBuffers[i]->Put(
+                     warpedSamples, floatSample, processed, frames - processed);
+                  // wxASSERT(put == frames);
                   // but we can't assert in this thread
                   wxUnusedVar(put);
-               }
-               
-               //if looping and processed is less than the full chunk/block/buffer that gets pulled from
-               //other longer tracks, then we still need to advance the ring buffers or
-               //we'll trip up on ourselves when we start them back up again.
-               //if not looping we never start them up again, so its okay to not do anything
-               // If scrubbing, we may be producing some silence.  Otherwise this should not happen,
-               // but makes sure anyway that we produce equal
-               // numbers of samples for all channels for this pass of the do-loop.
-               if(processed < frames && !mPlaybackSchedule.PlayingStraight())
-               {
-                  mSilentBuf.Resize(frames, floatSample);
-                  ClearSamples(mSilentBuf.ptr(), floatSample, 0, frames);
-                  const auto put = mPlaybackBuffers[i]->Put
-                     (mSilentBuf.ptr(), floatSample, frames - processed);
-                  // wxASSERT(put == frames - processed);
-                  // but we can't assert in this thread
-                  wxUnusedVar(put);
-               }
+               }               
             }
 
             available -= frames;
