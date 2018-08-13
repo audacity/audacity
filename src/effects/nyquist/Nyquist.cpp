@@ -2132,6 +2132,11 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mTrace = false;
    mDebugButton = true;    // Debug button enabled by default.
    mEnablePreview = true;  // Preview button enabled by default.
+                           
+   // Bug 1934.  
+   // All Nyquist plug-ins should have a ';type' field, but if they don't we default to
+   // being an Effect.
+   mType = EffectTypeProcess;
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
