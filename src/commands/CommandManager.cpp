@@ -1559,7 +1559,10 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
                                         CommandFlag flags, CommandMask mask, const wxEvent * evt)
 {
-   if (!entry || !entry->enabled)
+   if (!entry )
+      return false;
+
+   if (flags != AlwaysEnabledFlag && !entry->enabled)
       return false;
 
    auto proj = GetActiveProject();
