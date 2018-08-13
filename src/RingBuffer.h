@@ -24,7 +24,9 @@ class RingBuffer {
    //
 
    size_t AvailForPut();
-   size_t Put(samplePtr buffer, sampleFormat format, size_t samples);
+   size_t Put(samplePtr buffer, sampleFormat format, size_t samples,
+              // optional number of trailing zeroes
+              size_t padding = 0);
    size_t Clear(sampleFormat format, size_t samples);
 
    //

@@ -755,8 +755,6 @@ private:
    bool                mInputMixerWorks;
    float               mMixerOutputVol;
 
-   GrowableSampleBuffer mSilentBuf;
-
    AudioIOListener*    mListener;
 
    friend class AudioThread;

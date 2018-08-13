@@ -69,16 +69,18 @@ size_t RingBuffer::AvailForPut()
 }
 
 size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
-                    size_t samplesToCopy)
+                    size_t samplesToCopy, size_t padding)
 {
    auto start = mStart.load( std::memory_order_acquire );
    auto end = mEnd.load( std::memory_order_relaxed );
-   samplesToCopy = std::min( samplesToCopy, Free( start, end ) );
+   const auto free = Free( start, end );
+   samplesToCopy = std::min( samplesToCopy, free );
+   padding = std::min( padding, free - samplesToCopy );
    auto src = buffer;
    size_t copied = 0;
    auto pos = end;
 
-   while(samplesToCopy) {
+   while ( samplesToCopy ) {
       auto block = std::min( samplesToCopy, mBufferSize - pos );
 
       CopySamples(src, format,
@@ -88,6 +90,14 @@ size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
       src += block * SAMPLE_SIZE(format);
       pos = (pos + block) % mBufferSize;
       samplesToCopy -= block;
+      copied += block;
+   }
+
+   while ( padding ) {
+      const auto block = std::min( padding, mBufferSize - pos );
+      ClearSamples( mBuffer.ptr(), mFormat, pos, block );
+      pos = (pos + block) % mBufferSize;
+      padding -= block;
       copied += block;
    }
 
