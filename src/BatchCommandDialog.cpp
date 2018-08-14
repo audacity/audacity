@@ -118,6 +118,12 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
    S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
 
    PopulateCommandList();
+   if (mChoices->GetItemCount() > 0) {
+      // set first item to be selected (and the focus when the
+      // list first becomes the focus)
+      mChoices->SetItemState(0, wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED,
+         wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
+   }
 
    SetMinSize(wxSize(780, 560));
    Fit();
