@@ -221,18 +221,6 @@ double PlaybackSchedule::AdvancedTrackTime(
    return time;
 }
 
-void PlaybackSchedule::TrackTimeUpdate(double realElapsed)
-{
-   // Update mTime within the PortAudio callback
-
-   if (Interactive())
-      return;
-
-   auto time = GetTrackTime();
-   auto newTime = AdvancedTrackTime( time, realElapsed, 1.0 );
-   SetTrackTime( newTime );
-}
-
 double PlaybackSchedule::RealDuration(double trackTime1) const
 {
    return fabs(ComputeWarpedLength(mT0, trackTime1));
@@ -331,4 +319,10 @@ double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
    }
    mHead.mRemainder = remainder + nSamples;
    return mData[ mHead.mIndex ];
+}
+
+void PlaybackSchedule::TimeQueue::Prime(double time)
+{
+   mHead = mTail = {};
+   mLastTime = time;
 }

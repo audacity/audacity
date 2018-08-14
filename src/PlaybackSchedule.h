@@ -207,6 +207,10 @@ struct AUDACITY_DLL_API PlaybackSchedule {
          const PlaybackSchedule &schedule, double rate, double scrubSpeed,
          size_t nSamples );
       double Consumer( size_t nSamples, double rate );
+
+      //! Empty the queue and reassign the last produced time
+      /*! Assumes the producer and consumer are suspended */
+      void Prime(double time);
    } mTimeQueue;
 
    volatile enum {
@@ -304,10 +308,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    // taking into account whether the schedule is for looping
    double AdvancedTrackTime(
       double trackTime, double realElapsed, double speed) const;
-
-   // Use the function above in the callback after consuming samples from the
-   // playback ring buffers, during usual straight or looping play
-   void TrackTimeUpdate(double realElapsed);
 
    // Convert time between mT0 and argument to real duration, according to
    // time track if one is given; result is always nonnegative
