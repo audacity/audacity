@@ -141,7 +141,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mCopyright = XO("n/a");
 
    // set clip/split handling when applying over clip boundary.
-   mRestoreSplits = true;  // Default: Restore split lines. 
+   mRestoreSplits = true;  // Default: Restore split lines.
    mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
 
    mVersion = 4;
@@ -201,7 +201,7 @@ NyquistEffect::~NyquistEffect()
 wxString NyquistEffect::GetPath()
 {
    if (mIsPrompt)
-      return (mType == EffectTypeTool) ? 
+      return (mType == EffectTypeTool) ?
          NYQUIST_TOOLS_PROMPT_ID :
          NYQUIST_EFFECTS_PROMPT_ID;
 
@@ -211,7 +211,7 @@ wxString NyquistEffect::GetPath()
 IdentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-      return (mType == EffectTypeTool) ? 
+      return (mType == EffectTypeTool) ?
          XO("Nyquist Prompt") :
          XO("Nyquist Effects Prompt");
 
@@ -556,7 +556,7 @@ bool NyquistEffect::Init()
       if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
          Effect::MessageBox(_("To use 'Spectral effects', enable 'Spectral Selection'\n"
                         "in the track Spectrogram settings and select the\n"
-                        "frequency range for the effect to act on."), 
+                        "frequency range for the effect to act on."),
             wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));
 
          return false;
@@ -569,7 +569,7 @@ bool NyquistEffect::Init()
       //we will need to modify this test.
       //Note that removing it stops the caching of parameter values,
       //(during this session).
-      if (mFileName.GetModificationTime().IsLaterThan(mFileModified)) 
+      if (mFileName.GetModificationTime().IsLaterThan(mFileModified))
       {
          SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -600,7 +600,7 @@ bool NyquistEffect::Process()
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
-   // and that chain contains Nyquist,  it will be clearer if the chain completes 
+   // and that chain contains Nyquist,  it will be clearer if the chain completes
    // skipping Nyquist, rather than doing nothing at all.
    if( mReentryCount > 0 )
       return true;
@@ -1042,7 +1042,7 @@ bool NyquistEffect::ProcessOne()
    // A tool may be using AUD-DO which will potentially invalidate *TRACK*
    // so tools do not get *TRACK*.
    if (GetType() == EffectTypeTool)
-      cmd += wxT("(setf S 0.25)\n"); // No Track.
+      cmd += wxT("(setf S 0.25)\n");  // No Track.
    else if (mVersion >= 4) {
       nyx_set_audio_name("*TRACK*");
       cmd += wxT("(setf S 0.25)\n");
@@ -1052,7 +1052,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *TRACK* '*unbound*)\n");
    }
 
-   if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) { 
+   if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
       cmd += mProps;
       cmd += mPerTrackProps;
 
@@ -1206,7 +1206,7 @@ bool NyquistEffect::ProcessOne()
    // If in tool mode, then we don't do anything with the track and selection.
    if (GetType() == EffectTypeTool) {
       nyx_set_audio_params(44100, 0);
-   } 
+   }
    else if (GetType() == EffectTypeGenerate) {
       nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
    }
@@ -1503,7 +1503,7 @@ bool NyquistEffect::ProcessOne()
 
       if (mMergeClips < 0) {
          // Use sample counts to determine default behaviour - times will rarely be equal.
-         bool bMergeClips = (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime) == 
+         bool bMergeClips = (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime) ==
                                                                      out->TimeToLongSamples(mT1));
          mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, bMergeClips);
       }
@@ -1659,7 +1659,7 @@ double NyquistEffect::GetCtrlValue(const wxString &s)
    /* For this to work correctly requires that the plug-in header is
     * parsed on each run so that the correct value for "half-srate" may
     * be determined.
-    * 
+    *
    AudacityProject *project = GetActiveProject();
    double rate = INT_MAX;
    if (project && s.IsSameAs(wxT("half-srate"), false)) {
@@ -2002,8 +2002,8 @@ bool NyquistEffect::Parse(
          // valStr may or may not be a quoted string
          ctrl.valStr = len > 5 ? tokens[5] : wxT("");
          ctrl.val = GetCtrlValue(ctrl.valStr);
-         if (ctrl.valStr.Len() > 0 && 
-               (ctrl.valStr[0] == wxT('(') || 
+         if (ctrl.valStr.Len() > 0 &&
+               (ctrl.valStr[0] == wxT('(') ||
                ctrl.valStr[0] == wxT('"')))
             ctrl.valStr = UnQuote( ctrl.valStr );
 
@@ -2138,8 +2138,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mTrace = false;
    mDebugButton = true;    // Debug button enabled by default.
    mEnablePreview = true;  // Preview button enabled by default.
-                           
-   // Bug 1934.  
+
+   // Bug 1934.
    // All Nyquist plug-ins should have a ';type' field, but if they don't we default to
    // being an Effect.
    mType = EffectTypeProcess;
@@ -2576,7 +2576,7 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
          S.AddSpace(1, 1);
 
          mVersionCheckBox = S.AddCheckBox(_("&Use legacy (version 3) syntax."),
-                                          (mVersion == 3) ? wxT("true") : wxT("false"));  
+                                          (mVersion == 3) ? wxT("true") : wxT("false"));
       }
       S.EndMultiColumn();
 
@@ -2910,7 +2910,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
       if (wildcards % 2 != 0 || !validWildcards || ctrl.lowStr.EndsWith("|"))
       {
          Effect::MessageBox(_("Invalid wildcard string in 'path' control.'\n"
-                        "Using empty string instead."), 
+                        "Using empty string instead."),
                         wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));
          ctrl.lowStr = "";
       }

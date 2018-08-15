@@ -2841,7 +2841,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
-   [[((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+   [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
    SetName( effect->GetTranslatedName() );
@@ -2874,7 +2874,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
-   [[((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+   [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
    //SetName( command->GetTranslatedName() );

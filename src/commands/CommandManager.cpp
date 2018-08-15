@@ -148,7 +148,7 @@ public:
       [
          NSEvent addLocalMonitorForEventsMatchingMask:mask handler:^NSEvent *(NSEvent *event)
          {
-            WXWidget widget = (WXWidget) [[event window] firstResponder];
+            WXWidget widget = (WXWidget) [ [event window] firstResponder];
             if (widget)
             {
                wxWidgetCocoaImpl *impl = (wxWidgetCocoaImpl *)
@@ -339,7 +339,7 @@ private:
 #elif defined(__WXGTK__)
 
       chars.Append((wxChar) gdk_keyval_to_unicode(event.GetRawKeyCode()));
-                                     
+
 #elif defined(__WXMAC__)
 
       if (!mEvent) {
@@ -377,7 +377,7 @@ private:
       {
          return chars;
       }
-      
+
       const UniCharCount maxStringLength = 255;
       UniCharCount actualStringLength = 0;
       UniChar unicodeString[maxStringLength];
@@ -387,7 +387,7 @@ private:
                          (nsflags & NSControlKeyMask ? controlKey : 0) |
                          (nsflags & NSAlternateKeyMask ? optionKey : 0) |
                          (nsflags & NSCommandKeyMask ? cmdKey : 0);
-         
+
       OSStatus status = UCKeyTranslate(keyboardLayout,
                                        [mEvent keyCode],
                                        kUCKeyActionDown,
@@ -398,13 +398,13 @@ private:
                                        maxStringLength,
                                        &actualStringLength,
                                        unicodeString);
-     
+
       if (status != noErr)
       {
          return chars;
       }
-      
-      chars = [[NSString stringWithCharacters:unicodeString
+
+      chars = [ [NSString stringWithCharacters:unicodeString
                                        length:(NSInteger)actualStringLength] UTF8String];
 
 #endif
@@ -414,7 +414,7 @@ private:
 
 private:
 
-#if defined(__WXMAC__)   
+#if defined(__WXMAC__)
    id mHandler;
    NSEvent *mEvent {};
    UInt32 mDeadKeyState;
@@ -511,7 +511,7 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
    return list;
 }
 
-// CommandManager needs to know which defaults are standard and which are in the 
+// CommandManager needs to know which defaults are standard and which are in the
 // full (max) list.
 void CommandManager::SetMaxList()
 {
@@ -520,7 +520,7 @@ void CommandManager::SetMaxList()
    // KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 
    // TODO: At a later date get rid of the maxList entirely and
-   // instead use flags in the menu entrys to indicate whether the default 
+   // instead use flags in the menu entrys to indicate whether the default
    // shortcut is standard or full.
 
    mMaxListOnly.clear();
@@ -598,11 +598,11 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
    return mMenuBarList.back().menubar;
 }
 
-/// 
+///
 /// Swap the last two menu bars in the list,
 /// to make the previous menu bar 'current' again.
-/// Typically used to switch back and forth 
-/// between adding to a hidden menu bar and 
+/// Typically used to switch back and forth
+/// between adding to a hidden menu bar and
 /// adding to one that is visible,
 ///
 void CommandManager::SwapMenuBars()
@@ -825,7 +825,7 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
                              CommandMask mask,
-                             bool bIsEffect, 
+                             bool bIsEffect,
                              const CommandParameter &parameter)
 {
    AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, -1, bIsEffect, parameter);
@@ -840,19 +840,19 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFlag flags,
                              CommandMask mask,
                              int checkmark,
-                             bool bIsEffect, 
+                             bool bIsEffect,
                              const CommandParameter &parameter)
 {
    wxString cookedParameter;
    if( parameter == "" )
       cookedParameter = name;
-   else 
+   else
       cookedParameter = parameter;
    CommandListEntry *entry =
-      NewIdentifier(name, 
-         label_in, 
-         mLongNameForItem, 
-         hasDialog, 
+      NewIdentifier(name,
+         label_in,
+         mLongNameForItem,
+         hasDialog,
          accel, CurrentMenu(), finder, callback,
          {}, 0, 0, bIsEffect, cookedParameter);
    mLongNameForItem = "";
@@ -1159,7 +1159,7 @@ wxString CommandManager::GetLabel(const CommandListEntry *entry) const
 // The problem is that as soon as we show accelerators in the menu, the menu might
 // catch them in normal wxWidgets processing, rather than passing the key presses on
 // to the controls that had the focus.  We would like all the menu accelerators to be
-// disabled, in fact.  
+// disabled, in fact.
 wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry) const
 {
    wxString label = entry->label;
@@ -1389,7 +1389,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    ShowErrorDialog(
       NULL,
       title,
-      reason, 
+      reason,
       helpPage);
 }
 
@@ -1500,9 +1500,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          bIntercept = pWnd && ( dynamic_cast<LyricsPanel*>(pWnd) == NULL );
       }
       //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
-      // We allow the keystrokes below to be handled by wxWidgets controls IF we are 
+      // We allow the keystrokes below to be handled by wxWidgets controls IF we are
       // in some sub window rather than in the TrackPanel itself.
-      // Otherwise they will go to our command handler and if it handles them 
+      // Otherwise they will go to our command handler and if it handles them
       // they will NOT be available to wxWidgets.
       if( bIntercept ){
          switch( evt.GetKeyCode() ){
@@ -1578,7 +1578,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       NiceName.Replace("&", "");// remove &
       NiceName.Replace(".","");// remove ...
       // NB: The call may have the side effect of changing flags.
-      bool allowed = proj->ReportIfActionNotAllowed( 
+      bool allowed = proj->ReportIfActionNotAllowed(
          NiceName, flags, entry->flags, combinedMask );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
@@ -1724,7 +1724,7 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
    for(const auto &entry : mCommandList) {
       // This is fetching commands from the menus, for use as batch commands.
       // Until we have properly merged EffectManager and CommandManager
-      // we explicitly exclude effects, as they are already handled by the 
+      // we explicitly exclude effects, as they are already handled by the
       // effects Manager.
       if ( entry->isEffect )
          continue;
