@@ -2277,7 +2277,12 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    while( mAudioThreadShouldCallFillBuffersOnce ) {
       if (mScrubQueue)
-         mScrubQueue->Nudge();
+         // If not using a scrub thread, then we need to let the mouse polling
+         // in the main thread deliver its messages to ScrubQueue, so that
+         // FillBuffers() can progress in priming the RingBuffer.  Else we would
+         // deadlock here.  If not using the scrub thread, this should be
+         // harmless.
+         wxEventLoopBase::GetActive()->YieldFor( wxEVT_CATEGORY_TIMER );
       wxMilliSleep( 50 );
    }
 
