@@ -911,6 +911,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 //
 //////////////////////////////////////////////////////////////////////
 
+#include <thread>
+
 #ifdef __WXMAC__
 
 // On Mac OS X, it's better not to use the wxThread class.
@@ -946,7 +948,6 @@ class AudioThread {
  private:
    bool mDestroy;
    pthread_t mThread;
-
 };
 
 #else
@@ -3229,6 +3230,10 @@ AudioThread::ExitCode AudioThread::Entry()
 {
    while( !TestDestroy() )
    {
+      using Clock = std::chrono::steady_clock;
+      auto loopPassStart = Clock::now();
+      const auto interval = Scrubber::ScrubPollInterval_ms;
+
       // Set LoopActive outside the tests to avoid race condition
       gAudioIO->mAudioThreadFillBuffersLoopActive = true;
       if( gAudioIO->mAudioThreadShouldCallFillBuffersOnce )
@@ -3242,16 +3247,11 @@ AudioThread::ExitCode AudioThread::Entry()
       }
       gAudioIO->mAudioThreadFillBuffersLoopActive = false;
 
-      if (gAudioIO->mPlaybackSchedule.Interactive()) {
-         // Rely on the Wait() in ScrubState::Consumer()
-         // This allows the scrubbing update interval to be made very short without
-         // playback becoming intermittent.
-      }
-      else {
-         // Perhaps this too could use a condition variable, for available space in the
-         // ring buffer, instead of a polling loop?  But no harm in doing it this way.
+      if ( gAudioIO->mPlaybackSchedule.Interactive() )
+         std::this_thread::sleep_until(
+            loopPassStart + std::chrono::milliseconds( interval ) );
+      else
          Sleep(10);
-      }
    }
 
    return 0;
