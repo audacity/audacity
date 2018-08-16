@@ -522,25 +522,9 @@ constexpr size_t TimeQueueGrainSize = 2000;
 #endif
 
 
-/*
-This work queue class coordinates two threads during scrub play:
-
-The UI thread which specifies scrubbing intervals to play,
-
-and the Audio thread which consumes those specifications
-and fills the ring buffers with samples for play (to be consumed by yet another
-thread, spawned by PortAudio).
-
-Audio produces samples for PortAudio, which consumes them, both in
-approximate real time.  The UI thread might go idle and so Audio
-might catch up, emptying the queue and causing scrub to go silent.
-The UI thread will not normally outrun Audio -- because InitEntry()
-limits the real time duration over which each enqueued interval will play.
-So a small, fixed queue size should be adequate.
-*/
-struct AudioIO::ScrubQueue
+struct AudioIO::ScrubState
 {
-   ScrubQueue(double t0, double t1, wxLongLong startClockMillis,
+   ScrubState(double t0, double t1, wxLongLong startClockMillis,
               double rate,
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
@@ -574,7 +558,7 @@ struct AudioIO::ScrubQueue
       mAvailable.Signal();
    }
 
-   bool Producer(double end, const ScrubbingOptions &options)
+   bool Update(double end, const ScrubbingOptions &options)
    {
       // Main thread indicates a scrubbing interval
 
@@ -594,7 +578,7 @@ struct AudioIO::ScrubQueue
          if (dd.duration <= 0)
             return false;
 
-         const sampleCount s1 ( options.enqueueBySpeed
+         const sampleCount s1 ( options.bySpeed
             ? s0.as_double() +
                lrint(dd.duration.as_double() * end) // end is a speed
             : lrint(end * mRate)            // end is a time
@@ -622,9 +606,9 @@ struct AudioIO::ScrubQueue
       }
    }
 
-   void Consumer(sampleCount &startSample, sampleCount &endSample,
-                 sampleCount &duration,
-                 Maybe<wxMutexLocker> &cleanup)
+   void Get(sampleCount &startSample, sampleCount &endSample,
+            sampleCount &duration,
+            Maybe<wxMutexLocker> &cleanup)
    {
       // Audio thread is ready for the next interval.
 
@@ -641,7 +625,7 @@ struct AudioIO::ScrubQueue
       auto now = ::wxGetLocalTimeMillis();
 
       if (mMiddleIdx != mLeadingIdx) {
-         Entry &entry = mEntries[mMiddleIdx];
+         Data &entry = mEntries[mMiddleIdx];
          if (entry.mDuration > 0) {
             // First use of the entry
             startSample = entry.mS0;
@@ -667,20 +651,20 @@ struct AudioIO::ScrubQueue
       }
    }
 
-   double LastTimeInQueue() const
+   double LastTrackTime() const
    {
       // Needed by the main thread sometimes
       wxMutexLocker locker(mUpdating);
-      const Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
+      const Data &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
       return previous.mS1.as_double() / mRate;
    }
 
-   ~ScrubQueue() {}
+   ~ScrubState() {}
 
 private:
-   struct Entry
+   struct Data
    {
-      Entry()
+      Data()
          : mS0(0)
          , mS1(0)
          , mGoal(0)
@@ -688,7 +672,7 @@ private:
          , mSilence(0)
       {}
 
-      bool Init(Entry *previous, sampleCount s0, sampleCount s1,
+      bool Init(Data *previous, sampleCount s0, sampleCount s1,
          sampleCount duration,
          const ScrubbingOptions &options, double rate)
       {
@@ -787,7 +771,7 @@ private:
                   )
                );
             if (newDuration == 0) {
-               // Enqueue a silent scrub with s0 == s1
+               // A silent scrub with s0 == s1
                silent = true;
                s1 = s0;
             }
@@ -818,22 +802,15 @@ private:
          return true;
       }
 
-      // These sample counts are initialized in the UI, producer, thread:
       sampleCount mS0;
       sampleCount mS1;
       sampleCount mGoal;
-      // This field is initialized in the UI thread too, and
-      // this work queue item corresponds to exactly this many samples of
-      // playback output:
       sampleCount mDuration;
       sampleCount mSilence;
-
-      // The middleman Audio thread does not change these entries, but only
-      // changes indices in the queue structure.
    };
 
    struct Duration {
-      Duration (ScrubQueue &queue_) : queue(queue_) {}
+      Duration (ScrubState &queue_) : queue(queue_) {}
       ~Duration ()
       {
          if(!cancelled)
@@ -842,7 +819,7 @@ private:
 
       void Cancel() { cancelled = true; }
 
-      ScrubQueue &queue;
+      ScrubState &queue;
       const wxLongLong clockTime { ::wxGetLocalTimeMillis() };
       const sampleCount duration { static_cast<long long>
          (queue.mRate * (clockTime - queue.mLastScrubTimeMillis).ToDouble() / 1000.0)
@@ -851,7 +828,7 @@ private:
    };
 
    enum { Size = 10 };
-   Entry mEntries[Size];
+   Data mEntries[Size];
    unsigned mTrailingIdx;
    unsigned mMiddleIdx;
    unsigned mLeadingIdx;
@@ -1168,7 +1145,7 @@ AudioIO::AudioIO()
    mLastPlaybackTimeMillis = 0;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   mScrubQueue = NULL;
+   mScrubState = NULL;
    mScrubDuration = 0;
    mSilentScrub = false;
 #endif
@@ -2009,8 +1986,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    if (scrubbing)
    {
       const auto &scrubOptions = *options.pScrubbingOptions;
-      mScrubQueue =
-         std::make_unique<ScrubQueue>(
+      mScrubState =
+         std::make_unique<ScrubState>(
             mPlaybackSchedule.mT0, mPlaybackSchedule.mT1,
             scrubOptions.startClockTimeMillis,
             mRate,
@@ -2019,7 +1996,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mSilentScrub = false;
    }
    else
-      mScrubQueue.reset();
+      mScrubState.reset();
 #endif
 
    // We signal the audio thread to call FillBuffers, to prime the RingBuffers
@@ -2029,8 +2006,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mAudioThreadShouldCallFillBuffersOnce = true;
 
    while( mAudioThreadShouldCallFillBuffersOnce ) {
-      if (mScrubQueue)
-         mScrubQueue->Nudge();
+      if (mScrubState)
+         mScrubState->Nudge();
       wxMilliSleep( 50 );
    }
 
@@ -2321,7 +2298,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   mScrubQueue.reset();
+   mScrubState.reset();
 #endif
 }
 
@@ -2536,8 +2513,8 @@ void AudioIO::StopStream()
    //
 
    mAudioThreadFillBuffersLoopRunning = false;
-   if (mScrubQueue)
-      mScrubQueue->Nudge();
+   if (mScrubState)
+      mScrubState->Nudge();
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -2645,8 +2622,8 @@ void AudioIO::StopStream()
       {
          // LLL:  Experienced recursive yield here...once.
          wxGetApp().Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
-         if (mScrubQueue)
-            mScrubQueue->Nudge();
+         if (mScrubState)
+            mScrubState->Nudge();
          wxMilliSleep( 50 );
       }
 
@@ -2747,7 +2724,7 @@ void AudioIO::StopStream()
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   mScrubQueue.reset();
+   mScrubState.reset();
 #endif
 
    if (mListener) {
@@ -2782,19 +2759,19 @@ bool AudioIO::IsPaused() const
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-bool AudioIO::EnqueueScrub
+bool AudioIO::UpdateScrub
    (double endTimeOrSpeed, const ScrubbingOptions &options)
 {
-   if (mScrubQueue)
-      return mScrubQueue->Producer(endTimeOrSpeed, options);
+   if (mScrubState)
+      return mScrubState->Update(endTimeOrSpeed, options);
    else
       return false;
 }
 
-double AudioIO::GetLastTimeInScrubQueue() const
+double AudioIO::GetLastScrubTime() const
 {
-   if (mScrubQueue)
-      return mScrubQueue->LastTimeInQueue();
+   if (mScrubState)
+      return mScrubState->LastTrackTime();
    else
       return -1.0;
 }
@@ -3258,7 +3235,7 @@ AudioThread::ExitCode AudioThread::Entry()
       gAudioIO->mAudioThreadFillBuffersLoopActive = false;
 
       if (gAudioIO->mPlaybackSchedule.Interactive()) {
-         // Rely on the Wait() in ScrubQueue::Consumer()
+         // Rely on the Wait() in ScrubState::Consumer()
          // This allows the scrubbing update interval to be made very short without
          // playback becoming intermittent.
       }
@@ -3861,7 +3838,7 @@ void AudioIO::FillBuffers()
          // times, to ensure, that the buffer has a reasonable size
          // This is the purpose of this loop.
          // PRL: or, when scrubbing, we may get work repeatedly from the
-         // scrub queue.
+         // user interface.
          bool done = false;
          Maybe<wxMutexLocker> cleanup;
          do {
@@ -3948,7 +3925,8 @@ void AudioIO::FillBuffers()
                if (!done && mScrubDuration <= 0)
                {
                   sampleCount startSample, endSample;
-                  mScrubQueue->Consumer(startSample, endSample, mScrubDuration, cleanup);
+                  mScrubState->Get(
+                     startSample, endSample, mScrubDuration, cleanup);
                   if (mScrubDuration < 0)
                   {
                      // Can't play anything
