@@ -541,14 +541,13 @@ So a small, fixed queue size should be adequate.
 struct AudioIO::ScrubQueue
 {
    ScrubQueue(double t0, double t1, wxLongLong startClockMillis,
-              double rate, double maxDebt,
+              double rate,
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
       , mMiddleIdx(1)
       , mLeadingIdx(1)
       , mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
-      , mMaxDebt { lrint(maxDebt * rate) }
       , mUpdating()
    {
       const sampleCount s0 { llrint( mRate *
@@ -631,12 +630,8 @@ struct AudioIO::ScrubQueue
 
       // MAY ADVANCE mMiddleIdx, WHICH MAY EQUAL mLeadingIdx, BUT DOES NOT PASS IT.
 
-      bool checkDebt = false;
       if (!cleanup) {
          cleanup.create(mUpdating);
-
-         // Check for cancellation of work only when re-enetering the cricial section
-         checkDebt = true;
       }
       while(!mNudged && mMiddleIdx == mLeadingIdx)
          mAvailable.Wait();
@@ -645,53 +640,7 @@ struct AudioIO::ScrubQueue
 
       auto now = ::wxGetLocalTimeMillis();
 
-      if (checkDebt &&
-          mLastTransformerTimeMillis >= 0 && // Not the first time for this scrub
-          mMiddleIdx != mLeadingIdx) {
-         // There is work in the queue, but if Producer is outrunning us, discard some,
-         // which may make a skip yet keep playback better synchronized with user gestures.
-         const auto interval = (now - mLastTransformerTimeMillis).ToDouble() / 1000.0;
-         //const Entry &previous = mEntries[(mMiddleIdx + Size - 1) % Size];
-         const auto deficit =
-            static_cast<long>(interval * mRate) - // Samples needed in the last time interval
-            mCredit;                              // Samples done in the last time interval
-         mCredit = 0;
-         mDebt += deficit;
-         auto toDiscard = mDebt - mMaxDebt;
-         while (toDiscard > 0 && mMiddleIdx != mLeadingIdx) {
-            // Cancel some debt (discard some NEW work)
-            auto &entry = mEntries[mMiddleIdx];
-            auto &dur = entry.mDuration;
-            if (toDiscard >= dur) {
-               // Discard entire queue entry
-               mDebt -= dur;
-               toDiscard -= dur;
-               dur = 0;
-               mTrailingIdx = mMiddleIdx;
-               mMiddleIdx = (mMiddleIdx + 1) % Size;
-            }
-            else {
-               // Adjust the start time
-               auto &start = entry.mS0;
-               const auto end = entry.mS1;
-               const auto ratio = toDiscard.as_double() / dur.as_double();
-               const sampleCount adjustment(
-                  std::abs((end - start).as_long_long()) * ratio
-               );
-               if (start <= end)
-                  start += adjustment;
-               else
-                  start -= adjustment;
-
-               mDebt -= toDiscard;
-               dur -= toDiscard;
-               toDiscard = 0;
-            }
-         }
-      }
-
       if (mMiddleIdx != mLeadingIdx) {
-         // There is still work in the queue, after cancelling debt
          Entry &entry = mEntries[mMiddleIdx];
          if (entry.mDuration > 0) {
             // First use of the entry
@@ -699,14 +648,12 @@ struct AudioIO::ScrubQueue
             endSample = entry.mS1;
             duration = entry.mDuration;
             entry.mDuration = 0;
-            mCredit += duration;
          }
          else if (entry.mSilence > 0) {
             // Second use of the entry
             startSample = endSample = entry.mS1;
             duration = entry.mSilence;
             entry.mSilence = 0;
-            mCredit += duration;
          }
          if (entry.mSilence == 0) {
             // Entry is used up
@@ -718,9 +665,6 @@ struct AudioIO::ScrubQueue
          // We got the shut-down signal, or we got nudged, or we discarded all the work.
          startSample = endSample = duration = -1L;
       }
-
-      if (checkDebt)
-         mLastTransformerTimeMillis = now;
    }
 
    double LastTimeInQueue() const
@@ -913,11 +857,6 @@ private:
    unsigned mLeadingIdx;
    const double mRate;
    wxLongLong mLastScrubTimeMillis;
-
-   wxLongLong mLastTransformerTimeMillis { -1LL };
-   sampleCount mCredit { 0 };
-   sampleCount mDebt { 0 };
-   const long mMaxDebt;
 
    mutable wxMutex mUpdating;
    mutable wxCondition mAvailable { mUpdating };
@@ -2074,7 +2013,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          std::make_unique<ScrubQueue>(
             mPlaybackSchedule.mT0, mPlaybackSchedule.mT1,
             scrubOptions.startClockTimeMillis,
-            mRate, 2 * scrubOptions.minStutterTime,
+            mRate,
             scrubOptions);
       mScrubDuration = 0;
       mSilentScrub = false;
