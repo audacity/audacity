@@ -537,7 +537,14 @@ private:
    *
    * Returns the smallest of the buffer free space values in the event that
    * they are different. */
-   size_t GetCommonlyAvailPlayback();
+   size_t GetCommonlyFreePlayback();
+
+   /** \brief Get the number of audio samples ready in all of the playback
+   * buffers.
+   *
+   * Returns the smallest of the buffer ready space values in the event that
+   * they are different. */
+   size_t GetCommonlyReadyPlayback();
 
    /** \brief Get the number of audio samples ready in all of the recording
     * buffers.

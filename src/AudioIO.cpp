@@ -3358,12 +3358,23 @@ MidiThread::ExitCode MidiThread::Entry()
 }
 #endif
 
-size_t AudioIO::GetCommonlyAvailPlayback()
+size_t AudioIO::GetCommonlyFreePlayback()
 {
    auto commonlyAvail = mPlaybackBuffers[0]->AvailForPut();
    for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
       commonlyAvail = std::min(commonlyAvail,
          mPlaybackBuffers[i]->AvailForPut());
+   // MB: subtract a few samples because the code in FillBuffers has rounding
+   // errors
+   return commonlyAvail - 10;
+}
+
+size_t AudioIO::GetCommonlyReadyPlayback()
+{
+   auto commonlyAvail = mPlaybackBuffers[0]->AvailForGet();
+   for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
+      commonlyAvail = std::min(commonlyAvail,
+         mPlaybackBuffers[i]->AvailForGet());
    return commonlyAvail;
 }
 
@@ -3881,8 +3892,7 @@ void AudioIO::FillBuffers()
       // if we hit this code during the PortAudio callback.  To keep
       // things simple, we only write as much data as is vacant in
       // ALL buffers, and advance the global time by that much.
-      // MB: subtract a few samples because the code below has rounding errors
-      auto nAvailable = (int)GetCommonlyAvailPlayback() - 10;
+      auto nAvailable = (int)GetCommonlyFreePlayback();
 
       //
       // Don't fill the buffers at all unless we can do the
@@ -5028,6 +5038,11 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          int group = 0;
          int chanCnt = 0;
          decltype(framesPerBuffer) maxLen = 0;
+
+         // Choose a common size to take from all ring buffers
+         const auto toGet =
+            std::min(framesPerBuffer, GetCommonlyReadyPlayback());
+
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
             const WaveTrack *vt = mPlaybackTracks[t].get();
@@ -5071,9 +5086,15 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             {
                len = mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
                                                          floatSample,
-                                                         framesPerBuffer);
+                                                         toGet);
+               // wxASSERT( len == toGet );
                if (len < framesPerBuffer)
-                  // Pad with zeroes to the end, in case of a short channel
+                  // This used to happen normally at the end of non-looping
+                  // plays, but it can also be an anomalous case where the
+                  // supply from FillBuffers fails to keep up with the
+                  // real-time demand in this thread (see bug 1932).  We
+                  // must supply something to the sound card, so pad it with
+                  // zeroes and not random garbage.
                   memset((void*)&tempBufs[chanCnt][len], 0,
                      (framesPerBuffer - len) * sizeof(float));
 
@@ -5183,6 +5204,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          // Update the current time position, for scrubbing
          // "Consume" only as much as the ring buffers produced, which may
          // be less than framesPerBuffer (during "stutter")
+         // wxASSERT( maxLen == toGet );
          if (mPlaybackSchedule.Interactive())
             mPlaybackSchedule.SetTrackTime( mScrubQueue->Consumer( maxLen ) );
 #endif
