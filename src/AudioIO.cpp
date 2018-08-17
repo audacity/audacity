@@ -527,108 +527,71 @@ struct AudioIO::ScrubState
    ScrubState(double t0, wxLongLong startClockMillis,
               double rate,
               const ScrubbingOptions &options)
-      : mTrailingIdx(0)
-      , mMiddleIdx(1)
-      , mLeadingIdx(1)
-      , mRate(rate)
+      : mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
-      , mUpdating()
       , mStartTime( t0 )
    {
+      const double t1 = options.bySpeed ? 1.0 : t0;
+      Update( t1, options );
    }
 
-   bool Update(double end, const ScrubbingOptions &options)
+   void Update(double end, const ScrubbingOptions &options)
    {
-      Duration dd { *this };
-      if (dd.duration <= 0)
-         return false;
-
-      wxMutexLocker locker(mUpdating);
-
-      if ( !mStarted ) {
-         const sampleCount s0 { llrint( mRate *
-            std::max( options.minTime,
-               std::min( options.maxTime, mStartTime ) ) ) };
-         const sampleCount s1 ( options.bySpeed
-            ? s0.as_double() +
-               llrint(dd.duration.as_double() * end) // end is a speed
-            : llrint(end * mRate)            // end is a time
-         );
-         auto actualDuration = std::max(sampleCount{1}, dd.duration);
-         auto success = mEntries[mMiddleIdx].Init(nullptr,
-            s0, s1, actualDuration, options, mRate);
-         if (success)
-            ++mLeadingIdx;
-         else {
-            // If not, we can wait to enqueue again later
-            dd.Cancel();
-            return false;
-         }
-
-         mStarted = true;
-         return true;
-      }
-
-      // MAY ADVANCE mLeadingIdx, BUT IT NEVER CATCHES UP TO mTrailingIdx.
-
-      bool result = true;
-      unsigned next = (mLeadingIdx + 1) % Size;
-      if (next != mTrailingIdx)
-      {
-         auto current = &mEntries[mLeadingIdx];
-         auto previous = &mEntries[(mLeadingIdx + Size - 1) % Size];
-
-         // Use the previous end as NEW start.
-         const auto s0 = previous->mS1;
-
-         const sampleCount s1 ( options.bySpeed
-            ? s0.as_double() +
-               lrint(dd.duration.as_double() * end) // end is a speed
-            : lrint(end * mRate)            // end is a time
-         );
-         auto success =
-            current->Init(previous, s0, s1, dd.duration, options, mRate);
-         if (success)
-            mLeadingIdx = next;
-         else {
-            dd.Cancel();
-            return false;
-         }
-
-         mAvailable.Signal();
-         return result;
-      }
-      else
-      {
-         // ??
-         // Queue wasn't long enough.  Write side (UI thread)
-         // has overtaken the trailing read side (Audio thread), despite
-         // my comments above!  We lose some work requests then.
-         // wxASSERT(false);
-         return false;
-      }
+      // Called by another thread
+      mMessage.Write({ end, options });
    }
 
    void Get(sampleCount &startSample, sampleCount &endSample,
-            sampleCount &duration,
-            Maybe<wxMutexLocker> &cleanup)
+         sampleCount &duration)
    {
-      // Audio thread is ready for the next interval.
+      // Called by the thread that calls AudioIO::FillBuffers
+      startSample = endSample = duration = -1LL;
+      Duration dd { *this };
+      if (dd.duration <= 0)
+         return;
 
-      // MAY ADVANCE mMiddleIdx, WHICH MAY EQUAL mLeadingIdx, BUT DOES NOT PASS IT.
-
-      if (!cleanup) {
-         cleanup.create(mUpdating);
+      Message message{ mMessage.Read() };
+      if ( !mStarted ) {
+         const sampleCount s0 { llrint( mRate *
+            std::max( message.options.minTime,
+               std::min( message.options.maxTime, mStartTime ) ) ) };
+         const sampleCount s1 ( message.options.bySpeed
+            ? s0.as_double() +
+               llrint(dd.duration.as_double() * message.end) // end is a speed
+            : llrint(message.end * mRate)            // end is a time
+         );
+         auto actualDuration = std::max(sampleCount{1}, dd.duration);
+         auto success = mData.Init(nullptr,
+            s0, s1, actualDuration, message.options, mRate);
+         if ( !success ) {
+            // If not, we can wait to enqueue again later
+            dd.Cancel();
+            return;
+         }
+         mStarted = true;
       }
-      while(! mStopped.load( std::memory_order_relaxed )&&
-           mMiddleIdx == mLeadingIdx)
-         mAvailable.Wait();
+      else {
+         Data newData;
+         auto previous = &mData;
 
-      auto now = ::wxGetLocalTimeMillis();
+         // Use the previous end as NEW start.
+         const auto s0 = previous->mS1;
+         const sampleCount s1 ( message.options.bySpeed
+            ? s0.as_double() +
+               lrint(dd.duration.as_double() * message.end) // end is a speed
+            : lrint(message.end * mRate)            // end is a time
+         );
+         auto success =
+            newData.Init(previous, s0, s1, dd.duration, message.options, mRate);
+         if ( !success ) {
+            dd.Cancel();
+            return;
+         }
+         mData = newData;
+      }
 
-      if ( ! mStopped.load( std::memory_order_relaxed )  &&
-           mMiddleIdx != mLeadingIdx ) {
-         Data &entry = mEntries[mMiddleIdx];
+      if ( ! mStopped.load( std::memory_order_relaxed ) ) {
+         Data &entry = mData;
          if (entry.mDuration > 0) {
             // First use of the entry
             startSample = entry.mS0;
@@ -642,32 +605,27 @@ struct AudioIO::ScrubState
             duration = entry.mSilence;
             entry.mSilence = 0;
          }
-         if (entry.mSilence == 0) {
-            // Entry is used up
-            mTrailingIdx = mMiddleIdx;
-            mMiddleIdx = (mMiddleIdx + 1) % Size;
-         }
       }
       else {
          // We got the shut-down signal, or we discarded all the work.
-         startSample = endSample = duration = -1L;
+         // Output the -1 values.
       }
    }
 
    void Stop()
    {
       mStopped.store( true, std::memory_order_relaxed );
-      wxMutexLocker locker(mUpdating);
-      mAvailable.Signal();
    }
 
+#if 0
+   // Needed only for the DRAG_SCRUB experiment
+   // Should make mS1 atomic then?
    double LastTrackTime() const
    {
       // Needed by the main thread sometimes
-      wxMutexLocker locker(mUpdating);
-      const Data &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
-      return previous.mS1.as_double() / mRate;
+      return mData.mS1.as_double() / mRate;
    }
+#endif
 
    ~ScrubState() {}
 
@@ -837,19 +795,17 @@ private:
       bool cancelled { false };
    };
 
-   enum { Size = 10 };
-   Data mEntries[Size];
-   unsigned mTrailingIdx;
-   unsigned mMiddleIdx;
-   unsigned mLeadingIdx;
    double mStartTime;
    bool mStarted{ false };
    std::atomic<bool> mStopped { false };
+   Data mData;
    const double mRate;
    wxLongLong mLastScrubTimeMillis;
-
-   mutable wxMutex mUpdating;
-   mutable wxCondition mAvailable { mUpdating };
+   struct Message {
+      double end;
+      ScrubbingOptions options;
+   };
+   MessageBuffer<Message> mMessage;
 };
 #endif
 
@@ -2776,13 +2732,11 @@ bool AudioIO::IsPaused() const
 }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-bool AudioIO::UpdateScrub
+void AudioIO::UpdateScrub
    (double endTimeOrSpeed, const ScrubbingOptions &options)
 {
    if (mScrubState)
-      return mScrubState->Update(endTimeOrSpeed, options);
-   else
-      return false;
+      mScrubState->Update(endTimeOrSpeed, options);
 }
 
 void AudioIO::StopScrub()
@@ -2791,6 +2745,8 @@ void AudioIO::StopScrub()
       mScrubState->Stop();
 }
 
+#if 0
+// Only for DRAG_SCRUB
 double AudioIO::GetLastScrubTime() const
 {
    if (mScrubState)
@@ -2798,6 +2754,7 @@ double AudioIO::GetLastScrubTime() const
    else
       return -1.0;
 }
+#endif
 
 #endif
 
@@ -3862,7 +3819,6 @@ void AudioIO::FillBuffers()
          // PRL: or, when scrubbing, we may get work repeatedly from the
          // user interface.
          bool done = false;
-         Maybe<wxMutexLocker> cleanup;
          do {
             // How many samples to produce for each channel.
             auto frames = available;
@@ -3948,7 +3904,7 @@ void AudioIO::FillBuffers()
                {
                   sampleCount startSample, endSample;
                   mScrubState->Get(
-                     startSample, endSample, mScrubDuration, cleanup);
+                     startSample, endSample, mScrubDuration);
                   if (mScrubDuration < 0)
                   {
                      // Can't play anything
