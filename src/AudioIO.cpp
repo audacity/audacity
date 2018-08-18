@@ -2260,7 +2260,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          std::make_unique<ScrubQueue>(
             mPlaybackSchedule.mT0, mPlaybackSchedule.mT1,
             scrubOptions.startClockTimeMillis,
-            sampleRate, 2 * scrubOptions.minStutter,
+            mRate, 
+            2 * scrubOptions.minStutter,
             scrubOptions);
       mScrubDuration = 0;
       mSilentScrub = false;
