@@ -592,38 +592,21 @@ struct AudioIO::ScrubQueue
          // Use the previous end as NEW start.
          const auto s0 = previous->mS1;
          Duration dd { *this };
-         const auto &origDuration = dd.duration;
-         if (origDuration <= 0)
+         if (dd.duration <= 0)
             return false;
 
-         auto actualDuration = origDuration;
          const sampleCount s1 ( options.enqueueBySpeed
             ? s0.as_double() +
-               lrint(origDuration.as_double() * end) // end is a speed
+               lrint(dd.duration.as_double() * end) // end is a speed
             : lrint(end * mRate)            // end is a time
          );
          auto success =
-            current->Init(previous, s0, s1, actualDuration, options, mRate);
+            current->Init(previous, s0, s1, dd.duration, options, mRate);
          if (success)
             mLeadingIdx = next;
          else {
             dd.Cancel();
             return false;
-         }
-
-         // Fill up the queue with some silence if there was trimming
-         wxASSERT(actualDuration <= origDuration);
-         if (actualDuration < origDuration) {
-            next = (mLeadingIdx + 1) % Size;
-            if (next != mTrailingIdx) {
-               previous = &mEntries[(mLeadingIdx + Size - 1) % Size];
-               current = &mEntries[mLeadingIdx];
-               current->InitSilent(*previous, origDuration - actualDuration);
-               mLeadingIdx = next;
-            }
-            else
-               // Oops, can't enqueue the silence -- so do what?
-               ;
          }
 
          mAvailable.Signal();
@@ -710,12 +693,26 @@ struct AudioIO::ScrubQueue
       if (mMiddleIdx != mLeadingIdx) {
          // There is still work in the queue, after cancelling debt
          Entry &entry = mEntries[mMiddleIdx];
-         startSample = entry.mS0;
-         endSample = entry.mS1;
-         duration = entry.mDuration;
-         mTrailingIdx = mMiddleIdx;
-         mMiddleIdx = (mMiddleIdx + 1) % Size;
-         mCredit += duration;
+         if (entry.mDuration > 0) {
+            // First use of the entry
+            startSample = entry.mS0;
+            endSample = entry.mS1;
+            duration = entry.mDuration;
+            entry.mDuration = 0;
+            mCredit += duration;
+         }
+         else if (entry.mSilence > 0) {
+            // Second use of the entry
+            startSample = endSample = entry.mS1;
+            duration = entry.mSilence;
+            entry.mSilence = 0;
+            mCredit += duration;
+         }
+         if (entry.mSilence == 0) {
+            // Entry is used up
+            mTrailingIdx = mMiddleIdx;
+            mMiddleIdx = (mMiddleIdx + 1) % Size;
+         }
       }
       else {
          // We got the shut-down signal, or we got nudged, or we discarded all the work.
@@ -744,12 +741,16 @@ private:
          , mS1(0)
          , mGoal(0)
          , mDuration(0)
+         , mSilence(0)
       {}
 
       bool Init(Entry *previous, sampleCount s0, sampleCount s1,
-         sampleCount &duration /* in/out */,
+         sampleCount duration,
          const ScrubbingOptions &options, double rate)
       {
+         auto origDuration = duration;
+         mSilence = 0;
+
          const bool &adjustStart = options.adjustStart;
 
          wxASSERT(duration > 0);
@@ -867,14 +868,10 @@ private:
          mS0 = s0;
          mS1 = s1;
          mDuration = duration;
-         return true;
-      }
+         if (duration < origDuration)
+            mSilence = origDuration - duration;
 
-      void InitSilent(const Entry &previous, sampleCount duration)
-      {
-         mGoal = previous.mGoal;
-         mS0 = mS1 = previous.mS1;
-         mDuration = duration;
+         return true;
       }
 
       // These sample counts are initialized in the UI, producer, thread:
@@ -885,6 +882,7 @@ private:
       // this work queue item corresponds to exactly this many samples of
       // playback output:
       sampleCount mDuration;
+      sampleCount mSilence;
 
       // The middleman Audio thread does not change these entries, but only
       // changes indices in the queue structure.
