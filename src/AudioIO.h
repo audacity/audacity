@@ -483,22 +483,23 @@ class AUDACITY_DLL_API AudioIO final {
    void SetCaptureMeter(AudacityProject *project, MeterPanel *meter);
    void SetPlaybackMeter(AudacityProject *project, MeterPanel *meter);
 
+   /** \brief Return a valid sample rate that is supported by the current I/O
+   * device(s).
+   *
+   * The return from this function is used to determine the sample rate that
+   * audacity actually runs the audio I/O stream at. if there is no suitable
+   * rate available from the hardware, it returns 0.
+   * The sampleRate argument gives the desired sample rate (the rate of the
+   * audio to be handeled, i.e. the currently Project Rate).
+   * capturing is true if the stream is capturing one or more audio channels,
+   * and playing is true if one or more channels are being played. */
+   double GetBestRate(bool capturing, bool playing, double sampleRate);
+
 private:
    /** \brief Set the current VU meters - this should be done once after
     * each call to StartStream currently */
    void SetMeters();
 
-   /** \brief Return a valid sample rate that is supported by the current I/O
-    * device(s).
-    *
-    * The return from this function is used to determine the sample rate that
-    * audacity actually runs the audio I/O stream at. if there is no suitable
-    * rate available from the hardware, it returns 0.
-    * The sampleRate argument gives the desired sample rate (the rate of the
-    * audio to be handeled, i.e. the currently Project Rate).
-    * capturing is true if the stream is capturing one or more audio channels,
-    * and playing is true if one or more channels are being played. */
-   double GetBestRate(bool capturing, bool playing, double sampleRate);
 
    /** \brief Opens the portaudio stream(s) used to do playback or recording
     * (or both) through.

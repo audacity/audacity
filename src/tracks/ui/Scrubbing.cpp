@@ -462,7 +462,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mMaxSpeed = speed;
    mDragging = false;
 
-   AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
+   AudioIOStartStreamOptions options(mProject->GetSpeedPlayOptions());
    options.pScrubbingOptions = &mOptions;
    options.timeTrack = NULL;
    mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
@@ -499,11 +499,11 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    });
    
    mScrubSpeedDisplayCountdown = 0;
-   // last buffer should not be any bigger than this.
-   double lastBuffer = (2 * ScrubPollInterval_ms) / 1000.0;
+   // Aim to stop within 20 samples of correct position.
+   double stopTolerance = 20.0 / options.rate;
    mScrubToken =
-      // Reduce time by 'lastBuffer' fudge factor, so that the Play will stop.
-      ctb->PlayPlayRegion(SelectedRegion(time0, time1-lastBuffer), options,
+      // Reduce time by 'stopTolerance' fudge factor, so that the Play will stop.
+      ctb->PlayPlayRegion(SelectedRegion(time0, time1-stopTolerance), options,
          PlayMode::normalPlay, appearance, backwards);
 
    if (mScrubToken >= 0) {
