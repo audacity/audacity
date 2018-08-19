@@ -565,15 +565,6 @@ struct AudioIO::ScrubQueue
          dd.Cancel();
       }
    }
-   ~ScrubQueue() {}
-
-   double LastTimeInQueue() const
-   {
-      // Needed by the main thread sometimes
-      wxMutexLocker locker(mUpdating);
-      const Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
-      return previous.mS1.as_double() / mRate;
-   }
 
    // This is for avoiding deadlocks while starting a scrub:
    // Audio stream needs to be unblocked
@@ -734,6 +725,16 @@ struct AudioIO::ScrubQueue
       if (checkDebt)
          mLastTransformerTimeMillis = now;
    }
+
+   double LastTimeInQueue() const
+   {
+      // Needed by the main thread sometimes
+      wxMutexLocker locker(mUpdating);
+      const Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
+      return previous.mS1.as_double() / mRate;
+   }
+
+   ~ScrubQueue() {}
 
 private:
    struct Entry
