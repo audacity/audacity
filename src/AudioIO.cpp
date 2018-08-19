@@ -524,7 +524,7 @@ constexpr size_t TimeQueueGrainSize = 2000;
 
 struct AudioIO::ScrubState
 {
-   ScrubState(double t0, double t1, wxLongLong startClockMillis,
+   ScrubState(double t0, wxLongLong startClockMillis,
               double rate,
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
@@ -533,29 +533,44 @@ struct AudioIO::ScrubState
       , mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
       , mUpdating()
+      , mStartTime( t0 )
    {
-      const sampleCount s0 { llrint( mRate *
-         std::max( options.minTime, std::min( options.maxTime, t0 ) ) ) };
-      const sampleCount s1 { llrint(t1 * mRate) };
-      Duration dd { *this };
-      auto actualDuration = std::max(sampleCount{1}, dd.duration);
-      auto success = mEntries[mMiddleIdx].Init(nullptr,
-         s0, s1, actualDuration, options, mRate);
-      if (success)
-         ++mLeadingIdx;
-      else {
-         // If not, we can wait to enqueue again later
-         dd.Cancel();
-      }
    }
 
    bool Update(double end, const ScrubbingOptions &options)
    {
-      // Main thread indicates a scrubbing interval
+      Duration dd { *this };
+      if (dd.duration <= 0)
+         return false;
+
+      wxMutexLocker locker(mUpdating);
+
+      if ( !mStarted ) {
+         const sampleCount s0 { llrint( mRate *
+            std::max( options.minTime,
+               std::min( options.maxTime, mStartTime ) ) ) };
+         const sampleCount s1 ( options.bySpeed
+            ? s0.as_double() +
+               llrint(dd.duration.as_double() * end) // end is a speed
+            : llrint(end * mRate)            // end is a time
+         );
+         auto actualDuration = std::max(sampleCount{1}, dd.duration);
+         auto success = mEntries[mMiddleIdx].Init(nullptr,
+            s0, s1, actualDuration, options, mRate);
+         if (success)
+            ++mLeadingIdx;
+         else {
+            // If not, we can wait to enqueue again later
+            dd.Cancel();
+            return false;
+         }
+
+         mStarted = true;
+         return true;
+      }
 
       // MAY ADVANCE mLeadingIdx, BUT IT NEVER CATCHES UP TO mTrailingIdx.
 
-      wxMutexLocker locker(mUpdating);
       bool result = true;
       unsigned next = (mLeadingIdx + 1) % Size;
       if (next != mTrailingIdx)
@@ -565,9 +580,6 @@ struct AudioIO::ScrubState
 
          // Use the previous end as NEW start.
          const auto s0 = previous->mS1;
-         Duration dd { *this };
-         if (dd.duration <= 0)
-            return false;
 
          const sampleCount s1 ( options.bySpeed
             ? s0.as_double() +
@@ -830,6 +842,8 @@ private:
    unsigned mTrailingIdx;
    unsigned mMiddleIdx;
    unsigned mLeadingIdx;
+   double mStartTime;
+   bool mStarted{ false };
    std::atomic<bool> mStopped { false };
    const double mRate;
    wxLongLong mLastScrubTimeMillis;
@@ -1987,7 +2001,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       const auto &scrubOptions = *options.pScrubbingOptions;
       mScrubState =
          std::make_unique<ScrubState>(
-            mPlaybackSchedule.mT0, mPlaybackSchedule.mT1,
+            mPlaybackSchedule.mT0,
             scrubOptions.startClockTimeMillis,
             mRate,
             scrubOptions);
