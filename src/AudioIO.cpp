@@ -3913,7 +3913,7 @@ void AudioIO::FillBuffers()
       // if we hit this code during the PortAudio callback.  To keep
       // things simple, we only write as much data as is vacant in
       // ALL buffers, and advance the global time by that much.
-      auto nAvailable = (int)GetCommonlyFreePlayback();
+      auto nAvailable = GetCommonlyFreePlayback();
 
       //
       // Don't fill the buffers at all unless we can do the
@@ -3925,14 +3925,13 @@ void AudioIO::FillBuffers()
       // region - then we should just fill the buffer.
       //
       auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
-      if (nAvailable >= (int)mPlaybackSamplesToCopy ||
+      if (nAvailable >= mPlaybackSamplesToCopy ||
           (mPlaybackSchedule.PlayingStraight() &&
-           nAvailable > 0 &&
            nAvailable / mRate >= realTimeRemaining))
       {
          // Limit maximum buffer size (increases performance)
          auto available =
-            std::min<size_t>( nAvailable, mPlaybackSamplesToCopy );
+            std::min( nAvailable, mPlaybackSamplesToCopy );
 
          // msmeyer: When playing a very short selection in looped
          // mode, the selection must be copied to the buffer multiple
