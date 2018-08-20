@@ -2298,6 +2298,10 @@ bool AudioIO::AllocateBuffers(
 #endif
                     Mixer::WarpOptions(mPlaybackSchedule.mTimeTrack);
 
+            mPlaybackQueueMinimum = mPlaybackSamplesToCopy;
+            mPlaybackQueueMinimum =
+               std::min( mPlaybackQueueMinimum, playbackBufferSize );
+
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
             {
                mPlaybackBuffers[i] =
@@ -2326,7 +2330,8 @@ bool AudioIO::AllocateBuffers(
                   mPlaybackSchedule.mT0,
                   endTime,
                   1,
-                  mPlaybackSamplesToCopy, false,
+                  std::max( mPlaybackSamplesToCopy, mPlaybackQueueMinimum ),
+                  false,
                   mRate, floatSample, false);
                mPlaybackMixers[i]->ApplyTrackGains(false);
             }
@@ -3914,14 +3919,23 @@ void AudioIO::FillBuffers()
       // The exception is if we're at the end of the selected
       // region - then we should just fill the buffer.
       //
+      // May produce a larger amount when initially priming the buffer, or
+      // perhaps again later in play to avoid unerfilling the queue and falling
+      // behind the real-time demand on the consumer side in the callback.
+      auto nReady = GetCommonlyReadyPlayback();
+      auto nNeeded =
+         mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
+
+      // wxASSERT( nNeeded <= nAvailable );
+
       auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
       if (nAvailable >= mPlaybackSamplesToCopy ||
           (mPlaybackSchedule.PlayingStraight() &&
            nAvailable / mRate >= realTimeRemaining))
       {
          // Limit maximum buffer size (increases performance)
-         auto available =
-            std::min( nAvailable, mPlaybackSamplesToCopy );
+         auto available = std::min( nAvailable,
+            std::max( nNeeded, mPlaybackSamplesToCopy ) );
 
          // msmeyer: When playing a very short selection in looped
          // mode, the selection must be copied to the buffer multiple
