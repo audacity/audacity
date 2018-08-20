@@ -2264,8 +2264,10 @@ bool AudioIO::AllocateBuffers(
    // Capacity of the playback buffer.
    mPlaybackRingBufferSecs = 10.0;
 
-   mCaptureRingBufferSecs = 4.5 + 0.5 * std::min(size_t(16), mCaptureTracks.size());
-   mMinCaptureSecsToCopy = 0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.size());
+   mCaptureRingBufferSecs =
+      4.5 + 0.5 * std::min(size_t(16), mCaptureTracks.size());
+   mMinCaptureSecsToCopy =
+      0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.size());
 
    bool bDone;
    do
@@ -2296,14 +2298,16 @@ bool AudioIO::AllocateBuffers(
 
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
             {
-               mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
+               mPlaybackBuffers[i] =
+                  std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // use track time for the end time, not real time!
                WaveTrackConstArray mixTracks;
                mixTracks.push_back(mPlaybackTracks[i]);
 
                double endTime;
-               if (make_iterator_range(tracks.prerollTracks).contains(mPlaybackTracks[i]))
+               if (make_iterator_range(tracks.prerollTracks)
+                      .contains(mPlaybackTracks[i]))
                   // Stop playing this track after pre-roll
                   endTime = t0;
                else
@@ -2330,9 +2334,11 @@ bool AudioIO::AllocateBuffers(
          {
             // Allocate input buffers.  For every input track we allocate
             // a ring buffer of five seconds
-            auto captureBufferSize = (size_t)(mRate * mCaptureRingBufferSecs + 0.5);
+            auto captureBufferSize =
+               (size_t)(mRate * mCaptureRingBufferSecs + 0.5);
 
-            // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
+            // In the extraordinarily rare case that we can't even afford
+            // 100 samples, just give up.
             if(captureBufferSize < 100)
             {
                StartStreamCleanup();
@@ -2346,10 +2352,11 @@ bool AudioIO::AllocateBuffers(
 
             for( unsigned int i = 0; i < mCaptureTracks.size(); i++ )
             {
-               mCaptureBuffers[i] = std::make_unique<RingBuffer>
-                  ( mCaptureTracks[i]->GetSampleFormat(),
-                                                    captureBufferSize );
-               mResample[i] = std::make_unique<Resample>(true, mFactor, mFactor); // constant rate resampling
+               mCaptureBuffers[i] = std::make_unique<RingBuffer>(
+                  mCaptureTracks[i]->GetSampleFormat(), captureBufferSize );
+               mResample[i] =
+                  std::make_unique<Resample>(true, mFactor, mFactor);
+                  // constant rate resampling
             }
          }
       }
@@ -2364,8 +2371,10 @@ bool AudioIO::AllocateBuffers(
          mMinCaptureSecsToCopy *= 0.5;
          bDone = false;
 
-         // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-         auto playbackBufferSize = (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+         // In the extraordinarily rare case that we can't even afford 100
+         // samples, just give up.
+         auto playbackBufferSize =
+            (size_t)lrint(mRate * mPlaybackRingBufferSecs);
          auto playbackMixBufferSize = mPlaybackSamplesToCopy;
          if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
          {
