@@ -581,6 +581,16 @@ private:
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
 
+   /** \brief Allocate RingBuffer structures, and others, needed for playback
+     * and recording.
+     *
+     * Returns true iff successful.
+     */
+   bool AllocateBuffers(
+      const AudioIOStartStreamOptions &options,
+      const TransportTracks &tracks, double t0, double t1, double sampleRate,
+      bool scrubbing );
+
    /** \brief Clean up after StartStream if it fails.
      *
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
