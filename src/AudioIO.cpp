@@ -2247,11 +2247,10 @@ bool AudioIO::AllocateBuffers(
    // mouse input, so make fillings more and shorter.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
-
    double playbackTime = 4.0;
    if (scrubbing)
       playbackTime =
-      lrint(options.pScrubbingOptions->delay * sampleRate) / sampleRate;
+      lrint(options.pScrubbingOptions->delay * mRate) / mRate;
    
    wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
