@@ -2227,6 +2227,11 @@ bool AudioIO::AllocateBuffers(
    const TransportTracks &tracks, double t0, double t1, double sampleRate,
    bool scrubbing )
 {
+   bool success = false;
+   auto cleanup = finally([&]{
+      if (!success) StartStreamCleanup( false );
+   });
+
    //
    // The (audio) stream has been opened successfully (assuming we tried
    // to open it). We now proceed to
@@ -2337,7 +2342,6 @@ bool AudioIO::AllocateBuffers(
             // 100 samples, just give up.
             if(captureBufferSize < 100)
             {
-               StartStreamCleanup();
                AudacityMessageBox(_("Out of memory!"));
                return false;
             }
@@ -2373,13 +2377,13 @@ bool AudioIO::AllocateBuffers(
             (size_t)lrint(mRate * mPlaybackRingBufferSecs);
          if(playbackBufferSize < 100 || mPlaybackSamplesToCopy < 100)
          {
-            StartStreamCleanup();
             AudacityMessageBox(_("Out of memory!"));
             return false;
          }
       }
    } while(!bDone);
    
+   success = true;
    return true;
 }
 
