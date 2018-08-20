@@ -2259,8 +2259,10 @@ bool AudioIO::AllocateBuffers(
    // thread, in many smaller pieces.
    double playbackTime = 4.0;
    if (scrubbing)
+      // Specify a very short minimum batch for non-seek scrubbing, to allow
+      // more frequent polling of the mouse
       playbackTime =
-      lrint(options.pScrubbingOptions->delay * mRate) / mRate;
+         lrint(options.pScrubbingOptions->delay * mRate) / mRate;
    
    wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
@@ -2299,6 +2301,13 @@ bool AudioIO::AllocateBuffers(
                     Mixer::WarpOptions(mPlaybackSchedule.mTimeTrack);
 
             mPlaybackQueueMinimum = mPlaybackSamplesToCopy;
+            if (scrubbing)
+               // Specify enough playback RingBuffer latency so we can refill
+               // once every seek stutter without falling behind the demand.
+               // (Scrub might switch in and out of seeking with left mouse
+               // presses in the ruler)
+               mPlaybackQueueMinimum = lrint(
+                  2 * options.pScrubbingOptions->minStutterTime * mRate );
             mPlaybackQueueMinimum =
                std::min( mPlaybackQueueMinimum, playbackBufferSize );
 
