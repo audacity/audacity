@@ -2279,8 +2279,6 @@ bool AudioIO::AllocateBuffers(
             // a ring buffer of ten seconds
             auto playbackBufferSize =
                (size_t)lrint(mRate * mPlaybackRingBufferSecs);
-            auto playbackMixBufferSize =
-               mPlaybackSamplesToCopy;
 
             mPlaybackBuffers.reinit(mPlaybackTracks.size());
             mPlaybackMixers.reinit(mPlaybackTracks.size());
@@ -2323,7 +2321,7 @@ bool AudioIO::AllocateBuffers(
                   mPlaybackSchedule.mT0,
                   endTime,
                   1,
-                  playbackMixBufferSize, false,
+                  mPlaybackSamplesToCopy, false,
                   mRate, floatSample, false);
                mPlaybackMixers[i]->ApplyTrackGains(false);
             }
@@ -2374,8 +2372,7 @@ bool AudioIO::AllocateBuffers(
          // samples, just give up.
          auto playbackBufferSize =
             (size_t)lrint(mRate * mPlaybackRingBufferSecs);
-         auto playbackMixBufferSize = mPlaybackSamplesToCopy;
-         if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
+         if(playbackBufferSize < 100 || mPlaybackSamplesToCopy < 100)
          {
             StartStreamCleanup();
             AudacityMessageBox(_("Out of memory!"));
