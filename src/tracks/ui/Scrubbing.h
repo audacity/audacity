@@ -41,8 +41,8 @@ struct ScrubbingOptions {
    bool adjustStart {};
 
    // usually from TrackList::GetEndTime()
-   sampleCount maxSample {};
-   sampleCount minSample {};
+   double maxTime {};
+   double minTime {};
 
    bool enqueueBySpeed {};
    bool isPlayingAtSpeed{};
@@ -56,7 +56,7 @@ struct ScrubbingOptions {
 
    // When maximum speed scrubbing skips to follow the mouse,
    // this is the minimum amount of playback allowed at the maximum speed:
-   long minStutter {};
+   double minStutterTime {};
 
    // Scrubbing needs the time of start of the mouse movement that began
    // the scrub:

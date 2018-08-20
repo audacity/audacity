@@ -378,14 +378,13 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #endif
 
 #endif
-            mOptions.minSample = 0;
-            mOptions.maxSample =
-               lrint(std::max(0.0, mProject->GetTracks()->GetEndTime()) * options.rate);
-            mOptions.minStutter =
+            mOptions.minTime = 0;
+            mOptions.maxTime = std::max(0.0, mProject->GetTracks()->GetEndTime());
+            mOptions.minStutterTime =
 #ifdef DRAG_SCRUB
                mDragging ? 0.0 :
 #endif
-               lrint(std::max(0.0, MinStutter) * options.rate);
+               std::max(0.0, MinStutter);
 
             ControlToolBar::PlayAppearance appearance = 
             // commented out to fix Bug 1241
@@ -472,9 +471,9 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
 
    if (time1 == time0)
       time1 = std::max(0.0, mProject->GetTracks()->GetEndTime());
-   mOptions.minSample = 0;
-   mOptions.maxSample = lrint(time1 * options.rate);
-   mOptions.minStutter = lrint(std::max(0.0, MinStutter) * options.rate);
+   mOptions.minTime = 0;
+   mOptions.maxTime = time1;
+   mOptions.minStutterTime = std::max(0.0, MinStutter);
    mOptions.enqueueBySpeed = true;
    mOptions.adjustStart = false;
    mOptions.isPlayingAtSpeed = true;

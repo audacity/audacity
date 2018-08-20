@@ -546,24 +546,23 @@ So a small, fixed queue size should be adequate.
 struct AudioIO::ScrubQueue
 {
    ScrubQueue(double t0, double t1, wxLongLong startClockMillis,
-              double rate, long maxDebt,
+              double rate, double maxDebt,
               const ScrubbingOptions &options)
       : mTrailingIdx(0)
       , mMiddleIdx(1)
       , mLeadingIdx(1)
       , mRate(rate)
       , mLastScrubTimeMillis(startClockMillis)
-      , mMaxDebt { maxDebt }
+      , mMaxDebt { lrint(maxDebt * rate) }
       , mUpdating()
    {
-      const auto s0 = std::max(options.minSample, std::min(options.maxSample,
-         sampleCount(lrint(t0 * mRate))
-      ));
-      const auto s1 = sampleCount(lrint(t1 * mRate));
+      const sampleCount s0 { llrint( mRate *
+         std::max( options.minTime, std::min( options.maxTime, t0 ) ) ) };
+      const sampleCount s1 { llrint(t1 * mRate) };
       Duration dd { *this };
       auto actualDuration = std::max(sampleCount{1}, dd.duration);
       auto success = mEntries[mMiddleIdx].Init(nullptr,
-         s0, s1, actualDuration, options);
+         s0, s1, actualDuration, options, mRate);
       if (success)
          ++mLeadingIdx;
       else {
@@ -625,7 +624,7 @@ struct AudioIO::ScrubQueue
             : lrint(end * mRate)            // end is a time
          );
          auto success =
-            current->Init(previous, s0, s1, actualDuration, options);
+            current->Init(previous, s0, s1, actualDuration, options, mRate);
          if (success)
             mLeadingIdx = next;
          else {
@@ -795,7 +794,7 @@ private:
 
       bool Init(Entry *previous, sampleCount s0, sampleCount s1,
          sampleCount &duration /* in/out */,
-         const ScrubbingOptions &options)
+         const ScrubbingOptions &options, double rate)
       {
          const bool &adjustStart = options.adjustStart;
 
@@ -865,8 +864,10 @@ private:
          // (Assume s0 is in bounds, because it equals the last scrub's s1 which was checked.)
          if (s1 != s0)
          {
+            sampleCount minSample { llrint(options.minTime * rate) };
+            sampleCount maxSample { llrint(options.maxTime * rate) };
             auto newDuration = duration;
-            const auto newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
+            const auto newS1 = std::max(minSample, std::min(maxSample, s1));
             if(s1 != newS1)
                newDuration = std::max( sampleCount{ 0 },
                   sampleCount(
@@ -876,7 +877,8 @@ private:
                );
             // When playback follows a fast mouse movement by "stuttering"
             // at maximum playback, don't make stutters too short to be useful.
-            if (options.adjustStart && newDuration < options.minStutter)
+            if (options.adjustStart &&
+                newDuration < llrint( options.minStutterTime * rate ) )
                return false;
             else if (newDuration == 0) {
                // Enqueue a silent scrub with s0 == s1
@@ -2260,8 +2262,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          std::make_unique<ScrubQueue>(
             mPlaybackSchedule.mT0, mPlaybackSchedule.mT1,
             scrubOptions.startClockTimeMillis,
-            mRate, 
-            2 * scrubOptions.minStutter,
+            mRate, 2 * scrubOptions.minStutterTime,
             scrubOptions);
       mScrubDuration = 0;
       mSilentScrub = false;
