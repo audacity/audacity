@@ -1995,8 +1995,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mCaptureBuffers.reset();
    mResample.reset();
 
-   double playbackTime = 4.0;
-
 #ifdef EXPERIMENTAL_MIDI_OUT
    streamStartTime = 0;
    streamStartTime = SystemTime(mUsingAlsa);
@@ -2005,32 +2003,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mPlaybackSchedule.Init(
       t0, t1, options, mCaptureTracks.empty() ? nullptr : &mRecordingSchedule );
    const bool scrubbing = mPlaybackSchedule.Interactive();
-   if (scrubbing)
-      playbackTime =
-         lrint(options.pScrubbingOptions->delay * sampleRate) / sampleRate;
-
-   //
-   // The RingBuffer sizes, and the max amount of the buffer to
-   // fill at a time, both grow linearly with the number of
-   // tracks.  This allows us to scale up to many tracks without
-   // killing performance.
-   //
-
-   // real playback time to produce with each filling of the buffers
-   // by the Audio thread (except at the end of playback):
-   // usually, make fillings fewer and longer for less CPU usage.
-   // But for useful scrubbing, we can't run too far ahead without checking
-   // mouse input, so make fillings more and shorter.
-   // What Audio thread produces for playback is then consumed by the PortAudio
-   // thread, in many smaller pieces.
-   wxASSERT( playbackTime >= 0 );
-   mPlaybackSamplesToCopy = playbackTime * mRate;
-
-   // Capacity of the playback buffer.
-   mPlaybackRingBufferSecs = 10.0;
-
-   mCaptureRingBufferSecs = 4.5 + 0.5 * std::min(size_t(16), mCaptureTracks.size());
-   mMinCaptureSecsToCopy = 0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.size());
 
    unsigned int playbackChannels = 0;
    unsigned int captureChannels = 0;
@@ -2092,120 +2064,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       return 0;
    }
 
-   //
-   // The (audio) stream has been opened successfully (assuming we tried
-   // to open it). We now proceed to
-   // allocate the memory structures the stream will need.
-   //
-
-   bool bDone;
-   do
-   {
-      bDone = true; // assume success
-      try
-      {
-         if( mNumPlaybackChannels > 0 ) {
-            // Allocate output buffers.  For every output track we allocate
-            // a ring buffer of five seconds
-            auto playbackBufferSize =
-               (size_t)lrint(mRate * mPlaybackRingBufferSecs);
-            auto playbackMixBufferSize =
-               mPlaybackSamplesToCopy;
-
-            mPlaybackBuffers.reinit(mPlaybackTracks.size());
-            mPlaybackMixers.reinit(mPlaybackTracks.size());
-
-            const Mixer::WarpOptions &warpOptions =
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-               scrubbing
-                  ? Mixer::WarpOptions
-                     (ScrubbingOptions::MinAllowedScrubSpeed(),
-                      ScrubbingOptions::MaxAllowedScrubSpeed())
-                  :
-#endif
-                    Mixer::WarpOptions(mPlaybackSchedule.mTimeTrack);
-
-            for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-            {
-               mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
-
-               // use track time for the end time, not real time!
-               WaveTrackConstArray mixTracks;
-               mixTracks.push_back(mPlaybackTracks[i]);
-
-               double endTime;
-               if (make_iterator_range(tracks.prerollTracks).contains(mPlaybackTracks[i]))
-                  // Stop playing this track after pre-roll
-                  endTime = t0;
-               else
-                  // Pass t1 -- not mT1 as may have been adjusted for latency
-                  // -- so that overdub recording stops playing back samples
-                  // at the right time, though transport may continue to record
-                  endTime = t1;
-
-               mPlaybackMixers[i] = std::make_unique<Mixer>
-                  (mixTracks,
-                  // Don't throw for read errors, just play silence:
-                  false,
-                  warpOptions,
-                  mPlaybackSchedule.mT0,
-                  endTime,
-                  1,
-                  playbackMixBufferSize, false,
-                  mRate, floatSample, false);
-               mPlaybackMixers[i]->ApplyTrackGains(false);
-            }
-         }
-
-         if( mNumCaptureChannels > 0 )
-         {
-            // Allocate input buffers.  For every input track we allocate
-            // a ring buffer of five seconds
-            auto captureBufferSize = (size_t)(mRate * mCaptureRingBufferSecs + 0.5);
-
-            // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-            if(captureBufferSize < 100)
-            {
-               StartStreamCleanup();
-               AudacityMessageBox(_("Out of memory!"));
-               return 0;
-            }
-
-            mCaptureBuffers.reinit(mCaptureTracks.size());
-            mResample.reinit(mCaptureTracks.size());
-            mFactor = sampleRate / mRate;
-
-            for( unsigned int i = 0; i < mCaptureTracks.size(); i++ )
-            {
-               mCaptureBuffers[i] = std::make_unique<RingBuffer>
-                  ( mCaptureTracks[i]->GetSampleFormat(),
-                                                    captureBufferSize );
-               mResample[i] = std::make_unique<Resample>(true, mFactor, mFactor); // constant rate resampling
-            }
-         }
-      }
-      catch(std::bad_alloc&)
-      {
-         // Oops!  Ran out of memory.  This is pretty rare, so we'll just
-         // try deleting everything, halving our buffer size, and try again.
-         StartStreamCleanup(true);
-         mPlaybackRingBufferSecs *= 0.5;
-         mPlaybackSamplesToCopy /= 2;
-         mCaptureRingBufferSecs *= 0.5;
-         mMinCaptureSecsToCopy *= 0.5;
-         bDone = false;
-
-         // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-         auto playbackBufferSize = (size_t)lrint(mRate * mPlaybackRingBufferSecs);
-         auto playbackMixBufferSize = mPlaybackSamplesToCopy;
-         if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
-         {
-            StartStreamCleanup();
-            AudacityMessageBox(_("Out of memory!"));
-            return 0;
-         }
-      }
-   } while(!bDone);
+   if ( ! AllocateBuffers( options, tracks, t0, t1, sampleRate, scrubbing ) )
+      return 0;
 
    if (mNumPlaybackChannels > 0)
    {
@@ -2365,6 +2225,158 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    commit = true;
    return mStreamToken;
+}
+
+bool AudioIO::AllocateBuffers(
+   const AudioIOStartStreamOptions &options,
+   const TransportTracks &tracks, double t0, double t1, double sampleRate,
+   bool scrubbing )
+{
+   //
+   // The (audio) stream has been opened successfully (assuming we tried
+   // to open it). We now proceed to
+   // allocate the memory structures the stream will need.
+   //
+
+   //
+   // The RingBuffer sizes, and the max amount of the buffer to
+   // fill at a time, both grow linearly with the number of
+   // tracks.  This allows us to scale up to many tracks without
+   // killing performance.
+   //
+
+   // real playback time to produce with each filling of the buffers
+   // by the Audio thread (except at the end of playback):
+   // usually, make fillings fewer and longer for less CPU usage.
+   // But for useful scrubbing, we can't run too far ahead without checking
+   // mouse input, so make fillings more and shorter.
+   // What Audio thread produces for playback is then consumed by the PortAudio
+   // thread, in many smaller pieces.
+
+   double playbackTime = 4.0;
+   if (scrubbing)
+      playbackTime =
+      lrint(options.pScrubbingOptions->delay * sampleRate) / sampleRate;
+   
+   wxASSERT( playbackTime >= 0 );
+   mPlaybackSamplesToCopy = playbackTime * mRate;
+
+   // Capacity of the playback buffer.
+   mPlaybackRingBufferSecs = 10.0;
+
+   mCaptureRingBufferSecs = 4.5 + 0.5 * std::min(size_t(16), mCaptureTracks.size());
+   mMinCaptureSecsToCopy = 0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.size());
+
+   bool bDone;
+   do
+   {
+      bDone = true; // assume success
+      try
+      {
+         if( mNumPlaybackChannels > 0 ) {
+            // Allocate output buffers.  For every output track we allocate
+            // a ring buffer of ten seconds
+            auto playbackBufferSize =
+               (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+            auto playbackMixBufferSize =
+               mPlaybackSamplesToCopy;
+
+            mPlaybackBuffers.reinit(mPlaybackTracks.size());
+            mPlaybackMixers.reinit(mPlaybackTracks.size());
+
+            const Mixer::WarpOptions &warpOptions =
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+               scrubbing
+                  ? Mixer::WarpOptions
+                     (ScrubbingOptions::MinAllowedScrubSpeed(),
+                      ScrubbingOptions::MaxAllowedScrubSpeed())
+                  :
+#endif
+                    Mixer::WarpOptions(mPlaybackSchedule.mTimeTrack);
+
+            for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
+            {
+               mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
+
+               // use track time for the end time, not real time!
+               WaveTrackConstArray mixTracks;
+               mixTracks.push_back(mPlaybackTracks[i]);
+
+               double endTime;
+               if (make_iterator_range(tracks.prerollTracks).contains(mPlaybackTracks[i]))
+                  // Stop playing this track after pre-roll
+                  endTime = t0;
+               else
+                  // Pass t1 -- not mT1 as may have been adjusted for latency
+                  // -- so that overdub recording stops playing back samples
+                  // at the right time, though transport may continue to record
+                  endTime = t1;
+
+               mPlaybackMixers[i] = std::make_unique<Mixer>
+                  (mixTracks,
+                  // Don't throw for read errors, just play silence:
+                  false,
+                  warpOptions,
+                  mPlaybackSchedule.mT0,
+                  endTime,
+                  1,
+                  playbackMixBufferSize, false,
+                  mRate, floatSample, false);
+               mPlaybackMixers[i]->ApplyTrackGains(false);
+            }
+         }
+
+         if( mNumCaptureChannels > 0 )
+         {
+            // Allocate input buffers.  For every input track we allocate
+            // a ring buffer of five seconds
+            auto captureBufferSize = (size_t)(mRate * mCaptureRingBufferSecs + 0.5);
+
+            // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
+            if(captureBufferSize < 100)
+            {
+               StartStreamCleanup();
+               AudacityMessageBox(_("Out of memory!"));
+               return false;
+            }
+
+            mCaptureBuffers.reinit(mCaptureTracks.size());
+            mResample.reinit(mCaptureTracks.size());
+            mFactor = sampleRate / mRate;
+
+            for( unsigned int i = 0; i < mCaptureTracks.size(); i++ )
+            {
+               mCaptureBuffers[i] = std::make_unique<RingBuffer>
+                  ( mCaptureTracks[i]->GetSampleFormat(),
+                                                    captureBufferSize );
+               mResample[i] = std::make_unique<Resample>(true, mFactor, mFactor); // constant rate resampling
+            }
+         }
+      }
+      catch(std::bad_alloc&)
+      {
+         // Oops!  Ran out of memory.  This is pretty rare, so we'll just
+         // try deleting everything, halving our buffer size, and try again.
+         StartStreamCleanup(true);
+         mPlaybackRingBufferSecs *= 0.5;
+         mPlaybackSamplesToCopy /= 2;
+         mCaptureRingBufferSecs *= 0.5;
+         mMinCaptureSecsToCopy *= 0.5;
+         bDone = false;
+
+         // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
+         auto playbackBufferSize = (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+         auto playbackMixBufferSize = mPlaybackSamplesToCopy;
+         if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
+         {
+            StartStreamCleanup();
+            AudacityMessageBox(_("Out of memory!"));
+            return false;
+         }
+      }
+   } while(!bDone);
+   
+   return true;
 }
 
 void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
