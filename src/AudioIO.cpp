@@ -832,8 +832,14 @@ private:
             mGoal = -1;
 
          if (speed < minSpeed) {
-            // Trim the duration.
-            duration = std::max(0L, lrint(speed * duration.as_double() / minSpeed));
+            if (s0 != s1 && adjustStart)
+               // Do not trim the duration.
+               ;
+            else
+               // Trim the duration.
+               duration =
+                  std::max(0L, lrint(speed * duration.as_double() / minSpeed));
+
             speed = minSpeed;
             adjustedSpeed = true;
          }
