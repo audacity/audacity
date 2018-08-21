@@ -637,6 +637,17 @@ bool NyquistEffect::Process()
    mTrackIndex = 0;
 
    mNumSelectedChannels = 0;
+
+   // If in tool mode, then we don't do anything with the track and selection.
+   bool bOnePassTool = (GetType() == EffectTypeTool);
+
+   // We must copy all the tracks, because Paste needs label tracks to ensure
+   // correct sync-lock group behavior when the timeline is affected; then we just want
+   // to operate on the selected wave tracks.
+   // Also need to set up mOutputTracks for channel count.
+   if( !bOnePassTool )
+      CopyInputTracks(Track::All);
+
    SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks.get());
    for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
       mNumSelectedChannels++;
@@ -773,15 +784,12 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
    }
 
-   // If in tool mode, then we don't do anything with the track and selection.
-   bool bOnePassTool = (GetType() == EffectTypeTool);
+   // Nyquist Prompt does not require a selection, but effects do.
+   if (!bOnePassTool && (mNumSelectedChannels == 0)) {
+      wxString message = _("Cannot run command without a selection.");
+      Effect::MessageBox(message, wxOK | wxCENTRE | wxICON_EXCLAMATION, _("Nyquist Error"));
+   }
 
-
-   // We must copy all the tracks, because Paste needs label tracks to ensure
-   // correct sync-lock group behavior when the timeline is affected; then we just want
-   // to operate on the selected wave tracks
-   if( !bOnePassTool )
-      CopyInputTracks(Track::All);
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
    mCurTrack[0] = (WaveTrack *)iter.First();
 
