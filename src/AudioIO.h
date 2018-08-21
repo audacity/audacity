@@ -538,7 +538,14 @@ private:
    *
    * Returns the smallest of the buffer free space values in the event that
    * they are different. */
-   size_t GetCommonlyAvailPlayback();
+   size_t GetCommonlyFreePlayback();
+
+   /** \brief Get the number of audio samples ready in all of the playback
+   * buffers.
+   *
+   * Returns the smallest of the buffer ready space values in the event that
+   * they are different. */
+   size_t GetCommonlyReadyPlayback();
 
    /** \brief Get the number of audio samples ready in all of the recording
     * buffers.
@@ -580,6 +587,16 @@ private:
    static const int RatesToTry[];
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
+
+   /** \brief Allocate RingBuffer structures, and others, needed for playback
+     * and recording.
+     *
+     * Returns true iff successful.
+     */
+   bool AllocateBuffers(
+      const AudioIOStartStreamOptions &options,
+      const TransportTracks &tracks, double t0, double t1, double sampleRate,
+      bool scrubbing );
 
    /** \brief Clean up after StartStream if it fails.
      *
@@ -703,7 +720,12 @@ private:
    double              mSeek;
    double              mPlaybackRingBufferSecs;
    double              mCaptureRingBufferSecs;
+
+   /// Preferred batch size for replenishing the playback RingBuffer
    size_t              mPlaybackSamplesToCopy;
+   /// Occupancy of the queue we try to maintain, with bigger batches if needed
+   size_t              mPlaybackQueueMinimum;
+
    double              mMinCaptureSecsToCopy;
    /// True if audio playback is paused
    bool                mPaused;
