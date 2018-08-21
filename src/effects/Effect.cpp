@@ -1201,7 +1201,6 @@ bool Effect::DoEffect(wxWindow *parent,
       ReplaceProcessedTracks( false );
    } );
 
-   wxLogDebug("EFFECT TYPE IS: %s", GetPath());
    if ((GetType() == EffectTypeGenerate) && (mNumTracks == 0) && GetPath() != NYQUIST_EFFECTS_PROMPT_ID) {
       newTrack = static_cast<WaveTrack*>(mTracks->Add(mFactory->NewWaveTrack()));
       newTrack->SetSelected(true);
