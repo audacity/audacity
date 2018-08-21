@@ -565,6 +565,10 @@ bool NyquistEffect::Init()
 
    if (!mIsPrompt && !mExternal)
    {
+      //TODO: (bugs):
+      // 1) If there is more than one plug-in with the same name, GetModificationTime may pick the wrong one.
+      // 2) If the ;type is changed after the effect has been registered, the plug-in will appear in the wrong menu.
+
       //TODO: If we want to auto-add parameters from spectral selection,
       //we will need to modify this test.
       //Note that removing it stops the caching of parameter values,
@@ -592,8 +596,6 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 }
 
 static void RegisterFunctions();
-
-
 
 bool NyquistEffect::Process()
 {
@@ -1024,7 +1026,6 @@ bool NyquistEffect::TransferDataFromWindow()
    {
       return TransferDataFromPromptWindow();
    }
-
    return TransferDataFromEffectWindow();
 }
 

@@ -4567,18 +4567,12 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
    auto nTracksOriginally = GetTrackCount();
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
-   WaveTrack *newTrack{};
    wxWindow *focus = wxWindow::FindFocus();
 
    bool success = false;
    auto cleanup = finally( [&] {
 
       if (!success) {
-         if (newTrack) {
-            mTracks->Remove(newTrack);
-            mTrackPanel->Refresh(false);
-         }
-
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
@@ -4587,7 +4581,6 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
 
    } );
 
-   //double prevEndTime = mTracks->GetEndTime();
    int count = 0;
    bool clean = true;
    while (t) {
@@ -4598,15 +4591,6 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
       t = iter.Next();
    }
 
-   if (count == 0) {
-      // No tracks were selected...
-      if (type == EffectTypeGenerate) {
-         // Create a NEW track for the generated audio...
-         newTrack = static_cast<WaveTrack*>(mTracks->Add(mTrackFactory->NewWaveTrack()));
-         newTrack->SetSelected(true);
-      }
-   }
-      
    EffectManager & em = EffectManager::Get();
 
    success = em.DoEffect(ID, this, mRate,

@@ -1172,14 +1172,39 @@ bool Effect::DoEffect(wxWindow *parent,
    mFactory = factory;
    mProjectRate = projectRate;
    mTracks = list;
-   
+
+   // Update track/group counts
+   CountWaveTracks();
+
    bool isSelection = false;
 
    mDuration = 0.0;
-
    if (GetType() == EffectTypeGenerate)
    {
       GetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
+   }
+
+   WaveTrack *newTrack{};
+   bool success = false;
+   auto oldDuration = mDuration;
+
+   auto cleanup = finally( [&] {
+      if (!success) {
+         if (newTrack) {
+            mTracks->Remove(newTrack);
+         }
+         // LastUsedDuration may have been modified by Preview.
+         SetDuration(oldDuration);
+      }
+
+      End();
+      ReplaceProcessedTracks( false );
+   } );
+
+   wxLogDebug("EFFECT TYPE IS: %s", GetPath());
+   if ((GetType() == EffectTypeGenerate) && (mNumTracks == 0) && GetPath() != NYQUIST_EFFECTS_PROMPT_ID) {
+      newTrack = static_cast<WaveTrack*>(mTracks->Add(mFactory->NewWaveTrack()));
+      newTrack->SetSelected(true);
    }
 
    mT0 = selectedRegion->t0();
@@ -1192,10 +1217,9 @@ bool Effect::DoEffect(wxWindow *parent,
       double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
       double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
       mDuration = quantMT1 - quantMT0;
-      mT1 = mT0 + mDuration;
-
       isSelection = true;
    }
+   mT1 = mT0 + mDuration;
 
    mDurationFormat = isSelection
       ? NumericConverter::TimeAndSampleFormat()
@@ -1228,13 +1252,6 @@ bool Effect::DoEffect(wxWindow *parent,
       return false;
    }
 
-   auto cleanup = finally( [&] {
-      End();
-
-      // In case of failed effect, be sure to free memory.
-      ReplaceProcessedTracks( false );
-   } );
-
    bool returnVal = true;
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
@@ -1255,6 +1272,7 @@ bool Effect::DoEffect(wxWindow *parent,
       selectedRegion->setTimes(mT0, mT1);
    }
 
+   success = returnVal;
    return returnVal;
 }
 
@@ -2586,7 +2604,6 @@ void Effect::Preview(bool dryOnly)
    // play back in these tracks
    mT1 -= mT0;
    mT0 = 0.0;
-
 
    // Update track/group counts
    CountWaveTracks();

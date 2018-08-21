@@ -111,7 +111,7 @@ public:
    bool SetAutomationParameters(CommandParameters & parms) override;
 
    // Effect implementation
-   
+
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
