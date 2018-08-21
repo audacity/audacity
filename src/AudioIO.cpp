@@ -870,6 +870,12 @@ private:
          // (Assume s0 is in bounds, because it equals the last scrub's s1 which was checked.)
          if (s1 != s0)
          {
+            // When playback follows a fast mouse movement by "stuttering"
+            // at maximum playback, don't make stutters too short to be useful.
+            if (options.adjustStart &&
+                duration < llrint( options.minStutterTime * rate ) )
+               return false;
+
             sampleCount minSample { llrint(options.minTime * rate) };
             sampleCount maxSample { llrint(options.maxTime * rate) };
             auto newDuration = duration;
@@ -881,12 +887,7 @@ private:
                         (s1 - s0).as_double()
                   )
                );
-            // When playback follows a fast mouse movement by "stuttering"
-            // at maximum playback, don't make stutters too short to be useful.
-            if (options.adjustStart &&
-                newDuration < llrint( options.minStutterTime * rate ) )
-               return false;
-            else if (newDuration == 0) {
+            if (newDuration == 0) {
                // Enqueue a silent scrub with s0 == s1
                silent = true;
                s1 = s0;
