@@ -3201,7 +3201,7 @@ static LVAL ngettext()
 /* These functions may later move to their own source file. */
 extern void * ExecForLisp( char * pIn );
 extern void * nyq_make_opaque_string( int size, unsigned char *src );
-
+extern void * nyq_reformat_aud_do_response(const wxString & Str);
 
 void * nyq_make_opaque_string( int size, unsigned char *src ){
     LVAL dst;
@@ -3216,6 +3216,19 @@ void * nyq_make_opaque_string( int size, unsigned char *src ){
 
     return (void*)dst;
 }
+
+void * nyq_reformat_aud_do_response(const wxString & Str) {
+   LVAL dst;
+   LVAL message;
+   LVAL success;
+   wxString Left = Str.BeforeLast('\n').BeforeLast('\n');
+   wxString Right = Str.BeforeLast('\n').AfterLast('\n');
+   message = cvstring(Left);
+   success = Right.EndsWith("OK") ? cvfixnum(1) : NIL;
+   dst = cons(message, success);
+   return (void *)dst;
+}
+
 
 /* xlc_aud_do -- interface to C routine aud_do */
 /**/
@@ -3236,6 +3249,7 @@ LVAL xlc_aud_do(void)
     // Go call my real function here...
     dst = (LVAL)ExecForLisp( (char *)leftp );
 
+    //dst = cons(dst, (LVAL)1);
     /* return the new string */
     return (dst);
 }

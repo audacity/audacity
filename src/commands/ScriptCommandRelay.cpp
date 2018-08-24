@@ -141,6 +141,8 @@ int ExecCommand2(wxString *pIn, wxString *pOut)
 // The void * return is actually a Lisp LVAL and will be cast to such as needed.
 extern void * ExecForLisp( char * pIn );
 extern void * nyq_make_opaque_string( int size, unsigned char *src );
+extern void * nyq_reformat_aud_do_response(const wxString & Str);
+
 
 void * ExecForLisp( char * pIn ){
    wxString Str1( pIn );
@@ -148,11 +150,11 @@ void * ExecForLisp( char * pIn ){
    ExecCommand2( &Str1, &Str2 );
 
    // wxString provides a const char *
-   const char * pStr = static_cast<const char*>(Str2);
+   //const char * pStr = static_cast<const char*>(Str2);
 
    // We'll be passing it as a non-const unsigned char *
    // That 'unsafe' cast is actually safe.  nyq_make_opaque_string is just copying the string.
-   void * pResult = nyq_make_opaque_string( Str2.Length(), (unsigned char *)pStr );
+   void * pResult = nyq_reformat_aud_do_response( Str2 );
    return pResult;
 };
 
