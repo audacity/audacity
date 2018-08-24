@@ -123,6 +123,12 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
          S.TieCheckBox("&Vari-Speed Play", "/AudioIO/VariSpeedPlay", true);
       }
       S.EndTwoColumn();
+
+      S.StartTwoColumn();
+      {
+         S.TieCheckBox("Always scrub un&pinned", "/AudioIO/UnpinnedScrubbing", true);
+      }
+      S.EndTwoColumn();
    }
    S.EndStatic();
 
