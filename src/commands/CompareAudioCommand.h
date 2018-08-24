@@ -36,7 +36,7 @@ public:
    bool Apply() override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Compare_Audio");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#compare_Audio");};
    bool Apply(const CommandContext &context) override;
 
 

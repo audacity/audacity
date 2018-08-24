@@ -34,7 +34,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Open");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#open_project");};
 public:
    wxString mFileName;
    bool mbAddToHistory;
@@ -54,7 +54,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Save");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#save_project");};
 public:
    wxString mFileName;
    bool mbAddToHistory;

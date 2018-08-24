@@ -57,7 +57,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_track_status");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#set_track_status");};
    bool ApplyInner( const CommandContext & context, Track * t ) override;
 
 public:
@@ -82,7 +82,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_track");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#set_track_audio");};
    bool ApplyInner( const CommandContext & context, Track * t ) override;
 
 public:
@@ -109,7 +109,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_track");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#set_track_visuals");};
    bool ApplyInner( const CommandContext & context, Track * t ) override;
 
 public:
@@ -143,7 +143,7 @@ public:
    IdentInterfaceSymbol GetSymbol() override {return SET_TRACK_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets various values for a track.");};
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_track");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#set_track");};
 
 public:
 

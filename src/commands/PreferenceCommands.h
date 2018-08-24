@@ -40,7 +40,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Preferences");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#get_preference");};
 
    wxString mName;
 };
@@ -58,7 +58,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Preferences");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#set_preference");};
 
    wxString mName;
    wxString mValue;

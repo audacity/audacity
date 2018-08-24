@@ -32,7 +32,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Tools#set_label");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#set_label");};
 
    bool Apply(const CommandContext & context) override;
 

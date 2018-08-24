@@ -36,7 +36,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Import");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#import");};
 public:
    wxString mFileName;
 };
@@ -54,7 +54,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Export");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#export");};
 public:
    wxString mFileName;
    int mnChannels;
