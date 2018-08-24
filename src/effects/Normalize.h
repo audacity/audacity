@@ -62,23 +62,27 @@ private:
 
    enum AnalyseOperation
    {
-      ANALYSE_DC, ANALYSE_LOUDNESS, ANALYSE_LOUDNESS_DC
+      ANALYSE_NONE     = 0,
+      ANALYSE_DC       = (1 << 0),
+      ANALYSE_LOUDNESS = (1 << 1),
+      ANALYSE_LOUDNESS_DC = ANALYSE_DC | ANALYSE_LOUDNESS
    };
 
-   bool ProcessOne(
-      WaveTrack * t, const wxString &msg, double& progress, float offset);
-   bool AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                     double &progress, float &offset, float &extent);
-   bool AnalyseTrackData(const WaveTrack * track, const wxString &msg, double &progress,
-                     AnalyseOperation op, float &offset);
-   void AnalyseDataDC(float *buffer, size_t len);
-   void AnalyseDataLoudness(float *buffer, size_t len);
-   void AnalyseDataLoudnessDC(float *buffer, size_t len);
-   void ProcessData(float *buffer, size_t len, float offset);
+   bool GetTrackMinMax(WaveTrack* track, float& min, float& max);
+   void AllocBuffers(SelectedTrackListOfKindIterator iter);
+   bool ProcessOne(SelectedTrackListOfKindIterator iter, bool analyse);
+   bool LoadBufferBlock(WaveTrack* track1, WaveTrack* track2,
+                        sampleCount pos, size_t len);
+   bool AnalyseBufferBlock();
+   bool ProcessBufferBlock();
+   void StoreBufferBlock(WaveTrack* track1, WaveTrack* track2,
+                         sampleCount pos, size_t len);
+   void InitTrackAnalysis();
 
    void CalcEBUR128HPF(float fs);
    void CalcEBUR128HSF(float fs);
 
+   bool UpdateProgress();
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
 
@@ -93,9 +97,19 @@ private:
 
    double mCurT0;
    double mCurT1;
+   double mProgressVal;
+   int    mSteps;
+   wxString mProgressMsg;
+   double mTrackLen;
+   double mCurRate;
+
+   int    mOp;
    float  mMult;
-   double mSum;
-   double mSqSum;
+   float  mOffset[2];
+   float  mMin[2];
+   float  mMax[2];
+   double mSum[2];
+   double mSqSum[2];
    sampleCount    mCount;
 
    wxCheckBox *mGainCheckBox;
@@ -106,9 +120,14 @@ private:
    wxCheckBox *mUseLoudnessCheckBox;
    wxCheckBox *mStereoIndCheckBox;
 
+   Floats mTrackBuffer[2];
+   size_t mTrackBufferLen;
+   size_t mTrackBufferCapacity;
+   bool   mProcStereo;
+
    bool mCreating;
-   Biquad mR128HSF;
-   Biquad mR128HPF;
+   Biquad mR128HSF[2];
+   Biquad mR128HPF[2];
 
    DECLARE_EVENT_TABLE()
 };
