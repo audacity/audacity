@@ -108,6 +108,8 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mRate = (int) rate;
    mGain = 1.0;
    mPan = 0.0;
+   mOldGain[0] = 0.0;
+   mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
    SetDefaultName(TracksPrefs::GetDefaultAudioTrackNamePreference());
    SetName(GetDefaultName());
