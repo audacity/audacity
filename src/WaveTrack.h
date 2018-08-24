@@ -138,6 +138,11 @@ private:
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;
 
+   // Old gain is used in playback in linearly interpolating 
+   // the gain.
+   float GetOldChannelGain(int channel) const;
+   void SetOldChannelGain(int channel, float gain);
+
    void DoSetMinimized(bool isMinimized) override;
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
@@ -615,6 +620,7 @@ private:
    float         mGain;
    float         mPan;
    int           mWaveColorIndex;
+   float         mOldGain[2];
 
 
    //

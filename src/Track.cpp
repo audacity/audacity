@@ -1576,10 +1576,10 @@ bool TrackList::HasPendingTracks() const
 }
 
 #include "AudioIO.h"
-TransportTracks GetAllPlaybackTracks(const TrackList &trackList, bool selectedOnly, bool useMidi)
+TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi)
 {
    TransportTracks result;
-   result.playbackTracks = trackList.GetWaveTrackConstArray(selectedOnly);
+   result.playbackTracks = trackList.GetWaveTrackArray(selectedOnly);
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (useMidi)
       result.midiTracks = trackList.GetNoteTrackConstArray(selectedOnly);

@@ -153,6 +153,8 @@ void WaveTrack::Init(const WaveTrack &orig)
    mRate = orig.mRate;
    mGain = orig.mGain;
    mPan = orig.mPan;
+   mOldGain[0] = 0.0;
+   mOldGain[1] = 0.0;
    SetDefaultName(orig.GetDefaultName());
    SetName(orig.GetName());
    mDisplay = orig.mDisplay;
@@ -452,6 +454,18 @@ float WaveTrack::GetChannelGain(int channel) const
    else
       return right*mGain;
 }
+
+float WaveTrack::GetOldChannelGain(int channel) const
+{
+   return mOldGain[channel%2];
+}
+
+void WaveTrack::SetOldChannelGain(int channel, float gain)
+{
+   mOldGain[channel % 2] = gain;
+}
+
+
 
 void WaveTrack::DoSetMinimized(bool isMinimized){
 

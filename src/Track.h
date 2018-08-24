@@ -893,6 +893,6 @@ class AUDACITY_DLL_API TrackFactory
 
 // global functions
 struct TransportTracks;
-TransportTracks GetAllPlaybackTracks(const TrackList &trackList, bool selectedOnly, bool useMidi = false);
+TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi = false);
 
 #endif

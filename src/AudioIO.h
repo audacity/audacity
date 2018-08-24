@@ -156,7 +156,7 @@ struct AudioIOStartStreamOptions
 };
 
 struct TransportTracks {
-   WaveTrackConstArray playbackTracks;
+   WaveTrackArray playbackTracks;
    WaveTrackArray captureTracks;
 #ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrackConstArray midiTracks;
@@ -691,7 +691,7 @@ private:
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
-   WaveTrackConstArray mPlaybackTracks;
+   WaveTrackArray      mPlaybackTracks;
 
    ArrayOf<std::unique_ptr<Mixer>> mPlaybackMixers;
    volatile int        mStreamToken;

@@ -5025,7 +5025,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                numSolo++;
 #endif
 
-         const WaveTrack **chans = (const WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
+         WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
          float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
          for (unsigned int c = 0; c < numPlaybackChannels; c++)
          {
@@ -5041,7 +5041,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          decltype(framesPerBuffer) maxLen = 0;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
-            const WaveTrack *vt = mPlaybackTracks[t].get();
+            WaveTrack *vt = mPlaybackTracks[t].get();
 
             chans[chanCnt] = vt;
 
@@ -5140,7 +5140,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             if (cut) // no samples to process, they've been discarded
                continue;
 
-            for (int c = 0; c < chanCnt; c++)
+            if (len > 0) for (int c = 0; c < chanCnt; c++)
             {
                vt = chans[c];
 
@@ -5159,8 +5159,14 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                   if (mEmulateMixerOutputVol)
                      gain *= mMixerOutputVol;
 
-                  for(decltype(len) i = 0; i < len; i++)
-                     outputFloats[numPlaybackChannels*i] += gain*tempBufs[c][i];
+                  float oldGain = vt->GetOldChannelGain(0);
+                  if( gain != oldGain )
+                     vt->SetOldChannelGain(0, gain);
+                  wxASSERT(len > 0);
+                  float deltaGain = (gain - oldGain) / len;
+                  for (decltype(len) i = 0; i < len; i++)
+                     outputFloats[numPlaybackChannels*i] += (oldGain + deltaGain * i) *tempBufs[c][i];
+
                }
 
                if (vt->GetChannel() == Track::RightChannel ||
@@ -5177,8 +5183,13 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                   if (mEmulateMixerOutputVol)
                      gain *= mMixerOutputVol;
 
+                  float oldGain = vt->GetOldChannelGain(1);
+                  if (gain != oldGain)
+                     vt->SetOldChannelGain(1,gain);
+                  wxASSERT(len > 0);
+                  float deltaGain = (gain - oldGain) / len;
                   for(decltype(len) i = 0; i < len; i++)
-                     outputFloats[numPlaybackChannels*i+1] += gain*tempBufs[c][i];
+                     outputFloats[numPlaybackChannels*i+1] += (oldGain + deltaGain*i) *tempBufs[c][i];
                }
             }
 
