@@ -1360,6 +1360,12 @@ bool NyquistEffect::ProcessOne()
       rval = nyx_error;
    }
 
+   if ((rval == nyx_labels) && (GetType() == EffectTypeTool)) {
+      // Catch this first so that we can also handle other errors.
+      mDebugOutput = _("';type tool' effects cannot return labels from Nyquist.\n") + mDebugOutput;
+      rval = nyx_error;
+   }
+
    if (rval == nyx_error) {
       // Return value is not valid type.
       // Show error in debug window if trace enabled, otherwise log.
