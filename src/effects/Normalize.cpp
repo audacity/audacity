@@ -195,10 +195,8 @@ bool EffectNormalize::Process()
    bool bGoodResult = true;
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
    WaveTrack *track = (WaveTrack *) iter.First();
-   WaveTrack *prevTrack;
-   prevTrack = track;
-   double progress = 0;
    wxString topMsg;
+
    if(mDC && mGain)
       topMsg = _("Removing DC offset and Normalizing...\n");
    else if(mDC && !mGain)
@@ -208,7 +206,11 @@ bool EffectNormalize::Process()
    else if(!mDC && !mGain)
       topMsg = _("Not doing anything...\n");   // shouldn't get here
 
-   while (track) {
+   AllocBuffers(iter);
+   mProgressVal = 0;
+
+   while (track)
+   {
       //Get start and end times from track
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
@@ -218,110 +220,122 @@ bool EffectNormalize::Process()
       mCurT0 = mT0 < trackStart? trackStart: mT0;
       mCurT1 = mT1 > trackEnd? trackEnd: mT1;
 
-      // Process only if the right marker is to the right of the left marker
-      if (mCurT1 > mCurT0) {
-         wxString msg;
-         auto trackName = track->GetName();
+      // Get the track rate
+      mCurRate = track->GetRate();
 
-         if(!track->GetLinked() || mStereoInd)
-            msg =
-               topMsg + wxString::Format( _("Analyzing: %s"), trackName );
-         else
-            msg =
-               topMsg + wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName );
-         float offset, extent;
-         bGoodResult = AnalyseTrack(track, msg, progress, offset, extent);
-         if (!bGoodResult )
-             break;
-         if(!track->GetLinked() || mStereoInd) {
-            // mono or 'stereo tracks independently'
-            if( (extent > 0) && mGain )
-            {
-               mMult = ratio / extent;
-               if(mUseLoudness)
-               {
-                  // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
-                  mMult /= 0.8529037031;
-                  // LUFS are related to square values so the multiplier must be the root.
-                  mMult = sqrt(ratio / extent);
-               }
-            }
-            else
-               mMult = 1.0;
+      wxString msg;
+      auto trackName = track->GetName();
+      mSteps = 2;
 
-            msg =
-               topMsg + wxString::Format( _("Processing: %s"), trackName );
-            if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
-               msg =
-                  topMsg + wxString::Format( _("Processing stereo channels independently: %s"), trackName );
+      if(!mStereoInd && track->GetLinked())
+         mProcStereo = true;
 
-            if (!ProcessOne(track, msg, progress, offset))
-            {
-               bGoodResult = false;
-               break;
-            }
+      mProgressMsg =
+         topMsg + wxString::Format( _("Analyzing: %s"), trackName );
+
+      InitTrackAnalysis();
+
+      // Get track min/max in peak mode
+      if(!mUseLoudness)
+      {
+         if(!GetTrackMinMax(track, mMin[0], mMax[0]))
+            return false;
+         if(mProcStereo)
+         {
+            // Get next WaveTrack* without incrementing iter.
+            track = (WaveTrack *) iter.Next();
+            iter.Prev();
+            if(!GetTrackMinMax(track, mMin[1], mMax[1]))
+               return false;
+         }
+      }
+      // Skip analyze pass if it is not necessary.
+      if(mUseLoudness || mDC)
+      {
+         if(!ProcessOne(iter, true))
+            // Processing failed -> abort
+            return false;
+      }
+      else
+         mSteps = 1;
+
+      // Calculate normalization values the analysis results
+      // mMin[], mMax[], mSum[], mSqSum[].
+      if(mCount > 0 && mDC)
+      {
+         mOffset[0] = -mSum[0] / mCount.as_double();
+         mOffset[1] = -mSum[1] / mCount.as_double();
+         mMin[0] += mOffset[0];
+         mMin[1] += mOffset[1];
+         mMax[0] += mOffset[0];
+         mMax[1] += mOffset[1];
+      }
+      else
+      {
+         mOffset[0] = 0.0;
+         mOffset[1] = 0.0;
+      }
+
+      float extent;
+      // EBU R128: z_i = mean square without root
+      if(mUseLoudness)
+         extent = mSqSum[0] / mCount.as_double();
+      else
+         extent = fmax(fabs(mMin[0]), fabs(mMax[0]));
+
+      if(mProcStereo)
+      {
+         float extent2;
+         if(mUseLoudness)
+         {
+            extent2 = mSqSum[1] / mCount.as_double();
+            // Loudness: use sum of both tracks.
+            // As a result, stereo tracks appear about 3 LUFS louder, as specified.
+            extent = extent + extent2;
          }
          else
          {
-            // we have a linked stereo track
-            // so we need to find it's min, max and offset
-            // as they are needed to calc the multiplier for both tracks
-
-            track = (WaveTrack *) iter.Next();  // get the next one
-            msg =
-               topMsg + wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
-
-            float offset2, extent2;
-            bGoodResult = AnalyseTrack(track, msg, progress, offset2, extent2);
-            if ( !bGoodResult )
-                break;
-
-            if (mUseLoudness)
-            {
-               // Loudness: use sum of both tracks.
-               // As a result, stereo tracks appear about 3 LUFS louder, as specified.
-               extent = extent + extent2;
-               // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
-               extent *= 0.8529037031;
-            }
-            else
-               // Peak: use maximum of both tracks.
-               extent = fmax(extent, extent2);
-
-            if( (extent > 0) && mGain )
-            {
-               mMult = ratio / extent; // we need to use this for both linked tracks
-               if(mUseLoudness)
-                  // LUFS are related to square values so the multiplier must be the root.
-                  mMult = sqrt(mMult);
-            }
-            else
-               mMult = 1.0;
-            track = (WaveTrack *) iter.Prev();  // go back to the first linked one
-            msg =
-               topMsg + wxString::Format( _("Processing first track of stereo pair: %s"), trackName );
-            if (!ProcessOne(track, msg, progress, offset))
-            {
-               bGoodResult = false;
-               break;
-            }
-            track = (WaveTrack *) iter.Next();  // go to the second linked one
-            msg =
-               topMsg + wxString::Format( _("Processing second track of stereo pair: %s"), trackName );
-            if (!ProcessOne(track, msg, progress, offset2))
-            {
-               bGoodResult = false;
-               break;
-            }
+            // Peak: use maximum of both tracks.
+            extent2 = fmax(fabs(mMin[1]), fabs(mMax[1]));;
+            extent = fmax(extent, extent2);
          }
       }
 
+      if( (extent > 0) && mGain )
+      {
+         mMult = ratio / extent;
+         if(mUseLoudness)
+         {
+            // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+            // (divide by 0.85... because extent is in the denominator)
+            mMult /= 0.8529037031;
+            // LUFS are related to square values so the multiplier must be the root.
+            mMult = sqrt(mMult);
+         }
+      }
+      else
+         mMult = 1.0;
+
+      mProgressMsg =
+         topMsg + wxString::Format( _("Processing: %s"), trackName );
+
+      if(!ProcessOne(iter, false))
+         // Processing failed -> abort
+         return false;
+
       //Iterate to the next track
-      prevTrack = track;
       track = (WaveTrack *) iter.Next();
+      if(mProcStereo)
+         // Stereo track is already processed so advance again.
+         track = (WaveTrack *) iter.Next();
    }
 
    this->ReplaceProcessedTracks(bGoodResult);
+
+   // Free memory
+   mTrackBuffer[0].reset();
+   mTrackBuffer[1].reset();
+
    return bGoodResult;
 }
 
@@ -410,247 +424,239 @@ bool EffectNormalize::TransferDataFromWindow()
 
 // EffectNormalize implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                                   double &progress, float &offset, float &extent)
+bool EffectNormalize::GetTrackMinMax(WaveTrack* track, float& min, float& max)
 {
-   bool result = true;
-   float min, max;
+   // Since we need complete summary data, we need to block until the OD tasks are done for this track
+   // This is needed for track->GetMinMax
+   // TODO: should we restrict the flags to just the relevant block files (for selections)
+   while (track->GetODFlags()) {
+      // update the gui
+      if (ProgressResult::Cancelled == mProgress->Update(
+         0, _("Waiting for waveform to finish computing...")) )
+         return false;
+      wxMilliSleep(100);
+   }
 
+   // set mMin, mMax.  No progress bar here as it's fast.
+   auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
+   min = pair.first, max = pair.second;
+   return true;
+}
+
+/// Get required buffer size for the largest whole track and allocate buffers.
+/// This reduces the amount of allocations required.
+void EffectNormalize::AllocBuffers(SelectedTrackListOfKindIterator iter)
+{
+   mTrackBufferCapacity = 0;
+   bool stereoTrackFound = false;
+   mProcStereo = false;
+
+   WaveTrack *track = (WaveTrack *) iter.First();
+   while (track)
+   {
+      mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
+
+      // There is a stereo track
+      if(track->GetLinked())
+         stereoTrackFound = true;
+
+      // Iterate to the next track
+      track = (WaveTrack *) iter.Next();
+   }
+
+   //Initiate a processing buffer.  This buffer will (most likely)
+   //be shorter than the length of the track being processed.
+   mTrackBuffer[0].reinit(mTrackBufferCapacity);
+
+   if(!mStereoInd && stereoTrackFound)
+      mTrackBuffer[1].reinit(mTrackBufferCapacity);
+}
+
+/// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
+/// and executes ProcessData, on it...
+///  uses mMult and offset to normalize a track.
+///  mMult must be set before this is called
+/// In analyse mode, it executes the selected analyse operation on it...
+///  mMult does not have to be set before this is called
+bool EffectNormalize::ProcessOne(SelectedTrackListOfKindIterator iter, bool analyse)
+{
+   WaveTrack* track1 = (WaveTrack *) *iter;
+   WaveTrack* track2 = 0;
+
+   //Transform the marker timepoints to samples
+   auto start = track1->TimeToLongSamples(mCurT0);
+   auto end   = track1->TimeToLongSamples(mCurT1);
+
+   //Get the length of the buffer (as double). len is
+   //used simply to calculate a progress meter, so it is easier
+   //to make it a double now than it is to do it later
+   mTrackLen = (end - start).as_double();
+
+   // Abort if the right marker is not to the right of the left marker
+   if (mCurT1 <= mCurT0)
+      return false;
+
+   if(mProcStereo)
+      track2 = (WaveTrack *) iter.Next();
+
+   //Go through the track one buffer at a time. s counts which
+   //sample the current buffer starts at.
+   auto s = start;
+   while (s < end)
+   {
+      //Get a block of samples (smaller than the size of the buffer)
+      //Adjust the block size if it is the final block in the track
+      const auto blockLen = limitSampleBufferSize(
+         track1->GetBestBlockSize(s),
+         mTrackBufferCapacity
+      );
+
+      if(!LoadBufferBlock(track1, track2, s, blockLen))
+         return false;
+
+      //Process the buffer.
+      if(analyse)
+      {
+         if(!AnalyseBufferBlock())
+            return false;
+      }
+      else
+      {
+         if(!ProcessBufferBlock())
+            return false;
+      }
+
+      if(!analyse)
+         StoreBufferBlock(track1, track2, s, blockLen);
+
+      //Increment s one blockfull of samples
+      s += blockLen;
+   }
+
+   //Return true because the effect processing succeeded ... unless cancelled
+   return true;
+}
+
+bool EffectNormalize::LoadBufferBlock(WaveTrack* track1, WaveTrack* track2,
+                                      sampleCount pos, size_t len)
+{
+   sampleCount read_size;
+   // Get the samples from the track and put them in the buffer
+   track1->Get((samplePtr) mTrackBuffer[0].get(), floatSample, pos, mTrackBufferCapacity,
+               fillZero, true, &read_size);
+   mTrackBufferLen = read_size.as_size_t();
+
+   // Get linked stereo track as well.
+   if(mProcStereo)
+   {
+      track2->Get((samplePtr) mTrackBuffer[1].get(), floatSample, pos, mTrackBufferCapacity,
+                  fillZero, true, &read_size);
+      // Fail if we read different sample count from stereo pair tracks.
+      if(read_size.as_size_t() != mTrackBufferLen)
+         return false;
+   }
+   return true;
+}
+
+/// Calculates sample sum (for DC) and EBU R128 weighted square sum
+/// (for loudness).
+bool EffectNormalize::AnalyseBufferBlock()
+{
+   for(size_t i = 0; i < mTrackBufferLen; i++)
+   {
+      if(mOp & ANALYSE_DC)
+      {
+         mSum[0] += (double)mTrackBuffer[0][i];
+         if(mProcStereo)
+            mSum[1] += (double)mTrackBuffer[1][i];
+      }
+      if(mOp & ANALYSE_LOUDNESS)
+      {
+         double value;
+         value = mR128HSF[0].ProcessOne(mTrackBuffer[0][i]);
+         value = mR128HPF[0].ProcessOne(value);
+         mSqSum[0] += ((double)value) * ((double)value);
+         if(mProcStereo)
+         {
+            value = mR128HSF[1].ProcessOne(mTrackBuffer[1][i]);
+            value = mR128HPF[1].ProcessOne(value);
+            mSqSum[1] += ((double)value) * ((double)value);
+         }
+      }
+   }
+   mCount += mTrackBufferLen;
+
+   if(!UpdateProgress())
+      return false;
+   return true;
+}
+
+bool EffectNormalize::ProcessBufferBlock()
+{
+   for(size_t i = 0; i < mTrackBufferLen; i++)
+   {
+      mTrackBuffer[0][i] = (mTrackBuffer[0][i] + mOffset[0]) * mMult;
+      if(mProcStereo)
+         mTrackBuffer[1][i] = (mTrackBuffer[1][i] + mOffset[1]) * mMult;
+   }
+
+   if(!UpdateProgress())
+      return false;
+   return true;
+}
+
+void EffectNormalize::StoreBufferBlock(WaveTrack* track1, WaveTrack* track2,
+                                       sampleCount pos, size_t len)
+{
+   // Copy the newly-changed samples back onto the track.
+   track1->Set((samplePtr) mTrackBuffer[0].get(), floatSample, pos, len);
+   // Store linked stereo track as well.
+   if(mProcStereo)
+      track2->Set((samplePtr) mTrackBuffer[1].get(), floatSample, pos, len);
+}
+
+void EffectNormalize::InitTrackAnalysis()
+{
+   mSum[0]   = 0.0; // dc offset inits
+   mSum[0]   = 0.0;
+   mSqSum[0] = 0.0; // rms init
+   mSqSum[1] = 0.0;
+   mCount = 0;
+
+   // Normalize ?
    if(mGain)
    {
       if(mUseLoudness)
       {
-         CalcEBUR128HPF(track->GetRate());
-         CalcEBUR128HSF(track->GetRate());
+         CalcEBUR128HPF(mCurRate);
+         CalcEBUR128HSF(mCurRate);
          if(mDC)
-         {
-            result = AnalyseTrackData(track, msg, progress, ANALYSE_LOUDNESS_DC, offset);
-         }
+            mOp = ANALYSE_LOUDNESS_DC;
          else
          {
-            result = AnalyseTrackData(track, msg, progress, ANALYSE_LOUDNESS, offset);
-            offset = 0.0;
-         }
-
-         // EBU R128: z_i = mean square without root
-         extent = mSqSum / mCount.as_double();
-      }
-      else
-      {
-         // Since we need complete summary data, we need to block until the OD tasks are done for this track
-         // This is needed for track->GetMinMax
-         // TODO: should we restrict the flags to just the relevant block files (for selections)
-         while (track->GetODFlags()) {
-            // update the gui
-            if (ProgressResult::Cancelled == mProgress->Update(
-               0, _("Waiting for waveform to finish computing...")) )
-               return false;
-            wxMilliSleep(100);
-         }
-
-         // set mMin, mMax.  No progress bar here as it's fast.
-         auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
-         min = pair.first, max = pair.second;
-
-         if(mDC)
-         {
-            result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
-            min += offset;
-            max += offset;
+            mOp = ANALYSE_LOUDNESS;
+            mOffset[0] = 0.0;
+            mOffset[1] = 0.0;
          }
       }
+      else if(mDC)
+         mOp = ANALYSE_DC;
    }
+   // Just remove DC ?
    else if(mDC)
    {
-      min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
-      min += offset;
-      max += offset;
+      mMin[0] = -1.0, mMax[0] = 1.0;   // sensible defaults?
+      mMin[1] = -1.0, mMax[1] = 1.0;
+      mOp = ANALYSE_NONE;
    }
+   // Do nothing
    else
    {
-      min = -1.0, max = 1.0;   // sensible defaults?
-      offset = 0.0;
-   }
-
-   if(!mUseLoudness)
-      extent = fmax(fabs(min), fabs(max));
-   return result;
-}
-
-//AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
-//and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const wxString &msg,
-                                double &progress, AnalyseOperation op, float &offset)
-{
-   bool rc = true;
-
-   //Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end = track->TimeToLongSamples(mCurT1);
-
-   //Get the length of the buffer (as double). len is
-   //used simply to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later
-   auto len = (end - start).as_double();
-
-   //Initiate a processing buffer.  This buffer will (most likely)
-   //be shorter than the length of the track being processed.
-   Floats buffer{ track->GetMaxBlockSize() };
-
-   mSum   = 0.0; // dc offset inits
-   mSqSum = 0.0; // rms init
-   mCount = 0;
-
-   sampleCount blockSamples;
-   sampleCount totalSamples = 0;
-
-   //Go through the track one buffer at a time. s counts which
-   //sample the current buffer starts at.
-   auto s = start;
-   while (s < end) {
-      //Get a block of samples (smaller than the size of the buffer)
-      //Adjust the block size if it is the final block in the track
-      const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
-         end - s
-      );
-
-      //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block, fillZero, true, &blockSamples);
-      totalSamples += blockSamples;
-
-      //Process the buffer.
-      if(op == ANALYSE_DC)
-         AnalyseDataDC(buffer.get(), block);
-      else if(op == ANALYSE_LOUDNESS)
-         AnalyseDataLoudness(buffer.get(), block);
-      else if(op == ANALYSE_LOUDNESS_DC)
-         AnalyseDataLoudnessDC(buffer.get(), block);
-
-      //Increment s one blockfull of samples
-      s += block;
-
-      //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
-         rc = false; //lda .. break, not return, so that buffer is deleted
-         break;
-      }
-   }
-   if( totalSamples > 0 )
-      offset = -mSum / totalSamples.as_double();  // calculate actual offset (amount that needs to be added on)
-   else
-      offset = 0.0;
-
-   progress += 1.0/double(2*GetNumWaveTracks());
-   //Return true because the effect processing succeeded ... unless cancelled
-   return rc;
-}
-
-//ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
-//and executes ProcessData, on it...
-// uses mMult and offset to normalize a track.
-// mMult must be set before this is called
-bool EffectNormalize::ProcessOne(
-   WaveTrack * track, const wxString &msg, double &progress, float offset)
-{
-   bool rc = true;
-
-   //Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end = track->TimeToLongSamples(mCurT1);
-
-   //Get the length of the buffer (as double). len is
-   //used simply to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later
-   auto len = (end - start).as_double();
-
-   //Initiate a processing buffer.  This buffer will (most likely)
-   //be shorter than the length of the track being processed.
-   Floats buffer{ track->GetMaxBlockSize() };
-
-   //Go through the track one buffer at a time. s counts which
-   //sample the current buffer starts at.
-   auto s = start;
-   while (s < end) {
-      //Get a block of samples (smaller than the size of the buffer)
-      //Adjust the block size if it is the final block in the track
-      const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
-         end - s
-      );
-
-      //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block);
-
-      //Process the buffer.
-      ProcessData(buffer.get(), block, offset);
-
-      //Copy the newly-changed samples back onto the track.
-      track->Set((samplePtr) buffer.get(), floatSample, s, block);
-
-      //Increment s one blockfull of samples
-      s += block;
-
-      //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
-         rc = false; //lda .. break, not return, so that buffer is deleted
-         break;
-      }
-   }
-   progress += 1.0/double(2*GetNumWaveTracks());
-
-   //Return true because the effect processing succeeded ... unless cancelled
-   return rc;
-}
-
-/// @see AnalyseDataLoudnessDC
-void EffectNormalize::AnalyseDataDC(float *buffer, size_t len)
-{
-   for(decltype(len) i = 0; i < len; i++)
-      mSum += (double)buffer[i];
-   mCount += len;
-}
-
-/// @see AnalyseDataLoudnessDC
-void EffectNormalize::AnalyseDataLoudness(float *buffer, size_t len)
-{
-   float value;
-   for(decltype(len) i = 0; i < len; i++)
-   {
-      value = mR128HSF.ProcessOne(buffer[i]);
-      value = mR128HPF.ProcessOne(value);
-      mSqSum += ((double)value) * ((double)value);
-   }
-   mCount += len;
-}
-
-/// Calculates sample sum (for DC) and EBU R128 weighted square sum
-/// (for loudness). This function has variants which only calculate
-/// sum or square sum for performance improvements if only one of those
-/// values is required.
-/// @see AnalyseDataLoudness
-/// @see AnalyseDataDC
-void EffectNormalize::AnalyseDataLoudnessDC(float *buffer, size_t len)
-{
-   float value;
-   for(decltype(len) i = 0; i < len; i++)
-   {
-      mSum += (double)buffer[i];
-      value = mR128HSF.ProcessOne(buffer[i]);
-      value = mR128HPF.ProcessOne(value);
-      mSqSum += ((double)value) * ((double)value);
-   }
-   mCount += len;
-}
-
-void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
-{
-   for(decltype(len) i = 0; i < len; i++) {
-      float adjFrame = (buffer[i] + offset) * mMult;
-      buffer[i] = adjFrame;
+      mMin[0] = -1.0, mMax[0] = 1.0;   // sensible defaults?
+      mMin[1] = -1.0, mMax[1] = 1.0;
+      mOffset[0] = 0.0;
+      mOffset[1] = 0.0;
+      mOp = ANALYSE_NONE;
    }
 }
 
@@ -665,14 +671,24 @@ void EffectNormalize::CalcEBUR128HPF(float fs)
    double Q  =  0.5003270373238773;
    double K  = tan(M_PI * f0 / fs);
 
-   mR128HPF.Reset();
+   mR128HPF[0].Reset();
 
-   mR128HPF.fNumerCoeffs[Biquad::B0] =  1.0;
-   mR128HPF.fNumerCoeffs[Biquad::B1] = -2.0;
-   mR128HPF.fNumerCoeffs[Biquad::B2] =  1.0;
+   mR128HPF[0].fNumerCoeffs[Biquad::B0] =  1.0;
+   mR128HPF[0].fNumerCoeffs[Biquad::B1] = -2.0;
+   mR128HPF[0].fNumerCoeffs[Biquad::B2] =  1.0;
 
-   mR128HPF.fDenomCoeffs[Biquad::A1] = 2.0 * (K * K - 1.0) / (1.0 + K / Q + K * K);
-   mR128HPF.fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
+   mR128HPF[0].fDenomCoeffs[Biquad::A1] = 2.0 * (K * K - 1.0) / (1.0 + K / Q + K * K);
+   mR128HPF[0].fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
+
+   if(mProcStereo)
+   {
+      mR128HPF[1].Reset();
+      mR128HPF[1].fNumerCoeffs[Biquad::B0] = mR128HPF[0].fNumerCoeffs[Biquad::B0];
+      mR128HPF[1].fNumerCoeffs[Biquad::B1] = mR128HPF[0].fNumerCoeffs[Biquad::B1];
+      mR128HPF[1].fNumerCoeffs[Biquad::B2] = mR128HPF[0].fNumerCoeffs[Biquad::B2];
+      mR128HPF[1].fDenomCoeffs[Biquad::A1] = mR128HPF[0].fDenomCoeffs[Biquad::A1];
+      mR128HPF[1].fDenomCoeffs[Biquad::A2] = mR128HPF[0].fDenomCoeffs[Biquad::A2];
+   }
 }
 
 // EBU R128 parameter sampling rate adaption after
@@ -692,14 +708,31 @@ void EffectNormalize::CalcEBUR128HSF(float fs)
 
    double a0 = 1.0 + K / Q + K * K;
 
-   mR128HSF.Reset();
+   mR128HSF[0].Reset();
 
-   mR128HSF.fNumerCoeffs[Biquad::B0] = (Vh + Vb * K / Q + K * K) / a0;
-   mR128HSF.fNumerCoeffs[Biquad::B1] =       2.0 * (K * K -  Vh) / a0;
-   mR128HSF.fNumerCoeffs[Biquad::B2] = (Vh - Vb * K / Q + K * K) / a0;
+   mR128HSF[0].fNumerCoeffs[Biquad::B0] = (Vh + Vb * K / Q + K * K) / a0;
+   mR128HSF[0].fNumerCoeffs[Biquad::B1] =       2.0 * (K * K -  Vh) / a0;
+   mR128HSF[0].fNumerCoeffs[Biquad::B2] = (Vh - Vb * K / Q + K * K) / a0;
 
-   mR128HSF.fDenomCoeffs[Biquad::A1] =   2.0 * (K * K - 1.0) / a0;
-   mR128HSF.fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / a0;
+   mR128HSF[0].fDenomCoeffs[Biquad::A1] =   2.0 * (K * K - 1.0) / a0;
+   mR128HSF[0].fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / a0;
+
+   if(mProcStereo)
+   {
+      mR128HSF[1].Reset();
+      mR128HSF[1].fNumerCoeffs[Biquad::B0] = mR128HSF[0].fNumerCoeffs[Biquad::B0];
+      mR128HSF[1].fNumerCoeffs[Biquad::B1] = mR128HSF[0].fNumerCoeffs[Biquad::B1];
+      mR128HSF[1].fNumerCoeffs[Biquad::B2] = mR128HSF[0].fNumerCoeffs[Biquad::B2];
+      mR128HSF[1].fDenomCoeffs[Biquad::A1] = mR128HSF[0].fDenomCoeffs[Biquad::A1];
+      mR128HSF[1].fDenomCoeffs[Biquad::A2] = mR128HSF[0].fDenomCoeffs[Biquad::A2];
+   }
+}
+
+bool EffectNormalize::UpdateProgress()
+{
+   mProgressVal += (double(1+mProcStereo) * double(mTrackBufferLen)
+                 / (double(GetNumWaveTracks()) * double(mSteps) * mTrackLen));
+   return !TotalProgress(mProgressVal, mProgressMsg);
 }
 
 void EffectNormalize::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
