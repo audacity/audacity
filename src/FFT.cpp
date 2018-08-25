@@ -445,8 +445,8 @@ void NewWindowFunc(int whichFunction, size_t NumSamplesIn, bool extraSample, flo
    case eWinFuncHanning:
    {
       // Hanning
-      // In the Fourier domain, the Hanning window will produce
-      // coefficients whose magnitudes are 0.25
+      // In the Fourier domain, the Hanning window will produce three non-zero
+      // FFT coefficients, whose magnitudes are 1/4, 1/2 and 1/4.
       const double multiplier = 2 * M_PI / NumSamples;
       static const double coeff0 = 0.5, coeff1 = -0.5;
       for (int ii = 0; ii < NumSamples; ++ii)
