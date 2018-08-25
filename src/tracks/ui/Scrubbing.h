@@ -154,8 +154,6 @@ public:
    void CheckMenuItems();
 
 private:
-   void StartPolling();
-   void StopPolling();
    void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
 
