@@ -786,7 +786,7 @@ bool NyquistEffect::Process()
 
    // Nyquist Prompt does not require a selection, but effects do.
    if (!bOnePassTool && (mNumSelectedChannels == 0)) {
-      wxString message = _("Cannot run command without a selection.");
+      wxString message = _("Audio selection required.");
       Effect::MessageBox(message, wxOK | wxCENTRE | wxICON_EXCLAMATION, _("Nyquist Error"));
    }
 
