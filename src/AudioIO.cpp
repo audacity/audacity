@@ -4985,7 +4985,20 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
       if( outputBuffer && (numPlaybackChannels > 0) )
       {
+         // The cut and cutQuickly booleans are for historical reasons.
+         // JKC: The original code attempted to be faster by doing nothing on silenced audio.
+         // This, IMHO, is 'premature optimisation'.  Instead clearer and cleaner code would
+         // simply use a gain of 0.0 for silent audio and go on through to the stage of 
+         // applying that 0.0 gain to the data mixed into the buffer.
+         // Then (and only then) we would have if needed fast paths for:
+         // - Applying a uniform gain of 0.0.
+         // - Applying a uniform gain of 1.0.
+         // - Applying some other uniform gain.
+         // - Applying a linearly interpolated gain.
+         // I would expect us not to need the fast paths, since linearly interpolated gain
+         // is very cheap to process.
          bool cut = false;
+         bool cutQuickly = false;
          bool linkFlag = false;
 
          float *outputFloats = (float *)outputBuffer;
@@ -5045,10 +5058,16 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
             chans[chanCnt] = vt;
 
-            if (linkFlag)
+            if (linkFlag) {
                linkFlag = false;
+               if (vt->GetChannelIgnoringPan() == Track::LeftChannel)
+                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(0) == 0.0);
+               if (vt->GetChannelIgnoringPan() == Track::RightChannel )
+                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(1) == 0.0);
+            }
             else {
                cut = false;
+               cutQuickly = false;
 
                // Cut if somebody else is soloing
                if (numSolo>0 && !vt->GetSolo())
@@ -5066,13 +5085,22 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                {
                   memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
                }
+
+               cutQuickly = cut;
+               if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
+                  vt->GetChannelIgnoringPan() == Track::MonoChannel )
+                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(0) == 0.0);
+               if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
+                  vt->GetChannelIgnoringPan() == Track::MonoChannel )
+                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(1) == 0.0);
             }
+
 
 #define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
 #ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
             decltype(framesPerBuffer) len = 0;
             // this is original code prior to r10680 -RBD
-            if (cut)
+            if (cutQuickly)
             {
                len = mPlaybackBuffers[t]->Discard(framesPerBuffer);
                // keep going here.  
@@ -5112,7 +5140,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             // playback that might also be going on? ...Maybe muted audio tracks + MIDI,
             // the playback would NEVER terminate. ...I think the #else part is probably preferable...
             size_t len;
-            if (cut)
+            if (cutQuickly)
             {
                len =
                   mPlaybackBuffers[t]->Discard(framesPerBuffer);
@@ -5128,7 +5156,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             // Last channel seen now
             len = maxLen;
 
-            if( !cut && selected )
+            if( !cutQuickly && selected )
             {
                len = em.RealtimeProcess(group, chanCnt, tempBufs, len);
             }
@@ -5137,17 +5165,19 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
             CallbackCheckCompletion(callbackReturn, len);
 
-            if (cut) // no samples to process, they've been discarded
+            if (cutQuickly) // no samples to process, they've been discarded
                continue;
 
             if (len > 0) for (int c = 0; c < chanCnt; c++)
             {
                vt = chans[c];
 
-               if (vt->GetChannel() == Track::LeftChannel ||
-                   vt->GetChannel() == Track::MonoChannel)
+               if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
+                   vt->GetChannelIgnoringPan() == Track::MonoChannel )
                {
                   float gain = vt->GetChannelGain(0);
+                  if (cut)
+                     gain = 0.0;
 
                   // Output volume emulation: possibly copy meter samples, then
                   // apply volume, then copy to the output buffer
@@ -5169,10 +5199,12 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
                }
 
-               if (vt->GetChannel() == Track::RightChannel ||
-                   vt->GetChannel() == Track::MonoChannel)
+               if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
+                   vt->GetChannelIgnoringPan() == Track::MonoChannel  )
                {
                   float gain = vt->GetChannelGain(1);
+                  if (cut)
+                     gain = 0.0;
 
                   // Output volume emulation (as above)
                   if (outputMeterFloats != outputFloats)

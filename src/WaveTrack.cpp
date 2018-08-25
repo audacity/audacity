@@ -237,6 +237,10 @@ void WaveTrack::SetOffset(double o)
    mOffset = o;
 }
 
+int WaveTrack::GetChannelIgnoringPan() const {
+   return mChannel;
+}
+
 int WaveTrack::GetChannel() const 
 {
    if( mChannel != Track::MonoChannel )

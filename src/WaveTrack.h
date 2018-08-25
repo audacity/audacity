@@ -98,6 +98,7 @@ private:
 
    double GetOffset() const override;
    void SetOffset(double o) override;
+   virtual int GetChannelIgnoringPan() const;
    virtual int GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
