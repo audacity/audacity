@@ -21,7 +21,7 @@
 
     http://www.intersrv.com/~dcross/fft.html
 
-  The basic algorithm for his code was based on Numerican Recipes
+  The basic algorithm for his code was based on Numerical Recipes
   in Fortran.  I optimized his code further by reducing array
   accesses, caching the bit reversal table, and eliminating
   float-to-double conversions, and I added the routines to
@@ -359,6 +359,45 @@ const wxChar *WindowFuncName(int whichFunction)
    }
 }
 
+/*
+ * When creating window functions for use with FFT analysis, it is necessary
+ * to ensure that the functions are periodic in the observation interval. In
+ * order to better visualise this, consider a short observation interval that
+ * consists of samples. The corresponding window coefficients have been 
+ * computed and are stored in the array in[] = in[0]...in[7]:
+ *
+ *   Location:   in[0]  in[1]  in[2]  in[3]  in[4]  in[5]  in[6]  in[7]
+ *      Value:    0.0    0.3    0.6    0.9    1.0    0.9    0.6    0.3
+ *
+ * In order to ensure that Fourier periodicity is maintained, i.e. the
+ * windows coefficients are periodic in the observation interval, it is
+ * necessary to have performed the window computations so that:
+ *
+ *    in[7] = in[1]
+ *
+ * If the window coefficients do not have Fourier periodicity, then there
+ * will be errors in the computation of the Fourier coefficients. A simple
+ * test case is to create a 1024 point sinusoidal waveform, using a sampling
+ * frequency of exactly 1024 Hz. Choose a frequency of 128 Hz for this sine
+ * wave, and the waveform will be periodic in the FFT block. Taking the FFT
+ * of this signal will produce a single spike located at FFT bin 128, where
+ * FFT bin 0 is the DC component. If a correctly-formed Hanning window is
+ * applied to this sinusoidal waveform, then there will be exactly three FFT
+ * that contain non-zero data values. For our example, the bins in question 
+ * are bin numbers 127, 128, and 129. Furthermore, |bin 127| = |bin 129| =
+ * |bin 128|/2 (Harris, 1978).
+ *
+ * Some useful references for windowing functions are as follows:
+ *
+ * 1. Fredric Harris. On the Use of Windows for Harmonic Analysis with
+ *    Discrete Fourier Transforms. Proceedings IEEE, Vol 66, pp 51-83,
+ *    January 1978.
+ *
+ * 2. Svend Gade and Henrik Herlufsen. Windows to FFT Analysis: Use of
+ *    Weighting Functions in DFT/FFT Analysis (Part I and Part II).
+ *    B&K Technical Review, Issue 3 and 4, 1987.
+ *
+ */
 void NewWindowFunc(int whichFunction, size_t NumSamplesIn, bool extraSample, float *in)
 {
    int NumSamples = (int)NumSamplesIn;
@@ -405,6 +444,8 @@ void NewWindowFunc(int whichFunction, size_t NumSamplesIn, bool extraSample, flo
    case eWinFuncHanning:
    {
       // Hanning
+      // In the Fourier domain, the Hanning window will produce
+      // coefficients whose magnitudes are 0.25
       const double multiplier = 2 * M_PI / NumSamples;
       static const double coeff0 = 0.5, coeff1 = -0.5;
       for (int ii = 0; ii < NumSamples; ++ii)
@@ -510,11 +551,11 @@ void WindowFunc(int whichFunction, size_t NumSamples, float *in)
    switch (whichFunction)
    {
    case eWinFuncHamming:
-   case eWinFuncHanning:
    case eWinFuncBlackman:
    case eWinFuncBlackmanHarris:
       extraSample = true;
       break;
+   case eWinFuncHanning:
    default:
       break;
    case eWinFuncBartlett:
