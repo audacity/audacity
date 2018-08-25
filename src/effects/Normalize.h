@@ -109,7 +109,6 @@ private:
    float  mMin[2];
    float  mMax[2];
    double mSum[2];
-   double mSqSum[2];
    sampleCount    mCount;
 
    wxCheckBox *mGainCheckBox;
@@ -124,6 +123,15 @@ private:
    size_t mTrackBufferLen;
    size_t mTrackBufferCapacity;
    bool   mProcStereo;
+
+   static const size_t HIST_BIN_COUNT = 65536;
+   static constexpr double GAMMA_A = (-70.0 + 0.691) / 10.0;   // EBU R128 absolute threshold
+   ArrayOf<long int> mLoudnessHist;
+   Doubles mBlockRingBuffer;
+   size_t mBlockRingPos;
+   size_t mBlockRingSize;
+   size_t mBlockSize;
+   size_t mBlockOverlap;
 
    bool mCreating;
    Biquad mR128HSF[2];
