@@ -2127,6 +2127,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
             {
+               // Bug 1763 - We must fade in from zero to avoid a click on starting.
+               mPlaybackTracks[i]->SetOldChannelGain(0, 0.0);
+               mPlaybackTracks[i]->SetOldChannelGain(1, 0.0);
                mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // use track time for the end time, not real time!
@@ -2557,6 +2560,17 @@ void AudioIO::StopStream()
 #endif
      )
       return;
+
+   if( mAudioThreadFillBuffersLoopRunning)
+   {
+      // PortAudio callback can use the information that we are stopping to fade
+      // out the audio.  Give PortAudio callback a chance to do so.
+      mAudioThreadFillBuffersLoopRunning = false;
+      // IF we were being more careful, we would loop and test for the fade out 
+      // having been done.  But 200ms is the max we can reasonably wait here 
+      // in any case, so we should not wait longer.
+      wxMilliSleep(200);
+   }
 
    wxMutexLocker locker(mSuspendAudioThread);
 
@@ -4960,6 +4974,11 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          }
       }
    }
+
+// This old code is a quick route, when paused.
+// However, we must fade-out into a pause, so it's better to keep going,
+// and return later.
+#ifdef USE_OLD_CODE
    if( mPaused )
    {
       if (outputBuffer && numPlaybackChannels > 0)
@@ -4976,6 +4995,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
       return paContinue;
    }
+#endif
 
    if (mStreamToken > 0)
    {
@@ -5066,7 +5086,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                   cutQuickly = cutQuickly && (vt->GetOldChannelGain(1) == 0.0);
             }
             else {
-               cut = false;
+               cut = mPaused;
                cutQuickly = false;
 
                // Cut if somebody else is soloing
@@ -5176,7 +5196,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                    vt->GetChannelIgnoringPan() == Track::MonoChannel )
                {
                   float gain = vt->GetChannelGain(0);
-                  if (cut)
+                  if (cut || !mAudioThreadFillBuffersLoopRunning || mPaused)
                      gain = 0.0;
 
                   // Output volume emulation: possibly copy meter samples, then
@@ -5203,7 +5223,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                    vt->GetChannelIgnoringPan() == Track::MonoChannel  )
                {
                   float gain = vt->GetChannelGain(1);
-                  if (cut)
+                  if (cut || !mAudioThreadFillBuffersLoopRunning || mPaused)
                      gain = 0.0;
 
                   // Output volume emulation (as above)
@@ -5227,8 +5247,12 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
             chanCnt = 0;
          }
+
+         if (mPaused)
+            return paContinue;
+
          // Poke: If there are no playback tracks, then the earlier check
-         // about the time indicator being passed the end won't happen;
+         // about the time indicator being past the end won't happen;
          // do it here instead (but not if looping or scrubbing)
          if (numPlaybackTracks == 0)
             CallbackCheckCompletion(callbackReturn, 0);
@@ -5405,7 +5429,8 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
       }
      #endif
    } // if mStreamToken > 0
-   else {
+   else if( !mPaused ) 
+   {
       // No tracks to play, but we should clear the output, and
       // possibly do software playthrough...
 
@@ -5521,6 +5546,8 @@ PaStreamCallbackResult AudioIO::CallbackDoSeek()
 void AudioIO::CallbackCheckCompletion(
    int &callbackReturn, unsigned long len)
 {
+   if (mPaused)
+      return;
    bool done = mPlaybackSchedule.PassIsComplete();
    if (done)
       done = (
