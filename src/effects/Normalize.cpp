@@ -252,6 +252,8 @@ bool EffectNormalize::Process()
       // Skip analyze pass if it is not necessary.
       if(mUseLoudness || mDC)
       {
+         mBlockSize = 0.4 * mCurRate; // 400 ms blocks
+         mBlockOverlap = 0.1 * mCurRate; // 100 ms overlap
          if(!ProcessOne(iter, true))
             // Processing failed -> abort
             return false;
@@ -260,7 +262,7 @@ bool EffectNormalize::Process()
          mSteps = 1;
 
       // Calculate normalization values the analysis results
-      // mMin[], mMax[], mSum[], mSqSum[].
+      // mMin[], mMax[], mSum[], mLoudnessHist.
       if(mCount > 0 && mDC)
       {
          mOffset[0] = -mSum[0] / mCount.as_double();
@@ -279,26 +281,51 @@ bool EffectNormalize::Process()
       float extent;
       // EBU R128: z_i = mean square without root
       if(mUseLoudness)
-         extent = mSqSum[0] / mCount.as_double();
+      {
+         // Calculate Gamma_R from histogram.
+         double sum_v = 0;
+         double val;
+         long int sum_c = 0;
+         for(size_t i = 0; i < HIST_BIN_COUNT; ++i)
+         {
+            val = -GAMMA_A / double(HIST_BIN_COUNT) * (i+1) + GAMMA_A;
+            sum_v += pow(10, val) * mLoudnessHist[i];
+            sum_c += mLoudnessHist[i];
+         }
+
+         // Histogram values are simplified log(x^2) immediate values
+         // without -0.691 + 10*(...) to safe computing power. This is
+         // possible because they will cancel out anyway.
+         // The -1 in the line below is the -10 LUFS from the EBU R128
+         // specification without the scaling factor of 10.
+         double Gamma_R = log10(sum_v/sum_c) - 1;
+         size_t idx_R = round((Gamma_R - GAMMA_A) * double(HIST_BIN_COUNT) / -GAMMA_A - 1);
+
+         // Apply Gamma_R threshold and calculate gated loudness (extent).
+         sum_v = 0;
+         sum_c = 0;
+         for(size_t i = idx_R+1; i < HIST_BIN_COUNT; ++i)
+         {
+            val = -GAMMA_A / double(HIST_BIN_COUNT) * (i+1) + GAMMA_A;
+            sum_v += pow(10, val) * mLoudnessHist[i];
+            sum_c += mLoudnessHist[i];
+         }
+         // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+         extent = 0.8529037031 * sum_v / sum_c;
+      }
       else
          extent = fmax(fabs(mMin[0]), fabs(mMax[0]));
 
       if(mProcStereo)
       {
-         float extent2;
-         if(mUseLoudness)
-         {
-            extent2 = mSqSum[1] / mCount.as_double();
-            // Loudness: use sum of both tracks.
-            // As a result, stereo tracks appear about 3 LUFS louder, as specified.
-            extent = extent + extent2;
-         }
-         else
+         if(!mUseLoudness)
          {
             // Peak: use maximum of both tracks.
+            float extent2;
             extent2 = fmax(fabs(mMin[1]), fabs(mMax[1]));;
             extent = fmax(extent, extent2);
          }
+         // else: mNormalizeTo == kLoudness : do nothing (this is already handled in histogram)
       }
 
       if( (extent > 0) && mGain )
@@ -306,9 +333,6 @@ bool EffectNormalize::Process()
          mMult = ratio / extent;
          if(mUseLoudness)
          {
-            // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
-            // (divide by 0.85... because extent is in the denominator)
-            mMult /= 0.8529037031;
             // LUFS are related to square values so the multiplier must be the root.
             mMult = sqrt(mMult);
          }
@@ -335,6 +359,8 @@ bool EffectNormalize::Process()
    // Free memory
    mTrackBuffer[0].reset();
    mTrackBuffer[1].reset();
+   mBlockRingBuffer.reset();
+   mLoudnessHist.reset();
 
    return bGoodResult;
 }
@@ -449,12 +475,14 @@ void EffectNormalize::AllocBuffers(SelectedTrackListOfKindIterator iter)
 {
    mTrackBufferCapacity = 0;
    bool stereoTrackFound = false;
+   double maxSampleRate = 0;
    mProcStereo = false;
 
    WaveTrack *track = (WaveTrack *) iter.First();
    while (track)
    {
       mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
+      maxSampleRate = std::max(maxSampleRate, track->GetRate());
 
       // There is a stereo track
       if(track->GetLinked())
@@ -463,6 +491,10 @@ void EffectNormalize::AllocBuffers(SelectedTrackListOfKindIterator iter)
       // Iterate to the next track
       track = (WaveTrack *) iter.Next();
    }
+
+   // Allocate histogram buffers
+   mLoudnessHist.reinit(HIST_BIN_COUNT, false);
+   mBlockRingBuffer.reinit(static_cast<size_t>(ceil(0.4 * maxSampleRate))); // 400 ms blocks
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -575,13 +607,52 @@ bool EffectNormalize::AnalyseBufferBlock()
          double value;
          value = mR128HSF[0].ProcessOne(mTrackBuffer[0][i]);
          value = mR128HPF[0].ProcessOne(value);
-         mSqSum[0] += ((double)value) * ((double)value);
+         mBlockRingBuffer[mBlockRingPos] = value * value;
          if(mProcStereo)
          {
             value = mR128HSF[1].ProcessOne(mTrackBuffer[1][i]);
             value = mR128HPF[1].ProcessOne(value);
-            mSqSum[1] += ((double)value) * ((double)value);
+            // Add the power of second channel to the power of first channel.
+            // As a result, stereo tracks appear about 3 LUFS louder, as specified.
+            mBlockRingBuffer[mBlockRingPos] += value * value;
          }
+         ++mBlockRingPos;
+         ++mBlockRingSize;
+
+         if(mBlockRingPos % mBlockOverlap == 0)
+         {
+            // Process new full block. As incomplete blocks shall be discarded
+            // according to the EBU R128 specification there is no need for
+            // some special logic for the last blocks.
+            if(mBlockRingSize >= mBlockSize)
+            {
+               // Reset mBlockRingSize to full state to avoid overflow.
+               // The actual value of mBlockRingSize does not matter
+               // since this is only used to detect if blocks are complete (>= mBlockSize).
+               mBlockRingSize = mBlockSize;
+
+               size_t idx;
+               double blockVal = 0;
+               for(size_t i = 0; i < mBlockSize; ++i)
+                  blockVal += mBlockRingBuffer[i];
+
+               // Histogram values are simplified log10() immediate values
+               // without -0.691 + 10*(...) to safe computing power. This is
+               // possible because these constant cancel out anyway during the
+               // following processing steps.
+               blockVal = log10(blockVal/double(mBlockSize));
+               // log(blockVal) is within ]-inf, 1]
+               idx = round((blockVal - GAMMA_A) * double(HIST_BIN_COUNT) / -GAMMA_A - 1);
+
+               // idx is within ]-inf, HIST_BIN_COUNT-1], discard indices below 0
+               // as they are below the EBU R128 absolute threshold anyway.
+               if(idx >= 0 && idx < HIST_BIN_COUNT)
+                  ++mLoudnessHist[idx];
+            }
+         }
+         // Close the ring.
+         if(mBlockRingPos == mBlockSize)
+            mBlockRingPos = 0;
       }
    }
    mCount += mTrackBufferLen;
@@ -619,9 +690,11 @@ void EffectNormalize::InitTrackAnalysis()
 {
    mSum[0]   = 0.0; // dc offset inits
    mSum[0]   = 0.0;
-   mSqSum[0] = 0.0; // rms init
-   mSqSum[1] = 0.0;
    mCount = 0;
+
+   mBlockRingPos = 0;
+   mBlockRingSize = 0;
+   memset(mLoudnessHist.get(), 0, HIST_BIN_COUNT*sizeof(long int));
 
    // Normalize ?
    if(mGain)
@@ -742,7 +815,6 @@ void EffectNormalize::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 
 void EffectNormalize::UpdateUI()
 {
-
    if (!mUIParent->TransferDataFromWindow())
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
