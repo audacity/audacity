@@ -43,3 +43,15 @@
     (if translated
         translated
         (funcall underscore txt)))
+
+
+;;; A couple of helpers for parsing strings returned by (aud-do "GetInfo: ...
+
+(defun eval-string (string)
+  ;;; Evaluate a string as a LISP expression.
+  ;;; If 'string' is not a valid LISP expression, the behaviour is undefined.
+  (eval (read (make-string-input-stream string))))
+
+(defmacro quote-string (string)
+  ;;; Prepend a single quote to a string
+  `(setf ,string (format nil "\'~a" ,string)))
