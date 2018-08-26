@@ -44,7 +44,7 @@ struct ScrubbingOptions {
    double maxTime {};
    double minTime {};
 
-   bool enqueueBySpeed {};
+   bool bySpeed {};
    bool isPlayingAtSpeed{};
 
    double delay {};

@@ -476,7 +476,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    mOptions.minTime = 0;
    mOptions.maxTime = time1;
    mOptions.minStutterTime = std::max(0.0, MinStutter);
-   mOptions.enqueueBySpeed = true;
+   mOptions.bySpeed = true;
    mOptions.adjustStart = false;
    mOptions.isPlayingAtSpeed = true;
       
@@ -529,12 +529,12 @@ void Scrubber::ContinueScrubbingPoll()
 
    bool result = false;
    if (mPaused) {
-      // When paused, enqueue silent scrubs.
+      // When paused, make silent scrubs.
       mOptions.minSpeed = 0.0;
       mOptions.maxSpeed = mMaxSpeed;
       mOptions.adjustStart = false;
-      mOptions.enqueueBySpeed = true;
-      result = gAudioIO->EnqueueScrub(0, mOptions);
+      mOptions.bySpeed = true;
+      result = gAudioIO->UpdateScrub(0, mOptions);
    }
    else if (mSpeedPlaying) {
       // default speed of 1.3 set, so that we can hear there is a problem
@@ -547,8 +547,8 @@ void Scrubber::ContinueScrubbingPoll()
       mOptions.minSpeed = speed -0.01;
       mOptions.maxSpeed = speed +0.01;
       mOptions.adjustStart = false;
-      mOptions.enqueueBySpeed = true;
-      result = gAudioIO->EnqueueScrub(speed, mOptions);
+      mOptions.bySpeed = true;
+      result = gAudioIO->UpdateScrub(speed, mOptions);
    } else {
       const wxMouseState state(::wxGetMouseState());
       const auto trackPanel = mProject->GetTrackPanel();
@@ -556,14 +556,14 @@ void Scrubber::ContinueScrubbingPoll()
       const auto &viewInfo = mProject->GetViewInfo();
 #ifdef DRAG_SCRUB
       if (mDragging && mSmoothScrollingScrub) {
-         const auto lastTime = gAudioIO->GetLastTimeInScrubQueue();
+         const auto lastTime = gAudioIO->GetLastScrubTime();
          const auto delta = mLastScrubPosition - position.x;
          const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
          mOptions.minSpeed = 0.0;
          mOptions.maxSpeed = mMaxSpeed;
          mOptions.adjustStart = true;
-         mOptions.enqueueBySpeed = false;
-         result = gAudioIO->EnqueueScrub(time, mOptions);
+         mOptions.bySpeed = false;
+         result = gAudioIO->UpdateScrub(time, mOptions);
          mLastScrubPosition = position.x;
       }
       else
@@ -576,12 +576,12 @@ void Scrubber::ContinueScrubbingPoll()
 
          if (mSmoothScrollingScrub) {
             const double speed = FindScrubSpeed(seek, time);
-            mOptions.enqueueBySpeed = true;
-            result = gAudioIO->EnqueueScrub(speed, mOptions);
+            mOptions.bySpeed = true;
+            result = gAudioIO->UpdateScrub(speed, mOptions);
          }
          else {
-            mOptions.enqueueBySpeed = false;
-            result = gAudioIO->EnqueueScrub(time, mOptions);
+            mOptions.bySpeed = false;
+            result = gAudioIO->UpdateScrub(time, mOptions);
          }
       }
    }
