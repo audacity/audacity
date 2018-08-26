@@ -1061,10 +1061,12 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *TRACK* '*unbound*)\n");
    }
 
-   if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
+   if(mVersion >= 4) {
       cmd += mProps;
       cmd += mPerTrackProps;
+   }
 
+   if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
       // Set the track TYPE and VIEW properties
       wxString type;
       wxString view;
