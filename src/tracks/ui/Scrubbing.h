@@ -72,6 +72,8 @@ struct ScrubbingOptions {
 class Scrubber : public wxEvtHandler
 {
 public:
+   static constexpr unsigned ScrubPollInterval_ms = 50;
+   
    Scrubber(AudacityProject *project);
    ~Scrubber();
 

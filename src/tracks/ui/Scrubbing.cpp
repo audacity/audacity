@@ -51,9 +51,7 @@ enum {
    ScrubSpeedStepsPerOctave = 4,
 #endif
 
-   ScrubPollInterval_ms = 50,
-
-   kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
+   kOneSecondCountdown = 1000 / Scrubber::ScrubPollInterval_ms,
 };
 
 static const double MinStutter = 0.2;
@@ -657,6 +655,7 @@ void Scrubber::StopPolling()
 
 void Scrubber::StopScrubbing()
 {
+   gAudioIO->StopScrub();
    StopPolling();
 
    if (HasMark() && !mCancelled) {
