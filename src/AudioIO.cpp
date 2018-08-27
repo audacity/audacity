@@ -524,11 +524,10 @@ constexpr size_t TimeQueueGrainSize = 2000;
 
 struct AudioIO::ScrubState
 {
-   ScrubState(double t0, wxLongLong startClockMillis,
+   ScrubState(double t0,
               double rate,
               const ScrubbingOptions &options)
       : mRate(rate)
-      , mLastScrubTimeMillis(startClockMillis)
       , mStartTime( t0 )
    {
       const double t1 = options.bySpeed ? 1.0 : t0;
@@ -800,7 +799,7 @@ private:
    std::atomic<bool> mStopped { false };
    Data mData;
    const double mRate;
-   wxLongLong mLastScrubTimeMillis;
+   wxLongLong mLastScrubTimeMillis{ ::wxGetLocalTimeMillis() };
    struct Message {
       double end;
       ScrubbingOptions options;
@@ -1958,7 +1957,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mScrubState =
          std::make_unique<ScrubState>(
             mPlaybackSchedule.mT0,
-            scrubOptions.startClockTimeMillis,
             mRate,
             scrubOptions);
       mScrubDuration = 0;

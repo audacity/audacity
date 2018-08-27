@@ -297,7 +297,6 @@ void Scrubber::MarkScrubStart(
 
    mScrubStartPosition = xx;
    ctb->UpdateStatusBar(mProject);
-   mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
    mCancelled = false;
 }
 
@@ -424,7 +423,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       }
       else
          // Wait to test again
-         mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
+         ;
 
       if (IsScrubbing()) {
          mLastScrubPosition = xx;
@@ -462,7 +461,6 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    AudioIOStartStreamOptions options(mProject->GetSpeedPlayOptions());
    options.pScrubbingOptions = &mOptions;
    options.timeTrack = NULL;
-   mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
    mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
    mOptions.minSpeed = speed -0.01;
    mOptions.maxSpeed = speed +0.01;

@@ -58,10 +58,6 @@ struct ScrubbingOptions {
    // this is the minimum amount of playback allowed at the maximum speed:
    double minStutterTime {};
 
-   // Scrubbing needs the time of start of the mouse movement that began
-   // the scrub:
-   wxLongLong startClockTimeMillis { -1 };
-
    static double MaxAllowedScrubSpeed()
    { return 32.0; } // Is five octaves enough for your amusement?
    static double MinAllowedScrubSpeed()
