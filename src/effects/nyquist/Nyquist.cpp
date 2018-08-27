@@ -3226,7 +3226,7 @@ void * nyq_reformat_aud_do_response(const wxString & Str) {
    wxString Left = Str.BeforeLast('\n').BeforeLast('\n');
    wxString Right = Str.BeforeLast('\n').AfterLast('\n');
    message = cvstring(Left);
-   success = Right.EndsWith("OK") ? cvfixnum(1) : nullptr;
+   success = Right.EndsWith("OK") ? s_true : nullptr;
    dst = cons(message, success);
    return (void *)dst;
 }
