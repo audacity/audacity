@@ -953,7 +953,7 @@ void AudacityProject::CreateMenusAndCommands()
                   // Switching of scrolling on and off is permitted even during transport
                   AlwaysEnabledFlag, AlwaysEnabledFlag);
 
-      c->AddCheck(wxT("Duplex"), XXO("&Overdub (on/off)"), FN(OnTogglePlayRecording), 0,
+      c->AddCheck(wxT("Overdub"), XXO("&Overdub (on/off)"), FN(OnTogglePlayRecording), 0,
                   AudioIONotBusyFlag | CanStopAudioStreamFlag,
                   AudioIONotBusyFlag | CanStopAudioStreamFlag);
       c->AddCheck(wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0,
