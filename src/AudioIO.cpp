@@ -1987,7 +1987,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // execute too much else
       if (mScrubState) {
          mOwningProject->GetScrubber().ContinueScrubbingPoll();
-         wxMilliSleep( Scrubber::ScrubPollInterval_ms );
+         wxMilliSleep( Scrubber::ScrubPollInterval_ms * 0.9 );
       }
       else
 #endif

@@ -51,7 +51,9 @@ enum {
    ScrubSpeedStepsPerOctave = 4,
 #endif
 
-   kOneSecondCountdown = 1000 / Scrubber::ScrubPollInterval_ms,
+   ScrubPollInterval_ms = 50,
+
+   kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
 };
 
 static const double MinStutter = 0.2;
@@ -632,7 +634,7 @@ void Scrubber::StartPolling()
    mpThread->Run();
 #endif
    
-   mPoller->Start(ScrubPollInterval_ms);
+   mPoller->Start(ScrubPollInterval_ms * 0.9);
 }
 
 void Scrubber::StopPolling()
