@@ -51,7 +51,9 @@ enum {
    ScrubSpeedStepsPerOctave = 4,
 #endif
 
-   kOneSecondCountdown = 1000 / Scrubber::ScrubPollInterval_ms,
+   ScrubPollInterval_ms = 50,
+
+   kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
 };
 
 static const double MinStutter = 0.2;
@@ -297,7 +299,6 @@ void Scrubber::MarkScrubStart(
 
    mScrubStartPosition = xx;
    ctb->UpdateStatusBar(mProject);
-   mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
    mCancelled = false;
 }
 
@@ -424,7 +425,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       }
       else
          // Wait to test again
-         mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
+         ;
 
       if (IsScrubbing()) {
          mLastScrubPosition = xx;
@@ -462,7 +463,6 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    AudioIOStartStreamOptions options(mProject->GetSpeedPlayOptions());
    options.pScrubbingOptions = &mOptions;
    options.timeTrack = NULL;
-   mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
    mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
    mOptions.minSpeed = speed -0.01;
    mOptions.maxSpeed = speed +0.01;
@@ -634,7 +634,7 @@ void Scrubber::StartPolling()
    mpThread->Run();
 #endif
    
-   mPoller->Start(ScrubPollInterval_ms);
+   mPoller->Start(ScrubPollInterval_ms * 0.9);
 }
 
 void Scrubber::StopPolling()
