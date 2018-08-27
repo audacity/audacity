@@ -777,7 +777,17 @@ private:
    };
 
    struct Duration {
-      Duration (ScrubState &queue_) : queue(queue_) {}
+      Duration (ScrubState &queue_) : queue(queue_)
+      {
+         do {
+            clockTime = ::wxGetLocalTimeMillis();
+            duration = static_cast<long long>(
+               queue.mRate *
+                  (clockTime - queue.mLastScrubTimeMillis).ToDouble()
+                     / 1000.0
+            );
+         } while( duration <= 0 && (::wxMilliSleep(1), true) );
+      }
       ~Duration ()
       {
          if(!cancelled)
@@ -787,10 +797,8 @@ private:
       void Cancel() { cancelled = true; }
 
       ScrubState &queue;
-      const wxLongLong clockTime { ::wxGetLocalTimeMillis() };
-      const sampleCount duration { static_cast<long long>
-         (queue.mRate * (clockTime - queue.mLastScrubTimeMillis).ToDouble() / 1000.0)
-      };
+      wxLongLong clockTime;
+      sampleCount duration;
       bool cancelled { false };
    };
 
