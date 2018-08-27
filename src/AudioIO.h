@@ -362,7 +362,7 @@ class AUDACITY_DLL_API AudioIO final {
    * scrub speed, adjust the beginning of the scrub interval rather than the
    * end, so that the scrub skips or "stutters" to stay near the cursor.
    */
-   bool UpdateScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
+   void UpdateScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
 
    void StopScrub();
 

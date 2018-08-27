@@ -522,14 +522,13 @@ void Scrubber::ContinueScrubbingPoll()
    // timer callback, to a left click event detected elsewhere.)
    const bool seek = TemporarilySeeks() || Seeks();
 
-   bool result = false;
    if (mPaused) {
       // When paused, make silent scrubs.
       mOptions.minSpeed = 0.0;
       mOptions.maxSpeed = mMaxSpeed;
       mOptions.adjustStart = false;
       mOptions.bySpeed = true;
-      result = gAudioIO->UpdateScrub(0, mOptions);
+      gAudioIO->UpdateScrub(0, mOptions);
    }
    else if (mSpeedPlaying) {
       // default speed of 1.3 set, so that we can hear there is a problem
@@ -543,7 +542,7 @@ void Scrubber::ContinueScrubbingPoll()
       mOptions.maxSpeed = speed +0.01;
       mOptions.adjustStart = false;
       mOptions.bySpeed = true;
-      result = gAudioIO->UpdateScrub(speed, mOptions);
+      gAudioIO->UpdateScrub(speed, mOptions);
    } else {
       const wxMouseState state(::wxGetMouseState());
       const auto trackPanel = mProject->GetTrackPanel();
@@ -558,7 +557,7 @@ void Scrubber::ContinueScrubbingPoll()
          mOptions.maxSpeed = mMaxSpeed;
          mOptions.adjustStart = true;
          mOptions.bySpeed = false;
-         result = gAudioIO->UpdateScrub(time, mOptions);
+         gAudioIO->UpdateScrub(time, mOptions);
          mLastScrubPosition = position.x;
       }
       else
@@ -572,17 +571,16 @@ void Scrubber::ContinueScrubbingPoll()
          if (mSmoothScrollingScrub) {
             const double speed = FindScrubSpeed(seek, time);
             mOptions.bySpeed = true;
-            result = gAudioIO->UpdateScrub(speed, mOptions);
+            gAudioIO->UpdateScrub(speed, mOptions);
          }
          else {
             mOptions.bySpeed = false;
-            result = gAudioIO->UpdateScrub(time, mOptions);
+            gAudioIO->UpdateScrub(time, mOptions);
          }
       }
    }
 
-   if (result)
-      mScrubSeekPress = false;
+   mScrubSeekPress = false;
 
    // else, if seek requested, try again at a later time when we might
    // enqueue a long enough stutter

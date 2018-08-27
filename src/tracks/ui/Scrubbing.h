@@ -76,7 +76,7 @@ public:
    
    Scrubber(AudacityProject *project);
    ~Scrubber();
-
+   
    // Assume xx is relative to the left edge of TrackPanel!
    void MarkScrubStart(wxCoord xx, bool smoothScrolling, bool seek);
 
