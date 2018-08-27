@@ -52,6 +52,8 @@ src/Benchmark.cpp
 src/Benchmark.h
 src/BlockFile.cpp
 src/BlockFile.h
+src/CellularPanel.cpp
+src/CellularPanel.h
 src/ClassicThemeAsCeeCode.h
 src/CrossFade.cpp
 src/CrossFade.h
@@ -711,6 +713,8 @@ src/widgets/Ruler.cpp
 src/widgets/Ruler.h
 src/widgets/Warning.cpp
 src/widgets/Warning.h
+src/widgets/WindowAccessible.cpp
+src/widgets/WindowAccessible.h
 src/widgets/numformatter.cpp
 src/widgets/numformatter.h
 src/widgets/valnum.cpp
