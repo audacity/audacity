@@ -51,9 +51,7 @@ enum {
    ScrubSpeedStepsPerOctave = 4,
 #endif
 
-   ScrubPollInterval_ms = 50,
-
-   kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
+   kOneSecondCountdown = 1000 / Scrubber::ScrubPollInterval_ms,
 };
 
 static const double MinStutter = 0.2;
@@ -336,8 +334,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          double time1 = std::min(maxTime,
             viewInfo.PositionToTime(position, leftOffset)
          );
-         if (time1 != time0)
-         {
+         if (time1 != time0) {
             if (busy) {
                auto position = mScrubStartPosition;
                ctb->StopPlaying();
@@ -403,6 +400,15 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             );
 #endif
             mScrubSpeedDisplayCountdown = 0;
+
+            // Must start the thread and poller first or else PlayPlayRegion
+            // will insert some silence
+            StartPolling();
+            auto cleanup = finally([this]{
+               if (mScrubToken < 0)
+                  StopPolling();
+            });
+
             mScrubToken =
                ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
                                    PlayMode::normalPlay, appearance, backwards);
@@ -421,17 +427,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          mOptions.startClockTimeMillis = ::wxGetLocalTimeMillis();
 
       if (IsScrubbing()) {
-         mPaused = false;
          mLastScrubPosition = xx;
-
-#ifdef USE_SCRUB_THREAD
-         // Detached thread is self-deleting, after it receives the Delete() message
-         mpThread = safenew ScrubPollerThread{ *this };
-         mpThread->Create(4096);
-         mpThread->Run();
-#endif
-
-         mPoller->Start(ScrubPollInterval_ms);
       }
 
       // Return true whether we started scrub, or are still waiting to decide.
@@ -491,6 +487,14 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    );
 #endif
 
+   // Must start the thread and poller first or else PlayPlayRegion
+   // will insert some silence
+   StartPolling();
+   auto cleanup = finally([this]{
+      if (mScrubToken < 0)
+         StopPolling();
+   });
+   
    mScrubSpeedDisplayCountdown = 0;
    // Aim to stop within 20 samples of correct position.
    double stopTolerance = 20.0 / options.rate;
@@ -500,18 +504,9 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
          PlayMode::normalPlay, appearance, backwards);
 
    if (mScrubToken >= 0) {
-      mPaused = false;
       mLastScrubPosition = 0;
-
-#ifdef USE_SCRUB_THREAD
-      // Detached thread is self-deleting, after it receives the Delete() message
-      mpThread = safenew ScrubPollerThread{ *this };
-      mpThread->Create(4096);
-      mpThread->Run();
-#endif
-
-      mPoller->Start(ScrubPollInterval_ms);
    }
+
    return true;
 }
 
@@ -630,16 +625,38 @@ void Scrubber::ContinueScrubbingUI()
    }
 }
 
-void Scrubber::StopScrubbing()
+void Scrubber::StartPolling()
 {
+   mPaused = false;
+   
+#ifdef USE_SCRUB_THREAD
+   // Detached thread is self-deleting, after it receives the Delete() message
+   mpThread = safenew ScrubPollerThread{ *this };
+   mpThread->Create(4096);
+   mpThread->Run();
+#endif
+   
+   mPoller->Start(ScrubPollInterval_ms);
+}
+
+void Scrubber::StopPolling()
+{
+   mPaused = true;
+
 #ifdef USE_SCRUB_THREAD
    if (mpThread) {
       mpThread->Delete();
       mpThread = nullptr;
    }
 #endif
-
+   
    mPoller->Stop();
+}
+
+void Scrubber::StopScrubbing()
+{
+   gAudioIO->StopScrub();
+   StopPolling();
 
    if (HasMark() && !mCancelled) {
       const wxMouseState state(::wxGetMouseState());

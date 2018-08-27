@@ -261,6 +261,8 @@ class AUDACITY_DLL_API AudioIO final {
    */
    bool UpdateScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
 
+   void StopScrub();
+
    /** \brief return the ending time of the last scrub interval.
    */
    double GetLastScrubTime() const;

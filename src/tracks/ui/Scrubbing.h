@@ -72,6 +72,8 @@ struct ScrubbingOptions {
 class Scrubber : public wxEvtHandler
 {
 public:
+   static constexpr unsigned ScrubPollInterval_ms = 50;
+   
    Scrubber(AudacityProject *project);
    ~Scrubber();
 
@@ -154,6 +156,8 @@ public:
    void CheckMenuItems();
 
 private:
+   void StartPolling();
+   void StopPolling();
    void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
 

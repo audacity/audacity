@@ -549,15 +549,6 @@ struct AudioIO::ScrubState
       }
    }
 
-   // This is for avoiding deadlocks while starting a scrub:
-   // Audio stream needs to be unblocked
-   void Nudge()
-   {
-      wxMutexLocker locker(mUpdating);
-      mNudged = true;
-      mAvailable.Signal();
-   }
-
    bool Update(double end, const ScrubbingOptions &options)
    {
       // Main thread indicates a scrubbing interval
@@ -617,14 +608,14 @@ struct AudioIO::ScrubState
       if (!cleanup) {
          cleanup.create(mUpdating);
       }
-      while(!mNudged && mMiddleIdx == mLeadingIdx)
+      while(! mStopped.load( std::memory_order_relaxed )&&
+           mMiddleIdx == mLeadingIdx)
          mAvailable.Wait();
-
-      mNudged = false;
 
       auto now = ::wxGetLocalTimeMillis();
 
-      if (mMiddleIdx != mLeadingIdx) {
+      if ( ! mStopped.load( std::memory_order_relaxed )  &&
+           mMiddleIdx != mLeadingIdx ) {
          Data &entry = mEntries[mMiddleIdx];
          if (entry.mDuration > 0) {
             // First use of the entry
@@ -646,9 +637,16 @@ struct AudioIO::ScrubState
          }
       }
       else {
-         // We got the shut-down signal, or we got nudged, or we discarded all the work.
+         // We got the shut-down signal, or we discarded all the work.
          startSample = endSample = duration = -1L;
       }
+   }
+
+   void Stop()
+   {
+      mStopped.store( true, std::memory_order_relaxed );
+      wxMutexLocker locker(mUpdating);
+      mAvailable.Signal();
    }
 
    double LastTrackTime() const
@@ -832,12 +830,12 @@ private:
    unsigned mTrailingIdx;
    unsigned mMiddleIdx;
    unsigned mLeadingIdx;
+   std::atomic<bool> mStopped { false };
    const double mRate;
    wxLongLong mLastScrubTimeMillis;
 
    mutable wxMutex mUpdating;
    mutable wxCondition mAvailable { mUpdating };
-   bool mNudged { false };
 };
 #endif
 
@@ -2006,9 +2004,17 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mAudioThreadShouldCallFillBuffersOnce = true;
 
    while( mAudioThreadShouldCallFillBuffersOnce ) {
-      if (mScrubState)
-         mScrubState->Nudge();
-      wxMilliSleep( 50 );
+#ifndef USE_SCRUB_THREAD
+      // Yuck, we either have to poll "by hand" when scrub polling doesn't
+      // work with a thread, or else yield to timer messages, but that would
+      // execute too much else
+      if (mScrubState) {
+         mOwningProject->GetScrubber().ContinueScrubbingPoll();
+         wxMilliSleep( Scrubber::ScrubPollInterval_ms );
+      }
+      else
+#endif
+        wxMilliSleep( 50 );
    }
 
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
@@ -2513,8 +2519,6 @@ void AudioIO::StopStream()
    //
 
    mAudioThreadFillBuffersLoopRunning = false;
-   if (mScrubState)
-      mScrubState->Nudge();
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -2622,8 +2626,6 @@ void AudioIO::StopStream()
       {
          // LLL:  Experienced recursive yield here...once.
          wxGetApp().Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
-         if (mScrubState)
-            mScrubState->Nudge();
          wxMilliSleep( 50 );
       }
 
@@ -2766,6 +2768,12 @@ bool AudioIO::UpdateScrub
       return mScrubState->Update(endTimeOrSpeed, options);
    else
       return false;
+}
+
+void AudioIO::StopScrub()
+{
+   if (mScrubState)
+      mScrubState->Stop();
 }
 
 double AudioIO::GetLastScrubTime() const
