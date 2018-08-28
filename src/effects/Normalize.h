@@ -70,6 +70,7 @@ private:
    };
 
    bool GetTrackMinMax(WaveTrack* track, float& min, float& max);
+   bool GetTrackRMS(WaveTrack* track, float& rms);
    void AllocBuffers(SelectedTrackListOfKindIterator iter);
    bool ProcessOne(SelectedTrackListOfKindIterator iter, bool analyse);
    bool LoadBufferBlock(WaveTrack* track1, WaveTrack* track2,
@@ -78,7 +79,7 @@ private:
    bool ProcessBufferBlock();
    void StoreBufferBlock(WaveTrack* track1, WaveTrack* track2,
                          sampleCount pos, size_t len);
-   void InitTrackAnalysis();
+   void InitTrackAnalysis(bool dc);
 
    void CalcEBUR128HPF(float fs);
    void CalcEBUR128HSF(float fs);
@@ -90,6 +91,7 @@ private:
 private:
    double mPeakLevel;
    double mLUFSLevel;
+   double mRMSLevel;
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
@@ -109,6 +111,7 @@ private:
    float  mOffset[2];
    float  mMin[2];
    float  mMax[2];
+   float  mRMS[2];
    double mSum[2];
    sampleCount    mCount;
 

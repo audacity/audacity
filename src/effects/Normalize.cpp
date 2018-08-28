@@ -34,19 +34,22 @@ enum kNormalizeTargets
 {
    kAmplitude,
    kLoudness,
+   kRMS,
    nAlgos
 };
 
 static const ComponentInterfaceSymbol kNormalizeTargetStrings[nAlgos] =
 {
    { XO("peak amplitude") },
-   { XO("perceived loudness") }
+   { XO("perceived loudness") },
+   { XO("RMS") }
 };
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name         Type     Key                        Def         Min      Max       Scale
 Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,       -145.0,  0.0,      1  );
 Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,      -145.0,  0.0,      1  );
+Param( RMSLevel,    double,  wxT("RMSLevel"),            -20.0,      -145.0,  0.0,      1  );
 Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,       false,   true,     1  );
 Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,       false,   true,     1  );
 Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,      false,   true,     1  );
@@ -62,6 +65,7 @@ EffectNormalize::EffectNormalize()
 {
    mPeakLevel = DEF_PeakLevel;
    mLUFSLevel = DEF_LUFSLevel;
+   mRMSLevel = DEF_RMSLevel;
    mDC = DEF_RemoveDC;
    mGain = DEF_ApplyGain;
    mStereoInd = DEF_StereoInd;
@@ -102,6 +106,7 @@ EffectType EffectNormalize::GetType()
 bool EffectNormalize::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
    S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
+   S.SHUTTLE_PARAM( mRMSLevel, RMSLevel );
    S.SHUTTLE_PARAM( mGain, ApplyGain );
    S.SHUTTLE_PARAM( mDC, RemoveDC );
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );
@@ -113,6 +118,7 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_PeakLevel, mPeakLevel);
    parms.Write(KEY_LUFSLevel, mLUFSLevel);
+   parms.Write(KEY_RMSLevel, mRMSLevel);
    parms.Write(KEY_ApplyGain, mGain);
    parms.Write(KEY_RemoveDC, mDC);
    parms.Write(KEY_StereoInd, mStereoInd);
@@ -125,6 +131,7 @@ bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(PeakLevel);
    ReadAndVerifyDouble(LUFSLevel);
+   ReadAndVerifyDouble(RMSLevel);
    ReadAndVerifyBool(ApplyGain);
    ReadAndVerifyBool(RemoveDC);
    ReadAndVerifyBool(StereoInd);
@@ -132,6 +139,7 @@ bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 
    mPeakLevel = PeakLevel;
    mLUFSLevel = LUFSLevel;
+   mRMSLevel = RMSLevel;
    mGain = ApplyGain;
    mDC = RemoveDC;
    mStereoInd = StereoInd;
@@ -186,7 +194,10 @@ bool EffectNormalize::Startup()
 
 bool EffectNormalize::Process()
 {
-   if (mGain == false && mDC == false)
+   // Use temporary copy of mDC so that the checkbox
+   // state is unaffected by the operation below.
+   bool dc = mDC && mNormalizeTo != kRMS;
+   if (mGain == false && dc == false)
       return true;
 
    float ratio;
@@ -198,6 +209,9 @@ bool EffectNormalize::Process()
          // LU use 10*log10(...) instead of 20*log10(...)
          // so multiply level by 2 and use standard DB_TO_LINEAR macro.
          ratio = DB_TO_LINEAR(TrapDouble(mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
+      else // RMS
+         ratio = DB_TO_LINEAR(TrapDouble(mRMSLevel, MIN_RMSLevel, MAX_RMSLevel));
+
    }
    else
       ratio = 1.0;
@@ -209,13 +223,13 @@ bool EffectNormalize::Process()
    WaveTrack *track = (WaveTrack *) iter.First();
    wxString topMsg;
 
-   if(mDC && mGain)
+   if(dc && mGain)
       topMsg = _("Removing DC offset and Normalizing...\n");
-   else if(mDC && !mGain)
+   else if(dc && !mGain)
       topMsg = _("Removing DC offset...\n");
-   else if(!mDC && mGain)
+   else if(!dc && mGain)
       topMsg = _("Normalizing without removing DC offset...\n");
-   else if(!mDC && !mGain)
+   else if(!dc && !mGain)
       topMsg = _("Not doing anything...\n");   // shouldn't get here
 
    AllocBuffers(iter);
@@ -245,24 +259,40 @@ bool EffectNormalize::Process()
       mProgressMsg =
          topMsg + wxString::Format( _("Analyzing: %s"), trackName );
 
-      InitTrackAnalysis();
+      InitTrackAnalysis(dc);
 
       // Get track min/max/rms in peak/rms mode
-      if(mGain && (mNormalizeTo == kAmplitude))
+      if(mGain && (mNormalizeTo == kAmplitude || mNormalizeTo == kRMS))
       {
-         if(!GetTrackMinMax(track, mMin[0], mMax[0]))
-            return false;
+         if(mNormalizeTo == kAmplitude)
+         {
+            if(!GetTrackMinMax(track, mMin[0], mMax[0]))
+               return false;
+         }
+         else // RMS
+         {
+            if(!GetTrackRMS(track, mRMS[0]))
+               return false;
+         }
          if(mProcStereo)
          {
             // Get next WaveTrack* without incrementing iter.
             track = (WaveTrack *) iter.Next();
             iter.Prev();
-            if(!GetTrackMinMax(track, mMin[1], mMax[1]))
-               return false;
+            if(mNormalizeTo == kAmplitude)
+            {
+               if(!GetTrackMinMax(track, mMin[0], mMax[0]))
+                  return false;
+            }
+            else // RMS
+            {
+               if(!GetTrackRMS(track, mRMS[1]))
+                  return false;
+            }
          }
       }
       // Skip analyze pass if it is not necessary.
-      if(mNormalizeTo == kLoudness || mDC)
+      if(mNormalizeTo == kLoudness || dc)
       {
          mBlockSize = 0.4 * mCurRate; // 400 ms blocks
          mBlockOverlap = 0.1 * mCurRate; // 100 ms overlap
@@ -274,8 +304,8 @@ bool EffectNormalize::Process()
          mSteps = 1;
 
       // Calculate normalization values the analysis results
-      // mMin[], mMax[], mSum[], mLoudnessHist.
-      if(mCount > 0 && mDC)
+      // mMin[], mMax[], mSum[], mRMS[], mLoudnessHist.
+      if(mCount > 0 && dc)
       {
          mOffset[0] = -mSum[0] / mCount.as_double();
          mOffset[1] = -mSum[1] / mCount.as_double();
@@ -330,6 +360,10 @@ bool EffectNormalize::Process()
          // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
          extent = 0.8529037031 * sum_v / sum_c;
       }
+      else // RMS
+      {
+         extent = mRMS[0];
+      }
 
       if(mProcStereo)
       {
@@ -340,15 +374,20 @@ bool EffectNormalize::Process()
             extent2 = fmax(fabs(mMin[1]), fabs(mMax[1]));;
             extent = fmax(extent, extent2);
          }
+         else if(mNormalizeTo == kRMS)
+         {
+            // RMS: use average RMS
+            extent = (extent + mRMS[1]) / 2.0;
+         }
          // else: mNormalizeTo == kLoudness : do nothing (this is already handled in histogram)
       }
 
       if( (extent > 0) && mGain )
       {
          mMult = ratio / extent;
-         if(mNormalizeTo == kLoudness)
+         if(mNormalizeTo == kLoudness || mNormalizeTo == kRMS)
          {
-            // LUFS are related to square values so the multiplier must be the root.
+            // LUFS and RMS are related to square values so the multiplier must be the root.
             mMult = sqrt(mMult);
          }
       }
@@ -476,6 +515,25 @@ bool EffectNormalize::GetTrackMinMax(WaveTrack* track, float& min, float& max)
    // set mMin, mMax.  No progress bar here as it's fast.
    auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
    min = pair.first, max = pair.second;
+   return true;
+}
+
+bool EffectNormalize::GetTrackRMS(WaveTrack* track, float& rms)
+{
+   // Since we need complete summary data, we need to block until the OD tasks are done for this track
+   // This is needed for track->GetMinMax
+   // TODO: should we restrict the flags to just the relevant block files (for selections)
+   while (track->GetODFlags()) {
+      // update the gui
+      if (ProgressResult::Cancelled == mProgress->Update(
+         0, _("Waiting for waveform to finish computing...")) )
+         return false;
+      wxMilliSleep(100);
+   }
+
+   // set mRMS.  No progress bar here as it's fast.
+   float _rms = track->GetRMS(mCurT0, mCurT1); // may throw
+   rms = _rms;
    return true;
 }
 
@@ -696,7 +754,7 @@ void EffectNormalize::StoreBufferBlock(WaveTrack* track1, WaveTrack* track2,
       track2->Set((samplePtr) mTrackBuffer[1].get(), floatSample, pos, len);
 }
 
-void EffectNormalize::InitTrackAnalysis()
+void EffectNormalize::InitTrackAnalysis(bool dc)
 {
    mSum[0]   = 0.0; // dc offset inits
    mSum[0]   = 0.0;
@@ -713,7 +771,7 @@ void EffectNormalize::InitTrackAnalysis()
       {
          CalcEBUR128HPF(mCurRate);
          CalcEBUR128HSF(mCurRate);
-         if(mDC)
+         if(dc)
             mOp = ANALYSE_LOUDNESS_DC;
          else
          {
@@ -722,11 +780,11 @@ void EffectNormalize::InitTrackAnalysis()
             mOffset[1] = 0.0;
          }
       }
-      else if(mDC)
+      else if(dc)
          mOp = ANALYSE_DC;
    }
    // Just remove DC ?
-   else if(mDC)
+   else if(dc)
    {
       mMin[0] = -1.0, mMax[0] = 1.0;   // sensible defaults?
       mMin[1] = -1.0, mMax[1] = 1.0;
@@ -858,12 +916,27 @@ void EffectNormalize::UpdateUI()
          /* i18n-hint: LUFS is a particular method for measuring loudnesss */
          mLeveldB->SetLabel(_("LUFS"));
       }
+      else // RMS
+      {
+         FloatingPointValidator<double> vldLevel(2, &mRMSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
+         vldLevel.SetRange(MIN_RMSLevel, MAX_RMSLevel);
+         mLevelTextCtrl->SetValidator(vldLevel);
+         mLevelTextCtrl->SetName(_("RMS dB"));
+         mLevelTextCtrl->SetValue(wxString::FromDouble(mRMSLevel));
+         mLeveldB->SetLabel(_("dB"));
+      }
    }
 
    // Disallow level stuff if not normalizing
    mLevelTextCtrl->Enable(mGain);
    mLeveldB->Enable(mGain);
    mStereoIndCheckBox->Enable(mGain);
+   mNormalizeToCtl->Enable(mGain);
+
+   // Disallow DC removal in RMS mode because this is impossible with a
+   // single analyze pass due to center 2ab term of the binomial formula.
+   // Loudness is immune to this effect because is has highpass characteristic.
+   mDCCheckBox->Enable(mNormalizeTo != kRMS);
 
    // Disallow OK/Preview if doing nothing
    EnableApply(mGain || mDC);
