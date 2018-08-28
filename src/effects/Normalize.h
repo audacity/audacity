@@ -14,6 +14,7 @@
 #define __AUDACITY_EFFECT_NORMALIZE__
 
 #include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/stattext.h>
 #include <wx/string.h>
@@ -92,8 +93,8 @@ private:
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
-   bool   mUseLoudness;
-   bool   mGUIUseLoudness;
+   int    mNormalizeTo;
+   int    mGUINormalizeTo;
 
    double mCurT0;
    double mCurT1;
@@ -113,10 +114,10 @@ private:
 
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
+   wxChoice   *mNormalizeToCtl;
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
-   wxCheckBox *mUseLoudnessCheckBox;
    wxCheckBox *mStereoIndCheckBox;
 
    Floats mTrackBuffer[2];
