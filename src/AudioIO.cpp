@@ -549,7 +549,7 @@ struct AudioIO::ScrubState
       if (dd.duration <= 0)
          return;
 
-      Message message{ mMessage.Read() };
+      Message message( mMessage.Read() );
       if ( !mStarted ) {
          const sampleCount s0 { llrint( mRate *
             std::max( message.options.minTime,
