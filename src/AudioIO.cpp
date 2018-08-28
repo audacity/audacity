@@ -809,6 +809,8 @@ private:
    const double mRate;
    wxLongLong mLastScrubTimeMillis{ ::wxGetLocalTimeMillis() };
    struct Message {
+      Message() = default;
+      Message(const Message&) = default;
       double end;
       ScrubbingOptions options;
    };
