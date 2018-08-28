@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-23 18:10-0500\n"
+"POT-Creation-Date: 2018-08-28 15:05+0100\n"
 "PO-Revision-Date: 2018-02-10 16:40+0300\n"
 "Last-Translator: \n"
 "Language-Team: ar@li.org\n"
@@ -34,8 +34,8 @@ msgstr "أكد"
 msgid "Please choose an existing file."
 msgstr "من فضلك اختر ملفاً موجوداً."
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AutoRecovery.cpp
-#: src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
+#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
 #: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
@@ -301,7 +301,7 @@ msgstr "امسح"
 msgid "Clear selection"
 msgstr "مسح الاختيار"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
 msgid "Select All"
 msgstr "اختر الجميع"
 
@@ -442,6 +442,16 @@ msgid "Nyquist plug-ins"
 msgstr "موصلات Nyquist"
 
 #: src/AboutDialog.cpp
+#, fuzzy
+msgid "web developer"
+msgstr "مطور"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "graphics"
+msgstr "بياني"
+
+#: src/AboutDialog.cpp
 msgid "incorporating"
 msgstr "يدمج"
 
@@ -456,9 +466,10 @@ msgid "OK"
 msgstr "حسناً"
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
-"Audacity is a free program written by a worldwide team of [[http://www."
-"audacityteam.org/about/credits|volunteers]]. Audacity is [[http://www."
+"Audacity is a free program written by a worldwide team of [[https://www."
+"audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
 "audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
 "other Unix-like systems)."
 msgstr ""
@@ -467,10 +478,11 @@ msgstr ""
 "متوافر]] ل Mac ،Windows و GNU/Linux (و أنظمة أخرى تشبه Unix)."
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
-"our [[http://forum.audacityteam.org/|forum]]. For help, view the tips and "
-"tricks on our [[http://wiki.audacityteam.org/|wiki]] or visit our [[http://"
+"our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
+"tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
 "forum.audacityteam.org/|forum]]."
 msgstr ""
 "إذا وجدت خطأ برمجياً أو لديك اقتراح لنا، من فضلك اكتب، بالإنكليزية، إلى "
@@ -524,6 +536,10 @@ msgid "Contributors"
 msgstr "المساهمون"
 
 #: src/AboutDialog.cpp
+msgid "Website and Graphics"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "Translators"
 msgstr "المترجمون"
 
@@ -544,9 +560,10 @@ msgid "Audacity website: "
 msgstr "موقع جرأة الشبكي: "
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2017 Audacity Team.<br>"
+"&copy; 1999-2018 Audacity Team.<br>"
 msgstr ""
 "<p><br>&nbsp; &nbsp; برمجيات <b>جرأة<sup>&reg;</sup></b> محمية بموجب حقوق "
 "النشر &copy; 1999-2017 فريق جرأة.<br>"
@@ -559,7 +576,8 @@ msgstr ""
 "&nbsp; &nbsp; الاسم<b>جرأة</b> علامة تجارية مسجلة لأجل Dominic Mazzoni."
 "<br><br>"
 
-#: src/AboutDialog.cpp src/effects/Effect.cpp src/effects/nyquist/Nyquist.cpp
+#: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "Audacity"
 msgstr "جرأة"
 
@@ -762,7 +780,7 @@ msgid "Audacity is starting up..."
 msgstr "جرأة يبدأ..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
 msgid "&New"
 msgstr "جديد"
 
@@ -904,6 +922,11 @@ msgstr ""
 msgid "Audacity Project Files"
 msgstr "ملفات مشروع جرأة"
 
+#: src/AudacityException.h src/commands/MessageCommand.h
+#: src/widgets/ErrorDialog.cpp
+msgid "Message"
+msgstr "رسالة"
+
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
 msgstr "سجل جرأة"
@@ -966,26 +989,16 @@ msgstr "لن يكون بإمكانك أن تعزف MIDI.\n"
 msgid "Error Initializing Midi"
 msgstr "خطأ في بدء MIDI"
 
+#: src/AudioIO.cpp src/toolbars/ControlToolBar.cpp
+#, fuzzy, c-format
+msgid ""
+"Error opening recording device.\n"
+"Error code: %s"
+msgstr "حدث خطأ أثناء فتح جهاز الصوت. "
+
 #: src/AudioIO.cpp
 msgid "Out of memory!"
 msgstr "نفذت الذاكرة!"
-
-#: src/AudioIO.cpp
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before "
-"zero.\n"
-"Audacity has brought it back to start at zero.\n"
-"You may have to use the Time Shift Tool (<---> or F5) to drag the track to "
-"the right place."
-msgstr ""
-"أوضاع تصحيح الكمون تسببت في إخفاء الصوت المسجل قبل الصفر.\n"
-"جرأة أعاده إلى خط البداية عند الصفر.\n"
-"ربما يجب عليك أن تستخدم أداة تحريك الوقت (<---> أو F5) لتسحب المقطع إلى "
-"المكان الصحيح."
-
-#: src/AudioIO.cpp
-msgid "Latency problem"
-msgstr "مشكلة كمون"
 
 #: src/AudioIO.cpp
 msgid ""
@@ -1116,7 +1129,12 @@ msgid "&Parameters"
 msgstr "المتغيرات"
 
 #: src/BatchCommandDialog.cpp
-msgid "C&hoose command"
+msgid "&Details"
+msgstr ""
+
+#: src/BatchCommandDialog.cpp
+#, fuzzy
+msgid "Choose command"
 msgstr "اختيار أمر"
 
 #: src/BatchCommands.cpp
@@ -1152,6 +1170,40 @@ msgstr "صدر كـ Ogg"
 #: src/BatchCommands.cpp
 msgid "Export as WAV"
 msgstr "صدر كـ WAV"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "MP3 Conversion"
+msgstr "التحويل الحي"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Fade Ends"
+msgstr "ظهور"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Select to Ends"
+msgstr "الاختيار إلى النهاية"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Special Command"
+msgstr "أمر الاختيار"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Effect"
+msgstr "التأثيرات"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Menu Command (With Parameters)"
+msgstr "حرر المتغيرات"
+
+#: src/BatchCommands.cpp
+msgid "Menu Command (No Parameters)"
+msgstr ""
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1198,17 +1250,19 @@ msgstr "لم يتعرف على دفعة أوامرك %s."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-msgid "Applied batch chain"
+#, fuzzy
+msgid "Applied Macro"
 msgstr "طبقت سلسلة دفعة"
 
 #: src/BatchCommands.cpp
-msgid "Apply chain"
+#, fuzzy
+msgid "Apply Macro"
 msgstr "طبق السلسلة"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, c-format
-msgid "Applied batch chain '%s'"
+#, fuzzy, c-format
+msgid "Applied Macro '%s'"
 msgstr "طبقت سلسلة الدفعة '%s'"
 
 #: src/BatchCommands.cpp
@@ -1237,34 +1291,53 @@ msgid "Apply %s"
 msgstr "طبق %s"
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply Chain"
-msgstr "طبق سلسلة"
+msgid "Macros Palette"
+msgstr ""
 
-#. i18n-hint: A chain is a sequence of commands that can be applied
+#. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
-msgid "&Select Chain"
-msgstr "اختيار السلسلة"
+#, fuzzy
+msgid "Select Macro"
+msgstr "اختر المنحنى"
 
-#. i18n-hint: This is the heading for a column in the edit chains dialog
+#. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
-msgid "Chain"
-msgstr "سلسلة"
+msgid "Macro"
+msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to Current &Project"
+msgid "Apply Macro to:"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "&Project"
+msgstr "المشاريع"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Apply macro to project"
 msgstr "طبق على المشروع الحالي"
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to &Files..."
+#, fuzzy
+msgid "&Files..."
+msgstr "ملف"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Apply macro to files..."
 msgstr "طبق على الملفات..."
 
 #: src/BatchProcessDialog.cpp
-msgid "&Cancel"
-msgstr "ألغ"
+#, fuzzy
+msgid "&Expand"
+msgstr "وسع"
 
 #: src/BatchProcessDialog.cpp
-msgid "No chain selected"
+#, fuzzy
+msgid "No macro selected"
 msgstr "لا سلسلة مختارة"
 
 #: src/BatchProcessDialog.cpp
@@ -1294,28 +1367,36 @@ msgid "File"
 msgstr "ملف"
 
 #: src/BatchProcessDialog.cpp
-msgid "Edit Chains"
-msgstr "تحرير السلاسل"
+msgid "&Cancel"
+msgstr "ألغ"
 
 #: src/BatchProcessDialog.cpp
-msgid "&Chains"
-msgstr "السلاسل"
+#, fuzzy
+msgid "Manage Macros"
+msgstr "أدر المنحنيات"
 
-#: src/BatchProcessDialog.cpp src/Tags.cpp
-msgid "&Add"
-msgstr "أضف"
-
-#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/Tags.cpp
-msgid "&Remove"
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Remo&ve"
 msgstr "أزل"
 
-#: src/BatchProcessDialog.cpp
-msgid "Re&name"
-msgstr "أعد تسمية"
+#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+msgid "&Rename..."
+msgstr "أعد تسمية..."
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
+msgid "I&mport..."
+msgstr "استورد..."
+
+#: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
+#: src/effects/Equalization.cpp
+msgid "E&xport..."
+msgstr "صدر..."
 
 #: src/BatchProcessDialog.cpp
-msgid "C&hain (Double-Click or press SPACE to edit)"
-msgstr "سلسلة (انقر نقرة مزدوجة أو اضغط على زر المسافة للتحرير)"
+#, fuzzy
+msgid "Edit Steps"
+msgstr "حرر العلامات"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
@@ -1330,11 +1411,15 @@ msgstr "أمر "
 msgid "Parameters"
 msgstr "المتغيرات"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "&Insert"
 msgstr "أدخل"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/LabelTrack.cpp
+msgid "&Edit..."
+msgstr "حرر..."
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "De&lete"
 msgstr "حذف"
 
@@ -1349,6 +1434,10 @@ msgstr "حرك لأسفل"
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "De&faults"
 msgstr "الافتراضيات"
+
+#: src/BatchProcessDialog.cpp
+msgid "Shrin&k"
+msgstr ""
 
 #. i18n-hint: This is the last item in a list.
 #: src/BatchProcessDialog.cpp
@@ -1365,11 +1454,13 @@ msgid "Do you want to save the changes?"
 msgstr "هل تريد حفظ التغييرات؟"
 
 #: src/BatchProcessDialog.cpp
-msgid "Enter name of new chain"
+#, fuzzy
+msgid "Enter name of new macro"
 msgstr "أدخل اسم السلسلة الجديدة"
 
 #: src/BatchProcessDialog.cpp
-msgid "Name of new chain"
+#, fuzzy
+msgid "Name of new macro"
 msgstr "اسم السلسلة الجديدة"
 
 #: src/BatchProcessDialog.cpp
@@ -1652,6 +1743,11 @@ msgstr "كلما كان هناك مشروع يعتمد على ملفات أخر�
 #, c-format
 msgid "MISSING %s"
 msgstr "مفقود %s"
+
+#: src/Dependencies.cpp
+#, fuzzy
+msgid "&Copy Names to Clipboard"
+msgstr "انسخ إلى الحافظة"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2001,6 +2097,10 @@ msgstr "احفظ الصوت المسجل"
 msgid "Saving recorded audio to disk"
 msgstr "احفظ الصوت المسجل إلى القرص"
 
+#: src/FFT.cpp
+msgid "Rectangular"
+msgstr "مستطيل"
+
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
 msgstr "دعم FFmpeg غير مجمع"
@@ -2071,9 +2171,48 @@ msgstr "أين '%s'؟"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "أخفقت في إيجاد مكتبات FFmpeg متوافقة."
 
-#: src/FFT.cpp
-msgid "Rectangular"
-msgstr "مستطيل"
+#: src/FFmpeg.h
+msgid "FFmpeg not found"
+msgstr "لم يعثر على FFmpeg"
+
+#: src/FFmpeg.h
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"حاول جرأة استخدام FFmpeg ليستورد ملف صوت،\n"
+"لكن لم يعثر على المكتبات.\n"
+"\n"
+"لتستخدم استوراد FFmpeg، اذهب إلى التفضيلات > المكتبات\n"
+"لتُنزلَ أو تحدد موقع مكتبات FFmpeg."
+
+#: src/FFmpeg.h
+msgid "Do not show this warning again"
+msgstr "لا تظهر هذا التحذير مرة أخرى"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"فقط avformat.dll|*avformat*.dll|مكتبات مترابطة ديناميكياً (*.dll)|*.dll|جميع "
+"الملفات|*"
+
+#: src/FFmpeg.h
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "مكتبات ديناميكية (*.dylib)|*.dylib|جميع الملفات (*)|*"
+
+#: src/FFmpeg.h
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"فقط libavformat.so|libavformat*.so*|مكتبات مترابطة ديناميكياً (*.so*)|*.so*|"
+"جميع الملفات (*)|*"
 
 #: src/FileException.cpp
 #, c-format
@@ -2098,6 +2237,10 @@ msgstr ""
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr "كتب جرأة ملفاً في %s بنجاح لكن أخفق في إعادة تسميته إلى %s."
+
+#: src/FileException.h
+msgid "File Error"
+msgstr "خطأ ملف"
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp
@@ -2136,10 +2279,13 @@ msgstr "تردد خطي"
 msgid "Log frequency"
 msgstr "تردد لوغاريتمي"
 
+#. i18n-hint: abbreviates decibels
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
+#: src/FreqWindow.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/widgets/Meter.cpp
+#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/widgets/Meter.cpp
 msgid "dB"
 msgstr "dB"
 
@@ -2342,38 +2488,13 @@ msgstr ""
 "دعم كاملان.<br><br>"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"You can help us get Audacity ready for release by joining our [[http://www."
+"You can help us get Audacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
 "يمكنك أن تساعدنا في جعل جرأة جاهزاً للإطلاق بالالتحاق [[http://www."
 "audacityteam.org/community/|بمشتركنا]].<hr><br><br>"
-
-#: src/HelpText.cpp
-msgid "<br><br>DarkAudacity is based on Audacity:"
-msgstr "<br><br>جرأة القاتم مبني على أساس جرأة:"
-
-#: src/HelpText.cpp
-msgid ""
-" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
-"between them."
-msgstr ""
-" [[http://www.darkaudacity.com|www.darkaudacity.com]] - لاختلافات بينهما."
-
-#: src/HelpText.cpp
-msgid ""
-" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-"help using DarkAudacity."
-msgstr ""
-" أرسل بريداً إلكترونياً إلى [[mailto:james@audacityteam.org|james@audacityteam."
-"org]] - للمساعدة باستخدام جرأة المظلم."
-
-#: src/HelpText.cpp
-msgid ""
-" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started "
-"with DarkAudacity."
-msgstr ""
-" [[http://www.darkaudacity.com/video.html|دروس]] - لتبدأ مع جرأة القاتم."
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -2384,44 +2505,49 @@ msgid "These are our support methods:"
 msgstr "هذه هي طرق دعمنا:"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://"
+" [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://"
 "manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 " [[file:quick_help.html|المساعدة السريعة]] - إذا لم يكن مُنزلاً محلياً، "
 "[[http://manual.audacityteam.org/quick_help.html|اعرض على الشبكة العنكبوتية]]"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[file:index.html|Manual]] - if not installed locally, [[http://manual."
+" [[file:index.html|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
 " [[file:index.html|الكُتيبْ]] - إذا لم يكن مُنزلاً محلياً، [[http://manual."
 "audacityteam.org/|اعرض على الشبكة العنكبوتية]]"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, "
+" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
 " [[http://forum.audacityteam.org/|المنتدى]] - اسأل سؤالك مباشرة، على الشبكة "
 "العنكبوتية."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for "
+"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
 "المزيد:<b> زر [[http://wiki.audacityteam.org/index.php|ويكينا]] للمزيد من "
 "النصائح، الخدع، المزيد من الدروس و البرامج المساعدة المُؤثرة."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "Audacity can import unprotected files in many other formats (such as M4A and "
 "WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[http://manual.audacityteam."
-"org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your "
-"computer."
+"files) if you download and install the optional [[https://manual."
+"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
+"library]] to your computer."
 msgstr ""
 "يستطيع جرأة استيراد الملفات الغير محمية في الكثير من الصيغ الأخرى (مثل M4A و "
 "WMA، ملفات WAV المضغوطة من المسجلات المتنقلة و الصوت من ملفات الڤيديو) إذا "
@@ -2430,9 +2556,10 @@ msgstr ""
 "حاسوبك."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"You can also read our help on importing [[http://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#midi|MIDI files]] and tracks from [[http://"
+"You can also read our help on importing [[https://manual.audacityteam.org/"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -2452,9 +2579,10 @@ msgstr ""
 "الواجهة إلى \"من الإنترنت\"."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[http://manual.audacityteam.org/man/unzipping_the_manual.html| "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
 "download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
@@ -2526,6 +2654,10 @@ msgstr ""
 "خطأ داخلي عند %s سطر %d.\n"
 "من فضلك أخبر فريق جرأة عند /https://forum.audacityteam.org."
 
+#: src/InconsistencyException.h
+msgid "Internal Error"
+msgstr "خطأ داخلي"
+
 #: src/Internat.cpp
 msgid "Unable to determine"
 msgstr "غير قادر على تحديد"
@@ -2563,22 +2695,6 @@ msgstr "عين اسم-ملف جديد:"
 msgid "Edit Labels"
 msgstr "حرر العلامات"
 
-#: src/LabelDialog.cpp
-msgid "Press F2 or double click to edit cell contents."
-msgstr "اضغط على F2 أو انقر مرتين لتحرير محتويات الخلية."
-
-#: src/LabelDialog.cpp
-msgid "Insert &After"
-msgstr "أدخل بعد"
-
-#: src/LabelDialog.cpp
-msgid "Insert &Before"
-msgstr "أدخل قبل"
-
-#: src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "&Import..."
-msgstr "استورد..."
-
 #. i18n-hint: (noun).  A track contains waves, audio etc.
 #: src/LabelDialog.cpp
 msgid "Track"
@@ -2600,18 +2716,22 @@ msgid "End Time"
 msgstr "وقت النهاية"
 
 #. i18n-hint: (noun) of a label
-#: src/LabelDialog.cpp
+#: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Low Frequency"
 msgstr "تردد منخفض"
 
 #. i18n-hint: (noun) of a label
-#: src/LabelDialog.cpp
+#: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "High Frequency"
 msgstr "تردد مرتفع"
 
 #: src/LabelDialog.cpp
 msgid "New..."
 msgstr "جديد..."
+
+#: src/LabelDialog.cpp
+msgid "Press F2 or double click to edit cell contents."
+msgstr "اضغط على F2 أو انقر مرتين لتحرير محتويات الخلية."
 
 #: src/LabelDialog.cpp src/Menus.cpp
 msgid "Select a text file containing labels"
@@ -2645,8 +2765,8 @@ msgstr "أدخل اسم المقطع"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/TrackPanelAx.cpp
-#: src/LabelDialog.h
+#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
+#: src/TrackPanelAx.cpp
 msgid "Label Track"
 msgstr "مقطع علامة"
 
@@ -2680,10 +2800,6 @@ msgstr "لصق"
 #: src/LabelTrack.cpp
 msgid "&Delete Label"
 msgstr "احذف العلامة"
-
-#: src/LabelTrack.cpp
-msgid "&Edit..."
-msgstr "حرر..."
 
 #: src/LabelTrack.cpp
 msgid "Deleted Label"
@@ -2739,12 +2855,26 @@ msgid "Uncategorized"
 msgstr "غير مصنف"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "&Reset..."
+msgstr "أعد بدأ..."
+
+#: src/Menus.cpp
 msgid "&Save Project"
 msgstr "احفظ المشروع"
 
 #: src/Menus.cpp
 msgid "Save Project &As..."
 msgstr "احفظ المشروع كـ..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "احفظ نسخة مضغوطة من المشروع..."
+
+#: src/Menus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "احفظ نسخة مضغوطة من المشروع..."
 
 #: src/Menus.cpp
 msgid "&Export"
@@ -2782,10 +2912,6 @@ msgstr "صدر عدة..."
 msgid "Export MI&DI..."
 msgstr "صدر MIDI..."
 
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "احفظ نسخة مضغوطة من المشروع..."
-
 #: src/Menus.cpp src/import/ImportRaw.cpp
 msgid "&Import"
 msgstr "استورد"
@@ -2805,18 +2931,6 @@ msgstr "MIDI..."
 #: src/Menus.cpp
 msgid "&Raw Data..."
 msgstr "بيانات خام..."
-
-#: src/Menus.cpp
-msgid "C&hains"
-msgstr "السلاسل"
-
-#: src/Menus.cpp
-msgid "Appl&y Chain..."
-msgstr "طبق سلسلة..."
-
-#: src/Menus.cpp
-msgid "Edit C&hains..."
-msgstr "حرر السلاسل..."
 
 #: src/Menus.cpp
 msgid "Pa&ge Setup..."
@@ -2908,11 +3022,13 @@ msgid "&Edit Labels..."
 msgstr "حرر العلامات..."
 
 #: src/Menus.cpp
-msgid "Add Label At &Selection"
+#, fuzzy
+msgid "Add Label at &Selection"
 msgstr "أضف علامة عند الاختيار"
 
 #: src/Menus.cpp
-msgid "Add Label At &Playback Position"
+#, fuzzy
+msgid "Add Label at &Playback Position"
 msgstr "أضف علامة عند موضع التشغيل"
 
 #: src/Menus.cpp
@@ -2929,17 +3045,42 @@ msgstr "الصوت المُعلمْ"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "تحرير علامة"
+
+#: src/Menus.cpp
 msgid "&Cut"
 msgstr "قص"
 
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "قسم و احذف"
+
 #. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "قسم و قص"
+
 #: src/Menus.cpp
 msgid "&Split Cut"
 msgstr "فلق قطع"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "قسم و احذف"
+
+#: src/Menus.cpp
 msgid "Sp&lit Delete"
 msgstr "فلق حذف"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "سكون"
 
 #: src/Menus.cpp
 msgid "Silence &Audio"
@@ -2947,13 +3088,29 @@ msgstr "أصمت الصوت"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "علامة"
+
+#: src/Menus.cpp
 msgid "Co&py"
 msgstr "انسخ"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "تحرير علامة"
+
+#: src/Menus.cpp
 msgid "Spli&t"
 msgstr "افلق"
+
+#. i18n-hint: (verb)
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "تحرير علامة"
 
 #: src/Menus.cpp
 msgid "Me&tadata..."
@@ -2974,6 +3131,11 @@ msgid "&All"
 msgstr "الجميع"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "اختيار"
+
+#: src/Menus.cpp
 msgid "&None"
 msgstr "لا شيء"
 
@@ -2986,6 +3148,11 @@ msgid "In All &Tracks"
 msgstr "في جميع المقاطع"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Sync-Locked"
+msgstr "اختيار-الصوت"
+
+#: src/Menus.cpp
 msgid "In All &Sync-Locked Tracks"
 msgstr "في جميع المقاطع المقفولة تزامنياً"
 
@@ -2994,20 +3161,50 @@ msgid "R&egion"
 msgstr "منطقة"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "حدد نقطة الاختيار و القراءة"
+
+#: src/Menus.cpp
 msgid "&Left at Playback Position"
 msgstr "يسار عند موضع التشغيل"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "حدد نقطة الاختيار و القراءة"
 
 #: src/Menus.cpp
 msgid "&Right at Playback Position"
 msgstr "يمين عند موضع التشغيل"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "بداية المقطع إلى المؤشر"
+
+#: src/Menus.cpp
 msgid "Track &Start to Cursor"
 msgstr "بداية المقطع إلى المؤشر"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "المؤشر إلى نهاية المقطع"
+
+#: src/Menus.cpp
 msgid "Cursor to Track &End"
 msgstr "المؤشر إلى نهاية المقطع"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "الاختيار إلى النهاية"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "بداية المقطع إلى المؤشر"
 
 #: src/Menus.cpp
 msgid "S&tore Selection"
@@ -3022,7 +3219,8 @@ msgid "S&pectral"
 msgstr "طيفي"
 
 #: src/Menus.cpp
-msgid "To&ggle spectral selection"
+#, fuzzy
+msgid "To&ggle Spectral Selection"
 msgstr "فعّل الاختيار الطيفي"
 
 #: src/Menus.cpp
@@ -3042,12 +3240,27 @@ msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "المؤشر إلى حد المقطع الضمني التالي"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "المقطع الضمني السابق"
+
+#: src/Menus.cpp
 msgid "Previo&us Clip"
 msgstr "المقطع الضمني السابق"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "المقطع الضمني التالي"
+
+#: src/Menus.cpp
 msgid "N&ext Clip"
 msgstr "المقطع الضمني التالي"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "الاختيار إلى البداية"
 
 #: src/Menus.cpp
 msgid "Cursor to Stored &Cursor Position"
@@ -3056,6 +3269,11 @@ msgstr "المؤشر إلى موقع-المؤشر المحفوظ"
 #: src/Menus.cpp
 msgid "Store Cursor Pos&ition"
 msgstr "احفظ موقع المؤشر"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "عند التقاطعات مع الصفر"
 
 #: src/Menus.cpp
 msgid "At &Zero Crossings"
@@ -3116,8 +3334,18 @@ msgid "Sk&ip to"
 msgstr "تخطى إلى"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "إلى بداية الاختيار"
+
+#: src/Menus.cpp
 msgid "Selection Sta&rt"
 msgstr "بداية الاختيار"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "إلى نهاية الاختيار"
 
 #: src/Menus.cpp
 msgid "Selection En&d"
@@ -3166,7 +3394,7 @@ msgid "&Playback Meter Toolbar"
 msgstr "شريط أدوات مقياس التشغيل"
 
 #. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), _("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #. i18n-hint: Clicking this menu item shows the toolbar with the mixer
 #: src/Menus.cpp
 msgid "Mi&xer Toolbar"
@@ -3179,8 +3407,9 @@ msgstr "شريط أدوات التحرير"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
 #: src/Menus.cpp
-msgid "Tra&nscription Toolbar"
-msgstr "شريط أدوات سرعة التشغيل"
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "شغل-في-سرعة"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
 #: src/Menus.cpp
@@ -3210,16 +3439,21 @@ msgstr "قوائم إضافية (جار/متوقف)"
 msgid "&Show Clipping (on/off)"
 msgstr "أظهر القطع (جار/متوقف)"
 
+#: src/Menus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "أظهر منصب التأثيرات"
+
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: src/Menus.cpp
-msgid "T&ransport"
-msgstr "تنقل"
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "النقل"
 
-#. i18n-hint: (verb) Start playing audio
 #: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "شغل"
+#, fuzzy
+msgid "Pl&aying"
+msgstr "أشغل"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/Menus.cpp
@@ -3237,6 +3471,11 @@ msgstr "تشغيل حلقي"
 #: src/Menus.cpp
 msgid "&Pause"
 msgstr "إيقاف"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "التسجيل"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -3256,32 +3495,76 @@ msgid "&Timer Record..."
 msgstr "تسجيل المؤقت..."
 
 #: src/Menus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "&Cursor to"
 msgstr "المؤشر إلى"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "اذهب إلى بداية الاختيار"
 
 #: src/Menus.cpp
 msgid "Selection Star&t"
 msgstr "بداية الاختيار"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "اذهب على نهاية الاختيار"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "المؤشر إلى نهاية المقطع"
+
+#: src/Menus.cpp
 msgid "Track &Start"
 msgstr "بداية المقطع"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "المؤشر إلى نهاية المقطع"
 
 #: src/Menus.cpp
 msgid "Track &End"
 msgstr "نهاية المقطع"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "المؤشر إلى حد المقطع الضمني التالي"
+
+#: src/Menus.cpp
 msgid "Pre&vious Clip Boundary"
 msgstr "حد المقطع الضمني السابق"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "المؤشر إلى حد المقطع الضمني التالي"
 
 #: src/Menus.cpp
 msgid "Ne&xt Clip Boundary"
 msgstr "حد المقطع الضمني التالي"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "بداية المشروع"
+
+#: src/Menus.cpp
 msgid "&Project Start"
 msgstr "بداية المشروع"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "المؤشر إلى نهاية المقطع"
 
 #: src/Menus.cpp
 msgid "Project E&nd"
@@ -3356,7 +3639,8 @@ msgid "Mi&x"
 msgstr "امزج"
 
 #: src/Menus.cpp
-msgid "Mix Stereo down to &Mono"
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
 msgstr "امزج الثنائي إلى أحادي"
 
 #: src/Menus.cpp
@@ -3392,12 +3676,27 @@ msgid "&Pan"
 msgstr "التوزيع"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "يسار"
+
+#: src/Menus.cpp
 msgid "&Left"
 msgstr "يسار"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "يمين"
+
+#: src/Menus.cpp
 msgid "&Right"
 msgstr "يمين"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "مركز"
 
 #: src/Menus.cpp
 msgid "&Center"
@@ -3452,11 +3751,21 @@ msgid "S&ort Tracks"
 msgstr "رتب المقاطع"
 
 #: src/Menus.cpp
-msgid "by &Start time"
+msgid "Sort by Time"
+msgstr "رتب حسب الوقت"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "By &Start Time"
 msgstr "حسب وقت البداية"
 
 #: src/Menus.cpp
-msgid "by &Name"
+msgid "Sort by Name"
+msgstr "رتب حسب الاسم"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "By &Name"
 msgstr "حسب الاسم"
 
 #: src/Menus.cpp
@@ -3499,6 +3808,42 @@ msgid "Plot Spectrum..."
 msgstr "ارسم منحنى الطيف..."
 
 #: src/Menus.cpp
+msgid "T&ools"
+msgstr "الأدوات"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "علامات..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "طبق"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Palette..."
+msgstr "احذف..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "أدوات تصوير الشاشة..."
+
+#: src/Menus.cpp
+msgid "&Run Benchmark..."
+msgstr "شغل الصُوَّة..."
+
+#: src/Menus.cpp
+msgid "Simulate Recording Errors"
+msgstr "حاك أخطاء تسجيل"
+
+#: src/Menus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "اكتشف الانقطاعات المؤقتة ضد التيار"
+
+#: src/Menus.cpp
 msgid "&Window"
 msgstr "نافذة"
 
@@ -3512,74 +3857,19 @@ msgstr "صغر"
 msgid "&Bring All to Front"
 msgstr "أحضر الجميع إلى الأمام"
 
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "مساعدة"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "أتهيأ للبدأ"
-
-#: src/Menus.cpp
-msgid "&Quick Help"
-msgstr "المساعدة السريعة"
-
-#: src/Menus.cpp
-msgid "&Manual"
-msgstr "الكتيب"
-
-#: src/Menus.cpp
-msgid "&Tools"
-msgstr "الأدوات"
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "حاك أخطاء تسجيل"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "اكتشف الانقطاعات المؤقتة ضد التيار"
-
-#: src/Menus.cpp
-msgid "&Screenshot Tools..."
-msgstr "أدوات تصوير الشاشة..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "شغل الصُوَّة..."
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "التشخيصات"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "معلومات جهاز الصوت..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "معلومات جهاز MIDI..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "أظهر السجل..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "ولد معلومات الدعم..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "تحقق من التبعيات..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "تحقق من وجود تحديثات..."
-
 #. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
-msgid "E&xtra"
-msgstr "إضافي"
+msgid "Ext&ra"
+msgstr ""
+
+#: src/Menus.cpp
+msgid "T&ransport"
+msgstr "تنقل"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/Menus.cpp
+msgid "Pl&ay"
+msgstr "شغل"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/Menus.cpp
@@ -3591,7 +3881,8 @@ msgid "Play &One Second"
 msgstr "شغل ثانية واحدة"
 
 #: src/Menus.cpp
-msgid "Play To &Selection"
+#, fuzzy
+msgid "Play to &Selection"
 msgstr "شغل حتى الاختيار"
 
 #: src/Menus.cpp
@@ -3621,10 +3912,6 @@ msgstr "شغل قبل وبعد نهاية الاختيار"
 #: src/Menus.cpp
 msgid "Play C&ut Preview"
 msgstr "شغل عرض القص المسبق"
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "الأدوات"
 
 #: src/Menus.cpp
 msgid "&Selection Tool"
@@ -3663,43 +3950,53 @@ msgid "Mi&xer"
 msgstr "المازج"
 
 #: src/Menus.cpp
-msgid "Ad&just playback volume"
+#, fuzzy
+msgid "Ad&just Playback Volume..."
 msgstr "اضبط حجم التشغيل"
 
 #: src/Menus.cpp
-msgid "&Increase playback volume"
+#, fuzzy
+msgid "&Increase Playback Volume"
 msgstr "زد حجم التشغيل"
 
 #: src/Menus.cpp
-msgid "&Decrease playback volume"
+#, fuzzy
+msgid "&Decrease Playback Volume"
 msgstr "أنقص حجم التشغيل"
 
 #: src/Menus.cpp
-msgid "Adj&ust recording volume"
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
 msgstr "اضبط حجم التسجيل"
 
 #: src/Menus.cpp
-msgid "I&ncrease recording volume"
+#, fuzzy
+msgid "I&ncrease Recording Volume"
 msgstr "زد حجم التسجيل"
 
 #: src/Menus.cpp
-msgid "D&ecrease recording volume"
+#, fuzzy
+msgid "D&ecrease Recording Volume"
 msgstr "أنقص حجم التسجيل"
 
 #: src/Menus.cpp
-msgid "&DeleteKey"
+#, fuzzy
+msgid "&Delete Key"
 msgstr "زر الحذف"
 
 #: src/Menus.cpp
-msgid "DeleteKey&2"
+#, fuzzy
+msgid "Delete Key&2"
 msgstr "زر الحذف 2"
 
 #: src/Menus.cpp
-msgid "Transcri&ption"
-msgstr "الترجمة (التمثيل برموز صوتية)"
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "شغل-في-سرعة"
 
 #: src/Menus.cpp
-msgid "Pl&ay-at-Speed"
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
 msgstr "شغل-في-سرعة"
 
 #: src/Menus.cpp
@@ -3711,15 +4008,18 @@ msgid "Play C&ut Preview-at-Speed"
 msgstr "شغل عرض القص المسبق في سرعة"
 
 #: src/Menus.cpp
-msgid "Ad&just playback speed"
+#, fuzzy
+msgid "Ad&just Playback Speed..."
 msgstr "اضبط سرعة التشغيل"
 
 #: src/Menus.cpp
-msgid "&Increase playback speed"
+#, fuzzy
+msgid "&Increase Playback Speed"
 msgstr "زد سرعة التشغيل"
 
 #: src/Menus.cpp
-msgid "&Decrease playback speed"
+#, fuzzy
+msgid "&Decrease Playback Speed"
 msgstr "أنقص سرعة التشغيل"
 
 #: src/Menus.cpp
@@ -3735,19 +4035,23 @@ msgid "See&k"
 msgstr "اقصد"
 
 #: src/Menus.cpp
-msgid "Short seek &left during playback"
+#, fuzzy
+msgid "Short Seek &Left During Playback"
 msgstr "قصد قصير إلى اليسار أثناء التشغيل"
 
 #: src/Menus.cpp
-msgid "Short seek &right during playback"
+#, fuzzy
+msgid "Short Seek &Right During Playback"
 msgstr "قصد قصير إلى اليمين أثناء التشغيل"
 
 #: src/Menus.cpp
-msgid "Long seek le&ft during playback"
+#, fuzzy
+msgid "Long Seek Le&ft During Playback"
 msgstr "قصد طويل إلى اليسار أثناء التشغيل"
 
 #: src/Menus.cpp
-msgid "Long Seek rig&ht during playback"
+#, fuzzy
+msgid "Long Seek Rig&ht During Playback"
 msgstr "قصد طويل إلى اليمين أثناء التشغيل"
 
 #: src/Menus.cpp
@@ -3755,19 +4059,23 @@ msgid "De&vice"
 msgstr "جهاز"
 
 #: src/Menus.cpp
-msgid "Change &recording device"
+#, fuzzy
+msgid "Change &Recording Device..."
 msgstr "غير جهاز التسجيل"
 
 #: src/Menus.cpp
-msgid "Change &playback device"
+#, fuzzy
+msgid "Change &Playback Device..."
 msgstr "غير جهاز التشغيل"
 
 #: src/Menus.cpp
-msgid "Change audio &host"
+#, fuzzy
+msgid "Change Audio &Host..."
 msgstr "غير مضيف الصوت"
 
 #: src/Menus.cpp
-msgid "Change recording cha&nnels"
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
 msgstr "غير قنوات التسجيل"
 
 #: src/Menus.cpp
@@ -3775,15 +4083,18 @@ msgid "&Selection"
 msgstr "الاختيار"
 
 #: src/Menus.cpp
-msgid "Snap To &Off"
+#, fuzzy
+msgid "Snap-To &Off"
 msgstr "الحصر معطل"
 
 #: src/Menus.cpp
-msgid "Snap To &Nearest"
+#, fuzzy
+msgid "Snap-To &Nearest"
 msgstr "احصر إلى الأقرب"
 
 #: src/Menus.cpp
-msgid "Snap To &Prior"
+#, fuzzy
+msgid "Snap-To &Prior"
 msgstr "احصر إلى السابق"
 
 #: src/Menus.cpp
@@ -3819,11 +4130,13 @@ msgid "Selection Contract R&ight"
 msgstr "تقلص الاختيار من اليمين"
 
 #: src/Menus.cpp
-msgid "Move backward thru active windows"
+#, fuzzy
+msgid "Move Backward Through Active Windows"
 msgstr "تحرك إلى الوراء عير النوافذ النشطة"
 
 #: src/Menus.cpp
-msgid "Move forward thru active windows"
+#, fuzzy
+msgid "Move Forward Through Active Windows"
 msgstr "تحرك إلى الأمام عير النوافذ النشطة"
 
 #: src/Menus.cpp
@@ -3831,11 +4144,13 @@ msgid "F&ocus"
 msgstr "ركز"
 
 #: src/Menus.cpp
-msgid "Move &backward from toolbars to tracks"
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
 msgstr "تحرك إلى الوراء من أشرطة الأدوات إلى المقاطع"
 
 #: src/Menus.cpp
-msgid "Move f&orward from toolbars to tracks"
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
 msgstr "تحرك إلى الأمام من أشرطة الأدوات إلى المقاطع"
 
 #: src/Menus.cpp
@@ -3911,77 +4226,262 @@ msgid "&Track"
 msgstr "مقطع"
 
 #: src/Menus.cpp
-msgid "Change p&an on focused track"
+#, fuzzy
+msgid "Change P&an on Focused Track..."
 msgstr "غير التوزيع على المقطع المركز"
 
 #: src/Menus.cpp
-msgid "Pan &left on focused track"
+#, fuzzy
+msgid "Pan &Left on Focused Track"
 msgstr "وزع يساراً على المقطع المركز"
 
 #: src/Menus.cpp
-msgid "Pan &right on focused track"
+#, fuzzy
+msgid "Pan &Right on Focused Track"
 msgstr "وزع يميناً على المقطع المركز"
 
 #: src/Menus.cpp
-msgid "Change gai&n on focused track"
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
 msgstr "غير الزيادة على المقطع المركز"
 
 #: src/Menus.cpp
-msgid "&Increase gain on focused track"
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
 msgstr "ارفع الزيادة على المقطع المركز"
 
 #: src/Menus.cpp
-msgid "&Decrease gain on focused track"
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
 msgstr "أنقص الزيادة على المقطع المركز"
 
 #: src/Menus.cpp
-msgid "Op&en menu on focused track"
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
 msgstr "افتح قائمة على المقطع المركز"
 
 #: src/Menus.cpp
-msgid "M&ute/Unmute focused track"
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
 msgstr "أصمت/ألغ إصمات المقطع المركز"
 
 #: src/Menus.cpp
-msgid "&Solo/Unsolo focused track"
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
 msgstr "أفرد/ألغي إفراد المقطع المركز"
 
 #: src/Menus.cpp
-msgid "&Close focused track"
+#, fuzzy
+msgid "&Close Focused Track"
 msgstr "أغلق المقطع المركز"
 
 #: src/Menus.cpp
-msgid "Move focused track u&p"
+#, fuzzy
+msgid "Move Focused Track U&p"
 msgstr "حرك المقطع المركز إلى أعلى"
 
 #: src/Menus.cpp
-msgid "Move focused track do&wn"
+#, fuzzy
+msgid "Move Focused Track Do&wn"
 msgstr "حرك المقطع المركز إلى أسفل"
 
 #: src/Menus.cpp
-msgid "Move focused track to t&op"
+#, fuzzy
+msgid "Move Focused Track to T&op"
 msgstr "حرك المقطع المركز إلى القمة"
 
 #: src/Menus.cpp
-msgid "Move focused track to &bottom"
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
 msgstr "حرك المقطع المركز إلى القاع"
 
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/Menus.cpp
-msgid "&Full screen (on/off)"
+#, fuzzy
+msgid "&Scriptables I"
+msgstr "نص"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "اختر..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "ترددات"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "اختر..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "بداية المقطع"
+
+#: src/Menus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/Menus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "تفضيلات..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "تفضيلات..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "المقطع الضمني التالي"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "غلاف"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "حرر العلامات..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "احفظ المشروع كـ..."
+
+#: src/Menus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/Menus.cpp src/TimerRecordDialog.cpp
+msgid "Select..."
+msgstr "اختر..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "رتب المقاطع"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "احصل على المزيد..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "رسالة"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "مساعدة"
+
+#: src/Menus.cpp src/effects/Effect.cpp
+msgid "Import..."
+msgstr "استورد..."
+
+#: src/Menus.cpp src/effects/Effect.cpp
+msgid "Export..."
+msgstr "صدر..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "فتح ملف حديث..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "احفظ المشروع كـ..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "احصل على المزيد..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "الضاغط..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/Menus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "أدوات تصوير الشاشة..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
 msgstr "شاشة كاملة (جار/متوقف)"
 
 #. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
-msgid "Minimize all projects"
+#, fuzzy
+msgid "Minimize All Projects"
 msgstr "صغر جميع المشاريع"
 
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "تذكرة Nyquist"
+#: src/Menus.cpp src/effects/Contrast.cpp
+msgid "&Help"
+msgstr "مساعدة"
+
+#: src/Menus.cpp
+msgid "&Getting Started"
+msgstr "أتهيأ للبدأ"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "جرأة"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "المساعدة السريعة"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Manual..."
+msgstr "الكتيب"
+
+#: src/Menus.cpp
+msgid "&Diagnostics"
+msgstr "التشخيصات"
+
+#: src/Menus.cpp
+msgid "Au&dio Device Info..."
+msgstr "معلومات جهاز الصوت..."
+
+#: src/Menus.cpp
+msgid "&MIDI Device Info..."
+msgstr "معلومات جهاز MIDI..."
+
+#: src/Menus.cpp
+msgid "Show &Log..."
+msgstr "أظهر السجل..."
+
+#: src/Menus.cpp
+msgid "&Generate Support Data..."
+msgstr "ولد معلومات الدعم..."
+
+#: src/Menus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "تحقق من التبعيات..."
+
+#: src/Menus.cpp
+msgid "&Check for Updates..."
+msgstr "تحقق من وجود تحديثات..."
 
 #: src/Menus.cpp
 msgid "Unknown"
@@ -4017,16 +4517,8 @@ msgid "Tracks sorted by time"
 msgstr "المقاطع المرتبة حسب الوقت"
 
 #: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "رتب حسب الوقت"
-
-#: src/Menus.cpp
 msgid "Tracks sorted by name"
 msgstr "المقاطع المرتبة حسب الاسم"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "رتب حسب الاسم"
 
 #: src/Menus.cpp
 msgid "no label track"
@@ -4696,6 +5188,38 @@ msgstr ""
 "\n"
 "من فضلك احفظ أو أغلق هذا المشروع و حاول مرة ثانية."
 
+#: src/Menus.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "الاسم"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "New label"
+msgstr "العلامة المضافة"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "من فضلك اختر مقطعاً صوتياً."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "من فضلك اختر مقطعاً صوتياً."
+
+#: src/Menus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "من فضلك اختر مقطعاً صوتياً."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "من فضلك اختر مقطع علامات."
+
 #: src/Menus.cpp
 msgid "Edited labels"
 msgstr "العلامات المحررة"
@@ -4735,6 +5259,17 @@ msgstr "احفظ معلومات جهاز MIDI"
 #: src/Menus.cpp
 msgid "Unable to save MIDI device info"
 msgstr "غير قادر على حفظ معلومات جهاز MIDI"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/Menus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "أعدت أخذ عينات مقاطع الصوت"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "مقطع"
 
 #: src/Menus.cpp
 msgid ""
@@ -4800,13 +5335,13 @@ msgid "Pan"
 msgstr "التوزيع"
 
 #. i18n-hint: This is on a button that will silence this track.
-#: src/MixerBoard.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 msgid "Mute"
 msgstr "أصمت"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
-#: src/MixerBoard.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 msgid "Solo"
 msgstr "أفرد"
@@ -5019,8 +5554,9 @@ msgid "A♯/B♭"
 msgstr "لا♯/سي♭"
 
 #: src/PluginManager.cpp
-msgid "Plug-in Manager: Effects, Generators and Analyzers"
-msgstr "مدير البرامج المساعدة: تأثيرات، مولدات و محللات"
+#, fuzzy
+msgid "Manage Plug-ins"
+msgstr "مكن موصلات جديدة"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -5087,9 +5623,9 @@ msgid "&Disable"
 msgstr "ألغ تمكين"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Enabling effects:\n"
+"Enabling effects or commands:\n"
 "\n"
 "%s"
 msgstr ""
@@ -5098,9 +5634,9 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Enabling effect:\n"
+"Enabling effect or command:\n"
 "\n"
 "%s"
 msgstr ""
@@ -5109,21 +5645,17 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Effect at %s failed to register:\n"
+"Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
 "أخفق التأثير عند %s في التدوين:\n"
 "%s"
 
-#: src/PluginManager.cpp src/effects/Effect.cpp
-msgid "Built-in"
-msgstr "مبني داخليا"
-
 #: src/PluginManager.cpp
-#, c-format
-msgid "Overwrite the plug-in file %s ?"
+#, fuzzy, c-format
+msgid "Overwrite the plug-in file %s?"
 msgstr "اكتب على الملف الموصل %s؟"
 
 #: src/PluginManager.cpp
@@ -5242,7 +5774,7 @@ msgstr ""
 "ألغ، حرر > تراجع إلى أن تكون جميع المقاطع\n"
 "مفتوحة، ثم ملف > احفظ مشروع."
 
-#: src/Project.cpp
+#: src/Project.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "اختر واحداً أو أكثر من الملفات"
 
@@ -5457,15 +5989,43 @@ msgstr ""
 "من فضلك حاول من جديد و اختر اسماً جديداً."
 
 #: src/Project.cpp
+#, fuzzy, c-format
+msgid "%sSave Lossless Copy of Project \"%s\" As..."
+msgstr "%sاحفظ المشروع المضغوط \"%s\" كـ..."
+
+#: src/Project.cpp
+#, fuzzy
 msgid ""
-"'Save Compressed Project' is for an Audacity project, not an audio file.\n"
+"'Save Lossless Copy of Project' is for an Audacity project, not an audio "
+"file.\n"
+"For an audio file that will open in other apps, use 'Export'.\n"
+"\n"
+"Lossless copies of project are a good way to backup your project, \n"
+"with no loss of quality, but the projects are large.\n"
+msgstr ""
+"'احفظ المشروع مضغوطاً' هي لمشروع جرأة، ليست لملف صوت.\n"
+"لملف صوت قابل للفتح في تطبيقات أخرى، استخدم 'استورد'.\n"
+"\n"
+"ملفات المشروع المضغوطة وسيلة جيدة لتنقل مشروعك على الشبكة،\n"
+"لكن لديهم  بعض النقص في الدقة.\n"
+"\n"
+"فتح مشروع مضغوط يأخذ فترة أطول من المعتاد، لأنه يستورد\n"
+"كل مقطع مضغوط.\n"
+
+#: src/Project.cpp
+#, fuzzy, c-format
+msgid "%sSave Compressed Copy of Project \"%s\" As..."
+msgstr "%sاحفظ المشروع المضغوط \"%s\" كـ..."
+
+#: src/Project.cpp
+#, fuzzy
+msgid ""
+"'Save Compressed Copy of Project' is for an Audacity project, not an audio "
+"file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 "\n"
 "Compressed project files are a good way to transmit your project online, \n"
 "but they have some loss of fidelity.\n"
-"\n"
-"To open a compressed project takes longer than usual, as it imports \n"
-"each compressed track.\n"
 msgstr ""
 "'احفظ المشروع مضغوطاً' هي لمشروع جرأة، ليست لملف صوت.\n"
 "لملف صوت قابل للفتح في تطبيقات أخرى، استخدم 'استورد'.\n"
@@ -5478,8 +6038,8 @@ msgstr ""
 
 #: src/Project.cpp
 #, c-format
-msgid "%sSave Compressed Project \"%s\" As..."
-msgstr "%sاحفظ المشروع المضغوط \"%s\" كـ..."
+msgid "%sSave Project \"%s\" As..."
+msgstr "%sاحفظ المشروع \"%s\" كـ..."
 
 #: src/Project.cpp
 msgid ""
@@ -5490,9 +6050,47 @@ msgstr ""
 "لملف صوت قابل للفتح في تطبيقات أخرى، استخدم 'استورد'.\n"
 
 #: src/Project.cpp
+#, fuzzy
+msgid ""
+"Saving a copy must not overwrite an existing saved project.\n"
+"Please try again and select an original name."
+msgstr ""
+"لم يحفظ المشروع لأن اسم الملف المزود يستطيع أن بكتب على مشروع آخر.\n"
+"من فضلك حاول من جديد و اختر اسماً جديداً."
+
+#: src/Project.cpp
+#, fuzzy
+msgid "Error Saving Copy of Project"
+msgstr "خطأ في حفظ المشروع"
+
+#. i18n-hint: In each case, %s is the name
+#. of the file being overwritten.
+#: src/Project.cpp
 #, c-format
-msgid "%sSave Project \"%s\" As..."
-msgstr "%sاحفظ المشروع \"%s\" كـ..."
+msgid ""
+"Do you want to overwrite the project:\n"
+"\"%s\"?\n"
+"\n"
+"If you select \"Yes\" the project\n"
+"\"%s\"\n"
+"will be irreversibly overwritten."
+msgstr ""
+
+#. i18n-hint: Heading: A warning that a project is about to be overwritten.
+#: src/Project.cpp
+#, fuzzy
+msgid "Overwrite Project Warning"
+msgstr "اكتب على الملفات الموجودة"
+
+#: src/Project.cpp
+#, fuzzy
+msgid ""
+"The project will not saved because the selected project is open in another "
+"window.\n"
+"Please try again and select an original name."
+msgstr ""
+"لم يحفظ المشروع لأن اسم الملف المزود يستطيع أن بكتب على مشروع آخر.\n"
+"من فضلك حاول من جديد و اختر اسماً جديداً."
 
 #: src/Project.cpp
 msgid "Created new project"
@@ -5656,7 +6254,7 @@ msgid "24-bit PCM"
 msgstr "24-بِت PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp
+#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
 msgid "32-bit float"
 msgstr "32-بِت عائم"
 
@@ -5729,12 +6327,13 @@ msgid "All Toolbars"
 msgstr "جميع أشرطة الأدوات"
 
 #: src/Screenshot.cpp
-msgid "All Menus"
-msgstr "جميع القوائم"
-
-#: src/Screenshot.cpp
 msgid "All Effects"
 msgstr "جميع التأثيرات"
+
+#: src/Screenshot.cpp
+#, fuzzy
+msgid "All Scriptables"
+msgstr "جميع الملفات|*"
 
 #: src/Screenshot.cpp
 msgid "All Preferences"
@@ -5744,50 +6343,61 @@ msgstr "جميع التفضيلات"
 msgid "SelectionBar"
 msgstr "شريط الاختيار"
 
-#: src/Screenshot.cpp src/toolbars/SpectralSelectionBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
 msgstr "الاختيار الطيفي"
 
-#: src/Screenshot.cpp src/toolbars/ToolsToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ToolsToolBar.cpp
 msgid "Tools"
 msgstr "الأدوات"
 
-#: src/Screenshot.cpp src/toolbars/ControlToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Transport"
 msgstr "النقل"
 
-#: src/Screenshot.cpp src/toolbars/MixerToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MixerToolBar.cpp
 msgid "Mixer"
 msgstr "المازج"
 
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr "العداد"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "عداد التشغيل"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
 msgstr "عداد التسجيل"
 
-#: src/Screenshot.cpp src/toolbars/EditToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/EditToolBar.cpp
 msgid "Edit"
 msgstr "حرر"
 
-#: src/Screenshot.cpp src/toolbars/DeviceToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "جهاز"
 
-#: src/Screenshot.cpp src/toolbars/TranscriptionToolBar.cpp
-msgid "Transcription"
-msgstr "الترجمة (التمثيل برموز صوتية)"
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/TranscriptionToolBar.cpp
+msgid "Play-at-Speed"
+msgstr "شغل-في-سرعة"
 
-#: src/Screenshot.cpp src/toolbars/ScrubbingToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub"
 msgstr "افرك"
 
@@ -5795,22 +6405,24 @@ msgstr "افرك"
 msgid "Track Panel"
 msgstr "لوح المقطع"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Ruler"
 msgstr "المسطرة"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
 #. * data associated with a time line, such as sequences of labels, and musical
 #. * notes
-#: src/Screenshot.cpp src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
 msgid "Tracks"
 msgstr "المقاطع"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "First Track"
 msgstr "المقطع الأول"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Second Track"
 msgstr "المقطع الثاني"
 
@@ -5871,7 +6483,8 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "تحذير - أقلم ملف كتلة أطول مما ينبغي"
 
-#: src/ShuttleGui.cpp src/effects/Equalization.cpp src/widgets/ErrorDialog.cpp
+#: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
+#: src/widgets/ErrorDialog.cpp
 msgid "Help"
 msgstr "مساعدة"
 
@@ -5958,6 +6571,14 @@ msgstr "بطاقة"
 #: src/Tags.cpp
 msgid "Value"
 msgstr "قيمة"
+
+#: src/Tags.cpp
+msgid "&Add"
+msgstr "أضف"
+
+#: src/Tags.cpp
+msgid "&Remove"
+msgstr "أزل"
 
 #: src/Tags.cpp
 msgid "Genres"
@@ -6141,6 +6762,19 @@ msgstr ""
 "لم يتمكن جرأة من حفظ الملف:\n"
 "  %s"
 
+#: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
+#: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid "Duration"
+msgstr "الأمد"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Time track.
+#: src/TimeTrack.cpp src/TrackPanelAx.cpp
+msgid "Time Track"
+msgstr "مقطع وقت"
+
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "مسجِل مؤقِت جرأة"
@@ -6220,7 +6854,7 @@ msgstr "بداية التسجيل:"
 
 #: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
 #: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr "المدة:"
 
@@ -6344,13 +6978,6 @@ msgstr "يوم و ساعة النهاية"
 msgid "End Date"
 msgstr "تاريخ النهاية"
 
-#: src/TimerRecordDialog.cpp src/TimeDialog.h src/effects/DtmfGen.cpp
-#: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Duration"
-msgstr "الأمد"
-
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -6376,10 +7003,6 @@ msgid "Save Project As:"
 msgstr "احفظ المشروع كـ:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "اختر..."
-
-#: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
 msgstr "تصدير تلقائي"
 
@@ -6391,7 +7014,8 @@ msgstr "مكن التصدير التلقائي؟"
 msgid "Export Project As:"
 msgstr "صدر المشروع كـ:"
 
-#: src/TimerRecordDialog.cpp src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
+#: src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "اختيارات"
 
@@ -6447,12 +7071,6 @@ msgstr "التسجيل المصدر:"
 msgid "Audacity Timer Record - Waiting"
 msgstr "تسجيل مؤقِت جرأة - ينتظر"
 
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Time track.
-#: src/TimeTrack.cpp src/TrackPanelAx.cpp
-msgid "Time Track"
-msgstr "مقطع وقت"
-
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -6487,30 +7105,46 @@ msgid "TrackView"
 msgstr "منظر المقطع"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track mute is on.
+#. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
-msgid " Mute On"
-msgstr " الإصمات مشغل"
+#, fuzzy
+msgid " Muted"
+msgstr "أصمت"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track solo is on.
+#. this track is soloed. (The Solo button is on.)
 #: src/TrackPanelAx.cpp
-msgid " Solo On"
-msgstr " الإفراد مشغل"
+#, fuzzy
+msgid " Soloed"
+msgstr "أفرد"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: src/TrackPanelAx.cpp
-msgid " Select On"
-msgstr " الاختيار مشغل"
+#, fuzzy
+msgid " Selected"
+msgstr "اختيار"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
 #. The absence of a dash between Sync and Locked is deliberate -
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
-msgid " Sync Lock Selected"
+#, fuzzy
+msgid " Sync Locked"
 msgstr " اقفل المختار تزامنياً"
+
+#: src/TrackPanelAx.cpp
+msgid " Mute On"
+msgstr " الإصمات مشغل"
+
+#: src/TrackPanelAx.cpp
+msgid " Solo On"
+msgstr " الإفراد مشغل"
+
+#: src/TrackPanelAx.cpp
+msgid " Select On"
+msgstr " الاختيار مشغل"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -6565,65 +7199,47 @@ msgstr "ليست هناك ساحة كافية للصق الاختيار"
 msgid "There is not enough room available to expand the cut line"
 msgstr "ليست هناك مساحة كافية لتوسيع خط القطع"
 
-#: src/AudacityException.h src/widgets/ErrorDialog.cpp
-msgid "Message"
-msgstr "رسالة"
-
-#: src/FFmpeg.h
-msgid "FFmpeg not found"
-msgstr "لم يعثر على FFmpeg"
-
-#: src/FFmpeg.h
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"حاول جرأة استخدام FFmpeg ليستورد ملف صوت،\n"
-"لكن لم يعثر على المكتبات.\n"
-"\n"
-"لتستخدم استوراد FFmpeg، اذهب إلى التفضيلات > المكتبات\n"
-"لتُنزلَ أو تحدد موقع مكتبات FFmpeg."
-
-#: src/FFmpeg.h
-msgid "Do not show this warning again"
-msgstr "لا تظهر هذا التحذير مرة أخرى"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"فقط avformat.dll|*avformat*.dll|مكتبات مترابطة ديناميكياً (*.dll)|*.dll|جميع "
-"الملفات|*"
-
-#: src/FFmpeg.h
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "مكتبات ديناميكية (*.dylib)|*.dylib|جميع الملفات (*)|*"
-
-#: src/FFmpeg.h
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"فقط libavformat.so|libavformat*.so*|مكتبات مترابطة ديناميكياً (*.so*)|*.so*|"
-"جميع الملفات (*)|*"
-
-#: src/FileException.h
-msgid "File Error"
-msgstr "خطأ ملف"
-
-#: src/InconsistencyException.h
-msgid "Internal Error"
-msgstr "خطأ داخلي"
-
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "لا بمكن أن تنجز هذه العملية حتى ينتهي استوراد %s."
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#, c-format
+msgid ""
+"%s: Could not load settings below. Default settings will be used.\n"
+"\n"
+"%s"
+msgstr ""
+"%s: لم أتمكن من تحميل الأوضاع أدناه. ستستخدم الأوضاع الأساسية.\n"
+"\n"
+"%s"
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#, c-format
+msgid "Applying %s..."
+msgstr "أطبق %s..."
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/vamp/VampEffect.cpp src/widgets/ASlider.cpp
+#, c-format
+msgid "%s: %s"
+msgstr "%s: %s"
+
+#: src/commands/BatchEvalCommand.cpp
+#, fuzzy
+msgid "Batch Command"
+msgstr "أمر"
+
+#: src/commands/Command.cpp
+#, c-format
+msgid "%s is not a parameter accepted by %s"
+msgstr ""
+
+#: src/commands/Command.cpp
+#, c-format
+msgid "Invalid value for parameter '%s': should be %s"
+msgstr ""
 
 #: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
 #: src/widgets/KeyView.cpp
@@ -6698,6 +7314,12 @@ msgstr ""
 "يجب أولا أن تختار بعض الصوت لتقوم بهذا الفعل.\n"
 "(اختيار نوع آخر من المقاطع لن يعمل.)"
 
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#: src/commands/CommandManager.cpp
+#, c-format
+msgid "\"%s\" requires one or more tracks to be selected."
+msgstr ""
+
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid "Loaded %d keyboard shortcuts\n"
@@ -6707,10 +7329,785 @@ msgstr "حملت %d اختصارات للوحة المفاتيح\n"
 msgid "Loading Keyboard Shortcuts"
 msgstr "احمل اختصارات لوحة المفاتيح"
 
+#: src/commands/CommandTargets.cpp
+#, fuzzy
+msgid "Long Message"
+msgstr "رسالة"
+
+#: src/commands/CompareAudioCommand.cpp src/effects/AutoDuck.cpp
+#: src/effects/Compressor.cpp src/effects/TruncSilence.cpp
+msgid "Threshold:"
+msgstr "العتبة:"
+
+#: src/commands/CompareAudioCommand.h
+#, fuzzy
+msgid "Compare Audio"
+msgstr "انسخ الصوت المُعلّم"
+
+#: src/commands/CompareAudioCommand.h
+#, fuzzy
+msgid "Compares a range on two tracks."
+msgstr "اضغط استناداً إلى القمم"
+
+#: src/commands/Demo.cpp src/effects/Echo.cpp
+msgid "Delay time (seconds):"
+msgstr "وقت التأخير (ثواني):"
+
+#: src/commands/Demo.cpp src/effects/Echo.cpp
+msgid "Decay factor:"
+msgstr "معامل الانحطاط:"
+
+#: src/commands/Demo.h
+msgid "Demo"
+msgstr ""
+
+#: src/commands/Demo.h
+msgid "Does the demo action."
+msgstr ""
+
+#: src/commands/DragCommand.cpp src/widgets/wxPanelWrapper.h
+msgid "Panel"
+msgstr "لوح"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Application"
+msgstr "التكبير dB"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Track 0"
+msgstr "مقطع"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Track 1"
+msgstr "مقطع"
+
+#. i18n-hint abbreviates "Identity" or "Identifier"
+#: src/commands/DragCommand.cpp
+msgid "Id:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Window Name:"
+msgstr "حجم النافذة:"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "From X:"
+msgstr "من دورة في الدقيقة"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "From Y:"
+msgstr "من دورة في الدقيقة"
+
+#: src/commands/DragCommand.cpp
+msgid "To X:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp
+msgid "To Y:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
+msgid "Relative To:"
+msgstr ""
+
+#: src/commands/DragCommand.h
+#, fuzzy
+msgid "Drag"
+msgstr "يسار-سحب"
+
+#: src/commands/DragCommand.h
+msgid "Drags mouse from one place to another."
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Commands"
+msgstr "أمر"
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Menus"
+msgstr "قائمة"
+
+#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Preferences"
+msgstr "التفضيلات: "
+
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Clips"
+msgstr "مقاطع ضمنية"
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Envelopes"
+msgstr "غلاف"
+
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportMultiple.cpp
+msgid "Labels"
+msgstr "علامات"
+
+#: src/commands/GetInfoCommand.cpp
+msgid "Boxes"
+msgstr ""
+
+#. i18n-hint JavaScript Object Notation
+#: src/commands/GetInfoCommand.cpp
+msgid "JSON"
+msgstr ""
+
+#. i18n-hint name of a computer programming language
+#: src/commands/GetInfoCommand.cpp
+msgid "LISP"
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp
+msgid "Brief"
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp src/effects/Effect.cpp
+msgid "Type:"
+msgstr "النوع:"
+
+#: src/commands/GetInfoCommand.cpp src/export/ExportFFmpegDialogs.cpp
+#: src/export/ExportMultiple.cpp
+msgid "Format:"
+msgstr "الصيغة:"
+
+#: src/commands/GetInfoCommand.h
+#, fuzzy
+msgid "Get Info"
+msgstr "معلومة"
+
+#: src/commands/GetInfoCommand.h
+msgid "Gets information in JSON format."
+msgstr ""
+
+#: src/commands/GetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Types:"
+msgstr "النوع:"
+
+#: src/commands/GetTrackInfoCommand.h
+#, fuzzy
+msgid "Get Track Info"
+msgstr "حرك المقطع لأسفل"
+
+#: src/commands/GetTrackInfoCommand.h
+msgid "Gets track values as JSON."
+msgstr ""
+
+#: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
+msgid "Command:"
+msgstr "أمر:"
+
+#: src/commands/HelpCommand.h
+msgid "Gives help on a command."
+msgstr ""
+
+#: src/commands/ImportExportCommands.cpp src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "File Name:"
+msgstr "نوع الملف:"
+
+#: src/commands/ImportExportCommands.cpp
+#, fuzzy
+msgid "Number of Channels:"
+msgstr "عدد التحريرات:"
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Import2"
+msgstr "استيراد"
+
+#: src/commands/ImportExportCommands.h
+msgid "Imports from a file."
+msgstr ""
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Export2"
+msgstr "صدر"
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Exports to a file."
+msgstr "صدر عددة"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Builtin Commands"
+msgstr "أمر الاختيار"
+
+#: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+msgid "The Audacity Team"
+msgstr "فريق جرأة"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Provides builtin commands to Audacity"
+msgstr "يوفر تأثيرات مصيغة-داخلياً إلى جرأة"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Unknown built-in command name"
+msgstr "اسم تأثير مبني-داخلياً مجهول"
+
+#: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
+msgid "Text:"
+msgstr ""
+
+#: src/commands/MessageCommand.h
+#, fuzzy
+msgid "Echos a message."
+msgstr "رسالة المساعدة هذه"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Add to History"
+msgstr "تاريخ التراجع"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Add to History:"
+msgstr "تاريخ التراجع"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Compress:"
+msgstr "اضغط"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Open Project2"
+msgstr "مشروع جديد"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Opens a project."
+msgstr "فتح مشروع  جرأة"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Save Project2"
+msgstr "احفظ المشروع"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Saves a project."
+msgstr "احفظ المشروع"
+
+#: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Value:"
+msgstr "قيمة"
+
+#: src/commands/PreferenceCommands.cpp
+msgid "Reload:"
+msgstr ""
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Get Preference"
+msgstr "استخدم التفضيلات"
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Set Preference"
+msgstr "استخدم التفضيلات"
+
+#: src/commands/PreferenceCommands.h
+msgid "Gets the value of a single preference."
+msgstr ""
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Sets the value of a single preference."
+msgstr "يحدد أعلى مستوى لواحد أو أكثر من المقاطع"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Window"
+msgstr "نافذة"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Full Window"
+msgstr "التقط النافذة كاملة"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Window Plus"
+msgstr "التقط النافذة إضافي"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Fullscreen"
+msgstr "شاشة كاملة (جار/متوقف)"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Toolbars"
+msgstr "أشرطة الأدوات"
+
+#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+msgid "Effects"
+msgstr "التأثيرات"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Scriptables"
+msgstr "نص"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Selectionbar"
+msgstr "شريط الاختيار"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Trackpanel"
+msgstr "لوح المقطع"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Two Tracks"
+msgstr "المقطع الأول"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Three Tracks"
+msgstr "المقطع الأول"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Four Tracks"
+msgstr "المقطع الأول"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Tracks Plus"
+msgstr "لوح المقطع"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Track Plus"
+msgstr "المقطع الأول"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "All Tracks"
+msgstr "مقاطع طويلة"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "All Tracks Plus"
+msgstr "مقاطع طويلة"
+
+#: src/commands/ScreenshotCommand.cpp
+msgid "Blue"
+msgstr ""
+
+#: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
+msgid "White"
+msgstr "أبيض"
+
+#: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
+#: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+msgid "None"
+msgstr "لا شيء"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Path:"
+msgstr "مقطع"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Capture What:"
+msgstr "أخفق الالتقاط!"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Background:"
+msgstr "الخلفية:"
+
+#: src/commands/ScreenshotCommand.cpp
+msgid "Bring To Top:"
+msgstr ""
+
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Error trying to save file: %s"
 msgstr "خطأ في محاولة حفظ الملف: %s"
+
+#: src/commands/ScreenshotCommand.h
+#, fuzzy
+msgid "Screenshot"
+msgstr "أدوات تصوير الشاشة..."
+
+#: src/commands/ScreenshotCommand.h
+msgid "Takes screenshots."
+msgstr ""
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Project Start"
+msgstr "بداية المشروع"
+
+#: src/commands/SelectCommand.cpp src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Project"
+msgstr "المشاريع"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Project End"
+msgstr "نهاية المشروع"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Selection Start"
+msgstr "بداية الاختيار"
+
+#: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
+msgid "Selection"
+msgstr "اختيار"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Selection End"
+msgstr "نهاية الاختيار"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Start Time:"
+msgstr "وقت البداية"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "End Time:"
+msgstr "وقت النهاية"
+
+#: src/commands/SelectCommand.cpp
+msgid "High:"
+msgstr ""
+
+#: src/commands/SelectCommand.cpp
+msgid "Low:"
+msgstr ""
+
+#. i18n-hint verb, imperative
+#: src/commands/SelectCommand.cpp
+msgid "Set"
+msgstr "عَينْ"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Add"
+msgstr "أضف"
+
+#: src/commands/SelectCommand.cpp src/effects/EffectRack.cpp
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
+msgid "Remove"
+msgstr "أزل"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "First Track:"
+msgstr "المقطع الأول"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Track Count:"
+msgstr "كمية الغمر:"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Mode:"
+msgstr "أنماط"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Time"
+msgstr "اختر ملفاً"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Frequencies"
+msgstr "ترددات"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Tracks"
+msgstr "رتب المقاطع"
+
+#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "اختيار"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects a time range."
+msgstr "اختر ملفاً"
+
+#: src/commands/SelectCommand.h
+msgid "Selects a frequency range."
+msgstr ""
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects a range of tracks."
+msgstr "من فضلك اختر مقطعاً صوتياً."
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects Audio."
+msgstr "اختر مضيف الصوت"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 0"
+msgstr "الألوان"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 1"
+msgstr "الألوان"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 2"
+msgstr "الألوان"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 3"
+msgstr "الألوان"
+
+#: src/commands/SetClipCommand.cpp
+msgid "At:"
+msgstr ""
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Colour:"
+msgstr "الألوان"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Start:"
+msgstr "بداية"
+
+#: src/commands/SetClipCommand.h
+#, fuzzy
+msgid "Set Clip"
+msgstr "المقطع الضمني التالي"
+
+#: src/commands/SetClipCommand.h
+msgid "Sets various values for a clip."
+msgstr ""
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Time:"
+msgstr "وقت الخط:"
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Delete:"
+msgstr "حذف"
+
+#: src/commands/SetEnvelopeCommand.h
+#, fuzzy
+msgid "Set Envelope"
+msgstr "غلاف"
+
+#: src/commands/SetEnvelopeCommand.h
+msgid "Sets an envelope point position."
+msgstr ""
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Label Index"
+msgstr "تحرير علامة"
+
+#: src/commands/SetLabelCommand.cpp
+msgid "End:"
+msgstr ""
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Selected:"
+msgstr "اختيار"
+
+#: src/commands/SetLabelCommand.h
+#, fuzzy
+msgid "Set Label"
+msgstr "تقسيم العلامات"
+
+#: src/commands/SetLabelCommand.h
+msgid "Sets various values for a label."
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Resize:"
+msgstr "الفضالة"
+
+#: src/commands/SetProjectCommand.cpp
+msgid "X:"
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+msgid "Y:"
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Width:"
+msgstr "عرض"
+
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Height:"
+msgstr "خفيف"
+
+#: src/commands/SetProjectCommand.h
+#, fuzzy
+msgid "Set Project"
+msgstr "احفظ المشروع"
+
+#: src/commands/SetProjectCommand.h
+msgid "Sets various values for a project."
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Track Index:"
+msgstr "نهاية المقطع"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Channel Index:"
+msgstr "صيغة القناة:"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Unnamed"
+msgstr "غير مسمى"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Selected"
+msgstr "اختيار"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Focused"
+msgstr "ركز"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Gain:"
+msgstr "الزيادة"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Pan:"
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+msgid "Waveform"
+msgstr "شكل موجي"
+
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+msgid "Spectrogram"
+msgstr "صورة طيفية"
+
+#: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
+#: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
+#: src/widgets/Meter.cpp
+msgid "Linear"
+msgstr "خطي"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Reset"
+msgstr "أعد تعيين"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Times 2"
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "HalfWave"
+msgstr "نصف موجة"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Display:"
+msgstr "عرض"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Scale:"
+msgstr "المقياس"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom:"
+msgstr "زوم"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Use Spectral Prefs"
+msgstr "مسبقات المستخدم"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Spectral Select"
+msgstr "الاختيار الطيفي"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Gray Scale"
+msgstr "تدرج رمادي"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track"
+msgstr "مقطع جديد"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Status"
+msgstr "بداية المقطع"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Audio"
+msgstr "مدة الصمت:"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Visuals"
+msgstr "رتب المقاطع"
+
+#: src/commands/SetTrackInfoCommand.h
+msgid "Sets various values for a track."
+msgstr ""
 
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
@@ -6731,6 +8128,10 @@ msgstr "حجم الذروة الجديد (dB):"
 #: src/effects/Amplify.cpp
 msgid "Allow clipping"
 msgstr "اسمح بالقطع"
+
+#: src/effects/Amplify.h
+msgid "Amplify"
+msgstr "ضخم"
 
 #: src/effects/AutoDuck.cpp
 msgid ""
@@ -6763,7 +8164,8 @@ msgstr "أعلى توقف مؤقت:"
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
-#: src/prefs/PlaybackPrefs.cpp src/widgets/NumericTextCtrl.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/widgets/NumericTextCtrl.cpp
 msgid "seconds"
 msgstr "ثواني"
 
@@ -6783,13 +8185,13 @@ msgstr "مدة الخفوت السفلي:"
 msgid "Inner fade up length:"
 msgstr "مدة الخفوت العلوي:"
 
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-msgid "Threshold:"
-msgstr "العتبة:"
-
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
 msgstr "العرض المسبق غير متوفر"
+
+#: src/effects/AutoDuck.h
+msgid "Auto Duck"
+msgstr "غمر تلقائي للصوت"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
@@ -6831,8 +8233,13 @@ msgstr "مستوى"
 msgid "&Link Volume control to Tone controls"
 msgstr "اربط تحكم الحجم إلى تحكمات النغمة"
 
+#: src/effects/BassTreble.h
+msgid "Bass and Treble"
+msgstr "الحدة المنخفضة و الحدة المرتفعة"
+
 #: src/effects/ChangePitch.cpp
-msgid "Change the pitch of a track without changing its tempo"
+#, fuzzy
+msgid "Changes the pitch of a track without changing its tempo"
 msgstr "غير طبقة المقطع بدون تغيير درجة سرعته"
 
 #: src/effects/ChangePitch.cpp
@@ -6905,6 +8312,10 @@ msgstr "التغير النسبي"
 msgid "Use high quality stretching (slow)"
 msgstr "استخدم التمديد عالي الجودة (بطيء)"
 
+#: src/effects/ChangePitch.h
+msgid "Change Pitch"
+msgstr "غير الطبقة"
+
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #: src/effects/ChangeSpeed.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -6913,15 +8324,9 @@ msgstr "استخدم التمديد عالي الجودة (بطيء)"
 msgid "n/a"
 msgstr "غير قابل للتطبيق"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
-#: src/effects/ChangeSpeed.cpp src/effects/Effect.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + milliseconds"
-msgstr "ملي ث + ث:د:س"
-
 #: src/effects/ChangeSpeed.cpp
-msgid "Change the speed of a track, also changing its pitch"
+#, fuzzy
+msgid "Changes the speed of a track, also changing its pitch"
 msgstr "غير سرعة المقطع، مع تغيير طبقته أيضاً"
 
 #: src/effects/ChangeSpeed.cpp
@@ -6961,8 +8366,13 @@ msgstr "المدة الحالية للاختيار."
 msgid "New Length:"
 msgstr "المدة الجديدة:"
 
+#: src/effects/ChangeSpeed.h
+msgid "Change Speed"
+msgstr "غير السرعة"
+
 #: src/effects/ChangeTempo.cpp
-msgid "Change the tempo of a selection without changing its pitch"
+#, fuzzy
+msgid "Changes the tempo of a selection without changing its pitch"
 msgstr "غير درجة سرعة الاختيار بدون تغيير طبقته"
 
 #: src/effects/ChangeTempo.cpp
@@ -6994,6 +8404,10 @@ msgstr "مدة (ثواني)"
 msgid "Length in seconds from %s, to"
 msgstr "المدة بالثواني من %s، إلى"
 
+#: src/effects/ChangeTempo.h
+msgid "Change Tempo"
+msgstr "غير درجة السرعة"
+
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
 msgstr "إزالة النقر مصممة لإزالة النقرات على المقاطع الصوتية"
@@ -7022,6 +8436,10 @@ msgstr "أعلى عرض للارتفاع الحاد (العرض الأعلى أ�
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
 msgstr "أعلى عرض للارتفاع الحاد"
+
+#: src/effects/ClickRemoval.h
+msgid "Click Removal"
+msgstr "إزالة النقر"
 
 #: src/effects/Compressor.cpp
 msgid "Compresses the dynamic range of audio"
@@ -7131,6 +8549,10 @@ msgstr "وقت الإطلاق: %.1f ثواني"
 msgid "%.1f secs"
 msgstr "%.1f ثواني"
 
+#: src/effects/Compressor.h
+msgid "Compressor"
+msgstr "ضاغط"
+
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
 msgstr "يمكنك أن تقيس مقطعاً واحد في المرة الواحدة."
@@ -7176,12 +8598,6 @@ msgstr "حجم    "
 msgid "&Foreground:"
 msgstr "مقدمة:"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundredths of a second (1/100 second)
-#: src/effects/Contrast.cpp src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + hundredths"
-msgstr "أجزاء من المئة من الثانية + ثا:دق:سا"
-
 #: src/effects/Contrast.cpp
 msgid "Foreground start time"
 msgstr "وقت بدأ الأمامية"
@@ -7225,10 +8641,6 @@ msgstr "أعد تعيين"
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr "اختلاف:"
-
-#: src/effects/Contrast.cpp src/effects/Equalization.cpp
-msgid "E&xport..."
-msgstr "صدر..."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -7630,6 +9042,10 @@ msgstr " (0 إلى 100):"
 msgid " (0 to 5):"
 msgstr " (0 إلى 5):"
 
+#: src/effects/Distortion.h
+msgid "Distortion"
+msgstr "تشويه"
+
 #: src/effects/DtmfGen.cpp
 msgid ""
 "Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
@@ -7671,6 +9087,10 @@ msgstr "مدة السكون:"
 msgid "%.0f ms"
 msgstr "%.0f ملي الثانية"
 
+#: src/effects/DtmfGen.h
+msgid "DTMF Tones"
+msgstr "نغمات ثنائية-النغمة متعددة-الترددات"
+
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
 msgstr "كرر ملفات الصوت المختارة مجدداً و مجدداً"
@@ -7680,35 +9100,13 @@ msgstr "كرر ملفات الصوت المختارة مجدداً و مجددا
 msgid "Requested value exceeds memory capacity."
 msgstr "القيمة المطلوبة تتخطى سعة الذاكرة."
 
-#: src/effects/Echo.cpp
-msgid "Delay time (seconds):"
-msgstr "وقت التأخير (ثواني):"
-
-#: src/effects/Echo.cpp
-msgid "Decay factor:"
-msgstr "معامل الانحطاط:"
+#: src/effects/Echo.h
+msgid "Echo"
+msgstr "صدى"
 
 #: src/effects/Effect.cpp
-#, c-format
-msgid ""
-"%s: Could not load settings below. Default settings will be used.\n"
-"\n"
-"%s"
-msgstr ""
-"%s: لم أتمكن من تحميل الأوضاع أدناه. ستستخدم الأوضاع الأساسية.\n"
-"\n"
-"%s"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
-#: src/effects/Effect.cpp src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + samples"
-msgstr "عينات + ث:د:س"
-
-#: src/effects/Effect.cpp
-#, c-format
-msgid "Applying %s..."
-msgstr "أطبق %s..."
+msgid "Built-in"
+msgstr "مبني داخليا"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
@@ -7726,11 +9124,10 @@ msgstr ""
 "خطأ في فتح جهاز الصوت.\n"
 "حاول تغيير مضيف الصوت و جهاز التشغيل و معدل عينة المشروع."
 
-#: src/effects/Effect.cpp src/effects/vamp/VampEffect.cpp
-#: src/widgets/ASlider.cpp
-#, c-format
-msgid "%s: %s"
-msgstr "%s: %s"
+#: src/effects/Effect.cpp
+#, fuzzy
+msgid "Some Command"
+msgstr "أمر الاختيار"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
@@ -7794,22 +9191,9 @@ msgstr "احذف المحددة مسبقاً"
 msgid "Defaults"
 msgstr "الافتراضيات"
 
-#: src/effects/Effect.cpp src/prefs/QualityPrefs.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "None"
-msgstr "لا شيء"
-
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "مسبقات المصنع"
-
-#: src/effects/Effect.cpp
-msgid "Import..."
-msgstr "استورد..."
-
-#: src/effects/Effect.cpp
-msgid "Export..."
-msgstr "صدر..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -7883,10 +9267,6 @@ msgid "Select Preset"
 msgstr "اختر محددة مسبقاً"
 
 #: src/effects/Effect.cpp
-msgid "Type:"
-msgstr "النوع:"
-
-#: src/effects/Effect.cpp
 msgid "&Preset:"
 msgstr "المسبقة:"
 
@@ -7901,6 +9281,11 @@ msgstr "أساسيات المصنع"
 #: src/effects/EffectManager.cpp
 #, c-format
 msgid "Applied effect: %s"
+msgstr "التأثير المُطبَّق: %s"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy, c-format
+msgid "Applied command: %s"
 msgstr "التأثير المُطبَّق: %s"
 
 #: src/effects/EffectManager.cpp
@@ -7920,6 +9305,26 @@ msgstr ""
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
+msgstr "أخفق التأثير في البدء"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in Help->Show Log"
+msgstr ""
+"أخفقت محاولة بدء التأثير التالي:\n"
+"\n"
+"%s\n"
+"\n"
+"قد تتاح معلومات أكثر في مساعدة-> أظهر السجل"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy
+msgid "Command failed to initialize"
 msgstr "أخفق التأثير في البدء"
 
 #: src/effects/EffectRack.cpp
@@ -7979,11 +9384,6 @@ msgid "Mark effect as a favorite"
 msgstr "حدد التأثير كمفضل"
 
 #: src/effects/EffectRack.cpp
-#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
-msgid "Remove"
-msgstr "أزل"
-
-#: src/effects/EffectRack.cpp
 msgid "Remove effect from the rack"
 msgstr "أزل التأثير من المِنصَب"
 
@@ -8014,8 +9414,9 @@ msgid "Adjusts the volume levels of particular frequencies"
 msgstr "يعدل مستويات الصوت لترددات مفردة"
 
 #: src/effects/Equalization.cpp
+#, fuzzy
 msgid ""
-"To use this EQ curve in a batch chain, please choose a new name for it.\n"
+"To use this EQ curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
@@ -8219,16 +9620,8 @@ msgid "Curve Name"
 msgstr "اسم المنحنى"
 
 #: src/effects/Equalization.cpp
-msgid "&Rename..."
-msgstr "أعد تسمية..."
-
-#: src/effects/Equalization.cpp
 msgid "D&elete..."
 msgstr "احذف..."
-
-#: src/effects/Equalization.cpp
-msgid "I&mport..."
-msgstr "استورد..."
 
 #: src/effects/Equalization.cpp
 msgid "&Get More..."
@@ -8273,12 +9666,9 @@ msgid "Same name"
 msgstr "نفس الاسم"
 
 #: src/effects/Equalization.cpp
-msgid "Overwrite existing curve '"
+#, fuzzy, c-format
+msgid "Overwrite existing curve '%s'?"
 msgstr "اكتب على المنحنى الموجود '"
-
-#: src/effects/Equalization.cpp
-msgid "'?"
-msgstr "'؟"
 
 #: src/effects/Equalization.cpp
 msgid "Curve exists"
@@ -8293,24 +9683,18 @@ msgid "Can't delete 'unnamed'"
 msgstr "لا يمكنني حذف 'غير مسمى'"
 
 #: src/effects/Equalization.cpp
-msgid "Delete '"
+#, fuzzy, c-format
+msgid "Delete '%s'?"
 msgstr "احذف '"
-
-#: src/effects/Equalization.cpp
-msgid "' ?"
-msgstr "' ؟"
 
 #: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Confirm Deletion"
 msgstr "تأكيد الحذف"
 
 #: src/effects/Equalization.cpp
-msgid "Delete "
-msgstr "احذف "
-
-#: src/effects/Equalization.cpp
-msgid "items?"
-msgstr "مواد؟"
+#, fuzzy, c-format
+msgid "Delete %d items?"
+msgstr "مُعاد %d مرة"
 
 #: src/effects/Equalization.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
@@ -8349,6 +9733,10 @@ msgstr "صدرت المنحنيات"
 msgid "No curves exported"
 msgstr "لا منحنيات مصدرة"
 
+#: src/effects/Equalization.h
+msgid "Equalization"
+msgstr "تسوية"
+
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -8374,6 +9762,14 @@ msgstr "يطبق ظهوراً خطياً على الصوت المختار"
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "يطبق خفوتاً خطياً على الصوت المختار"
 
+#: src/effects/Fade.h
+msgid "Fade In"
+msgstr "ظهور"
+
+#: src/effects/Fade.h
+msgid "Fade Out"
+msgstr "خفوت"
+
 #: src/effects/FindClipping.cpp
 msgid "Creates labels where clipping is detected"
 msgstr "أنشئ علامات أينما يكتشف قطع"
@@ -8390,6 +9786,10 @@ msgstr "بداية العتبة (عينات):"
 msgid "Stop threshold (samples):"
 msgstr "نهاية العتبة (عينات):"
 
+#: src/effects/FindClipping.h
+msgid "Find Clipping"
+msgstr "اعثر على قطع"
+
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
 msgstr "ليس هناك حيز كاف لتوليد الصوت"
@@ -8398,16 +9798,13 @@ msgstr "ليس هناك حيز كاف لتوليد الصوت"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "يقلب عينات الصوت رأسا على عقب، عاكسا قطبيتهن"
 
+#: src/effects/Invert.h
+msgid "Invert"
+msgstr "اعكس"
+
 #: src/effects/LoadEffects.cpp
 msgid "Builtin Effects"
 msgstr "التأثيرات المصيغة داخليا"
-
-#: src/effects/LoadEffects.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "The Audacity Team"
-msgstr "فريق جرأة"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
@@ -8416,10 +9813,6 @@ msgstr "يوفر تأثيرات مصيغة-داخلياً إلى جرأة"
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
 msgstr "اسم تأثير مبني-داخلياً مجهول"
-
-#: src/effects/Noise.cpp
-msgid "White"
-msgstr "أبيض"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8436,6 +9829,10 @@ msgstr "يولد واحداً من ثلاثة أنواع مختلفة من ال�
 #: src/effects/Noise.cpp
 msgid "Noise type:"
 msgstr "نوع الضجيج:"
+
+#: src/effects/Noise.h
+msgid "Noise"
+msgstr "ضجيج"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
@@ -8690,6 +10087,11 @@ msgid "Re&move"
 msgstr "أزل"
 
 #: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Sets the peak amplitude or loudness of one or more tracks"
+msgstr "يعين سعة القمة لمقطع أو أكثر"
+
+#: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
 msgstr "يعين سعة القمة لمقطع أو أكثر"
 
@@ -8749,12 +10151,24 @@ msgid "Remove DC offset (center on 0.0 vertically)"
 msgstr "أزل انحياز التيار المستمر (مركز على 0.0 رأسياً)"
 
 #: src/effects/Normalize.cpp
-msgid "Normalize maximum amplitude to"
+#, fuzzy
+msgid "Normalize peak amplitude to"
 msgstr "طبع السعة الأعلى إلى"
 
 #: src/effects/Normalize.cpp
-msgid "Maximum amplitude dB"
-msgstr "السعة العليا dB"
+#, fuzzy
+msgid "Normalize loudness to"
+msgstr "طبع السعة الأعلى إلى"
+
+#: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Peak amplitude dB"
+msgstr "حجم الذروة الجديد (dB):"
+
+#: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Use loudness instead of peak amplitude"
+msgstr "ينشئ صوتا سعته صفر"
 
 #: src/effects/Normalize.cpp
 msgid "Normalize stereo channels independently"
@@ -8768,8 +10182,21 @@ msgstr "أنتظر الشكل الموجي لينجز الإحصاء..."
 msgid ".  Maximum 0dB."
 msgstr ".  الأعلى 0 dB."
 
+#: src/effects/Normalize.cpp
+msgid "Loudness LUFS"
+msgstr ""
+
+#: src/effects/Normalize.cpp
+msgid "LUFS"
+msgstr ""
+
+#: src/effects/Normalize.h
+msgid "Normalize"
+msgstr "طبع"
+
 #: src/effects/Paulstretch.cpp
-msgid "Use Paulstretch only for an extreme time-stretch or \"stasis\" effect"
+#, fuzzy
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr "استخدم Paulstretch  فقط لتمديد-وقت متطرف أو تأثير \"ركود\""
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
@@ -8823,6 +10250,10 @@ msgstr ""
 "\n"
 "جرب زيادة اختيار الصوت إلى %.1f ثواني على الأقل،\n"
 "أو تقليل دقة الوقت إلى أقل من %.1f ثواني."
+
+#: src/effects/Paulstretch.h
+msgid "Paulstretch"
+msgstr "تمديد Paul"
 
 #: src/effects/Phaser.cpp
 msgid "Combines phase-shifted signals with the original signal"
@@ -8884,6 +10315,10 @@ msgstr "زيادة المخرج (dB):"
 msgid "Output gain (dB)"
 msgstr "زيادة المخرج (dB)"
 
+#: src/effects/Phaser.h
+msgid "Phaser"
+msgstr "مغير الطور"
+
 #: src/effects/Repair.cpp
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "يحدد أعلى مستوى لواحد أو أكثر من المقاطع"
@@ -8914,6 +10349,10 @@ msgstr ""
 "\n"
 "كلما كثر الصوت المحيط، كلما أدى بشكل أفضل."
 
+#: src/effects/Repair.h
+msgid "Repair"
+msgstr "أصلح"
+
 #: src/effects/Repeat.cpp
 msgid "Repeats the selection the specified number of times"
 msgstr "يعيد الجزء المختار للعدد المحدد من المرات"
@@ -8943,6 +10382,10 @@ msgstr "مدة الاختيار الجديد: %s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "تحذير - لا إعادات."
+
+#: src/effects/Repeat.h
+msgid "Repeat"
+msgstr "أعد"
 
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
@@ -9032,6 +10475,14 @@ msgstr "ترجيع"
 msgid "Reverses the selected audio"
 msgstr "اعكس الصوت المختار"
 
+#: src/effects/Reverse.h
+msgid "Reverse"
+msgstr "اعكس"
+
+#: src/effects/SBSMSEffect.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "وقت SBSMS / تمديد الطبقة"
+
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
@@ -9099,6 +10550,10 @@ msgstr ""
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr ""
+
+#: src/effects/ScienFilter.h
+msgid "Classic Filters"
+msgstr "المصفيات الكلاسيكية"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Align MIDI to Audio"
@@ -9193,9 +10648,9 @@ msgstr "ينشئ صوتا سعته صفر"
 msgid "Converts stereo tracks to mono"
 msgstr "يحول المقاطع الثنائية إلى أحادية"
 
-#: src/effects/TimeScale.cpp
-msgid "Sliding Time Scale/Pitch Shift"
-msgstr "مقياس وقت الانزلاق/تغير الطبقة"
+#: src/effects/StereoToMono.h
+msgid "Stereo To Mono"
+msgstr "ثنائي إلى أحادي"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
@@ -9225,10 +10680,10 @@ msgstr "(%) [-50 إلى 100]:"
 msgid "Final Pitch Shift"
 msgstr "تغيير الطبقة النهائي"
 
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/prefs/WaveformSettings.cpp src/widgets/Meter.cpp
-msgid "Linear"
-msgstr "خطي"
+#: src/effects/TimeScale.h
+#, fuzzy
+msgid "Sliding Stretch"
+msgstr "مدد"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/prefs/WaveformSettings.cpp
@@ -9287,6 +10742,14 @@ msgstr "نهاية السعة"
 msgid "Interpolation:"
 msgstr "الاستيفاء:"
 
+#: src/effects/ToneGen.h
+msgid "Chirp"
+msgstr "زقزقة"
+
+#: src/effects/ToneGen.h
+msgid "Tone"
+msgstr "النبرة"
+
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
 msgstr "قلم السكون المكتشف"
@@ -9313,10 +10776,6 @@ msgstr ""
 msgid "Detect Silence"
 msgstr "اكتشف السكون"
 
-#: src/effects/TruncSilence.cpp src/export/ExportFLAC.cpp
-msgid "Level:"
-msgstr "مستوى:"
-
 #: src/effects/TruncSilence.cpp
 msgid "Truncate to:"
 msgstr "قلم إلى:"
@@ -9332,6 +10791,195 @@ msgstr "%"
 #: src/effects/TruncSilence.cpp
 msgid "Truncate tracks independently"
 msgstr "قلم المقاطع بشكل باستقلال"
+
+#: src/effects/TruncSilence.h
+msgid "Truncate Silence"
+msgstr "قلم السكون"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST Effects"
+msgstr "تأثيرات VST"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Adds the ability to use VST effects in Audacity."
+msgstr "يضيف القدرة على استخدام تأثيرات VST في جرأة."
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "VST plugin registration failed for %s\n"
+msgstr "تسديل برنامج VST المساعد أخفق ل %s\n"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Scanning Shell VST"
+msgstr "أمسح Shell VST"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Registering %d of %d: %-64.64s"
+msgstr "تسجيل %d من %d: %-64.64s"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
+msgid "Could not load the library"
+msgstr "لم أتمكن من فتح المكتبة"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST Effect Options"
+msgstr "اختيارات تأثير VST"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Buffer Size"
+msgstr "حجم الصوان"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "The buffer size controls the number of samples sent to the effect "
+msgstr "حجم الصوان يتحكم في عدد العينات المرسلة إلى التأثير "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "on each iteration. Smaller values will cause slower processing and "
+msgstr "عند كل تكرار. القيم الأصغر سوف تسبب معالجة أبطأ و "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "some effects require 8192 samples or less to work properly. However "
+msgstr "بعض التأثيرات تتطلب 8192 عينة أو أقل لكي تعمل جيداُ. مع ذلك "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "most effects can accept large buffers and using them will greatly "
+msgstr "معظم التأثيرات يمكنها أن توافق الصوانات الكبيرة و استعمالهم سوف "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "reduce processing time."
+msgstr "يقلل وقت المعالجة بشكل كبير."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "&Buffer Size (8 to 1048576 samples):"
+msgstr "حجم الصوان (8 إلى 1048576 عينة):"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Latency Compensation"
+msgstr "تعويض الكمون"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "As part of their processing, some VST effects must delay returning "
+msgstr "كجزء من معالجتها، بعض تأثيرات VST يجب أن تأخر الصوت "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "audio to Audacity. When not compensating for this delay, you will "
+msgstr "العائد إلى جرأة. عندما لا تعوض لهذا التأخير، سوف "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "notice that small silences have been inserted into the audio. "
+msgstr "لاحظ أن فترات سكون صغيرة أدرجت في الصوت. "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp
+msgid "Enabling this option will provide that compensation, but it may "
+msgstr "تمكين هذا الاختيار سوف يوفر ذلك التعويض، لكن من الممكن أن "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "not work for all VST effects."
+msgstr "لا تعمل لجميع تأثيرات VST."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Enable &compensation"
+msgstr "مكن التعويض"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Graphical Mode"
+msgstr "صيغة بيانية"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid ""
+"Most VST effects have a graphical interface for setting parameter values."
+msgstr "معظم تأثيرات VST لديها واجهة بيانية لضبط قيم المعاملات."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid " A basic text-only method is also available. "
+msgstr " طريقة نص-فقط أساسية متوفرة أيضاً. "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid " Reopen the effect for this to take effect."
+msgstr " أعد فتح التأثير ليظهر مفعول هذا."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Enable &graphical interface"
+msgstr "مكن الواجهة البيانية"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Audio In: %d, Audio Out: %d"
+msgstr "مدخل الصوت: %d، مخرج الصوت: %d"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Save VST Preset As:"
+msgstr "احفظ مسبقة VST كـ:"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unrecognized file extension."
+msgstr "امتداد ملف مجهول."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Saving VST Presets"
+msgstr "خطأ في حفظ مسبقة VST"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Load VST Preset:"
+msgstr "حمل مسبقة VST:"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Loading VST Presets"
+msgstr "خطأ في تحميل مسبقة VST"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to load presets file."
+msgstr "غير قادر على تحميل ملف المسبقات."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST plugin initialization failed\n"
+msgstr "أخفق بدء موصلة VST\n"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid "Effect Settings"
+msgstr "أوضاع التأثير"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to allocate memory when loading presets file."
+msgstr "غير قادر على الذاكرة عند تحميل ملف المسبقات."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to read presets file."
+msgstr "غير قادر على قراءة ملف المسبقات."
+
+#: src/effects/VST/VSTEffect.cpp src/xml/XMLFileReader.cpp
+#, c-format
+msgid "Could not open file: \"%s\""
+msgstr "لم أتمكن من فتح ملف: \"%s\""
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Error writing to file: \"%s\""
+msgstr "خطأ في كتابة الملف: \"%s\""
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Saving Effect Presets"
+msgstr "خطأ في حفظ مسبقات التأثير"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "This parameter file was saved from %s.  Continue?"
+msgstr "حفظ ملف المعامل من %s. استأنف؟"
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/effects/VST/VSTEffect.h
+msgid "VST"
+msgstr ""
 
 #: src/effects/Wahwah.cpp
 msgid ""
@@ -9358,126 +11006,6 @@ msgstr "تغير تردد واه (%):"
 #: src/effects/Wahwah.cpp
 msgid "Wah frequency offset in percent"
 msgstr "تغير تردد واه في المئة"
-
-#: src/effects/Amplify.h
-msgid "Amplify"
-msgstr "ضخم"
-
-#: src/effects/AutoDuck.h
-msgid "Auto Duck"
-msgstr "غمر تلقائي للصوت"
-
-#: src/effects/BassTreble.h
-msgid "Bass and Treble"
-msgstr "الحدة المنخفضة و الحدة المرتفعة"
-
-#: src/effects/ChangePitch.h
-msgid "Change Pitch"
-msgstr "غير الطبقة"
-
-#: src/effects/ChangeSpeed.h
-msgid "Change Speed"
-msgstr "غير السرعة"
-
-#: src/effects/ChangeTempo.h
-msgid "Change Tempo"
-msgstr "غير درجة السرعة"
-
-#: src/effects/ClickRemoval.h
-msgid "Click Removal"
-msgstr "إزالة النقر"
-
-#: src/effects/Compressor.h
-msgid "Compressor"
-msgstr "ضاغط"
-
-#: src/effects/Distortion.h
-msgid "Distortion"
-msgstr "تشويه"
-
-#: src/effects/DtmfGen.h
-msgid "DTMF Tones"
-msgstr "نغمات ثنائية-النغمة متعددة-الترددات"
-
-#: src/effects/Echo.h
-msgid "Echo"
-msgstr "صدى"
-
-#: src/effects/Equalization.h
-msgid "Equalization"
-msgstr "تسوية"
-
-#: src/effects/Fade.h
-msgid "Fade In"
-msgstr "ظهور"
-
-#: src/effects/Fade.h
-msgid "Fade Out"
-msgstr "خفوت"
-
-#: src/effects/FindClipping.h
-msgid "Find Clipping"
-msgstr "اعثر على قطع"
-
-#: src/effects/Invert.h
-msgid "Invert"
-msgstr "اعكس"
-
-#: src/effects/Noise.h
-msgid "Noise"
-msgstr "ضجيج"
-
-#: src/effects/Normalize.h
-msgid "Normalize"
-msgstr "طبع"
-
-#: src/effects/Paulstretch.h
-msgid "Paulstretch"
-msgstr "تمديد Paul"
-
-#: src/effects/Phaser.h
-msgid "Phaser"
-msgstr "مغير الطور"
-
-#: src/effects/Repair.h
-msgid "Repair"
-msgstr "أصلح"
-
-#: src/effects/Repeat.h
-msgid "Repeat"
-msgstr "أعد"
-
-#: src/effects/Reverse.h
-msgid "Reverse"
-msgstr "اعكس"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "وقت SBSMS / تمديد الطبقة"
-
-#: src/effects/ScienFilter.h
-msgid "Classic Filters"
-msgstr "المصفيات الكلاسيكية"
-
-#: src/effects/StereoToMono.h
-msgid "Stereo To Mono"
-msgstr "ثنائي إلى أحادي"
-
-#: src/effects/TimeScale.h
-msgid "Time Scale"
-msgstr "مقياس الوقت"
-
-#: src/effects/ToneGen.h
-msgid "Chirp"
-msgstr "زقزقة"
-
-#: src/effects/ToneGen.h
-msgid "Tone"
-msgstr "النبرة"
-
-#: src/effects/TruncSilence.h
-msgid "Truncate Silence"
-msgstr "قلم السكون"
 
 #: src/effects/Wahwah.h
 msgid "Wahwah"
@@ -9516,42 +11044,13 @@ msgid "Basic"
 msgstr "أساسي"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Latency Compensation"
-msgstr "تعويض الكمون"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
 "As part of their processing, some Audio Unit effects must delay returning "
 msgstr "كجزء من معالجتها، وحدات الصوت يجب أن تأخر "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "audio to Audacity. When not compensating for this delay, you will "
-msgstr "العائد إلى جرأة. عندما لا تعوض لهذا التأخير، سوف "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "notice that small silences have been inserted into the audio. "
-msgstr "لاحظ أن فترات سكون صغيرة أدرجت في الصوت. "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Enabling this option will provide that compensation, but it may "
-msgstr "تمكين هذا الاختيار سوف يوفر ذلك التعويض، لكن من الممكن أن "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "not work for all Audio Unit effects."
 msgstr "لا يعمل لجميع وحدات الصوت."
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Enable &compensation"
-msgstr "مكن التعويض"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9569,11 +11068,6 @@ msgstr " اختر \"شاملة\" لتستخدم الواجهة الشاملة ا
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr " اختر \"أساسية\" لواجهة نص-فقط أساسية. "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid " Reopen the effect for this to take effect."
-msgstr " أعد فتح التأثير ليظهر مفعول هذا."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9599,6 +11093,11 @@ msgstr "استورد مسبقات Audio Unit"
 msgid "Location"
 msgstr "موقع"
 
+#: src/effects/audiounits/AudioUnitEffect.h
+#, fuzzy
+msgid "AudioUnit"
+msgstr "وحدة صوت"
+
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "تأثير LADSPA"
@@ -9610,11 +11109,6 @@ msgstr "يوفر تأثيرات LADSPA"
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Audacity no longer uses vst-bridge"
 msgstr "جرأة لا يستخدم vst-bridge بعد الآن"
-
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
-msgid "Could not load the library"
-msgstr "لم أتمكن من فتح المكتبة"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effect Options"
@@ -9628,22 +11122,14 @@ msgstr "كجزء من معالجتها، بعض تأثيرات LADSPA يجب أ�
 msgid "not work for all LADSPA effects."
 msgstr "لا يعمل لجميع تأثيرات LADSPA."
 
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Effect Settings"
-msgstr "أوضاع التأثير"
-
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Effect Output"
 msgstr "مخرجات التأثير"
 
-#: src/effects/lv2/LoadLV2.cpp
-msgid "LV2 Effects"
-msgstr "تأثيرات LV2"
-
-#: src/effects/lv2/LoadLV2.cpp
-msgid "Provides LV2 Effects support to Audacity"
-msgstr "يوفر دعم تأثيرات LV2 لجرأة"
+#: src/effects/ladspa/LadspaEffect.h
+#, fuzzy
+msgid "LADSPA"
+msgstr "تأثير LADSPA"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 Effect Settings"
@@ -9661,22 +11147,10 @@ msgstr "تمكين هذا الوضع سوف يوفر ذلك التعويض، ل�
 msgid "not work for all LV2 effects."
 msgstr "لا يعمل لجميع تأثيرات LV2."
 
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Graphical Mode"
-msgstr "صيغة بيانية"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values."
 msgstr "يمكن أن يكون لتأثيرات LV2 واجهة بيناية لضبط قيم المعاملات."
-
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid " A basic text-only method is also available. "
-msgstr " طريقة نص-فقط أساسية متوفرة أيضاً. "
-
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Enable &graphical interface"
-msgstr "مكن الواجهة البيانية"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -9690,6 +11164,20 @@ msgstr "مولد"
 msgid "&Duration:"
 msgstr "المدة:"
 
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/effects/lv2/LV2Effect.h
+msgid "LV2"
+msgstr ""
+
+#: src/effects/lv2/LoadLV2.cpp
+msgid "LV2 Effects"
+msgstr "تأثيرات LV2"
+
+#: src/effects/lv2/LoadLV2.cpp
+msgid "Provides LV2 Effects support to Audacity"
+msgstr "يوفر دعم تأثيرات LV2 لجرأة"
+
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
 msgstr "تأثيرات Nyquist"
@@ -9701,6 +11189,15 @@ msgstr "يوفر دعم تأثيرات Nyquist لجرأة"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "أطبق تأثير Nyquist..."
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Nyquist Effects Prompt"
+msgstr "تأثيرات Nyquist"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Prompt"
+msgstr "تذكرة Nyquist"
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
@@ -9727,6 +11224,15 @@ msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
 msgstr "خطأ: الملف \"%s\" مخصص في الترئيس لكن لم يعثر عليه في طريق الموصلة.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Audio selection required."
+msgstr "اختر تلقائياً، إذا كان الاختيار متطلباً"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Error"
+msgstr "خطأ Nyquist"
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 msgstr ""
@@ -9745,10 +11251,6 @@ msgstr ""
 "(قرابة %.1f ساعات عند معدل عينة 44100 Hz)."
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "خطأ Nyquist"
-
-#: src/effects/nyquist/Nyquist.cpp
 msgid "Debug Output: "
 msgstr "مخرجات التنقيح: "
 
@@ -9765,6 +11267,14 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Processing complete."
 msgstr "أنجزت المعالجة."
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr ""
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -9845,6 +11355,19 @@ msgid "Could not determine language"
 msgstr "لم أتمكن من تحديد اللغة"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, c-format
+msgid "\"%s\" is not a valid file path."
+msgstr ""
+
+#. i18n-hint: Warning that there is one quotation mark rather than a pair.
+#: src/effects/nyquist/Nyquist.cpp
+#, c-format
+msgid ""
+"Mismatched quotes in\n"
+"%s"
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
 msgstr "أدخل أمر Nyquist: "
 
@@ -9880,6 +11403,46 @@ msgstr "لم يتمكن من تحميل الملف"
 msgid "File could not be saved"
 msgstr "لم يتمكن من حفظ الملف"
 
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid ""
+"Value range:\n"
+"%s to %s"
+msgstr "القيمة ليست في المدى: %s إلى %s"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Value Error"
+msgstr "خطأ ملف"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
+"Invalid wildcard string in 'path' control.'\n"
+"Using empty string instead."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+msgid "Select a file"
+msgstr "اختر ملفاً"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Save file as"
+msgstr "حفظ الملفات"
+
+#: src/effects/nyquist/Nyquist.cpp src/export/Export.cpp
+#: src/export/ExportMultiple.cpp
+msgid "untitled"
+msgstr "غير معنون"
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/effects/nyquist/Nyquist.h
+msgid "Nyquist"
+msgstr "Nyquist "
+
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
 msgstr "تأثيرات Vamp"
@@ -9912,132 +11475,11 @@ msgstr "أوضاع البرنامج المساعد"
 msgid "Program"
 msgstr "برنامج"
 
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST Effects"
-msgstr "تأثيرات VST"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Adds the ability to use VST effects in Audacity."
-msgstr "يضيف القدرة على استخدام تأثيرات VST في جرأة."
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "VST plugin registration failed for %s\n"
-msgstr "تسديل برنامج VST المساعد أخفق ل %s\n"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Scanning Shell VST"
-msgstr "أمسح Shell VST"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Registering %d of %d: %-64.64s"
-msgstr "تسجيل %d من %d: %-64.64s"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST Effect Options"
-msgstr "اختيارات تأثير VST"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Buffer Size"
-msgstr "حجم الصوان"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "The buffer size controls the number of samples sent to the effect "
-msgstr "حجم الصوان يتحكم في عدد العينات المرسلة إلى التأثير "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "on each iteration. Smaller values will cause slower processing and "
-msgstr "عند كل تكرار. القيم الأصغر سوف تسبب معالجة أبطأ و "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "some effects require 8192 samples or less to work properly. However "
-msgstr "بعض التأثيرات تتطلب 8192 عينة أو أقل لكي تعمل جيداُ. مع ذلك "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "most effects can accept large buffers and using them will greatly "
-msgstr "معظم التأثيرات يمكنها أن توافق الصوانات الكبيرة و استعمالهم سوف "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "reduce processing time."
-msgstr "يقلل وقت المعالجة بشكل كبير."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "&Buffer Size (8 to 1048576 samples):"
-msgstr "حجم الصوان (8 إلى 1048576 عينة):"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "As part of their processing, some VST effects must delay returning "
-msgstr "كجزء من معالجتها، بعض تأثيرات VST يجب أن تأخر الصوت "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "not work for all VST effects."
-msgstr "لا تعمل لجميع تأثيرات VST."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values."
-msgstr "معظم تأثيرات VST لديها واجهة بيانية لضبط قيم المعاملات."
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Audio In: %d, Audio Out: %d"
-msgstr "مدخل الصوت: %d، مخرج الصوت: %d"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Save VST Preset As:"
-msgstr "احفظ مسبقة VST كـ:"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unrecognized file extension."
-msgstr "امتداد ملف مجهول."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Saving VST Presets"
-msgstr "خطأ في حفظ مسبقة VST"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Load VST Preset:"
-msgstr "حمل مسبقة VST:"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Loading VST Presets"
-msgstr "خطأ في تحميل مسبقة VST"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to load presets file."
-msgstr "غير قادر على تحميل ملف المسبقات."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST plugin initialization failed\n"
-msgstr "أخفق بدء موصلة VST\n"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to allocate memory when loading presets file."
-msgstr "غير قادر على الذاكرة عند تحميل ملف المسبقات."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to read presets file."
-msgstr "غير قادر على قراءة ملف المسبقات."
-
-#: src/effects/VST/VSTEffect.cpp src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Could not open file: \"%s\""
-msgstr "لم أتمكن من فتح ملف: \"%s\""
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Error writing to file: \"%s\""
-msgstr "خطأ في كتابة الملف: \"%s\""
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Saving Effect Presets"
-msgstr "خطأ في حفظ مسبقات التأثير"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
-msgstr "حفظ ملف المعامل من %s. استأنف؟"
+#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#: src/effects/vamp/VampEffect.h
+msgid "Vamp"
+msgstr ""
 
 #: src/export/Export.cpp
 msgid "No format specific options"
@@ -10064,10 +11506,6 @@ msgstr "جميع الأصوات مصمتة."
 #: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "غير قادر على التصدير"
-
-#: src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "untitled"
-msgstr "غير معنون"
 
 #: src/export/Export.cpp
 #, c-format
@@ -10118,13 +11556,13 @@ msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "هناك ملف اسمه \"%s\" موجود قبل الآن. هل تريد استبداله؟"
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to a single mono channel in the exported file."
-msgstr "سوف يتم مزج مقاطعك في قناة أحادية في الملف المُصدَّر."
+#, fuzzy
+msgid "Your tracks will be mixed down and exported as one mono file."
+msgstr "سوف يتم مزج مقاطعك في قناتين ثنائيتين في الملف المُصدَّر."
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to two stereo channels in the exported file."
+#, fuzzy
+msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr "سوف يتم مزج مقاطعك في قناتين ثنائيتين في الملف المُصدَّر."
 
 #: src/export/Export.cpp
@@ -10166,10 +11604,6 @@ msgstr "لوحة المازج"
 #, c-format
 msgid "Output Channels: %2d"
 msgstr "قنوات المخرج: %2d"
-
-#: src/export/ExportCL.cpp
-msgid "Command:"
-msgstr "أمر:"
 
 #: src/export/ExportCL.cpp
 msgid "Show output"
@@ -10355,6 +11789,7 @@ msgstr "يمكن إعادة أخذ العينة إلى أحد المعدَّلا
 msgid "Sample Rates"
 msgstr "معدَّلات العينة"
 
+#. i18n-hint: abbreviates thousands of bits per second
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 #, c-format
 msgid "%i kbps"
@@ -10483,10 +11918,6 @@ msgstr "استورد مسبقات"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Export Presets"
 msgstr "صدر المسبقات"
-
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMultiple.cpp
-msgid "Format:"
-msgstr "الصيغة:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Codec:"
@@ -10873,6 +12304,10 @@ msgid "24 bit"
 msgstr "24 بت"
 
 #: src/export/ExportFLAC.cpp
+msgid "Level:"
+msgstr "مستوى:"
+
+#: src/export/ExportFLAC.cpp
 msgid "Bit depth:"
 msgstr "عمق البت:"
 
@@ -10923,15 +12358,23 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "أصدر الصوت عند %ld Kbps"
 
 #: src/export/ExportMP3.cpp
-msgid "kbps"
-msgstr "أ.ب.ب.ث"
+#, fuzzy, c-format
+msgid "%d kbps"
+msgstr "%i kbps"
 
 #: src/export/ExportMP3.cpp
-msgid "(Best Quality)"
+#, fuzzy, c-format
+msgid "%s kbps (Best Quality)"
 msgstr "(أفضل جودة)"
 
 #: src/export/ExportMP3.cpp
-msgid "(Smaller files)"
+#, fuzzy, c-format
+msgid "%s kbps"
+msgstr "%i kbps"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy, c-format
+msgid "%s kbps (Smaller files)"
 msgstr "(ملفات أصغر)"
 
 #: src/export/ExportMP3.cpp
@@ -10944,16 +12387,20 @@ msgstr "قياسي"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
-msgid "Insane"
-msgstr "جنوني"
+msgid "Insane, 320 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
-msgid "Extreme"
-msgstr "متطرف"
+msgid "Extreme, 220-260 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
-msgid "Medium"
-msgstr "متوسط"
+msgid "Standard, 170-210 kbps"
+msgstr ""
+
+#: src/export/ExportMP3.cpp
+msgid "Medium, 145-185 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Bit Rate Mode:"
@@ -11150,8 +12597,9 @@ msgid "Cannot Export Multiple"
 msgstr "لا يمكنني تصدير متعدد"
 
 #: src/export/ExportMultiple.cpp
+#, fuzzy
 msgid ""
-"You have only one unmuted Audio Track and no applicable \n"
+"You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
 "لديك مقطع صوتي واحد غير مصمت فقط و لا علامات مطبقة، \n"
@@ -11176,10 +12624,6 @@ msgstr "اختيارات:"
 #: src/export/ExportMultiple.cpp
 msgid "Split files based on:"
 msgstr "افلق الملفات استناداً إلى:"
-
-#: src/export/ExportMultiple.cpp
-msgid "Labels"
-msgstr "علامات"
 
 #: src/export/ExportMultiple.cpp
 msgid "Include audio before first label"
@@ -11308,6 +12752,11 @@ msgstr "AIFF (Apple) signed 16-bit PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) signed 16-bit PCM"
+msgstr "WAV (Microsoft) signed 16-bit PCM"
+
+#: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "WAV (Microsoft) signed 24-bit PCM"
 msgstr "WAV (Microsoft) signed 16-bit PCM"
 
 #: src/export/ExportPCM.cpp
@@ -11726,6 +13175,11 @@ msgstr "اقرأ الملفات مباشرة من الأصلية (أسرع)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "لا تحذر مجدداً و ستخدم اختيار أعلاه دائماً"
 
+#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "استورد %s"
+
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
 msgstr "ملفات QuickTime"
@@ -11753,11 +13207,6 @@ msgstr "غير قادر على استرداد وصف المجرى"
 #: src/import/ImportQT.cpp
 msgid "Unable to get fill buffer"
 msgstr "غير قادر على أخذ صوان الملء"
-
-#: src/import/ImportRaw.cpp src/import/ImportPlugin.h
-#, c-format
-msgid "Importing %s"
-msgstr "استورد %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp
@@ -11831,11 +13280,6 @@ msgstr "معدَّل العينة:"
 msgid "Bad data size"
 msgstr "حجم معطيات سيئ"
 
-#: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f%% مكتمل.  انقر لتغير بؤرة المهمة."
-
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
 msgstr "أنجز الاستيراد. يتم الآن حساب الشكل الموجي"
@@ -11844,12 +13288,16 @@ msgstr "أنجز الاستيراد. يتم الآن حساب الشكل الم�
 msgid "Decoding Waveform"
 msgstr "أحل تشفير الشكل الموجي"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f%% مكتمل.  انقر لتغير بؤرة المهمة."
+
 #: src/prefs/BatchPrefs.cpp
 msgid "Batch"
 msgstr "دفعة"
 
-#: src/prefs/BatchPrefs.cpp src/prefs/GUIPrefs.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
 msgstr "سلوكات"
 
@@ -11905,13 +13353,15 @@ msgstr "الكمون"
 msgid "&Buffer length:"
 msgstr "مدة الصوان:"
 
-#: src/prefs/DevicePrefs.cpp src/widgets/NumericTextCtrl.cpp
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/widgets/NumericTextCtrl.cpp
 msgid "milliseconds"
 msgstr "أجزاء من ألف من الثانية"
 
 #: src/prefs/DevicePrefs.cpp
-msgid "Track &shift after record:"
-msgstr "تحريك المقطع بعد التسجيل:"
+#, fuzzy
+msgid "&Latency compensation:"
+msgstr "تعويض الكمون"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
@@ -11943,12 +13393,12 @@ msgid "&Location:"
 msgstr "موقع:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "C&hoose..."
-msgstr "اختر..."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "Free Space:"
 msgstr "المساحة الفارغة:"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "C&hoose..."
+msgstr "اختر..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Audio cache"
@@ -12006,10 +13456,6 @@ msgstr "التغييرات إلى المجلد المؤقت لن تكون فعّ
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
 msgstr "تحديث المجلد المؤقت"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Effects"
-msgstr "التأثيرات"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
@@ -12233,15 +13679,13 @@ msgid "Meter dB &range:"
 msgstr "مدى dB المقياس:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Show"
-msgstr "أظهر"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "'How to Get &Help' at launch"
+#, fuzzy
+msgid "Show 'How to Get &Help' at launch"
 msgstr "'كيف تحصل على المساعدة' عند البدء"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "E&xtra menus"
+#, fuzzy
+msgid "Show e&xtra menus"
 msgstr "قوائم إضافية"
 
 #: src/prefs/GUIPrefs.cpp
@@ -12259,6 +13703,10 @@ msgstr "احتفظ بالعلامات إذا كان الاختيار يتلقف 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
 msgstr "ادمح موضوع النظام و جرأة"
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Use mostly Left-to-Right layouts in RTL languages"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -12377,6 +13825,10 @@ msgstr "عين"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
 msgstr "ملاحظة: الضغط على Cmd+Q يؤدي إلى الخروج. جميع المفاتيح الأخرى صالحة."
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "&Import..."
+msgstr "استورد..."
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
 msgid "&Defaults"
@@ -12585,10 +14037,6 @@ msgstr "أزرار"
 #: src/prefs/MousePrefs.cpp
 msgid "Left-Click"
 msgstr "نقرة-يسرى"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "اختيار"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Set Selection Point"
@@ -12834,6 +14282,16 @@ msgid "As&k"
 msgstr "اسأل"
 
 #: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "16-bit"
+msgstr "16-بِت PCM"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "24-bit"
+msgstr "24-بِت PCM"
+
+#: src/prefs/QualityPrefs.cpp
 msgid "Rectangle"
 msgstr "مستطيل"
 
@@ -12888,20 +14346,28 @@ msgid "Dit&her:"
 msgstr "الارتجاف:"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "Playthrough"
-msgstr "شغل عبر"
-
-#: src/prefs/RecordingPrefs.cpp
-msgid "&Other tracks while recording (overdub)"
+#, fuzzy
+msgid "Play &other tracks while recording (overdub)"
 msgstr "مقاطع أخرى ما دام التسجيل"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Hardware Playthrough of input"
-msgstr "تشغيل عبر العتاد للمدخلات"
+msgid "Use &hardware to play other tracks"
+msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Software Playthrough of input"
+#, fuzzy
+msgid "&Software playthrough of input"
 msgstr "تشغيل عبر البرمجيات للمدخلات"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Record on a new track"
+msgstr "دائماً سجل على مقطع جديد"
+
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr "اكتشف الانقطاعات المؤقتة"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
@@ -12944,15 +14410,6 @@ msgid "System T&ime"
 msgstr "وقت النظام"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "Always record on a new track"
-msgstr "دائماً سجل على مقطع جديد"
-
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
-#: src/prefs/RecordingPrefs.cpp
-msgid "Detect dropouts"
-msgstr "اكتشف الانقطاعات المؤقتة"
-
-#: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
 msgstr "تعديل مستوى الصوت المؤتمت"
 
@@ -12984,6 +14441,19 @@ msgstr "عدد التحليلات المتعاقبة:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "0 means endless"
 msgstr "0 تعني لا نهائي"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Punch and Roll Recording"
+msgstr "تسجيل مفعل بالصوت"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "Pre-ro&ll:"
+msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "Cross&fade:"
+msgstr ""
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
@@ -13073,11 +14543,13 @@ msgid "S&cale"
 msgstr "المقياس"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Mi&nimum Frequency (Hz):"
+#, fuzzy
+msgid "Mi&n Frequency (Hz):"
 msgstr "الحد اﻷدنى للتردد (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Ma&ximum Frequency (Hz):"
+#, fuzzy
+msgid "Ma&x Frequency (Hz):"
 msgstr "الحد الأعلى للتردد (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
@@ -13093,8 +14565,8 @@ msgid "&Range (dB):"
 msgstr "المدى (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Frequency g&ain (dB/dec):"
-msgstr "زيادة التردد (dB/dec):"
+msgid "High &boost (dB/dec):"
+msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Gra&yscale"
@@ -13313,6 +14785,10 @@ msgid "&Type to create a label"
 msgstr "اكتب لتنشأ علامة"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "Use dialog for the &name of a new label"
+msgstr ""
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable scrolling left of &zero"
 msgstr "مكن التمرير يسار الصفر"
 
@@ -13325,16 +14801,8 @@ msgid "Solo &Button:"
 msgstr "زر الإفراد:"
 
 #: src/prefs/TracksPrefs.cpp
-msgid "Waveform"
-msgstr "شكل موجي"
-
-#: src/prefs/TracksPrefs.cpp
 msgid "Waveform (dB)"
 msgstr "شكل موجي (dB)"
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Spectrogram"
-msgstr "صورة طيفية"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Connect dots"
@@ -13365,6 +14833,34 @@ msgid "Seconds"
 msgstr "ثواني"
 
 #: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "5ths of Seconds"
+msgstr "ثواني"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "10ths of Seconds"
+msgstr "ثواني"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "20ths of Seconds"
+msgstr "ثواني"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "50ths of Seconds"
+msgstr "ثواني"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "100ths of Seconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "500ths of Seconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
 msgid "MilliSeconds"
 msgstr "أجزاء من ألف من الثانية"
 
@@ -13381,6 +14877,18 @@ msgid "Max Zoom"
 msgstr "أقصى تزويم"
 
 #: src/prefs/TracksPrefs.cpp
+msgid "Auto-&fit track height"
+msgstr "لائم تلقائياً طول المقطع"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Sho&w audio track name as overlay"
+msgstr "أظهر اسم مقطع الصوت كغطاء"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Use &half-wave display when collapsed"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
 msgstr "مقدمة تسجيل/تشغيل مدبسة"
 
@@ -13389,8 +14897,8 @@ msgid "A&uto-scroll if head unpinned"
 msgstr "مرر تلقائياً إذا كانت المقدمة غير مدبسة"
 
 #: src/prefs/TracksPrefs.cpp
-msgid "Auto-&fit track height"
-msgstr "لائم تلقائياً طول المقطع"
+msgid "Pinned &head position"
+msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -13404,13 +14912,10 @@ msgstr "اعرض العينات:"
 msgid "Default audio track &name:"
 msgstr "اسم مقطع الصوت الأساسي:"
 
+#. i18n-hint: The default name for an audio track.
 #: src/prefs/TracksPrefs.cpp
 msgid "Audio Track"
 msgstr "مقطع صوت"
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Sho&w audio track name as overlay"
-msgstr "أظهر اسم مقطع الصوت كغطاء"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
@@ -13515,14 +15020,6 @@ msgstr "الاختيار إلى النهاية"
 msgid "Select to Start"
 msgstr "الاختيار إلى البداية"
 
-#: src/toolbars/ControlToolBar.cpp
-msgid ""
-"Error opening sound device.\n"
-"Try changing the audio host, recording device and the project sample rate."
-msgstr ""
-"خطأ عند فتح جهاز الصوت. من فضلك تفقد أوضاع جهاز المخرج و معدل العينة في هذا "
-"المشروع."
-
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Playback Device"
@@ -13598,10 +15095,6 @@ msgid "Zoom Out"
 msgstr "زوم خارجاً"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "أظهر منصب التأثيرات"
-
-#: src/toolbars/EditToolBar.cpp
 msgid "Fit selection to width"
 msgstr "لائم الاختيار إلى العرض"
 
@@ -13652,16 +15145,8 @@ msgid "Recording Volume"
 msgstr "حجم التسجيل"
 
 #: src/toolbars/MixerToolBar.cpp
-msgid "Slider Recording"
-msgstr "تسجيل المنزلق"
-
-#: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume"
 msgstr "حجم التشغيل"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Slider Playback"
-msgstr "تشغيل المنزلق"
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
@@ -13731,10 +15216,6 @@ msgid "Show Scrub Ruler"
 msgstr "أظهر مسطرة الفرك"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Selection"
-msgstr "اختيار"
-
-#: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
 msgstr "معدَّل المشروع (Hz):"
 
@@ -13761,6 +15242,10 @@ msgstr "مدة و نهاية الاختيار"
 #: src/toolbars/SelectionBar.cpp
 msgid "Length and Center of Selection"
 msgstr "مدة و مركز الاختيار"
+
+#: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
+msgid "Show"
+msgstr "أظهر"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap To"
@@ -13791,22 +15276,6 @@ msgstr "%s - مدفوع"
 msgid "Selection %s.  %s won't change."
 msgstr "الاختيار %s.  %s لن يتغير."
 
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - End"
-msgstr "بداية - نهاية"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length"
-msgstr "بداية - مدة"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length - End"
-msgstr "مدة - نهاية"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length - Center"
-msgstr "مدة - مركز"
-
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
 msgstr "التردد المركزي و العرض"
@@ -13816,20 +15285,14 @@ msgid "Low and High Frequencies"
 msgstr "الترددات المنحفضة و المرتفعة"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-msgid "Center Frequency:"
+#, fuzzy
+msgid "Center Frequency"
 msgstr "التردد المركزي:"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-msgid "Bandwidth:"
+#, fuzzy
+msgid "Bandwidth"
 msgstr "عرض النطاق:"
-
-#: src/toolbars/SpectralSelectionBar.cpp
-msgid "Low Frequency:"
-msgstr "تردد منخفض:"
-
-#: src/toolbars/SpectralSelectionBar.cpp
-msgid "High Frequency:"
-msgstr "التردد المرتفع:"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -13881,10 +15344,6 @@ msgstr "شغل بالسرعة المختارة"
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Playback Speed"
 msgstr "سرعة التشغيل"
-
-#: src/toolbars/TranscriptionToolBar.cpp
-msgid "Play-at-Speed"
-msgstr "شغل-في-سرعة"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Looped-Play-at-Speed"
@@ -14334,6 +15793,11 @@ msgid "Scrub &Ruler"
 msgstr "مسطرة الفرك"
 
 #: src/tracks/ui/Scrubbing.cpp
+#, fuzzy
+msgid "Playing at Speed"
+msgstr "شغل في سرعة"
+
+#: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Seek"
 msgstr "حرك مؤشر الفأرة إلى اقصد"
 
@@ -14443,11 +15907,8 @@ msgid "Move Track to &Bottom"
 msgstr "حرك المقطع إلى القاع"
 
 #: src/tracks/ui/TrackControls.cpp
-msgid "Change track name to:"
-msgstr "تغيير اسم المقطع إلى:"
-
-#: src/tracks/ui/TrackControls.cpp
-msgid "Track Name"
+#, fuzzy
+msgid "Set Track Name"
 msgstr "اسم المقطع"
 
 #: src/tracks/ui/TrackControls.cpp
@@ -14694,6 +16155,10 @@ msgstr " قص "
 msgid "Show Log for Details"
 msgstr "أظهر السجل للتفاصيل"
 
+#: src/widgets/MultiDialog.h
+msgid "Please select an action"
+msgstr "من فضلك اختر فعلاً"
+
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
 #. * on the end to the word for seconds. Don't change the numbers.
@@ -14731,6 +16196,12 @@ msgstr "ي:س:د:ث"
 msgid "0100 days 024 h 060 m 060 s"
 msgstr "0100 ي 024 س 060 د 060 ث"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundredths of a second (1/100 second)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + hundredths"
+msgstr "أجزاء من المئة من الثانية + ثا:دق:سا"
+
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
@@ -14740,6 +16211,12 @@ msgstr "0100 ي 024 س 060 د 060 ث"
 msgid "0100 h 060 m 060.0100 s"
 msgstr "0100 س 060 د 060.0100 ث"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and milliseconds (1/1000 second)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + milliseconds"
+msgstr "ملي ث + ث:د:س"
+
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -14748,6 +16225,12 @@ msgstr "0100 س 060 د 060.0100 ث"
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060.01000 s"
 msgstr "0100 س 060 د 060,01000 ث"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and samples (at the current project sample rate)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + samples"
+msgstr "عينات + ث:د:س"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -14977,19 +16460,6 @@ msgstr "أجزاء من مئة من "
 msgid "thousandths of "
 msgstr "أجزاء من ألف من "
 
-# In computing, NaN, standing for not a number, is a numeric data type value representing an undefined or unrepresentable value, especially in floating-point calculations.
-#: src/widgets/numformatter.cpp
-msgid "NaN"
-msgstr "ليس رقماً"
-
-#: src/widgets/numformatter.cpp
-msgid "Infinity"
-msgstr "ما لا نهاية"
-
-#: src/widgets/numformatter.cpp
-msgid "-Infinity"
-msgstr "-ما لا نهاية"
-
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
 msgstr "الوقت المنقضي:"
@@ -15027,6 +16497,20 @@ msgid "Confirm Close"
 msgstr "أكد الإغلاق"
 
 #: src/widgets/Ruler.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "أفعال خط الوقت غير ممَكنة أثناء التسجيل"
+
+#: src/widgets/Ruler.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "انقر و اسحب لتعديل الحجم النسبي للمقاطع الثنائية."
+
+#: src/widgets/Ruler.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "مقدمة تسجيل/تشغيل مدبسة"
+
+#: src/widgets/Ruler.cpp
 msgid "Timeline"
 msgstr "خط الوقت"
 
@@ -15061,10 +16545,6 @@ msgstr "اسحب لتقصد. أفلت و حرك لتفرك."
 #: src/widgets/Ruler.cpp
 msgid "Move to Scrub. Drag to Seek."
 msgstr "حرك لتفرك. اسحب لتقصد."
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "أفعال خط الوقت غير ممَكنة أثناء التسجيل"
 
 #: src/widgets/Ruler.cpp
 msgid "Quick-Play disabled"
@@ -15130,6 +16610,23 @@ msgstr "ألغ تمكين مسطرة الفرك"
 msgid "Enable Scrub Ruler"
 msgstr "مكن مسطرة الفرك"
 
+#: src/widgets/Warning.cpp
+msgid "Don't show this warning again"
+msgstr "لا تظهر هذا التحذير مرة أخرى"
+
+# In computing, NaN, standing for not a number, is a numeric data type value representing an undefined or unrepresentable value, especially in floating-point calculations.
+#: src/widgets/numformatter.cpp
+msgid "NaN"
+msgstr "ليس رقماً"
+
+#: src/widgets/numformatter.cpp
+msgid "Infinity"
+msgstr "ما لا نهاية"
+
+#: src/widgets/numformatter.cpp
+msgid "-Infinity"
+msgstr "-ما لا نهاية"
+
 #: src/widgets/valnum.cpp
 msgid "Validation error"
 msgstr "خطأ في التحقق من الصلاحية"
@@ -15174,18 +16671,6 @@ msgstr "يجب أن لا تكون القيمة أكبر من %s"
 msgid "e"
 msgstr "e"
 
-#: src/widgets/Warning.cpp
-msgid "Don't show this warning again"
-msgstr "لا تظهر هذا التحذير مرة أخرى"
-
-#: src/widgets/MultiDialog.h
-msgid "Please select an action"
-msgstr "من فضلك اختر فعلاً"
-
-#: src/widgets/wxPanelWrapper.h
-msgid "Panel"
-msgstr "لوح"
-
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
 msgstr "حوار"
@@ -15197,10 +16682,6 @@ msgstr "اختر مجلداً"
 #: src/widgets/wxPanelWrapper.h
 msgid "Directory Dialog"
 msgstr "حوار المجلدات"
-
-#: src/widgets/wxPanelWrapper.h
-msgid "Select a file"
-msgstr "اختر ملفاً"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "File Dialog"
@@ -15215,6 +16696,184 @@ msgstr "خطأ: %hs عند خط %lu"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "لم أتمكن من تحميل الملف: \"%s\""
+
+#~ msgid ""
+#~ "Latency Correction setting has caused the recorded audio to be hidden "
+#~ "before zero.\n"
+#~ "Audacity has brought it back to start at zero.\n"
+#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
+#~ "to the right place."
+#~ msgstr ""
+#~ "أوضاع تصحيح الكمون تسببت في إخفاء الصوت المسجل قبل الصفر.\n"
+#~ "جرأة أعاده إلى خط البداية عند الصفر.\n"
+#~ "ربما يجب عليك أن تستخدم أداة تحريك الوقت (<---> أو F5) لتسحب المقطع إلى "
+#~ "المكان الصحيح."
+
+#~ msgid "Latency problem"
+#~ msgstr "مشكلة كمون"
+
+#~ msgid "Apply Chain"
+#~ msgstr "طبق سلسلة"
+
+#~ msgid "&Select Chain"
+#~ msgstr "اختيار السلسلة"
+
+#~ msgid "Chain"
+#~ msgstr "سلسلة"
+
+#~ msgid "Edit Chains"
+#~ msgstr "تحرير السلاسل"
+
+#~ msgid "&Chains"
+#~ msgstr "السلاسل"
+
+#~ msgid "Re&name"
+#~ msgstr "أعد تسمية"
+
+#~ msgid "C&hain (Double-Click or press SPACE to edit)"
+#~ msgstr "سلسلة (انقر نقرة مزدوجة أو اضغط على زر المسافة للتحرير)"
+
+#~ msgid "<br><br>DarkAudacity is based on Audacity:"
+#~ msgstr "<br><br>جرأة القاتم مبني على أساس جرأة:"
+
+#~ msgid ""
+#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
+#~ "between them."
+#~ msgstr ""
+#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - لاختلافات بينهما."
+
+#~ msgid ""
+#~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
+#~ "help using DarkAudacity."
+#~ msgstr ""
+#~ " أرسل بريداً إلكترونياً إلى [[mailto:james@audacityteam.org|"
+#~ "james@audacityteam.org]] - للمساعدة باستخدام جرأة المظلم."
+
+#~ msgid ""
+#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
+#~ "started with DarkAudacity."
+#~ msgstr ""
+#~ " [[http://www.darkaudacity.com/video.html|دروس]] - لتبدأ مع جرأة القاتم."
+
+#~ msgid "Insert &After"
+#~ msgstr "أدخل بعد"
+
+#~ msgid "Insert &Before"
+#~ msgstr "أدخل قبل"
+
+#~ msgid "C&hains"
+#~ msgstr "السلاسل"
+
+#~ msgid "Appl&y Chain..."
+#~ msgstr "طبق سلسلة..."
+
+#~ msgid "Edit C&hains..."
+#~ msgstr "حرر السلاسل..."
+
+#~ msgid "Tra&nscription Toolbar"
+#~ msgstr "شريط أدوات سرعة التشغيل"
+
+#~ msgid "&Tools"
+#~ msgstr "الأدوات"
+
+#~ msgid "E&xtra"
+#~ msgstr "إضافي"
+
+#~ msgid "Transcri&ption"
+#~ msgstr "الترجمة (التمثيل برموز صوتية)"
+
+#~ msgid "Plug-in Manager: Effects, Generators and Analyzers"
+#~ msgstr "مدير البرامج المساعدة: تأثيرات، مولدات و محللات"
+
+#~ msgid "All Menus"
+#~ msgstr "جميع القوائم"
+
+#~ msgid "Transcription"
+#~ msgstr "الترجمة (التمثيل برموز صوتية)"
+
+#~ msgid "'?"
+#~ msgstr "'؟"
+
+#~ msgid "' ?"
+#~ msgstr "' ؟"
+
+#~ msgid "Delete "
+#~ msgstr "احذف "
+
+#~ msgid "items?"
+#~ msgstr "مواد؟"
+
+#~ msgid "Maximum amplitude dB"
+#~ msgstr "السعة العليا dB"
+
+#~ msgid "Sliding Time Scale/Pitch Shift"
+#~ msgstr "مقياس وقت الانزلاق/تغير الطبقة"
+
+#~ msgid "Time Scale"
+#~ msgstr "مقياس الوقت"
+
+#~ msgid ""
+#~ "Your tracks will be mixed down to a single mono channel in the exported "
+#~ "file."
+#~ msgstr "سوف يتم مزج مقاطعك في قناة أحادية في الملف المُصدَّر."
+
+#~ msgid "kbps"
+#~ msgstr "أ.ب.ب.ث"
+
+#~ msgid "Insane"
+#~ msgstr "جنوني"
+
+#~ msgid "Extreme"
+#~ msgstr "متطرف"
+
+#~ msgid "Medium"
+#~ msgstr "متوسط"
+
+#~ msgid "Track &shift after record:"
+#~ msgstr "تحريك المقطع بعد التسجيل:"
+
+#~ msgid "Playthrough"
+#~ msgstr "شغل عبر"
+
+#~ msgid "&Hardware Playthrough of input"
+#~ msgstr "تشغيل عبر العتاد للمدخلات"
+
+#~ msgid "Frequency g&ain (dB/dec):"
+#~ msgstr "زيادة التردد (dB/dec):"
+
+#~ msgid ""
+#~ "Error opening sound device.\n"
+#~ "Try changing the audio host, recording device and the project sample rate."
+#~ msgstr ""
+#~ "خطأ عند فتح جهاز الصوت. من فضلك تفقد أوضاع جهاز المخرج و معدل العينة في "
+#~ "هذا المشروع."
+
+#~ msgid "Slider Recording"
+#~ msgstr "تسجيل المنزلق"
+
+#~ msgid "Slider Playback"
+#~ msgstr "تشغيل المنزلق"
+
+#~ msgid "Start - End"
+#~ msgstr "بداية - نهاية"
+
+#~ msgid "Start - Length"
+#~ msgstr "بداية - مدة"
+
+#~ msgid "Length - End"
+#~ msgstr "مدة - نهاية"
+
+#~ msgid "Length - Center"
+#~ msgstr "مدة - مركز"
+
+#~ msgid "Low Frequency:"
+#~ msgstr "تردد منخفض:"
+
+#~ msgid "High Frequency:"
+#~ msgstr "التردد المرتفع:"
+
+#~ msgid "Change track name to:"
+#~ msgstr "تغيير اسم المقطع إلى:"
 
 #~ msgid "In Memoriam"
 #~ msgstr "إحياء لذكرى"
@@ -15270,9 +16929,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "clip"
 #~ msgstr "مقطع ضمني"
-
-#~ msgid "clips"
-#~ msgstr "مقاطع ضمنية"
 
 #~ msgid "and"
 #~ msgstr "و"
@@ -15401,12 +17057,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "down"
 #~ msgstr "أسفل"
 
-#~ msgid "Left"
-#~ msgstr "يسار"
-
-#~ msgid "Right"
-#~ msgstr "يمين"
-
 #~ msgid "+"
 #~ msgstr "+"
 
@@ -15442,9 +17092,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Percentage"
 #~ msgstr "النسبة المئوية"
-
-#~ msgid "Width"
-#~ msgstr "عرض"
 
 #~ msgid "NoiseFloor"
 #~ msgstr "الحد الأدنى للضجيج"
@@ -15588,9 +17235,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "Truncate"
 #~ msgstr "قلم"
 
-#~ msgid "Compress"
-#~ msgstr "اضغط"
-
 #~ msgid "Independent"
 #~ msgstr "مستقل"
 
@@ -15628,9 +17272,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "C&ategory:"
 #~ msgstr "الفئة:"
 
-#~ msgid "Set"
-#~ msgstr "عَينْ"
-
 #~ msgid "Key Combination"
 #~ msgstr "مجموعة مفاتيح"
 
@@ -15656,20 +17297,8 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "Edit Me&tadata Tags..."
 #~ msgstr "حرر البيانات الوصفية..."
 
-#~ msgid "to Selection Star&t"
-#~ msgstr "إلى بداية الاختيار"
-
-#~ msgid "to Selection En&d"
-#~ msgstr "إلى نهاية الاختيار"
-
 #~ msgid "Fit &Vertically"
 #~ msgstr "ناسب عمودياً"
-
-#~ msgid "Go to Selection Sta&rt"
-#~ msgstr "اذهب إلى بداية الاختيار"
-
-#~ msgid "Go to Selection En&d"
-#~ msgstr "اذهب على نهاية الاختيار"
 
 #~ msgid "Co&mbined Meter Toolbar"
 #~ msgstr "شريط أدوات المقياس المدموج"
@@ -15688,9 +17317,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Move Sele&ction when Aligning"
 #~ msgstr "حرك الاختيار عند الصف"
-
-#~ msgid "Play at speed"
-#~ msgstr "شغل في سرعة"
 
 #, fuzzy
 #~ msgid "&Mono"
@@ -15716,9 +17342,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "You must select audio in the project window."
 #~ msgstr "يجب أن تختار صوتاً في نافذة المشروع."
-
-#~ msgid "Nyquist"
-#~ msgstr "Nyquist "
 
 #, fuzzy
 #~ msgid "Undefined return value.\n"
@@ -15769,10 +17392,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "Record Below"
 #~ msgstr "عداد التسجيل"
 
-#, fuzzy
-#~ msgid "Silence Audio"
-#~ msgstr "مدة الصمت:"
-
 #~ msgid "Fit Selection"
 #~ msgstr "جعل الاختيار ملائم"
 
@@ -15821,9 +17440,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Welcome to Audacity "
 #~ msgstr "مرحبا بك في برنامج جُرأة"
-
-#~ msgid "Undo History"
-#~ msgstr "تاريخ التراجع"
 
 #~ msgid "Edit Metadata"
 #~ msgstr "تحرير الميتابيانات"
@@ -15888,9 +17504,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Multi-Tool Mode"
 #~ msgstr "نمط الأدوات المتعددة"
-
-#~ msgid "Preferences..."
-#~ msgstr "تفضيلات..."
 
 #, fuzzy
 #~ msgid "Recording Meter Preferences"
@@ -16022,9 +17635,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "Spectral Selection log(f)"
 #~ msgstr "اختيار"
 
-#~ msgid "Error while opening sound device. "
-#~ msgstr "حدث خطأ أثناء فتح جهاز الصوت. "
-
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "استخدام حجم الكتلة %ld\n"
 
@@ -16059,9 +17669,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "&Audio Track"
 #~ msgstr "&مسار صوتي"
-
-#~ msgid "New Project"
-#~ msgstr "مشروع جديد"
 
 #~ msgid "High-quality Sinc Interpolation"
 #~ msgstr "استقراء سينك ذو جودة عالية"
@@ -16127,9 +17734,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Removing clicks and pops..."
 #~ msgstr "حذف النقرة و الفرقعة..."
-
-#~ msgid "Compressor..."
-#~ msgstr "الضاغط..."
 
 #~ msgid "Applying Dynamic Range Compression..."
 #~ msgstr "تطبيق ضغط المجال الديناميكي..."
@@ -16238,9 +17842,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Repairing damaged audio"
 #~ msgstr "إصلاح الصوت المتضرر"
-
-#~ msgid "Repeated %d times"
-#~ msgstr "مُعاد %d مرة"
 
 #, fuzzy
 #~ msgid "R&ename"
@@ -16353,9 +17954,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "Display effects in graphical mode when supported"
 #~ msgstr "لا &تطبق التأثيرات في نمط الدفعة"
 
-#~ msgid "Set Selection Point and Play"
-#~ msgstr "حدد نقطة الاختيار و القراءة"
-
 #, fuzzy
 #~ msgid "Recording Level (Click to monitor.)"
 #~ msgstr "عداد مستوى المدخل - انقر لمراقبة المدخل"
@@ -16450,9 +18048,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Silence Labels"
 #~ msgstr "تسكيت العلامات"
-
-#~ msgid "Split Labels"
-#~ msgstr "تقسيم العلامات"
 
 #~ msgid "Join Labels"
 #~ msgstr "ضمّ العلامات"
@@ -16588,9 +18183,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 #~ msgid "Cl&eanSpeech Mode (Customized GUI)"
 #~ msgstr "نمط الخطاب الن&ظيف (الواجهة الرسومية حسب طلب المستخدم)"
 
-#~ msgid "Modes"
-#~ msgstr "أنماط"
-
 #~ msgid "FFT Skip Points"
 #~ msgstr "نقاط القفز في تحويل فورييه السريع"
 
@@ -16663,9 +18255,6 @@ msgstr "لم أتمكن من تحميل الملف: \"%s\""
 
 #~ msgid "Right-to-On"
 #~ msgstr "الأيمن للتشغيل"
-
-#~ msgid "Select-Sound"
-#~ msgstr "اختيار-الصوت"
 
 #~ msgid "Make Labels"
 #~ msgstr "إنتاج العلامات"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-23 18:10-0500\n"
+"POT-Creation-Date: 2018-08-28 15:05+0100\n"
 "PO-Revision-Date: 2018-02-24 22:27+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
@@ -32,8 +32,8 @@ msgstr "Bekräfta"
 msgid "Please choose an existing file."
 msgstr "Var god välj en befintlig fil."
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AutoRecovery.cpp
-#: src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
+#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
 #: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
@@ -301,7 +301,7 @@ msgstr "Rensa"
 msgid "Clear selection"
 msgstr "Rensa markering"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
 msgid "Select All"
 msgstr "Markera allt"
 
@@ -442,6 +442,16 @@ msgid "Nyquist plug-ins"
 msgstr "Nyquist-insticksmoduler"
 
 #: src/AboutDialog.cpp
+#, fuzzy
+msgid "web developer"
+msgstr "utvecklare"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "graphics"
+msgstr "&Grafisk"
+
+#: src/AboutDialog.cpp
 msgid "incorporating"
 msgstr "innehåller"
 
@@ -456,9 +466,10 @@ msgid "OK"
 msgstr "OK"
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
-"Audacity is a free program written by a worldwide team of [[http://www."
-"audacityteam.org/about/credits|volunteers]]. Audacity is [[http://www."
+"Audacity is a free program written by a worldwide team of [[https://www."
+"audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
 "audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
 "other Unix-like systems)."
 msgstr ""
@@ -468,10 +479,11 @@ msgstr ""
 "andra Unix-liknande system)."
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
-"our [[http://forum.audacityteam.org/|forum]]. For help, view the tips and "
-"tricks on our [[http://wiki.audacityteam.org/|wiki]] or visit our [[http://"
+"our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
+"tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
 "forum.audacityteam.org/|forum]]."
 msgstr ""
 "Om du hittar en bugg eller har ett förslag till oss, var vänlig skriv på "
@@ -527,6 +539,10 @@ msgid "Contributors"
 msgstr "Bidragsgivare"
 
 #: src/AboutDialog.cpp
+msgid "Website and Graphics"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "Translators"
 msgstr "Översättare"
 
@@ -547,9 +563,10 @@ msgid "Audacity website: "
 msgstr "Audacitys webbplats: "
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2017 Audacity Team.<br>"
+"&copy; 1999-2018 Audacity Team.<br>"
 msgstr ""
 "<p><br>&nbsp; &nbsp; Programvaran <b>Audacity<sup>&reg;</sup></b> är "
 "upphovsrättsskyddad &copy; 1999-2017 Audacity-teamet.<br>"
@@ -562,7 +579,8 @@ msgstr ""
 "&nbsp; &nbsp; Namnet <b>Audacity</b> är ett registrerat varumärke av Dominic "
 "Mazzoni.<br><br>"
 
-#: src/AboutDialog.cpp src/effects/Effect.cpp src/effects/nyquist/Nyquist.cpp
+#: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -765,7 +783,7 @@ msgid "Audacity is starting up..."
 msgstr "Audacity startas..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
 msgid "&New"
 msgstr "&Nytt"
 
@@ -908,6 +926,11 @@ msgstr ""
 msgid "Audacity Project Files"
 msgstr "Audacity-projektfiler"
 
+#: src/AudacityException.h src/commands/MessageCommand.h
+#: src/widgets/ErrorDialog.cpp
+msgid "Message"
+msgstr "Meddelande"
+
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
 msgstr "Audacity-logg"
@@ -974,27 +997,16 @@ msgstr ""
 msgid "Error Initializing Midi"
 msgstr "Fel uppstod när MIDI initialiserades"
 
+#: src/AudioIO.cpp src/toolbars/ControlToolBar.cpp
+#, fuzzy, c-format
+msgid ""
+"Error opening recording device.\n"
+"Error code: %s"
+msgstr "Fel vid öppnande av ljudenhet."
+
 #: src/AudioIO.cpp
 msgid "Out of memory!"
 msgstr "Slut på minne!"
-
-#: src/AudioIO.cpp
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before "
-"zero.\n"
-"Audacity has brought it back to start at zero.\n"
-"You may have to use the Time Shift Tool (<---> or F5) to drag the track to "
-"the right place."
-msgstr ""
-"Inställningarna för latenskorrigering har orsakat att det inspelade ljudet "
-"är gömt\n"
-"innan noll. Audacity har flyttat början på ljudet till noll.\n"
-"Du kanske måste använda tidsförskjutningsverktyget (<---> eller F5) för att "
-"dra spåret till rätt plats."
-
-#: src/AudioIO.cpp
-msgid "Latency problem"
-msgstr "Latensproblem"
 
 #: src/AudioIO.cpp
 msgid ""
@@ -1128,7 +1140,12 @@ msgid "&Parameters"
 msgstr "&Parametrar"
 
 #: src/BatchCommandDialog.cpp
-msgid "C&hoose command"
+msgid "&Details"
+msgstr ""
+
+#: src/BatchCommandDialog.cpp
+#, fuzzy
+msgid "Choose command"
 msgstr "V&älj kommando"
 
 #: src/BatchCommands.cpp
@@ -1164,6 +1181,40 @@ msgstr "Exportera som Ogg"
 #: src/BatchCommands.cpp
 msgid "Export as WAV"
 msgstr "Exportera som WAV"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "MP3 Conversion"
+msgstr "Realtidskonvertering"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Fade Ends"
+msgstr "Tona in"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Select to Ends"
+msgstr "Markera till slutet"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Special Command"
+msgstr "Välj kommando"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Effect"
+msgstr "Effekter"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Menu Command (With Parameters)"
+msgstr "&Ändra parametrar"
+
+#: src/BatchCommands.cpp
+msgid "Menu Command (No Parameters)"
+msgstr ""
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1210,17 +1261,19 @@ msgstr "Ditt batchkommando för %s kändes inte igen."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-msgid "Applied batch chain"
+#, fuzzy
+msgid "Applied Macro"
 msgstr "Tillämpade batchkedja"
 
 #: src/BatchCommands.cpp
-msgid "Apply chain"
+#, fuzzy
+msgid "Apply Macro"
 msgstr "Tillämpa kedja"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, c-format
-msgid "Applied batch chain '%s'"
+#, fuzzy, c-format
+msgid "Applied Macro '%s'"
 msgstr "Tillämpade batchkedjan \"%s\""
 
 #: src/BatchCommands.cpp
@@ -1249,34 +1302,53 @@ msgid "Apply %s"
 msgstr "Tillämpa %s"
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply Chain"
-msgstr "Tillämpa kedja"
+msgid "Macros Palette"
+msgstr ""
 
-#. i18n-hint: A chain is a sequence of commands that can be applied
+#. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
-msgid "&Select Chain"
-msgstr "&Välj kedja"
+#, fuzzy
+msgid "Select Macro"
+msgstr "Välj kurva"
 
-#. i18n-hint: This is the heading for a column in the edit chains dialog
+#. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
-msgid "Chain"
-msgstr "Kedja"
+msgid "Macro"
+msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to Current &Project"
+msgid "Apply Macro to:"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "&Project"
+msgstr "Projekt"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Apply macro to project"
 msgstr "Tillämpa i nuvarande &projekt"
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to &Files..."
+#, fuzzy
+msgid "&Files..."
+msgstr "&Arkiv"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Apply macro to files..."
 msgstr "Tillämpa i &filer..."
 
 #: src/BatchProcessDialog.cpp
-msgid "&Cancel"
-msgstr "&Avbryt"
+#, fuzzy
+msgid "&Expand"
+msgstr "Expandera"
 
 #: src/BatchProcessDialog.cpp
-msgid "No chain selected"
+#, fuzzy
+msgid "No macro selected"
 msgstr "Ingen kedja har valts"
 
 #: src/BatchProcessDialog.cpp
@@ -1306,28 +1378,36 @@ msgid "File"
 msgstr "Arkiv"
 
 #: src/BatchProcessDialog.cpp
-msgid "Edit Chains"
-msgstr "Ändra kedjor"
+msgid "&Cancel"
+msgstr "&Avbryt"
 
 #: src/BatchProcessDialog.cpp
-msgid "&Chains"
-msgstr "&Kedjor"
-
-#: src/BatchProcessDialog.cpp src/Tags.cpp
-msgid "&Add"
-msgstr "&Lägg till"
-
-#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/Tags.cpp
-msgid "&Remove"
-msgstr "&Radera"
+#, fuzzy
+msgid "Manage Macros"
+msgstr "Hantera kurvor"
 
 #: src/BatchProcessDialog.cpp
-msgid "Re&name"
-msgstr "Byt& namn"
+#, fuzzy
+msgid "Remo&ve"
+msgstr "Radera"
+
+#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+msgid "&Rename..."
+msgstr "&Byt namn..."
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
+msgid "I&mport..."
+msgstr "I&mportera..."
+
+#: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
+#: src/effects/Equalization.cpp
+msgid "E&xport..."
+msgstr "E&xportera..."
 
 #: src/BatchProcessDialog.cpp
-msgid "C&hain (Double-Click or press SPACE to edit)"
-msgstr "K&edja (dubbelklicka eller tryck på mellanslag för att redigera)"
+#, fuzzy
+msgid "Edit Steps"
+msgstr "Redigera etiketter"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
@@ -1342,11 +1422,15 @@ msgstr "Kommando "
 msgid "Parameters"
 msgstr "Parametrar"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "&Insert"
 msgstr "&Infoga"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/LabelTrack.cpp
+msgid "&Edit..."
+msgstr "R&edigera..."
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "De&lete"
 msgstr "Ra&dera"
 
@@ -1361,6 +1445,10 @@ msgstr "Flytta &ned"
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "De&faults"
 msgstr "Standar&dvärden"
+
+#: src/BatchProcessDialog.cpp
+msgid "Shrin&k"
+msgstr ""
 
 #. i18n-hint: This is the last item in a list.
 #: src/BatchProcessDialog.cpp
@@ -1377,11 +1465,13 @@ msgid "Do you want to save the changes?"
 msgstr "Vill du spara ändringarna?"
 
 #: src/BatchProcessDialog.cpp
-msgid "Enter name of new chain"
+#, fuzzy
+msgid "Enter name of new macro"
 msgstr "Skriv in namn på ny kedja"
 
 #: src/BatchProcessDialog.cpp
-msgid "Name of new chain"
+#, fuzzy
+msgid "Name of new macro"
 msgstr "Namnet på den nya kedjan"
 
 #: src/BatchProcessDialog.cpp
@@ -1667,6 +1757,11 @@ msgstr "När ett projekt beror på andra filer:"
 #, c-format
 msgid "MISSING %s"
 msgstr "SAKNAR %s"
+
+#: src/Dependencies.cpp
+#, fuzzy
+msgid "&Copy Names to Clipboard"
+msgstr "Kopiera till urklipp"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2028,6 +2123,10 @@ msgstr "Sparar inspelat ljud"
 msgid "Saving recorded audio to disk"
 msgstr "Sparar ljudinspelning till hårddisk"
 
+#: src/FFT.cpp
+msgid "Rectangular"
+msgstr "Rekangulär"
+
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
 msgstr "Stöd för FFmpeg kompilerades inte i"
@@ -2103,9 +2202,48 @@ msgstr "Var hittar man \"%s\"?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Misslyckades att hitta kompatibla FFmpeg-bibliotek."
 
-#: src/FFT.cpp
-msgid "Rectangular"
-msgstr "Rekangulär"
+#: src/FFmpeg.h
+msgid "FFmpeg not found"
+msgstr "FFmpeg hittades inte"
+
+#: src/FFmpeg.h
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity försökte använda FFmpeg för att importera en ljudfil,\n"
+"men biblioteken kunde inte hittas.\n"
+"\n"
+"För att kunna importera med FFmpeg, gå till Inställningar > Bibliotek\n"
+"för att ladda ned och lokalisera FFmpeg-biblioteken."
+
+#: src/FFmpeg.h
+msgid "Do not show this warning again"
+msgstr "Visa inte denna varning igen"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Endast avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*."
+"dll|Alla filer|*"
+
+#: src/FFmpeg.h
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "Dynamic Libraries (*.dylib)|*.dylib|Alla filer (*)|*"
+
+#: src/FFmpeg.h
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Endast libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|Alla filer (*)|*"
 
 #: src/FileException.cpp
 #, c-format
@@ -2130,6 +2268,10 @@ msgstr ""
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr "Audacity skrev en till i %s men misslyckades att döpa om den till %s."
+
+#: src/FileException.h
+msgid "File Error"
+msgstr "Filfel"
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp
@@ -2168,10 +2310,13 @@ msgstr "Linjär frekvens"
 msgid "Log frequency"
 msgstr "Logga frekvens"
 
+#. i18n-hint: abbreviates decibels
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
+#: src/FreqWindow.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/widgets/Meter.cpp
+#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/widgets/Meter.cpp
 msgid "dB"
 msgstr "dB"
 
@@ -2380,40 +2525,13 @@ msgstr ""
 "som har fullständig dokumentation och support.<br><br>"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"You can help us get Audacity ready for release by joining our [[http://www."
+"You can help us get Audacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
 "Du kan hjälpa oss att få Audacity redo för utgivning genom att gå med i vår "
 "[[http://www.audacityteam.org/community/|gemenskap]].<hr><br><br>"
-
-#: src/HelpText.cpp
-msgid "<br><br>DarkAudacity is based on Audacity:"
-msgstr "<br><br>DarkAudacity baseras på Audacity:"
-
-#: src/HelpText.cpp
-msgid ""
-" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
-"between them."
-msgstr ""
-" [[http://www.darkaudacity.com|www.darkaudacity.com]] - för skillnaderna "
-"mellan dem."
-
-#: src/HelpText.cpp
-msgid ""
-" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-"help using DarkAudacity."
-msgstr ""
-" skicka e-post till [[mailto:james@audacityteam.org|james@audacityteam.org]] "
-"- för hjälp om hur man använder DarkAudacity."
-
-#: src/HelpText.cpp
-msgid ""
-" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started "
-"with DarkAudacity."
-msgstr ""
-" [[http://www.darkaudacity.com/video.html|Guider]] - för hur man kommer "
-"igång med DarkAudacity."
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -2424,44 +2542,49 @@ msgid "These are our support methods:"
 msgstr "Dessa är våra sätt att ge support:"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://"
+" [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://"
 "manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 " [[file:quick_help.html|Snabbhjälp]] - om den inte är installerad lokalt, "
 "[[http://manual.audacityteam.org/quick_help.html|se på Internet]]"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[file:index.html|Manual]] - if not installed locally, [[http://manual."
+" [[file:index.html|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
 " [[file:index.html|Manual]] - om den inte är installerad lokalt, [[http://"
 "manual.audacityteam.org/|se på Internet]]"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, "
+" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
 " [[http://forum.audacityteam.org/|Forum]] - ställ din fråga direkt på "
 "Internet."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for "
+"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
 "Mer:</b> Besök vår [[http://wiki.audacityteam.org/index.php|wiki]] för tips, "
 "tricks, extra guider och effektinsticksmoduler)"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "Audacity can import unprotected files in many other formats (such as M4A and "
 "WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[http://manual.audacityteam."
-"org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your "
-"computer."
+"files) if you download and install the optional [[https://manual."
+"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
+"library]] to your computer."
 msgstr ""
 "Audacity kan importera oskyddade filer i många format (som M4A och WMA, "
 "komprimerade WAV-filer från portabla inspelningsenheter och ljud från "
@@ -2470,9 +2593,10 @@ msgstr ""
 "biblioteket]] till din dator."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"You can also read our help on importing [[http://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#midi|MIDI files]] and tracks from [[http://"
+"You can also read our help on importing [[https://manual.audacityteam.org/"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -2496,9 +2620,10 @@ msgstr ""
 "manualen</a>."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[http://manual.audacityteam.org/man/unzipping_the_manual.html| "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
 "download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
@@ -2571,6 +2696,10 @@ msgstr ""
 "Internt fel på %s rad %d.\n"
 "Var god meddela Audacity-teamet på https://forum.audacityteam.org/."
 
+#: src/InconsistencyException.h
+msgid "Internal Error"
+msgstr "Internt fel"
+
 #: src/Internat.cpp
 msgid "Unable to determine"
 msgstr "Kunde inte fastställas"
@@ -2609,22 +2738,6 @@ msgstr "Välj nytt filnamn:"
 msgid "Edit Labels"
 msgstr "Redigera etiketter"
 
-#: src/LabelDialog.cpp
-msgid "Press F2 or double click to edit cell contents."
-msgstr "Tryck F2 eller dubbelklicka för att redigera cellinnehållet."
-
-#: src/LabelDialog.cpp
-msgid "Insert &After"
-msgstr "Infoga &efter"
-
-#: src/LabelDialog.cpp
-msgid "Insert &Before"
-msgstr "Infoga &före"
-
-#: src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "&Import..."
-msgstr "&Importera..."
-
 #. i18n-hint: (noun).  A track contains waves, audio etc.
 #: src/LabelDialog.cpp
 msgid "Track"
@@ -2646,18 +2759,22 @@ msgid "End Time"
 msgstr "Sluttid"
 
 #. i18n-hint: (noun) of a label
-#: src/LabelDialog.cpp
+#: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Low Frequency"
 msgstr "Låg frekvens"
 
 #. i18n-hint: (noun) of a label
-#: src/LabelDialog.cpp
+#: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "High Frequency"
 msgstr "Hög frekvens"
 
 #: src/LabelDialog.cpp
 msgid "New..."
 msgstr "Ny..."
+
+#: src/LabelDialog.cpp
+msgid "Press F2 or double click to edit cell contents."
+msgstr "Tryck F2 eller dubbelklicka för att redigera cellinnehållet."
 
 #: src/LabelDialog.cpp src/Menus.cpp
 msgid "Select a text file containing labels"
@@ -2691,8 +2808,8 @@ msgstr "Ange spårets namn"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/TrackPanelAx.cpp
-#: src/LabelDialog.h
+#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
+#: src/TrackPanelAx.cpp
 msgid "Label Track"
 msgstr "Etikettspår"
 
@@ -2726,10 +2843,6 @@ msgstr "K&listra in"
 #: src/LabelTrack.cpp
 msgid "&Delete Label"
 msgstr "&Radera etikett"
-
-#: src/LabelTrack.cpp
-msgid "&Edit..."
-msgstr "R&edigera..."
 
 #: src/LabelTrack.cpp
 msgid "Deleted Label"
@@ -2786,12 +2899,26 @@ msgid "Uncategorized"
 msgstr "Okategoriserat"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "&Reset..."
+msgstr "Åter&ställ..."
+
+#: src/Menus.cpp
 msgid "&Save Project"
 msgstr "&Spara projekt"
 
 #: src/Menus.cpp
 msgid "Save Project &As..."
 msgstr "Spara projekt s&om..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "&Spara komprimerad kopia av projektet..."
+
+#: src/Menus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "&Spara komprimerad kopia av projektet..."
 
 #: src/Menus.cpp
 msgid "&Export"
@@ -2829,10 +2956,6 @@ msgstr "Exportera &flera..."
 msgid "Export MI&DI..."
 msgstr "Exportera &MIDI..."
 
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "&Spara komprimerad kopia av projektet..."
-
 #: src/Menus.cpp src/import/ImportRaw.cpp
 msgid "&Import"
 msgstr "&Importera"
@@ -2852,18 +2975,6 @@ msgstr "&MIDI..."
 #: src/Menus.cpp
 msgid "&Raw Data..."
 msgstr "R&ådata..."
-
-#: src/Menus.cpp
-msgid "C&hains"
-msgstr "&Kedjor"
-
-#: src/Menus.cpp
-msgid "Appl&y Chain..."
-msgstr "&Verkställ kedja..."
-
-#: src/Menus.cpp
-msgid "Edit C&hains..."
-msgstr "&Redigera kedjor..."
 
 #: src/Menus.cpp
 msgid "Pa&ge Setup..."
@@ -2955,11 +3066,13 @@ msgid "&Edit Labels..."
 msgstr "&Redigera etiketter..."
 
 #: src/Menus.cpp
-msgid "Add Label At &Selection"
+#, fuzzy
+msgid "Add Label at &Selection"
 msgstr "Lägg till etikett vid &markering"
 
 #: src/Menus.cpp
-msgid "Add Label At &Playback Position"
+#, fuzzy
+msgid "Add Label at &Playback Position"
 msgstr "Lägg till etikett vid uppspelning&position"
 
 #: src/Menus.cpp
@@ -2976,17 +3089,42 @@ msgstr "Lj&ud med etikett"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Etikettredigering"
+
+#: src/Menus.cpp
 msgid "&Cut"
 msgstr "&Klipp ut"
 
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Dela och radera"
+
 #. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "Dela och klipp ut"
+
 #: src/Menus.cpp
 msgid "&Split Cut"
 msgstr "&Dela och klipp ut"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "Dela och radera"
+
+#: src/Menus.cpp
 msgid "Sp&lit Delete"
 msgstr "D&ela och radera"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Tystnad"
 
 #: src/Menus.cpp
 msgid "Silence &Audio"
@@ -2994,13 +3132,29 @@ msgstr "&Tysta ljud"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Etikett"
+
+#: src/Menus.cpp
 msgid "Co&py"
 msgstr "Kop&iera"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Etikettredigering"
+
+#: src/Menus.cpp
 msgid "Spli&t"
 msgstr "Del&a"
+
+#. i18n-hint: (verb)
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Etikettredigering"
 
 #: src/Menus.cpp
 msgid "Me&tadata..."
@@ -3021,6 +3175,11 @@ msgid "&All"
 msgstr "&Allting"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Markering"
+
+#: src/Menus.cpp
 msgid "&None"
 msgstr "&Ingenting"
 
@@ -3033,6 +3192,10 @@ msgid "In All &Tracks"
 msgstr "I alla &spår"
 
 #: src/Menus.cpp
+msgid "Select Sync-Locked"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "In All &Sync-Locked Tracks"
 msgstr "I alla s&ynkroniseringslåsta spår"
 
@@ -3041,20 +3204,50 @@ msgid "R&egion"
 msgstr "&Område"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "Ställ markeringspunkt och Spela"
+
+#: src/Menus.cpp
 msgid "&Left at Playback Position"
 msgstr "&Vänster om uppspelningspositionen"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "Ställ markeringspunkt och Spela"
 
 #: src/Menus.cpp
 msgid "&Right at Playback Position"
 msgstr "&Höger om uppspelningspositionen"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "Från spårets &början till markören"
+
+#: src/Menus.cpp
 msgid "Track &Start to Cursor"
 msgstr "Från spårets &början till markören"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "Från markören till spårets &slut"
+
+#: src/Menus.cpp
 msgid "Cursor to Track &End"
 msgstr "Från markören till spårets &slut"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Markera till slutet"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "Från spårets &början till markören"
 
 #: src/Menus.cpp
 msgid "S&tore Selection"
@@ -3069,7 +3262,8 @@ msgid "S&pectral"
 msgstr "S&pektral"
 
 #: src/Menus.cpp
-msgid "To&ggle spectral selection"
+#, fuzzy
+msgid "To&ggle Spectral Selection"
 msgstr "Slå på/av spektral markering"
 
 #: src/Menus.cpp
@@ -3089,12 +3283,27 @@ msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Flytta markör till nä&sta klippgräns"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "F&öregående klipp"
+
+#: src/Menus.cpp
 msgid "Previo&us Clip"
 msgstr "F&öregående klipp"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "N&ästa klipp"
+
+#: src/Menus.cpp
 msgid "N&ext Clip"
 msgstr "N&ästa klipp"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Markera till början"
 
 #: src/Menus.cpp
 msgid "Cursor to Stored &Cursor Position"
@@ -3103,6 +3312,11 @@ msgstr "Flytta &markör till lagrad markörposition"
 #: src/Menus.cpp
 msgid "Store Cursor Pos&ition"
 msgstr "La&gra markörposition"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "Vid &nollkorsningar"
 
 #: src/Menus.cpp
 msgid "At &Zero Crossings"
@@ -3163,8 +3377,18 @@ msgid "Sk&ip to"
 msgstr "H&oppa till"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "till markeringens börja&n"
+
+#: src/Menus.cpp
 msgid "Selection Sta&rt"
 msgstr "Ma&rkeringens början"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "till markeringens slu&t"
 
 #: src/Menus.cpp
 msgid "Selection En&d"
@@ -3213,7 +3437,7 @@ msgid "&Playback Meter Toolbar"
 msgstr "Verktygsfält för u&ppspelningsmätare"
 
 #. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), _("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #. i18n-hint: Clicking this menu item shows the toolbar with the mixer
 #: src/Menus.cpp
 msgid "Mi&xer Toolbar"
@@ -3226,8 +3450,9 @@ msgstr "Verktygsfält för &redigering"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
 #: src/Menus.cpp
-msgid "Tra&nscription Toolbar"
-msgstr "Verktygsfält för tra&nskription"
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Spela upp med vald hastighet"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
 #: src/Menus.cpp
@@ -3257,16 +3482,21 @@ msgstr "&Extra menyer (på/av)"
 msgid "&Show Clipping (on/off)"
 msgstr "V&isa klippning (på/av)"
 
+#: src/Menus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "Visa effekthyllan"
+
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: src/Menus.cpp
-msgid "T&ransport"
-msgstr "&Transport"
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Transport"
 
-#. i18n-hint: (verb) Start playing audio
 #: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "Spela &upp"
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Spelar upp"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/Menus.cpp
@@ -3284,6 +3514,11 @@ msgstr "Spe&la upp slinga"
 #: src/Menus.cpp
 msgid "&Pause"
 msgstr "&Pausa"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Inspelning"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -3303,32 +3538,76 @@ msgid "&Timer Record..."
 msgstr "&Timerinspelning..."
 
 #: src/Menus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "&Cursor to"
 msgstr "Flytta &markören till"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "Gå till markeringens bör&jan"
 
 #: src/Menus.cpp
 msgid "Selection Star&t"
 msgstr "Markeringens &början"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "Gå till markeringens sl&ut"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "Från markören till spårets &slut"
+
+#: src/Menus.cpp
 msgid "Track &Start"
 msgstr "S&pårets början"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "Från markören till spårets &slut"
 
 #: src/Menus.cpp
 msgid "Track &End"
 msgstr "Sp&årets slut"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "Flytta markör till nä&sta klippgräns"
+
+#: src/Menus.cpp
 msgid "Pre&vious Clip Boundary"
 msgstr "F&öregående klippgräns"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "Flytta markör till nä&sta klippgräns"
 
 #: src/Menus.cpp
 msgid "Ne&xt Clip Boundary"
 msgstr "N&ästa klippgräns"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "&Projektets början"
+
+#: src/Menus.cpp
 msgid "&Project Start"
 msgstr "&Projektets början"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "Från markören till spårets &slut"
 
 #: src/Menus.cpp
 msgid "Project E&nd"
@@ -3403,7 +3682,8 @@ msgid "Mi&x"
 msgstr "Mi&xa"
 
 #: src/Menus.cpp
-msgid "Mix Stereo down to &Mono"
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
 msgstr "&Mixa stereo ned till mono"
 
 #: src/Menus.cpp
@@ -3439,12 +3719,27 @@ msgid "&Pan"
 msgstr "&Panorering"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "Vänster"
+
+#: src/Menus.cpp
 msgid "&Left"
 msgstr "&Vänster"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "Höger"
+
+#: src/Menus.cpp
 msgid "&Right"
 msgstr "&Höger"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Centrera"
 
 #: src/Menus.cpp
 msgid "&Center"
@@ -3499,11 +3794,21 @@ msgid "S&ort Tracks"
 msgstr "S&ortera spår"
 
 #: src/Menus.cpp
-msgid "by &Start time"
+msgid "Sort by Time"
+msgstr "Sorterade efter tid"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "By &Start Time"
 msgstr "efter &starttid"
 
 #: src/Menus.cpp
-msgid "by &Name"
+msgid "Sort by Name"
+msgstr "Sorterade efter namn"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "By &Name"
 msgstr "efter &namn"
 
 #: src/Menus.cpp
@@ -3546,6 +3851,42 @@ msgid "Plot Spectrum..."
 msgstr "Rita ut spektrum..."
 
 #: src/Menus.cpp
+msgid "T&ools"
+msgstr "&Verktyg"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&Etiketter..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "&Verkställ"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Palette..."
+msgstr "R&adera..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Skärmdumpsverktyg..."
+
+#: src/Menus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Kör prestandatest..."
+
+#: src/Menus.cpp
+msgid "Simulate Recording Errors"
+msgstr "Simulera inspelningsfel"
+
+#: src/Menus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "Upptäck signalfel i uppströmmen"
+
+#: src/Menus.cpp
 msgid "&Window"
 msgstr "&Fönster"
 
@@ -3559,74 +3900,19 @@ msgstr "&Minimera"
 msgid "&Bring All to Front"
 msgstr "&Flytta allting längst fram"
 
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "&Hjälp"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "&Kom igång"
-
-#: src/Menus.cpp
-msgid "&Quick Help"
-msgstr "&Snabbhjälp"
-
-#: src/Menus.cpp
-msgid "&Manual"
-msgstr "&Manual"
-
-#: src/Menus.cpp
-msgid "&Tools"
-msgstr "&Verktyg"
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "Simulera inspelningsfel"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "Upptäck signalfel i uppströmmen"
-
-#: src/Menus.cpp
-msgid "&Screenshot Tools..."
-msgstr "&Skärmdumpsverktyg..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Kör prestandatest..."
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "&Diagnostik"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "&Ljudenhetsinformation..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "&MIDI-enhetsinfo..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "&Visa logg..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "&Generera supportdata..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "Granska &beroenden..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "&Kolla efter uppdateringar..."
-
 #. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
-msgid "E&xtra"
-msgstr "E&xtra"
+msgid "Ext&ra"
+msgstr ""
+
+#: src/Menus.cpp
+msgid "T&ransport"
+msgstr "&Transport"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/Menus.cpp
+msgid "Pl&ay"
+msgstr "Spela &upp"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/Menus.cpp
@@ -3638,7 +3924,8 @@ msgid "Play &One Second"
 msgstr "Spela upp &en sekund"
 
 #: src/Menus.cpp
-msgid "Play To &Selection"
+#, fuzzy
+msgid "Play to &Selection"
 msgstr "Spela upp till &markering"
 
 #: src/Menus.cpp
@@ -3668,10 +3955,6 @@ msgstr "Spela upp innan och efter markeringens &slut"
 #: src/Menus.cpp
 msgid "Play C&ut Preview"
 msgstr "Spela upp &klippförhandsvisning"
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "&Verktyg"
 
 #: src/Menus.cpp
 msgid "&Selection Tool"
@@ -3710,43 +3993,53 @@ msgid "Mi&xer"
 msgstr "Mi&xer"
 
 #: src/Menus.cpp
-msgid "Ad&just playback volume"
+#, fuzzy
+msgid "Ad&just Playback Volume..."
 msgstr "&Justera uppspelningsvolym"
 
 #: src/Menus.cpp
-msgid "&Increase playback volume"
+#, fuzzy
+msgid "&Increase Playback Volume"
 msgstr "&Öka uppspelningsvolym"
 
 #: src/Menus.cpp
-msgid "&Decrease playback volume"
+#, fuzzy
+msgid "&Decrease Playback Volume"
 msgstr "&Minska uppspelningsvolym"
 
 #: src/Menus.cpp
-msgid "Adj&ust recording volume"
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
 msgstr "J&ustera inspelningsvolym"
 
 #: src/Menus.cpp
-msgid "I&ncrease recording volume"
+#, fuzzy
+msgid "I&ncrease Recording Volume"
 msgstr "Ö&ka uppspelningshastighet"
 
 #: src/Menus.cpp
-msgid "D&ecrease recording volume"
+#, fuzzy
+msgid "D&ecrease Recording Volume"
 msgstr "M&inska uppspelningshastighet"
 
 #: src/Menus.cpp
-msgid "&DeleteKey"
+#, fuzzy
+msgid "&Delete Key"
 msgstr "&Raderingstangent"
 
 #: src/Menus.cpp
-msgid "DeleteKey&2"
+#, fuzzy
+msgid "Delete Key&2"
 msgstr "Raderingstangent &2"
 
 #: src/Menus.cpp
-msgid "Transcri&ption"
-msgstr "Tr&anskription"
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Spela upp med vald hastighet"
 
 #: src/Menus.cpp
-msgid "Pl&ay-at-Speed"
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
 msgstr "&Spela upp med vald hastighet"
 
 #: src/Menus.cpp
@@ -3758,15 +4051,18 @@ msgid "Play C&ut Preview-at-Speed"
 msgstr "Spela upp &klippförhandsvisning med vald hastighet"
 
 #: src/Menus.cpp
-msgid "Ad&just playback speed"
+#, fuzzy
+msgid "Ad&just Playback Speed..."
 msgstr "&Justera uppspelningshastighet"
 
 #: src/Menus.cpp
-msgid "&Increase playback speed"
+#, fuzzy
+msgid "&Increase Playback Speed"
 msgstr "&Öka uppspelningshastighet"
 
 #: src/Menus.cpp
-msgid "&Decrease playback speed"
+#, fuzzy
+msgid "&Decrease Playback Speed"
 msgstr "&Minska uppspelningshastighet"
 
 #: src/Menus.cpp
@@ -3782,19 +4078,23 @@ msgid "See&k"
 msgstr "Sö&k"
 
 #: src/Menus.cpp
-msgid "Short seek &left during playback"
+#, fuzzy
+msgid "Short Seek &Left During Playback"
 msgstr "Kort sökning åt &vänster under uppspelning"
 
 #: src/Menus.cpp
-msgid "Short seek &right during playback"
+#, fuzzy
+msgid "Short Seek &Right During Playback"
 msgstr "Kort sökning åt &höger under uppspelning"
 
 #: src/Menus.cpp
-msgid "Long seek le&ft during playback"
+#, fuzzy
+msgid "Long Seek Le&ft During Playback"
 msgstr "Lång sökning åt v&änster under uppspelning"
 
 #: src/Menus.cpp
-msgid "Long Seek rig&ht during playback"
+#, fuzzy
+msgid "Long Seek Rig&ht During Playback"
 msgstr "Lång sökning åt h&öger under uppspelning"
 
 #: src/Menus.cpp
@@ -3802,19 +4102,23 @@ msgid "De&vice"
 msgstr "&Enhet"
 
 #: src/Menus.cpp
-msgid "Change &recording device"
+#, fuzzy
+msgid "Change &Recording Device..."
 msgstr "Byt &inspelningsenhet"
 
 #: src/Menus.cpp
-msgid "Change &playback device"
+#, fuzzy
+msgid "Change &Playback Device..."
 msgstr "Byt &uppspelningsenhet"
 
 #: src/Menus.cpp
-msgid "Change audio &host"
+#, fuzzy
+msgid "Change Audio &Host..."
 msgstr "Byt &ljudvärd"
 
 #: src/Menus.cpp
-msgid "Change recording cha&nnels"
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
 msgstr "Byt inspelnings&kanaler"
 
 #: src/Menus.cpp
@@ -3822,15 +4126,18 @@ msgid "&Selection"
 msgstr "&Markering"
 
 #: src/Menus.cpp
-msgid "Snap To &Off"
+#, fuzzy
+msgid "Snap-To &Off"
 msgstr "Fäst mot &av"
 
 #: src/Menus.cpp
-msgid "Snap To &Nearest"
+#, fuzzy
+msgid "Snap-To &Nearest"
 msgstr "Fäst mot &närmaste"
 
 #: src/Menus.cpp
-msgid "Snap To &Prior"
+#, fuzzy
+msgid "Snap-To &Prior"
 msgstr "Fäst mot &tidigare"
 
 #: src/Menus.cpp
@@ -3866,11 +4173,13 @@ msgid "Selection Contract R&ight"
 msgstr "Förminska markering åt höge&r"
 
 #: src/Menus.cpp
-msgid "Move backward thru active windows"
+#, fuzzy
+msgid "Move Backward Through Active Windows"
 msgstr "Flytta bakåt genom aktiva fönster"
 
 #: src/Menus.cpp
-msgid "Move forward thru active windows"
+#, fuzzy
+msgid "Move Forward Through Active Windows"
 msgstr "Flytta framåt genom aktiva fönster"
 
 #: src/Menus.cpp
@@ -3878,11 +4187,13 @@ msgid "F&ocus"
 msgstr "&Fokus"
 
 #: src/Menus.cpp
-msgid "Move &backward from toolbars to tracks"
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
 msgstr "Flytta b&akåt från verktygsfält till spår"
 
 #: src/Menus.cpp
-msgid "Move f&orward from toolbars to tracks"
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
 msgstr "Flytta f&ramåt från verktygsfält till spår"
 
 #: src/Menus.cpp
@@ -3958,77 +4269,262 @@ msgid "&Track"
 msgstr "S&pår"
 
 #: src/Menus.cpp
-msgid "Change p&an on focused track"
+#, fuzzy
+msgid "Change P&an on Focused Track..."
 msgstr "Ändra &panorering för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "Pan &left on focused track"
+#, fuzzy
+msgid "Pan &Left on Focused Track"
 msgstr "Panorera åt &vänster för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "Pan &right on focused track"
+#, fuzzy
+msgid "Pan &Right on Focused Track"
 msgstr "Panorera åt &höger för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "Change gai&n on focused track"
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
 msgstr "Ändra &förstärkningen för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "&Increase gain on focused track"
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
 msgstr "&Öka förstärkningen för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "&Decrease gain on focused track"
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
 msgstr "&Minska förstärkningen för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "Op&en menu on focused track"
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
 msgstr "Öppna men&yn för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "M&ute/Unmute focused track"
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
 msgstr "Slå av/på &ljudet för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "&Solo/Unsolo focused track"
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
 msgstr "Aktivera/inaktivera &solo för aktuellt spår"
 
 #: src/Menus.cpp
-msgid "&Close focused track"
+#, fuzzy
+msgid "&Close Focused Track"
 msgstr "S&täng aktuellt spår"
 
 #: src/Menus.cpp
-msgid "Move focused track u&p"
+#, fuzzy
+msgid "Move Focused Track U&p"
 msgstr "Flytta aktuellt spår &uppåt"
 
 #: src/Menus.cpp
-msgid "Move focused track do&wn"
+#, fuzzy
+msgid "Move Focused Track Do&wn"
 msgstr "Flytta aktuellt spår &nedåt"
 
 #: src/Menus.cpp
-msgid "Move focused track to t&op"
+#, fuzzy
+msgid "Move Focused Track to T&op"
 msgstr "Flytta aktuellt spår l&ängst upp"
 
 #: src/Menus.cpp
-msgid "Move focused track to &bottom"
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
 msgstr "Flytta aktuellt spår län&gst ned"
 
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/Menus.cpp
-msgid "&Full screen (on/off)"
+#, fuzzy
+msgid "&Scriptables I"
+msgstr "Skript"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Bläddra..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Frekvenser"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Bläddra..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "S&pårets början"
+
+#: src/Menus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/Menus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "Inställningar..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "Inställningar..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "N&ästa klipp"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Envelopp"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "&Redigera etiketter..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Spara projekt s&om..."
+
+#: src/Menus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/Menus.cpp src/TimerRecordDialog.cpp
+msgid "Select..."
+msgstr "Bläddra..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "S&ortera spår"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "&Mer..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "Meddelande"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Hjälp"
+
+#: src/Menus.cpp src/effects/Effect.cpp
+msgid "Import..."
+msgstr "Importera..."
+
+#: src/Menus.cpp src/effects/Effect.cpp
+msgid "Export..."
+msgstr "Exportera..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Öppna senaste..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Spara projekt s&om..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "&Mer..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "Kompressor..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/Menus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Skärmdumpsverktyg..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
 msgstr "&Helskärm (på/av)"
 
 #. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
-msgid "Minimize all projects"
+#, fuzzy
+msgid "Minimize All Projects"
 msgstr "Minimera alla projekt"
 
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist-inmatning"
+#: src/Menus.cpp src/effects/Contrast.cpp
+msgid "&Help"
+msgstr "&Hjälp"
+
+#: src/Menus.cpp
+msgid "&Getting Started"
+msgstr "&Kom igång"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&Snabbhjälp"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Manual..."
+msgstr "&Manual"
+
+#: src/Menus.cpp
+msgid "&Diagnostics"
+msgstr "&Diagnostik"
+
+#: src/Menus.cpp
+msgid "Au&dio Device Info..."
+msgstr "&Ljudenhetsinformation..."
+
+#: src/Menus.cpp
+msgid "&MIDI Device Info..."
+msgstr "&MIDI-enhetsinfo..."
+
+#: src/Menus.cpp
+msgid "Show &Log..."
+msgstr "&Visa logg..."
+
+#: src/Menus.cpp
+msgid "&Generate Support Data..."
+msgstr "&Generera supportdata..."
+
+#: src/Menus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "Granska &beroenden..."
+
+#: src/Menus.cpp
+msgid "&Check for Updates..."
+msgstr "&Kolla efter uppdateringar..."
 
 #: src/Menus.cpp
 msgid "Unknown"
@@ -4064,16 +4560,8 @@ msgid "Tracks sorted by time"
 msgstr "Spår sorterade efter tid"
 
 #: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Sorterade efter tid"
-
-#: src/Menus.cpp
 msgid "Tracks sorted by name"
 msgstr "Spår sorterade efter namn"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Sorterade efter namn"
 
 #: src/Menus.cpp
 msgid "no label track"
@@ -4733,6 +5221,38 @@ msgstr ""
 "\n"
 "Var god spara eller stäng detta projekt och försök igen."
 
+#: src/Menus.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Namn"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Skapade etikett"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Var god välj ett ljudspår."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Var god välj ett ljudspår."
+
+#: src/Menus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Var god välj ett ljudspår."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Var god välj ett notspår."
+
 #: src/Menus.cpp
 msgid "Edited labels"
 msgstr "Redigerade etiketter"
@@ -4772,6 +5292,17 @@ msgstr "Spara MIDI-enhetsinfo"
 #: src/Menus.cpp
 msgid "Unable to save MIDI device info"
 msgstr "Kunde inte spara MIDI-enhetsinfo"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/Menus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Återsamplade ljudspår"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "Spår"
 
 #: src/Menus.cpp
 msgid ""
@@ -4839,13 +5370,13 @@ msgid "Pan"
 msgstr "Panorering"
 
 #. i18n-hint: This is on a button that will silence this track.
-#: src/MixerBoard.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 msgid "Mute"
 msgstr "Tyst"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
-#: src/MixerBoard.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 msgid "Solo"
 msgstr "Solo"
@@ -5060,8 +5591,9 @@ msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
 #: src/PluginManager.cpp
-msgid "Plug-in Manager: Effects, Generators and Analyzers"
-msgstr "Insticksmodulshanterare: Effekter, generatorer och analyser"
+#, fuzzy
+msgid "Manage Plug-ins"
+msgstr "Aktivera nya insticksmoduler"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -5128,9 +5660,9 @@ msgid "&Disable"
 msgstr "&Inaktivera"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Enabling effects:\n"
+"Enabling effects or commands:\n"
 "\n"
 "%s"
 msgstr ""
@@ -5139,9 +5671,9 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Enabling effect:\n"
+"Enabling effect or command:\n"
 "\n"
 "%s"
 msgstr ""
@@ -5150,21 +5682,17 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Effect at %s failed to register:\n"
+"Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
 "Effekten vid %s misslyckades att registreras:\n"
 "%s"
 
-#: src/PluginManager.cpp src/effects/Effect.cpp
-msgid "Built-in"
-msgstr "Inbyggd"
-
 #: src/PluginManager.cpp
-#, c-format
-msgid "Overwrite the plug-in file %s ?"
+#, fuzzy, c-format
+msgid "Overwrite the plug-in file %s?"
 msgstr "Skriv över insticksmodulfilen %s?"
 
 #: src/PluginManager.cpp
@@ -5283,7 +5811,7 @@ msgstr ""
 "Välj Avbryt, Redigera > Ångra tills alla spår\n"
 "är öppna, välj sedan Arkiv > Spara projekt."
 
-#: src/Project.cpp
+#: src/Project.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "Välj en eller flera filer"
 
@@ -5501,15 +6029,46 @@ msgstr ""
 "Försök igen med ett annat namn."
 
 #: src/Project.cpp
+#, fuzzy, c-format
+msgid "%sSave Lossless Copy of Project \"%s\" As..."
+msgstr "%sSpara komprimerade projektet \"%s\" som..."
+
+#: src/Project.cpp
+#, fuzzy
 msgid ""
-"'Save Compressed Project' is for an Audacity project, not an audio file.\n"
+"'Save Lossless Copy of Project' is for an Audacity project, not an audio "
+"file.\n"
+"For an audio file that will open in other apps, use 'Export'.\n"
+"\n"
+"Lossless copies of project are a good way to backup your project, \n"
+"with no loss of quality, but the projects are large.\n"
+msgstr ""
+"\"Spara komprimerat projekt\" är till för ett Audacity-projekt, inte en "
+"ljudfil.\n"
+"För en ljudfil som kommer att öppnas i andra appar, välj \"Exportera\".\n"
+"\n"
+"Komprimerade projektfiler är ett bra sätt att överföra dina projekt på "
+"nätet, \n"
+"men de har lite brist på naturtrogenhet.\n"
+"\n"
+"Att öppna ett komprimerat projekt tar längre tid än vanligt, eftersom det "
+"importerar \n"
+"varje komprimerade spår.\n"
+
+#: src/Project.cpp
+#, fuzzy, c-format
+msgid "%sSave Compressed Copy of Project \"%s\" As..."
+msgstr "%sSpara komprimerade projektet \"%s\" som..."
+
+#: src/Project.cpp
+#, fuzzy
+msgid ""
+"'Save Compressed Copy of Project' is for an Audacity project, not an audio "
+"file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 "\n"
 "Compressed project files are a good way to transmit your project online, \n"
 "but they have some loss of fidelity.\n"
-"\n"
-"To open a compressed project takes longer than usual, as it imports \n"
-"each compressed track.\n"
 msgstr ""
 "\"Spara komprimerat projekt\" är till för ett Audacity-projekt, inte en "
 "ljudfil.\n"
@@ -5525,8 +6084,8 @@ msgstr ""
 
 #: src/Project.cpp
 #, c-format
-msgid "%sSave Compressed Project \"%s\" As..."
-msgstr "%sSpara komprimerade projektet \"%s\" som..."
+msgid "%sSave Project \"%s\" As..."
+msgstr "%sSpara projektet \"%s\" som..."
 
 #: src/Project.cpp
 msgid ""
@@ -5537,9 +6096,49 @@ msgstr ""
 "För en ljudfil som kommer att öppnas i andra appar, välj \"Exportera\".\n"
 
 #: src/Project.cpp
+#, fuzzy
+msgid ""
+"Saving a copy must not overwrite an existing saved project.\n"
+"Please try again and select an original name."
+msgstr ""
+"Detta projekt kunde inte sparas då det angivna namnet skulle orsaka att en "
+"annan fil med samma namn skulle skrivas över.\n"
+"Försök igen med ett annat namn."
+
+#: src/Project.cpp
+#, fuzzy
+msgid "Error Saving Copy of Project"
+msgstr "Fel uppstod när projektet sparades"
+
+#. i18n-hint: In each case, %s is the name
+#. of the file being overwritten.
+#: src/Project.cpp
 #, c-format
-msgid "%sSave Project \"%s\" As..."
-msgstr "%sSpara projektet \"%s\" som..."
+msgid ""
+"Do you want to overwrite the project:\n"
+"\"%s\"?\n"
+"\n"
+"If you select \"Yes\" the project\n"
+"\"%s\"\n"
+"will be irreversibly overwritten."
+msgstr ""
+
+#. i18n-hint: Heading: A warning that a project is about to be overwritten.
+#: src/Project.cpp
+#, fuzzy
+msgid "Overwrite Project Warning"
+msgstr "Skriv över befintliga filer"
+
+#: src/Project.cpp
+#, fuzzy
+msgid ""
+"The project will not saved because the selected project is open in another "
+"window.\n"
+"Please try again and select an original name."
+msgstr ""
+"Detta projekt kunde inte sparas då det angivna namnet skulle orsaka att en "
+"annan fil med samma namn skulle skrivas över.\n"
+"Försök igen med ett annat namn."
 
 #: src/Project.cpp
 msgid "Created new project"
@@ -5697,7 +6296,7 @@ msgid "24-bit PCM"
 msgstr "24-bitars PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp
+#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
 msgid "32-bit float"
 msgstr "32-bitars flyttal"
 
@@ -5770,12 +6369,13 @@ msgid "All Toolbars"
 msgstr "Alla verktygsfält"
 
 #: src/Screenshot.cpp
-msgid "All Menus"
-msgstr "Alla menyer"
-
-#: src/Screenshot.cpp
 msgid "All Effects"
 msgstr "Alla effekter"
+
+#: src/Screenshot.cpp
+#, fuzzy
+msgid "All Scriptables"
+msgstr "Alla filer|*"
 
 #: src/Screenshot.cpp
 msgid "All Preferences"
@@ -5785,50 +6385,61 @@ msgstr "Alla inställningar"
 msgid "SelectionBar"
 msgstr "Markeringsfält"
 
-#: src/Screenshot.cpp src/toolbars/SpectralSelectionBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
 msgstr "Spektral markering"
 
-#: src/Screenshot.cpp src/toolbars/ToolsToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ToolsToolBar.cpp
 msgid "Tools"
 msgstr "Verktyg"
 
-#: src/Screenshot.cpp src/toolbars/ControlToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Transport"
 msgstr "Transport"
 
-#: src/Screenshot.cpp src/toolbars/MixerToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MixerToolBar.cpp
 msgid "Mixer"
 msgstr "Mixer"
 
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr "Mätare"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Uppspelningsmätare"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
 msgstr "Inspelningsmätare"
 
-#: src/Screenshot.cpp src/toolbars/EditToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/EditToolBar.cpp
 msgid "Edit"
 msgstr "Redigera"
 
-#: src/Screenshot.cpp src/toolbars/DeviceToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Enhet"
 
-#: src/Screenshot.cpp src/toolbars/TranscriptionToolBar.cpp
-msgid "Transcription"
-msgstr "Transkription"
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/TranscriptionToolBar.cpp
+msgid "Play-at-Speed"
+msgstr "Spela upp med vald hastighet"
 
-#: src/Screenshot.cpp src/toolbars/ScrubbingToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub"
 msgstr "Scrub"
 
@@ -5836,22 +6447,24 @@ msgstr "Scrub"
 msgid "Track Panel"
 msgstr "Spårpanel"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Ruler"
 msgstr "Linjal"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
 #. * data associated with a time line, such as sequences of labels, and musical
 #. * notes
-#: src/Screenshot.cpp src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
 msgid "Tracks"
 msgstr "Spår"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "First Track"
 msgstr "Första spåret"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Second Track"
 msgstr "Andra spåret"
 
@@ -5912,7 +6525,8 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Varning - Trunkerar blockfil som är för lång"
 
-#: src/ShuttleGui.cpp src/effects/Equalization.cpp src/widgets/ErrorDialog.cpp
+#: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
+#: src/widgets/ErrorDialog.cpp
 msgid "Help"
 msgstr "Hjälp"
 
@@ -6000,6 +6614,14 @@ msgstr "Tagg"
 #: src/Tags.cpp
 msgid "Value"
 msgstr "Värde"
+
+#: src/Tags.cpp
+msgid "&Add"
+msgstr "&Lägg till"
+
+#: src/Tags.cpp
+msgid "&Remove"
+msgstr "&Radera"
 
 #: src/Tags.cpp
 msgid "Genres"
@@ -6183,6 +6805,19 @@ msgstr ""
 "Audacity kunde inte spara fil:\n"
 "  %s"
 
+#: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
+#: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid "Duration"
+msgstr "Längd"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Time track.
+#: src/TimeTrack.cpp src/TrackPanelAx.cpp
+msgid "Time Track"
+msgstr "Tidspår"
+
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Audacitys timerinspelning"
@@ -6262,7 +6897,7 @@ msgstr "Inspelningens början:"
 
 #: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
 #: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr "Längd:"
 
@@ -6386,13 +7021,6 @@ msgstr "Slutdatum och -tid"
 msgid "End Date"
 msgstr "Slutdatum"
 
-#: src/TimerRecordDialog.cpp src/TimeDialog.h src/effects/DtmfGen.cpp
-#: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Duration"
-msgstr "Längd"
-
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -6418,10 +7046,6 @@ msgid "Save Project As:"
 msgstr "Spara projekt s&om:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Bläddra..."
-
-#: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
 msgstr "Automatisk exportering"
 
@@ -6433,7 +7057,8 @@ msgstr "Aktivera automatisk &exportering?"
 msgid "Export Project As:"
 msgstr "Exportera projekt som:"
 
-#: src/TimerRecordDialog.cpp src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
+#: src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "Alternativ"
 
@@ -6489,12 +7114,6 @@ msgstr "Inspelning exporterades:"
 msgid "Audacity Timer Record - Waiting"
 msgstr "Audacitys timerinspelning - Väntar"
 
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Time track.
-#: src/TimeTrack.cpp src/TrackPanelAx.cpp
-msgid "Time Track"
-msgstr "Tidspår"
-
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -6529,30 +7148,46 @@ msgid "TrackView"
 msgstr "Spårvy"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track mute is on.
+#. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
-msgid " Mute On"
-msgstr " Tyst på"
+#, fuzzy
+msgid " Muted"
+msgstr "Tyst"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track solo is on.
+#. this track is soloed. (The Solo button is on.)
 #: src/TrackPanelAx.cpp
-msgid " Solo On"
-msgstr " Solo på"
+#, fuzzy
+msgid " Soloed"
+msgstr "Solo"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: src/TrackPanelAx.cpp
-msgid " Select On"
-msgstr " Välj på"
+#, fuzzy
+msgid " Selected"
+msgstr "Markera"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
 #. The absence of a dash between Sync and Locked is deliberate -
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
-msgid " Sync Lock Selected"
+#, fuzzy
+msgid " Sync Locked"
 msgstr " Synkroniseringslås markerades"
+
+#: src/TrackPanelAx.cpp
+msgid " Mute On"
+msgstr " Tyst på"
+
+#: src/TrackPanelAx.cpp
+msgid " Solo On"
+msgstr " Solo på"
+
+#: src/TrackPanelAx.cpp
+msgid " Select On"
+msgstr " Välj på"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -6607,65 +7242,48 @@ msgstr "Det finns inte tillräcklig plats att klistra in markering"
 msgid "There is not enough room available to expand the cut line"
 msgstr "Det finns inte tillräcklig plats för att expandera klipplinjen"
 
-#: src/AudacityException.h src/widgets/ErrorDialog.cpp
-msgid "Message"
-msgstr "Meddelande"
-
-#: src/FFmpeg.h
-msgid "FFmpeg not found"
-msgstr "FFmpeg hittades inte"
-
-#: src/FFmpeg.h
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity försökte använda FFmpeg för att importera en ljudfil,\n"
-"men biblioteken kunde inte hittas.\n"
-"\n"
-"För att kunna importera med FFmpeg, gå till Inställningar > Bibliotek\n"
-"för att ladda ned och lokalisera FFmpeg-biblioteken."
-
-#: src/FFmpeg.h
-msgid "Do not show this warning again"
-msgstr "Visa inte denna varning igen"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Endast avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*."
-"dll|Alla filer|*"
-
-#: src/FFmpeg.h
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Dynamic Libraries (*.dylib)|*.dylib|Alla filer (*)|*"
-
-#: src/FFmpeg.h
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Endast libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|Alla filer (*)|*"
-
-#: src/FileException.h
-msgid "File Error"
-msgstr "Filfel"
-
-#: src/InconsistencyException.h
-msgid "Internal Error"
-msgstr "Internt fel"
-
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "Denna handling kan inte utföras tills %s har importerats."
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#, c-format
+msgid ""
+"%s: Could not load settings below. Default settings will be used.\n"
+"\n"
+"%s"
+msgstr ""
+"%s: Kunde inte läsa in inställningar nedan. Standardinställningar kommer att "
+"användas.\n"
+"\n"
+"%s"
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#, c-format
+msgid "Applying %s..."
+msgstr "Verkställer %s..."
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/vamp/VampEffect.cpp src/widgets/ASlider.cpp
+#, c-format
+msgid "%s: %s"
+msgstr "%s: %s"
+
+#: src/commands/BatchEvalCommand.cpp
+#, fuzzy
+msgid "Batch Command"
+msgstr "Kommando"
+
+#: src/commands/Command.cpp
+#, c-format
+msgid "%s is not a parameter accepted by %s"
+msgstr ""
+
+#: src/commands/Command.cpp
+#, c-format
+msgid "Invalid value for parameter '%s': should be %s"
+msgstr ""
 
 #: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
 #: src/widgets/KeyView.cpp
@@ -6744,6 +7362,12 @@ msgstr ""
 "Du måste först markera lite ljud för att använda denna\n"
 "funktion. (Det går inte att markera andra sorters spår.)"
 
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#: src/commands/CommandManager.cpp
+#, c-format
+msgid "\"%s\" requires one or more tracks to be selected."
+msgstr ""
+
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid "Loaded %d keyboard shortcuts\n"
@@ -6753,10 +7377,787 @@ msgstr "Läste in %d kortkommandon\n"
 msgid "Loading Keyboard Shortcuts"
 msgstr "Läser in kortkommandon"
 
+#: src/commands/CommandTargets.cpp
+#, fuzzy
+msgid "Long Message"
+msgstr "Meddelande"
+
+#: src/commands/CompareAudioCommand.cpp src/effects/AutoDuck.cpp
+#: src/effects/Compressor.cpp src/effects/TruncSilence.cpp
+msgid "Threshold:"
+msgstr "Tröskel:"
+
+#: src/commands/CompareAudioCommand.h
+#, fuzzy
+msgid "Compare Audio"
+msgstr "Kopiera ljud med etikett"
+
+#: src/commands/CompareAudioCommand.h
+#, fuzzy
+msgid "Compares a range on two tracks."
+msgstr "Komprimera baserat på toppunkter"
+
+#: src/commands/Demo.cpp src/effects/Echo.cpp
+msgid "Delay time (seconds):"
+msgstr "Fördröjningstid (sekunder):"
+
+#: src/commands/Demo.cpp src/effects/Echo.cpp
+msgid "Decay factor:"
+msgstr "Decay-faktor:"
+
+#: src/commands/Demo.h
+msgid "Demo"
+msgstr ""
+
+#: src/commands/Demo.h
+msgid "Does the demo action."
+msgstr ""
+
+#: src/commands/DragCommand.cpp src/widgets/wxPanelWrapper.h
+msgid "Panel"
+msgstr "Panel"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Application"
+msgstr "Förstärkning dB"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Track 0"
+msgstr "Spår"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Track 1"
+msgstr "Spår"
+
+#. i18n-hint abbreviates "Identity" or "Identifier"
+#: src/commands/DragCommand.cpp
+msgid "Id:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Window Name:"
+msgstr "Fönsterstorlek:"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "From X:"
+msgstr "Från rpm"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "From Y:"
+msgstr "Från rpm"
+
+#: src/commands/DragCommand.cpp
+msgid "To X:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp
+msgid "To Y:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
+msgid "Relative To:"
+msgstr ""
+
+#: src/commands/DragCommand.h
+#, fuzzy
+msgid "Drag"
+msgstr "Vänster-Dra"
+
+#: src/commands/DragCommand.h
+msgid "Drags mouse from one place to another."
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Commands"
+msgstr "Kommando"
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Menus"
+msgstr "Meny"
+
+#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Preferences"
+msgstr "Inställningar: "
+
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Clips"
+msgstr "klipp"
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Envelopes"
+msgstr "Envelopp"
+
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportMultiple.cpp
+msgid "Labels"
+msgstr "Etiketter"
+
+#: src/commands/GetInfoCommand.cpp
+msgid "Boxes"
+msgstr ""
+
+#. i18n-hint JavaScript Object Notation
+#: src/commands/GetInfoCommand.cpp
+msgid "JSON"
+msgstr ""
+
+#. i18n-hint name of a computer programming language
+#: src/commands/GetInfoCommand.cpp
+msgid "LISP"
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp
+msgid "Brief"
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp src/effects/Effect.cpp
+msgid "Type:"
+msgstr "Typ:"
+
+#: src/commands/GetInfoCommand.cpp src/export/ExportFFmpegDialogs.cpp
+#: src/export/ExportMultiple.cpp
+msgid "Format:"
+msgstr "Format:"
+
+#: src/commands/GetInfoCommand.h
+#, fuzzy
+msgid "Get Info"
+msgstr "Information"
+
+#: src/commands/GetInfoCommand.h
+msgid "Gets information in JSON format."
+msgstr ""
+
+#: src/commands/GetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Types:"
+msgstr "Typ:"
+
+#: src/commands/GetTrackInfoCommand.h
+#, fuzzy
+msgid "Get Track Info"
+msgstr "Flytta ned spåret"
+
+#: src/commands/GetTrackInfoCommand.h
+msgid "Gets track values as JSON."
+msgstr ""
+
+#: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
+msgid "Command:"
+msgstr "Kommando:"
+
+#: src/commands/HelpCommand.h
+msgid "Gives help on a command."
+msgstr ""
+
+#: src/commands/ImportExportCommands.cpp src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "File Name:"
+msgstr "Filtyp:"
+
+#: src/commands/ImportExportCommands.cpp
+#, fuzzy
+msgid "Number of Channels:"
+msgstr "Antal redigeringar:"
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Import2"
+msgstr "Importera"
+
+#: src/commands/ImportExportCommands.h
+msgid "Imports from a file."
+msgstr ""
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Export2"
+msgstr "Exportera"
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Exports to a file."
+msgstr "Exportera flera"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Builtin Commands"
+msgstr "Välj kommando"
+
+#: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+msgid "The Audacity Team"
+msgstr "Audacity-teamet"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Provides builtin commands to Audacity"
+msgstr "Tillhandahåller inbyggda effekter i Audacity"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Unknown built-in command name"
+msgstr "Okänt namn på inbyggd effekt"
+
+#: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
+msgid "Text:"
+msgstr ""
+
+#: src/commands/MessageCommand.h
+#, fuzzy
+msgid "Echos a message."
+msgstr "detta hjälpmeddelande"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Add to History"
+msgstr "Ångra historia"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Add to History:"
+msgstr "Ångra historia"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Compress:"
+msgstr "Kompressor"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Open Project2"
+msgstr "Nytt projekt"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Opens a project."
+msgstr "Öppnar Audacity-projekt"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Save Project2"
+msgstr "&Spara projekt"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Saves a project."
+msgstr "&Spara projekt"
+
+#: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Value:"
+msgstr "Värde"
+
+#: src/commands/PreferenceCommands.cpp
+msgid "Reload:"
+msgstr ""
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Get Preference"
+msgstr "&Använd inställningar"
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Set Preference"
+msgstr "&Använd inställningar"
+
+#: src/commands/PreferenceCommands.h
+msgid "Gets the value of a single preference."
+msgstr ""
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Sets the value of a single preference."
+msgstr "Ändrar den maximala amplituden för ett eller fler spår"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Window"
+msgstr "&Fönster"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Full Window"
+msgstr "FFT Window"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Window Plus"
+msgstr "Fönstret och dess omgivning"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Fullscreen"
+msgstr "&Helskärm (på/av)"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Toolbars"
+msgstr "&Verktygsfält"
+
+#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+msgid "Effects"
+msgstr "Effekter"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Scriptables"
+msgstr "Skript"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Selectionbar"
+msgstr "Markeringsfält"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Trackpanel"
+msgstr "Spårpanel"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Two Tracks"
+msgstr "Första spåret"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Three Tracks"
+msgstr "Första spåret"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Four Tracks"
+msgstr "Första spåret"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Tracks Plus"
+msgstr "Spårpanel"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Track Plus"
+msgstr "Första spåret"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "All Tracks"
+msgstr "Långa spår"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "All Tracks Plus"
+msgstr "Långa spår"
+
+#: src/commands/ScreenshotCommand.cpp
+msgid "Blue"
+msgstr ""
+
+#: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
+msgid "White"
+msgstr "Vitt"
+
+#: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
+#: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+msgid "None"
+msgstr "Inget"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Path:"
+msgstr "Sökväg"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Capture What:"
+msgstr "Misslyckades att ta skärmdump!"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Background:"
+msgstr "&Bakgrund:"
+
+#: src/commands/ScreenshotCommand.cpp
+msgid "Bring To Top:"
+msgstr ""
+
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Error trying to save file: %s"
 msgstr "Fel uppstod när filen sparades: %s"
+
+#: src/commands/ScreenshotCommand.h
+#, fuzzy
+msgid "Screenshot"
+msgstr "&Skärmdumpsverktyg..."
+
+#: src/commands/ScreenshotCommand.h
+msgid "Takes screenshots."
+msgstr ""
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Project Start"
+msgstr "&Projektets början"
+
+#: src/commands/SelectCommand.cpp src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Project"
+msgstr "Projekt"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Project End"
+msgstr "P&rojektets slut"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Selection Start"
+msgstr "Markeringens &början"
+
+#: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
+msgid "Selection"
+msgstr "Markering"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Selection End"
+msgstr "Markeringens &slut"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Start Time:"
+msgstr "Starttid"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "End Time:"
+msgstr "Sluttid"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "High:"
+msgstr "Highpass"
+
+#: src/commands/SelectCommand.cpp
+msgid "Low:"
+msgstr ""
+
+#. i18n-hint verb, imperative
+#: src/commands/SelectCommand.cpp
+msgid "Set"
+msgstr "Set"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Add"
+msgstr "&Lägg till"
+
+#: src/commands/SelectCommand.cpp src/effects/EffectRack.cpp
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
+msgid "Remove"
+msgstr "Radera"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "First Track:"
+msgstr "Första spåret"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Track Count:"
+msgstr "Duckingsmängd:"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Mode:"
+msgstr "Måttlig"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Time"
+msgstr "Välj en fil"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Frequencies"
+msgstr "Frekvenser"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Tracks"
+msgstr "S&ortera spår"
+
+#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Markera"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects a time range."
+msgstr "Välj en fil"
+
+#: src/commands/SelectCommand.h
+msgid "Selects a frequency range."
+msgstr ""
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects a range of tracks."
+msgstr "Var god välj ett ljudspår."
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects Audio."
+msgstr "Välj ljudvärd"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 0"
+msgstr "Färger"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 1"
+msgstr "Färger"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 2"
+msgstr "Färger"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 3"
+msgstr "Färger"
+
+#: src/commands/SetClipCommand.cpp
+msgid "At:"
+msgstr ""
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Colour:"
+msgstr "Färger"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Start:"
+msgstr "Start"
+
+#: src/commands/SetClipCommand.h
+#, fuzzy
+msgid "Set Clip"
+msgstr "N&ästa klipp"
+
+#: src/commands/SetClipCommand.h
+msgid "Sets various values for a clip."
+msgstr ""
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Time:"
+msgstr "Tid"
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Delete:"
+msgstr "Radera"
+
+#: src/commands/SetEnvelopeCommand.h
+#, fuzzy
+msgid "Set Envelope"
+msgstr "Envelopp"
+
+#: src/commands/SetEnvelopeCommand.h
+msgid "Sets an envelope point position."
+msgstr ""
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Label Index"
+msgstr "Etikettredigering"
+
+#: src/commands/SetLabelCommand.cpp
+msgid "End:"
+msgstr ""
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Selected:"
+msgstr "Markera"
+
+#: src/commands/SetLabelCommand.h
+#, fuzzy
+msgid "Set Label"
+msgstr "&Radera etikett"
+
+#: src/commands/SetLabelCommand.h
+msgid "Sets various values for a label."
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Resize:"
+msgstr "&Resterande"
+
+#: src/commands/SetProjectCommand.cpp
+msgid "X:"
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+msgid "Y:"
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Width:"
+msgstr "Bandbredd:"
+
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Height:"
+msgstr "Ljust"
+
+#: src/commands/SetProjectCommand.h
+#, fuzzy
+msgid "Set Project"
+msgstr "&Spara projekt"
+
+#: src/commands/SetProjectCommand.h
+msgid "Sets various values for a project."
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Track Index:"
+msgstr "Sp&årets slut"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Channel Index:"
+msgstr "Kanalläge:"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Unnamed"
+msgstr "namnlös"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Selected"
+msgstr "Markera"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Focused"
+msgstr "&Fokus"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Gain:"
+msgstr "Förstärkning"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Pan:"
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+msgid "Waveform"
+msgstr "Vågform"
+
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+msgid "Spectrogram"
+msgstr "Spektrogram"
+
+#: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
+#: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
+#: src/widgets/Meter.cpp
+msgid "Linear"
+msgstr "Linjär"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Reset"
+msgstr "&Återställ"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Times 2"
+msgstr "Tid"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "HalfWave"
+msgstr "Halvvåg"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Display:"
+msgstr "Visning"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Scale:"
+msgstr "Skala"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom:"
+msgstr "Zoom"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Use Spectral Prefs"
+msgstr "Spectral Processor"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Spectral Select"
+msgstr "Spektral markering"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Gray Scale"
+msgstr "Gr&åskala"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track"
+msgstr "Nytt spår"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Status"
+msgstr "S&pårets början"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Audio"
+msgstr "Skapa tystnad"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Visuals"
+msgstr "S&ortera spår"
+
+#: src/commands/SetTrackInfoCommand.h
+msgid "Sets various values for a track."
+msgstr ""
 
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
@@ -6777,6 +8178,10 @@ msgstr "Ny maximal amplitud(dB):"
 #: src/effects/Amplify.cpp
 msgid "Allow clipping"
 msgstr "Tillåt klippning"
+
+#: src/effects/Amplify.h
+msgid "Amplify"
+msgstr "Förstärk"
 
 #: src/effects/AutoDuck.cpp
 msgid ""
@@ -6812,7 +8217,8 @@ msgstr "Maximal paus:"
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
-#: src/prefs/PlaybackPrefs.cpp src/widgets/NumericTextCtrl.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/widgets/NumericTextCtrl.cpp
 msgid "seconds"
 msgstr "sekunder"
 
@@ -6832,13 +8238,13 @@ msgstr "Längd för inre nedtoning:"
 msgid "Inner fade up length:"
 msgstr "Längd för inre upptoning:"
 
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-msgid "Threshold:"
-msgstr "Tröskel:"
-
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
 msgstr "Förhandsvisning inte tillgänglig"
+
+#: src/effects/AutoDuck.h
+msgid "Auto Duck"
+msgstr "Automatisk ducking"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
@@ -6880,8 +8286,13 @@ msgstr "Nivå"
 msgid "&Link Volume control to Tone controls"
 msgstr "&Länka volymkontrollen till tonkontroller"
 
+#: src/effects/BassTreble.h
+msgid "Bass and Treble"
+msgstr "Bas och diskant"
+
 #: src/effects/ChangePitch.cpp
-msgid "Change the pitch of a track without changing its tempo"
+#, fuzzy
+msgid "Changes the pitch of a track without changing its tempo"
 msgstr "Ändra tonhöjden för ett spår utan att ändra tempot"
 
 #: src/effects/ChangePitch.cpp
@@ -6954,6 +8365,10 @@ msgstr "Procentuell ändring"
 msgid "Use high quality stretching (slow)"
 msgstr "Använd sträckning i hög kvalitet (långsam)"
 
+#: src/effects/ChangePitch.h
+msgid "Change Pitch"
+msgstr "Ändra tonhöjd"
+
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #: src/effects/ChangeSpeed.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -6962,15 +8377,9 @@ msgstr "Använd sträckning i hög kvalitet (långsam)"
 msgid "n/a"
 msgstr "n/a"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
-#: src/effects/ChangeSpeed.cpp src/effects/Effect.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + milliseconds"
-msgstr "hh:mm:ss + millisekunder"
-
 #: src/effects/ChangeSpeed.cpp
-msgid "Change the speed of a track, also changing its pitch"
+#, fuzzy
+msgid "Changes the speed of a track, also changing its pitch"
 msgstr "Ändra hastigheten för ett spår, ändrar även dess tonhöjd"
 
 #: src/effects/ChangeSpeed.cpp
@@ -7010,8 +8419,13 @@ msgstr "Nuvarande längd på markering."
 msgid "New Length:"
 msgstr "Ny längd:"
 
+#: src/effects/ChangeSpeed.h
+msgid "Change Speed"
+msgstr "Ändra hastighet"
+
 #: src/effects/ChangeTempo.cpp
-msgid "Change the tempo of a selection without changing its pitch"
+#, fuzzy
+msgid "Changes the tempo of a selection without changing its pitch"
 msgstr "Ändra tempot för en markering utan att ändra dess tonhöjd"
 
 #: src/effects/ChangeTempo.cpp
@@ -7043,6 +8457,10 @@ msgstr "Längd (sekunder)"
 msgid "Length in seconds from %s, to"
 msgstr "Längd i sekunder från %s, till"
 
+#: src/effects/ChangeTempo.h
+msgid "Change Tempo"
+msgstr "Ändra tempo"
+
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
 msgstr "Klickborttagning är designad för att ta bort klickningar i ljudspåren"
@@ -7071,6 +8489,10 @@ msgstr "Max. spikbredd (högre är mer känslig):"
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
 msgstr "Max. spikbredd"
+
+#: src/effects/ClickRemoval.h
+msgid "Click Removal"
+msgstr "Ta bort klick"
 
 #: src/effects/Compressor.cpp
 msgid "Compresses the dynamic range of audio"
@@ -7180,6 +8602,10 @@ msgstr "Fördröjningstid %.1f sek"
 msgid "%.1f secs"
 msgstr "%.1f sek"
 
+#: src/effects/Compressor.h
+msgid "Compressor"
+msgstr "Kompressor"
+
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
 msgstr "Du kan bara mäta ett spår åt gången."
@@ -7226,12 +8652,6 @@ msgstr "Volym "
 msgid "&Foreground:"
 msgstr "&Förgrund:"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundredths of a second (1/100 second)
-#: src/effects/Contrast.cpp src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + hundredths"
-msgstr "hh:mm:ss + hundratal"
-
 #: src/effects/Contrast.cpp
 msgid "Foreground start time"
 msgstr "Starttid för förgrund"
@@ -7275,10 +8695,6 @@ msgstr "&Återställ"
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr "&Skillnad:"
-
-#: src/effects/Contrast.cpp src/effects/Equalization.cpp
-msgid "E&xport..."
-msgstr "E&xportera..."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -7680,6 +9096,10 @@ msgstr " (0 till 100):"
 msgid " (0 to 5):"
 msgstr " (0 till 5):"
 
+#: src/effects/Distortion.h
+msgid "Distortion"
+msgstr "Förvrängning"
+
 #: src/effects/DtmfGen.cpp
 msgid ""
 "Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
@@ -7721,6 +9141,10 @@ msgstr "Tystnadslängd:"
 msgid "%.0f ms"
 msgstr "%.0f ms"
 
+#: src/effects/DtmfGen.h
+msgid "DTMF Tones"
+msgstr "DTMF-toner"
+
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
 msgstr "Upprepar markerat ljud om och om igen"
@@ -7730,36 +9154,13 @@ msgstr "Upprepar markerat ljud om och om igen"
 msgid "Requested value exceeds memory capacity."
 msgstr "Begärt värde överskrider minneskapaciteten."
 
-#: src/effects/Echo.cpp
-msgid "Delay time (seconds):"
-msgstr "Fördröjningstid (sekunder):"
-
-#: src/effects/Echo.cpp
-msgid "Decay factor:"
-msgstr "Decay-faktor:"
+#: src/effects/Echo.h
+msgid "Echo"
+msgstr "Eko"
 
 #: src/effects/Effect.cpp
-#, c-format
-msgid ""
-"%s: Could not load settings below. Default settings will be used.\n"
-"\n"
-"%s"
-msgstr ""
-"%s: Kunde inte läsa in inställningar nedan. Standardinställningar kommer att "
-"användas.\n"
-"\n"
-"%s"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
-#: src/effects/Effect.cpp src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + samples"
-msgstr "hh:mm:ss + samplingar"
-
-#: src/effects/Effect.cpp
-#, c-format
-msgid "Applying %s..."
-msgstr "Verkställer %s..."
+msgid "Built-in"
+msgstr "Inbyggd"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
@@ -7778,11 +9179,10 @@ msgstr ""
 "Försök att ändra ljudvärden, uppspelningsenhet och projektets "
 "samplingsfrekvens."
 
-#: src/effects/Effect.cpp src/effects/vamp/VampEffect.cpp
-#: src/widgets/ASlider.cpp
-#, c-format
-msgid "%s: %s"
-msgstr "%s: %s"
+#: src/effects/Effect.cpp
+#, fuzzy
+msgid "Some Command"
+msgstr "Välj kommando"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
@@ -7846,22 +9246,9 @@ msgstr "Radera förinställning"
 msgid "Defaults"
 msgstr "Standardvärden"
 
-#: src/effects/Effect.cpp src/prefs/QualityPrefs.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "None"
-msgstr "Inget"
-
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "Fabriksförinställning"
-
-#: src/effects/Effect.cpp
-msgid "Import..."
-msgstr "Importera..."
-
-#: src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Exportera..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -7938,10 +9325,6 @@ msgid "Select Preset"
 msgstr "Välj förinställning"
 
 #: src/effects/Effect.cpp
-msgid "Type:"
-msgstr "Typ:"
-
-#: src/effects/Effect.cpp
 msgid "&Preset:"
 msgstr "&Förinställning:"
 
@@ -7956,6 +9339,11 @@ msgstr "Fabriksinställningar"
 #: src/effects/EffectManager.cpp
 #, c-format
 msgid "Applied effect: %s"
+msgstr "Tillämpade effekt: %s"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy, c-format
+msgid "Applied command: %s"
 msgstr "Tillämpade effekt: %s"
 
 #: src/effects/EffectManager.cpp
@@ -7975,6 +9363,26 @@ msgstr ""
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
+msgstr "Effekten misslyckades att initieras"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in Help->Show Log"
+msgstr ""
+"Misslyckades att försöka initialisera följande effekt:\n"
+"\n"
+"%s\n"
+"\n"
+"Mer information finns tillgänglig i Hjälp ->Visa logg"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy
+msgid "Command failed to initialize"
 msgstr "Effekten misslyckades att initieras"
 
 #: src/effects/EffectRack.cpp
@@ -8034,11 +9442,6 @@ msgid "Mark effect as a favorite"
 msgstr "Markera effekten som en favorit"
 
 #: src/effects/EffectRack.cpp
-#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
-msgid "Remove"
-msgstr "Radera"
-
-#: src/effects/EffectRack.cpp
 msgid "Remove effect from the rack"
 msgstr "Ta bort effekten från hyllan"
 
@@ -8069,8 +9472,9 @@ msgid "Adjusts the volume levels of particular frequencies"
 msgstr "Justerar volymnivåerna för vissa frekvenser"
 
 #: src/effects/Equalization.cpp
+#, fuzzy
 msgid ""
-"To use this EQ curve in a batch chain, please choose a new name for it.\n"
+"To use this EQ curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
@@ -8276,16 +9680,8 @@ msgid "Curve Name"
 msgstr "Kurvnamn"
 
 #: src/effects/Equalization.cpp
-msgid "&Rename..."
-msgstr "&Byt namn..."
-
-#: src/effects/Equalization.cpp
 msgid "D&elete..."
 msgstr "R&adera..."
-
-#: src/effects/Equalization.cpp
-msgid "I&mport..."
-msgstr "I&mportera..."
 
 #: src/effects/Equalization.cpp
 msgid "&Get More..."
@@ -8330,12 +9726,9 @@ msgid "Same name"
 msgstr "Samma namn"
 
 #: src/effects/Equalization.cpp
-msgid "Overwrite existing curve '"
+#, fuzzy, c-format
+msgid "Overwrite existing curve '%s'?"
 msgstr "Skriva över den befintliga kurvan \""
-
-#: src/effects/Equalization.cpp
-msgid "'?"
-msgstr "\"?"
 
 #: src/effects/Equalization.cpp
 msgid "Curve exists"
@@ -8350,24 +9743,18 @@ msgid "Can't delete 'unnamed'"
 msgstr "Kan inte radera \"namnlös\""
 
 #: src/effects/Equalization.cpp
-msgid "Delete '"
+#, fuzzy, c-format
+msgid "Delete '%s'?"
 msgstr "Radera \""
-
-#: src/effects/Equalization.cpp
-msgid "' ?"
-msgstr "\"?"
 
 #: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Confirm Deletion"
 msgstr "Bekräfta radering"
 
 #: src/effects/Equalization.cpp
-msgid "Delete "
-msgstr "Radera "
-
-#: src/effects/Equalization.cpp
-msgid "items?"
-msgstr "saker?"
+#, fuzzy, c-format
+msgid "Delete %d items?"
+msgstr "Repeterat %d gånger"
 
 #: src/effects/Equalization.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
@@ -8406,6 +9793,10 @@ msgstr "Kurvor exporterade"
 msgid "No curves exported"
 msgstr "Inga kurvor exporterades"
 
+#: src/effects/Equalization.h
+msgid "Equalization"
+msgstr "Equalization"
+
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -8431,6 +9822,14 @@ msgstr "Tillämpar en linjär intoning för markerat ljud"
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "Tillämpar en linjär uttoningseffekt på det markerade ljudet"
 
+#: src/effects/Fade.h
+msgid "Fade In"
+msgstr "Tona in"
+
+#: src/effects/Fade.h
+msgid "Fade Out"
+msgstr "Tona ut"
+
 #: src/effects/FindClipping.cpp
 msgid "Creates labels where clipping is detected"
 msgstr "Skapar etiketter där klippning identifieras"
@@ -8447,6 +9846,10 @@ msgstr "Starttröskelvärde (samplingar):"
 msgid "Stop threshold (samples):"
 msgstr "Sluttröskelvärde (samplingar):"
 
+#: src/effects/FindClipping.h
+msgid "Find Clipping"
+msgstr "Hitta klippning"
+
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
 msgstr "Det finns inte tillräcklig plats att skapa ljud"
@@ -8455,16 +9858,13 @@ msgstr "Det finns inte tillräcklig plats att skapa ljud"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Vänder uppochned på ljudsamplingarna och vänder på deras polaritet"
 
+#: src/effects/Invert.h
+msgid "Invert"
+msgstr "Invertera"
+
 #: src/effects/LoadEffects.cpp
 msgid "Builtin Effects"
 msgstr "Inbyggda effekter"
-
-#: src/effects/LoadEffects.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "The Audacity Team"
-msgstr "Audacity-teamet"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
@@ -8473,10 +9873,6 @@ msgstr "Tillhandahåller inbyggda effekter i Audacity"
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
 msgstr "Okänt namn på inbyggd effekt"
-
-#: src/effects/Noise.cpp
-msgid "White"
-msgstr "Vitt"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8493,6 +9889,10 @@ msgstr "Genererar en av tre olika brustyper"
 #: src/effects/Noise.cpp
 msgid "Noise type:"
 msgstr "Brus typ:"
+
+#: src/effects/Noise.h
+msgid "Noise"
+msgstr "Brus"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
@@ -8747,6 +10147,11 @@ msgid "Re&move"
 msgstr "Ra&dera"
 
 #: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Sets the peak amplitude or loudness of one or more tracks"
+msgstr "Ändrar den maximala amplituden för ett eller fler spår"
+
+#: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
 msgstr "Ändrar den maximala amplituden för ett eller fler spår"
 
@@ -8806,12 +10211,24 @@ msgid "Remove DC offset (center on 0.0 vertically)"
 msgstr "Ta bort DC-offset (centrera vid 0.0 vertikalt)"
 
 #: src/effects/Normalize.cpp
-msgid "Normalize maximum amplitude to"
+#, fuzzy
+msgid "Normalize peak amplitude to"
 msgstr "Normalisera maxamplitud till"
 
 #: src/effects/Normalize.cpp
-msgid "Maximum amplitude dB"
-msgstr "Max Amplitude (dB)"
+#, fuzzy
+msgid "Normalize loudness to"
+msgstr "Normalisera maxamplitud till"
+
+#: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Peak amplitude dB"
+msgstr "Ny maximal amplitud(dB):"
+
+#: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Use loudness instead of peak amplitude"
+msgstr "Skapar ljud med noll amplitud"
 
 #: src/effects/Normalize.cpp
 msgid "Normalize stereo channels independently"
@@ -8825,8 +10242,21 @@ msgstr "Väntar på vågformen att sluta beräknas..."
 msgid ".  Maximum 0dB."
 msgstr ".  Maximalt 0dB."
 
+#: src/effects/Normalize.cpp
+msgid "Loudness LUFS"
+msgstr ""
+
+#: src/effects/Normalize.cpp
+msgid "LUFS"
+msgstr ""
+
+#: src/effects/Normalize.h
+msgid "Normalize"
+msgstr "Normalisera"
+
 #: src/effects/Paulstretch.cpp
-msgid "Use Paulstretch only for an extreme time-stretch or \"stasis\" effect"
+#, fuzzy
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
 "Använd Paulstretch endast för en extrem \"stasiseffekt\" eller tidsutsträckt "
 "effekt"
@@ -8883,6 +10313,10 @@ msgstr ""
 "\n"
 "Försök att öka ljudmarkeringen till minst %.1f sekunder\n"
 "eller reducera \"Tidsupplösningen\" till mindre än %.1f sekunder."
+
+#: src/effects/Paulstretch.h
+msgid "Paulstretch"
+msgstr "Paulstretch"
 
 #: src/effects/Phaser.cpp
 msgid "Combines phase-shifted signals with the original signal"
@@ -8944,6 +10378,10 @@ msgstr "&Utmatningsförstärkning (dB):"
 msgid "Output gain (dB)"
 msgstr "Utmatningsförstärkning (dB):"
 
+#: src/effects/Phaser.h
+msgid "Phaser"
+msgstr "Phaser"
+
 #: src/effects/Repair.cpp
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "Ändrar den maximala amplituden för ett eller fler spår"
@@ -8975,6 +10413,10 @@ msgstr ""
 "\n"
 "Ju mer omgivande ljud, desto bättre fungerar det."
 
+#: src/effects/Repair.h
+msgid "Repair"
+msgstr "Reparera"
+
 #: src/effects/Repeat.cpp
 msgid "Repeats the selection the specified number of times"
 msgstr "Upprepar markeringen ett specificerat antal gånger"
@@ -9004,6 +10446,10 @@ msgstr "Ny markeringslängd: %s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "Varning: Inga upprepningar."
+
+#: src/effects/Repeat.h
+msgid "Repeat"
+msgstr "Repetera"
 
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
@@ -9093,6 +10539,14 @@ msgstr "Reverb"
 msgid "Reverses the selected audio"
 msgstr "Vänd på markerat ljud"
 
+#: src/effects/Reverse.h
+msgid "Reverse"
+msgstr "Baklänges"
+
+#: src/effects/SBSMSEffect.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "SBSMS-tid / Tonhöjdssträckning"
+
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
@@ -9162,6 +10616,10 @@ msgstr "Minimal förtunning av s&toppband:"
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "Minimal förtunning av s&toppband (dB)"
+
+#: src/effects/ScienFilter.h
+msgid "Classic Filters"
+msgstr "Klassiska filter"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Align MIDI to Audio"
@@ -9256,9 +10714,9 @@ msgstr "Skapar ljud med noll amplitud"
 msgid "Converts stereo tracks to mono"
 msgstr "Konverterar stereospå&r till mono"
 
-#: src/effects/TimeScale.cpp
-msgid "Sliding Time Scale/Pitch Shift"
-msgstr "Glidande tidskala/Tonhöjdsändring"
+#: src/effects/StereoToMono.h
+msgid "Stereo To Mono"
+msgstr "Stereo till mono"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
@@ -9288,10 +10746,10 @@ msgstr "(%) [-50 till 100]:"
 msgid "Final Pitch Shift"
 msgstr "Slutgiltig tonhöjdsskiftning"
 
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/prefs/WaveformSettings.cpp src/widgets/Meter.cpp
-msgid "Linear"
-msgstr "Linjär"
+#: src/effects/TimeScale.h
+#, fuzzy
+msgid "Sliding Stretch"
+msgstr "Sträck"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/prefs/WaveformSettings.cpp
@@ -9350,6 +10808,14 @@ msgstr "Amplitud, slut"
 msgid "Interpolation:"
 msgstr "Interpolering:"
 
+#: src/effects/ToneGen.h
+msgid "Chirp"
+msgstr "Pip"
+
+#: src/effects/ToneGen.h
+msgid "Tone"
+msgstr "Ton"
+
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
 msgstr "Trunkera identifierad tystnad"
@@ -9378,10 +10844,6 @@ msgstr ""
 msgid "Detect Silence"
 msgstr "Upptäck tystnad"
 
-#: src/effects/TruncSilence.cpp src/export/ExportFLAC.cpp
-msgid "Level:"
-msgstr "Nivå:"
-
 #: src/effects/TruncSilence.cpp
 msgid "Truncate to:"
 msgstr "Trunkera till:"
@@ -9397,6 +10859,207 @@ msgstr "%"
 #: src/effects/TruncSilence.cpp
 msgid "Truncate tracks independently"
 msgstr "Trunkera spår oberoende"
+
+#: src/effects/TruncSilence.h
+msgid "Truncate Silence"
+msgstr "Trunkera tystnad"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST Effects"
+msgstr "VST-effekter"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Adds the ability to use VST effects in Audacity."
+msgstr "Lägger till funktionalitet att använda VST-effekter i Audacity."
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "VST plugin registration failed for %s\n"
+msgstr "Registrering av VST-insticksmodul misslyckades för %s\n"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Scanning Shell VST"
+msgstr "Skannar Shell VST"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Registering %d of %d: %-64.64s"
+msgstr "Registrerar %d av %d: %-64.64s"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
+msgid "Could not load the library"
+msgstr "Kunde inte läsa in biblioteket"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST Effect Options"
+msgstr "VST-effektalternativ"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Buffer Size"
+msgstr "Buffertstorlek"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "The buffer size controls the number of samples sent to the effect "
+msgstr ""
+"Buffertstorleken kontrollerar antalet samplingar som skickas till effekten "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "on each iteration. Smaller values will cause slower processing and "
+msgstr ""
+"vid varje upprepning. Mindre värden kommer att orsaka långsammare "
+"bearbetning och "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "some effects require 8192 samples or less to work properly. However "
+msgstr ""
+"vissa effekter kräver 8192 samplingar eller färre för att fungera "
+"ordentligt. Men "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "most effects can accept large buffers and using them will greatly "
+msgstr "de flesta effekter kan acceptera stora buffertar och med dem kommer "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "reduce processing time."
+msgstr "det reducera bearbetningstiden avsevärt."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "&Buffer Size (8 to 1048576 samples):"
+msgstr "&Buffertstorlek (8 till 1048576 samplingar):"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Latency Compensation"
+msgstr "Latenskompensering"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "As part of their processing, some VST effects must delay returning "
+msgstr ""
+"Som en del av dess bearbetning måste vissa VST-effekter fördröja returnerad "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "audio to Audacity. When not compensating for this delay, you will "
+msgstr ""
+"ljud till Audacity. När du inte kompenserar för denna fördröjning kommer "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "notice that small silences have been inserted into the audio. "
+msgstr "du upptäcka att korta tystnadsperioder har infogats i ljudet. "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp
+msgid "Enabling this option will provide that compensation, but it may "
+msgstr ""
+"Om detta alternativ aktiveras kommer det tillhandahålla kompensationen, men "
+"det kan "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "not work for all VST effects."
+msgstr "fungerar inte för alla VST-effekter."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Enable &compensation"
+msgstr "Aktiverar &kompensering"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Graphical Mode"
+msgstr "Grafiskt läge"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid ""
+"Most VST effects have a graphical interface for setting parameter values."
+msgstr ""
+"De flesta VST-effekter har ett användargränssnitt för att ändra "
+"parametervärden."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid " A basic text-only method is also available. "
+msgstr " En grundläggande metod med endast text finns också tillgänglig. "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid " Reopen the effect for this to take effect."
+msgstr " Öppna effekten igen för att detta ska träda i kraft."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Enable &graphical interface"
+msgstr "Aktivera &användargränssnitt"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Audio In: %d, Audio Out: %d"
+msgstr "Ljud in: %d, ljud ut: %d"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Save VST Preset As:"
+msgstr "Spara VST-förinställning som:"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unrecognized file extension."
+msgstr "Filändelsen kändes inte igen."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Saving VST Presets"
+msgstr "Fel uppstod när VST-förinställning sparades"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Load VST Preset:"
+msgstr "Läs in VST-förinställning:"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Loading VST Presets"
+msgstr "Fel uppstod när VST-förinställning lästes in"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to load presets file."
+msgstr "Kunde inte läsa in förinställningsfil."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST plugin initialization failed\n"
+msgstr "Initialisering av VST-insticksmodul misslyckades\n"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid "Effect Settings"
+msgstr "Effekt inställningar"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to allocate memory when loading presets file."
+msgstr ""
+"Kunde inte allokera minne när filerna till förinställningarna lästes in."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to read presets file."
+msgstr "Kunde inte läsa förinställningsfil."
+
+#: src/effects/VST/VSTEffect.cpp src/xml/XMLFileReader.cpp
+#, c-format
+msgid "Could not open file: \"%s\""
+msgstr "Kunde inte öppna fil: \"%s\""
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Error writing to file: \"%s\""
+msgstr "Fel vid skrivning till fil: \"%s\""
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Saving Effect Presets"
+msgstr "Fel uppstod när effektförinställningar sparades"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "This parameter file was saved from %s.  Continue?"
+msgstr "Denna parameter-fil sparades från %s. Fortsätta?"
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/effects/VST/VSTEffect.h
+msgid "VST"
+msgstr ""
 
 #: src/effects/Wahwah.cpp
 msgid ""
@@ -9425,126 +11088,6 @@ msgstr "Frekvensoffset för wahwah (%):"
 #: src/effects/Wahwah.cpp
 msgid "Wah frequency offset in percent"
 msgstr "Frevensoffset för wahwah i procent"
-
-#: src/effects/Amplify.h
-msgid "Amplify"
-msgstr "Förstärk"
-
-#: src/effects/AutoDuck.h
-msgid "Auto Duck"
-msgstr "Automatisk ducking"
-
-#: src/effects/BassTreble.h
-msgid "Bass and Treble"
-msgstr "Bas och diskant"
-
-#: src/effects/ChangePitch.h
-msgid "Change Pitch"
-msgstr "Ändra tonhöjd"
-
-#: src/effects/ChangeSpeed.h
-msgid "Change Speed"
-msgstr "Ändra hastighet"
-
-#: src/effects/ChangeTempo.h
-msgid "Change Tempo"
-msgstr "Ändra tempo"
-
-#: src/effects/ClickRemoval.h
-msgid "Click Removal"
-msgstr "Ta bort klick"
-
-#: src/effects/Compressor.h
-msgid "Compressor"
-msgstr "Kompressor"
-
-#: src/effects/Distortion.h
-msgid "Distortion"
-msgstr "Förvrängning"
-
-#: src/effects/DtmfGen.h
-msgid "DTMF Tones"
-msgstr "DTMF-toner"
-
-#: src/effects/Echo.h
-msgid "Echo"
-msgstr "Eko"
-
-#: src/effects/Equalization.h
-msgid "Equalization"
-msgstr "Equalization"
-
-#: src/effects/Fade.h
-msgid "Fade In"
-msgstr "Tona in"
-
-#: src/effects/Fade.h
-msgid "Fade Out"
-msgstr "Tona ut"
-
-#: src/effects/FindClipping.h
-msgid "Find Clipping"
-msgstr "Hitta klippning"
-
-#: src/effects/Invert.h
-msgid "Invert"
-msgstr "Invertera"
-
-#: src/effects/Noise.h
-msgid "Noise"
-msgstr "Brus"
-
-#: src/effects/Normalize.h
-msgid "Normalize"
-msgstr "Normalisera"
-
-#: src/effects/Paulstretch.h
-msgid "Paulstretch"
-msgstr "Paulstretch"
-
-#: src/effects/Phaser.h
-msgid "Phaser"
-msgstr "Phaser"
-
-#: src/effects/Repair.h
-msgid "Repair"
-msgstr "Reparera"
-
-#: src/effects/Repeat.h
-msgid "Repeat"
-msgstr "Repetera"
-
-#: src/effects/Reverse.h
-msgid "Reverse"
-msgstr "Baklänges"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "SBSMS-tid / Tonhöjdssträckning"
-
-#: src/effects/ScienFilter.h
-msgid "Classic Filters"
-msgstr "Klassiska filter"
-
-#: src/effects/StereoToMono.h
-msgid "Stereo To Mono"
-msgstr "Stereo till mono"
-
-#: src/effects/TimeScale.h
-msgid "Time Scale"
-msgstr "Tidskala"
-
-#: src/effects/ToneGen.h
-msgid "Chirp"
-msgstr "Pip"
-
-#: src/effects/ToneGen.h
-msgid "Tone"
-msgstr "Ton"
-
-#: src/effects/TruncSilence.h
-msgid "Truncate Silence"
-msgstr "Trunkera tystnad"
 
 #: src/effects/Wahwah.h
 msgid "Wahwah"
@@ -9583,12 +11126,6 @@ msgid "Basic"
 msgstr "Grundläggande"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Latency Compensation"
-msgstr "Latenskompensering"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
 "As part of their processing, some Audio Unit effects must delay returning "
 msgstr ""
@@ -9596,34 +11133,8 @@ msgstr ""
 "returnerat "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "audio to Audacity. When not compensating for this delay, you will "
-msgstr ""
-"ljud till Audacity. När du inte kompenserar för denna fördröjning kommer "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "notice that small silences have been inserted into the audio. "
-msgstr "du upptäcka att korta tystnadsperioder har infogats i ljudet. "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Enabling this option will provide that compensation, but it may "
-msgstr ""
-"Om detta alternativ aktiveras kommer det tillhandahålla kompensationen, men "
-"det kan "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "not work for all Audio Unit effects."
 msgstr "fungerar inte för alla ljudenehetseffekter."
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Enable &compensation"
-msgstr "Aktiverar &kompensering"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9644,11 +11155,6 @@ msgstr ""
 msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr ""
 " Välj \"Grundläggande\" för ett grundläggande gränssnitt som består av text. "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid " Reopen the effect for this to take effect."
-msgstr " Öppna effekten igen för att detta ska träda i kraft."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9674,6 +11180,11 @@ msgstr "Importera ljudenhetsförinställningar"
 msgid "Location"
 msgstr "Plats"
 
+#: src/effects/audiounits/AudioUnitEffect.h
+#, fuzzy
+msgid "AudioUnit"
+msgstr "Ljudenhet"
+
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "LADSPA-effekter"
@@ -9685,11 +11196,6 @@ msgstr "Tillhandahåller LADSPA-effekter"
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Audacity no longer uses vst-bridge"
 msgstr "Audacity använder inte längre vst-bridge"
-
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
-msgid "Could not load the library"
-msgstr "Kunde inte läsa in biblioteket"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effect Options"
@@ -9705,22 +11211,14 @@ msgstr ""
 msgid "not work for all LADSPA effects."
 msgstr "fungerar inte för alla LADSPA-effekter."
 
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Effect Settings"
-msgstr "Effekt inställningar"
-
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Effect Output"
 msgstr "Effektutmatning"
 
-#: src/effects/lv2/LoadLV2.cpp
-msgid "LV2 Effects"
-msgstr "LV2-effekter"
-
-#: src/effects/lv2/LoadLV2.cpp
-msgid "Provides LV2 Effects support to Audacity"
-msgstr "Tillhandahåller LV2-effekter till Audacity"
+#: src/effects/ladspa/LadspaEffect.h
+#, fuzzy
+msgid "LADSPA"
+msgstr "LADSPA-effekter"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 Effect Settings"
@@ -9741,23 +11239,11 @@ msgstr ""
 msgid "not work for all LV2 effects."
 msgstr "fungerar inte för alla LV2-effekter."
 
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Graphical Mode"
-msgstr "Grafiskt läge"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values."
 msgstr ""
 "LV2-effekter kan ha ett användargränssnitt för att ändra parametervärden."
-
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid " A basic text-only method is also available. "
-msgstr " En grundläggande metod med endast text finns också tillgänglig. "
-
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Enable &graphical interface"
-msgstr "Aktivera &användargränssnitt"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -9771,6 +11257,20 @@ msgstr "Generator"
 msgid "&Duration:"
 msgstr "&Varaktighet:"
 
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/effects/lv2/LV2Effect.h
+msgid "LV2"
+msgstr ""
+
+#: src/effects/lv2/LoadLV2.cpp
+msgid "LV2 Effects"
+msgstr "LV2-effekter"
+
+#: src/effects/lv2/LoadLV2.cpp
+msgid "Provides LV2 Effects support to Audacity"
+msgstr "Tillhandahåller LV2-effekter till Audacity"
+
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
 msgstr "Nyquist-effekter"
@@ -9782,6 +11282,15 @@ msgstr "Lägger till stöd för Nyquist-effekter i Audacity"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "Verkställer Nyquist effekt..."
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Nyquist Effects Prompt"
+msgstr "Nyquist-effekter"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Prompt"
+msgstr "Nyquist-inmatning"
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
@@ -9810,6 +11319,15 @@ msgstr ""
 "insticksmodulens sökväg.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Audio selection required."
+msgstr "A&utomarkera, om markera är nödvändigt"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Error"
+msgstr "Nyquist-fel"
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 msgstr "Tyvärr, kan inte använda effekt på stereospår när spåren inte passar."
@@ -9824,10 +11342,6 @@ msgstr ""
 "Markeringen är för lång för Nyquist-koden.\n"
 "Maximal tillåten markering %ld samplingar\n"
 "(omkring %.1f timmar vid 44100 Hz samplingsfrekvens)."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "Nyquist-fel"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Debug Output: "
@@ -9846,6 +11360,14 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Processing complete."
 msgstr "Bearbetning slutförd."
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr ""
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -9930,6 +11452,19 @@ msgid "Could not determine language"
 msgstr "Kunde inte bestämma språket"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, c-format
+msgid "\"%s\" is not a valid file path."
+msgstr ""
+
+#. i18n-hint: Warning that there is one quotation mark rather than a pair.
+#: src/effects/nyquist/Nyquist.cpp
+#, c-format
+msgid ""
+"Mismatched quotes in\n"
+"%s"
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
 msgstr "Skriv Nyquist-kommando: "
 
@@ -9965,6 +11500,46 @@ msgstr "Filen kunde inte läsas in"
 msgid "File could not be saved"
 msgstr "Filen kunde inte sparas"
 
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid ""
+"Value range:\n"
+"%s to %s"
+msgstr "Värdet är inte inom intervallet: %s till %s"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Value Error"
+msgstr "Filfel"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
+"Invalid wildcard string in 'path' control.'\n"
+"Using empty string instead."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+msgid "Select a file"
+msgstr "Välj en fil"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Save file as"
+msgstr "Spara filer"
+
+#: src/effects/nyquist/Nyquist.cpp src/export/Export.cpp
+#: src/export/ExportMultiple.cpp
+msgid "untitled"
+msgstr "namnlös"
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/effects/nyquist/Nyquist.h
+msgid "Nyquist"
+msgstr "Nyquist"
+
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
 msgstr "Vamp-effekter"
@@ -9997,141 +11572,11 @@ msgstr "Inställningar för insticksmoduler"
 msgid "Program"
 msgstr "Program"
 
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST Effects"
-msgstr "VST-effekter"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Adds the ability to use VST effects in Audacity."
-msgstr "Lägger till funktionalitet att använda VST-effekter i Audacity."
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "VST plugin registration failed for %s\n"
-msgstr "Registrering av VST-insticksmodul misslyckades för %s\n"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Scanning Shell VST"
-msgstr "Skannar Shell VST"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Registering %d of %d: %-64.64s"
-msgstr "Registrerar %d av %d: %-64.64s"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST Effect Options"
-msgstr "VST-effektalternativ"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Buffer Size"
-msgstr "Buffertstorlek"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "The buffer size controls the number of samples sent to the effect "
+#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#: src/effects/vamp/VampEffect.h
+msgid "Vamp"
 msgstr ""
-"Buffertstorleken kontrollerar antalet samplingar som skickas till effekten "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "on each iteration. Smaller values will cause slower processing and "
-msgstr ""
-"vid varje upprepning. Mindre värden kommer att orsaka långsammare "
-"bearbetning och "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "some effects require 8192 samples or less to work properly. However "
-msgstr ""
-"vissa effekter kräver 8192 samplingar eller färre för att fungera "
-"ordentligt. Men "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "most effects can accept large buffers and using them will greatly "
-msgstr "de flesta effekter kan acceptera stora buffertar och med dem kommer "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "reduce processing time."
-msgstr "det reducera bearbetningstiden avsevärt."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "&Buffer Size (8 to 1048576 samples):"
-msgstr "&Buffertstorlek (8 till 1048576 samplingar):"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "As part of their processing, some VST effects must delay returning "
-msgstr ""
-"Som en del av dess bearbetning måste vissa VST-effekter fördröja returnerad "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "not work for all VST effects."
-msgstr "fungerar inte för alla VST-effekter."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values."
-msgstr ""
-"De flesta VST-effekter har ett användargränssnitt för att ändra "
-"parametervärden."
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Audio In: %d, Audio Out: %d"
-msgstr "Ljud in: %d, ljud ut: %d"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Save VST Preset As:"
-msgstr "Spara VST-förinställning som:"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unrecognized file extension."
-msgstr "Filändelsen kändes inte igen."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Saving VST Presets"
-msgstr "Fel uppstod när VST-förinställning sparades"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Load VST Preset:"
-msgstr "Läs in VST-förinställning:"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Loading VST Presets"
-msgstr "Fel uppstod när VST-förinställning lästes in"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to load presets file."
-msgstr "Kunde inte läsa in förinställningsfil."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST plugin initialization failed\n"
-msgstr "Initialisering av VST-insticksmodul misslyckades\n"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to allocate memory when loading presets file."
-msgstr ""
-"Kunde inte allokera minne när filerna till förinställningarna lästes in."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to read presets file."
-msgstr "Kunde inte läsa förinställningsfil."
-
-#: src/effects/VST/VSTEffect.cpp src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Could not open file: \"%s\""
-msgstr "Kunde inte öppna fil: \"%s\""
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Error writing to file: \"%s\""
-msgstr "Fel vid skrivning till fil: \"%s\""
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Saving Effect Presets"
-msgstr "Fel uppstod när effektförinställningar sparades"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
-msgstr "Denna parameter-fil sparades från %s. Fortsätta?"
 
 #: src/export/Export.cpp
 msgid "No format specific options"
@@ -10158,10 +11603,6 @@ msgstr "Allt ljud är avstängt."
 #: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "Kunde inte exportera"
-
-#: src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "untitled"
-msgstr "namnlös"
 
 #: src/export/Export.cpp
 #, c-format
@@ -10213,15 +11654,15 @@ msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "En fil med namnet \"%s\" finns redan.  Ersätt?"
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to a single mono channel in the exported file."
+#, fuzzy
+msgid "Your tracks will be mixed down and exported as one mono file."
 msgstr ""
-"Dina spår kommer att mixas ned till en enskild monokanal i den exporterade "
+"Dina spår kommer att mixas ner till två stereokanaler i den exporterade "
 "filen."
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to two stereo channels in the exported file."
+#, fuzzy
+msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr ""
 "Dina spår kommer att mixas ner till två stereokanaler i den exporterade "
 "filen."
@@ -10267,10 +11708,6 @@ msgstr "Mixerpanel"
 #, c-format
 msgid "Output Channels: %2d"
 msgstr "Utmatningskanaler: %2d"
-
-#: src/export/ExportCL.cpp
-msgid "Command:"
-msgstr "Kommando:"
 
 #: src/export/ExportCL.cpp
 msgid "Show output"
@@ -10460,6 +11897,7 @@ msgstr "Du kan återsampla till någon av frekvenserna nedan."
 msgid "Sample Rates"
 msgstr "Samplingsfrekvenser"
 
+#. i18n-hint: abbreviates thousands of bits per second
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 #, c-format
 msgid "%i kbps"
@@ -10588,10 +12026,6 @@ msgstr "Importera förinställningar"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Export Presets"
 msgstr "Exportera förinställningar"
-
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMultiple.cpp
-msgid "Format:"
-msgstr "Format:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Codec:"
@@ -10979,6 +12413,10 @@ msgid "24 bit"
 msgstr "24 bitar"
 
 #: src/export/ExportFLAC.cpp
+msgid "Level:"
+msgstr "Nivå:"
+
+#: src/export/ExportFLAC.cpp
 msgid "Bit depth:"
 msgstr "Bitdjup:"
 
@@ -11031,15 +12469,23 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "Exporterar ljudet vid %ld kbps"
 
 #: src/export/ExportMP3.cpp
-msgid "kbps"
-msgstr "kbps"
+#, fuzzy, c-format
+msgid "%d kbps"
+msgstr "%i kbps"
 
 #: src/export/ExportMP3.cpp
-msgid "(Best Quality)"
+#, fuzzy, c-format
+msgid "%s kbps (Best Quality)"
 msgstr "(Bäst kvalitet)"
 
 #: src/export/ExportMP3.cpp
-msgid "(Smaller files)"
+#, fuzzy, c-format
+msgid "%s kbps"
+msgstr "%i kbps"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy, c-format
+msgid "%s kbps (Smaller files)"
 msgstr "(Mindre filer)"
 
 #: src/export/ExportMP3.cpp
@@ -11052,16 +12498,20 @@ msgstr "Standard"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
-msgid "Insane"
-msgstr "Galet"
+msgid "Insane, 320 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
-msgid "Extreme"
-msgstr "Extrem"
+msgid "Extreme, 220-260 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
-msgid "Medium"
-msgstr "Mellanstor"
+msgid "Standard, 170-210 kbps"
+msgstr ""
+
+#: src/export/ExportMP3.cpp
+msgid "Medium, 145-185 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Bit Rate Mode:"
@@ -11260,8 +12710,9 @@ msgid "Cannot Export Multiple"
 msgstr "Kan inte exportera flera"
 
 #: src/export/ExportMultiple.cpp
+#, fuzzy
 msgid ""
-"You have only one unmuted Audio Track and no applicable \n"
+"You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
 "Du har bara ett tystat ljudspår och inga användbara\n"
@@ -11286,10 +12737,6 @@ msgstr "Alternativ:"
 #: src/export/ExportMultiple.cpp
 msgid "Split files based on:"
 msgstr "Dela filer baserat på:"
-
-#: src/export/ExportMultiple.cpp
-msgid "Labels"
-msgstr "Etiketter"
 
 #: src/export/ExportMultiple.cpp
 msgid "Include audio before first label"
@@ -11421,6 +12868,11 @@ msgstr "AIFF (Apple) 16-bitars PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) signed 16-bit PCM"
+msgstr "WAV (Microsoft) signed 16-bitars PCM"
+
+#: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "WAV (Microsoft) signed 24-bit PCM"
 msgstr "WAV (Microsoft) signed 16-bitars PCM"
 
 #: src/export/ExportPCM.cpp
@@ -11857,6 +13309,11 @@ msgstr "Läs filer &direkt från originalet (snabbare)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "Varna &inte igen utan använd mitt val ovan"
 
+#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "Importerar %s"
+
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
 msgstr "QuickTime-filer"
@@ -11884,11 +13341,6 @@ msgstr "Kunde inte hämta strömbeskrivning"
 #: src/import/ImportQT.cpp
 msgid "Unable to get fill buffer"
 msgstr "Kunde inte fylla buffert"
-
-#: src/import/ImportRaw.cpp src/import/ImportPlugin.h
-#, c-format
-msgid "Importing %s"
-msgstr "Importerar %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp
@@ -11962,11 +13414,6 @@ msgstr "Samplingsfrekvens:"
 msgid "Bad data size"
 msgstr "Dålig datastorlek"
 
-#: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f %% färdigt.  Klicka för att ändra uppgiftens kontaktpunkt."
-
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
 msgstr "Import färdig. Beräknar vågform"
@@ -11975,12 +13422,16 @@ msgstr "Import färdig. Beräknar vågform"
 msgid "Decoding Waveform"
 msgstr "Avkodar vågform"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f %% färdigt.  Klicka för att ändra uppgiftens kontaktpunkt."
+
 #: src/prefs/BatchPrefs.cpp
 msgid "Batch"
 msgstr "Batch"
 
-#: src/prefs/BatchPrefs.cpp src/prefs/GUIPrefs.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
 msgstr "Beteenden"
 
@@ -12036,13 +13487,15 @@ msgstr "Latens"
 msgid "&Buffer length:"
 msgstr "&Buffertlängd:"
 
-#: src/prefs/DevicePrefs.cpp src/widgets/NumericTextCtrl.cpp
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/widgets/NumericTextCtrl.cpp
 msgid "milliseconds"
 msgstr "millisekunder"
 
 #: src/prefs/DevicePrefs.cpp
-msgid "Track &shift after record:"
-msgstr "Byt &spår efter inspelning:"
+#, fuzzy
+msgid "&Latency compensation:"
+msgstr "Latenskompensering"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
@@ -12074,12 +13527,12 @@ msgid "&Location:"
 msgstr "&Plats:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "C&hoose..."
-msgstr "Bl&äddra..."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "Free Space:"
 msgstr "Ledigt utrymme:"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "C&hoose..."
+msgstr "Bl&äddra..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Audio cache"
@@ -12140,10 +13593,6 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
 msgstr "Uppdatera temporär katalog"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Effects"
-msgstr "Effekter"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
@@ -12368,15 +13817,13 @@ msgid "Meter dB &range:"
 msgstr "Inte&rvall för dB-mätare:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Show"
-msgstr "Visa"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "'How to Get &Help' at launch"
+#, fuzzy
+msgid "Show 'How to Get &Help' at launch"
 msgstr "\"Hur man får &hjälp\" vid programstart"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "E&xtra menus"
+#, fuzzy
+msgid "Show e&xtra menus"
 msgstr "E&xtra menyer"
 
 #: src/prefs/GUIPrefs.cpp
@@ -12394,6 +13841,10 @@ msgstr "Be&håll etiketter om markeringen fästs till en etikett"
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
 msgstr "B&landa systemets och Audacitys tema"
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Use mostly Left-to-Right layouts in RTL languages"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -12513,6 +13964,10 @@ msgstr "&Ändra"
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
 msgstr ""
 "OBS: Cmd+Q kommer att avsluta programmet. Alla andra tangenter är giltiga."
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "&Import..."
+msgstr "&Importera..."
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
 msgid "&Defaults"
@@ -12728,10 +14183,6 @@ msgstr "Knappar"
 #: src/prefs/MousePrefs.cpp
 msgid "Left-Click"
 msgstr "Vänsterklick"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Markera"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Set Selection Point"
@@ -12977,6 +14428,16 @@ msgid "As&k"
 msgstr "Frå&ga"
 
 #: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "16-bit"
+msgstr "16-bitars PCM"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "24-bit"
+msgstr "24-bitars PCM"
+
+#: src/prefs/QualityPrefs.cpp
 msgid "Rectangle"
 msgstr "Rektangel"
 
@@ -13031,20 +14492,28 @@ msgid "Dit&her:"
 msgstr "Gitt&er:"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "Playthrough"
-msgstr "Spela upp"
-
-#: src/prefs/RecordingPrefs.cpp
-msgid "&Other tracks while recording (overdub)"
+#, fuzzy
+msgid "Play &other tracks while recording (overdub)"
 msgstr "&Andra spår under inspelning (pålägg)"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Hardware Playthrough of input"
-msgstr "&Hårdvaruuppspelning av inmatning"
+msgid "Use &hardware to play other tracks"
+msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Software Playthrough of input"
+#, fuzzy
+msgid "&Software playthrough of input"
 msgstr "&Mjukvaruuppspelning av inmatning"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Record on a new track"
+msgstr "Spela alltid in på ett nytt spår"
+
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr "Upptäck signalförluster"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
@@ -13087,15 +14556,6 @@ msgid "System T&ime"
 msgstr "Systemt&id"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "Always record on a new track"
-msgstr "Spela alltid in på ett nytt spår"
-
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
-#: src/prefs/RecordingPrefs.cpp
-msgid "Detect dropouts"
-msgstr "Upptäck signalförluster"
-
-#: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
 msgstr "Automatisk justering av inspelningsnivå"
 
@@ -13127,6 +14587,19 @@ msgstr "Antal analyser i följd:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "0 means endless"
 msgstr "0 betyder oändligt"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Punch and Roll Recording"
+msgstr "Ljudaktiverad inspelning"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "Pre-ro&ll:"
+msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "Cross&fade:"
+msgstr ""
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
@@ -13216,11 +14689,13 @@ msgid "S&cale"
 msgstr "S&kala"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Mi&nimum Frequency (Hz):"
+#, fuzzy
+msgid "Mi&n Frequency (Hz):"
 msgstr "M&inimal frekvens (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Ma&ximum Frequency (Hz):"
+#, fuzzy
+msgid "Ma&x Frequency (Hz):"
 msgstr "Ma&ximal frekvens (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
@@ -13236,8 +14711,8 @@ msgid "&Range (dB):"
 msgstr "&Intervall (dB)"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Frequency g&ain (dB/dec):"
-msgstr "Frekvensförstärknin&g: (dB/dec)"
+msgid "High &boost (dB/dec):"
+msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Gra&yscale"
@@ -13457,6 +14932,10 @@ msgid "&Type to create a label"
 msgstr "Skriv för a&tt skapa en etikett"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "Use dialog for the &name of a new label"
+msgstr ""
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable scrolling left of &zero"
 msgstr "Till&åt att rulla till vänster om noll"
 
@@ -13469,16 +14948,8 @@ msgid "Solo &Button:"
 msgstr "Solo&knapp:"
 
 #: src/prefs/TracksPrefs.cpp
-msgid "Waveform"
-msgstr "Vågform"
-
-#: src/prefs/TracksPrefs.cpp
 msgid "Waveform (dB)"
 msgstr "Vågform (dB)"
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Spectrogram"
-msgstr "Spektrogram"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Connect dots"
@@ -13509,6 +14980,34 @@ msgid "Seconds"
 msgstr "Sekunder"
 
 #: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "5ths of Seconds"
+msgstr "Sekunder"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "10ths of Seconds"
+msgstr "Sekunder"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "20ths of Seconds"
+msgstr "Sekunder"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "50ths of Seconds"
+msgstr "Sekunder"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "100ths of Seconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "500ths of Seconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
 msgid "MilliSeconds"
 msgstr "Millisekunder"
 
@@ -13525,6 +15024,18 @@ msgid "Max Zoom"
 msgstr "Max. zoom"
 
 #: src/prefs/TracksPrefs.cpp
+msgid "Auto-&fit track height"
+msgstr "Auto&passa spårhöjd"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Sho&w audio track name as overlay"
+msgstr "&Visa ljudspårets namn som överlägg"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Use &half-wave display when collapsed"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
 msgstr "&Fäst sidhuvudet för inspelning/uppspelning"
 
@@ -13533,8 +15044,8 @@ msgid "A&uto-scroll if head unpinned"
 msgstr "A&utorulla om sidhuvudet inte är fäst"
 
 #: src/prefs/TracksPrefs.cpp
-msgid "Auto-&fit track height"
-msgstr "Auto&passa spårhöjd"
+msgid "Pinned &head position"
+msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -13548,13 +15059,10 @@ msgstr "Visar &samplingar:"
 msgid "Default audio track &name:"
 msgstr "Standard&namn för ljudspår:"
 
+#. i18n-hint: The default name for an audio track.
 #: src/prefs/TracksPrefs.cpp
 msgid "Audio Track"
 msgstr "Ljudspår"
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Sho&w audio track name as overlay"
-msgstr "&Visa ljudspårets namn som överlägg"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
@@ -13659,15 +15167,6 @@ msgstr "Markera till slutet"
 msgid "Select to Start"
 msgstr "Markera till början"
 
-#: src/toolbars/ControlToolBar.cpp
-msgid ""
-"Error opening sound device.\n"
-"Try changing the audio host, recording device and the project sample rate."
-msgstr ""
-"Fel uppstod när ljudenheten öppnades.\n"
-"Försök att ändra ljudvärden, inspelningsenhet och projektets "
-"samplingsfrekvens."
-
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Playback Device"
@@ -13743,10 +15242,6 @@ msgid "Zoom Out"
 msgstr "Zooma ut"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Visa effekthyllan"
-
-#: src/toolbars/EditToolBar.cpp
 msgid "Fit selection to width"
 msgstr "Anpassa markeringen till bredden"
 
@@ -13797,16 +15292,8 @@ msgid "Recording Volume"
 msgstr "Inspelningsvolym"
 
 #: src/toolbars/MixerToolBar.cpp
-msgid "Slider Recording"
-msgstr "Inspelningsreglage"
-
-#: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume"
 msgstr "Uppspelningsvolym"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Slider Playback"
-msgstr "Uppspelningsreglage"
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
@@ -13876,10 +15363,6 @@ msgid "Show Scrub Ruler"
 msgstr "Visa scrublinjal"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Selection"
-msgstr "Markering"
-
-#: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
 msgstr "Projektets frekvens (Hz)"
 
@@ -13906,6 +15389,10 @@ msgstr "Markeringens längd och slut"
 #: src/toolbars/SelectionBar.cpp
 msgid "Length and Center of Selection"
 msgstr "Markeringens längd och center"
+
+#: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
+msgid "Show"
+msgstr "Visa"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap To"
@@ -13936,22 +15423,6 @@ msgstr "%s - kontrollerad"
 msgid "Selection %s.  %s won't change."
 msgstr "Markering %s.  %s kommer inte att ändras."
 
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - End"
-msgstr "Start - Slut"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length"
-msgstr "Start - Längd"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length - End"
-msgstr "Längd - Slut"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length - Center"
-msgstr "Längd - Centrera"
-
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
 msgstr "Centrera frekvens och bredd"
@@ -13961,20 +15432,14 @@ msgid "Low and High Frequencies"
 msgstr "Låga och höga frekvenser"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-msgid "Center Frequency:"
+#, fuzzy
+msgid "Center Frequency"
 msgstr "Centrera frekvens:"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-msgid "Bandwidth:"
+#, fuzzy
+msgid "Bandwidth"
 msgstr "Bandbredd:"
-
-#: src/toolbars/SpectralSelectionBar.cpp
-msgid "Low Frequency:"
-msgstr "Låg frekvens:"
-
-#: src/toolbars/SpectralSelectionBar.cpp
-msgid "High Frequency:"
-msgstr "Hög frekvens:"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -14026,10 +15491,6 @@ msgstr "Spela upp med vald hastighet"
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Playback Speed"
 msgstr "Uppspelningshastighet"
-
-#: src/toolbars/TranscriptionToolBar.cpp
-msgid "Play-at-Speed"
-msgstr "Spela upp med vald hastighet"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Looped-Play-at-Speed"
@@ -14485,6 +15946,11 @@ msgid "Scrub &Ruler"
 msgstr "Scrub&linjal"
 
 #: src/tracks/ui/Scrubbing.cpp
+#, fuzzy
+msgid "Playing at Speed"
+msgstr "Spela efter hastighet"
+
+#: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Seek"
 msgstr "Flytta muspekaren till sök"
 
@@ -14596,11 +16062,8 @@ msgid "Move Track to &Bottom"
 msgstr "Flytta spåret l&ängst ned"
 
 #: src/tracks/ui/TrackControls.cpp
-msgid "Change track name to:"
-msgstr "Ändra spårets namn till:"
-
-#: src/tracks/ui/TrackControls.cpp
-msgid "Track Name"
+#, fuzzy
+msgid "Set Track Name"
 msgstr "Spårnamn"
 
 #: src/tracks/ui/TrackControls.cpp
@@ -14849,6 +16312,10 @@ msgstr " Klipptes "
 msgid "Show Log for Details"
 msgstr "Visa logg för mer detaljer"
 
+#: src/widgets/MultiDialog.h
+msgid "Please select an action"
+msgstr "Välj vad som ska göras"
+
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
 #. * on the end to the word for seconds. Don't change the numbers.
@@ -14886,6 +16353,12 @@ msgstr "dd:hh:mm:ss"
 msgid "0100 days 024 h 060 m 060 s"
 msgstr "0100 dagar 024 h 060 m 060 s"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundredths of a second (1/100 second)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + hundredths"
+msgstr "hh:mm:ss + hundratal"
+
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
@@ -14895,6 +16368,12 @@ msgstr "0100 dagar 024 h 060 m 060 s"
 msgid "0100 h 060 m 060.0100 s"
 msgstr "0100 h 060 m 060.0100 s"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and milliseconds (1/1000 second)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + milliseconds"
+msgstr "hh:mm:ss + millisekunder"
+
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -14903,6 +16382,12 @@ msgstr "0100 h 060 m 060.0100 s"
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060.01000 s"
 msgstr "0100 h 060 m 060.01000 s"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and samples (at the current project sample rate)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + samples"
+msgstr "hh:mm:ss + samplingar"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -15132,18 +16617,6 @@ msgstr "hundratals "
 msgid "thousandths of "
 msgstr "tusentals "
 
-#: src/widgets/numformatter.cpp
-msgid "NaN"
-msgstr "N/A"
-
-#: src/widgets/numformatter.cpp
-msgid "Infinity"
-msgstr "Oändlig"
-
-#: src/widgets/numformatter.cpp
-msgid "-Infinity"
-msgstr "-Oändlig"
-
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
 msgstr "Förbrukad tid:"
@@ -15181,6 +16654,20 @@ msgid "Confirm Close"
 msgstr "Bekräfta nedstängning"
 
 #: src/widgets/Ruler.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "Tidslinjeåtgärder är inaktiverade under inspelning"
+
+#: src/widgets/Ruler.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Klicka och dra för att justera relativa storleken för stereospår."
+
+#: src/widgets/Ruler.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "&Fäst sidhuvudet för inspelning/uppspelning"
+
+#: src/widgets/Ruler.cpp
 msgid "Timeline"
 msgstr "Tidslinje"
 
@@ -15216,10 +16703,6 @@ msgstr "Dra för att söka. Släpp och flytta för att använda scrubbing."
 #: src/widgets/Ruler.cpp
 msgid "Move to Scrub. Drag to Seek."
 msgstr "Flytta för att använda scrubbing. Dra för att söka."
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "Tidslinjeåtgärder är inaktiverade under inspelning"
 
 #: src/widgets/Ruler.cpp
 msgid "Quick-Play disabled"
@@ -15285,6 +16768,22 @@ msgstr "Inaktivera scrublinjal"
 msgid "Enable Scrub Ruler"
 msgstr "Aktivera scrublinjal"
 
+#: src/widgets/Warning.cpp
+msgid "Don't show this warning again"
+msgstr "Visa inte denna varning igen"
+
+#: src/widgets/numformatter.cpp
+msgid "NaN"
+msgstr "N/A"
+
+#: src/widgets/numformatter.cpp
+msgid "Infinity"
+msgstr "Oändlig"
+
+#: src/widgets/numformatter.cpp
+msgid "-Infinity"
+msgstr "-Oändlig"
+
 #: src/widgets/valnum.cpp
 msgid "Validation error"
 msgstr "Valideringsfel"
@@ -15329,18 +16828,6 @@ msgstr "Värdet får inte vara högre än %s"
 msgid "e"
 msgstr "e"
 
-#: src/widgets/Warning.cpp
-msgid "Don't show this warning again"
-msgstr "Visa inte denna varning igen"
-
-#: src/widgets/MultiDialog.h
-msgid "Please select an action"
-msgstr "Välj vad som ska göras"
-
-#: src/widgets/wxPanelWrapper.h
-msgid "Panel"
-msgstr "Panel"
-
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
 msgstr "Dialog"
@@ -15352,10 +16839,6 @@ msgstr "Välj en katalog"
 #: src/widgets/wxPanelWrapper.h
 msgid "Directory Dialog"
 msgstr "Katalogdialog"
-
-#: src/widgets/wxPanelWrapper.h
-msgid "Select a file"
-msgstr "Välj en fil"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "File Dialog"
@@ -15370,6 +16853,190 @@ msgstr "Fel: %hs vid rad %lu"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "Kunde inte läsa in fil: \"%s\""
+
+#~ msgid ""
+#~ "Latency Correction setting has caused the recorded audio to be hidden "
+#~ "before zero.\n"
+#~ "Audacity has brought it back to start at zero.\n"
+#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
+#~ "to the right place."
+#~ msgstr ""
+#~ "Inställningarna för latenskorrigering har orsakat att det inspelade "
+#~ "ljudet är gömt\n"
+#~ "innan noll. Audacity har flyttat början på ljudet till noll.\n"
+#~ "Du kanske måste använda tidsförskjutningsverktyget (<---> eller F5) för "
+#~ "att dra spåret till rätt plats."
+
+#~ msgid "Latency problem"
+#~ msgstr "Latensproblem"
+
+#~ msgid "Apply Chain"
+#~ msgstr "Tillämpa kedja"
+
+#~ msgid "&Select Chain"
+#~ msgstr "&Välj kedja"
+
+#~ msgid "Chain"
+#~ msgstr "Kedja"
+
+#~ msgid "Edit Chains"
+#~ msgstr "Ändra kedjor"
+
+#~ msgid "&Chains"
+#~ msgstr "&Kedjor"
+
+#~ msgid "Re&name"
+#~ msgstr "Byt& namn"
+
+#~ msgid "C&hain (Double-Click or press SPACE to edit)"
+#~ msgstr "K&edja (dubbelklicka eller tryck på mellanslag för att redigera)"
+
+#~ msgid "<br><br>DarkAudacity is based on Audacity:"
+#~ msgstr "<br><br>DarkAudacity baseras på Audacity:"
+
+#~ msgid ""
+#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
+#~ "between them."
+#~ msgstr ""
+#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - för skillnaderna "
+#~ "mellan dem."
+
+#~ msgid ""
+#~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
+#~ "help using DarkAudacity."
+#~ msgstr ""
+#~ " skicka e-post till [[mailto:james@audacityteam.org|james@audacityteam."
+#~ "org]] - för hjälp om hur man använder DarkAudacity."
+
+#~ msgid ""
+#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
+#~ "started with DarkAudacity."
+#~ msgstr ""
+#~ " [[http://www.darkaudacity.com/video.html|Guider]] - för hur man kommer "
+#~ "igång med DarkAudacity."
+
+#~ msgid "Insert &After"
+#~ msgstr "Infoga &efter"
+
+#~ msgid "Insert &Before"
+#~ msgstr "Infoga &före"
+
+#~ msgid "C&hains"
+#~ msgstr "&Kedjor"
+
+#~ msgid "Appl&y Chain..."
+#~ msgstr "&Verkställ kedja..."
+
+#~ msgid "Edit C&hains..."
+#~ msgstr "&Redigera kedjor..."
+
+#~ msgid "Tra&nscription Toolbar"
+#~ msgstr "Verktygsfält för tra&nskription"
+
+#~ msgid "&Tools"
+#~ msgstr "&Verktyg"
+
+#~ msgid "E&xtra"
+#~ msgstr "E&xtra"
+
+#~ msgid "Transcri&ption"
+#~ msgstr "Tr&anskription"
+
+#~ msgid "Plug-in Manager: Effects, Generators and Analyzers"
+#~ msgstr "Insticksmodulshanterare: Effekter, generatorer och analyser"
+
+#~ msgid "All Menus"
+#~ msgstr "Alla menyer"
+
+#~ msgid "Transcription"
+#~ msgstr "Transkription"
+
+#~ msgid "'?"
+#~ msgstr "\"?"
+
+#~ msgid "' ?"
+#~ msgstr "\"?"
+
+#~ msgid "Delete "
+#~ msgstr "Radera "
+
+#~ msgid "items?"
+#~ msgstr "saker?"
+
+#~ msgid "Maximum amplitude dB"
+#~ msgstr "Max Amplitude (dB)"
+
+#~ msgid "Sliding Time Scale/Pitch Shift"
+#~ msgstr "Glidande tidskala/Tonhöjdsändring"
+
+#~ msgid "Time Scale"
+#~ msgstr "Tidskala"
+
+#~ msgid ""
+#~ "Your tracks will be mixed down to a single mono channel in the exported "
+#~ "file."
+#~ msgstr ""
+#~ "Dina spår kommer att mixas ned till en enskild monokanal i den "
+#~ "exporterade filen."
+
+#~ msgid "kbps"
+#~ msgstr "kbps"
+
+#~ msgid "Insane"
+#~ msgstr "Galet"
+
+#~ msgid "Extreme"
+#~ msgstr "Extrem"
+
+#~ msgid "Medium"
+#~ msgstr "Mellanstor"
+
+#~ msgid "Track &shift after record:"
+#~ msgstr "Byt &spår efter inspelning:"
+
+#~ msgid "Playthrough"
+#~ msgstr "Spela upp"
+
+#~ msgid "&Hardware Playthrough of input"
+#~ msgstr "&Hårdvaruuppspelning av inmatning"
+
+#~ msgid "Frequency g&ain (dB/dec):"
+#~ msgstr "Frekvensförstärknin&g: (dB/dec)"
+
+#~ msgid ""
+#~ "Error opening sound device.\n"
+#~ "Try changing the audio host, recording device and the project sample rate."
+#~ msgstr ""
+#~ "Fel uppstod när ljudenheten öppnades.\n"
+#~ "Försök att ändra ljudvärden, inspelningsenhet och projektets "
+#~ "samplingsfrekvens."
+
+#~ msgid "Slider Recording"
+#~ msgstr "Inspelningsreglage"
+
+#~ msgid "Slider Playback"
+#~ msgstr "Uppspelningsreglage"
+
+#~ msgid "Start - End"
+#~ msgstr "Start - Slut"
+
+#~ msgid "Start - Length"
+#~ msgstr "Start - Längd"
+
+#~ msgid "Length - End"
+#~ msgstr "Längd - Slut"
+
+#~ msgid "Length - Center"
+#~ msgstr "Längd - Centrera"
+
+#~ msgid "Low Frequency:"
+#~ msgstr "Låg frekvens:"
+
+#~ msgid "High Frequency:"
+#~ msgstr "Hög frekvens:"
+
+#~ msgid "Change track name to:"
+#~ msgstr "Ändra spårets namn till:"
 
 #~ msgid "In Memoriam"
 #~ msgstr "Till minne av"
@@ -15414,9 +17081,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgstr "av"
 
 #~ msgid "clip"
-#~ msgstr "klipp"
-
-#~ msgid "clips"
 #~ msgstr "klipp"
 
 #~ msgid "and"
@@ -15565,12 +17229,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "down"
 #~ msgstr "ned"
 
-#~ msgid "Left"
-#~ msgstr "Vänster"
-
-#~ msgid "Right"
-#~ msgstr "Höger"
-
 #~ msgid "+"
 #~ msgstr "+"
 
@@ -15660,9 +17318,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #, fuzzy
 #~ msgid "InterpolationMethod"
 #~ msgstr "Interpolation:"
-
-#~ msgid "Moderate"
-#~ msgstr "Måttlig"
 
 #~ msgid "Heavy"
 #~ msgstr "Kraftigt"
@@ -15812,10 +17467,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgstr "Trunkera tystnad"
 
 #, fuzzy
-#~ msgid "Compress"
-#~ msgstr "Kompressor"
-
-#, fuzzy
 #~ msgid "Version"
 #~ msgstr "Gör baklänges"
 
@@ -15824,9 +17475,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "C&ategory:"
 #~ msgstr "K&ategori:"
-
-#~ msgid "Set"
-#~ msgstr "Set"
 
 #~ msgid "Key Combination"
 #~ msgstr "Tangentkombination"
@@ -15854,20 +17502,8 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Mo&ve Cursor"
 #~ msgstr "Fly&tta markör"
 
-#~ msgid "to Selection Star&t"
-#~ msgstr "till markeringens börja&n"
-
-#~ msgid "to Selection En&d"
-#~ msgstr "till markeringens slu&t"
-
 #~ msgid "Fit &Vertically"
 #~ msgstr "Anpassa &vertikalt"
-
-#~ msgid "Go to Selection Sta&rt"
-#~ msgstr "Gå till markeringens bör&jan"
-
-#~ msgid "Go to Selection En&d"
-#~ msgstr "Gå till markeringens sl&ut"
 
 #, fuzzy
 #~ msgid "Co&mbined Meter Toolbar"
@@ -15887,9 +17523,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "Move Sele&ction when Aligning"
 #~ msgstr "Flytta mar&kering vid placering"
-
-#~ msgid "Play at speed"
-#~ msgstr "Spela efter hastighet"
 
 #~ msgid "&Mono"
 #~ msgstr "&Mono"
@@ -15929,9 +17562,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #, fuzzy
 #~ msgid "You must select audio in the project window."
 #~ msgstr "Var vänlig välj ett spår först."
-
-#~ msgid "Nyquist"
-#~ msgstr "Nyquist"
 
 #~ msgid "&Ergonomic order of Transport Toolbar buttons"
 #~ msgstr "&Ergonomisk ordning av Transportpanelens knappar"
@@ -16037,9 +17667,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Record Below"
 #~ msgstr "Inspelning mätare"
 
-#~ msgid "Silence Audio"
-#~ msgstr "Skapa tystnad"
-
 #~ msgid "Fit Selection"
 #~ msgstr "Anpassa markering"
 
@@ -16107,9 +17734,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ "<b>searchable</b>."
 #~ msgstr ""
 #~ "För ännu snabbare svar, alla online-resurser ovan är <b>sökbara</b>."
-
-#~ msgid "Undo History"
-#~ msgstr "Ångra historia"
 
 #~ msgid "Edit Metadata"
 #~ msgstr "Redigera metadata"
@@ -16250,9 +17874,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "Multi-Tool Mode"
 #~ msgstr "Multiverktyg"
-
-#~ msgid "Preferences..."
-#~ msgstr "Inställningar..."
 
 #, fuzzy
 #~ msgid "Recording Meter Preferences"
@@ -16427,18 +18048,12 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Ctrl-Wheel-Rotate"
 #~ msgstr "Ctrl-Hjul-rotera"
 
-#~ msgid "FFT Window"
-#~ msgstr "FFT Window"
-
 #~ msgid "Spectrogram log(f)"
 #~ msgstr "Spectrogram log(f)"
 
 #, fuzzy
 #~ msgid "Spectral Selection log(f)"
 #~ msgstr "Markering"
-
-#~ msgid "Error while opening sound device. "
-#~ msgstr "Fel vid öppnande av ljudenhet."
 
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "Använder blockstorlek %ld\n"
@@ -16481,9 +18096,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "&Select Plug-ins to Install or press ENTER to Install All"
 #~ msgstr ""
 #~ "&Välj plugins att installlera eller tryck ENTER för att installera alla"
-
-#~ msgid "New Project"
-#~ msgstr "Nytt projekt"
 
 #~ msgid "High-quality Sinc Interpolation"
 #~ msgstr "Hög kvalité Sinc Interpolation"
@@ -16557,9 +18169,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Removing clicks and pops..."
 #~ msgstr "Raderar klick och pops"
 
-#~ msgid "Compressor..."
-#~ msgstr "Kompressor..."
-
 #~ msgid "Applying Dynamic Range Compression..."
 #~ msgstr "lägger till Dynamic Range Compression..."
 
@@ -16624,9 +18233,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Multiband"
 #~ msgstr "Multiband"
 
-#~ msgid "Spectral Processor"
-#~ msgstr "Spectral Processor"
-
 #~ msgid "Pitch Shifter"
 #~ msgstr "Pitch Shifter"
 
@@ -16647,9 +18253,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "Pitch and Tempo"
 #~ msgstr "Tonhöjd och tempo"
-
-#~ msgid "Time"
-#~ msgstr "Tid"
 
 #~ msgid "Onsets"
 #~ msgstr "Onsets"
@@ -16747,9 +18350,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "Repairing damaged audio"
 #~ msgstr "Reparerar skadat ljud"
-
-#~ msgid "Repeated %d times"
-#~ msgstr "Repeterat %d gånger"
 
 #~ msgid "Repeat..."
 #~ msgstr "Repetera..."
@@ -16934,9 +18534,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #, fuzzy
 #~ msgid "Display effects in graphical mode when supported"
 #~ msgstr "&Visa VST effekter i grafiskt läge"
-
-#~ msgid "Set Selection Point and Play"
-#~ msgstr "Ställ markeringspunkt och Spela"
 
 #, fuzzy
 #~ msgid "Recording Level (Click to monitor.)"

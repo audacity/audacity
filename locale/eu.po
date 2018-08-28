@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-01-23 18:10-0500\n"
+"POT-Creation-Date: 2018-08-28 15:05+0100\n"
 "PO-Revision-Date: 2018-01-21 09:48+0100\n"
 "Last-Translator: EUS_Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi)\n"
@@ -32,8 +32,8 @@ msgstr "Baieztatu"
 msgid "Please choose an existing file."
 msgstr "Mesedez hautatu badagoen agiri bat."
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AutoRecovery.cpp
-#: src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
+#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AudioIO.cpp
+#: src/AutoRecovery.cpp src/Menus.cpp src/Project.cpp src/TimerRecordDialog.cpp
 #: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
 #: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
 #: src/export/ExportMP2.cpp src/prefs/DirectoriesPrefs.cpp
@@ -301,7 +301,7 @@ msgstr "Garbitu"
 msgid "Clear selection"
 msgstr "Garbitu hautapena"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: lib-src/mod-nyq-bench/NyqBench.cpp src/Menus.cpp
 msgid "Select All"
 msgstr "Hautatu Denak"
 
@@ -442,6 +442,16 @@ msgid "Nyquist plug-ins"
 msgstr "Nyquist plug-inak"
 
 #: src/AboutDialog.cpp
+#, fuzzy
+msgid "web developer"
+msgstr "garatzailea"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "graphics"
+msgstr "&Grafikoa"
+
+#: src/AboutDialog.cpp
 msgid "incorporating"
 msgstr "gehitzen"
 
@@ -456,9 +466,10 @@ msgid "OK"
 msgstr "Ongi"
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
-"Audacity is a free program written by a worldwide team of [[http://www."
-"audacityteam.org/about/credits|volunteers]]. Audacity is [[http://www."
+"Audacity is a free program written by a worldwide team of [[https://www."
+"audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
 "audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
 "other Unix-like systems)."
 msgstr ""
@@ -468,10 +479,11 @@ msgstr ""
 "Linux-rako (eta beste Unix-bezalako sistemetarako)."
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
-"our [[http://forum.audacityteam.org/|forum]]. For help, view the tips and "
-"tricks on our [[http://wiki.audacityteam.org/|wiki]] or visit our [[http://"
+"our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
+"tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
 "forum.audacityteam.org/|forum]]."
 msgstr ""
 "Akatsen bat aurkitzen baduzu edo iradokizunen bat baduzu, mesedez idatzi "
@@ -525,6 +537,10 @@ msgid "Contributors"
 msgstr "Laguntzaileak"
 
 #: src/AboutDialog.cpp
+msgid "Website and Graphics"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "Translators"
 msgstr "Itzultzaileak"
 
@@ -545,9 +561,10 @@ msgid "Audacity website: "
 msgstr "Audacity webgunea: "
 
 #: src/AboutDialog.cpp
+#, fuzzy
 msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2017 Audacity Team.<br>"
+"&copy; 1999-2018 Audacity Team.<br>"
 msgstr ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> softwarea copyright "
 "&copy; 1999-2017 Audacity Taldea.<br>"
@@ -560,7 +577,8 @@ msgstr ""
 "&nbsp; &nbsp; The name <b>Audacity</b> Dominic Mazzoni-ren egilemarka "
 "erregistratua da.<br><br>"
 
-#: src/AboutDialog.cpp src/effects/Effect.cpp src/effects/nyquist/Nyquist.cpp
+#: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -762,7 +780,7 @@ msgid "Audacity is starting up..."
 msgstr "Audacity abiatzen ari da..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/Menus.cpp
+#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/Menus.cpp
 msgid "&New"
 msgstr "&Berria"
 
@@ -906,6 +924,11 @@ msgstr ""
 msgid "Audacity Project Files"
 msgstr "Audacity Egitasmoko Agiriak"
 
+#: src/AudacityException.h src/commands/MessageCommand.h
+#: src/widgets/ErrorDialog.cpp
+msgid "Message"
+msgstr "Mezua"
+
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
 msgstr "Audacity-ren Oharra"
@@ -972,27 +995,16 @@ msgstr ""
 msgid "Error Initializing Midi"
 msgstr "Akatsa Midi Abirazterakoan"
 
+#: src/AudioIO.cpp src/toolbars/ControlToolBar.cpp
+#, c-format
+msgid ""
+"Error opening recording device.\n"
+"Error code: %s"
+msgstr ""
+
 #: src/AudioIO.cpp
 msgid "Out of memory!"
 msgstr "Ez dago oroimenik!"
-
-#: src/AudioIO.cpp
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before "
-"zero.\n"
-"Audacity has brought it back to start at zero.\n"
-"You may have to use the Time Shift Tool (<---> or F5) to drag the track to "
-"the right place."
-msgstr ""
-"Atzerapen Zuzenketa ezarpenak eragin du grabatutako audioa ezkutuan izatea "
-"zero aurretik.\n"
-"Audacity zerotik hastera ekarri du berriro.\n"
-"Badaiteke erabili behar izatea Denbora Aldaketa Tresna (<---> edo F5) bidea "
-"toki zuzenera arrastatzeko."
-
-#: src/AudioIO.cpp
-msgid "Latency problem"
-msgstr "Atzerapen arazoa"
 
 #: src/AudioIO.cpp
 msgid ""
@@ -1130,7 +1142,12 @@ msgid "&Parameters"
 msgstr "&Parametroak"
 
 #: src/BatchCommandDialog.cpp
-msgid "C&hoose command"
+msgid "&Details"
+msgstr ""
+
+#: src/BatchCommandDialog.cpp
+#, fuzzy
+msgid "Choose command"
 msgstr "&Hautatu agindua"
 
 #: src/BatchCommands.cpp
@@ -1166,6 +1183,40 @@ msgstr "Esportatu OGG bezala"
 #: src/BatchCommands.cpp
 msgid "Export as WAV"
 msgstr "Esportatu WAV bezala"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "MP3 Conversion"
+msgstr "Egizko-denbora Bihurketa"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Fade Ends"
+msgstr "Hutsalpen Sarrera"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Select to Ends"
+msgstr "Hautatu Amaiera arte"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Special Command"
+msgstr "Hautatu Agindua"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Effect"
+msgstr "Eraginak"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Menu Command (With Parameters)"
+msgstr "&Editatu Parametroak"
+
+#: src/BatchCommands.cpp
+msgid "Menu Command (No Parameters)"
+msgstr ""
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1212,17 +1263,19 @@ msgstr "Zure multzo agindua %s ez da ezagutu."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-msgid "Applied batch chain"
+#, fuzzy
+msgid "Applied Macro"
 msgstr "Mutzo katea ezarrita"
 
 #: src/BatchCommands.cpp
-msgid "Apply chain"
+#, fuzzy
+msgid "Apply Macro"
 msgstr "Ezarri katea"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, c-format
-msgid "Applied batch chain '%s'"
+#, fuzzy, c-format
+msgid "Applied Macro '%s'"
 msgstr "'%s' multzo katea ezarrita"
 
 #: src/BatchCommands.cpp
@@ -1251,34 +1304,53 @@ msgid "Apply %s"
 msgstr "Ezarri %s"
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply Chain"
-msgstr "Ezarri Katea"
+msgid "Macros Palette"
+msgstr ""
 
-#. i18n-hint: A chain is a sequence of commands that can be applied
+#. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
-msgid "&Select Chain"
-msgstr "&Hautatu Katea"
+#, fuzzy
+msgid "Select Macro"
+msgstr "Hautatu Bihurgunea"
 
-#. i18n-hint: This is the heading for a column in the edit chains dialog
+#. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
-msgid "Chain"
-msgstr "Katea"
+msgid "Macro"
+msgstr ""
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to Current &Project"
+msgid "Apply Macro to:"
+msgstr ""
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "&Project"
+msgstr "Egitasmoak"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Apply macro to project"
 msgstr "Ezarri &Oraingo Egitasmoari"
 
 #: src/BatchProcessDialog.cpp
-msgid "Apply to &Files..."
+#, fuzzy
+msgid "&Files..."
+msgstr "&Agiria"
+
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Apply macro to files..."
 msgstr "Ezarri &Agiriei..."
 
 #: src/BatchProcessDialog.cpp
-msgid "&Cancel"
-msgstr "E&zeztatu"
+#, fuzzy
+msgid "&Expand"
+msgstr "Hedatu"
 
 #: src/BatchProcessDialog.cpp
-msgid "No chain selected"
+#, fuzzy
+msgid "No macro selected"
 msgstr "Ez da katerik hautatu"
 
 #: src/BatchProcessDialog.cpp
@@ -1308,28 +1380,36 @@ msgid "File"
 msgstr "Agiria"
 
 #: src/BatchProcessDialog.cpp
-msgid "Edit Chains"
-msgstr "Editatu Kateak"
+msgid "&Cancel"
+msgstr "E&zeztatu"
 
 #: src/BatchProcessDialog.cpp
-msgid "&Chains"
-msgstr "Kat&eak"
-
-#: src/BatchProcessDialog.cpp src/Tags.cpp
-msgid "&Add"
-msgstr "&Gehitu"
-
-#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/Tags.cpp
-msgid "&Remove"
-msgstr "&Kendu"
+#, fuzzy
+msgid "Manage Macros"
+msgstr "Kudeatu Bihurguneak"
 
 #: src/BatchProcessDialog.cpp
-msgid "Re&name"
-msgstr "&Berrizendatu"
+#, fuzzy
+msgid "Remo&ve"
+msgstr "Kendu"
+
+#: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
+msgid "&Rename..."
+msgstr "B&errizendatu..."
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
+msgid "I&mport..."
+msgstr "I&nportatu..."
+
+#: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
+#: src/effects/Equalization.cpp
+msgid "E&xport..."
+msgstr "E&sportatu..."
 
 #: src/BatchProcessDialog.cpp
-msgid "C&hain (Double-Click or press SPACE to edit)"
-msgstr "K&atea (Klik-Bikoitza edo sakatu TARTEA editatzeko)"
+#, fuzzy
+msgid "Edit Steps"
+msgstr "Editatu Etiketak"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
@@ -1344,11 +1424,15 @@ msgstr "Agindua  "
 msgid "Parameters"
 msgstr "Parametroak"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "&Insert"
 msgstr "&Txertatu"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/LabelTrack.cpp
+msgid "&Edit..."
+msgstr "&Editatu..."
+
+#: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 msgid "De&lete"
 msgstr "E&zabatu"
 
@@ -1363,6 +1447,10 @@ msgstr "Mugitu &Behera"
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "De&faults"
 msgstr "Be&rezkoak"
+
+#: src/BatchProcessDialog.cpp
+msgid "Shrin&k"
+msgstr ""
 
 #. i18n-hint: This is the last item in a list.
 #: src/BatchProcessDialog.cpp
@@ -1379,11 +1467,13 @@ msgid "Do you want to save the changes?"
 msgstr "Aldaketak gordetzea nahi dituzu?"
 
 #: src/BatchProcessDialog.cpp
-msgid "Enter name of new chain"
+#, fuzzy
+msgid "Enter name of new macro"
 msgstr "Sartu kate berriaren izena"
 
 #: src/BatchProcessDialog.cpp
-msgid "Name of new chain"
+#, fuzzy
+msgid "Name of new macro"
 msgstr "Kate berriaren izena"
 
 #: src/BatchProcessDialog.cpp
@@ -1668,6 +1758,11 @@ msgstr "Egitasmo bat beste agiri batzuen mendekoa denean:"
 #, c-format
 msgid "MISSING %s"
 msgstr "EZ DAGO %s"
+
+#: src/Dependencies.cpp
+#, fuzzy
+msgid "&Copy Names to Clipboard"
+msgstr "Kopiatu gakora"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2035,6 +2130,10 @@ msgstr "Grabaturiko audio gordetzea"
 msgid "Saving recorded audio to disk"
 msgstr "Grabatutako audioa diskan gordetzen"
 
+#: src/FFT.cpp
+msgid "Rectangular"
+msgstr "Laukiluzea"
+
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg sostengua ez dago bilduta"
@@ -2109,9 +2208,48 @@ msgstr "Non dago '%s'?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Hutsegitea FFmpeg liburutegi bateragarria aurkitzerakoan."
 
-#: src/FFT.cpp
-msgid "Rectangular"
-msgstr "Laukiluzea"
+#: src/FFmpeg.h
+msgid "FFmpeg not found"
+msgstr "FFmpeg ez da aurkitu"
+
+#: src/FFmpeg.h
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity saiatu da FFmpeg erabiltzen audio agiri bat inportatzeko,\n"
+"baina liburutegiak ez dira aurkitu.\n"
+"\n"
+"FFmpeg inportazioa erabiltzeko, joan Hobespenak > Liburutegiak\n"
+"FFmpeg liburutegiak jeisteko edo kokatzeko."
+
+#: src/FFmpeg.h
+msgid "Do not show this warning again"
+msgstr "Ez erakutsi ohar hau berriro"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Bakarrik avformat.dll|*avformat*.dll|Dinamikoki Lotutako Liburutegiak (*."
+"dll)|*.dll|Agiri Guztiak|*"
+
+#: src/FFmpeg.h
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "Liburutegi Dinamikoak (*.dylib)|*.dylib|Agiri Guztiak (*)|*"
+
+#: src/FFmpeg.h
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Bakarrik libavformat.so|libavformat.so*|Dinamikoki Loturaturiko Liburutegiak "
+"(*.so*)|*.so*|Agiri Guztiak (*)|*"
 
 #: src/FileException.cpp
 #, c-format
@@ -2138,6 +2276,10 @@ msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
 "Audacity-k ongi idatzi du agiri bat hemen: %s baina huts egin du %s bezala "
 "berrizendatzerakoan."
+
+#: src/FileException.h
+msgid "File Error"
+msgstr "Agiri Akatsa"
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp
@@ -2176,10 +2318,13 @@ msgstr "Maiztasun linearra"
 msgid "Log frequency"
 msgstr "Ohar maiztasuna"
 
+#. i18n-hint: abbreviates decibels
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
+#: src/FreqWindow.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/widgets/Meter.cpp
+#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/widgets/Meter.cpp
 msgid "dB"
 msgstr "dB"
 
@@ -2390,40 +2535,13 @@ msgstr ""
 "agiritza eta sostengu osoa duen. <br><br>"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"You can help us get Audacity ready for release by joining our [[http://www."
+"You can help us get Audacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
 "Audacity argitaratzeko gertu egoten lagundu gaitzakezu gure [[http://www."
 "audacityteam.org/community/|community]]-ra batuz.<hr><br><br>"
-
-#: src/HelpText.cpp
-msgid "<br><br>DarkAudacity is based on Audacity:"
-msgstr "<br><br>DarkAudacity jatorrizko Audacity-an ohinarrituta dago:"
-
-#: src/HelpText.cpp
-msgid ""
-" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
-"between them."
-msgstr ""
-" [[http://www.darkaudacity.com|www.darkaudacity.com]] - ezberdintasunak "
-"ikusteko."
-
-#: src/HelpText.cpp
-msgid ""
-" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-"help using DarkAudacity."
-msgstr ""
-" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - "
-"DarkAudacity laguntzarako."
-
-#: src/HelpText.cpp
-msgid ""
-" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started "
-"with DarkAudacity."
-msgstr ""
-" [[http://www.darkaudacity.com/video.html|Tutorials]] - DarkAudacity "
-"hastapenarako."
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -2434,44 +2552,49 @@ msgid "These are our support methods:"
 msgstr "Hauek dira sostengatzen ditugun metodoak:"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://"
+" [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://"
 "manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 " [[file:quick_help.html|Laguntza Azkarra]] - tokian ezarrita ez badago, "
 "[[http://manual.audacityteam.org/quick_help.html|ikusi online]]"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[file:index.html|Manual]] - if not installed locally, [[http://manual."
+" [[file:index.html|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
 " [[file:index.html|Eskuliburua]] - tokian ezarrita ez badago, [[http://"
 "manual.audacityteam.org/|ikusi online]]"
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, "
+" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
 " [[http://forum.audacityteam.org/|Eztabaidagunea]] - egin zure galdera "
 "zuzenean, online."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for "
+"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
 "Gehiago: Ikusi gure [[http://wiki.audacityteam.org/index.php|Wikia]] aholku, "
 "truku, ikasgai gehigarriak eta eragin plug-in-etarako."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "Audacity can import unprotected files in many other formats (such as M4A and "
 "WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[http://manual.audacityteam."
-"org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your "
-"computer."
+"files) if you download and install the optional [[https://manual."
+"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
+"library]] to your computer."
 msgstr ""
 "Audacity-k agiri babestugabeak inportatu ditzake beste heuskarri askotan "
 "(M4A eta WMA, konprimituriko WAV agiriak grabagailu eramangarrietatik eta "
@@ -2480,9 +2603,10 @@ msgstr ""
 "ordenagailura jeitsi eta ezartzen baduzu."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
-"You can also read our help on importing [[http://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#midi|MIDI files]] and tracks from [[http://"
+"You can also read our help on importing [[https://manual.audacityteam.org/"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -2503,9 +2627,10 @@ msgstr ""
 "Kokalekua\" Interfaze Hobespenetan \"Intenetetik\"-ra."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[http://manual.audacityteam.org/man/unzipping_the_manual.html| "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
 "download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
@@ -2577,6 +2702,10 @@ msgstr ""
 "Barneko akatsa -> %s lerroa %d.\n"
 "Mesedez jakinarazi Audacity taldeari hemen: https://forum.audacityteam.org/."
 
+#: src/InconsistencyException.h
+msgid "Internal Error"
+msgstr "Barneko Akatsa"
+
 #: src/Internat.cpp
 msgid "Unable to determine"
 msgstr "Ezinezkoa zehaztea"
@@ -2615,22 +2744,6 @@ msgstr "Adierazi Agirizen Berria:"
 msgid "Edit Labels"
 msgstr "Editatu Etiketak"
 
-#: src/LabelDialog.cpp
-msgid "Press F2 or double click to edit cell contents."
-msgstr "Sakatu F2 edo klik bikoitza gelaxa edukiak editatzeko."
-
-#: src/LabelDialog.cpp
-msgid "Insert &After"
-msgstr "Txertatu &Ondoren"
-
-#: src/LabelDialog.cpp
-msgid "Insert &Before"
-msgstr "Txertatu A&urretik"
-
-#: src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "&Import..."
-msgstr "I&nportatu..."
-
 #. i18n-hint: (noun).  A track contains waves, audio etc.
 #: src/LabelDialog.cpp
 msgid "Track"
@@ -2652,18 +2765,22 @@ msgid "End Time"
 msgstr "Amaiera Denbora"
 
 #. i18n-hint: (noun) of a label
-#: src/LabelDialog.cpp
+#: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Low Frequency"
 msgstr "Behe Maiztasuna"
 
 #. i18n-hint: (noun) of a label
-#: src/LabelDialog.cpp
+#: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "High Frequency"
 msgstr "Goi Maiztasuna"
 
 #: src/LabelDialog.cpp
 msgid "New..."
 msgstr "Berria..."
+
+#: src/LabelDialog.cpp
+msgid "Press F2 or double click to edit cell contents."
+msgstr "Sakatu F2 edo klik bikoitza gelaxa edukiak editatzeko."
 
 #: src/LabelDialog.cpp src/Menus.cpp
 msgid "Select a text file containing labels"
@@ -2697,8 +2814,8 @@ msgstr "Sartu bide izena"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/TrackPanelAx.cpp
-#: src/LabelDialog.h
+#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
+#: src/TrackPanelAx.cpp
 msgid "Label Track"
 msgstr "Etiketatu Bidea"
 
@@ -2732,10 +2849,6 @@ msgstr "&Itsatsi"
 #: src/LabelTrack.cpp
 msgid "&Delete Label"
 msgstr "E&zabtu Etiketa"
-
-#: src/LabelTrack.cpp
-msgid "&Edit..."
-msgstr "&Editatu..."
 
 #: src/LabelTrack.cpp
 msgid "Deleted Label"
@@ -2792,12 +2905,26 @@ msgid "Uncategorized"
 msgstr "Kategoriagabea"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "&Reset..."
+msgstr "&Berrezarri..."
+
+#: src/Menus.cpp
 msgid "&Save Project"
 msgstr "&Gorde Egitasmoa"
 
 #: src/Menus.cpp
 msgid "Save Project &As..."
 msgstr "Gorde Egitasmoa &Honela..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Save Lossless Copy of Project..."
+msgstr "Gorde Egitasmoaren &Kopia Konprimitu bat..."
+
+#: src/Menus.cpp
+msgid "&Save Compressed Copy of Project..."
+msgstr "Gorde Egitasmoaren &Kopia Konprimitu bat..."
 
 #: src/Menus.cpp
 msgid "&Export"
@@ -2835,10 +2962,6 @@ msgstr "Es&portatu Anitz..."
 msgid "Export MI&DI..."
 msgstr "Esportatu MI&DI..."
 
-#: src/Menus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "Gorde Egitasmoaren &Kopia Konprimitu bat..."
-
 #: src/Menus.cpp src/import/ImportRaw.cpp
 msgid "&Import"
 msgstr "I&nportatu"
@@ -2858,18 +2981,6 @@ msgstr "&MIDI..."
 #: src/Menus.cpp
 msgid "&Raw Data..."
 msgstr "&Raw Datuak..."
-
-#: src/Menus.cpp
-msgid "C&hains"
-msgstr "Ka&teak"
-
-#: src/Menus.cpp
-msgid "Appl&y Chain..."
-msgstr "Ezarri &Katea..."
-
-#: src/Menus.cpp
-msgid "Edit C&hains..."
-msgstr "E&ditatu Katea..."
 
 #: src/Menus.cpp
 msgid "Pa&ge Setup..."
@@ -2961,11 +3072,13 @@ msgid "&Edit Labels..."
 msgstr "Edit&atu Etiketak..."
 
 #: src/Menus.cpp
-msgid "Add Label At &Selection"
+#, fuzzy
+msgid "Add Label at &Selection"
 msgstr "Gehitu Etiketa &Hautapenean"
 
 #: src/Menus.cpp
-msgid "Add Label At &Playback Position"
+#, fuzzy
+msgid "Add Label at &Playback Position"
 msgstr "Gehitu Etiketa &Irakurketa Kokapenean"
 
 #: src/Menus.cpp
@@ -2982,17 +3095,42 @@ msgstr "Etiketaturiko &Audioa"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Cut"
+msgstr "Etiketa Edizioa"
+
+#: src/Menus.cpp
 msgid "&Cut"
 msgstr "&Ebaki"
 
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Delete"
+msgstr "Banandu Ezabapena"
+
 #. i18n-hint: (verb) A special way to cut out a piece of audio
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Split Cut"
+msgstr "Banandu Ebaki"
+
 #: src/Menus.cpp
 msgid "&Split Cut"
 msgstr "&Bananketa Ebaki"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Split Delete"
+msgstr "Banandu Ezabapena"
+
+#: src/Menus.cpp
 msgid "Sp&lit Delete"
 msgstr "B&ananketa Ezabatu"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Silence"
+msgstr "Isiltasuna"
 
 #: src/Menus.cpp
 msgid "Silence &Audio"
@@ -3000,13 +3138,29 @@ msgstr "I&sildu Audioa"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Copy"
+msgstr "Etiketa"
+
+#: src/Menus.cpp
 msgid "Co&py"
 msgstr "K&opiatu"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
+#, fuzzy
+msgid "Label Split"
+msgstr "Etiketa Edizioa"
+
+#: src/Menus.cpp
 msgid "Spli&t"
 msgstr "Ba&nandu"
+
+#. i18n-hint: (verb)
+#: src/Menus.cpp
+#, fuzzy
+msgid "Label Join"
+msgstr "Etiketa Edizioa"
 
 #: src/Menus.cpp
 msgid "Me&tadata..."
@@ -3027,6 +3181,11 @@ msgid "&All"
 msgstr "De&nak"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select None"
+msgstr "Hautapena"
+
+#: src/Menus.cpp
 msgid "&None"
 msgstr "&Ezer ez"
 
@@ -3039,6 +3198,10 @@ msgid "In All &Tracks"
 msgstr "Bide &Guztietan"
 
 #: src/Menus.cpp
+msgid "Select Sync-Locked"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "In All &Sync-Locked Tracks"
 msgstr "&Albiberete-Blokeatutako Bide Guztietan"
 
@@ -3047,20 +3210,50 @@ msgid "R&egion"
 msgstr "Ere&mua"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Set Selection Left at Play Position"
+msgstr "Ez&kerrera Irakurketa Kokapenera"
+
+#: src/Menus.cpp
 msgid "&Left at Playback Position"
 msgstr "Ez&kerrera Irakurketa Kokapenera"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Selection Right at Play Position"
+msgstr "E&skuinera Irakurketa Kokapenera"
 
 #: src/Menus.cpp
 msgid "&Right at Playback Position"
 msgstr "E&skuinera Irakurketa Kokapenera"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Track Start to Cursor"
+msgstr "E&zkerrera Irakurketa Kokapenera"
+
+#: src/Menus.cpp
 msgid "Track &Start to Cursor"
 msgstr "E&zkerrera Irakurketa Kokapenera"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Cursor to Track End"
+msgstr "K&urtsorean Bide Amaierara"
+
+#: src/Menus.cpp
 msgid "Cursor to Track &End"
 msgstr "K&urtsorean Bide Amaierara"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Track Start to End"
+msgstr "Hautatu Amaiera arte"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Track Start to En&d"
+msgstr "E&zkerrera Irakurketa Kokapenera"
 
 #: src/Menus.cpp
 msgid "S&tore Selection"
@@ -3075,7 +3268,8 @@ msgid "S&pectral"
 msgstr "A&rgilitza"
 
 #: src/Menus.cpp
-msgid "To&ggle spectral selection"
+#, fuzzy
+msgid "To&ggle Spectral Selection"
 msgstr "Al&datu argilitza hautapena"
 
 #: src/Menus.cpp
@@ -3095,12 +3289,27 @@ msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kurtsorea &Hurrengo Ebaketa Mugara"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Previous Clip"
+msgstr "A&urreko Ebaketa"
+
+#: src/Menus.cpp
 msgid "Previo&us Clip"
 msgstr "A&urreko Ebaketa"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Select Next Clip"
+msgstr "Hu&rrengo Ebaketa"
+
+#: src/Menus.cpp
 msgid "N&ext Clip"
 msgstr "Hu&rrengo Ebaketa"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Cursor to Stored"
+msgstr "Hautatu Hasiera arte"
 
 #: src/Menus.cpp
 msgid "Cursor to Stored &Cursor Position"
@@ -3109,6 +3318,11 @@ msgstr "Kurtsorea &Kurtsore Kokapena Gordetzeko"
 #: src/Menus.cpp
 msgid "Store Cursor Pos&ition"
 msgstr "&Gorde Kurtsorearen Kokapena"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Zero Crossing"
+msgstr "&Zero Gurutzapenetan"
 
 #: src/Menus.cpp
 msgid "At &Zero Crossings"
@@ -3169,8 +3383,18 @@ msgid "Sk&ip to"
 msgstr "&Jauzi hona"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Skip to Selection Start"
+msgstr "Hautapenaren Ha&siera"
+
+#: src/Menus.cpp
 msgid "Selection Sta&rt"
 msgstr "Hautapenaren Ha&siera"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Skip to Selection End"
+msgstr "Hasiera H&autapenaren Amaierara"
 
 #: src/Menus.cpp
 msgid "Selection En&d"
@@ -3219,7 +3443,7 @@ msgid "&Playback Meter Toolbar"
 msgstr "&Irakurketa Neurgailu Tresnabarra"
 
 #. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#. c->AddCheck(wxT("ShowMeterTB"), _("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+#. c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #. i18n-hint: Clicking this menu item shows the toolbar with the mixer
 #: src/Menus.cpp
 msgid "Mi&xer Toolbar"
@@ -3232,8 +3456,9 @@ msgstr "&Editatu Tresnabarra"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
 #: src/Menus.cpp
-msgid "Tra&nscription Toolbar"
-msgstr "&Irakurketa Tresnabarra"
+#, fuzzy
+msgid "Pla&y-at-Speed Toolbar"
+msgstr "Irakurketa Abiaduran"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
 #: src/Menus.cpp
@@ -3263,16 +3488,21 @@ msgstr "Gehigarri &Menuak (bai/ez)"
 msgid "&Show Clipping (on/off)"
 msgstr "Erakutsi Ebaketa (bai/ez)"
 
+#: src/Menus.cpp src/toolbars/EditToolBar.cpp
+msgid "Show Effects Rack"
+msgstr "Erakutsi Eragin Racka"
+
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: src/Menus.cpp
-msgid "T&ransport"
-msgstr "&Garraioa"
+#, fuzzy
+msgid "Tra&nsport"
+msgstr "Garraioa"
 
-#. i18n-hint: (verb) Start playing audio
 #: src/Menus.cpp
-msgid "Pl&ay"
-msgstr "&Irakurri"
+#, fuzzy
+msgid "Pl&aying"
+msgstr "Irakurtzen"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/Menus.cpp
@@ -3290,6 +3520,11 @@ msgstr "&Bigizta Irakurketa"
 #: src/Menus.cpp
 msgid "&Pause"
 msgstr "&Pausatu"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Recording"
+msgstr "Grabaketa"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -3309,32 +3544,76 @@ msgid "&Timer Record..."
 msgstr "&Denboragailu Grabaketa..."
 
 #: src/Menus.cpp
+msgid "Punch and Rol&l Record"
+msgstr ""
+
+#: src/Menus.cpp
 msgid "&Cursor to"
 msgstr "&Kurtsorea hona"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Selection Start"
+msgstr "Amaiera K&urtsore/Hautapenaren Hasierara"
 
 #: src/Menus.cpp
 msgid "Selection Star&t"
 msgstr "Hautapenaren Ha&siera"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Selection End"
+msgstr "Hasiera H&autapenaren Amaierara"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Track Start"
+msgstr "K&urtsorean Bide Amaierara"
+
+#: src/Menus.cpp
 msgid "Track &Start"
 msgstr "Bide &Hasiera"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Track End"
+msgstr "K&urtsorean Bide Amaierara"
 
 #: src/Menus.cpp
 msgid "Track &End"
 msgstr "Bide &Amaiera"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Prev Clip Boundary"
+msgstr "Kurtsorea &Hurrengo Ebaketa Mugara"
+
+#: src/Menus.cpp
 msgid "Pre&vious Clip Boundary"
 msgstr "A&urreko Ebaketa Muga"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Next Clip Boundary"
+msgstr "Kurtsorea &Hurrengo Ebaketa Mugara"
 
 #: src/Menus.cpp
 msgid "Ne&xt Clip Boundary"
 msgstr "&Hurrengo Ebaketa Muga"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Project Start"
+msgstr "Egi&tasmoaren Hasiera"
+
+#: src/Menus.cpp
 msgid "&Project Start"
 msgstr "Egi&tasmoaren Hasiera"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Cursor to Project End"
+msgstr "K&urtsorean Bide Amaierara"
 
 #: src/Menus.cpp
 msgid "Project E&nd"
@@ -3409,7 +3688,8 @@ msgid "Mi&x"
 msgstr "Na&hasketa"
 
 #: src/Menus.cpp
-msgid "Mix Stereo down to &Mono"
+#, fuzzy
+msgid "Mix Stereo Down to &Mono"
 msgstr "Behera nahastu Estereoa &Monora"
 
 #: src/Menus.cpp
@@ -3445,12 +3725,27 @@ msgid "&Pan"
 msgstr "&Pan"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Pan Left"
+msgstr "Ezkerra"
+
+#: src/Menus.cpp
 msgid "&Left"
 msgstr "E&zker"
 
 #: src/Menus.cpp
+#, fuzzy
+msgid "Pan Right"
+msgstr "Eskuina"
+
+#: src/Menus.cpp
 msgid "&Right"
 msgstr "E&skuin"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Pan Center"
+msgstr "Erdia"
 
 #: src/Menus.cpp
 msgid "&Center"
@@ -3505,11 +3800,21 @@ msgid "S&ort Tracks"
 msgstr "Antolat&u Bideak"
 
 #: src/Menus.cpp
-msgid "by &Start time"
+msgid "Sort by Time"
+msgstr "Antolatu Denboraz"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "By &Start Time"
 msgstr "&Hasiera denboraz"
 
 #: src/Menus.cpp
-msgid "by &Name"
+msgid "Sort by Name"
+msgstr "Antolatu Izenez"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "By &Name"
 msgstr "&Izenez"
 
 #: src/Menus.cpp
@@ -3552,6 +3857,42 @@ msgid "Plot Spectrum..."
 msgstr "Egitura Argilitza..."
 
 #: src/Menus.cpp
+msgid "T&ools"
+msgstr "&Tresnak"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Macros..."
+msgstr "&Etiketak..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Apply Macro"
+msgstr "&Ezarri"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Palette..."
+msgstr "&Kendu..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Screenshot..."
+msgstr "&Ikusleiho-argazki Tresnak..."
+
+#: src/Menus.cpp
+msgid "&Run Benchmark..."
+msgstr "&Ekin Benchmark..."
+
+#: src/Menus.cpp
+msgid "Simulate Recording Errors"
+msgstr "Antzeratu Grabaketa Akatsak"
+
+#: src/Menus.cpp
+msgid "Detect Upstream Dropouts"
+msgstr "Atzemar Gorako Kanporaketak"
+
+#: src/Menus.cpp
 msgid "&Window"
 msgstr "&Leihoa"
 
@@ -3565,74 +3906,19 @@ msgstr "&Txikiendu"
 msgid "&Bring All to Front"
 msgstr "&Ekarri Guztia Aurrealdera"
 
-#: src/Menus.cpp src/effects/Contrast.cpp
-msgid "&Help"
-msgstr "Lag&untza"
-
-#: src/Menus.cpp
-msgid "&Getting Started"
-msgstr "&Hastapena"
-
-#: src/Menus.cpp
-msgid "&Quick Help"
-msgstr "&Laguntza Azkarra"
-
-#: src/Menus.cpp
-msgid "&Manual"
-msgstr "&Eskuliburua"
-
-#: src/Menus.cpp
-msgid "&Tools"
-msgstr "&Tresnak"
-
-#: src/Menus.cpp
-msgid "Simulate Recording Errors"
-msgstr "Antzeratu Grabaketa Akatsak"
-
-#: src/Menus.cpp
-msgid "Detect Upstream Dropouts"
-msgstr "Atzemar Gorako Kanporaketak"
-
-#: src/Menus.cpp
-msgid "&Screenshot Tools..."
-msgstr "&Ikusleiho-argazki Tresnak..."
-
-#: src/Menus.cpp
-msgid "&Run Benchmark..."
-msgstr "&Ekin Benchmark..."
-
-#: src/Menus.cpp
-msgid "&Diagnostics"
-msgstr "&Diagnostikoak"
-
-#: src/Menus.cpp
-msgid "Au&dio Device Info..."
-msgstr "A&udio Gailu Argibideak..."
-
-#: src/Menus.cpp
-msgid "&MIDI Device Info..."
-msgstr "&MIDI Gailu Infoa..."
-
-#: src/Menus.cpp
-msgid "Show &Log..."
-msgstr "Erakutsi &Oharra..."
-
-#: src/Menus.cpp
-msgid "&Generate Support Data..."
-msgstr "&Sortu Sostengu Datuak..."
-
-#: src/Menus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "Egia&ztatu Elkartokiak..."
-
-#: src/Menus.cpp
-msgid "&Check for Updates..."
-msgstr "Egia&ztatu Eguneraketak..."
-
 #. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
-msgid "E&xtra"
-msgstr "Ge&higarria"
+msgid "Ext&ra"
+msgstr ""
+
+#: src/Menus.cpp
+msgid "T&ransport"
+msgstr "&Garraioa"
+
+#. i18n-hint: (verb) Start playing audio
+#: src/Menus.cpp
+msgid "Pl&ay"
+msgstr "&Irakurri"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/Menus.cpp
@@ -3644,7 +3930,8 @@ msgid "Play &One Second"
 msgstr "Irakurri &Segundu Batez"
 
 #: src/Menus.cpp
-msgid "Play To &Selection"
+#, fuzzy
+msgid "Play to &Selection"
 msgstr "Irakurri &Hautapenera"
 
 #: src/Menus.cpp
@@ -3674,10 +3961,6 @@ msgstr "Ira&kurri Hautapena Amaitu Aurretik eta Ondoren"
 #: src/Menus.cpp
 msgid "Play C&ut Preview"
 msgstr "Irakurri &Ebakin Aurreikuspena"
-
-#: src/Menus.cpp
-msgid "T&ools"
-msgstr "&Tresnak"
 
 #: src/Menus.cpp
 msgid "&Selection Tool"
@@ -3716,43 +3999,53 @@ msgid "Mi&xer"
 msgstr "&Nahastzailea"
 
 #: src/Menus.cpp
-msgid "Ad&just playback volume"
+#, fuzzy
+msgid "Ad&just Playback Volume..."
 msgstr "&Zehaztu irakurketaren bolumena"
 
 #: src/Menus.cpp
-msgid "&Increase playback volume"
+#, fuzzy
+msgid "&Increase Playback Volume"
 msgstr "&Igo irakurketaren bolumena"
 
 #: src/Menus.cpp
-msgid "&Decrease playback volume"
+#, fuzzy
+msgid "&Decrease Playback Volume"
 msgstr "&Jeitsi irakurketaren bolumena"
 
 #: src/Menus.cpp
-msgid "Adj&ust recording volume"
+#, fuzzy
+msgid "Adj&ust Recording Volume..."
 msgstr "Ze&haztu grabaketaren bolumena"
 
 #: src/Menus.cpp
-msgid "I&ncrease recording volume"
+#, fuzzy
+msgid "I&ncrease Recording Volume"
 msgstr "Igo &grabaketaren bolumena"
 
 #: src/Menus.cpp
-msgid "D&ecrease recording volume"
+#, fuzzy
+msgid "D&ecrease Recording Volume"
 msgstr "J&eitsi grabaketaren bolumena"
 
 #: src/Menus.cpp
-msgid "&DeleteKey"
+#, fuzzy
+msgid "&Delete Key"
 msgstr "E&zabaTekla"
 
 #: src/Menus.cpp
-msgid "DeleteKey&2"
+#, fuzzy
+msgid "Delete Key&2"
 msgstr "E&zabaTekla&2"
 
 #: src/Menus.cpp
-msgid "Transcri&ption"
-msgstr "Irakur&keta"
+#, fuzzy
+msgid "&Play-at-Speed"
+msgstr "Irakurketa Abiaduran"
 
 #: src/Menus.cpp
-msgid "Pl&ay-at-Speed"
+#, fuzzy
+msgid "Normal Pl&ay-at-Speed"
 msgstr "I&rakurri Abiaduran"
 
 #: src/Menus.cpp
@@ -3764,15 +4057,18 @@ msgid "Play C&ut Preview-at-Speed"
 msgstr "Irakurri &Ebakin Aurreikuspena Abiaduran"
 
 #: src/Menus.cpp
-msgid "Ad&just playback speed"
+#, fuzzy
+msgid "Ad&just Playback Speed..."
 msgstr "&Zehaztu irakurketaren abiadura"
 
 #: src/Menus.cpp
-msgid "&Increase playback speed"
+#, fuzzy
+msgid "&Increase Playback Speed"
 msgstr "&Handitu irakurketaren abiadura"
 
 #: src/Menus.cpp
-msgid "&Decrease playback speed"
+#, fuzzy
+msgid "&Decrease Playback Speed"
 msgstr "&Gutxitu irakurketaren abiadura"
 
 #: src/Menus.cpp
@@ -3788,19 +4084,23 @@ msgid "See&k"
 msgstr "&Bilaketa"
 
 #: src/Menus.cpp
-msgid "Short seek &left during playback"
+#, fuzzy
+msgid "Short Seek &Left During Playback"
 msgstr "Bilaketa laburra e&zkerrerantz irakurketan"
 
 #: src/Menus.cpp
-msgid "Short seek &right during playback"
+#, fuzzy
+msgid "Short Seek &Right During Playback"
 msgstr "Bilaketa laburra e&skuinerantz irakurketan"
 
 #: src/Menus.cpp
-msgid "Long seek le&ft during playback"
+#, fuzzy
+msgid "Long Seek Le&ft During Playback"
 msgstr "Bilaketa luzea e&zkerrerantz irakurketan"
 
 #: src/Menus.cpp
-msgid "Long Seek rig&ht during playback"
+#, fuzzy
+msgid "Long Seek Rig&ht During Playback"
 msgstr "Bilaketa luzea e&skuinerantz irakurketan"
 
 #: src/Menus.cpp
@@ -3808,19 +4108,23 @@ msgid "De&vice"
 msgstr "&Gailua"
 
 #: src/Menus.cpp
-msgid "Change &recording device"
+#, fuzzy
+msgid "Change &Recording Device..."
 msgstr "Aldatu &grabaketa gailua"
 
 #: src/Menus.cpp
-msgid "Change &playback device"
+#, fuzzy
+msgid "Change &Playback Device..."
 msgstr "Aldatu &irakurketa gailua"
 
 #: src/Menus.cpp
-msgid "Change audio &host"
+#, fuzzy
+msgid "Change Audio &Host..."
 msgstr "Aldatu &audio hostalaria"
 
 #: src/Menus.cpp
-msgid "Change recording cha&nnels"
+#, fuzzy
+msgid "Change Recording Cha&nnels..."
 msgstr "Aldatu grabaketa &bideak"
 
 #: src/Menus.cpp
@@ -3828,15 +4132,18 @@ msgid "&Selection"
 msgstr "&Hautapena"
 
 #: src/Menus.cpp
-msgid "Snap To &Off"
+#, fuzzy
+msgid "Snap-To &Off"
 msgstr "Zehaztu &Etendara"
 
 #: src/Menus.cpp
-msgid "Snap To &Nearest"
+#, fuzzy
+msgid "Snap-To &Nearest"
 msgstr "Zehaztu &Hurbilenera"
 
 #: src/Menus.cpp
-msgid "Snap To &Prior"
+#, fuzzy
+msgid "Snap-To &Prior"
 msgstr "Zehaztu A&urrekora"
 
 #: src/Menus.cpp
@@ -3872,11 +4179,13 @@ msgid "Selection Contract R&ight"
 msgstr "Hautapena Estutu Esk&uinera"
 
 #: src/Menus.cpp
-msgid "Move backward thru active windows"
+#, fuzzy
+msgid "Move Backward Through Active Windows"
 msgstr "Mugitu atzera jarduneko leihoetan"
 
 #: src/Menus.cpp
-msgid "Move forward thru active windows"
+#, fuzzy
+msgid "Move Forward Through Active Windows"
 msgstr "Mugitu aurrera jarduneko leihoetan"
 
 #: src/Menus.cpp
@@ -3884,11 +4193,13 @@ msgid "F&ocus"
 msgstr "&Fokutu"
 
 #: src/Menus.cpp
-msgid "Move &backward from toolbars to tracks"
+#, fuzzy
+msgid "Move &Backward from Toolbars to Tracks"
 msgstr "Mugitu &atzera tresnabarretatik bideetara"
 
 #: src/Menus.cpp
-msgid "Move f&orward from toolbars to tracks"
+#, fuzzy
+msgid "Move F&orward from Toolbars to Tracks"
 msgstr "Mugitu atzera &tresnabarretatik bideetara"
 
 #: src/Menus.cpp
@@ -3964,77 +4275,262 @@ msgid "&Track"
 msgstr "&Bidea"
 
 #: src/Menus.cpp
-msgid "Change p&an on focused track"
+#, fuzzy
+msgid "Change P&an on Focused Track..."
 msgstr "Alatu &pan fokututako bidean"
 
 #: src/Menus.cpp
-msgid "Pan &left on focused track"
+#, fuzzy
+msgid "Pan &Left on Focused Track"
 msgstr "Pan e&zkerra fokuturiko bidean"
 
 #: src/Menus.cpp
-msgid "Pan &right on focused track"
+#, fuzzy
+msgid "Pan &Right on Focused Track"
 msgstr "Pan e&skuina fokuturiko bidean"
 
 #: src/Menus.cpp
-msgid "Change gai&n on focused track"
+#, fuzzy
+msgid "Change Gai&n on Focused Track..."
 msgstr "Aldatu i&rabazia fokuturiko bidean"
 
 #: src/Menus.cpp
-msgid "&Increase gain on focused track"
+#, fuzzy
+msgid "&Increase Gain on Focused Track"
 msgstr "Handitu &irabazia fokuturiko bidean"
 
 #: src/Menus.cpp
-msgid "&Decrease gain on focused track"
+#, fuzzy
+msgid "&Decrease Gain on Focused Track"
 msgstr "Gut&xitu irabazia fokuturiko bidean"
 
 #: src/Menus.cpp
-msgid "Op&en menu on focused track"
+#, fuzzy
+msgid "Op&en Menu on Focused Track..."
 msgstr "Ireki &menua fokuturiko bidean"
 
 #: src/Menus.cpp
-msgid "M&ute/Unmute focused track"
+#, fuzzy
+msgid "M&ute/Unmute Focused Track"
 msgstr "&Mututu/Desmututu fokututako bidea"
 
 #: src/Menus.cpp
-msgid "&Solo/Unsolo focused track"
+#, fuzzy
+msgid "&Solo/Unsolo Focused Track"
 msgstr "&Solotu/Dessolotu fokututako bidea"
 
 #: src/Menus.cpp
-msgid "&Close focused track"
+#, fuzzy
+msgid "&Close Focused Track"
 msgstr "It&xi fokututako bidea"
 
 #: src/Menus.cpp
-msgid "Move focused track u&p"
+#, fuzzy
+msgid "Move Focused Track U&p"
 msgstr "Mugitu fokututako bidea &gora"
 
 #: src/Menus.cpp
-msgid "Move focused track do&wn"
+#, fuzzy
+msgid "Move Focused Track Do&wn"
 msgstr "Mugitu fokututako bidea &behera"
 
 #: src/Menus.cpp
-msgid "Move focused track to t&op"
+#, fuzzy
+msgid "Move Focused Track to T&op"
 msgstr "Mugitu fokututako bidea g&oren"
 
 #: src/Menus.cpp
-msgid "Move focused track to &bottom"
+#, fuzzy
+msgid "Move Focused Track to &Bottom"
 msgstr "Mugitu fokututako bidea be&heren"
 
+#. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/Menus.cpp
-msgid "&Full screen (on/off)"
+#, fuzzy
+msgid "&Scriptables I"
+msgstr "Eskripta"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Time..."
+msgstr "Hautatu..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Frequencies..."
+msgstr "Maiztasunak"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Select Tracks..."
+msgstr "Hautatu..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Track Status..."
+msgstr "Bide &Hasiera"
+
+#: src/Menus.cpp
+msgid "Set Track Audio..."
+msgstr ""
+
+#: src/Menus.cpp
+msgid "Set Track Visuals..."
+msgstr ""
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Get Preference..."
+msgstr "&Hobespenak..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Preference..."
+msgstr "&Hobespenak..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Clip..."
+msgstr "Hu&rrengo Ebaketa"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Envelope..."
+msgstr "Bilkaria"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Label..."
+msgstr "Edit&atu Etiketak..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Project..."
+msgstr "Gorde Egitasmoa &Honela..."
+
+#: src/Menus.cpp
+msgid "Scripta&bles II"
+msgstr ""
+
+#: src/Menus.cpp src/TimerRecordDialog.cpp
+msgid "Select..."
+msgstr "Hautatu..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Set Track..."
+msgstr "Antolat&u Bideak"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Get Info..."
+msgstr "&Lortu Gehiago..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Message..."
+msgstr "Mezua"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Help..."
+msgstr "Laguntza"
+
+#: src/Menus.cpp src/effects/Effect.cpp
+msgid "Import..."
+msgstr "Inportatu..."
+
+#: src/Menus.cpp src/effects/Effect.cpp
+msgid "Export..."
+msgstr "Esportatu..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Open Project..."
+msgstr "Ireki &Berrikikoa..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Save Project..."
+msgstr "Gorde Egitasmoa &Honela..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Move Mouse..."
+msgstr "&Lortu Gehiago..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Compare Audio..."
+msgstr "E&sportatu Audioa..."
+
+#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
+#: src/Menus.cpp
+#, fuzzy
+msgid "Screenshot (short format)..."
+msgstr "&Ikusleiho-argazki Tresnak..."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Full Screen (on/off)"
 msgstr "&Ikusleiho osoa (bai/ez)"
 
 #. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
-msgid "Minimize all projects"
+#, fuzzy
+msgid "Minimize All Projects"
 msgstr "Txikiendu egitasmo guztiak"
 
-#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-#. In the translations of this and other strings, you may transliterate the
-#. name into another alphabet.
-#: src/Menus.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist Eskaerak"
+#: src/Menus.cpp src/effects/Contrast.cpp
+msgid "&Help"
+msgstr "Lag&untza"
+
+#: src/Menus.cpp
+msgid "&Getting Started"
+msgstr "&Hastapena"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Audacity &Manual"
+msgstr "Audacity"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Quick Help..."
+msgstr "&Laguntza Azkarra"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "&Manual..."
+msgstr "&Eskuliburua"
+
+#: src/Menus.cpp
+msgid "&Diagnostics"
+msgstr "&Diagnostikoak"
+
+#: src/Menus.cpp
+msgid "Au&dio Device Info..."
+msgstr "A&udio Gailu Argibideak..."
+
+#: src/Menus.cpp
+msgid "&MIDI Device Info..."
+msgstr "&MIDI Gailu Infoa..."
+
+#: src/Menus.cpp
+msgid "Show &Log..."
+msgstr "Erakutsi &Oharra..."
+
+#: src/Menus.cpp
+msgid "&Generate Support Data..."
+msgstr "&Sortu Sostengu Datuak..."
+
+#: src/Menus.cpp
+msgid "Chec&k Dependencies..."
+msgstr "Egia&ztatu Elkartokiak..."
+
+#: src/Menus.cpp
+msgid "&Check for Updates..."
+msgstr "Egia&ztatu Eguneraketak..."
 
 #: src/Menus.cpp
 msgid "Unknown"
@@ -4070,16 +4566,8 @@ msgid "Tracks sorted by time"
 msgstr "Bideak denboraz antolatuta"
 
 #: src/Menus.cpp
-msgid "Sort by Time"
-msgstr "Antolatu Denboraz"
-
-#: src/Menus.cpp
 msgid "Tracks sorted by name"
 msgstr "Bideak izenez antolatuta"
-
-#: src/Menus.cpp
-msgid "Sort by Name"
-msgstr "Antolatu Izenez"
 
 #: src/Menus.cpp
 msgid "no label track"
@@ -4741,6 +5229,38 @@ msgstr ""
 "\n"
 "Mesedez gorde edo itxi egitasmo hau eta saiatu berriro."
 
+#: src/Menus.cpp src/commands/PreferenceCommands.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#: src/tracks/ui/TrackControls.cpp
+#, fuzzy
+msgid "Name:"
+msgstr "Izena"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "New label"
+msgstr "Gehitutako etiketa"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select in a mono track."
+msgstr "Mesedez hautatu audio bide bat."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select in a stereo track."
+msgstr "Mesedez hautatu audio bide bat."
+
+#: src/Menus.cpp
+#, fuzzy, c-format
+msgid "Please select at least %d channels."
+msgstr "Mesedez hautatu audio bide bat."
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Please select a time within a clip."
+msgstr "Mesedez hautatu Ohar Bide bat."
+
 #: src/Menus.cpp
 msgid "Edited labels"
 msgstr "Editaturiko etiketak"
@@ -4780,6 +5300,17 @@ msgstr "Gorde MIDI Gailuaren Infoa"
 #: src/Menus.cpp
 msgid "Unable to save MIDI device info"
 msgstr "Ezinezkoa MIDI gailuaren infoa gordetzea"
+
+#. i18n-hint: One or more audio tracks have been panned
+#: src/Menus.cpp
+#, fuzzy
+msgid "Panned audio track(s)"
+msgstr "Birlagindutako audio bidea(k)"
+
+#: src/Menus.cpp
+#, fuzzy
+msgid "Pan Track"
+msgstr "Bidea"
 
 #: src/Menus.cpp
 msgid ""
@@ -4847,13 +5378,13 @@ msgid "Pan"
 msgstr "Panoramikoa"
 
 #. i18n-hint: This is on a button that will silence this track.
-#: src/MixerBoard.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 msgid "Mute"
 msgstr "Mututu"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
-#: src/MixerBoard.cpp src/TrackPanel.cpp
+#: src/MixerBoard.cpp src/TrackPanel.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 msgid "Solo"
 msgstr "Soloa"
@@ -5066,8 +5597,9 @@ msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
 #: src/PluginManager.cpp
-msgid "Plug-in Manager: Effects, Generators and Analyzers"
-msgstr "Plug-in Kudeatzailea: Eraginak, Sorgailuak eta Aztergailuak"
+#, fuzzy
+msgid "Manage Plug-ins"
+msgstr "Gaitu plug-in berriak"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -5135,9 +5667,9 @@ msgid "&Disable"
 msgstr "&Ezgaitu"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Enabling effects:\n"
+"Enabling effects or commands:\n"
 "\n"
 "%s"
 msgstr ""
@@ -5146,9 +5678,9 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Enabling effect:\n"
+"Enabling effect or command:\n"
 "\n"
 "%s"
 msgstr ""
@@ -5157,21 +5689,17 @@ msgstr ""
 "%s"
 
 #: src/PluginManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Effect at %s failed to register:\n"
+"Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
 "%s eraginak huts egin du erregistratzerakoan:\n"
 "%s"
 
-#: src/PluginManager.cpp src/effects/Effect.cpp
-msgid "Built-in"
-msgstr "Barne-bilduta"
-
 #: src/PluginManager.cpp
-#, c-format
-msgid "Overwrite the plug-in file %s ?"
+#, fuzzy, c-format
+msgid "Overwrite the plug-in file %s?"
 msgstr "Gainidatzi %s plug-in agiria?"
 
 #: src/PluginManager.cpp
@@ -5289,7 +5817,7 @@ msgstr ""
 "Ezeztatu, Editatu > Desegin bide guztiak irekita\n"
 "egon arte, orduan Agiria > Gorde Egitasmoa."
 
-#: src/Project.cpp
+#: src/Project.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "Hautatu agiri bat edo gehiago"
 
@@ -5509,15 +6037,47 @@ msgstr ""
 "Mesedez saiatu berriro eta hautatu jatorrizko izen bat."
 
 #: src/Project.cpp
+#, fuzzy, c-format
+msgid "%sSave Lossless Copy of Project \"%s\" As..."
+msgstr "%sGorde Konprimitutako Egitasmoa \"%s\" Honela..."
+
+#: src/Project.cpp
+#, fuzzy
 msgid ""
-"'Save Compressed Project' is for an Audacity project, not an audio file.\n"
+"'Save Lossless Copy of Project' is for an Audacity project, not an audio "
+"file.\n"
+"For an audio file that will open in other apps, use 'Export'.\n"
+"\n"
+"Lossless copies of project are a good way to backup your project, \n"
+"with no loss of quality, but the projects are large.\n"
+msgstr ""
+"'Gorde Konprimitutako Egitasmoa' Audacity egitasmo baterako da, ez audio "
+"agiri batentzat.\n"
+"Beste aplikazio batzuetan irekiko den audio agiri baterako, erabili "
+"'Esportatu'.\n"
+"\n"
+"Konprimitutako egitasmo agiriak bide on bat dira zure egitasmoa online "
+"igortzeko, \n"
+"baina fideltasun galera apur bat dute.\n"
+"\n"
+"Konprimitutako egitasmo bat irekitzeak ohikoa baino gehiago luzatzen da, "
+"honek \n"
+"konprimitutako bide bakoitza inportatzen duenez.\n"
+
+#: src/Project.cpp
+#, fuzzy, c-format
+msgid "%sSave Compressed Copy of Project \"%s\" As..."
+msgstr "%sGorde Konprimitutako Egitasmoa \"%s\" Honela..."
+
+#: src/Project.cpp
+#, fuzzy
+msgid ""
+"'Save Compressed Copy of Project' is for an Audacity project, not an audio "
+"file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 "\n"
 "Compressed project files are a good way to transmit your project online, \n"
 "but they have some loss of fidelity.\n"
-"\n"
-"To open a compressed project takes longer than usual, as it imports \n"
-"each compressed track.\n"
 msgstr ""
 "'Gorde Konprimitutako Egitasmoa' Audacity egitasmo baterako da, ez audio "
 "agiri batentzat.\n"
@@ -5534,8 +6094,8 @@ msgstr ""
 
 #: src/Project.cpp
 #, c-format
-msgid "%sSave Compressed Project \"%s\" As..."
-msgstr "%sGorde Konprimitutako Egitasmoa \"%s\" Honela..."
+msgid "%sSave Project \"%s\" As..."
+msgstr "%sGorde Egitasmoa \"%s\" Honela..."
 
 #: src/Project.cpp
 msgid ""
@@ -5547,9 +6107,49 @@ msgstr ""
 "'Esportatu'.\n"
 
 #: src/Project.cpp
+#, fuzzy
+msgid ""
+"Saving a copy must not overwrite an existing saved project.\n"
+"Please try again and select an original name."
+msgstr ""
+"Egitasmoa ez da gorde emaniko agiriaren izenak beste egitasmo bat "
+"gainidatziko lukeelako.\n"
+"Mesedez saiatu berriro eta hautatu jatorrizko izen bat."
+
+#: src/Project.cpp
+#, fuzzy
+msgid "Error Saving Copy of Project"
+msgstr "Akatsa Egitasmoa Gordetzerakoan"
+
+#. i18n-hint: In each case, %s is the name
+#. of the file being overwritten.
+#: src/Project.cpp
 #, c-format
-msgid "%sSave Project \"%s\" As..."
-msgstr "%sGorde Egitasmoa \"%s\" Honela..."
+msgid ""
+"Do you want to overwrite the project:\n"
+"\"%s\"?\n"
+"\n"
+"If you select \"Yes\" the project\n"
+"\"%s\"\n"
+"will be irreversibly overwritten."
+msgstr ""
+
+#. i18n-hint: Heading: A warning that a project is about to be overwritten.
+#: src/Project.cpp
+#, fuzzy
+msgid "Overwrite Project Warning"
+msgstr "Gainidatzi dauden agiriak"
+
+#: src/Project.cpp
+#, fuzzy
+msgid ""
+"The project will not saved because the selected project is open in another "
+"window.\n"
+"Please try again and select an original name."
+msgstr ""
+"Egitasmoa ez da gorde emaniko agiriaren izenak beste egitasmo bat "
+"gainidatziko lukeelako.\n"
+"Mesedez saiatu berriro eta hautatu jatorrizko izen bat."
 
 #: src/Project.cpp
 msgid "Created new project"
@@ -5708,7 +6308,7 @@ msgid "24-bit PCM"
 msgstr "24-bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp
+#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
 msgid "32-bit float"
 msgstr "32-bit float"
 
@@ -5781,12 +6381,13 @@ msgid "All Toolbars"
 msgstr "Tresnabarra Guztiak"
 
 #: src/Screenshot.cpp
-msgid "All Menus"
-msgstr "Menu Guztiak"
-
-#: src/Screenshot.cpp
 msgid "All Effects"
 msgstr "Eragin Guztiak"
+
+#: src/Screenshot.cpp
+#, fuzzy
+msgid "All Scriptables"
+msgstr "Agiri guztiak |*"
 
 #: src/Screenshot.cpp
 msgid "All Preferences"
@@ -5796,50 +6397,61 @@ msgstr "Hobespen Guztiak"
 msgid "SelectionBar"
 msgstr "Hautapen-Barra"
 
-#: src/Screenshot.cpp src/toolbars/SpectralSelectionBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
 msgstr "Argilitza Hautapena"
 
-#: src/Screenshot.cpp src/toolbars/ToolsToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ToolsToolBar.cpp
 msgid "Tools"
 msgstr "Tresnak"
 
-#: src/Screenshot.cpp src/toolbars/ControlToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Transport"
 msgstr "Garraioa"
 
-#: src/Screenshot.cpp src/toolbars/MixerToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MixerToolBar.cpp
 msgid "Mixer"
 msgstr "Nahastzailea"
 
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
 msgid "Meter"
 msgstr "Neurgailua"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Irakur Neurgailua"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-#: src/Screenshot.cpp src/toolbars/MeterToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
 msgstr "Grabaketa Neurgailua"
 
-#: src/Screenshot.cpp src/toolbars/EditToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/EditToolBar.cpp
 msgid "Edit"
 msgstr "Editatu"
 
-#: src/Screenshot.cpp src/toolbars/DeviceToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/DeviceToolBar.cpp
 msgid "Device"
 msgstr "Gailua"
 
-#: src/Screenshot.cpp src/toolbars/TranscriptionToolBar.cpp
-msgid "Transcription"
-msgstr "Irakurketa"
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/TranscriptionToolBar.cpp
+msgid "Play-at-Speed"
+msgstr "Irakurketa Abiaduran"
 
-#: src/Screenshot.cpp src/toolbars/ScrubbingToolBar.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
+#: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub"
 msgstr "Arrast-irakurri"
 
@@ -5847,22 +6459,24 @@ msgstr "Arrast-irakurri"
 msgid "Track Panel"
 msgstr "Bide Panela"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Ruler"
 msgstr "Zuzentzailea"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
 #. * data associated with a time line, such as sequences of labels, and musical
 #. * notes
-#: src/Screenshot.cpp src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
+#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/export/ExportMultiple.cpp src/prefs/TracksPrefs.cpp
 msgid "Tracks"
 msgstr "Bideak"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "First Track"
 msgstr "Lehen Bidea"
 
-#: src/Screenshot.cpp
+#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Second Track"
 msgstr "Bigarren Bidea"
 
@@ -5924,7 +6538,8 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Kontuz - Bloke Agiri Gainluzatua Itzulikatzen"
 
-#: src/ShuttleGui.cpp src/effects/Equalization.cpp src/widgets/ErrorDialog.cpp
+#: src/ShuttleGui.cpp src/commands/HelpCommand.h src/effects/Equalization.cpp
+#: src/widgets/ErrorDialog.cpp
 msgid "Help"
 msgstr "Laguntza"
 
@@ -6012,6 +6627,14 @@ msgstr "Etiketa"
 #: src/Tags.cpp
 msgid "Value"
 msgstr "Balioa"
+
+#: src/Tags.cpp
+msgid "&Add"
+msgstr "&Gehitu"
+
+#: src/Tags.cpp
+msgid "&Remove"
+msgstr "&Kendu"
 
 #: src/Tags.cpp
 msgid "Genres"
@@ -6195,6 +6818,19 @@ msgstr ""
 "Audacity-k ezin du agiria gorde:\n"
 "  %s"
 
+#: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
+#: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid "Duration"
+msgstr "Iraupena"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Time track.
+#: src/TimeTrack.cpp src/TrackPanelAx.cpp
+msgid "Time Track"
+msgstr "Denbora Bidea"
+
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Audacity Denboragailu Grabaketa"
@@ -6274,7 +6910,7 @@ msgstr "Grabaketa hasiera:"
 
 #: src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp src/effects/Noise.cpp
 #: src/effects/Silence.cpp src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr "Iraupena:"
 
@@ -6398,13 +7034,6 @@ msgstr "Amaiera Eguna eta Ordua"
 msgid "End Date"
 msgstr "Amaiera Eguna"
 
-#: src/TimerRecordDialog.cpp src/TimeDialog.h src/effects/DtmfGen.cpp
-#: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Duration"
-msgstr "Iraupena"
-
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -6430,10 +7059,6 @@ msgid "Save Project As:"
 msgstr "Gorde Egitasmoa Honela:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Select..."
-msgstr "Hautatu..."
-
-#: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
 msgstr "Berezgaitasunezko Esportazioa"
 
@@ -6445,7 +7070,8 @@ msgstr "Gaitu &Berezgaitasunezko Esportatzea?"
 msgid "Export Project As:"
 msgstr "Esportatu Egitasmoa Honela:"
 
-#: src/TimerRecordDialog.cpp src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
+#: src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "Aukerak"
 
@@ -6501,12 +7127,6 @@ msgstr "Grabaketa Esportatuta:"
 msgid "Audacity Timer Record - Waiting"
 msgstr "Audacity Denboragailu Grabaketa - Itxaroten"
 
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Time track.
-#: src/TimeTrack.cpp src/TrackPanelAx.cpp
-msgid "Time Track"
-msgstr "Denbora Bidea"
-
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -6541,30 +7161,46 @@ msgid "TrackView"
 msgstr "Bide-Ikuspena"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track mute is on.
+#. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
-msgid " Mute On"
-msgstr " Mutu Eraginda"
+#, fuzzy
+msgid " Muted"
+msgstr "Mututu"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track solo is on.
+#. this track is soloed. (The Solo button is on.)
 #: src/TrackPanelAx.cpp
-msgid " Solo On"
-msgstr " Solo Eraginda"
+#, fuzzy
+msgid " Soloed"
+msgstr "Soloa"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: src/TrackPanelAx.cpp
-msgid " Select On"
-msgstr " Hautatua Eraginda"
+#, fuzzy
+msgid " Selected"
+msgstr "Hautatu"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
 #. The absence of a dash between Sync and Locked is deliberate -
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
-msgid " Sync Lock Selected"
+#, fuzzy
+msgid " Sync Locked"
 msgstr " Aldiberetze Blokeoa Hautaturik"
+
+#: src/TrackPanelAx.cpp
+msgid " Mute On"
+msgstr " Mutu Eraginda"
+
+#: src/TrackPanelAx.cpp
+msgid " Solo On"
+msgstr " Solo Eraginda"
+
+#: src/TrackPanelAx.cpp
+msgid " Select On"
+msgstr " Hautatua Eraginda"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -6619,65 +7255,47 @@ msgstr "Ez dago nahikoa toki eskuragarri hautapena itsasteko"
 msgid "There is not enough room available to expand the cut line"
 msgstr "Ez dago nahikoa toki eskuragarri ebaketa lerroa hedatzeko"
 
-#: src/AudacityException.h src/widgets/ErrorDialog.cpp
-msgid "Message"
-msgstr "Mezua"
-
-#: src/FFmpeg.h
-msgid "FFmpeg not found"
-msgstr "FFmpeg ez da aurkitu"
-
-#: src/FFmpeg.h
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity saiatu da FFmpeg erabiltzen audio agiri bat inportatzeko,\n"
-"baina liburutegiak ez dira aurkitu.\n"
-"\n"
-"FFmpeg inportazioa erabiltzeko, joan Hobespenak > Liburutegiak\n"
-"FFmpeg liburutegiak jeisteko edo kokatzeko."
-
-#: src/FFmpeg.h
-msgid "Do not show this warning again"
-msgstr "Ez erakutsi ohar hau berriro"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Bakarrik avformat.dll|*avformat*.dll|Dinamikoki Lotutako Liburutegiak (*."
-"dll)|*.dll|Agiri Guztiak|*"
-
-#: src/FFmpeg.h
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Liburutegi Dinamikoak (*.dylib)|*.dylib|Agiri Guztiak (*)|*"
-
-#: src/FFmpeg.h
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Bakarrik libavformat.so|libavformat.so*|Dinamikoki Loturaturiko Liburutegiak "
-"(*.so*)|*.so*|Agiri Guztiak (*)|*"
-
-#: src/FileException.h
-msgid "File Error"
-msgstr "Agiri Akatsa"
-
-#: src/InconsistencyException.h
-msgid "Internal Error"
-msgstr "Barneko Akatsa"
-
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "Eragiketa hau ezin da egin %s-ren inportazioa osatu arte."
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#, c-format
+msgid ""
+"%s: Could not load settings below. Default settings will be used.\n"
+"\n"
+"%s"
+msgstr ""
+"%s: Ezin dira ezarpenak azpian gertatu. Berezko ezarpenak erabiliko dira.\n"
+"\n"
+"%s"
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#, c-format
+msgid "Applying %s..."
+msgstr "Ezartzen %s..."
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/vamp/VampEffect.cpp src/widgets/ASlider.cpp
+#, c-format
+msgid "%s: %s"
+msgstr "%s: %s"
+
+#: src/commands/BatchEvalCommand.cpp
+#, fuzzy
+msgid "Batch Command"
+msgstr "Agindua"
+
+#: src/commands/Command.cpp
+#, c-format
+msgid "%s is not a parameter accepted by %s"
+msgstr ""
+
+#: src/commands/Command.cpp
+#, c-format
+msgid "Invalid value for parameter '%s': should be %s"
+msgstr ""
 
 #: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
 #: src/widgets/KeyView.cpp
@@ -6756,6 +7374,12 @@ msgstr ""
 "Lehenik audioren bat hautatu behar duzu ekintza hau burutzeko.\n"
 "(Beste bide mota bat hautatzeak ez du lanik egiten.)"
 
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#: src/commands/CommandManager.cpp
+#, c-format
+msgid "\"%s\" requires one or more tracks to be selected."
+msgstr ""
+
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid "Loaded %d keyboard shortcuts\n"
@@ -6765,10 +7389,786 @@ msgstr "Gertaturik %d lastertekla\n"
 msgid "Loading Keyboard Shortcuts"
 msgstr "Lasterteklak Gertaketa"
 
+#: src/commands/CommandTargets.cpp
+#, fuzzy
+msgid "Long Message"
+msgstr "Mezua"
+
+#: src/commands/CompareAudioCommand.cpp src/effects/AutoDuck.cpp
+#: src/effects/Compressor.cpp src/effects/TruncSilence.cpp
+msgid "Threshold:"
+msgstr "Muga:"
+
+#: src/commands/CompareAudioCommand.h
+#, fuzzy
+msgid "Compare Audio"
+msgstr "Kopiatu Etiketaturiko Audioa"
+
+#: src/commands/CompareAudioCommand.h
+#, fuzzy
+msgid "Compares a range on two tracks."
+msgstr "Konpresioa Gailurretan ohinarriturik"
+
+#: src/commands/Demo.cpp src/effects/Echo.cpp
+msgid "Delay time (seconds):"
+msgstr "Atzerapen denbora (segundoak):"
+
+#: src/commands/Demo.cpp src/effects/Echo.cpp
+msgid "Decay factor:"
+msgstr "Erortze ezaugarria:"
+
+#: src/commands/Demo.h
+msgid "Demo"
+msgstr ""
+
+#: src/commands/Demo.h
+msgid "Does the demo action."
+msgstr ""
+
+#: src/commands/DragCommand.cpp src/widgets/wxPanelWrapper.h
+msgid "Panel"
+msgstr "Panela"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Application"
+msgstr "Anplitudea dB"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Track 0"
+msgstr "Bidea"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Track 1"
+msgstr "Bidea"
+
+#. i18n-hint abbreviates "Identity" or "Identifier"
+#: src/commands/DragCommand.cpp
+msgid "Id:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "Window Name:"
+msgstr "Leiho Neurria:"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "From X:"
+msgstr "IM-kotik"
+
+#: src/commands/DragCommand.cpp
+#, fuzzy
+msgid "From Y:"
+msgstr "IM-kotik"
+
+#: src/commands/DragCommand.cpp
+msgid "To X:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp
+msgid "To Y:"
+msgstr ""
+
+#: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
+msgid "Relative To:"
+msgstr ""
+
+#: src/commands/DragCommand.h
+#, fuzzy
+msgid "Drag"
+msgstr "Ezker-Arrastatu"
+
+#: src/commands/DragCommand.h
+msgid "Drags mouse from one place to another."
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Commands"
+msgstr "Agindua"
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Menus"
+msgstr "Menua"
+
+#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Preferences"
+msgstr "Hobespenak: "
+
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Clips"
+msgstr "ebakinak"
+
+#: src/commands/GetInfoCommand.cpp
+#, fuzzy
+msgid "Envelopes"
+msgstr "Bilkaria"
+
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportMultiple.cpp
+msgid "Labels"
+msgstr "Etiketak"
+
+#: src/commands/GetInfoCommand.cpp
+msgid "Boxes"
+msgstr ""
+
+#. i18n-hint JavaScript Object Notation
+#: src/commands/GetInfoCommand.cpp
+msgid "JSON"
+msgstr ""
+
+#. i18n-hint name of a computer programming language
+#: src/commands/GetInfoCommand.cpp
+msgid "LISP"
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp
+msgid "Brief"
+msgstr ""
+
+#: src/commands/GetInfoCommand.cpp src/effects/Effect.cpp
+msgid "Type:"
+msgstr "Mota:"
+
+#: src/commands/GetInfoCommand.cpp src/export/ExportFFmpegDialogs.cpp
+#: src/export/ExportMultiple.cpp
+msgid "Format:"
+msgstr "Heuskarria:"
+
+#: src/commands/GetInfoCommand.h
+#, fuzzy
+msgid "Get Info"
+msgstr "Argibideak"
+
+#: src/commands/GetInfoCommand.h
+msgid "Gets information in JSON format."
+msgstr ""
+
+#: src/commands/GetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Types:"
+msgstr "Mota:"
+
+#: src/commands/GetTrackInfoCommand.h
+#, fuzzy
+msgid "Get Track Info"
+msgstr "Mugitu Bidea Behera"
+
+#: src/commands/GetTrackInfoCommand.h
+msgid "Gets track values as JSON."
+msgstr ""
+
+#: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
+msgid "Command:"
+msgstr "Agindua:"
+
+#: src/commands/HelpCommand.h
+msgid "Gives help on a command."
+msgstr ""
+
+#: src/commands/ImportExportCommands.cpp src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "File Name:"
+msgstr "Iragazki mota:"
+
+#: src/commands/ImportExportCommands.cpp
+#, fuzzy
+msgid "Number of Channels:"
+msgstr "Edizio zenbatekoa:"
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Import2"
+msgstr "Inportatu"
+
+#: src/commands/ImportExportCommands.h
+msgid "Imports from a file."
+msgstr ""
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Export2"
+msgstr "Esportatu"
+
+#: src/commands/ImportExportCommands.h
+#, fuzzy
+msgid "Exports to a file."
+msgstr "Esportazio Anitza"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Builtin Commands"
+msgstr "Hautatu Agindua"
+
+#: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
+#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+msgid "The Audacity Team"
+msgstr "Audacity Taldea"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Provides builtin commands to Audacity"
+msgstr "Barnebildutako eraginak hornitzen dizkio Audacity-ri"
+
+#: src/commands/LoadCommands.cpp
+#, fuzzy
+msgid "Unknown built-in command name"
+msgstr "Barne-bildutako eragin izen ezezaguna"
+
+#: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
+msgid "Text:"
+msgstr ""
+
+#: src/commands/MessageCommand.h
+#, fuzzy
+msgid "Echos a message."
+msgstr "laguntza mezu hau"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Add to History"
+msgstr "Historia"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Add to History:"
+msgstr "Historia"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Compress:"
+msgstr "Konprimitu"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Open Project2"
+msgstr "Oraingo Egitasmoa"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Opens a project."
+msgstr "Audacity Egitasmoa Irekitzen"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Save Project2"
+msgstr "&Gorde Egitasmoa"
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Saves a project."
+msgstr "&Gorde Egitasmoa"
+
+#: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Value:"
+msgstr "Balioa"
+
+#: src/commands/PreferenceCommands.cpp
+msgid "Reload:"
+msgstr ""
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Get Preference"
+msgstr "&Erabilpen Hobespenak"
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Set Preference"
+msgstr "&Erabilpen Hobespenak"
+
+#: src/commands/PreferenceCommands.h
+msgid "Gets the value of a single preference."
+msgstr ""
+
+#: src/commands/PreferenceCommands.h
+#, fuzzy
+msgid "Sets the value of a single preference."
+msgstr "Bide baten edo gehiagoren anplitude gailurra ezartzen du"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Window"
+msgstr "&Leihoa"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Full Window"
+msgstr "Hartu Leiho Osoa"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Window Plus"
+msgstr "Hartu Leiho Geh"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Fullscreen"
+msgstr "&Ikusleiho osoa (bai/ez)"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Toolbars"
+msgstr "&Tresnabarrak"
+
+#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
+msgid "Effects"
+msgstr "Eraginak"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Scriptables"
+msgstr "Eskripta"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Selectionbar"
+msgstr "Hautapen-Barra"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Trackpanel"
+msgstr "Bide Panela"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Two Tracks"
+msgstr "Lehen Bidea"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Three Tracks"
+msgstr "Lehen Bidea"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Four Tracks"
+msgstr "Lehen Bidea"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Tracks Plus"
+msgstr "Bide Panela"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "First Track Plus"
+msgstr "Lehen Bidea"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "All Tracks"
+msgstr "Bide Luzeak"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "All Tracks Plus"
+msgstr "Bide Luzeak"
+
+#: src/commands/ScreenshotCommand.cpp
+msgid "Blue"
+msgstr ""
+
+#: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
+msgid "White"
+msgstr "Zuria"
+
+#: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
+#: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+msgid "None"
+msgstr "Bat ere ez"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Path:"
+msgstr "Helburua"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Capture What:"
+msgstr "Hartze hutsegitea!"
+
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgid "Background:"
+msgstr "&Barrena:"
+
+#: src/commands/ScreenshotCommand.cpp
+msgid "Bring To Top:"
+msgstr ""
+
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
 msgid "Error trying to save file: %s"
 msgstr "Akatsa agiria gordetzen saiatzerakoan: %s"
+
+#: src/commands/ScreenshotCommand.h
+#, fuzzy
+msgid "Screenshot"
+msgstr "&Ikusleiho-argazki Tresnak..."
+
+#: src/commands/ScreenshotCommand.h
+msgid "Takes screenshots."
+msgstr ""
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Project Start"
+msgstr "Egi&tasmoaren Hasiera"
+
+#: src/commands/SelectCommand.cpp src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Project"
+msgstr "Egitasmoak"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Project End"
+msgstr "Egi&tasmoaren &Amaiera"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Selection Start"
+msgstr "Hautapenaren Ha&siera"
+
+#: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
+msgid "Selection"
+msgstr "Hautapena"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Selection End"
+msgstr "Hautapenaren A&maiera"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Start Time:"
+msgstr "Hasiera Denbora"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "End Time:"
+msgstr "Amaiera Denbora"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "High:"
+msgstr "Goi-igaropena"
+
+#: src/commands/SelectCommand.cpp
+msgid "Low:"
+msgstr ""
+
+#. i18n-hint verb, imperative
+#: src/commands/SelectCommand.cpp
+msgid "Set"
+msgstr "Ezarri"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Add"
+msgstr "&Gehitu"
+
+#: src/commands/SelectCommand.cpp src/effects/EffectRack.cpp
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
+msgid "Remove"
+msgstr "Kendu"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "First Track:"
+msgstr "Lehen Bidea"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Track Count:"
+msgstr "Uztarpen kopurua:"
+
+#: src/commands/SelectCommand.cpp
+#, fuzzy
+msgid "Mode:"
+msgstr "Arrunta"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Time"
+msgstr "Hautatu agiri bat"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Frequencies"
+msgstr "Maiztasunak"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Select Tracks"
+msgstr "Antolat&u Bideak"
+
+#: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Hautatu"
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects a time range."
+msgstr "Hautatu agiri bat"
+
+#: src/commands/SelectCommand.h
+msgid "Selects a frequency range."
+msgstr ""
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects a range of tracks."
+msgstr "Mesedez hautatu audio bide bat."
+
+#: src/commands/SelectCommand.h
+#, fuzzy
+msgid "Selects Audio."
+msgstr "Hautatu Audio Hostalaria"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 0"
+msgstr "Margoak"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 1"
+msgstr "Margoak"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 2"
+msgstr "Margoak"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Color 3"
+msgstr "Margoak"
+
+#: src/commands/SetClipCommand.cpp
+msgid "At:"
+msgstr ""
+
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Colour:"
+msgstr "Margoak"
+
+#: src/commands/SetClipCommand.cpp src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Start:"
+msgstr "Hasiera"
+
+#: src/commands/SetClipCommand.h
+#, fuzzy
+msgid "Set Clip"
+msgstr "Hu&rrengo Ebaketa"
+
+#: src/commands/SetClipCommand.h
+msgid "Sets various values for a clip."
+msgstr ""
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Time:"
+msgstr "Lerro Denbora:"
+
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Delete:"
+msgstr "Ezabatu"
+
+#: src/commands/SetEnvelopeCommand.h
+#, fuzzy
+msgid "Set Envelope"
+msgstr "Bilkaria"
+
+#: src/commands/SetEnvelopeCommand.h
+msgid "Sets an envelope point position."
+msgstr ""
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Label Index"
+msgstr "Etiketa Edizioa"
+
+#: src/commands/SetLabelCommand.cpp
+msgid "End:"
+msgstr ""
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Selected:"
+msgstr "Hautatu"
+
+#: src/commands/SetLabelCommand.h
+#, fuzzy
+msgid "Set Label"
+msgstr "E&zabtu Etiketa"
+
+#: src/commands/SetLabelCommand.h
+msgid "Sets various values for a label."
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Resize:"
+msgstr "&Hondarra"
+
+#: src/commands/SetProjectCommand.cpp
+msgid "X:"
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+msgid "Y:"
+msgstr ""
+
+#: src/commands/SetProjectCommand.cpp
+#, fuzzy
+msgid "Width:"
+msgstr "Zabalera"
+
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Height:"
+msgstr "Arina"
+
+#: src/commands/SetProjectCommand.h
+#, fuzzy
+msgid "Set Project"
+msgstr "&Gorde Egitasmoa"
+
+#: src/commands/SetProjectCommand.h
+msgid "Sets various values for a project."
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Track Index:"
+msgstr "Bide &Amaiera"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Channel Index:"
+msgstr "Bide Modua:"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Unnamed"
+msgstr "izengabea"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Selected"
+msgstr "Hautatu"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Focused"
+msgstr "&Fokutu"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Gain:"
+msgstr "Irabazia"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Pan:"
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+msgid "Waveform"
+msgstr "Uhinera"
+
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
+msgid "Spectrogram"
+msgstr "Argilitza"
+
+#: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
+#: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
+#: src/widgets/Meter.cpp
+msgid "Linear"
+msgstr "Linearra"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Reset"
+msgstr "Ber&rezarri"
+
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Times 2"
+msgstr ""
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "HalfWave"
+msgstr "Uhin Erdia"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Display:"
+msgstr "Erakutsi"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Scale:"
+msgstr "E&skala"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "VZoom:"
+msgstr "Zooma"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Use Spectral Prefs"
+msgstr "Erabiltzaile Aurrezarpenak"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Spectral Select"
+msgstr "Argilitza Hautapena"
+
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Gray Scale"
+msgstr "&Griseskala"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track"
+msgstr "Bide Berria"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Status"
+msgstr "Bide &Hasiera"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Audio"
+msgstr "Moztu Audioa"
+
+#: src/commands/SetTrackInfoCommand.h
+#, fuzzy
+msgid "Set Track Visuals"
+msgstr "Antolat&u Bideak"
+
+#: src/commands/SetTrackInfoCommand.h
+msgid "Sets various values for a track."
+msgstr ""
 
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
@@ -6789,6 +8189,10 @@ msgstr "Anplitude Gailur Berria (dB):"
 #: src/effects/Amplify.cpp
 msgid "Allow clipping"
 msgstr "Ahalbidetu ebaketa"
+
+#: src/effects/Amplify.h
+msgid "Amplify"
+msgstr "Anplifikatu"
 
 #: src/effects/AutoDuck.cpp
 msgid ""
@@ -6824,7 +8228,8 @@ msgstr "Gehienezko pausaldia:"
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
-#: src/prefs/PlaybackPrefs.cpp src/widgets/NumericTextCtrl.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/widgets/NumericTextCtrl.cpp
 msgid "seconds"
 msgstr "segundu"
 
@@ -6844,13 +8249,13 @@ msgstr "Barne hutsalbehera luzera:"
 msgid "Inner fade up length:"
 msgstr "Barne hutsalgora luzera:"
 
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-msgid "Threshold:"
-msgstr "Muga:"
-
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
 msgstr "Aurreikuspena ez dago eskuragarri"
+
+#: src/effects/AutoDuck.h
+msgid "Auto Duck"
+msgstr "Berez Uztartu"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
@@ -6892,8 +8297,13 @@ msgstr "Maila"
 msgid "&Link Volume control to Tone controls"
 msgstr "&Lotu Bolumen aginteak Doinu aginteei"
 
+#: src/effects/BassTreble.h
+msgid "Bass and Treble"
+msgstr "Hotslodiak eta Hotsmeheak"
+
 #: src/effects/ChangePitch.cpp
-msgid "Change the pitch of a track without changing its tempo"
+#, fuzzy
+msgid "Changes the pitch of a track without changing its tempo"
 msgstr "Aldatu bide baten doinua tenpoa aldatu gabe"
 
 #: src/effects/ChangePitch.cpp
@@ -6966,6 +8376,10 @@ msgstr "Ehuneko Aldaketa"
 msgid "Use high quality stretching (slow)"
 msgstr "Erabili ontasun handiko indartzea (astiroa)"
 
+#: src/effects/ChangePitch.h
+msgid "Change Pitch"
+msgstr "Aldatu Doinua"
+
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #: src/effects/ChangeSpeed.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -6974,15 +8388,9 @@ msgstr "Erabili ontasun handiko indartzea (astiroa)"
 msgid "n/a"
 msgstr "e/g"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
-#: src/effects/ChangeSpeed.cpp src/effects/Effect.cpp
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + milliseconds"
-msgstr "oo:mm:ss + segundumilaen"
-
 #: src/effects/ChangeSpeed.cpp
-msgid "Change the speed of a track, also changing its pitch"
+#, fuzzy
+msgid "Changes the speed of a track, also changing its pitch"
 msgstr "Bide baten abiadura aldatzen du, doinua ere aldatuz"
 
 #: src/effects/ChangeSpeed.cpp
@@ -7022,8 +8430,13 @@ msgstr "Hautapenaren oraingo luzera."
 msgid "New Length:"
 msgstr "Luzera Berria:"
 
+#: src/effects/ChangeSpeed.h
+msgid "Change Speed"
+msgstr "Aldatu Abiadura"
+
 #: src/effects/ChangeTempo.cpp
-msgid "Change the tempo of a selection without changing its pitch"
+#, fuzzy
+msgid "Changes the tempo of a selection without changing its pitch"
 msgstr "Aldatu hautapen baten tenpoa doinua aldatu gabe"
 
 #: src/effects/ChangeTempo.cpp
@@ -7055,6 +8468,10 @@ msgstr "Luzera (segundu)"
 msgid "Length in seconds from %s, to"
 msgstr "Luzera segundutan %s-tik, hona"
 
+#: src/effects/ChangeTempo.h
+msgid "Change Tempo"
+msgstr "Aldatu Tenpoa"
+
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
 msgstr "Klaska Kentzea audio bideetako klaskak kentzeko diseinatua dago"
@@ -7083,6 +8500,10 @@ msgstr "Geh. Erpin Zabalera (handiagoa sentikorragoa da):"
 #: src/effects/ClickRemoval.cpp
 msgid "Max Spike Width"
 msgstr "Geh. Erpin Zabalera"
+
+#: src/effects/ClickRemoval.h
+msgid "Click Removal"
+msgstr "Klaska Kentzea"
 
 #: src/effects/Compressor.cpp
 msgid "Compresses the dynamic range of audio"
@@ -7192,6 +8613,10 @@ msgstr "Askapen Denbora %.1f seg"
 msgid "%.1f secs"
 msgstr "%.1f seg"
 
+#: src/effects/Compressor.h
+msgid "Compressor"
+msgstr "Konprimitzailea"
+
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
 msgstr "Bide bakar bat  bakarrik neurtu dezakezu aldiberean."
@@ -7238,12 +8663,6 @@ msgstr "Bolumena   "
 msgid "&Foreground:"
 msgstr "&Gainaldea:"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundredths of a second (1/100 second)
-#: src/effects/Contrast.cpp src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + hundredths"
-msgstr "oo:mm:ss + ehunenak"
-
 #: src/effects/Contrast.cpp
 msgid "Foreground start time"
 msgstr "Gainalde hasiera denbora"
@@ -7287,10 +8706,6 @@ msgstr "Ber&rezarri"
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
 msgstr "&Aldea:"
-
-#: src/effects/Contrast.cpp src/effects/Equalization.cpp
-msgid "E&xport..."
-msgstr "E&sportatu..."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -7692,6 +9107,10 @@ msgstr " (0 -> 100):"
 msgid " (0 to 5):"
 msgstr " (0 -> 5 artean):"
 
+#: src/effects/Distortion.h
+msgid "Distortion"
+msgstr "Itsustura"
+
 #: src/effects/DtmfGen.cpp
 msgid ""
 "Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
@@ -7733,6 +9152,10 @@ msgstr "Isiltasun iraupena:"
 msgid "%.0f ms"
 msgstr "%.0f ms"
 
+#: src/effects/DtmfGen.h
+msgid "DTMF Tones"
+msgstr "DTMF Tonuak"
+
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
 msgstr "Hautaturiko audioa behin eta berriro berregiten du"
@@ -7742,35 +9165,13 @@ msgstr "Hautaturiko audioa behin eta berriro berregiten du"
 msgid "Requested value exceeds memory capacity."
 msgstr "Eskatutako balioak oroimen gaitasuna gainditzen du."
 
-#: src/effects/Echo.cpp
-msgid "Delay time (seconds):"
-msgstr "Atzerapen denbora (segundoak):"
-
-#: src/effects/Echo.cpp
-msgid "Decay factor:"
-msgstr "Erortze ezaugarria:"
+#: src/effects/Echo.h
+msgid "Echo"
+msgstr "Oihartzuna"
 
 #: src/effects/Effect.cpp
-#, c-format
-msgid ""
-"%s: Could not load settings below. Default settings will be used.\n"
-"\n"
-"%s"
-msgstr ""
-"%s: Ezin dira ezarpenak azpian gertatu. Berezko ezarpenak erabiliko dira.\n"
-"\n"
-"%s"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
-#: src/effects/Effect.cpp src/widgets/NumericTextCtrl.cpp
-msgid "hh:mm:ss + samples"
-msgstr "oo:mm:ss + laginak"
-
-#: src/effects/Effect.cpp
-#, c-format
-msgid "Applying %s..."
-msgstr "Ezartzen %s..."
+msgid "Built-in"
+msgstr "Barne-bilduta"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
@@ -7789,11 +9190,10 @@ msgstr ""
 "Saiatu audio hostalaria, irakurketa gailua eta egitasmoaren laginketa "
 "neurria aldatzen."
 
-#: src/effects/Effect.cpp src/effects/vamp/VampEffect.cpp
-#: src/widgets/ASlider.cpp
-#, c-format
-msgid "%s: %s"
-msgstr "%s: %s"
+#: src/effects/Effect.cpp
+#, fuzzy
+msgid "Some Command"
+msgstr "Hautatu Agindua"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
@@ -7857,22 +9257,9 @@ msgstr "Ezabatu Aurrezarpena"
 msgid "Defaults"
 msgstr "Berezkoak"
 
-#: src/effects/Effect.cpp src/prefs/QualityPrefs.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "None"
-msgstr "Bat ere ez"
-
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
 msgstr "Lantegiko Aurrezarpenak"
-
-#: src/effects/Effect.cpp
-msgid "Import..."
-msgstr "Inportatu..."
-
-#: src/effects/Effect.cpp
-msgid "Export..."
-msgstr "Esportatu..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -7949,10 +9336,6 @@ msgid "Select Preset"
 msgstr "Hautatu Aurrezarpena"
 
 #: src/effects/Effect.cpp
-msgid "Type:"
-msgstr "Mota:"
-
-#: src/effects/Effect.cpp
 msgid "&Preset:"
 msgstr "A&urrezarpena:"
 
@@ -7967,6 +9350,11 @@ msgstr "Lantegiko Berezkoak"
 #: src/effects/EffectManager.cpp
 #, c-format
 msgid "Applied effect: %s"
+msgstr "Ezarritako eragina: %s"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy, c-format
+msgid "Applied command: %s"
 msgstr "Ezarritako eragina: %s"
 
 #: src/effects/EffectManager.cpp
@@ -7986,6 +9374,26 @@ msgstr ""
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
+msgstr "Eraginak huts egin du abiatzerakoan"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in Help->Show Log"
+msgstr ""
+"Hutsegitea hurrengo eragina abiarazten saitzerakoan:\n"
+"\n"
+"%s\n"
+"\n"
+"Argibide gehiago dago eskuragarri hemen: Laguntza->Erakutsi Oharra"
+
+#: src/effects/EffectManager.cpp
+#, fuzzy
+msgid "Command failed to initialize"
 msgstr "Eraginak huts egin du abiatzerakoan"
 
 #: src/effects/EffectRack.cpp
@@ -8045,11 +9453,6 @@ msgid "Mark effect as a favorite"
 msgstr "Markatu eragina gogokoen bat bezala"
 
 #: src/effects/EffectRack.cpp
-#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
-msgid "Remove"
-msgstr "Kendu"
-
-#: src/effects/EffectRack.cpp
 msgid "Remove effect from the rack"
 msgstr "Kendu eragina racketik"
 
@@ -8080,8 +9483,9 @@ msgid "Adjusts the volume levels of particular frequencies"
 msgstr "Maiztasun bereizi batzuen bolumen mailak zehazten ditu"
 
 #: src/effects/Equalization.cpp
+#, fuzzy
 msgid ""
-"To use this EQ curve in a batch chain, please choose a new name for it.\n"
+"To use this EQ curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
@@ -8288,16 +9692,8 @@ msgid "Curve Name"
 msgstr "Bihurgune Izena"
 
 #: src/effects/Equalization.cpp
-msgid "&Rename..."
-msgstr "B&errizendatu..."
-
-#: src/effects/Equalization.cpp
 msgid "D&elete..."
 msgstr "&Kendu..."
-
-#: src/effects/Equalization.cpp
-msgid "I&mport..."
-msgstr "I&nportatu..."
 
 #: src/effects/Equalization.cpp
 msgid "&Get More..."
@@ -8342,12 +9738,9 @@ msgid "Same name"
 msgstr "Izen berdina"
 
 #: src/effects/Equalization.cpp
-msgid "Overwrite existing curve '"
+#, fuzzy, c-format
+msgid "Overwrite existing curve '%s'?"
 msgstr "Gainidatzi dagoen bihurgunea '"
-
-#: src/effects/Equalization.cpp
-msgid "'?"
-msgstr "'?"
 
 #: src/effects/Equalization.cpp
 msgid "Curve exists"
@@ -8362,24 +9755,18 @@ msgid "Can't delete 'unnamed'"
 msgstr "Ezin da 'izengabea' ezabatu"
 
 #: src/effects/Equalization.cpp
-msgid "Delete '"
+#, fuzzy, c-format
+msgid "Delete '%s'?"
 msgstr "Ezabatu '"
-
-#: src/effects/Equalization.cpp
-msgid "' ?"
-msgstr "' ?"
 
 #: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Confirm Deletion"
 msgstr "Baieztatu Ezabapena"
 
 #: src/effects/Equalization.cpp
-msgid "Delete "
-msgstr "Ezabatu "
-
-#: src/effects/Equalization.cpp
-msgid "items?"
-msgstr "gaiak?"
+#, fuzzy, c-format
+msgid "Delete %d items?"
+msgstr "Ezabatu Aurrezarpena"
 
 #: src/effects/Equalization.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
@@ -8418,6 +9805,10 @@ msgstr "Bihurguneak esportatuta"
 msgid "No curves exported"
 msgstr "Ez da bihurgunerik esportatu"
 
+#: src/effects/Equalization.h
+msgid "Equalization"
+msgstr "Ekualizazioa"
+
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -8443,6 +9834,14 @@ msgstr "Agertze linear bat ezartzen dio hautaturiko audioari"
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "Hutsalpen-irteera linear bat ezartzen dio hautaturiko audioari"
 
+#: src/effects/Fade.h
+msgid "Fade In"
+msgstr "Hutsalpen Sarrera"
+
+#: src/effects/Fade.h
+msgid "Fade Out"
+msgstr "Hutsalpen Irteera"
+
 #: src/effects/FindClipping.cpp
 msgid "Creates labels where clipping is detected"
 msgstr "Etiketak sortzen ditu ebaketa atzematen den tokian"
@@ -8459,6 +9858,10 @@ msgstr "Hasiera muga (laginak):"
 msgid "Stop threshold (samples):"
 msgstr "Gelditu muga (laginak):"
 
+#: src/effects/FindClipping.h
+msgid "Find Clipping"
+msgstr "Bilatu Ebaketa"
+
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
 msgstr "Ez dago nahikoa toki eskuragarri audioa sortzeko"
@@ -8468,16 +9871,13 @@ msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 "Audio laginak goi-behe itzulikatzen ditu, beren polaritatea alderantzizkatuz"
 
+#: src/effects/Invert.h
+msgid "Invert"
+msgstr "Alderantzizkatu"
+
 #: src/effects/LoadEffects.cpp
 msgid "Builtin Effects"
 msgstr "Barnebildutako Eraginak"
-
-#: src/effects/LoadEffects.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "The Audacity Team"
-msgstr "Audacity Taldea"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
@@ -8486,10 +9886,6 @@ msgstr "Barnebildutako eraginak hornitzen dizkio Audacity-ri"
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
 msgstr "Barne-bildutako eragin izen ezezaguna"
-
-#: src/effects/Noise.cpp
-msgid "White"
-msgstr "Zuria"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -8506,6 +9902,10 @@ msgstr "Hiru zarate motetako bat sortzen du"
 #: src/effects/Noise.cpp
 msgid "Noise type:"
 msgstr "Zarata mota:"
+
+#: src/effects/Noise.h
+msgid "Noise"
+msgstr "Zarata"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
@@ -8766,6 +10166,11 @@ msgid "Re&move"
 msgstr "&Kendu"
 
 #: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Sets the peak amplitude or loudness of one or more tracks"
+msgstr "Bide baten edo gehiagoren anplitude gailurra ezartzen du"
+
+#: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
 msgstr "Bide baten edo gehiagoren anplitude gailurra ezartzen du"
 
@@ -8825,12 +10230,24 @@ msgid "Remove DC offset (center on 0.0 vertically)"
 msgstr "Kendu edozein DC oreka (erdiratu 0.0-an zutika)"
 
 #: src/effects/Normalize.cpp
-msgid "Normalize maximum amplitude to"
+#, fuzzy
+msgid "Normalize peak amplitude to"
 msgstr "Normaldu gehienezko anplitudea hona"
 
 #: src/effects/Normalize.cpp
-msgid "Maximum amplitude dB"
-msgstr "Gehienezko anplitudea dB"
+#, fuzzy
+msgid "Normalize loudness to"
+msgstr "Normaldu gehienezko anplitudea hona"
+
+#: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Peak amplitude dB"
+msgstr "Anplitude Gailur Berria (dB):"
+
+#: src/effects/Normalize.cpp
+#, fuzzy
+msgid "Use loudness instead of peak amplitude"
+msgstr "Huts anplitudeko audioa sortzen du"
 
 #: src/effects/Normalize.cpp
 msgid "Normalize stereo channels independently"
@@ -8844,8 +10261,21 @@ msgstr "Uhinerak konputazioa amaitzearen zain..."
 msgid ".  Maximum 0dB."
 msgstr ".  Gehienez 0dB."
 
+#: src/effects/Normalize.cpp
+msgid "Loudness LUFS"
+msgstr ""
+
+#: src/effects/Normalize.cpp
+msgid "LUFS"
+msgstr ""
+
+#: src/effects/Normalize.h
+msgid "Normalize"
+msgstr "Normaldu"
+
 #: src/effects/Paulstretch.cpp
-msgid "Use Paulstretch only for an extreme time-stretch or \"stasis\" effect"
+#, fuzzy
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
 "Erabili Paul-luzapena muturreko denbora-luzapen edo \"stasis\" eraginerako "
 "bakarrik"
@@ -8902,6 +10332,10 @@ msgstr ""
 "\n"
 "Saiatu audio hautapena gutxienez %.1f segundu handitzen,\n"
 "edo 'Denbora Bereizmena' %.1f segundu baino gutxiagora gutxitzen."
+
+#: src/effects/Paulstretch.h
+msgid "Paulstretch"
+msgstr "Paul-luzapena"
 
 #: src/effects/Phaser.cpp
 msgid "Combines phase-shifted signals with the original signal"
@@ -8963,6 +10397,10 @@ msgstr "&Irteera irabazia (dB):"
 msgid "Output gain (dB)"
 msgstr "Irteera irabazia (dB):"
 
+#: src/effects/Phaser.h
+msgid "Phaser"
+msgstr "Faserra"
+
 #: src/effects/Repair.cpp
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "Bide baten edo gehiagoren anplitude gailurra ezartzen du"
@@ -8994,6 +10432,10 @@ msgstr ""
 "\n"
 "Inguru audio gehiagorekin, hobeto egiten da."
 
+#: src/effects/Repair.h
+msgid "Repair"
+msgstr "Konpondu"
+
 #: src/effects/Repeat.cpp
 msgid "Repeats the selection the specified number of times"
 msgstr "Hautapena adierazitako aldi zenbatekoan berregiten du"
@@ -9023,6 +10465,10 @@ msgstr "Hautapen luzera berria: %s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "Kontuz: Berregiterik ez."
+
+#: src/effects/Repeat.h
+msgid "Repeat"
+msgstr "Berregin"
 
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
@@ -9112,6 +10558,14 @@ msgstr "Dirdira"
 msgid "Reverses the selected audio"
 msgstr "Hautaturiko audioa atzekoz-aurrera jartzen du"
 
+#: src/effects/Reverse.h
+msgid "Reverse"
+msgstr "Atzekoz-aurrera"
+
+#: src/effects/SBSMSEffect.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "SBSMS Denbora / Doinuaren Indarra"
+
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
@@ -9181,6 +10635,10 @@ msgstr "Gutxienezko Eragozpen-banda Arintzea:"
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "Gutxienezko eragozpen-banda Arintzea (dB)"
+
+#: src/effects/ScienFilter.h
+msgid "Classic Filters"
+msgstr "Iragazki Klasikoa"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Align MIDI to Audio"
@@ -9275,9 +10733,9 @@ msgstr "Huts anplitudeko audioa sortzen du"
 msgid "Converts stereo tracks to mono"
 msgstr "Estereo bidea monora bihurtzen du"
 
-#: src/effects/TimeScale.cpp
-msgid "Sliding Time Scale/Pitch Shift"
-msgstr "Denbora Eskala Irristatzen/Doinu Aldaketa"
+#: src/effects/StereoToMono.h
+msgid "Stereo To Mono"
+msgstr "Estereotik Monora"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
@@ -9307,10 +10765,10 @@ msgstr "(%) [-50-->100]:"
 msgid "Final Pitch Shift"
 msgstr "Amaiera Doinu Aldaketa"
 
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/prefs/WaveformSettings.cpp src/widgets/Meter.cpp
-msgid "Linear"
-msgstr "Linearra"
+#: src/effects/TimeScale.h
+#, fuzzy
+msgid "Sliding Stretch"
+msgstr "Luzera"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/prefs/WaveformSettings.cpp
@@ -9369,6 +10827,14 @@ msgstr "Anplitude Amaiera"
 msgid "Interpolation:"
 msgstr "Interpolazioa:"
 
+#: src/effects/ToneGen.h
+msgid "Chirp"
+msgstr "Kurrinka"
+
+#: src/effects/ToneGen.h
+msgid "Tone"
+msgstr "Tonua"
+
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
 msgstr "Hautsi Atzemandako Isiltasuna"
@@ -9397,10 +10863,6 @@ msgstr ""
 msgid "Detect Silence"
 msgstr "Atzeman Isiltasuna"
 
-#: src/effects/TruncSilence.cpp src/export/ExportFLAC.cpp
-msgid "Level:"
-msgstr "Maila:"
-
 #: src/effects/TruncSilence.cpp
 msgid "Truncate to:"
 msgstr "Hautsi hona:"
@@ -9416,6 +10878,204 @@ msgstr "%"
 #: src/effects/TruncSilence.cpp
 msgid "Truncate tracks independently"
 msgstr "Trunkatu bideak independienteki"
+
+#: src/effects/TruncSilence.h
+msgid "Truncate Silence"
+msgstr "Hautsi Isiltasuna"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST Effects"
+msgstr "VST Eraginak"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Adds the ability to use VST effects in Audacity."
+msgstr "Audacity-n VST eraginak erabiltzeko gaitasuna gehitzen du."
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "VST plugin registration failed for %s\n"
+msgstr "Hutsegitea VST plugin erregistratzean %s-rako\n"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Scanning Shell VST"
+msgstr "VST Shell Mihatzen"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Registering %d of %d: %-64.64s"
+msgstr "Erregistratzen %d -> %d-tik: %-64.64s"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
+msgid "Could not load the library"
+msgstr "Ezin da liburutegia gertatu"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST Effect Options"
+msgstr "VST Eragin Aukerak"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Buffer Size"
+msgstr "Buffer Neurria"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "The buffer size controls the number of samples sent to the effect "
+msgstr "Buffer neurriak eraginera bidalitako lagin zenbatekoa agintzen du "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "on each iteration. Smaller values will cause slower processing and "
+msgstr ""
+"iterazio bakoitzean. Balio txikiagoek eragin dezakete prozesapen astiroagoa "
+"eta "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "some effects require 8192 samples or less to work properly. However "
+msgstr ""
+"zenbait eraginek 8192 lagin edo gutxiago behar dute egoki lan egiteko. "
+"Edonola "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "most effects can accept large buffers and using them will greatly "
+msgstr ""
+"eragin gehienek buffer handiak onartu ditzakete eta hauek erabiltzea ona "
+"izango da "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "reduce processing time."
+msgstr "gutxitu prozesapen denbora."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "&Buffer Size (8 to 1048576 samples):"
+msgstr "&Buffer Neurria (8 eta 1048576 lagin artean):"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Latency Compensation"
+msgstr "Atzerapen Ordaina"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "As part of their processing, some VST effects must delay returning "
+msgstr "Beren prozesapenaren atal bezala, zenbait VTS eraginek "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "audio to Audacity. When not compensating for this delay, you will "
+msgstr ""
+"audio erantzuna atzeratu dezakete Audacity-ra. Ordainik ez dagoenean "
+"atzerapen hauetarako, "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "notice that small silences have been inserted into the audio. "
+msgstr "ohartuko zara isiltsaun txiki batzuk txertatu direla audioan. "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp
+msgid "Enabling this option will provide that compensation, but it may "
+msgstr "Aukera hau gaitzeak ordain hori hornituko du, baina badaiteke "
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "not work for all VST effects."
+msgstr "ez du lan egien VST eragin guztietarako."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Enable &compensation"
+msgstr "Gaitu &ordaina"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Graphical Mode"
+msgstr "Grafika Modua"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid ""
+"Most VST effects have a graphical interface for setting parameter values."
+msgstr ""
+"VST eragin gehienek interfaze grafiko bat dute parametroen balioak ezartzeko."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid " A basic text-only method is also available. "
+msgstr " Ohinarrizko idazkia-bakarrik metodoa ere eskuragarri dago. "
+
+#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid " Reopen the effect for this to take effect."
+msgstr " Berrireki eragina honek eragina izateko."
+
+#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+msgid "Enable &graphical interface"
+msgstr "&Gaitu grafika interfazea"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Audio In: %d, Audio Out: %d"
+msgstr "Audio Sarrera: %d, Audio Irteera: %d"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Save VST Preset As:"
+msgstr "Gorde VST Aurrezarpena Honela:"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unrecognized file extension."
+msgstr "Agiri hedapen ezezaguna."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Saving VST Presets"
+msgstr "Akatsa VST Aurrezarpena Gordetzerakoan"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Load VST Preset:"
+msgstr "Gertatu VST Aurrezarpena:"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Loading VST Presets"
+msgstr "Akatsa VST Aurrezarpena Gertatzerakoan"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to load presets file."
+msgstr "Ezinezkoa aurrezarpen agiria gertatzea."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "VST plugin initialization failed\n"
+msgstr "Hutsegitea VST plugin abiaraztean\n"
+
+#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/lv2/LV2Effect.cpp
+msgid "Effect Settings"
+msgstr "Eragin Ezarpenak"
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to allocate memory when loading presets file."
+msgstr "Ezinezkoa oroimena esleitzea aurrezarpenak agiria gertatzerakoan."
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Unable to read presets file."
+msgstr "Ezinezkoa aurrezarpen agiria irakurtzea."
+
+#: src/effects/VST/VSTEffect.cpp src/xml/XMLFileReader.cpp
+#, c-format
+msgid "Could not open file: \"%s\""
+msgstr "Ezin izan da agiri hau ireki: \"%s\""
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Error writing to file: \"%s\""
+msgstr "Akatsa agirira idazterakoan: \"%s\""
+
+#: src/effects/VST/VSTEffect.cpp
+msgid "Error Saving Effect Presets"
+msgstr "Akatsa Eraginen Aurrezarpenak Gordetzerakoan"
+
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "This parameter file was saved from %s.  Continue?"
+msgstr "Parametro agiri hau %s-tik gorde zen. Jarraitu?"
+
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. developed by Steinberg GmbH
+#: src/effects/VST/VSTEffect.h
+msgid "VST"
+msgstr ""
 
 #: src/effects/Wahwah.cpp
 msgid ""
@@ -9444,126 +11104,6 @@ msgstr "&Wah Maiztasunaren Oreka (%):"
 #: src/effects/Wahwah.cpp
 msgid "Wah frequency offset in percent"
 msgstr "Wah maiztasun oreka ehuntan"
-
-#: src/effects/Amplify.h
-msgid "Amplify"
-msgstr "Anplifikatu"
-
-#: src/effects/AutoDuck.h
-msgid "Auto Duck"
-msgstr "Berez Uztartu"
-
-#: src/effects/BassTreble.h
-msgid "Bass and Treble"
-msgstr "Hotslodiak eta Hotsmeheak"
-
-#: src/effects/ChangePitch.h
-msgid "Change Pitch"
-msgstr "Aldatu Doinua"
-
-#: src/effects/ChangeSpeed.h
-msgid "Change Speed"
-msgstr "Aldatu Abiadura"
-
-#: src/effects/ChangeTempo.h
-msgid "Change Tempo"
-msgstr "Aldatu Tenpoa"
-
-#: src/effects/ClickRemoval.h
-msgid "Click Removal"
-msgstr "Klaska Kentzea"
-
-#: src/effects/Compressor.h
-msgid "Compressor"
-msgstr "Konprimitzailea"
-
-#: src/effects/Distortion.h
-msgid "Distortion"
-msgstr "Itsustura"
-
-#: src/effects/DtmfGen.h
-msgid "DTMF Tones"
-msgstr "DTMF Tonuak"
-
-#: src/effects/Echo.h
-msgid "Echo"
-msgstr "Oihartzuna"
-
-#: src/effects/Equalization.h
-msgid "Equalization"
-msgstr "Ekualizazioa"
-
-#: src/effects/Fade.h
-msgid "Fade In"
-msgstr "Hutsalpen Sarrera"
-
-#: src/effects/Fade.h
-msgid "Fade Out"
-msgstr "Hutsalpen Irteera"
-
-#: src/effects/FindClipping.h
-msgid "Find Clipping"
-msgstr "Bilatu Ebaketa"
-
-#: src/effects/Invert.h
-msgid "Invert"
-msgstr "Alderantzizkatu"
-
-#: src/effects/Noise.h
-msgid "Noise"
-msgstr "Zarata"
-
-#: src/effects/Normalize.h
-msgid "Normalize"
-msgstr "Normaldu"
-
-#: src/effects/Paulstretch.h
-msgid "Paulstretch"
-msgstr "Paul-luzapena"
-
-#: src/effects/Phaser.h
-msgid "Phaser"
-msgstr "Faserra"
-
-#: src/effects/Repair.h
-msgid "Repair"
-msgstr "Konpondu"
-
-#: src/effects/Repeat.h
-msgid "Repeat"
-msgstr "Berregin"
-
-#: src/effects/Reverse.h
-msgid "Reverse"
-msgstr "Atzekoz-aurrera"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "SBSMS Denbora / Doinuaren Indarra"
-
-#: src/effects/ScienFilter.h
-msgid "Classic Filters"
-msgstr "Iragazki Klasikoa"
-
-#: src/effects/StereoToMono.h
-msgid "Stereo To Mono"
-msgstr "Estereotik Monora"
-
-#: src/effects/TimeScale.h
-msgid "Time Scale"
-msgstr "Denbora Neurria"
-
-#: src/effects/ToneGen.h
-msgid "Chirp"
-msgstr "Kurrinka"
-
-#: src/effects/ToneGen.h
-msgid "Tone"
-msgstr "Tonua"
-
-#: src/effects/TruncSilence.h
-msgid "Truncate Silence"
-msgstr "Hautsi Isiltasuna"
 
 #: src/effects/Wahwah.h
 msgid "Wahwah"
@@ -9602,12 +11142,6 @@ msgid "Basic"
 msgstr "Ohinarrizkoa"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Latency Compensation"
-msgstr "Atzerapen Ordaina"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
 "As part of their processing, some Audio Unit effects must delay returning "
 msgstr ""
@@ -9615,33 +11149,8 @@ msgstr ""
 "atzeratzen dute "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "audio to Audacity. When not compensating for this delay, you will "
-msgstr ""
-"audio erantzuna atzeratu dezakete Audacity-ra. Ordainik ez dagoenean "
-"atzerapen hauetarako, "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "notice that small silences have been inserted into the audio. "
-msgstr "ohartuko zara isiltsaun txiki batzuk txertatu direla audioan. "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Enabling this option will provide that compensation, but it may "
-msgstr "Aukera hau gaitzeak ordain hori hornituko du, baina badaiteke "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "not work for all Audio Unit effects."
 msgstr "ez du lan egiten Audio Unitate eragin guztiekin."
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Enable &compensation"
-msgstr "Gaitu &ordaina"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9663,11 +11172,6 @@ msgstr ""
 msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr ""
 "Hautatu \"Ohinarrizkoa\" idazkia-bakarrik ohinarrizko interfaze baterako. "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid " Reopen the effect for this to take effect."
-msgstr " Berrireki eragina honek eragina izateko."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9693,6 +11197,11 @@ msgstr "Inportatu Audio Unitate Aurrezarpenak"
 msgid "Location"
 msgstr "Kokalekua"
 
+#: src/effects/audiounits/AudioUnitEffect.h
+#, fuzzy
+msgid "AudioUnit"
+msgstr "Audio Unitatea"
+
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "LADSPA Eraginak"
@@ -9704,11 +11213,6 @@ msgstr "LADSPA Eraginak hornitzen ditu"
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Audacity no longer uses vst-bridge"
 msgstr "Audacity-k ez du vst-zubia erabiltzen gehiago"
-
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
-#: src/effects/vamp/LoadVamp.cpp src/effects/VST/VSTEffect.cpp
-msgid "Could not load the library"
-msgstr "Ezin da liburutegia gertatu"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effect Options"
@@ -9724,22 +11228,14 @@ msgstr ""
 msgid "not work for all LADSPA effects."
 msgstr "ez du lan egiten LADSPA eragin guztiekin."
 
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Effect Settings"
-msgstr "Eragin Ezarpenak"
-
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Effect Output"
 msgstr "Eragin Irteera"
 
-#: src/effects/lv2/LoadLV2.cpp
-msgid "LV2 Effects"
-msgstr "LV2 Eraginak"
-
-#: src/effects/lv2/LoadLV2.cpp
-msgid "Provides LV2 Effects support to Audacity"
-msgstr "LV2 Eragin sostengua hornitzen dio Audacity-ri"
+#: src/effects/ladspa/LadspaEffect.h
+#, fuzzy
+msgid "LADSPA"
+msgstr "LADSPA Eraginak"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 Effect Settings"
@@ -9759,23 +11255,11 @@ msgstr "Aukera hau gaitzeak ordain hori hornituko du, baina badaiteke "
 msgid "not work for all LV2 effects."
 msgstr "ez du lan egiten LV2 eragin guztietarako."
 
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Graphical Mode"
-msgstr "Grafika Modua"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values."
 msgstr ""
 "LV2 eragin gehienek interfaze grafiko bat dute parametroen balioak ezartzeko."
-
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid " A basic text-only method is also available. "
-msgstr " Ohinarrizko idazkia-bakarrik metodoa ere eskuragarri dago. "
-
-#: src/effects/lv2/LV2Effect.cpp src/effects/VST/VSTEffect.cpp
-msgid "Enable &graphical interface"
-msgstr "&Gaitu grafika interfazea"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -9789,6 +11273,20 @@ msgstr "Sortzailea"
 msgid "&Duration:"
 msgstr "&Iraupena:"
 
+#. i18n-hint: abbreviates
+#. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
+#: src/effects/lv2/LV2Effect.h
+msgid "LV2"
+msgstr ""
+
+#: src/effects/lv2/LoadLV2.cpp
+msgid "LV2 Effects"
+msgstr "LV2 Eraginak"
+
+#: src/effects/lv2/LoadLV2.cpp
+msgid "Provides LV2 Effects support to Audacity"
+msgstr "LV2 Eragin sostengua hornitzen dio Audacity-ri"
+
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
 msgstr "Nyquist Eraginak"
@@ -9800,6 +11298,15 @@ msgstr "Nyquist Eragin sostengua hornitzen dio Audacity-ri"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
 msgstr "Nyquist Eragina ezartzen..."
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Nyquist Effects Prompt"
+msgstr "Nyquist Eraginak"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Prompt"
+msgstr "Nyquist Eskaerak"
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
@@ -9828,6 +11335,15 @@ msgstr ""
 "aurkitu.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Audio selection required."
+msgstr "&Berez-hautatu, hautapena beharrezkoa bada"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Error"
+msgstr "Nyquist Akatsa"
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 msgstr "Barkatu, ezin da eragina bide estereotan ezarri bideak bat ez badatoz."
@@ -9842,10 +11358,6 @@ msgstr ""
 "Hautapena luzeegia da Nyquist koderako.\n"
 "Ahalbidetutako gehienezko hautapena %ld lagin da\n"
 "(%.1f ordu inguru 44100 Hz-ko lagin neurrian)."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "Nyquist Akatsa"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Debug Output: "
@@ -9864,6 +11376,14 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Processing complete."
 msgstr "Prozesatzea osatuta."
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr ""
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -9947,6 +11467,19 @@ msgid "Could not determine language"
 msgstr "Ezin da hizkuntza zehaztu"
 
 #: src/effects/nyquist/Nyquist.cpp
+#, c-format
+msgid "\"%s\" is not a valid file path."
+msgstr ""
+
+#. i18n-hint: Warning that there is one quotation mark rather than a pair.
+#: src/effects/nyquist/Nyquist.cpp
+#, c-format
+msgid ""
+"Mismatched quotes in\n"
+"%s"
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
 msgstr "Sartu Nyquist Agindua: "
 
@@ -9982,6 +11515,47 @@ msgstr "Agiria ezin da gertatu"
 msgid "File could not be saved"
 msgstr "Agiria ezin da gorde"
 
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy, c-format
+msgid ""
+"Value range:\n"
+"%s to %s"
+msgstr "Balioa ez dago maila barnean: %s-tik  %s-ra artean"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Value Error"
+msgstr "Agiri Akatsa"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
+"Invalid wildcard string in 'path' control.'\n"
+"Using empty string instead."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+msgid "Select a file"
+msgstr "Hautatu agiri bat"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Save file as"
+msgstr "Gorde Agiriak"
+
+#: src/effects/nyquist/Nyquist.cpp src/export/Export.cpp
+#: src/export/ExportMultiple.cpp
+msgid "untitled"
+msgstr "izenburugabea"
+
+#. i18n-hint: "Nyquist" is an embedded interpreted programming language in
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. In the translations of this and other strings, you may transliterate the
+#. name into another alphabet.
+#: src/effects/nyquist/Nyquist.h
+#, fuzzy
+msgid "Nyquist"
+msgstr "Nyquist Akatsa"
+
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
 msgstr "Vamp Eraginak"
@@ -10014,139 +11588,11 @@ msgstr "Plugin Ezarpena"
 msgid "Program"
 msgstr "Programa"
 
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST Effects"
-msgstr "VST Eraginak"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Adds the ability to use VST effects in Audacity."
-msgstr "Audacity-n VST eraginak erabiltzeko gaitasuna gehitzen du."
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "VST plugin registration failed for %s\n"
-msgstr "Hutsegitea VST plugin erregistratzean %s-rako\n"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Scanning Shell VST"
-msgstr "VST Shell Mihatzen"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Registering %d of %d: %-64.64s"
-msgstr "Erregistratzen %d -> %d-tik: %-64.64s"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST Effect Options"
-msgstr "VST Eragin Aukerak"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Buffer Size"
-msgstr "Buffer Neurria"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "The buffer size controls the number of samples sent to the effect "
-msgstr "Buffer neurriak eraginera bidalitako lagin zenbatekoa agintzen du "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "on each iteration. Smaller values will cause slower processing and "
+#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#: src/effects/vamp/VampEffect.h
+msgid "Vamp"
 msgstr ""
-"iterazio bakoitzean. Balio txikiagoek eragin dezakete prozesapen astiroagoa "
-"eta "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "some effects require 8192 samples or less to work properly. However "
-msgstr ""
-"zenbait eraginek 8192 lagin edo gutxiago behar dute egoki lan egiteko. "
-"Edonola "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "most effects can accept large buffers and using them will greatly "
-msgstr ""
-"eragin gehienek buffer handiak onartu ditzakete eta hauek erabiltzea ona "
-"izango da "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "reduce processing time."
-msgstr "gutxitu prozesapen denbora."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "&Buffer Size (8 to 1048576 samples):"
-msgstr "&Buffer Neurria (8 eta 1048576 lagin artean):"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "As part of their processing, some VST effects must delay returning "
-msgstr "Beren prozesapenaren atal bezala, zenbait VTS eraginek "
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "not work for all VST effects."
-msgstr "ez du lan egien VST eragin guztietarako."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values."
-msgstr ""
-"VST eragin gehienek interfaze grafiko bat dute parametroen balioak ezartzeko."
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Audio In: %d, Audio Out: %d"
-msgstr "Audio Sarrera: %d, Audio Irteera: %d"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Save VST Preset As:"
-msgstr "Gorde VST Aurrezarpena Honela:"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unrecognized file extension."
-msgstr "Agiri hedapen ezezaguna."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Saving VST Presets"
-msgstr "Akatsa VST Aurrezarpena Gordetzerakoan"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Load VST Preset:"
-msgstr "Gertatu VST Aurrezarpena:"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Loading VST Presets"
-msgstr "Akatsa VST Aurrezarpena Gertatzerakoan"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to load presets file."
-msgstr "Ezinezkoa aurrezarpen agiria gertatzea."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST plugin initialization failed\n"
-msgstr "Hutsegitea VST plugin abiaraztean\n"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to allocate memory when loading presets file."
-msgstr "Ezinezkoa oroimena esleitzea aurrezarpenak agiria gertatzerakoan."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Unable to read presets file."
-msgstr "Ezinezkoa aurrezarpen agiria irakurtzea."
-
-#: src/effects/VST/VSTEffect.cpp src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Could not open file: \"%s\""
-msgstr "Ezin izan da agiri hau ireki: \"%s\""
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Error writing to file: \"%s\""
-msgstr "Akatsa agirira idazterakoan: \"%s\""
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "Error Saving Effect Presets"
-msgstr "Akatsa Eraginen Aurrezarpenak Gordetzerakoan"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "This parameter file was saved from %s.  Continue?"
-msgstr "Parametro agiri hau %s-tik gorde zen. Jarraitu?"
 
 #: src/export/Export.cpp
 msgid "No format specific options"
@@ -10173,10 +11619,6 @@ msgstr "Audio dena mututurik dago."
 #: src/export/ExportPCM.cpp
 msgid "Unable to export"
 msgstr "Ezinezkoa esportazioa"
-
-#: src/export/Export.cpp src/export/ExportMultiple.cpp
-msgid "untitled"
-msgstr "izenburugabea"
 
 #: src/export/Export.cpp
 #, c-format
@@ -10229,15 +11671,15 @@ msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "\"%s\" izeneko agiria jadanik badago. Ordeztu?"
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to a single mono channel in the exported file."
+#, fuzzy
+msgid "Your tracks will be mixed down and exported as one mono file."
 msgstr ""
-"Zure bideak mono azpibide bakarrera behera-nahastuko dira esportatutako "
+"Zure bideak bi azpibide estereora behera-nahastuko dira esportaturiko "
 "agirian."
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to two stereo channels in the exported file."
+#, fuzzy
+msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr ""
 "Zure bideak bi azpibide estereora behera-nahastuko dira esportaturiko "
 "agirian."
@@ -10283,10 +11725,6 @@ msgstr "Nahastzaile Agintea"
 #, c-format
 msgid "Output Channels: %2d"
 msgstr "Irteera Bideak: %2d"
-
-#: src/export/ExportCL.cpp
-msgid "Command:"
-msgstr "Agindua:"
 
 #: src/export/ExportCL.cpp
 msgid "Show output"
@@ -10479,6 +11917,7 @@ msgstr "Beheko neurrietako batera birlagindu dezakezu."
 msgid "Sample Rates"
 msgstr "Lagin Neurriak"
 
+#. i18n-hint: abbreviates thousands of bits per second
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 #, c-format
 msgid "%i kbps"
@@ -10607,10 +12046,6 @@ msgstr "Inportatu Aurrezarpenak"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Export Presets"
 msgstr "Esportatu Aurrezarpenak"
-
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMultiple.cpp
-msgid "Format:"
-msgstr "Heuskarria:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Codec:"
@@ -10999,6 +12434,10 @@ msgid "24 bit"
 msgstr "24 bit"
 
 #: src/export/ExportFLAC.cpp
+msgid "Level:"
+msgstr "Maila:"
+
+#: src/export/ExportFLAC.cpp
 msgid "Bit depth:"
 msgstr "Bit sakonera:"
 
@@ -11051,15 +12490,23 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "Audioa %ld kbs-ko eran esportatzen"
 
 #: src/export/ExportMP3.cpp
-msgid "kbps"
-msgstr "kbs-ko"
+#, fuzzy, c-format
+msgid "%d kbps"
+msgstr "%i kbs-ko"
 
 #: src/export/ExportMP3.cpp
-msgid "(Best Quality)"
+#, fuzzy, c-format
+msgid "%s kbps (Best Quality)"
 msgstr "(Ontasun Hoberena)"
 
 #: src/export/ExportMP3.cpp
-msgid "(Smaller files)"
+#, fuzzy, c-format
+msgid "%s kbps"
+msgstr "%i kbs-ko"
+
+#: src/export/ExportMP3.cpp
+#, fuzzy, c-format
+msgid "%s kbps (Smaller files)"
 msgstr "(Agiri txikiak)"
 
 #: src/export/ExportMP3.cpp
@@ -11072,16 +12519,20 @@ msgstr "Estandarra"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
-msgid "Insane"
-msgstr "Gaitza"
+msgid "Insane, 320 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
-msgid "Extreme"
-msgstr "Hertzekoa"
+msgid "Extreme, 220-260 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
-msgid "Medium"
-msgstr "Ertaina"
+msgid "Standard, 170-210 kbps"
+msgstr ""
+
+#: src/export/ExportMP3.cpp
+msgid "Medium, 145-185 kbps"
+msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Bit Rate Mode:"
@@ -11279,8 +12730,9 @@ msgid "Cannot Export Multiple"
 msgstr "Ezin da Esportazio Anitza egin"
 
 #: src/export/ExportMultiple.cpp
+#, fuzzy
 msgid ""
-"You have only one unmuted Audio Track and no applicable \n"
+"You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
 "Audio Bide mututugabe bakarra eta ezarri ezinezko etiketak \n"
@@ -11305,10 +12757,6 @@ msgstr "Aukerak:"
 #: src/export/ExportMultiple.cpp
 msgid "Split files based on:"
 msgstr "Banandu ohinarri honetako agiriak:"
-
-#: src/export/ExportMultiple.cpp
-msgid "Labels"
-msgstr "Etiketak"
 
 #: src/export/ExportMultiple.cpp
 msgid "Include audio before first label"
@@ -11439,6 +12887,11 @@ msgstr "AIFF (Apple) sinatuta 16-bit PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) signed 16-bit PCM"
+msgstr "WAV (Microsoft) sinatuta 16-bit PCM"
+
+#: src/export/ExportPCM.cpp
+#, fuzzy
+msgid "WAV (Microsoft) signed 24-bit PCM"
 msgstr "WAV (Microsoft) sinatuta 16-bit PCM"
 
 #: src/export/ExportPCM.cpp
@@ -11871,6 +13324,11 @@ msgstr "Irakurri agiriak &zuzenean jatorrizkotik (azkarra)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "Ez &ohartarazi berriro eta betik erabili gaineko nire aukera"
 
+#: src/import/ImportPlugin.h src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "%s inportatzen"
+
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
 msgstr "QuickTime agiriak"
@@ -11898,11 +13356,6 @@ msgstr "Ezinezkoa jarioa azalpena berreskuratzea"
 #: src/import/ImportQT.cpp
 msgid "Unable to get fill buffer"
 msgstr "Ezinezkoa buffer osoa lortzea"
-
-#: src/import/ImportRaw.cpp src/import/ImportPlugin.h
-#, c-format
-msgid "Importing %s"
-msgstr "%s inportatzen"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp
@@ -11976,11 +13429,6 @@ msgstr "Laginketa neurria:"
 msgid "Bad data size"
 msgstr "Datu neurri okerra"
 
-#: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f%% osatuta.  Klikatu eginkizun foku puntua aldatzeko."
-
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
 msgstr "Inportazioa osatuta. Uhinera kalkulatzen"
@@ -11989,12 +13437,16 @@ msgstr "Inportazioa osatuta. Uhinera kalkulatzen"
 msgid "Decoding Waveform"
 msgstr "Uhinera Dekodeatzen"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f%% osatuta.  Klikatu eginkizun foku puntua aldatzeko."
+
 #: src/prefs/BatchPrefs.cpp
 msgid "Batch"
 msgstr "Multzoa"
 
-#: src/prefs/BatchPrefs.cpp src/prefs/GUIPrefs.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp
+#: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
 msgstr "Jokabideak"
 
@@ -12050,13 +13502,15 @@ msgstr "Atzerapena"
 msgid "&Buffer length:"
 msgstr "Bu&ffer luzera:"
 
-#: src/prefs/DevicePrefs.cpp src/widgets/NumericTextCtrl.cpp
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/widgets/NumericTextCtrl.cpp
 msgid "milliseconds"
 msgstr "segundumilaen"
 
 #: src/prefs/DevicePrefs.cpp
-msgid "Track &shift after record:"
-msgstr "Bide &aldaketa grabaketaren ondoren:"
+#, fuzzy
+msgid "&Latency compensation:"
+msgstr "Atzerapen Ordaina"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
@@ -12088,12 +13542,12 @@ msgid "&Location:"
 msgstr "&Kokalekua:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "C&hoose..."
-msgstr "&Hautatu..."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "Free Space:"
 msgstr "Toki Askea:"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "C&hoose..."
+msgstr "&Hautatu..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Audio cache"
@@ -12154,10 +13608,6 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
 msgstr "Aldbibaterako Zuzenbide Eguneraketa"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Effects"
-msgstr "Eraginak"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
@@ -12382,15 +13832,13 @@ msgid "Meter dB &range:"
 msgstr "Neurgailu dB &maila:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Show"
-msgstr "Erakutsi"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "'How to Get &Help' at launch"
+#, fuzzy
+msgid "Show 'How to Get &Help' at launch"
 msgstr "'Nola Lortu &Laguntza' abiaraztean"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "E&xtra menus"
+#, fuzzy
+msgid "Show e&xtra menus"
 msgstr "G&ehigarri menuak"
 
 #: src/prefs/GUIPrefs.cpp
@@ -12408,6 +13856,10 @@ msgstr "He&utsi etiketei hautapena etiketa baten hertzera zehazten bada"
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
 msgstr "&Nahastu sistemaren eta Audacity azalgaia"
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Use mostly Left-to-Right layouts in RTL languages"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -12527,6 +13979,10 @@ msgstr "&Ezarri"
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
 msgstr ""
 "Oharra: Sakatuz Cmd+Q utzi egingo da. Beste tekla guztiak baliozkoak dira."
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "&Import..."
+msgstr "I&nportatu..."
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
 msgid "&Defaults"
@@ -12742,10 +14198,6 @@ msgstr "Botoiak"
 #: src/prefs/MousePrefs.cpp
 msgid "Left-Click"
 msgstr "Ezker-Klikatu"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Hautatu"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Set Selection Point"
@@ -12991,6 +14443,16 @@ msgid "As&k"
 msgstr "Ga&ldetu"
 
 #: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "16-bit"
+msgstr "16-bit PCM"
+
+#: src/prefs/QualityPrefs.cpp
+#, fuzzy
+msgid "24-bit"
+msgstr "24-bit PCM"
+
+#: src/prefs/QualityPrefs.cpp
 msgid "Rectangle"
 msgstr "Laukiluzea"
 
@@ -13045,20 +14507,28 @@ msgid "Dit&her:"
 msgstr "Dith&er:"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "Playthrough"
-msgstr "Zehar-irakurketa"
-
-#: src/prefs/RecordingPrefs.cpp
-msgid "&Other tracks while recording (overdub)"
+#, fuzzy
+msgid "Play &other tracks while recording (overdub)"
 msgstr "&Beste bideak grabatzerakoan (gainduba)"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Hardware Playthrough of input"
-msgstr "Sarreraren &Hardware zehar-irakurketa"
+msgid "Use &hardware to play other tracks"
+msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "&Software Playthrough of input"
+#, fuzzy
+msgid "&Software playthrough of input"
 msgstr "Sarreraren &software zehar-irakurketa"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Record on a new track"
+msgstr "Betik grabatu bide berri batean"
+
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#: src/prefs/RecordingPrefs.cpp
+msgid "Detect dropouts"
+msgstr "Atzeman kanporaketak"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
@@ -13101,15 +14571,6 @@ msgid "System T&ime"
 msgstr "Sistemaren &Ordua"
 
 #: src/prefs/RecordingPrefs.cpp
-msgid "Always record on a new track"
-msgstr "Betik grabatu bide berri batean"
-
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
-#: src/prefs/RecordingPrefs.cpp
-msgid "Detect dropouts"
-msgstr "Atzeman kanporaketak"
-
-#: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
 msgstr "Berezgaitasunezko Grabaketa Maila Zehaztapena"
 
@@ -13141,6 +14602,19 @@ msgstr "Azterketa jarrai zenbatekoa:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "0 means endless"
 msgstr "0 amaieragabe esanahi du"
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "Punch and Roll Recording"
+msgstr "Soinu Grabaketa Eraginda"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "Pre-ro&ll:"
+msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "Cross&fade:"
+msgstr ""
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
@@ -13231,11 +14705,13 @@ msgid "S&cale"
 msgstr "Eskala"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Mi&nimum Frequency (Hz):"
+#, fuzzy
+msgid "Mi&n Frequency (Hz):"
 msgstr "G&utxienezko Maiztasuna (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Ma&ximum Frequency (Hz):"
+#, fuzzy
+msgid "Ma&x Frequency (Hz):"
 msgstr "&Gehienezko Maiztasuna (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
@@ -13251,8 +14727,8 @@ msgid "&Range (dB):"
 msgstr "&Maila (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
-msgid "Frequency g&ain (dB/dec):"
-msgstr "M&aiztasun irabazia (dB/ham):"
+msgid "High &boost (dB/dec):"
+msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Gra&yscale"
@@ -13471,6 +14947,10 @@ msgid "&Type to create a label"
 msgstr "&Idatzi etiketa bat sortzeko"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "Use dialog for the &name of a new label"
+msgstr ""
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable scrolling left of &zero"
 msgstr "Gaitu h&utsren ezkerrera irristatzea"
 
@@ -13483,16 +14963,8 @@ msgid "Solo &Button:"
 msgstr "Solo &Botoia:"
 
 #: src/prefs/TracksPrefs.cpp
-msgid "Waveform"
-msgstr "Uhinera"
-
-#: src/prefs/TracksPrefs.cpp
 msgid "Waveform (dB)"
 msgstr "Uhinera (dB)"
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Spectrogram"
-msgstr "Argilitza"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Connect dots"
@@ -13523,6 +14995,34 @@ msgid "Seconds"
 msgstr "Segundu"
 
 #: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "5ths of Seconds"
+msgstr "Segundu"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "10ths of Seconds"
+msgstr "Segundu"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "20ths of Seconds"
+msgstr "Segundu"
+
+#: src/prefs/TracksPrefs.cpp
+#, fuzzy
+msgid "50ths of Seconds"
+msgstr "Segundu"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "100ths of Seconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
+msgid "500ths of Seconds"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
 msgid "MilliSeconds"
 msgstr "SegunduMilaen"
 
@@ -13539,6 +15039,18 @@ msgid "Max Zoom"
 msgstr "Geh Zooma"
 
 #: src/prefs/TracksPrefs.cpp
+msgid "Auto-&fit track height"
+msgstr "Berez-&finkatu bide garaiera"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Sho&w audio track name as overlay"
+msgstr "&Erakutsi audio bidearen izena gainjarrita bezala"
+
+#: src/prefs/TracksPrefs.cpp
+msgid "Use &half-wave display when collapsed"
+msgstr ""
+
+#: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
 msgstr "&Grabaketa/Irakurketa Buru Ainguratua"
 
@@ -13547,8 +15059,8 @@ msgid "A&uto-scroll if head unpinned"
 msgstr "Berez-&irristatu burua ainguratugabea bada"
 
 #: src/prefs/TracksPrefs.cpp
-msgid "Auto-&fit track height"
-msgstr "Berez-&finkatu bide garaiera"
+msgid "Pinned &head position"
+msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -13562,13 +15074,10 @@ msgstr "Erakutsi &laginak:"
 msgid "Default audio track &name:"
 msgstr "Berezko audio bide &izena:"
 
+#. i18n-hint: The default name for an audio track.
 #: src/prefs/TracksPrefs.cpp
 msgid "Audio Track"
 msgstr "Audio Bidea"
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Sho&w audio track name as overlay"
-msgstr "&Erakutsi audio bidearen izena gainjarrita bezala"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
@@ -13673,15 +15182,6 @@ msgstr "Hautatu Amaiera arte"
 msgid "Select to Start"
 msgstr "Hautatu Hasiera arte"
 
-#: src/toolbars/ControlToolBar.cpp
-msgid ""
-"Error opening sound device.\n"
-"Try changing the audio host, recording device and the project sample rate."
-msgstr ""
-"Akatsa soinu gailua irekitzerakoan.\n"
-"Saiatu audio hostalaria, grabaketa gailua eta egitasmoaren laginketa neurria "
-"aldatzen."
-
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Playback Device"
@@ -13757,10 +15257,6 @@ msgid "Zoom Out"
 msgstr "Zooma Gutxiagotu"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Erakutsi Eragin Racka"
-
-#: src/toolbars/EditToolBar.cpp
 msgid "Fit selection to width"
 msgstr "Finkatu hautapena zabaleran"
 
@@ -13811,16 +15307,8 @@ msgid "Recording Volume"
 msgstr "Grabaketa Bolumena"
 
 #: src/toolbars/MixerToolBar.cpp
-msgid "Slider Recording"
-msgstr "Grabaketa Irristaria"
-
-#: src/toolbars/MixerToolBar.cpp
 msgid "Playback Volume"
 msgstr "Irakurketa Bolumena"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Slider Playback"
-msgstr "Irakurketa Irristaria"
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
@@ -13890,10 +15378,6 @@ msgid "Show Scrub Ruler"
 msgstr "Erakutsi Arrast-irakurtze Zuzenkaria"
 
 #: src/toolbars/SelectionBar.cpp
-msgid "Selection"
-msgstr "Hautapena"
-
-#: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
 msgstr "Egitasmo Neurria (Hz)"
 
@@ -13920,6 +15404,10 @@ msgstr "Hautapenaren Luzera eta Amaiera"
 #: src/toolbars/SelectionBar.cpp
 msgid "Length and Center of Selection"
 msgstr "Hautapenaren Luzera eta Erdia"
+
+#: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
+msgid "Show"
+msgstr "Erakutsi"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap To"
@@ -13950,22 +15438,6 @@ msgstr "%s - bultzatuta"
 msgid "Selection %s.  %s won't change."
 msgstr "Hautapena %s.  %s ez da aldatzen."
 
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - End"
-msgstr "Hasiera - Amaiera"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Start - Length"
-msgstr "Hasiera - Luzera"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length - End"
-msgstr "Luzer - Amaiera"
-
-#: src/toolbars/SelectionBar.cpp
-msgid "Length - Center"
-msgstr "Luzera - Erdia"
-
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
 msgstr "Erdiko maiztasun eta Zabalera"
@@ -13975,20 +15447,14 @@ msgid "Low and High Frequencies"
 msgstr "Goi eta Behe Maiztasunak"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-msgid "Center Frequency:"
+#, fuzzy
+msgid "Center Frequency"
 msgstr "Erdiko Maiztasuna:"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-msgid "Bandwidth:"
+#, fuzzy
+msgid "Bandwidth"
 msgstr "Bandazabalera:"
-
-#: src/toolbars/SpectralSelectionBar.cpp
-msgid "Low Frequency:"
-msgstr "Behe Maiztasuna:"
-
-#: src/toolbars/SpectralSelectionBar.cpp
-msgid "High Frequency:"
-msgstr "Goi Maiztasuna:"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -14040,10 +15506,6 @@ msgstr "Irakurri hautaturiko abiaduran"
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Playback Speed"
 msgstr "Irakurketa Abiadura"
-
-#: src/toolbars/TranscriptionToolBar.cpp
-msgid "Play-at-Speed"
-msgstr "Irakurketa Abiaduran"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Looped-Play-at-Speed"
@@ -14498,6 +15960,11 @@ msgid "Scrub &Ruler"
 msgstr "&Arrast-irakurtze Zuzenkaria"
 
 #: src/tracks/ui/Scrubbing.cpp
+#, fuzzy
+msgid "Playing at Speed"
+msgstr "Irakurketa Abiaduran"
+
+#: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Seek"
 msgstr "Mugitu sagu punta Bilatzeko"
 
@@ -14609,11 +16076,8 @@ msgid "Move Track to &Bottom"
 msgstr "Mugitu Bidea &Beheren"
 
 #: src/tracks/ui/TrackControls.cpp
-msgid "Change track name to:"
-msgstr "Aldatu bide izena hona:"
-
-#: src/tracks/ui/TrackControls.cpp
-msgid "Track Name"
+#, fuzzy
+msgid "Set Track Name"
 msgstr "Bide Izena"
 
 #: src/tracks/ui/TrackControls.cpp
@@ -14862,6 +16326,10 @@ msgstr " Ebakita "
 msgid "Show Log for Details"
 msgstr "Erakutsi Xehetasun Oharra"
 
+#: src/widgets/MultiDialog.h
+msgid "Please select an action"
+msgstr "Mesedez hautatu ekintza bat"
+
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
 #. * on the end to the word for seconds. Don't change the numbers.
@@ -14899,6 +16367,12 @@ msgstr "ee:oo:mm:ss"
 msgid "0100 days 024 h 060 m 060 s"
 msgstr "0100 egun 024 o 060 m 060 s"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundredths of a second (1/100 second)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + hundredths"
+msgstr "oo:mm:ss + ehunenak"
+
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
@@ -14908,6 +16382,12 @@ msgstr "0100 egun 024 o 060 m 060 s"
 msgid "0100 h 060 m 060.0100 s"
 msgstr "0100 o 060 m 060.0100 s"
 
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and milliseconds (1/1000 second)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + milliseconds"
+msgstr "oo:mm:ss + segundumilaen"
+
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -14916,6 +16396,12 @@ msgstr "0100 o 060 m 060.0100 s"
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060.01000 s"
 msgstr "0100 o 060 m 060.01000 s"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and samples (at the current project sample rate)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hh:mm:ss + samples"
+msgstr "oo:mm:ss + laginak"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -15145,18 +16631,6 @@ msgstr "ehundaka "
 msgid "thousandths of "
 msgstr "milaka "
 
-#: src/widgets/numformatter.cpp
-msgid "NaN"
-msgstr "NaN"
-
-#: src/widgets/numformatter.cpp
-msgid "Infinity"
-msgstr "Mugagabe"
-
-#: src/widgets/numformatter.cpp
-msgid "-Infinity"
-msgstr "-Mugagabe"
-
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
 msgstr "Igarotako Denbora:"
@@ -15194,6 +16668,20 @@ msgid "Confirm Close"
 msgstr "Baieztatu Istea"
 
 #: src/widgets/Ruler.cpp
+msgid "Timeline actions disabled during recording"
+msgstr "Denbora-lerro ekintzak ezgaituta grabaketan zehar"
+
+#: src/widgets/Ruler.cpp
+#, fuzzy
+msgid "Click and drag to adjust, double-click to reset"
+msgstr "Klikatu eta arrastatu bide esteroen neurri erlatiboa zehazteko."
+
+#: src/widgets/Ruler.cpp
+#, fuzzy
+msgid "Record/Play head"
+msgstr "&Grabaketa/Irakurketa Buru Ainguratua"
+
+#: src/widgets/Ruler.cpp
 msgid "Timeline"
 msgstr "Denbora-lerroa"
 
@@ -15229,10 +16717,6 @@ msgstr "Arrastatu Bilatzeko.  Askatu eta mugitu Arrast-irakurtzeko."
 #: src/widgets/Ruler.cpp
 msgid "Move to Scrub. Drag to Seek."
 msgstr "Mugitu Arrast-irakurtzeko. Arrastatu Bilatzeko."
-
-#: src/widgets/Ruler.cpp
-msgid "Timeline actions disabled during recording"
-msgstr "Denbora-lerro ekintzak ezgaituta grabaketan zehar"
 
 #: src/widgets/Ruler.cpp
 msgid "Quick-Play disabled"
@@ -15298,6 +16782,22 @@ msgstr "Ezgaitu Arrast-irakurtze Zuzenkaria"
 msgid "Enable Scrub Ruler"
 msgstr "Gaitu Arrast-irakurtze Zuzenkaria"
 
+#: src/widgets/Warning.cpp
+msgid "Don't show this warning again"
+msgstr "Ez erakutsi ohar hau berriro"
+
+#: src/widgets/numformatter.cpp
+msgid "NaN"
+msgstr "NaN"
+
+#: src/widgets/numformatter.cpp
+msgid "Infinity"
+msgstr "Mugagabe"
+
+#: src/widgets/numformatter.cpp
+msgid "-Infinity"
+msgstr "-Mugagabe"
+
 #: src/widgets/valnum.cpp
 msgid "Validation error"
 msgstr "Balioztapen akatsa"
@@ -15342,18 +16842,6 @@ msgstr "Balioa ez da izan behar %s baino handiagoa"
 msgid "e"
 msgstr "e"
 
-#: src/widgets/Warning.cpp
-msgid "Don't show this warning again"
-msgstr "Ez erakutsi ohar hau berriro"
-
-#: src/widgets/MultiDialog.h
-msgid "Please select an action"
-msgstr "Mesedez hautatu ekintza bat"
-
-#: src/widgets/wxPanelWrapper.h
-msgid "Panel"
-msgstr "Panela"
-
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
 msgstr "Elkarrizket"
@@ -15365,10 +16853,6 @@ msgstr "Hautatu zuzenbide bat"
 #: src/widgets/wxPanelWrapper.h
 msgid "Directory Dialog"
 msgstr "Zuzenbide Elkarrizketa"
-
-#: src/widgets/wxPanelWrapper.h
-msgid "Select a file"
-msgstr "Hautatu agiri bat"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "File Dialog"
@@ -15383,6 +16867,190 @@ msgstr "Akatsa: %hs lerro honetan: %lu"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "Ezin da agiria gertatu: \"%s\""
+
+#~ msgid ""
+#~ "Latency Correction setting has caused the recorded audio to be hidden "
+#~ "before zero.\n"
+#~ "Audacity has brought it back to start at zero.\n"
+#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
+#~ "to the right place."
+#~ msgstr ""
+#~ "Atzerapen Zuzenketa ezarpenak eragin du grabatutako audioa ezkutuan "
+#~ "izatea zero aurretik.\n"
+#~ "Audacity zerotik hastera ekarri du berriro.\n"
+#~ "Badaiteke erabili behar izatea Denbora Aldaketa Tresna (<---> edo F5) "
+#~ "bidea toki zuzenera arrastatzeko."
+
+#~ msgid "Latency problem"
+#~ msgstr "Atzerapen arazoa"
+
+#~ msgid "Apply Chain"
+#~ msgstr "Ezarri Katea"
+
+#~ msgid "&Select Chain"
+#~ msgstr "&Hautatu Katea"
+
+#~ msgid "Chain"
+#~ msgstr "Katea"
+
+#~ msgid "Edit Chains"
+#~ msgstr "Editatu Kateak"
+
+#~ msgid "&Chains"
+#~ msgstr "Kat&eak"
+
+#~ msgid "Re&name"
+#~ msgstr "&Berrizendatu"
+
+#~ msgid "C&hain (Double-Click or press SPACE to edit)"
+#~ msgstr "K&atea (Klik-Bikoitza edo sakatu TARTEA editatzeko)"
+
+#~ msgid "<br><br>DarkAudacity is based on Audacity:"
+#~ msgstr "<br><br>DarkAudacity jatorrizko Audacity-an ohinarrituta dago:"
+
+#~ msgid ""
+#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
+#~ "between them."
+#~ msgstr ""
+#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - ezberdintasunak "
+#~ "ikusteko."
+
+#~ msgid ""
+#~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
+#~ "help using DarkAudacity."
+#~ msgstr ""
+#~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - "
+#~ "DarkAudacity laguntzarako."
+
+#~ msgid ""
+#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
+#~ "started with DarkAudacity."
+#~ msgstr ""
+#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - DarkAudacity "
+#~ "hastapenarako."
+
+#~ msgid "Insert &After"
+#~ msgstr "Txertatu &Ondoren"
+
+#~ msgid "Insert &Before"
+#~ msgstr "Txertatu A&urretik"
+
+#~ msgid "C&hains"
+#~ msgstr "Ka&teak"
+
+#~ msgid "Appl&y Chain..."
+#~ msgstr "Ezarri &Katea..."
+
+#~ msgid "Edit C&hains..."
+#~ msgstr "E&ditatu Katea..."
+
+#~ msgid "Tra&nscription Toolbar"
+#~ msgstr "&Irakurketa Tresnabarra"
+
+#~ msgid "&Tools"
+#~ msgstr "&Tresnak"
+
+#~ msgid "E&xtra"
+#~ msgstr "Ge&higarria"
+
+#~ msgid "Transcri&ption"
+#~ msgstr "Irakur&keta"
+
+#~ msgid "Plug-in Manager: Effects, Generators and Analyzers"
+#~ msgstr "Plug-in Kudeatzailea: Eraginak, Sorgailuak eta Aztergailuak"
+
+#~ msgid "All Menus"
+#~ msgstr "Menu Guztiak"
+
+#~ msgid "Transcription"
+#~ msgstr "Irakurketa"
+
+#~ msgid "'?"
+#~ msgstr "'?"
+
+#~ msgid "' ?"
+#~ msgstr "' ?"
+
+#~ msgid "Delete "
+#~ msgstr "Ezabatu "
+
+#~ msgid "items?"
+#~ msgstr "gaiak?"
+
+#~ msgid "Maximum amplitude dB"
+#~ msgstr "Gehienezko anplitudea dB"
+
+#~ msgid "Sliding Time Scale/Pitch Shift"
+#~ msgstr "Denbora Eskala Irristatzen/Doinu Aldaketa"
+
+#~ msgid "Time Scale"
+#~ msgstr "Denbora Neurria"
+
+#~ msgid ""
+#~ "Your tracks will be mixed down to a single mono channel in the exported "
+#~ "file."
+#~ msgstr ""
+#~ "Zure bideak mono azpibide bakarrera behera-nahastuko dira esportatutako "
+#~ "agirian."
+
+#~ msgid "kbps"
+#~ msgstr "kbs-ko"
+
+#~ msgid "Insane"
+#~ msgstr "Gaitza"
+
+#~ msgid "Extreme"
+#~ msgstr "Hertzekoa"
+
+#~ msgid "Medium"
+#~ msgstr "Ertaina"
+
+#~ msgid "Track &shift after record:"
+#~ msgstr "Bide &aldaketa grabaketaren ondoren:"
+
+#~ msgid "Playthrough"
+#~ msgstr "Zehar-irakurketa"
+
+#~ msgid "&Hardware Playthrough of input"
+#~ msgstr "Sarreraren &Hardware zehar-irakurketa"
+
+#~ msgid "Frequency g&ain (dB/dec):"
+#~ msgstr "M&aiztasun irabazia (dB/ham):"
+
+#~ msgid ""
+#~ "Error opening sound device.\n"
+#~ "Try changing the audio host, recording device and the project sample rate."
+#~ msgstr ""
+#~ "Akatsa soinu gailua irekitzerakoan.\n"
+#~ "Saiatu audio hostalaria, grabaketa gailua eta egitasmoaren laginketa "
+#~ "neurria aldatzen."
+
+#~ msgid "Slider Recording"
+#~ msgstr "Grabaketa Irristaria"
+
+#~ msgid "Slider Playback"
+#~ msgstr "Irakurketa Irristaria"
+
+#~ msgid "Start - End"
+#~ msgstr "Hasiera - Amaiera"
+
+#~ msgid "Start - Length"
+#~ msgstr "Hasiera - Luzera"
+
+#~ msgid "Length - End"
+#~ msgstr "Luzer - Amaiera"
+
+#~ msgid "Length - Center"
+#~ msgstr "Luzera - Erdia"
+
+#~ msgid "Low Frequency:"
+#~ msgstr "Behe Maiztasuna:"
+
+#~ msgid "High Frequency:"
+#~ msgstr "Goi Maiztasuna:"
+
+#~ msgid "Change track name to:"
+#~ msgstr "Aldatu bide izena hona:"
 
 #~ msgid "In Memoriam"
 #~ msgstr "Oroimenean"
@@ -15456,9 +17124,6 @@ msgstr "Ezin da agiria gertatu: \"%s\""
 
 #~ msgid "clip"
 #~ msgstr "ebakina"
-
-#~ msgid "clips"
-#~ msgstr "ebakinak"
 
 #~ msgid "and"
 #~ msgstr "eta"
@@ -15590,12 +17255,6 @@ msgstr "Ezin da agiria gertatu: \"%s\""
 #~ msgid "down"
 #~ msgstr "behera"
 
-#~ msgid "Left"
-#~ msgstr "Ezkerra"
-
-#~ msgid "Right"
-#~ msgstr "Eskuina"
-
 #~ msgid "+"
 #~ msgstr "+"
 
@@ -15634,9 +17293,6 @@ msgstr "Ezin da agiria gertatu: \"%s\""
 
 #~ msgid "SBSMS"
 #~ msgstr "SBSMS"
-
-#~ msgid "Width"
-#~ msgstr "Zabalera"
 
 #~ msgid "NoiseFloor"
 #~ msgstr "Zarata Ohina"
@@ -15836,9 +17492,6 @@ msgstr "Ezin da agiria gertatu: \"%s\""
 #~ msgid "Truncate"
 #~ msgstr "Trunkatu"
 
-#~ msgid "Compress"
-#~ msgstr "Konprimitu"
-
 #~ msgid "Independent"
 #~ msgstr "Independientea"
 
@@ -15847,9 +17500,6 @@ msgstr "Ezin da agiria gertatu: \"%s\""
 
 #~ msgid "Version"
 #~ msgstr "Bertsioa"
-
-#~ msgid "Moderate"
-#~ msgstr "Arrunta"
 
 #~ msgid "Heavy"
 #~ msgstr "Gogorra"
@@ -15881,9 +17531,6 @@ msgstr "Ezin da agiria gertatu: \"%s\""
 
 #~ msgid "C&ategory:"
 #~ msgstr "&Kategoria:"
-
-#~ msgid "Set"
-#~ msgstr "Ezarri"
 
 #~ msgid "Key Combination"
 #~ msgstr "Tekla Konbinazioa"
