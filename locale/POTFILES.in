@@ -318,6 +318,8 @@ src/commands/SetTrackInfoCommand.cpp
 src/commands/SetTrackInfoCommand.h
 src/commands/Validators.h
 src/configtemplate.h
+src/configunix.h
+src/configwin.h
 src/effects/Amplify.cpp
 src/effects/Amplify.h
 src/effects/AutoDuck.cpp

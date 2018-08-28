@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-28 15:05+0100\n"
+"POT-Creation-Date: 2018-08-29 11:18+0100\n"
 "PO-Revision-Date: 2018-02-24 22:27+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
@@ -580,7 +580,7 @@ msgstr ""
 "Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1341,6 +1341,7 @@ msgstr "&Arkiv"
 msgid "Apply macro to files..."
 msgstr "Tillämpa i &filer..."
 
+#. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 #, fuzzy
 msgid "&Expand"
@@ -1446,6 +1447,7 @@ msgstr "Flytta &ned"
 msgid "De&faults"
 msgstr "Standar&dvärden"
 
+#. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
 msgstr ""
@@ -2316,7 +2318,7 @@ msgstr "Logga frekvens"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2641,7 +2643,7 @@ msgstr "Historik"
 msgid "&Manage History"
 msgstr "&Hantera historik"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
 msgid "Action"
 msgstr "Handling"
 
@@ -2744,7 +2746,7 @@ msgid "Track"
 msgstr "Spår"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Etikett"
 
@@ -2897,11 +2899,6 @@ msgstr "Audacity Karaoke%s"
 #: src/Menus.cpp
 msgid "Uncategorized"
 msgstr "Okategoriserat"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Reset..."
-msgstr "Åter&ställ..."
 
 #: src/Menus.cpp
 msgid "&Save Project"
@@ -4037,6 +4034,7 @@ msgstr "Raderingstangent &2"
 msgid "&Play-at-Speed"
 msgstr "Spela upp med vald hastighet"
 
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/Menus.cpp
 #, fuzzy
 msgid "Normal Pl&ay-at-Speed"
@@ -5459,10 +5457,13 @@ msgstr ""
 "Använd endast moduler från pålitliga källor"
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
+#: plug-ins/delay.ny
 msgid "Yes"
 msgstr "Ja"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
+#: plug-ins/equalabel.ny plug-ins/delay.ny
 msgid "No"
 msgstr "Nej"
 
@@ -7773,6 +7774,7 @@ msgstr "Vitt"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Inget"
 
@@ -8086,7 +8088,7 @@ msgstr "Spektrogram"
 
 #: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
 #: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "Linear"
 msgstr "Linjär"
 
@@ -10242,10 +10244,12 @@ msgstr "Väntar på vågformen att sluta beräknas..."
 msgid ".  Maximum 0dB."
 msgstr ".  Maximalt 0dB."
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "Loudness LUFS"
 msgstr ""
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
 msgstr ""
@@ -10756,15 +10760,15 @@ msgstr "Sträck"
 msgid "Logarithmic"
 msgstr "Logaritmisk"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sine"
 msgstr "Sinus"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Square"
 msgstr "Kvadrat"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sawtooth"
 msgstr "Sågtand"
 
@@ -11361,10 +11365,12 @@ msgstr ""
 msgid "Processing complete."
 msgstr "Bearbetning slutförd."
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
 msgstr ""
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
 msgstr ""
@@ -11519,6 +11525,7 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+#: plug-ins/sample-data-export.ny
 msgid "Select a file"
 msgstr "Välj en fil"
 
@@ -12493,6 +12500,7 @@ msgid "Fast"
 msgstr "Snabb"
 
 #: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "Standard"
 
@@ -12546,7 +12554,7 @@ msgstr "Kanalläge:"
 msgid "Joint Stereo"
 msgstr "Joint Stereo"
 
-#: src/export/ExportMP3.cpp
+#: src/export/ExportMP3.cpp plug-ins/rms.ny
 msgid "Stereo"
 msgstr "Stereo"
 
@@ -13842,6 +13850,7 @@ msgstr "Be&håll etiketter om markeringen fästs till en etikett"
 msgid "B&lend system and Audacity theme"
 msgstr "B&landa systemets och Audacitys tema"
 
+#. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
@@ -14441,7 +14450,7 @@ msgstr "24-bitars PCM"
 msgid "Rectangle"
 msgstr "Rektangel"
 
-#: src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.cpp plug-ins/tremolo.ny
 msgid "Triangle"
 msgstr "Triangel"
 
@@ -14975,7 +14984,7 @@ msgstr "Standardzoom"
 msgid "Minutes"
 msgstr "Minuter"
 
-#: src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
 msgid "Seconds"
 msgstr "Sekunder"
 
@@ -15778,7 +15787,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr "Stoppa ljudet först"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
 msgid "Mono"
 msgstr "Mono"
 
@@ -16274,7 +16283,7 @@ msgstr "Mätartyp"
 msgid "Orientation"
 msgstr "Orientering"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
 msgstr "Automatisk"
 
@@ -16402,7 +16411,7 @@ msgstr "0100 h 060 m 060 s+.# samplingar"
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
 #.
-#: src/widgets/NumericTextCtrl.cpp
+#: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "samplingar"
 
@@ -16854,6 +16863,1652 @@ msgstr "Fel: %hs vid rad %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Kunde inte läsa in fil: \"%s\""
 
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Processing Vocoder..."
+msgstr "Bearbetning slutförd."
+
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr ""
+
+#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
+#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
+#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
+#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+msgid "Released under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Output choice"
+msgstr "Output enhet"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Both Channels"
+msgstr "%d kanaler"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Right Only"
+msgstr "Höger kanal"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Number of vocoder bands"
+msgstr "Antal upprepningar"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of original audio (percent)"
+msgstr "Frekvens (Hz):"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of white noise (percent)"
+msgstr "Frekvens (Hz):"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "Frekvens (Hz):"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "Frekvens (Hz):"
+
+#: plug-ins/vocoder.ny
+#, elisp-format
+msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Clip Fix"
+msgstr "Flytta klipp åt h&öger"
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Reconstructing clips..."
+msgstr "Raderar klick och pops"
+
+#: plug-ins/clipfix.ny
+msgid "Benjamin Schwartz and Steve Daulton"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid ""
+"Licensing confirmed under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Threshold of Clipping (%)"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Reduce amplitude to allow for restored peaks (dB)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm Track"
+msgstr "Ta bort spår"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Generating Rhythm..."
+msgstr "Skapar Chirp"
+
+#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Dominic Mazzoni"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Tempo (bpm)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "30 - 300 beats/minute"
+msgstr "Till slag i minuten"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Beats per bar"
+msgstr "Slag i minuten"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "1 - 20 beats/measure"
+msgstr "Till slag i minuten"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Swing amount"
+msgstr "Förvrängningsmängd"
+
+#: plug-ins/rhythmtrack.ny
+msgid "+/- 1"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Number of bars"
+msgstr "Antal upprepningar"
+
+#: plug-ins/rhythmtrack.ny
+msgid "1 - 1000 bars"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm track duration"
+msgstr "Ta bort spår"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Start time offset"
+msgstr "Startoffset:"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Silence before first beat"
+msgstr "Inkludera ljud innan första etiketten"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Beat sound"
+msgstr "&Slag"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Metronome Tick"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Cowbell"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Resonant Noise"
+msgstr "Raderar brus"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Noise Click"
+msgstr "Brusgrund"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of strong beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "18 - 116"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of weak beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid ""
+"Set either 'Number of bars' or\n"
+"'Rhythm track duration' to greater than zero."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Data Export"
+msgstr "Kunde inte exportera"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Analyzing..."
+msgstr "Tillämpar..."
+
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
+#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Steve Daulton"
+msgstr "An&ge som standard"
+
+#: plug-ins/sample-data-export.ny
+msgid "Limit output to first"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Measurement scale"
+msgstr "&Mät markering"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Export data to"
+msgstr "Exportera ljud"
+
+#: plug-ins/sample-data-export.ny
+msgid "Index (text files only)"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Count"
+msgstr "Redigera sampling"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Time Indexed"
+msgstr "Etikettredigering"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Include header information"
+msgstr "Versionsinformation"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Minimal"
+msgstr "&Minimera"
+
+#: plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "Allt"
+
+#: plug-ins/sample-data-export.ny
+msgid "Optional header text"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Channel layout for stereo"
+msgstr ""
+
+#. i18n-hint: Left and Right
+#: plug-ins/sample-data-export.ny
+msgid "L-R on Same Line"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Alternate Lines"
+msgstr ""
+
+#. i18n-hint: L for Left
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "L Channel First"
+msgstr "%d kanaler"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Show messages"
+msgstr "detta hjälpmeddelande"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Errors Only"
+msgstr "Fel: "
+
+#. i18n-hint abbreviates negative infinity
+#: plug-ins/sample-data-export.ny
+msgid "[-inf]"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left Channel.~%~%"
+msgstr "Vänster kanal"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~%~%Right Channel.~%~%"
+msgstr "Höger kanal"
+
+#: plug-ins/sample-data-export.ny
+msgid "~aData written to:~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+"                     Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
+"~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
+"Unweighted RMS: ~a dB.~%~\n"
+"                  DC offset: ~a~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a samples."
+msgstr "samplingar"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a seconds."
+msgstr "sekunder"
+
+#: plug-ins/sample-data-export.ny
+msgid "Audio data analysis:"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
+msgstr ""
+
+#. i18n-hint: abbreviates "decibels"
+#: plug-ins/sample-data-export.ny
+msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#: plug-ins/sample-data-export.ny
+msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#: plug-ins/sample-data-export.ny
+msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "sample data"
+msgstr "Redigera sampling"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample #"
+msgstr "Samplingar"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (linear)"
+msgstr "Linjär"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (dB)"
+msgstr "&Volym (dB):"
+
+#: plug-ins/sample-data-export.ny
+msgid "audio sample value analysis"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (linear)"
+msgstr "Linjär"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (linear)"
+msgstr "Linjär"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (dB)"
+msgstr "&Nivå (dB):"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (dB)"
+msgstr "Höger, %dHz"
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"Produced with <span>Sample Data Export</span> for\n"
+"<a href=\"~a\">Audacity</a> by Steve\n"
+"Daulton"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "linear"
+msgstr "Linjär"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "2 channels (stereo)"
+msgstr "2 kanaler (stereo)"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "1 channel (mono)"
+msgstr "1 kanal (mono)"
+
+#: plug-ins/sample-data-export.ny
+msgid "One column per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "One row per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel then Right channel on same line.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left and right channels on alternate lines.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel first then right channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Unspecified channel order"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Error.~%\"~a\" cannot be written."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Generating pluck sound..."
+msgstr "Skapar ton"
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Fade-out type"
+msgstr "Filtyp:"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "Längd"
+
+#: plug-ins/vocalrediso.ny
+msgid "Vocal Reduction and Isolation"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Applying Action..."
+msgstr "Tillämpar..."
+
+#: plug-ins/vocalrediso.ny
+msgid "Robert Haenggi"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Vocals"
+msgstr "&Ta bort special"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals"
+msgstr "&Isolera"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals and Invert"
+msgstr "&Isolera"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center"
+msgstr "Raderade skärlinjer"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center"
+msgstr "Centrera"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center and Invert"
+msgstr "Centrera"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center Classic: Mono"
+msgstr "Raderade skärlinjer"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Analyze"
+msgstr "A&nalysera"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Strength"
+msgstr "Start-Längd"
+
+#: plug-ins/vocalrediso.ny
+msgid "Low Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "High Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Average x: ~a, y: ~a\n"
+"Covariance x y: ~a\n"
+"Average variance x: ~a, y: ~a\n"
+"Standard deviation x: ~a, y: ~a\n"
+"Coefficient of correlation: ~a\n"
+"Coefficient of determination: ~a \n"
+"Variation of residuals: ~a\n"
+"y equals ~a plus ~a times x~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
+"This means:~%~a~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are identical, i.e. dual mono.\n"
+"   The center can't be removed.\n"
+"      Any remaining difference may be caused by lossy encoding."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two Channels are strongly related, i.e. nearly mono or extremely "
+"panned.\n"
+"   Most likely, the center extraction will be poor."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - An ideal value for Stereo.\n"
+"  However, the center extraction depends also on the used reverb."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are almost not related.\n"
+"   Either you have only noise or the piece is mastered in a unbalanced "
+"manner.\n"
+"   The center extraction can still be good though."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - Although the Track is stereo, the field is obviously extra wide.\n"
+"   This can cause strange effects.\n"
+"   Especially when played by only one speaker."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are nearly identical.\n"
+"   Obviously, a pseudo stereo effect has been used\n"
+"   to spread the signal over the physical distance between the speakers.\n"
+" Don't expect good results from a center removal."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "This plug-in works only with stereo tracks."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Sample Data Import"
+msgstr "Kon&vertering av samplingsfrekvens:"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Reading and rendering samples..."
+msgstr "Mixar och renderar spår"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Select file"
+msgstr "Välj en fil"
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Throw Error"
+msgstr "Fel"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Error.~%Unable to open file"
+msgstr "Kunde inte öppna genrefil."
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Studio Fade Out"
+msgstr "Tona ut"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Applying Fade..."
+msgstr "Tillämpar..."
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr "Markeringen måste vara större än %d samplingar."
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiter"
+msgstr "db-gräns"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiting..."
+msgstr "Normaliserar..."
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Type"
+msgstr "Typ:"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Limit"
+msgstr "db-gräns"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Limit"
+msgstr "db-gräns"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Clip"
+msgstr "N&ästa klipp"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Clip"
+msgstr "Hård klippning"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limit to (dB)"
+msgstr "&Nivå (dB):"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Apply Make-up Gain"
+msgstr "Ombrytningförstärkning"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "Ta bort spår"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removing center-panned audio..."
+msgstr "Raderar klick och pops"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove vocals or view Help"
+msgstr "&Ta bort special"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "View Help"
+msgstr "Hjälp"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removal choice"
+msgstr "Raderar brus"
+
+#: plug-ins/vocalremover.ny
+msgid "Simple (Entire Spectrum)"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Frequency Band"
+msgstr "Centrera frekvens:"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Retain Frequency Band"
+msgstr "Linjär frekvensskala"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band from (Hz)"
+msgstr "Frekvens (Hz):"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band to (Hz)"
+msgstr "Frekvens (Hz):"
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Vocal Remover requires a stereo track. It works best with\n"
+"lossless files like WAV or AIFF, rather than MP3 or\n"
+"other compressed formats. It only removes vocals or other\n"
+"audio that is panned to center (sounds equally loud in left\n"
+"and right). Vocals may be mixed this way. Inverting one\n"
+"channel then panning both to center cancels out any audio\n"
+"which was originally center-panned, making it inaudible.\n"
+"This can remove some parts of the audio you may want to\n"
+"keep, such as drums, which are also often mixed to center.\n"
+"If the vocals and other centered parts differ in pitch,\n"
+"this can be solved by removing only selected frequencies.~%\n"
+"Vocal Remover thus has three choices of removal method.\n"
+"'Simple' inverts the entire frequency spectrum of one\n"
+"channel. This may remove too much music if other parts of\n"
+"the audio are centered as well as the vocals. In that case,\n"
+"try the other choices. If the vocals are at a different\n"
+"pitch than the other audio (such as a high female voice),\n"
+"try 'Remove frequency band'. This only removes frequencies\n"
+"between a lower and upper limit which you can enter in the\n"
+"'Frequency band...' boxes. Experiment by entering what\n"
+"sounds like the most significant frequency range of the\n"
+"original vocals. If the other choices remove too much\n"
+"audio in a particular frequency range (such as low drums\n"
+"or bass), try 'Retain frequency band'. This only removes\n"
+"frequencies outside the limits, retaining the others."
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"~%Vocal Remover requires an unsplit, stereo track.~%~\n"
+"If you have a stereo track split into left and right~%~\n"
+"channels, use 'Make Stereo Track' on the Track~%~\n"
+"Drop-Down Menu, then run Vocal Remover again.~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Warning:~%~\n"
+"              Selected band-stop filter is~%~\n"
+"              ~a Hz to ~a Hz.~%~\n"
+"              A very narrow stop-band filter may have~%~\n"
+"              unexpected results.~%~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Current settings returned the original audio."
+msgstr "Nyquist returnerade inget ljud.\n"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Adjustable Fade"
+msgstr "Justerade panorering"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Type"
+msgstr "&Filtertyp:"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Up"
+msgstr "Tona in"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Down"
+msgstr "Tona in"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Up"
+msgstr "Kurvnamn"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Down"
+msgstr "Flytta ned"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start/End as"
+msgstr "Start-Slut"
+
+#: plug-ins/adjustable-fade.ny
+#, elisp-format
+msgid "% of Original"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "dB Gain"
+msgstr "Förstärkning"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start (or end)"
+msgstr "Start - Slut"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "None Selected"
+msgstr "Markera"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear In"
+msgstr "Linjär"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear Out"
+msgstr "Linjär"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic In"
+msgstr "Logaritmisk"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic Out"
+msgstr "Logaritmisk"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded In"
+msgstr "Tona ut"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded Out"
+msgstr "Tona ut"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine In"
+msgstr "Cosinus"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine Out"
+msgstr "Cosinus"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve In"
+msgstr "Kurvnamn"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Out"
+msgstr "Kurva finns"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "~aPercentage values cannot be negative."
+msgstr "Frekvensens värde kan inte vara negativt"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "Frekvensens värde kan inte vara negativt"
+
+#: plug-ins/adjustable-fade.ny
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 \t-6 dB halves the amplitude."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Error~%~%"
+msgstr "Fel"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "Spectral edit parametric EQ"
+msgstr "Spektral markering"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Filtering..."
+msgstr "Filter"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "Paul Licameli"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Gain (dB)"
+msgstr "För&stärkning (dB):"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "~aPlease select frequencies."
+msgstr "Frekvenser"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aLow frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aHigh frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "Minimifrekvens måste vara minst 0 Hz"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Error.~%"
+msgstr "Fel"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfade Tracks"
+msgstr "Notspår"
+
+#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfading..."
+msgstr "Notspår"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade type"
+msgstr "Filtyp:"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Gain"
+msgstr "Konstant"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 1"
+msgstr "Konstant"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 2"
+msgstr "Konstant"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom Curve"
+msgstr "Anpassat"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom curve"
+msgstr "Anpassat"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade direction"
+msgstr "läs direkt"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, elisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr ""
+
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Spectral edit shelves"
+msgstr "Spektral markering"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Sound Finder"
+msgstr "Skapa tystnad"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Finding sound..."
+msgstr "Hitta clipping..."
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Risset Drum"
+msgstr "Skapar brus"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Generating Risset Drum..."
+msgstr "Skapar brus"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Steven Jones"
+msgstr "An&ge som standard"
+
+#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Frequency (Hz)"
+msgstr "Frekvens (Hz):"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Decay (seconds)"
+msgstr "Fördröjningstid (sekunder):"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Center frequency of noise (Hz)"
+msgstr "Centrera frekvens och bredd"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amplitude (0 - 1)"
+msgstr "Amplitud (0-1):"
+
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Spectral edit multi tool"
+msgstr "Spektral markering"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "&Vänster"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "&Höger"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "Antal redigeringar:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "Etikettredigering"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of labels"
+msgstr "Antal redigeringar:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label interval (seconds)"
+msgstr "Längd (sekunder)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "Etikettredigering"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Notch Filter"
+msgstr "Filterlängd"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Applying Notch Filter..."
+msgstr "Lägger till utjämnare..."
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "An&ge som standard"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr ""
+
+#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "Minimifrekvens måste vara minst 0 Hz"
+
+#: plug-ins/notch.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "Notspår"
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+"Ogiltig ljudmarkering.\n"
+"Var god se till att ljudet är markerat."
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"Ogiltig ljudmarkering.\n"
+"Var god se till att ljudet är markerat."
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "Delay"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Applying Delay Effect..."
+msgstr "Verkställer Nyquist effekt..."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay type"
+msgstr "Delay"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "Rekangulär"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time (seconds)"
+msgstr "Fördröjningstid (sekunder):"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change effect"
+msgstr "Förhandsvisa effekt"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch/Tempo"
+msgstr "Tonhöjd och tempo"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Low-quality Pitch Shift"
+msgstr "Slutgiltig tonhöjdsskiftning"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change per echo (semitones)"
+msgstr "Förhandsvisa effekt"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes"
+msgstr "Antal upprepningar"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr "Antalet redigeringar bör vara inom intervallet 1..10000."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Error.~%~a"
+msgstr "Fel"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr ""
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Applying Tremolo..."
+msgstr "Lägger till utjämnare..."
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Waveform type"
+msgstr "Vågform"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "Sågtand"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Starting phase (degrees)"
+msgstr "LFO start läge i grader"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Wet level (percent)"
+msgstr "Wet-nivå"
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Silence Finder"
+msgstr "Skapa tystnad"
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Finding silence..."
+msgstr "Trunkera tystnad..."
+
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "Klassiska filter"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "Performing ScienFilter"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "Klassiska filter"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "Performing ScienFilter"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Beat Finder"
+msgstr "&Slag"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Finding beats..."
+msgstr "Hitta clipping..."
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Threshold Percentage"
+msgstr "Tröskelkontroller"
+
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
 #~ "before zero.\n"
@@ -17017,9 +18672,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Slider Playback"
 #~ msgstr "Uppspelningsreglage"
 
-#~ msgid "Start - End"
-#~ msgstr "Start - Slut"
-
 #~ msgid "Start - Length"
 #~ msgstr "Start - Längd"
 
@@ -17156,20 +18808,11 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "copy in"
 #~ msgstr "kopiera i"
 
-#~ msgid "read directly"
-#~ msgstr "läs direkt"
-
 #~ msgid "&Display a mono channel as virtual stereo"
 #~ msgstr "&Visa en monokanal som virtuell stereo"
 
 #~ msgid " (emulated)"
 #~ msgstr " (emulerad)"
-
-#~ msgid "Start-End"
-#~ msgstr "Start-Slut"
-
-#~ msgid "Start-Length"
-#~ msgstr "Start-Längd"
 
 #~ msgid "Length-End"
 #~ msgstr "Längd-Slut"
@@ -17296,16 +18939,9 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Amplitude"
 #~ msgstr "Amplitud slut"
 
-#~ msgid "Delay"
-#~ msgstr "Delay"
-
 #, fuzzy
 #~ msgid "Decay"
 #~ msgstr "Decay Time"
-
-#, fuzzy
-#~ msgid "FilterLength"
-#~ msgstr "Filter"
 
 #, fuzzy
 #~ msgid "CurveName"
@@ -17469,9 +19105,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #, fuzzy
 #~ msgid "Version"
 #~ msgstr "Gör baklänges"
-
-#~ msgid "All"
-#~ msgstr "Allt"
 
 #~ msgid "C&ategory:"
 #~ msgstr "K&ategori:"
@@ -17784,9 +19417,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "From beats per minute"
 #~ msgstr "Från slag i minuten"
-
-#~ msgid "To beats per minute"
-#~ msgstr "Till slag i minuten"
 
 #~ msgid "Length (seconds):"
 #~ msgstr "Längd (sekunder):"
@@ -18166,9 +19796,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Click Removal..."
 #~ msgstr "Ta bort klick..."
 
-#~ msgid "Removing clicks and pops..."
-#~ msgstr "Raderar klick och pops"
-
 #~ msgid "Applying Dynamic Range Compression..."
 #~ msgstr "lägger till Dynamic Range Compression..."
 
@@ -18251,9 +19878,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Gate"
 #~ msgstr "Gate"
 
-#~ msgid "Pitch and Tempo"
-#~ msgstr "Tonhöjd och tempo"
-
 #~ msgid "Onsets"
 #~ msgstr "Onsets"
 
@@ -18272,9 +19896,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Detect clipping"
 #~ msgstr "Påvisa peakar"
 
-#~ msgid "Find Clipping..."
-#~ msgstr "Hitta clipping..."
-
 #~ msgid "Detecting clipping"
 #~ msgstr "Påvisa clipping"
 
@@ -18283,9 +19904,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "Leveler..."
 #~ msgstr "Utjämnare..."
-
-#~ msgid "Applying Leveler..."
-#~ msgstr "Lägger till utjämnare..."
 
 #~ msgid "Noise Generator"
 #~ msgstr "Brusgenerator"
@@ -18296,17 +19914,11 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Applied effect: Generate Noise, %.6lf seconds"
 #~ msgstr "Använd effekt: Skapa brus, %.6lf sekunder"
 
-#~ msgid "Generating Noise"
-#~ msgstr "Skapar brus"
-
 #~ msgid "Noise Removal..."
 #~ msgstr "Brusreducering..."
 
 #~ msgid "Creating Noise Profile"
 #~ msgstr "Skapar brusprofil"
-
-#~ msgid "Removing Noise"
-#~ msgstr "Raderar brus"
 
 #~ msgid ""
 #~ "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, "
@@ -18323,9 +19935,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 
 #~ msgid "Normalize..."
 #~ msgstr "Normalisera..."
-
-#~ msgid "Normalizing..."
-#~ msgstr "Normaliserar..."
 
 #~ msgid ""
 #~ "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
@@ -18416,13 +20025,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Classic Filters..."
 #~ msgstr "Scientific Filter..."
 
-#, fuzzy
-#~ msgid "Performing Classic Filtering"
-#~ msgstr "Performing ScienFilter"
-
-#~ msgid "Silence Generator"
-#~ msgstr "Skapa tystnad"
-
 #~ msgid "Silence..."
 #~ msgstr "Tystnad..."
 
@@ -18454,16 +20056,7 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #~ msgid "Tone Generator"
 #~ msgstr "Tongenerator"
 
-#~ msgid "Generating Chirp"
-#~ msgstr "Skapar Chirp"
-
-#~ msgid "Generating Tone"
-#~ msgstr "Skapar ton"
-
 #~ msgid "Truncate Silence..."
-#~ msgstr "Trunkera tystnad..."
-
-#~ msgid "Truncating Silence..."
 #~ msgstr "Trunkera tystnad..."
 
 #, fuzzy
@@ -18639,9 +20232,6 @@ msgstr "Kunde inte läsa in fil: \"%s\""
 #, fuzzy
 #~ msgid "Effect Refresh"
 #~ msgstr "Effekter"
-
-#~ msgid "Output Device"
-#~ msgstr "Output enhet"
 
 #~ msgid "Input Device"
 #~ msgstr "Input enhet"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.0.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-28 15:05+0100\n"
+"POT-Creation-Date: 2018-08-29 11:18+0100\n"
 "PO-Revision-Date: 2014-11-21 21:02-0000\n"
 "Last-Translator: Aram Vardanyan\n"
 "Language-Team: Armenian <aramvardanyan@gmx.com>\n"
@@ -626,7 +626,7 @@ msgstr ""
 "(Dominic Mazzoni):"
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Աուդասիթի պատմության գրքույկ"
@@ -1401,6 +1401,7 @@ msgstr "&Ֆայլ"
 msgid "Apply macro to files..."
 msgstr "Հաստատել &ֆայլերում..."
 
+#. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 #, fuzzy
 msgid "&Expand"
@@ -1507,6 +1508,7 @@ msgstr "Տեղափոխել &ներգև"
 msgid "De&faults"
 msgstr "Լռ&ելյայն"
 
+#. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
 msgstr ""
@@ -2386,7 +2388,7 @@ msgstr "Մուտքային հաճախականություն"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
 msgid "dB"
 msgstr "դԲ"
 
@@ -2707,7 +2709,7 @@ msgstr "Պատմություն..."
 msgid "&Manage History"
 msgstr "Կառավարել պատմությունը"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
 msgid "Action"
 msgstr "Գործողություն"
 
@@ -2808,7 +2810,7 @@ msgid "Track"
 msgstr "Ձայնային ֆայլ"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Նշիչ"
 
@@ -2967,11 +2969,6 @@ msgstr "Աուդասիթի Կարաոկե%s"
 #: src/Menus.cpp
 msgid "Uncategorized"
 msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Reset..."
-msgstr "Վեր&նշել..."
 
 #: src/Menus.cpp
 msgid "&Save Project"
@@ -4183,6 +4180,7 @@ msgstr "ՋնջելԲանալի2"
 msgid "&Play-at-Speed"
 msgstr "Նվագարկել արագությամբ"
 
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/Menus.cpp
 #, fuzzy
 msgid "Normal Pl&ay-at-Speed"
@@ -5678,10 +5676,13 @@ msgstr ""
 "Միշտ օգտվել վստահելի աղբյուրների մոդուլներից"
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
+#: plug-ins/delay.ny
 msgid "Yes"
 msgstr "Այո"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
+#: plug-ins/equalabel.ny plug-ins/delay.ny
 msgid "No"
 msgstr "Ոչ"
 
@@ -7997,6 +7998,7 @@ msgstr "Սպիտակ"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Ոչինչ"
 
@@ -8303,7 +8305,7 @@ msgstr "Տատանման ցուցիչ"
 
 #: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
 #: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "Linear"
 msgstr "Գծային"
 
@@ -10542,10 +10544,12 @@ msgstr ""
 msgid ".  Maximum 0dB."
 msgstr ".  Առավելագույն 0դԲ:"
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "Loudness LUFS"
 msgstr ""
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
 msgstr ""
@@ -11071,15 +11075,15 @@ msgstr "Ձգել"
 msgid "Logarithmic"
 msgstr "Լոգարիթմային"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sine"
 msgstr "Սինուս"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Square"
 msgstr "Վանդակ"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sawtooth"
 msgstr "Սղոցատամ"
 
@@ -11700,10 +11704,12 @@ msgstr ""
 msgid "Processing complete."
 msgstr "Ընթացքի մեջ է"
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
 msgstr ""
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
 msgstr ""
@@ -11857,6 +11863,7 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+#: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Select a file"
 msgstr "Ընտրել MIDI ֆայլ..."
@@ -12836,6 +12843,7 @@ msgid "Fast"
 msgstr "Արագ"
 
 #: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "Ստանդարտ"
 
@@ -12889,7 +12897,7 @@ msgstr "Ալիքի ռեժիմ՝"
 msgid "Joint Stereo"
 msgstr "Համատեղ ստերեո"
 
-#: src/export/ExportMP3.cpp
+#: src/export/ExportMP3.cpp plug-ins/rms.ny
 msgid "Stereo"
 msgstr "Ստերեո"
 
@@ -14201,6 +14209,7 @@ msgstr "Պահպանել նշումները, եթե ընրությունը գտ�
 msgid "B&lend system and Audacity theme"
 msgstr ""
 
+#. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
@@ -14824,7 +14833,7 @@ msgstr "24-բիթ Պրոց. հիշ."
 msgid "Rectangle"
 msgstr "Ուղղանկյուն"
 
-#: src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.cpp plug-ins/tremolo.ny
 msgid "Triangle"
 msgstr "Եռանկյուն"
 
@@ -15393,7 +15402,7 @@ msgstr "Խոշորացնել լռելյայն"
 msgid "Minutes"
 msgstr ""
 
-#: src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Seconds"
 msgstr "վարկյան"
@@ -16250,7 +16259,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
 msgid "Mono"
 msgstr "Մոնո"
 
@@ -16782,7 +16791,7 @@ msgstr "&Զտման տեսակը՝"
 msgid "Orientation"
 msgstr "Ժամաչափը"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
 msgstr ""
 
@@ -16913,7 +16922,7 @@ msgstr "0100 ժ 060 ր 060 վ+.# նմուշներ"
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
 #.
-#: src/widgets/NumericTextCtrl.cpp
+#: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "նմուշներ"
 
@@ -17393,6 +17402,1647 @@ msgstr "Սխալ՝ %hs  %lu գծում"
 msgid "Could not load file: \"%s\""
 msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Processing Vocoder..."
+msgstr "Ընթացքի մեջ է"
+
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr ""
+
+#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
+#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
+#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
+#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+msgid "Released under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Output choice"
+msgstr "Էֆեկտի կարգավորումներ"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Both Channels"
+msgstr "%d Ալիքներ"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Right Only"
+msgstr "Աջ ալիք"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Number of vocoder bands"
+msgstr "Ժամաքանակ կրկնելու՝"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of original audio (percent)"
+msgstr "Հաճախականություն (Հց)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of white noise (percent)"
+msgstr "Հաճախականություն (Հց)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "Հաճախականություն (Հց)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "Հաճախականություն (Հց)"
+
+#: plug-ins/vocoder.ny
+#, elisp-format
+msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Clip Fix"
+msgstr "Կտրում"
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Reconstructing clips..."
+msgstr "Հեռացվող սեմղմումներ և խցաններ..."
+
+#: plug-ins/clipfix.ny
+msgid "Benjamin Schwartz and Steve Daulton"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid ""
+"Licensing confirmed under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Threshold of Clipping (%)"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Reduce amplitude to allow for restored peaks (dB)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm Track"
+msgstr "Հեռացնել ձայնագրությունը"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Generating Rhythm..."
+msgstr "Ձայնի ստեղծում"
+
+#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Dominic Mazzoni"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Tempo (bpm)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "30 - 300 beats/minute"
+msgstr "Մինչ բիթեր րոպեում"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Beats per bar"
+msgstr "Բիթեր րոպեում՝"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "1 - 20 beats/measure"
+msgstr "Մինչ բիթեր րոպեում"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Swing amount"
+msgstr "Այլակերպում"
+
+#: plug-ins/rhythmtrack.ny
+msgid "+/- 1"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Number of bars"
+msgstr "Ժամաքանակ կրկնելու՝"
+
+#: plug-ins/rhythmtrack.ny
+msgid "1 - 1000 bars"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm track duration"
+msgstr "Հեռացնել ձայնագրությունը"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Start time offset"
+msgstr "Սկզբի տարբերություն՝"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Silence before first beat"
+msgstr "Ներառել աուդիո մինչ առաջին նշում"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Beat sound"
+msgstr "Կրկնել"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Metronome Tick"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Cowbell"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Resonant Noise"
+msgstr "Աղմուկի հեռացում"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Noise Click"
+msgstr "Աղմուկի ծածկ"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of strong beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "18 - 116"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of weak beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid ""
+"Set either 'Number of bars' or\n"
+"'Rhythm track duration' to greater than zero."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Data Export"
+msgstr "Չի ստացվում վերցնել"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Analyzing..."
+msgstr "Հաստատվում է..."
+
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
+#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Steve Daulton"
+msgstr "Դնել լռ&ելյայն"
+
+#: plug-ins/sample-data-export.ny
+msgid "Limit output to first"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Measurement scale"
+msgstr "Հավասարեցման նշում"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Export data to"
+msgstr "Վերցնել աուդիոն"
+
+#: plug-ins/sample-data-export.ny
+msgid "Index (text files only)"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Count"
+msgstr "Փոխել նմուշ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Time Indexed"
+msgstr "Փոխել նշում"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Include header information"
+msgstr "Ստեղծման տեղեկություն"
+
+#: plug-ins/sample-data-export.ny
+msgid "Minimal"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "Բոլորը"
+
+#: plug-ins/sample-data-export.ny
+msgid "Optional header text"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Channel layout for stereo"
+msgstr ""
+
+#. i18n-hint: Left and Right
+#: plug-ins/sample-data-export.ny
+msgid "L-R on Same Line"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Alternate Lines"
+msgstr ""
+
+#. i18n-hint: L for Left
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "L Channel First"
+msgstr "%d Ալիքներ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Show messages"
+msgstr "\t-help (Տ-Օգնություն)"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Errors Only"
+msgstr "Եղավ սխալ՝"
+
+#. i18n-hint abbreviates negative infinity
+#: plug-ins/sample-data-export.ny
+msgid "[-inf]"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left Channel.~%~%"
+msgstr "Ձախ ալիք"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~%~%Right Channel.~%~%"
+msgstr "Աջ ալիք"
+
+#: plug-ins/sample-data-export.ny
+msgid "~aData written to:~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+"                     Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
+"~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
+"Unweighted RMS: ~a dB.~%~\n"
+"                  DC offset: ~a~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a samples."
+msgstr "նմուշներ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a seconds."
+msgstr "վարկյան"
+
+#: plug-ins/sample-data-export.ny
+msgid "Audio data analysis:"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
+msgstr ""
+
+#. i18n-hint: abbreviates "decibels"
+#: plug-ins/sample-data-export.ny
+msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#: plug-ins/sample-data-export.ny
+msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#: plug-ins/sample-data-export.ny
+msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "sample data"
+msgstr "Փոխել նմուշ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample #"
+msgstr "նմուշներ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (linear)"
+msgstr "Գծային"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (dB)"
+msgstr "Եռատակ (դԲ)՝"
+
+#: plug-ins/sample-data-export.ny
+msgid "audio sample value analysis"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (linear)"
+msgstr "Գծային"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (linear)"
+msgstr "Գծային"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (dB)"
+msgstr "Փուլ (դԲ)՝"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (dB)"
+msgstr "Աջ"
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"Produced with <span>Sample Data Export</span> for\n"
+"<a href=\"~a\">Audacity</a> by Steve\n"
+"Daulton"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "linear"
+msgstr "Գծային"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "2 channels (stereo)"
+msgstr "2 Ալիքներ (Ստերեո-երկու դինամիկ)"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "1 channel (mono)"
+msgstr "1 Ալիք (Մոնո-մեկ դինամիկ)"
+
+#: plug-ins/sample-data-export.ny
+msgid "One column per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "One row per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel then Right channel on same line.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left and right channels on alternate lines.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel first then right channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Unspecified channel order"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Error.~%\"~a\" cannot be written."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Generating pluck sound..."
+msgstr "Տոնի ստեղծում"
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Fade-out type"
+msgstr "&Զտման տեսակը՝"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "Ժամաչափը"
+
+#: plug-ins/vocalrediso.ny
+msgid "Vocal Reduction and Isolation"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Applying Action..."
+msgstr "Հաստատվում է..."
+
+#: plug-ins/vocalrediso.ny
+msgid "Robert Haenggi"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Vocals"
+msgstr "Հեռացնել հատուկ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals"
+msgstr "&Մեկուսացում"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals and Invert"
+msgstr "&Մեկուսացում"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center"
+msgstr "Հեռացված կտրման գիծ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center"
+msgstr "Կենտրոն"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center and Invert"
+msgstr "Կենտրոն"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center Classic: Mono"
+msgstr "Հեռացված կտրման գիծ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Analyze"
+msgstr "Ստուգել"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Strength"
+msgstr "Զտիչ"
+
+#: plug-ins/vocalrediso.ny
+msgid "Low Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "High Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Average x: ~a, y: ~a\n"
+"Covariance x y: ~a\n"
+"Average variance x: ~a, y: ~a\n"
+"Standard deviation x: ~a, y: ~a\n"
+"Coefficient of correlation: ~a\n"
+"Coefficient of determination: ~a \n"
+"Variation of residuals: ~a\n"
+"y equals ~a plus ~a times x~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
+"This means:~%~a~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are identical, i.e. dual mono.\n"
+"   The center can't be removed.\n"
+"      Any remaining difference may be caused by lossy encoding."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two Channels are strongly related, i.e. nearly mono or extremely "
+"panned.\n"
+"   Most likely, the center extraction will be poor."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - An ideal value for Stereo.\n"
+"  However, the center extraction depends also on the used reverb."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are almost not related.\n"
+"   Either you have only noise or the piece is mastered in a unbalanced "
+"manner.\n"
+"   The center extraction can still be good though."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - Although the Track is stereo, the field is obviously extra wide.\n"
+"   This can cause strange effects.\n"
+"   Especially when played by only one speaker."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are nearly identical.\n"
+"   Obviously, a pseudo stereo effect has been used\n"
+"   to spread the signal over the physical distance between the speakers.\n"
+" Don't expect good results from a center removal."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "This plug-in works only with stereo tracks."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Sample Data Import"
+msgstr "Ձայնաչափի վերափոխիչ՝"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Reading and rendering samples..."
+msgstr "Միախառնված և ստեղծված ձայնագրություններ"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Select file"
+msgstr "Ընտրել MIDI ֆայլ..."
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Throw Error"
+msgstr "Եղավ սխալ"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Error.~%Unable to open file"
+msgstr "Չի հաջողվում բացել ոճի ֆայլը:"
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Studio Fade Out"
+msgstr "Քչացնել"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Applying Fade..."
+msgstr "Հաստատվում է..."
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr "Նշվածը պետք է մեծ լինի քան %d նշումները:"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiter"
+msgstr "Սահմանափակիչ"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiting..."
+msgstr "Կարգավորվում է..."
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Type"
+msgstr "&Զտման տեսակը՝"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Limit"
+msgstr "Սահմանափակիչ"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Limit"
+msgstr "Սահմանափակիչ"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Clip"
+msgstr "Հաջորդը գործիք"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Clip"
+msgstr "Գտնել անջատում"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limit to (dB)"
+msgstr "Փուլ (դԲ)՝"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Apply Make-up Gain"
+msgstr "Հաստատել շղթան"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "Հեռացնել ձայնագրություն"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removing center-panned audio..."
+msgstr "Հեռացվող սեմղմումներ և խցաններ..."
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove vocals or view Help"
+msgstr "Հեռացնել հատուկ"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "View Help"
+msgstr "Օգնություն"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removal choice"
+msgstr "Աղմուկի հեռացում"
+
+#: plug-ins/vocalremover.ny
+msgid "Simple (Entire Spectrum)"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Frequency Band"
+msgstr "Գծային հաճախականություն"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Retain Frequency Band"
+msgstr "Գծային հաճախականության սանդղակ"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band from (Hz)"
+msgstr "Հաճախականություն (Հց)"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band to (Hz)"
+msgstr "Հաճախականություն (Հց)"
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Vocal Remover requires a stereo track. It works best with\n"
+"lossless files like WAV or AIFF, rather than MP3 or\n"
+"other compressed formats. It only removes vocals or other\n"
+"audio that is panned to center (sounds equally loud in left\n"
+"and right). Vocals may be mixed this way. Inverting one\n"
+"channel then panning both to center cancels out any audio\n"
+"which was originally center-panned, making it inaudible.\n"
+"This can remove some parts of the audio you may want to\n"
+"keep, such as drums, which are also often mixed to center.\n"
+"If the vocals and other centered parts differ in pitch,\n"
+"this can be solved by removing only selected frequencies.~%\n"
+"Vocal Remover thus has three choices of removal method.\n"
+"'Simple' inverts the entire frequency spectrum of one\n"
+"channel. This may remove too much music if other parts of\n"
+"the audio are centered as well as the vocals. In that case,\n"
+"try the other choices. If the vocals are at a different\n"
+"pitch than the other audio (such as a high female voice),\n"
+"try 'Remove frequency band'. This only removes frequencies\n"
+"between a lower and upper limit which you can enter in the\n"
+"'Frequency band...' boxes. Experiment by entering what\n"
+"sounds like the most significant frequency range of the\n"
+"original vocals. If the other choices remove too much\n"
+"audio in a particular frequency range (such as low drums\n"
+"or bass), try 'Retain frequency band'. This only removes\n"
+"frequencies outside the limits, retaining the others."
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"~%Vocal Remover requires an unsplit, stereo track.~%~\n"
+"If you have a stereo track split into left and right~%~\n"
+"channels, use 'Make Stereo Track' on the Track~%~\n"
+"Drop-Down Menu, then run Vocal Remover again.~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Warning:~%~\n"
+"              Selected band-stop filter is~%~\n"
+"              ~a Hz to ~a Hz.~%~\n"
+"              A very narrow stop-band filter may have~%~\n"
+"              unexpected results.~%~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Current settings returned the original audio."
+msgstr "Nyquist չի վերադառնում աուդիոն:\n"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Adjustable Fade"
+msgstr "Հարմարեցված պան"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Type"
+msgstr "&Զտման տեսակը՝"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Up"
+msgstr "Ավելացնել"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Down"
+msgstr "Ավելացնել"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Up"
+msgstr "Կորի անունը"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Down"
+msgstr "Տեղափոխել &ներգև"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start/End as"
+msgstr "Սկսել"
+
+#: plug-ins/adjustable-fade.ny
+#, elisp-format
+msgid "% of Original"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "dB Gain"
+msgstr "Որակի ամրապնդում"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start (or end)"
+msgstr "Սկսել"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "None Selected"
+msgstr "Ընտրել"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear In"
+msgstr "Գծային"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear Out"
+msgstr "Գծային"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic In"
+msgstr "Լոգարիթմային"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic Out"
+msgstr "Լոգարիթմային"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded In"
+msgstr "Քչացնել"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded Out"
+msgstr "Քչացնել"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine In"
+msgstr "Կոսինուս"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine Out"
+msgstr "Կոսինուս"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve In"
+msgstr "Կորի անունը"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Out"
+msgstr "Կորը գոյություն ունի"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "~aPercentage values cannot be negative."
+msgstr "Հաճախության ավելացումը չպետք է լինի բացասական"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "Հաճախության ավելացումը չպետք է լինի բացասական"
+
+#: plug-ins/adjustable-fade.ny
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 \t-6 dB halves the amplitude."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Error~%~%"
+msgstr "Եղավ սխալ"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "Spectral edit parametric EQ"
+msgstr "Տեղավորել նշվածը"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Filtering..."
+msgstr "Զտիչ"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "Paul Licameli"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Gain (dB)"
+msgstr "Հզորացում (դԲ)՝"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "~aPlease select frequencies."
+msgstr "Հաճախություն"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aLow frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aHigh frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "Նվազագույն հաճախությունը պետք է լինի առնվազն 0 Հց"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Error.~%"
+msgstr "Եղավ սխալ"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfade Tracks"
+msgstr "Հավելում ձայնագրություն"
+
+#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfading..."
+msgstr "Հավելում ձայնագրություն"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade type"
+msgstr "&Զտման տեսակը՝"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Gain"
+msgstr "Հաստատուն"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 1"
+msgstr "Հաստատուն"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 2"
+msgstr "Հաստատուն"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom Curve"
+msgstr "Ձայնագրության անունը"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom curve"
+msgstr "Ձայնագրության անունը"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade direction"
+msgstr "կարդալ անմիջապես"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, elisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr ""
+
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Spectral edit shelves"
+msgstr "Տեղավորել նշվածը"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Sound Finder"
+msgstr "Լռություն ստեղծող"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Finding sound..."
+msgstr "Գտնել մասնատված..."
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr "Մինիմում գտնման ժամաչափ՝ 0.001 վարկյան:"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Risset Drum"
+msgstr "Ստեղծված աղմուկ"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Generating Risset Drum..."
+msgstr "Ստեղծված աղմուկ"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Steven Jones"
+msgstr "Դնել լռ&ելյայն"
+
+#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Frequency (Hz)"
+msgstr "Հաճախականություն (Հց)"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Decay (seconds)"
+msgstr "Դանդաղեցման ժամ (վարկյան)՝"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Center frequency of noise (Hz)"
+msgstr "Գծային հաճախականություն"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amplitude (0 - 1)"
+msgstr "Լայնք (0-1)"
+
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Spectral edit multi tool"
+msgstr "Տեղավորել նշվածը"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "Ձախ"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "Աջ"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "Ժամաքանակ կրկնելու՝"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "Փոխել նշում"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of labels"
+msgstr "Ժամաքանակ կրկնելու՝"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label interval (seconds)"
+msgstr "Երկարություն (վարկյան)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "Փոխել նշում"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Notch Filter"
+msgstr "Ֆիլտրերի երկարությամբ"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Applying Notch Filter..."
+msgstr "Փուլավորման հաստատում..."
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "Դնել լռ&ելյայն"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr ""
+
+#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "Նվազագույն հաճախությունը պետք է լինի առնվազն 0 Հց"
+
+#: plug-ins/notch.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "Հավելում ձայնագրություն"
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "Ուշացնող"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Applying Delay Effect..."
+msgstr "Nyquist էֆեկտի հաստատում..."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay type"
+msgstr "Ուշացնող"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "Ողղանկյուն"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time (seconds)"
+msgstr "Դանդաղեցման ժամ (վարկյան)՝"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change effect"
+msgstr "Դիտում"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch/Tempo"
+msgstr "Ձայնի տոն և տեմպ"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Low-quality Pitch Shift"
+msgstr "Վերջնական ձայնի բարձրություն"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change per echo (semitones)"
+msgstr "Դիտում"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes"
+msgstr "Ժամաքանակ կրկնելու՝"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr "Նշման առավելագույն քանակը պետք է լինի"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr "Նշման առավելագույն քանակը պետք է լինի"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr "Նշման առավելագույն քանակը պետք է լինի"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr "Նշման առավելագույն քանակը պետք է լինի"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Error.~%~a"
+msgstr "Եղավ սխալ"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr ""
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Applying Tremolo..."
+msgstr "Փուլավորման հաստատում..."
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Waveform type"
+msgstr "Ալիքաձև"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "Սղոցատամ"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Starting phase (degrees)"
+msgstr "Ցածր տատանմ. սկզբնափուլ աստիճաններում"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Wet level (percent)"
+msgstr "2 փուլ"
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Silence Finder"
+msgstr "Լռություն ստեղծող"
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Finding silence..."
+msgstr "Լռության ընդհատում..."
+
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Minimum duration of silence [seconds]"
+msgstr "Մինիմում գտնման ժամաչափ՝ 0.001 վարկյան:"
+
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "Դասական զտումներ"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "Դասական զտման կատարում"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "Դասական զտումներ"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "Դասական զտման կատարում"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Beat Finder"
+msgstr "Կրկնել"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Finding beats..."
+msgstr "Գտնել մասնատված..."
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Threshold Percentage"
+msgstr "Շեմ"
+
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
 #~ "before zero.\n"
@@ -17529,10 +19179,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgstr "Փոփոխվող նվագարկում"
 
 #, fuzzy
-#~ msgid "Start - End"
-#~ msgstr "Սկսել"
-
-#, fuzzy
 #~ msgid "Start - Length"
 #~ msgstr "Սկսել մոնիտորինգը"
 
@@ -17664,22 +19310,11 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "copy in"
 #~ msgstr "պատճենել -ում"
 
-#~ msgid "read directly"
-#~ msgstr "կարդալ անմիջապես"
-
 #~ msgid "&Display a mono channel as virtual stereo"
 #~ msgstr "Ցուցադրել մոնո ալիքները որպես վիրտուալ ստերեո"
 
 #~ msgid " (emulated)"
 #~ msgstr " (emulated)"
-
-#, fuzzy
-#~ msgid "Start-End"
-#~ msgstr "Սկսել"
-
-#, fuzzy
-#~ msgid "Start-Length"
-#~ msgstr "Զտիչ"
 
 #, fuzzy
 #~ msgid "Length-End"
@@ -17801,13 +19436,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Amplitude"
 #~ msgstr "Ամպլիտուդա ավարտ"
 
-#~ msgid "Delay"
-#~ msgstr "Ուշացնող"
-
-#, fuzzy
-#~ msgid "FilterLength"
-#~ msgstr "Զտիչ"
-
 #, fuzzy
 #~ msgid "CurveName"
 #~ msgstr "Կորի անունը"
@@ -17846,10 +19474,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #, fuzzy
 #~ msgid "RemoveDcOffset"
 #~ msgstr "Հեռացում DC ճյուղի...\n"
-
-#, fuzzy
-#~ msgid "ApplyGain"
-#~ msgstr "Հաստատել շղթան"
 
 #, fuzzy
 #~ msgid "Stretch Factor"
@@ -17970,9 +19594,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #, fuzzy
 #~ msgid "Version"
 #~ msgstr "Հետդարձում"
-
-#~ msgid "All"
-#~ msgstr "Բոլորը"
 
 #~ msgid "C&ategory:"
 #~ msgstr "Տեսակ՝"
@@ -18279,9 +19900,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 
 #~ msgid "From beats per minute"
 #~ msgstr "Բիթերից րոպեում"
-
-#~ msgid "To beats per minute"
-#~ msgstr "Մինչ բիթեր րոպեում"
 
 #~ msgid "Length (seconds):"
 #~ msgstr "Երկարություն (վարկյան)՝"
@@ -18683,9 +20301,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Click Removal..."
 #~ msgstr "Սեղմել հեռացման..."
 
-#~ msgid "Removing clicks and pops..."
-#~ msgstr "Հեռացվող սեմղմումներ և խցաններ..."
-
 #~ msgid "Applying Dynamic Range Compression..."
 #~ msgstr "Հաստատում դինամիկ շարային խտացման"
 
@@ -18722,9 +20337,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Detect clipping"
 #~ msgstr "Գտնված կտրում"
 
-#~ msgid "Find Clipping..."
-#~ msgstr "Գտնել մասնատված..."
-
 #~ msgid "Detecting clipping"
 #~ msgstr "Գտնված մասնատված..."
 
@@ -18733,9 +20345,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 
 #~ msgid "Leveler..."
 #~ msgstr "Փուլավորում..."
-
-#~ msgid "Applying Leveler..."
-#~ msgstr "Փուլավորման հաստատում..."
 
 #~ msgid "Oscillator"
 #~ msgstr "Գեներատոր"
@@ -18791,9 +20400,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Gate"
 #~ msgstr "Դարպաս"
 
-#~ msgid "Pitch and Tempo"
-#~ msgstr "Ձայնի տոն և տեմպ"
-
 #~ msgid "Onsets"
 #~ msgstr "Գրոհներ"
 
@@ -18806,17 +20412,11 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Applied effect: Generate Noise, %.6lf seconds"
 #~ msgstr "Կիրառված էֆեկտ՝ Աղմուկի ստեղծում, %.6lf վարկյան"
 
-#~ msgid "Generating Noise"
-#~ msgstr "Ստեղծված աղմուկ"
-
 #~ msgid "Noise Removal..."
 #~ msgstr "Աղմուկի հեռացում..."
 
 #~ msgid "Creating Noise Profile"
 #~ msgstr "Աղմուկի պրոֆիլի ստեղծում"
-
-#~ msgid "Removing Noise"
-#~ msgstr "Աղմուկի հեռացում"
 
 #~ msgid ""
 #~ "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, "
@@ -18833,9 +20433,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 
 #~ msgid "Normalize..."
 #~ msgstr "Կարգավորում..."
-
-#~ msgid "Normalizing..."
-#~ msgstr "Կարգավորվում է..."
 
 #~ msgid ""
 #~ "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
@@ -18932,12 +20529,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Classic Filters..."
 #~ msgstr "Դասական զտումներ..."
 
-#~ msgid "Performing Classic Filtering"
-#~ msgstr "Դասական զտման կատարում"
-
-#~ msgid "Silence Generator"
-#~ msgstr "Լռություն ստեղծող"
-
 #~ msgid "Silence..."
 #~ msgstr "Լռություն..."
 
@@ -18969,15 +20560,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Tone Generator"
 #~ msgstr "Տոնի գեներատոր"
 
-#~ msgid "Generating Chirp"
-#~ msgstr "Ձայնի ստեղծում"
-
-#~ msgid "Generating Tone"
-#~ msgstr "Տոնի ստեղծում"
-
-#~ msgid "Minimum detection duration: 0.001 seconds."
-#~ msgstr "Մինիմում գտնման ժամաչափ՝ 0.001 վարկյան:"
-
 #~ msgid "Maximum detection duration: 10000 seconds."
 #~ msgstr "Մինիմում գտնման ժամաչափ՝ 10000 վարկյան:"
 
@@ -18995,9 +20577,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 
 #~ msgid "Truncate Silence..."
 #~ msgstr "Ընդհատել լռւթյունը..."
-
-#~ msgid "Truncating Silence..."
-#~ msgstr "Լռության ընդհատում..."
 
 #~ msgid ""
 #~ "Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = "

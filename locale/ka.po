@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AUDACITY.PO\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-28 15:05+0100\n"
+"POT-Creation-Date: 2018-08-29 11:18+0100\n"
 "PO-Revision-Date: 2009-01-16 03:10-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team:  <en@li.org>\n"
@@ -609,7 +609,7 @@ msgid ""
 msgstr ""
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Audacity %s ხელსაწყოთა ზოლი"
@@ -1368,6 +1368,7 @@ msgstr "&ფაილი"
 msgid "Apply macro to files..."
 msgstr "&ფაილებზე გააქტიურება"
 
+#. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 #, fuzzy
 msgid "&Expand"
@@ -1474,6 +1475,7 @@ msgstr "ჩამოწევა"
 msgid "De&faults"
 msgstr "ნაგულისხმევი"
 
+#. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
 msgstr ""
@@ -2282,7 +2284,7 @@ msgstr "ჩანაწერის სიხშირე"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2574,7 +2576,7 @@ msgstr "&ისტორია..."
 msgid "&Manage History"
 msgstr "მართვის ისტორია"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
 msgid "Action"
 msgstr "მოქმედება"
 
@@ -2675,7 +2677,7 @@ msgid "Track"
 msgstr "ტრეკი"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "იარლიყი"
 
@@ -2833,11 +2835,6 @@ msgstr ""
 #: src/Menus.cpp
 msgid "Uncategorized"
 msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Reset..."
-msgstr "&რესემპლირება..."
 
 #: src/Menus.cpp
 msgid "&Save Project"
@@ -4064,6 +4061,7 @@ msgstr "გასაღების წაშლა2"
 msgid "&Play-at-Speed"
 msgstr "დაკვრა სიჩქარით"
 
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/Menus.cpp
 #, fuzzy
 msgid "Normal Pl&ay-at-Speed"
@@ -5555,10 +5553,13 @@ msgid ""
 msgstr ""
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
+#: plug-ins/delay.ny
 msgid "Yes"
 msgstr ""
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
+#: plug-ins/equalabel.ny plug-ins/delay.ny
 #, fuzzy
 msgid "No"
 msgstr "არცერთიი"
@@ -7801,6 +7802,7 @@ msgstr "თეთრი"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "არცერთიი"
 
@@ -8107,7 +8109,7 @@ msgstr "სპექტოგრამები"
 
 #: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
 #: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "Linear"
 msgstr "ლინეარული"
 
@@ -10349,10 +10351,12 @@ msgstr ""
 msgid ".  Maximum 0dB."
 msgstr ""
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "Loudness LUFS"
 msgstr ""
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
 msgstr ""
@@ -10883,15 +10887,15 @@ msgstr "შეყოვნების ფაქტორი:"
 msgid "Logarithmic"
 msgstr "ლოგარითმული"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sine"
 msgstr "სინუსიოდი"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Square"
 msgstr "კვადრატი"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sawtooth"
 msgstr "კბილოვანი ტალღა"
 
@@ -11491,10 +11495,12 @@ msgstr ""
 msgid "Processing complete."
 msgstr "Auto Duck დამუშავება..."
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
 msgstr ""
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
 msgstr ""
@@ -11640,6 +11646,7 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+#: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Select a file"
 msgstr "MIDI ფაილის ამორჩევა"
@@ -12601,6 +12608,7 @@ msgid "Fast"
 msgstr "სწრაფი"
 
 #: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "სტანდარტული"
 
@@ -12654,7 +12662,7 @@ msgstr "არხის რეჯიმი"
 msgid "Joint Stereo"
 msgstr "გაერთიანებული სტერეო"
 
-#: src/export/ExportMP3.cpp
+#: src/export/ExportMP3.cpp plug-ins/rms.ny
 msgid "Stereo"
 msgstr "სტერეო"
 
@@ -13922,6 +13930,7 @@ msgstr ""
 msgid "B&lend system and Audacity theme"
 msgstr ""
 
+#. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
@@ -14534,7 +14543,7 @@ msgstr "24-ბიტიანი PCM"
 msgid "Rectangle"
 msgstr "მართკუთხედი"
 
-#: src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.cpp plug-ins/tremolo.ny
 msgid "Triangle"
 msgstr "სამკუთხედი"
 
@@ -15097,7 +15106,7 @@ msgstr "ნაგულისხმევი მასშტაბირებ�
 msgid "Minutes"
 msgstr ""
 
-#: src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Seconds"
 msgstr "წამები"
@@ -15981,7 +15990,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
 msgid "Mono"
 msgstr "მონო"
 
@@ -16514,7 +16523,7 @@ msgstr "ფილტრი"
 msgid "Orientation"
 msgstr "ხანგრძლოვობა"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
 msgstr ""
 
@@ -16645,7 +16654,7 @@ msgstr "0100 ს 060 წ 060 წ+.# სემპლები"
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
 #.
-#: src/widgets/NumericTextCtrl.cpp
+#: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "სემპლები"
 
@@ -17128,6 +17137,1638 @@ msgstr "შეცდომა: %hs at line %lu"
 msgid "Could not load file: \"%s\""
 msgstr "შეუძლებელია ფაილის ჩატვირთვა: \"%s\""
 
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Processing Vocoder..."
+msgstr "Auto Duck დამუშავება..."
+
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr ""
+
+#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
+#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
+#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
+#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+msgid "Released under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Output choice"
+msgstr "გამონატანის მოწყობილობა"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Both Channels"
+msgstr "%d არხი"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Right Only"
+msgstr "მარჯვენა არხი"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Number of vocoder bands"
+msgstr "გასამეორებელი ჯერების ოდენობა:"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of original audio (percent)"
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of white noise (percent)"
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/vocoder.ny
+#, elisp-format
+msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Clip Fix"
+msgstr "კლინინგი"
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Reconstructing clips..."
+msgstr "წკაპუნისა და ხტუნვის წაშლა..."
+
+#: plug-ins/clipfix.ny
+msgid "Benjamin Schwartz and Steve Daulton"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid ""
+"Licensing confirmed under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Threshold of Clipping (%)"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Reduce amplitude to allow for restored peaks (dB)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm Track"
+msgstr "ტრეკის წაშლა"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Generating Rhythm..."
+msgstr "Chirp გენერაცია"
+
+#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Dominic Mazzoni"
+msgstr "Dominic Mazzoni-ის მიერ"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Tempo (bpm)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "30 - 300 beats/minute"
+msgstr "დარტყმებზე წუთზე"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Beats per bar"
+msgstr "დარყმები წუთზე:"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "1 - 20 beats/measure"
+msgstr "დარტყმებზე წუთზე"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Swing amount"
+msgstr "რღვევა"
+
+#: plug-ins/rhythmtrack.ny
+msgid "+/- 1"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Number of bars"
+msgstr "გასამეორებელი ჯერების ოდენობა:"
+
+#: plug-ins/rhythmtrack.ny
+msgid "1 - 1000 bars"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm track duration"
+msgstr "ტრეკის წაშლა"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Start time offset"
+msgstr "ოფსეტის დაწყება:"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Silence before first beat"
+msgstr "აუდიოს ჩართვა პირველ იარლიყამდე"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Beat sound"
+msgstr "გამეორება"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Metronome Tick"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Cowbell"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Resonant Noise"
+msgstr "ხარვეზის წაშლა"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Noise Click"
+msgstr "ხარვეზი..."
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of strong beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "18 - 116"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of weak beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid ""
+"Set either 'Number of bars' or\n"
+"'Rhythm track duration' to greater than zero."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Data Export"
+msgstr "შეუძლებელია ესპორტირება"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Analyzing..."
+msgstr "გააქტიურება..."
+
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
+#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
+#: plug-ins/tremolo.ny
+msgid "Steve Daulton"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Limit output to first"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Measurement scale"
+msgstr "სიჩუმის მონიშვნა"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Export data to"
+msgstr "ფაილის ექსპორტი"
+
+#: plug-ins/sample-data-export.ny
+msgid "Index (text files only)"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Count"
+msgstr "სემპლის რედაქტირება"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Time Indexed"
+msgstr "იარლიყის რედაქტირება"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Include header information"
+msgstr "აგების ინფორმაცია"
+
+#: plug-ins/sample-data-export.ny
+msgid "Minimal"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "All"
+msgstr "&All"
+
+#: plug-ins/sample-data-export.ny
+msgid "Optional header text"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Channel layout for stereo"
+msgstr ""
+
+#. i18n-hint: Left and Right
+#: plug-ins/sample-data-export.ny
+msgid "L-R on Same Line"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Alternate Lines"
+msgstr ""
+
+#. i18n-hint: L for Left
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "L Channel First"
+msgstr "%d არხი"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Show messages"
+msgstr "\t-დახმარება (ეს შეტყობინება)"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Errors Only"
+msgstr "შეცდომა: "
+
+#. i18n-hint abbreviates negative infinity
+#: plug-ins/sample-data-export.ny
+msgid "[-inf]"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left Channel.~%~%"
+msgstr "მარცხენა არხი"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~%~%Right Channel.~%~%"
+msgstr "მარჯვენა არხი"
+
+#: plug-ins/sample-data-export.ny
+msgid "~aData written to:~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+"                     Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
+"~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
+"Unweighted RMS: ~a dB.~%~\n"
+"                  DC offset: ~a~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a samples."
+msgstr "სემპლები"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a seconds."
+msgstr "წამები"
+
+#: plug-ins/sample-data-export.ny
+msgid "Audio data analysis:"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
+msgstr ""
+
+#. i18n-hint: abbreviates "decibels"
+#: plug-ins/sample-data-export.ny
+msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#: plug-ins/sample-data-export.ny
+msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#: plug-ins/sample-data-export.ny
+msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "sample data"
+msgstr "სემპლის რედაქტირება"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample #"
+msgstr "სემპლები"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (linear)"
+msgstr "ლინეარული"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (dB)"
+msgstr "დონე:"
+
+#: plug-ins/sample-data-export.ny
+msgid "audio sample value analysis"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (linear)"
+msgstr "ლინეარული"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (linear)"
+msgstr "ლინეარული"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (dB)"
+msgstr "დონე:"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (dB)"
+msgstr "მარჯვენა,"
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"Produced with <span>Sample Data Export</span> for\n"
+"<a href=\"~a\">Audacity</a> by Steve\n"
+"Daulton"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "linear"
+msgstr "ლინეარული"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "2 channels (stereo)"
+msgstr "2 არხი (სტერეო)"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "1 channel (mono)"
+msgstr "1 არხი (მონო)"
+
+#: plug-ins/sample-data-export.ny
+msgid "One column per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "One row per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel then Right channel on same line.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left and right channels on alternate lines.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel first then right channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Unspecified channel order"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Error.~%\"~a\" cannot be written."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Generating pluck sound..."
+msgstr "ტონის გენერაცია"
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Fade-out type"
+msgstr "ფილტრი"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "ხანგრძლოვობა"
+
+#: plug-ins/vocalrediso.ny
+msgid "Vocal Reduction and Isolation"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Applying Action..."
+msgstr "გააქტიურება..."
+
+#: plug-ins/vocalrediso.ny
+msgid "Robert Haenggi"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Vocals"
+msgstr "ტრეკების წაშლ&ა"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals"
+msgstr "ტრეკების წაშლ&ა"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals and Invert"
+msgstr "ცენტრში"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center"
+msgstr "წაშლილი ამოჭრის ხაზი"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center"
+msgstr "ცენტრში"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center and Invert"
+msgstr "ცენტრში"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center Classic: Mono"
+msgstr "წაშლილი ამოჭრის ხაზი"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Analyze"
+msgstr "&ანალიზი"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Strength"
+msgstr "ფილტრი"
+
+#: plug-ins/vocalrediso.ny
+msgid "Low Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "High Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Average x: ~a, y: ~a\n"
+"Covariance x y: ~a\n"
+"Average variance x: ~a, y: ~a\n"
+"Standard deviation x: ~a, y: ~a\n"
+"Coefficient of correlation: ~a\n"
+"Coefficient of determination: ~a \n"
+"Variation of residuals: ~a\n"
+"y equals ~a plus ~a times x~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
+"This means:~%~a~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are identical, i.e. dual mono.\n"
+"   The center can't be removed.\n"
+"      Any remaining difference may be caused by lossy encoding."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two Channels are strongly related, i.e. nearly mono or extremely "
+"panned.\n"
+"   Most likely, the center extraction will be poor."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - An ideal value for Stereo.\n"
+"  However, the center extraction depends also on the used reverb."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are almost not related.\n"
+"   Either you have only noise or the piece is mastered in a unbalanced "
+"manner.\n"
+"   The center extraction can still be good though."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - Although the Track is stereo, the field is obviously extra wide.\n"
+"   This can cause strange effects.\n"
+"   Especially when played by only one speaker."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are nearly identical.\n"
+"   Obviously, a pseudo stereo effect has been used\n"
+"   to spread the signal over the physical distance between the speakers.\n"
+" Don't expect good results from a center removal."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "This plug-in works only with stereo tracks."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Sample Data Import"
+msgstr "სემპლის კოეფიციენტის კონვერტორი"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Reading and rendering samples..."
+msgstr "ტრეკების არევა და რენდერინგი"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Select file"
+msgstr "MIDI ფაილის ამორჩევა"
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Throw Error"
+msgstr "შეცდომა"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Error.~%Unable to open file"
+msgstr "შეუძლებელია ჟანრის ფაილის შენახვა."
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Studio Fade Out"
+msgstr "გამკვეთრება"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Applying Fade..."
+msgstr "გააქტიურება..."
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiter"
+msgstr "ლიმიტერი"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiting..."
+msgstr "ნორმალიზაცია..."
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Type"
+msgstr "ფილტრი"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Limit"
+msgstr "ლიმიტერი"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Limit"
+msgstr "ლიმიტერი"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Clip"
+msgstr "შემდეგი ხელსაწყო"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Clip"
+msgstr "კლიპინგის მოძიება"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limit to (dB)"
+msgstr "დონე:"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Apply Make-up Gain"
+msgstr "ჯაჭვის გააქტიურება"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "ტრეკის წაშლა"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removing center-panned audio..."
+msgstr "წკაპუნისა და ხტუნვის წაშლა..."
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove vocals or view Help"
+msgstr "ტრეკების წაშლ&ა"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "View Help"
+msgstr "დახმარება"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removal choice"
+msgstr "ხარვეზის წაშლა"
+
+#: plug-ins/vocalremover.ny
+msgid "Simple (Entire Spectrum)"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Frequency Band"
+msgstr "ლინეარული სიხშირე"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Retain Frequency Band"
+msgstr "ლინეარული სიხშირე"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band from (Hz)"
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band to (Hz)"
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Vocal Remover requires a stereo track. It works best with\n"
+"lossless files like WAV or AIFF, rather than MP3 or\n"
+"other compressed formats. It only removes vocals or other\n"
+"audio that is panned to center (sounds equally loud in left\n"
+"and right). Vocals may be mixed this way. Inverting one\n"
+"channel then panning both to center cancels out any audio\n"
+"which was originally center-panned, making it inaudible.\n"
+"This can remove some parts of the audio you may want to\n"
+"keep, such as drums, which are also often mixed to center.\n"
+"If the vocals and other centered parts differ in pitch,\n"
+"this can be solved by removing only selected frequencies.~%\n"
+"Vocal Remover thus has three choices of removal method.\n"
+"'Simple' inverts the entire frequency spectrum of one\n"
+"channel. This may remove too much music if other parts of\n"
+"the audio are centered as well as the vocals. In that case,\n"
+"try the other choices. If the vocals are at a different\n"
+"pitch than the other audio (such as a high female voice),\n"
+"try 'Remove frequency band'. This only removes frequencies\n"
+"between a lower and upper limit which you can enter in the\n"
+"'Frequency band...' boxes. Experiment by entering what\n"
+"sounds like the most significant frequency range of the\n"
+"original vocals. If the other choices remove too much\n"
+"audio in a particular frequency range (such as low drums\n"
+"or bass), try 'Retain frequency band'. This only removes\n"
+"frequencies outside the limits, retaining the others."
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"~%Vocal Remover requires an unsplit, stereo track.~%~\n"
+"If you have a stereo track split into left and right~%~\n"
+"channels, use 'Make Stereo Track' on the Track~%~\n"
+"Drop-Down Menu, then run Vocal Remover again.~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Warning:~%~\n"
+"              Selected band-stop filter is~%~\n"
+"              ~a Hz to ~a Hz.~%~\n"
+"              A very narrow stop-band filter may have~%~\n"
+"              unexpected results.~%~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Current settings returned the original audio."
+msgstr "Nyquist არ დააბრუნა აუდიო.\n"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Adjustable Fade"
+msgstr "მორგებული Pan"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Type"
+msgstr "ფილტრი"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Up"
+msgstr "მინავლება"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Down"
+msgstr "მინავლება"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Up"
+msgstr "ჩამოწევა"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Down"
+msgstr "ჩამოწევა"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start/End as"
+msgstr "დაწყება"
+
+#: plug-ins/adjustable-fade.ny
+#, elisp-format
+msgid "% of Original"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "dB Gain"
+msgstr "Gain"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start (or end)"
+msgstr "დაწყება"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "None Selected"
+msgstr "მონიშვნა"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear In"
+msgstr "ლინეარული"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear Out"
+msgstr "ლინეარული"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic In"
+msgstr "ლოგარითმული"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic Out"
+msgstr "ლოგარითმული"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded In"
+msgstr "გამკვეთრება"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded Out"
+msgstr "გამკვეთრება"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine In"
+msgstr "Cosine"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine Out"
+msgstr "Cosine"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve In"
+msgstr "ჩამოწევა"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Out"
+msgstr "ჩამოწევა"
+
+#: plug-ins/adjustable-fade.ny
+msgid "~aPercentage values cannot be negative."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 \t-6 dB halves the amplitude."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Error~%~%"
+msgstr "შეცდომა"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "Spectral edit parametric EQ"
+msgstr "მონიშვნა"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Filtering..."
+msgstr "ფილტრი"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "Paul Licameli"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Gain (dB)"
+msgstr "გამონატანი არხები: %2d"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "~aPlease select frequencies."
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "~aLow frequency is undefined."
+msgstr "სიხშირეზე წამებში"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "~aHigh frequency is undefined."
+msgstr "სიხშირეზე წამებში"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "მინიმალური სიხშირე 0 Hz მაინც უნდა იყოს"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Error.~%"
+msgstr "შეცდომა"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfade Tracks"
+msgstr "გაითვალისწინეთ ტრეკი"
+
+#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfading..."
+msgstr "გაითვალისწინეთ ტრეკი"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade type"
+msgstr "ფილტრი"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Gain"
+msgstr "კონსტანტა"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 1"
+msgstr "კონსტანტა"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 2"
+msgstr "კონსტანტა"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom Curve"
+msgstr "ტრეკის სახელი"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom curve"
+msgstr "ტრეკის სახელი"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade direction"
+msgstr "მონიშვნა"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, elisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr ""
+
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Spectral edit shelves"
+msgstr "მონიშვნა"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Sound Finder"
+msgstr "სიჩუმის გენერატორი"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Finding sound..."
+msgstr "კლიპინგის მოძიება..."
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Risset Drum"
+msgstr "ხარვეზის გენერაცია"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Generating Risset Drum..."
+msgstr "ხარვეზის გენერაცია"
+
+#: plug-ins/rissetdrum.ny
+msgid "Steven Jones"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Frequency (Hz)"
+msgstr "სიხშირე (Hz)"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Decay (seconds)"
+msgstr "შეყოვნების დრო (წამები):"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Center frequency of noise (Hz)"
+msgstr "ლინეარული სიხშირე"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amplitude (0 - 1)"
+msgstr "ამპლიტუდა (0-1)"
+
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Spectral edit multi tool"
+msgstr "მონიშვნა"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "მარცენა"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "მარჯვენა"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "გასამეორებელი ჯერების ოდენობა:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "იარლიყის რედაქტირება"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of labels"
+msgstr "გასამეორებელი ჯერების ოდენობა:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label interval (seconds)"
+msgstr "სიგრძე (წამებო)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "იარლიყის რედაქტირება"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Notch Filter"
+msgstr "ხმის სიმაღლის წამნაცვლებელი"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Applying Notch Filter..."
+msgstr "გამასწორებლის გააქტიურება"
+
+#: plug-ins/notch.ny
+msgid "Steve Daulton and Bill Wharrie"
+msgstr ""
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr ""
+
+#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "მინიმალური სიხშირე 0 Hz მაინც უნდა იყოს"
+
+#: plug-ins/notch.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "გაითვალისწინეთ ტრეკი"
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "შეყოვნება"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Applying Delay Effect..."
+msgstr "Nyquist ეფექტის გააქტიურება..."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay type"
+msgstr "გასაღების ტიპი"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "მართკუთხედი"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time (seconds)"
+msgstr "შეყოვნების დრო (წამები):"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change effect"
+msgstr "ეს&კიზი"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch/Tempo"
+msgstr "Pitch დაTempo"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Low-quality Pitch Shift"
+msgstr "ხმის სიმაღლის წამნაცვლებელი"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change per echo (semitones)"
+msgstr "ეს&კიზი"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes"
+msgstr "გასამეორებელი ჯერების ოდენობა:"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Error.~%~a"
+msgstr "შეცდომა"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr ""
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Applying Tremolo..."
+msgstr "გამასწორებლის გააქტიურება"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Waveform type"
+msgstr "ტალღოვანი"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "კბილოვანი ტალღა"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Starting phase (degrees)"
+msgstr "LFO საწყისი ფაზა გრადუსებში"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Wet level (percent)"
+msgstr "2-დონე"
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Silence Finder"
+msgstr "სიჩუმის გენერატორი"
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Finding silence..."
+msgstr "სიჩუმის ამოჭრა..."
+
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "ფაილების ჩატვირთვა"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "ეკვალიზაციის შესრულება"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "ფაილების ჩატვირთვა"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "ეკვალიზაციის შესრულება"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Beat Finder"
+msgstr "გამეორება"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Finding beats..."
+msgstr "კლიპინგის მოძიება..."
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Threshold Percentage"
+msgstr "ხარვეზის ზღვარი:"
+
 #~ msgid "Latency problem"
 #~ msgstr "ლატენტურობის პრობლემა"
 
@@ -17221,10 +18862,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #, fuzzy
 #~ msgid "Slider Playback"
 #~ msgstr "დაკვრა"
-
-#, fuzzy
-#~ msgid "Start - End"
-#~ msgstr "დაწყება"
 
 #, fuzzy
 #~ msgid "Start - Length"
@@ -17349,14 +18986,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgstr "შაბლონი"
 
 #, fuzzy
-#~ msgid "Start-End"
-#~ msgstr "დაწყება"
-
-#, fuzzy
-#~ msgid "Start-Length"
-#~ msgstr "ფილტრი"
-
-#, fuzzy
 #~ msgid "Length-End"
 #~ msgstr "სიგრძე"
 
@@ -17462,16 +19091,9 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Amplitude"
 #~ msgstr "ამპლიტუდა (0-1)"
 
-#~ msgid "Delay"
-#~ msgstr "შეყოვნება"
-
 #, fuzzy
 #~ msgid "Decay"
 #~ msgstr "დაწევის დრო"
-
-#, fuzzy
-#~ msgid "FilterLength"
-#~ msgstr "ფილტრი"
 
 #, fuzzy
 #~ msgid "CurveName"
@@ -17511,10 +19133,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #, fuzzy
 #~ msgid "RemoveDcOffset"
 #~ msgstr "ხარვეზის წაშლა"
-
-#, fuzzy
-#~ msgid "ApplyGain"
-#~ msgstr "ჯაჭვის გააქტიურება"
 
 #, fuzzy
 #~ msgid "Stretch Factor"
@@ -17803,9 +19421,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 
 #~ msgid "From beats per minute"
 #~ msgstr "დარტყმებიდან წუთზე"
-
-#~ msgid "To beats per minute"
-#~ msgstr "დარტყმებზე წუთზე"
 
 #~ msgid "Length (seconds):"
 #~ msgstr "სიგრძე (წამები):"
@@ -18100,9 +19715,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Click Removal..."
 #~ msgstr "დაწკაპუნების წაშლა..."
 
-#~ msgid "Removing clicks and pops..."
-#~ msgstr "წკაპუნისა და ხტუნვის წაშლა..."
-
 #~ msgid "Applying Dynamic Range Compression..."
 #~ msgstr "დინამიური დიაპაზონის კომპრესიის გააქტიურება..."
 
@@ -18168,9 +19780,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Multiband"
 #~ msgstr "Multiband"
 
-#~ msgid "Pitch Shifter"
-#~ msgstr "ხმის სიმაღლის წამნაცვლებელი"
-
 #~ msgid "Amplifier"
 #~ msgstr "ამპლიფიკატორი"
 
@@ -18185,9 +19794,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 
 #~ msgid "Gate"
 #~ msgstr "გეითი"
-
-#~ msgid "Pitch and Tempo"
-#~ msgstr "Pitch დაTempo"
 
 #~ msgid "Onsets"
 #~ msgstr "ონსეტი"
@@ -18207,9 +19813,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Detect clipping"
 #~ msgstr "კლიპინგის დადგენა"
 
-#~ msgid "Find Clipping..."
-#~ msgstr "კლიპინგის მოძიება..."
-
 #~ msgid "Detecting clipping"
 #~ msgstr "კლიპინგის დადგენა"
 
@@ -18220,27 +19823,17 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Leveler..."
 #~ msgstr "გამასწორებელი:"
 
-#, fuzzy
-#~ msgid "Applying Leveler..."
-#~ msgstr "გამასწორებლის გააქტიურება"
-
 #~ msgid "Noise Generator"
 #~ msgstr "ხარვეზების გენერატორი"
 
 #~ msgid "Applied effect: Generate Noise, %.6lf seconds"
 #~ msgstr "დამატებული ეფექტი: ხარვეზის გენერაცია, %.6lf წამი"
 
-#~ msgid "Generating Noise"
-#~ msgstr "ხარვეზის გენერაცია"
-
 #~ msgid "Noise Removal..."
 #~ msgstr "ხარვეზის წაშლა..."
 
 #~ msgid "Creating Noise Profile"
 #~ msgstr "ხარვეზის პროფილის შექმნა"
-
-#~ msgid "Removing Noise"
-#~ msgstr "ხარვეზის წაშლა"
 
 #~ msgid "true"
 #~ msgstr "სწორი"
@@ -18249,9 +19842,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgstr ", მაქსიმალური ამპლიტუდა = %.1f dB"
 
 #~ msgid "Normalize..."
-#~ msgstr "ნორმალიზაცია..."
-
-#~ msgid "Normalizing..."
 #~ msgstr "ნორმალიზაცია..."
 
 #, fuzzy
@@ -18308,13 +19898,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Classic Filters..."
 #~ msgstr "ფაილის &ატვირთვა.."
 
-#, fuzzy
-#~ msgid "Performing Classic Filtering"
-#~ msgstr "ეკვალიზაციის შესრულება"
-
-#~ msgid "Silence Generator"
-#~ msgstr "სიჩუმის გენერატორი"
-
 #~ msgid "Silence..."
 #~ msgstr "სიჩუმე..."
 
@@ -18337,19 +19920,7 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Tone Generator"
 #~ msgstr "ტონის გენერატორი"
 
-#~ msgid "Frequency (Hz)"
-#~ msgstr "სიხშირე (Hz)"
-
-#~ msgid "Generating Chirp"
-#~ msgstr "Chirp გენერაცია"
-
-#~ msgid "Generating Tone"
-#~ msgstr "ტონის გენერაცია"
-
 #~ msgid "Truncate Silence..."
-#~ msgstr "სიჩუმის ამოჭრა..."
-
-#~ msgid "Truncating Silence..."
 #~ msgstr "სიჩუმის ამოჭრა..."
 
 #, fuzzy
@@ -18463,9 +20034,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #, fuzzy
 #~ msgid "Effect Refresh"
 #~ msgstr "ეფექტის პარამეტრები"
-
-#~ msgid "Output Device"
-#~ msgstr "გამონატანის მოწყობილობა"
 
 #~ msgid "Input Device"
 #~ msgstr "შენატანი მოწყობილობა"
@@ -18641,9 +20209,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 #~ msgid "Plugins 1 to %i"
 #~ msgstr "მოდულები 1-დან %i-მდე"
 
-#~ msgid "by Dominic Mazzoni"
-#~ msgstr "Dominic Mazzoni-ის მიერ"
-
 #~ msgid "Auto Duck by Markus Meyer"
 #~ msgstr "Auto Duck  Markus Meyer-ის მიერ"
 
@@ -18676,9 +20241,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 
 #~ msgid "From frequency in hertz"
 #~ msgstr "სიხშირე hertz-ებში"
-
-#~ msgid "To frequency in seconds"
-#~ msgstr "სიხშირეზე წამებში"
 
 #~ msgid "using SampleRate, by Erik de Castro Lopo"
 #~ msgstr "SampleRate-ის გამოყენება, Erik de Castro Lopo-ის  მიერ"
@@ -18820,9 +20382,6 @@ msgstr "შეუძლებელია ფაილის ჩატვირ�
 
 #~ msgid "Direction Changes (High Threshold)"
 #~ msgstr "მიმართულების ცვლილებები (მაღალი ზღვარი)"
-
-#~ msgid "Key type"
-#~ msgstr "გასაღების ტიპი"
 
 #~ msgid "Left-to-On"
 #~ msgstr "მარცხნივ"

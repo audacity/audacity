@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-28 15:05+0100\n"
+"POT-Creation-Date: 2018-08-29 11:18+0100\n"
 "PO-Revision-Date: 2018-08-07 21:34+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/"
@@ -590,7 +590,7 @@ msgstr ""
 "Dominica Mazzoniego.<br><br>"
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1348,6 +1348,7 @@ msgstr "&Pliki..."
 msgid "Apply macro to files..."
 msgstr "Zastosuj makro do:"
 
+#. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 msgid "&Expand"
 msgstr "&Rozszerz"
@@ -1449,6 +1450,7 @@ msgstr "Przesuń w &dół"
 msgid "De&faults"
 msgstr "Do&myślnie"
 
+#. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
 msgstr "S&kurcz"
@@ -2318,7 +2320,7 @@ msgstr "Skala logarytmiczna"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2633,7 +2635,7 @@ msgstr "Historia"
 msgid "&Manage History"
 msgstr "&Zarządzaj historią"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
 msgid "Action"
 msgstr "Działanie"
 
@@ -2736,7 +2738,7 @@ msgid "Track"
 msgstr "Ścieżka"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Etykieta"
 
@@ -2891,11 +2893,6 @@ msgstr "Audacity Karaoke%s"
 #: src/Menus.cpp
 msgid "Uncategorized"
 msgstr "Bez kategorii"
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Reset..."
-msgstr "Wy&zeruj..."
 
 #: src/Menus.cpp
 msgid "&Save Project"
@@ -3978,6 +3975,7 @@ msgstr "K&lawisz kasowania­ 2"
 msgid "&Play-at-Speed"
 msgstr "Odtwarzaj z prędkością"
 
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/Menus.cpp
 #, fuzzy
 msgid "Normal Pl&ay-at-Speed"
@@ -5345,10 +5343,13 @@ msgstr ""
 "Używaj modułów tylko z zaufanych źródeł"
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
+#: plug-ins/delay.ny
 msgid "Yes"
 msgstr "Tak"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
+#: plug-ins/equalabel.ny plug-ins/delay.ny
 msgid "No"
 msgstr "Nie"
 
@@ -7610,6 +7611,7 @@ msgstr "Biały"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "Żaden"
 
@@ -7878,7 +7880,7 @@ msgstr "Spektrogram"
 
 #: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
 #: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "Linear"
 msgstr "Liniowa"
 
@@ -10021,10 +10023,12 @@ msgstr "Oczekiwanie na zakończenie obliczeń kształtu fali..."
 msgid ".  Maximum 0dB."
 msgstr ".  Maksimum 0dB."
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "Loudness LUFS"
 msgstr ""
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
 msgstr ""
@@ -10531,15 +10535,15 @@ msgstr "Rozciągnij"
 msgid "Logarithmic"
 msgstr "Logarytmiczna"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sine"
 msgstr "Sinusoidalny"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Square"
 msgstr "Kwadratowy"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sawtooth"
 msgstr "Piłokształtny"
 
@@ -11126,10 +11130,12 @@ msgstr ""
 msgid "Processing complete."
 msgstr "Przetwarzanie ukończone."
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
 msgstr ""
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
 msgstr ""
@@ -11284,6 +11290,7 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+#: plug-ins/sample-data-export.ny
 msgid "Select a file"
 msgstr "Zaznacz plik"
 
@@ -12261,6 +12268,7 @@ msgid "Fast"
 msgstr "Szybka"
 
 #: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "Standardowa"
 
@@ -12314,7 +12322,7 @@ msgstr "Tryb kanałów:"
 msgid "Joint Stereo"
 msgstr "Połączone stereo"
 
-#: src/export/ExportMP3.cpp
+#: src/export/ExportMP3.cpp plug-ins/rms.ny
 msgid "Stereo"
 msgstr "Stereo"
 
@@ -13610,6 +13618,7 @@ msgstr "&Zachowaj etykiety, jeśli wybór jest przyciągany do etykiety"
 msgid "B&lend system and Audacity theme"
 msgstr "B&lend systemu i motyw Audacity"
 
+#. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
@@ -14207,7 +14216,7 @@ msgstr "24-bity"
 msgid "Rectangle"
 msgstr "Prostokątny"
 
-#: src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.cpp plug-ins/tremolo.ny
 msgid "Triangle"
 msgstr "Trójkątny"
 
@@ -14739,7 +14748,7 @@ msgstr "Ustaw domyślne powiększenie"
 msgid "Minutes"
 msgstr "Minut"
 
-#: src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
 msgid "Seconds"
 msgstr "Sekund"
 
@@ -15535,7 +15544,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr "Najpierw zatrzymaj dźwięk"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
 msgid "Mono"
 msgstr "Mono"
 
@@ -16034,7 +16043,7 @@ msgstr "Typ miernika"
 msgid "Orientation"
 msgstr "Orientacja"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
 msgstr "Automatyczna"
 
@@ -16162,7 +16171,7 @@ msgstr "0100 g 060 m 060 s+.# sample"
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
 #.
-#: src/widgets/NumericTextCtrl.cpp
+#: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "sample"
 
@@ -16613,6 +16622,1619 @@ msgstr "Błąd: %hs w wierszu %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Nie można wczytać pliku: \"%s\""
 
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr "Wokoder"
+
+#: plug-ins/vocoder.ny
+msgid "Processing Vocoder..."
+msgstr "Przetwarzanie wokodera..."
+
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr "Edgar-RFT"
+
+#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
+#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
+#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
+#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+msgid "Released under terms of the GNU General Public License version 2"
+msgstr "Wydany na warunkach licencji GNU General Public License wersja 2"
+
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr "Odległość: (1 do 120, domyślna = 20)"
+
+#: plug-ins/vocoder.ny
+msgid "Output choice"
+msgstr "Wybór wyjścia"
+
+#: plug-ins/vocoder.ny
+msgid "Both Channels"
+msgstr "Oba kanały"
+
+#: plug-ins/vocoder.ny
+msgid "Right Only"
+msgstr "Tylko prawy"
+
+#: plug-ins/vocoder.ny
+msgid "Number of vocoder bands"
+msgstr "Liczba pasm wokodera"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of original audio (percent)"
+msgstr "Amplituda oryginalnego dźwięku (procent)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of white noise (percent)"
+msgstr "Amplituda szumu białego (procent)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "Amplituda igieł radaru (procent)"
+
+#: plug-ins/vocoder.ny
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "Częstotliwość igieł radaru (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy, elisp-format
+msgid "Error.~%Stereo track required."
+msgstr "Błąd.~%Wymagana ścieżka stereo."
+
+#: plug-ins/clipfix.ny
+msgid "Clip Fix"
+msgstr "Napraw klip"
+
+#: plug-ins/clipfix.ny
+msgid "Reconstructing clips..."
+msgstr "Rekonstruowanie klipów..."
+
+#: plug-ins/clipfix.ny
+msgid "Benjamin Schwartz and Steve Daulton"
+msgstr "Benjamin Schwartz i Steve Daulton"
+
+#: plug-ins/clipfix.ny
+msgid ""
+"Licensing confirmed under terms of the GNU General Public License version 2"
+msgstr ""
+"Licencjonowanie potwierdzone na warunkach licencji GNU General Public "
+"License wersja 2"
+
+#: plug-ins/clipfix.ny
+msgid "Threshold of Clipping (%)"
+msgstr "Próg obcinania (%)"
+
+#: plug-ins/clipfix.ny
+msgid "Reduce amplitude to allow for restored peaks (dB)"
+msgstr "Redukuj amplitudę, aby umożliwić przywrócenie szczytów (dB)"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Rhythm Track"
+msgstr "Ścieżka rytmu"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Generating Rhythm..."
+msgstr "Generowanie rytmu..."
+
+#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Dominic Mazzoni"
+msgstr "Dominic Mazzoni"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Tempo (bpm)"
+msgstr "Tempo (bpm)"
+
+#: plug-ins/rhythmtrack.ny
+msgid "30 - 300 beats/minute"
+msgstr "30 - 300 uderzeń/minutę"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Beats per bar"
+msgstr "Uderzenia na takt"
+
+#: plug-ins/rhythmtrack.ny
+msgid "1 - 20 beats/measure"
+msgstr "1 - 20 uderzeń/takt"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Swing amount"
+msgstr "Wartość swingu"
+
+#: plug-ins/rhythmtrack.ny
+msgid "+/- 1"
+msgstr "+/- 1"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
+msgstr ""
+"Ustaw 'Liczbę taktów' na zero, aby włączyć 'Czas trwania ścieżki rytmu'."
+
+#: plug-ins/rhythmtrack.ny
+msgid "Number of bars"
+msgstr "Liczba taktów"
+
+#: plug-ins/rhythmtrack.ny
+msgid "1 - 1000 bars"
+msgstr "1 - 1000 taktów"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Rhythm track duration"
+msgstr "Czas trwania ścieżki rytmu"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Start time offset"
+msgstr "Przesunięcie początku"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Silence before first beat"
+msgstr "Cisza przed pierwszym uderzeniem"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Beat sound"
+msgstr "Dźwięk uderzenia"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Metronome Tick"
+msgstr "Tykanie metronomu"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (short)"
+msgstr "Gwizd (krótki)"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (long)"
+msgstr "Gwizd (długi)"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Cowbell"
+msgstr "Dzwonek"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Resonant Noise"
+msgstr "Szum rezonansowy"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Noise Click"
+msgstr "Stukot"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (short)"
+msgstr "Kapanie (krótkie)"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (long)"
+msgstr "Kapanie (długie)"
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of strong beat"
+msgstr "Wysokość MIDI mocnego uderzenia"
+
+#: plug-ins/rhythmtrack.ny
+msgid "18 - 116"
+msgstr "18 - 116"
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of weak beat"
+msgstr "Wysokość MIDI słabego uderzenia"
+
+#: plug-ins/rhythmtrack.ny
+msgid ""
+"Set either 'Number of bars' or\n"
+"'Rhythm track duration' to greater than zero."
+msgstr ""
+"Ustaw 'Liczbę taktów' lub\n"
+"'Czas trwania ścieżki rytmu' na więcej niż zero."
+
+#: plug-ins/sample-data-export.ny
+msgid "Sample Data Export"
+msgstr "Eksport przykładowych danych"
+
+#: plug-ins/sample-data-export.ny
+msgid "Analyzing..."
+msgstr "Analizowanie..."
+
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
+#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
+#: plug-ins/tremolo.ny
+msgid "Steve Daulton"
+msgstr "Steve Daulton"
+
+#: plug-ins/sample-data-export.ny
+msgid "Limit output to first"
+msgstr "Najpierw ogranicz wyjście"
+
+#: plug-ins/sample-data-export.ny
+msgid "Measurement scale"
+msgstr "Skala pomiaru"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Export data to"
+msgstr "Eksportuj dźwięk"
+
+#: plug-ins/sample-data-export.ny
+msgid "Index (text files only)"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Count"
+msgstr "Sampel #"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Time Indexed"
+msgstr "Indeksowany czas (txt)"
+
+#: plug-ins/sample-data-export.ny
+msgid "Include header information"
+msgstr "Dołącz informacje o nagłówku"
+
+#: plug-ins/sample-data-export.ny
+msgid "Minimal"
+msgstr "Minimalne"
+
+#: plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "Wszystkie"
+
+#: plug-ins/sample-data-export.ny
+msgid "Optional header text"
+msgstr "Opcjonalny tekst nagłówka"
+
+#: plug-ins/sample-data-export.ny
+msgid "Channel layout for stereo"
+msgstr "Układ kanału dla stereo"
+
+#. i18n-hint: Left and Right
+#: plug-ins/sample-data-export.ny
+msgid "L-R on Same Line"
+msgstr "L-P na tej samej linii"
+
+#: plug-ins/sample-data-export.ny
+msgid "Alternate Lines"
+msgstr "Alternatywne linie"
+
+#. i18n-hint: L for Left
+#: plug-ins/sample-data-export.ny
+msgid "L Channel First"
+msgstr "Najpierw l. kanał"
+
+#: plug-ins/sample-data-export.ny
+msgid "Show messages"
+msgstr "Pokaż komunikaty"
+
+#: plug-ins/sample-data-export.ny
+msgid "Errors Only"
+msgstr "Tylko błędy"
+
+#. i18n-hint abbreviates negative infinity
+#: plug-ins/sample-data-export.ny
+msgid "[-inf]"
+msgstr "[-inf]"
+
+#: plug-ins/sample-data-export.ny
+msgid "Left Channel.~%~%"
+msgstr "Lewy kanał.~%~%"
+
+#: plug-ins/sample-data-export.ny
+msgid "~%~%Right Channel.~%~%"
+msgstr "~%~%Prawy kanał.~%~%"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~aData written to:~%~a"
+msgstr "~aDane zapisane w:~%~a~a~a"
+
+#: plug-ins/sample-data-export.ny
+msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
+msgstr ""
+"Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali.~%~a~%~a"
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+"~a   ~a~%~aCzęstotliwość próbkowania: ~a Hz.~%LePrzetworzona długość: ~a "
+"sampli ~a sekund.~a"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+"                     Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+"~a   ~a~%~aCzęstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a "
+"skali.~%~\n"
+"Przetworzona długość: ~a sampli ~a sekund.~a"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid ""
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
+"~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
+"Unweighted RMS: ~a dB.~%~\n"
+"                  DC offset: ~a~a"
+msgstr ""
+"~a~%Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali. ~a.~"
+"%~aPrzetworzona długość: ~a ~\n"
+"sampli, ~a sekund.~% Amplituda szczytowa: ~a (lin) ~a dB. Nieważona RMS: ~a "
+"dB.~%~\n"
+"DC offset: ~a~a"
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, ~a dB."
+msgstr "~a liniowy, ~a dB."
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
+msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a lin, ~a dB."
+
+#: plug-ins/sample-data-export.ny
+msgid "~a samples."
+msgstr "~a sampli."
+
+#: plug-ins/sample-data-export.ny
+msgid "~a seconds."
+msgstr "~a sekund."
+
+#: plug-ins/sample-data-export.ny
+msgid "Audio data analysis:"
+msgstr "Analiza danych dźwięku:"
+
+#: plug-ins/sample-data-export.ny
+msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
+msgstr "<b>Częstotliwość próbkowania:</b> &nbsp;&nbsp;~a Hz."
+
+#. i18n-hint: abbreviates "decibels"
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
+msgstr "<b>Amplituda szczytowa:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB."
+
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#: plug-ins/sample-data-export.ny
+msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
+msgstr "<b>RMS</b> (nieważona): &nbsp;&nbsp;~a dB."
+
+#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#: plug-ins/sample-data-export.ny
+msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
+msgstr "<b>DC Offset:</b> &nbsp;&nbsp;~a"
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, &nbsp;&nbsp;~a dB."
+msgstr "~a liniowy, &nbsp;&nbsp;~a dB."
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
+msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a liniowy, &nbsp;&nbsp;~a dB."
+
+#: plug-ins/sample-data-export.ny
+msgid "sample data"
+msgstr "przykładowe dane"
+
+#: plug-ins/sample-data-export.ny
+msgid "Sample #"
+msgstr "Sampel #"
+
+#: plug-ins/sample-data-export.ny
+msgid "Value (linear)"
+msgstr "Wartość (liniowa)"
+
+#: plug-ins/sample-data-export.ny
+msgid "Value (dB)"
+msgstr "Wartość (dB)"
+
+#: plug-ins/sample-data-export.ny
+msgid "audio sample value analysis"
+msgstr "analiza przykładowej wartości dźwięku"
+
+#: plug-ins/sample-data-export.ny
+msgid "Left (linear)"
+msgstr "Lewy (liniowy)"
+
+#: plug-ins/sample-data-export.ny
+msgid "Right (linear)"
+msgstr "Prawy (liniowy)"
+
+#: plug-ins/sample-data-export.ny
+msgid "Left (dB)"
+msgstr "Lewy (dB)"
+
+#: plug-ins/sample-data-export.ny
+msgid "Right (dB)"
+msgstr "Prawy (dB)"
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"Produced with <span>Sample Data Export</span> for\n"
+"<a href=\"~a\">Audacity</a> by Steve\n"
+"Daulton"
+msgstr ""
+"Wyprodukowane z <span>Eksportu przykładowych danych</span> dla\n"
+"<a href=\"~a\">Audacity</a>przez Steve'a\n"
+"Daultona"
+
+#: plug-ins/sample-data-export.ny
+msgid "linear"
+msgstr "liniowa"
+
+#: plug-ins/sample-data-export.ny
+msgid "2 channels (stereo)"
+msgstr "2 kanały (stereo)"
+
+#: plug-ins/sample-data-export.ny
+msgid "1 channel (mono)"
+msgstr "1 kanał (mono)"
+
+#: plug-ins/sample-data-export.ny
+msgid "One column per channel.~%"
+msgstr "Jedna kolumna na kanał.~%"
+
+#: plug-ins/sample-data-export.ny
+msgid "One row per channel.~%"
+msgstr "Jeden wiersz na kanał.~%"
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel then Right channel on same line.~%"
+msgstr "Lewy kanał, potem prawy kanał na tej samej linii.~%"
+
+#: plug-ins/sample-data-export.ny
+msgid "Left and right channels on alternate lines.~%"
+msgstr "Lewy i prawy kanał na alternatywnych liniach.~%"
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel first then right channel.~%"
+msgstr "Najpierw lewy kanał, a potem prawy kanał.~%"
+
+#: plug-ins/sample-data-export.ny
+msgid "Unspecified channel order"
+msgstr "Nieokreślona kolejność kanałów"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Error.~%\"~a\" cannot be written."
+msgstr "\"~a~a~a\" nie może być zapisany."
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr "Pluck"
+
+#: plug-ins/pluck.ny
+msgid "Generating pluck sound..."
+msgstr "Generowanie dźwięku pluck..."
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr "Wartości MIDI dla nut C: 36, 48, 60 [środkowe C], 72, 84, 96."
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr "David R. Sky"
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr "Wysokość pluck MIDI"
+
+#: plug-ins/pluck.ny
+msgid "Fade-out type"
+msgstr "Typ ściszenia"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr "Nagły"
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr "Stopniowy"
+
+#: plug-ins/pluck.ny
+msgid "Duration (60s max)"
+msgstr "Czas trwania (maksymalnie 60)"
+
+#: plug-ins/vocalrediso.ny
+msgid "Vocal Reduction and Isolation"
+msgstr "Redukcja i izolacja wokalu"
+
+#: plug-ins/vocalrediso.ny
+msgid "Applying Action..."
+msgstr "Stosowanie działania..."
+
+#: plug-ins/vocalrediso.ny
+msgid "Robert Haenggi"
+msgstr "Robert Haenggi"
+
+#: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+msgid "Remove Vocals"
+msgstr "Usuń wokale"
+
+#: plug-ins/vocalrediso.ny
+msgid "Isolate Vocals"
+msgstr "Izoluj wokale"
+
+#: plug-ins/vocalrediso.ny
+msgid "Isolate Vocals and Invert"
+msgstr "Izoluj wokale i odwróć"
+
+#: plug-ins/vocalrediso.ny
+msgid "Remove Center"
+msgstr "Usuń środek"
+
+#: plug-ins/vocalrediso.ny
+msgid "Isolate Center"
+msgstr "Izoluj środek"
+
+#: plug-ins/vocalrediso.ny
+msgid "Isolate Center and Invert"
+msgstr "Izoluj środek i odwróć"
+
+#: plug-ins/vocalrediso.ny
+msgid "Remove Center Classic: Mono"
+msgstr "Usuń środek klasycznie: mono"
+
+#: plug-ins/vocalrediso.ny
+msgid "Analyze"
+msgstr "Analizuj"
+
+#: plug-ins/vocalrediso.ny
+msgid "Strength"
+msgstr "Siła"
+
+#: plug-ins/vocalrediso.ny
+msgid "Low Cut for Vocals (Hz)"
+msgstr "Niskie cięcie dla wokali (Hz)"
+
+#: plug-ins/vocalrediso.ny
+msgid "High Cut for Vocals (Hz)"
+msgstr "Wysokie cięcie dla wokali (Hz)"
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Average x: ~a, y: ~a\n"
+"Covariance x y: ~a\n"
+"Average variance x: ~a, y: ~a\n"
+"Standard deviation x: ~a, y: ~a\n"
+"Coefficient of correlation: ~a\n"
+"Coefficient of determination: ~a \n"
+"Variation of residuals: ~a\n"
+"y equals ~a plus ~a times x~%"
+msgstr ""
+"Średnia x: ~a, y: ~a\n"
+"Kowariancja x y: ~a\n"
+"Średnia wariancja x: ~a, y: ~a\n"
+"Odchylenie standardowe x: ~a, y: ~a\n"
+"Współczynnik korelacji: ~a\n"
+"Współczynnik determinacji: ~a\n"
+"Zmiana reszty: ~a\n"
+"y równa się ~a plus ~a razy x~%"
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
+"This means:~%~a~%"
+msgstr ""
+"Pozycja panoramy: ~a~%Kanały lewy i prawy są skorelowane około ~a %. Oznacza "
+"to:~%~a~%"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid ""
+" - The two channels are identical, i.e. dual mono.\n"
+"   The center can't be removed.\n"
+"      Any remaining difference may be caused by lossy encoding."
+msgstr ""
+" - Te dwa kanały są identyczne, tj. dual mono.\n"
+"   Środkowego nie można usunąć.\n"
+"      Wszystkie pozostałe różnice mogą być spowodowane przez stratne "
+"kodowanie."
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two Channels are strongly related, i.e. nearly mono or extremely "
+"panned.\n"
+"   Most likely, the center extraction will be poor."
+msgstr ""
+" - Obydwa kanały są silnie powiązane, tj. prawie mono lub ekstremalne "
+"panoramowanie.\n"
+"   Najprawdopodobniej środek ekstrakcji będzie słaby."
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+" - Dość dobra wartość, przynajmniej średnia stereo i nie za szeroka "
+"rozpiętość."
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - An ideal value for Stereo.\n"
+"  However, the center extraction depends also on the used reverb."
+msgstr ""
+" - Idealna wartość dla stereo.\n"
+"  Jednak ekstrakcja centrum zależy również od zastosowanego pogłosu."
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are almost not related.\n"
+"   Either you have only noise or the piece is mastered in a unbalanced "
+"manner.\n"
+"   The center extraction can still be good though."
+msgstr ""
+" - Oba kanały są prawie niepowiązane.\n"
+"   Albo masz tylko szum, albo utwór jest zmasterowany w niezbalansowany "
+"sposób.\n"
+"   Ekstrakcja środka może być jednak dobra."
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - Although the Track is stereo, the field is obviously extra wide.\n"
+"   This can cause strange effects.\n"
+"   Especially when played by only one speaker."
+msgstr ""
+" - Mimo że ścieżka jest stereo, pole jest oczywiście bardzo szerokie.\n"
+"   Może to spowodować dziwne efekty.\n"
+"   Zwłaszcza gdy gra tylko jeden głośnik."
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are nearly identical.\n"
+"   Obviously, a pseudo stereo effect has been used\n"
+"   to spread the signal over the physical distance between the speakers.\n"
+" Don't expect good results from a center removal."
+msgstr ""
+" - Dwa kanały są prawie identyczne.\n"
+"   Oczywiście zastosowano efekt pseudo stereo,\n"
+"   aby rozłożyć sygnał na fizyczną odległość między głośnikami.\n"
+" Nie oczekuj dobrych wyników z usunięcia środka."
+
+#: plug-ins/vocalrediso.ny
+msgid "This plug-in works only with stereo tracks."
+msgstr "Ta wtyczka działa tylko ze ścieżkami stereo."
+
+#: plug-ins/sample-data-import.ny
+msgid "Sample Data Import"
+msgstr "Import przykładowych danych"
+
+#: plug-ins/sample-data-import.ny
+msgid "Reading and rendering samples..."
+msgstr "Odczytywanie i renderowanie sampli..."
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Select file"
+msgstr "Zaznacz plik"
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr "Nieprawidłowa obsługa danych"
+
+#: plug-ins/sample-data-import.ny
+msgid "Throw Error"
+msgstr "Odrzuć błąd"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr "Odczytaj jako zero"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+"Error~%~\n"
+"                          '~a~a~a' nie mógł zostać otwarty.~%~\n"
+"                          Sprawdź, czy plik istnieje."
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+"Błąd:~%~\n"
+"                Plik musi zawierać tylko zwykły tekst ASCII.~%~\n"
+"                (Błędny bajt '~a' pod numerem bajtu: ~a)"
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+"Błąd~%~\n"
+"              Dane muszą być liczbami w prostym tekście ASCII.~%~\n"
+"              '~a' nie jest wartością liczbową."
+
+#: plug-ins/sample-data-import.ny
+msgid "Error.~%Unable to open file"
+msgstr "Błąd.~%Nie można otworzyć pliku"
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Studio Fade Out"
+msgstr "Studio ściszania"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+msgid "Applying Fade..."
+msgstr "Stosowanie przejścia..."
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr "Wybór jest za krótki. ~%Musi być większy niż 2 sample."
+
+#: plug-ins/limiter.ny
+msgid "Limiter"
+msgstr "Limiter"
+
+#: plug-ins/limiter.ny
+msgid "Limiting..."
+msgstr "Ograniczanie..."
+
+#: plug-ins/limiter.ny
+msgid "Type"
+msgstr "Typ"
+
+#: plug-ins/limiter.ny
+msgid "Soft Limit"
+msgstr "Miękki limit"
+
+#: plug-ins/limiter.ny
+msgid "Hard Limit"
+msgstr "Twardy limit"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+msgid "Soft Clip"
+msgstr "Miękkie obcięcie"
+
+#: plug-ins/limiter.ny
+msgid "Hard Clip"
+msgstr "Twarde obcięcie"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+"Wzmocnienie wejściowe (dB)\n"
+"mono/lewy"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+"Wzmocnienie wejściowe (dB)\n"
+"prawy kanał"
+
+#: plug-ins/limiter.ny
+msgid "Limit to (dB)"
+msgstr "Ogranicz do (dB)"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr "Przytrzymaj (ms)"
+
+#: plug-ins/limiter.ny
+msgid "Apply Make-up Gain"
+msgstr "Zastosuj Uczyń ze wzmocnienia"
+
+#: plug-ins/vocalremover.ny
+msgid "Vocal Remover"
+msgstr "Narzędzie do usuwania wokalu"
+
+#: plug-ins/vocalremover.ny
+msgid "Removing center-panned audio..."
+msgstr "Usuwanie dźwięku z panoramą środkową..."
+
+#: plug-ins/vocalremover.ny
+msgid "Remove vocals or view Help"
+msgstr "Usuń wokale lub pokaż pomoc"
+
+#: plug-ins/vocalremover.ny
+msgid "View Help"
+msgstr "Pokaż pomoc"
+
+#: plug-ins/vocalremover.ny
+msgid "Removal choice"
+msgstr "Wybór do usunięcia"
+
+#: plug-ins/vocalremover.ny
+msgid "Simple (Entire Spectrum)"
+msgstr "Prosty (całe widmo)"
+
+#: plug-ins/vocalremover.ny
+msgid "Remove Frequency Band"
+msgstr "Usuń pasmo częstotliwości"
+
+#: plug-ins/vocalremover.ny
+msgid "Retain Frequency Band"
+msgstr "Zachowaj pasmo częstotliwości"
+
+#: plug-ins/vocalremover.ny
+msgid "Frequency band from (Hz)"
+msgstr "Pasmo częstotliwości od (Hz)"
+
+#: plug-ins/vocalremover.ny
+msgid "Frequency band to (Hz)"
+msgstr "Pasmo częstotliwości do (Hz)"
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Vocal Remover requires a stereo track. It works best with\n"
+"lossless files like WAV or AIFF, rather than MP3 or\n"
+"other compressed formats. It only removes vocals or other\n"
+"audio that is panned to center (sounds equally loud in left\n"
+"and right). Vocals may be mixed this way. Inverting one\n"
+"channel then panning both to center cancels out any audio\n"
+"which was originally center-panned, making it inaudible.\n"
+"This can remove some parts of the audio you may want to\n"
+"keep, such as drums, which are also often mixed to center.\n"
+"If the vocals and other centered parts differ in pitch,\n"
+"this can be solved by removing only selected frequencies.~%\n"
+"Vocal Remover thus has three choices of removal method.\n"
+"'Simple' inverts the entire frequency spectrum of one\n"
+"channel. This may remove too much music if other parts of\n"
+"the audio are centered as well as the vocals. In that case,\n"
+"try the other choices. If the vocals are at a different\n"
+"pitch than the other audio (such as a high female voice),\n"
+"try 'Remove frequency band'. This only removes frequencies\n"
+"between a lower and upper limit which you can enter in the\n"
+"'Frequency band...' boxes. Experiment by entering what\n"
+"sounds like the most significant frequency range of the\n"
+"original vocals. If the other choices remove too much\n"
+"audio in a particular frequency range (such as low drums\n"
+"or bass), try 'Retain frequency band'. This only removes\n"
+"frequencies outside the limits, retaining the others."
+msgstr ""
+"Narzędzie do usuwania wokalu wymaga ścieżki stereo.\n"
+"Działa najlepiej w przypadku bezstratnych plików, takich\n"
+"jak WAV lub AIFF, nie z MP3 lub innymi skompresowanymi\n"
+"formatami. Usuwa tylko wokal lub inny dźwięk przesunięty\n"
+"do środka (dźwięki są równie głośne po lewej i prawej\n"
+"stronie). Wokale można mieszać w ten sposób.\n"
+"Odwrócenie jednego kanału, a następnie przesunięcie do\n"
+"środka powoduje anulowanie dowolnego dźwięku, który\n"
+"był pierwotnie przesuwany środkowo, co powoduje, że\n"
+"jest on niesłyszalny. Może to usunąć niektóre części\n"
+"dźwięku, które chcesz zachować, takie jak bębny, które\n"
+"często są również miksowane ze środkiem. Jeśli wokal i\n"
+"inne wyśrodkowane części różnią się skokiem, można to\n"
+"rozwiązać, usuwając tylko wybrane częstotliwości.~%\n"
+"Narzędzie do usuwania wokalu ma trzy możliwości wyboru\n"
+"metody usuwania. 'Prosta' odwraca całe widmo\n"
+"częstotliwości jednego kanału. Może to spowodować\n"
+"usunięcie za dużej ilości muzyki, jeśli inne części dźwięku\n"
+"są wyśrodkowane, a także wokale. W takim przypadku\n"
+"spróbuj innych opcji. Jeśli wokal jest w innym tonie niż inne\n"
+"dźwięki (np. głos żeński), spróbuj 'Usuń pasmo\n"
+"częstotliwości'. Powoduje to jedynie usunięcie częstotliwości\n"
+"między dolnym i górnym limitem, które można wprowadzić w\n"
+"polach 'Pasmo częstotliwości...'. Poeksperymentuj,\n"
+"wprowadzając to, co brzmi jak najbardziej znaczący zakres\n"
+"częstotliwości oryginalnego wokalu. Jeśli pozostałe opcje\n"
+"usuwają za dużo dźwięków w określonym zakresie\n"
+"częstotliwości (np. niskie bębny lub bas), spróbuj 'Zachowaj\n"
+"pasmo częstotliwości'. Usuwa to tylko częstotliwości poza\n"
+"limitami, zachowując pozostałe."
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"~%Vocal Remover requires an unsplit, stereo track.~%~\n"
+"If you have a stereo track split into left and right~%~\n"
+"channels, use 'Make Stereo Track' on the Track~%~\n"
+"Drop-Down Menu, then run Vocal Remover again.~%"
+msgstr ""
+"~%Narzędzie do usuwania wokalu wymaga niepołączonej ścieżki stereo.~%~\n"
+"Jeśli masz ścieżkę stereo rozdzieloną na kanały lewy i prawy~%~\n"
+"użyj 'Utwórz ścieżkę stereo' w rozwijanym menu ścieżki~%~\n"
+"i uruchom ponownie Narzędzie do usuwania wokalu.~%"
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Warning:~%~\n"
+"              Selected band-stop filter is~%~\n"
+"              ~a Hz to ~a Hz.~%~\n"
+"              A very narrow stop-band filter may have~%~\n"
+"              unexpected results.~%~%"
+msgstr ""
+"Ostrzeżenie:~%~\n"
+"              Wybrany filtr zatrzymania pasma jest~%~\n"
+"              ~a Hz do ~a Hz.~%~\n"
+"              Bardzo wąski filtr zatrzymania pasma może posiadać~%~\n"
+"              nieoczekiwane wyniki.~%~%"
+
+#: plug-ins/vocalremover.ny
+msgid "Current settings returned the original audio."
+msgstr "Bieżące ustawienia przywróciły oryginalny dźwięk."
+
+#: plug-ins/adjustable-fade.ny
+msgid "Adjustable Fade"
+msgstr "Przejście dające się regulować"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Type"
+msgstr "Typ przejścia"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Up"
+msgstr "Zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Down"
+msgstr "Ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Up"
+msgstr "S-krzywa w górę"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Down"
+msgstr "S-krzywa w dół"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr "Dostosuj średnie przejście (%)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start/End as"
+msgstr "Początek/koniec jako"
+
+#: plug-ins/adjustable-fade.ny
+#, elisp-format
+msgid "% of Original"
+msgstr "% oryginału"
+
+#: plug-ins/adjustable-fade.ny
+msgid "dB Gain"
+msgstr "dB wzmocnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start (or end)"
+msgstr "Początek (lub koniec)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr "Koniec (lub początek)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr "Poręczne presety (zastąp kontrole)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "None Selected"
+msgstr "Brak zaznaczenia"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Linear In"
+msgstr "Liniowe zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Linear Out"
+msgstr "Liniowe ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr "Wykładnicze zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr "Wykładnicze ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic In"
+msgstr "Logarytmiczne zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic Out"
+msgstr "Logarytmiczne ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded In"
+msgstr "Zaokrąglone zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded Out"
+msgstr "Zaokrąglone ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine In"
+msgstr "Cosinusoidalne zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine Out"
+msgstr "Cosinusoidalne ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve In"
+msgstr "S-krzywa zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Out"
+msgstr "S-krzywa ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "~aPercentage values cannot be negative."
+msgstr "~aWartości procentowe nie mogą być ujemne."
+
+#: plug-ins/adjustable-fade.ny
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "~aWartości procentowe nie mogą być większe niż 1000%."
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 \t-6 dB halves the amplitude."
+msgstr ""
+"~adB wartości nie mogą być większe niż +100 dB.~%~%~\n"
+"                                 Wskazówka: 6 dB podwaja amplitudę~%~\n"
+"                                 t-6 dB to połowa amplitudy."
+
+#: plug-ins/adjustable-fade.ny
+msgid "Error~%~%"
+msgstr "Błąd~%~%"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "Spectral edit parametric EQ"
+msgstr "Parametryczna edycja EQ widma"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "Filtering..."
+msgstr "Filtrowanie..."
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "Paul Licameli"
+msgstr "Paul Licameli"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid "Gain (dB)"
+msgstr "Wzmocnienie (dB)"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "~aPlease select frequencies."
+msgstr "~aZaznacz częstotliwości."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aLow frequency is undefined."
+msgstr "~aNiska częstotliwość jest niezdefiniowana."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aHigh frequency is undefined."
+msgstr "~aWysoka częstotliwość jest niezdefiniowana."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "~aCzęstotliwość środkowa musi być powyżej 0 Hz."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+"~aCzęstotliwość zaznaczenia jest za wysoka dla próbkowania ścieżki.~%~\n"
+"                        W przypadku bieżącej ścieżki ustawienie wysokiej "
+"częstotliwości nie może~%~\n"
+"                        być większe niż ~a Hz"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+"~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
+"                         częstotliwość wynoszą obie ~a Hz).~%~\n"
+"                         Wybierz zakres częstotliwości."
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "Error.~%"
+msgstr "Błąd.~%"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Crossfade Tracks"
+msgstr "Przenikanie ścieżek"
+
+#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
+msgid "Crossfading..."
+msgstr "Przenikanie..."
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade type"
+msgstr "Typ przejścia"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Gain"
+msgstr "Stałe wzmocnienie"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 1"
+msgstr "Stała moc 1"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 2"
+msgstr "Stała moc 2"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom Curve"
+msgstr "Niestandardowa krzywa"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom curve"
+msgstr "Niestandardowa krzywa"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade direction"
+msgstr "Kierunek przejścia"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr "Alternatywne wyjście/wejście"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr "Alternatywne wejście/wyjście"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy, elisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr "Błąd.~%Wybierz 2 (lub więcej) ścieżek do przenikania."
+
+#: plug-ins/SpectralEditShelves.ny
+msgid "Spectral edit shelves"
+msgstr "Półki edycji widma"
+
+#: plug-ins/SoundFinder.ny
+msgid "Sound Finder"
+msgstr "Szukacz dźwięku"
+
+#: plug-ins/SoundFinder.ny
+msgid "Finding sound..."
+msgstr "Znajdowanie dźwięku..."
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr "Jeremy R. Brown"
+
+#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr "Traktuj dźwięk poniżej tego poziomu jako ciszę [-dB]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr "Minimalny czas trwania ciszy między dźwiękami [sekundy]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr "Punkt początkowy etykiety [sekundy przed rozpoczęciem dźwięku]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr "Punkt końcowy etykiety [sekundy po zakończeniu dźwięku]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr "Dodać etykietę na końcu ścieżki? [Nie=0, Tak=1]"
+
+#: plug-ins/SoundFinder.ny
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Nie znaleziono żadnych dźwięków. Spróbuj zmniejszyć poziom ciszy ~% i "
+"minimalny czas trwania ciszy."
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr "[Koniec]"
+
+#: plug-ins/rissetdrum.ny
+msgid "Risset Drum"
+msgstr "Risset Drum"
+
+#: plug-ins/rissetdrum.ny
+msgid "Generating Risset Drum..."
+msgstr "Generowanie Risset Drum..."
+
+#: plug-ins/rissetdrum.ny
+msgid "Steven Jones"
+msgstr "Steven Jones"
+
+#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Frequency (Hz)"
+msgstr "Częstotliwość (Hz)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Decay (seconds)"
+msgstr "Zanik (sekundy)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Center frequency of noise (Hz)"
+msgstr "Częstotliwość środkowa szumów (Hz)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr "Szerokość pasma szumów (Hz)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr "Ilość szumu w miksie (procent)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amplitude (0 - 1)"
+msgstr "Amplituda (0 - 1)"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid "Spectral edit multi tool"
+msgstr "Multinarzędzie edycji widma"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+"~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
+"                       częstotliwość wynoszą obie ~a Hz).~%~\n"
+"                       Wybierz zakres częstotliwości."
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+"~aParametry filtra Notch nie mogą być zastosowane.~%~\n"
+"                      Spróbuj zwiększyć granicę niskiej częstotliwości~%~\n"
+"                      lub zredukuj filtr 'Szerokość'."
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "&Lewo"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "&Prawo"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr "Regularne przedziały etykiet"
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr "Dodawanie równo rozmieszczonych etykiet do ścieżki etykiet..."
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr "Użyj 'Liczba etykiet' LUB 'Przedział etykiety'"
+
+#: plug-ins/equalabel.ny
+msgid "Number of Labels"
+msgstr "Liczba etykiet"
+
+#: plug-ins/equalabel.ny
+msgid "Label Interval"
+msgstr "Przedział etykiety"
+
+#: plug-ins/equalabel.ny
+msgid "Number of labels"
+msgstr "Liczba etykiet"
+
+#: plug-ins/equalabel.ny
+msgid "Label interval (seconds)"
+msgstr "Przedział etykiety (sekundy)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr "Dostosuj przedział etykiety, aby dopasować długość"
+
+#: plug-ins/equalabel.ny
+msgid "Label text"
+msgstr "Tekst etykiety"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr "Minimalna liczba cyfr na etykiecie"
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr "Brak - tylko tekst"
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr "1 (przed etykietą)"
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr "2 (przed etykietą)"
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr "3 (przed etykietą)"
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr "1 (po etykiecie)"
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr "2 (po etykiecie)"
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr "3 (po etykiecie)"
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr "Rozpocznij numerowanie od"
+
+#: plug-ins/notch.ny
+msgid "Notch Filter"
+msgstr "Filtr Notch"
+
+#: plug-ins/notch.ny
+msgid "Applying Notch Filter..."
+msgstr "Stosowanie filtra Notch..."
+
+#: plug-ins/notch.ny
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "Steve Daulton i Bill Wharrie"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr "Q (wyższa wartość redukuje szerokość)"
+
+#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "Częstotliwość musi wynosić co najmniej 0.1 Hz."
+
+#: plug-ins/notch.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+"Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki.~%~"
+"%~\n"
+"                 Próbkowanie ścieżki wynosi ~a Hz.~%~\n"
+"                 Częstotliwość musi być mniejsza niż ~a Hz."
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "Przenikanie ścieżek"
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+"Błąd.~%Nieprawidłowe zaznaczenie.~%Zaznaczono więcej niż 2 klipy dźwiękowe."
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"Błąd.~%Nieprawidłowe zaznaczenie.~%EPusta przestrzeń na początku/końcu "
+"zaznaczenia."
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr "Błąd.~%Przenikanie klipów można zastosować tylko na jednej ścieżce."
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "Opóźnienie"
+
+#: plug-ins/delay.ny
+msgid "Applying Delay Effect..."
+msgstr "Stosowanie efektu opóźnienia..."
+
+#: plug-ins/delay.ny
+msgid "Delay type"
+msgstr "Typ opóźnienia"
+
+#: plug-ins/delay.ny
+msgid "Regular"
+msgstr "Regularne"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr "Odbijająca się piłka"
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr "Odwrócona odbijająca się piłka"
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr "Poziom opóźnienia na echo (dB)"
+
+#: plug-ins/delay.ny
+msgid "Delay time (seconds)"
+msgstr "Czas opóźnienia (sekundy)"
+
+#: plug-ins/delay.ny
+msgid "Pitch change effect"
+msgstr "Efekt zmiany wysokości"
+
+#: plug-ins/delay.ny
+msgid "Pitch/Tempo"
+msgstr "Wysokość/tempo"
+
+#: plug-ins/delay.ny
+msgid "Low-quality Pitch Shift"
+msgstr "Przesunięcie wysokości niskiej jakości"
+
+#: plug-ins/delay.ny
+msgid "Pitch change per echo (semitones)"
+msgstr "Zmiana wysokości na echo (półtony)"
+
+#: plug-ins/delay.ny
+msgid "Number of echoes"
+msgstr "Liczba ech"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr "Zezwalaj na zmianę czasu trwania"
+
+#: plug-ins/delay.ny
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr "Liczba ech '~a' poza dopuszczalnym zakresem od 1 do 50.~%~a"
+
+#: plug-ins/delay.ny
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr ""
+"Zmiana wysokości '~a' poza dopuszczalnym zakresem od -12 do +12 półtonów.~%~a"
+
+#: plug-ins/delay.ny
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr ""
+"Czas opóźnienia '~a' poza dopuszczalnym zakresem od 0 do 10 sekund.~%~a"
+
+#: plug-ins/delay.ny
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr ""
+"Poziom opóźnienia '~a' poza dopuszczalnym zakresem od -30 do +6 dB.~%~a"
+
+#: plug-ins/delay.ny
+msgid "Error.~%~a"
+msgstr "Błąd.~%~a"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr "Tremolo"
+
+#: plug-ins/tremolo.ny
+msgid "Applying Tremolo..."
+msgstr "Stosowanie tremolo..."
+
+#: plug-ins/tremolo.ny
+msgid "Waveform type"
+msgstr "Typ kształtu fali"
+
+#: plug-ins/tremolo.ny
+msgid "Inverse Sawtooth"
+msgstr "Odwrócony piłokształtny"
+
+#: plug-ins/tremolo.ny
+msgid "Starting phase (degrees)"
+msgstr "Faza początkowa (stopnie)"
+
+#: plug-ins/tremolo.ny
+msgid "Wet level (percent)"
+msgstr "Poziom mokry (procent)"
+
+#: plug-ins/SilenceMarker.ny
+msgid "Silence Finder"
+msgstr "Szukacz ciszy"
+
+#: plug-ins/SilenceMarker.ny
+msgid "Finding silence..."
+msgstr "Znajdowanie ciszy..."
+
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr "Alex S. Brown"
+
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr "Minimalny czas trwania ciszy [sekundy]"
+
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr "Położenie etykiety [sekundy przed końcami ciszy]"
+
+#: plug-ins/SilenceMarker.ny
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Nie znaleziono ciszy. Spróbuj zmniejszyć poziom ciszy ~% i minimalny czas "
+"jej trwania."
+
+#: plug-ins/highpass.ny
+msgid "High-Pass Filter"
+msgstr "Filtr górnoprzepustowy"
+
+#: plug-ins/highpass.ny
+msgid "Performing High-Pass Filter..."
+msgstr "Tworzenie filtra górnoprzepustowego..."
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr "Rolloff (dB na oktawę)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr "6 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr "12 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr "24 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr "36 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr "48 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+"Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki.~%.~%~"
+"%~\n"
+"                   Próbkowanie ścieżki wynosi ~a Hz~%~\n"
+"                   Częstotliwość musi być mniejsza niż ~a Hz."
+
+#: plug-ins/lowpass.ny
+msgid "Low-Pass Filter"
+msgstr "Filtr dolnoprzepustowy"
+
+#: plug-ins/lowpass.ny
+msgid "Performing Low-Pass Filter..."
+msgstr "Tworzenie filtra dolnoprzepustowego..."
+
+#: plug-ins/beat.ny
+msgid "Beat Finder"
+msgstr "Szukacz uderzeń"
+
+#: plug-ins/beat.ny
+msgid "Finding beats..."
+msgstr "Znajdowanie uderzeń..."
+
+#: plug-ins/beat.ny
+msgid "Threshold Percentage"
+msgstr "Próg procentowy"
+
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
 #~ "before zero.\n"
@@ -16655,705 +18277,6 @@ msgstr "Nie można wczytać pliku: \"%s\""
 #~ "Spróbuj zmienić host dźwięku, urządzenie nagrywające dźwięk i "
 #~ "częstotliwość próbkowania projektu."
 
-#~ msgid "Silence Finder"
-#~ msgstr "Szukacz ciszy"
-
-#~ msgid "Finding silence..."
-#~ msgstr "Znajdowanie ciszy..."
-
-#~ msgid "Alex S. Brown"
-#~ msgstr "Alex S. Brown"
-
-#~ msgid "Released under terms of the GNU General Public License version 2"
-#~ msgstr "Wydany na warunkach licencji GNU General Public License wersja 2"
-
-#~ msgid "Treat audio below this level as silence [ -dB]"
-#~ msgstr "Traktuj dźwięk poniżej tego poziomu jako ciszę [-dB]"
-
-#~ msgid "Minimum duration of silence [seconds]"
-#~ msgstr "Minimalny czas trwania ciszy [sekundy]"
-
-#~ msgid "Label placement [seconds before silence ends]"
-#~ msgstr "Położenie etykiety [sekundy przed końcami ciszy]"
-
-#~ msgid ""
-#~ "No silences found. Try reducing the silence~%level and minimum silence "
-#~ "duration."
-#~ msgstr ""
-#~ "Nie znaleziono ciszy. Spróbuj zmniejszyć poziom ciszy ~% i minimalny czas "
-#~ "jej trwania."
-
-#~ msgid "Sound Finder"
-#~ msgstr "Szukacz dźwięku"
-
-#~ msgid "Finding sound..."
-#~ msgstr "Znajdowanie dźwięku..."
-
-#~ msgid "Jeremy R. Brown"
-#~ msgstr "Jeremy R. Brown"
-
-#~ msgid "Minimum duration of silence between sounds [seconds]"
-#~ msgstr "Minimalny czas trwania ciszy między dźwiękami [sekundy]"
-
-#~ msgid "Label starting point [seconds before sound starts]"
-#~ msgstr "Punkt początkowy etykiety [sekundy przed rozpoczęciem dźwięku]"
-
-#~ msgid "Label ending point [seconds after sound ends]"
-#~ msgstr "Punkt końcowy etykiety [sekundy po zakończeniu dźwięku]"
-
-#~ msgid "Add a label at the end of the track? [No=0, Yes=1]"
-#~ msgstr "Dodać etykietę na końcu ścieżki? [Nie=0, Tak=1]"
-
-#~ msgid ""
-#~ "No sounds found. Try reducing the silence~%level and minimum silence "
-#~ "duration."
-#~ msgstr ""
-#~ "Nie znaleziono żadnych dźwięków. Spróbuj zmniejszyć poziom ciszy ~% i "
-#~ "minimalny czas trwania ciszy."
-
-#~ msgid "[End]"
-#~ msgstr "[Koniec]"
-
-#~ msgid "Spectral edit multi tool"
-#~ msgstr "Multinarzędzie edycji widma"
-
-#~ msgid "Filtering..."
-#~ msgstr "Filtrowanie..."
-
-#~ msgid "Paul Licameli"
-#~ msgstr "Paul Licameli"
-
-#~ msgid "~aPlease select frequencies."
-#~ msgstr "~aZaznacz częstotliwości."
-
-#~ msgid ""
-#~ "~aBandwidth is zero (the upper and lower~%~\n"
-#~ "                       frequencies are both ~a Hz).~%~\n"
-#~ "                       Please select a frequency range."
-#~ msgstr ""
-#~ "~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
-#~ "                       częstotliwość wynoszą obie ~a Hz).~%~\n"
-#~ "                       Wybierz zakres częstotliwości."
-
-#~ msgid ""
-#~ "~aNotch filter parameters cannot be applied.~%~\n"
-#~ "                      Try increasing the low frequency bound~%~\n"
-#~ "                      or reduce the filter 'Width'."
-#~ msgstr ""
-#~ "~aParametry filtra Notch nie mogą być zastosowane.~%~\n"
-#~ "                      Spróbuj zwiększyć granicę niskiej "
-#~ "częstotliwości~%~\n"
-#~ "                      lub zredukuj filtr 'Szerokość'."
-
-#~ msgid "Error.~%"
-#~ msgstr "Błąd.~%"
-
-#~ msgid "Spectral edit parametric EQ"
-#~ msgstr "Parametryczna edycja EQ widma"
-
-#~ msgid "Gain (dB)"
-#~ msgstr "Wzmocnienie (dB)"
-
-#~ msgid "~aLow frequency is undefined."
-#~ msgstr "~aNiska częstotliwość jest niezdefiniowana."
-
-#~ msgid "~aHigh frequency is undefined."
-#~ msgstr "~aWysoka częstotliwość jest niezdefiniowana."
-
-#~ msgid "~aCenter frequency must be above 0 Hz."
-#~ msgstr "~aCzęstotliwość środkowa musi być powyżej 0 Hz."
-
-#~ msgid ""
-#~ "~aFrequency selection is too high for track sample rate.~%~\n"
-#~ "                        For the current track, the high frequency setting "
-#~ "cannot~%~\n"
-#~ "                        be greater than ~a Hz"
-#~ msgstr ""
-#~ "~aCzęstotliwość zaznaczenia jest za wysoka dla próbkowania ścieżki.~%~\n"
-#~ "                        W przypadku bieżącej ścieżki ustawienie wysokiej "
-#~ "częstotliwości nie może~%~\n"
-#~ "                        być większe niż ~a Hz"
-
-#~ msgid ""
-#~ "~aBandwidth is zero (the upper and lower~%~\n"
-#~ "                         frequencies are both ~a Hz).~%~\n"
-#~ "                         Please select a frequency range."
-#~ msgstr ""
-#~ "~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
-#~ "                         częstotliwość wynoszą obie ~a Hz).~%~\n"
-#~ "                         Wybierz zakres częstotliwości."
-
-#~ msgid "Spectral edit shelves"
-#~ msgstr "Półki edycji widma"
-
-#~ msgid "Studio Fade Out"
-#~ msgstr "Studio ściszania"
-
-#~ msgid "Applying Fade..."
-#~ msgstr "Stosowanie przejścia..."
-
-#~ msgid "Steve Daulton"
-#~ msgstr "Steve Daulton"
-
-#~ msgid "Selection too short.~%It must be more than 2 samples."
-#~ msgstr "Wybór jest za krótki. ~%Musi być większy niż 2 sample."
-
-#~ msgid "Adjustable Fade"
-#~ msgstr "Przejście dające się regulować"
-
-#~ msgid "Fade Type"
-#~ msgstr "Typ przejścia"
-
-#~ msgid "Fade Up"
-#~ msgstr "Zgłośnienie"
-
-#~ msgid "Fade Down"
-#~ msgstr "Ściszenie"
-
-#~ msgid "S-Curve Up"
-#~ msgstr "S-krzywa w górę"
-
-#~ msgid "S-Curve Down"
-#~ msgstr "S-krzywa w dół"
-
-#~ msgid "Mid-fade Adjust (%)"
-#~ msgstr "Dostosuj średnie przejście (%)"
-
-#~ msgid "Start/End as"
-#~ msgstr "Początek/koniec jako"
-
-#~ msgid "% of Original"
-#~ msgstr "% oryginału"
-
-#~ msgid "dB Gain"
-#~ msgstr "dB wzmocnienie"
-
-#~ msgid "Start (or end)"
-#~ msgstr "Początek (lub koniec)"
-
-#~ msgid "End (or start)"
-#~ msgstr "Koniec (lub początek)"
-
-#~ msgid "Handy Presets (override controls)"
-#~ msgstr "Poręczne presety (zastąp kontrole)"
-
-#~ msgid "None Selected"
-#~ msgstr "Brak zaznaczenia"
-
-#~ msgid "Linear In"
-#~ msgstr "Liniowe zgłośnienie"
-
-#~ msgid "Linear Out"
-#~ msgstr "Liniowe ściszenie"
-
-#~ msgid "Exponential In"
-#~ msgstr "Wykładnicze zgłośnienie"
-
-#~ msgid "Exponential Out"
-#~ msgstr "Wykładnicze ściszenie"
-
-#~ msgid "Logarithmic In"
-#~ msgstr "Logarytmiczne zgłośnienie"
-
-#~ msgid "Logarithmic Out"
-#~ msgstr "Logarytmiczne ściszenie"
-
-#~ msgid "Rounded In"
-#~ msgstr "Zaokrąglone zgłośnienie"
-
-#~ msgid "Rounded Out"
-#~ msgstr "Zaokrąglone ściszenie"
-
-#~ msgid "Cosine In"
-#~ msgstr "Cosinusoidalne zgłośnienie"
-
-#~ msgid "Cosine Out"
-#~ msgstr "Cosinusoidalne ściszenie"
-
-#~ msgid "S-Curve In"
-#~ msgstr "S-krzywa zgłośnienie"
-
-#~ msgid "S-Curve Out"
-#~ msgstr "S-krzywa ściszenie"
-
-#~ msgid "~aPercentage values cannot be negative."
-#~ msgstr "~aWartości procentowe nie mogą być ujemne."
-
-#~ msgid "~aPercentage values cannot be more than 1000 %."
-#~ msgstr "~aWartości procentowe nie mogą być większe niż 1000%."
-
-#~ msgid ""
-#~ "~adB values cannot be more than +100 dB.~%~%~\n"
-#~ "                                 Hint: 6 dB doubles the amplitude~%~\n"
-#~ "                                 t-6 dB halves the amplitude."
-#~ msgstr ""
-#~ "~adB wartości nie mogą być większe niż +100 dB.~%~%~\n"
-#~ "                                 Wskazówka: 6 dB podwaja amplitudę~%~\n"
-#~ "                                 t-6 dB to połowa amplitudy."
-
-#~ msgid "Error~%~%"
-#~ msgstr "Błąd~%~%"
-
-#~ msgid "Beat Finder"
-#~ msgstr "Szukacz uderzeń"
-
-#~ msgid "Finding beats..."
-#~ msgstr "Znajdowanie uderzeń..."
-
-#~ msgid "Threshold Percentage"
-#~ msgstr "Próg procentowy"
-
-#~ msgid "Clip Fix"
-#~ msgstr "Napraw klip"
-
-#~ msgid "Reconstructing clips..."
-#~ msgstr "Rekonstruowanie klipów..."
-
-#~ msgid "Benjamin Schwartz and Steve Daulton"
-#~ msgstr "Benjamin Schwartz i Steve Daulton"
-
-#~ msgid ""
-#~ "Licensing confirmed under terms of the GNU General Public License version "
-#~ "2"
-#~ msgstr ""
-#~ "Licencjonowanie potwierdzone na warunkach licencji GNU General Public "
-#~ "License wersja 2"
-
-#~ msgid "Threshold of Clipping (%)"
-#~ msgstr "Próg obcinania (%)"
-
-#~ msgid "Reduce amplitude to allow for restored peaks (dB)"
-#~ msgstr "Redukuj amplitudę, aby umożliwić przywrócenie szczytów (dB)"
-
-#~ msgid "Crossfading..."
-#~ msgstr "Przenikanie..."
-
-#~ msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-#~ msgstr ""
-#~ "Błąd.~%Nieprawidłowe zaznaczenie.~%Zaznaczono więcej niż 2 klipy "
-#~ "dźwiękowe."
-
-#~ msgid ""
-#~ "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-#~ msgstr ""
-#~ "Błąd.~%Nieprawidłowe zaznaczenie.~%EPusta przestrzeń na początku/końcu "
-#~ "zaznaczenia."
-
-#~ msgid "Error.~%Crossfade Clips may only be applied to one track."
-#~ msgstr "Błąd.~%Przenikanie klipów można zastosować tylko na jednej ścieżce."
-
-#~ msgid "Crossfade Tracks"
-#~ msgstr "Przenikanie ścieżek"
-
-#~ msgid "Fade type"
-#~ msgstr "Typ przejścia"
-
-#~ msgid "Constant Gain"
-#~ msgstr "Stałe wzmocnienie"
-
-#~ msgid "Constant Power 1"
-#~ msgstr "Stała moc 1"
-
-#~ msgid "Constant Power 2"
-#~ msgstr "Stała moc 2"
-
-#~ msgid "Custom Curve"
-#~ msgstr "Niestandardowa krzywa"
-
-#~ msgid "Custom curve"
-#~ msgstr "Niestandardowa krzywa"
-
-#~ msgid "Fade direction"
-#~ msgstr "Kierunek przejścia"
-
-#~ msgid "Alternating Out / In"
-#~ msgstr "Alternatywne wyjście/wejście"
-
-#~ msgid "Alternating In / Out"
-#~ msgstr "Alternatywne wejście/wyjście"
-
-#~ msgid "Error.~%Select 2 (or more) tracks to crossfade."
-#~ msgstr "Błąd.~%Wybierz 2 (lub więcej) ścieżek do przenikania."
-
-#~ msgid "Delay"
-#~ msgstr "Opóźnienie"
-
-#~ msgid "Applying Delay Effect..."
-#~ msgstr "Stosowanie efektu opóźnienia..."
-
-#~ msgid "Delay type"
-#~ msgstr "Typ opóźnienia"
-
-#~ msgid "Regular"
-#~ msgstr "Regularne"
-
-#~ msgid "Bouncing Ball"
-#~ msgstr "Odbijająca się piłka"
-
-#~ msgid "Reverse Bouncing Ball"
-#~ msgstr "Odwrócona odbijająca się piłka"
-
-#~ msgid "Delay level per echo (dB)"
-#~ msgstr "Poziom opóźnienia na echo (dB)"
-
-#~ msgid "Delay time (seconds)"
-#~ msgstr "Czas opóźnienia (sekundy)"
-
-#~ msgid "Pitch change effect"
-#~ msgstr "Efekt zmiany wysokości"
-
-#~ msgid "Pitch/Tempo"
-#~ msgstr "Wysokość/tempo"
-
-#~ msgid "Low-quality Pitch Shift"
-#~ msgstr "Przesunięcie wysokości niskiej jakości"
-
-#~ msgid "Pitch change per echo (semitones)"
-#~ msgstr "Zmiana wysokości na echo (półtony)"
-
-#~ msgid "Number of echoes"
-#~ msgstr "Liczba ech"
-
-#~ msgid "Allow duration to change"
-#~ msgstr "Zezwalaj na zmianę czasu trwania"
-
-#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-#~ msgstr "Liczba ech '~a' poza dopuszczalnym zakresem od 1 do 50.~%~a"
-
-#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-#~ msgstr ""
-#~ "Zmiana wysokości '~a' poza dopuszczalnym zakresem od -12 do +12 półtonów."
-#~ "~%~a"
-
-#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-#~ msgstr ""
-#~ "Czas opóźnienia '~a' poza dopuszczalnym zakresem od 0 do 10 sekund.~%~a"
-
-#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-#~ msgstr ""
-#~ "Poziom opóźnienia '~a' poza dopuszczalnym zakresem od -30 do +6 dB.~%~a"
-
-#~ msgid "Error.~%~a"
-#~ msgstr "Błąd.~%~a"
-
-#~ msgid "Regular Interval Labels"
-#~ msgstr "Regularne przedziały etykiet"
-
-#~ msgid "Adding equally-spaced labels to the label track..."
-#~ msgstr "Dodawanie równo rozmieszczonych etykiet do ścieżki etykiet..."
-
-#~ msgid "Use 'Number of labels' OR 'Label interval'"
-#~ msgstr "Użyj 'Liczba etykiet' LUB 'Przedział etykiety'"
-
-#~ msgid "Number of Labels"
-#~ msgstr "Liczba etykiet"
-
-#~ msgid "Label Interval"
-#~ msgstr "Przedział etykiety"
-
-#~ msgid "Number of labels"
-#~ msgstr "Liczba etykiet"
-
-#~ msgid "Label interval (seconds)"
-#~ msgstr "Przedział etykiety (sekundy)"
-
-#~ msgid "Adjust label interval to fit length"
-#~ msgstr "Dostosuj przedział etykiety, aby dopasować długość"
-
-#~ msgid "Label text"
-#~ msgstr "Tekst etykiety"
-
-#~ msgid "Minimum number of digits in label"
-#~ msgstr "Minimalna liczba cyfr na etykiecie"
-
-#~ msgid "None - Text Only"
-#~ msgstr "Brak - tylko tekst"
-
-#~ msgid "1 (Before Label)"
-#~ msgstr "1 (przed etykietą)"
-
-#~ msgid "2 (Before Label)"
-#~ msgstr "2 (przed etykietą)"
-
-#~ msgid "3 (Before Label)"
-#~ msgstr "3 (przed etykietą)"
-
-#~ msgid "1 (After Label)"
-#~ msgstr "1 (po etykiecie)"
-
-#~ msgid "2 (After Label)"
-#~ msgstr "2 (po etykiecie)"
-
-#~ msgid "3 (After Label)"
-#~ msgstr "3 (po etykiecie)"
-
-#~ msgid "Begin numbering from"
-#~ msgstr "Rozpocznij numerowanie od"
-
-#~ msgid "High-Pass Filter"
-#~ msgstr "Filtr górnoprzepustowy"
-
-#~ msgid "Performing High-Pass Filter..."
-#~ msgstr "Tworzenie filtra górnoprzepustowego..."
-
-#~ msgid "Dominic Mazzoni"
-#~ msgstr "Dominic Mazzoni"
-
-#~ msgid "Frequency (Hz)"
-#~ msgstr "Częstotliwość (Hz)"
-
-#~ msgid "Roll-off (dB per octave)"
-#~ msgstr "Rolloff (dB na oktawę)"
-
-#~ msgid "6 dB"
-#~ msgstr "6 dB"
-
-#~ msgid "12 dB"
-#~ msgstr "12 dB"
-
-#~ msgid "24 dB"
-#~ msgstr "24 dB"
-
-#~ msgid "36 dB"
-#~ msgstr "36 dB"
-
-#~ msgid "48 dB"
-#~ msgstr "48 dB"
-
-#~ msgid "Frequency must be at least 0.1 Hz."
-#~ msgstr "Częstotliwość musi wynosić co najmniej 0.1 Hz."
-
-#~ msgid ""
-#~ "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-#~ "                   Track sample rate is ~a Hz~%~\n"
-#~ "                   Frequency must be less than ~a Hz."
-#~ msgstr ""
-#~ "Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki.~%."
-#~ "~%~%~\n"
-#~ "                   Próbkowanie ścieżki wynosi ~a Hz~%~\n"
-#~ "                   Częstotliwość musi być mniejsza niż ~a Hz."
-
-#~ msgid "Limiter"
-#~ msgstr "Limiter"
-
-#~ msgid "Limiting..."
-#~ msgstr "Ograniczanie..."
-
-#~ msgid "Type"
-#~ msgstr "Typ"
-
-#~ msgid "Soft Limit"
-#~ msgstr "Miękki limit"
-
-#~ msgid "Hard Limit"
-#~ msgstr "Twardy limit"
-
-#~ msgid "Soft Clip"
-#~ msgstr "Miękkie obcięcie"
-
-#~ msgid "Hard Clip"
-#~ msgstr "Twarde obcięcie"
-
-#~ msgid ""
-#~ "Input Gain (dB)\n"
-#~ "mono/Left"
-#~ msgstr ""
-#~ "Wzmocnienie wejściowe (dB)\n"
-#~ "mono/lewy"
-
-#~ msgid ""
-#~ "Input Gain (dB)\n"
-#~ "Right channel"
-#~ msgstr ""
-#~ "Wzmocnienie wejściowe (dB)\n"
-#~ "prawy kanał"
-
-#~ msgid "Limit to (dB)"
-#~ msgstr "Ogranicz do (dB)"
-
-#~ msgid "Hold (ms)"
-#~ msgstr "Przytrzymaj (ms)"
-
-#~ msgid "Apply Make-up Gain"
-#~ msgstr "Zastosuj Uczyń ze wzmocnienia"
-
-#~ msgid "Low-Pass Filter"
-#~ msgstr "Filtr dolnoprzepustowy"
-
-#~ msgid "Performing Low-Pass Filter..."
-#~ msgstr "Tworzenie filtra dolnoprzepustowego..."
-
-#~ msgid "Notch Filter"
-#~ msgstr "Filtr Notch"
-
-#~ msgid "Applying Notch Filter..."
-#~ msgstr "Stosowanie filtra Notch..."
-
-#~ msgid "Steve Daulton and Bill Wharrie"
-#~ msgstr "Steve Daulton i Bill Wharrie"
-
-#~ msgid "Q (higher value reduces width)"
-#~ msgstr "Q (wyższa wartość redukuje szerokość)"
-
-#~ msgid ""
-#~ "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-#~ "                 Track sample rate is ~a Hz.~%~\n"
-#~ "                 Frequency must be less than ~a Hz."
-#~ msgstr ""
-#~ "Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki."
-#~ "~%~%~\n"
-#~ "                 Próbkowanie ścieżki wynosi ~a Hz.~%~\n"
-#~ "                 Częstotliwość musi być mniejsza niż ~a Hz."
-
-#~ msgid "Pluck"
-#~ msgstr "Pluck"
-
-#~ msgid "Generating pluck sound..."
-#~ msgstr "Generowanie dźwięku pluck..."
-
-#~ msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-#~ msgstr "Wartości MIDI dla nut C: 36, 48, 60 [środkowe C], 72, 84, 96."
-
-#~ msgid "David R.Sky"
-#~ msgstr "David R. Sky"
-
-#~ msgid "Pluck MIDI pitch"
-#~ msgstr "Wysokość pluck MIDI"
-
-#~ msgid "Fade-out type"
-#~ msgstr "Typ ściszenia"
-
-#~ msgid "Abrupt"
-#~ msgstr "Nagły"
-
-#~ msgid "Gradual"
-#~ msgstr "Stopniowy"
-
-#~ msgid "Duration (60s max)"
-#~ msgstr "Czas trwania (maksymalnie 60)"
-
-#~ msgid "Rhythm Track"
-#~ msgstr "Ścieżka rytmu"
-
-#~ msgid "Generating Rhythm..."
-#~ msgstr "Generowanie rytmu..."
-
-#~ msgid "Tempo (bpm)"
-#~ msgstr "Tempo (bpm)"
-
-#~ msgid "30 - 300 beats/minute"
-#~ msgstr "30 - 300 uderzeń/minutę"
-
-#~ msgid "Beats per bar"
-#~ msgstr "Uderzenia na takt"
-
-#~ msgid "1 - 20 beats/measure"
-#~ msgstr "1 - 20 uderzeń/takt"
-
-#~ msgid "Swing amount"
-#~ msgstr "Wartość swingu"
-
-#~ msgid "+/- 1"
-#~ msgstr "+/- 1"
-
-#~ msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-#~ msgstr ""
-#~ "Ustaw 'Liczbę taktów' na zero, aby włączyć 'Czas trwania ścieżki rytmu'."
-
-#~ msgid "Number of bars"
-#~ msgstr "Liczba taktów"
-
-#~ msgid "1 - 1000 bars"
-#~ msgstr "1 - 1000 taktów"
-
-#~ msgid "Rhythm track duration"
-#~ msgstr "Czas trwania ścieżki rytmu"
-
-#~ msgid "Start time offset"
-#~ msgstr "Przesunięcie początku"
-
-#~ msgid "Silence before first beat"
-#~ msgstr "Cisza przed pierwszym uderzeniem"
-
-#~ msgid "Beat sound"
-#~ msgstr "Dźwięk uderzenia"
-
-#~ msgid "Metronome Tick"
-#~ msgstr "Tykanie metronomu"
-
-#~ msgid "Ping (short)"
-#~ msgstr "Gwizd (krótki)"
-
-#~ msgid "Ping (long)"
-#~ msgstr "Gwizd (długi)"
-
-#~ msgid "Cowbell"
-#~ msgstr "Dzwonek"
-
-#~ msgid "Resonant Noise"
-#~ msgstr "Szum rezonansowy"
-
-#~ msgid "Noise Click"
-#~ msgstr "Stukot"
-
-#~ msgid "Drip (short)"
-#~ msgstr "Kapanie (krótkie)"
-
-#~ msgid "Drip (long)"
-#~ msgstr "Kapanie (długie)"
-
-#~ msgid "MIDI pitch of strong beat"
-#~ msgstr "Wysokość MIDI mocnego uderzenia"
-
-#~ msgid "18 - 116"
-#~ msgstr "18 - 116"
-
-#~ msgid "MIDI pitch of weak beat"
-#~ msgstr "Wysokość MIDI słabego uderzenia"
-
-#~ msgid ""
-#~ "Set either 'Number of bars' or\n"
-#~ "'Rhythm track duration' to greater than zero."
-#~ msgstr ""
-#~ "Ustaw 'Liczbę taktów' lub\n"
-#~ "'Czas trwania ścieżki rytmu' na więcej niż zero."
-
-#~ msgid "Risset Drum"
-#~ msgstr "Risset Drum"
-
-#~ msgid "Generating Risset Drum..."
-#~ msgstr "Generowanie Risset Drum..."
-
-#~ msgid "Steven Jones"
-#~ msgstr "Steven Jones"
-
-#~ msgid "Decay (seconds)"
-#~ msgstr "Zanik (sekundy)"
-
-#~ msgid "Center frequency of noise (Hz)"
-#~ msgstr "Częstotliwość środkowa szumów (Hz)"
-
-#~ msgid "Width of noise band (Hz)"
-#~ msgstr "Szerokość pasma szumów (Hz)"
-
-#~ msgid "Amount of noise in mix (percent)"
-#~ msgstr "Ilość szumu w miksie (procent)"
-
-#~ msgid "Amplitude (0 - 1)"
-#~ msgstr "Amplituda (0 - 1)"
-
-#~ msgid "Sample Data Export"
-#~ msgstr "Eksport przykładowych danych"
-
-#~ msgid "Analyzing..."
-#~ msgstr "Analizowanie..."
-
-#~ msgid "Limit output to first"
-#~ msgstr "Najpierw ogranicz wyjście"
-
-#~ msgid "Measurement scale"
-#~ msgstr "Skala pomiaru"
-
 #~ msgid "File data format"
 #~ msgstr "Format danych pliku"
 
@@ -17363,44 +18286,11 @@ msgstr "Nie można wczytać pliku: \"%s\""
 #~ msgid "Indexed List (txt)"
 #~ msgstr "Indeksowana lista (txt)"
 
-#~ msgid "Time Indexed (txt)"
-#~ msgstr "Indeksowany czas (txt)"
-
 #~ msgid "Data (csv)"
 #~ msgstr "Dane (csv)"
 
 #~ msgid "Web Page (html)"
 #~ msgstr "Strona internetowa (html)"
-
-#~ msgid "Include header information"
-#~ msgstr "Dołącz informacje o nagłówku"
-
-#~ msgid "Minimal"
-#~ msgstr "Minimalne"
-
-#~ msgid "All"
-#~ msgstr "Wszystkie"
-
-#~ msgid "Optional header text"
-#~ msgstr "Opcjonalny tekst nagłówka"
-
-#~ msgid "Channel layout for stereo"
-#~ msgstr "Układ kanału dla stereo"
-
-#~ msgid "L-R on Same Line"
-#~ msgstr "L-P na tej samej linii"
-
-#~ msgid "Alternate Lines"
-#~ msgstr "Alternatywne linie"
-
-#~ msgid "L Channel First"
-#~ msgstr "Najpierw l. kanał"
-
-#~ msgid "Show messages"
-#~ msgstr "Pokaż komunikaty"
-
-#~ msgid "Errors Only"
-#~ msgstr "Tylko błędy"
 
 #~ msgid "File name"
 #~ msgstr "Nazwa pliku"
@@ -17423,172 +18313,14 @@ msgstr "Nie można wczytać pliku: \"%s\""
 #~ msgid "Cannot export more than 1 million samples."
 #~ msgstr "Nie można wyeksportować więcej niż 1 milion sampli."
 
-#~ msgid "[-inf]"
-#~ msgstr "[-inf]"
-
-#~ msgid "Left Channel.~%~%"
-#~ msgstr "Lewy kanał.~%~%"
-
-#~ msgid "~%~%Right Channel.~%~%"
-#~ msgstr "~%~%Prawy kanał.~%~%"
-
-#~ msgid "~aData written to:~%~a~a~a"
-#~ msgstr "~aDane zapisane w:~%~a~a~a"
-
 #~ msgid "Output folder \"~a~a\" cannot be accessed."
 #~ msgstr "Nie można uzyskać dostępu do katalogu wyjściowego \"~a~a\"."
-
-#~ msgid "\"~a~a~a\" cannot be written."
-#~ msgstr "\"~a~a~a\" nie może być zapisany."
-
-#~ msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
-#~ msgstr ""
-#~ "Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali."
-#~ "~%~a~%~a"
-
-#~ msgid ""
-#~ "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-#~ msgstr ""
-#~ "~a   ~a~%~aCzęstotliwość próbkowania: ~a Hz.~%LePrzetworzona długość: ~a "
-#~ "sampli ~a sekund.~a"
-
-#~ msgid ""
-#~ "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
-#~ "Length processed: ~a samples ~a seconds.~a"
-#~ msgstr ""
-#~ "~a   ~a~%~aCzęstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a "
-#~ "skali.~%~\n"
-#~ "Przetworzona długość: ~a sampli ~a sekund.~a"
-
-#~ msgid ""
-#~ "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength "
-#~ "processed: ~a ~\n"
-#~ "samples, ~a seconds.~%Peak amplitude: ~a (lin) ~a dB.  Unweighted RMS: ~a "
-#~ "dB.~%~\n"
-#~ "DC offset: ~a~a"
-#~ msgstr ""
-#~ "~a~%Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali. "
-#~ "~a.~%~aPrzetworzona długość: ~a ~\n"
-#~ "sampli, ~a sekund.~% Amplituda szczytowa: ~a (lin) ~a dB. Nieważona RMS: "
-#~ "~a dB.~%~\n"
-#~ "DC offset: ~a~a"
-
-#~ msgid "~a linear, ~a dB."
-#~ msgstr "~a liniowy, ~a dB."
-
-#~ msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
-#~ msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a lin, ~a dB."
-
-#~ msgid "~a samples."
-#~ msgstr "~a sampli."
-
-#~ msgid "~a seconds."
-#~ msgstr "~a sekund."
-
-#~ msgid "Audio data analysis:"
-#~ msgstr "Analiza danych dźwięku:"
-
-#~ msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
-#~ msgstr "<b>Częstotliwość próbkowania:</b> &nbsp;&nbsp;~a Hz."
-
-#~ msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB."
-#~ msgstr "<b>Amplituda szczytowa:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB."
-
-#~ msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
-#~ msgstr "<b>RMS</b> (nieważona): &nbsp;&nbsp;~a dB."
-
-#~ msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-#~ msgstr "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-
-#~ msgid "~a linear, &nbsp;&nbsp;~a dB."
-#~ msgstr "~a liniowy, &nbsp;&nbsp;~a dB."
-
-#~ msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
-#~ msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a liniowy, &nbsp;&nbsp;~a dB."
-
-#~ msgid "sample data"
-#~ msgstr "przykładowe dane"
-
-#~ msgid "Sample #"
-#~ msgstr "Sampel #"
-
-#~ msgid "Value (linear)"
-#~ msgstr "Wartość (liniowa)"
-
-#~ msgid "Value (dB)"
-#~ msgstr "Wartość (dB)"
-
-#~ msgid "audio sample value analysis"
-#~ msgstr "analiza przykładowej wartości dźwięku"
-
-#~ msgid "Left (linear)"
-#~ msgstr "Lewy (liniowy)"
-
-#~ msgid "Right (linear)"
-#~ msgstr "Prawy (liniowy)"
-
-#~ msgid "Left (dB)"
-#~ msgstr "Lewy (dB)"
-
-#~ msgid "Right (dB)"
-#~ msgstr "Prawy (dB)"
-
-#~ msgid ""
-#~ "Produced with <span>Sample Data Export</span> for\n"
-#~ "<a href=\"~a\">Audacity</a> by Steve\n"
-#~ "Daulton"
-#~ msgstr ""
-#~ "Wyprodukowane z <span>Eksportu przykładowych danych</span> dla\n"
-#~ "<a href=\"~a\">Audacity</a>przez Steve'a\n"
-#~ "Daultona"
-
-#~ msgid "linear"
-#~ msgstr "liniowa"
-
-#~ msgid "2 channels (stereo)"
-#~ msgstr "2 kanały (stereo)"
-
-#~ msgid "1 channel (mono)"
-#~ msgstr "1 kanał (mono)"
-
-#~ msgid "One column per channel.~%"
-#~ msgstr "Jedna kolumna na kanał.~%"
-
-#~ msgid "One row per channel.~%"
-#~ msgstr "Jeden wiersz na kanał.~%"
-
-#~ msgid "Left channel then Right channel on same line.~%"
-#~ msgstr "Lewy kanał, potem prawy kanał na tej samej linii.~%"
-
-#~ msgid "Left and right channels on alternate lines.~%"
-#~ msgstr "Lewy i prawy kanał na alternatywnych liniach.~%"
-
-#~ msgid "Left channel first then right channel.~%"
-#~ msgstr "Najpierw lewy kanał, a potem prawy kanał.~%"
-
-#~ msgid "Unspecified channel order"
-#~ msgstr "Nieokreślona kolejność kanałów"
 
 #~ msgid "~a is not a number."
 #~ msgstr "~a nie jest liczbą."
 
-#~ msgid "Sample Data Import"
-#~ msgstr "Import przykładowych danych"
-
-#~ msgid "Reading and rendering samples..."
-#~ msgstr "Odczytywanie i renderowanie sampli..."
-
 #~ msgid "File location (path to file)"
 #~ msgstr "Lokalizacja pliku (ścieżka do pliku)"
-
-#~ msgid "Invalid data handling"
-#~ msgstr "Nieprawidłowa obsługa danych"
-
-#~ msgid "Throw Error"
-#~ msgstr "Odrzuć błąd"
-
-#~ msgid "Read as Zero"
-#~ msgstr "Odczytaj jako zero"
 
 #~ msgid "Error~%No file name."
 #~ msgstr "Błąd~%Brak nazwy pliku."
@@ -17609,340 +18341,3 @@ msgstr "Nie można wczytać pliku: \"%s\""
 #~ msgstr ""
 #~ "Błąd~%~\n"
 #~ "                          Katalog '~a' nie mógł zostać otwarty."
-
-#~ msgid ""
-#~ "Error~%~\n"
-#~ "                          '~a~a~a' could not be opened.~%~\n"
-#~ "                          Check that file exists."
-#~ msgstr ""
-#~ "Error~%~\n"
-#~ "                          '~a~a~a' nie mógł zostać otwarty.~%~\n"
-#~ "                          Sprawdź, czy plik istnieje."
-
-#~ msgid ""
-#~ "Error:~%~\n"
-#~ "                The file must contain only plain ASCII text.~%~\n"
-#~ "                (Invalid byte '~a' at byte number: ~a)"
-#~ msgstr ""
-#~ "Błąd:~%~\n"
-#~ "                Plik musi zawierać tylko zwykły tekst ASCII.~%~\n"
-#~ "                (Błędny bajt '~a' pod numerem bajtu: ~a)"
-
-#~ msgid ""
-#~ "Error~%~\n"
-#~ "              Data must be numbers in plain ASCII text.~%~\n"
-#~ "              '~a' is not a numeric value."
-#~ msgstr ""
-#~ "Błąd~%~\n"
-#~ "              Dane muszą być liczbami w prostym tekście ASCII.~%~\n"
-#~ "              '~a' nie jest wartością liczbową."
-
-#~ msgid "Error.~%Unable to open file"
-#~ msgstr "Błąd.~%Nie można otworzyć pliku"
-
-#~ msgid "Tremolo"
-#~ msgstr "Tremolo"
-
-#~ msgid "Applying Tremolo..."
-#~ msgstr "Stosowanie tremolo..."
-
-#~ msgid "Waveform type"
-#~ msgstr "Typ kształtu fali"
-
-#~ msgid "Inverse Sawtooth"
-#~ msgstr "Odwrócony piłokształtny"
-
-#~ msgid "Starting phase (degrees)"
-#~ msgstr "Faza początkowa (stopnie)"
-
-#~ msgid "Wet level (percent)"
-#~ msgstr "Poziom mokry (procent)"
-
-#~ msgid "Vocal Reduction and Isolation"
-#~ msgstr "Redukcja i izolacja wokalu"
-
-#~ msgid "Applying Action..."
-#~ msgstr "Stosowanie działania..."
-
-#~ msgid "Robert Haenggi"
-#~ msgstr "Robert Haenggi"
-
-#~ msgid "Remove Vocals"
-#~ msgstr "Usuń wokale"
-
-#~ msgid "Isolate Vocals"
-#~ msgstr "Izoluj wokale"
-
-#~ msgid "Isolate Vocals and Invert"
-#~ msgstr "Izoluj wokale i odwróć"
-
-#~ msgid "Remove Center"
-#~ msgstr "Usuń środek"
-
-#~ msgid "Isolate Center"
-#~ msgstr "Izoluj środek"
-
-#~ msgid "Isolate Center and Invert"
-#~ msgstr "Izoluj środek i odwróć"
-
-#~ msgid "Remove Center Classic: Mono"
-#~ msgstr "Usuń środek klasycznie: mono"
-
-#~ msgid "Analyze"
-#~ msgstr "Analizuj"
-
-#~ msgid "Strength"
-#~ msgstr "Siła"
-
-#~ msgid "Low Cut for Vocals (Hz)"
-#~ msgstr "Niskie cięcie dla wokali (Hz)"
-
-#~ msgid "High Cut for Vocals (Hz)"
-#~ msgstr "Wysokie cięcie dla wokali (Hz)"
-
-#~ msgid ""
-#~ "Average x: ~a, y: ~a\n"
-#~ "Covariance x y: ~a\n"
-#~ "Average variance x: ~a, y: ~a\n"
-#~ "Standard deviation x: ~a, y: ~a\n"
-#~ "Coefficient of correlation: ~a\n"
-#~ "Coefficient of determination: ~a \n"
-#~ "Variation of residuals: ~a\n"
-#~ "y equals ~a plus ~a times x~%"
-#~ msgstr ""
-#~ "Średnia x: ~a, y: ~a\n"
-#~ "Kowariancja x y: ~a\n"
-#~ "Średnia wariancja x: ~a, y: ~a\n"
-#~ "Odchylenie standardowe x: ~a, y: ~a\n"
-#~ "Współczynnik korelacji: ~a\n"
-#~ "Współczynnik determinacji: ~a\n"
-#~ "Zmiana reszty: ~a\n"
-#~ "y równa się ~a plus ~a razy x~%"
-
-#~ msgid ""
-#~ "Pan position: ~a~%The left and right channels are correlated by about ~a "
-#~ "%. This means:~%~a~%"
-#~ msgstr ""
-#~ "Pozycja panoramy: ~a~%Kanały lewy i prawy są skorelowane około ~a %. "
-#~ "Oznacza to:~%~a~%"
-
-#~ msgid ""
-#~ " - The two channels are identical, i.e. dual mono.\n"
-#~ "   The center can't be removed.\n"
-#~ "      Any remaining  difference may be caused by lossy encoding."
-#~ msgstr ""
-#~ " - Te dwa kanały są identyczne, tj. dual mono.\n"
-#~ "   Środkowego nie można usunąć.\n"
-#~ "      Wszystkie pozostałe różnice mogą być spowodowane przez stratne "
-#~ "kodowanie."
-
-#~ msgid ""
-#~ " - The two Channels are strongly related, i.e. nearly mono or extremely "
-#~ "panned.\n"
-#~ "   Most likely, the center extraction will be poor."
-#~ msgstr ""
-#~ " - Obydwa kanały są silnie powiązane, tj. prawie mono lub ekstremalne "
-#~ "panoramowanie.\n"
-#~ "   Najprawdopodobniej środek ekstrakcji będzie słaby."
-
-#~ msgid ""
-#~ " - A fairly good value, at least stereo in average and not too wide "
-#~ "spread."
-#~ msgstr ""
-#~ " - Dość dobra wartość, przynajmniej średnia stereo i nie za szeroka "
-#~ "rozpiętość."
-
-#~ msgid ""
-#~ " - An ideal value for Stereo.\n"
-#~ "  However, the center extraction depends also on the used reverb."
-#~ msgstr ""
-#~ " - Idealna wartość dla stereo.\n"
-#~ "  Jednak ekstrakcja centrum zależy również od zastosowanego pogłosu."
-
-#~ msgid ""
-#~ " - The two channels are almost not related.\n"
-#~ "   Either you have only noise or the piece is mastered in a unbalanced "
-#~ "manner.\n"
-#~ "   The center extraction can still be good though."
-#~ msgstr ""
-#~ " - Oba kanały są prawie niepowiązane.\n"
-#~ "   Albo masz tylko szum, albo utwór jest zmasterowany w niezbalansowany "
-#~ "sposób.\n"
-#~ "   Ekstrakcja środka może być jednak dobra."
-
-#~ msgid ""
-#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
-#~ "   This can cause strange effects.\n"
-#~ "   Especially when played by only one speaker."
-#~ msgstr ""
-#~ " - Mimo że ścieżka jest stereo, pole jest oczywiście bardzo szerokie.\n"
-#~ "   Może to spowodować dziwne efekty.\n"
-#~ "   Zwłaszcza gdy gra tylko jeden głośnik."
-
-#~ msgid ""
-#~ " - The two channels are nearly identical.\n"
-#~ "   Obviously, a pseudo stereo effect has been used\n"
-#~ "   to spread the signal over the physical distance between the speakers.\n"
-#~ " Don't expect good results from a center removal."
-#~ msgstr ""
-#~ " - Dwa kanały są prawie identyczne.\n"
-#~ "   Oczywiście zastosowano efekt pseudo stereo,\n"
-#~ "   aby rozłożyć sygnał na fizyczną odległość między głośnikami.\n"
-#~ " Nie oczekuj dobrych wyników z usunięcia środka."
-
-#~ msgid "This plug-in works only with stereo tracks."
-#~ msgstr "Ta wtyczka działa tylko ze ścieżkami stereo."
-
-#~ msgid "Vocal Remover"
-#~ msgstr "Narzędzie do usuwania wokalu"
-
-#~ msgid "Removing center-panned audio..."
-#~ msgstr "Usuwanie dźwięku z panoramą środkową..."
-
-#~ msgid "Remove vocals or view Help"
-#~ msgstr "Usuń wokale lub pokaż pomoc"
-
-#~ msgid "View Help"
-#~ msgstr "Pokaż pomoc"
-
-#~ msgid "Removal choice"
-#~ msgstr "Wybór do usunięcia"
-
-#~ msgid "Simple (Entire Spectrum)"
-#~ msgstr "Prosty (całe widmo)"
-
-#~ msgid "Remove Frequency Band"
-#~ msgstr "Usuń pasmo częstotliwości"
-
-#~ msgid "Retain Frequency Band"
-#~ msgstr "Zachowaj pasmo częstotliwości"
-
-#~ msgid "Frequency band from (Hz)"
-#~ msgstr "Pasmo częstotliwości od (Hz)"
-
-#~ msgid "Frequency band to (Hz)"
-#~ msgstr "Pasmo częstotliwości do (Hz)"
-
-#~ msgid ""
-#~ "Vocal Remover requires a stereo track. It works best with\n"
-#~ "lossless files like WAV or AIFF, rather than MP3 or\n"
-#~ "other compressed formats. It only removes vocals or other\n"
-#~ "audio that is panned to center (sounds equally loud in left\n"
-#~ "and right). Vocals may be mixed this way. Inverting one\n"
-#~ "channel then panning both to center cancels out any audio\n"
-#~ "which was originally center-panned, making it inaudible.\n"
-#~ "This can remove some parts of the audio you may want to\n"
-#~ "keep, such as drums, which are also often mixed to center.\n"
-#~ "If the vocals and other centered parts differ in pitch,\n"
-#~ "this can be solved by removing only selected frequencies.~%\n"
-#~ "Vocal Remover thus has three choices of removal method.\n"
-#~ "'Simple' inverts the entire frequency spectrum of one\n"
-#~ "channel. This may remove too much music if other parts of\n"
-#~ "the audio are centered as well as the vocals. In that case,\n"
-#~ "try the other choices. If the vocals are at a different\n"
-#~ "pitch than the other audio (such as a high female voice),\n"
-#~ "try 'Remove frequency band'. This only removes frequencies\n"
-#~ "between a lower and upper limit which you can enter in the\n"
-#~ "'Frequency band...' boxes. Experiment by entering what\n"
-#~ "sounds like the most significant frequency range of the\n"
-#~ "original vocals. If the other choices remove too much\n"
-#~ "audio in a particular frequency range (such as low drums\n"
-#~ "or bass), try 'Retain frequency band'. This only removes\n"
-#~ "frequencies outside the limits, retaining the others."
-#~ msgstr ""
-#~ "Narzędzie do usuwania wokalu wymaga ścieżki stereo.\n"
-#~ "Działa najlepiej w przypadku bezstratnych plików, takich\n"
-#~ "jak WAV lub AIFF, nie z MP3 lub innymi skompresowanymi\n"
-#~ "formatami. Usuwa tylko wokal lub inny dźwięk przesunięty\n"
-#~ "do środka (dźwięki są równie głośne po lewej i prawej\n"
-#~ "stronie). Wokale można mieszać w ten sposób.\n"
-#~ "Odwrócenie jednego kanału, a następnie przesunięcie do\n"
-#~ "środka powoduje anulowanie dowolnego dźwięku, który\n"
-#~ "był pierwotnie przesuwany środkowo, co powoduje, że\n"
-#~ "jest on niesłyszalny. Może to usunąć niektóre części\n"
-#~ "dźwięku, które chcesz zachować, takie jak bębny, które\n"
-#~ "często są również miksowane ze środkiem. Jeśli wokal i\n"
-#~ "inne wyśrodkowane części różnią się skokiem, można to\n"
-#~ "rozwiązać, usuwając tylko wybrane częstotliwości.~%\n"
-#~ "Narzędzie do usuwania wokalu ma trzy możliwości wyboru\n"
-#~ "metody usuwania. 'Prosta' odwraca całe widmo\n"
-#~ "częstotliwości jednego kanału. Może to spowodować\n"
-#~ "usunięcie za dużej ilości muzyki, jeśli inne części dźwięku\n"
-#~ "są wyśrodkowane, a także wokale. W takim przypadku\n"
-#~ "spróbuj innych opcji. Jeśli wokal jest w innym tonie niż inne\n"
-#~ "dźwięki (np. głos żeński), spróbuj 'Usuń pasmo\n"
-#~ "częstotliwości'. Powoduje to jedynie usunięcie częstotliwości\n"
-#~ "między dolnym i górnym limitem, które można wprowadzić w\n"
-#~ "polach 'Pasmo częstotliwości...'. Poeksperymentuj,\n"
-#~ "wprowadzając to, co brzmi jak najbardziej znaczący zakres\n"
-#~ "częstotliwości oryginalnego wokalu. Jeśli pozostałe opcje\n"
-#~ "usuwają za dużo dźwięków w określonym zakresie\n"
-#~ "częstotliwości (np. niskie bębny lub bas), spróbuj 'Zachowaj\n"
-#~ "pasmo częstotliwości'. Usuwa to tylko częstotliwości poza\n"
-#~ "limitami, zachowując pozostałe."
-
-#~ msgid ""
-#~ "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
-#~ "If you have a stereo track split into left and right~%~\n"
-#~ "channels, use 'Make Stereo Track' on the Track~%~\n"
-#~ "Drop-Down Menu, then run Vocal Remover again.~%"
-#~ msgstr ""
-#~ "~%Narzędzie do usuwania wokalu wymaga niepołączonej ścieżki stereo.~%~\n"
-#~ "Jeśli masz ścieżkę stereo rozdzieloną na kanały lewy i prawy~%~\n"
-#~ "użyj 'Utwórz ścieżkę stereo' w rozwijanym menu ścieżki~%~\n"
-#~ "i uruchom ponownie Narzędzie do usuwania wokalu.~%"
-
-#~ msgid ""
-#~ "Warning:~%~\n"
-#~ "              Selected band-stop filter is~%~\n"
-#~ "              ~a Hz to ~a Hz.~%~\n"
-#~ "              A very narrow stop-band filter may have~%~\n"
-#~ "              unexpected results.~%~%"
-#~ msgstr ""
-#~ "Ostrzeżenie:~%~\n"
-#~ "              Wybrany filtr zatrzymania pasma jest~%~\n"
-#~ "              ~a Hz do ~a Hz.~%~\n"
-#~ "              Bardzo wąski filtr zatrzymania pasma może posiadać~%~\n"
-#~ "              nieoczekiwane wyniki.~%~%"
-
-#~ msgid "Current settings returned the original audio."
-#~ msgstr "Bieżące ustawienia przywróciły oryginalny dźwięk."
-
-#~ msgid "Vocoder"
-#~ msgstr "Wokoder"
-
-#~ msgid "Processing Vocoder..."
-#~ msgstr "Przetwarzanie wokodera..."
-
-#~ msgid "Edgar-RFT"
-#~ msgstr "Edgar-RFT"
-
-#~ msgid "Distance: (1 to 120, default = 20)"
-#~ msgstr "Odległość: (1 do 120, domyślna = 20)"
-
-#~ msgid "Output choice"
-#~ msgstr "Wybór wyjścia"
-
-#~ msgid "Both Channels"
-#~ msgstr "Oba kanały"
-
-#~ msgid "Right Only"
-#~ msgstr "Tylko prawy"
-
-#~ msgid "Number of vocoder bands"
-#~ msgstr "Liczba pasm wokodera"
-
-#~ msgid "Amplitude of original audio (percent)"
-#~ msgstr "Amplituda oryginalnego dźwięku (procent)"
-
-#~ msgid "Amplitude of white noise (percent)"
-#~ msgstr "Amplituda szumu białego (procent)"
-
-#~ msgid "Amplitude of Radar Needles (percent)"
-#~ msgstr "Amplituda igieł radaru (procent)"
-
-#~ msgid "Frequency of Radar Needles (Hz)"
-#~ msgstr "Częstotliwość igieł radaru (Hz)"
-
-#~ msgid "Error.~%Stereo track required."
-#~ msgstr "Błąd.~%Wymagana ścieżka stereo."

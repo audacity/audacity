@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-28 15:05+0100\n"
+"POT-Creation-Date: 2018-08-29 11:18+0100\n"
 "PO-Revision-Date: 2008-07-09 13:48+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <en@li.org>\n"
@@ -605,7 +605,7 @@ msgid ""
 msgstr ""
 
 #: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: src/effects/nyquist/Nyquist.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "របារ​ឧបករណ៍​របស់ Audacity %s"
@@ -1357,6 +1357,7 @@ msgstr "ឯកសារ"
 msgid "Apply macro to files..."
 msgstr "អនុវត្ត​ទៅ​ឯកសារ..."
 
+#. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 #, fuzzy
 msgid "&Expand"
@@ -1463,6 +1464,7 @@ msgstr "ផ្លាស់ទី​ចុះក្រោម"
 msgid "De&faults"
 msgstr "លំនាំដើម"
 
+#. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
 msgstr ""
@@ -2271,7 +2273,7 @@ msgstr "ប្រេកង់​​កំណត់​ហេតុ"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2559,7 +2561,7 @@ msgstr "ប្រវត្តិ..."
 msgid "&Manage History"
 msgstr "គ្រប់គ្រង​​ប្រវត្តិ"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
 msgid "Action"
 msgstr "សកម្មភាព"
 
@@ -2660,7 +2662,7 @@ msgid "Track"
 msgstr "បទ"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp
+#: src/LabelDialog.cpp src/LabelTrack.cpp src/Menus.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "ស្លាក"
 
@@ -2818,11 +2820,6 @@ msgstr ""
 #: src/Menus.cpp
 msgid "Uncategorized"
 msgstr ""
-
-#: src/Menus.cpp
-#, fuzzy
-msgid "&Reset..."
-msgstr "សាកល្បង​​ឡើងវិញ"
 
 #: src/Menus.cpp
 msgid "&Save Project"
@@ -4047,6 +4044,7 @@ msgstr "គ្រាប់​ចុច​លុប ២ លុប (Delete)"
 msgid "&Play-at-Speed"
 msgstr "ចាក់​នៅ​ល្បឿន"
 
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/Menus.cpp
 #, fuzzy
 msgid "Normal Pl&ay-at-Speed"
@@ -5528,10 +5526,13 @@ msgid ""
 msgstr ""
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
+#: plug-ins/delay.ny
 msgid "Yes"
 msgstr ""
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
+#: plug-ins/equalabel.ny plug-ins/delay.ny
 #, fuzzy
 msgid "No"
 msgstr "គ្មាន"
@@ -7750,6 +7751,7 @@ msgstr "ពណ៌ស"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Effect.cpp
 #: src/prefs/QualityPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "None"
 msgstr "គ្មាន"
 
@@ -8054,7 +8056,7 @@ msgstr "ក្រាហ្វិក​វិសាលគម"
 
 #: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
 #: src/prefs/SpectrogramSettings.cpp src/prefs/WaveformSettings.cpp
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "Linear"
 msgstr "លីនេអ៊ែរ"
 
@@ -10264,10 +10266,12 @@ msgstr ""
 msgid ".  Maximum 0dB."
 msgstr ""
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "Loudness LUFS"
 msgstr ""
 
+#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
 msgstr ""
@@ -10783,15 +10787,15 @@ msgstr "កត្តា​បន្ថយ ៖"
 msgid "Logarithmic"
 msgstr ""
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sine"
 msgstr "ស៊ីនុស"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Square"
 msgstr "ការេ"
 
-#: src/effects/ToneGen.cpp
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
 msgid "Sawtooth"
 msgstr "ធ្មេញ​រណារ"
 
@@ -11386,10 +11390,12 @@ msgstr ""
 msgid "Processing complete."
 msgstr "កំពុង​ដំណើរ​ការ Auto Duck..."
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
 msgstr ""
 
+#. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
 msgstr ""
@@ -11535,6 +11541,7 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
+#: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Select a file"
 msgstr "ជ្រើស​​ឯកសារ​​មីឌី..."
@@ -12417,6 +12424,7 @@ msgid "Fast"
 msgstr "លឿន"
 
 #: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "ស្តង់ដារ"
 
@@ -12470,7 +12478,7 @@ msgstr "របៀប​ឆានែល ៖"
 msgid "Joint Stereo"
 msgstr "ភ្ជាប់​ស្តេរ៉េអូ"
 
-#: src/export/ExportMP3.cpp
+#: src/export/ExportMP3.cpp plug-ins/rms.ny
 msgid "Stereo"
 msgstr "ស្តេរ៉េអូ"
 
@@ -13675,6 +13683,7 @@ msgstr ""
 msgid "B&lend system and Audacity theme"
 msgstr ""
 
+#. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
@@ -14279,7 +14288,7 @@ msgstr "២៤ ប៊ីត PCM"
 msgid "Rectangle"
 msgstr "ចតុកោណកែង"
 
-#: src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.cpp plug-ins/tremolo.ny
 msgid "Triangle"
 msgstr "ត្រីកោណ"
 
@@ -14834,7 +14843,7 @@ msgstr "ពង្រីក​លំនាំដើម"
 msgid "Minutes"
 msgstr ""
 
-#: src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Seconds"
 msgstr "វិនាទី"
@@ -15711,7 +15720,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
 msgid "Mono"
 msgstr "ម៉ូណូ"
 
@@ -16242,7 +16251,7 @@ msgstr "ម៉ែត្រ"
 msgid "Orientation"
 msgstr "ថិរវេលា"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
 msgstr ""
 
@@ -16373,7 +16382,7 @@ msgstr "0100 ម៉ោង 060 នាទី 060 វិនាទី+.# គំរ�
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
 #.
-#: src/widgets/NumericTextCtrl.cpp
+#: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "គំរូ"
 
@@ -16850,6 +16859,1629 @@ msgstr ""
 msgid "Could not load file: \"%s\""
 msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Processing Vocoder..."
+msgstr "កំពុង​ដំណើរ​ការ Auto Duck..."
+
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr ""
+
+#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
+#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
+#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
+#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+msgid "Released under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr ""
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Output choice"
+msgstr "ឧបករណ៍​លទ្ធផល"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Both Channels"
+msgstr "ឆានែល %d"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Right Only"
+msgstr "ឆានែល​ស្ដាំ"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Number of vocoder bands"
+msgstr "ចំនួន​ដង​ដើម្បី​ធ្វើ​ម្តង​ទៀត ៖"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of original audio (percent)"
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of white noise (percent)"
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/vocoder.ny
+#, elisp-format
+msgid "Error.~%Stereo track required."
+msgstr ""
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Clip Fix"
+msgstr "ខ្ទាស់"
+
+#: plug-ins/clipfix.ny
+#, fuzzy
+msgid "Reconstructing clips..."
+msgstr "កំពុង​យក​ក្លីក និង​ផប់​ចេញ..."
+
+#: plug-ins/clipfix.ny
+msgid "Benjamin Schwartz and Steve Daulton"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid ""
+"Licensing confirmed under terms of the GNU General Public License version 2"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Threshold of Clipping (%)"
+msgstr ""
+
+#: plug-ins/clipfix.ny
+msgid "Reduce amplitude to allow for restored peaks (dB)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm Track"
+msgstr "យក​បទ​ចេញ"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Generating Rhythm..."
+msgstr "កំពុង​បង្កើត Chirp"
+
+#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Dominic Mazzoni"
+msgstr "ការ​យក​​​ការ​រំខាន​​ចេញ​​ដោយ Dominic Mazzoni"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Tempo (bpm)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "30 - 300 beats/minute"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Beats per bar"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "1 - 20 beats/measure"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Swing amount"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "+/- 1"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Number of bars"
+msgstr "ចំនួន​ដង​ដើម្បី​ធ្វើ​ម្តង​ទៀត ៖"
+
+#: plug-ins/rhythmtrack.ny
+msgid "1 - 1000 bars"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Rhythm track duration"
+msgstr "យក​បទ​ចេញ"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Start time offset"
+msgstr "អុហ្វសិត​ចាប់ផ្ដើម ៖"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Silence before first beat"
+msgstr "រួម​បញ្ចូល​អូឌីយ៉ូ​មុន​ស្លាក​ដំបូង"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Beat sound"
+msgstr "ធ្វើ​​ម្ដង​​ទៀត"
+
+#: plug-ins/rhythmtrack.ny
+msgid "Metronome Tick"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Cowbell"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Resonant Noise"
+msgstr "​យក​ការ​រំខាន​ចេញ"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Noise Click"
+msgstr "ការ​រំខាន..."
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (long)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of strong beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "18 - 116"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "MIDI pitch of weak beat"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid ""
+"Set either 'Number of bars' or\n"
+"'Rhythm track duration' to greater than zero."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Data Export"
+msgstr "មិន​អាច​នាំ​ចេញ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Analyzing..."
+msgstr "កំពុង​​អនុវត្ត..."
+
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
+#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
+#: plug-ins/tremolo.ny
+msgid "Steve Daulton"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Limit output to first"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Measurement scale"
+msgstr "ជម្រើស​ស្ងាត់"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Export data to"
+msgstr "នាំ​ឯកសារ​ចេញ"
+
+#: plug-ins/sample-data-export.ny
+msgid "Index (text files only)"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample Count"
+msgstr "កែសម្រួល​គំរូ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Time Indexed"
+msgstr "កែសម្រួល​ស្លាក"
+
+#: plug-ins/sample-data-export.ny
+msgid "Include header information"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Minimal"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "All"
+msgstr "ទាំងអស់"
+
+#: plug-ins/sample-data-export.ny
+msgid "Optional header text"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Channel layout for stereo"
+msgstr ""
+
+#. i18n-hint: Left and Right
+#: plug-ins/sample-data-export.ny
+msgid "L-R on Same Line"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Alternate Lines"
+msgstr ""
+
+#. i18n-hint: L for Left
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "L Channel First"
+msgstr "ឆានែល %d"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Show messages"
+msgstr "\t-help (សារ​នេះ)"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Errors Only"
+msgstr "កំហុស ៖ "
+
+#. i18n-hint abbreviates negative infinity
+#: plug-ins/sample-data-export.ny
+msgid "[-inf]"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left Channel.~%~%"
+msgstr "ឆានែល​ឆ្វេង"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~%~%Right Channel.~%~%"
+msgstr "ឆានែល​ស្ដាំ"
+
+#: plug-ins/sample-data-export.ny
+msgid "~aData written to:~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
+"                     Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
+"~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
+"Unweighted RMS: ~a dB.~%~\n"
+"                  DC offset: ~a~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a samples."
+msgstr "គំរូ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "~a seconds."
+msgstr "វិនាទី"
+
+#: plug-ins/sample-data-export.ny
+msgid "Audio data analysis:"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
+msgstr ""
+
+#. i18n-hint: abbreviates "decibels"
+#: plug-ins/sample-data-export.ny
+msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#: plug-ins/sample-data-export.ny
+msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#: plug-ins/sample-data-export.ny
+msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "sample data"
+msgstr "កែសម្រួល​គំរូ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Sample #"
+msgstr "គំរូ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (linear)"
+msgstr "លីនេអ៊ែរ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Value (dB)"
+msgstr "កម្រិត ៖"
+
+#: plug-ins/sample-data-export.ny
+msgid "audio sample value analysis"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (linear)"
+msgstr "លីនេអ៊ែរ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (linear)"
+msgstr "លីនេអ៊ែរ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Left (dB)"
+msgstr "កម្រិត ៖"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "Right (dB)"
+msgstr "ស្ដាំ "
+
+#: plug-ins/sample-data-export.ny
+msgid ""
+"Produced with <span>Sample Data Export</span> for\n"
+"<a href=\"~a\">Audacity</a> by Steve\n"
+"Daulton"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "linear"
+msgstr "លីនេអ៊ែរ"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "2 channels (stereo)"
+msgstr "ឆានែល ២​ (ស្តេរ៉េអូ)"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "1 channel (mono)"
+msgstr "ឆានែល ១ (ម៉ូណូ)"
+
+#: plug-ins/sample-data-export.ny
+msgid "One column per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "One row per channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel then Right channel on same line.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left and right channels on alternate lines.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Left channel first then right channel.~%"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Unspecified channel order"
+msgstr ""
+
+#: plug-ins/sample-data-export.ny
+msgid "Error.~%\"~a\" cannot be written."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Generating pluck sound..."
+msgstr "កំពុង​បង្កើត​សំឡេង"
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Fade-out type"
+msgstr "ប្រភេទ​ការរំខាន"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "ថិរវេលា"
+
+#: plug-ins/vocalrediso.ny
+msgid "Vocal Reduction and Isolation"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Applying Action..."
+msgstr "កំពុង​​អនុវត្ត..."
+
+#: plug-ins/vocalrediso.ny
+msgid "Robert Haenggi"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Vocals"
+msgstr "យក​បទ​​ចេញ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals"
+msgstr "យក​បទ​​ចេញ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Vocals and Invert"
+msgstr "កណ្តាល"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center"
+msgstr "​បន្ទាត់​កាត់​ដែល​បាន​យកចេញ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center"
+msgstr "កណ្តាល"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Isolate Center and Invert"
+msgstr "កណ្តាល"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Remove Center Classic: Mono"
+msgstr "​បន្ទាត់​កាត់​ដែល​បាន​យកចេញ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Analyze"
+msgstr "ធ្វើ​​វិភាគ"
+
+#: plug-ins/vocalrediso.ny
+#, fuzzy
+msgid "Strength"
+msgstr "ប្រវែង"
+
+#: plug-ins/vocalrediso.ny
+msgid "Low Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "High Cut for Vocals (Hz)"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Average x: ~a, y: ~a\n"
+"Covariance x y: ~a\n"
+"Average variance x: ~a, y: ~a\n"
+"Standard deviation x: ~a, y: ~a\n"
+"Coefficient of correlation: ~a\n"
+"Coefficient of determination: ~a \n"
+"Variation of residuals: ~a\n"
+"y equals ~a plus ~a times x~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
+"This means:~%~a~%"
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are identical, i.e. dual mono.\n"
+"   The center can't be removed.\n"
+"      Any remaining difference may be caused by lossy encoding."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two Channels are strongly related, i.e. nearly mono or extremely "
+"panned.\n"
+"   Most likely, the center extraction will be poor."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - An ideal value for Stereo.\n"
+"  However, the center extraction depends also on the used reverb."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are almost not related.\n"
+"   Either you have only noise or the piece is mastered in a unbalanced "
+"manner.\n"
+"   The center extraction can still be good though."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - Although the Track is stereo, the field is obviously extra wide.\n"
+"   This can cause strange effects.\n"
+"   Especially when played by only one speaker."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid ""
+" - The two channels are nearly identical.\n"
+"   Obviously, a pseudo stereo effect has been used\n"
+"   to spread the signal over the physical distance between the speakers.\n"
+" Don't expect good results from a center removal."
+msgstr ""
+
+#: plug-ins/vocalrediso.ny
+msgid "This plug-in works only with stereo tracks."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Sample Data Import"
+msgstr "កម្មវិធី​បម្លែង​អត្រា​គំរូ"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Reading and rendering samples..."
+msgstr "លាយ និង​បង្ហាញ​បទ"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Select file"
+msgstr "ជ្រើស​​ឯកសារ​​មីឌី..."
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Throw Error"
+msgstr "កំហុស"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Error.~%Unable to open file"
+msgstr "មិន​អាច​បើក​ឯកសារ​ចង្វាក់ ។"
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Studio Fade Out"
+msgstr "ផតចុះ"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Applying Fade..."
+msgstr "កំពុង​​អនុវត្ត..."
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid "Limiter"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiting..."
+msgstr "កំពុង​ធ្វើ​ឲ្យ​ធម្មតា..."
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Type"
+msgstr "ម៉ែត្រ"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Limit"
+msgstr "បង្ហាញ​​កា​រច្រឹប"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Limit"
+msgstr "រក​កា​ខ្ទាស់"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Clip"
+msgstr "ឧបករណ៍​​​បន្ទាប់ D"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Clip"
+msgstr "រក​កា​ខ្ទាស់"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limit to (dB)"
+msgstr "កម្រិត ៖"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Apply Make-up Gain"
+msgstr "អនុវត្ត​ច្រវាក់"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "យក​បទ​ចេញ"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removing center-panned audio..."
+msgstr "កំពុង​យក​ក្លីក និង​ផប់​ចេញ..."
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove vocals or view Help"
+msgstr "យក​បទ​​ចេញ"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "View Help"
+msgstr "ជំនួយ"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Removal choice"
+msgstr "​យក​ការ​រំខាន​ចេញ"
+
+#: plug-ins/vocalremover.ny
+msgid "Simple (Entire Spectrum)"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Remove Frequency Band"
+msgstr "ប្រេកង់​​លីនេអ៊ែរ"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Retain Frequency Band"
+msgstr "ប្រេកង់​​លីនេអ៊ែរ"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band from (Hz)"
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Frequency band to (Hz)"
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Vocal Remover requires a stereo track. It works best with\n"
+"lossless files like WAV or AIFF, rather than MP3 or\n"
+"other compressed formats. It only removes vocals or other\n"
+"audio that is panned to center (sounds equally loud in left\n"
+"and right). Vocals may be mixed this way. Inverting one\n"
+"channel then panning both to center cancels out any audio\n"
+"which was originally center-panned, making it inaudible.\n"
+"This can remove some parts of the audio you may want to\n"
+"keep, such as drums, which are also often mixed to center.\n"
+"If the vocals and other centered parts differ in pitch,\n"
+"this can be solved by removing only selected frequencies.~%\n"
+"Vocal Remover thus has three choices of removal method.\n"
+"'Simple' inverts the entire frequency spectrum of one\n"
+"channel. This may remove too much music if other parts of\n"
+"the audio are centered as well as the vocals. In that case,\n"
+"try the other choices. If the vocals are at a different\n"
+"pitch than the other audio (such as a high female voice),\n"
+"try 'Remove frequency band'. This only removes frequencies\n"
+"between a lower and upper limit which you can enter in the\n"
+"'Frequency band...' boxes. Experiment by entering what\n"
+"sounds like the most significant frequency range of the\n"
+"original vocals. If the other choices remove too much\n"
+"audio in a particular frequency range (such as low drums\n"
+"or bass), try 'Retain frequency band'. This only removes\n"
+"frequencies outside the limits, retaining the others."
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"~%Vocal Remover requires an unsplit, stereo track.~%~\n"
+"If you have a stereo track split into left and right~%~\n"
+"channels, use 'Make Stereo Track' on the Track~%~\n"
+"Drop-Down Menu, then run Vocal Remover again.~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+msgid ""
+"Warning:~%~\n"
+"              Selected band-stop filter is~%~\n"
+"              ~a Hz to ~a Hz.~%~\n"
+"              A very narrow stop-band filter may have~%~\n"
+"              unexpected results.~%~%"
+msgstr ""
+
+#: plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Current settings returned the original audio."
+msgstr "Nyquist មិន​បាន​ត្រឡប់​អូឌីយ៉ូ ។\n"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Adjustable Fade"
+msgstr "បន្ទះ​ដែល​បាន​លៃតម្រូវ"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Type"
+msgstr "ម៉ែត្រ"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Up"
+msgstr "ផុសចេញ"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Down"
+msgstr "ផុសចេញ"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Up"
+msgstr "ផ្លាស់ទី​ចុះក្រោម"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Down"
+msgstr "ផ្លាស់ទី​ចុះក្រោម"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start/End as"
+msgstr "ចាប់ផ្ដើម"
+
+#: plug-ins/adjustable-fade.ny
+#, elisp-format
+msgid "% of Original"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "dB Gain"
+msgstr "កំណើន"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start (or end)"
+msgstr "ចាប់ផ្ដើម"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "None Selected"
+msgstr "ជ្រើស"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear In"
+msgstr "លីនេអ៊ែរ"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear Out"
+msgstr "លីនេអ៊ែរ"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic In"
+msgstr "ការ​កែខៃ​ធ្វើ​សមកាលកម្ម​រហ័ស"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic Out"
+msgstr "ការ​កែខៃ​ធ្វើ​សមកាលកម្ម​រហ័ស"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded In"
+msgstr "ផតចុះ"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded Out"
+msgstr "ផតចុះ"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine In"
+msgstr "កូស៊ីនុស"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine Out"
+msgstr "កូស៊ីនុស"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve In"
+msgstr "ផ្លាស់ទី​ចុះក្រោម"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Out"
+msgstr "ផ្លាស់ទី​ចុះក្រោម"
+
+#: plug-ins/adjustable-fade.ny
+msgid "~aPercentage values cannot be negative."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 \t-6 dB halves the amplitude."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Error~%~%"
+msgstr "កំហុស"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "Spectral edit parametric EQ"
+msgstr "ជម្រើស"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Filtering..."
+msgstr "ប្រវែង"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+msgid "Paul Licameli"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Gain (dB)"
+msgstr "ឆានែល​លទ្ធផល ៖ %2d"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "~aPlease select frequencies."
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aLow frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "~aHigh frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "ប្រេកង់​អប្បបរមា​ត្រូវតែ​មាន​តម្លៃ​តូចបំផុត ០ Hz"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Error.~%"
+msgstr "កំហុស"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfade Tracks"
+msgstr "កំណត់​ចំណាំ​បទ"
+
+#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfading..."
+msgstr "កំណត់​ចំណាំ​បទ"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade type"
+msgstr "ប្រភេទ​ការរំខាន"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Gain"
+msgstr "ថេរ"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 1"
+msgstr "ថេរ"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 2"
+msgstr "ថេរ"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom Curve"
+msgstr "ឈ្មោះ​បទ"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom curve"
+msgstr "ឈ្មោះ​បទ"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade direction"
+msgstr "ជម្រើស"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, elisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr ""
+
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Spectral edit shelves"
+msgstr "ជម្រើស"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Sound Finder"
+msgstr "កម្មវិធី​បង្កើត​ស្ងាត់ៗ"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Finding sound..."
+msgstr "រក​ការ​ខ្ទាស់..."
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Risset Drum"
+msgstr "បង្កើត​ការ​រំខាន"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Generating Risset Drum..."
+msgstr "បង្កើត​ការ​រំខាន"
+
+#: plug-ins/rissetdrum.ny
+msgid "Steven Jones"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Frequency (Hz)"
+msgstr "ប្រេកង់ (Hz)"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Decay (seconds)"
+msgstr "ពេលវេលា​ពន្យារ (វិនាទី) ៖"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Center frequency of noise (Hz)"
+msgstr "ប្រេកង់​​លីនេអ៊ែរ"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amplitude (0 - 1)"
+msgstr "អាំភ្លី (០-១)"
+
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Spectral edit multi tool"
+msgstr "ជម្រើស"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "ឆ្វេង"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "ស្តាំ"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "ចំនួន​ដង​ដើម្បី​ធ្វើ​ម្តង​ទៀត ៖"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "កែសម្រួល​ស្លាក"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of labels"
+msgstr "ចំនួន​ដង​ដើម្បី​ធ្វើ​ម្តង​ទៀត ៖"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label interval (seconds)"
+msgstr "ប្រវែង (វិនាទី)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "កែសម្រួល​ស្លាក"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Notch Filter"
+msgstr "កំពុង​​អនុវត្ត​ Leveller..."
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Applying Notch Filter..."
+msgstr "កំពុង​​អនុវត្ត​ Leveller..."
+
+#: plug-ins/notch.ny
+msgid "Steve Daulton and Bill Wharrie"
+msgstr ""
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr ""
+
+#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "ប្រេកង់​អប្បបរមា​ត្រូវតែ​មាន​តម្លៃ​តូចបំផុត ០ Hz"
+
+#: plug-ins/notch.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "កំណត់​ចំណាំ​បទ"
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay"
+msgstr "ប្រភេទ​គ្រាប់ចុច"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Applying Delay Effect..."
+msgstr "អនុវត្ត​បែបផែន Nyquist..."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay type"
+msgstr "ប្រភេទ​គ្រាប់ចុច"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "ចតុកោណកែង"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time (seconds)"
+msgstr "ពេលវេលា​ពន្យារ (វិនាទី) ៖"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change effect"
+msgstr "មើល​ជាមុន"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch/Tempo"
+msgstr "កម្ពស់​សំឡេង (EAC)"
+
+#: plug-ins/delay.ny
+msgid "Low-quality Pitch Shift"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change per echo (semitones)"
+msgstr "មើល​ជាមុន"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes"
+msgstr "ចំនួន​ដង​ដើម្បី​ធ្វើ​ម្តង​ទៀត ៖"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Error.~%~a"
+msgstr "កំហុស"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr ""
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Applying Tremolo..."
+msgstr "កំពុង​​អនុវត្ត​ Leveller..."
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Waveform type"
+msgstr "ទ្រង់ទ្រាយ​រលក"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "ធ្មេញ​រណារ"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Starting phase (degrees)"
+msgstr "ដំណាក់​ចាប់ផ្តើម LFO (deg.) ៖"
+
+#: plug-ins/tremolo.ny
+msgid "Wet level (percent)"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Silence Finder"
+msgstr "កម្មវិធី​បង្កើត​ស្ងាត់ៗ"
+
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Finding silence..."
+msgstr "កំពុង​កាត់​ស្ងាត់​ឲ្យ​ខ្លី..."
+
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "ផ្ទុក​ឯកសារ"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "អនុវត្ត​អេហ្គុយ"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "ផ្ទុក​ឯកសារ"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "អនុវត្ត​អេហ្គុយ"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Beat Finder"
+msgstr "ធ្វើ​​ម្ដង​​ទៀត"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Finding beats..."
+msgstr "រក​ការ​ខ្ទាស់..."
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Threshold Percentage"
+msgstr "កម្រិត​​ពន្លឺ​​សម្រាប់​​ការ​រំខាន ៖"
+
 #~ msgid "Latency problem"
 #~ msgstr "បញ្ហា​​ជាក់ស្ដែង"
 
@@ -16928,10 +18560,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #, fuzzy
 #~ msgid "Slider Playback"
 #~ msgstr "ចាក់ឡើងវិញ"
-
-#, fuzzy
-#~ msgid "Start - End"
-#~ msgstr "ចាប់ផ្ដើម"
 
 #, fuzzy
 #~ msgid "Start - Length"
@@ -17040,14 +18668,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgstr "ពុម្ព"
 
 #, fuzzy
-#~ msgid "Start-End"
-#~ msgstr "ចាប់ផ្ដើម"
-
-#, fuzzy
-#~ msgid "Start-Length"
-#~ msgstr "ប្រវែង"
-
-#, fuzzy
 #~ msgid "Length-End"
 #~ msgstr "ប្រវែង"
 
@@ -17148,10 +18768,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgstr "អាំភ្លី (០-១)"
 
 #, fuzzy
-#~ msgid "FilterLength"
-#~ msgstr "ប្រវែង"
-
-#, fuzzy
 #~ msgid "CurveName"
 #~ msgstr "ឈ្មោះ"
 
@@ -17183,10 +18799,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #, fuzzy
 #~ msgid "RemoveDcOffset"
 #~ msgstr "​យក​ការ​រំខាន​ចេញ"
-
-#, fuzzy
-#~ msgid "ApplyGain"
-#~ msgstr "អនុវត្ត​ច្រវាក់"
 
 #, fuzzy
 #~ msgid "Stretch Factor"
@@ -17672,9 +19284,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgid "Click Removal..."
 #~ msgstr "យក​ក្លីក​ចេញ..."
 
-#~ msgid "Removing clicks and pops..."
-#~ msgstr "កំពុង​យក​ក្លីក និង​ផប់​ចេញ..."
-
 #~ msgid "Applying Dynamic Range Compression..."
 #~ msgstr "កំពុង​​អនុវត្ត​​ការ​​បង្ហាប់​​ជួរ​​ថាមវន្ត..."
 
@@ -17715,9 +19324,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgid "Detect clipping"
 #~ msgstr "រកឃើញការ​ខ្ទាស់"
 
-#~ msgid "Find Clipping..."
-#~ msgstr "រក​ការ​ខ្ទាស់..."
-
 #~ msgid "Detecting clipping"
 #~ msgstr "រក​ឃើញ​កា​រខ្ទាស់"
 
@@ -17728,27 +19334,17 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgid "Leveler..."
 #~ msgstr "Leveller..."
 
-#, fuzzy
-#~ msgid "Applying Leveler..."
-#~ msgstr "កំពុង​​អនុវត្ត​ Leveller..."
-
 #~ msgid "Noise Generator"
 #~ msgstr "ឧបករណ៍​​បង្កើត​​ការ​រំខាន"
 
 #~ msgid "Applied effect: Generate Noise, %.6lf seconds"
 #~ msgstr "អនុវត្ត​បែបផែន ៖ បង្កើត​ការ​រំខាន %.6lf វិនាទី"
 
-#~ msgid "Generating Noise"
-#~ msgstr "បង្កើត​ការ​រំខាន"
-
 #~ msgid "Noise Removal..."
 #~ msgstr "ការយក​ការរំខាន​ចេញ..."
 
 #~ msgid "Creating Noise Profile"
 #~ msgstr "បង្កើត​ទម្រង់​ការ​រំខាន"
-
-#~ msgid "Removing Noise"
-#~ msgstr "​យក​ការ​រំខាន​ចេញ"
 
 #~ msgid "true"
 #~ msgstr "ពិត"
@@ -17758,9 +19354,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 
 #~ msgid "Normalize..."
 #~ msgstr "ធ្វើ​ឲ្យ​ធម្មតា..."
-
-#~ msgid "Normalizing..."
-#~ msgstr "កំពុង​ធ្វើ​ឲ្យ​ធម្មតា..."
 
 #, fuzzy
 #~ msgid ""
@@ -17807,13 +19400,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgid "Classic Filters..."
 #~ msgstr "ផ្ទុក​ឯកសារ​ឡើង..."
 
-#, fuzzy
-#~ msgid "Performing Classic Filtering"
-#~ msgstr "អនុវត្ត​អេហ្គុយ"
-
-#~ msgid "Silence Generator"
-#~ msgstr "កម្មវិធី​បង្កើត​ស្ងាត់ៗ"
-
 #~ msgid "Silence..."
 #~ msgstr "ស្ងាត់..."
 
@@ -17836,20 +19422,8 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgid "Tone Generator"
 #~ msgstr "ឧបករណ៍​បង្កើត​សំឡេង"
 
-#~ msgid "Frequency (Hz)"
-#~ msgstr "ប្រេកង់ (Hz)"
-
-#~ msgid "Generating Chirp"
-#~ msgstr "កំពុង​បង្កើត Chirp"
-
-#~ msgid "Generating Tone"
-#~ msgstr "កំពុង​បង្កើត​សំឡេង"
-
 #~ msgid "Truncate Silence..."
 #~ msgstr "កាត់​ស្ងាត់​ឲ្យ​ខ្លី..."
-
-#~ msgid "Truncating Silence..."
-#~ msgstr "កំពុង​កាត់​ស្ងាត់​ឲ្យ​ខ្លី..."
 
 #, fuzzy
 #~ msgid "Buffer Delay Compensation"
@@ -17924,9 +19498,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #, fuzzy
 #~ msgid "Effect Refresh"
 #~ msgstr "ការ​កំណត់​បែបផែន"
-
-#~ msgid "Output Device"
-#~ msgstr "ឧបករណ៍​លទ្ធផល"
 
 #~ msgid "Input Device"
 #~ msgstr "ឧបករណ៍​បញ្ចូល"
@@ -18092,9 +19663,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgid "Attempt to run Noise Removal without a noise profile.\n"
 #~ msgstr "ប៉ុនប៉ង​​រត់​​ការ​​យក​​ការ​​រំខាន​​ចេញ​​ដោយ​គ្មាន​ទម្រង់​ការ​រំខាន ។\n"
 
-#~ msgid "Noise Removal by Dominic Mazzoni"
-#~ msgstr "ការ​យក​​​ការ​រំខាន​​ចេញ​​ដោយ Dominic Mazzoni"
-
 #~ msgid ""
 #~ "Sorry, this effect cannot be performed on stereo tracks where the "
 #~ "individual channels of the track do not match."
@@ -18189,9 +19757,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 
 #~ msgid "Direction Changes (High Threshold)"
 #~ msgstr "ទិសផ្លាស់ប្តូរ (កម្រិត​ពន្លឺ​ខ្ពស់)"
-
-#~ msgid "Key type"
-#~ msgstr "ប្រភេទ​គ្រាប់ចុច"
 
 #~ msgid "Left-to-On"
 #~ msgstr "ឆ្វេង​ដើម្បី​បើក"
