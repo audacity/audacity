@@ -787,8 +787,10 @@ void EffectNormalize::UpdateUI()
          FloatingPointValidator<double> vldLevel(2, &mLUFSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldLevel.SetRange(MIN_LUFSLevel, MAX_LUFSLevel);
          mLevelTextCtrl->SetValidator(vldLevel);
+         /* i18n-hint: LUFS is a particular method for measuring loudnesss */
          mLevelTextCtrl->SetName(_("Loudness LUFS"));
          mLevelTextCtrl->SetValue(wxString::FromDouble(mLUFSLevel));
+         /* i18n-hint: LUFS is a particular method for measuring loudnesss */
          mLeveldB->SetLabel(_("LUFS"));
          mGainCheckBox->SetLabelText(_("Normalize loudness to"));
       }

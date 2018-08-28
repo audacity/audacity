@@ -333,8 +333,11 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag);
 
 #ifdef EXPERIMENTAL_RESET
-      // Empty the current project and forget its name and path.
-      c->AddItem(wxT("Reset"), XXO("&Reset..."), FN(OnReset), wxT(""),
+      // Empty the current project and forget its name and path.  DANGEROUS
+      // It's just for developers.
+      // Do not translate this menu item (no XXO).  
+      // It MUST not be shown to regular users.
+      c->AddItem(wxT("Reset"), wxT("&Dangerous Reset..."), FN(OnProjectReset), wxT(""),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
 #endif
@@ -1383,6 +1386,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
       c->BeginSubMenu(_("&Play-at-Speed"));
 
+      /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
       c->AddItem(wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"), FN(OnPlayAtSpeed));
       c->AddItem(wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped));
       c->AddItem(wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"), FN(OnPlayAtSpeedCutPreview));
@@ -4749,7 +4753,7 @@ void AudacityProject::OnOpen(const CommandContext &WXUNUSED(context) )
 // It does not test for unsaved changes.
 // It is not in the menus by default.  Its main purpose is/was for 
 // developers checking functionality of ResetProjectToEmpty().
-void AudacityProject::OnReset(const CommandContext &WXUNUSED(context))
+void AudacityProject::OnProjectReset(const CommandContext &WXUNUSED(context))
 {
    ResetProjectToEmpty();
 }

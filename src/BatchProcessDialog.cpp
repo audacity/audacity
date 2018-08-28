@@ -156,6 +156,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 
    S.StartHorizontalLay(wxEXPAND, 0);
    {
+      /* i18n-hint: The Expand button makes the dialog bigger, with more in it */
       mResize = S.Id(ExpandID).AddButton(_("&Expand"));
       S.Prop(1).AddSpace( 10 );
       S.AddStandardButtons( eCancelButton | eHelpButton);
@@ -662,6 +663,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
    S.StartHorizontalLay(wxEXPAND, 0);
    {  
+      /* i18n-hint: The Shrink button makes the dialog smaller, with less in it */
       mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
       // Using variable text just to get the positioning options.
       S.Prop(0).AddVariableText( _("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );

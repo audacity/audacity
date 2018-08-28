@@ -1358,12 +1358,14 @@ bool NyquistEffect::ProcessOne()
 
    if ((rval == nyx_audio) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
+      /* i18n-hint: Don't translate ';type tool'.  */
       mDebugOutput = _("';type tool' effects cannot return audio from Nyquist.\n") + mDebugOutput;
       rval = nyx_error;
    }
 
    if ((rval == nyx_labels) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
+      /* i18n-hint: Don't translate ';type tool'.  */
       mDebugOutput = _("';type tool' effects cannot return labels from Nyquist.\n") + mDebugOutput;
       rval = nyx_error;
    }
