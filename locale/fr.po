@@ -18040,11 +18040,11 @@ msgstr "Sortie cosinus"
 
 #: plug-ins/adjustable-fade.ny
 msgid "S-Curve In"
-msgid "Entrée en courbe-S"
+msgstr "Entrée en courbe-S"
 
 #: plug-ins/adjustable-fade.ny
 msgid "S-Curve Out"
-msgid "Sortie en courbe-S"
+msgstr "Sortie en courbe-S"
 
 #: plug-ins/adjustable-fade.ny
 msgid "~aPercentage values cannot be negative."
