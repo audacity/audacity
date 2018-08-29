@@ -1696,14 +1696,20 @@ ProgressResult TimerProgressDialog::UpdateProgress()
    // Only update if a full second has passed.
    if (now - mLastUpdate > 1000)
    {
+      // Bug 1952:
+      // wxTimeSpan will assert on ridiculously large values.
+      // We silently wrap the displayed range at one day.
+      // You'll only see the remaining hours, mins and secs.
+      // With a + sign, if the time was wrapped.
+      const wxLongLong_t wrapTime = 24 * 60 * 60 * 1000;
       if (m_bShowElapsedTime) {
-         wxTimeSpan tsElapsed(0, 0, 0, elapsed);
-         mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")));
+         wxTimeSpan tsElapsed(0, 0, 0, elapsed % wrapTime);
+         mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")) + ((elapsed >= wrapTime) ? " +":""));
          mElapsed->Update();
       }
 
-      wxTimeSpan tsRemains(0, 0, 0, remains);
-      mRemaining->SetLabel(tsRemains.Format(wxT("%H:%M:%S")));
+      wxTimeSpan tsRemains(0, 0, 0, remains % wrapTime);
+      mRemaining->SetLabel(tsRemains.Format(wxT("%H:%M:%S")) + ((remains >= wrapTime) ? " +":""));
       mRemaining->Update();
 
       mLastUpdate = now;
