@@ -1569,8 +1569,16 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       if (mSoftwarePlaythrough)
          playbackParameters.suggestedLatency =
             playbackDeviceInfo->defaultLowOutputLatency;
-      else
-         playbackParameters.suggestedLatency = latencyDuration/1000.0;
+      else {
+         // When using WASAPI, the suggested latency does not affect
+         // the latency of the playback, but the position of playback is given as if
+         // there was the suggested latency. This results in the last "suggested latency"
+         // of a selection not being played. So for WASAPI use 0.0 for the suggested
+         // latency regardless of user setting. See bug 1949.
+         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
+         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+         playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
+      }
 
       mOutputMeter = mOwningProject->GetPlaybackMeter();
    }
