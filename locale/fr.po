@@ -17068,7 +17068,7 @@ msgstr "Fréquence des aiguilles de radar (Hz)"
 #: plug-ins/vocoder.ny
 #, elisp-format
 msgid "Error.~%Stereo track required."
-msgstr "Erreur.~piste %stéréo nécessaire."
+msgstr "Erreur.~%Piste stéréo nécessaire."
 
 #: plug-ins/clipfix.ny
 msgid "Clip Fix"
@@ -17935,7 +17935,7 @@ msgstr ""
 # trebmuh to check (vérifier dans un contexte graphique)
 #: plug-ins/vocalremover.ny
 msgid "Current settings returned the original audio."
-msgstr "Les paramètres actuels ont rendus l’audio originelle.\n"
+msgstr "Les paramètres actuels ont rendus l’audio originelle."
 
 #: plug-ins/adjustable-fade.ny
 msgid "Adjustable Fade"
