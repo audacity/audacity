@@ -2374,7 +2374,7 @@ msgstr ""
 #: src/HelpText.cpp
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
