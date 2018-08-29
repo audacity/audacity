@@ -4813,6 +4813,8 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
    if (IsPaused()
        // PRL:  Why was this added?  Was it only because of the mysterious
        // initial leading zeroes, now solved by setting mStreamToken early?
+       // JKC: I think it's used for the MIDI time cursor.  See comments
+       // at head of file about AudioTime().
        || mStreamToken <= 0
        )
       mNumPauseFrames += framesPerBuffer;
@@ -4887,11 +4889,69 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
       }
    }
 
-// This old code is a quick route, when paused.
-// However, we must fade-out into a pause, so it's better to keep going,
-// and return later.
-#ifdef USE_OLD_CODE
-   if( mPaused )
+   // MOVE_TO: CountSoloedTracks() function
+   unsigned numSolo = 0;
+   for(unsigned t = 0; t < numPlaybackTracks; t++ )
+      if( mPlaybackTracks[t]->GetSolo() )
+         numSolo++;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   auto numMidiPlaybackTracks = mMidiPlaybackTracks.size();
+   for( unsigned t = 0; t < numMidiPlaybackTracks; t++ )
+      if( mMidiPlaybackTracks[t]->GetSolo() )
+         numSolo++;
+#endif
+
+
+   // MOVE_TO: CountDroppedTracks() function
+   bool dropAllQuickly = true; //i.e. drop all channels, without any fade out.
+   for (unsigned t = 0; t < numPlaybackTracks; t++)
+   {
+      WaveTrack *vt = mPlaybackTracks[t].get();
+      bool drop = false;
+      bool dropQuickly = false;
+      bool linkFlag = false;
+      
+      if (linkFlag) {
+         linkFlag = false;
+         if (vt->GetChannelIgnoringPan() == Track::LeftChannel)
+            dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
+         if (vt->GetChannelIgnoringPan() == Track::RightChannel )
+            dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
+      }
+      else {
+         drop = mPaused;
+         dropQuickly = false;
+
+         // Cut if somebody else is soloing
+         if (numSolo>0 && !vt->GetSolo())
+            drop = true;
+
+         // Cut if we're muted (unless we're soloing)
+         if (vt->GetMute() && !vt->GetSolo())
+            drop = true;
+
+         linkFlag = vt->GetLinked();
+
+         dropQuickly = drop;
+         if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
+            vt->GetChannelIgnoringPan() == Track::MonoChannel )
+            dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
+         if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
+            vt->GetChannelIgnoringPan() == Track::MonoChannel )
+            dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
+      }
+      dropAllQuickly = dropAllQuickly && dropQuickly;
+   }
+
+// This is a quick route, when paused and already at zero level on all channels.
+// However, we always fade-out into a pause, hence the 'dropAllQuickly' test
+// Net result is we may pause one frame later than requested, if we can't drop
+// all channels quickly (because some are not yet down to zero gain).
+// Note that if we are paused, the gain will be dropped to zero by the end of
+// this callback, and so the next time round 'dropAllQuickly' will be true.
+// All this logic will be easier when we shift over to working with gains that
+// go to zero, and not flags.
+   if( mPaused && dropAllQuickly )
    {
       if (outputBuffer && numPlaybackChannels > 0)
       {
@@ -4904,10 +4964,8 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                                   (float *)outputBuffer, (int)framesPerBuffer);
          }
       }
-
       return paContinue;
    }
-#endif
 
    if (mStreamToken > 0)
    {
@@ -4919,7 +4977,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
       if( outputBuffer && (numPlaybackChannels > 0) )
       {
-         // The cut and cutQuickly booleans are for historical reasons.
+         // The drop and dropQuickly booleans are for historical reasons.
          // JKC: The original code attempted to be faster by doing nothing on silenced audio.
          // This, IMHO, is 'premature optimisation'.  Instead clearer and cleaner code would
          // simply use a gain of 0.0 for silent audio and go on through to the stage of 
@@ -4931,8 +4989,8 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          // - Applying a linearly interpolated gain.
          // I would expect us not to need the fast paths, since linearly interpolated gain
          // is very cheap to process.
-         bool cut = false;
-         bool cutQuickly = false;
+         bool drop = false;
+         bool dropQuickly = false;
          bool linkFlag = false;
 
          float *outputFloats = (float *)outputBuffer;
@@ -4961,16 +5019,6 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          if (mSeek)
             return CallbackDoSeek();
 
-         unsigned numSolo = 0;
-         for(unsigned t = 0; t < numPlaybackTracks; t++ )
-            if( mPlaybackTracks[t]->GetSolo() )
-               numSolo++;
-#ifdef EXPERIMENTAL_MIDI_OUT
-         auto numMidiPlaybackTracks = mMidiPlaybackTracks.size();
-         for( unsigned t = 0; t < numMidiPlaybackTracks; t++ )
-            if( mMidiPlaybackTracks[t]->GetSolo() )
-               numSolo++;
-#endif
 
          WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
          float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
@@ -4999,21 +5047,21 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             if (linkFlag) {
                linkFlag = false;
                if (vt->GetChannelIgnoringPan() == Track::LeftChannel)
-                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(0) == 0.0);
+                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
                if (vt->GetChannelIgnoringPan() == Track::RightChannel )
-                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(1) == 0.0);
+                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
             }
             else {
-               cut = mPaused;
-               cutQuickly = false;
+               drop = mPaused;
+               dropQuickly = false;
 
                // Cut if somebody else is soloing
                if (numSolo>0 && !vt->GetSolo())
-                  cut = true;
+                  drop = true;
 
                // Cut if we're muted (unless we're soloing)
                if (vt->GetMute() && !vt->GetSolo())
-                  cut = true;
+                  drop = true;
 
                linkFlag = vt->GetLinked();
                selected = vt->GetSelected();
@@ -5024,13 +5072,13 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                   memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
                }
 
-               cutQuickly = cut;
+               dropQuickly = drop;
                if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
                   vt->GetChannelIgnoringPan() == Track::MonoChannel )
-                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(0) == 0.0);
+                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
                if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
                   vt->GetChannelIgnoringPan() == Track::MonoChannel )
-                  cutQuickly = cutQuickly && (vt->GetOldChannelGain(1) == 0.0);
+                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
             }
 
 
@@ -5038,7 +5086,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 #ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
             decltype(framesPerBuffer) len = 0;
             // this is original code prior to r10680 -RBD
-            if (cutQuickly)
+            if (dropQuickly)
             {
                len = mPlaybackBuffers[t]->Discard(framesPerBuffer);
                // keep going here.  
@@ -5088,7 +5136,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             // playback that might also be going on? ...Maybe muted audio tracks + MIDI,
             // the playback would NEVER terminate. ...I think the #else part is probably preferable...
             size_t len;
-            if (cutQuickly)
+            if (dropQuickly)
             {
                len =
                   mPlaybackBuffers[t]->Discard(framesPerBuffer);
@@ -5104,7 +5152,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             // Last channel of a track seen now
             len = maxLen;
 
-            if( !cutQuickly && selected )
+            if( !dropQuickly && selected )
             {
                len = em.RealtimeProcess(group, chanCnt, tempBufs, len);
             }
@@ -5113,7 +5161,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
             CallbackCheckCompletion(callbackReturn, len);
 
-            if (cutQuickly) // no samples to process, they've been discarded
+            if (dropQuickly) // no samples to process, they've been discarded
                continue;
 
             if (len > 0) for (int c = 0; c < chanCnt; c++)
@@ -5124,7 +5172,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                    vt->GetChannelIgnoringPan() == Track::MonoChannel )
                {
                   float gain = vt->GetChannelGain(0);
-                  if (cut || !mAudioThreadFillBuffersLoopRunning || mPaused)
+                  if (drop || !mAudioThreadFillBuffersLoopRunning || mPaused)
                      gain = 0.0;
 
                   // Output volume emulation: possibly copy meter samples, then
@@ -5151,7 +5199,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
                    vt->GetChannelIgnoringPan() == Track::MonoChannel  )
                {
                   float gain = vt->GetChannelGain(1);
-                  if (cut || !mAudioThreadFillBuffersLoopRunning || mPaused)
+                  if (drop || !mAudioThreadFillBuffersLoopRunning || mPaused)
                      gain = 0.0;
 
                   // Output volume emulation (as above)
@@ -5175,9 +5223,6 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
             chanCnt = 0;
          }
-
-         if (mPaused)
-            return paContinue;
 
          // Poke: If there are no playback tracks, then the earlier check
          // about the time indicator being past the end won't happen;
@@ -5353,7 +5398,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
       }
      #endif
    } // if mStreamToken > 0
-   else if( !mPaused ) 
+   else
    {
       // No tracks to play, but we should clear the output, and
       // possibly do software playthrough...
