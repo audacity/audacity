@@ -776,28 +776,29 @@ private:
       sampleCount mSilence;
    };
 
+   using Clock = std::chrono::steady_clock;
+
    struct Duration {
       Duration (ScrubState &queue_) : queue(queue_)
       {
          do {
-            clockTime = ::wxGetLocalTimeMillis();
-            duration = static_cast<long long>(
-               queue.mRate *
-                  (clockTime - queue.mLastScrubTimeMillis).ToDouble()
-                     / 1000.0
-            );
+            clockTime = Clock::now();
+            using Seconds = std::chrono::duration<double>;
+            const auto elapsed = std::chrono::duration_cast<Seconds>(
+               clockTime - queue.mLastScrubTime);
+            duration = static_cast<long long>( queue.mRate * elapsed.count() );
          } while( duration <= 0 && (::wxMilliSleep(1), true) );
       }
       ~Duration ()
       {
          if(!cancelled)
-            queue.mLastScrubTimeMillis = clockTime;
+            queue.mLastScrubTime = clockTime;
       }
 
       void Cancel() { cancelled = true; }
 
       ScrubState &queue;
-      wxLongLong clockTime;
+      Clock::time_point clockTime;
       sampleCount duration;
       bool cancelled { false };
    };
@@ -807,7 +808,7 @@ private:
    std::atomic<bool> mStopped { false };
    Data mData;
    const double mRate;
-   wxLongLong mLastScrubTimeMillis{ ::wxGetLocalTimeMillis() };
+   Clock::time_point mLastScrubTime { Clock::now() };
    struct Message {
       Message() = default;
       Message(const Message&) = default;
