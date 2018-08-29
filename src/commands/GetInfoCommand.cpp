@@ -400,11 +400,11 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
 #endif
          }
       }
-      // Theoretically you could have a stereo LabelTrack, and
-      // this way you'd skip the second version of it.
       // Skip second tracks of stereo...
-      //if( t->GetLinked() )
-      //   t= iter.Next();
+      // This has no effect on label tracks themselves, which are never stereo
+      // but is needed for per track rather than per channel numbering.  
+      if( t->GetLinked() )
+         t= iter.Next();
       if( t )
          t=iter.Next();
       i++;
