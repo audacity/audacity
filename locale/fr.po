@@ -17066,7 +17066,7 @@ msgid "Frequency of Radar Needles (Hz)"
 msgstr "Fréquence des aiguilles de radar (Hz)"
 
 #: plug-ins/vocoder.ny
-#, elisp-format
+#, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Erreur.~%Piste stéréo nécessaire."
 
@@ -17974,7 +17974,7 @@ msgid "Start/End as"
 msgstr "Début/fin comme"
 
 #: plug-ins/adjustable-fade.ny
-#, elisp-format
+#, lisp-format
 msgid "% of Original"
 msgstr "% de l’originel"
 
@@ -18177,7 +18177,7 @@ msgid "Alternating In / Out"
 msgstr "Alternance entrée / sortie"
 
 #: plug-ins/crossfadetracks.ny
-#, elisp-format
+#, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
 msgstr ""
 "Erreur.~%Sélectionnez 2 (ou davantage) pistes pour faire les fondu-enchaînés."
