@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
+#include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"
 #include "../../toolbars/ScrubbingToolBar.h"
@@ -161,6 +162,12 @@ auto Scrubber::ScrubPollerThread::Entry() -> ExitCode
 }
 
 #endif
+
+bool Scrubber::ShouldScrubPinned()
+{
+   return TracksPrefs::GetPinnedHeadPreference() &&
+      !PlaybackPrefs::GetUnpinnedScrubbingPreference();
+}
 
 class Scrubber::ScrubPoller : public wxTimer
 {
@@ -997,7 +1004,7 @@ void Scrubber::DoScrub(bool seek)
    if( !CanScrub() )
       return;
    const bool wasScrubbing = HasMark() || IsScrubbing();
-   const bool scroll = TracksPrefs::GetPinnedHeadPreference();
+   const bool scroll = ShouldScrubPinned();
    if (!wasScrubbing) {
       auto tp = mProject->GetTrackPanel();
       wxCoord xx = tp->ScreenToClient(::wxGetMouseState().GetPosition()).x;

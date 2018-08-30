@@ -2210,7 +2210,7 @@ public:
    static std::shared_ptr<PlayheadHandle>
    HitTest( const AudacityProject *pProject, wxCoord xx )
    {
-      if( TracksPrefs::GetPinnedHeadPreference() &&
+      if( ControlToolBar::IsTransportingPinned() &&
           pProject->IsAudioActive() )
       {
          const auto targetX = GetPlayHeadX( pProject );
@@ -2373,7 +2373,7 @@ private:
             if (!scrubber.HasMark()) {
                // Asynchronous scrub poller gets activated here
                scrubber.MarkScrubStart(
-                  event.event.m_x, TracksPrefs::GetPinnedHeadPreference(), false);
+                  event.event.m_x, Scrubber::ShouldScrubPinned(), false);
             }
          }
       }
@@ -3287,6 +3287,8 @@ void AdornedRulerPanel::UpdateButtonStates()
    };
 
    {
+      // The button always reflects the pinned head preference, even though
+      // there is also a Playback preference that may overrule it for scrubbing
       bool state = TracksPrefs::GetPinnedHeadPreference();
       auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
       if( !state )
@@ -3664,7 +3666,7 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      bool pinned = TracksPrefs::GetPinnedHeadPreference();
+      bool pinned = ControlToolBar::IsTransportingPinned();
       wxBitmap & bmp = theTheme.Bitmap( pinned ? 
          (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
          (playing ? bmpPlayPointer : bmpRecordPointer) 

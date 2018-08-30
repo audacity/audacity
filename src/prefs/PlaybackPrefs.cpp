@@ -49,6 +49,18 @@ void PlaybackPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
+namespace {
+   const char *UnpinnedScrubbingPreferenceKey()
+   {
+      return "/AudioIO/UnpinnedScrubbing";
+   }
+   bool UnpinnedScrubbingPreferenceDefault()
+   {
+      return true;
+   }
+   int iPreferenceUnpinned = -1;
+}
+
 void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    wxTextCtrl *w;
@@ -126,7 +138,9 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartTwoColumn();
       {
-         S.TieCheckBox(_("Always scrub un&pinned"), "/AudioIO/UnpinnedScrubbing", true);
+         S.TieCheckBox(_("Always scrub un&pinned"),
+            UnpinnedScrubbingPreferenceKey(),
+            UnpinnedScrubbingPreferenceDefault());
       }
       S.EndTwoColumn();
    }
@@ -137,8 +151,21 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
 
 }
 
+bool PlaybackPrefs::GetUnpinnedScrubbingPreference()
+{
+   if ( iPreferenceUnpinned >= 0 )
+      return iPreferenceUnpinned == 1;
+   bool bResult = gPrefs->ReadBool(
+      UnpinnedScrubbingPreferenceKey(),
+      UnpinnedScrubbingPreferenceDefault());
+   iPreferenceUnpinned = bResult ? 1: 0;
+   return bResult;
+}
+
 bool PlaybackPrefs::Commit()
 {
+   iPreferenceUnpinned = -1;
+
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 

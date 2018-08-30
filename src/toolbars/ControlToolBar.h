@@ -51,6 +51,8 @@ class ControlToolBar final : public ToolBar {
    ControlToolBar();
    virtual ~ControlToolBar();
 
+   static bool IsTransportingPinned();
+
    void Create(wxWindow *parent) override;
 
    void UpdatePrefs() override;

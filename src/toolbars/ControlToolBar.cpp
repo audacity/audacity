@@ -1505,9 +1505,20 @@ void ControlToolBar::UpdateStatusBar(AudacityProject *pProject)
    pProject->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
 
+bool ControlToolBar::IsTransportingPinned()
+{
+   if (!TracksPrefs::GetPinnedHeadPreference())
+      return false;
+   const auto &scrubber = ::GetActiveProject()->GetScrubber();
+   return
+     !(scrubber.HasMark() &&
+       !scrubber.WasSpeedPlaying() &&
+       !Scrubber::ShouldScrubPinned());
+}
+
 void ControlToolBar::StartScrollingIfPreferred()
 {
-   if (TracksPrefs::GetPinnedHeadPreference())
+   if (IsTransportingPinned())
       StartScrolling();
 #ifdef __WXMAC__
    else if (::GetActiveProject()->GetScrubber().HasMark()) {
