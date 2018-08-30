@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-30 12:04+0100\n"
-"PO-Revision-Date: 2018-08-30 01:41+0100\n"
+"PO-Revision-Date: 2018-08-30 18:05+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -2000,7 +2000,7 @@ msgstr "Remplacer l’audio manquante par du silence (cette session seulement)"
 
 #: src/DirManager.cpp
 msgid "Replace missing audio with silence (permanent immediately)."
-msgstr "Remplacer l’audio manquante par du silence (immédiatement permanent)."
+msgstr "Remplacer l’audio manquant par du silence (immédiatement permanent)."
 
 #: src/DirManager.cpp
 msgid "Warning - Missing Aliased File(s)"
@@ -2080,7 +2080,7 @@ msgstr ""
 
 #: src/DirManager.cpp
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "Remplacer l’audio manquante par du silence (immédiatement permanent)"
+msgstr "Remplacer l’audio manquant par du silence (immédiatement permanent)"
 
 #: src/DirManager.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
@@ -2184,11 +2184,11 @@ msgstr "Mise en cache de l’audio dans la mémoire"
 
 #: src/DirManager.cpp
 msgid "Saving recorded audio"
-msgstr "Sauvegarde de l’audio enregistrée"
+msgstr "Sauvegarde de l’audio enregistré"
 
 #: src/DirManager.cpp
 msgid "Saving recorded audio to disk"
-msgstr "Sauvegarder de l’audio enregistrée sur le disque"
+msgstr "Sauvegarder de l’audio enregistré sur le disque"
 
 #: src/FFT.cpp
 msgid "Rectangular"
@@ -2456,7 +2456,7 @@ msgid ""
 "Too much audio was selected.  Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
-"Trop d’audio a été sélectionnée.  Seules les %.1f premières secondes d’audio "
+"Trop d’audio a été sélectionné.  Seules les %.1f premières secondes d’audio "
 "seront analysées."
 
 #: src/FreqWindow.cpp
@@ -3014,7 +3014,7 @@ msgstr "&Exporter l’audio…"
 
 #: src/Menus.cpp
 msgid "Expo&rt Selected Audio..."
-msgstr "Expo&rter l’audio sélectionnée…"
+msgstr "Expo&rter l’audio sélectionné…"
 
 # trebmuh to check (accélérateur)
 #: src/Menus.cpp
@@ -3172,7 +3172,7 @@ msgstr "&Taper pour créer un marqueur (marche/arrêt)"
 # trebmuh to check (vérifier dans un contexte graphique)
 #: src/Menus.cpp
 msgid "La&beled Audio"
-msgstr "Audio éti&quetée"
+msgstr "Audio éti&queté"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4759,7 +4759,7 @@ msgstr "Exporter MIDI"
 
 #: src/Menus.cpp
 msgid "Export Selected Audio"
-msgstr "Exporter l’audio sélectionnée"
+msgstr "Exporter l’audio sélectionné"
 
 #: src/Menus.cpp
 msgid "Nothing to undo"
@@ -4804,7 +4804,7 @@ msgstr "Coller le texte dans le nouveau marqueur"
 #: src/Menus.cpp
 #, c-format
 msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Rogner la piste audio sélectionnée de %.2f secondes à %.2f secondes"
+msgstr "Rogner la piste audio sélectionné de %.2f secondes à %.2f secondes"
 
 #: src/Menus.cpp
 msgid "Trim Audio"
@@ -4813,7 +4813,7 @@ msgstr "Rognage audio"
 #: src/Menus.cpp
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Audio supprimée de %.2f secondes à t=%.2f"
+msgstr "Audio supprimé de %.2f secondes à t=%.2f"
 
 #: src/Menus.cpp
 msgid "Split Delete"
@@ -4862,7 +4862,7 @@ msgstr "Couper les régions audio marquées vers le presse-papier"
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Cut Labeled Audio"
-msgstr "Couper l’audio marquée"
+msgstr "Couper l’audio marqué"
 
 #. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
 #: src/Menus.cpp
@@ -4876,12 +4876,12 @@ msgstr "Scinder l’audio marquée"
 
 #: src/Menus.cpp
 msgid "Copied labeled audio regions to clipboard"
-msgstr "Régions de l’audio marquée copiées vers le presse-papier"
+msgstr "Régions de l’audio marqué copiées vers le presse-papier"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Copy Labeled Audio"
-msgstr "Copier l’audio marquée"
+msgstr "Copier l’audio marqué"
 
 #. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
 #: src/Menus.cpp
@@ -4891,7 +4891,7 @@ msgstr "Régions audio marquées supprimées"
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Delete Labeled Audio"
-msgstr "Supprimer l’audio marquée"
+msgstr "Supprimer l’audio marqué"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
 #: src/Menus.cpp
@@ -4901,7 +4901,7 @@ msgstr "Les régions audio marquées effacées ont été partagées"
 #. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
 #: src/Menus.cpp
 msgid "Split Delete Labeled Audio"
-msgstr "Les audio marquées effacées ont été partagées"
+msgstr "Les audio marqués effacés ont été partagés"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4911,34 +4911,34 @@ msgstr "Régions audio marquées muettes"
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Silence Labeled Audio"
-msgstr "Silencer l’audio marquée"
+msgstr "Silencer l’audio marqué"
 
 #. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
 #: src/Menus.cpp
 msgid "Split labeled audio (points or regions)"
-msgstr "Séparer l’audio marquée (points ou régions)"
+msgstr "Séparer l’audio marqué (points ou régions)"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Split Labeled Audio"
-msgstr "Séparer l’audio marquée"
+msgstr "Séparer l’audio marqué"
 
 #. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
 #: src/Menus.cpp
 msgid "Joined labeled audio (points or regions)"
-msgstr "Audio marquée raccordée (points ou régions)"
+msgstr "Audio marqué raccordé (points ou régions)"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Join Labeled Audio"
-msgstr "Raccorder l’audio marquée"
+msgstr "Raccorder l’audio marqué"
 
 #. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
 #. This message appears in history and tells you about something
 #. Audacity has done.
 #: src/Menus.cpp
 msgid "Detached labeled audio regions"
-msgstr "Régions marquées de l’audio détachées"
+msgstr "Régions audio marquées détachées"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -6149,9 +6149,8 @@ msgstr ""
 "Pour un fichier audio qui sera ouvert dans d’autres applications,\n"
 "utiliser 'Exporter'.\n"
 "\n"
-"Les fichiers compressés de projet sont une bonne façon de transmettre "
-"votre \n"
-"projet en ligne, mais ils ont des pertes de fidélité.\n"
+"Les fichiers compressés de projet sont une bonne façon de transmettre\n"
+"votre projet en ligne, mais ils ont des pertes de fidélité.\n"
 
 #: src/Project.cpp
 #, c-format
@@ -6210,9 +6209,8 @@ msgid ""
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Le projet ne sera pas sauvegardé parce que le projet sélectionné est "
-"ouvert \n"
-"dans une autre fenêtre.\n"
+"Le projet ne sera pas sauvegardé parce que le projet sélectionné est\n"
+"ouvert dans une autre fenêtre.\n"
 "Veuillez recommencer et choisissez un nom original."
 
 #: src/Project.cpp
@@ -6286,7 +6284,7 @@ msgid ""
 "\n"
 "You are saving directly to a slow external storage device\n"
 msgstr ""
-"L’audio enregistrée a été perdue aux emplacements marqués.\n"
+"L’audio enregistré a été perdu aux emplacements marqués.\n"
 "Causes possibles :\n"
 "\n"
 "D’autres applications sont en compétition avec Audacity en ce qui concerne "
@@ -6301,7 +6299,7 @@ msgstr "Désactiver la détection de désynchronisation"
 
 #: src/Project.cpp
 msgid "Recorded Audio"
-msgstr "Audio enregistrée"
+msgstr "Audio enregistré"
 
 #: src/Project.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
@@ -7402,7 +7400,7 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "No Audio Selected"
-msgstr "Pas d’audio sélectionnée"
+msgstr "Pas d’audio sélectionné"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp
@@ -8141,7 +8139,7 @@ msgstr "Paramètre différentes valeurs pour une piste."
 
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
-msgstr "Augmente ou réduit le volume de l’audio que vous avez sélectionnée"
+msgstr "Augmente ou réduit le volume de l’audio que vous avez sélectionné"
 
 #: src/effects/Amplify.cpp
 msgid "Amplification (dB):"
@@ -8601,7 +8599,7 @@ msgid ""
 "Please ensure that audio is selected."
 msgstr ""
 "Sélection audio invalide.\n"
-"Veuillez vous assurez que l’audio est sélectionnée."
+"Veuillez vous assurez que l’audio est sélectionné."
 
 #: src/effects/Contrast.cpp
 msgid ""
@@ -8612,7 +8610,7 @@ msgstr ""
 "Sélectionnez une portion de piste."
 
 #: src/effects/Contrast.cpp
-msgid "Please select an audio track."
+msgid "Please select an *track."
 msgstr "Veuillez sélectionner une piste audio."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
@@ -9156,7 +9154,7 @@ msgstr "Tonalités DTMF"
 
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
-msgstr "Répète l’audio sélectionnée encore et encore"
+msgstr "Répète l’audio sélectionné encore et encore"
 
 #: src/effects/Echo.cpp src/effects/FindClipping.cpp
 #: src/effects/Paulstretch.cpp
@@ -9836,19 +9834,19 @@ msgstr ""
 
 #: src/effects/Fade.cpp
 msgid "Applies a linear fade-in to the selected audio"
-msgstr "Applique un fondu à l’ouverture linéaire à l’audio sélectionnée"
+msgstr "Applique un fondu à l’ouverture linéaire à l’audio sélectionné"
 
 #: src/effects/Fade.cpp
 msgid "Applies a linear fade-out to the selected audio"
-msgstr "Applique un fondu à la fermeture linéaire à l’audio sélectionnée"
+msgstr "Applique un fondu à la fermeture linéaire à l’audio sélectionné"
 
 #: src/effects/Fade.h
 msgid "Fade In"
-msgstr "Fondre en ouverture"
+msgstr "Fondu en ouverture"
 
 #: src/effects/Fade.h
 msgid "Fade Out"
-msgstr "Fondre en fermeture"
+msgstr "Fondu en fermeture"
 
 #: src/effects/FindClipping.cpp
 msgid "Creates labels where clipping is detected"
@@ -10296,7 +10294,7 @@ msgstr "Normaliser"
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
-"Paulstretch ne s'utilise que pour un étirement temporel extrême ou pour un "
+"Paulstretch ne s’utilise que pour un étirement temporel extrême ou pour un "
 "effet de \"stase\""
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
@@ -10435,7 +10433,7 @@ msgid ""
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
 "L’effet de réparation est destiné à être utilisé avec de très courtes "
-"sections d’audio endommagée (jusqu’à 128 échantillons).\n"
+"sections d’audio endommagées (jusqu’à 128 échantillons).\n"
 "\n"
 "Zoomez et sélectionnez une courte fraction de seconde à réparer."
 
@@ -10578,7 +10576,7 @@ msgstr "Réverbération"
 
 #: src/effects/Reverse.cpp
 msgid "Reverses the selected audio"
-msgstr "Renverse l’audio sélectionnée"
+msgstr "Renverse l’audio sélectionné"
 
 #: src/effects/Reverse.h
 msgid "Reverse"
@@ -10883,7 +10881,7 @@ msgid ""
 "each Sync-Locked Track Group."
 msgstr ""
 "Lorsque tronqué indépendamment, il pourrait n’y avoir qu’une seule piste "
-"d’audio sélectionnée dans chaque groupe de pistes synchro-verrouillées."
+"d’audio sélectionné dans chaque groupe de pistes synchro-verrouillées."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -11660,7 +11658,7 @@ msgstr "Toute la sélection audio est muette."
 
 #: src/export/Export.cpp src/export/ExportMultiple.cpp
 msgid "All audio is muted."
-msgstr "Toute l’audio est muette."
+msgstr "Tout l’audio est muet."
 
 #: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
@@ -11707,7 +11705,7 @@ msgid ""
 msgstr ""
 "Vous essayez d’écraser un fichier associé qui est manquant.\n"
 "               Le fichier ne peut pas être inscrit car le chemin est "
-"nécessaire pour restaurer l’audio originelle dans le projet.\n"
+"nécessaire pour restaurer l’audio originel dans le projet.\n"
 "               Choisissez Aide > Diagnostics > Vérifier les Dépendances pour "
 "voir les emplacements de tous les fichiers manquants.\n"
 "               Si vous souhaitez toujours exporter, veuillez choisir un nom "
@@ -12790,9 +12788,9 @@ msgid ""
 "You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
-"Vous n'avez pas de pistes audio non-silenciées et aucun marqueur "
-"applicable,\n"
-"donc vous ne pouvez pas exporter vers des fichiers audio séparés."
+"Vous n'avez pas de pistes audio non-silenciées et aucun marqueur\n"
+"applicable, donc vous ne pouvez pas exporter vers des fichiers\n"
+"audio séparés."
 
 #: src/export/ExportMultiple.cpp
 msgid "Export files to:"
@@ -15350,7 +15348,7 @@ msgstr "Rogner l’audio autour de la sélection"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Silence audio selection"
-msgstr "Taire l’audio sélectionnée"
+msgstr "Silencier l’audio sélectionné"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Sync-Lock Tracks"
@@ -17030,7 +17028,7 @@ msgstr "Alex S. Brown"
 #: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
 #: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
-msgstr "Fourni sous les termes de la licence public général GNU version 2"
+msgstr "Fourni sous les termes de la licence public générale GNU version 2"
 
 #: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
 msgid "Treat audio below this level as silence [ -dB]"
@@ -17050,7 +17048,7 @@ msgid ""
 "No silences found. Try reducing the silence~%level and minimum silence "
 "duration."
 msgstr ""
-"Pas de silence trouvés. Essayez de réduire la~%valeur de silence et la "
+"Pas de silence trouvé. Essayez de réduire la~%valeur de silence et la "
 "duréede silence minimum."
 
 #: plug-ins/SoundFinder.ny
@@ -17075,7 +17073,7 @@ msgstr "Marque un point de départ [secondes avant que le son ne démarre]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Label ending point [seconds after sound ends]"
-msgstr "Marque un point de fin [secondes après que le son ne s'arrête]"
+msgstr "Marque un point de fin [secondes après que le son ne s’arrête]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Add a label at the end of the track? [No=0, Yes=1]"
@@ -17087,8 +17085,8 @@ msgid ""
 "No sounds found. Try reducing the silence~%level and minimum silence "
 "duration."
 msgstr ""
-"Aucun son trouvé. Essayez de réduire la durée~% du niveau de silence et "
-"lesilence minimum "
+"Aucun son trouvé. Essayez de réduire le niveau~%du silence et la "
+"durée de silence minimum "
 
 #: plug-ins/SoundFinder.ny
 msgid "[End]"
@@ -17175,9 +17173,9 @@ msgid ""
 "                        be greater than ~a Hz"
 msgstr ""
 "~aLa sélection de fréquence est trop haute pour le taux d’échantillonnage "
-"dela piste.~%~\n"
+"de la piste.~%~\n"
 "                        Pour la piste actuelle, le paramétrage de la "
-"fréquencehaute ne peut pas~%~\n"
+"fréquence haute ne peut pas~%~\n"
 "                        être plus grande que ~a Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
@@ -17197,7 +17195,7 @@ msgstr "Étages d’édition spectrale"
 
 #: plug-ins/StudioFadeOut.ny
 msgid "Studio Fade Out"
-msgstr "Fondre en fermeture du studio"
+msgstr "Fondu en fermeture du studio"
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 msgid "Applying Fade..."
@@ -17225,11 +17223,11 @@ msgstr "Type de fondu"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Up"
-msgstr "Fondre en ouverture"
+msgstr "Fondu en ouverture"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Down"
-msgstr "Fondre en fermeture"
+msgstr "Fondu en fermeture"
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: plug-ins/adjustable-fade.ny
@@ -17342,7 +17340,7 @@ msgid ""
 msgstr ""
 "~aLes valeurs dB ne peuvent pas être à plus de +100 dB.~%~%~\n"
 "                                 Astuce : 6 dB double l’amplitude~%~\n"
-"                                 \t-6 dB divise l’amplitude par deux."
+"                                 t-6 dB divise l’amplitude par deux."
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
@@ -17377,7 +17375,7 @@ msgstr "Benjamin Schwartz et Steve Daulton"
 msgid ""
 "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr ""
-"Licence confirmée sous les termes de la licence public général GNU version 2"
+"Licence confirmée sous les termes de la licence public générale GNU version 2"
 
 #: plug-ins/clipfix.ny
 msgid "Threshold of Clipping (%)"
@@ -17678,7 +17676,7 @@ msgid ""
 "                   Frequency must be less than ~a Hz."
 msgstr ""
 "Erreur :~%~%la fréquence (~a Hz) est trop haute pour le taux "
-"d’échantillonnagede la piste.~%~%~\n"
+"d’échantillonnage de la piste.~%~%~\n"
 "                   Le taux d’échantillonnage de la piste est de ~a Hz~%~\n"
 "                   la fréquence doit être plus petite que ~a Hz."
 
@@ -17767,7 +17765,7 @@ msgstr "Steve Daulton et Bill Wharrie"
 
 #: plug-ins/notch.ny
 msgid "Q (higher value reduces width)"
-msgstr "Q (un valeur plus haute réduit la largeur)"
+msgstr "Q (une valeur plus haute réduit la largeur)"
 
 #: plug-ins/notch.ny
 #, lisp-format
@@ -17777,7 +17775,7 @@ msgid ""
 "                 Frequency must be less than ~a Hz."
 msgstr ""
 "Erreur :~%~%La fréquence (~a Hz) est trop haute pour le taux "
-"d’échantillonnagede la piste.~%~%~\n"
+"d’échantillonnage de la piste.~%~%~\n"
 "                 Le taux d’échantillonnage de la piste est de ~a Hz.~%~\n"
 "                 La fréquence doit être en dessous de ~a Hz."
 
@@ -17786,6 +17784,7 @@ msgstr ""
 msgid "Pluck"
 msgstr "Pluck"
 
+# trebmuh : à vérifier
 #: plug-ins/pluck.ny
 msgid "Generating pluck sound..."
 msgstr "Génération de son pluck…"
@@ -17799,6 +17798,7 @@ msgstr ""
 msgid "David R.Sky"
 msgstr "David R.Sky"
 
+# trebmuh : à vérifier
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
 msgstr "Hauteur MIDI pluck"
@@ -17903,7 +17903,7 @@ msgstr "Bruit de résonnance"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Noise Click"
-msgstr "clic de bruit"
+msgstr "Clic de bruit"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Drip (short)"
@@ -17936,7 +17936,7 @@ msgstr ""
 # trebmuh : à vérifier
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
-msgstr "Batterie risset"
+msgstr "Batterie Risset"
 
 #: plug-ins/rissetdrum.ny
 msgid "Generating Risset Drum..."
@@ -17960,7 +17960,7 @@ msgstr "Largeur de la bande de bruit (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amount of noise in mix (percent)"
-msgstr "Quantité de bruit dans le pix (pourcentage)"
+msgstr "Quantité de bruit dans le mix (pourcentage)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amplitude (0 - 1)"
@@ -18046,7 +18046,7 @@ msgstr "Afficher les messages"
 
 #: plug-ins/sample-data-export.ny
 msgid "Errors Only"
-msgstr "Erreur seulement"
+msgstr "Erreurs seulement"
 
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
@@ -18168,7 +18168,7 @@ msgstr "Gauche : ~a lin, ~a dB | Droite : ~a linéaire, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
 msgid "sample data"
-msgstr "Données d’échantillon"
+msgstr "données d’échantillon"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample #"
@@ -18324,7 +18324,7 @@ msgstr "Erreur.~%Incapable d’ouvrir le fichier"
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
-msgstr "Tremolo"
+msgstr "Trémolo"
 
 #: plug-ins/tremolo.ny
 msgid "Applying Tremolo..."
@@ -18430,7 +18430,7 @@ msgid ""
 "This means:~%~a~%"
 msgstr ""
 "Position panoramique : ~a~%Les canaux gauche et droit sont corrélés "
-"parenviron ~a %. Ceci signifie :~%~a~%"
+"par environ ~a %. Ceci signifie :~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18450,14 +18450,14 @@ msgid ""
 "   Most likely, the center extraction will be poor."
 msgstr ""
 " - Les deux canaux sont fortement reliés, càd. presque mono ou extrêment "
-"pannoramisés.\n"
+"panoramisés.\n"
 "   À priori, l’extraction du centre sera pauvre."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - A fairly good value, at least stereo in average and not too wide spread."
 msgstr ""
-"Une valeur plutôt bonne, au moins stéréo en moyenne, et pas trop étalée."
+" - Une valeur plutôt bonne, au moins stéréo en moyenne, et pas trop étalée."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18465,7 +18465,7 @@ msgid ""
 "  However, the center extraction depends also on the used reverb."
 msgstr ""
 " - Une valeur idéale pour de la stéréo.\n"
-"  cependant, l’extraction du centre dépend également de la réverb utilisée."
+"  Cependant, l’extraction du centre dépend également de la réverb utilisée."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18475,7 +18475,7 @@ msgid ""
 "   The center extraction can still be good though."
 msgstr ""
 " - Les deux canaux ne sont presque pas reliés.\n"
-"   Vous avez soit seulement du bruit, soit la pièce est mastérisée d’une "
+"   Vous avez soit seulement du bruit, soit le morceau est mastérisé d’une "
 "manière non-balancée.\n"
 "   L’extraction du centre peut quand même ête bon ceci dit."
 
@@ -18485,8 +18485,8 @@ msgid ""
 "   This can cause strange effects.\n"
 "   Especially when played by only one speaker."
 msgstr ""
-" - bien que la piste soit stéréo, le champ est évidemment très large.\n"
-"   ceci peut provoquer des effets étranges.\n"
+" - Bien que la piste soit stéréo, le champ est évidemment très large.\n"
+"   Ceci peut provoquer des effets étranges.\n"
 "   Spécialement lorsqu'il est joué par seulement un haut-parleur."
 
 #: plug-ins/vocalrediso.ny
@@ -18498,7 +18498,7 @@ msgid ""
 msgstr ""
 " - Les deux canaux sont presque identiques.\n"
 "   Évidemment, un effet de pseudo stéréo a été utilisé\n"
-"   pourétaler le signal sur la distance physique entre les haut-parleurs.\n"
+"   pour étaler le signal sur la distance physique entre les haut-parleurs.\n"
 " N'espérez pas de bons résultats d’une suppression de centre."
 
 #: plug-ins/vocalrediso.ny
@@ -18535,7 +18535,7 @@ msgstr "Suppression d’une bande de fréquence"
 
 #: plug-ins/vocalremover.ny
 msgid "Retain Frequency Band"
-msgstr "Conserve dun bande de fréquence"
+msgstr "Conservation d’une bande de fréquence"
 
 #: plug-ins/vocalremover.ny
 msgid "Frequency band from (Hz)"
@@ -18631,12 +18631,12 @@ msgstr ""
 "              Un filtre stop-bande sélectionné est~%~\n"
 "              ~a Hz à ~a Hz.~%~\n"
 "              Un filtre stop-bande très proche pourrait avoir~%~\n"
-"              des résultats insttendus.~%~%"
+"              des résultats inattendus.~%~%"
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: plug-ins/vocalremover.ny
 msgid "Current settings returned the original audio."
-msgstr "Les paramètres actuels ont rendus l’audio originelle."
+msgstr "Les paramètres actuels ont rendus l’audio originel."
 
 #: plug-ins/vocoder.ny
 msgid "Vocoder"
@@ -18672,7 +18672,7 @@ msgstr "Nombre de bandes de vocodeurs"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of original audio (percent)"
-msgstr "Amplitude de l’audio originale (pourcent)"
+msgstr "Amplitude de l’audio originel (pourcent)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of white noise (percent)"
@@ -18698,7 +18698,7 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 #~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
 #~ "to the right place."
 #~ msgstr ""
-#~ "Le réglage de correction de latence a caché l’audio enregistrée avant le "
+#~ "Le réglage de correction de latence a caché l’audio enregistré avant le "
 #~ "zéro.\n"
 #~ "Audacity l’a ramené au zéro.\n"
 #~ "Vous pourrez avoir à utiliser l’outil de glissement temporel (<---> ou "
