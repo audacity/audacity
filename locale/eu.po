@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 12:04+0100\n"
+"POT-Creation-Date: 2018-08-30 22:06+0100\n"
 "PO-Revision-Date: 2018-01-21 09:48+0100\n"
 "Last-Translator: EUS_Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi)\n"
@@ -14416,6 +14416,14 @@ msgstr "Aldi la&burra:"
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Lo&ng period:"
 msgstr "Aldi lu&zea:"
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "Always scrub un&pinned"
+msgstr ""
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"

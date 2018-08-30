@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 12:04+0100\n"
+"POT-Creation-Date: 2018-08-30 22:06+0100\n"
 "PO-Revision-Date: 2013-09-19 05:24-0000\n"
 "Last-Translator: Martin Bagic\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
@@ -14768,6 +14768,14 @@ msgstr "&Kratak skok:"
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Lo&ng period:"
 msgstr "&Dugi skok:"
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "Always scrub un&pinned"
+msgstr ""
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"

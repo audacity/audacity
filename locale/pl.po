@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 12:04+0100\n"
+"POT-Creation-Date: 2018-08-30 22:06+0100\n"
 "PO-Revision-Date: 2018-08-07 21:34+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/"
@@ -14169,6 +14169,14 @@ msgstr "&Krótki odcinek:"
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Lo&ng period:"
 msgstr "&Długi odcinek:"
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "Always scrub un&pinned"
+msgstr ""
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"

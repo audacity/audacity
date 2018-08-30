@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 12:04+0100\n"
+"POT-Creation-Date: 2018-08-30 22:06+0100\n"
 "PO-Revision-Date: 2018-07-23 15:09+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/klyok/audacity/language/"
@@ -14271,6 +14271,14 @@ msgstr "&Короткий период:"
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Lo&ng period:"
 msgstr "&Длинный период:"
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "Always scrub un&pinned"
+msgstr ""
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"

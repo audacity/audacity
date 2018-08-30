@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 12:04+0100\n"
+"POT-Creation-Date: 2018-08-30 22:06+0100\n"
 "PO-Revision-Date: 2008-06-26 15:07+0700\n"
 "Last-Translator: Nguyen Dinh Trung <nguyendinhtrung141@gmail.com>\n"
 "Language-Team: \n"
@@ -14316,6 +14316,14 @@ msgstr ""
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Lo&ng period:"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "Always scrub un&pinned"
 msgstr ""
 
 #: src/prefs/PrefsDialog.cpp
