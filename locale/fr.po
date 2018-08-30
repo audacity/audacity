@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-29 11:18+0100\n"
+"POT-Creation-Date: 2018-08-30 12:04+0100\n"
 "PO-Revision-Date: 2018-08-30 01:41+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
@@ -1597,8 +1597,7 @@ msgstr "Le nombre maximal d’édition devrait être dans la plage 1 - 10000."
 
 #: src/Benchmark.cpp
 msgid "Test data size should be in the range 1 - 2000 MB."
-msgstr ""
-"La taille des données de test devrait être dans la plage 1 - 2000 Mo."
+msgstr "La taille des données de test devrait être dans la plage 1 - 2000 Mo."
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: src/Benchmark.cpp
@@ -2386,7 +2385,7 @@ msgstr "Fréquence logarithmique"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
+#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -5528,14 +5527,13 @@ msgstr ""
 "\n"
 "N’utilisez que les modules provenant de sources fiables"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
-#: plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Oui"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
-#: plug-ins/equalabel.ny plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "Non"
 
@@ -6151,7 +6149,8 @@ msgstr ""
 "Pour un fichier audio qui sera ouvert dans d’autres applications,\n"
 "utiliser 'Exporter'.\n"
 "\n"
-"Les fichiers compressés de projet sont une bonne façon de transmettre votre \n"
+"Les fichiers compressés de projet sont une bonne façon de transmettre "
+"votre \n"
 "projet en ligne, mais ils ont des pertes de fidélité.\n"
 
 #: src/Project.cpp
@@ -6211,7 +6210,8 @@ msgid ""
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Le projet ne sera pas sauvegardé parce que le projet sélectionné est ouvert \n"
+"Le projet ne sera pas sauvegardé parce que le projet sélectionné est "
+"ouvert \n"
 "dans une autre fenêtre.\n"
 "Veuillez recommencer et choisissez un nom original."
 
@@ -10187,7 +10187,8 @@ msgstr "Retirer (&m)"
 
 #: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude or loudness of one or more tracks"
-msgstr "Paramètre l’amplitude de crête ou la sonie pour une ou plusieurs pistes"
+msgstr ""
+"Paramètre l’amplitude de crête ou la sonie pour une ou plusieurs pistes"
 
 #: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
@@ -11565,7 +11566,7 @@ msgstr "Le fichier n’a pas pu être sauvegardé"
 msgid ""
 "Value range:\n"
 "%s to %s"
-msgstr 
+msgstr ""
 "Plage de valeur :\n"
 "%s à %s"
 
@@ -12789,7 +12790,8 @@ msgid ""
 "You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
-"Vous n'avez pas de pistes audio non-silenciées et aucun marqueur applicable,\n"
+"Vous n'avez pas de pistes audio non-silenciées et aucun marqueur "
+"applicable,\n"
 "donc vous ne pouvez pas exporter vers des fichiers audio séparés."
 
 #: src/export/ExportMultiple.cpp
@@ -13983,7 +13985,7 @@ msgstr "L’heure d’enregistrement des fichiers Allegro exportés (.gro) :"
 msgid "&Seconds"
 msgstr "&Secondes"
 
-#trebmuh : accélérateur
+# trebmuh : accélérateur
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Beats"
 msgstr "Pulsations (&b)"
@@ -17005,70 +17007,359 @@ msgstr "Erreur : %hs à la ligne %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Impossible de charger le fichier : \"%s\""
 
-#: plug-ins/vocoder.ny
-msgid "Vocoder"
-msgstr "Vocodeur"
+#: plug-ins/SilenceMarker.ny
+msgid "Silence Finder"
+msgstr "Trouveur de silence"
 
-#: plug-ins/vocoder.ny
-msgid "Processing Vocoder..."
-msgstr "Traitement vocodeur…"
+#: plug-ins/SilenceMarker.ny
+msgid "Finding silence..."
+msgstr "Recherche de silence…"
 
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
-msgstr "Edgar-RFT"
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr "Alex S. Brown"
 
-#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
-#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
-#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
-#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
+#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr "Fourni sous les termes de la licence public général GNU version 2"
 
-#: plug-ins/vocoder.ny
-msgid "Distance: (1 to 120, default = 20)"
-msgstr "Distance : (1 à 120, défaut = 20)"
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr "Traite l’audio en dessous de ce niveau comme du silence [ -dB]"
 
-#: plug-ins/vocoder.ny
-msgid "Output choice"
-msgstr "Choix de sortie"
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr "Durée minimum de silence [secondes]"
 
-#: plug-ins/vocoder.ny
-msgid "Both Channels"
-msgstr "Les deux Canaux"
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr "Placement de marqueur [secondes avant que le silence ne finisse]"
 
-#: plug-ins/vocoder.ny
-msgid "Right Only"
-msgstr "Droit uniquement"
-
-#: plug-ins/vocoder.ny
-msgid "Number of vocoder bands"
-msgstr "Nombre de bandes de vocodeurs"
-
-#: plug-ins/vocoder.ny
-msgid "Amplitude of original audio (percent)"
-msgstr "Amplitude de l’audio originale (pourcent)"
-
-#: plug-ins/vocoder.ny
-msgid "Amplitude of white noise (percent)"
-msgstr "Amplitude du bruit blanc (pourcent)"
-
-#: plug-ins/vocoder.ny
-msgid "Amplitude of Radar Needles (percent)"
-msgstr "Amplitude des aiguilles de radar (pourcent)"
-
-#: plug-ins/vocoder.ny
-msgid "Frequency of Radar Needles (Hz)"
-msgstr "Fréquence des aiguilles de radar (Hz)"
-
-#: plug-ins/vocoder.ny
+#: plug-ins/SilenceMarker.ny
 #, lisp-format
-msgid "Error.~%Stereo track required."
-msgstr "Erreur.~%Piste stéréo nécessaire."
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Pas de silence trouvés. Essayez de réduire la~%valeur de silence et la "
+"duréede silence minimum."
+
+#: plug-ins/SoundFinder.ny
+msgid "Sound Finder"
+msgstr "Trouveur de son"
+
+#: plug-ins/SoundFinder.ny
+msgid "Finding sound..."
+msgstr "Recherche d’un son…"
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr "Jeremy R. Brown"
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr "Durée minimum de silence entre des sons [secondes]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr "Marque un point de départ [secondes avant que le son ne démarre]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr "Marque un point de fin [secondes après que le son ne s'arrête]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr "Ajoute un marqueur à la fin de la piste ? [Non=0, Oui=1]"
+
+#: plug-ins/SoundFinder.ny
+#, lisp-format
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Aucun son trouvé. Essayez de réduire la durée~% du niveau de silence et "
+"lesilence minimum "
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr "[Fin]"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid "Spectral edit multi tool"
+msgstr "Multi-outils d’édition spectrale"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Filtering..."
+msgstr "Filtrage…"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Paul Licameli"
+msgstr "Paul Licameli"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "~aPlease select frequencies."
+msgstr "~aVeuillez sélectionner les fréquences."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+"~aLa bande passante est de zéro (les fréquences haute~%~\n"
+"                       et basse sont toutes deux de ~a Hz).~%~\n"
+"                       Veuillez sélectionner une plage de fréquence."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+"~aLes paramètres de filtre à peigne ne peuvent pas être appliqués.~%~\n"
+"                      Essayez d’augmenter la limite de fréquence basse~%~\n"
+"                      ou de réduire le filtre de largeur ('Width')."
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "Error.~%"
+msgstr "Erreur.~%"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "Spectral edit parametric EQ"
+msgstr "Égalisation paramétrique de l’édition spectrale"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid "Gain (dB)"
+msgstr "Gain (dB)"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aLow frequency is undefined."
+msgstr "~aLa fréquence basse est indéfinie."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aHigh frequency is undefined."
+msgstr "~aLa fréquence haute est indéfinie."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "~aLa fréquence centrale doit être supérieure à 0 Hz."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+"~aLa sélection de fréquence est trop haute pour le taux d’échantillonnage "
+"dela piste.~%~\n"
+"                        Pour la piste actuelle, le paramétrage de la "
+"fréquencehaute ne peut pas~%~\n"
+"                        être plus grande que ~a Hz"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+"~aLa largeur de bande est de zéro (les fréquences~%~\n"
+"                         haute et basse sont toutes deux de ~a Hz).~%~\n"
+"                         Veuillez sélectionner une plage de fréquence."
+
+#: plug-ins/SpectralEditShelves.ny
+msgid "Spectral edit shelves"
+msgstr "Étages d’édition spectrale"
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Studio Fade Out"
+msgstr "Fondre en fermeture du studio"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+msgid "Applying Fade..."
+msgstr "Application du fondu…"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
+msgid "Steve Daulton"
+msgstr "Steve Daulton"
+
+#: plug-ins/StudioFadeOut.ny
+#, lisp-format
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr "Sélection trop courte.~%Elle doit faire plus de 2 échantillons."
+
+#: plug-ins/adjustable-fade.ny
+msgid "Adjustable Fade"
+msgstr "Fondu ajustable"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Type"
+msgstr "Type de fondu"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Up"
+msgstr "Fondre en ouverture"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Down"
+msgstr "Fondre en fermeture"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Up"
+msgstr "Courbe-S vers le haut"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Down"
+msgstr "Courbe-S vers le bas"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr "Ajustement fondu-milieu (%)"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/adjustable-fade.ny
+msgid "Start/End as"
+msgstr "Début/fin comme"
+
+#: plug-ins/adjustable-fade.ny
+msgid "% of Original"
+msgstr "% de l’originel"
+
+#: plug-ins/adjustable-fade.ny
+msgid "dB Gain"
+msgstr "Gain dB"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start (or end)"
+msgstr "Début (ou fin)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr "Fin (ou début)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr "Préréglages pratiques (écrase les contrôles)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "None Selected"
+msgstr "Aucune sélection"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Linear In"
+msgstr "Entrée linéaire"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Linear Out"
+msgstr "Sortie linéaire"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr "Entrée exponentielle"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr "Sortie exponentielle"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic In"
+msgstr "Entrée logarithmique"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic Out"
+msgstr "Sortie logarithmique"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded In"
+msgstr "Entrée arrondie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded Out"
+msgstr "Sortie arrondie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine In"
+msgstr "Entrée cosinus"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine Out"
+msgstr "Sortie cosinus"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve In"
+msgstr "Entrée en courbe-S"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Out"
+msgstr "Sortie en courbe-S"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be negative."
+msgstr "~aLes valeurs de pourcentage ne peuvent pas être négatives."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "~aLes valeurs de pourcentage ne peuvent pas être à plus de 1000 %."
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 t-6 dB halves the amplitude."
+msgstr ""
+"~aLes valeurs dB ne peuvent pas être à plus de +100 dB.~%~%~\n"
+"                                 Astuce : 6 dB double l’amplitude~%~\n"
+"                                 \t-6 dB divise l’amplitude par deux."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "Error~%~%"
+msgstr "Erreur~%~%"
+
+#: plug-ins/beat.ny
+msgid "Beat Finder"
+msgstr "Trouveur de pulsation"
+
+#: plug-ins/beat.ny
+msgid "Finding beats..."
+msgstr "Recherche de pulsations…"
+
+#: plug-ins/beat.ny
+msgid "Threshold Percentage"
+msgstr "Pourcentage du seuil de déclenchement"
 
 #: plug-ins/clipfix.ny
 msgid "Clip Fix"
@@ -17096,6 +17387,438 @@ msgstr "Seuil de déclenchement du clipping (%)"
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr "Réduire l’amplitude pour permettre la restauration des pics (dB)"
 
+#: plug-ins/crossfadeclips.ny
+msgid "Crossfade Clips"
+msgstr "Clips de fondu-enchaîné"
+
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+msgid "Crossfading..."
+msgstr "Fondu-enchaîné…"
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+"Erreur.~%Sélection invalide.~%Plus de 2 clips audio clips sélectionnés."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"Erreur.~%Sélection invalide.~%Espace vide au début/fin de la sélection."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+"Erreur.~%Les clips de fondu-enchaîné peuvent seulement être appliqués à une "
+"piste."
+
+#: plug-ins/crossfadetracks.ny
+msgid "Crossfade Tracks"
+msgstr "Fondu-enchaîné de pistes"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade type"
+msgstr "Type de fondu"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Gain"
+msgstr "Gain constant"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 1"
+msgstr "Puissance de 1 constante"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 2"
+msgstr "Puissance de 2 constante"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom Curve"
+msgstr "Courbe personnalisée"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom curve"
+msgstr "Courbe personnalisée"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade direction"
+msgstr "Direction de fondu"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr "Alternance sortie / entrée"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr "Alternance entrée / sortie"
+
+#: plug-ins/crossfadetracks.ny
+#, lisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr ""
+"Erreur.~%Sélectionnez 2 (ou davantage) pistes pour faire les fondu-enchaînés."
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "Délai"
+
+#: plug-ins/delay.ny
+msgid "Applying Delay Effect..."
+msgstr "Application de l’effet de délai…"
+
+#: plug-ins/delay.ny
+msgid "Delay type"
+msgstr "Type de délai"
+
+#: plug-ins/delay.ny
+msgid "Regular"
+msgstr "Régulier"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr "Balle rebondissante"
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr "Balle rebondissante inversée"
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr "Niveau de délai par écho (dB)"
+
+#: plug-ins/delay.ny
+msgid "Delay time (seconds)"
+msgstr "Durée du délai (secondes)"
+
+#: plug-ins/delay.ny
+msgid "Pitch change effect"
+msgstr "Effet de changement de hauteur"
+
+#: plug-ins/delay.ny
+msgid "Pitch/Tempo"
+msgstr "Hauteur/tempo"
+
+#: plug-ins/delay.ny
+msgid "Low-quality Pitch Shift"
+msgstr "Décalage de hauteur de basse-qualité"
+
+#: plug-ins/delay.ny
+msgid "Pitch change per echo (semitones)"
+msgstr "Modification de hauteur par écho (demi-tons)"
+
+#: plug-ins/delay.ny
+msgid "Number of echoes"
+msgstr "Nombre d’échos"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr "Permet la modification de durée"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr ""
+"Nombre maximal d’échos '~a' en dehors de la plage valide de 1 à 50.~%~a"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr ""
+"Modification de hauteur '~a' en dehors de la plage valide de -12 à +12demi-"
+"tons.~%~a"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr ""
+"Temps de délai '~a' en dehors de la plage valide de 0 à +10 secondes.~%~a"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr "Niveau de délai '~a' en dehors de la plage valide de -30 à +6dB.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Error.~%~a"
+msgstr "Erreur.~%~a"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr "Marqueurs d’intervalles réguliers"
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr "Ajoute des marqueurs espacés régulièrement sur la piste de marqueurs…"
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr "Utilise le 'nombre de marqueurs' OU 'l’intervalle de marqueur'"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/equalabel.ny
+msgid "Number of Labels"
+msgstr "Nombre de marqueurs"
+
+#: plug-ins/equalabel.ny
+msgid "Label Interval"
+msgstr "Intervalle de marqueur"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/equalabel.ny
+msgid "Number of labels"
+msgstr "Nombre de marqueurs"
+
+# trebmuh to check
+#: plug-ins/equalabel.ny
+msgid "Label interval (seconds)"
+msgstr "Intervalle de marqueur (secondes)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr "Ajuste l’intervalle de marqueur pour correspondre à la longueur"
+
+#: plug-ins/equalabel.ny
+msgid "Label text"
+msgstr "Texte de marqueur"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr "Nombre minimum de chiffre dans le marqueur"
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr "Aucun - texte uniquement"
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr "1 (avant le marqueur)"
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr "2 (avant le marqueur)"
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr "3 (avant le marqueur)"
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr "1 (après le marqueur)"
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr "2 (après le marqueur)"
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr "3 (après le marqueur)"
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr "Démarrer le numérotage à partir de"
+
+#: plug-ins/highpass.ny
+msgid "High-Pass Filter"
+msgstr "Filtre passe-haut"
+
+#: plug-ins/highpass.ny
+msgid "Performing High-Pass Filter..."
+msgstr "Exécution du filtre passe-haut…"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+msgid "Dominic Mazzoni"
+msgstr "Dominic Mazzoni"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+msgid "Frequency (Hz)"
+msgstr "Fréquence (Hz)"
+
+# trebmuh : à vérifier
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr "Roll-off (dB par octave)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr "6 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr "12 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr "24 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr "36 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr "48 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "La fréquence doit être au moins de à 0,1 Hz."
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+"Erreur :~%~%la fréquence (~a Hz) est trop haute pour le taux "
+"d’échantillonnagede la piste.~%~%~\n"
+"                   Le taux d’échantillonnage de la piste est de ~a Hz~%~\n"
+"                   la fréquence doit être plus petite que ~a Hz."
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/limiter.ny
+msgid "Limiter"
+msgstr "Limiteur"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/limiter.ny
+msgid "Limiting..."
+msgstr "Limitation…"
+
+#: plug-ins/limiter.ny
+msgid "Type"
+msgstr "Type"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/limiter.ny
+msgid "Soft Limit"
+msgstr "Limite douce"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: plug-ins/limiter.ny
+msgid "Hard Limit"
+msgstr "Limite dure"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+msgid "Soft Clip"
+msgstr "Clip doux"
+
+# trebmuh to check
+#: plug-ins/limiter.ny
+msgid "Hard Clip"
+msgstr "Clip dur"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+"Gain d’entrée (dB)\n"
+"mono/gauche"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+"Gain d’entrée (dB)\n"
+"canal de droite"
+
+#: plug-ins/limiter.ny
+msgid "Limit to (dB)"
+msgstr "Limiter à (dB)"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr "Maintien (ms)"
+
+# trebmuh to check (vérifier dans le contexte graphique)
+#: plug-ins/limiter.ny
+msgid "Apply Make-up Gain"
+msgstr "Appliquer un gain d’entrée"
+
+#: plug-ins/lowpass.ny
+msgid "Low-Pass Filter"
+msgstr "Filtre passe-bas"
+
+#: plug-ins/lowpass.ny
+msgid "Performing Low-Pass Filter..."
+msgstr "Exécution du filtre passe-bas…"
+
+#: plug-ins/notch.ny
+msgid "Notch Filter"
+msgstr "Filtre à peigne"
+
+#: plug-ins/notch.ny
+msgid "Applying Notch Filter..."
+msgstr "Application du filtre à peigne…"
+
+#: plug-ins/notch.ny
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "Steve Daulton et Bill Wharrie"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr "Q (un valeur plus haute réduit la largeur)"
+
+#: plug-ins/notch.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+"Erreur :~%~%La fréquence (~a Hz) est trop haute pour le taux "
+"d’échantillonnagede la piste.~%~%~\n"
+"                 Le taux d’échantillonnage de la piste est de ~a Hz.~%~\n"
+"                 La fréquence doit être en dessous de ~a Hz."
+
+# trebmuh : à vérifier
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr "Pluck"
+
+#: plug-ins/pluck.ny
+msgid "Generating pluck sound..."
+msgstr "Génération de son pluck…"
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+"Valeurs MIDI pour les notes Do : 36, 48, 60 [Do du milieu], 72, 84, 96."
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr "David R.Sky"
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr "Hauteur MIDI pluck"
+
+#: plug-ins/pluck.ny
+msgid "Fade-out type"
+msgstr "Filtre de fondu en fermeture"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr "Abrupte"
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr "Graduel"
+
+#: plug-ins/pluck.ny
+msgid "Duration (60s max)"
+msgstr "Durée (60s max)"
+
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm Track"
 msgstr "Piste de rythme"
@@ -17103,10 +17826,6 @@ msgstr "Piste de rythme"
 #: plug-ins/rhythmtrack.ny
 msgid "Generating Rhythm..."
 msgstr "Génération de rythme…"
-
-#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Dominic Mazzoni"
-msgstr "Dominic Mazzoni"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -17134,7 +17853,9 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr "Paramètre le 'nombre de mesures' à zéro pour activer la 'durée de la piste de rythme'."
+msgstr ""
+"Paramètre le 'nombre de mesures' à zéro pour activer la 'durée de la piste "
+"de rythme'."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -17212,6 +17933,47 @@ msgstr ""
 "Paramétrer soit le 'numbre de mesures' soit\n"
 "la 'durée de la piste de rythme' à plus que zéro."
 
+# trebmuh : à vérifier
+#: plug-ins/rissetdrum.ny
+msgid "Risset Drum"
+msgstr "Batterie risset"
+
+#: plug-ins/rissetdrum.ny
+msgid "Generating Risset Drum..."
+msgstr "Génération d’une batterie Risset…"
+
+#: plug-ins/rissetdrum.ny
+msgid "Steven Jones"
+msgstr "Steven Jones"
+
+#: plug-ins/rissetdrum.ny
+msgid "Decay (seconds)"
+msgstr "Délai (secondes)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Center frequency of noise (Hz)"
+msgstr "Centre la fréquence de bruit (Hz)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr "Largeur de la bande de bruit (Hz)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr "Quantité de bruit dans le pix (pourcentage)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amplitude (0 - 1)"
+msgstr "Amplitude (0 - 1)"
+
+#: plug-ins/rms.ny
+msgid "Left"
+msgstr "Gauche"
+
+#: plug-ins/rms.ny
+msgid "Right"
+msgstr "Droit"
+
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
 msgstr "Export de donnée d’échantillon"
@@ -17219,14 +17981,6 @@ msgstr "Export de donnée d’échantillon"
 #: plug-ins/sample-data-export.ny
 msgid "Analyzing..."
 msgstr "Analyse en cours…"
-
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
-#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
-#: plug-ins/tremolo.ny
-msgid "Steve Daulton"
-msgstr "Steve Daulton"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -17300,36 +18054,47 @@ msgid "[-inf]"
 msgstr "[-inf]"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left Channel.~%~%"
 msgstr "Canal gauche.~%~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~%~%Right Channel.~%~%"
 msgstr "~%~%Canal droit.~%~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~aData written to:~%~a"
 msgstr "~aDonnées écrites sur :~%~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
-msgstr "Taux d’échantillonnage : ~a Hz.  Valeurs d’échantillon sur l’échelle ~a.~%~a~%~a"
+msgstr ""
+"Taux d’échantillonnage : ~a Hz.  Valeurs d’échantillon sur l’échelle ~a."
+"~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
-"~a   ~a~%~aTaux d’échantillonnage : ~a Hz.~%Longueur traitée : ~a échantillonns ~a secondes.~a"
+"~a   ~a~%~aTaux d’échantillonnage : ~a Hz.~%Longueur traitée : ~a "
+"échantillonns ~a secondes.~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
-"~a   ~a~%~aTaux d’échantillonnage : ~a Hz. Valeurs d’échantillon sur l’échelle ~a.~%~\n"
+"~a   ~a~%~aTaux d’échantillonnage : ~a Hz. Valeurs d’échantillon sur "
+"l’échelle ~a.~%~\n"
 "                     Longueur traitée : ~a échantillons ~a secondes.~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
 "~a ~\n"
@@ -17337,27 +18102,29 @@ msgid ""
 "Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
-"~a~%Taux d’échantillonnage: ~a Hz. Valeurs d’échantillons sur l’échelle ~a."
-" ~a.~%~aLongueur traitée : "
-"~a ~\n"
-"                  échantillons, ~a secondes.~%Amplitude de crête : ~a (linéaire)"
-" ~a dB.  "
-"RMS non-pesé : ~a dB.~%~\n"
+"~a~%Taux d’échantillonnage: ~a Hz. Valeurs d’échantillons sur l’échelle ~a. "
+"~a.~%~aLongueur traitée : ~a ~\n"
+"                  échantillons, ~a secondes.~%Amplitude de crête : ~a "
+"(linéaire) ~a dB.  RMS non-pesé : ~a dB.~%~\n"
 "                  Décalage continu : ~a~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, ~a dB."
 msgstr "~a linéaire, ~a dB."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
 msgstr "Gauche : ~a lin, ~a dB | Droite : ~a lin, ~a dB."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a samples."
 msgstr "~a échantillons."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a seconds."
 msgstr "~a secondes."
 
@@ -17366,29 +18133,36 @@ msgid "Audio data analysis:"
 msgstr "Analyse de données audio :"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
 msgstr "<b>Taux d’échantillonnage :</b> &nbsp;&nbsp;~a Hz."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
-msgstr "<b>Amplitude de crête :</b> &nbsp;&nbsp;~a (linéaire) &nbsp;&nbsp;~a dB."
+msgstr ""
+"<b>Amplitude de crête :</b> &nbsp;&nbsp;~a (linéaire) &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>RMS</b> (non-pesé) : &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 msgstr "<b>Décalage continu :</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
 msgstr "~a linéaire, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
 msgstr "Gauche : ~a lin, ~a dB | Droite : ~a linéaire, &nbsp;&nbsp;~a dB."
 
@@ -17430,6 +18204,7 @@ msgid "Right (dB)"
 msgstr "Droit (dB)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
 "<a href=\"~a\">Audacity</a> by Steve\n"
@@ -17452,22 +18227,27 @@ msgid "1 channel (mono)"
 msgstr "1 canal (mono)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One column per channel.~%"
 msgstr "Une colonne par canal.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One row per channel.~%"
 msgstr "Une ligne par canal.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel then Right channel on same line.~%"
 msgstr "Canal gauche puis canal droit sur la même ligne.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left and right channels on alternate lines.~%"
 msgstr "Canaux gauche et droit sur des lignes alternées.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel first then right channel.~%"
 msgstr "Canal gauche en premier puis canal droit.~%"
 
@@ -17476,45 +18256,95 @@ msgid "Unspecified channel order"
 msgstr "Ordre de canaux non-spécifié"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
 msgstr "Erreur.~%\"~a\" ne peut pas être écrit."
 
-# trebmuh : à vérifier
-#: plug-ins/pluck.ny
-msgid "Pluck"
-msgstr "Pluck"
+#: plug-ins/sample-data-import.ny
+msgid "Sample Data Import"
+msgstr "Importation de données d’échantillon"
 
-#: plug-ins/pluck.ny
-msgid "Generating pluck sound..."
-msgstr "Génération de son pluck…"
+#: plug-ins/sample-data-import.ny
+msgid "Reading and rendering samples..."
+msgstr "Lire et faire un rendu des échantillons…"
 
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr "Valeurs MIDI pour les notes Do : 36, 48, 60 [Do du milieu], 72, 84, 96."
+#: plug-ins/sample-data-import.ny
+msgid "Select file"
+msgstr "Sélection d’un fichier"
 
-#: plug-ins/pluck.ny
-msgid "David R.Sky"
-msgstr "David R.Sky"
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr "Gestion de données invalide"
 
-#: plug-ins/pluck.ny
-msgid "Pluck MIDI pitch"
-msgstr "Hauteur MIDI pluck"
+#: plug-ins/sample-data-import.ny
+msgid "Throw Error"
+msgstr "Jeté d’erreur"
 
-#: plug-ins/pluck.ny
-msgid "Fade-out type"
-msgstr "Filtre de fondu en fermeture"
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr "Lire en tant que zéro"
 
-#: plug-ins/pluck.ny
-msgid "Abrupt"
-msgstr "Abrupte"
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+"Erreur~%~\n"
+"                        '~a' n'a pas pu être ouvert.~%~\n"
+"                        Vérifiez que ce fichier existe."
 
-#: plug-ins/pluck.ny
-msgid "Gradual"
-msgstr "Graduel"
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+"Erreur :~%~\n"
+"              Le fichier doit contenir uniquement du texte ASCII plein.~%~\n"
+"              (Octet invalide '~a' au numéro d’octet : ~a)"
 
-#: plug-ins/pluck.ny
-msgid "Duration (60s max)"
-msgstr "Durée (60s max)"
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+"Erreur~%~\n"
+"              Les données doivent être des nombres en texte ASCII plein.~%~\n"
+"              '~a' n'est pas une valeur numérique."
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid "Error.~%Unable to open file"
+msgstr "Erreur.~%Incapable d’ouvrir le fichier"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr "Tremolo"
+
+#: plug-ins/tremolo.ny
+msgid "Applying Tremolo..."
+msgstr "Application du trémolo…"
+
+#: plug-ins/tremolo.ny
+msgid "Waveform type"
+msgstr "Type de forme d’onde"
+
+#: plug-ins/tremolo.ny
+msgid "Inverse Sawtooth"
+msgstr "Dent de scie inversée"
+
+#: plug-ins/tremolo.ny
+msgid "Starting phase (degrees)"
+msgstr "Phase de départ (degrés)"
+
+#: plug-ins/tremolo.ny
+msgid "Wet level (percent)"
+msgstr "Niveau traité (pourcent)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -17573,6 +18403,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr "Coupe-haut pour les voix (Hz)"
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "Covariance x y: ~a\n"
@@ -17593,13 +18424,13 @@ msgstr ""
 "y égale ~a plus ~a temps x~%"
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
 msgstr ""
-"Position panoramique : ~a~%Les canaux gauche et droit sont corrélés par"
-"environ ~a %. "
-"Ceci signifie :~%~a~%"
+"Position panoramique : ~a~%Les canaux gauche et droit sont corrélés "
+"parenviron ~a %. Ceci signifie :~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -17609,8 +18440,8 @@ msgid ""
 msgstr ""
 " - Les deux canaux sont identiques, i.e. dual mono.\n"
 "   Le centre ne peut pas être supprimé.\n"
-"      Toute différence restante pourrait être causée par un encodage avec"
-" perte."
+"      Toute différence restante pourrait être causée par un encodage avec "
+"perte."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -17674,139 +18505,6 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr "Ce greffon fonctionne uniquement avec des pistes stéréo."
 
-#: plug-ins/sample-data-import.ny
-msgid "Sample Data Import"
-msgstr "Importation de données d’échantillon"
-
-#: plug-ins/sample-data-import.ny
-msgid "Reading and rendering samples..."
-msgstr "Lire et faire un rendu des échantillons…"
-
-#: plug-ins/sample-data-import.ny
-msgid "Select file"
-msgstr "Sélection d’un fichier"
-
-#: plug-ins/sample-data-import.ny
-msgid "Invalid data handling"
-msgstr "Gestion de données invalide"
-
-#: plug-ins/sample-data-import.ny
-msgid "Throw Error"
-msgstr "Jeté d’erreur"
-
-#: plug-ins/sample-data-import.ny
-msgid "Read as Zero"
-msgstr "Lire en tant que zéro"
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
-"                        Check that file exists."
-msgstr ""
-"Erreur~%~\n"
-"                        '~a' n'a pas pu être ouvert.~%~\n"
-"                        Vérifiez que ce fichier existe."
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
-"              (Invalid byte '~a' at byte number: ~a)"
-msgstr ""
-"Erreur :~%~\n"
-"              Le fichier doit contenir uniquement du texte ASCII plein.~%~\n"
-"              (Octet invalide '~a' au numéro d’octet : ~a)"
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
-"              '~a' is not a numeric value."
-msgstr ""
-"Erreur~%~\n"
-"              Les données doivent être des nombres en texte ASCII plein.~%~\n"
-"              '~a' n'est pas une valeur numérique."
-
-#: plug-ins/sample-data-import.ny
-msgid "Error.~%Unable to open file"
-msgstr "Erreur.~%Incapable d’ouvrir le fichier"
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Studio Fade Out"
-msgstr "Fondre en fermeture du studio"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-msgid "Applying Fade..."
-msgstr "Application du fondu…"
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "Sélection trop courte.~%Elle doit faire plus de 2 échantillons."
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/limiter.ny
-msgid "Limiter"
-msgstr "Limiteur"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/limiter.ny
-msgid "Limiting..."
-msgstr "Limitation…"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "Type"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/limiter.ny
-msgid "Soft Limit"
-msgstr "Limite douce"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/limiter.ny
-msgid "Hard Limit"
-msgstr "Limite dure"
-
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
-msgid "Soft Clip"
-msgstr "Clip doux"
-
-# trebmuh to check
-#: plug-ins/limiter.ny
-msgid "Hard Clip"
-msgstr "Clip dur"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"mono/Left"
-msgstr ""
-"Gain d’entrée (dB)\n"
-"mono/gauche"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"Right channel"
-msgstr ""
-"Gain d’entrée (dB)\n"
-"canal de droite"
-
-#: plug-ins/limiter.ny
-msgid "Limit to (dB)"
-msgstr "Limiter à (dB)"
-
-#: plug-ins/limiter.ny
-msgid "Hold (ms)"
-msgstr "Maintien (ms)"
-
-# trebmuh to check (vérifier dans le contexte graphique)
-#: plug-ins/limiter.ny
-msgid "Apply Make-up Gain"
-msgstr "Appliquer un gain d’entrée"
-
 #: plug-ins/vocalremover.ny
 msgid "Vocal Remover"
 msgstr "Supprimeur de voix"
@@ -17848,6 +18546,7 @@ msgid "Frequency band to (Hz)"
 msgstr "Bande de fréquence jusqu'à (Hz)"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Vocal Remover requires a stereo track. It works best with\n"
 "lossless files like WAV or AIFF, rather than MP3 or\n"
@@ -17907,6 +18606,7 @@ msgstr ""
 "limites, conservant les autres."
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
 "If you have a stereo track split into left and right~%~\n"
@@ -17919,6 +18619,7 @@ msgstr ""
 "puis lancez la suppression de voix à nouveau.~%"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Warning:~%~\n"
 "              Selected band-stop filter is~%~\n"
@@ -17937,693 +18638,58 @@ msgstr ""
 msgid "Current settings returned the original audio."
 msgstr "Les paramètres actuels ont rendus l’audio originelle."
 
-#: plug-ins/adjustable-fade.ny
-msgid "Adjustable Fade"
-msgstr "Fondu ajustable"
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr "Vocodeur"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Type"
-msgstr "Type de fondu"
+#: plug-ins/vocoder.ny
+msgid "Processing Vocoder..."
+msgstr "Traitement vocodeur…"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Up"
-msgstr "Fondre en ouverture"
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr "Edgar-RFT"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Down"
-msgstr "Fondre en fermeture"
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr "Distance : (1 à 120, défaut = 20)"
 
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Up"
-msgstr "Courbe-S vers le haut"
+#: plug-ins/vocoder.ny
+msgid "Output choice"
+msgstr "Choix de sortie"
 
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Down"
-msgstr "Courbe-S vers le bas"
+#: plug-ins/vocoder.ny
+msgid "Both Channels"
+msgstr "Les deux Canaux"
 
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/adjustable-fade.ny
-msgid "Mid-fade Adjust (%)"
-msgstr "Ajustement fondu-milieu (%)"
+#: plug-ins/vocoder.ny
+msgid "Right Only"
+msgstr "Droit uniquement"
 
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/adjustable-fade.ny
-msgid "Start/End as"
-msgstr "Début/fin comme"
+#: plug-ins/vocoder.ny
+msgid "Number of vocoder bands"
+msgstr "Nombre de bandes de vocodeurs"
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
+msgid "Amplitude of original audio (percent)"
+msgstr "Amplitude de l’audio originale (pourcent)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of white noise (percent)"
+msgstr "Amplitude du bruit blanc (pourcent)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "Amplitude des aiguilles de radar (pourcent)"
+
+#: plug-ins/vocoder.ny
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "Fréquence des aiguilles de radar (Hz)"
+
+#: plug-ins/vocoder.ny
 #, lisp-format
-msgid "% of Original"
-msgstr "% de l’originel"
-
-#: plug-ins/adjustable-fade.ny
-msgid "dB Gain"
-msgstr "Gain dB"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Start (or end)"
-msgstr "Début (ou fin)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "End (or start)"
-msgstr "Fin (ou début)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Handy Presets (override controls)"
-msgstr "Préréglages pratiques (écrase les contrôles)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "None Selected"
-msgstr "Aucune sélection"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear In"
-msgstr "Entrée linéaire"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear Out"
-msgstr "Sortie linéaire"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential In"
-msgstr "Entrée exponentielle"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential Out"
-msgstr "Sortie exponentielle"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic In"
-msgstr "Entrée logarithmique"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic Out"
-msgstr "Sortie logarithmique"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded In"
-msgstr "Entrée arrondie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded Out"
-msgstr "Sortie arrondie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine In"
-msgstr "Entrée cosinus"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine Out"
-msgstr "Sortie cosinus"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve In"
-msgstr "Entrée en courbe-S"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Out"
-msgstr "Sortie en courbe-S"
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be negative."
-msgstr "~aLes valeurs de pourcentage ne peuvent pas être négatives."
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "~aLes valeurs de pourcentage ne peuvent pas être à plus de 1000 %."
-
-#: plug-ins/adjustable-fade.ny
-msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
-msgstr ""
-"~aLes valeurs dB ne peuvent pas être à plus de +100 dB.~%~%~\n"
-"                                 Astuce : 6 dB double l’amplitude~%~\n"
-"                                 \t-6 dB divise l’amplitude par deux."
-
-#: plug-ins/adjustable-fade.ny
-msgid "Error~%~%"
-msgstr "Erreur~%~%"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "Spectral edit parametric EQ"
-msgstr "Égalisation paramétrique de l’édition spectrale"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Filtering..."
-msgstr "Filtrage…"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Paul Licameli"
-msgstr "Paul Licameli"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid "Gain (dB)"
-msgstr "Gain (dB)"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "~aPlease select frequencies."
-msgstr "~aVeuillez sélectionner les fréquences."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aLow frequency is undefined."
-msgstr "~aLa fréquence basse est indéfinie."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aHigh frequency is undefined."
-msgstr "~aLa fréquence haute est indéfinie."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aCenter frequency must be above 0 Hz."
-msgstr "~aLa fréquence centrale doit être supérieure à 0 Hz."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
-"                        be greater than ~a Hz"
-msgstr ""
-"~aLa sélection de fréquence est trop haute pour le taux d’échantillonnage de"
-"la piste.~%~\n"
-"                        Pour la piste actuelle, le paramétrage de la fréquence"
-"haute ne peut pas~%~\n"
-"                        être plus grande que ~a Hz"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
-"                         Please select a frequency range."
-msgstr ""
-"~aLa largeur de bande est de zéro (les fréquences~%~\n"
-"                         haute et basse sont toutes deux de ~a Hz).~%~\n"
-"                         Veuillez sélectionner une plage de fréquence."
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Error.~%"
-msgstr "Erreur.~%"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Crossfade Tracks"
-msgstr "Fondu-enchaîné de pistes"
-
-#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
-msgid "Crossfading..."
-msgstr "Fondu-enchaîné…"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade type"
-msgstr "Type de fondu"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Gain"
-msgstr "Gain constant"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 1"
-msgstr "Puissance de 1 constante"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 2"
-msgstr "Puissance de 2 constante"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom Curve"
-msgstr "Courbe personnalisée"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom curve"
-msgstr "Courbe personnalisée"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade direction"
-msgstr "Direction de fondu"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating Out / In"
-msgstr "Alternance sortie / entrée"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating In / Out"
-msgstr "Alternance entrée / sortie"
-
-#: plug-ins/crossfadetracks.ny
-#, lisp-format
-msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr ""
-"Erreur.~%Sélectionnez 2 (ou davantage) pistes pour faire les fondu-enchaînés."
-
-#: plug-ins/SpectralEditShelves.ny
-msgid "Spectral edit shelves"
-msgstr "Étages d’édition spectrale"
-
-#: plug-ins/SoundFinder.ny
-msgid "Sound Finder"
-msgstr "Trouveur de son"
-
-#: plug-ins/SoundFinder.ny
-msgid "Finding sound..."
-msgstr "Recherche d’un son…"
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr "Jeremy R. Brown"
-
-#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr "Traite l’audio en dessous de ce niveau comme du silence [ -dB]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr "Durée minimum de silence entre des sons [secondes]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr "Marque un point de départ [secondes avant que le son ne démarre]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr "Marque un point de fin [secondes après que le son ne s'arrête]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr "Ajoute un marqueur à la fin de la piste ? [Non=0, Oui=1]"
-
-#: plug-ins/SoundFinder.ny
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"Aucun son trouvé. Essayez de réduire la durée~% du niveau de silence et le"
-"silence minimum "
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr "[Fin]"
-
-# trebmuh : à vérifier
-#: plug-ins/rissetdrum.ny
-msgid "Risset Drum"
-msgstr "Batterie risset"
-
-#: plug-ins/rissetdrum.ny
-msgid "Generating Risset Drum..."
-msgstr "Génération d’une batterie Risset…"
-
-#: plug-ins/rissetdrum.ny
-msgid "Steven Jones"
-msgstr "Steven Jones"
-
-#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency (Hz)"
-msgstr "Fréquence (Hz)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Decay (seconds)"
-msgstr "Délai (secondes)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Center frequency of noise (Hz)"
-msgstr "Centre la fréquence de bruit (Hz)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Width of noise band (Hz)"
-msgstr "Largeur de la bande de bruit (Hz)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Amount of noise in mix (percent)"
-msgstr "Quantité de bruit dans le pix (pourcentage)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Amplitude (0 - 1)"
-msgstr "Amplitude (0 - 1)"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid "Spectral edit multi tool"
-msgstr "Multi-outils d’édition spectrale"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
-"                       Please select a frequency range."
-msgstr ""
-"~aLa bande passante est de zéro (les fréquences haute~%~\n"
-"                       et basse sont toutes deux de ~a Hz).~%~\n"
-"                       Veuillez sélectionner une plage de fréquence."
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
-"                      or reduce the filter 'Width'."
-msgstr ""
-"~aLes paramètres de filtre à peigne ne peuvent pas être appliqués.~%~\n"
-"                      Essayez d’augmenter la limite de fréquence basse~%~\n"
-"                      ou de réduire le filtre de largeur ('Width')."
-
-#: plug-ins/rms.ny
-msgid "Left"
-msgstr "Gauche"
-
-#: plug-ins/rms.ny
-msgid "Right"
-msgstr "Droit"
-
-#: plug-ins/equalabel.ny
-msgid "Regular Interval Labels"
-msgstr "Marqueurs d’intervalles réguliers"
-
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-"Ajoute des marqueurs espacés régulièrement sur la piste de marqueurs…"
-
-#: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr "Utilise le 'nombre de marqueurs' OU 'l’intervalle de marqueur'"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/equalabel.ny
-msgid "Number of Labels"
-msgstr "Nombre de marqueurs"
-
-#: plug-ins/equalabel.ny
-msgid "Label Interval"
-msgstr "Intervalle de marqueur"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/equalabel.ny
-msgid "Number of labels"
-msgstr "Nombre de marqueurs"
-
-# trebmuh to check
-#: plug-ins/equalabel.ny
-msgid "Label interval (seconds)"
-msgstr "Intervalle de marqueur (secondes)"
-
-#: plug-ins/equalabel.ny
-msgid "Adjust label interval to fit length"
-msgstr "Ajuste l’intervalle de marqueur pour correspondre à la longueur"
-
-#: plug-ins/equalabel.ny
-msgid "Label text"
-msgstr "Texte de marqueur"
-
-#: plug-ins/equalabel.ny
-msgid "Minimum number of digits in label"
-msgstr "Nombre minimum de chiffre dans le marqueur"
-
-#: plug-ins/equalabel.ny
-msgid "None - Text Only"
-msgstr "Aucun - texte uniquement"
-
-#: plug-ins/equalabel.ny
-msgid "1 (Before Label)"
-msgstr "1 (avant le marqueur)"
-
-#: plug-ins/equalabel.ny
-msgid "2 (Before Label)"
-msgstr "2 (avant le marqueur)"
-
-#: plug-ins/equalabel.ny
-msgid "3 (Before Label)"
-msgstr "3 (avant le marqueur)"
-
-#: plug-ins/equalabel.ny
-msgid "1 (After Label)"
-msgstr "1 (après le marqueur)"
-
-#: plug-ins/equalabel.ny
-msgid "2 (After Label)"
-msgstr "2 (après le marqueur)"
-
-#: plug-ins/equalabel.ny
-msgid "3 (After Label)"
-msgstr "3 (après le marqueur)"
-
-#: plug-ins/equalabel.ny
-msgid "Begin numbering from"
-msgstr "Démarrer le numérotage à partir de"
-
-#: plug-ins/notch.ny
-msgid "Notch Filter"
-msgstr "Filtre à peigne"
-
-#: plug-ins/notch.ny
-msgid "Applying Notch Filter..."
-msgstr "Application du filtre à peigne…"
-
-#: plug-ins/notch.ny
-msgid "Steve Daulton and Bill Wharrie"
-msgstr "Steve Daulton et Bill Wharrie"
-
-#: plug-ins/notch.ny
-msgid "Q (higher value reduces width)"
-msgstr "Q (un valeur plus haute réduit la largeur)"
-
-#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency must be at least 0.1 Hz."
-msgstr "La fréquence doit être au moins de à 0,1 Hz."
-
-#: plug-ins/notch.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
-"                 Frequency must be less than ~a Hz."
-msgstr ""
-"Erreur :~%~%La fréquence (~a Hz) est trop haute pour le taux d’échantillonnage"
-"de la piste.~%~%~\n"
-"                 Le taux d’échantillonnage de la piste est de ~a Hz.~%~\n"
-"                 La fréquence doit être en dessous de ~a Hz."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Crossfade Clips"
-msgstr "Clips de fondu-enchaîné"
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr "Erreur.~%Sélection invalide.~%Plus de 2 clips audio clips sélectionnés."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "Erreur.~%Sélection invalide.~%Espace vide au début/fin de la sélection."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr ""
-"Erreur.~%Les clips de fondu-enchaîné peuvent seulement être appliqués à une"
-" piste."
-
-#: plug-ins/delay.ny
-msgid "Delay"
-msgstr "Délai"
-
-#: plug-ins/delay.ny
-msgid "Applying Delay Effect..."
-msgstr "Application de l’effet de délai…"
-
-#: plug-ins/delay.ny
-msgid "Delay type"
-msgstr "Type de délai"
-
-#: plug-ins/delay.ny
-msgid "Regular"
-msgstr "Régulier"
-
-#: plug-ins/delay.ny
-msgid "Bouncing Ball"
-msgstr "Balle rebondissante"
-
-#: plug-ins/delay.ny
-msgid "Reverse Bouncing Ball"
-msgstr "Balle rebondissante inversée"
-
-#: plug-ins/delay.ny
-msgid "Delay level per echo (dB)"
-msgstr "Niveau de délai par écho (dB)"
-
-#: plug-ins/delay.ny
-msgid "Delay time (seconds)"
-msgstr "Durée du délai (secondes)"
-
-#: plug-ins/delay.ny
-msgid "Pitch change effect"
-msgstr "Effet de changement de hauteur"
-
-#: plug-ins/delay.ny
-msgid "Pitch/Tempo"
-msgstr "Hauteur/tempo"
-
-#: plug-ins/delay.ny
-msgid "Low-quality Pitch Shift"
-msgstr "Décalage de hauteur de basse-qualité"
-
-#: plug-ins/delay.ny
-msgid "Pitch change per echo (semitones)"
-msgstr "Modification de hauteur par écho (demi-tons)"
-
-#: plug-ins/delay.ny
-msgid "Number of echoes"
-msgstr "Nombre d’échos"
-
-#: plug-ins/delay.ny
-msgid "Allow duration to change"
-msgstr "Permet la modification de durée"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/delay.ny
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Nombre maximal d’échos '~a' en dehors de la plage valide de 1 à 50.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/delay.ny
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-"Modification de hauteur '~a' en dehors de la plage valide de -12 à +12"
-"demi-tons.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/delay.ny
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-"Temps de délai '~a' en dehors de la plage valide de 0 à +10 secondes.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: plug-ins/delay.ny
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-"Niveau de délai '~a' en dehors de la plage valide de -30 à +6dB.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Error.~%~a"
-msgstr "Erreur.~%~a"
-
-#: plug-ins/tremolo.ny
-msgid "Tremolo"
-msgstr "Tremolo"
-
-#: plug-ins/tremolo.ny
-msgid "Applying Tremolo..."
-msgstr "Application du trémolo…"
-
-#: plug-ins/tremolo.ny
-msgid "Waveform type"
-msgstr "Type de forme d’onde"
-
-#: plug-ins/tremolo.ny
-msgid "Inverse Sawtooth"
-msgstr "Dent de scie inversée"
-
-#: plug-ins/tremolo.ny
-msgid "Starting phase (degrees)"
-msgstr "Phase de départ (degrés)"
-
-#: plug-ins/tremolo.ny
-msgid "Wet level (percent)"
-msgstr "Niveau traité (pourcent)"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Silence Finder"
-msgstr "Trouveur de silence"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Finding silence..."
-msgstr "Recherche de silence…"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Alex S. Brown"
-msgstr "Alex S. Brown"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence [seconds]"
-msgstr "Durée minimum de silence [secondes]"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement [seconds before silence ends]"
-msgstr "Placement de marqueur [secondes avant que le silence ne finisse]"
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"Pas de silence trouvés. Essayez de réduire la~%valeur de silence et la durée"
-"de silence minimum."
-
-#: plug-ins/highpass.ny
-msgid "High-Pass Filter"
-msgstr "Filtre passe-haut"
-
-#: plug-ins/highpass.ny
-msgid "Performing High-Pass Filter..."
-msgstr "Exécution du filtre passe-haut…"
-
-# trebmuh : à vérifier
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Roll-off (dB per octave)"
-msgstr "Roll-off (dB par octave)"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "6 dB"
-msgstr "6 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "12 dB"
-msgstr "12 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "24 dB"
-msgstr "24 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "36 dB"
-msgstr "36 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "48 dB"
-msgstr "48 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
-"                   Frequency must be less than ~a Hz."
-msgstr ""
-"Erreur :~%~%la fréquence (~a Hz) est trop haute pour le taux d’échantillonnage"
-"de la piste.~%~%~\n"
-"                   Le taux d’échantillonnage de la piste est de ~a Hz~%~\n"
-"                   la fréquence doit être plus petite que ~a Hz."
-
-#: plug-ins/lowpass.ny
-msgid "Low-Pass Filter"
-msgstr "Filtre passe-bas"
-
-#: plug-ins/lowpass.ny
-msgid "Performing Low-Pass Filter..."
-msgstr "Exécution du filtre passe-bas…"
-
-#: plug-ins/beat.ny
-msgid "Beat Finder"
-msgstr "Trouveur de pulsation"
-
-#: plug-ins/beat.ny
-msgid "Finding beats..."
-msgstr "Recherche de pulsations…"
-
-#: plug-ins/beat.ny
-msgid "Threshold Percentage"
-msgstr "Pourcentage du seuil de déclenchement"
+msgid "Error.~%Stereo track required."
+msgstr "Erreur.~%Piste stéréo nécessaire."
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "

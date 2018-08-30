@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-29 11:18+0100\n"
+"POT-Creation-Date: 2018-08-30 12:04+0100\n"
 "PO-Revision-Date: 2018-05-25 00:24+0000\n"
 "Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/"
@@ -2282,7 +2282,7 @@ msgstr "로그 주파수"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
+#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2547,9 +2547,10 @@ msgstr ""
 "html#foreign|FFmpeg 라이브러리]]를 받아서 설치해야 합니다."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -5281,14 +5282,13 @@ msgstr ""
 "\n"
 "신뢰하는 소스의 모듈만 사용합니다"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
-#: plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "예"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
-#: plug-ins/equalabel.ny plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "아니요"
 
@@ -11188,8 +11188,8 @@ msgstr "플러그인 설정"
 msgid "Program"
 msgstr "프로그램"
 
-#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
-#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
 msgstr ""
@@ -16404,72 +16404,351 @@ msgstr "오류: %hs, %lu번째 줄"
 msgid "Could not load file: \"%s\""
 msgstr "파일을 불러올 수 없음: \"%s\""
 
-#: plug-ins/vocoder.ny
-msgid "Vocoder"
-msgstr "보코더"
+#: plug-ins/SilenceMarker.ny
+msgid "Silence Finder"
+msgstr "무음 검색기"
 
-#: plug-ins/vocoder.ny
-msgid "Processing Vocoder..."
-msgstr "보코더 처리 중..."
+#: plug-ins/SilenceMarker.ny
+msgid "Finding silence..."
+msgstr "무음 찾는 중..."
 
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
-msgstr "에드거-RFT"
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr "알렉스 S. 브라운"
 
-#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
-#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
-#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
-#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
+#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr "GNU 일반 공중 라이선스 버전 2의 규정에 따라 배포됨"
 
-#: plug-ins/vocoder.ny
-msgid "Distance: (1 to 120, default = 20)"
-msgstr "거리: (1 ~ 120, 기본값 = 20)"
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr "이 수준 이하의 오디오는 무음으로 취급 [ -dB]"
 
-#: plug-ins/vocoder.ny
-msgid "Output choice"
-msgstr "출력 선택"
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr "무음의 최소 지속 시간 [초]"
 
-#: plug-ins/vocoder.ny
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr "레이블 배치 [무음 끝나기 전, 초]"
+
+#: plug-ins/SilenceMarker.ny
+#, lisp-format
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"무음을 찾지 못했습니다. 무음~%수준 및 최소 무음 지속 시간을 낮춰 보세요."
+
+#: plug-ins/SoundFinder.ny
+msgid "Sound Finder"
+msgstr "소리 검색기"
+
+#: plug-ins/SoundFinder.ny
+msgid "Finding sound..."
+msgstr "소리 찾는 중..."
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr "제레미 R. 브라운"
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr "소리 사이의 최소 무음 지속 시간 [초]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr "레이블 시작 지점 [소리 시작 전, 초]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr "레이블 종료 지점 [소리 끝난 후, 초]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr "트랙의 끝에 레이블을 추가할까요? [아니요=0, 예=1]"
+
+#: plug-ins/SoundFinder.ny
+#, lisp-format
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"소리을 찾지 못했습니다. 무음~%수준 및 최소 무음 지속 시간을 낮춰 보세요."
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr "[끝]"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid "Spectral edit multi tool"
+msgstr "스펙트럼 편집 다중 도구"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Filtering..."
+msgstr "필터링..."
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Paul Licameli"
+msgstr "폴 리카멜리"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "~aPlease select frequencies."
+msgstr "~a주파수를 선택하세요."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+"~a대역폭이 0입니다 (위쪽 및 아래쪽~%~\n"
+"                       주파수가 모두 ~a Hz입니다).~%~\n"
+"                       주파수 범위를 선택하세요."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+"~a노치 필터 매개 변수를 적용할 수 없습니다.~%~\n"
+"                      낮은 주파수 범위를 높이거나~%~\n"
+"                      필터 '너비'를 줄이세요."
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "Error.~%"
+msgstr "오류.~%"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "Spectral edit parametric EQ"
+msgstr "스펙트럼 편집 파라메트릭 EQ"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid "Gain (dB)"
+msgstr "게인 (dB)"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aLow frequency is undefined."
+msgstr "~a낮은 주파수는 정의되지 않습니다."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aHigh frequency is undefined."
+msgstr "~a높은 주파수는 정의되지 않습니다."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "~a중심 주파수는 0 Hz 이상이어야 합니다."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+"~a주파수 선택이 트랙 샘플 속도에 비해 너무 높습니다.~%~\n"
+"                        현재 트랙에 대해, 높은 주파수 설정은~%~\n"
+"                        ~a Hz보다 클 수 없습니다."
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+"~a대역폭이 0입니다 (위쪽 및 아래쪽~%~\n"
+"                         주파수가 모두 ~a Hz입니다).~%~\n"
+"                         주파수 범위를 선택하세요."
+
+#: plug-ins/SpectralEditShelves.ny
+msgid "Spectral edit shelves"
+msgstr "스펙트럼 편집 선반(shelf)"
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Studio Fade Out"
+msgstr "스튜디오 페이드 아웃"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+msgid "Applying Fade..."
+msgstr "페이드 적용 중..."
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
+msgid "Steve Daulton"
+msgstr "스티브 달튼"
+
+#: plug-ins/StudioFadeOut.ny
+#, lisp-format
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr "선택이 너무 짧습니다.~%2개 이상의 샘플이어야 합니다."
+
+#: plug-ins/adjustable-fade.ny
+msgid "Adjustable Fade"
+msgstr "조정 가능한 페이드"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Type"
+msgstr "페이드 형식"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Up"
+msgstr "페이드 업 (등장 효과)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Down"
+msgstr "페이드 다운 (퇴장 효과)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Up"
+msgstr "S-커브 업 (S형 등장 효과)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Down"
+msgstr "S-커브 다운 (S형 퇴장 효과)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr "중간-페이드 조절 (%)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start/End as"
+msgstr "시작/끝 단위"
+
+#: plug-ins/adjustable-fade.ny
 #, fuzzy
-msgid "Both Channels"
-msgstr "%d 채널"
+msgid "% of Original"
+msgstr "원본의 %"
 
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Right Only"
-msgstr "오른쪽 채널"
+#: plug-ins/adjustable-fade.ny
+msgid "dB Gain"
+msgstr "dB 게인"
 
-#: plug-ins/vocoder.ny
-msgid "Number of vocoder bands"
-msgstr "보코더 밴드 수"
+#: plug-ins/adjustable-fade.ny
+msgid "Start (or end)"
+msgstr "시작 (또는 끝)"
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of original audio (percent)"
-msgstr "원본 오디오의 진폭 (퍼센트)"
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr "끝 (또는 시작)"
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of white noise (percent)"
-msgstr "화이트 노이즈의 진폭 (퍼센트)"
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr ""
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of Radar Needles (percent)"
-msgstr "레이더 니들[펄스 트레인]의 진폭 (퍼센트)"
+#: plug-ins/adjustable-fade.ny
+msgid "None Selected"
+msgstr "선택 없음"
 
-#: plug-ins/vocoder.ny
-msgid "Frequency of Radar Needles (Hz)"
-msgstr "레이더 니들의 주파수 (Hz)"
+#: plug-ins/adjustable-fade.ny
+msgid "Linear In"
+msgstr "선형 페이드 인"
 
-#: plug-ins/vocoder.ny
-#, fuzzy, elisp-format
-msgid "Error.~%Stereo track required."
-msgstr "오류.~%스테레오 트랙이 필요합니다."
+#: plug-ins/adjustable-fade.ny
+msgid "Linear Out"
+msgstr "선형 페이드 아웃"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr "지수형 페이드 인"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr "지수형 페이드 아웃"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic In"
+msgstr "로그형 페이드 인"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic Out"
+msgstr "로그형 페이드 아웃"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded In"
+msgstr "반원형 페이드 인"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded Out"
+msgstr "반원형 페이드 아웃"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine In"
+msgstr "코사인형 페이드 인"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine Out"
+msgstr "코사인형 페이드 아웃"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve In"
+msgstr "S-커브형 페이드 인"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Out"
+msgstr "S-커브형 페이드 아웃"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be negative."
+msgstr "~a백분율 값은 음수가 될 수 없습니다."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "~a백분율 값은1000 %를 초과할 수 없습니다."
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 t-6 dB halves the amplitude."
+msgstr ""
+"~adB 값은 +100 dB를 초과할 수  없습니다.~%~%~\n"
+"                                 힌트: 6 dB는 진폭을 두 배로 만들고~%~\n"
+"                                 t-6 dB는 진폭을 절반으로 만듭니다."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "Error~%~%"
+msgstr "오류~%~%"
+
+#: plug-ins/beat.ny
+msgid "Beat Finder"
+msgstr "비트 검색기"
+
+#: plug-ins/beat.ny
+msgid "Finding beats..."
+msgstr "비트 찾는 중..."
+
+#: plug-ins/beat.ny
+msgid "Threshold Percentage"
+msgstr "임계치 백분율"
 
 #: plug-ins/clipfix.ny
 msgid "Clip Fix"
@@ -16496,6 +16775,433 @@ msgstr "클리핑 임계값 (%)"
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr "복원된 피크를 고려하도록 진폭을 줄이기 (dB)"
 
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "트랙 크로스페이드"
+
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+msgid "Crossfading..."
+msgstr "크로스페이딩 적용 중..."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr "오류.^%무효한 선택.^%두 개 이상의 오디오 클립이 선택되었습니다."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr "오류.^%무효한 선택.~%E선택 영역의 시작/끝에 빈 공간이 있습니다."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr "오류.^%클립 크로스페이드는 한 트랙에만 적용됩니다."
+
+#: plug-ins/crossfadetracks.ny
+msgid "Crossfade Tracks"
+msgstr "트랙 크로스페이드"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade type"
+msgstr "페이드 형식"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Gain"
+msgstr "일정한 이득"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 1"
+msgstr "일정한 파워 1"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 2"
+msgstr "일정한 파워 2"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom Curve"
+msgstr "사용자 정의 커브"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom curve"
+msgstr "사용자 정의 커브"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade direction"
+msgstr "페이드 방향"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr "교대로 페이드 아웃/인"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr "교대로 페이드 인/아웃"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr "오류.^%크로스페이드하려면 2개 이상의 트랙을 선택하세요."
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "지연"
+
+#: plug-ins/delay.ny
+msgid "Applying Delay Effect..."
+msgstr "지연 효과 적용 중..."
+
+#: plug-ins/delay.ny
+msgid "Delay type"
+msgstr "지연 형식"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "Rectangular (직사각형)"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr "에코당 지연 수준 (dB)"
+
+#: plug-ins/delay.ny
+msgid "Delay time (seconds)"
+msgstr "지연 시간 (초)"
+
+#: plug-ins/delay.ny
+msgid "Pitch change effect"
+msgstr "피치(음정) 변경 효과"
+
+#: plug-ins/delay.ny
+msgid "Pitch/Tempo"
+msgstr "피치/템포"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Low-quality Pitch Shift"
+msgstr "최종 피치 변경"
+
+#: plug-ins/delay.ny
+msgid "Pitch change per echo (semitones)"
+msgstr "에코당 피치 변경 (반음)"
+
+#: plug-ins/delay.ny
+msgid "Number of echoes"
+msgstr "에코 수"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr "지속 시간 변경 허용"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr "에코 개수 '~a' 외부 유효 범위는 1에서 50 사이.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr "피치 변경 '~a' 외부 유효 범위는 -12에서 +12 반음 사이.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr "지연 시간 '~a' 외부 유효 범위는 0에서 10초 사이.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr "지연 수준 '~a' 외부 유효 범위는 -30에서 +6dB 사이.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Error.~%~a"
+msgstr "오류.~%~a"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "채널수:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "레이블 인덱스"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of labels"
+msgstr "채널수:"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label interval (seconds)"
+msgstr "길이 (초)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "레이블 인덱스"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "클래식 필터"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "%d 편집 항목 수행 중...\n"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+msgid "Dominic Mazzoni"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+msgid "Frequency (Hz)"
+msgstr "주파수(Hz)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#, fuzzy
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "최소 주파수는 최소한 0 Hz여야 합니다"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+"~a주파수 선택이 트랙 샘플 속도에 비해 너무 높습니다.~%~\n"
+"                        현재 트랙에 대해, 높은 주파수 설정은~%~\n"
+"                        ~a Hz보다 클 수 없습니다."
+
+#: plug-ins/limiter.ny
+msgid "Limiter"
+msgstr "리미터"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiting..."
+msgstr "필터링..."
+
+#: plug-ins/limiter.ny
+msgid "Type"
+msgstr "형식"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Limit"
+msgstr "dB 한계"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Limit"
+msgstr "dB 한계"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Clip"
+msgstr "클립 설정"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Clip"
+msgstr "하드 클리핑"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limit to (dB)"
+msgstr "레벨 (dB)(&V):"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Apply Make-up Gain"
+msgstr "메이크업 게인"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "클래식 필터"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "%d 편집 항목 수행 중...\n"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Notch Filter"
+msgstr "필터 길이"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Applying Notch Filter..."
+msgstr "페이드 적용 중..."
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "스티브 달튼"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr ""
+
+#: plug-ins/notch.ny
+#, fuzzy, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+"~a주파수 선택이 트랙 샘플 속도에 비해 너무 높습니다.~%~\n"
+"                        현재 트랙에 대해, 높은 주파수 설정은~%~\n"
+"                        ~a Hz보다 클 수 없습니다."
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Generating pluck sound..."
+msgstr "소리 찾는 중..."
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Fade-out type"
+msgstr "페이드 형식"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "지속 시간"
+
 #: plug-ins/rhythmtrack.ny
 #, fuzzy
 msgid "Rhythm Track"
@@ -16505,10 +17211,6 @@ msgstr "트랙 제거"
 #, fuzzy
 msgid "Generating Rhythm..."
 msgstr "소리 찾는 중..."
-
-#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Dominic Mazzoni"
-msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -16621,6 +17323,55 @@ msgid ""
 "'Rhythm track duration' to greater than zero."
 msgstr ""
 
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Risset Drum"
+msgstr "소리 찾는 중..."
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Generating Risset Drum..."
+msgstr "소리 찾는 중..."
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Steven Jones"
+msgstr "스티브 달튼"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Decay (seconds)"
+msgstr "지연 시간 (초)"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Center frequency of noise (Hz)"
+msgstr "중심 주파수와 폭"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amount of noise in mix (percent)"
+msgstr "화이트 노이즈의 진폭 (퍼센트)"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amplitude (0 - 1)"
+msgstr "진폭 (0-1):"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "왼쪽(&L)"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "오른쪽(&R)"
+
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -16630,14 +17381,6 @@ msgstr "내보낼 수 없습니다"
 #, fuzzy
 msgid "Analyzing..."
 msgstr "적용 중..."
-
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
-#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
-#: plug-ins/tremolo.ny
-msgid "Steve Daulton"
-msgstr "스티브 달튼"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -16720,35 +17463,40 @@ msgid "[-inf]"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "Left Channel.~%~%"
 msgstr "왼쪽 채널"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~%~%Right Channel.~%~%"
 msgstr "오른쪽 채널"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~aData written to:~%~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
 "~a ~\n"
@@ -16758,20 +17506,22 @@ msgid ""
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, ~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~a samples."
 msgstr "샘플"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~a seconds."
 msgstr "초"
 
@@ -16780,29 +17530,35 @@ msgid "Audio data analysis:"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
 msgstr ""
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
 msgstr ""
 
@@ -16851,6 +17607,7 @@ msgid "Right (dB)"
 msgstr "오른쪽, %dHz"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
 "<a href=\"~a\">Audacity</a> by Steve\n"
@@ -16873,22 +17630,27 @@ msgid "1 channel (mono)"
 msgstr "1 채널 (모노)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One column per channel.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One row per channel.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel then Right channel on same line.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left and right channels on alternate lines.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel first then right channel.~%"
 msgstr ""
 
@@ -16897,47 +17659,95 @@ msgid "Unspecified channel order"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
 msgstr ""
 
-#: plug-ins/pluck.ny
-msgid "Pluck"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Generating pluck sound..."
-msgstr "소리 찾는 중..."
+msgid "Sample Data Import"
+msgstr "샘플 속도 변환(&V):"
 
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "David R.Sky"
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "Pluck MIDI pitch"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Fade-out type"
-msgstr "페이드 형식"
+msgid "Reading and rendering samples..."
+msgstr "트랙 믹싱/렌더링"
 
-#: plug-ins/pluck.ny
-msgid "Abrupt"
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "Gradual"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Duration (60s max)"
-msgstr "지속 시간"
+msgid "Select file"
+msgstr "파일을 선택하세요"
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Throw Error"
+msgstr "오류"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Unable to open file"
+msgstr "장르 파일을 열 수 없습니다."
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr ""
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Applying Tremolo..."
+msgstr "페이드 적용 중..."
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Waveform type"
+msgstr "파형"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "톱니 모양"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Starting phase (degrees)"
+msgstr "LFO 시작 위상, 도 단위"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Wet level (percent)"
+msgstr "Wet 레벨"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -17006,6 +17816,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "Covariance x y: ~a\n"
@@ -17018,6 +17829,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
@@ -17075,132 +17887,6 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Sample Data Import"
-msgstr "샘플 속도 변환(&V):"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Reading and rendering samples..."
-msgstr "트랙 믹싱/렌더링"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Select file"
-msgstr "파일을 선택하세요"
-
-#: plug-ins/sample-data-import.ny
-msgid "Invalid data handling"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Throw Error"
-msgstr "오류"
-
-#: plug-ins/sample-data-import.ny
-msgid "Read as Zero"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
-"                        Check that file exists."
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
-"              (Invalid byte '~a' at byte number: ~a)"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
-"              '~a' is not a numeric value."
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Error.~%Unable to open file"
-msgstr "장르 파일을 열 수 없습니다."
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Studio Fade Out"
-msgstr "스튜디오 페이드 아웃"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-msgid "Applying Fade..."
-msgstr "페이드 적용 중..."
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "선택이 너무 짧습니다.~%2개 이상의 샘플이어야 합니다."
-
-#: plug-ins/limiter.ny
-msgid "Limiter"
-msgstr "리미터"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiting..."
-msgstr "필터링..."
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "형식"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Soft Limit"
-msgstr "dB 한계"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Hard Limit"
-msgstr "dB 한계"
-
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Soft Clip"
-msgstr "클립 설정"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Hard Clip"
-msgstr "하드 클리핑"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"mono/Left"
-msgstr ""
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"Right channel"
-msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limit to (dB)"
-msgstr "레벨 (dB)(&V):"
-
-#: plug-ins/limiter.ny
-msgid "Hold (ms)"
-msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Apply Make-up Gain"
-msgstr "메이크업 게인"
-
 #: plug-ins/vocalremover.ny
 #, fuzzy
 msgid "Vocal Remover"
@@ -17250,6 +17936,7 @@ msgid "Frequency band to (Hz)"
 msgstr "주파수(Hz)"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Vocal Remover requires a stereo track. It works best with\n"
 "lossless files like WAV or AIFF, rather than MP3 or\n"
@@ -17279,6 +17966,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
 "If you have a stereo track split into left and right~%~\n"
@@ -17287,6 +17975,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Warning:~%~\n"
 "              Selected band-stop filter is~%~\n"
@@ -17300,698 +17989,60 @@ msgstr ""
 msgid "Current settings returned the original audio."
 msgstr "나이키스트가 반환한 오디오가 없습니다.\n"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Adjustable Fade"
-msgstr "조정 가능한 페이드"
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr "보코더"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Type"
-msgstr "페이드 형식"
+#: plug-ins/vocoder.ny
+msgid "Processing Vocoder..."
+msgstr "보코더 처리 중..."
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Up"
-msgstr "페이드 업 (등장 효과)"
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr "에드거-RFT"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Down"
-msgstr "페이드 다운 (퇴장 효과)"
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr "거리: (1 ~ 120, 기본값 = 20)"
 
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Up"
-msgstr "S-커브 업 (S형 등장 효과)"
+#: plug-ins/vocoder.ny
+msgid "Output choice"
+msgstr "출력 선택"
 
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Down"
-msgstr "S-커브 다운 (S형 퇴장 효과)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Mid-fade Adjust (%)"
-msgstr "중간-페이드 조절 (%)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Start/End as"
-msgstr "시작/끝 단위"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, elisp-format
-msgid "% of Original"
-msgstr "원본의 %"
-
-#: plug-ins/adjustable-fade.ny
-msgid "dB Gain"
-msgstr "dB 게인"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Start (or end)"
-msgstr "시작 (또는 끝)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "End (or start)"
-msgstr "끝 (또는 시작)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Handy Presets (override controls)"
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-msgid "None Selected"
-msgstr "선택 없음"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear In"
-msgstr "선형 페이드 인"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear Out"
-msgstr "선형 페이드 아웃"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential In"
-msgstr "지수형 페이드 인"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential Out"
-msgstr "지수형 페이드 아웃"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic In"
-msgstr "로그형 페이드 인"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic Out"
-msgstr "로그형 페이드 아웃"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded In"
-msgstr "반원형 페이드 인"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded Out"
-msgstr "반원형 페이드 아웃"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine In"
-msgstr "코사인형 페이드 인"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine Out"
-msgstr "코사인형 페이드 아웃"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve In"
-msgstr "S-커브형 페이드 인"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Out"
-msgstr "S-커브형 페이드 아웃"
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be negative."
-msgstr "~a백분율 값은 음수가 될 수 없습니다."
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "~a백분율 값은1000 %를 초과할 수 없습니다."
-
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
-msgstr ""
-"~adB 값은 +100 dB를 초과할 수  없습니다.~%~%~\n"
-"                                 힌트: 6 dB는 진폭을 두 배로 만들고~%~\n"
-"                                 t-6 dB는 진폭을 절반으로 만듭니다."
+msgid "Both Channels"
+msgstr "%d 채널"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Error~%~%"
-msgstr "오류~%~%"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "Spectral edit parametric EQ"
-msgstr "스펙트럼 편집 파라메트릭 EQ"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Filtering..."
-msgstr "필터링..."
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Paul Licameli"
-msgstr "폴 리카멜리"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid "Gain (dB)"
-msgstr "게인 (dB)"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "~aPlease select frequencies."
-msgstr "~a주파수를 선택하세요."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aLow frequency is undefined."
-msgstr "~a낮은 주파수는 정의되지 않습니다."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aHigh frequency is undefined."
-msgstr "~a높은 주파수는 정의되지 않습니다."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aCenter frequency must be above 0 Hz."
-msgstr "~a중심 주파수는 0 Hz 이상이어야 합니다."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
-"                        be greater than ~a Hz"
-msgstr ""
-"~a주파수 선택이 트랙 샘플 속도에 비해 너무 높습니다.~%~\n"
-"                        현재 트랙에 대해, 높은 주파수 설정은~%~\n"
-"                        ~a Hz보다 클 수 없습니다."
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
-"                         Please select a frequency range."
-msgstr ""
-"~a대역폭이 0입니다 (위쪽 및 아래쪽~%~\n"
-"                         주파수가 모두 ~a Hz입니다).~%~\n"
-"                         주파수 범위를 선택하세요."
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Error.~%"
-msgstr "오류.~%"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Crossfade Tracks"
-msgstr "트랙 크로스페이드"
-
-#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
-msgid "Crossfading..."
-msgstr "크로스페이딩 적용 중..."
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade type"
-msgstr "페이드 형식"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Gain"
-msgstr "일정한 이득"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 1"
-msgstr "일정한 파워 1"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 2"
-msgstr "일정한 파워 2"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom Curve"
-msgstr "사용자 정의 커브"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom curve"
-msgstr "사용자 정의 커브"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade direction"
-msgstr "페이드 방향"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating Out / In"
-msgstr "교대로 페이드 아웃/인"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating In / Out"
-msgstr "교대로 페이드 인/아웃"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy, elisp-format
-msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr "오류.^%크로스페이드하려면 2개 이상의 트랙을 선택하세요."
-
-#: plug-ins/SpectralEditShelves.ny
-msgid "Spectral edit shelves"
-msgstr "스펙트럼 편집 선반(shelf)"
-
-#: plug-ins/SoundFinder.ny
-msgid "Sound Finder"
-msgstr "소리 검색기"
-
-#: plug-ins/SoundFinder.ny
-msgid "Finding sound..."
-msgstr "소리 찾는 중..."
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr "제레미 R. 브라운"
-
-#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr "이 수준 이하의 오디오는 무음으로 취급 [ -dB]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr "소리 사이의 최소 무음 지속 시간 [초]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr "레이블 시작 지점 [소리 시작 전, 초]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr "레이블 종료 지점 [소리 끝난 후, 초]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr "트랙의 끝에 레이블을 추가할까요? [아니요=0, 예=1]"
-
-#: plug-ins/SoundFinder.ny
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"소리을 찾지 못했습니다. 무음~%수준 및 최소 무음 지속 시간을 낮춰 보세요."
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr "[끝]"
-
-#: plug-ins/rissetdrum.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Risset Drum"
-msgstr "소리 찾는 중..."
+msgid "Right Only"
+msgstr "오른쪽 채널"
 
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Generating Risset Drum..."
-msgstr "소리 찾는 중..."
+#: plug-ins/vocoder.ny
+msgid "Number of vocoder bands"
+msgstr "보코더 밴드 수"
 
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Steven Jones"
-msgstr "스티브 달튼"
+#: plug-ins/vocoder.ny
+msgid "Amplitude of original audio (percent)"
+msgstr "원본 오디오의 진폭 (퍼센트)"
 
-#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency (Hz)"
-msgstr "주파수(Hz)"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Decay (seconds)"
-msgstr "지연 시간 (초)"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Center frequency of noise (Hz)"
-msgstr "중심 주파수와 폭"
-
-#: plug-ins/rissetdrum.ny
-msgid "Width of noise band (Hz)"
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Amount of noise in mix (percent)"
+#: plug-ins/vocoder.ny
+msgid "Amplitude of white noise (percent)"
 msgstr "화이트 노이즈의 진폭 (퍼센트)"
 
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Amplitude (0 - 1)"
-msgstr "진폭 (0-1):"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid "Spectral edit multi tool"
-msgstr "스펙트럼 편집 다중 도구"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
-"                       Please select a frequency range."
-msgstr ""
-"~a대역폭이 0입니다 (위쪽 및 아래쪽~%~\n"
-"                       주파수가 모두 ~a Hz입니다).~%~\n"
-"                       주파수 범위를 선택하세요."
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
-"                      or reduce the filter 'Width'."
-msgstr ""
-"~a노치 필터 매개 변수를 적용할 수 없습니다.~%~\n"
-"                      낮은 주파수 범위를 높이거나~%~\n"
-"                      필터 '너비'를 줄이세요."
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "왼쪽(&L)"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "오른쪽(&R)"
-
-#: plug-ins/equalabel.ny
-msgid "Regular Interval Labels"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Number of Labels"
-msgstr "채널수:"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label Interval"
-msgstr "레이블 인덱스"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Number of labels"
-msgstr "채널수:"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label interval (seconds)"
-msgstr "길이 (초)"
-
-#: plug-ins/equalabel.ny
-msgid "Adjust label interval to fit length"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label text"
-msgstr "레이블 인덱스"
-
-#: plug-ins/equalabel.ny
-msgid "Minimum number of digits in label"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "None - Text Only"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "1 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "2 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "3 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "1 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "2 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "3 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Begin numbering from"
-msgstr ""
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Notch Filter"
-msgstr "필터 길이"
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Applying Notch Filter..."
-msgstr "페이드 적용 중..."
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Steve Daulton and Bill Wharrie"
-msgstr "스티브 달튼"
-
-#: plug-ins/notch.ny
-msgid "Q (higher value reduces width)"
-msgstr ""
-
-#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy
-msgid "Frequency must be at least 0.1 Hz."
-msgstr "최소 주파수는 최소한 0 Hz여야 합니다"
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
-"                 Frequency must be less than ~a Hz."
-msgstr ""
-"~a주파수 선택이 트랙 샘플 속도에 비해 너무 높습니다.~%~\n"
-"                        현재 트랙에 대해, 높은 주파수 설정은~%~\n"
-"                        ~a Hz보다 클 수 없습니다."
-
-#: plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Crossfade Clips"
-msgstr "트랙 크로스페이드"
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr "오류.^%무효한 선택.^%두 개 이상의 오디오 클립이 선택되었습니다."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "오류.^%무효한 선택.~%E선택 영역의 시작/끝에 빈 공간이 있습니다."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr "오류.^%클립 크로스페이드는 한 트랙에만 적용됩니다."
-
-#: plug-ins/delay.ny
-msgid "Delay"
-msgstr "지연"
-
-#: plug-ins/delay.ny
-msgid "Applying Delay Effect..."
-msgstr "지연 효과 적용 중..."
-
-#: plug-ins/delay.ny
-msgid "Delay type"
-msgstr "지연 형식"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Regular"
-msgstr "Rectangular (직사각형)"
-
-#: plug-ins/delay.ny
-msgid "Bouncing Ball"
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Reverse Bouncing Ball"
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Delay level per echo (dB)"
-msgstr "에코당 지연 수준 (dB)"
-
-#: plug-ins/delay.ny
-msgid "Delay time (seconds)"
-msgstr "지연 시간 (초)"
-
-#: plug-ins/delay.ny
-msgid "Pitch change effect"
-msgstr "피치(음정) 변경 효과"
-
-#: plug-ins/delay.ny
-msgid "Pitch/Tempo"
-msgstr "피치/템포"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Low-quality Pitch Shift"
-msgstr "최종 피치 변경"
-
-#: plug-ins/delay.ny
-msgid "Pitch change per echo (semitones)"
-msgstr "에코당 피치 변경 (반음)"
-
-#: plug-ins/delay.ny
-msgid "Number of echoes"
-msgstr "에코 수"
-
-#: plug-ins/delay.ny
-msgid "Allow duration to change"
-msgstr "지속 시간 변경 허용"
-
-#: plug-ins/delay.ny
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "에코 개수 '~a' 외부 유효 범위는 1에서 50 사이.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "피치 변경 '~a' 외부 유효 범위는 -12에서 +12 반음 사이.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "지연 시간 '~a' 외부 유효 범위는 0에서 10초 사이.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "지연 수준 '~a' 외부 유효 범위는 -30에서 +6dB 사이.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Error.~%~a"
-msgstr "오류.~%~a"
-
-#: plug-ins/tremolo.ny
-msgid "Tremolo"
-msgstr ""
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Applying Tremolo..."
-msgstr "페이드 적용 중..."
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Waveform type"
-msgstr "파형"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Inverse Sawtooth"
-msgstr "톱니 모양"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Starting phase (degrees)"
-msgstr "LFO 시작 위상, 도 단위"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Wet level (percent)"
-msgstr "Wet 레벨"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Silence Finder"
-msgstr "무음 검색기"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Finding silence..."
-msgstr "무음 찾는 중..."
-
-#: plug-ins/SilenceMarker.ny
-msgid "Alex S. Brown"
-msgstr "알렉스 S. 브라운"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence [seconds]"
-msgstr "무음의 최소 지속 시간 [초]"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement [seconds before silence ends]"
-msgstr "레이블 배치 [무음 끝나기 전, 초]"
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"무음을 찾지 못했습니다. 무음~%수준 및 최소 무음 지속 시간을 낮춰 보세요."
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "High-Pass Filter"
-msgstr "클래식 필터"
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "Performing High-Pass Filter..."
-msgstr "%d 편집 항목 수행 중...\n"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Roll-off (dB per octave)"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "6 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "12 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "24 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "36 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "48 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
-"                   Frequency must be less than ~a Hz."
-msgstr ""
-"~a주파수 선택이 트랙 샘플 속도에 비해 너무 높습니다.~%~\n"
-"                        현재 트랙에 대해, 높은 주파수 설정은~%~\n"
-"                        ~a Hz보다 클 수 없습니다."
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Low-Pass Filter"
-msgstr "클래식 필터"
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Performing Low-Pass Filter..."
-msgstr "%d 편집 항목 수행 중...\n"
-
-#: plug-ins/beat.ny
-msgid "Beat Finder"
-msgstr "비트 검색기"
-
-#: plug-ins/beat.ny
-msgid "Finding beats..."
-msgstr "비트 찾는 중..."
-
-#: plug-ins/beat.ny
-msgid "Threshold Percentage"
-msgstr "임계치 백분율"
+#: plug-ins/vocoder.ny
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "레이더 니들[펄스 트레인]의 진폭 (퍼센트)"
+
+#: plug-ins/vocoder.ny
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "레이더 니들의 주파수 (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Stereo track required."
+msgstr "오류.~%스테레오 트랙이 필요합니다."
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-29 11:18+0100\n"
+"POT-Creation-Date: 2018-08-30 12:04+0100\n"
 "PO-Revision-Date: 2017-11-09 20:07+0530\n"
 "Last-Translator: bashishtha narayan singh <bashishtha.singh@gmail.com>\n"
 "Language-Team: bashishtha singh, tushar raj <bashishtha.singh@gmail.com>\n"
@@ -2322,7 +2322,7 @@ msgstr "Log आवृति"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
+#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2600,7 +2600,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -5513,14 +5513,13 @@ msgstr ""
 "\n"
 "केवल विश्वसनीय स्रोतों से मॉड्यूल का उपयोग करें"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
-#: plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "हाँ"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
-#: plug-ins/equalabel.ny plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "ना"
 
@@ -11630,8 +11629,8 @@ msgstr "प्लगइन सेटिग्स"
 msgid "Program"
 msgstr "कार्यक्रम"
 
-#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
-#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
 msgstr ""
@@ -16912,79 +16911,365 @@ msgstr "त्रुटि: %hs पंक्ति %lu  पर"
 msgid "Could not load file: \"%s\""
 msgstr "फ़ाइल : \"%s\"  को लोड नहीं किया जा सका"
 
-#: plug-ins/vocoder.ny
-msgid "Vocoder"
-msgstr ""
-
-#: plug-ins/vocoder.ny
+#: plug-ins/SilenceMarker.ny
 #, fuzzy
-msgid "Processing Vocoder..."
-msgstr "प्रक्रिया पूरी हुई."
+msgid "Silence Finder"
+msgstr "शांति"
 
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
+#: plug-ins/SilenceMarker.ny
+msgid "Finding silence..."
 msgstr ""
 
-#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
-#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
-#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
-#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
+#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
-#: plug-ins/vocoder.ny
-msgid "Distance: (1 to 120, default = 20)"
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+msgid "Treat audio below this level as silence [ -dB]"
 msgstr ""
 
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Output choice"
-msgstr "आउटपुट स्तर"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Both Channels"
-msgstr "%d चैनल"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Right Only"
-msgstr "दायां चैनल"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Number of vocoder bands"
-msgstr "दुहराने की संख्या"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Amplitude of original audio (percent)"
-msgstr "आवृति(Hz):"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Amplitude of white noise (percent)"
-msgstr "आवृति(Hz):"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Amplitude of Radar Needles (percent)"
-msgstr "आवृति(Hz):"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Frequency of Radar Needles (Hz)"
-msgstr "आवृति(Hz):"
-
-#: plug-ins/vocoder.ny
-#, elisp-format
-msgid "Error.~%Stereo track required."
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
 msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+#, lisp-format
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Sound Finder"
+msgstr "शांति"
+
+#: plug-ins/SoundFinder.ny
+msgid "Finding sound..."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+#, lisp-format
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Spectral edit multi tool"
+msgstr "वर्णक्रम चयन"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Filtering..."
+msgstr "फ़िल्टर-लंबाई"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Paul Licameli"
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy, lisp-format
+msgid "~aPlease select frequencies."
+msgstr "आवृत्तियाँ"
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy, lisp-format
+msgid "Error.~%"
+msgstr "त्रुटि"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "Spectral edit parametric EQ"
+msgstr "वर्णक्रम चयन"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Gain (dB)"
+msgstr "गेन (dB):(&G)"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aLow frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aHigh frequency is undefined."
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy, lisp-format
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "न्यूनतम फ्रीकवेंसी कम से कम 0 Hz होनी चाहिए"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Spectral edit shelves"
+msgstr "वर्णक्रम चयन"
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Studio Fade Out"
+msgstr "घटते हुए"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Applying Fade..."
+msgstr "लगा रहे हैं..."
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Steve Daulton"
+msgstr "डिफ़ाल्ट सेट करें"
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy, lisp-format
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr "चयन %d नमूनों से भी बड़ा होना चाहिए."
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Adjustable Fade"
+msgstr "ऐडजस्टेड पैन"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Type"
+msgstr "फ़िल्टर प्रकार :"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Up"
+msgstr "बढ़ते हुए"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Down"
+msgstr "बढ़ते हुए"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Up"
+msgstr "वक्र का नाम"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Down"
+msgstr "नीचे ले जाएं"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start/End as"
+msgstr "आरंभ-समाप्ति"
+
+#: plug-ins/adjustable-fade.ny
+msgid "% of Original"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "dB Gain"
+msgstr "गेन"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start (or end)"
+msgstr "आरंभ - समाप्ति"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "None Selected"
+msgstr "चुनें"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear In"
+msgstr "रेखीय"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear Out"
+msgstr "रेखीय"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic In"
+msgstr "लॉगरिद्मिक"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic Out"
+msgstr "लॉगरिद्मिक"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded In"
+msgstr "घटते हुए"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded Out"
+msgstr "घटते हुए"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine In"
+msgstr "Cosine"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine Out"
+msgstr "Cosine"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve In"
+msgstr "वक्र का नाम"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Out"
+msgstr "वक्र मौजूद है"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "~aPercentage values cannot be negative."
+msgstr "आवृति बढ़ोतरी ऋणात्मक नहीं हो सकता"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "आवृति बढ़ोतरी ऋणात्मक नहीं हो सकता"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 t-6 dB halves the amplitude."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "त्रुटि"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Beat Finder"
+msgstr "ताल (&B)"
+
+#: plug-ins/beat.ny
+msgid "Finding beats..."
+msgstr ""
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Threshold Percentage"
+msgstr "पठार नियंत्रक"
 
 #: plug-ins/clipfix.ny
 #, fuzzy
@@ -17012,6 +17297,448 @@ msgstr ""
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr ""
 
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "सुर ट्रैक"
+
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfading..."
+msgstr "सुर ट्रैक"
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+"अमान्य ऑडियो चयन\n"
+"कृपया सुनिश्चित करें कि ऑडियो चुना गया है."
+
+#: plug-ins/crossfadeclips.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"अमान्य ऑडियो चयन\n"
+"कृपया सुनिश्चित करें कि ऑडियो चुना गया है."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfade Tracks"
+msgstr "सुर ट्रैक"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade type"
+msgstr "फाइल प्रकार :"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Gain"
+msgstr "स्थिर"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 1"
+msgstr "स्थिर"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 2"
+msgstr "स्थिर"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom Curve"
+msgstr "विशिष्ट"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom curve"
+msgstr "विशिष्ट"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade direction"
+msgstr "सीधे पढ़ें"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, lisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "विलंबता"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Applying Delay Effect..."
+msgstr "Nyquist प्रभाव लगाना..."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay type"
+msgstr "विलंबता"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "आयताकार"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time (seconds)"
+msgstr "देरी(सेकेंड):"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change effect"
+msgstr "प्रभाव पूर्वालोकन"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch/Tempo"
+msgstr "पिच"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Low-quality Pitch Shift"
+msgstr "अंतिम पिच शिफ्ट"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change per echo (semitones)"
+msgstr "प्रभाव पूर्वालोकन"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes"
+msgstr "दुहराने की संख्या"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~a"
+msgstr "त्रुटि"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "संपादन संख्या :"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "नाम संपादन"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of labels"
+msgstr "संपादन संख्या :"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label interval (seconds)"
+msgstr "लंबाई (सेकेंड)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "नाम संपादन"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "क्लासिक फ़िल्टर"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "%d संपादन हो रहा है...\n"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+msgid "Dominic Mazzoni"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+#, fuzzy
+msgid "Frequency (Hz)"
+msgstr "आवृति(Hz):"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#, fuzzy
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "न्यूनतम फ्रीकवेंसी कम से कम 0 Hz होनी चाहिए"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiter"
+msgstr "dB सीमा"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiting..."
+msgstr "फ़िल्टर-लंबाई"
+
+#: plug-ins/limiter.ny
+msgid "Type"
+msgstr "प्रकार"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Limit"
+msgstr "dB सीमा"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Limit"
+msgstr "dB सीमा"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Clip"
+msgstr "अगला क्लिप"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Clip"
+msgstr "हार्ड क्लिपिंग"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limit to (dB)"
+msgstr "स्तर(&v) (dB):"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Apply Make-up Gain"
+msgstr "पूरक गेन"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "क्लासिक फ़िल्टर"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "%d संपादन हो रहा है...\n"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Notch Filter"
+msgstr "फ़िल्टर की लंबाई"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Applying Notch Filter..."
+msgstr "Nyquist प्रभाव लगाना..."
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "डिफ़ाल्ट सेट करें"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr ""
+
+#: plug-ins/notch.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Generating pluck sound..."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Fade-out type"
+msgstr "फाइल प्रकार :"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "अवधि"
+
 #: plug-ins/rhythmtrack.ny
 #, fuzzy
 msgid "Rhythm Track"
@@ -17019,10 +17746,6 @@ msgstr "ट्रैक मिटाएं"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Generating Rhythm..."
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Dominic Mazzoni"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -17136,6 +17859,52 @@ msgid ""
 "'Rhythm track duration' to greater than zero."
 msgstr ""
 
+#: plug-ins/rissetdrum.ny
+msgid "Risset Drum"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+msgid "Generating Risset Drum..."
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Steven Jones"
+msgstr "डिफ़ाल्ट सेट करें"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Decay (seconds)"
+msgstr "देरी(सेकेंड):"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Center frequency of noise (Hz)"
+msgstr "केंद्र आवृत्ति और चौड़ाई"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amplitude (0 - 1)"
+msgstr "आयाम (0-1)"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "बाएं (&L)"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "दाएं (&R)"
+
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -17145,15 +17914,6 @@ msgstr "निर्यात नहीं कर सका"
 #, fuzzy
 msgid "Analyzing..."
 msgstr "लगा रहे हैं..."
-
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
-#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Steve Daulton"
-msgstr "डिफ़ाल्ट सेट करें"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -17236,35 +17996,40 @@ msgid "[-inf]"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "Left Channel.~%~%"
 msgstr "बायाँ चैनल"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~%~%Right Channel.~%~%"
 msgstr "दायां चैनल"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~aData written to:~%~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
 "~a ~\n"
@@ -17274,20 +18039,22 @@ msgid ""
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, ~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~a samples."
 msgstr "नमूने"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~a seconds."
 msgstr "सेकेंड"
 
@@ -17296,29 +18063,35 @@ msgid "Audio data analysis:"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
 msgstr ""
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
 msgstr ""
 
@@ -17367,6 +18140,7 @@ msgid "Right (dB)"
 msgstr "दायाँ, "
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
 "<a href=\"~a\">Audacity</a> by Steve\n"
@@ -17389,22 +18163,27 @@ msgid "1 channel (mono)"
 msgstr "1 चैनल ( मोनो)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One column per channel.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One row per channel.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel then Right channel on same line.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left and right channels on alternate lines.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel first then right channel.~%"
 msgstr ""
 
@@ -17413,46 +18192,95 @@ msgid "Unspecified channel order"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
 msgstr ""
 
-#: plug-ins/pluck.ny
-msgid "Pluck"
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "Generating pluck sound..."
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "David R.Sky"
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "Pluck MIDI pitch"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Fade-out type"
-msgstr "फाइल प्रकार :"
+msgid "Sample Data Import"
+msgstr "नमूना दर परिवर्तक:"
 
-#: plug-ins/pluck.ny
-msgid "Abrupt"
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "Gradual"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Duration (60s max)"
-msgstr "अवधि"
+msgid "Reading and rendering samples..."
+msgstr "मिश्रण द्वारा ट्रैक निर्माण"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Select file"
+msgstr "एक MIDI फ़ाइल चुनें"
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Throw Error"
+msgstr "त्रुटि"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Unable to open file"
+msgstr "शैली फ़ाइल को खोलने में अक्षम."
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr ""
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Applying Tremolo..."
+msgstr "लगा रहे हैं..."
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Waveform type"
+msgstr "तरंगरूप"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "आरीदाँत"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Starting phase (degrees)"
+msgstr "LFO शुरूआती फ़ेज डिग्री में"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Wet level (percent)"
+msgstr "वेट् स्तर"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -17521,6 +18349,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "Covariance x y: ~a\n"
@@ -17533,6 +18362,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
@@ -17590,136 +18420,6 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Sample Data Import"
-msgstr "नमूना दर परिवर्तक:"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Reading and rendering samples..."
-msgstr "मिश्रण द्वारा ट्रैक निर्माण"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Select file"
-msgstr "एक MIDI फ़ाइल चुनें"
-
-#: plug-ins/sample-data-import.ny
-msgid "Invalid data handling"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Throw Error"
-msgstr "त्रुटि"
-
-#: plug-ins/sample-data-import.ny
-msgid "Read as Zero"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
-"                        Check that file exists."
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
-"              (Invalid byte '~a' at byte number: ~a)"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
-"              '~a' is not a numeric value."
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Error.~%Unable to open file"
-msgstr "शैली फ़ाइल को खोलने में अक्षम."
-
-#: plug-ins/StudioFadeOut.ny
-#, fuzzy
-msgid "Studio Fade Out"
-msgstr "घटते हुए"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Applying Fade..."
-msgstr "लगा रहे हैं..."
-
-#: plug-ins/StudioFadeOut.ny
-#, fuzzy
-msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "चयन %d नमूनों से भी बड़ा होना चाहिए."
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiter"
-msgstr "dB सीमा"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiting..."
-msgstr "फ़िल्टर-लंबाई"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "प्रकार"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Soft Limit"
-msgstr "dB सीमा"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Hard Limit"
-msgstr "dB सीमा"
-
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Soft Clip"
-msgstr "अगला क्लिप"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Hard Clip"
-msgstr "हार्ड क्लिपिंग"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"mono/Left"
-msgstr ""
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"Right channel"
-msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limit to (dB)"
-msgstr "स्तर(&v) (dB):"
-
-#: plug-ins/limiter.ny
-msgid "Hold (ms)"
-msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Apply Make-up Gain"
-msgstr "पूरक गेन"
-
 #: plug-ins/vocalremover.ny
 #, fuzzy
 msgid "Vocal Remover"
@@ -17769,6 +18469,7 @@ msgid "Frequency band to (Hz)"
 msgstr "आवृति(Hz):"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Vocal Remover requires a stereo track. It works best with\n"
 "lossless files like WAV or AIFF, rather than MP3 or\n"
@@ -17798,6 +18499,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
 "If you have a stereo track split into left and right~%~\n"
@@ -17806,6 +18508,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Warning:~%~\n"
 "              Selected band-stop filter is~%~\n"
@@ -17819,732 +18522,67 @@ msgstr ""
 msgid "Current settings returned the original audio."
 msgstr "Nyquist ने रिक्त ऑडियो लौटाया.\n"
 
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Adjustable Fade"
-msgstr "ऐडजस्टेड पैन"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Fade Type"
-msgstr "फ़िल्टर प्रकार :"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Fade Up"
-msgstr "बढ़ते हुए"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Fade Down"
-msgstr "बढ़ते हुए"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve Up"
-msgstr "वक्र का नाम"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve Down"
-msgstr "नीचे ले जाएं"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Mid-fade Adjust (%)"
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Start/End as"
-msgstr "आरंभ-समाप्ति"
+msgid "Processing Vocoder..."
+msgstr "प्रक्रिया पूरी हुई."
 
-#: plug-ins/adjustable-fade.ny
-#, elisp-format
-msgid "% of Original"
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "dB Gain"
-msgstr "गेन"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Start (or end)"
-msgstr "आरंभ - समाप्ति"
-
-#: plug-ins/adjustable-fade.ny
-msgid "End (or start)"
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
-msgid "Handy Presets (override controls)"
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "None Selected"
-msgstr "चुनें"
+msgid "Output choice"
+msgstr "आउटपुट स्तर"
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Linear In"
-msgstr "रेखीय"
+msgid "Both Channels"
+msgstr "%d चैनल"
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Linear Out"
-msgstr "रेखीय"
+msgid "Right Only"
+msgstr "दायां चैनल"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential In"
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential Out"
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Logarithmic In"
-msgstr "लॉगरिद्मिक"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Logarithmic Out"
-msgstr "लॉगरिद्मिक"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Rounded In"
-msgstr "घटते हुए"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Rounded Out"
-msgstr "घटते हुए"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Cosine In"
-msgstr "Cosine"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Cosine Out"
-msgstr "Cosine"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve In"
-msgstr "वक्र का नाम"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve Out"
-msgstr "वक्र मौजूद है"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "~aPercentage values cannot be negative."
-msgstr "आवृति बढ़ोतरी ऋणात्मक नहीं हो सकता"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "आवृति बढ़ोतरी ऋणात्मक नहीं हो सकता"
-
-#: plug-ins/adjustable-fade.ny
-msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Error~%~%"
-msgstr "त्रुटि"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy
-msgid "Spectral edit parametric EQ"
-msgstr "वर्णक्रम चयन"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "Filtering..."
-msgstr "फ़िल्टर-लंबाई"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Paul Licameli"
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#, fuzzy
-msgid "Gain (dB)"
-msgstr "गेन (dB):(&G)"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "~aPlease select frequencies."
-msgstr "आवृत्तियाँ"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aLow frequency is undefined."
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aHigh frequency is undefined."
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy
-msgid "~aCenter frequency must be above 0 Hz."
-msgstr "न्यूनतम फ्रीकवेंसी कम से कम 0 Hz होनी चाहिए"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
-"                        be greater than ~a Hz"
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
-"                         Please select a frequency range."
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "Error.~%"
-msgstr "त्रुटि"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Crossfade Tracks"
-msgstr "सुर ट्रैक"
-
-#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Crossfading..."
-msgstr "सुर ट्रैक"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Fade type"
-msgstr "फाइल प्रकार :"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Constant Gain"
-msgstr "स्थिर"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Constant Power 1"
-msgstr "स्थिर"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Constant Power 2"
-msgstr "स्थिर"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Custom Curve"
-msgstr "विशिष्ट"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Custom curve"
-msgstr "विशिष्ट"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Fade direction"
-msgstr "सीधे पढ़ें"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating Out / In"
-msgstr ""
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating In / Out"
-msgstr ""
-
-#: plug-ins/crossfadetracks.ny
-#, elisp-format
-msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr ""
-
-#: plug-ins/SpectralEditShelves.ny
-#, fuzzy
-msgid "Spectral edit shelves"
-msgstr "वर्णक्रम चयन"
-
-#: plug-ins/SoundFinder.ny
-#, fuzzy
-msgid "Sound Finder"
-msgstr "शांति"
-
-#: plug-ins/SoundFinder.ny
-msgid "Finding sound..."
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-msgid "Risset Drum"
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-msgid "Generating Risset Drum..."
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Steven Jones"
-msgstr "डिफ़ाल्ट सेट करें"
-
-#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy
-msgid "Frequency (Hz)"
-msgstr "आवृति(Hz):"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Decay (seconds)"
-msgstr "देरी(सेकेंड):"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Center frequency of noise (Hz)"
-msgstr "केंद्र आवृत्ति और चौड़ाई"
-
-#: plug-ins/rissetdrum.ny
-msgid "Width of noise band (Hz)"
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-msgid "Amount of noise in mix (percent)"
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Amplitude (0 - 1)"
-msgstr "आयाम (0-1)"
-
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "Spectral edit multi tool"
-msgstr "वर्णक्रम चयन"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
-"                       Please select a frequency range."
-msgstr ""
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
-"                      or reduce the filter 'Width'."
-msgstr ""
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "बाएं (&L)"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "दाएं (&R)"
-
-#: plug-ins/equalabel.ny
-msgid "Regular Interval Labels"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Number of Labels"
-msgstr "संपादन संख्या :"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label Interval"
-msgstr "नाम संपादन"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Number of labels"
-msgstr "संपादन संख्या :"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label interval (seconds)"
-msgstr "लंबाई (सेकेंड)"
-
-#: plug-ins/equalabel.ny
-msgid "Adjust label interval to fit length"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label text"
-msgstr "नाम संपादन"
-
-#: plug-ins/equalabel.ny
-msgid "Minimum number of digits in label"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "None - Text Only"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "1 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "2 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "3 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "1 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "2 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "3 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Begin numbering from"
-msgstr ""
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Notch Filter"
-msgstr "फ़िल्टर की लंबाई"
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Applying Notch Filter..."
-msgstr "Nyquist प्रभाव लगाना..."
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Steve Daulton and Bill Wharrie"
-msgstr "डिफ़ाल्ट सेट करें"
-
-#: plug-ins/notch.ny
-msgid "Q (higher value reduces width)"
-msgstr ""
-
-#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy
-msgid "Frequency must be at least 0.1 Hz."
-msgstr "न्यूनतम फ्रीकवेंसी कम से कम 0 Hz होनी चाहिए"
-
-#: plug-ins/notch.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
-"                 Frequency must be less than ~a Hz."
-msgstr ""
-
-#: plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Crossfade Clips"
-msgstr "सुर ट्रैक"
-
-#: plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr ""
-"अमान्य ऑडियो चयन\n"
-"कृपया सुनिश्चित करें कि ऑडियो चुना गया है."
-
-#: plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
-"अमान्य ऑडियो चयन\n"
-"कृपया सुनिश्चित करें कि ऑडियो चुना गया है."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Delay"
-msgstr "विलंबता"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Applying Delay Effect..."
-msgstr "Nyquist प्रभाव लगाना..."
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay type"
-msgstr "विलंबता"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Regular"
-msgstr "आयताकार"
-
-#: plug-ins/delay.ny
-msgid "Bouncing Ball"
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Reverse Bouncing Ball"
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Delay level per echo (dB)"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay time (seconds)"
-msgstr "देरी(सेकेंड):"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch change effect"
-msgstr "प्रभाव पूर्वालोकन"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch/Tempo"
-msgstr "पिच"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Low-quality Pitch Shift"
-msgstr "अंतिम पिच शिफ्ट"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch change per echo (semitones)"
-msgstr "प्रभाव पूर्वालोकन"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Number of echoes"
+msgid "Number of vocoder bands"
 msgstr "दुहराने की संख्या"
 
-#: plug-ins/delay.ny
-msgid "Allow duration to change"
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of original audio (percent)"
+msgstr "आवृति(Hz):"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of white noise (percent)"
+msgstr "आवृति(Hz):"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "आवृति(Hz):"
+
+#: plug-ins/vocoder.ny
+#, fuzzy
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "आवृति(Hz):"
+
+#: plug-ins/vocoder.ny
+#, lisp-format
+msgid "Error.~%Stereo track required."
 msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "संपादन की संख्या सीमा 1 से 10000 के बीच होनी चाहिए."
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Error.~%~a"
-msgstr "त्रुटि"
-
-#: plug-ins/tremolo.ny
-msgid "Tremolo"
-msgstr ""
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Applying Tremolo..."
-msgstr "लगा रहे हैं..."
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Waveform type"
-msgstr "तरंगरूप"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Inverse Sawtooth"
-msgstr "आरीदाँत"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Starting phase (degrees)"
-msgstr "LFO शुरूआती फ़ेज डिग्री में"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Wet level (percent)"
-msgstr "वेट् स्तर"
-
-#: plug-ins/SilenceMarker.ny
-#, fuzzy
-msgid "Silence Finder"
-msgstr "शांति"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Finding silence..."
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid "Alex S. Brown"
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence [seconds]"
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement [seconds before silence ends]"
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "High-Pass Filter"
-msgstr "क्लासिक फ़िल्टर"
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "Performing High-Pass Filter..."
-msgstr "%d संपादन हो रहा है...\n"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Roll-off (dB per octave)"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "6 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "12 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "24 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "36 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "48 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
-"                   Frequency must be less than ~a Hz."
-msgstr ""
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Low-Pass Filter"
-msgstr "क्लासिक फ़िल्टर"
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Performing Low-Pass Filter..."
-msgstr "%d संपादन हो रहा है...\n"
-
-#: plug-ins/beat.ny
-#, fuzzy
-msgid "Beat Finder"
-msgstr "ताल (&B)"
-
-#: plug-ins/beat.ny
-msgid "Finding beats..."
-msgstr ""
-
-#: plug-ins/beat.ny
-#, fuzzy
-msgid "Threshold Percentage"
-msgstr "पठार नियंत्रक"
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
@@ -18629,12 +18667,10 @@ msgstr "पठार नियंत्रक"
 
 # अतिरिक्त तालिका
 #, fuzzy
-#~| msgid "E&xtra menus"
 #~ msgid "E&xtra"
 #~ msgstr "अतिरिक्त (&x) मेन्यु"
 
 #, fuzzy
-#~| msgid "Transcription"
 #~ msgid "Transcri&ption"
 #~ msgstr "श्रुतिलेखन"
 

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-29 11:18+0100\n"
+"POT-Creation-Date: 2018-08-30 12:04+0100\n"
 "PO-Revision-Date: 2018-03-04 14:48+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/klyok/audacity/language/"
@@ -2342,7 +2342,7 @@ msgstr "Частота запису журналу"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
+#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "дБ"
 
@@ -2617,9 +2617,10 @@ msgstr ""
 "html#foreign|бібліотеку FFmpeg]]."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -5435,14 +5436,13 @@ msgstr ""
 "\n"
 "Використовуйте лише модулі з надійних джерел"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
-#: plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Так"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
-#: plug-ins/equalabel.ny plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "Ні"
 
@@ -11518,8 +11518,8 @@ msgstr "Параметри додатка"
 msgid "Program"
 msgstr "Програма"
 
-#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
-#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
 msgstr ""
@@ -16837,73 +16837,359 @@ msgstr "Помилка: %hs у рядку %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Не вдалося завантажити файл: «%s»"
 
-#: plug-ins/vocoder.ny
-msgid "Vocoder"
-msgstr "Вокодер"
+#: plug-ins/SilenceMarker.ny
+msgid "Silence Finder"
+msgstr "Пошук тиші"
 
-#: plug-ins/vocoder.ny
-msgid "Processing Vocoder..."
-msgstr "Виконуємо обробку вокодером…"
+#: plug-ins/SilenceMarker.ny
+msgid "Finding silence..."
+msgstr "Шукаємо тишу…"
 
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
-msgstr "Едґар-RFT"
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr "Alex S. Brown"
 
-#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
-#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
-#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
-#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
+#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 "Випущено за умов дотримання Загальної громадської ліцензії GNU (GPL) версії 2"
 
-#: plug-ins/vocoder.ny
-msgid "Distance: (1 to 120, default = 20)"
-msgstr "Відстань: (від 1 до 120, типова = 20)"
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr "Вважати звук, нижчий за це порогове значення, тишею (-дБ)"
 
-#: plug-ins/vocoder.ny
-msgid "Output choice"
-msgstr "Вибір виведення"
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr "Мінімальна тривалість тиші (у секундах)"
 
-#: plug-ins/vocoder.ny
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr "Розташування мітки (у секундах після завершення ділянки тиші)"
+
+#: plug-ins/SilenceMarker.ny
+#, lisp-format
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Фрагментів тиші не знайдено. Спробуйте зменшити~%рівень тиші і мінімальну "
+"тривалість тиші."
+
+#: plug-ins/SoundFinder.ny
+msgid "Sound Finder"
+msgstr "Пошук звуку"
+
+#: plug-ins/SoundFinder.ny
+msgid "Finding sound..."
+msgstr "Шукаємо звук…"
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr "Jeremy R. Brown"
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr "Мінімальна тривалість тиші між звуками (у секундах)"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr "Початкова точка мітки (у секундах перед звуком)"
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr "Кінцева точка мітки (у секундах після звуку)"
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr "Додавати мітку наприкінці доріжки? [Ні=0, Так=1]"
+
+#: plug-ins/SoundFinder.ny
+#, lisp-format
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Фрагментів звуку не знайдено. Спробуйте зменшити~%рівень тиші і мінімальну "
+"тривалість тиші."
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr "[Кінець]"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid "Spectral edit multi tool"
+msgstr "Універсальний інструмент редагування спектра"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Filtering..."
+msgstr "Фільтрування…"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Paul Licameli"
+msgstr "Paul Licameli"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "~aPlease select frequencies."
+msgstr "~aБудь ласка, виберіть частоти."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+"~aНульова ширина каналу (верхня і нижня~%~\n"
+"                       частоти обидві дорівнюють ~a Гц).~%~\n"
+"                       Будь ласка, виберіть діапазон частот."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+"~aФільтрування розривів не може бути застосовано.~%~\n"
+"                      Спробуйте збільшити обмеження за нижньою частотою~%~\n"
+"                      або зменшити значення фільтра «Ширина»."
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "Error.~%"
+msgstr "Помилка.~%"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "Spectral edit parametric EQ"
+msgstr "Спектральне редагування параметричного еквалайзера"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid "Gain (dB)"
+msgstr "Підсилення (дБ)"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aLow frequency is undefined."
+msgstr "~aНе визначено нижню частоту."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aHigh frequency is undefined."
+msgstr "~aНе визначено верхню частоту."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "~aЦентральна частота має бути вищою за 0 Гц."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+"~aВибір частоти є надто високим для частоти дискретизації доріжки.~%~\n"
+"                        Для поточної доріжки значення верхньої частоти "
+"не~%~\n"
+"                        може перевищувати ~a Гц"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+"~aНульова ширина каналу (верхня і нижня~%~\n"
+"                        частоти обидві дорівнюють ~a Гц).~%~\n"
+"                        Будь ласка, виберіть діапазон частот."
+
+#: plug-ins/SpectralEditShelves.ny
+msgid "Spectral edit shelves"
+msgstr "Полиці редагування спектра"
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Studio Fade Out"
+msgstr "Студійне спадання"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+msgid "Applying Fade..."
+msgstr "Застосовуємо спадання…"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
+msgid "Steve Daulton"
+msgstr "Steve Daulton"
+
+#: plug-ins/StudioFadeOut.ny
+#, lisp-format
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr ""
+"Позначено надто малий фрагмент.~%У фрагменті має бути більше за 2 семпли."
+
+#: plug-ins/adjustable-fade.ny
+msgid "Adjustable Fade"
+msgstr "Кориговане спадання"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Type"
+msgstr "Тип спадання"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Up"
+msgstr "Наростання"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Down"
+msgstr "Спадання"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Up"
+msgstr "Сигмоїдальне підняття"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Down"
+msgstr "Сигмоїдальне зниження"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr "Коригування середнього спадання (%)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start/End as"
+msgstr "Початок/Кінець як"
+
+#: plug-ins/adjustable-fade.ny
 #, fuzzy
-msgid "Both Channels"
-msgstr "обидва канали"
+msgid "% of Original"
+msgstr "% початкового"
 
-#: plug-ins/vocoder.ny
+#: plug-ins/adjustable-fade.ny
+msgid "dB Gain"
+msgstr "Підсилання у дБ"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start (or end)"
+msgstr "Початок (або кінець)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr "Кінець (або початок)"
+
+#: plug-ins/adjustable-fade.ny
 #, fuzzy
-msgid "Right Only"
-msgstr "лише правий"
+msgid "Handy Presets (override controls)"
+msgstr ""
+"   Зручні шаблони\n"
+"(перевизначення параметрів)"
 
-#: plug-ins/vocoder.ny
-msgid "Number of vocoder bands"
-msgstr "Кількість смуг вокодера"
+#: plug-ins/adjustable-fade.ny
+msgid "None Selected"
+msgstr "Не вибрано жодного елемента"
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of original audio (percent)"
-msgstr "Амплітудна початкового звуку (у відсотках)"
+#: plug-ins/adjustable-fade.ny
+msgid "Linear In"
+msgstr "Лінійний вхід"
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of white noise (percent)"
-msgstr "Амплітуда білого шуму (у відсотках)"
+#: plug-ins/adjustable-fade.ny
+msgid "Linear Out"
+msgstr "Лінійний вихід"
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of Radar Needles (percent)"
-msgstr "Амплітуда голок радару (у відсотках)"
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr "Експоненційний вхід"
 
-#: plug-ins/vocoder.ny
-msgid "Frequency of Radar Needles (Hz)"
-msgstr "Частота голок радару (у Гц)"
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr "Експоненційний вихід"
 
-#: plug-ins/vocoder.ny
-#, fuzzy, elisp-format
-msgid "Error.~%Stereo track required."
-msgstr "Помилка.~%Потрібна стереодоріжка."
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic In"
+msgstr "Логарифмічний вхід"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic Out"
+msgstr "Логарифмічний вихід"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded In"
+msgstr "Округлений вхід"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded Out"
+msgstr "Округлений вихід"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine In"
+msgstr "Косинусоїдальний вхід"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine Out"
+msgstr "Косинусоїдальний вихід"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve In"
+msgstr "Сигмоїдальний вхід"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Out"
+msgstr "Сигмоїдальний вихід"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be negative."
+msgstr "~aЗначення у відсотках не можуть бути від'ємними."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "~aЗначення у відсотках не можуть перевищувати 1000 %."
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 t-6 dB halves the amplitude."
+msgstr ""
+"~aЗначення у дБ не можуть перевищувати +100 дБ.~%~%~\n"
+"                                 Підказка: 6 дБ подвоює амплітуду~%~\n"
+"                                 t-6 дБ зменшує амплітуду удвічі."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "Error~%~%"
+msgstr "Помилка~%~%"
+
+#: plug-ins/beat.ny
+msgid "Beat Finder"
+msgstr "Пошук бітів"
+
+#: plug-ins/beat.ny
+msgid "Finding beats..."
+msgstr "Шукаємо біти…"
+
+#: plug-ins/beat.ny
+msgid "Threshold Percentage"
+msgstr "Поріг у відсотках"
 
 #: plug-ins/clipfix.ny
 msgid "Clip Fix"
@@ -16931,6 +17217,445 @@ msgstr "Поріг обрізання (у %)"
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr "Зменшення амплітуди, щоб уможливити відновлені піки (у дБ)"
 
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "Плавний перехід між доріжками"
+
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+msgid "Crossfading..."
+msgstr "Створюємо плавний перехід…"
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr "Помилка.~%Некоректне позначення.~%Позначено понад 2 звукових кліпи."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"Помилка.~%Некоректне позначення.~%Порожнє місце на початку або наприкінці "
+"позначеного фрагмента."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+"Помилка.~%Плавний перехід між кліпами може бути застосовано лише до однієї "
+"доріжки."
+
+#: plug-ins/crossfadetracks.ny
+msgid "Crossfade Tracks"
+msgstr "Плавний перехід між доріжками"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade type"
+msgstr "Тип переходу"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Gain"
+msgstr "Стале підсилення"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 1"
+msgstr "Стала потужність 1"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 2"
+msgstr "Стала потужність 2"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom Curve"
+msgstr "Нетипова крива"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom curve"
+msgstr "Нетипова крива"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade direction"
+msgstr "Напрямок переходу"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr "Переміжний вихід/вхід"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr "Переміжний вхід/вихід"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr "Помилка.~%Виберіть 2 (або більше) доріжки для перехресного спадання."
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "Затримка"
+
+#: plug-ins/delay.ny
+msgid "Applying Delay Effect..."
+msgstr "Застосування ефекту затримки…"
+
+#: plug-ins/delay.ny
+msgid "Delay type"
+msgstr "Тип затримки"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "звичайний"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Bouncing Ball"
+msgstr "м'ячик-стрибунець"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Reverse Bouncing Ball"
+msgstr "зворотний м'ячик-стрибунець"
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr "Рівень затримки на луну (дБ)"
+
+#: plug-ins/delay.ny
+msgid "Delay time (seconds)"
+msgstr "Час затримки (у секундах)"
+
+#: plug-ins/delay.ny
+msgid "Pitch change effect"
+msgstr "Ефект зміни тону"
+
+#: plug-ins/delay.ny
+msgid "Pitch/Tempo"
+msgstr "Тон/Ритм"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Low-quality Pitch Shift"
+msgstr "НЯ зсув тону"
+
+#: plug-ins/delay.ny
+msgid "Pitch change per echo (semitones)"
+msgstr "Зміна тону на відлуння (півтони)"
+
+#: plug-ins/delay.ny
+msgid "Number of echoes"
+msgstr "Кількість відлунь"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr "Дозволити зміну тривалості"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr ""
+"Кількість відлунь «~a» не належить коректному діапазону від 1 до 50.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr ""
+"Зміна тону «~a» не належить коректному діапазону від -12 до +12 півтонів.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr ""
+"Час затримки «~a» не належить до коректного діапазону від 0 до 10 секунд.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr ""
+"Рівень затримки «~a» не належить до коректного діапазону від -30 до +6 дБ."
+"~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Error.~%~a"
+msgstr "Помилка.~%~a"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr "Регулярні мітки інтервалів"
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr "Додаємо рівномірно розподілені мітки на доріжку міток…"
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr "Скористайтеся полем «Кількість міток» або «Інтервал між мітками»"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "Кількість міток"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "Інтервал між мітками"
+
+#: plug-ins/equalabel.ny
+msgid "Number of labels"
+msgstr "Кількість міток"
+
+#: plug-ins/equalabel.ny
+msgid "Label interval (seconds)"
+msgstr "Інтервал між мітками (у секундах)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr "Скоригувати інтервал між мітками за загальною тривалістю"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "Індекс мітки"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr "Мінімальна кількість цифр у мітці"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "None - Text Only"
+msgstr "Немає — лише текст"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "1 (Before Label)"
+msgstr "1 (перед міткою)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "2 (Before Label)"
+msgstr "2 (після мітки)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "3 (Before Label)"
+msgstr "3 (перед міткою)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "1 (After Label)"
+msgstr "1 (після мітки)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "2 (After Label)"
+msgstr "2 (після мітки)"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "3 (After Label)"
+msgstr "3 (після мітки)"
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr "Почати нумерацію з"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "Фільтр високих частот"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "Виконуємо фільтрування високих частот…"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+msgid "Dominic Mazzoni"
+msgstr "Dominic Mazzoni"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+msgid "Frequency (Hz)"
+msgstr "Частота (Гц)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, fuzzy
+msgid "Roll-off (dB per octave)"
+msgstr "Спадання (дБ на октаву)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr "6 дБ"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr "12 дБ"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr "24 дБ"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr "36 дБ"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr "48 дБ"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "Значення частоти має бути не нижчим за 0.1 Гц."
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+"Помилка:~%~%Частота (~a Гц) є надто високою для частоти дискретизації "
+"доріжки.~%~%~\n"
+"                   Частотою дискретизації доріжки є ~a Гц~%~\n"
+"                   Частота має бути нижчою за ~a Гц."
+
+#: plug-ins/limiter.ny
+msgid "Limiter"
+msgstr "Обмежувач"
+
+#: plug-ins/limiter.ny
+msgid "Limiting..."
+msgstr "Обмежуємо…"
+
+#: plug-ins/limiter.ny
+msgid "Type"
+msgstr "Тип"
+
+#: plug-ins/limiter.ny
+msgid "Soft Limit"
+msgstr "М'яке обмеження"
+
+#: plug-ins/limiter.ny
+msgid "Hard Limit"
+msgstr "Жорстке обмеження"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+msgid "Soft Clip"
+msgstr "М'яке обрізання"
+
+#: plug-ins/limiter.ny
+msgid "Hard Clip"
+msgstr "Жорстке обрізання"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+"Вхідне підсилення (дБ)\n"
+"моно/лівий"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+"Вхідне підсилення (дБ)\n"
+"Правий канал"
+
+#: plug-ins/limiter.ny
+msgid "Limit to (dB)"
+msgstr "Обмеження (у дБ)"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr "Призупинення (мс)"
+
+#: plug-ins/limiter.ny
+msgid "Apply Make-up Gain"
+msgstr "Застосувати підсилення"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "Низькочастотний фільтр"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "Виконуємо фільтрування низьких частот…"
+
+#: plug-ins/notch.ny
+msgid "Notch Filter"
+msgstr "Фільтр розривів"
+
+#: plug-ins/notch.ny
+msgid "Applying Notch Filter..."
+msgstr "Застосовуємо фільтрування розривів…"
+
+#: plug-ins/notch.ny
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "Steve Daulton і Bill Wharrie"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr "Q (вище значення зменшує ширину)"
+
+#: plug-ins/notch.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+"Помилка:~%~%Частота (~a Гц) є надто високою для частоти дискретизації "
+"доріжки.~%~%~\n"
+"                   Частотою дискретизації доріжки є ~a Гц.~%~\n"
+"                   Частота має бути нижчою за ~a Гц."
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr "Смикання"
+
+#: plug-ins/pluck.ny
+msgid "Generating pluck sound..."
+msgstr "Створюємо звук смикання…"
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr "Значення MIDI для нот до: 36, 48, 60 [середня до], 72, 84, 96."
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr "David R. Sky"
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr "Тон MIDI для смикання"
+
+#: plug-ins/pluck.ny
+msgid "Fade-out type"
+msgstr "Тип спадання"
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Abrupt"
+msgstr "різко"
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Gradual"
+msgstr "поступово"
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "Тривалість"
+
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm Track"
 msgstr "Доріжка ритму"
@@ -16938,10 +17663,6 @@ msgstr "Доріжка ритму"
 #: plug-ins/rhythmtrack.ny
 msgid "Generating Rhythm..."
 msgstr "Створюємо ритм…"
-
-#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Dominic Mazzoni"
-msgstr "Dominic Mazzoni"
 
 #: plug-ins/rhythmtrack.ny
 #, fuzzy
@@ -17054,6 +17775,48 @@ msgid ""
 "'Rhythm track duration' to greater than zero."
 msgstr ""
 
+#: plug-ins/rissetdrum.ny
+msgid "Risset Drum"
+msgstr "Барабан Ріссе"
+
+#: plug-ins/rissetdrum.ny
+msgid "Generating Risset Drum..."
+msgstr "Створюємо звук барабана Ріссе…"
+
+#: plug-ins/rissetdrum.ny
+msgid "Steven Jones"
+msgstr "Steven Jones"
+
+#: plug-ins/rissetdrum.ny
+msgid "Decay (seconds)"
+msgstr "Затримка (у секундах)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Center frequency of noise (Hz)"
+msgstr "Центральна частота шуму (у Гц)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr "Ширина смуги шуму (у Гц)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr "Часта шуму у суміші (у відсотках)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amplitude (0 - 1)"
+msgstr "Амплітуда (0 — 1)"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "&Ліворуч"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "&Праворуч"
+
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
 msgstr "Експортування даних семплу"
@@ -17061,14 +17824,6 @@ msgstr "Експортування даних семплу"
 #: plug-ins/sample-data-export.ny
 msgid "Analyzing..."
 msgstr "Аналізуємо…"
-
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
-#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
-#: plug-ins/tremolo.ny
-msgid "Steve Daulton"
-msgstr "Steve Daulton"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -17146,23 +17901,27 @@ msgid "[-inf]"
 msgstr "[-inf]"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left Channel.~%~%"
 msgstr "Лівий канал.~%~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~%~%Right Channel.~%~%"
 msgstr "~%~%Правий канал.~%~%"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~aData written to:~%~a"
 msgstr "~aДані записано до:~%~a~a~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
 msgstr "Частота дискретизації: ~a Гц. Значення семплів на шкалі ~a.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
@@ -17170,7 +17929,7 @@ msgstr ""
 "~a секунд.~a"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
@@ -17179,6 +17938,7 @@ msgstr ""
 "Тривалість обробленого: ~a семплів ~a секунд.~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
 "~a ~\n"
@@ -17188,18 +17948,22 @@ msgid ""
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, ~a dB."
 msgstr "~a лінійний, ~a дБ."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
 msgstr "Лівий: ~a лін, ~a дБ | Правий: ~a лін, ~a дБ."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a samples."
 msgstr "~a семплів."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a seconds."
 msgstr "~a секунд."
 
@@ -17208,30 +17972,35 @@ msgid "Audio data analysis:"
 msgstr "Аналіз звукових даних:"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
 msgstr "<b>Частота дискретизації:</b> &nbsp;&nbsp;~a Гц."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr "<b>Пікова амплітуда:</b> &nbsp;&nbsp;~a (лін) &nbsp;&nbsp;~a дБ."
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>СКВ</b> (незважене): &nbsp;&nbsp;~a дБ."
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 msgstr "<b>Зміщення сталої:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
 msgstr "~a лінійний, &nbsp;&nbsp;~a дБ."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
 msgstr "Лівий: ~a лін, ~a дБ | Правий: ~a лін, &nbsp;&nbsp;~a дБ."
 
@@ -17272,6 +18041,7 @@ msgid "Right (dB)"
 msgstr "Правий (дБ)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
 "<a href=\"~a\">Audacity</a> by Steve\n"
@@ -17294,22 +18064,27 @@ msgid "1 channel (mono)"
 msgstr "1 канал (моно)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One column per channel.~%"
 msgstr "Один стовпчик на канал.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One row per channel.~%"
 msgstr "Один рядок на канал.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel then Right channel on same line.~%"
 msgstr "Лівий канал, потім правий канал на одній лінії.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left and right channels on alternate lines.~%"
 msgstr "Лівий канал і правий канал на переміжних лініях.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel first then right channel.~%"
 msgstr "Спочатку лівий канал, потім правий канал.~%"
 
@@ -17318,48 +18093,99 @@ msgid "Unspecified channel order"
 msgstr "Невказаний порядок каналів"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
 msgstr "Не вдалося записати «~a~a~a»."
 
-#: plug-ins/pluck.ny
-msgid "Pluck"
-msgstr "Смикання"
+#: plug-ins/sample-data-import.ny
+msgid "Sample Data Import"
+msgstr "Імпортування даних семплів"
 
-#: plug-ins/pluck.ny
-msgid "Generating pluck sound..."
-msgstr "Створюємо звук смикання…"
+#: plug-ins/sample-data-import.ny
+msgid "Reading and rendering samples..."
+msgstr "Читаємо і обробляємо семпли…"
 
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr "Значення MIDI для нот до: 36, 48, 60 [середня до], 72, 84, 96."
-
-#: plug-ins/pluck.ny
-msgid "David R.Sky"
-msgstr "David R. Sky"
-
-#: plug-ins/pluck.ny
-msgid "Pluck MIDI pitch"
-msgstr "Тон MIDI для смикання"
-
-#: plug-ins/pluck.ny
-msgid "Fade-out type"
-msgstr "Тип спадання"
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Abrupt"
-msgstr "різко"
+msgid "Select file"
+msgstr "Виберіть файл"
 
-#: plug-ins/pluck.ny
-#, fuzzy
-msgid "Gradual"
-msgstr "поступово"
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr "Некоректна обробка даних"
 
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Duration (60s max)"
-msgstr "Тривалість"
+msgid "Throw Error"
+msgstr "Повідомлення про помилку"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Read as Zero"
+msgstr "Читати як нуль"
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy, lisp-format
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+"Помилка~%~\n"
+"                          Не вдалося відкрити «~a~a~a».~%~\n"
+"                          Перевірте, чи існує цей файл."
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy, lisp-format
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+"Помилка:~%~\n"
+"                Файл має містити лише звичайний текст з символів ASCII.~%~\n"
+"                (Некоректний байт «~a» на позиції ~a)"
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+"Помилка~%~\n"
+"              Даними мають бути числа у тексті з символів ASCII.~%~\n"
+"              «~a» не є числовим значенням."
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid "Error.~%Unable to open file"
+msgstr "Помилка.~%Не вдалося відкрити файл"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr "Тремоло"
+
+#: plug-ins/tremolo.ny
+msgid "Applying Tremolo..."
+msgstr "Застосовуємо тремоло…"
+
+#: plug-ins/tremolo.ny
+msgid "Waveform type"
+msgstr "Тип форми хвилі"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "зворотний зубцеподібний"
+
+#: plug-ins/tremolo.ny
+msgid "Starting phase (degrees)"
+msgstr "Початкова фаза (у градусах)"
+
+#: plug-ins/tremolo.ny
+msgid "Wet level (percent)"
+msgstr "Рівень теплого (у відсотках)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -17418,6 +18244,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr "Верхнє обрізання вокалу (у Гц)"
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "Covariance x y: ~a\n"
@@ -17438,6 +18265,7 @@ msgstr ""
 "y дорівнює ~a плюс ~a помножити на x~%"
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
@@ -17502,139 +18330,6 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr "Цей додаток може працювати лише із стереодоріжками."
 
-#: plug-ins/sample-data-import.ny
-msgid "Sample Data Import"
-msgstr "Імпортування даних семплів"
-
-#: plug-ins/sample-data-import.ny
-msgid "Reading and rendering samples..."
-msgstr "Читаємо і обробляємо семпли…"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Select file"
-msgstr "Виберіть файл"
-
-#: plug-ins/sample-data-import.ny
-msgid "Invalid data handling"
-msgstr "Некоректна обробка даних"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Throw Error"
-msgstr "Повідомлення про помилку"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Read as Zero"
-msgstr "Читати як нуль"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
-"                        Check that file exists."
-msgstr ""
-"Помилка~%~\n"
-"                          Не вдалося відкрити «~a~a~a».~%~\n"
-"                          Перевірте, чи існує цей файл."
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
-"              (Invalid byte '~a' at byte number: ~a)"
-msgstr ""
-"Помилка:~%~\n"
-"                Файл має містити лише звичайний текст з символів ASCII.~%~\n"
-"                (Некоректний байт «~a» на позиції ~a)"
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
-"              '~a' is not a numeric value."
-msgstr ""
-"Помилка~%~\n"
-"              Даними мають бути числа у тексті з символів ASCII.~%~\n"
-"              «~a» не є числовим значенням."
-
-#: plug-ins/sample-data-import.ny
-msgid "Error.~%Unable to open file"
-msgstr "Помилка.~%Не вдалося відкрити файл"
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Studio Fade Out"
-msgstr "Студійне спадання"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-msgid "Applying Fade..."
-msgstr "Застосовуємо спадання…"
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Selection too short.~%It must be more than 2 samples."
-msgstr ""
-"Позначено надто малий фрагмент.~%У фрагменті має бути більше за 2 семпли."
-
-#: plug-ins/limiter.ny
-msgid "Limiter"
-msgstr "Обмежувач"
-
-#: plug-ins/limiter.ny
-msgid "Limiting..."
-msgstr "Обмежуємо…"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "Тип"
-
-#: plug-ins/limiter.ny
-msgid "Soft Limit"
-msgstr "М'яке обмеження"
-
-#: plug-ins/limiter.ny
-msgid "Hard Limit"
-msgstr "Жорстке обмеження"
-
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
-msgid "Soft Clip"
-msgstr "М'яке обрізання"
-
-#: plug-ins/limiter.ny
-msgid "Hard Clip"
-msgstr "Жорстке обрізання"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"mono/Left"
-msgstr ""
-"Вхідне підсилення (дБ)\n"
-"моно/лівий"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"Right channel"
-msgstr ""
-"Вхідне підсилення (дБ)\n"
-"Правий канал"
-
-#: plug-ins/limiter.ny
-msgid "Limit to (dB)"
-msgstr "Обмеження (у дБ)"
-
-#: plug-ins/limiter.ny
-msgid "Hold (ms)"
-msgstr "Призупинення (мс)"
-
-#: plug-ins/limiter.ny
-msgid "Apply Make-up Gain"
-msgstr "Застосувати підсилення"
-
 #: plug-ins/vocalremover.ny
 msgid "Vocal Remover"
 msgstr "Вилучення вокалу"
@@ -17679,6 +18374,7 @@ msgid "Frequency band to (Hz)"
 msgstr "Кінець смуги частот (у Гц)"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Vocal Remover requires a stereo track. It works best with\n"
 "lossless files like WAV or AIFF, rather than MP3 or\n"
@@ -17708,6 +18404,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
 "If you have a stereo track split into left and right~%~\n"
@@ -17716,6 +18413,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Warning:~%~\n"
 "              Selected band-stop filter is~%~\n"
@@ -17728,706 +18426,60 @@ msgstr ""
 msgid "Current settings returned the original audio."
 msgstr "За поточних параметрів було повернуто початкові звукові дані."
 
-#: plug-ins/adjustable-fade.ny
-msgid "Adjustable Fade"
-msgstr "Кориговане спадання"
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr "Вокодер"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Type"
-msgstr "Тип спадання"
+#: plug-ins/vocoder.ny
+msgid "Processing Vocoder..."
+msgstr "Виконуємо обробку вокодером…"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Up"
-msgstr "Наростання"
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr "Едґар-RFT"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Down"
-msgstr "Спадання"
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr "Відстань: (від 1 до 120, типова = 20)"
 
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Up"
-msgstr "Сигмоїдальне підняття"
+#: plug-ins/vocoder.ny
+msgid "Output choice"
+msgstr "Вибір виведення"
 
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Down"
-msgstr "Сигмоїдальне зниження"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Mid-fade Adjust (%)"
-msgstr "Коригування середнього спадання (%)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Start/End as"
-msgstr "Початок/Кінець як"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy, elisp-format
-msgid "% of Original"
-msgstr "% початкового"
-
-#: plug-ins/adjustable-fade.ny
-msgid "dB Gain"
-msgstr "Підсилання у дБ"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Start (or end)"
-msgstr "Початок (або кінець)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "End (or start)"
-msgstr "Кінець (або початок)"
-
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Handy Presets (override controls)"
-msgstr ""
-"   Зручні шаблони\n"
-"(перевизначення параметрів)"
+msgid "Both Channels"
+msgstr "обидва канали"
 
-#: plug-ins/adjustable-fade.ny
-msgid "None Selected"
-msgstr "Не вибрано жодного елемента"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear In"
-msgstr "Лінійний вхід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear Out"
-msgstr "Лінійний вихід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential In"
-msgstr "Експоненційний вхід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential Out"
-msgstr "Експоненційний вихід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic In"
-msgstr "Логарифмічний вхід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic Out"
-msgstr "Логарифмічний вихід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded In"
-msgstr "Округлений вхід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded Out"
-msgstr "Округлений вихід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine In"
-msgstr "Косинусоїдальний вхід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine Out"
-msgstr "Косинусоїдальний вихід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve In"
-msgstr "Сигмоїдальний вхід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Out"
-msgstr "Сигмоїдальний вихід"
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be negative."
-msgstr "~aЗначення у відсотках не можуть бути від'ємними."
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "~aЗначення у відсотках не можуть перевищувати 1000 %."
-
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
-msgstr ""
-"~aЗначення у дБ не можуть перевищувати +100 дБ.~%~%~\n"
-"                                 Підказка: 6 дБ подвоює амплітуду~%~\n"
-"                                 t-6 дБ зменшує амплітуду удвічі."
-
-#: plug-ins/adjustable-fade.ny
-msgid "Error~%~%"
-msgstr "Помилка~%~%"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "Spectral edit parametric EQ"
-msgstr "Спектральне редагування параметричного еквалайзера"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Filtering..."
-msgstr "Фільтрування…"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Paul Licameli"
-msgstr "Paul Licameli"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid "Gain (dB)"
-msgstr "Підсилення (дБ)"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "~aPlease select frequencies."
-msgstr "~aБудь ласка, виберіть частоти."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aLow frequency is undefined."
-msgstr "~aНе визначено нижню частоту."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aHigh frequency is undefined."
-msgstr "~aНе визначено верхню частоту."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aCenter frequency must be above 0 Hz."
-msgstr "~aЦентральна частота має бути вищою за 0 Гц."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
-"                        be greater than ~a Hz"
-msgstr ""
-"~aВибір частоти є надто високим для частоти дискретизації доріжки.~%~\n"
-"                        Для поточної доріжки значення верхньої частоти не~"
-"%~\n"
-"                        може перевищувати ~a Гц"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
-"                         Please select a frequency range."
-msgstr ""
-"~aНульова ширина каналу (верхня і нижня~%~\n"
-"                        частоти обидві дорівнюють ~a Гц).~%~\n"
-"                        Будь ласка, виберіть діапазон частот."
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Error.~%"
-msgstr "Помилка.~%"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Crossfade Tracks"
-msgstr "Плавний перехід між доріжками"
-
-#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
-msgid "Crossfading..."
-msgstr "Створюємо плавний перехід…"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade type"
-msgstr "Тип переходу"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Gain"
-msgstr "Стале підсилення"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 1"
-msgstr "Стала потужність 1"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 2"
-msgstr "Стала потужність 2"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom Curve"
-msgstr "Нетипова крива"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom curve"
-msgstr "Нетипова крива"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade direction"
-msgstr "Напрямок переходу"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating Out / In"
-msgstr "Переміжний вихід/вхід"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating In / Out"
-msgstr "Переміжний вхід/вихід"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy, elisp-format
-msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr "Помилка.~%Виберіть 2 (або більше) доріжки для перехресного спадання."
-
-#: plug-ins/SpectralEditShelves.ny
-msgid "Spectral edit shelves"
-msgstr "Полиці редагування спектра"
-
-#: plug-ins/SoundFinder.ny
-msgid "Sound Finder"
-msgstr "Пошук звуку"
-
-#: plug-ins/SoundFinder.ny
-msgid "Finding sound..."
-msgstr "Шукаємо звук…"
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr "Jeremy R. Brown"
-
-#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr "Вважати звук, нижчий за це порогове значення, тишею (-дБ)"
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr "Мінімальна тривалість тиші між звуками (у секундах)"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr "Початкова точка мітки (у секундах перед звуком)"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr "Кінцева точка мітки (у секундах після звуку)"
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr "Додавати мітку наприкінці доріжки? [Ні=0, Так=1]"
-
-#: plug-ins/SoundFinder.ny
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"Фрагментів звуку не знайдено. Спробуйте зменшити~%рівень тиші і мінімальну "
-"тривалість тиші."
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr "[Кінець]"
-
-#: plug-ins/rissetdrum.ny
-msgid "Risset Drum"
-msgstr "Барабан Ріссе"
-
-#: plug-ins/rissetdrum.ny
-msgid "Generating Risset Drum..."
-msgstr "Створюємо звук барабана Ріссе…"
-
-#: plug-ins/rissetdrum.ny
-msgid "Steven Jones"
-msgstr "Steven Jones"
-
-#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency (Hz)"
-msgstr "Частота (Гц)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Decay (seconds)"
-msgstr "Затримка (у секундах)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Center frequency of noise (Hz)"
-msgstr "Центральна частота шуму (у Гц)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Width of noise band (Hz)"
-msgstr "Ширина смуги шуму (у Гц)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Amount of noise in mix (percent)"
-msgstr "Часта шуму у суміші (у відсотках)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Amplitude (0 - 1)"
-msgstr "Амплітуда (0 — 1)"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid "Spectral edit multi tool"
-msgstr "Універсальний інструмент редагування спектра"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
-"                       Please select a frequency range."
-msgstr ""
-"~aНульова ширина каналу (верхня і нижня~%~\n"
-"                       частоти обидві дорівнюють ~a Гц).~%~\n"
-"                       Будь ласка, виберіть діапазон частот."
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
-"                      or reduce the filter 'Width'."
-msgstr ""
-"~aФільтрування розривів не може бути застосовано.~%~\n"
-"                      Спробуйте збільшити обмеження за нижньою частотою~%~\n"
-"                      або зменшити значення фільтра «Ширина»."
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "&Ліворуч"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "&Праворуч"
-
-#: plug-ins/equalabel.ny
-msgid "Regular Interval Labels"
-msgstr "Регулярні мітки інтервалів"
-
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr "Додаємо рівномірно розподілені мітки на доріжку міток…"
-
-#: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr "Скористайтеся полем «Кількість міток» або «Інтервал між мітками»"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Number of Labels"
-msgstr "Кількість міток"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label Interval"
-msgstr "Інтервал між мітками"
-
-#: plug-ins/equalabel.ny
-msgid "Number of labels"
-msgstr "Кількість міток"
-
-#: plug-ins/equalabel.ny
-msgid "Label interval (seconds)"
-msgstr "Інтервал між мітками (у секундах)"
-
-#: plug-ins/equalabel.ny
-msgid "Adjust label interval to fit length"
-msgstr "Скоригувати інтервал між мітками за загальною тривалістю"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label text"
-msgstr "Індекс мітки"
-
-#: plug-ins/equalabel.ny
-msgid "Minimum number of digits in label"
-msgstr "Мінімальна кількість цифр у мітці"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "None - Text Only"
-msgstr "Немає — лише текст"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "1 (Before Label)"
-msgstr "1 (перед міткою)"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "2 (Before Label)"
-msgstr "2 (після мітки)"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "3 (Before Label)"
-msgstr "3 (перед міткою)"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "1 (After Label)"
-msgstr "1 (після мітки)"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "2 (After Label)"
-msgstr "2 (після мітки)"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "3 (After Label)"
-msgstr "3 (після мітки)"
-
-#: plug-ins/equalabel.ny
-msgid "Begin numbering from"
-msgstr "Почати нумерацію з"
-
-#: plug-ins/notch.ny
-msgid "Notch Filter"
-msgstr "Фільтр розривів"
-
-#: plug-ins/notch.ny
-msgid "Applying Notch Filter..."
-msgstr "Застосовуємо фільтрування розривів…"
-
-#: plug-ins/notch.ny
-msgid "Steve Daulton and Bill Wharrie"
-msgstr "Steve Daulton і Bill Wharrie"
-
-#: plug-ins/notch.ny
-msgid "Q (higher value reduces width)"
-msgstr "Q (вище значення зменшує ширину)"
-
-#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency must be at least 0.1 Hz."
-msgstr "Значення частоти має бути не нижчим за 0.1 Гц."
-
-#: plug-ins/notch.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
-"                 Frequency must be less than ~a Hz."
-msgstr ""
-"Помилка:~%~%Частота (~a Гц) є надто високою для частоти дискретизації "
-"доріжки.~%~%~\n"
-"                   Частотою дискретизації доріжки є ~a Гц.~%~\n"
-"                   Частота має бути нижчою за ~a Гц."
-
-#: plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Crossfade Clips"
-msgstr "Плавний перехід між доріжками"
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr "Помилка.~%Некоректне позначення.~%Позначено понад 2 звукових кліпи."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
-"Помилка.~%Некоректне позначення.~%Порожнє місце на початку або наприкінці "
-"позначеного фрагмента."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr ""
-"Помилка.~%Плавний перехід між кліпами може бути застосовано лише до однієї "
-"доріжки."
-
-#: plug-ins/delay.ny
-msgid "Delay"
-msgstr "Затримка"
-
-#: plug-ins/delay.ny
-msgid "Applying Delay Effect..."
-msgstr "Застосування ефекту затримки…"
-
-#: plug-ins/delay.ny
-msgid "Delay type"
-msgstr "Тип затримки"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Regular"
-msgstr "звичайний"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Bouncing Ball"
-msgstr "м'ячик-стрибунець"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Reverse Bouncing Ball"
-msgstr "зворотний м'ячик-стрибунець"
-
-#: plug-ins/delay.ny
-msgid "Delay level per echo (dB)"
-msgstr "Рівень затримки на луну (дБ)"
-
-#: plug-ins/delay.ny
-msgid "Delay time (seconds)"
-msgstr "Час затримки (у секундах)"
-
-#: plug-ins/delay.ny
-msgid "Pitch change effect"
-msgstr "Ефект зміни тону"
-
-#: plug-ins/delay.ny
-msgid "Pitch/Tempo"
-msgstr "Тон/Ритм"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Low-quality Pitch Shift"
-msgstr "НЯ зсув тону"
-
-#: plug-ins/delay.ny
-msgid "Pitch change per echo (semitones)"
-msgstr "Зміна тону на відлуння (півтони)"
-
-#: plug-ins/delay.ny
-msgid "Number of echoes"
-msgstr "Кількість відлунь"
-
-#: plug-ins/delay.ny
-msgid "Allow duration to change"
-msgstr "Дозволити зміну тривалості"
-
-#: plug-ins/delay.ny
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr ""
-"Кількість відлунь «~a» не належить коректному діапазону від 1 до 50.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-"Зміна тону «~a» не належить коректному діапазону від -12 до +12 півтонів.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-"Час затримки «~a» не належить до коректного діапазону від 0 до 10 секунд.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-"Рівень затримки «~a» не належить до коректного діапазону від -30 до +6 дБ.~"
-"%~a"
-
-#: plug-ins/delay.ny
-msgid "Error.~%~a"
-msgstr "Помилка.~%~a"
-
-#: plug-ins/tremolo.ny
-msgid "Tremolo"
-msgstr "Тремоло"
-
-#: plug-ins/tremolo.ny
-msgid "Applying Tremolo..."
-msgstr "Застосовуємо тремоло…"
-
-#: plug-ins/tremolo.ny
-msgid "Waveform type"
-msgstr "Тип форми хвилі"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Inverse Sawtooth"
-msgstr "зворотний зубцеподібний"
-
-#: plug-ins/tremolo.ny
-msgid "Starting phase (degrees)"
-msgstr "Початкова фаза (у градусах)"
-
-#: plug-ins/tremolo.ny
-msgid "Wet level (percent)"
-msgstr "Рівень теплого (у відсотках)"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Silence Finder"
-msgstr "Пошук тиші"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Finding silence..."
-msgstr "Шукаємо тишу…"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Alex S. Brown"
-msgstr "Alex S. Brown"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence [seconds]"
-msgstr "Мінімальна тривалість тиші (у секундах)"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement [seconds before silence ends]"
-msgstr "Розташування мітки (у секундах після завершення ділянки тиші)"
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"Фрагментів тиші не знайдено. Спробуйте зменшити~%рівень тиші і мінімальну "
-"тривалість тиші."
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "High-Pass Filter"
-msgstr "Фільтр високих частот"
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "Performing High-Pass Filter..."
-msgstr "Виконуємо фільтрування високих частот…"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy
-msgid "Roll-off (dB per octave)"
-msgstr "Спадання (дБ на октаву)"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "6 dB"
-msgstr "6 дБ"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "12 dB"
-msgstr "12 дБ"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "24 dB"
-msgstr "24 дБ"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "36 dB"
-msgstr "36 дБ"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "48 dB"
-msgstr "48 дБ"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
-"                   Frequency must be less than ~a Hz."
-msgstr ""
-"Помилка:~%~%Частота (~a Гц) є надто високою для частоти дискретизації "
-"доріжки.~%~%~\n"
-"                   Частотою дискретизації доріжки є ~a Гц~%~\n"
-"                   Частота має бути нижчою за ~a Гц."
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Low-Pass Filter"
-msgstr "Низькочастотний фільтр"
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Performing Low-Pass Filter..."
-msgstr "Виконуємо фільтрування низьких частот…"
-
-#: plug-ins/beat.ny
-msgid "Beat Finder"
-msgstr "Пошук бітів"
-
-#: plug-ins/beat.ny
-msgid "Finding beats..."
-msgstr "Шукаємо біти…"
-
-#: plug-ins/beat.ny
-msgid "Threshold Percentage"
-msgstr "Поріг у відсотках"
+msgid "Right Only"
+msgstr "лише правий"
+
+#: plug-ins/vocoder.ny
+msgid "Number of vocoder bands"
+msgstr "Кількість смуг вокодера"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of original audio (percent)"
+msgstr "Амплітудна початкового звуку (у відсотках)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of white noise (percent)"
+msgstr "Амплітуда білого шуму (у відсотках)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "Амплітуда голок радару (у відсотках)"
+
+#: plug-ins/vocoder.ny
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "Частота голок радару (у Гц)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Stereo track required."
+msgstr "Помилка.~%Потрібна стереодоріжка."
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "

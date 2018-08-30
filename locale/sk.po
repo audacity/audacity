@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-29 11:18+0100\n"
+"POT-Creation-Date: 2018-08-30 12:04+0100\n"
 "PO-Revision-Date: 2012-04-08 18:37-0000\n"
 "Last-Translator: Milos Sramek\n"
 "Language-Team: \n"
@@ -2409,7 +2409,7 @@ msgstr "Logaritmická frekvencia"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
+#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2696,7 +2696,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -5737,14 +5737,13 @@ msgid ""
 "Only use modules from trusted sources"
 msgstr ""
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
-#: plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr ""
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
-#: plug-ins/equalabel.ny plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "Nie"
 
@@ -11983,8 +11982,8 @@ msgstr "Nastavenie zásuvného modulu"
 msgid "Program"
 msgstr "Program"
 
-#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
-#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
 msgstr ""
@@ -17498,79 +17497,368 @@ msgstr "Chyba: %hs na riadku %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Nie je možné nahrať súbor: \"%s\""
 
-#: plug-ins/vocoder.ny
-msgid "Vocoder"
-msgstr ""
-
-#: plug-ins/vocoder.ny
+#: plug-ins/SilenceMarker.ny
 #, fuzzy
-msgid "Processing Vocoder..."
-msgstr "Aplikuje sa Automatické zoslabenie..."
+msgid "Silence Finder"
+msgstr "Generovať ticho"
 
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
+#: plug-ins/SilenceMarker.ny
+#, fuzzy
+msgid "Finding silence..."
+msgstr "Orezáva sa ticho..."
+
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
 msgstr ""
 
-#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
-#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
-#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
-#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
+#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
-#: plug-ins/vocoder.ny
-msgid "Distance: (1 to 120, default = 20)"
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+msgid "Treat audio below this level as silence [ -dB]"
 msgstr ""
 
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Output choice"
-msgstr "Výstupné zariadenie"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Both Channels"
-msgstr "%d kanálov"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Right Only"
-msgstr "Pravý kanál"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Number of vocoder bands"
-msgstr "Počet opakovaní: "
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Amplitude of original audio (percent)"
-msgstr "Frekvencia (Hz)"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Amplitude of white noise (percent)"
-msgstr "Frekvencia (Hz)"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Amplitude of Radar Needles (percent)"
-msgstr "Frekvencia (Hz)"
-
-#: plug-ins/vocoder.ny
-#, fuzzy
-msgid "Frequency of Radar Needles (Hz)"
-msgstr "Frekvencia (Hz)"
-
-#: plug-ins/vocoder.ny
-#, elisp-format
-msgid "Error.~%Stereo track required."
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
 msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr ""
+
+#: plug-ins/SilenceMarker.ny
+#, lisp-format
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Sound Finder"
+msgstr "Generovať ticho"
+
+#: plug-ins/SoundFinder.ny
+#, fuzzy
+msgid "Finding sound..."
+msgstr "Hľadanie orezaných vzoriek..."
+
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+#, lisp-format
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+#, fuzzy
+msgid "Spectral edit multi tool"
+msgstr "Výber"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Filtering..."
+msgstr "Filter "
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Paul Licameli"
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy, lisp-format
+msgid "~aPlease select frequencies."
+msgstr "Frekvencia (Hz)"
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy, lisp-format
+msgid "Error.~%"
+msgstr "Chyba"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy
+msgid "Spectral edit parametric EQ"
+msgstr "Výber"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Gain (dB)"
+msgstr "&Zosilnenie (dB):"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy, lisp-format
+msgid "~aLow frequency is undefined."
+msgstr "Na frekvenciu v sekundách"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy, lisp-format
+msgid "~aHigh frequency is undefined."
+msgstr "Na frekvenciu v sekundách"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, fuzzy, lisp-format
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "Minimálna frekvencia musí byť najmenej 0 Hz"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+
+#: plug-ins/SpectralEditShelves.ny
+#, fuzzy
+msgid "Spectral edit shelves"
+msgstr "Výber"
+
+#: plug-ins/StudioFadeOut.ny
+#, fuzzy
+msgid "Studio Fade Out"
+msgstr "Do stratena (Fade Out)"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Applying Fade..."
+msgstr "Aplikuje sa..."
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
+#, fuzzy
+msgid "Steve Daulton"
+msgstr "Nastaviť ako &predvolené"
+
+#: plug-ins/StudioFadeOut.ny
+#, lisp-format
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Adjustable Fade"
+msgstr "Upravené vyváženie"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Type"
+msgstr "Filter "
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Up"
+msgstr "Postupný nábeh (Fade In)"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Fade Down"
+msgstr "Postupný nábeh (Fade In)"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Up"
+msgstr "Názov krivky"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Down"
+msgstr "Posunúť na&dol"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start/End as"
+msgstr "Štart"
+
+#: plug-ins/adjustable-fade.ny
+msgid "% of Original"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "dB Gain"
+msgstr "Hlasitosť"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Start (or end)"
+msgstr "Štart"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "None Selected"
+msgstr "Označiť"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear In"
+msgstr "Lineárny"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Linear Out"
+msgstr "Lineárny"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic In"
+msgstr "Logaritmický"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Logarithmic Out"
+msgstr "Logaritmický"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded In"
+msgstr "Do stratena (Fade Out)"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Rounded Out"
+msgstr "Do stratena (Fade Out)"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine In"
+msgstr "Kosínusová"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "Cosine Out"
+msgstr "Kosínusová"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve In"
+msgstr "Názov krivky"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy
+msgid "S-Curve Out"
+msgstr "Krivka existuje"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "~aPercentage values cannot be negative."
+msgstr "Frekvenčné zosilnenie nemôže byť záporné"
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "Frekvenčné zosilnenie nemôže byť záporné"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 t-6 dB halves the amplitude."
+msgstr ""
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid "Error~%~%"
+msgstr "Chyba"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Beat Finder"
+msgstr "Opakovať"
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Finding beats..."
+msgstr "Hľadanie orezaných vzoriek..."
+
+#: plug-ins/beat.ny
+#, fuzzy
+msgid "Threshold Percentage"
+msgstr "Prahová hodnota pre šum:"
 
 #: plug-ins/clipfix.ny
 #, fuzzy
@@ -17599,6 +17887,446 @@ msgstr ""
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr ""
 
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "Notová stopa"
+
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfading..."
+msgstr "Notová stopa"
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Crossfade Tracks"
+msgstr "Notová stopa"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade type"
+msgstr "Filter "
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Gain"
+msgstr "Konštantná"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 1"
+msgstr "Konštantná"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Constant Power 2"
+msgstr "Konštantná"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom Curve"
+msgstr "užívateľský"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Custom curve"
+msgstr "užívateľský"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy
+msgid "Fade direction"
+msgstr "čítať priamo"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr ""
+
+#: plug-ins/crossfadetracks.ny
+#, lisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "Oneskorenie"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Applying Delay Effect..."
+msgstr "Aplikujem Nyquist efekt..."
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay type"
+msgstr "Typ kľúča"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Regular"
+msgstr "Obdĺžnikový"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr ""
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Delay time (seconds)"
+msgstr "Čas oneskorenia (sekundy):"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change effect"
+msgstr "Vy&skúšať"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch/Tempo"
+msgstr "Výška tónu a tempo"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Low-quality Pitch Shift"
+msgstr "Koncová  zmena výšky tónu"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Pitch change per echo (semitones)"
+msgstr "Vy&skúšať"
+
+#: plug-ins/delay.ny
+#, fuzzy
+msgid "Number of echoes"
+msgstr "Počet opakovaní: "
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr ""
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
+
+#: plug-ins/delay.ny
+#, fuzzy, lisp-format
+msgid "Error.~%~a"
+msgstr "Chyba"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of Labels"
+msgstr "Počet opakovaní: "
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label Interval"
+msgstr "Upraviť popis"
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Number of labels"
+msgstr "Počet opakovaní: "
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label interval (seconds)"
+msgstr "Dĺžka (sekundy)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, fuzzy
+msgid "Label text"
+msgstr "Upraviť popis"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr ""
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "High-Pass Filter"
+msgstr "Načítať súbory"
+
+#: plug-ins/highpass.ny
+#, fuzzy
+msgid "Performing High-Pass Filter..."
+msgstr "Aplikujem ekvalizáciu"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Dominic Mazzoni"
+msgstr "autor Dominic Mazzoni"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+msgid "Frequency (Hz)"
+msgstr "Frekvencia (Hz)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr ""
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#, fuzzy
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "Minimálna frekvencia musí byť najmenej 0 Hz"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiter"
+msgstr "Obmedzovač"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limiting..."
+msgstr "Normalizujem..."
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Type"
+msgstr "Filter "
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Limit"
+msgstr "Obmedzovač"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Limit"
+msgstr "Obmedzovač"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Soft Clip"
+msgstr "Nasledujúci nástroj"
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Hard Clip"
+msgstr "Nájsť orezané vzorky"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Limit to (dB)"
+msgstr "&Rozsah (dB):"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr ""
+
+#: plug-ins/limiter.ny
+#, fuzzy
+msgid "Apply Make-up Gain"
+msgstr "Použiť sadu príkazov"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Low-Pass Filter"
+msgstr "Načítať súbory"
+
+#: plug-ins/lowpass.ny
+#, fuzzy
+msgid "Performing Low-Pass Filter..."
+msgstr "Aplikujem ekvalizáciu"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Notch Filter"
+msgstr "Dĺžka filtra"
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Applying Notch Filter..."
+msgstr "Vyrovnanie úrovní..."
+
+#: plug-ins/notch.ny
+#, fuzzy
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "Nastaviť ako &predvolené"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr ""
+
+#: plug-ins/notch.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Generating pluck sound..."
+msgstr "Generujem tón"
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Fade-out type"
+msgstr "Filter "
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr ""
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr ""
+
+#: plug-ins/pluck.ny
+#, fuzzy
+msgid "Duration (60s max)"
+msgstr "Dĺžka"
+
 #: plug-ins/rhythmtrack.ny
 #, fuzzy
 msgid "Rhythm Track"
@@ -17608,11 +18336,6 @@ msgstr "Odstrániť stopu"
 #, fuzzy
 msgid "Generating Rhythm..."
 msgstr "Generujem štebot"
-
-#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy
-msgid "Dominic Mazzoni"
-msgstr "autor Dominic Mazzoni"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -17727,6 +18450,54 @@ msgid ""
 "'Rhythm track duration' to greater than zero."
 msgstr ""
 
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Risset Drum"
+msgstr "Generuje sa šum"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Generating Risset Drum..."
+msgstr "Generuje sa šum"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Steven Jones"
+msgstr "Nastaviť ako &predvolené"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Decay (seconds)"
+msgstr "Čas oneskorenia (sekundy):"
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Center frequency of noise (Hz)"
+msgstr "Lineárna frekvencia"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr ""
+
+#: plug-ins/rissetdrum.ny
+#, fuzzy
+msgid "Amplitude (0 - 1)"
+msgstr "Amplitúda (0-1)"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "Ľavý"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "Pravý"
+
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -17736,15 +18507,6 @@ msgstr "Export nie je možný"
 #, fuzzy
 msgid "Analyzing..."
 msgstr "Aplikuje sa..."
-
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
-#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Steve Daulton"
-msgstr "Nastaviť ako &predvolené"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -17826,35 +18588,40 @@ msgid "[-inf]"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "Left Channel.~%~%"
 msgstr "Ľavý kanál"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~%~%Right Channel.~%~%"
 msgstr "Pravý kanál"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~aData written to:~%~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
 "~a ~\n"
@@ -17864,20 +18631,22 @@ msgid ""
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, ~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~a samples."
 msgstr "vzorky"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~a seconds."
 msgstr "sekúnd"
 
@@ -17886,29 +18655,35 @@ msgid "Audio data analysis:"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
 msgstr ""
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
 msgstr ""
 
@@ -17957,6 +18732,7 @@ msgid "Right (dB)"
 msgstr "Pravý, "
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
 "<a href=\"~a\">Audacity</a> by Steve\n"
@@ -17979,22 +18755,27 @@ msgid "1 channel (mono)"
 msgstr "1 kanál (Mono)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One column per channel.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One row per channel.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel then Right channel on same line.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left and right channels on alternate lines.~%"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel first then right channel.~%"
 msgstr ""
 
@@ -18003,47 +18784,95 @@ msgid "Unspecified channel order"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
 msgstr ""
 
-#: plug-ins/pluck.ny
-msgid "Pluck"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Generating pluck sound..."
-msgstr "Generujem tón"
+msgid "Sample Data Import"
+msgstr "Prevo&dník vzorkovacej rýchlosti:"
 
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "David R.Sky"
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "Pluck MIDI pitch"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Fade-out type"
-msgstr "Filter "
+msgid "Reading and rendering samples..."
+msgstr "Miešanie a ukladanie stôp"
 
-#: plug-ins/pluck.ny
-msgid "Abrupt"
-msgstr ""
-
-#: plug-ins/pluck.ny
-msgid "Gradual"
-msgstr ""
-
-#: plug-ins/pluck.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Duration (60s max)"
-msgstr "Dĺžka"
+msgid "Select file"
+msgstr "Zvoliť MIDI súbor..."
+
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Throw Error"
+msgstr "Chyba"
+
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+
+#: plug-ins/sample-data-import.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Unable to open file"
+msgstr "Nie je možné otvoriť žánrový súbor."
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr ""
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Applying Tremolo..."
+msgstr "Vyrovnanie úrovní..."
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Waveform type"
+msgstr "Časový priebeh"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Inverse Sawtooth"
+msgstr "Píla"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Starting phase (degrees)"
+msgstr "LFO štartovacia fáza v stupňoch"
+
+#: plug-ins/tremolo.ny
+#, fuzzy
+msgid "Wet level (percent)"
+msgstr "2-úrovňový"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -18112,6 +18941,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "Covariance x y: ~a\n"
@@ -18124,6 +18954,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
@@ -18181,136 +19012,6 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Sample Data Import"
-msgstr "Prevo&dník vzorkovacej rýchlosti:"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Reading and rendering samples..."
-msgstr "Miešanie a ukladanie stôp"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Select file"
-msgstr "Zvoliť MIDI súbor..."
-
-#: plug-ins/sample-data-import.ny
-msgid "Invalid data handling"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Throw Error"
-msgstr "Chyba"
-
-#: plug-ins/sample-data-import.ny
-msgid "Read as Zero"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
-"                        Check that file exists."
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
-"              (Invalid byte '~a' at byte number: ~a)"
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
-"              '~a' is not a numeric value."
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Error.~%Unable to open file"
-msgstr "Nie je možné otvoriť žánrový súbor."
-
-#: plug-ins/StudioFadeOut.ny
-#, fuzzy
-msgid "Studio Fade Out"
-msgstr "Do stratena (Fade Out)"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Applying Fade..."
-msgstr "Aplikuje sa..."
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Selection too short.~%It must be more than 2 samples."
-msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiter"
-msgstr "Obmedzovač"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiting..."
-msgstr "Normalizujem..."
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Type"
-msgstr "Filter "
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Soft Limit"
-msgstr "Obmedzovač"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Hard Limit"
-msgstr "Obmedzovač"
-
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Soft Clip"
-msgstr "Nasledujúci nástroj"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Hard Clip"
-msgstr "Nájsť orezané vzorky"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"mono/Left"
-msgstr ""
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"Right channel"
-msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limit to (dB)"
-msgstr "&Rozsah (dB):"
-
-#: plug-ins/limiter.ny
-msgid "Hold (ms)"
-msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Apply Make-up Gain"
-msgstr "Použiť sadu príkazov"
-
 #: plug-ins/vocalremover.ny
 #, fuzzy
 msgid "Vocal Remover"
@@ -18361,6 +19062,7 @@ msgid "Frequency band to (Hz)"
 msgstr "Frekvencia (Hz)"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Vocal Remover requires a stereo track. It works best with\n"
 "lossless files like WAV or AIFF, rather than MP3 or\n"
@@ -18390,6 +19092,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
 "If you have a stereo track split into left and right~%~\n"
@@ -18398,6 +19101,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Warning:~%~\n"
 "              Selected band-stop filter is~%~\n"
@@ -18411,732 +19115,67 @@ msgstr ""
 msgid "Current settings returned the original audio."
 msgstr "Nyquist nevrátil žiadne audio.\n"
 
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Adjustable Fade"
-msgstr "Upravené vyváženie"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Fade Type"
-msgstr "Filter "
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Fade Up"
-msgstr "Postupný nábeh (Fade In)"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Fade Down"
-msgstr "Postupný nábeh (Fade In)"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve Up"
-msgstr "Názov krivky"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve Down"
-msgstr "Posunúť na&dol"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Mid-fade Adjust (%)"
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Start/End as"
-msgstr "Štart"
+msgid "Processing Vocoder..."
+msgstr "Aplikuje sa Automatické zoslabenie..."
 
-#: plug-ins/adjustable-fade.ny
-#, elisp-format
-msgid "% of Original"
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "dB Gain"
-msgstr "Hlasitosť"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Start (or end)"
-msgstr "Štart"
-
-#: plug-ins/adjustable-fade.ny
-msgid "End (or start)"
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
-msgid "Handy Presets (override controls)"
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "None Selected"
-msgstr "Označiť"
+msgid "Output choice"
+msgstr "Výstupné zariadenie"
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Linear In"
-msgstr "Lineárny"
+msgid "Both Channels"
+msgstr "%d kanálov"
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Linear Out"
-msgstr "Lineárny"
+msgid "Right Only"
+msgstr "Pravý kanál"
 
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential In"
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential Out"
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Logarithmic In"
-msgstr "Logaritmický"
+msgid "Number of vocoder bands"
+msgstr "Počet opakovaní: "
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Logarithmic Out"
-msgstr "Logaritmický"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Rounded In"
-msgstr "Do stratena (Fade Out)"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Rounded Out"
-msgstr "Do stratena (Fade Out)"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Cosine In"
-msgstr "Kosínusová"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Cosine Out"
-msgstr "Kosínusová"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve In"
-msgstr "Názov krivky"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "S-Curve Out"
-msgstr "Krivka existuje"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "~aPercentage values cannot be negative."
-msgstr "Frekvenčné zosilnenie nemôže byť záporné"
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "Frekvenčné zosilnenie nemôže byť záporné"
-
-#: plug-ins/adjustable-fade.ny
-msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
-msgstr ""
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Error~%~%"
-msgstr "Chyba"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy
-msgid "Spectral edit parametric EQ"
-msgstr "Výber"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "Filtering..."
-msgstr "Filter "
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Paul Licameli"
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#, fuzzy
-msgid "Gain (dB)"
-msgstr "&Zosilnenie (dB):"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "~aPlease select frequencies."
+msgid "Amplitude of original audio (percent)"
 msgstr "Frekvencia (Hz)"
 
-#: plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "~aLow frequency is undefined."
-msgstr "Na frekvenciu v sekundách"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy
-msgid "~aHigh frequency is undefined."
-msgstr "Na frekvenciu v sekundách"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy
-msgid "~aCenter frequency must be above 0 Hz."
-msgstr "Minimálna frekvencia musí byť najmenej 0 Hz"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
-"                        be greater than ~a Hz"
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
-"                         Please select a frequency range."
-msgstr ""
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "Error.~%"
-msgstr "Chyba"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Crossfade Tracks"
-msgstr "Notová stopa"
-
-#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Crossfading..."
-msgstr "Notová stopa"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Fade type"
-msgstr "Filter "
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Constant Gain"
-msgstr "Konštantná"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Constant Power 1"
-msgstr "Konštantná"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Constant Power 2"
-msgstr "Konštantná"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Custom Curve"
-msgstr "užívateľský"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Custom curve"
-msgstr "užívateľský"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Fade direction"
-msgstr "čítať priamo"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating Out / In"
-msgstr ""
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating In / Out"
-msgstr ""
-
-#: plug-ins/crossfadetracks.ny
-#, elisp-format
-msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr ""
-
-#: plug-ins/SpectralEditShelves.ny
-#, fuzzy
-msgid "Spectral edit shelves"
-msgstr "Výber"
-
-#: plug-ins/SoundFinder.ny
-#, fuzzy
-msgid "Sound Finder"
-msgstr "Generovať ticho"
-
-#: plug-ins/SoundFinder.ny
-#, fuzzy
-msgid "Finding sound..."
-msgstr "Hľadanie orezaných vzoriek..."
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Risset Drum"
-msgstr "Generuje sa šum"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Generating Risset Drum..."
-msgstr "Generuje sa šum"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Steven Jones"
-msgstr "Nastaviť ako &predvolené"
-
-#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency (Hz)"
+msgid "Amplitude of white noise (percent)"
 msgstr "Frekvencia (Hz)"
 
-#: plug-ins/rissetdrum.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Decay (seconds)"
-msgstr "Čas oneskorenia (sekundy):"
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "Frekvencia (Hz)"
 
-#: plug-ins/rissetdrum.ny
+#: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Center frequency of noise (Hz)"
-msgstr "Lineárna frekvencia"
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "Frekvencia (Hz)"
 
-#: plug-ins/rissetdrum.ny
-msgid "Width of noise band (Hz)"
+#: plug-ins/vocoder.ny
+#, lisp-format
+msgid "Error.~%Stereo track required."
 msgstr ""
-
-#: plug-ins/rissetdrum.ny
-msgid "Amount of noise in mix (percent)"
-msgstr ""
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Amplitude (0 - 1)"
-msgstr "Amplitúda (0-1)"
-
-#: plug-ins/SpectralEditMulti.ny
-#, fuzzy
-msgid "Spectral edit multi tool"
-msgstr "Výber"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
-"                       Please select a frequency range."
-msgstr ""
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
-"                      or reduce the filter 'Width'."
-msgstr ""
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "Ľavý"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "Pravý"
-
-#: plug-ins/equalabel.ny
-msgid "Regular Interval Labels"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Number of Labels"
-msgstr "Počet opakovaní: "
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label Interval"
-msgstr "Upraviť popis"
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Number of labels"
-msgstr "Počet opakovaní: "
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label interval (seconds)"
-msgstr "Dĺžka (sekundy)"
-
-#: plug-ins/equalabel.ny
-msgid "Adjust label interval to fit length"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-#, fuzzy
-msgid "Label text"
-msgstr "Upraviť popis"
-
-#: plug-ins/equalabel.ny
-msgid "Minimum number of digits in label"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "None - Text Only"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "1 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "2 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "3 (Before Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "1 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "2 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "3 (After Label)"
-msgstr ""
-
-#: plug-ins/equalabel.ny
-msgid "Begin numbering from"
-msgstr ""
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Notch Filter"
-msgstr "Dĺžka filtra"
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Applying Notch Filter..."
-msgstr "Vyrovnanie úrovní..."
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Steve Daulton and Bill Wharrie"
-msgstr "Nastaviť ako &predvolené"
-
-#: plug-ins/notch.ny
-msgid "Q (higher value reduces width)"
-msgstr ""
-
-#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy
-msgid "Frequency must be at least 0.1 Hz."
-msgstr "Minimálna frekvencia musí byť najmenej 0 Hz"
-
-#: plug-ins/notch.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
-"                 Frequency must be less than ~a Hz."
-msgstr ""
-
-#: plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Crossfade Clips"
-msgstr "Notová stopa"
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr ""
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Delay"
-msgstr "Oneskorenie"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Applying Delay Effect..."
-msgstr "Aplikujem Nyquist efekt..."
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay type"
-msgstr "Typ kľúča"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Regular"
-msgstr "Obdĺžnikový"
-
-#: plug-ins/delay.ny
-msgid "Bouncing Ball"
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Reverse Bouncing Ball"
-msgstr ""
-
-#: plug-ins/delay.ny
-msgid "Delay level per echo (dB)"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay time (seconds)"
-msgstr "Čas oneskorenia (sekundy):"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch change effect"
-msgstr "Vy&skúšať"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch/Tempo"
-msgstr "Výška tónu a tempo"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Low-quality Pitch Shift"
-msgstr "Koncová  zmena výšky tónu"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch change per echo (semitones)"
-msgstr "Vy&skúšať"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Number of echoes"
-msgstr "Počet opakovaní: "
-
-#: plug-ins/delay.ny
-msgid "Allow duration to change"
-msgstr ""
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr "Maximálna frekvencia musí byť v rozsahu 100 Hz - 100,000 Hz"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Error.~%~a"
-msgstr "Chyba"
-
-#: plug-ins/tremolo.ny
-msgid "Tremolo"
-msgstr ""
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Applying Tremolo..."
-msgstr "Vyrovnanie úrovní..."
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Waveform type"
-msgstr "Časový priebeh"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Inverse Sawtooth"
-msgstr "Píla"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Starting phase (degrees)"
-msgstr "LFO štartovacia fáza v stupňoch"
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Wet level (percent)"
-msgstr "2-úrovňový"
-
-#: plug-ins/SilenceMarker.ny
-#, fuzzy
-msgid "Silence Finder"
-msgstr "Generovať ticho"
-
-#: plug-ins/SilenceMarker.ny
-#, fuzzy
-msgid "Finding silence..."
-msgstr "Orezáva sa ticho..."
-
-#: plug-ins/SilenceMarker.ny
-msgid "Alex S. Brown"
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence [seconds]"
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement [seconds before silence ends]"
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "High-Pass Filter"
-msgstr "Načítať súbory"
-
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "Performing High-Pass Filter..."
-msgstr "Aplikujem ekvalizáciu"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Roll-off (dB per octave)"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "6 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "12 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "24 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "36 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "48 dB"
-msgstr ""
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
-"                   Frequency must be less than ~a Hz."
-msgstr ""
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Low-Pass Filter"
-msgstr "Načítať súbory"
-
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Performing Low-Pass Filter..."
-msgstr "Aplikujem ekvalizáciu"
-
-#: plug-ins/beat.ny
-#, fuzzy
-msgid "Beat Finder"
-msgstr "Opakovať"
-
-#: plug-ins/beat.ny
-#, fuzzy
-msgid "Finding beats..."
-msgstr "Hľadanie orezaných vzoriek..."
-
-#: plug-ins/beat.ny
-#, fuzzy
-msgid "Threshold Percentage"
-msgstr "Prahová hodnota pre šum:"
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
@@ -19201,7 +19240,6 @@ msgstr "Prahová hodnota pre šum:"
 #~ msgstr "Nástroje"
 
 #, fuzzy
-#~| msgid "Transcription"
 #~ msgid "Transcri&ption"
 #~ msgstr "Transkripcia"
 

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-29 11:18+0100\n"
+"POT-Creation-Date: 2018-08-30 12:04+0100\n"
 "PO-Revision-Date: 2018-08-07 21:34+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/"
@@ -2320,7 +2320,7 @@ msgstr "Skala logarytmiczna"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny plug-ins/rms.ny
+#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2593,9 +2593,10 @@ msgstr ""
 "faq_opening_and_saving_files.html#foreign|bibliotekę FFmpeg]]."
 
 #: src/HelpText.cpp
+#, fuzzy
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[http://"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
 "manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
 "CDs]]."
 msgstr ""
@@ -5342,14 +5343,13 @@ msgstr ""
 "\n"
 "Używaj modułów tylko z zaufanych źródeł"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/sample-data-export.ny plug-ins/limiter.ny plug-ins/equalabel.ny
-#: plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Tak"
 
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/limiter.ny
-#: plug-ins/equalabel.ny plug-ins/delay.ny
+#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "Nie"
 
@@ -11344,8 +11344,8 @@ msgstr "Ustawienia wtyczki"
 msgid "Program"
 msgstr "Program"
 
-#. i18n-hint: Vamp is the porper name of a software protocol for sound analysis.
-#. It is not an abbreviation for anything.  see http://vamp-plugins.org
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
 msgstr "Vamp"
@@ -16622,70 +16622,353 @@ msgstr "Błąd: %hs w wierszu %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Nie można wczytać pliku: \"%s\""
 
-#: plug-ins/vocoder.ny
-msgid "Vocoder"
-msgstr "Wokoder"
+#: plug-ins/SilenceMarker.ny
+msgid "Silence Finder"
+msgstr "Szukacz ciszy"
 
-#: plug-ins/vocoder.ny
-msgid "Processing Vocoder..."
-msgstr "Przetwarzanie wokodera..."
+#: plug-ins/SilenceMarker.ny
+msgid "Finding silence..."
+msgstr "Znajdowanie ciszy..."
 
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
-msgstr "Edgar-RFT"
+#: plug-ins/SilenceMarker.ny
+msgid "Alex S. Brown"
+msgstr "Alex S. Brown"
 
-#: plug-ins/vocoder.ny plug-ins/rhythmtrack.ny plug-ins/sample-data-export.ny
-#: plug-ins/pluck.ny plug-ins/vocalrediso.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/crossfadetracks.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SoundFinder.ny plug-ins/rissetdrum.ny plug-ins/SpectralEditMulti.ny
-#: plug-ins/equalabel.ny plug-ins/notch.ny plug-ins/crossfadeclips.ny
-#: plug-ins/delay.ny plug-ins/tremolo.ny plug-ins/SilenceMarker.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/beat.ny
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
+#: plug-ins/rissetdrum.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr "Wydany na warunkach licencji GNU General Public License wersja 2"
 
-#: plug-ins/vocoder.ny
-msgid "Distance: (1 to 120, default = 20)"
-msgstr "Odległość: (1 do 120, domyślna = 20)"
+#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
+msgid "Treat audio below this level as silence [ -dB]"
+msgstr "Traktuj dźwięk poniżej tego poziomu jako ciszę [-dB]"
 
-#: plug-ins/vocoder.ny
-msgid "Output choice"
-msgstr "Wybór wyjścia"
+#: plug-ins/SilenceMarker.ny
+msgid "Minimum duration of silence [seconds]"
+msgstr "Minimalny czas trwania ciszy [sekundy]"
 
-#: plug-ins/vocoder.ny
-msgid "Both Channels"
-msgstr "Oba kanały"
+#: plug-ins/SilenceMarker.ny
+msgid "Label placement [seconds before silence ends]"
+msgstr "Położenie etykiety [sekundy przed końcami ciszy]"
 
-#: plug-ins/vocoder.ny
-msgid "Right Only"
-msgstr "Tylko prawy"
+#: plug-ins/SilenceMarker.ny
+#, lisp-format
+msgid ""
+"No silences found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Nie znaleziono ciszy. Spróbuj zmniejszyć poziom ciszy ~% i minimalny czas "
+"jej trwania."
 
-#: plug-ins/vocoder.ny
-msgid "Number of vocoder bands"
-msgstr "Liczba pasm wokodera"
+#: plug-ins/SoundFinder.ny
+msgid "Sound Finder"
+msgstr "Szukacz dźwięku"
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of original audio (percent)"
-msgstr "Amplituda oryginalnego dźwięku (procent)"
+#: plug-ins/SoundFinder.ny
+msgid "Finding sound..."
+msgstr "Znajdowanie dźwięku..."
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of white noise (percent)"
-msgstr "Amplituda szumu białego (procent)"
+#: plug-ins/SoundFinder.ny
+msgid "Jeremy R. Brown"
+msgstr "Jeremy R. Brown"
 
-#: plug-ins/vocoder.ny
-msgid "Amplitude of Radar Needles (percent)"
-msgstr "Amplituda igieł radaru (procent)"
+#: plug-ins/SoundFinder.ny
+msgid "Minimum duration of silence between sounds [seconds]"
+msgstr "Minimalny czas trwania ciszy między dźwiękami [sekundy]"
 
-#: plug-ins/vocoder.ny
-msgid "Frequency of Radar Needles (Hz)"
-msgstr "Częstotliwość igieł radaru (Hz)"
+#: plug-ins/SoundFinder.ny
+msgid "Label starting point [seconds before sound starts]"
+msgstr "Punkt początkowy etykiety [sekundy przed rozpoczęciem dźwięku]"
 
-#: plug-ins/vocoder.ny
-#, fuzzy, elisp-format
-msgid "Error.~%Stereo track required."
-msgstr "Błąd.~%Wymagana ścieżka stereo."
+#: plug-ins/SoundFinder.ny
+msgid "Label ending point [seconds after sound ends]"
+msgstr "Punkt końcowy etykiety [sekundy po zakończeniu dźwięku]"
+
+#: plug-ins/SoundFinder.ny
+msgid "Add a label at the end of the track? [No=0, Yes=1]"
+msgstr "Dodać etykietę na końcu ścieżki? [Nie=0, Tak=1]"
+
+#: plug-ins/SoundFinder.ny
+#, lisp-format
+msgid ""
+"No sounds found. Try reducing the silence~%level and minimum silence "
+"duration."
+msgstr ""
+"Nie znaleziono żadnych dźwięków. Spróbuj zmniejszyć poziom ciszy ~% i "
+"minimalny czas trwania ciszy."
+
+#: plug-ins/SoundFinder.ny
+msgid "[End]"
+msgstr "[Koniec]"
+
+#: plug-ins/SpectralEditMulti.ny
+msgid "Spectral edit multi tool"
+msgstr "Multinarzędzie edycji widma"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Filtering..."
+msgstr "Filtrowanie..."
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+msgid "Paul Licameli"
+msgstr "Paul Licameli"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "~aPlease select frequencies."
+msgstr "~aZaznacz częstotliwości."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                       frequencies are both ~a Hz).~%~\n"
+"                       Please select a frequency range."
+msgstr ""
+"~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
+"                       częstotliwość wynoszą obie ~a Hz).~%~\n"
+"                       Wybierz zakres częstotliwości."
+
+#: plug-ins/SpectralEditMulti.ny
+#, lisp-format
+msgid ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
+msgstr ""
+"~aParametry filtra Notch nie mogą być zastosowane.~%~\n"
+"                      Spróbuj zwiększyć granicę niskiej częstotliwości~%~\n"
+"                      lub zredukuj filtr 'Szerokość'."
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid "Error.~%"
+msgstr "Błąd.~%"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+msgid "Spectral edit parametric EQ"
+msgstr "Parametryczna edycja EQ widma"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+msgid "Gain (dB)"
+msgstr "Wzmocnienie (dB)"
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aLow frequency is undefined."
+msgstr "~aNiska częstotliwość jest niezdefiniowana."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aHigh frequency is undefined."
+msgstr "~aWysoka częstotliwość jest niezdefiniowana."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid "~aCenter frequency must be above 0 Hz."
+msgstr "~aCzęstotliwość środkowa musi być powyżej 0 Hz."
+
+#: plug-ins/SpectralEditParametricEQ.ny
+#, lisp-format
+msgid ""
+"~aFrequency selection is too high for track sample rate.~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
+"                        be greater than ~a Hz"
+msgstr ""
+"~aCzęstotliwość zaznaczenia jest za wysoka dla próbkowania ścieżki.~%~\n"
+"                        W przypadku bieżącej ścieżki ustawienie wysokiej "
+"częstotliwości nie może~%~\n"
+"                        być większe niż ~a Hz"
+
+#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#, lisp-format
+msgid ""
+"~aBandwidth is zero (the upper and lower~%~\n"
+"                         frequencies are both ~a Hz).~%~\n"
+"                         Please select a frequency range."
+msgstr ""
+"~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
+"                         częstotliwość wynoszą obie ~a Hz).~%~\n"
+"                         Wybierz zakres częstotliwości."
+
+#: plug-ins/SpectralEditShelves.ny
+msgid "Spectral edit shelves"
+msgstr "Półki edycji widma"
+
+#: plug-ins/StudioFadeOut.ny
+msgid "Studio Fade Out"
+msgstr "Studio ściszania"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+msgid "Applying Fade..."
+msgstr "Stosowanie przejścia..."
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
+msgid "Steve Daulton"
+msgstr "Steve Daulton"
+
+#: plug-ins/StudioFadeOut.ny
+#, lisp-format
+msgid "Selection too short.~%It must be more than 2 samples."
+msgstr "Wybór jest za krótki. ~%Musi być większy niż 2 sample."
+
+#: plug-ins/adjustable-fade.ny
+msgid "Adjustable Fade"
+msgstr "Przejście dające się regulować"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Type"
+msgstr "Typ przejścia"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Up"
+msgstr "Zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Fade Down"
+msgstr "Ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Up"
+msgstr "S-krzywa w górę"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Down"
+msgstr "S-krzywa w dół"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Mid-fade Adjust (%)"
+msgstr "Dostosuj średnie przejście (%)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start/End as"
+msgstr "Początek/koniec jako"
+
+#: plug-ins/adjustable-fade.ny
+msgid "% of Original"
+msgstr "% oryginału"
+
+#: plug-ins/adjustable-fade.ny
+msgid "dB Gain"
+msgstr "dB wzmocnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Start (or end)"
+msgstr "Początek (lub koniec)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "End (or start)"
+msgstr "Koniec (lub początek)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Handy Presets (override controls)"
+msgstr "Poręczne presety (zastąp kontrole)"
+
+#: plug-ins/adjustable-fade.ny
+msgid "None Selected"
+msgstr "Brak zaznaczenia"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Linear In"
+msgstr "Liniowe zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Linear Out"
+msgstr "Liniowe ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential In"
+msgstr "Wykładnicze zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Exponential Out"
+msgstr "Wykładnicze ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic In"
+msgstr "Logarytmiczne zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Logarithmic Out"
+msgstr "Logarytmiczne ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded In"
+msgstr "Zaokrąglone zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Rounded Out"
+msgstr "Zaokrąglone ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine In"
+msgstr "Cosinusoidalne zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "Cosine Out"
+msgstr "Cosinusoidalne ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve In"
+msgstr "S-krzywa zgłośnienie"
+
+#: plug-ins/adjustable-fade.ny
+msgid "S-Curve Out"
+msgstr "S-krzywa ściszenie"
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be negative."
+msgstr "~aWartości procentowe nie mogą być ujemne."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "~aPercentage values cannot be more than 1000 %."
+msgstr "~aWartości procentowe nie mogą być większe niż 1000%."
+
+#: plug-ins/adjustable-fade.ny
+#, fuzzy, lisp-format
+msgid ""
+"~adB values cannot be more than +100 dB.~%~%~\n"
+"                                 Hint: 6 dB doubles the amplitude~%~\n"
+"                                 t-6 dB halves the amplitude."
+msgstr ""
+"~adB wartości nie mogą być większe niż +100 dB.~%~%~\n"
+"                                 Wskazówka: 6 dB podwaja amplitudę~%~\n"
+"                                 t-6 dB to połowa amplitudy."
+
+#: plug-ins/adjustable-fade.ny
+#, lisp-format
+msgid "Error~%~%"
+msgstr "Błąd~%~%"
+
+#: plug-ins/beat.ny
+msgid "Beat Finder"
+msgstr "Szukacz uderzeń"
+
+#: plug-ins/beat.ny
+msgid "Finding beats..."
+msgstr "Znajdowanie uderzeń..."
+
+#: plug-ins/beat.ny
+msgid "Threshold Percentage"
+msgstr "Próg procentowy"
 
 #: plug-ins/clipfix.ny
 msgid "Clip Fix"
@@ -16714,6 +16997,420 @@ msgstr "Próg obcinania (%)"
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr "Redukuj amplitudę, aby umożliwić przywrócenie szczytów (dB)"
 
+#: plug-ins/crossfadeclips.ny
+#, fuzzy
+msgid "Crossfade Clips"
+msgstr "Przenikanie ścieżek"
+
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+msgid "Crossfading..."
+msgstr "Przenikanie..."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
+msgstr ""
+"Błąd.~%Nieprawidłowe zaznaczenie.~%Zaznaczono więcej niż 2 klipy dźwiękowe."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"Błąd.~%Nieprawidłowe zaznaczenie.~%EPusta przestrzeń na początku/końcu "
+"zaznaczenia."
+
+#: plug-ins/crossfadeclips.ny
+#, lisp-format
+msgid "Error.~%Crossfade Clips may only be applied to one track."
+msgstr "Błąd.~%Przenikanie klipów można zastosować tylko na jednej ścieżce."
+
+#: plug-ins/crossfadetracks.ny
+msgid "Crossfade Tracks"
+msgstr "Przenikanie ścieżek"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade type"
+msgstr "Typ przejścia"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Gain"
+msgstr "Stałe wzmocnienie"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 1"
+msgstr "Stała moc 1"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Constant Power 2"
+msgstr "Stała moc 2"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom Curve"
+msgstr "Niestandardowa krzywa"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Custom curve"
+msgstr "Niestandardowa krzywa"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Fade direction"
+msgstr "Kierunek przejścia"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating Out / In"
+msgstr "Alternatywne wyjście/wejście"
+
+#: plug-ins/crossfadetracks.ny
+msgid "Alternating In / Out"
+msgstr "Alternatywne wejście/wyjście"
+
+#: plug-ins/crossfadetracks.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Select 2 (or more) tracks to crossfade."
+msgstr "Błąd.~%Wybierz 2 (lub więcej) ścieżek do przenikania."
+
+#: plug-ins/delay.ny
+msgid "Delay"
+msgstr "Opóźnienie"
+
+#: plug-ins/delay.ny
+msgid "Applying Delay Effect..."
+msgstr "Stosowanie efektu opóźnienia..."
+
+#: plug-ins/delay.ny
+msgid "Delay type"
+msgstr "Typ opóźnienia"
+
+#: plug-ins/delay.ny
+msgid "Regular"
+msgstr "Regularne"
+
+#: plug-ins/delay.ny
+msgid "Bouncing Ball"
+msgstr "Odbijająca się piłka"
+
+#: plug-ins/delay.ny
+msgid "Reverse Bouncing Ball"
+msgstr "Odwrócona odbijająca się piłka"
+
+#: plug-ins/delay.ny
+msgid "Delay level per echo (dB)"
+msgstr "Poziom opóźnienia na echo (dB)"
+
+#: plug-ins/delay.ny
+msgid "Delay time (seconds)"
+msgstr "Czas opóźnienia (sekundy)"
+
+#: plug-ins/delay.ny
+msgid "Pitch change effect"
+msgstr "Efekt zmiany wysokości"
+
+#: plug-ins/delay.ny
+msgid "Pitch/Tempo"
+msgstr "Wysokość/tempo"
+
+#: plug-ins/delay.ny
+msgid "Low-quality Pitch Shift"
+msgstr "Przesunięcie wysokości niskiej jakości"
+
+#: plug-ins/delay.ny
+msgid "Pitch change per echo (semitones)"
+msgstr "Zmiana wysokości na echo (półtony)"
+
+#: plug-ins/delay.ny
+msgid "Number of echoes"
+msgstr "Liczba ech"
+
+#: plug-ins/delay.ny
+msgid "Allow duration to change"
+msgstr "Zezwalaj na zmianę czasu trwania"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
+msgstr "Liczba ech '~a' poza dopuszczalnym zakresem od 1 do 50.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
+msgstr ""
+"Zmiana wysokości '~a' poza dopuszczalnym zakresem od -12 do +12 półtonów.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
+msgstr ""
+"Czas opóźnienia '~a' poza dopuszczalnym zakresem od 0 do 10 sekund.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
+msgstr ""
+"Poziom opóźnienia '~a' poza dopuszczalnym zakresem od -30 do +6 dB.~%~a"
+
+#: plug-ins/delay.ny
+#, lisp-format
+msgid "Error.~%~a"
+msgstr "Błąd.~%~a"
+
+#: plug-ins/equalabel.ny
+msgid "Regular Interval Labels"
+msgstr "Regularne przedziały etykiet"
+
+#: plug-ins/equalabel.ny
+msgid "Adding equally-spaced labels to the label track..."
+msgstr "Dodawanie równo rozmieszczonych etykiet do ścieżki etykiet..."
+
+#: plug-ins/equalabel.ny
+msgid "Use 'Number of labels' OR 'Label interval'"
+msgstr "Użyj 'Liczba etykiet' LUB 'Przedział etykiety'"
+
+#: plug-ins/equalabel.ny
+msgid "Number of Labels"
+msgstr "Liczba etykiet"
+
+#: plug-ins/equalabel.ny
+msgid "Label Interval"
+msgstr "Przedział etykiety"
+
+#: plug-ins/equalabel.ny
+msgid "Number of labels"
+msgstr "Liczba etykiet"
+
+#: plug-ins/equalabel.ny
+msgid "Label interval (seconds)"
+msgstr "Przedział etykiety (sekundy)"
+
+#: plug-ins/equalabel.ny
+msgid "Adjust label interval to fit length"
+msgstr "Dostosuj przedział etykiety, aby dopasować długość"
+
+#: plug-ins/equalabel.ny
+msgid "Label text"
+msgstr "Tekst etykiety"
+
+#: plug-ins/equalabel.ny
+msgid "Minimum number of digits in label"
+msgstr "Minimalna liczba cyfr na etykiecie"
+
+#: plug-ins/equalabel.ny
+msgid "None - Text Only"
+msgstr "Brak - tylko tekst"
+
+#: plug-ins/equalabel.ny
+msgid "1 (Before Label)"
+msgstr "1 (przed etykietą)"
+
+#: plug-ins/equalabel.ny
+msgid "2 (Before Label)"
+msgstr "2 (przed etykietą)"
+
+#: plug-ins/equalabel.ny
+msgid "3 (Before Label)"
+msgstr "3 (przed etykietą)"
+
+#: plug-ins/equalabel.ny
+msgid "1 (After Label)"
+msgstr "1 (po etykiecie)"
+
+#: plug-ins/equalabel.ny
+msgid "2 (After Label)"
+msgstr "2 (po etykiecie)"
+
+#: plug-ins/equalabel.ny
+msgid "3 (After Label)"
+msgstr "3 (po etykiecie)"
+
+#: plug-ins/equalabel.ny
+msgid "Begin numbering from"
+msgstr "Rozpocznij numerowanie od"
+
+#: plug-ins/highpass.ny
+msgid "High-Pass Filter"
+msgstr "Filtr górnoprzepustowy"
+
+#: plug-ins/highpass.ny
+msgid "Performing High-Pass Filter..."
+msgstr "Tworzenie filtra górnoprzepustowego..."
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+msgid "Dominic Mazzoni"
+msgstr "Dominic Mazzoni"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+#: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+msgid "Frequency (Hz)"
+msgstr "Częstotliwość (Hz)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "Roll-off (dB per octave)"
+msgstr "Rolloff (dB na oktawę)"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "6 dB"
+msgstr "6 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "12 dB"
+msgstr "12 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "24 dB"
+msgstr "24 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "36 dB"
+msgstr "36 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+msgid "48 dB"
+msgstr "48 dB"
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
+msgid "Frequency must be at least 0.1 Hz."
+msgstr "Częstotliwość musi wynosić co najmniej 0.1 Hz."
+
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                   Track sample rate is ~a Hz~%~\n"
+"                   Frequency must be less than ~a Hz."
+msgstr ""
+"Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki.~%."
+"~%~%~\n"
+"                   Próbkowanie ścieżki wynosi ~a Hz~%~\n"
+"                   Częstotliwość musi być mniejsza niż ~a Hz."
+
+#: plug-ins/limiter.ny
+msgid "Limiter"
+msgstr "Limiter"
+
+#: plug-ins/limiter.ny
+msgid "Limiting..."
+msgstr "Ograniczanie..."
+
+#: plug-ins/limiter.ny
+msgid "Type"
+msgstr "Typ"
+
+#: plug-ins/limiter.ny
+msgid "Soft Limit"
+msgstr "Miękki limit"
+
+#: plug-ins/limiter.ny
+msgid "Hard Limit"
+msgstr "Twardy limit"
+
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#: plug-ins/limiter.ny
+msgid "Soft Clip"
+msgstr "Miękkie obcięcie"
+
+#: plug-ins/limiter.ny
+msgid "Hard Clip"
+msgstr "Twarde obcięcie"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"mono/Left"
+msgstr ""
+"Wzmocnienie wejściowe (dB)\n"
+"mono/lewy"
+
+#: plug-ins/limiter.ny
+msgid ""
+"Input Gain (dB)\n"
+"Right channel"
+msgstr ""
+"Wzmocnienie wejściowe (dB)\n"
+"prawy kanał"
+
+#: plug-ins/limiter.ny
+msgid "Limit to (dB)"
+msgstr "Ogranicz do (dB)"
+
+#: plug-ins/limiter.ny
+msgid "Hold (ms)"
+msgstr "Przytrzymaj (ms)"
+
+#: plug-ins/limiter.ny
+msgid "Apply Make-up Gain"
+msgstr "Zastosuj Uczyń ze wzmocnienia"
+
+#: plug-ins/lowpass.ny
+msgid "Low-Pass Filter"
+msgstr "Filtr dolnoprzepustowy"
+
+#: plug-ins/lowpass.ny
+msgid "Performing Low-Pass Filter..."
+msgstr "Tworzenie filtra dolnoprzepustowego..."
+
+#: plug-ins/notch.ny
+msgid "Notch Filter"
+msgstr "Filtr Notch"
+
+#: plug-ins/notch.ny
+msgid "Applying Notch Filter..."
+msgstr "Stosowanie filtra Notch..."
+
+#: plug-ins/notch.ny
+msgid "Steve Daulton and Bill Wharrie"
+msgstr "Steve Daulton i Bill Wharrie"
+
+#: plug-ins/notch.ny
+msgid "Q (higher value reduces width)"
+msgstr "Q (wyższa wartość redukuje szerokość)"
+
+#: plug-ins/notch.ny
+#, lisp-format
+msgid ""
+"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+"                 Track sample rate is ~a Hz.~%~\n"
+"                 Frequency must be less than ~a Hz."
+msgstr ""
+"Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki."
+"~%~%~\n"
+"                 Próbkowanie ścieżki wynosi ~a Hz.~%~\n"
+"                 Częstotliwość musi być mniejsza niż ~a Hz."
+
+#: plug-ins/pluck.ny
+msgid "Pluck"
+msgstr "Pluck"
+
+#: plug-ins/pluck.ny
+msgid "Generating pluck sound..."
+msgstr "Generowanie dźwięku pluck..."
+
+#: plug-ins/pluck.ny
+msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+msgstr "Wartości MIDI dla nut C: 36, 48, 60 [środkowe C], 72, 84, 96."
+
+#: plug-ins/pluck.ny
+msgid "David R.Sky"
+msgstr "David R. Sky"
+
+#: plug-ins/pluck.ny
+msgid "Pluck MIDI pitch"
+msgstr "Wysokość pluck MIDI"
+
+#: plug-ins/pluck.ny
+msgid "Fade-out type"
+msgstr "Typ ściszenia"
+
+#: plug-ins/pluck.ny
+msgid "Abrupt"
+msgstr "Nagły"
+
+#: plug-ins/pluck.ny
+msgid "Gradual"
+msgstr "Stopniowy"
+
+#: plug-ins/pluck.ny
+msgid "Duration (60s max)"
+msgstr "Czas trwania (maksymalnie 60)"
+
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm Track"
 msgstr "Ścieżka rytmu"
@@ -16721,10 +17418,6 @@ msgstr "Ścieżka rytmu"
 #: plug-ins/rhythmtrack.ny
 msgid "Generating Rhythm..."
 msgstr "Generowanie rytmu..."
-
-#: plug-ins/rhythmtrack.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Dominic Mazzoni"
-msgstr "Dominic Mazzoni"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -16831,6 +17524,48 @@ msgstr ""
 "Ustaw 'Liczbę taktów' lub\n"
 "'Czas trwania ścieżki rytmu' na więcej niż zero."
 
+#: plug-ins/rissetdrum.ny
+msgid "Risset Drum"
+msgstr "Risset Drum"
+
+#: plug-ins/rissetdrum.ny
+msgid "Generating Risset Drum..."
+msgstr "Generowanie Risset Drum..."
+
+#: plug-ins/rissetdrum.ny
+msgid "Steven Jones"
+msgstr "Steven Jones"
+
+#: plug-ins/rissetdrum.ny
+msgid "Decay (seconds)"
+msgstr "Zanik (sekundy)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Center frequency of noise (Hz)"
+msgstr "Częstotliwość środkowa szumów (Hz)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Width of noise band (Hz)"
+msgstr "Szerokość pasma szumów (Hz)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amount of noise in mix (percent)"
+msgstr "Ilość szumu w miksie (procent)"
+
+#: plug-ins/rissetdrum.ny
+msgid "Amplitude (0 - 1)"
+msgstr "Amplituda (0 - 1)"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Left"
+msgstr "&Lewo"
+
+#: plug-ins/rms.ny
+#, fuzzy
+msgid "Right"
+msgstr "&Prawo"
+
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
 msgstr "Eksport przykładowych danych"
@@ -16838,14 +17573,6 @@ msgstr "Eksport przykładowych danych"
 #: plug-ins/sample-data-export.ny
 msgid "Analyzing..."
 msgstr "Analizowanie..."
-
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/StudioFadeOut.ny plug-ins/limiter.ny plug-ins/vocalremover.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadetracks.ny
-#: plug-ins/equalabel.ny plug-ins/crossfadeclips.ny plug-ins/delay.ny
-#: plug-ins/tremolo.ny
-msgid "Steve Daulton"
-msgstr "Steve Daulton"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -16922,24 +17649,28 @@ msgid "[-inf]"
 msgstr "[-inf]"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left Channel.~%~%"
 msgstr "Lewy kanał.~%~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~%~%Right Channel.~%~%"
 msgstr "~%~%Prawy kanał.~%~%"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "~aData written to:~%~a"
 msgstr "~aDane zapisane w:~%~a~a~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
 msgstr ""
 "Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
@@ -16947,7 +17678,7 @@ msgstr ""
 "sampli ~a sekund.~a"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
@@ -16957,7 +17688,7 @@ msgstr ""
 "Przetworzona długość: ~a sampli ~a sekund.~a"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
 "~a ~\n"
@@ -16965,25 +17696,29 @@ msgid ""
 "Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
-"~a~%Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali. ~a.~"
-"%~aPrzetworzona długość: ~a ~\n"
+"~a~%Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali. ~a."
+"~%~aPrzetworzona długość: ~a ~\n"
 "sampli, ~a sekund.~% Amplituda szczytowa: ~a (lin) ~a dB. Nieważona RMS: ~a "
 "dB.~%~\n"
 "DC offset: ~a~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, ~a dB."
 msgstr "~a liniowy, ~a dB."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
 msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a lin, ~a dB."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a samples."
 msgstr "~a sampli."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a seconds."
 msgstr "~a sekund."
 
@@ -16992,30 +17727,35 @@ msgid "Audio data analysis:"
 msgstr "Analiza danych dźwięku:"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
 msgstr "<b>Częstotliwość próbkowania:</b> &nbsp;&nbsp;~a Hz."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr "<b>Amplituda szczytowa:</b> &nbsp;&nbsp;~a (lin) &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>RMS</b> (nieważona): &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 msgstr "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
 msgstr "~a liniowy, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
 msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a liniowy, &nbsp;&nbsp;~a dB."
 
@@ -17056,6 +17796,7 @@ msgid "Right (dB)"
 msgstr "Prawy (dB)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
 "<a href=\"~a\">Audacity</a> by Steve\n"
@@ -17078,22 +17819,27 @@ msgid "1 channel (mono)"
 msgstr "1 kanał (mono)"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One column per channel.~%"
 msgstr "Jedna kolumna na kanał.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "One row per channel.~%"
 msgstr "Jeden wiersz na kanał.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel then Right channel on same line.~%"
 msgstr "Lewy kanał, potem prawy kanał na tej samej linii.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left and right channels on alternate lines.~%"
 msgstr "Lewy i prawy kanał na alternatywnych liniach.~%"
 
 #: plug-ins/sample-data-export.ny
+#, lisp-format
 msgid "Left channel first then right channel.~%"
 msgstr "Najpierw lewy kanał, a potem prawy kanał.~%"
 
@@ -17102,45 +17848,96 @@ msgid "Unspecified channel order"
 msgstr "Nieokreślona kolejność kanałów"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
+#, fuzzy, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
 msgstr "\"~a~a~a\" nie może być zapisany."
 
-#: plug-ins/pluck.ny
-msgid "Pluck"
-msgstr "Pluck"
+#: plug-ins/sample-data-import.ny
+msgid "Sample Data Import"
+msgstr "Import przykładowych danych"
 
-#: plug-ins/pluck.ny
-msgid "Generating pluck sound..."
-msgstr "Generowanie dźwięku pluck..."
+#: plug-ins/sample-data-import.ny
+msgid "Reading and rendering samples..."
+msgstr "Odczytywanie i renderowanie sampli..."
 
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr "Wartości MIDI dla nut C: 36, 48, 60 [środkowe C], 72, 84, 96."
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Select file"
+msgstr "Zaznacz plik"
 
-#: plug-ins/pluck.ny
-msgid "David R.Sky"
-msgstr "David R. Sky"
+#: plug-ins/sample-data-import.ny
+msgid "Invalid data handling"
+msgstr "Nieprawidłowa obsługa danych"
 
-#: plug-ins/pluck.ny
-msgid "Pluck MIDI pitch"
-msgstr "Wysokość pluck MIDI"
+#: plug-ins/sample-data-import.ny
+msgid "Throw Error"
+msgstr "Odrzuć błąd"
 
-#: plug-ins/pluck.ny
-msgid "Fade-out type"
-msgstr "Typ ściszenia"
+#: plug-ins/sample-data-import.ny
+msgid "Read as Zero"
+msgstr "Odczytaj jako zero"
 
-#: plug-ins/pluck.ny
-msgid "Abrupt"
-msgstr "Nagły"
+#: plug-ins/sample-data-import.ny
+#, fuzzy, lisp-format
+msgid ""
+"Error~%~\n"
+"                        '~a' could not be opened.~%~\n"
+"                        Check that file exists."
+msgstr ""
+"Error~%~\n"
+"                          '~a~a~a' nie mógł zostać otwarty.~%~\n"
+"                          Sprawdź, czy plik istnieje."
 
-#: plug-ins/pluck.ny
-msgid "Gradual"
-msgstr "Stopniowy"
+#: plug-ins/sample-data-import.ny
+#, fuzzy, lisp-format
+msgid ""
+"Error:~%~\n"
+"              The file must contain only plain ASCII text.~%~\n"
+"              (Invalid byte '~a' at byte number: ~a)"
+msgstr ""
+"Błąd:~%~\n"
+"                Plik musi zawierać tylko zwykły tekst ASCII.~%~\n"
+"                (Błędny bajt '~a' pod numerem bajtu: ~a)"
 
-#: plug-ins/pluck.ny
-msgid "Duration (60s max)"
-msgstr "Czas trwania (maksymalnie 60)"
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid ""
+"Error~%~\n"
+"              Data must be numbers in plain ASCII text.~%~\n"
+"              '~a' is not a numeric value."
+msgstr ""
+"Błąd~%~\n"
+"              Dane muszą być liczbami w prostym tekście ASCII.~%~\n"
+"              '~a' nie jest wartością liczbową."
+
+#: plug-ins/sample-data-import.ny
+#, lisp-format
+msgid "Error.~%Unable to open file"
+msgstr "Błąd.~%Nie można otworzyć pliku"
+
+#: plug-ins/tremolo.ny
+msgid "Tremolo"
+msgstr "Tremolo"
+
+#: plug-ins/tremolo.ny
+msgid "Applying Tremolo..."
+msgstr "Stosowanie tremolo..."
+
+#: plug-ins/tremolo.ny
+msgid "Waveform type"
+msgstr "Typ kształtu fali"
+
+#: plug-ins/tremolo.ny
+msgid "Inverse Sawtooth"
+msgstr "Odwrócony piłokształtny"
+
+#: plug-ins/tremolo.ny
+msgid "Starting phase (degrees)"
+msgstr "Faza początkowa (stopnie)"
+
+#: plug-ins/tremolo.ny
+msgid "Wet level (percent)"
+msgstr "Poziom mokry (procent)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -17199,6 +17996,7 @@ msgid "High Cut for Vocals (Hz)"
 msgstr "Wysokie cięcie dla wokali (Hz)"
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Average x: ~a, y: ~a\n"
 "Covariance x y: ~a\n"
@@ -17219,6 +18017,7 @@ msgstr ""
 "y równa się ~a plus ~a razy x~%"
 
 #: plug-ins/vocalrediso.ny
+#, lisp-format
 msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
@@ -17301,136 +18100,6 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr "Ta wtyczka działa tylko ze ścieżkami stereo."
 
-#: plug-ins/sample-data-import.ny
-msgid "Sample Data Import"
-msgstr "Import przykładowych danych"
-
-#: plug-ins/sample-data-import.ny
-msgid "Reading and rendering samples..."
-msgstr "Odczytywanie i renderowanie sampli..."
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "Select file"
-msgstr "Zaznacz plik"
-
-#: plug-ins/sample-data-import.ny
-msgid "Invalid data handling"
-msgstr "Nieprawidłowa obsługa danych"
-
-#: plug-ins/sample-data-import.ny
-msgid "Throw Error"
-msgstr "Odrzuć błąd"
-
-#: plug-ins/sample-data-import.ny
-msgid "Read as Zero"
-msgstr "Odczytaj jako zero"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid ""
-"Error~%~\n"
-"                        '~a' could not be opened.~%~\n"
-"                        Check that file exists."
-msgstr ""
-"Error~%~\n"
-"                          '~a~a~a' nie mógł zostać otwarty.~%~\n"
-"                          Sprawdź, czy plik istnieje."
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid ""
-"Error:~%~\n"
-"              The file must contain only plain ASCII text.~%~\n"
-"              (Invalid byte '~a' at byte number: ~a)"
-msgstr ""
-"Błąd:~%~\n"
-"                Plik musi zawierać tylko zwykły tekst ASCII.~%~\n"
-"                (Błędny bajt '~a' pod numerem bajtu: ~a)"
-
-#: plug-ins/sample-data-import.ny
-msgid ""
-"Error~%~\n"
-"              Data must be numbers in plain ASCII text.~%~\n"
-"              '~a' is not a numeric value."
-msgstr ""
-"Błąd~%~\n"
-"              Dane muszą być liczbami w prostym tekście ASCII.~%~\n"
-"              '~a' nie jest wartością liczbową."
-
-#: plug-ins/sample-data-import.ny
-msgid "Error.~%Unable to open file"
-msgstr "Błąd.~%Nie można otworzyć pliku"
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Studio Fade Out"
-msgstr "Studio ściszania"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-msgid "Applying Fade..."
-msgstr "Stosowanie przejścia..."
-
-#: plug-ins/StudioFadeOut.ny
-msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "Wybór jest za krótki. ~%Musi być większy niż 2 sample."
-
-#: plug-ins/limiter.ny
-msgid "Limiter"
-msgstr "Limiter"
-
-#: plug-ins/limiter.ny
-msgid "Limiting..."
-msgstr "Ograniczanie..."
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "Typ"
-
-#: plug-ins/limiter.ny
-msgid "Soft Limit"
-msgstr "Miękki limit"
-
-#: plug-ins/limiter.ny
-msgid "Hard Limit"
-msgstr "Twardy limit"
-
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
-msgid "Soft Clip"
-msgstr "Miękkie obcięcie"
-
-#: plug-ins/limiter.ny
-msgid "Hard Clip"
-msgstr "Twarde obcięcie"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"mono/Left"
-msgstr ""
-"Wzmocnienie wejściowe (dB)\n"
-"mono/lewy"
-
-#: plug-ins/limiter.ny
-msgid ""
-"Input Gain (dB)\n"
-"Right channel"
-msgstr ""
-"Wzmocnienie wejściowe (dB)\n"
-"prawy kanał"
-
-#: plug-ins/limiter.ny
-msgid "Limit to (dB)"
-msgstr "Ogranicz do (dB)"
-
-#: plug-ins/limiter.ny
-msgid "Hold (ms)"
-msgstr "Przytrzymaj (ms)"
-
-#: plug-ins/limiter.ny
-msgid "Apply Make-up Gain"
-msgstr "Zastosuj Uczyń ze wzmocnienia"
-
 #: plug-ins/vocalremover.ny
 msgid "Vocal Remover"
 msgstr "Narzędzie do usuwania wokalu"
@@ -17472,6 +18141,7 @@ msgid "Frequency band to (Hz)"
 msgstr "Pasmo częstotliwości do (Hz)"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Vocal Remover requires a stereo track. It works best with\n"
 "lossless files like WAV or AIFF, rather than MP3 or\n"
@@ -17531,6 +18201,7 @@ msgstr ""
 "limitami, zachowując pozostałe."
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
 "If you have a stereo track split into left and right~%~\n"
@@ -17543,6 +18214,7 @@ msgstr ""
 "i uruchom ponownie Narzędzie do usuwania wokalu.~%"
 
 #: plug-ins/vocalremover.ny
+#, lisp-format
 msgid ""
 "Warning:~%~\n"
 "              Selected band-stop filter is~%~\n"
@@ -17560,680 +18232,58 @@ msgstr ""
 msgid "Current settings returned the original audio."
 msgstr "Bieżące ustawienia przywróciły oryginalny dźwięk."
 
-#: plug-ins/adjustable-fade.ny
-msgid "Adjustable Fade"
-msgstr "Przejście dające się regulować"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Type"
-msgstr "Typ przejścia"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Up"
-msgstr "Zgłośnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Fade Down"
-msgstr "Ściszenie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Up"
-msgstr "S-krzywa w górę"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Down"
-msgstr "S-krzywa w dół"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Mid-fade Adjust (%)"
-msgstr "Dostosuj średnie przejście (%)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Start/End as"
-msgstr "Początek/koniec jako"
-
-#: plug-ins/adjustable-fade.ny
-#, elisp-format
-msgid "% of Original"
-msgstr "% oryginału"
-
-#: plug-ins/adjustable-fade.ny
-msgid "dB Gain"
-msgstr "dB wzmocnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Start (or end)"
-msgstr "Początek (lub koniec)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "End (or start)"
-msgstr "Koniec (lub początek)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Handy Presets (override controls)"
-msgstr "Poręczne presety (zastąp kontrole)"
-
-#: plug-ins/adjustable-fade.ny
-msgid "None Selected"
-msgstr "Brak zaznaczenia"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear In"
-msgstr "Liniowe zgłośnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Linear Out"
-msgstr "Liniowe ściszenie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential In"
-msgstr "Wykładnicze zgłośnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Exponential Out"
-msgstr "Wykładnicze ściszenie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic In"
-msgstr "Logarytmiczne zgłośnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Logarithmic Out"
-msgstr "Logarytmiczne ściszenie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded In"
-msgstr "Zaokrąglone zgłośnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Rounded Out"
-msgstr "Zaokrąglone ściszenie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine In"
-msgstr "Cosinusoidalne zgłośnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "Cosine Out"
-msgstr "Cosinusoidalne ściszenie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve In"
-msgstr "S-krzywa zgłośnienie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "S-Curve Out"
-msgstr "S-krzywa ściszenie"
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be negative."
-msgstr "~aWartości procentowe nie mogą być ujemne."
-
-#: plug-ins/adjustable-fade.ny
-msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "~aWartości procentowe nie mogą być większe niż 1000%."
-
-#: plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid ""
-"~adB values cannot be more than +100 dB.~%~%~\n"
-"                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
-msgstr ""
-"~adB wartości nie mogą być większe niż +100 dB.~%~%~\n"
-"                                 Wskazówka: 6 dB podwaja amplitudę~%~\n"
-"                                 t-6 dB to połowa amplitudy."
-
-#: plug-ins/adjustable-fade.ny
-msgid "Error~%~%"
-msgstr "Błąd~%~%"
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "Spectral edit parametric EQ"
-msgstr "Parametryczna edycja EQ widma"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Filtering..."
-msgstr "Filtrowanie..."
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Paul Licameli"
-msgstr "Paul Licameli"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid "Gain (dB)"
-msgstr "Wzmocnienie (dB)"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "~aPlease select frequencies."
-msgstr "~aZaznacz częstotliwości."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aLow frequency is undefined."
-msgstr "~aNiska częstotliwość jest niezdefiniowana."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aHigh frequency is undefined."
-msgstr "~aWysoka częstotliwość jest niezdefiniowana."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid "~aCenter frequency must be above 0 Hz."
-msgstr "~aCzęstotliwość środkowa musi być powyżej 0 Hz."
-
-#: plug-ins/SpectralEditParametricEQ.ny
-msgid ""
-"~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
-"                        be greater than ~a Hz"
-msgstr ""
-"~aCzęstotliwość zaznaczenia jest za wysoka dla próbkowania ścieżki.~%~\n"
-"                        W przypadku bieżącej ścieżki ustawienie wysokiej "
-"częstotliwości nie może~%~\n"
-"                        być większe niż ~a Hz"
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                         frequencies are both ~a Hz).~%~\n"
-"                         Please select a frequency range."
-msgstr ""
-"~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
-"                         częstotliwość wynoszą obie ~a Hz).~%~\n"
-"                         Wybierz zakres częstotliwości."
-
-#: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#: plug-ins/SpectralEditMulti.ny
-msgid "Error.~%"
-msgstr "Błąd.~%"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Crossfade Tracks"
-msgstr "Przenikanie ścieżek"
-
-#: plug-ins/crossfadetracks.ny plug-ins/crossfadeclips.ny
-msgid "Crossfading..."
-msgstr "Przenikanie..."
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade type"
-msgstr "Typ przejścia"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Gain"
-msgstr "Stałe wzmocnienie"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 1"
-msgstr "Stała moc 1"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Constant Power 2"
-msgstr "Stała moc 2"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom Curve"
-msgstr "Niestandardowa krzywa"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Custom curve"
-msgstr "Niestandardowa krzywa"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Fade direction"
-msgstr "Kierunek przejścia"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating Out / In"
-msgstr "Alternatywne wyjście/wejście"
-
-#: plug-ins/crossfadetracks.ny
-msgid "Alternating In / Out"
-msgstr "Alternatywne wejście/wyjście"
-
-#: plug-ins/crossfadetracks.ny
-#, fuzzy, elisp-format
-msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr "Błąd.~%Wybierz 2 (lub więcej) ścieżek do przenikania."
-
-#: plug-ins/SpectralEditShelves.ny
-msgid "Spectral edit shelves"
-msgstr "Półki edycji widma"
-
-#: plug-ins/SoundFinder.ny
-msgid "Sound Finder"
-msgstr "Szukacz dźwięku"
-
-#: plug-ins/SoundFinder.ny
-msgid "Finding sound..."
-msgstr "Znajdowanie dźwięku..."
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr "Jeremy R. Brown"
-
-#: plug-ins/SoundFinder.ny plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr "Traktuj dźwięk poniżej tego poziomu jako ciszę [-dB]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr "Minimalny czas trwania ciszy między dźwiękami [sekundy]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr "Punkt początkowy etykiety [sekundy przed rozpoczęciem dźwięku]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr "Punkt końcowy etykiety [sekundy po zakończeniu dźwięku]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr "Dodać etykietę na końcu ścieżki? [Nie=0, Tak=1]"
-
-#: plug-ins/SoundFinder.ny
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"Nie znaleziono żadnych dźwięków. Spróbuj zmniejszyć poziom ciszy ~% i "
-"minimalny czas trwania ciszy."
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr "[Koniec]"
-
-#: plug-ins/rissetdrum.ny
-msgid "Risset Drum"
-msgstr "Risset Drum"
-
-#: plug-ins/rissetdrum.ny
-msgid "Generating Risset Drum..."
-msgstr "Generowanie Risset Drum..."
-
-#: plug-ins/rissetdrum.ny
-msgid "Steven Jones"
-msgstr "Steven Jones"
-
-#: plug-ins/rissetdrum.ny plug-ins/notch.ny plug-ins/tremolo.ny
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency (Hz)"
-msgstr "Częstotliwość (Hz)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Decay (seconds)"
-msgstr "Zanik (sekundy)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Center frequency of noise (Hz)"
-msgstr "Częstotliwość środkowa szumów (Hz)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Width of noise band (Hz)"
-msgstr "Szerokość pasma szumów (Hz)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Amount of noise in mix (percent)"
-msgstr "Ilość szumu w miksie (procent)"
-
-#: plug-ins/rissetdrum.ny
-msgid "Amplitude (0 - 1)"
-msgstr "Amplituda (0 - 1)"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid "Spectral edit multi tool"
-msgstr "Multinarzędzie edycji widma"
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aBandwidth is zero (the upper and lower~%~\n"
-"                       frequencies are both ~a Hz).~%~\n"
-"                       Please select a frequency range."
-msgstr ""
-"~aSzerokość pasma wynosi zero (górna i dolna~%~\n"
-"                       częstotliwość wynoszą obie ~a Hz).~%~\n"
-"                       Wybierz zakres częstotliwości."
-
-#: plug-ins/SpectralEditMulti.ny
-msgid ""
-"~aNotch filter parameters cannot be applied.~%~\n"
-"                      Try increasing the low frequency bound~%~\n"
-"                      or reduce the filter 'Width'."
-msgstr ""
-"~aParametry filtra Notch nie mogą być zastosowane.~%~\n"
-"                      Spróbuj zwiększyć granicę niskiej częstotliwości~%~\n"
-"                      lub zredukuj filtr 'Szerokość'."
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "&Lewo"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "&Prawo"
-
-#: plug-ins/equalabel.ny
-msgid "Regular Interval Labels"
-msgstr "Regularne przedziały etykiet"
-
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr "Dodawanie równo rozmieszczonych etykiet do ścieżki etykiet..."
-
-#: plug-ins/equalabel.ny
-msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr "Użyj 'Liczba etykiet' LUB 'Przedział etykiety'"
-
-#: plug-ins/equalabel.ny
-msgid "Number of Labels"
-msgstr "Liczba etykiet"
-
-#: plug-ins/equalabel.ny
-msgid "Label Interval"
-msgstr "Przedział etykiety"
-
-#: plug-ins/equalabel.ny
-msgid "Number of labels"
-msgstr "Liczba etykiet"
-
-#: plug-ins/equalabel.ny
-msgid "Label interval (seconds)"
-msgstr "Przedział etykiety (sekundy)"
-
-#: plug-ins/equalabel.ny
-msgid "Adjust label interval to fit length"
-msgstr "Dostosuj przedział etykiety, aby dopasować długość"
-
-#: plug-ins/equalabel.ny
-msgid "Label text"
-msgstr "Tekst etykiety"
-
-#: plug-ins/equalabel.ny
-msgid "Minimum number of digits in label"
-msgstr "Minimalna liczba cyfr na etykiecie"
-
-#: plug-ins/equalabel.ny
-msgid "None - Text Only"
-msgstr "Brak - tylko tekst"
-
-#: plug-ins/equalabel.ny
-msgid "1 (Before Label)"
-msgstr "1 (przed etykietą)"
-
-#: plug-ins/equalabel.ny
-msgid "2 (Before Label)"
-msgstr "2 (przed etykietą)"
-
-#: plug-ins/equalabel.ny
-msgid "3 (Before Label)"
-msgstr "3 (przed etykietą)"
-
-#: plug-ins/equalabel.ny
-msgid "1 (After Label)"
-msgstr "1 (po etykiecie)"
-
-#: plug-ins/equalabel.ny
-msgid "2 (After Label)"
-msgstr "2 (po etykiecie)"
-
-#: plug-ins/equalabel.ny
-msgid "3 (After Label)"
-msgstr "3 (po etykiecie)"
-
-#: plug-ins/equalabel.ny
-msgid "Begin numbering from"
-msgstr "Rozpocznij numerowanie od"
-
-#: plug-ins/notch.ny
-msgid "Notch Filter"
-msgstr "Filtr Notch"
-
-#: plug-ins/notch.ny
-msgid "Applying Notch Filter..."
-msgstr "Stosowanie filtra Notch..."
-
-#: plug-ins/notch.ny
-msgid "Steve Daulton and Bill Wharrie"
-msgstr "Steve Daulton i Bill Wharrie"
-
-#: plug-ins/notch.ny
-msgid "Q (higher value reduces width)"
-msgstr "Q (wyższa wartość redukuje szerokość)"
-
-#: plug-ins/notch.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Frequency must be at least 0.1 Hz."
-msgstr "Częstotliwość musi wynosić co najmniej 0.1 Hz."
-
-#: plug-ins/notch.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                 Track sample rate is ~a Hz.~%~\n"
-"                 Frequency must be less than ~a Hz."
-msgstr ""
-"Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki.~%~"
-"%~\n"
-"                 Próbkowanie ścieżki wynosi ~a Hz.~%~\n"
-"                 Częstotliwość musi być mniejsza niż ~a Hz."
-
-#: plug-ins/crossfadeclips.ny
-#, fuzzy
-msgid "Crossfade Clips"
-msgstr "Przenikanie ścieżek"
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr ""
-"Błąd.~%Nieprawidłowe zaznaczenie.~%Zaznaczono więcej niż 2 klipy dźwiękowe."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
-"Błąd.~%Nieprawidłowe zaznaczenie.~%EPusta przestrzeń na początku/końcu "
-"zaznaczenia."
-
-#: plug-ins/crossfadeclips.ny
-msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr "Błąd.~%Przenikanie klipów można zastosować tylko na jednej ścieżce."
-
-#: plug-ins/delay.ny
-msgid "Delay"
-msgstr "Opóźnienie"
-
-#: plug-ins/delay.ny
-msgid "Applying Delay Effect..."
-msgstr "Stosowanie efektu opóźnienia..."
-
-#: plug-ins/delay.ny
-msgid "Delay type"
-msgstr "Typ opóźnienia"
-
-#: plug-ins/delay.ny
-msgid "Regular"
-msgstr "Regularne"
-
-#: plug-ins/delay.ny
-msgid "Bouncing Ball"
-msgstr "Odbijająca się piłka"
-
-#: plug-ins/delay.ny
-msgid "Reverse Bouncing Ball"
-msgstr "Odwrócona odbijająca się piłka"
-
-#: plug-ins/delay.ny
-msgid "Delay level per echo (dB)"
-msgstr "Poziom opóźnienia na echo (dB)"
-
-#: plug-ins/delay.ny
-msgid "Delay time (seconds)"
-msgstr "Czas opóźnienia (sekundy)"
-
-#: plug-ins/delay.ny
-msgid "Pitch change effect"
-msgstr "Efekt zmiany wysokości"
-
-#: plug-ins/delay.ny
-msgid "Pitch/Tempo"
-msgstr "Wysokość/tempo"
-
-#: plug-ins/delay.ny
-msgid "Low-quality Pitch Shift"
-msgstr "Przesunięcie wysokości niskiej jakości"
-
-#: plug-ins/delay.ny
-msgid "Pitch change per echo (semitones)"
-msgstr "Zmiana wysokości na echo (półtony)"
-
-#: plug-ins/delay.ny
-msgid "Number of echoes"
-msgstr "Liczba ech"
-
-#: plug-ins/delay.ny
-msgid "Allow duration to change"
-msgstr "Zezwalaj na zmianę czasu trwania"
-
-#: plug-ins/delay.ny
-msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr "Liczba ech '~a' poza dopuszczalnym zakresem od 1 do 50.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-"Zmiana wysokości '~a' poza dopuszczalnym zakresem od -12 do +12 półtonów.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-msgstr ""
-"Czas opóźnienia '~a' poza dopuszczalnym zakresem od 0 do 10 sekund.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-"Poziom opóźnienia '~a' poza dopuszczalnym zakresem od -30 do +6 dB.~%~a"
-
-#: plug-ins/delay.ny
-msgid "Error.~%~a"
-msgstr "Błąd.~%~a"
-
-#: plug-ins/tremolo.ny
-msgid "Tremolo"
-msgstr "Tremolo"
-
-#: plug-ins/tremolo.ny
-msgid "Applying Tremolo..."
-msgstr "Stosowanie tremolo..."
-
-#: plug-ins/tremolo.ny
-msgid "Waveform type"
-msgstr "Typ kształtu fali"
-
-#: plug-ins/tremolo.ny
-msgid "Inverse Sawtooth"
-msgstr "Odwrócony piłokształtny"
-
-#: plug-ins/tremolo.ny
-msgid "Starting phase (degrees)"
-msgstr "Faza początkowa (stopnie)"
-
-#: plug-ins/tremolo.ny
-msgid "Wet level (percent)"
-msgstr "Poziom mokry (procent)"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Silence Finder"
-msgstr "Szukacz ciszy"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Finding silence..."
-msgstr "Znajdowanie ciszy..."
-
-#: plug-ins/SilenceMarker.ny
-msgid "Alex S. Brown"
-msgstr "Alex S. Brown"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence [seconds]"
-msgstr "Minimalny czas trwania ciszy [sekundy]"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement [seconds before silence ends]"
-msgstr "Położenie etykiety [sekundy przed końcami ciszy]"
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"Nie znaleziono ciszy. Spróbuj zmniejszyć poziom ciszy ~% i minimalny czas "
-"jej trwania."
-
-#: plug-ins/highpass.ny
-msgid "High-Pass Filter"
-msgstr "Filtr górnoprzepustowy"
-
-#: plug-ins/highpass.ny
-msgid "Performing High-Pass Filter..."
-msgstr "Tworzenie filtra górnoprzepustowego..."
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Roll-off (dB per octave)"
-msgstr "Rolloff (dB na oktawę)"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "6 dB"
-msgstr "6 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "12 dB"
-msgstr "12 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "24 dB"
-msgstr "24 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "36 dB"
-msgstr "36 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "48 dB"
-msgstr "48 dB"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid ""
-"Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
-"                   Track sample rate is ~a Hz~%~\n"
-"                   Frequency must be less than ~a Hz."
-msgstr ""
-"Błąd:~%~%FCzęstotliwość (~a Hz) jest za wysoka dla próbkowania ścieżki.~%.~%~"
-"%~\n"
-"                   Próbkowanie ścieżki wynosi ~a Hz~%~\n"
-"                   Częstotliwość musi być mniejsza niż ~a Hz."
-
-#: plug-ins/lowpass.ny
-msgid "Low-Pass Filter"
-msgstr "Filtr dolnoprzepustowy"
-
-#: plug-ins/lowpass.ny
-msgid "Performing Low-Pass Filter..."
-msgstr "Tworzenie filtra dolnoprzepustowego..."
-
-#: plug-ins/beat.ny
-msgid "Beat Finder"
-msgstr "Szukacz uderzeń"
-
-#: plug-ins/beat.ny
-msgid "Finding beats..."
-msgstr "Znajdowanie uderzeń..."
-
-#: plug-ins/beat.ny
-msgid "Threshold Percentage"
-msgstr "Próg procentowy"
+#: plug-ins/vocoder.ny
+msgid "Vocoder"
+msgstr "Wokoder"
+
+#: plug-ins/vocoder.ny
+msgid "Processing Vocoder..."
+msgstr "Przetwarzanie wokodera..."
+
+#: plug-ins/vocoder.ny
+msgid "Edgar-RFT"
+msgstr "Edgar-RFT"
+
+#: plug-ins/vocoder.ny
+msgid "Distance: (1 to 120, default = 20)"
+msgstr "Odległość: (1 do 120, domyślna = 20)"
+
+#: plug-ins/vocoder.ny
+msgid "Output choice"
+msgstr "Wybór wyjścia"
+
+#: plug-ins/vocoder.ny
+msgid "Both Channels"
+msgstr "Oba kanały"
+
+#: plug-ins/vocoder.ny
+msgid "Right Only"
+msgstr "Tylko prawy"
+
+#: plug-ins/vocoder.ny
+msgid "Number of vocoder bands"
+msgstr "Liczba pasm wokodera"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of original audio (percent)"
+msgstr "Amplituda oryginalnego dźwięku (procent)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of white noise (percent)"
+msgstr "Amplituda szumu białego (procent)"
+
+#: plug-ins/vocoder.ny
+msgid "Amplitude of Radar Needles (percent)"
+msgstr "Amplituda igieł radaru (procent)"
+
+#: plug-ins/vocoder.ny
+msgid "Frequency of Radar Needles (Hz)"
+msgstr "Częstotliwość igieł radaru (Hz)"
+
+#: plug-ins/vocoder.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Stereo track required."
+msgstr "Błąd.~%Wymagana ścieżka stereo."
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
