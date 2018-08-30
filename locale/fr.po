@@ -8610,7 +8610,7 @@ msgstr ""
 "Sélectionnez une portion de piste."
 
 #: src/effects/Contrast.cpp
-msgid "Please select an *track."
+msgid "Please select an audio track."
 msgstr "Veuillez sélectionner une piste audio."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
