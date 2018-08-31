@@ -3670,7 +3670,7 @@ msgstr "Fin de la pist&e"
 
 #: src/Menus.cpp
 msgid "Cursor to Prev Clip Boundary"
-msgstr "Curseur à la prochaine limite du clip"
+msgstr "Curseur à la limite précédente du clip"
 
 # trebmuh to check (accélérateur)
 #: src/Menus.cpp
