@@ -17877,9 +17877,8 @@ msgid "Rhythm track duration"
 msgstr "Durée de la piste de rythme"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Used if 'Number of bars' = 0"
-msgstr "Nombre de mesures"
+msgstr "Utilisé si 'Nombre de mesures' = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
