@@ -26,7 +26,7 @@ $control timesig (_ "Beats per bar") int (_ "1 - 20 beats/measure") 4 1 20
 $control swing (_ "Swing amount") float (_ "+/- 1") 0 -1 1
 $control text (_ "Set 'Number of bars' to zero to enable the 'Rhythm track duration'.")
 $control bars (_ "Number of bars") int (_ "1 - 1000 bars") 16 0 1000
-$control click-track-dur (_ "Rhythm track duration") time "Used if 'Number of bars' = 0" 0 0 nil  
+$control click-track-dur (_ "Rhythm track duration") time (_ "Used if 'Number of bars' = 0") 0 0 nil  
 $control offset (_ "Start time offset") time (_ "Silence before first beat") 0 0 nil
 $control click-type (_ "Beat sound") choice (("Metronome" (_ "Metronome Tick"))
                                              (_ "Ping (short)")
