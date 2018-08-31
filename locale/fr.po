@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-30 22:06+0100\n"
-"PO-Revision-Date: 2018-08-31 13:39+0100\n"
+"PO-Revision-Date: 2018-08-31 14:08+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -4127,11 +4127,11 @@ msgstr "Réduir&e le volume d’enregistrement"
 # trebmuh to check (accélérateur)
 #: src/Menus.cpp
 msgid "&Delete Key"
-msgstr "Touche de suppression (&d)"
+msgstr "Touche &de suppression"
 
 #: src/Menus.cpp
 msgid "Delete Key&2"
-msgstr "Touche suppression&2"
+msgstr "Touche de suppression&2"
 
 # trebmuh : accélérateur
 #: src/Menus.cpp
