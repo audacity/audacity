@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-30 22:06+0100\n"
-"PO-Revision-Date: 2018-08-30 19:54+0100\n"
+"PO-Revision-Date: 2018-08-31 14:08+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -3209,7 +3209,7 @@ msgstr "&Supprimer-séparer"
 
 #: src/Menus.cpp
 msgid "Label Silence"
-msgstr "Marqueur de silence"
+msgstr "Marquer de silence"
 
 #: src/Menus.cpp
 msgid "Silence &Audio"
@@ -3670,7 +3670,7 @@ msgstr "Fin de la pist&e"
 
 #: src/Menus.cpp
 msgid "Cursor to Prev Clip Boundary"
-msgstr "Curseur à la prochaine limite du clip"
+msgstr "Curseur à la limite du clip précédent"
 
 # trebmuh to check (accélérateur)
 #: src/Menus.cpp
@@ -3679,7 +3679,7 @@ msgstr "Délimitati&ons du clip précédent"
 
 #: src/Menus.cpp
 msgid "Cursor to Next Clip Boundary"
-msgstr "Curseur à la prochaine limite du clip"
+msgstr "Curseur à la limite du clip suivant"
 
 # trebmuh to check (accélérateur)
 #: src/Menus.cpp
@@ -4127,11 +4127,11 @@ msgstr "Réduir&e le volume d’enregistrement"
 # trebmuh to check (accélérateur)
 #: src/Menus.cpp
 msgid "&Delete Key"
-msgstr "Touche de suppression (&d)"
+msgstr "Touche &de suppression"
 
 #: src/Menus.cpp
 msgid "Delete Key&2"
-msgstr "Touche suppression&2"
+msgstr "Touche de suppression&2"
 
 # trebmuh : accélérateur
 #: src/Menus.cpp
@@ -14505,11 +14505,11 @@ msgstr "Lo&ng :"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr ""
+msgstr "Lecture à vitesse &variable"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "Toujours un frottement non-punaisé"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
