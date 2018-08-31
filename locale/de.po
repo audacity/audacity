@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 12:04+0100\n"
+"POT-Creation-Date: 2018-08-31 22:53+0100\n"
 "PO-Revision-Date: 2018-08-30 21:20+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German\n"
@@ -14187,6 +14187,14 @@ msgstr "K&urzes Intervall:"
 msgid "Lo&ng period:"
 msgstr "L&anges Intervall:"
 
+#: src/prefs/PlaybackPrefs.cpp
+msgid "&Vari-Speed Play"
+msgstr ""
+
+#: src/prefs/PlaybackPrefs.cpp
+msgid "Always scrub un&pinned"
+msgstr ""
+
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
 msgstr "Audacity-Einstellungen"
@@ -17467,6 +17475,11 @@ msgstr "1 - 1000 Takte"
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
 msgstr "Rhythmusspurdauer"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Used if 'Number of bars' = 0"
+msgstr "Anzahl Takte"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"

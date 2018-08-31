@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AUDACITY.PO\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 22:06+0100\n"
+"POT-Creation-Date: 2018-08-31 22:53+0100\n"
 "PO-Revision-Date: 2009-01-16 03:10-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team:  <en@li.org>\n"
@@ -18027,6 +18027,11 @@ msgstr ""
 #, fuzzy
 msgid "Rhythm track duration"
 msgstr "ტრეკის წაშლა"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Used if 'Number of bars' = 0"
+msgstr "გასამეორებელი ჯერების ოდენობა:"
 
 #: plug-ins/rhythmtrack.ny
 #, fuzzy

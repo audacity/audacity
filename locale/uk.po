@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 22:06+0100\n"
+"POT-Creation-Date: 2018-08-31 22:53+0100\n"
 "PO-Revision-Date: 2018-03-04 14:48+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/klyok/audacity/language/"
@@ -17715,6 +17715,11 @@ msgstr "1 — 1000 барів"
 #, fuzzy
 msgid "Rhythm track duration"
 msgstr "Доріжка ритму"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Used if 'Number of bars' = 0"
+msgstr "Кількість міток"
 
 #: plug-ins/rhythmtrack.ny
 #, fuzzy

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.24b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 22:06+0100\n"
+"POT-Creation-Date: 2018-08-31 22:53+0100\n"
 "PO-Revision-Date: 2006-03-07 11:16-0000\n"
 "Last-Translator: \n"
 "Language-Team: Audacity Cymru <f00@hushmail.com>\n"
@@ -17439,6 +17439,11 @@ msgstr ""
 #, fuzzy
 msgid "Rhythm track duration"
 msgstr "Gwaredu Trac"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Used if 'Number of bars' = 0"
+msgstr "Nifer o weithiau i ailadrodd: "
 
 #: plug-ins/rhythmtrack.ny
 #, fuzzy

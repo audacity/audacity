@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 22:06+0100\n"
+"POT-Creation-Date: 2018-08-31 22:53+0100\n"
 "PO-Revision-Date: 2008-06-26 15:07+0700\n"
 "Last-Translator: Nguyen Dinh Trung <nguyendinhtrung141@gmail.com>\n"
 "Language-Team: \n"
@@ -17834,6 +17834,11 @@ msgstr ""
 #, fuzzy
 msgid "Rhythm track duration"
 msgstr "Xoá bỏ dải âm"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Used if 'Number of bars' = 0"
+msgstr "Số lần lặp lại:"
 
 #: plug-ins/rhythmtrack.ny
 #, fuzzy

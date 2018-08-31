@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 22:06+0100\n"
+"POT-Creation-Date: 2018-08-31 22:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16503,6 +16503,10 @@ msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Used if 'Number of bars' = 0"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny

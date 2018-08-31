@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-30 22:06+0100\n"
+"POT-Creation-Date: 2018-08-31 22:53+0100\n"
 "PO-Revision-Date: 2018-08-31 14:08+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
@@ -17875,6 +17875,11 @@ msgstr "1 - 1000 mesures"
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
 msgstr "Durée de la piste de rythme"
+
+#: plug-ins/rhythmtrack.ny
+#, fuzzy
+msgid "Used if 'Number of bars' = 0"
+msgstr "Nombre de mesures"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
