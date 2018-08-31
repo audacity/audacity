@@ -1644,7 +1644,7 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
    int len = s.Length();
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
-      return unquoted;
+      return wxGetTranslation( unquoted );
    }
    else if (allowParens &&
             len >= 2 && s[0] == wxT('(') && s[len - 1] == wxT(')')) {
