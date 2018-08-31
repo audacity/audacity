@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-30 22:06+0100\n"
-"PO-Revision-Date: 2018-08-30 19:54+0100\n"
+"PO-Revision-Date: 2018-08-31 13:39+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -14505,11 +14505,11 @@ msgstr "Lo&ng :"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr ""
+msgstr "Lecture à vitesse &variable"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "Toujours un frottement non-punaisé"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
