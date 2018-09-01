@@ -2467,10 +2467,13 @@ void AudioIO::StopStream()
       // PortAudio callback can use the information that we are stopping to fade
       // out the audio.  Give PortAudio callback a chance to do so.
       mAudioThreadFillBuffersLoopRunning = false;
-      // IF we were being more careful, we would loop and test for the fade out 
-      // having been done.  But 200ms is the max we can reasonably wait here 
-      // in any case, so we should not wait longer.
-      wxMilliSleep(200);
+      long latency;
+      gPrefs->Read(  wxT("/AudioIO/LatencyDuration"), &latency, DEFAULT_LATENCY_DURATION );
+      // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through 
+      // the sound card, then do so.  If we can't, don't wait around.  Just stop quickly and accept 
+      // there will be a click.
+      if( latency < 150 )
+         wxMilliSleep( latency + 50);
    }
 
    wxMutexLocker locker(mSuspendAudioThread);
