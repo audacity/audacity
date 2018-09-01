@@ -3943,12 +3943,12 @@ void AudioIO::FillBuffers()
                         mScrubSpeed = 0;
                      else
                         mScrubSpeed =
-                           double(std::abs(diff)) / mScrubDuration.as_double();
+                           double(diff) / mScrubDuration.as_double();
                      if (!mSilentScrub)
                      {
                         for (i = 0; i < mPlaybackTracks.size(); i++)
                            mPlaybackMixers[i]->SetTimesAndSpeed(
-                              startTime, endTime, mScrubSpeed);
+                              startTime, endTime, fabs( mScrubSpeed ));
                      }
                      mTimeQueue.mLastTime = startTime;
                   }
