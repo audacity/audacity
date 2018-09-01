@@ -53,6 +53,7 @@ Param( RMSLevel,    double,  wxT("RMSLevel"),            -20.0,      -145.0,  0.
 Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,       false,   true,     1  );
 Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,       false,   true,     1  );
 Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,      false,   true,     1  );
+Param( DualMono,    bool,    wxT("DualMono"),            true,       false,   true,     1  );
 Param( NormalizeTo, int,     wxT("NormalizeTo"),         kAmplitude, 0    ,   nAlgos-1, 1  );
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
@@ -69,6 +70,7 @@ EffectNormalize::EffectNormalize()
    mDC = DEF_RemoveDC;
    mGain = DEF_ApplyGain;
    mStereoInd = DEF_StereoInd;
+   mDualMono = DEF_DualMono;
    mNormalizeTo = DEF_NormalizeTo;
 
    SetLinearEffectFlag(false);
@@ -110,6 +112,7 @@ bool EffectNormalize::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mGain, ApplyGain );
    S.SHUTTLE_PARAM( mDC, RemoveDC );
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );
+   S.SHUTTLE_PARAM( mDualMono, DualMono );
    S.SHUTTLE_PARAM( mNormalizeTo, NormalizeTo );
    return true;
 }
@@ -122,6 +125,7 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
    parms.Write(KEY_ApplyGain, mGain);
    parms.Write(KEY_RemoveDC, mDC);
    parms.Write(KEY_StereoInd, mStereoInd);
+   parms.Write(KEY_DualMono, mDualMono);
    parms.Write(KEY_NormalizeTo, mNormalizeTo);
 
    return true;
@@ -135,6 +139,7 @@ bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyBool(ApplyGain);
    ReadAndVerifyBool(RemoveDC);
    ReadAndVerifyBool(StereoInd);
+   ReadAndVerifyBool(DualMono);
    ReadAndVerifyBool(NormalizeTo);
 
    mPeakLevel = PeakLevel;
@@ -143,6 +148,7 @@ bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
    mGain = ApplyGain;
    mDC = RemoveDC;
    mStereoInd = StereoInd;
+   mDualMono = DualMono;
    mNormalizeTo = NormalizeTo;
 
    return true;
@@ -179,6 +185,7 @@ bool EffectNormalize::Startup()
          mPeakLevel = -mPeakLevel;
       boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
       mStereoInd = (boolProxy == 1);
+      mDualMono = DEF_DualMono;
       mNormalizeTo = kAmplitude;
       mLUFSLevel = DEF_LUFSLevel;
 
@@ -254,7 +261,9 @@ bool EffectNormalize::Process()
       mSteps = 2;
 
       if(!mStereoInd && track->GetLinked())
+      {
          mProcStereo = true;
+      }
 
       mProgressMsg =
          topMsg + wxString::Format( _("Analyzing: %s"), trackName );
@@ -385,6 +394,10 @@ bool EffectNormalize::Process()
       if( (extent > 0) && mGain )
       {
          mMult = ratio / extent;
+         // Target half the LUFS value if mono shall be treated as dual mono.
+         if(!mProcStereo && mDualMono)
+            mMult /= 2.0;
+
          if(mNormalizeTo == kLoudness || mNormalizeTo == kRMS)
          {
             // LUFS and RMS are related to square values so the multiplier must be the root.
@@ -464,6 +477,10 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
             mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
                                                mStereoInd ? wxT("true") : wxT("false"));
             mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
+
+            mDualMonoCheckBox = S.AddCheckBox(_("Treat mono as dual-mono (recommended)"),
+                                               mDualMono ? wxT("true") : wxT("false"));
+            mDualMonoCheckBox->SetValidator(wxGenericValidator(&mDualMono));
          }
          S.EndVerticalLay();
       }
@@ -931,6 +948,7 @@ void EffectNormalize::UpdateUI()
    mLevelTextCtrl->Enable(mGain);
    mLeveldB->Enable(mGain);
    mStereoIndCheckBox->Enable(mGain);
+   mDualMonoCheckBox->Enable(mGain);
    mNormalizeToCtl->Enable(mGain);
 
    // Disallow DC removal in RMS mode because this is impossible with a
