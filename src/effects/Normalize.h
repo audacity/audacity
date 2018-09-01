@@ -95,6 +95,7 @@ private:
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
+   bool   mDualMono;
    int    mNormalizeTo;
    int    mGUINormalizeTo;
 
@@ -122,6 +123,7 @@ private:
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
+   wxCheckBox *mDualMonoCheckBox;
 
    Floats mTrackBuffer[2];
    size_t mTrackBufferLen;
