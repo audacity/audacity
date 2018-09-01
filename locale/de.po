@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-31 22:53+0100\n"
-"PO-Revision-Date: 2018-08-30 21:20+0200\n"
+"PO-Revision-Date: 2018-09-01 09:04+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1397,12 +1397,12 @@ msgstr "&Umbenennen …"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp src/effects/Equalization.cpp
 msgid "I&mport..."
-msgstr "&Importieren …"
+msgstr "&Import …"
 
 #: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
 #: src/effects/Equalization.cpp
 msgid "E&xport..."
-msgstr "&Exportieren …"
+msgstr "&Export …"
 
 #: src/BatchProcessDialog.cpp
 msgid "Edit Steps"
@@ -2365,7 +2365,7 @@ msgstr "&Größe:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "&Export..."
-msgstr "&Exportieren …"
+msgstr "&Export …"
 
 #: src/FreqWindow.cpp
 msgid "&Function:"
@@ -2773,7 +2773,7 @@ msgstr "Neu …"
 
 #: src/LabelDialog.cpp
 msgid "Press F2 or double click to edit cell contents."
-msgstr "F2 drücken oder doppelklicken um Zelleninhalt zu bearbeiten."
+msgstr "F2 drücken oder Doppelklicken um Zelleninhalt zu bearbeiten."
 
 #: src/LabelDialog.cpp src/Menus.cpp
 msgid "Select a text file containing labels"
@@ -3506,7 +3506,7 @@ msgstr "&Zeitgesteuerte Aufnahme …"
 
 #: src/Menus.cpp
 msgid "Punch and Rol&l Record"
-msgstr "Drücken und &Laufen Aufnahme"
+msgstr "\"Punch and Rol&l\" Aufnahme"
 
 #: src/Menus.cpp
 msgid "&Cursor to"
@@ -4324,7 +4324,7 @@ msgstr "Hilfe …"
 
 #: src/Menus.cpp src/effects/Effect.cpp
 msgid "Import..."
-msgstr "Importieren …"
+msgstr "Import …"
 
 #: src/Menus.cpp src/effects/Effect.cpp
 msgid "Export..."
@@ -6445,7 +6445,7 @@ msgstr "Pegelgesteuerte Aufnahme"
 
 #: src/SoundActivatedRecord.cpp
 msgid "Activation level (dB):"
-msgstr "Start-Pegel (dB):"
+msgstr "Startpegel (dB):"
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
@@ -13468,7 +13468,7 @@ msgstr "MIME-Typen"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Importer order"
-msgstr "Importer-Reihenfolge"
+msgstr "Import-Reihenfolge"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move rule &up"
@@ -13635,8 +13635,8 @@ msgstr "System- und Audacity-Theme mischen"
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
-"Links-nach-Rechts Layouts (Mehrzählig) bei Rechts-nach-Links sprachen "
-"verwenden"
+"Verwendung von großenteils links-nach-rechts Layouts bei linksläufigen "
+"Sprachen (RTL-Sprachen)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -13648,11 +13648,11 @@ msgstr "Beim Importieren von Audiodateien"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Copy uncompressed files into the project (safer)"
-msgstr "&Unkomprimierte Dateien in das Projekt kopieren (sicherer)"
+msgstr "Unkomprimierte Dateien in das &Projekt kopieren (sicherer)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Read uncompressed files from original location (faster)"
-msgstr "&Unkomprimierte Dateien vom Ursprungsort lesen (schneller)"
+msgstr "Unkomprimierte Dateien vom &Ursprungsort lesen (schneller)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Normalize all tracks in project"
@@ -13672,7 +13672,7 @@ msgstr "&Eigenen Mix verwenden"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&how Metadata Tags editor before export"
-msgstr "Metadaten-Tag-Editor vor dem Export &zeigen"
+msgstr "Tag-Metadaten-Editor vor dem Export an&zeigen"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -13760,7 +13760,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
-msgstr "&Importieren …"
+msgstr "&Import …"
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
 msgid "&Defaults"
@@ -13942,8 +13942,8 @@ msgstr "„Neu“ bedeutet, dass noch keine Auswahl getroffen wurde."
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
 msgstr ""
-"Änderungen an diesen Einstellungen werden erst aktiv, wenn Audacity neu "
-"startet."
+"Änderungen an diesen Einstellungen werden erst nach einem Neustart von "
+"Audacity aktiv."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "No modules were found"
@@ -14189,11 +14189,11 @@ msgstr "L&anges Intervall:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr ""
+msgstr "Variable &Geschwindigkeit bei Wiedergabe"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "Immer abge&pinnt schrubben"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -14309,7 +14309,7 @@ msgstr "In neue Spur aufzeichnen"
 #. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
-msgstr "Aussetzer aufspüren"
+msgstr "Aussetzer erkennen"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
@@ -14329,7 +14329,7 @@ msgstr "Mit:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom Track &Name"
-msgstr "Eigener Spur&name"
+msgstr "Eigenem Spur&namen"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Recorded_Audio"
@@ -14341,7 +14341,7 @@ msgstr "Eigener Namenstext"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Track Number"
-msgstr "&Spurnummer"
+msgstr "Sp&urnummer"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "System &Date"
@@ -14386,7 +14386,7 @@ msgstr "0 bedeutet endlos"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Punch and Roll Recording"
-msgstr "Drücken und Laufen Aufnahme"
+msgstr "\"Punch and Roll\" Aufnahmen"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
@@ -14818,7 +14818,7 @@ msgstr "Spurhöhe automatisch ein&passen"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w audio track name as overlay"
-msgstr "Audiospurname als Overla&y anzeigen"
+msgstr "Audiospurname als &Überlagerung anzeigen"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -14830,7 +14830,7 @@ msgstr "Aufnahme/Wiedergabekopf &angepinnt"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "A&uto-scroll if head unpinned"
-msgstr "A&utomatisch scrollen wenn Kopf abgepinnt"
+msgstr "A&utomatisch scrollen, wenn Kopf abgepinnt"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
@@ -16729,7 +16729,7 @@ msgstr "[Ende]"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
-msgstr "Spektralbearbeitung-Multiwerkzeug"
+msgstr "Spektralbearbeitung - Multiwerkzeug"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -17014,8 +17014,7 @@ msgstr "Schwelle für Übersteuerungen (%)"
 
 #: plug-ins/clipfix.ny
 msgid "Reduce amplitude to allow for restored peaks (dB)"
-msgstr ""
-"Amplitude reduzieren damit Spitzen wiederhergestellt werden können (dB)"
+msgstr "Amplitude reduzieren, um restaurierte Spitzen zu ermöglichen (dB)"
 
 #: plug-ins/crossfadeclips.ny
 msgid "Crossfade Clips"
@@ -17185,7 +17184,7 @@ msgstr "'Anzahl an Textmarken' ODER 'Textmarkenintervall' verwenden"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
-msgstr "Textmarkenanzahl"
+msgstr "Anzahl an Textmarken"
 
 #: plug-ins/equalabel.ny
 msgid "Label Interval"
@@ -17477,9 +17476,8 @@ msgid "Rhythm track duration"
 msgstr "Rhythmusspurdauer"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Used if 'Number of bars' = 0"
-msgstr "Anzahl Takte"
+msgstr "Verwendet wenn 'Anzahl Takte' = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
