@@ -260,6 +260,10 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.StartStruct();
       context.AddItem( trk->GetName(), "name" );
       context.AddBool( (trk == fTrack), "focused");
+      context.AddBool( trk->GetSelected(), "selected" );
+      //JKC: Possibly add these two later...
+      //context.AddItem( trk->GetKind(), "kind" );
+      //context.AddItem( trk->GetHeight(), "height" );
       auto t = dynamic_cast<WaveTrack*>( trk );
       if( t )
       {
@@ -267,7 +271,6 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( t->GetEndTime(), "end" );
          context.AddItem( t->GetPan() , "pan");
          context.AddItem( t->GetGain() , "gain");
-         context.AddBool( t->GetSelected(), "selected" );
          context.AddBool( t->GetLinked(), "linked");
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
