@@ -3282,6 +3282,9 @@ size_t AudioIO::GetCommonlyFreePlayback()
 
 size_t AudioIO::GetCommonlyReadyPlayback()
 {
+   if (mPlaybackTracks.empty())
+      return 0;
+
    auto commonlyAvail = mPlaybackBuffers[0]->AvailForGet();
    for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
       commonlyAvail = std::min(commonlyAvail,
