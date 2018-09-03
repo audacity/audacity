@@ -618,8 +618,11 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                S.Id(AddButtonID).AddButton(_("&New"));
                mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
                mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
+// Not yet ready for prime time.
+#if 0
                S.Id(ImportButtonID).AddButton(_("I&mport..."))->Enable( false);
                S.Id(ExportButtonID).AddButton(_("E&xport..."))->Enable( false);
+#endif
             }
             S.EndVerticalLay();
          }
