@@ -45,7 +45,7 @@
         (funcall underscore txt)))
 
 
-;;; A couple of helpers for parsing strings returned by (aud-do "GetInfo: ...
+;;; Some helpers for parsing strings returned by (aud-do "GetInfo: ...
 
 (defun eval-string (string)
   ;;; Evaluate a string as a LISP expression.
@@ -55,3 +55,22 @@
 (defmacro quote-string (string)
   ;;; Prepend a single quote to a string
   `(setf ,string (format nil "\'~a" ,string)))
+
+(defun aud-get-info (str)
+  ;;; Return "GetInfo: type=type" as Lisp list, or throw error
+  ;;; Audacity 2.3.0 does not fail if type is not recognised, it 
+  ;;; falls back to a default, so test for valid types.
+  ;;; 'Commands+' is not supported in Audacity 2.3.0
+  (let (type
+        info
+        (types '("Commands" "Menus" "Preferences"
+                "Tracks" "Clips" "Envelopes" "Labels" "Boxes")))
+    ;Case insensitive search, then set 'type' with correct case string, or  NIL.
+    (setf type (first (member str types :test 'string-equal)))
+    (if (not type)
+        (error (format nil "bad argument '~a' in (aud-get-info ~a)" str str)))
+    (setf info (aud-do (format nil "GetInfo: type=~a format=LISP" type)))
+    (if (not (last info))
+        (error (format nil "(aud-get-info ~a) failed.~%" str)))
+    (let ((info-string (first info)))
+      (eval-string (quote-string info-string)))))
