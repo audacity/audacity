@@ -298,7 +298,6 @@ void OnSelectAll(const CommandContext &context );
 void OnSelectSomething(const CommandContext &context );
 void OnSelectNone(const CommandContext &context );
 private:
-int CountSelectedWaveTracks();
 int CountSelectedTracks();
 public:
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING

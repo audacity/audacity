@@ -6279,18 +6279,6 @@ void AudacityProject::OnSplitNew(const CommandContext &WXUNUSED(context) )
    RedrawProject();
 }
 
-int AudacityProject::CountSelectedWaveTracks()
-{
-   TrackListIterator iter(GetTracks());
-
-   int count =0;
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      if( (t->GetKind() == Track::Wave) && t->GetSelected() )
-         count++;
-   }
-   return count;
-}
-
 int AudacityProject::CountSelectedTracks()
 {
    TrackListIterator iter(GetTracks());
