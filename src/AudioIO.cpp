@@ -3818,7 +3818,7 @@ void AudioIO::FillBuffers()
       // region - then we should just fill the buffer.
       //
       // May produce a larger amount when initially priming the buffer, or
-      // perhaps again later in play to avoid unerfilling the queue and falling
+      // perhaps again later in play to avoid underfilling the queue and falling
       // behind the real-time demand on the consumer side in the callback.
       auto nReady = GetCommonlyReadyPlayback();
       auto nNeeded =

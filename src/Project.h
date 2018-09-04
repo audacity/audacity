@@ -709,7 +709,7 @@ private:
    wxString mHelpPref;
    wxString mSoloPref;
    bool mbBusyImporting{ false }; // used to fix bug 584
-   int mBatchMode{ 0 };// 0 menas not, >0 means in batch mode.
+   int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
 
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
