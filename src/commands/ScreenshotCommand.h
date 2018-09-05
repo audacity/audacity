@@ -78,7 +78,7 @@ public:
       nCaptureWhats
    };
 
-   ScreenshotCommand(){ mbBringToTop=true;};
+   ScreenshotCommand(){ mbBringToTop=true;mIgnore=NULL;};
    // CommandDefinitionInterface overrides
    IdentInterfaceSymbol GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Takes screenshots.");};
@@ -103,6 +103,7 @@ public:
 
 private:
    // May need to ignore the screenshot dialog
+   // Appears not to be used anymore.
    wxWindow *mIgnore;
 
    bool mBackground;
