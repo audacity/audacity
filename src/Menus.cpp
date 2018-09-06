@@ -4572,6 +4572,7 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    wxWindow *focus = wxWindow::FindFocus();
+   auto parent = focus->GetParent();
 
    bool success = false;
    auto cleanup = finally( [&] {
@@ -4641,7 +4642,7 @@ bool AudacityProject::DoEffect(const PluginID & ID, const CommandContext &WXUNUS
          //  mTrackPanel->Refresh(false);
    }
    RedrawProject();
-   if (focus != nullptr) {
+   if (focus != nullptr && focus->GetParent()==parent) {
       focus->SetFocus();
    }
 
