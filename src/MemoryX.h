@@ -647,7 +647,7 @@ public:
    transform_iterator operator -- (int)
       { auto copy{*this}; --this->mIterator; return copy; }
 
-   typename transform_iterator::reference operator * ()
+   Result operator * ()
       { return this->mFunction(this->mIterator); }
 
    friend inline bool operator == (
@@ -676,8 +676,8 @@ template < typename Function, typename Iterator > struct value_transformer
    // Adapts a function on values to a function on iterators.
    Function function;
 
-   auto operator () (const Iterator &iterator)
-      -> decltype( function( *iterator ) ) const
+   auto operator () (const Iterator &iterator) const
+      -> decltype( function( *iterator ) )
    { return this->function( *iterator ); }
 };
 
