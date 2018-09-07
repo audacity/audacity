@@ -158,6 +158,11 @@ $control messages (_ "Show messages") choice ((_ "Yes")
 
 ;; Print to file
 (defun printdata ()
+  (case header
+    (0 (format t (normhead))(format fp (nohead)))
+    (1 (format t (normhead))(format fp (minhead)))
+    (2 (format t (normhead))(format fp (normhead)))
+    (3 (format t (normhead))(format fp (fullhead))))
   (if (and (arrayp *track*)(= channel-layout 2))
       ;; Stereo and left channel first
       (progn
@@ -208,8 +213,8 @@ $control messages (_ "Show messages") choice ((_ "Yes")
               number                                ; number of samples
               (get 'info 'duration)                 ; duration (seconds)
               (if (> (length optext)0)
-                  (format nil "~%~a~%~%" optext)  ; optional text
-                  (format nil "~%~%")))           ; no optional text
+                  (format nil "~%~a~%~%" optext)    ; optional text
+                  (format nil "~%~%")))             ; no optional text
       (format nil (_ "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
                      Length processed: ~a samples ~a seconds.~a")
               filename                              ; file name
@@ -220,8 +225,8 @@ $control messages (_ "Show messages") choice ((_ "Yes")
               number                                ; number of samples
               (get 'info 'duration)                 ; duration (seconds)
               (if (> (length optext)0)
-                  (format nil "~%~a~%~%" optext)  ; optional text
-                  (format nil "~%~%")))))         ; no optional text
+                  (format nil "~%~a~%~%" optext)    ; optional text
+                  (format nil "~%~%")))))           ; no optional text
 
 
 (defun fullhead ()
@@ -365,8 +370,8 @@ ul {
   (get 'info 'srate)                        ; sample rate
   (setq smax (stereomax *track*))                 ; peak amplitude linear
   (lin-to-db smax)                          ; peak amplitude dB
-  (srms *track*)                                  ; rms
-  (let ((vals (dc-off *track*)))                  ; DC offset
+  (srms *track*)                            ; rms
+  (let ((vals (dc-off *track*)))            ; DC offset
     (if (= (length vals) 2) ; mono
         (format nil (_ "~a linear, &nbsp;&nbsp;~a dB.")
                 (first vals)(second vals))
