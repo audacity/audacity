@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-31 22:53+0100\n"
-"PO-Revision-Date: 2018-09-02 02:48+0000\n"
+"PO-Revision-Date: 2018-09-07 02:16+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -3193,7 +3193,7 @@ msgstr "Pasek narzędziowy &edycji"
 #. (currently just vary play speed)
 #: src/Menus.cpp
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "Pasek narzędziowy &Odtwarzaj z prędkością"
+msgstr "Pasek narzędziowy &odtwarzania z prędkością"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or
 #. Seek playback and Scrub Ruler
@@ -14485,12 +14485,12 @@ msgstr "Kliknij, aby powiększyć w pionie. Kliknij z Shift, aby pomniejszyć. P
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Right-click for menu."
-msgstr "Kliknięcie prawym przyciskiem myszki dla menu"
+msgstr "Kliknij prawym przyciskiem myszki, aby wyświetlić menu."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Reset\tShift-Right-Click"
-msgstr "Resetuj powiększenie\tKliknij prawym przyciskiem myszki z Shift"
+msgstr "Zresetuj powiększenie\tKliknij prawym przyciskiem myszki z Shift"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -14778,7 +14778,7 @@ msgstr "Pół fali"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom Reset"
-msgstr "Resetuj powiększenie"
+msgstr "Zresetuj powiększenie"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Zoom to Fit\tShift-Right-Click"
@@ -15013,7 +15013,7 @@ msgstr "Polecenie i kliknięcie"
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Ctrl-Click"
-msgstr "Ctrl i kliknięcie"
+msgstr "Ctrl i kliknij"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
