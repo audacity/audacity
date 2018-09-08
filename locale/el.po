@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3 b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-31 22:53+0100\n"
-"PO-Revision-Date: 2018-01-20 18:12+0200\n"
+"PO-Revision-Date: 2018-09-08 17:42+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -443,14 +443,12 @@ msgid "Nyquist plug-ins"
 msgstr "Πρόσθετα Nyquist"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "web developer"
 msgstr "προγραμματιστής"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "graphics"
-msgstr "&Γραφική"
+msgstr "γραφικά"
 
 #: src/AboutDialog.cpp
 msgid "incorporating"
@@ -467,7 +465,6 @@ msgid "OK"
 msgstr "Εντάξει"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid ""
 "Audacity is a free program written by a worldwide team of [[https://www."
 "audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
@@ -480,17 +477,16 @@ msgstr ""
 "Linux (καθώς και για άλλα συστήματα παρόμοια με Unix)."
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
 "tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
 "forum.audacityteam.org/|forum]]."
 msgstr ""
-"Αν εντοπίσετε κάποιο σφάλμα ή έχετε να μας προτείνετε κάτι, παρακαλούμε "
-"γράψτε μας στα αγγλικά στo [[http://forum.audacityteam.org/|φόρουμ]]. Για "
-"βοήθεια, δείτε τις συμβουλές και τα κόλπα μας στο [[http://wiki.audacityteam."
-"org/|wiki]] ή επισκεφτείτε το [[http://forum.audacityteam.org/|φόρουμ μας]]."
+"Εάν βρείτε κάποιο σφάλμα ή έχετε να μας προτείνετε κάτι, παρακαλούμε γράψτε "
+"μας στα αγγλικά στo [[http://forum.audacityteam.org/|φόρουμ]]. Για βοήθεια, "
+"δείτε τις συμβουλές και τα κόλπα μας στο [[http://wiki.audacityteam.org/|"
+"wiki]] ή επισκεφτείτε το [[http://forum.audacityteam.org/|φόρουμ μας]]."
 
 #  i18n-hint: The translation of "translator_credits" will appear
 #  in the credits in the About Audacity window.  Use this to add
@@ -543,7 +539,7 @@ msgstr "Συντελεστές"
 
 #: src/AboutDialog.cpp
 msgid "Website and Graphics"
-msgstr ""
+msgstr "Ιστότοπος και γραφικά"
 
 #: src/AboutDialog.cpp
 msgid "Translators"
@@ -566,13 +562,12 @@ msgid "Audacity website: "
 msgstr "Ιστοσελίδα Audacity: "
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
 "&copy; 1999-2018 Audacity Team.<br>"
 msgstr ""
 "<p><br>&nbsp; &nbsp; Το λογισμικό <b>Audacity<sup>&reg;</sup></b> υπόκειται "
-"σε πνευματικά δικαιώματαϛ·1999-2017 Ομάδα Audacity.<br>"
+"σε πνευματικά δικαιώματα·1999-2017 Ομάδα Audacity.<br>"
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -607,23 +602,23 @@ msgstr "Μορφές αρχείων που υποστηρίζονται"
 #. i18n-hint: This is what the library (libmad) does - imports MP3 files
 #: src/AboutDialog.cpp
 msgid "MP3 Importing"
-msgstr "εισαγωγή αρχείων Mp3"
+msgstr "Εισαγωγή Mp3"
 
 #: src/AboutDialog.cpp
 msgid "Ogg Vorbis Import and Export"
-msgstr "εισαγωγή και εξαγωγή αρχείων Ogg Vorbis"
+msgstr "Εισαγωγή και εξαγωγή Ogg Vorbis"
 
 #: src/AboutDialog.cpp
 msgid "ID3 tag support"
-msgstr "ετικέτες ID3"
+msgstr "Υποστήριξη ετικέτας ID3"
 
 #: src/AboutDialog.cpp
 msgid "FLAC import and export"
-msgstr "εισαγωγή και εξαγωγή αρχείων FLAC"
+msgstr "Εισαγωγή και εξαγωγή FLAC"
 
 #: src/AboutDialog.cpp
 msgid "MP2 export"
-msgstr "εξαγωγή αρχείων MP2"
+msgstr "Εξαγωγή MP2"
 
 #: src/AboutDialog.cpp
 msgid "Import via QuickTime"
@@ -672,11 +667,11 @@ msgstr "Υποστήριξη μείκτη κάρτας ήχου"
 
 #: src/AboutDialog.cpp
 msgid "Pitch and Tempo Change support"
-msgstr "Υποστήριξη αλλαγής ρυθμού και τονικού ύψους"
+msgstr "Υποστήριξη αλλαγής ρυθμού (τέμπο) και τονικού ύψους"
 
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Υποστήριξη ακραίας αλλαγής τόνου και ρυθμού"
+msgstr "Υποστήριξη ακραίας αλλαγής τόνου και ρυθμού (τέμπο)"
 
 #: src/AboutDialog.cpp
 msgid "Program build date: "
@@ -927,7 +922,7 @@ msgstr ""
 "Τα αρχεία έργου του Audacity (.AUP) δεν είναι για την ώρα \n"
 "συσχετισμένα με το Audacity. \n"
 "\n"
-"Να γίνει συσχετισμός ώστε να ανοίγουν διπλοπατώντας;"
+"Να γίνει συσχετισμός τους, έτσι ώστε να ανοίγουν διπλοπατώντας;"
 
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
@@ -1007,11 +1002,13 @@ msgid "Error Initializing Midi"
 msgstr "Σφάλμα στην αρχικοποίηση midi"
 
 #: src/AudioIO.cpp src/toolbars/ControlToolBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
-msgstr "Σφάλμα κατά το άνοιγμα της συσκευής ήχου."
+msgstr ""
+"Σφάλμα κατά το άνοιγμα της συσκευής ηχογράφησης.\n"
+"Κωδικός σφάλματος: %s"
 
 #: src/AudioIO.cpp
 msgid "Out of memory!"
@@ -1154,12 +1151,11 @@ msgstr "Π&αράμετροι"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Details"
-msgstr ""
+msgstr "&Λεπτομέρειες"
 
 #: src/BatchCommandDialog.cpp
-#, fuzzy
 msgid "Choose command"
-msgstr "Ε&πιλογή εντολής"
+msgstr "Επιλογή εντολής"
 
 #: src/BatchCommands.cpp
 msgid "No Action"
@@ -1196,38 +1192,32 @@ msgid "Export as WAV"
 msgstr "Εξαγωγή ως WAV"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "MP3 Conversion"
-msgstr "Μετατροπή σε πραγματικό χρόνο"
+msgstr "Μετατροπή MP3"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Fade Ends"
-msgstr "Ενίσχυση"
+msgstr "Τέλη ομαλής μετάβσης"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Select to Ends"
-msgstr "Επιλογή τέλους"
+msgstr "Επιλογή άκρων"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Special Command"
-msgstr "Επιλογή εντολής"
+msgstr "Ειδική εντολή"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Effect"
 msgstr "Εφέ"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Menu Command (With Parameters)"
-msgstr "Επε&ξεργασία παραμέτρων"
+msgstr "Εντολή μενού (με παραμέτρους)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
-msgstr ""
+msgstr "Εντολή μενού (χωρίς παραμέτρους)"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
@@ -1252,7 +1242,7 @@ msgid ""
 "File already exists that is not a directory"
 msgstr ""
 "Αδυναμία δημιουργίας καταλόγου 'καθαρισμένο'. \n"
-"Το αρχείο που ήδη υπάρχει δεν είναι κατάλογος."
+"Το αρχείο που ήδη υπάρχει δεν είναι κατάλογος"
 
 #: src/BatchCommands.cpp
 msgid "Ogg Vorbis support is not included in this build of Audacity"
@@ -1274,20 +1264,18 @@ msgstr "Η εντολή δέσμης του %s δεν αναγνωρίστηκε
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Applied Macro"
-msgstr "Εφαρμόστηκε αλυσίδα δέσμης"
+msgstr "Εφαρμόστηκε μακροεντολή"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Apply Macro"
-msgstr "Εφαρμογή αλυσίδας"
+msgstr "Εφαρμογή μακροεντολής"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Applied Macro '%s'"
-msgstr "Εφαρμόστηκε η αλυσίδα δέσμης '%s'"
+msgstr "Εφαρμόστηκε η μακροεντολή '%s'"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1316,54 +1304,47 @@ msgstr "Εφαρμογή %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Macros Palette"
-msgstr ""
+msgstr "Παλέτα μακροεντολών"
 
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Select Macro"
-msgstr "Επιλογή καμπύλης"
+msgstr "Επιλογή μακροεντολής"
 
 #. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
 msgid "Macro"
-msgstr ""
+msgstr "Μακροεντολή"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply Macro to:"
-msgstr ""
+msgstr "Εφαρμογή μακροεντολής σε:"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Project"
-msgstr "Έργα"
+msgstr "Έ&ργο"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Apply macro to project"
-msgstr "Εφαρμογή στον τρέχον έ&ργο"
+msgstr "Εφαρμογή μακροεντολής στο έργο"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Files..."
-msgstr "&Αρχείο"
+msgstr "&Αρχεία..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Apply macro to files..."
-msgstr "Εφαρμογή στα &αρχεία..."
+msgstr "Εφαρμογή μακροεντολής στα αρχεία..."
 
 #. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "&Expand"
-msgstr "Επέκταση"
+msgstr "Ε&πέκταση"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "No macro selected"
-msgstr "Δεν επιλέχθηκε καμιά αλυσίδα"
+msgstr "Δεν επιλέχθηκε καμιά μακροεντολή"
 
 #: src/BatchProcessDialog.cpp
 #, c-format
@@ -1396,14 +1377,12 @@ msgid "&Cancel"
 msgstr "&Ακύρωση"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Manage Macros"
-msgstr "Διαχείριση καμπυλών"
+msgstr "Διαχείριση μακροεντολών"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Remo&ve"
-msgstr "Αφαίρεση"
+msgstr "Α&φαίρεση"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "&Rename..."
@@ -1419,9 +1398,8 @@ msgid "E&xport..."
 msgstr "Ε&ξαγωγή..."
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Edit Steps"
-msgstr "Επεξεργασία ετικετών"
+msgstr "Επεξεργασία βημάτων"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
@@ -1430,7 +1408,7 @@ msgstr "Αριθμός"
 
 #: src/BatchProcessDialog.cpp
 msgid "Command  "
-msgstr "Εντολή"
+msgstr "Εντολή  "
 
 #: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
 msgid "Parameters"
@@ -1463,7 +1441,7 @@ msgstr "&Προεπιλεγμένα"
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
-msgstr ""
+msgstr "Σ&υρρίκνωση"
 
 #. i18n-hint: This is the last item in a list.
 #: src/BatchProcessDialog.cpp
@@ -1480,14 +1458,12 @@ msgid "Do you want to save the changes?"
 msgstr "Θέλετε να αποθηκεύσετε τις αλλαγές;"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Enter name of new macro"
-msgstr "Πληκτρολογείστε όνομα για νέα αλυσίδα"
+msgstr "Εισάγετε όνομα της νέας μακροεντολής"
 
 #: src/BatchProcessDialog.cpp
-#, fuzzy
 msgid "Name of new macro"
-msgstr "Ονομάστε τη νέα αλυσίδα"
+msgstr "Όνομα της νέας μακροεντολής"
 
 #: src/BatchProcessDialog.cpp
 msgid "Name must not be blank"
@@ -1660,7 +1636,7 @@ msgstr "Χρόνος για έλεγχο όλων των δεδομένων: %ld
 
 #: src/Benchmark.cpp
 msgid "Reading data again...\n"
-msgstr "Αναάγνωση δεδομένων ξανά...\n"
+msgstr "Ανάγνωση δεδομένων ξανά...\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1774,16 +1750,15 @@ msgid "MISSING %s"
 msgstr "Λείπει το %s"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "&Copy Names to Clipboard"
-msgstr "Αντιγραφή στο πρόχειρο"
+msgstr "Α&ντιγραφή ονομάτων στο πρόχειρο"
 
 #: src/Dependencies.cpp
 msgid ""
 "If you proceed, your project will not be saved to disk. Is this what you "
 "want?"
 msgstr ""
-"Αν συνεχίσετε, το έργο σου δεν θα αποθηκευθεί στον δίσκο. Είναι αυτό που "
+"Εάν συνεχίσετε, το έργο σας δεν θα αποθηκευθεί στον δίσκο. Είναι αυτό που "
 "θέλετε;"
 
 #: src/Dependencies.cpp
@@ -1875,7 +1850,7 @@ msgstr "Αδύνατο το άνοιγμα/δημιουργία δοκιμαστ
 #: src/DirManager.cpp
 #, c-format
 msgid "Unable to remove '%s'."
-msgstr "Αδύνατη η απομάκρυνση του '%s'"
+msgstr "Αδύνατη η απομάκρυνση του '%s'."
 
 #: src/DirManager.cpp
 #, c-format
@@ -1885,7 +1860,7 @@ msgstr "Μετονομασμένο αρχείο: %s\n"
 #: src/DirManager.cpp
 #, c-format
 msgid "Unable to rename '%s' to '%s'."
-msgstr "Αδύνατη η μετονομασία του '%s' σε '%s'"
+msgstr "Αδύνατη η μετονομασία του '%s' σε '%s'."
 
 #: src/DirManager.cpp
 #, c-format
@@ -1974,7 +1949,8 @@ msgstr "Προειδοποίηση - Λείπουν αρχεία με ψευδώ
 #: src/DirManager.cpp
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr ""
-"Ο έλεγχος του έργου αντικατέστησε τα αρχεία με ψευδώνυμο που λείπουν με σιγή."
+"  Ο έλεγχος του έργου αντικατέστησε τα αρχεία με ψευδώνυμο που λείπουν με "
+"σιγή."
 
 #: src/DirManager.cpp
 #, c-format
@@ -2007,7 +1983,7 @@ msgstr "Προειδοποίηση - Λείπουν αρχεία περίληψ�
 
 #: src/DirManager.cpp
 msgid "   Project check regenerated missing alias summary file(s)."
-msgstr "Ο έλεγχος έργου αναδημιούργησε τα αρχεία περίληψης ψευδωνύμων."
+msgstr "  Ο έλεγχος έργου αναδημιούργησε τα αρχεία περίληψης ψευδωνύμων."
 
 #: src/DirManager.cpp
 #, c-format
@@ -2050,7 +2026,7 @@ msgstr "Προειδοποίηση - Λείπουν αρχεία ομάδας δ
 msgid ""
 "   Project check replaced missing audio data block file(s) with silence."
 msgstr ""
-"Ο έλεγχος του έργου αντικατέστησε τα αρχεία ομάδας δεδομένων ήχου που "
+"  Ο έλεγχος του έργου αντικατέστησε τα αρχεία ομάδας δεδομένων ήχου που "
 "λείπουν με σίγαση."
 
 #: src/DirManager.cpp
@@ -2058,8 +2034,8 @@ msgid ""
 "   Project check ignored orphan block file(s). They will be deleted when "
 "project is saved."
 msgstr ""
-"Ο έλεγχος έργου αγνόησε τα ορφανά αρχεία ομάδας. Θα διαγραφούν όταν το έργο "
-"αποθηκευτεί."
+"  Ο έλεγχος έργου αγνόησε τα ορφανά αρχεία ομάδας. Θα διαγραφούν όταν το "
+"έργο αποθηκευτεί."
 
 #: src/DirManager.cpp
 #, c-format
@@ -2156,7 +2132,7 @@ msgstr "Ορθογώνιο"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
-msgstr "η υποστήριξη FFmpeg δεν μεταγλωττίστηκε στο"
+msgstr "Η υποστήριξη FFmpeg δεν μεταγλωττίστηκε στο"
 
 #: src/FFmpeg.cpp
 msgid ""
@@ -2190,7 +2166,7 @@ msgstr "Εντοπισμός FFmpeg"
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
 "Το Audacity χρειάζεται το αρχείο '%s' για να εισαγάγει και να εξαγάγει ήχο "
-"μέσω του FFmpeg"
+"μέσω του FFmpeg."
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -2225,7 +2201,7 @@ msgstr "Πού βρίσκεται το αρχείο '%s';"
 
 #: src/FFmpeg.cpp
 msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Αποτυχία εύρεσης συμβατών βιβλιοθηκών FFmpeg"
+msgstr "Αποτυχία εύρεσης συμβατών βιβλιοθηκών FFmpeg."
 
 #: src/FFmpeg.h
 msgid "FFmpeg not found"
@@ -2530,7 +2506,7 @@ msgstr "Εγγραφή σε CD"
 
 #: src/HelpText.cpp
 msgid "No Local Help"
-msgstr "Δεν είναι εγκατεστημένη η Βοήθεια τοπικά."
+msgstr "Χωρίς τοπική βοήθεια"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2560,12 +2536,11 @@ msgstr ""
 "που έχει πλήρη τεκμηρίωση και υποστήριξη.<br><br>"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "You can help us get Audacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"Μπορείτε να μας βοηθήσετε να καταστήσετε το Audacity έτοιμο για έκδοση "
+"Μπορείτε να μας βοηθήσετε να ετοιμάσουμε το Audacity για έκδοση "
 "συμμετέχοντας στην [[http://www.audacityteam.org/community/|κοινότητά]] μας."
 "<hr><br><br>"
 
@@ -2578,7 +2553,6 @@ msgid "These are our support methods:"
 msgstr "Οι μέθοδοι υποστήριξης που παρέχουμε:"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[file:quick_help.html|Quick Help]] - if not installed locally, [[https://"
 "manual.audacityteam.org/quick_help.html|view online]]"
@@ -2588,7 +2562,6 @@ msgstr ""
 "προβολή]]"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[file:index.html|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
@@ -2597,15 +2570,14 @@ msgstr ""
 "manual.audacityteam.org/|Διαδικτυακή προβολή]]"
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
-" [[http://forum.audacityteam.org/|Φόρουμ]] - ερωτήστε απευθείας, διαδικτυακά."
+" [[http://forum.audacityteam.org/|Φόρουμ]] - ερωτήστε απευθείας την ερώτησή "
+"σας, διαδικτυακά."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
@@ -2614,7 +2586,6 @@ msgstr ""
 "php|βίκι μας]] για συμβουλές, κόλπα, επιπλέον μαθήματα και πρόσθετα εφέ."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "Audacity can import unprotected files in many other formats (such as M4A and "
 "WMA, compressed WAV files from portable recorders and audio from video "
@@ -2622,15 +2593,13 @@ msgid ""
 "audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
 "library]] to your computer."
 msgstr ""
-"Το Audacity έχει τη δυνατότητα εισαγωγής απροστάτευτων αρχείων σε πολλές "
-"άλλες μορφές (όπως M4A και WMA, συμπιεσμένα αρχεία WAV από φορητές συσκευές "
-"εγγραφής και ήχο από αρχεία βίντεο) εφόσον κατεβάσετε και εγκαταστήσετε την "
-"προαιρετική [[http://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#foreign| βιβλιοθήκη FFmpeg]] στον "
-"υπολογιστή σας."
+"Το Audacity μπορεί να  εισάγει απροστάτευτα αρχείων σε πολλές άλλες μορφές "
+"(όπως M4A και WMA, συμπιεσμένα αρχεία WAV από φορητές συσκευές εγγραφής και "
+"ήχο από αρχεία βίντεο) εάν κατεβάσετε και εγκαταστήσετε την προαιρετική "
+"[[http://manual.audacityteam.org/man/faq_opening_and_saving_files."
+"html#foreign| βιβλιοθήκη FFmpeg]] στον υπολογιστή σας."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "You can also read our help on importing [[https://manual.audacityteam.org/"
 "man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
@@ -2654,7 +2623,6 @@ msgstr ""
 "διεπαφής στο \"Από το διαδίκτυο\"."
 
 #: src/HelpText.cpp
-#, fuzzy
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
 "online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
@@ -2839,7 +2807,7 @@ msgstr "Νέο κομμάτι ετικέτας"
 
 #: src/LabelDialog.cpp
 msgid "Enter track name"
-msgstr "Γράψτε το όνομα του κομματιού."
+msgstr "Εισάγετε το όνομα του ίχνους"
 
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
@@ -2944,9 +2912,8 @@ msgid "Save Project &As..."
 msgstr "&Αποθήκευση έργου ως..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Save Lossless Copy of Project..."
-msgstr "Απο&θήκευση συμπιεσμένου αντιγράφου του έργου..."
+msgstr "Αποθήκευση μη απωλεστικού αντιγράφου του έργου..."
 
 #: src/Menus.cpp
 msgid "&Save Compressed Copy of Project..."
@@ -3098,12 +3065,10 @@ msgid "&Edit Labels..."
 msgstr "&Επεξεργασία ετικετών..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Add Label at &Selection"
 msgstr "Προσθήκη ετικέτας στην ε&πιλογή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Add Label at &Playback Position"
 msgstr "Προσθήκη ετικέτας στην θέση α&ναπαραγωγής"
 
@@ -3121,42 +3086,37 @@ msgstr "Ήχος με ε&τικέτα"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Cut"
-msgstr "Επεξεργασία ετικέτας"
+msgstr "Αποκοπή ετικέτας"
 
 #: src/Menus.cpp
 msgid "&Cut"
 msgstr "&Αποκοπή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Delete"
-msgstr "Διαίρεση-Διαγραφή"
+msgstr "Διαγραφή ετικέτας"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Split Cut"
-msgstr "Διαίρεση-Αποκοπή"
+msgstr "Διαίρεση-Αποκοπή ετικέτας"
 
 #: src/Menus.cpp
 msgid "&Split Cut"
 msgstr "&Διαίρεση-Αποκοπή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Split Delete"
-msgstr "Διαίρεση-Διαγραφή"
+msgstr "Διαίρεση-Διαγραφή ετικέτας"
 
 #: src/Menus.cpp
 msgid "Sp&lit Delete"
 msgstr "Δ&ιαίρεση-Διαγραφή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Silence"
-msgstr "Σιγή"
+msgstr "Σίγαση ετικέτας"
 
 #: src/Menus.cpp
 msgid "Silence &Audio"
@@ -3164,9 +3124,8 @@ msgstr "Σίγαση ή&χος"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Copy"
-msgstr "Ετικέτα"
+msgstr "Αντιγραφή ετικέτας"
 
 #: src/Menus.cpp
 msgid "Co&py"
@@ -3174,9 +3133,8 @@ msgstr "&Αντιγραφή"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Split"
-msgstr "Επεξεργασία ετικέτας"
+msgstr "Διαίρεση ετικέτας"
 
 #: src/Menus.cpp
 msgid "Spli&t"
@@ -3184,9 +3142,8 @@ msgstr "Διαί&ρεση"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-#, fuzzy
 msgid "Label Join"
-msgstr "Επεξεργασία ετικέτας"
+msgstr "Ένωση ετικέτας"
 
 #: src/Menus.cpp
 msgid "Me&tadata..."
@@ -3207,9 +3164,8 @@ msgid "&All"
 msgstr "Ό&λα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select None"
-msgstr "Επιλογή"
+msgstr "Επιλογή κανενός"
 
 #: src/Menus.cpp
 msgid "&None"
@@ -3224,9 +3180,8 @@ msgid "In All &Tracks"
 msgstr "Σε όλα τα &κομμάτια"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Sync-Locked"
-msgstr "Επιλογή-Σιγής"
+msgstr "Επιλογή κλειδωμένου συγχρονισμού"
 
 #: src/Menus.cpp
 msgid "In All &Sync-Locked Tracks"
@@ -3237,50 +3192,44 @@ msgid "R&egion"
 msgstr "&Περιοχή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Selection Left at Play Position"
-msgstr "Ορισμός σημείου επιλογής και αναπαραγωγής"
+msgstr "Ορισμός επιλογής αριστερά της θέσης αναπαραγωγής"
 
 #: src/Menus.cpp
 msgid "&Left at Playback Position"
 msgstr "Προς τα &αριστερά της θέσης αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Selection Right at Play Position"
-msgstr "Ορισμός σημείου επιλογής και αναπαραγωγής"
+msgstr "Ορισμός επιλογής δεξιά της θέσης αναπαραγωγής"
 
 #: src/Menus.cpp
 msgid "&Right at Playback Position"
 msgstr "Προς τα &δεξιά της θέσης αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Track Start to Cursor"
-msgstr "Από την έναρ&ξη του κομματιού μέχρι τον δρομέα"
+msgstr "Επιλογή της έναρξης κομματιού στον δρομέα"
 
 #: src/Menus.cpp
 msgid "Track &Start to Cursor"
 msgstr "Από την έναρ&ξη του κομματιού μέχρι τον δρομέα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Cursor to Track End"
-msgstr "Δρομέας στο &τέλος του κομματιού"
+msgstr "Επιλογή δρομέα στο τέλος του κομματιού"
 
 #: src/Menus.cpp
 msgid "Cursor to Track &End"
 msgstr "Δρομέας στο &τέλος του κομματιού"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Track Start to End"
-msgstr "Επιλογή τέλους"
+msgstr "Επιλογή έναρξης κομματιού στο τέλος"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Track Start to En&d"
-msgstr "Από την έναρ&ξη του κομματιού μέχρι τον δρομέα"
+msgstr "Έναρξη κομματιού στο &τέλος"
 
 #: src/Menus.cpp
 msgid "S&tore Selection"
@@ -3295,7 +3244,6 @@ msgid "S&pectral"
 msgstr "Φασ&ματικός"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "To&ggle Spectral Selection"
 msgstr "Ε&ναλλαγή φασματικής επιλογής"
 
@@ -3316,27 +3264,24 @@ msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Δρομέας στο επό&μενο όριο αποσπάσματος"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Previous Clip"
-msgstr "Π&ροηγούμενο απόσπασμα"
+msgstr "Επιλογή προηγούμενου αποσπάσματος"
 
 #: src/Menus.cpp
 msgid "Previo&us Clip"
 msgstr "Π&ροηγούμενο απόσπασμα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Next Clip"
-msgstr "Ε&πόμενο απόσπασμα"
+msgstr "Επιλογή επόμενου αποσπάσματος"
 
 #: src/Menus.cpp
 msgid "N&ext Clip"
 msgstr "Ε&πόμενο απόσπασμα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Cursor to Stored"
-msgstr "Επιλογή αρχής"
+msgstr "Επιλογή δρομέα για αποθήκευση"
 
 #: src/Menus.cpp
 msgid "Cursor to Stored &Cursor Position"
@@ -3347,9 +3292,8 @@ msgid "Store Cursor Pos&ition"
 msgstr "Αποθήκευση &θέσης δρομέα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Zero Crossing"
-msgstr "Σε &μηδενοδιελεύσεις"
+msgstr "Επιλογή μηδενοδιέλευσης"
 
 #: src/Menus.cpp
 msgid "At &Zero Crossings"
@@ -3410,18 +3354,16 @@ msgid "Sk&ip to"
 msgstr "Με&ταπήδηση σε"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Skip to Selection Start"
-msgstr "στην α&ρχή της επιλογής"
+msgstr "Στην αρχή της επιλογής"
 
 #: src/Menus.cpp
 msgid "Selection Sta&rt"
 msgstr "Ένα&ρξη επιλογής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Skip to Selection End"
-msgstr "στο τέλος της επιλογής"
+msgstr "Στο τέλος της επιλογής"
 
 #: src/Menus.cpp
 msgid "Selection En&d"
@@ -3434,11 +3376,11 @@ msgstr "&Ιστορικό..."
 
 #: src/Menus.cpp
 msgid "&Karaoke..."
-msgstr "&Καραόκε"
+msgstr "&Καραόκε..."
 
 #: src/Menus.cpp
 msgid "&Mixer Board..."
-msgstr "Πίνακας μεί&κτη"
+msgstr "Πίνακας μεί&κτη..."
 
 #: src/Menus.cpp
 msgid "&Toolbars"
@@ -3483,9 +3425,8 @@ msgstr "Γραμμή εργαλείων επε&ξεργασίας"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "Αναπαραγωγή-με-ταχύτητα"
+msgstr "Γραμμή εργαλείων αναπαραγωγή-με-ταχύτητα"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
 #: src/Menus.cpp
@@ -3522,14 +3463,12 @@ msgstr "Εμφάνιση Effects Rack"
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: src/Menus.cpp
-#, fuzzy
 msgid "Tra&nsport"
-msgstr "Μεταφορά"
+msgstr "Μετα&φορά"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pl&aying"
-msgstr "Αναπαράγεται"
+msgstr "Α&ναπαραγωγή"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/Menus.cpp
@@ -3549,9 +3488,8 @@ msgid "&Pause"
 msgstr "&Παύση"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Recording"
-msgstr "Ηχογράφηση"
+msgstr "Η&χογράφηση"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -3572,75 +3510,67 @@ msgstr "&Προγραμματισμένη ηχογράφηση..."
 
 #: src/Menus.cpp
 msgid "Punch and Rol&l Record"
-msgstr ""
+msgstr "Ηχογράφηση σήμανσης και διόρθωσης (Punch and Rol&l)"
 
 #: src/Menus.cpp
 msgid "&Cursor to"
 msgstr "&Δρομέας σε"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Selection Start"
-msgstr "Μετάβαση στην α&ρχή της επιλογής"
+msgstr "Ο δρομέας στην αρχή της επιλογής"
 
 #: src/Menus.cpp
 msgid "Selection Star&t"
 msgstr "Έναρξ&η επιλογής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Selection End"
-msgstr "Πήγαινε στο &τέλος της επιλογής"
+msgstr "Ο δρομέας στο τέλος της επιλογής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Track Start"
-msgstr "Δρομέας στο &τέλος του κομματιού"
+msgstr "Ο δρομέας στην έναρξη του κομματιού"
 
 #: src/Menus.cpp
 msgid "Track &Start"
 msgstr "Έναρ&ξη κομματιού"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Track End"
-msgstr "Δρομέας στο &τέλος του κομματιού"
+msgstr "Ο δρομέας στο τέλος του κομματιού"
 
 #: src/Menus.cpp
 msgid "Track &End"
 msgstr "&Τέλος κομματιού"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Prev Clip Boundary"
-msgstr "Δρομέας στο επό&μενο όριο αποσπάσματος"
+msgstr "Ο δρομέας στο επόμενο όριο αποσπάσματος"
 
 #: src/Menus.cpp
 msgid "Pre&vious Clip Boundary"
 msgstr "Προ&ηγούμενο όριο αποσπάσματος"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Next Clip Boundary"
-msgstr "Δρομέας στο επό&μενο όριο αποσπάσματος"
+msgstr "Ο δρομέας στο επόμενο όριο αποσπάσματος"
 
 #: src/Menus.cpp
 msgid "Ne&xt Clip Boundary"
 msgstr "Επό&μενο όριο αποσπάσματος"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Project Start"
-msgstr "Αρχή έρ&γου"
+msgstr "Ο δρομέας στην αρχή του έργου"
 
 #: src/Menus.cpp
 msgid "&Project Start"
 msgstr "Αρχή έρ&γου"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Cursor to Project End"
-msgstr "Δρομέας στο &τέλος του κομματιού"
+msgstr "Ο δρομέας στο τέλος του έργου"
 
 #: src/Menus.cpp
 msgid "Project E&nd"
@@ -3715,9 +3645,8 @@ msgid "Mi&x"
 msgstr "Μεί&ξη"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Mix Stereo Down to &Mono"
-msgstr "Ανάμειξη του στερεοφωνικού σε ένα &μονοφωνικό"
+msgstr "Μίξη του στερεοφωνικού σε &μονοφωνικό"
 
 #: src/Menus.cpp
 msgid "Mi&x and Render"
@@ -3752,27 +3681,24 @@ msgid "&Pan"
 msgstr "&Μετατόπιση"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pan Left"
-msgstr "Αριστερό"
+msgstr "Μετακίνηση αριστερά"
 
 #: src/Menus.cpp
 msgid "&Left"
 msgstr "&Αριστερά"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pan Right"
-msgstr "Δεξιά"
+msgstr "Μετακίνηση δεξιά"
 
 #: src/Menus.cpp
 msgid "&Right"
 msgstr "&Δεξιά"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pan Center"
-msgstr "Κέντρο"
+msgstr "Μετακίνηση στο κέντρο"
 
 #: src/Menus.cpp
 msgid "&Center"
@@ -3831,18 +3757,16 @@ msgid "Sort by Time"
 msgstr "Ταξινόμηση κατά χρόνο"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "By &Start Time"
-msgstr "κατά χρόνο έναρ&ξης"
+msgstr "Κατά χρόνο έναρ&ξης"
 
 #: src/Menus.cpp
 msgid "Sort by Name"
 msgstr "Ταξινόμηση κατά όνομα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "By &Name"
-msgstr "κατά &όνομα"
+msgstr "Κατά &όνομα"
 
 #: src/Menus.cpp
 msgid "Sync-&Lock Tracks (on/off)"
@@ -3888,24 +3812,20 @@ msgid "T&ools"
 msgstr "Ε&ργαλεία"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Macros..."
-msgstr "&Ετικέτες..."
+msgstr "&Μακροεντολές..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Apply Macro"
-msgstr "Ε&φαρμογή"
+msgstr "Ε&φαρμογή μακροεντολής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Palette..."
-msgstr "Δια&γραφή..."
+msgstr "&Παλέτα..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Screenshot..."
-msgstr "&Εργαλεία στιγμιοτύπου οθόνης..."
+msgstr "&Στιγμιότυπο..."
 
 #: src/Menus.cpp
 msgid "&Run Benchmark..."
@@ -3938,7 +3858,7 @@ msgstr "Με&ταφορά όλων εμπρός"
 #. i18n-hint: Extra is a menu with extra commands
 #: src/Menus.cpp
 msgid "Ext&ra"
-msgstr ""
+msgstr "Ε&πιπρόσθετα"
 
 #: src/Menus.cpp
 msgid "T&ransport"
@@ -3959,7 +3879,6 @@ msgid "Play &One Second"
 msgstr "Αναπαραγωγή ε&νός δευτερολέπτου"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Play to &Selection"
 msgstr "Αναπαραγωγή στην επι&λογή"
 
@@ -4028,55 +3947,45 @@ msgid "Mi&xer"
 msgstr "Μεί&κτης"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Ad&just Playback Volume..."
-msgstr "Ρύ&θμιση έντασης αναπαραγωγής"
+msgstr "Ρύ&θμιση έντασης αναπαραγωγής..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Increase Playback Volume"
 msgstr "Αύ&ξηση έντασης αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Decrease Playback Volume"
 msgstr "Μεί&ωση έντασης αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Adj&ust Recording Volume..."
-msgstr "Ρύ&θμιση έντασης ηχογράφησης"
+msgstr "Ρύ&θμιση έντασης ηχογράφησης..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "I&ncrease Recording Volume"
 msgstr "Αύξ&ηση έντασης ηχογράφησης"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "D&ecrease Recording Volume"
-msgstr "Μείω&ση έντασης εγγραφής"
+msgstr "Μείω&ση έντασης ηχογράφησης"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Delete Key"
-msgstr "Πλήκτρο&Διαγραφής"
+msgstr "Πλήκτρο &διαγραφής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Delete Key&2"
-msgstr "ΠλήκτροΔιαγραφής&2"
+msgstr "Πλήκτρο διαγραφής&2"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Play-at-Speed"
-msgstr "Αναπαραγωγή-με-ταχύτητα"
+msgstr "Α&ναπαραγωγή-με-ταχύτητα"
 
 #. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/Menus.cpp
-#, fuzzy
 msgid "Normal Pl&ay-at-Speed"
-msgstr "Α&ναπαραγωγή-με-ταχύτητα"
+msgstr "Κανονική α&ναπαραγωγή-με-ταχύτητα"
 
 #: src/Menus.cpp
 msgid "&Loop Play-at-Speed"
@@ -4087,17 +3996,14 @@ msgid "Play C&ut Preview-at-Speed"
 msgstr "Προεπισκόπησης απο&κοπής αναπαραγωγής σε ταχύτητα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Ad&just Playback Speed..."
-msgstr "Ρύθμ&ιση ταχύτητας αναπαραγωγής"
+msgstr "Ρύθμ&ιση ταχύτητας αναπαραγωγής..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Increase Playback Speed"
 msgstr "Αύ&ξηση ταχύτητας αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Decrease Playback Speed"
 msgstr "Μεί&ωση ταχύτητας αναπαραγωγής"
 
@@ -4114,22 +4020,18 @@ msgid "See&k"
 msgstr "Ανα&ζήτηση"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Short Seek &Left During Playback"
 msgstr "Σύντομη αναζήτηση α&ριστερά κατά τη διάρκεια της αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Short Seek &Right During Playback"
 msgstr "Σύντομη αναζήτηση &δεξιά κατά τη διάρκεια της αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Long Seek Le&ft During Playback"
 msgstr "Μεγάλη αναζήτηση αρι&στερά κατά τη διάρκεια της αναπαραγωγής"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Long Seek Rig&ht During Playback"
 msgstr "Μεγάλη αναζήτηση δε&ξιά κατά τη διάρκεια της αναπαραγωγής"
 
@@ -4138,41 +4040,34 @@ msgid "De&vice"
 msgstr "Συ&σκευή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Change &Recording Device..."
-msgstr "Αλλαγή &συσκευής ηχογράφησης"
+msgstr "Αλλαγή &συσκευής ηχογράφησης..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Change &Playback Device..."
-msgstr "Αλλαγή συσκευής α&ναπαραγωγής"
+msgstr "Αλλαγή συσκευής α&ναπαραγωγής..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Change Audio &Host..."
-msgstr "Αλλαγή &δέκτη ήχου"
+msgstr "Αλλαγή &δέκτη ήχου..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Change Recording Cha&nnels..."
-msgstr "Αλλαγή κα&ναλιών ηχογράφησης"
+msgstr "Αλλαγή κα&ναλιών ηχογράφησης..."
 
 #: src/Menus.cpp
 msgid "&Selection"
 msgstr "&Επιλογή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Snap-To &Off"
 msgstr "Προσκόλληση σε α&νενεργό"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Snap-To &Nearest"
 msgstr "Προσκόλληση στο πιο &κοντινό"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Snap-To &Prior"
 msgstr "Προσκόλληση στο προ&ηγούμενο"
 
@@ -4209,12 +4104,10 @@ msgid "Selection Contract R&ight"
 msgstr "Σύμπτυξη επιλογής δ&εξιά"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move Backward Through Active Windows"
 msgstr "Μετακίνηση προς τα πίσω μέσω ενεργών παραθύρων"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move Forward Through Active Windows"
 msgstr "Μετακίνηση προς τα εμπρός μέσω ενεργών παραθύρων"
 
@@ -4223,14 +4116,12 @@ msgid "F&ocus"
 msgstr "Ε&στίαση"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move &Backward from Toolbars to Tracks"
-msgstr "Μετακίνηση &πίσω από γραμμές εργαλείων σε κομμάτια"
+msgstr "Μετακίνηση &πίσω από τις γραμμές εργαλείων σε κομμάτια"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move F&orward from Toolbars to Tracks"
-msgstr "Μετακίνηση &μπροστά από γραμμές εργαλείων σε κομμάτια"
+msgstr "Μετακίνηση &μπροστά από τις γραμμές εργαλείων σε κομμάτια"
 
 #: src/Menus.cpp
 msgid "Move Focus to &Previous Track"
@@ -4305,166 +4196,137 @@ msgid "&Track"
 msgstr "&Κομμάτι"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Change P&an on Focused Track..."
-msgstr "Αλλαγή &μετακίνησης στο εστιασμένο κομμάτι"
+msgstr "Αλλαγή &μετακίνηση στο εστιασμένο κομμάτι..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pan &Left on Focused Track"
 msgstr "Μετακίνηση α&ριστερά στο εστιασμένο κομμάτι"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pan &Right on Focused Track"
 msgstr "Μετακίνηση &δεξιά στο εστιασμένο κομμάτι"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Change Gai&n on Focused Track..."
-msgstr "Αλλαγή απολα&βής στο εστιασμένο κομμάτι"
+msgstr "Αλλαγή απολα&βής στο εστιασμένο κομμάτι..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Increase Gain on Focused Track"
 msgstr "Αύ&ξηση απολαβής στο εστιασμένο κομμάτι"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Decrease Gain on Focused Track"
 msgstr "&Μείωση απολαβής στο εστιασμένο κομμάτι"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Op&en Menu on Focused Track..."
-msgstr "Άνοι&γμα μενού στο εστιασμένο κομμάτι"
+msgstr "Άνοι&γμα μενού στο εστιασμένο κομμάτι..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "M&ute/Unmute Focused Track"
-msgstr "Σίγαση/κατάργηση σίγασης εστιασμένου κομματιού"
+msgstr "Σί&γαση/κατάργηση σίγασης εστιασμένου κομματιού"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Solo/Unsolo Focused Track"
 msgstr "&Μονωδία(σόλο)/Κατάργηση μονωδίας εστιασμένου κομματιού"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Close Focused Track"
 msgstr "&Κλείσιμο εστιασμένου κομματιού"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move Focused Track U&p"
-msgstr "Μετακίνηση εστιασμένου κομματιού &πάνω"
+msgstr "Μετακίνηση εστιασμένου κομματιού προς τα &πάνω"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move Focused Track Do&wn"
-msgstr "Μετακίνηση εστιασμένου κομματιού &κάτω"
+msgstr "Μετακίνηση εστιασμένου κομματιού προς τα &κάτω"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move Focused Track to T&op"
 msgstr "Μετακίνηση εστιασμένου κομματιού στην κορ&υφή"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move Focused Track to &Bottom"
 msgstr "Μετακίνηση εστιασμένου κομματιού στον πυ&θμένα"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Scriptables I"
-msgstr "Δέσμη ενεργειών"
+msgstr "&Επεκτάσιμο Ι"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Time..."
-msgstr "Επιλογή..."
+msgstr "Επιλογή χρόνου..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Frequencies..."
-msgstr "Συχνότητες"
+msgstr "Επιλογή συχνοτήτων..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Select Tracks..."
-msgstr "Επιλογή..."
+msgstr "Επιλογή κομματιών..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Track Status..."
-msgstr "Έναρ&ξη κομματιού"
+msgstr "Ορισμός κατάστασης κομματιού..."
 
 #: src/Menus.cpp
 msgid "Set Track Audio..."
-msgstr ""
+msgstr "Ορισμός ήχου κομματιού..."
 
 #: src/Menus.cpp
 msgid "Set Track Visuals..."
-msgstr ""
+msgstr "Ορισμός οπτικών κομματιού..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Get Preference..."
-msgstr "Προτιμήσεις..."
+msgstr "Λήψη προτίμησης..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Preference..."
-msgstr "Προτιμήσεις..."
+msgstr "Ορισμός προτίμησης..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Clip..."
-msgstr "Ε&πόμενο απόσπασμα"
+msgstr "Ορισμός αποσπάσματος..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Envelope..."
-msgstr "Καμπύλη ακουστότητας"
+msgstr "Ορισμός καμπύλης ακουστότητας..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Label..."
-msgstr "&Επεξεργασία ετικετών..."
+msgstr "Ορισμός ετικέτας..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Project..."
-msgstr "&Αποθήκευση έργου ως..."
+msgstr "Ορισμός έργου..."
 
 #: src/Menus.cpp
 msgid "Scripta&bles II"
-msgstr ""
+msgstr "Με δυνατότητα δέσμης ενεργειών (Scripta&bles) II"
 
 #: src/Menus.cpp src/TimerRecordDialog.cpp
 msgid "Select..."
 msgstr "Επιλογή..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Set Track..."
-msgstr "&Τακτοποίηση των κομματιών"
+msgstr "Ορισμός κομματιού..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Get Info..."
-msgstr "&Λήψη περισσότερων..."
+msgstr "Λήψη πληροφοριών..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Message..."
-msgstr "Μήνυμα"
+msgstr "Μήνυμα..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Help..."
-msgstr "Βοήθεια"
+msgstr "Βοήθεια..."
 
 #: src/Menus.cpp src/effects/Effect.cpp
 msgid "Import..."
@@ -4475,39 +4337,32 @@ msgid "Export..."
 msgstr "Εξαγωγή..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Open Project..."
-msgstr "Άνοιγμα &προσφάτου..."
+msgstr "Άνοιγμα έργου..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Save Project..."
-msgstr "&Αποθήκευση έργου ως..."
+msgstr "Αποθήκευση έργου..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Move Mouse..."
-msgstr "&Λήψη περισσότερων..."
+msgstr "Μετακίνηση ποντικιού..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Compare Audio..."
-msgstr "Συμπιεστής..."
+msgstr "Σύγκριση ήχου..."
 
 #. i18n-hint: Screenshot in the help menu has a much bigger dialog.
 #: src/Menus.cpp
-#, fuzzy
 msgid "Screenshot (short format)..."
-msgstr "&Εργαλεία στιγμιοτύπου οθόνης..."
+msgstr "Στιγμιότυπο (σύντομη μορφή)..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Full Screen (on/off)"
 msgstr "&Πλήρης οθόνη (ναι/όχι)"
 
 #. i18n-hint: Shrink all project windows to icons on the Macintosh tooldock
 #: src/Menus.cpp
-#, fuzzy
 msgid "Minimize All Projects"
 msgstr "Ελαχιστοποίηση όλων των έργων"
 
@@ -4520,19 +4375,16 @@ msgid "&Getting Started"
 msgstr "&Ξεκίνημα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Audacity &Manual"
-msgstr "Audacity"
+msgstr "Εγ&χειρίδιο του Audacity"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Quick Help..."
-msgstr "&Γρήγορη βοήθεια"
+msgstr "&Γρήγορη βοήθεια..."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "&Manual..."
-msgstr "Εγ&χειρίδιο"
+msgstr "Εγ&χειρίδιο..."
 
 #: src/Menus.cpp
 msgid "&Diagnostics"
@@ -4806,7 +4658,7 @@ msgstr "Ένωση"
 #: src/Menus.cpp
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "επιλεγμένα κομμάτια σε σίγαση για %.2f δευτερόλεπτα στο %.2f"
+msgstr "Επιλεγμένα κομμάτια σε σίγαση για %.2f δευτερόλεπτα στο %.2f"
 
 #: src/Menus.cpp src/effects/Silence.h
 msgid "Silence"
@@ -4929,7 +4781,7 @@ msgstr "Διαίρεση σε νέο"
 #. string names a track
 #: src/Menus.cpp
 msgid "dummyStringOnSelectClip"
-msgstr "ΕικονικήΣυμβολοσειράΕπιλογήςΑποσπάσματος"
+msgstr "εικονικήΣυμβολοσειράΕπιλογήςΑποσπάσματος"
 
 #: src/Menus.cpp
 #, c-format
@@ -5052,7 +4904,7 @@ msgstr "το %s δεξιά"
 #.
 #: src/Menus.cpp
 msgid "dummyStringClipBoundaryMessage"
-msgstr "ΕικονικήΣυμβολοσειράΜηνύματοςΟρίωνΑποσπάσματος"
+msgstr "εικονικήΣυμβολοσειράΜηνύματοςΟρίωνΑποσπάσματος"
 
 #: src/Menus.cpp
 #, c-format
@@ -5079,7 +4931,7 @@ msgstr "τέλος"
 #.
 #: src/Menus.cpp
 msgid "dummyStringClipBoundaryMessageLong"
-msgstr "ΕικονικήΓραμματοσειράΜεγάλουΜηνύματοςΟρίωνΑποσπάσματος"
+msgstr "εικονικήΓραμματοσειράΜεγάλουΜηνύματοςΟρίωνΑποσπάσματος"
 
 #: src/Menus.cpp
 #, c-format
@@ -5267,34 +5119,29 @@ msgstr ""
 #: src/Menus.cpp src/commands/PreferenceCommands.cpp
 #: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/ui/TrackControls.cpp
-#, fuzzy
 msgid "Name:"
-msgstr "Όνομα"
+msgstr "Όνομα:"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "New label"
-msgstr "Προστέθηκε ετικέτα"
+msgstr "Νέα ετικέτα"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Please select in a mono track."
-msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι ήχου."
+msgstr "Παρακαλούμε, επιλέξτε μονοφωνικό κομμάτι."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Please select in a stereo track."
-msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι ήχου."
+msgstr "Παρακαλούμε, επιλέξτε στερεοφωνικό κομμάτι."
 
 #: src/Menus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Please select at least %d channels."
-msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι ήχου."
+msgstr "Παρακαλούμε, επιλέξτε τουλάχιστον %d κανάλια."
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Please select a time within a clip."
-msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι νότας."
+msgstr "Παρακαλούμε, επιλέξτε κάποιον χρόνο μες το απόσπασμα."
 
 #: src/Menus.cpp
 msgid "Edited labels"
@@ -5338,14 +5185,12 @@ msgstr "Αδύνατη η αποθήκευση πληροφοριών συσκε
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/Menus.cpp
-#, fuzzy
 msgid "Panned audio track(s)"
-msgstr "Κομμάτια ήχου με επαναδειγματοληψία"
+msgstr "Μετακινημένα κομμάτια ήχου"
 
 #: src/Menus.cpp
-#, fuzzy
 msgid "Pan Track"
-msgstr "Κομμάτι"
+msgstr "Μετακίνηση κομματιού"
 
 #: src/Menus.cpp
 msgid ""
@@ -5636,9 +5481,8 @@ msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
 #: src/PluginManager.cpp
-#, fuzzy
 msgid "Manage Plug-ins"
-msgstr "Ενεργοποίηση νέων προσθέτων"
+msgstr "Διαχείριση προσθέτων"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -5707,38 +5551,38 @@ msgid "&Disable"
 msgstr "Α&πενεργοποίηση"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Enabling effects or commands:\n"
 "\n"
 "%s"
 msgstr ""
-"Ενεργοποίηση εφέ:\n"
+"Ενεργοποίηση εφέ ή εντολών:\n"
 "\n"
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Enabling effect or command:\n"
 "\n"
 "%s"
 msgstr ""
-"Ενεργοποίηση εφέ:\n"
+"Ενεργοποίηση εφέ ή εντολής:\n"
 "\n"
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
-"Αποτυχία καταχώρισης του εφέ στο %s:\n"
+"Αποτυχία καταχώρισης εφέ ή εντολής στο %s:\n"
 "%s"
 
 #: src/PluginManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Overwrite the plug-in file %s?"
 msgstr "Να αντικατασταθεί το αρχείο προσθέτου %s;"
 
@@ -5748,7 +5592,7 @@ msgstr "Το πρόσθετο υπάρχει ήδη"
 
 #: src/PluginManager.cpp
 msgid "Plug-in file is in use.  Failed to overwrite"
-msgstr "Το αρχείο του προσθέτου χρησιμοποιείται. Αποτυχία αντικατάστασης."
+msgstr "Το αρχείο του προσθέτου χρησιμοποιείται. Αποτυχία αντικατάστασης"
 
 #: src/PluginManager.cpp
 #, c-format
@@ -6079,12 +5923,11 @@ msgstr ""
 "Παρακαλούμε δοκιμάστε ξανά και επιλέξτε να πρωτότυπο όνομα."
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Lossless Copy of Project \"%s\" As..."
-msgstr "%sΑποθήκευση συμπιεσμένου έργου \"%s\" ως..."
+msgstr "%sΑποθήκευση μη απωλεστικού αντιγράφου του έργου \"%s\" ως..."
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
 "file.\n"
@@ -6093,25 +5936,22 @@ msgid ""
 "Lossless copies of project are a good way to backup your project, \n"
 "with no loss of quality, but the projects are large.\n"
 msgstr ""
-"Το 'Αποθήκευση συμπιεσμένου έργου' είναι για ένα έργο Audacity, όχι για "
-"αρχείο ήχου.\n"
+"Το 'Αποθήκευση μη απωλεστικού αντιγράφου έργου' είναι για ένα έργο Audacity, "
+"όχι για αρχείο ήχου.\n"
 "Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε "
 "'Εξαγωγή'.\n"
 "\n"
-"Τα συμπιεσμένα αρχεία έργου είναι ένας καλός τρόπος για να διαδώσετε το έργο "
-"σας\n"
-"διαδικτυακά, αλλά υπάρχει κάποια απώλεια στην πιστότητα.\n"
+"Τα μη απωλεστικά αντίγραφα έργου είναι ένας καλός τρόπος για να αντιγράψετε "
+"το έργο σας, \n"
+"χωρίς απώλεια ποιότητας, αλλά τα έργα είναι μεγάλα.\n"
 "\n"
-"Για να ανοίξετε ένα συμπιεσμένο έργο παίρνει περισσότερο από ό,τι συνήθως,\n"
-"επειδή εισάγει κάθε συμπιεσμένο κομμάτι.\n"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Compressed Copy of Project \"%s\" As..."
-msgstr "%sΑποθήκευση συμπιεσμένου έργου \"%s\" ως..."
+msgstr "%sΑποθήκευση συμπιεσμένου αντιγράφου έργου \"%s\" ως..."
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "'Save Compressed Copy of Project' is for an Audacity project, not an audio "
 "file.\n"
@@ -6127,7 +5967,7 @@ msgstr ""
 "\n"
 "Τα συμπιεσμένα αρχεία έργου είναι ένας καλός τρόπος για να διαδώσετε το έργο "
 "σας\n"
-"διαδικτυακά, αλλά υπάρχει κάποια απώλεια στην πιστότητα.\n"
+"διαδικτυακά, αλλά έχουν κάποια απώλεια στην πιστότητα.\n"
 "\n"
 "Για να ανοίξετε ένα συμπιεσμένο έργο παίρνει περισσότερο από ό,τι συνήθως,\n"
 "επειδή εισάγει κάθε συμπιεσμένο κομμάτι.\n"
@@ -6147,19 +5987,17 @@ msgstr ""
 "'Εξαγωγή'.\n"
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "Saving a copy must not overwrite an existing saved project.\n"
 "Please try again and select an original name."
 msgstr ""
-"Το έργο δεν αποθηκεύτηκε επειδή το παρεχόμενο όνομα αρχείου θα "
-"αντικαθιστούσε ένα άλλο έργο.\n"
-"Παρακαλούμε δοκιμάστε ξανά και επιλέξτε να πρωτότυπο όνομα."
+"Η αποθήκευση αντιγράφου δεν πρέπει να αντικαθιστά υφιστάμενο αποθηκευμένο "
+"έργο.\n"
+"Παρακαλούμε δοκιμάστε ξανά και επιλέξτε ένα πρωτότυπο όνομα."
 
 #: src/Project.cpp
-#, fuzzy
 msgid "Error Saving Copy of Project"
-msgstr "Σφάλμα κατά την αποθήκευση του έργου"
+msgstr "Σφάλμα κατά την αποθήκευση αντιγράφου του έργου"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -6173,23 +6011,27 @@ msgid ""
 "\"%s\"\n"
 "will be irreversibly overwritten."
 msgstr ""
+"Θέλετε να αντικαταστήσετε το έργο:\n"
+"\"%s\"?\n"
+"\n"
+"Εάν επιλέξετε \"Ναι\" το έργο\n"
+"\"%s\"\n"
+"θα αντικατασταθεί αμετάκλητα."
 
 #. i18n-hint: Heading: A warning that a project is about to be overwritten.
 #: src/Project.cpp
-#, fuzzy
 msgid "Overwrite Project Warning"
-msgstr "Αντικατάσταση υπαρχόντων αρχείων"
+msgstr "Αντικατάσταση προειδοποίησης έργου"
 
 #: src/Project.cpp
-#, fuzzy
 msgid ""
 "The project will not saved because the selected project is open in another "
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Το έργο δεν αποθηκεύτηκε επειδή το παρεχόμενο όνομα αρχείου θα "
-"αντικαθιστούσε ένα άλλο έργο.\n"
-"Παρακαλούμε δοκιμάστε ξανά και επιλέξτε να πρωτότυπο όνομα."
+"Το έργο δεν θα αποθηκευτεί επειδή το επιλεγμένο έργο είναι ανοικτό σε άλλο "
+"παράθυρο.\n"
+"Παρακαλούμε δοκιμάστε ξανά και επιλέξτε ένα πρωτότυπο όνομα."
 
 #: src/Project.cpp
 msgid "Created new project"
@@ -6426,9 +6268,8 @@ msgid "All Effects"
 msgstr "Όλα τα εφέ"
 
 #: src/Screenshot.cpp
-#, fuzzy
 msgid "All Scriptables"
-msgstr "Όλα τα αρχεία|*"
+msgstr "Όλα τα επεκτάσιμα"
 
 #: src/Screenshot.cpp
 msgid "All Preferences"
@@ -6684,11 +6525,11 @@ msgstr "Μουσικά είδη"
 
 #: src/Tags.cpp
 msgid "E&dit..."
-msgstr "Ε&πεξεργασία"
+msgstr "Ε&πεξεργασία..."
 
 #: src/Tags.cpp
 msgid "Rese&t..."
-msgstr "Επαναφο&ρά"
+msgstr "Επαναφο&ρά..."
 
 #: src/Tags.cpp
 msgid "Template"
@@ -7207,44 +7048,40 @@ msgstr "ΠροβολήΚομματιού"
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Muted"
-msgstr "Σιγή"
+msgstr " Σε σιγή"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is soloed. (The Solo button is on.)
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Soloed"
-msgstr "Σόλο"
+msgstr " Σόλο"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Selected"
-msgstr "Επιλογή"
+msgstr " Επιλεγμένο"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
 #. The absence of a dash between Sync and Locked is deliberate -
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
-#, fuzzy
 msgid " Sync Locked"
-msgstr "Επιλεγμένο κλείδωμα συγχρονισμού"
+msgstr " Κλειδωμένος συγχρονισμός"
 
 #: src/TrackPanelAx.cpp
 msgid " Mute On"
-msgstr "Ενεργοποιημένη σίγαση"
+msgstr " Ενεργοποιημένη σίγαση"
 
 #: src/TrackPanelAx.cpp
 msgid " Solo On"
-msgstr "Σόλο ενεργό"
+msgstr " Σόλο ενεργό"
 
 #: src/TrackPanelAx.cpp
 msgid " Select On"
-msgstr "Ενεργοποιημένη επιλογή"
+msgstr " Ενεργοποιημένη επιλογή"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -7331,19 +7168,18 @@ msgid "%s: %s"
 msgstr "%s: %s"
 
 #: src/commands/BatchEvalCommand.cpp
-#, fuzzy
 msgid "Batch Command"
-msgstr "Εντολή"
+msgstr "Εντολή δέσμης"
 
 #: src/commands/Command.cpp
 #, c-format
 msgid "%s is not a parameter accepted by %s"
-msgstr ""
+msgstr "το %s δεν είναι αποδεκτή παράμετρος από το %s"
 
 #: src/commands/Command.cpp
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
-msgstr ""
+msgstr "Άκυρη τιμή για την παράμετρο '%s': πρέπει να είναι %s"
 
 #: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
 #: src/widgets/KeyView.cpp
@@ -7426,7 +7262,7 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
-msgstr ""
+msgstr "το \"%s\" απαιτεί την επιλογή ενός ή περισσότερων κομματιών."
 
 #: src/commands/CommandManager.cpp
 #, c-format
@@ -7438,9 +7274,8 @@ msgid "Loading Keyboard Shortcuts"
 msgstr "Φόρτωση συντομεύσεων πληκτρολογίου"
 
 #: src/commands/CommandTargets.cpp
-#, fuzzy
 msgid "Long Message"
-msgstr "Μήνυμα"
+msgstr "Μεγάλο μήνυμα"
 
 #: src/commands/CompareAudioCommand.cpp src/effects/AutoDuck.cpp
 #: src/effects/Compressor.cpp src/effects/TruncSilence.cpp
@@ -7448,14 +7283,12 @@ msgid "Threshold:"
 msgstr "Κατώφλι:"
 
 #: src/commands/CompareAudioCommand.h
-#, fuzzy
 msgid "Compare Audio"
-msgstr "Αντιγραφή ήχου με ετικέτα"
+msgstr "Σύγκριση ήχου"
 
 #: src/commands/CompareAudioCommand.h
-#, fuzzy
 msgid "Compares a range on two tracks."
-msgstr "Συμπίεση με βάση τις κορυφές"
+msgstr "Συγκρίνει νια περιοχή σε δύο κομμάτια."
 
 #: src/commands/Demo.cpp src/effects/Echo.cpp
 msgid "Delay time (seconds):"
@@ -7467,96 +7300,84 @@ msgstr "Παράγοντας Φθοράς:"
 
 #: src/commands/Demo.h
 msgid "Demo"
-msgstr ""
+msgstr "Επίδειξη"
 
 #: src/commands/Demo.h
 msgid "Does the demo action."
-msgstr ""
+msgstr "Κάνει την ενέργεια της επίδειξης."
 
 #: src/commands/DragCommand.cpp src/widgets/wxPanelWrapper.h
 msgid "Panel"
 msgstr "Πίνακας"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Application"
-msgstr "Ενίσχυση (dB):"
+msgstr "Εφαρμογή"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Track 0"
-msgstr "Κομμάτι"
+msgstr "Κομμάτι 0"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Track 1"
-msgstr "Κομμάτι"
+msgstr "Κομμάτι 1"
 
 #. i18n-hint abbreviates "Identity" or "Identifier"
 #: src/commands/DragCommand.cpp
 msgid "Id:"
-msgstr ""
+msgstr "Αναγνωριστικό:"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "Window Name:"
-msgstr "Μέγεθος παραθύρου:"
+msgstr "Όνομα παραθύρου:"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "From X:"
-msgstr "Από στροφές ανά λεπτό"
+msgstr "Από το Χ:"
 
 #: src/commands/DragCommand.cpp
-#, fuzzy
 msgid "From Y:"
-msgstr "Από στροφές ανά λεπτό"
+msgstr "Από το Υ:"
 
 #: src/commands/DragCommand.cpp
 msgid "To X:"
-msgstr ""
+msgstr "Στο Χ:"
 
 #: src/commands/DragCommand.cpp
 msgid "To Y:"
-msgstr ""
+msgstr "Στο Υ:"
 
 #: src/commands/DragCommand.cpp src/commands/SelectCommand.cpp
 msgid "Relative To:"
-msgstr ""
+msgstr "Σχετικά με:"
 
 #: src/commands/DragCommand.h
-#, fuzzy
 msgid "Drag"
-msgstr "Αριστερό-σύρσιμο"
+msgstr "Μεταφορά"
 
 #: src/commands/DragCommand.h
 msgid "Drags mouse from one place to another."
-msgstr ""
+msgstr "Μεταφέρει το ποντίκι από μια θέση σε μία άλλη."
 
 #: src/commands/GetInfoCommand.cpp
-#, fuzzy
 msgid "Commands"
-msgstr "Εντολή"
+msgstr "Εντολές"
 
 #: src/commands/GetInfoCommand.cpp
-#, fuzzy
 msgid "Menus"
 msgstr "Μενού"
 
 #: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Preferences"
-msgstr "Προτιμήσεις: "
+msgstr "Προτιμήσεις"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Clips"
-msgstr "αποσπασμάτων"
+msgstr "Αποσπάσματα"
 
 #: src/commands/GetInfoCommand.cpp
-#, fuzzy
 msgid "Envelopes"
-msgstr "Καμπύλη ακουστότητας"
+msgstr "Καμπύλες ακουστότητας"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 #: src/export/ExportMultiple.cpp
@@ -7565,21 +7386,21 @@ msgstr "Ετικέτες"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
-msgstr ""
+msgstr "Πλαίσια"
 
 #. i18n-hint JavaScript Object Notation
 #: src/commands/GetInfoCommand.cpp
 msgid "JSON"
-msgstr ""
+msgstr "JSON"
 
 #. i18n-hint name of a computer programming language
 #: src/commands/GetInfoCommand.cpp
 msgid "LISP"
-msgstr ""
+msgstr "LISP"
 
 #: src/commands/GetInfoCommand.cpp
 msgid "Brief"
-msgstr ""
+msgstr "Σύντομο"
 
 #: src/commands/GetInfoCommand.cpp src/effects/Effect.cpp
 msgid "Type:"
@@ -7591,27 +7412,24 @@ msgid "Format:"
 msgstr "Μορφή:"
 
 #: src/commands/GetInfoCommand.h
-#, fuzzy
 msgid "Get Info"
-msgstr "Πληροφορίες"
+msgstr "Λήψη πληροφοριών"
 
 #: src/commands/GetInfoCommand.h
 msgid "Gets information in JSON format."
-msgstr ""
+msgstr "Παίρνει πληροφορίες σε μορφή JSON."
 
 #: src/commands/GetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Types:"
-msgstr "Τύπος:"
+msgstr "Τύποι:"
 
 #: src/commands/GetTrackInfoCommand.h
-#, fuzzy
 msgid "Get Track Info"
-msgstr "Μετακίνηση κομματιού προς τα κάτω"
+msgstr "Λήψη πληροφοριών κομματιού"
 
 #: src/commands/GetTrackInfoCommand.h
 msgid "Gets track values as JSON."
-msgstr ""
+msgstr "Παίρνει τιμές κομματιού ως JSON."
 
 #: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
 msgid "Command:"
@@ -7619,41 +7437,35 @@ msgstr "Εντολή:"
 
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
-msgstr ""
+msgstr "Βοηθά σε εντολή."
 
 #: src/commands/ImportExportCommands.cpp src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "File Name:"
-msgstr "Τύπος αρχείου:"
+msgstr "Όνομα αρχείου:"
 
 #: src/commands/ImportExportCommands.cpp
-#, fuzzy
 msgid "Number of Channels:"
-msgstr "Αριθμός επεξεργασιών:"
+msgstr "Αριθμός καναλιών:"
 
 #: src/commands/ImportExportCommands.h
-#, fuzzy
 msgid "Import2"
-msgstr "Εισαγωγή"
+msgstr "Εισαγωγή2"
 
 #: src/commands/ImportExportCommands.h
 msgid "Imports from a file."
-msgstr ""
+msgstr "Εισάγει από αρχείο."
 
 #: src/commands/ImportExportCommands.h
-#, fuzzy
 msgid "Export2"
-msgstr "Εξαγωγή"
+msgstr "Εξαγωγή2"
 
 #: src/commands/ImportExportCommands.h
-#, fuzzy
 msgid "Exports to a file."
-msgstr "Πολλαπλή εξαγωγή"
+msgstr "Εξαγωγή σε αρχείο."
 
 #: src/commands/LoadCommands.cpp
-#, fuzzy
 msgid "Builtin Commands"
-msgstr "Επιλογή εντολής"
+msgstr "Ενσωματωμένες εντολές"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -7663,171 +7475,142 @@ msgid "The Audacity Team"
 msgstr "Η ομάδα του Audacity"
 
 #: src/commands/LoadCommands.cpp
-#, fuzzy
 msgid "Provides builtin commands to Audacity"
-msgstr "Παρέχει ενσωματωμένα εφέ στο Audacity"
+msgstr "Παρέχει ενσωματωμένες εντολές στο Audacity"
 
 #: src/commands/LoadCommands.cpp
-#, fuzzy
 msgid "Unknown built-in command name"
-msgstr "Άγνωστο όνομα ενσωματωμένου εφέ"
+msgstr "Άγνωστο όνομα ενσωματωμένο εντολής"
 
 #: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
 msgid "Text:"
-msgstr ""
+msgstr "Κείμενο:"
 
 #: src/commands/MessageCommand.h
-#, fuzzy
 msgid "Echos a message."
-msgstr "μήνυμα βοήθειας"
+msgstr "Εμφανίζει μήνυμα."
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Add to History"
-msgstr "Ιστορικό αναίρεσης"
+msgstr "Προσθήκη στο ιστορικό"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Add to History:"
-msgstr "Ιστορικό αναίρεσης"
+msgstr "Προσθήκη στο ιστορικό:"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Compress:"
-msgstr "Συμπίεση"
+msgstr "Συμπίεση:"
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Open Project2"
-msgstr "Νέο έργο"
+msgstr "Άνοιγμα έργου2"
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Opens a project."
-msgstr "Άνοιγμα έργου του Audacity"
+msgstr "Άνοιγμα έργου."
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Save Project2"
-msgstr "&Αποθήκευση έργου"
+msgstr "Αποθήκευση έργου2"
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Saves a project."
-msgstr "&Αποθήκευση έργου"
+msgstr "Αποθήκευση έργου."
 
 #: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Value:"
-msgstr "Τιμή"
+msgstr "Τιμή:"
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Reload:"
-msgstr ""
+msgstr "Επαναφόρτωση:"
 
 #: src/commands/PreferenceCommands.h
-#, fuzzy
 msgid "Get Preference"
-msgstr "&Χρήση προτιμήσεων"
+msgstr "Λήψη προτίμησης"
 
 #: src/commands/PreferenceCommands.h
-#, fuzzy
 msgid "Set Preference"
-msgstr "&Χρήση προτιμήσεων"
+msgstr "Ορισμός προτίμησης"
 
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
-msgstr ""
+msgstr "Παίρνει την τιμή μιας μοναδικής προτίμησης."
 
 #: src/commands/PreferenceCommands.h
-#, fuzzy
 msgid "Sets the value of a single preference."
-msgstr "Ορίζει το πλάτος κορυφής ενός ή περισσότερων κομματιών"
+msgstr "Ορίζει την τιμή μιας μοναδικής προτίμησης."
 
 #  i18n-hint: This refers to a "window function", used in the
 #  Frequency analyze dialog box.
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Window"
-msgstr "&Παράθυρο"
+msgstr "Παράθυρο"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Full Window"
-msgstr "Παράθυρο FFT"
+msgstr "Πλήρες παράθυρο"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Window Plus"
-msgstr "Καταγραφή πέρα από το παράθυρο"
+msgstr "Επιπλέον παράθυρο"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Fullscreen"
-msgstr "&Πλήρης οθόνη (ναι/όχι)"
+msgstr "Πλήρης οθόνη"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Toolbars"
-msgstr "&Γραμμές εργαλείων"
+msgstr "Γραμμές εργαλείων"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 msgid "Effects"
 msgstr "Εφέ"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Scriptables"
-msgstr "Δέσμη ενεργειών"
+msgstr "Επεκτάσιμα"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Selectionbar"
 msgstr "Γραμμή επιλογής"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Trackpanel"
 msgstr "Πίνακας ελέγχου κομματιού"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Two Tracks"
-msgstr "Πρώτο κομμάτι"
+msgstr "Πρώτα δύο κομμάτια"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Three Tracks"
-msgstr "Πρώτο κομμάτι"
+msgstr "Πρώτα τρία κομμάτια"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Four Tracks"
-msgstr "Πρώτο κομμάτι"
+msgstr "Πρώτα τέσσερα κομμάτια"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Tracks Plus"
-msgstr "Πίνακας ελέγχου κομματιού"
+msgstr "Επιπλέον κομμάτια"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "First Track Plus"
-msgstr "Πρώτο κομμάτι"
+msgstr "Πρώτο κομμάτι συν"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "All Tracks"
-msgstr "Μεγάλα κομμάτια"
+msgstr "Όλα τα κομμάτια"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "All Tracks Plus"
-msgstr "Μεγάλα κομμάτια"
+msgstr "Όλα τα κομμάτια συν"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Blue"
-msgstr ""
+msgstr "Γαλάζιο"
 
 #: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
 msgid "White"
@@ -7840,23 +7623,20 @@ msgid "None"
 msgstr "Κανένα"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Path:"
-msgstr "Διαδρομή"
+msgstr "Διαδρομή:"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Capture What:"
-msgstr "Αποτυχία σύλληψης!"
+msgstr "Τι θα συλληφθεί:"
 
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgid "Background:"
-msgstr "Πα&ρασκήνιο:"
+msgstr "Παρασκήνιο:"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Bring To Top:"
-msgstr ""
+msgstr "Μεταφορά στην κορυφή:"
 
 #: src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -7864,61 +7644,52 @@ msgid "Error trying to save file: %s"
 msgstr "Σφάλμα κατά την αποθήκευση του αρχείου: %s"
 
 #: src/commands/ScreenshotCommand.h
-#, fuzzy
 msgid "Screenshot"
-msgstr "&Εργαλεία στιγμιοτύπου οθόνης..."
+msgstr "Στιγμιοτύπου οθόνης"
 
 #: src/commands/ScreenshotCommand.h
 msgid "Takes screenshots."
-msgstr ""
+msgstr "Παίρνει στιγμιότυπα."
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Project Start"
-msgstr "Αρχή έρ&γου"
+msgstr "Αρχή έργου"
 
 #: src/commands/SelectCommand.cpp src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Project"
-msgstr "Έργα"
+msgstr "Έργο"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Project End"
-msgstr "Τέ&λος έργου"
+msgstr "Τέλος έργου"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Selection Start"
-msgstr "Έναρξ&η επιλογής"
+msgstr "Έναρξη επιλογής"
 
 #: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
 msgid "Selection"
 msgstr "Επιλογή"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Selection End"
-msgstr "&Τέλος επιλογής"
+msgstr "Τέλος επιλογής"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Start Time:"
-msgstr "Χρόνος έναρξης"
+msgstr "Χρόνος έναρξης:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "End Time:"
-msgstr "Χρόνος λήξης"
+msgstr "Χρόνος λήξης:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "High:"
-msgstr "Υψιπερατό"
+msgstr "Υψηλό:"
 
 #: src/commands/SelectCommand.cpp
 msgid "Low:"
-msgstr ""
+msgstr "Χαμηλό:"
 
 #. i18n-hint verb, imperative
 #: src/commands/SelectCommand.cpp
@@ -7926,9 +7697,8 @@ msgid "Set"
 msgstr "Ορισμός"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Add"
-msgstr "&Προσθήκη"
+msgstr "Προσθήκη"
 
 #: src/commands/SelectCommand.cpp src/effects/EffectRack.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
@@ -7936,209 +7706,177 @@ msgid "Remove"
 msgstr "Αφαίρεση"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "First Track:"
-msgstr "Πρώτο κομμάτι"
+msgstr "Πρώτο κομμάτι:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Track Count:"
-msgstr "Ποσότητα μείωσης:"
+msgstr "Αριθμός κομματιών:"
 
 #: src/commands/SelectCommand.cpp
-#, fuzzy
 msgid "Mode:"
-msgstr "Μέτριο"
+msgstr "Κατάσταση:"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Select Time"
-msgstr "Επιλογή αρχείου"
+msgstr "Επιλογή χρόνου"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Select Frequencies"
-msgstr "Συχνότητες"
+msgstr "Επιλογή συχνοτήτων"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Select Tracks"
-msgstr "&Τακτοποίηση των κομματιών"
+msgstr "Επιλογή κομματιών"
 
 #: src/commands/SelectCommand.h src/prefs/MousePrefs.cpp
 msgid "Select"
 msgstr "Επιλογή"
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Selects a time range."
-msgstr "Επιλογή αρχείου"
+msgstr "Επιλέγει διάστημα χρόνου."
 
 #: src/commands/SelectCommand.h
 msgid "Selects a frequency range."
-msgstr ""
+msgstr "Επιλέγει περιοχή συχνοτήτων."
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Selects a range of tracks."
-msgstr "Παρακαλούμε, επιλέξτε ένα κομμάτι ήχου."
+msgstr "Επιλέγει περιοχή κομματιών."
 
 #: src/commands/SelectCommand.h
-#, fuzzy
 msgid "Selects Audio."
-msgstr "Επιλέξτε τον δέκτη του ήχου"
+msgstr "Επιλέγει ήχο."
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 0"
-msgstr "Χρώματα"
+msgstr "Χρώμα 0"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 1"
-msgstr "Χρώματα"
+msgstr "Χρώμα 1"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 2"
-msgstr "Χρώματα"
+msgstr "Χρώμα 2"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Color 3"
-msgstr "Χρώματα"
+msgstr "Χρώμα 3"
 
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
-msgstr ""
+msgstr "Στα:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Colour:"
-msgstr "Χρώματα"
+msgstr "Χρώμα:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Start:"
-msgstr "Έναρξη"
+msgstr "Έναρξη:"
 
 #: src/commands/SetClipCommand.h
-#, fuzzy
 msgid "Set Clip"
-msgstr "Ε&πόμενο απόσπασμα"
+msgstr "Ορισμός αποσπάσματος"
 
 #: src/commands/SetClipCommand.h
 msgid "Sets various values for a clip."
-msgstr ""
+msgstr "Ορίζει διάφορες τιμές για απόσπασμα."
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Time:"
-msgstr "Χρόνος"
+msgstr "Χρόνος:"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Delete:"
-msgstr "Διαγραφή"
+msgstr "Διαγραφή:"
 
 #: src/commands/SetEnvelopeCommand.h
-#, fuzzy
 msgid "Set Envelope"
-msgstr "Καμπύλη ακουστότητας"
+msgstr "Ορισμός καμπύλης ακουστότητας"
 
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
-msgstr ""
+msgstr "Ορίζει θέση σημείου φακέλου."
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Label Index"
-msgstr "Επεξεργασία ετικέτας"
+msgstr "Δείκτης ετικέτας"
 
 #: src/commands/SetLabelCommand.cpp
 msgid "End:"
-msgstr ""
+msgstr "Τέλος:"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Selected:"
-msgstr "Επιλογή"
+msgstr "Επιλεγμένο:"
 
 #: src/commands/SetLabelCommand.h
-#, fuzzy
 msgid "Set Label"
-msgstr "Διαχωρισμός Ετικετών"
+msgstr "Ορισμός ετικέτας"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
-msgstr ""
+msgstr "Ορίζει διάφορες τιμές για ετικέτα."
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Resize:"
-msgstr "Κα&τάλοιπο"
+msgstr "Αλλαγή μεγέθους:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "X:"
-msgstr ""
+msgstr "Χ:"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Y:"
-msgstr ""
+msgstr "Υ:"
 
 #: src/commands/SetProjectCommand.cpp
-#, fuzzy
 msgid "Width:"
-msgstr "Πλάτος"
+msgstr "Πλάτος:"
 
 #: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Height:"
-msgstr "Ελαφρύ"
+msgstr "Ύψος:"
 
 #: src/commands/SetProjectCommand.h
-#, fuzzy
 msgid "Set Project"
-msgstr "&Αποθήκευση έργου"
+msgstr "Ορισμός έργου"
 
 #: src/commands/SetProjectCommand.h
 msgid "Sets various values for a project."
-msgstr ""
+msgstr "Ορίζει διάφορες τιμές για έργο."
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Track Index:"
-msgstr "&Τέλος κομματιού"
+msgstr "Δείκτης κομματιού:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Channel Index:"
-msgstr "Λειτουργία καναλιού:"
+msgstr "Δείκτης καναλιού:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Unnamed"
-msgstr "ανώνυμο"
+msgstr "Ανώνυμο"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Selected"
-msgstr "Επιλογή"
+msgstr "Επιλεγμένο"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Focused"
-msgstr "Ε&στίαση"
+msgstr "Εστιασμένο"
 
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Gain:"
-msgstr "Απολαβή"
+msgstr "Απολαβή:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
-msgstr ""
+msgstr "Μετακίνηση:"
 
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 msgid "Waveform"
@@ -8155,73 +7893,60 @@ msgid "Linear"
 msgstr "Γραμμικό"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Reset"
-msgstr "Ε&παναφορά"
+msgstr "Επαναφορά"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Times 2"
-msgstr "Χρόνος"
+msgstr "Χρόνοι 2"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "HalfWave"
 msgstr "Ημικύμα"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Display:"
-msgstr "Εμφάνιση"
+msgstr "Εμφάνιση:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Scale:"
-msgstr "Κλίμακα"
+msgstr "Κλίμακα:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "VZoom:"
-msgstr "Μεγέθυνση"
+msgstr "Κατακόρυφη εστίαση:"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Use Spectral Prefs"
-msgstr "Φασματικός επεξεργαστής"
+msgstr "Χρήση φασματικών προτιμήσεων"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Spectral Select"
 msgstr "Φασματική επιλογή"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Gray Scale"
-msgstr "Κ&λίμακα του γκρίζου"
+msgstr "Κλίμακα του γκρίζου"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track"
-msgstr "Νέο κομμάτι"
+msgstr "Ορισμός κομμάτι"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track Status"
-msgstr "Έναρ&ξη κομματιού"
+msgstr "Ορισμός κατάστασης κομματιού"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track Audio"
-msgstr "Σίγαση ήχου"
+msgstr "Ορισμός ήχου κομματιού"
 
 #: src/commands/SetTrackInfoCommand.h
-#, fuzzy
 msgid "Set Track Visuals"
-msgstr "&Τακτοποίηση των κομματιών"
+msgstr "Ορισμός οπτικών κομματιού"
 
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
-msgstr ""
+msgstr "Ορίζει διάφορες τιμές για κομμάτι."
 
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
@@ -8233,7 +7958,7 @@ msgstr "Ενίσχυση (dB):"
 
 #: src/effects/Amplify.cpp
 msgid "Amplification dB"
-msgstr "Ενίσχυση (dB):"
+msgstr "Ενίσχυση (dB)"
 
 #: src/effects/Amplify.cpp
 msgid "New Peak Amplitude (dB):"
@@ -8355,9 +8080,8 @@ msgid "Bass and Treble"
 msgstr "Μπάσα και πρίμα"
 
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Αλλαγή τονικού ύψους κομματιού χωρίς αλλαγή στο τέμπο του"
+msgstr "Αλλαγή τονικού ύψους κομματιού χωρίς αλλαγή στο ρυθμό (τέμπο) του"
 
 #: src/effects/ChangePitch.cpp
 msgid "High Quality Pitch Change"
@@ -8365,7 +8089,7 @@ msgstr "Αλλαγή τονικού ύψους υψηλής ποιότητας"
 
 #: src/effects/ChangePitch.cpp
 msgid "Change Pitch without Changing Tempo"
-msgstr "Αλλαγή τονικού ύψους, δίχως να αλλάξει το τέμπο"
+msgstr "Αλλαγή τονικού ύψους, δίχως να αλλάξει ο ρυθμός (τέμπο)"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
@@ -8446,14 +8170,12 @@ msgid "n/a"
 msgstr "μή εφαρμόσιμο"
 
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr ""
-"Η αλλαγή της ταχύτητας ενός κομματιού αλλάζει επίσης το τονικό του ύψος"
+msgstr "Αλλάζει την ταχύτητα κομματιού, αλλάζει επίσης το τονικό του ύψος"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "Αλλαγή ταχύτητας, επιδρά και στο τέμπο και στο τονικό ύψος"
+msgstr "Αλλαγή ταχύτητας, επιδρά και στο ρυθμό (τέμπο) και στο τονικό ύψος"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Speed Multiplier:"
@@ -8493,17 +8215,16 @@ msgid "Change Speed"
 msgstr "Αλλαγή ταχύτητας"
 
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Αλλαγή του ρυθμού μιας επιλογής χωρίς να αλλάξει το τονικό ύψος του"
+msgstr "Αλλάζει τον ρυθμό (τέμπο) επιλογής χωρίς να αλλάξει το τονικό ύψος του"
 
 #: src/effects/ChangeTempo.cpp
 msgid "High Quality Tempo Change"
-msgstr "Αλλαγή ρυθμού υψηλής ποιότητας"
+msgstr "Αλλαγή ρυθμού (τέμπο) υψηλής ποιότητας"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo without Changing Pitch"
-msgstr "Αλλαγή του τέμπο δίχως να αλλάξει το τονικό ύψος"
+msgstr "Αλλαγή του ρυθμού (τέμπο) δίχως να αλλάξει το τονικό ύψος"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
@@ -8528,7 +8249,7 @@ msgstr "Διάρκεια σε δευτερόλεπτα από το %s, στο"
 
 #: src/effects/ChangeTempo.h
 msgid "Change Tempo"
-msgstr "Αλλαγή τέμπο"
+msgstr "Αλλαγή ρυθμού (τέμπο)"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
@@ -8718,7 +8439,7 @@ msgstr "Τέλος"
 
 #: src/effects/Contrast.cpp
 msgid "Volume    "
-msgstr "Ένταση"
+msgstr "Ένταση   "
 
 #: src/effects/Contrast.cpp
 msgid "&Foreground:"
@@ -9078,7 +8799,7 @@ msgstr "Τύπος παραμόρφωσης:"
 
 #: src/effects/Distortion.cpp
 msgid "DC blocking filter"
-msgstr "φίλτρο φραγής DC"
+msgstr "Φίλτρο φραγής DC"
 
 #: src/effects/Distortion.cpp
 msgid "Threshold controls"
@@ -9134,7 +8855,7 @@ msgstr "Βαθμός ισοστάθμισης"
 
 #: src/effects/Distortion.cpp
 msgid "dB Limit"
-msgstr "Όριο dB"
+msgstr "όριο dB"
 
 #: src/effects/Distortion.cpp
 msgid "Wet level"
@@ -9252,9 +8973,8 @@ msgstr ""
 "ρυθμό δειγματοληψίας του έργου."
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Some Command"
-msgstr "Επιλογή εντολής"
+msgstr "Κάποια εντολή"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
@@ -9358,7 +9078,7 @@ msgstr "Περί"
 #: src/effects/Effect.cpp
 #, c-format
 msgid "Are you sure you want to delete \"%s\"?"
-msgstr "Είσατε βέβαιοι ότι θέλετε να διαγράψετε το \"%s\";"
+msgstr "Είσαστε βέβαιοι ότι θέλετε να διαγράψετε το \"%s\";"
 
 #: src/effects/Effect.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Save Preset"
@@ -9414,9 +9134,9 @@ msgid "Applied effect: %s"
 msgstr "Εφαρμοσμένο εφέ: %s"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Applied command: %s"
-msgstr "Εφαρμοσμένο εφέ: %s"
+msgstr "Εφαρμοσμένη εντολή: %s"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -9439,7 +9159,7 @@ msgid "Effect failed to initialize"
 msgstr "Αποτυχία αρχικοποίησης εφέ"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Attempting to initialize the following command failed:\n"
 "\n"
@@ -9447,7 +9167,7 @@ msgid ""
 "\n"
 "More information may be available in Help->Show Log"
 msgstr ""
-"Αποτυχία της προσπάθειας αρχικοποίησης του παρακάτω εφέ:\n"
+"Αποτυχία της προσπάθειας αρχικοποίησης της παρακάτω εντολής:\n"
 "\n"
 "%s\n"
 "\n"
@@ -9455,9 +9175,8 @@ msgstr ""
 "ημερολογίου"
 
 #: src/effects/EffectManager.cpp
-#, fuzzy
 msgid "Command failed to initialize"
-msgstr "Αποτυχία αρχικοποίησης εφέ"
+msgstr "Αποτυχία αρχικοποίησης εντολής"
 
 #: src/effects/EffectRack.cpp
 msgid "Effects Rack"
@@ -9546,13 +9265,12 @@ msgid "Adjusts the volume levels of particular frequencies"
 msgstr "Ρυθμίζει τα επίπεδα έντασης των συγκεκριμένων συχνοτήτων"
 
 #: src/effects/Equalization.cpp
-#, fuzzy
 msgid ""
 "To use this EQ curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
-"Για να χρησιμοποιήσετε αυτήν την καμπύλη ισοστάθμισης σε μια αλυσίδα δέσμης, "
+"Για να χρησιμοποιήσετε αυτήν την καμπύλη ισοστάθμισης σε μακροεντολή, "
 "παρακαλούμε επιλέξτε ένα νέο όνομα για αυτήν.\n"
 "Επιλέξτε το πλήκτρο 'Αποθήκευση/Διαχείριση καμπυλών...' και μετονομάστε την "
 "'ανώνυμη' καμπύλη, έπειτα χρησιμοποιήστε την."
@@ -9678,7 +9396,7 @@ msgstr "Να εμφανίζονται οι γραμμές πλέγματος"
 
 #: src/effects/Equalization.cpp
 msgid "&Processing: "
-msgstr "Ε&πεξεργασία:"
+msgstr "Ε&πεξεργασία: "
 
 #: src/effects/Equalization.cpp
 msgid "D&efault"
@@ -9791,7 +9509,7 @@ msgstr "Μετονομασία..."
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "Rename '%s'"
-msgstr "Μετονομασία του %s"
+msgstr "Μετονομασία του '%s'"
 
 #: src/effects/Equalization.cpp
 msgid "Name is the same as the original one"
@@ -9802,9 +9520,9 @@ msgid "Same name"
 msgstr "Ίδιο όνομα"
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Overwrite existing curve '%s'?"
-msgstr "Αντικατάσταση υφιστάμενης καμπύλης '"
+msgstr "Αντικατάσταση υφιστάμενης καμπύλης '%s';"
 
 #: src/effects/Equalization.cpp
 msgid "Curve exists"
@@ -9819,18 +9537,18 @@ msgid "Can't delete 'unnamed'"
 msgstr "Αδύνατη η διαγραφή της 'ανώνυμης'"
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Delete '%s'?"
-msgstr "Διαγραφή '"
+msgstr "Διαγραφή '%s';"
 
 #: src/effects/Equalization.cpp src/export/ExportFFmpegDialogs.cpp
 msgid "Confirm Deletion"
 msgstr "Επιβεβαίωση διαγραφής"
 
 #: src/effects/Equalization.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d items?"
-msgstr "Επαναλαμβανόμενο %d φορές"
+msgstr "Διαγραφή%d στοιχείων;"
 
 #: src/effects/Equalization.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
@@ -10236,9 +9954,8 @@ msgid "Re&move"
 msgstr "Α&φαίρεση"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Sets the peak amplitude or loudness of one or more tracks"
-msgstr "Ορίζει το πλάτος κορυφής ενός ή περισσότερων κομματιών"
+msgstr "Ορίζει το πλάτος κορυφής ή ακουστότητας ενός ή περισσότερων κομματιών"
 
 #: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
@@ -10300,24 +10017,20 @@ msgid "Remove DC offset (center on 0.0 vertically)"
 msgstr "Αφαίρεση μετατόπισης DC (κεντράρισμα στο 0.0 κάθετα)"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Normalize peak amplitude to"
-msgstr "Κανονικοποίηση μέγιστου πλάτους σε"
+msgstr "Κανονικοποίηση πλάτους κορυφής σε"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Normalize loudness to"
-msgstr "Κανονικοποίηση μέγιστου πλάτους σε"
+msgstr "Κανονικοποίηση ακουστότητας σε"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Peak amplitude dB"
-msgstr "Νέα πλάτος κορυφής (dB):"
+msgstr "Πλάτος κορυφής dB"
 
 #: src/effects/Normalize.cpp
-#, fuzzy
 msgid "Use loudness instead of peak amplitude"
-msgstr "Δημιουργεί ήχο μηδενικού πλάτους"
+msgstr "Χρήση ακουστότητας αντί για πλάτος κορυφής"
 
 #: src/effects/Normalize.cpp
 msgid "Normalize stereo channels independently"
@@ -10334,23 +10047,21 @@ msgstr ".  Μέγιστο 0dB."
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "Loudness LUFS"
-msgstr ""
+msgstr "Ακουστότητα LUFS"
 
 #. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Normalize.cpp
 msgid "LUFS"
-msgstr ""
+msgstr "LUFS"
 
 #: src/effects/Normalize.h
 msgid "Normalize"
 msgstr "Κανονικοποίηση"
 
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
-"Χρησιμοποιήστε το Paulstretch μόνο για ακραία επιμήκυνση χρόνου ή το εφέ "
-"\"στάση\""
+"Το Paulstretch είναι μόνο για ακραία επιμήκυνση χρόνου ή το εφέ \"στάση\""
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -10813,15 +10524,15 @@ msgstr "Από στερεοφωνικό σε μονοφωνικό"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "Επιτρέπει συνεχείς αλλαγές στο τέμπο και/ή το τονικό ύψος"
+msgstr "Επιτρέπει συνεχείς αλλαγές στο ρυθμό (τέμπο) και/ή το τονικό ύψος"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
-msgstr "Αλλαγή αρχικού τέμπο (%)"
+msgstr "Αλλαγή αρχικού ρυθμού (τέμπο) (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Tempo Change (%)"
-msgstr "Αλλαγή τελικού τέμπο (%)"
+msgstr "Αλλαγή τελικού ρυθμού (τέμπο) (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Pitch Shift"
@@ -10840,9 +10551,8 @@ msgid "Final Pitch Shift"
 msgstr "Τελική μετατόπιση τονικού ύψους"
 
 #: src/effects/TimeScale.h
-#, fuzzy
 msgid "Sliding Stretch"
-msgstr "Επέκταση"
+msgstr "Επιμήκυνση ολίσθησης"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/prefs/WaveformSettings.cpp
@@ -11151,7 +10861,7 @@ msgstr "Αυτό το αρχείο παραμέτρων αποθηκεύτηκε
 #. developed by Steinberg GmbH
 #: src/effects/VST/VSTEffect.h
 msgid "VST"
-msgstr ""
+msgstr "VST"
 
 #: src/effects/Wahwah.cpp
 msgid ""
@@ -11274,7 +10984,6 @@ msgid "Location"
 msgstr "Τοποθεσία"
 
 #: src/effects/audiounits/AudioUnitEffect.h
-#, fuzzy
 msgid "AudioUnit"
 msgstr "Μονάδα ήχου"
 
@@ -11309,9 +11018,8 @@ msgid "Effect Output"
 msgstr "Έξοδος εφέ"
 
 #: src/effects/ladspa/LadspaEffect.h
-#, fuzzy
 msgid "LADSPA"
-msgstr "Εφέ LADSPA"
+msgstr "LADSPA"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "LV2 Effect Settings"
@@ -11356,7 +11064,7 @@ msgstr "&Διάρκεια:"
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/effects/lv2/LV2Effect.h
 msgid "LV2"
-msgstr ""
+msgstr "LV2"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "LV2 Effects"
@@ -11379,9 +11087,8 @@ msgid "Applying Nyquist Effect..."
 msgstr "Εφαρμογή εφέ Nyquist..."
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Nyquist Effects Prompt"
-msgstr "Εφέ Nyquist"
+msgstr "Προτροπή εφέ Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Prompt"
@@ -11414,9 +11121,8 @@ msgstr ""
 "διαδρομή του προσθέτου.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Audio selection required."
-msgstr "Α&υτόματη επιλογή, εάν απαιτείται επιλογή"
+msgstr "Απαιτείται επιλογή ήχου."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Error"
@@ -11461,12 +11167,13 @@ msgstr "Ολοκλήρωση επεξεργασίας."
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr ""
+msgstr "τα εφέ ';type tool' δεν μπορούν να επιστρέψουν ήχο από το Nyquist.\n"
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
 msgstr ""
+"τα εφέ ';type tool' δεν μπορούν να επιστρέψουν ετικέτες από το Nyquist.\n"
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -11554,7 +11261,7 @@ msgstr "Αδυναμία προσδιορισμού γλώσσας"
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
-msgstr ""
+msgstr "το \"%s\" δεν είναι έγκυρη διαδρομή αρχείου."
 
 #. i18n-hint: Warning that there is one quotation mark rather than a pair.
 #: src/effects/nyquist/Nyquist.cpp
@@ -11563,6 +11270,8 @@ msgid ""
 "Mismatched quotes in\n"
 "%s"
 msgstr ""
+"Παράταιρα εισαγωγικά στο\n"
+"%s"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
@@ -11601,23 +11310,26 @@ msgid "File could not be saved"
 msgstr "Αδυναμία αποθήκευσης του αρχείου"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Value range:\n"
 "%s to %s"
-msgstr "Η τιμή δεν είναι στην περιοχή: %s έως %s"
+msgstr ""
+"Περιοχή τιμής:\n"
+"%s έως %s"
 
 #  i18n-hint: You do not need to translate "LOF"
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Value Error"
-msgstr "Σφάλμα αρχείου"
+msgstr "Σφάλμα τιμής"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Invalid wildcard string in 'path' control.'\n"
 "Using empty string instead."
 msgstr ""
+"Άκυρη συμβολοσειρά συμβόλου υποκατάστασης στο στοιχείο ελέγχου 'διαδρομή'.'\n"
+"Χρήση κενής συμβολοσειράς στη θέση του."
 
 #: src/effects/nyquist/Nyquist.cpp src/widgets/wxPanelWrapper.h
 #: plug-ins/sample-data-export.ny
@@ -11625,9 +11337,8 @@ msgid "Select a file"
 msgstr "Επιλογή αρχείου"
 
 #: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
 msgid "Save file as"
-msgstr "Αποθήκευση αρχείων"
+msgstr "Αποθήκευση αρχείου ως"
 
 #: src/effects/nyquist/Nyquist.cpp src/export/Export.cpp
 #: src/export/ExportMultiple.cpp
@@ -11678,7 +11389,7 @@ msgstr "Πρόγραμμα"
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
-msgstr ""
+msgstr "Vamp"
 
 #: src/export/Export.cpp
 msgid "No format specific options"
@@ -11758,16 +11469,14 @@ msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "Ένα αρχείο με το όνομα \"%s\" υπάρχει ήδη.  Να αντικατασταθεί;"
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid "Your tracks will be mixed down and exported as one mono file."
 msgstr ""
-"Τα κομμάτια σας θα αναμιχθούν σε δύο στέρεο κανάλια στο αρχείο εξαγωγής."
+"Τα κομμάτια σας θα αναμιχθούν και θα εξαχθούν ως ένα μονοφωνικό αρχείο."
 
 #: src/export/Export.cpp
-#, fuzzy
 msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr ""
-"Τα κομμάτια σας θα αναμιχθούν σε δύο στέρεο κανάλια στο αρχείο εξαγωγής."
+"Τα κομμάτια σας θα αναμιχθούν και θα εξαχθούν ως ένα στερεοφωνικό αρχείο."
 
 #: src/export/Export.cpp
 msgid ""
@@ -12585,24 +12294,24 @@ msgid "Exporting the audio at %ld kbps"
 msgstr "Εξάγεται ο ήχος στα %ld kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%d kbps"
-msgstr "%i kbps"
+msgstr "%d kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s kbps (Best Quality)"
-msgstr "(Καλύτερη Ποιότητα)"
+msgstr "%s kbps (Άριστη ποιότητα)"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s kbps"
-msgstr "%i kbps"
+msgstr "%s kbps"
 
 #: src/export/ExportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s kbps (Smaller files)"
-msgstr "(Μικρότερα αρχεία)"
+msgstr "%s kbps (Μικρότερα αρχεία)"
 
 #: src/export/ExportMP3.cpp
 msgid "Fast"
@@ -12616,19 +12325,19 @@ msgstr "Τυπικό"
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
-msgstr ""
+msgstr "Εξωφρενικό, 320 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
-msgstr ""
+msgstr "Ακραίο, 220-260 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
-msgstr ""
+msgstr "Τυπικό, 170-210 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
-msgstr ""
+msgstr "Μεσαίο, 145-185 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Bit Rate Mode:"
@@ -12653,7 +12362,7 @@ msgstr "Ποιότητα"
 
 #: src/export/ExportMP3.cpp
 msgid "Variable Speed:"
-msgstr "Μεταβλητή ταχύτητα"
+msgstr "Μεταβλητή ταχύτητα:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -12831,13 +12540,12 @@ msgid "Cannot Export Multiple"
 msgstr "Δεν μπορεί να γίνει πολλαπλή εξαγωγή"
 
 #: src/export/ExportMultiple.cpp
-#, fuzzy
 msgid ""
 "You have no unmuted Audio Tracks and no applicable \n"
 "labels, so you cannot export to separate audio files."
 msgstr ""
-"Έχετε μόνο ένα κομμάτι ήχου σε σίγαση και καμιά εφαρμόσιμη\n"
-"ετικέτα, έτσι δεν μπορείτε να εξάγετε σε ξεχωριστά αρχεία ήχου."
+"Δεν έχετε κομμάτια ήχου σε σίγαση και καθόλου εφαρμόσιμες\n"
+"ετικέτες, έτσι δεν μπορείτε να εξάγετε σε ξεχωριστά αρχεία ήχου."
 
 #: src/export/ExportMultiple.cpp
 msgid "Export files to:"
@@ -12994,9 +12702,8 @@ msgid "WAV (Microsoft) signed 16-bit PCM"
 msgstr "WAV (Microsoft) με υπογραφή 16 δυαδικών PCM"
 
 #: src/export/ExportPCM.cpp
-#, fuzzy
 msgid "WAV (Microsoft) signed 24-bit PCM"
-msgstr "WAV (Microsoft) με υπογραφή 16 δυαδικών PCM"
+msgstr "WAV (Microsoft) με υπογραφή 24 δυαδικών PCM"
 
 #: src/export/ExportPCM.cpp
 msgid "WAV (Microsoft) 32-bit float PCM"
@@ -13269,7 +12976,7 @@ msgstr "αρχεία συμβατά με GStreamer"
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to add decoder to pipeline"
-msgstr "Αδύνατη η προσθήκη αποκωδικοποιητή στη διοχέτευση."
+msgstr "Αδύνατη η προσθήκη αποκωδικοποιητή στη διοχέτευση"
 
 #: src/import/ImportGStreamer.cpp
 msgid "GStreamer Importer"
@@ -13632,9 +13339,8 @@ msgid "milliseconds"
 msgstr "χιλιοστοδευτερόλεπτα"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "&Latency compensation:"
-msgstr "Αντιστάθμιση αναμονής"
+msgstr "Αντιστάθμιση α&ναμονής:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
@@ -13943,11 +13649,11 @@ msgstr "Εμφάνιση"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "&Language:"
-msgstr "&Γλώσσα"
+msgstr "&Γλώσσα:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Location of &Manual:"
-msgstr "Τοποθεσία του &εγχειριδίου"
+msgstr "Τοποθεσία του &εγχειριδίου:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
@@ -13958,14 +13664,12 @@ msgid "Meter dB &range:"
 msgstr "&Περιοχή μετρητή dB:"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show 'How to Get &Help' at launch"
-msgstr "'Πώς να πάρετε &βοήθεια' στην έναρξη"
+msgstr "Εμφάνιση 'Πώς να πάρετε &βοήθεια' στην έναρξη"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgid "Show e&xtra menus"
-msgstr "&Πρόσθετα μενού"
+msgstr "Εμφάνιση &Πρόσθετα μενού"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show alternative &styling (Mac vs PC)"
@@ -13986,7 +13690,7 @@ msgstr "Α&νάμειξη θέματος συστήματος και Audacity"
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
-msgstr ""
+msgstr "Χρήση κυρίως διατάξεων αριστερά-προς-τα-δεξιά σε γλώσσες RTL"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -14136,7 +13840,7 @@ msgstr "Σφάλμα κατά την εξαγωγή συντομεύσεων π�
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You may not assign a key to this entry"
-msgstr "Δεν μπορείτε να εκχωρήσετε ένα πλήκτρο σε αυτή την καταχώριση "
+msgstr "Δεν μπορείτε να εκχωρήσετε ένα πλήκτρο σε αυτή την καταχώριση"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You must select a binding before assigning a shortcut"
@@ -14180,15 +13884,15 @@ msgstr "Έκδοση MP3 βιβλιοθήκης:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "MP3 Library:"
-msgstr "Βιβλιοθήκη MP3"
+msgstr "Βιβλιοθήκη MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Locate..."
-msgstr "&Εύρεση"
+msgstr "&Εντοπισμός..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "LAME MP3 Library:"
-msgstr "Βιβλιοθήκη LAME MP3"
+msgstr "Βιβλιοθήκη LAME MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "&Download"
@@ -14212,7 +13916,7 @@ msgstr "Βιβλιοθήκη FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Loca&te..."
-msgstr "Εύρε&ση"
+msgstr "Ε&ντοπισμός..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Dow&nload"
@@ -14539,11 +14243,11 @@ msgstr "Με&γάλη περίοδος:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr ""
+msgstr "Αναπαραγωγή με &μεταβλητή ταχύτητα"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "Πάντα &ξεκαρφιτσωμένο τρίψιμο"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -14579,14 +14283,12 @@ msgid "As&k"
 msgstr "Να γίνεται ε&ρώτηση"
 
 #: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "16-bit"
-msgstr "PCM 16 δυαδικών"
+msgstr "16 δυαδικά"
 
 #: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "24-bit"
-msgstr "PCM 24 δυαδικών"
+msgstr "24 δυαδικά"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Rectangle"
@@ -14643,23 +14345,20 @@ msgid "Dit&her:"
 msgstr "Πρό&σμιξη:"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Play &other tracks while recording (overdub)"
-msgstr "Ά&λλων κομματιών κατά την ηχογράφηση (υπέρθεση εγγραφής)"
+msgstr "Αναπαραγωγή ά&λλων κομματιών κατά την ηχογράφηση (υπέρθεση εγγραφής)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Use &hardware to play other tracks"
-msgstr ""
+msgstr "Χρήση &λογισμικού για αναπαραγωγή άλλων κομματιών"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "&Software playthrough of input"
 msgstr "Πλήρης αναπαραγωγή &λογισμικού εισόδου"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Record on a new track"
-msgstr "Να ηχογραφείται πάντα σε νέο κομμάτι."
+msgstr "Να ηχογραφείται σε νέο κομμάτι"
 
 #. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
@@ -14740,17 +14439,16 @@ msgid "0 means endless"
 msgstr "0 σημαίνει ατελείωτο"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Punch and Roll Recording"
-msgstr "Ηχογράφηση ενεργοποιημένου ήχου"
+msgstr "Ηχογράφηση με σήμανση και διόρθωση (Punch and Roll)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
-msgstr ""
+msgstr "Προε&κκίνηση:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
-msgstr ""
+msgstr "Ομαλή &μετάβαση:"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
@@ -14841,12 +14539,10 @@ msgid "S&cale"
 msgstr "Κ&λίμακα"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "Mi&n Frequency (Hz):"
 msgstr "Ε&λάχιστη συχνότητα (Hz):"
 
 #: src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgid "Ma&x Frequency (Hz):"
 msgstr "Μέ&γιστη συχνότητα (Hz):"
 
@@ -14864,7 +14560,7 @@ msgstr "&Περιοχή (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
-msgstr ""
+msgstr "Υψηλή αύξ&ηση (dB/dec):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Gra&yscale"
@@ -15088,7 +14784,7 @@ msgstr "&Πληκτρολογήστε για να δημιουργήσετε μ�
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
-msgstr ""
+msgstr "Χρήση διαλόγου για το ό&νομα της νέας ετικέτας"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable scrolling left of &zero"
@@ -15100,7 +14796,7 @@ msgstr "Προχωρημένη &κάθετη εστίαση"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
-msgstr "Κουμπί σόλο"
+msgstr "Πλήκτρο σόλο:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Waveform (dB)"
@@ -15135,32 +14831,28 @@ msgid "Seconds"
 msgstr "Δευτερόλεπτα"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "5ths of Seconds"
-msgstr "Δευτερόλεπτα"
+msgstr "5τα δευτερολέπτων"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "10ths of Seconds"
-msgstr "Δευτερόλεπτα"
+msgstr "10τα δευτερολέπτων"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "20ths of Seconds"
-msgstr "Δευτερόλεπτα"
+msgstr "20στα δευτερολέπτων"
 
 #: src/prefs/TracksPrefs.cpp
-#, fuzzy
 msgid "50ths of Seconds"
-msgstr "Δευτερόλεπτα"
+msgstr "50στα δευτερολέπτων"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "100ths of Seconds"
-msgstr ""
+msgstr "100στά δευτερολέπτων"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "500ths of Seconds"
-msgstr ""
+msgstr "500στα δευτερολέπτων"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "MilliSeconds"
@@ -15188,7 +14880,7 @@ msgstr "Εμ&φάνιση του ονόματος του κομματιού ήχ
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
-msgstr ""
+msgstr "Χρήση εμφάνισης &ημικύματος όταν συμπτύσσεται"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -15200,7 +14892,7 @@ msgstr "Α&υτόματη κύλιση εάν η κεφαλή είναι ξεκ�
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
-msgstr ""
+msgstr "Καρφιτσωμένη θέση &κεφαλής"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -15591,14 +15283,12 @@ msgid "Low and High Frequencies"
 msgstr "Χαμηλές και υψηλές συχνότητες"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
 msgid "Center Frequency"
-msgstr "Συχνότητα κέντρου:"
+msgstr "Συχνότητα κέντρου"
 
 #: src/toolbars/SpectralSelectionBar.cpp
-#, fuzzy
 msgid "Bandwidth"
-msgstr "Εύρος ζώνης:"
+msgstr "Εύρος ζώνης"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -16105,7 +15795,6 @@ msgid "Scrub &Ruler"
 msgstr "&Χάρακας τριψίματος"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Playing at Speed"
 msgstr "Αναπαραγωγή με ταχύτητα"
 
@@ -16170,7 +15859,7 @@ msgstr "Πατήστε και σύρετε για να ορίσετε το εύ�
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to select audio"
-msgstr "Πατήστε και σύρετε για να επιλέξετε ήχο."
+msgstr "Πατήστε και σύρετε για να επιλέξετε ήχο"
 
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
@@ -16226,9 +15915,8 @@ msgid "Move Track to &Bottom"
 msgstr "Μετακίνηση κομματιού προς τον &πυθμένα"
 
 #: src/tracks/ui/TrackControls.cpp
-#, fuzzy
 msgid "Set Track Name"
-msgstr "Όνομα κομματιού"
+msgstr "Ορισμός ονόματος κομματιού"
 
 #: src/tracks/ui/TrackControls.cpp
 #, c-format
@@ -16290,7 +15978,7 @@ msgstr "Αριστερό=Μεγέθυνση, Δεξί=Σμίκρυνση, Μεσ
 
 #: src/widgets/AButton.cpp
 msgid " (disabled)"
-msgstr "(απενεργοποιημένο)"
+msgstr " (απενεργοποιημένο)"
 
 #: src/widgets/AButton.cpp src/widgets/Meter.cpp
 msgid "Press"
@@ -16493,7 +16181,7 @@ msgstr "01000.01000 δευτερόλεπτα"
 #. * and seconds
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss"
-msgstr "ώρες:λεπτά:δευτ."
+msgstr "ώρες:λεπτά:δευτ"
 
 #. i18n-hint: Format string for displaying time in hours, minutes and
 #. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -16502,13 +16190,13 @@ msgstr "ώρες:λεπτά:δευτ."
 #. * locale
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s"
-msgstr "0100 ώρες 060 λεπτά 060 δευτ."
+msgstr "0100 ώρες 060 λεπτά 060 δευτ"
 
 #. i18n-hint: Name of time display format that shows time in days, hours,
 #. * minutes and seconds
 #: src/widgets/NumericTextCtrl.cpp
 msgid "dd:hh:mm:ss"
-msgstr "ημερομ.:ώρες:λεπτά:δευτ."
+msgstr "ημερομ.:ώρες:λεπτά:δευτ"
 
 #. i18n-hint: Format string for displaying time in days, hours, minutes and
 #. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
@@ -16547,7 +16235,7 @@ msgstr "ώρες:λεπτά:δευτ. + χιλιοδευτερόλεπτα"
 #. * unless there aren't 60 minutes in an hour in your locale
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060.01000 s"
-msgstr "0100 ώρες 060 λεπτά 060.01000 δευτ."
+msgstr "0100 ώρες 060 λεπτά 060.01000 δευτ"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -16824,15 +16512,12 @@ msgid "Timeline actions disabled during recording"
 msgstr "Οι ενέργειες της λωρίδας χρόνου απενεργοποιήθηκαν κατά την εγγραφή"
 
 #: src/widgets/Ruler.cpp
-#, fuzzy
 msgid "Click and drag to adjust, double-click to reset"
-msgstr ""
-"Πατήστε και σύρετε για να ρυθμίσετε το σχετικό μέγεθος των κομματιών στέρεο."
+msgstr "Πατήστε και σύρετε για να ρυθμίσετε, διπλοπατήστε για επαναφορά"
 
 #: src/widgets/Ruler.cpp
-#, fuzzy
 msgid "Record/Play head"
-msgstr "Απαγκυρωμένη ηχογράφηση/κεφαλή αναπαραγωγής"
+msgstr "Κεφαλή ηχογράφησης/αναπαραγωγής"
 
 #: src/widgets/Ruler.cpp
 msgid "Timeline"
@@ -17021,18 +16706,16 @@ msgid "Could not load file: \"%s\""
 msgstr "Αδύνατη η φόρτωση του αρχείου: \"%s\""
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Silence Finder"
-msgstr "Δημιουργία σιγής"
+msgstr "Εύρεση σιγής"
 
 #: plug-ins/SilenceMarker.ny
-#, fuzzy
 msgid "Finding silence..."
-msgstr "Περικόπτεται η σίγαση..."
+msgstr "Εύρεση σιγής..."
 
 #: plug-ins/SilenceMarker.ny
 msgid "Alex S. Brown"
-msgstr ""
+msgstr "Alex S. Brown"
 
 #: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -17045,19 +16728,19 @@ msgstr ""
 #: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
 #: plug-ins/vocalremover.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
-msgstr ""
+msgstr "Εκδόθηκε με τους όρους της Γενικής Δημόσιας Άδειας GNU, έκδοσης 2"
 
 #: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
 msgid "Treat audio below this level as silence [ -dB]"
-msgstr ""
+msgstr "Να αντιμετωπίζεται ο ήχος κάτω από αυτό το επίπεδο ως σιγή [ -dB]"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Minimum duration of silence [seconds]"
-msgstr ""
+msgstr "Ελάχιστη διάρκεια σιγής [δευτερόλεπτα]"
 
 #: plug-ins/SilenceMarker.ny
 msgid "Label placement [seconds before silence ends]"
-msgstr ""
+msgstr "τοποθέτηση ετικέτας [δευτερόλεπτα πριν τον τερματισμό της σιωπής]"
 
 #: plug-ins/SilenceMarker.ny
 #, lisp-format
@@ -17065,36 +16748,36 @@ msgid ""
 "No silences found. Try reducing the silence~%level and minimum silence "
 "duration."
 msgstr ""
+"Δεν βρέθηκε σιγή. Δοκιμάστε να μειώσετε τη σιγή ~%επίπεδο και "
+"ελαχιστοποιήστε τη διάρκεια της σιγής."
 
 #: plug-ins/SoundFinder.ny
-#, fuzzy
 msgid "Sound Finder"
-msgstr "Δημιουργία σιγής"
+msgstr "Εύρεση ήχου"
 
 #: plug-ins/SoundFinder.ny
-#, fuzzy
 msgid "Finding sound..."
-msgstr "Εύρεση ψαλιδίσματος..."
+msgstr "Εύρεση ήχου..."
 
 #: plug-ins/SoundFinder.ny
 msgid "Jeremy R. Brown"
-msgstr ""
+msgstr "Jeremy R. Brown"
 
 #: plug-ins/SoundFinder.ny
 msgid "Minimum duration of silence between sounds [seconds]"
-msgstr ""
+msgstr "Ελάχιστη διάρκεια της σιγής μεταξύ ήχων [δευτερόλεπτα]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Label starting point [seconds before sound starts]"
-msgstr ""
+msgstr "Σημείο έναρξης ετικέτας [δευτερόλεπτα πριν την έναρξη του ήχου]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Label ending point [seconds after sound ends]"
-msgstr ""
+msgstr "Σημείο λήξης ετικέτας [δευτερόλεπτα μετά τον τερματισμό του ήχου]"
 
 #: plug-ins/SoundFinder.ny
 msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr ""
+msgstr "Προσθήκη ετικέτας στο τέλος του κομματιού; [Ναι=0, Όχι=1]"
 
 #: plug-ins/SoundFinder.ny
 #, lisp-format
@@ -17102,32 +16785,32 @@ msgid ""
 "No sounds found. Try reducing the silence~%level and minimum silence "
 "duration."
 msgstr ""
+"Δεν βρέθηκαν ήχοι. Δοκιμάστε να μειώσετε τη σιγή ~%επίπεδο και "
+"ελαχιστοποιήστε τη διάρκεια της σιγής."
 
 #: plug-ins/SoundFinder.ny
 msgid "[End]"
-msgstr ""
+msgstr "[Τέλος]"
 
 #: plug-ins/SpectralEditMulti.ny
-#, fuzzy
 msgid "Spectral edit multi tool"
-msgstr "Φασματική επιλογή"
+msgstr "Πολυεργαλείο φασματικής επεξεργασίας"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy
 msgid "Filtering..."
-msgstr "Διάρκεια φίλτρου"
+msgstr "Φιλτράρισμα..."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
 msgid "Paul Licameli"
-msgstr ""
+msgstr "Paul Licameli"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aPlease select frequencies."
-msgstr "Συχνότητες"
+msgstr "~aΕπιλέξτε συχνότητες."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -17136,6 +16819,9 @@ msgid ""
 "                       frequencies are both ~a Hz).~%~\n"
 "                       Please select a frequency range."
 msgstr ""
+"~aτο πλάτος της ζώνης είναι μηδέν (το ανώτερο και το κατώτερο~%~\n"
+"                       και οι δυο συχνότητες είναι ~a Hz).~%~\n"
+"                       Επιλέξτε περιοχή συχνοτήτων."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -17144,37 +16830,39 @@ msgid ""
 "                      Try increasing the low frequency bound~%~\n"
 "                      or reduce the filter 'Width'."
 msgstr ""
+"~aΟι παράμετροι του φίλτρου εγκοπής (Notch) δεν μπορούν να εφαρμοστούν.~%~\n"
+"                      Προσπαθήστε να αυξήσετε το κάτω όριο της "
+"συχνότητας~%~\n"
+"                      ή να μειώσετε το φίλτρο πλάτους ('Width')."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%"
-msgstr "Σφάλμα"
+msgstr "Σφάλμα.~%"
 
 #: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy
 msgid "Spectral edit parametric EQ"
-msgstr "Φασματική επιλογή"
+msgstr "Παραμετρική εξισορρόπηση φασματικής επιλογής"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
-#, fuzzy
 msgid "Gain (dB)"
-msgstr "&Απολαβή (dB):"
+msgstr "Απολαβή (dB)"
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aLow frequency is undefined."
-msgstr ""
+msgstr "~aΜια χαμηλή συχνότητα είναι αόριστη."
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aHigh frequency is undefined."
-msgstr ""
+msgstr "~aΜια υψηλή συχνότητα είναι αόριστη."
 
 #: plug-ins/SpectralEditParametricEQ.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aCenter frequency must be above 0 Hz."
-msgstr "Η ελάχιστη συχνότητα θα πρέπει να είναι τουλάχιστον 0 Hz"
+msgstr "~aΗ κεντρική συχνότητα πρέπει να είναι πάνω από 0 Hz."
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
@@ -17184,6 +16872,11 @@ msgid ""
 "cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
+"~aΗ επιλογή συσχνότητας είναι υπερβολικά υψηλή για τον ρυθμό δειγματοληψίας "
+"κομματιού.~%~\n"
+"                        Για το τρέχον κομμάτι, η ρύθμιση της υψηλής "
+"συχνότητας δεν μπορεί~%~\n"
+"                        να είναι μεγαλύτερη από ~a Hz"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
 #, lisp-format
@@ -17192,169 +16885,150 @@ msgid ""
 "                         frequencies are both ~a Hz).~%~\n"
 "                         Please select a frequency range."
 msgstr ""
+"~aΤο πλάτος ζώνης είναι μηδέν (η ανώτερη και η κατώτερη~%~\n"
+"                         συχνότητα είναι και οι δυο ~a Hz).~%~\n"
+"                         Επιλέξτε περιοχή συχνοτήτων."
 
 #: plug-ins/SpectralEditShelves.ny
-#, fuzzy
 msgid "Spectral edit shelves"
-msgstr "Φασματική επιλογή"
+msgstr "Ράφια φασματικής επεξεργασίας"
 
 #: plug-ins/StudioFadeOut.ny
-#, fuzzy
 msgid "Studio Fade Out"
-msgstr "Εξασθένιση"
+msgstr "Σταδιακή εξασθένιση στούντιο"
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Applying Fade..."
-msgstr "Εφαρμογή..."
+msgstr "Εφαρμογή σταδιακής μεταβολής..."
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
 #: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny plug-ins/tremolo.ny plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Steve Daulton"
-msgstr "Ορισμός πρ&οεπιλογής"
+msgstr "Steve Daulton"
 
 #: plug-ins/StudioFadeOut.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "Η επιλογή πρέπει να είναι μεγαλύτερη από %d δείγματα."
+msgstr ""
+"Η επιλογή είναι υπερβολικά μικρή. ~%Πρέπει να είναι μεγαλύτερη από 2 "
+"δείγματα."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Adjustable Fade"
-msgstr "Ρύθμιση μετατόπισης"
+msgstr "Ρυθμίσιμη σταδιακή μεταβολή"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Fade Type"
-msgstr "Τύπος &φίλτρου:"
+msgstr "Τύπος εξασθένισης"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Fade Up"
 msgstr "Ενίσχυση"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Fade Down"
-msgstr "Ενίσχυση"
+msgstr "Εξασθένηση"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve Up"
-msgstr "Όνομα καμπύλης"
+msgstr "Καμπύλη s προς τα πάνω "
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve Down"
-msgstr "Μετακίνηση προς τα κάτω"
+msgstr "Καμπύλη s προς τα κάτω"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Mid-fade Adjust (%)"
-msgstr ""
+msgstr "Ρύθμιση μέσης βαθμιαίας μεταβολής (%)"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Start/End as"
-msgstr "Έναρξη-τέλος"
+msgstr "Έναρξη/Τέλος ως"
 
 #: plug-ins/adjustable-fade.ny
 msgid "% of Original"
-msgstr ""
+msgstr "% του αρχικού"
 
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "dB Gain"
-msgstr "Απολαβή"
+msgstr "απολαβή dB"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Start (or end)"
-msgstr "Έναρξη - τέλος"
+msgstr "Έναρξη (ή τέλος)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "End (or start)"
-msgstr ""
+msgstr "Τέλος (ή αρχή)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
-msgstr ""
+msgstr "Εύχρηστες προεπιλογές (αντικατάσταση στοιχείων ελέγχου)"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "None Selected"
-msgstr "Επιλογή"
+msgstr "Χωρίς επιλογή"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Linear In"
-msgstr "Γραμμικό"
+msgstr "Γραμμική είσοδος"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Linear Out"
-msgstr "Γραμμικό"
+msgstr "Γραμμική έξοδος"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Exponential In"
-msgstr ""
+msgstr "Εκθετική είσοδος"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Exponential Out"
-msgstr ""
+msgstr "Εκθετική έξοδος"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Logarithmic In"
-msgstr "Λογαριθμικό"
+msgstr "Λογαριθμική είσοδος"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Logarithmic Out"
-msgstr "Λογαριθμικό"
+msgstr "Λογαριθμική έξοδος"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Rounded In"
-msgstr "Εξασθένιση"
+msgstr "Στρογγυλεμένη είσοδος"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Rounded Out"
-msgstr "Εξασθένιση"
+msgstr "Στρογγυλεμένη έξοδος"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Cosine In"
-msgstr "Συνημίτονο"
+msgstr "Είσοδος συνημιτόνου"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "Cosine Out"
-msgstr "Συνημίτονο"
+msgstr "Έξοδος συνημιτόνου"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve In"
-msgstr "Όνομα καμπύλης"
+msgstr "Είσοδος καμπύλης S"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy
 msgid "S-Curve Out"
-msgstr "Η καμπύλη υπάρχει"
+msgstr "Έξοδος καμπύλης S"
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aPercentage values cannot be negative."
-msgstr "Η απολαβή συχνότητας δεν μπορεί να είναι αρνητική"
+msgstr "~aΟι τιμές ποσοστού δεν μπορούν να είναι αρνητικές."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~aPercentage values cannot be more than 1000 %."
-msgstr "Η απολαβή συχνότητας δεν μπορεί να είναι αρνητική"
+msgstr "~aΟι τιμές ποσοστού δεν μπορούν να είναι μεγαλύτερες από 1000 %."
 
 #: plug-ins/adjustable-fade.ny
 #, lisp-format
@@ -17363,321 +17037,290 @@ msgid ""
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
 "                                 t-6 dB halves the amplitude."
 msgstr ""
+"τιμές ~adB δεν μπορεί να είναι μεγαλύτερες από +100 dB.~%~%~\n"
+"                                 Υπόδειξη: 6 dB διπλασιάζουν το πλάτος~%~\n"
+"                                 t-6 dB υποδιπλασιάζουν το πλάτος."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error~%~%"
-msgstr "Σφάλμα"
+msgstr "Σφάλμα~%~%"
 
 #: plug-ins/beat.ny
-#, fuzzy
 msgid "Beat Finder"
-msgstr "&Κτύποι (Beats)"
+msgstr "Εύρεση κτύπου (Beat)"
 
 #: plug-ins/beat.ny
-#, fuzzy
 msgid "Finding beats..."
-msgstr "Εύρεση ψαλιδίσματος..."
+msgstr "Εύρεση κτύπων (beats)..."
 
 #: plug-ins/beat.ny
-#, fuzzy
 msgid "Threshold Percentage"
-msgstr "Έλεγχοι κατωφλίου"
+msgstr "Ποσοστό κατωφλίου"
 
 #: plug-ins/clipfix.ny
-#, fuzzy
 msgid "Clip Fix"
-msgstr "Απόσπασμα δ&εξιά"
+msgstr "Διόρθωση αποσπάσματος"
 
 #: plug-ins/clipfix.ny
-#, fuzzy
 msgid "Reconstructing clips..."
-msgstr "Απομάκρυνση των κλικ και των ποπ..."
+msgstr "Ανακατασκευή αποσπασμάτων..."
 
 #: plug-ins/clipfix.ny
 msgid "Benjamin Schwartz and Steve Daulton"
-msgstr ""
+msgstr "Benjamin Schwartz και Steve Daulton"
 
 #: plug-ins/clipfix.ny
 msgid ""
 "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr ""
+"Η αδειοδότηση συμφωνεί με τους όρους της Γενικής Δημόσιας Άδειας GNU, "
+"έκδοσης 2"
 
 #: plug-ins/clipfix.ny
 msgid "Threshold of Clipping (%)"
-msgstr ""
+msgstr "Κατώφλι περικοπής (%)"
 
 #: plug-ins/clipfix.ny
 msgid "Reduce amplitude to allow for restored peaks (dB)"
-msgstr ""
+msgstr "Μείωση πλάτους για να επιτραπεί η επαναφορά των κορυφών (dB)"
 
 #: plug-ins/crossfadeclips.ny
-#, fuzzy
 msgid "Crossfade Clips"
-msgstr "Κομμάτι με νότες"
+msgstr "Αποσπάσματα με ομαλή μετάβαση"
 
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Crossfading..."
-msgstr "Κομμάτι με νότες"
+msgstr "Ομαλή μετάβαση..."
 
 #: plug-ins/crossfadeclips.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
 msgstr ""
-"Άκυρη επιλογή ήχου.\n"
-"Παρακαλούμε, ελέγξτε ότι έχει επιλεγεί ήχος."
+"Σφάλμα.~%Άκυρη επιλογή.~%Επιλέχτηκαν περισσότερα από 2 αποσπάσματα ήχου."
 
 #: plug-ins/crossfadeclips.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
-"Άκυρη επιλογή ήχου.\n"
-"Παρακαλούμε, ελέγξτε ότι έχει επιλεγεί ήχος."
+msgstr "Σφάλμα.~%Άκυρη επιλογή.~%Κενός χώρος στην αρχή/τέλος της επιλογής."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
 msgstr ""
+"Σφάλμα.~%Αποσπάσματα ομαλής μετάβασης μπορούν να εφαρμοστούν μόνο σε ένα "
+"κομμάτι."
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Crossfade Tracks"
-msgstr "Κομμάτι με νότες"
+msgstr "Κομμάτια σταδιακής μετάβασης"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Fade type"
-msgstr "Τύπος αρχείου:"
+msgstr "Τύπος ομαλής μετάβασης"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Constant Gain"
-msgstr "Σταθερή"
+msgstr "Σταθερή απολαβή"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Constant Power 1"
-msgstr "Σταθερή"
+msgstr "Σταθερή ισχύς 1"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Constant Power 2"
-msgstr "Σταθερή"
+msgstr "Σταθερή ισχύς 2"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Custom Curve"
-msgstr "Προσαρμοσμένο"
+msgstr "Προσαρμοσμένη καμπύλη"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Custom curve"
-msgstr "Προσαρμοσμένο"
+msgstr "Προσαρμοσμένη καμπύλη"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Fade direction"
-msgstr "άμεση ανάγνωση"
+msgstr "Κατεύθυνση ομαλής μετάβασης"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating Out / In"
-msgstr ""
+msgstr "Εναλλαγή έξοδος / είσοδος"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating In / Out"
-msgstr ""
+msgstr "Εναλλαγή είσοδος / έξοδος"
 
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr ""
+msgstr "Σφάλμα.~%Επιλέξτε 2 (ή περισσότερα) κομμάτια για ομαλή μετάβαση."
 
 #: plug-ins/delay.ny
 msgid "Delay"
 msgstr "Καθυστέρηση"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Applying Delay Effect..."
-msgstr "Εφαρμογή εφέ Nyquist..."
+msgstr "Εφαρμογή εφέ καθυστέρησης..."
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Delay type"
-msgstr "Τύπος κλειδιού"
+msgstr "Τύπος καθυστέρησης"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Regular"
-msgstr "Ορθογώνιο"
+msgstr "Κανονικό"
 
 #: plug-ins/delay.ny
 msgid "Bouncing Ball"
-msgstr ""
+msgstr "Αναπηδούσα σφαίρα"
 
 #: plug-ins/delay.ny
 msgid "Reverse Bouncing Ball"
-msgstr ""
+msgstr "Αντιστροφή αναπηδούσας σφαίρας"
 
 #: plug-ins/delay.ny
 msgid "Delay level per echo (dB)"
-msgstr ""
+msgstr "Επίπεδο καθυστέρησης ανά ηχώ (dB)"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Delay time (seconds)"
-msgstr "Χρόνος καθυστέρησης (δευτ.):"
+msgstr "Χρόνος καθυστέρησης (δευτ.)"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Pitch change effect"
-msgstr "Προεπισκόπηση εφέ"
+msgstr "Εφέ αλλαγής τονικού ύψους"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Pitch/Tempo"
-msgstr "Τονικό ύψος και τέμπο"
+msgstr "Τονικό ύψος και ρυθμός (τέμπο)"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Low-quality Pitch Shift"
-msgstr "Τελική μετατόπιση τονικού ύψους"
+msgstr "Μετατόπιση τονικού ύψους χαμηλής ποιότητας"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Pitch change per echo (semitones)"
-msgstr "Προεπισκόπηση εφέ"
+msgstr "Αλλαγή τονικού ύψους ανά ηχώ (ημιτόνια)"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "Number of echoes"
-msgstr "Αριθμός επαναλήψεων"
+msgstr "Αριθμός αντηχήσεων"
 
 #: plug-ins/delay.ny
 msgid "Allow duration to change"
-msgstr ""
+msgstr "Να επιτρέπεται αλλαγή της διάρκειας"
 
 #: plug-ins/delay.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-msgstr ""
-"Ο μέγιστος αριθμός επεξεργασιών πρέπει να είναι στην περιοχή 1 - 10000."
+msgstr "Ο αριθμός των αντηχήσεων '~a' εκτός έγκυρης περιοχής 1 έως 50.~%~a"
 
 #: plug-ins/delay.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-msgstr ""
-"Ο μέγιστος αριθμός επεξεργασιών πρέπει να είναι στην περιοχή 1 - 10000."
+msgstr "Τονικό ύψος '~a' εκτός έγκυρης περιοχής -12 έως +12 ημιτόνια.~%~a"
 
 #: plug-ins/delay.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
 msgstr ""
-"Ο μέγιστος αριθμός επεξεργασιών πρέπει να είναι στην περιοχή 1 - 10000."
+"Ο χρόνος καθυστέρησης '~a' εκτός έγκυρης περιοχής 0 έως 10 δευτερόλεπτα.~%~a"
 
 #: plug-ins/delay.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-msgstr ""
-"Ο μέγιστος αριθμός επεξεργασιών πρέπει να είναι στην περιοχή 1 - 10000."
+msgstr "Το επίπεδο καθυστέρησης '~a' εκτός έγκυρης περιοχής -30 έως +6 dB.~%~a"
 
 #: plug-ins/delay.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%~a"
-msgstr "Σφάλμα"
+msgstr "Σφάλμα.~%~a"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
-msgstr ""
+msgstr "Ετικέτες κανονικού διαστήματος"
 
 #: plug-ins/equalabel.ny
 msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
+msgstr "Προσθήκη ισαπεχουσών ετικετών στο κομμάτι ετικέτας..."
 
 #: plug-ins/equalabel.ny
 msgid "Use 'Number of labels' OR 'Label interval'"
-msgstr ""
+msgstr "Χρησιμοποιήστε 'Αριθμός ετικετών' Ή 'Απόσταση ετικετών'"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number of Labels"
-msgstr "Αριθμός επεξεργασιών:"
+msgstr "Αριθμός εικετών"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Label Interval"
-msgstr "Επεξεργασία ετικέτας"
+msgstr "Διάστημα ετικέτας"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number of labels"
-msgstr "Αριθμός επεξεργασιών:"
+msgstr "Αριθμός εικετών"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Label interval (seconds)"
-msgstr "Διάρκεια (δευτ.)"
+msgstr "Διάστημα ετικέτας(δευτ.)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
-msgstr ""
+msgstr "Ρυθμίστε την απόσταση ετικέτας για να προσαρμοστεί στο μήκος"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Label text"
-msgstr "Επεξεργασία ετικέτας"
+msgstr "Κείμενο ετικέτας"
 
 #: plug-ins/equalabel.ny
 msgid "Minimum number of digits in label"
-msgstr ""
+msgstr "Ελάχιστος αριθμός ψηφίων στην ετικέτα"
 
 #: plug-ins/equalabel.ny
 msgid "None - Text Only"
-msgstr ""
+msgstr "Κανένα - Μόνο κείμενο"
 
 #: plug-ins/equalabel.ny
 msgid "1 (Before Label)"
-msgstr ""
+msgstr "1 (Πριν την ετικέτα)"
 
 #: plug-ins/equalabel.ny
 msgid "2 (Before Label)"
-msgstr ""
+msgstr "2 (Πριν την ετικέτα)"
 
 #: plug-ins/equalabel.ny
 msgid "3 (Before Label)"
-msgstr ""
+msgstr "3 (Πριν την ετικέτα)"
 
 #: plug-ins/equalabel.ny
 msgid "1 (After Label)"
-msgstr ""
+msgstr "1 (Μετά την ετικέτα)"
 
 #: plug-ins/equalabel.ny
 msgid "2 (After Label)"
-msgstr ""
+msgstr "2 (Μετά την ετικέτα)"
 
 #: plug-ins/equalabel.ny
 msgid "3 (After Label)"
-msgstr ""
+msgstr "3 (Μετά την ετικέτα)"
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
-msgstr ""
+msgstr "Έναρξη αρίθμησης από"
 
 #: plug-ins/highpass.ny
-#, fuzzy
 msgid "High-Pass Filter"
-msgstr "Κλασικά φίλτρα"
+msgstr "Υψίσυχνο φίλτρο"
 
 #: plug-ins/highpass.ny
-#, fuzzy
 msgid "Performing High-Pass Filter..."
-msgstr "Εκτελείται ScienFilter"
+msgstr "Εκτελείται υψιπερατό φίλτρο..."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Dominic Mazzoni"
-msgstr "Απομάκρυνση Θορύβου από τον Dominic Mazzoni"
+msgstr "Dominic Mazzoni"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 #: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
@@ -17686,32 +17329,31 @@ msgstr "Συχνότητα (Hz)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
-msgstr ""
+msgstr "Απότομη εξασθένιση (Roll-off) (dB ανά οκτάβα)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "6 dB"
-msgstr ""
+msgstr "6 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "12 dB"
-msgstr ""
+msgstr "12 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "24 dB"
-msgstr ""
+msgstr "24 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "36 dB"
-msgstr ""
+msgstr "36 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "48 dB"
-msgstr ""
+msgstr "48 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
-#, fuzzy
 msgid "Frequency must be at least 0.1 Hz."
-msgstr "Η ελάχιστη συχνότητα θα πρέπει να είναι τουλάχιστον 0 Hz"
+msgstr "Η συχνότητα πρέπει να είναι τουλάχιστον 0,1 Hz."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, lisp-format
@@ -17720,39 +17362,37 @@ msgid ""
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
+"Σφάλμα:~%~%Η συχνότητα (~a Hz) είναι υπερβολικά υψηλή για το ρυθμό "
+"δειγματοληψίας του κομματιού.~%~%~\n"
+"                   Ο ρυθμός δειγματοληψίας του κομματιού είναι ~a Hz~%~\n"
+"                   Η συχνότητα πρέπει να είναι μικρότερη από ~a Hz."
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limiter"
-msgstr "Όριο dB"
+msgstr "Όριο"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limiting..."
-msgstr "Γίνεται κανονικοποίηση..."
+msgstr "Περιορισμός..."
 
 #: plug-ins/limiter.ny
 msgid "Type"
 msgstr "Τύπος"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Soft Limit"
-msgstr "Όριο dB"
+msgstr "Απαλό όριο"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Hard Limit"
-msgstr "Όριο dB"
+msgstr "Έντονο όριο"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Soft Clip"
-msgstr "Ε&πόμενο απόσπασμα"
+msgstr "Απαλό ψαλίδισμα"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Hard Clip"
 msgstr "Έντονο ψαλίδισμα"
 
@@ -17761,55 +17401,52 @@ msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
+"Απολαβή εισόδου (dB)\n"
+"μονοφωνικό/αριστερό"
 
 #: plug-ins/limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
+"Απολαβή εισόδου (dB)\n"
+"Δεξιό κανάλι"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Limit to (dB)"
-msgstr "&Επίπεδο (dB):"
+msgstr "Όριο μέχρι (dB)"
 
 #: plug-ins/limiter.ny
 msgid "Hold (ms)"
-msgstr ""
+msgstr "Κράτημα (ms)"
 
 #: plug-ins/limiter.ny
-#, fuzzy
 msgid "Apply Make-up Gain"
-msgstr "Διόρθωση απολαβής"
+msgstr "Εφαρμογή απολαβής διόρθωσης (Make-up)"
 
 #: plug-ins/lowpass.ny
-#, fuzzy
 msgid "Low-Pass Filter"
-msgstr "Κλασικά φίλτρα"
+msgstr "Χαμηλοπερατό φίλτρο"
 
 #: plug-ins/lowpass.ny
-#, fuzzy
 msgid "Performing Low-Pass Filter..."
-msgstr "Εκτελείται ScienFilter"
+msgstr "Εκτελείται χαμηλοπερατό φίλτρο..."
 
 #: plug-ins/notch.ny
-#, fuzzy
 msgid "Notch Filter"
-msgstr "Διάρκεια του φίλτρου"
+msgstr "Φίλτρο εγκοπής (Notch Filter)"
 
 #: plug-ins/notch.ny
-#, fuzzy
 msgid "Applying Notch Filter..."
-msgstr "Εφαρμογή ισοπέδωσης..."
+msgstr "Εφαρμογή φίλτρου εγκοπής (Notch Filter)..."
 
 #: plug-ins/notch.ny
-#, fuzzy
 msgid "Steve Daulton and Bill Wharrie"
-msgstr "Ορισμός πρ&οεπιλογής"
+msgstr "Steve Daulton και Bill Wharrie"
 
 #: plug-ins/notch.ny
 msgid "Q (higher value reduces width)"
-msgstr ""
+msgstr "Q (πιο υψηλή τιμή μειώνει το πλάτος)"
 
 #: plug-ins/notch.ny
 #, lisp-format
@@ -17818,267 +17455,242 @@ msgid ""
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
+"Σφάλμα:~%~%Η συχνότητα (~a Hz) είναι υπερβολικά υψηλή για τον ρυθμό "
+"δειγματοληψίας του κομματιού.~%~%~\n"
+"                 Ο ρυθμός δειγματοληψίας του κομματιού είναι ~a Hz.~%~\n"
+"                 Η συχνότητα πρέπει να είναι μικρότερη από ~a Hz."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
-msgstr ""
+msgstr "Τράβηγμα χορδών (Pluck)"
 
 #: plug-ins/pluck.ny
-#, fuzzy
 msgid "Generating pluck sound..."
-msgstr "Δημιουργειται τόνος"
+msgstr "Δημιουργία ήχου με τράβηγμα χορδών (Pluck)..."
 
 #: plug-ins/pluck.ny
 msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
+msgstr "Τιμές MIDI για νότες ντο (C): 36, 48, 60 [μεσαίο C], 72, 84, 96."
 
 #: plug-ins/pluck.ny
 msgid "David R.Sky"
-msgstr ""
+msgstr "David R.Sky"
 
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
-msgstr ""
+msgstr "Τονικό ύψος MIDI με τράβηγμα χορδών (Pluck)"
 
 #: plug-ins/pluck.ny
-#, fuzzy
 msgid "Fade-out type"
-msgstr "Τύπος αρχείου:"
+msgstr "Τύπος εξασθένισης"
 
 #: plug-ins/pluck.ny
 msgid "Abrupt"
-msgstr ""
+msgstr "Απότομο"
 
 #: plug-ins/pluck.ny
 msgid "Gradual"
-msgstr ""
+msgstr "Βαθμιαίο"
 
 #: plug-ins/pluck.ny
-#, fuzzy
 msgid "Duration (60s max)"
-msgstr "Διάρκεια"
+msgstr "Διάρκεια (μέγιστο 60s)"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Rhythm Track"
-msgstr "Απομάκρυνση κομματιού"
+msgstr "Κομμάτι ρυθμού"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Generating Rhythm..."
-msgstr "Δημιουργία κελαηδήματος"
+msgstr "Δημιουργία ρυθμού..."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
-msgstr ""
+msgstr "Ρυθμός (τέμπο) (bpm)"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "30 - 300 beats/minute"
-msgstr "Σε beat ανά λεπτό"
+msgstr "30 - 300 κτύποι (beats)/λεπτό"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Beats per bar"
-msgstr "Κτύποι (Beats) ανά λεπτό"
+msgstr "Κτύποι (Beats) ανά γραμμή"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "1 - 20 beats/measure"
-msgstr "Σε beat ανά λεπτό"
+msgstr "1 - 20 κτύποι (beats)/μέτρο (measure)"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Swing amount"
-msgstr "Ποσότητα παραμόρφωσης"
+msgstr "Ποσότητα ταλάντωσης"
 
 #: plug-ins/rhythmtrack.ny
 msgid "+/- 1"
-msgstr ""
+msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
 msgstr ""
+"Ορίστε το 'Αριθμός γραμμών' σε μηδέν για να ενεργοποιηθεί το 'Διάρκεια "
+"κομματιού ρυθμού'."
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Number of bars"
-msgstr "Αριθμός επαναλήψεων"
+msgstr "Αριθμός γραμμών"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 1000 bars"
-msgstr ""
+msgstr "1 - 1000 bars"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Rhythm track duration"
-msgstr "Απομάκρυνση κομματιού"
+msgstr "Διάρκεια κομματιού ρυθμού"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Used if 'Number of bars' = 0"
-msgstr "Αριθμός επαναλήψεων"
+msgstr "Χρησιμοποιείται εάν ο 'Αριθμός γραμμών' = 0"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Start time offset"
-msgstr "Ξεκίνημα μετατόπισης:"
+msgstr "Μετατόπιση χρόνου έναρξης"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Silence before first beat"
-msgstr "Να περιλαμβάνεται ο ήχος πριν την πρώτη ετικέτα"
+msgstr "Σιγή πριν τον πρώτο κτύπο (beat)"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Beat sound"
-msgstr "&Κτύποι (Beats)"
+msgstr "Ήχος κτύπου (Beat)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Metronome Tick"
-msgstr ""
+msgstr "Τικ μετρονόμου"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Ping (short)"
-msgstr ""
+msgstr "Αποστολή (σύντομη)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Ping (long)"
-msgstr ""
+msgstr "Αποστολή (παρατεταμένη)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Cowbell"
-msgstr ""
+msgstr "Κουδούνι αγελάδας"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Resonant Noise"
-msgstr "Απομάκρυνση θορύβου"
+msgstr "Θόρυβος συντονισμού"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
 msgid "Noise Click"
-msgstr "Ελάχιστος θόρυβος"
+msgstr "Κλικ θορύβου"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Drip (short)"
-msgstr ""
+msgstr "Σταγόνα (σύντομη)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Drip (long)"
-msgstr ""
+msgstr "Σταγόνα (μεγάλη)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of strong beat"
-msgstr ""
+msgstr "Τονικό ύψος MIDI του ισχυρού κτύπου (beat)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "18 - 116"
-msgstr ""
+msgstr "18 - 116"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of weak beat"
-msgstr ""
+msgstr "Τονικό ύψος MIDI του ασθενούς κτύπου (beat)"
 
 #: plug-ins/rhythmtrack.ny
 msgid ""
 "Set either 'Number of bars' or\n"
 "'Rhythm track duration' to greater than zero."
 msgstr ""
+"Ορίστε είτε τον 'Αριθμό γραμμών' είτε\n"
+"την 'Διάρκεια κομματιού ρυθμού' σε μεγαλύτερη από μηδέν."
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Risset Drum"
-msgstr "Δημιουργία θορύβου"
+msgstr "Τύμπανο Ρισέ (Risset Drum)"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Generating Risset Drum..."
-msgstr "Δημιουργία θορύβου"
+msgstr "Δημιουργία τύμπανου Risset..."
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Steven Jones"
-msgstr "Ορισμός πρ&οεπιλογής"
+msgstr "Steven Jones"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Decay (seconds)"
-msgstr "Χρόνος καθυστέρησης (δευτ.):"
+msgstr "Καθυστέρηση (δευτ.)"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Center frequency of noise (Hz)"
-msgstr "Συχνότητα κέντρου και πλάτος"
+msgstr "Συχνότητα κέντρου του θορύβου (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Width of noise band (Hz)"
-msgstr ""
+msgstr "Πλάτος ζώνης θορύβου (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amount of noise in mix (percent)"
-msgstr ""
+msgstr "Ποσότητα θορύβου στη μείξη (ποσοστό)"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Amplitude (0 - 1)"
-msgstr "Πλάτος σήματος (0-1):"
+msgstr "Πλάτος (0-1)"
 
 #: plug-ins/rms.ny
-#, fuzzy
 msgid "Left"
-msgstr "&Αριστερά"
+msgstr "Αριστερά"
 
 #: plug-ins/rms.ny
-#, fuzzy
 msgid "Right"
-msgstr "&Δεξιά"
+msgstr "Δεξιά"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample Data Export"
-msgstr "Αδύνατη η εξαγωγή"
+msgstr "Εξαγωγή δεδομένων δείγματος"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Analyzing..."
-msgstr "Εφαρμογή..."
+msgstr "Ανάλυση..."
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
-msgstr ""
+msgstr "Έξοδος ορίου στο πρώτο"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Measurement scale"
-msgstr "&Μέτρηση επιλογής"
+msgstr "Κλίμακα μέτρησης"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Export data to"
-msgstr "Εξαγωγή ήχου"
+msgstr "Εξαγωγή δεδομένων σε"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
-msgstr ""
+msgstr "Δείκτης (μόνο για αρχεία κειμένου)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample Count"
-msgstr "Επεξεργασία δείγματος"
+msgstr "Αριθμός δείγματος"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Time Indexed"
-msgstr "Επεξεργασία ετικέτας"
+msgstr "Χρόνος με δείκτη"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Include header information"
-msgstr "Πληροφορίες έκδοσης"
+msgstr "Συμπερίληψη πληροφοριών κεφαλίδας"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Minimal"
 msgstr "Ελάχιστο"
 
@@ -18088,67 +17700,67 @@ msgstr "Όλα"
 
 #: plug-ins/sample-data-export.ny
 msgid "Optional header text"
-msgstr ""
+msgstr "Προαιρετικό κείμενο κεφαλίδας"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
-msgstr ""
+msgstr "Διάταξη καναλιού για στερεοφωνικό"
 
 #. i18n-hint: Left and Right
 #: plug-ins/sample-data-export.ny
 msgid "L-R on Same Line"
-msgstr ""
+msgstr "Αριστερό-δεξιό (L-R) στην ίδια γραμμή"
 
 #: plug-ins/sample-data-export.ny
 msgid "Alternate Lines"
-msgstr ""
+msgstr "Εναλλακτικές γραμμές"
 
 #. i18n-hint: L for Left
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "L Channel First"
-msgstr "%d κανάλια"
+msgstr "Πρώτα αριστερό κανάλι"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Show messages"
-msgstr "μήνυμα βοήθειας"
+msgstr "Εμφάνιση μηνυμάτων"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Errors Only"
-msgstr "Σφάλματα"
+msgstr "Μόνο σφάλματα"
 
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
 msgid "[-inf]"
-msgstr ""
+msgstr "[-inf] (αρνητικό άπειρο)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Left Channel.~%~%"
-msgstr "Αριστερό κανάλι"
+msgstr "Αριστερό κανάλι.~%~%"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~%~%Right Channel.~%~%"
-msgstr "Δεξί κανάλι"
+msgstr "~%~%R δεξιό κανάλι.~%~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~aData written to:~%~a"
-msgstr ""
+msgstr "~aΔεδομένα γράφτηκαν στο:~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
 msgstr ""
+"Ρυθμός δειγματοληψίας: ~a Hz.  Τιμές δειγματοληψίας σε κλίμακα ~a.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
+"~a   ~a~%~aΡυθμός δειγματοληψίας: ~a Hz.~%Επεξεργάστηκε μήκος: ~a δείγματα "
+"~a δευτερόλεπτα.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18156,6 +17768,8 @@ msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
+"~a   ~a~%~aΡυθμός δειγματοληψίας: ~a Hz. Τιμές δείγματος σε κλίμακα ~a.~%~\n"
+"                     Επεξεργάστηκε μήκος: ~a δείγματα ~a δευτερόλεπτα.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18166,107 +17780,104 @@ msgid ""
 "Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
+"~a~%Ρυθμός δειγματοληψίας: ~a Hz. Τιμές δείγματος στην κλίμακα ~a scale. ~a."
+"~%~aΕπεξεργάστηκε μήκος: ~a ~\n"
+"                  δείγματα, ~a δευτερόλεπτα.~%Πλάτος κορυφής: ~a (γραμμικό) "
+"~a dB.  Αστάθμιστο RMS: ~a dB.~%~\n"
+"                  Μετατόπιση DC: ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a linear, ~a dB."
-msgstr ""
+msgstr "~a γραμμικό, ~a dB."
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
-msgstr ""
+msgstr "Αριστερά: ~a lin, ~a dB | Δεξιά: ~a lin, ~a dB."
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~a samples."
-msgstr "δείγματα"
+msgstr "~a δείγματα."
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~a seconds."
-msgstr "δευτερόλεπτα"
+msgstr "~a δευτερόλεπτα."
 
 #: plug-ins/sample-data-export.ny
 msgid "Audio data analysis:"
-msgstr ""
+msgstr "Ανάλυση δεδομένων ήχου:"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
-msgstr ""
+msgstr "<b>Ρυθμός δειγματοληψίας:</b> &nbsp;&nbsp;~a Hz."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "<b>Πλάτος κορυφής:</b> &nbsp;&nbsp;~a (γραμμικό) &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "<b>RMS</b> (αστάθμιστο): &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr ""
+msgstr "<b>Διαφορά φάσης DC:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "~a γραμμικό, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "Αριστερά: ~a lin, ~a dB | Δεξιά: ~a linear, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "sample data"
-msgstr "Επεξεργασία δείγματος"
+msgstr "δεδομένα δείγματος"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Sample #"
-msgstr "Δείγματα"
+msgstr "Δείγμα #"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Value (linear)"
-msgstr "Γραμμικό"
+msgstr "Τιμή (γραμμικό)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Value (dB)"
-msgstr "Ε&νταση (dB):"
+msgstr "Τιμή (dB)"
 
 #: plug-ins/sample-data-export.ny
 msgid "audio sample value analysis"
-msgstr ""
+msgstr "ανάλυση τιμής δείγματος ήχου"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Left (linear)"
-msgstr "Γραμμικό"
+msgstr "Αριστερό (γραμμικό)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Right (linear)"
-msgstr "Γραμμικό"
+msgstr "Δεξιό (γραμμικό)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Left (dB)"
-msgstr "&Επίπεδο (dB):"
+msgstr "Αριστερό (dB)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "Right (dB)"
-msgstr "Δεξιό, %dHz"
+msgstr "Δεξιό (dB)"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -18275,83 +17886,79 @@ msgid ""
 "<a href=\"~a\">Audacity</a> by Steve\n"
 "Daulton"
 msgstr ""
+"Παράχθηκε με <span>Εξαγωγή δεδομένων δείγματος</span> για το\n"
+"<a href=\"~a\">Audacity</a> από τον Steve\n"
+"Daulton"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "linear"
-msgstr "Γραμμικό"
+msgstr "γραμμικό"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "2 channels (stereo)"
-msgstr "2 κανάλια (στέρεο)"
+msgstr "2 κανάλια (στερεοφωνικό)"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "1 channel (mono)"
-msgstr "1 κανάλι(μονό)"
+msgstr "1 κανάλι (μονοφωνικό)"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One column per channel.~%"
-msgstr ""
+msgstr "Μια στήλη ανά κανάλι.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "One row per channel.~%"
-msgstr ""
+msgstr "Μια γραμμή ανά κανάλι.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left channel then Right channel on same line.~%"
-msgstr ""
+msgstr "Αριστερό κανάλι, μετά δεξιό κανάλι στην ίδια γραμμή.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left and right channels on alternate lines.~%"
-msgstr ""
+msgstr "Αριστερό και δεξιό κανάλι σε εναλλασσόμενες γραμμές.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left channel first then right channel.~%"
-msgstr ""
+msgstr "Πρώτα αριστερό κανάλι, έπειτα δεξιό κανάλι.~%"
 
 #: plug-ins/sample-data-export.ny
 msgid "Unspecified channel order"
-msgstr ""
+msgstr "Ακαθόριστη σειρά καναλιών"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Error.~%\"~a\" cannot be written."
-msgstr ""
+msgstr "Σφάλμα.Το ~%\"~a\" δεν μπορεί να εγγραφεί."
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Sample Data Import"
-msgstr "Μετ&ατροπέας ρυθμού δειγματοληψίας:"
+msgstr "Εισαγωγή δεδομένων δείγματος"
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Reading and rendering samples..."
-msgstr "Μίξη κομματιών"
+msgstr "Ανάγνωση και απόδοση δειγμάτων..."
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Select file"
 msgstr "Επιλογή αρχείου"
 
 #: plug-ins/sample-data-import.ny
 msgid "Invalid data handling"
-msgstr ""
+msgstr "Άκυρα δεδομένα χειρισμού"
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Throw Error"
-msgstr "Σφάλμα"
+msgstr "Εμφάνιση σφάλματος"
 
 #: plug-ins/sample-data-import.ny
 msgid "Read as Zero"
-msgstr ""
+msgstr "Ανάγνωση ως μηδέν"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -18360,6 +17967,9 @@ msgid ""
 "                        '~a' could not be opened.~%~\n"
 "                        Check that file exists."
 msgstr ""
+"Σφάλμα~%~\n"
+"                        '~a' δεν μπόρεσε να ανοιχθεί.~%~\n"
+"                        Ελέγχει την ύπαρξη αρχείου."
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -18368,6 +17978,9 @@ msgid ""
 "              The file must contain only plain ASCII text.~%~\n"
 "              (Invalid byte '~a' at byte number: ~a)"
 msgstr ""
+"Σφάλμα:~%~\n"
+"              Το αρχείο πρέπει να περιέχει μόνο απλό κείμενο ASCII.~%~\n"
+"              (Άκυρο byte '~a' στον αριθμό byte: ~a)"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -18376,106 +17989,94 @@ msgid ""
 "              Data must be numbers in plain ASCII text.~%~\n"
 "              '~a' is not a numeric value."
 msgstr ""
+"Σφάλμα~%~\n"
+"              Τα δεδομένα πρέπει να είναι αριθμοί σε απλό κείμενο ASCII.~%~\n"
+"              το '~a' δεν είναι αριθμητική τιμή."
 
 #: plug-ins/sample-data-import.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Unable to open file"
-msgstr "Αδύνατη το άνοιγμα είδους αρχείου."
+msgstr "Σφάλμα.~%Αδύνατο το άνοιγμα του αρχείου"
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
-msgstr ""
+msgstr "Τρέμολο"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Applying Tremolo..."
-msgstr "Εφαρμογή ισοπέδωσης..."
+msgstr "Εφαρμογή τρέμολο..."
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Waveform type"
-msgstr "Κυματομορφή"
+msgstr "Τύπος κυματομορφής"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Inverse Sawtooth"
-msgstr "Πριονωτό"
+msgstr "Αντίστροφο πριονωτό"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Starting phase (degrees)"
-msgstr "Η αρχική φάση LFO σε μοίρες"
+msgstr "Αρχική φάση (μοίρες)"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Wet level (percent)"
-msgstr "Επίπεδο ήχου με αντήχηση"
+msgstr "Επεξεργασμένο επίπεδο (ποσοστό)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
-msgstr ""
+msgstr "Φωνητική μείωση και απομόνωση"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Applying Action..."
-msgstr "Εφαρμογή..."
+msgstr "Εφαρμογή ενέργειας..."
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
-msgstr ""
+msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove Vocals"
-msgstr "Ειδική α&φαίρεση"
+msgstr "Αφαίρεση φωνητικών"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Vocals"
-msgstr "&Απομόνωση"
+msgstr "Απομόνωση φωνητικών"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Vocals and Invert"
-msgstr "&Απομόνωση"
+msgstr "Απομόνωση φωνητικών και αντιστροφή"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center"
-msgstr "Αφαίρεση της γραμμής αποκοπής"
+msgstr "Αφαίρεση κέντρου"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Center"
-msgstr "Κέντρο"
+msgstr "Απομόνωση κέντρου"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Isolate Center and Invert"
-msgstr "Κέντρο"
+msgstr "Απομόνωση κέντρου και αντιστροφή"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Remove Center Classic: Mono"
-msgstr "Αφαίρεση της γραμμής αποκοπής"
+msgstr "Αφαίρεση κλασικού κέντρου: Μονοφωνικό"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Analyze"
-msgstr "Ανά&λυση"
+msgstr "Ανάλυση"
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid "Strength"
-msgstr "Έναρξη-διάρκεια"
+msgstr "Ισχύς"
 
 #: plug-ins/vocalrediso.ny
 msgid "Low Cut for Vocals (Hz)"
-msgstr ""
+msgstr "Χαμηλή αποκοπή για φωνητικά (Hz)"
 
 #: plug-ins/vocalrediso.ny
 msgid "High Cut for Vocals (Hz)"
-msgstr ""
+msgstr "Υψηλή αποκοπή για φωνητικά (Hz)"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -18489,6 +18090,14 @@ msgid ""
 "Variation of residuals: ~a\n"
 "y equals ~a plus ~a times x~%"
 msgstr ""
+"Μέσος όρος x: ~a, y: ~a\n"
+"Συνδιακύμανση x y: ~a\n"
+"Μέση διακύμανση x: ~a, y: ~a\n"
+"Τυπική απόκλιση x: ~a, y: ~a\n"
+"Συντελεστής συσχέτισης: ~a\n"
+"Συντελεστής προσδιορισμού: ~a \n"
+"Διακύμανση των υπολοίπων: ~a\n"
+"y ίσο με ~a συν ~a φορές x~%"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -18496,6 +18105,8 @@ msgid ""
 "Pan position: ~a~%The left and right channels are correlated by about ~a %. "
 "This means:~%~a~%"
 msgstr ""
+"Θέση μετακίνησης: ~a~%Το αριστερό και το δεξιό κανάλι συσχετίζονται κατά "
+"περίπου ~a %. Αυτό σημαίνει:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18503,6 +18114,10 @@ msgid ""
 "   The center can't be removed.\n"
 "      Any remaining difference may be caused by lossy encoding."
 msgstr ""
+" - Τα δύο κανάλια είναι ταυτόσημα, δηλ. δύο μονοφωνικά.\n"
+"   Το κέντρο δεν μπορεί να μετακινηθεί.\n"
+"      Οποιαδήποτε παραμένουσα διαφορά μπορεί να προκληθεί από απωλεστική "
+"κωδικοποίηση."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18510,17 +18125,25 @@ msgid ""
 "panned.\n"
 "   Most likely, the center extraction will be poor."
 msgstr ""
+" - Τα δύο κανάλια συσχετίζονται έντονα, δηλ. σχεδόν μονοφωνικό ή ακραία "
+"μετακινημένο.\n"
+"   Κατά πάσα πιθανότητα, η εξαγωγή του κέντρου θα είναι φτωχή."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - A fairly good value, at least stereo in average and not too wide spread."
 msgstr ""
+" - Μια αρκετά καλή τιμή, τουλάχιστον στερεοφωνική στο μέσο όρο και όχι "
+"υπερβολικά εξαπλωμένη."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
 "  However, the center extraction depends also on the used reverb."
 msgstr ""
+" - Μια ιδανική τιμή για στερεοφωνικό.\n"
+"  Όμως, η εξαγωγή του κέντρου εξαρτάται επίσης από τη χρησιμοποιούμενη "
+"αντήχηση."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18529,6 +18152,10 @@ msgid ""
 "manner.\n"
 "   The center extraction can still be good though."
 msgstr ""
+" - Τα δυο κανάλια σχεδόν δεν συσχετίζονται.\n"
+"   Είτε έχετε μόνο θόρυβο ή το κομμάτι επεξεργάστηκε με μη εξισορροπημένο "
+"τρόπο.\n"
+"   Η εξαγωγή του κέντρου μπορεί να είναι ακόμα καλή, όμως."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18536,6 +18163,10 @@ msgid ""
 "   This can cause strange effects.\n"
 "   Especially when played by only one speaker."
 msgstr ""
+" - Αν και το κομμάτι είναι στερεοφωνικό, το πεδίο είναι προφανώς πολύ "
+"πλατύ.\n"
+"   Αυτό μπορεί να προκαλέσει περίεργα εφέ.\n"
+"   Ιδιαίτερα, όταν παίζεται από ένα μόνο ηχείο."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -18544,59 +18175,55 @@ msgid ""
 "   to spread the signal over the physical distance between the speakers.\n"
 " Don't expect good results from a center removal."
 msgstr ""
+" - Τα δύο κανάλια είναι σχεδόν ταυτόσημα.\n"
+"   Προφανώς, έχει χρησιμοποιηθεί ένα ψευδοστερεοφωνικό εφέ\n"
+"   για την εξάπλωση του σήματος μέσω της φυσικής απόστασης μεταξύ των "
+"ηχείων.\n"
+" Μην περιμένετε καλά αποτελέσματα από αφαίρεση του κέντρου."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
-msgstr ""
+msgstr "Αυτό το πρόσθετο δουλεύει μόνο με στερεοφωνικά κομμάτια."
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Vocal Remover"
-msgstr "Απομάκρυνση κομματιού"
+msgstr "Απομάκρυνση φωνής"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Removing center-panned audio..."
-msgstr "Απομάκρυνση των κλικ και των ποπ..."
+msgstr "Αφαίρεση κεντρικού ήχου..."
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove vocals or view Help"
-msgstr "Ειδική α&φαίρεση"
+msgstr "Αφαίρεση φωνητικών ή προβολή βοήθειας"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "View Help"
-msgstr "Βοήθεια"
+msgstr "Προβολή βοήθειας"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Removal choice"
-msgstr "Απομάκρυνση θορύβου"
+msgstr "Επιλογή αφαίρεσης"
 
 #: plug-ins/vocalremover.ny
 msgid "Simple (Entire Spectrum)"
-msgstr ""
+msgstr "Απλό (Πλήρες φάσμα)"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Remove Frequency Band"
-msgstr "Συχνότητα κέντρου:"
+msgstr "Αφαίρεση ζώνης συχνότητας"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Retain Frequency Band"
-msgstr "Κλίμακα γραμμικής συχνότητας"
+msgstr "Κράτημα ζώνης συχνότητας"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Frequency band from (Hz)"
-msgstr "Συχνότητα (Hz)"
+msgstr "Ζώνη συχνότητας από (Hz)"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Frequency band to (Hz)"
-msgstr "Συχνότητα (Hz)"
+msgstr "Ζώνη συχνότητας μέχρι (Hz)"
 
 #: plug-ins/vocalremover.ny
 #, lisp-format
@@ -18627,6 +18254,34 @@ msgid ""
 "or bass), try 'Retain frequency band'. This only removes\n"
 "frequencies outside the limits, retaining the others."
 msgstr ""
+"Η φωνητική αφαίρεση (Vocal Remover) απαιτεί στερεοφωνικό κομμάτι. Δουλεύει "
+"άριστα με\n"
+"μη απωλεστικά αρχεία όπως WAV ή AIFF, παρά με MP3 ή\n"
+"άλλες συμπιεσμένες μορφές. Αφαιρεί μόνο φωνές ή άλλο\n"
+"ήχο που μετακινείται στο κέντρο (ακούγεται εξίσου δυνατά στο αριστερό\n"
+"και στο δεξιό). Οι φωνές μπορούν να αναμειχθούν με αυτόν τον τρόπο. Η "
+"αντιστροφή ενός\n"
+"καναλιού, κατόπιν η μετακίνηση και των δύο στο κέντρο εξουδετερώνει "
+"οποιονδήποτε ήχο\n"
+"που ήταν αρχικά μετατοπισμένος στο κέντρο, καθιστώντας τον μη ακουστό.\n"
+"Αυτό μπορεί να αφαιρέσει μερικά τμήματα του ήχου που μπορεί να θέλετε\n"
+"να κρατήσετε, όπως τα τύμπανα, που αναμειγνύονται επίσης συχνά στο κέντρο.\n"
+"Εάν τα φωνητικά και άλλα κεντραρισμένα τμήματα διαφέρουν σε τονικό ύψος,\n"
+"αυτό μπορεί να επιλυθεί αφαιρώντας μόνο επιλεγμένες συχνότητες.~%\n"
+"Η φωνητική αφαίρεση συνεπώς έχει τρεις επιλογές μεθόδου απομάκρυνσης.\n"
+"Η 'απλή' αντιστρέφει το συνολικό φάσμα συχνότητας ενός\n"
+"καναλιού. Αυτό μπορεί να αφαιρέσει υπερβολική μουσική, εάν άλλα τμήματα του\n"
+"ήχου είναι κεντραρισμένα καθώς και τα φωνητικά. Σε αυτήν την περίπτωση,\n"
+"δοκιμάστε τις άλλες επιλογές. Εάν τα φωνητικά είναι σε διαφορετικό\n"
+"τονικό ύψος από τον άλλο ήχο (όπως η υψηλή γυναικεία φωνή),\n"
+"δοκιμάστε το 'Αφαίρεση ζώνης συχνοτήτων'. Αυτό αφαιρεί μόνο συχνότητες\n"
+"μεταξύ χαμηλότερου και ανώτερου ορίου που μπορούν να εισαχθούν στα\n"
+"πλαίσια 'Ζώνη συχνοτήτων...'. Πειραματιστείτε εισάγοντας ό,τι\n"
+"ακούγεται όπως η πιο σημαντική περιοχή συχνοτήτων των\n"
+"αρχικών φωνητικών. Εάν οι άλλες επιλογές αφαιρούν υπερβολικό\n"
+"ήχο σε μια συγκεκριμένη περιοχή συχνοτήτων (όπως χαμηλά τύμπανα\n"
+"ή μπάσα), δοκιμάστε 'Κράτημα ζώνης συχνοτήτων'. Αυτό αφαιρεί μόνο\n"
+"συχνότητες εκτός των ορίων, διατηρώντας τις άλλες."
 
 #: plug-ins/vocalremover.ny
 #, lisp-format
@@ -18636,6 +18291,11 @@ msgid ""
 "channels, use 'Make Stereo Track' on the Track~%~\n"
 "Drop-Down Menu, then run Vocal Remover again.~%"
 msgstr ""
+"~%Η αφαίρεση φωνών απαιτεί ένα αδιαίρετο, στερεοφωνικό κομμάτι.~%~\n"
+"Εάν έχετε στερεοφωνικό κομμάτι διαιρεμένο σε αριστερό και δεξιό~%~\n"
+"κανάλι, χρησιμοποιήστε το 'Δημιουργία στερεοφωνικού κομματιού' στο~%~\n"
+"πτυσσόμενο μενού του κομματιού, κατόπιν εκτελέστε το φωνητική αφαίρεση "
+"(Vocal Remover) ξανά.~%"
 
 #: plug-ins/vocalremover.ny
 #, lisp-format
@@ -18646,73 +18306,68 @@ msgid ""
 "              A very narrow stop-band filter may have~%~\n"
 "              unexpected results.~%~%"
 msgstr ""
+"Προειδοποίηση:~%~\n"
+"              Το επιλεγμένο ζωνοφρακτικό φίλτρο (band-stop) είναι~%~\n"
+"              ~a Hz μέχρι ~a Hz.~%~\n"
+"              Ένα πολύ στενό ζωνοφρακτικό φίλτρο μπορεί να έχει~%~\n"
+"              αναπάντεχα αποτελέσματα..~%~%"
 
 #: plug-ins/vocalremover.ny
-#, fuzzy
 msgid "Current settings returned the original audio."
-msgstr "Το Nyquist δεν επέστρεψε ήχο.\n"
+msgstr "Οι τρέχουσες ρυθμίσεις επέστρεψαν στον αρχικό ήχο."
 
 #: plug-ins/vocoder.ny
 msgid "Vocoder"
-msgstr ""
+msgstr "Vocoder"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Processing Vocoder..."
-msgstr "Ολοκλήρωση επεξεργασίας."
+msgstr "Επεξεργασία Vocoder..."
 
 #: plug-ins/vocoder.ny
 msgid "Edgar-RFT"
-msgstr ""
+msgstr "Edgar-RFT"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
-msgstr ""
+msgstr "Απόσταση: (1 μέχρι 120, προεπιλογή = 20)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Output choice"
-msgstr "Συσκευή εξόδου"
+msgstr "Επιλογή εξόδου"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Both Channels"
-msgstr "%d κανάλια"
+msgstr "Και τα δυο κανάλια"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Right Only"
-msgstr "Δεξί κανάλι"
+msgstr "Μόνο το δεξιό"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Number of vocoder bands"
-msgstr "Αριθμός επαναλήψεων"
+msgstr "Αριθμός ζωνών vocoder"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Amplitude of original audio (percent)"
-msgstr "Συχνότητα (Hz)"
+msgstr "Πλάτος αρχικού ήχου (ποσοστό)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Amplitude of white noise (percent)"
-msgstr "Συχνότητα (Hz)"
+msgstr "Πλάτος λευκού ήχου (ποσοστό)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Amplitude of Radar Needles (percent)"
-msgstr "Συχνότητα (Hz)"
+msgstr "Πλάτος βελονών ραντάρ (ποσοστό)"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Frequency of Radar Needles (Hz)"
-msgstr "Συχνότητα (Hz)"
+msgstr "Συχνότητα βελονών ραντάρ (Hz)"
 
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
-msgstr ""
+msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
