@@ -1567,16 +1567,10 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       playbackParameters.hostApiSpecificStreamInfo = NULL;
       playbackParameters.channelCount = mNumPlaybackChannels;
 
-// Workaround for bug 1969.
-// PortAudio appears to be reporting too high a value for LowOuputLatency
-// in release builds.  The Workaround is don't use it.
-#if 0
       if (mSoftwarePlaythrough)
          playbackParameters.suggestedLatency =
             playbackDeviceInfo->defaultLowOutputLatency;
-      else 
-#endif      
-      {
+      else {
          // When using WASAPI, the suggested latency does not affect
          // the latency of the playback, but the position of playback is given as if
          // there was the suggested latency. This results in the last "suggested latency"
