@@ -2452,7 +2452,7 @@ void AudacityProject::ModifyToolbarMenus()
 #else
    gPrefs->Read(wxT("/AudioIO/Duplex"),&active, true);
 #endif
-   mCommandManager.Check(wxT("Duplex"), active);
+   mCommandManager.Check(wxT("Overdub"), active);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
    mCommandManager.Check(wxT("SWPlaythrough"), active);
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
