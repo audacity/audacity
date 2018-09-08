@@ -1751,7 +1751,11 @@ static PaError CalculateBufferSettings(
 
                 if( *hostFramesPerOutputBuffer != *hostFramesPerInputBuffer )
                 {
-                    if( hostFramesPerInputBuffer < hostFramesPerOutputBuffer )
+// JKC: Patched By Audacity.  Our Bug 1969
+// Previously this line incorrectly read:
+// if( hostFramesPerInputBuffer < hostFramesPerOutputBuffer )
+// So it was comparing pointers, rather than the values pointed to.
+                    if( *hostFramesPerInputBuffer < *hostFramesPerOutputBuffer )
                     {
                         *hostFramesPerOutputBuffer = *hostFramesPerInputBuffer;
 
