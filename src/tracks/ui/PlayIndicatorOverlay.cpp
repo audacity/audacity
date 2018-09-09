@@ -145,6 +145,8 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
    }
 
    auto trackPanel = mProject->GetTrackPanel();
+   int width;
+   trackPanel->GetTracksUsableArea(&width, nullptr);
 
    if (!mProject->IsAudioActive()) {
       mNewIndicatorX = -1;
@@ -152,8 +154,6 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       const auto &scrubber = mProject->GetScrubber();
       if (scrubber.HasMark()) {
          auto position = scrubber.GetScrubStartPosition();
-         int width;
-         trackPanel->GetTracksUsableArea(&width, nullptr);
          const auto offset = trackPanel->GetLeftOffset();
          if(position >= trackPanel->GetLeftOffset() &&
             position < offset + width)
@@ -191,7 +191,16 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
              mProject->mLastPlayMode != PlayMode::oneSecondPlay &&
              !gAudioIO->IsPaused())
          {
-            mProject->TP_ScrollWindow(playPos);
+            auto newPos = playPos;
+            if (playPos < viewInfo.h) {
+               // This is possible when scrubbing backwards.
+               // We want to page leftward by (at least) a whole screen, not
+               // just a little bit equal to the scrubbing poll interval
+               // duration.
+               newPos = viewInfo.OffsetTimeByPixels( newPos, -width );
+               newPos = std::max( newPos, mProject->ScrollingLowerBoundTime() );
+            }
+            mProject->TP_ScrollWindow(newPos);
             // Might yet be off screen, check it
             onScreen = playPos >= 0.0 &&
             between_incexc(viewInfo.h,
