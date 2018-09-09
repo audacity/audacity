@@ -166,9 +166,13 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       // Calculate the horizontal position of the indicator
       const double playPos = viewInfo.mRecentStreamTime;
 
+      using Mode = AudacityProject::PlaybackScroller::Mode;
+      const Mode mode = mProject->GetPlaybackScroller().GetMode();
+      const bool pinned = ( mode == Mode::Pinned || mode == Mode::Right );
+
       // Use a small tolerance to avoid flicker of play head pinned all the way
       // left or right
-      const auto tolerance = 1.5 * kTimerInterval / 1000.0;
+      const auto tolerance = pinned ? 1.5 * kTimerInterval / 1000.0 : 0;
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,
@@ -182,9 +186,6 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
           playPos >= 0 && !onScreen ) {
          // msmeyer: But only if not playing looped or in one-second mode
          // PRL: and not scrolling with play/record head fixed
-         using Mode = AudacityProject::PlaybackScroller::Mode;
-         const Mode mode = mProject->GetPlaybackScroller().GetMode();
-         const bool pinned = ( mode == Mode::Pinned || mode == Mode::Right );
          if (!pinned &&
              mProject->mLastPlayMode != PlayMode::loopedPlay &&
              mProject->mLastPlayMode != PlayMode::oneSecondPlay &&
