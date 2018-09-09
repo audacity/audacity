@@ -1190,11 +1190,17 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
                }
             }
          }
-         // If we've dropped minor labels through overcrowding, then don't show
-         // any of them.  We're allowed though to drop ones which correspond to the
-         // major numbers.
-         if( nDroppedMinorLabels > (mNumMajor+ (mLabelEdges ? 2:0)) )
-            mNumMinor = 0;
+      }
+
+      // If we've dropped minor labels through overcrowding, then don't show
+      // any of them.  We're allowed though to drop ones which correspond to the
+      // major numbers.
+      if( nDroppedMinorLabels > (mNumMajor+ (mLabelEdges ? 2:0)) ){
+         // Old code dropped the labels AND their ticks, like so:
+         //    mNumMinor = 0;
+         // Nowadays we just drop the labels.
+         for(i=0; i<mNumMinor; i++)
+            mMinorLabels[i].text = "";
       }
 
       // Left and Right Edges
