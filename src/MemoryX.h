@@ -552,8 +552,7 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
    R max( Unary unary_op = {} ) const
    {
       return this->accumulate(
-         -std::numeric_limits< R >::max(),
-         // std::numeric_limits< R >::lowest(), // TODO C++11
+         std::numeric_limits< R >::lowest(),
          (const R&(*)(const R&, const R&)) std::max,
          unary_op
       );
