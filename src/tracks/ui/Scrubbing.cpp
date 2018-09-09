@@ -364,7 +364,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
             options.pScrubbingOptions = &mOptions;
             options.timeTrack = NULL;
-            mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
+            mOptions.delay = (ScrubPollInterval_ms / 1000.0);
             mOptions.isPlayingAtSpeed = false;
             mOptions.minSpeed = 0.0;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
@@ -470,7 +470,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
    AudioIOStartStreamOptions options(mProject->GetSpeedPlayOptions());
    options.pScrubbingOptions = &mOptions;
    options.timeTrack = NULL;
-   mOptions.delay = (ScrubPollInterval_ms * 0.9 / 1000.0);
+   mOptions.delay = (ScrubPollInterval_ms / 1000.0);
    mOptions.minSpeed = speed -0.01;
    mOptions.maxSpeed = speed +0.01;
 

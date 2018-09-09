@@ -541,49 +541,40 @@ struct AudioIO::ScrubState
    }
 
    void Get(sampleCount &startSample, sampleCount &endSample,
-         sampleCount &duration)
+         sampleCount inDuration, sampleCount &duration)
    {
       // Called by the thread that calls AudioIO::FillBuffers
       startSample = endSample = duration = -1LL;
-      Duration dd { *this };
-      if (dd.duration <= 0)
-         return;
 
       Message message( mMessage.Read() );
       if ( !mStarted ) {
+         // Make some initial silence
          const sampleCount s0 { llrint( mRate *
             std::max( message.options.minTime,
                std::min( message.options.maxTime, mStartTime ) ) ) };
-         const sampleCount s1 ( message.options.bySpeed
-            ? s0.as_double() +
-               llrint(dd.duration.as_double() * message.end) // end is a speed
-            : llrint(message.end * mRate)            // end is a time
-         );
-         auto actualDuration = std::max(sampleCount{1}, dd.duration);
-         auto success = mData.Init(nullptr,
-            s0, s1, actualDuration, message.options, mRate);
-         if ( !success ) {
-            // If not, we can wait to enqueue again later
-            dd.Cancel();
-            return;
-         }
+         mData.mS0 = mData.mS1 = s0;
+         mData.mGoal = -1;
+         mData.mDuration = duration = inDuration;
+         mData.mSilence = 0;
          mStarted = true;
       }
       else {
          Data newData;
-         auto previous = &mData;
+         inDuration += mAccumulatedSeekDuration;
 
          // Use the previous end as NEW start.
-         const auto s0 = previous->mS1;
+         const auto s0 = mData.mS1;
          const sampleCount s1 ( message.options.bySpeed
             ? s0.as_double() +
-               lrint(dd.duration.as_double() * message.end) // end is a speed
+               lrint(inDuration.as_double() * message.end) // end is a speed
             : lrint(message.end * mRate)            // end is a time
          );
          auto success =
-            newData.Init(previous, s0, s1, dd.duration, message.options, mRate);
-         if ( !success ) {
-            dd.Cancel();
+            newData.Init(mData, s0, s1, inDuration, message.options, mRate);
+         if (success)
+            mAccumulatedSeekDuration = 0;
+         else {
+            mAccumulatedSeekDuration += inDuration;
             return;
          }
          mData = newData;
@@ -639,10 +630,11 @@ private:
          , mSilence(0)
       {}
 
-      bool Init(Data *previous, sampleCount s0, sampleCount s1,
+      bool Init(Data &rPrevious, sampleCount s0, sampleCount s1,
          sampleCount duration,
          const ScrubbingOptions &options, double rate)
       {
+         auto previous = &rPrevious;
          auto origDuration = duration;
          mSilence = 0;
 
@@ -665,7 +657,6 @@ private:
             adjustedSpeed = true;
          }
          else if (!adjustStart &&
-            previous &&
             previous->mGoal >= 0 &&
             previous->mGoal == s1)
          {
@@ -776,39 +767,11 @@ private:
       sampleCount mSilence;
    };
 
-   using Clock = std::chrono::steady_clock;
-
-   struct Duration {
-      Duration (ScrubState &queue_) : queue(queue_)
-      {
-         do {
-            clockTime = Clock::now();
-            using Seconds = std::chrono::duration<double>;
-            const auto elapsed = std::chrono::duration_cast<Seconds>(
-               clockTime - queue.mLastScrubTime);
-            duration = static_cast<long long>( queue.mRate * elapsed.count() );
-         } while( duration <= 0 && (::wxMilliSleep(1), true) );
-      }
-      ~Duration ()
-      {
-         if(!cancelled)
-            queue.mLastScrubTime = clockTime;
-      }
-
-      void Cancel() { cancelled = true; }
-
-      ScrubState &queue;
-      Clock::time_point clockTime;
-      sampleCount duration;
-      bool cancelled { false };
-   };
-
    double mStartTime;
    bool mStarted{ false };
    std::atomic<bool> mStopped { false };
    Data mData;
    const double mRate;
-   Clock::time_point mLastScrubTime { Clock::now() };
    struct Message {
       Message() = default;
       Message(const Message&) = default;
@@ -816,6 +779,7 @@ private:
       ScrubbingOptions options;
    };
    MessageBuffer<Message> mMessage;
+   sampleCount mAccumulatedSeekDuration{};
 };
 #endif
 
@@ -3927,7 +3891,7 @@ void AudioIO::FillBuffers()
                {
                   sampleCount startSample, endSample;
                   mScrubState->Get(
-                     startSample, endSample, mScrubDuration);
+                     startSample, endSample, available, mScrubDuration);
                   if (mScrubDuration < 0)
                   {
                      // Can't play anything
