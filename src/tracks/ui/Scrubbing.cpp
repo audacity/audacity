@@ -570,7 +570,23 @@ void Scrubber::ContinueScrubbingPoll()
       else
 #endif
       {
-         const double time = viewInfo.PositionToTime(position.x, trackPanel->GetLeftOffset());
+         const auto origin = trackPanel->GetLeftOffset();
+         auto xx = position.x;
+         if (!seek && !mSmoothScrollingScrub) {
+            // If mouse is out-of-bounds, so that we scrub at maximum speed
+            // toward the mouse position, then move the target time to a more
+            // extreme position to avoid catching-up and halting before the
+            // screen scrolls.
+            int width;
+            trackPanel->GetTracksUsableArea(&width, NULL);
+            auto delta = xx - origin;
+            if (delta < 0)
+               delta -= width;
+            else if (delta >= width)
+               delta += width;
+            xx = origin + delta;
+         }
+         const double time = viewInfo.PositionToTime(xx, origin);
          mOptions.adjustStart = seek;
          mOptions.minSpeed = seek ? 1.0 : 0.0;
          mOptions.maxSpeed = seek ? 1.0 : mMaxSpeed;
