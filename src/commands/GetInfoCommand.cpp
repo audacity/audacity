@@ -271,7 +271,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( t->GetEndTime(), "end" );
          context.AddItem( t->GetPan() , "pan");
          context.AddItem( t->GetGain() , "gain");
-         context.AddBool( t->GetLinked(), "linked");
+         context.AddItem( t->GetLinked() ? 2:1, "channels");
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
       }
