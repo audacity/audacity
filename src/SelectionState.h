@@ -21,7 +21,7 @@ class SelectionState
 {
 public:
    static void SelectTrackLength
-      ( TrackList &tracks, ViewInfo &viewInfo, Track &track, bool syncLocked );
+      ( ViewInfo &viewInfo, Track &track, bool syncLocked );
 
    void SelectTrack
       ( Track &track,

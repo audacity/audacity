@@ -226,9 +226,8 @@ UIHandle::Result StretchHandle::Release
    bool right = mStretchState.mMode == stretchRight;
    ViewInfo &viewInfo = pProject->GetViewInfo();
    if ( pProject->IsSyncLocked() && ( left || right ) ) {
-      SyncLockedTracksIterator syncIter( pProject->GetTracks() );
-      for ( auto track = syncIter.StartWith( mpTrack.get() ); track != nullptr;
-           track = syncIter.Next() ) {
+      for ( auto track :
+           TrackList::SyncLockGroup( mpTrack.get() ) ) {
          if ( track != mpTrack.get() ) {
             if ( left ) {
                auto origT0 = mStretchState.mOrigSel0Quantized;

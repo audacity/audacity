@@ -16,42 +16,24 @@
 // on, use the largest possible selection in the sync-lock group.
 // If it's a stereo track, do the same for the stereo channels.
 void SelectionState::SelectTrackLength
-( TrackList &tracks, ViewInfo &viewInfo, Track &track, bool syncLocked )
+( ViewInfo &viewInfo, Track &track, bool syncLocked )
 {
-   SyncLockedTracksIterator it( &tracks );
-   Track *t1 = it.StartWith( &track );
-   double minOffset = track.GetOffset();
-   double maxEnd = track.GetEndTime();
-
+   auto trackRange = syncLocked
    // If we have a sync-lock group and sync-lock linking is on,
    // check the sync-lock group tracks.
-   if ( syncLocked && t1 != NULL )
-   {
-      for ( ; t1; t1 = it.Next())
-      {
-         if (t1->GetOffset() < minOffset)
-            minOffset = t1->GetOffset();
-         if (t1->GetEndTime() > maxEnd)
-            maxEnd = t1->GetEndTime();
-      }
-   }
-   else
-   {
-      // Otherwise, check for a stereo pair
-      t1 = track.GetLink();
-      if (t1)
-      {
-         if (t1->GetOffset() < minOffset)
-            minOffset = t1->GetOffset();
-         if (t1->GetEndTime() > maxEnd)
-            maxEnd = t1->GetEndTime();
-      }
-   }
+   ? TrackList::SyncLockGroup(&track)
+
+   // Otherwise, check for a stereo pair
+   : TrackList::Channels(&track);
+
+   auto minOffset = trackRange.min( &Track::GetOffset );
+   auto maxEnd = trackRange.max( &Track::GetEndTime );
 
    // PRL: double click or click on track control.
    // should this select all frequencies too?  I think not.
    viewInfo.selectedRegion.setTimes(minOffset, maxEnd);
 }
+
 
 void SelectionState::SelectTrack
 ( Track &track, bool selected, bool updateLastPicked,
@@ -175,7 +157,7 @@ void SelectionState::HandleListSelection
       else {
          SelectNone( tracks, pMixerBoard );
          SelectTrack( track, true, true, pMixerBoard );
-         SelectTrackLength( tracks, viewInfo, track, syncLocked );
+         SelectTrackLength( viewInfo, track, syncLocked );
       }
 
       if (pMixerBoard)

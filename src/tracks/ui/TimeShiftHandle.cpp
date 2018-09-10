@@ -267,9 +267,7 @@ void TimeShiftHandle::CreateListOfCapturedClips
          // we can treat individual labels as clips)
          if ( trackClip.clip ) {
             // Iterate over sync-lock group tracks.
-            SyncLockedTracksIterator git( &trackList );
-            for (Track *t = git.StartWith( trackClip.track  );
-                  t; t = git.Next() )
+            for (auto t : TrackList::SyncLockGroup( trackClip.track ))
                AddClipsToCaptured(state, t,
                      trackClip.clip->GetStartTime(),
                      trackClip.clip->GetEndTime() );
@@ -278,8 +276,7 @@ void TimeShiftHandle::CreateListOfCapturedClips
          // Capture additional clips from NoteTracks
          trackClip.track->TypeSwitch( [&](NoteTrack *nt) {
             // Iterate over sync-lock group tracks.
-            SyncLockedTracksIterator git( &trackList );
-            for (Track *t = git.StartWith(nt); t; t = git.Next())
+            for (auto t : TrackList::SyncLockGroup(nt))
                AddClipsToCaptured
                   ( state, t, nt->GetStartTime(), nt->GetEndTime() );
          });

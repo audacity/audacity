@@ -371,9 +371,9 @@ bool EffectTruncSilence::ProcessIndependently()
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
          if (syncLock) {
-            SyncLockedTracksIterator syncIter(mOutputTracks.get());
-            groupFirst = syncIter.StartWith(track);
-            groupLast = syncIter.Last();
+            auto trackRange = TrackList::SyncLockGroup(track);
+            groupFirst = *trackRange.begin();
+            groupLast = *trackRange.rbegin();
          }
          else {
             groupFirst = track;
