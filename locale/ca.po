@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-31 22:53+0100\n"
-"PO-Revision-Date: 2018-09-06 16:24+0200\n"
+"PO-Revision-Date: 2018-09-10 17:16+0200\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "Language: ca\n"
@@ -51,7 +51,7 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
-msgstr "Banc de treball &Nyquist…"
+msgstr "Banc de treball &Nyquist..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
@@ -515,7 +515,7 @@ msgstr "Emèrits:"
 
 #: src/AboutDialog.cpp
 msgid "Distinguished Audacity Team members, not currently active"
-msgstr "Membres distingits de l'equip d'Audacity, no actius actualmet"
+msgstr "Membres distingits de l'equip d'Audacity, no actius actualment"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -651,11 +651,11 @@ msgstr "Compatibilitat amb el mesclador de la targeta de so"
 
 #: src/AboutDialog.cpp
 msgid "Pitch and Tempo Change support"
-msgstr "Compatibilitat amb el canvi de to i tempo"
+msgstr "Compatibilitat amb el canvi d'altura i tempo"
 
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Compatibilitat amb el canvi extrem de to i tempo"
+msgstr "Compatibilitat amb el canvi extrem d'altura i tempo"
 
 #: src/AboutDialog.cpp
 msgid "Program build date: "
@@ -3146,7 +3146,7 @@ msgstr "En totes les pistes amb &sincronització bloquejada"
 
 #: src/Menus.cpp
 msgid "R&egion"
-msgstr "R&egió"
+msgstr "Fra&gment"
 
 #: src/Menus.cpp
 msgid "Set Selection Left at Play Position"
@@ -3250,11 +3250,11 @@ msgstr "Emmagatzema la pos&ició del cursor"
 
 #: src/Menus.cpp
 msgid "Select Zero Crossing"
-msgstr ""
+msgstr "Seleccioneu la transició del zero"
 
 #: src/Menus.cpp
 msgid "At &Zero Crossings"
-msgstr ""
+msgstr "A les transicions del &zero"
 
 #: src/Menus.cpp
 msgid "&View"
@@ -3373,7 +3373,7 @@ msgstr "Barra d'eines del vúmetre de &reproducció"
 #. i18n-hint: Clicking this menu item shows the toolbar with the mixer
 #: src/Menus.cpp
 msgid "Mi&xer Toolbar"
-msgstr "Barra de control del &mesclador"
+msgstr "Barra d'eines del &mesclador"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/Menus.cpp
@@ -3383,7 +3383,7 @@ msgstr "Barra d'eines d'&edició"
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
 #: src/Menus.cpp
 msgid "Pla&y-at-Speed Toolbar"
-msgstr ""
+msgstr "Barra d'eines de reproduei&x a velocitat"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
 #: src/Menus.cpp
@@ -3393,7 +3393,7 @@ msgstr "&Barra d'eines de rastreig"
 #. i18n-hint: Clicking this menu item shows the toolbar that manages devices
 #: src/Menus.cpp
 msgid "&Device Toolbar"
-msgstr "Barra de &dispositius"
+msgstr "Barra d'eines dels &dispositius"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio
 #: src/Menus.cpp
@@ -3407,7 +3407,7 @@ msgstr "Barra d'eines de selecció espe&ctral"
 
 #: src/Menus.cpp
 msgid "&Extra Menus (on/off)"
-msgstr "Menús &extres (activat/desactivat)"
+msgstr "Menú &extres (activat/desactivat)"
 
 #: src/Menus.cpp
 msgid "&Show Clipping (on/off)"
@@ -3421,7 +3421,7 @@ msgstr "Mostra el tauler d'efectes"
 #. play, record, pause etc.
 #: src/Menus.cpp
 msgid "Tra&nsport"
-msgstr "Tra&nsporta"
+msgstr "Tra&nsport"
 
 #: src/Menus.cpp
 msgid "Pl&aying"
@@ -3535,7 +3535,7 @@ msgstr "Acabame&nt del projecte"
 
 #: src/Menus.cpp
 msgid "Pla&y Region"
-msgstr "Reproducció de la &regió"
+msgstr "&Fragment de reproducció"
 
 #: src/Menus.cpp
 msgid "&Lock"
@@ -3559,11 +3559,11 @@ msgstr "Ni&vell d'activació per so..."
 
 #: src/Menus.cpp
 msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Enregistrament &activat pel so (activat/desactivat)"
+msgstr "Enregistrament &activat per so (activat/desactivat)"
 
 #: src/Menus.cpp
 msgid "Pinned Play/Record &Head (on/off)"
-msgstr ""
+msgstr "Ca&pçal de reproducció/enregistrament enclavat (activar/desactivat)"
 
 #: src/Menus.cpp
 msgid "&Overdub (on/off)"
@@ -3623,7 +3623,7 @@ msgstr "&Elimina les pistes"
 
 #: src/Menus.cpp
 msgid "M&ute/Unmute"
-msgstr ""
+msgstr "S&ilencia/Dessilencia"
 
 #: src/Menus.cpp
 msgid "&Mute All Tracks"
@@ -3631,7 +3631,7 @@ msgstr "Si&lencia totes les pistes"
 
 #: src/Menus.cpp
 msgid "&Unmute All Tracks"
-msgstr "Desemm&udeix totes les pistes"
+msgstr "&Dessilencia totes les pistes"
 
 #: src/Menus.cpp
 msgid "&Pan"
@@ -4180,7 +4180,7 @@ msgstr ""
 
 #: src/Menus.cpp
 msgid "M&ute/Unmute Focused Track"
-msgstr ""
+msgstr "S&ilencia/Dessilencia la pista amb focus"
 
 #: src/Menus.cpp
 msgid "&Solo/Unsolo Focused Track"
@@ -4188,23 +4188,23 @@ msgstr ""
 
 #: src/Menus.cpp
 msgid "&Close Focused Track"
-msgstr ""
+msgstr "Tan&ca la pista amb focus"
 
 #: src/Menus.cpp
 msgid "Move Focused Track U&p"
-msgstr ""
+msgstr "Mou la pista amb focus a&munt"
 
 #: src/Menus.cpp
 msgid "Move Focused Track Do&wn"
-msgstr ""
+msgstr "Mou la pista amb focus a&vall"
 
 #: src/Menus.cpp
 msgid "Move Focused Track to T&op"
-msgstr ""
+msgstr "Mou la pista amb focus al capdamun&t"
 
 #: src/Menus.cpp
 msgid "Move Focused Track to &Bottom"
-msgstr ""
+msgstr "Mou la pista amb focus al capdava&ll"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/Menus.cpp
@@ -4347,7 +4347,7 @@ msgstr "&Diagnòstics"
 
 #: src/Menus.cpp
 msgid "Au&dio Device Info..."
-msgstr "Informació del dispositiu d'àu&dio…"
+msgstr "Informació del dispositiu d'àu&dio..."
 
 #: src/Menus.cpp
 msgid "&MIDI Device Info..."
@@ -4618,7 +4618,7 @@ msgstr ""
 
 #: src/Menus.cpp src/effects/Silence.h
 msgid "Silence"
-msgstr "Silencia"
+msgstr "Silenci"
 
 #: src/Menus.cpp
 msgid "Duplicated"
@@ -4631,7 +4631,7 @@ msgstr "Duplica"
 #. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
 #: src/Menus.cpp
 msgid "Cut labeled audio regions to clipboard"
-msgstr "Retalla les regions d'àudio etiquetades"
+msgstr "S'han retallat fragments d'àudio etiquetat al porta-retalls"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4641,7 +4641,7 @@ msgstr "Retalla l'àudio etiquetat"
 #. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
 #: src/Menus.cpp
 msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Divideix i retalla les regions etiquetades"
+msgstr "S'han dividit i retallat fragments d'àudio etiquetat al porta-retalls"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/Menus.cpp
@@ -4650,7 +4650,7 @@ msgstr "Divideix i retalla l'àudio"
 
 #: src/Menus.cpp
 msgid "Copied labeled audio regions to clipboard"
-msgstr "Copia l'àudio de les regions etiquetades"
+msgstr "S'han copiat fragments d'àudio etiquetat al porta-retalls"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4660,7 +4660,7 @@ msgstr "Copia l'àudio etiquetat"
 #. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
 #: src/Menus.cpp
 msgid "Deleted labeled audio regions"
-msgstr "Elimina les regions d'àudio etiquetades"
+msgstr "S'han eliminat fragments d'àudio etiquetat"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4670,7 +4670,7 @@ msgstr "Elimina l'àudio etiquetat"
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
 #: src/Menus.cpp
 msgid "Split Deleted labeled audio regions"
-msgstr "Divideix i elimina les regions d'àudio etiquetades"
+msgstr "S'han dividir i eliminat fragments d'àudio etiquetat"
 
 #. i18n-hint: (verb) Do a special kind of DELETE on labeled audio regions
 #: src/Menus.cpp
@@ -4680,7 +4680,7 @@ msgstr "Divideix i elimina l'àudio etiquetat"
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Silenced labeled audio regions"
-msgstr "Silencia les regions d'àudio etiquetades"
+msgstr "S'han silenciat fragments d'àudio etiquetat"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4690,7 +4690,7 @@ msgstr "Silencia l'àudio etiquetat"
 #. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
 #: src/Menus.cpp
 msgid "Split labeled audio (points or regions)"
-msgstr "Divideix l'àudio etiquetat (punts o regions)"
+msgstr "S'ha dividit àudio etiquetat (punts o fragments)"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4700,7 +4700,7 @@ msgstr "Divideix l'àudio etiquetat"
 #. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
 #: src/Menus.cpp
 msgid "Joined labeled audio (points or regions)"
-msgstr "S'ha unit l'àudio etiquetat (punts o regions)"
+msgstr "S'ha unit àudio etiquetat (punts o fragments)"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4712,7 +4712,7 @@ msgstr "Uneix l'àudio etiquetat"
 #. Audacity has done.
 #: src/Menus.cpp
 msgid "Detached labeled audio regions"
-msgstr "Desenganxa regions d'àudio etiquetades"
+msgstr "S'han desenganxat fragments d'àudio etiquetat"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -5144,8 +5144,8 @@ msgid ""
 "Cannot lock region beyond\n"
 "end of project."
 msgstr ""
-"No es pot bloquejar més enllà\n"
-"del final del projecte."
+"No es pot bloquejar el fragment\n"
+"més enllà del final del projecte."
 
 #: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Resample"
@@ -5318,112 +5318,112 @@ msgstr "Pista de notes"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C"
-msgstr ""
+msgstr "do"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C♯"
-msgstr ""
+msgstr "do♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D"
-msgstr ""
+msgstr "re"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♯"
-msgstr ""
+msgstr "re♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "E"
-msgstr ""
+msgstr "mi"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F"
-msgstr ""
+msgstr "fa"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F♯"
-msgstr ""
+msgstr "fa♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G"
-msgstr "G"
+msgstr "sol"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♯"
-msgstr ""
+msgstr "sol♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A"
-msgstr ""
+msgstr "la"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯"
-msgstr ""
+msgstr "la♯"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "B"
-msgstr ""
+msgstr "si"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♭"
-msgstr ""
+msgstr "re♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "E♭"
-msgstr ""
+msgstr "mi♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♭"
-msgstr ""
+msgstr "sol♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♭"
-msgstr ""
+msgstr "la♭"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "B♭"
-msgstr ""
+msgstr "si♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
-msgstr ""
+msgstr "do♯ / re♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
-msgstr ""
+msgstr "re♯ / mi♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
-msgstr ""
+msgstr "fa♯ / sol♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
-msgstr ""
+msgstr "sol♯ / la♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
-msgstr ""
+msgstr "la♯ / si♭"
 
 #: src/PluginManager.cpp
 msgid "Manage Plug-ins"
@@ -5432,8 +5432,8 @@ msgstr "Gestiona els connectors"
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
-"Seleccioneu els efectes, feu clic al botó Habilita o Inhabilita i, "
-"finalment, feu clic a D'acord."
+"Seleccioneu els efectes, feu clic al botó «Habilita» o «Inhabilita» i, "
+"finalment, feu clic a «D'acord»."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
@@ -5554,7 +5554,7 @@ msgstr[1] "Voleu habilitar aquests connectors?"
 
 #: src/PluginManager.cpp
 msgid "Enable new plug-ins"
-msgstr "Voleu habilitar els connectors nous?"
+msgstr "Habilita els connectors nous"
 
 #: src/Prefs.cpp
 #, c-format
@@ -6199,7 +6199,7 @@ msgstr "Eines"
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/ControlToolBar.cpp
 msgid "Transport"
-msgstr "Transporta"
+msgstr "Transport"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MixerToolBar.cpp
@@ -6216,7 +6216,7 @@ msgstr "Vúmetre"
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
-msgstr "Vúmetre de sortida"
+msgstr "Vúmetre de reproducció"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
@@ -6879,7 +6879,7 @@ msgstr "Enregistrament temporitzat d'Audacity - S'està esperant per començar"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording will commence in:"
-msgstr ""
+msgstr "L'enregistrament començarà d'aquí:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording Saved:"
@@ -6891,7 +6891,7 @@ msgstr "S'ha exportat l'enregistrament:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record - Waiting"
-msgstr ""
+msgstr "Enregistrament temporitzat d'Audacity - S'està esperant"
 
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
@@ -6911,12 +6911,12 @@ msgstr "Mono, %d Hz"
 #: src/TrackPanel.cpp
 #, c-format
 msgid "Left, %dHz"
-msgstr ""
+msgstr "Esquerre, %d Hz"
 
 #: src/TrackPanel.cpp
 #, c-format
 msgid "Right, %dHz"
-msgstr ""
+msgstr "Dret, %d Hz"
 
 #: src/TrackPanel.cpp
 msgid "Stereo, 999999Hz"
@@ -6930,7 +6930,7 @@ msgstr "Vista de pista"
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
 msgid " Muted"
-msgstr ""
+msgstr " Silenciat"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is soloed. (The Solo button is on.)
@@ -7004,7 +7004,7 @@ msgstr "Canvis de direcció   -- significa: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 msgid "Calibration Complete"
-msgstr ""
+msgstr "S'ha completat el calibratge"
 
 #: src/WaveClip.cpp
 msgid "Resampling failed."
@@ -7087,7 +7087,7 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "No Audio Selected"
-msgstr "No s'ha seleccionat cap so"
+msgstr "No s'ha seleccionat cap àudio"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp
@@ -7105,6 +7105,8 @@ msgid ""
 "Select the audio for %s to use (for example, Cmd + A to Select All) then try "
 "again."
 msgstr ""
+"Seleccioneu l'àudio per utilitzar-lo amb «%s» (p. ex. cmd+A per seleccionar-"
+"ho tot), després torneu-ho a intentar."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp
@@ -7113,6 +7115,8 @@ msgid ""
 "Select the audio for %s to use (for example, Ctrl + A to Select All) then "
 "try again."
 msgstr ""
+"Seleccioneu l'àudio per utilitzar-lo amb «%s» (p. ex. Ctrl+A per seleccionar-"
+"ho tot), després torneu-ho a intentar."
 
 #: src/commands/CommandManager.cpp
 msgid ""
@@ -7434,7 +7438,7 @@ msgstr ""
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Selectionbar"
-msgstr ""
+msgstr "Barra de selecció"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Trackpanel"
@@ -7900,7 +7904,7 @@ msgstr ""
 
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
-msgstr ""
+msgstr "Controls dels tons"
 
 #: src/effects/BassTreble.cpp
 msgid "Ba&ss (dB):"
@@ -7940,25 +7944,25 @@ msgstr "Baixos i aguts"
 
 #: src/effects/ChangePitch.cpp
 msgid "Changes the pitch of a track without changing its tempo"
-msgstr ""
+msgstr "Canvia l'altura d'una pista sense canviar el seu tempo"
 
 #: src/effects/ChangePitch.cpp
 msgid "High Quality Pitch Change"
-msgstr ""
+msgstr "Canvi d'altura d'alta qualitat"
 
 #: src/effects/ChangePitch.cpp
 msgid "Change Pitch without Changing Tempo"
-msgstr "Canvia el to sense canviar el temps"
+msgstr "Canvia l'altura sense canviar el tempo"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
 msgid "Estimated Start Pitch: %s%d (%.3f Hz)"
-msgstr "To d'inici estimat: %s%d (%.3f Hz)"
+msgstr "Altura inicial aproximada: %s%d (%.3f Hz)"
 
 #. i18n-hint: (noun) Musical pitch.
 #: src/effects/ChangePitch.cpp
 msgid "Pitch"
-msgstr "To"
+msgstr "Altura"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
@@ -8010,11 +8014,11 @@ msgstr "Canvi percentual"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 msgid "Use high quality stretching (slow)"
-msgstr ""
+msgstr "Utilitza l'estirament d'alta qualitat (lent)"
 
 #: src/effects/ChangePitch.h
 msgid "Change Pitch"
-msgstr "Canvia el to"
+msgstr "Canvia l'altura"
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
@@ -8026,11 +8030,11 @@ msgstr "no aplicable"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr ""
+msgstr "Canvia la velocitat d'una pista, també canvia la seva altura"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "Canvia la velocitat, afectant tant el temps com el to"
+msgstr "Canvia la velocitat, afectant tant el tempo com l'altura"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Speed Multiplier:"
@@ -8071,7 +8075,7 @@ msgstr "Canvia la velocitat"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Changes the tempo of a selection without changing its pitch"
-msgstr ""
+msgstr "Canvia el tempo d'una selecció sense canviar la seva altura"
 
 #: src/effects/ChangeTempo.cpp
 msgid "High Quality Tempo Change"
@@ -8079,7 +8083,7 @@ msgstr "Canvi de tempo d'alta qualitat"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo without Changing Pitch"
-msgstr "Canvia el temps sense canviar el to"
+msgstr "Canvia el tempo sense canviar l'altura"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
@@ -8501,35 +8505,35 @@ msgstr "Dades recollides"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Clipping"
-msgstr ""
+msgstr "Escapçament fort"
 
 #: src/effects/Distortion.cpp
 msgid "Soft Clipping"
-msgstr ""
+msgstr "Escapçament suau"
 
 #: src/effects/Distortion.cpp
 msgid "Soft Overdrive"
-msgstr ""
+msgstr "Sobrecàrrega suau"
 
 #: src/effects/Distortion.cpp
 msgid "Medium Overdrive"
-msgstr ""
+msgstr "Sobrecàrrega mitjana"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Overdrive"
-msgstr ""
+msgstr "Sobrecàrrega forta"
 
 #: src/effects/Distortion.cpp
 msgid "Cubic Curve (odd harmonics)"
-msgstr ""
+msgstr "Corba cúbica (harmònics imparells)"
 
 #: src/effects/Distortion.cpp
 msgid "Even Harmonics"
-msgstr ""
+msgstr "Harmònics parells"
 
 #: src/effects/Distortion.cpp
 msgid "Expand and Compress"
-msgstr ""
+msgstr "Expansió i compressió"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller"
@@ -8537,11 +8541,11 @@ msgstr "Anivellador"
 
 #: src/effects/Distortion.cpp
 msgid "Rectifier Distortion"
-msgstr "Distorsió del rectificador"
+msgstr "Distorsió de rectificador"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Limiter 1413"
-msgstr ""
+msgstr "Limitador fort 1413"
 
 #: src/effects/Distortion.cpp
 #, no-c-format
@@ -8559,7 +8563,7 @@ msgstr ""
 
 #: src/effects/Distortion.cpp
 msgid "Walkie-talkie"
-msgstr ""
+msgstr "Transceptor portàtil"
 
 #: src/effects/Distortion.cpp
 msgid "Blues drive sustain"
@@ -8567,63 +8571,63 @@ msgstr ""
 
 #: src/effects/Distortion.cpp
 msgid "Light Crunch Overdrive"
-msgstr ""
+msgstr "Sobrecàrrega de cruixits lleugera"
 
 #: src/effects/Distortion.cpp
 msgid "Heavy Overdrive"
-msgstr ""
+msgstr "Sobrecàrrega pesada"
 
 #: src/effects/Distortion.cpp
 msgid "3rd Harmonic (Perfect Fifth)"
-msgstr ""
+msgstr "3r. harmònic (quinta justa)"
 
 #: src/effects/Distortion.cpp
 msgid "Valve Overdrive"
-msgstr ""
+msgstr "Sobrecàrrega de la vàlvula"
 
 #: src/effects/Distortion.cpp
 msgid "2nd Harmonic (Octave)"
-msgstr ""
+msgstr "2n. harmònic (octava)"
 
 #: src/effects/Distortion.cpp
 msgid "Gated Expansion Distortion"
-msgstr ""
+msgstr "Distorsió d'expansió tancada"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Light, -70dB noise floor"
-msgstr ""
+msgstr "Anivellador, lleuger, -70 dB de soroll de fons"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Moderate, -70dB noise floor"
-msgstr ""
+msgstr "Anivellador, moderat, -70 dB de soroll de fons"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavy, -70dB noise floor"
-msgstr ""
+msgstr "Anivellador, pesat, -70 dB de soroll de fons"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavier, -70dB noise floor"
-msgstr ""
+msgstr "Anivellador, més pesat, -70 dB de soroll de fons"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr ""
+msgstr "Anivellador, el més pesat, -70 dB de soroll de fons"
 
 #: src/effects/Distortion.cpp
 msgid "Half-wave Rectifier"
-msgstr ""
+msgstr "Rectificador de mitja ona"
 
 #: src/effects/Distortion.cpp
 msgid "Full-wave Rectifier"
-msgstr ""
+msgstr "Rectificador d'ona completa"
 
 #: src/effects/Distortion.cpp
 msgid "Full-wave Rectifier (DC blocked)"
-msgstr ""
+msgstr "Rectificador d'ona completa (DC bloquejat)"
 
 #: src/effects/Distortion.cpp
 msgid "Percussion Limiter"
-msgstr ""
+msgstr "Limitador de percussió"
 
 #: src/effects/Distortion.cpp
 msgid "Upper Threshold"
@@ -8643,7 +8647,7 @@ msgstr "Nombre de repeticions"
 
 #: src/effects/Distortion.cpp
 msgid "Waveshaping distortion effect"
-msgstr ""
+msgstr "Efecte de distorsió en forma d'ones"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -8651,23 +8655,23 @@ msgstr "Tipus de distorsió:"
 
 #: src/effects/Distortion.cpp
 msgid "DC blocking filter"
-msgstr ""
+msgstr "Filtratge de bloqueig DC"
 
 #: src/effects/Distortion.cpp
 msgid "Threshold controls"
-msgstr ""
+msgstr "Controls dels llindars"
 
 #: src/effects/Distortion.cpp
 msgid "Parameter controls"
-msgstr ""
+msgstr "Controls dels paràmetres"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping level"
-msgstr ""
+msgstr "Nivell d'escapçament"
 
 #: src/effects/Distortion.cpp
 msgid "Drive"
-msgstr ""
+msgstr "Càrrega"
 
 #: src/effects/Distortion.cpp
 msgid "Make-up Gain"
@@ -8675,15 +8679,15 @@ msgstr ""
 
 #: src/effects/Distortion.cpp
 msgid "Clipping threshold"
-msgstr ""
+msgstr "Llindar d'escapçament"
 
 #: src/effects/Distortion.cpp
 msgid "Hardness"
-msgstr ""
+msgstr "Duresa"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion amount"
-msgstr ""
+msgstr "Quantitat de distorsió"
 
 #: src/effects/Distortion.cpp
 msgid "Output level"
@@ -8707,11 +8711,11 @@ msgstr "Grau d'anivellament"
 
 #: src/effects/Distortion.cpp
 msgid "dB Limit"
-msgstr ""
+msgstr "Límit de dB"
 
 #: src/effects/Distortion.cpp
 msgid "Wet level"
-msgstr ""
+msgstr "Nivell d'humitat"
 
 #: src/effects/Distortion.cpp
 msgid "Residual level"
@@ -8797,7 +8801,7 @@ msgstr "Repeteix l'àudio seleccionat una vegada i una altra"
 #: src/effects/Echo.cpp src/effects/FindClipping.cpp
 #: src/effects/Paulstretch.cpp
 msgid "Requested value exceeds memory capacity."
-msgstr ""
+msgstr "El valor sol·licitat supera la capacitat de la memòria."
 
 #: src/effects/Echo.h
 msgid "Echo"
@@ -8823,7 +8827,7 @@ msgstr ""
 
 #: src/effects/Effect.cpp
 msgid "Some Command"
-msgstr ""
+msgstr "Alguna ordre"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
@@ -8889,7 +8893,7 @@ msgstr "Valors predeterminats"
 
 #: src/effects/Effect.cpp
 msgid "Factory Presets"
-msgstr "Valors predefinits de fàbrica"
+msgstr "Valors predefinits originals"
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -8913,7 +8917,7 @@ msgstr "Versió: %s"
 #: src/effects/Effect.cpp
 #, c-format
 msgid "Vendor: %s"
-msgstr "Fabricant: %s"
+msgstr "Proveïdor: %s"
 
 #: src/effects/Effect.cpp
 #, c-format
@@ -9503,7 +9507,7 @@ msgstr "Proporciona suport per utilitzar efectes predefinits amb Audacity"
 
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
-msgstr "Nom d'efecte integrat descongut"
+msgstr "Nom d'efecte integrat desconegut"
 
 #: src/effects/Noise.cpp
 msgid "Pink"
@@ -9606,11 +9610,11 @@ msgstr "Temps d'alliberament"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Frequency smoothing (bands):"
-msgstr "Suavitzat de &freqüència (bandes):"
+msgstr "Suavització de &freqüències (bandes):"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Frequency smoothing"
-msgstr "Allisament de freqüències"
+msgstr "Suavització de freqüències"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Sensiti&vity (dB):"
@@ -9633,14 +9637,13 @@ msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
 msgstr ""
-"Seleccioneu uns quants segons on només hi hagi soroll, de manera que "
-"Audacity\n"
-"sàpiga què és el que cal filtrar. Després feu clic a 'Obtenció del perfil de "
-"soroll':"
+"Seleccioneu uns quants segons on només hi hagi soroll, perquè Audacity\n"
+"sàpiga què és el que cal filtrar. Després feu clic a Obtén el perfil del "
+"soroll:"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "&Get Noise Profile"
-msgstr "&Adquireix el perfil de soroll"
+msgstr "&Obtén el perfil del soroll"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Step 2"
@@ -9776,7 +9779,7 @@ msgstr "&Sensitivitat (dB):"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Fr&equency smoothing (Hz):"
-msgstr "Suavització de fr&eqüència (Hz):"
+msgstr "Suavització de fr&eqüències (Hz):"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Attac&k/decay time (secs):"
@@ -9970,11 +9973,11 @@ msgstr "Fr&eqüència LFO (Hz):"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO frequency in hertz"
-msgstr "Freqüència LFO en Hertz"
+msgstr "Freqüència LFO en hertzs"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO Sta&rt Phase (deg.):"
-msgstr ""
+msgstr "Fase inicial LFO (g&raus):"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO start phase in degrees"
@@ -9986,7 +9989,7 @@ msgstr "Profun&ditat:"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "Depth in percent"
-msgstr "Profunditat en percentatge"
+msgstr "Profunditat percentual"
 
 #: src/effects/Phaser.cpp
 msgid "Feedbac&k (%):"
@@ -9994,7 +9997,7 @@ msgstr ""
 
 #: src/effects/Phaser.cpp
 msgid "Feedback in percent"
-msgstr "Retroalimentació en percentatge"
+msgstr "Retroalimentació percentual"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "&Output gain (dB):"
@@ -10032,13 +10035,13 @@ msgid ""
 "\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
-"La reparació es fa a partir de dades d'àudio que estiguin fora de la regió "
-"seleccionada.\n"
+"La reparació es fa a partir de dades d'àudio que estan fora del fragment de "
+"la selecció.\n"
 "\n"
-"Si us plau, seleccioneu una regió neta però que estigui a tocar d'una zona "
-"amb àudio.\n"
+"Si us plau, seleccioneu un fragment net però que estigui a tocar d'un "
+"fragment amb àudio.\n"
 "\n"
-"Com més àudio hi hagi als voltants de la regió, millor serà el resultat."
+"Com més àudio hi hagi als voltants del fragment, millor serà el resultat."
 
 #: src/effects/Repair.h
 msgid "Repair"
@@ -10172,7 +10175,7 @@ msgstr "Inverteix"
 
 #: src/effects/SBSMSEffect.h
 msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
+msgstr "Temps SBSMS / Estirament de l'altura"
 
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
@@ -10347,23 +10350,23 @@ msgstr "Estèreo a mono"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "Permet realitzar de manera continuada canvis en el temps i/o en el to"
+msgstr "Permet realitzar de manera continuada canvis al tempo i/o a l'altura"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
-msgstr "Canvi de temps inicial (%)"
+msgstr "Canvi de tempo inicial (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Tempo Change (%)"
-msgstr "Canvi de temps final (%)"
+msgstr "Canvi de tempo final (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Pitch Shift"
-msgstr "Desplaçament de to inicial"
+msgstr "Desplaçament de l'altura inicial"
 
 #: src/effects/TimeScale.cpp
 msgid "(semitones) [-12 to 12]:"
-msgstr "(semitons) [-12 a 12]:"
+msgstr "(semitons) [-12 fins a 12]:"
 
 #: src/effects/TimeScale.cpp
 msgid "(%) [-50 to 100]:"
@@ -10371,11 +10374,11 @@ msgstr "(%) [-50 fins a 100]:"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Pitch Shift"
-msgstr "Desplaçament de to final"
+msgstr "Desplaçament de l'altura final"
 
 #: src/effects/TimeScale.h
 msgid "Sliding Stretch"
-msgstr ""
+msgstr "Estirament lliscant"
 
 #: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
 #: src/prefs/WaveformSettings.cpp
@@ -10671,7 +10674,7 @@ msgstr "S'ha produït un error en escriure al fitxer: «%s»"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Error Saving Effect Presets"
-msgstr ""
+msgstr "Error en desar els valors predefinits de l'efecte"
 
 #: src/effects/VST/VSTEffect.cpp
 #, c-format
@@ -10707,7 +10710,7 @@ msgstr "Ressonància"
 
 #: src/effects/Wahwah.cpp
 msgid "Wah Frequency Offse&t (%):"
-msgstr ""
+msgstr "Desplaçamen&t de la freqüència Wah (%)"
 
 #: src/effects/Wahwah.cpp
 msgid "Wah frequency offset in percent"
@@ -10715,7 +10718,7 @@ msgstr "Desplaçament percentual de la freqüència Wah"
 
 #: src/effects/Wahwah.h
 msgid "Wahwah"
-msgstr "Wahwah"
+msgstr "Wah-wah"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
@@ -11196,11 +11199,11 @@ msgstr "Etiquetes exportades"
 
 #: src/export/Export.cpp
 msgid "All selected audio is muted."
-msgstr "Tot l'àudio seleccionat està emmudit."
+msgstr "Tot l'àudio seleccionat està silenciat."
 
 #: src/export/Export.cpp src/export/ExportMultiple.cpp
 msgid "All audio is muted."
-msgstr "Tot l'àudio està emmudit."
+msgstr "Tot l'àudio està silenciat."
 
 #: src/export/Export.cpp src/export/ExportFFmpeg.cpp src/export/ExportFLAC.cpp
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
@@ -11228,7 +11231,7 @@ msgstr ""
 "Normalment aquests fitxers acaben en «%s», i alguns programes no obren "
 "fitxers amb extensions no estàndard.\n"
 "\n"
-"Este segur que voleu exportar el fitxer amb aquest nom?"
+"Esteu segur que voleu exportar el fitxer amb aquest nom?"
 
 #: src/export/Export.cpp
 msgid "Sorry, pathnames longer than 256 characters not supported."
@@ -11876,7 +11879,7 @@ msgid ""
 "min - 0\n"
 "max - 8"
 msgstr ""
-"Ordre mínim de partició\n"
+"Grau mínim de partició\n"
 "Opcional\n"
 "-1 - per defecte\n"
 "mín. - 0\n"
@@ -13960,11 +13963,11 @@ msgstr "Vista prèvia del retall"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
-msgstr "A&bans de la regió del retall:"
+msgstr "A&bans del fragment del retall:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&After cut region:"
-msgstr "Després de la regió del ret&all:"
+msgstr "Després del fragment del ret&all:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Seek Time when playing"
@@ -14185,7 +14188,7 @@ msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
-msgstr ""
+msgstr "&Fosa de transició:"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
@@ -14219,7 +14222,7 @@ msgstr "Reassignament"
 #. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Pitch (EAC)"
-msgstr "To (EAC)"
+msgstr "Altura (EAC)"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -15009,7 +15012,7 @@ msgstr ""
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
-msgstr "Centra la freqüència i l'amplada"
+msgstr "Freqüència central i amplada"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Low and High Frequencies"
@@ -15124,7 +15127,7 @@ msgid ""
 "region."
 msgstr ""
 "Feu clic per augmentar el zoom verticalment. Maj+Clic per reduir el zoom. "
-"Arrossegueu per especificar una regió de zoom."
+"Arrossegueu per especificar el zoom d'un fragment."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -15148,7 +15151,7 @@ msgstr "Redueix el zoom\tMaj+Clic esquerre"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
-msgstr "Feu clic i arrossegueu per estirar la regió seleccionada."
+msgstr "Feu clic i arrossegueu per estirar el fragment seleccionat."
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
 #. dragged to change their duration.
@@ -15699,7 +15702,7 @@ msgstr "Feu clic per augmentar el zoom i Maj+Clic per reduir-lo"
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
 msgstr ""
-"Arrossegueu per ampliar el zoom a la regió, clic dret per reduir el zoom"
+"Arrossegueu per ampliar el zoom al fragment, clic dret per reduir el zoom"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -15807,7 +15810,7 @@ msgstr "Comença a monitorar"
 
 #: src/widgets/Meter.cpp
 msgid "Recording Meter Options"
-msgstr ""
+msgstr "Opcions del vúmetre d'enregistrament"
 
 #: src/widgets/Meter.cpp
 msgid "Playback Meter Options"
@@ -16245,7 +16248,7 @@ msgstr "Feu clic i arrossegueu per ajustar, doble clic per restablir"
 
 #: src/widgets/Ruler.cpp
 msgid "Record/Play head"
-msgstr ""
+msgstr "Capçal de reproducció/enregistrament"
 
 #: src/widgets/Ruler.cpp
 msgid "Timeline"
@@ -16333,11 +16336,11 @@ msgstr "Habilita el lliscament mentre es reprodueix"
 
 #: src/widgets/Ruler.cpp
 msgid "Lock Play Region"
-msgstr "Bloqueja la regió de reproducció"
+msgstr "Bloqueja el fragment de reproducció"
 
 #: src/widgets/Ruler.cpp
 msgid "Unlock Play Region"
-msgstr "Desbloqueja la regió de reproducció"
+msgstr "Desbloqueja el fragment de reproducció"
 
 #: src/widgets/Ruler.cpp
 msgid "Disable Scrub Ruler"
@@ -16477,6 +16480,8 @@ msgid ""
 "No silences found. Try reducing the silence~%level and minimum silence "
 "duration."
 msgstr ""
+"No s'ha trobat cap silenci. Proveu de reduir el nivell~%i la durada del "
+"silenci."
 
 #: plug-ins/SoundFinder.ny
 msgid "Sound Finder"
@@ -16519,7 +16524,7 @@ msgstr "[Final]"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
-msgstr ""
+msgstr "Eina d'edició múltiple de l'espectre"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -16625,19 +16630,19 @@ msgstr ""
 
 #: plug-ins/adjustable-fade.ny
 msgid "Adjustable Fade"
-msgstr ""
+msgstr "Fosa ajustable"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
-msgstr ""
+msgstr "Tipus de fosa"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Up"
-msgstr ""
+msgstr "Fosa cap amunt"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Down"
-msgstr ""
+msgstr "Fosa cap avall"
 
 #: plug-ins/adjustable-fade.ny
 msgid "S-Curve Up"
@@ -16653,15 +16658,15 @@ msgstr ""
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start/End as"
-msgstr ""
+msgstr "Començament/acabament com"
 
 #: plug-ins/adjustable-fade.ny
 msgid "% of Original"
-msgstr "% d'original"
+msgstr "% de l'original"
 
 #: plug-ins/adjustable-fade.ny
 msgid "dB Gain"
-msgstr ""
+msgstr "Guany de dB"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start (or end)"
@@ -16789,11 +16794,11 @@ msgstr ""
 
 #: plug-ins/crossfadeclips.ny
 msgid "Crossfade Clips"
-msgstr ""
+msgstr "Fosa de transició de clips"
 
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
 msgid "Crossfading..."
-msgstr ""
+msgstr "S'està realitzant la fosa de transició..."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -16809,10 +16814,12 @@ msgstr ""
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
 msgstr ""
+"Error.~%La fosa de transició de clips només es pot aplicar a una pista "
+"d'àudio."
 
 #: plug-ins/crossfadetracks.ny
 msgid "Crossfade Tracks"
-msgstr ""
+msgstr "Fosa de transició de pistes"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade type"
@@ -16824,11 +16831,11 @@ msgstr "Guany constant"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Power 1"
-msgstr ""
+msgstr "Potència constant 1"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Power 2"
-msgstr ""
+msgstr "Potència constant 2"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Custom Curve"
@@ -16844,16 +16851,17 @@ msgstr "Direcció de la fosa"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating Out / In"
-msgstr ""
+msgstr "Alternança tancament / obertura"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating In / Out"
-msgstr ""
+msgstr "Alternança obertura / tancament"
 
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
 msgstr ""
+"Error.~%Seleccioneu 2 (o més) pistes per realitzar la fosa de transició."
 
 #: plug-ins/delay.ny
 msgid "Delay"
@@ -16889,19 +16897,19 @@ msgstr ""
 
 #: plug-ins/delay.ny
 msgid "Pitch change effect"
-msgstr ""
+msgstr "Efecte de canvi d'altura"
 
 #: plug-ins/delay.ny
 msgid "Pitch/Tempo"
-msgstr "To/Tempo"
+msgstr "Altura/Tempo"
 
 #: plug-ins/delay.ny
 msgid "Low-quality Pitch Shift"
-msgstr ""
+msgstr "Canvi d'altura de baixa qualitat"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
-msgstr ""
+msgstr "Canvi d'altura per eco (semitons)"
 
 #: plug-ins/delay.ny
 msgid "Number of echoes"
@@ -17067,7 +17075,7 @@ msgstr "Limitador"
 
 #: plug-ins/limiter.ny
 msgid "Limiting..."
-msgstr ""
+msgstr "S'està limitant..."
 
 #: plug-ins/limiter.ny
 msgid "Type"
@@ -17075,11 +17083,11 @@ msgstr "Tipus"
 
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
-msgstr ""
+msgstr "Límit suau"
 
 #: plug-ins/limiter.ny
 msgid "Hard Limit"
-msgstr ""
+msgstr "Límit fort"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
 #: plug-ins/limiter.ny
@@ -17095,12 +17103,16 @@ msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
+"Guany de l'entrada (dB)\n"
+"mono/esquerre"
 
 #: plug-ins/limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
+"Guany de l'entrada (dB)\n"
+"canal dret"
 
 #: plug-ins/limiter.ny
 msgid "Limit to (dB)"
@@ -17302,7 +17314,7 @@ msgstr "Tambor Risset"
 
 #: plug-ins/rissetdrum.ny
 msgid "Generating Risset Drum..."
-msgstr "Sestà generant el tambor Risset…"
+msgstr "S'està generant el tambor Risset..."
 
 #: plug-ins/rissetdrum.ny
 msgid "Steven Jones"
@@ -17322,7 +17334,7 @@ msgstr "Amplada de la banda del soroll (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amount of noise in mix (percent)"
-msgstr "Quantitat de soroll a la mescla (percentatge)"
+msgstr "Quantitat de soroll a la mescla (percentual)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Amplitude (0 - 1)"
@@ -17485,7 +17497,7 @@ msgstr "Anàlisi de dades d'àudio:"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
-msgstr ""
+msgstr "<b>Freqüència de mostreig:</b> &nbsp;&nbsp;~a Hz."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
@@ -17533,7 +17545,7 @@ msgstr "Valor (dB)"
 
 #: plug-ins/sample-data-export.ny
 msgid "audio sample value analysis"
-msgstr ""
+msgstr "anàlisi del valor de les mostres d'àudio"
 
 #: plug-ins/sample-data-export.ny
 msgid "Left (linear)"
@@ -17663,11 +17675,11 @@ msgstr "Error.~%No es pot obrir el fitxer"
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
-msgstr "Tremolo"
+msgstr "Trèmolo"
 
 #: plug-ins/tremolo.ny
 msgid "Applying Tremolo..."
-msgstr "S'està aplicant Tremolo..."
+msgstr "S'està aplicant el trèmolo..."
 
 #: plug-ins/tremolo.ny
 msgid "Waveform type"
@@ -17683,11 +17695,11 @@ msgstr ""
 
 #: plug-ins/tremolo.ny
 msgid "Wet level (percent)"
-msgstr "Nivell humit (percentatge)"
+msgstr "Nivell d'humitat (percentual)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
-msgstr ""
+msgstr "Reducció de veus i aïllament"
 
 #: plug-ins/vocalrediso.ny
 msgid "Applying Action..."
@@ -17723,7 +17735,7 @@ msgstr "Aïlla el centre i capgira"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center Classic: Mono"
-msgstr ""
+msgstr "Elimina el centre clàssic: mono"
 
 #: plug-ins/vocalrediso.ny
 msgid "Analyze"
@@ -17731,15 +17743,15 @@ msgstr "Analitza"
 
 #: plug-ins/vocalrediso.ny
 msgid "Strength"
-msgstr "Força"
+msgstr "Intensitat"
 
 #: plug-ins/vocalrediso.ny
 msgid "Low Cut for Vocals (Hz)"
-msgstr "Retall curt per a les veus (Hz)"
+msgstr "Retall baix per a les veus (Hz)"
 
 #: plug-ins/vocalrediso.ny
 msgid "High Cut for Vocals (Hz)"
-msgstr "Retall llarg per a les veus (Hz)"
+msgstr "Retall alt per a les veus (Hz)"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -17940,19 +17952,19 @@ msgstr "Nombre de bandes vocoder"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of original audio (percent)"
-msgstr "Amplitud de l'àudio original (percentatge)"
+msgstr "Amplitud de l'àudio original (percentual)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of white noise (percent)"
-msgstr "Amplitud del soroll blanc (percentatge)"
+msgstr "Amplitud del soroll blanc (percentual)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of Radar Needles (percent)"
-msgstr "Amplitud del tren de polsos (percentatge)"
+msgstr "Amplitud del tren de polsos (percentual)"
 
 #: plug-ins/vocoder.ny
 msgid "Frequency of Radar Needles (Hz)"
-msgstr "Freqüència del tren de polsos (percentatge)"
+msgstr "Freqüència del tren de polsos (Hz)"
 
 #: plug-ins/vocoder.ny
 #, lisp-format
