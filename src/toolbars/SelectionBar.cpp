@@ -658,6 +658,10 @@ void SelectionBar::SetRate(double rate)
       // if the rate is actually being changed
       mRate = rate;   // update the stored rate
       mRateBox->SetValue(wxString::Format(wxT("%d"), (int)rate));
+      // Update rate in stored prefs.
+      // This will also update rate in preferences dialog.
+      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
+
       // update the TimeTextCtrls if they exist
       NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
       int i;
@@ -672,6 +676,7 @@ void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
    if (mRateBox->GetValue().ToDouble(&mRate) && // is a numeric value
          (mRate != 0.0))
    {
+      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
       NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
       int i;
       for(i=0;i<5;i++)
