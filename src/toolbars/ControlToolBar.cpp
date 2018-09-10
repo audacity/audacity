@@ -1399,6 +1399,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
    ClearCutPreviewTracks();
    AudacityProject *p = GetActiveProject();
    if (p) {
+      mCutPreviewTracks = TrackList::Create();
       // Find first selected track (stereo or mono) and duplicate it
       const Track *track1 = NULL, *track2 = NULL;
       TrackListIterator it(p->GetTracks());
@@ -1413,30 +1414,25 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
          {
             track1 = t;
             track2 = t->GetLink();
-            break;
+            // Duplicate and change tracks
+            // Clear has a very small chance of throwing
+            auto new1 = track1->Duplicate();
+            new1->Clear(cutStart, cutEnd);
+            decltype(new1) new2{};
+            if (track2)
+            {
+               new2 = track2->Duplicate();
+               new2->Clear(cutStart, cutEnd);
+            }
+
+            // use NOTHROW-GUARANTEE:
+            mCutPreviewTracks->Add(std::move(new1));
+            if (track2)
+               mCutPreviewTracks->Add(std::move(new2));
          }
       }
-
-      if (track1)
-      {
-         // Duplicate and change tracks
-         // Clear has a very small chance of throwing
-         auto new1 = track1->Duplicate();
-         new1->Clear(cutStart, cutEnd);
-         decltype(new1) new2{};
-         if (track2)
-         {
-            new2 = track2->Duplicate();
-            new2->Clear(cutStart, cutEnd);
-         }
-
-         // use NOTHROW-GUARANTEE:
-
-         mCutPreviewTracks = TrackList::Create();
-         mCutPreviewTracks->Add(std::move(new1));
-         if (track2)
-            mCutPreviewTracks->Add(std::move(new2));
-      }
+      if( !track1 )
+         ClearCutPreviewTracks();
    }
 }
 
