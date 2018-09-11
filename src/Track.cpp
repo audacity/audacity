@@ -1102,7 +1102,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
 
 /// For mono track height of track
 /// For stereo track combined height of both channels.
-int TrackList::GetGroupHeight(Track * t) const
+int TrackList::GetGroupHeight(const Track * t) const
 {
    int height = t->GetHeight();
 

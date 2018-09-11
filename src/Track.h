@@ -702,7 +702,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
      * @param linked if true, skips over linked tracks, if false returns the next track even if it is a linked track
     **/
    Track *GetNext(Track * t, bool linked = false) const;
-   int GetGroupHeight(Track * t) const;
+   int GetGroupHeight(const Track * t) const;
 
    bool CanMoveUp(Track * t) const;
    bool CanMoveDown(Track * t) const;
