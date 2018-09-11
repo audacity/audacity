@@ -489,6 +489,16 @@ protected:
    friend class GetInfoCommand;
 };
 
+// A predicate class
+struct IsVisibleTrack
+{
+   IsVisibleTrack(AudacityProject *project);
+
+   bool operator () (const Track *pTrack) const;
+
+   wxRect mPanelRect;
+};
+
 // See big pictorial comment in TrackPanel for explanation of these numbers
 enum : int {
    kLeftInset = 4,

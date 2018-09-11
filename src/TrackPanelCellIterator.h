@@ -53,7 +53,7 @@ private:
    void UpdateRect();
 
    TrackPanel *mPanel;
-   VisibleTrackIterator mIter;
+   TrackIter<Track> mIter;
    std::shared_ptr<Track> mpTrack;
    std::shared_ptr<TrackPanelCell> mpCell;
    CellType mType{ CellType::Track };

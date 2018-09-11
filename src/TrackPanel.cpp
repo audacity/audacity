@@ -1200,8 +1200,8 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    wxRect trackRect = clip;
    trackRect.height = 0;   // for drawing background in no tracks case.
 
-   VisibleTrackIterator iter(GetProject());
-   for (const Track *t = iter.First(); t; t = iter.Next()) {
+   for ( auto t :
+         GetTracks()->Any< const Track >() + IsVisibleTrack{ GetProject() } ) {
       t = t->SubstitutePendingChangedTrack().get();
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
@@ -1220,8 +1220,8 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
       }
 
       // If the previous track is linked to this one but isn't on the screen
-      // (and thus would have been skipped by VisibleTrackIterator) we need to
-      // draw that track's border instead.
+      // (and thus would have been skipped) we need to draw that track's border
+      // instead.
       const Track *borderTrack = t;
       wxRect borderRect = rect;
 
@@ -2686,10 +2686,13 @@ IteratorRange< TrackPanelCellIterator > TrackPanel::Cells()
 
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
    : mPanel{ trackPanel }
-   , mIter{ trackPanel->GetProject() }
+   , mIter{
+        trackPanel->GetTracks()->Any().begin()
+           .Filter( IsVisibleTrack( trackPanel->GetProject() ) )
+     }
 {
    if (begin) {
-      mpTrack = Track::Pointer( mIter.First() );
+      mpTrack = Track::Pointer( *mIter );
       if (mpTrack)
          mpCell = mpTrack;
       else
@@ -2707,7 +2710,7 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
 {
    if ( mpTrack ) {
       if ( ++ mType == CellType::Background )
-         mType = CellType::Track, mpTrack = Track::Pointer( mIter.Next() );
+         mType = CellType::Track, mpTrack = Track::Pointer( * ++ mIter );
    }
    if ( mpTrack ) {
       if ( mType == CellType::Label &&
@@ -2908,4 +2911,24 @@ unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
 {
    event.Skip();
    return RefreshCode::RefreshNone;
+}
+
+IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
+   : mPanelRect {
+        wxPoint{ 0, project->mViewInfo.vpos },
+        project->GetTPTracksUsableArea()
+     }
+{}
+
+bool IsVisibleTrack::operator () (const Track *pTrack) const
+{
+   // Need to return true if this track or a later channel intersects
+   // the view
+   return
+   TrackList::Channels(pTrack).StartingWith(pTrack).any_of(
+      [this]( const Track *pT ) {
+         wxRect r(0, pT->GetY(), 1, pT->GetHeight());
+         return r.Intersects(mPanelRect);
+      }
+   );
 }

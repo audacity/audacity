@@ -484,8 +484,7 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
 
    wxRect trackRect = pWin->GetRect();
 
-   VisibleTrackIterator iter(pProj);
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   for (auto t : pProj->GetTracks()->Any() + IsVisibleTrack{ pProj }) {
       trackRect.y = t->GetY() - pTP->mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
