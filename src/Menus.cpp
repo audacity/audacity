@@ -8517,60 +8517,29 @@ void MenuCommandHandler::HandleAlign
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
    wxString action;
    wxString shortAction;
-   double offset;
-   double minOffset = DBL_MAX;
-   double maxEndOffset = 0.0;
-   double leftOffset = 0.0;
-   bool bRightChannel = false;
-   double avgOffset = 0.0;
-   int numSelected = 0;
-   Track *t = iter.First();
    double delta = 0.0;
    double newPos = -1.0;
-   std::vector<double> trackStartArray;
-   std::vector<double> trackEndArray;
-   double firstTrackOffset=0.0f;
 
-   while (t) {
-      // We only want Wave and Note tracks here.
-      if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
-      {
-         offset = t->GetOffset();
-         if (t->GetLinked()) {   // Left channel of stereo track.
-            leftOffset = offset;
-            bRightChannel = true; // next track is the right channel.
-         } else {
-            if (bRightChannel) {
-               // Align channel with earlier start  time
-               offset = (offset < leftOffset)? offset : leftOffset;
-               leftOffset = 0.0;
-               bRightChannel = false;
-            }
-            avgOffset += offset;
-            if (numSelected == 0) {
-               firstTrackOffset = offset; // For Align End to End.
-            }
-            numSelected++;
-         }
-         trackStartArray.push_back(t->GetStartTime());
-         trackEndArray.push_back(t->GetEndTime());
+   auto channelRange = tracks->Selected< AudioTrack >();
+   auto trackRange = tracks->SelectedLeaders< AudioTrack >();
 
-         if (offset < minOffset)
-            minOffset = offset;
-         if (t->GetEndTime() > maxEndOffset)
-            maxEndOffset = t->GetEndTime();
-      }
-      t = iter.Next();
-   }
+   auto FindOffset = []( const Track *pTrack ) {
+      return TrackList::Channels(pTrack).min( &Track::GetOffset ); };
 
-   avgOffset /= numSelected;  // numSelected is mono/stereo tracks not channels.
+   auto firstTrackOffset = [&]{ return FindOffset( *trackRange.begin() ); };
+   auto minOffset = [&]{ return trackRange.min( FindOffset ); };
+   auto avgOffset = [&]{
+      return trackRange.sum( FindOffset ) /
+                             std::max( size_t(1), trackRange.size() ); };
+
+   auto maxEndOffset = [&]{
+      return std::max(0.0, channelRange.max( &Track::GetEndTime ) ); };
 
    switch(index) {
    case kAlignStartZero:
-      delta = -minOffset;
+      delta = -minOffset();
       action = moveSel
          /* i18n-hint: In this and similar messages describing editing actions,
             the starting or ending points of tracks are re-"aligned" to other
@@ -8586,7 +8555,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Start");
       break;
    case kAlignStartSelStart:
-      delta = selectedRegion.t0() - minOffset;
+      delta = selectedRegion.t0() - minOffset();
       action = moveSel
          ? _("Aligned/Moved start to cursor/selection start")
          : _("Aligned start to cursor/selection start");
@@ -8595,7 +8564,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Start");
       break;
    case kAlignStartSelEnd:
-      delta = selectedRegion.t1() - minOffset;
+      delta = selectedRegion.t1() - minOffset();
       action = moveSel
          ? _("Aligned/Moved start to selection end")
          : _("Aligned start to selection end");
@@ -8604,7 +8573,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Start");
       break;
    case kAlignEndSelStart:
-      delta = selectedRegion.t0() - maxEndOffset;
+      delta = selectedRegion.t0() - maxEndOffset();
       action = moveSel
          ? _("Aligned/Moved end to cursor/selection start")
          : _("Aligned end to cursor/selection start");
@@ -8614,7 +8583,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align End");
       break;
    case kAlignEndSelEnd:
-      delta = selectedRegion.t1() - maxEndOffset;
+      delta = selectedRegion.t1() - maxEndOffset();
       action = moveSel
          ? _("Aligned/Moved end to selection end")
          : _("Aligned end to selection end");
@@ -8625,7 +8594,7 @@ void MenuCommandHandler::HandleAlign
       break;
    // index set in alignLabelsNoSync
    case kAlignEndToEnd:
-      newPos = firstTrackOffset;
+      newPos = firstTrackOffset();
       action = moveSel
          ? _("Aligned/Moved end to end")
          : _("Aligned end to end");
@@ -8635,7 +8604,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align End to End");
       break;
    case kAlignTogether:
-      newPos = avgOffset;
+      newPos = avgOffset();
       action = moveSel
          ? _("Aligned/Moved together")
          : _("Aligned together");
@@ -8646,52 +8615,20 @@ void MenuCommandHandler::HandleAlign
    }
 
    if ((unsigned)index >= mAlignLabelsCount) { // This is an alignLabelsNoSync command.
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-      double leftChannelStart = 0.0;
-      double leftChannelEnd = 0.0;
-      double rightChannelStart = 0.0;
-      double rightChannelEnd = 0.0;
-      int arrayIndex = 0;
-      while (t) {
+      for (auto t : tracks->SelectedLeaders< AudioTrack >()) {
          // This shifts different tracks in different ways, so no sync-lock move.
          // Only align Wave and Note tracks end to end.
-         if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
-         {
-            t->SetOffset(newPos);   // Move the track
+         auto channels = TrackList::Channels(t);
 
-            if (t->GetLinked()) {   // Left channel of stereo track.
-               leftChannelStart = trackStartArray[arrayIndex];
-               leftChannelEnd = trackEndArray[arrayIndex];
-               rightChannelStart = trackStartArray[1+arrayIndex];
-               rightChannelEnd = trackEndArray[1+arrayIndex];
-               bRightChannel = true;   // next track is the right channel.
-               // newPos is the offset for the earlier channel.
-               // If right channel started first, offset the left channel.
-               if (rightChannelStart < leftChannelStart) {
-                  t->SetOffset(newPos + leftChannelStart - rightChannelStart);
-               }
-               arrayIndex++;
-            } else {
-               if (bRightChannel) {
-                  // If left channel started first, offset the right channel.
-                  if (leftChannelStart < rightChannelStart) {
-                     t->SetOffset(newPos + rightChannelStart - leftChannelStart);
-                  }
-                  if (index == kAlignEndToEnd) {
-                     // Now set position for start of next track.
-                     newPos += wxMax(leftChannelEnd, rightChannelEnd) - wxMin(leftChannelStart, rightChannelStart);
-                  }
-                  bRightChannel = false;
-               } else { // Mono track
-                  if (index == kAlignEndToEnd) {
-                     newPos += (trackEndArray[arrayIndex] - trackStartArray[arrayIndex]);
-                  }
-               }
-               arrayIndex++;
-            }
-         }
-         t = iter.Next();
+         auto trackStart = channels.min( &Track::GetStartTime );
+         auto trackEnd = channels.max( &Track::GetEndTime );
+
+         for (auto channel : channels)
+            // Move the track
+            channel->SetOffset(newPos + channel->GetStartTime() - trackStart);
+
+         if (index == kAlignEndToEnd)
+            newPos += (trackEnd - trackStart);
       }
       if (index == kAlignEndToEnd) {
          OnZoomFit(project);
@@ -8699,16 +8636,9 @@ void MenuCommandHandler::HandleAlign
    }
 
    if (delta != 0.0) {
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-
-      while (t) {
-         // For a fixed-distance shift move sync-lock selected tracks also.
-         if (t->GetSelected() || t->IsSyncLockSelected()) {
-            t->SetOffset(t->GetOffset() + delta);
-         }
-         t = iter.Next();
-      }
+      // For a fixed-distance shift move sync-lock selected tracks also.
+      for (auto t : tracks->Any() + &Track::IsSelectedOrSyncLockSelected )
+         t->SetOffset(t->GetOffset() + delta);
    }
 
    if (moveSel)
