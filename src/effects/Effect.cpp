@@ -2262,25 +2262,8 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
 void Effect::CountWaveTracks()
 {
-   mNumTracks = 0;
-   mNumGroups = 0;
-
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
-   Track *t = iter.First();
-
-   while(t) {
-      if (!t->GetSelected()) {
-         t = iter.Next();
-         continue;
-      }
-
-      if (t->GetKind() == Track::Wave) {
-         mNumTracks++;
-         if (!t->GetLinked())
-            mNumGroups++;
-      }
-      t = iter.Next();
-   }
+   mNumTracks = mTracks->Selected< const WaveTrack >().size();
+   mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
 }
 
 double Effect::CalcPreviewInputLength(double previewLength)
@@ -2574,17 +2557,13 @@ void Effect::Preview(bool dryOnly)
       }
    }
    else {
-      TrackListOfKindIterator iter(Track::Wave, saveTracks);
-      WaveTrack *src = (WaveTrack *) iter.First();
-      while (src)
-      {
+      for (auto src : saveTracks->Any< const WaveTrack >()) {
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
             static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
             mTracks->Add(std::move(dest));
          }
-         src = (WaveTrack *) iter.Next();
       }
    }
 

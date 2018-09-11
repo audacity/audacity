@@ -264,7 +264,7 @@ public:
 
    bool Process(EffectNoiseReduction &effect,
                 Statistics &statistics, TrackFactory &factory,
-                SelectedTrackListOfKindIterator &iter, double mT0, double mT1);
+                TrackList &tracks, double mT0, double mT1);
 
 private:
    bool ProcessOne(EffectNoiseReduction &effect,
@@ -606,8 +606,7 @@ bool EffectNoiseReduction::Process()
 
    this->CopyInputTracks(); // Set up mOutputTracks.
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
+   auto track = * (mOutputTracks->Selected< const WaveTrack >()).begin();
    if (!track)
       return false;
 
@@ -633,7 +632,8 @@ bool EffectNoiseReduction::Process()
                  , mF0, mF1
 #endif
       );
-   bool bGoodResult = worker.Process(*this, *mStatistics, *mFactory, iter, mT0, mT1);
+   bool bGoodResult = worker.Process
+      (*this, *mStatistics, *mFactory, *mOutputTracks, mT0, mT1);
    if (mSettings->mDoProfile) {
       if (bGoodResult)
          mSettings->mDoProfile = false; // So that "repeat last effect" will reduce noise
@@ -650,11 +650,10 @@ EffectNoiseReduction::Worker::~Worker()
 
 bool EffectNoiseReduction::Worker::Process
 (EffectNoiseReduction &effect, Statistics &statistics, TrackFactory &factory,
- SelectedTrackListOfKindIterator &iter, double inT0, double inT1)
+ TrackList &tracks, double inT0, double inT1)
 {
    int count = 0;
-   WaveTrack *track = (WaveTrack *) iter.First();
-   while (track) {
+   for ( auto track : tracks.Selected< WaveTrack >() ) {
       if (track->GetRate() != mSampleRate) {
          if (mDoProfile)
             effect.Effect::MessageBox(_("All noise profile data must have the same sample rate."));
@@ -677,7 +676,6 @@ bool EffectNoiseReduction::Worker::Process
                          count, track, start, len))
             return false;
       }
-      track = (WaveTrack *) iter.Next();
       ++count;
    }
 

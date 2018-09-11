@@ -389,19 +389,15 @@ bool EffectAutoDuck::Process()
    if (!cancel)
    {
       CopyInputTracks(); // Set up mOutputTracks.
-      SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-      Track *iterTrack = iter.First();
 
       int trackNum = 0;
 
-      while (iterTrack)
+      for( auto iterTrack : mOutputTracks->Selected< WaveTrack >() )
       {
-         WaveTrack* t = (WaveTrack*)iterTrack;
-
          for (size_t i = 0; i < regions.size(); i++)
          {
             const AutoDuckRegion& region = regions[i];
-            if (ApplyDuckFade(trackNum, t, region.t0, region.t1))
+            if (ApplyDuckFade(trackNum, iterTrack, region.t0, region.t1))
             {
                cancel = true;
                break;
@@ -411,7 +407,6 @@ bool EffectAutoDuck::Process()
          if (cancel)
             break;
 
-         iterTrack = iter.Next();
          trackNum++;
       }
    }

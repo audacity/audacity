@@ -405,10 +405,10 @@ bool EffectTruncSilence::ProcessAll()
    auto trackRange0 = inputTracks()->Selected< const WaveTrack >();
    if (FindSilences(
          silences, inputTracks(), *trackRange0.begin(), *trackRange0.rbegin())) {
-      TrackListIterator iterOut(mOutputTracks.get());
+      auto trackRange = mOutputTracks->Any();
       double totalCutLen = 0.0;
-      Track *const first = iterOut.First();
-      if (DoRemoval(silences, 0, 1, first, iterOut.Last(), totalCutLen)) {
+      if (DoRemoval(silences, 0, 1,
+         *trackRange.begin(), *trackRange.rbegin(), totalCutLen)) {
          mT1 -= totalCutLen;
          return true;
       }

@@ -164,11 +164,9 @@ double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
 bool EffectPaulstretch::Process()
 {
    CopyInputTracks();
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    m_t1=mT1;
    int count=0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -179,7 +177,6 @@ bool EffectPaulstretch::Process()
             return false;
       }
 
-      track = (WaveTrack *) iter.Next();
       count++;
    }
    mT1=m_t1;
