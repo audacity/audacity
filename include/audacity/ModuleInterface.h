@@ -43,13 +43,6 @@
 #define __AUDACITY_MODULEINTERFACE_H__
 
 #include <functional>
-
-#ifdef __WXMAC__
-// Needs this for std::function
-// Make this go away when Mac moves to a proper C++11 library
-#include "../../src/MemoryX.h"
-#endif
-
 #include "audacity/Types.h"
 #include "audacity/IdentInterface.h"
 #include "audacity/PluginInterface.h"
