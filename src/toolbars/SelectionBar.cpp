@@ -116,6 +116,8 @@ SelectionBar::SelectionBar()
    // will occur.
    // Refer to bug #462 for a scenario where the division-by-zero causes
    // Audacity to fail.
+   // We expect mRate to be set from the project later.
+   // We could just use AudioIO::GetOptimalSupportedSampleRate() here.
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
       AudioIO::GetOptimalSupportedSampleRate());
 
@@ -341,7 +343,12 @@ void SelectionBar::Populate()
 
 void SelectionBar::UpdatePrefs()
 {
-   mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate());
+   // The project rate is no longer driven from here.
+   // IF /SamplingRate/DefaultProjectSampleRate has changed, that is sent to the project.
+   // IF the project has no tracks, then the project updates its sample rate, and
+   // signals that back to the SelectionBar via SetRate().
+   // Usually though there are tracks, and changes to that pref will only affect new
+   // or empty projects.
 
    wxCommandEvent e;
    e.SetInt(mStartTime->GetFormatIndex());
@@ -658,9 +665,6 @@ void SelectionBar::SetRate(double rate)
       // if the rate is actually being changed
       mRate = rate;   // update the stored rate
       mRateBox->SetValue(wxString::Format(wxT("%d"), (int)rate));
-      // Update rate in stored prefs.
-      // This will also update rate in preferences dialog.
-      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
 
       // update the TimeTextCtrls if they exist
       NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
@@ -676,7 +680,6 @@ void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
    if (mRateBox->GetValue().ToDouble(&mRate) && // is a numeric value
          (mRate != 0.0))
    {
-      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
       NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
       int i;
       for(i=0;i<5;i++)

@@ -1351,7 +1351,16 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"), &mTracksFitVerticallyZoomed, false);
    //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"), &mViewInfo.bUpdateSpectrogram, true);
 
-   gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
+   // The DefaultProjectSample rate is the rate for new projects.
+   // Do not change this project's rate, unless there are no tracks.
+   if( GetTrackCount() == 0){
+      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
+      // If necessary, we change this rate in the selection toolbar too.
+      auto bar = GetSelectionBar();
+      if( bar ){
+         bar->SetRate( mRate );
+      }
+   }
    mDefaultFormat = QualityPrefs::SampleFormatChoice();
 
    gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);
@@ -1559,6 +1568,8 @@ double AudacityProject::AS_GetRate()
    return mRate;
 }
 
+// Typically this came from the SelectionToolbar and does not need to 
+// be communicated back to it.
 void AudacityProject::AS_SetRate(double rate)
 {
    mRate = rate;
