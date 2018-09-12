@@ -3222,114 +3222,74 @@ void AudacityProject::OnToggleAutomatedInputLevelAdjustment(
 }
 #endif
 
-double MenuCommandHandler::GetTime(const Track *t)
-{
-   double stime = 0.0;
-
-   if (t->GetKind() == Track::Wave) {
-      WaveTrack *w = (WaveTrack *)t;
-      stime = w->GetEndTime();
-
-      WaveClip *c;
-      int ndx;
-      for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
-         c = w->GetClipByIndex(ndx);
-         if (c->GetNumSamples() == 0)
-            continue;
-         if (c->GetStartTime() < stime) {
-            stime = c->GetStartTime();
-         }
-      }
-   }
-   else if (t->GetKind() == Track::Label) {
-      LabelTrack *l = (LabelTrack *)t;
-      stime = l->GetStartTime();
-   }
-
-   return stime;
-}
-
 //sort based on flags.  see Project.h for sort flags
 void AudacityProject::SortTracks(int flags)
 {
+   auto GetTime = [](const Track *t) {
+      return t->TypeSwitch< double >(
+         [&](const WaveTrack* w) {
+            auto stime = w->GetEndTime();
+
+            int ndx;
+            for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
+               const auto c = w->GetClipByIndex(ndx);
+               if (c->GetNumSamples() == 0)
+                  continue;
+               stime = std::min(stime, c->GetStartTime());
+            }
+            return stime;
+         },
+         [&](const LabelTrack* l) {
+            return l->GetStartTime();
+         }
+      );
+   };
+
    size_t ndx = 0;
-   int cmpValue;
    // This one place outside of TrackList where we must use undisguised
    // std::list iterators!  Avoid this elsewhere!
    std::vector<TrackNodePointer> arr;
    arr.reserve(mTracks->size());
-   bool lastTrackLinked = false;
-   //sort by linked tracks. Assumes linked track follows owner in list.
 
    // First find the permutation.
+   // This routine, very unusually, deals with the underlying stl list
+   // iterators, not with TrackIter!  Dangerous!
    for (auto iter = mTracks->ListOfTracks::begin(),
         end = mTracks->ListOfTracks::end(); iter != end; ++iter) {
       const auto &track = *iter;
-      if(lastTrackLinked) {
-         //insert after the last track since this track should be linked to it.
+      if ( !track->IsLeader() )
+         // keep channels contiguous
          ndx++;
-      }
       else {
-         bool bArrayTrackLinked = false;
-         for (ndx = 0; ndx < arr.size(); ++ndx) {
+         auto size = arr.size();
+         for (ndx = 0; ndx < size;) {
             Track &arrTrack = **arr[ndx].first;
-            // Don't insert between channels of a stereo track!
-            if( bArrayTrackLinked ){
-               bArrayTrackLinked = false;
-            }
-            else if(flags & kAudacitySortByName) {
+            auto channels = TrackList::Channels(&arrTrack);
+            if(flags & kAudacitySortByName) {
                //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
                //also if we have case insensitive equality, then we need to sort by case as well
                //We sort 'b' before 'B' accordingly.  We uncharacteristically use greater than for the case sensitive
                //compare because 'b' is greater than 'B' in ascii.
-               cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
-               if (cmpValue < 0 ||
-                   (0 == cmpValue && track->GetName().CompareTo(arrTrack.GetName()) > 0) )
+               auto cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
+               if ( cmpValue < 0 ||
+                     ( 0 == cmpValue &&
+                        track->GetName().CompareTo(arrTrack.GetName()) > 0 ) )
                   break;
             }
             //sort by time otherwise
             else if(flags & kAudacitySortByTime) {
-               //we have to search each track and all its linked ones to fine the minimum start time.
-               double time1, time2, tempTime;
-               const Track* tempTrack;
-               size_t candidatesLookedAt;
-
-               candidatesLookedAt = 0;
-               tempTrack = &*track;
-               time1 = time2 = std::numeric_limits<double>::max(); //TODO: find max time value. (I don't think we have one yet)
-               while(tempTrack) {
-                  tempTime = MenuCommandHandler::GetTime(tempTrack);
-                  time1 = std::min(time1, tempTime);
-                  if(tempTrack->GetLinked())
-                     tempTrack = tempTrack->GetLink();
-                  else
-                     tempTrack = NULL;
-               }
+               auto time1 = TrackList::Channels(track.get()).min( GetTime );
 
                //get candidate's (from sorted array) time
-               tempTrack = &arrTrack;
-               while(tempTrack) {
-                  tempTime = MenuCommandHandler::GetTime(tempTrack);
-                  time2 = std::min(time2, tempTime);
-                  if(tempTrack->GetLinked() && (ndx+candidatesLookedAt < arr.size()-1) ) {
-                     candidatesLookedAt++;
-                     tempTrack = &**arr[ndx+candidatesLookedAt].first;
-                  }
-                  else
-                     tempTrack = NULL;
-               }
+               auto time2 = channels.min( GetTime );
 
                if (time1 < time2)
                   break;
-
-               ndx+=candidatesLookedAt;
             }
-            bArrayTrackLinked = arrTrack.GetLinked();
+            ndx += channels.size();
          }
       }
       arr.insert(arr.begin() + ndx, TrackNodePointer{iter, mTracks.get()});
-
-      lastTrackLinked = track->GetLinked();
    }
 
    // Now apply the permutation
