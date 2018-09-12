@@ -229,13 +229,9 @@ void TimeShiftHandle::CreateListOfCapturedClips
 
    // First, if click was in selection, capture selected clips; otherwise
    // just the clicked-on clip
-   if ( state.capturedClipIsSelection ) {
-      TrackListIterator iter( &trackList );
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetSelected())
-            AddClipsToCaptured( state, viewInfo, t, true );
-      }
-   }
+   if ( state.capturedClipIsSelection )
+      for (auto t : trackList.Selected())
+         AddClipsToCaptured( state, viewInfo, t, true );
    else {
       state.capturedClipArray.push_back
          (TrackClip( &capturedTrack, state.capturedClip ));

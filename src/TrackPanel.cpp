@@ -749,34 +749,13 @@ void TrackPanel::UpdateAccessibility()
 // Counts tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetTrackCount() const
 {
-   size_t count = 0;
-   TrackListConstIterator iter(GetTracks());
-   for (auto t = iter.First(); t; t = iter.Next()) {
-      count +=  1;
-      if( t->GetLinked() ){
-         t = iter.Next();
-         if( !t )
-            break;
-      }
-   }
-   return count;
+  return GetTracks()->Leaders().size();
 }
 
 // Counts selected tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetSelectedTrackCount() const
 {
-   size_t count = 0;
-
-   TrackListConstIterator iter(GetTracks());
-   for (auto t = iter.First(); t; t = iter.Next()) {
-      count +=  t->GetSelected() ? 1:0;
-      if( t->GetLinked() ){
-         t = iter.Next();
-         if( !t )
-            break;
-      }
-   }
-   return count;
+   return GetTracks()->SelectedLeaders().size();
 }
 
 void TrackPanel::MessageForScreenReader(const wxString& message)
@@ -1845,10 +1824,8 @@ void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
 
 void TrackPanel::UpdateVRulers()
 {
-   TrackListOfKindIterator iter(Track::Wave, GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   for (auto t : GetTracks()->Any< const WaveTrack >())
       UpdateTrackVRuler(t);
-   }
 
    UpdateVRulerSize();
 }
@@ -1883,14 +1860,12 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
 
 void TrackPanel::UpdateVRulerSize()
 {
-   TrackListIterator iter(GetTracks());
-   Track *t = iter.First();
-   if (t) {
-      wxSize s = t->vrulerSize;
-      while (t) {
+   auto trackRange = GetTracks()->Any();
+   if (trackRange) {
+      wxSize s { 0, 0 };
+      for (auto t : trackRange)
          s.IncTo(t->vrulerSize);
-         t = iter.Next();
-      }
+
       if (vrulerSize != s) {
          vrulerSize = s;
          mRuler->SetLeftOffset(GetLeftOffset());  // bevel on AdornedRuler
@@ -1927,54 +1902,29 @@ void TrackPanel::OnTrackMenu(Track *t)
 
 Track * TrackPanel::GetFirstSelectedTrack()
 {
-
-   TrackListIterator iter(GetTracks());
-
-   Track * t;
-   for ( t = iter.First();t!=NULL;t=iter.Next())
-      {
-         //Find the first selected track
-         if(t->GetSelected())
-            {
-               return t;
-            }
-
-      }
-   //if nothing is selected, return the first track
-   t = iter.First();
-
-   if(t)
+   auto t = *GetTracks()->Selected().begin();
+   if (t)
       return t;
    else
-      return NULL;
+      //if nothing is selected, return the first track
+      return *GetTracks()->Any().begin();
 }
 
 void TrackPanel::EnsureVisible(Track * t)
 {
-   TrackListIterator iter(GetTracks());
-   Track *it = NULL;
-   Track *nt = NULL;
-
    SetFocusedTrack(t);
 
    int trackTop = 0;
    int trackHeight =0;
 
-   for (it = iter.First(); it; it = iter.Next()) {
+   for (auto it : GetTracks()->Leaders()) {
       trackTop += trackHeight;
-      trackHeight =  it->GetHeight();
 
-      //find the second track if this is stereo
-      if (it->GetLinked()) {
-         nt = iter.Next();
-         trackHeight += nt->GetHeight();
-      }
-      else {
-         nt = it;
-      }
+      auto channels = TrackList::Channels(it);
+      trackHeight = channels.sum( &Track::GetHeight );
 
       //We have found the track we want to ensure is visible.
-      if ((it == t) || (nt == t)) {
+      if (channels.contains(t)) {
 
          //Get the size of the trackpanel.
          int width, height;
@@ -2000,27 +1950,20 @@ void TrackPanel::EnsureVisible(Track * t)
 // 0.0 scrolls to top
 // 1.0 scrolls to bottom.
 void TrackPanel::VerticalScroll( float fracPosition){
-   TrackListIterator iter(GetTracks());
-   Track *it = NULL;
-   Track *nt = NULL;
 
-   // Compute trackHeight
    int trackTop = 0;
-   int trackHeight =0;
+   int trackHeight = 0;
 
-   for (it = iter.First(); it; it = iter.Next()) {
-      trackTop += trackHeight;
-      trackHeight =  it->GetHeight();
+   auto tracks = GetTracks();
+   auto GetHeight =
+      [&]( const Track *t ){ return tracks->GetGroupHeight(t); };
 
-      //find the second track if this is stereo
-      if (it->GetLinked()) {
-         nt = iter.Next();
-         trackHeight += nt->GetHeight();
-      }
-      else {
-         nt = it;
-      }
+   auto range = tracks->Leaders();
+   if (!range.empty()) {
+      trackHeight = GetHeight( *range.rbegin() );
+      --range.second;
    }
+   trackTop = range.sum( GetHeight );
 
    int delta;
    
