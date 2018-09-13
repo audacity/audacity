@@ -299,25 +299,25 @@ bool VampEffect::Init()
 {
    mRate = 0.0;
 
-   for (auto left : inputTracks()->Leaders< const WaveTrack >() )
-   {
-      if (mRate == 0.0)
-      {
-         mRate = left->GetRate();
-      }
+   // PRL: this loop checked that channels of a track have the same rate,
+   // but there was no check that all tracks have one rate, and only the first
+   // is remembered in mRate.  Is that correct?
 
-      if (left->GetLinked())
-      {
-         auto right = static_cast<const WaveTrack*>( left->GetLink() );
-
+   for (auto leader : inputTracks()->Leaders<const WaveTrack>()) {
+      auto channelGroup = TrackList::Channels( leader );
+      auto rate = (*channelGroup.first++) -> GetRate();
+      for(auto channel : channelGroup) {
+         if (rate != channel->GetRate())
          // PRL:  Track rate might not match individual clip rates.
          // So is this check not adequate?
-         if (left->GetRate() != right->GetRate())
-         {
-            Effect::MessageBox(_("Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."));
-            return false;
+          {
+             // TODO: more-than-two-channels-message
+             Effect::MessageBox(_("Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."));
+             return false;
          }
       }
+      if (mRate == 0.0)
+         mRate = rate;
    }
 
    if (mRate <= 0.0)
@@ -361,21 +361,25 @@ bool VampEffect::Process()
 
    std::vector<std::shared_ptr<Effect::AddedAnalysisTrack>> addedTracks;
 
-   for (auto left : inputTracks()->Leaders< const WaveTrack >() )
+   for (auto leader : inputTracks()->Leaders<const WaveTrack>())
    {
+      auto channelGroup = TrackList::Channels(leader);
+      auto left = *channelGroup.first++;
+
       sampleCount lstart, rstart = 0;
       sampleCount len;
       GetSamples(left, &lstart, &len);
 
       unsigned channels = 1;
 
-      const WaveTrack *right{};
-      if (left->GetLinked())
+      const WaveTrack *right = *channelGroup.first++;
+      if (right)
       {
-         right = static_cast< const WaveTrack* >( left->GetLink() );
          channels = 2;
          GetSamples(right, &rstart, &len);
       }
+
+      // TODO: more-than-two-channels
 
       size_t step = mPlugin->getPreferredStepSize();
       size_t block = mPlugin->getPreferredBlockSize();
