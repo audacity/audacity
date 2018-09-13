@@ -1192,7 +1192,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    trackRect.height = 0;   // for drawing background in no tracks case.
 
    VisibleTrackIterator iter(GetProject());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   for (const Track *t = iter.First(); t; t = iter.Next()) {
       auto other = GetTracks()->FindPendingChangedTrack(t->GetId());
       if (other)
          t = other.get();
@@ -1215,7 +1215,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
       // If the previous track is linked to this one but isn't on the screen
       // (and thus would have been skipped by VisibleTrackIterator) we need to
       // draw that track's border instead.
-      Track *borderTrack = t;
+      const Track *borderTrack = t;
       wxRect borderRect = rect;
 
       if (l && !t->GetLinked() && trackRect.y < 0)
@@ -1718,7 +1718,7 @@ void TrackInfo::Status2DrawFunction
 
 void TrackPanel::DrawOutside
 (TrackPanelDrawingContext &context,
- Track * t, const wxRect & rec)
+ const Track * t, const wxRect & rec)
 {
    auto dc = &context.dc;
    bool bIsWave = (t->GetKind() == Track::Wave);
@@ -1769,7 +1769,7 @@ void TrackPanel::DrawOutside
 // If linked to a following channel, also paint the separator area, which
 // overlaps the next track rectangle's top
 void TrackPanel::DrawOutsideOfTrack
-(TrackPanelDrawingContext &context, Track * t, const wxRect & rect)
+(TrackPanelDrawingContext &context, const Track * t, const wxRect & rect)
 {
    auto dc = &context.dc;
 
@@ -2032,7 +2032,7 @@ void TrackPanel::VerticalScroll( float fracPosition){
 // Given rectangle excludes the insets left, right, and top
 // Draw a rectangular border and also a vertical separator of track controls
 // from the rest (ruler and proper track area)
-void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
+void TrackPanel::DrawBordersAroundTrack(const Track * t, wxDC * dc,
                                         const wxRect & rect, const int labelw,
                                         const int vrul)
 {
@@ -2064,7 +2064,7 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
 // Given rectangle has insets subtracted left, right, and top
 // Stroke lines along bottom and right, which are slightly short at
 // bottom-left and top-right
-void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
+void TrackPanel::DrawShadow(const Track * /* t */ , wxDC * dc, const wxRect & rect)
 {
    int right = rect.x + rect.width - 1;
    int bottom = rect.y + rect.height - 1;

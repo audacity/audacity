@@ -340,7 +340,7 @@ void TrackArtist::SetMargins(int left, int top, int right, int bottom)
 }
 
 void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
-                             TrackList * tracks,
+                             const TrackList * tracks,
                              Track * start,
                              const wxRegion & reg,
                              const wxRect & rect,
@@ -353,8 +353,8 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 {
    wxRect trackRect = rect;
    wxRect stereoTrackRect;
-   TrackListIterator iter(tracks);
-   Track *t;
+   TrackListConstIterator iter(tracks);
+   const Track *t;
 
    bool hasSolo = false;
    for (t = iter.First(); t; t = iter.Next()) {

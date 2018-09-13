@@ -137,7 +137,7 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 }
 
 // Returns TRUE if passed track has the focus
-bool TrackPanelAx::IsFocused( Track *track )
+bool TrackPanelAx::IsFocused( const Track *track )
 {
    auto focusedTrack = mFocusedTrack.lock();
    if( !focusedTrack )

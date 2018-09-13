@@ -1956,7 +1956,7 @@ void AudacityProject::FixScrollbars()
 
    auto LastTime = -std::numeric_limits<double>::max();
    auto &tracks = *GetTracks();
-   for (auto track : tracks) {
+   for (const Track *track : tracks) {
       // Iterate over pending changed tracks if present.
       {
          auto other =
