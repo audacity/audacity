@@ -1351,6 +1351,10 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"), &mTracksFitVerticallyZoomed, false);
    //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"), &mViewInfo.bUpdateSpectrogram, true);
 
+   // This code to change an empty projects rate is currently disabled, after discussion.
+   // The rule 'Default sample rate' only affects newly created projects was felt to 
+   // be simpler and better.
+#if 0
    // The DefaultProjectSample rate is the rate for new projects.
    // Do not change this project's rate, unless there are no tracks.
    if( GetTrackCount() == 0){
@@ -1361,6 +1365,8 @@ void AudacityProject::UpdatePrefsVariables()
          bar->SetRate( mRate );
       }
    }
+#endif
+
    mDefaultFormat = QualityPrefs::SampleFormatChoice();
 
    gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);

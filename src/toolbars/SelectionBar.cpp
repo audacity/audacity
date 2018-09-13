@@ -117,7 +117,6 @@ SelectionBar::SelectionBar()
    // Refer to bug #462 for a scenario where the division-by-zero causes
    // Audacity to fail.
    // We expect mRate to be set from the project later.
-   // We could just use AudioIO::GetOptimalSupportedSampleRate() here.
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
       AudioIO::GetOptimalSupportedSampleRate());
 
@@ -344,11 +343,11 @@ void SelectionBar::Populate()
 void SelectionBar::UpdatePrefs()
 {
    // The project rate is no longer driven from here.
-   // IF /SamplingRate/DefaultProjectSampleRate has changed, that is sent to the project.
-   // IF the project has no tracks, then the project updates its sample rate, and
-   // signals that back to the SelectionBar via SetRate().
-   // Usually though there are tracks, and changes to that pref will only affect new
-   // or empty projects.
+   // When preferences change, the Project learns about it too.
+   // If necessary we can drive the SelectionBar mRate via the Project
+   // calling our SetRate().
+   // As of 13-Sep-2018, changes to the sample rate pref will only affect 
+   // creation of new projects, not the smaple rate in existing ones.
 
    wxCommandEvent e;
    e.SetInt(mStartTime->GetFormatIndex());
