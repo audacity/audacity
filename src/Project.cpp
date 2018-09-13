@@ -1958,12 +1958,7 @@ void AudacityProject::FixScrollbars()
    auto &tracks = *GetTracks();
    for (const Track *track : tracks) {
       // Iterate over pending changed tracks if present.
-      {
-         auto other =
-         tracks.FindPendingChangedTrack(track->GetId());
-         if (other)
-            track = other.get();
-      }
+      track = track->SubstitutePendingChangedTrack().get();
       LastTime = std::max( LastTime, track->GetEndTime() );
    }
    LastTime =

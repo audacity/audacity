@@ -1554,14 +1554,20 @@ bool TrackList::ApplyPendingTracks()
    return result;
 }
 
-std::shared_ptr<Track> TrackList::FindPendingChangedTrack(TrackId id) const
+std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
 {
    // Linear search.  Tracks in a project are usually very few.
-   auto it = std::find_if( mPendingUpdates.begin(), mPendingUpdates.end(),
-      [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
-   if (it == mPendingUpdates.end())
-      return {};
-   return *it;
+   auto pList = mList.lock();
+   if (pList) {
+      const auto id = GetId();
+      const auto end = pList->mPendingUpdates.end();
+      auto it = std::find_if(
+         pList->mPendingUpdates.begin(), end,
+         [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
+      if (it != end)
+         return *it;
+   }
+   return Pointer( this );
 }
 
 bool TrackList::HasPendingTracks() const

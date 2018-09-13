@@ -358,9 +358,7 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 
    bool hasSolo = false;
    for (t = iter.First(); t; t = iter.Next()) {
-      auto other = tracks->FindPendingChangedTrack(t->GetId());
-      if (other)
-         t = other.get();
+      t = t->SubstitutePendingChangedTrack().get();
       auto pt = dynamic_cast<const PlayableTrack *>(t);
       if (pt && pt->GetSolo()) {
          hasSolo = true;
@@ -385,9 +383,7 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 
    t = iter.StartWith(start);
    while (t) {
-      auto other = tracks->FindPendingChangedTrack(t->GetId());
-      if (other)
-         t = other.get();
+      t = t->SubstitutePendingChangedTrack().get();
       trackRect.y = t->GetY() - zoomInfo.vpos;
       trackRect.height = t->GetHeight();
 

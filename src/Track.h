@@ -158,6 +158,10 @@ class AUDACITY_DLL_API Track /* not final */
       return {};
    }
 
+   // Find anything registered with TrackList::RegisterPendingChangedTrack and
+   // not yet cleared or applied; if no such exists, return this track
+   std::shared_ptr<const Track> SubstitutePendingChangedTrack() const;
+
    // Cause certain overriding tool modes (Zoom; future ones?) to behave
    // uniformly in all tracks, disregarding track contents.
    // Do not further override this...
@@ -850,10 +854,6 @@ public:
    // Will always clear the pending updates.
    // Return true if the state of the track list really did change.
    bool ApplyPendingTracks();
-
-   // Find anything registered with RegisterPendingChangedTrack and not yet
-   // cleared or applied
-   std::shared_ptr<Track> FindPendingChangedTrack(TrackId id) const;
 
    bool HasPendingTracks() const;
 
