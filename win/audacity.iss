@@ -120,8 +120,8 @@ Source: ".\release\wxmsw311u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignorev
 ; "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; or "C:\Program Files\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
 ; according to your system 
-Source: ".\release\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\release\msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\release\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: ".\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't currently ship any modules, so the next line is commented out
@@ -145,6 +145,8 @@ Type: files; Name: "{app}\msvcp80.dll"
 Type: files; Name: "{app}\msvcr80.dll"
 Type: files; Name: "{app}\msvcp90.dll"
 Type: files; Name: "{app}\msvcr90.dll"
+Type: files; Name: "{app}\msvcp120.dll"
+Type: files; Name: "{app}\msvcr120.dll"
 
 ; Get rid of previous help folder.
 Type: filesandordirs; Name: "{app}\help"
