@@ -188,10 +188,6 @@ void WaveTrack::Reinit(const WaveTrack &orig)
    }
 
    this->SetOffset(orig.GetOffset());
-
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   // To do:  mYv, mHeightV, mPerY, mVirtualStereo
-#endif
 }
 
 void WaveTrack::Merge(const Track &orig)
