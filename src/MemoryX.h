@@ -8,10 +8,6 @@
 #define safenew new
 #endif
 
-// Conditional compilation switch indicating whether to rely on
-// std:: containers knowing about rvalue references
-#undef __AUDACITY_OLD_STD__
-
 
 #include <functional>
 
@@ -321,83 +317,6 @@ static char*THIS_FILE = __FILE__;
 #define new new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
 #endif
 #endif
-
-// Frequently, we need to use a vector or list of unique_ptr if we can, but default
-// to shared_ptr if we can't (because containers know how to copy elements only,
-// not move them).
-#ifdef __AUDACITY_OLD_STD__
-template<typename T> using movable_ptr = std::shared_ptr<T>;
-template<typename T, typename Deleter> using movable_ptr_with_deleter_base = std::shared_ptr<T>;
-#else
-template<typename T> using movable_ptr = std::unique_ptr<T>;
-template<typename T, typename Deleter> using movable_ptr_with_deleter_base = std::unique_ptr<T, Deleter>;
-#endif
-
-template<typename T, typename... Args>
-inline movable_ptr<T> make_movable(Args&&... args)
-{
-   return std::
-#ifdef __AUDACITY_OLD_STD__
-      make_shared
-#else
-      make_unique
-#endif
-      <T>(std::forward<Args>(args)...);
-}
-
-template<typename T, typename Deleter> class movable_ptr_with_deleter
-   : public movable_ptr_with_deleter_base < T, Deleter >
-{
-public:
-   // Do not expose a constructor that takes only a pointer without deleter
-   // That is important when implemented with shared_ptr
-   movable_ptr_with_deleter() {};
-   movable_ptr_with_deleter(T* p, const Deleter &d)
-      : movable_ptr_with_deleter_base<T, Deleter>( p, d ) {}
-
-#ifdef __AUDACITY_OLD_STD__
-
-   // copy
-   movable_ptr_with_deleter(const movable_ptr_with_deleter &that)
-      : movable_ptr_with_deleter_base < T, Deleter > ( that )
-   {
-   }
-
-   movable_ptr_with_deleter &operator= (const movable_ptr_with_deleter& that)
-   {
-      if (this != &that) {
-         ((movable_ptr_with_deleter_base<T, Deleter>&)(*this)) =
-            that;
-      }
-      return *this;
-   }
-
-#else
-
-   // move
-   movable_ptr_with_deleter(movable_ptr_with_deleter &&that)
-      : movable_ptr_with_deleter_base < T, Deleter > ( std::move(that) )
-   {
-   }
-
-   movable_ptr_with_deleter &operator= (movable_ptr_with_deleter&& that)
-   {
-      if (this != &that) {
-         ((movable_ptr_with_deleter_base<T, Deleter>&)(*this)) =
-         std::move(that);
-      }
-      return *this;
-   }
-
-#endif
-};
-
-template<typename T, typename Deleter, typename... Args>
-inline movable_ptr_with_deleter<T, Deleter>
-make_movable_with_deleter(const Deleter &d, Args&&... args)
-{
-   return movable_ptr_with_deleter<T, Deleter>(safenew T(std::forward<Args>(args)...), d);
-}
 
 /*
  * A deleter for pointers obtained with malloc
