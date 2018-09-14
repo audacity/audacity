@@ -79,12 +79,6 @@ and replace the main project window with our own wxFrame.
 #endif
 
 
-// HACK!
-// This must match the enum in LoadModules.h
-// We do NOT include LoadModules.h, because we want
-// this DLL to be usable with programs other than Audacity.
-// (More work required for this to be possible -
-// we need new header files that just define the interface).
 typedef enum
 {
    ModuleInitialize,

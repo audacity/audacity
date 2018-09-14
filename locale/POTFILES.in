@@ -112,8 +112,6 @@ src/Languages.h
 src/Legacy.cpp
 src/Legacy.h
 src/LightThemeAsCeeCode.h
-src/LoadModules.cpp
-src/LoadModules.h
 src/Lyrics.cpp
 src/Lyrics.h
 src/LyricsWindow.cpp
