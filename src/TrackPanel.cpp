@@ -1787,8 +1787,8 @@ void TrackPanel::DrawOutsideOfTrack
 
    // Area between panel border and right track border
    side = rect;
-   side.x += side.width - kTopInset;
-   side.width = kTopInset;
+   side.x += side.width - kRightInset;
+   side.width = kRightInset;
    dc->DrawRectangle(side);
 
    // Area between tracks of stereo group
@@ -2076,7 +2076,7 @@ void TrackPanel::DrawShadow(const Track * /* t */ , wxDC * dc, const wxRect & re
    AColor::Line(*dc, right, rect.y, right, bottom);
 
    // background color erases small parts of those lines
-   AColor::Dark(dc, false);
+   AColor::TrackPanelBackground(dc, false);
 
    // bottom-left
    AColor::Line(*dc, rect.x, bottom, rect.x + 1, bottom);
@@ -2534,7 +2534,7 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
 
    // fill in label
    wxRect fill = rect;
-   fill.width = labelw-4;
+   fill.width = labelw - kLeftInset;
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
 
