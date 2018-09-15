@@ -147,22 +147,27 @@ void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
 
       // Insert as a leaf, or as an internal node?
       if (adopt && position.adopt) {
-         // Existing child of parent become its grandchild
-
-         // TODO:  is it ever correct to adopt more than one, depending on
-         // heights?  Could an inserted tall bar adopt two short ones?
+         // Existing children of parent become grandchildren
 
          // Make NEW node
          Tree tree;
          tree.pBar = bar;
 
          // Do adoption
-         tree.children.push_back(Tree{});
-         auto &child = tree.children.back();
-         child.pBar = iter->pBar;
-         child.children.swap(iter->children);
+         const auto barHeight = bar->GetSize().GetY() + toolbarGap;
+         auto totalHeight = 0;
+         while (iter != pForest->end() &&
+            barHeight >=
+               (totalHeight += (iter->pBar->GetSize().GetY() + toolbarGap))) {
+            tree.children.push_back(Tree{});
+            auto &child = tree.children.back();
+            child.pBar = iter->pBar;
+            child.children.swap(iter->children);
+            iter = pForest->erase(iter);
+         }
 
          // Put the node in the tree
+         iter = pForest->insert(iter, Tree{});
          (*iter).swap(tree);
       }
       else
@@ -435,11 +440,6 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position 
 
    // Inform toolbar of change
    bar->SetDocked( this, false );
-
-   // Rearrange our world
-   if (bar->IsVisible())
-      LayoutToolBars();
-   Updated();
 }
 
 // Initial docking of bars
@@ -453,6 +453,7 @@ void ToolDock::LoadConfig()
       // configuration
       Expose( bar->GetId(), true );
    }
+   Updated();
 }
 
 // A policy object for the skeleton routine below
@@ -842,10 +843,6 @@ void ToolDock::Expose( int type, bool show )
 
    // Make it (dis)appear
    t->Expose( show );
-
-   // Update the layout
-   LayoutToolBars();
-   Updated();
 }
 
 //
