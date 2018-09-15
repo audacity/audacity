@@ -63,7 +63,7 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.2.1: 
+2. Changes since version 2.2.2: 
 
 Improvements
 
@@ -84,10 +84,13 @@ Improvements
  * Sliding Stretch
  * Dialog (option) for entering labels
 
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.0
+
+
 
 Bug Fixes
 
- Over 90 bugs in 2.2.0 fixed, including:
+ Over 90 bugs in 2.2.2 fixed, including:
 
  * Windows: Queen Mary 1.7.1 Vamp plug-ins crash Audacity on opening Plug-in Manager - bug #1244
  * Inconsistent behavior when recording with a selection defined - bug #1839
@@ -100,8 +103,7 @@ Bug Fixes
  * Using Spectrogram Settings in TCP or using Preferences causes Audacity to reset Project Rate to default rate in Quality Preferences - bug #1977
  * Cut Preview should play all selected/sync-locked tracks, respecting Mute/Solo during preview - bug #231
 
- See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.0
- and: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.0
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.0
 
 -------------------------------------------------------------------------------
 
