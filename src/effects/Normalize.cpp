@@ -623,11 +623,13 @@ bool EffectNormalize::ProcessOne(SelectedTrackListOfKindIterator iter, bool anal
    {
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
-      const auto blockLen = limitSampleBufferSize(
+      auto blockLen = limitSampleBufferSize(
          track1->GetBestBlockSize(s),
          mTrackBufferCapacity
       );
 
+      const size_t remainingLen = (end - s).as_size_t();
+      blockLen = blockLen > remainingLen ? remainingLen : blockLen;
       if(!LoadBufferBlock(track1, track2, s, blockLen))
          return false;
 
@@ -659,14 +661,14 @@ bool EffectNormalize::LoadBufferBlock(WaveTrack* track1, WaveTrack* track2,
 {
    sampleCount read_size;
    // Get the samples from the track and put them in the buffer
-   track1->Get((samplePtr) mTrackBuffer[0].get(), floatSample, pos, mTrackBufferCapacity,
+   track1->Get((samplePtr) mTrackBuffer[0].get(), floatSample, pos, len,
                fillZero, true, &read_size);
    mTrackBufferLen = read_size.as_size_t();
 
    // Get linked stereo track as well.
    if(mProcStereo)
    {
-      track2->Get((samplePtr) mTrackBuffer[1].get(), floatSample, pos, mTrackBufferCapacity,
+      track2->Get((samplePtr) mTrackBuffer[1].get(), floatSample, pos, len,
                   fillZero, true, &read_size);
       // Fail if we read different sample count from stereo pair tracks.
       if(read_size.as_size_t() != mTrackBufferLen)
