@@ -18,7 +18,7 @@ Minor tweaks (for Audacity) By James Crook, Nov 2009.
 ...
 """
 
-__version__ = '0.1.0.1'
+__version__ = '0.1.0.2'
 
 import re
 import sys
@@ -246,7 +246,8 @@ def monobook_fix_html(doc, page_url):
     doc = remove_tag(doc, '<div class="editsection"', '</div>', '<div')
     doc = remove_tag(doc, '<span class="editsection"', '</span>', '<span')
     doc = re.sub(r'<h2>Navigation menu</h2>', r'', doc)
-
+    doc = re.sub(r'Audacity Development Manual</title>', r'Audacity Manual</title>', doc )
+    doc = re.sub(r' .lpha Manual</strong>', r' Manual</strong>', doc )
 
     return doc
 
@@ -450,6 +451,8 @@ def monobook_hack_skin_css(doc, url):
     doc = doc.replace(c1, '/* edit by mw2html */\n' + c2 +
                           '\n/* end edit by mw2html */\n')
 
+    doc = doc.replace('h3 { font-size: 90%; }', 'h3 { font-size: 130%; }')
+    
     # Remove external link icons.
     if config.remove_png:
         doc = re.sub(r'#bodyContent a\[href \^="https://"\][\s\S]+?\}', r'', doc)
