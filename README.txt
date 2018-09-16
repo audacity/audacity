@@ -78,6 +78,7 @@ Improvements
    * New 'Tools' menu
    * New 'Scriptables' commands 
  * Nyquist gains AUD-DO command
+ * Nyquist effects are now translatable and translated
  * More dialogs have help buttons now
  * Increased legibility of trackname display
  * Half-wave option for collapsed tracks
