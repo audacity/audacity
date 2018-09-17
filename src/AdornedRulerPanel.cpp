@@ -2141,19 +2141,6 @@ std::shared_ptr<TrackPanelNode> AdornedRulerPanel::Root()
    return std::make_shared< MainGroup >( *this );
 }
 
-auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell
-{
-   bool mayScrub = mProject->GetScrubber().CanScrub() &&
-      mShowScrubbing;
-   if (mayScrub && mScrubZone.Contains(mouseX, mouseY))
-      return { mScrubbingCell, mScrubZone };
-
-   if (mInner.Contains(mouseX, mouseY))
-      return { mQPCell, mInner };
-
-   return {};
-}
-
 wxRect AdornedRulerPanel::FindRect(const TrackPanelCell &cell)
 {
    if (&cell == mScrubbingCell.get())

@@ -177,7 +177,6 @@ private:
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
 
-   FoundCell FindCell(int mouseX, int mouseY) override;
    wxRect FindRect(const TrackPanelCell &cell) override;
 public:
    AudacityProject * GetProject() const override;

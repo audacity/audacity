@@ -126,13 +126,13 @@ time, but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindCell() for label returns a rectangle that OMITS left, top, and bottom
+Cell for label has a rectangle that OMITS left, top, and bottom
 margins
 
-FindCell() for vruler returns a rectangle right of the label,
+Cell for vruler has a rectangle right of the label,
 up to and including the One Pixel column, and OMITS top and bottom margins
 
-FindCell() for track returns a rectangle with x == GetLeftOffset(), and OMITS
+Cell() for track returns a rectangle with x == GetLeftOffset(), and OMITS
 right, top, and bottom margins
 
 +--------------- ... ------ ... --------------------- ...       ... -------------+
@@ -2086,27 +2086,6 @@ std::shared_ptr<TrackPanelNode> TrackPanel::Root()
    // That cache would need invalidation when there is addition, deletion, or
    // permutation of tracks, or change of width of the vertical rulers.
    return std::make_shared< MainGroup >( *this );
-}
-
-/// Determines which cell is under the mouse
-///  @param mouseX - mouse X position.
-///  @param mouseY - mouse Y position.
-auto TrackPanel::FindCell(int mouseX, int mouseY) -> FoundCell
-{
-   auto range = Cells();
-   auto &iter = range.first, &end = range.second;
-   while
-      ( iter != end &&
-        !(*iter).second.Contains( mouseX, mouseY ) )
-      ++iter;
-   if (iter == end)
-      return {};
-
-   auto found = *iter;
-   return {
-      found.first,
-      found.second
-   };
 }
 
 wxRect TrackPanel::FindRect( const TrackPanelCell &cell )

@@ -341,9 +341,6 @@ protected:
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
 
-   // Find track info by coordinate
-   FoundCell FindCell(int mouseX, int mouseY) override;
-
    // Find rectangle of the given cell
    wxRect FindRect(const TrackPanelCell &cell) override;
 

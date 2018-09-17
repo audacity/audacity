@@ -44,17 +44,10 @@ public:
    
    virtual AudacityProject *GetProject() const = 0;
    
-   // Find track info by coordinate
-   struct FoundCell {
-      std::shared_ptr<TrackPanelCell> pCell;
-      wxRect rect;
-   };
-
    // Get the root object defining a recursive subdivision of the panel's
    // area into cells
    virtual std::shared_ptr<TrackPanelNode> Root() = 0;
 
-   virtual FoundCell FindCell(int mouseX, int mouseY) = 0;
    virtual wxRect FindRect(const TrackPanelCell &cell) = 0;
 
    // Structure and functions for generalized visitation of the subdivision
@@ -93,6 +86,14 @@ public:
    virtual bool TakesFocus() const = 0;
    
 public:
+   // Find cell by coordinate
+   struct FoundCell {
+      std::shared_ptr< TrackPanelCell > pCell;
+      wxRect rect;
+   };
+
+   FoundCell FindCell(int mouseX, int mouseY);
+
    UIHandlePtr Target();
    
    std::shared_ptr<TrackPanelCell> LastCell() const;

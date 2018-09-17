@@ -937,7 +937,6 @@ namespace {
       const auto end = children.end();
       const auto nextCoord = ((next == end) ? upperBound : next->first - 1);
 
-      // Some defense against bad overrides of TrackPanelGroup::Children
       auto lesser = std::max(lowerBound, std::min(upperBound, iter->first));
       auto greater = std::max(lesser, std::min(upperBound, nextCoord));
 
@@ -974,6 +973,45 @@ void CellularPanel::Visit(
    }
    else
       return;
+}
+
+auto CellularPanel::FindCell(int mouseX, int mouseY) -> FoundCell
+{
+   auto rect = this->GetClientRect();
+   auto node = Root();
+   while (node) {
+      if ( auto pCell = std::dynamic_pointer_cast< TrackPanelCell >( node ) )
+         // Found the bottom of the hierarchy
+         return { pCell, rect };
+      else if ( auto pGroup = dynamic_cast< TrackPanelGroup* >( node.get() ) ) {
+         // Ask node for its subdivision
+         const auto results = pGroup->Children( rect );
+         const bool divideX = results.first == TrackPanelGroup::Axis::X;
+         const auto &children = results.second;
+
+         // Find the correct child
+         const auto begin = children.begin(), end = children.end();
+         auto iter = std::upper_bound( begin, end,
+            (divideX ? mouseX : mouseY),
+            [&]( wxCoord coord, const TrackPanelGroup::Child &child ) {
+               return coord < child.first;
+            }
+         );
+         if (iter == begin)
+            break;
+         --iter;
+
+         // Descend the hierarchy of nodes
+         rect = Subdivide(rect, divideX, children, iter);
+         node = iter->second;
+      }
+      else
+         // Nulls in the array of children are allowed, to define a void with
+         // no cell
+         break;
+   }
+
+   return { {}, {} };
 }
 
 UIHandlePtr CellularPanel::Target()
