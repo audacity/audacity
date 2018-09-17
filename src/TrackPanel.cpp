@@ -2729,6 +2729,22 @@ TrackPanel *(*TrackPanel::FactoryFunction)(
               TrackPanelListener * listener,
               AdornedRulerPanel * ruler) = TrackPanelFactory;
 
+TrackPanelNode::TrackPanelNode()
+{
+}
+
+TrackPanelNode::~TrackPanelNode()
+{
+}
+
+TrackPanelGroup::TrackPanelGroup()
+{
+}
+
+TrackPanelGroup::~TrackPanelGroup()
+{
+}
+
 TrackPanelCell::~TrackPanelCell()
 {
 }

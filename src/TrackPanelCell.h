@@ -28,9 +28,43 @@ using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 #include <vector>
 
+// A subtree in the subdivision of the CellularPanel's area
+class AUDACITY_DLL_API /* not final */ TrackPanelNode
+{
+public:
+   TrackPanelNode();
+   virtual ~TrackPanelNode() = 0;
+};
+
+// A non-leaf
+class AUDACITY_DLL_API TrackPanelGroup /* not final */ : public TrackPanelNode
+{
+public:
+   TrackPanelGroup();
+   virtual ~TrackPanelGroup();
+
+   enum class Axis { X, Y };
+
+   // A refinement of a given rectangle partitions it along one of its axes
+   // and associates TrackPanelNodes with the partition.
+   // The sequence of coordinates should be increasing, giving left or top
+   // coordinates of sub-rectangles.
+   // Null pointers are permitted to define empty spaces with no cell object.
+   // If the first coordinate is right of or below the rectangle boundary,
+   // then that also defines an empty space at the edge.
+   // Sub-rectangles may be defined partly or wholly out of the bounds of the
+   // given rectangle.  Such portions are ignored.
+   using Child = std::pair< wxCoord, std::shared_ptr<TrackPanelNode> >;
+   using Refinement = std::vector< Child >;
+   using Subdivision = std::pair< Axis, Refinement >;
+
+   // Report a subdivision of one of the axes of the given rectangle
+   virtual Subdivision Children( const wxRect &rect ) = 0;
+};
+
 // Abstract base class defining TrackPanel's access to specialist classes that
 // implement drawing and user interactions
-class AUDACITY_DLL_API TrackPanelCell /* not final */
+class AUDACITY_DLL_API TrackPanelCell /* not final */ : public TrackPanelNode
 {
 public:
    virtual ~TrackPanelCell () = 0;
