@@ -201,7 +201,7 @@ NyquistEffect::~NyquistEffect()
 wxString NyquistEffect::GetPath()
 {
    if (mIsPrompt)
-      return (mType == EffectTypeTool) ?
+      return (mPromptType == EffectTypeTool) ?
          NYQUIST_TOOLS_PROMPT_ID :
          NYQUIST_EFFECTS_PROMPT_ID;
 
@@ -211,7 +211,7 @@ wxString NyquistEffect::GetPath()
 IdentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-      return (mType == EffectTypeTool) ?
+      return (mPromptType == EffectTypeTool) ?
          XO("Nyquist Prompt") :
          XO("Nyquist Effects Prompt");
 
