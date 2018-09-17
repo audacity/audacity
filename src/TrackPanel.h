@@ -341,9 +341,6 @@ protected:
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
 
-   // Find rectangle of the given cell
-   wxRect FindRect(const TrackPanelCell &cell) override;
-
    int GetVRulerWidth() const;
    int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
 

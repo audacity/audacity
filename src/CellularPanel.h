@@ -48,8 +48,6 @@ public:
    // area into cells
    virtual std::shared_ptr<TrackPanelNode> Root() = 0;
 
-   virtual wxRect FindRect(const TrackPanelCell &cell) = 0;
-
    // Structure and functions for generalized visitation of the subdivision
    struct Visitor {
       virtual ~Visitor();
@@ -93,6 +91,11 @@ public:
    };
 
    FoundCell FindCell(int mouseX, int mouseY);
+
+   // Search the tree of subdivisions of the panel area for the given cell.
+   // If more than one sub-area is associated with the same cell object, it
+   // is not specified which rectangle is returned.
+   wxRect FindRect(const TrackPanelCell &cell);
 
    UIHandlePtr Target();
    

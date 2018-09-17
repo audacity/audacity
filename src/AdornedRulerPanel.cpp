@@ -2141,17 +2141,6 @@ std::shared_ptr<TrackPanelNode> AdornedRulerPanel::Root()
    return std::make_shared< MainGroup >( *this );
 }
 
-wxRect AdornedRulerPanel::FindRect(const TrackPanelCell &cell)
-{
-   if (&cell == mScrubbingCell.get())
-      return mScrubZone;
-   if (&cell == mQPCell.get())
-      return mInner;
-   
-   return {};
-}
-
-
 AudacityProject * AdornedRulerPanel::GetProject() const
 {
    return mProject;

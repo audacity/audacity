@@ -1014,6 +1014,20 @@ auto CellularPanel::FindCell(int mouseX, int mouseY) -> FoundCell
    return { {}, {} };
 }
 
+wxRect CellularPanel::FindRect( const TrackPanelCell &cell )
+{
+   wxRect result;
+
+   struct Stop{};
+   try { VisitCells( [&]( const wxRect &rect, TrackPanelCell &visited ) {
+      if ( &visited == &cell )
+         result = rect, throw Stop{};
+   } ); }
+   catch ( const Stop& ) {}
+
+   return result;
+}
+
 UIHandlePtr CellularPanel::Target()
 {
    auto &state = *mState;

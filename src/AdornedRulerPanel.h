@@ -176,8 +176,6 @@ private:
    // Get the root object defining a recursive subdivision of the panel's
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
-
-   wxRect FindRect(const TrackPanelCell &cell) override;
 public:
    AudacityProject * GetProject() const override;
 private:
