@@ -1956,6 +1956,11 @@ void TrackPanel::DrawShadow(const Track * /* t */ , wxDC * dc, const wxRect & re
    AColor::Line(*dc, right, rect.y, right, rect.y + 1);
 }
 
+std::shared_ptr<TrackPanelNode> TrackPanel::Root()
+{
+   return {};
+}
+
 /// Determines which cell is under the mouse
 ///  @param mouseX - mouse X position.
 ///  @param mouseY - mouse Y position.

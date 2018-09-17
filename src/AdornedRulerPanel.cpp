@@ -2102,6 +2102,11 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
 }
 
 // CellularPanel implementation
+std::shared_ptr<TrackPanelNode> AdornedRulerPanel::Root()
+{
+   return {};
+}
+
 auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell
 {
    bool mayScrub = mProject->GetScrubber().CanScrub() &&
