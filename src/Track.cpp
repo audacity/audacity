@@ -408,6 +408,63 @@ bool Track::IsLeader() const
 bool Track::IsSelectedLeader() const
    { return IsSelected() && IsLeader(); }
 
+void Track::FinishCopy
+(const Track *n, Track *dest)
+{
+   if (dest) {
+      dest->SetChannel(n->GetChannel());
+      dest->SetLinked(n->GetLinked());
+      dest->SetName(n->GetName());
+   }
+}
+
+bool Track::LinkConsistencyCheck()
+{
+   // Sanity checks for linked tracks; unsetting the linked property
+   // doesn't fix the problem, but it likely leaves us with orphaned
+   // blockfiles instead of much worse problems.
+   bool err = false;
+   if (GetLinked())
+   {
+      Track *l = GetLink();
+      if (l)
+      {
+         // A linked track's partner should never itself be linked
+         if (l->GetLinked())
+         {
+            wxLogWarning(
+               wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
+               GetName().c_str(), l->GetName());
+            err = true;
+            l->SetLinked(false);
+         }
+
+         // Channels should be left and right
+         if ( !(  (GetChannel() == Track::LeftChannel &&
+                     l->GetChannel() == Track::RightChannel) ||
+                  (GetChannel() == Track::RightChannel &&
+                     l->GetChannel() == Track::LeftChannel) ) )
+         {
+            wxLogWarning(
+               wxT("Track %s and %s had left/right track links out of order. Setting tracks to not be linked."),
+               GetName(), l->GetName());
+            err = true;
+            SetLinked(false);
+         }
+      }
+      else
+      {
+         wxLogWarning(
+            wxT("Track %s had link to NULL track. Setting it to not be linked."),
+            GetName());
+         err = true;
+         SetLinked(false);
+      }
+   }
+
+   return ! err;
+}
+
 std::pair<Track *, Track *> TrackList::FindSyncLockGroup(Track *pMember) const
 {
    if (!pMember)

@@ -315,12 +315,23 @@ public:
    void SetMinimized(bool isMinimized);
 protected:
    virtual void DoSetMinimized(bool isMinimized);
-public:
 
-   Track *GetLink() const;
+public:
+   static void FinishCopy (const Track *n, Track *dest);
+
+   // For use when loading a file.  Return true if ok, else make repair
+   bool LinkConsistencyCheck();
 
 private:
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
+
+   Track *GetLink() const;
+   bool GetLinked  () const { return mLinked; }
+public:
+   void SetLinked  (bool l);
+private:
+   // No need yet to make this virtual
+   void DoSetLinked(bool l);
 
    TrackNodePointer GetNode() const;
    void SetOwner
@@ -358,13 +369,9 @@ private:
    void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
+
    virtual void SetSelected(bool s);
 
-   bool GetLinked  () const { return mLinked;   }
-   void SetLinked  (bool l);
-private:
-   // No need yet to make this virtual
-   void DoSetLinked(bool l);
 public:
 
    virtual ChannelType GetChannel() const { return mChannel;}

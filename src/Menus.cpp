@@ -5479,19 +5479,9 @@ void MenuCommandHandler::OnRedo(const CommandContext &context)
 }
 
 void MenuCommandHandler::FinishCopy
-   (const Track *n, Track *dest)
-{
-   if (dest) {
-      dest->SetChannel(n->GetChannel());
-      dest->SetLinked(n->GetLinked());
-      dest->SetName(n->GetName());
-   }
-}
-
-void MenuCommandHandler::FinishCopy
    (const Track *n, Track::Holder &&dest, TrackList &list)
 {
-   FinishCopy( n, dest.get() );
+   Track::FinishCopy( n, dest.get() );
    if (dest)
       list.Add(std::move(dest));
 }
@@ -6037,7 +6027,7 @@ bool MenuCommandHandler::HandlePasteNothingSelected(AudacityProject &project)
          if (uNewTrack)
             FinishCopy(pClip, std::move(uNewTrack), *tracks);
          else
-            FinishCopy(pClip, pNewTrack);
+            Track::FinishCopy(pClip, pNewTrack);
       }
 
       // Select some pasted samples, which is probably impossible to get right
