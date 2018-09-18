@@ -1155,14 +1155,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 
 bool MixerBoard::HasSolo()
 {
-   TrackListIterator iterTracks(mTracks);
-   Track* pTrack;
-   for (pTrack = iterTracks.First(); pTrack; pTrack = iterTracks.Next()) {
-      auto pPlayable = dynamic_cast<PlayableTrack *>( pTrack );
-      if (pPlayable && pPlayable->GetSolo())
-         return true;
-   }
-   return false;
+   return !(( mTracks->Any<PlayableTrack>() + &PlayableTrack::GetSolo ).empty());
 }
 
 void MixerBoard::RefreshTrackCluster(const PlayableTrack* pTrack, bool bEraseBackground /*= true*/)

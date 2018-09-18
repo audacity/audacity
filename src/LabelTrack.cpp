@@ -1970,10 +1970,8 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 
       case WXK_ESCAPE:
          if (mRestoreFocus >= 0) {
-            TrackListIterator iter(GetActiveProject()->GetTracks());
-            Track *track = iter.First();
-            while (track && mRestoreFocus--)
-               track = iter.Next();
+            auto track = *GetActiveProject()->GetTracks()->Any()
+               .begin().advance(mRestoreFocus);
             if (track)
                GetActiveProject()->GetTrackPanel()->SetFocusedTrack(track);
             mRestoreFocus = -1;

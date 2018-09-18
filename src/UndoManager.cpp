@@ -78,9 +78,7 @@ namespace {
       SpaceArray::value_type result = 0;
 
       //TIMER_START( "CalculateSpaceUsage", space_calc );
-      TrackListOfKindIterator iter(Track::Wave);
-      WaveTrack *wt = (WaveTrack *) iter.First(tracks);
-      while (wt)
+      for (auto wt : tracks->Any< WaveTrack >())
       {
          // Scan all clips within current track
          for(const auto &clip : wt->GetAllClips())
@@ -104,8 +102,6 @@ namespace {
                   seen->insert( &*file );
             }
          }
-
-         wt = (WaveTrack *) iter.Next();
       }
 
       return result;
@@ -377,10 +373,10 @@ void UndoManager::StateSaved()
 //void UndoManager::Debug()
 //{
 //   for (unsigned int i = 0; i < stack.Count(); i++) {
-//      TrackListIterator iter(stack[i]->tracks);
-//      WaveTrack *t = (WaveTrack *) (iter.First());
-//      wxPrintf(wxT("*%d* %s %f\n"), i, (i == (unsigned int)current) ? wxT("-->") : wxT("   "),
-//             t ? t->GetEndTime()-t->GetStartTime() : 0);
+//      for (auto t : stack[i]->tracks->Any())
+//         wxPrintf(wxT("*%d* %s %f\n"),
+//                  i, (i == (unsigned int)current) ? wxT("-->") : wxT("   "),
+//                t ? t->GetEndTime()-t->GetStartTime() : 0);
 //   }
 //}
 

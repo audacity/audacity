@@ -363,27 +363,22 @@ bool LabelDialog::TransferDataFromWindow()
 {
    int cnt = mData.size();
    int i;
-   TrackListIterator iter(mTracks);
-   Track *t;
    int tndx = 0;
 
    // Clear label tracks of labels
-   for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Label) {
-         ++tndx;
-         LabelTrack *lt = static_cast<LabelTrack*>(t);
-         if (!mSelectedTrack) {
-            for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
-               lt->DeleteLabel(i);
-            }
+   for (auto lt : mTracks->Any<LabelTrack>()) {
+      ++tndx;
+      if (!mSelectedTrack) {
+         for (i = lt->GetNumLabels() - 1; i >= 0 ; i--) {
+            lt->DeleteLabel(i);
          }
-         else if (mSelectedTrack == lt && mIndex > -1) {
-            lt->DeleteLabel(mIndex);
-         }
-         else
-            // Do nothing to the nonselected tracks
-            ;
       }
+      else if (mSelectedTrack == lt && mIndex > -1) {
+         lt->DeleteLabel(mIndex);
+      }
+      else
+         // Do nothing to the nonselected tracks
+         ;
    }
 
    // Create any added tracks
@@ -405,18 +400,20 @@ bool LabelDialog::TransferDataFromWindow()
 
       // Look for track with matching index
       tndx = 1;
-      for (t = iter.First(); t; t = iter.Next()) {
-         if (t->GetKind() == Track::Label && rd.index == tndx++) {
+      LabelTrack *lt{};
+      for (auto t : mTracks->Any<LabelTrack>()) {
+         lt = t;
+         if (rd.index == tndx++) {
             break;
          }
       }
-      wxASSERT(t);
-      if (!t)
+      wxASSERT(lt);
+      if (!lt)
          return false;
 
       // Add the label to it
-      static_cast<LabelTrack *>(t)->AddLabel(rd.selectedRegion, rd.title,-2);
-      static_cast<LabelTrack *>(t)->Unselect();
+      lt->AddLabel(rd.selectedRegion, rd.title, -2);
+      lt->Unselect();
    }
 
    return true;
@@ -446,14 +443,9 @@ wxString LabelDialog::TrackName(int & index, const wxString &dflt)
 
 void LabelDialog::FindAllLabels()
 {
-   TrackListIterator iter(mTracks);
-   Track *t;
-
-
    // Add labels from all label tracks
-   for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Label)
-         AddLabels(static_cast<const LabelTrack *>(t));
+   for (auto lt : mTracks->Any<const LabelTrack>()) {
+      AddLabels(lt);
    }
 
    FindInitialRow();
@@ -737,13 +729,8 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
 void LabelDialog::OnSelectCell(wxGridEvent &event)
 {
-   TrackListIterator iter(mTracks);
-   Track *t = iter.First();
-   while( t )
-   {
+   for (auto t: mTracks->Any())
       t->SetSelected( true );
-      t = iter.Next();
-   }
 
    if (!mData.empty())
    {

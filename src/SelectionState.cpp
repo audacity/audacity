@@ -79,60 +79,34 @@ void SelectionState::SelectRangeOfTracks
    if (eTrack->GetIndex() < sTrack->GetIndex())
       std::swap(sTrack, eTrack);
 
-   TrackListIterator iter( &tracks );
-   sTrack = iter.StartWith( sTrack );
-   do {
-      SelectTrack( *sTrack, true, false, pMixerBoard );
-      if ( sTrack == eTrack ) {
-         break;
-      }
-
-      sTrack = iter.Next();
-   } while ( sTrack );
+   for (auto track :
+        tracks.Any().StartingWith(sTrack).EndingAfter(eTrack))
+      SelectTrack(*track, true, false, pMixerBoard);
 }
 
 void SelectionState::SelectNone( TrackList &tracks, MixerBoard *pMixerBoard )
 {
-   TrackListIterator iter( &tracks );
-   Track *track = iter.First();
-   while ( track ) {
-      SelectTrack( *track, false, false, pMixerBoard );
-      track = iter.Next();
-   }
+   for (auto t : tracks.Any())
+      SelectTrack( *t, false, false, pMixerBoard );
 }
 
 void SelectionState::ChangeSelectionOnShiftClick
 ( TrackList &tracks, Track &track, MixerBoard *pMixerBoard )
 {
-
-   // Optional: Track already selected?  Nothing to do.
-   // If we enable this, Shift-Click behaves like click in this case.
-   //if( pTrack->GetSelected() )
-   //   return;
-
-   // Find first and last selected track.
-   Track* pFirst = nullptr;
-   Track* pLast = nullptr;
    // We will either extend from the first or from the last.
    auto pExtendFrom = tracks.Lock(mLastPickedTrack);
 
    if( !pExtendFrom ) {
-      TrackListIterator iter( &tracks );
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         const bool isSelected = t->GetSelected();
-         // Record first and last selected.
-         if( isSelected ) {
-            if( !pFirst )
-               pFirst = t;
-            pLast = t;
-         }
-         // If our track is at or after the first, extend from the first.
-         if( t == &track )
-            pExtendFrom = Track::Pointer( pFirst );
-      }
+      auto trackRange = tracks.Selected();
+      auto pFirst = *trackRange.begin();
+
+      // If our track is at or after the first, extend from the first.
+      if( pFirst && track.GetIndex() >= pFirst->GetIndex() )
+         pExtendFrom = Track::Pointer( pFirst );
+
       // Our track was earlier than the first.  Extend from the last.
       if( !pExtendFrom )
-         pExtendFrom = Track::Pointer( pLast );
+         pExtendFrom = Track::Pointer( *trackRange.rbegin() );
    }
 
    SelectNone( tracks, pMixerBoard );
@@ -173,8 +147,7 @@ SelectionStateChanger::SelectionStateChanger
 {
    // Save initial state of track selections
    mInitialTrackSelection.clear();
-   TrackListIterator iter( &mTracks );
-   for (Track *track = iter.First(); track; track = iter.Next()) {
+   for (const auto track : tracks.Any()) {
       const bool isSelected = track->GetSelected();
       mInitialTrackSelection.push_back(isSelected);
    }
@@ -185,12 +158,13 @@ SelectionStateChanger::~SelectionStateChanger()
    if ( mpState ) {
       // roll back changes
       mpState->mLastPickedTrack = mInitialLastPickedTrack;
-      TrackListIterator iter( &mTracks );
       std::vector<bool>::const_iterator
          it = mInitialTrackSelection.begin(),
          end = mInitialTrackSelection.end();
-      for (Track *track = iter.First(); track && it != end; track = iter.Next()) {
-         // wxASSERT(it != end);
+
+      for (auto track : mTracks.Any()) {
+         if (it == end)
+            break;
          track->SetSelected( *it++ );
       }
    }

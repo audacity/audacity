@@ -376,30 +376,19 @@ bool SpectrumPrefs::Validate()
 
 void SpectrumPrefs::Rollback()
 {
-   const auto partner =
-      mWt ?
-            // Assume linked track is wave or null
-            static_cast<WaveTrack*>(mWt->GetLink())
-          : nullptr;
-
    if (mWt) {
-      if (mOrigDefaulted) {
-         mWt->SetSpectrogramSettings({});
-         mWt->SetSpectrumBounds(-1, -1);
-         if (partner) {
-            partner->SetSpectrogramSettings({});
-            partner->SetSpectrumBounds(-1, -1);
+      auto channels = TrackList::Channels(mWt);
+
+      for (auto channel : channels) {
+         if (mOrigDefaulted) {
+            channel->SetSpectrogramSettings({});
+            channel->SetSpectrumBounds(-1, -1);
          }
-      }
-      else {
-         SpectrogramSettings *pSettings =
-            &mWt->GetIndependentSpectrogramSettings();
-         mWt->SetSpectrumBounds(mOrigMin, mOrigMax);
-         *pSettings = mOrigSettings;
-         if (partner) {
-            pSettings = &partner->GetIndependentSpectrogramSettings();
-            partner->SetSpectrumBounds(mOrigMin, mOrigMax);
-            *pSettings = mOrigSettings;
+         else {
+            auto &settings =
+               channel->GetIndependentSpectrogramSettings();
+            channel->SetSpectrumBounds(mOrigMin, mOrigMax);
+            settings = mOrigSettings;
          }
       }
    }
@@ -411,9 +400,9 @@ void SpectrumPrefs::Rollback()
 
    const bool isOpenPage = this->IsShown();
    if (mWt && isOpenPage) {
-      mWt->SetDisplay(mOrigDisplay);
-      if (partner)
-         partner->SetDisplay(mOrigDisplay);
+      auto channels = TrackList::Channels(mWt);
+      for (auto channel : channels)
+         channel->SetDisplay(mOrigDisplay);
    }
 
    if (isOpenPage) {
@@ -430,12 +419,6 @@ void SpectrumPrefs::Preview()
 
    const bool isOpenPage = this->IsShown();
 
-   const auto partner =
-      mWt ?
-            // Assume linked track is wave or null
-            static_cast<WaveTrack*>(mWt->GetLink())
-          : nullptr;
-
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
@@ -443,24 +426,17 @@ void SpectrumPrefs::Preview()
    mTempSettings.ConvertToActualWindowSizes();
 
    if (mWt) {
-      if (mDefaulted) {
-         mWt->SetSpectrogramSettings({});
-         // ... and so that the vertical scale also defaults:
-         mWt->SetSpectrumBounds(-1, -1);
-         if (partner) {
-            partner->SetSpectrogramSettings({});
-            partner->SetSpectrumBounds(-1, -1);
+      for (auto channel : TrackList::Channels(mWt)) {
+         if (mDefaulted) {
+            channel->SetSpectrogramSettings({});
+            // ... and so that the vertical scale also defaults:
+            channel->SetSpectrumBounds(-1, -1);
          }
-      }
-      else {
-         SpectrogramSettings *pSettings =
-            &mWt->GetIndependentSpectrogramSettings();
-         mWt->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
-         *pSettings = mTempSettings;
-         if (partner) {
-            pSettings = &partner->GetIndependentSpectrogramSettings();
-            partner->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
-            *pSettings = mTempSettings;
+         else {
+            SpectrogramSettings &settings =
+               channel->GetIndependentSpectrogramSettings();
+            channel->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
+            settings = mTempSettings;
          }
       }
    }
@@ -472,9 +448,8 @@ void SpectrumPrefs::Preview()
    mTempSettings.ConvertToEnumeratedWindowSizes();
 
    if (mWt && isOpenPage) {
-      mWt->SetDisplay(WaveTrack::Spectrum);
-      if (partner)
-         partner->SetDisplay(WaveTrack::Spectrum);
+      for (auto channel : TrackList::Channels(mWt))
+         channel->SetDisplay(WaveTrack::Spectrum);
    }
 
    if (isOpenPage) {

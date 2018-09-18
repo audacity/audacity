@@ -173,29 +173,21 @@ void ODTask::DoSome(float amountWork)
 
 bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
 {
-   TrackList *tracks = proj->GetTracks();
-   TrackListIterator iter1(tracks);
-   Track *tr = iter1.First();
-
-   while (tr)
+   for (auto tr : proj->GetTracks()->Any<const WaveTrack>())
    {
       //go over all tracks in the project
-      if (tr->GetKind() == Track::Wave)
+      //look inside our task's track list for one that matches this projects one.
+      mWaveTrackMutex.Lock();
+      for(int i=0;i<(int)mWaveTracks.size();i++)
       {
-         //look inside our task's track list for one that matches this projects one.
-         mWaveTrackMutex.Lock();
-         for(int i=0;i<(int)mWaveTracks.size();i++)
+         if(mWaveTracks[i]==tr)
          {
-            if(mWaveTracks[i]==tr)
-            {
-               //if we find one, then the project is associated with us;return true
-               mWaveTrackMutex.Unlock();
-               return true;
-            }
+            //if we find one, then the project is associated with us;return true
+            mWaveTrackMutex.Unlock();
+            return true;
          }
-         mWaveTrackMutex.Unlock();
       }
-      tr = iter1.Next();
+      mWaveTrackMutex.Unlock();
    }
 
    return false;
