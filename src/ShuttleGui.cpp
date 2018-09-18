@@ -313,7 +313,15 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString
    mpWind = pCheckBox = safenew wxCheckBox(GetParent(), miId, realPrompt, wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
    pCheckBox->SetValue(Selected == wxT("true"));
-   pCheckBox->SetName(wxStripMenuCodes(Prompt));
+   if (realPrompt.IsEmpty()) {
+      // NVDA 2018.3 does not read controls which are buttons, check boxes or radio buttons which have
+      // an accessibility name which is empty. Bug 1980.
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      pCheckBox->SetAccessible(safenew WindowAccessible(pCheckBox));
+#endif
+      pCheckBox->SetName(wxT("\a"));      // non-empty string which screen readers do not read
+   }
    UpdateSizers();
    return pCheckBox;
 }
