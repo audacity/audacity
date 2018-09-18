@@ -268,22 +268,6 @@ ProgressResult LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory)
    return ProgressResult::Success;
 }
 
-static int CountNumTracks(AudacityProject *proj)
-{
-   int count = 0;
-   Track *t;
-   TrackListIterator iter(proj->GetTracks());
-
-   t = iter.First();
-
-   while(t) {
-      count++;
-      t = iter.Next();
-   }
-
-   return count;
-}
-
 /** @brief Processes a single line from a LOF text file, doing whatever is
  * indicated on the line.
  *
@@ -432,18 +416,14 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                ;
             else if (Internat::CompatibleToDouble(tokenholder, &offset))
             {
-               Track *t;
-               TrackListIterator iter(mProject->GetTracks());
-
-               t = iter.First();
-
-               for (int i = 1; i < CountNumTracks(mProject) - 1; i++)
-                  t = iter.Next();
+               auto tracks = mProject->GetTracks();
+               auto t = *tracks->Leaders().rbegin();
 
                // t is now the last track in the project, unless the import of
                // all tracks failed, in which case it will be null. In that
                // case we return because we cannot offset a non-existent track.
-               if (t == NULL) return;
+               if (t == NULL)
+                  return;
 #ifdef USE_MIDI
                if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false) ||
                    targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
@@ -454,16 +434,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                else
 #endif
                {
-                  if (CountNumTracks(mProject) == 1)
-                     t->SetOffset(offset);
-                  else
-                  {
-                     if (t->GetLinked())
-                        t->SetOffset(offset);
-
-                     t = iter.Next();
-                     t->SetOffset(offset);
-                  }
+                  for (auto channel : TrackList::Channels(t))
+                     channel->SetOffset(offset);
                }
 
                // Amend the undo transaction made by import
