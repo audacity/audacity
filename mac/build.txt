@@ -44,9 +44,12 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
    Don't be tempted to use Widgets already installed by a package manager such 
    as Homebrew because this will cause problems.
 
-   As of 16-Apr-2018 we haven't yet applied any Audacity specific patches
-   to the official wxWidgets 3.1.1 branch, so currently it is the same as:
-   https://github.com/audacity/wxWidgets/tree/v3.1.1
+   We have applied some Audacity specific patches to wxWidgets to better 
+   support VoiceOver, so please use the audacity-fixes-3.1.1 branch.  It's
+   the default branch on our GitHub copy.
+   https://github.com/audacity/wxWidgets/tree/audacity-fixes-3.1.1
+
+   git checkout audacity-fixes-3.1.1
 
 9) Change directory to the folder wxWidgets was cloned to then build/install 
     wxWidgets:
