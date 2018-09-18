@@ -267,7 +267,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( t->GetEndTime(), "end" );
          context.AddItem( t->GetPan() , "pan");
          context.AddItem( t->GetGain() , "gain");
-         context.AddItem( t->GetLinked() ? 2:1, "channels");
+         context.AddItem( TrackList::Channels(t).size(), "channels");
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
       } );
@@ -280,28 +280,18 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
 bool GetInfoCommand::SendClips(const CommandContext &context)
 {
    TrackList *tracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    int i=0;
    context.StartArray();
-   while (t) {
-      if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         WaveClipPointers ptrs( waveTrack->SortedClipArray());
-         for(WaveClip * pClip : ptrs ) {
-            context.StartStruct();
-            context.AddItem( (double)i, "track" );
-            context.AddItem( pClip->GetStartTime(), "start" );
-            context.AddItem( pClip->GetEndTime(), "end" );
-            context.AddItem( pClip->GetColourIndex(), "color" );
-            context.EndStruct();
-         }
+   for (auto waveTrack : tracks->Leaders<WaveTrack>()) {
+      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+      for(WaveClip * pClip : ptrs ) {
+         context.StartStruct();
+         context.AddItem( (double)i, "track" );
+         context.AddItem( pClip->GetStartTime(), "start" );
+         context.AddItem( pClip->GetEndTime(), "end" );
+         context.AddItem( pClip->GetColourIndex(), "color" );
+         context.EndStruct();
       }
-      // Skip second tracks of stereo...
-      if( t->GetLinked() )
-         t= iter.Next();
-      if( t )
-         t=iter.Next();
       i++;
    }
    context.EndArray();
@@ -312,43 +302,33 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
 bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
 {
    TrackList *tracks = context.GetProject()->GetTracks();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    int i=0;
    int j=0;
    context.StartArray();
-   while (t) {
-      if (t->GetKind() == Track::Wave) {
-         WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-         WaveClipPointers ptrs( waveTrack->SortedClipArray());
-         for(WaveClip * pClip : ptrs ) {
-            context.StartStruct();
-            context.AddItem( (double)i, "track" );
-            context.AddItem( (double)j, "clip" );
-            context.AddItem( pClip->GetStartTime(), "start" );
-            Envelope * pEnv = pClip->GetEnvelope();
-            context.StartField( "points" );
-            context.StartArray();
-            double offset = pEnv->mOffset;
-            for( size_t k=0;k<pEnv->mEnv.size(); k++)
-            {
-               context.StartStruct( );
-               context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
-               context.AddItem( pEnv->mEnv[k].GetVal(), "y" );
-               context.EndStruct();
-            }
-            context.EndArray();
-            context.EndField();
-            context.AddItem( pClip->GetEndTime(), "end" );
+   for (auto waveTrack : tracks->Leaders<WaveTrack>()) {
+      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+      for(WaveClip * pClip : ptrs ) {
+         context.StartStruct();
+         context.AddItem( (double)i, "track" );
+         context.AddItem( (double)j, "clip" );
+         context.AddItem( pClip->GetStartTime(), "start" );
+         Envelope * pEnv = pClip->GetEnvelope();
+         context.StartField( "points" );
+         context.StartArray();
+         double offset = pEnv->mOffset;
+         for( size_t k=0;k<pEnv->mEnv.size(); k++)
+         {
+            context.StartStruct( );
+            context.AddItem( pEnv->mEnv[k].GetT()+offset, "t" );
+            context.AddItem( pEnv->mEnv[k].GetVal(), "y" );
             context.EndStruct();
-            j++;
          }
+         context.EndArray();
+         context.EndField();
+         context.AddItem( pClip->GetEndTime(), "end" );
+         context.EndStruct();
+         j++;
       }
-      // Skip second tracks of stereo...
-      if( t->GetLinked() )
-         t= iter.Next();
-      if( t )
-         t=iter.Next();
    }
    context.EndArray();
 
