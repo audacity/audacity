@@ -69,7 +69,7 @@ Improvements
 
  * New feature - "Punch and Roll Recording".
  * Pinned-play-head can now be repositioned by dragging
- * Play-at-speed now can be adjusted whilst playing.
+ * Play-at-Speed now can be adjusted whilst playing.
  * Toolbars controlling volume and speed can now be resized for greater precision
  * Macros (formerly 'Chains') substantially extended
    * New Macro palette
