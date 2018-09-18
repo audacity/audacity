@@ -2101,10 +2101,44 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
    mRuler.GetMaxSize(width, height);
 }
 
+// Second-level subdivision includes quick-play region and maybe the scrub bar
+// and also shaves little margins above and below
+struct AdornedRulerPanel::Subgroup final : TrackPanelGroup {
+   explicit Subgroup( const AdornedRulerPanel &ruler ) : mRuler{ ruler } {}
+   Subdivision Children( const wxRect & ) override
+   {
+      return { Axis::Y, ( mRuler.mShowScrubbing )
+         ? Refinement{
+            { mRuler.mInner.GetTop(), mRuler.mQPCell },
+            { mRuler.mScrubZone.GetTop(), mRuler.mScrubbingCell },
+            { mRuler.mScrubZone.GetBottom() + 1, nullptr }
+         }
+         : Refinement{
+            { mRuler.mInner.GetTop(), mRuler.mQPCell },
+            { mRuler.mInner.GetBottom() + 1, nullptr }
+         }
+      };
+   }
+   const AdornedRulerPanel &mRuler;
+};
+
+// Top-level subdivision shaves little margins off left and right
+struct AdornedRulerPanel::MainGroup final : TrackPanelGroup {
+   explicit MainGroup( const AdornedRulerPanel &ruler ) : mRuler{ ruler } {}
+   Subdivision Children( const wxRect & ) override
+   { return { Axis::X, Refinement{
+      // Subgroup is a throwaway object
+      { mRuler.mInner.GetLeft(), std::make_shared< Subgroup >( mRuler ) },
+      { mRuler.mInner.GetRight() + 1, nullptr }
+   } }; }
+   const AdornedRulerPanel &mRuler;
+};
+
 // CellularPanel implementation
 std::shared_ptr<TrackPanelNode> AdornedRulerPanel::Root()
 {
-   return {};
+   // Root is a throwaway object
+   return std::make_shared< MainGroup >( *this );
 }
 
 auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell

@@ -212,6 +212,10 @@ private:
    
    class ScrubbingCell;
    std::shared_ptr<ScrubbingCell> mScrubbingCell;
+
+   // classes implementing subdivision for CellularPanel
+   struct Subgroup;
+   struct MainGroup;
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__
