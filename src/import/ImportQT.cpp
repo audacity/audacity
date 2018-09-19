@@ -352,16 +352,6 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          channel = trackFactory->NewWaveTrack( format );
          channel->SetRate( desc.mSampleRate );
-   
-         if (numchan == 2) {
-            if (c == 0) {
-               channel->SetChannel(Track::LeftChannel);
-               channel->SetLinked(true);
-            }
-            else if (c == 1) {
-               channel->SetChannel(Track::RightChannel);
-            }
-         }
       }
    
       do {

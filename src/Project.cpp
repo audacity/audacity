@@ -4177,10 +4177,17 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
    // Must add all tracks first (before using Track::IsLeader)
    for (auto &group : newTracks) {
+      if (group.empty()) {
+         wxASSERT(false);
+         continue;
+      }
+      auto first = group.begin()->get();
+      auto nChannels = group.size();
       for (auto &uNewTrack : group) {
          auto newTrack = mTracks->Add(std::move(uNewTrack));
          results.push_back(Track::Pointer(newTrack));
       }
+      mTracks->GroupChannels(*first, nChannels);
    }
    newTracks.clear();
       

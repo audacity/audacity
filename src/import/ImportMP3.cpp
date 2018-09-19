@@ -503,17 +503,9 @@ enum mad_flow output_cb(void *_data,
 
          auto format = QualityPrefs::SampleFormatChoice();
 
-         for(auto &channel: data->channels) {
+         for(auto &channel: data->channels)
             channel = data->trackFactory->NewWaveTrack(format, samplerate);
-            channel->SetChannel(Track::MonoChannel);
-         }
 
-         /* special case: 2 channels is understood to be stereo */
-         if(channels == 2) {
-            data->channels.begin()->get()->SetChannel(Track::LeftChannel);
-            data->channels.rbegin()->get()->SetChannel(Track::RightChannel);
-            data->channels.begin()->get()->SetLinked(true);
-         }
          data->numChannels = channels;
       }
       else {

@@ -367,25 +367,8 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
    NewChannelGroup channels(mInfo.channels);
 
    auto iter = channels.begin();
-   for (int c = 0; c < mInfo.channels; ++iter, ++c) {
+   for (int c = 0; c < mInfo.channels; ++iter, ++c)
       *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
-
-      if (mInfo.channels > 1)
-         switch (c) {
-         case 0:
-            iter->get()->SetChannel(Track::LeftChannel);
-            break;
-         case 1:
-            iter->get()->SetChannel(Track::RightChannel);
-            break;
-         default:
-            iter->get()->SetChannel(Track::MonoChannel);
-         }
-   }
-
-   if (mInfo.channels == 2) {
-      channels.begin()->get()->SetLinked(true);
-   }
 
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t

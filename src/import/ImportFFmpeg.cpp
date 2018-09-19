@@ -523,31 +523,8 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       // There is a possibility that number of channels will change over time, but we do not have WaveTracks for NEW channels. Remember the number of channels and stick to it.
       sc->m_initialchannels = sc->m_stream->codec->channels;
       stream.resize(sc->m_stream->codec->channels);
-      int c = -1;
       for (auto &channel : stream)
-      {
-         ++c;
-
          channel = trackFactory->NewWaveTrack(sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
-
-         if (sc->m_stream->codec->channels == 2)
-         {
-            switch (c)
-            {
-            case 0:
-               channel->SetChannel(Track::LeftChannel);
-               channel->SetLinked(true);
-               break;
-            case 1:
-               channel->SetChannel(Track::RightChannel);
-               break;
-            }
-         }
-         else
-         {
-            channel->SetChannel(Track::MonoChannel);
-         }
-      }
    }
 
    // Handles the start_time by creating silence. This may or may not be correct.

@@ -205,28 +205,10 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       channels.resize(numChannels);
 
       auto iter = channels.begin();
-      for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c) {
-         const auto channel =
-         (*iter = trackFactory->NewWaveTrack(format, rate)).get();
-
-         if (numChannels > 1)
-            switch (c) {
-               case 0:
-                  channel->SetChannel(Track::LeftChannel);
-                  break;
-               case 1:
-                  channel->SetChannel(Track::RightChannel);
-                  break;
-               default:
-                  channel->SetChannel(Track::MonoChannel);
-            }
-      }
+      for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c)
+         *iter = trackFactory->NewWaveTrack(format, rate);
 
       const auto firstChannel = channels.begin()->get();
-      if (numChannels == 2) {
-         firstChannel->SetLinked(true);
-      }
-
       auto maxBlockSize = firstChannel->GetMaxBlockSize();
 
       SampleBuffer srcbuffer(maxBlockSize * numChannels, format);

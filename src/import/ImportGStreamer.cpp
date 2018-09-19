@@ -789,14 +789,6 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
             return;
          }
       }
-
-      // Set to stereo if there's exactly 2 channels
-      if (c->mNumChannels == 2)
-      {
-         c->mChannels[0]->SetChannel(Track::LeftChannel);
-         c->mChannels[1]->SetChannel(Track::RightChannel);
-         c->mChannels[0]->SetLinked(true);
-      }
    }
 
    // Get the buffer for the sample...no need to release
