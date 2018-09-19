@@ -641,6 +641,16 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
    wxColour backgroundColour = theTheme.Colour(clrTrackInfo);
    if( mHW )
       backgroundColour = mParent->GetBackgroundColour();
+
+   // Bug 1981 workaround.
+   // On Mac the colour may end up being the system background colour.
+   // For some reason (not yet known) the mask does not work in that case.
+   // So perturb the colour very slightly to work around that.
+   // (we can actually perterb it a lot before the anti-aliassing starts 
+   // to look bad)
+   backgroundColour = wxColour( backgroundColour.Red(), 
+      backgroundColour.Green(), 
+      backgroundColour.Blue() ^1 );
    dc.SetBackground(wxBrush(backgroundColour));
    dc.Clear();
 
