@@ -1318,6 +1318,16 @@ public:
    template<typename TrackKind>
    Track *Add(std::shared_ptr<TrackKind> &&t);
 
+   /** \brief Define a group of channels starting at the given track
+   *
+   * @param track and (groupSize - 1) following tracks must be in this
+   * list.  They will be disassociated from any groups they already belong to.
+   * @param groupSize must be at least 1.
+   * @param resetChannels if true, disassociated channels will be marked Mono.
+   */
+   void GroupChannels(
+      Track &track, size_t groupSize, bool resetChannels = true );
+
    /// Replace first track with second track, give back a holder
    /// Give the replacement the same id as the replaced
    ListOfTracks::value_type Replace(Track * t, ListOfTracks::value_type &&with);
