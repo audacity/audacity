@@ -364,7 +364,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    CreateProgress();
 
-   TrackHolders channels(mInfo.channels);
+   NewChannelGroup channels(mInfo.channels);
 
    auto iter = channels.begin();
    for (int c = 0; c < mInfo.channels; ++iter, ++c) {
@@ -529,10 +529,11 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
       return updateResult;
    }
 
-   for(const auto &channel : channels) {
+   for(const auto &channel : channels)
       channel->Flush();
-   }
-   outTracks.swap(channels);
+
+   if (!channels.empty())
+      outTracks.push_back(std::move(channels));
 
    const char *str;
 

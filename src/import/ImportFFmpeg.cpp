@@ -274,7 +274,10 @@ private:
    bool                  mCancelled;     //!< True if importing was canceled by user
    bool                  mStopped;       //!< True if importing was stopped by user
    wxString              mName;
-   std::list<TrackHolders> mChannels;     //!< 2-dimentional array of WaveTrack's. First dimention - streams, second - channels of a stream. Length is mNumStreams
+   TrackHolders mChannels;               //!< 2-dimensional array of WaveTrack's.
+                                         //!< First dimension - streams,
+                                         //!< second - channels of a stream.
+                                         //!< Length is mNumStreams
 #ifdef EXPERIMENTAL_OD_FFMPEG
    bool                  mUsingOD;
 #endif
@@ -688,13 +691,10 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
    for (auto &stream : mChannels)
-   {
       for(auto &channel : stream)
-      {
          channel->Flush();
-         outTracks.push_back(std::move(channel));
-      }
-   }
+
+   outTracks.swap(mChannels);
 
    // Save metadata
    WriteMetadata(tags);

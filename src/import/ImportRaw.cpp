@@ -107,7 +107,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    sf_count_t offset = 0;
    double rate = 44100.0;
    double percent = 100.0;
-   TrackHolders channels;
+   TrackHolders results;
    auto updateResult = ProgressResult::Success;
 
    {
@@ -200,6 +200,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
           sf_subtype_more_than_16_bits(encoding))
          format = floatSample;
 
+      results.resize(1);
+      auto &channels = results[0];
       channels.resize(numChannels);
 
       auto iter = channels.begin();
@@ -295,9 +297,11 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       throw UserException{};
 
-   for (const auto &channel : channels)
-      channel->Flush();
-   outTracks.swap(channels);
+   if (!results.empty() && !results[0].empty()) {
+      for (const auto &channel : results[0])
+         channel->Flush();
+      outTracks.swap(results);
+   }
 }
 
 //

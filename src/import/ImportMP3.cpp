@@ -98,7 +98,7 @@ struct private_data {
    ArrayOf<unsigned char> inputBuffer{ static_cast<unsigned int>(INPUT_BUFFER_SIZE) };
    int inputBufferFill;     /* amount of data in inputBuffer */
    TrackFactory *trackFactory;
-   TrackHolders channels;
+   NewChannelGroup channels;
    ProgressDialog *progress;
    unsigned numChannels;
    ProgressResult updateResult;
@@ -208,8 +208,9 @@ auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
-                                Tags *tags)
+ProgressResult MP3ImportFileHandle::Import(
+   TrackFactory *trackFactory, TrackHolders &outTracks,
+   Tags *tags)
 {
    outTracks.clear();
 
@@ -252,7 +253,8 @@ ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
    for(const auto &channel : privateData.channels) {
       channel->Flush();
    }
-   outTracks.swap(privateData.channels);
+   if (!privateData.channels.empty())
+      outTracks.push_back(std::move(privateData.channels));
 
    /* Read in any metadata */
    ImportID3(tags);

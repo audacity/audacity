@@ -181,7 +181,7 @@ private:
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
    ProgressResult        mUpdateResult;
-   TrackHolders          mChannels;
+   NewChannelGroup       mChannels;
    std::unique_ptr<ODDecodeFlacTask> mDecoderTask;
 };
 
@@ -536,10 +536,11 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
       return mUpdateResult;
    }
 
-   for (const auto &channel : mChannels) {
+   for (const auto &channel : mChannels)
       channel->Flush();
-   }
-   outTracks.swap(mChannels);
+
+   if (!mChannels.empty())
+      outTracks.push_back(std::move(mChannels));
 
    tags->Clear();
    size_t cnt = mFile->mComments.GetCount();

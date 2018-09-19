@@ -155,7 +155,7 @@ private:
 
    ArrayOf<int> mStreamUsage;
    wxArrayString   mStreamInfo;
-   std::list<TrackHolders> mChannels;
+   std::list<NewChannelGroup> mChannels;
 
    sampleFormat   mFormat;
 };
@@ -228,7 +228,8 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+ProgressResult OggImportFileHandle::Import(
+   TrackFactory *trackFactory, TrackHolders &outTracks,
    Tags *tags)
 {
    outTracks.clear();
@@ -374,10 +375,9 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
    for (auto &link : mChannels)
    {
-      for (auto &channel : link) {
+      for (auto &channel : link)
          channel->Flush();
-         outTracks.push_back(std::move(channel));
-      }
+      outTracks.push_back(std::move(link));
    }
 
    //\todo { Extract comments from each stream? }

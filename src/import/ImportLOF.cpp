@@ -223,8 +223,9 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
-                                Tags * WXUNUSED(tags))
+ProgressResult LOFImportFileHandle::Import(
+   TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
+   Tags * WXUNUSED(tags))
 {
    // Unlike other ImportFileHandle subclasses, this one never gives any tracks
    // back to the caller.
