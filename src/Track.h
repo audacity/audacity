@@ -327,8 +327,11 @@ private:
 
    Track *GetLink() const;
    bool GetLinked  () const { return mLinked; }
-public:
+
+   friend WaveTrack; // WaveTrack needs to call SetLinked when reloading project
    void SetLinked  (bool l);
+
+   void SetChannel(ChannelType c) { mChannel = c; }
 private:
    // No need yet to make this virtual
    void DoSetLinked(bool l);
@@ -380,7 +383,6 @@ public:
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
 
-   void SetChannel(ChannelType c) { mChannel = c; }
    virtual void SetPan( float ){ ;}
    virtual void SetPanFromChannelType(){ ;};
 

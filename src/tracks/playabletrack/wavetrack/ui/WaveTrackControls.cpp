@@ -802,6 +802,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    }
 }
 
+#if 0
 void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
 {
    int id = event.GetId();
@@ -834,6 +835,7 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
       _("Channel"));
    mpData->result = RefreshCode::RefreshAll;
 }
+#endif
 
 /// Merge two tracks into one stereo track ??
 void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
