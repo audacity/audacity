@@ -126,6 +126,13 @@ class AUDACITY_DLL_API Track /* not final */
 
  public:
 
+   enum ChannelType
+   {
+      LeftChannel = 0,
+      RightChannel = 1,
+      MonoChannel = 2
+   };
+   
    TrackId GetId() const { return mId; }
  private:
    void SetId( TrackId id ) { mId = id; }
@@ -234,19 +241,12 @@ public:
  // Keep in Track
 
  protected:
-   int                 mChannel;
+   ChannelType         mChannel;
    double              mOffset;
 
    mutable std::shared_ptr<DirManager> mDirManager;
 
  public:
-
-   enum
-   {
-      LeftChannel = 0,
-      RightChannel = 1,
-      MonoChannel = 2
-   };
 
    enum TrackKindEnum
    {
@@ -291,13 +291,13 @@ private:
    void DoSetLinked(bool l);
 public:
 
-   virtual int GetChannel() const { return mChannel;};
+   virtual ChannelType GetChannel() const { return mChannel;}
    virtual double GetOffset() const = 0;
 
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
 
-   void SetChannel(int    c) { mChannel = c; }
+   void SetChannel(ChannelType c) { mChannel = c; }
    virtual void SetPan( float ){ ;}
    virtual void SetPanFromChannelType(){ ;};
 

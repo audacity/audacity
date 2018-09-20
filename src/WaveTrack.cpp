@@ -233,11 +233,11 @@ void WaveTrack::SetOffset(double o)
    mOffset = o;
 }
 
-int WaveTrack::GetChannelIgnoringPan() const {
+auto WaveTrack::GetChannelIgnoringPan() const -> ChannelType {
    return mChannel;
 }
 
-int WaveTrack::GetChannel() const 
+auto WaveTrack::GetChannel() const -> ChannelType
 {
    if( mChannel != Track::MonoChannel )
       return mChannel; 
@@ -1731,7 +1731,7 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) ||
                   !XMLValueChecker::IsValidChannel(nValue))
                return false;
-            mChannel = nValue;
+            mChannel = static_cast<Track::ChannelType>( nValue );
          }
          else if (!wxStrcmp(attr, wxT("linked")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))

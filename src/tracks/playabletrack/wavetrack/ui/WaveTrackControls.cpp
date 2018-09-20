@@ -825,7 +825,7 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
    wxASSERT(id >= OnChannelLeftID && id <= OnChannelMonoID);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
-   int channel;
+   Track::ChannelType channel;
    wxString channelmsg;
    switch (id) {
    default:
