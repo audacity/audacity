@@ -165,6 +165,7 @@ void MixerToolBar::UpdatePrefs()
 
    // Show or hide the input slider based on whether it works
    mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   wxSize oldSize( GetSize() );
 
    // Layout the toolbar
    Layout();
@@ -173,11 +174,18 @@ void MixerToolBar::UpdatePrefs()
    //Fit();
 
    // And make that size the minimum
-   SetMinSize( wxWindow::GetSizer()->GetMinSize() );
-   SetSize( GetMinSize() );
+   wxSize newMinSize( wxWindow::GetSizer()->GetMinSize() );
+   SetMinSize( newMinSize  );
 
-   // Notify someone that we've changed our size
-   Updated();
+   // IF size must increase, do so.
+   if( newMinSize.y > oldSize.y ){
+      SetSize( newMinSize );
+      // Notify someone that we've changed our size
+      Updated();
+   }
+   // ELSE preserve original size.
+   else
+      SetSize( oldSize );
 #endif
 
    // Set label to pull in language change
