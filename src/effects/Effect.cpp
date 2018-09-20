@@ -2543,6 +2543,7 @@ void Effect::Preview(bool dryOnly)
          mixRight->SetSelected(true);
          mTracks->Add(std::move(mixRight));
       }
+      mTracks->GroupChannels(*mixLeft, mixRight ? 2 : 1);
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {

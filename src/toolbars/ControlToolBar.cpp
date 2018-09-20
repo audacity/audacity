@@ -1164,10 +1164,13 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
+         Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
             std::shared_ptr<WaveTrack> newTrack{
                p->GetTrackFactory()->NewWaveTrack().release()
             };
+            if (!first)
+               first = newTrack.get();
 
             // Quantize bounds to the rate of the new track.
             if (c == 0) {
@@ -1215,26 +1218,14 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
                newTrack->SetMinimized(true);
             }
 
-            if (recordingChannels == 2) {
-               if (c == 0) {
-                  newTrack->SetChannel(Track::LeftChannel);
-                  newTrack->SetLinked(true);
-               }
-               else {
-                  newTrack->SetChannel(Track::RightChannel);
-               }
-            }
-            else {
-               newTrack->SetChannel( Track::MonoChannel );
-            }
-
             p->GetTracks()->RegisterPendingNewTrack( newTrack );
             transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
             p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
          }
+         p->GetTracks()->GroupChannels(*first, recordingChannels);
       }
-
+      
       //Automated Input Level Adjustment Initialization
       #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
          gAudioIO->AILAInitialize();
