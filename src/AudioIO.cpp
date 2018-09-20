@@ -4872,47 +4872,31 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          numSolo++;
 #endif
 
-
-   // MOVE_TO: CountDroppedTracks() function
-   bool dropAllQuickly = true; //i.e. drop all channels, without any fade out.
-   for (unsigned t = 0; t < numPlaybackTracks; t++)
-   {
-      WaveTrack *vt = mPlaybackTracks[t].get();
-      bool drop = false;
-      bool dropQuickly = false;
-      bool linkFlag = false;
-      
-      if (linkFlag) {
-         linkFlag = false;
-         if (vt->GetChannelIgnoringPan() == Track::LeftChannel)
-            dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
-         if (vt->GetChannelIgnoringPan() == Track::RightChannel )
-            dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
-      }
-      else {
-         drop = mPaused;
-         dropQuickly = false;
-
+   auto dropTrack = [&] ( const WaveTrack &wt ) {
+      return mPaused || (!wt.GetSolo() && (
          // Cut if somebody else is soloing
-         if (numSolo>0 && !vt->GetSolo())
-            drop = true;
+         numSolo > 0 ||
+         // Cut if we're muted (and not soloing)
+         wt.GetMute()
+      ));
+   };
 
-         // Cut if we're muted (unless we're soloing)
-         if (vt->GetMute() && !vt->GetSolo())
-            drop = true;
+   auto doneMicrofading = [&] ( const WaveTrack &wt ) {
+      const auto channel = wt.GetChannelIgnoringPan();
+      if ((channel == Track::LeftChannel  || channel == Track::MonoChannel) &&
+         wt.GetOldChannelGain(0) != 0.0)
+         return false;
+      if ((channel == Track::RightChannel || channel == Track::MonoChannel) &&
+         wt.GetOldChannelGain(1) != 0.0)
+         return false;
+      return true;
+   };
 
-         linkFlag = vt->GetLinked();
-
-         dropQuickly = drop;
-         if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
-            vt->GetChannelIgnoringPan() == Track::MonoChannel )
-            dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
-         if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
-            vt->GetChannelIgnoringPan() == Track::MonoChannel )
-            dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
-      }
-      dropAllQuickly = dropAllQuickly && dropQuickly;
-   }
+   const bool dropAllQuickly = std::all_of(
+      mPlaybackTracks.begin(), mPlaybackTracks.end(),
+      [&]( const std::shared_ptr< WaveTrack > &vt )
+         { return dropTrack( *vt ) && doneMicrofading( *vt ); }
+   );
 
 // This is a quick route, when paused and already at zero level on all channels.
 // However, we always fade-out into a pause, hence the 'dropAllQuickly' test
@@ -4960,9 +4944,6 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          // - Applying a linearly interpolated gain.
          // I would expect us not to need the fast paths, since linearly interpolated gain
          // is very cheap to process.
-         bool drop = false;
-         bool dropQuickly = false;
-         bool linkFlag = false;
 
          float *outputFloats = (float *)outputBuffer;
          for( unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
@@ -5009,49 +4990,31 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
          const auto toGet =
             std::min<size_t>(framesPerBuffer, GetCommonlyReadyPlayback());
 
+         bool drop = false;
+         bool dropQuickly = false;
+         bool linkFlag = false;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
             WaveTrack *vt = mPlaybackTracks[t].get();
 
             chans[chanCnt] = vt;
 
-            if (linkFlag) {
+            if ( linkFlag ) {
                linkFlag = false;
-               if (vt->GetChannelIgnoringPan() == Track::LeftChannel)
-                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
-               if (vt->GetChannelIgnoringPan() == Track::RightChannel )
-                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
+               dropQuickly = dropQuickly && doneMicrofading( *vt );
             }
             else {
-               drop = mPaused;
-               dropQuickly = false;
-
-               // Cut if somebody else is soloing
-               if (numSolo>0 && !vt->GetSolo())
-                  drop = true;
-
-               // Cut if we're muted (unless we're soloing)
-               if (vt->GetMute() && !vt->GetSolo())
-                  drop = true;
+               drop = dropTrack( *vt );
 
                linkFlag = vt->GetLinked();
                selected = vt->GetSelected();
-
+               
                // If we have a mono track, clear the right channel
                if (!linkFlag)
-               {
                   memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
-               }
 
-               dropQuickly = drop;
-               if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
-                  vt->GetChannelIgnoringPan() == Track::MonoChannel )
-                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(0) == 0.0);
-               if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
-                  vt->GetChannelIgnoringPan() == Track::MonoChannel )
-                  dropQuickly = dropQuickly && (vt->GetOldChannelGain(1) == 0.0);
+               dropQuickly = drop && doneMicrofading( *vt );
             }
-
 
 #define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
 #ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
