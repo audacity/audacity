@@ -96,6 +96,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
 
    bool AcceptsFocus() const override { return false; };
 
+   void SetToDefaultSize();
    //NEW virtuals:
    virtual void Create(wxWindow *parent);
    virtual void EnableDisableButtons() = 0;

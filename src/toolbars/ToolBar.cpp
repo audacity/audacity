@@ -459,6 +459,13 @@ void ToolBar::Create( wxWindow *parent )
    mVisible = true;
 }
 
+void ToolBar::SetToDefaultSize(){
+   wxSize sz;
+   sz.SetHeight( -1 );
+   sz.SetWidth( GetInitialWidth());
+   SetSize( sz );
+}
+
 void ToolBar::ReCreateButtons()
 {
    wxSize sz3 = GetSize();
@@ -519,12 +526,18 @@ void ToolBar::ReCreateButtons()
       sz2.SetWidth(GetMinToolbarWidth());
       sz2.y = tbs -1;
       SetMinSize(sz2);
-      // Initial size at least as big as minimum.
+      
+      // sz2 is now the minimum size.
+      // sz3 is the size we were.
+      // When recreating buttons, we want to preserve size.
+      // But not if that makes the size too small.
+
+      // Size at least as big as minimum.
       if( sz3.y < sz2.y )
          sz3.y = sz2.y;
-      //if( sz3.x < sz2.x )
-      sz3.x = GetInitialWidth();
-      //sz.SetWidth();
+      if( sz3.x < sz2.x )
+         sz3.x = sz2.x;
+
       SetSize(sz3);
    }
    else

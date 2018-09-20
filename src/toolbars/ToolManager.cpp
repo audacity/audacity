@@ -546,6 +546,7 @@ void ToolManager::Reset()
          floater->Destroy();
 
       // Recreate bar buttons (and resize it)
+      bar->SetToDefaultSize();
       bar->ReCreateButtons();
       bar->EnableDisableButtons();
 
