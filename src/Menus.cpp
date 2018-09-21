@@ -5786,17 +5786,16 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
    if (this->HandlePasteNothingSelected(project))
       return;
 
+   auto clipTrackRange = AudacityProject::msClipboard->Any< const Track >();
+   if (clipTrackRange.empty())
+      return;
+
    // Otherwise, paste into the selected tracks.
    double t0 = selectedRegion.t0();
    double t1 = selectedRegion.t1();
 
-   TrackListIterator iter(tracks);
-   TrackListConstIterator clipIter(AudacityProject::msClipboard.get());
+   auto pN = tracks->Any().begin();
 
-   Track *n = iter.First();
-   const Track *c = clipIter.First();
-   if (c == NULL)
-      return;
    Track *ff = NULL;
    const Track *lastClipBeforeMismatch = NULL;
    const Track *mismatchedClip = NULL;
@@ -5805,12 +5804,15 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
    bool bAdvanceClipboard = true;
    bool bPastedSomething = false;
 
-   while (n && c) {
+   auto pC = clipTrackRange.begin();
+   while (*pN && *pC) {
+      auto n = *pN;
+      auto c = *pC;
       if (n->GetSelected()) {
          bAdvanceClipboard = true;
          if (mismatchedClip)
             c = mismatchedClip;
-         if (c->GetKind() != n->GetKind()) {
+         if (!c->SameKindAs(*n)) {
             if (!mismatchedClip) {
                lastClipBeforeMismatch = prevClip;
                mismatchedClip = c;
@@ -5818,10 +5820,11 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             bAdvanceClipboard = false;
             c = lastClipBeforeMismatch;
 
+
             // If the types still don't match...
-            while (c && c->GetKind() != n->GetKind()) {
+            while (c && !c->SameKindAs(*n)) {
                prevClip = c;
-               c = clipIter.Next();
+               c = * ++ pC;
             }
          }
 
@@ -5829,7 +5832,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
          // is of different type than the first selected track
          if (!c) {
             c = mismatchedClip;
-            while (n && (c->GetKind() != n->GetKind() || !n->GetSelected()))
+            while (n && (!c->SameKindAs(*n) || !n->GetSelected()))
             {
                // Must perform sync-lock adjustment before incrementing n
                if (n->IsSyncLockSelected()) {
@@ -5840,7 +5843,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
                      bPastedSomething = true;
                   }
                }
-               n = iter.Next();
+               n = * ++ pN;
             }
             if (!n)
                c = NULL;
@@ -5868,58 +5871,60 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
 
          if (!ff)
             ff = n;
-
+         
+         wxASSERT( n && c && n->SameKindAs(*c) );
          Maybe<WaveTrack::Locker> locker;
-         if (AudacityProject::msClipProject != &project &&
-             c->GetKind() == Track::Wave)
-            // Cause duplication of block files on disk, when copy is
-            // between projects
-            locker.create(static_cast<const WaveTrack*>(c));
 
-         wxASSERT( n && c );
-         if (c->GetKind() == Track::Wave && n->GetKind() == Track::Wave)
-         {
-            bPastedSomething = true;
-            ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
-         }
-         else if (c->GetKind() == Track::Label &&
-                  n->GetKind() == Track::Label)
-         {
-            // Per Bug 293, users expect labels to move on a paste into 
-            // a label track.
-            ((LabelTrack *)n)->Clear(t0, t1);
-            ((LabelTrack *)n)->ShiftLabelsOnInsert(
-               AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
-            bPastedSomething |= ((LabelTrack *)n)->PasteOver(t0, c);
-         }
-         else
-         {
-            bPastedSomething = true;
-            n->Clear(t0, t1);
-            n->Paste(t0, c);
-         }
+         n->TypeSwitch(
+            [&](WaveTrack *wn){
+               const auto wc = static_cast<const WaveTrack *>(c);
+               if (AudacityProject::msClipProject != &project)
+                  // Cause duplication of block files on disk, when copy is
+                  // between projects
+                  locker.create(wc);
+               bPastedSomething = true;
+               wn->ClearAndPaste(t0, t1, wc, true, true);
+            },
+            [&](LabelTrack *ln){
+               // Per Bug 293, users expect labels to move on a paste into
+               // a label track.
+               ln->Clear(t0, t1);
+
+               ln->ShiftLabelsOnInsert(
+                  AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
+
+               bPastedSomething |= ln->PasteOver(t0, c);
+            },
+            [&](Track *){
+               bPastedSomething = true;
+               n->Clear(t0, t1);
+               n->Paste(t0, c);
+            }
+         );
 
          // When copying from mono to stereo track, paste the wave form
          // to both channels
          if (n->GetLinked() && !c->GetLinked())
          {
-            n = iter.Next();
+            n = * ++ pN;
 
-            if (n->GetKind() == Track::Wave) {
-               bPastedSomething = true;
-               ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
-            }
-            else
-            {
-               n->Clear(t0, t1);
-               bPastedSomething = true;
-               n->Paste(t0, c);
-            }
+            n->TypeSwitch(
+               [&](WaveTrack *wn){
+                  bPastedSomething = true;
+                  // Note:  rely on locker being still be in scope!
+                  wn->ClearAndPaste(t0, t1, c, true, true);
+               },
+               [&](Track *){
+                  n->Clear(t0, t1);
+                  bPastedSomething = true;
+                  n->Paste(t0, c);
+               }
+            );
          }
 
          if (bAdvanceClipboard){
             prevClip = c;
-            c = clipIter.Next();
+            c = * ++ pC;
          }
       } // if (n->GetSelected())
       else if (n->IsSyncLockSelected())
@@ -5931,60 +5936,60 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             bPastedSomething = true;
          }
       }
-
-      n = iter.Next();
+      ++pN;
    }
 
    // This block handles the cases where our clipboard is smaller
    // than the amount of selected destination tracks. We take the
    // last wave track, and paste that one into the remaining
    // selected tracks.
-   if ( n && !c )
+   if ( *pN && ! *pC )
    {
-      TrackListOfKindIterator clipWaveIter(Track::Wave,
-                                           AudacityProject::msClipboard.get());
-      c = clipWaveIter.Last();
-
+      const auto wc =
+         *AudacityProject::msClipboard->Any< const WaveTrack >().rbegin();
       Maybe<WaveTrack::Locker> locker;
-      if (AudacityProject::msClipProject != &project && c)
+      if (AudacityProject::msClipProject != &project && wc)
          // Cause duplication of block files on disk, when copy is
          // between projects
-         locker.create(static_cast<const WaveTrack*>(c));
+         locker.create(static_cast<const WaveTrack*>(wc));
 
-      while (n) {
-         if (n->GetSelected() && n->GetKind()==Track::Wave) {
-            if (c) {
-               wxASSERT(c->GetKind() == Track::Wave);
+      tracks->Any().StartingWith(*pN).Visit(
+         [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
+            if (!wt->GetSelected())
+               return fallthrough();
+
+            if (wc) {
                bPastedSomething = true;
-               ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
+               wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = trackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
+               auto tmp = trackFactory->NewWaveTrack(
+                  wt->GetSampleFormat(), wt->GetRate());
                tmp->InsertSilence(0.0,
                   AudacityProject::msClipT1 - AudacityProject::msClipT0); // MJS: Is this correct?
                tmp->Flush();
 
                bPastedSomething = true;
-               ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
+               wt->ClearAndPaste(t0, t1, tmp.get(), true, true);
             }
-         }
-         else if (n->GetKind() == Track::Label && n->GetSelected())
-         {
-            ((LabelTrack *)n)->Clear(t0, t1);
+         },
+         [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
+            if (!lt->GetSelected())
+               return fallthrough();
+
+            lt->Clear(t0, t1);
 
             // As above, only shift labels if sync-lock is on.
             if (isSyncLocked)
-               ((LabelTrack *)n)->ShiftLabelsOnInsert(
+               lt->ShiftLabelsOnInsert(
                   AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
+         },
+         [&](Track *n) {
+            if (n->IsSyncLockSelected())
+               n->SyncLockAdjust(t1, t0 +
+                  AudacityProject::msClipT1 - AudacityProject::msClipT0);
          }
-         else if (n->IsSyncLockSelected())
-         {
-            n->SyncLockAdjust(t1,
-               t0 + AudacityProject::msClipT1 - AudacityProject::msClipT0);
-         }
-
-         n = iter.Next();
-      }
+      );
    }
 
    // TODO: What if we clicked past the end of the track?
