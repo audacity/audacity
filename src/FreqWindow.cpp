@@ -504,7 +504,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    }
    mLogAxis = mAxis != 0;
 
-   mCloseButton = reinterpret_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
+   mCloseButton = static_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
    mCloseButton->SetDefault();
    mCloseButton->SetFocus();
 

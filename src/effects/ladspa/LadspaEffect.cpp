@@ -1714,7 +1714,7 @@ void LadspaEffect::OnSlider(wxCommandEvent & evt)
 
 void LadspaEffect::OnTextCtrl(wxCommandEvent & evt)
 {
-   LadspaEffect *that = reinterpret_cast<LadspaEffect *>(this);
+   LadspaEffect *that = this;
    int p = evt.GetId() - ID_Texts;
 
    float val;
