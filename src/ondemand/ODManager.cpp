@@ -381,12 +381,12 @@ void ODManager::RemoveWaveTrack(WaveTrack* track)
 }
 
 ///replace the wavetrack whose wavecache the gui watches for updates
-void ODManager::ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack)
+void ODManager::ReplaceWaveTrack(Track *oldTrack, Track *newTrack)
 {
    mQueuesMutex.Lock();
    for(unsigned int i=0;i<mQueues.size();i++)
    {
-      mQueues[i]->ReplaceWaveTrack(oldTrack,newTrack);
+      mQueues[i]->ReplaceWaveTrack( oldTrack, newTrack );
    }
    mQueuesMutex.Unlock();
 }

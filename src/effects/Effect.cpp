@@ -2236,14 +2236,14 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       else
       {
          // Replace mTracks entry with the NEW track
-         WaveTrack *newTrack = static_cast<WaveTrack*>(o.get());
+         auto newTrack = o.get();
          mTracks->Replace(t, std::move(o));
 
+         // If the track is a wave track,
          // Swap the wavecache track the ondemand task uses, since now the NEW
          // one will be kept in the project
          if (ODManager::IsInstanceCreated()) {
-            ODManager::Instance()->ReplaceWaveTrack((WaveTrack *)t,
-                                                    newTrack);
+            ODManager::Instance()->ReplaceWaveTrack( t, newTrack );
          }
       }
    }
