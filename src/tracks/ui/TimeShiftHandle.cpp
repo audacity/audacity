@@ -99,61 +99,6 @@ TimeShiftHandle::~TimeShiftHandle()
 
 namespace
 {
-   // Adds a track's clips to mCapturedClipArray within a specified time
-   void AddClipsToCaptured
-      (TrackClipArray &capturedClipArray, Track *pTrack, double t0, double t1)
-   {
-      if (pTrack->GetKind() == Track::Wave)
-      {
-         for(const auto &clip: static_cast<WaveTrack*>(pTrack)->GetClips())
-         {
-            if (!clip->AfterClip(t0) && !clip->BeforeClip(t1))
-            {
-               // Avoid getting clips that were already captured
-               bool newClip = true;
-               for (unsigned int ii = 0; newClip && ii < capturedClipArray.size(); ++ii)
-                  newClip = (capturedClipArray[ii].clip != clip.get());
-               if (newClip)
-                  capturedClipArray.push_back(TrackClip(pTrack, clip.get()));
-            }
-         }
-      }
-      else
-      {
-         // This handles label tracks rather heavy-handedly -- it would be nice to
-         // treat individual labels like clips
-
-         // Avoid adding a track twice
-         bool newClip = true;
-         for (unsigned int ii = 0; newClip && ii < capturedClipArray.size(); ++ii)
-            newClip = (capturedClipArray[ii].track != pTrack);
-         if (newClip) {
-#ifdef USE_MIDI
-            // do not add NoteTrack if the data is outside of time bounds
-            if (pTrack->GetKind() == Track::Note) {
-               if (pTrack->GetEndTime() < t0 || pTrack->GetStartTime() > t1)
-                  return;
-            }
-#endif
-            capturedClipArray.push_back(TrackClip(pTrack, NULL));
-         }
-      }
-   }
-
-   // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
-   // duplication of this logic)
-   void AddClipsToCaptured
-      (TrackClipArray &capturedClipArray,
-       const ViewInfo &viewInfo, Track *pTrack, bool withinSelection)
-   {
-      if (withinSelection)
-         AddClipsToCaptured(capturedClipArray, pTrack,
-            viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1());
-      else
-         AddClipsToCaptured(capturedClipArray, pTrack,
-            pTrack->GetStartTime(), pTrack->GetEndTime());
-   }
-
    // Adds a track's clips to state.capturedClipArray within a specified time
    void AddClipsToCaptured
       ( ClipMoveState &state, Track *t, double t0, double t1 )
