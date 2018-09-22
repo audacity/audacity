@@ -23,7 +23,7 @@
 
 class AudacityProject;
 class Track;
-class TrackArray;
+using TrackArray = std::vector< Track* >;
 class TrackClipArray;
 class WaveClip;
 class WaveTrack;

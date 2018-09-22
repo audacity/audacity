@@ -47,7 +47,7 @@ class ZoomInfo;
 class SelectHandle;
 class TimeShiftHandle;
 
-WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
+using TrackArray = std::vector< Track* >;
 using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
