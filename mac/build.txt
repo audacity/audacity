@@ -33,25 +33,19 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
 
    Xcode is now ready.
 
-8) Clone wxWidgets 3.1.1
+8) Compile wxWidgets 3.1.1
 
-   git clone --recurse-submodules https://github.com/audacity/wxWidgets.git
+   Make sure that the wxWidgets submodule as been properly cloned by typing this command:
 
-   Ensure that you clone with the "--recurse-submodules" option, and do not
-   just download the Zip package, otherwise there will be required components
-   missing.
+   git submodule update --init --recursive
 
    Don't be tempted to use Widgets already installed by a package manager such 
    as Homebrew because this will cause problems.
 
    We have applied some Audacity specific patches to wxWidgets to better 
-   support VoiceOver, so please use the audacity-fixes-3.1.1 branch.  It's
-   the default branch on our GitHub copy.
-   https://github.com/audacity/wxWidgets/tree/audacity-fixes-3.1.1
+   support VoiceOver.
 
-   git checkout audacity-fixes-3.1.1
-
-9) Change directory to the folder wxWidgets was cloned to then build/install 
+9) Change directory to the vendors/wxWidgets folder build/install 
     wxWidgets:
 
    sudo <path to Audacity source>/mac/scripts/build_wxwidgets
