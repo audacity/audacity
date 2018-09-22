@@ -61,8 +61,6 @@ UIHandlePtr TimeShiftHandle::HitAnywhere
 (std::weak_ptr<TimeShiftHandle> &holder,
  const std::shared_ptr<Track> &pTrack, bool gripHit)
 {
-   // After all that, it still may be unsafe to drag.
-   // Even if so, make an informative cursor change from default to "banned."
    auto result = std::make_shared<TimeShiftHandle>( pTrack, gripHit );
    result = AssignUIHandlePtr(holder, result);
    return result;
@@ -103,25 +101,18 @@ namespace
    void AddClipsToCaptured
       ( ClipMoveState &state, Track *t, double t0, double t1 )
    {
+      auto &clips = state.capturedClipArray;
+
+      bool exclude = true;
       if (t->GetKind() == Track::Wave)
       {
+         exclude = false;
          for(const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
-         {
-            if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) )
-            {
+            if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) &&
                // Avoid getting clips that were already captured
-               bool newClip = true;
-               for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
-                  if ( state.capturedClipArray[i].clip == clip.get() ) {
-                     newClip = false;
-                     break;
-                  }
-               }
-
-               if (newClip)
-                  state.capturedClipArray.push_back( TrackClip(t, clip.get()) );
-            }
-         }
+                 ! std::any_of( clips.begin(), clips.end(),
+                    [&](const TrackClip &c) { return c.clip == clip.get(); } ) )
+               clips.emplace_back( t, clip.get() );
       }
       else
       {
@@ -129,15 +120,8 @@ namespace
          // treat individual labels like clips
 
          // Avoid adding a track twice
-         bool newClip = true;
-         for ( unsigned int i = 0; i < state.capturedClipArray.size(); ++i ) {
-            if ( state.capturedClipArray[i].track == t ) {
-               newClip = false;
-               break;
-            }
-         }
-
-         if (newClip) {
+         if( ! std::any_of( clips.begin(), clips.end(),
+            [&](const TrackClip &c) { return c.track == t; } ) ) {
    #ifdef USE_MIDI
             // do not add NoteTrack if the data is outside of time bounds
             if (t->GetKind() == Track::Note) {
@@ -145,12 +129,14 @@ namespace
                   return;
             }
    #endif
-            state.capturedClipArray.push_back(TrackClip(t, NULL));
+            clips.emplace_back( t, nullptr );
          }
       }
+      if ( exclude )
+         state.trackExclusions.push_back(t);
    }
 
-   // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
+   // Helper for the above, adds a track's clips to capturedClipArray (eliminates
    // duplication of this logic)
    void AddClipsToCaptured
       ( ClipMoveState &state, const ViewInfo &viewInfo,
@@ -205,6 +191,31 @@ namespace
 
       return 0;
    }
+
+   void DoOffset( ClipMoveState &state, Track *pTrack, double offset,
+                  WaveClip *pExcludedClip = nullptr )
+   {
+      auto &clips = state.capturedClipArray;
+      if ( !clips.empty() ) {
+         for (auto &clip : clips) {
+            if (clip.clip) {
+               if (clip.clip != pExcludedClip)
+                  clip.clip->Offset( offset );
+            }
+            else
+               clip.track->Offset( offset );
+         }
+      }
+      else if ( pTrack ) {
+         // Was a shift-click
+         for (auto channel =
+                 pTrack->GetLink() && !pTrack->GetLinked()
+                    ? pTrack->GetLink() : pTrack;
+              channel;
+              channel = channel->GetLinked() ? channel->GetLink() : nullptr)
+            channel->Offset( offset );
+      }
+   }
 }
 
 void TimeShiftHandle::CreateListOfCapturedClips
@@ -221,11 +232,8 @@ void TimeShiftHandle::CreateListOfCapturedClips
    if ( state.capturedClipIsSelection ) {
       TrackListIterator iter( &trackList );
       for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetSelected()) {
+         if (t->GetSelected())
             AddClipsToCaptured( state, viewInfo, t, true );
-            if (t->GetKind() != Track::Wave)
-               state.trackExclusions.push_back(t);
-         }
       }
    }
    else {
@@ -248,40 +256,33 @@ void TimeShiftHandle::CreateListOfCapturedClips
    // Now, if sync-lock is enabled, capture any clip that's linked to a
    // captured clip.
    if ( syncLocked ) {
-      // AWD: mCapturedClipArray expands as the loop runs, so newly-added
+      // AWD: capturedClipArray expands as the loop runs, so newly-added
       // clips are considered (the effect is like recursion and terminates
       // because AddClipsToCaptured doesn't add duplicate clips); to remove
       // this behavior just store the array size beforehand.
       for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
+         auto &trackClip = state.capturedClipArray[i];
          // Capture based on tracks that have clips -- that means we
          // don't capture based on links to label tracks for now (until
          // we can treat individual labels as clips)
-         if ( state.capturedClipArray[i].clip ) {
+         if ( trackClip.clip ) {
             // Iterate over sync-lock group tracks.
             SyncLockedTracksIterator git( &trackList );
-            for (Track *t = git.StartWith( state.capturedClipArray[i].track  );
+            for (Track *t = git.StartWith( trackClip.track  );
                   t; t = git.Next() )
-            {
                AddClipsToCaptured(state, t,
-                     state.capturedClipArray[i].clip->GetStartTime(),
-                     state.capturedClipArray[i].clip->GetEndTime() );
-               if (t->GetKind() != Track::Wave)
-                  state.trackExclusions.push_back(t);
-            }
+                     trackClip.clip->GetStartTime(),
+                     trackClip.clip->GetEndTime() );
          }
 #ifdef USE_MIDI
          // Capture additional clips from NoteTracks
-         Track *nt = state.capturedClipArray[i].track;
+         Track *nt = trackClip.track;
          if (nt->GetKind() == Track::Note) {
             // Iterate over sync-lock group tracks.
             SyncLockedTracksIterator git( &trackList );
             for (Track *t = git.StartWith(nt); t; t = git.Next())
-            {
                AddClipsToCaptured
                   ( state, t, nt->GetStartTime(), nt->GetEndTime() );
-               if (t->GetKind() != Track::Wave)
-                  state.trackExclusions.push_back(t);
-            }
          }
 #endif
       }
@@ -291,11 +292,10 @@ void TimeShiftHandle::CreateListOfCapturedClips
 void TimeShiftHandle::DoSlideHorizontal
    ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack )
 {
-#ifdef USE_MIDI
+   // Given a signed slide distance, move clips, but subject to constraint of
+   // non-overlapping with other clips, so the distance may be adjusted toward
+   // zero.
    if ( state.capturedClipArray.size() )
-#else
-   if ( state.capturedClip )
-#endif
    {
       double allowed;
       double initialAllowed;
@@ -305,21 +305,18 @@ void TimeShiftHandle::DoSlideHorizontal
       do { // loop to compute allowed, does not actually move anything yet
          initialAllowed = state.hSlideAmount;
 
-         unsigned int i, j;
-         for ( i = 0; i < state.capturedClipArray.size(); ++i ) {
-            WaveTrack *track = (WaveTrack *)state.capturedClipArray[i].track;
-            WaveClip *clip = state. capturedClipArray[i].clip;
+         for ( auto &trackClip : state.capturedClipArray ) {
+            if (const auto clip = trackClip.clip) {
+               // only audio clips are used to compute allowed
+               const auto track = static_cast<WaveTrack *>( trackClip.track );
 
-            if (clip) { // only audio clips are used to compute allowed
                // Move all other selected clips totally out of the way
                // temporarily because they're all moving together and
                // we want to find out if OTHER clips are in the way,
                // not one of the moving ones
-               for ( j = 0; j < state.capturedClipArray.size(); j++ ) {
-                  WaveClip *clip2 = state.capturedClipArray[j].clip;
-                  if (clip2 && clip2 != clip)
-                     clip2->Offset(-safeBigDistance);
-               }
+               DoOffset( state, nullptr, -safeBigDistance, clip );
+               auto cleanup = finally( [&]
+                  { DoOffset( state, nullptr, safeBigDistance, clip ); } );
 
                if ( track->CanOffsetClip(clip, state.hSlideAmount, &allowed) ) {
                   if ( state.hSlideAmount != allowed ) {
@@ -331,36 +328,18 @@ void TimeShiftHandle::DoSlideHorizontal
                   state.hSlideAmount = 0.0;
                   state.snapLeft = state.snapRight = -1; // see bug 1067
                }
-
-               for ( j = 0; j < state.capturedClipArray.size(); ++j ) {
-                  WaveClip *clip2 = state.capturedClipArray[j].clip;
-                  if (clip2 && clip2 != clip)
-                     clip2->Offset(safeBigDistance);
-               }
             }
          }
       } while ( state.hSlideAmount != initialAllowed );
 
-      if ( state.hSlideAmount != 0.0 ) { // finally, here is where clips are moved
-         unsigned int i;
-         for ( i = 0; i < state.capturedClipArray.size(); ++i ) {
-            Track *track = state.capturedClipArray[i].track;
-            WaveClip *clip = state.capturedClipArray[i].clip;
-            if (clip)
-               clip->Offset( state.hSlideAmount );
-            else
-               track->Offset( state.hSlideAmount );
-         }
-      }
+      // finally, here is where clips are moved
+      if ( state.hSlideAmount != 0.0 )
+         DoOffset( state, nullptr, state.hSlideAmount );
    }
-   else {
+   else
       // For Shift key down, or
       // For non wavetracks, specifically label tracks ...
-      capturedTrack.Offset( state.hSlideAmount );
-      Track* link = capturedTrack.GetLink();
-      if (link)
-         link->Offset( state.hSlideAmount );
-   }
+      DoOffset( state, &capturedTrack, state.hSlideAmount );
 }
 
 UIHandle::Result TimeShiftHandle::Click
@@ -427,7 +406,6 @@ UIHandle::Result TimeShiftHandle::Click
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
    mMouseClickX = event.m_x;
-   const double selStart = viewInfo.PositionToTime(event.m_x, mRect.x);
    mSnapManager = std::make_shared<SnapManager>(trackList,
                                   &viewInfo,
                                   &mClipMoveState.capturedClipArray,
@@ -437,8 +415,8 @@ UIHandle::Result TimeShiftHandle::Click
    mClipMoveState.snapRight = -1;
    mSnapPreferRightEdge =
       mClipMoveState.capturedClip &&
-      (fabs(selStart - mClipMoveState.capturedClip->GetEndTime()) <
-       fabs(selStart - mClipMoveState.capturedClip->GetStartTime()));
+      (fabs(clickTime - mClipMoveState.capturedClip->GetEndTime()) <
+       fabs(clickTime - mClipMoveState.capturedClip->GetStartTime()));
 
    return RefreshNone;
 }
@@ -446,15 +424,21 @@ UIHandle::Result TimeShiftHandle::Click
 UIHandle::Result TimeShiftHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if (unsafe) {
+      this->Cancel(pProject);
+      return RefreshAll | Cancelled;
+   }
+
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   // We may switch pTrack to its stereo partner below
    Track *track = dynamic_cast<Track*>(evt.pCell.get());
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
-   pTrack = static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack().get();
+   track = static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack().get();
    */
 
    if (!track) {
@@ -471,13 +455,6 @@ UIHandle::Result TimeShiftHandle::Drag
       return RefreshCode::RefreshNone;
 
 
-   using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe) {
-      this->Cancel(pProject);
-      return RefreshAll | Cancelled;
-   }
-
    TrackList *const trackList = pProject->GetTracks();
 
    // GM: DoSlide now implementing snap-to
@@ -486,28 +463,8 @@ UIHandle::Result TimeShiftHandle::Drag
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
    // each clip...
-#ifdef USE_MIDI
-   if (mClipMoveState.capturedClipArray.size())
-#else
-   if (mClipMoveState.capturedClip)
-#endif
-   {
-      for (unsigned ii = 0; ii < mClipMoveState.capturedClipArray.size(); ++ii) {
-         if (mClipMoveState.capturedClipArray[ii].clip)
-            mClipMoveState.capturedClipArray[ii].clip->Offset
-               ( -mClipMoveState.hSlideAmount );
-         else
-            mClipMoveState.capturedClipArray[ii].track->Offset
-               ( -mClipMoveState.hSlideAmount );
-      }
-   }
-   else {
-      // Was a shift-click
-      mCapturedTrack->Offset( -mClipMoveState.hSlideAmount );
-      Track *const link = mCapturedTrack->GetLink();
-      if (link)
-         link->Offset( -mClipMoveState.hSlideAmount );
-   }
+   DoOffset(
+      mClipMoveState, mCapturedTrack.get(), -mClipMoveState.hSlideAmount );
 
    if ( mClipMoveState.capturedClipIsSelection ) {
       // Slide the selection, too
@@ -593,9 +550,7 @@ UIHandle::Result TimeShiftHandle::Drag
       const int diff =
          TrackPosition(*trackList, pTrack.get()) -
          TrackPosition(*trackList, mCapturedTrack.get());
-      for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
-            ii < nn; ++ii ) {
-         TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+      for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
          if (trackClip.clip) {
             // Move all clips up or down by an equal count of audio tracks.
             Track *const pSrcTrack = trackClip.track;
@@ -620,9 +575,7 @@ UIHandle::Result TimeShiftHandle::Drag
       // Having passed that test, remove clips temporarily from their
       // tracks, so moving clips don't interfere with each other
       // when we call CanInsertClip()
-      for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
-            ii < nn;  ++ii ) {
-         TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+      for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
          WaveClip *const pSrcClip = trackClip.clip;
          if (pSrcClip)
             trackClip.holder =
@@ -640,24 +593,28 @@ UIHandle::Result TimeShiftHandle::Drag
       double tolerance = viewInfo.PositionToTime(event.m_x+1) - viewInfo.PositionToTime(event.m_x);
 
       // The desiredSlideAmount may change and the tolerance may get used up.
-      for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
-            ok && ii < nn; ++ii) {
-         TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+      for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
          WaveClip *const pSrcClip = trackClip.clip;
-         if (pSrcClip)
-            ok = trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount, tolerance);
+         if (pSrcClip) {
+            ok = trackClip.dstTrack->CanInsertClip(
+               pSrcClip, desiredSlideAmount, tolerance );
+            if( !ok  )
+               break;
+         }
       }
 
       if( ok ) {
          // fits ok, but desiredSlideAmount could have been updated to get the clip to fit.
          // Check again, in the new position, this time with zero tolerance.
          tolerance = 0.0;
-         for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
-               ok && ii < nn; ++ii) {
-            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+         for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
             WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip)
-               ok = trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount, tolerance);
+            if (pSrcClip) {
+               ok = trackClip.dstTrack->CanInsertClip(
+                  pSrcClip, desiredSlideAmount, tolerance);
+               if ( !ok )
+                  break;
+            }
          }
       }
 
@@ -668,9 +625,7 @@ UIHandle::Result TimeShiftHandle::Drag
          ok = true; // assume slide is OK.
          tolerance = 0.0;
          desiredSlideAmount = slide;
-         for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
-               ii < nn;  ++ii) {
-            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+         for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip){
                // back to the track it came from...
@@ -678,9 +633,7 @@ UIHandle::Result TimeShiftHandle::Drag
                ok = ok && trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount, tolerance);
             }
          }
-         for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
-               ii < nn;  ++ii) {
-            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+         for ( auto &trackClip : mClipMoveState.capturedClipArray)  {
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip){
 
@@ -707,9 +660,7 @@ UIHandle::Result TimeShiftHandle::Drag
       }
       else {
          // Do the vertical moves of clips
-         for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
-               ii < nn; ++ii ) {
-            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+         for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
                const auto dstTrack = trackClip.dstTrack;
@@ -778,19 +729,18 @@ UIHandle::Result TimeShiftHandle::Release
    if ( !mDidSlideVertically && mClipMoveState.hSlideAmount == 0 )
       return result;
    
-   for ( size_t ii = 0; ii < mClipMoveState.capturedClipArray.size(); ++ii )
+   for ( auto &trackClip : mClipMoveState.capturedClipArray )
    {
-      TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
       WaveClip* pWaveClip = trackClip.clip;
       // Note that per AddClipsToCaptured(Track *t, double t0, double t1),
-      // in the non-WaveTrack case, the code adds a NULL clip to mCapturedClipArray,
+      // in the non-WaveTrack case, the code adds a NULL clip to capturedClipArray,
       // so we have to check for that any time we're going to deref it.
       // Previous code did not check it here, and that caused bug 367 crash.
       if (pWaveClip &&
          trackClip.track != trackClip.origTrack)
       {
          // Now that user has dropped the clip into a different track,
-         // make sure the sample rate matches the destination track (mCapturedTrack).
+         // make sure the sample rate matches the destination track.
          // Assume the clip was dropped in a wave track
          pWaveClip->Resample
             (static_cast<WaveTrack*>(trackClip.track)->GetRate());
