@@ -5567,6 +5567,12 @@ void AudacityProject::OnPaste(const CommandContext &WXUNUSED(context) )
       TrackListOfKindIterator clipWaveIter(Track::Wave, msClipboard.get());
       c = clipWaveIter.Last();
 
+      Maybe<WaveTrack::Locker> locker;
+      if (msClipProject != this && c)
+         // Cause duplication of block files on disk, when copy is
+         // between projects
+         locker.create(static_cast<const WaveTrack*>(c));
+
       while (n) {
          if (n->GetSelected() && n->GetKind()==Track::Wave) {
             if (c) {
