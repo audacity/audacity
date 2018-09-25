@@ -6018,6 +6018,12 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
                                            AudacityProject::msClipboard.get());
       c = clipWaveIter.Last();
 
+      Maybe<WaveTrack::Locker> locker;
+      if (AudacityProject::msClipProject != &project && c)
+         // Cause duplication of block files on disk, when copy is
+         // between projects
+         locker.create(static_cast<const WaveTrack*>(c));
+
       while (n) {
          if (n->GetSelected() && n->GetKind()==Track::Wave) {
             if (c) {
