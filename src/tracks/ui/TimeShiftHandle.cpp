@@ -578,9 +578,8 @@ UIHandle::Result TimeShiftHandle::Drag
       desiredSlideAmount =
          viewInfo.PositionToTime(event.m_x) -
          viewInfo.PositionToTime(mMouseClickX);
-      bool trySnap = false;
       double clipLeft = 0, clipRight = 0;
-#ifdef USE_MIDI
+
       if (pTrack->GetKind() == Track::Wave) {
          WaveTrack *const mtw = static_cast<WaveTrack*>(pTrack.get());
          const double rate = mtw->GetRate();
@@ -589,8 +588,7 @@ UIHandle::Result TimeShiftHandle::Drag
       }
 
       // Adjust desiredSlideAmount using SnapManager
-      if (mSnapManager.get() && mClipMoveState.capturedClipArray.size()) {
-         trySnap = true;
+      if (mSnapManager.get()) {
          if (mClipMoveState.capturedClip) {
             clipLeft = mClipMoveState.capturedClip->GetStartTime()
                + desiredSlideAmount;
@@ -601,26 +599,7 @@ UIHandle::Result TimeShiftHandle::Drag
             clipLeft = mCapturedTrack->GetStartTime() + desiredSlideAmount;
             clipRight = mCapturedTrack->GetEndTime() + desiredSlideAmount;
          }
-      }
-#else
-      {
-         trySnap = true;
-         if (pTrack->GetKind() == Track::Wave) {
-            auto wt = static_cast<const WaveTrack *>(pTrack.get());
-            const double rate = wt->GetRate();
-            // set it to a sample point
-            desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
-            if (mSnapManager && mClipMoveState.capturedClip) {
-               clipLeft = mClipMoveState.capturedClip->GetStartTime()
-                  + desiredSlideAmount;
-               clipRight = mClipMoveState.capturedClip->GetEndTime()
-                 + desiredSlideAmount;
-            }
-         }
-      }
-#endif
-      if (trySnap)
-      {
+
          auto results =
             mSnapManager->Snap(mCapturedTrack.get(), clipLeft, false);
          auto newClipLeft = results.outTime;
