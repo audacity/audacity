@@ -405,7 +405,7 @@ UIHandle::Result TimeShiftHandle::Click
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
-   mMouseClickX = event.m_x;
+   mClipMoveState.mMouseClickX = event.m_x;
    mSnapManager = std::make_shared<SnapManager>(trackList,
                                   &viewInfo,
                                   &mClipMoveState.capturedClipArray,
@@ -422,6 +422,77 @@ UIHandle::Result TimeShiftHandle::Click
 }
 
 namespace {
+   double FindDesiredSlideAmount(
+      const ViewInfo &viewInfo, wxCoord xx, const wxMouseEvent &event,
+      SnapManager *pSnapManager,
+      bool slideUpDownOnly, bool snapPreferRightEdge,
+      ClipMoveState &state,
+      Track &capturedTrack, Track &track )
+   {
+      if (slideUpDownOnly)
+         return 0.0;
+      else {
+         double desiredSlideAmount =
+            viewInfo.PositionToTime(event.m_x) -
+            viewInfo.PositionToTime(state.mMouseClickX);
+         double clipLeft = 0, clipRight = 0;
+
+         if (track.GetKind() == Track::Wave) {
+            WaveTrack *const mtw = static_cast<WaveTrack*>(&track);
+            const double rate = mtw->GetRate();
+            // set it to a sample point
+            desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
+         }
+
+         // Adjust desiredSlideAmount using SnapManager
+         if (pSnapManager) {
+            if (state.capturedClip) {
+               clipLeft = state.capturedClip->GetStartTime()
+                  + desiredSlideAmount;
+               clipRight = state.capturedClip->GetEndTime()
+                  + desiredSlideAmount;
+            }
+            else {
+               clipLeft = capturedTrack.GetStartTime() + desiredSlideAmount;
+               clipRight = capturedTrack.GetEndTime() + desiredSlideAmount;
+            }
+
+            auto results =
+               pSnapManager->Snap(&capturedTrack, clipLeft, false);
+            auto newClipLeft = results.outTime;
+            results =
+               pSnapManager->Snap(&capturedTrack, clipRight, false);
+            auto newClipRight = results.outTime;
+
+            // Only one of them is allowed to snap
+            if (newClipLeft != clipLeft && newClipRight != clipRight) {
+               // Un-snap the un-preferred edge
+               if (snapPreferRightEdge)
+                  newClipLeft = clipLeft;
+               else
+                  newClipRight = clipRight;
+            }
+
+            // Take whichever one snapped (if any) and compute the NEW desiredSlideAmount
+            state.snapLeft = -1;
+            state.snapRight = -1;
+            if (newClipLeft != clipLeft) {
+               const double difference = (newClipLeft - clipLeft);
+               desiredSlideAmount += difference;
+               state.snapLeft =
+                  viewInfo.TimeToPosition(newClipLeft, xx);
+            }
+            else if (newClipRight != clipRight) {
+               const double difference = (newClipRight - clipRight);
+               desiredSlideAmount += difference;
+               state.snapRight =
+                  viewInfo.TimeToPosition(newClipRight, xx);
+            }
+         }
+         return desiredSlideAmount;
+      }
+   }
+
    struct TemporaryClipRemover {
       TemporaryClipRemover( ClipMoveState &clipMoveState )
          : state( clipMoveState )
@@ -514,69 +585,10 @@ UIHandle::Result TimeShiftHandle::Drag
    }
    mClipMoveState.hSlideAmount = 0.0;
 
-   double desiredSlideAmount;
-   if (mSlideUpDownOnly) {
-      desiredSlideAmount = 0.0;
-   }
-   else {
-      desiredSlideAmount =
-         viewInfo.PositionToTime(event.m_x) -
-         viewInfo.PositionToTime(mMouseClickX);
-      double clipLeft = 0, clipRight = 0;
-
-      if (pTrack->GetKind() == Track::Wave) {
-         WaveTrack *const mtw = static_cast<WaveTrack*>(pTrack.get());
-         const double rate = mtw->GetRate();
-         // set it to a sample point
-         desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
-      }
-
-      // Adjust desiredSlideAmount using SnapManager
-      if (mSnapManager.get()) {
-         if (mClipMoveState.capturedClip) {
-            clipLeft = mClipMoveState.capturedClip->GetStartTime()
-               + desiredSlideAmount;
-            clipRight = mClipMoveState.capturedClip->GetEndTime()
-               + desiredSlideAmount;
-         }
-         else {
-            clipLeft = mCapturedTrack->GetStartTime() + desiredSlideAmount;
-            clipRight = mCapturedTrack->GetEndTime() + desiredSlideAmount;
-         }
-
-         auto results =
-            mSnapManager->Snap(mCapturedTrack.get(), clipLeft, false);
-         auto newClipLeft = results.outTime;
-         results =
-            mSnapManager->Snap(mCapturedTrack.get(), clipRight, false);
-         auto newClipRight = results.outTime;
-
-         // Only one of them is allowed to snap
-         if (newClipLeft != clipLeft && newClipRight != clipRight) {
-            // Un-snap the un-preferred edge
-            if (mSnapPreferRightEdge)
-               newClipLeft = clipLeft;
-            else
-               newClipRight = clipRight;
-         }
-
-         // Take whichever one snapped (if any) and compute the NEW desiredSlideAmount
-         mClipMoveState.snapLeft = -1;
-         mClipMoveState.snapRight = -1;
-         if (newClipLeft != clipLeft) {
-            const double difference = (newClipLeft - clipLeft);
-            desiredSlideAmount += difference;
-            mClipMoveState.snapLeft =
-               viewInfo.TimeToPosition(newClipLeft, mRect.x);
-         }
-         else if (newClipRight != clipRight) {
-            const double difference = (newClipRight - clipRight);
-            desiredSlideAmount += difference;
-            mClipMoveState.snapRight =
-               viewInfo.TimeToPosition(newClipRight, mRect.x);
-         }
-      }
-   }
+   double desiredSlideAmount =
+      FindDesiredSlideAmount( viewInfo, mRect.x, event, mSnapManager.get(),
+         mSlideUpDownOnly, mSnapPreferRightEdge, mClipMoveState,
+         *mCapturedTrack, *pTrack );
 
    // Scroll during vertical drag.
    // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
@@ -682,7 +694,7 @@ UIHandle::Result TimeShiftHandle::Drag
          }
          // Make the offset permanent; start from a "clean slate"
          if( ok ) {
-            mMouseClickX = event.m_x;
+            mClipMoveState.mMouseClickX = event.m_x;
             if (mClipMoveState.capturedClipIsSelection) {
                // Slide the selection, too
                viewInfo.selectedRegion.move( slide );
@@ -697,7 +709,7 @@ UIHandle::Result TimeShiftHandle::Drag
          mDidSlideVertically = true;
 
          // Make the offset permanent; start from a "clean slate"
-         mMouseClickX = event.m_x;
+         mClipMoveState.mMouseClickX = event.m_x;
       }
 
       // Not done yet, check for horizontal movement.

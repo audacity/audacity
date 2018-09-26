@@ -30,6 +30,8 @@ struct ClipMoveState {
    TrackClipArray capturedClipArray {};
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
+   int mMouseClickX{};
+
    void clear()
    {
       capturedClip = nullptr;
@@ -38,6 +40,7 @@ struct ClipMoveState {
       hSlideAmount = 0;
       capturedClipArray.clear();
       snapLeft = snapRight = -1;
+      mMouseClickX = 0;
    }
 };
 
@@ -107,8 +110,6 @@ private:
    bool mSlideUpDownOnly{};
 
    bool mSnapPreferRightEdge{};
-
-   int mMouseClickX{};
 
    // Handles snapping the selection boundaries or track boundaries to
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight
