@@ -421,6 +421,48 @@ UIHandle::Result TimeShiftHandle::Click
    return RefreshNone;
 }
 
+namespace {
+   struct TemporaryClipRemover {
+      TemporaryClipRemover( ClipMoveState &clipMoveState )
+         : state( clipMoveState )
+      {
+         // Pluck the moving clips out of their tracks
+         for ( auto &trackClip : state.capturedClipArray ) {
+            WaveClip *const pSrcClip = trackClip.clip;
+            if (pSrcClip)
+               trackClip.holder =
+                  // Assume track is wave because it has a clip
+                  static_cast<WaveTrack*>(trackClip.track)->
+                     RemoveAndReturnClip(pSrcClip);
+         }
+      }
+
+      void Fail()
+      {
+         // Cause destructor to put all clips back where they came from
+         for ( auto &trackClip : state.capturedClipArray )
+            trackClip.dstTrack = static_cast<WaveTrack*>(trackClip.track);
+      }
+
+      ~TemporaryClipRemover()
+      {
+         // Complete (or roll back) the vertical move.
+         // Put moving clips into their destination tracks
+         // which become the source tracks when we move again
+         for ( auto &trackClip : state.capturedClipArray ) {
+            WaveClip *const pSrcClip = trackClip.clip;
+            if (pSrcClip) {
+               const auto dstTrack = trackClip.dstTrack;
+               dstTrack->AddClip(std::move(trackClip.holder));
+               trackClip.track = dstTrack;
+            }
+         }
+      }
+
+      ClipMoveState &state;
+   };
+}
+
 UIHandle::Result TimeShiftHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -575,14 +617,7 @@ UIHandle::Result TimeShiftHandle::Drag
       // Having passed that test, remove clips temporarily from their
       // tracks, so moving clips don't interfere with each other
       // when we call CanInsertClip()
-      for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
-         WaveClip *const pSrcClip = trackClip.clip;
-         if (pSrcClip)
-            trackClip.holder =
-               // Assume track is wave because it has a clip
-               static_cast<WaveTrack*>(trackClip.track)->
-                  RemoveAndReturnClip(pSrcClip);
-      }
+      TemporaryClipRemover remover( mClipMoveState );
 
       // Now check that the move is possible
       bool ok = true;
@@ -620,6 +655,8 @@ UIHandle::Result TimeShiftHandle::Drag
 
       if (!ok) {
          // Failure, even with using tolerance.
+         remover.Fail();
+
          // Failure -- we'll put clips back where they were
          // ok will next indicate if a horizontal slide is OK.
          ok = true; // assume slide is OK.
@@ -641,9 +678,6 @@ UIHandle::Result TimeShiftHandle::Drag
                // Put the clip back appropriately shifted!
                if( ok) 
                   trackClip.holder->Offset(slide);
-               // Assume track is wave because it has a clip
-                  static_cast<WaveTrack*>(trackClip.track)->
-                     AddClip(std::move(trackClip.holder));
             }
          }
          // Make the offset permanent; start from a "clean slate"
@@ -659,16 +693,6 @@ UIHandle::Result TimeShiftHandle::Drag
          return RefreshAll;
       }
       else {
-         // Do the vertical moves of clips
-         for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip) {
-               const auto dstTrack = trackClip.dstTrack;
-               dstTrack->AddClip(std::move(trackClip.holder));
-               trackClip.track = dstTrack;
-            }
-         }
-
          mCapturedTrack = pTrack;
          mDidSlideVertically = true;
 
