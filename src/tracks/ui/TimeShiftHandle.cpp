@@ -493,6 +493,37 @@ namespace {
       }
    }
 
+   bool FindCorrespondence(
+      TrackList &trackList, Track &track, Track &capturedTrack,
+      ClipMoveState &state)
+   {
+      const int diff =
+         TrackPosition(trackList, &track) -
+         TrackPosition(trackList, &capturedTrack);
+      for ( auto &trackClip : state.capturedClipArray ) {
+         if (trackClip.clip) {
+            // Move all clips up or down by an equal count of audio tracks.
+            Track *const pSrcTrack = trackClip.track;
+            auto pDstTrack = NthAudioTrack(trackList,
+               diff + TrackPosition(trackList, pSrcTrack));
+            // Can only move mono to mono, or left to left, or right to right
+            // And that must be so for each captured clip
+            bool stereo = (pSrcTrack->GetLink() != 0);
+            if (pDstTrack && stereo && !pSrcTrack->GetLinked())
+               // Assume linked track is wave or null
+               pDstTrack = static_cast<WaveTrack*>(pDstTrack->GetLink());
+            bool ok = pDstTrack &&
+            (stereo == (pDstTrack->GetLink() != 0)) &&
+            (!stereo || (pSrcTrack->GetLinked() == pDstTrack->GetLinked()));
+            if (ok)
+               trackClip.dstTrack = pDstTrack;
+            else
+               return false;
+         }
+      }
+      return true;
+   }
+
    struct TemporaryClipRemover {
       TemporaryClipRemover( ClipMoveState &clipMoveState )
          : state( clipMoveState )
@@ -601,30 +632,8 @@ UIHandle::Result TimeShiftHandle::Drag
        pTrack->GetKind() == Track::Wave
        /* && !mCapturedClipIsSelection*/)
    {
-      const int diff =
-         TrackPosition(*trackList, pTrack.get()) -
-         TrackPosition(*trackList, mCapturedTrack.get());
-      for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
-         if (trackClip.clip) {
-            // Move all clips up or down by an equal count of audio tracks.
-            Track *const pSrcTrack = trackClip.track;
-            auto pDstTrack = NthAudioTrack(*trackList,
-               diff + TrackPosition(*trackList, pSrcTrack));
-            // Can only move mono to mono, or left to left, or right to right
-            // And that must be so for each captured clip
-            bool stereo = (pSrcTrack->GetLink() != 0);
-            if (pDstTrack && stereo && !pSrcTrack->GetLinked())
-               // Assume linked track is wave or null
-               pDstTrack = static_cast<WaveTrack*>(pDstTrack->GetLink());
-            bool ok = pDstTrack &&
-            (stereo == (pDstTrack->GetLink() != 0)) &&
-            (!stereo || (pSrcTrack->GetLinked() == pDstTrack->GetLinked()));
-            if (ok)
-               trackClip.dstTrack = pDstTrack;
-            else
-               return RefreshAll;
-         }
-      }
+      if (!FindCorrespondence( *trackList, *pTrack, *mCapturedTrack, mClipMoveState))
+         return RefreshAll;
 
       // Having passed that test, remove clips temporarily from their
       // tracks, so moving clips don't interfere with each other
