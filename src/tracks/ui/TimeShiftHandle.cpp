@@ -373,35 +373,37 @@ UIHandle::Result TimeShiftHandle::Click
        clickTime >= viewInfo.selectedRegion.t0() &&
        clickTime < viewInfo.selectedRegion.t1());
 
-   WaveTrack *wt = pTrack->GetKind() == Track::Wave
-      ? static_cast<WaveTrack*>(pTrack.get()) : nullptr;
+   mClipMoveState.capturedClip = NULL;
+   mClipMoveState.capturedClipArray.clear();
 
-   if ((wt
-#ifdef USE_MIDI
-      || pTrack->GetKind() == Track::Note
-#endif
-      ) && !event.ShiftDown())
-   {
-#ifdef USE_MIDI
-      if (!wt)
-         mClipMoveState.capturedClip = nullptr;
-      else
-#endif
+   bool ok = true;
+   bool captureClips = false;
+
+   if (!event.ShiftDown()) {
+      WaveTrack *wt = pTrack->GetKind() == Track::Wave
+         ? static_cast<WaveTrack*>(pTrack.get()) : nullptr;
+      if (wt)
       {
-         mClipMoveState.capturedClip = wt->GetClipAtX(event.m_x);
-         if (mClipMoveState.capturedClip == NULL)
-            return Cancelled;
+         if (nullptr ==
+            (mClipMoveState.capturedClip = wt->GetClipAtX(event.m_x)))
+            ok = false;
+         else
+            captureClips = true;
       }
+#ifdef USE_MIDI
+      else if (pTrack->GetKind() == Track::Note)
+      {
+         captureClips = true;
+      }
+#endif
+   }
 
+   if ( ! ok )
+      return Cancelled;
+   else if ( captureClips )
       CreateListOfCapturedClips
          ( mClipMoveState, viewInfo, *pTrack, *trackList,
            pProject->IsSyncLocked(), clickTime );
-   }
-   else {
-      // Shift was down, or track was not Wave or Note
-      mClipMoveState.capturedClip = NULL;
-      mClipMoveState.capturedClipArray.clear();
-   }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
