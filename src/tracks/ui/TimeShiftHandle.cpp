@@ -595,6 +595,65 @@ namespace {
    };
 }
 
+bool TimeShiftHandle::DoSlideVertical
+( ViewInfo &viewInfo, wxCoord xx,
+  ClipMoveState &state, TrackList &trackList, Track &capturedTrack,
+  Track &dstTrack, double &desiredSlideAmount )
+{
+   if (!FindCorrespondence( trackList, dstTrack, capturedTrack, state))
+      return false;
+
+   // Having passed that test, remove clips temporarily from their
+   // tracks, so moving clips don't interfere with each other
+   // when we call CanInsertClip()
+   TemporaryClipRemover remover{ state };
+
+   // Now check that the move is possible
+   double slide = desiredSlideAmount; // remember amount requested.
+   // The test for tolerance will need review with FishEye!
+   // The tolerance is supposed to be the time for one pixel,
+   // i.e. one pixel tolerance at current zoom.
+   double tolerance =
+      viewInfo.PositionToTime(xx + 1) - viewInfo.PositionToTime(xx);
+   bool ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
+
+   if (!ok) {
+      // Failure, even with using tolerance.
+      remover.Fail();
+
+      // Failure -- we'll put clips back where they were
+      // ok will next indicate if a horizontal slide is OK.
+      tolerance = 0.0;
+      desiredSlideAmount = slide;
+      ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
+      for ( auto &trackClip : state.capturedClipArray)  {
+         WaveClip *const pSrcClip = trackClip.clip;
+         if (pSrcClip){
+            
+            // Attempt to move to a new track did not work.
+            // Put the clip back appropriately shifted!
+            if( ok)
+               trackClip.holder->Offset(slide);
+         }
+      }
+      // Make the offset permanent; start from a "clean slate"
+      if( ok ) {
+         state.mMouseClickX = xx;
+         if (state.capturedClipIsSelection) {
+            // Slide the selection, too
+            viewInfo.selectedRegion.move( slide );
+         }
+         state.hSlideAmount = 0;
+      }
+
+      return false;
+   }
+
+   // Make the offset permanent; start from a "clean slate"
+   state.mMouseClickX = xx;
+   return true;
+}
+
 UIHandle::Result TimeShiftHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -662,61 +721,13 @@ UIHandle::Result TimeShiftHandle::Drag
        pTrack->GetKind() == Track::Wave
        /* && !mCapturedClipIsSelection*/)
    {
-      if (!FindCorrespondence( *trackList, *pTrack, *mCapturedTrack, mClipMoveState))
-         return RefreshAll;
-
-      // Having passed that test, remove clips temporarily from their
-      // tracks, so moving clips don't interfere with each other
-      // when we call CanInsertClip()
-      TemporaryClipRemover remover( mClipMoveState );
-
-      // Now check that the move is possible
-      double slide = desiredSlideAmount; // remember amount requested.
-      // The test for tolerance will need review with FishEye!
-      // The tolerance is supposed to be the time for one pixel, i.e. one pixel tolerance 
-      // at current zoom.
-      double tolerance =
-         viewInfo.PositionToTime(event.m_x+1) - viewInfo.PositionToTime(event.m_x);
-      bool ok = CheckFit( viewInfo, event.m_x, mClipMoveState, tolerance, desiredSlideAmount );
-  
-      if (!ok) {
-         // Failure, even with using tolerance.
-         remover.Fail();
-
-         // Failure -- we'll put clips back where they were
-         // ok will next indicate if a horizontal slide is OK.
-         tolerance = 0.0;
-         desiredSlideAmount = slide;
-         ok = CheckFit( viewInfo, event.m_x, mClipMoveState, tolerance, desiredSlideAmount );
-         for ( auto &trackClip : mClipMoveState.capturedClipArray)  {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip){
-
-               // Attempt to move to a new track did not work.
-               // Put the clip back appropriately shifted!
-               if( ok) 
-                  trackClip.holder->Offset(slide);
-            }
-         }
-         // Make the offset permanent; start from a "clean slate"
-         if( ok ) {
-            mClipMoveState.mMouseClickX = event.m_x;
-            if (mClipMoveState.capturedClipIsSelection) {
-               // Slide the selection, too
-               viewInfo.selectedRegion.move( slide );
-            }
-            mClipMoveState.hSlideAmount = 0;
-         }
-
-         return RefreshAll;
-      }
-      else {
+      if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
+               *trackList, *mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
          mCapturedTrack = pTrack;
          mDidSlideVertically = true;
-
-         // Make the offset permanent; start from a "clean slate"
-         mClipMoveState.mMouseClickX = event.m_x;
       }
+      else
+         return RefreshAll;
 
       // Not done yet, check for horizontal movement.
       slidVertically = true;
