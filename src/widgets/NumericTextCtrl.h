@@ -88,7 +88,7 @@ public:
    virtual void ControlsToValue();
 
 private:
-   void ParseFormatString(const wxString & format);
+   void ParseFormatString(const wxString & untranslatedFormat);
 
 public:
    void PrintDebugInfo();
