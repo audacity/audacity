@@ -524,6 +524,36 @@ namespace {
       return true;
    }
 
+   bool CheckFit(
+      const ViewInfo &viewInfo, wxCoord xx, ClipMoveState &state,
+      double tolerance, double &desiredSlideAmount )
+   {
+      bool ok = true;
+      double firstTolerance = tolerance;
+
+      // The desiredSlideAmount may change and the tolerance may get used up.
+      for ( unsigned iPass = 0; iPass < 2 && ok; ++iPass ) {
+         for ( auto &trackClip : state.capturedClipArray ) {
+            WaveClip *const pSrcClip = trackClip.clip;
+            if (pSrcClip) {
+               ok = trackClip.dstTrack->CanInsertClip(
+                  pSrcClip, desiredSlideAmount, tolerance );
+               if( !ok  )
+                  break;
+            }
+         }
+         // If it fits ok, desiredSlideAmount could have been updated to get
+         // the clip to fit.
+         // Check again, in the new position, this time with zero tolerance.
+         if (firstTolerance == 0)
+            break;
+         else
+            tolerance = 0.0;
+      }
+
+      return ok;
+   }
+
    struct TemporaryClipRemover {
       TemporaryClipRemover( ClipMoveState &clipMoveState )
          : state( clipMoveState )
@@ -641,56 +671,23 @@ UIHandle::Result TimeShiftHandle::Drag
       TemporaryClipRemover remover( mClipMoveState );
 
       // Now check that the move is possible
-      bool ok = true;
+      double slide = desiredSlideAmount; // remember amount requested.
       // The test for tolerance will need review with FishEye!
       // The tolerance is supposed to be the time for one pixel, i.e. one pixel tolerance 
       // at current zoom.
-      double slide = desiredSlideAmount; // remember amount requested.
-      double tolerance = viewInfo.PositionToTime(event.m_x+1) - viewInfo.PositionToTime(event.m_x);
-
-      // The desiredSlideAmount may change and the tolerance may get used up.
-      for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
-         WaveClip *const pSrcClip = trackClip.clip;
-         if (pSrcClip) {
-            ok = trackClip.dstTrack->CanInsertClip(
-               pSrcClip, desiredSlideAmount, tolerance );
-            if( !ok  )
-               break;
-         }
-      }
-
-      if( ok ) {
-         // fits ok, but desiredSlideAmount could have been updated to get the clip to fit.
-         // Check again, in the new position, this time with zero tolerance.
-         tolerance = 0.0;
-         for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip) {
-               ok = trackClip.dstTrack->CanInsertClip(
-                  pSrcClip, desiredSlideAmount, tolerance);
-               if ( !ok )
-                  break;
-            }
-         }
-      }
-
+      double tolerance =
+         viewInfo.PositionToTime(event.m_x+1) - viewInfo.PositionToTime(event.m_x);
+      bool ok = CheckFit( viewInfo, event.m_x, mClipMoveState, tolerance, desiredSlideAmount );
+  
       if (!ok) {
          // Failure, even with using tolerance.
          remover.Fail();
 
          // Failure -- we'll put clips back where they were
          // ok will next indicate if a horizontal slide is OK.
-         ok = true; // assume slide is OK.
          tolerance = 0.0;
          desiredSlideAmount = slide;
-         for ( auto &trackClip : mClipMoveState.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip){
-               // back to the track it came from...
-               trackClip.dstTrack = static_cast<WaveTrack*>(trackClip.track);
-               ok = ok && trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount, tolerance);
-            }
-         }
+         ok = CheckFit( viewInfo, event.m_x, mClipMoveState, tolerance, desiredSlideAmount );
          for ( auto &trackClip : mClipMoveState.capturedClipArray)  {
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip){
