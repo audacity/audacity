@@ -1,0 +1,3 @@
+[submodule "vendors/wxWidgets"]
+	path = vendors/wxWidgets
+	url = https://github.com/audacity/wxWidgets.git

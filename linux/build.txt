@@ -32,30 +32,23 @@ sudo apt-get install git git-gui gitk
 
 wxWidgets:
 
- 1) Clone wxWidgets and checkout 3.1.1 from the Audacity fork of the 
-    wxWidgets project: 
-       https://github.com/audacity/wxWidgets/....
+ 1) Make sure that the wxWidgets submodule as been properly cloned by typing this command:
 
-    for example
-      mkdir ./wxWidgets
-      cd ./wxWidgets
-      git clone --recurse-submodules https://github.com/audacity/wxWidgets/
+   git submodule update --init --recursive
 
-    Don't be tempted to use Widgets already installed on Linux because this 
-    will typically be a different version and will cause problems.              
+    Don't be tempted to use Widgets already installed on Linux because this
+    will typically be a different version and will cause problems.
 
-    IF you forgot the --recurse-submodules, you can correct that later by:
-      git submodule update --init
-
-  2) Follow instructions for building at 
+  2) Follow instructions for building at
     https://github.com/audacity/wxWidgets/blob/v3.1.1/docs/gtk/install.txt
 
     So...
 
+    cd vendors/wxWidgets
     mkdir buildgtk
     cd buildgtk
     ../configure --with-gtk
-    make    
+    make
 
   3) Having got this far, it is well worth trying out building some wxWidgets
     examples to confirm that building has worked OK

@@ -165,19 +165,29 @@ void MixerToolBar::UpdatePrefs()
 
    // Show or hide the input slider based on whether it works
    mInputSlider->Enable(gAudioIO->InputMixerWorks());
-
-   // Layout the toolbar
    Layout();
 
+// This code is from before the mixer toolbar was resizable.
+// Now that it is resizable we trust the user to resize the mixer toolbar themselves.
+#if 0
+   wxSize oldSize( GetSize() );
+   // Layout the toolbar
+   Layout();
    // Resize the toolbar to fit the contents
    //Fit();
-
    // And make that size the minimum
-   SetMinSize( wxWindow::GetSizer()->GetMinSize() );
-   SetSize( GetMinSize() );
-
-   // Notify someone that we've changed our size
-   Updated();
+   wxSize newMinSize( wxWindow::GetSizer()->GetMinSize() );
+   SetMinSize( newMinSize  );
+   // IF size must increase, do so.
+   if( newMinSize.x > oldSize.x ){
+      SetSize( newMinSize );
+      // Notify someone that we've changed our size
+      Updated();
+   }
+   // ELSE preserve original size.
+   else
+      SetSize( oldSize );
+#endif
 #endif
 
    // Set label to pull in language change
