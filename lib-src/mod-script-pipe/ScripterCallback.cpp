@@ -19,6 +19,36 @@
 #include "../../src/Audacity.h"
 #include "../../src/ShuttleGui.h"
 
+#if defined(__WXMSW__)
+#include <wx/init.h>
+#  if defined(__WXDEBUG__)
+#     define D "d"
+#  else
+#     define D ""
+#  endif
+#  if wxCHECK_VERSION(3, 1, 0)
+#     define V "31"
+#  elif wxCHECK_VERSION(3, 0, 0)
+#     define V "30"
+#  else
+#     define V "28"
+#  endif
+
+#  pragma comment(lib, "wxbase" V "u" D)
+#  pragma comment(lib, "wxbase" V "u" D "_net")
+#  pragma comment(lib, "wxmsw"  V "u" D "_adv")
+#  pragma comment(lib, "wxmsw"  V "u" D "_core")
+#  pragma comment(lib, "wxmsw"  V "u" D "_html")
+#  pragma comment(lib, "wxpng"        D)
+#  pragma comment(lib, "wxzlib"       D)
+#  pragma comment(lib, "wxjpeg"       D)
+#  pragma comment(lib, "wxtiff"       D)
+
+#  undef V
+#  undef D
+
+#endif //(__WXMSW__)
+
 /*
 There are several functions that can be used in a GUI module.
 
@@ -40,12 +70,15 @@ and replace the main project window with our own wxFrame.
 
 */
 
-// HACK!
-// This must match the enum in LoadModules.h
-// We do NOT include LoadModules.h, because we want
-// this DLL to be usable with programs other than Audacity.
-// (More work required for this to be possible -
-// we need new header files that just define the interface).
+#ifdef _MSC_VER
+   #define DLL_API _declspec(dllexport)
+   #define DLL_IMPORT _declspec(dllimport)
+#else
+   #define DLL_API __attribute__ ((visibility("default")))
+   #define DLL_IMPORT
+#endif
+
+
 typedef enum
 {
    ModuleInitialize,
@@ -59,14 +92,14 @@ typedef enum
 
 
 extern void PipeServer();
-typedef SCRIPT_PIPE_DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
+typedef DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
 static tpExecScriptServerFunc pScriptServerFn=NULL;
 
 
 extern "C" {
 
 
-SCRIPT_PIPE_DLL_API wxChar * GetVersionString()
+DLL_API wxChar * GetVersionString()
 {
    // Make sure that this version of the module requires the version 
    // of Audacity it is built with. 
@@ -75,7 +108,7 @@ SCRIPT_PIPE_DLL_API wxChar * GetVersionString()
    return AUDACITY_VERSION_STRING;
 }
 
-extern int SCRIPT_PIPE_DLL_API  ModuleDispatch(ModuleDispatchTypes type);
+extern int DLL_API  ModuleDispatch(ModuleDispatchTypes type);
 // ModuleDispatch
 // is called by Audacity to initialize/terminmate the module,
 // and ask if it has anything for the menus.
@@ -100,7 +133,7 @@ int ModuleDispatch(ModuleDispatchTypes type){
 }   
 
 // And here is our special registration function.
-int SCRIPT_PIPE_DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
+int DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
 {
    if( pFn )
    {

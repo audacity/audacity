@@ -48,13 +48,15 @@ for shared and private configs - which need to move out.
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 #include "PluginManager.h"
 
 #include "Experimental.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 using ProviderMap = std::unordered_map<wxString, wxArrayString>;
 
@@ -540,15 +542,31 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                S.AddPrompt(_("Show:"));
                /* i18n-hint: Radio button to show all effects */
                rb = S.Id(ID_ShowAll).AddRadioButton(_("&All"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show all"));
                /* i18n-hint: Radio button to show just the currently disabled effects */
                rb = S.Id(ID_ShowDisabled).AddRadioButtonToGroup(_("D&isabled"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show disabled"));
                /* i18n-hint: Radio button to show just the currently enabled effects */
                rb = S.Id(ID_ShowEnabled).AddRadioButtonToGroup(_("E&nabled"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show enabled"));
                /* i18n-hint: Radio button to show just the newly discovered effects */
                rb = S.Id(ID_ShowNew).AddRadioButtonToGroup(_("Ne&w"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
                rb->SetName(_("Show new"));
             }
             S.EndHorizontalLay();
@@ -623,7 +641,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
       if (plugType == PluginTypeEffect)
       {
-         item.name = plug.GetTranslatedName();
+         item.name = plug.GetSymbol().Translation();
       }
       // This is not right and will not work when other plugin types are added.
       // But it's presumed that the plugin manager dialog will be fully developed
@@ -996,6 +1014,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                   {
                      pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
                   }
+                  // Bug 1893.  We've found a provider that works.
+                  // Error messages from any that failed are no longer useful.
+                  errMsgs.clear();
                   break;
                }
                else
@@ -1131,19 +1152,9 @@ const wxString & PluginDescriptor::GetPath() const
    return mPath;
 }
 
-const wxString & PluginDescriptor::GetSymbol() const
+const IdentInterfaceSymbol & PluginDescriptor::GetSymbol() const
 {
-   if (mSymbol.IsEmpty())
-   {
-      return mName;
-   }
-
    return mSymbol;
-}
-
-wxString PluginDescriptor::GetUntranslatedName() const
-{
-   return mName;
 }
 
 wxString PluginDescriptor::GetUntranslatedVersion() const
@@ -1151,19 +1162,9 @@ wxString PluginDescriptor::GetUntranslatedVersion() const
    return mVersion;
 }
 
-wxString PluginDescriptor::GetTranslatedName() const
-{
-   return wxGetTranslation(mName);
-}
-
-wxString PluginDescriptor::GetUntranslatedVendor() const
+wxString PluginDescriptor::GetVendor() const
 {
    return mVendor;
-}
-
-wxString PluginDescriptor::GetTranslatedVendor() const
-{
-   return wxGetTranslation(mVendor);
 }
 
 bool PluginDescriptor::IsEnabled() const
@@ -1196,14 +1197,9 @@ void PluginDescriptor::SetPath(const wxString & path)
    mPath = path;
 }
 
-void PluginDescriptor::SetSymbol(const wxString & symbol)
+void PluginDescriptor::SetSymbol(const IdentInterfaceSymbol & symbol)
 {
    mSymbol = symbol;
-}
-
-void PluginDescriptor::SetName(const wxString & name)
-{
-   mName = name;
 }
 
 void PluginDescriptor::SetVersion(const wxString & version)
@@ -1336,10 +1332,12 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+// Registry has the list of plug ins
 #define REGVERKEY wxString(wxT("/pluginregistryversion"))
-#define REGVERCUR wxString(wxT("1.0"))
+#define REGVERCUR wxString(wxT("1.1"))
 #define REGROOT wxString(wxT("/pluginregistry/"))
 
+// Settings has the values of the plug in settings.
 #define SETVERKEY wxString(wxT("/pluginsettingsversion"))
 #define SETVERCUR wxString(wxT("1.0"))
 #define SETROOT wxString(wxT("/pluginsettings/"))
@@ -1442,8 +1440,8 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
 
    plug.SetProviderID(PluginManager::GetID(provider));
 
-   plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamilyId(effect->GetFamilyId());
+   plug.SetEffectType(effect->GetClassification());
+   plug.SetEffectFamilyId(effect->GetFamilyId().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -1850,7 +1848,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                   auto &id = PluginManagerInterface::DefaultRegistrationCallback(
                         provider, ident);
                   ids.push_back(id);
-                  names.push_back( wxGetTranslation( ident->GetName() ) );
+                  names.push_back( ident->GetSymbol().Translation() );
                   return id;
                });
             if ( ! nPlugIns ) {
@@ -1900,14 +1898,58 @@ void PluginManager::Load()
    }
 
    // Check for a registry version that we can understand
+   // TODO: Should also check for a registry file that is newer than
+   // what we can understand.
    wxString regver = registry.Read(REGVERKEY);
    if (regver < REGVERCUR )
    {
-      // This is where we'd put in conversion code when the
-      // registry version changes.
-      //
-      // Should also check for a registry file that is newer than
-      // what we can understand.
+      // Conversion code here, for when registry version changes.
+
+      // We iterate through the effects, possibly updating their info.
+      wxString groupName;
+      long groupIndex;
+      wxString group = GetPluginTypeString(PluginTypeEffect);
+      wxString cfgPath = REGROOT + group + wxCONFIG_PATH_SEPARATOR;
+      wxArrayString groupsToDelete;
+
+      registry.SetPath(cfgPath);
+      for (bool cont = registry.GetFirstGroup(groupName, groupIndex);
+         cont;
+         registry.SetPath(cfgPath),
+         cont = registry.GetNextGroup(groupName, groupIndex))
+      {
+         registry.SetPath(groupName);
+         wxString effectSymbol = registry.Read(KEY_SYMBOL, "");
+         wxString effectVersion = registry.Read(KEY_VERSION, "");
+
+
+         // For 2.3.0 the plugins we distribute have moved around.
+         // So we upped the registry version number to 1.1.
+         // These particular config edits were originally written to fix Bug 1914.
+         if (regver <= "1.0") {
+            // Nyquist prompt is a built-in that has moved to the tools menu.
+            if (effectSymbol == "Nyquist Prompt") {
+               registry.Write(KEY_EFFECTTYPE, "Tool");
+            // Old version of SDE was in Analyze menu.  Now it is in Tools.
+            // We don't want both the old and the new.
+            } else if ((effectSymbol == "Sample Data Export") && (effectVersion == "n/a")) {
+               groupsToDelete.push_back(cfgPath + groupName);
+            // Old version of SDI was in Generate menu.  Now it is in Tools.
+            } else if ((effectSymbol == "Sample Data Import") && (effectVersion == "n/a")) {
+               groupsToDelete.push_back(cfgPath + groupName);
+            }
+         }
+
+      }
+      // Doing the deletion within the search loop risked skipping some items,
+      // hence the delayed delete.
+      for (int i = 0; i < groupsToDelete.Count(); i++) {
+         registry.DeleteGroup(groupsToDelete[i]);
+      }
+      registry.SetPath("");
+      registry.Write(REGVERKEY, REGVERCUR);
+      // Updates done.  Make sure we read the updated data later.
+      registry.Flush();
    }
 
    // Load all provider plugins first
@@ -1920,11 +1962,6 @@ void PluginManager::Load()
    LoadGroup(&registry, PluginTypeImporter);
 
    LoadGroup(&registry, PluginTypeStub);
-
-   // Not used by 2.1.1 or greater, but must load to allow users to switch between 2.1.0
-   // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
-   LoadGroup(&registry, PluginTypeNone);
-
    return;
 }
 
@@ -2015,18 +2052,25 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
          continue;
       plug.SetPath(strVal);
 
+      /*
+       // PRL: Ignore names  written in configs before 2.3.0!
+       // use Internal string only!  Let the present version of Audacity map
+       // that to a user-visible string.
       // Get the name and bypass group if not found
       if (!pRegistry->Read(KEY_NAME, &strVal))
       {
          continue;
       }
       plug.SetName(strVal);
+       */
 
-      // Get the symbol...use name if not found
+      // Get the symbol...Audacity 2.3.0 or later requires it
+      // bypass group if not found
+      // Note, KEY_SYMBOL started getting written to config files in 2.1.0.
+      // KEY_NAME (now ignored) was written before that, but only for VST
+      // effects.
       if (!pRegistry->Read(KEY_SYMBOL, &strVal))
-      {
-         strVal = plug.GetTranslatedName();
-      }
+         continue;
       plug.SetSymbol(strVal);
 
       // Get the version and bypass group if not found
@@ -2041,7 +2085,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
       {
          continue;
       }
-      plug.SetVendor(strVal);
+      plug.SetVendor( strVal );
 
 #if 0
       // This was done before version 2.2.2, but the value was not really used
@@ -2231,10 +2275,14 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
       pRegistry->SetPath(REGROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
 
       pRegistry->Write(KEY_PATH, plug.GetPath());
-      pRegistry->Write(KEY_SYMBOL, plug.GetSymbol());
-      pRegistry->Write(KEY_NAME, plug.GetUntranslatedName());
+      pRegistry->Write(KEY_SYMBOL, plug.GetSymbol().Internal());
+
+      // PRL:  Writing KEY_NAME which is no longer read, but older Audacity
+      // versions expect to find it.
+      pRegistry->Write(KEY_NAME, plug.GetSymbol().Msgid());
+
       pRegistry->Write(KEY_VERSION, plug.GetUntranslatedVersion());
-      pRegistry->Write(KEY_VENDOR, plug.GetUntranslatedVendor());
+      pRegistry->Write(KEY_VENDOR, plug.GetVendor());
       // Write a blank -- see comments in LoadGroup:
       pRegistry->Write(KEY_DESCRIPTION, wxString{});
       pRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
@@ -2403,7 +2451,7 @@ const PluginID & PluginManager::RegisterPlugin(EffectDefinitionInterface *effect
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, type);
 
    plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamilyId(effect->GetFamilyId());
+   plug.SetEffectFamilyId(effect->GetFamilyId().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetEffectRealtime(effect->SupportsRealtime());
@@ -2563,25 +2611,15 @@ void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
    return mPlugins[ID].SetEnabled(enable);
 }
 
-const wxString & PluginManager::GetSymbol(const PluginID & ID)
+const IdentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
-      static wxString empty;
+      static IdentInterfaceSymbol empty;
       return empty;
    }
 
    return mPlugins[ID].GetSymbol();
-}
-
-wxString PluginManager::GetName(const PluginID & ID)
-{
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return wxEmptyString;
-   }
-
-   return mPlugins[ID].GetTranslatedName();
 }
 
 IdentInterface *PluginManager::GetInstance(const PluginID & ID)
@@ -2612,8 +2650,8 @@ PluginID PluginManager::GetID(ModuleInterface *module)
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeModule),
                            wxEmptyString,
-                           module->GetVendor(),
-                           module->GetName(),
+                           module->GetVendor().Internal(),
+                           module->GetSymbol().Internal(),
                            module->GetPath());
 }
 
@@ -2622,8 +2660,8 @@ PluginID PluginManager::GetID(CommandDefinitionInterface *command)
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeAudacityCommand),
                            wxEmptyString,
-                           command->GetVendor(),
-                           command->GetName(),
+                           command->GetVendor().Internal(),
+                           command->GetSymbol().Internal(),
                            command->GetPath());
 }
 
@@ -2631,9 +2669,9 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),
-                           effect->GetFamilyId(),
-                           effect->GetVendor(),
-                           effect->GetName(),
+                           effect->GetFamilyId().Internal(),
+                           effect->GetVendor().Internal(),
+                           effect->GetSymbol().Internal(),
                            effect->GetPath());
 }
 
@@ -2642,8 +2680,8 @@ PluginID PluginManager::GetID(ImporterInterface *importer)
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeImporter),
                            wxEmptyString,
-                           importer->GetVendor(),
-                           importer->GetName(),
+                           importer->GetVendor().Internal(),
+                           importer->GetSymbol().Internal(),
                            importer->GetPath());
 }
 
@@ -2694,8 +2732,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
    plug.SetID(id);
    plug.SetPath(ident->GetPath());
    plug.SetSymbol(ident->GetSymbol());
-   plug.SetName(ident->GetName());
-   plug.SetVendor(ident->GetVendor());
+   plug.SetVendor(ident->GetVendor().Internal());
    plug.SetVersion(ident->GetVersion());
 
    return plug;
@@ -2941,9 +2978,9 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
                  wxT("_") +
                  plug.GetEffectFamilyId() + // is empty for non-Effects
                  wxT("_") +
-                 plug.GetUntranslatedVendor() +
+                 plug.GetVendor() +
                  wxT("_") +
-                 (shared ? wxT("") : plug.GetSymbol());
+                 (shared ? wxT("") : plug.GetSymbol().Internal());
 
    return SETROOT +
           ConvertID(id) +
@@ -3155,5 +3192,5 @@ int PluginManager::b64decode(const wxString &in, void *out)
 // #include directives.
 const wxString& IdentInterface::GetTranslatedName()
 {
-   return wxGetTranslation( GetName() );
+   return GetSymbol().Translation();
 }

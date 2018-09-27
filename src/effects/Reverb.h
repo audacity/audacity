@@ -22,7 +22,7 @@
 
 class ShuttleGui;
 
-#define REVERB_PLUGIN_SYMBOL XO("Reverb")
+#define REVERB_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Reverb") }
 
 struct Reverb_priv_t;
 
@@ -48,7 +48,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 
@@ -71,8 +71,8 @@ public:
 
    // Effect implementation
 
-   bool Startup();
-   void PopulateOrExchange(ShuttleGui & S);
+   bool Startup() override;
+   void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

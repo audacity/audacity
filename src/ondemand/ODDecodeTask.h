@@ -90,7 +90,7 @@ protected:
 
 
    std::vector<std::weak_ptr<ODDecodeBlockFile>> mBlockFiles;
-   std::vector<movable_ptr<ODFileDecoder>> mDecoders;
+   std::vector<std::unique_ptr<ODFileDecoder>> mDecoders;
 
    int mMaxBlockFiles;
 

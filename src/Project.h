@@ -191,6 +191,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    virtual void ApplyUpdatedTheme();
 
    AudioIOStartStreamOptions GetDefaultPlayOptions();
+   AudioIOStartStreamOptions GetSpeedPlayOptions();
 
    TrackList *GetTracks() { return mTracks.get(); }
    const TrackList *GetTracks() const { return mTracks.get(); }
@@ -229,7 +230,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
-   bool IsActive();
+   bool IsActive() override;
 
    // File I/O
 
@@ -291,16 +292,16 @@ public:
                      TrackHolders &&newTracks);
 
    bool Save();
-   bool SaveAs(bool bWantSaveCompressed = false);
-   bool SaveAs(const wxString & newFileName, bool bWantSaveCompressed = false, bool addToHistory = true);
-   #ifdef USE_LIBVORBIS
-      bool SaveCompressedWaveTracks(const wxString & strProjectPathName); // full path for aup except extension
-   #endif
+   bool SaveAs(bool bWantSaveCopy = false, bool bLossless = false);
+   bool SaveAs(const wxString & newFileName, bool bWantSaveCopy = false, bool addToHistory = true);
+   // strProjectPathName is full path for aup except extension
+   bool SaveCopyWaveTracks(const wxString & strProjectPathName, bool bLossless = false);
+
 private:
-   bool DoSave(bool fromSaveAs, bool bWantSaveCompressed);
+   bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 public:
 
-   void Clear();
+   void Clear();// clears a selection
 
    const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
@@ -336,6 +337,7 @@ public:
    bool ExportFromTimerRecording(wxFileName fnFile, int iFormat, int iSubFormat, int iFilterIndex);
    int GetOpenProjectCount();
    bool IsProjectSaved();
+   void ResetProjectToEmpty();
 
    bool ProjectHasTracks();
 
@@ -559,7 +561,7 @@ public:
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(
-      XMLWriter &xmlFile, bool bWantSaveCompressed) /* not override */;
+      XMLWriter &xmlFile, bool bWantSaveCopy) /* not override */;
 
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
@@ -671,8 +673,9 @@ private:
 
    // Window elements
 
+   wxString mLastMainStatusMessage;
    std::unique_ptr<wxTimer> mTimer;
-   long mLastStatusUpdateTime;
+   void RestartTimer();
 
    wxStatusBar *mStatusBar;
 
@@ -715,6 +718,7 @@ private:
    wxString mHelpPref;
    wxString mSoloPref;
    bool mbBusyImporting{ false }; // used to fix bug 584
+   int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
 
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
@@ -819,7 +823,7 @@ public:
       enum class Mode {
          Off,
          Refresh,
-         Centered,
+         Pinned,
          Right,
       };
 
@@ -841,6 +845,12 @@ public:
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
    std::shared_ptr<BackgroundCell> GetBackgroundCell() const
       { return mBackgroundCell; }
+
+   wxWindowRef mFocusLender;
+
+   // Return true if the window is really focused, or if focus was borrowed
+   // from it
+   bool IsFocused( const wxWindow *window ) const;
 
    DECLARE_EVENT_TABLE()
 };

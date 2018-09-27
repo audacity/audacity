@@ -79,6 +79,11 @@ enum {
    POST_TIMER_RECORD_SHUTDOWN
 };
 
+// The slow timer interval is used to update the start and end times, which only show
+// time to the nearest second.  So we only need an update once a second.
+const int kSlowTimerInterval = 1000; // ms
+
+// This timer interval is used in some busy-wait loops and is much shorter.
 const int kTimerInterval = 50; // ms
 
 static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
@@ -177,7 +182,7 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
    m_pTimeTextCtrl_Duration->SetFieldFocus(3);
 
    m_timer.SetOwner(this, TIMER_ID);
-   m_timer.Start(kTimerInterval);
+   m_timer.Start(kSlowTimerInterval);
 
    // Do we need to tidy up when the timer recording has been completed?
    m_bProjectCleanupRequired = !(this->HaveFilesToRecover());
@@ -923,23 +928,28 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartStatic(_("Options"), true);
          {
 
-            wxArrayString arrayOptions;
-            arrayOptions.Add(_("Do nothing"));
-            arrayOptions.Add(_("Exit Audacity"));
-            arrayOptions.Add(_("Restart system"));
-            arrayOptions.Add(_("Shutdown system"));
+            S.StartMultiColumn(1, wxEXPAND);
+            {
+               S.SetStretchyCol( 0 );
+               wxArrayString arrayOptions;
+               arrayOptions.Add(_("Do nothing"));
+               arrayOptions.Add(_("Exit Audacity"));
+               arrayOptions.Add(_("Restart system"));
+               arrayOptions.Add(_("Shutdown system"));
 
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(0));
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(1));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(0));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(1));
 #ifdef __WINDOWS__
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(2));
-            m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(3));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(2));
+               m_sTimerAfterCompleteOptionsArray.Add(arrayOptions.Item(3));
 #endif
-            m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
+               m_sTimerAfterCompleteOption = arrayOptions.Item(iPostTimerRecordAction);
 
-            m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
-                                                          m_sTimerAfterCompleteOption,
-                                                          &m_sTimerAfterCompleteOptionsArray);
+               m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(_("After Recording completes:"),
+                                                             m_sTimerAfterCompleteOption,
+                                                             &m_sTimerAfterCompleteOptionsArray);
+            }
+            S.EndMultiColumn();
          }
          S.EndStatic();
 
@@ -1014,7 +1024,15 @@ void TimerRecordDialog::UpdateEnd()
 {
    //v Use remaining disk -> record time calcs from AudacityProject::OnTimer to set range?
    m_DateTime_End = m_DateTime_Start + m_TimeSpan_Duration;
+   //wxLogDebug( "Time start %s end %s", 
+   //   m_DateTime_Start.FormatISOCombined(' '),
+   //   m_DateTime_End.FormatISOCombined(' ') );
+
+   // Disable the range limitation (to fix Bug 1749 and 1978)
+   // Otherwise SetVallue asserts when going back in time.
+   m_pDatePickerCtrl_End->SetRange(wxInvalidDateTime, wxInvalidDateTime); 
    m_pDatePickerCtrl_End->SetValue(m_DateTime_End);
+   // Re-enable range limitation to constrain user input.
    m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
    m_pDatePickerCtrl_End->Refresh();
    m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
@@ -1064,7 +1082,7 @@ ProgressResult TimerRecordDialog::WaitForStart()
    while (updateResult == ProgressResult::Success && !bIsRecording)
    {
       updateResult = progress.UpdateProgress();
-      wxMilliSleep(10);
+      wxMilliSleep(kTimerInterval);
       bIsRecording = (m_DateTime_Start <= wxDateTime::UNow());
    }
    return updateResult;
@@ -1111,7 +1129,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    while (iUpdateResult == ProgressResult::Success && !bIsTime)
    {
       iUpdateResult = dlgAction.UpdateProgress();
-      wxMilliSleep(10);
+      wxMilliSleep(kTimerInterval);
       bIsTime = (dtActionTime <= wxDateTime::UNow());
    }
    return iUpdateResult;

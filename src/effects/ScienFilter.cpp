@@ -91,9 +91,9 @@ static const IdentInterfaceSymbol kTypeStrings[nTypes] =
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   { wxT("ChebyshevTypeI"), XO("Chebyshev Type I") },
+   { XO("Chebyshev Type I") },
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   { wxT("ChebyshevTypeII"), XO("Chebyshev Type II") }
+   { XO("Chebyshev Type II") }
 };
 
 enum kSubTypes
@@ -180,7 +180,7 @@ EffectScienFilter::~EffectScienFilter()
 
 // IdentInterface implementation
 
-wxString EffectScienFilter::GetSymbol()
+IdentInterfaceSymbol EffectScienFilter::GetSymbol()
 {
    return CLASSICFILTERS_PLUGIN_SYMBOL;
 }
@@ -218,12 +218,7 @@ unsigned EffectScienFilter::GetAudioOutCount()
 bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
-   {
-      mpBiquad[iPair].fPrevIn = 0;
-      mpBiquad[iPair].fPrevPrevIn = 0;
-      mpBiquad[iPair].fPrevOut = 0;
-      mpBiquad[iPair].fPrevPrevOut = 0;
-   }
+      mpBiquad[iPair].Reset();
 
    return true;
 }
@@ -235,7 +230,7 @@ size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t
    {
       mpBiquad[iPair].pfIn = ibuf;
       mpBiquad[iPair].pfOut = outBlock[0];
-      Biquad_Process(&mpBiquad[iPair], blockLen);
+      mpBiquad[iPair].Process(blockLen);
       ibuf = outBlock[0];
    }
 
@@ -1074,7 +1069,7 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       mWidth = width;
       mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight);
+      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight,24);
    }
 
    wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
@@ -1108,7 +1103,7 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    mEnvRect.Deflate(2, 2);
 
    // Pure blue x-axis line
-   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 1, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 1, wxPENSTYLE_SOLID));
    int center = (int) (mEnvRect.height * mDbMax / (mDbMax - mDbMin) + 0.5);
    AColor::Line(memDC,
                 mEnvRect.GetLeft(), mEnvRect.y + center,
@@ -1116,7 +1111,7 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    //Now draw the actual response that you will get.
    //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
-   memDC.SetPen(wxPen(theTheme.Colour(clrResponseLines), 3, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour(clrResponseLines), 3, wxPENSTYLE_SOLID));
    double scale = (double) mEnvRect.height / (mDbMax - mDbMin);    // pixels per dB
    double yF;                                                     // gain at this freq
 

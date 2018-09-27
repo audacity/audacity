@@ -17,18 +17,18 @@
 #include "BatchEvalCommand.h"
 #include "CommandContext.h"
 
-wxString BatchEvalCommandType::BuildName()
+IdentInterfaceSymbol BatchEvalCommandType::BuildName()
 {
-   return wxT("BatchCommand");
+   return { wxT("BatchCommand"), XO("Batch Command") };
 }
 
 void BatchEvalCommandType::BuildSignature(CommandSignature &signature)
 {
-   auto commandNameValidator = make_movable<DefaultValidator>();
+   auto commandNameValidator = std::make_unique<DefaultValidator>();
    signature.AddParameter(wxT("CommandName"), wxT(""), std::move(commandNameValidator));
-   auto paramValidator = make_movable<DefaultValidator>();
+   auto paramValidator = std::make_unique<DefaultValidator>();
    signature.AddParameter(wxT("ParamString"), wxT(""), std::move(paramValidator));
-   auto macroValidator = make_movable<DefaultValidator>();
+   auto macroValidator = std::make_unique<DefaultValidator>();
    signature.AddParameter(wxT("MacroName"), wxT(""), std::move(macroValidator));
 }
 
@@ -61,7 +61,7 @@ bool BatchEvalCommand::Apply(const CommandContext & context)
 
    // Create a Batch that will have just one command in it...
    MacroCommands Batch;
-   bool bResult = Batch.ApplyCommand(friendly, cmdName, cmdParams, &context);
+   bool bResult = Batch.ApplyCommandInBatchMode(friendly, cmdName, cmdParams, &context);
    // Relay messages, if any.
    wxString Message = Batch.GetMessage();
    if( !Message.IsEmpty() )

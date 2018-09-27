@@ -412,7 +412,7 @@ public:
    static WaveformVRulerMenuTable &Instance();
 
 private:
-   virtual void InitMenu(Menu *pMenu, void *pUserData);
+   virtual void InitMenu(Menu *pMenu, void *pUserData) override;
 
    void OnWaveformScaleType(wxCommandEvent &evt);
 };
@@ -499,7 +499,7 @@ public:
    static SpectrumVRulerMenuTable &Instance();
 
 private:
-   void InitMenu(Menu *pMenu, void *pUserData);
+   void InitMenu(Menu *pMenu, void *pUserData) override;
 
    void OnSpectrumScaleType(wxCommandEvent &evt);
 };

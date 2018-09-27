@@ -35,7 +35,7 @@ class OldStyleCommand /* not final */
 public:
    OldStyleCommand() {};
    virtual ~OldStyleCommand() { }
-   virtual wxString GetName() = 0;
+   virtual IdentInterfaceSymbol GetSymbol() = 0;
    virtual CommandSignature &GetSignature() = 0;
    virtual bool SetParameter(const wxString &paramName, const wxVariant &paramValue);
    virtual bool Apply()=0;
@@ -57,7 +57,7 @@ public:
       wxASSERT(cmd != NULL);
    }
    virtual ~DecoratedCommand();
-   wxString GetName() override;
+   IdentInterfaceSymbol GetSymbol() override;
    CommandSignature &GetSignature() override;
    bool SetParameter(const wxString &paramName, const wxVariant &paramValue) override;
 };
@@ -105,7 +105,7 @@ public:
    virtual ~CommandImplementation();
 
    /// An instance method for getting the command name (for consistency)
-   wxString GetName();
+   IdentInterfaceSymbol GetSymbol() override;
 
    /// Get the signature of the command
    CommandSignature &GetSignature() override;

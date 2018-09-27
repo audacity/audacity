@@ -287,7 +287,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       ModulePrefs::SetModuleStatus( files[i], kModuleFailed );
 #endif
 
-      auto umodule = make_movable<Module>(files[i]);
+      auto umodule = std::make_unique<Module>(files[i]);
       if (umodule->Load())   // it will get rejected if there  are version problems
       {
          auto module = umodule.get();
@@ -421,7 +421,7 @@ void ModuleManager::InitializeBuiltins()
 
 ModuleInterface *ModuleManager::LoadModule(const wxString & path)
 {
-   auto lib = make_movable<wxDynamicLibrary>();
+   auto lib = std::make_unique<wxDynamicLibrary>();
 
    if (lib->Load(path, wxDL_NOW))
    {

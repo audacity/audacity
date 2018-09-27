@@ -49,6 +49,7 @@ CommandFlag GetUpdateFlags(bool checkActive = false);
 
 //Adds label and returns index of label in labeltrack.
 int DoAddLabel(const SelectedRegion& region, bool preserveFocus = false);
+int DialogForLabelName(const wxString& initialValue, wxString& value);
 
 private:
 double NearestZeroCrossing(double t0);
@@ -216,9 +217,11 @@ void OnMacBringAllToFront(const CommandContext &context );
 
 void OnNew(const CommandContext &context );
 void OnOpen(const CommandContext &context );
+void OnProjectReset(const CommandContext &context);
 void OnClose(const CommandContext &context );
 void OnSave(const CommandContext &context );
 void OnSaveAs(const CommandContext &context );
+void OnSaveCopy(const CommandContext &context );
 #ifdef USE_LIBVORBIS
    void OnSaveCompressed(const CommandContext &context );
 #endif
@@ -295,7 +298,6 @@ void OnSelectAll(const CommandContext &context );
 void OnSelectSomething(const CommandContext &context );
 void OnSelectNone(const CommandContext &context );
 private:
-int CountSelectedWaveTracks();
 int CountSelectedTracks();
 public:
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -401,6 +403,10 @@ void OnToggleSWPlaythrough(const CommandContext &context );
    void OnToggleAutomatedInputLevelAdjustment(const CommandContext &context );
 #endif
 void OnRescanDevices(const CommandContext &context );
+
+#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
+void OnPunchAndRoll(const CommandContext &context);
+#endif
 
 // Import Submenu
 void OnImport(const CommandContext &context );

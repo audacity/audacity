@@ -38,12 +38,12 @@
 
 #include "LoadLV2.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
-#define LV2EFFECTS_FAMILY wxT("LV2")
+/* i18n-hint: abbreviates
+   "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
+#define LV2EFFECTS_FAMILY XO("LV2")
 
 /** A structure that contains information about a single LV2 plugin port. */
 class LV2Port
@@ -110,17 +110,15 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -294,7 +292,7 @@ private:
 
    bool mUseGUI;
 
-   std::vector< movable_ptr_with_deleter<char, freer> > mURIMap;
+   std::vector< std::unique_ptr<char, freer> > mURIMap;
 
    LV2_URI_Map_Feature mUriMapFeature;
    LV2_URID_Map mURIDMapFeature;
@@ -308,7 +306,7 @@ private:
    LV2_Options_Interface *mOptionsInterface;
    std::vector<LV2_Options_Option> mOptions;
 
-   std::vector<movable_ptr<LV2_Feature>> mFeatures;
+   std::vector<std::unique_ptr<LV2_Feature>> mFeatures;
 
    LV2_Feature *mInstanceAccessFeature;
    LV2_Feature *mParentFeature;

@@ -1085,6 +1085,9 @@
     <ClCompile Include="..\..\..\src\widgets\WindowAccessible.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\CellularPanel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2166,6 +2169,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\WindowAccessible.h">
       <Filter>src\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CellularPanel.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

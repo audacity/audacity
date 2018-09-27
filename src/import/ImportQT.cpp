@@ -31,13 +31,17 @@ static const wxChar *exts[] =
    wxT("mp4")
 };
 
+#if defined(__WXMAC__)
+#undef USE_QUICKTIME
+#endif
+
 #ifndef USE_QUICKTIME
 
 void GetQTImportPlugin(ImportPluginList &importPluginList,
                        UnusableImportPluginList &unusableImportPluginList)
 {
    unusableImportPluginList.push_back(
-      make_movable<UnusableImportPlugin>
+      std::make_unique<UnusableImportPlugin>
          (DESC, wxArrayString(WXSIZEOF(exts), exts))
    );
 }
@@ -169,7 +173,7 @@ class QTImportFileHandle final : public ImportFileHandle
 void GetQTImportPlugin(ImportPluginList &importPluginList,
                        UnusableImportPluginList &unusableImportPluginList)
 {
-   importPluginList.push_back( make_movable<QTImportPlugin>() );
+   importPluginList.push_back( std::make_unique<QTImportPlugin>() );
 }
 
 wxString QTImportPlugin::GetPluginFormatDescription()

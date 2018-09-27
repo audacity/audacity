@@ -237,3 +237,9 @@ extern wxString AudacityMessageBoxCaptionStr()
 {
    return _("Message");
 }
+
+void AudacityTextEntryDialog::SetInsertionPointEnd()
+{
+   // m_textctrl is protected member of wxTextEntryDialog
+   m_textctrl->SetInsertionPointEnd();
+}

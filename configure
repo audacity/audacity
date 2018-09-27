@@ -970,6 +970,8 @@ enable_ladspa
 enable_quicktime
 enable_vst
 with_portmixer
+with_mod_script_pipe
+with_mod_nyq_bench
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1027,7 +1029,7 @@ GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
 JACK_LIBS'
-ac_subdirs_all='lib-src/FileDialog lib-src/mod-nyq-bench
+ac_subdirs_all='lib-src/FileDialog lib-src/mod-nyq-bench lib-src/mod-script-pipe lib-src/mod-null
 lib-src/expat
 lib-src/libflac
 lib-src/libid3tag
@@ -1733,6 +1735,8 @@ Optional Packages:
   --with-widgetextra      which libwidgetextra to use (required):
                           [system,local]
   --with-portmixer        compile with PortMixer [default=yes]
+  --with-mod-script-pipe  compile with mod-script-pipe [default=no]
+  --with-mod-nyq-bench    compile with mod-nyq-bench [default=no]
 
 Some influential environment variables:
   CC          C compiler command
@@ -19926,7 +19930,7 @@ CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/include"
 
 
 
-subdirs="$subdirs lib-src/FileDialog lib-src/mod-nyq-bench"
+subdirs="$subdirs lib-src/FileDialog lib-src/mod-nyq-bench lib-src/mod-script-pipe lib-src/mod-null"
 
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
@@ -23602,6 +23606,27 @@ if test "${with_portmixer+set}" = set; then :
 else
   use_portmixer="yes"
 fi
+
+
+
+
+# Check whether --with-mod-script-pipe was given.
+if test "${with_mod_script_pipe+set}" = set; then :
+  withval=$with_mod_script_pipe; use_mod_script_pipe=$withval
+else
+  use_mod_script_pipe="no"
+fi
+
+
+
+# Check whether --with-mod-nyq-bench was given.
+if test "${with_mod_nyq_bench+set}" = set; then :
+  withval=$with_mod_nyq_bench; use_mod_nyq_bench=$withval
+else
+  use_mod_nyq_bench="no"
+fi
+
+
 
 
 
@@ -27343,6 +27368,19 @@ for lib in $LIBRARIES ; do
       echo "$lib: disabled"
    fi
 done
+
+if [ "$use_mod_script_pipe" = "yes" ] ; then
+   echo "build module mod-script-pipe: enabled"
+else
+   echo "build module mod-script-pipe: disabled"
+fi
+
+if [ "$use_mod_nyq_bench" = "yes" ] ; then
+   echo "build module mod-nyq-bench: enabled"
+else
+   echo "build module mod-nyq-bench: disabled"
+fi
+
 
 if [ "$use_ladspa" = "yes" ] ; then
    echo "ladspa plugin support: enabled"

@@ -140,22 +140,18 @@ public:
                        wxWindowID id,
                        wxEvtHandler *evtHandler) override;
 
-   void SetSize(const wxRect &rect);
-
-   void BeginEdit(int row, int col, wxGrid *grid);
-
+   void SetSize(const wxRect &rect) override;
+   void BeginEdit(int row, int col, wxGrid *grid) override;
    bool EndEdit(int row, int col, wxGrid *grid);
-
-   bool EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval);
-
-   void ApplyEdit(int row, int col, wxGrid *grid);
-
-   void Reset();
+   bool EndEdit(int row, int col, const wxGrid *grid,
+                const wxString &oldval, wxString *newval) override;
+   void ApplyEdit(int row, int col, wxGrid *grid) override;
+   void Reset() override;
 
    wxGridCellEditor *Clone() const override;
 
    void SetChoices(const wxArrayString &choices);
-   wxString GetValue() const;
+   wxString GetValue() const override;
 
  protected:
 
@@ -230,7 +226,7 @@ class Grid final : public wxGrid
 
 #if wxUSE_ACCESSIBILITY
    GridAx *mAx;
-   std::vector<movable_ptr<GridAx>> mChildren;
+   std::vector<std::unique_ptr<GridAx>> mChildren;
    int mObjNdx;
 #endif
 

@@ -39,7 +39,7 @@
 // Its value may be more than 0 for pre-release "Beta" builds that differ only
 // in the welcome screen, and hiding of some development menu commands, but
 // still link to the alpha manual online.
-#define AUDACITY_BUILD_LEVEL 0
+#define AUDACITY_BUILD_LEVEL 2
 
 // used #ifdef not #if for IS_ALPHA, IS_BETA, IS_RELEASE, USE_ALPHA_MANUAL
 #undef IS_ALPHA
@@ -124,7 +124,11 @@ void QuitAudacity();
 #endif
 
 #ifdef __WXGTK__
-#include "configunix.h"
+#ifndef __CONFIG_UNIX_INCLUDED
+   #define __CONFIG_UNIX_INCLUDED
+   #include "configunix.h"
+#endif
+
 // Some systems do not restrict the path length and therefore PATH_MAX is undefined
 #ifdef PATH_MAX
 #undef PLATFORM_MAX_PATH
@@ -133,7 +137,10 @@ void QuitAudacity();
 #endif
 
 #ifdef __WXX11__
-#include "configunix.h"
+#ifndef __CONFIG_UNIX_INCLUDED
+   #define __CONFIG_UNIX_INCLUDED
+   #include "configunix.h"
+#endif
 // wxX11 should also get the platform-specific definition of PLATFORM_MAX_PATH, so do not declare here.
 #endif
 
@@ -221,5 +228,16 @@ void QuitAudacity();
 // You may use it in NEW code when the NEW expression is the constructor argument for a standard smart
 // pointer like std::unique_ptr or std::shared_ptr.
 #define safenew new
+
+// Right to left languages fail in many wx3 dialogs with missing buttons.
+// The workaround is to use LTR in those dialogs.
+#ifndef __WXMAC__
+#define RTL_WORKAROUND( pWnd ) \
+   if ( gPrefs->Read( "/GUI/RtlWorkaround", true) ) \
+       pWnd->SetLayoutDirection(wxLayout_LeftToRight); 
+#else
+   #define RTL_WORKAROUND( pWnd ) 
+#endif
+
 
 #endif // __AUDACITY_H__

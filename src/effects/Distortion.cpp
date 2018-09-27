@@ -59,17 +59,17 @@ enum kTableType
 
 static const IdentInterfaceSymbol kTableTypeStrings[nTableTypes] =
 {
-   { wxT("HardClipping"),               XO("Hard Clipping") },
-   { wxT("SoftClipping"),               XO("Soft Clipping") },
-   { wxT("SoftOverdrive"),              XO("Soft Overdrive") },
-   { wxT("MediumOverdrive"),            XO("Medium Overdrive") },
-   { wxT("HardOverdrive"),              XO("Hard Overdrive") },
-   { wxT("CubicCurveOddHarmonics"),     XO("Cubic Curve (odd harmonics)") },
-   { wxT("EvenHarmonics"),              XO("Even Harmonics") },
-   { wxT("ExpandCompress"),             XO("Expand and Compress") },
+   { XO("Hard Clipping") },
+   { XO("Soft Clipping") },
+   { XO("Soft Overdrive") },
+   { XO("Medium Overdrive") },
+   { XO("Hard Overdrive") },
+   { XO("Cubic Curve (odd harmonics)") },
+   { XO("Even Harmonics") },
+   { XO("Expand and Compress") },
    { XO("Leveller") },
-   { wxT("RectifierDistortion"),        XO("Rectifier Distortion") },
-   { wxT("HardLimiter1413"),            XO("Hard Limiter 1413") }
+   { XO("Rectifier Distortion") },
+   { XO("Hard Limiter 1413") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -190,7 +190,7 @@ EffectDistortion::~EffectDistortion()
 
 // IdentInterface implementation
 
-wxString EffectDistortion::GetSymbol()
+IdentInterfaceSymbol EffectDistortion::GetSymbol()
 {
    return DISTORTION_PLUGIN_SYMBOL;
 }
@@ -1190,7 +1190,7 @@ void EffectDistortion::Leveller()
    // Here we model that more efficiently by repeated passes over a linear table.
    for (int n = STEPS; n < TABLESIZE; n++) {
       mTable[n] = ((double) (n - STEPS) / (double) STEPS);
-      for (int i = 0; i < numPasses; i++) {
+      for (int j = 0; j < numPasses; j++) {
          // Find the highest index for gain adjustment
          int index = numPoints - 1;
          for (int i = index; i >= 0 && mTable[n] < gainLimits[i]; i--) {

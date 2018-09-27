@@ -54,6 +54,10 @@ effects from this one class.
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../../widgets/WindowAccessible.h"
+#endif
+
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
 // ============================================================================
@@ -112,17 +116,15 @@ wxString LadspaEffectsModule::GetPath()
    return mPath;
 }
 
-wxString LadspaEffectsModule::GetSymbol()
+IdentInterfaceSymbol LadspaEffectsModule::GetSymbol()
 {
+   /* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
+      (Application programming interface)
+    */
    return XO("LADSPA Effects");
 }
 
-wxString LadspaEffectsModule::GetName()
-{
-   return GetSymbol();
-}
-
-wxString LadspaEffectsModule::GetVendor()
+IdentInterfaceSymbol LadspaEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -619,19 +621,14 @@ wxString LadspaEffect::GetPath()
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-wxString LadspaEffect::GetSymbol()
+IdentInterfaceSymbol LadspaEffect::GetSymbol()
 {
    return LAT1CTOWX(mData->Name);
 }
 
-wxString LadspaEffect::GetName()
+IdentInterfaceSymbol LadspaEffect::GetVendor()
 {
-   return GetSymbol();
-}
-
-wxString LadspaEffect::GetVendor()
-{
-   return LAT1CTOWX(mData->Maker);
+   return { LAT1CTOWX(mData->Maker) };
 }
 
 wxString LadspaEffect::GetVersion()
@@ -668,12 +665,7 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-wxString LadspaEffect::GetFamilyId()
-{
-   return LADSPAEFFECTS_FAMILY;
-}
-
-wxString LadspaEffect::GetFamilyName()
+IdentInterfaceSymbol LadspaEffect::GetFamilyId()
 {
    return LADSPAEFFECTS_FAMILY;
 }
@@ -1328,6 +1320,10 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                0, 0, 1000,
                wxDefaultPosition,
                wxSize(200, -1));
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mSliders[p]->SetAccessible(safenew WindowAccessible(mSliders[p]));
+#endif
             mSliders[p]->SetName(labelText);
             gridSizer->Add(mSliders[p], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
 
@@ -1450,7 +1446,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
 
             mMeters[p] = safenew LadspaEffectMeter(w, mOutputControls[p], lower, upper);
-            mMeters[p]->SetName(labelText);
+            mMeters[p]->SetLabel(labelText);    // for screen readers
             gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          }
 

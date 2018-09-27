@@ -43,7 +43,7 @@ EffectRepair::~EffectRepair()
 
 // IdentInterface implementation
 
-wxString EffectRepair::GetSymbol()
+IdentInterfaceSymbol EffectRepair::GetSymbol()
 {
    return REPAIR_PLUGIN_SYMBOL;
 }

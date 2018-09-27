@@ -39,11 +39,6 @@ class wxStaticText;
 class SelectionBarListener;
 class NumericTextCtrl;
 
-enum
-{
-   numSelectionBarButtons = 1,
-};
-
 class SelectionBar final : public ToolBar {
 
  public:
@@ -58,17 +53,13 @@ class SelectionBar final : public ToolBar {
    void UpdatePrefs() override;
 
    void SetTimes(double start, double end, double audio);
-   void SetField(const wxChar *msg, int fieldNum);
    void SetSnapTo(int);
    void SetSelectionFormat(const NumericFormatId & format);
    void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;
-   void OnButton(wxCommandEvent & event);
 
  private:
-   wxRadioButton * AddRadioButton( const wxString & Name, int id, 
-      wxSizer * pSizer, long style);
    auStaticText * AddTitle( const wxString & Title, 
       wxSizer * pSizer );
    NumericTextCtrl * AddTime( const wxString Name, int id, wxSizer * pSizer );
@@ -80,15 +71,6 @@ class SelectionBar final : public ToolBar {
    void ValuesToControls();
    void OnUpdate(wxCommandEvent &evt);
    void OnChangedTime(wxCommandEvent &evt);
-   void OnTitleClicked(int newDriver );
-   void OnStartTitleClicked(wxMouseEvent & event);
-   void OnCenterTitleClicked(wxMouseEvent & event);
-   void OnLengthTitleClicked(wxMouseEvent & event);
-   void OnEndTitleClicked(wxMouseEvent & event);
-
-   void OnModeDecClicked(wxMouseEvent & event);
-   void OnModeIncClicked(wxMouseEvent & event);
-   void OnChooserTitleClicked(wxMouseEvent & event);
 
    void OnRate(wxCommandEvent & event);
    void OnSnapTo(wxCommandEvent & event);
@@ -96,7 +78,6 @@ class SelectionBar final : public ToolBar {
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
-   void OnFieldChoice(wxCommandEvent &event);
 
    void ModifySelection(int newDriver, bool done = false);
    void UpdateRates();
@@ -105,10 +86,6 @@ class SelectionBar final : public ToolBar {
    SelectionBarListener * mListener;
    double mRate;
    double mStart, mEnd, mLength, mCenter;
-   wxString mField[10];
-
-   // Only used if we use radio buttons.
-   bool mbUseNativeRadioButton;
 
    // These two numbers say which two controls 
    // drive the other two.
@@ -121,13 +98,11 @@ class SelectionBar final : public ToolBar {
    NumericTextCtrl   *mCenterTime;
    NumericTextCtrl   *mLengthTime;
    NumericTextCtrl   *mEndTime;
-   wxChoice * mChoice;
-   wxStaticText * mProxy;
-   wxComboBox     *mRateBox;
-   wxChoice       *mSnapTo;
-   wxWindow       *mRateText;
-
-   AButton * mButtons[numSelectionBarButtons];
+   wxChoice          *mChoice;
+   wxStaticText      *mProxy;
+   wxComboBox        *mRateBox;
+   wxChoice          *mSnapTo;
+   wxWindow          *mRateText;
 
  public:
 

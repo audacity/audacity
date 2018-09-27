@@ -42,6 +42,16 @@ namespace {
    {
       return false;
    }
+   
+   const wxChar *PinnedHeadPositionPreferenceKey()
+   {
+      return wxT("/AudioIO/PinnedHeadPosition");
+   }
+
+   double PinnedHeadPositionPreferenceDefault()
+   {
+      return 0.5;
+   }
 }
 
 
@@ -253,12 +263,6 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Display"));
    {
-      S.TieCheckBox(_("&Pinned Recording/Playback head"),
-                    PinnedHeadPreferenceKey(),
-                    PinnedHeadPreferenceDefault());
-      S.TieCheckBox(_("&Auto-scroll"),
-                    wxT("/GUI/AutoScroll"),
-                    true);
       S.TieCheckBox(_("Auto-&height for tracks"),
                     wxT("/GUI/TracksFitVerticallyZoomed"),
                     false);
@@ -270,11 +274,27 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                   wxT("/GUI/CollapseToHalfWave"),
                   false);
 #endif
+#ifdef SHOW_PINNED_UNPINNED_IN_PREFS
+      S.TieCheckBox(_("&Pinned Recording/Playback head"),
+         PinnedHeadPreferenceKey(),
+         PinnedHeadPreferenceDefault());
+#endif
+      S.TieCheckBox(_("A&uto-scroll if head unpinned"),
+         wxT("/GUI/AutoScroll"),
+         true);
 
       S.AddSpace(10);
 
       S.StartMultiColumn(2);
       {
+#ifdef SHOW_PINNED_POSITION_IN_PREFS
+         S.TieNumericTextBox(
+            _("Pinned &head position"),
+            PinnedHeadPositionPreferenceKey(),
+            PinnedHeadPositionPreferenceDefault(),
+            30
+         );
+#endif
          S.TieChoice(_("Default &view mode:"),
                      viewModeSetting );
 
@@ -320,6 +340,22 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
 {
    iPreferencePinned = value ? 1 :0;
    gPrefs->Write(PinnedHeadPreferenceKey(), value);
+   if(flush)
+      gPrefs->Flush();
+}
+
+double TracksPrefs::GetPinnedHeadPositionPreference()
+{
+   auto value = gPrefs->ReadDouble(
+      PinnedHeadPositionPreferenceKey(),
+      PinnedHeadPositionPreferenceDefault());
+   return std::max(0.0, std::min(1.0, value));
+}
+
+void TracksPrefs::SetPinnedHeadPositionPreference(double value, bool flush)
+{
+   value = std::max(0.0, std::min(1.0, value));
+   gPrefs->Write(PinnedHeadPositionPreferenceKey(), value);
    if(flush)
       gPrefs->Flush();
 }

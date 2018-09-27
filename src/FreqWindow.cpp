@@ -85,6 +85,10 @@ and in the spectrogram spectral selection.
 #include "./widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
 enum {
@@ -309,6 +313,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          {
             mPanScroller = safenew wxScrollBar(this, FreqPanScrollerID,
                wxDefaultPosition, wxDefaultSize, wxSB_VERTICAL);
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mPanScroller->SetAccessible(safenew WindowAccessible(mPanScroller));
+#endif
             mPanScroller->SetName(_("Scroll"));
             S.Prop(1);
             S.AddWindow(mPanScroller, wxALIGN_LEFT | wxTOP);
@@ -326,6 +334,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL);
             S.Prop(1);
             S.AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mZoomSlider->SetAccessible(safenew WindowAccessible(mZoomSlider));
+#endif
             mZoomSlider->SetName(_("Zoom"));
 
             S.AddSpace(5);
@@ -635,7 +647,7 @@ void FreqWindow::DrawBackground(wxMemoryDC & dc)
 
    mPlotRect = mFreqPlot->GetClientRect();
 
-   mBitmap = std::make_unique<wxBitmap>(mPlotRect.width, mPlotRect.height);
+   mBitmap = std::make_unique<wxBitmap>(mPlotRect.width, mPlotRect.height,24);
 
    dc.SelectObject(*mBitmap);
 
@@ -752,9 +764,9 @@ void FreqWindow::DrawPlot()
 
    // Draw the plot
    if (mAlg == SpectrumAnalyst::Spectrum)
-      memDC.SetPen(wxPen(theTheme.Colour( clrHzPlot ), 1, wxSOLID));
+      memDC.SetPen(wxPen(theTheme.Colour( clrHzPlot ), 1, wxPENSTYLE_SOLID));
    else
-      memDC.SetPen(wxPen(theTheme.Colour( clrWavelengthPlot), 1, wxSOLID));
+      memDC.SetPen(wxPen(theTheme.Colour( clrWavelengthPlot), 1, wxPENSTYLE_SOLID));
 
    float xPos = xMin;
 
@@ -911,7 +923,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & event)
       else
          px = (int)((bestpeak - xMin) * width / (xMax - xMin));
 
-      dc.SetPen(wxPen(wxColour(160,160,160), 1, wxSOLID));
+      dc.SetPen(wxPen(wxColour(160,160,160), 1, wxPENSTYLE_SOLID));
       AColor::Line(dc, r.x + 1 + px, r.y, r.x + 1 + px, r.y + r.height);
 
        // print out info about the cursor location

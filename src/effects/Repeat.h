@@ -20,7 +20,7 @@
 
 class ShuttleGui;
 
-#define REPEAT_PLUGIN_SYMBOL XO("Repeat")
+#define REPEAT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Repeat") }
 
 class EffectRepeat final : public Effect
 {
@@ -30,7 +30,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

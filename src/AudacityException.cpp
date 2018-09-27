@@ -85,12 +85,6 @@ wxString SimpleMessageBoxException::ErrorMessage() const
    return message;
 }
 
-std::unique_ptr< AudacityException > SimpleMessageBoxException::Move()
-{
-   return std::unique_ptr< AudacityException >
-   { safenew SimpleMessageBoxException{ std::move( *this ) } };
-}
-
 // This is meant to be invoked via wxEvtHandler::CallAfter
 void MessageBoxException::DelayedHandlerAction()
 {

@@ -5,6 +5,7 @@ $name (_ "Regular Interval Labels")
 $manpage "Regular_Interval_Labels"
 $action (_ "Adding equally-spaced labels to the label track...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; Original version by David R. Sky (http://www.garyallendj.com/davidsky/) 2007.

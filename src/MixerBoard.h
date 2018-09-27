@@ -163,7 +163,7 @@ public:
    wxArrayString  mKeywords;
 };
 
-using MusicalInstrumentArray = std::vector<movable_ptr<MusicalInstrument>>;
+using MusicalInstrumentArray = std::vector<std::unique_ptr<MusicalInstrument>>;
 
 
 

@@ -52,7 +52,7 @@ class Resample final
     * output buffer.
     *
     * Reads samples from the input buffer, and writes samples to the output
-    * buffer. Stops when either is exhaughsted, or we reach a convenient block
+    * buffer. Stops when either is exhausted, or we reach a convenient block
     * end, unless lastFlag is set to force emptying the input buffer.
     * The number of input samples used is returned in inBufferUsed, and the
     * number of output samples generated is the return value of the function.

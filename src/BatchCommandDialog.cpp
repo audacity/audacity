@@ -98,13 +98,15 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
          S.SetStretchyCol(1);
          mParameters = S.AddTextBox(_("&Parameters"), wxT(""), 0);
          mParameters->SetEditable(false);
-         S.Prop(0).AddPrompt( _("&Details" ) );
+         wxString prompt{_("&Details")};
+         S.Prop(0).AddPrompt(prompt);
          mDetails = S.AddTextWindow( wxT(""));
          mDetails->SetEditable(false);
+         mDetails->SetName(wxStripMenuCodes(prompt));
       }
       S.EndMultiColumn();
 
-      S.Prop(10).StartStatic(_("C&hoose command"), true);
+      S.Prop(10).StartStatic(_("Choose command"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_LIST | wxLC_SINGLE_SEL);
          mChoices = S.Id(CommandsListID).AddListControl();
@@ -116,6 +118,12 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
    S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
 
    PopulateCommandList();
+   if (mChoices->GetItemCount() > 0) {
+      // set first item to be selected (and the focus when the
+      // list first becomes the focus)
+      mChoices->SetItemState(0, wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED,
+         wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
+   }
 
    SetMinSize(wxSize(780, 560));
    Fit();

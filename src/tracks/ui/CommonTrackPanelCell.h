@@ -27,6 +27,10 @@ public:
 
    virtual ~CommonTrackPanelCell() = 0;
 
+   // Default to the arrow cursor
+   HitTestPreview DefaultPreview
+      (const TrackPanelMouseState &, const AudacityProject *) override;
+
    virtual std::shared_ptr<Track> FindTrack() = 0;
 
 protected:

@@ -5,6 +5,7 @@ $name (_ "Studio Fade Out")
 $manpage "Fades#studio_fadeout"
 $action (_ "Applying Fade...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; StudioFadeOut.ny by Steve Daulton December 2012.

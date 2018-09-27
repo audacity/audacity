@@ -99,7 +99,7 @@ EffectPhaser::~EffectPhaser()
 
 // IdentInterface implementation
 
-wxString EffectPhaser::GetSymbol()
+IdentInterfaceSymbol EffectPhaser::GetSymbol()
 {
    return PHASER_PLUGIN_SYMBOL;
 }

@@ -31,7 +31,7 @@ Vaughan Johnson (Preview)
 class wxTextCtrl;
 class ShuttleGui;
 
-#define CLASSICFILTERS_PLUGIN_SYMBOL XO("Classic Filters")
+#define CLASSICFILTERS_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Classic Filters") }
 
 class EffectScienFilterPanel;
 
@@ -43,7 +43,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 
@@ -102,7 +102,7 @@ private:
    int mFilterSubtype;	// lowpass, highpass
    int mOrder;
    int mOrderIndex;
-   ArrayOf<BiquadStruct> mpBiquad;
+   ArrayOf<Biquad> mpBiquad;
 
    double mdBMax;
    double mdBMin;

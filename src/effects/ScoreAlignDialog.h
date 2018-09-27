@@ -12,7 +12,43 @@
 #include <wx/dialog.h>
 #include <wx/slider.h>
 #include <wx/checkbox.h>
+
+#if 1
+
 #include "ScoreAlignParams.h"
+
+#else
+
+// Stub definitions
+struct ScoreAlignParams
+{
+   int mStatus;
+   double mMidiStart, mMidiEnd;
+   double mAudioStart, mAudioEnd;
+   float mFramePeriod;
+   float mWindowSize;
+   float mSilenceThreshold;
+   float mForceFinalAlignment;
+   float mIgnoreSilence;
+   float mPresmoothTime;
+   float mLineTime;
+   float mSmoothTime;
+};
+class SAProgress;
+class Alg_seq;
+
+extern int scorealign(
+   void *data,
+   long (*process)(void *data, float **buffer, long n),
+   unsigned channels,
+   double rate,
+   double endTime,
+   Alg_seq *seq,
+   SAProgress *progress,
+   ScoreAlignParams params
+);
+
+#endif
 
 class wxButton;
 class wxSizer;

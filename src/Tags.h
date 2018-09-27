@@ -41,9 +41,7 @@
 
 #include "widgets/wxPanelWrapper.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 class wxButton;
 class wxChoice;

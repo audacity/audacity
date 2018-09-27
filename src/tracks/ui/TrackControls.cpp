@@ -160,7 +160,7 @@ END_POPUP_MENU()
 
 
 
-#define SET_TRACK_NAME_PLUGIN_SYMBOL XO("Set Track Name")
+#define SET_TRACK_NAME_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Track Name") }
 
 // An example of using an AudacityCommand simply to create a dialog.
 // We can add additional functions later, if we want to make it
@@ -170,7 +170,8 @@ class SetTrackNameCommand : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_TRACK_NAME_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override
+   {return SET_TRACK_NAME_PLUGIN_SYMBOL;};
    //wxString GetDescription() override {return _("Sets the track name.");};
    //bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

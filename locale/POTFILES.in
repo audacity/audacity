@@ -52,6 +52,8 @@ src/Benchmark.cpp
 src/Benchmark.h
 src/BlockFile.cpp
 src/BlockFile.h
+src/CellularPanel.cpp
+src/CellularPanel.h
 src/ClassicThemeAsCeeCode.h
 src/CrossFade.cpp
 src/CrossFade.h
@@ -110,8 +112,6 @@ src/Languages.h
 src/Legacy.cpp
 src/Legacy.h
 src/LightThemeAsCeeCode.h
-src/LoadModules.cpp
-src/LoadModules.h
 src/Lyrics.cpp
 src/Lyrics.h
 src/LyricsWindow.cpp
@@ -316,6 +316,8 @@ src/commands/SetTrackInfoCommand.cpp
 src/commands/SetTrackInfoCommand.h
 src/commands/Validators.h
 src/configtemplate.h
+src/configunix.h
+src/configwin.h
 src/effects/Amplify.cpp
 src/effects/Amplify.h
 src/effects/AutoDuck.cpp
@@ -711,6 +713,8 @@ src/widgets/Ruler.cpp
 src/widgets/Ruler.h
 src/widgets/Warning.cpp
 src/widgets/Warning.h
+src/widgets/WindowAccessible.cpp
+src/widgets/WindowAccessible.h
 src/widgets/numformatter.cpp
 src/widgets/numformatter.h
 src/widgets/valnum.cpp

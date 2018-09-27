@@ -120,7 +120,6 @@ set( SOURCE
    ${CMAKE_SOURCE_DIRECTORY}LangChoice.cpp
    ${CMAKE_SOURCE_DIRECTORY}Languages.cpp
    ${CMAKE_SOURCE_DIRECTORY}Legacy.cpp
-   ${CMAKE_SOURCE_DIRECTORY}LoadModules.cpp
    ${CMAKE_SOURCE_DIRECTORY}Lyrics.cpp
    ${CMAKE_SOURCE_DIRECTORY}LyricsWindow.cpp
    ${CMAKE_SOURCE_DIRECTORY}Matrix.cpp

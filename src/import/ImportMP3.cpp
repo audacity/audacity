@@ -62,7 +62,7 @@ void GetMP3ImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList &unusableImportPluginList)
 {
    unusableImportPluginList.push_back(
-      make_movable<UnusableImportPlugin>
+      std::make_unique<UnusableImportPlugin>
          (DESC, wxArrayString(WXSIZEOF(exts), exts))
   );
 }
@@ -116,8 +116,8 @@ public:
 
    ~MP3ImportPlugin() { }
 
-   wxString GetPluginStringID() { return wxT("libmad"); }
-   wxString GetPluginFormatDescription();
+   wxString GetPluginStringID() override { return wxT("libmad"); }
+   wxString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(const wxString &Filename) override;
 };
 
@@ -159,7 +159,7 @@ private:
 void GetMP3ImportPlugin(ImportPluginList &importPluginList,
                         UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   importPluginList.push_back( make_movable<MP3ImportPlugin>() );
+   importPluginList.push_back( std::make_unique<MP3ImportPlugin>() );
 }
 
 /* The MAD callbacks */

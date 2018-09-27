@@ -64,7 +64,7 @@ class LabelDialog final : public wxDialogWrapper
 
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
-   bool Validate();
+   bool Validate() override;
    void FindAllLabels();
    void AddLabels(const LabelTrack *t);
    void FindInitialRow();
@@ -86,6 +86,9 @@ class LabelDialog final : public wxDialogWrapper
    void OnChangeHfreq(wxGridEvent &event, int row, RowData *rd);
    void OnOK(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
+
+   void ReadSize();
+   void WriteSize();
 
  private:
 

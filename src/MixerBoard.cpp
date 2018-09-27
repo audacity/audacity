@@ -29,6 +29,7 @@
 #include "NoteTrack.h"
 #endif
 
+#include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 #include "UndoManager.h"
@@ -117,19 +118,19 @@ void MixerTrackSlider::OnCaptureKey(wxCommandEvent &event)
 
 // class MixerTrackCluster
 
-#define kInset             4
-#define kDoubleInset       (2 * kInset)
-#define kTripleInset       (3 * kInset)
-#define kQuadrupleInset    (4 * kInset)
+const int kInset = 4;
+const int kDoubleInset    = (2 * kInset);
+const int kTripleInset    = (3 * kInset);
+const int kQuadrupleInset = (4 * kInset);
 
-#define TRACK_NAME_HEIGHT                    18
-#define MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH  48
-#define MUTE_SOLO_HEIGHT                     19
-#define PAN_HEIGHT                           24
+const int TRACK_NAME_HEIGHT                   = 18;
+const int MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH = 48;
+const int MUTE_SOLO_HEIGHT                    = 19;
+const int  PAN_HEIGHT                         = 24;
 
-#define kLeftSideStackWidth         MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - kDoubleInset //vvv Change when numbers shown on slider scale.
-#define kRightSideStackWidth        MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset
-#define kMixerTrackClusterWidth     kLeftSideStackWidth + kRightSideStackWidth + kQuadrupleInset // kDoubleInset margin on both sides
+const int kLeftSideStackWidth     = MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - kDoubleInset; //vvv Change when numbers shown on slider scale.
+const int kRightSideStackWidth    = MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset;
+const int kMixerTrackClusterWidth = kLeftSideStackWidth + kRightSideStackWidth + kQuadrupleInset; // kDoubleInset margin on both sides
 
 enum {
    ID_BITMAPBUTTON_MUSICAL_INSTRUMENT = 13000,
@@ -466,6 +467,7 @@ void MixerTrackCluster::UpdateName()
    #endif
    mBitmapButton_MusicalInstrument->SetBitmapLabel(
       *(mMixerBoard->GetMusicalInstrumentBitmap(mTrack.get())));
+   Refresh();
 }
 
 void MixerTrackCluster::UpdateMute()
@@ -697,24 +699,25 @@ void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
 
 void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
+   auto selected = mTrack->GetSelected();
+
+   wxColour col = theTheme.Colour(selected ? clrTrackInfoSelected : clrTrackInfo) ;
+   SetBackgroundColour( col );
+   mMeter->SetBackgroundColour( col );
+   mStaticText_TrackName->SetBackgroundColour( col );
+   mSlider_Gain->SetBackgroundColour( col );
+   mSlider_Pan->SetBackgroundColour( col );
+
    wxPaintDC dc(this);
 
-   #ifdef __WXMAC__
-      // Fill with correct color, not scroller background. Done automatically on Windows.
-      AColor::Medium(&dc, false);
-      dc.DrawRectangle(this->GetClientRect());
-   #endif
+   AColor::MediumTrackInfo(&dc, selected);
+   dc.DrawRectangle(this->GetClientRect());
 
    wxSize clusterSize = this->GetSize();
    wxRect bev(0, 0, clusterSize.GetWidth() - 1, clusterSize.GetHeight() - 1);
 
-   auto selected = mTrack->GetSelected();
-
-   for (unsigned int i = 0; i < 4; i++) // 4 gives a big bevel, but there were complaints about visibility otherwise.
-   {
-      bev.Inflate(-1, -1);
-      AColor::Bevel(dc, !selected, bev);
-   }
+   //bev.Inflate(-1, -1);
+   AColor::Bevel(dc, true, bev);// same bevel whether selected or not.
 }
 
 
@@ -861,7 +864,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
 #define MIXER_BOARD_MIN_HEIGHT      460
 
 // Min width is one cluster wide, plus margins.
-#define MIXER_BOARD_MIN_WIDTH       kTripleInset + kMixerTrackClusterWidth + kTripleInset
+#define MIXER_BOARD_MIN_WIDTH       kTripleInset + kMixerTrackClusterWidth*2 + kTripleInset
 
 
 BEGIN_EVENT_TABLE(MixerBoard, wxWindow)
@@ -910,6 +913,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
 //      mScrolledWindow->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW));
 //   #endif
    mScrolledWindow->SetBackgroundColour( theTheme.Colour( clrMedium ) );
+   RTL_WORKAROUND(mScrolledWindow);
 
    mScrolledWindow->SetScrollRate(10, 0); // no vertical scroll
    mScrolledWindow->SetVirtualSize(size);
@@ -999,10 +1003,7 @@ void MixerBoard::UpdateTrackClusters()
          {
             // Not already showing it. Add a NEW MixerTrackCluster.
             wxPoint clusterPos(
-               (kInset +                                       // extra inset to left for first one, so it's double
-                  (nClusterIndex *
-                     (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each to its left
-                  kInset),                                     // plus left margin for NEW cluster
+               kInset + nClusterIndex * kMixerTrackClusterWidth,
                kInset);
             wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
             pMixerTrackCluster =
@@ -1329,7 +1330,7 @@ void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & WXUNUSED(bitmap),
    #ifdef __WXMSW__
       fontSize = 8;
    #endif
-   wxFont font(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+   wxFont font(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    GetTextExtent(str, &textWidth, &textHeight, NULL, NULL, &font);
 
    AColor::UseThemeColour( &dc, clrMedium );
@@ -1435,10 +1436,10 @@ void MixerBoard::LoadMusicalInstruments()
    wxMemoryDC dc;
 
    for (const auto &data : table) {
-      auto bmp = std::make_unique<wxBitmap>(data.bitmap);
+      auto bmp = std::make_unique<wxBitmap>(data.bitmap,24);
       dc.SelectObject(*bmp);
       AColor::Bevel(dc, false, bev);
-      mMusicalInstruments.push_back(make_movable<MusicalInstrument>(
+      mMusicalInstruments.push_back(std::make_unique<MusicalInstrument>(
          std::move(bmp), data.name
       ));
    };

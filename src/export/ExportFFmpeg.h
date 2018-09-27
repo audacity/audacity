@@ -18,6 +18,6 @@ class ExportPlugin;
  * factory method New_ExportFFmpeg() which creates a NEW ExportFFmpeg object and
  * returns a pointer to it. The rest of the class declaration is in ExportFFmpeg.cpp
  */
-movable_ptr<ExportPlugin> New_ExportFFmpeg();
+std::unique_ptr<ExportPlugin> New_ExportFFmpeg();
 
 #endif

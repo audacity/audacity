@@ -431,6 +431,8 @@ UIHandle::Result TimeShiftHandle::Click
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
    const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
+   if (!pTrack)
+      return RefreshCode::Cancelled;
 
    TrackList *const trackList = pProject->GetTracks();
 

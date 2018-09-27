@@ -80,20 +80,16 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    wxString GetPath() override;
 
-   // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
 
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -274,6 +270,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                   long style = DefaultMessageBoxStyle,
                   const wxString& titleStr = wxString{});
 
+   static void IncEffectCounter(){ nEffectsDone++;};
+
 //
 // protected virtual methods
 //
@@ -334,7 +332,7 @@ protected:
    // is okay, but don't try to undo).
 
    // Pass a fraction between 0.0 and 1.0
-   bool TotalProgress(double frac);
+   bool TotalProgress(double frac, const wxString & = wxEmptyString);
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
@@ -345,7 +343,6 @@ protected:
    bool TrackGroupProgress(int whichGroup, double frac, const wxString & = wxEmptyString);
 
    int GetNumWaveTracks() { return mNumTracks; }
-
    int GetNumWaveGroups() { return mNumGroups; }
 
    // Calculates the start time and selection length in samples
@@ -373,6 +370,9 @@ protected:
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    void CopyInputTracks(); // trackType = Track::Wave
    void CopyInputTracks(int trackType);
+
+   // A global counter of all the successful Effect invocations.
+   static int nEffectsDone;
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to add label tracks.

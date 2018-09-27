@@ -96,6 +96,8 @@ audacity$(EXEEXT): src/audacity$(EXEEXT)
 modules:
 	mkdir -p modules
 	(cd lib-src/mod-nyq-bench && make clean && make && cp .libs/mod-nyq-bench.so ../../modules)
+	(cd lib-src/mod-script-pipe && make clean && make && cp .libs/mod-script-pipe.so ../../modules)
+	(cd lib-src/mod-null && make clean && make && cp .libs/mod-null.so ../../modules)
 
 .PHONY: modules
 

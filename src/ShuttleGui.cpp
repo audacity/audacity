@@ -113,6 +113,10 @@ for registering for changes.
 #include "widgets/wxPanelWrapper.h"
 #include "AllThemeResources.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 ShuttleGuiBase::ShuttleGuiBase(wxWindow * pParent, teShuttleMode ShuttleMode )
 {
    wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
@@ -309,7 +313,15 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString
    mpWind = pCheckBox = safenew wxCheckBox(GetParent(), miId, realPrompt, wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
    pCheckBox->SetValue(Selected == wxT("true"));
-   pCheckBox->SetName(wxStripMenuCodes(Prompt));
+   if (realPrompt.IsEmpty()) {
+      // NVDA 2018.3 does not read controls which are buttons, check boxes or radio buttons which have
+      // an accessibility name which is empty. Bug 1980.
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      pCheckBox->SetAccessible(safenew WindowAccessible(pCheckBox));
+#endif
+      pCheckBox->SetName(wxT("\a"));      // non-empty string which screen readers do not read
+   }
    UpdateSizers();
    return pCheckBox;
 }
@@ -503,6 +515,10 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
       wxDefaultPosition, wxDefaultSize,
       Style( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
       );
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    mpWind->SetName(wxStripMenuCodes(Prompt));
    miProp=1;
    UpdateSizers();
@@ -552,6 +568,10 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString 
 
    mpWind = pTextCtrl = safenew wxTextCtrl(GetParent(), miId, Value,
       wxDefaultPosition, Size, Style( flags ));
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    mpWind->SetName(wxStripMenuCodes(Caption));
    UpdateSizers();
    return pTextCtrl;
@@ -583,6 +603,10 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(const wxString &Caption, const wx
       wxDefaultPosition, Size, Style( flags ),
       Validator // It's OK to pass this.  It will be cloned.
       );
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    mpWind->SetName(wxStripMenuCodes(Caption));
    UpdateSizers();
    return pTextCtrl;
@@ -598,6 +622,10 @@ wxTextCtrl * ShuttleGuiBase::AddTextWindow(const wxString &Value)
    SetProportions( 1 );
    mpWind = pTextCtrl = safenew wxTextCtrl(GetParent(), miId, Value,
       wxDefaultPosition, wxDefaultSize, Style( wxTE_MULTILINE ));
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mpWind->SetAccessible(safenew WindowAccessible(mpWind));
+#endif
    UpdateSizers();
    // Start off at start of window...
    pTextCtrl->SetInsertionPoint( 0 );
@@ -794,11 +822,7 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
    }
    else
    {
-      mpWind->SetBackgroundColour(
-         iStyle==0
-         ? wxColour( 245,244,240) :
-         wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)
-         );
+     // mpWind->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
       UpdateSizers();  // adds window in to current sizer.
    }
 
@@ -2274,6 +2298,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       // bs->AddButton(safenew wxButton(parent, wxID_HELP));
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( _("Help") );
+      b->SetLabel(_("Help"));       // for screen readers
       bs->AddButton( b );
    }
 

@@ -6,9 +6,9 @@
 #  sudo <path to this script>/build_wxwidgets
 #
 
-# Currently, Audacity is built using the 10.6 SDK, but you may choose to target
-# 10.7 or greater by changing this variable.
-min=10.6
+# Currently, Audacity is built using the 10.7 SDK, but you may choose to target
+# 10.8 or greater by changing this variable.
+min=10.7
 
 # You shouldn't need to change this, but just in case you put Xcode in a non-standard
 # location, update this appropriately.
@@ -51,9 +51,7 @@ function bld
    pushd "${1}"
    shift
 
-   ../configure --disable-accessibility \
-                --disable-compat26 \
-                --disable-compat28 \
+   ../configure --enable-macosx-arch=i386 \
                 --with-expat=builtin \
                 --with-zlib=builtin \
                 --with-regex=builtin \
@@ -77,8 +75,8 @@ function inst
 }
 
 # Build all configurations
-bld bld_debug --enable-debug=yes --enable-static=no --enable-shared=yes --with-flavour=debug
-bld bld_release --enable-debug=no --enable-static=no --enable-shared=yes --with-flavour=release
+bld bld_debug --enable-debug=yes --enable-shared=yes --with-flavour=debug
+bld bld_release --enable-debug=no --enable-shared=yes --with-flavour=release
 
 # Install all configurations
 inst bld_debug

@@ -533,7 +533,8 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
       dlg.ShowModal();
 
-      updateResult = ProgressResult::Failed;
+      if (process.GetStatus() != 0)
+         updateResult = ProgressResult::Failed;
    }
 
    return updateResult;
@@ -545,8 +546,8 @@ wxWindow *ExportCL::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportCLOptions(parent, format);
 }
 
-movable_ptr<ExportPlugin> New_ExportCL()
+std::unique_ptr<ExportPlugin> New_ExportCL()
 {
-   return make_movable<ExportCL>();
+   return std::make_unique<ExportCL>();
 }
 

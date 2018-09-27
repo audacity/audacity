@@ -30,6 +30,7 @@ around to NEW positions.
 #include "wx/event.h"
 #include "wx/gdicmn.h"
 #include "wx/window.h"
+#include <wx/statbmp.h>
 
 ////////////////////////////////////////////////////////////
 /// Grabber Class
@@ -118,6 +119,7 @@ class Grabber final : public wxWindow
    void OnLeftDown(wxMouseEvent & event);
    void OnEnter(wxMouseEvent & event);
    void OnLeave(wxMouseEvent & event);
+   void OnErase(wxEraseEvent & event);
    void OnPaint(wxPaintEvent & event);
    void OnKeyDown(wxKeyEvent & event);
 
@@ -134,5 +136,33 @@ class Grabber final : public wxWindow
 
    DECLARE_EVENT_TABLE()
 };
+
+// Piggy back in same source file as Grabber.
+// Audcaity Flicker-free StaticBitmap.
+class AStaticBitmap : public wxStaticBitmap {
+  public:
+    AStaticBitmap(wxWindow *parent,
+                   wxWindowID id,
+                   const wxBitmap& label,
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   long style = 0,
+                   const wxString& name = wxStaticBitmapNameStr) :
+
+    wxStaticBitmap(parent,
+                   id,
+                   label,
+                   pos ,
+                   size ,
+                   style,
+                   name )
+    {};
+    void OnErase(wxEraseEvent& event) {
+       static_cast<void>(event);
+    };
+    DECLARE_EVENT_TABLE()
+};
+
+
 
 #endif

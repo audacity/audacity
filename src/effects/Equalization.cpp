@@ -282,7 +282,7 @@ EffectEqualization::~EffectEqualization()
 
 // IdentInterface implementation
 
-wxString EffectEqualization::GetSymbol()
+IdentInterfaceSymbol EffectEqualization::GetSymbol()
 {
    return EQUALIZATION_PLUGIN_SYMBOL;
 }
@@ -632,14 +632,14 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             );
 
             S.AddSpace(0, 1);
-            S.Prop(1).AddWindow(mdBRuler, wxEXPAND | wxALIGN_RIGHT);
+            S.Prop(1).AddWindow(mdBRuler, wxEXPAND );
             S.AddSpace(0, 1);
          }
          S.EndVerticalLay();
 
          mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
          S.Prop(1);
-         S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
+         S.AddWindow(mPanel, wxEXPAND );
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
 
          S.SetBorder(5);
@@ -1790,7 +1790,7 @@ void EffectEqualization::setCurve(const wxString &curveName)
       Effect::MessageBox( _("Requested curve not found, using 'unnamed'"),
          wxOK|wxICON_ERROR,
          _("Curve not found") );
-      setCurve((int) mCurves.size() - 1);
+      setCurve();
    }
    else
       setCurve( i );
@@ -2117,10 +2117,16 @@ void EffectEqualization::UpdateCurves()
 {
    // Reload the curve names
    mCurve->Clear();
+   bool selectedCurveExists = false;
    for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
    {
+      if (mCurveName == mCurve)
+         selectedCurveExists = true;
       mCurve->Append(mCurves[ i ].Name);
    }
+   // In rare circumstances, mCurveName may not exist (bug 1891)
+   if (!selectedCurveExists)
+      mCurveName = mCurves[ (int)mCurves.size() - 1 ].Name;
    mCurve->SetStringSelection(mCurveName);
 
    // Allow the control to resize
@@ -2897,7 +2903,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    {
       mWidth = width;
       mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight);
+      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight,24);
    }
 
    wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
@@ -2931,7 +2937,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    mEnvRect.Deflate(PANELBORDER, PANELBORDER);
 
    // Pure blue x-axis line
-   memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxPENSTYLE_SOLID));
    int center = (int) (mEnvRect.height * mEffect->mdBMax/(mEffect->mdBMax-mEffect->mdBMin) + .5);
    AColor::Line(memDC,
       mEnvRect.GetLeft(), mEnvRect.y + center,
@@ -2945,7 +2951,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    }
 
    // Med-blue envelope line
-   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxPENSTYLE_SOLID));
 
    // Draw envelope
    int x, y, xlast = 0, ylast = 0;
@@ -2980,7 +2986,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
    //Now draw the actual response that you will get.
    //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
-   memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxSOLID));
+   memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxPENSTYLE_SOLID));
    double scale = (double)mEnvRect.height/(mEffect->mdBMax-mEffect->mdBMin);   //pixels per dB
    double yF;   //gain at this freq
    double delta = mEffect->mHiFreq / (((double)mEffect->mWindowSize / 2.));   //size of each freq bin
@@ -3460,11 +3466,12 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       int deleted = 0;
       while(item >= 0)
       {
+         // TODO: Migrate to the standard "Manage" dialog.
          if(item == mList->GetItemCount()-1)   //unnamed
          {
             mEffect->Effect::MessageBox(_("You cannot delete the 'unnamed' curve, it is special."),
-               Effect::DefaultMessageBoxStyle,
-               _("Can't delete 'unnamed'"));
+                                        Effect::DefaultMessageBoxStyle,
+                                        _("Can't delete 'unnamed'"));
          }
          else
          {

@@ -1043,10 +1043,8 @@ ProgressDialog::~ProgressDialog()
 
    // Restore saved focus, but only if the window still exists.
    //
-   // It is possible that it was a deferred deletion and it was deleted since
-   // we captured the focused window.  So, we need to verify that the window
-   // still exists by searching all of the wxWidgets windows.  It's the only
-   // sure way.
+   // PRL:  I'm conservatively preserving the old existence test, but I think
+   // it's redundant now that we use wxWindowRef to avoid a dangling pointer
    if (mHadFocus && SearchForWindow(wxTopLevelWindows, mHadFocus)) {
       mHadFocus->SetFocus();
    }
@@ -1698,14 +1696,20 @@ ProgressResult TimerProgressDialog::UpdateProgress()
    // Only update if a full second has passed.
    if (now - mLastUpdate > 1000)
    {
+      // Bug 1952:
+      // wxTimeSpan will assert on ridiculously large values.
+      // We silently wrap the displayed range at one day.
+      // You'll only see the remaining hours, mins and secs.
+      // With a + sign, if the time was wrapped.
+      const wxLongLong_t wrapTime = 24 * 60 * 60 * 1000;
       if (m_bShowElapsedTime) {
-         wxTimeSpan tsElapsed(0, 0, 0, elapsed);
-         mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")));
+         wxTimeSpan tsElapsed(0, 0, 0, elapsed % wrapTime);
+         mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")) + ((elapsed >= wrapTime) ? " +":""));
          mElapsed->Update();
       }
 
-      wxTimeSpan tsRemains(0, 0, 0, remains);
-      mRemaining->SetLabel(tsRemains.Format(wxT("%H:%M:%S")));
+      wxTimeSpan tsRemains(0, 0, 0, remains % wrapTime);
+      mRemaining->SetLabel(tsRemains.Format(wxT("%H:%M:%S")) + ((remains >= wrapTime) ? " +":""));
       mRemaining->Update();
 
       mLastUpdate = now;
@@ -1722,7 +1726,21 @@ ProgressResult TimerProgressDialog::UpdateProgress()
    //      (and probably other things).  I do not yet know why this happens and
    //      I'm not too keen on having timer events processed here, but you do
    //      what you have to do.
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
+   // JKC: Added thread category, since blocking a thread message could cause things 
+   //      to gum up.  
+   //      See http://trac.wxwidgets.org/ticket/14027 for discussion of why
+   //      YieldFor is flaky.  
+   //      Conclusion...  use wxEVT_CATEGORY_ALL since with the list below, we 
+   //      are pretty much there already.
+   //           wxEVT_CATEGORY_UI |
+   //           wxEVT_CATEGORY_USER_INPUT |
+   //           wxEVT_CATEGORY_TIMER |
+   //           wxEVT_CATEGORY_THREAD
+
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_ALL );
+   // JKC: Yielding twice, because e.g. a timer can build up a lot of events, and we 
+   //      really want to make sure they are worked through.
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_ALL );
 
    // MY: Added this after the YieldFor to check we haven't changed the outcome based on buttons pressed...
    auto iReturn = ProgressResult::Success;

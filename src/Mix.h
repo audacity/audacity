@@ -157,6 +157,8 @@ class AUDACITY_DLL_API Mixer {
                                 int *queueStart, int *queueLen,
                                 Resample * pResample);
 
+   void MakeResamplers();
+
  private:
 
     // Input
@@ -192,6 +194,7 @@ class AUDACITY_DLL_API Mixer {
    double           mRate;
    double           mSpeed;
    bool             mHighQuality;
+   std::vector<double> mMinFactor, mMaxFactor;
 
    bool             mMayThrow;
 };

@@ -1,0 +1,94 @@
+Instructions for building on Mac
+
+At this time, Audacity is usually built with the 10.7 SDK.  This is to give
+compatibility with older versions of MacOSX.
+To build Audacity using Xcode 5.1 or newer, you need to extract the 10.7 SDK
+from an earlier version of Xcode.
+
+In the instructions below, Xcode 4.3.3 (for the 10.7 SDK) and Xcode 8.1 will
+be used and can be downloaded from https://developer.apple.com/download/more/ 
+(requires Apple ID to login).
+
+Fuller instructions that include 
+   * Using other Xcodes
+   * Optional signing of DMGs
+can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
+
+1) Download Xcode 8.1 and install it to /Applications.
+2) Download Xcode 4.3.3 (it includes the 10.6 and 10.7 SDK's despite 
+   the downloads page says it only has the 10.7 SDK).
+3) Open the DMG in Finder.
+4) Right-click the "Xcode.app" bundle and select "Show Package Contents".
+5) Navigate down the directories to get to:
+
+   Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/ .
+
+6) Copy the MacOSX10.7.sdk folder to:
+
+   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+
+7) Change the MinimumSDKVersion key value in 
+   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist 
+   to 10.7
+
+   Xcode is now ready.
+
+8) Clone wxWidgets 3.1.1
+
+   git clone --recurse-submodules https://github.com/audacity/wxWidgets.git
+
+   Ensure that you clone with the "--recurse-submodules" option, and do not
+   just download the Zip package, otherwise there will be required components
+   missing.
+
+   Don't be tempted to use Widgets already installed by a package manager such 
+   as Homebrew because this will cause problems.
+
+   We have applied some Audacity specific patches to wxWidgets to better 
+   support VoiceOver, so please use the audacity-fixes-3.1.1 branch.  It's
+   the default branch on our GitHub copy.
+   https://github.com/audacity/wxWidgets/tree/audacity-fixes-3.1.1
+
+   git checkout audacity-fixes-3.1.1
+
+9) Change directory to the folder wxWidgets was cloned to then build/install 
+    wxWidgets:
+
+   sudo <path to Audacity source>/mac/scripts/build_wxwidgets
+
+You should now be able to build Audacity using either the Xcode application or 
+the Xcodebuild command line tool. 
+
+* Change directory to <path to Audacity source>/mac
+* Optionally, if you have built before, clean the Debug build with:
+
+  xcodebuild clean
+
+* If you have built the Release build, clean with:
+
+  xcodebuild clean -configuration Release  
+  
+* Build Audacity and create DMG and ZIP bundles in 
+  /private/tmp by typing the following in the terminal:
+
+  xcodebuild -configuration Release install   
+
+* If you use the Xcode application, don't make any changes to 
+  Audacity.xcodeproj recommended by Xcode. In particular, be sure to leave the
+  Base SDK configuration set to 10.7 as it is now. 
+
+If you need Audacity to show languages other than English, install the gettext
+suite of tools (to get the msgfmt command).  The source can be downloaded from:
+
+   ftp://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
+
+Untar it:
+
+   tar xf gettext-latest.tar.gz
+
+And install:
+
+   cd gexttext-latest
+   ./configure
+   sudo make install
+   

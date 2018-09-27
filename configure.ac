@@ -340,8 +340,8 @@ ac_configure_args="$ac_configure_args --enable-static=yes --enable-shared=no"
 dnl Include "external" headers
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/include"
 
-dnl Include FileDialog
-AC_CONFIG_SUBDIRS([lib-src/FileDialog lib-src/mod-nyq-bench])
+dnl Include FileDialog, mod-nyq-bench, mod-script-pipe and mod-null
+AC_CONFIG_SUBDIRS([lib-src/FileDialog lib-src/mod-nyq-bench lib-src/mod-script-pipe lib-src/mod-null])
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
 AC_SUBST([FILEDIALOG_LIBS])
@@ -542,7 +542,23 @@ AC_ARG_WITH(portmixer,
   use_portmixer=$withval,
   use_portmixer="yes")
 
+dnl optional plug-in modules, so only options are off and local.
+  
+AC_ARG_WITH(mod-script-pipe,
+  [AS_HELP_STRING([--with-mod-script-pipe],
+     [compile with mod-script-pipe [default=no]])],
+  use_mod_script_pipe=$withval,
+  use_mod_script_pipe="no")  
+  
+AC_ARG_WITH(mod-nyq-bench,
+  [AS_HELP_STRING([--with-mod-nyq-bench],
+     [compile with mod-nyq-bench [default=no]])],
+  use_mod_nyq_bench=$withval,
+  use_mod_nyq_bench="no")  
+  
 
+  
+  
 AC_CANONICAL_HOST
 
 dnl OS-specific configuration
@@ -756,6 +772,19 @@ for lib in $LIBRARIES ; do
       echo "$lib: disabled"
    fi
 done
+
+if [[ "$use_mod_script_pipe" = "yes" ]] ; then
+   echo "build module mod-script-pipe: enabled"
+else
+   echo "build module mod-script-pipe: disabled"
+fi
+
+if [[ "$use_mod_nyq_bench" = "yes" ]] ; then
+   echo "build module mod-nyq-bench: enabled"
+else
+   echo "build module mod-nyq-bench: disabled"
+fi
+
 
 if [[ "$use_ladspa" = "yes" ]] ; then
    echo "ladspa plugin support: enabled"

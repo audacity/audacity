@@ -37,6 +37,20 @@ the pitch without changing the tempo.
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
 
+// Soundtouch defines these as well, which are also in generated configmac.h
+// and configunix.h, so get rid of them before including,
+// to avoid compiler warnings, and be sure to do this
+// after all other #includes, to avoid any mischief that might result
+// from doing the un-definitions before seeing any wx headers.
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE
+#undef VERSION
+#include "SoundTouch.h"
+
 enum {
    ID_PercentChange = 10000,
    ID_FromPitch,
@@ -115,7 +129,7 @@ EffectChangePitch::~EffectChangePitch()
 
 // IdentInterface implementation
 
-wxString EffectChangePitch::GetSymbol()
+IdentInterfaceSymbol EffectChangePitch::GetSymbol()
 {
    return CHANGEPITCH_PLUGIN_SYMBOL;
 }
@@ -201,7 +215,7 @@ bool EffectChangePitch::Process()
    else
 #endif
    {
-      mSoundTouch = std::make_unique<SoundTouch>();
+      mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
       IdentityTimeWarper warper;
       mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
 #ifdef USE_MIDI

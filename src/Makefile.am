@@ -121,6 +121,8 @@ audacity_SOURCES = \
 	BatchProcessDialog.h \
 	Benchmark.cpp \
 	Benchmark.h \
+	CellularPanel.cpp \
+	CellularPanel.h \
 	Dependencies.cpp \
 	Dependencies.h \
 	DeviceChange.cpp \

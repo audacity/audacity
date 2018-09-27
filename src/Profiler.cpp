@@ -96,7 +96,7 @@ TaskProfile* Profiler::GetOrCreateTaskProfile(const char* fileName, int lineNum)
          return mTasks[i].get();
    }
 
-   auto tp = make_movable<TaskProfile>();
+   auto tp = std::make_unique<TaskProfile>();
    mTasks.push_back(std::move(tp));
    return mTasks.back().get();
 }

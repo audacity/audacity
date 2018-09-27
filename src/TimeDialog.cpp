@@ -62,7 +62,6 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
                          mRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
-         mTimeCtrl->SetName(mPrompt);
          S.AddWindow(mTimeCtrl);
       }
       S.EndStatic();

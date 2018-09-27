@@ -50,7 +50,8 @@ class TimeShiftHandle;
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
 using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
-using NoteTrackArray  = std::vector < std::shared_ptr < NoteTrack > >;
+
+using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #if defined(USE_MIDI)
 class NoteTrack;
@@ -157,12 +158,20 @@ class AUDACITY_DLL_API Track /* not final */
       return {};
    }
 
+   // Find anything registered with TrackList::RegisterPendingChangedTrack and
+   // not yet cleared or applied; if no such exists, return this track
+   std::shared_ptr<const Track> SubstitutePendingChangedTrack() const;
+
    // Cause certain overriding tool modes (Zoom; future ones?) to behave
    // uniformly in all tracks, disregarding track contents.
    // Do not further override this...
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *pProject)
       final override;
+
+   // Delegates the handling to the related TCP cell
+   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
+      { return GetTrackControl(); }
 
  public:
 
@@ -697,7 +706,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
      * @param linked if true, skips over linked tracks, if false returns the next track even if it is a linked track
     **/
    Track *GetNext(Track * t, bool linked = false) const;
-   int GetGroupHeight(Track * t) const;
+   int GetGroupHeight(const Track * t) const;
 
    bool CanMoveUp(Track * t) const;
    bool CanMoveDown(Track * t) const;
@@ -721,7 +730,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    WaveTrackConstArray GetWaveTrackConstArray(bool selectionOnly, bool includeMuted = true) const;
 
 #if defined(USE_MIDI)
-   NoteTrackArray GetNoteTrackArray(bool selectionOnly);
+   NoteTrackConstArray GetNoteTrackConstArray(bool selectionOnly) const;
 #endif
 
    /// Mainly a test function. Uses a linear search, so could be slow.
@@ -846,10 +855,6 @@ public:
    // Return true if the state of the track list really did change.
    bool ApplyPendingTracks();
 
-   // Find anything registered with RegisterPendingChangedTrack and not yet
-   // cleared or applied
-   std::shared_ptr<Track> FindPendingChangedTrack(TrackId id) const;
-
    bool HasPendingTracks() const;
 
 private:
@@ -885,5 +890,9 @@ class AUDACITY_DLL_API TrackFactory
    std::unique_ptr<NoteTrack> NewNoteTrack();
 #endif
 };
+
+// global functions
+struct TransportTracks;
+TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi = false);
 
 #endif

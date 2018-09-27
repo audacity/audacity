@@ -22,7 +22,9 @@
 #include "VSTControl.h"
 
 #define VSTCMDKEY wxT("-checkvst")
-#define VSTPLUGINTYPE wxT("VST")
+/* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+   developed by Steinberg GmbH */
+#define VSTPLUGINTYPE XO("VST")
 
 #define audacityVSTID CCONST('a', 'u', 'D', 'y');
 
@@ -62,7 +64,7 @@ struct __CFBundle;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-using VSTEffectArray = std::vector < movable_ptr<VSTEffect> > ;
+using VSTEffectArray = std::vector < std::unique_ptr<VSTEffect> > ;
 
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
@@ -86,17 +88,15 @@ class VSTEffect final : public wxEvtHandler,
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -247,7 +247,8 @@ private:
 
    // VST methods
 
-   intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt);
+   intptr_t callDispatcher(int opcode, int index,
+                           intptr_t value, void *ptr, float opt) override;
    void callProcessReplacing(float **inputs, float **outputs, int sampleframes);
    void callSetParameter(int index, float value);
    float callGetParameter(int index);
@@ -380,9 +381,8 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

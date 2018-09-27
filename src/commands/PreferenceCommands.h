@@ -26,21 +26,21 @@
 
 // GetPreference
 
-#define GET_PREFERENCE_PLUGIN_SYMBOL XO("Get Preference")
-#define SET_PREFERENCE_PLUGIN_SYMBOL XO("Set Preference")
+#define GET_PREFERENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Get Preference") }
+#define SET_PREFERENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Set Preference") }
 
 class GetPreferenceCommand final : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return GET_PREFERENCE_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return GET_PREFERENCE_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Gets the value of a single preference.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Preferences");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#get_preference");};
 
    wxString mName;
 };
@@ -51,14 +51,14 @@ class SetPreferenceCommand final : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SET_PREFERENCE_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SET_PREFERENCE_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Sets the value of a single preference.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Preferences");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#set_preference");};
 
    wxString mName;
    wxString mValue;

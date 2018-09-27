@@ -12,6 +12,7 @@
 #include "LyricsWindow.h"
 #include "Lyrics.h"
 #include "AudioIO.h"
+#include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
 
@@ -114,6 +115,8 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    //pToolBar->Realize();
 
    mLyricsPanel = safenew LyricsPanel(this, -1, panelPos, panelSize);
+   RTL_WORKAROUND(mLyricsPanel);
+
 
    //vvv Highlight style is broken in ported version.
    //switch (mLyricsPanel->GetLyricsStyle())

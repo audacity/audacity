@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -13,18 +13,19 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1D64095C-F936-4FCF-B609-56E9DDF941FA}</ProjectGuid>
     <RootNamespace>Audacity</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <LocalDebuggerEnvironment>PATH=%WXWIN%\lib\vc_dll;%PATH%</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <LocalDebuggerEnvironment>PATH=%WXWIN%\lib\vc_dll;%PATH%</LocalDebuggerEnvironment>
@@ -137,6 +138,7 @@
     <ClCompile Include="..\..\..\src\Benchmark.cpp" />
     <ClCompile Include="..\..\..\src\BlockFile.cpp" />
     <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp" />
+    <ClCompile Include="..\..\..\src\CellularPanel.cpp" />
     <ClCompile Include="..\..\..\src\commands\AudacityCommand.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandContext.cpp" />
     <ClCompile Include="..\..\..\src\commands\CommandTargets.cpp" />
@@ -481,6 +483,7 @@
     <ClInclude Include="..\..\..\src\Benchmark.h" />
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h" />
+    <ClInclude Include="..\..\..\src\CellularPanel.h" />
     <ClInclude Include="..\..\..\src\commands\AudacityCommand.h" />
     <ClInclude Include="..\..\..\src\commands\CommandContext.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />

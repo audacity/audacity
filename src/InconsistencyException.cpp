@@ -14,12 +14,6 @@ InconsistencyException::~InconsistencyException()
 {
 }
 
-std::unique_ptr< AudacityException > InconsistencyException::Move()
-{
-   return std::unique_ptr< AudacityException >
-   { safenew InconsistencyException{ std::move( *this ) } };
-}
-
 wxString InconsistencyException::ErrorMessage() const
 {
    // Shorten the path

@@ -207,8 +207,6 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
          wxString device = wxString::Format(wxT("%s: %s"),
                                             interf,
                                             name);
-         int index;
-
          if (info->output) {
             playnames.Add(name);
             index = mPlay->Append(name, (void *) info);

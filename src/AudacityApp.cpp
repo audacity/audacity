@@ -1083,7 +1083,7 @@ bool AudacityApp::OnExceptionInMainLoop()
       // Use CallAfter to delay this to the next pass of the event loop,
       // rather than risk doing it inside stack unwinding.
       auto pProject = ::GetActiveProject();
-      std::shared_ptr< AudacityException > pException { e.Move().release() };
+      auto pException = std::current_exception();
       CallAfter( [=]      // Capture pException by value!
       {
 
@@ -1097,7 +1097,9 @@ bool AudacityApp::OnExceptionInMainLoop()
          pProject->RedrawProject();
 
          // Give the user an alert
-         pException->DelayedHandlerAction();
+         try { std::rethrow_exception( pException ); }
+         catch( AudacityException &e )
+            { e.DelayedHandlerAction(); }
 
       } );
 
@@ -1289,8 +1291,15 @@ bool AudacityApp::OnInit()
       * The "share" and "share/doc" directories in their install path */
    wxString home = wxGetHomeDir();
 
-   /* On Unix systems, the default temp dir is in /var/tmp. */
-   defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId());
+   wxString envTempDir = wxGetenv(wxT("TMPDIR"));
+   if (envTempDir != wxT("")) {
+      /* On Unix systems, the environment variable TMPDIR may point to
+         an unusual path when /tmp and /var/tmp are not desirable. */
+      defaultTempDir.Printf(wxT("%s/audacity-%s"), envTempDir, wxGetUserId());
+   } else {
+      /* On Unix systems, the default temp dir is in /var/tmp. */
+      defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId());
+   }
 
 // DA: Path env variable.
 #ifndef EXPERIMENTAL_DA
@@ -1478,6 +1487,8 @@ bool AudacityApp::OnInit()
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **)AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
+   if( GetLayoutDirection() == wxLayout_RightToLeft)
+      logoimage = logoimage.Mirror();
    wxBitmap logo(logoimage);
 
    AudacityProject *project;
@@ -1503,7 +1514,7 @@ bool AudacityApp::OnInit()
       // now appears before setting its position.
       // On a dual monitor screen it will appear on one screen and then 
       // possibly jump to the second.
-      // We could fix this by writing outr own splash screen and using Hide() 
+      // We could fix this by writing our own splash screen and using Hide() 
       // until the splash scren was correctly positioned, then Show()
 
       // Possibly move it on to the second screen...
@@ -1667,7 +1678,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
       auto project = ::GetActiveProject();
       auto token = project->GetAudioIOToken();
       auto &scrubber = project->GetScrubber();
-      auto scrubbing = scrubber.HasStartedScrubbing();
+      auto scrubbing = scrubber.HasMark();
       if (scrubbing)
          scrubber.Cancel();
       if((token > 0 &&
@@ -1903,14 +1914,22 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             sock->Connect(addr, true);
             if (sock->IsConnected())
             {
-               for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+               if (parser->GetParamCount() > 0)
                {
-                  // Send the filename
-                  wxString param = parser->GetParam(i);
-                  sock->WriteMsg((const wxChar *) param, (param.Len() + 1) * sizeof(wxChar));
+                  for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+                  {
+                     // Send the filename
+                     wxString param = parser->GetParam(i);
+                     sock->WriteMsg((const wxChar *) param, (param.Len() + 1) * sizeof(wxChar));
+                  }
+               }
+               else
+               {
+                  // Send an empty string to force existing Audacity to front
+                  sock->WriteMsg(wxEmptyString, sizeof(wxChar));
                }
 
-               return false;
+               return sock->Error();
             }
 
             wxMilliSleep(100);

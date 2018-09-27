@@ -88,9 +88,9 @@ private:
 
 private:
    ToolBar *mBar;
-   wxPoint mResizeStart;
+   wxPoint mResizeOffset;
    wxSize mOrigSize;
-   wxWindow *mOrigFocus{};
+   wxWindowRef mOrigFocus{};
 
    DECLARE_EVENT_TABLE()
 };
@@ -164,7 +164,10 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
    event.Skip();
 
    // Retrieve the mouse position
-   mResizeStart = ClientToScreen( event.GetPosition() );
+   // Bug 1896: This is at time of processing the event, rather than at time 
+   // of generation of event.  Works around event.GetPosition() giving
+   // incorrect values if position of resizer is changing.
+   mResizeOffset = wxGetMousePosition()-mBar->GetRect().GetBottomRight();
 
    mOrigSize = mBar->GetSize();
 
@@ -209,19 +212,20 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
    // Go ahead and set the event to propagate
    event.Skip();
 
-   // Retrieve the mouse position
-   wxPoint raw_pos = event.GetPosition();
-   wxPoint pos = ClientToScreen( raw_pos );
-
    if( HasCapture() && event.Dragging() )
    {
+      // Retrieve the mouse position
+      // Bug 1896: This is at time of processing the event, rather than at time 
+      // of generation of event.  Works around event.GetPosition() giving
+      // incorrect values if position of resizer is changing.
+      wxPoint pos = wxGetMousePosition();
+
       wxRect r = mBar->GetRect();
       wxSize msz = mBar->GetMinSize();
       wxSize psz = mBar->GetParent()->GetClientSize();
 
-      // Adjust the size by the difference between the
-      // last mouse and current mouse positions.
-      r.width += ( pos.x - mResizeStart.x );
+      // Adjust the size based on updated mouse position.
+      r.width = ( pos.x - mResizeOffset.x ) - r.x;
 
       // Constrain
       if( r.width < msz.x )
@@ -237,11 +241,6 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
          // calculations in ToolDock::LayoutToolBars() even though I'm
          // the one that set them up.  :-)
          r.SetRight( psz.x - 3 );
-      }
-      else
-      {
-         // Remember for next go round
-         mResizeStart = pos;
       }
 
       ResizeBar( r.GetSize() );
@@ -329,7 +328,6 @@ ToolBar::ToolBar( int type,
 
    mGrabber = NULL;
    mResizer = NULL;
-
    SetId(mType);
 }
 
@@ -461,6 +459,13 @@ void ToolBar::Create( wxWindow *parent )
    mVisible = true;
 }
 
+void ToolBar::SetToDefaultSize(){
+   wxSize sz;
+   sz.SetHeight( -1 );
+   sz.SetWidth( GetInitialWidth());
+   SetSize( sz );
+}
+
 void ToolBar::ReCreateButtons()
 {
    wxSize sz3 = GetSize();
@@ -474,6 +479,7 @@ void ToolBar::ReCreateButtons()
    DestroyChildren();
    mGrabber = NULL;
    mResizer = NULL;
+   SetLayoutDirection(wxLayout_LeftToRight);
 
    {
       // Create the main sizer
@@ -520,12 +526,18 @@ void ToolBar::ReCreateButtons()
       sz2.SetWidth(GetMinToolbarWidth());
       sz2.y = tbs -1;
       SetMinSize(sz2);
-      // Initial size at least as big as minimum.
+      
+      // sz2 is now the minimum size.
+      // sz3 is the size we were.
+      // When recreating buttons, we want to preserve size.
+      // But not if that makes the size too small.
+
+      // Size at least as big as minimum.
       if( sz3.y < sz2.y )
          sz3.y = sz2.y;
       if( sz3.x < sz2.x )
-         sz3.x = GetInitialWidth();
-      //sz.SetWidth();
+         sz3.x = sz2.x;
+
       SetSize(sz3);
    }
    else
@@ -587,7 +599,6 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
    {
       mResizer->Show(dock != NULL);
       Layout();
-      Fit();
    }
 }
 
@@ -865,8 +876,8 @@ void ToolBar::OnErase( wxEraseEvent & WXUNUSED(event) )
 //
 void ToolBar::OnPaint( wxPaintEvent & event )
 {
-   wxPaintDC dc( (wxWindow *) event.GetEventObject() );
-
+   //wxPaintDC dc( (wxWindow *) event.GetEventObject() );
+   wxPaintDC dc( this );
    // Start with a clean background
    //
    // Under GTK, we specifically set the toolbar background to the background

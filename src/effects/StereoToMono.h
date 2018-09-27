@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-#define STEREOTOMONO_PLUGIN_SYMBOL XO("Stereo To Mono")
+#define STEREOTOMONO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Stereo To Mono") }
 
 class EffectStereoToMono final : public Effect
 {
@@ -25,7 +25,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

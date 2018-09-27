@@ -90,7 +90,11 @@ CommandManager.  It holds the callback for one command.
 #include "../AudacityException.h"
 #include "../Prefs.h"
 #include "../Project.h"
+
+// LyricsPanel and MixerBoard both intercept keys, as if they were the TrackPanel.
+// The mechanism of checking for the type of window here is klunky.
 #include "../Lyrics.h"
+#include "../MixerBoard.h"
 
 #include "Keyboard.h"
 #include "../PluginManager.h"
@@ -98,6 +102,7 @@ CommandManager.  It holds the callback for one command.
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/HelpSystem.h"
+
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
@@ -143,7 +148,7 @@ public:
       [
          NSEvent addLocalMonitorForEventsMatchingMask:mask handler:^NSEvent *(NSEvent *event)
          {
-            WXWidget widget = (WXWidget) [[event window] firstResponder];
+            WXWidget widget = (WXWidget) [ [event window] firstResponder];
             if (widget)
             {
                wxWidgetCocoaImpl *impl = (wxWidgetCocoaImpl *)
@@ -334,7 +339,7 @@ private:
 #elif defined(__WXGTK__)
 
       chars.Append((wxChar) gdk_keyval_to_unicode(event.GetRawKeyCode()));
-                                     
+
 #elif defined(__WXMAC__)
 
       if (!mEvent) {
@@ -372,7 +377,7 @@ private:
       {
          return chars;
       }
-      
+
       const UniCharCount maxStringLength = 255;
       UniCharCount actualStringLength = 0;
       UniChar unicodeString[maxStringLength];
@@ -382,7 +387,7 @@ private:
                          (nsflags & NSControlKeyMask ? controlKey : 0) |
                          (nsflags & NSAlternateKeyMask ? optionKey : 0) |
                          (nsflags & NSCommandKeyMask ? cmdKey : 0);
-         
+
       OSStatus status = UCKeyTranslate(keyboardLayout,
                                        [mEvent keyCode],
                                        kUCKeyActionDown,
@@ -393,13 +398,13 @@ private:
                                        maxStringLength,
                                        &actualStringLength,
                                        unicodeString);
-     
+
       if (status != noErr)
       {
          return chars;
       }
-      
-      chars = [[NSString stringWithCharacters:unicodeString
+
+      chars = [ [NSString stringWithCharacters:unicodeString
                                        length:(NSInteger)actualStringLength] UTF8String];
 
 #endif
@@ -409,7 +414,7 @@ private:
 
 private:
 
-#if defined(__WXMAC__)   
+#if defined(__WXMAC__)
    id mHandler;
    NSEvent *mEvent {};
    UInt32 mDeadKeyState;
@@ -506,7 +511,7 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
    return list;
 }
 
-// CommandManager needs to know which defaults are standard and which are in the 
+// CommandManager needs to know which defaults are standard and which are in the
 // full (max) list.
 void CommandManager::SetMaxList()
 {
@@ -515,7 +520,7 @@ void CommandManager::SetMaxList()
    // KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 
    // TODO: At a later date get rid of the maxList entirely and
-   // instead use flags in the menu entrys to indicate whether the default 
+   // instead use flags in the menu entrys to indicate whether the default
    // shortcut is standard or full.
 
    mMaxListOnly.clear();
@@ -561,11 +566,7 @@ std::unique_ptr<wxMenuBar> CommandManager::AddMenuBar(const wxString & sMenu)
    }
 
    auto result = std::make_unique<wxMenuBar>();
-#ifdef __AUDACITY_OLD_STD__
-   mMenuBarList.push_back(MenuBarListEntry{sMenu, result.get()});
-#else
    mMenuBarList.emplace_back(sMenu, result.get());
-#endif
 
    return result;
 }
@@ -595,6 +596,20 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
       return NULL;
 
    return mMenuBarList.back().menubar;
+}
+
+///
+/// Swap the last two menu bars in the list,
+/// to make the previous menu bar 'current' again.
+/// Typically used to switch back and forth
+/// between adding to a hidden menu bar and
+/// adding to one that is visible,
+///
+void CommandManager::SwapMenuBars()
+{
+    int l = mMenuBarList.size();
+    wxASSERT(l >= 2);
+    std::swap(mMenuBarList[l - 2], mMenuBarList[l - 1]);
 }
 
 
@@ -630,7 +645,7 @@ void CommandManager::EndMenu()
 wxMenu* CommandManager::BeginSubMenu(const wxString & tName)
 {
    mSubMenuList.push_back
-      (make_movable< SubMenuListEntry > ( tName, std::make_unique<wxMenu>() ));
+      (std::make_unique< SubMenuListEntry > ( tName, std::make_unique<wxMenu>() ));
    mbSeparatorAllowed = false;
    return mSubMenuList.back()->menu.get();
 }
@@ -810,7 +825,7 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
                              CommandMask mask,
-                             bool bIsEffect, 
+                             bool bIsEffect,
                              const CommandParameter &parameter)
 {
    AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, -1, bIsEffect, parameter);
@@ -825,19 +840,19 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFlag flags,
                              CommandMask mask,
                              int checkmark,
-                             bool bIsEffect, 
+                             bool bIsEffect,
                              const CommandParameter &parameter)
 {
    wxString cookedParameter;
    if( parameter == "" )
       cookedParameter = name;
-   else 
+   else
       cookedParameter = parameter;
    CommandListEntry *entry =
-      NewIdentifier(name, 
-         label_in, 
-         mLongNameForItem, 
-         hasDialog, 
+      NewIdentifier(name,
+         label_in,
+         mLongNameForItem,
+         hasDialog,
          accel, CurrentMenu(), finder, callback,
          {}, 0, 0, bIsEffect, cookedParameter);
    mLongNameForItem = "";
@@ -875,8 +890,8 @@ void CommandManager::AddItemList(const wxString & name,
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
       CommandListEntry *entry = NewIdentifier(name,
-                                              items[i].Translated(),
-                                              items[i].Translated(),
+                                              items[i].TranslatedForMenu(),
+                                              items[i].TranslatedForMenu(),
                                               // No means yet to specify !
                                               false,
                                               CurrentMenu(),
@@ -1013,7 +1028,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
 
    {
       // Make a unique_ptr or shared_ptr as appropriate:
-      auto entry = make_movable<CommandListEntry>();
+      auto entry = std::make_unique<CommandListEntry>();
 
       wxString labelPrefix;
       if (!mSubMenuList.empty()) {
@@ -1144,7 +1159,7 @@ wxString CommandManager::GetLabel(const CommandListEntry *entry) const
 // The problem is that as soon as we show accelerators in the menu, the menu might
 // catch them in normal wxWidgets processing, rather than passing the key presses on
 // to the controls that had the focus.  We would like all the menu accelerators to be
-// disabled, in fact.  
+// disabled, in fact.
 wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry) const
 {
    wxString label = entry->label;
@@ -1374,7 +1389,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    ShowErrorDialog(
       NULL,
       title,
-      reason, 
+      reason,
       helpPage);
 }
 
@@ -1452,10 +1467,19 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
    }
 
-   // Any other keypresses must be destined for this project window.
-   if (!permit && 
-       (wxGetTopLevelParent(wxWindow::FindFocus()) != project ||
-        !wxEventLoop::GetActive()->IsMain()))
+   wxWindow * pFocus = wxWindow::FindFocus();
+   wxWindow * pParent = wxGetTopLevelParent( pFocus );
+   bool validTarget = pParent == project;
+   // Bug 1557.  MixerBoard should count as 'destined for project'
+   // MixerBoard IS a TopLevelWindow, and its parent is the project.
+   if( pParent && pParent->GetParent() == project){
+      if( dynamic_cast<MixerBoardFrame*>( pParent) != NULL )
+         validTarget = true;
+   }
+   validTarget = validTarget && wxEventLoop::GetActive()->IsMain();
+
+   // Any other keypresses must be destined for this project window
+   if (!permit && !validTarget )
    {
       return false;
    }
@@ -1476,9 +1500,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          bIntercept = pWnd && ( dynamic_cast<LyricsPanel*>(pWnd) == NULL );
       }
       //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
-      // We allow the keystrokes below to be handled by wxWidgets controls IF we are 
+      // We allow the keystrokes below to be handled by wxWidgets controls IF we are
       // in some sub window rather than in the TrackPanel itself.
-      // Otherwise they will go to our command handler and if it handles them 
+      // Otherwise they will go to our command handler and if it handles them
       // they will NOT be available to wxWidgets.
       if( bIntercept ){
          switch( evt.GetKeyCode() ){
@@ -1535,7 +1559,10 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
                                         CommandFlag flags, CommandMask mask, const wxEvent * evt)
 {
-   if (!entry || !entry->enabled)
+   if (!entry )
+      return false;
+
+   if (flags != AlwaysEnabledFlag && !entry->enabled)
       return false;
 
    auto proj = GetActiveProject();
@@ -1551,7 +1578,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       NiceName.Replace("&", "");// remove &
       NiceName.Replace(".","");// remove ...
       // NB: The call may have the side effect of changing flags.
-      bool allowed = proj->ReportIfActionNotAllowed( 
+      bool allowed = proj->ReportIfActionNotAllowed(
          NiceName, flags, entry->flags, combinedMask );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
@@ -1697,7 +1724,7 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
    for(const auto &entry : mCommandList) {
       // This is fetching commands from the menus, for use as batch commands.
       // Until we have properly merged EffectManager and CommandManager
-      // we explicitly exclude effects, as they are already handled by the 
+      // we explicitly exclude effects, as they are already handled by the
       // effects Manager.
       if ( entry->isEffect )
          continue;

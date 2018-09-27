@@ -44,7 +44,7 @@ This class now lists
 
 enum {
    kCommands,
-   kCommandsPlus,
+   //kCommandsPlus,
    kMenus,
    kPreferences,
    kTracks,
@@ -58,7 +58,7 @@ enum {
 static const IdentInterfaceSymbol kTypes[nTypes] =
 {
    { XO("Commands") },
-   { wxT("CommandsPlus"), XO("Commands Plus") },
+   //{ wxT("CommandsPlus"), XO("Commands Plus") },
    { XO("Menus") },
    { XO("Preferences") },
    { XO("Tracks") },
@@ -138,7 +138,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
 {
    switch( mInfoType  ){
       case kCommands     : return SendCommands( context, 0 );
-      case kCommandsPlus : return SendCommands( context, 1 );
+      //case kCommandsPlus : return SendCommands( context, 1 );
       case kMenus        : return SendMenus( context );
       case kPreferences  : return SendPreferences( context );
       case kTracks       : return SendTracks( context );
@@ -167,12 +167,12 @@ bool GetInfoCommand::SendMenus(const CommandContext &context)
    for(i=0;i<cnt;i++)
    {
       Label = pBar->GetMenuLabelText( i );
-      context.StartArray();
-      context.AddItem( 0 );
-      context.AddItem( 0 );
-      context.AddItem( Label );
-      context.AddItem( "" );
-      context.EndArray();
+      context.StartStruct();
+      context.AddItem( 0, "depth" );
+      context.AddItem( 0, "flags" );
+      context.AddItem( Label, "label" );
+      context.AddItem( "", "accel" );
+      context.EndStruct();
       ExploreMenu( context, pBar->GetMenu( i ), pBar->GetId(), 1 );
    }
    context.EndArray();
@@ -226,14 +226,18 @@ bool GetInfoCommand::SendBoxes(const CommandContext &context)
    //R.SetPosition( wxPoint(0,0) );
    
    //wxString Name = pWin->GetName();
-   context.StartArray();
-   context.AddItem( 0 );
+   context.StartStruct();
+   context.AddItem( 0, "depth" );
+   context.AddItem( "Audacity Window", "name" ); 
+   context.StartField( "box" );
+   context.StartArray( );
    context.AddItem( R.GetLeft() );
    context.AddItem( R.GetTop() );
    context.AddItem( R.GetRight() );
    context.AddItem( R.GetBottom() );
-   context.AddItem( "Audacity Window" ); 
    context.EndArray( );
+   context.EndField();
+   context.EndStruct( );
 
    ExploreAdornments( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
    ExploreWindows( context, pWin->GetPosition()+wxSize( 6,-1), pWin, pWin->GetId(), 1 );
@@ -256,6 +260,10 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       context.StartStruct();
       context.AddItem( trk->GetName(), "name" );
       context.AddBool( (trk == fTrack), "focused");
+      context.AddBool( trk->GetSelected(), "selected" );
+      //JKC: Possibly add these two later...
+      //context.AddItem( trk->GetKind(), "kind" );
+      //context.AddItem( trk->GetHeight(), "height" );
       auto t = dynamic_cast<WaveTrack*>( trk );
       if( t )
       {
@@ -263,8 +271,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( t->GetEndTime(), "end" );
          context.AddItem( t->GetPan() , "pan");
          context.AddItem( t->GetGain() , "gain");
-         context.AddBool( t->GetSelected(), "selected" );
-         context.AddBool( t->GetLinked(), "linked");
+         context.AddItem( t->GetLinked() ? 2:1, "channels");
          context.AddBool( t->GetSolo(), "solo" );
          context.AddBool( t->GetMute(), "mute");
       }
@@ -396,11 +403,11 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
 #endif
          }
       }
-      // Theoretically you could have a stereo LabelTrack, and
-      // this way you'd skip the second version of it.
       // Skip second tracks of stereo...
-      //if( t->GetLinked() )
-      //   t= iter.Next();
+      // This has no effect on label tracks themselves, which are never stereo
+      // but is needed for per track rather than per channel numbering.  
+      if( t->GetLinked() )
+         t= iter.Next();
       if( t )
          t=iter.Next();
       i++;
@@ -449,10 +456,10 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
          flags +=2;
 
       context.StartStruct();
-      context.AddItem( depth, "0" );
-      context.AddItem( flags, "1" );
-      context.AddItem( Label, "2" );
-      context.AddItem( Accel, "3" );
+      context.AddItem( depth, "depth" );
+      context.AddItem( flags, "flags" );
+      context.AddItem( Label, "label" );
+      context.AddItem( Accel, "accel" );
       if( !Name.IsEmpty() )
          context.AddItem( Name, "id" );// It is called Scripting ID outside Audacity.
       context.EndStruct();
@@ -477,14 +484,18 @@ void GetInfoCommand::ExploreAdornments( const CommandContext &context,
    wxSize s = pWin->GetWindowBorderSize();
    wxRect R( 2,32, R1.GetWidth() - s.GetWidth() * 2 -16, 22 );
 
+   context.StartStruct();
+   context.AddItem( depth, "depth" );
+   context.AddItem( "MenuBar", "label" ); 
+   context.StartField( "box" );
    context.StartArray();
-   context.AddItem( depth );
    context.AddItem( R.GetLeft() );
    context.AddItem( R.GetTop() );
    context.AddItem( R.GetRight() );
    context.AddItem( R.GetBottom() );
-   context.AddItem( "MenuBar" ); 
    context.EndArray();
+   context.EndField();
+   context.EndStruct();
 }
 
 void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
@@ -558,14 +569,18 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
          R.height -= (kTopMargin + kBottomMargin);
          R.SetPosition( R.GetPosition() + P );
 
+         context.StartStruct();
+         context.AddItem( depth, "depth" );
+         context.AddItem( "VRuler", "label" ); 
+         context.StartField("box");
          context.StartArray();
-         context.AddItem( depth );
          context.AddItem( R.GetLeft() );
          context.AddItem( R.GetTop() );
          context.AddItem( R.GetRight() );
          context.AddItem( R.GetBottom() );
-         context.AddItem( "VRuler" ); 
          context.EndArray();
+         context.EndField();
+         context.EndStruct();
       }
    }
 }
@@ -601,15 +616,19 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
       if( Name.IsEmpty() )
          Name = wxString("*") + item->GetToolTipText();
 
+      context.StartStruct();
+      context.AddItem( depth, "depth" );
+      context.AddItem( Name, "label" );
+      context.AddItem( item->GetId(), "id" );
+      context.StartField( "box" );
       context.StartArray();
-      context.AddItem( depth );
       context.AddItem( R.GetLeft() );
       context.AddItem( R.GetTop() );
       context.AddItem( R.GetRight() );
       context.AddItem( R.GetBottom() );
-      context.AddItem( Name );
-      context.AddItem( item->GetId() );
       context.EndArray();
+      context.EndField();
+      context.EndStruct();
 
       ExploreWindows( context, P, item, item->GetId(), depth+1 );
    }

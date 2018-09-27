@@ -160,6 +160,7 @@ class LWSlider
    static void DeleteSharedTipPanel();
 
    void SetParent(wxWindow *parent) { mParent = parent; }
+   void SendUpdate(float newValue);
 
  private:
 
@@ -168,11 +169,10 @@ class LWSlider
    void FormatPopWin();
    void SetPopWinPosition();
    void CreatePopWin();
-   void Draw(wxDC & dc);
+   void DrawToBitmap(wxDC & dc);
 
    bool DoShowDialog(wxPoint pos);
 
-   void SendUpdate( float newValue );
 
    int ValueToPosition(float val);
    float DragPositionToValue(int fromPos, bool shiftDown);
@@ -314,7 +314,7 @@ class ASlider /* not final */ : public wxPanelWrapper
    void OnTimer(wxTimerEvent & event);
 
    // Overrides of the wxWindow functions with the same semantics
-   bool Enable(bool enable = true);
+   bool Enable(bool enable = true) override;
    bool IsEnabled() const;
 
 private:
@@ -356,7 +356,8 @@ class SliderDialog final : public wxDialogWrapper
                 int style,
                 float value,
                 float line,
-                float page);
+                float page,
+                LWSlider * pSlider=nullptr);
    ~SliderDialog();
 
    float Get();
@@ -371,6 +372,7 @@ class SliderDialog final : public wxDialogWrapper
    ASlider * mSlider;
    wxTextCtrl * mTextCtrl;
    int mStyle;
+   LWSlider * mpOrigin;
 
  public:
    DECLARE_EVENT_TABLE()

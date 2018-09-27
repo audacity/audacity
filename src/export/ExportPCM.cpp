@@ -59,8 +59,11 @@ struct
 }
 static const kFormats[] =
 {
+#if defined(__WXMAC__)
    { SF_FORMAT_AIFF | SF_FORMAT_PCM_16,   wxT("AIFF"),   XO("AIFF (Apple) signed 16-bit PCM")    },
+#endif
    { SF_FORMAT_WAV | SF_FORMAT_PCM_16,    wxT("WAV"),    XO("WAV (Microsoft) signed 16-bit PCM") },
+   { SF_FORMAT_WAV | SF_FORMAT_PCM_24,    wxT("WAV24"),  XO("WAV (Microsoft) signed 24-bit PCM") },
    { SF_FORMAT_WAV | SF_FORMAT_FLOAT,     wxT("WAVFLT"), XO("WAV (Microsoft) 32-bit float PCM")  },
 // { SF_FORMAT_WAV | SF_FORMAT_GSM610,    wxT("GSM610"), XO("GSM 6.10 WAV (mobile)")             },
 };
@@ -277,6 +280,14 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    ValidatePair(GetFormat());
 
    TransferDataFromWindow();
+
+   // Send the event indicating a file suffix change.
+   // We pass the entire header string, which starts with the suffix.
+   wxCommandEvent event(AUDACITY_FILE_SUFFIX_EVENT, GetId());
+   event.SetEventObject(this);
+   event.SetString(mHeaderChoice->GetString(mHeaderChoice->GetSelection()));
+   ProcessWindowEvent(event);
+
 }
 
 int ExportPCMOptions::GetFormat()
@@ -329,7 +340,7 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
    // optional
-   wxString GetExtension(int index);
+   wxString GetExtension(int index) override;
    bool CheckFileName(wxFileName &filename, int format) override;
 
 private:
@@ -909,7 +920,7 @@ bool ExportPCM::CheckFileName(wxFileName &filename, int format)
    return ExportPlugin::CheckFileName(filename, format);
 }
 
-movable_ptr<ExportPlugin> New_ExportPCM()
+std::unique_ptr<ExportPlugin> New_ExportPCM()
 {
-   return make_movable<ExportPCM>();
+   return std::make_unique<ExportPCM>();
 }

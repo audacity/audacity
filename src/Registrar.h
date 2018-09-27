@@ -41,10 +41,10 @@ public:
    bool bWantsCommands;
    bool bWantsCommandTypes;
    bool bWantsEffects;
-   virtual void AddCommandType(movable_ptr<CommandDefinitionInterface> && WXUNUSED(comDef) ){;};
-   virtual void AddCommand(movable_ptr<AudacityCommand> && WXUNUSED(command) ){;};
-   virtual void AddModule(movable_ptr<LoadableModule> && WXUNUSED(module) ){;};
-   virtual void AddEffect(movable_ptr<Effect> && WXUNUSED(effect) ){;};
+   virtual void AddCommandType(std::unique_ptr<CommandDefinitionInterface> && WXUNUSED(comDef) ){;};
+   virtual void AddCommand(std::unique_ptr<AudacityCommand> && WXUNUSED(command) ){;};
+   virtual void AddModule(std::unique_ptr<LoadableModule> && WXUNUSED(module) ){;};
+   virtual void AddEffect(std::unique_ptr<Effect> && WXUNUSED(effect) ){;};
 };
 
 #endif

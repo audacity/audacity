@@ -544,7 +544,15 @@ void ToolManager::Reset()
       else
          dock = mTopDock;
 
+      // PRL: Destroy the tool frame before recreating buttons.
+      // This fixes some subtle sizing problems on macOs.
+      bar->Reparent( dock );
+      //OK (and good) to DELETE floater, as bar is no longer in it.
+      if( floater )
+         floater->Destroy();
+
       // Recreate bar buttons (and resize it)
+      bar->SetToDefaultSize();
       bar->ReCreateButtons();
       bar->EnableDisableButtons();
 
@@ -577,9 +585,6 @@ void ToolManager::Reset()
          // when we dock, we reparent, so bar is no longer a child of floater.
          dock->Dock( bar, false, position );
          Expose( ndx, expose );
-         //OK (and good) to DELETE floater, as bar is no longer in it.
-         if( floater )
-            floater->Destroy();
       }
       else
       {
@@ -612,7 +617,6 @@ void ToolManager::Reset()
    // It would be nice to show them again, but hardly essential as
    // they will show up again on the next play.
    // SetVUMeters(AudacityProject *p);
-   LayoutToolBars();
    Updated();
 }
 
@@ -640,14 +644,8 @@ int ToolManager::FilterEvent(wxEvent &event)
            !dynamic_cast<Grabber*>( window ) &&
            !dynamic_cast<ToolFrame*>( window ) &&
            top == mParent )
+         // Note this is a dangle-proof wxWindowRef:
          mLastFocus = window;
-   }
-   else if (event.GetEventType() == wxEVT_DESTROY) {
-      auto &closeEvent = static_cast<wxWindowDestroyEvent&>(event);
-      auto window = closeEvent.GetEventObject();
-      if (window == mLastFocus)
-         // Avoid a dangling pointer!
-         mLastFocus = nullptr;
    }
 
    return Event_Skip;
@@ -1071,6 +1069,7 @@ bool ToolManager::IsVisible( int type )
 void ToolManager::ShowHide( int type )
 {
    Expose( type, !mBars[ type ]->IsVisible() );
+   Updated();
 }
 
 //
@@ -1156,6 +1155,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       {
          // Trip over...everyone ashore that's going ashore...
          mDragDock->Dock( mDragBar, true, mDragBefore );
+         Updated();
          mDragWindow->ClearBar();
 
          // Done with the floater
@@ -1398,7 +1398,7 @@ void ToolManager::UndockBar( wxPoint mp )
    // Construct a NEW floater
    wxASSERT(mParent);
    mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
-
+   mDragWindow->SetLayoutDirection(wxLayout_LeftToRight);
    // Make sure the ferry is visible
    mDragWindow->Show();
 
@@ -1471,6 +1471,7 @@ void ToolManager::HandleEscapeKey()
          // I want to go home.
          mPrevDock->RestoreConfiguration(mPrevConfiguration);
          mPrevDock->Dock( mDragBar, true, mPrevSlot );
+         Updated();
 
          // Done with the floater
          mDragWindow->ClearBar();

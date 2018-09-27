@@ -453,6 +453,12 @@ void Tags::SetTag(const wxString & name, const wxString & value)
       return;
    }
 
+   // Tag name must be ascii
+   if (!name.IsAscii()) {
+      wxLogError("Tag rejected (Non-ascii character in name)");
+      return;
+   }
+
    // All keys are uppercase
    wxString key = name;
    key.UpperCase();

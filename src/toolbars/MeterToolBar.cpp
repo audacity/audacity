@@ -234,6 +234,7 @@ void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
 
    // And make it happen
    Layout();
+   Fit();
 }
 
 bool MeterToolBar::Expose( bool show )
@@ -272,5 +273,13 @@ wxSize MeterToolBar::GetDockedSize()
    else 
       sz.y = 2 * tbs -1;
    return sz;
+}
+
+// The meter's sizing code does not take account of the resizer
+// Hence after docking we need to enlarge the bar (using fit)
+// so that the resizer can be reached.
+void MeterToolBar::SetDocked(ToolDock *dock, bool pushed) {
+   ToolBar::SetDocked(dock, pushed);
+   Fit();
 }
 

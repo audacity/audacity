@@ -18,7 +18,7 @@ class ExportPlugin;
  * factory method New_ExportOGG() which creates a NEW ExportOGG object and
  * returns a pointer to it. The rest of the class declaration is in ExportOGG.cpp
  */
-movable_ptr<ExportPlugin> New_ExportOGG();
+std::unique_ptr<ExportPlugin> New_ExportOGG();
 
 #endif
 

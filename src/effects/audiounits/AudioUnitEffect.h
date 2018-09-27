@@ -29,11 +29,12 @@
 #include "AUControl.h"
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
-#define AUDIOUNITEFFECTS_FAMILY wxT("AudioUnit")
+/* 18n-hint: the name of an Apple audio software protocol */
+#define AUDIOUNITEFFECTS_FAMILY XO("AudioUnit")
 
 class AudioUnitEffect;
 
-using AudioUnitEffectArray = std::vector<movable_ptr<AudioUnitEffect>>;
+using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
@@ -52,17 +53,15 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectIdentInterface implementation
 
    EffectType GetType() override;
-   wxString GetFamilyId() override;
-   wxString GetFamilyName() override;
+   IdentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -233,9 +232,8 @@ public:
    // IdentInterface implementation
 
    wxString GetPath() override;
-   wxString GetSymbol() override;
-   wxString GetName() override;
-   wxString GetVendor() override;
+   IdentInterfaceSymbol GetSymbol() override;
+   IdentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 

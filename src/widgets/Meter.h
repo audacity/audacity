@@ -195,6 +195,8 @@ class MeterPanel final : public ASlider
    void SetMixer(wxCommandEvent & event);
 
 
+   int GetDBRange() const { return mDB ? mDBRange : -1; }
+
  private:
    static bool s_AcceptsFocus;
    struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };

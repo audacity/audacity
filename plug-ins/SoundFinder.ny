@@ -5,6 +5,7 @@ $name (_ "Sound Finder")
 $manpage "Sound_Finder"
 $action (_ "Finding sound...")
 $author (_ "Jeremy R. Brown")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; by Jeremy R. Brown (http://www.jeremy-brown.com/)

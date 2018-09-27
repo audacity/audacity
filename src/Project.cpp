@@ -172,8 +172,13 @@ scroll information.  It also has some status flags.
 #include "commands/CommandContext.h"
 
 #include "prefs/QualityPrefs.h"
+#include "prefs/TracksPrefs.h"
 
 #include "../images/AudacityLogoAlpha.xpm"
+
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
 
 std::shared_ptr<TrackList> AudacityProject::msClipboard{ TrackList::Create() };
 double AudacityProject::msClipT0 = 0.0;
@@ -923,7 +928,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    : wxFrame(parent, id, _TS("Audacity"), pos, size),
      mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
      mbLoadedFromAup( false ),
-     mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat(QualityPrefs::SampleFormatChoice()),
      mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
      mSelectionFormat( NumericTextCtrl::LookupFormat(
@@ -937,6 +941,14 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
          gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) ) ),
      mUndoManager(std::make_unique<UndoManager>())
 {
+   if (!gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate())) {
+      // The default given above can vary with host/devices. So unless there is an entry for
+      // the default sample rate in audacity.cfg, Audacity can open with a rate which is different
+      // from the rate with which it closed. See bug 1879.
+      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
+      gPrefs->Flush();
+   }
+
    mTracks = TrackList::Create();
 
 #ifdef EXPERIMENTAL_DA2
@@ -950,6 +962,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // field. Currently there are no such help strings, but it they were introduced, then
    // there would need to be an event handler to send them to the appropriate field.
    mStatusBar = CreateStatusBar(4);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mStatusBar->SetAccessible(safenew WindowAccessible(mStatusBar));
+#endif
+   mStatusBar->SetName(wxT("status_line"));     // not localized
    mProjectNo = mProjectCounter++; // Bug 322
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
@@ -993,7 +1010,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       this, wxID_ANY, wxDefaultPosition,
       wxSize{ this->GetSize().GetWidth(), -1 }
    };
-   mTopPanel->SetName( "Top Panel" );// Not localised
+   mTopPanel->SetLabel( "Top Panel" );// Not localised
+   mTopPanel->SetLayoutDirection(wxLayout_LeftToRight);
    mTopPanel->SetAutoLayout(true);
 #ifdef EXPERIMENTAL_DA2
    mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -1018,6 +1036,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                    wxDefaultPosition,
                                    wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
                                    &mViewInfo );
+   mRuler->SetLayoutDirection(wxLayout_LeftToRight);
 
    //
    // Create the TrackPanel and the scrollbars
@@ -1044,7 +1063,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       wxDefaultSize,
       wxNO_BORDER);
    mMainPanel->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
-   mMainPanel->SetName("Main Panel");// Not localised.
+   mMainPanel->SetLabel("Main Panel");// Not localised.
    pPage = mMainPanel;
    // Set the colour here to the track panel background to avoid
    // flicker when Audacity starts up.
@@ -1053,6 +1072,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // colour, so suppress this for now.
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
 #endif
+   pPage->SetLayoutDirection(wxLayout_LeftToRight);
 
 #ifdef EXPERIMENTAL_DA2
    pPage->SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -1132,9 +1152,14 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //      several focus problems.
    mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
    mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
+#if wxUSE_ACCESSIBILITY
+   // so that name can be set on a standard control
+   mHsbar->SetAccessible(safenew WindowAccessible(mHsbar));
+   mVsbar->SetAccessible(safenew WindowAccessible(mVsbar));
+#endif
+   mHsbar->SetLayoutDirection(wxLayout_LeftToRight);
    mHsbar->SetName(_("Horizontal Scrollbar"));
    mVsbar->SetName(_("Vertical Scrollbar"));
-
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By
@@ -1224,10 +1249,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    GetControlToolBar()->UpdateStatusBar(this);
-   mLastStatusUpdateTime = ::wxGetUTCTime();
 
    mTimer = std::make_unique<wxTimer>(this, AudacityProjectTimerID);
-   mTimer->Start(200);
+   RestartTimer();
 
 #if wxUSE_DRAG_AND_DROP
    // We can import now, so become a drag target
@@ -1286,6 +1310,20 @@ AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
    return options;
 }
 
+AudioIOStartStreamOptions AudacityProject::GetSpeedPlayOptions()
+{
+   auto PlayAtSpeedRate = gAudioIO->GetBestRate(
+      false,     //not capturing
+      true,      //is playing
+      GetRate()  //suggested rate
+   );
+   AudioIOStartStreamOptions options{ PlayAtSpeedRate };
+   options.timeTrack = GetTracks()->GetTimeTrack();
+   options.listener = this;
+   return options;
+}
+
+
 void AudacityProject::UpdatePrefsVariables()
 {
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
@@ -1317,7 +1355,22 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"), &mTracksFitVerticallyZoomed, false);
    //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"), &mViewInfo.bUpdateSpectrogram, true);
 
-   gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
+   // This code to change an empty projects rate is currently disabled, after discussion.
+   // The rule 'Default sample rate' only affects newly created projects was felt to 
+   // be simpler and better.
+#if 0
+   // The DefaultProjectSample rate is the rate for new projects.
+   // Do not change this project's rate, unless there are no tracks.
+   if( GetTrackCount() == 0){
+      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate());
+      // If necessary, we change this rate in the selection toolbar too.
+      auto bar = GetSelectionBar();
+      if( bar ){
+         bar->SetRate( mRate );
+      }
+   }
+#endif
+
    mDefaultFormat = QualityPrefs::SampleFormatChoice();
 
    gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);
@@ -1525,6 +1578,8 @@ double AudacityProject::AS_GetRate()
    return mRate;
 }
 
+// Typically this came from the SelectionToolbar and does not need to 
+// be communicated back to it.
 void AudacityProject::AS_SetRate(double rate)
 {
    mRate = rate;
@@ -1804,11 +1859,11 @@ bool AudacityProject::MayScrollBeyondZero() const
    if (mViewInfo.bScrollBeyondZero)
       return true;
 
-   if (GetScrubber().HasStartedScrubbing() ||
+   if (GetScrubber().HasMark() ||
        IsAudioActive()) {
       if (mPlaybackScroller) {
          auto mode = mPlaybackScroller->GetMode();
-         if (mode == PlaybackScroller::Mode::Centered ||
+         if (mode == PlaybackScroller::Mode::Pinned ||
              mode == PlaybackScroller::Mode::Right)
             return true;
       }
@@ -1822,7 +1877,7 @@ double AudacityProject::ScrollingLowerBoundTime() const
    if (!MayScrollBeyondZero())
       return 0;
    const double screen = mTrackPanel->GetScreenEndTime() - mViewInfo.h;
-   return std::min(mTracks->GetStartTime(), -screen / 2.0);
+   return std::min(mTracks->GetStartTime(), -screen);
 }
 
 // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
@@ -1925,14 +1980,9 @@ void AudacityProject::FixScrollbars()
 
    auto LastTime = -std::numeric_limits<double>::max();
    auto &tracks = *GetTracks();
-   for (auto track : tracks) {
+   for (const Track *track : tracks) {
       // Iterate over pending changed tracks if present.
-      {
-         auto other =
-         tracks.FindPendingChangedTrack(track->GetId());
-         if (other)
-            track = other.get();
-      }
+      track = track->SubstitutePendingChangedTrack().get();
       LastTime = std::max( LastTime, track->GetEndTime() );
    }
    LastTime =
@@ -2249,7 +2299,7 @@ void AudacityProject::OnODTaskComplete(wxCommandEvent & WXUNUSED(event))
 {
   if(mTrackPanel)
       mTrackPanel->Refresh(false);
- }
+}
 
 void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
@@ -3130,7 +3180,24 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 
    XMLFileReader xmlFile;
 
+   // 'Lossless copy' projects have dependencies. We need to always copy-in
+   // these dependencies when converting to a normal project.
+   wxString oldAction = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   bool oldAsk = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true)?true:false;
+   if (oldAction != wxT("copy"))
+      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   if (oldAsk)
+      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
+   gPrefs->Flush();
+
    bool bParseSuccess = xmlFile.Parse(this, fileName);
+
+   // and restore old settings if necessary.
+   if (oldAction != wxT("copy"))
+      gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), oldAction);
+   if (oldAsk)
+      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) true);
+   gPrefs->Flush();
 
    // Clean up now unused recording recovery handler if any
    mRecordingRecoveryHandler.reset();
@@ -3417,7 +3484,7 @@ void AudacityProject::EnqueueODTasks()
       TrackListIterator triter(GetTracks());
       tr = triter.First();
 
-      std::vector<movable_ptr<ODTask>> newTasks;
+      std::vector<std::unique_ptr<ODTask>> newTasks;
       //std::vector<ODDecodeTask*> decodeTasks;
       unsigned int createdODTasks=0;
       while (tr) {
@@ -3437,16 +3504,16 @@ void AudacityProject::EnqueueODTasks()
             //we want at most one instance of each class for the project
             while((odFlags|createdODTasks) != createdODTasks)
             {
-               movable_ptr<ODTask> newTask;
+               std::unique_ptr<ODTask> newTask;
 #ifdef EXPERIMENTAL_OD_FLAC
                if(!(createdODTasks&ODTask::eODFLAC) && (odFlags & ODTask::eODFLAC)) {
-                  newTask = make_movable<ODDecodeFlacTask>();
+                  newTask = std::make_unique<ODDecodeFlacTask>();
                   createdODTasks = createdODTasks | ODTask::eODFLAC;
                }
                else
 #endif
                if(!(createdODTasks&ODTask::eODPCMSummary) && (odFlags & ODTask::eODPCMSummary)) {
-                  newTask = make_movable<ODComputeSummaryTask>();
+                  newTask = std::make_unique<ODComputeSummaryTask>();
                   createdODTasks= createdODTasks | ODTask::eODPCMSummary;
                }
                else {
@@ -3748,7 +3815,7 @@ void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile) const
    xmlFile.Write(wxT(">\n"));
 }
 
-void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
+void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
 // may throw
 {
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
@@ -3802,7 +3869,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
    t = iter.First();
    unsigned int ndx = 0;
    while (t) {
-      if ((t->GetKind() == Track::Wave) && bWantSaveCompressed)
+      if ((t->GetKind() == Track::Wave) && bWantSaveCopy)
       {
          auto wt = static_cast<const WaveTrack *>(t);
 
@@ -3889,7 +3956,10 @@ private:
 
 bool AudacityProject::Save()
 {
-   if ( !IsProjectSaved() )
+   // Prompt for file name?
+   bool bPromptingRequired = !IsProjectSaved();
+
+   if (bPromptingRequired)
       return SaveAs();
 
    return DoSave(false, false);
@@ -3897,16 +3967,17 @@ bool AudacityProject::Save()
 
 
 // Assumes AudacityProject::mFileName has been set to the desired path.
-bool AudacityProject::DoSave
-   (const bool fromSaveAs, const bool bWantSaveCompressed)
+bool AudacityProject::DoSave (const bool fromSaveAs,
+                              const bool bWantSaveCopy,
+                              const bool bLossless /*= false*/)
 {
    // See explanation above
    // ProjectDisabler disabler(this);
 
-   wxASSERT_MSG(!bWantSaveCompressed || fromSaveAs, "Compressed SHOULD only be availabele from SaveAs");
+   wxASSERT_MSG(!bWantSaveCopy || fromSaveAs, "Copy Project SHOULD only be availabele from SaveAs");
 
    // Some confirmation dialogs
-   if (!bWantSaveCompressed)
+   if (!bWantSaveCopy)
    {
       TrackListIterator iter(GetTracks());
       bool bHasTracks = (iter.First() != NULL);
@@ -4006,16 +4077,13 @@ bool AudacityProject::DoSave
          return (success = false);
       }
 
-      if (bWantSaveCompressed)
+      if (bWantSaveCopy)
       {
          // Do this before saving the .aup, because we accumulate
          // mStrOtherNamesArray which affects the contents of the .aup
 
-         //v Move this condition into SaveCompressedWaveTracks() if want to support other formats.
-         #ifdef USE_LIBVORBIS
-            // This populates the array mStrOtherNamesArray
-            success = this->SaveCompressedWaveTracks(project);
-         #endif
+         // This populates the array mStrOtherNamesArray
+         success = this->SaveCopyWaveTracks(project, bLossless);
       }
 
       if (!success)
@@ -4031,7 +4099,7 @@ bool AudacityProject::DoSave
    XMLFileWriter saveFile{ mFileName, _("Error Saving Project") };
    success = GuardedCall< bool >( [&] {
          WriteXMLHeader(saveFile);
-         WriteXML(saveFile, bWantSaveCompressed);
+         WriteXML(saveFile, bWantSaveCopy);
          // Flushes files, forcing space exhaustion errors before trying
          // SetProject():
          saveFile.PreCommit();
@@ -4046,7 +4114,7 @@ bool AudacityProject::DoSave
    if (!success)
       return false;
 
-   if (fromSaveAs && !bWantSaveCompressed) {
+   if (fromSaveAs && !bWantSaveCopy) {
       // We are about to move files from the current directory to
       // the NEW directory.  We need to make sure files that belonged
       // to the last saved project don't get erased, so we "lock" them, so that
@@ -4054,7 +4122,7 @@ bool AudacityProject::DoSave
       // (Otherwise the NEW project would be fine, but the old one would
       // be empty of all of its files.)
 
-      std::vector<movable_ptr<WaveTrack::Locker>> lockers;
+      std::vector<std::unique_ptr<WaveTrack::Locker>> lockers;
       if (mLastSavedTracks) {
          lockers.reserve(mLastSavedTracks->size());
          TrackListIterator iter(mLastSavedTracks.get());
@@ -4062,7 +4130,7 @@ bool AudacityProject::DoSave
          while (t) {
             if (t->GetKind() == Track::Wave)
                lockers.push_back(
-                  make_movable<WaveTrack::Locker>(
+                  std::make_unique<WaveTrack::Locker>(
                      static_cast<const WaveTrack*>(t)));
             t = iter.Next();
          }
@@ -4093,7 +4161,7 @@ bool AudacityProject::DoSave
 
    // SAVE HAS SUCCEEDED -- following are further no-fail commit operations.
 
-   if ( !bWantSaveCompressed )
+   if ( !bWantSaveCopy )
    {
       // Now that we have saved the file, we can DELETE the auto-saved version
       DeleteCurrentAutoSaveFile();
@@ -4152,111 +4220,124 @@ bool AudacityProject::DoSave
    return true;
 }
 
+
+bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
+                                         const bool bLossless /*= false*/)
+{
+   wxString extension, fileFormat;
 #ifdef USE_LIBVORBIS
-   bool AudacityProject::SaveCompressedWaveTracks(const wxString & strProjectPathName) // full path for aup except extension
-   {
-      // Some of this is similar to code in ExportMultiple::ExportMultipleByTrack
-      // but that code is really tied into the dialogs.
-
-      // Copy the tracks because we're going to do some state changes before exporting.
-      Track* pTrack;
-      WaveTrack* pWaveTrack;
-      TrackListOfKindIterator iter(Track::Wave, GetTracks());
-      unsigned int numWaveTracks = 0;
-
-      auto ppSavedTrackList = TrackList::Create();
-      auto &pSavedTrackList = *ppSavedTrackList;
-
-      for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
-      {
-         numWaveTracks++;
-         pWaveTrack = (WaveTrack*)pTrack;
-         pSavedTrackList.Add(mTrackFactory->DuplicateWaveTrack(*pWaveTrack));
-      }
-      auto cleanup = finally( [&] {
-         // Restore the saved track states and clean up.
-         TrackListIterator savedTrackIter(&pSavedTrackList);
-         Track *pSavedTrack;
-         for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
-              ((pTrack != NULL) && (pSavedTrack != NULL));
-              pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
-         {
-            pWaveTrack = static_cast<WaveTrack*>(pTrack);
-            auto pSavedWaveTrack = static_cast<const WaveTrack*>(pSavedTrack);
-
-            pWaveTrack->SetSelected(pSavedTrack->GetSelected());
-            pWaveTrack->SetMute(pSavedWaveTrack->GetMute());
-            pWaveTrack->SetSolo(pSavedWaveTrack->GetSolo());
-
-            pWaveTrack->SetGain(((WaveTrack*)pSavedTrack)->GetGain());
-            pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
-         }
-      } );
-
-      if (numWaveTracks == 0)
-         // Nothing to save compressed => success. Delete the copies and go.
-         return true;
-
-      // Okay, now some bold state-faking to default values.
-      for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
-      {
-         pWaveTrack = (WaveTrack*)pTrack;
-
-         pWaveTrack->SetSelected(false);
-         pWaveTrack->SetMute(false);
-         pWaveTrack->SetSolo(false);
-
-         pWaveTrack->SetGain(1.0);
-         pWaveTrack->SetPan(0.0);
-      }
-
-      wxString strDataDirPathName = strProjectPathName + wxT("_data");
-      if (!wxFileName::DirExists(strDataDirPathName) &&
-            !wxFileName::Mkdir(strDataDirPathName, 0777, wxPATH_MKDIR_FULL))
-         return false;
-      strDataDirPathName += wxFileName::GetPathSeparator();
-
-      // Export all WaveTracks to OGG.
-      bool bSuccess = true;
-
-      // This accumulates the names of the .ogg files, to be written as
-      // dependencies in the .aup file
-      mStrOtherNamesArray.clear();
-
-      Exporter theExporter;
-      Track* pRightTrack;
-      wxFileName uniqueTrackFileName;
-      for (pTrack = iter.First(); ((pTrack != NULL) && bSuccess); pTrack = iter.Next())
-      {
-         if (pTrack->GetKind() == Track::Wave)
-         {
-            SelectionStateChanger changer{ GetSelectionState(), *GetTracks() };
-            pTrack->SetSelected(true);
-            if (pTrack->GetLinked())
-            {
-               pRightTrack = iter.Next();
-               pRightTrack->SetSelected(true);
-            }
-            else
-               pRightTrack = NULL;
-
-            uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), wxT("ogg"));
-            FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
-            bSuccess =
-               theExporter.Process(this, pRightTrack ? 2 : 1,
-                                    wxT("OGG"), uniqueTrackFileName.GetFullPath(), true,
-                                    pTrack->GetStartTime(), pTrack->GetEndTime());
-
-            if (!bSuccess)
-               // If only some exports succeed, the cleanup is not done here
-               // but trusted to the caller
-               break;
-         }
-      }
-
-      return bSuccess;
+   if (bLossless) {
+      extension = wxT("wav");
+      fileFormat = wxT("WAVFLT");
+   } else {
+      extension = wxT("ogg");
+      fileFormat = wxT("OGG");
    }
+#else
+   extension = wxT("wav");
+   fileFormat = wxT("WAVFLT");
 #endif
+   // Some of this is similar to code in ExportMultiple::ExportMultipleByTrack
+   // but that code is really tied into the dialogs.
+
+   // Copy the tracks because we're going to do some state changes before exporting.
+   Track* pTrack;
+   WaveTrack* pWaveTrack;
+   TrackListOfKindIterator iter(Track::Wave, GetTracks());
+   unsigned int numWaveTracks = 0;
+
+   auto ppSavedTrackList = TrackList::Create();
+   auto &pSavedTrackList = *ppSavedTrackList;
+
+   for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
+   {
+      numWaveTracks++;
+      pWaveTrack = (WaveTrack*)pTrack;
+      pSavedTrackList.Add(mTrackFactory->DuplicateWaveTrack(*pWaveTrack));
+   }
+   auto cleanup = finally( [&] {
+      // Restore the saved track states and clean up.
+      TrackListIterator savedTrackIter(&pSavedTrackList);
+      Track *pSavedTrack;
+      for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
+            ((pTrack != NULL) && (pSavedTrack != NULL));
+            pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
+      {
+         pWaveTrack = static_cast<WaveTrack*>(pTrack);
+         auto pSavedWaveTrack = static_cast<const WaveTrack*>(pSavedTrack);
+
+         pWaveTrack->SetSelected(pSavedTrack->GetSelected());
+         pWaveTrack->SetMute(pSavedWaveTrack->GetMute());
+         pWaveTrack->SetSolo(pSavedWaveTrack->GetSolo());
+
+         pWaveTrack->SetGain(((WaveTrack*)pSavedTrack)->GetGain());
+         pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
+      }
+   } );
+
+   if (numWaveTracks == 0)
+      // Nothing to save compressed => success. Delete the copies and go.
+      return true;
+
+   // Okay, now some bold state-faking to default values.
+   for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
+   {
+      pWaveTrack = (WaveTrack*)pTrack;
+
+      pWaveTrack->SetSelected(false);
+      pWaveTrack->SetMute(false);
+      pWaveTrack->SetSolo(false);
+
+      pWaveTrack->SetGain(1.0);
+      pWaveTrack->SetPan(0.0);
+   }
+
+   wxString strDataDirPathName = strProjectPathName + wxT("_data");
+   if (!wxFileName::DirExists(strDataDirPathName) &&
+         !wxFileName::Mkdir(strDataDirPathName, 0777, wxPATH_MKDIR_FULL))
+      return false;
+   strDataDirPathName += wxFileName::GetPathSeparator();
+
+   // Export all WaveTracks to OGG.
+   bool bSuccess = true;
+
+   // This accumulates the names of the track files, to be written as
+   // dependencies in the .aup file
+   mStrOtherNamesArray.clear();
+
+   Exporter theExporter;
+   Track* pRightTrack;
+   wxFileName uniqueTrackFileName;
+   for (pTrack = iter.First(); ((pTrack != NULL) && bSuccess); pTrack = iter.Next())
+   {
+      if (pTrack->GetKind() == Track::Wave)
+      {
+         SelectionStateChanger changer{ GetSelectionState(), *GetTracks() };
+         pTrack->SetSelected(true);
+         if (pTrack->GetLinked())
+         {
+            pRightTrack = iter.Next();
+            pRightTrack->SetSelected(true);
+         }
+         else
+            pRightTrack = NULL;
+
+         uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), extension);
+         FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
+         bSuccess =
+            theExporter.Process(this, pRightTrack ? 2 : 1,
+                                 fileFormat, uniqueTrackFileName.GetFullPath(), true,
+                                 pTrack->GetStartTime(), pTrack->GetEndTime());
+
+         if (!bSuccess)
+            // If only some exports succeed, the cleanup is not done here
+            // but trusted to the caller
+            break;
+      }
+   }
+
+   return bSuccess;
+}
 
 
 std::vector< std::shared_ptr< Track > >
@@ -4425,7 +4506,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
    return true;
 }
 
-bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
+bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCopy /*= false*/, bool addToHistory /*= true*/)
 {
    // This version of SaveAs is invoked only from scripting and does not
    // prompt for a file name
@@ -4448,7 +4529,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    mFileName = newFileName;
    bool success = false;
    auto cleanup = finally( [&] {
-      if (!success || bWantSaveCompressed)
+      if (!success || bWantSaveCopy)
          // Restore file name on error
          mFileName = oldFileName;
    } );
@@ -4456,12 +4537,12 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    //Don't change the title, unless we succeed.
    //SetProjectTitle();
 
-   success = DoSave(!bOwnsNewAupName || bWantSaveCompressed, bWantSaveCompressed);
+   success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy);
 
    if (success && addToHistory) {
       wxGetApp().AddFileToHistory(mFileName);
    }
-   if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
+   if (!success || bWantSaveCopy) // bWantSaveCopy doesn't actually change current project.
    {
    }
    else {
@@ -4473,89 +4554,160 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 }
 
 
-bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
+bool AudacityProject::SaveAs(bool bWantSaveCopy /*= false*/, bool bLossless /*= false*/)
 {
    TitleRestorer Restorer(this); // RAII
    bool bHasPath = true;
    wxFileName filename(mFileName);
+   // Save a copy of the project with 32-bit float tracks.
+   if (bLossless)
+      bWantSaveCopy = true;
+
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
    if( filename.GetFullPath().IsEmpty() ){
       bHasPath = false;
       filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }
 
-   wxString sDialogTitle;
-   if (bWantSaveCompressed)
+   wxString title;
+   wxString message;
+   if (bWantSaveCopy)
    {
-      if (ShowWarningDialog(this, wxT("FirstProjectSave"),
-                           _("\
-'Save Compressed Project' is for an Audacity project, not an audio file.\n\
+      if (bLossless)
+      {
+         title = wxString::Format(_("%sSave Lossless Copy of Project \"%s\" As..."),
+                                           Restorer.sProjNumber,Restorer.sProjName);
+         message = _("\
+'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n\
+For an audio file that will open in other apps, use 'Export'.\n\n\
+\
+Lossless copies of project are a good way to backup your project, \n\
+with no loss of quality, but the projects are large.\n");
+      }
+      else
+      {
+         title = wxString::Format(_("%sSave Compressed Copy of Project \"%s\" As..."),
+                                           Restorer.sProjNumber,Restorer.sProjName);
+         message = _("\
+'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n\n\
 \
 Compressed project files are a good way to transmit your project online, \n\
-but they have some loss of fidelity.\n\n\
-\
-To open a compressed project takes longer than usual, as it imports \n\
-each compressed track.\n"),
-                           true) != wxID_OK)
-         return false;
-      sDialogTitle.Printf(_("%sSave Compressed Project \"%s\" As..."), Restorer.sProjNumber,Restorer.sProjName);
+but they have some loss of fidelity.\n");
+      }
    }
    else
    {
-      if (ShowWarningDialog(this, wxT("FirstProjectSave"),
-                           _("\
+      title = wxString::Format(_("%sSave Project \"%s\" As..."),
+                               Restorer.sProjNumber, Restorer.sProjName);
+      message = _("\
 'Save Project' is for an Audacity project, not an audio file.\n\
-For an audio file that will open in other apps, use 'Export'.\n"),
-                           true) != wxID_OK)
-         return false;
-      sDialogTitle.Printf(_("%sSave Project \"%s\" As..."), Restorer.sProjNumber, Restorer.sProjName);
+For an audio file that will open in other apps, use 'Export'.\n");
+   }
+   if (ShowWarningDialog(this, wxT("FirstProjectSave"), message, true) != wxID_OK)
+   {
+      return false;
    }
 
-   // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
-   // for overwrite ourselves later, and we disallow it.
-   // We disallow overwrite because we would have to DELETE the many
-   // smaller files too, or prompt to move them.
-   wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
-                                 sDialogTitle,
-                                 filename.GetPath(),
-                                 filename.GetFullName(),
-                                 wxT("aup"),
-                                 _("Audacity projects") + wxT(" (*.aup)|*.aup"),
-                                 wxFD_SAVE | wxRESIZE_BORDER,
-                                 this);
+   bool bPrompt = (mBatchMode == 0) || (mFileName.IsEmpty());
+   wxString fName = "";
 
-   if (fName == wxT(""))
-      return false;
+   if (bPrompt) {
+      // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
+      // for overwrite ourselves later, and we disallow it.
+      // We disallow overwrite because we would have to DELETE the many
+      // smaller files too, or prompt to move them.
+      fName = FileNames::SelectFile(FileNames::Operation::Export,
+         title,
+         filename.GetPath(),
+         filename.GetFullName(),
+         wxT("aup"),
+         _("Audacity projects") + wxT(" (*.aup)|*.aup"),
+         wxFD_SAVE | wxRESIZE_BORDER,
+         this);
 
-   filename = fName;
+      if (fName == wxT(""))
+         return false;
+
+      filename = fName;
+   };
+
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
-   bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==fName);
-   //check to see if the NEW project file already exists.
-   //We should only overwrite it if this project already has the same name, where the user
-   //simply chose to use the save as command although the save command would have the effect.
-   if (!bOwnsNewAupName && filename.FileExists()) {
+   if ((bWantSaveCopy||!bPrompt) && filename.FileExists()) {
+      // Saving a copy of the project should never overwrite an existing project.
       AudacityMessageDialog m(
          NULL,
-         _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
-         _("Error Saving Project"),
+         _("Saving a copy must not overwrite an existing saved project.\nPlease try again and select an original name."),
+         _("Error Saving Copy of Project"),
          wxOK|wxICON_ERROR);
       m.ShowModal();
       return false;
+   }
+
+   bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==fName);
+   // Check to see if the project file already exists, and if it does
+   // check that the project file 'belongs' to this project.
+   // otherwise, prompt the user before overwriting.
+   if (!bOwnsNewAupName && filename.FileExists()) {
+      // Ensure that project of same name is not open in another window.
+      // fName is the destination file.
+      // mFileName is this project.
+      // It is possible for mFileName == fName even when this project is not
+      // saved to disk, and we then need to check the destination file is not
+      // open in another window.
+      int mayOverwrite = (mFileName == fName)? 2 : 1;
+      for (auto p : gAudacityProjects) {
+         const wxFileName openProjectName(p->mFileName);
+         if (openProjectName.SameAs(fName)) {
+            mayOverwrite -= 1;
+            if (mayOverwrite == 0)
+               break;
+         }
+      }
+
+      if (mayOverwrite > 0) {
+         /* i18n-hint: In each case, %s is the name
+          of the file being overwritten.*/
+         wxString Message = wxString::Format(_("\
+Do you want to overwrite the project:\n\"%s\"?\n\n\
+If you select \"Yes\" the project\n\"%s\"\n\
+will be irreversibly overwritten."), fName, fName);
+
+         // For safety, there should NOT be an option to hide this warning.
+         int result = AudacityMessageBox(Message,
+                                         /* i18n-hint: Heading: A warning that a project is about to be overwritten.*/
+                                         _("Overwrite Project Warning"),
+                                         wxYES_NO | wxNO_DEFAULT | wxICON_WARNING,
+                                         this);
+         if (result != wxYES) {
+            return false;
+         }
+      }
+      else
+      {
+         // Overwrite disalowed. The destination project is open in another window.
+         AudacityMessageDialog m(
+            NULL,
+            _("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+            _("Error Saving Project"),
+            wxOK|wxICON_ERROR);
+         m.ShowModal();
+         return false;
+      }
    }
 
    wxString oldFileName = mFileName;
    mFileName = fName;
    bool success = false;
    auto cleanup = finally( [&] {
-      if (!success || bWantSaveCompressed)
+      if (!success || bWantSaveCopy)
          // Restore file name on error
          mFileName = oldFileName;
    } );
 
-   success = DoSave(!bOwnsNewAupName || bWantSaveCompressed, bWantSaveCompressed);
+   success = DoSave(!bOwnsNewAupName || bWantSaveCopy, bWantSaveCopy, bLossless);
 
    if (success) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -4565,7 +4717,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
          gPrefs->Flush();
       }
    }
-   if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
+   if (!success || bWantSaveCopy) // bWantSaveCopy doesn't actually change current project.
    {
    }
    else {
@@ -4681,7 +4833,7 @@ void AudacityProject::PopState(const UndoState &state)
    TrackListIterator iter(tracks);
    Track *t = iter.First();
    bool odUsed = false;
-   movable_ptr<ODComputeSummaryTask> computeTask;
+   std::unique_ptr<ODComputeSummaryTask> computeTask;
 
    while (t)
    {
@@ -4701,7 +4853,7 @@ void AudacityProject::PopState(const UndoState &state)
          {
             if(!odUsed)
             {
-               computeTask = make_movable<ODComputeSummaryTask>();
+               computeTask = std::make_unique<ODComputeSummaryTask>();
                odUsed=true;
             }
             // PRL:  Is it correct to add all tracks to one task, even if they
@@ -5039,6 +5191,14 @@ void AudacityProject::SetCaptureMeter(MeterPanel *capture)
    }
 }
 
+void AudacityProject::RestartTimer()
+{
+   if (mTimer) {
+      // mTimer->Stop(); // not really needed
+      mTimer->Start( 3000 ); // Update messages as needed once every 3 s.
+   }
+}
+
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    MixerToolBar *mixerToolBar = GetMixerToolBar();
@@ -5053,9 +5213,6 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
    if( meter )
       meter->UpdateControl();
 
-   if (::wxGetUTCTime() - mLastStatusUpdateTime < 3)
-      return;
-
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
    if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
@@ -5066,6 +5223,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
          sMessage.Printf(_("Disk space remaining for recording: %s"), GetHoursMinsString(iRecordingMins));
 
+         // Do not change mLastMainStatusMessage
          mStatusBar->SetStatusText(sMessage, mainStatusBarField);
       }
    }
@@ -5101,6 +5259,10 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          mStatusBar->SetStatusText(msg, mainStatusBarField);
       }
    }
+
+   // As also with the TrackPanel timer:  wxTimer may be unreliable without
+   // some restarts
+   RestartTimer();
 }
 
 //get regions selected by selected labels
@@ -5286,13 +5448,15 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 // TrackPanel callback method
 void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 {
-   // Bug1756:  If recording, let the status message for remaining disk space
-   // prevail
-   if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0)
-      return;
-
-   mStatusBar->SetStatusText(msg, mainStatusBarField);
-   mLastStatusUpdateTime = ::wxGetUTCTime();
+   if ( msg != mLastMainStatusMessage ) {
+      mLastMainStatusMessage = msg;
+      mStatusBar->SetStatusText(msg, mainStatusBarField);
+      
+      // When recording, let the NEW status message stay at least as long as
+      // the timer interval (if it is not replaced again by this function),
+      // before replacing it with the message about remaining disk capacity.
+      RestartTimer();
+   }
 }
 
 void AudacityProject::TP_DisplaySelection()
@@ -5933,6 +6097,41 @@ bool AudacityProject::IsProjectSaved() {
    return (sProjectName != wxT(""));
 }
 
+// This is done to empty out the tracks, but without creating a new project.
+void AudacityProject::ResetProjectToEmpty() {
+   OnSelectAll(*this);
+   OnRemoveTracks(*this);
+   // A new DirManager.
+   mDirManager = std::make_shared<DirManager>();
+   mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
+
+   // mLastSavedTrack code copied from OnCloseWindow.
+   // Lock all blocks in all tracks of the last saved version, so that
+   // the blockfiles aren't deleted on disk when we DELETE the blockfiles
+   // in memory.  After it's locked, DELETE the data structure so that
+   // there's no memory leak.
+   if (mLastSavedTracks) {
+      TrackListIterator iter(mLastSavedTracks.get());
+      Track *t = iter.First();
+      while (t) {
+         if (t->GetKind() == Track::Wave)
+            ((WaveTrack *)t)->CloseLock();
+         t = iter.Next();
+      }
+
+      mLastSavedTracks->Clear(); // sends an event
+      mLastSavedTracks.reset();
+   }
+
+   //mLastSavedTracks = TrackList::Create();
+   mFileName = "";
+   mIsRecovered = false;
+   mbLoadedFromAup = false;
+   SetProjectTitle();
+   mDirty = false;
+   GetUndoManager()->ClearStates();
+}
+
 bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    // MY: Will save the project to a NEW location a-la Save As
    // and then tidy up after itself.
@@ -6164,7 +6363,8 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
       trackPanel->Refresh(false);
    }
    else if (mMode != Mode::Off) {
-      // Pan the view, so that we center the play indicator.
+      // Pan the view, so that we put the play indicator at some fixed
+      // fraction of the window width.
 
       ViewInfo &viewInfo = mProject->GetViewInfo();
       TrackPanel *const trackPanel = mProject->GetTrackPanel();
@@ -6177,8 +6377,10 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
          default:
             wxASSERT(false);
             /* fallthru */
-         case Mode::Centered:
-            deltaX = posX - width / 2;    break;
+         case Mode::Pinned:
+            deltaX =
+               posX - width * TracksPrefs::GetPinnedHeadPositionPreference();
+            break;
          case Mode::Right:
             deltaX = posX - width;        break;
       }
@@ -6189,4 +6391,9 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
          viewInfo.h = std::max(0.0, viewInfo.h);
       trackPanel->Refresh(false);
    }
+}
+
+bool AudacityProject::IsFocused( const wxWindow *window ) const
+{
+   return window == mFocusLender || window == wxWindow::FindFocus();
 }

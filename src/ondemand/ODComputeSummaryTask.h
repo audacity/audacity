@@ -36,7 +36,7 @@ class ODComputeSummaryTask final : public ODTask
    ODComputeSummaryTask();
    virtual ~ODComputeSummaryTask(){};
 
-   movable_ptr<ODTask> Clone() const override;
+   std::unique_ptr<ODTask> Clone() const override;
 
    ///Subclasses should override to return respective type.
    unsigned int GetODType() override { return eODPCMSummary; }

@@ -6,6 +6,7 @@ $name (_ "Delay")
 $manpage "Delay"
 $action (_ "Applying Delay Effect...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; by Steve Daulton, July 2012.

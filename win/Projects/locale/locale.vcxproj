@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -13,20 +13,21 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BE9F28C5-058A-45F5-B2C1-D077BC058AAE}</ProjectGuid>
     <RootNamespace>locale</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Audacity">
+    <MsgfmtCommand>$(MSBuildThisFileDirectory)..\..\packages\Gettext.Tools.0.19.8.1\tools\bin\msgfmt</MsgfmtCommand>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="po.props" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -45,29 +46,11 @@
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <PostBuildEvent>
-      <Command>for %%I in ("%WXWIN%\locale\*.po") do call :fmt %%~nI
-goto :EOF
-
-:fmt
-if not exist "$(OutDir)Languages\%1" mkdir "$(OutDir)Languages\%1"
-msgfmt -o "$(OutDir)Languages\%1\wxstd.mo" "%WXWIN%\locale\%1.po"
-goto :EOF
-</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <PostBuildEvent>
-      <Command>for %%I in ("%WXWIN%\locale\*.po") do call :fmt %%~nI
-goto :EOF
-
-:fmt
-if not exist "$(OutDir)Languages\%1" mkdir "$(OutDir)Languages\%1"
-msgfmt -o "$(OutDir)Languages\%1\wxstd.mo" "%WXWIN%\locale\%1.po"
-goto :EOF
-</Command>
-    </PostBuildEvent>
+  <ItemDefinitionGroup>
+    <msgfmt>
+      <OutputName>$(OutDir)Languages\%(Filename)\Audacity.mo</OutputName>
+      <Message>Compiling %(Filename) locale</Message>
+    </msgfmt>
   </ItemDefinitionGroup>
   <ItemGroup>
     <msgfmt Include="..\..\..\locale\af.po" />
@@ -127,10 +110,46 @@ goto :EOF
     <msgfmt Include="..\..\..\locale\zh_TW.po" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\locale\audacity.pot" />
+    <msgfmt Include="$(WXWIN)\locale\gl_ES.po">
+      <OutputName>$(OutDir)Languages\gl\wxstd.mo</OutputName>
+      <Message>Compiling wxWidgets %(Filename) to gl locale</Message>
+      <Visible>false</Visible>
+    </msgfmt>
+    <msgfmt Include="$(WXWIN)\locale\ko_KR.po">
+      <OutputName>$(OutDir)Languages\ko\wxstd.mo</OutputName>
+      <Message>Compiling wxWidgets %(Filename) to ko locale</Message>
+      <Visible>false</Visible>
+    </msgfmt>
+    <msgfmt Include="$(WXWIN)\locale\pt.po">
+      <OutputName>$(OutDir)Languages\pt_PT\wxstd.mo</OutputName>
+      <Message>Compiling wxWidgets %(Filename) to pt_PT locale</Message>
+      <Visible>false</Visible>
+    </msgfmt>
+    <msgfmt Include="$(WXWIN)\locale\*.po" Exclude="@(msgfmt)">
+      <OutputName>$(OutDir)Languages\%(Filename)\wxstd.mo</OutputName>
+      <Message>Compiling wxWidgets %(Filename) locale</Message>
+      <Visible>false</Visible>
+    </msgfmt>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\locale\audacity.pot" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <OutputPaths Include="@(msgfmt->'%(OutputName)')" />
+    <OutputDirs Include="@(OutputPaths-&gt;'%(RootDir)%(Directory)'-&gt;Distinct())" />
+    <CustomBuildStep Include="@(msgfmt)">
+      <Command>"$(MsgfmtCommand)" -o "%(OutputName)" "%(FullPath)"</Command>
+      <Inputs>%(FullPath)</Inputs>
+      <Outputs>%(OutputName)</Outputs>
+    </CustomBuildStep>
+  </ItemGroup>
+  <Target Name="MakeOutputDirs" BeforeTargets="CustomBuildStep">
+    <MakeDir Directories="@(OutputDirs)" />
+  </Target>
+  <Target Name="CleanOutput" BeforeTargets="AfterClean">
+    <Delete Files="@(OutputPaths)" />
+    <RemoveDir Directories="@(OutputDirs);$(OutDir)Languages" />
+  </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="po.targets" />
-  </ImportGroup>
 </Project>

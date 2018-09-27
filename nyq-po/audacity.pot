@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.2.2\n"
+"Project-Id-Version: audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-03-08 16:40-0500\n"
+"POT-Creation-Date: 2018-05-24 14:35-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,14 +23,6 @@ msgstr ""
 
 #: plug-ins/SilenceMarker.ny
 msgid "Finding silence..."
-msgstr ""
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"Adds point labels in areas of silence according to the specified\n"
-"level and duration of silence. If too many silences are detected,\n"
-"increase the silence level and duration; if too few are detected,\n"
-"reduce the level and duration."
 msgstr ""
 
 #: plug-ins/SilenceMarker.ny
@@ -75,14 +67,6 @@ msgstr ""
 
 #: plug-ins/SoundFinder.ny
 msgid "Finding sound..."
-msgstr ""
-
-#: plug-ins/SoundFinder.ny
-msgid ""
-"Adds region labels for areas of sound according to the specified level\n"
-"and duration of surrounding silence. If too many labels are produced,\n"
-"increase the silence level and duration; if too few are produced,\n"
-"reduce the level and duration."
 msgstr ""
 
 #: plug-ins/SoundFinder.ny
@@ -271,9 +255,7 @@ msgid "End (or start)"
 msgstr ""
 
 #: plug-ins/adjustable-fade.ny
-msgid ""
-"   Handy Presets\n"
-"(override controls)"
+msgid "Handy Presets (override controls)"
 msgstr ""
 
 #: plug-ins/adjustable-fade.ny
@@ -477,15 +459,15 @@ msgid "Delay type"
 msgstr ""
 
 #: plug-ins/delay.ny
-msgid "regular"
+msgid "Regular"
 msgstr ""
 
 #: plug-ins/delay.ny
-msgid "bouncing ball"
+msgid "Bouncing Ball"
 msgstr ""
 
 #: plug-ins/delay.ny
-msgid "reverse bouncing ball"
+msgid "Reverse Bouncing Ball"
 msgstr ""
 
 #: plug-ins/delay.ny
@@ -505,7 +487,7 @@ msgid "Pitch/Tempo"
 msgstr ""
 
 #: plug-ins/delay.ny
-msgid "LQ Pitch Shift"
+msgid "Low-quality Pitch Shift"
 msgstr ""
 
 #: plug-ins/delay.ny
@@ -568,11 +550,15 @@ msgid "Use 'Number of labels' OR 'Label interval'"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "Number of labels"
+msgid "Number of Labels"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "Label interval"
+msgid "Label Interval"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+msgid "Number of labels"
 msgstr ""
 
 #: plug-ins/equalabel.ny
@@ -596,31 +582,31 @@ msgid "Minimum number of digits in label"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "None - text only"
+msgid "None - Text Only"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "1 (before label)"
+msgid "1 (Before Label)"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "2 (before label)"
+msgid "2 (Before Label)"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "3 (before label)"
+msgid "3 (Before Label)"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "1 (after label)"
+msgid "1 (After Label)"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "2 (after label)"
+msgid "2 (After Label)"
 msgstr ""
 
 #: plug-ins/equalabel.ny
-msgid "3 (after label)"
+msgid "3 (After Label)"
 msgstr ""
 
 #: plug-ins/equalabel.ny
@@ -628,11 +614,11 @@ msgid "Begin numbering from"
 msgstr ""
 
 #: plug-ins/highpass.ny
-msgid "High Pass Filter"
+msgid "High-Pass Filter"
 msgstr ""
 
 #: plug-ins/highpass.ny
-msgid "Performing High Pass Filter..."
+msgid "Performing High-Pass Filter..."
 msgstr ""
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
@@ -645,7 +631,7 @@ msgid "Frequency (Hz)"
 msgstr ""
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
-msgid "Rolloff (dB per octave)"
+msgid "Roll-off (dB per octave)"
 msgstr ""
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
@@ -700,6 +686,7 @@ msgstr ""
 msgid "Hard Limit"
 msgstr ""
 
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
 #: plug-ins/limiter.ny
 msgid "Soft Clip"
 msgstr ""
@@ -733,11 +720,11 @@ msgid "Apply Make-up Gain"
 msgstr ""
 
 #: plug-ins/lowpass.ny
-msgid "Low Pass Filter"
+msgid "Low-Pass Filter"
 msgstr ""
 
 #: plug-ins/lowpass.ny
-msgid "Performing Low Pass Filter..."
+msgid "Performing Low-Pass Filter..."
 msgstr ""
 
 #: plug-ins/notch.ny
@@ -789,15 +776,15 @@ msgid "Fade-out type"
 msgstr ""
 
 #: plug-ins/pluck.ny
-msgid "abrupt"
+msgid "Abrupt"
 msgstr ""
 
 #: plug-ins/pluck.ny
-msgid "gradual"
+msgid "Gradual"
 msgstr ""
 
 #: plug-ins/pluck.ny
-msgid "Duration [seconds]"
+msgid "Duration (60s max)"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -809,23 +796,7 @@ msgid "Generating Rhythm..."
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Action choice"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-msgid "Generate track"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-msgid "Help screen 1"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-msgid "Help screen 2"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-msgid "Tempo (beats per minute)"
+msgid "Tempo (bpm)"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -833,7 +804,7 @@ msgid "30 - 300 beats/minute"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Beats per measure (bar)"
+msgid "Beats per bar"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -849,7 +820,11 @@ msgid "+/- 1"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Number of measures (bars)"
+msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Number of bars"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -857,19 +832,15 @@ msgid "1 - 1000 bars"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Optional rhythm track duration (minutes seconds)"
+msgid "Rhythm track duration"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Whole numbers only"
+msgid "Start time offset"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Start time offset (seconds)"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-msgid "0 - 30 seconds"
+msgid "Silence before first beat"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -877,11 +848,15 @@ msgid "Beat sound"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Metronome tick"
+msgid "Metronome Tick"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Ping"
+msgid "Ping (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Ping (long)"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -889,15 +864,19 @@ msgid "Cowbell"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Resonant noise"
+msgid "Resonant Noise"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Noise click"
+msgid "Noise Click"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
-msgid "Drip"
+msgid "Drip (short)"
+msgstr ""
+
+#: plug-ins/rhythmtrack.ny
+msgid "Drip (long)"
 msgstr ""
 
 #: plug-ins/rhythmtrack.ny
@@ -914,116 +893,10 @@ msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid ""
-"Rhythm Track Generator help - screen 1 of 2\n"
-"\n"
-"Generates a rhythm track at the selected tempo, beats per\n"
-"measure, and either number of measures or track duration,\n"
-"using the selected sound.\n"
-"\n"
-"'Tempo': number of beats (clicks) per minute.\n"
-"\n"
-"'Beats per measure (bar)': For example, 3/4 time means one\n"
-"strong beat then two others to form one bar, repeated\n"
-"depending on 'number of measures' or 'rhythm track duration'.\n"
-"\n"
-"'Swing amount': When set to a non-zero amount, alternate\n"
-"beats are delayed or advanced to give a swing feel. At\n"
-"maximum / minimum settings the rhythm plays with triplet timing.\n"
-"\n"
-"'Optional rhythm track duration': If you enter a value into this\n"
-"field, either (minutes seconds - separated by a space), or\n"
-"(seconds), the generated rhythm track will be at or slightly\n"
-"longer than this duration: the end of the track is extended\n"
-"into a whole measure if the entered duration does not\n"
-"produce this. Use whole numbers only.\n"
-"\n"
-"If you enter a value into this field, the 'number of measures'\n"
-"value will be ignored.\n"
-"\n"
-"To generate rhythm track or view help screen 2,\n"
-"restart Rhythm Track and select from 'Action choice'."
+"Set either 'Number of bars' or\n"
+"'Rhythm track duration' to greater than zero."
 msgstr ""
 
-#: plug-ins/rhythmtrack.ny
-msgid ""
-"Rhythm Track Generator help - screen 2 of 2\n"
-"\n"
-"'Start time offset': makes the rhythm track start at a later\n"
-"time than the very beginning (zero seconds), maximum\n"
-"of 30 seconds.\n"
-"\n"
-"'Beat sound': choose which sound to use for the beats.\n"
-"\n"
-"'MIDI pitch of strong/weak beat': MIDI values indicate\n"
-"what pitch to use. C-notes are:\n"
-"\n"
-"24, 36, 48, 60 (middle C), 72, 84, 96, 108.\n"
-"C# (C-sharp) above middle C is 61.\n"
-"\n"
-"To generate rhythm track or view help screen 1,\n"
-"restart Rhythm Track and select from 'Action choice'."
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "Tempo ~a outside valid range 30 to 300 bpm\n"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "Beats per measure ~a outside valid range 1 to 20\n"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "Number of measures ~a outside valid range 1 to 1000\n"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "Time offset ~a outside valid range 0 to 30 seconds\n"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "Filter quality q ~a outside valid range 1 to 20\n"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "High MIDI pitch ~a outside valid range 18 to 116\n"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "Low MIDI pitch ~a outside valid range 18 to 116\n"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid ""
-"If used, 'Optional rhythm track duration' must be \n"
-"entered as either one number (seconds), or two \n"
-"numbers (minutes seconds) separated by a space.\n"
-"Use whole numbers only.~%"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "~a seconds is outside valid range 0 to 3660~%"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "~a is outside valid range 0 to (60 59)~%"
-msgstr ""
-
-#: plug-ins/rhythmtrack.ny
-#, lisp-format
-msgid "Error.~%You have entered at least one invalid value:~%~%"
-msgstr ""
-
-#. i18n-hint named for Jean-Claude Risset (silent t)
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
 msgstr ""
@@ -1100,6 +973,7 @@ msgstr ""
 msgid "Time Indexed (txt)"
 msgstr ""
 
+#. i18n-hint: "comma separated values"
 #: plug-ins/sample-data-export.ny
 msgid "Data (csv)"
 msgstr ""
@@ -1136,6 +1010,7 @@ msgstr ""
 msgid "Channel layout for stereo"
 msgstr ""
 
+#. i18n-hint: Left and Right
 #: plug-ins/sample-data-export.ny
 msgid "L-R on Same Line"
 msgstr ""
@@ -1144,6 +1019,7 @@ msgstr ""
 msgid "Alternate Lines"
 msgstr ""
 
+#. i18n-hint: L for Left
 #: plug-ins/sample-data-export.ny
 msgid "L Channel First"
 msgstr ""
@@ -1410,11 +1286,11 @@ msgid "Invalid data handling"
 msgstr ""
 
 #: plug-ins/sample-data-import.ny
-msgid "Throw error"
+msgid "Throw Error"
 msgstr ""
 
 #: plug-ins/sample-data-import.ny
-msgid "Read as zero"
+msgid "Read as Zero"
 msgstr ""
 
 #: plug-ins/sample-data-import.ny
@@ -1483,23 +1359,23 @@ msgid "Waveform type"
 msgstr ""
 
 #: plug-ins/tremolo.ny
-msgid "sine"
+msgid "Sine"
 msgstr ""
 
 #: plug-ins/tremolo.ny
-msgid "triangle"
+msgid "Triangle"
 msgstr ""
 
 #: plug-ins/tremolo.ny
-msgid "sawtooth"
+msgid "Sawtooth"
 msgstr ""
 
 #: plug-ins/tremolo.ny
-msgid "inverse sawtooth"
+msgid "Inverse Sawtooth"
 msgstr ""
 
 #: plug-ins/tremolo.ny
-msgid "square"
+msgid "Square"
 msgstr ""
 
 #: plug-ins/tremolo.ny
@@ -1526,7 +1402,7 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: plug-ins/vocalrediso.ny
+#: plug-ins/vocalrediso.ny plug-ins/vocalremover.ny
 msgid "Remove Vocals"
 msgstr ""
 
@@ -1651,15 +1527,7 @@ msgid "Removing center-panned audio..."
 msgstr ""
 
 #: plug-ins/vocalremover.ny
-msgid "For reducing center-panned vocals"
-msgstr ""
-
-#: plug-ins/vocalremover.ny
 msgid "Remove vocals or view Help"
-msgstr ""
-
-#: plug-ins/vocalremover.ny
-msgid "Remove vocals"
 msgstr ""
 
 #: plug-ins/vocalremover.ny
@@ -1671,15 +1539,15 @@ msgid "Removal choice"
 msgstr ""
 
 #: plug-ins/vocalremover.ny
-msgid "Simple (entire spectrum)"
+msgid "Simple (Entire Spectrum)"
 msgstr ""
 
 #: plug-ins/vocalremover.ny
-msgid "Remove frequency band"
+msgid "Remove Frequency Band"
 msgstr ""
 
 #: plug-ins/vocalremover.ny
-msgid "Retain frequency band"
+msgid "Retain Frequency Band"
 msgstr ""
 
 #: plug-ins/vocalremover.ny
@@ -1764,11 +1632,11 @@ msgid "Output choice"
 msgstr ""
 
 #: plug-ins/vocoder.ny
-msgid "both channels"
+msgid "Both Channels"
 msgstr ""
 
 #: plug-ins/vocoder.ny
-msgid "right only"
+msgid "Right Only"
 msgstr ""
 
 #: plug-ins/vocoder.ny

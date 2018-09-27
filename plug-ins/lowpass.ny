@@ -2,14 +2,13 @@ $nyquist plug-in
 $version 4
 $type process
 $preview linear
-$name (_ "Low Pass Filter")
-$manpage "Low_Pass_Filter"
+$name (_ "Low-Pass Filter")
+$manpage "Low-Pass_Filter"
 $debugbutton disabled
-$action (_ "Performing Low Pass Filter...")
+$action (_ "Performing Low-Pass Filter...")
 $author (_ "Dominic Mazzoni")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
-
-;; lowpass.ny by Dominic Mazzoni
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -19,13 +18,11 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 $control frequency (_ "Frequency (Hz)") float-text "" 1000 0 nil
-$control rolloff (_ "Rolloff (dB per octave)") choice (
-   ("dB6" (_ "6 dB"))
-   ("dB12" (_ "12 dB"))
-   ("dB24" (_ "24 dB"))
-   ("dB36" (_ "36 dB"))
-   ("dB48" (_ "48 dB"))
-) 0
+$control rolloff (_ "Roll-off (dB per octave)") choice (("dB6" (_ "6 dB"))
+                                                        ("dB12" (_ "12 dB"))
+                                                        ("dB24" (_ "24 dB"))
+                                                        ("dB36" (_ "36 dB"))
+                                                        ("dB48" (_ "48 dB"))) 0
 
 
 (cond

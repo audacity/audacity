@@ -23,20 +23,20 @@ classes
 
 class WaveTrack;
 
-#define COMPARE_AUDIO_PLUGIN_SYMBOL XO("Compare Audio")
+#define COMPARE_AUDIO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Compare Audio") }
 
 class CompareAudioCommand final : public AudacityCommand
 {
 public:
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return XO("Compare Audio");}
+   IdentInterfaceSymbol GetSymbol() override {return XO("Compare Audio");}
    wxString GetDescription() override {return _("Compares a range on two tracks.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply() override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Compare_Audio");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#compare_Audio");};
    bool Apply(const CommandContext &context) override;
 
 

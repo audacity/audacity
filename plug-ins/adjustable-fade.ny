@@ -8,9 +8,8 @@ $manpage "Adjustable_Fade"
 $debugbutton false
 $action (_ "Applying Fade...")
 $author (_ "Steve Daulton")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
-
-;; adjustable-fade.ny by Steve Daulton Dec 2012
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -18,49 +17,43 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control type (_ "Fade Type") choice (
-   ("Up" (_ "Fade Up"))
-   ("Down" (_ "Fade Down"))
-   ("SCurveUp" (_ "S-Curve Up"))
-   ("SCurveDown" (_ "S-Curve Down"))
-) 0
+
+$control type (_ "Fade Type") choice (("Up" (_ "Fade Up"))
+                                      ("Down" (_ "Fade Down"))
+                                      ("SCurveUp" (_ "S-Curve Up"))
+                                      ("SCurveDown" (_ "S-Curve Down"))) 0
 $control curve (_ "Mid-fade Adjust (%)") real "" 0 -100 100
-$control units (_ "Start/End as") choice (
-   ("Percent" (_ "% of Original"))
-   ("dB" (_ "dB Gain"))
-) 0 
+$control units (_ "Start/End as") choice (("Percent" (_ "% of Original"))
+                                          ("dB" (_ "dB Gain"))) 0 
 $control gain0 (_ "Start (or end)") float-text "" 0 nil nil
 $control gain1 (_ "End (or start)") float-text "" 100 nil nil
-$control preset (_ "Handy Presets (override controls)") choice (
-   ("None" (_ "None Selected"))
-   ("LinearIn" (_ "Linear In"))
-   ("LinearOut" (_ "Linear Out"))
-   ("ExponentialIn" (_ "Exponential In"))
-   ("ExponentialOut" (_ "Exponential Out"))
-   ("LogarithmicIn" (_ "Logarithmic In"))
-   ("LogarithmicOut" (_ "Logarithmic Out"))
-   ("RoundedIn" (_ "Rounded In"))
-   ("RoundedOut" (_ "Rounded Out"))
-   ("CosineIn" (_ "Cosine In"))
-   ("CosineOut" (_ "Cosine Out"))
-   ("SCurveIn" (_ "S-Curve In"))
-   ("SCurveOut" (_ "S-Curve Out"))
-) 0
+$control preset (_ "Handy Presets (override controls)") choice (("None" (_ "None Selected"))
+                                                                ("LinearIn" (_ "Linear In"))
+                                                                ("LinearOut" (_ "Linear Out"))
+                                                                ("ExponentialIn" (_ "Exponential In"))
+                                                                ("ExponentialOut" (_ "Exponential Out"))
+                                                                ("LogarithmicIn" (_ "Logarithmic In"))
+                                                                ("LogarithmicOut" (_ "Logarithmic Out"))
+                                                                ("RoundedIn" (_ "Rounded In"))
+                                                                ("RoundedOut" (_ "Rounded Out"))
+                                                                ("CosineIn" (_ "Cosine In"))
+                                                                ("CosineOut" (_ "Cosine Out"))
+                                                                ("SCurveIn" (_ "S-Curve In"))
+                                                                ("SCurveOut" (_ "S-Curve Out"))) 0
 
-
+;;; Preview takes the entire selection so that we know the correct
+;;; selection length, but preview only needs to process preview length."
 (defun get-input (sig)
-"Preview takes the entire selection so that we know the correct
-selection length, but preview only needs to process preview length."
-;; (if *previewp* sig (multichan-expand #'trim-input sig)))
-  (if (get '*track* 'view)  ;NIL if preview
-      sig
-      (multichan-expand #'trim-input sig)))
+  (if *previewp*
+      (multichan-expand #'trim-input sig)
+      sig))
 
+
+;;; Trim input when previewing."
 (defun trim-input (sig)
-"Trim input when previewing."
   (let ((dur (min (get-duration 1)
                   (get '*project* 'preview-duration))))
-    (setf sig (extract-abs 0 dur *track*))))
+    (setf sig (extract-abs 0 dur sig))))
 
 ;;; invalid values
 (defun check-values (x y)
@@ -76,7 +69,7 @@ selection length, but preview only needs to process preview length."
                                  Hint: 6 dB doubles the amplitude~%~
                                  \t-6 dB halves the amplitude." err)))))))
 
-;;; select and apply fade
+;;; Select and apply fade
 (defun fade (sig type curve g0 g1)
   (check-values gain0 gain1)
   (mult (get-input sig)
@@ -115,12 +108,12 @@ selection length, but preview only needs to process preview length."
       (cos-curve g0 g1 (- 1.5 curve)))                    ; +ve curve > 0.5
     (t (simple-curve g0 g1 (- 1 (* 2 curve))))))          ; -ve curve
 
-;;; linear fade to the power of pow
+;;; Linear fade to the power of 'pow'.
 (defun simple-curve (g0 g1 pow)
   (curve-adjust g0 g1 pow
     (linear g0 g1)))
 
-;;; cosine fade to the power of pow
+;;; Cosine fade to the power of 'pow'.
 (defun cos-curve (g0 g1 pow)
   (curve-adjust g0 g1 pow
     (cosine-curve g0 g1)))
@@ -133,25 +126,25 @@ selection length, but preview only needs to process preview length."
           (mult pow
             (snd-log env))))))
 
-;;; scale curves to min, max
+;;; Scale curves to min, max.
 (defun scale-curve (g0 g1 env)
   (sum (min g0 g1)
     (mult (abs (- g0 g1)) env)))
 
-;;; cosine curve
+;;; Cosine curve.
 (defun cosine-curve (g0 g1)
   (let ((step (hz-to-step (/ 0.25 (get-duration 1))))
         (phase (if (> g0 g1) 90 0)))
     (osc step 1 *sine-table* phase)))
 
-;;; linear fade in, out
+;;; Linear fade in, out.
 (defun linear (g0 g1)
   (control-srate-abs *sound-srate*
     (if (> g0 g1)                         ; g0 = g1 does not occur here.
         (pwlv 1 1 0)                      ; fade out
         (pwlv 0 1 1))))                   ; else fade in
 
-;;; raised cosine fades
+;;; Raised cosine fades.
 (defun raised-cos (g0 g1 curve)
   (setq curve
     (if (> curve 0)
@@ -171,7 +164,7 @@ selection length, but preview only needs to process preview length."
   (sum (min g0 g1)
     (mult (abs (- g0 g1)) env)))
 
-;;; raised cosine curve
+;;; Raised cosine curve.
 (defun raised-cosin (phase)
   (let ((hz (hz-to-step (/ (get-duration 2)))))
     (mult 0.5 
@@ -179,7 +172,7 @@ selection length, but preview only needs to process preview length."
         (osc hz 1 *sine-table* phase)))))
 
 ;;; log or exponential curve scaled 0 to 1
-;;; x is the minimum level in dB before scaling
+;;; x is the minimum level in dB before scaling.
 (defun log-exp-curve (x direction)
   (control-srate-abs *sound-srate*
     (let ((x (db-to-linear x)))
@@ -190,7 +183,7 @@ selection length, but preview only needs to process preview length."
       (mult (/ (- 1 x))     ; normalize to 0 dB
         (diff env x)))))    ; drop down to silence
 
-;;; curve scaling for S-curve
+;;; Curve scaling for S-curve.
 (defun exp-scale-mid (x)
   (let ((e (exp 1.0)))
     (/ (- (exp (- 1 x)) e)

@@ -15,12 +15,6 @@ FileException::~FileException()
 {
 }
 
-std::unique_ptr< AudacityException > FileException::Move()
-{
-   return std::unique_ptr< AudacityException >
-      { safenew FileException{ std::move( *this ) } };
-}
-
 wxString FileException::ErrorMessage() const
 {
    wxString format;

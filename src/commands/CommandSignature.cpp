@@ -24,7 +24,7 @@ CommandSignature::~CommandSignature()
 
 void CommandSignature::AddParameter(const wxString &name,
       const wxVariant &dft,
-      movable_ptr<Validator> &&valid)
+      std::unique_ptr<Validator> &&valid)
 {
    wxASSERT_MSG(valid->Validate(dft),
          wxT("Invalid command signature: the default value of '")

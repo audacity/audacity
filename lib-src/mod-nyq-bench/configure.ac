@@ -1,5 +1,5 @@
 #
-# FileDialog
+# mod-nyq-bench
 #
 
 AC_PREREQ([2.59])
@@ -44,7 +44,7 @@ AC_ARG_ENABLE(debug,
             debug_preference="")
 
 AC_ARG_WITH(wx-version,
-            [AS_HELP_STRING([--with-wx-version],[override default wxWidgets version [2.6,2.8]])],
+            [AS_HELP_STRING([--with-wx-version],[override default wxWidgets version [3.1,3.0]])],
             wx_preference="--version=$withval",
             wx_preference="")
 

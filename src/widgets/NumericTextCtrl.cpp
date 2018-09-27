@@ -1234,6 +1234,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
    mMenuEnabled = options.menuEnabled;
    mButtonWidth = 9;
 
+   SetLayoutDirection(wxLayout_LeftToRight);
    Layout();
    Fit();
    ValueToControls();
@@ -1364,7 +1365,7 @@ bool NumericTextCtrl::Layout()
    wxMemoryDC memDC;
 
    // Placeholder bitmap so the memDC has something to reference
-   mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1);
+   mBackgroundBitmap = std::make_unique<wxBitmap>(1, 1, 24);
    memDC.SelectObject(*mBackgroundBitmap);
 
    mDigits.clear();
@@ -1431,7 +1432,7 @@ bool NumericTextCtrl::Layout()
 
    wxBrush Brush;
 
-   mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight);
+   mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight,24);
    memDC.SelectObject(*mBackgroundBitmap);
 
    theTheme.SetBrushColour( Brush, clrTimeHours );
@@ -1639,6 +1640,8 @@ void NumericTextCtrl::OnFocus(wxFocusEvent &event)
    }
    else {
       AudacityProject::CaptureKeyboard(this);
+      if( mFocusedDigit <=0 )
+         UpdateAutoFocus();
    }
 
    Refresh(false);
@@ -1866,10 +1869,6 @@ void NumericTextCtrl::Updated(bool keyup /* = false */)
 
 #if wxUSE_ACCESSIBILITY
    if (!keyup) {
-      GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
-                                   this,
-                                   wxOBJID_CLIENT,
-                                   mFocusedDigit + 1);
       SetFieldFocus(mFocusedDigit);
    }
 #endif

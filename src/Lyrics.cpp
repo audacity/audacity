@@ -582,7 +582,7 @@ void LyricsPanel::HandlePaint_BouncingBall(wxDC &dc)
 
    if (mT >= 0.0) {
       wxRect ball(ctr - ballRadius, yi - ballRadius, 2 * ballRadius, 2 * ballRadius);
-      dc.SetBrush(wxBrush(wxColour(238, 0, 102), wxSOLID));
+      dc.SetBrush(wxBrush(wxColour(238, 0, 102), wxBRUSHSTYLE_SOLID));
       dc.DrawEllipse(ball);
    }
 }

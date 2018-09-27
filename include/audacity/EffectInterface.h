@@ -103,14 +103,12 @@ class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public Ident
 public:
    virtual ~EffectDefinitionInterface() {};
 
+   // Type determines how it behaves.
    virtual EffectType GetType() = 0;
+   // Classification determines which menu it appears in.
+   virtual EffectType GetClassification() { return GetType();};
 
-   // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
-   virtual wxString GetFamilyId() = 0;
-
-   // Returns a user-visible string:
-   virtual wxString GetFamilyName() = 0;
+   virtual IdentInterfaceSymbol GetFamilyId() = 0;
 
    // These should move to the "EffectClientInterface" class once all
    // effects have been converted.

@@ -79,7 +79,7 @@ UIHandlePtr GainSliderHandle::HitTest
 
    wxRect sliderRect;
    TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
+   if ( TrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       wxRect sliderRect;
@@ -163,7 +163,7 @@ UIHandlePtr PanSliderHandle::HitTest
 
    wxRect sliderRect;
    TrackInfo::GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
+   if ( TrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       auto sliderFn =

@@ -42,9 +42,7 @@
 
 #include "AudacityApp.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 using LangHash = std::unordered_map<wxString, wxString>;
 

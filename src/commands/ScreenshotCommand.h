@@ -28,7 +28,7 @@ class AdornedRulerPanel;
 class AudacityProject;
 class CommandContext;
 
-#define SCREENSHOT_PLUGIN_SYMBOL XO("Screenshot")
+#define SCREENSHOT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Screenshot") }
 
 class ScreenshotCommand : public AudacityCommand
 {
@@ -78,15 +78,15 @@ public:
       nCaptureWhats
    };
 
-   ScreenshotCommand(){ mbBringToTop=true;};
+   ScreenshotCommand(){ mbBringToTop=true;mIgnore=NULL;};
    // CommandDefinitionInterface overrides
-   wxString GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
+   IdentInterfaceSymbol GetSymbol() override {return SCREENSHOT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Takes screenshots.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Help_Menu:_Tools#screenshot_tools");};
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#screenshot_short_format");};
 
 private:
    int mWhat;
@@ -103,6 +103,7 @@ public:
 
 private:
    // May need to ignore the screenshot dialog
+   // Appears not to be used anymore.
    wxWindow *mIgnore;
 
    bool mBackground;

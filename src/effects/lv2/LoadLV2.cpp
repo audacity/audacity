@@ -43,9 +43,7 @@ Functions that find and load all LV2 plugins on the system.
 
 #include "LoadLV2.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 // ============================================================================
 // Module registration entry point
@@ -100,17 +98,12 @@ wxString LV2EffectsModule::GetPath()
    return mPath;
 }
 
-wxString LV2EffectsModule::GetSymbol()
+IdentInterfaceSymbol LV2EffectsModule::GetSymbol()
 {
    return XO("LV2 Effects");
 }
 
-wxString LV2EffectsModule::GetName()
-{
-   return GetSymbol();
-}
-
-wxString LV2EffectsModule::GetVendor()
+IdentInterfaceSymbol LV2EffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }

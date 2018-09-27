@@ -29,7 +29,7 @@ class wxChoice;
 class wxTextCtrl;
 class wxCheckBox;
 
-#define TRUNCATESILENCE_PLUGIN_SYMBOL XO("Truncate Silence")
+#define TRUNCATESILENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Truncate Silence") }
 
 class RegionList;
 
@@ -41,7 +41,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 
@@ -97,7 +97,7 @@ private:
 
 private:
 
-   int mTruncDbChoiceIndex;
+   double mThresholdDB {} ;
    int mActionIndex;
    double mInitialAllowedSilence;
    double mTruncLongestAllowedSilence;
@@ -106,7 +106,7 @@ private:
 
    size_t mBlendFrameCount;
 
-   wxChoice *mTruncDbChoice;
+   wxTextCtrl *mThresholdText;
    wxChoice *mActionChoice;
    wxTextCtrl *mInitialAllowedSilenceT;
    wxTextCtrl *mTruncLongestAllowedSilenceT;

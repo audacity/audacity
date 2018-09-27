@@ -43,6 +43,10 @@ KeyConfigPrefs and MousePrefs use.
 #include "../widgets/KeyView.h"
 #include "../widgets/ErrorDialog.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
+
 //
 // KeyConfigPrefs
 //
@@ -159,6 +163,12 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                if( mViewByName ) mViewByName->SetName(_("View by name"));
                mViewByKey = S.Id(ViewByKeyID).TieRadioButton(_("&Key"), wxT("key"));
                if( mViewByKey ) mViewByKey->SetName(_("View by key"));
+#if wxUSE_ACCESSIBILITY
+               // so that name can be set on a standard control
+               if (mViewByTree) mViewByTree->SetAccessible(safenew WindowAccessible(mViewByTree));
+               if (mViewByName) mViewByName->SetAccessible(safenew WindowAccessible(mViewByName));
+               if (mViewByKey) mViewByKey->SetAccessible(safenew WindowAccessible(mViewByKey));
+#endif
             }
             S.EndRadioButtonGroup();
          }
@@ -224,7 +234,10 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                   wxSize(210, -1),
 #endif
                                   wxTE_PROCESS_ENTER);
-
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            mKey->SetAccessible(safenew WindowAccessible(mKey));
+#endif
             mKey->SetName(_("Short cut"));
             mKey->Bind(wxEVT_KEY_DOWN,
                           &KeyConfigPrefs::OnHotkeyKeyDown,

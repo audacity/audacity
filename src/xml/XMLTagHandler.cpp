@@ -39,6 +39,7 @@
 #include "../SampleFormat.h"
 #include "../Track.h"
 
+// Length check.  Is in part about not supplying malicious strings to file functions.
 bool XMLValueChecker::IsGoodString(const wxString & str)
 {
    size_t len = str.Length();
@@ -49,6 +50,13 @@ bool XMLValueChecker::IsGoodString(const wxString & str)
    else
       return false; // good place for a breakpoint
 }
+
+// No length check, as e.g. labels could be very long.
+bool XMLValueChecker::IsGoodLongString(const wxString & str)
+{
+   return str.Find('\0', false) == -1; // No null characters except terminator.
+}
+
 
 // "Good" means the name is well-formed and names an existing file or folder.
 bool XMLValueChecker::IsGoodFileName(const wxString & strFileName, const wxString & strDirName /* = "" */)

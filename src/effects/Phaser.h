@@ -27,7 +27,7 @@ class ShuttleGui;
 
 #define NUM_STAGES 24
 
-#define PHASER_PLUGIN_SYMBOL XO("Phaser")
+#define PHASER_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Phaser") }
 
 class EffectPhaserState
 {
@@ -52,7 +52,7 @@ public:
 
    // IdentInterface implementation
 
-   wxString GetSymbol() override;
+   IdentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 
@@ -80,7 +80,7 @@ public:
 
    // Effect implementation
 
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

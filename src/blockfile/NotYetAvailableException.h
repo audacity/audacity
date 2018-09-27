@@ -25,7 +25,6 @@ public:
    ~NotYetAvailableException();
 
 protected:
-   std::unique_ptr< AudacityException > Move() override;
    wxString ErrorMessage() const override;
 };
 

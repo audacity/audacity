@@ -20,6 +20,7 @@
 
 #include "Experimental.h"
 
+#include <chrono>
 #include <vector>
 #include "wx/wx.h"
 
@@ -55,6 +56,9 @@ class DeviceManager final
    /// Assumes that DeviceManager is only used on the main thread.
    void Rescan();
 
+   // Time since devices scanned in seconds.
+   float GetTimeSinceRescan();
+
    DeviceSourceMap* GetDefaultOutputDevice(int hostIndex);
    DeviceSourceMap* GetDefaultInputDevice(int hostIndex);
 
@@ -67,6 +71,9 @@ class DeviceManager final
    void DeviceChangeNotification();
 #endif
 #endif
+
+private:
+   std::chrono::time_point<std::chrono::steady_clock> mRescanTime;
 
  protected:
    //private constructor - Singleton.

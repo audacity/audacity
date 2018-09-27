@@ -1102,7 +1102,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
 
 /// For mono track height of track
 /// For stereo track combined height of both channels.
-int TrackList::GetGroupHeight(Track * t) const
+int TrackList::GetGroupHeight(const Track * t) const
 {
    int height = t->GetHeight();
 
@@ -1354,14 +1354,14 @@ WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool i
 }
 
 #if defined(USE_MIDI)
-NoteTrackArray TrackList::GetNoteTrackArray(bool selectionOnly)
+NoteTrackConstArray TrackList::GetNoteTrackConstArray(bool selectionOnly) const
 {
-   NoteTrackArray noteTrackArray;
+   NoteTrackConstArray noteTrackArray;
 
    for(const auto &track : *this) {
       if (track->GetKind() == Track::Note &&
          (track->GetSelected() || !selectionOnly)) {
-         noteTrackArray.push_back( Track::Pointer<NoteTrack>(track) );
+         noteTrackArray.push_back( Track::Pointer<const NoteTrack>(track) );
       }
    }
 
@@ -1482,6 +1482,7 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
       if (it->get()->GetId() == TrackId{}) {
          if (pAdded)
             pAdded->push_back( *it );
+         (*it)->SetOwner( {}, {} );
          it = erase( it );
       }
       else
@@ -1553,14 +1554,20 @@ bool TrackList::ApplyPendingTracks()
    return result;
 }
 
-std::shared_ptr<Track> TrackList::FindPendingChangedTrack(TrackId id) const
+std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
 {
    // Linear search.  Tracks in a project are usually very few.
-   auto it = std::find_if( mPendingUpdates.begin(), mPendingUpdates.end(),
-      [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
-   if (it == mPendingUpdates.end())
-      return {};
-   return *it;
+   auto pList = mList.lock();
+   if (pList) {
+      const auto id = GetId();
+      const auto end = pList->mPendingUpdates.end();
+      auto it = std::find_if(
+         pList->mPendingUpdates.begin(), end,
+         [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
+      if (it != end)
+         return *it;
+   }
+   return Pointer( this );
 }
 
 bool TrackList::HasPendingTracks() const
@@ -1572,4 +1579,18 @@ bool TrackList::HasPendingTracks() const
    }))
       return true;
    return false;
+}
+
+#include "AudioIO.h"
+TransportTracks GetAllPlaybackTracks(TrackList &trackList, bool selectedOnly, bool useMidi)
+{
+   TransportTracks result;
+   result.playbackTracks = trackList.GetWaveTrackArray(selectedOnly);
+#ifdef EXPERIMENTAL_MIDI_OUT
+   if (useMidi)
+      result.midiTracks = trackList.GetNoteTrackConstArray(selectedOnly);
+#else
+   WXUNUSED(useMidi);
+#endif
+   return result;
 }

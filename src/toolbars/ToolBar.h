@@ -97,6 +97,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
 
    bool AcceptsFocus() const override { return false; };
 
+   void SetToDefaultSize();
    //NEW virtuals:
    virtual void Create(wxWindow *parent);
    virtual void EnableDisableButtons() = 0;
@@ -110,10 +111,8 @@ class ToolBar /* not final */ : public wxPanelWrapper
    wxString GetSection();
    ToolDock *GetDock();
 
-   void SetLabel(const wxString & label);
-   void SetDock( ToolDock *dock);
-
-   void SetDocked(ToolDock *dock, bool pushed);
+   void SetLabel(const wxString & label) override;
+   virtual void SetDocked(ToolDock *dock, bool pushed);
 
    // NEW virtual:
    virtual bool Expose(bool show = true);

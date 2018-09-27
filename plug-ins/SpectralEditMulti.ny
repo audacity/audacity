@@ -5,6 +5,7 @@ $name (_ "Spectral edit multi tool")
 $manpage "Spectral_edit_multi_tool"
 $action (_ "Filtering...")
 $author (_ "Paul Licameli")
+$release 2.3.0
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; SpectralEditMulti.ny by Paul Licameli, November 2014.

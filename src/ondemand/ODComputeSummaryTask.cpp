@@ -35,9 +35,9 @@ ODComputeSummaryTask::ODComputeSummaryTask()
    mHasUpdateRan=false;
 }
 
-movable_ptr<ODTask> ODComputeSummaryTask::Clone() const
+std::unique_ptr<ODTask> ODComputeSummaryTask::Clone() const
 {
-   auto clone = make_movable<ODComputeSummaryTask>();
+   auto clone = std::make_unique<ODComputeSummaryTask>();
    clone->mDemandSample = GetDemandSample();
    // This std::move is needed to "upcast" the pointer type
    return std::move(clone);
@@ -66,7 +66,7 @@ void ODComputeSummaryTask::DoSomeInternal()
    }
 
    mBlockFilesMutex.Lock();
-   for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
+   for(size_t j=0; j < mWaveTracks.size() && mBlockFiles.size();j++)
    {
       bool success = false;
       const auto bf = mBlockFiles[0].lock();

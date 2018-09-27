@@ -305,10 +305,11 @@ MeterPanel::MeterPanel(AudacityProject *project,
    UpdatePrefs();
 
    wxColour backgroundColour = theTheme.Colour( clrMedium);
-   mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
+   mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
+   SetBackgroundColour( backgroundColour );
 
-   mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxSOLID);
-   mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxSOLID);
+   mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
+   mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
 
    // Register for our preference update event
    wxTheApp->Bind(EVT_METER_PREFERENCES_CHANGED,
@@ -320,10 +321,10 @@ MeterPanel::MeterPanel(AudacityProject *project,
       wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
                      &MeterPanel::OnAudioIOStatus,this);
 
-      mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxSOLID);
-      mBrush     = wxBrush( theTheme.Colour( clrMeterInputBrush       ), wxSOLID);
-      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterInputRMSBrush    ), wxSOLID);
-      mClipBrush = wxBrush( theTheme.Colour( clrMeterInputClipBrush   ), wxSOLID);
+      mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxPENSTYLE_SOLID);
+      mBrush     = wxBrush( theTheme.Colour( clrMeterInputBrush       ), wxBRUSHSTYLE_SOLID);
+      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterInputRMSBrush    ), wxBRUSHSTYLE_SOLID);
+      mClipBrush = wxBrush( theTheme.Colour( clrMeterInputClipBrush   ), wxBRUSHSTYLE_SOLID);
 //      mLightPen  = wxPen(   theTheme.Colour( clrMeterInputLightPen    ), 1, wxSOLID);
 //      mDarkPen   = wxPen(   theTheme.Colour( clrMeterInputDarkPen     ), 1, wxSOLID);
    }
@@ -332,10 +333,10 @@ MeterPanel::MeterPanel(AudacityProject *project,
       wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
                      &MeterPanel::OnAudioIOStatus,this);
 
-      mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxSOLID);
-      mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxSOLID);
-      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxSOLID);
-      mClipBrush = wxBrush( theTheme.Colour( clrMeterOutputClipBrush  ), wxSOLID);
+      mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxPENSTYLE_SOLID);
+      mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxBRUSHSTYLE_SOLID);
+      mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxBRUSHSTYLE_SOLID);
+      mClipBrush = wxBrush( theTheme.Colour( clrMeterOutputClipBrush  ), wxBRUSHSTYLE_SOLID);
 //      mLightPen  = wxPen(   theTheme.Colour( clrMeterOutputLightPen   ), 1, wxSOLID);
 //      mDarkPen   = wxPen(   theTheme.Colour( clrMeterOutputDarkPen    ), 1, wxSOLID);
    }
@@ -468,7 +469,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    wxColour clrText = theTheme.Colour( clrTrackPanelText );
    wxColour clrBoxFill = theTheme.Colour( clrMedium );
 
-   if (mLayoutValid == false)
+   if (mLayoutValid == false || (mStyle == MixerTrackCluster ))
    {
       // Create a NEW one using current size and select into the DC
       mBitmap = std::make_unique<wxBitmap>();
@@ -488,7 +489,8 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
       //}
 #endif
-   
+     
+      mBkgndBrush.SetColour( GetBackgroundColour() );
       dc.SetPen(*wxTRANSPARENT_PEN);
       dc.SetBrush(mBkgndBrush);
       dc.DrawRectangle(0, 0, mWidth, mHeight);
@@ -1811,7 +1813,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // Draw the "recent" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          dc.SetPen(mPen);
-         int ht = (int)(bar->peakHold * (h - 1) + 0.5);
+         ht = (int)(bar->peakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
             AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);

@@ -98,6 +98,7 @@ private:
 
    double GetOffset() const override;
    void SetOffset(double o) override;
+   virtual int GetChannelIgnoringPan() const;
    virtual int GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
@@ -105,14 +106,14 @@ private:
     *
     * @return time in seconds, or zero if there are no clips in the track
     */
-   double GetStartTime() const;
+   double GetStartTime() const override;
 
    /** @brief Get the time at which the last clip in the track ends, plus
     * recorded stuff
     *
     * @return time in seconds, or zero if there are no clips in the track.
     */
-   double GetEndTime() const;
+   double GetEndTime() const override;
 
    //
    // Identifying the type of track
@@ -137,6 +138,11 @@ private:
 
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;
+
+   // Old gain is used in playback in linearly interpolating 
+   // the gain.
+   float GetOldChannelGain(int channel) const;
+   void SetOldChannelGain(int channel, float gain);
 
    void DoSetMinimized(bool isMinimized) override;
 
@@ -615,6 +621,7 @@ private:
    float         mGain;
    float         mPan;
    int           mWaveColorIndex;
+   float         mOldGain[2];
 
 
    //

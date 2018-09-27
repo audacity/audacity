@@ -21,22 +21,7 @@
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\filter.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\lsr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\pffft32s.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\rate32.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\rate32s.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\rate64.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libsoxr\src\simd.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\soxr.c">
@@ -45,5 +30,10 @@
     <ClCompile Include="..\..\..\lib-src\libsoxr\src\vr32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsoxr\src\cr.c" />
+    <ClCompile Include="..\..\..\lib-src\libsoxr\src\cr32.c" />
+    <ClCompile Include="..\..\..\lib-src\libsoxr\src\cr32s.c" />
+    <ClCompile Include="..\..\..\lib-src\libsoxr\src\cr64.c" />
+    <ClCompile Include="..\..\..\lib-src\libsoxr\src\util32s.c" />
   </ItemGroup>
 </Project>

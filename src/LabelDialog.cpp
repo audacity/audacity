@@ -237,14 +237,12 @@ void LabelDialog::Populate()
    r = GetRect();
    SetSizeHints(r.GetWidth(), r.GetHeight());
 
+   // Bug 1465
+   // There might be a saved size, in which case use that.
+   ReadSize();
+
    // Center on display
    Center();
-
-// Size and place window
-//   SetSize(wxSystemSettings::GetMetric(wxSYS_SCREEN_X) * 3 / 4,
-//           wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) * 4 / 5);
-//   Center();
-
 }
 
 void LabelDialog::PopulateOrExchange( ShuttleGui & S )
@@ -899,6 +897,25 @@ void LabelDialog::OnChangeHfreq(wxGridEvent & WXUNUSED(event), int row, RowData 
    return;
 }
 
+void LabelDialog::ReadSize(){
+   wxSize sz = GetSize();
+   int prefWidth, prefHeight;
+   gPrefs->Read(wxT("/LabelEditor/Width"), &prefWidth, sz.x);
+   gPrefs->Read(wxT("/LabelEditor/Height"), &prefHeight, sz.y);
+   
+   wxRect screenRect(wxGetClientDisplayRect());
+   wxSize prefSize = wxSize(prefWidth, prefHeight);
+   prefSize.DecTo(screenRect.GetSize());
+   SetSize(prefSize);
+}
+
+void LabelDialog::WriteSize(){
+   wxSize sz = GetSize();
+   gPrefs->Write(wxT("/LabelEditor/Width"), sz.x);
+   gPrefs->Write(wxT("/LabelEditor/Height"), sz.y);
+   gPrefs->Flush();
+}
+
 void LabelDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
@@ -909,6 +926,7 @@ void LabelDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
    // Standard handling
    if (Validate() && TransferDataFromWindow()) {
+      WriteSize();
       EndModal(wxID_OK);
    }
 
@@ -927,6 +945,7 @@ void LabelDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
+   WriteSize();
    // Standard handling
    EndModal(wxID_CANCEL);
 

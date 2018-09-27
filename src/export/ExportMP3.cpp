@@ -1599,7 +1599,7 @@ class ExportMP3 final : public ExportPlugin
 public:
 
    ExportMP3();
-   bool CheckFileName(wxFileName & filename, int format);
+   bool CheckFileName(wxFileName & filename, int format) override;
 
    // Required
 
@@ -2158,9 +2158,9 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-movable_ptr<ExportPlugin> New_ExportMP3()
+std::unique_ptr<ExportPlugin> New_ExportMP3()
 {
-   return make_movable<ExportMP3>();
+   return std::make_unique<ExportMP3>();
 }
 
 //----------------------------------------------------------------------------

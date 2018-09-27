@@ -40,6 +40,8 @@
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
+#include "../tracks/ui/Scrubbing.h"
+#include "../Prefs.h"
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
@@ -88,7 +90,7 @@ END_EVENT_TABLE()
 
 ////Standard Constructor
 TranscriptionToolBar::TranscriptionToolBar()
-: ToolBar(TranscriptionBarID, _("Transcription"), wxT("Transcription"))
+: ToolBar(TranscriptionBarID, _("Play-at-Speed"), wxT("Transcription"),true)
 {
    mPlaySpeed = 1.0 * 100.0;
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -131,6 +133,11 @@ void TranscriptionToolBar::Create(wxWindow * parent)
    //then stop Audio if it is playing, so we can be playing
    //audio and open a second project.
    mPlaySpeed = (mPlaySpeedSlider->Get()) * 100;
+
+   // Simulate a size event to set initial placement/size
+   wxSizeEvent event(GetSize(), GetId());
+   event.SetEventObject(this);
+   GetEventHandler()->ProcessEvent(event);
 }
 
 /// This is a convenience function that allows for button creation in
@@ -195,11 +202,12 @@ void TranscriptionToolBar::Populate()
          .Style( SPEED_SLIDER )
          //  6 steps using page up/down, and 60 using arrow keys
          .Line( 0.16667f )
-         .Page( 0.16667f )
+         .Page( 1.6667f )
    );
+   mPlaySpeedSlider->SetSizeHints(wxSize(100, 25), wxSize(2000, 25));
    mPlaySpeedSlider->Set(mPlaySpeed / 100.0);
    mPlaySpeedSlider->SetLabel(_("Playback Speed"));
-   Add( mPlaySpeedSlider, 0, wxALIGN_CENTER );
+   Add( mPlaySpeedSlider, 1, wxALIGN_CENTER );
    mPlaySpeedSlider->Bind(wxEVT_SET_FOCUS,
                  &TranscriptionToolBar::OnFocus,
                  this);
@@ -289,7 +297,7 @@ void TranscriptionToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(_("Transcription"));
+   SetLabel(_("Play-at-Speed"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
@@ -319,7 +327,6 @@ void TranscriptionToolBar::RegenerateTooltips()
       };
       ToolBar::SetButtonToolTip( *mButtons[entry.tool], commands, 2u );
    }
-
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
    mButtons[TTB_StartOn]->SetToolTip(TRANSLATABLE("Left-to-On"));
@@ -447,12 +454,33 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    }
 
-   // Create a TimeTrack if we haven't done so already
-   if (!mTimeTrack) {
-      mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
-      if (!mTimeTrack) {
-         return;
+   // Fixed speed play is the old method, that uses a time track.
+   // VariSpeed play reuses Scrubbing.
+   bool bFixedSpeedPlay = !gPrefs->ReadBool(wxT("/AudioIO/VariSpeedPlay"), true);
+   // Scrubbing doesn't support note tracks, but the fixed-speed method using time tracks does.
+   TrackListIterator iter(p->GetTracks());
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      if (t->GetKind() == Track::Note) {
+         bFixedSpeedPlay = true;
+         break;
       }
+   }
+   // Scrubbing only supports straight through play.
+   // So if looped or cutPreview, we have to fall back to fixed speed.
+   bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
+   if (bFixedSpeedPlay)
+   {
+      // Create a TimeTrack if we haven't done so already
+      if (!mTimeTrack) {
+         mTimeTrack = p->GetTrackFactory()->NewTimeTrack();
+         if (!mTimeTrack) {
+            return;
+         }
+      }
+      // Set the speed range
+      //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
+      //mTimeTrack->SetRangeLower((double)mPlaySpeed / 100.0);
+      mTimeTrack->GetEnvelope()->Flatten((double)mPlaySpeed / 100.0);
    }
 
    // Pop up the button
@@ -463,20 +491,20 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       p->GetControlToolBar()->StopPlaying();
    }
 
-   // Set the speed range
-   //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
-   //mTimeTrack->SetRangeLower((double)mPlaySpeed / 100.0);
-   mTimeTrack->GetEnvelope()->Flatten((double)mPlaySpeed / 100.0);
-
    // Get the current play region
    double playRegionStart, playRegionEnd;
    p->GetPlayRegion(&playRegionStart, &playRegionEnd);
 
    // Start playing
-   if (playRegionStart >= 0) {
-//      playRegionEnd = playRegionStart + (playRegionEnd-playRegionStart)* 100.0/mPlaySpeed;
+   if (playRegionStart < 0)
+      return;
+   if (bFixedSpeedPlay)
+   {
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
+      // No need to set cutPreview options.
+      // Due to a rather hacky approach, the appearance is used
+      // to signal use of cutpreview to code below.
       options.timeTrack = mTimeTrack.get();
       ControlToolBar::PlayAppearance appearance =
          cutPreview ? ControlToolBar::PlayAppearance::CutPreview
@@ -484,9 +512,14 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
          : ControlToolBar::PlayAppearance::Straight;
       p->GetControlToolBar()->PlayPlayRegion
          (SelectedRegion(playRegionStart, playRegionEnd),
-          options,
-          PlayMode::normalPlay,
-          appearance);
+            options,
+            PlayMode::normalPlay,
+            appearance);
+   }
+   else
+   {
+      Scrubber &Scrubber = p->GetScrubber();
+      Scrubber.StartSpeedPlay(GetPlaySpeed(), playRegionStart, playRegionEnd);
    }
 }
 

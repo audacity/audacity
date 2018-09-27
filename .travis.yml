@@ -17,4 +17,6 @@ before_install:
 language:
     - cpp
 script:
-    - time ./configure && time make -j2
+    - mkdir build
+    - cd build
+    - time ../configure && time make modules && time make -j2

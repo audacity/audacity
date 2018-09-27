@@ -1140,7 +1140,7 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
    if (result != len)
    {
-      wxLogWarning(wxT("Expected to read %ld samples, got %d samples."),
+      wxLogWarning(wxT("Expected to read %ld samples, got %ld samples."),
                    len, result);
       return false;
    }

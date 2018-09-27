@@ -131,7 +131,7 @@ void MacroCommands::RestoreMacro(const wxString & name)
    } else if (name == GetCustomTranslation( FadeEnds ) ){
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\"") );
         AddToMacro( wxT("FadeIn") );
-        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" RelativeTo=\"Project End\"") );
+        AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"1\" RelativeTo=\"ProjectEnd\"") );
         AddToMacro( wxT("FadeOut") );
         AddToMacro( wxT("Select"), wxT("Start=\"0\" End=\"0\"") );
    } else if (name == GetCustomTranslation( SelectToEnds ) ){
@@ -310,7 +310,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          auto command = em.GetCommandIdentifier(plug->GetID());
          if (!command.IsEmpty())
             commands.push_back( {
-               { command, plug->GetTranslatedName() },
+               { command, plug->GetSymbol().Translation() },
                plug->GetPluginType() == PluginTypeEffect ?
                   _("Effect") : _("Menu Command (With Parameters)")
             } );
@@ -558,7 +558,6 @@ wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxStr
    cleanedName += wxFileName::GetPathSeparator();
    cleanedName += justName;
    cleanedName += extension;
-   wxGetApp().AddFileToHistory(cleanedName);
 
    return cleanedName;
 }
@@ -798,19 +797,22 @@ bool MacroCommands::ApplyCommand( const wxString &friendlyCommand,
 }
 
 bool MacroCommands::ApplyCommandInBatchMode( const wxString &friendlyCommand,
-   const wxString & command, const wxString &params)
+   const wxString & command, const wxString &params,
+   CommandContext const * pContext)
 {
    AudacityProject *project = GetActiveProject();
    // Recalc flags and enable items that may have become enabled.
    project->UpdateMenus(false);
    // enter batch mode...
    bool prevShowMode = project->GetShowId3Dialog();
+   project->mBatchMode++;
    auto cleanup = finally( [&] {
       // exit batch mode...
       project->SetShowId3Dialog(prevShowMode);
+      project->mBatchMode--;
    } );
 
-   return ApplyCommand( friendlyCommand, command, params );
+   return ApplyCommand( friendlyCommand, command, params, pContext );
 }
 
 static int MacroReentryCount = 0;

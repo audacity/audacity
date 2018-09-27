@@ -93,7 +93,7 @@ class ToolManager final : public wxEvtHandler, public wxEventFilter
    void Updated();
 
    AudacityProject *mParent;
-   wxWindow *mLastFocus{};
+   wxWindowRef mLastFocus{};
 
    ToolFrame *mDragWindow;
    ToolDock *mDragDock;

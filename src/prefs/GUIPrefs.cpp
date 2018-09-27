@@ -196,6 +196,12 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("B&lend system and Audacity theme"),
                     wxT("/GUI/BlendThemes"),
                     true);
+#ifndef __WXMAC__
+      /* i18n-hint: RTL stands for 'Right to Left'  */
+      S.TieCheckBox(_("Use mostly Left-to-Right layouts in RTL languages"),
+         "/GUI/RtlWorkaround",
+         true);
+#endif
    }
    S.EndStatic();
 

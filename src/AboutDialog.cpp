@@ -109,7 +109,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
    AddCredit(wxString(wxT("Steve Daulton")), roleTeamMember);
-   AddCredit(wxString(wxT("Vaughan Johnson, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
@@ -127,6 +126,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Benjamin Drung, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Joshua Haberman, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Ruslan Ijbulatov, ")) + _("developer"), roleEmeritusTeam);
+   AddCredit(wxString(wxT("Vaughan Johnson, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Leland Lucius, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Dominic Mazzoni, "))+_("co-founder and developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Markus Meyer, ")) + _("developer"), roleEmeritusTeam);
@@ -161,6 +161,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Arun Kishore, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Paul Livesey, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Harvey Lubin, ")) + _("graphic artist"), roleContributor);
+   AddCredit(wxString(wxT("Max Maisel, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Greg Mekkes, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Abe Milde, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Paul Nasca, ")) + _("developer"), roleContributor);
@@ -182,6 +183,10 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Tom Woodhams, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Mark Young, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Wing Yu, ")) + _("developer"), roleContributor);
+
+   // Website and Graphics
+   AddCredit(wxString(wxT("Shinta Carolinasari, ")) + _("web developer"), roleGraphics);
+   AddCredit(wxString(wxT("Bayu Rizaldhan Rayes, ")) + _("graphics"), roleGraphics);
 
    // Libraries
 
@@ -352,6 +357,9 @@ visit our [[https://forum.audacityteam.org/|forum]].");
 
       wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
+
+      wxT("<p><b>") + _("Website and Graphics") + wxT("</b><br>") +
+      GetCreditsByRole(roleGraphics) +
 
       (translatorCredits.empty()
          ? wxT("")
@@ -986,11 +994,7 @@ wxT("POSSIBILITY OF SUCH DAMAGES.\n"));
 
 void AboutDialog::AddCredit(wxString &&description, Role role)
 {
-#ifdef __AUDACITY_OLD_STD__
-   creditItems.push_back(AboutDialogCreditItem{ std::move(description), role });
-#else
    creditItems.emplace_back(std::move(description), role);
-#endif
 }
 
 wxString AboutDialog::GetCreditsByRole(AboutDialog::Role role)

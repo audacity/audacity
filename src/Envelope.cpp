@@ -754,7 +754,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // envelope point applies to the first sample, but the t=tracklen
 // envelope point applies one-past the last actual sample.
 // t0 should be in the domain of this; if not, it is trimmed.
-void Envelope::Paste( double t0, const Envelope *e, double sampleDur )
+void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
 // NOFAIL-GUARANTEE
 {
    const bool wasEmpty = (this->mEnv.size() == 0);
@@ -774,7 +774,8 @@ void Envelope::Paste( double t0, const Envelope *e, double sampleDur )
       return;
    }
 
-   // Make t0 relative and trim it to the domain of this
+   // Make t0 relative to the offset of the envelope we are pasting into, 
+   // and trim it to the domain of this
    t0 = std::min( mTrackLen, std::max( 0.0, t0 - mOffset ) );
 
    // Adjust if the insertion point rounds off near a discontinuity in this
@@ -812,7 +813,13 @@ void Envelope::Paste( double t0, const Envelope *e, double sampleDur )
    for ( size_t index = insertAt, last = insertAt + otherSize;
          index < last; ++index ) {
       auto &point = mEnv[ index ];
-      point.SetT( point.GetT() + otherOffset + t0 );
+      // The mOffset of the envelope-pasted-from is irrelevant.
+      // The GetT() times in it are relative to its start.
+      // The new GetT() times are relative to the envelope-pasted-to start.
+      // We are pasting at t0 relative to the envelope-pasted-to start.
+      // Hence we adjust by just t0.
+      // Bug 1844 was that we also adjusted by the envelope-pasted-from offset.
+      point.SetT( point.GetT() + /*otherOffset +*/ t0 );
    }
 
    // Treat removable discontinuities

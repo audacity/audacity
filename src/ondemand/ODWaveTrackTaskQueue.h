@@ -72,7 +72,7 @@ class ODWaveTrackTaskQueue final
    int GetNumWaveTracks();
 
    ///Add a task to the queue.
-   void AddTask(movable_ptr<ODTask> &&mtask);
+   void AddTask(std::unique_ptr<ODTask> &&mtask);
 
    //returns true if either tracks or tasks are empty
    bool IsEmpty();
@@ -106,7 +106,7 @@ class ODWaveTrackTaskQueue final
   ODLock mTracksMutex;
 
   ///the list of tasks associated with the tracks.  This class owns these tasks.
-  std::vector<movable_ptr<ODTask>> mTasks;
+  std::vector<std::unique_ptr<ODTask>> mTasks;
   ODLock    mTasksMutex;
 
 };

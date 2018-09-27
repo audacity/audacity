@@ -37,6 +37,8 @@ protected:
    const bool mIsMaster;
    int mLastIndicatorX { -1 };
    int mNewIndicatorX { -1 };
+   bool mNewIsCapturing { false };
+   bool mLastIsCapturing { false };
 };
 
 // Master object for track panel, creates the other object for the ruler

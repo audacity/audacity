@@ -83,7 +83,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Temporary files directory"));
    {
-      S.StartMultiColumn(3, wxEXPAND);
+      S.StartMultiColumn(2, wxEXPAND);
       {
          S.SetStretchyCol(1);
 
@@ -92,13 +92,16 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
                                  wxT("/Directories/TempDir"),
                                  wxT(""),
                                  30);
-         S.Id(ChooseButtonID);
-         S.AddButton(_("C&hoose..."));
-
-         S.AddFixedText(_("Free Space:"));
-         mFreeSpace = S.AddVariableText( {} );
       }
       S.EndMultiColumn();
+      S.StartHorizontalLay(wxEXPAND);
+      {
+         S.Prop(0).AddFixedText(_("Free Space:"));
+         mFreeSpace = S.Prop(0).AddVariableText( {} );
+         S.Prop(10).AddSpace( 10 );
+         S.Id(ChooseButtonID).Prop(0).AddButton(_("C&hoose..."));
+      }
+
    }
    S.EndStatic();
 

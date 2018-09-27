@@ -68,7 +68,7 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
    { XO("Edit") },
    { XO("Device") },
    { XO("Scrub") },
-   { XO("Transcription") },
+   { XO("Play-at-Speed") },
    { XO("Trackpanel") },
    { XO("Ruler") },
    { XO("Tracks") },
@@ -143,6 +143,16 @@ wxTopLevelWindow *ScreenshotCommand::GetFrontWindow(AudacityProject *project)
    wxWindow *front = NULL;
    wxWindow *proj = wxGetTopLevelParent(project);
 
+
+   // JKC: The code below is no longer such a good idea.
+   // We now have options to directly capture toolbars, effects, preferences.
+   // We now also may have more than one dialog open, so who is to say 
+   // which one we want to capture?  Additionally, as currently written,
+   // it may capture the screenshot dialog itself (on Linux)
+   // IF we still keep this code in future, it needs a rethink.
+   // Possibly as well as the kWindow options, we should offer kDialog options, 
+   // which attempt to do what this once did.
+#if 0
    // This is kind of an odd hack.  There's no method to enumerate all
    // possible windows, so we search the whole screen for any windows
    // that are not this one and not the given Audacity project and
@@ -156,13 +166,14 @@ wxTopLevelWindow *ScreenshotCommand::GetFrontWindow(AudacityProject *project)
          wxWindow *win = wxFindWindowAtPoint(wxPoint(x, y));
          if (win) {
             win = wxGetTopLevelParent(win);
-            if (win != mIgnore && win != proj) {
+            if (win != mIgnore && win != proj  && win->IsShown()) {
                front = win;
                break;
             }
          }
       }
    }
+#endif
 
    if (!front || !front->IsTopLevel()) {
       return (wxTopLevelWindow *)proj;
@@ -260,7 +271,7 @@ bool ScreenshotCommand::Capture(
       wxBitmap back(width + b.width, height + b.height);
       fullDC.SelectObject(back);
 
-      fullDC.SetBackground(wxBrush(mBackColor, wxSOLID));
+      fullDC.SetBackground(wxBrush(mBackColor, wxBRUSHSTYLE_SOLID));
       fullDC.Clear();
 
       fullDC.DrawBitmap(part, b.x, b.y);
@@ -315,7 +326,7 @@ bool ScreenshotCommand::CaptureToolbar(
 
 bool ScreenshotCommand::CaptureDock(
    const CommandContext & context,
-   wxWindow *win, const wxString &mFileName)
+   wxWindow *win, const wxString &FileName)
 {
    int x = 0, y = 0;
    int width, height;
@@ -324,7 +335,7 @@ bool ScreenshotCommand::CaptureDock(
    win->GetParent()->ScreenToClient(&x, &y);
    win->GetClientSize(&width, &height);
 
-   return Capture(context, mFileName, win, wxRect(x, y, width, height));
+   return Capture(context, FileName, win, wxRect(x, y, width, height));
 }
 
 void ExploreMenu(
@@ -357,7 +368,6 @@ void ExploreMenu(
       if (item->IsCheck() && item->IsChecked())
          flags +=2;
 
-      wxLogDebug("T.Add( %2i, %2i,  0, \"%s¬%s\" );", depth, flags, Label,Accel ); 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
          ExploreMenu( context, pMenu, item->GetId(), depth+1 );
@@ -411,14 +421,18 @@ void ScreenshotCommand::CaptureWindowOnIdle(
 
 void ScreenshotCommand::CapturePreferences( 
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName ){
-   (void)&mFileName;//compiler food.
+   AudacityProject * pProject, const wxString &FileName ){
+   (void)&FileName;//compiler food.
    (void)&context;
    CommandManager * pMan = pProject->GetCommandManager();
 
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
-   mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+#ifdef __WXMSW__
+   mDirToWriteTo = FileName.BeforeLast('\\') + "\\";
+#else
+   mDirToWriteTo = FileName.BeforeLast('/') + "/";
+#endif
    mpShooter = this;
    const int nPrefsPages = 19;
 
@@ -428,8 +442,8 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)i);
       gPrefs->Flush();
       wxString Command = "Preferences";
-      const CommandContext context( *pProject );
-      if( !pMan->HandleTextualCommand( Command, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      const CommandContext projectContext( *pProject );
+      if( !pMan->HandleTextualCommand( Command, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Command );
       }
@@ -441,10 +455,10 @@ void ScreenshotCommand::CapturePreferences(
 
 void ScreenshotCommand::CaptureEffects(
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName )
+   AudacityProject * pProject, const wxString &FileName )
 {
    (void)pProject;
-   (void)&mFileName;//compiler food.
+   (void)&FileName;//compiler food.
    (void)&context;
 #define TRICKY_CAPTURE
 #define CAPTURE_NYQUIST_TOO
@@ -485,7 +499,7 @@ void ScreenshotCommand::CaptureEffects(
       "Repeat...",
       "Reverb...",
       //"Reverse",
-      "Sliding Time Scale/Pitch Shift...",
+      "Sliding Stretch...",
       "Truncate Silence...",
       "Wahwah...",
       // Sole LADSPA effect...
@@ -499,7 +513,7 @@ void ScreenshotCommand::CaptureEffects(
       "Limiter...",
       "Low Pass Filter...",
       "Notch Filter...",
-      "Nyquist Prompt...",
+      "Nyquist Effects Prompt...",
       //"Studio Fade Out",
       "Tremolo...",
       "Vocal Reduction and Isolation...",
@@ -534,10 +548,10 @@ void ScreenshotCommand::CaptureEffects(
 
 void ScreenshotCommand::CaptureScriptables( 
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &mFileName )
+   AudacityProject * pProject, const wxString &FileName )
 {
    (void)pProject;
-   (void)&mFileName;//compiler food.
+   (void)&FileName;//compiler food.
    (void)&context;
 
    const wxString ScriptablesNames[] = {
@@ -581,15 +595,19 @@ void ScreenshotCommand::CaptureCommands(
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
+#ifdef __WXMSW__
    mDirToWriteTo = mFileName.BeforeLast('\\') + "\\";
+#else
+   mDirToWriteTo = mFileName.BeforeLast('/') + "/";
+#endif
    mpShooter = this;
 
    for( size_t i=0;i<Commands.GetCount();i++){
       // The handler is cleared each time it is used.
       SetIdleHandler( IdleHandler );
       Str = Commands[i];
-      const CommandContext context( *pProject );
-      if( !pMan->HandleTextualCommand( Str, context, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      const CommandContext projectContext( *pProject );
+      if( !pMan->HandleTextualCommand( Str, projectContext, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
       {
          wxLogDebug("Command %s not found", Str);
       }

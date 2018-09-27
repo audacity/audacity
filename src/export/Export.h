@@ -146,12 +146,16 @@ private:
    std::vector<FormatInfo> mFormatInfos;
 };
 
-using ExportPluginArray = std::vector < movable_ptr< ExportPlugin > > ;
+using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(wxWindow *, WindowPtrArray, class AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
 // Exporter
 //----------------------------------------------------------------------------
+
+// For a file suffix change from the options.
+wxDECLARE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+
 class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
 {
 public:
@@ -161,7 +165,7 @@ public:
 
    void SetFileDialogTitle( const wxString & DialogTitle );
    void SetDefaultFormat( const wxString & Format ){ mFormatName = Format;};
-   void RegisterPlugin(movable_ptr<ExportPlugin> &&plugin);
+   void RegisterPlugin(std::unique_ptr<ExportPlugin> &&plugin);
 
    bool Process(AudacityProject *project, bool selectedOnly,
                 double t0, double t1);
@@ -188,6 +192,8 @@ public:
    int GetAutoExportSubFormat();
    int GetAutoExportFilterIndex();
    wxFileName GetAutoExportFileName();
+   void OnExtensionChanged(wxCommandEvent &evt);
+   void OnHelp(wxCommandEvent &evt);
 
 private:
    bool ExamineTracks();
@@ -287,6 +293,7 @@ private:
 private:
    void OnOk( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
+   void OnMixerPanelHelp( wxCommandEvent &event );
    void OnSlider( wxCommandEvent &event );
    void OnSize( wxSizeEvent &event );
 

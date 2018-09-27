@@ -1206,6 +1206,7 @@
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
 		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
+		5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */; };
 		5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
 		5E15125A1DB000DC00702E29 /* LabelTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512401DB000DC00702E29 /* LabelTrackControls.cpp */; };
@@ -3053,6 +3054,8 @@
 		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
 		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
 		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
+		5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CellularPanel.cpp; sourceTree = "<group>"; };
+		5E0A1CDC20E95FF7001AAF8D /* CellularPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellularPanel.h; sourceTree = "<group>"; };
 		5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackButtonHandles.cpp; sourceTree = "<group>"; };
 		5E10D9051EC8F81300B3AC57 /* PlayableTrackButtonHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayableTrackButtonHandles.h; sourceTree = "<group>"; };
 		5E1512381DB000C000702E29 /* HitTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitTestResult.h; sourceTree = "<group>"; };
@@ -3084,6 +3087,11 @@
 		5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E52335F1EFDD57D001E4BB8 /* TrackPanelDrawingContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelDrawingContext.h; sourceTree = "<group>"; };
+		5E60AC79214C31B100A82791 /* ClassicThemeAsCeeCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassicThemeAsCeeCode.h; sourceTree = "<group>"; };
+		5E60AC7A214C31B100A82791 /* DarkThemeAsCeeCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DarkThemeAsCeeCode.h; sourceTree = "<group>"; };
+		5E60AC7B214C31B100A82791 /* HiContrastThemeAsCeeCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HiContrastThemeAsCeeCode.h; sourceTree = "<group>"; };
+		5E60AC7C214C31B100A82791 /* LightThemeAsCeeCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightThemeAsCeeCode.h; sourceTree = "<group>"; };
+		5E60AC7D214C31B100A82791 /* Registrar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Registrar.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
 		5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveTrackVZoomHandle.cpp; sourceTree = "<group>"; };
 		5E667A5F1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackVZoomHandle.h; sourceTree = "<group>"; };
@@ -4053,6 +4061,7 @@
 				1790AFD809883BFD008A330A /* BatchProcessDialog.cpp */,
 				1790AFDA09883BFD008A330A /* Benchmark.cpp */,
 				1790AFE809883BFD008A330A /* BlockFile.cpp */,
+				5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */,
 				1790AFF409883BFD008A330A /* CrossFade.cpp */,
 				2849B4600A7444BE00ECF12D /* Dependencies.cpp */,
 				28D000A31A32920C00367B21 /* DeviceChange.cpp */,
@@ -4147,8 +4156,11 @@
 				1790AFD909883BFD008A330A /* BatchProcessDialog.h */,
 				1790AFDB09883BFD008A330A /* Benchmark.h */,
 				1790AFE909883BFD008A330A /* BlockFile.h */,
+				5E0A1CDC20E95FF7001AAF8D /* CellularPanel.h */,
+				5E60AC79214C31B100A82791 /* ClassicThemeAsCeeCode.h */,
 				1790AFF009883BFD008A330A /* configtemplate.h */,
 				1790AFF509883BFD008A330A /* CrossFade.h */,
+				5E60AC7A214C31B100A82791 /* DarkThemeAsCeeCode.h */,
 				2849B4610A7444BE00ECF12D /* Dependencies.h */,
 				28D000A41A32920C00367B21 /* DeviceChange.h */,
 				8484F31313086237002DF7F0 /* DeviceManager.h */,
@@ -4166,6 +4178,7 @@
 				1790B07409883BFD008A330A /* float_cast.h */,
 				1790B07609883BFD008A330A /* FreqWindow.h */,
 				28501E9E0CEECEF80029ABAA /* HelpText.h */,
+				5E60AC7B214C31B100A82791 /* HiContrastThemeAsCeeCode.h */,
 				1790B07A09883BFD008A330A /* HistoryWindow.h */,
 				5E1512381DB000C000702E29 /* HitTestResult.h */,
 				1790B07C09883BFD008A330A /* ImageManipulation.h */,
@@ -4177,6 +4190,7 @@
 				1790B0A009883BFD008A330A /* LangChoice.h */,
 				1790B0A209883BFD008A330A /* Languages.h */,
 				1790B0A409883BFD008A330A /* Legacy.h */,
+				5E60AC7C214C31B100A82791 /* LightThemeAsCeeCode.h */,
 				1865A9B51004490400946EE6 /* Lyrics.h */,
 				1865A9B71004490500946EE6 /* LyricsWindow.h */,
 				28FB121F0A3790A8006F0917 /* MacroMagic.h */,
@@ -4198,6 +4212,7 @@
 				28DABFBD0FF19DB100AC7848 /* RealFFTf.h */,
 				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
 				5E1512391DB000C000702E29 /* RefreshCode.h */,
+				5E60AC7D214C31B100A82791 /* Registrar.h */,
 				1790B0D309883BFD008A330A /* Resample.h */,
 				28D8425A1AD8D69D00551353 /* RevisionIdent.h */,
 				1790B0D509883BFD008A330A /* RingBuffer.h */,
@@ -7729,6 +7744,7 @@
 				1790B11E09883BFD008A330A /* BatchCommands.cpp in Sources */,
 				5ED1D0B11CDE560C00471E3C /* BackedPanel.cpp in Sources */,
 				1790B11F09883BFD008A330A /* BatchProcessDialog.cpp in Sources */,
+				5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */,
 				1790B12009883BFD008A330A /* Benchmark.cpp in Sources */,
 				1790B12109883BFD008A330A /* LegacyAliasBlockFile.cpp in Sources */,
 				1790B12209883BFD008A330A /* LegacyBlockFile.cpp in Sources */,
@@ -8493,10 +8509,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.6]" = "c++11";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.7]" = "c++1z";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.6]" = "libstdc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
@@ -8515,7 +8528,7 @@
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.7;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WARNING_CFLAGS = "";
@@ -8525,7 +8538,7 @@
 				WX_FLAVOR = debug;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = /usr/local;
-				WX_VER = 3.0;
+				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
 			name = Debug;
@@ -8820,10 +8833,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.6]" = "c++11";
-				"CLANG_CXX_LANGUAGE_STANDARD[sdk=macosx10.7]" = "c++1z";
-				"CLANG_CXX_LIBRARY[sdk=macosx10.6]" = "libstdc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				"CLANG_CXX_LIBRARY[sdk=macosx10.7]" = "libc++";
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
@@ -8842,7 +8852,7 @@
 					"-Xlinker",
 					"-headerpad_max_install_names",
 				);
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.7;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WARNING_CFLAGS = "";
@@ -8852,7 +8862,7 @@
 				WX_FLAVOR = release;
 				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_osx_cocoau_$(WX_FLAVOR)_xrc-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_webview-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_html-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_qa-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_adv-$(WX_VER) -lwx_osx_cocoau_$(WX_FLAVOR)_core-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_xml-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)_net-$(WX_VER) -lwx_baseu_$(WX_FLAVOR)-$(WX_VER)";
 				WX_PREFIX = /usr/local;
-				WX_VER = 3.0;
+				WX_VER = 3.1;
 				ZERO_LINK = NO;
 			};
 			name = Release;

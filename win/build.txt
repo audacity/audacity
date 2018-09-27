@@ -1,0 +1,64 @@
+Instructions for building on Windows.
+
+Fuller instructions that include 
+   * Portable Settings
+   * Building an Installer
+can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Windows
+
+
+1. MSVC 2017: Download and install Microsoft Visual Studio 2017
+
+ https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2017
+
+2. Git: Download and install Git, for example by installing GitExtensions
+
+ http://gitextensions.github.io/
+
+ download and run the .msi installer.  GitExtensions has a GUI interface, includes Git for
+ Windows and has a Git bash command line in the bottom panel of the screen.
+
+3. wxWidgets:
+
+ 1) Clone wxWidgets and checkout 3.1.1 from the Audacity fork of the 
+    wxWidgets project: 
+       https://github.com/audacity/wxWidgets/
+
+    for example, in the git-bash command line
+      mkdir ./wxWidgets
+      cd ./wxWidgets
+      git clone --recurse-submodules https://github.com/audacity/wxWidgets/
+      
+    IF you forgot the --recurse-submodules, you can correct that later by:
+      git submodule update --init
+
+  2) Follow instructions for building at 
+    https://github.com/audacity/wxWidgets/blob/v3.1.1/README-GIT.md
+    https://github.com/audacity/wxWidgets/blob/v3.1.1/docs/msw/install.txt
+
+    DO set WXWIN to the appropriate directory where you installed wxWidgets.
+    To do that, open a cmd.exe window, and type: 
+       set WXWIN=C:\wxWidgets-3.1.1
+
+    You will be building a dll version with MSVC2017 IDE, so...
+
+    In MSVC 2017 open wx_vc15.sln, and select dll, release.
+    Then build.
+
+  3) Having got this far, it is well worth trying out building some wxWidgets
+    examples to confirm that building has worked OK
+
+4. Audacity
+
+ 1) Clone Audacity from the Audacity GitHub project.
+       https://github.com/audacity/audacity/
+
+    for example, in the git-bash command line
+      mkdir ./audacity
+      cd ./audacity
+      git clone https://github.com/audacity/audacity/
+
+    Audacity itself does not use/need git submodules.
+
+  2) in MSVC 2017 open audacity.sln
+    Choose Release or Debug.
+    Click compile.

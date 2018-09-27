@@ -232,7 +232,7 @@ private:
    bool                    mAsyncDone;    //!< true = 1st async-done message received
 
    GMutex                  mStreamsLock;  //!< Mutex protecting the mStreams array
-   std::vector<movable_ptr<GStreamContext>> mStreams;      //!< Array of pointers to stream contexts
+   std::vector<std::unique_ptr<GStreamContext>> mStreams;      //!< Array of pointers to stream contexts
 };
 
 /// A representative of GStreamer loader in
@@ -299,7 +299,7 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
                 nano);
 
    // Instantiate plugin
-   auto plug = make_movable<GStreamerImportPlugin>();
+   auto plug = std::make_unique<GStreamerImportPlugin>();
 
    // No supported extensions...no gstreamer plugins installed
    if (plug->GetSupportedExtensions().GetCount() == 0)
@@ -569,7 +569,7 @@ GStreamerImportFileHandle::OnPadAdded(GstPad *pad)
 
       {
          // Allocate a NEW stream context
-         auto uc = make_movable<GStreamContext>();
+         auto uc = std::make_unique<GStreamContext>();
          c = uc.get();
          if (!c)
          {

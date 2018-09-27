@@ -40,7 +40,7 @@ public:
    std::shared_ptr<Track> SetFocus( std::shared_ptr<Track> track = {} );
 
    // Returns TRUE if passed track has the focus
-   bool IsFocused( Track *track );
+   bool IsFocused( const Track *track );
 
    // Called to signal changes to a track
    void Updated();
@@ -121,6 +121,7 @@ private:
    TrackPanel *mTrackPanel;
 
    std::weak_ptr<Track> mFocusedTrack;
+   int mNumFocusedTrack;
 
    wxString mMessage;
    bool mTrackName;

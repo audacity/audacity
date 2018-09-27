@@ -71,6 +71,10 @@
 #include "../Theme.h"
 #include "../widgets/HelpSystem.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "../widgets/WindowAccessible.h"
+#endif
+
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
@@ -240,6 +244,7 @@ PrefsDialog::PrefsDialog
 {
    wxASSERT(factories.size() > 0);
    const bool uniquePage = (factories.size() == 1);
+   SetLayoutDirection(wxLayout_LeftToRight);
 
    ShuttleGui S(this, eIsCreating);
 
@@ -248,6 +253,10 @@ PrefsDialog::PrefsDialog
       wxASSERT(factories.size() > 0);
       if (!uniquePage) {
          mCategories = safenew wxTreebookExt(this, wxID_ANY, mTitlePrefix);
+#if wxUSE_ACCESSIBILITY
+         // so that name can be set on a standard control
+         mCategories->GetTreeCtrl()->SetAccessible(safenew WindowAccessible(mCategories->GetTreeCtrl()));
+#endif
          // RJH: Prevent NVDA from reading "treeCtrl"
          mCategories->GetTreeCtrl()->SetName(_("Category"));
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
@@ -347,13 +356,17 @@ PrefsDialog::PrefsDialog
 
    sz.DecTo(screenRect.GetSize());
 
-   int prefWidth, prefHeight;
-   gPrefs->Read(wxT("/Prefs/Width"), &prefWidth, sz.x);
-   gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, sz.y);
+   if( !mUniquePage ){
+      int prefWidth, prefHeight;
+      gPrefs->Read(wxT("/Prefs/Width"), &prefWidth, sz.x);
+      gPrefs->Read(wxT("/Prefs/Height"), &prefHeight, wxMax(480,sz.y));
 
-   wxSize prefSize = wxSize(prefWidth, prefHeight);
-   prefSize.DecTo(screenRect.GetSize());
-   SetSize(prefSize);
+      wxSize prefSize = wxSize(prefWidth, prefHeight);
+      prefSize.DecTo(screenRect.GetSize());
+      SetSize(prefSize);
+      InvalidateBestSize();
+      Layout();
+   }
    SetMinSize(sz);
 
    // Center after all that resizing, but make sure it doesn't end up
@@ -398,6 +411,14 @@ void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    }
    else
       mUniquePage->Cancel();
+
+   // Remember modified dialog size, even if cancelling.
+   if( !mUniquePage ){
+      wxSize sz = GetSize();
+      gPrefs->Write(wxT("/Prefs/Width"), sz.x);
+      gPrefs->Write(wxT("/Prefs/Height"), sz.y);
+   }
+   gPrefs->Flush();
 
    EndModal(false);
 }
@@ -495,9 +516,11 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       mUniquePage->Commit();
    }
 
-   wxSize sz = GetSize();
-   gPrefs->Write(wxT("/Prefs/Width"), sz.x);
-   gPrefs->Write(wxT("/Prefs/Height"), sz.y);
+   if( !mUniquePage ){
+      wxSize sz = GetSize();
+      gPrefs->Write(wxT("/Prefs/Width"), sz.x);
+      gPrefs->Write(wxT("/Prefs/Height"), sz.y);
+   }
    gPrefs->Flush();
 
    // Reads preference /GUI/Theme

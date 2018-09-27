@@ -207,6 +207,10 @@ void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
 
 bool SelectTracksCommand::Apply(const CommandContext &context)
 {
+
+   // Count selection as a do-nothing effect.
+   // Used to invalidate cached selection and tracks.
+   Effect::IncEffectCounter();
    int index = 0;
    TrackList *tracks = context.GetProject()->GetTracks();
 

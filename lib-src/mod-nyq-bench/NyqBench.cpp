@@ -169,7 +169,9 @@ extern "C"
    int ModuleDispatch(ModuleDispatchTypes type){
       switch (type){
          case AppQuiting: {
-            wxASSERT(gBench != NULL);
+            //It is perfectly OK for gBench to be NULL.
+            //Can happen if the menu item was never invoked.
+            //wxASSERT(gBench != NULL);
             if (gBench) {
                gBench->Destroy();
                gBench = NULL;
@@ -185,7 +187,7 @@ extern "C"
 
             wxMenuBar * pBar = p->GetMenuBar();
             wxASSERT(pBar != NULL );
-            wxMenu * pMenu = pBar->GetMenu( 2 );  // Menu 2 is the View Menu.
+            wxMenu * pMenu = pBar->GetMenu( 9 );  // Menu 9 is the Tools Menu.
             wxASSERT( pMenu != NULL );
 
             c->SetCurrentMenu(pMenu);
@@ -193,6 +195,7 @@ extern "C"
             c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
             c->AddItem(wxT("NyqBench"),
                _("&Nyquist Workbench..."),
+               true,
                findme,
                static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench));
 

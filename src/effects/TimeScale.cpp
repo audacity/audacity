@@ -84,14 +84,9 @@ EffectTimeScale::~EffectTimeScale()
 
 // IdentInterface implementation
 
-wxString EffectTimeScale::GetSymbol()
+IdentInterfaceSymbol EffectTimeScale::GetSymbol()
 {
    return TIMESCALE_PLUGIN_SYMBOL;
-}
-
-wxString EffectTimeScale::GetName()
-{
-   return XO("Sliding Time Scale/Pitch Shift");
 }
 
 wxString EffectTimeScale::GetDescription()
@@ -101,7 +96,7 @@ wxString EffectTimeScale::GetDescription()
 
 wxString EffectTimeScale::ManualPage()
 {
-   return wxT("Sliding_Time_Scale_-_Pitch_Shift");
+   return wxT("Sliding_Stretch");
 }
 
 // EffectDefinitionInterface implementation

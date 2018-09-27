@@ -543,11 +543,11 @@ auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
       file.Close();
    }
 
-   return {
+   return (
           sizeof(auHeader) +
           mSummaryInfo.totalSummaryBytes +
           (GetLength() * SAMPLE_SIZE_DISK(mFormat))
-   };
+   );
 }
 
 void SimpleBlockFile::Recover(){

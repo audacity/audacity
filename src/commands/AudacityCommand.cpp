@@ -59,9 +59,7 @@ ShuttleGui.
 #include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 #include "../commands/CommandContext.h"
 
 AudacityCommand::AudacityCommand()
@@ -81,9 +79,8 @@ AudacityCommand::~AudacityCommand()
 }
 
 
-wxString AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol();}
-wxString AudacityCommand::GetName(){        return GetSymbol();}
-wxString AudacityCommand::GetVendor(){      return XO("Audacity");}
+wxString AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
+IdentInterfaceSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
 wxString AudacityCommand::GetVersion(){     return AUDACITY_VERSION_STRING;}
 
 

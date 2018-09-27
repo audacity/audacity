@@ -57,7 +57,7 @@ EffectRepeat::~EffectRepeat()
 
 // IdentInterface implementation
 
-wxString EffectRepeat::GetSymbol()
+IdentInterfaceSymbol EffectRepeat::GetSymbol()
 {
    return REPEAT_PLUGIN_SYMBOL;
 }

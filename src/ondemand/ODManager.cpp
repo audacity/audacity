@@ -142,7 +142,7 @@ void ODManager::RemoveTaskIfInQueue(ODTask* task)
 ///
 ///@param task the task to add
 ///@param lockMutex locks the mutexes if true (default).  This function is used within other ODManager calls, which many need to set this to false.
-void ODManager::AddNewTask(movable_ptr<ODTask> &&mtask, bool lockMutex)
+void ODManager::AddNewTask(std::unique_ptr<ODTask> &&mtask, bool lockMutex)
 {
    auto task = mtask.get();
    ODWaveTrackTaskQueue* queue = NULL;
@@ -168,7 +168,7 @@ void ODManager::AddNewTask(movable_ptr<ODTask> &&mtask, bool lockMutex)
    {
       //Make a NEW one, add it to the local track queue, and to the immediate running task list,
       //since this task is definitely at the head
-      auto newqueue = make_movable<ODWaveTrackTaskQueue>();
+      auto newqueue = std::make_unique<ODWaveTrackTaskQueue>();
       newqueue->AddTask(std::move(mtask));
       mQueues.push_back(std::move(newqueue));
       if(lockMutex)

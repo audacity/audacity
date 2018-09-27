@@ -330,17 +330,12 @@ wxString LV2Effect::GetPath()
    return LilvString(lilv_plugin_get_uri(mPlug));
 }
 
-wxString LV2Effect::GetSymbol()
+IdentInterfaceSymbol LV2Effect::GetSymbol()
 {
    return LilvString(lilv_plugin_get_name(mPlug), true);
 }
 
-wxString LV2Effect::GetName()
-{
-   return GetSymbol();
-}
-
-wxString LV2Effect::GetVendor()
+IdentInterfaceSymbol LV2Effect::GetVendor()
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 
@@ -349,7 +344,7 @@ wxString LV2Effect::GetVendor()
       vendor = XO("n/a");
    }
 
-   return vendor;
+   return { vendor };
 }
 
 wxString LV2Effect::GetVersion()
@@ -386,12 +381,7 @@ EffectType LV2Effect::GetType()
    return EffectTypeProcess;
 }
 
-wxString LV2Effect::GetFamilyId()
-{
-   return LV2EFFECTS_FAMILY;
-}
-
-wxString LV2Effect::GetFamilyName()
+IdentInterfaceSymbol LV2Effect::GetFamilyId()
 {
    return LV2EFFECTS_FAMILY;
 }

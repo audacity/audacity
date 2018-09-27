@@ -55,6 +55,10 @@
 #include "widgets/ErrorDialog.h"
 #include "widgets/HelpSystem.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 #define MacrosListID       7001
 #define CommandsListID     7002
 #define ApplyToProjectID   7003
@@ -122,7 +126,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 {
    /*i18n-hint: A macro is a sequence of commands that can be applied
       * to one or more audio files.*/
-   S.StartStatic(_("&Select Macro"), 1);
+   S.StartStatic(_("Select Macro"), 1);
    {
       S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                   wxLC_SINGLE_SEL);
@@ -134,13 +138,25 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartHorizontalLay(wxEXPAND, 0);
    {
       S.AddPrompt( _("Apply Macro to:") );
-      S.Id(ApplyToProjectID).AddButton(_("&Project"));
-      S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      wxButton* btn = S.Id(ApplyToProjectID).AddButton(_("&Project"));
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+#endif
+      btn->SetName(_("Apply macro to project"));
+
+      btn = S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+#endif
+      btn->SetName(_("Apply macro to files..."));
    }
    S.EndHorizontalLay();
 
    S.StartHorizontalLay(wxEXPAND, 0);
    {
+      /* i18n-hint: The Expand button makes the dialog bigger, with more in it */
       mResize = S.Id(ExpandID).AddButton(_("&Expand"));
       S.Prop(1).AddSpace( 10 );
       S.AddStandardButtons( eCancelButton | eHelpButton);
@@ -170,7 +186,8 @@ void ApplyMacroDialog::PopulateMacros()
    }
 
    // Select the name in the list...this will fire an event.
-   mMacros->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+   mMacros->SetItemState(item, wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
+      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
 
    if( 0 <= topItem && topItem < (int)mMacros->GetItemCount())
    {
@@ -231,6 +248,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    if( name.IsEmpty() )
       return;
 
+#ifdef OPTIONAL_ACTIVITY_WINDOW
    wxDialogWrapper activityWin( this, wxID_ANY, GetTitle());
    activityWin.SetName(activityWin.GetTitle());
    ShuttleGui S(&activityWin, eIsCreating);
@@ -258,6 +276,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
 
    // Without this the newly created dialog may not show completely.
    wxYield();
+#endif
 
    //Since we intend to keep this dialog open, there is no reason to hide it 
    //and then show it again.
@@ -273,7 +292,9 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    // the menus on OSX will remain disabled.
    bool success;
    {
+#ifdef OPTIONAL_ACTIVITY_WINDOW
       wxWindowDisabler wd(&activityWin);
+#endif
       success = GuardedCall< bool >(
          [this]{ return mMacroCommands.ApplyMacro(mCatalog); } );
    }
@@ -453,13 +474,8 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       if (!success)
          break;
       
-      UndoManager *um = project->GetUndoManager();
-      um->ClearStates();
-      project->OnSelectAll(*project);
-      project->OnRemoveTracks(*project);
+      project->ResetProjectToEmpty();
    }
-   project->OnRemoveTracks(*project);
-   
    Show();
    Raise();
 }
@@ -588,7 +604,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 1);
    {
-      S.StartStatic(_("&Select Macro"),0);
+      S.StartStatic(_("Select Macro"),0);
       {
          S.StartHorizontalLay(wxEXPAND,1);
          {
@@ -602,8 +618,11 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                S.Id(AddButtonID).AddButton(_("&New"));
                mRemove = S.Id(RemoveButtonID).AddButton(_("Remo&ve"));
                mRename = S.Id(RenameButtonID).AddButton(_("&Rename..."));
+// Not yet ready for prime time.
+#if 0
                S.Id(ImportButtonID).AddButton(_("I&mport..."))->Enable( false);
                S.Id(ExportButtonID).AddButton(_("E&xport..."))->Enable( false);
+#endif
             }
             S.EndVerticalLay();
          }
@@ -611,7 +630,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndStatic();
 
-      S.StartStatic(_("Edit S&teps"), true);
+      S.StartStatic(_("Edit Steps"), true);
       {
          S.StartHorizontalLay(wxEXPAND,1);
          {
@@ -647,11 +666,23 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
    S.StartHorizontalLay(wxEXPAND, 0);
    {  
+      /* i18n-hint: The Shrink button makes the dialog smaller, with less in it */
       mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
       // Using variable text just to get the positioning options.
       S.Prop(0).AddVariableText( _("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
-      S.Id(ApplyToProjectID).AddButton(_("&Project"));
-      S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      wxButton* btn = S.Id(ApplyToProjectID).AddButton(_("&Project"));
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+#endif
+      btn->SetName(_("Apply macro to project"));
+
+      btn = S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      btn->SetAccessible(safenew WindowAccessible(btn));
+#endif
+      btn->SetName(_("Apply macro to files..."));
       S.Prop(1).AddSpace( 10 );
       S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
    }
@@ -678,7 +709,9 @@ void MacrosWindow::PopulateList()
    if (mSelectedCommand >= (int)mList->GetItemCount()) {
       mSelectedCommand = 0;
    }
-   mList->SetItemState(mSelectedCommand, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+   mList->SetItemState(mSelectedCommand,
+      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
+      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
    if( 0 <= topItem && topItem < (int)mList->GetItemCount())
    {
       // Workaround for scrolling being windows only.

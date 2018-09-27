@@ -180,7 +180,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    struct ReadUnlocker { void operator () ( const BlockFile *p ) const {
       if (p) p->UnlockRead(); } };
    using ReadLockBase =
-      movable_ptr_with_deleter< const BlockFile, ReadUnlocker >;
+      std::unique_ptr< const BlockFile, ReadUnlocker >;
 
  public:
    class ReadLock : public ReadLockBase
@@ -189,14 +189,6 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
       ReadLock ( const BlockFile *p, const BlockFile::ReadUnlocker &u )
          : ReadLockBase { p, u } {}
    public:
-#ifdef __AUDACITY_OLD_STD__
-      ReadLock (const ReadLock &that) : ReadLockBase( that ) {}
-      ReadLock &operator= (const ReadLock &that)
-      {
-         *((ReadLockBase*)this) = that;
-         return *this;
-      }
-#endif
       ReadLock(ReadLock&&that) : ReadLockBase{ std::move(that) } {}
       using Suspension = std::unique_ptr< const BlockFile, ReadLocker >;
       Suspension Suspend() const

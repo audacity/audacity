@@ -96,7 +96,7 @@ EffectCompressor::~EffectCompressor()
 
 // IdentInterface implementation
 
-wxString EffectCompressor::GetSymbol()
+IdentInterfaceSymbol EffectCompressor::GetSymbol()
 {
    return COMPRESSOR_PLUGIN_SYMBOL;
 }

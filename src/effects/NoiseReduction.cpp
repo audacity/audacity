@@ -47,6 +47,7 @@
 
 #include "../WaveTrack.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/valnum.h"
 
 #include <algorithm>
 #include <vector>
@@ -342,7 +343,7 @@ private:
       FloatVector mRealFFTs;
       FloatVector mImagFFTs;
    };
-   std::vector<movable_ptr<Record>> mQueue;
+   std::vector<std::unique_ptr<Record>> mQueue;
 };
 
 /****************************************************************//**
@@ -366,7 +367,7 @@ public:
        wxWindow *parent, bool bHasProfile,
        bool bAllowTwiddleSettings);
 
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -386,7 +387,7 @@ private:
 #ifdef ADVANCED_SETTINGS
    void OnMethodChoice(wxCommandEvent &);
 #endif
-   void OnPreview(wxCommandEvent &event);
+   void OnPreview(wxCommandEvent &event) override;
    void OnReduceNoise( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
    void OnHelp( wxCommandEvent &event );
@@ -428,7 +429,7 @@ EffectNoiseReduction::~EffectNoiseReduction()
 
 // IdentInterface implementation
 
-wxString EffectNoiseReduction::GetSymbol()
+IdentInterfaceSymbol EffectNoiseReduction::GetSymbol()
 {
    return NOISEREDUCTION_PLUGIN_SYMBOL;
 }
@@ -649,7 +650,7 @@ EffectNoiseReduction::Worker::~Worker()
 
 bool EffectNoiseReduction::Worker::Process
 (EffectNoiseReduction &effect, Statistics &statistics, TrackFactory &factory,
- SelectedTrackListOfKindIterator &iter, double mT0, double mT1)
+ SelectedTrackListOfKindIterator &iter, double inT0, double inT1)
 {
    int count = 0;
    WaveTrack *track = (WaveTrack *) iter.First();
@@ -664,8 +665,8 @@ bool EffectNoiseReduction::Worker::Process
 
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
-      double t0 = std::max(trackStart, mT0);
-      double t1 = std::min(trackEnd, mT1);
+      double t0 = std::max(trackStart, inT0);
+      double t1 = std::min(trackEnd, inT1);
 
       if (t1 > t0) {
          auto start = track->TimeToLongSamples(t0);
@@ -800,7 +801,7 @@ EffectNoiseReduction::Worker::Worker
 
    mQueue.resize(mHistoryLen);
    for (unsigned ii = 0; ii < mHistoryLen; ++ii)
-      mQueue[ii] = make_movable<Record>(mSpectrumSize);
+      mQueue[ii] = std::make_unique<Record>(mSpectrumSize);
 
    // Create windows
 
@@ -1423,12 +1424,16 @@ struct ControlInfo {
          return wxString::Format(format, value);
    }
 
-   void CreateControls(int id, wxTextValidator &vld, ShuttleGui &S) const
+   void CreateControls(int id, ShuttleGui &S) const
    {
+      FloatingPointValidator<double> vld2(2);// precision.
+      if (formatAsInt)
+         vld2.SetPrecision( 0 );
+      vld2.SetRange( valueMin, valueMax );
       wxTextCtrl *const text =
          S.Id(id + 1).AddTextBox(textBoxCaption(), wxT(""), 0);
       S.SetStyle(wxSL_HORIZONTAL);
-      text->SetValidator(vld);
+      text->SetValidator(vld2);
 
       wxSlider *const slider =
          S.Id(id).AddSlider( {}, 0, sliderMax);
@@ -1705,10 +1710,9 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-         wxTextValidator vld(wxFILTER_NUMERIC);
          for (int id = FIRST_SLIDER; id < END_OF_BASIC_SLIDERS; id += 2) {
             const ControlInfo &info = controlInfo()[(id - FIRST_SLIDER) / 2];
-            info.CreateControls(id, vld, S);
+            info.CreateControls(id, S);
          }
       }
       S.EndMultiColumn();
@@ -1806,10 +1810,9 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-         wxTextValidator vld(wxFILTER_NUMERIC);
          for (int id = END_OF_BASIC_SLIDERS; id < END_OF_ADVANCED_SLIDERS; id += 2) {
             const ControlInfo &info = controlInfo[(id - FIRST_SLIDER) / 2];
-            info.CreateControls(id, vld, S);
+            info.CreateControls(id, S);
          }
       }
       S.EndMultiColumn();
@@ -1854,6 +1857,8 @@ bool EffectNoiseReduction::Dialog::TransferDataToWindow()
 
 bool EffectNoiseReduction::Dialog::TransferDataFromWindow()
 {
+   if( !wxWindow::Validate() )
+      return false;
    // Do the choice controls:
    if (!EffectDialog::TransferDataFromWindow())
       return false;

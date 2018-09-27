@@ -68,9 +68,10 @@ greater use in future.
 #include "../Experimental.h"
 #include "../commands/ScreenshotCommand.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
+
+// Effect application counter
+int Effect::nEffectsDone=0;
 
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
@@ -164,30 +165,20 @@ wxString Effect::GetPath()
       return mClient->GetPath();
    }
 
-   return BUILTIN_EFFECT_PREFIX + GetSymbol();
+   return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
-wxString Effect::GetSymbol()
+IdentInterfaceSymbol Effect::GetSymbol()
 {
    if (mClient)
    {
       return mClient->GetSymbol();
    }
 
-   return wxEmptyString;
+   return {};
 }
 
-wxString Effect::GetName()
-{
-   if (mClient)
-   {
-      return mClient->GetName();
-   }
-
-   return GetSymbol();
-}
-
-wxString Effect::GetVendor()
+IdentInterfaceSymbol Effect::GetVendor()
 {
    if (mClient)
    {
@@ -217,33 +208,16 @@ wxString Effect::GetDescription()
    return wxEmptyString;
 }
 
-wxString Effect::GetFamilyId()
+IdentInterfaceSymbol Effect::GetFamilyId()
 {
    if (mClient)
    {
       return mClient->GetFamilyId();
    }
 
-   // PRL:  In 2.2.2 we wanted to change the user-visible name to
-   // "Built-in" but we did not do it the obvious way by just changing this
-   // string, because of problems with compatibility of pluginsettings.cfg
-   // See PluginDescriptor::GetTranslatedEffectFamily and
-   // EffectUIHost::OnMenu
-   // See PluginManager::RegisterPlugin and PluginManager::GetID, where the
-   // return value is also (mis?)used for internal identification purposes,
-   // NOT as a user-visible  string!
-   // Thereby affecting configuration file contents!
-   return XO("Audacity");
-}
-
-wxString Effect::GetFamilyName()
-{
-   if (mClient)
-   {
-      return mClient->GetFamilyName();
-   }
-
-   return XO("Built-in");
+   // Unusually, the internal and visible strings differ for the built-in
+   // effect family.
+   return { wxT("Audacity"), XO("Built-in") };
 }
 
 bool Effect::IsInteractive()
@@ -1103,8 +1077,9 @@ bool Effect::SetAutomationParameters(const wxString & parms)
             preset
          )
       );
-
-      return false;
+      // We are using defualt settings and we still wish to continue.
+      return true;
+      //return false;
    }
 
    if (!mUIDialog)
@@ -1197,14 +1172,38 @@ bool Effect::DoEffect(wxWindow *parent,
    mFactory = factory;
    mProjectRate = projectRate;
    mTracks = list;
-   
+
+   // Update track/group counts
+   CountWaveTracks();
+
    bool isSelection = false;
 
    mDuration = 0.0;
-
    if (GetType() == EffectTypeGenerate)
    {
       GetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
+   }
+
+   WaveTrack *newTrack{};
+   bool success = false;
+   auto oldDuration = mDuration;
+
+   auto cleanup = finally( [&] {
+      if (!success) {
+         if (newTrack) {
+            mTracks->Remove(newTrack);
+         }
+         // LastUsedDuration may have been modified by Preview.
+         SetDuration(oldDuration);
+      }
+
+      End();
+      ReplaceProcessedTracks( false );
+   } );
+
+   if ((GetType() == EffectTypeGenerate) && (mNumTracks == 0) && GetPath() != NYQUIST_EFFECTS_PROMPT_ID) {
+      newTrack = static_cast<WaveTrack*>(mTracks->Add(mFactory->NewWaveTrack()));
+      newTrack->SetSelected(true);
    }
 
    mT0 = selectedRegion->t0();
@@ -1217,10 +1216,9 @@ bool Effect::DoEffect(wxWindow *parent,
       double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
       double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
       mDuration = quantMT1 - quantMT0;
-      mT1 = mT0 + mDuration;
-
       isSelection = true;
    }
+   mT1 = mT0 + mDuration;
 
    mDurationFormat = isSelection
       ? NumericConverter::TimeAndSampleFormat()
@@ -1253,13 +1251,6 @@ bool Effect::DoEffect(wxWindow *parent,
       return false;
    }
 
-   auto cleanup = finally( [&] {
-      End();
-
-      // In case of failed effect, be sure to free memory.
-      ReplaceProcessedTracks( false );
-   } );
-
    bool returnVal = true;
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
@@ -1275,11 +1266,12 @@ bool Effect::DoEffect(wxWindow *parent,
       returnVal = Process();
    }
 
-   if (returnVal)
+   if (returnVal && (mT1 >= mT0 ))
    {
       selectedRegion->setTimes(mT0, mT1);
    }
 
+   success = returnVal;
    return returnVal;
 }
 
@@ -2003,10 +1995,10 @@ void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
    mPreviewWithNotSelected = includeNotSelected;
 }
 
-bool Effect::TotalProgress(double frac)
+bool Effect::TotalProgress(double frac, const wxString &msg)
 {
    auto updateResult = (mProgress ?
-      mProgress->Update(frac) :
+      mProgress->Update(frac, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
@@ -2154,12 +2146,7 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
    // So it's okay that we cast it back to const
    mpOrigTrack =
       pEffect->mTracks->Replace(const_cast<LabelTrack*>(pOrigTrack),
-#ifdef __AUDACITY_OLD_STD__
-      std::shared_ptr<Track>(newTrack.release())
-#else
-      std::move(newTrack)
-#endif
-   );
+         std::move(newTrack) );
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
@@ -2280,6 +2267,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    // The output list is no longer needed
    mOutputTracks.reset();
    mOutputTracksType = Track::None;
+   nEffectsDone++;
 }
 
 void Effect::CountWaveTracks()
@@ -2516,7 +2504,7 @@ void Effect::Preview(bool dryOnly)
    wxWindow *FocusDialog = wxWindow::FindFocus();
 
    double previewDuration;
-   bool isNyquist = GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY);
+   bool isNyquist = GetFamilyId() == NYQUISTEFFECTS_FAMILY;
    bool isGenerator = GetType() == EffectTypeGenerate;
 
    // Mix a few seconds of audio from all of the tracks
@@ -2542,6 +2530,18 @@ void Effect::Preview(bool dryOnly)
       return;
 
    bool success = true;
+
+   auto cleanup = finally( [&] {
+
+      // Effect is already inited; we will call Process, End, and then Init
+      // again, so the state is exactly the way it was before Preview
+      // was called.
+      if (!dryOnly) {
+         End();
+         GuardedCall( [&]{ Init(); } );
+      }
+   } );
+
    auto vr0 = valueRestorer( mT0 );
    auto vr1 = valueRestorer( mT1 );
    // Most effects should stop at t1.
@@ -2551,17 +2551,8 @@ void Effect::Preview(bool dryOnly)
    // Save the original track list
    TrackList *saveTracks = mTracks;
 
-   auto cleanup = finally( [&] {
+   auto cleanup2 = finally( [&] {
       mTracks = saveTracks;
-
-      // Effect is already inited; we will call Process, End, and then Init
-      // again, so the state is exactly the way it was before Preview
-      // was called.
-      if (!dryOnly) {
-         End();
-         GuardedCall( [&]{ Init(); } );
-      }
-
       if (FocusDialog) {
          FocusDialog->SetFocus();
       }
@@ -2613,7 +2604,6 @@ void Effect::Preview(bool dryOnly)
    mT1 -= mT0;
    mT0 = 0.0;
 
-
    // Update track/group counts
    CountWaveTracks();
 
@@ -2633,30 +2623,16 @@ void Effect::Preview(bool dryOnly)
 
    if (success)
    {
-      WaveTrackConstArray playbackTracks;
-      WaveTrackArray recordingTracks;
+      auto tracks = GetAllPlaybackTracks(*mTracks, true);
 
-      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
-      WaveTrack *src = (WaveTrack *) iter.First();
-      while (src) {
-         playbackTracks.push_back(Track::Pointer<WaveTrack>(src));
-         src = (WaveTrack *) iter.Next();
-      }
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.
       t1 = std::min(mT0 + previewLen, mT1);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-      NoteTrackArray empty;
-#endif
       // Start audio playing
       AudioIOStartStreamOptions options { rate };
       int token =
-         gAudioIO->StartStream(playbackTracks, recordingTracks,
-#ifdef EXPERIMENTAL_MIDI_OUT
-                            empty,
-#endif
-                            mT0, t1, options);
+         gAudioIO->StartStream(tracks, mT0, t1, options);
 
       if (token) {
          auto previewing = ProgressResult::Success;
@@ -2881,7 +2857,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
-   [[((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+   [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
    SetName( effect->GetTranslatedName() );
@@ -2914,7 +2890,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
-   [[((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
+   [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
    //SetName( command->GetTranslatedName() );
@@ -3013,6 +2989,7 @@ int EffectUIHost::ShowModal()
 bool EffectUIHost::Initialize()
 {
    EffectPanel *w = safenew EffectPanel(this);
+   RTL_WORKAROUND(w);
    {
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       {
@@ -3067,7 +3044,8 @@ bool EffectUIHost::Initialize()
          else
          {
             wxASSERT(bar); // To justify safenew
-            mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+            mMenuBtn = safenew wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, true));
+            mMenuBtn->SetBitmapPressed(CreateBitmap(effect_menu_xpm, false, true));
 #if defined(__WXMAC__)
             mMenuBtn->SetName(_("&Manage"));
 #else
@@ -3104,12 +3082,13 @@ bool EffectUIHost::Initialize()
             else
             {
                mPlayBM = CreateBitmap(effect_play_xpm, true, false);
-               mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
+               mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, true);
                mStopBM = CreateBitmap(effect_stop_xpm, true, false);
                mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
                wxASSERT(bar); // To justify safenew
                bb = safenew wxBitmapButton(bar, kPlayID, mPlayBM);
                bb->SetBitmapDisabled(mPlayDisabledBM);
+               bb->SetBitmapPressed(CreateBitmap(effect_play_xpm, false, true));
                mPlayBtn = bb;
                bs->Add(mPlayBtn);
                if (!mSupportsRealtime)
@@ -3135,7 +3114,8 @@ bool EffectUIHost::Initialize()
                {
                   wxASSERT(bar); // To justify safenew
                   bb = safenew wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
-                  bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+                  bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, false));
+                  bb->SetBitmapPressed(CreateBitmap(effect_rewind_xpm, false, true));
                   mRewindBtn = bb;
 #if defined(__WXMAC__)
                   mRewindBtn->SetName(_("Skip &Backward"));
@@ -3156,7 +3136,8 @@ bool EffectUIHost::Initialize()
                {
                   wxASSERT(bar); // To justify safenew
                   bb = safenew wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
-                  bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+                  bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, false));
+                  bb->SetBitmapPressed(CreateBitmap(effect_ffwd_xpm, false, true));
                   mFFwdBtn = bb;
 #if defined(__WXMAC__)
                   mFFwdBtn->SetName(_("Skip &Forward"));
@@ -3290,7 +3271,11 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
 
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
-   if (!mIsBatch && mEffect && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
+   if (!mIsBatch && 
+      mEffect && 
+      mEffect->GetType() != EffectTypeGenerate && 
+      mEffect->GetType() != EffectTypeTool && 
+      mProject->mViewInfo.selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed = mProject->ReportIfActionNotAllowed(
@@ -3366,7 +3351,7 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect && mEffect->GetFamilyId().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
+   if (mEffect && mEffect->GetFamilyId() == NYQUISTEFFECTS_FAMILY && (mEffect->ManualPage().IsEmpty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
       HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
@@ -3458,10 +3443,10 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       auto sub = std::make_unique<wxMenu>();
 
       sub->Append(kDummyID, wxString::Format(_("Type: %s"),
-                  ::wxGetTranslation( mEffect->GetFamilyName() )));
+                  ::wxGetTranslation( mEffect->GetFamilyId().Translation() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
-      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), GetCustomTranslation(mEffect->GetVendor())));
+      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription()));
 
       menu.Append(0, _("About"), sub.release());
@@ -3792,20 +3777,17 @@ wxBitmap EffectUIHost::CreateBitmap(const char * const xpm[], bool up, bool push
    wxMemoryDC dc;
    wxBitmap pic(xpm);
 
-   wxBitmap mod(pic.GetWidth() + 6, pic.GetHeight() + 6);
+   wxBitmap mod(pic.GetWidth() + 6, pic.GetHeight() + 6, 24);
    dc.SelectObject(mod);
-
-#if !defined(__WXMAC__)
 
 #if defined(__WXGTK__)
    wxColour newColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-#elif defined(__WXMSW__)
+#else
    wxColour newColour = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
 #endif
 
    dc.SetBackground(wxBrush(newColour));
    dc.Clear();
-#endif
 
    int offset = 3;
    if (pusher)

@@ -102,7 +102,7 @@ EffectAutoDuck::~EffectAutoDuck()
 
 // IdentInterface implementation
 
-wxString EffectAutoDuck::GetSymbol()
+IdentInterfaceSymbol EffectAutoDuck::GetSymbol()
 {
    return AUTODUCK_PLUGIN_SYMBOL;
 }
@@ -657,7 +657,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    if (!mBackgroundBitmap || mBackgroundBitmap->GetWidth() != clientWidth ||
        mBackgroundBitmap->GetHeight() != clientHeight)
    {
-      mBackgroundBitmap = std::make_unique<wxBitmap>(clientWidth, clientHeight);
+      mBackgroundBitmap = std::make_unique<wxBitmap>(clientWidth, clientHeight,24);
    }
 
    wxMemoryDC dc;
@@ -701,7 +701,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       // draw preview
       dc.SetBrush(*wxTRANSPARENT_BRUSH);
-      dc.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxSOLID));
+      dc.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxPENSTYLE_SOLID));
 
       wxPoint points[6];
 
@@ -727,7 +727,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
       dc.DrawLines(6, points);
 
-      dc.SetPen(wxPen(*wxBLACK, 1, wxDOT));
+      dc.SetPen(wxPen(*wxBLACK, 1, wxPENSTYLE_DOT));
 
       AColor::Line(dc, FADE_DOWN_START, 10, FADE_DOWN_START, clientHeight - 10);
       AColor::Line(dc, FADE_UP_START, 10, FADE_UP_START, clientHeight - 10);

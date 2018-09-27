@@ -81,6 +81,7 @@ BEGIN_EVENT_TABLE(ExportMultiple, wxDialogWrapper)
    EVT_BUTTON(ChooseID, ExportMultiple::OnChoose)
    EVT_BUTTON(wxID_OK, ExportMultiple::OnExport)
    EVT_BUTTON(wxID_CANCEL, ExportMultiple::OnCancel)
+   EVT_BUTTON(wxID_HELP, ExportMultiple::OnHelp)
    EVT_RADIOBUTTON(LabelID, ExportMultiple::OnLabel)
    EVT_RADIOBUTTON(TrackID, ExportMultiple::OnTrack)
    EVT_RADIOBUTTON(ByNameAndNumberID, ExportMultiple::OnByName)
@@ -193,17 +194,18 @@ int ExportMultiple::ShowModal()
       return wxID_CANCEL;
    }
 
-   if (mNumLabels < 1) {
-      mLabel->Enable(false);
-      mTrack->SetValue(true);
-      mLabel->SetValue(false);
-   }
+   bool bHasLabels = (mNumLabels > 0);
+   bool bHasTracks = (mNumWaveTracks > 0);
+   
+   mLabel->Enable(bHasLabels && bHasTracks);
+   mTrack->Enable(bHasTracks);
 
-   if (mNumWaveTracks < 1) {
-      mTrack->Enable(false);
-      mLabel->SetValue(true);
-      mTrack->SetValue(false);
-   }
+   // If you have 2 or more tracks, then it is export by tracks.
+   // If you have no labels, then it is export by tracks.
+   // Otherwise it is export by labels, by default.
+   bool bPreferByLabels = bHasLabels && (mNumWaveTracks < 2);
+   mLabel->SetValue(bPreferByLabels);
+   mTrack->SetValue(!bPreferByLabels);
 
    EnableControls();
 
@@ -385,7 +387,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    }
    S.EndHorizontalLay();
 
-   S.AddStandardButtons();
+   S.AddStandardButtons(eOkButton | eCancelButton | eHelpButton);
    mExport = (wxButton *)wxWindow::FindWindowById(wxID_OK, this);
    mExport->SetLabel(_("Export"));
 
@@ -523,6 +525,11 @@ void ExportMultiple::OnPrefix(wxCommandEvent& WXUNUSED(event))
 void ExportMultiple::OnCancel(wxCommandEvent& WXUNUSED(event))
 {
    EndModal(0);
+}
+
+void ExportMultiple::OnHelp(wxCommandEvent& WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Export_Multiple"), true);
 }
 
 void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))

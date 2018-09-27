@@ -44,6 +44,8 @@ AliasedFile s.
 #include <wx/hashmap.h>
 #include <wx/progdlg.h>
 #include <wx/choice.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 
 #include "BlockFile.h"
 #include "DirManager.h"
@@ -56,9 +58,7 @@ AliasedFile s.
 #include "WaveClip.h"
 #include "widgets/ErrorDialog.h"
 
-#ifndef __AUDACITY_OLD_STD__
 #include <unordered_map>
-#endif
 
 using AliasedFileHash = std::unordered_map<wxString, AliasedFile*>;
 
@@ -262,6 +262,9 @@ private:
    void OnSize(wxSizeEvent &evt);
    void OnNo(wxCommandEvent &evt);
    void OnYes(wxCommandEvent &evt);
+   void OnRightClick(wxListEvent& evt);
+   void OnCopyToClipboard( wxCommandEvent& evt );
+
 
    void SaveFutureActionChoice();
 
@@ -285,17 +288,20 @@ public:
 enum {
    FileListID = 6000,
    CopySelectedFilesButtonID,
+   CopyNamesToClipboardID,
    FutureActionChoiceID
 };
 
 BEGIN_EVENT_TABLE(DependencyDialog, wxDialogWrapper)
    EVT_LIST_ITEM_SELECTED(FileListID, DependencyDialog::OnList)
    EVT_LIST_ITEM_DESELECTED(FileListID, DependencyDialog::OnList)
+   EVT_LIST_ITEM_RIGHT_CLICK(FileListID, DependencyDialog::OnRightClick )
    EVT_BUTTON(CopySelectedFilesButtonID, DependencyDialog::OnCopySelectedFiles)
    EVT_SIZE(DependencyDialog::OnSize)
    EVT_BUTTON(wxID_NO, DependencyDialog::OnNo) // mIsSaving ? "Cancel Save" : "Save Without Copying"
    EVT_BUTTON(wxID_YES, DependencyDialog::OnYes) // "Copy All Files (Safer)"
    EVT_BUTTON(wxID_CANCEL, DependencyDialog::OnCancel)  // "Cancel Save"
+   EVT_MENU(CopyNamesToClipboardID,DependencyDialog::OnCopyToClipboard)
 END_EVENT_TABLE()
 
 DependencyDialog::DependencyDialog(wxWindow *parent,
@@ -346,7 +352,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
    {
       mMessageStaticText = S.AddVariableText(kStdMsg(), false);
 
-      S.StartStatic(_("Project Dependencies"));
+      S.StartStatic(_("Project Dependencies"),1);
       {
          mFileListCtrl = S.Id(FileListID).AddListControlReportMode();
          mFileListCtrl->InsertColumn(0, _("Audio File"));
@@ -366,7 +372,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       }
       S.EndStatic();
 
-      S.StartHorizontalLay(wxALIGN_CENTRE);
+      S.StartHorizontalLay(wxALIGN_CENTRE,0);
       {
          if (mIsSaving) {
             S.Id(wxID_CANCEL).AddButton(_("Cancel Save"));
@@ -386,7 +392,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 
       if (mIsSaving)
       {
-         S.StartHorizontalLay(wxALIGN_LEFT);
+         S.StartHorizontalLay(wxALIGN_LEFT,0);
          {
             wxArrayString choices;
             /*i18n-hint: One of the choices of what you want Audacity to do when
@@ -519,6 +525,37 @@ void DependencyDialog::OnCopySelectedFiles(wxCommandEvent & WXUNUSED(event))
    {
       SaveFutureActionChoice();
       EndModal(wxID_NO);  // Don't need to remove dependencies
+   }
+}
+
+void DependencyDialog::OnRightClick( wxListEvent& event)
+{
+   static_cast<void>(event);
+   wxMenu menu;
+   menu.Append(CopyNamesToClipboardID, _("&Copy Names to Clipboard"));
+   PopupMenu(&menu);
+}
+
+void DependencyDialog::OnCopyToClipboard( wxCommandEvent& evt )
+{
+   static_cast<void>(evt);
+   wxString Files = "";
+   for (const auto &aliasedFile : mAliasedFiles) {
+      const wxFileName & fileName = aliasedFile.mFileName;
+      wxLongLong byteCount = (aliasedFile.mByteCount * 124) / 100;
+      bool bOriginalExists = aliasedFile.mbOriginalExists;
+      // All fields quoted, as e.g. size may contain a comma in the number.
+      Files += wxString::Format( "\"%s\", \"%s\", \"%s\"\n",
+         fileName.GetFullPath(), 
+         Internat::FormatSize( byteCount), 
+         bOriginalExists ? "OK":"Missing" );
+   }
+
+   // copy data onto clipboard
+   if (wxTheClipboard->Open()) {
+      // Clipboard owns the data you give it
+      wxTheClipboard->SetData(safenew wxTextDataObject(Files));
+      wxTheClipboard->Close();
    }
 }
 

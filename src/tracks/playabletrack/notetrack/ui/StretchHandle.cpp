@@ -192,8 +192,10 @@ UIHandle::Result StretchHandle::Drag
    const wxMouseEvent &event = evt.event;
    const int x = event.m_x;
 
-   Track *clickedTrack =
-      static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack().get();
+   Track *clickedTrack;
+   if (evt.pCell)
+      clickedTrack =
+         static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack().get();
 
    if (clickedTrack == NULL && mpTrack != NULL)
       clickedTrack = mpTrack.get();

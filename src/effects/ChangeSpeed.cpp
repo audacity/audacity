@@ -105,7 +105,7 @@ EffectChangeSpeed::~EffectChangeSpeed()
 
 // IdentInterface implementation
 
-wxString EffectChangeSpeed::GetSymbol()
+IdentInterfaceSymbol EffectChangeSpeed::GetSymbol()
 {
    return CHANGESPEED_PLUGIN_SYMBOL;
 }

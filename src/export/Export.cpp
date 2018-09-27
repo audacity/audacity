@@ -66,9 +66,11 @@
 #include "../WaveTrack.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/Warning.h"
+#include "../widgets/HelpSystem.h"
 #include "../AColor.h"
 #include "../Dependencies.h"
 #include "../FileNames.h"
+#include "../widgets/HelpSystem.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -266,8 +268,13 @@ void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
 // Export
 //----------------------------------------------------------------------------
 
+
+wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+
 BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
    EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
+   EVT_BUTTON(wxID_HELP, Exporter::OnHelp)
+   EVT_COMMAND( wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
 END_EVENT_TABLE()
 
 Exporter::Exporter()
@@ -305,6 +312,29 @@ Exporter::~Exporter()
 {
 }
 
+// Beginnings of a fix for bug 1355.
+// 'Other Uncompressed Files' Header option updates do not update
+// the extension shown in the file dialog.
+// Unfortunately, although we get the new extension here, we
+// can't do anything with it as the FileDialog does not provide
+// methods for setting its standard controls.
+// We would need OS specific code that 'knows' about the system 
+// dialogs.
+void Exporter::OnExtensionChanged(wxCommandEvent &evt) {
+   wxString ext = evt.GetString();
+   ext = ext.BeforeFirst(' ').Lower();
+   wxLogDebug("Extension changed to '.%s'", ext);
+//   wxString Name = mDialog->GetFilename();
+//   Name = Name.BeforeLast('.')+ext;
+//   mDialog->SetFilename(Name);
+}
+
+void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
+{
+   wxWindow * pWin = GetActiveProject();
+   HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
+}
+
 void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
 {
    // The default title is "Export File"
@@ -325,7 +355,7 @@ int Exporter::FindFormatIndex(int exportindex)
    return 0;
 }
 
-void Exporter::RegisterPlugin(movable_ptr<ExportPlugin> &&ExportPlugin)
+void Exporter::RegisterPlugin(std::unique_ptr<ExportPlugin> &&ExportPlugin)
 {
    mPlugins.push_back(std::move(ExportPlugin));
 }
@@ -526,6 +556,7 @@ bool Exporter::GetFilename()
    {
       mFormat = 0;
       mFilterIndex = 0;
+      mSubFormat = 0;
    }
    maskString.RemoveLast();
    wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
@@ -785,14 +816,14 @@ bool Exporter::CheckMix()
          if (exportedChannels == 1) {
             if (ShowWarningDialog(mProject,
                                   wxT("MixMono"),
-                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  _("Your tracks will be mixed down and exported as one mono file."),
                                   true) == wxID_CANCEL)
                return false;
          }
          else if (exportedChannels == 2) {
             if (ShowWarningDialog(mProject,
                                   wxT("MixStereo"),
-                                  _("Your tracks will be mixed down to two stereo channels in the exported file."),
+                                  _("Your tracks will be mixed down and exported as one stereo file."),
                                   true) == wxID_CANCEL)
                return false;
          }
@@ -894,7 +925,7 @@ void Exporter::CreateUserPane(wxWindow *parent)
          {
             mBook = safenew wxSimplebook(S.GetParent());
             S.AddWindow(mBook, wxEXPAND);
-                                  
+
             for (const auto &pPlugin : mPlugins)
             {
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
@@ -907,6 +938,11 @@ void Exporter::CreateUserPane(wxWindow *parent)
       }
       S.EndHorizontalLay();
    }
+   S.StartHorizontalLay(wxALIGN_RIGHT, 0);
+   {
+      S.AddStandardButtons(eHelpButton);
+   }
+   S.EndHorizontalLay();
    S.EndVerticalLay();
 
    return;
@@ -1067,11 +1103,11 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    {
       mWidth = width;
       mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>( mWidth, mHeight );
+      mBitmap = std::make_unique<wxBitmap>( mWidth, mHeight,24 );
    }
 
    wxColour bkgnd = GetBackgroundColour();
-   wxBrush bkgndBrush( bkgnd, wxSOLID );
+   wxBrush bkgndBrush( bkgnd, wxBRUSHSTYLE_SOLID );
 
    wxMemoryDC memDC;
    memDC.SelectObject( *mBitmap );
@@ -1253,6 +1289,7 @@ enum
 BEGIN_EVENT_TABLE( ExportMixerDialog, wxDialogWrapper )
    EVT_BUTTON( wxID_OK, ExportMixerDialog::OnOk )
    EVT_BUTTON( wxID_CANCEL, ExportMixerDialog::OnCancel )
+   EVT_BUTTON( wxID_HELP, ExportMixerDialog::OnMixerPanelHelp )
    EVT_SIZE( ExportMixerDialog::OnSize )
    EVT_SLIDER( ID_SLIDER_CHANNEL, ExportMixerDialog::OnSlider )
 END_EVENT_TABLE()
@@ -1310,7 +1347,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          mMixerSpec.get(), mTrackNames,
          wxDefaultPosition, wxSize(400, -1));
       mixerPanel->SetName(_("Mixer Panel"));
-      vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5);
+      vertSizer->Add(mixerPanel, 1, wxEXPAND | wxALL, 5);
 
       {
          auto horSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
@@ -1329,7 +1366,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
          vertSizer->Add(horSizer.release(), 0, wxALIGN_CENTRE | wxALL, 5);
       }
 
-      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton).release(), 0, wxEXPAND);
+      vertSizer->Add(CreateStdButtonSizer(this, eCancelButton | eOkButton | eHelpButton).release(), 0, wxEXPAND);
 
       SetAutoLayout(true);
       SetSizer(uVertSizer.release());
@@ -1375,5 +1412,10 @@ void ExportMixerDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 void ExportMixerDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal( wxID_CANCEL );
+}
+
+void ExportMixerDialog::OnMixerPanelHelp(wxCommandEvent & WXUNUSED(event))
+{
+   HelpSystem::ShowHelp(this, wxT("Advanced_Mixing_Options"), true);
 }
 

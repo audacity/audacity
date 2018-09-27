@@ -464,10 +464,6 @@ sound_type sound_zero(time_type t0, rate_type sr);
 double step_to_hz(double);
     /* LISP: (STEP-TO-HZ ANYNUM) */
 
-#ifdef WIN32
-double log2(double x);
-#endif /* WIN32 */
-
 /* macros for access to samples within a suspension */
 /* NOTE: assume suspension structure is named "susp" */
 

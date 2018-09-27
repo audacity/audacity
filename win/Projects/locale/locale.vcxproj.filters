@@ -176,5 +176,6 @@
     <None Include="..\..\..\locale\audacity.pot">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

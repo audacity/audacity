@@ -46,8 +46,7 @@ bool Generator::Process()
       if (t->GetKind() == Track::Wave && t->GetSelected()) {
          WaveTrack* track = (WaveTrack*)t;
 
-         bool editClipCanMove;
-         gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
+         bool editClipCanMove = gPrefs->GetEditClipsCanMove();
 
          //if we can't move clips, and we're generating into an empty space,
          //make sure there's room.

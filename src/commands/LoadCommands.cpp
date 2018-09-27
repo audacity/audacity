@@ -100,14 +100,16 @@ enum
 // Redefine COMMAND() to add the COMMAND's name to an array
 //
 #undef COMMAND
-#define COMMAND(n, i, args) n ## _PLUGIN_SYMBOL,
+#define COMMAND(n, i, args) results.push_back( (n ## _PLUGIN_SYMBOL).Internal() );
 
 //
 // Create the COMMAND name array
 //
-static const wxChar *kCOMMANDNames[] =
+static const std::vector<wxString> kCOMMANDNames()
 {
-   COMMAND_LIST
+   std::vector<wxString> results;
+   COMMAND_LIST;
+   return results;
 };
 
 /*
@@ -176,17 +178,12 @@ wxString BuiltinCommandsModule::GetPath()
    return mPath;
 }
 
-wxString BuiltinCommandsModule::GetSymbol()
+IdentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
 {
    return XO("Builtin Commands");
 }
 
-wxString BuiltinCommandsModule::GetName()
-{
-   return XO("Builtin Commands");
-}
-
-wxString BuiltinCommandsModule::GetVendor()
+IdentInterfaceSymbol BuiltinCommandsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -208,10 +205,11 @@ wxString BuiltinCommandsModule::GetDescription()
 
 bool BuiltinCommandsModule::Initialize()
 {
-   for (size_t i = 0; i < WXSIZEOF(kCOMMANDNames); i++)
+   const auto &names = kCOMMANDNames();
+   for (const auto &name : names)
    {
-      wxLogDebug("Adding %s", kCOMMANDNames[i] );
-      mNames.Add(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + kCOMMANDNames[i]);
+      //wxLogDebug("Adding %s", name );
+      mNames.Add(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
    }
 
 /*
@@ -233,9 +231,10 @@ void BuiltinCommandsModule::Terminate()
 bool BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    wxString ignoredErrMsg;
-   for (size_t i = 0; i < WXSIZEOF(kCOMMANDNames); i++)
+   const auto &names = kCOMMANDNames();
+   for (const auto &name : names)
    {
-      wxString path(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + kCOMMANDNames[i]);
+      wxString path(wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + name);
 
       if (!pm.IsPluginRegistered(path))
       {

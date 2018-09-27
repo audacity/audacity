@@ -292,12 +292,17 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    {
       S.StartMultiColumn(3, wxCENTER);
       {
-         S.AddFixedText(_("Co&ntrast Result:"));
+         wxString label = _("Co&ntrast Result:");
+         S.AddFixedText(label);
          mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox( {}, wxT(""), 50);
+         mPassFailText->SetName(wxStripMenuCodes(label));
          mPassFailText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
-         S.AddFixedText(_("&Difference:"));
+
+         label = _("&Difference:");
+         S.AddFixedText(label);
          mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox( {}, wxT(""), 50);
+         mDiffText->SetName(wxStripMenuCodes(label));
          mDiffText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }

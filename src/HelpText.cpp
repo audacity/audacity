@@ -265,7 +265,7 @@ the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.
 FFmpeg library]] to your computer.") + wxT("</p><p>") +
          _("You can also read our help on importing \
 [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] \
-and tracks from [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| \
+and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| \
 audio CDs]].")
     + wxT("</p>")
       );
