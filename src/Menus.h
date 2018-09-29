@@ -10,9 +10,15 @@
 #ifndef __AUDACITY_MENUS__
 #define __AUDACITY_MENUS__
 
-// Formerly members of AudacityProject, now members of MenuCommandHandler
 
 #include "Experimental.h"
+
+
+struct MenuCommandHandler : public wxEvtHandler {
+   MenuCommandHandler();
+   ~MenuCommandHandler();
+
+// Formerly members of AudacityProject, now members of MenuCommandHandler
 
 
 // Command Handling
@@ -637,6 +643,10 @@ double mSeekLong;
 
 wxLongLong mLastSelectionAdjustment;
 
+};
+
+
+MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
 
 #endif
 

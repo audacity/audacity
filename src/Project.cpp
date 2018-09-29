@@ -11,7 +11,6 @@
 
 \file Project.cpp
 \brief Implements AudacityProject, DropTarget, and FileObject.F
-Includes Menus.cpp.
 
 *//****************************************************************//**
 

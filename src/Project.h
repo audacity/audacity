@@ -172,15 +172,11 @@ class WaveTrack;
 
 #include "./commands/CommandManager.h"
 
-struct MenuCommandHandler : public wxEvtHandler {
-   MenuCommandHandler();
-   ~MenuCommandHandler();
+// Include Menus.h for struct MenuCommandHandler 
+// and all the functions it contains.
 
 #include "Menus.h"
 
-};
-
-MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
 
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
