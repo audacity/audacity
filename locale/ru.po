@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-08-31 22:53+0100\n"
-"PO-Revision-Date: 2018-09-06 07:54+0500\n"
+"PO-Revision-Date: 2018-09-27 19:11+0500\n"
 "Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/klyok/audacity/language/"
 "Language: ru\n"
@@ -4486,7 +4486,7 @@ msgstr "Вставить текст в новую метку"
 
 #: src/Menus.cpp
 msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Обрезать выделенные треки с %.2f секунды до %.2f секунды"
+msgstr "Обрезать выделенные треки с %.2f сек. до %.2f сек."
 
 #: src/Menus.cpp
 msgid "Trim Audio"
@@ -7752,7 +7752,7 @@ msgstr "Макс. пауза:"
 #: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/widgets/NumericTextCtrl.cpp
 msgid "seconds"
-msgstr "секунды"
+msgstr "сек."
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade down length:"
@@ -9000,7 +9000,7 @@ msgstr "%d дБ"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "- dB"
-msgstr "- Дб"
+msgstr "- дБ"
 
 #: src/effects/Equalization.cpp src/effects/ScienFilter.cpp
 msgid "Min dB"
@@ -9258,7 +9258,7 @@ msgstr "Не удался экспорт 'без_названия'"
 
 #: src/effects/Equalization.cpp
 msgid "%d curves exported to %s"
-msgstr "%d кривых экспортировано в %s"
+msgstr "Кривые (%d) экспортированы в %s"
 
 #: src/effects/Equalization.cpp
 msgid "Curves exported"
@@ -10428,7 +10428,7 @@ msgstr " Доступен также основной текстовый мет�
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
 msgid " Reopen the effect for this to take effect."
-msgstr " Снова откройте эффект, чтобы он вступил в силу."
+msgstr " Чтобы эффект вступил в силу, отройте его повторно."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -12700,7 +12700,7 @@ msgstr "2 канала (стерео)"
 
 #: src/import/ImportRaw.cpp
 msgid "%d Channels"
-msgstr "%d каналов"
+msgstr "Каналов %d"
 
 #: src/import/ImportRaw.cpp
 msgid "Byte order:"
@@ -12802,7 +12802,7 @@ msgstr "&Длина буфера:"
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/widgets/NumericTextCtrl.cpp
 msgid "milliseconds"
-msgstr "миллисекунды"
+msgstr "миллисек."
 
 #: src/prefs/DevicePrefs.cpp
 msgid "&Latency compensation:"
@@ -13945,7 +13945,7 @@ msgstr "Минимальная частота должна быть меньше
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The range must be at least 1 dB"
-msgstr "Диапазон должен быть равен не менее 1 дБ"
+msgstr "Диапазон должен быть не менее 1 дБ"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The frequency gain cannot be negative"
@@ -13953,7 +13953,7 @@ msgstr "Усиление частоты не должно быть отрица�
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "Усиление частоты должно быть не больше 60 дБ/дек"
+msgstr "Усиление частоты должно быть не более 60 дБ/дек"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
@@ -13978,7 +13978,7 @@ msgstr "32768 - наиболее узкополосный"
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "&Use Preferences"
-msgstr "Использовать настройки"
+msgstr "&Использовать настройки"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale"
@@ -13998,7 +13998,7 @@ msgstr "Цвета"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Gain (dB):"
-msgstr "&Усиление (Дб):"
+msgstr "&Усиление (дБ):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Range (dB):"
@@ -14157,8 +14157,9 @@ msgid ""
 "but is\n"
 "otherwise the same idea."
 msgstr ""
-"При сохранении и загрузке отдельных файлов тем используется\n"
-"отдельный файл на изображение, иначе нет никакой разницы."
+"Сохранение и загрузка отдельных файлов темы использует отдельный файл для\n"
+"каждого изображения.\n"
+"В противном случае различий нет."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
 #. * so keep it as is
@@ -14218,7 +14219,7 @@ msgstr "&Правка фрагмента может перемещать дру�
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
-msgstr "'Переместить фокус трека' &циклично неоднократно через треки"
+msgstr "Циклично 'Переместить фокус трека' &многократно по трекам"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
@@ -15233,7 +15234,7 @@ msgstr "Скра&ббинг"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
-msgstr "Щёлкните и перетащите для установки левой границы выделения."
+msgstr "Щёлкните и перетащите для перемещения левой границы выделения."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move right selection boundary."
@@ -15241,11 +15242,11 @@ msgstr "Щёлкните и перетащите для установки пр�
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move bottom selection frequency."
-msgstr "Щёлкните и перетащите для установки нижней частоты выделения."
+msgstr "Щёлкните и перетащите для перемещения нижней частоты выделения."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move top selection frequency."
-msgstr "Щёлкните и перетащите для установки верхней частоты выделения."
+msgstr "Щёлкните и перетащите для перемещения верхней частоты выделения."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
@@ -15259,7 +15260,7 @@ msgstr "Щёлкните и перетащите для установки це�
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr "Щёлкните и перетащите для установки диапазона частот."
+msgstr "Щёлкните и перетащите для регулировки полосы частот."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
@@ -15272,7 +15273,7 @@ msgstr "Режим мульти-инструмента: %s для настрек
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to set frequency bandwidth."
-msgstr "Щёлкните и перетащите для установки диапазона частот."
+msgstr "Щёлкните и перетащите для установки полосы частот."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to select audio"
@@ -15352,12 +15353,12 @@ msgstr "Ctrl+клик"
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "%s to select or deselect track. Drag up or down to change track order."
 msgstr ""
-"%s, чтобы выбрать или отменить выбор трека. Перетащите вверх/вниз для изменения "
+"%s, чтобы выбрать или сбросить выбор трека. Перетащите вверх/вниз для изменения "
 "порядка треков."
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "%s to select or deselect track."
-msgstr "%s, чтобы выбрать или отменить выбор трека."
+msgstr "%s, чтобы выбрать или сбросить выбор трека."
 
 #. i18n-hint: will substitute name of track for %s
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -15915,7 +15916,7 @@ msgstr "Временная шкала неактивна во время зап�
 
 #: src/widgets/Ruler.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "Щёлкните и перетащите для установки диапазона частот"
+msgstr "Щёлкните и перетащите для регулировки, дабл-клик, чтобы сбросить"
 
 #: src/widgets/Ruler.cpp
 msgid "Record/Play head"
@@ -17168,7 +17169,7 @@ msgstr "<b>RMS</b> (невзвешенный): &nbsp;&nbsp;~a дБ."
 #. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr "<b>DC смещение:</b> &nbsp;&nbsp;~a"
+msgstr "<b>DC-смещение:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 msgid "~a linear, &nbsp;&nbsp;~a dB."
@@ -17437,7 +17438,7 @@ msgid ""
 "      Any remaining difference may be caused by lossy encoding."
 msgstr ""
 " -Два канала идентичны, т.е. двойное моно.\n"
-"   Центр не может быть удалён.\n"
+"   Центр удалить нельзя.\n"
 "      Любое оставшееся различие может быть вызвано кодированием с потерей."
 
 #: plug-ins/vocalrediso.ny
