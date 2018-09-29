@@ -333,9 +333,10 @@ void MenuCommandHandler::UpdatePrefs()
 /// affect the short-cut key legend that appears beside each command,
 
 // To supply the "finder" argument in AddItem calls
-static CommandHandlerObject &ident(AudacityProject &project) { return project; }
+static CommandHandlerObject &findMenuCommandHandler(AudacityProject &project)
+{ return GetMenuCommandHandler( project ); }
 
-#define FN(X) ident, \
+#define FN(X) findMenuCommandHandler, \
    static_cast<CommandFunctorPointer>(& MenuCommandHandler :: X)
 #define XXO(X) _(X), wxString{X}.Contains("...")
 
