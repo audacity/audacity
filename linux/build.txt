@@ -64,7 +64,7 @@ Audacity:
 
   1) Create a 'build' subdirectory under Audacity and change to it.
 
-  2) Now to build Audacity itself.  In the following command -j4 means use 4 cores.
+  2) Now to build Audacity itself.  
     Using a build directory (and .. in the command) keeps source and object files
     in separate directories.
 
