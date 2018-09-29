@@ -70,5 +70,5 @@ Audacity:
 
     ../configure --with-lib-preference="local system"
 
-    make -j4
+    make
     make install  # as root
