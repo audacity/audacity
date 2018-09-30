@@ -152,6 +152,21 @@ namespace
          AddClipsToCaptured( state, t, t->GetStartTime(), t->GetEndTime() );
    }
 
+   WaveTrack *NthChannel(WaveTrack &leader, int nn)
+   {
+      if (nn < 0)
+         return nullptr;
+      return *TrackList::Channels( &leader ).begin().advance(nn);
+   }
+
+   int ChannelPosition(const Track *pChannel)
+   {
+      return static_cast<int>(
+         TrackList::Channels( pChannel )
+            .EndingAfter( pChannel ).size()
+      ) - 1;
+   }
+
    // Don't count right channels.
    WaveTrack *NthAudioTrack(TrackList &list, int nn)
    {
@@ -206,15 +221,10 @@ namespace
                clip.track->Offset( offset );
          }
       }
-      else if ( pTrack ) {
+      else if ( pTrack )
          // Was a shift-click
-         for (auto channel =
-                 pTrack->GetLink() && !pTrack->GetLinked()
-                    ? pTrack->GetLink() : pTrack;
-              channel;
-              channel = channel->GetLinked() ? channel->GetLink() : nullptr)
+         for (auto channel : TrackList::Channels( pTrack ))
             channel->Offset( offset );
-      }
    }
 }
 
@@ -236,16 +246,12 @@ void TimeShiftHandle::CreateListOfCapturedClips
       state.capturedClipArray.push_back
          (TrackClip( &capturedTrack, state.capturedClip ));
 
-      // Check for stereo partner
-      Track *partner = capturedTrack.GetLink();
-      WaveTrack *wt;
-      if (state.capturedClip &&
-            // Assume linked track is wave or null
-            nullptr != (wt = static_cast<WaveTrack*>(partner))) {
-         WaveClip *const clip = FindClipAtTime(wt, clickTime);
-
-         if (clip)
-            state.capturedClipArray.push_back(TrackClip(partner, clip));
+      if (state.capturedClip) {
+         // Check for other channels
+         auto wt = static_cast<WaveTrack*>(&capturedTrack);
+         for ( auto channel : TrackList::Channels( wt ).Excluding( wt ) )
+            if (WaveClip *const clip = FindClipAtTime(channel, clickTime))
+               state.capturedClipArray.push_back(TrackClip(channel, clip));
       }
    }
 
@@ -493,22 +499,28 @@ namespace {
       for ( auto &trackClip : state.capturedClipArray ) {
          if (trackClip.clip) {
             // Move all clips up or down by an equal count of audio tracks.
+            // Can only move between tracks with equal numbers of channels,
+            // and among corresponding channels.
+
             Track *const pSrcTrack = trackClip.track;
             auto pDstTrack = NthAudioTrack(trackList,
                diff + TrackPosition(trackList, pSrcTrack));
-            // Can only move mono to mono, or left to left, or right to right
-            // And that must be so for each captured clip
-            bool stereo = (pSrcTrack->GetLink() != 0);
-            if (pDstTrack && stereo && !pSrcTrack->GetLinked())
-               // Assume linked track is wave or null
-               pDstTrack = static_cast<WaveTrack*>(pDstTrack->GetLink());
-            bool ok = pDstTrack &&
-            (stereo == (pDstTrack->GetLink() != 0)) &&
-            (!stereo || (pSrcTrack->GetLinked() == pDstTrack->GetLinked()));
-            if (ok)
-               trackClip.dstTrack = pDstTrack;
-            else
+            if (!pDstTrack)
                return false;
+
+            if (TrackList::Channels(pSrcTrack).size() !=
+                TrackList::Channels(pDstTrack).size())
+               return false;
+
+            auto pDstChannel = NthChannel(
+               *pDstTrack, ChannelPosition(pSrcTrack));
+
+            if (!pDstChannel) {
+               wxASSERT(false);
+               return false;
+            }
+
+           trackClip.dstTrack = pDstChannel;
          }
       }
       return true;

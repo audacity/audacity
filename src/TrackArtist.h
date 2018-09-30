@@ -55,7 +55,7 @@ class AUDACITY_DLL_API TrackArtist {
 
    void SetColours(int iColorIndex);
    void DrawTracks(TrackPanelDrawingContext &context,
-                   const TrackList *tracks, Track *start,
+                   const TrackList *tracks,
                    const wxRegion & reg,
                    const wxRect & rect, const wxRect & clip,
                    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,

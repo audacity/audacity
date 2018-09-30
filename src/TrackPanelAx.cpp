@@ -144,13 +144,9 @@ bool TrackPanelAx::IsFocused( const Track *track )
    if (origTrack)
       track = origTrack;
 
-   if( ( track == focusedTrack.get() ) ||
-       ( focusedTrack && track == focusedTrack->GetLink() ) )
-   {
-      return true;
-   }
-
-   return false;
+   return focusedTrack
+      ? TrackList::Channels(focusedTrack.get()).contains(track)
+      : !track;
 }
 
 int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )

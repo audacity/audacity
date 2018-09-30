@@ -341,7 +341,6 @@ void TrackArtist::SetMargins(int left, int top, int right, int bottom)
 
 void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
                              const TrackList * tracks,
-                             Track * start,
                              const wxRegion & reg,
                              const wxRect & rect,
                              const wxRect & clip,
@@ -351,13 +350,11 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
                              bool bigPoints,
                              bool drawSliders)
 {
+   // Copy the horizontal extent of rect; will later change only the vertical.
    wxRect trackRect = rect;
-   wxRect stereoTrackRect;
-   TrackListConstIterator iter(tracks);
-   const Track *t;
 
    bool hasSolo = false;
-   for (t = iter.First(); t; t = iter.Next()) {
+   for (const Track *t : *tracks) {
       t = t->SubstitutePendingChangedTrack().get();
       auto pt = dynamic_cast<const PlayableTrack *>(t);
       if (pt && pt->GetSolo()) {
@@ -381,60 +378,52 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
 
    gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), &mbShowTrackNameInWaveform, false);
 
-   t = iter.StartWith(start);
-   while (t) {
-      t = t->SubstitutePendingChangedTrack().get();
-      trackRect.y = t->GetY() - zoomInfo.vpos;
-      trackRect.height = t->GetHeight();
+   for(auto leader : tracks->Leaders()) {
+      auto group = TrackList::Channels( leader );
+      leader = leader->SubstitutePendingChangedTrack().get();
 
-      if (trackRect.y > clip.GetBottom() && !t->GetLinked()) {
+      trackRect.y = leader->GetY() - zoomInfo.vpos;
+      trackRect.height = group.sum( [&] (const Track *channel) {
+         channel = channel->SubstitutePendingChangedTrack().get();
+         return channel->GetHeight();
+      });
+
+      if (trackRect.GetBottom() < clip.GetTop())
+         continue;
+      else if (trackRect.GetTop() > clip.GetBottom())
          break;
-      }
+
+      for (auto t : group) {
+         t = t->SubstitutePendingChangedTrack().get();
 
 #if defined(DEBUG_CLIENT_AREA)
-      // Filled rectangle to show the interior of the client area
-      wxRect zr = trackRect;
-      zr.x+=1; zr.y+=5; zr.width-=7; zr.height-=7;
-      dc.SetPen(*wxCYAN_PEN);
-      dc.SetBrush(*wxRED_BRUSH);
-      dc.DrawRectangle(zr);
+         // Filled rectangle to show the interior of the client area
+         wxRect zr = trackRect;
+         zr.x+=1; zr.y+=5; zr.width-=7; zr.height-=7;
+         dc.SetPen(*wxCYAN_PEN);
+         dc.SetBrush(*wxRED_BRUSH);
+         dc.DrawRectangle(zr);
 #endif
 
-      stereoTrackRect = trackRect;
+         // For various reasons, the code will break if we display one
+         // of a stereo pair of tracks but not the other - for example,
+         // if you try to edit the envelope of one track when its linked
+         // pair is off the screen, then it won't be able to edit the
+         // offscreen envelope.  So we compute the rect of the track and
+         // its linked partner, and see if any part of that rect is on-screen.
+         // If so, we draw both.  Otherwise, we can safely draw neither.
 
-      // For various reasons, the code will break if we display one
-      // of a stereo pair of tracks but not the other - for example,
-      // if you try to edit the envelope of one track when its linked
-      // pair is off the screen, then it won't be able to edit the
-      // offscreen envelope.  So we compute the rect of the track and
-      // its linked partner, and see if any part of that rect is on-screen.
-      // If so, we draw both.  Otherwise, we can safely draw neither.
-
-      Track *link = t->GetLink();
-      if (link) {
-         if (t->GetLinked()) {
-            // If we're the first track
-            stereoTrackRect.height += link->GetHeight();
-         }
-         else {
-            // We're the second of two
-            stereoTrackRect.y -= link->GetHeight();
-            stereoTrackRect.height += link->GetHeight();
+         if (trackRect.Intersects(clip) && reg.Contains(trackRect)) {
+            wxRect rr = trackRect;
+            rr.x += mMarginLeft;
+            rr.y += mMarginTop;
+            rr.width -= (mMarginLeft + mMarginRight);
+            rr.height -= (mMarginTop + mMarginBottom);
+            DrawTrack(context, t, rr,
+                      selectedRegion, zoomInfo,
+                      drawEnvelope, bigPoints, drawSliders, hasSolo);
          }
       }
-
-      if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
-         wxRect rr = trackRect;
-         rr.x += mMarginLeft;
-         rr.y += mMarginTop;
-         rr.width -= (mMarginLeft + mMarginRight);
-         rr.height -= (mMarginTop + mMarginBottom);
-         DrawTrack(context, t, rr,
-                   selectedRegion, zoomInfo,
-                   drawEnvelope, bigPoints, drawSliders, hasSolo);
-      }
-
-      t = iter.Next();
    }
 }
 
@@ -480,8 +469,7 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
    #endif
 
          if (mbShowTrackNameInWaveform &&
-             // Exclude right channel of stereo track 
-             !(!wt->GetLinked() && wt->GetLink()) &&
+             wt->IsLeader() &&
              // Exclude empty name.
              !wt->GetName().IsEmpty()) {
             wxBrush Brush;
