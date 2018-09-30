@@ -62,9 +62,7 @@ std::shared_ptr<Track> TrackPanelAx::GetFocus()
          focusedTrack = FindTrack(mNumFocusedTrack);
       }
       if (!focusedTrack) {
-
-         TrackListIterator iter( mTrackPanel->GetTracks() );
-         focusedTrack = Track::Pointer( iter.First() );
+         focusedTrack = Track::Pointer( *mTrackPanel->GetTracks()->Any().first );
          // only call SetFocus if the focus has changed to avoid
          // unnecessary focus events
          if (focusedTrack) 
@@ -99,10 +97,7 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 #endif
 
    if( !track )
-   {
-      TrackListIterator iter( mTrackPanel->GetTracks() );
-      track = Track::Pointer( iter.First() );
-   }
+      track = Track::Pointer( *mTrackPanel->GetTracks()->Any().begin() );
 
    mFocusedTrack = track;
    mNumFocusedTrack = TrackNum(track);
@@ -252,24 +247,7 @@ wxAccStatus TrackPanelAx::GetChild( int childId, wxAccessible** child )
 // Gets the number of children.
 wxAccStatus TrackPanelAx::GetChildCount( int* childCount )
 {
-   TrackListIterator iter( mTrackPanel->GetTracks() );
-   Track *t = iter.First();
-   int cnt = 0;
-
-   while( t != NULL )
-   {
-      cnt++;
-
-      if( t->GetLink() != NULL )
-      {
-         t = iter.Next();
-      }
-
-      t = iter.Next();
-   }
-
-   *childCount = cnt;
-
+   *childCount = mTrackPanel->GetTrackCount();
    return wxACC_OK;
 }
 
@@ -373,26 +351,26 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                name->Printf(_("Track %d"), TrackNum( t ) );
             }
 
-            if (t->GetKind() == Track::Label)
-            {
-               /* i18n-hint: This is for screen reader software and indicates that
-                  this is a Label track.*/
-               name->Append( wxT(" ") + wxString(_("Label Track")));
-            }
-            else if (t->GetKind() == Track::Time)
-            {
-               /* i18n-hint: This is for screen reader software and indicates that
-                  this is a Time track.*/
-               name->Append( wxT(" ") + wxString(_("Time Track")));
-            }
+            t->TypeSwitch(
+               [&](const LabelTrack *) {
+                  /* i18n-hint: This is for screen reader software and indicates that
+                     this is a Label track.*/
+                  name->Append( wxT(" ") + wxString(_("Label Track")));
+               },
+               [&](const TimeTrack *) {
+                  /* i18n-hint: This is for screen reader software and indicates that
+                     this is a Time track.*/
+                  name->Append( wxT(" ") + wxString(_("Time Track")));
+               }
 #ifdef USE_MIDI
-            else if (t->GetKind() == Track::Note)
-            {
-               /* i18n-hint: This is for screen reader software and indicates that
-                  this is a Note track.*/
-               name->Append( wxT(" ") + wxString(_("Note Track")));
-            }
+                ,
+               [&](const NoteTrack *) {
+                  /* i18n-hint: This is for screen reader software and indicates that
+                     this is a Note track.*/
+                  name->Append( wxT(" ") + wxString(_("Note Track")));
+               }
 #endif
+            );
 
             // LLL: Remove these during "refactor"
             auto pt = dynamic_cast<PlayableTrack *>(t.get());

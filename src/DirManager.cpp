@@ -2019,8 +2019,7 @@ void DirManager::FindOrphanBlockFiles(
             TrackList *clipTracks = AudacityProject::GetClipboardTracks();
 
             if (clipTracks) {
-               TrackListIterator clipIter(clipTracks);
-               Track *track = clipIter.First();
+               auto track = *clipTracks->Any().first;
                if (track)
                   clipboardDM = track->GetDirManager().get();
             }

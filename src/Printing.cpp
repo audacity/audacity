@@ -91,9 +91,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    ZoomInfo zoomInfo(0.0, width / screenDuration);
    int y = rulerPageHeight;
 
-   TrackListIterator iter(mTracks);
-   Track *n = iter.First();
-   while (n) {
+   for (auto n : mTracks->Any()) {
       wxRect r;
       r.x = 0;
       r.y = y;
@@ -107,7 +105,6 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       dc->SetPen(*wxBLACK_PEN);
       AColor::Line(*dc, 0, r.y, width, r.y);
 
-      n = iter.Next();
       y += r.height;
    };
 

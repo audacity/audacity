@@ -297,12 +297,9 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
 
 bool VampEffect::Init()
 {
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *left = (WaveTrack *)iter.First();
-
    mRate = 0.0;
 
-   while (left)
+   for (auto left : inputTracks()->Leaders< const WaveTrack >() )
    {
       if (mRate == 0.0)
       {
@@ -311,16 +308,16 @@ bool VampEffect::Init()
 
       if (left->GetLinked())
       {
-         WaveTrack *right = (WaveTrack *)iter.Next();
+         auto right = static_cast<const WaveTrack*>( left->GetLink() );
 
+         // PRL:  Track rate might not match individual clip rates.
+         // So is this check not adequate?
          if (left->GetRate() != right->GetRate())
          {
             Effect::MessageBox(_("Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."));
             return false;
          }
       }
-
-      left = (WaveTrack *)iter.Next();
    }
 
    if (mRate <= 0.0)
@@ -348,11 +345,7 @@ bool VampEffect::Process()
       return false;
    }
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-
    int count = 0;
-
-   WaveTrack *left = (WaveTrack *)iter.First();
 
    bool multiple = false;
    unsigned prevTrackChannels = 0;
@@ -368,18 +361,18 @@ bool VampEffect::Process()
 
    std::vector<std::shared_ptr<Effect::AddedAnalysisTrack>> addedTracks;
 
-   while (left)
+   for (auto left : inputTracks()->Leaders< const WaveTrack >() )
    {
       sampleCount lstart, rstart = 0;
       sampleCount len;
       GetSamples(left, &lstart, &len);
 
-      WaveTrack *right = NULL;
       unsigned channels = 1;
 
+      const WaveTrack *right{};
       if (left->GetLinked())
       {
-         right = (WaveTrack *)iter.Next();
+         right = static_cast< const WaveTrack* >( left->GetLink() );
          channels = 2;
          GetSamples(right, &rstart, &len);
       }
@@ -519,8 +512,6 @@ bool VampEffect::Process()
       AddFeatures(ltrack, features);
 
       prevTrackChannels = channels;
-
-      left = (WaveTrack *)iter.Next();
    }
 
    // All completed without cancellation, so commit the addition of tracks now

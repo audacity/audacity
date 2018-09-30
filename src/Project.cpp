@@ -1392,18 +1392,9 @@ void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
    FixScrollbars();
    if (bForceWaveTracks && GetTracks())
    {
-      TrackListIterator iter(GetTracks());
-      Track* pTrack = iter.First();
-      while (pTrack)
-      {
-         if (pTrack->GetKind() == Track::Wave)
-         {
-            WaveTrack* pWaveTrack = static_cast<WaveTrack*>(pTrack);
-            for (const auto &clip: pWaveTrack->GetClips())
-               clip->MarkChanged();
-         }
-         pTrack = iter.Next();
-      }
+      for (auto pWaveTrack : GetTracks()->Any<WaveTrack>())
+         for (const auto &clip: pWaveTrack->GetClips())
+            clip->MarkChanged();
    }
    mTrackPanel->Refresh(false);
 }
@@ -1604,17 +1595,8 @@ void AudacityProject::AS_SetSelectionFormat(const NumericFormatId & format)
 double AudacityProject::SSBL_GetRate() const
 {
    // Return maximum of project rate and all track rates.
-   double rate = mRate;
-
-   TrackListOfKindIterator iterWaveTrack(Track::Wave, mTracks.get());
-   WaveTrack *pWaveTrack = static_cast<WaveTrack*>(iterWaveTrack.First());
-   while (pWaveTrack)
-   {
-      rate = std::max(rate, pWaveTrack->GetRate());
-      pWaveTrack = static_cast<WaveTrack*>(iterWaveTrack.Next());
-   }
-
-   return rate;
+   return std::max( mRate,
+      mTracks->Any<const WaveTrack>().max( &WaveTrack::GetRate ) );
 }
 
 const NumericFormatId & AudacityProject::SSBL_GetFrequencySelectionFormatName()
@@ -2648,13 +2630,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks) {
-      TrackListIterator iter(mLastSavedTracks.get());
-      Track *t = iter.First();
-      while (t) {
-         if (t->GetKind() == Track::Wave)
-            ((WaveTrack *) t)->CloseLock();
-         t = iter.Next();
-      }
+      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
+         wt->CloseLock();
 
       mLastSavedTracks->Clear(); // sends an event
       mLastSavedTracks.reset();
@@ -3169,12 +3146,9 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       // the version saved on disk will be preserved until the
       // user selects Save().
 
-      Track *t;
-      TrackListIterator iter(GetTracks());
       mLastSavedTracks = TrackList::Create();
 
-      t = iter.First();
-      while (t) {
+      for (auto t : GetTracks()->Any()) {
          if (t->GetErrorOpening())
          {
             wxLogWarning(
@@ -3225,11 +3199,10 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          }
 
          mLastSavedTracks->Add(t->Duplicate());
-         t = iter.Next();
       }
 
       InitialState();
-      mTrackPanel->SetFocusedTrack(iter.First());
+      mTrackPanel->SetFocusedTrack(*GetTracks()->Any().begin());
       HandleResize();
       mTrackPanel->Refresh(false);
       mTrackPanel->Update(); // force any repaint to happen now,
@@ -3310,17 +3283,11 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          else if (status & FSCKstatus_CHANGED)
          {
             // Mark the wave tracks as changed and redraw.
-            TrackListIterator iter(GetTracks());
-            Track *t = iter.First();
-            while (t) {
-               if (t->GetKind() == Track::Wave)
-               {
-                  // Only wave tracks have a notion of "changed".
-                  for (const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
-                     clip->MarkChanged();
-               }
-               t = iter.Next();
-            }
+            for (auto wt : GetTracks()->Any<WaveTrack>())
+               // Only wave tracks have a notion of "changed".
+               for (const auto &clip: wt->GetClips())
+                  clip->MarkChanged();
+
             mTrackPanel->Refresh(true);
 
             // Vaughan, 2010-08-20: This was bogus, as all the actions in DirManager::ProjectFSCK
@@ -3350,10 +3317,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       // may have spared the files at the expense of leaked memory).  But
       // here is a better way to accomplish the intent, doing like what happens
       // when the project closes:
-      TrackListOfKindIterator iter(Track::Wave, mTracks.get() );
-      for ( Track *pTrack = iter.First(); pTrack; pTrack = iter.Next() ) {
-         static_cast< WaveTrack* >(pTrack)->CloseLock();
-      }
+      for ( auto pTrack : mTracks->Any< WaveTrack >() )
+         pTrack->CloseLock();
 
       mTracks->Clear(); //mTracks->Clear(true);
 
@@ -3438,55 +3403,47 @@ void AudacityProject::EnqueueODTasks()
    //OD***Blocks.
    if(ODManager::HasLoadedODFlag())
    {
-      Track *tr;
-      TrackListIterator triter(GetTracks());
-      tr = triter.First();
-
       std::vector<std::unique_ptr<ODTask>> newTasks;
       //std::vector<ODDecodeTask*> decodeTasks;
       unsigned int createdODTasks=0;
-      while (tr) {
-         if (tr->GetKind() == Track::Wave) {
-            //check the track for blocks that need decoding.
-            //There may be more than one type e.g. FLAC/FFMPEG/lame
-            unsigned int odFlags;
-            odFlags=((WaveTrack*)tr)->GetODFlags();
+      for (auto wt : GetTracks()->Any<WaveTrack>()) {
+         //check the track for blocks that need decoding.
+         //There may be more than one type e.g. FLAC/FFMPEG/lame
+         unsigned int odFlags = wt->GetODFlags();
 
-            //add the track to the already created tasks that correspond to the od flags in the wavetrack.
-            for(unsigned int i=0;i<newTasks.size();i++) {
-               if(newTasks[i]->GetODType() & odFlags)
-                  newTasks[i]->AddWaveTrack((WaveTrack*)tr);
-            }
+         //add the track to the already created tasks that correspond to the od flags in the wavetrack.
+         for(unsigned int i=0;i<newTasks.size();i++) {
+            if(newTasks[i]->GetODType() & odFlags)
+               newTasks[i]->AddWaveTrack(wt);
+         }
 
-            //create whatever NEW tasks we need to.
-            //we want at most one instance of each class for the project
-            while((odFlags|createdODTasks) != createdODTasks)
-            {
-               std::unique_ptr<ODTask> newTask;
+         //create whatever NEW tasks we need to.
+         //we want at most one instance of each class for the project
+         while((odFlags|createdODTasks) != createdODTasks)
+         {
+            std::unique_ptr<ODTask> newTask;
 #ifdef EXPERIMENTAL_OD_FLAC
-               if(!(createdODTasks&ODTask::eODFLAC) && (odFlags & ODTask::eODFLAC)) {
-                  newTask = std::make_unique<ODDecodeFlacTask>();
-                  createdODTasks = createdODTasks | ODTask::eODFLAC;
-               }
-               else
+            if(!(createdODTasks&ODTask::eODFLAC) && (odFlags & ODTask::eODFLAC)) {
+               newTask = std::make_unique<ODDecodeFlacTask>();
+               createdODTasks = createdODTasks | ODTask::eODFLAC;
+            }
+            else
 #endif
-               if(!(createdODTasks&ODTask::eODPCMSummary) && (odFlags & ODTask::eODPCMSummary)) {
-                  newTask = std::make_unique<ODComputeSummaryTask>();
-                  createdODTasks= createdODTasks | ODTask::eODPCMSummary;
-               }
-               else {
-                  wxPrintf("unrecognized OD Flag in block file.\n");
-                  //TODO:ODTODO: display to user.  This can happen when we build audacity on a system that doesnt have libFLAC
-                  break;
-               }
-               if(newTask)
-               {
-                  newTask->AddWaveTrack((WaveTrack*)tr);
-                  newTasks.push_back(std::move(newTask));
-               }
+            if(!(createdODTasks&ODTask::eODPCMSummary) && (odFlags & ODTask::eODPCMSummary)) {
+               newTask = std::make_unique<ODComputeSummaryTask>();
+               createdODTasks = createdODTasks | ODTask::eODPCMSummary;
+            }
+            else {
+               wxPrintf("unrecognized OD Flag in block file.\n");
+               //TODO:ODTODO: display to user.  This can happen when we build audacity on a system that doesnt have libFLAC
+               break;
+            }
+            if(newTask)
+            {
+               newTask->AddWaveTrack(wt);
+               newTasks.push_back(std::move(newTask));
             }
          }
-         tr = triter.Next();
       }
       for(unsigned int i=0;i<newTasks.size();i++)
          ODManager::Instance()->AddNewTask(std::move(newTasks[i]));
@@ -3821,55 +3778,45 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCopy)
 
    mTags->WriteXML(xmlFile);
 
-   const Track *t;
-   WaveTrack* pWaveTrack;
-   TrackListConstIterator iter(GetTracks());
-   t = iter.First();
    unsigned int ndx = 0;
-   while (t) {
-      if ((t->GetKind() == Track::Wave) && bWantSaveCopy)
-      {
-         auto wt = static_cast<const WaveTrack *>(t);
+   GetTracks()->Any().Visit(
+      [&](WaveTrack *pWaveTrack) {
+         if (bWantSaveCopy) {
+            if (!pWaveTrack->IsLeader())
+               return;
 
-         //vvv This should probably be a method, WaveTrack::WriteCompressedTrackXML().
-         xmlFile.StartTag(wxT("import"));
-         xmlFile.WriteAttr(wxT("filename"), mStrOtherNamesArray[ndx]); // Assumes mTracks order hasn't changed!
+            //vvv This should probably be a method, WaveTrack::WriteCompressedTrackXML().
+            xmlFile.StartTag(wxT("import"));
+            xmlFile.WriteAttr(wxT("filename"), mStrOtherNamesArray[ndx]); // Assumes mTracks order hasn't changed!
 
-         // Don't store "channel" and "linked" tags because the importer can figure that out,
-         // e.g., from stereo Ogg files.
-         //    xmlFile.WriteAttr(wxT("channel"), t->GetChannel());
-         //    xmlFile.WriteAttr(wxT("linked"), t->GetLinked());
+            // Don't store "channel" and "linked" tags because the importer can figure that out,
+            // e.g., from stereo Ogg files.
+            //    xmlFile.WriteAttr(wxT("channel"), t->GetChannel());
+            //    xmlFile.WriteAttr(wxT("linked"), t->GetLinked());
 
-         xmlFile.WriteAttr(wxT("offset"), t->GetOffset(), 8);
-         xmlFile.WriteAttr(wxT("mute"), wt->GetMute());
-         xmlFile.WriteAttr(wxT("solo"), wt->GetSolo());
-         xmlFile.WriteAttr(wxT("height"), t->GetActualHeight());
-         xmlFile.WriteAttr(wxT("minimized"), t->GetMinimized());
+            xmlFile.WriteAttr(wxT("offset"), pWaveTrack->GetOffset(), 8);
+            xmlFile.WriteAttr(wxT("mute"), pWaveTrack->GetMute());
+            xmlFile.WriteAttr(wxT("solo"), pWaveTrack->GetSolo());
+            xmlFile.WriteAttr(wxT("height"), pWaveTrack->GetActualHeight());
+            xmlFile.WriteAttr(wxT("minimized"), pWaveTrack->GetMinimized());
 
-         pWaveTrack = (WaveTrack*)t;
-         // Don't store "rate" tag because the importer can figure that out.
-         //    xmlFile.WriteAttr(wxT("rate"), pWaveTrack->GetRate());
-         xmlFile.WriteAttr(wxT("gain"), (double)pWaveTrack->GetGain());
-         xmlFile.WriteAttr(wxT("pan"), (double)pWaveTrack->GetPan());
-         xmlFile.EndTag(wxT("import"));
+            // Don't store "rate" tag because the importer can figure that out.
+            //    xmlFile.WriteAttr(wxT("rate"), pWaveTrack->GetRate());
+            xmlFile.WriteAttr(wxT("gain"), (double)pWaveTrack->GetGain());
+            xmlFile.WriteAttr(wxT("pan"), (double)pWaveTrack->GetPan());
+            xmlFile.EndTag(wxT("import"));
 
-         ndx++;
-         if (t->GetLinked())
-            t = iter.Next();
-      }
-      else if (t->GetKind() == Track::Wave)
-      {
-         pWaveTrack = (WaveTrack*)t;
-         pWaveTrack->SetAutoSaveIdent(mAutoSaving ? ++ndx : 0);
+            ndx++;
+         }
+         else {
+            pWaveTrack->SetAutoSaveIdent(mAutoSaving ? ++ndx : 0);
+            pWaveTrack->WriteXML(xmlFile);
+         }
+      },
+      [&](Track *t) {
          t->WriteXML(xmlFile);
       }
-      else
-      {
-         t->WriteXML(xmlFile);
-      }
-
-      t = iter.Next();
-   }
+   );
 
    if (!mAutoSaving)
    {
@@ -3937,9 +3884,7 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    // Some confirmation dialogs
    if (!bWantSaveCopy)
    {
-      TrackListIterator iter(GetTracks());
-      bool bHasTracks = (iter.First() != NULL);
-      if (!bHasTracks)
+      if ( ! GetTracks()->Any() )
       {
          if (GetUndoManager()->UnsavedChanges() && mEmptyCanBeDirty) {
             int result = AudacityMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
@@ -4083,15 +4028,9 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       std::vector<std::unique_ptr<WaveTrack::Locker>> lockers;
       if (mLastSavedTracks) {
          lockers.reserve(mLastSavedTracks->size());
-         TrackListIterator iter(mLastSavedTracks.get());
-         Track *t = iter.First();
-         while (t) {
-            if (t->GetKind() == Track::Wave)
-               lockers.push_back(
-                  std::make_unique<WaveTrack::Locker>(
-                     static_cast<const WaveTrack*>(t)));
-            t = iter.Next();
-         }
+         for (auto wt : mLastSavedTracks->Any<WaveTrack>())
+            lockers.push_back(
+               std::make_unique<WaveTrack::Locker>(wt));
       }
 
       // This renames the project directory, and moves or copies
@@ -4148,17 +4087,13 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
          mLastSavedTracks->Clear();
       mLastSavedTracks = TrackList::Create();
 
-      TrackListIterator iter(GetTracks());
-      Track *t = iter.First();
-      while (t) {
+      for (auto t : GetTracks()->Any()) {
          mLastSavedTracks->Add(t->Duplicate());
 
          //only after the xml has been saved we can mark it saved.
          //thus is because the OD blockfiles change on  background thread while this is going on.
-         //         if(dupT->GetKind() == Track::Wave)
-         //         ((WaveTrack*)dupT)->MarkSaved();
-
-         t = iter.Next();
+         //         if(const auto wt = track_cast<WaveTrack*>(dupT))
+         //            wt->MarkSaved();
       }
 
       GetUndoManager()->StateSaved();
@@ -4198,38 +4133,36 @@ bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
    // Some of this is similar to code in ExportMultiple::ExportMultipleByTrack
    // but that code is really tied into the dialogs.
 
-   // Copy the tracks because we're going to do some state changes before exporting.
-   Track* pTrack;
-   WaveTrack* pWaveTrack;
-   TrackListOfKindIterator iter(Track::Wave, GetTracks());
-   unsigned int numWaveTracks = 0;
+      // Copy the tracks because we're going to do some state changes before exporting.
+      unsigned int numWaveTracks = 0;
 
    auto ppSavedTrackList = TrackList::Create();
    auto &pSavedTrackList = *ppSavedTrackList;
 
-   for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
+   auto trackRange = GetTracks()->Any<WaveTrack>();
+   for (auto pWaveTrack : trackRange)
    {
       numWaveTracks++;
-      pWaveTrack = (WaveTrack*)pTrack;
       pSavedTrackList.Add(mTrackFactory->DuplicateWaveTrack(*pWaveTrack));
    }
    auto cleanup = finally( [&] {
       // Restore the saved track states and clean up.
-      TrackListIterator savedTrackIter(&pSavedTrackList);
-      Track *pSavedTrack;
-      for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
-            ((pTrack != NULL) && (pSavedTrack != NULL));
-            pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
-      {
-         pWaveTrack = static_cast<WaveTrack*>(pTrack);
-         auto pSavedWaveTrack = static_cast<const WaveTrack*>(pSavedTrack);
+      auto savedTrackRange = pSavedTrackList.Any<const WaveTrack>();
+      auto ppSavedTrack = savedTrackRange.begin();
+      for (auto ppTrack = trackRange.begin();
 
-         pWaveTrack->SetSelected(pSavedTrack->GetSelected());
+           *ppTrack && *ppSavedTrack;
+
+           ++ppTrack, ++ppSavedTrack)
+      {
+         auto pWaveTrack = *ppTrack;
+         auto pSavedWaveTrack = *ppSavedTrack;
+         pWaveTrack->SetSelected(pSavedWaveTrack->GetSelected());
          pWaveTrack->SetMute(pSavedWaveTrack->GetMute());
          pWaveTrack->SetSolo(pSavedWaveTrack->GetSolo());
 
-         pWaveTrack->SetGain(((WaveTrack*)pSavedTrack)->GetGain());
-         pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
+         pWaveTrack->SetGain(pSavedWaveTrack->GetGain());
+         pWaveTrack->SetPan(pSavedWaveTrack->GetPan());
       }
    } );
 
@@ -4238,10 +4171,8 @@ bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
       return true;
 
    // Okay, now some bold state-faking to default values.
-   for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
+   for (auto pWaveTrack : trackRange)
    {
-      pWaveTrack = (WaveTrack*)pTrack;
-
       pWaveTrack->SetSelected(false);
       pWaveTrack->SetMute(false);
       pWaveTrack->SetSolo(false);
@@ -4264,34 +4195,25 @@ bool AudacityProject::SaveCopyWaveTracks(const wxString & strProjectPathName,
    mStrOtherNamesArray.clear();
 
    Exporter theExporter;
-   Track* pRightTrack;
    wxFileName uniqueTrackFileName;
-   for (pTrack = iter.First(); ((pTrack != NULL) && bSuccess); pTrack = iter.Next())
+   for (auto pTrack : (trackRange + &Track::IsLeader))
    {
-      if (pTrack->GetKind() == Track::Wave)
-      {
-         SelectionStateChanger changer{ GetSelectionState(), *GetTracks() };
-         pTrack->SetSelected(true);
-         if (pTrack->GetLinked())
-         {
-            pRightTrack = iter.Next();
-            pRightTrack->SetSelected(true);
-         }
-         else
-            pRightTrack = NULL;
+      SelectionStateChanger changer{ GetSelectionState(), *GetTracks() };
+      auto channels = TrackList::Channels(pTrack);
 
-         uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), extension);
-         FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
-         bSuccess =
-            theExporter.Process(this, pRightTrack ? 2 : 1,
-                                 fileFormat, uniqueTrackFileName.GetFullPath(), true,
-                                 pTrack->GetStartTime(), pTrack->GetEndTime());
+      for (auto channel : channels)
+         channel->SetSelected(true);
+      uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), extension);
+      FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
+      bSuccess =
+         theExporter.Process(this, channels.size(),
+                              fileFormat, uniqueTrackFileName.GetFullPath(), true,
+                              pTrack->GetStartTime(), pTrack->GetEndTime());
 
-         if (!bSuccess)
-            // If only some exports succeed, the cleanup is not done here
-            // but trusted to the caller
-            break;
-      }
+      if (!bSuccess)
+         // If only some exports succeed, the cleanup is not done here
+         // but trusted to the caller
+         break;
    }
 
    return bSuccess;
@@ -4317,9 +4239,6 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
       auto newTrack = mTracks->Add(std::move(uNewTrack));
       results.push_back(Track::Pointer(newTrack));
-      if (newRate == 0 && newTrack->GetKind() == Track::Wave) {
-         newRate = ((WaveTrack *)newTrack)->GetRate();
-      }
       newTrack->SetSelected(true);
       //we need to check link status based on the first channel only.
       if(0==i)
@@ -4331,11 +4250,13 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
          newTrack->SetName(trackNameBase);
       }
 
-      // Check if NEW track contains aliased blockfiles and if yes,
-      // remember this to show a warning later
-      if (newTrack->GetKind() == WaveTrack::Wave)
-      {
-         if (WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0)) {
+      newTrack->TypeSwitch( [&](WaveTrack *wt) {
+         if (newRate == 0)
+            newRate = wt->GetRate();
+
+         // Check if NEW track contains aliased blockfiles and if yes,
+         // remember this to show a warning later
+         if(WaveClip* clip = wt->GetClipByIndex(0)) {
             BlockArray &blocks = clip->GetSequence()->GetBlockArray();
             if (blocks.size())
             {
@@ -4346,7 +4267,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
                }
             }
          }
-      }
+      });
    }
 
    // Automatically assign rate of imported file to whole project,
@@ -4442,9 +4363,9 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
 
    if (pTrackArray) {
       for (const auto &newTrack : newSharedTracks) {
-         if (newTrack->GetKind() == Track::Wave)
-            pTrackArray->push_back(
-               std::static_pointer_cast<WaveTrack>(newTrack));
+         newTrack->TypeSwitch( [&](WaveTrack *wt) {
+            pTrackArray->push_back( Track::Pointer< WaveTrack >( wt ) );
+         });
       }
    }
 
@@ -4789,18 +4710,15 @@ void AudacityProject::PopState(const UndoState &state)
    TrackList *const tracks = state.tracks.get();
 
    mTracks->Clear();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    bool odUsed = false;
    std::unique_ptr<ODComputeSummaryTask> computeTask;
 
-   while (t)
+   for (auto t : tracks->Any())
    {
       auto copyTrack = mTracks->Add(t->Duplicate());
 
       //add the track to OD if the manager exists.  later we might do a more rigorous check...
-      if (copyTrack->GetKind() == Track::Wave)
-      {
+      copyTrack->TypeSwitch( [&](WaveTrack *wt) {
          //if the ODManager hasn't been initialized, there's no chance this track has OD blocks since this
          //is a "Redo" operation.
          //TODO: update this to look like the update loop in OpenFile that handles general purpose ODTasks.
@@ -4818,10 +4736,9 @@ void AudacityProject::PopState(const UndoState &state)
             // PRL:  Is it correct to add all tracks to one task, even if they
             // are not partnered channels?  Rather than
             // make one task for each?
-            computeTask->AddWaveTrack((WaveTrack*)copyTrack);
+            computeTask->AddWaveTrack(wt);
          }
-      }
-      t = iter.Next();
+      });
    }
 
    //add the task.
@@ -4858,8 +4775,8 @@ void AudacityProject::UpdateLyrics()
    if (!mLyricsWindow)
       return;
 
-   TrackListOfKindIterator iter(Track::Label, GetTracks());
-   LabelTrack* pLabelTrack = (LabelTrack*)(iter.First()); // Lyrics come from only the first label track.
+   // Lyrics come from only the first label track.
+   auto pLabelTrack = *GetTracks()->Any< const LabelTrack >().begin();
    if (!pLabelTrack)
       return;
 
@@ -4935,15 +4852,10 @@ void AudacityProject::ClearClipboard()
 
 void AudacityProject::Clear()
 {
-   TrackListIterator iter(GetTracks());
-
-   Track *n = iter.First();
-
-   while (n) {
+   for (auto n : GetTracks()->Any()) {
       if (n->GetSelected() || n->IsSyncLockSelected()) {
          n->Clear(mViewInfo.selectedRegion.t0(), mViewInfo.selectedRegion.t1());
       }
-      n = iter.Next();
    }
 
    double seconds = mViewInfo.selectedRegion.duration();
@@ -5213,22 +5125,16 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 //regions memory need to be deleted by the caller
 void AudacityProject::GetRegionsByLabel( Regions &regions )
 {
-   TrackListIterator iter(GetTracks());
-   Track *n;
-
    //determine labeled regions
-   for( n = iter.First(); n; n = iter.Next() )
-      if( n->GetKind() == Track::Label && n->GetSelected() )
+   for (auto lt : GetTracks()->Selected< LabelTrack >()) {
+      for (int i = 0; i < lt->GetNumLabels(); i++)
       {
-         LabelTrack *lt = ( LabelTrack* )n;
-         for( int i = 0; i < lt->GetNumLabels(); i++ )
-         {
-            const LabelStruct *ls = lt->GetLabel( i );
-            if( ls->selectedRegion.t0() >= mViewInfo.selectedRegion.t0() &&
-                ls->selectedRegion.t1() <= mViewInfo.selectedRegion.t1() )
-               regions.push_back(Region(ls->getT0(), ls->getT1()));
-         }
+         const LabelStruct *ls = lt->GetLabel(i);
+         if (ls->selectedRegion.t0() >= mViewInfo.selectedRegion.t0() &&
+            ls->selectedRegion.t1() <= mViewInfo.selectedRegion.t1())
+            regions.push_back(Region(ls->getT0(), ls->getT1()));
       }
+   }
 
    //anything to do ?
    if( regions.size() == 0 )
@@ -5267,35 +5173,22 @@ void AudacityProject::EditByLabel( EditFunction action,
    if( regions.size() == 0 )
       return;
 
-   TrackListIterator iter(GetTracks());
-   Track *n;
-   bool allTracks = true;
-
    // if at least one wave track is selected
    // apply only on the selected track
-   for( n = iter.First(); n; n = iter.Next() )
-      if( n->GetKind() == Track::Wave && n->GetSelected() )
-      {
-         allTracks = false;
-         break;
-      }
+   const bool allTracks = (GetTracks()->Selected< WaveTrack >()).empty();
 
    //Apply action on wavetracks starting from
    //labeled regions in the end. This is to correctly perform
    //actions like 'Delete' which collapse the track area.
-   n = iter.First();
-   while (n)
+   for (auto wt : GetTracks()->Any<WaveTrack>())
    {
-      if ((n->GetKind() == Track::Wave) &&
-            (allTracks || n->GetSelected() || (bSyncLockedTracks && n->IsSyncLockSelected())))
+      if (allTracks || wt->GetSelected() || (bSyncLockedTracks && wt->IsSyncLockSelected()))
       {
-         WaveTrack *wt = ( WaveTrack* )n;
          for (int i = (int)regions.size() - 1; i >= 0; i--) {
             const Region &region = regions.at(i);
             (wt->*action)(region.start, region.end);
          }
       }
-      n = iter.Next();
    }
 }
 
@@ -5313,18 +5206,9 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
    if( regions.size() == 0 )
       return;
 
-   TrackListIterator iter(GetTracks());
-   Track *n;
-   bool allTracks = true;
-
    // if at least one wave track is selected
    // apply only on the selected track
-   for( n = iter.First(); n; n = iter.Next() )
-      if( n->GetKind() == Track::Wave && n->GetSelected() )
-      {
-         allTracks = false;
-         break;
-      }
+   const bool allTracks = (GetTracks()->Selected< WaveTrack >()).empty();
 
    ClearClipboard();
 
@@ -5334,47 +5218,46 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
    //Apply action on wavetracks starting from
    //labeled regions in the end. This is to correctly perform
    //actions like 'Cut' which collapse the track area.
-   for( n = iter.First(); n; n = iter.Next() )
-   {
-      if( n->GetKind() == Track::Wave && ( allTracks || n->GetSelected() ) )
-      {
-         WaveTrack *wt = ( WaveTrack* )n;
-         // This track accumulates the needed clips, right to left:
-         Track::Holder merged;
-         for( int i = (int)regions.size() - 1; i >= 0; i-- )
-         {
-            const Region &region = regions.at(i);
-            auto dest = ( wt->*action )( region.start, region.end );
-            if( dest )
-            {
-               MenuCommandHandler::FinishCopy( wt, dest.get() );
-               if( !merged )
-                  merged = std::move(dest);
-               else
-               {
-                  // Paste to the beginning; unless this is the first region,
-                  // offset the track to account for time between the regions
-                  if (i < (int)regions.size() - 1)
-                     merged->Offset(
-                        regions.at(i + 1).start - region.end);
 
-                  // dest may have a placeholder clip at the end that is
-                  // removed when pasting, which is okay because we proceed
-                  // right to left.  Any placeholder already in merged is kept.
-                  // Only the rightmost placeholder is important in the final
-                  // result.
-                  merged->Paste( 0.0 , dest.get() );
-               }
-            }
-            else  // nothing copied but there is a 'region', so the 'region' must be a 'point label' so offset
+   for(auto wt :
+         GetTracks()->Any<WaveTrack>()
+            + (allTracks ? &Track::Any : &Track::IsSelected)
+   ) {
+      // This track accumulates the needed clips, right to left:
+      Track::Holder merged;
+      for( int i = (int)regions.size() - 1; i >= 0; i-- )
+      {
+         const Region &region = regions.at(i);
+         auto dest = ( wt->*action )( region.start, region.end );
+         if( dest )
+         {
+            MenuCommandHandler::FinishCopy( wt, dest.get() );
+            if( !merged )
+               merged = std::move(dest);
+            else
+            {
+               // Paste to the beginning; unless this is the first region,
+               // offset the track to account for time between the regions
                if (i < (int)regions.size() - 1)
-                  if (merged)
-                     merged->Offset(
-                        regions.at(i + 1).start - region.end);
+                  merged->Offset(
+                     regions.at(i + 1).start - region.end);
+
+               // dest may have a placeholder clip at the end that is
+               // removed when pasting, which is okay because we proceed
+               // right to left.  Any placeholder already in merged is kept.
+               // Only the rightmost placeholder is important in the final
+               // result.
+               merged->Paste( 0.0 , dest.get() );
+            }
          }
-         if( merged )
-            newClipboard.Add( std::move(merged) );
+         else  // nothing copied but there is a 'region', so the 'region' must be a 'point label' so offset
+            if (i < (int)regions.size() - 1)
+               if (merged)
+                  merged->Offset(
+                     regions.at(i + 1).start - region.end);
       }
+      if( merged )
+         newClipboard.Add( std::move(merged) );
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
@@ -5748,11 +5631,8 @@ void AudacityProject::SetTrackGain(WaveTrack * wt, LWSlider * slider)
    wxASSERT(wt);
    float newValue = slider->Get();
 
-   // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(wt->GetLink());
-   wt->SetGain(newValue);
-   if (link)
-      link->SetGain(newValue);
+   for (auto channel : TrackList::Channels(wt))
+      channel->SetGain(newValue);
 
    PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
 
@@ -5764,11 +5644,8 @@ void AudacityProject::SetTrackPan(WaveTrack * wt, LWSlider * slider)
    wxASSERT(wt);
    float newValue = slider->Get();
 
-   // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(wt->GetLink());
-   wt->SetPan(newValue);
-   if (link)
-      link->SetPan(newValue);
+   for (auto channel : TrackList::Channels(wt))
+      channel->SetPan(newValue);
 
    PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
 
@@ -5792,7 +5669,6 @@ void AudacityProject::RemoveTrack(Track * toRemove)
    }
 
    wxString name = toRemove->GetName();
-   Track *partner = toRemove->GetLink();
 
    auto playable = dynamic_cast<PlayableTrack*>(toRemove);
    if (playable)
@@ -5803,14 +5679,14 @@ void AudacityProject::RemoveTrack(Track * toRemove)
          pMixerBoard->RemoveTrackCluster(playable); // Will remove partner shown in same cluster.
    }
 
-   mTracks->Remove(toRemove);
-   if (partner) {
-      mTracks->Remove(partner);
-   }
-   
-   if (toRemoveWasFocused) {
+   auto channels = TrackList::Channels(toRemove);
+   // Be careful to post-increment over positions that get erased!
+   auto &iter = channels.first;
+   while (iter != channels.end())
+      mTracks->Remove( * iter++ );
+
+   if (toRemoveWasFocused)
       mTrackPanel->SetFocusedTrack(newFocus);
-   }
 
    PushState(
       wxString::Format(_("Removed track '%s.'"),
@@ -5824,82 +5700,42 @@ void AudacityProject::RemoveTrack(Track * toRemove)
 
 void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
 {
+   // Whatever t is, replace with lead channel
+   t = *GetTracks()->FindLeader(t);
+
    // "exclusive" mute means mute the chosen track and unmute all others.
-   if (exclusive)
-   {
-      TrackListIterator iter(GetTracks());
-      Track *it = iter.First();
-      while (it) {
-         auto i = dynamic_cast<PlayableTrack *>(it);
-         if (i) {
-            if (i == t) {
-               i->SetMute(true);
-               if(i->GetLinked()) { // also mute the linked track
-                  it = iter.Next();
-                  i->SetMute(true);
-               }
-            }
-            else {
-               i->SetMute(false);
-            }
-            i->SetSolo(false);
-         }
-         it = iter.Next();
+   if (exclusive) {
+      for (auto leader : GetTracks()->Leaders<PlayableTrack>()) {
+         const auto group = TrackList::Channels(leader);
+         bool chosen = (t == leader);
+         for (auto channel : group)
+            channel->SetMute( chosen ),
+            channel->SetSolo( false );
       }
    }
-   else
-   {
+   else {
       // Normal click toggles this track.
       auto pt = dynamic_cast<PlayableTrack *>( t );
       if (!pt)
          return;
 
-      pt->SetMute(!pt->GetMute());
-      if(t->GetLinked())   // set mute the same on both, if a pair
-      {
-         bool muted = pt->GetMute();
-         TrackListIterator iter(GetTracks());
-         Track *i = iter.First();
-         while (i != t) {  // search for this track
-            i = iter.Next();
-         }
-         i = iter.Next();  // get the next one, since linked
-         auto pi = dynamic_cast<PlayableTrack *>( i );
-         if (pi)
-            pi->SetMute(muted);   // and mute it as well
-      }
+      bool wasMute = pt->GetMute();
+      for (auto channel : TrackList::Channels(pt))
+         channel->SetMute( !wasMute );
 
       if (IsSoloSimple() || IsSoloNone())
       {
-         TrackListIterator iter(GetTracks());
-         Track *i = iter.First();
-         int nPlaying=0;
-         int nPlayableTracks =0;
-
          // We also set a solo indicator if we have just one track / stereo pair playing.
          // in a group of more than one playable tracks.
          // otherwise clear solo on everything.
-         while (i) {
-            auto pi = dynamic_cast<PlayableTrack *>( i );
-            if (pi) {
-               nPlayableTracks++;
-               if( !pi->GetMute())
-               {
-                  nPlaying += 1;
-                  if(i->GetLinked())
-                     i = iter.Next();  // don't count this one as it is linked
-               }
-            }
-            i = iter.Next();
-         }
 
-         i = iter.First();
-         while (i) {
-            auto pi = dynamic_cast<PlayableTrack *>( i );
-            if (pi)
-               pi->SetSolo( (nPlaying==1) && (nPlayableTracks > 1 ) && !pi->GetMute() );   // will set both of a stereo pair
-            i = iter.Next();
-         }
+         auto range = GetTracks()->Leaders<PlayableTrack>();
+         auto nPlayableTracks = range.size();
+         auto nPlaying = (range - &PlayableTrack::GetMute).size();
+
+         for (auto track : GetTracks()->Any<PlayableTrack>())
+            // will set both of a stereo pair
+            track->SetSolo( (nPlaying==1) && (nPlayableTracks > 1 ) && !track->GetMute() );
       }
    }
    ModifyState(true);
@@ -5907,11 +5743,15 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
 
 // Type of solo (standard or simple) follows the set preference, unless
 // alternate == true, which causes the opposite behavior.
-void AudacityProject::HandleTrackSolo(Track *const t, const bool alternate)
+void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
 {
+   // Whatever t is, replace with lead channel
+   t = *GetTracks()->FindLeader(t);
+
    const auto pt = dynamic_cast<PlayableTrack *>( t );
    if (!pt)
       return;
+   bool bWasSolo = pt->GetSolo();
 
    bool bSoloMultiple = !IsSoloSimple() ^ alternate;
 
@@ -5922,55 +5762,28 @@ void AudacityProject::HandleTrackSolo(Track *const t, const bool alternate)
    // when in standard radio button mode.
    if ( bSoloMultiple )
    {
-      pt->SetSolo( !pt->GetSolo() );
-      if(t->GetLinked())
-      {
-         bool soloed = pt->GetSolo();
-         TrackListIterator iter(GetTracks());
-         Track *i = iter.First();
-         while (i != t) {  // search for this track
-            i = iter.Next();
-         }
-         i = iter.Next();  // get the next one, since linked
-         auto pi = dynamic_cast<PlayableTrack *>( i );
-         if (pi)
-            pi->SetSolo(soloed);   // and solo it as well
-      }
+      for (auto channel : TrackList::Channels(pt))
+         channel->SetSolo( !bWasSolo );
    }
    else
    {
       // Normal click solo this track only, mute everything else.
       // OR unmute and unsolo everything.
-      TrackListIterator iter(GetTracks());
-      Track *i = iter.First();
-      bool bWasSolo = pt->GetSolo();
-      while (i) {
-         if( i==t )
-         {
-            pt->SetSolo(!bWasSolo);
-            if( IsSoloSimple() )
-               pt->SetMute(false);
-            if(t->GetLinked())
-            {
-               i = iter.Next();
-               auto pi = dynamic_cast<PlayableTrack *>( i );
-               if (pi) {
-                  pi->SetSolo(!bWasSolo);
-                  if( IsSoloSimple() )
-                     pi->SetMute(false);
-               }
-            }
-         }
-         else
-         {
-            auto pi = dynamic_cast<PlayableTrack *>( i );
-            if (pi) {
-               pi->SetSolo(false);
+      for (auto leader : GetTracks()->Leaders<PlayableTrack>()) {
+         const auto group = TrackList::Channels(leader);
+         bool chosen = (t == leader);
+         for (auto channel : group) {
+            if (chosen) {
+               channel->SetSolo( !bWasSolo );
                if( IsSoloSimple() )
-                  pi->SetMute(!bWasSolo);
+                  channel->SetMute( false );
+            }
+            else {
+               channel->SetSolo( false );
+               if( IsSoloSimple() )
+                  channel->SetMute( !bWasSolo );
             }
          }
-         i = iter.Next();
       }
    }
    ModifyState(true);
@@ -6054,13 +5867,8 @@ void AudacityProject::ResetProjectToEmpty() {
    // in memory.  After it's locked, DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks) {
-      TrackListIterator iter(mLastSavedTracks.get());
-      Track *t = iter.First();
-      while (t) {
-         if (t->GetKind() == Track::Wave)
-            ((WaveTrack *)t)->CloseLock();
-         t = iter.Next();
-      }
+      for (auto t : mLastSavedTracks->Any<WaveTrack>())
+         t->CloseLock();
 
       mLastSavedTracks->Clear(); // sends an event
       mLastSavedTracks.reset();
@@ -6116,11 +5924,9 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
 
 // Does the project have any tracks?
 bool AudacityProject::ProjectHasTracks() {
-   // These two lines test for an 'empty' project.
+   // Test for an 'empty' project.
    // of course it could still have a history at this stage.
-   TrackListIterator iter2(GetTracks());
-   bool bHasTracks = (iter2.First() != NULL);
-   return bHasTracks;
+   return ! ( GetTracks()->Any() ).empty();
 }
 
 wxString AudacityProject::GetHoursMinsString(int iMinutes)

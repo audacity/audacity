@@ -607,29 +607,6 @@ bool SelectedTrackListOfKindIterator::Condition(Track *t)
    return TrackListOfKindIterator::Condition(t) && t->GetSelected();
 }
 
-// VisibleTrackIterator
-//
-// Based on TrackListIterator returns only the currently visible tracks.
-//
-VisibleTrackIterator::VisibleTrackIterator(AudacityProject *project)
-:  TrackListCondIterator(project->GetTracks())
-{
-   mProject = project;
-   mPanelRect.SetTop(mProject->mViewInfo.vpos);
-   mPanelRect.SetSize(mProject->GetTPTracksUsableArea());
-}
-
-bool VisibleTrackIterator::Condition(Track *t)
-{
-   wxRect r(0, t->GetY(), 1, t->GetHeight());
-   if( r.Intersects(mPanelRect) )
-      return true;
-   auto partner = t->GetLink();
-   if ( partner && t->GetLinked() )
-      return Condition( partner );
-   return false;
-}
-
 // SyncLockedTracksIterator
 //
 // Based on TrackListIterator returns only tracks belonging to the group

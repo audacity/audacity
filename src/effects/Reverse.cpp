@@ -64,40 +64,30 @@ bool EffectReverse::IsInteractive()
 
 bool EffectReverse::Process()
 {
-   //Track::All is needed because Reverse should move the labels too
-   this->CopyInputTracks(Track::All); // Set up mOutputTracks.
+   //all needed because Reverse should move the labels too
+   this->CopyInputTracks(true); // Set up mOutputTracks.
    bool bGoodResult = true;
-
-   TrackListIterator iter(mOutputTracks.get());
-   Track *t = iter.First();
    int count = 0;
-   while (t) {
-      if (t->GetKind() == Track::Wave &&
-            (t->GetSelected() || t->IsSyncLockSelected()))
-      {
-         WaveTrack *track = (WaveTrack*)t;
 
+   auto trackRange =
+      mOutputTracks->Any() + &Track::IsSelectedOrSyncLockSelected;
+   trackRange.VisitWhile( bGoodResult,
+      [&](WaveTrack * track) {
          if (mT1 > mT0) {
             auto start = track->TimeToLongSamples(mT0);
             auto end = track->TimeToLongSamples(mT1);
             auto len = end - start;
 
             if (!ProcessOneWave(count, track, start, len))
-            {
                bGoodResult = false;
-               break;
-            }
          }
-      }
-      else if (t->GetKind() == Track::Label &&
-            (t->GetSelected() || t->IsSyncLockSelected()))
-      {
-         LabelTrack *track = (LabelTrack*)t;
+         count++;
+      },
+      [&](LabelTrack * track) {
          track->ChangeLabelsOnReverse(mT0, mT1);
+         count++;
       }
-      t = iter.Next();
-      count++;
-   }
+   );
 
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;

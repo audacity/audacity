@@ -178,45 +178,52 @@ UIHandle::Result EnvelopeHandle::Click
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    const auto pTrack = static_cast<Track*>(evt.pCell.get());
 
-   if (pTrack &&
-       pTrack->GetKind() == Track::Wave) {
-      WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
-      if (wt->GetDisplay() != WaveTrack::Waveform)
+   unsigned result = Cancelled;
+   if (pTrack)
+      result = pTrack->TypeSwitch< decltype(RefreshNone) >(
+      [&](WaveTrack *wt) {
+         if (wt->GetDisplay() != WaveTrack::Waveform)
+            return Cancelled;
+
+         if (!mEnvelope)
+            return Cancelled;
+
+         mLog = !wt->GetWaveformSettings().isLinear();
+         wt->GetDisplayBounds(&mLower, &mUpper);
+         mdBRange = wt->GetWaveformSettings().dBRange;
+         mEnvelopeEditor =
+            std::make_unique< EnvelopeEditor >( *mEnvelope, true );
+         mEnvelopeEditorRight.reset();
+
+         // Assume linked track is wave or null
+         auto partner = static_cast<WaveTrack*>(wt->GetLink());
+         if (partner)
+         {
+            auto clickedEnvelope = partner->GetEnvelopeAtX(event.GetX());
+            if (clickedEnvelope)
+               mEnvelopeEditorRight =
+                  std::make_unique< EnvelopeEditor >( *clickedEnvelope, true );
+         }
+
+         return RefreshNone;
+      },
+      [&](TimeTrack *tt) {
+         if (!mEnvelope)
+            return Cancelled;
+         GetTimeTrackData( *pProject, *tt, mdBRange, mLog, mLower, mUpper);
+         mEnvelopeEditor =
+            std::make_unique< EnvelopeEditor >( *mEnvelope, false );
+         mEnvelopeEditorRight.reset();
+
+         return RefreshNone;
+      },
+      [](Track *) {
          return Cancelled;
-
-      if (!mEnvelope)
-         return Cancelled;
-
-      mLog = !wt->GetWaveformSettings().isLinear();
-      wt->GetDisplayBounds(&mLower, &mUpper);
-      mdBRange = wt->GetWaveformSettings().dBRange;
-      mEnvelopeEditor =
-         std::make_unique< EnvelopeEditor >( *mEnvelope, true );
-      mEnvelopeEditorRight.reset();
-
-      // Assume linked track is wave or null
-      auto partner = static_cast<WaveTrack*>(wt->GetLink());
-      if (partner)
-      {
-         auto clickedEnvelope = partner->GetEnvelopeAtX(event.GetX());
-         if (clickedEnvelope)
-            mEnvelopeEditorRight =
-               std::make_unique< EnvelopeEditor >( *clickedEnvelope, true );
       }
-   }
-   else if (pTrack &&
-            pTrack->GetKind() == Track::Time)
-   {
-      TimeTrack *const tt = static_cast<TimeTrack*>(pTrack);
-      if (!mEnvelope)
-         return Cancelled;
-      GetTimeTrackData( *pProject, *tt, mdBRange, mLog, mLower, mUpper);
-      mEnvelopeEditor =
-         std::make_unique< EnvelopeEditor >( *mEnvelope, false );
-      mEnvelopeEditorRight.reset();
-   }
-   else
-      return Cancelled;
+   );
+
+   if (result & Cancelled)
+      return result;
 
    mRect = evt.rect;
 

@@ -1224,26 +1224,6 @@ class AUDACITY_DLL_API SelectedTrackListOfKindIterator final : public TrackListO
    bool Condition(Track *t) override;
 };
 
-//
-// VisibleTrackIterator
-//
-// Based on TrackListIterator returns only the currently visible tracks.
-//
-class AUDACITY_DLL_API VisibleTrackIterator final : public TrackListCondIterator
-{
- public:
-   VisibleTrackIterator(AudacityProject *project);
-   virtual ~VisibleTrackIterator() {}
-
- protected:
-   bool Condition(Track *t) override;
-
- private:
-   AudacityProject *mProject;
-   wxRect mPanelRect;
-};
-
-
 // SyncLockedTracksIterator returns only tracks belonging to the sync-locked tracks
 // in which the starting track is a member.
 class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator

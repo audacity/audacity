@@ -459,51 +459,44 @@ bool Exporter::ExamineTracks()
    double latestEnd = mT0;
 
    const TrackList *tracks = mProject->GetTracks();
-   TrackListConstIterator iter1(tracks);
-   const Track *tr = iter1.First();
 
-   while (tr) {
-      if (tr->GetKind() == Track::Wave) {
-         auto wt = static_cast<const WaveTrack *>(tr);
-         if ( (tr->GetSelected() || !mSelectedOnly) &&
-              !wt->GetMute() ) {  // don't count muted tracks
-            mNumSelected++;
+   for (auto tr :
+         tracks->Any< const WaveTrack >()
+            + ( mSelectedOnly ? &Track::IsSelected : &Track::Any )
+            - &WaveTrack::GetMute
+   ) {
+      mNumSelected++;
 
-            if (tr->GetChannel() == Track::LeftChannel) {
-               mNumLeft++;
-            }
-            else if (tr->GetChannel() == Track::RightChannel) {
-               mNumRight++;
-            }
-            else if (tr->GetChannel() == Track::MonoChannel) {
-               // It's a mono channel, but it may be panned
-               float pan = ((WaveTrack*)tr)->GetPan();
+      if (tr->GetChannel() == Track::LeftChannel) {
+         mNumLeft++;
+      }
+      else if (tr->GetChannel() == Track::RightChannel) {
+         mNumRight++;
+      }
+      else if (tr->GetChannel() == Track::MonoChannel) {
+         // It's a mono channel, but it may be panned
+         float pan = tr->GetPan();
 
-               if (pan == -1.0)
-                  mNumLeft++;
-               else if (pan == 1.0)
-                  mNumRight++;
-               else if (pan == 0)
-                  mNumMono++;
-               else {
-                  // Panned partially off-center. Mix as stereo.
-                  mNumLeft++;
-                  mNumRight++;
-               }
-            }
-
-            if (tr->GetOffset() < earliestBegin) {
-               earliestBegin = tr->GetOffset();
-            }
-
-            if (tr->GetEndTime() > latestEnd) {
-               latestEnd = tr->GetEndTime();
-            }
-
+         if (pan == -1.0)
+            mNumLeft++;
+         else if (pan == 1.0)
+            mNumRight++;
+         else if (pan == 0)
+            mNumMono++;
+         else {
+            // Panned partially off-center. Mix as stereo.
+            mNumLeft++;
+            mNumRight++;
          }
       }
 
-      tr = iter1.Next();
+      if (tr->GetOffset() < earliestBegin) {
+         earliestBegin = tr->GetOffset();
+      }
+
+      if (tr->GetEndTime() > latestEnd) {
+         latestEnd = tr->GetEndTime();
+      }
    }
 
    if (mNumSelected == 0) {
@@ -1305,25 +1298,22 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
    SetName(GetTitle());
 
    unsigned numTracks = 0;
-   TrackListConstIterator iter( tracks );
 
-   for( const Track *t = iter.First(); t; t = iter.Next() )
-   {
-      auto wt = static_cast<const WaveTrack *>(t);
-      if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) &&
-         !wt->GetMute() )
-      {
-         numTracks++;
-         const wxString sTrackName = (t->GetName()).Left(20);
-         if( t->GetChannel() == Track::LeftChannel )
-            /* i18n-hint: track name and L abbreviating Left channel */
-            mTrackNames.Add( wxString::Format( _( "%s - L" ), sTrackName ) );
-         else if( t->GetChannel() == Track::RightChannel )
-         /* i18n-hint: track name and R abbreviating Right channel */
-            mTrackNames.Add( wxString::Format( _( "%s - R" ), sTrackName ) );
-         else
-            mTrackNames.Add(sTrackName);
-      }
+   for (auto t :
+         tracks->Any< const WaveTrack >()
+            + ( selectedOnly ? &Track::IsSelected : &Track::Any )
+            - &WaveTrack::GetMute
+   ) {
+      numTracks++;
+      const wxString sTrackName = (t->GetName()).Left(20);
+      if( t->GetChannel() == Track::LeftChannel )
+      /* i18n-hint: track name and L abbreviating Left channel */
+         mTrackNames.Add( wxString::Format( _( "%s - L" ), sTrackName ) );
+      else if( t->GetChannel() == Track::RightChannel )
+      /* i18n-hint: track name and R abbreviating Right channel */
+         mTrackNames.Add( wxString::Format( _( "%s - R" ), sTrackName ) );
+      else
+         mTrackNames.Add(sTrackName);
    }
 
    // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
