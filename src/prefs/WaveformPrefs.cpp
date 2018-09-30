@@ -140,12 +140,6 @@ bool WaveformPrefs::Commit()
 {
    const bool isOpenPage = this->IsShown();
 
-   const auto partner =
-      mWt ?
-            // Assume linked track is wave or null
-            static_cast<WaveTrack*>(mWt->GetLink())
-          : nullptr;
-
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
@@ -153,18 +147,13 @@ bool WaveformPrefs::Commit()
    WaveformSettings::Globals::Get().SavePrefs();
 
    if (mWt) {
-      if (mDefaulted) {
-         mWt->SetWaveformSettings({});
-         if (partner)
-            partner->SetWaveformSettings({});
-      }
-      else {
-         WaveformSettings *pSettings =
-            &mWt->GetIndependentWaveformSettings();
-         *pSettings = mTempSettings;
-         if (partner) {
-            pSettings = &partner->GetIndependentWaveformSettings();
-            *pSettings = mTempSettings;
+      for (auto channel : TrackList::Channels(mWt)) {
+         if (mDefaulted)
+            channel->SetWaveformSettings({});
+         else {
+            WaveformSettings &settings =
+               channel->GetIndependentWaveformSettings();
+            settings = mTempSettings;
          }
       }
    }
@@ -179,9 +168,8 @@ bool WaveformPrefs::Commit()
    mTempSettings.ConvertToEnumeratedDBRange();
 
    if (mWt && isOpenPage) {
-      mWt->SetDisplay(WaveTrack::Waveform);
-      if (partner)
-         partner->SetDisplay(WaveTrack::Waveform);
+      for (auto channel : TrackList::Channels(mWt))
+         channel->SetDisplay(WaveTrack::Waveform);
    }
 
    if (isOpenPage) {

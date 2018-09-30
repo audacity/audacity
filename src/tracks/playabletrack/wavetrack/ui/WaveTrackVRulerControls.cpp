@@ -58,13 +58,12 @@ void WaveTrackVRulerControls::DoZoomPreset( int i)
 
    const auto wt = static_cast<WaveTrack*>(pTrack.get());
 
-   // Don't pass the partner, that causes problems when updating display
+   // Don't do all channels, that causes problems when updating display
    // during recording and there are special pending tracks.
    // This function implements WaveTrack::DoSetMinimized which is always
    // called in a context that loops over linked tracks too and reinvokes.
-   auto partner = nullptr;
    WaveTrackVZoomHandle::DoZoom(
-         NULL, wt, partner, (i==1)?kZoomHalfWave: kZoom1to1,
+         NULL, wt, false, (i==1)?kZoomHalfWave: kZoom1to1,
          wxRect(0,0,0,0), 0,0, true);
 }
 
@@ -88,9 +87,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    wxASSERT(pTrack->GetKind() == Track::Wave);
    auto steps = evt.steps;
 
-   const auto wt = static_cast<WaveTrack*>(pTrack.get());
-   // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack*>(wt->GetLink());
+   WaveTrack *const wt = static_cast<WaveTrack*>(pTrack.get());
    const bool isDB =
       wt->GetDisplay() == WaveTrack::Waveform &&
       wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
@@ -102,24 +99,20 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
       if (!(min < 0.0 && max > 0.0))
          return RefreshNone;
 
-      WaveformSettings &settings = wt->GetIndependentWaveformSettings();
+      WaveformSettings &settings =
+         wt->GetIndependentWaveformSettings();
       float olddBRange = settings.dBRange;
-      if (steps < 0)
-         // Zoom out
-         settings.NextLowerDBRange();
-      else
-         settings.NextHigherDBRange();
-      float newdBRange = settings.dBRange;
-
-      if (partner) {
-         WaveformSettings &settings = partner->GetIndependentWaveformSettings();
+      for (auto channel : TrackList::Channels(wt)) {
+         WaveformSettings &channelSettings =
+            channel->GetIndependentWaveformSettings();
          if (steps < 0)
             // Zoom out
-            settings.NextLowerDBRange();
+            channelSettings.NextLowerDBRange();
          else
-            settings.NextHigherDBRange();
+            channelSettings.NextHigherDBRange();
       }
 
+      float newdBRange = settings.dBRange;
 
       // Is y coordinate within the rectangle half-height centered about
       // the zero level?
@@ -135,19 +128,16 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
          const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
          max = std::min(extreme, max * olddBRange / newdBRange);
          min = std::max(-extreme, min * olddBRange / newdBRange);
-         wt->SetLastdBRange();
-         wt->SetDisplayBounds(min, max);
-         if (partner) {
-            partner->SetLastdBRange();
-            partner->SetDisplayBounds(min, max);
+         for (auto channel : TrackList::Channels(wt)) {
+            channel->SetLastdBRange();
+            channel->SetDisplayBounds(min, max);
          }
       }
    }
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
-      const auto partner = static_cast<WaveTrack *>(wt);
       WaveTrackVZoomHandle::DoZoom(
-         pProject, wt, partner, (steps < 0)?kZoomOut:kZoomIn,
+         pProject, wt, true, (steps < 0)?kZoomOut:kZoomIn,
          evt.rect, yy, yy, true);
    }
    else if (!event.CmdDown() && event.ShiftDown()) {
@@ -173,9 +163,8 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
             std::min(bound,
                      numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
 
-         wt->SetSpectrumBounds(newBottom, newTop);
-         if (partner)
-            partner->SetSpectrumBounds(newBottom, newTop);
+         for (auto channel : TrackList::Channels(wt))
+            channel->SetSpectrumBounds(newBottom, newTop);
       }
       else {
          float topLimit = 2.0;
@@ -191,9 +180,8 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
          float newTop = std::min(topLimit, top + delta);
          const float newBottom = std::max(bottomLimit, newTop - range);
          newTop = std::min(topLimit, newBottom + range);
-         wt->SetDisplayBounds(newBottom, newTop);
-         if (partner)
-            partner->SetDisplayBounds(newBottom, newTop);
+         for (auto channel : TrackList::Channels(wt))
+            channel->SetDisplayBounds(newBottom, newTop);
       }
    }
    else

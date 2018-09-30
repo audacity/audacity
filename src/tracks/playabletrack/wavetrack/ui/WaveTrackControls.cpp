@@ -213,14 +213,9 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
    int newWaveColor = id - OnInstrument1ID;
 
    AudacityProject *const project = ::GetActiveProject();
-//   TrackList *const tracks = project->GetTracks();
 
-   pTrack->SetWaveColorIndex(newWaveColor);
-
-   // Assume partner is wave or null
-   const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
-   if (partner)
-      partner->SetWaveColorIndex(newWaveColor);
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->SetWaveColorIndex(newWaveColor);
 
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
       pTrack->GetName(),
@@ -336,12 +331,9 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
       return; // Nothing to do.
 
    AudacityProject *const project = ::GetActiveProject();
-   pTrack->ConvertToSampleFormat(newFormat);
 
-   // Assume partner is wave or null
-   const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
-   if (partner)
-      partner->ConvertToSampleFormat(newFormat);
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->ConvertToSampleFormat(newFormat);
 
    /* i18n-hint: The strings name a track and a format */
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
@@ -439,11 +431,9 @@ int RateMenuTable::IdOfRate(int rate)
 void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 {
    AudacityProject *const project = ::GetActiveProject();
-   pTrack->SetRate(rate);
-   // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
-   if (partner)
-      partner->SetRate(rate);
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->SetRate(rate);
+
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
    /* i18n-hint: The string names a track */
@@ -623,7 +613,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
       WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
       TrackList *const tracks = project->GetTracks();
-      Track *const next = tracks->GetNext(pTrack);
+      auto next = * ++ tracks->Find(pTrack);
 
       if (isMono) {
          const bool canMakeStereo =
@@ -733,22 +723,13 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
       (id == WaveTrack::Waveform &&
       pTrack->GetWaveformSettings().isLinear() != linear);
    if (wrongType || wrongScale) {
-      pTrack->SetLastScaleType();
-      pTrack->SetDisplay(WaveTrack::WaveTrackDisplay(id));
-      if (wrongScale)
-         pTrack->GetIndependentWaveformSettings().scaleType = linear
-         ? WaveformSettings::stLinear
-         : WaveformSettings::stLogarithmic;
-
-      // Assume partner is wave or null
-      auto partner = static_cast<WaveTrack *>(pTrack->GetLink());
-      if (partner) {
-         partner->SetLastScaleType();
-         partner->SetDisplay(WaveTrack::WaveTrackDisplay(id));
+      for (auto channel : TrackList::Channels(pTrack)) {
+         channel->SetLastScaleType();
+         channel->SetDisplay(WaveTrack::WaveTrackDisplay(id));
          if (wrongScale)
-            partner->GetIndependentWaveformSettings().scaleType = linear
-            ? WaveformSettings::stLinear
-            : WaveformSettings::stLogarithmic;
+            channel->GetIndependentWaveformSettings().scaleType = linear
+               ? WaveformSettings::stLinear
+               : WaveformSettings::stLogarithmic;
       }
 
       AudacityProject *const project = ::GetActiveProject();

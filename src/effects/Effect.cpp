@@ -104,7 +104,6 @@ Effect::Effect()
    mClient = NULL;
 
    mTracks = NULL;
-   mOutputTracksType = Track::None;
    mT0 = 0.0;
    mT1 = 0.0;
    mDuration = 0.0;
@@ -1311,7 +1310,7 @@ bool Effect::InitPass2()
 
 bool Effect::Process()
 {
-   CopyInputTracks(Track::All);
+   CopyInputTracks(true);
    bool bGoodResult = true;
 
    // It's possible that the number of channels the effect expects changed based on
@@ -1348,154 +1347,152 @@ bool Effect::ProcessPass()
    mBufferSize = 0;
    mBlockSize = 0;
 
-   TrackListIterator iter(mOutputTracks.get());
    int count = 0;
    bool clear = false;
-   Track* t = iter.First();
 
-   for (t = iter.First(); t; t = iter.Next())
-   {
-      if (t->GetKind() != Track::Wave || !t->GetSelected())
-      {
-         if (t->IsSyncLockSelected())
-         {
-            t->SyncLockAdjust(mT1, mT0 + mDuration);
-         }
-         continue;
-      }
+   const bool multichannel = mNumAudioIn > 1;
+   auto range = multichannel
+      ? mOutputTracks->Leaders()
+      : mOutputTracks->Any();
+   range.VisitWhile( bGoodResult,
+      [&](WaveTrack *left, const Track::Fallthrough &fallthrough) {
+         if (!left->GetSelected())
+            return fallthrough();
 
-      WaveTrack *left = (WaveTrack *)t;
-      WaveTrack *right;
-      sampleCount len;
-      sampleCount leftStart;
-      sampleCount rightStart;
+         WaveTrack *right;
+         sampleCount len;
+         sampleCount leftStart;
+         sampleCount rightStart;
 
-      if (!isGenerator)
-      {
-         GetSamples(left, &leftStart, &len);
-         mSampleCnt = len;
-      }
-      else
-      {
-         len = 0;
-         leftStart = 0;
-         mSampleCnt = left->TimeToLongSamples(mDuration);
-      }
-
-      mNumChannels = 1;
-
-      if (left->GetChannel() == Track::LeftChannel)
-      {
-         map[0] = ChannelNameFrontLeft;
-      }
-      else if (left->GetChannel() == Track::RightChannel)
-      {
-         map[0] = ChannelNameFrontRight;
-      }
-      else
-      {
-         map[0] = ChannelNameMono;
-      }
-      map[1] = ChannelNameEOL;
-
-      right = NULL;
-      rightStart = 0;
-      if (left->GetLinked() && mNumAudioIn > 1)
-      {
-         // Assume linked track is wave
-         right = static_cast<WaveTrack *>(iter.Next());
          if (!isGenerator)
          {
-            GetSamples(right, &rightStart, &len);
-         }
-         clear = false;
-         mNumChannels = 2;
-
-         if (right->GetChannel() == Track::LeftChannel)
-         {
-            map[1] = ChannelNameFrontLeft;
-         }
-         else if (right->GetChannel() == Track::RightChannel)
-         {
-            map[1] = ChannelNameFrontRight;
+            GetSamples(left, &leftStart, &len);
+            mSampleCnt = len;
          }
          else
          {
-            map[1] = ChannelNameMono;
+            len = 0;
+            leftStart = 0;
+            mSampleCnt = left->TimeToLongSamples(mDuration);
          }
-         map[2] = ChannelNameEOL;
-      }
 
-      // Let the client know the sample rate
-      SetSampleRate(left->GetRate());
+         mNumChannels = 1;
 
-      // Get the block size the client wants to use
-      auto max = left->GetMaxBlockSize() * 2;
-      mBlockSize = SetBlockSize(max);
+         if (left->GetChannel() == Track::LeftChannel)
+         {
+            map[0] = ChannelNameFrontLeft;
+         }
+         else if (left->GetChannel() == Track::RightChannel)
+         {
+            map[0] = ChannelNameFrontRight;
+         }
+         else
+         {
+            map[0] = ChannelNameMono;
+         }
+         map[1] = ChannelNameEOL;
 
-      // Calculate the buffer size to be at least the max rounded up to the clients
-      // selected block size.
-      const auto prevBufferSize = mBufferSize;
-      mBufferSize = ((max + (mBlockSize - 1)) / mBlockSize) * mBlockSize;
+         right = NULL;
+         rightStart = 0;
+         if (left->GetLinked() && multichannel)
+         {
+            // Assume linked track is wave
+            right = static_cast<WaveTrack *>(left->GetLink());
+            if (!isGenerator)
+            {
+               GetSamples(right, &rightStart, &len);
+            }
+            clear = false;
+            mNumChannels = 2;
 
-      // If the buffer size has changed, then (re)allocate the buffers
-      if (prevBufferSize != mBufferSize)
-      {
-         // Always create the number of input buffers the client expects even if we don't have
-         // the same number of channels.
-         inBufPos.reinit( mNumAudioIn );
-         inBuffer.reinit( mNumAudioIn, mBufferSize );
+            if (right->GetChannel() == Track::LeftChannel)
+            {
+               map[1] = ChannelNameFrontLeft;
+            }
+            else if (right->GetChannel() == Track::RightChannel)
+            {
+               map[1] = ChannelNameFrontRight;
+            }
+            else
+            {
+               map[1] = ChannelNameMono;
+            }
+            map[2] = ChannelNameEOL;
+         }
 
-         // We won't be using more than the first 2 buffers, so clear the rest (if any)
-         for (size_t i = 2; i < mNumAudioIn; i++)
+         // Let the client know the sample rate
+         SetSampleRate(left->GetRate());
+
+         // Get the block size the client wants to use
+         auto max = left->GetMaxBlockSize() * 2;
+         mBlockSize = SetBlockSize(max);
+
+         // Calculate the buffer size to be at least the max rounded up to the clients
+         // selected block size.
+         const auto prevBufferSize = mBufferSize;
+         mBufferSize = ((max + (mBlockSize - 1)) / mBlockSize) * mBlockSize;
+
+         // If the buffer size has changed, then (re)allocate the buffers
+         if (prevBufferSize != mBufferSize)
+         {
+            // Always create the number of input buffers the client expects even if we don't have
+            // the same number of channels.
+            inBufPos.reinit( mNumAudioIn );
+            inBuffer.reinit( mNumAudioIn, mBufferSize );
+
+            // We won't be using more than the first 2 buffers, so clear the rest (if any)
+            for (size_t i = 2; i < mNumAudioIn; i++)
+            {
+               for (size_t j = 0; j < mBufferSize; j++)
+               {
+                  inBuffer[i][j] = 0.0;
+               }
+            }
+
+            // Always create the number of output buffers the client expects even if we don't have
+            // the same number of channels.
+            outBufPos.reinit( mNumAudioOut );
+            // Output buffers get an extra mBlockSize worth to give extra room if
+            // the plugin adds latency
+            outBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
+         }
+
+         // (Re)Set the input buffer positions
+         for (size_t i = 0; i < mNumAudioIn; i++)
+         {
+            inBufPos[i] = inBuffer[i].get();
+         }
+
+         // (Re)Set the output buffer positions
+         for (size_t i = 0; i < mNumAudioOut; i++)
+         {
+            outBufPos[i] = outBuffer[i].get();
+         }
+
+         // Clear unused input buffers
+         if (!right && !clear && mNumAudioIn > 1)
          {
             for (size_t j = 0; j < mBufferSize; j++)
             {
-               inBuffer[i][j] = 0.0;
+               inBuffer[1][j] = 0.0;
             }
+            clear = true;
          }
 
-         // Always create the number of output buffers the client expects even if we don't have
-         // the same number of channels.
-         // Output buffers get an extra mBlockSize worth to give extra room if
-         // the plugin adds latency
-         outBufPos.reinit( mNumAudioOut );
-         outBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
-      }
+         // Go process the track(s)
+         bGoodResult = ProcessTrack(
+            count, map, left, right, leftStart, rightStart, len,
+            inBuffer, outBuffer, inBufPos, outBufPos);
+         if (!bGoodResult)
+            return;
 
-      // (Re)Set the input buffer positions
-      for (size_t i = 0; i < mNumAudioIn; i++)
-      {
-         inBufPos[i] = inBuffer[i].get();
+         count++;
+      },
+      [&](Track *t) {
+         if (t->IsSyncLockSelected())
+            t->SyncLockAdjust(mT1, mT0 + mDuration);
       }
-
-      // (Re)Set the output buffer positions
-      for (size_t i = 0; i < mNumAudioOut; i++)
-      {
-         outBufPos[i] = outBuffer[i].get();
-      }
-
-      // Clear unused input buffers
-      if (!right && !clear && mNumAudioIn > 1)
-      {
-         for (size_t j = 0; j < mBufferSize; j++)
-         {
-            inBuffer[1][j] = 0.0;
-         }
-         clear = true;
-      }
-
-      // Go process the track(s)
-      bGoodResult = ProcessTrack(
-         count, map, left, right, leftStart, rightStart, len,
-         inBuffer, outBuffer, inBufPos, outBufPos);
-      if (!bGoodResult)
-      {
-         break;
-      }
-
-      count++;
-   }
+   );
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
    {
@@ -2052,37 +2049,32 @@ void Effect::GetSamples(
 //
 // private methods
 //
-// Use these two methods to copy the input tracks to mOutputTracks, if
+// Use this method to copy the input tracks to mOutputTracks, if
 // doing the processing on them, and replacing the originals only on success (and not cancel).
 // Copy the group tracks that have tracks selected
-void Effect::CopyInputTracks()
-{
-   CopyInputTracks(Track::Wave);
-}
-
-void Effect::CopyInputTracks(TrackKind trackType)
+// If not all sync-locked selected, then only selected wave tracks.
+void Effect::CopyInputTracks(bool allSyncLockSelected)
 {
    // Reset map
    mIMap.clear();
    mOMap.clear();
 
    mOutputTracks = TrackList::Create();
-   mOutputTracksType = trackType;
 
-   //iterate over tracks of type trackType (All types if Track::All)
-   TrackListOfKindIterator aIt(trackType, mTracks);
+   auto trackRange = mTracks->Any() +
+      [&] (const Track *pTrack) {
+         return allSyncLockSelected
+         ? pTrack->IsSelectedOrSyncLockSelected()
+         : track_cast<const WaveTrack*>( pTrack ) && pTrack->GetSelected();
+      };
+
    t2bHash added;
 
-   for (Track *aTrack = aIt.First(); aTrack; aTrack = aIt.Next())
+   for (auto aTrack : trackRange)
    {
-      // Include selected tracks, plus sync-lock selected tracks for Track::All.
-      if (aTrack->GetSelected() ||
-            (trackType == Track::All && aTrack->IsSyncLockSelected()))
-      {
-         Track *o = mOutputTracks->Add(aTrack->Duplicate());
-         mIMap.push_back(aTrack);
-         mOMap.push_back(o);
-      }
+      Track *o = mOutputTracks->Add(aTrack->Duplicate());
+      mIMap.push_back(aTrack);
+      mOMap.push_back(o);
    }
 }
 
@@ -2194,8 +2186,6 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       mIMap.clear();
       mOMap.clear();
 
-      mOutputTracksType = Track::None;
-
       //TODO:undo the non-gui ODTask transfer
       return;
    }
@@ -2267,31 +2257,13 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
    // The output list is no longer needed
    mOutputTracks.reset();
-   mOutputTracksType = Track::None;
    nEffectsDone++;
 }
 
 void Effect::CountWaveTracks()
 {
-   mNumTracks = 0;
-   mNumGroups = 0;
-
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
-   Track *t = iter.First();
-
-   while(t) {
-      if (!t->GetSelected()) {
-         t = iter.Next();
-         continue;
-      }
-
-      if (t->GetKind() == Track::Wave) {
-         mNumTracks++;
-         if (!t->GetLinked())
-            mNumGroups++;
-      }
-      t = iter.Next();
-   }
+   mNumTracks = mTracks->Selected< const WaveTrack >().size();
+   mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
 }
 
 double Effect::CalcPreviewInputLength(double previewLength)
@@ -2585,17 +2557,13 @@ void Effect::Preview(bool dryOnly)
       }
    }
    else {
-      TrackListOfKindIterator iter(Track::Wave, saveTracks);
-      WaveTrack *src = (WaveTrack *) iter.First();
-      while (src)
-      {
+      for (auto src : saveTracks->Any< const WaveTrack >()) {
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
             static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
             mTracks->Add(std::move(dest));
          }
-         src = (WaveTrack *) iter.Next();
       }
    }
 

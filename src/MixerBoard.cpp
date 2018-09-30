@@ -980,42 +980,36 @@ void MixerBoard::UpdateTrackClusters()
    const int nClusterHeight = mScrolledWindow->GetClientSize().GetHeight() - kDoubleInset;
    size_t nClusterCount = mMixerTrackClusters.size();
    unsigned int nClusterIndex = 0;
-   TrackListIterator iterTracks(mTracks);
    MixerTrackCluster* pMixerTrackCluster = NULL;
    Track* pTrack;
 
-   pTrack = iterTracks.First();
-   while (pTrack) {
-      if (auto pPlayableTrack = dynamic_cast<PlayableTrack*>(pTrack))
+   for (auto pPlayableTrack: mTracks->Leaders<PlayableTrack>()) {
+      auto spTrack = Track::Pointer<PlayableTrack>( pPlayableTrack );
+      if (nClusterIndex < nClusterCount)
       {
-         auto spTrack = Track::Pointer<PlayableTrack>( pPlayableTrack );
-         if (nClusterIndex < nClusterCount)
-         {
-            // Already showing it.
-            // Track clusters are maintained in the same order as the WaveTracks.
-            // Track pointers can change for the "same" track for different states
-            // on the undo stack, so update the pointers and display name.
-            mMixerTrackClusters[nClusterIndex]->mTrack = spTrack;
-            // Assume linked track is wave or null
-            mMixerTrackClusters[nClusterIndex]->UpdateForStateChange();
-         }
-         else
-         {
-            // Not already showing it. Add a NEW MixerTrackCluster.
-            wxPoint clusterPos(
-               kInset + nClusterIndex * kMixerTrackClusterWidth,
-               kInset);
-            wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
-            pMixerTrackCluster =
-               safenew MixerTrackCluster(mScrolledWindow, this, mProject,
-                                       spTrack,
-                                       clusterPos, clusterSize);
-            if (pMixerTrackCluster)
-               mMixerTrackClusters.push_back(pMixerTrackCluster);
-         }
-         nClusterIndex++;
+         // Already showing it.
+         // Track clusters are maintained in the same order as the WaveTracks.
+         // Track pointers can change for the "same" track for different states
+         // on the undo stack, so update the pointers and display name.
+         mMixerTrackClusters[nClusterIndex]->mTrack = spTrack;
+         // Assume linked track is wave or null
+         mMixerTrackClusters[nClusterIndex]->UpdateForStateChange();
       }
-      pTrack = iterTracks.Next(true);
+      else
+      {
+         // Not already showing it. Add a NEW MixerTrackCluster.
+         wxPoint clusterPos(
+            kInset + nClusterIndex * kMixerTrackClusterWidth,
+            kInset);
+         wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
+         pMixerTrackCluster =
+            safenew MixerTrackCluster(mScrolledWindow, this, mProject,
+                                    spTrack,
+                                    clusterPos, clusterSize);
+         if (pMixerTrackCluster)
+            mMixerTrackClusters.push_back(pMixerTrackCluster);
+      }
+      nClusterIndex++;
    }
 
    if (pMixerTrackCluster)
@@ -1161,14 +1155,7 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 
 bool MixerBoard::HasSolo()
 {
-   TrackListIterator iterTracks(mTracks);
-   Track* pTrack;
-   for (pTrack = iterTracks.First(); pTrack; pTrack = iterTracks.Next()) {
-      auto pPlayable = dynamic_cast<PlayableTrack *>( pTrack );
-      if (pPlayable && pPlayable->GetSolo())
-         return true;
-   }
-   return false;
+   return !(( mTracks->Any<PlayableTrack>() + &PlayableTrack::GetSolo ).empty());
 }
 
 void MixerBoard::RefreshTrackCluster(const PlayableTrack* pTrack, bool bEraseBackground /*= true*/)

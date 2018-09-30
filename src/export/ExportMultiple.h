@@ -112,7 +112,7 @@ private:
    AudacityProject *mProject;
    TrackList *mTracks;           /**< The list of tracks in the project that is
                                    being exported */
-   LabelTrack *mLabels;
+   const LabelTrack *mLabels;
    int mNumLabels;
    int mNumWaveTracks;
 

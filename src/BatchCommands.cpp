@@ -501,18 +501,7 @@ bool MacroCommands::IsMono()
       return false;
    }
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   bool mono = true;
-   while (t) {
-      if (t->GetLinked()) {
-         mono = false;
-         break;
-      }
-      t = iter.Next();
-   }
-
-   return mono;
+   return ( tracks->Any() - &Track::IsLeader ).empty();
 }
 
 wxString MacroCommands::BuildCleanFileName(const wxString &fileName, const wxString &extension)

@@ -143,8 +143,6 @@ UIHandle::Result CutlineHandle::Click
 
    // Cutline data changed on either branch, so refresh the track display.
    UIHandle::Result result = RefreshCell;
-   // Assume linked track is wave or null
-   const auto linked = static_cast<WaveTrack*>(mpTrack->GetLink());
 
    if (event.LeftDown())
    {
@@ -156,26 +154,30 @@ UIHandle::Result CutlineHandle::Click
 
          // When user presses left button on cut line, expand the line again
          double cutlineStart = 0, cutlineEnd = 0;
+         double *pCutlineStart = &cutlineStart, *pCutlineEnd = &cutlineEnd;
 
-         mpTrack->ExpandCutLine(mLocation.pos, &cutlineStart, &cutlineEnd);
-
-         if (linked)
-            // Expand the cutline in the opposite channel if it is present.
-            linked->ExpandCutLine(mLocation.pos);
+         for (auto channel :
+              TrackList::Channels(mpTrack.get())) {
+            channel->ExpandCutLine(
+               mLocation.pos, pCutlineStart, pCutlineEnd);
+            if ( channel == mpTrack.get() )
+               pCutlineStart = pCutlineEnd = nullptr;
+         }
 
          viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
          result |= UpdateSelection;
       }
       else if (mLocation.typ == WaveTrackLocation::locationMergePoint) {
          const double pos = mLocation.pos;
-         mpTrack->MergeClips(mLocation.clipidx1, mLocation.clipidx2);
-
-         if (linked) {
+         for (auto channel :
+              TrackList::Channels(mpTrack.get())) {
             // Don't assume correspondence of merge points across channels!
-            int idx = FindMergeLine(linked, pos);
+            int idx = FindMergeLine(channel, pos);
             if (idx >= 0) {
-               WaveTrack::Location location = linked->GetCachedLocations()[idx];
-               linked->MergeClips(location.clipidx1, location.clipidx2);
+               WaveTrack::Location location =
+                  channel->GetCachedLocations()[idx];
+               channel->MergeClips(
+                  location.clipidx1, location.clipidx2);
             }
          }
 
@@ -184,10 +186,10 @@ UIHandle::Result CutlineHandle::Click
    }
    else if (event.RightDown())
    {
-      bool removed = mpTrack->RemoveCutLine(mLocation.pos);
-
-      if (linked)
-         removed = linked->RemoveCutLine(mLocation.pos) || removed;
+      bool removed = false;
+      for (auto channel :
+           TrackList::Channels(mpTrack.get()))
+         removed = channel->RemoveCutLine(mLocation.pos) || removed;
 
       if (!removed)
          // Nothing happened, make no Undo item

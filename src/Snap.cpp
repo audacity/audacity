@@ -16,6 +16,7 @@
 
 #include "Project.h"
 #include "LabelTrack.h"
+#include "NoteTrack.h"
 #include "WaveTrack.h"
 
 inline bool operator < (SnapPoint s1, SnapPoint s2)
@@ -100,19 +101,14 @@ void SnapManager::Reinit()
    // Add a SnapPoint at t=0
    mSnapPoints.push_back(SnapPoint{});
 
-   TrackListConstIterator iter(mTracks);
-   for (const Track *track = iter.First();  track; track = iter.Next())
-   {
-      if (mTrackExclusions &&
-          mTrackExclusions->end() !=
-          std::find(mTrackExclusions->begin(), mTrackExclusions->end(), track))
-      {
-         continue;
-      }
-
-      if (track->GetKind() == Track::Label)
-      {
-         LabelTrack *labelTrack = (LabelTrack *)track;
+   auto trackRange =
+      mTracks->Any()
+         - [&](const Track *pTrack){
+            return mTrackExclusions &&
+               make_iterator_range( *mTrackExclusions ).contains( pTrack );
+         };
+   trackRange.Visit(
+      [&](const LabelTrack *labelTrack) {
          for (int i = 0, cnt = labelTrack->GetNumLabels(); i < cnt; ++i)
          {
             const LabelStruct *label = labelTrack->GetLabel(i);
@@ -124,10 +120,8 @@ void SnapManager::Reinit()
                CondListAdd(t1, labelTrack);
             }
          }
-      }
-      else if (track->GetKind() == Track::Wave)
-      {
-         auto waveTrack = static_cast<const WaveTrack *>(track);
+      },
+      [&](const WaveTrack *waveTrack) {
          for (const auto &clip: waveTrack->GetClips())
          {
             if (mClipExclusions)
@@ -144,9 +138,7 @@ void SnapManager::Reinit()
                }
 
                if (skip)
-               {
                   continue;
-               }
             }
 
             CondListAdd(clip->GetStartTime(), waveTrack);
@@ -154,13 +146,13 @@ void SnapManager::Reinit()
          }
       }
 #ifdef USE_MIDI
-      else if (track->GetKind() == Track::Note)
-      {
+      ,
+      [&](const NoteTrack *track) {
          CondListAdd(track->GetStartTime(), track);
          CondListAdd(track->GetEndTime(), track);
       }
 #endif
-   }
+   );
 
    // Sort all by time
    std::sort(mSnapPoints.begin(), mSnapPoints.end());

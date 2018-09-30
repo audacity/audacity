@@ -213,8 +213,6 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
 
-   std::shared_ptr<Track> GetFirstVisible();
-
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
    void SetPlayRegionLocked(bool value) { mLockPlayRegion = value; }

@@ -217,7 +217,6 @@ void OnZeroCrossing(const CommandContext &context );
 void OnLockPlayRegion(const CommandContext &context );
 void OnUnlockPlayRegion(const CommandContext &context );
 
-static double GetTime(const Track *t);
 void OnSortTime(const CommandContext &context );
 void OnSortName(const CommandContext &context );
 

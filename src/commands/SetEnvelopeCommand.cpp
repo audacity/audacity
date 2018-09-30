@@ -54,32 +54,29 @@ void SetEnvelopeCommand::PopulateOrExchange(ShuttleGui & S)
 bool SetEnvelopeCommand::ApplyInner( const CommandContext & context, Track * t )
 {
    static_cast<void>(context);
-   if( (t->GetKind() != Track::Wave)) 
-      return true;
-
-   // if no time is specified, then 
+   // if no time is specified, then
    //   - delete deletes any envelope in selected tracks.
    //   - value is not set for any clip
-
-   WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-   WaveClipPointers ptrs( waveTrack->SortedClipArray());
-   for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
-      WaveClip * pClip = *it;
-      bool bFound = 
-         !bHasT || (
-            ( pClip->GetStartTime() <= mT) &&
-            ( pClip->GetEndTime() >= mT )
-         );
-      if( bFound )
-      {
-         // Inside this IF is where we actually apply the command
-         Envelope* pEnv = pClip->GetEnvelope();
-         if( bHasDelete && mbDelete )
-            pEnv->mEnv.clear();
-         if( bHasT && bHasV )
-            pEnv->InsertOrReplace( mT, mV );
+   t->TypeSwitch([&](WaveTrack *waveTrack) {
+      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+      for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
+         WaveClip * pClip = *it;
+         bool bFound =
+            !bHasT || (
+               ( pClip->GetStartTime() <= mT) &&
+               ( pClip->GetEndTime() >= mT )
+            );
+         if( bFound )
+         {
+            // Inside this IF is where we actually apply the command
+            Envelope* pEnv = pClip->GetEnvelope();
+            if( bHasDelete && mbDelete )
+               pEnv->mEnv.clear();
+            if( bHasT && bHasV )
+               pEnv->InsertOrReplace( mT, mV );
+         }
       }
-   }
+   } );
 
    return true;
 }

@@ -178,45 +178,57 @@ UIHandle::Result EnvelopeHandle::Click
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    const auto pTrack = static_cast<Track*>(evt.pCell.get());
 
-   if (pTrack &&
-       pTrack->GetKind() == Track::Wave) {
-      WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
-      if (wt->GetDisplay() != WaveTrack::Waveform)
+   mEnvelopeEditors.clear();
+
+   unsigned result = Cancelled;
+   if (pTrack)
+      result = pTrack->TypeSwitch< decltype(RefreshNone) >(
+      [&](WaveTrack *wt) {
+         if (wt->GetDisplay() != WaveTrack::Waveform)
+            return Cancelled;
+
+         if (!mEnvelope)
+            return Cancelled;
+
+         mLog = !wt->GetWaveformSettings().isLinear();
+         wt->GetDisplayBounds(&mLower, &mUpper);
+         mdBRange = wt->GetWaveformSettings().dBRange;
+         auto channels = TrackList::Channels( wt );
+         for ( auto channel : channels ) {
+            if (channel == wt)
+               mEnvelopeEditors.push_back(
+                  std::make_unique< EnvelopeEditor >( *mEnvelope, true ) );
+            else {
+               auto e2 = channel->GetEnvelopeAtX(event.GetX());
+               if (e2)
+                  mEnvelopeEditors.push_back(
+                     std::make_unique< EnvelopeEditor >( *e2, true ) );
+               else {
+                   // There isn't necessarily an envelope there; no guarantee a
+                   // linked track has the same WaveClip structure...
+                }
+            }
+         }
+
+         return RefreshNone;
+      },
+      [&](TimeTrack *tt) {
+         if (!mEnvelope)
+            return Cancelled;
+         GetTimeTrackData( *pProject, *tt, mdBRange, mLog, mLower, mUpper);
+         mEnvelopeEditors.push_back(
+            std::make_unique< EnvelopeEditor >( *mEnvelope, false )
+         );
+
+         return RefreshNone;
+      },
+      [](Track *) {
          return Cancelled;
-
-      if (!mEnvelope)
-         return Cancelled;
-
-      mLog = !wt->GetWaveformSettings().isLinear();
-      wt->GetDisplayBounds(&mLower, &mUpper);
-      mdBRange = wt->GetWaveformSettings().dBRange;
-      mEnvelopeEditor =
-         std::make_unique< EnvelopeEditor >( *mEnvelope, true );
-      mEnvelopeEditorRight.reset();
-
-      // Assume linked track is wave or null
-      auto partner = static_cast<WaveTrack*>(wt->GetLink());
-      if (partner)
-      {
-         auto clickedEnvelope = partner->GetEnvelopeAtX(event.GetX());
-         if (clickedEnvelope)
-            mEnvelopeEditorRight =
-               std::make_unique< EnvelopeEditor >( *clickedEnvelope, true );
       }
-   }
-   else if (pTrack &&
-            pTrack->GetKind() == Track::Time)
-   {
-      TimeTrack *const tt = static_cast<TimeTrack*>(pTrack);
-      if (!mEnvelope)
-         return Cancelled;
-      GetTimeTrackData( *pProject, *tt, mdBRange, mLog, mLower, mUpper);
-      mEnvelopeEditor =
-         std::make_unique< EnvelopeEditor >( *mEnvelope, false );
-      mEnvelopeEditorRight.reset();
-   }
-   else
-      return Cancelled;
+   );
+
+   if (result & Cancelled)
+      return result;
 
    mRect = evt.rect;
 
@@ -282,8 +294,7 @@ UIHandle::Result EnvelopeHandle::Release
       _("Envelope")
    );
 
-   mEnvelopeEditor.reset();
-   mEnvelopeEditorRight.reset();
+   mEnvelopeEditors.clear();
 
    using namespace RefreshCode;
    return needUpdate ? RefreshCell : RefreshNone;
@@ -292,8 +303,7 @@ UIHandle::Result EnvelopeHandle::Release
 UIHandle::Result EnvelopeHandle::Cancel(AudacityProject *pProject)
 {
    pProject->RollbackState();
-   mEnvelopeEditor.reset();
-   mEnvelopeEditorRight.reset();
+   mEnvelopeEditors.clear();
    return RefreshCode::RefreshCell;
 }
 
@@ -306,14 +316,13 @@ bool EnvelopeHandle::ForwardEventToEnvelopes
 
    // AS: I'm not sure why we can't let the Envelope take care of
    //  redrawing itself.  ?
-   bool needUpdate =
-      mEnvelopeEditor->MouseEvent(
-         event, mRect, viewInfo, mLog, mdBRange, mLower, mUpper);
-
-   if (mEnvelopeEditorRight)
-      needUpdate |=
-         mEnvelopeEditorRight->MouseEvent(
-            event, mRect, viewInfo, mLog, mdBRange, mLower, mUpper);
+   bool needUpdate = false;
+   for (const auto &pEditor : mEnvelopeEditors) {
+      needUpdate =
+         pEditor->MouseEvent(
+            event, mRect, viewInfo, mLog, mdBRange, mLower, mUpper)
+         || needUpdate;
+   }
 
    return needUpdate;
 }

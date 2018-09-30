@@ -21,10 +21,10 @@ class SelectionState
 {
 public:
    static void SelectTrackLength
-      ( TrackList &tracks, ViewInfo &viewInfo, Track &track, bool syncLocked );
+      ( ViewInfo &viewInfo, Track &track, bool syncLocked );
 
    void SelectTrack
-      ( TrackList &tracks, Track &track,
+      ( Track &track,
         bool selected, bool updateLastPicked, MixerBoard *pMixerBoard );
    // Inclusive range of tracks, the limits specified in either order:
    void SelectRangeOfTracks

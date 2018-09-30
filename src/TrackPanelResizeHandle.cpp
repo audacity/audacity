@@ -64,8 +64,8 @@ TrackPanelResizeHandle::TrackPanelResizeHandle
    , mMouseClickY( y )
 {
    auto tracks = pProject->GetTracks();
-   Track *prev = tracks->GetPrev(track.get());
-   Track *next = tracks->GetNext(track.get());
+   auto prev = * -- tracks->Find(track.get());
+   auto next = * ++ tracks->Find(track.get());
 
    //STM:  Determine whether we should rescale one or two tracks
    if (prev && prev->GetLink() == track.get()) {
@@ -184,13 +184,13 @@ UIHandle::Result TrackPanelResizeHandle::Drag
    {
       case IsResizingBelowLinkedTracks:
       {
-         Track *prev = tracks->GetPrev(pTrack.get());
+         auto prev = * -- tracks->Find(pTrack.get());
          doResizeBelow(prev, false);
          break;
       }
       case IsResizingBetweenLinkedTracks:
       {
-         Track *next = tracks->GetNext(pTrack.get());
+         auto next = * ++ tracks->Find(pTrack.get());
          doResizeBetween(next, false);
          break;
       }
@@ -244,7 +244,7 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    break;
    case IsResizingBetweenLinkedTracks:
    {
-      Track *const next = tracks->GetNext(pTrack.get());
+      Track *const next = * ++ tracks->Find(pTrack.get());
       pTrack->SetHeight(mInitialUpperActualHeight);
       pTrack->SetMinimized(mInitialMinimized);
       next->SetHeight(mInitialActualHeight);
@@ -253,7 +253,7 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    break;
    case IsResizingBelowLinkedTracks:
    {
-      Track *const prev = tracks->GetPrev(pTrack.get());
+      Track *const prev = * -- tracks->Find(pTrack.get());
       pTrack->SetHeight(mInitialActualHeight);
       pTrack->SetMinimized(mInitialMinimized);
       prev->SetHeight(mInitialUpperActualHeight);

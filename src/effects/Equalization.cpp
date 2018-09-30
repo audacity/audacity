@@ -471,23 +471,20 @@ bool EffectEqualization::Init()
 {
    int selcount = 0;
    double rate = 0.0;
-   TrackListIterator iter(GetActiveProject()->GetTracks());
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         WaveTrack *track = (WaveTrack *)t;
-         if (selcount==0) {
-            rate = track->GetRate();
+
+   auto trackRange =
+      GetActiveProject()->GetTracks()->Selected< const WaveTrack >();
+   if (trackRange) {
+      rate = (*(trackRange.first++)) -> GetRate();
+      ++selcount;
+
+      for (auto track : trackRange) {
+         if (track->GetRate() != rate) {
+            Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
+            return(false);
          }
-         else {
-            if (track->GetRate() != rate) {
-               Effect::MessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
-               return(false);
-            }
-         }
-         selcount++;
+         ++selcount;
       }
-      t = iter.Next();
    }
 
    mHiFreq = rate / 2.0;
@@ -532,10 +529,8 @@ bool EffectEqualization::Process()
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
-   while (track) {
+   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -553,7 +548,6 @@ bool EffectEqualization::Process()
          }
       }
 
-      track = (WaveTrack *) iter.Next();
       count++;
    }
 
@@ -588,8 +582,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    LoadCurves();
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
+   const auto t = *inputTracks()->Any< const WaveTrack >().first;
    mHiFreq = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
    mLoFreq = loFreqI;
 

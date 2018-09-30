@@ -42,7 +42,7 @@ public:
 
    static void DoZoom
    (AudacityProject *pProject,
-    WaveTrack *pTrack, WaveTrack *partner, int ZoomKind,
+    WaveTrack *pTrack, bool allChannels, int ZoomKind,
     const wxRect &rect, int zoomStart, int zoomEnd,
     bool fixedMousePoint);
 

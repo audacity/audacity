@@ -366,10 +366,10 @@ protected:
    // preview copies of all wave tracks.
    void IncludeNotSelectedPreviewTracks(bool includeNotSelected);
 
-   // Use these two methods to copy the input tracks to mOutputTracks, if
+   // Use this method to copy the input tracks to mOutputTracks, if
    // doing the processing on them, and replacing the originals only on success (and not cancel).
-   void CopyInputTracks(); // trackType = TrackKind::Wave
-   void CopyInputTracks(TrackKind trackType);
+   // If not all sync-locked selected, then only selected wave tracks.
+   void CopyInputTracks(bool allSyncLockSelected = false);
 
    // A global counter of all the successful Effect invocations.
    static int nEffectsDone;
@@ -459,7 +459,7 @@ protected:
    double         mSampleRate;
    SelectedRegion *mpSelectedRegion{};
    TrackFactory   *mFactory;
-   TrackList *inputTracks() const { return mTracks; }
+   const TrackList *inputTracks() const { return mTracks; }
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;
@@ -477,9 +477,6 @@ protected:
    int            mUIResultID;
 
    sampleCount    mSampleCnt;
-
-   // type of the tracks on mOutputTracks
-   TrackKind      mOutputTracksType;
 
  // Used only by the base Effect class
  //
