@@ -28,7 +28,7 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
    auto pTrack = mpTrack.lock();
    if (pTrack) {
       auto result = std::make_shared<TrackPanelResizeHandle>(
-         pTrack, st.state.m_y, pProject );
+         pTrack, st.state.m_y );
       result = AssignUIHandlePtr(mResizeHandle, result);
       results.push_back(result);
    }

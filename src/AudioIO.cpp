@@ -1891,20 +1891,17 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // group determination should mimic what is done in audacityAudioCallback()
       // when calling RealtimeProcess().
       int group = 0;
-      for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt; i++)
+      for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt;)
       {
          const WaveTrack *vt = mPlaybackTracks[i].get();
 
-         unsigned chanCnt = 1;
-         if (vt->GetLinked())
-         {
-            i++;
-            chanCnt++;
-         }
+         // TODO: more-than-two-channels
+         unsigned chanCnt = TrackList::Channels(vt).size();
+         i += chanCnt;
 
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
-         em.RealtimeAddProcessor(group++, chanCnt, mRate);
+         em.RealtimeAddProcessor(group++, std::min(2u, chanCnt), mRate);
       }
    }
 
@@ -4992,26 +4989,38 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
 
          bool drop = false;
          bool dropQuickly = false;
-         bool linkFlag = false;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
             WaveTrack *vt = mPlaybackTracks[t].get();
 
             chans[chanCnt] = vt;
 
-            if ( linkFlag ) {
-               linkFlag = false;
+            // TODO: more-than-two-channels
+            auto nextTrack =
+               t + 1 < numPlaybackTracks
+                  ? mPlaybackTracks[t + 1].get()
+                  : nullptr;
+            bool firstChannel = vt->IsLeader();
+            bool lastChannel = !nextTrack || nextTrack->IsLeader();
+
+            if ( ! firstChannel )
                dropQuickly = dropQuickly && doneMicrofading( *vt );
-            }
             else {
                drop = dropTrack( *vt );
 
-               linkFlag = vt->GetLinked();
                selected = vt->GetSelected();
                
-               // If we have a mono track, clear the right channel
-               if (!linkFlag)
+               if ( lastChannel ) {
+                  // TODO: more-than-two-channels
+#if 1
+                  // If we have a mono track, clear the right channel
                   memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
+#else
+                  // clear any other channels
+                  for ( size_t c = chanCnt + 1; c < numPlaybackChannels; ++c )
+                     memset(tempBufs[c], 0, framesPerBuffer * sizeof(float));
+#endif
+               }
 
                dropQuickly = drop && doneMicrofading( *vt );
             }
@@ -5055,7 +5064,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
             maxLen = std::max(maxLen, len);
 
 
-            if (linkFlag)
+            if ( ! lastChannel )
             {
                continue;
             }
