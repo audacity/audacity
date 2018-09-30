@@ -49,6 +49,7 @@ and ImportLOF.cpp.
 #include <wx/listimpl.cpp>
 #include "../ShuttleGui.h"
 #include "../Project.h"
+#include "../WaveTrack.h"
 
 #include "ImportPCM.h"
 #include "ImportMP3.h"
@@ -538,6 +539,15 @@ bool Importer::Import(const wxString &fName,
                return true;
             }
 
+            auto end = tracks.end();
+            auto iter = std::remove_if( tracks.begin(), end,
+               std::mem_fn( &NewChannelGroup::empty ) );
+            if ( iter != end ) {
+               // importer shouldn't give us empty groups of channels!
+               wxASSERT(false);
+               // But correct that and proceed anyway
+               tracks.erase( iter, end );
+            }
             if (tracks.size() > 0)
             {
                // success!

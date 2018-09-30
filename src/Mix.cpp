@@ -120,10 +120,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    // TODO: more-than-two-channels
    decltype(mixLeft) mixRight{};
-   if (mono) {
-      mixLeft->SetChannel(Track::MonoChannel);
-   }
-   else {
+   if ( !mono ) {
       mixRight = trackFactory->NewWaveTrack(format, rate);
       if (oneinput) {
          auto channels = TrackList::Channels(first);
@@ -134,12 +131,8 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       }
       else
          mixRight->SetName(_("Mix"));
-      mixLeft->SetChannel(Track::LeftChannel);
-      mixRight->SetChannel(Track::RightChannel);
       mixRight->SetOffset(mixStartTime);
-      mixLeft->SetLinked(true);
    }
-
 
 
    auto maxBlockLen = mixLeft->GetIdealBlockSize();

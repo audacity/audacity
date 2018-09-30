@@ -4168,7 +4168,6 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 {
    std::vector< std::shared_ptr< Track > > results;
 
-   const auto numTracks = newTracks.size();
    SelectNone();
 
    bool initiallyEmpty = mTracks->empty();
@@ -4177,9 +4176,18 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
    int i = -1;
 
    // Must add all tracks first (before using Track::IsLeader)
-   for (auto &uNewTrack : newTracks) {
-      auto newTrack = mTracks->Add(std::move(uNewTrack));
-      results.push_back(Track::Pointer(newTrack));
+   for (auto &group : newTracks) {
+      if (group.empty()) {
+         wxASSERT(false);
+         continue;
+      }
+      auto first = group.begin()->get();
+      auto nChannels = group.size();
+      for (auto &uNewTrack : group) {
+         auto newTrack = mTracks->Add(std::move(uNewTrack));
+         results.push_back(Track::Pointer(newTrack));
+      }
+      mTracks->GroupChannels(*first, nChannels);
    }
    newTracks.clear();
       

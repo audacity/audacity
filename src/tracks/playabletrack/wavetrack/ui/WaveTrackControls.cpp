@@ -802,6 +802,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
    }
 }
 
+#if 0
 void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
 {
    int id = event.GetId();
@@ -834,6 +835,7 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
       _("Channel"));
    mpData->result = RefreshCode::RefreshAll;
 }
+#endif
 
 /// Merge two tracks into one stereo track ??
 void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
@@ -847,46 +849,39 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    auto partner = static_cast< WaveTrack * >
       ( *tracks->Find( pTrack ).advance( 1 ) );
 
-   pTrack->SetLinked(true);
+   tracks->GroupChannels( *pTrack, 2 );
 
-   if (partner) {
-      // Set partner's parameters to match target.
-      partner->Merge(*pTrack);
+   // Set partner's parameters to match target.
+   partner->Merge(*pTrack);
 
-      pTrack->SetPan( 0.0f );
-      pTrack->SetChannel(Track::LeftChannel);
-      partner->SetPan( 0.0f );
-      partner->SetChannel(Track::RightChannel);
+   pTrack->SetPan( 0.0f );
+   partner->SetPan( 0.0f );
 
-      // Set NEW track heights and minimized state
-      bool bBothMinimizedp = ((pTrack->GetMinimized()) && (partner->GetMinimized()));
-      pTrack->SetMinimized(false);
-      partner->SetMinimized(false);
-      int AverageHeight = (pTrack->GetHeight() + partner->GetHeight()) / 2;
-      pTrack->SetHeight(AverageHeight);
-      partner->SetHeight(AverageHeight);
-      pTrack->SetMinimized(bBothMinimizedp);
-      partner->SetMinimized(bBothMinimizedp);
+   // Set NEW track heights and minimized state
+   bool bBothMinimizedp = ((pTrack->GetMinimized()) && (partner->GetMinimized()));
+   pTrack->SetMinimized(false);
+   partner->SetMinimized(false);
+   int AverageHeight = (pTrack->GetHeight() + partner->GetHeight()) / 2;
+   pTrack->SetHeight(AverageHeight);
+   partner->SetHeight(AverageHeight);
+   pTrack->SetMinimized(bBothMinimizedp);
+   partner->SetMinimized(bBothMinimizedp);
 
-      //On Demand - join the queues together.
-      if (ODManager::IsInstanceCreated())
-         if (!ODManager::Instance()->MakeWaveTrackDependent(partner, pTrack))
-         {
-            ;
-            //TODO: in the future, we will have to check the return value of MakeWaveTrackDependent -
-            //if the tracks cannot merge, it returns false, and in that case we should not allow a merging.
-            //for example it returns false when there are two different types of ODTasks on each track's queue.
-            //we will need to display this to the user.
-         }
+   //On Demand - join the queues together.
+   if (ODManager::IsInstanceCreated())
+      if (!ODManager::Instance()->MakeWaveTrackDependent(partner, pTrack))
+      {
+         ;
+         //TODO: in the future, we will have to check the return value of MakeWaveTrackDependent -
+         //if the tracks cannot merge, it returns false, and in that case we should not allow a merging.
+         //for example it returns false when there are two different types of ODTasks on each track's queue.
+         //we will need to display this to the user.
+      }
 
-      AudacityProject *const project = ::GetActiveProject();
-      /* i18n-hint: The string names a track */
-      project->PushState(wxString::Format(_("Made '%s' a stereo track"),
-         pTrack->GetName()),
-         _("Make Stereo"));
-   }
-   else
-      pTrack->SetLinked(false);
+   /* i18n-hint: The string names a track */
+   project->PushState(wxString::Format(_("Made '%s' a stereo track"),
+      pTrack->GetName()),
+      _("Make Stereo"));
 
    mpData->result = RefreshCode::RefreshAll;
 }
@@ -899,7 +894,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    AudacityProject *const project = ::GetActiveProject();
    auto channels = TrackList::Channels( pTrack );
 
-
    int totalHeight = 0;
    int nChannels = 0;
    for (auto channel : channels) {
@@ -907,7 +901,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       channel->SetName(pTrack->GetName());
       if (stereo)
          channel->SetPanFromChannelType();
-      channel->SetChannel(Track::MonoChannel);
 
       //On Demand - have each channel add its own.
       if (ODManager::IsInstanceCreated())
@@ -919,7 +912,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       ++nChannels;
    }
 
-   pTrack->SetLinked(false);
+   project->GetTracks()->GroupChannels( *pTrack, 1 );
    int averageHeight = totalHeight / nChannels;
 
    for (auto channel : channels)
@@ -947,12 +940,9 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 
    SplitStereo(false);
 
-   first->SetChannel(Track::RightChannel);
-   partner->SetChannel(Track::LeftChannel);
-
    TrackList *const tracks = project->GetTracks();
-   (tracks->MoveUp(partner));
-   partner->SetLinked(true);
+   tracks->MoveUp( partner );
+   tracks->GroupChannels( *partner, 2 );
 
    MixerBoard* pMixerBoard = project->GetMixerBoard();
    if (pMixerBoard)

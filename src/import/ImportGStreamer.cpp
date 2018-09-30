@@ -130,7 +130,7 @@ struct GStreamContext
    GstElement    *mConv{};         // Audio converter
    GstElement    *mSink{};         // Application sink
    bool           mUse{};          // True if this stream should be imported
-   TrackHolders   mChannels;     // Array of WaveTrack pointers, one for each channel
+   NewChannelGroup mChannels;     // Array of WaveTrack pointers, one for each channel
    unsigned       mNumChannels{};  // Number of channels
    gdouble        mSampleRate{};   // Sample rate
    GstString      mType;         // Audio type
@@ -789,14 +789,6 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
             return;
          }
       }
-
-      // Set to stereo if there's exactly 2 channels
-      if (c->mNumChannels == 2)
-      {
-         c->mChannels[0]->SetChannel(Track::LeftChannel);
-         c->mChannels[1]->SetChannel(Track::RightChannel);
-         c->mChannels[0]->SetLinked(true);
-      }
    }
 
    // Get the buffer for the sample...no need to release
@@ -1140,18 +1132,6 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    // Grab the streams lock
    g_mutex_locker locker{ mStreamsLock };
 
-   // Count the total number of tracks collected
-   unsigned outNumTracks = 0;
-   for (guint s = 0; s < mStreams.size(); s++)
-   {
-      GStreamContext *c = mStreams[s].get();
-      if (c)
-         outNumTracks += c->mNumChannels;
-   }
-
-   // Create NEW tracks
-   outTracks.resize(outNumTracks);
-
    // Copy audio from mChannels to newly created tracks (destroying mChannels in process)
    int trackindex = 0;
    for (guint s = 0; s < mStreams.size(); s++)
@@ -1160,12 +1140,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
       if (c->mNumChannels)
       {
          for (int ch = 0; ch < c->mNumChannels; ch++)
-         {
             c->mChannels[ch]->Flush();
-            outTracks[trackindex++] = std::move(c->mChannels[ch]);
-         }
-
-         c->mChannels.clear();
+         outTracks.push_back(std::move(c->mChannels));
       }
    }
 

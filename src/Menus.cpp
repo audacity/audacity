@@ -7819,6 +7819,7 @@ void MenuCommandHandler::HandleMixAndRender
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(
       tracks, trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
+   tracks->GroupChannels(*uNewLeft, uNewRight ? 2 : 1);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
@@ -8769,22 +8770,20 @@ void MenuCommandHandler::OnNewStereoTrack(const CommandContext &context)
    auto defaultFormat = project.GetDefaultFormat();
    auto rate = project.GetRate();
 
-   auto t = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
-   t->SetChannel(Track::LeftChannel);
    project.SelectNone();
 
-   t->SetSelected(true);
-   t->SetLinked (true);
+   auto left = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
+   left->SetSelected(true);
 
-   t = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
-   t->SetChannel(Track::RightChannel);
+   auto right = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
+   right->SetSelected(true);
 
-   t->SetSelected(true);
+   tracks->GroupChannels(*left, 2);
 
    project.PushState(_("Created new stereo audio track"), _("New Track"));
 
    project.RedrawProject();
-   trackPanel->EnsureVisible(t);
+   trackPanel->EnsureVisible(left);
 }
 
 void MenuCommandHandler::OnNewLabelTrack(const CommandContext &context)

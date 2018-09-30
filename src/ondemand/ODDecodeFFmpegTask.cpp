@@ -109,17 +109,17 @@ private:
    int                  mStreamIndex;
 };
 
-auto ODDecodeFFmpegTask::FromList(const std::list<TrackHolders> &channels) -> Streams
+auto ODDecodeFFmpegTask::FromList( const TrackHolders &channels ) -> Streams
 {
    Streams streams;
    streams.reserve(channels.size());
    using namespace std;
    transform(channels.begin(), channels.end(), back_inserter(streams),
-      [](const TrackHolders &holders) {
+      [](const NewChannelGroup &holders) {
          Channels channels;
          channels.reserve(holders.size());
          transform(holders.begin(), holders.end(), back_inserter(channels),
-            mem_fn(&TrackHolders::value_type::get)
+            mem_fn(&NewChannelGroup::value_type::get)
          );
          return channels;
       }

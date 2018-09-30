@@ -107,7 +107,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    sf_count_t offset = 0;
    double rate = 44100.0;
    double percent = 100.0;
-   TrackHolders channels;
+   TrackHolders results;
    auto updateResult = ProgressResult::Success;
 
    {
@@ -200,31 +200,15 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
           sf_subtype_more_than_16_bits(encoding))
          format = floatSample;
 
+      results.resize(1);
+      auto &channels = results[0];
       channels.resize(numChannels);
 
       auto iter = channels.begin();
-      for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c) {
-         const auto channel =
-         (*iter = trackFactory->NewWaveTrack(format, rate)).get();
-
-         if (numChannels > 1)
-            switch (c) {
-               case 0:
-                  channel->SetChannel(Track::LeftChannel);
-                  break;
-               case 1:
-                  channel->SetChannel(Track::RightChannel);
-                  break;
-               default:
-                  channel->SetChannel(Track::MonoChannel);
-            }
-      }
+      for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c)
+         *iter = trackFactory->NewWaveTrack(format, rate);
 
       const auto firstChannel = channels.begin()->get();
-      if (numChannels == 2) {
-         firstChannel->SetLinked(true);
-      }
-
       auto maxBlockSize = firstChannel->GetMaxBlockSize();
 
       SampleBuffer srcbuffer(maxBlockSize * numChannels, format);
@@ -295,9 +279,11 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       throw UserException{};
 
-   for (const auto &channel : channels)
-      channel->Flush();
-   outTracks.swap(channels);
+   if (!results.empty() && !results[0].empty()) {
+      for (const auto &channel : results[0])
+         channel->Flush();
+      outTracks.swap(results);
+   }
 }
 
 //

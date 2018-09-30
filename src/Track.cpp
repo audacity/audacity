@@ -38,6 +38,7 @@ and TimeTrack.
 #include "DirManager.h"
 
 #include "Experimental.h"
+#include "InconsistencyException.h"
 
 #include "TrackPanel.h" // for TrackInfo
 
@@ -723,6 +724,58 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 // Make instantiations for the linker to find
 template Track *TrackList::Add<Track>(std::shared_ptr<Track> &&);
 template Track *TrackList::Add<WaveTrack>(std::shared_ptr<WaveTrack> &&);
+
+void TrackList::GroupChannels(
+   Track &track, size_t groupSize, bool resetChannels )
+{
+   // If group size is more than two, for now only the first two channels
+   // are grouped as stereo, and any others remain mono
+   auto list = track.mList.lock();
+   if ( groupSize > 0 && list.get() == this  ) {
+      auto iter = track.mNode.first;
+      auto after = iter;
+      auto end = this->ListOfTracks::end();
+      auto count = groupSize;
+      for ( ; after != end && count--; ++after )
+         ;
+      if ( count == 0 ) {
+         auto unlink = [&] ( Track &tr ) {
+            if ( tr.GetLinked() ) {
+               if ( resetChannels ) {
+                  auto link = tr.GetLink();
+                  if ( link )
+                     link->SetChannel( Track::MonoChannel );
+               }
+               tr.SetLinked( false );
+            }
+            if ( resetChannels )
+               tr.SetChannel( Track::MonoChannel );
+         };
+
+         // Disassociate previous tracks -- at most one
+         auto pLeader = this->FindLeader( &track );
+         if ( *pLeader && *pLeader != &track )
+            unlink( **pLeader );
+         
+         // First disassociate given and later tracks, then reassociate them
+         for ( auto iter2 = iter; iter2 != after; ++iter2 )
+             unlink( **iter2 );
+
+         if ( groupSize > 1 ) {
+            const auto channel = *iter++;
+            channel->SetLinked( true );
+            channel->SetChannel( Track::LeftChannel );
+            (*iter++)->SetChannel( Track::RightChannel );
+            while (iter != after)
+               (*iter++)->SetChannel( Track::MonoChannel );
+         }
+         return;
+      }
+   }
+   // *this does not contain the track or sufficient following channels
+   // or group size is zero
+   throw InconsistencyException{};
+}
 
 auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
    ListOfTracks::value_type

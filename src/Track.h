@@ -327,8 +327,11 @@ private:
 
    Track *GetLink() const;
    bool GetLinked  () const { return mLinked; }
-public:
+
+   friend WaveTrack; // WaveTrack needs to call SetLinked when reloading project
    void SetLinked  (bool l);
+
+   void SetChannel(ChannelType c) { mChannel = c; }
 private:
    // No need yet to make this virtual
    void DoSetLinked(bool l);
@@ -380,7 +383,6 @@ public:
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
 
-   void SetChannel(ChannelType c) { mChannel = c; }
    virtual void SetPan( float ){ ;}
    virtual void SetPanFromChannelType(){ ;};
 
@@ -1317,6 +1319,16 @@ public:
    /// Add a Track, giving it a fresh id
    template<typename TrackKind>
    Track *Add(std::shared_ptr<TrackKind> &&t);
+
+   /** \brief Define a group of channels starting at the given track
+   *
+   * @param track and (groupSize - 1) following tracks must be in this
+   * list.  They will be disassociated from any groups they already belong to.
+   * @param groupSize must be at least 1.
+   * @param resetChannels if true, disassociated channels will be marked Mono.
+   */
+   void GroupChannels(
+      Track &track, size_t groupSize, bool resetChannels = true );
 
    /// Replace first track with second track, give back a holder
    /// Give the replacement the same id as the replaced
