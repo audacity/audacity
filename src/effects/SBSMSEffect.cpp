@@ -252,11 +252,11 @@ bool EffectSBSMS::Process()
             auto start = leftTrack->TimeToLongSamples(mCurT0);
             auto end = leftTrack->TimeToLongSamples(mCurT1);
 
-            WaveTrack* rightTrack = NULL;
-            if (leftTrack->GetLinked()) {
+            // TODO: more-than-two-channels
+            WaveTrack *rightTrack =
+               * ++ TrackList::Channels(leftTrack).begin();
+            if (rightTrack) {
                double t;
-               // Assume linked track is wave or null
-               rightTrack = static_cast<WaveTrack*>(leftTrack->GetLink());
 
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();
