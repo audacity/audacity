@@ -65,14 +65,13 @@ namespace
       wxASSERT(t);
       //For OD regions, we need to override and display the percent complete for this task.
       //first, make sure it's a wavetrack.
-      if (t->GetKind() != Track::Wave)
-         return;
-      //see if the wavetrack exists in the ODManager (if the ODManager exists)
-      if (!ODManager::IsInstanceCreated())
-         return;
-      //ask the wavetrack for the corresponding tip - it may not change tip, but that's fine.
-      ODManager::Instance()->FillTipForWaveTrack(static_cast<const WaveTrack*>(t), tip);
-      return;
+      t->TypeSwitch( [&](const WaveTrack *wt) {
+         //see if the wavetrack exists in the ODManager (if the ODManager exists)
+         if (!ODManager::IsInstanceCreated())
+            return;
+         //ask the wavetrack for the corresponding tip - it may not change tip, but that's fine.
+         ODManager::Instance()->FillTipForWaveTrack(wt, tip);
+      });
    }
 
    /// Converts a frequency to screen y position.
@@ -125,16 +124,12 @@ namespace
 
    // This returns true if we're a spectral editing track.
    inline bool isSpectralSelectionTrack(const Track *pTrack) {
-      if (pTrack &&
-         pTrack->GetKind() == Track::Wave) {
-         const WaveTrack *const wt = static_cast<const WaveTrack*>(pTrack);
+      return pTrack && pTrack->TypeSwitch< bool >( [&](const WaveTrack *wt) {
          const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
          const int display = wt->GetDisplay();
-         return (display == WaveTrack::Spectrum) && settings.SpectralSelectionEnabled();
-      }
-      else {
-         return false;
-      }
+         return (display == WaveTrack::Spectrum) &&
+            settings.SpectralSelectionEnabled();
+      });
    }
 
    enum SelectionBoundary {
@@ -542,19 +537,23 @@ UIHandle::Result SelectHandle::Click
 
    TrackPanel *const trackPanel = pProject->GetTrackPanel();
 
-   if( pTrack->GetKind() == Track::Label &&
-       event.LeftDown() &&
-       event.ControlDown() ){
-      // We should reach this, only in default of other hits on glyphs or
-      // text boxes.
-      bool bShift = event.ShiftDown();
-      bool unsafe = pProject->IsAudioActive();
-      GetMenuCommandHandler(*pProject)
-         .HandleListSelection(*pProject, pTrack, bShift, true, !unsafe);
+   bool selectChange = (
+      event.LeftDown() &&
+      event.ControlDown() &&
+      pTrack->TypeSwitch<bool>( [&](LabelTrack *){
+         // We should reach this, only in default of other hits on glyphs or
+         // text boxes.
+         bool bShift = event.ShiftDown();
+         bool unsafe = pProject->IsAudioActive();
+         GetMenuCommandHandler(*pProject)
+            .HandleListSelection(*pProject, pTrack, bShift, true, !unsafe);
+         return true;
+       } )
+   );
+   if ( selectChange )
       // Do not start a drag
       return RefreshAll | Cancelled;
-   }
-
+   
    auto &selectionState = pProject->GetSelectionState();
    if (event.LeftDClick() && !event.ShiftDown()) {
       TrackList *const trackList = pProject->GetTracks();
@@ -563,22 +562,21 @@ UIHandle::Result SelectHandle::Click
       selectionState.SelectNone( *trackList, pProject->GetMixerBoard() );
 
       selectionState.SelectTrack
-         ( *trackList, *pTrack, true, true, pProject->GetMixerBoard() );
+         ( *pTrack, true, true, pProject->GetMixerBoard() );
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength
-         ( *trackList, viewInfo, *pTrack, pProject->IsSyncLocked() );
+         ( viewInfo, *pTrack, pProject->IsSyncLocked() );
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
-      if (pTrack->GetKind() == Track::Wave) {
-         WaveTrack *const wt = static_cast<WaveTrack *>(pTrack);
+      pTrack->TypeSwitch( [&] ( WaveTrack *wt ) {
          WaveClip *const selectedClip = wt->GetClipAtX(event.m_x);
          if (selectedClip) {
             viewInfo.selectedRegion.setTimes(
                selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
-      }
+      } );
 
       pProject->ModifyState(false);
 
@@ -617,7 +615,7 @@ UIHandle::Result SelectHandle::Click
          // Don't toggle away the last selected track.
          if( !bIsSelected || trackPanel->GetSelectedTrackCount() > 1 )
             selectionState.SelectTrack
-               ( *trackList, *pTrack, !bIsSelected, true, pMixerBoard );
+               ( *pTrack, !bIsSelected, true, pMixerBoard );
       }
 
       double value;
@@ -773,14 +771,13 @@ UIHandle::Result SelectHandle::Click
 #endif
       StartSelection(pProject);
       selectionState.SelectTrack
-         ( *trackList, *pTrack, true, true, pMixerBoard );
+         ( *pTrack, true, true, pMixerBoard );
       trackPanel->SetFocusedTrack(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
-      if (pTrack->GetKind() == Track::Wave) {
+      pTrack->TypeSwitch( [&](WaveTrack *wt) {
          if(ODManager::IsInstanceCreated())
-            ODManager::Instance()->DemandTrackUpdate
-               (static_cast<WaveTrack*>(pTrack),mSelStart);
-      }
+            ODManager::Instance()->DemandTrackUpdate(wt,mSelStart);
+      });
 
       Connect(pProject);
       return RefreshAll | UpdateSelection;
@@ -1201,9 +1198,11 @@ void SelectHandle::AssignSelection
    viewInfo.selectedRegion.setTimes(sel0, sel1);
 
    //On-Demand: check to see if there is an OD thing associated with this track.  If so we want to update the focal point for the task.
-   if (pTrack && (pTrack->GetKind() == Track::Wave) && ODManager::IsInstanceCreated())
-      ODManager::Instance()->DemandTrackUpdate
-         (static_cast<WaveTrack*>(pTrack),sel0); //sel0 is sometimes less than mSelStart
+   if (pTrack && ODManager::IsInstanceCreated())
+      pTrack->TypeSwitch( [&](WaveTrack *wt) {
+         ODManager::Instance()->DemandTrackUpdate(wt, sel0);
+         //sel0 is sometimes less than mSelStart
+      });
 }
 
 void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,

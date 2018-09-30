@@ -49,28 +49,23 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    uLeft.reset(), uRight.reset();
 
    // This function was formerly known as "Quick Mix".
-   const Track *t;
    bool mono = false;   /* flag if output can be mono without loosing anything*/
    bool oneinput = false;  /* flag set to true if there is only one input track
                               (mono or stereo) */
 
-   TrackListIterator iter(tracks);
-   SelectedTrackListOfKindIterator usefulIter(Track::Wave, tracks);
+   const auto trackRange = tracks->Selected< const WaveTrack >();
+   auto first = *trackRange.begin();
    // this only iterates tracks which are relevant to this function, i.e.
    // selected WaveTracks. The tracklist is (confusingly) the list of all
    // tracks in the project
 
    int numWaves = 0; /* number of wave tracks in the selection */
    int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
-   t = iter.First();
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         numWaves++;
-         float pan = ((WaveTrack*)t)->GetPan();
-         if (t->GetChannel() == Track::MonoChannel && pan == 0)
-            numMono++;
-      }
-      t = iter.Next();
+   for(auto wt : trackRange) {
+      numWaves++;
+      float pan = wt->GetPan();
+      if (wt->GetChannel() == Track::MonoChannel && pan == 0)
+         numMono++;
    }
 
    if (numMono == numWaves)
@@ -88,65 +83,56 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    double tstart, tend;    // start and end times for one track.
 
    WaveTrackConstArray waveArray;
-   t = iter.First();
 
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         waveArray.push_back(Track::Pointer<const WaveTrack>(t));
-         tstart = t->GetStartTime();
-         tend = t->GetEndTime();
-         if (tend > mixEndTime)
-            mixEndTime = tend;
-         // try and get the start time. If the track is empty we will get 0,
-         // which is ambiguous because it could just mean the track starts at
-         // the beginning of the project, as well as empty track. The give-away
-         // is that an empty track also ends at zero.
+   for(auto wt : trackRange) {
+      waveArray.push_back( Track::Pointer< const WaveTrack >( wt ) );
+      tstart = wt->GetStartTime();
+      tend = wt->GetEndTime();
+      if (tend > mixEndTime)
+         mixEndTime = tend;
+      // try and get the start time. If the track is empty we will get 0,
+      // which is ambiguous because it could just mean the track starts at
+      // the beginning of the project, as well as empty track. The give-away
+      // is that an empty track also ends at zero.
 
-         if (tstart != tend) {
-            // we don't get empty tracks here
-            if (!gotstart) {
-               // no previous start, use this one unconditionally
-               mixStartTime = tstart;
-               gotstart = true;
-            } else if (tstart < mixStartTime)
-               mixStartTime = tstart;  // have a start, only make it smaller
-         }  // end if start and end are different
-      }  // end if track is a selected WaveTrack.
-      /** @TODO: could we not use a SelectedTrackListOfKindIterator here? */
-      t = iter.Next();
+      if (tstart != tend) {
+         // we don't get empty tracks here
+         if (!gotstart) {
+            // no previous start, use this one unconditionally
+            mixStartTime = tstart;
+            gotstart = true;
+         } else if (tstart < mixStartTime)
+            mixStartTime = tstart;  // have a start, only make it smaller
+      }  // end if start and end are different
    }
 
    /* create the destination track (NEW track) */
-   if ((numWaves == 1) || ((numWaves == 2) && (usefulIter.First()->GetLink() != NULL)))
+   if (numWaves == TrackList::Channels(first).size())
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
    auto mixLeft = trackFactory->NewWaveTrack(format, rate);
    if (oneinput)
-      mixLeft->SetName(usefulIter.First()->GetName()); /* set name of output track to be the same as the sole input track */
+      mixLeft->SetName(first->GetName()); /* set name of output track to be the same as the sole input track */
    else
       mixLeft->SetName(_("Mix"));
    mixLeft->SetOffset(mixStartTime);
+
+   // TODO: more-than-two-channels
    decltype(mixLeft) mixRight{};
-   if (mono) {
-      mixLeft->SetChannel(Track::MonoChannel);
-   }
-   else {
+   if ( !mono ) {
       mixRight = trackFactory->NewWaveTrack(format, rate);
       if (oneinput) {
-         if (usefulIter.First()->GetLink() != NULL)   // we have linked track
-            mixRight->SetName(usefulIter.First()->GetLink()->GetName()); /* set name to match input track's right channel!*/
+         auto channels = TrackList::Channels(first);
+         if (channels.size() > 1)
+            mixRight->SetName((*channels.begin().advance(1))->GetName()); /* set name to match input track's right channel!*/
          else
-            mixRight->SetName(usefulIter.First()->GetName());   /* set name to that of sole input channel */
+            mixRight->SetName(first->GetName());   /* set name to that of sole input channel */
       }
       else
          mixRight->SetName(_("Mix"));
-      mixLeft->SetChannel(Track::LeftChannel);
-      mixRight->SetChannel(Track::RightChannel);
       mixRight->SetOffset(mixStartTime);
-      mixLeft->SetLinked(true);
    }
-
 
 
    auto maxBlockLen = mixLeft->GetIdealBlockSize();

@@ -57,9 +57,6 @@ class TimeTrack final : public Track {
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
-   // Identifying the type of track
-   int GetKind() const override { return Time; }
-
    // TimeTrack parameters
 
    double GetOffset() const override { return 0.0; }
@@ -138,6 +135,9 @@ class TimeTrack final : public Track {
    void testMe();
 
  private:
+   // Identifying the type of track
+   TrackKind GetKind() const override { return TrackKind::Time; }
+
    const ZoomInfo  *const mZoomInfo;
    std::unique_ptr<Envelope> mEnvelope;
    std::unique_ptr<Ruler> mRuler;

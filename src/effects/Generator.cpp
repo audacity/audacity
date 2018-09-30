@@ -32,20 +32,17 @@ bool Generator::Process()
 
 
    // Set up mOutputTracks.
-   // This effect needs Track::All for sync-lock grouping.
-   this->CopyInputTracks(Track::All);
+   // This effect needs all for sync-lock grouping.
+   this->CopyInputTracks(true);
 
    // Iterate over the tracks
    bool bGoodResult = true;
    int ntrack = 0;
-   TrackListIterator iter(mOutputTracks.get());
-   Track* t = iter.First();
 
-   while (t != NULL)
-   {
-      if (t->GetKind() == Track::Wave && t->GetSelected()) {
-         WaveTrack* track = (WaveTrack*)t;
-
+   mOutputTracks->Any().VisitWhile( bGoodResult,
+      [&](WaveTrack *track, const Track::Fallthrough &fallthrough) {
+         if (!track->GetSelected())
+            return fallthrough();
          bool editClipCanMove = gPrefs->GetEditClipsCanMove();
 
          //if we can't move clips, and we're generating into an empty space,
@@ -59,7 +56,8 @@ bool Generator::Process()
                   wxICON_STOP,
                   _("Error"));
             Failure();
-            return false;
+            bGoodResult = false;
+            return;
          }
 
          if (GetDuration() > 0.0)
@@ -87,7 +85,7 @@ bool Generator::Process()
 
             if (!bGoodResult) {
                Failure();
-               return false;
+               return;
             }
          }
          else
@@ -98,21 +96,23 @@ bool Generator::Process()
          }
 
          ntrack++;
+      },
+      [&](Track *t) {
+         if (t->IsSyncLockSelected()) {
+            t->SyncLockAdjust(mT1, mT0 + GetDuration());
+         }
       }
-      else if (t->IsSyncLockSelected()) {
-         t->SyncLockAdjust(mT1, mT0 + GetDuration());
-      }
-      // Move on to the next track
-      t = iter.Next();
+   );
+
+   if (bGoodResult) {
+      Success();
+
+      this->ReplaceProcessedTracks(bGoodResult);
+
+      mT1 = mT0 + GetDuration(); // Update selection.
    }
 
-   Success();
-
-   this->ReplaceProcessedTracks(bGoodResult);
-
-   mT1 = mT0 + GetDuration(); // Update selection.
-
-   return true;
+   return bGoodResult;
 }
 
 bool BlockGenerator::GenerateTrack(WaveTrack *tmp,

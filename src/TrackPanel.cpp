@@ -89,11 +89,6 @@ subset of the TrackPanel methods from all over the place.
 
 *//**************************************************************//**
 
-\class TrackListIterator
-\brief An iterator for a TrackList.
-
-*//**************************************************************//**
-
 \class TrackListNode
 \brief Used by TrackList, points to a Track.
 
@@ -749,34 +744,13 @@ void TrackPanel::UpdateAccessibility()
 // Counts tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetTrackCount() const
 {
-   size_t count = 0;
-   TrackListConstIterator iter(GetTracks());
-   for (auto t = iter.First(); t; t = iter.Next()) {
-      count +=  1;
-      if( t->GetLinked() ){
-         t = iter.Next();
-         if( !t )
-            break;
-      }
-   }
-   return count;
+  return GetTracks()->Leaders().size();
 }
 
 // Counts selected tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetSelectedTrackCount() const
 {
-   size_t count = 0;
-
-   TrackListConstIterator iter(GetTracks());
-   for (auto t = iter.First(); t; t = iter.Next()) {
-      count +=  t->GetSelected() ? 1:0;
-      if( t->GetLinked() ){
-         t = iter.Next();
-         if( !t )
-            break;
-      }
-   }
-   return count;
+   return GetTracks()->SelectedLeaders().size();
 }
 
 void TrackPanel::MessageForScreenReader(const wxString& message)
@@ -957,13 +931,22 @@ int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 
 const TCPLines &getTCPLines( const Track &track )
 {
+   auto lines = track.TypeSwitch< TCPLines * >(
 #ifdef USE_MIDI
-   if ( track.GetKind() == Track::Note )
-      return noteTrackTCPLines;
+      [](const NoteTrack*){
+         return &noteTrackTCPLines;
+      },
 #endif
+      [](const WaveTrack*){
+         return &waveTrackTCPLines;
+      },
+      [](const Track*){
+         return &commonTrackTCPLines;
+      }
+   );
 
-   if ( track.GetKind() == Track::Wave )
-      return waveTrackTCPLines;
+   if (lines)
+      return *lines;
 
    return commonTrackTCPLines;
 }
@@ -1090,23 +1073,17 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
    if (!trk)
       return;
 
-   Track *link = trk->GetLink();
-
-   if (link && !trk->GetLinked()) {
-      trk = link;
-      link = trk->GetLink();
-   }
+   trk = *GetTracks()->FindLeader(trk);
+   auto height =
+      TrackList::Channels(trk).sum( &Track::GetHeight )
+      - kTopInset - kShadowThickness;
 
    // subtract insets and shadows from the rectangle, but not border
    // This matters because some separators do paint over the border
    wxRect rect(kLeftInset,
             -mViewInfo->vpos + trk->GetY() + kTopInset,
             GetRect().GetWidth() - kLeftInset - kRightInset - kShadowThickness,
-            trk->GetHeight() - kTopInset - kShadowThickness);
-
-   if (link) {
-      rect.height += link->GetHeight();
-   }
+            height);
 
    if( refreshbacking )
    {
@@ -1168,8 +1145,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
 
    // The track artist actually draws the stuff inside each track
-   auto first = GetProject()->GetFirstVisible();
-   mTrackArtist->DrawTracks(context, GetTracks(), first.get(),
+   mTrackArtist->DrawTracks(context, GetTracks(),
                             region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
@@ -1191,47 +1167,30 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    wxRect trackRect = clip;
    trackRect.height = 0;   // for drawing background in no tracks case.
 
-   VisibleTrackIterator iter(GetProject());
-   for (const Track *t = iter.First(); t; t = iter.Next()) {
+   for ( auto t :
+         GetTracks()->Any< const Track >() + IsVisibleTrack{ GetProject() } ) {
       t = t->SubstitutePendingChangedTrack().get();
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
-      // If this track is linked to the next one, display a common
-      // border for both, otherwise draw a normal border
-      wxRect rect = trackRect;
-      bool skipBorder = false;
-      Track *l = t->GetLink();
-
-      if (l && t->GetLinked()) {
-         rect.height += l->GetHeight();
-      }
-      else if (l && trackRect.y >= 0) {
-         skipBorder = true;
-      }
-
+      auto leaderTrack = *GetTracks()->FindLeader( t );
       // If the previous track is linked to this one but isn't on the screen
-      // (and thus would have been skipped by VisibleTrackIterator) we need to
-      // draw that track's border instead.
-      const Track *borderTrack = t;
-      wxRect borderRect = rect;
+      // (and thus would have been skipped) we need to draw that track's border
+      // instead.
+      bool drawBorder = (t == leaderTrack || trackRect.y < 0);
 
-      if (l && !t->GetLinked() && trackRect.y < 0)
-      {
-         borderTrack = l;
+      if (drawBorder) {
+         wxRect teamRect = trackRect;
+         teamRect.y = leaderTrack->GetY() - mViewInfo->vpos;
+         // danger with pending tracks?
+         teamRect.height =
+            TrackList::Channels(leaderTrack)
+               .sum( &Track::GetHeight );
 
-         borderRect = trackRect;
-         borderRect.y = l->GetY() - mViewInfo->vpos;
-         borderRect.height = l->GetHeight();
-
-         borderRect.height += t->GetHeight();
-      }
-
-      if (!skipBorder) {
          if (mAx->IsFocused(t)) {
-            focusRect = borderRect;
+            focusRect = teamRect;
          }
-         DrawOutside(context, borderTrack, borderRect);
+         DrawOutside(context, leaderTrack, teamRect);
       }
 
       // Believe it or not, we can speed up redrawing if we don't
@@ -1688,7 +1647,9 @@ void TrackInfo::Status1DrawFunction
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
    wxString s;
-   if (!wt || (wt->GetLinked()))
+   if (!pTrack || TrackList::Channels(pTrack).size() > 1)
+      // TODO: more-than-two-channels-message
+      // more appropriate strings
       s = _("Stereo, %dHz");
    else {
       if (wt->GetChannel() == Track::MonoChannel)
@@ -1719,13 +1680,22 @@ void TrackPanel::DrawOutside
  const Track * t, const wxRect & rec)
 {
    auto dc = &context.dc;
-   bool bIsWave = (t->GetKind() == Track::Wave);
+   const auto wt = track_cast<const WaveTrack*>(t);
 
    // Draw things that extend right of track control panel
    {
       // Start with whole track rect
       wxRect rect = rec;
       DrawOutsideOfTrack(context, t, rect);
+
+      {
+         auto channels = TrackList::Channels(t);
+         // omit last (perhaps, only) channel
+         --channels.second;
+         for (auto channel : channels)
+            // draw the sash below this channel
+            DrawSash(channel, dc, rect);
+      }
 
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
@@ -1735,7 +1705,7 @@ void TrackPanel::DrawOutside
 
       int labelw = GetLabelWidth();
       int vrul = GetVRulerOffset();
-      mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), bIsWave, labelw, vrul);
+      mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), (wt != nullptr), labelw, vrul);
 
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
@@ -1746,7 +1716,16 @@ void TrackPanel::DrawOutside
       //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
       //}
 
-      DrawBordersAroundTrack(t, dc, rect, labelw, vrul);
+      DrawBordersAroundTrack(dc, rect, vrul);
+      {
+         auto channels = TrackList::Channels(t);
+         // omit last (perhaps, only) channel
+         --channels.second;
+         for (auto channel : channels)
+            // draw the sash below this channel
+            DrawBordersAroundSash(channel, dc, rect, labelw);
+      }
+
       DrawShadow(t, dc, rect);
    }
 
@@ -1790,16 +1769,17 @@ void TrackPanel::DrawOutsideOfTrack
    side.x += side.width - kRightInset;
    side.width = kRightInset;
    dc->DrawRectangle(side);
+}
 
-   // Area between tracks of stereo group
-   if (t->GetLinked()) {
-      // Paint the channel separator over (what would be) the shadow of the top
-      // channel, and the top inset of the bottom channel
-      side = rect;
-      side.y += t->GetHeight() - kShadowThickness;
-      side.height = kTopInset + kShadowThickness;
-      dc->DrawRectangle(side);
-   }
+void TrackPanel::DrawSash(const Track * t, wxDC * dc, const wxRect & rect)
+{
+   // Area between channels of a group
+   // Paint the channel separator over (what would be) the shadow of this
+   // channel, and the top inset of the following channel
+   wxRect side = rect;
+   side.y = t->GetY() - mViewInfo->vpos + t->GetHeight() - kShadowThickness;
+   side.height = kTopInset + kShadowThickness;
+   dc->DrawRectangle(side);
 }
 
 void TrackPanel::SetBackgroundCell
@@ -1836,10 +1816,8 @@ void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
 
 void TrackPanel::UpdateVRulers()
 {
-   TrackListOfKindIterator iter(Track::Wave, GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
+   for (auto t : GetTracks()->Any< const WaveTrack >())
       UpdateTrackVRuler(t);
-   }
 
    UpdateVRulerSize();
 }
@@ -1861,27 +1839,23 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
    wxRect rect(GetVRulerOffset(),
             kTopMargin,
             GetVRulerWidth(),
-            t->GetHeight() - (kTopMargin + kBottomMargin));
+            0);
 
-   mTrackArtist->UpdateVRuler(t, rect);
-   const Track *l = t->GetLink();
-   if (l)
-   {
-      rect.height = l->GetHeight() - (kTopMargin + kBottomMargin);
-      mTrackArtist->UpdateVRuler(l, rect);
+
+   for (auto channel : TrackList::Channels(t)) {
+      rect.height = channel->GetHeight() - (kTopMargin + kBottomMargin);
+      mTrackArtist->UpdateVRuler(channel, rect);
    }
 }
 
 void TrackPanel::UpdateVRulerSize()
 {
-   TrackListIterator iter(GetTracks());
-   Track *t = iter.First();
-   if (t) {
-      wxSize s = t->vrulerSize;
-      while (t) {
+   auto trackRange = GetTracks()->Any();
+   if (trackRange) {
+      wxSize s { 0, 0 };
+      for (auto t : trackRange)
          s.IncTo(t->vrulerSize);
-         t = iter.Next();
-      }
+
       if (vrulerSize != s) {
          vrulerSize = s;
          mRuler->SetLeftOffset(GetLeftOffset());  // bevel on AdornedRuler
@@ -1918,54 +1892,29 @@ void TrackPanel::OnTrackMenu(Track *t)
 
 Track * TrackPanel::GetFirstSelectedTrack()
 {
-
-   TrackListIterator iter(GetTracks());
-
-   Track * t;
-   for ( t = iter.First();t!=NULL;t=iter.Next())
-      {
-         //Find the first selected track
-         if(t->GetSelected())
-            {
-               return t;
-            }
-
-      }
-   //if nothing is selected, return the first track
-   t = iter.First();
-
-   if(t)
+   auto t = *GetTracks()->Selected().begin();
+   if (t)
       return t;
    else
-      return NULL;
+      //if nothing is selected, return the first track
+      return *GetTracks()->Any().begin();
 }
 
 void TrackPanel::EnsureVisible(Track * t)
 {
-   TrackListIterator iter(GetTracks());
-   Track *it = NULL;
-   Track *nt = NULL;
-
    SetFocusedTrack(t);
 
    int trackTop = 0;
    int trackHeight =0;
 
-   for (it = iter.First(); it; it = iter.Next()) {
+   for (auto it : GetTracks()->Leaders()) {
       trackTop += trackHeight;
-      trackHeight =  it->GetHeight();
 
-      //find the second track if this is stereo
-      if (it->GetLinked()) {
-         nt = iter.Next();
-         trackHeight += nt->GetHeight();
-      }
-      else {
-         nt = it;
-      }
+      auto channels = TrackList::Channels(it);
+      trackHeight = channels.sum( &Track::GetHeight );
 
       //We have found the track we want to ensure is visible.
-      if ((it == t) || (nt == t)) {
+      if (channels.contains(t)) {
 
          //Get the size of the trackpanel.
          int width, height;
@@ -1991,27 +1940,20 @@ void TrackPanel::EnsureVisible(Track * t)
 // 0.0 scrolls to top
 // 1.0 scrolls to bottom.
 void TrackPanel::VerticalScroll( float fracPosition){
-   TrackListIterator iter(GetTracks());
-   Track *it = NULL;
-   Track *nt = NULL;
 
-   // Compute trackHeight
    int trackTop = 0;
-   int trackHeight =0;
+   int trackHeight = 0;
 
-   for (it = iter.First(); it; it = iter.Next()) {
-      trackTop += trackHeight;
-      trackHeight =  it->GetHeight();
+   auto tracks = GetTracks();
+   auto GetHeight =
+      [&]( const Track *t ){ return tracks->GetGroupHeight(t); };
 
-      //find the second track if this is stereo
-      if (it->GetLinked()) {
-         nt = iter.Next();
-         trackHeight += nt->GetHeight();
-      }
-      else {
-         nt = it;
-      }
+   auto range = tracks->Leaders();
+   if (!range.empty()) {
+      trackHeight = GetHeight( *range.rbegin() );
+      --range.second;
    }
+   trackTop = range.sum( GetHeight );
 
    int delta;
    
@@ -2030,8 +1972,8 @@ void TrackPanel::VerticalScroll( float fracPosition){
 // Given rectangle excludes the insets left, right, and top
 // Draw a rectangular border and also a vertical separator of track controls
 // from the rest (ruler and proper track area)
-void TrackPanel::DrawBordersAroundTrack(const Track * t, wxDC * dc,
-                                        const wxRect & rect, const int labelw,
+void TrackPanel::DrawBordersAroundTrack(wxDC * dc,
+                                        const wxRect & rect,
                                         const int vrul)
 {
    // Border around track and label area
@@ -2042,21 +1984,21 @@ void TrackPanel::DrawBordersAroundTrack(const Track * t, wxDC * dc,
                      rect.width - kShadowThickness,
                      rect.height - kShadowThickness);
 
+
    // between vruler and TrackInfo
    AColor::Line(*dc, vrul, rect.y, vrul, rect.y + rect.height - 1);
+}
 
-   // The lines at bottom of 1st track and top of second track of stereo group
-   // Possibly replace with DrawRectangle to add left border.
-   if (t->GetLinked()) {
-      // The given rect has had the top inset subtracted
-      int h1 = rect.y + t->GetHeight() - kTopInset;
-      // h1 is the top coordinate of the second tracks' rectangle
-      // Draw (part of) the bottom border of the top channel and top border of the bottom
-      // At left it extends between the vertical rulers too
-      // These lines stroke over what is otherwise "border" of each channel
-      AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
-      AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
-   }
+void TrackPanel::DrawBordersAroundSash(const Track * t, wxDC * dc,
+                                        const wxRect & rect, const int labelw)
+{
+   int h1 = t->GetY() - mViewInfo->vpos + t->GetHeight();
+   // h1 is the top coordinate of the following channel's rectangle
+   // Draw (part of) the bottom border of the top channel and top border of the bottom
+   // At left it extends between the vertical rulers too
+   // These lines stroke over what is otherwise "border" of each channel
+   AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
+   AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
 }
 
 // Given rectangle has insets subtracted left, right, and top
@@ -2128,30 +2070,29 @@ wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
       return { 0, 0, 0, 0 };
    }
 
-   wxRect rect{
-      0,
-      target->GetY() - mViewInfo->vpos,
-      GetSize().GetWidth(),
-      target->GetHeight()
-   };
-
    // PRL:  I think the following very old comment misused the term "race
    // condition" for a bug that happened with only a single thread.  I think the
    // real problem referred to, was that this function could be reached, via
    // TrackPanelAx callbacks, during low-level operations while the TrackList
-   // was not in a consistent state.  Therefore GetLinked() did not imply
-   // that GetLink() was not null.
+   // was not in a consistent state.
    // Now the problem is fixed by delaying the handling of events generated
-   // by TrackList.
+   // by TrackList.  And besides that, we use Channels() instead of looking
+   // directly at the links.
 
    // Old comment:
    // The check for a null linked track is necessary because there's
    // a possible race condition between the time the 2 linked tracks
    // are added and when wxAccessible methods are called.  This is
    // most evident when using Jaws.
-   if (target->GetLinked() && target->GetLink()) {
-      rect.height += target->GetLink()->GetHeight();
-   }
+   auto height = TrackList::Channels( target ).sum( &Track::GetHeight );
+
+   wxRect rect{
+      0,
+      target->GetY() - mViewInfo->vpos,
+      GetSize().GetWidth(),
+      height
+   };
+
 
    rect.x += kLeftMargin;
    if (label)
@@ -2199,8 +2140,7 @@ void TrackPanel::SetFocusedCell()
 void TrackPanel::SetFocusedTrack( Track *t )
 {
    // Make sure we always have the first linked track of a stereo track
-   if (t && !t->GetLinked() && t->GetLink())
-      t = (WaveTrack*)t->GetLink();
+   t = *GetTracks()->FindLeader(t);
 
    auto cell = mAx->SetFocus( Track::Pointer( t ) ).get();
 
@@ -2677,10 +2617,13 @@ IteratorRange< TrackPanelCellIterator > TrackPanel::Cells()
 
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
    : mPanel{ trackPanel }
-   , mIter{ trackPanel->GetProject() }
+   , mIter{
+        trackPanel->GetTracks()->Any().begin()
+           .Filter( IsVisibleTrack( trackPanel->GetProject() ) )
+     }
 {
    if (begin) {
-      mpTrack = Track::Pointer( mIter.First() );
+      mpTrack = Track::Pointer( *mIter );
       if (mpTrack)
          mpCell = mpTrack;
       else
@@ -2698,11 +2641,11 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
 {
    if ( mpTrack ) {
       if ( ++ mType == CellType::Background )
-         mType = CellType::Track, mpTrack = Track::Pointer( mIter.Next() );
+         mType = CellType::Track, mpTrack = Track::Pointer( * ++ mIter );
    }
    if ( mpTrack ) {
       if ( mType == CellType::Label &&
-           mpTrack->GetLink() && !mpTrack->GetLinked() )
+           !mpTrack->IsLeader() )
          // Visit label of stereo track only once
          ++mType;
       switch ( mType ) {
@@ -2768,10 +2711,10 @@ void TrackPanelCellIterator::UpdateRect()
             mRect.x = kLeftMargin;
             mRect.width = kTrackInfoWidth - mRect.x;
             mRect.y += kTopMargin;
+            mRect.height =
+               TrackList::Channels(mpTrack.get())
+                  .sum( &Track::GetHeight );
             mRect.height -= (kBottomMargin + kTopMargin);
-            auto partner = mpTrack->GetLink();
-            if ( partner && mpTrack->GetLinked() )
-               mRect.height += partner->GetHeight();
             break;
          }
          case CellType::VRuler:
@@ -2787,11 +2730,12 @@ void TrackPanelCellIterator::UpdateRect()
             // The resizer region encompasses the bottom margin proper to this
             // track, plus the top margin of the next track (or, an equally
             // tall zone below, in case there is no next track)
-            auto partner = mpTrack->GetLink();
-            if ( partner && mpTrack->GetLinked() )
-               mRect.x = kTrackInfoWidth;
-            else
+            if ( mpTrack.get() ==
+                *TrackList::Channels(mpTrack.get()).rbegin() )
+               // Last channel has a resizer extending farther leftward
                mRect.x = kLeftMargin;
+            else
+               mRect.x = kTrackInfoWidth;
             mRect.width -= (mRect.x + kRightMargin);
             mRect.y += (mRect.height - kBottomMargin);
             mRect.height = (kBottomMargin + kTopMargin);
@@ -2899,4 +2843,24 @@ unsigned TrackPanelCell::Char(wxKeyEvent &event, ViewInfo &, wxWindow *)
 {
    event.Skip();
    return RefreshCode::RefreshNone;
+}
+
+IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
+   : mPanelRect {
+        wxPoint{ 0, project->mViewInfo.vpos },
+        project->GetTPTracksUsableArea()
+     }
+{}
+
+bool IsVisibleTrack::operator () (const Track *pTrack) const
+{
+   // Need to return true if this track or a later channel intersects
+   // the view
+   return
+   TrackList::Channels(pTrack).StartingWith(pTrack).any_of(
+      [this]( const Track *pT ) {
+         wxRect r(0, pT->GetY(), 1, pT->GetHeight());
+         return r.Intersects(mPanelRect);
+      }
+   );
 }

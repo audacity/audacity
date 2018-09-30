@@ -192,9 +192,8 @@ void WaveTrack::Reinit(const WaveTrack &orig)
 
 void WaveTrack::Merge(const Track &orig)
 {
-   if (orig.GetKind() == Wave)
-   {
-      const WaveTrack &wt = static_cast<const WaveTrack&>(orig);
+   orig.TypeSwitch( [&](const WaveTrack *pwt) {
+      const WaveTrack &wt = *pwt;
       mDisplay = wt.mDisplay;
       mGain    = wt.mGain;
       mPan     = wt.mPan;
@@ -204,7 +203,7 @@ void WaveTrack::Merge(const Track &orig)
          ? std::make_unique<SpectrogramSettings>(*wt.mpSpectrumSettings) : nullptr);
       SetWaveformSettings
          (wt.mpWaveformSettings ? std::make_unique<WaveformSettings>(*wt.mpWaveformSettings) : nullptr);
-   }
+   });
    PlayableTrack::Merge(orig);
 }
 
@@ -1210,159 +1209,158 @@ void WaveTrack::Paste(double t0, const Track *src)
 // WEAK-GUARANTEE
 {
    bool editClipCanMove = gPrefs->GetEditClipsCanMove();
-   
-   if( src == NULL )
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
 
-   if (src->GetKind() != Track::Wave)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
+   bool bOk = src && src->TypeSwitch< bool >( [&](const WaveTrack *other) {
 
-   const WaveTrack* other = static_cast<const WaveTrack*>(src);
+      //
+      // Pasting is a bit complicated, because with the existence of multiclip mode,
+      // we must guess the behaviour the user wants.
+      //
+      // Currently, two modes are implemented:
+      //
+      // - If a single clip should be pasted, and it should be pasted inside another
+      //   clip, no NEW clips are generated. The audio is simply inserted.
+      //   This resembles the old (pre-multiclip support) behaviour. However, if
+      //   the clip is pasted outside of any clip, a NEW clip is generated. This is
+      //   the only behaviour which is different to what was done before, but it
+      //   shouldn't confuse users too much.
+      //
+      // - If multiple clips should be pasted, or a single clip that does not fill
+      // the duration of the pasted track, these are always pasted as single
+      // clips, and the current clip is splitted, when necessary. This may seem
+      // strange at first, but it probably is better than trying to auto-merge
+      // anything. The user can still merge the clips by hand (which should be a
+      // simple command reachable by a hotkey or single mouse click).
+      //
 
-   //
-   // Pasting is a bit complicated, because with the existence of multiclip mode,
-   // we must guess the behaviour the user wants.
-   //
-   // Currently, two modes are implemented:
-   //
-   // - If a single clip should be pasted, and it should be pasted inside another
-   //   clip, no NEW clips are generated. The audio is simply inserted.
-   //   This resembles the old (pre-multiclip support) behaviour. However, if
-   //   the clip is pasted outside of any clip, a NEW clip is generated. This is
-   //   the only behaviour which is different to what was done before, but it
-   //   shouldn't confuse users too much.
-   //
-   // - If multiple clips should be pasted, or a single clip that does not fill
-   // the duration of the pasted track, these are always pasted as single
-   // clips, and the current clip is splitted, when necessary. This may seem
-   // strange at first, but it probably is better than trying to auto-merge
-   // anything. The user can still merge the clips by hand (which should be a
-   // simple command reachable by a hotkey or single mouse click).
-   //
+      if (other->GetNumClips() == 0)
+         return true;
 
-   if (other->GetNumClips() == 0)
-      return;
+      //wxPrintf("paste: we have at least one clip\n");
 
-   //wxPrintf("paste: we have at least one clip\n");
+      bool singleClipMode = (other->GetNumClips() == 1 &&
+            other->GetStartTime() == 0.0);
 
-   bool singleClipMode = (other->GetNumClips() == 1 &&
-         other->GetStartTime() == 0.0);
+      const double insertDuration = other->GetEndTime();
+      if( insertDuration != 0 && insertDuration < 1.0/mRate )
+         // PRL:  I added this check to avoid violations of preconditions in other WaveClip and Sequence
+         // methods, but allow the value 0 so I don't subvert the purpose of commit
+         // 739422ba70ceb4be0bb1829b6feb0c5401de641e which causes append-recording always to make
+         // a new clip.
+         return true;
 
-   const double insertDuration = other->GetEndTime();
-   if( insertDuration != 0 && insertDuration < 1.0/mRate )
-      // PRL:  I added this check to avoid violations of preconditions in other WaveClip and Sequence
-      // methods, but allow the value 0 so I don't subvert the purpose of commit
-      // 739422ba70ceb4be0bb1829b6feb0c5401de641e which causes append-recording always to make
-      // a new clip.
-      return;
+      //wxPrintf("Check if we need to make room for the pasted data\n");
 
-   //wxPrintf("Check if we need to make room for the pasted data\n");
-
-   // Make room for the pasted data
-   if (editClipCanMove) {
-      if (!singleClipMode) {
-         // We need to insert multiple clips, so split the current clip and
-         // move everything to the right, then try to paste again
-         if (!IsEmpty(t0, GetEndTime())) {
-            auto tmp = Cut(t0, GetEndTime()+1.0/mRate);
-            Paste(t0 + insertDuration, tmp.get());
-         }
-      }
-      else {
-         // We only need to insert one single clip, so just move all clips
-         // to the right of the paste point out of the way
-         for (const auto &clip : mClips)
-         {
-            if (clip->GetStartTime() > t0-(1.0/mRate))
-               clip->Offset(insertDuration);
-         }
-      }
-   }
-
-   if (singleClipMode)
-   {
-      // Single clip mode
-      // wxPrintf("paste: checking for single clip mode!\n");
-
-      WaveClip *insideClip = NULL;
-
-      for (const auto &clip : mClips)
-      {
-         if (editClipCanMove)
-         {
-            if (clip->WithinClip(t0))
-            {
-               //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
-               //       t0, clip->GetStartTime(), clip->GetEndTime());
-               insideClip = clip.get();
-               break;
+      // Make room for the pasted data
+      if (editClipCanMove) {
+         if (!singleClipMode) {
+            // We need to insert multiple clips, so split the current clip and
+            // move everything to the right, then try to paste again
+            if (!IsEmpty(t0, GetEndTime())) {
+               auto tmp = Cut(t0, GetEndTime()+1.0/mRate);
+               Paste(t0 + insertDuration, tmp.get());
             }
          }
-         else
-         {
-            // If clips are immovable we also allow prepending to clips
-            if (clip->WithinClip(t0) ||
-                  TimeToLongSamples(t0) == clip->GetStartSample())
-            {
-               insideClip = clip.get();
-               break;
-            }
-         }
-      }
-
-      if (insideClip)
-      {
-         // Exhibit traditional behaviour
-         //wxPrintf("paste: traditional behaviour\n");
-         if (!editClipCanMove)
-         {
-            // We did not move other clips out of the way already, so
-            // check if we can paste without having to move other clips
+         else {
+            // We only need to insert one single clip, so just move all clips
+            // to the right of the paste point out of the way
             for (const auto &clip : mClips)
             {
-               if (clip->GetStartTime() > insideClip->GetStartTime() &&
-                   insideClip->GetEndTime() + insertDuration >
-                                                      clip->GetStartTime())
-                  // STRONG-GUARANTEE in case of this path
-                  // not that it matters.
-                  throw SimpleMessageBoxException{
-                     _("There is not enough room available to paste the selection")
-                  };
+               if (clip->GetStartTime() > t0-(1.0/mRate))
+                  clip->Offset(insertDuration);
+            }
+         }
+      }
+
+      if (singleClipMode)
+      {
+         // Single clip mode
+         // wxPrintf("paste: checking for single clip mode!\n");
+
+         WaveClip *insideClip = NULL;
+
+         for (const auto &clip : mClips)
+         {
+            if (editClipCanMove)
+            {
+               if (clip->WithinClip(t0))
+               {
+                  //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
+                  //       t0, clip->GetStartTime(), clip->GetEndTime());
+                  insideClip = clip.get();
+                  break;
+               }
+            }
+            else
+            {
+               // If clips are immovable we also allow prepending to clips
+               if (clip->WithinClip(t0) ||
+                     TimeToLongSamples(t0) == clip->GetStartSample())
+               {
+                  insideClip = clip.get();
+                  break;
+               }
             }
          }
 
-         insideClip->Paste(t0, other->GetClipByIndex(0));
-         return;
+         if (insideClip)
+         {
+            // Exhibit traditional behaviour
+            //wxPrintf("paste: traditional behaviour\n");
+            if (!editClipCanMove)
+            {
+               // We did not move other clips out of the way already, so
+               // check if we can paste without having to move other clips
+               for (const auto &clip : mClips)
+               {
+                  if (clip->GetStartTime() > insideClip->GetStartTime() &&
+                      insideClip->GetEndTime() + insertDuration >
+                                                         clip->GetStartTime())
+                     // STRONG-GUARANTEE in case of this path
+                     // not that it matters.
+                     throw SimpleMessageBoxException{
+                        _("There is not enough room available to paste the selection")
+                     };
+               }
+            }
+
+            insideClip->Paste(t0, other->GetClipByIndex(0));
+            return true;
+         }
+
+         // Just fall through and exhibit NEW behaviour
+
       }
 
-      // Just fall through and exhibit NEW behaviour
-   }
+      // Insert NEW clips
+      //wxPrintf("paste: multi clip mode!\n");
 
-   // Insert NEW clips
-   //wxPrintf("paste: multi clip mode!\n");
+      if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
+         // STRONG-GUARANTEE in case of this path
+         // not that it matters.
+         throw SimpleMessageBoxException{
+            _("There is not enough room available to paste the selection")
+         };
 
-   if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
-      // STRONG-GUARANTEE in case of this path
-      // not that it matters.
-      throw SimpleMessageBoxException{
-         _("There is not enough room available to paste the selection")
-      };
-
-   for (const auto &clip : other->mClips)
-   {
-      // AWD Oct. 2009: Don't actually paste in placeholder clips
-      if (!clip->GetIsPlaceholder())
+      for (const auto &clip : other->mClips)
       {
-         auto newClip =
-            std::make_unique<WaveClip>( *clip, mDirManager, true );
-         newClip->Resample(mRate);
-         newClip->Offset(t0);
-         newClip->MarkChanged();
-         mClips.push_back(std::move(newClip)); // transfer ownership
+         // AWD Oct. 2009: Don't actually paste in placeholder clips
+         if (!clip->GetIsPlaceholder())
+         {
+            auto newClip =
+               std::make_unique<WaveClip>( *clip, mDirManager, true );
+            newClip->Resample(mRate);
+            newClip->Offset(t0);
+            newClip->MarkChanged();
+            mClips.push_back(std::move(newClip)); // transfer ownership
+         }
       }
-   }
+      return true;
+   } );
+
+   if( !bOk )
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      ;
 }
 
 void WaveTrack::Silence(double t0, double t1)

@@ -140,37 +140,12 @@ ExportMultiple::~ExportMultiple()
 
 void ExportMultiple::CountTracksAndLabels()
 {
-   mLabels = NULL;
-   mNumLabels = 0;
-   mNumWaveTracks = 0;
+   mNumWaveTracks =
+      (mTracks->Leaders< const WaveTrack >() - &WaveTrack::GetMute).size();
 
-   const Track* pTrack;
-   TrackListConstIterator iter;
-   for (pTrack = iter.First(mTracks); pTrack != NULL; pTrack = iter.Next())
-   {
-      switch (pTrack->GetKind())
-      {
-         // Count WaveTracks, and for linked pairs, count only the second of the pair.
-         case Track::Wave:
-         {
-            auto wt = static_cast<const WaveTrack *>(pTrack);
-            if (!wt->GetMute() && !pTrack->GetLinked()) // Don't count muted tracks.
-               mNumWaveTracks++;
-            break;
-         }
-
-         // Only support one label track???
-         case Track::Label:
-         {
-            // Supports only one LabelTrack.
-            if (mLabels == NULL) {
-               mLabels = (LabelTrack*)pTrack;
-               mNumLabels = mLabels->GetNumLabels();
-            }
-            break;
-         }
-      }
-   }
+   // only the first label track
+   mLabels = *mTracks->Any< const LabelTrack >().begin();
+   mNumLabels = mLabels ? mLabels->GetNumLabels() : 0;
 }
 
 int ExportMultiple::ShowModal()
@@ -777,7 +752,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
 {
    wxASSERT(mProject);
    bool tagsPrompt = mProject->GetShowId3Dialog();
-   Track *tr, *tr2;
+   Track *tr;
    int l = 0;     // track counter
    auto ok = ProgressResult::Success;
    wxArrayString otherNames;
@@ -793,52 +768,22 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
 
    /* Remember which tracks were selected, and set them to unselected */
    SelectionStateChanger changer{ mSelectionState, *mTracks };
-   TrackListIterator iter;
-   for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
-      if (tr->GetKind() != Track::Wave) {
-         continue;
-      }
-
-      if (tr->GetSelected())
-         tr->SetSelected(false);
-   }
+   for (auto tr : mTracks->Selected<WaveTrack>())
+      tr->SetSelected(false);
 
    /* Examine all tracks in turn, collecting export information */
-   for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
-
-      // Want only non-muted wave tracks.
-      auto wt = static_cast<const WaveTrack *>(tr);
-      if ((tr->GetKind() != Track::Wave) ||
-          wt->GetMute())
-         continue;
+   for (auto tr : mTracks->Leaders<WaveTrack>() - &WaveTrack::GetMute) {
 
       // Get the times for the track
-      setting.t0 = tr->GetStartTime();
-      setting.t1 = tr->GetEndTime();
-
-      // Check for a linked track
-      tr2 = NULL;
-      if (tr->GetLinked()) {
-         tr2 = iter.Next();
-         if (tr2) {
-
-            // Make sure it gets included
-            if (tr2->GetStartTime() < setting.t0) {
-               setting.t0 = tr2->GetStartTime();
-            }
-
-            if (tr2->GetEndTime() > setting.t1) {
-               setting.t1 = tr2->GetEndTime();
-            }
-         }
-      }
+      auto channels = TrackList::Channels(tr);
+      setting.t0 = channels.min( &Track::GetStartTime );
+      setting.t1 = channels.max( &Track::GetEndTime );
 
       // number of export channels?
-      // Needs to be per track.
-      if (tr2 == NULL && tr->GetChannel() == WaveTrack::MonoChannel &&
-                 ((WaveTrack *)tr)->GetPan() == 0.0)
-         setting.channels = 1;
-      else
+      setting.channels = channels.size();
+      if (setting.channels == 1 &&
+          !(tr->GetChannel() == WaveTrack::MonoChannel &&
+                  tr->GetPan() == 0.0))
          setting.channels = 2;
 
       // Get name and title
@@ -894,21 +839,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    int count = 0; // count the number of sucessful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
    std::unique_ptr<ProgressDialog> pDialog;
-   for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
-
-      // Want only non-muted wave tracks.
-      auto wt = static_cast<const WaveTrack *>(tr);
-      if ((tr->GetKind() != Track::Wave) || (wt->GetMute())) {
-         continue;
-      }
-
-      // Bug 1510 possibly increment iter, before deciding whether to export.
-      // Check for a linked track
-      tr2 = NULL;
-      if (tr->GetLinked()) {
-         tr2 = iter.Next();
-      }
-
+   for (auto tr : mTracks->Leaders<WaveTrack>() - &WaveTrack::GetMute) {
       wxLogDebug( "Get setting %i", count );
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
@@ -919,10 +850,9 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
 
       /* Select the track */
       SelectionStateChanger changer2{ mSelectionState, *mTracks };
-      tr->SetSelected(true);
-      if (tr2)
-         // Select it also
-         tr2->SetSelected(true);
+      const auto range = TrackList::Channels(tr);
+      for (auto channel : range)
+         channel->SetSelected(true);
 
       // Export the data. "channels" are per track.
       ok = DoExport(pDialog,

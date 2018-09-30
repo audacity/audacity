@@ -92,28 +92,26 @@ bool SetTrackBase::Apply(const CommandContext & context  )
 {
    long i = 0;// track counter
    long j = 0;// channel counter
-   TrackListIterator iter(context.GetProject()->GetTracks());
-   Track *t = iter.First();
-   bIsSecondChannel = false;
-   while (t )
+   auto tracks = context.GetProject()->GetTracks();
+   for ( auto t : tracks->Leaders() )
    {
-      bool bThisTrack =
+      auto channels = TrackList::Channels(t);
+      for ( auto channel : channels ) {
+         bool bThisTrack =
 #ifdef USE_OWN_TRACK_SELECTION
          (bHasTrackIndex && (i==mTrackIndex)) ||
          (bHasChannelIndex && (j==mChannelIndex ) ) ||
          (!bHasTrackIndex && !bHasChannelIndex) ;
 #else
-         t->GetSelected();
+         channel->GetSelected();
 #endif
 
-      if( bThisTrack ){
-         ApplyInner( context, t );
+         if( bThisTrack ){
+            ApplyInner( context, t );
+         }
+         ++j; // count all channels
       }
-      bIsSecondChannel = t->GetLinked();
-      if( !bIsSecondChannel )
-         ++i;
-      j++;
-      t = iter.Next();
+      ++i; // count groups of channels
    }
    return true;
 }

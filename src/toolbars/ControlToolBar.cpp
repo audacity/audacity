@@ -451,7 +451,6 @@ void ControlToolBar::Repaint( wxDC *dc )
 void ControlToolBar::EnableDisableButtons()
 {
    AudacityProject *p = GetActiveProject();
-   bool tracks = false;
 
    bool paused = mPause->IsDown();
    bool playing = mPlay->IsDown();
@@ -459,15 +458,7 @@ void ControlToolBar::EnableDisableButtons()
    bool busy = gAudioIO->IsBusy();
 
    // Only interested in audio type tracks
-   if (p) {
-      TrackListIterator iter( p->GetTracks() );
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (dynamic_cast<const AudioTrack*>(t)) {
-            tracks = true;
-            break;
-         }
-      }
-   }
+   bool tracks = p && p->GetTracks()->Any<AudioTrack>(); // PRL:  PlayableTrack ?
 
    if (p) {
       TranscriptionToolBar *const playAtSpeedTB = p->GetTranscriptionToolBar();
@@ -599,18 +590,11 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    p->mLastPlayMode = mode;
 
-   bool hasaudio = false;
-   TrackListIterator iter(t);
-   for (Track *trk = iter.First(); trk; trk = iter.Next()) {
-      if (trk->GetKind() == Track::Wave
-#ifdef EXPERIMENTAL_MIDI_OUT
-         || (trk->GetKind() == Track::Note && useMidi)
-#endif
-         ) {
-         hasaudio = true;
-         break;
-      }
-   }
+   bool hasaudio;
+   if (useMidi)
+      hasaudio = ! p->GetTracks()->Any<PlayableTrack>().empty();
+   else
+      hasaudio = ! p->GetTracks()->Any<WaveTrack>().empty();
 
    double latestEnd = (playWhiteSpace)? t1 : t->GetEndTime();
 
@@ -925,28 +909,13 @@ WaveTrackArray ControlToolBar::ChooseExistingRecordingTracks(
       return {};
 
    auto trackList = p->GetTracks();
-   TrackListIterator it(trackList);
    std::vector<unsigned> channelCounts;
    WaveTrackArray candidates;
-   for (Track *tt = it.First(); tt; tt = it.Next()) {
-      // Eliminate certain tracks from consideration
-      if (tt->GetKind() != Track::Wave)
-         continue;
-      WaveTrack *candidate = static_cast<WaveTrack *>(tt);
-      if (candidate->GetLink() && !candidate->GetLinked())
-         // Don't re-consider right channel apart from the left
-         continue;
-      if (selectedOnly && !candidate->GetSelected())
-         continue;
-
+   const auto range = trackList->Leaders<WaveTrack>();
+   for ( auto candidate : selectedOnly ? range + &Track::IsSelected : range ) {
       // count channels in this track
-      unsigned nChannels = 0;
-      // This is written with odd seeming generality, looking forward to
-      // the rewrite that removes assumption of at-most-stereo
-      for (auto channel = candidate; channel;
-           channel = channel->GetLinked()
-           ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr)
-         ++nChannels;
+      const auto channels = TrackList::Channels( candidate );
+      unsigned nChannels = channels.size();
 
       if (strictRules && nChannels > recordingChannels) {
          // The recording would under-fill this track's channels
@@ -967,9 +936,7 @@ WaveTrackArray ControlToolBar::ChooseExistingRecordingTracks(
                              candidates.begin() + nOldChannels);
          }
          channelCounts.push_back(nChannels);
-         for (auto channel = candidate; channel;
-              channel = channel->GetLinked()
-              ? static_cast<WaveTrack*>(channel->GetLink()) : nullptr) {
+         for ( auto channel : channels ) {
             candidates.push_back(Track::Pointer<WaveTrack>(channel));
             if(candidates.size() == recordingChannels)
                // Done!
@@ -1017,41 +984,20 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       if (t1 == t0)
          t1 = DBL_MAX;
 
-      double allt0 = t0;
-
       WaveTrackArray existingTracks;
 
-      double selt0 = t0;
       if (appendRecord) {
-         TrackList *trackList = p->GetTracks();
-         TrackListIterator it(trackList);
-
-         // Find the maximum end time of selected and all wave tracks
-         for (Track *tt = it.First(); tt; tt = it.Next()) {
-            if (tt->GetKind() == Track::Wave) {
-               WaveTrack *wt = static_cast<WaveTrack *>(tt);
-               if (wt->GetEndTime() > allt0)
-                  allt0 = wt->GetEndTime();
-
-               if (wt->GetSelected()) {
-                  if (wt->GetEndTime() > selt0)
-                     selt0 = wt->GetEndTime();
-               }
-            }
-         }
+         const auto trackRange = p->GetTracks()->Any< const WaveTrack >();
 
          // Try to find wave tracks to record into.  (If any are selected,
          // try to choose only from them; else if wave tracks exist, may record into any.)
          existingTracks = ChooseExistingRecordingTracks(*p, true);
-         if (!existingTracks.empty()) {
-            // selt0 is now: max(selection-start, end-of-selected-wavetracks)
-            t0 = selt0;
-         }
+         if ( !existingTracks.empty() )
+            t0 = std::max( t0,
+               ( trackRange + &Track::IsSelected ).max( &Track::GetEndTime ) );
          else {
-            // allt0 is:  max(selection-start, end-of-all-tracks)
-            // Use end time of all wave tracks if recording to non-selected
-            t0 = allt0;
             existingTracks = ChooseExistingRecordingTracks(*p, false);
+            t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
             // If suitable tracks still not found, will record into NEW ones,
             // but the choice of t0 does not depend on that.
          }
@@ -1203,16 +1149,9 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
 
-         // Count the tracks.  
-         int numTracks = 0;
-
-         TrackList *trackList = p->GetTracks();
-         TrackListIterator it(trackList);
-         for (Track *tt = it.First(); tt; tt = it.Next()) {
-            if (tt->GetKind() == Track::Wave && !tt->GetLinked())
-               numTracks++;
-         }
-         numTracks++;
+         // Count the tracks.
+         const auto trackList = p->GetTracks();
+         auto numTracks = trackList->Leaders<const WaveTrack>().size();
 
          auto recordingChannels = std::max(1L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
 
@@ -1225,10 +1164,13 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
+         Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
             std::shared_ptr<WaveTrack> newTrack{
                p->GetTrackFactory()->NewWaveTrack().release()
             };
+            if (!first)
+               first = newTrack.get();
 
             // Quantize bounds to the rate of the new track.
             if (c == 0) {
@@ -1242,7 +1184,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
             wxString nameSuffix = wxString(wxT(""));
 
             if (useTrackNumber) {
-               nameSuffix += wxString::Format(wxT("%d"), numTracks + c);
+               nameSuffix += wxString::Format(wxT("%d"), 1 + numTracks + c);
             }
 
             if (useDateStamp) {
@@ -1276,26 +1218,14 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
                newTrack->SetMinimized(true);
             }
 
-            if (recordingChannels == 2) {
-               if (c == 0) {
-                  newTrack->SetChannel(Track::LeftChannel);
-                  newTrack->SetLinked(true);
-               }
-               else {
-                  newTrack->SetChannel(Track::RightChannel);
-               }
-            }
-            else {
-               newTrack->SetChannel( Track::MonoChannel );
-            }
-
             p->GetTracks()->RegisterPendingNewTrack( newTrack );
             transportTracks.captureTracks.push_back(newTrack);
             // Bug 1548.  New track needs the focus.
             p->GetTrackPanel()->SetFocusedTrack( newTrack.get() );
          }
+         p->GetTracks()->GroupChannels(*first, recordingChannels);
       }
-
+      
       //Automated Input Level Adjustment Initialization
       #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
          gAudioIO->AILAInitialize();
@@ -1400,40 +1330,20 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
    ClearCutPreviewTracks();
    AudacityProject *p = GetActiveProject();
    if (p) {
-      auto cutPreviewTracks = TrackList::Create();
-      // Find first selected track (stereo or mono) and duplicate it
-      const Track *track1 = NULL, *track2 = NULL;
-      TrackListIterator it(p->GetTracks());
-      for (Track *t = it.First(); t; t = it.Next())
-      {
-         if (t->GetSelected() &&
-            (t->GetKind() == Track::Wave
-#ifdef EXPERIMENTAL_MIDI_OUT
-         || t->GetKind() == Track::Note
-#endif
-            ))
-         {
-            track1 = t;
-            track2 = t->GetLink();
+      auto trackRange = p->GetTracks()->Selected<const PlayableTrack>();
+      if( !trackRange.empty() ) {
+         auto cutPreviewTracks = TrackList::Create();
+         for (const auto track1 : trackRange) {
             // Duplicate and change tracks
             // Clear has a very small chance of throwing
-            auto new1 = track1->Duplicate();
-            new1->Clear(cutStart, cutEnd);
-            decltype(new1) new2{};
-            if (track2)
-            {
-               new2 = track2->Duplicate();
-               new2->Clear(cutStart, cutEnd);
-            }
 
-            // use NOTHROW-GUARANTEE:
-            cutPreviewTracks->Add(std::move(new1));
-            if (track2)
-               cutPreviewTracks->Add(std::move(new2));
+            auto newTrack = track1->Duplicate();
+            newTrack->Clear(cutStart, cutEnd);
+            cutPreviewTracks->Add(std::move(newTrack));
          }
-      }
-      if( track1 )
+         // use NOTHROW-GUARANTEE:
          mCutPreviewTracks = cutPreviewTracks;
+      }
    }
 }
 

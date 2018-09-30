@@ -157,6 +157,8 @@ public:
    // The given Tags structure may also be modified.
    // In case of errors or exceptions, it is not necessary to leave outTracks
    // or tags unmodified.
+   // If resulting outTracks is not empty,
+   // then each member of it must be a nonempty vector.
    virtual ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
                       Tags *tags) = 0;
 

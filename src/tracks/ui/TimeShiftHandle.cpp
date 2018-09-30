@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackControls.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
+#include "../../NoteTrack.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -101,38 +102,40 @@ namespace
    void AddClipsToCaptured
       ( ClipMoveState &state, Track *t, double t0, double t1 )
    {
-      auto &clips = state.capturedClipArray;
-
       bool exclude = true;
-      if (t->GetKind() == Track::Wave)
-      {
-         exclude = false;
-         for(const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
-            if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) &&
-               // Avoid getting clips that were already captured
-                 ! std::any_of( clips.begin(), clips.end(),
-                    [&](const TrackClip &c) { return c.clip == clip.get(); } ) )
-               clips.emplace_back( t, clip.get() );
-      }
-      else
-      {
-         // This handles label tracks rather heavy-handedly -- it would be nice to
-         // treat individual labels like clips
-
-         // Avoid adding a track twice
-         if( ! std::any_of( clips.begin(), clips.end(),
-            [&](const TrackClip &c) { return c.track == t; } ) ) {
-   #ifdef USE_MIDI
+      auto &clips = state.capturedClipArray;
+      t->TypeSwitch(
+         [&](WaveTrack *wt) {
+            exclude = false;
+            for(const auto &clip: wt->GetClips())
+               if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) &&
+                  // Avoid getting clips that were already captured
+                    ! std::any_of( clips.begin(), clips.end(),
+                       [&](const TrackClip &c) { return c.clip == clip.get(); } ) )
+                  clips.emplace_back( t, clip.get() );
+         },
+#ifdef USE_MIDI
+         [&](NoteTrack *, const Track::Fallthrough &fallthrough){
             // do not add NoteTrack if the data is outside of time bounds
-            if (t->GetKind() == Track::Note) {
-               if (t->GetEndTime() < t0 || t->GetStartTime() > t1)
-                  return;
+            if (t->GetEndTime() < t0 || t->GetStartTime() > t1)
+               return;
+            else
+               fallthrough();
+         },
+#endif
+         [&](Track *t) {
+            // This handles label tracks rather heavy-handedly --
+            // it would be nice to
+            // treat individual labels like clips
+
+            // Avoid adding a track twice
+            if( !std::any_of( clips.begin(), clips.end(),
+               [&](const TrackClip &c) { return c.track == t; } ) ) {
+               clips.emplace_back( t, nullptr );
             }
-   #endif
-            clips.emplace_back( t, nullptr );
          }
-      }
-      if ( exclude )
+      );
+      if (exclude)
          state.trackExclusions.push_back(t);
    }
 
@@ -149,30 +152,42 @@ namespace
          AddClipsToCaptured( state, t, t->GetStartTime(), t->GetEndTime() );
    }
 
+   WaveTrack *NthChannel(WaveTrack &leader, int nn)
+   {
+      if (nn < 0)
+         return nullptr;
+      return *TrackList::Channels( &leader ).begin().advance(nn);
+   }
+
+   int ChannelPosition(const Track *pChannel)
+   {
+      return static_cast<int>(
+         TrackList::Channels( pChannel )
+            .EndingAfter( pChannel ).size()
+      ) - 1;
+   }
+
    // Don't count right channels.
    WaveTrack *NthAudioTrack(TrackList &list, int nn)
    {
       if (nn >= 0) {
-         TrackListOfKindIterator iter(Track::Wave, &list);
-         Track *pTrack = iter.First();
-         while (pTrack && nn--)
-            pTrack = iter.Next(true);
-         return static_cast<WaveTrack*>(pTrack);
+         for ( auto pTrack : list.Leaders< WaveTrack >() )
+            if (nn -- == 0)
+               return pTrack;
       }
 
       return NULL;
    }
 
    // Don't count right channels.
-   int TrackPosition(TrackList &list, Track *pFindTrack)
+   int TrackPosition(TrackList &list, const Track *pFindTrack)
    {
-      Track *const partner = pFindTrack->GetLink();
-      TrackListOfKindIterator iter(Track::Wave, &list);
+      pFindTrack = *list.FindLeader(pFindTrack);
       int nn = 0;
-      for (Track *pTrack = iter.First(); pTrack; pTrack = iter.Next(true), ++nn) {
-         if (pTrack == pFindTrack ||
-             pTrack == partner)
+      for ( auto pTrack : list.Leaders< const WaveTrack >() ) {
+         if (pTrack == pFindTrack)
             return nn;
+         ++nn;
       }
       return -1;
    }
@@ -206,15 +221,10 @@ namespace
                clip.track->Offset( offset );
          }
       }
-      else if ( pTrack ) {
+      else if ( pTrack )
          // Was a shift-click
-         for (auto channel =
-                 pTrack->GetLink() && !pTrack->GetLinked()
-                    ? pTrack->GetLink() : pTrack;
-              channel;
-              channel = channel->GetLinked() ? channel->GetLink() : nullptr)
+         for (auto channel : TrackList::Channels( pTrack ))
             channel->Offset( offset );
-      }
    }
 }
 
@@ -229,27 +239,19 @@ void TimeShiftHandle::CreateListOfCapturedClips
 
    // First, if click was in selection, capture selected clips; otherwise
    // just the clicked-on clip
-   if ( state.capturedClipIsSelection ) {
-      TrackListIterator iter( &trackList );
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetSelected())
-            AddClipsToCaptured( state, viewInfo, t, true );
-      }
-   }
+   if ( state.capturedClipIsSelection )
+      for (auto t : trackList.Selected())
+         AddClipsToCaptured( state, viewInfo, t, true );
    else {
       state.capturedClipArray.push_back
          (TrackClip( &capturedTrack, state.capturedClip ));
 
-      // Check for stereo partner
-      Track *partner = capturedTrack.GetLink();
-      WaveTrack *wt;
-      if (state.capturedClip &&
-            // Assume linked track is wave or null
-            nullptr != (wt = static_cast<WaveTrack*>(partner))) {
-         WaveClip *const clip = FindClipAtTime(wt, clickTime);
-
-         if (clip)
-            state.capturedClipArray.push_back(TrackClip(partner, clip));
+      if (state.capturedClip) {
+         // Check for other channels
+         auto wt = static_cast<WaveTrack*>(&capturedTrack);
+         for ( auto channel : TrackList::Channels( wt ).Excluding( wt ) )
+            if (WaveClip *const clip = FindClipAtTime(channel, clickTime))
+               state.capturedClipArray.push_back(TrackClip(channel, clip));
       }
    }
 
@@ -267,23 +269,19 @@ void TimeShiftHandle::CreateListOfCapturedClips
          // we can treat individual labels as clips)
          if ( trackClip.clip ) {
             // Iterate over sync-lock group tracks.
-            SyncLockedTracksIterator git( &trackList );
-            for (Track *t = git.StartWith( trackClip.track  );
-                  t; t = git.Next() )
+            for (auto t : TrackList::SyncLockGroup( trackClip.track ))
                AddClipsToCaptured(state, t,
                      trackClip.clip->GetStartTime(),
                      trackClip.clip->GetEndTime() );
          }
 #ifdef USE_MIDI
          // Capture additional clips from NoteTracks
-         Track *nt = trackClip.track;
-         if (nt->GetKind() == Track::Note) {
+         trackClip.track->TypeSwitch( [&](NoteTrack *nt) {
             // Iterate over sync-lock group tracks.
-            SyncLockedTracksIterator git( &trackList );
-            for (Track *t = git.StartWith(nt); t; t = git.Next())
+            for (auto t : TrackList::SyncLockGroup(nt))
                AddClipsToCaptured
                   ( state, t, nt->GetStartTime(), nt->GetEndTime() );
-         }
+         });
 #endif
       }
    }
@@ -379,24 +377,21 @@ UIHandle::Result TimeShiftHandle::Click
    bool ok = true;
    bool captureClips = false;
 
-   if (!event.ShiftDown()) {
-      WaveTrack *wt = pTrack->GetKind() == Track::Wave
-         ? static_cast<WaveTrack*>(pTrack.get()) : nullptr;
-      if (wt)
-      {
-         if (nullptr ==
-            (mClipMoveState.capturedClip = wt->GetClipAtX(event.m_x)))
-            ok = false;
-         else
-            captureClips = true;
-      }
+   if (!event.ShiftDown())
+      pTrack->TypeSwitch(
+         [&](WaveTrack *wt) {
+            if (nullptr ==
+               (mClipMoveState.capturedClip = wt->GetClipAtX(event.m_x)))
+               ok = false;
+            else
+               captureClips = true;
+         },
 #ifdef USE_MIDI
-      else if (pTrack->GetKind() == Track::Note)
-      {
-         captureClips = true;
-      }
+         [&](NoteTrack *) {
+            captureClips = true;
+         }
 #endif
-   }
+      );
 
    if ( ! ok )
       return Cancelled;
@@ -439,12 +434,11 @@ namespace {
             viewInfo.PositionToTime(state.mMouseClickX);
          double clipLeft = 0, clipRight = 0;
 
-         if (track.GetKind() == Track::Wave) {
-            WaveTrack *const mtw = static_cast<WaveTrack*>(&track);
+         track.TypeSwitch( [&](WaveTrack *mtw){
             const double rate = mtw->GetRate();
             // set it to a sample point
             desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
-         }
+         });
 
          // Adjust desiredSlideAmount using SnapManager
          if (pSnapManager) {
@@ -505,22 +499,28 @@ namespace {
       for ( auto &trackClip : state.capturedClipArray ) {
          if (trackClip.clip) {
             // Move all clips up or down by an equal count of audio tracks.
+            // Can only move between tracks with equal numbers of channels,
+            // and among corresponding channels.
+
             Track *const pSrcTrack = trackClip.track;
             auto pDstTrack = NthAudioTrack(trackList,
                diff + TrackPosition(trackList, pSrcTrack));
-            // Can only move mono to mono, or left to left, or right to right
-            // And that must be so for each captured clip
-            bool stereo = (pSrcTrack->GetLink() != 0);
-            if (pDstTrack && stereo && !pSrcTrack->GetLinked())
-               // Assume linked track is wave or null
-               pDstTrack = static_cast<WaveTrack*>(pDstTrack->GetLink());
-            bool ok = pDstTrack &&
-            (stereo == (pDstTrack->GetLink() != 0)) &&
-            (!stereo || (pSrcTrack->GetLinked() == pDstTrack->GetLinked()));
-            if (ok)
-               trackClip.dstTrack = pDstTrack;
-            else
+            if (!pDstTrack)
                return false;
+
+            if (TrackList::Channels(pSrcTrack).size() !=
+                TrackList::Channels(pDstTrack).size())
+               return false;
+
+            auto pDstChannel = NthChannel(
+               *pDstTrack, ChannelPosition(pSrcTrack));
+
+            if (!pDstChannel) {
+               wxASSERT(false);
+               return false;
+            }
+
+           trackClip.dstTrack = pDstChannel;
          }
       }
       return true;
@@ -718,22 +718,27 @@ UIHandle::Result TimeShiftHandle::Drag
 
    // If the mouse is over a track that isn't the captured track,
    // decide which tracks the captured clips should go to.
-   if (mClipMoveState.capturedClip &&
-       pTrack != mCapturedTrack &&
-       pTrack->GetKind() == Track::Wave
-       /* && !mCapturedClipIsSelection*/)
-   {
-      if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
-               *trackList, *mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
-         mCapturedTrack = pTrack;
-         mDidSlideVertically = true;
-      }
-      else
-         return RefreshAll;
+   bool fail = (
+      mClipMoveState.capturedClip &&
+       pTrack != mCapturedTrack
+       /* && !mCapturedClipIsSelection*/
+      && pTrack->TypeSwitch<bool>( [&] (WaveTrack *) {
+            if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
+                     *trackList, *mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
+               mCapturedTrack = pTrack;
+               mDidSlideVertically = true;
+            }
+            else
+               return true;
 
-      // Not done yet, check for horizontal movement.
-      slidVertically = true;
-   }
+            // Not done yet, check for horizontal movement.
+            slidVertically = true;
+            return false;
+        })
+   );
+   
+   if (fail)
+      return RefreshAll;
 
    if (desiredSlideAmount == 0.0)
       return RefreshAll;

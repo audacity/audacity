@@ -336,7 +336,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                (sizeof(AudioBuffer) * numchan))) };
       abl->mNumberBuffers = numchan;
    
-      TrackHolders channels{ numchan };
+      NewChannelGroup channels{ numchan };
 
       const auto size = sizeof(float) * bufsize;
       ArraysOf<unsigned char> holders{ numchan, size };
@@ -352,16 +352,6 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          channel = trackFactory->NewWaveTrack( format );
          channel->SetRate( desc.mSampleRate );
-   
-         if (numchan == 2) {
-            if (c == 0) {
-               channel->SetChannel(Track::LeftChannel);
-               channel->SetLinked(true);
-            }
-            else if (c == 1) {
-               channel->SetChannel(Track::RightChannel);
-            }
-         }
       }
    
       do {
@@ -395,11 +385,10 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
       res = (updateResult == ProgressResult::Success && err == noErr);
    
       if (res) {
-         for (const auto &channel: channels) {
+         for (auto &channel: channels)
             channel->Flush();
-         }
-   
-         outTracks.swap(channels);
+         if (!channels.empty())
+            outTracks.push_back(std::move(channels));
       }
 
       //

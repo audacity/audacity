@@ -217,7 +217,6 @@ void OnZeroCrossing(const CommandContext &context );
 void OnLockPlayRegion(const CommandContext &context );
 void OnUnlockPlayRegion(const CommandContext &context );
 
-static double GetTime(const Track *t);
 void OnSortTime(const CommandContext &context );
 void OnSortName(const CommandContext &context );
 
@@ -271,10 +270,7 @@ void OnExit(const CommandContext &context );
 void OnUndo(const CommandContext &context );
 void OnRedo(const CommandContext &context );
 
-static void FinishCopy(const Track *n, Track *dest);
-static void FinishCopy
-   (const Track *n, Track::Holder &&dest, TrackList &list);
-
+static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
 
 void OnCut(const CommandContext &context );
 void OnSplitCut(const CommandContext &context );
@@ -358,7 +354,7 @@ FoundClip FindPrevClip
 int FindClips
 (AudacityProject &project,
  double t0, double t1, bool next, std::vector<FoundClip>& results);
-bool ChannelsHaveSameClipBoundaries(const WaveTrack* wt);
+bool ChannelsHaveDifferentClipBoundaries(const WaveTrack* wt);
 void OnSelectPrevClip(const CommandContext &context );
 void OnSelectNextClip(const CommandContext &context );
 void OnSelectClip(AudacityProject &project, bool next);

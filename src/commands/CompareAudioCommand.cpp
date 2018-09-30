@@ -76,20 +76,20 @@ bool CompareAudioCommand::GetSelection(const CommandContext &context, AudacityPr
 
    // Get the selected tracks and check that there are at least two to
    // compare
-   SelectedTrackListOfKindIterator iter(Track::Wave, proj.GetTracks());
-   mTrack0 = (WaveTrack*)(iter.First());
+   auto trackRange = proj.GetTracks()->Selected< const WaveTrack >();
+   mTrack0 = *trackRange.first;
    if (mTrack0 == NULL)
    {
       context.Error(wxT("No tracks selected! Select two tracks to compare."));
       return false;
    }
-   mTrack1 = (WaveTrack*)(iter.Next());
+   mTrack1 = * ++ trackRange.first;
    if (mTrack1 == NULL)
    {
       context.Error(wxT("Only one track selected! Select two tracks to compare."));
       return false;
    }
-   if (iter.Next() != NULL)
+   if ( * ++ trackRange.first )
    {
       context.Status(wxT("More than two tracks selected - only the first two will be compared."));
    }

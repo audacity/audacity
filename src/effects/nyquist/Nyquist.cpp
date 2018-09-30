@@ -48,6 +48,8 @@ effects from this one class.
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
+#include "../../NoteTrack.h"
+#include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../Project.h"
 #include "../../ShuttleGui.h"
@@ -544,8 +546,8 @@ bool NyquistEffect::Init()
       AudacityProject *project = GetActiveProject();
       bool bAllowSpectralEditing = true;
 
-      SelectedTrackListOfKindIterator sel(Track::Wave, project->GetTracks());
-      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
+      for ( auto t :
+               project->GetTracks()->Selected< const WaveTrack >() ) {
          if (t->GetDisplay() != WaveTrack::Spectrum ||
              !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
             bAllowSpectralEditing = false;
@@ -622,7 +624,6 @@ bool NyquistEffect::Process()
       mProgress->Hide();
    }
 
-
    mOutputTime = 0;
    mCount = 0;
    mProgressIn = 0;
@@ -636,28 +637,16 @@ bool NyquistEffect::Process()
 
    mTrackIndex = 0;
 
-   mNumSelectedChannels = 0;
-
    // If in tool mode, then we don't do anything with the track and selection.
-   bool bOnePassTool = (GetType() == EffectTypeTool);
+   const bool bOnePassTool = (GetType() == EffectTypeTool);
 
    // We must copy all the tracks, because Paste needs label tracks to ensure
    // correct sync-lock group behavior when the timeline is affected; then we just want
-   // to operate on the selected wave tracks.
-   // Also need to set up mOutputTracks for channel count.
-   if( !bOnePassTool )
-      CopyInputTracks(Track::All);
+   // to operate on the selected wave tracks
+   if ( !bOnePassTool )
+      CopyInputTracks(true);
 
-   SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks.get());
-   for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
-      mNumSelectedChannels++;
-      if (mT1 >= mT0) {
-         if (t->GetLinked()) {
-            mNumSelectedChannels++;
-            sel.Next();
-         }
-      }
-   }
+   mNumSelectedChannels = mOutputTracks->Selected< const WaveTrack >().size();
 
    mDebugOutput.Clear();
    if (!mHelpFile.IsEmpty() && !mHelpFileExists) {
@@ -721,8 +710,6 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), (int) gAudacityProjects.size());
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetName());
 
-      TrackListIterator all(project->GetTracks());
-      Track *t;
       int numTracks = 0;
       int numWave = 0;
       int numLabel = 0;
@@ -730,29 +717,21 @@ bool NyquistEffect::Process()
       int numTime = 0;
       wxString waveTrackList = wxT("");   // track positions of selected audio tracks.
 
-      for (t = all.First(); t; t = all.Next())
       {
-         switch (t->GetKind())
-         {
-            case Track::Wave:
+         auto countRange = project->GetTracks()->Leaders();
+         for (auto t : countRange) {
+            t->TypeSwitch( [&](const WaveTrack *) {
                numWave++;
-               if (t->GetSelected()) {
+               if (t->GetSelected())
                   waveTrackList += wxString::Format(wxT("%d "), 1 + numTracks);
-               }
-            break;
-            case Track::Label: numLabel++; break;
-#if defined(USE_MIDI)
-            case Track::Note: numMidi++; break;
-#endif
-            case Track::Time: numTime++; break;
-            default: break;
+            });
+            numTracks++;
          }
-
-         numTracks++;
-         if (t->GetLinked())
-         {
-            all.Next();
-         }
+         numLabel = countRange.Filter<const LabelTrack>().size();
+   #if defined(USE_MIDI)
+         numMidi = countRange.Filter<const NoteTrack>().size();
+   #endif
+         numTime = countRange.Filter<const TimeTrack>().size();
       }
 
       // We use Internat::ToString() rather than "%g" here because we
@@ -790,8 +769,7 @@ bool NyquistEffect::Process()
       Effect::MessageBox(message, wxOK | wxCENTRE | wxICON_EXCLAMATION, _("Nyquist Error"));
    }
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   mCurTrack[0] = (WaveTrack *)iter.First();
+   auto trackRange = mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader;
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
@@ -799,19 +777,25 @@ bool NyquistEffect::Process()
    mFirstInGroup = true;
    Track *gtLast = NULL;
 
-   while (mCurTrack[0] || bOnePassTool) {
+   for (auto &iter = trackRange.first, &end = trackRange.second;
+        bOnePassTool || iter != end; ++iter) {
+      mCurTrack[0] = *iter;
       mCurNumChannels = 1;
-      if ((mT1 >= mT0)||bOnePassTool) {
+      if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {
-
-         } else {
-            if (mCurTrack[0]->GetLinked()) {
+         }
+         else {
+            auto channels = TrackList::Channels(mCurTrack[0]);
+            if (channels.size() > 1) {
+               // TODO: more-than-two-channels
+               // Pay attention to consistency of mNumSelectedChannels
+               // with the running tally made by this loop!
                mCurNumChannels = 2;
 
-               mCurTrack[1] = (WaveTrack *)iter.Next();
+               mCurTrack[1] = * ++ channels.first;
                if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
                   Effect::MessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
-                     wxOK | wxCENTRE);
+                               wxOK | wxCENTRE);
                   success = false;
                   goto finish;
                }
@@ -819,8 +803,7 @@ bool NyquistEffect::Process()
             }
 
             // Check whether we're in the same group as the last selected track
-            SyncLockedTracksIterator gIter(mOutputTracks.get());
-            Track *gt = gIter.StartWith(mCurTrack[0]);
+            Track *gt = *TrackList::SyncLockGroup(mCurTrack[0]).first;
             mFirstInGroup = !gtLast || (gtLast != gt);
             gtLast = gt;
 
@@ -842,6 +825,7 @@ bool NyquistEffect::Process()
 
             mCurLen = std::min(mCurLen, mMaxLen);
          }
+
          mProgressIn = 0.0;
          mProgressOut = 0.0;
 
@@ -916,7 +900,6 @@ bool NyquistEffect::Process()
          mProgressTot += mProgressIn + mProgressOut;
       }
 
-      mCurTrack[0] = (WaveTrack *) iter.Next();
       mCount += mCurNumChannels;
    }
 
@@ -1073,37 +1056,36 @@ bool NyquistEffect::ProcessOne()
       wxString bitFormat;
       wxString spectralEditp;
 
-      switch (mCurTrack[0]->GetKind())
-      {
-         case Track::Wave:
+      mCurTrack[0]->TypeSwitch(
+         [&](const WaveTrack *wt) {
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
-            switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
+            switch (wt->GetDisplay())
             {
-               case WaveTrack::Waveform:
-                  view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
-                  break;
-               case WaveTrack::Spectrum:
-                  view = wxT("\"Spectrogram\"");
-                  break;
-               default: view = wxT("NIL"); break;
+            case WaveTrack::Waveform:
+               view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
+               break;
+            case WaveTrack::Spectrum:
+               view = wxT("\"Spectrogram\"");
+               break;
+            default: view = wxT("NIL"); break;
             }
-         break;
+         },
 #if defined(USE_MIDI)
-         case Track::Note:
+         [&](const NoteTrack *) {
             type = wxT("midi");
             view = wxT("\"Midi\"");
-         break;
+         },
 #endif
-         case Track::Label:
+         [&](const LabelTrack *) {
             type = wxT("label");
             view = wxT("\"Label\"");
-         break;
-         case Track::Time:
+         },
+         [&](const TimeTrack *) {
             type = wxT("time");
             view = wxT("\"Time\"");
-         break;
-      }
+         }
+      );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName());
@@ -1115,22 +1097,9 @@ bool NyquistEffect::ProcessOne()
       //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
 
-      double startTime = 0.0;
-      double endTime = 0.0;
-
-      if (mCurTrack[0]->GetLinked()) {
-         startTime = std::min<double>(mCurTrack[0]->GetStartTime(), mCurTrack[0]->GetLink()->GetStartTime());
-      }
-      else {
-         startTime = mCurTrack[0]->GetStartTime();
-      }
-
-      if (mCurTrack[0]->GetLinked()) {
-         endTime = std::max<double>(mCurTrack[0]->GetEndTime(), mCurTrack[0]->GetLink()->GetEndTime());
-      }
-      else {
-         endTime = mCurTrack[0]->GetEndTime();
-      }
+      auto channels = TrackList::Channels( mCurTrack[0] );
+      double startTime = channels.min( &Track::GetStartTime );
+      double endTime = channels.max( &Track::GetEndTime );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
                               Internat::ToString(startTime));
@@ -1418,16 +1387,7 @@ bool NyquistEffect::ProcessOne()
       mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
-      LabelTrack *ltrack = NULL;
-
-      TrackListIterator iter(mOutputTracks.get());
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetKind() == Track::Label) {
-            ltrack = (LabelTrack *)t;
-            break;
-         }
-      }
-
+      auto ltrack = * mOutputTracks->Any< LabelTrack >().begin();
       if (!ltrack) {
          ltrack = static_cast<LabelTrack*>(AddToOutputTracks(mFactory->NewLabelTrack()));
       }
@@ -1532,9 +1492,7 @@ bool NyquistEffect::ProcessOne()
 
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
-         SyncLockedTracksIterator git(mOutputTracks.get());
-         Track *t;
-         for (t = git.StartWith(mCurTrack[i]); t; t = git.Next())
+         for (auto t : TrackList::SyncLockGroup(mCurTrack[i]))
          {
             if (!t->GetSelected() && t->IsSyncLockSelected()) {
                t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
@@ -1680,12 +1638,10 @@ double NyquistEffect::GetCtrlValue(const wxString &s)
     * be determined.
     *
    AudacityProject *project = GetActiveProject();
-   double rate = INT_MAX;
    if (project && s.IsSameAs(wxT("half-srate"), false)) {
-      SelectedTrackListOfKindIterator sel(Track::Wave, project->GetTracks());
-      for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
-         rate = std::min(t->GetRate(), rate);
-      }
+      auto rate =
+         project->GetTracks()->Selected< const WaveTrack >()
+            .min( &WaveTrack::GetRate );
       return (rate / 2.0);
    }
    */

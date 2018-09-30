@@ -119,8 +119,6 @@ private:
    // Identifying the type of track
    //
 
-   int GetKind() const override { return Wave; }
-
    //
    // WaveTrack parameters
    //
@@ -642,7 +640,9 @@ private:
    // Protected methods
    //
 
- private:
+private:
+
+   TrackKind GetKind() const override { return TrackKind::Wave; }
 
    //
    // Private variables

@@ -2289,13 +2289,12 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
    if (!selectedRegion.isPoint())
       flags |= TimeSelectedFlag;
 
-   TrackListIterator iter(project.GetTracks());
-   Track *t = iter.First();
-   while (t) {
+   auto tracks = project.GetTracks();
+   auto trackRange = tracks->Any();
+   if ( trackRange )
       flags |= TracksExistFlag;
-      if (t->GetKind() == Track::Label) {
-         LabelTrack *lt = (LabelTrack *) t;
-
+   trackRange.Visit(
+      [&](LabelTrack *lt) {
          flags |= LabelTracksExistFlag;
 
          if (lt->GetSelected()) {
@@ -2313,27 +2312,25 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
          if (lt->IsTextSelected()) {
             flags |= CutCopyAvailableFlag;
          }
-      }
-      else if (t->GetKind() == Track::Wave) {
+      },
+      [&](WaveTrack *t) {
          flags |= WaveTracksExistFlag;
          flags |= PlayableTracksExistFlag;
          if (t->GetSelected()) {
             flags |= TracksSelectedFlag;
-            if (t->GetLinked()) {
+            // TODO: more-than-two-channels
+            if (TrackList::Channels(t).size() > 1) {
                flags |= StereoRequiredFlag;
             }
-            else {
-               flags |= WaveTracksSelectedFlag;
-               flags |= AudioTracksSelectedFlag;
-            }
+            flags |= WaveTracksSelectedFlag;
+            flags |= AudioTracksSelectedFlag;
          }
          if( t->GetEndTime() > t->GetStartTime() )
             flags |= HasWaveDataFlag;
       }
 #if defined(USE_MIDI)
-      else if (t->GetKind() == Track::Note) {
-         NoteTrack *nt = (NoteTrack *) t;
-
+      ,
+      [&](NoteTrack *nt) {
          flags |= NoteTracksExistFlag;
 #ifdef EXPERIMENTAL_MIDI_OUT
          flags |= PlayableTracksExistFlag;
@@ -2346,8 +2343,7 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
          }
       }
 #endif
-      t = iter.Next();
-   }
+   );
 
    if((AudacityProject::msClipT1 - AudacityProject::msClipT0) > 0.0)
       flags |= ClipboardFlag;
@@ -3222,114 +3218,74 @@ void AudacityProject::OnToggleAutomatedInputLevelAdjustment(
 }
 #endif
 
-double MenuCommandHandler::GetTime(const Track *t)
-{
-   double stime = 0.0;
-
-   if (t->GetKind() == Track::Wave) {
-      WaveTrack *w = (WaveTrack *)t;
-      stime = w->GetEndTime();
-
-      WaveClip *c;
-      int ndx;
-      for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
-         c = w->GetClipByIndex(ndx);
-         if (c->GetNumSamples() == 0)
-            continue;
-         if (c->GetStartTime() < stime) {
-            stime = c->GetStartTime();
-         }
-      }
-   }
-   else if (t->GetKind() == Track::Label) {
-      LabelTrack *l = (LabelTrack *)t;
-      stime = l->GetStartTime();
-   }
-
-   return stime;
-}
-
 //sort based on flags.  see Project.h for sort flags
 void AudacityProject::SortTracks(int flags)
 {
+   auto GetTime = [](const Track *t) {
+      return t->TypeSwitch< double >(
+         [&](const WaveTrack* w) {
+            auto stime = w->GetEndTime();
+
+            int ndx;
+            for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
+               const auto c = w->GetClipByIndex(ndx);
+               if (c->GetNumSamples() == 0)
+                  continue;
+               stime = std::min(stime, c->GetStartTime());
+            }
+            return stime;
+         },
+         [&](const LabelTrack* l) {
+            return l->GetStartTime();
+         }
+      );
+   };
+
    size_t ndx = 0;
-   int cmpValue;
    // This one place outside of TrackList where we must use undisguised
    // std::list iterators!  Avoid this elsewhere!
    std::vector<TrackNodePointer> arr;
    arr.reserve(mTracks->size());
-   bool lastTrackLinked = false;
-   //sort by linked tracks. Assumes linked track follows owner in list.
 
    // First find the permutation.
+   // This routine, very unusually, deals with the underlying stl list
+   // iterators, not with TrackIter!  Dangerous!
    for (auto iter = mTracks->ListOfTracks::begin(),
         end = mTracks->ListOfTracks::end(); iter != end; ++iter) {
       const auto &track = *iter;
-      if(lastTrackLinked) {
-         //insert after the last track since this track should be linked to it.
+      if ( !track->IsLeader() )
+         // keep channels contiguous
          ndx++;
-      }
       else {
-         bool bArrayTrackLinked = false;
-         for (ndx = 0; ndx < arr.size(); ++ndx) {
+         auto size = arr.size();
+         for (ndx = 0; ndx < size;) {
             Track &arrTrack = **arr[ndx].first;
-            // Don't insert between channels of a stereo track!
-            if( bArrayTrackLinked ){
-               bArrayTrackLinked = false;
-            }
-            else if(flags & kAudacitySortByName) {
+            auto channels = TrackList::Channels(&arrTrack);
+            if(flags & kAudacitySortByName) {
                //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
                //also if we have case insensitive equality, then we need to sort by case as well
                //We sort 'b' before 'B' accordingly.  We uncharacteristically use greater than for the case sensitive
                //compare because 'b' is greater than 'B' in ascii.
-               cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
-               if (cmpValue < 0 ||
-                   (0 == cmpValue && track->GetName().CompareTo(arrTrack.GetName()) > 0) )
+               auto cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
+               if ( cmpValue < 0 ||
+                     ( 0 == cmpValue &&
+                        track->GetName().CompareTo(arrTrack.GetName()) > 0 ) )
                   break;
             }
             //sort by time otherwise
             else if(flags & kAudacitySortByTime) {
-               //we have to search each track and all its linked ones to fine the minimum start time.
-               double time1, time2, tempTime;
-               const Track* tempTrack;
-               size_t candidatesLookedAt;
-
-               candidatesLookedAt = 0;
-               tempTrack = &*track;
-               time1 = time2 = std::numeric_limits<double>::max(); //TODO: find max time value. (I don't think we have one yet)
-               while(tempTrack) {
-                  tempTime = MenuCommandHandler::GetTime(tempTrack);
-                  time1 = std::min(time1, tempTime);
-                  if(tempTrack->GetLinked())
-                     tempTrack = tempTrack->GetLink();
-                  else
-                     tempTrack = NULL;
-               }
+               auto time1 = TrackList::Channels(track.get()).min( GetTime );
 
                //get candidate's (from sorted array) time
-               tempTrack = &arrTrack;
-               while(tempTrack) {
-                  tempTime = MenuCommandHandler::GetTime(tempTrack);
-                  time2 = std::min(time2, tempTime);
-                  if(tempTrack->GetLinked() && (ndx+candidatesLookedAt < arr.size()-1) ) {
-                     candidatesLookedAt++;
-                     tempTrack = &**arr[ndx+candidatesLookedAt].first;
-                  }
-                  else
-                     tempTrack = NULL;
-               }
+               auto time2 = channels.min( GetTime );
 
                if (time1 < time2)
                   break;
-
-               ndx+=candidatesLookedAt;
             }
-            bArrayTrackLinked = arrTrack.GetLinked();
+            ndx += channels.size();
          }
       }
       arr.insert(arr.begin() + ndx, TrackNodePointer{iter, mTracks.get()});
-
-      lastTrackLinked = track->GetLinked();
    }
 
    // Now apply the permutation
@@ -3430,31 +3386,24 @@ void MenuCommandHandler::OnMoveToLabel(AudacityProject &project, bool next)
    auto trackPanel = project.GetTrackPanel();
 
    // Find the number of label tracks, and ptr to last track found
-   Track* track = nullptr;
-   int nLabelTrack = 0;
-   TrackListOfKindIterator iter(Track::Label, tracks);
-   for (Track* t = iter.First(); t; t = iter.Next()) {
-      nLabelTrack++;
-      track = t;
-   }
+   auto trackRange = tracks->Any<LabelTrack>();
+   auto lt = *trackRange.rbegin();
+   auto nLabelTrack = trackRange.size();
 
    if (nLabelTrack == 0 ) {
       trackPanel->MessageForScreenReader(_("no label track"));
    }
    else if (nLabelTrack > 1) {         // find first label track, if any, starting at the focused track
-      track = trackPanel->GetFocusedTrack();
-      while (track && track->GetKind() != Track::Label) {
-         track = tracks->GetNext(track, true);
-         if (!track) {
-          trackPanel->MessageForScreenReader(_("no label track at or below focused track"));
-         }
+      lt =
+         *tracks->Find(trackPanel->GetFocusedTrack()).Filter<LabelTrack>();
+      if (!lt) {
+       trackPanel->MessageForScreenReader(_("no label track at or below focused track"));
       }
    }
 
    // If there is a single label track, or there is a label track at or below the focused track
    auto &selectedRegion = project.GetSelection();
-   if (track) {
-      LabelTrack* lt = static_cast<LabelTrack*>(track);
+   if (lt) {
       int i;
       if (next)
          i = lt->FindNextLabel(selectedRegion);
@@ -3497,11 +3446,10 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
    auto &selectionState = project.GetSelectionState();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter( tracks );
    Track* t = trackPanel->GetFocusedTrack();
    if( t == NULL )   // if there isn't one, focus on last
    {
-      t = iter.Last();
+      t = *tracks->Any().rbegin();
       trackPanel->SetFocusedTrack( t );
       trackPanel->EnsureVisible( t );
       project.ModifyState(false);
@@ -3513,17 +3461,14 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
    bool pSelected = false;
    if( shift )
    {
-      p = tracks->GetPrev( t, true ); // Get previous track
+      p = * -- tracks->FindLeader( t ); // Get previous track
       if( p == NULL )   // On first track
       {
          // JKC: wxBell() is probably for accessibility, so a blind
          // user knows they were at the top track.
          wxBell();
          if( mCircularTrackNavigation )
-         {
-            TrackListIterator iter( tracks );
-            p = iter.Last();
-         }
+            p = *tracks->Any().rbegin();
          else
          {
             trackPanel->EnsureVisible( t );
@@ -3536,8 +3481,8 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, false, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *t, false, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3545,8 +3490,8 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *p, true, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *p, true, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3554,8 +3499,8 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( !tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *p, false, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *p, false, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3563,29 +3508,26 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( !tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, true, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *t, true, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
-         project.ModifyState(false);
+          project.ModifyState(false);
          return;
       }
    }
    else
    {
-      p = tracks->GetPrev( t, true ); // Get next track
-      if( p == NULL )   // On last track so stay there?
+      p = * -- tracks->FindLeader( t ); // Get previous track
+      if( p == NULL )   // On first track so stay there?
       {
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( tracks );
-            for( Track *d = iter.First(); d; d = iter.Next( true ) )
-            {
-               p = d;
-            }
-            trackPanel->SetFocusedTrack( p );   // Wrap to the first track
+            auto range = tracks->Leaders();
+            p = * range.rbegin(); // null if range is empty
+            trackPanel->SetFocusedTrack( p );   // Wrap to the last track
             trackPanel->EnsureVisible( p );
-            project.ModifyState(false);
+             project.ModifyState(false);
             return;
          }
          else
@@ -3596,7 +3538,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       }
       else
       {
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3614,15 +3556,10 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
    auto &selectionState = project.GetSelectionState();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter( tracks );
-   Track *t;
-   Track *n;
-   bool tSelected,nSelected;
-
-   t = trackPanel->GetFocusedTrack();   // Get currently focused track
+   auto t = trackPanel->GetFocusedTrack();   // Get currently focused track
    if( t == NULL )   // if there isn't one, focus on first
    {
-      t = iter.First();
+      t = *tracks->Any().begin();
       trackPanel->SetFocusedTrack( t );
       trackPanel->EnsureVisible( t );
       project.ModifyState(false);
@@ -3631,27 +3568,24 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
 
    if( shift )
    {
-      n = tracks->GetNext( t, true ); // Get next track
+      auto n = * ++ tracks->FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
          if( mCircularTrackNavigation )
-         {
-            TrackListIterator iter( tracks );
-            n = iter.First();
-         }
+            n = *tracks->Any().begin();
          else
          {
             trackPanel->EnsureVisible( t );
             return;
          }
       }
-      tSelected = t->GetSelected();
-      nSelected = n->GetSelected();
+      auto tSelected = t->GetSelected();
+      auto nSelected = n->GetSelected();
       if( tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, false, false, mixerBoard );
+            ( *t, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3660,7 +3594,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *n, true, false, mixerBoard );
+            ( *n, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3669,7 +3603,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( !tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *n, false, false, mixerBoard );
+            ( *n, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3678,7 +3612,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( !tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, true, false, mixerBoard );
+            ( *t, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3687,14 +3621,13 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
    }
    else
    {
-      n = tracks->GetNext( t, true ); // Get next track
+      auto n = * ++ tracks->FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( tracks );
-            n = iter.First();
+            n = *tracks->Any().begin();
             trackPanel->SetFocusedTrack( n );   // Wrap to the first track
             trackPanel->EnsureVisible( n );
             project.ModifyState(false);
@@ -3738,8 +3671,7 @@ void MenuCommandHandler::OnFirstTrack(const CommandContext &context)
    if (!t)
       return;
 
-   TrackListIterator iter(tracks);
-   Track *f = iter.First();
+   auto f = *tracks->Any().begin();
    if (t != f)
    {
       trackPanel->SetFocusedTrack(f);
@@ -3758,8 +3690,7 @@ void MenuCommandHandler::OnLastTrack(const CommandContext &context)
    if (!t)
       return;
 
-   TrackListIterator iter(tracks);
-   Track *l = iter.Last();
+   auto l = *tracks->Any().rbegin();
    if (t != l)
    {
       trackPanel->SetFocusedTrack(l);
@@ -3785,7 +3716,6 @@ void MenuCommandHandler::OnToggle(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
    auto &selectionState = project.GetSelectionState();
    auto mixerBoard = project.GetMixerBoard();
 
@@ -3796,7 +3726,7 @@ void MenuCommandHandler::OnToggle(const CommandContext &context)
       return;
 
    selectionState.SelectTrack
-      ( *tracks, *t, !t->GetSelected(), true, mixerBoard );
+      ( *t, !t->GetSelected(), true, mixerBoard );
    trackPanel->EnsureVisible( t );
    project.ModifyState(false);
 
@@ -3920,19 +3850,19 @@ double MenuCommandHandler::OnClipMove
    auto &selectedRegion = viewInfo.selectedRegion;
 
    // just dealing with clips in wave tracks for the moment. Note tracks??
-   if (track && track->GetKind() == Track::Wave) {
+   if (track) return track->TypeSwitch<double>( [&]( WaveTrack *wt ) {
       ClipMoveState state;
 
-      auto wt = static_cast<WaveTrack*>(track);
       auto t0 = selectedRegion.t0();
 
-      state.capturedClip = wt->GetClipAtTime( t0 );
-      if (state.capturedClip == nullptr && track->GetLinked() && track->GetLink()) {
-         // the clips in the right channel may be different from the left
-         track = track->GetLink();
-         wt = static_cast<WaveTrack*>(track);
-         state.capturedClip = wt->GetClipAtTime(t0);
+      // Find the first channel that has a clip at time t0
+      for (auto channel : TrackList::Channels(wt) ) {
+         if( nullptr != (state.capturedClip = channel->GetClipAtTime( t0 )) ) {
+            wt = channel;
+            break;
+         }
       }
+
       if (state.capturedClip == nullptr)
          return 0.0;
 
@@ -3970,7 +3900,7 @@ double MenuCommandHandler::OnClipMove
       selectedRegion.setTimes(newT0, newT0 + diff);
 
       return state.hSlideAmount;
-   }
+   } );
    return 0.0;
 }
 
@@ -4314,15 +4244,11 @@ void MenuCommandHandler::OnTrackPan(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->PanSlider(wt);
-   if (slider->ShowDialog()) {
-      project.SetTrackPan(wt, slider);
-   }
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->PanSlider(wt);
+      if (slider->ShowDialog())
+         project.SetTrackPan(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackPanLeft(const CommandContext &context)
@@ -4331,14 +4257,11 @@ void MenuCommandHandler::OnTrackPanLeft(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->PanSlider(wt);
-   slider->Decrease(1);
-   project.SetTrackPan(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->PanSlider(wt);
+      slider->Decrease(1);
+      project.SetTrackPan(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackPanRight(const CommandContext &context)
@@ -4347,14 +4270,11 @@ void MenuCommandHandler::OnTrackPanRight(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->PanSlider(wt);
-   slider->Increase(1);
-   project.SetTrackPan(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->PanSlider(wt);
+      slider->Increase(1);
+      project.SetTrackPan(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackGain(const CommandContext &context)
@@ -4364,15 +4284,11 @@ void MenuCommandHandler::OnTrackGain(const CommandContext &context)
 
    /// This will pop up the track gain dialog for specified track
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->GainSlider(wt);
-   if (slider->ShowDialog()) {
-      project.SetTrackGain(wt, slider);
-   }
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->GainSlider(wt);
+      if (slider->ShowDialog())
+         project.SetTrackGain(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackGainInc(const CommandContext &context)
@@ -4381,14 +4297,11 @@ void MenuCommandHandler::OnTrackGainInc(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->GainSlider(wt);
-   slider->Increase(1);
-   project.SetTrackGain(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->GainSlider(wt);
+      slider->Increase(1);
+      project.SetTrackGain(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackGainDec(const CommandContext &context)
@@ -4397,14 +4310,11 @@ void MenuCommandHandler::OnTrackGainDec(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->GainSlider(wt);
-   slider->Decrease(1);
-   project.SetTrackGain(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->GainSlider(wt);
+      slider->Decrease(1);
+      project.SetTrackGain(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackMenu(const CommandContext &context)
@@ -4420,13 +4330,10 @@ void MenuCommandHandler::OnTrackMute(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
 
-   Track *t = NULL;
-   if (!t) {
-      t = trackPanel->GetFocusedTrack();
-      if (!dynamic_cast<PlayableTrack*>(t))
-         return;
-   }
-   project.DoTrackMute(t, false);
+   const auto track = trackPanel->GetFocusedTrack();
+   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
+      project.DoTrackMute(t, false);
+   });
 }
 
 void MenuCommandHandler::OnTrackSolo(const CommandContext &context)
@@ -4434,14 +4341,10 @@ void MenuCommandHandler::OnTrackSolo(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
 
-   Track *t = NULL;
-   if (!t)
-   {
-      t = trackPanel->GetFocusedTrack();
-      if (!dynamic_cast<PlayableTrack*>(t))
-         return;
-   }
-   project.DoTrackSolo(t, false);
+   const auto track = trackPanel->GetFocusedTrack();
+   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
+      project.DoTrackSolo(t, false);
+   });
 }
 
 void MenuCommandHandler::OnTrackClose(const CommandContext &context)
@@ -4752,15 +4655,8 @@ double MenuCommandHandler::NearestZeroCrossing
    auto windowSize = size_t(std::max(1.0, rate / 100));
    Floats dist{ windowSize, true };
 
-   TrackListIterator iter(tracks);
-   Track *track = iter.First();
    int nTracks = 0;
-   while (track) {
-      if (!track->GetSelected() || track->GetKind() != (Track::Wave)) {
-         track = iter.Next();
-         continue;
-      }
-      WaveTrack *one = (WaveTrack *)track;
+   for (auto one : tracks->Selected< const WaveTrack >()) {
       auto oneWindowSize = size_t(std::max(1.0, one->GetRate() / 100));
       Floats oneDist{ oneWindowSize };
       auto s = one->TimeToLongSamples(t0);
@@ -4798,7 +4694,6 @@ double MenuCommandHandler::NearestZeroCrossing
          dist[i] += 0.1 * (abs(int(i) - int(windowSize/2))) / float(windowSize/2);
       }
       nTracks++;
-      track = iter.Next();
    }
 
    // Find minimum
@@ -4922,8 +4817,6 @@ bool MenuCommandHandler::DoEffect(
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
    auto nTracksOriginally = project.GetTrackCount();
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    wxWindow *focus = wxWindow::FindFocus();
    auto parent = focus->GetParent();
 
@@ -4941,12 +4834,10 @@ bool MenuCommandHandler::DoEffect(
 
    int count = 0;
    bool clean = true;
-   while (t) {
-      if (t->GetSelected() && t->GetKind() == (Track::Wave)) {
-         if (t->GetEndTime() != 0.0) clean = false;
-         count++;
-      }
-      t = iter.Next();
+   for (auto t : tracks->Selected< const WaveTrack >()) {
+      if (t->GetEndTime() != 0.0)
+         clean = false;
+      count++;
    }
 
    EffectManager & em = EffectManager::Get();
@@ -5168,27 +5059,17 @@ void MenuCommandHandler::OnExportLabels(const CommandContext &context)
    auto &project = context.project;
    auto tracks = project.GetTracks();
 
-   Track *t;
-   int numLabelTracks = 0;
-
-   TrackListIterator iter(tracks);
-
    /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
-   t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Label)
-      {
-         numLabelTracks++;
-         fName = t->GetName();
-      }
-      t = iter.Next();
-   }
+   auto trackRange = tracks->Any<const LabelTrack>();
+   auto numLabelTracks = trackRange.size();
 
    if (numLabelTracks == 0) {
       AudacityMessageBox(_("There are no label tracks to export."));
       return;
    }
+   else
+      fName = (*trackRange.rbegin())->GetName();
 
    fName = FileNames::SelectFile(FileNames::Operation::Export,
                         _("Export Labels As:"),
@@ -5227,13 +5108,8 @@ void MenuCommandHandler::OnExportLabels(const CommandContext &context)
       return;
    }
 
-   t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Label)
-         ((LabelTrack *) t)->Export(f);
-
-      t = iter.Next();
-   }
+   for (auto lt : trackRange)
+      lt->Export(f);
 
    f.Write();
    f.Close();
@@ -5246,22 +5122,10 @@ void MenuCommandHandler::OnExportMIDI(const CommandContext &context)
    auto &project = context.project;
    auto tracks = project.GetTracks();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   int numNoteTracksSelected = 0;
-   NoteTrack *nt = NULL;
-
-   // Iterate through once to make sure that there is
+   // Make sure that there is
    // exactly one NoteTrack selected.
-   while (t) {
-      if (t->GetSelected()) {
-         if(t->GetKind() == Track::Note) {
-            numNoteTracksSelected++;
-            nt = (NoteTrack *) t;
-         }
-      }
-      t = iter.Next();
-   }
+   const auto range = tracks->Selected< const NoteTrack >();
+   const auto numNoteTracksSelected = range.size();
 
    if(numNoteTracksSelected > 1) {
       AudacityMessageBox(_(
@@ -5274,11 +5138,13 @@ void MenuCommandHandler::OnExportMIDI(const CommandContext &context)
       return;
    }
 
-   wxASSERT(nt);
-   if (!nt)
+   wxASSERT(numNoteTracksSelected);
+   if (!numNoteTracksSelected)
       return;
 
-   while(true){
+   const auto nt = *range.begin();
+
+   while(true) {
 
       wxString fName = wxT("");
 
@@ -5613,19 +5479,9 @@ void MenuCommandHandler::OnRedo(const CommandContext &context)
 }
 
 void MenuCommandHandler::FinishCopy
-   (const Track *n, Track *dest)
-{
-   if (dest) {
-      dest->SetChannel(n->GetChannel());
-      dest->SetLinked(n->GetLinked());
-      dest->SetName(n->GetName());
-   }
-}
-
-void MenuCommandHandler::FinishCopy
    (const Track *n, Track::Holder &&dest, TrackList &list)
 {
-   FinishCopy( n, dest.get() );
+   Track::FinishCopy( n, dest.get() );
    if (dest)
       list.Add(std::move(dest));
 }
@@ -5639,23 +5495,15 @@ void MenuCommandHandler::OnCut(const CommandContext &context)
    auto ruler = project.GetRulerPanel();
    auto historyWindow = project.GetHistoryWindow();
 
-   TrackListIterator iter(tracks);
-   Track *n = iter.First();
-
    // This doesn't handle cutting labels, it handles
    // cutting the _text_ inside of labels, i.e. if you're
    // in the middle of editing the label text and select "Cut".
 
-   while (n) {
-      if (n->GetSelected()) {
-         if (n->GetKind() == Track::Label) {
-            if (((LabelTrack *)n)->CutSelectedText()) {
-               trackPanel->Refresh(false);
-               return;
-            }
-         }
+   for (auto lt : tracks->Selected< LabelTrack >()) {
+      if (lt->CutSelectedText()) {
+         trackPanel->Refresh(false);
+         return;
       }
-      n = iter.Next();
    }
 
    AudacityProject::ClearClipboard();
@@ -5663,24 +5511,21 @@ void MenuCommandHandler::OnCut(const CommandContext &context)
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
 
-   n = iter.First();
-   while (n) {
-      if (n->GetSelected()) {
-         Track::Holder dest;
+   tracks->Selected().Visit(
 #if defined(USE_MIDI)
-         if (n->GetKind() == Track::Note)
-            // Since portsmf has a built-in cut operator, we use that instead
-            dest = n->Cut(selectedRegion.t0(),
-                   selectedRegion.t1());
-         else
+      [&](NoteTrack *n) {
+         // Since portsmf has a built-in cut operator, we use that instead
+         auto dest = n->Cut(selectedRegion.t0(),
+                selectedRegion.t1());
+         FinishCopy(n, std::move(dest), newClipboard);
+      },
 #endif
-            dest = n->Copy(selectedRegion.t0(),
-                    selectedRegion.t1());
-
+      [&](Track *n) {
+         auto dest = n->Copy(selectedRegion.t0(),
+                 selectedRegion.t1());
          FinishCopy(n, std::move(dest), newClipboard);
       }
-      n = iter.Next();
-   }
+   );
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
@@ -5688,35 +5533,28 @@ void MenuCommandHandler::OnCut(const CommandContext &context)
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
 
-   n = iter.First();
-   while (n) {
-      // We clear from selected and sync-lock selected tracks.
-      if (n->GetSelected() || n->IsSyncLockSelected()) {
-         switch (n->GetKind())
-         {
+   (tracks->Any() + &Track::IsSelectedOrSyncLockSelected).Visit(
 #if defined(USE_MIDI)
-            case Track::Note:
-               //if NoteTrack, it was cut, so do not clear anything
-            break;
+      [](NoteTrack*) {
+         //if NoteTrack, it was cut, so do not clear anything
+
+         // PRL:  But what if it was sync lock selected only, not selected?
+      },
 #endif
-            case Track::Wave:
-               if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0)) {
-                  ((WaveTrack*)n)->ClearAndAddCutLine(
-                     selectedRegion.t0(),
-                     selectedRegion.t1());
-                  break;
-               }
-
-               // Fall through
-
-            default:
-               n->Clear(selectedRegion.t0(),
-                        selectedRegion.t1());
-            break;
+      [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
+         if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0)) {
+            wt->ClearAndAddCutLine(
+               selectedRegion.t0(),
+               selectedRegion.t1());
          }
+         else
+            fallthrough();
+      },
+      [&](Track *n) {
+         n->Clear(selectedRegion.t0(),
+                  selectedRegion.t1());
       }
-      n = iter.Next();
-   }
+   );
 
    AudacityProject::msClipT0 = selectedRegion.t0();
    AudacityProject::msClipT1 = selectedRegion.t1();
@@ -5744,35 +5582,30 @@ void MenuCommandHandler::OnSplitCut(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
    auto historyWindow = project.GetHistoryWindow();
 
-   TrackListIterator iter(tracks);
-   Track *n = iter.First();
-
    AudacityProject::ClearClipboard();
 
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
 
-   while (n) {
-      if (n->GetSelected()) {
-         Track::Holder dest;
-         if (n->GetKind() == Track::Wave)
-         {
-            dest = ((WaveTrack*)n)->SplitCut(
-               selectedRegion.t0(),
-               selectedRegion.t1());
-         }
-         else
-         {
-            dest = n->Copy(selectedRegion.t0(),
+   Track::Holder dest;
+
+   tracks->Selected().Visit(
+      [&](WaveTrack *n) {
+         dest = n->SplitCut(
+            selectedRegion.t0(),
+            selectedRegion.t1());
+         if (dest)
+            FinishCopy(n, std::move(dest), newClipboard);
+      },
+      [&](Track *n) {
+         dest = n->Copy(selectedRegion.t0(),
+                 selectedRegion.t1());
+         n->Silence(selectedRegion.t0(),
                     selectedRegion.t1());
-            n->Silence(selectedRegion.t0(),
-                       selectedRegion.t1());
-         }
          if (dest)
             FinishCopy(n, std::move(dest), newClipboard);
       }
-      n = iter.Next();
-   }
+   );
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
@@ -5798,20 +5631,11 @@ void MenuCommandHandler::OnCopy(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
    auto historyWindow = project.GetHistoryWindow();
 
-   TrackListIterator iter(tracks);
-
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         if (n->GetKind() == Track::Label) {
-            if (((LabelTrack *)n)->CopySelectedText()) {
-               //trackPanel->Refresh(false);
-               return;
-            }
-         }
+   for (auto lt : tracks->Selected< LabelTrack >()) {
+      if (lt->CopySelectedText()) {
+         //trackPanel->Refresh(false);
+         return;
       }
-      n = iter.Next();
    }
 
    AudacityProject::ClearClipboard();
@@ -5819,14 +5643,10 @@ void MenuCommandHandler::OnCopy(const CommandContext &context)
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
 
-   n = iter.First();
-   while (n) {
-      if (n->GetSelected()) {
-         auto dest = n->Copy(selectedRegion.t0(),
-                 selectedRegion.t1());
-         FinishCopy(n, std::move(dest), newClipboard);
-      }
-      n = iter.Next();
+   for (auto n : tracks->Selected()) {
+      auto dest = n->Copy(selectedRegion.t0(),
+              selectedRegion.t1());
+      FinishCopy(n, std::move(dest), newClipboard);
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
@@ -5860,17 +5680,16 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
    if (this->HandlePasteNothingSelected(project))
       return;
 
+   auto clipTrackRange = AudacityProject::msClipboard->Any< const Track >();
+   if (clipTrackRange.empty())
+      return;
+
    // Otherwise, paste into the selected tracks.
    double t0 = selectedRegion.t0();
    double t1 = selectedRegion.t1();
 
-   TrackListIterator iter(tracks);
-   TrackListConstIterator clipIter(AudacityProject::msClipboard.get());
+   auto pN = tracks->Any().begin();
 
-   Track *n = iter.First();
-   const Track *c = clipIter.First();
-   if (c == NULL)
-      return;
    Track *ff = NULL;
    const Track *lastClipBeforeMismatch = NULL;
    const Track *mismatchedClip = NULL;
@@ -5879,12 +5698,16 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
    bool bAdvanceClipboard = true;
    bool bPastedSomething = false;
 
-   while (n && c) {
+   auto pC = clipTrackRange.begin();
+   size_t nnChannels, ncChannels;
+   while (*pN && *pC) {
+      auto n = *pN;
+      auto c = *pC;
       if (n->GetSelected()) {
          bAdvanceClipboard = true;
          if (mismatchedClip)
             c = mismatchedClip;
-         if (c->GetKind() != n->GetKind()) {
+         if (!c->SameKindAs(*n)) {
             if (!mismatchedClip) {
                lastClipBeforeMismatch = prevClip;
                mismatchedClip = c;
@@ -5892,10 +5715,11 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             bAdvanceClipboard = false;
             c = lastClipBeforeMismatch;
 
+
             // If the types still don't match...
-            while (c && c->GetKind() != n->GetKind()) {
+            while (c && !c->SameKindAs(*n)) {
                prevClip = c;
-               c = clipIter.Next();
+               c = * ++ pC;
             }
          }
 
@@ -5903,7 +5727,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
          // is of different type than the first selected track
          if (!c) {
             c = mismatchedClip;
-            while (n && (c->GetKind() != n->GetKind() || !n->GetSelected()))
+            while (n && (!c->SameKindAs(*n) || !n->GetSelected()))
             {
                // Must perform sync-lock adjustment before incrementing n
                if (n->IsSyncLockSelected()) {
@@ -5914,7 +5738,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
                      bPastedSomething = true;
                   }
                }
-               n = iter.Next();
+               n = * ++ pN;
             }
             if (!n)
                c = NULL;
@@ -5930,70 +5754,97 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
                _("Pasting one type of track into another is not allowed.")
             };
 
-         // When trying to copy from stereo to mono track, show error and exit
-         // TODO: Automatically offer user to mix down to mono (unfortunately
-         //       this is not easy to implement
-         if (c->GetLinked() && !n->GetLinked())
-            // Throw, so that any previous changes to the project in this loop
-            // are discarded.
-            throw SimpleMessageBoxException{
-               _("Copying stereo audio into a mono track is not allowed.")
-            };
+         // We should need this check only each time we visit the leading
+         // channel
+         if ( n->IsLeader() ) {
+            wxASSERT( c->IsLeader() ); // the iteration logic should ensure this
+
+            auto cChannels = TrackList::Channels(c);
+            ncChannels = cChannels.size();
+            auto nChannels = TrackList::Channels(n);
+            nnChannels = nChannels.size();
+
+            // When trying to copy from stereo to mono track, show error and exit
+            // TODO: Automatically offer user to mix down to mono (unfortunately
+            //       this is not easy to implement
+            if (ncChannels > nnChannels)
+            {
+               if (ncChannels > 2) {
+                  // TODO: more-than-two-channels-message
+                  // Re-word the error message
+               }
+               // else
+
+               // Throw, so that any previous changes to the project in this loop
+               // are discarded.
+               throw SimpleMessageBoxException{
+                  _("Copying stereo audio into a mono track is not allowed.")
+               };
+            }
+         }
 
          if (!ff)
             ff = n;
-
+         
+         wxASSERT( n && c && n->SameKindAs(*c) );
          Maybe<WaveTrack::Locker> locker;
-         if (AudacityProject::msClipProject != &project &&
-             c->GetKind() == Track::Wave)
-            // Cause duplication of block files on disk, when copy is
-            // between projects
-            locker.create(static_cast<const WaveTrack*>(c));
 
-         wxASSERT( n && c );
-         if (c->GetKind() == Track::Wave && n->GetKind() == Track::Wave)
-         {
-            bPastedSomething = true;
-            ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
-         }
-         else if (c->GetKind() == Track::Label &&
-                  n->GetKind() == Track::Label)
-         {
-            // Per Bug 293, users expect labels to move on a paste into 
-            // a label track.
-            ((LabelTrack *)n)->Clear(t0, t1);
-            ((LabelTrack *)n)->ShiftLabelsOnInsert(
-               AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
-            bPastedSomething |= ((LabelTrack *)n)->PasteOver(t0, c);
-         }
-         else
-         {
-            bPastedSomething = true;
-            n->Clear(t0, t1);
-            n->Paste(t0, c);
-         }
+         n->TypeSwitch(
+            [&](WaveTrack *wn){
+               const auto wc = static_cast<const WaveTrack *>(c);
+               if (AudacityProject::msClipProject != &project)
+                  // Cause duplication of block files on disk, when copy is
+                  // between projects
+                  locker.create(wc);
+               bPastedSomething = true;
+               wn->ClearAndPaste(t0, t1, wc, true, true);
+            },
+            [&](LabelTrack *ln){
+               // Per Bug 293, users expect labels to move on a paste into
+               // a label track.
+               ln->Clear(t0, t1);
+
+               ln->ShiftLabelsOnInsert(
+                  AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
+
+               bPastedSomething |= ln->PasteOver(t0, c);
+            },
+            [&](Track *){
+               bPastedSomething = true;
+               n->Clear(t0, t1);
+               n->Paste(t0, c);
+            }
+         );
+
+         --nnChannels;
+         --ncChannels;
 
          // When copying from mono to stereo track, paste the wave form
          // to both channels
-         if (n->GetLinked() && !c->GetLinked())
+         // TODO: more-than-two-channels
+         // This will replicate the last pasted channel as many times as needed
+         while (nnChannels > 0 && ncChannels == 0)
          {
-            n = iter.Next();
+            n = * ++ pN;
+            --nnChannels;
 
-            if (n->GetKind() == Track::Wave) {
-               bPastedSomething = true;
-               ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
-            }
-            else
-            {
-               n->Clear(t0, t1);
-               bPastedSomething = true;
-               n->Paste(t0, c);
-            }
+            n->TypeSwitch(
+               [&](WaveTrack *wn){
+                  bPastedSomething = true;
+                  // Note:  rely on locker being still be in scope!
+                  wn->ClearAndPaste(t0, t1, c, true, true);
+               },
+               [&](Track *){
+                  n->Clear(t0, t1);
+                  bPastedSomething = true;
+                  n->Paste(t0, c);
+               }
+            );
          }
 
-         if (bAdvanceClipboard){
+         if (bAdvanceClipboard) {
             prevClip = c;
-            c = clipIter.Next();
+            c = * ++ pC;
          }
       } // if (n->GetSelected())
       else if (n->IsSyncLockSelected())
@@ -6005,60 +5856,60 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             bPastedSomething = true;
          }
       }
-
-      n = iter.Next();
+      ++pN;
    }
 
    // This block handles the cases where our clipboard is smaller
    // than the amount of selected destination tracks. We take the
    // last wave track, and paste that one into the remaining
    // selected tracks.
-   if ( n && !c )
+   if ( *pN && ! *pC )
    {
-      TrackListOfKindIterator clipWaveIter(Track::Wave,
-                                           AudacityProject::msClipboard.get());
-      c = clipWaveIter.Last();
-
+      const auto wc =
+         *AudacityProject::msClipboard->Any< const WaveTrack >().rbegin();
       Maybe<WaveTrack::Locker> locker;
-      if (AudacityProject::msClipProject != &project && c)
+      if (AudacityProject::msClipProject != &project && wc)
          // Cause duplication of block files on disk, when copy is
          // between projects
-         locker.create(static_cast<const WaveTrack*>(c));
+         locker.create(static_cast<const WaveTrack*>(wc));
 
-      while (n) {
-         if (n->GetSelected() && n->GetKind()==Track::Wave) {
-            if (c) {
-               wxASSERT(c->GetKind() == Track::Wave);
+      tracks->Any().StartingWith(*pN).Visit(
+         [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
+            if (!wt->GetSelected())
+               return fallthrough();
+
+            if (wc) {
                bPastedSomething = true;
-               ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
+               wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = trackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
+               auto tmp = trackFactory->NewWaveTrack(
+                  wt->GetSampleFormat(), wt->GetRate());
                tmp->InsertSilence(0.0,
                   AudacityProject::msClipT1 - AudacityProject::msClipT0); // MJS: Is this correct?
                tmp->Flush();
 
                bPastedSomething = true;
-               ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
+               wt->ClearAndPaste(t0, t1, tmp.get(), true, true);
             }
-         }
-         else if (n->GetKind() == Track::Label && n->GetSelected())
-         {
-            ((LabelTrack *)n)->Clear(t0, t1);
+         },
+         [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
+            if (!lt->GetSelected())
+               return fallthrough();
+
+            lt->Clear(t0, t1);
 
             // As above, only shift labels if sync-lock is on.
             if (isSyncLocked)
-               ((LabelTrack *)n)->ShiftLabelsOnInsert(
+               lt->ShiftLabelsOnInsert(
                   AudacityProject::msClipT1 - AudacityProject::msClipT0, t0);
+         },
+         [&](Track *n) {
+            if (n->IsSyncLockSelected())
+               n->SyncLockAdjust(t1, t0 +
+                  AudacityProject::msClipT1 - AudacityProject::msClipT0);
          }
-         else if (n->IsSyncLockSelected())
-         {
-            n->SyncLockAdjust(t1,
-               t0 + AudacityProject::msClipT1 - AudacityProject::msClipT0);
-         }
-
-         n = iter.Next();
-      }
+      );
    }
 
    // TODO: What if we clicked past the end of the track?
@@ -6085,9 +5936,7 @@ bool MenuCommandHandler::HandlePasteText(AudacityProject &project)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListOfKindIterator iterLabelTrack(Track::Label, tracks);
-   LabelTrack* pLabelTrack = (LabelTrack*)(iterLabelTrack.First());
-   while (pLabelTrack)
+   for (auto pLabelTrack : tracks->Any<LabelTrack>())
    {
       // Does this track have an active label?
       if (pLabelTrack->IsSelected()) {
@@ -6109,7 +5958,6 @@ bool MenuCommandHandler::HandlePasteText(AudacityProject &project)
             return true;
          }
       }
-      pLabelTrack = (LabelTrack *) iterLabelTrack.Next();
    }
    return false;
 }
@@ -6125,69 +5973,49 @@ bool MenuCommandHandler::HandlePasteNothingSelected(AudacityProject &project)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    // First check whether anything's selected.
-   bool bAnySelected = false;
-   TrackListIterator iterTrack(tracks);
-   Track* pTrack = iterTrack.First();
-   while (pTrack) {
-      if (pTrack->GetSelected())
-      {
-         bAnySelected = true;
-         break;
-      }
-      pTrack = iterTrack.Next();
-   }
-
-   if (bAnySelected)
+   if (tracks->Selected())
       return false;
    else
    {
-      TrackListConstIterator iterClip(AudacityProject::msClipboard.get());
-      auto pClip = iterClip.First();
-      if (!pClip)
+      auto clipTrackRange = AudacityProject::msClipboard->Any< const Track >();
+      if (clipTrackRange.empty())
          return true; // nothing to paste
 
       Track* pFirstNewTrack = NULL;
-      while (pClip) {
+      for (auto pClip : clipTrackRange) {
          Maybe<WaveTrack::Locker> locker;
-         if ((AudacityProject::msClipProject != &project) && (pClip->GetKind() == Track::Wave))
-            // Cause duplication of block files on disk, when copy is
-            // between projects
-            locker.create(static_cast<const WaveTrack*>(pClip));
 
          Track::Holder uNewTrack;
          Track *pNewTrack;
-         switch (pClip->GetKind()) {
-         case Track::Wave:
-            {
-               WaveTrack *w = (WaveTrack *)pClip;
-               uNewTrack = trackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate()),
+         pClip->TypeSwitch(
+            [&](const WaveTrack *wc) {
+               if ((AudacityProject::msClipProject != &project))
+                  // Cause duplication of block files on disk, when copy is
+                  // between projects
+                  locker.create(wc);
+               uNewTrack = trackFactory->NewWaveTrack(
+                  wc->GetSampleFormat(), wc->GetRate()),
                pNewTrack = uNewTrack.get();
+            },
+#ifdef USE_MIDI
+            [&](const NoteTrack *) {
+               uNewTrack = trackFactory->NewNoteTrack(),
+               pNewTrack = uNewTrack.get();
+            },
+#endif
+            [&](const LabelTrack *) {
+               uNewTrack = trackFactory->NewLabelTrack(),
+               pNewTrack = uNewTrack.get();
+            },
+            [&](const TimeTrack *) {
+               // Maintain uniqueness of the time track!
+               pNewTrack = tracks->GetTimeTrack();
+               if (!pNewTrack)
+                  uNewTrack = trackFactory->NewTimeTrack(),
+                  pNewTrack = uNewTrack.get();
             }
-            break;
+         );
 
-         #ifdef USE_MIDI
-         case Track::Note:
-            uNewTrack = trackFactory->NewNoteTrack(),
-            pNewTrack = uNewTrack.get();
-            break;
-         #endif // USE_MIDI
-
-         case Track::Label:
-            uNewTrack = trackFactory->NewLabelTrack(),
-            pNewTrack = uNewTrack.get();
-            break;
-         case Track::Time: {
-            // Maintain uniqueness of the time track!
-            pNewTrack = tracks->GetTimeTrack();
-            if (!pNewTrack)
-               uNewTrack = trackFactory->NewTimeTrack(),
-               pNewTrack = uNewTrack.get();
-            break;
-         }
-         default:
-            pClip = iterClip.Next();
-            continue;
-         }
          wxASSERT(pClip);
 
          pNewTrack->Paste(0.0, pClip);
@@ -6199,9 +6027,7 @@ bool MenuCommandHandler::HandlePasteNothingSelected(AudacityProject &project)
          if (uNewTrack)
             FinishCopy(pClip, std::move(uNewTrack), *tracks);
          else
-            FinishCopy(pClip, pNewTrack);
-
-         pClip = iterClip.Next();
+            Track::FinishCopy(pClip, pNewTrack);
       }
 
       // Select some pasted samples, which is probably impossible to get right
@@ -6240,40 +6066,29 @@ void MenuCommandHandler::OnPasteNewLabel(const CommandContext &context)
 
    bool bPastedSomething = false;
 
-   SelectedTrackListOfKindIterator iter(Track::Label, tracks);
-   Track *t = iter.First();
-   if (!t)
    {
-      // If there are no selected label tracks, try to choose the first label
-      // track after some other selected track
-      TrackListIterator iter1(tracks);
-      for (Track *t1 = iter1.First(); t1; t1 = iter1.Next()) {
-         if (t1->GetSelected()) {
-            // Look for a label track
-            while (0 != (t1 = iter1.Next())) {
-               if (t1->GetKind() == Track::Label) {
-                  t = t1;
-                  break;
-               }
-            }
-            if (t) break;
+      auto trackRange = tracks->Selected< const LabelTrack >();
+      if (trackRange.empty())
+      {
+         // If there are no selected label tracks, try to choose the first label
+         // track after some other selected track
+         Track *t = *tracks->Selected().begin()
+            .Filter( &Track::Any )
+            .Filter<LabelTrack>();
+
+         // If no match found, add one
+         if (!t) {
+            t = tracks->Add(trackFactory->NewLabelTrack());
          }
-      }
 
-      // If no match found, add one
-      if (!t) {
-         t = tracks->Add(trackFactory->NewLabelTrack());
+         // Select this track so the loop picks it up
+         t->SetSelected(true);
       }
-
-      // Select this track so the loop picks it up
-      t->SetSelected(true);
    }
 
    LabelTrack *plt = NULL; // the previous track
-   for (Track *t = iter.First(); t; t = iter.Next())
+   for ( auto lt : tracks->Selected< LabelTrack >() )
    {
-      LabelTrack *lt = (LabelTrack *)t;
-
       // Unselect the last label, so we'll have just one active label when
       // we're done
       if (plt)
@@ -6331,32 +6146,19 @@ void MenuCommandHandler::OnTrim(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
-   TrackListIterator iter(tracks);
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         switch (n->GetKind())
-         {
-#if defined(USE_MIDI)
-            case Track::Note:
-               ((NoteTrack*)n)->Trim(selectedRegion.t0(),
-                                     selectedRegion.t1());
-            break;
+   tracks->Selected().Visit(
+#ifdef USE_MIDI
+      [&](NoteTrack *nt) {
+         nt->Trim(selectedRegion.t0(),
+            selectedRegion.t1());
+      },
 #endif
-
-            case Track::Wave:
-               //Delete the section before the left selector
-               ((WaveTrack*)n)->Trim(selectedRegion.t0(),
-                                     selectedRegion.t1());
-            break;
-
-            default:
-            break;
-         }
+      [&](WaveTrack *wt) {
+         //Delete the section before the left selector
+         wt->Trim(selectedRegion.t0(),
+            selectedRegion.t1());
       }
-      n = iter.Next();
-   }
+   );
 
    project.PushState(
       wxString::Format(
@@ -6379,24 +6181,16 @@ void MenuCommandHandler::OnSplitDelete(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         if (n->GetKind() == Track::Wave)
-         {
-            ((WaveTrack*)n)->SplitDelete(selectedRegion.t0(),
-                                         selectedRegion.t1());
-         }
-         else {
-            n->Silence(selectedRegion.t0(),
-                       selectedRegion.t1());
-         }
+   tracks->Selected().Visit(
+      [&](WaveTrack *wt) {
+         wt->SplitDelete(selectedRegion.t0(),
+                         selectedRegion.t1());
+      },
+      [&](Track *n) {
+         n->Silence(selectedRegion.t0(),
+                    selectedRegion.t1());
       }
-      n = iter.Next();
-   }
+   );
 
    project.PushState(
       wxString::Format(_("Split-deleted %.2f seconds at t=%.2f"),
@@ -6413,20 +6207,9 @@ void MenuCommandHandler::OnDisjoin(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         if (n->GetKind() == Track::Wave)
-         {
-            ((WaveTrack*)n)->Disjoin(selectedRegion.t0(),
-                                     selectedRegion.t1());
-         }
-      }
-      n = iter.Next();
-   }
+   for (auto wt : tracks->Selected< WaveTrack >())
+      wt->Disjoin(selectedRegion.t0(),
+                  selectedRegion.t1());
 
    project.PushState(
       wxString::Format(_("Detached %.2f seconds at t=%.2f"),
@@ -6443,20 +6226,9 @@ void MenuCommandHandler::OnJoin(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         if (n->GetKind() == Track::Wave)
-         {
-            ((WaveTrack*)n)->Join(selectedRegion.t0(),
-                                  selectedRegion.t1());
-         }
-      }
-      n = iter.Next();
-   }
+   for (auto wt : tracks->Selected< WaveTrack >())
+      wt->Join(selectedRegion.t0(),
+               selectedRegion.t1());
 
    project.PushState(
       wxString::Format(_("Joined %.2f seconds at t=%.2f"),
@@ -6474,11 +6246,8 @@ void MenuCommandHandler::OnSilence(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-
-   for (Track *n = iter.First(); n; n = iter.Next())
-      if (n->GetSelected() && (nullptr != dynamic_cast<AudioTrack *>(n)))
-         n->Silence(selectedRegion.t0(), selectedRegion.t1());
+   for ( auto n : tracks->Selected< AudioTrack >() )
+      n->Silence(selectedRegion.t0(), selectedRegion.t1());
 
    project.PushState(
       wxString::Format(_("Silenced selected tracks for %.2f seconds at %.2f"),
@@ -6495,26 +6264,20 @@ void MenuCommandHandler::OnDuplicate(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
+   // This iteration is unusual because we add to the list inside the loop
+   auto range = tracks->Selected();
+   auto last = *range.rbegin();
+   for (auto n : range) {
+      // Make copies not for clipboard but for direct addition to the project
+      auto dest = n->Copy(selectedRegion.t0(),
+              selectedRegion.t1(), false);
+      dest->Init(*n);
+      dest->SetOffset(wxMax(selectedRegion.t0(), n->GetOffset()));
+      tracks->Add(std::move(dest));
 
-   Track *l = iter.Last();
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         // Make copies not for clipboard but for direct addition to the project
-         auto dest = n->Copy(selectedRegion.t0(),
-                 selectedRegion.t1(), false);
-         dest->Init(*n);
-         dest->SetOffset(wxMax(selectedRegion.t0(), n->GetOffset()));
-         tracks->Add(std::move(dest));
-      }
-
-      if (n == l) {
+      // This break is really needed, else we loop infinitely
+      if (n == last)
          break;
-      }
-
-      n = iter.Next();
    }
 
    project.PushState(_("Duplicated"), _("Duplicate"));
@@ -6715,20 +6478,11 @@ void MenuCommandHandler::OnSplit(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-
    double sel0 = selectedRegion.t0();
    double sel1 = selectedRegion.t1();
 
-   for (Track* n=iter.First(); n; n = iter.Next())
-   {
-      if (n->GetKind() == Track::Wave)
-      {
-         WaveTrack* wt = (WaveTrack*)n;
-         if (wt->GetSelected())
-            wt->Split( sel0, sel1 );
-      }
-   }
+   for (auto wt : tracks->Selected< WaveTrack >())
+      wt->Split( sel0, sel1 );
 
    project.PushState(_("Split"), _("Split"));
    trackPanel->Refresh(false);
@@ -6789,39 +6543,43 @@ void MenuCommandHandler::OnSplitNew(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-   Track *l = iter.Last();
+   Track::Holder dest;
 
-   for (Track *n = iter.First(); n; n = iter.Next()) {
-      if (n->GetSelected()) {
-         Track::Holder dest;
-         double newt0 = 0, newt1 = 0;
-         double offset = n->GetOffset();
-         if (n->GetKind() == Track::Wave) {
-            const auto wt = static_cast<WaveTrack*>(n);
+   // This iteration is unusual because we add to the list inside the loop
+   auto range = tracks->Selected();
+   auto last = *range.rbegin();
+   for (auto track : range) {
+      track->TypeSwitch(
+         [&](WaveTrack *wt) {
             // Clips must be aligned to sample positions or the NEW clip will not fit in the gap where it came from
+            double offset = wt->GetOffset();
             offset = wt->LongSamplesToTime(wt->TimeToLongSamples(offset));
-            newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(selectedRegion.t0()));
-            newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(selectedRegion.t1()));
+            double newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(
+               selectedRegion.t0()));
+            double newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(
+               selectedRegion.t1()));
             dest = wt->SplitCut(newt0, newt1);
+            if (dest) {
+               dest->SetOffset(wxMax(newt0, offset));
+               FinishCopy(wt, std::move(dest), *tracks);
+            }
          }
 #if 0
+         ,
          // LL:  For now, just skip all non-wave tracks since the other do not
          //      yet support proper splitting.
-         else {
-            dest = n->Cut(selectedRegion.t0(),
-                   selectedRegion.t1());
+         [&](Track *n) {
+            dest = n->Cut(viewInfo.selectedRegion.t0(),
+                   viewInfo.selectedRegion.t1());
+            if (dest) {
+               dest->SetOffset(wxMax(0, n->GetOffset()));
+               FinishCopy(n, std::move(dest), *tracks);
+            }
          }
 #endif
-         if (dest) {
-            dest->SetOffset(wxMax(newt0, offset));
-            FinishCopy(n, std::move(dest), *tracks);
-         }
-      }
-
-      if (n == l) {
+      );
+      if (track == last)
          break;
-      }
    }
 
    project.PushState(_("Split to new track"), _("Split New"));
@@ -6831,14 +6589,7 @@ void MenuCommandHandler::OnSplitNew(const CommandContext &context)
 
 int MenuCommandHandler::CountSelectedTracks(TrackList &tracks)
 {
-   TrackListIterator iter(&tracks);
-
-   int count =0;
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      if( t->GetSelected() )
-         count++;
-   }
-   return count;
+   return tracks.Selected().size();
 }
 
 void MenuCommandHandler::OnSelectTimeAndTracks
@@ -6854,8 +6605,7 @@ void MenuCommandHandler::OnSelectTimeAndTracks
          tracks->GetMinOffset(), tracks->GetEndTime());
 
    if( bAllTracks ) {
-      TrackListIterator iter(tracks);
-      for (Track *t = iter.First(); t; t = iter.Next())
+      for (auto t : tracks->Any())
          t->SetSelected(true);
 
       project.ModifyState(false);
@@ -6903,12 +6653,9 @@ void MenuCommandHandler::OnSelectSomething(const CommandContext &context)
 
 void AudacityProject::SelectNone()
 {
-   TrackListIterator iter(GetTracks());
-   Track *t = iter.First();
-   while (t) {
+   for (auto t : GetTracks()->Any())
       t->SetSelected(false);
-      t = iter.Next();
-   }
+
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
       mMixerBoard->Refresh(false);
@@ -6958,9 +6705,7 @@ void MenuCommandHandler::DoNextPeakFrequency(AudacityProject &project, bool up)
 
    // Find the first selected wave track that is in a spectrogram view.
    const WaveTrack *pTrack {};
-   SelectedTrackListOfKindIterator iter(Track::Wave, tracks);
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      WaveTrack *const wt = static_cast<WaveTrack*>(t);
+   for ( auto wt : tracks->Selected< const WaveTrack >() ) {
       const int display = wt->GetDisplay();
       if (display == WaveTrack::Spectrum) {
          pTrack = wt;
@@ -6997,22 +6742,16 @@ void MenuCommandHandler::OnSelectCursorEnd(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   double kWayOverToLeft = -1000000.0;
-   double maxEndOffset = kWayOverToLeft;
+   double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
+   auto range = tracks->Selected();
+   if ( ! range )
+      return;
 
-   while (t) {
-      if (t->GetSelected()) {
-         if (t->GetEndTime() > maxEndOffset)
-            maxEndOffset = t->GetEndTime();
-      }
+   double maxEndOffset = range.max( &Track::GetEndTime );
 
-      t = iter.Next();
-   }
-
-   if( maxEndOffset <= (kWayOverToLeft +1))
+   if( maxEndOffset <=
+       (kWayOverToLeft * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setT1(maxEndOffset);
@@ -7029,22 +6768,16 @@ void MenuCommandHandler::OnSelectStartCursor(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   double kWayOverToRight = 1000000.0;
-   double minOffset = kWayOverToRight;
+   double kWayOverToRight = std::numeric_limits<double>::max();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
+   auto range = tracks->Selected();
+   if ( ! range )
+      return;
 
-   while (t) {
-      if (t->GetSelected()) {
-         if (t->GetStartTime() < minOffset)
-            minOffset = t->GetStartTime();
-      }
+   double minOffset = range.min( &Track::GetStartTime );
 
-      t = iter.Next();
-   }
-
-   if( minOffset >= (kWayOverToRight -1 ))
+   if( minOffset >=
+       (kWayOverToRight * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setT0(minOffset);
@@ -7061,28 +6794,11 @@ void MenuCommandHandler::OnSelectTrackStartToEnd(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto trackPanel = project.GetTrackPanel();
 
-   double kWayOverToLeft = -1000000.0;
-   double maxEndOffset = kWayOverToLeft;
-   double kWayOverToRight = 1000000.0;
-   double minOffset = kWayOverToRight;
+   auto range = tracks->Selected();
+   double maxEndOffset = range.max( &Track::GetEndTime );
+   double minOffset = range.min( &Track::GetStartTime );
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-
-   while (t) {
-      if (t->GetSelected()) {
-         if (t->GetEndTime() > maxEndOffset)
-            maxEndOffset = t->GetEndTime();
-         if (t->GetStartTime() < minOffset)
-            minOffset = t->GetStartTime();
-      }
-
-      t = iter.Next();
-   }
-
-   if( maxEndOffset <= (kWayOverToLeft +1))
-      return;
-   if( minOffset >= (kWayOverToRight -1 ))
+   if( maxEndOffset < minOffset)
       return;
 
    viewInfo.selectedRegion.setTimes( minOffset, maxEndOffset );
@@ -7199,47 +6915,36 @@ int MenuCommandHandler::FindClips
    const auto tracks = project.GetTracks();
    finalResults.clear();
 
-   bool anyWaveTracksSelected =
-      tracks->end() != std::find_if(tracks->begin(), tracks->end(),
-         [] (const Track * t) {
-            return t->GetSelected() && t->GetKind() == Track::Wave; });
+   bool anyWaveTracksSelected{ tracks->Selected< const WaveTrack >() };
 
    // first search the tracks individually
 
-   TrackListIterator iter(tracks);
-   Track* track = iter.First();
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   int trackNum = 1;
-   while (track) {
-      if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
-         auto waveTrack = static_cast<const WaveTrack*>(track);
-         bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
+   auto leaders = tracks->Leaders();
+   auto range = leaders.Filter<const WaveTrack>();
+   if (anyWaveTracksSelected)
+      range = range + &Track::GetSelected;
+   for (auto waveTrack : range) {
+      bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
 
-         auto result = next ? FindNextClip(project, waveTrack, t0, t1) :
-            FindPrevClip(project, waveTrack, t0, t1);
+      auto range = stereoAndDiff
+         ? TrackList::Channels( waveTrack )
+         : TrackList::SingletonRange( waveTrack );
+
+      for ( auto wt : range ) {
+         auto result = next ? FindNextClip(project, wt, t0, t1) :
+            FindPrevClip(project, wt, t0, t1);
          if (result.found) {
-            result.trackNum = trackNum;
+            result.trackNum =
+               1 + std::distance( leaders.begin(), leaders.find( waveTrack ) );
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
-         if (stereoAndDiff) {
-            auto waveTrack2 = static_cast<const WaveTrack*>(track->GetLink());
-            auto result = next ? FindNextClip(project, waveTrack2, t0, t1) :
-               FindPrevClip(project, waveTrack2, t0, t1);
-            if (result.found) {
-               result.trackNum = trackNum;
-               result.channel = stereoAndDiff;
-               results.push_back(result);
-            }
-         }
-
-         nTracksSearched++;
       }
 
-      trackNum++;
-      track = iter.Next(true);
+      nTracksSearched++;
    }
 
 
@@ -7280,14 +6985,13 @@ int MenuCommandHandler::FindClips
    return nTracksSearched;       // can be used for screen reader messages if required
 }
 
-// Whether the two channels of a stereo track have the same clips
-bool MenuCommandHandler::ChannelsHaveSameClipBoundaries(const WaveTrack* wt)
-{
-   bool sameClips = false;
-
-   if (wt->GetLinked() && wt->GetLink()) {
-      auto& left = wt->GetClips();
-      auto& right = static_cast<const WaveTrack*>(wt->GetLink())->GetClips();
+namespace {
+   bool TwoChannelsHaveSameBoundaries
+   ( const WaveTrack *first, const WaveTrack *second )
+   {
+      bool sameClips = false;
+      auto& left = first->GetClips();
+      auto& right = second->GetClips();
       if (left.size() == right.size()) {
          sameClips = true;
          for (unsigned int i = 0; i < left.size(); i++) {
@@ -7298,9 +7002,24 @@ bool MenuCommandHandler::ChannelsHaveSameClipBoundaries(const WaveTrack* wt)
             }
          }
       }
+      return sameClips;
+   }
+}
+
+bool MenuCommandHandler::ChannelsHaveDifferentClipBoundaries(
+   const WaveTrack* wt)
+{
+   // This is quadratic in the number of channels
+   auto channels = TrackList::Channels(wt);
+   while (!channels.empty()) {
+      auto channel = *channels.first++;
+      for (auto other : channels) {
+         if (!TwoChannelsHaveSameBoundaries(channel, other))
+            return true;
+      }
    }
 
-   return sameClips;
+   return false;
 }
 
 void MenuCommandHandler::OnSelectPrevClip(const CommandContext &context)
@@ -7385,13 +7104,10 @@ void MenuCommandHandler::OnSelectSyncLockSel(const CommandContext &context)
    auto mixerBoard = project.GetMixerBoard();
 
    bool selected = false;
-   TrackListIterator iter(tracks);
-   for (Track *t = iter.First(); t; t = iter.Next())
-   {
-      if (t->IsSyncLockSelected()) {
-         t->SetSelected(true);
-         selected = true;
-      }
+   for (auto t : tracks->Any()
+         + &Track::IsSyncLockSelected - &Track::IsSelected) {
+      t->SetSelected(true);
+      selected = true;
    }
 
    if (selected)
@@ -7563,39 +7279,27 @@ void MenuCommandHandler::DoZoomFitV(AudacityProject &project)
    auto trackPanel = project.GetTrackPanel();
    auto tracks = project.GetTracks();
 
-   int height, count;
-
-   trackPanel->GetTracksUsableArea(NULL, &height);
-
-   height -= 28;
-
-   count = 0;
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   while (t) {
-      if ((nullptr != dynamic_cast<AudioTrack*>(t)) &&
-          !t->GetMinimized())
-         count++;
-      else
-         height -= t->GetHeight();
-
-      t = iter.Next();
-   }
-
+   // Only nonminimized audio tracks will be resized
+   auto range = tracks->Any<AudioTrack>() - &Track::GetMinimized;
+   auto count = range.size();
    if (count == 0)
       return;
 
+   // Find total height to apportion
+   int height;
+   trackPanel->GetTracksUsableArea(NULL, &height);
+   height -= 28;
+   
+   // The height of minimized and non-audio tracks cannot be apportioned
+   height -=
+      tracks->Any().sum( &Track::GetHeight ) - range.sum( &Track::GetHeight );
+   
+   // Give each resized track the average of the remaining height
    height = height / count;
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
-   TrackListIterator iter2(tracks);
-   t = iter2.First();
-   while (t) {
-      if ((nullptr != dynamic_cast<AudioTrack*>(t)) &&
-          !t->GetMinimized())
-         t->SetHeight(height);
-      t = iter2.Next();
-   }
+   for (auto t : range)
+      t->SetHeight(height);
 }
 
 void MenuCommandHandler::OnZoomFitV(const CommandContext &context)
@@ -8115,33 +7819,20 @@ void MenuCommandHandler::HandleMixAndRender
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(
       tracks, trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
+   tracks->GroupChannels(*uNewLeft, uNewRight ? 2 : 1);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
 
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-      int selectedCount = 0;
+      auto trackRange = tracks->Selected< WaveTrack >();
+      auto selectedCount = (trackRange + &Track::IsLeader).size();
       wxString firstName;
-
-      while (t) {
-         if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
-            if (selectedCount==0)
-               firstName = t->GetName();
-
-            // Add one to the count if it's an unlinked track, or if it's the first
-            // in a stereo pair
-            if (t->GetLinked() || !t->GetLink())
-                selectedCount++;
-
-            if (!toNewTrack) {
-               t = iter.RemoveCurrent();
-            } else {
-               t = iter.Next();
-            };
-         }
-         else
-            t = iter.Next();
+      if (selectedCount > 0)
+         firstName = (*trackRange.begin())->GetName();
+      if (!toNewTrack)  {
+         // Beware iterator invalidation!
+         for (auto &it = trackRange.first, &end = trackRange.second; it != end;)
+            tracks->Remove( *it++ );
       }
 
       // Add NEW tracks
@@ -8239,25 +7930,20 @@ void MenuCommandHandler::OnCursorTrackStart(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   double kWayOverToRight = 1000000.0;
-   double minOffset = kWayOverToRight;
+   double kWayOverToRight = std::numeric_limits<double>::max();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-
-   while (t) {
-      if (t->GetSelected()) {
-         if (t->GetOffset() < minOffset)
-            minOffset = t->GetOffset();
-      }
-
-      t = iter.Next();
-   }
-
-   if( minOffset >= (kWayOverToRight-1) )
+   auto trackRange = tracks->Selected();
+   if (trackRange.empty())
+      // This should have been prevented by command manager
       return;
 
-   if (minOffset < 0.0) minOffset = 0.0;
+   // Range is surely nonempty now
+   auto minOffset = std::max( 0.0, trackRange.min( &Track::GetOffset ) );
+
+   if( minOffset >=
+       (kWayOverToRight * (1 - std::numeric_limits<double>::epsilon()) ))
+      return;
+
    selectedRegion.setTimes(minOffset, minOffset);
    project.ModifyState(false);
    trackPanel->ScrollIntoView(selectedRegion.t0());
@@ -8271,24 +7957,19 @@ void MenuCommandHandler::OnCursorTrackEnd(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   double kWayOverToLeft = -1000000.0;
-   double maxEndOffset = kWayOverToLeft;
+   double kWayOverToLeft = std::numeric_limits<double>::lowest();
    double thisEndOffset = 0.0;
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
+   auto trackRange = tracks->Selected();
+   if (trackRange.empty())
+      // This should have been prevented by command manager
+      return;
 
-   while (t) {
-      if (t->GetSelected()) {
-         thisEndOffset = t->GetEndTime();
-         if (thisEndOffset > maxEndOffset)
-            maxEndOffset = thisEndOffset;
-      }
+   // Range is surely nonempty now
+   auto maxEndOffset = trackRange.max( &Track::GetEndTime );
 
-      t = iter.Next();
-   }
-
-   if( maxEndOffset < (kWayOverToLeft +1) )
+   if( maxEndOffset <
+       (kWayOverToLeft * (1 - std::numeric_limits<double>::epsilon()) ))
       return;
 
    selectedRegion.setTimes(maxEndOffset, maxEndOffset);
@@ -8457,48 +8138,37 @@ int MenuCommandHandler::FindClipBoundaries
    auto tracks = project.GetTracks();
    finalResults.clear();
 
-   bool anyWaveTracksSelected =
-      tracks->end() != std::find_if(tracks->begin(), tracks->end(),
-         [] (const Track *t) {
-            return t->GetSelected() && t->GetKind() == Track::Wave; });
+   bool anyWaveTracksSelected{ tracks->Selected< const WaveTrack >() };
 
 
    // first search the tracks individually
 
-   TrackListIterator iter(tracks);
-   Track* track = iter.First();
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   int trackNum = 1;
-   while (track) {
-      if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
-         auto waveTrack = static_cast<const WaveTrack*>(track);
-         bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
+   auto leaders = tracks->Leaders();
+   auto range = leaders.Filter<const WaveTrack>();
+   if (anyWaveTracksSelected)
+      range = range + &Track::GetSelected;
+   for (auto waveTrack : range) {
+      bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
 
-         auto result = next ? FindNextClipBoundary(waveTrack, time) :
-            FindPrevClipBoundary(waveTrack, time);
+      auto range = stereoAndDiff
+         ? TrackList::Channels( waveTrack )
+         : TrackList::SingletonRange(waveTrack);
+
+      for (auto wt : range) {
+         auto result = next ? FindNextClipBoundary(wt, time) :
+         FindPrevClipBoundary(wt, time);
          if (result.nFound > 0) {
-            result.trackNum = trackNum;
+            result.trackNum =
+               1 + std::distance( leaders.begin(), leaders.find( waveTrack ) );
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
-         if (stereoAndDiff) {
-            waveTrack = static_cast<const WaveTrack*>(track->GetLink());
-            result = next ? FindNextClipBoundary(waveTrack, time) :
-               FindPrevClipBoundary(waveTrack, time);
-            if (result.nFound > 0) {
-               result.trackNum = trackNum;
-               result.channel = stereoAndDiff;
-               results.push_back(result);
-            }
-         }
-
-         nTracksSearched++;
       }
 
-      trackNum++;
-      track = iter.Next(true);
+      nTracksSearched++;
    }
 
 
@@ -8566,7 +8236,8 @@ wxString MenuCommandHandler::FoundTrack::ComposeTrackName() const
       : name;
    auto longName = shortName;
    if (channel) {
-      if ( waveTrack->GetLinked() )
+      // TODO: more-than-two-channels-message
+      if ( waveTrack->IsLeader() )
       /* i18n-hint: given the name of a track, specify its left channel */
          longName = wxString::Format(_("%s left"), shortName);
       else
@@ -8648,60 +8319,29 @@ void MenuCommandHandler::HandleAlign
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
    wxString action;
    wxString shortAction;
-   double offset;
-   double minOffset = DBL_MAX;
-   double maxEndOffset = 0.0;
-   double leftOffset = 0.0;
-   bool bRightChannel = false;
-   double avgOffset = 0.0;
-   int numSelected = 0;
-   Track *t = iter.First();
    double delta = 0.0;
    double newPos = -1.0;
-   std::vector<double> trackStartArray;
-   std::vector<double> trackEndArray;
-   double firstTrackOffset=0.0f;
 
-   while (t) {
-      // We only want Wave and Note tracks here.
-      if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
-      {
-         offset = t->GetOffset();
-         if (t->GetLinked()) {   // Left channel of stereo track.
-            leftOffset = offset;
-            bRightChannel = true; // next track is the right channel.
-         } else {
-            if (bRightChannel) {
-               // Align channel with earlier start  time
-               offset = (offset < leftOffset)? offset : leftOffset;
-               leftOffset = 0.0;
-               bRightChannel = false;
-            }
-            avgOffset += offset;
-            if (numSelected == 0) {
-               firstTrackOffset = offset; // For Align End to End.
-            }
-            numSelected++;
-         }
-         trackStartArray.push_back(t->GetStartTime());
-         trackEndArray.push_back(t->GetEndTime());
+   auto channelRange = tracks->Selected< AudioTrack >();
+   auto trackRange = tracks->SelectedLeaders< AudioTrack >();
 
-         if (offset < minOffset)
-            minOffset = offset;
-         if (t->GetEndTime() > maxEndOffset)
-            maxEndOffset = t->GetEndTime();
-      }
-      t = iter.Next();
-   }
+   auto FindOffset = []( const Track *pTrack ) {
+      return TrackList::Channels(pTrack).min( &Track::GetOffset ); };
 
-   avgOffset /= numSelected;  // numSelected is mono/stereo tracks not channels.
+   auto firstTrackOffset = [&]{ return FindOffset( *trackRange.begin() ); };
+   auto minOffset = [&]{ return trackRange.min( FindOffset ); };
+   auto avgOffset = [&]{
+      return trackRange.sum( FindOffset ) /
+                             std::max( size_t(1), trackRange.size() ); };
+
+   auto maxEndOffset = [&]{
+      return std::max(0.0, channelRange.max( &Track::GetEndTime ) ); };
 
    switch(index) {
    case kAlignStartZero:
-      delta = -minOffset;
+      delta = -minOffset();
       action = moveSel
          /* i18n-hint: In this and similar messages describing editing actions,
             the starting or ending points of tracks are re-"aligned" to other
@@ -8717,7 +8357,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Start");
       break;
    case kAlignStartSelStart:
-      delta = selectedRegion.t0() - minOffset;
+      delta = selectedRegion.t0() - minOffset();
       action = moveSel
          ? _("Aligned/Moved start to cursor/selection start")
          : _("Aligned start to cursor/selection start");
@@ -8726,7 +8366,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Start");
       break;
    case kAlignStartSelEnd:
-      delta = selectedRegion.t1() - minOffset;
+      delta = selectedRegion.t1() - minOffset();
       action = moveSel
          ? _("Aligned/Moved start to selection end")
          : _("Aligned start to selection end");
@@ -8735,7 +8375,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Start");
       break;
    case kAlignEndSelStart:
-      delta = selectedRegion.t0() - maxEndOffset;
+      delta = selectedRegion.t0() - maxEndOffset();
       action = moveSel
          ? _("Aligned/Moved end to cursor/selection start")
          : _("Aligned end to cursor/selection start");
@@ -8745,7 +8385,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align End");
       break;
    case kAlignEndSelEnd:
-      delta = selectedRegion.t1() - maxEndOffset;
+      delta = selectedRegion.t1() - maxEndOffset();
       action = moveSel
          ? _("Aligned/Moved end to selection end")
          : _("Aligned end to selection end");
@@ -8756,7 +8396,7 @@ void MenuCommandHandler::HandleAlign
       break;
    // index set in alignLabelsNoSync
    case kAlignEndToEnd:
-      newPos = firstTrackOffset;
+      newPos = firstTrackOffset();
       action = moveSel
          ? _("Aligned/Moved end to end")
          : _("Aligned end to end");
@@ -8766,7 +8406,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align End to End");
       break;
    case kAlignTogether:
-      newPos = avgOffset;
+      newPos = avgOffset();
       action = moveSel
          ? _("Aligned/Moved together")
          : _("Aligned together");
@@ -8777,52 +8417,20 @@ void MenuCommandHandler::HandleAlign
    }
 
    if ((unsigned)index >= mAlignLabelsCount) { // This is an alignLabelsNoSync command.
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-      double leftChannelStart = 0.0;
-      double leftChannelEnd = 0.0;
-      double rightChannelStart = 0.0;
-      double rightChannelEnd = 0.0;
-      int arrayIndex = 0;
-      while (t) {
+      for (auto t : tracks->SelectedLeaders< AudioTrack >()) {
          // This shifts different tracks in different ways, so no sync-lock move.
          // Only align Wave and Note tracks end to end.
-         if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
-         {
-            t->SetOffset(newPos);   // Move the track
+         auto channels = TrackList::Channels(t);
 
-            if (t->GetLinked()) {   // Left channel of stereo track.
-               leftChannelStart = trackStartArray[arrayIndex];
-               leftChannelEnd = trackEndArray[arrayIndex];
-               rightChannelStart = trackStartArray[1+arrayIndex];
-               rightChannelEnd = trackEndArray[1+arrayIndex];
-               bRightChannel = true;   // next track is the right channel.
-               // newPos is the offset for the earlier channel.
-               // If right channel started first, offset the left channel.
-               if (rightChannelStart < leftChannelStart) {
-                  t->SetOffset(newPos + leftChannelStart - rightChannelStart);
-               }
-               arrayIndex++;
-            } else {
-               if (bRightChannel) {
-                  // If left channel started first, offset the right channel.
-                  if (leftChannelStart < rightChannelStart) {
-                     t->SetOffset(newPos + rightChannelStart - leftChannelStart);
-                  }
-                  if (index == kAlignEndToEnd) {
-                     // Now set position for start of next track.
-                     newPos += wxMax(leftChannelEnd, rightChannelEnd) - wxMin(leftChannelStart, rightChannelStart);
-                  }
-                  bRightChannel = false;
-               } else { // Mono track
-                  if (index == kAlignEndToEnd) {
-                     newPos += (trackEndArray[arrayIndex] - trackStartArray[arrayIndex]);
-                  }
-               }
-               arrayIndex++;
-            }
-         }
-         t = iter.Next();
+         auto trackStart = channels.min( &Track::GetStartTime );
+         auto trackEnd = channels.max( &Track::GetEndTime );
+
+         for (auto channel : channels)
+            // Move the track
+            channel->SetOffset(newPos + channel->GetStartTime() - trackStart);
+
+         if (index == kAlignEndToEnd)
+            newPos += (trackEnd - trackStart);
       }
       if (index == kAlignEndToEnd) {
          OnZoomFit(project);
@@ -8830,16 +8438,9 @@ void MenuCommandHandler::HandleAlign
    }
 
    if (delta != 0.0) {
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-
-      while (t) {
-         // For a fixed-distance shift move sync-lock selected tracks also.
-         if (t->GetSelected() || t->IsSyncLockSelected()) {
-            t->SetOffset(t->GetOffset() + delta);
-         }
-         t = iter.Next();
-      }
+      // For a fixed-distance shift move sync-lock selected tracks also.
+      for (auto t : tracks->Any() + &Track::IsSelectedOrSyncLockSelected )
+         t->SetOffset(t->GetOffset() + delta);
    }
 
    if (moveSel)
@@ -9024,29 +8625,25 @@ void MenuCommandHandler::OnScoreAlign(const CommandContext &context)
    auto tracks = project.GetTracks();
    const auto rate = project.GetRate();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    int numWaveTracksSelected = 0;
    int numNoteTracksSelected = 0;
    int numOtherTracksSelected = 0;
-   NoteTrack *nt;
    double endTime = 0.0;
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   while (t) {
-      if (t->GetSelected()) {
-         if (t->GetKind() == Track::Wave) {
-            numWaveTracksSelected++;
-            WaveTrack *wt = (WaveTrack *) t;
-            endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();
-         } else if(t->GetKind() == Track::Note) {
-            numNoteTracksSelected++;
-            nt = (NoteTrack *) t;
-         } else numOtherTracksSelected++;
+   GetTracks()->Selected().Visit(
+      [&](WaveTrack *wt) {
+         numWaveTracksSelected++;
+         endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();
+      },
+      [&](NoteTrack *) {
+         numNoteTracksSelected++;
+      },
+      [&](Track*) {
+         numOtherTracksSelected++;
       }
-      t = iter.Next();
-   }
+   );
 
    if(numWaveTracksSelected == 0 ||
       numNoteTracksSelected != 1 ||
@@ -9173,22 +8770,20 @@ void MenuCommandHandler::OnNewStereoTrack(const CommandContext &context)
    auto defaultFormat = project.GetDefaultFormat();
    auto rate = project.GetRate();
 
-   auto t = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
-   t->SetChannel(Track::LeftChannel);
    project.SelectNone();
 
-   t->SetSelected(true);
-   t->SetLinked (true);
+   auto left = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
+   left->SetSelected(true);
 
-   t = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
-   t->SetChannel(Track::RightChannel);
+   auto right = tracks->Add(trackFactory->NewWaveTrack(defaultFormat, rate));
+   right->SetSelected(true);
 
-   t->SetSelected(true);
+   tracks->GroupChannels(*left, 2);
 
    project.PushState(_("Created new stereo audio track"), _("New Track"));
 
    project.RedrawProject();
-   trackPanel->EnsureVisible(t);
+   trackPanel->EnsureVisible(left);
 }
 
 void MenuCommandHandler::OnNewLabelTrack(const CommandContext &context)
@@ -9516,30 +9111,14 @@ int MenuCommandHandler::DoAddLabel(
          return -1;     // index
    }
 
-   LabelTrack *lt = NULL;
-
    // If the focused track is a label track, use that
    Track *const pFocusedTrack = trackPanel->GetFocusedTrack();
-   Track *t = pFocusedTrack;
-   if (t && t->GetKind() == Track::Label) {
-      lt = (LabelTrack *) t;
-   }
 
-   // Otherwise look for a label track after the focused track
-   if (!lt) {
-      TrackListIterator iter(tracks);
-      if (t)
-         iter.StartWith(t);
-      else
-         t = iter.First();
-
-      while (t && !lt) {
-         if (t->GetKind() == Track::Label)
-            lt = (LabelTrack *) t;
-
-         t = iter.Next();
-      }
-   }
+   // Look for a label track at or after the focused track
+   auto iter = pFocusedTrack
+      ? tracks->Find(pFocusedTrack)
+      : tracks->Any().begin();
+   auto lt = * iter.Filter< LabelTrack >();
 
    // If none found, start a NEW label track and use it
    if (!lt) {
@@ -9565,15 +9144,7 @@ int MenuCommandHandler::DoAddLabel(
          // Must remember the track to re-focus after finishing a label edit.
          // do NOT identify it by a pointer, which might dangle!  Identify
          // by position.
-         TrackListIterator iter(tracks);
-         Track *track = iter.First();
-         do
-            ++focusTrackNumber;
-         while (track != pFocusedTrack &&
-                NULL != (track = iter.Next()));
-         if (!track)
-            // How could we not find it?
-            focusTrackNumber = -1;
+         focusTrackNumber = pFocusedTrack->GetIndex();
       }
    }
 
@@ -9583,7 +9154,7 @@ int MenuCommandHandler::DoAddLabel(
 
    project.RedrawProject();
    if (!useDialog) {
-      trackPanel->EnsureVisible((Track *)lt);
+      trackPanel->EnsureVisible(lt);
    }
    trackPanel->SetFocus();
 
@@ -9680,34 +9251,31 @@ void MenuCommandHandler::OnRemoveTracks(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   Track *f = NULL;
-   Track *l = NULL;
+   std::vector<Track*> toRemove;
+   for (auto track : tracks->Selected())
+      toRemove.push_back(track);
 
-   while (t) {
-      if (t->GetSelected()) {
-         auto playable = dynamic_cast<PlayableTrack*>(t);
-         if (mixerBoard && playable)
-            mixerBoard->RemoveTrackCluster(playable);
-         if (!f)
-            f = l;         // Capture the track preceeding the first removed track
-         t = iter.RemoveCurrent();
-      }
-      else {
-         l = t;
-         t = iter.Next();
-      }
+   // Capture the track preceding the first removed track
+   Track *f{};
+   if (!toRemove.empty()) {
+      auto found = tracks->Find(toRemove[0]);
+      f = *--found;
    }
 
-   // All tracks but the last were removed...try to use the last track
-   if (!f)
-      f = l;
+   if (mixerBoard)
+      for (auto track : tracks->Selected<PlayableTrack>())
+         mixerBoard->RemoveTrackCluster(track);
 
-   // Try to use the first track after the removal or, if none,
-   // the track preceeding the removal
+   for (auto track : toRemove)
+      tracks->Remove(track);
+
+   if (!f)
+      // try to use the last track
+      f = *tracks->Any().rbegin();
    if (f) {
-      t = tracks->GetNext(f, true);
+      // Try to use the first track after the removal
+      auto found = tracks->FindLeader(f);
+      auto t = *++found;
       if (t)
          f = t;
    }
@@ -9926,14 +9494,8 @@ void MenuCommandHandler::OnCollapseAllTracks(const CommandContext &context)
    auto &project = context.project;
    auto tracks = project.GetTracks();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-
-   while (t)
-   {
+   for (auto t : tracks->Any())
       t->SetMinimized(true);
-      t = iter.Next();
-   }
 
    project.ModifyState(true);
    project.RedrawProject();
@@ -9944,14 +9506,8 @@ void MenuCommandHandler::OnExpandAllTracks(const CommandContext &context)
    auto &project = context.project;
    auto tracks = project.GetTracks();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-
-   while (t)
-   {
+   for (auto t : tracks->Any())
       t->SetMinimized(false);
-      t = iter.Next();
-   }
 
    project.ModifyState(true);
    project.RedrawProject();
@@ -9962,28 +9518,14 @@ void MenuCommandHandler::OnPanTracks(AudacityProject &project, float PanValue)
    auto tracks = project.GetTracks();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-
    // count selected wave tracks
-   int count =0;
-   while (t)
-   {
-      if( t->GetKind() == Track::Wave && t->GetSelected() )
-         count++;
-      t = iter.Next();
-   }
+   const auto range = tracks->Any< WaveTrack >();
+   const auto selectedRange = range + &Track::IsSelected;
+   auto count = selectedRange.size();
 
    // iter through them, all if none selected.
-   t = iter.First();
-   while (t)
-   {
-      if( t->GetKind() == Track::Wave && ((count==0) || t->GetSelected()) ){
-         WaveTrack *left = (WaveTrack *)t;
-         left->SetPan( PanValue );
-      }
-      t = iter.Next();
-   }
+   for (auto left : count == 0 ? range : selectedRange )
+      left->SetPan( PanValue );
 
    project.RedrawProject();
    if (mixerBoard)
@@ -10021,18 +9563,11 @@ void MenuCommandHandler::OnMuteAllTracks(const CommandContext &context)
    auto soloNone = project.IsSoloNone();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-
-   while (t)
+   for (auto pt : tracks->Any<PlayableTrack>())
    {
-      auto pt = dynamic_cast<PlayableTrack *>(t);
-      if (pt) {
-         pt->SetMute(true);
-         if (soloSimple || soloNone)
-            pt->SetSolo(false);
-      }
-      t = iter.Next();
+      pt->SetMute(true);
+      if (soloSimple || soloNone)
+         pt->SetSolo(false);
    }
 
    project.ModifyState(true);
@@ -10052,18 +9587,11 @@ void MenuCommandHandler::OnUnmuteAllTracks(const CommandContext &context)
    auto soloNone = project.IsSoloNone();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-
-   while (t)
+   for (auto pt : tracks->Any<PlayableTrack>())
    {
-      auto pt = dynamic_cast<PlayableTrack *>(t);
-      if (pt) {
-         pt->SetMute(false);
-         if (soloSimple || soloNone)
-            pt->SetSolo(false);
-      }
-      t = iter.Next();
+      pt->SetMute(false);
+      if (soloSimple || soloNone)
+         pt->SetSolo(false);
    }
 
    project.ModifyState(true);
@@ -10108,8 +9636,6 @@ void MenuCommandHandler::OnResample(const CommandContext &context)
    auto projectRate = project.GetRate();
    auto tracks = project.GetTracks();
    auto &undoManager = *project.GetUndoManager();
-
-   TrackListIterator iter(tracks);
 
    int newRate;
 
@@ -10178,7 +9704,7 @@ void MenuCommandHandler::OnResample(const CommandContext &context)
 
    int ndx = 0;
    auto flags = UndoPush::AUTOSAVE;
-   for (Track *t = iter.First(); t; t = iter.Next())
+   for (auto wt : tracks->Selected< WaveTrack >())
    {
       wxString msg;
 
@@ -10186,21 +9712,19 @@ void MenuCommandHandler::OnResample(const CommandContext &context)
 
       ProgressDialog progress(_("Resample"), msg);
 
-      if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         // The resampling of a track may be stopped by the user.  This might
-         // leave a track with multiple clips in a partially resampled state.
-         // But the thrown exception will cause rollback in the application
-         // level handler.
+      // The resampling of a track may be stopped by the user.  This might
+      // leave a track with multiple clips in a partially resampled state.
+      // But the thrown exception will cause rollback in the application
+      // level handler.
 
-         ((WaveTrack*)t)->Resample(newRate, &progress);
+       wt->Resample(newRate, &progress);
 
-         // Each time a track is successfully, completely resampled,
-         // commit that to the undo stack.  The second and later times,
-         // consolidate.
+      // Each time a track is successfully, completely resampled,
+      // commit that to the undo stack.  The second and later times,
+      // consolidate.
 
-         project.PushState(_("Resampled audio track(s)"), _("Resample Track"), flags);
-         flags = flags | UndoPush::CONSOLIDATE;
-      }
+      project.PushState(_("Resampled audio track(s)"), _("Resample Track"), flags);
+      flags = flags | UndoPush::CONSOLIDATE;
    }
 
    undoManager.StopConsolidating();

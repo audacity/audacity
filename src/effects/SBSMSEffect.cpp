@@ -215,10 +215,8 @@ bool EffectSBSMS::Process()
    bool bGoodResult = true;
 
    //Iterate over each track
-   //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
-   this->CopyInputTracks(Track::All); // Set up mOutputTracks.
-   TrackListIterator iter(mOutputTracks.get());
-   Track* t;
+   //all needed because this effect needs to introduce silence in the group tracks to keep sync
+   this->CopyInputTracks(true); // Set up mOutputTracks.
    mCurTrackNum = 0;
 
    double maxDuration = 0.0;
@@ -229,19 +227,16 @@ bool EffectSBSMS::Process()
    Slide pitchSlide(pitchSlideType,pitchStart,pitchEnd);
    mTotalStretch = rateSlide.getTotalStretch();
 
-   t = iter.First();
-   while (bGoodResult && t != NULL) {
-      if (t->GetKind() == Track::Label &&
-            (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
-      {
-         if (!ProcessLabelTrack(static_cast<LabelTrack*>(t))) {
+   mOutputTracks->Leaders().VisitWhile( bGoodResult,
+      [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
+         if (!(lt->GetSelected() || (mustSync && lt->IsSyncLockSelected())))
+            return fallthrough();
+         if (!ProcessLabelTrack(lt))
             bGoodResult = false;
-            break;
-         }
-      }
-      else if (t->GetKind() == Track::Wave && t->GetSelected() )
-      {
-         WaveTrack* leftTrack = (WaveTrack*)t;
+      },
+      [&](WaveTrack *leftTrack, const Track::Fallthrough &fallthrough) {
+         if (!leftTrack->GetSelected())
+            return fallthrough();
 
          //Get start and end times from track
          mCurT0 = leftTrack->GetStartTime();
@@ -257,11 +252,11 @@ bool EffectSBSMS::Process()
             auto start = leftTrack->TimeToLongSamples(mCurT0);
             auto end = leftTrack->TimeToLongSamples(mCurT1);
 
-            WaveTrack* rightTrack = NULL;
-            if (leftTrack->GetLinked()) {
+            // TODO: more-than-two-channels
+            WaveTrack *rightTrack =
+               * ++ TrackList::Channels(leftTrack).begin();
+            if (rightTrack) {
                double t;
-               // Assume linked track is wave or null
-               rightTrack = static_cast<WaveTrack*>(iter.Next());
 
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();
@@ -321,7 +316,8 @@ bool EffectSBSMS::Process()
                       ( samplesToProcess.as_long_long() ),
                    0, nullptr);
                
-            } else {
+            }
+            else {
               rb.bPitch = false;
               outSlideType = (srProcess==srTrack?SlideIdentity:SlideConstant);
               outResampleCB = postResampleCB;
@@ -414,8 +410,10 @@ bool EffectSBSMS::Process()
                      frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once.
                   }
                }
-               if (TrackProgress(nWhichTrack, frac))
-                  return false;
+               if (TrackProgress(nWhichTrack, frac)) {
+                  bGoodResult = false;
+                  return;
+               }
             }
 
             {
@@ -425,35 +423,34 @@ bool EffectSBSMS::Process()
                   std::rethrow_exception(pException);
             }
 
-            if (bGoodResult) {
-               rb.outputLeftTrack->Flush();
-               if(rightTrack)
-                  rb.outputRightTrack->Flush();
+            rb.outputLeftTrack->Flush();
+            if(rightTrack)
+               rb.outputRightTrack->Flush();
 
-               leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
-                                        true, false, warper.get());
+            leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
+                                     true, false, warper.get());
 
-               if(rightTrack)
-                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
-                                            true, false, warper.get());
-            }
+            if(rightTrack)
+               rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
+                                         true, false, warper.get());
          }
          mCurTrackNum++;
+      },
+      [&](Track *t) {
+         if (mustSync && t->IsSyncLockSelected())
+         {
+            t->SyncLockAdjust(mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
+         }
       }
-      else if (mustSync && t->IsSyncLockSelected())
-      {
-         t->SyncLockAdjust(mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
-      }
-      //Iterate to the next track
-      t = iter.Next();
-   }
+   );
 
-   if (bGoodResult)
+   if (bGoodResult) {
       ReplaceProcessedTracks(bGoodResult);
 
-   // Update selection
-   mT0 = mCurT0;
-   mT1 = mCurT0 + maxDuration;
+      // Update selection
+      mT0 = mCurT0;
+      mT1 = mCurT0 + maxDuration;
+   }
 
    return bGoodResult;
 }

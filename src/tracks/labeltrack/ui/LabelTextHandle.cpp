@@ -87,33 +87,22 @@ UIHandle::Result LabelTextHandle::Click
    {
       // IF the user clicked a label, THEN select all other tracks by Label
 
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-
       //do nothing if at least one other track is selected
-      bool done = false;
-      while (!done && t) {
-         if (t->GetSelected() && t != pLT.get())
-            done = true;
-         t = iter.Next();
-      }
+      bool done = tracks->Selected().any_of(
+         [&](const Track *pTrack){ return pTrack != pLT.get(); }
+      );
 
       if (!done) {
          //otherwise, select all tracks
-         t = iter.First();
-         while (t)
-         {
+         for (auto t : tracks->Any())
             selectionState.SelectTrack
-               ( *pProject->GetTracks(), *t, true, true,
-                 pProject->GetMixerBoard() );
-            t = iter.Next();
-         }
+               ( *t, true, true, pProject->GetMixerBoard() );
       }
 
       // Do this after, for its effect on TrackPanel's memory of last selected
       // track (which affects shift-click actions)
       selectionState.SelectTrack
-         ( *pProject->GetTracks(), *pLT, true, true,
+         ( *pLT, true, true,
            pProject->GetMixerBoard() );
    }
 

@@ -76,7 +76,7 @@ UIHandlePtr StretchHandle::HitTest
    // within the selection
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   if (!pTrack || !pTrack->GetSelected() || pTrack->GetKind() != Track::Note)
+   if (!pTrack || !pTrack->GetSelected())
       return {};
 
    const wxRect &rect = st.rect;
@@ -226,9 +226,8 @@ UIHandle::Result StretchHandle::Release
    bool right = mStretchState.mMode == stretchRight;
    ViewInfo &viewInfo = pProject->GetViewInfo();
    if ( pProject->IsSyncLocked() && ( left || right ) ) {
-      SyncLockedTracksIterator syncIter( pProject->GetTracks() );
-      for ( auto track = syncIter.StartWith( mpTrack.get() ); track != nullptr;
-           track = syncIter.Next() ) {
+      for ( auto track :
+           TrackList::SyncLockGroup( mpTrack.get() ) ) {
          if ( track != mpTrack.get() ) {
             if ( left ) {
                auto origT0 = mStretchState.mOrigSel0Quantized;
@@ -284,63 +283,60 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
    if (pTrack == NULL && mpTrack != NULL)
       pTrack = mpTrack.get();
 
-   if (!pTrack || pTrack->GetKind() != Track::Note) {
-      return;
-   }
+  if (pTrack) pTrack->TypeSwitch( [&](NoteTrack *pNt) {
+      double moveto =
+        std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
 
-   NoteTrack *pNt = static_cast<NoteTrack *>(pTrack);
-   double moveto =
-      std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
+      double dur, left_dur, right_dur;
 
-   double dur, left_dur, right_dur;
+      // check to make sure tempo is not higher than 20 beats per second
+      // (In principle, tempo can be higher, but not infinity.)
+      double minPeriod = 0.05; // minimum beat period
 
-   // check to make sure tempo is not higher than 20 beats per second
-   // (In principle, tempo can be higher, but not infinity.)
-   double minPeriod = 0.05; // minimum beat period
-
-   // make sure target duration is not too short
-   // Take quick exit if so, without changing the selection.
-   auto t0 = mStretchState.mBeat0.first;
-   auto t1 = mStretchState.mBeat1.first;
-   switch ( mStretchState.mMode ) {
-   case stretchLeft: {
-      dur = t1 - moveto;
-      if (dur < mStretchState.mRightBeats * minPeriod)
-         return;
-      pNt->StretchRegion
-         ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
-      pNt->Offset( moveto - t0 );
-      mStretchState.mBeat0.first = moveto;
-      viewInfo.selectedRegion.setT0(moveto);
-      break;
-   }
-   case stretchRight: {
-      dur = moveto - t0;
-      if (dur < mStretchState.mLeftBeats * minPeriod)
-         return;
-      pNt->StretchRegion
-         ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
-      viewInfo.selectedRegion.setT1(moveto);
-      mStretchState.mBeat1.first = moveto;
-      break;
-   }
-   case stretchCenter: {
-      moveto = std::max(t0, std::min(t1, moveto));
-      left_dur = moveto - t0;
-      right_dur = t1 - moveto;
-      if ( left_dur < mStretchState.mLeftBeats * minPeriod ||
-           right_dur < mStretchState.mRightBeats * minPeriod )
-         return;
-      pNt->StretchRegion
-         ( mStretchState.mBeatCenter, mStretchState.mBeat1, right_dur );
-      pNt->StretchRegion
-         ( mStretchState.mBeat0, mStretchState.mBeatCenter, left_dur );
-      mStretchState.mBeatCenter.first = moveto;
-      break;
-   }
-   default:
-      wxASSERT(false);
-      break;
-   }
+      // make sure target duration is not too short
+      // Take quick exit if so, without changing the selection.
+      auto t0 = mStretchState.mBeat0.first;
+      auto t1 = mStretchState.mBeat1.first;
+      switch ( mStretchState.mMode ) {
+      case stretchLeft: {
+         dur = t1 - moveto;
+         if (dur < mStretchState.mRightBeats * minPeriod)
+            return;
+         pNt->StretchRegion
+            ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
+         pNt->Offset( moveto - t0 );
+         mStretchState.mBeat0.first = moveto;
+         viewInfo.selectedRegion.setT0(moveto);
+         break;
+      }
+      case stretchRight: {
+         dur = moveto - t0;
+         if (dur < mStretchState.mLeftBeats * minPeriod)
+            return;
+         pNt->StretchRegion
+            ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
+         viewInfo.selectedRegion.setT1(moveto);
+         mStretchState.mBeat1.first = moveto;
+         break;
+      }
+      case stretchCenter: {
+         moveto = std::max(t0, std::min(t1, moveto));
+         left_dur = moveto - t0;
+         right_dur = t1 - moveto;
+         if ( left_dur < mStretchState.mLeftBeats * minPeriod ||
+              right_dur < mStretchState.mRightBeats * minPeriod )
+            return;
+         pNt->StretchRegion
+            ( mStretchState.mBeatCenter, mStretchState.mBeat1, right_dur );
+         pNt->StretchRegion
+            ( mStretchState.mBeat0, mStretchState.mBeatCenter, left_dur );
+         mStretchState.mBeatCenter.first = moveto;
+         break;
+      }
+      default:
+         wxASSERT(false);
+         break;
+      }
+  });
 }
 #endif

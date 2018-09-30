@@ -373,16 +373,20 @@ protected:
    void DrawEverythingElse(TrackPanelDrawingContext &context,
                            const wxRegion & region,
                            const wxRect & clip);
-   void DrawOutside
-      (TrackPanelDrawingContext &context,
-       const Track *t, const wxRect & rec);
+   void DrawOutside(
+      TrackPanelDrawingContext &context,
+      const Track *leaderTrack, const wxRect & teamRect);
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
    void DrawShadow            (const Track *t, wxDC* dc, const wxRect & rect);
-   void DrawBordersAroundTrack(const Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
-   void DrawOutsideOfTrack
-      (TrackPanelDrawingContext &context,
-       const Track *t, const wxRect & rect);
+   void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect,
+                                       const int vrul);
+   void DrawBordersAroundSash (const Track *t, wxDC* dc, const wxRect & rect,
+                                       const int labelw);
+   void DrawOutsideOfTrack    (
+      TrackPanelDrawingContext &context,
+      const Track *t, const wxRect & rect);
+   void DrawSash              (const Track *t, wxDC* dc, const wxRect & rect);
 
 public:
    // Set the object that performs catch-all event handling when the pointer
@@ -487,6 +491,16 @@ protected:
    // friending GetInfoCommand allow automation to get sizes of the
    // tracks, track control panel and such.
    friend class GetInfoCommand;
+};
+
+// A predicate class
+struct IsVisibleTrack
+{
+   IsVisibleTrack(AudacityProject *project);
+
+   bool operator () (const Track *pTrack) const;
+
+   wxRect mPanelRect;
 };
 
 // See big pictorial comment in TrackPanel for explanation of these numbers

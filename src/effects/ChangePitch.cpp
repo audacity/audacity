@@ -409,8 +409,7 @@ void EffectChangePitch::DeduceFrequencies()
 {
    // As a neat trick, attempt to get the frequency of the note at the
    // beginning of the selection.
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *track = (WaveTrack *) iter.First();
+   auto track = *( inputTracks()->Selected< const WaveTrack >() ).first;
    if (track) {
       double rate = track->GetRate();
 
