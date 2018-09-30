@@ -153,8 +153,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    int getSelectedIndex() const { return mSelIndex; }
 
-   int GetKind() const override { return Label; }
-
    double GetOffset() const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
@@ -274,6 +272,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
  public:
    void SortLabels(LabelTrackHit *pHit = nullptr);
  private:
+   TrackKind GetKind() const override { return TrackKind::Label; }
+
    void ShowContextMenu();
    void OnContextMenu(wxCommandEvent & evt);
 

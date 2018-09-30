@@ -529,7 +529,7 @@ void TrackArtist::DrawVRuler
    highlight = rect.Contains(context.lastState.GetPosition());
 #endif
 
-   int kind = t->GetKind();
+   auto kind = t->GetKind();
 
    // Label and Time tracks do not have a vruler
    // But give it a beveled area

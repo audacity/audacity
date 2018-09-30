@@ -34,6 +34,8 @@
 class wxTextFile;
 class DirManager;
 class Track;
+class AudioTrack;
+class PlayableTrack;
 class LabelTrack;
 class TimeTrack;
 class TrackControls;
@@ -69,6 +71,92 @@ inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
 
 inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
 { return !(a == b); }
+
+enum class TrackKind
+{
+   None,
+   Wave,
+#if defined(USE_MIDI)
+   Note,
+#endif
+   Label,
+   Time,
+   Audio,
+   Playable,
+   All
+};
+
+// Compile-time function on enum values.
+// It knows all inheritance relations among Track subclasses
+// even where the track types are only forward declared.
+constexpr bool CompatibleTrackKinds( TrackKind desired, TrackKind actual )
+{
+   return
+      (desired == actual)
+      ||
+      (desired == TrackKind::All)
+      ||
+      (desired == TrackKind::Audio    && actual == TrackKind::Wave)
+#ifdef USE_MIDI
+      ||
+      (desired == TrackKind::Audio    && actual == TrackKind::Note)
+#endif
+      ||
+      (desired == TrackKind::Playable && actual == TrackKind::Wave)
+#ifdef EXPERIMENTAL_MIDI_OUT
+      ||
+      (desired == TrackKind::Playable && actual == TrackKind::Note)
+#endif
+   ;
+}
+
+// This bit of metaprogramming lets track_cast work even when the track
+// subclasses are visible only as incomplete types
+namespace TrackTyper {
+   template<typename, TrackKind> struct Pair;
+   using List = std::tuple<
+     Pair<Track,         TrackKind::All>,
+     Pair<AudioTrack,    TrackKind::Audio>,
+     Pair<PlayableTrack, TrackKind::Playable>,
+     Pair<LabelTrack,    TrackKind::Label>,
+     Pair<NoteTrack,     TrackKind::Note>,
+     Pair<TimeTrack,     TrackKind::Time>,
+     Pair<WaveTrack,     TrackKind::Wave>
+     // New classes can be added easily to this list
+   >;
+   template<typename...> struct Lookup;
+   template<typename TrackType, TrackKind Here, typename... Rest>
+      struct Lookup< TrackType, std::tuple< Pair<TrackType, Here>, Rest... > > {
+         static constexpr TrackKind value() {
+            return Here;
+         }
+      };
+   template<typename TrackType, typename NotHere, typename... Rest>
+      struct Lookup< TrackType, std::tuple< NotHere, Rest... > > {
+         static constexpr TrackKind value() {
+            return Lookup< TrackType, std::tuple< Rest... > >::value();
+         }
+      };
+};
+
+template<typename TrackType> constexpr TrackKind track_kind ()
+{
+   using namespace TrackTyper;
+   return Lookup< typename std::remove_const<TrackType>::type, List >::value();
+}
+
+// forward declarations, so we can make them friends
+template<typename T>
+   typename std::enable_if< std::is_pointer<T>::value, T >::type
+      track_cast(Track *track);
+
+template<typename T>
+   typename std::enable_if<
+      std::is_pointer<T>::value &&
+         std::is_const< typename std::remove_pointer< T >::type >::value,
+      T
+   >::type
+      track_cast(const Track *track);
 
 class ViewInfo;
 
@@ -233,7 +321,9 @@ public:
 
    Track *GetLink() const;
 
- private:
+private:
+   std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
+
    TrackNodePointer GetNode() const;
    void SetOwner
       (const std::weak_ptr<TrackList> &list, TrackNodePointer node);
@@ -247,18 +337,6 @@ public:
    mutable std::shared_ptr<DirManager> mDirManager;
 
  public:
-
-   enum TrackKindEnum
-   {
-      None,
-      Wave,
-#if defined(USE_MIDI)
-      Note,
-#endif
-      Label,
-      Time,
-      All
-   };
 
    enum : unsigned { DefaultHeight = 150 };
 
@@ -335,7 +413,298 @@ public:
    // May assume precondition: t0 <= t1
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
-   virtual int GetKind() const { return None; }
+   // to do: privatize this
+   virtual TrackKind GetKind() const { return TrackKind::None; }
+
+   // to do: remove these
+   static const TrackKind Label = TrackKind::Label;
+#ifdef USE_MIDI
+   static const TrackKind Note = TrackKind::Note;
+#endif
+   static const TrackKind Wave = TrackKind::Wave;
+   static const TrackKind Time = TrackKind::Time;
+   static const TrackKind All = TrackKind::All;
+   static const TrackKind None = TrackKind::None;
+
+private:
+   template<typename T>
+      friend typename std::enable_if< std::is_pointer<T>::value, T >::type
+         track_cast(Track *track);
+   template<typename T>
+      friend typename std::enable_if<
+         std::is_pointer<T>::value &&
+            std::is_const< typename std::remove_pointer< T >::type >::value,
+         T
+      >::type
+         track_cast(const Track *track);
+   friend class TrackListOfKindIterator;
+
+public:
+   bool SameKindAs(const Track &track) const
+      { return GetKind() == track.GetKind(); }
+
+   template < typename R = void >
+   using Continuation = std::function< R() >;
+   using Fallthrough = Continuation<>;
+   
+private:
+
+   // Variadic template specialized below
+   template< typename ...Params >
+   struct Executor;
+
+   // This specialization grounds the recursion.
+   template< typename R, typename ConcreteType >
+   struct Executor< R, ConcreteType >
+   {
+      enum : unsigned { SetUsed = 0 };
+      // No functions matched, so do nothing.
+      R operator () (const void *) { return R{}; }
+   };
+
+   // And another specialization is needed for void return.
+   template< typename ConcreteType >
+   struct Executor< void, ConcreteType >
+   {
+      enum : unsigned { SetUsed = 0 };
+      // No functions matched, so do nothing.
+      void operator () (const void *) { }
+   };
+
+   // This struct groups some helpers needed to define the recursive cases of
+   // Executor.
+   struct Dispatcher {
+      // This implements the specialization of Executor
+      // for the first recursive case.
+      template< typename R, typename ConcreteType,
+                typename Function, typename ...Functions >
+      struct inapplicable
+      {
+         using Tail = Executor< R, ConcreteType, Functions... >;
+         enum : unsigned { SetUsed = Tail::SetUsed << 1 };
+
+         // Ignore the first, inapplicable function and try others.
+         R operator ()
+            (const Track *pTrack,
+             const Function &, const Functions &...functions)
+         { return Tail{}( pTrack, functions... ); }
+      };
+
+      // This implements the specialization of Executor
+      // for the second recursive case.
+      template< typename R, typename BaseClass, typename ConcreteType,
+                typename Function, typename ...Functions >
+      struct applicable1
+      {
+         enum : unsigned { SetUsed = 1u };
+
+         // Ignore the remaining functions and call the first only.
+         R operator ()
+            (const Track *pTrack,
+             const Function &function, const Functions &...)
+         { return function( (BaseClass *)pTrack ); }
+      };
+
+      // This implements the specialization of Executor
+      // for the third recursive case.
+      template< typename R, typename BaseClass, typename ConcreteType,
+                typename Function, typename ...Functions >
+      struct applicable2
+      {
+         using Tail = Executor< R, ConcreteType, Functions... >;
+         enum : unsigned { SetUsed = (Tail::SetUsed << 1) | 1u };
+
+         // Call the first function, which may request dispatch to the further
+         // functions by invoking a continuation.
+         R operator ()
+            (const Track *pTrack, const Function &function,
+             const Functions &...functions)
+         {
+            auto continuation = Continuation<R>{ [&] {
+               return Tail{}( pTrack, functions... );
+            } };
+            return function( (BaseClass *)pTrack, continuation );
+         }
+      };
+
+      // This variadic template chooses among the implementations above.
+      template< typename ... > struct Switch;
+
+      // Ground the recursion.
+      template< typename R, typename ConcreteType >
+      struct Switch< R, ConcreteType >
+      {
+         // No BaseClass of ConcreteType is acceptable to Function.
+         template< typename Function, typename ...Functions >
+            static auto test()
+               -> inapplicable< R, ConcreteType, Function, Functions... >;
+      };
+
+      // Recursive case.
+      template< typename R, typename ConcreteType,
+                typename BaseClass, typename ...BaseClasses >
+      struct Switch< R, ConcreteType, BaseClass, BaseClasses... >
+      {
+         using Retry = Switch< R, ConcreteType, BaseClasses... >;
+
+         // If ConcreteType is not compatible with BaseClass, or if
+         // Function does not accept BaseClass, try other BaseClasses.
+         template< typename Function, typename ...Functions >
+            static auto test( const void * )
+               -> decltype( Retry::template test< Function, Functions... >() );
+
+         // If BaseClass is a base of ConcreteType and Function can take it,
+         // then overload resolution chooses this.
+         // If not, then the sfinae rule makes this overload unavailable.
+         template< typename Function, typename ...Functions >
+            static auto test( std::true_type * )
+               -> decltype(
+                  (void) std::declval<Function>()
+                     ( (BaseClass*)nullptr ),
+                  applicable1< R, BaseClass, ConcreteType,
+                               Function, Functions... >{}
+               );
+
+         // If BaseClass is a base of ConcreteType and Function can take it,
+         // with a second argument for a continuation,
+         // then overload resolution chooses this.
+         // If not, then the sfinae rule makes this overload unavailable.
+         template< typename Function, typename ...Functions >
+            static auto test( std::true_type * )
+               -> decltype(
+                  (void) std::declval<Function>()
+                     ( (BaseClass*)nullptr,
+                       std::declval< Continuation<R> >() ),
+                  applicable2< R, BaseClass, ConcreteType,
+                               Function, Functions... >{}
+               );
+
+         static constexpr bool Compatible = CompatibleTrackKinds(
+            track_kind<BaseClass>(), track_kind<ConcreteType>() );
+         template< typename Function, typename ...Functions >
+            static auto test()
+               -> decltype(
+                  test< Function, Functions... >(
+                     (std::integral_constant<bool, Compatible>*)nullptr) );
+      };
+   };
+
+   // This specialization is the recursive case for non-const tracks.
+   template< typename R, typename ConcreteType,
+             typename Function, typename ...Functions >
+   struct Executor< R, ConcreteType, Function, Functions... >
+      : decltype(
+         Dispatcher::Switch< R, ConcreteType,
+            Track, AudioTrack, PlayableTrack,
+            WaveTrack, LabelTrack, TimeTrack,
+            NoteTrack >
+               ::template test<Function, Functions... >())
+   {};
+
+   // This specialization is the recursive case for const tracks.
+   template< typename R, typename ConcreteType,
+             typename Function, typename ...Functions >
+   struct Executor< R, const ConcreteType, Function, Functions... >
+      : decltype(
+         Dispatcher::Switch< R, ConcreteType,
+            const Track, const AudioTrack, const PlayableTrack,
+            const WaveTrack, const LabelTrack, const TimeTrack,
+            const NoteTrack >
+               ::template test<Function, Functions... >())
+   {};
+
+public:
+
+   // A variadic function taking any number of function objects, each taking
+   // a pointer to Track or a subclass, maybe const-qualified, and maybe a
+   // second argument which is a fall-through continuation.
+   // Each of the function objects (and supplied continuations) returns R.
+   // Call the first in the sequence that accepts the actual type of the track.
+   // If no function accepts the track, do nothing and return R{}
+   // if R is not void.
+   // If one of the functions invokes the call-through, then the next following
+   // applicable funtion is called.
+   template< typename R = void, typename ...Functions >
+   R TypeSwitch(const Functions &...functions)
+   {
+      using WaveExecutor =
+         Executor< R, WaveTrack,  Functions... >;
+      using NoteExecutor =
+         Executor< R, NoteTrack,  Functions... >;
+      using LabelExecutor =
+         Executor< R, LabelTrack, Functions... >;
+      using TimeExecutor =
+         Executor< R, TimeTrack,  Functions... >;
+      using DefaultExecutor =
+         Executor< R, Track >;
+      enum { All = sizeof...( functions ) };
+
+      static_assert(
+         (1u << All) - 1u ==
+            (WaveExecutor::SetUsed |
+             NoteExecutor::SetUsed |
+             LabelExecutor::SetUsed |
+             TimeExecutor::SetUsed),
+         "Uncallable case in Track::TypeSwitch"
+      );
+
+      switch (GetKind()) {
+         case TrackKind::Wave:
+            return WaveExecutor{} (this,  functions...);
+#if defined(USE_MIDI)
+         case TrackKind::Note:
+            return NoteExecutor{} (this,  functions...);
+#endif
+         case TrackKind::Label:
+            return LabelExecutor{}(this, functions...);
+         case TrackKind::Time:
+            return TimeExecutor{} (this,  functions...);
+         default:
+            return DefaultExecutor{} (this);
+      }
+   }
+
+   // This is the overload of TypeSwitch (see above) for const tracks, taking
+   // callable arguments that only accept arguments that are pointers to const
+   template< typename R = void, typename ...Functions >
+   R TypeSwitch(const Functions &...functions) const
+   {
+      using WaveExecutor =
+         Executor< R, const WaveTrack,  Functions... >;
+      using NoteExecutor =
+         Executor< R, const NoteTrack,  Functions... >;
+      using LabelExecutor =
+         Executor< R, const LabelTrack, Functions... >;
+      using TimeExecutor =
+         Executor< R, const TimeTrack,  Functions... >;
+      using DefaultExecutor =
+         Executor< R, const Track >;
+      enum { All = sizeof...( functions ) };
+
+      static_assert(
+         (1u << All) - 1u ==
+            (WaveExecutor::SetUsed |
+             NoteExecutor::SetUsed |
+             LabelExecutor::SetUsed |
+             TimeExecutor::SetUsed),
+         "Uncallable case in Track::TypeSwitch"
+      );
+
+      switch (GetKind()) {
+         case TrackKind::Wave:
+            return WaveExecutor{} (this,  functions...);
+#if defined(USE_MIDI)
+         case TrackKind::Note:
+            return NoteExecutor{} (this,  functions...);
+#endif
+         case TrackKind::Label:
+            return LabelExecutor{}(this, functions...);
+         case TrackKind::Time:
+            return TimeExecutor{} (this,  functions...);
+         default:
+            return DefaultExecutor{} (this);
+      }
+   }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) const = 0;
@@ -349,6 +718,15 @@ public:
 
    // Checks if sync-lock is on and any track in its sync-lock group is selected.
    bool IsSyncLockSelected() const;
+
+   // An always-true predicate useful for defining iterators
+   bool Any() const;
+
+   // Frequently useful operands for + and -
+   bool IsSelected() const;
+   bool IsSelectedOrSyncLockSelected() const;
+   bool IsLeader() const;
+   bool IsSelectedLeader() const;
 
 protected:
    std::shared_ptr<Track> FindTrack() override;
@@ -405,6 +783,300 @@ public:
 protected:
    bool                mMute { false };
    bool                mSolo { false };
+};
+
+// Functions to encapsulate the checked down-casting of track pointers,
+// eliminating possibility of error -- and not quietly casting away const
+// typical usage:
+// if (auto wt = track_cast<WaveTrack*>(track)) { ... }
+template<typename T>
+   inline typename std::enable_if< std::is_pointer<T>::value, T >::type
+      track_cast(Track *track)
+{
+   using BareType = typename std::remove_pointer< T >::type;
+   if (track &&
+       CompatibleTrackKinds( track_kind<BareType>(), track->GetKind() ))
+      return reinterpret_cast<T>(track);
+   else
+      return nullptr;
+}
+
+// Overload for const pointers can cast only to other const pointer types
+template<typename T>
+   inline typename std::enable_if<
+      std::is_pointer<T>::value &&
+         std::is_const< typename std::remove_pointer< T >::type >::value,
+      T
+   >::type
+      track_cast(const Track *track)
+{
+   using BareType = typename std::remove_pointer< T >::type;
+   if (track &&
+       CompatibleTrackKinds( track_kind<BareType>(), track->GetKind() ))
+      return reinterpret_cast<T>(track);
+   else
+      return nullptr;
+}
+
+// new track iterators can eliminate the need to cast the result
+template <
+   typename TrackType // Track or a subclass, maybe const-qualified
+> class TrackIter
+   : public std::iterator<
+      std::bidirectional_iterator_tag, TrackType *const
+   >
+{
+public:
+   // Type of predicate taking pointer to const TrackType
+   // TODO C++14:  simplify away ::type
+   using FunctionType = std::function< bool(
+      typename std::add_pointer<
+         typename std::add_const<
+            typename std::remove_pointer<
+               TrackType
+            >::type
+         >::type
+      >::type
+   ) >;
+
+   template<typename Predicate = FunctionType>
+   TrackIter( TrackNodePointer begin, TrackNodePointer iter,
+              TrackNodePointer end, const Predicate &pred = {} )
+      : mBegin( begin ), mIter( iter ), mEnd( end ), mPred( pred )
+   {
+      // Establish the class invariant
+      if (this->mIter != this->mEnd && !this->valid())
+         this->operator ++ ();
+   }
+
+   // Return an iterator that replaces the predicate, advancing to the first
+   // position at or after the old position that satisfies the new predicate,
+   // or to the end.
+   template < typename Predicate2 >
+      TrackIter Filter( const Predicate2 &pred2 ) const
+   {
+      return { this->mBegin, this->mIter, this->mEnd, pred2 };
+   }
+
+   // Return an iterator that refines the subclass (and not removing const),
+   // advancing to the first position at or after the old position that
+   // satisfies the type constraint, or to the end
+   template < typename TrackType2 >
+      auto Filter() const
+         -> typename std::enable_if<
+            std::is_base_of< TrackType, TrackType2 >::value &&
+               (!std::is_const<TrackType>::value ||
+                 std::is_const<TrackType2>::value),
+            TrackIter< TrackType2 >
+         >::type
+   {
+      return { this->mBegin, this->mIter, this->mEnd, this->mPred };
+   }
+
+   const FunctionType &GetPredicate() const
+   { return this->mPred; }
+
+   // Unlike with STL iterators, this class gives well defined behavior when
+   // you increment an end iterator: you get the same.
+   TrackIter &operator ++ ()
+   {
+      // Maintain the class invariant
+      if (this->mIter != this->mEnd) do
+         ++this->mIter.first;
+      while (this->mIter != this->mEnd && !this->valid() );
+      return *this;
+   }
+
+   TrackIter operator ++ (int)
+   {
+      TrackIter result { *this };
+      this-> operator ++ ();
+      return result;
+   }
+
+   // Unlike with STL iterators, this class gives well defined behavior when
+   // you decrement past the beginning of a range: you wrap and get an end
+   // iterator.
+   TrackIter &operator -- ()
+   {
+      // Maintain the class invariant
+      do {
+         if (this->mIter == this->mBegin)
+            // Go circularly
+            this->mIter = this->mEnd;
+         else
+            --this->mIter.first;
+      } while (this->mIter != this->mEnd && !this->valid() );
+      return *this;
+   }
+
+   TrackIter operator -- (int)
+   {
+      TrackIter result { *this };
+      this->operator -- ();
+      return result;
+   }
+
+   // Unlike with STL iterators, this class gives well defined behavior when
+   // you dereference an end iterator: you get a null pointer.
+   TrackType *operator * () const
+   {
+      if (this->mIter == this->mEnd)
+         return nullptr;
+      else
+         // Other methods guarantee that the cast is correct
+         // (provided no operations on the TrackList invalidated
+         // underlying iterators or replaced the tracks there)
+         return static_cast< TrackType * >( &**this->mIter.first );
+   }
+
+   // This might be called operator + ,
+   // but that might wrongly suggest constant time when the iterator is not
+   // random access.
+   TrackIter advance( long amount ) const
+   {
+      auto copy = *this;
+      std::advance( copy, amount );
+      return copy;
+   }
+
+   friend inline bool operator == (TrackIter a, TrackIter b)
+   {
+      // Assume the predicate is not stateful.  Just compare the iterators.
+      return
+         a.mIter == b.mIter
+         // Assume this too:
+         // && a.mBegin == b.mBegin && a.mEnd == b.mEnd
+      ;
+   }
+
+   friend inline bool operator != (TrackIter a, TrackIter b)
+   {
+      return !(a == b);
+   }
+
+private:
+   bool valid() const
+   {
+      // assume mIter != mEnd
+      const auto pTrack = track_cast< TrackType * >( &**this->mIter.first );
+      if (!pTrack)
+         return false;
+      return !this->mPred || this->mPred( pTrack );
+   }
+
+   // The class invariant is that mIter == mEnd, or else, mIter != mEnd and
+   // **mIter is of the appropriate subclass and mPred(&**mIter) is true.
+   TrackNodePointer mBegin, mIter, mEnd;
+   FunctionType mPred;
+};
+
+template <
+   typename TrackType // Track or a subclass, maybe const-qualified
+> struct TrackIterRange
+   : public IteratorRange< TrackIter< TrackType > >
+{
+   TrackIterRange
+      ( const TrackIter< TrackType > &begin,
+        const TrackIter< TrackType > &end )
+         : IteratorRange< TrackIter< TrackType > >
+            ( begin, end )
+   {}
+
+   // Conjoin the filter predicate with another predicate
+   // Read + as "and"
+   template< typename Predicate2 >
+      TrackIterRange operator + ( const Predicate2 &pred2 ) const
+   {
+      const auto &pred1 = this->first.GetPredicate();
+      using Function = typename TrackIter<TrackType>::FunctionType;
+      const auto &newPred = pred1
+         ? Function{ [=] (typename Function::argument_type track) {
+            return pred1(track) && pred2(track);
+         } }
+         : Function{ pred2 };
+      return {
+         this->first.Filter( newPred ),
+         this->second.Filter( newPred )
+      };
+   }
+
+   // Specify the added conjunct as a pointer to member function
+   template< typename R, typename C >
+      TrackIterRange operator + ( R ( C ::* pmf ) () const ) const
+   {
+      return this->operator + ( std::mem_fn( pmf ) );
+   }
+
+   // Conjoin the filter predicate with the negation of another predicate
+   // Read - as "and not"
+   template< typename Predicate2 >
+      TrackIterRange operator - ( const Predicate2 &pred2 ) const
+   {
+      using ArgumentType =
+         typename TrackIterRange::iterator::FunctionType::argument_type;
+      auto neg = [=] (ArgumentType track) { return !pred2( track ); };
+      return this->operator + ( neg );
+   }
+
+   // Specify the negated conjunct as a pointer to member function
+   template< typename R, typename C >
+      TrackIterRange operator - ( R ( C ::* pmf ) () const ) const
+   {
+      return this->operator + ( std::not1( std::mem_fn( pmf ) ) );
+   }
+
+   template< typename TrackType2 >
+      TrackIterRange< TrackType2 > Filter() const
+   {
+      return {
+         this-> first.template Filter< TrackType2 >(),
+         this->second.template Filter< TrackType2 >()
+      };
+   }
+
+   TrackIterRange StartingWith( const Track *pTrack ) const
+   {
+      return {
+         this->find( pTrack ),
+         this->second
+      };
+   }
+
+   TrackIterRange EndingAfter( const Track *pTrack ) const
+   {
+      return {
+         this->first,
+         this->reversal().find( pTrack ).base()
+      };
+   }
+
+   // Exclude one given track
+   TrackIterRange Excluding ( const TrackType *pExcluded ) const
+   {
+      return this->operator - (
+         [=](const Track *pTrack){ return pExcluded == pTrack; } );
+   }
+
+   // See Track::TypeSwitch
+   template< typename ...Functions >
+   void Visit(const Functions &...functions)
+   {
+      for (auto track : *this)
+         track->TypeSwitch(functions...);
+   }
+
+   // See Track::TypeSwitch
+   // Visit until flag is false, or no more tracks
+   template< typename Flag, typename ...Functions >
+   void VisitWhile(Flag &flag, const Functions &...functions)
+   {
+      if ( flag ) for (auto track : *this) {
+         track->TypeSwitch(functions...);
+         if (!flag)
+            break;
+      }
+   }
 };
 
 class AUDACITY_DLL_API TrackListIterator /* not final */
@@ -529,14 +1201,14 @@ class AUDACITY_DLL_API TrackListCondIterator /* not final */ : public TrackListI
 class AUDACITY_DLL_API TrackListOfKindIterator /* not final */ : public TrackListCondIterator
 {
  public:
-   TrackListOfKindIterator(int kind, TrackList * val = NULL);
+   TrackListOfKindIterator(TrackKind kind, TrackList * val = nullptr);
    virtual ~TrackListOfKindIterator() {}
 
  protected:
    virtual bool Condition(Track *t) override;
 
  private:
-   int kind;
+   TrackKind kind;
 };
 
 //
@@ -547,7 +1219,7 @@ class AUDACITY_DLL_API TrackListOfKindIterator /* not final */ : public TrackLis
 class AUDACITY_DLL_API SelectedTrackListOfKindIterator final : public TrackListOfKindIterator
 {
  public:
-    SelectedTrackListOfKindIterator(int kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {}
+   SelectedTrackListOfKindIterator(TrackKind kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {}
    virtual ~SelectedTrackListOfKindIterator() {}
 
  protected:
@@ -652,6 +1324,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    // Destructor
    virtual ~TrackList();
 
+   // Iteration
+
    // Hide the inherited begin() and end()
    using iterator = TrackListIterator;
    using const_iterator = TrackListConstIterator;
@@ -663,6 +1337,161 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    const_iterator end() const { return {}; }
    const_iterator cbegin() const { return begin(); }
    const_iterator cend() const { return end(); }
+
+   // Turn a pointer into an iterator (constant time).
+   template < typename TrackType = Track >
+      auto Find(Track *pTrack)
+         -> TrackIter< TrackType >
+   {
+      if (!pTrack || pTrack->GetOwner().get() != this)
+         return EndIterator<TrackType>();
+      else
+         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
+   }
+
+   // Turn a pointer into an iterator (constant time).
+   template < typename TrackType = const Track >
+      auto Find(const Track *pTrack) const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIter< TrackType >
+         >::type
+   {
+      if (!pTrack || pTrack->GetOwner().get() != this)
+         return EndIterator<TrackType>();
+      else
+         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
+   }
+
+   // If the track is not an audio track, or not one of a group of channels,
+   // return the track itself; else return the first channel of its group --
+   // in either case as an iterator that will only visit other leader tracks.
+   // (Generalizing away from the assumption of at most stereo)
+   TrackIter< Track > FindLeader( Track *pTrack );
+
+   TrackIter< const Track >
+      FindLeader( const Track *pTrack ) const
+   {
+      return const_cast<TrackList*>(this)->
+         FindLeader( const_cast<Track*>(pTrack) ).Filter< const Track >();
+   }
+
+
+   template < typename TrackType = Track >
+      auto Any()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >();
+   }
+
+   template < typename TrackType = const Track >
+      auto Any() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >();
+   }
+
+   // Abbreviating some frequently used cases
+   template < typename TrackType = Track >
+      auto Selected()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >( &Track::IsSelected );
+   }
+
+   template < typename TrackType = const Track >
+      auto Selected() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >( &Track::IsSelected );
+   }
+
+
+   template < typename TrackType = Track >
+      auto Leaders()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >( &Track::IsLeader );
+   }
+
+   template < typename TrackType = const Track >
+      auto Leaders() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >( &Track::IsLeader );
+   }
+
+
+   template < typename TrackType = Track >
+      auto SelectedLeaders()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >( &Track::IsSelectedLeader );
+   }
+
+   template < typename TrackType = const Track >
+      auto SelectedLeaders() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >( &Track::IsSelectedLeader );
+   }
+
+
+   template<typename TrackType>
+      static auto SingletonRange( TrackType *pTrack )
+         -> TrackIterRange< TrackType >
+   {
+      return pTrack->GetOwner()->template Any<TrackType>()
+         .StartingWith( pTrack ).EndingAfter( pTrack );
+   }
+
+
+   static TrackIterRange< Track >
+      SyncLockGroup( Track *pTrack );
+
+   static TrackIterRange< const Track >
+      SyncLockGroup( const Track *pTrack )
+   {
+      return SyncLockGroup(const_cast<Track*>(pTrack)).Filter<const Track>();
+   }
+
+private:
+   template< typename TrackType, typename InTrackType >
+      static TrackIterRange< TrackType >
+         Channels_( TrackIter< InTrackType > iter1 )
+   {
+      // Assume iterator filters leader tracks
+      if (*iter1) {
+         return {
+            iter1.Filter( &Track::Any )
+               .template Filter<TrackType>(),
+            (++iter1).Filter( &Track::Any )
+               .template Filter<TrackType>()
+         };
+      }
+      else
+         // empty range
+         return {
+            iter1.template Filter<TrackType>(),
+            iter1.template Filter<TrackType>()
+         };
+   }
+
+public:
+   // Find an iterator range of channels including the given track.
+   template< typename TrackType >
+      static auto Channels( TrackType *pTrack )
+         -> TrackIterRange< TrackType >
+   {
+      return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
+   }
 
    friend class Track;
    friend class TrackListIterator;
@@ -766,6 +1595,57 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 #endif
 
 private:
+
+   // Visit all tracks satisfying a predicate, mutative access
+   template <
+      typename TrackType = Track,
+      typename Pred =
+         typename TrackIterRange< TrackType >::iterator::FunctionType
+   >
+      auto Tracks( const Pred &pred = {} )
+         -> TrackIterRange< TrackType >
+   {
+      auto b = getBegin(), e = getEnd();
+      return { { b, b, e, pred }, { b, e, e, pred } };
+   }
+
+   // Visit all tracks satisfying a predicate, const access
+   template <
+      typename TrackType = const Track,
+      typename Pred =
+         typename TrackIterRange< TrackType >::iterator::FunctionType
+   >
+      auto Tracks( const Pred &pred = {} ) const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      auto b = const_cast<TrackList*>(this)->getBegin();
+      auto e = const_cast<TrackList*>(this)->getEnd();
+      return { { b, b, e, pred }, { b, e, e, pred } };
+   }
+
+   std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember) const;
+
+   template < typename TrackType >
+      TrackIter< TrackType >
+         MakeTrackIterator( TrackNodePointer iter ) const
+   {
+      auto b = const_cast<TrackList*>(this)->getBegin();
+      auto e = const_cast<TrackList*>(this)->getEnd();
+      return { b, iter, e };
+   }
+
+   template < typename TrackType >
+      TrackIter< TrackType >
+         EndIterator() const
+   {
+      auto e = const_cast<TrackList*>(this)->getEnd();
+      return { e, e, e };
+   }
+
+   TrackIterRange< Track > EmptyRange() const;
+
    bool isNull(TrackNodePointer p) const
    { return (p.second == this && p.first == ListOfTracks::end())
       || (p.second == &mPendingUpdates && p.first == mPendingUpdates.end()); }
