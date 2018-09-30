@@ -3138,46 +3138,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             err = true;
          }
 
-         // Sanity checks for linked tracks; unsetting the linked property
-         // doesn't fix the problem, but it likely leaves us with orphaned
-         // blockfiles instead of much worse problems.
-         if (t->GetLinked())
-         {
-            Track *l = t->GetLink();
-            if (l)
-            {
-               // A linked track's partner should never itself be linked
-               if (l->GetLinked())
-               {
-                  wxLogWarning(
-                     wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
-                     t->GetName(), l->GetName());
-                  err = true;
-                  l->SetLinked(false);
-               }
-
-               // Channels should be left and right
-               if ( !(  (t->GetChannel() == Track::LeftChannel &&
-                           l->GetChannel() == Track::RightChannel) ||
-                        (t->GetChannel() == Track::RightChannel &&
-                           l->GetChannel() == Track::LeftChannel) ) )
-               {
-                  wxLogWarning(
-                     wxT("Track %s and %s had left/right track links out of order. Setting tracks to not be linked."),
-                     t->GetName(), l->GetName());
-                  err = true;
-                  t->SetLinked(false);
-               }
-            }
-            else
-            {
-               wxLogWarning(
-                  wxT("Track %s had link to NULL track. Setting it to not be linked."),
-                  t->GetName());
-               err = true;
-               t->SetLinked(false);
-            }
-         }
+         err = ( !t->LinkConsistencyCheck() ) || err;
 
          mLastSavedTracks->Add(t->Duplicate());
       }
@@ -5222,7 +5183,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
          auto dest = ( wt->*action )( region.start, region.end );
          if( dest )
          {
-            MenuCommandHandler::FinishCopy( wt, dest.get() );
+            Track::FinishCopy( wt, dest.get() );
             if( !merged )
                merged = std::move(dest);
             else

@@ -270,10 +270,7 @@ void OnExit(const CommandContext &context );
 void OnUndo(const CommandContext &context );
 void OnRedo(const CommandContext &context );
 
-static void FinishCopy(const Track *n, Track *dest);
-static void FinishCopy
-   (const Track *n, Track::Holder &&dest, TrackList &list);
-
+static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
 
 void OnCut(const CommandContext &context );
 void OnSplitCut(const CommandContext &context );

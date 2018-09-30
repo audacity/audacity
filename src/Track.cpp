@@ -46,12 +46,6 @@ and TimeTrack.
 #pragma warning( disable : 4786 )
 #endif
 
-#ifdef __WXDEBUG__
-   // if we are in a debug build of audacity
-   /// Define this to do extended (slow) debuging of TrackListIterator
-//   #define DEBUG_TLI
-#endif
-
 Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 :  vrulerSize(36,0),
    mDirManager(projDirManager)
@@ -414,318 +408,61 @@ bool Track::IsLeader() const
 bool Track::IsSelectedLeader() const
    { return IsSelected() && IsLeader(); }
 
-// TrackListIterator
-TrackListIterator::TrackListIterator(TrackList * val, TrackNodePointer p)
-   : l{ val }
-   , cur{ p }
+void Track::FinishCopy
+(const Track *n, Track *dest)
 {
-}
-
-TrackListIterator::TrackListIterator(TrackList * val)
-   : l{ val }
-   , cur{}
-{
-   if (l)
-      cur = l->getBegin();
-}
-
-Track *TrackListIterator::StartWith(Track * val)
-{
-   if (val == NULL) {
-      return First();
+   if (dest) {
+      dest->SetChannel(n->GetChannel());
+      dest->SetLinked(n->GetLinked());
+      dest->SetName(n->GetName());
    }
-
-   if (l == NULL) {
-      return NULL;
-   }
-
-   if (val->mList.lock() == NULL)
-      return nullptr;
-
-   cur = val->GetNode();
-   return cur.first->get();
 }
 
-Track *TrackListIterator::First(TrackList * val)
+bool Track::LinkConsistencyCheck()
 {
-   if (val != NULL) {
-      l = val;
-   }
-
-   if (l == NULL) {
-      return NULL;
-   }
-
-   cur = l->getBegin();
-
-   if (!l->isNull(cur)) {
-      return cur.first->get();
-   }
-
-   return nullptr;
-}
-
-Track *TrackListIterator::Last()
-{
-   if (l == NULL) {
-      return NULL;
-   }
-
-   cur = l->getPrev( l->getEnd() );
-   if ( l->isNull( cur ) )
-      return nullptr;
-
-   return cur.first->get();
-}
-
-Track *TrackListIterator::Next()
-{
-#ifdef DEBUG_TLI // if we are debugging this bit
-   wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid at start of Next(). List changed since iterator created?"));   // check that cur is in the list
-#endif
-
-   if (!l || l->isNull(cur))
-      return nullptr;
-
-   cur = l->getNext( cur );
-
-   #ifdef DEBUG_TLI // if we are debugging this bit
-   wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after moving to next track."));   // check that cur is in the list if it is not null
-   #endif
-
-   if (!l->isNull(cur))
-      return cur.first->get();
-
-   return nullptr;
-}
-
-Track *TrackListIterator::Prev()
-{
-   if (!l || l->isNull(cur))
-      return nullptr;
-
-   cur = l->getPrev( cur );
-   if ( l->isNull( cur ) )
-      return nullptr;
-
-   return cur.first->get();
-}
-
-Track *TrackListIterator::operator *() const
-{
-   if ( !l || l->isNull( cur ) )
-      return nullptr;
-   else
-      return cur.first->get();
-}
-
-bool TrackListIterator::operator == (const TrackListIterator &other) const
-{
-   // Order these steps so as not to use operator == on default-constructed
-   // std::list::iterator -- that crashes in the MSVC 2013 standard library
-   bool isEnd = !l || l->isNull( cur );
-   bool otherIsEnd = !other.l || other.l->isNull( other.cur );
-
-   return (isEnd == otherIsEnd && (isEnd || cur == other.cur));
-}
-
-//
-// TrackListCondIterator (base class for iterators that iterate over all tracks
-// that meet a condition)
-//
-
-Track *TrackListCondIterator::StartWith(Track *val)
-{
-   Track *t = TrackListIterator::StartWith(val);
-
-   if (t && !this->Condition(t))
-      return nullptr;
-
-   return t;
-}
-
-Track *TrackListCondIterator::First(TrackList *val)
-{
-   Track *t = TrackListIterator::First(val);
-
-   while (t && !this->Condition(t)) {
-      t = TrackListIterator::Next();
-   }
-
-   return t;
-}
-
-Track *TrackListCondIterator::Next()
-{
-   while (Track *t = TrackListIterator::Next()) {
-      if (this->Condition(t)) {
-         return t;
-      }
-   }
-
-   return NULL;
-}
-
-Track *TrackListCondIterator::Prev()
-{
-   while (Track *t = TrackListIterator::Prev())
+   // Sanity checks for linked tracks; unsetting the linked property
+   // doesn't fix the problem, but it likely leaves us with orphaned
+   // blockfiles instead of much worse problems.
+   bool err = false;
+   if (GetLinked())
    {
-      if (this->Condition(t)) {
-         return t;
+      Track *l = GetLink();
+      if (l)
+      {
+         // A linked track's partner should never itself be linked
+         if (l->GetLinked())
+         {
+            wxLogWarning(
+               wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
+               GetName().c_str(), l->GetName());
+            err = true;
+            l->SetLinked(false);
+         }
+
+         // Channels should be left and right
+         if ( !(  (GetChannel() == Track::LeftChannel &&
+                     l->GetChannel() == Track::RightChannel) ||
+                  (GetChannel() == Track::RightChannel &&
+                     l->GetChannel() == Track::LeftChannel) ) )
+         {
+            wxLogWarning(
+               wxT("Track %s and %s had left/right track links out of order. Setting tracks to not be linked."),
+               GetName(), l->GetName());
+            err = true;
+            SetLinked(false);
+         }
+      }
+      else
+      {
+         wxLogWarning(
+            wxT("Track %s had link to NULL track. Setting it to not be linked."),
+            GetName());
+         err = true;
+         SetLinked(false);
       }
    }
 
-   return NULL;
-}
-
-Track *TrackListCondIterator::Last()
-{
-   Track *t = TrackListIterator::Last();
-
-   while (t && !this->Condition(t)) {
-      t = TrackListIterator::Prev();
-   }
-
-   return t;
-}
-
-// TrackListOfKindIterator
-TrackListOfKindIterator::TrackListOfKindIterator(TrackKind kind, TrackList * val)
-:  TrackListCondIterator(val)
-{
-   this->kind = kind;
-}
-
-bool TrackListOfKindIterator::Condition(Track *t)
-{
-   return kind == Track::All || t->GetKind() == kind;
-}
-
-//SelectedTrackListOfKindIterator
-bool SelectedTrackListOfKindIterator::Condition(Track *t)
-{
-   return TrackListOfKindIterator::Condition(t) && t->GetSelected();
-}
-
-// SyncLockedTracksIterator
-//
-// Based on TrackListIterator returns only tracks belonging to the group
-// in which the starting track is a member.
-//
-SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
-:  TrackListIterator(val),
-   mInLabelSection(false)
-{
-}
-
-Track *SyncLockedTracksIterator::StartWith(Track * member)
-{
-   Track *t = NULL;
-
-   // A sync-locked group consists of any positive number of wave (or note)
-   // tracks followed by any
-   // non-negative number of label tracks. Step back through any label tracks,
-   // and then through the wave tracks above them.
-
-   while (member && member->GetKind() == Track::Label) {
-      member = l->GetPrev(member);
-   }
-
-   while (member && IsSyncLockableNonLabelTrack(member)) {
-      t = member;
-      member = l->GetPrev(member);
-   }
-
-   // Make it current (if t is still NULL there are no wave tracks, so we're
-   // not in a sync-locked group).
-   if (t)
-      cur = t->GetNode();
-
-   mInLabelSection = false;
-
-   return t;
-}
-
-bool SyncLockedTracksIterator::IsGoodNextTrack(const Track *t) const
-{
-   if (!t)
-      return false;
-
-   const bool isLabel = ( t->GetKind() == Track::Label );
-   const bool isSyncLockable = IsSyncLockableNonLabelTrack( t );
-
-   if ( !( isLabel || isSyncLockable ) ) {
-      return false;
-   }
-
-   if (mInLabelSection && !isLabel) {
-      return false;
-   }
-
-   return true;
-}
-
-Track *SyncLockedTracksIterator::Next()
-{
-   Track *t = TrackListIterator::Next();
-
-   if (!t)
-      return nullptr;
-
-   if ( ! IsGoodNextTrack(t) ) {
-      cur = l->getEnd();
-      return nullptr;
-   }
-
-   mInLabelSection = ( t->GetKind() == Track::Label );
-
-   return t;
-}
-
-Track *SyncLockedTracksIterator::Prev()
-{
-   Track *t = TrackListIterator::Prev();
-
-   //
-   // Ways to end a sync-locked group in reverse
-   //
-
-   // Beginning of tracks
-   if (!t)
-      return nullptr;
-
-   const bool isLabel = ( t->GetKind() == Track::Label );
-   const bool isSyncLockable = IsSyncLockableNonLabelTrack( t );
-
-   if ( !( isLabel || isSyncLockable ) ) {
-      cur = l->getEnd();
-      return nullptr;
-   }
-
-   if ( !mInLabelSection && isLabel ) {
-      cur = l->getEnd();
-      return nullptr;
-   }
-
-   mInLabelSection = isLabel;
-
-   return t;
-}
-
-Track *SyncLockedTracksIterator::Last()
-{
-   if ( !l || l->isNull( cur ) )
-      return nullptr;
-
-   Track *t = cur.first->get();
-
-   while (const auto next = l->GetNext(t)) {
-      if ( ! IsGoodNextTrack(next) )
-         break;
-      t = Next();
-   }
-   
-   return t;
+   return ! err;
 }
 
 std::pair<Track *, Track *> TrackList::FindSyncLockGroup(Track *pMember) const
@@ -844,7 +581,7 @@ void TrackList::RecalcPositions(TrackNodePointer node)
    }
 
    const auto theEnd = end();
-   for (auto n = TrackListIterator{ this, node }; n != theEnd; ++n) {
+   for (auto n = Find( node.first->get() ); n != theEnd; ++n) {
       t = *n;
       t->SetIndex(i++);
       t->DoSetY(y);

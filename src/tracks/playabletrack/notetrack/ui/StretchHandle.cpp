@@ -76,7 +76,7 @@ UIHandlePtr StretchHandle::HitTest
    // within the selection
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   if (!pTrack || !pTrack->GetSelected() || pTrack->GetKind() != Track::Note)
+   if (!pTrack || !pTrack->GetSelected())
       return {};
 
    const wxRect &rect = st.rect;
