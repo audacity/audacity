@@ -225,13 +225,17 @@ void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & even
 
    if (tracks->CanMoveUp(mpTrack.get()))
       mMoveUpThreshold =
-      event.m_y - tracks->GetGroupHeight(tracks->GetPrev(mpTrack.get(), true));
+         event.m_y -
+            tracks->GetGroupHeight(
+               * -- tracks->FindLeader( mpTrack.get() ) );
    else
       mMoveUpThreshold = INT_MIN;
 
    if (tracks->CanMoveDown(mpTrack.get()))
       mMoveDownThreshold =
-      event.m_y + tracks->GetGroupHeight(tracks->GetNext(mpTrack.get(), true));
+         event.m_y +
+            tracks->GetGroupHeight(
+               * ++ tracks->FindLeader( mpTrack.get() ) );
    else
       mMoveDownThreshold = INT_MAX;
 }

@@ -1095,11 +1095,9 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    // Iterate functions
    virtual Track *First(TrackList * val = nullptr);
    virtual Track *StartWith(Track * val);
-   virtual Track *Next(bool skiplinked = false);
-   virtual Track *Prev(bool skiplinked = false);
-   virtual Track *Last(bool skiplinked = false);
-
-   Track *RemoveCurrent(); // deletes track, returns next
+   virtual Track *Next();
+   virtual Track *Prev();
+   virtual Track *Last();
 
    // Provide minimal STL forward-iterator idiom:
 
@@ -1146,12 +1144,12 @@ public:
    { return mIter.First(const_cast<TrackList*>(val)); }
    const Track *StartWith(const Track * val)
    { return mIter.StartWith(const_cast<Track*>(val)); }
-   const Track *Next(bool skiplinked = false)
-   { return mIter.Next(skiplinked); }
-   const Track *Prev(bool skiplinked = false)
-   { return mIter.Prev(skiplinked); }
-   const Track *Last(bool skiplinked = false)
-   { return mIter.Last(skiplinked); }
+   const Track *Next()
+   { return mIter.Next(); }
+   const Track *Prev()
+   { return mIter.Prev(); }
+   const Track *Last()
+   { return mIter.Last(); }
 
    // Provide minimal STL forward-iterator idiom:
 
@@ -1184,9 +1182,9 @@ class AUDACITY_DLL_API TrackListCondIterator /* not final */ : public TrackListI
       // Iteration functions
       Track *First(TrackList *val = NULL) override;
       Track *StartWith(Track *val) override;
-      Track *Next(bool skiplinked = false) override;
-      Track *Prev(bool skiplinked = false) override;
-      Track *Last(bool skiplinked = false) override;
+      Track *Next() override;
+      Track *Prev() override;
+      Track *Last() override;
 
    protected:
       // NEW virtual
@@ -1256,9 +1254,9 @@ class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
 
    // Iterate functions
    Track *StartWith(Track *member) override;
-   Track *Next(bool skiplinked = false) override;
-   Track *Prev(bool skiplinked = false) override;
-   Track *Last(bool skiplinked = false) override;
+   Track *Next() override;
+   Track *Prev() override;
+   Track *Last() override;
 
  private:
    bool IsGoodNextTrack(const Track *t) const;
@@ -1525,16 +1523,6 @@ public:
    /// Make the list empty
    void Clear(bool sendEvent = true);
 
-   /** Select a track, and if it is linked to another track, select it, too. */
-   void Select(Track * t, bool selected = true);
-
-   Track *GetPrev(Track * t, bool linked = false) const;
-
-   /** Return a track in the list that comes after Track t
-     * @param t a track in the list
-     * @param linked if true, skips over linked tracks, if false returns the next track even if it is a linked track
-    **/
-   Track *GetNext(Track * t, bool linked = false) const;
    int GetGroupHeight(const Track * t) const;
 
    bool CanMoveUp(Track * t) const;
@@ -1625,6 +1613,9 @@ private:
       return { { b, b, e, pred }, { b, e, e, pred } };
    }
 
+   Track *GetPrev(Track * t, bool linked = false) const;
+   Track *GetNext(Track * t, bool linked = false) const;
+   
    std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember) const;
 
    template < typename TrackType >

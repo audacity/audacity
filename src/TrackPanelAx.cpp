@@ -162,19 +162,15 @@ int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
 {
    // Find 1-based position of the target in the visible tracks, or 0 if not
    // found
-   TrackListIterator iter( mTrackPanel->GetTracks() );
-   Track *t = iter.First();
    int ndx = 0;
 
-   while( t != NULL )
+   for ( auto t : mTrackPanel->GetTracks()->Leaders() )
    {
       ndx++;
       if( t == target.get() )
       {
          return ndx;
       }
-
-      t = iter.Next( true );
    }
 
    return 0;
@@ -182,22 +178,16 @@ int TrackPanelAx::TrackNum( const std::shared_ptr<Track> &target )
 
 std::shared_ptr<Track> TrackPanelAx::FindTrack( int num )
 {
-   TrackListIterator iter( mTrackPanel->GetTracks() );
-   Track *t = iter.First();
    int ndx = 0;
 
-   while( t != NULL )
+   for ( auto t : mTrackPanel->GetTracks()->Leaders() )
    {
       ndx++;
       if( ndx == num )
-      {
-         break;
-      }
-
-      t = iter.Next( true );
+         return Track::Pointer( t );
    }
 
-   return Track::Pointer( t );
+   return {};
 }
 
 void TrackPanelAx::Updated()

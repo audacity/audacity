@@ -3443,11 +3443,9 @@ void MenuCommandHandler::OnMoveToLabel(AudacityProject &project, bool next)
    }
    else if (nLabelTrack > 1) {         // find first label track, if any, starting at the focused track
       track = trackPanel->GetFocusedTrack();
-      while (track && track->GetKind() != Track::Label) {
-         track = tracks->GetNext(track, true);
-         if (!track) {
-          trackPanel->MessageForScreenReader(_("no label track at or below focused track"));
-         }
+      track = *tracks->Find(track).Filter<LabelTrack>();
+      if (!track) {
+       trackPanel->MessageForScreenReader(_("no label track at or below focused track"));
       }
    }
 
@@ -3513,7 +3511,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
    bool pSelected = false;
    if( shift )
    {
-      p = tracks->GetPrev( t, true ); // Get previous track
+      p = * -- tracks->FindLeader( t ); // Get previous track
       if( p == NULL )   // On first track
       {
          // JKC: wxBell() is probably for accessibility, so a blind
@@ -3536,8 +3534,8 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, false, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *t, false, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3545,8 +3543,8 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *p, true, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *p, true, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3554,8 +3552,8 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( !tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *p, false, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *p, false, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3563,29 +3561,26 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( !tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, true, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+            ( *t, true, false, mixerBoard );
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
-         project.ModifyState(false);
+          project.ModifyState(false);
          return;
       }
    }
    else
    {
-      p = tracks->GetPrev( t, true ); // Get next track
-      if( p == NULL )   // On last track so stay there?
+      p = * -- tracks->FindLeader( t ); // Get previous track
+      if( p == NULL )   // On first track so stay there?
       {
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( tracks );
-            for( Track *d = iter.First(); d; d = iter.Next( true ) )
-            {
-               p = d;
-            }
-            trackPanel->SetFocusedTrack( p );   // Wrap to the first track
+            auto range = tracks->Leaders();
+            p = * range.rbegin(); // null if range is empty
+            trackPanel->SetFocusedTrack( p );   // Wrap to the last track
             trackPanel->EnsureVisible( p );
-            project.ModifyState(false);
+             project.ModifyState(false);
             return;
          }
          else
@@ -3596,7 +3591,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       }
       else
       {
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3631,7 +3626,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
 
    if( shift )
    {
-      n = tracks->GetNext( t, true ); // Get next track
+      n = * ++ tracks->FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
@@ -3651,7 +3646,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, false, false, mixerBoard );
+            ( *t, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3660,7 +3655,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *n, true, false, mixerBoard );
+            ( *n, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3669,7 +3664,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( !tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *n, false, false, mixerBoard );
+            ( *n, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3678,7 +3673,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( !tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, true, false, mixerBoard );
+            ( *t, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3687,7 +3682,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
    }
    else
    {
-      n = tracks->GetNext( t, true ); // Get next track
+      n = * ++ tracks->FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
@@ -3785,7 +3780,6 @@ void MenuCommandHandler::OnToggle(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
    auto &selectionState = project.GetSelectionState();
    auto mixerBoard = project.GetMixerBoard();
 
@@ -3796,7 +3790,7 @@ void MenuCommandHandler::OnToggle(const CommandContext &context)
       return;
 
    selectionState.SelectTrack
-      ( *tracks, *t, !t->GetSelected(), true, mixerBoard );
+      ( *t, !t->GetSelected(), true, mixerBoard );
    trackPanel->EnsureVisible( t );
    project.ModifyState(false);
 
@@ -7206,13 +7200,11 @@ int MenuCommandHandler::FindClips
 
    // first search the tracks individually
 
-   TrackListIterator iter(tracks);
-   Track* track = iter.First();
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
    int trackNum = 1;
-   while (track) {
+   for (auto track : tracks->Leaders()) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
          bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
@@ -7239,7 +7231,6 @@ int MenuCommandHandler::FindClips
       }
 
       trackNum++;
-      track = iter.Next(true);
    }
 
 
@@ -8119,29 +8110,15 @@ void MenuCommandHandler::HandleMixAndRender
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
 
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-      int selectedCount = 0;
+      auto trackRange = tracks->Selected< WaveTrack >();
+      auto selectedCount = (trackRange + &Track::IsLeader).size();
       wxString firstName;
-
-      while (t) {
-         if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
-            if (selectedCount==0)
-               firstName = t->GetName();
-
-            // Add one to the count if it's an unlinked track, or if it's the first
-            // in a stereo pair
-            if (t->GetLinked() || !t->GetLink())
-                selectedCount++;
-
-            if (!toNewTrack) {
-               t = iter.RemoveCurrent();
-            } else {
-               t = iter.Next();
-            };
-         }
-         else
-            t = iter.Next();
+      if (selectedCount > 0)
+         firstName = (*trackRange.begin())->GetName();
+      if (!toNewTrack)  {
+         // Beware iterator invalidation!
+         for (auto &it = trackRange.first, &end = trackRange.second; it != end;)
+            tracks->Remove( *it++ );
       }
 
       // Add NEW tracks
@@ -8465,13 +8442,11 @@ int MenuCommandHandler::FindClipBoundaries
 
    // first search the tracks individually
 
-   TrackListIterator iter(tracks);
-   Track* track = iter.First();
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
    int trackNum = 1;
-   while (track) {
+   for (auto track : tracks->Leaders()) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
          bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
@@ -8498,7 +8473,6 @@ int MenuCommandHandler::FindClipBoundaries
       }
 
       trackNum++;
-      track = iter.Next(true);
    }
 
 
@@ -9680,34 +9654,31 @@ void MenuCommandHandler::OnRemoveTracks(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   Track *f = NULL;
-   Track *l = NULL;
+   std::vector<Track*> toRemove;
+   for (auto track : tracks->Selected())
+      toRemove.push_back(track);
 
-   while (t) {
-      if (t->GetSelected()) {
-         auto playable = dynamic_cast<PlayableTrack*>(t);
-         if (mixerBoard && playable)
-            mixerBoard->RemoveTrackCluster(playable);
-         if (!f)
-            f = l;         // Capture the track preceeding the first removed track
-         t = iter.RemoveCurrent();
-      }
-      else {
-         l = t;
-         t = iter.Next();
-      }
+   // Capture the track preceding the first removed track
+   Track *f{};
+   if (!toRemove.empty()) {
+      auto found = tracks->Find(toRemove[0]);
+      f = *--found;
    }
 
-   // All tracks but the last were removed...try to use the last track
-   if (!f)
-      f = l;
+   if (mixerBoard)
+      for (auto track : tracks->Selected<PlayableTrack>())
+         mixerBoard->RemoveTrackCluster(track);
 
-   // Try to use the first track after the removal or, if none,
-   // the track preceeding the removal
+   for (auto track : toRemove)
+      tracks->Remove(track);
+
+   if (!f)
+      // try to use the last track
+      f = *tracks->Any().rbegin();
    if (f) {
-      t = tracks->GetNext(f, true);
+      // Try to use the first track after the removal
+      auto found = tracks->FindLeader(f);
+      auto t = *++found;
       if (t)
          f = t;
    }

@@ -623,7 +623,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
       WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
       TrackList *const tracks = project->GetTracks();
-      Track *const next = tracks->GetNext(pTrack);
+      auto next = * ++ tracks->Find(pTrack);
 
       if (isMono) {
          const bool canMakeStereo =

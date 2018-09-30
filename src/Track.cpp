@@ -469,7 +469,7 @@ Track *TrackListIterator::First(TrackList * val)
    return nullptr;
 }
 
-Track *TrackListIterator::Last(bool skiplinked)
+Track *TrackListIterator::Last()
 {
    if (l == NULL) {
       return NULL;
@@ -479,20 +479,10 @@ Track *TrackListIterator::Last(bool skiplinked)
    if ( l->isNull( cur ) )
       return nullptr;
 
-   // With skiplinked set, we won't return the second channel of a linked pair
-   if (skiplinked) {
-      auto prev = l->getPrev( cur );
-      if ( !l->isNull( prev ) &&
-           !(*cur.first)->GetLinked() &&
-           (*cur.first)->GetLink()
-      )
-         cur = prev;
-   }
-
    return cur.first->get();
 }
 
-Track *TrackListIterator::Next(bool skipLinked)
+Track *TrackListIterator::Next()
 {
 #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid at start of Next(). List changed since iterator created?"));   // check that cur is in the list
@@ -501,16 +491,7 @@ Track *TrackListIterator::Next(bool skipLinked)
    if (!l || l->isNull(cur))
       return nullptr;
 
-   if (skipLinked &&
-       (*cur.first)->GetLinked())
-      cur = l->getNext( cur );
-
-   #ifdef DEBUG_TLI // if we are debugging this bit
-   wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after skipping linked tracks."));   // check that cur is in the list
-   #endif
-
-   if (!l->isNull(cur))
-      cur = l->getNext( cur );
+   cur = l->getNext( cur );
 
    #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after moving to next track."));   // check that cur is in the list if it is not null
@@ -522,7 +503,7 @@ Track *TrackListIterator::Next(bool skipLinked)
    return nullptr;
 }
 
-Track *TrackListIterator::Prev(bool skiplinked)
+Track *TrackListIterator::Prev()
 {
    if (!l || l->isNull(cur))
       return nullptr;
@@ -530,12 +511,6 @@ Track *TrackListIterator::Prev(bool skiplinked)
    cur = l->getPrev( cur );
    if ( l->isNull( cur ) )
       return nullptr;
-
-   if ( skiplinked ) {
-      auto prev = l->getPrev( cur );
-      if( !l->isNull( prev ) && (*prev.first)->GetLinked() )
-         cur = prev;
-   }
 
    return cur.first->get();
 }
@@ -546,23 +521,6 @@ Track *TrackListIterator::operator *() const
       return nullptr;
    else
       return cur.first->get();
-}
-
-Track *TrackListIterator::RemoveCurrent()
-{
-   if ( !l || l->isNull( cur ) )
-      return nullptr;
-
-   cur = l->Remove( cur.first->get() );
-
-   #ifdef DEBUG_TLI // if we are debugging this bit
-   wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after deletion of track."));   // check that cur is in the list
-   #endif
-
-   if ( !l->isNull( cur ) )
-      return cur.first->get();
-
-   return nullptr;
 }
 
 bool TrackListIterator::operator == (const TrackListIterator &other) const
@@ -601,9 +559,9 @@ Track *TrackListCondIterator::First(TrackList *val)
    return t;
 }
 
-Track *TrackListCondIterator::Next(bool skiplinked)
+Track *TrackListCondIterator::Next()
 {
-   while (Track *t = TrackListIterator::Next(skiplinked)) {
+   while (Track *t = TrackListIterator::Next()) {
       if (this->Condition(t)) {
          return t;
       }
@@ -612,9 +570,9 @@ Track *TrackListCondIterator::Next(bool skiplinked)
    return NULL;
 }
 
-Track *TrackListCondIterator::Prev(bool skiplinked)
+Track *TrackListCondIterator::Prev()
 {
-   while (Track *t = TrackListIterator::Prev(skiplinked))
+   while (Track *t = TrackListIterator::Prev())
    {
       if (this->Condition(t)) {
          return t;
@@ -624,12 +582,12 @@ Track *TrackListCondIterator::Prev(bool skiplinked)
    return NULL;
 }
 
-Track *TrackListCondIterator::Last(bool skiplinked)
+Track *TrackListCondIterator::Last()
 {
-   Track *t = TrackListIterator::Last(skiplinked);
+   Track *t = TrackListIterator::Last();
 
    while (t && !this->Condition(t)) {
-      t = TrackListIterator::Prev(skiplinked);
+      t = TrackListIterator::Prev();
    }
 
    return t;
@@ -734,9 +692,9 @@ bool SyncLockedTracksIterator::IsGoodNextTrack(const Track *t) const
    return true;
 }
 
-Track *SyncLockedTracksIterator::Next(bool skiplinked)
+Track *SyncLockedTracksIterator::Next()
 {
-   Track *t = TrackListIterator::Next(skiplinked);
+   Track *t = TrackListIterator::Next();
 
    if (!t)
       return nullptr;
@@ -751,9 +709,9 @@ Track *SyncLockedTracksIterator::Next(bool skiplinked)
    return t;
 }
 
-Track *SyncLockedTracksIterator::Prev(bool skiplinked)
+Track *SyncLockedTracksIterator::Prev()
 {
-   Track *t = TrackListIterator::Prev(skiplinked);
+   Track *t = TrackListIterator::Prev();
 
    //
    // Ways to end a sync-locked group in reverse
@@ -781,17 +739,17 @@ Track *SyncLockedTracksIterator::Prev(bool skiplinked)
    return t;
 }
 
-Track *SyncLockedTracksIterator::Last(bool skiplinked)
+Track *SyncLockedTracksIterator::Last()
 {
    if ( !l || l->isNull( cur ) )
       return nullptr;
 
    Track *t = cur.first->get();
 
-   while (const auto next = l->GetNext(t, skiplinked)) {
+   while (const auto next = l->GetNext(t)) {
       if ( ! IsGoodNextTrack(next) )
          break;
-      t = Next(skiplinked);
+      t = Next();
    }
    
    return t;
@@ -1118,26 +1076,6 @@ void TrackList::Clear(bool sendEvent)
 
    if (sendEvent)
       DeletionEvent();
-}
-
-void TrackList::Select(Track * t, bool selected /* = true */ )
-{
-   if (t) {
-      const auto node = t->GetNode();
-      if ( !isNull( node ) ) {
-         t->SetSelected( selected );
-         if ( t->GetLinked() ) {
-            auto next = getNext( node );
-            if ( !isNull( next ) )
-               (*next.first)->SetSelected( selected );
-         }
-         else {
-            auto prev = getPrev( node );
-            if ( !isNull( prev ) && (*prev.first)->GetLinked() )
-               (*prev.first)->SetSelected( selected );
-         }
-      }
-   }
 }
 
 /// Return a track in the list that comes after Track t

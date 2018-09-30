@@ -104,7 +104,7 @@ UIHandle::Result LabelTextHandle::Click
          while (t)
          {
             selectionState.SelectTrack
-               ( *pProject->GetTracks(), *t, true, true,
+               ( *t, true, true,
                  pProject->GetMixerBoard() );
             t = iter.Next();
          }
@@ -113,7 +113,7 @@ UIHandle::Result LabelTextHandle::Click
       // Do this after, for its effect on TrackPanel's memory of last selected
       // track (which affects shift-click actions)
       selectionState.SelectTrack
-         ( *pProject->GetTracks(), *pLT, true, true,
+         ( *pLT, true, true,
            pProject->GetMixerBoard() );
    }
 

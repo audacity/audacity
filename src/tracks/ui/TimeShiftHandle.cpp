@@ -153,26 +153,23 @@ namespace
    WaveTrack *NthAudioTrack(TrackList &list, int nn)
    {
       if (nn >= 0) {
-         TrackListOfKindIterator iter(Track::Wave, &list);
-         Track *pTrack = iter.First();
-         while (pTrack && nn--)
-            pTrack = iter.Next(true);
-         return static_cast<WaveTrack*>(pTrack);
+         for ( auto pTrack : list.Leaders< WaveTrack >() )
+            if (nn -- == 0)
+               return pTrack;
       }
 
       return NULL;
    }
 
    // Don't count right channels.
-   int TrackPosition(TrackList &list, Track *pFindTrack)
+   int TrackPosition(TrackList &list, const Track *pFindTrack)
    {
-      Track *const partner = pFindTrack->GetLink();
-      TrackListOfKindIterator iter(Track::Wave, &list);
+      pFindTrack = *list.FindLeader(pFindTrack);
       int nn = 0;
-      for (Track *pTrack = iter.First(); pTrack; pTrack = iter.Next(true), ++nn) {
-         if (pTrack == pFindTrack ||
-             pTrack == partner)
+      for ( auto pTrack : list.Leaders< const WaveTrack >() ) {
+         if (pTrack == pFindTrack)
             return nn;
+         ++nn;
       }
       return -1;
    }
