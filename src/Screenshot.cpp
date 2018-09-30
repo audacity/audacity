@@ -703,16 +703,20 @@ void ScreenFrame::OnOneHour(wxCommandEvent & WXUNUSED(event))
 
 void ScreenFrame::SizeTracks(int h)
 {
-   TrackListIterator iter(mContext.GetProject()->GetTracks());
-   for (Track * t = iter.First(); t; t = iter.Next()) {
-      if (t->GetKind() == Track::Wave) {
-         if (t->GetLink()) {
-            t->SetHeight(h);
-         }
-         else {
-            t->SetHeight(h*2);
-         }
-      }
+   // h is the height for a channel
+   // Set the height of a mono track twice as high
+
+   // TODO: more-than-two-channels
+   // If there should be more-than-stereo tracks, this makes
+   // each channel as high as for a stereo channel
+
+   auto tracks = mContext.GetProject()->GetTracks();
+   for (auto t : tracks->Leaders<WaveTrack>()) {
+      auto channels = TrackList::Channels(t);
+      auto nChannels = channels.size();
+      auto height = nChannels == 1 ? 2 * h : h;
+      for (auto channel : channels)
+         channel->SetHeight(height);
    }
    mContext.GetProject()->RedrawProject();
 }

@@ -2318,13 +2318,12 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
          flags |= PlayableTracksExistFlag;
          if (t->GetSelected()) {
             flags |= TracksSelectedFlag;
-            if (t->GetLinked()) {
+            // TODO: more-than-two-channels
+            if (TrackList::Channels(t).size() > 1) {
                flags |= StereoRequiredFlag;
             }
-            else {
-               flags |= WaveTracksSelectedFlag;
-               flags |= AudioTracksSelectedFlag;
-            }
+            flags |= WaveTracksSelectedFlag;
+            flags |= AudioTracksSelectedFlag;
          }
          if( t->GetEndTime() > t->GetStartTime() )
             flags |= HasWaveDataFlag;
@@ -3856,13 +3855,14 @@ double MenuCommandHandler::OnClipMove
 
       auto t0 = selectedRegion.t0();
 
-      state.capturedClip = wt->GetClipAtTime( t0 );
-      if (state.capturedClip == nullptr && track->GetLinked() && track->GetLink()) {
-         // the clips in the right channel may be different from the left
-         track = track->GetLink();
-         wt = static_cast<WaveTrack*>(track);
-         state.capturedClip = wt->GetClipAtTime(t0);
+      // Find the first channel that has a clip at time t0
+      for (auto channel : TrackList::Channels(wt) ) {
+         if( nullptr != (state.capturedClip = channel->GetClipAtTime( t0 )) ) {
+            wt = channel;
+            break;
+         }
       }
+
       if (state.capturedClip == nullptr)
          return 0.0;
 
@@ -5709,6 +5709,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
    bool bPastedSomething = false;
 
    auto pC = clipTrackRange.begin();
+   size_t nnChannels, ncChannels;
    while (*pN && *pC) {
       auto n = *pN;
       auto c = *pC;
@@ -5763,15 +5764,34 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
                _("Pasting one type of track into another is not allowed.")
             };
 
-         // When trying to copy from stereo to mono track, show error and exit
-         // TODO: Automatically offer user to mix down to mono (unfortunately
-         //       this is not easy to implement
-         if (c->GetLinked() && !n->GetLinked())
-            // Throw, so that any previous changes to the project in this loop
-            // are discarded.
-            throw SimpleMessageBoxException{
-               _("Copying stereo audio into a mono track is not allowed.")
-            };
+         // We should need this check only each time we visit the leading
+         // channel
+         if ( n->IsLeader() ) {
+            wxASSERT( c->IsLeader() ); // the iteration logic should ensure this
+
+            auto cChannels = TrackList::Channels(c);
+            ncChannels = cChannels.size();
+            auto nChannels = TrackList::Channels(n);
+            nnChannels = nChannels.size();
+
+            // When trying to copy from stereo to mono track, show error and exit
+            // TODO: Automatically offer user to mix down to mono (unfortunately
+            //       this is not easy to implement
+            if (ncChannels > nnChannels)
+            {
+               if (ncChannels > 2) {
+                  // TODO: more-than-two-channels-message
+                  // Re-word the error message
+               }
+               // else
+
+               // Throw, so that any previous changes to the project in this loop
+               // are discarded.
+               throw SimpleMessageBoxException{
+                  _("Copying stereo audio into a mono track is not allowed.")
+               };
+            }
+         }
 
          if (!ff)
             ff = n;
@@ -5806,11 +5826,17 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             }
          );
 
+         --nnChannels;
+         --ncChannels;
+
          // When copying from mono to stereo track, paste the wave form
          // to both channels
-         if (n->GetLinked() && !c->GetLinked())
+         // TODO: more-than-two-channels
+         // This will replicate the last pasted channel as many times as needed
+         while (nnChannels > 0 && ncChannels == 0)
          {
             n = * ++ pN;
+            --nnChannels;
 
             n->TypeSwitch(
                [&](WaveTrack *wn){
@@ -5826,7 +5852,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             );
          }
 
-         if (bAdvanceClipboard){
+         if (bAdvanceClipboard) {
             prevClip = c;
             c = * ++ pC;
          }
@@ -6906,34 +6932,29 @@ int MenuCommandHandler::FindClips
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   int trackNum = 1;
-   for (auto track : tracks->Leaders()) {
-      if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
-         auto waveTrack = static_cast<const WaveTrack*>(track);
-         bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
+   auto leaders = tracks->Leaders();
+   auto range = leaders.Filter<const WaveTrack>();
+   if (anyWaveTracksSelected)
+      range = range + &Track::GetSelected;
+   for (auto waveTrack : range) {
+      bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
 
-         auto result = next ? FindNextClip(project, waveTrack, t0, t1) :
-            FindPrevClip(project, waveTrack, t0, t1);
+      auto range = stereoAndDiff
+         ? TrackList::Channels( waveTrack )
+         : TrackList::SingletonRange( waveTrack );
+
+      for ( auto wt : range ) {
+         auto result = next ? FindNextClip(project, wt, t0, t1) :
+            FindPrevClip(project, wt, t0, t1);
          if (result.found) {
-            result.trackNum = trackNum;
+            result.trackNum =
+               1 + std::distance( leaders.begin(), leaders.find( waveTrack ) );
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
-         if (stereoAndDiff) {
-            auto waveTrack2 = static_cast<const WaveTrack*>(track->GetLink());
-            auto result = next ? FindNextClip(project, waveTrack2, t0, t1) :
-               FindPrevClip(project, waveTrack2, t0, t1);
-            if (result.found) {
-               result.trackNum = trackNum;
-               result.channel = stereoAndDiff;
-               results.push_back(result);
-            }
-         }
-
-         nTracksSearched++;
       }
 
-      trackNum++;
+      nTracksSearched++;
    }
 
 
@@ -6974,14 +6995,13 @@ int MenuCommandHandler::FindClips
    return nTracksSearched;       // can be used for screen reader messages if required
 }
 
-// Whether the two channels of a stereo track have the same clips
-bool MenuCommandHandler::ChannelsHaveSameClipBoundaries(const WaveTrack* wt)
-{
-   bool sameClips = false;
-
-   if (wt->GetLinked() && wt->GetLink()) {
-      auto& left = wt->GetClips();
-      auto& right = static_cast<const WaveTrack*>(wt->GetLink())->GetClips();
+namespace {
+   bool TwoChannelsHaveSameBoundaries
+   ( const WaveTrack *first, const WaveTrack *second )
+   {
+      bool sameClips = false;
+      auto& left = first->GetClips();
+      auto& right = second->GetClips();
       if (left.size() == right.size()) {
          sameClips = true;
          for (unsigned int i = 0; i < left.size(); i++) {
@@ -6992,9 +7012,24 @@ bool MenuCommandHandler::ChannelsHaveSameClipBoundaries(const WaveTrack* wt)
             }
          }
       }
+      return sameClips;
+   }
+}
+
+bool MenuCommandHandler::ChannelsHaveDifferentClipBoundaries(
+   const WaveTrack* wt)
+{
+   // This is quadratic in the number of channels
+   auto channels = TrackList::Channels(wt);
+   while (!channels.empty()) {
+      auto channel = *channels.first++;
+      for (auto other : channels) {
+         if (!TwoChannelsHaveSameBoundaries(channel, other))
+            return true;
+      }
    }
 
-   return sameClips;
+   return false;
 }
 
 void MenuCommandHandler::OnSelectPrevClip(const CommandContext &context)
@@ -8120,34 +8155,29 @@ int MenuCommandHandler::FindClipBoundaries
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   int trackNum = 1;
-   for (auto track : tracks->Leaders()) {
-      if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
-         auto waveTrack = static_cast<const WaveTrack*>(track);
-         bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
+   auto leaders = tracks->Leaders();
+   auto range = leaders.Filter<const WaveTrack>();
+   if (anyWaveTracksSelected)
+      range = range + &Track::GetSelected;
+   for (auto waveTrack : range) {
+      bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
 
-         auto result = next ? FindNextClipBoundary(waveTrack, time) :
-            FindPrevClipBoundary(waveTrack, time);
+      auto range = stereoAndDiff
+         ? TrackList::Channels( waveTrack )
+         : TrackList::SingletonRange(waveTrack);
+
+      for (auto wt : range) {
+         auto result = next ? FindNextClipBoundary(wt, time) :
+         FindPrevClipBoundary(wt, time);
          if (result.nFound > 0) {
-            result.trackNum = trackNum;
+            result.trackNum =
+               1 + std::distance( leaders.begin(), leaders.find( waveTrack ) );
             result.channel = stereoAndDiff;
             results.push_back(result);
          }
-         if (stereoAndDiff) {
-            waveTrack = static_cast<const WaveTrack*>(track->GetLink());
-            result = next ? FindNextClipBoundary(waveTrack, time) :
-               FindPrevClipBoundary(waveTrack, time);
-            if (result.nFound > 0) {
-               result.trackNum = trackNum;
-               result.channel = stereoAndDiff;
-               results.push_back(result);
-            }
-         }
-
-         nTracksSearched++;
       }
 
-      trackNum++;
+      nTracksSearched++;
    }
 
 
@@ -8215,7 +8245,8 @@ wxString MenuCommandHandler::FoundTrack::ComposeTrackName() const
       : name;
    auto longName = shortName;
    if (channel) {
-      if ( waveTrack->GetLinked() )
+      // TODO: more-than-two-channels-message
+      if ( waveTrack->IsLeader() )
       /* i18n-hint: given the name of a track, specify its left channel */
          longName = wxString::Format(_("%s left"), shortName);
       else

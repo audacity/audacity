@@ -562,6 +562,8 @@ protected:
    void OnChannelChange(wxCommandEvent & event);
    void OnMergeStereo(wxCommandEvent & event);
 
+   // TODO: more-than-two-channels
+   // How should we define generalized channel manipulation operations?
    void SplitStereo(bool stereo);
 
    void OnSwapChannels(wxCommandEvent & event);
@@ -603,23 +605,28 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
       (display == WaveTrack::Spectrum) && !bAudioBusy);
 
    AudacityProject *const project = ::GetActiveProject();
+   TrackList *const tracks = project->GetTracks();
    bool unsafe = EffectManager::Get().RealtimeIsActive() &&
       project->IsAudioActive();
 
-   const bool isMono = !pTrack->GetLink();
+   auto nChannels = TrackList::Channels(pTrack).size();
+   const bool isMono = ( nChannels == 1 );
+   const bool isStereo = ( nChannels == 2 );
+   // Maybe more than stereo tracks some time?
+
    if ( isMono )
    {
       mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
       WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
-      TrackList *const tracks = project->GetTracks();
       auto next = * ++ tracks->Find(pTrack);
 
       if (isMono) {
          const bool canMakeStereo =
-         (next && !next->GetLinked()
-          && pTrack->GetKind() == Track::Wave
-          && next->GetKind() == Track::Wave);
+            (next &&
+             TrackList::Channels(next).size() == 1 &&
+             track_cast<WaveTrack*>(next));
+
          pMenu->Enable(OnMergeStereoID, canMakeStereo && !unsafe);
 
          int itemId;
@@ -647,8 +654,8 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
       return end != std::find(checkedIds.begin(), end, id);
    });
 
-
-   pMenu->Enable(OnSwapChannelsID, !isMono && !unsafe);
+   // Enable this only for properly stereo tracks:
+   pMenu->Enable(OnSwapChannelsID, isStereo && !unsafe);
    pMenu->Enable(OnSplitStereoID, !isMono && !unsafe);
 
 #ifndef EXPERIMENTAL_DA
@@ -836,11 +843,16 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
 /// Merge two tracks into one stereo track ??
 void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 {
+   AudacityProject *const project = ::GetActiveProject();
+   const auto tracks = project->GetTracks();
+
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
+
+   auto partner = static_cast< WaveTrack * >
+      ( *tracks->Find( pTrack ).advance( 1 ) );
+
    pTrack->SetLinked(true);
-   // Assume partner is wave or null
-   const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
 
    if (partner) {
       // Set partner's parameters to match target.
@@ -884,51 +896,40 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    mpData->result = RefreshCode::RefreshAll;
 }
 
-/// Split a stereo track into two tracks...
+/// Split a stereo track (or more-than-stereo?) into two (or more) tracks...
 void WaveTrackMenuTable::SplitStereo(bool stereo)
 {
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
+   AudacityProject *const project = ::GetActiveProject();
+   auto channels = TrackList::Channels( pTrack );
 
-   if (stereo)
-      pTrack->SetPanFromChannelType();
-   pTrack->SetChannel(Track::MonoChannel);
 
-   // Assume partner is present, and is wave
-   const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
-   wxASSERT(partner);
-   if (!partner)
-      return;
-
-   if (partner)
-   {
+   int totalHeight = 0;
+   int nChannels = 0;
+   for (auto channel : channels) {
       // Keep original stereo track name.
-      partner->SetName(pTrack->GetName());
+      channel->SetName(pTrack->GetName());
       if (stereo)
-         partner->SetPanFromChannelType();
-      partner->SetChannel(Track::MonoChannel);
+         channel->SetPanFromChannelType();
+      channel->SetChannel(Track::MonoChannel);
 
       //On Demand - have each channel add its own.
-      if (ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave)
-         ODManager::Instance()->MakeWaveTrackIndependent(partner);
+      if (ODManager::IsInstanceCreated())
+         ODManager::Instance()->MakeWaveTrackIndependent(channel);
+      //make sure no channel is smaller than its minimum height
+      if (channel->GetHeight() < channel->GetMinimizedHeight())
+         channel->SetHeight(channel->GetMinimizedHeight());
+      totalHeight += channel->GetHeight();
+      ++nChannels;
    }
 
    pTrack->SetLinked(false);
-   //make sure neither track is smaller than its minimum height
-   if (pTrack->GetHeight() < pTrack->GetMinimizedHeight())
-      pTrack->SetHeight(pTrack->GetMinimizedHeight());
-   if (partner)
-   {
-      if (partner->GetHeight() < partner->GetMinimizedHeight())
-         partner->SetHeight(partner->GetMinimizedHeight());
+   int averageHeight = totalHeight / nChannels;
 
+   for (auto channel : channels)
       // Make tracks the same height
-      if (pTrack->GetHeight() != partner->GetHeight())
-      {
-         pTrack->SetHeight((pTrack->GetHeight() + partner->GetHeight()) / 2.0);
-         partner->SetHeight(pTrack->GetHeight());
-      }
-   }
+      channel->SetHeight( averageHeight );
 
    mpData->result = RefreshCode::RefreshAll;
 }
@@ -939,14 +940,19 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    AudacityProject *const project = ::GetActiveProject();
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   // Assume partner is wave or null
-   const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
+   auto channels = TrackList::Channels( pTrack );
+   if (channels.size() != 2)
+      return;
+
    Track *const focused = project->GetTrackPanel()->GetFocusedTrack();
-   const bool hasFocus =
-      (focused == pTrack || focused == partner);
+   const bool hasFocus = channels.contains( focused );
+
+   auto first = *channels.begin();
+   auto partner = *channels.rbegin();
 
    SplitStereo(false);
-   pTrack->SetChannel(Track::RightChannel);
+
+   first->SetChannel(Track::RightChannel);
    partner->SetChannel(Track::LeftChannel);
 
    TrackList *const tracks = project->GetTracks();

@@ -769,7 +769,7 @@ bool NyquistEffect::Process()
       Effect::MessageBox(message, wxOK | wxCENTRE | wxICON_EXCLAMATION, _("Nyquist Error"));
    }
 
-   auto trackRange = mOutputTracks->Selected< WaveTrack >();
+   auto trackRange = mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader;
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
@@ -785,10 +785,14 @@ bool NyquistEffect::Process()
          if (bOnePassTool) {
          }
          else {
-            if (mCurTrack[0]->GetLinked()) {
+            auto channels = TrackList::Channels(mCurTrack[0]);
+            if (channels.size() > 1) {
+               // TODO: more-than-two-channels
+               // Pay attention to consistency of mNumSelectedChannels
+               // with the running tally made by this loop!
                mCurNumChannels = 2;
 
-               mCurTrack[1] = * ++ iter;
+               mCurTrack[1] = * ++ channels.first;
                if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
                   Effect::MessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
                                wxOK | wxCENTRE);

@@ -120,10 +120,10 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
 
-            if (leftTrack->GetLinked()) {
+            // TODO: more-than-two-channels
+            auto channels = TrackList::Channels(leftTrack);
+            if (auto rightTrack = * ++ channels.begin()) {
                double t;
-               // Assume linked track is wave
-               WaveTrack* rightTrack = static_cast<WaveTrack*>(leftTrack->GetLink());
 
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();

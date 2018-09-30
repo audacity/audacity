@@ -357,7 +357,7 @@ FoundClip FindPrevClip
 int FindClips
 (AudacityProject &project,
  double t0, double t1, bool next, std::vector<FoundClip>& results);
-bool ChannelsHaveSameClipBoundaries(const WaveTrack* wt);
+bool ChannelsHaveDifferentClipBoundaries(const WaveTrack* wt);
 void OnSelectPrevClip(const CommandContext &context );
 void OnSelectNextClip(const CommandContext &context );
 void OnSelectClip(AudacityProject &project, bool next);

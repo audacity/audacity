@@ -1359,10 +1359,9 @@ bool Effect::ProcessPass()
          if (!left->GetSelected())
             return fallthrough();
 
-         WaveTrack *right;
          sampleCount len;
          sampleCount leftStart;
-         sampleCount rightStart;
+         sampleCount rightStart = 0;
 
          if (!isGenerator)
          {
@@ -1376,48 +1375,37 @@ bool Effect::ProcessPass()
             mSampleCnt = left->TimeToLongSamples(mDuration);
          }
 
-         mNumChannels = 1;
+         mNumChannels = 0;
+         WaveTrack *right{};
 
-         if (left->GetChannel() == Track::LeftChannel)
-         {
-            map[0] = ChannelNameFrontLeft;
-         }
-         else if (left->GetChannel() == Track::RightChannel)
-         {
-            map[0] = ChannelNameFrontRight;
-         }
-         else
-         {
-            map[0] = ChannelNameMono;
-         }
-         map[1] = ChannelNameEOL;
-
-         right = NULL;
-         rightStart = 0;
-         if (left->GetLinked() && multichannel)
-         {
-            // Assume linked track is wave
-            right = static_cast<WaveTrack *>(left->GetLink());
-            if (!isGenerator)
-            {
-               GetSamples(right, &rightStart, &len);
-            }
-            clear = false;
-            mNumChannels = 2;
-
-            if (right->GetChannel() == Track::LeftChannel)
-            {
-               map[1] = ChannelNameFrontLeft;
-            }
-            else if (right->GetChannel() == Track::RightChannel)
-            {
-               map[1] = ChannelNameFrontRight;
-            }
+         // Iterate either over one track which could be any channel,
+         // or if multichannel, then over all channels of left,
+         // which is a leader.
+         for (auto channel :
+              TrackList::Channels(left).StartingWith(left)) {
+            if (channel->GetChannel() == Track::LeftChannel)
+               map[mNumChannels] = ChannelNameFrontLeft;
+            else if (channel->GetChannel() == Track::RightChannel)
+               map[mNumChannels] = ChannelNameFrontRight;
             else
-            {
-               map[1] = ChannelNameMono;
+               map[mNumChannels] = ChannelNameMono;
+
+            ++ mNumChannels;
+            map[mNumChannels] = ChannelNameEOL;
+
+            if (! multichannel)
+               break;
+
+            if (mNumChannels == 2) {
+               // TODO: more-than-two-channels
+               right = channel;
+               clear = false;
+               if (!isGenerator)
+                  GetSamples(right, &rightStart, &len);
+
+               // Ignore other channels
+               break;
             }
-            map[2] = ChannelNameEOL;
          }
 
          // Let the client know the sample rate

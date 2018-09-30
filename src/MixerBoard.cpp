@@ -334,9 +334,10 @@ WaveTrack *MixerTrackCluster::GetWave() const
 
 WaveTrack *MixerTrackCluster::GetRight() const
 {
+  // TODO: more-than-two-channels
    auto left = GetWave();
    if (left)
-      return static_cast<WaveTrack*>(left->GetLink());
+      return * ++ TrackList::Channels(left).begin();
    else
       return nullptr;
 }
@@ -981,9 +982,9 @@ void MixerBoard::UpdateTrackClusters()
    size_t nClusterCount = mMixerTrackClusters.size();
    unsigned int nClusterIndex = 0;
    MixerTrackCluster* pMixerTrackCluster = NULL;
-   Track* pTrack;
 
    for (auto pPlayableTrack: mTracks->Leaders<PlayableTrack>()) {
+      // TODO: more-than-two-channels
       auto spTrack = Track::Pointer<PlayableTrack>( pPlayableTrack );
       if (nClusterIndex < nClusterCount)
       {

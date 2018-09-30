@@ -41,7 +41,6 @@ public:
    // Effect implementation
 
    bool Process() override;
-   void End() override;
    bool IsHidden() override;
 
 private:
@@ -54,7 +53,6 @@ private:
    sampleCount mEnd;
    WaveTrack *mLeftTrack;
    WaveTrack *mRightTrack;
-   std::unique_ptr<WaveTrack> mOutTrack;
 };
 
 #endif
