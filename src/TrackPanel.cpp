@@ -1078,23 +1078,17 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
    if (!trk)
       return;
 
-   Track *link = trk->GetLink();
-
-   if (link && !trk->GetLinked()) {
-      trk = link;
-      link = trk->GetLink();
-   }
+   trk = *GetTracks()->FindLeader(trk);
+   auto height =
+      TrackList::Channels(trk).sum( &Track::GetHeight )
+      - kTopInset - kShadowThickness;
 
    // subtract insets and shadows from the rectangle, but not border
    // This matters because some separators do paint over the border
    wxRect rect(kLeftInset,
             -mViewInfo->vpos + trk->GetY() + kTopInset,
             GetRect().GetWidth() - kLeftInset - kRightInset - kShadowThickness,
-            trk->GetHeight() - kTopInset - kShadowThickness);
-
-   if (link) {
-      rect.height += link->GetHeight();
-   }
+            height);
 
    if( refreshbacking )
    {
@@ -1184,41 +1178,24 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
-      // If this track is linked to the next one, display a common
-      // border for both, otherwise draw a normal border
-      wxRect rect = trackRect;
-      bool skipBorder = false;
-      Track *l = t->GetLink();
-
-      if (l && t->GetLinked()) {
-         rect.height += l->GetHeight();
-      }
-      else if (l && trackRect.y >= 0) {
-         skipBorder = true;
-      }
-
+      auto leaderTrack = *GetTracks()->FindLeader( t );
       // If the previous track is linked to this one but isn't on the screen
       // (and thus would have been skipped) we need to draw that track's border
       // instead.
-      const Track *borderTrack = t;
-      wxRect borderRect = rect;
+      bool drawBorder = (t == leaderTrack || trackRect.y < 0);
 
-      if (l && !t->GetLinked() && trackRect.y < 0)
-      {
-         borderTrack = l;
+      if (drawBorder) {
+         wxRect teamRect = trackRect;
+         teamRect.y = leaderTrack->GetY() - mViewInfo->vpos;
+         // danger with pending tracks?
+         teamRect.height =
+            TrackList::Channels(leaderTrack)
+               .sum( &Track::GetHeight );
 
-         borderRect = trackRect;
-         borderRect.y = l->GetY() - mViewInfo->vpos;
-         borderRect.height = l->GetHeight();
-
-         borderRect.height += t->GetHeight();
-      }
-
-      if (!skipBorder) {
          if (mAx->IsFocused(t)) {
-            focusRect = borderRect;
+            focusRect = teamRect;
          }
-         DrawOutside(context, borderTrack, borderRect);
+         DrawOutside(context, leaderTrack, teamRect);
       }
 
       // Believe it or not, we can speed up redrawing if we don't
@@ -1675,7 +1652,9 @@ void TrackInfo::Status1DrawFunction
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
    wxString s;
-   if (!wt || (wt->GetLinked()))
+   if (!pTrack || TrackList::Channels(pTrack).size() > 1)
+      // TODO: more-than-two-channels-message
+      // more appropriate strings
       s = _("Stereo, %dHz");
    else {
       if (wt->GetChannel() == Track::MonoChannel)
@@ -1714,6 +1693,15 @@ void TrackPanel::DrawOutside
       wxRect rect = rec;
       DrawOutsideOfTrack(context, t, rect);
 
+      {
+         auto channels = TrackList::Channels(t);
+         // omit last (perhaps, only) channel
+         --channels.second;
+         for (auto channel : channels)
+            // draw the sash below this channel
+            DrawSash(channel, dc, rect);
+      }
+
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
       rect.y += kTopInset;
@@ -1733,7 +1721,16 @@ void TrackPanel::DrawOutside
       //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
       //}
 
-      DrawBordersAroundTrack(t, dc, rect, labelw, vrul);
+      DrawBordersAroundTrack(dc, rect, vrul);
+      {
+         auto channels = TrackList::Channels(t);
+         // omit last (perhaps, only) channel
+         --channels.second;
+         for (auto channel : channels)
+            // draw the sash below this channel
+            DrawBordersAroundSash(channel, dc, rect, labelw);
+      }
+
       DrawShadow(t, dc, rect);
    }
 
@@ -1777,16 +1774,17 @@ void TrackPanel::DrawOutsideOfTrack
    side.x += side.width - kRightInset;
    side.width = kRightInset;
    dc->DrawRectangle(side);
+}
 
-   // Area between tracks of stereo group
-   if (t->GetLinked()) {
-      // Paint the channel separator over (what would be) the shadow of the top
-      // channel, and the top inset of the bottom channel
-      side = rect;
-      side.y += t->GetHeight() - kShadowThickness;
-      side.height = kTopInset + kShadowThickness;
-      dc->DrawRectangle(side);
-   }
+void TrackPanel::DrawSash(const Track * t, wxDC * dc, const wxRect & rect)
+{
+   // Area between channels of a group
+   // Paint the channel separator over (what would be) the shadow of this
+   // channel, and the top inset of the following channel
+   wxRect side = rect;
+   side.y = t->GetY() - mViewInfo->vpos + t->GetHeight() - kShadowThickness;
+   side.height = kTopInset + kShadowThickness;
+   dc->DrawRectangle(side);
 }
 
 void TrackPanel::SetBackgroundCell
@@ -1979,8 +1977,8 @@ void TrackPanel::VerticalScroll( float fracPosition){
 // Given rectangle excludes the insets left, right, and top
 // Draw a rectangular border and also a vertical separator of track controls
 // from the rest (ruler and proper track area)
-void TrackPanel::DrawBordersAroundTrack(const Track * t, wxDC * dc,
-                                        const wxRect & rect, const int labelw,
+void TrackPanel::DrawBordersAroundTrack(wxDC * dc,
+                                        const wxRect & rect,
                                         const int vrul)
 {
    // Border around track and label area
@@ -1991,21 +1989,21 @@ void TrackPanel::DrawBordersAroundTrack(const Track * t, wxDC * dc,
                      rect.width - kShadowThickness,
                      rect.height - kShadowThickness);
 
+
    // between vruler and TrackInfo
    AColor::Line(*dc, vrul, rect.y, vrul, rect.y + rect.height - 1);
+}
 
-   // The lines at bottom of 1st track and top of second track of stereo group
-   // Possibly replace with DrawRectangle to add left border.
-   if (t->GetLinked()) {
-      // The given rect has had the top inset subtracted
-      int h1 = rect.y + t->GetHeight() - kTopInset;
-      // h1 is the top coordinate of the second tracks' rectangle
-      // Draw (part of) the bottom border of the top channel and top border of the bottom
-      // At left it extends between the vertical rulers too
-      // These lines stroke over what is otherwise "border" of each channel
-      AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
-      AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
-   }
+void TrackPanel::DrawBordersAroundSash(const Track * t, wxDC * dc,
+                                        const wxRect & rect, const int labelw)
+{
+   int h1 = t->GetY() - mViewInfo->vpos + t->GetHeight();
+   // h1 is the top coordinate of the following channel's rectangle
+   // Draw (part of) the bottom border of the top channel and top border of the bottom
+   // At left it extends between the vertical rulers too
+   // These lines stroke over what is otherwise "border" of each channel
+   AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
+   AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
 }
 
 // Given rectangle has insets subtracted left, right, and top
