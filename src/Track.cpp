@@ -435,7 +435,7 @@ bool Track::LinkConsistencyCheck()
          {
             wxLogWarning(
                wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
-               GetName().c_str(), l->GetName());
+               GetName(), l->GetName());
             err = true;
             l->SetLinked(false);
          }
