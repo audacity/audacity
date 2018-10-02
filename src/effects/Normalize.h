@@ -72,38 +72,30 @@ private:
    bool AnalyseTrackData(const WaveTrack * track, const wxString &msg, double &progress,
                      AnalyseOperation op, float &offset);
    void AnalyseDataDC(float *buffer, size_t len);
-#ifdef EXPERIMENTAL_R128_NORM
    void AnalyseDataLoudness(float *buffer, size_t len);
    void AnalyseDataLoudnessDC(float *buffer, size_t len);
-#endif
    void ProcessData(float *buffer, size_t len, float offset);
 
-#ifdef EXPERIMENTAL_R128_NORM
    void CalcEBUR128HPF(float fs);
    void CalcEBUR128HSF(float fs);
-#endif
 
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
 
 private:
    double mPeakLevel;
+   double mLUFSLevel;
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
-#ifdef EXPERIMENTAL_R128_NORM
-   double mLUFSLevel;
    bool   mUseLoudness;
    bool   mGUIUseLoudness;
-#endif
 
    double mCurT0;
    double mCurT1;
    float  mMult;
    double mSum;
-#ifdef EXPERIMENTAL_R128_NORM
    double mSqSum;
-#endif
    sampleCount    mCount;
 
    wxCheckBox *mGainCheckBox;
@@ -111,15 +103,12 @@ private:
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
-   wxCheckBox *mStereoIndCheckBox;
-#ifdef EXPERIMENTAL_R128_NORM
    wxCheckBox *mUseLoudnessCheckBox;
+   wxCheckBox *mStereoIndCheckBox;
 
+   bool mCreating;
    Biquad mR128HSF;
    Biquad mR128HPF;
-#endif
-   bool mCreating;
-
 
    DECLARE_EVENT_TABLE()
 };
