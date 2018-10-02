@@ -60,7 +60,7 @@ namespace {
       zoomMin = tt.GetRangeLower(), zoomMax = tt.GetRangeUpper();
       if (dB) {
          // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-         zoomMin = LINEAR_TO_DB(std::max(1.0e-7, double(dBRange))) / dBRange + 1.0;
+         zoomMin = LINEAR_TO_DB(std::max(1.0e-7, double(zoomMin))) / dBRange + 1.0;
          zoomMax = LINEAR_TO_DB(std::max(1.0e-7, double(zoomMax))) / dBRange + 1.0;
       }
    }
