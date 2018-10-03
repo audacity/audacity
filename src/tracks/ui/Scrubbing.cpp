@@ -1105,7 +1105,8 @@ const wxString &Scrubber::GetUntranslatedStateString() const
    static wxString empty;
 
    if (IsSpeedPlaying()) {
-      return XO("Playing at Speed");
+      static wxString result = XO("Playing at Speed");
+      return result;
    }
    else if (HasMark()) {
       auto &item = FindMenuItem(Seeks() || TemporarilySeeks());
