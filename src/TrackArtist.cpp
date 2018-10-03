@@ -351,7 +351,7 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
                              bool drawSliders)
 {
    // Copy the horizontal extent of rect; will later change only the vertical.
-   wxRect trackRect = rect;
+   wxRect teamRect = rect;
 
    bool hasSolo = false;
    for (const Track *t : *tracks) {
@@ -382,20 +382,18 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
       auto group = TrackList::Channels( leader );
       leader = leader->SubstitutePendingChangedTrack().get();
 
-      trackRect.y = leader->GetY() - zoomInfo.vpos;
-      trackRect.height = group.sum( [&] (const Track *channel) {
+      teamRect.y = leader->GetY() - zoomInfo.vpos;
+      teamRect.height = group.sum( [&] (const Track *channel) {
          channel = channel->SubstitutePendingChangedTrack().get();
          return channel->GetHeight();
       });
 
-      if (trackRect.GetBottom() < clip.GetTop())
+      if (teamRect.GetBottom() < clip.GetTop())
          continue;
-      else if (trackRect.GetTop() > clip.GetBottom())
+      else if (teamRect.GetTop() > clip.GetBottom())
          break;
 
       for (auto t : group) {
-         t = t->SubstitutePendingChangedTrack().get();
-
 #if defined(DEBUG_CLIENT_AREA)
          // Filled rectangle to show the interior of the client area
          wxRect zr = trackRect;
@@ -413,13 +411,15 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
          // its linked partner, and see if any part of that rect is on-screen.
          // If so, we draw both.  Otherwise, we can safely draw neither.
 
-         if (trackRect.Intersects(clip) && reg.Contains(trackRect)) {
-            wxRect rr = trackRect;
-            rr.x += mMarginLeft;
-            rr.y += mMarginTop;
-            rr.width -= (mMarginLeft + mMarginRight);
-            rr.height -= (mMarginTop + mMarginBottom);
-            DrawTrack(context, t, rr,
+         if (teamRect.Intersects(clip) && reg.Contains(teamRect)) {
+            t = t->SubstitutePendingChangedTrack().get();
+            wxRect trackRect {
+               rect.x + mMarginLeft,
+               t->GetY() - zoomInfo.vpos + mMarginTop,
+               rect.width - (mMarginLeft + mMarginRight),
+               t->GetHeight() - (mMarginTop + mMarginBottom)
+            };
+            DrawTrack(context, t, trackRect,
                       selectedRegion, zoomInfo,
                       drawEnvelope, bigPoints, drawSliders, hasSolo);
          }
