@@ -1169,9 +1169,9 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
    for ( auto t :
          GetTracks()->Any< const Track >() + IsVisibleTrack{ GetProject() } ) {
-      t = t->SubstitutePendingChangedTrack().get();
-      trackRect.y = t->GetY() - mViewInfo->vpos;
-      trackRect.height = t->GetHeight();
+      auto visibleT = t->SubstitutePendingChangedTrack().get();
+      trackRect.y = visibleT->GetY() - mViewInfo->vpos;
+      trackRect.height = visibleT->GetHeight();
 
       auto leaderTrack = *GetTracks()->FindLeader( t );
       // If the previous track is linked to this one but isn't on the screen
@@ -1181,11 +1181,15 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
       if (drawBorder) {
          wxRect teamRect = trackRect;
-         teamRect.y = leaderTrack->GetY() - mViewInfo->vpos;
-         // danger with pending tracks?
-         teamRect.height =
-            TrackList::Channels(leaderTrack)
-               .sum( &Track::GetHeight );
+         auto visibleLeaderTrack =
+           leaderTrack->SubstitutePendingChangedTrack().get();
+         teamRect.y = visibleLeaderTrack->GetY() - mViewInfo->vpos;
+         teamRect.height = TrackList::Channels(leaderTrack).sum(
+            [&] (const Track *channel) {
+               channel = channel->SubstitutePendingChangedTrack().get();
+               return channel->GetHeight();
+            }
+         );
 
          if (mAx->IsFocused(t)) {
             focusRect = teamRect;
@@ -1209,7 +1213,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          rect.y += kTopMargin;
          rect.width = GetVRulerWidth();
          rect.height -= (kTopMargin + kBottomMargin);
-         mTrackArtist->DrawVRuler(context, t, rect);
+         mTrackArtist->DrawVRuler(context, visibleT, rect);
       }
    }
 
