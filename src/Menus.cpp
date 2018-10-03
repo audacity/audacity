@@ -4818,7 +4818,7 @@ bool MenuCommandHandler::DoEffect(
 
    auto nTracksOriginally = project.GetTrackCount();
    wxWindow *focus = wxWindow::FindFocus();
-   wxWindow *parent;
+   wxWindow *parent = nullptr;
    if (focus != nullptr) {
       parent = focus->GetParent();
    }
