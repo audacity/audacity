@@ -263,25 +263,31 @@ void TimeShiftHandle::CreateListOfCapturedClips
       // because AddClipsToCaptured doesn't add duplicate clips); to remove
       // this behavior just store the array size beforehand.
       for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
-         auto &trackClip = state.capturedClipArray[i];
-         // Capture based on tracks that have clips -- that means we
-         // don't capture based on links to label tracks for now (until
-         // we can treat individual labels as clips)
-         if ( trackClip.clip ) {
-            // Iterate over sync-lock group tracks.
-            for (auto t : TrackList::SyncLockGroup( trackClip.track ))
-               AddClipsToCaptured(state, t,
-                     trackClip.clip->GetStartTime(),
-                     trackClip.clip->GetEndTime() );
+        {
+            auto &trackClip = state.capturedClipArray[i];
+            // Capture based on tracks that have clips -- that means we
+            // don't capture based on links to label tracks for now (until
+            // we can treat individual labels as clips)
+            if ( trackClip.clip ) {
+               // Iterate over sync-lock group tracks.
+               for (auto t : TrackList::SyncLockGroup( trackClip.track ))
+                  AddClipsToCaptured(state, t,
+                        trackClip.clip->GetStartTime(),
+                        trackClip.clip->GetEndTime() );
+            }
          }
 #ifdef USE_MIDI
-         // Capture additional clips from NoteTracks
-         trackClip.track->TypeSwitch( [&](NoteTrack *nt) {
-            // Iterate over sync-lock group tracks.
-            for (auto t : TrackList::SyncLockGroup(nt))
-               AddClipsToCaptured
-                  ( state, t, nt->GetStartTime(), nt->GetEndTime() );
-         });
+         {
+            // Beware relocation of array contents!  Bind trackClip again.
+            auto &trackClip = state.capturedClipArray[i];
+            // Capture additional clips from NoteTracks
+            trackClip.track->TypeSwitch( [&](NoteTrack *nt) {
+               // Iterate over sync-lock group tracks.
+               for (auto t : TrackList::SyncLockGroup(nt))
+                  AddClipsToCaptured
+                     ( state, t, nt->GetStartTime(), nt->GetEndTime() );
+            });
+         }
 #endif
       }
    }
