@@ -62,7 +62,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Returns true on success.
    // If SetProject is told NOT to create the directory
    // but it doesn't already exist, SetProject fails and returns false.
-   bool SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate);
+   bool SetProject(
+      wxString& newProjPath, // assigns it if empty
+      const wxString& newProjName, const bool bCreate);
 
    wxString GetProjectDataDir();
    wxString GetProjectName();
