@@ -226,8 +226,6 @@ bool EffectNormalize::Process()
    //Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
-   SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   WaveTrack *track = (WaveTrack *) iter.First();
    wxString topMsg;
 
    if(dc && mGain)
@@ -239,12 +237,14 @@ bool EffectNormalize::Process()
    else if(!dc && !mGain)
       topMsg = _("Not doing anything...\n");   // shouldn't get here
 
-   AllocBuffers(iter);
+   AllocBuffers();
    mProgressVal = 0;
 
-   while (track)
+   for(auto track : mOutputTracks->Selected<WaveTrack>()
+       + (mStereoInd ? &Track::Any : &Track::IsLeader))
    {
       //Get start and end times from track
+      // PRL: No accounting for multiple channels ?
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
 
@@ -260,42 +260,30 @@ bool EffectNormalize::Process()
       auto trackName = track->GetName();
       mSteps = 2;
 
-      if(!mStereoInd && track->GetLinked())
-      {
-         mProcStereo = true;
-      }
-
       mProgressMsg =
          topMsg + wxString::Format( _("Analyzing: %s"), trackName );
 
       InitTrackAnalysis(dc);
 
+      auto range = mStereoInd
+         ? TrackList::SingletonRange(track)
+         : TrackList::Channels(track);
+
+      mProcStereo = range.size() > 1;
+
       // Get track min/max/rms in peak/rms mode
       if(mGain && (mNormalizeTo == kAmplitude || mNormalizeTo == kRMS))
       {
-         if(mNormalizeTo == kAmplitude)
+         for(size_t idx = 0; idx < range.size(); ++idx)
          {
-            if(!GetTrackMinMax(track, mMin[0], mMax[0]))
-               return false;
-         }
-         else // RMS
-         {
-            if(!GetTrackRMS(track, mRMS[0]))
-               return false;
-         }
-         if(mProcStereo)
-         {
-            // Get next WaveTrack* without incrementing iter.
-            track = (WaveTrack *) iter.Next();
-            iter.Prev();
             if(mNormalizeTo == kAmplitude)
             {
-               if(!GetTrackMinMax(track, mMin[0], mMax[0]))
+               if(!GetTrackMinMax(track, mMin[idx], mMax[idx]))
                   return false;
             }
             else // RMS
             {
-               if(!GetTrackRMS(track, mRMS[1]))
+               if(!GetTrackRMS(track, mRMS[idx]))
                   return false;
             }
          }
@@ -305,7 +293,7 @@ bool EffectNormalize::Process()
       {
          mBlockSize = 0.4 * mCurRate; // 400 ms blocks
          mBlockOverlap = 0.1 * mCurRate; // 100 ms overlap
-         if(!ProcessOne(iter, true))
+         if(!ProcessOne(range, true))
             // Processing failed -> abort
             return false;
       }
@@ -410,15 +398,9 @@ bool EffectNormalize::Process()
       mProgressMsg =
          topMsg + wxString::Format( _("Processing: %s"), trackName );
 
-      if(!ProcessOne(iter, false))
+      if(!ProcessOne(range, false))
          // Processing failed -> abort
          return false;
-
-      //Iterate to the next track
-      track = (WaveTrack *) iter.Next();
-      if(mProcStereo)
-         // Stereo track is already processed so advance again.
-         track = (WaveTrack *) iter.Next();
    }
 
    this->ReplaceProcessedTracks(bGoodResult);
@@ -556,25 +538,21 @@ bool EffectNormalize::GetTrackRMS(WaveTrack* track, float& rms)
 
 /// Get required buffer size for the largest whole track and allocate buffers.
 /// This reduces the amount of allocations required.
-void EffectNormalize::AllocBuffers(SelectedTrackListOfKindIterator iter)
+void EffectNormalize::AllocBuffers()
 {
    mTrackBufferCapacity = 0;
    bool stereoTrackFound = false;
    double maxSampleRate = 0;
    mProcStereo = false;
 
-   WaveTrack *track = (WaveTrack *) iter.First();
-   while (track)
+   for(auto track : mOutputTracks->Selected<WaveTrack>() + &Track::Any)
    {
       mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
       maxSampleRate = std::max(maxSampleRate, track->GetRate());
 
       // There is a stereo track
-      if(track->GetLinked())
+      if(track->IsLeader())
          stereoTrackFound = true;
-
-      // Iterate to the next track
-      track = (WaveTrack *) iter.Next();
    }
 
    // Allocate histogram buffers
@@ -595,14 +573,13 @@ void EffectNormalize::AllocBuffers(SelectedTrackListOfKindIterator iter)
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectNormalize::ProcessOne(SelectedTrackListOfKindIterator iter, bool analyse)
+bool EffectNormalize::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
 {
-   WaveTrack* track1 = (WaveTrack *) *iter;
-   WaveTrack* track2 = 0;
+   WaveTrack* track = *range.begin();
 
    //Transform the marker timepoints to samples
-   auto start = track1->TimeToLongSamples(mCurT0);
-   auto end   = track1->TimeToLongSamples(mCurT1);
+   auto start = track->TimeToLongSamples(mCurT0);
+   auto end   = track->TimeToLongSamples(mCurT1);
 
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
@@ -613,9 +590,6 @@ bool EffectNormalize::ProcessOne(SelectedTrackListOfKindIterator iter, bool anal
    if (mCurT1 <= mCurT0)
       return false;
 
-   if(mProcStereo)
-      track2 = (WaveTrack *) iter.Next();
-
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
    auto s = start;
@@ -624,13 +598,13 @@ bool EffectNormalize::ProcessOne(SelectedTrackListOfKindIterator iter, bool anal
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
       auto blockLen = limitSampleBufferSize(
-         track1->GetBestBlockSize(s),
+         track->GetBestBlockSize(s),
          mTrackBufferCapacity
       );
 
       const size_t remainingLen = (end - s).as_size_t();
       blockLen = blockLen > remainingLen ? remainingLen : blockLen;
-      if(!LoadBufferBlock(track1, track2, s, blockLen))
+      if(!LoadBufferBlock(range, s, blockLen))
          return false;
 
       //Process the buffer.
@@ -646,7 +620,7 @@ bool EffectNormalize::ProcessOne(SelectedTrackListOfKindIterator iter, bool anal
       }
 
       if(!analyse)
-         StoreBufferBlock(track1, track2, s, blockLen);
+         StoreBufferBlock(range, s, blockLen);
 
       //Increment s one blockfull of samples
       s += blockLen;
@@ -656,23 +630,24 @@ bool EffectNormalize::ProcessOne(SelectedTrackListOfKindIterator iter, bool anal
    return true;
 }
 
-bool EffectNormalize::LoadBufferBlock(WaveTrack* track1, WaveTrack* track2,
+bool EffectNormalize::LoadBufferBlock(TrackIterRange<WaveTrack> range,
                                       sampleCount pos, size_t len)
 {
-   sampleCount read_size;
+   sampleCount read_size = -1;
    // Get the samples from the track and put them in the buffer
-   track1->Get((samplePtr) mTrackBuffer[0].get(), floatSample, pos, len,
-               fillZero, true, &read_size);
-   mTrackBufferLen = read_size.as_size_t();
-
-   // Get linked stereo track as well.
-   if(mProcStereo)
+   int idx = 0;
+   for(auto channel : range)
    {
-      track2->Get((samplePtr) mTrackBuffer[1].get(), floatSample, pos, len,
-                  fillZero, true, &read_size);
+      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len,
+                   fillZero, true, &read_size);
+      mTrackBufferLen = read_size.as_size_t();
+
       // Fail if we read different sample count from stereo pair tracks.
-      if(read_size.as_size_t() != mTrackBufferLen)
+      // Ignore this check during first iteration (read_size == -1).
+      if(read_size.as_size_t() != mTrackBufferLen && read_size != -1)
          return false;
+
+      ++idx;
    }
    return true;
 }
@@ -763,14 +738,16 @@ bool EffectNormalize::ProcessBufferBlock()
    return true;
 }
 
-void EffectNormalize::StoreBufferBlock(WaveTrack* track1, WaveTrack* track2,
+void EffectNormalize::StoreBufferBlock(TrackIterRange<WaveTrack> range,
                                        sampleCount pos, size_t len)
 {
-   // Copy the newly-changed samples back onto the track.
-   track1->Set((samplePtr) mTrackBuffer[0].get(), floatSample, pos, len);
-   // Store linked stereo track as well.
-   if(mProcStereo)
-      track2->Set((samplePtr) mTrackBuffer[1].get(), floatSample, pos, len);
+   int idx = 0;
+   for(auto channel : range)
+   {
+      // Copy the newly-changed samples back onto the track.
+      channel->Set((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      ++idx;
+   }
 }
 
 void EffectNormalize::InitTrackAnalysis(bool dc)

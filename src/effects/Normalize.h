@@ -71,13 +71,13 @@ private:
 
    bool GetTrackMinMax(WaveTrack* track, float& min, float& max);
    bool GetTrackRMS(WaveTrack* track, float& rms);
-   void AllocBuffers(SelectedTrackListOfKindIterator iter);
-   bool ProcessOne(SelectedTrackListOfKindIterator iter, bool analyse);
-   bool LoadBufferBlock(WaveTrack* track1, WaveTrack* track2,
+   void AllocBuffers();
+   bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
+   bool LoadBufferBlock(TrackIterRange<WaveTrack> range,
                         sampleCount pos, size_t len);
    bool AnalyseBufferBlock();
    bool ProcessBufferBlock();
-   void StoreBufferBlock(WaveTrack* track1, WaveTrack* track2,
+   void StoreBufferBlock(TrackIterRange<WaveTrack> range,
                          sampleCount pos, size_t len);
    void InitTrackAnalysis(bool dc);
 
@@ -109,7 +109,7 @@ private:
 
    int    mOp;
    float  mMult;
-   float  mOffset[2];
+   float  mOffset[2];   // MM: all those 2's must be increased once surround channels are supported
    float  mMin[2];
    float  mMax[2];
    float  mRMS[2];
@@ -125,7 +125,7 @@ private:
    wxCheckBox *mStereoIndCheckBox;
    wxCheckBox *mDualMonoCheckBox;
 
-   Floats mTrackBuffer[2];
+   Floats mTrackBuffer[2];    // MM: must be increased once surround channels are supported
    size_t mTrackBufferLen;
    size_t mTrackBufferCapacity;
    bool   mProcStereo;
