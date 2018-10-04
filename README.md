@@ -6,7 +6,7 @@ Audacity(R): free, open source, cross-platform audio software for
 multi-track recording and editing: <https://www.audacityteam.org>
 
 User support is provided on Audacity Forum:
-<ttps://forum.audacityteam.org>.
+<https://forum.audacityteam.org>.
 
 We welcome feedback on Audacity, suggestions for new or improved features, 
 and bug reports. Please visit <https://forum.audacityteam.org/viewforum.php?f=25>.
