@@ -7822,7 +7822,6 @@ void MenuCommandHandler::HandleMixAndRender
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(
       tracks, trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
-   tracks->GroupChannels(*uNewLeft, uNewRight ? 2 : 1);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
@@ -7844,6 +7843,9 @@ void MenuCommandHandler::HandleMixAndRender
       decltype(pNewLeft) pNewRight{};
       if (uNewRight)
          pNewRight = tracks->Add(std::move(uNewRight));
+
+      // Do this only after adding tracks to the list
+      tracks->GroupChannels(*pNewLeft, pNewRight ? 2 : 1);
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount==1) {
