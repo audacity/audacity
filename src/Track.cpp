@@ -774,7 +774,7 @@ void TrackList::GroupChannels(
    }
    // *this does not contain the track or sufficient following channels
    // or group size is zero
-   throw InconsistencyException{};
+   THROW_INCONSISTENCY_EXCEPTION;
 }
 
 auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->
