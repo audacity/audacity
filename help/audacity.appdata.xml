@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component>
+<component type="desktop">
   <id>org.audacityteam.Audacity</id>
   <launchable type="desktop">audacity.desktop</launchable>
   <project_license>GPL-2.0 and CC-BY-3.0</project_license>
