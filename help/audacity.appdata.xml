@@ -37,4 +37,27 @@
     </screenshot>
   </screenshots>
   <update_contact>audacity-devel@lists.sourceforge.net</update_contact>
+  <releases>
+    <release version="2.3.0" date="2018-09-29">
+     <description>
+        <p>New features in Audacity 2.3.0:</p>
+        <ul>
+          <li>New feature – Punch and Roll Recording.</li>
+          <li>Pinned-play-head can now be repositioned by dragging.</li>
+          <li>Play-at-speed now can be adjusted whilst playing.</li>
+          <li>Toolbars controlling volume and speed can now be resized for greater precision.</li>
+          <li>Macros (formerly Chains) substantially extended.</li>
+          <li>New Tools menu.</li>
+          <li>New Scriptables commands.</li>
+          <li>Nyquist gains AUD-DO command.</li>
+          <li>Nyquist effects are now translatable and translated.</li>
+          <li>More dialogs have help buttons now.</li>
+          <li>Increased legibility of trackname display.</li>
+          <li>Half-wave option for collapsed tracks.</li>
+          <li>Sliding Stretch.</li>
+          <li>Dialog (option) for entering labels.</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
 </component>
