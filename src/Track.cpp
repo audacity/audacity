@@ -736,7 +736,7 @@ void TrackList::GroupChannels(
       auto after = iter;
       auto end = this->ListOfTracks::end();
       auto count = groupSize;
-      for ( ; after != end && count--; ++after )
+      for ( ; after != end && count; ++after, --count )
          ;
       if ( count == 0 ) {
          auto unlink = [&] ( Track &tr ) {
