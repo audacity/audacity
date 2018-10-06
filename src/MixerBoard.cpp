@@ -668,7 +668,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
          else if (meterFloatsArray[index] > 1.0)
             meterFloatsArray[index] = 1.0;
 
-      mMeter->UpdateDisplay(2, nFrames, meterFloatsArray.get());
+      if (mMeter)
+         mMeter->UpdateDisplay(2, nFrames, meterFloatsArray.get());
    }
    else
       this->ResetMeter(false);
@@ -704,7 +705,8 @@ void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    wxColour col = theTheme.Colour(selected ? clrTrackInfoSelected : clrTrackInfo) ;
    SetBackgroundColour( col );
-   mMeter->SetBackgroundColour( col );
+   if (mMeter)
+      mMeter->SetBackgroundColour( col );
    mStaticText_TrackName->SetBackgroundColour( col );
    mSlider_Gain->SetBackgroundColour( col );
    mSlider_Pan->SetBackgroundColour( col );
