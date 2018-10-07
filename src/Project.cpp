@@ -3959,11 +3959,13 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
    if (!success)
       return false;
 
+   Maybe<DirManager::ProjectSetter> pSetter;
+
    if (fromSaveAs && !bWantSaveCopy) {
       // We are about to move files from the current directory to
       // the NEW directory.  We need to make sure files that belonged
       // to the last saved project don't get erased, so we "lock" them, so that
-      // SetProject() copies instead of moves the files.
+      // ProjectSetter's constructor copies instead of moves the files.
       // (Otherwise the NEW project would be fine, but the old one would
       // be empty of all of its files.)
 
@@ -3977,19 +3979,17 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
 
       // This renames the project directory, and moves or copies
       // all of our block files over.
-      success = mDirManager->SetProject(projPath, projName, true);
+      pSetter.create( *mDirManager, projPath, projName, true );
 
-      if (!success)
+      if (!pSetter->Ok())
          return false;
    }
 
    // Commit the writing of the .aup only now, after we know that the _data
    // folder also saved with no problems.
-   // Error recovery in case this fails might not be correct -- there is no
-   // provision to undo the effects of SetProject -- but it is very unlikely
-   // that this will happen:  only renaming and removing of files happens,
-   // not writes that might exhaust space.  So DO give a second dialog in
-   // case the unusual happens.
+   // It is very unlikely that errors will happen:
+   // only renaming and removing of files, not writes that might exhaust space.
+   // So DO give a second dialog in case the unusual happens.
    success = success && GuardedCall< bool >( [&] {
          saveFile.PostCommit();
          return true;
@@ -3999,6 +3999,9 @@ bool AudacityProject::DoSave (const bool fromSaveAs,
       return false;
 
    // SAVE HAS SUCCEEDED -- following are further no-fail commit operations.
+
+   if (pSetter)
+      pSetter->Commit();
 
    if ( !bWantSaveCopy )
    {
