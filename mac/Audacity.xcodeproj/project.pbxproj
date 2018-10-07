@@ -1301,6 +1301,7 @@
 		AA6B5BAF2061EC58008B5B26 /* soxr.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152160163C244200451B5F /* soxr.h */; };
 		AA6B5BB02061EC58008B5B26 /* soxr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15215F163C244200451B5F /* soxr.c */; };
 		AA6B5BB12061EC58008B5B26 /* vr32.c in Sources */ = {isa = PBXBuildFile; fileRef = EDE325FF168243EF00C19E60 /* vr32.c */; };
+		AAB5D42F216A9764006136B4 /* rms.ny in Resources */ = {isa = PBXBuildFile; fileRef = AAB5D42E216A9764006136B4 /* rms.ny */; };
 		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
@@ -3221,6 +3222,7 @@
 		AA6B5B872061DF3B008B5B26 /* util32s.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util32s.h; sourceTree = "<group>"; };
 		AA6B5B8D2061E20A008B5B26 /* fifo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fifo.h; sourceTree = "<group>"; };
 		AA6B5B8F2061E6A8008B5B26 /* std-types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "std-types.h"; sourceTree = "<group>"; };
+		AAB5D42E216A9764006136B4 /* rms.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rms.ny; path = "../plug-ins/rms.ny"; sourceTree = "<group>"; };
 		AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-data-import.ny"; path = "../../Audacity/plug-ins/sample-data-import.ny"; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1030E50AD5700CC4BD3 /* audioreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audioreader.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -5560,6 +5562,7 @@
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
 				28D34C7F1D9F52E200D4FB61 /* rhythmtrack.ny */,
 				28AA281D0F267A2D008AED9E /* rissetdrum.ny */,
+				AAB5D42E216A9764006136B4 /* rms.ny */,
 				28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */,
 				AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */,
 				28AA281E0F267A2D008AED9E /* SilenceMarker.ny */,
@@ -7173,6 +7176,7 @@
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
+				AAB5D42F216A9764006136B4 /* rms.ny in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
