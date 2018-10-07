@@ -59,9 +59,28 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    static void SetTempDir(const wxString &_temp) { globaltemp = _temp; }
 
+   class ProjectSetter
+   {
+   public:
+      ProjectSetter(
+         DirManager &dirManager,
+         wxString& newProjPath,  // assigns it if empty
+         const wxString& newProjName, const bool bCreate);
+      ~ProjectSetter();
+
+      bool Ok();
+      void Commit();
+
+   private:
+      struct Impl;
+      std::unique_ptr<Impl> mpImpl;
+   };
+
    // Returns true on success.
    // If SetProject is told NOT to create the directory
    // but it doesn't already exist, SetProject fails and returns false.
+   // This function simply creates a ProjectSetter and commits it if successful.
+   // Using ProjectSetter directly allows separation of those steps.
    bool SetProject(
       wxString& newProjPath, // assigns it if empty
       const wxString& newProjName, const bool bCreate);

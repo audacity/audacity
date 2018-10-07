@@ -521,50 +521,100 @@ namespace {
    };
 }
 
-bool DirManager::SetProject(
-   wxString& newProjPath, const wxString& newProjName, const bool bCreate)
+struct DirManager::ProjectSetter::Impl
 {
-   bool committed = false;
+   Impl(
+      DirManager &dm,
+      wxString& newProjPath, const wxString& newProjName, const bool bCreate );
 
+   void Commit();
+
+   DirManager &dirManager;
+   bool committed{ false };
+
+   // RAII object
    // Save old state of paths in case of failure
-   PathRestorer pathRestorer{ committed, projPath, projName, projFull };
+   PathRestorer pathRestorer{
+      committed,
+      dirManager.projPath, dirManager.projName, dirManager.projFull };
 
+   // Another RAII object
+   // Be prepared to un-create directory on failure
+   Maybe<DirCleaner> dirCleaner;
+   
+   // State variables to carry over into Commit()
    // Remember old path to be cleaned up in case of successful move
-   const auto oldFull = projFull;
+   wxString oldFull{ dirManager.projFull };
+   wxArrayString newPaths;
+   size_t trueTotal{ 0 };
+   bool moving{ true };
 
+   // Make this true only after successful construction
+   bool ok{ false };
+};
+
+DirManager::ProjectSetter::ProjectSetter(
+   DirManager &dirManager,
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate )
+   : mpImpl{
+      std::make_unique<Impl>( dirManager, newProjPath, newProjName, bCreate )
+   }
+{
+   
+}
+
+DirManager::ProjectSetter::~ProjectSetter()
+{
+}
+
+bool DirManager::ProjectSetter::Ok()
+{
+   return mpImpl->ok;
+}
+
+
+void DirManager::ProjectSetter::Commit()
+{
+   mpImpl->Commit();
+}
+
+DirManager::ProjectSetter::Impl::Impl(
+   DirManager &dm,
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate )
+: dirManager{ dm }
+{
    // Choose new paths
    if (newProjPath == wxT(""))
       newProjPath = ::wxGetCwd();
 
-   this->projPath = newProjPath;
-   this->projName = newProjName;
+   dirManager.projPath = newProjPath;
+   dirManager.projName = newProjName;
    if (newProjPath.Last() == wxFILE_SEP_PATH)
-      this->projFull = newProjPath + newProjName;
+      dirManager.projFull = newProjPath + newProjName;
    else
-      this->projFull = newProjPath + wxFILE_SEP_PATH + newProjName;
+      dirManager.projFull = newProjPath + wxFILE_SEP_PATH + newProjName;
 
    // Verify new paths, maybe creating a directory
    if (bCreate) {
-      if (!wxDirExists(projFull) &&
-          !wxMkdir(projFull))
-         return false;
+      if (!wxDirExists(dirManager.projFull) &&
+          !wxMkdir(dirManager.projFull))
+         return;
 
       #ifdef __UNIX__
-      chmod(OSFILENAME(projFull), 0775);
+      chmod(OSFILENAME(dirManager.projFull), 0775);
       #endif
 
       #ifdef __WXMAC__
-      chmod(OSFILENAME(projFull), 0775);
+      chmod(OSFILENAME(dirManager.projFull), 0775);
       #endif
 
    }
-   else if (!wxDirExists(projFull))
-      return false;
+   else if (!wxDirExists(dirManager.projFull))
+      return;
 
    // Be prepared to un-create directory on failure
-   Maybe<DirCleaner> dirCleaner;
    if (bCreate)
-      dirCleaner.create( committed, projFull );
+      dirCleaner.create( committed, dirManager.projFull );
 
    /* Move all files into this NEW directory.  Files which are
       "locked" get copied instead of moved.  (This happens when
@@ -572,9 +622,8 @@ bool DirManager::SetProject(
       saved version of the old project must not be moved,
       otherwise the old project would not be safe.) */
 
-   bool moving = true;
-   size_t trueTotal = 0;
-   wxArrayString newPaths;
+   moving = true;
+   trueTotal = 0;
 
    {
       /* i18n-hint: This title appears on a dialog that indicates the progress
@@ -582,18 +631,18 @@ bool DirManager::SetProject(
       ProgressDialog progress(_("Progress"),
          _("Saving project data files"));
 
-      int total = mBlockFileHash.size();
+      int total = dirManager.mBlockFileHash.size();
 
-      for (const auto &pair : mBlockFileHash) {
+      for (const auto &pair : dirManager.mBlockFileHash) {
          if( progress.Update(newPaths.size(), total) != ProgressResult::Success )
-            return false;
+            return;
 
          wxString newPath;
          if (auto b = pair.second.lock()) {
             moving = moving && !b->IsLocked();
-            auto result = CopyToNewProjectDirectory( &*b );
+            auto result = dirManager.CopyToNewProjectDirectory( &*b );
             if (!result.first)
-               return false;
+               return;
             newPath = result.second;
             ++trueTotal;
          }
@@ -601,11 +650,19 @@ bool DirManager::SetProject(
       }
    }
 
+   ok = true;
+}
+
+void DirManager::ProjectSetter::Impl::Commit()
+{
+   wxASSERT( ok );
+
    // We have built all of the new file tree.
+   // So cancel the destructor actions of the RAII objects.
    committed = true;
 
    auto size = newPaths.size();
-   wxASSERT( size == mBlockFileHash.size() );
+   wxASSERT( size == dirManager.mBlockFileHash.size() );
 
    // Commit changes to filenames in the BlockFile objects, and removal
    // of files at old paths, ONLY NOW!  This must be nothrow.
@@ -627,7 +684,7 @@ bool DirManager::SetProject(
    // same procedure in all cases.
 
    size_t ii = 0;
-   for (const auto &pair : mBlockFileHash)
+   for (const auto &pair : dirManager.mBlockFileHash)
    {
       BlockFilePtr b = pair.second.lock();
 
@@ -667,7 +724,7 @@ bool DirManager::SetProject(
       // that we didn't put there, but that Finder may insert into the folders,
       // and mercilessly remove them, in addition to removing the directories.
 
-      auto cleanupLoc1 = oldFull.empty() ? mytemp : oldFull;
+      auto cleanupLoc1 = oldFull.empty() ? dirManager.mytemp : oldFull;
       CleanDir(
          cleanupLoc1, 
          wxEmptyString, // EmptyString => ALL directories.
@@ -680,6 +737,15 @@ bool DirManager::SetProject(
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
       //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
    }
+}
+
+bool DirManager::SetProject(
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate)
+{
+   ProjectSetter setter{ *this, newProjPath, newProjName, bCreate };
+   if (!setter.Ok())
+      return false;
+   setter.Commit();
    return true;
 }
 
