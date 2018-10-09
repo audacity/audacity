@@ -40,9 +40,9 @@
                                   (format t "Error: Invalid translation for ~s in *locale*.~%" txt)
                                   (setf translated (second translation))))))))))))
     (if translated
-        translated)
+        translated
         (progn (setf *locale* '*unbound*)
-               (underscore txt)))
+               (underscore txt))))
 
 
 ;;; Some helpers for parsing strings returned by (aud-do "GetInfo: ...
