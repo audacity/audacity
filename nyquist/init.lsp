@@ -17,10 +17,9 @@
 ;; ("cc" ((list "string" "translated-string") [(list "string" "translated-string") ...]))
 ;; where "cc" is the quoted country code.
 ;;
-(setf underscore (function _))
+(setfn underscore _)
 ;;
-(defun _(txt)
-  (setf translated nil)
+(defun _(txt &aux translated language-list)
   (when (boundp '*locale*)
     (if (not (listp *locale*))
         (format t "Warning: Invalid *locale* (not a list).~%")
@@ -41,8 +40,9 @@
                                   (format t "Error: Invalid translation for ~s in *locale*.~%" txt)
                                   (setf translated (second translation))))))))))))
     (if translated
-        translated
-        (funcall underscore txt)))
+        translated)
+        (progn (setf *locale* '*unbound*)
+               (underscore txt)))
 
 
 ;;; Some helpers for parsing strings returned by (aud-do "GetInfo: ...
