@@ -17,32 +17,32 @@
 ;; ("cc" ((list "string" "translated-string") [(list "string" "translated-string") ...]))
 ;; where "cc" is the quoted country code.
 ;;
-(setf underscore (function _))
+(setfn underscore _)
 ;;
-(defun _(txt)
-  (setf translated nil)
+(defun _(txt &aux translated language-list)
   (when (boundp '*locale*)
     (if (not (listp *locale*))
         (format t "Warning: Invalid *locale* (not a list).~%")
         (let ((locale (get '*audacity* 'language)))
           (if (not (setf language-list (assoc locale *locale* :test 'string-equal)))
-              (format t "Warning: No language-list for \"~a\" in *locale*.~%" locale)
+              (format t "Warning: No language-list for ~s in *locale*.~%" locale)
               (if (/= (length language-list) 2)
-                  (format t "Error: Invalid \"~a\" language list in *locale*.~%" locale)
+                  (format t "Error: Invalid ~s language list in *locale*.~%" locale)
                   ; Get just the list of substitution pairs
                   (let ((language-list (second language-list)))
                     (if (not (listp language-list))
-                        (format t "Warning: No translations for \"~a\" in *locale*.~%" locale)
+                        (format t "Warning: No translations for ~s in *locale*.~%" locale)
                         (let ((translation (assoc txt language-list :test 'string=)))
                           (if (not translation)
-                              (format t "Warning: No ~a translations for \"~a\".~%" locale txt)
+                              (format t "Warning: No ~a translations for ~s.~%" locale txt)
                               (if (not (and (listp translation)
                                             (= (length translation) 2)))
-                                  (format t "Error: Invalid translation for ~a in *locale*.~%" txt)
+                                  (format t "Error: Invalid translation for ~s in *locale*.~%" txt)
                                   (setf translated (second translation))))))))))))
     (if translated
         translated
-        (funcall underscore txt)))
+        (progn (setf *locale* '*unbound*)
+               (underscore txt))))
 
 
 ;;; Some helpers for parsing strings returned by (aud-do "GetInfo: ...

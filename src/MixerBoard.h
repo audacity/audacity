@@ -146,7 +146,7 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    MixerTrackSlider* mSlider_Velocity;
 #endif
-   MeterPanel* mMeter;
+   wxWeakRef<MeterPanel> mMeter;
 
 public:
    DECLARE_EVENT_TABLE()

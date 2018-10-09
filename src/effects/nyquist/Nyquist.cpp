@@ -646,7 +646,9 @@ bool NyquistEffect::Process()
    if ( !bOnePassTool )
       CopyInputTracks(true);
 
-   mNumSelectedChannels = mOutputTracks->Selected< const WaveTrack >().size();
+   mNumSelectedChannels = bOnePassTool
+      ? 0
+      : mOutputTracks->Selected< const WaveTrack >().size();
 
    mDebugOutput.Clear();
    if (!mHelpFile.IsEmpty() && !mHelpFileExists) {
@@ -769,7 +771,9 @@ bool NyquistEffect::Process()
       Effect::MessageBox(message, wxOK | wxCENTRE | wxICON_EXCLAMATION, _("Nyquist Error"));
    }
 
-   auto trackRange = mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader;
+   Maybe<TrackIterRange<WaveTrack>> pRange;
+   if (!bOnePassTool)
+      pRange.create(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
@@ -777,9 +781,10 @@ bool NyquistEffect::Process()
    mFirstInGroup = true;
    Track *gtLast = NULL;
 
-   for (auto &iter = trackRange.first, &end = trackRange.second;
-        bOnePassTool || iter != end; ++iter) {
-      mCurTrack[0] = *iter;
+   for (;
+        bOnePassTool || pRange->first != pRange->second;
+        ++pRange->first) {
+      mCurTrack[0] = pRange ? *pRange->first : nullptr;
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {

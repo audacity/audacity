@@ -736,7 +736,7 @@ void TrackList::GroupChannels(
       auto after = iter;
       auto end = this->ListOfTracks::end();
       auto count = groupSize;
-      for ( ; after != end && count--; ++after )
+      for ( ; after != end && count; ++after, --count )
          ;
       if ( count == 0 ) {
          auto unlink = [&] ( Track &tr ) {
@@ -774,7 +774,7 @@ void TrackList::GroupChannels(
    }
    // *this does not contain the track or sufficient following channels
    // or group size is zero
-   throw InconsistencyException{};
+   THROW_INCONSISTENCY_EXCEPTION;
 }
 
 auto TrackList::Replace(Track * t, ListOfTracks::value_type &&with) ->

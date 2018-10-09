@@ -62,7 +62,8 @@ bool ContrastDialog::GetDB(float &dB)
       return false;
    }
 
-   for ( auto t : TrackList::Channels( *range.begin() ) ) {
+   const auto channels = TrackList::Channels( *range.begin() );
+   for ( auto t : channels ) {
       wxASSERT(mT0 <= mT1);
 
       // Ignore whitespace beyond ends of track.
@@ -94,7 +95,9 @@ bool ContrastDialog::GetDB(float &dB)
    }
    // TODO: This works for stereo, provided the audio clips are in both channels.
    // We should really count gaps between clips as silence.
-   rms = (meanSq > 0.0)? sqrt(meanSq/(double)numberSelectedTracks) : 0.0;
+   rms = (meanSq > 0.0)
+      ? sqrt( meanSq/static_cast<double>( channels.size() ) )
+      : 0.0;
 
    // Gives warning C4056, Overflow in floating-point constant arithmetic
    // -INFINITY is intentional here.

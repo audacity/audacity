@@ -2537,13 +2537,14 @@ void Effect::Preview(bool dryOnly)
       mixLeft->Offset(-mixLeft->GetStartTime());
       mixLeft->SetSelected(true);
       mixLeft->SetDisplay(WaveTrack::NoDisplay);
-      mTracks->Add(std::move(mixLeft));
+      auto pLeft = mTracks->Add(std::move(mixLeft));
+      Track *pRight{};
       if (mixRight) {
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->SetSelected(true);
-         mTracks->Add(std::move(mixRight));
+         pRight = mTracks->Add(std::move(mixRight));
       }
-      mTracks->GroupChannels(*mixLeft, mixRight ? 2 : 1);
+      mTracks->GroupChannels(*pLeft, pRight ? 2 : 1);
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {
