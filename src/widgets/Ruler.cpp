@@ -2050,6 +2050,8 @@ public:
       (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override
    {
+      (void)pProject;// Compiler food
+      (void)state;// Compiler food
       // May come here when recording is in progress, so hit tests are turned
       // off.
       wxString tooltip;
@@ -2068,6 +2070,8 @@ public:
       (const wxRect &rect,
        wxWindow *pParent, wxPoint *pPosition) final override
    {
+      (void)pParent;// Compiler food
+      (void)rect;// Compiler food
       mParent->ShowContextMenu(mMenuChoice, pPosition);
       return 0;
    }
@@ -2125,6 +2129,7 @@ protected:
 
    Result Cancel(AudacityProject *pProject) override
    {
+      (void)pProject;// Compiler food
       return RefreshCode::DrawOverlays;
    }
    
@@ -2230,6 +2235,7 @@ protected:
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override
    {
+      (void)pProject;// Compiler food
       if (event.event.LeftDClick()) {
          // Restore default position on double click
          TracksPrefs::SetPinnedHeadPositionPreference( 0.5, true );
@@ -2255,6 +2261,9 @@ protected:
       (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override
    {
+      (void)pProject;// Compiler food
+      (void)state;// Compiler food
+
       static wxCursor cursor{ wxCURSOR_SIZEWE };
       return {
          _( "Click and drag to adjust, double-click to reset" ),
@@ -2274,6 +2283,7 @@ protected:
 
    Result Cancel(AudacityProject *pProject) override
    {
+      (void)pProject;// Compiler food
       TracksPrefs::SetPinnedHeadPositionPreference( mOrigPreference );
       return RefreshCode::DrawOverlays;
    }
@@ -2328,12 +2338,14 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest
    auto xx = state.state.m_x;
 
 #ifdef EXPERIMENTAL_DRAGGABLE_PLAY_HEAD
-   // Allow click and drag on the play head even while recording
-   // Make this handle more prominent then the quick play handle
-   auto result = PlayheadHandle::HitTest( pProject, xx );
-   if (result) {
-      result = AssignUIHandlePtr( mPlayheadHolder, result );
-      results.push_back( result );
+   {
+      // Allow click and drag on the play head even while recording
+      // Make this handle more prominent then the quick play handle
+      auto result = PlayheadHandle::HitTest( pProject, xx );
+      if (result) {
+         result = AssignUIHandlePtr( mPlayheadHolder, result );
+         results.push_back( result );
+      }
    }
 #endif
    
@@ -2461,6 +2473,7 @@ std::vector<UIHandlePtr> AdornedRulerPanel::ScrubbingCell::HitTest
 (const TrackPanelMouseState &state,
  const AudacityProject *pProject)
 {
+   (void)pProject;// Compiler food
    // Creation of overlays on demand here -- constructor of AdornedRulerPanel
    // is too early to do it
    mParent->CreateOverlays();
@@ -3037,6 +3050,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview
 (const TrackPanelMouseState &state, const AudacityProject *pProject)
 -> HitTestPreview
 {
+   (void)state;// Compiler food
    const auto &scrubber = pProject->GetScrubber();
    auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
 
@@ -3789,6 +3803,8 @@ void AdornedRulerPanel::ProcessUIHandleResult
 (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
  unsigned refreshResult)
 {
+   (void)pLatestCell;// Compiler food
+   (void)pClickedTrack;// Compiler food
    if (refreshResult & RefreshCode::DrawOverlays)
       DrawBothOverlays();
 }

@@ -876,6 +876,7 @@ void ToolBar::OnErase( wxEraseEvent & WXUNUSED(event) )
 //
 void ToolBar::OnPaint( wxPaintEvent & event )
 {
+   (void)event;// compiler food.
    //wxPaintDC dc( (wxWindow *) event.GetEventObject() );
    wxPaintDC dc( this );
    // Start with a clean background

@@ -388,8 +388,10 @@ namespace
          break;
       case TWINDOW:
          NewWindowFunc(windowType, windowSize, extra, window.get() + padding);
-         for (int ii = padding, multiplier = -(int)windowSize / 2; ii < (int)endOfWindow; ++ii, ++multiplier)
-            window[ii] *= multiplier;
+         {
+            for (int ii = padding, multiplier = -(int)windowSize / 2; ii < (int)endOfWindow; ++ii, ++multiplier)
+               window[ii] *= multiplier;
+         }
          break;
       case DWINDOW:
          DerivativeOfWindowFunc(windowType, windowSize, extra, window.get() + padding);

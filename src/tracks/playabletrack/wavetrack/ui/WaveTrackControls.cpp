@@ -935,7 +935,6 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    Track *const focused = project->GetTrackPanel()->GetFocusedTrack();
    const bool hasFocus = channels.contains( focused );
 
-   auto first = *channels.begin();
    auto partner = *channels.rbegin();
 
    SplitStereo(false);

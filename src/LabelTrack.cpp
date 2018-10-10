@@ -2569,7 +2569,7 @@ bool LabelTrack::PasteOver(double t, const Track * src)
 
    if (! result )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      ;
+      (void)0;// intentionally do nothing
 
    return result;
 }
@@ -2587,7 +2587,7 @@ void LabelTrack::Paste(double t, const Track *src)
 
    if ( !bOk )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      ;
+      (void)0;// intentionally do nothing
 }
 
 // This repeats the labels in a time interval a specified number of times.

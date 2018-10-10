@@ -612,7 +612,7 @@ void NoteTrack::Paste(double t, const Track *src)
 
    if ( !bOk )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      ;
+      (void)0;// intentionally do nothing
 }
 
 void NoteTrack::Silence(double t0, double t1)

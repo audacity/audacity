@@ -107,7 +107,6 @@ int ExecCommand2(wxString *pIn, wxString *pOut)
       CommandBuilder builder(*pIn);
       if (builder.WasValid())
       {
-         AudacityProject *project = GetActiveProject();
          OldStyleCommandPointer cmd = builder.GetCommand();
          AppCommandEvent ev;
          ev.SetCommand(cmd);

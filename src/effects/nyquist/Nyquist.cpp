@@ -2134,7 +2134,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
           // The trick is that xgettext will not consider such lines comments
           // and will extract the strings they contain
           (line[0] == wxT(';') ||
-           (dollar = (line[0] == wxT('$')))))
+           ((dollar = (line[0] == wxT('$'))))))
       {
          Tokenizer tzer;
          unsigned nLines = 1;

@@ -194,7 +194,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // PRL:  I don't think that matters, the sequence of storage of clips in the track
    // is not elsewhere assumed to be by time
    {
-      for (auto it = revClips.rbegin(), end = revClips.rend(); it != end; ++it)
+      for (auto it = revClips.rbegin(), revEnd = revClips.rend(); it != revEnd; ++it)
          track->AddClip(std::move(*it));
    }
 

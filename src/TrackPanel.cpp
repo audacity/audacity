@@ -1752,6 +1752,7 @@ void TrackPanel::DrawOutside
 void TrackPanel::DrawOutsideOfTrack
 (TrackPanelDrawingContext &context, const Track * t, const wxRect & rect)
 {
+   (void)t;// Compiler food
    auto dc = &context.dc;
 
    // Fill in area outside of the track

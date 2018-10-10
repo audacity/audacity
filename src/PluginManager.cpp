@@ -313,7 +313,7 @@ wxAccStatus CheckListAx::GetSelections( wxVariant * WXUNUSED(selections) )
 }
 
 // Returns a state constant.
-wxAccStatus CheckListAx::GetState( int childId, long *state )
+wxAccStatus CheckListAx::GetState( int childId, long *pState )
 {
    int flag = wxACC_STATE_SYSTEM_FOCUSABLE;
 
@@ -347,7 +347,7 @@ wxAccStatus CheckListAx::GetState( int childId, long *state )
       }
    }
 
-   *state = flag;
+   *pState = flag;
 
    return wxACC_OK;
 }
@@ -1947,7 +1947,7 @@ void PluginManager::Load()
       }
       // Doing the deletion within the search loop risked skipping some items,
       // hence the delayed delete.
-      for (int i = 0; i < groupsToDelete.Count(); i++) {
+      for (unsigned int i = 0; i < groupsToDelete.Count(); i++) {
          registry.DeleteGroup(groupsToDelete[i]);
       }
       registry.SetPath("");

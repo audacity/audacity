@@ -1175,7 +1175,7 @@ void SpecCache::Populate
 #ifdef _OPENMP
          #pragma omp parallel for
 #endif
-         for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
+         for (xx = lowerBoundX; xx < upperBoundX; ++xx) {
             float *const results = &freq[nBins * xx];
             for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];

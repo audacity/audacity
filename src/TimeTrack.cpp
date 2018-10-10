@@ -128,7 +128,7 @@ void TimeTrack::Paste(double t, const Track * src)
 
    if (! bOk )
       // THROW_INCONSISTENCY_EXCEPTION // ?
-      ;
+      (void)0;// intentionally do nothing.
 }
 
 void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))

@@ -192,12 +192,12 @@ UIHandle::Result StretchHandle::Drag
    const wxMouseEvent &event = evt.event;
    const int x = event.m_x;
 
-   Track *clickedTrack;
+   Track *clickedTrack=nullptr;
    if (evt.pCell)
       clickedTrack =
          static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack().get();
 
-   if (clickedTrack == NULL && mpTrack != NULL)
+   if (clickedTrack == nullptr && mpTrack != nullptr)
       clickedTrack = mpTrack.get();
    Stretch(pProject, x, mLeftEdge, clickedTrack);
    return RefreshAll;

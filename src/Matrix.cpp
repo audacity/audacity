@@ -332,7 +332,7 @@ bool InvertMatrix(const Matrix& input, Matrix& Minv)
             continue;
          if (fabs(M[j][i]) > 0) {
             // Subtract a multiple of row i from row j
-            double factor = M[j][i];
+            factor = M[j][i];
             for(unsigned k = 0; k < N; k++) {
                M[j][k] -= (M[i][k] * factor);
                Minv[j][k] -= (Minv[i][k] * factor);

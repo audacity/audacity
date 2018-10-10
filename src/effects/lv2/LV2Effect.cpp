@@ -1838,10 +1838,10 @@ bool LV2Effect::TransferDataToWindow()
       return true;
    }
 
-   for (size_t i = 0, cnt = mGroups.GetCount(); i < cnt; i++)
+   for (size_t i = 0, groupCount = mGroups.GetCount(); i < GroupCount; i++)
    {
       const auto & params = mGroupMap[mGroups[i]];
-      for (size_t pi = 0, cnt = params.size(); pi < cnt; pi++)
+      for (size_t pi = 0, ParamCount = params.size(); pi < ParamCount; pi++)
       {
          int p = params[pi];
          LV2Port & ctrl = mControls[p];

@@ -79,8 +79,8 @@ UIHandlePtr GainSliderHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, sliderRect))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
-      wxRect sliderRect;
-      TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
+      wxRect sliderRect2;
+      TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect2);
       auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::GainSlider
@@ -88,7 +88,7 @@ UIHandlePtr GainSliderHandle::HitTest
              const_cast<TrackPanel*>(pProject->GetTrackPanel()));
       };
       auto result =
-         std::make_shared<GainSliderHandle>( sliderFn, sliderRect, pTrack );
+         std::make_shared<GainSliderHandle>( sliderFn, sliderRect2, pTrack );
       result = AssignUIHandlePtr(holder, result);
 
       return result;

@@ -1775,7 +1775,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(AVCodecID id, wxString *selfm
          if (ofmt->audio_codec == id)
          {
             wxString ofmtname = wxString::FromUTF8(ofmt->name);
-            bool found = false;
+            found = false;
             for (unsigned int i = 0; i < FromList.GetCount(); i++)
             {
                if (ofmtname.Cmp(FromList[i]) == 0)

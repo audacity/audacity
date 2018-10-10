@@ -1360,7 +1360,7 @@ void WaveTrack::Paste(double t0, const Track *src)
 
    if( !bOk )
       // THROW_INCONSISTENCY_EXCEPTION; // ?
-      ;
+      (void)0;// Empty if intentional.
 }
 
 void WaveTrack::Silence(double t0, double t1)

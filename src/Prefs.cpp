@@ -403,6 +403,7 @@ size_t EnumSetting::Find( const wxString &value ) const
 
 void EnumSetting::Migrate( wxString &value )
 {
+   (void)value;// Compiler food
 }
 
 bool EnumSetting::Write( const wxString &value )

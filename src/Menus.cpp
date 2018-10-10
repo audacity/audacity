@@ -5702,7 +5702,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
    bool bPastedSomething = false;
 
    auto pC = clipTrackRange.begin();
-   size_t nnChannels, ncChannels;
+   size_t nnChannels=0, ncChannels=0;
    while (*pN && *pC) {
       auto n = *pN;
       auto c = *pC;
@@ -6852,6 +6852,8 @@ void MenuCommandHandler::OnSelectClipBoundary(AudacityProject &project, bool nex
 MenuCommandHandler::FoundClip MenuCommandHandler::FindNextClip
 (AudacityProject &project, const WaveTrack* wt, double t0, double t1)
 {
+   (void)project;//Compiler food.
+
    FoundClip result{};
    result.waveTrack = wt;
    const auto clips = wt->SortedClipArray();
@@ -6888,6 +6890,8 @@ MenuCommandHandler::FoundClip MenuCommandHandler::FindNextClip
 MenuCommandHandler::FoundClip MenuCommandHandler::FindPrevClip
 (AudacityProject &project, const WaveTrack* wt, double t0, double t1)
 {
+   (void)project;//Compiler food.
+
    FoundClip result{};
    result.waveTrack = wt;
    const auto clips = wt->SortedClipArray();
@@ -7276,7 +7280,6 @@ void MenuCommandHandler::OnZoomFit(const CommandContext &context)
 {
    auto &project = context.project;
    auto &viewInfo = project.GetViewInfo();
-   auto &selectedRegion = viewInfo.selectedRegion;
    auto tracks = project.GetTracks();
 
    const double start = viewInfo.bScrollBeyondZero
@@ -7973,7 +7976,6 @@ void MenuCommandHandler::OnCursorTrackEnd(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
-   double thisEndOffset = 0.0;
 
    auto trackRange = tracks->Selected();
    if (trackRange.empty())

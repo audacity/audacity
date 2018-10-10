@@ -107,7 +107,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    }
 
    /* create the destination track (NEW track) */
-   if (numWaves == TrackList::Channels(first).size())
+   if (numWaves == (int)TrackList::Channels(first).size())
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 

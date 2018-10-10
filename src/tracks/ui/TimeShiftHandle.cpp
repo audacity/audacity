@@ -536,6 +536,8 @@ namespace {
       const ViewInfo &viewInfo, wxCoord xx, ClipMoveState &state,
       double tolerance, double &desiredSlideAmount )
    {
+      (void)xx;// Compiler food
+      (void)viewInfo;// Compiler food
       bool ok = true;
       double firstTolerance = tolerance;
 
