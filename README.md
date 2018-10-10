@@ -1,11 +1,15 @@
+# Audacity
+
+![Audacity](images/AudacityLogo.png)
+
 Audacity(R): free, open source, cross-platform audio software for 
-multi-track recording and editing: https://www.audacityteam.org/ . 
+multi-track recording and editing: <https://www.audacityteam.org>
 
 User support is provided on Audacity Forum:
-https://forum.audacityteam.org/ .
+<https://forum.audacityteam.org>.
 
 We welcome feedback on Audacity, suggestions for new or improved features, 
-and bug reports. Please visit https://forum.audacityteam.org/viewforum.php?f=25 .
+and bug reports. Please visit <https://forum.audacityteam.org/viewforum.php?f=25>.
 
 Audacity is copyright (c) 1999-2018 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
@@ -13,33 +17,33 @@ except as otherwise noted (mostly in the lib-src subdirectories).
 "Audacity" is a registered trademark of Dominic Mazzoni. 
 
 The Audacity documentation is licensed under the Creative Commons
-Attribution 3.0 license: https://creativecommons.org/licenses/by/3.0/legalcode .
+Attribution 3.0 license: <https://creativecommons.org/licenses/by/3.0/legalcode>.
 
 Compilation instructions for Audacity are provided in the source code:
-* Windows: win\build.txt
-* macOS: mac/build.txt
-* GNU/Linux: linux/build.txt 
+* Windows: `win\build.txt`
+* macOS: `mac/build.txt`
+* GNU/Linux: `linux/build.txt`
 
 You can ask for help with compilation problems at:
-https://forum.audacityteam.org/viewforum.php?f=19 .
+<https://forum.audacityteam.org/viewforum.php?f=19>.
 
 If you want to suggest some simple text change in our code, please submit a 
-pull request on https://github.com/audacity/audacity/pulls . It's usually 
+pull request on <https://github.com/audacity/audacity/pulls>. It's usually 
 best to discuss functional code changes with us first on audacity-devel: 
-https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
+<https://lists.sourceforge.net/lists/listinfo/audacity-devel>.
 
 Version 2.3.0
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.2.2
-3.  Known Issues at Release
-4.  Source Code, Libraries and Additional Copyright Information
+1.  Changes since version 2.2.2
+1.  Known Issues at Release
+1.  Source Code, Libraries and Additional Copyright Information
 
 --------------------------------------------------------------------------------
 
-1. Licensing
+## 1. Licensing
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -63,7 +67,7 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.2.2: 
+## 2. Changes since version 2.2.2: 
 
 Improvements
 
@@ -85,7 +89,7 @@ Improvements
  * Sliding Stretch
  * Dialog (option) for entering labels
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.0
+See also: <https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.3.0>
 
 
 
@@ -104,24 +108,22 @@ Bug Fixes
  * Using Spectrogram Settings in TCP or using Preferences causes Audacity to reset Project Rate to default rate in Quality Preferences - bug #1977
  * Cut Preview should play all selected/sync-locked tracks, respecting Mute/Solo during preview - bug #231
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.3.0
+See also: <https://wiki.audacityteam.org/wiki/Release_Notes_2.3.0>
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.3.0:
+## 3. Known Issues in 2.3.0:
 
 For known issues in 2.3.0 please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_2.3.0/Issues 
+  <https://wiki.audacityteam.org/wiki/Release_Notes_2.3.0/Issues> 
 
 
 -------------------------------------------------------------------------------
 
-4.  Source Code, Libraries and Additional Copyright Information
+## 4.  Source Code, Libraries and Additional Copyright Information
 
 Source code to this program is always available; for more information visit
-our web site at:
-
-  https://www.audacityteam.org/download/source
+our web site at: <https://www.audacityteam.org/download/source>
 
 Audacity is built upon other free libraries; some of these libraries may have
 come with Audacity in the lib-src directory.  Others you are expected to install
