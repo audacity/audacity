@@ -13,7 +13,7 @@ xargs xgettext \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L C -o audacity.pot 
 echo ";; Adding nyquist files to audacity.pot"
-for path in ../plug-ins ; do find $path -name \*.ny ; done | LANG=c sort | \
+for path in ../plug-ins ; do find $path -name \*.ny -not -name rms.ny; done | LANG=c sort | \
 sed -r 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \

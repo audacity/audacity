@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.0.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-10-10 15:25+0100\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -2382,7 +2382,7 @@ msgstr "பதிவு நிகழ்வெண்"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -5048,14 +5048,6 @@ msgid "%s, %s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "அதிர்வெண் ஆய்வு"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr ""
-
-#: src/Menus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "'%s' இலிருந்து  இறக்கப்பட்ட சிட்டைகள்"
@@ -6399,6 +6391,14 @@ msgstr[1] ""
 #: src/Project.cpp
 #, c-format
 msgid "%s and %s."
+msgstr ""
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "அதிர்வெண் ஆய்வு"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr ""
 
 #: src/Resample.cpp
@@ -8732,6 +8732,11 @@ msgid "You can only measure one track at a time."
 msgstr "உங்களால் ஒரு  நேரத்தில் ஒரு ஒலித்துண்டையே அளக்க முடியும்"
 
 #: src/effects/Contrast.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8742,11 +8747,6 @@ msgid ""
 "Nothing to measure.\n"
 "Please select a section of a track."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -10382,6 +10382,11 @@ msgstr "பலதிசை சோடியின்  முதலாவது �
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "பலதிசை சோடியின்  இரண்டாவது தடத்தை பகுப்பாய்கிறது :"
+
+#: src/effects/Normalize.cpp
+#, fuzzy, c-format
 msgid "Processing: %s"
 msgstr "நடைமுறைப்படுத்தபடுகிறது : "
 
@@ -10389,11 +10394,6 @@ msgstr "நடைமுறைப்படுத்தபடுகிறது : 
 #, fuzzy, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "பலதிசை தடங்கள் சுயாதீனமாக நடைமுறைப்படுத்தபடுகிறது"
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "பலதிசை சோடியின்  இரண்டாவது தடத்தை பகுப்பாய்கிறது :"
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
@@ -12672,7 +12672,7 @@ msgstr "சேனல் முறை:"
 msgid "Joint Stereo"
 msgstr "இணைந்த ஒலிசாதனம்"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "ஒலிசாதனம்"
 
@@ -15966,7 +15966,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "மொனோ"
 
@@ -18096,16 +18096,6 @@ msgstr ""
 msgid "Amplitude (0 - 1)"
 msgstr "வீச்சு (0-1)"
 
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "இடப்பக்கம்"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "வலப்பக்கம் "
-
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -18781,6 +18771,14 @@ msgstr "அதிர்வெண் (hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "இடப்பக்கம்"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "வலப்பக்கம் "
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "

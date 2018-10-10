@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-10-10 15:25+0100\n"
 "PO-Revision-Date: 2017-12-01 18:06+0800\n"
 "Last-Translator: mkpoli <snowwolf1001@gmail.com>\n"
 "Language-Team: \n"
@@ -2294,7 +2294,7 @@ msgstr "對數頻率"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "分貝"
 
@@ -4874,14 +4874,6 @@ msgid "%s, %s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "頻率分析"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "對比分析 (遵循 WCAG 2)"
-
-#: src/Menus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "已從 '%s' 匯入標籤"
@@ -6225,6 +6217,14 @@ msgstr[0] "分鐘"
 #, fuzzy, c-format
 msgid "%s and %s."
 msgstr "%d %s 和 %d %s"
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "頻率分析"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "對比分析 (遵循 WCAG 2)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -8561,6 +8561,10 @@ msgid "You can only measure one track at a time."
 msgstr "您一次只能量測一個軌道。"
 
 #: src/effects/Contrast.cpp
+msgid "Please select an audio track."
+msgstr "請選擇一個音訊軌道"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8575,10 +8579,6 @@ msgid ""
 msgstr ""
 "無可供量測的目標。\n"
 "請選擇一個軌道的區段。"
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "請選擇一個音訊軌道"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -10122,6 +10122,11 @@ msgstr "正在分析立體聲對的第一個軌道："
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "正在分析立體聲對的第二個軌道："
+
+#: src/effects/Normalize.cpp
+#, fuzzy, c-format
 msgid "Processing: %s"
 msgstr "正在處理："
 
@@ -10129,11 +10134,6 @@ msgstr "正在處理："
 #, fuzzy, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "正在個別地處理立體聲聲道："
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "正在分析立體聲對的第二個軌道："
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
@@ -12432,7 +12432,7 @@ msgstr "聲道模式："
 msgid "Joint Stereo"
 msgstr "聯合立體聲"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "立體聲"
 
@@ -15640,7 +15640,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr "先停止音讯"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "單聲道"
 
@@ -17720,16 +17720,6 @@ msgstr ""
 msgid "Amplitude (0 - 1)"
 msgstr "振幅 (0 至 1)："
 
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "左(&L)"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "右(&R)"
-
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -18409,6 +18399,14 @@ msgstr "頻率 (赫茲)："
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "左(&L)"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "右(&R)"
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "

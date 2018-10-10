@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-10-10 15:25+0100\n"
 "PO-Revision-Date: 2018-09-10 17:16+0200\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -2292,7 +2292,7 @@ msgstr "Freqüència logarítmica"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -4752,14 +4752,6 @@ msgid "%s, %s"
 msgstr "%s, %s"
 
 #: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Anàlisi de freqüències"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Anàlisi del contrast (per complir amb WCAG 2)"
-
-#: src/Menus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "S'han importat les etiquetes de «%s»"
@@ -6069,6 +6061,14 @@ msgstr[1] "%d minuts"
 #, c-format
 msgid "%s and %s."
 msgstr "%s i %s."
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Anàlisi de freqüències"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "Anàlisi del contrast (per complir amb WCAG 2)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -8262,6 +8262,10 @@ msgid "You can only measure one track at a time."
 msgstr "Només es pot mesurar una pista cada vegada."
 
 #: src/effects/Contrast.cpp
+msgid "Please select an audio track."
+msgstr "Seleccioneu una pista d'àudio."
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8274,10 +8278,6 @@ msgid ""
 msgstr ""
 "No hi ha res a mesurar.\n"
 "Si us plau, seleccioneu una secció d'una pista."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Seleccioneu una pista d'àudio."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -9829,6 +9829,11 @@ msgstr "S'està analitzant la primera pista del parell estèreo: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "S'està analitzant la segona pista del parell estèreo: %s"
+
+#: src/effects/Normalize.cpp
+#, c-format
 msgid "Processing: %s"
 msgstr ""
 
@@ -9836,11 +9841,6 @@ msgstr ""
 #, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "S'està processant la primera pista del parell per separat: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "S'està analitzant la segona pista del parell estèreo: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
@@ -12154,7 +12154,7 @@ msgstr "Mode de canal:"
 msgid "Joint Stereo"
 msgstr "Estèreo unificat"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "Estèreo"
 
@@ -15361,7 +15361,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr "Atura primer l'àudio"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Mono"
 
@@ -17340,14 +17340,6 @@ msgstr "Quantitat de soroll a la mescla (percentual)"
 msgid "Amplitude (0 - 1)"
 msgstr "Amplitud (0-1)"
 
-#: plug-ins/rms.ny
-msgid "Left"
-msgstr ""
-
-#: plug-ins/rms.ny
-msgid "Right"
-msgstr "Dreta"
-
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
 msgstr "Exportació de dades de mostres"
@@ -17970,3 +17962,6 @@ msgstr "Freqüència del tren de polsos (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Error.~%Es requereix la pista estèreo."
+
+#~ msgid "Right"
+#~ msgstr "Dreta"

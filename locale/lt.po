@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Vertimas 1,0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-10-10 15:25+0100\n"
 "PO-Revision-Date: 2018-03-29 22:12+0100\n"
 "Last-Translator: Zygimantus <zygimantus@gmail.com>\n"
 "Language-Team: Sharunas <Sharunas55387@hotmail.com>\n"
@@ -2344,7 +2344,7 @@ msgstr "Log dažnis"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -4934,14 +4934,6 @@ msgid "%s, %s"
 msgstr "%s, %s"
 
 #: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Dažnio Analizė"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Kontrasto Analizė (WCAG 2 sutikimas)"
-
-#: src/Menus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Importuoti pavadinimai iš '%s'"
@@ -6312,6 +6304,14 @@ msgstr[2] "%d minučių"
 #, c-format
 msgid "%s and %s."
 msgstr "%s ir %s."
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Dažnio Analizė"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "Kontrasto Analizė (WCAG 2 sutikimas)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -8658,6 +8658,10 @@ msgid "You can only measure one track at a time."
 msgstr "Galite matuoti tik vieną takelį vienu metu."
 
 #: src/effects/Contrast.cpp
+msgid "Please select an audio track."
+msgstr "Prašome pasirinkti garso takelį."
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8672,10 +8676,6 @@ msgid ""
 msgstr ""
 "Nera ko matuoti.\n"
 "Prašome pasirinkti takelio gabalą."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Prašome pasirinkti garso takelį."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -10222,17 +10222,17 @@ msgstr ""
 
 #: src/effects/Normalize.cpp
 #, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr ""
+
+#: src/effects/Normalize.cpp
+#, c-format
 msgid "Processing: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr ""
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
@@ -12460,7 +12460,7 @@ msgstr ""
 msgid "Joint Stereo"
 msgstr ""
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr ""
 
@@ -15664,7 +15664,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Mono"
 
@@ -17775,16 +17775,6 @@ msgstr ""
 msgid "Amplitude (0 - 1)"
 msgstr "Amplitudė (0-1):"
 
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "&Kairė"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "&Dešinė"
-
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -18463,6 +18453,14 @@ msgstr "LFO Dažnis (Hz):"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "&Kairė"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "&Dešinė"
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "

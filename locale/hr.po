@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-10-10 15:25+0100\n"
 "PO-Revision-Date: 2013-09-19 05:24-0000\n"
 "Last-Translator: Martin Bagic\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
@@ -2399,7 +2399,7 @@ msgstr "Logaritamska frekvencija"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -5118,14 +5118,6 @@ msgid "%s, %s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Analiza frekvencije"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Analiza kontrasta (sukladna s WCAG 2)"
-
-#: src/Menus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Uvezene oznake iz '%s'"
@@ -6496,6 +6488,14 @@ msgstr[3] ""
 #, c-format
 msgid "%s and %s."
 msgstr ""
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Analiza frekvencije"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "Analiza kontrasta (sukladna s WCAG 2)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -8846,6 +8846,11 @@ msgid "You can only measure one track at a time."
 msgstr "Istovremeno ne možete mjeriti više zapisa."
 
 #: src/effects/Contrast.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "Molimo izabrati radnju"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8858,11 +8863,6 @@ msgid ""
 msgstr ""
 "Ništa za mjeriti.\n"
 "Izaberite dio zapisa."
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "Molimo izabrati radnju"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -10502,6 +10502,11 @@ msgstr "Analiziranje prvoga zapisa stereo para: "
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Analiziranje drugoga zapisa stereo para:"
+
+#: src/effects/Normalize.cpp
+#, fuzzy, c-format
 msgid "Processing: %s"
 msgstr "Obrađivanje: "
 
@@ -10509,11 +10514,6 @@ msgstr "Obrađivanje: "
 #, fuzzy, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "Neovisno obrađivanje stereo kanala: "
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Analiziranje drugoga zapisa stereo para:"
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
@@ -12900,7 +12900,7 @@ msgstr "Mod kanala:"
 msgid "Joint Stereo"
 msgstr "Združeni stereo"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "Stereo"
 
@@ -16270,7 +16270,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Mono"
 
@@ -18408,16 +18408,6 @@ msgstr ""
 msgid "Amplitude (0 - 1)"
 msgstr "Amplituda (0-1)"
 
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "lijevo"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "desno"
-
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -19096,6 +19086,14 @@ msgstr "Frekvencija (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "lijevo"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "desno"
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "

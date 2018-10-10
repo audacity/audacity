@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-10-10 15:25+0100\n"
 "PO-Revision-Date: 2008-05-13 10:37+0100\n"
 "Last-Translator: Robert Millan <rmh@aybabtu.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -2288,7 +2288,7 @@ msgstr "Freqüència de registre"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -4986,14 +4986,6 @@ msgid "%s, %s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Anàlisi de freqüències"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr ""
-
-#: src/Menus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "S'han importat les etiquetes de '%s'"
@@ -6293,6 +6285,14 @@ msgstr[1] ""
 #: src/Project.cpp
 #, c-format
 msgid "%s and %s."
+msgstr ""
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Anàlisi de freqüències"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr ""
 
 #: src/Resample.cpp
@@ -8637,6 +8637,11 @@ msgid "You can only measure one track at a time."
 msgstr ""
 
 #: src/effects/Contrast.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "S'ha creat una nova pista de so"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8647,11 +8652,6 @@ msgid ""
 "Nothing to measure.\n"
 "Please select a section of a track."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "S'ha creat una nova pista de so"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -10264,6 +10264,11 @@ msgid "Analyzing first track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr ""
+
+#: src/effects/Normalize.cpp
 #, fuzzy, c-format
 msgid "Processing: %s"
 msgstr "S'està processant l'Auto Duck..."
@@ -10271,11 +10276,6 @@ msgstr "S'està processant l'Auto Duck..."
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr ""
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
 msgstr ""
 
 #: src/effects/Normalize.cpp
@@ -12551,7 +12551,7 @@ msgstr "Tipus de canal:"
 msgid "Joint Stereo"
 msgstr "Estèreo unificat"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "Estèreo"
 
@@ -15875,7 +15875,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Mono"
 
@@ -18015,16 +18015,6 @@ msgstr ""
 msgid "Amplitude (0 - 1)"
 msgstr "Amplitud (0-1)"
 
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "Esq."
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "Dreta"
-
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -18703,6 +18693,14 @@ msgstr "Freqüència (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "Esq."
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "Dreta"
 
 #~ msgid "Latency problem"
 #~ msgstr "Hi ha un problema de latència"

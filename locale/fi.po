@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2018-08-31 22:53+0100\n"
+"POT-Creation-Date: 2018-10-10 15:25+0100\n"
 "PO-Revision-Date: 2015-09-18 20:53+0300\n"
 "Last-Translator: Heino Keränen\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -2340,7 +2340,7 @@ msgstr "Logaritminen taajuus"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/Equalization.cpp src/effects/Normalize.cpp
 #: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
-#: src/widgets/Meter.cpp plug-ins/rms.ny plug-ins/sample-data-export.ny
+#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -5041,14 +5041,6 @@ msgid "%s, %s"
 msgstr ""
 
 #: src/Menus.cpp
-msgid "Frequency Analysis"
-msgstr "Taajuusanalyysi"
-
-#: src/Menus.cpp
-msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Kontrasti-analyysi (WCAG 2 mukaan)"
-
-#: src/Menus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Tuotu merkit lähteestä '%s'"
@@ -6434,6 +6426,14 @@ msgstr[1] ""
 #, c-format
 msgid "%s and %s."
 msgstr ""
+
+#: src/Project.cpp
+msgid "Frequency Analysis"
+msgstr "Taajuusanalyysi"
+
+#: src/Project.cpp
+msgid "Contrast Analysis (WCAG 2 compliance)"
+msgstr "Kontrasti-analyysi (WCAG 2 mukaan)"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -8772,6 +8772,11 @@ msgid "You can only measure one track at a time."
 msgstr "Voit mitata vain yhtä raitaa kerrallaan."
 
 #: src/effects/Contrast.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "Valitse toimenpide"
+
+#: src/effects/Contrast.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
@@ -8784,11 +8789,6 @@ msgid ""
 msgstr ""
 "Ei mitään mitattavaa.\n"
 "Valitse raidan osa."
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "Valitse toimenpide"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -10346,6 +10346,11 @@ msgstr "Analysoidaan stereoparin ensimmäistä raitaa: "
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Analysoidaan stereoparin toista raitaa: "
+
+#: src/effects/Normalize.cpp
+#, fuzzy, c-format
 msgid "Processing: %s"
 msgstr "Käsitellään:"
 
@@ -10353,11 +10358,6 @@ msgstr "Käsitellään:"
 #, fuzzy, c-format
 msgid "Processing stereo channels independently: %s"
 msgstr "Käsittele stereokanavia itsenäisesti:"
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Analysoidaan stereoparin toista raitaa: "
 
 #: src/effects/Normalize.cpp
 #, fuzzy, c-format
@@ -12596,7 +12596,7 @@ msgstr "Kanavatila:"
 msgid "Joint Stereo"
 msgstr "Yhdistä stereo"
 
-#: src/export/ExportMP3.cpp plug-ins/rms.ny
+#: src/export/ExportMP3.cpp
 msgid "Stereo"
 msgstr "Stereo"
 
@@ -15838,7 +15838,7 @@ msgstr ""
 msgid "Stop the Audio First"
 msgstr ""
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp plug-ins/rms.ny
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Mono"
 msgstr "Mono"
 
@@ -17934,16 +17934,6 @@ msgstr ""
 msgid "Amplitude (0 - 1)"
 msgstr "Amplitudi (0-1)"
 
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Left"
-msgstr "Vasen"
-
-#: plug-ins/rms.ny
-#, fuzzy
-msgid "Right"
-msgstr "Oikea"
-
 #: plug-ins/sample-data-export.ny
 #, fuzzy
 msgid "Sample Data Export"
@@ -18623,6 +18613,14 @@ msgstr "Taajuus (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Left"
+#~ msgstr "Vasen"
+
+#, fuzzy
+#~ msgid "Right"
+#~ msgstr "Oikea"
 
 #~ msgid ""
 #~ "Latency Correction setting has caused the recorded audio to be hidden "
