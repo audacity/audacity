@@ -1078,6 +1078,7 @@ bool AudacityApp::OnExceptionInMainLoop()
 
    try { throw; }
    catch ( AudacityException &e ) {
+      (void)e;// Compiler food
       // Here is the catch-all for our own exceptions
 
       // Use CallAfter to delay this to the next pass of the event loop,

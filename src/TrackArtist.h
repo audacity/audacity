@@ -77,12 +77,12 @@ class AUDACITY_DLL_API TrackArtist {
 
    void UpdatePrefs();
 
-   void SetBackgroundBrushes(wxBrush unselectedBrush, wxBrush selectedBrush,
-                             wxPen unselectedPen, wxPen selectedPen) {
-     this->unselectedBrush = unselectedBrush;
-     this->selectedBrush = selectedBrush;
-     this->unselectedPen = unselectedPen;
-     this->selectedPen = selectedPen;
+   void SetBackgroundBrushes(wxBrush unselectedBrushIn, wxBrush selectedBrushIn,
+                             wxPen unselectedPenIn, wxPen selectedPenIn) {
+     this->unselectedBrush = unselectedBrushIn;
+     this->selectedBrush = selectedBrushIn;
+     this->unselectedPen = unselectedPenIn;
+     this->selectedPen = selectedPenIn;
    }
 
    // Helper: draws the "sync-locked" watermark tiled to a rectangle

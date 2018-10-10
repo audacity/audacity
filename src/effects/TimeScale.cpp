@@ -161,10 +161,10 @@ double EffectTimeScale::CalcPreviewInputLength(double previewLength)
    if(inputLength == 0.0) {
       return 0.0;
    } else {
-      double rateStart = PercentChangeToRatio(m_RatePercentChangeStart);
-      double rateEnd = PercentChangeToRatio(m_RatePercentChangeEnd);
+      double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
+      double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
       double tOut = previewLength/inputLength;
-      double t = EffectSBSMS::getInvertedStretchedTime(rateStart,rateEnd,slideTypeRate,tOut);
+      double t = EffectSBSMS::getInvertedStretchedTime(rateStart1,rateEnd1,slideTypeRate,tOut);
       return t * inputLength;
    }
 }
@@ -178,18 +178,18 @@ void EffectTimeScale::Preview(bool dryOnly)
 
 bool EffectTimeScale::Process()
 {
-   double pitchStart = PercentChangeToRatio(m_PitchPercentChangeStart);
-   double pitchEnd = PercentChangeToRatio(m_PitchPercentChangeEnd);
-   double rateStart = PercentChangeToRatio(m_RatePercentChangeStart);
-   double rateEnd = PercentChangeToRatio(m_RatePercentChangeEnd);
+   double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
+   double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
+   double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
+   double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
   
    if(bPreview) {
       double t = (mT1-mT0) / previewSelectedDuration;
-      rateEnd = EffectSBSMS::getRate(rateStart,rateEnd,slideTypeRate,t);
-      pitchEnd = EffectSBSMS::getRate(pitchStart,pitchEnd,slideTypePitch,t);
+      rateEnd1 = EffectSBSMS::getRate(rateStart1,rateEnd1,slideTypeRate,t);
+      pitchEnd1 = EffectSBSMS::getRate(pitchStart1,pitchEnd1,slideTypePitch,t);
    }
    
-   EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,slideTypeRate,slideTypePitch,false,false,false);
+   EffectSBSMS::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
    return EffectSBSMS::Process();
 }
 

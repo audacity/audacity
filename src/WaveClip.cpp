@@ -255,11 +255,11 @@ public:
          LoadInvalidRegion(i, sequence, updateODCount);
    }
 
-   int CountODPixels(size_t start, size_t end)
+   int CountODPixels(size_t startIn, size_t endIn)
    {
       using namespace std;
       const int *begin = &bl[0];
-      return count_if(begin + start, begin + end, bind2nd(less<int>(), 0));
+      return count_if(begin + startIn, begin + endIn, bind2nd(less<int>(), 0));
    }
 
 protected:
@@ -830,7 +830,7 @@ bool SpecCache::CalculateOneSpectrum
    bool result = false;
    const bool reassignment =
       (settings.algorithm == SpectrogramSettings::algReassignment);
-   const size_t windowSize = settings.WindowSize();
+   const size_t windowSizeSetting = settings.WindowSize();
 
    sampleCount from;
 
@@ -851,9 +851,9 @@ bool SpecCache::CalculateOneSpectrum
 
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
-   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
-   const size_t padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
-   const size_t fftLen = windowSize * zeroPaddingFactor;
+   const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
+   const size_t padding = (windowSizeSetting * (zeroPaddingFactorSetting - 1)) / 2;
+   const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
    auto nBins = settings.NBins();
 
    if (from < 0 || from >= numSamples) {
@@ -872,9 +872,9 @@ bool SpecCache::CalculateOneSpectrum
       float *adj = scratch + padding;
 
       {
-         auto myLen = windowSize;
+         auto myLen = windowSizeSetting;
          // Take a window of the track centered at this sample.
-         from -= windowSize >> 1;
+         from -= windowSizeSetting >> 1;
          if (from < 0) {
             // Near the start of the clip, pad left with zeroes as needed.
             // from is at least -windowSize / 2
@@ -922,7 +922,7 @@ bool SpecCache::CalculateOneSpectrum
          wxASSERT(xx >= 0);
          float *const results = &out[nBins * xx];
          // This function does not mutate useBuffer
-         ComputeSpectrum(useBuffer, windowSize, windowSize,
+         ComputeSpectrum(useBuffer, windowSizeSetting, windowSizeSetting,
             rate, results,
             autocorrelation, settings.windowType);
       }
@@ -1071,21 +1071,21 @@ void SpecCache::Populate
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
 {
-   const int &frequencyGain = settings.frequencyGain;
-   const size_t windowSize = settings.WindowSize();
+   const int &frequencyGainSetting = settings.frequencyGain;
+   const size_t windowSizeSetting = settings.WindowSize();
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
    const bool reassignment =
       settings.algorithm == SpectrogramSettings::algReassignment;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
 #else
-   const size_t zeroPaddingFactor = 1;
+   const size_t zeroPaddingFactorSetting = 1;
 #endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
-   const size_t fftLen = windowSize * zeroPaddingFactor;
+   const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
    const auto nBins = settings.NBins();
 
    const size_t bufferSize = fftLen;
@@ -1094,7 +1094,7 @@ void SpecCache::Populate
 
    std::vector<float> gainFactors;
    if (!autocorrelation)
-      ComputeSpectrogramGainFactors(fftLen, rate, frequencyGain, gainFactors);
+      ComputeSpectrogramGainFactors(fftLen, rate, frequencyGainSetting, gainFactors);
 
    // Loop over the ranges before and after the copied portion and compute anew.
    // One of the ranges may be empty.

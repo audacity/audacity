@@ -1838,7 +1838,7 @@ bool LV2Effect::TransferDataToWindow()
       return true;
    }
 
-   for (size_t i = 0, groupCount = mGroups.GetCount(); i < GroupCount; i++)
+   for (size_t i = 0, groupCount = mGroups.GetCount(); i < groupCount; i++)
    {
       const auto & params = mGroupMap[mGroups[i]];
       for (size_t pi = 0, ParamCount = params.size(); pi < ParamCount; pi++)

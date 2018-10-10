@@ -145,19 +145,19 @@ long postResampleCB(void *cb_data, SBSMSFrame *data)
    return count;
 }
 
-void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
-                                  SlideType rateSlideType, SlideType pitchSlideType,
-                                  bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput)
+void EffectSBSMS :: setParameters(double rateStartIn, double rateEndIn, double pitchStartIn, double pitchEndIn,
+                                  SlideType rateSlideTypeIn, SlideType pitchSlideTypeIn,
+                                  bool bLinkRatePitchIn, bool bRateReferenceInputIn, bool bPitchReferenceInputIn)
 {
-   this->rateStart = rateStart;
-   this->rateEnd = rateEnd;
-   this->pitchStart = pitchStart;
-   this->pitchEnd = pitchEnd;
-   this->bLinkRatePitch = bLinkRatePitch;
-   this->rateSlideType = rateSlideType;
-   this->pitchSlideType = pitchSlideType;
-   this->bRateReferenceInput = bRateReferenceInput;
-   this->bPitchReferenceInput = bPitchReferenceInput;
+   this->rateStart = rateStartIn;
+   this->rateEnd = rateEndIn;
+   this->pitchStart = pitchStartIn;
+   this->pitchEnd = pitchEndIn;
+   this->bLinkRatePitch = bLinkRatePitchIn;
+   this->rateSlideType = rateSlideTypeIn;
+   this->pitchSlideType = pitchSlideTypeIn;
+   this->bRateReferenceInput = bRateReferenceInputIn;
+   this->bPitchReferenceInput = bPitchReferenceInputIn;
 }
 
 void EffectSBSMS::setParameters(double tempoRatio, double pitchRatio)
