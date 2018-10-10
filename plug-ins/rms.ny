@@ -21,7 +21,7 @@
   '(("de" (("Left" "Links")("Right" "Rechts")("Stereo" "Stereo")("Mono" "Mono")("dB" "dB")))
     ("es" (("Left" "Izquierda") ("Right" "Derecha") ("Stereo" "Estéreo") ("Mono" "Mono")("dB" "dB")))
     ("fr" (("Left" "Gauche")("Right" "Droite")("Stereo" "Stéréo")("Mono" "Mono")("dB" "dB")))
-    ("ru" (("Left" "Слева")("Right" "Направо")("Stereo" "Стерео")("Mono" "Моно")("dB" "дБ")))))
+    ("ru" (("Left" "Левый")("Right" "Правый")("Stereo" "Стерео")("Mono" "Моно")("dB" "дБ")))))
 
 
 (let ((rms (get '*selection* 'rms)))
