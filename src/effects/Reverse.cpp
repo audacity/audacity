@@ -193,8 +193,10 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // the last clip of revClips is appended to the track first
    // PRL:  I don't think that matters, the sequence of storage of clips in the track
    // is not elsewhere assumed to be by time
-   for (auto it = revClips.rbegin(), end = revClips.rend(); it != end; ++it)
-      track->AddClip(std::move(*it));
+   {
+      for (auto it = revClips.rbegin(), end = revClips.rend(); it != end; ++it)
+         track->AddClip(std::move(*it));
+   }
 
    for (auto &clip : otherClips)
       track->AddClip(std::move(clip));

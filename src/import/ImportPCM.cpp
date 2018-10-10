@@ -366,9 +366,12 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    NewChannelGroup channels(mInfo.channels);
 
-   auto iter = channels.begin();
-   for (int c = 0; c < mInfo.channels; ++iter, ++c)
-      *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
+   {
+      // iter not used outside this scope.
+      auto iter = channels.begin();
+      for (int c = 0; c < mInfo.channels; ++iter, ++c)
+         *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
+   }
 
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t
@@ -673,8 +676,8 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                   ustr = id3_field_getstring(&frame->fields[1]);
                   if (ustr) {
                      // Is this duplication really needed?
-                     MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
-                     n = UTF8CTOWX(str.get());
+                     MallocString<> convStr{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                     n = UTF8CTOWX(convStr.get());
                   }
 
                   ustr = id3_field_getstring(&frame->fields[2]);
@@ -685,8 +688,8 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
                if (ustr) {
                   // Is this duplication really needed?
-                  MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
-                  v = UTF8CTOWX(str.get());
+                  MallocString<> convStr{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                  v = UTF8CTOWX(convStr.get());
                }
 
                if (!n.IsEmpty() && !v.IsEmpty()) {

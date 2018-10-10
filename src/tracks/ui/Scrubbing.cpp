@@ -344,7 +344,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
          );
          if (time1 != time0) {
             if (busy) {
-               auto position = mScrubStartPosition;
+               position = mScrubStartPosition;
                ctb->StopPlaying();
                mScrubStartPosition = position;
             }

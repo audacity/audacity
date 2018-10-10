@@ -1520,29 +1520,29 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
    auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
 #endif
    for (const auto loc : track->GetCachedLocations()) {
-      bool highlight = false;
+      bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-      highlight =
+      highlightLoc =
          target2 && target2->GetTrack().get() == track &&
          target2->GetLocation() == loc;
 #endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);
       if (xx >= 0 && xx < rect.width) {
-         dc.SetPen( highlight ? AColor::uglyPen : *wxGREY_PEN );
+         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
          AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
          if (loc.typ == WaveTrackLocation::locationCutLine) {
-            dc.SetPen( highlight ? AColor::uglyPen : *wxRED_PEN );
+            dc.SetPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN );
          }
          else {
 #ifdef EXPERIMENTAL_DA
             // JKC Black does not show up enough.
-            dc.SetPen(highlight ? AColor::uglyPen : *wxWHITE_PEN);
+            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxWHITE_PEN);
 #else
-            dc.SetPen(highlight ? AColor::uglyPen : *wxBLACK_PEN);
+            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxBLACK_PEN);
 #endif
          }
          AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
-         dc.SetPen( highlight ? AColor::uglyPen : *wxGREY_PEN );
+         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
          AColor::Line(dc, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);
       }
    }
@@ -1841,19 +1841,19 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
    // the envelope and using a colored pen for the selected
    // part of the waveform
    {
-      double t0, t1;
+      double tt0, tt1;
       if (track->GetSelected() || track->IsSyncLockSelected()) {
-         t0 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t0())),
-            t1 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t1()));
+         tt0 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t0())),
+            tt1 = track->LongSamplesToTime(track->TimeToLongSamples(selectedRegion.t1()));
       }
       else
-         t0 = t1 = 0.0;
+         tt0 = tt1 = 0.0;
       DrawWaveformBackground(dc, leftOffset, mid,
          env,
          zoomMin, zoomMax,
          track->ZeroLevelYCoordinate(mid),
          dB, dBRange,
-         t0, t1, zoomInfo, drawEnvelope,
+         tt0, tt1, zoomInfo, drawEnvelope,
          !track->GetSelected(), highlightEnvelope);
    }
 

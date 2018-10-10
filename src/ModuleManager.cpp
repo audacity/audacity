@@ -504,7 +504,7 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
       plug = pm.GetNextPlugin(PluginTypeModule);
    }
 
-   for (size_t i = 0, cnt = modIDs.size(); i < cnt; i++)
+   for (size_t i = 0, cntIds = modIDs.size(); i < cntIds; i++)
    {
       PluginID providerID = modIDs[i];
 
@@ -515,10 +515,10 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
          continue;
 
       wxArrayString newpaths = module->FindPluginPaths(pm);
-      for (size_t i = 0, cnt = newpaths.size(); i < cnt; i++)
+      for (size_t j = 0, cntPaths = newpaths.size(); j < cntPaths; j++)
       {
          providers.push_back(providerID);
-         paths.push_back(newpaths[i]);
+         paths.push_back(newpaths[j]);
       }
    }
 }

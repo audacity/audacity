@@ -610,7 +610,7 @@ bool NyquistEffect::Process()
       return true;
 
    // Restore the reentry counter (to zero) when we exit.
-   auto cleanup = valueRestorer( mReentryCount);
+   auto countRestorer = valueRestorer( mReentryCount);
    mReentryCount++;
    RegisterFunctions();
 

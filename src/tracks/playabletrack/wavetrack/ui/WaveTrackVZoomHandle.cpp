@@ -78,11 +78,11 @@ void WaveTrackVZoomHandle::DoZoom
    if (zoomEnd < zoomStart)
       std::swap( zoomStart, zoomEnd );
 
-   float min, max, c, minBand = 0;
+   float min, max, minBand = 0;
    const double rate = pTrack->GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
-   const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
+   const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
    NumberScale scale;
    const bool spectral = (pTrack->GetDisplay() == WaveTrack::Spectrum);
    const bool spectrumLinear = spectral &&
@@ -105,8 +105,8 @@ void WaveTrackVZoomHandle::DoZoom
 
    if (spectral) {
       pTrack->GetSpectrumBounds(&min, &max);
-      scale = (settings.GetScale(min, max));
-      const auto fftLength = settings.GetFFTLength();
+      scale = (specSettings.GetScale(min, max));
+      const auto fftLength = specSettings.GetFFTLength();
       const float binSize = rate / fftLength;
       maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
       // JKC:  Following discussions of Bug 1208 I'm allowing zooming in
@@ -118,11 +118,11 @@ void WaveTrackVZoomHandle::DoZoom
    }
    else{
       pTrack->GetDisplayBounds(&min, &max);
-      const WaveformSettings &settings = pTrack->GetWaveformSettings();
-      const bool linear = settings.isLinear();
+      const WaveformSettings &waveSettings = pTrack->GetWaveformSettings();
+      const bool linear = waveSettings.isLinear();
       if( !linear ){
-         top = (LINEAR_TO_DB(2.0) + settings.dBRange) / settings.dBRange;
-         half = (LINEAR_TO_DB(0.5) + settings.dBRange) / settings.dBRange;
+         top = (LINEAR_TO_DB(2.0) + waveSettings.dBRange) / waveSettings.dBRange;
+         half = (LINEAR_TO_DB(0.5) + waveSettings.dBRange) / waveSettings.dBRange;
       }
    }
 
@@ -175,7 +175,7 @@ void WaveTrackVZoomHandle::DoZoom
 
          // Waveform view - allow zooming down to a range of ZOOMLIMIT
          if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
-            c = (min + max) / 2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
+            float c = (min + max) / 2;    // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
             min = c - ZOOMLIMIT / 2.0;
             max = c + ZOOMLIMIT / 2.0;
          }

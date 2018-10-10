@@ -1090,9 +1090,9 @@ bool LadspaEffect::SetAutomationParameters(CommandParameters & parms)
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
-      LADSPA_PortDescriptor d = mData->PortDescriptors[p];
+      LADSPA_PortDescriptor descriptor = mData->PortDescriptors[p];
 
-      if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d))
+      if (LADSPA_IS_PORT_CONTROL(descriptor) && LADSPA_IS_PORT_INPUT(descriptor))
       {
          wxString labelText = LAT1CTOWX(mData->PortNames[p]);
          double d = 0.0;

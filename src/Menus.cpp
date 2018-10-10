@@ -6858,15 +6858,19 @@ MenuCommandHandler::FoundClip MenuCommandHandler::FindNextClip
 
    t0 = AdjustForFindingStartTimes(clips, t0);
 
-   auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
-      return clip->GetStartTime() == t0; });
-   if (p != clips.end() && (*p)->GetEndTime() > t1) {
-      result.found = true;
-      result.startTime = (*p)->GetStartTime();
-      result.endTime = (*p)->GetEndTime();
-      result.index = std::distance(clips.begin(), p);
+   {
+      auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+         return clip->GetStartTime() == t0; });
+      if (p != clips.end() && (*p)->GetEndTime() > t1) {
+         result.found = true;
+         result.startTime = (*p)->GetStartTime();
+         result.endTime = (*p)->GetEndTime();
+         result.index = std::distance(clips.begin(), p);
+         return result;
+      }
    }
-   else {
+
+   {
       auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
          return clip->GetStartTime() > t0; });
       if (p != clips.end()) {
@@ -6874,6 +6878,7 @@ MenuCommandHandler::FoundClip MenuCommandHandler::FindNextClip
          result.startTime = (*p)->GetStartTime();
          result.endTime = (*p)->GetEndTime();
          result.index = std::distance(clips.begin(), p);
+         return result;
       }
    }
 
@@ -6889,15 +6894,19 @@ MenuCommandHandler::FoundClip MenuCommandHandler::FindPrevClip
 
    t0 = AdjustForFindingStartTimes(clips, t0);
 
-   auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
-      return clip->GetStartTime() == t0; });
-   if (p != clips.end() && (*p)->GetEndTime() < t1) {
-      result.found = true;
-      result.startTime = (*p)->GetStartTime();
-      result.endTime = (*p)->GetEndTime();
-      result.index = std::distance(clips.begin(), p);
+   {
+      auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+         return clip->GetStartTime() == t0; });
+      if (p != clips.end() && (*p)->GetEndTime() < t1) {
+         result.found = true;
+         result.startTime = (*p)->GetStartTime();
+         result.endTime = (*p)->GetEndTime();
+         result.index = std::distance(clips.begin(), p);
+         return result;
+      }
    }
-   else {
+   
+   {
       auto p = std::find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
          return clip->GetStartTime() < t0; });
       if (p != clips.rend()) {
@@ -6905,6 +6914,7 @@ MenuCommandHandler::FoundClip MenuCommandHandler::FindPrevClip
          result.startTime = (*p)->GetStartTime();
          result.endTime = (*p)->GetEndTime();
          result.index = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), p);
+         return result;
       }
    }
 
@@ -6926,17 +6936,17 @@ int MenuCommandHandler::FindClips
 
    int nTracksSearched = 0;
    auto leaders = tracks->Leaders();
-   auto range = leaders.Filter<const WaveTrack>();
+   auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
-      range = range + &Track::GetSelected;
-   for (auto waveTrack : range) {
+      rangeLeaders = rangeLeaders + &Track::GetSelected;
+   for (auto waveTrack : rangeLeaders) {
       bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
 
-      auto range = stereoAndDiff
+      auto rangeChans = stereoAndDiff
          ? TrackList::Channels( waveTrack )
          : TrackList::SingletonRange( waveTrack );
 
-      for ( auto wt : range ) {
+      for ( auto wt : rangeChans ) {
          auto result = next ? FindNextClip(project, wt, t0, t1) :
             FindPrevClip(project, wt, t0, t1);
          if (result.found) {
@@ -6957,12 +6967,12 @@ int MenuCommandHandler::FindClips
       auto compareStart = [] (const FoundClip& a, const FoundClip& b)
          { return a.startTime < b.startTime; };
 
-      auto p = next ? std::min_element(results.begin(), results.end(), compareStart) :
+      auto pStart = next ? std::min_element(results.begin(), results.end(), compareStart) :
          std::max_element(results.begin(), results.end(), compareStart);
 
       std::vector<FoundClip> resultsStartTime;
       for ( auto &r : results )
-         if ( r.startTime == (*p).startTime )
+         if ( r.startTime == (*pStart).startTime )
             resultsStartTime.push_back( r );
 
       if (resultsStartTime.size() > 1) {
@@ -6971,13 +6981,13 @@ int MenuCommandHandler::FindClips
          auto compareEnd = [] (const FoundClip& a, const FoundClip& b)
             { return a.endTime < b.endTime; };
 
-         auto p = next ? std::min_element(resultsStartTime.begin(),
+         auto pEnd = next ? std::min_element(resultsStartTime.begin(),
             resultsStartTime.end(), compareEnd) :
             std::max_element(resultsStartTime.begin(),
             resultsStartTime.end(), compareEnd);
 
          for ( auto &r : resultsStartTime )
-            if ( r.endTime == (*p).endTime )
+            if ( r.endTime == (*pEnd).endTime )
                finalResults.push_back( r );
       }
       else {
@@ -8152,17 +8162,17 @@ int MenuCommandHandler::FindClipBoundaries
 
    int nTracksSearched = 0;
    auto leaders = tracks->Leaders();
-   auto range = leaders.Filter<const WaveTrack>();
+   auto rangeLeaders = leaders.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
-      range = range + &Track::GetSelected;
-   for (auto waveTrack : range) {
+      rangeLeaders = rangeLeaders + &Track::GetSelected;
+   for (auto waveTrack : rangeLeaders) {
       bool stereoAndDiff = ChannelsHaveDifferentClipBoundaries(waveTrack);
 
-      auto range = stereoAndDiff
+      auto rangeChan = stereoAndDiff
          ? TrackList::Channels( waveTrack )
          : TrackList::SingletonRange(waveTrack);
 
-      for (auto wt : range) {
+      for (auto wt : rangeChan) {
          auto result = next ? FindNextClipBoundary(wt, time) :
          FindPrevClipBoundary(wt, time);
          if (result.nFound > 0) {

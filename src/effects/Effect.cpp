@@ -1705,9 +1705,11 @@ bool Effect::ProcessTrack(int count,
       // Get the current number of delayed samples and accumulate
       if (isProcessor)
       {
-         auto delay = GetLatency();
-         curDelay += delay;
-         delayRemaining += delay;
+         {
+            auto delay = GetLatency();
+            curDelay += delay;
+            delayRemaining += delay;
+         }
 
          // If the plugin has delayed the output by more samples than our current
          // block size, then we leave the output pointers alone.  This effectively

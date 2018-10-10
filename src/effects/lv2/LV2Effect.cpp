@@ -1572,7 +1572,7 @@ bool LV2Effect::BuildPlain()
 
          mGroups.Sort();
 
-         for (size_t i = 0, cnt = mGroups.GetCount(); i < cnt; i++)
+         for (size_t i = 0, groupCount = mGroups.GetCount(); i < groupCount; i++)
          {
             wxString label = mGroups[i];
             if (label.IsEmpty())
@@ -1585,7 +1585,7 @@ bool LV2Effect::BuildPlain()
             gridSizer->AddGrowableCol(3);
 
             const auto & params = mGroupMap[mGroups[i]];
-            for (size_t pi = 0, cnt = params.size(); pi < cnt; pi++)
+            for (size_t pi = 0, paramCount = params.size(); pi < paramCount; pi++)
             {
                int p = params[pi];
                LV2Port & ctrl = mControls[p];

@@ -574,26 +574,28 @@ void FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       if (action == wxNO) return;
    }
 
-   wxWindow *wnd;
-   wxListBox *lb;
-
-   wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FEFormatID,parent);
-   lb = dynamic_cast<wxListBox*>(wnd);
-   if (lb->GetSelection() < 0)
    {
-      AudacityMessageBox(_("Please select format before saving a profile"));
-      return;
-   }
-   format = lb->GetStringSelection();
+      wxWindow *wnd;
+      wxListBox *lb;
 
-   wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FECodecID,parent);
-   lb = dynamic_cast<wxListBox*>(wnd);
-   if (lb->GetSelection() < 0)
-   {
-      AudacityMessageBox(_("Please select codec before saving a profile"));
-      return;
+      wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FEFormatID,parent);
+      lb = dynamic_cast<wxListBox*>(wnd);
+      if (lb->GetSelection() < 0)
+      {
+         AudacityMessageBox(_("Please select format before saving a profile"));
+         return;
+      }
+      format = lb->GetStringSelection();
+
+      wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(FECodecID,parent);
+      lb = dynamic_cast<wxListBox*>(wnd);
+      if (lb->GetSelection() < 0)
+      {
+         AudacityMessageBox(_("Please select codec before saving a profile"));
+         return;
+      }
+      codec = lb->GetStringSelection();
    }
-   codec = lb->GetStringSelection();
 
    preset = &mPresets[name];
    preset->mPresetName = name;

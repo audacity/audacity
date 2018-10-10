@@ -613,9 +613,9 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    if ( isMono )
    {
       mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
-      WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+      WaveTrack *const pTrack2 = static_cast<WaveTrack*>(mpData->pTrack);
 
-      auto next = * ++ tracks->Find(pTrack);
+      auto next = * ++ tracks->Find(pTrack2);
 
       if (isMono) {
          const bool canMakeStereo =
@@ -626,7 +626,7 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
          pMenu->Enable(OnMergeStereoID, canMakeStereo && !unsafe);
 
          int itemId;
-         switch (pTrack->GetChannel()) {
+         switch (pTrack2->GetChannel()) {
             case Track::LeftChannel:
                itemId = OnChannelLeftID;
                break;

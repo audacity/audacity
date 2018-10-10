@@ -112,8 +112,6 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
 
    {
       SF_INFO sndInfo;
-      int result;
-
       unsigned numChannels = 0;
 
       try {
@@ -171,15 +169,17 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          throw FileException{ FileException::Cause::Open, fileName };
       }
 
-      result = sf_command(sndFile.get(), SFC_SET_RAW_START_OFFSET, &offset, sizeof(offset));
-      if (result != 0) {
-         char str[1000];
-         sf_error_str(sndFile.get(), str, 1000);
-         wxPrintf("%s\n", str);
 
-         throw FileException{ FileException::Cause::Read, fileName };
+      {
+         int result = sf_command(sndFile.get(), SFC_SET_RAW_START_OFFSET, &offset, sizeof(offset));
+         if (result != 0) {
+            char str[1000];
+            sf_error_str(sndFile.get(), str, 1000);
+            wxPrintf("%s\n", str);
+
+            throw FileException{ FileException::Cause::Read, fileName };
+         }
       }
-
       SFCall<sf_count_t>(sf_seek, sndFile.get(), 0, SEEK_SET);
 
       auto totalFrames =
@@ -204,10 +204,12 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       auto &channels = results[0];
       channels.resize(numChannels);
 
-      auto iter = channels.begin();
-      for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c)
-         *iter = trackFactory->NewWaveTrack(format, rate);
-
+      {
+         // iter not used outside this scope.
+         auto iter = channels.begin();
+         for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c)
+            *iter = trackFactory->NewWaveTrack(format, rate);
+      }
       const auto firstChannel = channels.begin()->get();
       auto maxBlockSize = firstChannel->GetMaxBlockSize();
 
@@ -232,14 +234,14 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          block =
             limitSampleBufferSize( maxBlockSize, totalFrames - framescompleted );
 
-         sf_count_t result;
+         sf_count_t sf_result;
          if (format == int16Sample)
-            result = SFCall<sf_count_t>(sf_readf_short, sndFile.get(), (short *)srcbuffer.ptr(), block);
+            sf_result = SFCall<sf_count_t>(sf_readf_short, sndFile.get(), (short *)srcbuffer.ptr(), block);
          else
-            result = SFCall<sf_count_t>(sf_readf_float, sndFile.get(), (float *)srcbuffer.ptr(), block);
+            sf_result = SFCall<sf_count_t>(sf_readf_float, sndFile.get(), (float *)srcbuffer.ptr(), block);
 
-         if (result >= 0) {
-            block = result;
+         if (sf_result >= 0) {
+            block = sf_result;
          }
          else {
             // This is not supposed to happen, sndfile.h says result is always

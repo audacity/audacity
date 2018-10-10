@@ -337,9 +337,11 @@ bool EffectScienFilter::Init()
    double rate = 0.0;
 
    auto trackRange = inputTracks()->Selected< const WaveTrack >();
-   auto t = *trackRange.begin();
 
-   mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
+   {
+      auto t = *trackRange.begin();
+      mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
+   }
 
    for (auto t : trackRange)
    {
@@ -662,8 +664,8 @@ bool EffectScienFilter::CalcFilter()
             fDCPoleDistSqr = fZPoleX + 1;    // dist from Nyquist
          for (int iPair = 1; iPair <= mOrder/2; iPair++)
          {
-            float fSPoleX = fC * cos (PI - iPair * PI / mOrder);
-            float fSPoleY = fC * sin (PI - iPair * PI / mOrder);
+            fSPoleX = fC * cos (PI - iPair * PI / mOrder);
+            fSPoleY = fC * sin (PI - iPair * PI / mOrder);
             BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
             mpBiquad[iPair].fNumerCoeffs [0] = 1;
             if (mFilterSubtype == kLowPass)		// LOWPASS

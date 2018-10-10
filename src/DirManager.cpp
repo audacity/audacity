@@ -611,7 +611,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
             if (b) {
                if (moving || !b->IsLocked()) {
                   auto result = b->GetFileName();
-                  auto oldPath = result.name.GetFullPath();
+                  oldPath = result.name.GetFullPath();
                   if (!oldPath.empty())
                      wxRemoveFile( oldPath );
                }
@@ -945,7 +945,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
                if(--dirTopPool[topnum]<1){
                   // do *not* erase the hash entry from dirTopPool
                   // *do* DELETE the actual directory
-                  wxString dir=(projFull != wxT("")? projFull: mytemp);
+                  dir=(projFull != wxT("")? projFull: mytemp);
                   dir += wxFILE_SEP_PATH;
                   dir += file.Mid(0,3);
                   wxFileName::Rmdir(dir);
@@ -1506,10 +1506,10 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       else
       {
          //point the aliases to the NEW filename.
-         BlockHash::iterator iter = mBlockFileHash.begin();
-         while (iter != mBlockFileHash.end())
+         BlockHash::iterator iter2 = mBlockFileHash.begin();
+         while (iter2 != mBlockFileHash.end())
          {
-            BlockFilePtr b = iter->second.lock();
+            BlockFilePtr b = iter2->second.lock();
             if (b) {
                auto ab = static_cast< AliasBlockFile * > ( &*b );
                auto db = static_cast< ODDecodeBlockFile * > ( &*b );
@@ -1525,7 +1525,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
                   db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
                }
             }
-            ++iter;
+            ++iter2;
          }
 
       }

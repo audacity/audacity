@@ -598,19 +598,21 @@ bool Exporter::GetFilename()
          mFilterIndex = fd.GetFilterIndex();
       }
 
-      int c = 0;
-      int i = -1;
-      for (const auto &pPlugin : mPlugins)
       {
-         ++i;
-         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
+         int c = 0;
+         int i = -1;
+         for (const auto &pPlugin : mPlugins)
          {
-            if (mFilterIndex == c)
+            ++i;
+            for (int j = 0; j < pPlugin->GetFormatCount(); j++)
             {
-               mFormat = i;
-               mSubFormat = j;
+               if (mFilterIndex == c)
+               {
+                  mFormat = i;
+                  mSubFormat = j;
+               }
+               c++;
             }
-            c++;
          }
       }
 

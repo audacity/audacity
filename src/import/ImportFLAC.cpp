@@ -454,10 +454,11 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
    mChannels.resize(mNumChannels);
 
-   auto iter = mChannels.begin();
-   for (size_t c = 0; c < mNumChannels; ++iter, ++c)
-      *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
-
+   {
+      auto iter = mChannels.begin();
+      for (size_t c = 0; c < mNumChannels; ++iter, ++c)
+         *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
+   }
 
 //Start OD
    bool useOD = false;

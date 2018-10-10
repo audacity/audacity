@@ -146,7 +146,7 @@ unsigned VampEffect::GetAudioInCount()
 
 bool VampEffect::GetAutomationParameters(CommandParameters & parms)
 {
-   for (size_t p = 0, cnt = mParameters.size(); p < cnt; p++)
+   for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
    {
       wxString key = wxString::FromUTF8(mParameters[p].identifier.c_str());
       float value = mPlugin->getParameter(mParameters[p].identifier);
@@ -169,7 +169,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
          std::vector<IdentInterfaceSymbol> choices;
          int val = 0;
 
-         for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
+         for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
          {
             wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
             if (size_t(value - mParameters[p].minValue + 0.5) == i)
@@ -193,7 +193,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
 bool VampEffect::SetAutomationParameters(CommandParameters & parms)
 {
    // First pass verifies values
-   for (size_t p = 0, cnt = mParameters.size(); p < cnt; p++)
+   for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
    {
       wxString key = wxString::FromUTF8(mParameters[p].identifier.c_str());
       float lower = mParameters[p].minValue;
@@ -216,7 +216,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
          std::vector<IdentInterfaceSymbol> choices;
          int val;
 
-         for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
+         for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
          {
             wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
             choices.push_back(choice);
@@ -238,7 +238,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
    }
 
    // Second pass sets the variables
-   for (size_t p = 0, cnt = mParameters.size(); p < cnt; p++)
+   for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
    {
       wxString key = wxString::FromUTF8(mParameters[p].identifier.c_str());
       float lower = mParameters[p].minValue;
@@ -262,7 +262,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
          std::vector<IdentInterfaceSymbol> choices;
          int val = 0;
 
-         for (size_t i = 0, cnt = mParameters[p].valueNames.size(); i < cnt; i++)
+         for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
          {
             wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
             choices.push_back(choice);

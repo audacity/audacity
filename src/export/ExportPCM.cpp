@@ -253,15 +253,15 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    int num = sf_num_encodings();
    for (i = 0; i < num; i++)
    {
-      int enc = sf_encoding_index_to_subtype(i);
-      int fmt = format | enc;
+      int encSubtype = sf_encoding_index_to_subtype(i);
+      int fmt = format | encSubtype;
       bool valid  = ValidatePair(fmt);
       if (valid)
       {
          const auto name = sf_encoding_index_name(i);
          mEncodingNames.Add(name);
          mEncodingChoice->Append(name);
-         mEncodingFormats.push_back(enc);
+         mEncodingFormats.push_back(encSubtype);
          for (j = 0; j < sfnum; j++)
          {
             int enc = sfs[j];

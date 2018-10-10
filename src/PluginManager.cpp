@@ -924,11 +924,13 @@ void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
    std::vector<long> items;
 
-   long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-   while (i != wxNOT_FOUND)
    {
-      items.insert(items.begin(), i);
-      i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      while (i != wxNOT_FOUND)
+      {
+         items.insert(items.begin(), i);
+         i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      }
    }
 
    for (size_t i = 0, cnt = items.size(); i < cnt; i++)
@@ -941,11 +943,13 @@ void PluginRegistrationDialog::OnDisable(wxCommandEvent & WXUNUSED(evt))
 {
    std::vector<long> items;
 
-   long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-   while (i != wxNOT_FOUND)
    {
-      items.insert(items.begin(), i);
-      i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      long i = mEffects->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      while (i != wxNOT_FOUND)
+      {
+         items.insert(items.begin(), i);
+         i = mEffects->GetNextItem(i, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      }
    }
 
    for (size_t i = 0, cnt = items.size(); i < cnt; i++)
@@ -1004,15 +1008,15 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
             wxString errMsgs;
 
             // Try to register the plugin via each provider until one succeeds
-            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
+            for (size_t j = 0, cntj = item.plugs.size(); j < cntj; j++)
             {
                wxString errMsg;
                if (mm.RegisterEffectPlugin(item.plugs[j]->GetProviderID(), path,
                                      errMsg))
                {
-                  for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
+                  for (size_t k = 0, cntk = item.plugs.size(); k < cntk; k++)
                   {
-                     pm.mPlugins.erase(item.plugs[j]->GetProviderID() + wxT("_") + path);
+                     pm.mPlugins.erase(item.plugs[k]->GetProviderID() + wxT("_") + path);
                   }
                   // Bug 1893.  We've found a provider that works.
                   // Error messages from any that failed are no longer useful.
@@ -2410,13 +2414,13 @@ void PluginManager::CheckForUpdates(bool bFast)
                if (pathIndex.Index(path) == wxNOT_FOUND)
                {
                   PluginID ID = plugID + wxT("_") + path;
-                  PluginDescriptor & plug = mPlugins[ID];  // This will create a NEW descriptor
-                  plug.SetPluginType(PluginTypeStub);
-                  plug.SetID(ID);
-                  plug.SetProviderID(plugID);
-                  plug.SetPath(path);
-                  plug.SetEnabled(false);
-                  plug.SetValid(false);
+                  PluginDescriptor & plug2 = mPlugins[ID];  // This will create a NEW descriptor
+                  plug2.SetPluginType(PluginTypeStub);
+                  plug2.SetID(ID);
+                  plug2.SetProviderID(plugID);
+                  plug2.SetPath(path);
+                  plug2.SetEnabled(false);
+                  plug2.SetValid(false);
                }
             }
          }
