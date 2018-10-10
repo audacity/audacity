@@ -274,18 +274,20 @@ bool EffectNormalize::Process()
       // Get track min/max/rms in peak/rms mode
       if(mGain && (mNormalizeTo == kAmplitude || mNormalizeTo == kRMS))
       {
-         for(size_t idx = 0; idx < range.size(); ++idx)
+         size_t idx = 0;
+         for(auto channel : range)
          {
             if(mNormalizeTo == kAmplitude)
             {
-               if(!GetTrackMinMax(track, mMin[idx], mMax[idx]))
+               if(!GetTrackMinMax(channel, mMin[idx], mMax[idx]))
                   return false;
             }
             else // RMS
             {
-               if(!GetTrackRMS(track, mRMS[idx]))
+               if(!GetTrackRMS(channel, mRMS[idx]))
                   return false;
             }
+            ++idx;
          }
       }
       // Skip analyze pass if it is not necessary.
