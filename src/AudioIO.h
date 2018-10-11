@@ -321,6 +321,55 @@ class AUDACITY_DLL_API AudioIO final {
    void CallbackCheckCompletion(
       int &callbackReturn, unsigned long len);
 
+private:
+   int mbHasSoloTracks;
+   int mCallbackReturn;
+   // Helpers to determine if tracks have already been faded out.
+   unsigned  CountSoloingTracks();
+   bool TrackShouldBeSilent( const WaveTrack &wt );
+   bool TrackHasBeenFadedOut( const WaveTrack &wt );
+   bool AllTracksAlreadySilent();
+
+   // These eight functions do different parts of AudioCallback().
+   void ComputeMidiTimings(
+      const PaStreamCallbackTimeInfo *timeInfo,
+      unsigned long framesPerBuffer);
+   void ComputeAudibilities();
+   void CheckSoundActivatedRecordingLevel();
+   bool QuickSilentPlayback(
+      const void *inputBuffer, 
+      void *outputBuffer,
+      unsigned long framesPerBuffer);
+   bool FillOutputBuffers(
+      const void *inputBuffer, 
+      void *outputBuffer,
+      unsigned long framesPerBuffer,
+      float * tempFloats, float *outputMeterFloats
+   );
+   bool FillInputBuffers(
+      const void *inputBuffer, 
+      unsigned long framesPerBuffer,
+      const PaStreamCallbackFlags statusFlags,
+      float * tempFloats
+   );
+   bool OnlyDoPlaythrough(
+      const void *inputBuffer, 
+      void *outputBuffer,
+      unsigned long framesPerBuffer,
+      float *outputMeterFloats
+   );
+   void SendVuInputMeterData(
+      float *tempFloats,
+      const void *inputBuffer,
+      unsigned long framesPerBuffer
+   );
+   void SendVuOutputMeterData(
+      float *outputMeterFloats,
+      unsigned long framesPerBuffer
+   ); 
+
+public:
+
    AudioIOListener* GetListener() { return mListener; }
    void SetListener(AudioIOListener* listener);
 
