@@ -11,17 +11,46 @@
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
+;; This plug-in demonstrates how authors of Nyquist plug-ins may add translations
+;; for output messages. It is not currently possible to provide translations for strings
+;; in the header comments (such as the plug-in name) of 3rd party plug-ins.
+
+;; Translations strings:
+;; The "en" translation is not normally required unless the original text is in another
+;; language, but it can make testing easier.
+(setf *locale*
+  '(("en" (("Left" "Left")
+           ("Right" "Right")
+           ("Stereo" "Stereo")
+           ("Mono" "Mono")
+           ("dB" "dB")))
+    ("de" (("Left" "Links")
+           ("Right" "Rechts")
+           ("Stereo" "Stereo")
+           ("Mono" "Mono")
+           ("dB" "dB")))
+    ("es" (("Left" "Izquierda")
+           ("Right" "Derecha")
+           ("Stereo" "Estéreo")
+           ("Mono" "Mono")
+           ("dB" "dB")))
+    ("fr" (("Left" "Gauche")
+           ("Right" "Droite")
+           ("Stereo" "Stéréo")
+           ("Mono" "Mono")
+           ("dB" "dB")))
+    ("ru" (("Left" "Левый")
+           ("Right" "Правый")
+           ("Stereo" "Стерео")
+           ("Mono" "Моно")
+           ("dB" "дБ")))))
+
+
 (defun stereo-rms(ar)
-  "Stereo RMS is the root mean of all (samples ^ 2) [both channels]"
+  ;;; Stereo RMS is the root mean of all (samples ^ 2) [both channels]
   (let ((left-mean-sq (* (aref ar 0)(aref ar 0)))
         (right-mean-sq (* (aref ar 1)(aref ar 1))))
     (sqrt (/ (+ left-mean-sq right-mean-sq) 2.0))))
-
-(setf *locale*
-  '(("de" (("Left" "Links")("Right" "Rechts")("Stereo" "Stereo")("Mono" "Mono")("dB" "dB")))
-    ("es" (("Left" "Izquierda") ("Right" "Derecha") ("Stereo" "Estéreo") ("Mono" "Mono")("dB" "dB")))
-    ("fr" (("Left" "Gauche")("Right" "Droite")("Stereo" "Stéréo")("Mono" "Mono")("dB" "dB")))
-    ("ru" (("Left" "Левый")("Right" "Правый")("Stereo" "Стерео")("Mono" "Моно")("dB" "дБ")))))
 
 
 (let ((rms (get '*selection* 'rms)))
