@@ -230,19 +230,18 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
       // Add 0.01 so we are free of rounding errors in comparisons.
       constexpr double fudge = 0.01;
       for (auto channel : channels) {
-         (void)channel;// compiler food
          double track = index + fudge + term;
          bool sel = first <= track && track <= last;
          if( mMode == 0 ){ // Set
-            t->SetSelected(sel);
+            channel->SetSelected(sel);
          }
          else if( mMode == 1 && sel ){ // Add
-            t->SetSelected(sel);
+            channel->SetSelected(sel);
          }
          else if( mMode == 2 && sel ){ // Remove
-            t->SetSelected(!sel);
+            channel->SetSelected(!sel);
          }
-         term += (1.0 - fudge) / channels.size();
+         term += 1.0 / channels.size();
       }
       ++index;
    }
