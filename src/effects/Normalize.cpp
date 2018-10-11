@@ -384,12 +384,13 @@ bool EffectNormalize::Process()
       if( (extent > 0) && mGain )
       {
          mMult = ratio / extent;
-         // Target half the LUFS value if mono shall be treated as dual mono.
-         if(!mProcStereo && mDualMono)
-            mMult /= 2.0;
 
          if(mNormalizeTo == kLoudness)
          {
+            // Target half the LUFS value if mono shall be treated as dual mono.
+            if(!mProcStereo && mDualMono)
+               mMult /= 2.0;
+
             // LUFS are related to square values so the multiplier must be the root.
             mMult = sqrt(mMult);
          }
