@@ -4828,19 +4828,6 @@ bool AudioIO::FillOutputBuffers(
 
    if( outputBuffer && (numPlaybackChannels > 0) )
    {
-      // The drop and dropQuickly booleans are for historical reasons.
-      // JKC: The original code attempted to be faster by doing nothing on silenced audio.
-      // This, IMHO, is 'premature optimisation'.  Instead clearer and cleaner code would
-      // simply use a gain of 0.0 for silent audio and go on through to the stage of 
-      // applying that 0.0 gain to the data mixed into the buffer.
-      // Then (and only then) we would have if needed fast paths for:
-      // - Applying a uniform gain of 0.0.
-      // - Applying a uniform gain of 1.0.
-      // - Applying some other uniform gain.
-      // - Applying a linearly interpolated gain.
-      // I would expect us not to need the fast paths, since linearly interpolated gain
-      // is very cheap to process.
-
       float *outputFloats = (float *)outputBuffer;
       for( unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
          outputFloats[i] = 0.0;
@@ -4862,16 +4849,19 @@ bool AudioIO::FillOutputBuffers(
       // While scrubbing, ignore seek requests
       if (mSeek && mPlaybackSchedule.Interactive())
          mSeek = 0.0;
-      else
 #endif
+
       if (mSeek){
          mCallbackReturn = CallbackDoSeek();
          return true;
       }
 
-
+      // ------ MEMORY ALLOCATION ----------------------
+      // These are small structures.
       WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
       float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
+      // ------ End of MEMORY ALLOCATION ---------------
+
       for (unsigned int c = 0; c < numPlaybackChannels; c++)
       {
          tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
@@ -4888,12 +4878,24 @@ bool AudioIO::FillOutputBuffers(
       const auto toGet =
          std::min<size_t>(framesPerBuffer, GetCommonlyReadyPlayback());
 
-      bool drop = false;
-      bool dropQuickly = false;
+      // The drop and dropQuickly booleans are so named for historical reasons.
+      // JKC: The original code attempted to be faster by doing nothing on silenced audio.
+      // This, IMHO, is 'premature optimisation'.  Instead clearer and cleaner code would
+      // simply use a gain of 0.0 for silent audio and go on through to the stage of 
+      // applying that 0.0 gain to the data mixed into the buffer.
+      // Then (and only then) we would have if needed fast paths for:
+      // - Applying a uniform gain of 0.0.
+      // - Applying a uniform gain of 1.0.
+      // - Applying some other uniform gain.
+      // - Applying a linearly interpolated gain.
+      // I would expect us not to need the fast paths, since linearly interpolated gain
+      // is very cheap to process.
+
+      bool drop = false;        // Track should become silent.
+      bool dropQuickly = false; // Track has already been faded to silence.
       for (unsigned t = 0; t < numPlaybackTracks; t++)
       {
          WaveTrack *vt = mPlaybackTracks[t].get();
-
          chans[chanCnt] = vt;
 
          // TODO: more-than-two-channels
@@ -4904,32 +4906,23 @@ bool AudioIO::FillOutputBuffers(
          bool firstChannel = vt->IsLeader();
          bool lastChannel = !nextTrack || nextTrack->IsLeader();
 
-         if ( ! firstChannel )
-            dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
-         else {
+         if ( firstChannel )
+         {
             drop = TrackShouldBeSilent( *vt );
-
             selected = vt->GetSelected();
                
+            // IF mono THEN clear 'the other' channel.
             if ( lastChannel ) {
                // TODO: more-than-two-channels
-#if 1
-               // If we have a mono track, clear the right channel
                memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
-#else
-               // clear any other channels
-               for ( size_t c = chanCnt + 1; c < numPlaybackChannels; ++c )
-                  memset(tempBufs[c], 0, framesPerBuffer * sizeof(float));
-#endif
             }
-
             dropQuickly = drop && TrackHasBeenFadedOut( *vt );
          }
-
-#define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
-#ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
+         else 
+            dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
+         
          decltype(framesPerBuffer) len = 0;
-         // this is original code prior to r10680 -RBD
+
          if (dropQuickly)
          {
             len = mPlaybackBuffers[t]->Discard(framesPerBuffer);
@@ -4951,7 +4944,6 @@ bool AudioIO::FillOutputBuffers(
                // zeroes and not random garbage.
                memset((void*)&tempBufs[chanCnt][len], 0,
                   (framesPerBuffer - len) * sizeof(float));
-
             chanCnt++;
          }
 
@@ -4964,34 +4956,8 @@ bool AudioIO::FillOutputBuffers(
          // available, so maxLen ought to increase from 0 only once
          maxLen = std::max(maxLen, len);
 
-
-         if ( ! lastChannel )
-         {
+         if ( !lastChannel )
             continue;
-         }
-#else
-         // This code was reorganized so that if all audio tracks
-         // are muted, we still return paComplete when the end of
-         // a selection is reached.
-         // Vaughan, 2011-10-20: Further comments from Roger, by off-list email:
-         //    ...something to do with what it means to mute all audio tracks. E.g. if you
-         // mute all and play, does the playback terminate immediately or play
-         // silence? If it terminates immediately, does that terminate any MIDI
-         // playback that might also be going on? ...Maybe muted audio tracks + MIDI,
-         // the playback would NEVER terminate. ...I think the #else part is probably preferable...
-         size_t len;
-         if (dropQuickly)
-         {
-            len =
-               mPlaybackBuffers[t]->Discard(framesPerBuffer);
-         } else
-         {
-            len =
-               mPlaybackBuffers[t]->Get((samplePtr)tempFloats,
-                                                   floatSample,
-                                                   framesPerBuffer);
-         }
-#endif
 
          // Last channel of a track seen now
          len = maxLen;
@@ -5002,67 +4968,57 @@ bool AudioIO::FillOutputBuffers(
          }
          group++;
 
-
          CallbackCheckCompletion(mCallbackReturn, len);
 
          if (dropQuickly) // no samples to process, they've been discarded
             continue;
 
+
+         // Our channels aren't silent.  We need to pass their data on.
          if (len > 0) for (int c = 0; c < chanCnt; c++)
          {
             vt = chans[c];
 
-            if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
-                  vt->GetChannelIgnoringPan() == Track::MonoChannel )
-            {
-               float gain = vt->GetChannelGain(0);
+            // A function to apply the requested gain, fading up or down from the
+            // most recently applied gain.
+            // Note that there are two kinds of channel count.
+            // chan (and numPlayBackChannels) is counting channels on the device.
+            // c and chanCnt are counting channels in the Tracks.
+            // chan = 0 is left channel
+            // chan = 1 is right channel.
+            auto fadeChannel = [&]( unsigned int chan){
+               float gain = vt->GetChannelGain(chan);
                if (drop || !mAudioThreadFillBuffersLoopRunning || mPaused)
                   gain = 0.0;
 
                // Output volume emulation: possibly copy meter samples, then
                // apply volume, then copy to the output buffer
                if (outputMeterFloats != outputFloats)
-                  for (decltype(len) i = 0; i < len; ++i)
-                     outputMeterFloats[numPlaybackChannels*i] +=
+                  for ( unsigned i = 0; i < len; ++i)
+                     outputMeterFloats[numPlaybackChannels*i+chan] +=
                         gain*tempFloats[i];
 
                if (mEmulateMixerOutputVol)
                   gain *= mMixerOutputVol;
 
-               float oldGain = vt->GetOldChannelGain(0);
+               float oldGain = vt->GetOldChannelGain(chan);
                if( gain != oldGain )
-                  vt->SetOldChannelGain(0, gain);
+                  vt->SetOldChannelGain(chan, gain);
                wxASSERT(len > 0);
-               float deltaGain = (gain - oldGain) / len;
-               for (decltype(len) i = 0; i < len; i++)
-                  outputFloats[numPlaybackChannels*i] += (oldGain + deltaGain * i) *tempBufs[c][i];
 
-            }
+               // Linear interpolate.
+               float deltaGain = (gain - oldGain) / len;
+               for (unsigned i = 0; i < len; i++)
+                  outputFloats[numPlaybackChannels*i+chan] += (oldGain + deltaGain * i) *tempBufs[c][i];
+            };
+
+            if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
+                  vt->GetChannelIgnoringPan() == Track::MonoChannel )
+               fadeChannel( 0 );
 
             if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
                   vt->GetChannelIgnoringPan() == Track::MonoChannel  )
-            {
-               float gain = vt->GetChannelGain(1);
-               if (drop || !mAudioThreadFillBuffersLoopRunning || mPaused)
-                  gain = 0.0;
-
-               // Output volume emulation (as above)
-               if (outputMeterFloats != outputFloats)
-                  for (decltype(len) i = 0; i < len; ++i)
-                     outputMeterFloats[numPlaybackChannels*i+1] +=
-                        gain*tempFloats[i];
-
-               if (mEmulateMixerOutputVol)
-                  gain *= mMixerOutputVol;
-
-               float oldGain = vt->GetOldChannelGain(1);
-               if (gain != oldGain)
-                  vt->SetOldChannelGain(1,gain);
-               wxASSERT(len > 0);
-               float deltaGain = (gain - oldGain) / len;
-               for(decltype(len) i = 0; i < len; i++)
-                  outputFloats[numPlaybackChannels*i+1] += (oldGain + deltaGain*i) *tempBufs[c][i];
-            }
+               fadeChannel( 1 );
          }
 
          chanCnt = 0;
@@ -5077,33 +5033,17 @@ bool AudioIO::FillOutputBuffers(
       // wxASSERT( maxLen == toGet );
 
       em.RealtimeProcessEnd();
-
       mLastPlaybackTimeMillis = ::wxGetLocalTimeMillis();
 
-      //
-      // Clip output to [-1.0,+1.0] range (msmeyer)
-      //
-      for(unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
-      {
-         float f = outputFloats[i];
-         if (f > 1.0)
-            outputFloats[i] = 1.0;
-         else if (f < -1.0)
-            outputFloats[i] = -1.0;
-      }
+      // Limit values to -1.0..+1.0
+      auto clampBuffer = [&] (float * pBuffer){
+         for(unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
+            pBuffer[i] = wxClip( -1.0f, pBuffer[i], 1.0f);
+      };
 
-      // Same for meter output
+      clampBuffer( outputFloats );
       if (outputMeterFloats != outputFloats)
-      {
-         for (unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; ++i)
-         {
-            float f = outputMeterFloats[i];
-            if (f > 1.0)
-               outputMeterFloats[i] = 1.0;
-            else if (f < -1.0)
-               outputMeterFloats[i] = -1.0;
-         }
-      }
+         clampBuffer( outputMeterFloats );
    }
 
    // Update the position seen by drawing code
@@ -5212,10 +5152,7 @@ bool AudioIO::FillInputBuffers(
                short *tempShorts = (short *)tempFloats;
                for( unsigned i = 0; i < len; i++) {
                   float tmp = inputShorts[numCaptureChannels*i+t];
-                  if (tmp > 32767)
-                     tmp = 32767;
-                  if (tmp < -32768)
-                     tmp = -32768;
+                  tmp = wxClip( -32768, tmp, 32767 );
                   tempShorts[i] = (short)(tmp);
                }
             } break;
