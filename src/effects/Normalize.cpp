@@ -388,9 +388,9 @@ bool EffectNormalize::Process()
          if(!mProcStereo && mDualMono)
             mMult /= 2.0;
 
-         if(mNormalizeTo == kLoudness || mNormalizeTo == kRMS)
+         if(mNormalizeTo == kLoudness)
          {
-            // LUFS and RMS are related to square values so the multiplier must be the root.
+            // LUFS are related to square values so the multiplier must be the root.
             mMult = sqrt(mMult);
          }
       }
