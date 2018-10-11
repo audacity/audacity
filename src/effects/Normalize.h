@@ -14,6 +14,7 @@
 #define __AUDACITY_EFFECT_NORMALIZE__
 
 #include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/stattext.h>
 #include <wx/string.h>
@@ -62,64 +63,85 @@ private:
 
    enum AnalyseOperation
    {
-      ANALYSE_DC, ANALYSE_LOUDNESS, ANALYSE_LOUDNESS_DC
+      ANALYSE_NONE     = 0,
+      ANALYSE_DC       = (1 << 0),
+      ANALYSE_LOUDNESS = (1 << 1),
+      ANALYSE_LOUDNESS_DC = ANALYSE_DC | ANALYSE_LOUDNESS
    };
 
-   bool ProcessOne(
-      WaveTrack * t, const wxString &msg, double& progress, float offset);
-   bool AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                     double &progress, float &offset, float &extent);
-   bool AnalyseTrackData(const WaveTrack * track, const wxString &msg, double &progress,
-                     AnalyseOperation op, float &offset);
-   void AnalyseDataDC(float *buffer, size_t len);
-#ifdef EXPERIMENTAL_R128_NORM
-   void AnalyseDataLoudness(float *buffer, size_t len);
-   void AnalyseDataLoudnessDC(float *buffer, size_t len);
-#endif
-   void ProcessData(float *buffer, size_t len, float offset);
+   bool GetTrackMinMax(WaveTrack* track, float& min, float& max);
+   bool GetTrackRMS(WaveTrack* track, float& rms);
+   void AllocBuffers();
+   bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
+   bool LoadBufferBlock(TrackIterRange<WaveTrack> range,
+                        sampleCount pos, size_t len);
+   bool AnalyseBufferBlock();
+   bool ProcessBufferBlock();
+   void StoreBufferBlock(TrackIterRange<WaveTrack> range,
+                         sampleCount pos, size_t len);
+   void InitTrackAnalysis(bool dc);
 
-#ifdef EXPERIMENTAL_R128_NORM
    void CalcEBUR128HPF(float fs);
    void CalcEBUR128HSF(float fs);
-#endif
 
+   bool UpdateProgress();
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
 
 private:
    double mPeakLevel;
+   double mLUFSLevel;
+   double mRMSLevel;
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
-#ifdef EXPERIMENTAL_R128_NORM
-   double mLUFSLevel;
-   bool   mUseLoudness;
-   bool   mGUIUseLoudness;
-#endif
+   bool   mDualMono;
+   int    mNormalizeTo;
+   int    mGUINormalizeTo;
 
    double mCurT0;
    double mCurT1;
+   double mProgressVal;
+   int    mSteps;
+   wxString mProgressMsg;
+   double mTrackLen;
+   double mCurRate;
+
+   int    mOp;
    float  mMult;
-   double mSum;
-#ifdef EXPERIMENTAL_R128_NORM
-   double mSqSum;
-#endif
+   float  mOffset[2];   // MM: all those 2's must be increased once surround channels are supported
+   float  mMin[2];
+   float  mMax[2];
+   float  mRMS[2];
+   double mSum[2];
    sampleCount    mCount;
 
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
+   wxChoice   *mNormalizeToCtl;
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
-#ifdef EXPERIMENTAL_R128_NORM
-   wxCheckBox *mUseLoudnessCheckBox;
+   wxCheckBox *mDualMonoCheckBox;
 
-   Biquad mR128HSF;
-   Biquad mR128HPF;
-#endif
+   Floats mTrackBuffer[2];    // MM: must be increased once surround channels are supported
+   size_t mTrackBufferLen;
+   size_t mTrackBufferCapacity;
+   bool   mProcStereo;
+
+   static const size_t HIST_BIN_COUNT = 65536;
+   static constexpr double GAMMA_A = (-70.0 + 0.691) / 10.0;   // EBU R128 absolute threshold
+   ArrayOf<long int> mLoudnessHist;
+   Doubles mBlockRingBuffer;
+   size_t mBlockRingPos;
+   size_t mBlockRingSize;
+   size_t mBlockSize;
+   size_t mBlockOverlap;
+
    bool mCreating;
-
+   Biquad mR128HSF[2];
+   Biquad mR128HPF[2];
 
    DECLARE_EVENT_TABLE()
 };

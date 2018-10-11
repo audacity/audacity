@@ -251,7 +251,4 @@
 // PRL 31 July 2018
 #define EXPERIMENTAL_DRAGGABLE_PLAY_HEAD
 
-// mmm-1 22 Aug 2018
-//#define EXPERIMENTAL_R128_NORM
-
 #endif

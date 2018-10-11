@@ -30,19 +30,34 @@
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 
+enum kNormalizeTargets
+{
+   kAmplitude,
+   kLoudness,
+   kRMS,
+   nAlgos
+};
+
+static const IdentInterfaceSymbol kNormalizeTargetStrings[nAlgos] =
+{
+   { XO("peak amplitude") },
+   { XO("perceived loudness") },
+   { XO("RMS") }
+};
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name         Type     Key                        Def      Min      Max   Scale
-Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,    -145.0,  0.0,  1  );
-Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,    false,   true, 1  );
-Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
-Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
-#ifdef EXPERIMENTAL_R128_NORM
-Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,   -145.0,  0.0,  1  );
-Param( UseLoudness, bool,    wxT("UseLoudness"),         false,   false,   true, 1  );
-#endif
+//     Name         Type     Key                        Def         Min      Max       Scale
+Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,       -145.0,  0.0,      1  );
+Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,      -145.0,  0.0,      1  );
+Param( RMSLevel,    double,  wxT("RMSLevel"),            -20.0,      -145.0,  0.0,      1  );
+Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,       false,   true,     1  );
+Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,       false,   true,     1  );
+Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,      false,   true,     1  );
+Param( DualMono,    bool,    wxT("DualMono"),            true,       false,   true,     1  );
+Param( NormalizeTo, int,     wxT("NormalizeTo"),         kAmplitude, 0    ,   nAlgos-1, 1  );
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
+   EVT_CHOICE(wxID_ANY, EffectNormalize::OnUpdateUI)
    EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
    EVT_TEXT(wxID_ANY, EffectNormalize::OnUpdateUI)
 END_EVENT_TABLE()
@@ -50,13 +65,13 @@ END_EVENT_TABLE()
 EffectNormalize::EffectNormalize()
 {
    mPeakLevel = DEF_PeakLevel;
+   mLUFSLevel = DEF_LUFSLevel;
+   mRMSLevel = DEF_RMSLevel;
    mDC = DEF_RemoveDC;
    mGain = DEF_ApplyGain;
    mStereoInd = DEF_StereoInd;
-#ifdef EXPERIMENTAL_R128_NORM
-   mLUFSLevel = DEF_LUFSLevel;
-   mUseLoudness = DEF_UseLoudness;
-#endif
+   mDualMono = DEF_DualMono;
+   mNormalizeTo = DEF_NormalizeTo;
 
    SetLinearEffectFlag(false);
 }
@@ -74,11 +89,7 @@ IdentInterfaceSymbol EffectNormalize::GetSymbol()
 
 wxString EffectNormalize::GetDescription()
 {
-#ifdef EXPERIMENTAL_R128_NORM
    return _("Sets the peak amplitude or loudness of one or more tracks");
-#else
-   return _("Sets the peak amplitude of one or more tracks");
-#endif
 }
 
 wxString EffectNormalize::ManualPage()
@@ -96,26 +107,26 @@ EffectType EffectNormalize::GetType()
 // EffectClientInterface implementation
 bool EffectNormalize::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
+   S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
+   S.SHUTTLE_PARAM( mRMSLevel, RMSLevel );
    S.SHUTTLE_PARAM( mGain, ApplyGain );
    S.SHUTTLE_PARAM( mDC, RemoveDC );
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );
-#ifdef EXPERIMENTAL_R128_NORM
-   S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
-   S.SHUTTLE_PARAM( mUseLoudness, UseLoudness );
-#endif
+   S.SHUTTLE_PARAM( mDualMono, DualMono );
+   S.SHUTTLE_PARAM( mNormalizeTo, NormalizeTo );
    return true;
 }
 
 bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_PeakLevel, mPeakLevel);
+   parms.Write(KEY_LUFSLevel, mLUFSLevel);
+   parms.Write(KEY_RMSLevel, mRMSLevel);
    parms.Write(KEY_ApplyGain, mGain);
    parms.Write(KEY_RemoveDC, mDC);
    parms.Write(KEY_StereoInd, mStereoInd);
-#ifdef EXPERIMENTAL_R128_NORM
-   parms.Write(KEY_LUFSLevel, mLUFSLevel);
-   parms.Write(KEY_UseLoudness, mUseLoudness);
-#endif
+   parms.Write(KEY_DualMono, mDualMono);
+   parms.Write(KEY_NormalizeTo, mNormalizeTo);
 
    return true;
 }
@@ -123,22 +134,22 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(PeakLevel);
+   ReadAndVerifyDouble(LUFSLevel);
+   ReadAndVerifyDouble(RMSLevel);
    ReadAndVerifyBool(ApplyGain);
    ReadAndVerifyBool(RemoveDC);
    ReadAndVerifyBool(StereoInd);
-#ifdef EXPERIMENTAL_R128_NORM
-   ReadAndVerifyDouble(LUFSLevel);
-   ReadAndVerifyBool(UseLoudness);
-#endif
+   ReadAndVerifyBool(DualMono);
+   ReadAndVerifyBool(NormalizeTo);
 
    mPeakLevel = PeakLevel;
+   mLUFSLevel = LUFSLevel;
+   mRMSLevel = RMSLevel;
    mGain = ApplyGain;
    mDC = RemoveDC;
    mStereoInd = StereoInd;
-#ifdef EXPERIMENTAL_R128_NORM
-   mLUFSLevel = LUFSLevel;
-   mUseLoudness = UseLoudness;
-#endif
+   mDualMono = DualMono;
+   mNormalizeTo = NormalizeTo;
 
    return true;
 }
@@ -174,10 +185,9 @@ bool EffectNormalize::Startup()
          mPeakLevel = -mPeakLevel;
       boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
       mStereoInd = (boolProxy == 1);
-#ifdef EXPERIMENTAL_R128_NORM
-      mUseLoudness = false;
+      mDualMono = DEF_DualMono;
+      mNormalizeTo = kAmplitude;
       mLUFSLevel = DEF_LUFSLevel;
-#endif
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -191,49 +201,50 @@ bool EffectNormalize::Startup()
 
 bool EffectNormalize::Process()
 {
-   if (mGain == false && mDC == false)
+   // Use temporary copy of mDC so that the checkbox
+   // state is unaffected by the operation below.
+   bool dc = mDC && mNormalizeTo != kRMS;
+   if (mGain == false && dc == false)
       return true;
 
    float ratio;
    if( mGain )
    {
-#ifdef EXPERIMENTAL_R128_NORM
-      if(mUseLoudness) {
+      if(mNormalizeTo == kAmplitude)
+         ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
+      else if(mNormalizeTo == kLoudness)
          // LU use 10*log10(...) instead of 20*log10(...)
          // so multiply level by 2 and use standard DB_TO_LINEAR macro.
          ratio = DB_TO_LINEAR(TrapDouble(mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
-      }
-      else {
-         // same value used for all tracks
-         ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
-      }
-#else
-      // same value used for all tracks
-      ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
-#endif
+      else // RMS
+         ratio = DB_TO_LINEAR(TrapDouble(mRMSLevel, MIN_RMSLevel, MAX_RMSLevel));
+
    }
-   else {
+   else
       ratio = 1.0;
-   }
 
    //Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
-   double progress = 0;
    wxString topMsg;
-   if(mDC && mGain)
+
+   if(dc && mGain)
       topMsg = _("Removing DC offset and Normalizing...\n");
-   else if(mDC && !mGain)
+   else if(dc && !mGain)
       topMsg = _("Removing DC offset...\n");
-   else if(!mDC && mGain)
+   else if(!dc && mGain)
       topMsg = _("Normalizing without removing DC offset...\n");
-   else if(!mDC && !mGain)
+   else if(!dc && !mGain)
       topMsg = _("Not doing anything...\n");   // shouldn't get here
 
-   for ( auto track : mOutputTracks->Selected< WaveTrack >()
-            + ( mStereoInd ? &Track::Any : &Track::IsLeader ) ) {
+   AllocBuffers();
+   mProgressVal = 0;
+
+   for(auto track : mOutputTracks->Selected<WaveTrack>()
+       + (mStereoInd ? &Track::Any : &Track::IsLeader))
+   {
       //Get start and end times from track
-      // PRL:  No accounting for multiple channels?
+      // PRL: No accounting for multiple channels ?
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
 
@@ -242,107 +253,166 @@ bool EffectNormalize::Process()
       mCurT0 = mT0 < trackStart? trackStart: mT0;
       mCurT1 = mT1 > trackEnd? trackEnd: mT1;
 
+      // Get the track rate
+      mCurRate = track->GetRate();
+
+      wxString msg;
+      auto trackName = track->GetName();
+      mSteps = 2;
+
+      mProgressMsg =
+         topMsg + wxString::Format( _("Analyzing: %s"), trackName );
+
+      InitTrackAnalysis(dc);
+
       auto range = mStereoInd
          ? TrackList::SingletonRange(track)
          : TrackList::Channels(track);
 
-      // Process only if the right marker is to the right of the left marker
-      if (mCurT1 > mCurT0) {
-         wxString trackName = track->GetName();
+      mProcStereo = range.size() > 1;
 
-         float extent;
-#ifdef EXPERIMENTAL_R128_NORM
-         if (mUseLoudness)
-            // Loudness: use sum of both tracks.
-            // As a result, stereo tracks appear about 3 LUFS louder,
-            // as specified.
-            extent = 0;
-         else
-#endif
-            // Will compute a maximum
-            extent = std::numeric_limits<float>::lowest();
-         std::vector<float> offsets;
-
-         wxString msg;
-         if (range.size() == 1)
-            // mono or 'stereo tracks independently'
-            msg = topMsg +
-               wxString::Format( _("Analyzing: %s"), trackName );
-         else
-            msg = topMsg +
-               // TODO: more-than-two-channels-message
-               wxString::Format( _("Analyzing first track of stereo pair: %s"), trackName);
-         
-         // Analysis loop over channels collects offsets and extent
-         for (auto channel : range) {
-            float offset, extent2;
-            bGoodResult =
-               AnalyseTrack( channel, msg, progress, offset, extent2 );
-            if ( ! bGoodResult )
-               goto break2;
-#ifdef EXPERIMENTAL_R128_NORM
-            if (mUseLoudness)
-               extent += extent2;
-            else
-#endif
-               extent = std::max( extent, extent2 );
-            offsets.push_back(offset);
-            // TODO: more-than-two-channels-message
-            msg = topMsg +
-               wxString::Format( _("Analyzing second track of stereo pair: %s"), trackName );
-         }
-
-         // Compute the multiplier using extent
-         if( (extent > 0) && mGain ) {
-            mMult = ratio / extent;
-#ifdef EXPERIMENTAL_R128_NORM
-            if(mUseLoudness) {
-               // PRL:  See commit 9cbb67a for the origin of the next line,
-               // which has no effect because mMult is again overwritten.  What
-               // was the intent?
-
-               // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
-               mMult /= 0.8529037031;
-               // LUFS are related to square values so the multiplier must be the root.
-               mMult = sqrt(ratio / extent);
+      // Get track min/max/rms in peak/rms mode
+      if(mGain && (mNormalizeTo == kAmplitude || mNormalizeTo == kRMS))
+      {
+         size_t idx = 0;
+         for(auto channel : range)
+         {
+            if(mNormalizeTo == kAmplitude)
+            {
+               if(!GetTrackMinMax(channel, mMin[idx], mMax[idx]))
+                  return false;
             }
-#endif
-         }
-         else
-            mMult = 1.0;
-
-         if (range.size() == 1) {
-            if (TrackList::Channels(track).size() == 1)
-               // really mono
-               msg = topMsg +
-                  wxString::Format( _("Processing: %s"), trackName );
-            else
-               //'stereo tracks independently'
-               // TODO: more-than-two-channels-message
-               msg = topMsg +
-                  wxString::Format( _("Processing stereo channels independently: %s"), trackName);
-         }
-         else
-            msg = topMsg +
-               // TODO: more-than-two-channels-message
-               wxString::Format( _("Processing first track of stereo pair: %s"), trackName);
-
-         // Use multiplier in the second, processing loop over channels
-         auto pOffset = offsets.begin();
-         for (auto channel : range) {
-            if (false ==
-                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)) )
-               goto break2;
-            // TODO: more-than-two-channels-message
-            msg = topMsg +
-               wxString::Format( _("Processing second track of stereo pair: %s"), trackName);
+            else // RMS
+            {
+               if(!GetTrackRMS(channel, mRMS[idx]))
+                  return false;
+            }
+            ++idx;
          }
       }
+      // Skip analyze pass if it is not necessary.
+      if(mNormalizeTo == kLoudness || dc)
+      {
+         mBlockSize = 0.4 * mCurRate; // 400 ms blocks
+         mBlockOverlap = 0.1 * mCurRate; // 100 ms overlap
+         if(!ProcessOne(range, true))
+            // Processing failed -> abort
+            return false;
+      }
+      else
+         mSteps = 1;
+
+      // Calculate normalization values the analysis results
+      // mMin[], mMax[], mSum[], mRMS[], mLoudnessHist.
+      if(mCount > 0 && dc)
+      {
+         mOffset[0] = -mSum[0] / mCount.as_double();
+         mOffset[1] = -mSum[1] / mCount.as_double();
+         mMin[0] += mOffset[0];
+         mMin[1] += mOffset[1];
+         mMax[0] += mOffset[0];
+         mMax[1] += mOffset[1];
+      }
+      else
+      {
+         mOffset[0] = 0.0;
+         mOffset[1] = 0.0;
+      }
+
+      float extent;
+      if(mNormalizeTo == kAmplitude)
+      {
+         extent = fmax(fabs(mMin[0]), fabs(mMax[0]));
+      }
+      else if(mNormalizeTo == kLoudness)
+      {
+         // EBU R128: z_i = mean square without root
+
+         // Calculate Gamma_R from histogram.
+         double sum_v = 0;
+         double val;
+         long int sum_c = 0;
+         for(size_t i = 0; i < HIST_BIN_COUNT; ++i)
+         {
+            val = -GAMMA_A / double(HIST_BIN_COUNT) * (i+1) + GAMMA_A;
+            sum_v += pow(10, val) * mLoudnessHist[i];
+            sum_c += mLoudnessHist[i];
+         }
+
+         // Histogram values are simplified log(x^2) immediate values
+         // without -0.691 + 10*(...) to safe computing power. This is
+         // possible because they will cancel out anyway.
+         // The -1 in the line below is the -10 LUFS from the EBU R128
+         // specification without the scaling factor of 10.
+         double Gamma_R = log10(sum_v/sum_c) - 1;
+         size_t idx_R = round((Gamma_R - GAMMA_A) * double(HIST_BIN_COUNT) / -GAMMA_A - 1);
+
+         // Apply Gamma_R threshold and calculate gated loudness (extent).
+         sum_v = 0;
+         sum_c = 0;
+         for(size_t i = idx_R+1; i < HIST_BIN_COUNT; ++i)
+         {
+            val = -GAMMA_A / double(HIST_BIN_COUNT) * (i+1) + GAMMA_A;
+            sum_v += pow(10, val) * mLoudnessHist[i];
+            sum_c += mLoudnessHist[i];
+         }
+         // LUFS is defined as -0.691 dB + 10*log10(sum(channels))
+         extent = 0.8529037031 * sum_v / sum_c;
+      }
+      else // RMS
+      {
+         extent = mRMS[0];
+      }
+
+      if(mProcStereo)
+      {
+         if(mNormalizeTo == kAmplitude)
+         {
+            // Peak: use maximum of both tracks.
+            float extent2;
+            extent2 = fmax(fabs(mMin[1]), fabs(mMax[1]));;
+            extent = fmax(extent, extent2);
+         }
+         else if(mNormalizeTo == kRMS)
+         {
+            // RMS: use average RMS
+            extent = (extent + mRMS[1]) / 2.0;
+         }
+         // else: mNormalizeTo == kLoudness : do nothing (this is already handled in histogram)
+      }
+
+      if( (extent > 0) && mGain )
+      {
+         mMult = ratio / extent;
+         // Target half the LUFS value if mono shall be treated as dual mono.
+         if(!mProcStereo && mDualMono)
+            mMult /= 2.0;
+
+         if(mNormalizeTo == kLoudness || mNormalizeTo == kRMS)
+         {
+            // LUFS and RMS are related to square values so the multiplier must be the root.
+            mMult = sqrt(mMult);
+         }
+      }
+      else
+         mMult = 1.0;
+
+      mProgressMsg =
+         topMsg + wxString::Format( _("Processing: %s"), trackName );
+
+      if(!ProcessOne(range, false))
+         // Processing failed -> abort
+         return false;
    }
 
-   break2:
-
    this->ReplaceProcessedTracks(bGoodResult);
+
+   // Free memory
+   mTrackBuffer[0].reset();
+   mTrackBuffer[1].reset();
+   mBlockRingBuffer.reset();
+   mLoudnessHist.reset();
+
    return bGoodResult;
 }
 
@@ -362,21 +432,17 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
-               // The checkbox needs to be sized for the longer prompt, and
-               // which that is will depend on translation.  So decide that here.
-               // (strictly we should count pixels, not characters).
-               wxString prompt1 = _("Normalize peak amplitude to");
-#ifdef EXPERIMENTAL_R128_NORM
-               wxString prompt2 = _("Normalize loudness to");
-               wxString longerPrompt = ((prompt1.Length() > prompt2.Length()) ? prompt1 : prompt2) + "   ";
-#else
-               wxString longerPrompt = prompt1 + "   ";
-#endif
                // Now make the checkbox.
-               mGainCheckBox = S.AddCheckBox(longerPrompt,
+               mGainCheckBox = S.AddCheckBox(_("Normalize"),
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
                mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
+
+               auto targetChoices = LocalizedStrings(kNormalizeTargetStrings, nAlgos);
+               mNormalizeToCtl = S.AddChoice(wxEmptyString, wxT(""), &targetChoices);
+               mNormalizeToCtl->SetValidator(wxGenericValidator(&mNormalizeTo));
+               S.AddVariableText(_("to"), false,
+                                 wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
                FloatingPointValidator<double> vldLevel(2, &mPeakLevel,
                                                        NumValidatorStyle::ONE_TRAILING_ZERO);
@@ -391,24 +457,22 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();
-#ifdef EXPERIMENTAL_R128_NORM
-            mUseLoudnessCheckBox = S.AddCheckBox(_("Use loudness instead of peak amplitude"),
-                                                 mUseLoudness ? wxT("true") : wxT("false"));
-            mUseLoudnessCheckBox->SetValidator(wxGenericValidator(&mGUIUseLoudness));
-#endif
+
             mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
                                                mStereoInd ? wxT("true") : wxT("false"));
             mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
+
+            mDualMonoCheckBox = S.AddCheckBox(_("Treat mono as dual-mono (recommended)"),
+                                               mDualMono ? wxT("true") : wxT("false"));
+            mDualMonoCheckBox->SetValidator(wxGenericValidator(&mDualMono));
          }
          S.EndVerticalLay();
       }
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
-#ifdef EXPERIMENTAL_R128_NORM
    // To ensure that the UpdateUI on creation sets the prompts correctly.
-   mUseLoudness = !mGUIUseLoudness;
-#endif
+   mGUINormalizeTo = !mNormalizeTo;
    mCreating = false;
 }
 
@@ -436,264 +500,305 @@ bool EffectNormalize::TransferDataFromWindow()
 
 // EffectNormalize implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
-                                   double &progress, float &offset, float &extent)
+bool EffectNormalize::GetTrackMinMax(WaveTrack* track, float& min, float& max)
 {
-   bool result = true;
-   float min, max;
+   // Since we need complete summary data, we need to block until the OD tasks are done for this track
+   // This is needed for track->GetMinMax
+   // TODO: should we restrict the flags to just the relevant block files (for selections)
+   while (track->GetODFlags()) {
+      // update the gui
+      if (ProgressResult::Cancelled == mProgress->Update(
+         0, _("Waiting for waveform to finish computing...")) )
+         return false;
+      wxMilliSleep(100);
+   }
 
-   if(mGain)
+   // set mMin, mMax.  No progress bar here as it's fast.
+   auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
+   min = pair.first, max = pair.second;
+   return true;
+}
+
+bool EffectNormalize::GetTrackRMS(WaveTrack* track, float& rms)
+{
+   // Since we need complete summary data, we need to block until the OD tasks are done for this track
+   // This is needed for track->GetMinMax
+   // TODO: should we restrict the flags to just the relevant block files (for selections)
+   while (track->GetODFlags()) {
+      // update the gui
+      if (ProgressResult::Cancelled == mProgress->Update(
+         0, _("Waiting for waveform to finish computing...")) )
+         return false;
+      wxMilliSleep(100);
+   }
+
+   // set mRMS.  No progress bar here as it's fast.
+   float _rms = track->GetRMS(mCurT0, mCurT1); // may throw
+   rms = _rms;
+   return true;
+}
+
+/// Get required buffer size for the largest whole track and allocate buffers.
+/// This reduces the amount of allocations required.
+void EffectNormalize::AllocBuffers()
+{
+   mTrackBufferCapacity = 0;
+   bool stereoTrackFound = false;
+   double maxSampleRate = 0;
+   mProcStereo = false;
+
+   for(auto track : mOutputTracks->Selected<WaveTrack>() + &Track::Any)
    {
-#ifdef EXPERIMENTAL_R128_NORM
-      if(mUseLoudness)
-      {
-         CalcEBUR128HPF(track->GetRate());
-         CalcEBUR128HSF(track->GetRate());
-         if(mDC)
-         {
-            result = AnalyseTrackData(track, msg, progress, ANALYSE_LOUDNESS_DC, offset);
-         }
-         else
-         {
-            result = AnalyseTrackData(track, msg, progress, ANALYSE_LOUDNESS, offset);
-            offset = 0.0;
-         }
+      mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
+      maxSampleRate = std::max(maxSampleRate, track->GetRate());
 
-         // EBU R128: z_i = mean square without root
-         extent = mSqSum / mCount.as_double();
+      // There is a stereo track
+      if(track->IsLeader())
+         stereoTrackFound = true;
+   }
+
+   // Allocate histogram buffers
+   mLoudnessHist.reinit(HIST_BIN_COUNT, false);
+   mBlockRingBuffer.reinit(static_cast<size_t>(ceil(0.4 * maxSampleRate))); // 400 ms blocks
+
+   //Initiate a processing buffer.  This buffer will (most likely)
+   //be shorter than the length of the track being processed.
+   mTrackBuffer[0].reinit(mTrackBufferCapacity);
+
+   if(!mStereoInd && stereoTrackFound)
+      mTrackBuffer[1].reinit(mTrackBufferCapacity);
+}
+
+/// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
+/// and executes ProcessData, on it...
+///  uses mMult and offset to normalize a track.
+///  mMult must be set before this is called
+/// In analyse mode, it executes the selected analyse operation on it...
+///  mMult does not have to be set before this is called
+bool EffectNormalize::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
+{
+   WaveTrack* track = *range.begin();
+
+   //Transform the marker timepoints to samples
+   auto start = track->TimeToLongSamples(mCurT0);
+   auto end   = track->TimeToLongSamples(mCurT1);
+
+   //Get the length of the buffer (as double). len is
+   //used simply to calculate a progress meter, so it is easier
+   //to make it a double now than it is to do it later
+   mTrackLen = (end - start).as_double();
+
+   // Abort if the right marker is not to the right of the left marker
+   if (mCurT1 <= mCurT0)
+      return false;
+
+   //Go through the track one buffer at a time. s counts which
+   //sample the current buffer starts at.
+   auto s = start;
+   while (s < end)
+   {
+      //Get a block of samples (smaller than the size of the buffer)
+      //Adjust the block size if it is the final block in the track
+      auto blockLen = limitSampleBufferSize(
+         track->GetBestBlockSize(s),
+         mTrackBufferCapacity
+      );
+
+      const size_t remainingLen = (end - s).as_size_t();
+      blockLen = blockLen > remainingLen ? remainingLen : blockLen;
+      if(!LoadBufferBlock(range, s, blockLen))
+         return false;
+
+      //Process the buffer.
+      if(analyse)
+      {
+         if(!AnalyseBufferBlock())
+            return false;
       }
       else
       {
-#endif
-         // Since we need complete summary data, we need to block until the OD tasks are done for this track
-         // This is needed for track->GetMinMax
-         // TODO: should we restrict the flags to just the relevant block files (for selections)
-         while (track->GetODFlags()) {
-            // update the gui
-            if (ProgressResult::Cancelled == mProgress->Update(
-               0, _("Waiting for waveform to finish computing...")) )
-               return false;
-            wxMilliSleep(100);
-         }
-
-         // set mMin, mMax.  No progress bar here as it's fast.
-         auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
-         min = pair.first, max = pair.second;
-
-         if(mDC)
-         {
-            result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
-            min += offset;
-            max += offset;
-         }
-#ifdef EXPERIMENTAL_R128_NORM
+         if(!ProcessBufferBlock())
+            return false;
       }
-#endif
-   }
-   else if(mDC)
-   {
-      min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, msg, progress, ANALYSE_DC, offset);
-      min += offset;
-      max += offset;
-   }
-   else
-   {
-      wxFAIL_MSG("Analysing Track when nothing to do!");
-      min = -1.0, max = 1.0;   // sensible defaults?
-      offset = 0.0;
-   }
-#ifdef EXPERIMENTAL_R128_NORM
-   if(!mUseLoudness)
-#endif
-      extent = fmax(fabs(min), fabs(max));
 
-   return result;
-}
-
-//AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
-//and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const wxString &msg,
-                                double &progress, AnalyseOperation op, float &offset)
-{
-   bool rc = true;
-
-   //Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end = track->TimeToLongSamples(mCurT1);
-
-   //Get the length of the buffer (as double). len is
-   //used simply to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later
-   auto len = (end - start).as_double();
-
-   //Initiate a processing buffer.  This buffer will (most likely)
-   //be shorter than the length of the track being processed.
-   Floats buffer{ track->GetMaxBlockSize() };
-
-   mSum   = 0.0; // dc offset inits
-   mCount = 0;
-#ifdef EXPERIMENTAL_R128_NORM
-   mSqSum = 0.0; // rms init
-#endif
-
-   sampleCount blockSamples;
-   sampleCount totalSamples = 0;
-
-   //Go through the track one buffer at a time. s counts which
-   //sample the current buffer starts at.
-   auto s = start;
-   while (s < end) {
-      //Get a block of samples (smaller than the size of the buffer)
-      //Adjust the block size if it is the final block in the track
-      const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
-         end - s
-      );
-
-      //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block, fillZero, true, &blockSamples);
-      totalSamples += blockSamples;
-
-      //Process the buffer.
-      if(op == ANALYSE_DC)
-         AnalyseDataDC(buffer.get(), block);
-#ifdef EXPERIMENTAL_R128_NORM
-      else if(op == ANALYSE_LOUDNESS)
-         AnalyseDataLoudness(buffer.get(), block);
-      else if(op == ANALYSE_LOUDNESS_DC)
-         AnalyseDataLoudnessDC(buffer.get(), block);
-#endif
+      if(!analyse)
+         StoreBufferBlock(range, s, blockLen);
 
       //Increment s one blockfull of samples
-      s += block;
-
-      //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
-         rc = false; //lda .. break, not return, so that buffer is deleted
-         break;
-      }
+      s += blockLen;
    }
-   if( totalSamples > 0 )
-      offset = -mSum / totalSamples.as_double();  // calculate actual offset (amount that needs to be added on)
-   else
-      offset = 0.0;
-
-   progress += 1.0/double(2*GetNumWaveTracks());
-   //Return true because the effect processing succeeded ... unless cancelled
-   return rc;
-}
-
-//ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
-//and executes ProcessData, on it...
-// uses mMult and offset to normalize a track.
-// mMult must be set before this is called
-bool EffectNormalize::ProcessOne(
-   WaveTrack * track, const wxString &msg, double &progress, float offset)
-{
-   bool rc = true;
-
-   //Transform the marker timepoints to samples
-   auto start = track->TimeToLongSamples(mCurT0);
-   auto end = track->TimeToLongSamples(mCurT1);
-
-   //Get the length of the buffer (as double). len is
-   //used simply to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later
-   auto len = (end - start).as_double();
-
-   //Initiate a processing buffer.  This buffer will (most likely)
-   //be shorter than the length of the track being processed.
-   Floats buffer{ track->GetMaxBlockSize() };
-
-   //Go through the track one buffer at a time. s counts which
-   //sample the current buffer starts at.
-   auto s = start;
-   while (s < end) {
-      //Get a block of samples (smaller than the size of the buffer)
-      //Adjust the block size if it is the final block in the track
-      const auto block = limitSampleBufferSize(
-         track->GetBestBlockSize(s),
-         end - s
-      );
-
-      //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block);
-
-      //Process the buffer.
-      ProcessData(buffer.get(), block, offset);
-
-      //Copy the newly-changed samples back onto the track.
-      track->Set((samplePtr) buffer.get(), floatSample, s, block);
-
-      //Increment s one blockfull of samples
-      s += block;
-
-      //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
-         rc = false; //lda .. break, not return, so that buffer is deleted
-         break;
-      }
-   }
-   progress += 1.0/double(2*GetNumWaveTracks());
 
    //Return true because the effect processing succeeded ... unless cancelled
-   return rc;
+   return true;
 }
 
-/// @see AnalyseDataLoudnessDC
-void EffectNormalize::AnalyseDataDC(float *buffer, size_t len)
+bool EffectNormalize::LoadBufferBlock(TrackIterRange<WaveTrack> range,
+                                      sampleCount pos, size_t len)
 {
-   for(decltype(len) i = 0; i < len; i++)
-      mSum += (double)buffer[i];
-   mCount += len;
-}
-
-#ifdef EXPERIMENTAL_R128_NORM
-/// @see AnalyseDataLoudnessDC
-void EffectNormalize::AnalyseDataLoudness(float *buffer, size_t len)
-{
-   float value;
-   for(decltype(len) i = 0; i < len; i++)
+   sampleCount read_size = -1;
+   // Get the samples from the track and put them in the buffer
+   int idx = 0;
+   for(auto channel : range)
    {
-      value = mR128HSF.ProcessOne(buffer[i]);
-      value = mR128HPF.ProcessOne(value);
-      mSqSum += ((double)value) * ((double)value);
+      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len,
+                   fillZero, true, &read_size);
+      mTrackBufferLen = read_size.as_size_t();
+
+      // Fail if we read different sample count from stereo pair tracks.
+      // Ignore this check during first iteration (read_size == -1).
+      if(read_size.as_size_t() != mTrackBufferLen && read_size != -1)
+         return false;
+
+      ++idx;
    }
-   mCount += len;
+   return true;
 }
 
 /// Calculates sample sum (for DC) and EBU R128 weighted square sum
-/// (for loudness). This function has variants which only calculate
-/// sum or square sum for performance improvements if only one of those
-/// values is required.
-/// @see AnalyseDataLoudness
-/// @see AnalyseDataDC
-void EffectNormalize::AnalyseDataLoudnessDC(float *buffer, size_t len)
+/// (for loudness).
+bool EffectNormalize::AnalyseBufferBlock()
 {
-   float value;
-   for(decltype(len) i = 0; i < len; i++)
+   for(size_t i = 0; i < mTrackBufferLen; i++)
    {
-      mSum += (double)buffer[i];
-      value = mR128HSF.ProcessOne(buffer[i]);
-      value = mR128HPF.ProcessOne(value);
-      mSqSum += ((double)value) * ((double)value);
-   }
-   mCount += len;
-}
-#endif
+      if(mOp & ANALYSE_DC)
+      {
+         mSum[0] += (double)mTrackBuffer[0][i];
+         if(mProcStereo)
+            mSum[1] += (double)mTrackBuffer[1][i];
+      }
+      if(mOp & ANALYSE_LOUDNESS)
+      {
+         double value;
+         value = mR128HSF[0].ProcessOne(mTrackBuffer[0][i]);
+         value = mR128HPF[0].ProcessOne(value);
+         mBlockRingBuffer[mBlockRingPos] = value * value;
+         if(mProcStereo)
+         {
+            value = mR128HSF[1].ProcessOne(mTrackBuffer[1][i]);
+            value = mR128HPF[1].ProcessOne(value);
+            // Add the power of second channel to the power of first channel.
+            // As a result, stereo tracks appear about 3 LUFS louder, as specified.
+            mBlockRingBuffer[mBlockRingPos] += value * value;
+         }
+         ++mBlockRingPos;
+         ++mBlockRingSize;
 
-void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
+         if(mBlockRingPos % mBlockOverlap == 0)
+         {
+            // Process new full block. As incomplete blocks shall be discarded
+            // according to the EBU R128 specification there is no need for
+            // some special logic for the last blocks.
+            if(mBlockRingSize >= mBlockSize)
+            {
+               // Reset mBlockRingSize to full state to avoid overflow.
+               // The actual value of mBlockRingSize does not matter
+               // since this is only used to detect if blocks are complete (>= mBlockSize).
+               mBlockRingSize = mBlockSize;
+
+               size_t idx;
+               double blockVal = 0;
+               for(size_t i = 0; i < mBlockSize; ++i)
+                  blockVal += mBlockRingBuffer[i];
+
+               // Histogram values are simplified log10() immediate values
+               // without -0.691 + 10*(...) to safe computing power. This is
+               // possible because these constant cancel out anyway during the
+               // following processing steps.
+               blockVal = log10(blockVal/double(mBlockSize));
+               // log(blockVal) is within ]-inf, 1]
+               idx = round((blockVal - GAMMA_A) * double(HIST_BIN_COUNT) / -GAMMA_A - 1);
+
+               // idx is within ]-inf, HIST_BIN_COUNT-1], discard indices below 0
+               // as they are below the EBU R128 absolute threshold anyway.
+               if(idx >= 0 && idx < HIST_BIN_COUNT)
+                  ++mLoudnessHist[idx];
+            }
+         }
+         // Close the ring.
+         if(mBlockRingPos == mBlockSize)
+            mBlockRingPos = 0;
+      }
+   }
+   mCount += mTrackBufferLen;
+
+   if(!UpdateProgress())
+      return false;
+   return true;
+}
+
+bool EffectNormalize::ProcessBufferBlock()
 {
-   for(decltype(len) i = 0; i < len; i++) {
-      float adjFrame = (buffer[i] + offset) * mMult;
-      buffer[i] = adjFrame;
+   for(size_t i = 0; i < mTrackBufferLen; i++)
+   {
+      mTrackBuffer[0][i] = (mTrackBuffer[0][i] + mOffset[0]) * mMult;
+      if(mProcStereo)
+         mTrackBuffer[1][i] = (mTrackBuffer[1][i] + mOffset[1]) * mMult;
+   }
+
+   if(!UpdateProgress())
+      return false;
+   return true;
+}
+
+void EffectNormalize::StoreBufferBlock(TrackIterRange<WaveTrack> range,
+                                       sampleCount pos, size_t len)
+{
+   int idx = 0;
+   for(auto channel : range)
+   {
+      // Copy the newly-changed samples back onto the track.
+      channel->Set((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      ++idx;
    }
 }
 
-#ifdef EXPERIMENTAL_R128_NORM
+void EffectNormalize::InitTrackAnalysis(bool dc)
+{
+   mSum[0]   = 0.0; // dc offset inits
+   mSum[0]   = 0.0;
+   mCount = 0;
+
+   mBlockRingPos = 0;
+   mBlockRingSize = 0;
+   memset(mLoudnessHist.get(), 0, HIST_BIN_COUNT*sizeof(long int));
+
+   // Normalize ?
+   if(mGain)
+   {
+      if(mNormalizeTo == kLoudness)
+      {
+         CalcEBUR128HPF(mCurRate);
+         CalcEBUR128HSF(mCurRate);
+         if(dc)
+            mOp = ANALYSE_LOUDNESS_DC;
+         else
+         {
+            mOp = ANALYSE_LOUDNESS;
+            mOffset[0] = 0.0;
+            mOffset[1] = 0.0;
+         }
+      }
+      else if(dc)
+         mOp = ANALYSE_DC;
+   }
+   // Just remove DC ?
+   else if(dc)
+   {
+      mMin[0] = -1.0, mMax[0] = 1.0;   // sensible defaults?
+      mMin[1] = -1.0, mMax[1] = 1.0;
+      mOp = ANALYSE_NONE;
+   }
+   // Do nothing
+   else
+   {
+      mMin[0] = -1.0, mMax[0] = 1.0;   // sensible defaults?
+      mMin[1] = -1.0, mMax[1] = 1.0;
+      mOffset[0] = 0.0;
+      mOffset[1] = 0.0;
+      mOp = ANALYSE_NONE;
+   }
+}
+
 // EBU R128 parameter sampling rate adaption after
 // Mansbridge, Stuart, Saoirse Finn, and Joshua D. Reiss.
 // "Implementation and Evaluation of Autonomous Multi-track Fader Control."
@@ -705,14 +810,24 @@ void EffectNormalize::CalcEBUR128HPF(float fs)
    double Q  =  0.5003270373238773;
    double K  = tan(M_PI * f0 / fs);
 
-   mR128HPF.Reset();
+   mR128HPF[0].Reset();
 
-   mR128HPF.fNumerCoeffs[Biquad::B0] =  1.0;
-   mR128HPF.fNumerCoeffs[Biquad::B1] = -2.0;
-   mR128HPF.fNumerCoeffs[Biquad::B2] =  1.0;
+   mR128HPF[0].fNumerCoeffs[Biquad::B0] =  1.0;
+   mR128HPF[0].fNumerCoeffs[Biquad::B1] = -2.0;
+   mR128HPF[0].fNumerCoeffs[Biquad::B2] =  1.0;
 
-   mR128HPF.fDenomCoeffs[Biquad::A1] = 2.0 * (K * K - 1.0) / (1.0 + K / Q + K * K);
-   mR128HPF.fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
+   mR128HPF[0].fDenomCoeffs[Biquad::A1] = 2.0 * (K * K - 1.0) / (1.0 + K / Q + K * K);
+   mR128HPF[0].fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
+
+   if(mProcStereo)
+   {
+      mR128HPF[1].Reset();
+      mR128HPF[1].fNumerCoeffs[Biquad::B0] = mR128HPF[0].fNumerCoeffs[Biquad::B0];
+      mR128HPF[1].fNumerCoeffs[Biquad::B1] = mR128HPF[0].fNumerCoeffs[Biquad::B1];
+      mR128HPF[1].fNumerCoeffs[Biquad::B2] = mR128HPF[0].fNumerCoeffs[Biquad::B2];
+      mR128HPF[1].fDenomCoeffs[Biquad::A1] = mR128HPF[0].fDenomCoeffs[Biquad::A1];
+      mR128HPF[1].fDenomCoeffs[Biquad::A2] = mR128HPF[0].fDenomCoeffs[Biquad::A2];
+   }
 }
 
 // EBU R128 parameter sampling rate adaption after
@@ -732,16 +847,32 @@ void EffectNormalize::CalcEBUR128HSF(float fs)
 
    double a0 = 1.0 + K / Q + K * K;
 
-   mR128HSF.Reset();
+   mR128HSF[0].Reset();
 
-   mR128HSF.fNumerCoeffs[Biquad::B0] = (Vh + Vb * K / Q + K * K) / a0;
-   mR128HSF.fNumerCoeffs[Biquad::B1] =       2.0 * (K * K -  Vh) / a0;
-   mR128HSF.fNumerCoeffs[Biquad::B2] = (Vh - Vb * K / Q + K * K) / a0;
+   mR128HSF[0].fNumerCoeffs[Biquad::B0] = (Vh + Vb * K / Q + K * K) / a0;
+   mR128HSF[0].fNumerCoeffs[Biquad::B1] =       2.0 * (K * K -  Vh) / a0;
+   mR128HSF[0].fNumerCoeffs[Biquad::B2] = (Vh - Vb * K / Q + K * K) / a0;
 
-   mR128HSF.fDenomCoeffs[Biquad::A1] =   2.0 * (K * K - 1.0) / a0;
-   mR128HSF.fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / a0;
+   mR128HSF[0].fDenomCoeffs[Biquad::A1] =   2.0 * (K * K - 1.0) / a0;
+   mR128HSF[0].fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / a0;
+
+   if(mProcStereo)
+   {
+      mR128HSF[1].Reset();
+      mR128HSF[1].fNumerCoeffs[Biquad::B0] = mR128HSF[0].fNumerCoeffs[Biquad::B0];
+      mR128HSF[1].fNumerCoeffs[Biquad::B1] = mR128HSF[0].fNumerCoeffs[Biquad::B1];
+      mR128HSF[1].fNumerCoeffs[Biquad::B2] = mR128HSF[0].fNumerCoeffs[Biquad::B2];
+      mR128HSF[1].fDenomCoeffs[Biquad::A1] = mR128HSF[0].fDenomCoeffs[Biquad::A1];
+      mR128HSF[1].fDenomCoeffs[Biquad::A2] = mR128HSF[0].fDenomCoeffs[Biquad::A2];
+   }
 }
-#endif
+
+bool EffectNormalize::UpdateProgress()
+{
+   mProgressVal += (double(1+mProcStereo) * double(mTrackBufferLen)
+                 / (double(GetNumWaveTracks()) * double(mSteps) * mTrackLen));
+   return !TotalProgress(mProgressVal, mProgressMsg);
+}
 
 void EffectNormalize::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 {
@@ -750,7 +881,6 @@ void EffectNormalize::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 
 void EffectNormalize::UpdateUI()
 {
-
    if (!mUIParent->TransferDataFromWindow())
    {
       mWarning->SetLabel(_(".  Maximum 0dB."));
@@ -759,13 +889,21 @@ void EffectNormalize::UpdateUI()
    }
    mWarning->SetLabel(wxT(""));
 
-#ifdef EXPERIMENTAL_R128_NORM
    // Changing the prompts causes an unwanted UpdateUI event.  
    // This 'guard' stops that becoming an infinite recursion.
-   if (mUseLoudness != mGUIUseLoudness)
+   if (mNormalizeTo != mGUINormalizeTo)
    {
-      mUseLoudness = mGUIUseLoudness;
-      if (mUseLoudness)
+      mGUINormalizeTo = mNormalizeTo;
+      if (mNormalizeTo == kAmplitude)
+      {
+         FloatingPointValidator<double> vldLevel(2, &mPeakLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
+         vldLevel.SetRange(MIN_PeakLevel, MAX_PeakLevel);
+         mLevelTextCtrl->SetValidator(vldLevel);
+         mLevelTextCtrl->SetName(_("Peak amplitude dB"));
+         mLevelTextCtrl->SetValue(wxString::FromDouble(mPeakLevel));
+         mLeveldB->SetLabel(_("dB"));
+      }
+      else if(mNormalizeTo == kLoudness)
       {
          FloatingPointValidator<double> vldLevel(2, &mLUFSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
          vldLevel.SetRange(MIN_LUFSLevel, MAX_LUFSLevel);
@@ -775,28 +913,29 @@ void EffectNormalize::UpdateUI()
          mLevelTextCtrl->SetValue(wxString::FromDouble(mLUFSLevel));
          /* i18n-hint: LUFS is a particular method for measuring loudnesss */
          mLeveldB->SetLabel(_("LUFS"));
-         mGainCheckBox->SetLabelText(_("Normalize loudness to"));
       }
-      else
+      else // RMS
       {
-         FloatingPointValidator<double> vldLevel(2, &mPeakLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
-         vldLevel.SetRange(MIN_PeakLevel, MAX_PeakLevel);
+         FloatingPointValidator<double> vldLevel(2, &mRMSLevel, NumValidatorStyle::ONE_TRAILING_ZERO);
+         vldLevel.SetRange(MIN_RMSLevel, MAX_RMSLevel);
          mLevelTextCtrl->SetValidator(vldLevel);
-         mLevelTextCtrl->SetName(_("Peak amplitude dB"));
-         mLevelTextCtrl->SetValue(wxString::FromDouble(mPeakLevel));
+         mLevelTextCtrl->SetName(_("RMS dB"));
+         mLevelTextCtrl->SetValue(wxString::FromDouble(mRMSLevel));
          mLeveldB->SetLabel(_("dB"));
-         mGainCheckBox->SetLabelText(_("Normalize peak amplitude to"));
       }
    }
-#endif
 
    // Disallow level stuff if not normalizing
    mLevelTextCtrl->Enable(mGain);
    mLeveldB->Enable(mGain);
    mStereoIndCheckBox->Enable(mGain);
-#ifdef EXPERIMENTAL_R128_NORM
-   mUseLoudnessCheckBox->Enable(mGain);
-#endif
+   mDualMonoCheckBox->Enable(mGain);
+   mNormalizeToCtl->Enable(mGain);
+
+   // Disallow DC removal in RMS mode because this is impossible with a
+   // single analyze pass due to center 2ab term of the binomial formula.
+   // Loudness is immune to this effect because is has highpass characteristic.
+   mDCCheckBox->Enable(mNormalizeTo != kRMS);
 
    // Disallow OK/Preview if doing nothing
    EnableApply(mGain || mDC);
