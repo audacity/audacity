@@ -344,8 +344,7 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
 
-   for ( auto t : p->GetTracks()->Selected< const WaveTrack >() ) {
-      (void)t;// Compiler food;
+   if( p->GetTracks()->Selected< const WaveTrack >() ) {
       mForegroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
       mForegroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }
@@ -360,8 +359,7 @@ void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
 
-   for ( auto t : p->GetTracks()->Selected< const WaveTrack >() ) {
-      (void)t;// Compiler food;
+   if( p->GetTracks()->Selected< const WaveTrack >() ) {
       mBackgroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
       mBackgroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
    }
