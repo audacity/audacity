@@ -311,9 +311,9 @@ void SelectionBar::Populate()
    mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
    // This vertical line is NOT just for decoration!
    // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
-   // into the radiobutton group jumps to selecting the first item in the 
+   // into the radiobutton group jumps to selecting the first item in the
    // group even if some other item had been selected.
-   // It is an important bug to work around for sceen reader users, who use TAB 
+   // It is an important bug to work around for sceen reader users, who use TAB
    // a lot in navigation.
    // More about the bug here:
    // https://forums.wxwidgets.org/viewtopic.php?t=41120
@@ -346,7 +346,7 @@ void SelectionBar::UpdatePrefs()
    // When preferences change, the Project learns about it too.
    // If necessary we can drive the SelectionBar mRate via the Project
    // calling our SetRate().
-   // As of 13-Sep-2018, changes to the sample rate pref will only affect 
+   // As of 13-Sep-2018, changes to the sample rate pref will only affect
    // creation of new projects, not the smaple rate in existing ones.
 
    wxCommandEvent e;
@@ -399,7 +399,7 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
       SetDrivers( mDrive2, newDriver);
 
    // Only update a value if user typed something in.
-   // The reason is the controls may be less accurate than 
+   // The reason is the controls may be less accurate than
    // the values.
    if( newDriver == StartTimeID )
       mStart = mStartTime->GetValue();
@@ -415,7 +415,7 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
    //    length = (end-start)
    // Therefore we can select any two controls as 'drivers' of
    // the other two.
-   // Here we compute 'i' which combines the identity of the two 
+   // Here we compute 'i' which combines the identity of the two
    // driving controls, to use it as an index.
    // The order of the two drivers generally does not matter much,
    // except that we have want:
@@ -590,14 +590,14 @@ void SelectionBar::SetSelectionMode(int mode)
    if( mode < 0 )
       mode = 0;
    mSelectionMode = mode;
-   mChoice->SetSelection( mode ); 
+   mChoice->SetSelection( mode );
 
    // First decide which two controls drive the others...
-   // For example the last option is with all controls shown, and in that mode we 
+   // For example the last option is with all controls shown, and in that mode we
    // initially have start and end driving.
-   int Drive2[] = { StartTimeID, StartTimeID,  LengthTimeID, LengthTimeID, 
+   int Drive2[] = { StartTimeID, StartTimeID,  LengthTimeID, LengthTimeID,
                     StartTimeID, StartTimeID,  StartTimeID,  StartTimeID};
-   int Drive1[] = { EndTimeID,   LengthTimeID, EndTimeID,    CenterTimeID, 
+   int Drive1[] = { EndTimeID,   LengthTimeID, EndTimeID,    CenterTimeID,
                     EndTimeID,   LengthTimeID, EndTimeID,    EndTimeID};
 
    SetDrivers( Drive1[mode], Drive2[mode] );
@@ -609,7 +609,7 @@ void SelectionBar::SetSelectionMode(int mode)
 void SelectionBar::ShowHideControls(int mode)
 {
    // The bits in these say which controls are visible.
-   int masks[8]= { 
+   int masks[8]= {
       9, 5, 12, 6, // 2 items shown
       13, 7, 11,// 3 items shown
       15};
@@ -617,7 +617,7 @@ void SelectionBar::ShowHideControls(int mode)
 
    NumericTextCtrl ** Ctrls[4]  = { &mStartTime,  &mCenterTime,  &mLengthTime,  &mEndTime};
    for(int i=0;i<4;i++){
-      if( *Ctrls[i]) 
+      if( *Ctrls[i])
          (*Ctrls[i])->Show( (mask & (1<<i))!=0 );
    }
 }
@@ -630,6 +630,11 @@ void SelectionBar::ValuesToControls()
    for(i=0;i<5;i++)
       if( *Ctrls[i] )
          (*Ctrls[i])->SetValue( Values[i] );
+
+   #ifdef PRINT_POSITION_TO_STDOUT
+      printf("(seek)%g\n", mAudio);
+      fflush(stdout);
+   #endif
 }
 
 // A time has been set.  Update the control values.

@@ -53,11 +53,11 @@
 
 // These CFG macros allow easy distinction between Audacity and DA defaults.
 #ifdef EXPERIMENTAL_DA
-#define CFG_A( x ) 
+#define CFG_A( x )
 #define CFG_DA( x ) x
 #else
 #define CFG_A( x ) x
-#define CFG_DA( x ) 
+#define CFG_DA( x )
 #endif
 
 
@@ -104,7 +104,7 @@
 // As a minimum, if this is turned on for a release,
 // it should have an easy mechanism to disable it at run-time, such as a menu item or a pref,
 // preferrably disabled until other work is done.  Martyn 22/12/2008.
-// 
+//
 
 // JKC Apr 2015, Menu item to manage effects.
 #define EXPERIMENTAL_EFFECT_MANAGEMENT
@@ -230,6 +230,13 @@
 // Zero-padding factor for spectrograms can smooth the display of spectrograms by
 // interpolating in frequency domain.
 #define EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+
+// Jonatã Bolzan Loss 23 Nov 2017
+// Print cursor position in seconds to stdout, useful if used with some video
+// playback engine, for example. It prints in SelectioBar everytime the
+// timecode is changed, and add a "(seek)" string to make sure it is a
+// position information that is being printed
+//#define PRINT_POSITION_TO_STDOUT
 
 // PRL 11 Jul 2017
 // Highlight more things in TrackPanel when the mouse moves over them,
