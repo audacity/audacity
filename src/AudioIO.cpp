@@ -994,12 +994,10 @@ AudioIO::AudioIO()
       wxASSERT(false);
    }
 
-   // These ASSERTs because of potentially dangerous casting in the callback 
-   // functions where we cast a tempFloats buffer to other things.
+   // This ASSERT because of casting in the callback 
+   // functions where we cast a tempFloats buffer to a (short*) buffer.
    // We have to ASSERT in the GUI thread, if we are to see it properly.
    wxASSERT( sizeof( short ) <= sizeof( float ));
-   wxASSERT( sizeof( samplePtr ) <= sizeof( float ));
-
 
    mAudioThreadShouldCallFillBuffersOnce = false;
    mAudioThreadFillBuffersLoopRunning = false;
@@ -5121,8 +5119,9 @@ bool AudioIO::FillInputBuffers(
          wxPrintf(wxT("lost %d samples\n"), (int)(framesPerBuffer - len));
       }
 
-      // We have some ASSERTs in the AudioIO constructor to alert us to 
-      // possible issues with the (short*) and (samplePtr*) casts
+      // We have an ASSERT in the AudioIO constructor to alert us to 
+      // possible issues with the (short*) cast.  We'd have a problem if
+      // sizeof(short) > sizeof(float) since our buffers are sized for floats.
 
       if (len > 0) {
          for(unsigned t = 0; t < numCaptureChannels; t++) {
@@ -5158,6 +5157,9 @@ bool AudioIO::FillInputBuffers(
             } break;
             } // switch
 
+            // JKC: mCaptureFormat must be for samples with sizeof(float) or
+            // fewer bytes (because tempFloats is sized for floats).  All 
+            // formats are 2 or 4 bytes, so we are OK.
             const auto put =
                mCaptureBuffers[t]->Put(
                   (samplePtr)tempFloats, mCaptureFormat, len);
