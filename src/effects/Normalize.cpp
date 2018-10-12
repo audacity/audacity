@@ -398,8 +398,9 @@ bool EffectNormalize::Process()
 
          if(mNormalizeTo == kLoudness)
          {
-            // Target half the LUFS value if mono shall be treated as dual mono.
-            if(!mProcStereo && mDualMono)
+            // Target half the LUFS value if mono (or independent processed stereo)
+            // shall be treated as dual mono.
+            if(range.size() == 1 && (mDualMono || track->GetChannel() != Track::MonoChannel))
                mMult /= 2.0;
 
             // LUFS are related to square values so the multiplier must be the root.
