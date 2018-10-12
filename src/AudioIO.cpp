@@ -2954,9 +2954,12 @@ std::vector<long> AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
    {
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
-      if (!(isDirectSound && RatesToTry[i] > 200000))
-      if (Pa_IsFormatSupported(NULL, &pars, RatesToTry[i]) == 0)
-         supported.push_back(RatesToTry[i]);
+      if (!(isDirectSound && RatesToTry[i] > 200000)){
+         if (Pa_IsFormatSupported(NULL, &pars, RatesToTry[i]) == 0)
+            supported.push_back(RatesToTry[i]);
+         Pa_Sleep( 10 );// There are ALSA drivers that don't like being probed
+         // too quickly.
+      }
    }
 
    if (irate != 0 && !make_iterator_range(supported).contains(irate))
@@ -2964,8 +2967,8 @@ std::vector<long> AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
-      if (Pa_IsFormatSupported(NULL, &pars, irate) == 0)
-         supported.push_back(irate);
+         if (Pa_IsFormatSupported(NULL, &pars, irate) == 0)
+            supported.push_back(irate);
    }
 
    return supported;
@@ -3021,8 +3024,12 @@ std::vector<long> AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
-      if (Pa_IsFormatSupported(&pars, NULL, RatesToTry[i]) == 0)
-         supported.push_back(RatesToTry[i]);
+      {
+         if (Pa_IsFormatSupported(&pars, NULL, RatesToTry[i]) == 0)
+            supported.push_back(RatesToTry[i]);
+         Pa_Sleep( 10 );// There are ALSA drivers that don't like being probed
+         // too quickly.
+      }
    }
 
    if (irate != 0 && !make_iterator_range(supported).contains(irate))
@@ -3030,8 +3037,8 @@ std::vector<long> AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
-      if (Pa_IsFormatSupported(&pars, NULL, irate) == 0)
-         supported.push_back(irate);
+         if (Pa_IsFormatSupported(&pars, NULL, irate) == 0)
+            supported.push_back(irate);
    }
 
    return supported;
