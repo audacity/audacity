@@ -26,11 +26,12 @@
 class ShuttleGui;
 
 #define NORMALIZE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Normalize") }
+#define LOUDNESS_PLUGIN_SYMBOL  ComponentInterfaceSymbol{ XO("Loudness") }
 
 class EffectNormalize final : public Effect
 {
 public:
-   EffectNormalize();
+   EffectNormalize(bool isLoudness);
    virtual ~EffectNormalize();
 
    // ComponentInterface implementation
@@ -89,6 +90,8 @@ private:
    void UpdateUI();
 
 private:
+   bool   mIsLoudness;
+
    double mPeakLevel;
    double mLUFSLevel;
    double mRMSLevel;

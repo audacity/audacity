@@ -124,7 +124,8 @@
    EFFECT( FADEIN,            EffectFade, (true) )         \
    EFFECT( FADEOUT,           EffectFade, (false) )        \
    EFFECT( INVERT,            EffectInvert, () )           \
-   EFFECT( NORMALIZE,         EffectNormalize, () )        \
+   EFFECT( NORMALIZE,         EffectNormalize, (false) )   \
+   EFFECT( LOUDNESS,          EffectNormalize, (true) )    \
    EFFECT( PHASER,            EffectPhaser, () )           \
    EFFECT( REPAIR,            EffectRepair, () )           \
    EFFECT( REPEAT,            EffectRepeat, () )           \

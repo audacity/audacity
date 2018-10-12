@@ -62,8 +62,10 @@ BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectNormalize::OnUpdateUI)
 END_EVENT_TABLE()
 
-EffectNormalize::EffectNormalize()
+EffectNormalize::EffectNormalize(bool isLoudness)
 {
+   mIsLoudness = isLoudness;
+
    mPeakLevel = DEF_PeakLevel;
    mLUFSLevel = DEF_LUFSLevel;
    mRMSLevel = DEF_RMSLevel;
@@ -84,17 +86,26 @@ EffectNormalize::~EffectNormalize()
 
 ComponentInterfaceSymbol EffectNormalize::GetSymbol()
 {
-   return NORMALIZE_PLUGIN_SYMBOL;
+   if(mIsLoudness)
+      return LOUDNESS_PLUGIN_SYMBOL;
+   else
+      return NORMALIZE_PLUGIN_SYMBOL;
 }
 
 wxString EffectNormalize::GetDescription()
 {
-   return _("Sets the peak amplitude or loudness of one or more tracks");
+   if(mIsLoudness)
+      return _("Sets the peak amplitude or loudness of one or more tracks");
+   else
+      return _("Sets the peak amplitude of one or more tracks");
 }
 
 wxString EffectNormalize::ManualPage()
 {
-   return wxT("Normalize");
+   if(mIsLoudness)
+      return wxT("Loudness");
+   else
+      return wxT("Normalize");
 }
 
 // EffectDefinitionInterface implementation
@@ -434,16 +445,23 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
                // Now make the checkbox.
-               mGainCheckBox = S.AddCheckBox(_("Normalize"),
+               wxString checkboxLabel = mIsLoudness
+                                      ? _("Normalize")
+                                      : _("Normalize peak amplitude to");
+
+               mGainCheckBox = S.AddCheckBox(checkboxLabel,
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
                mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
-               auto targetChoices = LocalizedStrings(kNormalizeTargetStrings, nAlgos);
-               mNormalizeToCtl = S.AddChoice(wxEmptyString, wxT(""), &targetChoices);
-               mNormalizeToCtl->SetValidator(wxGenericValidator(&mNormalizeTo));
-               S.AddVariableText(_("to"), false,
-                                 wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               if(mIsLoudness)
+               {
+                  auto targetChoices = LocalizedStrings(kNormalizeTargetStrings, nAlgos);
+                  mNormalizeToCtl = S.AddChoice(wxEmptyString, wxT(""), &targetChoices);
+                  mNormalizeToCtl->SetValidator(wxGenericValidator(&mNormalizeTo));
+                  S.AddVariableText(_("to"), false,
+                                    wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               }
 
                FloatingPointValidator<double> vldLevel(2, &mPeakLevel,
                                                        NumValidatorStyle::ONE_TRAILING_ZERO);
@@ -463,9 +481,12 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                                mStereoInd ? wxT("true") : wxT("false"));
             mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
 
-            mDualMonoCheckBox = S.AddCheckBox(_("Treat mono as dual-mono (recommended)"),
-                                               mDualMono ? wxT("true") : wxT("false"));
-            mDualMonoCheckBox->SetValidator(wxGenericValidator(&mDualMono));
+            if(mIsLoudness)
+            {
+               mDualMonoCheckBox = S.AddCheckBox(_("Treat mono as dual-mono (recommended)"),
+                                                 mDualMono ? wxT("true") : wxT("false"));
+               mDualMonoCheckBox->SetValidator(wxGenericValidator(&mDualMono));
+            }
          }
          S.EndVerticalLay();
       }
@@ -930,13 +951,16 @@ void EffectNormalize::UpdateUI()
    mLevelTextCtrl->Enable(mGain);
    mLeveldB->Enable(mGain);
    mStereoIndCheckBox->Enable(mGain);
-   mDualMonoCheckBox->Enable(mGain);
-   mNormalizeToCtl->Enable(mGain);
+   if(mIsLoudness)
+   {
+      mDualMonoCheckBox->Enable(mGain && mNormalizeTo == kLoudness);
+      mNormalizeToCtl->Enable(mGain);
 
-   // Disallow DC removal in RMS mode because this is impossible with a
-   // single analyze pass due to center 2ab term of the binomial formula.
-   // Loudness is immune to this effect because is has highpass characteristic.
-   mDCCheckBox->Enable(mNormalizeTo != kRMS);
+      // Disallow DC removal in RMS mode because this is impossible with a
+      // single analyze pass due to center 2ab term of the binomial formula.
+      // Loudness is immune to this effect because is has highpass characteristic.
+      mDCCheckBox->Enable(mNormalizeTo != kRMS);
+   }
 
    // Disallow OK/Preview if doing nothing
    EnableApply(mGain || mDC);
