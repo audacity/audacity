@@ -107,7 +107,7 @@ bool SetTrackBase::Apply(const CommandContext & context  )
 #endif
 
          if( bThisTrack ){
-            ApplyInner( context, t );
+            ApplyInner( context, channel );
          }
          ++j; // count all channels
       }
