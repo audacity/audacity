@@ -501,6 +501,9 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 
 bool EffectNormalize::TransferDataToWindow()
 {
+   // Force mNormalizeTo to kAmplitude if simple GUI is used, just in case.
+   if(mIsLoudness == false)
+      mNormalizeTo = kAmplitude;
    if (!mUIParent->TransferDataToWindow())
    {
       return false;
@@ -517,6 +520,9 @@ bool EffectNormalize::TransferDataFromWindow()
    {
       return false;
    }
+   // Force mNormalizeTo to kAmplitude if simple GUI is used, just in case.
+   if(mIsLoudness == false)
+      mNormalizeTo = kAmplitude;
 
    return true;
 }
