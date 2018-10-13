@@ -73,8 +73,8 @@ bool FileNames::HardLinkFile( const wxString& file1, const wxString& file2 )
 {
 #ifdef __WXMSW__
 
-   // return ::CreateHardLinkA( file1.c_str(), file2.c_str(), NULL );
-   return false;
+   return ::CreateHardLinkA( file1.c_str(), file2.c_str(), NULL );
+   //return false;
 
 #else
 
