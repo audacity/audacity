@@ -616,13 +616,30 @@ DirManager::ProjectSetter::Impl::Impl(
    if (bCreate)
       dirCleaner.create( committed, dirManager.projFull );
 
-   /* Move all files into this NEW directory.  Files which are
-      "locked" get copied instead of moved.  (This happens when
-      we perform a Save As - the files which belonged to the last
-      saved version of the old project must not be moved,
-      otherwise the old project would not be safe.) */
+   /* Hard-link or copy all files into this NEW directory.
 
-   moving = true;
+      If any files are "locked" then all get copied.  (This happens when
+      we perform a Save As - the files which belonged to the last
+      saved version of the old project must not be removed because of operations
+      on the NEW project, otherwise the old project would not be safe.)
+
+      Copy also happens anyway when hard file links are not possible, as when
+      saving the project for the first time out of temporary storage and onto
+      some other storage device.
+
+      Renaming would also be cheap like hard-linking, but linking is better
+      because it builds up a new tree of files without destroying anything in
+      the old tree.  That destruction can be left to a commit phase which
+      proceeds only when all the building of the new tree has succeeded.
+      */
+
+   moving = ! std::any_of(
+      dirManager.mBlockFileHash.begin(), dirManager.mBlockFileHash.end(),
+      []( const BlockHash::value_type &pair ){
+         auto b = pair.second.lock();
+         return b && b->IsLocked();
+      }
+   );
    trueTotal = 0;
 
    {
@@ -633,14 +650,15 @@ DirManager::ProjectSetter::Impl::Impl(
 
       int total = dirManager.mBlockFileHash.size();
 
+      bool link = moving;
       for (const auto &pair : dirManager.mBlockFileHash) {
          if( progress.Update(newPaths.size(), total) != ProgressResult::Success )
             return;
 
          wxString newPath;
          if (auto b = pair.second.lock()) {
-            moving = moving && !b->IsLocked();
-            auto result = dirManager.CopyToNewProjectDirectory( &*b );
+            auto result =
+               dirManager.LinkOrCopyToNewProjectDirectory( &*b, link );
             if (!result.first)
                return;
             newPath = result.second;
@@ -1402,7 +1420,8 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
+std::pair<bool, wxString> DirManager::LinkOrCopyToNewProjectDirectory(
+   BlockFile *f, bool &link )
 {
    wxString newPath;
    auto result = f->GetFileName();
@@ -1430,7 +1449,12 @@ std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
       bool summaryExisted = f->IsSummaryAvailable();
       auto oldPath = oldFileNameRef.GetFullPath();
       if (summaryExisted) {
-         auto success = FileNames::CopyFile(oldPath, newPath);
+         bool success = false;
+         if (link)
+            success = FileNames::HardLinkFile( oldPath, newPath );
+         if (!success)
+             link = false,
+             success = FileNames::CopyFile( oldPath, newPath );
          if (!success)
             return { false, {} };
       }
