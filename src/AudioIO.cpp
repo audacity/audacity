@@ -17,6 +17,15 @@
 
 ********************************************************************//**
 
+\class AudioIoCallback
+\brief AudioIoCallback is a class that implements the callback required 
+by PortAudio.  The callback needs to be responsive, has no GUI, and 
+copies data into and out of the sound card buffers.  It also sends data
+to the meters.
+
+
+*//*****************************************************************//**
+
 \class AudioIO
 \brief AudioIO uses the PortAudio library to play and record sound.
 
@@ -487,14 +496,14 @@ wxDEFINE_EVENT(EVT_AUDIOIO_CAPTURE, wxCommandEvent);
 wxDEFINE_EVENT(EVT_AUDIOIO_MONITOR, wxCommandEvent);
 
 // static
-int AudioIO::mNextStreamToken = 0;
-int AudioIO::mCachedPlaybackIndex = -1;
-std::vector<long> AudioIO::mCachedPlaybackRates;
-int AudioIO::mCachedCaptureIndex = -1;
-std::vector<long> AudioIO::mCachedCaptureRates;
-std::vector<long> AudioIO::mCachedSampleRates;
-double AudioIO::mCachedBestRateIn = 0.0;
-double AudioIO::mCachedBestRateOut;
+int AudioIoCallback::mNextStreamToken = 0;
+int AudioIoCallback::mCachedPlaybackIndex = -1;
+std::vector<long> AudioIoCallback::mCachedPlaybackRates;
+int AudioIoCallback::mCachedCaptureIndex = -1;
+std::vector<long> AudioIoCallback::mCachedCaptureRates;
+std::vector<long> AudioIoCallback::mCachedSampleRates;
+double AudioIoCallback::mCachedBestRateIn = 0.0;
+double AudioIoCallback::mCachedBestRateOut;
 
 enum {
    // This is the least positive latency we can
@@ -522,7 +531,7 @@ constexpr size_t TimeQueueGrainSize = 2000;
 #endif
 
 
-struct AudioIO::ScrubState
+struct AudioIoCallback::ScrubState
 {
    ScrubState(double t0,
               double rate,
@@ -2712,7 +2721,7 @@ void AudioIO::SetPaused(bool state)
    mPaused = state;
 }
 
-bool AudioIO::IsPaused() const
+bool AudioIoCallback::IsPaused() const
 {
    return mPaused;
 }
@@ -3253,7 +3262,7 @@ size_t AudioIO::GetCommonlyFreePlayback()
    return commonlyAvail - std::min(size_t(10), commonlyAvail);
 }
 
-size_t AudioIO::GetCommonlyReadyPlayback()
+size_t AudioIoCallback::GetCommonlyReadyPlayback()
 {
    if (mPlaybackTracks.empty())
       return 0;
@@ -4709,7 +4718,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 }
 
 
-void AudioIO::ComputeMidiTimings(
+void AudioIoCallback::ComputeMidiTimings(
    const PaStreamCallbackTimeInfo *timeInfo,
    unsigned long framesPerBuffer
    )
@@ -4792,9 +4801,6 @@ void AudioIO::ComputeMidiTimings(
 #endif
 }
 
-void AudioIO::ComputeAudibilities(){
-}
-
 // Stop recording if 'silence' is detected
 // Start recording if sound detected.
 //
@@ -4802,7 +4808,7 @@ void AudioIO::ComputeAudibilities(){
 //   to run in the main GUI thread after the next event loop iteration.
 //   That's important, because Pause() updates GUI, such as status bar,
 //   and that should NOT happen in this audio non-gui thread.
-void AudioIO::CheckSoundActivatedRecordingLevel( )
+void AudioIoCallback::CheckSoundActivatedRecordingLevel( )
 {
    if(mPauseRec && mInputMeter) {
       bool bShouldBePaused = mInputMeter->GetMaxPeak() < mSilenceLevel;
@@ -4818,7 +4824,7 @@ void AudioIO::CheckSoundActivatedRecordingLevel( )
 //
 // Mix and copy to PortAudio's output buffer
 //
-bool AudioIO::FillOutputBuffers(
+bool AudioIoCallback::FillOutputBuffers(
    const void *inputBuffer, 
    void *outputBuffer,
    unsigned long framesPerBuffer,
@@ -5065,7 +5071,7 @@ bool AudioIO::FillOutputBuffers(
 //
 // Copy from PortAudio to our input buffers.
 //
-bool AudioIO::FillInputBuffers(
+bool AudioIoCallback::FillInputBuffers(
    const void *inputBuffer, 
    unsigned long framesPerBuffer,
    const PaStreamCallbackFlags statusFlags,
@@ -5213,7 +5219,7 @@ bool AudioIO::FillInputBuffers(
 // return true, IFF we have fully handled the callback.
 // No tracks to play, but we should clear the output, and
 // possibly do software playthrough...
-bool AudioIO::OnlyDoPlaythrough(
+bool AudioIoCallback::OnlyDoPlaythrough(
       const void *inputBuffer, 
       void *outputBuffer,
       unsigned long framesPerBuffer,
@@ -5247,7 +5253,7 @@ bool AudioIO::OnlyDoPlaythrough(
 }
 
 // Also computes rms
-void AudioIO::SendVuInputMeterData(
+void AudioIoCallback::SendVuInputMeterData(
    float *tempFloats,
    const void *inputBuffer,
    unsigned long framesPerBuffer   
@@ -5288,7 +5294,7 @@ void AudioIO::SendVuInputMeterData(
    }  // end recording VU meter update
 }
 
-void AudioIO::SendVuOutputMeterData(
+void AudioIoCallback::SendVuOutputMeterData(
    float *outputMeterFloats,
    unsigned long framesPerBuffer)
 {
@@ -5331,7 +5337,7 @@ void AudioIO::SendVuOutputMeterData(
 
 }
 
-unsigned AudioIO::CountSoloingTracks(){
+unsigned AudioIoCallback::CountSoloingTracks(){
    const auto numPlaybackTracks = mPlaybackTracks.size();
 
    // MOVE_TO: CountSoloedTracks() function
@@ -5354,7 +5360,7 @@ unsigned AudioIO::CountSoloingTracks(){
 // true IFF the track should be silent. 
 // The track may not yet be silent, since it may still be
 // fading out.
-bool AudioIO::TrackShouldBeSilent( const WaveTrack &wt )
+bool AudioIoCallback::TrackShouldBeSilent( const WaveTrack &wt )
 {
    return mPaused || (!wt.GetSolo() && (
       // Cut if somebody else is soloing
@@ -5365,7 +5371,7 @@ bool AudioIO::TrackShouldBeSilent( const WaveTrack &wt )
 }
 
 // This is about micro-fades.
-bool AudioIO::TrackHasBeenFadedOut( const WaveTrack &wt )
+bool AudioIoCallback::TrackHasBeenFadedOut( const WaveTrack &wt )
 {
    const auto channel = wt.GetChannelIgnoringPan();
    if ((channel == Track::LeftChannel  || channel == Track::MonoChannel) &&
@@ -5377,7 +5383,7 @@ bool AudioIO::TrackHasBeenFadedOut( const WaveTrack &wt )
    return true;
 }
 
-bool AudioIO::AllTracksAlreadySilent()
+bool AudioIoCallback::AllTracksAlreadySilent()
 {
    const bool dropAllQuickly = std::all_of(
       mPlaybackTracks.begin(), mPlaybackTracks.end(),
@@ -5399,7 +5405,7 @@ bool AudioIO::AllTracksAlreadySilent()
 // this callback, and so the next time round 'AllTracksAlreadySilent' will be true.
 // All this logic will be easier when we shift over to working with gains that
 // go to zero, and not flags.
-bool AudioIO::QuickSilentPlayback(const void *inputBuffer, void *outputBuffer,
+bool AudioIoCallback::QuickSilentPlayback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer)
 {
    const auto numPlaybackTracks = mPlaybackTracks.size();
@@ -5424,9 +5430,17 @@ bool AudioIO::QuickSilentPlayback(const void *inputBuffer, void *outputBuffer,
    return false;
 }
 
+AudioIoCallback::AudioIoCallback()
+{
+}
 
 
-int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
+AudioIoCallback::~AudioIoCallback()
+{
+}
+
+
+int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer,
                           const PaStreamCallbackTimeInfo *timeInfo,
                           const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
@@ -5519,7 +5533,7 @@ int AudioIO::AudioCallback(const void *inputBuffer, void *outputBuffer,
    return mCallbackReturn;
 }
 
-PaStreamCallbackResult AudioIO::CallbackDoSeek()
+PaStreamCallbackResult AudioIoCallback::CallbackDoSeek()
 {
    const int token = mStreamToken;
    wxMutexLocker locker(mSuspendAudioThread);
@@ -5570,7 +5584,7 @@ PaStreamCallbackResult AudioIO::CallbackDoSeek()
    return paContinue;
 }
 
-void AudioIO::CallbackCheckCompletion(
+void AudioIoCallback::CallbackCheckCompletion(
    int &callbackReturn, unsigned long len)
 {
    if (mPaused)
