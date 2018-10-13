@@ -14,51 +14,13 @@
 #include "Experimental.h"
 
 
+
 struct MenuCommandHandler : public wxEvtHandler {
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-// Formerly members of AudacityProject, now members of MenuCommandHandler
-
-
-// Command Handling
-bool ReportIfActionNotAllowed
-   ( AudacityProject &project,
-     const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
-bool TryToMakeActionAllowed
-   ( AudacityProject &project,
-     CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
-
-void UpdatePrefs();
-
-void CreateMenusAndCommands(AudacityProject &project);
-void PopulateMacrosMenu( CommandManager* c, CommandFlag flags );
-
-void PopulateEffectsMenu(CommandManager *c, EffectType type,
-                         CommandFlag batchflags, CommandFlag realflags);
-void AddEffectMenuItems(CommandManager *c,
-                        std::vector<const PluginDescriptor*> & plugs,
-                        CommandFlag batchflags, CommandFlag realflags, bool isDefault);
-void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names,
-                            const std::vector<bool> &vHasDialog,
-                            const PluginIDList & plugs,
-                            const std::vector<CommandFlag> & flags, bool isDefault);
-void CreateRecentFilesMenu(CommandManager *c);
-void ModifyUndoMenuItems(AudacityProject &project);
-void ModifyToolbarMenus(AudacityProject &project);
-void RebuildMenuBar(AudacityProject &project);
-// Calls ModifyToolbarMenus() on all projects
-void ModifyAllProjectToolbarMenus();
-
-// checkActive is a temporary hack that should be removed as soon as we
-// get multiple effect preview working
-void UpdateMenus(AudacityProject &project, bool checkActive = true);
-
 CommandFlag GetFocusedFrame(AudacityProject &project);
 
-// If checkActive, do not do complete flags testing on an
-// inactive project as it is needlessly expensive.
-CommandFlag GetUpdateFlags(AudacityProject &project, bool checkActive = false);
 
 
 //Adds label and returns index of label in labeltrack.
@@ -619,30 +581,80 @@ double OffsetTime(const CommandContext &context,
 // Helper for moving by keyboard with snap-to-grid enabled
 double GridMove(AudacityProject &project, double t, int minPix);
 
-// Last effect applied to this project
-PluginID mLastEffect{};
    
-// Recent files
-wxMenu *mRecentFilesMenu;
 
-CommandFlag mLastFlags;
 
+
+public:
+// Last effect applied to this project
+   PluginID mLastEffect{};
+   CommandFlag mLastFlags;
 // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-int  mWhatIfNoSelection;
+   int  mWhatIfNoSelection;
+   bool mStopIfWasPaused;
+   double mSeekShort;
+   double mSeekLong;
+   bool mCircularTrackNavigation{};
+   wxLongLong mLastSelectionAdjustment;
 
-bool mStopIfWasPaused;
-
-bool mCircularTrackNavigation{};
-
-double mSeekShort;
-double mSeekLong;
-
-wxLongLong mLastSelectionAdjustment;
 
 };
 
+class MenuCreator : public MenuCommandHandler
+{
+public:
+   MenuCreator();
+   ~MenuCreator();
+   void CreateMenusAndCommands(AudacityProject &project);
+   void RebuildMenuBar(AudacityProject &project);
 
-MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
+   void PopulateMacrosMenu( CommandManager* c, CommandFlag flags );
+
+   void PopulateEffectsMenu(CommandManager *c, EffectType type,
+                            CommandFlag batchflags, CommandFlag realflags);
+   void AddEffectMenuItems(CommandManager *c,
+                           std::vector<const PluginDescriptor*> & plugs,
+                           CommandFlag batchflags, CommandFlag realflags, bool isDefault);
+   void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names,
+                               const std::vector<bool> &vHasDialog,
+                               const PluginIDList & plugs,
+                               const std::vector<CommandFlag> & flags, bool isDefault);
+   void CreateRecentFilesMenu(CommandManager *c);
+
+public:
+// Recent files
+   wxMenu *mRecentFilesMenu;
+
+};
+
+class MenuManager : public MenuCreator
+{
+public:
+   static void ModifyUndoMenuItems(AudacityProject &project);
+   static void ModifyToolbarMenus(AudacityProject &project);
+   // Calls ModifyToolbarMenus() on all projects
+   static void ModifyAllProjectToolbarMenus();
+
+   // checkActive is a temporary hack that should be removed as soon as we
+   // get multiple effect preview working
+   void UpdateMenus(AudacityProject &project, bool checkActive = true);
+
+   // If checkActive, do not do complete flags testing on an
+   // inactive project as it is needlessly expensive.
+   CommandFlag GetUpdateFlags(AudacityProject &project, bool checkActive = false);
+   void UpdatePrefs();
+
+   // Command Handling
+   bool ReportIfActionNotAllowed
+      ( AudacityProject &project,
+        const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+   bool TryToMakeActionAllowed
+      ( AudacityProject &project,
+        CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+};
+
+
+MenuManager &GetMenuCommandHandler(AudacityProject &project);
 
 #endif
 

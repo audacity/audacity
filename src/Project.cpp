@@ -979,7 +979,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Initialize view info (shared with TrackPanel)
    //
 
-   mMenuCommandHandler = std::make_unique<MenuCommandHandler>();
+   mMenuCommandHandler = std::make_unique<MenuManager>();
 
    UpdatePrefs();
 
@@ -2268,7 +2268,7 @@ void AudacityProject::DoScroll()
          GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
-bool MenuCommandHandler::ReportIfActionNotAllowed
+bool MenuManager::ReportIfActionNotAllowed
 ( AudacityProject &project,
   const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
@@ -2285,14 +2285,14 @@ bool MenuCommandHandler::ReportIfActionNotAllowed
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
-bool MenuCommandHandler::TryToMakeActionAllowed
+bool MenuManager::TryToMakeActionAllowed
 ( AudacityProject &project,
   CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
    bool bAllowed;
 
    if( !flags )
-      flags = GetUpdateFlags(project);
+      flags = GetMenuCommandHandler(project).GetUpdateFlags(project);
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    if( bAllowed )
@@ -2305,7 +2305,7 @@ bool MenuCommandHandler::TryToMakeActionAllowed
    if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
       project.StopIfPaused();
       // Hope this will now reflect stopped audio.
-      flags = GetUpdateFlags(project);
+      flags = GetMenuCommandHandler(project).GetUpdateFlags(project);
       bAllowed = ((flags & mask) == (flagsRqd & mask));
       if( bAllowed )
          return true;
@@ -2335,7 +2335,7 @@ bool MenuCommandHandler::TryToMakeActionAllowed
    // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
    // selecting all tracks is enough, we just do that.
    GetMenuCommandHandler(project).OnSelectSomething(project);
-   flags = GetUpdateFlags(project);
+   flags = GetMenuCommandHandler(project).GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
 }

@@ -811,10 +811,10 @@ private:
 #endif
 
 private:
-   std::unique_ptr<MenuCommandHandler> mMenuCommandHandler;
+   std::unique_ptr<MenuManager> mMenuCommandHandler;
 
 public:
-   friend MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
+   friend MenuManager &GetMenuCommandHandler(AudacityProject &project);
 
    class PlaybackScroller final : public wxEvtHandler
    {
