@@ -474,59 +474,147 @@ void DirManager::CleanDir(
    RecursivelyRemove(dirPathArray, count, countFiles, flags | kCleanDirs, msg);
 }
 
-bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
-{
-   bool moving = true;
-   wxString oldPath = this->projPath;
-   wxString oldName = this->projName;
-   wxString oldFull = projFull;
-   wxString oldLoc = projFull;
-   if (oldLoc == wxT(""))
-      oldLoc = mytemp;
+namespace {
+   struct PathRestorer {
+      PathRestorer(
+         bool &commitFlag, wxString &path, wxString &name, wxString &full )
+         : committed( commitFlag )
 
+         , projPath( path )
+         , projName( name )
+         , projFull( full )
+
+         , oldPath( path )
+         , oldName( name )
+         , oldFull( full )
+      {}
+      
+      ~PathRestorer()
+      {
+         if (!committed)
+            projFull = oldFull, projName = oldName, projPath = oldPath;
+      }
+
+      bool &committed;
+      wxString &projPath, &projName, &projFull;
+      const wxString oldPath, oldName, oldFull;
+   };
+
+   struct DirCleaner {
+      DirCleaner( bool &commitFlag, const wxString &path )
+         : committed( commitFlag )
+         , fullPath( path )
+      {}
+      ~DirCleaner()
+      {
+         if (!committed)
+            DirManager::CleanDir(
+               fullPath,
+               wxEmptyString,
+               wxEmptyString,
+               _("Cleaning up after failed save"),
+               kCleanTopDirToo);
+      }
+
+      bool &committed;
+      wxString fullPath;
+   };
+}
+
+struct DirManager::ProjectSetter::Impl
+{
+   Impl(
+      DirManager &dm,
+      wxString& newProjPath, const wxString& newProjName, const bool bCreate );
+
+   void Commit();
+
+   DirManager &dirManager;
+   bool committed{ false };
+
+   // RAII object
+   // Save old state of paths in case of failure
+   PathRestorer pathRestorer{
+      committed,
+      dirManager.projPath, dirManager.projName, dirManager.projFull };
+
+   // Another RAII object
+   // Be prepared to un-create directory on failure
+   Maybe<DirCleaner> dirCleaner;
+   
+   // State variables to carry over into Commit()
+   // Remember old path to be cleaned up in case of successful move
+   wxString oldFull{ dirManager.projFull };
+   wxArrayString newPaths;
+   size_t trueTotal{ 0 };
+   bool moving{ true };
+
+   // Make this true only after successful construction
+   bool ok{ false };
+};
+
+DirManager::ProjectSetter::ProjectSetter(
+   DirManager &dirManager,
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate )
+   : mpImpl{
+      std::make_unique<Impl>( dirManager, newProjPath, newProjName, bCreate )
+   }
+{
+   
+}
+
+DirManager::ProjectSetter::~ProjectSetter()
+{
+}
+
+bool DirManager::ProjectSetter::Ok()
+{
+   return mpImpl->ok;
+}
+
+
+void DirManager::ProjectSetter::Commit()
+{
+   mpImpl->Commit();
+}
+
+DirManager::ProjectSetter::Impl::Impl(
+   DirManager &dm,
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate )
+: dirManager{ dm }
+{
+   // Choose new paths
    if (newProjPath == wxT(""))
       newProjPath = ::wxGetCwd();
 
-   this->projPath = newProjPath;
-   this->projName = newProjName;
+   dirManager.projPath = newProjPath;
+   dirManager.projName = newProjName;
    if (newProjPath.Last() == wxFILE_SEP_PATH)
-      this->projFull = newProjPath + newProjName;
+      dirManager.projFull = newProjPath + newProjName;
    else
-      this->projFull = newProjPath + wxFILE_SEP_PATH + newProjName;
+      dirManager.projFull = newProjPath + wxFILE_SEP_PATH + newProjName;
 
-   wxString cleanupLoc1=oldLoc;
-   wxString cleanupLoc2=projFull;
-
-   bool created = false;
-
+   // Verify new paths, maybe creating a directory
    if (bCreate) {
-      if (!wxDirExists(projFull)) {
-         if (!wxMkdir(projFull)) {
-            this->projFull = oldFull;
-            this->projPath = oldPath;
-            this->projName = oldName;
-            return false;
-         }
-         else
-            created = true;
-      }
+      if (!wxDirExists(dirManager.projFull) &&
+          !wxMkdir(dirManager.projFull))
+         return;
 
       #ifdef __UNIX__
-      chmod(OSFILENAME(projFull), 0775);
+      chmod(OSFILENAME(dirManager.projFull), 0775);
       #endif
 
       #ifdef __WXMAC__
-      chmod(OSFILENAME(projFull), 0775);
+      chmod(OSFILENAME(dirManager.projFull), 0775);
       #endif
 
-   } else {
-      if (!wxDirExists(projFull)) {
-         this->projFull = oldFull;
-         this->projPath = oldPath;
-         this->projName = oldName;
-         return false;
-      }
    }
+   else if (!wxDirExists(dirManager.projFull))
+      return;
+
+   // Be prepared to un-create directory on failure
+   if (bCreate)
+      dirCleaner.create( committed, dirManager.projFull );
 
    /* Move all files into this NEW directory.  Files which are
       "locked" get copied instead of moved.  (This happens when
@@ -534,111 +622,86 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       saved version of the old project must not be moved,
       otherwise the old project would not be safe.) */
 
-   int trueTotal = 0;
+   moving = true;
+   trueTotal = 0;
 
    {
-      /*i18n-hint: This title appears on a dialog that indicates the progress in doing something.*/
+      /* i18n-hint: This title appears on a dialog that indicates the progress
+         in doing something.*/
       ProgressDialog progress(_("Progress"),
          _("Saving project data files"));
 
-      int total = mBlockFileHash.size();
+      int total = dirManager.mBlockFileHash.size();
 
-      bool success = true;
-      int count = 0;
-      wxArrayString newPaths;
-      for (const auto &pair : mBlockFileHash)
-      {
+      for (const auto &pair : dirManager.mBlockFileHash) {
+         if( progress.Update(newPaths.size(), total) != ProgressResult::Success )
+            return;
+
          wxString newPath;
-         BlockFilePtr b = pair.second.lock();
-         if (b) {
-            // FIXME: TRAP_ERR
-            // JKC: The 'success' variable and recovery strategy looks 
-            // broken/bogus to me.  Would need to be using &= to catch 
-            // failure in one of the copies/moves.  Besides which,
-            // our temporary files are going to be deleted when we exit 
-            // anyway, if saving from temporary to named project.
-
-            if( progress.Update(count, total) != ProgressResult::Success )
-               success = false;
-            else {
-               moving = moving && !b->IsLocked();
-               auto result = CopyToNewProjectDirectory( &*b );
-               success = result.first;
-               newPath = result.second;
-            }
-
-            if (success) {
-               count++;
-            }
-            else
-               break;
+         if (auto b = pair.second.lock()) {
+            moving = moving && !b->IsLocked();
+            auto result = dirManager.CopyToNewProjectDirectory( &*b );
+            if (!result.first)
+               return;
+            newPath = result.second;
+            ++trueTotal;
          }
-
          newPaths.push_back( newPath );
       }
+   }
 
-      // in case there are any nulls
-      trueTotal = count;
+   ok = true;
+}
 
-      if (success) {
-         auto size = newPaths.size();
-         wxASSERT( size == mBlockFileHash.size() );
+void DirManager::ProjectSetter::Impl::Commit()
+{
+   wxASSERT( ok );
 
-         // Commit changes to filenames in the BlockFile objects, and removal
-         // of files at old paths, ONLY NOW!  This must be nothrow.
+   // We have built all of the new file tree.
+   // So cancel the destructor actions of the RAII objects.
+   committed = true;
 
-         // This copy-then-delete procedure is needed to make it safe to
-         // attempt save to another storage device, but fail.
+   auto size = newPaths.size();
+   wxASSERT( size == dirManager.mBlockFileHash.size() );
 
-         // It has the consequence that saving a project from one part of
-         // the device to another will not succeed unless there is sufficient
-         // space to hold originals and copies at the same time.  Perhaps the
-         // extra cautions are not needed in that case, and the old procedure
-         // of renaming first, and reversing the renamings in case of failure,
-         // could still work safely.
+   // Commit changes to filenames in the BlockFile objects, and removal
+   // of files at old paths, ONLY NOW!  This must be nothrow.
 
-         // But I don't know whether wxWidgets gives us a reliable means to
-         // distinguish that case.
+   // This copy-then-delete procedure is needed to make it safe to
+   // attempt save to another storage device, but fail.
 
-         // I will err on the side of safety and simplicity and follow the
-         // same procedure in all cases.
+   // It has the consequence that saving a project from one part of
+   // the device to another will not succeed unless there is sufficient
+   // space to hold originals and copies at the same time.  Perhaps the
+   // extra cautions are not needed in that case, and the old procedure
+   // of renaming first, and reversing the renamings in case of failure,
+   // could still work safely.
 
-         size_t ii = 0;
-         for (const auto &pair : mBlockFileHash)
-         {
-            BlockFilePtr b = pair.second.lock();
+   // But I don't know whether wxWidgets gives us a reliable means to
+   // distinguish that case.
 
-            if (b) {
-               if (moving || !b->IsLocked()) {
-                  auto result = b->GetFileName();
-                  oldPath = result.name.GetFullPath();
-                  if (!oldPath.empty())
-                     wxRemoveFile( oldPath );
-               }
+   // I will err on the side of safety and simplicity and follow the
+   // same procedure in all cases.
 
-               if (ii < size)
-                  b->SetFileName(
-                     wxFileNameWrapper{ wxFileName{ newPaths[ii] } } );
-            }
+   size_t ii = 0;
+   for (const auto &pair : dirManager.mBlockFileHash)
+   {
+      BlockFilePtr b = pair.second.lock();
 
-            ++ii;
+      if (b) {
+         if (moving || !b->IsLocked()) {
+            auto result = b->GetFileName();
+            auto oldPath = result.name.GetFullPath();
+            if (!oldPath.empty())
+               wxRemoveFile( oldPath );
          }
-      }
-      else {
-         this->projFull = oldFull;
-         this->projPath = oldPath;
-         this->projName = oldName;
 
-         if (created)
-            CleanDir(
-               cleanupLoc2,
-               wxEmptyString,
-               wxEmptyString,
-               _("Cleaning up after failed save"),
-               kCleanTopDirToo);
-
-         return false;
+         if (ii < size)
+            b->SetFileName(
+               wxFileNameWrapper{ wxFileName{ newPaths[ii] } } );
       }
+
+      ++ii;
    }
 
    // Some subtlety; SetProject is used both to move a temp project
@@ -661,6 +724,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       // that we didn't put there, but that Finder may insert into the folders,
       // and mercilessly remove them, in addition to removing the directories.
 
+      auto cleanupLoc1 = oldFull.empty() ? dirManager.mytemp : oldFull;
       CleanDir(
          cleanupLoc1, 
          wxEmptyString, // EmptyString => ALL directories.
@@ -673,6 +737,15 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
       //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
    }
+}
+
+bool DirManager::SetProject(
+   wxString& newProjPath, const wxString& newProjName, const bool bCreate)
+{
+   ProjectSetter setter{ *this, newProjPath, newProjName, bCreate };
+   if (!setter.Ok())
+      return false;
+   setter.Commit();
    return true;
 }
 
