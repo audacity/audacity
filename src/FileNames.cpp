@@ -69,6 +69,20 @@ bool FileNames::CopyFile(
 #endif
 }
 
+bool FileNames::HardLinkFile( const wxString& file1, const wxString& file2 )
+{
+#ifdef __WXMSW__
+
+   // return ::CreateHardLinkA( file1.c_str(), file2.c_str(), NULL );
+   return false;
+
+#else
+
+   return 0 == ::link( file1.c_str(), file2.c_str() );
+
+#endif
+}
+
 wxString FileNames::MkDir(const wxString &Str)
 {
    // Behaviour of wxFileName::DirExists() and wxFileName::MkDir() has

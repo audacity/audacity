@@ -27,6 +27,11 @@ public:
    static bool CopyFile(
       const wxString& file1, const wxString& file2, bool overwrite = true);
 
+   // wxWidgets doesn't have a function to do this:  make a hard file-system
+   // link if possible.  It might not be, as when the paths are on different
+   // storage devices.
+   static bool HardLinkFile( const wxString& file1, const wxString& file2);
+
    static wxString MkDir(const wxString &Str);
    static wxString TempDir();
 
