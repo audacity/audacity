@@ -4840,21 +4840,6 @@ bool AudioIoCallback::FillOutputBuffers(
    if( outputBuffer && (numPlaybackChannels > 0) )
    {
       float *outputFloats = (float *)outputBuffer;
-      for( unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
-         outputFloats[i] = 0.0;
-
-      if (inputBuffer && mSoftwarePlaythrough) {
-         DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
-                                 numCaptureChannels,
-                                 (float *)outputBuffer, (int)framesPerBuffer);
-      }
-
-      // Copy the results to outputMeterFloats if necessary
-      if (outputMeterFloats != outputFloats) {
-         for (unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; ++i) {
-            outputMeterFloats[i] = outputFloats[i];
-         }
-      }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
       // While scrubbing, ignore seek requests
@@ -5217,9 +5202,8 @@ bool AudioIoCallback::FillInputBuffers(
 
 
 // return true, IFF we have fully handled the callback.
-// No tracks to play, but we should clear the output, and
-// possibly do software playthrough...
-bool AudioIoCallback::OnlyDoPlaythrough(
+// Prime the output buffer with 0's, optionally adding in the playthrough.
+bool AudioIoCallback::DoPlaythrough(
       const void *inputBuffer, 
       void *outputBuffer,
       unsigned long framesPerBuffer,
@@ -5395,41 +5379,6 @@ bool AudioIoCallback::AllTracksAlreadySilent()
    return dropAllQuickly;
 }
 
-// return true, IFF we have fully handled the callback.
-//
-// This is a quick route, when paused and already at zero level on all channels.
-// However, we always fade-out into a pause, hence the 'AllTracksAlreadySilent' test
-// Net result is we may pause one frame later than requested, if we can't drop
-// all channels quickly (because some are not yet down to zero gain).
-// Note that if we are paused, the gain will be dropped to zero by the end of
-// this callback, and so the next time round 'AllTracksAlreadySilent' will be true.
-// All this logic will be easier when we shift over to working with gains that
-// go to zero, and not flags.
-bool AudioIoCallback::QuickSilentPlayback(const void *inputBuffer, void *outputBuffer,
-                          unsigned long framesPerBuffer)
-{
-   const auto numPlaybackTracks = mPlaybackTracks.size();
-   const auto numPlaybackChannels = mNumPlaybackChannels;
-   const auto numCaptureChannels = mNumCaptureChannels;
-
-   if( mPaused && AllTracksAlreadySilent() )
-   {
-      if (outputBuffer && numPlaybackChannels > 0)
-      {
-         ClearSamples((samplePtr)outputBuffer, floatSample,
-                      0, framesPerBuffer * numPlaybackChannels);
-
-         if (inputBuffer && mSoftwarePlaythrough) {
-            DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
-                                  numCaptureChannels,
-                                  (float *)outputBuffer, (int)framesPerBuffer);
-         }
-      }
-      return true;
-   }
-   return false;
-}
-
 AudioIoCallback::AudioIoCallback()
 {
 }
@@ -5494,13 +5443,24 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
    // Functions called here can determine if the callback is done.
    // If we are done, then exit early with the mCallbackReturn.
 
-   // Test for no audio to play (because we are paused and have faded out)
-   if( QuickSilentPlayback(inputBuffer,outputBuffer,framesPerBuffer))
+   // Even when paused, we do playthrough.
+
+   // Initialise output buffer to zero or to playthrough data.
+   // Initialise output meter values.
+   if( DoPlaythrough(
+         inputBuffer, 
+         outputBuffer,
+         framesPerBuffer,
+         outputMeterFloats))
+      return mCallbackReturn;
+
+   // Test for no track audio to play (because we are paused and have faded out)
+   if( mPaused && AllTracksAlreadySilent() )
       return mCallbackReturn;
 
    if (mStreamToken > 0)
    {
-      // To play sound on speaker
+      // To add track output to output (to play sound on speaker)
       // possible exit, if we were seeking.
       if( FillOutputBuffers(
             inputBuffer, 
@@ -5509,7 +5469,7 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
             tempFloats,
             outputMeterFloats))
          return mCallbackReturn;
-      // To capture sound from microphone
+      // To capture input into track (sound from microphone)
       if( FillInputBuffers(
             inputBuffer, 
             framesPerBuffer,
@@ -5517,16 +5477,6 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
             tempFloats))
          return mCallbackReturn;
    }
-   else 
-   {
-      if( OnlyDoPlaythrough(
-            inputBuffer, 
-            outputBuffer,
-            framesPerBuffer,
-            outputMeterFloats))
-         return mCallbackReturn;
-   }
-
 
    SendVuOutputMeterData( outputMeterFloats, framesPerBuffer);
 

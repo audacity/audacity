@@ -334,10 +334,6 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer);
    void CheckSoundActivatedRecordingLevel();
-   bool QuickSilentPlayback(
-      const void *inputBuffer, 
-      void *outputBuffer,
-      unsigned long framesPerBuffer);
    bool FillOutputBuffers(
       const void *inputBuffer, 
       void *outputBuffer,
@@ -350,7 +346,7 @@ public:
       const PaStreamCallbackFlags statusFlags,
       float * tempFloats
    );
-   bool OnlyDoPlaythrough(
+   bool DoPlaythrough(
       const void *inputBuffer, 
       void *outputBuffer,
       unsigned long framesPerBuffer,
