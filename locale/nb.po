@@ -3673,7 +3673,7 @@ msgstr "&Demp alle spor"
 
 #: src/Menus.cpp
 msgid "&Unmute All Tracks"
-msgstr "&Avdemp alle spor"
+msgstr "&Udemp alle spor"
 
 #: src/Menus.cpp
 msgid "&Pan"
@@ -3705,7 +3705,7 @@ msgstr "&Midtstilt"
 
 #: src/Menus.cpp
 msgid "&Align End to End"
-msgstr "Koordiner slutt til markeringenss&lutt"
+msgstr "Koordiner slutt til s&lutt"
 
 #: src/Menus.cpp
 msgid "Align &Together"
@@ -4212,7 +4212,7 @@ msgstr "Panorer til &høyre på fokusert spor"
 
 #: src/Menus.cpp
 msgid "Change Gai&n on Focused Track..."
-msgstr "Endre forsterkin&gen på det fokusert sporet ..."
+msgstr "Endre forsterkin&gen på det fokuserte sporet ..."
 
 #: src/Menus.cpp
 msgid "&Increase Gain on Focused Track"
@@ -4224,7 +4224,7 @@ msgstr "&Senk volum på fokusert spor"
 
 #: src/Menus.cpp
 msgid "Op&en Menu on Focused Track..."
-msgstr "Åp&ne menyen for det forkuserte sporet ..."
+msgstr "Åp&ne menyen for det fokuserte sporet ..."
 
 #: src/Menus.cpp
 msgid "M&ute/Unmute Focused Track"
