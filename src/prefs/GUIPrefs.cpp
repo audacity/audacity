@@ -91,6 +91,7 @@ void GUIPrefs::Populate()
    mThemeCodes.Add( wxT("light") );
    mThemeCodes.Add( wxT("dark") );
    mThemeCodes.Add( wxT("high-contrast") );
+   mThemeCodes.Add( wxT("protools") );
    mThemeCodes.Add( wxT("custom") );
 
    /* i18n-hint: describing the "classic" or traditional appearance of older versions of Audacity */
@@ -100,6 +101,7 @@ void GUIPrefs::Populate()
    mThemeChoices.Add( _("Dark") );
    /* i18n-hint: greater difference between foreground and background colors */
    mThemeChoices.Add( _("High Contrast") );
+   mThemeChoices.Add( _("Pro Tools") );
    /* i18n-hint: user defined */
    mThemeChoices.Add( _("Custom") );
 
@@ -182,7 +184,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/GUI/ShowExtraMenus"),
                     false);
 #ifdef EXPERIMENTAL_THEME_PREFS
-      // We do not want to make this option mainstream.  It's a 
+      // We do not want to make this option mainstream.  It's a
       // convenience for developers.
       S.TieCheckBox(_("Show alternative &styling (Mac vs PC)"),
                     wxT("/GUI/ShowMac"),
