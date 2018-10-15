@@ -166,7 +166,7 @@ public:
    }
    wxString GetDescription() const override
    {
-      return wxT("0X101XX101...etc.  where 0=false, 1=true, and X=don't care.  Numbering starts at leftmost = track 0");
+      return wxT("0X101XX101...etc. where 0=false, 1=true, and X=don't care. Numbering starts at leftmost = track 0");
    }
    Holder GetClone() const override
    {

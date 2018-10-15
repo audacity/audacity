@@ -402,7 +402,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             S.AddVariableText(wxString() +
                _("Select \"Full\" to use the graphical interface if supplied by the Audio Unit.") +
                _(" Select \"Generic\" to use the system supplied generic interface.") +
-               _(" Select \"Basic\" for a basic text-only interface. ") +
+               _(" Select \"Basic\" for a basic text-only interface.") +
                _(" Reopen the effect for this to take effect."))->Wrap(650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);

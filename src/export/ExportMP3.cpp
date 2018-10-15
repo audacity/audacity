@@ -1991,10 +1991,10 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
             if (bitrate == 0) {
-               text.Printf(_("The project sample rate (%d) is not supported by the MP3\nfile format.  "), rate);
+               text.Printf(_("The project sample rate (%d) is not supported by the MP3\nfile format. "), rate);
             }
             else {
-               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format.  "), rate, bitrate);
+               text.Printf(_("The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. "), rate, bitrate);
             }
 
             text += _("You may resample to one of the rates below.");
