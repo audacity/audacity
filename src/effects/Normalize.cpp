@@ -753,7 +753,7 @@ void EffectNormalize::UpdateUI()
 
    if (!mUIParent->TransferDataFromWindow())
    {
-      mWarning->SetLabel(_(". Maximum 0dB."));
+      mWarning->SetLabel(_("(Maximum 0dB)"));
       EnableApply(false);
       return;
    }
