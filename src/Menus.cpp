@@ -158,8 +158,11 @@ menu items.
 #include "./commands/AudacityCommand.h"
 #include "commands/CommandContext.h"
 
-MenuManager &GetMenuCommandHandler(AudacityProject &project)
+MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project)
 { return *project.mMenuCommandHandler; }
+
+MenuManager &GetMenuManager(AudacityProject &project)
+{ return *project.mMenuManager; }
 
 MenuCommandHandler::MenuCommandHandler()
 {
@@ -330,6 +333,14 @@ static bool SortEffectsByType(const PluginDescriptor *a, const PluginDescriptor 
    return akey.CmpNoCase(bkey) < 0;
 }
 
+void MenuCommandHandler::UpdatePrefs()
+{
+   gPrefs->Read(wxT("/GUI/CircularTrackNavigation"), &mCircularTrackNavigation,
+                false);
+   gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);
+   gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekLong, 15.0);
+}
+
 void MenuManager::UpdatePrefs()
 {
    bool bSelectAllIfNone;
@@ -343,12 +354,6 @@ void MenuManager::UpdatePrefs()
    mWhatIfNoSelection = bSelectAllIfNone ? 1 : 2;
 #endif
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
-
-   gPrefs->Read(wxT("/GUI/CircularTrackNavigation"), &mCircularTrackNavigation,
-                false);
-
-   gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);
-   gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekLong, 15.0);
 }
 
 /// CreateMenusAndCommands builds the menus, and also rebuilds them after
@@ -2241,7 +2246,7 @@ void AudacityProject::RebuildOtherMenus()
 {
 }
 
-CommandFlag MenuCommandHandler::GetFocusedFrame(AudacityProject &project)
+CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
 {
    wxWindow *w = wxWindow::FindFocus();
 
@@ -2441,7 +2446,7 @@ CommandFlag MenuManager::GetUpdateFlags
 // time range is selected.
 void AudacityProject::SelectAllIfNone()
 {
-   auto flags = GetMenuCommandHandler(*this).GetUpdateFlags(*this);
+   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
    if(!(flags & TracksSelectedFlag) ||
       (mViewInfo.selectedRegion.isPoint()))
       GetMenuCommandHandler(*this).OnSelectSomething(*this);
@@ -2450,7 +2455,7 @@ void AudacityProject::SelectAllIfNone()
 // Stop playing or recording, if paused.
 void AudacityProject::StopIfPaused()
 {
-   auto flags = GetMenuCommandHandler(*this).GetUpdateFlags(*this);
+   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
    if( flags & PausedFlag )
       GetMenuCommandHandler(*this).OnStop(*this);
 }
@@ -2460,7 +2465,7 @@ void MenuManager::ModifyAllProjectToolbarMenus()
    AProjectArray::iterator i;
    for (i = gAudacityProjects.begin(); i != gAudacityProjects.end(); ++i) {
       auto &project = **i;
-      GetMenuCommandHandler(project).ModifyToolbarMenus(project);
+      GetMenuManager(project).ModifyToolbarMenus(project);
    }
 }
 
@@ -2545,7 +2550,7 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
    if (&project != GetActiveProject())
       return;
 
-   auto flags = GetMenuCommandHandler(project).GetUpdateFlags(project, checkActive);
+   auto flags = GetMenuManager(project).GetUpdateFlags(project, checkActive);
    auto flags2 = flags;
 
    // We can enable some extra items if we have select-all-on-none.
@@ -4854,7 +4859,7 @@ bool MenuCommandHandler::DoEffect(
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
-         GetMenuCommandHandler(project).UpdateMenus(project, false);
+         GetMenuManager(project).UpdateMenus(project, false);
       }
 
    } );
@@ -4892,7 +4897,7 @@ bool MenuCommandHandler::DoEffect(
       // or analyze effects.
       if (type == EffectTypeProcess) {
          wxString shortDesc = em.GetCommandName(ID);
-         mLastEffect = ID;
+         GetMenuManager(project).mLastEffect = ID;
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
@@ -4938,9 +4943,11 @@ void MenuCommandHandler::OnEffect(const CommandContext &context)
 
 void MenuCommandHandler::OnRepeatLastEffect(const CommandContext &context)
 {
-   if (!mLastEffect.IsEmpty())
+   auto lastEffect = GetMenuManager(context.project).mLastEffect;
+   if (!lastEffect.IsEmpty())
    {
-      DoEffect(mLastEffect, context, OnEffectFlags::kConfigured);
+      DoEffect(lastEffect,
+         context, OnEffectFlags::kConfigured);
    }
 }
 
@@ -4950,7 +4957,7 @@ void MenuCommandHandler::RebuildAllMenuBars()
    for( size_t i = 0; i < gAudacityProjects.size(); i++ ) {
       AudacityProject *p = gAudacityProjects[i].get();
 
-      GetMenuCommandHandler(*p).RebuildMenuBar(*p);
+      GetMenuManager(*p).RebuildMenuBar(*p);
 #if defined(__WXGTK__)
       // Workaround for:
       //
@@ -5362,7 +5369,7 @@ void MenuCommandHandler::OnPreferences(const CommandContext &context)
    for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       AudacityProject *p = gAudacityProjects[i].get();
 
-      GetMenuCommandHandler(*p).RebuildMenuBar(*p);
+      GetMenuManager(*p).RebuildMenuBar(*p);
       p->RebuildOtherMenus();
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
@@ -5400,7 +5407,7 @@ void MenuCommandHandler::OnReloadPreferences(const CommandContext &context )
    for (size_t i = 0; i < gAudacityProjects.size(); i++) {
       AudacityProject *p = gAudacityProjects[i].get();
 
-      GetMenuCommandHandler(*p).RebuildMenuBar(*p);
+      GetMenuManager(*p).RebuildMenuBar(*p);
       p->RebuildOtherMenus();
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
@@ -8457,7 +8464,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Together");
    }
 
-   if ((unsigned)index >= mAlignLabelsCount) { // This is an alignLabelsNoSync command.
+   if ((unsigned)index >= GetMenuManager(project).mAlignLabelsCount) { // This is an alignLabelsNoSync command.
       for (auto t : tracks->SelectedLeaders< AudioTrack >()) {
          // This shifts different tracks in different ways, so no sync-lock move.
          // Only align Wave and Note tracks end to end.
@@ -8497,7 +8504,8 @@ void MenuCommandHandler::OnAlignNoSync(const CommandContext &context)
    auto &project = context.project;
 
    // Add length of alignLabels array so that we can handle this in AudacityProject::HandleAlign.
-   HandleAlign(project, context.index + mAlignLabelsCount, false);
+   HandleAlign(project,
+      context.index + GetMenuManager(project).mAlignLabelsCount, false);
 }
 
 void MenuCommandHandler::OnAlign(const CommandContext &context)

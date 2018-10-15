@@ -19,8 +19,6 @@ struct MenuCommandHandler : public wxEvtHandler {
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-CommandFlag GetFocusedFrame(AudacityProject &project);
-
 
 
 //Adds label and returns index of label in labeltrack.
@@ -450,7 +448,6 @@ void OnAlignNoSync(const CommandContext &context );
 void OnAlign(const CommandContext &context );
 //void OnAlignMoveSel(int index);
 void HandleAlign(AudacityProject &project, int index, bool moveSel);
-size_t mAlignLabelsCount;
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 void OnScoreAlign(const CommandContext &context );
@@ -586,21 +583,16 @@ double GridMove(AudacityProject &project, double t, int minPix);
 
 
 public:
-// Last effect applied to this project
-   PluginID mLastEffect{};
-   CommandFlag mLastFlags;
-// 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-   int  mWhatIfNoSelection;
-   bool mStopIfWasPaused;
    double mSeekShort;
    double mSeekLong;
    bool mCircularTrackNavigation{};
    wxLongLong mLastSelectionAdjustment;
 
 
+   void UpdatePrefs();
 };
 
-class MenuCreator : public MenuCommandHandler
+class MenuCreator
 {
 public:
    MenuCreator();
@@ -625,6 +617,12 @@ public:
 // Recent files
    wxMenu *mRecentFilesMenu;
 
+   CommandFlag mLastFlags;
+   
+   // Last effect applied to this project
+   PluginID mLastEffect{};
+
+   size_t mAlignLabelsCount;
 };
 
 class MenuManager : public MenuCreator
@@ -651,10 +649,19 @@ public:
    bool TryToMakeActionAllowed
       ( AudacityProject &project,
         CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+
+
+private:
+   CommandFlag GetFocusedFrame(AudacityProject &project);
+
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+   int  mWhatIfNoSelection;
+   bool mStopIfWasPaused;
 };
 
 
-MenuManager &GetMenuCommandHandler(AudacityProject &project);
+MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
+MenuManager &GetMenuManager(AudacityProject &project);
 
 #endif
 

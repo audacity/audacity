@@ -3240,7 +3240,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed =
-         GetMenuCommandHandler(*mProject).ReportIfActionNotAllowed(
+         GetMenuManager(*mProject).ReportIfActionNotAllowed(
          *mProject,
          mEffect->GetTranslatedName(),
          flags,

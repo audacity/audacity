@@ -1054,7 +1054,7 @@ bool ControlToolBar::DoRecord(AudacityProject &project,
    CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
 
    // NB: The call may have the side effect of changing flags.
-   bool allowed = GetMenuCommandHandler(project).TryToMakeActionAllowed(
+   bool allowed = GetMenuManager(project).TryToMakeActionAllowed(
       project,
       flags,
       AudioIONotBusyFlag | CanStopAudioStreamFlag,

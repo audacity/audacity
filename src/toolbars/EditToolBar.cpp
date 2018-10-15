@@ -299,7 +299,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    CommandManager* cm = p->GetCommandManager();
    if (!cm) return;
 
-   auto flags = GetMenuCommandHandler(*p).GetUpdateFlags(*p);
+   auto flags = GetMenuManager(*p).GetUpdateFlags(*p);
    const CommandContext context( *GetActiveProject() );
    cm->HandleTextualCommand(EditToolbarButtonList[id].commandName, context, flags, NoFlagsSpecifed);
 }

@@ -979,7 +979,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Initialize view info (shared with TrackPanel)
    //
 
-   mMenuCommandHandler = std::make_unique<MenuManager>();
+   mMenuCommandHandler = std::make_unique<MenuCommandHandler>();
+   mMenuManager = std::make_unique<MenuManager>();
 
    UpdatePrefs();
 
@@ -1140,7 +1141,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mTrackPanel->AddOverlay(mScrubOverlay.get());
 #endif
 
-   mMenuCommandHandler->CreateMenusAndCommands(*this);
+   mMenuManager->CreateMenusAndCommands(*this);
 
    mTrackPanel->SetBackgroundCell(mBackgroundCell);
 
@@ -1361,6 +1362,7 @@ void AudacityProject::UpdatePrefs()
    SetProjectTitle();
 
    GetMenuCommandHandler(*this).UpdatePrefs();
+   GetMenuManager(*this).UpdatePrefs();
 
    if (mTrackPanel) {
       mTrackPanel->UpdatePrefs();
@@ -2040,7 +2042,7 @@ void AudacityProject::FixScrollbars()
       mTrackPanel->Refresh(false);
    }
 
-   GetMenuCommandHandler(*this).UpdateMenus(*this);
+   GetMenuManager(*this).UpdateMenus(*this);
 
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
@@ -2292,7 +2294,7 @@ bool MenuManager::TryToMakeActionAllowed
    bool bAllowed;
 
    if( !flags )
-      flags = GetMenuCommandHandler(project).GetUpdateFlags(project);
+      flags = GetMenuManager(project).GetUpdateFlags(project);
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    if( bAllowed )
@@ -2305,7 +2307,7 @@ bool MenuManager::TryToMakeActionAllowed
    if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
       project.StopIfPaused();
       // Hope this will now reflect stopped audio.
-      flags = GetMenuCommandHandler(project).GetUpdateFlags(project);
+      flags = GetMenuManager(project).GetUpdateFlags(project);
       bAllowed = ((flags & mask) == (flagsRqd & mask));
       if( bAllowed )
          return true;
@@ -2335,7 +2337,7 @@ bool MenuManager::TryToMakeActionAllowed
    // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
    // selecting all tracks is enough, we just do that.
    GetMenuCommandHandler(project).OnSelectSomething(project);
-   flags = GetMenuCommandHandler(project).GetUpdateFlags(project);
+   flags = GetMenuManager(project).GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
 }
@@ -2356,7 +2358,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
    }
 #endif
    bool handled = mCommandManager.HandleMenuID(
-      event.GetId(), GetMenuCommandHandler(*this).GetUpdateFlags(*this),
+      event.GetId(), GetMenuManager(*this).GetUpdateFlags(*this),
       NoFlagsSpecifed);
 
    if (handled)
@@ -2369,7 +2371,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
 
 void AudacityProject::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
 {
-   GetMenuCommandHandler(*this).UpdateMenus(*this);
+   GetMenuManager(*this).UpdateMenus(*this);
 }
 
 void AudacityProject::MacShowUndockedToolbars(bool show)
@@ -4588,9 +4590,9 @@ void AudacityProject::InitialState()
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   GetMenuCommandHandler(*this).ModifyUndoMenuItems(*this);
+   GetMenuManager(*this).ModifyUndoMenuItems(*this);
 
-   GetMenuCommandHandler(*this).UpdateMenus(*this);
+   GetMenuManager(*this).UpdateMenus(*this);
    this->UpdateLyrics();
    this->UpdateMixerBoard();
 }
@@ -4626,9 +4628,9 @@ void AudacityProject::PushState(const wxString &desc,
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   GetMenuCommandHandler(*this).ModifyUndoMenuItems(*this);
+   GetMenuManager(*this).ModifyUndoMenuItems(*this);
 
-   GetMenuCommandHandler(*this).UpdateMenus(*this);
+   GetMenuManager(*this).UpdateMenus(*this);
 
    // Some state pushes, like changing a track gain control (& probably others),
    // should not repopulate Lyrics Window and MixerBoard.
@@ -4710,7 +4712,7 @@ void AudacityProject::PopState(const UndoState &state)
 
    HandleResize();
 
-   GetMenuCommandHandler(*this).UpdateMenus(*this);
+   GetMenuManager(*this).UpdateMenus(*this);
    this->UpdateLyrics();
    this->UpdateMixerBoard();
 
@@ -4726,7 +4728,7 @@ void AudacityProject::SetStateTo(unsigned int n)
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
-   GetMenuCommandHandler(*this).ModifyUndoMenuItems(*this);
+   GetMenuManager(*this).ModifyUndoMenuItems(*this);
    this->UpdateLyrics();
    this->UpdateMixerBoard();
 }
