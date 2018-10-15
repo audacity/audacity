@@ -44,10 +44,12 @@ public:
    int mPosY;
    int mWidth;
    int mHeight;
+   double mRate;
 
 // For tracking optional parameters.
    bool bHasName;
    bool bHasSizing;
+   bool bHasRate;
 };
 
 
