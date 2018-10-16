@@ -25,7 +25,7 @@
 #include "../WaveTrack.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
-#include "toolbars/SelectionBar.h"
+#include "../toolbars/SelectionBar.h"
 
 SetProjectCommand::SetProjectCommand()
 {
