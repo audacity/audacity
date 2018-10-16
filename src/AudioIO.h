@@ -333,20 +333,22 @@ public:
    void ComputeMidiTimings(
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer);
-   void CheckSoundActivatedRecordingLevel();
+   void CheckSoundActivatedRecordingLevel(const void *inputBuffer);
    bool FillOutputBuffers(
-      const void *inputBuffer, 
       void *outputBuffer,
       unsigned long framesPerBuffer,
       float * tempFloats, float *outputMeterFloats
    );
-   bool FillInputBuffers(
+   void FillInputBuffers(
       const void *inputBuffer, 
       unsigned long framesPerBuffer,
       const PaStreamCallbackFlags statusFlags,
       float * tempFloats
    );
-   bool DoPlaythrough(
+   void UpdateTimePosition(
+      unsigned long framesPerBuffer
+   );
+   void DoPlaythrough(
       const void *inputBuffer, 
       void *outputBuffer,
       unsigned long framesPerBuffer,
@@ -493,6 +495,7 @@ public:
    double              mFactor;
    /// Audio playback rate in samples per second
    double              mRate;
+   unsigned long       mMaxFramesOutput; // The actual number of frames output.
 
    double              mSeek;
    double              mPlaybackRingBufferSecs;
