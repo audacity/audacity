@@ -25,11 +25,12 @@ in a background thread.
 
 #include "ODTaskThread.h"
 #include "../BlockFile.h"
-#include "../Project.h"
 
 #include "../MemoryX.h"
 #include <vector>
 #include <wx/wx.h>
+class AudacityProject;
+class Track;
 class WaveTrack;
 
 

@@ -80,6 +80,7 @@ menu items.
 #include "HistoryWindow.h"
 #include "LyricsWindow.h"
 #include "MixerBoard.h"
+#include "Project.h"
 #include "Internat.h"
 #include "FileFormats.h"
 #include "ModuleManager.h"
