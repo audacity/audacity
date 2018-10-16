@@ -24,6 +24,7 @@
 
 #include "AudioIO.h"
 #include "LabelTrack.h"
+#include "Menus.h"
 #include "ModuleManager.h"
 #include "Prefs.h"
 #include "Project.h"
