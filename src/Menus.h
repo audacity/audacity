@@ -10,16 +10,11 @@
 #ifndef __AUDACITY_MENUS__
 #define __AUDACITY_MENUS__
 
-
 #include "Experimental.h"
-
-
 
 struct MenuCommandHandler : public wxEvtHandler {
    MenuCommandHandler();
    ~MenuCommandHandler();
-
-
 
 //Adds label and returns index of label in labeltrack.
 int DoAddLabel(
@@ -27,7 +22,6 @@ int DoAddLabel(
    const SelectedRegion& region, bool preserveFocus = false);
 static int DialogForLabelName(
    AudacityProject &project, const wxString& initialValue, wxString& value);
-
 
 double NearestZeroCrossing(AudacityProject &project, double t0);
 
@@ -123,8 +117,8 @@ void OnPlaySpeedDec(const CommandContext &context );
 
         // Moving track focus commands
 
-void OnPrevTrack( AudacityProject &project, bool shift );
-void OnNextTrack( AudacityProject &project, bool shift );
+void DoPrevTrack( AudacityProject &project, bool shift );
+void DoNextTrack( AudacityProject &project, bool shift );
 void OnCursorUp(const CommandContext &context );
 void OnCursorDown(const CommandContext &context );
 void OnFirstTrack(const CommandContext &context );
@@ -170,7 +164,7 @@ void OnSelToEnd(const CommandContext &context );
 
 void OnMoveToNextLabel(const CommandContext &context );
 void OnMoveToPrevLabel(const CommandContext &context );
-void OnMoveToLabel(AudacityProject &project, bool next);
+void DoMoveToLabel(AudacityProject &project, bool next);
 
 void OnZeroCrossing(const CommandContext &context );
 
@@ -191,7 +185,7 @@ void OnMacMinimizeAll(const CommandContext &context );
 void OnMacZoom(const CommandContext &context );
 void OnMacBringAllToFront(const CommandContext &context );
 
-        // File Menu
+// File Menu
 
 void OnNew(const CommandContext &context );
 void OnOpen(const CommandContext &context );
@@ -206,7 +200,7 @@ void OnSaveCopy(const CommandContext &context );
 
 void OnCheckDependencies(const CommandContext &context );
 
-void OnExport(AudacityProject &project, const wxString & Format);
+void DoExport(AudacityProject &project, const wxString & Format);
 void OnExportAudio(const CommandContext &context );
 void OnExportMp3(const CommandContext &context );
 void OnExportWav(const CommandContext &context );
@@ -224,8 +218,7 @@ void OnPrint(const CommandContext &context );
 
 void OnExit(const CommandContext &context );
 
-        // Edit Menu
-
+// Edit Menu
 
 void OnUndo(const CommandContext &context );
 void OnRedo(const CommandContext &context );
@@ -292,7 +285,7 @@ void OnSelectStartCursor(const CommandContext &context );
 void OnSelectTrackStartToEnd(const CommandContext &context );
 void OnSelectPrevClipBoundaryToCursor(const CommandContext &context );
 void OnSelectCursorToNextClipBoundary(const CommandContext &context );
-void OnSelectClipBoundary(AudacityProject &project, bool next);
+void DoSelectClipBoundary(AudacityProject &project, bool next);
 struct FoundTrack {
    const WaveTrack* waveTrack{};
    int trackNum{};
@@ -317,7 +310,7 @@ int FindClips
 bool ChannelsHaveDifferentClipBoundaries(const WaveTrack* wt);
 void OnSelectPrevClip(const CommandContext &context );
 void OnSelectNextClip(const CommandContext &context );
-void OnSelectClip(AudacityProject &project, bool next);
+void DoSelectClip(AudacityProject &project, bool next);
 void OnSelectCursorStoredCursor(const CommandContext &context );
 void OnSelectSyncLockSel(const CommandContext &context );
 
@@ -335,7 +328,7 @@ void OnGoSelEnd(const CommandContext &context );
 void OnExpandAllTracks(const CommandContext &context );
 void OnCollapseAllTracks(const CommandContext &context );
 
-void OnPanTracks(AudacityProject &project, float PanValue);
+void DoPanTracks(AudacityProject &project, float PanValue);
 void OnPanLeft(const CommandContext &context );
 void OnPanRight(const CommandContext &context );
 void OnPanCenter(const CommandContext &context );
@@ -374,7 +367,7 @@ void OnResetToolBars(const CommandContext &context );
 void OnShowEffectsRack(const CommandContext &context );
 #endif
 
-        // Transport Menu
+// Transport Menu
 
 void OnSoundActivated(const CommandContext &context );
 void OnToggleSoundActivated(const CommandContext &context );
@@ -441,7 +434,7 @@ int FindClipBoundaries(AudacityProject &project,
     double time, bool next, std::vector<FoundClipBoundary>& results);
 void OnCursorNextClipBoundary(const CommandContext &context );
 void OnCursorPrevClipBoundary(const CommandContext &context );
-void OnCursorClipBoundary(AudacityProject &project, bool next);
+void DoCursorClipBoundary(AudacityProject &project, bool next);
 static wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results);
 
 void OnAlignNoSync(const CommandContext &context );
@@ -469,7 +462,7 @@ void DoEditLabels(AudacityProject &project,
 void OnEditLabels(const CommandContext &context );
 void OnToggleTypeToCreateLabel(const CommandContext &context );
 
-        // Effect Menu
+// Effect Menu
 
 struct OnEffectFlags
 {
@@ -493,16 +486,14 @@ void OnApplyMacrosPalette(const CommandContext &context );
 void OnManageMacros(const CommandContext &context );
 void OnStereoToMono(const CommandContext &context );
 void OnAudacityCommand(const CommandContext &context );
-void OnManagePluginsMenu(AudacityProject &project, EffectType Type);
+void DoManagePluginsMenu(AudacityProject &project, EffectType Type);
 static void RebuildAllMenuBars();
 void OnManageGenerators(const CommandContext &context );
 void OnManageEffects(const CommandContext &context );
 void OnManageAnalyzers(const CommandContext &context );
 void OnManageTools(const CommandContext &context );
 
-
-
-        // Help Menu
+// Help Menu
 
 void OnAbout(const CommandContext &context );
 void OnQuickHelp(const CommandContext &context );
@@ -523,18 +514,14 @@ void OnAudioDeviceInfo(const CommandContext &context );
 void OnMidiDeviceInfo(const CommandContext &context );
 #endif
 
-       //
-
-void OnSeparator(const CommandContext &context );
-
-      // Keyboard navigation
+// Keyboard navigation
 
 void NextOrPrevFrame(AudacityProject &project, bool next);
-void PrevFrame(const CommandContext &context );
-void NextFrame(const CommandContext &context );
+void OnPrevFrame(const CommandContext &context );
+void OnNextFrame(const CommandContext &context );
 
-void PrevWindow(const CommandContext &context );
-void NextWindow(const CommandContext &context );
+void OnPrevWindow(const CommandContext &context );
+void OnNextWindow(const CommandContext &context );
 
 void OnResample(const CommandContext &context );
 
@@ -556,38 +543,31 @@ enum TimeUnit {
 };
 
 bool OnlyHandleKeyUp( const CommandContext &context );
-void OnCursorMove(const CommandContext &context, double seekStep);
-void OnBoundaryMove(const CommandContext &context, int step);
+void DoCursorMove(AudacityProject &project, double seekStep);
+void DoBoundaryMove(AudacityProject &project, int step);
 
 // Handle small cursor and play head movements
 void SeekLeftOrRight
-(const CommandContext &context, double direction, SelectionOperation operation);
+(AudacityProject &project, double direction, SelectionOperation operation);
 
 void SeekWhenAudioActive(double seekStep);
 void SeekWhenAudioInactive
-(const CommandContext &context, double seekStep, TimeUnit timeUnit,
+(AudacityProject &project, double seekStep, TimeUnit timeUnit,
  SelectionOperation operation);
 void MoveWhenAudioInactive
-(const CommandContext &context, double seekStep, TimeUnit timeUnit);
+(AudacityProject &project, double seekStep, TimeUnit timeUnit);
 
-
-
-double OffsetTime(const CommandContext &context,
+double OffsetTime(AudacityProject &project,
    double t, double offset, TimeUnit timeUnit, int snapToTime);
 
 // Helper for moving by keyboard with snap-to-grid enabled
 double GridMove(AudacityProject &project, double t, int minPix);
-
-   
-
-
 
 public:
    double mSeekShort;
    double mSeekLong;
    bool mCircularTrackNavigation{};
    wxLongLong mLastSelectionAdjustment;
-
 
    void UpdatePrefs();
 };
