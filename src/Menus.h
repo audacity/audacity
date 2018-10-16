@@ -12,6 +12,8 @@
 
 #include "Experimental.h"
 
+#include <memory>
+#include <vector>
 #include <wx/event.h>
 #include "SelectedRegion.h"
 
