@@ -49,7 +49,7 @@
 
 #include <wx/dialog.h>
 
-typedef enum EffectType
+typedef enum EffectType : int
 {
    EffectTypeNone,
    EffectTypeHidden,

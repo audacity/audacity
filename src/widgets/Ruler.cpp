@@ -89,6 +89,7 @@ array of Ruler::Label.
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelCellIterator.h"
+#include "../Menus.h"
 #include "../NumberScale.h"
 #include "../Prefs.h"
 #include "../Snap.h"

@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackControls.h"
 #include "../../Experimental.h"
 #include "../../HitTestResult.h"
+#include "../../Menus.h"
 #include "../../MixerBoard.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"

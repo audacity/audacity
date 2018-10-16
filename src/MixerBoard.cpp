@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "Audacity.h"
+#include "MixerBoard.h"
 
 #include <cfloat>
 #include <math.h>
@@ -20,10 +21,11 @@
 
 #include "Theme.h"
 #include "Experimental.h"
-#include "MixerBoard.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+
+#include "Menus.h"
 
 #ifdef USE_MIDI
 #include "NoteTrack.h"

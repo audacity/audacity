@@ -106,6 +106,7 @@ scroll information.  It also has some status flags.
 #include "LabelTrack.h"
 #include "Legacy.h"
 #include "LyricsWindow.h"
+#include "Menus.h"
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"

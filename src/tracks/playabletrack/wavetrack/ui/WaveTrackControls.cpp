@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../AudioIO.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../MixerBoard.h"
+#include "../../../../Menus.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../WaveTrack.h"

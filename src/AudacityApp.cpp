@@ -75,6 +75,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Internat.h"
 #include "LangChoice.h"
 #include "Languages.h"
+#include "Menus.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"

@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AColor.h"
 #include "../../FreqWindow.h"
 #include "../../HitTestResult.h"
+#include "../../Menus.h"
 #include "../../MixerBoard.h"
 #include "../../NumberScale.h"
 #include "../../Project.h"

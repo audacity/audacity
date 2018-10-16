@@ -11,6 +11,7 @@
 
 #include "Audacity.h"
 #include "AudacityApp.h"
+#include "Menus.h"
 #include "Project.h"
 #include "commands/CommandContext.h"
 

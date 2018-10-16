@@ -34,6 +34,7 @@
 
 #include "AudacityException.h"
 #include "ShuttleGui.h"
+#include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Internat.h"

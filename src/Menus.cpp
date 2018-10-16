@@ -36,7 +36,7 @@ menu items.
 *//*******************************************************************/
 
 #include "Audacity.h"
-#include "Project.h"
+#include "Menus.h"
 
 #include <cfloat>
 #include <iterator>

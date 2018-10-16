@@ -34,6 +34,7 @@
 #include <wx/dynlib.h> //<! For windows.h
 
 #include "ShuttleGui.h"
+#include "Menus.h"
 #include "Project.h"
 #include "Internat.h"
 #include "Prefs.h"

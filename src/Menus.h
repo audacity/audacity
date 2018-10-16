@@ -12,6 +12,26 @@
 
 #include "Experimental.h"
 
+#include <wx/event.h>
+#include "SelectedRegion.h"
+
+class AudacityProject;
+class CommandContext;
+class CommandManager;
+class LabelTrack;
+class PluginDescriptor;
+class Track;
+class TrackList;
+class ViewInfo;
+class WaveClip;
+class WaveTrack;
+
+enum CommandFlag : unsigned long long;
+enum EffectType : int;
+
+typedef wxString PluginID;
+typedef wxArrayString PluginIDList;
+
 struct MenuCommandHandler : public wxEvtHandler {
    MenuCommandHandler();
    ~MenuCommandHandler();
@@ -223,7 +243,8 @@ void OnExit(const CommandContext &context );
 void OnUndo(const CommandContext &context );
 void OnRedo(const CommandContext &context );
 
-static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
+static void FinishCopy(
+   const Track *n, std::unique_ptr<Track> &&dest, TrackList &list);
 
 void OnCut(const CommandContext &context );
 void OnSplitCut(const CommandContext &context );
