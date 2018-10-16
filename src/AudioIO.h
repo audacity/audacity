@@ -334,6 +334,15 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer);
    void CheckSoundActivatedRecordingLevel(const void *inputBuffer);
+   void AddToOutputChannel( unsigned int chan,
+      float * outputMeterFloats,
+      float * outputFloats,
+      float * tempFloats,
+      float * tempBuf,
+      bool drop,
+      unsigned long len,
+      WaveTrack *vt
+      );
    bool FillOutputBuffers(
       void *outputBuffer,
       unsigned long framesPerBuffer,

@@ -4819,6 +4819,53 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel( const void *inputBuffer
    }
 }
 
+
+// A function to apply the requested gain, fading up or down from the
+// most recently applied gain.
+void AudioIoCallback::AddToOutputChannel( unsigned int chan,
+   float * outputMeterFloats,
+   float * outputFloats,
+   float * tempFloats,
+   float * tempBuf,
+   bool drop,
+   unsigned long len,
+   WaveTrack *vt
+   )
+{
+   const auto numPlaybackChannels = mNumPlaybackChannels;
+
+   float gain = vt->GetChannelGain(chan);
+   if (drop || !mAudioThreadFillBuffersLoopRunning || mPaused)
+      gain = 0.0;
+
+   // Output volume emulation: possibly copy meter samples, then
+   // apply volume, then copy to the output buffer
+   if (outputMeterFloats != outputFloats)
+      for ( unsigned i = 0; i < len; ++i)
+         outputMeterFloats[numPlaybackChannels*i+chan] +=
+            gain*tempFloats[i];
+
+   if (mEmulateMixerOutputVol)
+      gain *= mMixerOutputVol;
+
+   float oldGain = vt->GetOldChannelGain(chan);
+   if( gain != oldGain )
+      vt->SetOldChannelGain(chan, gain);
+   wxASSERT(len > 0);
+
+   // Linear interpolate.
+   float deltaGain = (gain - oldGain) / len;
+   for (unsigned i = 0; i < len; i++)
+      outputFloats[numPlaybackChannels*i+chan] += (oldGain + deltaGain * i) *tempBuf[i];
+};
+
+// Limit values to -1.0..+1.0
+void ClampBuffer(float * pBuffer, unsigned long len){
+   for(unsigned i = 0; i < len; i++)
+      pBuffer[i] = wxClip( -1.0f, pBuffer[i], 1.0f);
+};
+
+
 // return true, IFF we have fully handled the callback.
 //
 // Mix and copy to PortAudio's output buffer
@@ -4860,12 +4907,11 @@ bool AudioIoCallback::FillOutputBuffers(
    // These are small structures.
    WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
    float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
-   // ------ End of MEMORY ALLOCATION ---------------
 
+   // And these are larger structures....
    for (unsigned int c = 0; c < numPlaybackChannels; c++)
-   {
       tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
-   }
+   // ------ End of MEMORY ALLOCATION ---------------
 
    EffectManager & em = EffectManager::Get();
    em.RealtimeProcessStart();
@@ -4903,23 +4949,25 @@ bool AudioIoCallback::FillOutputBuffers(
          t + 1 < numPlaybackTracks
             ? mPlaybackTracks[t + 1].get()
             : nullptr;
+
+      // First and last channel in this group (for example left and right
+      // channels of stereo).
       bool firstChannel = vt->IsLeader();
       bool lastChannel = !nextTrack || nextTrack->IsLeader();
 
       if ( firstChannel )
       {
-         drop = TrackShouldBeSilent( *vt );
          selected = vt->GetSelected();
-               
          // IF mono THEN clear 'the other' channel.
-         if ( lastChannel ) {
+         if ( lastChannel && (numPlaybackChannels>1)) {
             // TODO: more-than-two-channels
             memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
          }
-         dropQuickly = drop && TrackHasBeenFadedOut( *vt );
+         drop = TrackShouldBeSilent( *vt );
+         dropQuickly = drop;
       }
-      else 
-         dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
+
+      dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
          
       decltype(framesPerBuffer) len = 0;
 
@@ -4963,62 +5011,34 @@ bool AudioIoCallback::FillOutputBuffers(
       len = mMaxFramesOutput;
 
       if( !dropQuickly && selected )
-      {
          len = em.RealtimeProcess(group, chanCnt, tempBufs, len);
-      }
       group++;
 
       CallbackCheckCompletion(mCallbackReturn, len);
-
       if (dropQuickly) // no samples to process, they've been discarded
          continue;
 
-
       // Our channels aren't silent.  We need to pass their data on.
+      //
+      // Note that there are two kinds of channel count.
+      // c and chanCnt are counting channels in the Tracks.
+      // chan (and numPlayBackChannels) is counting output channels on the device.
+      // chan = 0 is left channel
+      // chan = 1 is right channel.
+      //
+      // Each channel in the tracks can output to more than one channel on the device.
+      // For example mono channels output to both left and right output channels.
       if (len > 0) for (int c = 0; c < chanCnt; c++)
       {
          vt = chans[c];
 
-         // A function to apply the requested gain, fading up or down from the
-         // most recently applied gain.
-         // Note that there are two kinds of channel count.
-         // chan (and numPlayBackChannels) is counting channels on the device.
-         // c and chanCnt are counting channels in the Tracks.
-         // chan = 0 is left channel
-         // chan = 1 is right channel.
-         auto fadeChannel = [&]( unsigned int chan){
-            float gain = vt->GetChannelGain(chan);
-            if (drop || !mAudioThreadFillBuffersLoopRunning || mPaused)
-               gain = 0.0;
-
-            // Output volume emulation: possibly copy meter samples, then
-            // apply volume, then copy to the output buffer
-            if (outputMeterFloats != outputFloats)
-               for ( unsigned i = 0; i < len; ++i)
-                  outputMeterFloats[numPlaybackChannels*i+chan] +=
-                     gain*tempFloats[i];
-
-            if (mEmulateMixerOutputVol)
-               gain *= mMixerOutputVol;
-
-            float oldGain = vt->GetOldChannelGain(chan);
-            if( gain != oldGain )
-               vt->SetOldChannelGain(chan, gain);
-            wxASSERT(len > 0);
-
-            // Linear interpolate.
-            float deltaGain = (gain - oldGain) / len;
-            for (unsigned i = 0; i < len; i++)
-               outputFloats[numPlaybackChannels*i+chan] += (oldGain + deltaGain * i) *tempBufs[c][i];
-         };
-
          if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel )
-            fadeChannel( 0 );
+            AddToOutputChannel( 0, outputMeterFloats, outputFloats, tempFloats, tempBufs[c], drop, len, vt);
 
          if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel  )
-            fadeChannel( 1 );
+            AddToOutputChannel( 1, outputMeterFloats, outputFloats, tempFloats, tempBufs[c], drop, len, vt);
       }
 
       chanCnt = 0;
@@ -5035,15 +5055,9 @@ bool AudioIoCallback::FillOutputBuffers(
    em.RealtimeProcessEnd();
    mLastPlaybackTimeMillis = ::wxGetLocalTimeMillis();
 
-   // Limit values to -1.0..+1.0
-   auto clampBuffer = [&] (float * pBuffer){
-      for(unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
-         pBuffer[i] = wxClip( -1.0f, pBuffer[i], 1.0f);
-   };
-
-   clampBuffer( outputFloats );
+   ClampBuffer( outputFloats, framesPerBuffer*numPlaybackChannels );
    if (outputMeterFloats != outputFloats)
-      clampBuffer( outputMeterFloats );
+      ClampBuffer( outputMeterFloats, framesPerBuffer*numPlaybackChannels );
 
    return false;
 }
