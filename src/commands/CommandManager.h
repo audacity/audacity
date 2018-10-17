@@ -167,16 +167,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                  bool hasDialog,
                  CommandHandlerFinder finder,
                  CommandFunctorPointer callback,
-                 int checkmark = 0);
-
-   void AddCheck(const wxChar *name,
-                 const wxChar *label,
-                 bool hasDialog,
-                 CommandHandlerFinder finder,
-                 CommandFunctorPointer callback,
-                 int checkmark,
-                 CommandFlag flags,
-                 CommandMask mask);
+                 int checkmark = 0,
+                 CommandFlag flags = NoFlagsSpecifed,
+                 CommandMask mask = NoFlagsSpecifed);
 
    void AddItem(const wxChar *name,
                 const wxChar *label,

@@ -801,17 +801,6 @@ void CommandManager::AddCheck(const wxChar *name,
                               bool hasDialog,
                               CommandHandlerFinder finder,
                               CommandFunctorPointer callback,
-                              int checkmark)
-{
-   AddItem(name, label, hasDialog, finder, callback, wxT(""),
-           NoFlagsSpecifed, NoFlagsSpecifed, checkmark);
-}
-
-void CommandManager::AddCheck(const wxChar *name,
-                              const wxChar *label,
-                              bool hasDialog,
-                              CommandHandlerFinder finder,
-                              CommandFunctorPointer callback,
                               int checkmark,
                               CommandFlag flags,
                               CommandMask mask)
