@@ -2413,7 +2413,7 @@ void AudioIO::StopStream()
 {
    auto cleanup = finally ( [this] {
       ClearRecordingException();
-      mRecordingSchedule = {}; // free arrays
+      mRecordingSchedule.mCrossfadeData.clear(); // free arrays
    } );
 
    if( mPortStreamV19 == NULL
