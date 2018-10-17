@@ -171,21 +171,12 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                  CommandFlag flags = NoFlagsSpecified);
 
    void AddItem(const wxChar *name,
-                const wxChar *label,
-                bool hasDialog,
-                CommandHandlerFinder finder,
-                CommandFunctorPointer callback,
-                CommandFlag flags = NoFlagsSpecified,
-                bool bIsEffect = false, 
-                const CommandParameter &parameter = CommandParameter{});
-
-   void AddItem(const wxChar *name,
                 const wxChar *label_in,
                 bool hasDialog,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
-                const wxChar *accel,
                 CommandFlag flags = NoFlagsSpecified,
+                const wxChar *accel = wxT(""),
                 int checkmark = -1,
                 bool bIsEffect = false, 
                 const CommandParameter &parameter = CommandParameter{},

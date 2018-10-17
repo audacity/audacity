@@ -804,19 +804,7 @@ void CommandManager::AddCheck(const wxChar *name,
                               int checkmark,
                               CommandFlag flags)
 {
-   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, checkmark);
-}
-
-void CommandManager::AddItem(const wxChar *name,
-                             const wxChar *label,
-                             bool hasDialog,
-                             CommandHandlerFinder finder,
-                             CommandFunctorPointer callback,
-                             CommandFlag flags,
-                             bool bIsEffect,
-                             const CommandParameter &parameter)
-{
-   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, -1, bIsEffect, parameter);
+   AddItem(name, label, hasDialog, finder, callback, flags, wxT(""), checkmark);
 }
 
 void CommandManager::AddItem(const wxChar *name,
@@ -824,8 +812,8 @@ void CommandManager::AddItem(const wxChar *name,
                              bool hasDialog,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
-                             const wxChar *accel,
                              CommandFlag flags,
+                             const wxChar *accel,
                              int checkmark,
                              bool bIsEffect,
                              const CommandParameter &parameter,
