@@ -849,7 +849,7 @@ void CommandManager::AddItem(const wxChar *name,
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
-   if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
+   if (flags != NoFlagsSpecified || mask != NoFlagsSpecified) {
       SetCommandFlags(name, flags, mask);
    }
 
@@ -919,7 +919,7 @@ void CommandManager::AddCommand(const wxChar *name,
 {
    NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
-   if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
+   if (flags != NoFlagsSpecified || mask != NoFlagsSpecified) {
       SetCommandFlags(name, flags, mask);
    }
 }
@@ -1454,7 +1454,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // LL:  Why do they need to be disabled???
       entry->enabled = false;
       auto cleanup = valueRestorer( entry->enabled, true );
-      return HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
+      return HandleCommandEntry(entry, NoFlagsSpecified, NoFlagsSpecified, &evt);
    }
 
    wxWindow * pFocus = wxWindow::FindFocus();
@@ -1531,12 +1531,12 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       {
          return true;
       }
-      return HandleCommandEntry(entry, flags, NoFlagsSpecifed, &temp);
+      return HandleCommandEntry(entry, flags, NoFlagsSpecified, &temp);
    }
 
    if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
-      return HandleCommandEntry(entry, flags, NoFlagsSpecifed, &temp);
+      return HandleCommandEntry(entry, flags, NoFlagsSpecified, &temp);
    }
 
    return false;

@@ -2575,7 +2575,7 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
 
    auto &commandManager = *project.GetCommandManager();
 
-   commandManager.EnableUsingFlags(flags2 , NoFlagsSpecifed);
+   commandManager.EnableUsingFlags(flags2 , NoFlagsSpecified);
 
    // With select-all-on-none, some items that we don't want enabled may have
    // been enabled, since we changed the flags.  Here we manually disable them.

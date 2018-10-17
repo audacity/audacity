@@ -168,16 +168,16 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                  CommandHandlerFinder finder,
                  CommandFunctorPointer callback,
                  int checkmark = 0,
-                 CommandFlag flags = NoFlagsSpecifed,
-                 CommandMask mask = NoFlagsSpecifed);
+                 CommandFlag flags = NoFlagsSpecified,
+                 CommandMask mask = NoFlagsSpecified);
 
    void AddItem(const wxChar *name,
                 const wxChar *label,
                 bool hasDialog,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
-                CommandFlag flags = NoFlagsSpecifed,
-                CommandMask mask   = NoFlagsSpecifed,
+                CommandFlag flags = NoFlagsSpecified,
+                CommandMask mask   = NoFlagsSpecified,
                 bool bIsEffect = false, 
                 const CommandParameter &parameter = CommandParameter{});
 
@@ -187,8 +187,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 const wxChar *accel,
-                CommandFlag flags = NoFlagsSpecifed,
-                CommandMask mask   = NoFlagsSpecifed,
+                CommandFlag flags = NoFlagsSpecified,
+                CommandMask mask   = NoFlagsSpecified,
                 int checkmark = -1,
                 bool bIsEffect = false, 
                 const CommandParameter &parameter = CommandParameter{});
@@ -201,16 +201,16 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
-                   CommandFlag flags = NoFlagsSpecifed,
-                   CommandMask mask   = NoFlagsSpecifed);
+                   CommandFlag flags = NoFlagsSpecified,
+                   CommandMask mask   = NoFlagsSpecified);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
                    const wxChar *accel,
-                   CommandFlag flags = NoFlagsSpecifed,
-                   CommandMask mask   = NoFlagsSpecifed);
+                   CommandFlag flags = NoFlagsSpecified,
+                   CommandMask mask   = NoFlagsSpecified);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
