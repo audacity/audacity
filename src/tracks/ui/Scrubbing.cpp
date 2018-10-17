@@ -1166,14 +1166,14 @@ void Scrubber::AddMenuItems()
                       false,
                       findme, static_cast<CommandFunctorPointer>(item.memFn),
                       false,
-                      item.flags, item.flags);
+                      item.flags);
       else
          // The start item
-         cm->AddItem(item.name, wxGetTranslation(item.label),
+         cm->AddItem( item.name, wxGetTranslation(item.label),
                      // No menu items yet have dialogs
                      false,
                      findme, static_cast<CommandFunctorPointer>(item.memFn),
-                     item.flags, item.flags);
+                     item.flags );
    }
    cm->EndSubMenu();
    CheckMenuItems();

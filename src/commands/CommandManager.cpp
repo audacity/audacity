@@ -802,10 +802,9 @@ void CommandManager::AddCheck(const wxChar *name,
                               CommandHandlerFinder finder,
                               CommandFunctorPointer callback,
                               int checkmark,
-                              CommandFlag flags,
-                              CommandMask mask)
+                              CommandFlag flags)
 {
-   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, checkmark);
+   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, checkmark);
 }
 
 void CommandManager::AddItem(const wxChar *name,
@@ -814,11 +813,10 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
-                             CommandMask mask,
                              bool bIsEffect,
                              const CommandParameter &parameter)
 {
-   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, -1, bIsEffect, parameter);
+   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, -1, bIsEffect, parameter);
 }
 
 void CommandManager::AddItem(const wxChar *name,
@@ -828,11 +826,14 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFunctorPointer callback,
                              const wxChar *accel,
                              CommandFlag flags,
-                             CommandMask mask,
                              int checkmark,
                              bool bIsEffect,
-                             const CommandParameter &parameter)
+                             const CommandParameter &parameter,
+                             CommandMask mask)
 {
+   if (mask == NoFlagsSpecified)
+      mask = flags;
+
    wxString cookedParameter;
    if( parameter == "" )
       cookedParameter = name;
@@ -903,10 +904,9 @@ void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label,
                                 CommandHandlerFinder finder,
                                 CommandFunctorPointer callback,
-                                CommandFlag flags,
-                                CommandMask mask)
+                                CommandFlag flags)
 {
-   AddCommand(name, label, finder, callback, wxT(""), flags, mask);
+   AddCommand(name, label, finder, callback, wxT(""), flags);
 }
 
 void CommandManager::AddCommand(const wxChar *name,
@@ -914,14 +914,12 @@ void CommandManager::AddCommand(const wxChar *name,
                                 CommandHandlerFinder finder,
                                 CommandFunctorPointer callback,
                                 const wxChar *accel,
-                                CommandFlag flags,
-                                CommandMask mask)
+                                CommandFlag flags)
 {
    NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
-   if (flags != NoFlagsSpecified || mask != NoFlagsSpecified) {
-      SetCommandFlags(name, flags, mask);
-   }
+   if (flags != NoFlagsSpecified)
+      SetCommandFlags(name, flags, flags);
 }
 
 void CommandManager::AddGlobalCommand(const wxChar *name,

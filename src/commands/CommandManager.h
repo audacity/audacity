@@ -168,8 +168,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                  CommandHandlerFinder finder,
                  CommandFunctorPointer callback,
                  int checkmark = 0,
-                 CommandFlag flags = NoFlagsSpecified,
-                 CommandMask mask = NoFlagsSpecified);
+                 CommandFlag flags = NoFlagsSpecified);
 
    void AddItem(const wxChar *name,
                 const wxChar *label,
@@ -177,7 +176,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags = NoFlagsSpecified,
-                CommandMask mask   = NoFlagsSpecified,
                 bool bIsEffect = false, 
                 const CommandParameter &parameter = CommandParameter{});
 
@@ -188,10 +186,10 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 CommandFunctorPointer callback,
                 const wxChar *accel,
                 CommandFlag flags = NoFlagsSpecified,
-                CommandMask mask   = NoFlagsSpecified,
                 int checkmark = -1,
                 bool bIsEffect = false, 
-                const CommandParameter &parameter = CommandParameter{});
+                const CommandParameter &parameter = CommandParameter{},
+                CommandMask mask   = NoFlagsSpecified);
 
    void AddSeparator();
 
@@ -201,16 +199,14 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
-                   CommandFlag flags = NoFlagsSpecified,
-                   CommandMask mask   = NoFlagsSpecified);
+                   CommandFlag flags = NoFlagsSpecified);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
                    const wxChar *accel,
-                   CommandFlag flags = NoFlagsSpecified,
-                   CommandMask mask   = NoFlagsSpecified);
+                   CommandFlag flags = NoFlagsSpecified);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
