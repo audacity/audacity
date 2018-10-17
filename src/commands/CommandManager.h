@@ -362,7 +362,9 @@ private:
    wxMenuBar * CurrentMenuBar() const;
    wxMenuBar * GetMenuBar(const wxString & sMenu) const;
    wxMenu * CurrentSubMenu() const;
+public:
    wxMenu * CurrentMenu() const;
+private:
    wxString GetLabel(const CommandListEntry *entry) const;
    wxString GetLabelWithDisabledAccel(const CommandListEntry *entry) const;
 
@@ -397,5 +399,237 @@ private:
    bool bMakingOccultCommands;
    std::unique_ptr< wxMenuBar > mTempMenuBar;
 };
+
+// Define items that populate tables that describe menu trees
+namespace MenuTable {
+   // TODO C++17: maybe use std::variant (discriminated unions) to achieve
+   // polymorphism by other means, not needing unique_ptr and dynamic_cast
+   // and using less heap.
+   // Most items in the table will be the large ones describing commands, so the
+   // waste of space in unions for separators and sub-menus should not be
+   // large.
+   struct BaseItem {
+      // declare at least one virtual function so dynamic_cast will work
+      virtual ~BaseItem();
+   };
+   using BaseItemPtr = std::unique_ptr<BaseItem>;
+   using BaseItemPtrs = std::vector<BaseItemPtr>;
+   
+
+   // The type of functions that generate menu table descriptions.
+   // Return type is a shared_ptr to let the function decide whether to recycle
+   // the object or rebuild it on demand each time.
+   // Return value from the factory may be null.
+   using Factory = std::function<
+      std::shared_ptr< MenuTable::BaseItem >( AudacityProject & )
+   >;
+
+   struct ComputedItem : BaseItem {
+      explicit ComputedItem( const Factory &factory_ )
+         : factory{ factory_ }
+      {}
+      ~ComputedItem() override;
+
+      Factory factory;
+   };
+
+   struct GroupItem : BaseItem {
+      // Construction from a previously built-up vector of pointers
+      GroupItem( BaseItemPtrs &&items_ );
+      // In-line, variadic constructor that doesn't require building a vector
+      template< typename... Args >
+         GroupItem( Args&&... args )
+         { Append( std::forward< Args >( args )... ); }
+      ~GroupItem() override;
+
+      BaseItemPtrs items;
+
+   private:
+      // nullary overload grounds the recursion
+      void Append() {}
+      // recursive overload
+      template< typename Arg, typename... Args >
+         void Append( Arg &&arg, Args&&... moreArgs )
+         {
+            // Dispatch one argument to the proper overload of AppendOne.
+            // std::forward preserves rvalue/lvalue distinction of the actual
+            // argument of the constructor call; that is, it inserts a
+            // std::move() if and only if the original argument is rvalue
+            AppendOne( std::forward<Arg>( arg ) );
+            // recur with the rest of the arguments
+            Append( std::forward<Args>(moreArgs)... );
+         };
+
+      void AppendOne( BaseItemPtr&& ptr );
+      // This override allows a lambda or function pointer in the variadic
+      // argument lists without any other syntactic wrapping:
+      void AppendOne( const Factory &factory )
+      { AppendOne( std::make_unique<ComputedItem>( factory ) ); }
+   };
+
+   struct MenuItem final : GroupItem {
+      // Construction from a previously built-up vector of pointers
+      MenuItem( const wxString &title_, BaseItemPtrs &&items_ );
+      // In-line, variadic constructor that doesn't require building a vector
+      template< typename... Args >
+         MenuItem( const wxString &title_, Args&&... args )
+            : GroupItem{ std::forward<Args>(args)... }
+            , title{ title_ }
+         {}
+      ~MenuItem() override;
+
+      wxString title; // translated
+   };
+
+   struct ConditionalGroupItem final : GroupItem {
+      using Condition = std::function< bool() >;
+
+      // Construction from a previously built-up vector of pointers
+      ConditionalGroupItem( Condition condition_, BaseItemPtrs &&items_ );
+      // In-line, variadic constructor that doesn't require building a vector
+      template< typename... Args >
+         ConditionalGroupItem( Condition condition_, Args&&... args )
+            : GroupItem{ std::forward<Args>(args)... }
+            , condition{ condition_ }
+         {}
+      ~ConditionalGroupItem() override;
+
+      Condition condition;
+   };
+
+   struct SeparatorItem final : BaseItem
+   {
+      ~SeparatorItem() override;
+   };
+
+   struct CommandItem final : BaseItem {
+      CommandItem(const wxString &name_,
+               const wxString &label_in_,
+               bool hasDialog_,
+               CommandHandlerFinder finder_,
+               CommandFunctorPointer callback_,
+               CommandFlag flags_,
+               const CommandManager::Options &options_);
+      ~CommandItem() override;
+
+      const wxString name;
+      const wxString label_in;
+      bool hasDialog;
+      CommandHandlerFinder finder;
+      CommandFunctorPointer callback;
+      CommandFlag flags;
+      CommandManager::Options options;
+   };
+
+   struct CommandGroupItem final : BaseItem {
+      CommandGroupItem(const wxString &name_,
+               const IdentInterfaceSymbol items_[],
+               size_t nItems_,
+               CommandHandlerFinder finder_,
+               CommandFunctorPointer callback_,
+               CommandFlag flags_,
+               bool isEffect_);
+      ~CommandGroupItem() override;
+
+      const wxString name;
+      const std::vector<IdentInterfaceSymbol> items;
+      CommandHandlerFinder finder;
+      CommandFunctorPointer callback;
+      CommandFlag flags;
+      bool isEffect;
+   };
+
+   // For manipulating the enclosing menu or sub-menu directly,
+   // adding any number of items, not using the CommandManager
+   struct SpecialItem final : BaseItem
+   {
+      using Appender = std::function< void( AudacityProject&, wxMenu& ) >;
+
+      explicit SpecialItem( const Appender &fn_ )
+      : fn{ fn_ }
+      {}
+      ~SpecialItem() override;
+
+      Appender fn;
+   };
+
+   // Following are the functions to use directly in writing table definitions.
+
+   // Group items can be constructed two ways.
+   // Pointers to subordinate items are moved into the result.
+   // Null pointers are permitted, and ignored when building the menu.
+   // Items are spliced into the enclosing menu
+   template< typename... Args >
+   inline BaseItemPtr Items( Args&&... args )
+         { return std::make_unique<GroupItem>(
+            std::forward<Args>(args)... ); }
+   inline BaseItemPtr Items(
+      const wxString &title, BaseItemPtrs &&items )
+         { return std::make_unique<GroupItem>( std::move( items ) ); }
+
+   // Menu items can be constructed two ways, as for group items
+   // Items will appear in a main toolbar menu or in a sub-menu
+   template< typename... Args >
+   inline BaseItemPtr Menu(
+      const wxString &title, Args&&... args )
+         { return std::make_unique<MenuItem>(
+            title, std::forward<Args>(args)... ); }
+   inline BaseItemPtr Menu(
+      const wxString &title, BaseItemPtrs &&items )
+         { return std::make_unique<MenuItem>( title, std::move( items ) ); }
+
+   // Conditional group items can be constructed two ways, as for group items
+   // These items register in the CommandManager but are not shown in menus
+   template< typename... Args >
+      inline BaseItemPtr ConditionalItems(
+         ConditionalGroupItem::Condition condition, Args&&... args )
+         { return std::make_unique<ConditionalGroupItem>(
+            condition, std::forward<Args>(args)... ); }
+   inline BaseItemPtr ConditionalItems(
+      ConditionalGroupItem::Condition condition, BaseItemPtrs &&items )
+         { return std::make_unique<ConditionalGroupItem>(
+            condition, std::move( items ) ); }
+
+   // Make either a menu item or just a group, depending on the nonemptiness
+   // of the title
+   template< typename... Args >
+   inline BaseItemPtr MenuOrItems(
+      const wxString &title, Args&&... args )
+         {  if ( title.empty() ) return Items( std::forward<Args>(args)... );
+            else return std::make_unique<MenuItem>(
+               title, std::forward<Args>(args)... ); }
+   inline BaseItemPtr MenuOrItems(
+      const wxString &title, BaseItemPtrs &&items )
+         {  if ( title.empty() ) return Items( std::move( items ) );
+            else return std::make_unique<MenuItem>( title, std::move( items ) ); }
+
+   inline std::unique_ptr<SeparatorItem> Separator()
+      { return std::make_unique<SeparatorItem>(); }
+
+   inline std::unique_ptr<CommandItem> Command(
+      const wxString &name, const wxString &label_in, bool hasDialog,
+      CommandHandlerFinder finder, CommandFunctorPointer callback,
+      CommandFlag flags, const CommandManager::Options &options = {})
+   {
+      return std::make_unique<CommandItem>(
+         name, label_in, hasDialog, finder, callback, flags, options
+      );
+   }
+
+   inline std::unique_ptr<CommandGroupItem> CommandGroup(
+      const wxString &name,
+      const IdentInterfaceSymbol items[], size_t nItems,
+      CommandHandlerFinder finder, CommandFunctorPointer callback,
+      CommandFlag flags, bool isEffect = false)
+   {
+      return std::make_unique<CommandGroupItem>(
+         name, items, nItems, finder, callback, flags, isEffect
+      );
+   }
+
+   inline std::unique_ptr<SpecialItem> Special(
+      const SpecialItem::Appender &fn )
+         { return std::make_unique<SpecialItem>( fn ); }
+}
 
 #endif

@@ -363,6 +363,155 @@ void MenuManager::UpdatePrefs()
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
 }
 
+namespace MenuTable {
+
+BaseItem::~BaseItem() {}
+
+ComputedItem::~ComputedItem() {}
+
+GroupItem::GroupItem( BaseItemPtrs &&items_ )
+: items{ std::move( items_ ) }
+{
+}
+void GroupItem::AppendOne( BaseItemPtr&& ptr )
+{
+   items.push_back( std::move( ptr ) );
+}
+GroupItem::~GroupItem() {}
+
+MenuItem::MenuItem( const wxString &title_, BaseItemPtrs &&items_ )
+: GroupItem{ std::move( items_ ) }, title{ title_ }
+{
+   wxASSERT( !title.empty() );
+}
+MenuItem::~MenuItem() {}
+
+ConditionalGroupItem::ConditionalGroupItem(
+   Condition condition_, BaseItemPtrs &&items_ )
+: GroupItem{ std::move( items_ ) }, condition{ condition_ }
+{
+}
+ConditionalGroupItem::~ConditionalGroupItem() {}
+
+SeparatorItem::~SeparatorItem() {}
+
+CommandItem::CommandItem(const wxString &name_,
+         const wxString &label_in_,
+         bool hasDialog_,
+         CommandHandlerFinder finder_,
+         CommandFunctorPointer callback_,
+         CommandFlag flags_,
+         const CommandManager::Options &options_)
+: name{ name_ }, label_in{ label_in_ }, hasDialog{ hasDialog_ }
+, finder{ finder_ }, callback{ callback_ }
+, flags{ flags_ }, options{ options_ }
+{}
+CommandItem::~CommandItem() {}
+
+CommandGroupItem::CommandGroupItem(const wxString &name_,
+         const IdentInterfaceSymbol items_[],
+         size_t nItems_,
+         CommandHandlerFinder finder_,
+         CommandFunctorPointer callback_,
+         CommandFlag flags_,
+         bool isEffect_)
+: name{ name_ }, items{ items_, items_ + nItems_ }
+, finder{ finder_ }, callback{ callback_ }
+, flags{ flags_ }, isEffect{ isEffect_ }
+{}
+CommandGroupItem::~CommandGroupItem() {}
+
+SpecialItem::~SpecialItem() {}
+
+}
+
+namespace {
+
+void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem );
+
+void VisitItems(
+   AudacityProject &project, const MenuTable::BaseItemPtrs &items )
+{
+   for ( auto &pSubItem : items )
+      VisitItem( project, pSubItem.get() );
+}
+
+void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
+{
+   if (!pItem)
+      return;
+
+   auto &manager = *project.GetCommandManager();
+
+   using namespace MenuTable;
+   if (const auto pComputed =
+       dynamic_cast<ComputedItem*>( pItem )) {
+      // TODO maybe?  memo-ize the results of the function, but that requires
+      // invalidating the memo at the right times
+      auto result = pComputed->factory( project );
+      if (result)
+         // recursion
+         VisitItem( project, result.get() );
+   }
+   else
+   if (const auto pCommand =
+       dynamic_cast<CommandItem*>( pItem )) {
+      manager.AddItem(
+         pCommand->name, pCommand->label_in, pCommand->hasDialog,
+         pCommand->finder, pCommand->callback,
+         pCommand->flags, pCommand->options
+      );
+   }
+   else
+   if (const auto pCommandList =
+      dynamic_cast<CommandGroupItem*>( pItem ) ) {
+      manager.AddItemList(pCommandList->name,
+         pCommandList->items.data(), pCommandList->items.size(),
+         pCommandList->finder, pCommandList->callback,
+         pCommandList->flags, pCommandList->isEffect);
+   }
+   else
+   if (const auto pMenu =
+       dynamic_cast<MenuItem*>( pItem )) {
+      manager.BeginMenu( pMenu->title );
+      // recursion
+      VisitItems( project, pMenu->items );
+      manager.EndMenu();
+   }
+   else
+   if (const auto pConditionalGroup =
+       dynamic_cast<ConditionalGroupItem*>( pItem )) {
+      const auto flag = pConditionalGroup->condition();
+      if (!flag)
+         manager.BeginOccultCommands();
+      // recursion
+      VisitItems( project, pConditionalGroup->items );
+      if (!flag)
+         manager.EndOccultCommands();
+   }
+   else
+   if (const auto pGroup =
+       dynamic_cast<GroupItem*>( pItem )) {
+      // recursion
+      VisitItems( project, pGroup->items );
+   }
+   else
+   if (dynamic_cast<SeparatorItem*>( pItem )) {
+      manager.AddSeparator();
+   }
+   else
+   if (const auto pSpecial =
+       dynamic_cast<SpecialItem*>( pItem )) {
+      const auto pMenu = manager.CurrentMenu();
+      wxASSERT( pMenu );
+      pSpecial->fn( project, *pMenu );
+   }
+   else
+      wxASSERT( false );
+}
+
+}
+
 /// CreateMenusAndCommands builds the menus, and also rebuilds them after
 /// changes in configured preferences - for example changes in key-bindings
 /// affect the short-cut key legend that appears beside each command,
