@@ -1161,12 +1161,12 @@ void Scrubber::AddMenuItems()
    cm->BeginSubMenu(_("Scru&bbing"));
    for (const auto &item : menuItems) {
       if (item.StatusTest)
-         cm->AddCheck(item.name, wxGetTranslation(item.label),
+         cm->AddItem( item.name, wxGetTranslation(item.label),
                       // No menu items yet have dialogs
                       false,
                       findme, static_cast<CommandFunctorPointer>(item.memFn),
-                      false,
-                      item.flags);
+                      item.flags,
+                      CommandManager::Options{}.CheckState( false ) );
       else
          // The start item
          cm->AddItem( item.name, wxGetTranslation(item.label),

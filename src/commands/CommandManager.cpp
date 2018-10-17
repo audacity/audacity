@@ -796,33 +796,20 @@ void CommandManager::InsertItem(const wxString & name,
 
 
 
-void CommandManager::AddCheck(const wxChar *name,
-                              const wxChar *label,
-                              bool hasDialog,
-                              CommandHandlerFinder finder,
-                              CommandFunctorPointer callback,
-                              int checkmark,
-                              CommandFlag flags)
-{
-   AddItem(name, label, hasDialog, finder, callback, flags, wxT(""), checkmark);
-}
-
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label_in,
                              bool hasDialog,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
-                             const wxChar *accel,
-                             int checkmark,
-                             bool bIsEffect,
-                             const CommandParameter &parameter,
-                             CommandMask mask)
+                             const Options &options)
 {
+   auto mask = options.mask;
    if (mask == NoFlagsSpecified)
       mask = flags;
 
    wxString cookedParameter;
+   const auto &parameter = options.parameter;
    if( parameter == "" )
       cookedParameter = name;
    else
@@ -832,8 +819,8 @@ void CommandManager::AddItem(const wxChar *name,
          label_in,
          mLongNameForItem,
          hasDialog,
-         accel, CurrentMenu(), finder, callback,
-         {}, 0, 0, bIsEffect, cookedParameter);
+         options.accel, CurrentMenu(), finder, callback,
+         {}, 0, 0, options.bIsEffect, cookedParameter);
    mLongNameForItem = "";
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
@@ -843,6 +830,7 @@ void CommandManager::AddItem(const wxChar *name,
    }
 
 
+   auto checkmark = options.check;
    if (checkmark >= 0) {
       CurrentMenu()->AppendCheckItem(ID, label);
       CurrentMenu()->Check(ID, checkmark != 0);

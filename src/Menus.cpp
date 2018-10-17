@@ -360,6 +360,10 @@ static CommandHandlerObject &findMenuCommandHandler(AudacityProject &project)
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 {
+   using Options = CommandManager::Options;
+   const Options checkOff = Options{}.CheckState( false );
+   const Options checkOn =  Options{}.CheckState( true );
+
    CommandManager *c = project.GetCommandManager();
 
    // The list of defaults to exclude depends on
@@ -489,7 +493,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          AudioIONotBusyFlag | UndoAvailableFlag, wxT("Ctrl+Z"));
 
       // The default shortcut key for Redo is different on different platforms.
-      wxString key =
+      auto key =
 #ifdef __WXMSW__
          wxT("Ctrl+Y");
 #else
@@ -506,13 +510,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Basic Edit coomands
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Cut"), XXO("Cu&t"), FN(OnCut),
-         AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect, wxT("Ctrl+X"),
-         -1, false, {},
-         AudioIONotBusyFlag | CutCopyAvailableFlag);
+         AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
+         Options{ wxT("Ctrl+X") }
+            .Mask( AudioIONotBusyFlag | CutCopyAvailableFlag ) );
       c->AddItem(wxT("Delete"), XXO("&Delete"), FN(OnDelete),
-         AudioIONotBusyFlag | NoAutoSelect, wxT("Ctrl+K"),
-         -1, false, {},
-         AudioIONotBusyFlag );
+         AudioIONotBusyFlag | NoAutoSelect,
+         Options{ wxT("Ctrl+K") }
+            .Mask( AudioIONotBusyFlag ) );
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Copy"), XXO("&Copy"), FN(OnCopy),
          AudioIONotBusyFlag | CutCopyAvailableFlag, wxT("Ctrl+C"));
@@ -582,8 +586,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->AddSeparator();
 
-      c->AddCheck(wxT("TypeToCreateLabel"), XXO("&Type to Create a Label (on/off)"),
-                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("TypeToCreateLabel"), XXO("&Type to Create a Label (on/off)"),
+                  FN(OnToggleTypeToCreateLabel), AlwaysEnabledFlag, checkOff);
 
       c->EndSubMenu();
 
@@ -820,44 +824,46 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddSeparator();
 
       /* i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)*/
-      c->AddCheck(wxT("ShowTransportTB"), XXO("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowTransportTB"), XXO("&Transport Toolbar"), FN(OnShowTransportToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows a toolbar that has some tools in it*/
-      c->AddCheck(wxT("ShowToolsTB"), XXO("T&ools Toolbar"), FN(OnShowToolsToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowToolsTB"), XXO("T&ools Toolbar"), FN(OnShowToolsToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows the toolbar with the recording level meters*/
-      c->AddCheck(wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"), FN(OnShowRecordMeterToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"), FN(OnShowRecordMeterToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows the toolbar with the playback level meter*/
-      c->AddCheck(wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"), FN(OnShowPlayMeterToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"), FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag, checkOff);
 
       /* --i18nhint: Clicking this menu item shows the toolbar which has sound level meters*/
-      //c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag);
+      //c->AddItem(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff);
 
       /* i18n-hint: Clicking this menu item shows the toolbar with the mixer*/
-      c->AddCheck(wxT("ShowMixerTB"), XXO("Mi&xer Toolbar"), FN(OnShowMixerToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowMixerTB"), XXO("Mi&xer Toolbar"), FN(OnShowMixerToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
-      c->AddCheck(wxT("ShowEditTB"), XXO("&Edit Toolbar"), FN(OnShowEditToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowEditTB"), XXO("&Edit Toolbar"), FN(OnShowEditToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)*/
-      c->AddCheck(wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar"), FN(OnShowTranscriptionToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler*/
-      c->AddCheck(wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows the toolbar that manages devices*/
-      c->AddCheck(wxT("ShowDeviceTB"), XXO("&Device Toolbar"), FN(OnShowDeviceToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowDeviceTB"), XXO("&Device Toolbar"), FN(OnShowDeviceToolBar), AlwaysEnabledFlag, checkOff);
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio*/
-      c->AddCheck(wxT("ShowSelectionTB"), XXO("&Selection Toolbar"), FN(OnShowSelectionToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowSelectionTB"), XXO("&Selection Toolbar"), FN(OnShowSelectionToolBar), AlwaysEnabledFlag, checkOff);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio*/
-      c->AddCheck(wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag, checkOff);
 #endif
 
       c->EndSubMenu();
 
       c->AddSeparator();
 
-      c->AddCheck(wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"), FN(OnShowExtraMenus),
-         gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L), AlwaysEnabledFlag);
-      c->AddCheck(wxT("ShowClipping"), XXO("&Show Clipping (on/off)"), FN(OnShowClipping),
-         gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"), FN(OnShowExtraMenus),
+         AlwaysEnabledFlag,
+         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L) ) );
+      c->AddItem(wxT("ShowClipping"), XXO("&Show Clipping (on/off)"), FN(OnShowClipping),
+         AlwaysEnabledFlag,
+         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowClipping"), 0L) ) );
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
-      c->AddCheck(wxT("ShowEffectsRack"), XXO("Show Effects Rack"), FN(OnShowEffectsRack), 0, AlwaysEnabledFlag);
+      c->AddItem(wxT("ShowEffectsRack"), XXO("Show Effects Rack"), FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff);
 #endif
 
 
@@ -961,24 +967,24 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Sound Activated recording options
       c->AddItem(wxT("SoundActivationLevel"), XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
-      c->AddCheck(wxT("SoundActivation"), XXO("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated), 0,
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
+      c->AddItem(wxT("SoundActivation"), XXO("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated),
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff);
       c->AddSeparator();
 
-      c->AddCheck(wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
-                  FN(OnTogglePinnedHead), 0,
+      c->AddItem(wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
+                  FN(OnTogglePinnedHead),
                   // Switching of scrolling on and off is permitted even during transport
-                  AlwaysEnabledFlag);
+                  AlwaysEnabledFlag, checkOff);
 
-      c->AddCheck(wxT("Overdub"), XXO("&Overdub (on/off)"), FN(OnTogglePlayRecording), 1,
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
-      c->AddCheck(wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0,
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
+      c->AddItem(wxT("Overdub"), XXO("&Overdub (on/off)"), FN(OnTogglePlayRecording),
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOn);
+      c->AddItem(wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough),
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff);
 
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), XXO("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0,
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
+      c->AddItem(wxT("AutomatedInputLevelAdjustmentOnOff"), XXO("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment),
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff);
 #endif
       c->EndSubMenu();
 
@@ -1076,10 +1082,10 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddSeparator();
       c->AddItemList(wxT("Align"), alignLabels, mAlignLabelsCount, FN(OnAlign));
       c->AddSeparator();
-      c->AddCheck(wxT("MoveSelectionWithTracks"), XXO("&Move Selection with Tracks (on/off)"),
+      c->AddItem(wxT("MoveSelectionWithTracks"), XXO("&Move Selection with Tracks (on/off)"),
          FN(OnMoveSelectionWithTracks),
-         gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L),
-         AlwaysEnabledFlag);
+         AlwaysEnabledFlag,
+         Options{}.CheckState( gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L ) ) );
       c->EndSubMenu();
 
 #if 0
@@ -1119,9 +1125,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
       c->AddSeparator();
-      c->AddCheck(wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock),
-         gPrefs->Read(wxT("/GUI/SyncLockTracks"), 0L),
-         AlwaysEnabledFlag);
+      c->AddItem(wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock),
+         AlwaysEnabledFlag,
+         Options{}.CheckState( gPrefs->Read(wxT("/GUI/SyncLockTracks"), 0L) ) );
 
 #endif
 
@@ -1246,14 +1252,16 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
 #ifdef IS_ALPHA
       c->AddSeparator();
-      c->AddCheck(wxT("SimulateRecordingErrors"),
+      c->AddItem(wxT("SimulateRecordingErrors"),
          XXO("Simulate Recording Errors"),
          FN(OnSimulateRecordingErrors),
-         gAudioIO->mSimulateRecordingErrors);
-      c->AddCheck(wxT("DetectUpstreamDropouts"),
+         NoFlagsSpecified,
+         Options{}.CheckState( gAudioIO->mSimulateRecordingErrors ) );
+      c->AddItem(wxT("DetectUpstreamDropouts"),
          XXO("Detect Upstream Dropouts"),
          FN(OnDetectUpstreamDropouts),
-         gAudioIO->mDetectUpstreamDropouts);
+         NoFlagsSpecified,
+         Options{}.CheckState( gAudioIO->mDetectUpstreamDropouts ) );
 #endif
 
       c->EndMenu();
@@ -1369,15 +1377,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->AddItem(wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
-         wxT("Backspace"),
-         -1, false, {},
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
+         Options{ wxT("Backspace") }
+            .Mask( AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag ) );
 
       c->AddItem(wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
-         wxT("Delete"),
-         -1, false, {},
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
+         Options{ wxT("Delete") }
+            .Mask( AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag )  );
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
@@ -1618,12 +1624,14 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Accel key is not bindable.
       c->AddItem(wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"), FN(OnFullScreen),
          AlwaysEnabledFlag,
+         Options{
 #ifdef __WXMAC__
-         wxT("Ctrl+/"),
+            wxT("Ctrl+/"),
 #else
-         wxT("F11"),
+            wxT("F11"),
 #endif
-         project.wxTopLevelWindow::IsFullScreen() ? 1:0); // Check Mark.
+         }
+            .CheckState( project.wxTopLevelWindow::IsFullScreen() ) );
 
 #ifdef __WXMAC__
       /* i18n-hint: Shrink all project windows to icons on the Macintosh tooldock */
@@ -2016,7 +2024,9 @@ void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
                           item,
                           item.Contains("..."),
                           FN(OnEffect),
-                          flags[i], wxT(""), -1, true, plugs[i]);
+                          flags[i],
+                          CommandManager::Options{}
+                             .IsEffect().Parameter( plugs[i] ) );
 
             i++;
          }
@@ -2031,7 +2041,9 @@ void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
                        names[i],
                        vHasDialog[i],
                        FN(OnEffect),
-                       flags[i], wxT(""), -1, true, plugs[i]);
+                       flags[i],
+                       CommandManager::Options{}
+                          .IsEffect().Parameter( plugs[i] ) );
       }
 
       if (max > 0)

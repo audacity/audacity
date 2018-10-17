@@ -155,6 +155,32 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    int checkmark = -1);
     */
 
+   // For specifying unusual arguments in AddItem
+   struct Options
+   {
+      Options() {}
+      // Allow implicit construction from an accelerator string, which is
+      // a very common case
+      Options( const wxChar *accel_ ) : accel{ accel_ } {}
+
+      Options &&Accel (const wxChar *value) &&
+         { accel = value; return std::move(*this); }
+      Options &&CheckState (bool value) &&
+         { check = value ? 1 : 0; return std::move(*this); }
+      Options &&IsEffect () &&
+         { bIsEffect = true; return std::move(*this); }
+      Options &&Parameter (const CommandParameter &value) &&
+         { parameter = value; return std::move(*this); }
+      Options &&Mask (CommandMask value) &&
+         { mask = value; return std::move(*this); }
+
+      const wxChar *accel{ wxT("") };
+      int check{ -1 }; // default value means it's not a check item
+      bool bIsEffect{ false };
+      CommandParameter parameter{};
+      CommandMask mask{ NoFlagsSpecified };
+   };
+
    void AddItemList(const wxString & name,
                     const TranslatedInternalString items[],
                     size_t nItems,
@@ -162,25 +188,13 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                     CommandFunctorPointer callback,
                     bool bIsEffect = false);
 
-   void AddCheck(const wxChar *name,
-                 const wxChar *label,
-                 bool hasDialog,
-                 CommandHandlerFinder finder,
-                 CommandFunctorPointer callback,
-                 int checkmark = 0,
-                 CommandFlag flags = NoFlagsSpecified);
-
    void AddItem(const wxChar *name,
                 const wxChar *label_in,
                 bool hasDialog,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags = NoFlagsSpecified,
-                const wxChar *accel = wxT(""),
-                int checkmark = -1,
-                bool bIsEffect = false, 
-                const CommandParameter &parameter = CommandParameter{},
-                CommandMask mask   = NoFlagsSpecified);
+                const Options &options = {});
 
    void AddSeparator();
 
