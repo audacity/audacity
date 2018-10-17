@@ -429,8 +429,6 @@ private:
 CommandManager::CommandManager():
    mCurrentID(17000),
    mCurrentMenuName(COMMAND),
-   mDefaultFlags(AlwaysEnabledFlag),
-   mDefaultMask(AlwaysEnabledFlag),
    bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
@@ -976,8 +974,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
       entry->multi = multi;
       entry->index = index;
       entry->count = count;
-      entry->flags = mDefaultFlags;
-      entry->mask = mDefaultMask;
+      entry->flags = entry->mask = AlwaysEnabledFlag;
       entry->enabled = true;
       entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
       entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
@@ -1799,14 +1796,6 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
    }
 
    xmlFile.EndTag(wxT("audacitykeyboard"));
-}
-
-void CommandManager::SetDefaultFlags(CommandFlag flags, CommandMask mask)
-{
-   if (mask == NoFlagsSpecified)
-      mask = flags;
-   mDefaultFlags = flags;
-   mDefaultMask = mask;
 }
 
 void CommandManager::SetOccultCommands( bool bOccult)

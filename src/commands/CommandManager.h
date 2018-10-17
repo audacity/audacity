@@ -217,14 +217,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
                          const wxChar *accel);
-   //
-   // Command masks
-   //
-
-   // For NEW items/commands
-   void SetDefaultFlags(CommandFlag flags, CommandMask mask = NoFlagsSpecified);
-   CommandFlag GetDefaultFlags() const { return mDefaultFlags; }
-   CommandMask GetDefaultMask() const { return mDefaultMask; }
 
    void SwapMenuBars();
    void SetOccultCommands( bool bOccult);
@@ -397,8 +389,6 @@ private:
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
 
-   CommandFlag mDefaultFlags;
-   CommandMask mDefaultMask;
    bool bMakingOccultCommands;
 };
 
