@@ -243,10 +243,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
 
    void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
-   void SetCommandFlags(const wxChar **names,
-                        CommandFlag flags, CommandMask mask);
-   // Pass multiple command names as const wxChar *, terminated by NULL
-   void SetCommandFlags(CommandFlag flags, CommandMask mask, ...);
 
    //
    // Modifying menus

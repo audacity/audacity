@@ -1931,29 +1931,6 @@ void CommandManager::SetCommandFlags(const wxString &name,
    }
 }
 
-void CommandManager::SetCommandFlags(const wxChar **names,
-                                     CommandFlag flags, CommandMask mask)
-{
-   const wxChar **nptr = names;
-   while(*nptr) {
-      SetCommandFlags(wxString(*nptr), flags, mask);
-      nptr++;
-   }
-}
-
-void CommandManager::SetCommandFlags(CommandFlag flags, CommandMask mask, ...)
-{
-   va_list list;
-   va_start(list, mask);
-   for(;;) {
-      const wxChar *name = va_arg(list, const wxChar *);
-      if (!name)
-         break;
-      SetCommandFlags(wxString(name), flags, mask);
-   }
-   va_end(list);
-}
-
 #if defined(__WXDEBUG__)
 void CommandManager::CheckDups()
 {

@@ -361,8 +361,6 @@ static CommandHandlerObject &findMenuCommandHandler(AudacityProject &project)
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 {
    CommandManager *c = project.GetCommandManager();
-   wxArrayString names;
-   std::vector<int> indices;
 
    // The list of defaults to exclude depends on
    // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
