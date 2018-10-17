@@ -434,7 +434,6 @@ CommandManager::CommandManager():
    bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
-   mLongNameForItem = "";
    SetMaxList();
 }
 
@@ -796,55 +795,20 @@ void CommandManager::InsertItem(const wxString & name,
 
 
 
-void CommandManager::AddCheck(const wxChar *name,
-                              const wxChar *label,
-                              bool hasDialog,
-                              CommandHandlerFinder finder,
-                              CommandFunctorPointer callback,
-                              int checkmark)
-{
-   AddItem(name, label, hasDialog, finder, callback, wxT(""),
-           NoFlagsSpecifed, NoFlagsSpecifed, checkmark);
-}
-
-void CommandManager::AddCheck(const wxChar *name,
-                              const wxChar *label,
-                              bool hasDialog,
-                              CommandHandlerFinder finder,
-                              CommandFunctorPointer callback,
-                              int checkmark,
-                              CommandFlag flags,
-                              CommandMask mask)
-{
-   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, checkmark);
-}
-
-void CommandManager::AddItem(const wxChar *name,
-                             const wxChar *label,
-                             bool hasDialog,
-                             CommandHandlerFinder finder,
-                             CommandFunctorPointer callback,
-                             CommandFlag flags,
-                             CommandMask mask,
-                             bool bIsEffect,
-                             const CommandParameter &parameter)
-{
-   AddItem(name, label, hasDialog, finder, callback, wxT(""), flags, mask, -1, bIsEffect, parameter);
-}
-
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label_in,
                              bool hasDialog,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
-                             const wxChar *accel,
                              CommandFlag flags,
-                             CommandMask mask,
-                             int checkmark,
-                             bool bIsEffect,
-                             const CommandParameter &parameter)
+                             const Options &options)
 {
+   auto mask = options.mask;
+   if (mask == NoFlagsSpecified)
+      mask = flags;
+
    wxString cookedParameter;
+   const auto &parameter = options.parameter;
    if( parameter == "" )
       cookedParameter = name;
    else
@@ -852,19 +816,19 @@ void CommandManager::AddItem(const wxChar *name,
    CommandListEntry *entry =
       NewIdentifier(name,
          label_in,
-         mLongNameForItem,
+         options.longName,
          hasDialog,
-         accel, CurrentMenu(), finder, callback,
-         {}, 0, 0, bIsEffect, cookedParameter);
-   mLongNameForItem = "";
+         options.accel, CurrentMenu(), finder, callback,
+         {}, 0, 0, options.bIsEffect, cookedParameter);
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
-   if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
+   if (flags != NoFlagsSpecified || mask != NoFlagsSpecified) {
       SetCommandFlags(name, flags, mask);
    }
 
 
+   auto checkmark = options.check;
    if (checkmark >= 0) {
       CurrentMenu()->AppendCheckItem(ID, label);
       CurrentMenu()->Check(ID, checkmark != 0);
@@ -914,10 +878,9 @@ void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label,
                                 CommandHandlerFinder finder,
                                 CommandFunctorPointer callback,
-                                CommandFlag flags,
-                                CommandMask mask)
+                                CommandFlag flags)
 {
-   AddCommand(name, label, finder, callback, wxT(""), flags, mask);
+   AddCommand(name, label, finder, callback, wxT(""), flags);
 }
 
 void CommandManager::AddCommand(const wxChar *name,
@@ -925,14 +888,12 @@ void CommandManager::AddCommand(const wxChar *name,
                                 CommandHandlerFinder finder,
                                 CommandFunctorPointer callback,
                                 const wxChar *accel,
-                                CommandFlag flags,
-                                CommandMask mask)
+                                CommandFlag flags)
 {
    NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
-   if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
-      SetCommandFlags(name, flags, mask);
-   }
+   if (flags != NoFlagsSpecified)
+      SetCommandFlags(name, flags, flags);
 }
 
 void CommandManager::AddGlobalCommand(const wxChar *name,
@@ -1465,7 +1426,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // LL:  Why do they need to be disabled???
       entry->enabled = false;
       auto cleanup = valueRestorer( entry->enabled, true );
-      return HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
+      return HandleCommandEntry(entry, NoFlagsSpecified, NoFlagsSpecified, &evt);
    }
 
    wxWindow * pFocus = wxWindow::FindFocus();
@@ -1542,12 +1503,12 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       {
          return true;
       }
-      return HandleCommandEntry(entry, flags, NoFlagsSpecifed, &temp);
+      return HandleCommandEntry(entry, flags, NoFlagsSpecified, &temp);
    }
 
    if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
-      return HandleCommandEntry(entry, flags, NoFlagsSpecifed, &temp);
+      return HandleCommandEntry(entry, flags, NoFlagsSpecified, &temp);
    }
 
    return false;
@@ -1912,6 +1873,8 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
 
 void CommandManager::SetDefaultFlags(CommandFlag flags, CommandMask mask)
 {
+   if (mask == NoFlagsSpecified)
+      mask = flags;
    mDefaultFlags = flags;
    mDefaultMask = mask;
 }
@@ -1929,29 +1892,6 @@ void CommandManager::SetCommandFlags(const wxString &name,
       entry->flags = flags;
       entry->mask = mask;
    }
-}
-
-void CommandManager::SetCommandFlags(const wxChar **names,
-                                     CommandFlag flags, CommandMask mask)
-{
-   const wxChar **nptr = names;
-   while(*nptr) {
-      SetCommandFlags(wxString(*nptr), flags, mask);
-      nptr++;
-   }
-}
-
-void CommandManager::SetCommandFlags(CommandFlag flags, CommandMask mask, ...)
-{
-   va_list list;
-   va_start(list, mask);
-   for(;;) {
-      const wxChar *name = va_arg(list, const wxChar *);
-      if (!name)
-         break;
-      SetCommandFlags(wxString(name), flags, mask);
-   }
-   va_end(list);
 }
 
 #if defined(__WXDEBUG__)

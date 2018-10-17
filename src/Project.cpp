@@ -2360,7 +2360,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
 #endif
    bool handled = mCommandManager.HandleMenuID(
       event.GetId(), GetMenuManager(*this).GetUpdateFlags(*this),
-      NoFlagsSpecifed);
+      NoFlagsSpecified);
 
    if (handled)
       event.Skip(false);

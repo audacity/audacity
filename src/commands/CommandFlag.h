@@ -58,7 +58,7 @@ enum CommandFlag : unsigned long long
    AudioTracksSelectedFlag = 0x2000000000ULL,
    NoAutoSelect            = 0x4000000000ULL, // jkc
 
-   NoFlagsSpecifed        = ~0ULL
+   NoFlagsSpecified        = ~0ULL
 };
 
 // Prevent accidental misuse with narrower types
