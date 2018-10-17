@@ -219,7 +219,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    //
 
    // For NEW items/commands
-   void SetDefaultFlags(CommandFlag flags, CommandMask mask);
+   void SetDefaultFlags(CommandFlag flags, CommandMask mask = NoFlagsSpecified);
    CommandFlag GetDefaultFlags() const { return mDefaultFlags; }
    CommandMask GetDefaultMask() const { return mDefaultMask; }
 

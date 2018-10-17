@@ -1899,6 +1899,8 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
 
 void CommandManager::SetDefaultFlags(CommandFlag flags, CommandMask mask)
 {
+   if (mask == NoFlagsSpecified)
+      mask = flags;
    mDefaultFlags = flags;
    mDefaultMask = mask;
 }
