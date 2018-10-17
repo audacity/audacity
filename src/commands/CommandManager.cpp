@@ -803,6 +803,8 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFlag flags,
                              const Options &options)
 {
+   wxASSERT( flags != NoFlagsSpecified );
+
    auto mask = options.mask;
    if (mask == NoFlagsSpecified)
       mask = flags;
@@ -823,9 +825,7 @@ void CommandManager::AddItem(const wxChar *name,
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
-   if (flags != NoFlagsSpecified || mask != NoFlagsSpecified) {
-      SetCommandFlags(name, flags, mask);
-   }
+   SetCommandFlags(name, flags, mask);
 
 
    auto checkmark = options.check;
@@ -890,10 +890,11 @@ void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *accel,
                                 CommandFlag flags)
 {
+   wxASSERT( flags != NoFlagsSpecified );
+
    NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
-   if (flags != NoFlagsSpecified)
-      SetCommandFlags(name, flags, flags);
+   SetCommandFlags(name, flags, flags);
 }
 
 void CommandManager::AddGlobalCommand(const wxChar *name,
