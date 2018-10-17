@@ -162,6 +162,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
       // Allow implicit construction from an accelerator string, which is
       // a very common case
       Options( const wxChar *accel_ ) : accel{ accel_ } {}
+      // A two-argument constructor for another common case
+      Options( const wxChar *accel_, const wxString &longName_ )
+      : accel{ accel_ }, longName{ longName_ } {}
 
       Options &&Accel (const wxChar *value) &&
          { accel = value; return std::move(*this); }
@@ -173,12 +176,15 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
          { parameter = value; return std::move(*this); }
       Options &&Mask (CommandMask value) &&
          { mask = value; return std::move(*this); }
+      Options &&LongName (const wxString &value) &&
+         { longName = value; return std::move(*this); }
 
       const wxChar *accel{ wxT("") };
       int check{ -1 }; // default value means it's not a check item
       bool bIsEffect{ false };
       CommandParameter parameter{};
       CommandMask mask{ NoFlagsSpecified };
+      wxString longName{}; // translated
    };
 
    void AddItemList(const wxString & name,
@@ -230,10 +236,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void SwapMenuBars();
    void SetOccultCommands( bool bOccult);
-   CommandManager * SetLongName( const wxString & name ){ 
-      mLongNameForItem = name; 
-      return this;
-   }
 
 
    void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
@@ -402,8 +404,6 @@ private:
    wxString mCurrentMenuName;
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
-
-   wxString mLongNameForItem;
 
    CommandFlag mDefaultFlags;
    CommandMask mDefaultMask;

@@ -434,7 +434,6 @@ CommandManager::CommandManager():
    bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
-   mLongNameForItem = "";
    SetMaxList();
 }
 
@@ -817,11 +816,10 @@ void CommandManager::AddItem(const wxChar *name,
    CommandListEntry *entry =
       NewIdentifier(name,
          label_in,
-         mLongNameForItem,
+         options.longName,
          hasDialog,
          options.accel, CurrentMenu(), finder, callback,
          {}, 0, 0, options.bIsEffect, cookedParameter);
-   mLongNameForItem = "";
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
