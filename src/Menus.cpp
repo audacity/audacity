@@ -412,11 +412,14 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->BeginSubMenu( _("&Save Project") );
       c->AddItem( wxT("Save"), XXO("&Save Project"), FN(OnSave),
          AudioIONotBusyFlag | UnsavedChangesFlag, wxT("Ctrl+S") );
-      c->AddItem( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs) );
+      c->AddItem( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
+         AudioIONotBusyFlag );
       // TODO: The next two items should be disabled if project is empty
-      c->AddItem( wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."), FN(OnSaveCopy) );
+      c->AddItem( wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."),
+         FN(OnSaveCopy), AudioIONotBusyFlag );
 #ifdef USE_LIBVORBIS
-      c->AddItem( wxT("SaveCompressed"), XXO("&Save Compressed Copy of Project..."), FN(OnSaveCompressed) );
+      c->AddItem( wxT("SaveCompressed"), XXO("&Save Compressed Copy of Project..."),
+         FN(OnSaveCompressed), AudioIONotBusyFlag );
 #endif
       c->EndSubMenu();
       c->AddSeparator();
@@ -454,11 +457,14 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->BeginSubMenu(_("&Import"));
 
       c->AddItem( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport), NoFlagsSpecified, wxT("Ctrl+Shift+I") );
-      c->AddItem( wxT("ImportLabels"), XXO("&Labels..."), FN(OnImportLabels) );
+      c->AddItem( wxT("ImportLabels"), XXO("&Labels..."), FN(OnImportLabels),
+         AudioIONotBusyFlag );
 #ifdef USE_MIDI
-      c->AddItem( wxT("ImportMIDI"), XXO("&MIDI..."), FN(OnImportMIDI) );
+      c->AddItem( wxT("ImportMIDI"), XXO("&MIDI..."), FN(OnImportMIDI),
+         AudioIONotBusyFlag );
 #endif // USE_MIDI
-      c->AddItem( wxT("ImportRaw"), XXO("&Raw Data..."), FN(OnImportRaw) );
+      c->AddItem( wxT("ImportRaw"), XXO("&Raw Data..."), FN(OnImportRaw),
+         AudioIONotBusyFlag );
 
       c->EndSubMenu();
       c->AddSeparator();
@@ -725,8 +731,12 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       c->BeginSubMenu(_("S&pectral"));
       c->AddItem( wxT("ToggleSpectralSelection"), XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection), NoFlagsSpecified, wxT("Q") );
-      c->AddItem( wxT("NextHigherPeakFrequency"), XXO("Next &Higher Peak Frequency"), FN(OnNextHigherPeakFrequency) );
-      c->AddItem( wxT("NextLowerPeakFrequency"), XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency) );
+      c->AddItem( wxT("NextHigherPeakFrequency"),
+         XXO("Next &Higher Peak Frequency"), FN(OnNextHigherPeakFrequency),
+         TracksExistFlag );
+      c->AddItem( wxT("NextLowerPeakFrequency"),
+         XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency),
+         TracksExistFlag );
       c->EndSubMenu();
 #endif
 
@@ -1031,10 +1041,14 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->BeginSubMenu(_("Add &New"));
 
-      c->AddItem( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack), NoFlagsSpecified, wxT("Ctrl+Shift+N") );
-      c->AddItem( wxT("NewStereoTrack"), XXO("&Stereo Track"), FN(OnNewStereoTrack) );
-      c->AddItem( wxT("NewLabelTrack"), XXO("&Label Track"), FN(OnNewLabelTrack) );
-      c->AddItem( wxT("NewTimeTrack"), XXO("&Time Track"), FN(OnNewTimeTrack) );
+      c->AddItem( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
+         NoFlagsSpecified, wxT("Ctrl+Shift+N") );
+      c->AddItem( wxT("NewStereoTrack"), XXO("&Stereo Track"),
+         FN(OnNewStereoTrack), AudioIONotBusyFlag );
+      c->AddItem( wxT("NewLabelTrack"), XXO("&Label Track"),
+         FN(OnNewLabelTrack), AudioIONotBusyFlag );
+      c->AddItem( wxT("NewTimeTrack"), XXO("&Time Track"),
+         FN(OnNewTimeTrack), AudioIONotBusyFlag );
 
       c->EndSubMenu();
 
@@ -1181,7 +1195,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->SetDefaultFlags(AudioIONotBusyFlag);
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."), FN(OnManageGenerators) );
+      c->AddItem( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageGenerators), AudioIONotBusyFlag );
       c->AddSeparator();
 #endif
 
@@ -1208,7 +1223,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          buildMenuLabel = _("Repeat Last Effect");
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."), FN(OnManageEffects) );
+      c->AddItem( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageEffects), AudioIONotBusyFlag );
       c->AddSeparator();
 #endif
 
@@ -1231,7 +1247,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->BeginMenu(_("&Analyze"));
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."), FN(OnManageAnalyzers) );
+      c->AddItem( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageAnalyzers), AudioIONotBusyFlag );
       c->AddSeparator();
 #endif
 
@@ -1255,27 +1272,32 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->BeginMenu(_("T&ools"));
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."), FN(OnManageTools) );
+      c->AddItem( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageTools), AudioIONotBusyFlag );
       //c->AddSeparator();
 #endif
 
-      c->AddItem( wxT("ManageMacros"), XXO("&Macros..."), FN(OnManageMacros) );
+      c->AddItem( wxT("ManageMacros"), XXO("&Macros..."),
+         FN(OnManageMacros), AudioIONotBusyFlag );
 
       c->BeginSubMenu(_("&Apply Macro"));
-      c->AddItem( wxT("ApplyMacrosPalette"), XXO("&Palette..."), FN(OnApplyMacrosPalette) );
+      c->AddItem( wxT("ApplyMacrosPalette"), XXO("&Palette..."),
+         FN(OnApplyMacrosPalette), AudioIONotBusyFlag );
       c->AddSeparator();
       PopulateMacrosMenu( c, AudioIONotBusyFlag );
       c->EndSubMenu();
       c->AddSeparator();
 
-      c->AddItem( wxT("FancyScreenshot"), XXO("&Screenshot..."), FN(OnScreenshot) );
+      c->AddItem( wxT("FancyScreenshot"), XXO("&Screenshot..."),
+         FN(OnScreenshot), AudioIONotBusyFlag );
 
 // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
 // as they used to in 1.3.x
 //#ifdef IS_ALPHA
       // TODO: What should we do here?  Make benchmark a plug-in?
       // Easy enough to do.  We'd call it mod-self-test.
-      c->AddItem( wxT("Benchmark"), XXO("&Run Benchmark..."), FN(OnBenchmark) );
+      c->AddItem( wxT("Benchmark"), XXO("&Run Benchmark..."),
+         FN(OnBenchmark), AudioIONotBusyFlag );
 //#endif
 
       c->AddSeparator();
@@ -1397,12 +1419,18 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->SetDefaultFlags(AlwaysEnabledFlag);
       c->BeginSubMenu(_("Mi&xer"));
 
-      c->AddItem( wxT("OutputGain"), XXO("Ad&just Playback Volume..."), FN(OnOutputGain) );
-      c->AddItem( wxT("OutputGainInc"), XXO("&Increase Playback Volume"), FN(OnOutputGainInc) );
-      c->AddItem( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"), FN(OnOutputGainDec) );
-      c->AddItem( wxT("InputGain"), XXO("Adj&ust Recording Volume..."), FN(OnInputGain) );
-      c->AddItem( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"), FN(OnInputGainInc) );
-      c->AddItem( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"), FN(OnInputGainDec) );
+      c->AddItem( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
+         FN(OnOutputGain), AlwaysEnabledFlag );
+      c->AddItem( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
+         FN(OnOutputGainInc), AlwaysEnabledFlag );
+      c->AddItem( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"),
+         FN(OnOutputGainDec), AlwaysEnabledFlag );
+      c->AddItem( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
+         FN(OnInputGain), AlwaysEnabledFlag );
+      c->AddItem( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
+         FN(OnInputGainInc), AlwaysEnabledFlag );
+      c->AddItem( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
+         FN(OnInputGainDec), AlwaysEnabledFlag );
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
@@ -1427,12 +1455,18 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->BeginSubMenu(_("&Play-at-Speed"));
 
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
-      c->AddItem( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"), FN(OnPlayAtSpeed) );
-      c->AddItem( wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped) );
-      c->AddItem( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"), FN(OnPlayAtSpeedCutPreview) );
-      c->AddItem( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."), FN(OnSetPlaySpeed) );
-      c->AddItem( wxT("PlaySpeedInc"), XXO("&Increase Playback Speed"), FN(OnPlaySpeedInc) );
-      c->AddItem( wxT("PlaySpeedDec"), XXO("&Decrease Playback Speed"), FN(OnPlaySpeedDec) );
+      c->AddItem( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
+         FN(OnPlayAtSpeed), CaptureNotBusyFlag );
+      c->AddItem( wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"),
+         FN(OnPlayAtSpeedLooped), CaptureNotBusyFlag );
+      c->AddItem( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
+         FN(OnPlayAtSpeedCutPreview), CaptureNotBusyFlag );
+      c->AddItem( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),
+         FN(OnSetPlaySpeed), CaptureNotBusyFlag );
+      c->AddItem( wxT("PlaySpeedInc"), XXO("&Increase Playback Speed"),
+         FN(OnPlaySpeedInc), CaptureNotBusyFlag );
+      c->AddItem( wxT("PlaySpeedDec"), XXO("&Decrease Playback Speed"),
+         FN(OnPlaySpeedDec), CaptureNotBusyFlag );
 
       // These were on the original transcription toolbar.  But they are not on the
       // shortened one.
@@ -1473,9 +1507,12 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->SetDefaultFlags(AlwaysEnabledFlag);
       c->BeginSubMenu(_("&Selection"));
 
-      c->AddItem( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff) );
-      c->AddItem( wxT("SnapToNearest"), XXO("Snap-To &Nearest"), FN(OnSnapToNearest) );
-      c->AddItem( wxT("SnapToPrior"), XXO("Snap-To &Prior"), FN(OnSnapToPrior) );
+      c->AddItem( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
+         AlwaysEnabledFlag );
+      c->AddItem( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
+         FN(OnSnapToNearest), AlwaysEnabledFlag );
+      c->AddItem( wxT("SnapToPrior"), XXO("Snap-To &Prior"), FN(OnSnapToPrior),
+         AlwaysEnabledFlag );
 
       c->AddItem( wxT("SelStart"), XXO("Selection to &Start"), FN(OnSelToStart), NoFlagsSpecified, wxT("Shift+Home") );
       c->AddItem( wxT("SelEnd"), XXO("Selection to En&d"), FN(OnSelToEnd), NoFlagsSpecified, wxT("Shift+End") );
@@ -1706,8 +1743,10 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) );
       c->AddItem( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) );
 #else
-      c->AddItem( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp) );
-      c->AddItem( wxT("Manual"), XXO("&Manual..."), FN(OnManual) );
+      c->AddItem( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
+         AlwaysEnabledFlag );
+      c->AddItem( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
+         AlwaysEnabledFlag );
 #endif
       c->AddSeparator();
 
@@ -1719,10 +1758,12 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
           AudioIONotBusyFlag );
 #endif
 
-      c->AddItem( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog) );
+      c->AddItem( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
+         AlwaysEnabledFlag );
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
-      c->AddItem( wxT("CrashReport"), XXO("&Generate Support Data..."), FN(OnCrashReport) );
+      c->AddItem( wxT("CrashReport"), XXO("&Generate Support Data..."),
+         FN(OnCrashReport), AlwaysEnabledFlag );
 #endif
       c->AddItem( wxT("CheckDeps"), XXO("Chec&k Dependencies..."), FN(OnCheckDependencies),
           AudioIONotBusyFlag );
@@ -1734,9 +1775,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // DA: Does not fully support update checking.
 #ifndef EXPERIMENTAL_DA
-      c->AddItem( wxT("Updates"), XXO("&Check for Updates..."), FN(OnCheckForUpdates) );
+      c->AddItem( wxT("Updates"), XXO("&Check for Updates..."), FN(OnCheckForUpdates),
+         AlwaysEnabledFlag );
 #endif
-      c->AddItem( wxT("About"), XXO("&About Audacity..."), FN(OnAbout) );
+      c->AddItem( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
+         AlwaysEnabledFlag );
 
       c->EndMenu();
 

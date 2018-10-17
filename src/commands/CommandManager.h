@@ -199,7 +199,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 bool hasDialog,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
-                CommandFlag flags = NoFlagsSpecified,
+                CommandFlag flags,
                 const Options &options = {});
 
    void AddSeparator();
@@ -210,14 +210,14 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
-                   CommandFlag flags = NoFlagsSpecified);
+                   CommandFlag flags);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
                    const wxChar *accel,
-                   CommandFlag flags = NoFlagsSpecified);
+                   CommandFlag flags);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
