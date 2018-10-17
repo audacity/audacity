@@ -1169,9 +1169,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->BeginSubMenu(_("&Align Tracks"));
 
       //c->BeginSubMenu(_("Just Move Tracks"));
-      c->AddItemList(wxT("Align"), alignLabelsNoSync, 2u, FN(OnAlignNoSync));
+      c->AddItemList(wxT("Align"), alignLabelsNoSync, 2u, FN(OnAlignNoSync),
+         AudioIONotBusyFlag | TracksSelectedFlag);
       c->AddSeparator();
-      c->AddItemList(wxT("Align"), alignLabels, mAlignLabelsCount, FN(OnAlign));
+      c->AddItemList(wxT("Align"), alignLabels, mAlignLabelsCount, FN(OnAlign),
+         AudioIONotBusyFlag | TracksSelectedFlag);
       c->AddSeparator();
       c->AddItem( wxT("MoveSelectionWithTracks"), XXO("&Move Selection with Tracks (on/off)"),
          FN(OnMoveSelectionWithTracks),

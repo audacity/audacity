@@ -851,6 +851,7 @@ void CommandManager::AddItemList(const wxString & name,
                                  size_t nItems,
                                  CommandHandlerFinder finder,
                                  CommandFunctorPointer callback,
+                                 CommandFlag flags,
                                  bool bIsEffect)
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
@@ -866,6 +867,7 @@ void CommandManager::AddItemList(const wxString & name,
                                               i,
                                               cnt,
                                               bIsEffect);
+      entry->mask = entry->flags = flags;
       CurrentMenu()->Append(entry->id, GetLabel(entry));
       mbSeparatorAllowed = true;
    }

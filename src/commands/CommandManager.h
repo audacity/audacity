@@ -192,6 +192,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                     size_t nItems,
                     CommandHandlerFinder finder,
                     CommandFunctorPointer callback,
+                    CommandFlag flags,
                     bool bIsEffect = false);
 
    void AddItem(const wxChar *name,
