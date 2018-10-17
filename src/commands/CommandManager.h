@@ -146,15 +146,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    wxMenu* BeginSubMenu(const wxString & tName);
    void EndSubMenu();
 
-   /*
-   void InsertItem(const wxString & name,
-                   const wxString & label,
-                   CommandHandlerFinder finder,
-                   CommandFunctorPointer callback,
-                   const wxString & after,
-                   int checkmark = -1);
-    */
-
    // For specifying unusual arguments in AddItem
    struct Options
    {
