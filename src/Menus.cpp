@@ -863,8 +863,10 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddCheck(wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"), FN(OnShowRecordMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the playback level meter*/
       c->AddCheck(wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"), FN(OnShowPlayMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      /* --i18n-hint: Clicking this menu item shows the toolbar which has sound level meters*/
+
+      /* --i18nhint: Clicking this menu item shows the toolbar which has sound level meters*/
       //c->AddCheck(wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+
       /* i18n-hint: Clicking this menu item shows the toolbar with the mixer*/
       c->AddCheck(wxT("ShowMixerTB"), XXO("Mi&xer Toolbar"), FN(OnShowMixerToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
