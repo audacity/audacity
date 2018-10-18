@@ -158,18 +158,19 @@ int ModuleDispatch(ModuleDispatchTypes type)
 
          c->SetCurrentMenu( pMenu );
          c->AddSeparator();
-         c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
          // We add two new commands into the Analyze menu.
          c->AddItem( 
             _T("A New Command"), // internal name
             _T("1st Experimental Command"), //displayed name
             true, // has dialog
-            ModNullFN( OnFuncFirst ) );
+            ModNullFN( OnFuncFirst ),
+            AudioIONotBusyFlag );
          c->AddItem( 
             _T("Another New Command"), 
             _T("2nd Experimental Command"),
             false, // no dialog
-            ModNullFN( OnFuncSecond ) );
+            ModNullFN( OnFuncSecond ),
+            AudioIONotBusyFlag );
          c->ClearCurrentMenu();
    }
       break;
