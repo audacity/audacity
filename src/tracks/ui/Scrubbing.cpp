@@ -1156,14 +1156,13 @@ bool Scrubber::CanScrub() const
 static CommandHandlerObject &findme(AudacityProject &project)
 { return project.GetScrubber(); }
 
-void Scrubber::AddMenuItems()
+MenuTable::BaseItemPtr Scrubber::Menu()
 {
-   auto cm = mProject->GetCommandManager();
    using Options = CommandManager::Options;
 
-   cm->BeginMenu( _("Scru&bbing") );
+   MenuTable::BaseItemPtrs ptrs;
    for (const auto &item : menuItems) {
-      cm->AddItem( item.name, wxGetTranslation(item.label),
+      ptrs.push_back( MenuTable::Command( item.name, wxGetTranslation(item.label),
           // No menu items yet have dialogs
           false,
           findme, static_cast<CommandFunctorPointer>(item.memFn),
@@ -1172,9 +1171,11 @@ void Scrubber::AddMenuItems()
              ? // a checkmark item
                Options{}.CheckState( (this->*item.StatusTest)() )
              : // not a checkmark item
-               Options{} );
+               Options{}
+      ) );
    }
-   cm->EndMenu();
+
+   return MenuTable::Menu( _("Scru&bbing"), std::move( ptrs ) );
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)

@@ -528,6 +528,7 @@ MenuTable::BaseItemPtr FileMenu( AudacityProject& );
 MenuTable::BaseItemPtr EditMenu( AudacityProject& );
 MenuTable::BaseItemPtr SelectMenu( AudacityProject& );
 MenuTable::BaseItemPtr ViewMenu( AudacityProject& );
+MenuTable::BaseItemPtr TransportMenu( AudacityProject& );
 }
 
 // Tables of menu factories.
@@ -540,6 +541,7 @@ static const auto menuTree = MenuTable::Items(
    , EditMenu
    , SelectMenu
    , ViewMenu
+   , TransportMenu
 );
 
 namespace {
@@ -1183,13 +1185,168 @@ MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
    );
 }
 
+MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
+{
+   using namespace MenuTable;
+   using Options = CommandManager::Options;
+
+   static const auto checkOff = Options{}.CheckState( false );
+   static const auto checkOn = Options{}.CheckState( true );
+
+   constexpr auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
+
+   /* i18n-hint: 'Transport' is the name given to the set of controls that
+      play, record, pause etc. */
+   return Menu( _("Tra&nsport"),
+      Menu( _("Pl&aying"),
+         /* i18n-hint: (verb) Start or Stop audio playback*/
+         Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
+            CanStopAudioStreamFlag, wxT("Space") ),
+         Command( wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"),
+            FN(OnPlayStopSelect), CanStopAudioStreamFlag, wxT("X") ),
+         Command( wxT("PlayLooped"), XXO("&Loop Play"), FN(OnPlayLooped),
+            CanStopAudioStreamFlag, wxT("Shift+Space") ),
+         Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
+            CanStopAudioStreamFlag, wxT("P") )
+      ),
+
+      Menu( _("&Recording"),
+         /* i18n-hint: (verb)*/
+         Command( wxT("Record1stChoice"), XXO("&Record"), FN(OnRecord),
+            CanStopFlags, wxT("R") ),
+         // The OnRecord2ndChoice function is: if normal record records beside,
+         // it records below, if normal record records below, it records beside.
+         // TODO: Do 'the right thing' with other options like TimerRecord.
+         Command( wxT("Record2ndChoice"),
+            // Our first choice is bound to R (by default)
+            // and gets the prime position.
+            // We supply the name for the 'other one' here.
+            // It should be bound to Shift+R
+            (gPrefs->ReadBool("/GUI/PreferNewTrackRecord", false)
+             ? _("&Append Record") : _("Record &New Track")),
+            false, FN(OnRecord2ndChoice), CanStopFlags,
+            wxT("Shift+R")
+         ),
+
+         Command( wxT("TimerRecord"), XXO("&Timer Record..."),
+            FN(OnTimerRecord), CanStopFlags, wxT("Shift+T") ),
+
+#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
+         Command( wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"),
+            FN(OnPunchAndRoll),
+            WaveTracksExistFlag | AudioIONotBusyFlag, wxT("Shift+D") ),
+#endif
+
+         // JKC: I decided to duplicate this between play and record,
+         // rather than put it at the top level.
+         // CommandManger::AddItem can now cope with simple duplicated items.
+         // PRL:  This second registration of wxT("Pause") and XXO("&Pause")
+         // in fact will ignore the given flags and use the same flags as in
+         // the previous registration.
+         Command( wxT("Pause"), XXO("&Pause"), FN(OnPause), CanStopFlags,
+            wxT("P") )
+      ),
+
+      // Scrubbing sub-menu
+      project.GetScrubber().Menu(),
+
+      // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it useful?
+      // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
+      // selection. 'Cursor to' does neither. 'Center at' might describe it better than 'Skip'.
+      Menu( _("&Cursor to"),
+         Command( wxT("CursSelStart"), XXO("Selection Star&t"),
+            FN(OnCursorSelStart),
+            TimeSelectedFlag,
+            Options{}.LongName( _("Cursor to Selection Start") ) ),
+         Command( wxT("CursSelEnd"), XXO("Selection En&d"),
+            FN(OnCursorSelEnd),
+            TimeSelectedFlag,
+            Options{}.LongName( _("Cursor to Selection End") ) ),
+
+         Command( wxT("CursTrackStart"), XXO("Track &Start"),
+            FN(OnCursorTrackStart),
+            TracksSelectedFlag,
+            Options{ wxT("J"), _("Cursor to Track Start") } ),
+         Command( wxT("CursTrackEnd"), XXO("Track &End"),
+            FN(OnCursorTrackEnd),
+            TracksSelectedFlag,
+            Options{ wxT("K"), _("Cursor to Track End") } ),
+
+         Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
+            FN(OnCursorPrevClipBoundary),
+            WaveTracksExistFlag,
+            Options{}.LongName( _("Cursor to Prev Clip Boundary") ) ),
+         Command( wxT("CursNextClipBoundary"), XXO("Ne&xt Clip Boundary"),
+            FN(OnCursorNextClipBoundary),
+            WaveTracksExistFlag,
+            Options{}.LongName( _("Cursor to Next Clip Boundary") ) ),
+
+         Command( wxT("CursProjectStart"), XXO("&Project Start"),
+            FN(OnSkipStart),
+            CanStopFlags,
+            Options{ wxT("Home"), _("Cursor to Project Start") } ),
+         Command( wxT("CursProjectEnd"), XXO("Project E&nd"), FN(OnSkipEnd),
+            CanStopFlags,
+            Options{ wxT("End"), _("Cursor to Project End") } )
+      ),
+
+      Separator(),
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      Menu( _("Pla&y Region"),
+         Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
+            PlayRegionNotLockedFlag ),
+         Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
+            FN(OnUnlockPlayRegion), PlayRegionLockedFlag )
+      ),
+
+      Separator(),
+
+      Command( wxT("RescanDevices"), XXO("R&escan Audio Devices"), FN(OnRescanDevices),
+                 AudioIONotBusyFlag | CanStopAudioStreamFlag ),
+
+      Menu( _("Transport &Options"),
+         // Sound Activated recording options
+         Command( wxT("SoundActivationLevel"),
+            XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
+            AudioIONotBusyFlag | CanStopAudioStreamFlag ),
+         Command( wxT("SoundActivation"),
+            XXO("Sound A&ctivated Recording (on/off)"),
+            FN(OnToggleSoundActivated),
+            AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff ),
+         Separator(),
+
+         Command( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
+            FN(OnTogglePinnedHead),
+            // Switching of scrolling on and off is permitted
+            // even during transport
+            AlwaysEnabledFlag, checkOff ),
+
+         Command( wxT("Overdub"), XXO("&Overdub (on/off)"),
+            FN(OnTogglePlayRecording),
+            AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOn ),
+         Command( wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"),
+            FN(OnToggleSWPlaythrough),
+            AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff )
+
+
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+         ,
+         Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
+            XXO("A&utomated Recording Level Adjustment (on/off)"),
+            FN(OnToggleAutomatedInputLevelAdjustment),
+            AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff )
+#endif
+      )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 {
    using Options = CommandManager::Options;
-   const Options checkOff = Options{}.CheckState( false );
-   const Options checkOn =  Options{}.CheckState( true );
 
    CommandManager *c = project.GetCommandManager();
 
@@ -1202,142 +1359,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       wxASSERT(menubar);
 
       VisitItem( project, menuTree.get() );
-
-      /////////////////////////////////////////////////////////////////////////////
-      // Transport Menu
-      /////////////////////////////////////////////////////////////////////////////
-
-      /*i18n-hint: 'Transport' is the name given to the set of controls that
-      play, record, pause etc. */
-      c->BeginMenu( _("Tra&nsport") );
-      c->BeginMenu( _("Pl&aying") );
-      /* i18n-hint: (verb) Start or Stop audio playback*/
-      c->AddItem( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
-         CanStopAudioStreamFlag, wxT("Space") );
-      c->AddItem( wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"),
-         FN(OnPlayStopSelect), CanStopAudioStreamFlag, wxT("X") );
-      c->AddItem( wxT("PlayLooped"), XXO("&Loop Play"), FN(OnPlayLooped),
-         CanStopAudioStreamFlag, wxT("Shift+Space") );
-      c->AddItem( wxT("Pause"), XXO("&Pause"), FN(OnPause),
-         CanStopAudioStreamFlag, wxT("P") );
-      c->EndMenu();
-
-      c->BeginMenu( _("&Recording") );
-      constexpr auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
-      /* i18n-hint: (verb)*/
-      c->AddItem( wxT("Record1stChoice"), XXO("&Record"), FN(OnRecord),
-         CanStopFlags, wxT("R") );
-      // The OnRecord2ndChoice function is: if normal record records beside,
-      // it records below, if normal record records below, it records beside.
-      // TODO: Do 'the right thing' with other options like TimerRecord.
-      bool bPreferNewTrack;
-      gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
-      c->AddItem( wxT("Record2ndChoice"),
-         // Our first choice is bound to R (by default) and gets the prime position.
-         // We supply the name for the 'other one' here.  It should be bound to Shift+R
-         (bPreferNewTrack ? _("&Append Record") : _("Record &New Track")),
-         false, FN(OnRecord2ndChoice), CanStopFlags,
-         wxT("Shift+R")
-      );
-
-      c->AddItem( wxT("TimerRecord"), XXO("&Timer Record..."),
-         FN(OnTimerRecord), CanStopFlags, wxT("Shift+T") );
-
-#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
-      c->AddItem( wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"), FN(OnPunchAndRoll),
-         WaveTracksExistFlag | AudioIONotBusyFlag, wxT("Shift+D") );
-#endif
-
-      // JKC: I decided to duplicate this between play and record, rather than put it
-      // at the top level.  AddItem can now cope with simple duplicated items.
-      // PRL:  This second registration of wxT("Pause"), with unspecified flags,
-      // in fact will use the same flags as in the previous registration.
-      c->AddItem( wxT("Pause"), XXO("&Pause"), FN(OnPause), CanStopFlags,
-         wxT("P") );
-      c->EndMenu();
-
-      // Scrubbing sub-menu
-      project.GetScrubber().AddMenuItems();
-
-      // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it useful?
-      // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
-      // selection. 'Cursor to' does neither. 'Center at' might describe it better than 'Skip'.
-      c->BeginMenu( _("&Cursor to") );
-
-      c->AddItem( wxT("CursSelStart"), XXO("Selection Star&t"), FN(OnCursorSelStart),
-         TimeSelectedFlag,
-         Options{}.LongName( _("Cursor to Selection Start") ) );
-      c->AddItem( wxT("CursSelEnd"), XXO("Selection En&d"), FN(OnCursorSelEnd),
-         TimeSelectedFlag,
-         Options{}.LongName( _("Cursor to Selection End") ) );
-
-      c->AddItem( wxT("CursTrackStart"), XXO("Track &Start"), FN(OnCursorTrackStart),
-         TracksSelectedFlag,
-         Options{ wxT("J"), _("Cursor to Track Start") } );
-      c->AddItem( wxT("CursTrackEnd"), XXO("Track &End"), FN(OnCursorTrackEnd),
-         TracksSelectedFlag,
-         Options{ wxT("K"), _("Cursor to Track End") } );
-
-      c->AddItem( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"), FN(OnCursorPrevClipBoundary),
-         WaveTracksExistFlag,
-         Options{}.LongName( _("Cursor to Prev Clip Boundary") ) );
-      c->AddItem( wxT("CursNextClipBoundary"), XXO("Ne&xt Clip Boundary"), FN(OnCursorNextClipBoundary),
-         WaveTracksExistFlag,
-         Options{}.LongName( _("Cursor to Next Clip Boundary") ) );
-
-      c->AddItem( wxT("CursProjectStart"), XXO("&Project Start"),
-         FN(OnSkipStart), CanStopFlags,
-         Options{ wxT("Home"), _("Cursor to Project Start") } );
-      c->AddItem( wxT("CursProjectEnd"), XXO("Project E&nd"), FN(OnSkipEnd),
-         CanStopFlags,
-         Options{ wxT("End"), _("Cursor to Project End") } );
-
-      c->EndMenu();
-
-      c->AddSeparator();
-
-      /////////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("Pla&y Region") );
-
-      c->AddItem( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
-         PlayRegionNotLockedFlag );
-      c->AddItem( wxT("UnlockPlayRegion"), XXO("&Unlock"), FN(OnUnlockPlayRegion),
-         PlayRegionLockedFlag );
-
-      c->EndMenu();
-
-      c->AddSeparator();
-
-      c->AddItem( wxT("RescanDevices"), XXO("R&escan Audio Devices"), FN(OnRescanDevices),
-                 AudioIONotBusyFlag | CanStopAudioStreamFlag );
-
-      c->BeginMenu( _("Transport &Options") );
-      // Sound Activated recording options
-      c->AddItem( wxT("SoundActivationLevel"), XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
-                 AudioIONotBusyFlag | CanStopAudioStreamFlag );
-      c->AddItem( wxT("SoundActivation"), XXO("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated),
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff );
-      c->AddSeparator();
-
-      c->AddItem( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
-                  FN(OnTogglePinnedHead),
-                  // Switching of scrolling on and off is permitted even during transport
-                  AlwaysEnabledFlag, checkOff );
-
-      c->AddItem( wxT("Overdub"), XXO("&Overdub (on/off)"), FN(OnTogglePlayRecording),
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOn );
-      c->AddItem( wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough),
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff );
-
-
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      c->AddItem( wxT("AutomatedInputLevelAdjustmentOnOff"), XXO("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment),
-                  AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff );
-#endif
-      c->EndMenu();
-
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
       // Tracks Menu (formerly Project Menu)
