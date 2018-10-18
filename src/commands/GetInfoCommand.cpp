@@ -354,6 +354,7 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
             context.EndStruct();
          }
 #else
+         context.StartArray();
          context.AddItem( (double)i ); // Track number.
          context.StartArray();
          for (int nn = 0; nn< (int)labelTrack->mLabels.size(); nn++) {
@@ -364,6 +365,7 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
             context.AddItem( label.title ); //text.
             context.EndArray();
          }
+         context.EndArray();
          context.EndArray();
 #endif
       } );
