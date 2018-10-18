@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-10-10 15:25+0100\n"
-"PO-Revision-Date: 2018-09-01 09:04+0200\n"
+"PO-Revision-Date: 2018-10-16 19:21+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Bookmarks: -1,243,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -7047,7 +7047,7 @@ msgstr " Alleine"
 #. this track is selected.
 #: src/TrackPanelAx.cpp
 msgid " Selected"
-msgstr "Ausgewählt"
+msgstr " Ausgewählt"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
@@ -9964,12 +9964,12 @@ msgstr "Analysiere: %s"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing first track of stereo pair: %s"
-msgstr "Analysiere erste Spur von Stereopaar: %s"
+msgstr "Analysiere erste Spur des Stereopaars: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing second track of stereo pair: %s"
-msgstr "Analysiere zweite Spur von Stereopaar: %s"
+msgstr "Analysiere zweite Spur des Stereopaars: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
@@ -12992,17 +12992,17 @@ msgstr "Ungültiger Spurversatz in LOF-Datei."
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Could not open file %s: Filename too short."
-msgstr "Konnte Datei nicht öffnen. Dateiname zu kurz: %s"
+msgstr "Konnte Datei %s nicht öffnen: Dateiname zu kurz."
 
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Could not open file %s: Incorrect filetype."
-msgstr "Konnte Datei nicht öffnen. Falscher Dateityp: %s"
+msgstr "Konnte Datei %s nicht öffnen: Dateityp falsch."
 
 #: src/import/ImportMIDI.cpp
 #, c-format
 msgid "Could not open file %s."
-msgstr "Konnte Datei nicht öffnen: %s"
+msgstr "Konnte Datei %s nicht öffnen."
 
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
@@ -13418,7 +13418,7 @@ msgstr "Gruppiert nach Typ"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "S&ort or Group:"
-msgstr "S&ortieren oder gruppieren:"
+msgstr "S&ortieren oder Gruppieren:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Maximum effects per group (0 to disable):"
@@ -17465,7 +17465,7 @@ msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
-msgstr "Anzahl Takte"
+msgstr "Taktanzahl"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 1000 bars"
@@ -17477,7 +17477,7 @@ msgstr "Rhythmusspurdauer"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Used if 'Number of bars' = 0"
-msgstr "Verwendet wenn 'Anzahl Takte' = 0"
+msgstr "Verwendet wenn 'Taktanzahl' = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
