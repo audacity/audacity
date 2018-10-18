@@ -524,6 +524,14 @@ static CommandHandlerObject &findMenuCommandHandler(AudacityProject &project)
    static_cast<CommandFunctorPointer>(& MenuCommandHandler :: X)
 #define XXO(X) _(X), wxString{X}.Contains("...")
 
+// Tables of menu factories.
+// TODO:  devise a registration system instead.
+static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
+);
+
+static const auto menuTree = MenuTable::Items(
+);
+
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 {
    using Options = CommandManager::Options;
@@ -539,6 +547,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    {
       auto menubar = c->AddMenuBar(wxT("appmenu"));
       wxASSERT(menubar);
+
+      VisitItem( project, menuTree.get() );
 
       /////////////////////////////////////////////////////////////////////////////
       // File menu
