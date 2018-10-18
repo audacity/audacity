@@ -614,18 +614,44 @@ void CommandManager::SwapMenuBars()
 ///
 /// This starts a NEW menu
 ///
-void CommandManager::BeginMenu(const wxString & tName)
+wxMenu *CommandManager::BeginMenu(const wxString & tName)
+{
+   if ( mCurrentMenu )
+      return BeginSubMenu( tName );
+   else
+      return BeginMainMenu( tName );
+}
+
+
+///
+/// This attaches a menu, if it's main, to the menubar
+//  and in all cases ends the menu
+///
+void CommandManager::EndMenu()
+{
+   if ( mSubMenuList.empty() )
+      EndMainMenu();
+   else
+      EndSubMenu();
+}
+
+
+///
+/// This starts a NEW menu
+///
+wxMenu *CommandManager::BeginMainMenu(const wxString & tName)
 {
    uCurrentMenu = std::make_unique<wxMenu>();
    mCurrentMenu = uCurrentMenu.get();
    mCurrentMenuName = tName;
+   return mCurrentMenu;
 }
 
 
 ///
 /// This attaches a menu to the menubar and ends the menu
 ///
-void CommandManager::EndMenu()
+void CommandManager::EndMainMenu()
 {
    // Add the menu to the menubar after all menu items have been
    // added to the menu to allow OSX to rearrange special menu

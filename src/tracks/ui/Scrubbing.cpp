@@ -1161,7 +1161,7 @@ void Scrubber::AddMenuItems()
    auto cm = mProject->GetCommandManager();
    using Options = CommandManager::Options;
 
-   cm->BeginSubMenu(_("Scru&bbing"));
+   cm->BeginMenu( _("Scru&bbing") );
    for (const auto &item : menuItems) {
       cm->AddItem( item.name, wxGetTranslation(item.label),
           // No menu items yet have dialogs
@@ -1174,7 +1174,7 @@ void Scrubber::AddMenuItems()
              : // not a checkmark item
                Options{} );
    }
-   cm->EndSubMenu();
+   cm->EndMenu();
 }
 
 void Scrubber::PopulatePopupMenu(wxMenu &menu)
