@@ -101,25 +101,14 @@ size_t FileHistory::GetCount()
 
 void FileHistory::UseMenu(wxMenu *menu)
 {
+   Compress();
+
    auto end = mMenus.end();
    auto iter = std::find(mMenus.begin(), end, menu);
    auto found = (iter != end);
 
    if (!found)
       mMenus.push_back(menu);
-   else {
-      wxASSERT(false);
-   }
-}
-
-void FileHistory::RemoveMenu(wxMenu *menu)
-{
-   auto end = mMenus.end();
-   auto iter = std::find(mMenus.begin(), end, menu);
-   auto found = (iter != end);
-
-   if (found)
-      mMenus.erase(iter);
    else {
       wxASSERT(false);
    }
@@ -161,8 +150,10 @@ void FileHistory::Save(wxConfigBase & config, const wxString & group)
 
 void FileHistory::AddFilesToMenu()
 {
+   Compress();
    for (auto pMenu : mMenus)
-      AddFilesToMenu(pMenu);
+      if (pMenu)
+         AddFilesToMenu(pMenu);
 }
 
 void FileHistory::AddFilesToMenu(wxMenu *menu)
@@ -183,3 +174,15 @@ void FileHistory::AddFilesToMenu(wxMenu *menu)
    menu->Append(mIDBase, _("&Clear"));
    menu->Enable(mIDBase, mHistory.GetCount() > 0);
 }
+
+void FileHistory::Compress()
+{
+   // Clear up expired weak pointers
+   auto end = mMenus.end();
+   mMenus.erase(
+     std::remove_if( mMenus.begin(), end,
+        [](wxWeakRef<wxMenu> &pMenu){ return !pMenu; } ),
+     end
+   );
+}
+

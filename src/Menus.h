@@ -617,9 +617,6 @@ public:
    void CreateRecentFilesMenu(CommandManager *c);
 
 public:
-// Recent files
-   wxMenu *mRecentFilesMenu;
-
    CommandFlag mLastFlags;
    
    // Last effect applied to this project

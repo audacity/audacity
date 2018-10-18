@@ -170,10 +170,6 @@ MenuCreator::MenuCreator(){
 
 MenuCreator::~MenuCreator()
 {
-   if (wxGetApp().GetRecentFiles())
-   {
-      wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
-   }
 }
 
 enum {
@@ -1833,15 +1829,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
 
       project.SetMenuBar(menubar.release());
-      // Bug 143 workaround.
-      // The bug is in wxWidgets.  For a menu that has scrollers, the
-      // scrollers have an ID of 0 (not wxID_NONE which is -3).
-      // Therefore wxWidgets attempts to find a help string. See
-      // wxFrameBase::ShowMenuHelp(int menuId)
-      // It finds a bogus automatic help string of "Recent &Files"
-      // from that submenu.
-      // So we set the help string for command with Id 0 to empty.
-      mRecentFilesMenu->GetParent()->SetHelpString( 0, "" );
    }
 
 
@@ -2188,19 +2175,35 @@ void MenuCreator::CreateRecentFilesMenu(CommandManager *c)
 {
    // Recent Files and Recent Projects menus
 
+   wxWeakRef<wxMenu> recentFilesMenu = c->BeginSubMenu(
+
 #ifdef __WXMAC__
-   /* i18n-hint: This is the name of the menu item on Mac OS X only */
-   mRecentFilesMenu = c->BeginSubMenu(_("Open Recent"));
+      /* i18n-hint: This is the name of the menu item on Mac OS X only */
+      _("Open Recent")
 #else
-   /* i18n-hint: This is the name of the menu item on Windows and Linux */
-   mRecentFilesMenu = c->BeginSubMenu(_("Recent &Files"));
+      /* i18n-hint: This is the name of the menu item on Windows and Linux */
+      _("Recent &Files")
 #endif
 
-   wxGetApp().GetRecentFiles()->UseMenu(mRecentFilesMenu);
-   wxGetApp().GetRecentFiles()->AddFilesToMenu(mRecentFilesMenu);
+   );
+
+   wxGetApp().GetRecentFiles()->UseMenu(recentFilesMenu);
+   wxGetApp().GetRecentFiles()->AddFilesToMenu(recentFilesMenu);
 
    c->EndSubMenu();
 
+   wxTheApp->CallAfter( [=] {
+      // Bug 143 workaround.
+      // The bug is in wxWidgets.  For a menu that has scrollers, the
+      // scrollers have an ID of 0 (not wxID_NONE which is -3).
+      // Therefore wxWidgets attempts to find a help string. See
+      // wxFrameBase::ShowMenuHelp(int menuId)
+      // It finds a bogus automatic help string of "Recent &Files"
+      // from that submenu.
+      // So we set the help string for command with Id 0 to empty.
+      if ( recentFilesMenu )
+         recentFilesMenu->GetParent()->SetHelpString( 0, "" );
+   });
 }
 
 // TODO: This surely belongs in CommandManager?
@@ -2249,9 +2252,6 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
       wxASSERT((!dlg || !dlg->IsModal()));
    }
 #endif
-
-   // Allow FileHistory to remove its own menu
-   wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
 
    // Delete the menus, since we will soon recreate them.
    // Rather oddly, the menus don't vanish as a result of doing this.
