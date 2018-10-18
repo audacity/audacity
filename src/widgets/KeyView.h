@@ -11,6 +11,7 @@
 
 #include "../Audacity.h"
 
+#include <vector>
 #include <wx/defs.h>
 #include <wx/arrstr.h>
 #include <wx/string.h>
