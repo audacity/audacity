@@ -31,7 +31,7 @@ click from the menu into the actaul function to be called.
 #include "ModuleManager.h"
 #include "ShuttleGui.h"
 #include "Project.h"
-#include "CommandManager.h"
+#include "commands/CommandManager.h"
 
 #if defined(__WXMSW__)
 #include <wx/init.h>
