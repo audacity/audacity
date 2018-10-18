@@ -8,7 +8,7 @@ $manpage "Adjustable_Fade"
 $debugbutton false
 $action (_ "Applying Fade...")
 $author (_ "Steve Daulton")
-$release 2.3.0
+$release 2.3.1
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
 ;; Released under terms of the GNU General Public License version 2:
@@ -57,6 +57,7 @@ $control preset (_ "Handy Presets (override controls)") choice (("None" (_ "None
 
 ;;; invalid values
 (defun check-values (x y)
+  (setf err (format nil (_ "Error~%~%")))
   (if (= units 0)  ;percentage values
     (cond
       ((or (< x 0)(< y 0))
@@ -67,11 +68,16 @@ $control preset (_ "Handy Presets (override controls)") choice (("None" (_ "None
       ((or (> x 100)(> y 100))
         (throw 'err (format nil (_ "~adB values cannot be more than +100 dB.~%~%~
                                  Hint: 6 dB doubles the amplitude~%~
-                                 \t-6 dB halves the amplitude." err)))))))
+                                 \t-6 dB halves the amplitude.") err))))))
 
 ;;; Select and apply fade
 (defun fade (sig type curve g0 g1)
-  (check-values gain0 gain1)
+  (when (= preset 0)
+    ; Can't use widget validation for gain. Range depends on units.
+    (check-values g0 g1))
+  (psetq curve (/ curve 100.0)
+         g0    (gainscale g0 units)
+         g1    (gainscale g1 units))
   (mult (get-input sig)
     (case preset
       (0  (case type                  ; Custom fade
@@ -196,11 +202,4 @@ $control preset (_ "Handy Presets (override controls)") choice (("None" (_ "None
           (db-to-linear ,gain))))
 
 
-(setf curve (/ curve 100.0))
-(setf gain0 (gainscale gain0 units))
-(setf gain1 (gainscale gain1 units))
-(setf err (format nil (_ "Error~%~%")))
-
-
 (catch 'err (fade *track* type curve gain0 gain1))
-

@@ -1,8 +1,11 @@
 ;nyquist plug-in
 ;version 4
 ;type analyze
-;name "RMS"
+;name "Measure RMS"
+;manpage "Measure_RMS"
+;action "Measuring RMS level..."
 ;author "Steve Daulton"
+;release 2.3.1
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; Released under terms of the GNU General Public License version 2:

@@ -1,40 +1,34 @@
 $nyquist plug-in
-$version 3
+$version 4
 $type process
 $preview linear
 $name (_ "Delay")
 $manpage "Delay"
+$debugbutton false
 $action (_ "Applying Delay Effect...")
 $author (_ "Steve Daulton")
-$release 2.3.0
+$release 2.3.1
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 
-;; by Steve Daulton, July 2012.
-;; based on 'Delay' by David R. Sky
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;; based on 'Delay' by David R. Sky
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
-$control delay-type (_ "Delay type") choice (
-   (_ "Regular")
-   ("BouncingBall" (_ "Bouncing Ball"))
-   ("ReverseBouncingBall" (_ "Reverse Bouncing Ball"))
-) 0
+
+$control delay-type (_ "Delay type") choice ((_ "Regular")
+                                             ("BouncingBall" (_ "Bouncing Ball"))
+                                             ("ReverseBouncingBall" (_ "Reverse Bouncing Ball"))) 0
 $control dgain (_ "Delay level per echo (dB)") real "" -6 -30 1
 $control delay (_ "Delay time (seconds)") real "" 0.3 0 5
-$control pitch-type (_ "Pitch change effect") choice (
-   ("PitchTempo" (_ "Pitch/Tempo"))
-   ("LQPitchShift" (_ "Low-quality Pitch Shift"))
-) 0 
+$control pitch-type (_ "Pitch change effect") choice (("PitchTempo" (_ "Pitch/Tempo"))
+                                                      ("LQPitchShift" (_ "Low-quality Pitch Shift"))) 0 
 $control shift (_ "Pitch change per echo (semitones)") real "" 0 -2 2
 $control number (_ "Number of echoes") int "" 5 1 30
-$control constrain (_ "Allow duration to change") choice (
-   (_ "Yes")
-   (_ "No")
-) 0 
+$control constrain (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0 
 
 
 ;; The default pitch shift effect is a simple resampling, 
@@ -46,47 +40,23 @@ $control constrain (_ "Allow duration to change") choice (
 ;; noticeable on percussive sounds though may be acceptable 
 ;; on other sounds.
 
-(setf err "")   ; initialise error message
 
-(defun err-chk (arg min max)
-  (if (or (< arg min) (> arg max))
-    T nil))
-
-(when (err-chk number 1 50)(setq err (format nil
-  (_ "Number of echoes '~a' outside valid range 1 to 50.~%~a")  
-  number err)))
-
-(when (err-chk shift -12 12)(setq err (format nil
-  (_ "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a") 
-  shift err)))
-
-(when (err-chk delay 0 10)(setq err (format nil
-  (_ "Delay time '~a' outside valid range 0 to 10 seconds.~%~a") 
-  delay err)))
- 
-(when (err-chk dgain -30 6)(setq err (format nil
-  (_ "Delay level '~a' outside valid range -30 to +6 dB.~%~a") 
-  dgain err)))
-
-
-;;; anti-alias low pass filter
+;;; Anti-alias low pass filter
 (defun lp-wall (sig freq)
   (do ((count 0 (1+ count))
        (freq (* 0.94 freq)))
       ((= count 10) sig)
     (setf sig (lowpass8 sig freq))))
 
-
 ;;; Change speed
 (defun change-speed (sig shift)
   (if (= shift 0)                               ; no pitch shift
     sig
-    (let ((ratio (expt 0.5 (/ shift 12.0))))   ; shift value as frequency ratio
+    (let ((ratio (expt 0.5 (/ shift 12.0))))    ; shift value as frequency ratio
       (force-srate *sound-srate* 
         (stretch-abs ratio (sound sig))))))
 
-
-;;; pitch shift audio 
+;;; Pitch shift audio 
 (defun p-shift (sig shift)
   (if (= shift 0)                               ; no pitch shift
     sig
@@ -103,7 +73,7 @@ $control constrain (_ "Allow duration to change") choice (
               (pitshift (hp sig 20) ratio 1))   ; reduce sub-sonic frequencies
             (T (pitshift sig ratio 1))))))))
 
-;;; apply effects to echo
+;;; Apply effects to echo
 (defun modify (sig num gain shift p-type)
   (let ((gain (db-to-linear (* num gain)))
         (shift (* num shift)))
@@ -111,7 +81,7 @@ $control constrain (_ "Allow duration to change") choice (
         (mult gain (change-speed sig shift))
         (mult gain (p-shift sig shift)))))
 
-;;; compute echoes
+;;; Compute echoes
 (defun delays (sound gain delay shift num type mod)
   (let ((echo (s-rest 0)))
     (do ((count 1 (1+ count))
@@ -130,13 +100,17 @@ $control constrain (_ "Allow duration to change") choice (
 (defun constrain-abs (sig dur)
   (extract-abs 0 dur (cue sig)))
 
-;;; return errors or process
-(if (> (length err) 0)
-  (format nil (_ "Error.~%~a") err)               ; return error
-  (let* ((delay (if (= delay-type 0) delay (/ delay number)))
-         (output 
-          (multichan-expand #'delays 
-            s dgain delay shift number delay-type pitch-type)))
-    (if (= constrain 1)
+
+(let* ((delay (if (= delay-type 0)
+                  delay
+                  (/ delay number)))
+       (output (multichan-expand #'delays *track*
+                                          dgain
+                                          delay
+                                          shift
+                                          number
+                                          delay-type
+                                          pitch-type)))
+  (if (= constrain 1)
       (multichan-expand #'constrain-abs output (get-duration 1))
-      output)))
+      output))
