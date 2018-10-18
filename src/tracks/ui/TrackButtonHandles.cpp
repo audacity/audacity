@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
+#include "../../commands/CommandManager.h"
 
 MinimizeButtonHandle::MinimizeButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )

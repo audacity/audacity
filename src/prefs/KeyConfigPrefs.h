@@ -14,6 +14,7 @@
 
 #include "../Experimental.h"
 
+class CommandManager;
 class ShuttleGui;
 
 #include <wx/defs.h>
@@ -25,7 +26,6 @@ class ShuttleGui;
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 
-#include "../commands/CommandManager.h"
 #include "../widgets/KeyView.h"
 
 #include "PrefsPanel.h"

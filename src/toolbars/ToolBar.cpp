@@ -50,6 +50,7 @@ in which buttons can be placed.
 #include "../Project.h"
 #include "../Theme.h"
 #include "../commands/Keyboard.h"
+#include "../commands/CommandManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
 #include "../Prefs.h"

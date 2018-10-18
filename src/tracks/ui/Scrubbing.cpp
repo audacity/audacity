@@ -33,6 +33,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../widgets/Ruler.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../commands/CommandContext.h"
+#include "../../commands/CommandManager.h"
+
 
 #include <algorithm>
 

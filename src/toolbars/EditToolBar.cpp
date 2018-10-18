@@ -59,6 +59,7 @@
 
 #include "../Experimental.h"
 #include "../commands/CommandContext.h"
+#include "../commands/CommandManager.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 

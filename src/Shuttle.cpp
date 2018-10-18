@@ -69,7 +69,6 @@ preferences.
 //#include "Project.h"
 #include "Shuttle.h"
 #include "WrappedType.h"
-//#include "commands/CommandManager.h"
 //#include "effects/Effect.h"
 
 

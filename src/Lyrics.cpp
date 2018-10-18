@@ -19,6 +19,7 @@
 #include "Internat.h"
 #include "Project.h" // for GetActiveProject
 #include "LabelTrack.h"
+#include "commands/CommandManager.h"
 
 
 BEGIN_EVENT_TABLE(HighlightTextCtrl, wxTextCtrl)

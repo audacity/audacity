@@ -68,6 +68,7 @@ menu items.
 #include "Dependencies.h"
 #include "float_cast.h"
 #include "LabelTrack.h"
+#include "commands/CommandManager.h"
 #ifdef USE_MIDI
 #include "import/ImportMIDI.h"
 #endif // USE_MIDI
@@ -849,7 +850,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       //    // to show the Redo's on stack.
       //    // "UndoHistory" might already be enabled, but add this check for RedoAvailableFlag.
       //    if (flags & RedoAvailableFlag)
-      //       mCommandManager.Enable(wxT("UndoHistory"), true);
+      //       GetCommandManager()->Enable(wxT("UndoHistory"), true);
       // So for now, enable the command regardless of stack. It will just show empty sometimes.
       // FOR REDESIGN, clearly there are some limitations with the flags/mask bitmaps.
 
@@ -2641,8 +2642,8 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
 
 #if 0
    if (flags & CutCopyAvailableFlag) {
-      mCommandManager.Enable(wxT("Copy"), true);
-      mCommandManager.Enable(wxT("Cut"), true);
+      GetCommandManager()->Enable(wxT("Copy"), true);
+      GetCommandManager()->Enable(wxT("Cut"), true);
    }
 #endif
 

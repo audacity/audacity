@@ -117,6 +117,7 @@ scroll information.  It also has some status flags.
 #include "TrackPanel.h"
 #include "WaveTrack.h"
 #include "DirManager.h"
+#include "commands/CommandManager.h"
 #include "effects/Effect.h"
 #include "prefs/PrefsDialog.h"
 #include "widgets/LinkingHtmlWindow.h"
@@ -939,6 +940,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
          NumericConverter::BANDWIDTH,
          gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) ) ),
      mUndoManager(std::make_unique<UndoManager>())
+     , mCommandManager( std::make_unique<CommandManager>() )
 {
    if (!gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate, AudioIO::GetOptimalSupportedSampleRate())) {
       // The default given above can vary with host/devices. So unless there is an entry for
@@ -1570,7 +1572,7 @@ void AudacityProject::AS_SetSnapTo(int snap)
    mSnapTo = snap;
 
 // LLL: TODO - what should this be changed to???
-// mCommandManager.Check(wxT("Snap"), mSnapTo);
+// GetCommandManager()->Check(wxT("Snap"), mSnapTo);
    gPrefs->Write(wxT("/SnapTo"), mSnapTo);
    gPrefs->Flush();
 
@@ -2358,7 +2360,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
       return;
    }
 #endif
-   bool handled = mCommandManager.HandleMenuID(
+   bool handled = GetCommandManager()->HandleMenuID(
       event.GetId(), GetMenuManager(*this).GetUpdateFlags(*this),
       NoFlagsSpecified);
 

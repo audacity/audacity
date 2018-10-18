@@ -28,7 +28,6 @@
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
-#include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
@@ -169,8 +168,6 @@ class WaveTrack;
 
 #include "./commands/CommandFlag.h"
 #include "../include/audacity/EffectInterface.h"
-
-#include "./commands/CommandManager.h"
 
 class MenuCommandHandler;
 class MenuManager;
@@ -347,8 +344,10 @@ public:
    // Converts number of minutes to human readable format
    wxString GetHoursMinsString(int iMinutes);
 
-   CommandManager *GetCommandManager() { return &mCommandManager; }
-   const CommandManager *GetCommandManager() const { return &mCommandManager; }
+   CommandManager *GetCommandManager()
+      { return mCommandManager.get(); }
+   const CommandManager *GetCommandManager() const
+      { return mCommandManager.get(); }
 
    // Keyboard capture
    static bool HasKeyboardCapture(const wxWindow *handler);
@@ -653,7 +652,7 @@ private:
 
    // Commands
 
-   CommandManager mCommandManager;
+   std::unique_ptr<CommandManager> mCommandManager;
 
    // Window elements
 

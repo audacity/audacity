@@ -47,6 +47,7 @@
    #include "../images/AudacityLogo48x48.xpm"
 #endif
 
+#include "commands/CommandManager.h"
 
 // class MixerTrackSlider
 

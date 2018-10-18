@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/textdlg.h>
 #include "../../commands/CommandType.h"
 #include "../../commands/Command.h"
+#include "../../commands/CommandManager.h"
 #include "../../ShuttleGui.h"
 
 

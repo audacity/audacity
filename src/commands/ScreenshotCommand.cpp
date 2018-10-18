@@ -44,6 +44,7 @@ small calculations of rectangles.
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
+#include "CommandManager.h"
 
 
 static const IdentInterfaceSymbol
