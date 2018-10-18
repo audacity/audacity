@@ -429,8 +429,6 @@ private:
 CommandManager::CommandManager():
    mCurrentID(17000),
    mCurrentMenuName(COMMAND),
-   mDefaultFlags(AlwaysEnabledFlag),
-   mDefaultMask(AlwaysEnabledFlag),
    bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
@@ -720,79 +718,6 @@ void CommandManager::ClearCurrentMenu()
    mCurrentMenu = nullptr;
 }
 
-#if 0
-///
-/// Add a menu item to the current menu.  When the user selects it, the
-/// given functor will be called
-void CommandManager::InsertItem(const wxString & name,
-                                const wxString & label_in,
-                                CommandHandlerFinder finder,
-                                CommandFunctorPointer callback,
-                                const wxString & after,
-                                int checkmark)
-{
-   wxMenuBar *bar = GetActiveProject()->GetMenuBar();
-   wxArrayString names = ::wxStringTokenize(after, wxT(":"));
-   size_t cnt = names.GetCount();
-
-   if (cnt < 2) {
-      return;
-   }
-
-   int pos = bar->FindMenu(names[0]);
-   if (pos == wxNOT_FOUND) {
-      return;
-   }
-
-   wxMenu *menu = bar->GetMenu(pos);
-   wxMenuItem *item = NULL;
-   pos = 0;
-
-   for (size_t ndx = 1; ndx < cnt; ndx++) {
-      wxMenuItemList list = menu->GetMenuItems();
-      size_t lcnt = list.GetCount();
-      wxString label = wxMenuItem::GetLabelText(names[ndx]);
-
-      for (size_t lndx = 0; lndx < lcnt; lndx++) {
-         item = list.Item(lndx)->GetData();
-         if (item->GetItemLabelText() == label) {
-            break;
-         }
-         pos++;
-         item = NULL;
-      }
-
-      if (item == NULL) {
-         return;
-      }
-
-      if (item->IsSubMenu()) {
-         menu = item->GetSubMenu();
-         item = NULL;
-         continue;
-      }
-
-      if (ndx + 1 != cnt) {
-         return;
-      }
-   }
-
-   CommandListEntry *entry = NewIdentifier(name, label_in, false, menu, finder, callback, {}, 0, 0, false);
-   int ID = entry->id;
-   wxString label = GetLabel(entry);
-
-   if (checkmark >= 0) {
-      menu->InsertCheckItem(pos, ID, label);
-      menu->Check(ID, checkmark != 0);
-   }
-   else {
-      menu->Insert(pos, ID, label);
-   }
-
-   mbSeparatorAllowed = true;
-}
-#endif
-
 
 
 void CommandManager::AddItem(const wxChar *name,
@@ -803,6 +728,8 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFlag flags,
                              const Options &options)
 {
+   wxASSERT( flags != NoFlagsSpecified );
+
    auto mask = options.mask;
    if (mask == NoFlagsSpecified)
       mask = flags;
@@ -823,9 +750,7 @@ void CommandManager::AddItem(const wxChar *name,
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
-   if (flags != NoFlagsSpecified || mask != NoFlagsSpecified) {
-      SetCommandFlags(name, flags, mask);
-   }
+   SetCommandFlags(name, flags, mask);
 
 
    auto checkmark = options.check;
@@ -851,6 +776,7 @@ void CommandManager::AddItemList(const wxString & name,
                                  size_t nItems,
                                  CommandHandlerFinder finder,
                                  CommandFunctorPointer callback,
+                                 CommandFlag flags,
                                  bool bIsEffect)
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
@@ -866,6 +792,7 @@ void CommandManager::AddItemList(const wxString & name,
                                               i,
                                               cnt,
                                               bIsEffect);
+      entry->mask = entry->flags = flags;
       CurrentMenu()->Append(entry->id, GetLabel(entry));
       mbSeparatorAllowed = true;
    }
@@ -890,10 +817,11 @@ void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *accel,
                                 CommandFlag flags)
 {
+   wxASSERT( flags != NoFlagsSpecified );
+
    NewIdentifier(name, label_in, label_in, false, accel, NULL, finder, callback, {}, 0, 0, false, {});
 
-   if (flags != NoFlagsSpecified)
-      SetCommandFlags(name, flags, flags);
+   SetCommandFlags(name, flags, flags);
 }
 
 void CommandManager::AddGlobalCommand(const wxChar *name,
@@ -1046,8 +974,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
       entry->multi = multi;
       entry->index = index;
       entry->count = count;
-      entry->flags = mDefaultFlags;
-      entry->mask = mDefaultMask;
+      entry->flags = entry->mask = AlwaysEnabledFlag;
       entry->enabled = true;
       entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
       entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
@@ -1869,14 +1796,6 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
    }
 
    xmlFile.EndTag(wxT("audacitykeyboard"));
-}
-
-void CommandManager::SetDefaultFlags(CommandFlag flags, CommandMask mask)
-{
-   if (mask == NoFlagsSpecified)
-      mask = flags;
-   mDefaultFlags = flags;
-   mDefaultMask = mask;
 }
 
 void CommandManager::SetOccultCommands( bool bOccult)

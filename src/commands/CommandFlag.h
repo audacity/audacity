@@ -115,18 +115,18 @@ CommandFlag operator ^ (int, CommandFlag) PROHIBITED;
 
 // Supply the bitwise operations
 
-inline CommandFlag operator ~ (CommandFlag flag)
+inline constexpr CommandFlag operator ~ (CommandFlag flag)
 {
    return static_cast<CommandFlag>( ~ static_cast<unsigned long long> (flag) );
 }
-inline CommandFlag operator & (CommandFlag lhs, CommandFlag rhs)
+inline constexpr CommandFlag operator & (CommandFlag lhs, CommandFlag rhs)
 {
    return static_cast<CommandFlag> (
       static_cast<unsigned long long>(lhs) &
       static_cast<unsigned long long>(rhs)
    );
 }
-inline CommandFlag operator | (CommandFlag lhs, CommandFlag rhs)
+inline constexpr CommandFlag operator | (CommandFlag lhs, CommandFlag rhs)
 {
    return static_cast<CommandFlag> (
       static_cast<unsigned long long>(lhs) |

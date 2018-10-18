@@ -146,15 +146,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    wxMenu* BeginSubMenu(const wxString & tName);
    void EndSubMenu();
 
-   /*
-   void InsertItem(const wxString & name,
-                   const wxString & label,
-                   CommandHandlerFinder finder,
-                   CommandFunctorPointer callback,
-                   const wxString & after,
-                   int checkmark = -1);
-    */
-
    // For specifying unusual arguments in AddItem
    struct Options
    {
@@ -192,6 +183,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                     size_t nItems,
                     CommandHandlerFinder finder,
                     CommandFunctorPointer callback,
+                    CommandFlag flags,
                     bool bIsEffect = false);
 
    void AddItem(const wxChar *name,
@@ -199,7 +191,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 bool hasDialog,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
-                CommandFlag flags = NoFlagsSpecified,
+                CommandFlag flags,
                 const Options &options = {});
 
    void AddSeparator();
@@ -210,14 +202,14 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
-                   CommandFlag flags = NoFlagsSpecified);
+                   CommandFlag flags);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
                    CommandHandlerFinder finder,
                    CommandFunctorPointer callback,
                    const wxChar *accel,
-                   CommandFlag flags = NoFlagsSpecified);
+                   CommandFlag flags);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
@@ -225,14 +217,6 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
                          const wxChar *accel);
-   //
-   // Command masks
-   //
-
-   // For NEW items/commands
-   void SetDefaultFlags(CommandFlag flags, CommandMask mask = NoFlagsSpecified);
-   CommandFlag GetDefaultFlags() const { return mDefaultFlags; }
-   CommandMask GetDefaultMask() const { return mDefaultMask; }
 
    void SwapMenuBars();
    void SetOccultCommands( bool bOccult);
@@ -405,8 +389,6 @@ private:
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
 
-   CommandFlag mDefaultFlags;
-   CommandMask mDefaultMask;
    bool bMakingOccultCommands;
 };
 
