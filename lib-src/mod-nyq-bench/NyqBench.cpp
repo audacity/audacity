@@ -193,12 +193,12 @@ extern "C"
 
             c->SetCurrentMenu(pMenu);
             c->AddSeparator();
-            c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
             c->AddItem(wxT("NyqBench"),
                _("&Nyquist Workbench..."),
                true,
                findme,
-               static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench));
+               static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
+               AudioIONotBusyFlag);
 
             c->ClearCurrentMenu();
          }
