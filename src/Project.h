@@ -169,7 +169,7 @@ class WaveTrack;
 #include "./commands/CommandFlag.h"
 #include "../include/audacity/EffectInterface.h"
 
-class MenuCommandHandler;
+struct MenuCommandHandler;
 class MenuManager;
 
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
