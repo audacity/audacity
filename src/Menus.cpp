@@ -652,7 +652,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->EndSubMenu();
 
-      c->AddItem( wxT("EditMetaData"), XXO("Me&tadata..."), FN(OnEditMetadata),
+      c->AddItem( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
          AudioIONotBusyFlag );
 
       /////////////////////////////////////////////////////////////////////////////
@@ -1662,7 +1662,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // These are the more useful to VI user Scriptables.
       // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-      c->BeginSubMenu(_("&Scriptables I"));
+      c->BeginSubMenu(_("Script&ables I"));
 
       // Note that the PLUGIN_SYMBOL must have a space between words, 
       // whereas the short-form used here must not.
