@@ -944,7 +944,6 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & nameIn,
       return prev;
 
    {
-      // Make a unique_ptr or shared_ptr as appropriate:
       auto entry = std::make_unique<CommandListEntry>();
 
       wxString labelPrefix;
