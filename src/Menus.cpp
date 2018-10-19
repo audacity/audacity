@@ -1297,7 +1297,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          FN(OnManageMacros), AudioIONotBusyFlag );
 
       c->BeginSubMenu(_("&Apply Macro"));
-      c->AddItem( wxT("ApplyMacrosPalette"), XXO("&Palette..."),
+      // Palette has no access key to ensure first letter navigation of sub menu
+      c->AddItem( wxT("ApplyMacrosPalette"), XXO("Palette..."),
          FN(OnApplyMacrosPalette), AudioIONotBusyFlag );
       c->AddSeparator();
       PopulateMacrosMenu( c, AudioIONotBusyFlag );
