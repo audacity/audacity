@@ -808,7 +808,7 @@ void EffectNormalize::StoreBufferBlock(TrackIterRange<WaveTrack> range,
 void EffectNormalize::InitTrackAnalysis(bool dc)
 {
    mSum[0]   = 0.0; // dc offset inits
-   mSum[0]   = 0.0;
+   mSum[1]   = 0.0;
    mCount = 0;
 
    mBlockRingPos = 0;
