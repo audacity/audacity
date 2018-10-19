@@ -1910,7 +1910,8 @@ void MenuCreator::PopulateEffectsMenu(CommandManager* c,
       comp1 = comp2 = SortEffectsByName;
 
    std::sort( defplugs.begin(), defplugs.end(), comp1 );
-   std::sort( optplugs.begin(), optplugs.end(), comp2 );
+   if ( comp1 != comp2 )
+      std::stable_sort( optplugs.begin(), optplugs.end(), comp2 );
 
    AddEffectMenuItems(c, defplugs, batchflags, realflags, true);
 
