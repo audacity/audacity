@@ -116,28 +116,37 @@ EffectType EffectNormalize::GetType()
 }
 
 // EffectClientInterface implementation
-bool EffectNormalize::DefineParams( ShuttleParams & S ){
+bool EffectNormalize::DefineParams( ShuttleParams & S )
+{
    S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
-   S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
-   S.SHUTTLE_PARAM( mRMSLevel, RMSLevel );
    S.SHUTTLE_PARAM( mGain, ApplyGain );
    S.SHUTTLE_PARAM( mDC, RemoveDC );
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );
-   S.SHUTTLE_PARAM( mDualMono, DualMono );
-   S.SHUTTLE_PARAM( mNormalizeTo, NormalizeTo );
+   if(mIsLoudness)
+   {
+      S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
+      S.SHUTTLE_PARAM( mRMSLevel, RMSLevel );
+      S.SHUTTLE_PARAM( mDualMono, DualMono );
+      S.SHUTTLE_PARAM( mNormalizeTo, NormalizeTo );
+   }
+   else
+      mNormalizeTo = kAmplitude;
    return true;
 }
 
 bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 {
    parms.Write(KEY_PeakLevel, mPeakLevel);
-   parms.Write(KEY_LUFSLevel, mLUFSLevel);
-   parms.Write(KEY_RMSLevel, mRMSLevel);
    parms.Write(KEY_ApplyGain, mGain);
    parms.Write(KEY_RemoveDC, mDC);
    parms.Write(KEY_StereoInd, mStereoInd);
-   parms.Write(KEY_DualMono, mDualMono);
-   parms.Write(KEY_NormalizeTo, mNormalizeTo);
+   if(mIsLoudness)
+   {
+      parms.Write(KEY_LUFSLevel, mLUFSLevel);
+      parms.Write(KEY_RMSLevel, mRMSLevel);
+      parms.Write(KEY_DualMono, mDualMono);
+      parms.Write(KEY_NormalizeTo, mNormalizeTo);
+   }
 
    return true;
 }
@@ -145,22 +154,29 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
 bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 {
    ReadAndVerifyDouble(PeakLevel);
-   ReadAndVerifyDouble(LUFSLevel);
-   ReadAndVerifyDouble(RMSLevel);
    ReadAndVerifyBool(ApplyGain);
    ReadAndVerifyBool(RemoveDC);
    ReadAndVerifyBool(StereoInd);
-   ReadAndVerifyBool(DualMono);
-   ReadAndVerifyBool(NormalizeTo);
 
    mPeakLevel = PeakLevel;
-   mLUFSLevel = LUFSLevel;
-   mRMSLevel = RMSLevel;
    mGain = ApplyGain;
    mDC = RemoveDC;
    mStereoInd = StereoInd;
-   mDualMono = DualMono;
-   mNormalizeTo = NormalizeTo;
+
+   if(mIsLoudness)
+   {
+      ReadAndVerifyDouble(LUFSLevel);
+      ReadAndVerifyDouble(RMSLevel);
+      ReadAndVerifyBool(DualMono);
+      ReadAndVerifyBool(NormalizeTo);
+
+      mLUFSLevel = LUFSLevel;
+      mRMSLevel = RMSLevel;
+      mDualMono = DualMono;
+      mNormalizeTo = NormalizeTo;
+   }
+   else
+      mNormalizeTo = kAmplitude;
 
    return true;
 }
@@ -174,7 +190,11 @@ bool EffectNormalize::CheckWhetherSkipEffect()
 
 bool EffectNormalize::Startup()
 {
-   wxString base = wxT("/Effects/Normalize/");
+   wxString base;
+   if(mIsLoudness)
+      base = wxT("/Effects/Loudness/");
+   else
+      base = wxT("/Effects/Normalize/");
 
    // Migrate settings from 2.1.0 or before
 
@@ -196,9 +216,13 @@ bool EffectNormalize::Startup()
          mPeakLevel = -mPeakLevel;
       boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
       mStereoInd = (boolProxy == 1);
-      mDualMono = DEF_DualMono;
-      mNormalizeTo = kAmplitude;
-      mLUFSLevel = DEF_LUFSLevel;
+      if(mIsLoudness)
+      {
+         mDualMono = DEF_DualMono;
+         mNormalizeTo = kAmplitude;
+         mLUFSLevel = DEF_LUFSLevel;
+         mRMSLevel = DEF_RMSLevel;
+      }
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
