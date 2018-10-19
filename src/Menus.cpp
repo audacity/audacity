@@ -529,6 +529,7 @@ MenuTable::BaseItemPtr EditMenu( AudacityProject& );
 MenuTable::BaseItemPtr SelectMenu( AudacityProject& );
 MenuTable::BaseItemPtr ViewMenu( AudacityProject& );
 MenuTable::BaseItemPtr TransportMenu( AudacityProject& );
+MenuTable::BaseItemPtr TracksMenu( AudacityProject& );
 }
 
 // Tables of menu factories.
@@ -542,6 +543,7 @@ static const auto menuTree = MenuTable::Items(
    , SelectMenu
    , ViewMenu
    , TransportMenu
+   , TracksMenu
 );
 
 namespace {
@@ -1342,6 +1344,171 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
    );
 }
 
+MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
+{
+   // Tracks Menu (formerly Project Menu)
+   using namespace MenuTable;
+   using Options = CommandManager::Options;
+   
+   return Menu( _("&Tracks"),
+      Menu( _("Add &New"),
+         Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
+            AudioIONotBusyFlag, wxT("Ctrl+Shift+N") ),
+         Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
+            FN(OnNewStereoTrack), AudioIONotBusyFlag ),
+         Command( wxT("NewLabelTrack"), XXO("&Label Track"),
+            FN(OnNewLabelTrack), AudioIONotBusyFlag ),
+         Command( wxT("NewTimeTrack"), XXO("&Time Track"),
+            FN(OnNewTimeTrack), AudioIONotBusyFlag )
+      ),
+
+      //////////////////////////////////////////////////////////////////////////
+
+      Separator(),
+
+      Menu( _("Mi&x"),
+         // Stereo to Mono is an oddball command that is also subject to control by the
+         // plug-in manager, as if an effect.  Decide whether to show or hide it.
+         [](AudacityProject&) -> BaseItemPtr {
+            const PluginID ID =
+               EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
+            const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
+            if (plug && plug->IsEnabled())
+               return Command( wxT("Stereo to Mono"),
+                  XXO("Mix Stereo Down to &Mono"), FN(OnStereoToMono),
+                  AudioIONotBusyFlag | StereoRequiredFlag |
+                     WaveTracksSelectedFlag );
+            else
+               return {};
+         },
+         Command( wxT("MixAndRender"), XXO("Mi&x and Render"), FN(OnMixAndRender),
+            AudioIONotBusyFlag | WaveTracksSelectedFlag ),
+         Command( wxT("MixAndRenderToNewTrack"), XXO("Mix and Render to Ne&w Track"), FN(OnMixAndRenderToNewTrack),
+            AudioIONotBusyFlag | WaveTracksSelectedFlag, wxT("Ctrl+Shift+M") )
+      ),
+
+      Command( wxT("Resample"), XXO("&Resample..."), FN(OnResample),
+         AudioIONotBusyFlag | WaveTracksSelectedFlag ),
+
+      Separator(),
+
+      Command( wxT("RemoveTracks"), XXO("Remo&ve Tracks"), FN(OnRemoveTracks),
+         AudioIONotBusyFlag | TracksSelectedFlag ),
+
+      Separator(),
+
+      Menu( _("M&ute/Unmute"),
+         Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
+            FN(OnMuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+U") ),
+         Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
+            FN(OnUnmuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+Shift+U") )
+      ),
+
+      Menu( _("&Pan"),
+         // As Pan changes are not saved on Undo stack,
+         // pan settings for all tracks
+         // in the project could very easily be lost unless we
+         // require the tracks to be selected.
+         Command( wxT("PanLeft"), XXO("&Left"), FN(OnPanLeft),
+            TracksSelectedFlag,
+            Options{}.LongName( _("Pan Left") ) ),
+         Command( wxT("PanRight"), XXO("&Right"), FN(OnPanRight),
+            TracksSelectedFlag,
+            Options{}.LongName( _("Pan Right") ) ),
+         Command( wxT("PanCenter"), XXO("&Center"), FN(OnPanCenter),
+            TracksSelectedFlag,
+            Options{}.LongName( _("Pan Center") ) )
+      ),
+
+      Separator(),
+
+      //////////////////////////////////////////////////////////////////////////
+
+      Menu( _("&Align Tracks"), //_("Just Move Tracks"),
+         []{
+            // Mutual alignment of tracks independent of selection or zero
+            static const IdentInterfaceSymbol alignLabelsNoSync[] = {
+               { wxT("EndToEnd"),     XO("&Align End to End") },
+               { wxT("Together"),     XO("Align &Together") },
+            };
+            return CommandGroup(wxT("Align"),
+               alignLabelsNoSync, 2u, FN(OnAlignNoSync),
+               AudioIONotBusyFlag | TracksSelectedFlag);
+         }(),
+
+         Separator(),
+
+         []{
+            // Alignment commands using selection or zero
+            static const IdentInterfaceSymbol alignLabels[] = {
+               { wxT("StartToZero"),     XO("Start to &Zero") },
+               { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start") },
+               { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
+               { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start") },
+               { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
+            };
+            static_assert(
+               kAlignLabelsCount == sizeof(alignLabels) / sizeof(alignLabels[0]),
+               "incorrect count"
+            );
+            return CommandGroup(wxT("Align"),
+               alignLabels, kAlignLabelsCount, FN(OnAlign),
+               AudioIONotBusyFlag | TracksSelectedFlag);
+         }(),
+
+         Separator(),
+
+         Command( wxT("MoveSelectionWithTracks"),
+            XXO("&Move Selection with Tracks (on/off)"),
+            FN(OnMoveSelectionWithTracks),
+            AlwaysEnabledFlag,
+            Options{}.CheckState(
+               gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L ) ) )
+      ),
+
+#if 0
+      // TODO: Can these labels be made clearer?
+      // Do we need this sub-menu at all?
+      Menu( _("Move Sele&ction and Tracks"), {
+         CommandGroup(wxT("AlignMove"), alignLabels, kAlignLabelsCount,
+            FN(OnAlignMoveSel), AudioIONotBusyFlag | TracksSelectedFlag),
+      } ),
+#endif
+
+      //////////////////////////////////////////////////////////////////////////
+
+#ifdef EXPERIMENTAL_SCOREALIGN
+      Command( wxT("ScoreAlign"), XXO("Synchronize MIDI with Audio"),
+         FN(OnScoreAlign),
+         AudioIONotBusyFlag | NoteTracksSelectedFlag | WaveTracksSelectedFlag ),
+#endif // EXPERIMENTAL_SCOREALIGN
+
+      //////////////////////////////////////////////////////////////////////////
+
+      Menu( _("S&ort Tracks"),
+         Command( wxT("SortByTime"), XXO("By &Start Time"), FN(OnSortTime),
+            TracksExistFlag,
+            Options{}.LongName( _("Sort by Time") ) ),
+         Command( wxT("SortByName"), XXO("By &Name"), FN(OnSortName),
+            TracksExistFlag,
+            Options{}.LongName( _("Sort by Name") ) )
+      )
+
+      //////////////////////////////////////////////////////////////////////////
+
+#ifdef EXPERIMENTAL_SYNC_LOCK
+
+      ,
+      Separator(),
+
+      Command( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"),
+         FN(OnSyncLock), AlwaysEnabledFlag,
+         Options{}.CheckState( gPrefs->Read(wxT("/GUI/SyncLockTracks"), 0L) ) )
+
+#endif
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1359,161 +1526,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       wxASSERT(menubar);
 
       VisitItem( project, menuTree.get() );
-
-      //////////////////////////////////////////////////////////////////////////
-      // Tracks Menu (formerly Project Menu)
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Tracks") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("Add &New") );
-
-      c->AddItem( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
-         AudioIONotBusyFlag, wxT("Ctrl+Shift+N") );
-      c->AddItem( wxT("NewStereoTrack"), XXO("&Stereo Track"),
-         FN(OnNewStereoTrack), AudioIONotBusyFlag );
-      c->AddItem( wxT("NewLabelTrack"), XXO("&Label Track"),
-         FN(OnNewLabelTrack), AudioIONotBusyFlag );
-      c->AddItem( wxT("NewTimeTrack"), XXO("&Time Track"),
-         FN(OnNewTimeTrack), AudioIONotBusyFlag );
-
-      c->EndMenu();
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->AddSeparator();
-
-      c->BeginMenu( _("Mi&x") );
-      {
-         // Stereo to Mono is an oddball command that is also subject to control by the
-         // plug-in manager, as if an effect.  Decide whether to show or hide it.
-         const PluginID ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
-         const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-         if (plug && plug->IsEnabled())
-            c->AddItem( wxT("Stereo to Mono"), XXO("Mix Stereo Down to &Mono"), FN(OnStereoToMono),
-            AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag );
-      }
-      c->AddItem( wxT("MixAndRender"), XXO("Mi&x and Render"), FN(OnMixAndRender),
-         AudioIONotBusyFlag | WaveTracksSelectedFlag );
-      c->AddItem( wxT("MixAndRenderToNewTrack"), XXO("Mix and Render to Ne&w Track"), FN(OnMixAndRenderToNewTrack),
-         AudioIONotBusyFlag | WaveTracksSelectedFlag, wxT("Ctrl+Shift+M") );
-      c->EndMenu();
-
-      c->AddItem( wxT("Resample"), XXO("&Resample..."), FN(OnResample),
-         AudioIONotBusyFlag | WaveTracksSelectedFlag );
-
-      c->AddSeparator();
-
-      c->AddItem( wxT("RemoveTracks"), XXO("Remo&ve Tracks"), FN(OnRemoveTracks),
-         AudioIONotBusyFlag | TracksSelectedFlag );
-
-      c->AddSeparator();
-
-      c->BeginMenu( _("M&ute/Unmute") );
-      c->AddItem( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
-         FN(OnMuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+U") );
-      c->AddItem( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
-         FN(OnUnmuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+Shift+U") );
-      c->EndMenu();
-
-      c->BeginMenu( _("&Pan") );
-      // As Pan changes are not saved on Undo stack, pan settings for all tracks
-      // in the project could very easily be lost unless we require the tracks to be selcted.
-      c->AddItem( wxT("PanLeft"), XXO("&Left"), FN(OnPanLeft),
-         TracksSelectedFlag,
-         Options{}.LongName( _("Pan Left") ) );
-      c->AddItem( wxT("PanRight"), XXO("&Right"), FN(OnPanRight),
-         TracksSelectedFlag,
-         Options{}.LongName( _("Pan Right") ) );
-      c->AddItem( wxT("PanCenter"), XXO("&Center"), FN(OnPanCenter),
-         TracksSelectedFlag,
-         Options{}.LongName( _("Pan Center") ) );
-      c->EndMenu();
-
-
-      c->AddSeparator();
-
-      //////////////////////////////////////////////////////////////////////////
-
-      // Mutual alignment of tracks independent of selection or zero
-      static const IdentInterfaceSymbol alignLabelsNoSync[] = {
-         { wxT("EndToEnd"),     XO("&Align End to End") },
-         { wxT("Together"),     XO("Align &Together") },
-      };
-
-      // Alignment commands using selection or zero
-      static const IdentInterfaceSymbol alignLabels[] = {
-         { wxT("StartToZero"),     XO("Start to &Zero") },
-         { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start") },
-         { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
-         { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start") },
-         { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
-      };
-      static_assert(
-         kAlignLabelsCount == sizeof(alignLabels) / sizeof(alignLabels[0]),
-         "incorrect count"
-      );
-
-      c->BeginMenu( _("&Align Tracks") );
-
-      //c->BeginMenu( _("Just Move Tracks") );
-      c->AddItemList(wxT("Align"), alignLabelsNoSync, 2u, FN(OnAlignNoSync),
-         AudioIONotBusyFlag | TracksSelectedFlag);
-      c->AddSeparator();
-      c->AddItemList(wxT("Align"), alignLabels, kAlignLabelsCount, FN(OnAlign),
-         AudioIONotBusyFlag | TracksSelectedFlag);
-      c->AddSeparator();
-      c->AddItem( wxT("MoveSelectionWithTracks"), XXO("&Move Selection with Tracks (on/off)"),
-         FN(OnMoveSelectionWithTracks),
-         AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L ) ) );
-      c->EndMenu();
-
-#if 0
-      // TODO: Can these labels be made clearer? Do we need this sub-menu at all?
-      c->BeginMenu( _("Move Sele&ction and Tracks") );
-
-      c->AddItemList(wxT("AlignMove"), alignLabels, kAlignLabelsCount, FN(OnAlignMoveSel));
-      c->SetCommandFlags(wxT("AlignMove"),
-         AudioIONotBusyFlag | TracksSelectedFlag,
-         AudioIONotBusyFlag | TracksSelectedFlag);
-
-      c->EndMenu();
-#endif
-
-      //////////////////////////////////////////////////////////////////////////
-
-#ifdef EXPERIMENTAL_SCOREALIGN
-      c->AddItem( wxT("ScoreAlign"), XXO("Synchronize MIDI with Audio"), FN(OnScoreAlign),
-         AudioIONotBusyFlag | NoteTracksSelectedFlag | WaveTracksSelectedFlag );
-#endif // EXPERIMENTAL_SCOREALIGN
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("S&ort Tracks") );
-
-      c->AddItem( wxT("SortByTime"), XXO("By &Start Time"), FN(OnSortTime),
-         TracksExistFlag,
-         Options{}.LongName( _("Sort by Time") ) );
-      c->AddItem( wxT("SortByName"), XXO("By &Name"), FN(OnSortName),
-         TracksExistFlag,
-         Options{}.LongName( _("Sort by Name") ) );
-
-      c->EndMenu();
-
-      //////////////////////////////////////////////////////////////////////////
-
-#ifdef EXPERIMENTAL_SYNC_LOCK
-      c->AddSeparator();
-      c->AddItem( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock),
-         AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/SyncLockTracks"), 0L) ) );
-
-#endif
-
-      c->EndMenu();
 
       // All of this is a bit hacky until we can get more things connected into
       // the plugin manager...sorry! :-(
