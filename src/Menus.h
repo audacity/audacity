@@ -609,8 +609,6 @@ public:
    
    // Last effect applied to this project
    PluginID mLastEffect{};
-
-   size_t mAlignLabelsCount;
 };
 
 class MenuManager : public MenuCreator

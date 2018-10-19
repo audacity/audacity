@@ -167,6 +167,8 @@ static void AddEffectMenuItemGroup(CommandManager *c,
    bool isDefault);
 static void CreateRecentFilesMenu(CommandManager *c);
 
+constexpr size_t kAlignLabelsCount = 5;
+
 MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project)
 { return *project.mMenuCommandHandler; }
 
@@ -1156,7 +1158,10 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          { wxT("EndToSelStart"),   _("End to Cu&rsor/Selection Start") },
          { wxT("EndToSelEnd"),     _("End to Selection En&d") },
       };
-      mAlignLabelsCount = sizeof(alignLabels) / sizeof(alignLabels[0]);
+      static_assert(
+         kAlignLabelsCount == sizeof(alignLabels) / sizeof(alignLabels[0]),
+         "incorrect count"
+      );
 
       c->BeginSubMenu(_("&Align Tracks"));
 
@@ -1164,7 +1169,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItemList(wxT("Align"), alignLabelsNoSync, 2u, FN(OnAlignNoSync),
          AudioIONotBusyFlag | TracksSelectedFlag);
       c->AddSeparator();
-      c->AddItemList(wxT("Align"), alignLabels, mAlignLabelsCount, FN(OnAlign),
+      c->AddItemList(wxT("Align"), alignLabels, kAlignLabelsCount, FN(OnAlign),
          AudioIONotBusyFlag | TracksSelectedFlag);
       c->AddSeparator();
       c->AddItem( wxT("MoveSelectionWithTracks"), XXO("&Move Selection with Tracks (on/off)"),
@@ -1177,7 +1182,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // TODO: Can these labels be made clearer? Do we need this sub-menu at all?
       c->BeginSubMenu(_("Move Sele&ction and Tracks"));
 
-      c->AddItemList(wxT("AlignMove"), alignLabels, mAlignLabelsCount, FN(OnAlignMoveSel));
+      c->AddItemList(wxT("AlignMove"), alignLabels, kAlignLabelsCount, FN(OnAlignMoveSel));
       c->SetCommandFlags(wxT("AlignMove"),
          AudioIONotBusyFlag | TracksSelectedFlag,
          AudioIONotBusyFlag | TracksSelectedFlag);
@@ -8517,7 +8522,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Together");
    }
 
-   if ((unsigned)index >= GetMenuManager(project).mAlignLabelsCount) { // This is an alignLabelsNoSync command.
+   if ((unsigned)index >= kAlignLabelsCount) { // This is an alignLabelsNoSync command.
       for (auto t : tracks->SelectedLeaders< AudioTrack >()) {
          // This shifts different tracks in different ways, so no sync-lock move.
          // Only align Wave and Note tracks end to end.
@@ -8558,7 +8563,7 @@ void MenuCommandHandler::OnAlignNoSync(const CommandContext &context)
 
    // Add length of alignLabels array so that we can handle this in AudacityProject::HandleAlign.
    HandleAlign(project,
-      context.index + GetMenuManager(project).mAlignLabelsCount, false);
+      context.index + kAlignLabelsCount, false);
 }
 
 void MenuCommandHandler::OnAlign(const CommandContext &context)
