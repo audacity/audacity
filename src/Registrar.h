@@ -23,7 +23,6 @@ responsible for calling the appropriate callback functions.
 #include "Audacity.h"
 #include "MemoryX.h"
 
-class Command;
 class LoadableModule;
 class CommandDefinitionInterface;
 class Effect;
