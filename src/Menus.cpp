@@ -149,6 +149,24 @@ menu items.
 #include "./commands/AudacityCommand.h"
 #include "commands/CommandContext.h"
 
+static void PopulateMacrosMenu( CommandManager* c, CommandFlag flags  );
+static void PopulateEffectsMenu(CommandManager* c,
+   EffectType type,
+   CommandFlag batchflags,
+   CommandFlag realflags);
+static void AddEffectMenuItems(CommandManager *c,
+   std::vector<const PluginDescriptor*> & plugs,
+   CommandFlag batchflags,
+   CommandFlag realflags,
+   bool isDefault);
+static void AddEffectMenuItemGroup(CommandManager *c,
+   const wxArrayString & names,
+   const std::vector<bool> &vHasDialog,
+   const PluginIDList & plugs,
+   const std::vector<CommandFlag> & flags,
+   bool isDefault);
+static void CreateRecentFilesMenu(CommandManager *c);
+
 MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project)
 { return *project.mMenuCommandHandler; }
 
@@ -1848,7 +1866,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
 
 
-void MenuCreator::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
+void PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
 {
    wxArrayString names = MacroCommands::GetNames();
    int i;
@@ -1865,10 +1883,10 @@ void MenuCreator::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into
 /// the menu.
-void MenuCreator::PopulateEffectsMenu(CommandManager* c,
-                                          EffectType type,
-                                          CommandFlag batchflags,
-                                          CommandFlag realflags)
+void PopulateEffectsMenu(CommandManager* c,
+   EffectType type,
+   CommandFlag batchflags,
+   CommandFlag realflags)
 {
    PluginManager & pm = PluginManager::Get();
 
@@ -1928,7 +1946,7 @@ void MenuCreator::PopulateEffectsMenu(CommandManager* c,
    return;
 }
 
-void MenuCreator::AddEffectMenuItems(CommandManager *c,
+void AddEffectMenuItems(CommandManager *c,
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
    CommandFlag realflags,
@@ -2069,12 +2087,12 @@ void MenuCreator::AddEffectMenuItems(CommandManager *c,
    return;
 }
 
-void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
-                                             const wxArrayString & names,
-                                             const std::vector<bool> &vHasDialog,
-                                             const PluginIDList & plugs,
-                                             const std::vector<CommandFlag> & flags,
-                                             bool isDefault)
+void AddEffectMenuItemGroup(CommandManager *c,
+   const wxArrayString & names,
+   const std::vector<bool> &vHasDialog,
+   const PluginIDList & plugs,
+   const std::vector<CommandFlag> & flags,
+   bool isDefault)
 {
    int namesCnt = (int) names.GetCount();
    int perGroup;
@@ -2176,7 +2194,7 @@ void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
 
 #undef FN
 
-void MenuCreator::CreateRecentFilesMenu(CommandManager *c)
+void CreateRecentFilesMenu(CommandManager *c)
 {
    // Recent Files and Recent Projects menus
 
