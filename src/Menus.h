@@ -520,6 +520,7 @@ void OnManageTools(const CommandContext &context );
 
 void OnAbout(const CommandContext &context );
 void OnQuickHelp(const CommandContext &context );
+void OnQuickFix(const CommandContext &context );
 void OnManual(const CommandContext &context );
 void OnCheckForUpdates(const CommandContext &context );
 void MayCheckForUpdates(AudacityProject &project);

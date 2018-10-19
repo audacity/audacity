@@ -1775,6 +1775,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->BeginMenu(_("&Help"));
 
+      c->AddItem( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
+         AlwaysEnabledFlag );
+
       // DA: Emphasise it is the Audacity Manual (No separate DA manual).
 #ifdef EXPERIMENTAL_DA
       // 'Getting Started' rather than 'Quick Help' for DarkAudacity.
@@ -9405,6 +9408,14 @@ void MenuCommandHandler::OnQuickHelp(const CommandContext &context)
    HelpSystem::ShowHelp(
       &project,
       wxT("Quick_Help"));
+}
+
+
+void MenuCommandHandler::OnQuickFix(const CommandContext &context)
+{
+   auto &project = context.project;
+   QuickFixDialog dlg( &project );
+   dlg.ShowModal();
 }
 
 void MenuCommandHandler::OnManual(const CommandContext &context)
