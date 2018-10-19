@@ -815,7 +815,7 @@ void EffectNormalize::InitTrackAnalysis(bool dc)
    {
       mMin[0] = -1.0, mMax[0] = 1.0;   // sensible defaults?
       mMin[1] = -1.0, mMax[1] = 1.0;
-      mOp = ANALYSE_NONE;
+      mOp = ANALYSE_DC;
    }
    // Do nothing
    else
