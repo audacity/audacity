@@ -149,17 +149,20 @@ menu items.
 #include "./commands/AudacityCommand.h"
 #include "commands/CommandContext.h"
 
-static void PopulateMacrosMenu( CommandManager* c, CommandFlag flags  );
-static void PopulateEffectsMenu(CommandManager* c,
+static MenuTable::BaseItemPtrs PopulateMacrosMenu(
+   CommandFlag flags  );
+static MenuTable::BaseItemPtrs PopulateEffectsMenu(
    EffectType type,
    CommandFlag batchflags,
    CommandFlag realflags);
-static void AddEffectMenuItems(CommandManager *c,
+static void AddEffectMenuItems(
+   MenuTable::BaseItemPtrs &table,
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
    CommandFlag realflags,
    bool isDefault);
-static void AddEffectMenuItemGroup(CommandManager *c,
+static void AddEffectMenuItemGroup(
+   MenuTable::BaseItemPtrs &table,
    const wxArrayString & names,
    const std::vector<bool> &vHasDialog,
    const PluginIDList & plugs,
@@ -530,6 +533,10 @@ MenuTable::BaseItemPtr SelectMenu( AudacityProject& );
 MenuTable::BaseItemPtr ViewMenu( AudacityProject& );
 MenuTable::BaseItemPtr TransportMenu( AudacityProject& );
 MenuTable::BaseItemPtr TracksMenu( AudacityProject& );
+MenuTable::BaseItemPtr GenerateMenu( AudacityProject& );
+MenuTable::BaseItemPtr EffectMenu( AudacityProject& );
+MenuTable::BaseItemPtr AnalyzeMenu( AudacityProject& );
+MenuTable::BaseItemPtr ToolsMenu( AudacityProject& );
 }
 
 // Tables of menu factories.
@@ -544,6 +551,10 @@ static const auto menuTree = MenuTable::Items(
    , ViewMenu
    , TransportMenu
    , TracksMenu
+   , GenerateMenu
+   , EffectMenu
+   , AnalyzeMenu
+   , ToolsMenu
 );
 
 namespace {
@@ -1509,6 +1520,158 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr GenerateMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   // All of this is a bit hacky until we can get more things connected into
+   // the plugin manager...sorry! :-(
+
+   return Menu( _("&Generate"),
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+      Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageGenerators), AudioIONotBusyFlag ),
+
+      Separator(),
+
+#endif
+
+      Items( PopulateEffectsMenu(
+         EffectTypeGenerate,
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag) )
+   );
+}
+
+MenuTable::BaseItemPtr EffectMenu( AudacityProject &project )
+{
+   using namespace MenuTable;
+   // All of this is a bit hacky until we can get more things connected into
+   // the plugin manager...sorry! :-(
+
+   const auto &lastEffect = GetMenuManager(project).mLastEffect;
+   wxString buildMenuLabel;
+   if (!lastEffect.IsEmpty()) {
+      buildMenuLabel.Printf(_("Repeat %s"),
+         EffectManager::Get().GetCommandName(lastEffect));
+   }
+   else
+      buildMenuLabel = _("Repeat Last Effect");
+
+   return Menu( _("Effe&ct"),
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+      Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageEffects), AudioIONotBusyFlag ),
+
+      Separator(),
+
+#endif
+      Command( wxT("RepeatLastEffect"), buildMenuLabel, false, FN(OnRepeatLastEffect),
+         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | HasLastEffectFlag, wxT("Ctrl+R") ),
+
+      Separator(),
+
+      Items( PopulateEffectsMenu(
+         EffectTypeProcess,
+         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+         IsRealtimeNotActiveFlag ) )
+   );
+}
+
+MenuTable::BaseItemPtr AnalyzeMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   // All of this is a bit hacky until we can get more things connected into
+   // the plugin manager...sorry! :-(
+
+   return Menu( _("&Analyze"),
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+      Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageAnalyzers), AudioIONotBusyFlag ),
+
+      Separator(),
+
+#endif
+
+      Command( wxT("ContrastAnalyser"), XXO("Contrast..."), FN(OnContrast),
+         AudioIONotBusyFlag | WaveTracksSelectedFlag | TimeSelectedFlag, wxT("Ctrl+Shift+T") ),
+      Command( wxT("PlotSpectrum"), XXO("Plot Spectrum..."), FN(OnPlotSpectrum),
+         AudioIONotBusyFlag | WaveTracksSelectedFlag | TimeSelectedFlag ),
+
+      Items( PopulateEffectsMenu(
+         EffectTypeAnalyze,
+         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+         IsRealtimeNotActiveFlag ) )
+   );
+}
+
+MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   using Options = CommandManager::Options;
+
+   return Menu( _("T&ools"),
+
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+      Command( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
+         FN(OnManageTools), AudioIONotBusyFlag ),
+
+      //Separator(),
+
+#endif
+
+      Command( wxT("ManageMacros"), XXO("&Macros..."),
+         FN(OnManageMacros), AudioIONotBusyFlag ),
+
+      Menu( _("&Apply Macro"),
+         // Palette has no access key to ensure first letter navigation of sub menu
+         Command( wxT("ApplyMacrosPalette"), XXO("Palette..."),
+            FN(OnApplyMacrosPalette), AudioIONotBusyFlag ),
+
+         Separator(),
+
+         Items( PopulateMacrosMenu( AudioIONotBusyFlag ) )
+      ),
+
+      Separator(),
+
+      Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
+         FN(OnScreenshot), AudioIONotBusyFlag ),
+
+// PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
+// as they used to in 1.3.x
+//#ifdef IS_ALPHA
+      // TODO: What should we do here?  Make benchmark a plug-in?
+      // Easy enough to do.  We'd call it mod-self-test.
+      Command( wxT("Benchmark"), XXO("&Run Benchmark..."),
+         FN(OnBenchmark), AudioIONotBusyFlag ),
+//#endif
+
+      Separator(),
+
+      Items( PopulateEffectsMenu(
+         EffectTypeTool,
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag ) )
+
+#ifdef IS_ALPHA
+      ,
+
+      Separator(),
+
+      Command( wxT("SimulateRecordingErrors"),
+         XXO("Simulate Recording Errors"),
+         FN(OnSimulateRecordingErrors),
+         AudioIONotBusyFlag,
+         Options{}.CheckState( gAudioIO->mSimulateRecordingErrors ) ),
+      Command( wxT("DetectUpstreamDropouts"),
+         XXO("Detect Upstream Dropouts"),
+         FN(OnDetectUpstreamDropouts),
+         AudioIONotBusyFlag,
+         Options{}.CheckState( gAudioIO->mDetectUpstreamDropouts ) )
+#endif
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1526,148 +1689,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       wxASSERT(menubar);
 
       VisitItem( project, menuTree.get() );
-
-      // All of this is a bit hacky until we can get more things connected into
-      // the plugin manager...sorry! :-(
-
-      wxArrayString defaults;
-
-      //////////////////////////////////////////////////////////////////////////
-      // Generate Menu
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Generate") );
-
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
-         FN(OnManageGenerators), AudioIONotBusyFlag );
-      c->AddSeparator();
-#endif
-
-
-      PopulateEffectsMenu(c,
-         EffectTypeGenerate,
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-
-      c->EndMenu();
-
-      /////////////////////////////////////////////////////////////////////////////
-      // Effect Menu
-      /////////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("Effe&ct") );
-
-      wxString buildMenuLabel;
-      if (!mLastEffect.IsEmpty()) {
-         buildMenuLabel.Printf(_("Repeat %s"),
-            EffectManager::Get().GetCommandName(mLastEffect));
-      }
-      else
-         buildMenuLabel = _("Repeat Last Effect");
-
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
-         FN(OnManageEffects), AudioIONotBusyFlag );
-      c->AddSeparator();
-#endif
-
-      c->AddItem( wxT("RepeatLastEffect"), buildMenuLabel, false, FN(OnRepeatLastEffect),
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | HasLastEffectFlag, wxT("Ctrl+R") );
-
-      c->AddSeparator();
-
-      PopulateEffectsMenu(c,
-         EffectTypeProcess,
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-         IsRealtimeNotActiveFlag);
-
-      c->EndMenu();
-
-      //////////////////////////////////////////////////////////////////////////
-      // Analyze Menu
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Analyze") );
-
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
-         FN(OnManageAnalyzers), AudioIONotBusyFlag );
-      c->AddSeparator();
-#endif
-
-
-      c->AddItem( wxT("ContrastAnalyser"), XXO("Contrast..."), FN(OnContrast),
-         AudioIONotBusyFlag | WaveTracksSelectedFlag | TimeSelectedFlag, wxT("Ctrl+Shift+T") );
-      c->AddItem( wxT("PlotSpectrum"), XXO("Plot Spectrum..."), FN(OnPlotSpectrum),
-         AudioIONotBusyFlag | WaveTracksSelectedFlag | TimeSelectedFlag );
-
-      PopulateEffectsMenu(c,
-         EffectTypeAnalyze,
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-         IsRealtimeNotActiveFlag);
-
-      c->EndMenu();
-
-      //////////////////////////////////////////////////////////////////////////
-      // Tools Menu
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("T&ools") );
-
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-      c->AddItem( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
-         FN(OnManageTools), AudioIONotBusyFlag );
-      //c->AddSeparator();
-#endif
-
-      c->AddItem( wxT("ManageMacros"), XXO("&Macros..."),
-         FN(OnManageMacros), AudioIONotBusyFlag );
-
-      c->BeginMenu( _("&Apply Macro") );
-      // Palette has no access key to ensure first letter navigation of sub menu
-      c->AddItem( wxT("ApplyMacrosPalette"), XXO("Palette..."),
-         FN(OnApplyMacrosPalette), AudioIONotBusyFlag );
-      c->AddSeparator();
-      PopulateMacrosMenu( c, AudioIONotBusyFlag );
-      c->EndMenu();
-      c->AddSeparator();
-
-      c->AddItem( wxT("FancyScreenshot"), XXO("&Screenshot..."),
-         FN(OnScreenshot), AudioIONotBusyFlag );
-
-// PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
-// as they used to in 1.3.x
-//#ifdef IS_ALPHA
-      // TODO: What should we do here?  Make benchmark a plug-in?
-      // Easy enough to do.  We'd call it mod-self-test.
-      c->AddItem( wxT("Benchmark"), XXO("&Run Benchmark..."),
-         FN(OnBenchmark), AudioIONotBusyFlag );
-//#endif
-
-      c->AddSeparator();
-
-      PopulateEffectsMenu(c,
-         EffectTypeTool,
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-
-#ifdef IS_ALPHA
-      c->AddSeparator();
-      c->AddItem( wxT("SimulateRecordingErrors"),
-         XXO("Simulate Recording Errors"),
-         FN(OnSimulateRecordingErrors),
-         AudioIONotBusyFlag,
-         Options{}.CheckState( gAudioIO->mSimulateRecordingErrors ) );
-      c->AddItem( wxT("DetectUpstreamDropouts"),
-         XXO("Detect Upstream Dropouts"),
-         FN(OnDetectUpstreamDropouts),
-         AudioIONotBusyFlag,
-         Options{}.CheckState( gAudioIO->mDetectUpstreamDropouts ) );
-#endif
-
-      c->EndMenu();
-
 
 #ifdef __WXMAC__
       /////////////////////////////////////////////////////////////////////////////
@@ -2178,28 +2199,32 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
 
 
-void PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
+MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
 {
+   MenuTable::BaseItemPtrs result;
    wxArrayString names = MacroCommands::GetNames();
    int i;
 
    for (i = 0; i < (int)names.GetCount(); i++) {
       wxString MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
-      c->AddItem( MacroID, names[i], false, FN(OnApplyMacroDirectly),
-         flags );
+      result.push_back( MenuTable::Command( MacroID,
+         names[i], false, FN(OnApplyMacroDirectly),
+         flags ) );
    }
 
+   return result;
 }
 
 
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into
 /// the menu.
-void PopulateEffectsMenu(CommandManager* c,
+MenuTable::BaseItemPtrs PopulateEffectsMenu(
    EffectType type,
    CommandFlag batchflags,
    CommandFlag realflags)
 {
+   MenuTable::BaseItemPtrs result;
    PluginManager & pm = PluginManager::Get();
 
    std::vector<const PluginDescriptor*> defplugs;
@@ -2246,19 +2271,18 @@ void PopulateEffectsMenu(CommandManager* c,
    if ( comp1 != comp2 )
       std::stable_sort( optplugs.begin(), optplugs.end(), comp2 );
 
-   AddEffectMenuItems(c, defplugs, batchflags, realflags, true);
+   AddEffectMenuItems( result, defplugs, batchflags, realflags, true );
 
    if (defplugs.size() && optplugs.size())
-   {
-      c->AddSeparator();
-   }
+      result.push_back( MenuTable::Separator() );
 
-   AddEffectMenuItems(c, optplugs, batchflags, realflags, false);
+   AddEffectMenuItems( result, optplugs, batchflags, realflags, false );
 
-   return;
+   return result;
 }
 
-void AddEffectMenuItems(CommandManager *c,
+void AddEffectMenuItems(
+   MenuTable::BaseItemPtrs &table,
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
    CommandFlag realflags,
@@ -2314,15 +2338,17 @@ void AddEffectMenuItems(CommandManager *c,
 
          if (current != last)
          {
+            using namespace MenuTable;
+            BaseItemPtrs temp;
             bool bInSubmenu = !last.IsEmpty() && (groupNames.Count() > 1);
-            if( bInSubmenu)
-               c->BeginMenu( last );
 
-            AddEffectMenuItemGroup(c, groupNames, vHasDialog,
-                                   groupPlugs, groupFlags, isDefault);
+            AddEffectMenuItemGroup(temp,
+               groupNames, vHasDialog,
+               groupPlugs, groupFlags, isDefault);
 
-            if (bInSubmenu)
-               c->EndMenu();
+            table.push_back( MenuOrItems(
+               ( bInSubmenu ? last : wxString{} ), std::move( temp )
+            ) );
 
             groupNames.Clear();
             vHasDialog.clear();
@@ -2339,14 +2365,16 @@ void AddEffectMenuItems(CommandManager *c,
 
       if (groupNames.GetCount() > 0)
       {
+         using namespace MenuTable;
+         BaseItemPtrs temp;
          bool bInSubmenu = groupNames.Count() > 1;
-         if (bInSubmenu)
-            c->BeginMenu( current );
 
-         AddEffectMenuItemGroup(c, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
+         AddEffectMenuItemGroup(temp,
+            groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
 
-         if (bInSubmenu)
-            c->EndMenu();
+         table.push_back( MenuOrItems(
+            ( bInSubmenu ? current : wxString{} ), std::move( temp )
+         ) );
       }
    }
    else
@@ -2391,7 +2419,7 @@ void AddEffectMenuItems(CommandManager *c,
 
       if (groupNames.GetCount() > 0)
       {
-         AddEffectMenuItemGroup(c, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
+         AddEffectMenuItemGroup(table, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
       }
 
    }
@@ -2399,14 +2427,15 @@ void AddEffectMenuItems(CommandManager *c,
    return;
 }
 
-void AddEffectMenuItemGroup(CommandManager *c,
+void AddEffectMenuItemGroup(
+   MenuTable::BaseItemPtrs &table,
    const wxArrayString & names,
    const std::vector<bool> &vHasDialog,
    const PluginIDList & plugs,
    const std::vector<CommandFlag> & flags,
    bool isDefault)
 {
-   int namesCnt = (int) names.GetCount();
+   const int namesCnt = (int) names.GetCount();
    int perGroup;
 
 #if defined(__WXGTK__)
@@ -2439,65 +2468,75 @@ void AddEffectMenuItemGroup(CommandManager *c,
       max = 0;
    }
 
+   using namespace MenuTable;
+   auto pTable = &table;
+   BaseItemPtrs temp1;
+
    int groupNdx = 0;
    for (int i = 0; i < namesCnt; i++)
    {
       if (max > 0 && items == max)
       {
-         int end = groupNdx + max;
-         if (end + 1 > groupCnt)
-         {
-            end = groupCnt;
-         }
-         c->BeginMenu( wxString::Format(_("Plug-in %d to %d"),
-                                          groupNdx + 1,
-                                          end) );
+         // start collecting items for the next submenu
+         pTable = &temp1;
       }
 
       if (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
       {
-         wxString name = names[i];
-         c->BeginMenu( name );
+         // collect a sub-menu for like-named items
+         const wxString name = names[i];
+         BaseItemPtrs temp2;
          while (i < namesCnt && names[i].IsSameAs(name))
          {
             const PluginDescriptor *plug = PluginManager::Get().GetPlugin(plugs[i]);
             wxString item = plug->GetPath();
             if( plug->GetPluginType() == PluginTypeEffect )
-               c->AddItem( item,
-                          item,
-                          item.Contains("..."),
-                          FN(OnEffect),
-                          flags[i],
-                          CommandManager::Options{}
-                             .IsEffect().Parameter( plugs[i] ) );
+               temp2.push_back( Command( item,
+                  item,
+                  item.Contains("..."),
+                  FN(OnEffect),
+                  flags[i],
+                  CommandManager::Options{}
+                     .IsEffect().Parameter( plugs[i] ) ) );
 
             i++;
          }
-         c->EndMenu();
+         pTable->push_back( Menu( name, std::move( temp2 ) ) );
          i--;
       }
       else
       {
+         // collect one item
          const PluginDescriptor *plug = PluginManager::Get().GetPlugin(plugs[i]);
          if( plug->GetPluginType() == PluginTypeEffect )
-            c->AddItem( names[i],
-                       names[i],
-                       vHasDialog[i],
-                       FN(OnEffect),
-                       flags[i],
-                       CommandManager::Options{}
-                          .IsEffect().Parameter( plugs[i] ) );
+            pTable->push_back( Command( names[i],
+               names[i],
+               vHasDialog[i],
+               FN(OnEffect),
+               flags[i],
+               CommandManager::Options{}
+                  .IsEffect().Parameter( plugs[i] ) ) );
       }
 
       if (max > 0)
       {
-         groupNdx++;
          items--;
          if (items == 0 || i + 1 == namesCnt)
          {
-            c->EndMenu();
+            int end = groupNdx + max;
+            if (end + 1 > groupCnt)
+            {
+               end = groupCnt;
+            }
+            // Done collecting
+            table.push_back( Menu(
+               wxString::Format(_("Plug-in %d to %d"), groupNdx + 1, end),
+               std::move( temp1 )
+            ) );
             items = max;
+            pTable = &table;
          }
+         groupNdx++;
       }
    }
 
