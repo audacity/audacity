@@ -179,7 +179,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    };
 
    void AddItemList(const wxString & name,
-                    const TranslatedInternalString items[],
+                    const IdentInterfaceSymbol items[],
                     size_t nItems,
                     CommandHandlerFinder finder,
                     CommandFunctorPointer callback,

@@ -772,7 +772,7 @@ void CommandManager::AddItem(const wxChar *name,
 /// When you call Enable on this command name, it will enable or disable
 /// all of the items at once.
 void CommandManager::AddItemList(const wxString & name,
-                                 const TranslatedInternalString items[],
+                                 const IdentInterfaceSymbol items[],
                                  size_t nItems,
                                  CommandHandlerFinder finder,
                                  CommandFunctorPointer callback,
@@ -780,9 +780,10 @@ void CommandManager::AddItemList(const wxString & name,
                                  bool bIsEffect)
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
+      auto translated = items[i].Translation();
       CommandListEntry *entry = NewIdentifier(name,
-                                              items[i].TranslatedForMenu(),
-                                              items[i].TranslatedForMenu(),
+                                              translated,
+                                              translated,
                                               // No means yet to specify !
                                               false,
                                               CurrentMenu(),

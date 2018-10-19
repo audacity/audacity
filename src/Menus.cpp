@@ -1146,17 +1146,19 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       //////////////////////////////////////////////////////////////////////////
 
-      const TranslatedInternalString alignLabelsNoSync[] = {
-         { wxT("EndToEnd"),     _("&Align End to End") },
-         { wxT("Together"),     _("Align &Together") },
+      // Mutual alignment of tracks independent of selection or zero
+      static const IdentInterfaceSymbol alignLabelsNoSync[] = {
+         { wxT("EndToEnd"),     XO("&Align End to End") },
+         { wxT("Together"),     XO("Align &Together") },
       };
 
-      const TranslatedInternalString alignLabels[] = {
-         { wxT("StartToZero"),  _("Start to &Zero") },
-         { wxT("StartToSelStart"), _("Start to &Cursor/Selection Start") },
-         { wxT("StartToSelEnd"),   _("Start to Selection &End") },
-         { wxT("EndToSelStart"),   _("End to Cu&rsor/Selection Start") },
-         { wxT("EndToSelEnd"),     _("End to Selection En&d") },
+      // Alignment commands using selection or zero
+      static const IdentInterfaceSymbol alignLabels[] = {
+         { wxT("StartToZero"),     XO("Start to &Zero") },
+         { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start") },
+         { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
+         { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start") },
+         { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
       };
       static_assert(
          kAlignLabelsCount == sizeof(alignLabels) / sizeof(alignLabels[0]),

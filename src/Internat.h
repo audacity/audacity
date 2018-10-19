@@ -214,7 +214,6 @@ public:
       Temp.Replace( "&","" );
       return Temp;
    }
-   const wxString &TranslatedForMenu() const { return mTranslated; }
 
 private:
    wxString mInternal;
