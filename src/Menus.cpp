@@ -551,6 +551,7 @@ MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & );
 MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -570,6 +571,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraGlobalCommands
    , ExtraFocusMenu
    , ExtraCursorMenu
+   , ExtraTrackMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -2020,6 +2022,57 @@ MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+
+   return Menu( _("&Track"),
+      Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),
+         FN(OnTrackPan),
+         TrackPanelHasFocus | TracksExistFlag, wxT("Shift+P") ),
+      Command( wxT("TrackPanLeft"), XXO("Pan &Left on Focused Track"),
+         FN(OnTrackPanLeft),
+         TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Left") ),
+      Command( wxT("TrackPanRight"), XXO("Pan &Right on Focused Track"),
+         FN(OnTrackPanRight),
+         TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Right") ),
+      Command( wxT("TrackGain"), XXO("Change Gai&n on Focused Track..."),
+         FN(OnTrackGain),
+         TrackPanelHasFocus | TracksExistFlag, wxT("Shift+G") ),
+      Command( wxT("TrackGainInc"), XXO("&Increase Gain on Focused Track"),
+         FN(OnTrackGainInc),
+         TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Up") ),
+      Command( wxT("TrackGainDec"), XXO("&Decrease Gain on Focused Track"),
+         FN(OnTrackGainDec),
+         TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Down") ),
+      Command( wxT("TrackMenu"), XXO("Op&en Menu on Focused Track..."),
+         FN(OnTrackMenu),
+         TracksExistFlag | TrackPanelHasFocus, wxT("Shift+M\tskipKeydown") ),
+      Command( wxT("TrackMute"), XXO("M&ute/Unmute Focused Track"),
+         FN(OnTrackMute),
+         TracksExistFlag | TrackPanelHasFocus, wxT("Shift+U") ),
+      Command( wxT("TrackSolo"), XXO("&Solo/Unsolo Focused Track"),
+         FN(OnTrackSolo),
+         TracksExistFlag | TrackPanelHasFocus, wxT("Shift+S") ),
+      Command( wxT("TrackClose"), XXO("&Close Focused Track"),
+         FN(OnTrackClose),
+         AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+         wxT("Shift+C") ),
+      Command( wxT("TrackMoveUp"), XXO("Move Focused Track U&p"),
+         FN(OnTrackMoveUp),
+         AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag ),
+      Command( wxT("TrackMoveDown"), XXO("Move Focused Track Do&wn"),
+         FN(OnTrackMoveDown),
+         AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag ),
+      Command( wxT("TrackMoveTop"), XXO("Move Focused Track to T&op"),
+         FN(OnTrackMoveTop),
+         AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag ),
+      Command( wxT("TrackMoveBottom"), XXO("Move Focused Track to &Bottom"),
+         FN(OnTrackMoveBottom),
+         AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -2051,40 +2104,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Track") );
-
-      c->AddItem( wxT("TrackPan"), XXO("Change P&an on Focused Track..."), FN(OnTrackPan),
-                 TrackPanelHasFocus | TracksExistFlag, wxT("Shift+P") );
-      c->AddItem( wxT("TrackPanLeft"), XXO("Pan &Left on Focused Track"), FN(OnTrackPanLeft),
-                 TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Left") );
-      c->AddItem( wxT("TrackPanRight"), XXO("Pan &Right on Focused Track"), FN(OnTrackPanRight),
-                 TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Right") );
-      c->AddItem( wxT("TrackGain"), XXO("Change Gai&n on Focused Track..."), FN(OnTrackGain),
-                 TrackPanelHasFocus | TracksExistFlag, wxT("Shift+G") );
-      c->AddItem( wxT("TrackGainInc"), XXO("&Increase Gain on Focused Track"), FN(OnTrackGainInc),
-                 TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Up") );
-      c->AddItem( wxT("TrackGainDec"), XXO("&Decrease Gain on Focused Track"), FN(OnTrackGainDec),
-                 TrackPanelHasFocus | TracksExistFlag, wxT("Alt+Shift+Down") );
-      c->AddItem( wxT("TrackMenu"), XXO("Op&en Menu on Focused Track..."), FN(OnTrackMenu),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Shift+M\tskipKeydown") );
-      c->AddItem( wxT("TrackMute"), XXO("M&ute/Unmute Focused Track"), FN(OnTrackMute),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Shift+U") );
-      c->AddItem( wxT("TrackSolo"), XXO("&Solo/Unsolo Focused Track"), FN(OnTrackSolo),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Shift+S") );
-      c->AddItem( wxT("TrackClose"), XXO("&Close Focused Track"), FN(OnTrackClose),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag, wxT("Shift+C") );
-      c->AddItem( wxT("TrackMoveUp"), XXO("Move Focused Track U&p"), FN(OnTrackMoveUp),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag );
-      c->AddItem( wxT("TrackMoveDown"), XXO("Move Focused Track Do&wn"), FN(OnTrackMoveDown),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag );
-      c->AddItem( wxT("TrackMoveTop"), XXO("Move Focused Track to T&op"), FN(OnTrackMoveTop),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag );
-      c->AddItem( wxT("TrackMoveBottom"), XXO("Move Focused Track to &Bottom"), FN(OnTrackMoveBottom),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag );
-      c->EndMenu();
 
       // These are the more useful to VI user Scriptables.
       // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
