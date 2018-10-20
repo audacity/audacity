@@ -555,6 +555,8 @@ MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject & );
+
+MenuTable::BaseItemPtr HelpMenu( AudacityProject& );
 }
 
 // Tables of menu factories.
@@ -593,6 +595,7 @@ static const auto menuTree = MenuTable::Items(
    , ToolsMenu
    , WindowMenu
    , ExtraMenu
+   , HelpMenu
 );
 
 namespace {
@@ -2196,6 +2199,68 @@ MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
    );
 }
 
+MenuTable::BaseItemPtr HelpMenu( AudacityProject & )
+{
+#ifdef __WXMAC__
+      wxGetApp().s_macHelpMenuTitleName = _("&Help");
+#endif
+
+   using namespace MenuTable;
+
+   return Menu( _("&Help"),
+      Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
+         AlwaysEnabledFlag ),
+      // DA: Emphasise it is the Audacity Manual (No separate DA manual).
+#ifdef EXPERIMENTAL_DA
+      // 'Getting Started' rather than 'Quick Help' for DarkAudacity.
+      // At the moment the video tutorials are aspirational (aka do not exist yet).
+      // Emphasise that manual is for Audacity, not DarkAudacity.
+      Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
+      Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) ),
+#else
+      Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
+         AlwaysEnabledFlag ),
+      Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
+         AlwaysEnabledFlag ),
+#endif
+
+      Separator(),
+
+      Menu( _("&Diagnostics"),
+         Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
+            FN(OnAudioDeviceInfo),
+            AudioIONotBusyFlag ),
+   #ifdef EXPERIMENTAL_MIDI_OUT
+         Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
+            FN(OnMidiDeviceInfo),
+            AudioIONotBusyFlag ),
+   #endif
+         Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
+            AlwaysEnabledFlag ),
+   #if defined(EXPERIMENTAL_CRASH_REPORT)
+         Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
+            FN(OnCrashReport), AlwaysEnabledFlag ),
+   #endif
+         Command( wxT("CheckDeps"), XXO("Chec&k Dependencies..."),
+            FN(OnCheckDependencies),
+            AudioIONotBusyFlag )
+      ),
+
+#ifndef __WXMAC__
+      Separator(),
+#endif
+
+      // DA: Does not fully support update checking.
+#ifndef EXPERIMENTAL_DA
+      Command( wxT("Updates"), XXO("&Check for Updates..."),
+         FN(OnCheckForUpdates),
+         AlwaysEnabledFlag ),
+#endif
+      Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
+         AlwaysEnabledFlag )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -2206,83 +2271,12 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
    c->SetMaxList();
 
-   {
-      auto menubar = c->AddMenuBar(wxT("appmenu"));
-      wxASSERT(menubar);
+   auto menubar = c->AddMenuBar(wxT("appmenu"));
+   wxASSERT(menubar);
 
-      VisitItem( project, menuTree.get() );
+   VisitItem( project, menuTree.get() );
 
-      /////////////////////////////////////////////////////////////////////////////
-      // Help Menu
-      /////////////////////////////////////////////////////////////////////////////
-
-#ifdef __WXMAC__
-      wxGetApp().s_macHelpMenuTitleName = _("&Help");
-#endif
-
-      c->BeginMenu( _("&Help") );
-
-      c->AddItem( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
-         AlwaysEnabledFlag );
-
-      // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-#ifdef EXPERIMENTAL_DA
-      // 'Getting Started' rather than 'Quick Help' for DarkAudacity.
-      // At the moment the video tutorials are aspirational (aka do not exist yet).
-      // Emphasise that manual is for Audacity, not DarkAudacity.
-      c->AddItem( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) );
-      c->AddItem( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) );
-#else
-      c->AddItem( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
-         AlwaysEnabledFlag );
-      c->AddItem( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
-         AlwaysEnabledFlag );
-#endif
-      c->AddSeparator();
-
-      c->BeginMenu( _("&Diagnostics") );
-      c->AddItem( wxT("DeviceInfo"), XXO("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
-          AudioIONotBusyFlag );
-#ifdef EXPERIMENTAL_MIDI_OUT
-      c->AddItem( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."), FN(OnMidiDeviceInfo),
-          AudioIONotBusyFlag );
-#endif
-
-      c->AddItem( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
-         AlwaysEnabledFlag );
-
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-      c->AddItem( wxT("CrashReport"), XXO("&Generate Support Data..."),
-         FN(OnCrashReport), AlwaysEnabledFlag );
-#endif
-      c->AddItem( wxT("CheckDeps"), XXO("Chec&k Dependencies..."), FN(OnCheckDependencies),
-          AudioIONotBusyFlag );
-      c->EndMenu();
-
-#ifndef __WXMAC__
-      c->AddSeparator();
-#endif
-
-      // DA: Does not fully support update checking.
-#ifndef EXPERIMENTAL_DA
-      c->AddItem( wxT("Updates"), XXO("&Check for Updates..."), FN(OnCheckForUpdates),
-         AlwaysEnabledFlag );
-#endif
-      c->AddItem( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
-         AlwaysEnabledFlag );
-
-      c->EndMenu();
-
-      /////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-      project.SetMenuBar(menubar.release());
-   }
-
-
+   project.SetMenuBar(menubar.release());
 
    mLastFlags = AlwaysEnabledFlag;
 
