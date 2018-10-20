@@ -548,6 +548,7 @@ MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -561,6 +562,10 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraSeekMenu
    , ExtraDeviceMenu
    , ExtraSelectionMenu
+
+   , MenuTable::Separator()
+
+   , ExtraGlobalCommands
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1935,6 +1940,21 @@ MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & )
+{
+   // Ceci n'est pas un menu
+   using namespace MenuTable;
+   using Options = CommandManager::Options;
+   return Items(
+      Command( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
+         FN(OnPrevWindow), AlwaysEnabledFlag,
+         Options{ wxT("Alt+Shift+F6") }.IsGlobal() ),
+      Command( wxT("NextWindow"), XXO("Move Forward Through Active Windows"),
+         FN(OnNextWindow), AlwaysEnabledFlag,
+         Options{ wxT("Alt+F6") }.IsGlobal() )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1966,16 +1986,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      c->AddSeparator();
-
-      // Global commands
-      c->AddItem( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
-         FN(OnPrevWindow), AlwaysEnabledFlag,
-         Options{ wxT("Alt+Shift+F6") }.IsGlobal() );
-      c->AddItem( wxT("NextWindow"), XXO("Move Forward Through Active Windows"),
-         FN(OnNextWindow), AlwaysEnabledFlag,
-         Options{ wxT("Alt+F6") }.IsGlobal() );
 
       //////////////////////////////////////////////////////////////////////////
 
