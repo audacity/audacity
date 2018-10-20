@@ -546,6 +546,7 @@ MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -557,6 +558,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraEditMenu
    , ExtraPlayAtSpeedMenu
    , ExtraSeekMenu
+   , ExtraDeviceMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1874,6 +1876,24 @@ MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   return Menu( _("De&vice"),
+      Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
+         FN(OnInputDevice),
+         AudioIONotBusyFlag, wxT("Shift+I") ),
+      Command( wxT("OutputDevice"), XXO("Change &Playback Device..."),
+         FN(OnOutputDevice),
+         AudioIONotBusyFlag, wxT("Shift+O") ),
+      Command( wxT("AudioHost"), XXO("Change Audio &Host..."), FN(OnAudioHost),
+         AudioIONotBusyFlag, wxT("Shift+H") ),
+      Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
+         FN(OnInputChannels),
+         AudioIONotBusyFlag, wxT("Shift+N") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1905,20 +1925,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("De&vice") );
-
-      c->AddItem( wxT("InputDevice"), XXO("Change &Recording Device..."), FN(OnInputDevice),
-         AudioIONotBusyFlag, wxT("Shift+I") );
-      c->AddItem( wxT("OutputDevice"), XXO("Change &Playback Device..."), FN(OnOutputDevice),
-         AudioIONotBusyFlag, wxT("Shift+O") );
-      c->AddItem( wxT("AudioHost"), XXO("Change Audio &Host..."), FN(OnAudioHost),
-         AudioIONotBusyFlag, wxT("Shift+H") );
-      c->AddItem( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."), FN(OnInputChannels),
-         AudioIONotBusyFlag, wxT("Shift+N") );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
