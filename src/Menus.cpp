@@ -538,6 +538,7 @@ MenuTable::BaseItemPtr EffectMenu( AudacityProject& );
 MenuTable::BaseItemPtr AnalyzeMenu( AudacityProject& );
 MenuTable::BaseItemPtr ToolsMenu( AudacityProject& );
 MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
+MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
 }
 
 // Tables of menu factories.
@@ -557,6 +558,7 @@ static const auto menuTree = MenuTable::Items(
    , AnalyzeMenu
    , ToolsMenu
    , WindowMenu
+   , ExtraMenu
 );
 
 namespace {
@@ -1703,6 +1705,16 @@ MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
 #endif
 }
 
+MenuTable::BaseItemPtr ExtraMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   static const auto pred =
+      []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
+   static const auto factory =
+      [](AudacityProject &){ return extraItems; };
+   return ConditionalItems( pred, Menu( _("Ext&ra"), factory ) );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1733,7 +1745,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       /////////////////////////////////////////////////////////////////////////////
 
       // i18n-hint: Extra is a menu with extra commands
-      c->BeginMenu( _("Ext&ra") );
+      c->BeginMenu( _("Ext&ra_") );
 
       //////////////////////////////////////////////////////////////////////////
 
