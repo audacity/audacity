@@ -549,6 +549,7 @@ MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & );
+MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -566,6 +567,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , MenuTable::Separator()
 
    , ExtraGlobalCommands
+   , ExtraFocusMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1955,6 +1957,37 @@ MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   constexpr auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
+
+   return Menu( _("F&ocus"),
+      Command( wxT("PrevFrame"),
+         XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
+         AlwaysEnabledFlag, wxT("Ctrl+Shift+F6") ),
+      Command( wxT("NextFrame"),
+         XXO("Move F&orward from Toolbars to Tracks"), FN(OnNextFrame),
+         AlwaysEnabledFlag, wxT("Ctrl+F6") ),
+      Command( wxT("PrevTrack"), XXO("Move Focus to &Previous Track"),
+         FN(OnCursorUp), FocusedTracksFlags, wxT("Up") ),
+      Command( wxT("NextTrack"), XXO("Move Focus to &Next Track"),
+         FN(OnCursorDown), FocusedTracksFlags, wxT("Down") ),
+      Command( wxT("FirstTrack"), XXO("Move Focus to &First Track"),
+         FN(OnFirstTrack), FocusedTracksFlags, wxT("Ctrl+Home") ),
+      Command( wxT("LastTrack"), XXO("Move Focus to &Last Track"),
+         FN(OnLastTrack), FocusedTracksFlags, wxT("Ctrl+End") ),
+      Command( wxT("ShiftUp"), XXO("Move Focus to P&revious and Select"),
+         FN(OnShiftUp), FocusedTracksFlags, wxT("Shift+Up") ),
+      Command( wxT("ShiftDown"), XXO("Move Focus to N&ext and Select"),
+         FN(OnShiftDown), FocusedTracksFlags, wxT("Shift+Down") ),
+      Command( wxT("Toggle"), XXO("&Toggle Focused Track"), FN(OnToggle),
+         FocusedTracksFlags, wxT("Return") ),
+      Command( wxT("ToggleAlt"), XXO("Toggle Focuse&d Track"), FN(OnToggle),
+         FocusedTracksFlags, wxT("NUMPAD_ENTER") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1986,38 +2019,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("F&ocus") );
-
-      c->AddItem( wxT("PrevFrame"),
-         XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
-         AlwaysEnabledFlag, wxT("Ctrl+Shift+F6") );
-      c->AddItem( wxT("NextFrame"),
-         XXO("Move F&orward from Toolbars to Tracks"), FN(OnNextFrame),
-         AlwaysEnabledFlag, wxT("Ctrl+F6") );
-
-      constexpr auto FocusedTracksFlags = TracksExistFlag | TrackPanelHasFocus;
-      c->AddItem( wxT("PrevTrack"), XXO("Move Focus to &Previous Track"),
-         FN(OnCursorUp), FocusedTracksFlags, wxT("Up") );
-      c->AddItem( wxT("NextTrack"), XXO("Move Focus to &Next Track"),
-         FN(OnCursorDown), FocusedTracksFlags, wxT("Down") );
-      c->AddItem( wxT("FirstTrack"), XXO("Move Focus to &First Track"),
-         FN(OnFirstTrack), FocusedTracksFlags, wxT("Ctrl+Home") );
-      c->AddItem( wxT("LastTrack"), XXO("Move Focus to &Last Track"),
-         FN(OnLastTrack), FocusedTracksFlags, wxT("Ctrl+End") );
-
-      c->AddItem( wxT("ShiftUp"), XXO("Move Focus to P&revious and Select"),
-         FN(OnShiftUp), FocusedTracksFlags, wxT("Shift+Up") );
-      c->AddItem( wxT("ShiftDown"), XXO("Move Focus to N&ext and Select"),
-         FN(OnShiftDown), FocusedTracksFlags, wxT("Shift+Down") );
-
-      c->AddItem( wxT("Toggle"), XXO("&Toggle Focused Track"), FN(OnToggle),
-         FocusedTracksFlags, wxT("Return") );
-      c->AddItem( wxT("ToggleAlt"), XXO("Toggle Focuse&d Track"), FN(OnToggle),
-         FocusedTracksFlags, wxT("NUMPAD_ENTER") );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
