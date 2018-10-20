@@ -542,6 +542,7 @@ MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -549,6 +550,7 @@ MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
 static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    ExtraTransportMenu
    , ExtraToolsMenu
+   , ExtraMixerMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1785,6 +1787,25 @@ MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   return Menu( _("Mi&xer"),
+      Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
+         FN(OnOutputGain), AlwaysEnabledFlag ),
+      Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
+         FN(OnOutputGainInc), AlwaysEnabledFlag ),
+      Command( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"),
+         FN(OnOutputGainDec), AlwaysEnabledFlag ),
+      Command( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
+         FN(OnInputGain), AlwaysEnabledFlag ),
+      Command( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
+         FN(OnInputGainInc), AlwaysEnabledFlag ),
+      Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
+         FN(OnInputGainDec), AlwaysEnabledFlag )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1816,24 +1837,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("Mi&xer") );
-
-      c->AddItem( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
-         FN(OnOutputGain), AlwaysEnabledFlag );
-      c->AddItem( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
-         FN(OnOutputGainInc), AlwaysEnabledFlag );
-      c->AddItem( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"),
-         FN(OnOutputGainDec), AlwaysEnabledFlag );
-      c->AddItem( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
-         FN(OnInputGain), AlwaysEnabledFlag );
-      c->AddItem( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
-         FN(OnInputGainInc), AlwaysEnabledFlag );
-      c->AddItem( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
-         FN(OnInputGainDec), AlwaysEnabledFlag );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
