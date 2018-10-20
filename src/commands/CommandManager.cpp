@@ -614,18 +614,44 @@ void CommandManager::SwapMenuBars()
 ///
 /// This starts a NEW menu
 ///
-void CommandManager::BeginMenu(const wxString & tName)
+wxMenu *CommandManager::BeginMenu(const wxString & tName)
+{
+   if ( mCurrentMenu )
+      return BeginSubMenu( tName );
+   else
+      return BeginMainMenu( tName );
+}
+
+
+///
+/// This attaches a menu, if it's main, to the menubar
+//  and in all cases ends the menu
+///
+void CommandManager::EndMenu()
+{
+   if ( mSubMenuList.empty() )
+      EndMainMenu();
+   else
+      EndSubMenu();
+}
+
+
+///
+/// This starts a NEW menu
+///
+wxMenu *CommandManager::BeginMainMenu(const wxString & tName)
 {
    uCurrentMenu = std::make_unique<wxMenu>();
    mCurrentMenu = uCurrentMenu.get();
    mCurrentMenuName = tName;
+   return mCurrentMenu;
 }
 
 
 ///
 /// This attaches a menu to the menubar and ends the menu
 ///
-void CommandManager::EndMenu()
+void CommandManager::EndMainMenu()
 {
    // Add the menu to the menubar after all menu items have been
    // added to the menu to allow OSX to rearrange special menu
@@ -772,7 +798,7 @@ void CommandManager::AddItem(const wxChar *name,
 /// When you call Enable on this command name, it will enable or disable
 /// all of the items at once.
 void CommandManager::AddItemList(const wxString & name,
-                                 const TranslatedInternalString items[],
+                                 const IdentInterfaceSymbol items[],
                                  size_t nItems,
                                  CommandHandlerFinder finder,
                                  CommandFunctorPointer callback,
@@ -780,9 +806,10 @@ void CommandManager::AddItemList(const wxString & name,
                                  bool bIsEffect)
 {
    for (size_t i = 0, cnt = nItems; i < cnt; i++) {
+      auto translated = items[i].Translation();
       CommandListEntry *entry = NewIdentifier(name,
-                                              items[i].TranslatedForMenu(),
-                                              items[i].TranslatedForMenu(),
+                                              translated,
+                                              translated,
                                               // No means yet to specify !
                                               false,
                                               CurrentMenu(),

@@ -149,6 +149,26 @@ menu items.
 #include "./commands/AudacityCommand.h"
 #include "commands/CommandContext.h"
 
+static void PopulateMacrosMenu( CommandManager* c, CommandFlag flags  );
+static void PopulateEffectsMenu(CommandManager* c,
+   EffectType type,
+   CommandFlag batchflags,
+   CommandFlag realflags);
+static void AddEffectMenuItems(CommandManager *c,
+   std::vector<const PluginDescriptor*> & plugs,
+   CommandFlag batchflags,
+   CommandFlag realflags,
+   bool isDefault);
+static void AddEffectMenuItemGroup(CommandManager *c,
+   const wxArrayString & names,
+   const std::vector<bool> &vHasDialog,
+   const PluginIDList & plugs,
+   const std::vector<CommandFlag> & flags,
+   bool isDefault);
+static void CreateRecentFilesMenu(CommandManager *c);
+
+constexpr size_t kAlignLabelsCount = 5;
+
 MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project)
 { return *project.mMenuCommandHandler; }
 
@@ -376,7 +396,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // File menu
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("&File"));
+      c->BeginMenu( _("&File") );
 
       /*i18n-hint: "New" is an action (verb) to create a NEW project*/
       c->AddItem( wxT("New"), XXO("&New"), FN(OnNew),
@@ -406,7 +426,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->AddSeparator();
 
-      c->BeginSubMenu( _("&Save Project") );
+      c->BeginMenu( _("&Save Project") );
       c->AddItem( wxT("Save"), XXO("&Save Project"), FN(OnSave),
          AudioIONotBusyFlag | UnsavedChangesFlag, wxT("Ctrl+S") );
       c->AddItem( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
@@ -418,10 +438,10 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("SaveCompressed"), XXO("&Save Compressed Copy of Project..."),
          FN(OnSaveCompressed), AudioIONotBusyFlag );
 #endif
-      c->EndSubMenu();
+      c->EndMenu();
       c->AddSeparator();
 
-      c->BeginSubMenu( _("&Export") );
+      c->BeginMenu( _("&Export") );
 
       // Enable Export audio commands only when there are audio tracks.
       c->AddItem( wxT("ExportMp3"), XXO("Export as MP&3"), FN(OnExportMp3),
@@ -449,9 +469,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("ExportMIDI"), XXO("Export MI&DI..."), FN(OnExportMIDI),
          AudioIONotBusyFlag | NoteTracksExistFlag );
 #endif
-      c->EndSubMenu();
+      c->EndMenu();
 
-      c->BeginSubMenu(_("&Import"));
+      c->BeginMenu( _("&Import") );
 
       c->AddItem( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport),
          AudioIONotBusyFlag, wxT("Ctrl+Shift+I") );
@@ -464,7 +484,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("ImportRaw"), XXO("&Raw Data..."), FN(OnImportRaw),
          AudioIONotBusyFlag );
 
-      c->EndSubMenu();
+      c->EndMenu();
       c->AddSeparator();
 
       /////////////////////////////////////////////////////////////////////////////
@@ -489,7 +509,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Edit Menu
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("&Edit"));
+      c->BeginMenu( _("&Edit") );
 
       constexpr auto NotBusyTimeAndTracksFlags =
          AudioIONotBusyFlag | TimeSelectedFlag | TracksSelectedFlag;
@@ -534,7 +554,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->AddSeparator();
 
-      c->BeginSubMenu(_("R&emove Special"));
+      c->BeginMenu( _("R&emove Special") );
       /* i18n-hint: (verb) Do a special kind of cut*/
       c->AddItem( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
          NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+X") );
@@ -550,13 +570,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       /* i18n-hint: (verb)*/
       c->AddItem( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
          AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag, wxT("Ctrl+T") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->AddSeparator();
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Clip B&oundaries"));
+      c->BeginMenu( _("Clip B&oundaries") );
       /* i18n-hint: (verb) It's an item on a menu. */
       c->AddItem( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
          AudioIONotBusyFlag | WaveTracksSelectedFlag, wxT("Ctrl+I") );
@@ -568,11 +588,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          NotBusyTimeAndTracksFlags, wxT("Ctrl+J") );
       c->AddItem( wxT("Disjoin"), XXO("Detac&h at Silences"), FN(OnDisjoin),
          NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Labels"));
+      c->BeginMenu( _("&Labels") );
 
       c->AddItem( wxT("EditLabels"), XXO("&Edit Labels..."), FN(OnEditLabels),
                  AudioIONotBusyFlag );
@@ -598,11 +618,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("TypeToCreateLabel"), XXO("&Type to Create a Label (on/off)"),
                   FN(OnToggleTypeToCreateLabel), AlwaysEnabledFlag, checkOff );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("La&beled Audio"));
+      c->BeginMenu( _("La&beled Audio") );
 
       constexpr auto NotBusyLabelsAndWaveFlags =
          AudioIONotBusyFlag |
@@ -650,7 +670,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("DisjoinLabels"), XXO("Detac&h at Silences"),
          FN(OnDisjoinLabels), NotBusyLabelsAndWaveFlags, wxT("Alt+Shift+J") );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->AddItem( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
          AudioIONotBusyFlag );
@@ -679,7 +699,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       /////////////////////////////////////////////////////////////////////////////
 
       /* i18n-hint: (verb) It's an item on a menu. */
-      c->BeginMenu(_("&Select"));
+      c->BeginMenu( _("&Select") );
 
       c->AddItem( wxT("SelectAll"), XXO("&All"), FN(OnSelectAll),
          TracksExistFlag,
@@ -690,7 +710,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Tracks"));
+      c->BeginMenu( _("&Tracks") );
       c->AddItem( wxT("SelAllTracks"), XXO("In All &Tracks"), FN(OnSelectAllTracks),
                  TracksExistFlag,
                  wxT("Ctrl+Shift+K") );
@@ -702,11 +722,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          Options{ wxT("Ctrl+Shift+Y"), _("Select Sync-Locked") } );
 #endif
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("R&egion"));
+      c->BeginMenu( _("R&egion") );
 
       c->AddItem( wxT("SetLeftSelection"), XXO("&Left at Playback Position"),
          FN(OnSetLeftSelection), TracksExistFlag,
@@ -731,12 +751,12 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("SelRestore"), XXO("Retrieve Selectio&n"), FN(OnSelectionRestore),
          TracksExistFlag );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       /////////////////////////////////////////////////////////////////////////////
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      c->BeginSubMenu(_("S&pectral"));
+      c->BeginMenu( _("S&pectral") );
       c->AddItem( wxT("ToggleSpectralSelection"),
          XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
          TracksExistFlag, wxT("Q") );
@@ -746,12 +766,12 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("NextLowerPeakFrequency"),
          XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency),
          TracksExistFlag );
-      c->EndSubMenu();
+      c->EndMenu();
 #endif
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Clip B&oundaries"));
+      c->BeginMenu( _("Clip B&oundaries") );
       c->AddItem( wxT("SelPrevClipBoundaryToCursor"), XXO("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor),
          WaveTracksExistFlag );
@@ -765,7 +785,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          WaveTracksExistFlag,
          Options{ wxT("Alt+."), _("Select Next Clip") } );
 
-      c->EndSubMenu();
+      c->EndMenu();
       /////////////////////////////////////////////////////////////////////////////
 
       c->AddSeparator();
@@ -791,8 +811,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // View Menu
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("&View"));
-      c->BeginSubMenu(_("&Zoom"));
+      c->BeginMenu( _("&View") );
+      c->BeginMenu( _("&Zoom") );
 
       c->AddItem( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
          ZoomInAvailableFlag, wxT("Ctrl+1") );
@@ -804,9 +824,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          TimeSelectedFlag, wxT("Ctrl+E") );
       c->AddItem( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
          TracksExistFlag, wxT("Shift+Z") );
-      c->EndSubMenu();
+      c->EndMenu();
 
-      c->BeginSubMenu(_("T&rack Size"));
+      c->BeginMenu( _("T&rack Size") );
       c->AddItem( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
          TracksExistFlag, wxT("Ctrl+F") );
       c->AddItem( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
@@ -815,16 +835,16 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          FN(OnCollapseAllTracks), TracksExistFlag, wxT("Ctrl+Shift+C") );
       c->AddItem( wxT("ExpandAllTracks"), XXO("E&xpand Collapsed Tracks"),
          FN(OnExpandAllTracks), TracksExistFlag, wxT("Ctrl+Shift+X") );
-      c->EndSubMenu();
+      c->EndMenu();
 
-      c->BeginSubMenu(_("Sk&ip to"));
+      c->BeginMenu( _("Sk&ip to") );
       c->AddItem( wxT("SkipSelStart"), XXO("Selection Sta&rt"), FN(OnGoSelStart),
          TimeSelectedFlag,
          Options{ wxT("Ctrl+["), _("Skip to Selection Start") } );
       c->AddItem( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
          TimeSelectedFlag,
          Options{ wxT("Ctrl+]"), _("Skip to Selection End") } );
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->AddSeparator();
 
@@ -861,7 +881,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Toolbars"));
+      c->BeginMenu( _("&Toolbars") );
 
       /* i18n-hint: (verb)*/
       c->AddItem( wxT("ResetToolbars"), XXO("Reset Toolb&ars"), FN(OnResetToolBars), AlwaysEnabledFlag );
@@ -896,7 +916,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag, checkOff );
 #endif
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->AddSeparator();
 
@@ -919,8 +939,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       /*i18n-hint: 'Transport' is the name given to the set of controls that
       play, record, pause etc. */
-      c->BeginMenu(_("Tra&nsport"));
-      c->BeginSubMenu(_("Pl&aying"));
+      c->BeginMenu( _("Tra&nsport") );
+      c->BeginMenu( _("Pl&aying") );
       /* i18n-hint: (verb) Start or Stop audio playback*/
       c->AddItem( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
          CanStopAudioStreamFlag, wxT("Space") );
@@ -930,9 +950,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          CanStopAudioStreamFlag, wxT("Shift+Space") );
       c->AddItem( wxT("Pause"), XXO("&Pause"), FN(OnPause),
          CanStopAudioStreamFlag, wxT("P") );
-      c->EndSubMenu();
+      c->EndMenu();
 
-      c->BeginSubMenu( _("&Recording"));
+      c->BeginMenu( _("&Recording") );
       constexpr auto CanStopFlags = AudioIONotBusyFlag | CanStopAudioStreamFlag;
       /* i18n-hint: (verb)*/
       c->AddItem( wxT("Record1stChoice"), XXO("&Record"), FN(OnRecord),
@@ -964,7 +984,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // in fact will use the same flags as in the previous registration.
       c->AddItem( wxT("Pause"), XXO("&Pause"), FN(OnPause), CanStopFlags,
          wxT("P") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       // Scrubbing sub-menu
       project.GetScrubber().AddMenuItems();
@@ -972,7 +992,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it useful?
       // GA: 'Skip to' moves the viewpoint to center of the track and preserves the
       // selection. 'Cursor to' does neither. 'Center at' might describe it better than 'Skip'.
-      c->BeginSubMenu(_("&Cursor to"));
+      c->BeginMenu( _("&Cursor to") );
 
       c->AddItem( wxT("CursSelStart"), XXO("Selection Star&t"), FN(OnCursorSelStart),
          TimeSelectedFlag,
@@ -1002,27 +1022,27 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          CanStopFlags,
          Options{ wxT("End"), _("Cursor to Project End") } );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->AddSeparator();
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Pla&y Region"));
+      c->BeginMenu( _("Pla&y Region") );
 
       c->AddItem( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
          PlayRegionNotLockedFlag );
       c->AddItem( wxT("UnlockPlayRegion"), XXO("&Unlock"), FN(OnUnlockPlayRegion),
          PlayRegionLockedFlag );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->AddSeparator();
 
       c->AddItem( wxT("RescanDevices"), XXO("R&escan Audio Devices"), FN(OnRescanDevices),
                  AudioIONotBusyFlag | CanStopAudioStreamFlag );
 
-      c->BeginSubMenu(_("Transport &Options"));
+      c->BeginMenu( _("Transport &Options") );
       // Sound Activated recording options
       c->AddItem( wxT("SoundActivationLevel"), XXO("Sound Activation Le&vel..."), FN(OnSoundActivated),
                  AudioIONotBusyFlag | CanStopAudioStreamFlag );
@@ -1045,7 +1065,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("AutomatedInputLevelAdjustmentOnOff"), XXO("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment),
                   AudioIONotBusyFlag | CanStopAudioStreamFlag, checkOff );
 #endif
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->EndMenu();
 
@@ -1053,11 +1073,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Tracks Menu (formerly Project Menu)
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("&Tracks"));
+      c->BeginMenu( _("&Tracks") );
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Add &New"));
+      c->BeginMenu( _("Add &New") );
 
       c->AddItem( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
          AudioIONotBusyFlag, wxT("Ctrl+Shift+N") );
@@ -1068,13 +1088,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("NewTimeTrack"), XXO("&Time Track"),
          FN(OnNewTimeTrack), AudioIONotBusyFlag );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
       c->AddSeparator();
 
-      c->BeginSubMenu(_("Mi&x") );
+      c->BeginMenu( _("Mi&x") );
       {
          // Stereo to Mono is an oddball command that is also subject to control by the
          // plug-in manager, as if an effect.  Decide whether to show or hide it.
@@ -1088,7 +1108,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          AudioIONotBusyFlag | WaveTracksSelectedFlag );
       c->AddItem( wxT("MixAndRenderToNewTrack"), XXO("Mix and Render to Ne&w Track"), FN(OnMixAndRenderToNewTrack),
          AudioIONotBusyFlag | WaveTracksSelectedFlag, wxT("Ctrl+Shift+M") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       c->AddItem( wxT("Resample"), XXO("&Resample..."), FN(OnResample),
          AudioIONotBusyFlag | WaveTracksSelectedFlag );
@@ -1100,14 +1120,14 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->AddSeparator();
 
-      c->BeginSubMenu(_("M&ute/Unmute"));
+      c->BeginMenu( _("M&ute/Unmute") );
       c->AddItem( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
          FN(OnMuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+U") );
       c->AddItem( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
          FN(OnUnmuteAllTracks), AudioIONotBusyFlag, wxT("Ctrl+Shift+U") );
-      c->EndSubMenu();
+      c->EndMenu();
 
-      c->BeginSubMenu(_("&Pan"));
+      c->BeginMenu( _("&Pan") );
       // As Pan changes are not saved on Undo stack, pan settings for all tracks
       // in the project could very easily be lost unless we require the tracks to be selcted.
       c->AddItem( wxT("PanLeft"), XXO("&Left"), FN(OnPanLeft),
@@ -1119,52 +1139,57 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("PanCenter"), XXO("&Center"), FN(OnPanCenter),
          TracksSelectedFlag,
          Options{}.LongName( _("Pan Center") ) );
-      c->EndSubMenu();
+      c->EndMenu();
 
 
       c->AddSeparator();
 
       //////////////////////////////////////////////////////////////////////////
 
-      const TranslatedInternalString alignLabelsNoSync[] = {
-         { wxT("EndToEnd"),     _("&Align End to End") },
-         { wxT("Together"),     _("Align &Together") },
+      // Mutual alignment of tracks independent of selection or zero
+      static const IdentInterfaceSymbol alignLabelsNoSync[] = {
+         { wxT("EndToEnd"),     XO("&Align End to End") },
+         { wxT("Together"),     XO("Align &Together") },
       };
 
-      const TranslatedInternalString alignLabels[] = {
-         { wxT("StartToZero"),  _("Start to &Zero") },
-         { wxT("StartToSelStart"), _("Start to &Cursor/Selection Start") },
-         { wxT("StartToSelEnd"),   _("Start to Selection &End") },
-         { wxT("EndToSelStart"),   _("End to Cu&rsor/Selection Start") },
-         { wxT("EndToSelEnd"),     _("End to Selection En&d") },
+      // Alignment commands using selection or zero
+      static const IdentInterfaceSymbol alignLabels[] = {
+         { wxT("StartToZero"),     XO("Start to &Zero") },
+         { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start") },
+         { wxT("StartToSelEnd"),   XO("Start to Selection &End") },
+         { wxT("EndToSelStart"),   XO("End to Cu&rsor/Selection Start") },
+         { wxT("EndToSelEnd"),     XO("End to Selection En&d") },
       };
-      mAlignLabelsCount = sizeof(alignLabels) / sizeof(alignLabels[0]);
+      static_assert(
+         kAlignLabelsCount == sizeof(alignLabels) / sizeof(alignLabels[0]),
+         "incorrect count"
+      );
 
-      c->BeginSubMenu(_("&Align Tracks"));
+      c->BeginMenu( _("&Align Tracks") );
 
-      //c->BeginSubMenu(_("Just Move Tracks"));
+      //c->BeginMenu( _("Just Move Tracks") );
       c->AddItemList(wxT("Align"), alignLabelsNoSync, 2u, FN(OnAlignNoSync),
          AudioIONotBusyFlag | TracksSelectedFlag);
       c->AddSeparator();
-      c->AddItemList(wxT("Align"), alignLabels, mAlignLabelsCount, FN(OnAlign),
+      c->AddItemList(wxT("Align"), alignLabels, kAlignLabelsCount, FN(OnAlign),
          AudioIONotBusyFlag | TracksSelectedFlag);
       c->AddSeparator();
       c->AddItem( wxT("MoveSelectionWithTracks"), XXO("&Move Selection with Tracks (on/off)"),
          FN(OnMoveSelectionWithTracks),
          AlwaysEnabledFlag,
          Options{}.CheckState( gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L ) ) );
-      c->EndSubMenu();
+      c->EndMenu();
 
 #if 0
       // TODO: Can these labels be made clearer? Do we need this sub-menu at all?
-      c->BeginSubMenu(_("Move Sele&ction and Tracks"));
+      c->BeginMenu( _("Move Sele&ction and Tracks") );
 
-      c->AddItemList(wxT("AlignMove"), alignLabels, mAlignLabelsCount, FN(OnAlignMoveSel));
+      c->AddItemList(wxT("AlignMove"), alignLabels, kAlignLabelsCount, FN(OnAlignMoveSel));
       c->SetCommandFlags(wxT("AlignMove"),
          AudioIONotBusyFlag | TracksSelectedFlag,
          AudioIONotBusyFlag | TracksSelectedFlag);
 
-      c->EndSubMenu();
+      c->EndMenu();
 #endif
 
       //////////////////////////////////////////////////////////////////////////
@@ -1176,7 +1201,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("S&ort Tracks"));
+      c->BeginMenu( _("S&ort Tracks") );
 
       c->AddItem( wxT("SortByTime"), XXO("By &Start Time"), FN(OnSortTime),
          TracksExistFlag,
@@ -1185,7 +1210,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          TracksExistFlag,
          Options{}.LongName( _("Sort by Name") ) );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1208,7 +1233,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Generate Menu
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("&Generate"));
+      c->BeginMenu( _("&Generate") );
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       c->AddItem( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
@@ -1228,7 +1253,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Effect Menu
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("Effe&ct"));
+      c->BeginMenu( _("Effe&ct") );
 
       wxString buildMenuLabel;
       if (!mLastEffect.IsEmpty()) {
@@ -1260,7 +1285,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Analyze Menu
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("&Analyze"));
+      c->BeginMenu( _("&Analyze") );
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       c->AddItem( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
@@ -1285,7 +1310,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // Tools Menu
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu(_("T&ools"));
+      c->BeginMenu( _("T&ools") );
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       c->AddItem( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
@@ -1296,13 +1321,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("ManageMacros"), XXO("&Macros..."),
          FN(OnManageMacros), AudioIONotBusyFlag );
 
-      c->BeginSubMenu(_("&Apply Macro"));
+      c->BeginMenu( _("&Apply Macro") );
       // Palette has no access key to ensure first letter navigation of sub menu
       c->AddItem( wxT("ApplyMacrosPalette"), XXO("Palette..."),
          FN(OnApplyMacrosPalette), AudioIONotBusyFlag );
       c->AddSeparator();
       PopulateMacrosMenu( c, AudioIONotBusyFlag );
-      c->EndSubMenu();
+      c->EndMenu();
       c->AddSeparator();
 
       c->AddItem( wxT("FancyScreenshot"), XXO("&Screenshot..."),
@@ -1347,7 +1372,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       /////////////////////////////////////////////////////////////////////////////
 
       {
-      c->BeginMenu(_("&Window"));
+      c->BeginMenu( _("&Window") );
       /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
        * window) shrink to an icon on the dock */
          c->AddItem( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize), NotMinimizedFlag,
@@ -1381,11 +1406,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       /////////////////////////////////////////////////////////////////////////////
 
       // i18n-hint: Extra is a menu with extra commands
-      c->BeginMenu(_("Ext&ra"));
+      c->BeginMenu( _("Ext&ra") );
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("T&ransport"));
+      c->BeginMenu( _("T&ransport") );
 
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
@@ -1421,11 +1446,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          wxT("Ctrl+Shift+F7") );
       c->AddItem( wxT("PlayCutPreview"), XXO("Play C&ut Preview"), FN(OnPlayCutPreview),
          CaptureNotBusyFlag, wxT("C") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("T&ools"));
+      c->BeginMenu( _("T&ools") );
 
       c->AddItem( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
          AlwaysEnabledFlag, wxT("F1") );
@@ -1444,11 +1469,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          AlwaysEnabledFlag, wxT("A") );
       c->AddItem( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
          AlwaysEnabledFlag, wxT("D") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Mi&xer"));
+      c->BeginMenu( _("Mi&xer") );
 
       c->AddItem( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
          FN(OnOutputGain), AlwaysEnabledFlag );
@@ -1462,11 +1487,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          FN(OnInputGainInc), AlwaysEnabledFlag );
       c->AddItem( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
          FN(OnInputGainDec), AlwaysEnabledFlag );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Edit"));
+      c->BeginMenu( _("&Edit") );
 
       c->AddItem( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
@@ -1477,11 +1502,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
          Options{ wxT("Delete") }
             .Mask( AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag ) );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Play-at-Speed"));
+      c->BeginMenu( _("&Play-at-Speed") );
 
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
       c->AddItem( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
@@ -1503,11 +1528,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          CaptureNotBusyFlag | TrackPanelHasFocus, wxT("Alt+Left") );
       c->AddItem( wxT("MoveToNextLabel"), XXO("Move to &Next Label"), FN(OnMoveToNextLabel),
          CaptureNotBusyFlag | TrackPanelHasFocus, wxT("Alt+Right") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("See&k"));
+      c->BeginMenu( _("See&k") );
 
       c->AddItem( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
          FN(OnSeekLeftShort), AudioIOBusyFlag, wxT("Left\tallowDup") );
@@ -1518,11 +1543,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          FN(OnSeekLeftLong), AudioIOBusyFlag, wxT("Shift+Left\tallowDup") );
       c->AddItem( wxT("SeekRightLong"), XXO("Long Seek Rig&ht During Playback"),
          FN(OnSeekRightLong), AudioIOBusyFlag, wxT("Shift+Right\tallowDup") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("De&vice"));
+      c->BeginMenu( _("De&vice") );
 
       c->AddItem( wxT("InputDevice"), XXO("Change &Recording Device..."), FN(OnInputDevice),
          AudioIONotBusyFlag, wxT("Shift+I") );
@@ -1532,11 +1557,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          AudioIONotBusyFlag, wxT("Shift+H") );
       c->AddItem( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."), FN(OnInputChannels),
          AudioIONotBusyFlag, wxT("Shift+N") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Selection"));
+      c->BeginMenu( _("&Selection") );
 
       c->AddItem( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
          AlwaysEnabledFlag );
@@ -1564,7 +1589,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("SelCntrRight"), XXO("Selection Contract R&ight"), FN(OnSelContractRight),
                  TracksExistFlag | TrackPanelHasFocus, wxT("Ctrl+Shift+Left\twantKeyup") );
 
-      c->EndSubMenu();
+      c->EndMenu();
 
 
       c->AddSeparator();
@@ -1574,7 +1599,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("F&ocus"));
+      c->BeginMenu( _("F&ocus") );
 
       c->AddItem( wxT("PrevFrame"),
          XXO("Move &Backward from Toolbars to Tracks"), FN(OnPrevFrame),
@@ -1602,11 +1627,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          FocusedTracksFlags, wxT("Return") );
       c->AddItem( wxT("ToggleAlt"), XXO("Toggle Focuse&d Track"), FN(OnToggle),
          FocusedTracksFlags, wxT("NUMPAD_ENTER") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Cursor"));
+      c->BeginMenu( _("&Cursor") );
 
       c->AddItem( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
                  TracksExistFlag | TrackPanelHasFocus, wxT("Left\twantKeyup\tallowDup") );
@@ -1625,11 +1650,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
                  TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") );
       c->AddItem( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
                  TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") );
-      c->EndSubMenu();
+      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("&Track"));
+      c->BeginMenu( _("&Track") );
 
       c->AddItem( wxT("TrackPan"), XXO("Change P&an on Focused Track..."), FN(OnTrackPan),
                  TrackPanelHasFocus | TracksExistFlag, wxT("Shift+P") );
@@ -1659,11 +1684,11 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
                  AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag );
       c->AddItem( wxT("TrackMoveBottom"), XXO("Move Focused Track to &Bottom"), FN(OnTrackMoveBottom),
                  AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag );
-      c->EndSubMenu();
+      c->EndMenu();
 
       // These are the more useful to VI user Scriptables.
       // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-      c->BeginSubMenu(_("Script&ables I"));
+      c->BeginMenu( _("Script&ables I") );
 
       // Note that the PLUGIN_SYMBOL must have a space between words, 
       // whereas the short-form used here must not.
@@ -1698,9 +1723,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       c->AddItem( wxT("SetProject"), XXO("Set Project..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag );
 
-      c->EndSubMenu();
+      c->EndMenu();
       // Less useful to VI users.
-      c->BeginSubMenu(_("Scripta&bles II"));
+      c->BeginMenu( _("Scripta&bles II") );
 
       c->AddItem( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
          AudioIONotBusyFlag );
@@ -1731,7 +1756,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
          AudioIONotBusyFlag );
 
 
-      c->EndSubMenu();
+      c->EndMenu();
 
 
       // Accel key is not bindable.
@@ -1773,7 +1798,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       wxGetApp().s_macHelpMenuTitleName = _("&Help");
 #endif
 
-      c->BeginMenu(_("&Help"));
+      c->BeginMenu( _("&Help") );
 
       c->AddItem( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
          AlwaysEnabledFlag );
@@ -1793,7 +1818,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
       c->AddSeparator();
 
-      c->BeginSubMenu(_("&Diagnostics"));
+      c->BeginMenu( _("&Diagnostics") );
       c->AddItem( wxT("DeviceInfo"), XXO("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
           AudioIONotBusyFlag );
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1810,7 +1835,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
       c->AddItem( wxT("CheckDeps"), XXO("Chec&k Dependencies..."), FN(OnCheckDependencies),
           AudioIONotBusyFlag );
-      c->EndSubMenu();
+      c->EndMenu();
 
 #ifndef __WXMAC__
       c->AddSeparator();
@@ -1848,7 +1873,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
 
 
-void MenuCreator::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
+void PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
 {
    wxArrayString names = MacroCommands::GetNames();
    int i;
@@ -1865,10 +1890,10 @@ void MenuCreator::PopulateMacrosMenu( CommandManager* c, CommandFlag flags  )
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into
 /// the menu.
-void MenuCreator::PopulateEffectsMenu(CommandManager* c,
-                                          EffectType type,
-                                          CommandFlag batchflags,
-                                          CommandFlag realflags)
+void PopulateEffectsMenu(CommandManager* c,
+   EffectType type,
+   CommandFlag batchflags,
+   CommandFlag realflags)
 {
    PluginManager & pm = PluginManager::Get();
 
@@ -1928,7 +1953,7 @@ void MenuCreator::PopulateEffectsMenu(CommandManager* c,
    return;
 }
 
-void MenuCreator::AddEffectMenuItems(CommandManager *c,
+void AddEffectMenuItems(CommandManager *c,
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
    CommandFlag realflags,
@@ -1986,13 +2011,13 @@ void MenuCreator::AddEffectMenuItems(CommandManager *c,
          {
             bool bInSubmenu = !last.IsEmpty() && (groupNames.Count() > 1);
             if( bInSubmenu)
-               c->BeginSubMenu(last);
+               c->BeginMenu( last );
 
             AddEffectMenuItemGroup(c, groupNames, vHasDialog,
                                    groupPlugs, groupFlags, isDefault);
 
             if (bInSubmenu)
-               c->EndSubMenu();
+               c->EndMenu();
 
             groupNames.Clear();
             vHasDialog.clear();
@@ -2011,12 +2036,12 @@ void MenuCreator::AddEffectMenuItems(CommandManager *c,
       {
          bool bInSubmenu = groupNames.Count() > 1;
          if (bInSubmenu)
-            c->BeginSubMenu(current);
+            c->BeginMenu( current );
 
          AddEffectMenuItemGroup(c, groupNames, vHasDialog, groupPlugs, groupFlags, isDefault);
 
          if (bInSubmenu)
-            c->EndSubMenu();
+            c->EndMenu();
       }
    }
    else
@@ -2069,12 +2094,12 @@ void MenuCreator::AddEffectMenuItems(CommandManager *c,
    return;
 }
 
-void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
-                                             const wxArrayString & names,
-                                             const std::vector<bool> &vHasDialog,
-                                             const PluginIDList & plugs,
-                                             const std::vector<CommandFlag> & flags,
-                                             bool isDefault)
+void AddEffectMenuItemGroup(CommandManager *c,
+   const wxArrayString & names,
+   const std::vector<bool> &vHasDialog,
+   const PluginIDList & plugs,
+   const std::vector<CommandFlag> & flags,
+   bool isDefault)
 {
    int namesCnt = (int) names.GetCount();
    int perGroup;
@@ -2119,15 +2144,15 @@ void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
          {
             end = groupCnt;
          }
-         c->BeginSubMenu(wxString::Format(_("Plug-in %d to %d"),
+         c->BeginMenu( wxString::Format(_("Plug-in %d to %d"),
                                           groupNdx + 1,
-                                          end));
+                                          end) );
       }
 
       if (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
       {
          wxString name = names[i];
-         c->BeginSubMenu(name);
+         c->BeginMenu( name );
          while (i < namesCnt && names[i].IsSameAs(name))
          {
             const PluginDescriptor *plug = PluginManager::Get().GetPlugin(plugs[i]);
@@ -2143,7 +2168,7 @@ void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
 
             i++;
          }
-         c->EndSubMenu();
+         c->EndMenu();
          i--;
       }
       else
@@ -2165,7 +2190,7 @@ void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
          items--;
          if (items == 0 || i + 1 == namesCnt)
          {
-            c->EndSubMenu();
+            c->EndMenu();
             items = max;
          }
       }
@@ -2176,11 +2201,11 @@ void MenuCreator::AddEffectMenuItemGroup(CommandManager *c,
 
 #undef FN
 
-void MenuCreator::CreateRecentFilesMenu(CommandManager *c)
+void CreateRecentFilesMenu(CommandManager *c)
 {
    // Recent Files and Recent Projects menus
 
-   wxWeakRef<wxMenu> recentFilesMenu = c->BeginSubMenu(
+   wxWeakRef<wxMenu> recentFilesMenu = c->BeginMenu(
 
 #ifdef __WXMAC__
       /* i18n-hint: This is the name of the menu item on Mac OS X only */
@@ -2195,7 +2220,7 @@ void MenuCreator::CreateRecentFilesMenu(CommandManager *c)
    wxGetApp().GetRecentFiles()->UseMenu(recentFilesMenu);
    wxGetApp().GetRecentFiles()->AddFilesToMenu(recentFilesMenu);
 
-   c->EndSubMenu();
+   c->EndMenu();
 
    wxTheApp->CallAfter( [=] {
       // Bug 143 workaround.
@@ -8499,7 +8524,7 @@ void MenuCommandHandler::HandleAlign
          : _("Align Together");
    }
 
-   if ((unsigned)index >= GetMenuManager(project).mAlignLabelsCount) { // This is an alignLabelsNoSync command.
+   if ((unsigned)index >= kAlignLabelsCount) { // This is an alignLabelsNoSync command.
       for (auto t : tracks->SelectedLeaders< AudioTrack >()) {
          // This shifts different tracks in different ways, so no sync-lock move.
          // Only align Wave and Note tracks end to end.
@@ -8540,7 +8565,7 @@ void MenuCommandHandler::OnAlignNoSync(const CommandContext &context)
 
    // Add length of alignLabels array so that we can handle this in AudacityProject::HandleAlign.
    HandleAlign(project,
-      context.index + GetMenuManager(project).mAlignLabelsCount, false);
+      context.index + kAlignLabelsCount, false);
 }
 
 void MenuCommandHandler::OnAlign(const CommandContext &context)

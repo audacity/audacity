@@ -140,11 +140,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
    // or else BeginMenu followed by EndMenu.  Don't mix them.
-   void BeginMenu(const wxString & tName);
+   wxMenu *BeginMenu(const wxString & tName);
    void EndMenu();
-
-   wxMenu* BeginSubMenu(const wxString & tName);
-   void EndSubMenu();
 
    // For specifying unusual arguments in AddItem
    struct Options
@@ -179,7 +176,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    };
 
    void AddItemList(const wxString & name,
-                    const TranslatedInternalString items[],
+                    const IdentInterfaceSymbol items[],
                     size_t nItems,
                     CommandHandlerFinder finder,
                     CommandFunctorPointer callback,
@@ -349,6 +346,10 @@ protected:
    //
 
    void Enable(CommandListEntry *entry, bool enabled);
+   wxMenu *BeginMainMenu(const wxString & tName);
+   void EndMainMenu();
+   wxMenu* BeginSubMenu(const wxString & tName);
+   void EndSubMenu();
 
    //
    // Accessing
