@@ -541,12 +541,14 @@ MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
 
 MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
 // TODO:  devise a registration system instead.
 static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    ExtraTransportMenu
+   , ExtraToolsMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1760,6 +1762,29 @@ MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   return Menu( _("T&ools"),
+      Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
+         AlwaysEnabledFlag, wxT("F1") ),
+      Command( wxT("EnvelopeTool"), XXO("&Envelope Tool"),
+         FN(OnEnvelopeTool), AlwaysEnabledFlag, wxT("F2") ),
+      Command( wxT("DrawTool"), XXO("&Draw Tool"), FN(OnDrawTool),
+         AlwaysEnabledFlag, wxT("F3") ),
+      Command( wxT("ZoomTool"), XXO("&Zoom Tool"), FN(OnZoomTool),
+         AlwaysEnabledFlag, wxT("F4") ),
+      Command( wxT("TimeShiftTool"), XXO("&Time Shift Tool"),
+         FN(OnTimeShiftTool), AlwaysEnabledFlag, wxT("F5") ),
+      Command( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
+         AlwaysEnabledFlag, wxT("F6") ),
+      Command( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
+         AlwaysEnabledFlag, wxT("A") ),
+      Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
+         AlwaysEnabledFlag, wxT("D") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1791,29 +1816,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("T&ools") );
-
-      c->AddItem( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
-         AlwaysEnabledFlag, wxT("F1") );
-      c->AddItem( wxT("EnvelopeTool"), XXO("&Envelope Tool"),
-         FN(OnEnvelopeTool), AlwaysEnabledFlag, wxT("F2") );
-      c->AddItem( wxT("DrawTool"), XXO("&Draw Tool"), FN(OnDrawTool),
-         AlwaysEnabledFlag, wxT("F3") );
-      c->AddItem( wxT("ZoomTool"), XXO("&Zoom Tool"), FN(OnZoomTool),
-         AlwaysEnabledFlag, wxT("F4") );
-      c->AddItem( wxT("TimeShiftTool"), XXO("&Time Shift Tool"),
-         FN(OnTimeShiftTool), AlwaysEnabledFlag, wxT("F5") );
-      c->AddItem( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
-         AlwaysEnabledFlag, wxT("F6") );
-
-      c->AddItem( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
-         AlwaysEnabledFlag, wxT("A") );
-      c->AddItem( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
-         AlwaysEnabledFlag, wxT("D") );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
