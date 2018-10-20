@@ -550,6 +550,7 @@ MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & );
 MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -568,6 +569,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
 
    , ExtraGlobalCommands
    , ExtraFocusMenu
+   , ExtraCursorMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1988,6 +1990,36 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+
+   return Menu( _("&Cursor"),
+      Command( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
+         TracksExistFlag | TrackPanelHasFocus,
+         wxT("Left\twantKeyup\tallowDup") ),
+      Command( wxT("CursorRight"), XXO("Cursor &Right"), FN(OnCursorRight),
+         TracksExistFlag | TrackPanelHasFocus,
+         wxT("Right\twantKeyup\tallowDup") ),
+      Command( wxT("CursorShortJumpLeft"), XXO("Cursor Sh&ort Jump Left"),
+         FN(OnCursorShortJumpLeft),
+         TracksExistFlag | TrackPanelHasFocus, wxT(",") ),
+      Command( wxT("CursorShortJumpRight"), XXO("Cursor Shor&t Jump Right"),
+         FN(OnCursorShortJumpRight),
+         TracksExistFlag | TrackPanelHasFocus, wxT(".") ),
+      Command( wxT("CursorLongJumpLeft"), XXO("Cursor Long J&ump Left"),
+         FN(OnCursorLongJumpLeft),
+         TracksExistFlag | TrackPanelHasFocus, wxT("Shift+,") ),
+      Command( wxT("CursorLongJumpRight"), XXO("Cursor Long Ju&mp Right"),
+         FN(OnCursorLongJumpRight),
+         TracksExistFlag | TrackPanelHasFocus, wxT("Shift+.") ),
+      Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
+         TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") ),
+      Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
+         TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -2019,29 +2051,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Cursor") );
-
-      c->AddItem( wxT("CursorLeft"), XXO("Cursor &Left"), FN(OnCursorLeft),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Left\twantKeyup\tallowDup") );
-      c->AddItem( wxT("CursorRight"), XXO("Cursor &Right"), FN(OnCursorRight),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Right\twantKeyup\tallowDup") );
-      c->AddItem( wxT("CursorShortJumpLeft"), XXO("Cursor Sh&ort Jump Left"), FN(OnCursorShortJumpLeft),
-                 TracksExistFlag | TrackPanelHasFocus, wxT(",") );
-      c->AddItem( wxT("CursorShortJumpRight"), XXO("Cursor Shor&t Jump Right"), FN(OnCursorShortJumpRight),
-                 TracksExistFlag | TrackPanelHasFocus, wxT(".") );
-      c->AddItem( wxT("CursorLongJumpLeft"), XXO("Cursor Long J&ump Left"), FN(OnCursorLongJumpLeft),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Shift+,") );
-      c->AddItem( wxT("CursorLongJumpRight"), XXO("Cursor Long Ju&mp Right"), FN(OnCursorLongJumpRight),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Shift+.") );
-
-      c->AddItem( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") );
-      c->AddItem( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("\twantKeyup") );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
