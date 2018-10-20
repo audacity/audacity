@@ -1397,6 +1397,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       std::unique_ptr<wxMenuBar> menubar2;
       if( !bShowExtraMenus )
       {
+         // Make a temporary menu bar collecting items added below.
+         // This bar will be discarded but other side effects on the command
+         // manager persist.
          menubar2 = c->AddMenuBar(wxT("ext-menu"));
          c->SetOccultCommands(true);
       }
@@ -1791,7 +1794,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       if (!bShowExtraMenus)
       {
-          c->SwapMenuBars();
+          c->PopMenuBar();
           c->SetOccultCommands(false);
       }
 

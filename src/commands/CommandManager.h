@@ -40,7 +40,7 @@ struct MenuBarListEntry
    {}
 
    wxString name;
-   wxMenuBar *menubar; // This structure does not assume memory ownership!
+   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
 };
 
 struct SubMenuListEntry
@@ -211,7 +211,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    const wxChar *accel,
                    CommandFlag flags);
 
-   void SwapMenuBars();
+   void PopMenuBar();
    void SetOccultCommands( bool bOccult);
 
 
