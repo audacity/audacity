@@ -538,12 +538,15 @@ MenuTable::BaseItemPtr EffectMenu( AudacityProject& );
 MenuTable::BaseItemPtr AnalyzeMenu( AudacityProject& );
 MenuTable::BaseItemPtr ToolsMenu( AudacityProject& );
 MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
+
 MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
+MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
 // TODO:  devise a registration system instead.
 static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
+   ExtraTransportMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1715,6 +1718,48 @@ MenuTable::BaseItemPtr ExtraMenu( AudacityProject & )
    return ConditionalItems( pred, Menu( _("Ext&ra"), factory ) );
 }
 
+MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   return Menu( _("T&ransport"),
+      // PlayStop is already in the menus.
+      /* i18n-hint: (verb) Start playing audio*/
+      Command( wxT("Play"), XXO("Pl&ay"), FN(OnPlayStop),
+         WaveTracksExistFlag | AudioIONotBusyFlag ),
+      /* i18n-hint: (verb) Stop playing audio*/
+      Command( wxT("Stop"), XXO("Sto&p"), FN(OnStop),
+         AudioIOBusyFlag | CanStopAudioStreamFlag ),
+      Command( wxT("PlayOneSec"), XXO("Play &One Second"), FN(OnPlayOneSecond),
+         CaptureNotBusyFlag, wxT("1") ),
+      Command( wxT("PlayToSelection"), XXO("Play to &Selection"),
+         FN(OnPlayToSelection),
+         CaptureNotBusyFlag, wxT("B") ),
+      Command( wxT("PlayBeforeSelectionStart"),
+         XXO("Play &Before Selection Start"), FN(OnPlayBeforeSelectionStart),
+         CaptureNotBusyFlag, wxT("Shift+F5") ),
+      Command( wxT("PlayAfterSelectionStart"),
+         XXO("Play Af&ter Selection Start"), FN(OnPlayAfterSelectionStart),
+         CaptureNotBusyFlag, wxT("Shift+F6") ),
+      Command( wxT("PlayBeforeSelectionEnd"),
+         XXO("Play Be&fore Selection End"), FN(OnPlayBeforeSelectionEnd),
+         CaptureNotBusyFlag, wxT("Shift+F7") ),
+      Command( wxT("PlayAfterSelectionEnd"),
+         XXO("Play Aft&er Selection End"), FN(OnPlayAfterSelectionEnd),
+         CaptureNotBusyFlag, wxT("Shift+F8") ),
+      Command( wxT("PlayBeforeAndAfterSelectionStart"),
+         XXO("Play Before a&nd After Selection Start"),
+         FN(OnPlayBeforeAndAfterSelectionStart), CaptureNotBusyFlag,
+         wxT("Ctrl+Shift+F5") ),
+      Command( wxT("PlayBeforeAndAfterSelectionEnd"),
+         XXO("Play Before an&d After Selection End"),
+         FN(OnPlayBeforeAndAfterSelectionEnd), CaptureNotBusyFlag,
+         wxT("Ctrl+Shift+F7") ),
+      Command( wxT("PlayCutPreview"), XXO("Play C&ut Preview"),
+         FN(OnPlayCutPreview),
+         CaptureNotBusyFlag, wxT("C") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1746,46 +1791,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("T&ransport") );
-
-      // PlayStop is already in the menus.
-      /* i18n-hint: (verb) Start playing audio*/
-      c->AddItem( wxT("Play"), XXO("Pl&ay"), FN(OnPlayStop),
-         WaveTracksExistFlag | AudioIONotBusyFlag );
-      /* i18n-hint: (verb) Stop playing audio*/
-      c->AddItem( wxT("Stop"), XXO("Sto&p"), FN(OnStop),
-         AudioIOBusyFlag | CanStopAudioStreamFlag );
-
-      c->AddItem( wxT("PlayOneSec"), XXO("Play &One Second"), FN(OnPlayOneSecond),
-         CaptureNotBusyFlag, wxT("1") );
-      c->AddItem( wxT("PlayToSelection"), XXO("Play to &Selection"), FN(OnPlayToSelection),
-         CaptureNotBusyFlag, wxT("B") );
-      c->AddItem( wxT("PlayBeforeSelectionStart"),
-         XXO("Play &Before Selection Start"), FN(OnPlayBeforeSelectionStart),
-         CaptureNotBusyFlag, wxT("Shift+F5") );
-      c->AddItem( wxT("PlayAfterSelectionStart"),
-         XXO("Play Af&ter Selection Start"), FN(OnPlayAfterSelectionStart),
-         CaptureNotBusyFlag, wxT("Shift+F6") );
-      c->AddItem( wxT("PlayBeforeSelectionEnd"),
-         XXO("Play Be&fore Selection End"), FN(OnPlayBeforeSelectionEnd),
-         CaptureNotBusyFlag, wxT("Shift+F7") );
-      c->AddItem( wxT("PlayAfterSelectionEnd"),
-         XXO("Play Aft&er Selection End"), FN(OnPlayAfterSelectionEnd),
-         CaptureNotBusyFlag, wxT("Shift+F8") );
-      c->AddItem( wxT("PlayBeforeAndAfterSelectionStart"),
-         XXO("Play Before a&nd After Selection Start"),
-         FN(OnPlayBeforeAndAfterSelectionStart), CaptureNotBusyFlag,
-         wxT("Ctrl+Shift+F5") );
-      c->AddItem( wxT("PlayBeforeAndAfterSelectionEnd"),
-         XXO("Play Before an&d After Selection End"),
-         FN(OnPlayBeforeAndAfterSelectionEnd), CaptureNotBusyFlag,
-         wxT("Ctrl+Shift+F7") );
-      c->AddItem( wxT("PlayCutPreview"), XXO("Play C&ut Preview"), FN(OnPlayCutPreview),
-         CaptureNotBusyFlag, wxT("C") );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
