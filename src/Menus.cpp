@@ -547,6 +547,7 @@ MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -559,6 +560,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraPlayAtSpeedMenu
    , ExtraSeekMenu
    , ExtraDeviceMenu
+   , ExtraSelectionMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1894,6 +1896,45 @@ MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   return Menu( _("&Selection"),
+      Command( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
+         AlwaysEnabledFlag ),
+      Command( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
+         FN(OnSnapToNearest), AlwaysEnabledFlag ),
+      Command( wxT("SnapToPrior"), XXO("Snap-To &Prior"), FN(OnSnapToPrior),
+         AlwaysEnabledFlag ),
+      Command( wxT("SelStart"), XXO("Selection to &Start"), FN(OnSelToStart),
+         AlwaysEnabledFlag, wxT("Shift+Home") ),
+      Command( wxT("SelEnd"), XXO("Selection to En&d"), FN(OnSelToEnd),
+         AlwaysEnabledFlag, wxT("Shift+End") ),
+      Command( wxT("SelExtLeft"), XXO("Selection Extend &Left"),
+         FN(OnSelExtendLeft),
+         TracksExistFlag | TrackPanelHasFocus,
+         wxT("Shift+Left\twantKeyup\tallowDup") ),
+      Command( wxT("SelExtRight"), XXO("Selection Extend &Right"),
+         FN(OnSelExtendRight),
+         TracksExistFlag | TrackPanelHasFocus,
+         wxT("Shift+Right\twantKeyup\tallowDup") ),
+      Command( wxT("SelSetExtLeft"), XXO("Set (or Extend) Le&ft Selection"),
+         FN(OnSelSetExtendLeft),
+         TracksExistFlag | TrackPanelHasFocus ),
+      Command( wxT("SelSetExtRight"), XXO("Set (or Extend) Rig&ht Selection"),
+         FN(OnSelSetExtendRight),
+         TracksExistFlag | TrackPanelHasFocus ),
+      Command( wxT("SelCntrLeft"), XXO("Selection Contract L&eft"),
+         FN(OnSelContractLeft),
+         TracksExistFlag | TrackPanelHasFocus,
+         wxT("Ctrl+Shift+Right\twantKeyup") ),
+      Command( wxT("SelCntrRight"), XXO("Selection Contract R&ight"),
+         FN(OnSelContractRight),
+         TracksExistFlag | TrackPanelHasFocus,
+         wxT("Ctrl+Shift+Left\twantKeyup") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1925,39 +1966,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Selection") );
-
-      c->AddItem( wxT("SnapToOff"), XXO("Snap-To &Off"), FN(OnSnapToOff),
-         AlwaysEnabledFlag );
-      c->AddItem( wxT("SnapToNearest"), XXO("Snap-To &Nearest"),
-         FN(OnSnapToNearest), AlwaysEnabledFlag );
-      c->AddItem( wxT("SnapToPrior"), XXO("Snap-To &Prior"), FN(OnSnapToPrior),
-         AlwaysEnabledFlag );
-
-      c->AddItem( wxT("SelStart"), XXO("Selection to &Start"), FN(OnSelToStart),
-         AlwaysEnabledFlag, wxT("Shift+Home") );
-      c->AddItem( wxT("SelEnd"), XXO("Selection to En&d"), FN(OnSelToEnd),
-         AlwaysEnabledFlag, wxT("Shift+End") );
-      c->AddItem( wxT("SelExtLeft"), XXO("Selection Extend &Left"), FN(OnSelExtendLeft),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Shift+Left\twantKeyup\tallowDup") );
-      c->AddItem( wxT("SelExtRight"), XXO("Selection Extend &Right"), FN(OnSelExtendRight),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Shift+Right\twantKeyup\tallowDup") );
-
-      c->AddItem( wxT("SelSetExtLeft"), XXO("Set (or Extend) Le&ft Selection"), FN(OnSelSetExtendLeft),
-                 TracksExistFlag | TrackPanelHasFocus );
-      c->AddItem( wxT("SelSetExtRight"), XXO("Set (or Extend) Rig&ht Selection"), FN(OnSelSetExtendRight),
-                 TracksExistFlag | TrackPanelHasFocus );
-
-      c->AddItem( wxT("SelCntrLeft"), XXO("Selection Contract L&eft"), FN(OnSelContractLeft),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Ctrl+Shift+Right\twantKeyup") );
-      c->AddItem( wxT("SelCntrRight"), XXO("Selection Contract R&ight"), FN(OnSelContractRight),
-                 TracksExistFlag | TrackPanelHasFocus, wxT("Ctrl+Shift+Left\twantKeyup") );
-
-      c->EndMenu();
-
 
       c->AddSeparator();
 
