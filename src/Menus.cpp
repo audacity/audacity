@@ -545,6 +545,7 @@ MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -555,6 +556,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraMixerMenu
    , ExtraEditMenu
    , ExtraPlayAtSpeedMenu
+   , ExtraSeekMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1856,6 +1858,22 @@ MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   return Menu( _("See&k"),
+      Command( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
+         FN(OnSeekLeftShort), AudioIOBusyFlag, wxT("Left\tallowDup") ),
+      Command( wxT("SeekRightShort"),
+         XXO("Short Seek &Right During Playback"), FN(OnSeekRightShort),
+         AudioIOBusyFlag, wxT("Right\tallowDup") ),
+      Command( wxT("SeekLeftLong"), XXO("Long Seek Le&ft During Playback"),
+         FN(OnSeekLeftLong), AudioIOBusyFlag, wxT("Shift+Left\tallowDup") ),
+      Command( wxT("SeekRightLong"), XXO("Long Seek Rig&ht During Playback"),
+         FN(OnSeekRightLong), AudioIOBusyFlag, wxT("Shift+Right\tallowDup") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1887,21 +1905,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("See&k") );
-
-      c->AddItem( wxT("SeekLeftShort"), XXO("Short Seek &Left During Playback"),
-         FN(OnSeekLeftShort), AudioIOBusyFlag, wxT("Left\tallowDup") );
-      c->AddItem( wxT("SeekRightShort"),
-         XXO("Short Seek &Right During Playback"), FN(OnSeekRightShort),
-         AudioIOBusyFlag, wxT("Right\tallowDup") );
-      c->AddItem( wxT("SeekLeftLong"), XXO("Long Seek Le&ft During Playback"),
-         FN(OnSeekLeftLong), AudioIOBusyFlag, wxT("Shift+Left\tallowDup") );
-      c->AddItem( wxT("SeekRightLong"), XXO("Long Seek Rig&ht During Playback"),
-         FN(OnSeekRightLong), AudioIOBusyFlag, wxT("Shift+Right\tallowDup") );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
