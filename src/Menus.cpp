@@ -544,6 +544,7 @@ MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -553,6 +554,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraToolsMenu
    , ExtraMixerMenu
    , ExtraEditMenu
+   , ExtraPlayAtSpeedMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1824,6 +1826,36 @@ MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   return Menu( _("&Play-at-Speed"),
+      /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
+      Command( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
+         FN(OnPlayAtSpeed), CaptureNotBusyFlag ),
+      Command( wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"),
+         FN(OnPlayAtSpeedLooped), CaptureNotBusyFlag ),
+      Command( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
+         FN(OnPlayAtSpeedCutPreview), CaptureNotBusyFlag ),
+      Command( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),
+         FN(OnSetPlaySpeed), CaptureNotBusyFlag ),
+      Command( wxT("PlaySpeedInc"), XXO("&Increase Playback Speed"),
+         FN(OnPlaySpeedInc), CaptureNotBusyFlag ),
+      Command( wxT("PlaySpeedDec"), XXO("&Decrease Playback Speed"),
+         FN(OnPlaySpeedDec), CaptureNotBusyFlag ),
+
+      // These were on the original transcription toolbar.
+      // But they are not on the
+      // shortened one.
+      Command( wxT("MoveToPrevLabel"), XXO("Move to &Previous Label"),
+         FN(OnMoveToPrevLabel),
+         CaptureNotBusyFlag | TrackPanelHasFocus, wxT("Alt+Left") ),
+      Command( wxT("MoveToNextLabel"), XXO("Move to &Next Label"),
+         FN(OnMoveToNextLabel),
+         CaptureNotBusyFlag | TrackPanelHasFocus, wxT("Alt+Right") )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1855,32 +1887,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Play-at-Speed") );
-
-      /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
-      c->AddItem( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
-         FN(OnPlayAtSpeed), CaptureNotBusyFlag );
-      c->AddItem( wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"),
-         FN(OnPlayAtSpeedLooped), CaptureNotBusyFlag );
-      c->AddItem( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
-         FN(OnPlayAtSpeedCutPreview), CaptureNotBusyFlag );
-      c->AddItem( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),
-         FN(OnSetPlaySpeed), CaptureNotBusyFlag );
-      c->AddItem( wxT("PlaySpeedInc"), XXO("&Increase Playback Speed"),
-         FN(OnPlaySpeedInc), CaptureNotBusyFlag );
-      c->AddItem( wxT("PlaySpeedDec"), XXO("&Decrease Playback Speed"),
-         FN(OnPlaySpeedDec), CaptureNotBusyFlag );
-
-      // These were on the original transcription toolbar.  But they are not on the
-      // shortened one.
-      c->AddItem( wxT("MoveToPrevLabel"), XXO("Move to &Previous Label"), FN(OnMoveToPrevLabel),
-         CaptureNotBusyFlag | TrackPanelHasFocus, wxT("Alt+Left") );
-      c->AddItem( wxT("MoveToNextLabel"), XXO("Move to &Next Label"), FN(OnMoveToNextLabel),
-         CaptureNotBusyFlag | TrackPanelHasFocus, wxT("Alt+Right") );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
