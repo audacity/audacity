@@ -543,6 +543,7 @@ MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -551,6 +552,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    ExtraTransportMenu
    , ExtraToolsMenu
    , ExtraMixerMenu
+   , ExtraEditMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -1806,6 +1808,22 @@ MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+   using Options = CommandManager::Options;
+   constexpr auto flags =
+      AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag;
+   return Menu( _("&Edit"),
+      Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
+         (flags | NoAutoSelect),
+         Options{ wxT("Backspace") }.Mask( flags ) ),
+      Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
+         (flags | NoAutoSelect),
+         Options{ wxT("Delete") }.Mask( flags ) )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1837,21 +1855,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      //////////////////////////////////////////////////////////////////////////
-
-      c->BeginMenu( _("&Edit") );
-
-      c->AddItem( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
-         Options{ wxT("Backspace") }
-            .Mask( AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag ) );
-
-      c->AddItem( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
-         Options{ wxT("Delete") }
-            .Mask( AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag ) );
-      c->EndMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
