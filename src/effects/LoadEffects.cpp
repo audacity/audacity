@@ -105,6 +105,16 @@
 #endif
 
 //
+// Include the Loudness effect, if requested
+#if defined(EXPERIMENTAL_LOUDNESS_EFFECT)
+#define LOUDNESS_EFFECT \
+   EFFECT( LOUDNESS,          EffectNormalize, (true) )
+#else
+#define LOUDNESS_EFFECT
+#endif
+
+
+//
 // Define the list of effects that will be autoregistered and how to instantiate each
 //
 #define EFFECT_LIST \
@@ -125,7 +135,7 @@
    EFFECT( FADEOUT,           EffectFade, (false) )        \
    EFFECT( INVERT,            EffectInvert, () )           \
    EFFECT( NORMALIZE,         EffectNormalize, (false) )   \
-   EFFECT( LOUDNESS,          EffectNormalize, (true) )    \
+   LOUDNESS_EFFECT                                         \
    EFFECT( PHASER,            EffectPhaser, () )           \
    EFFECT( REPAIR,            EffectRepair, () )           \
    EFFECT( REPEAT,            EffectRepeat, () )           \

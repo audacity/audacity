@@ -71,7 +71,9 @@ private:
    };
 
    bool GetTrackMinMax(WaveTrack* track, float& min, float& max);
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    bool GetTrackRMS(WaveTrack* track, float& rms);
+#endif
    void AllocBuffers();
    bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
    bool LoadBufferBlock(TrackIterRange<WaveTrack> range,
@@ -82,25 +84,31 @@ private:
                          sampleCount pos, size_t len);
    void InitTrackAnalysis(bool dc);
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    void CalcEBUR128HPF(float fs);
    void CalcEBUR128HSF(float fs);
+#endif
 
    bool UpdateProgress();
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
 
 private:
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    bool   mIsLoudness;
+#endif
 
    double mPeakLevel;
-   double mLUFSLevel;
-   double mRMSLevel;
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
+   double mLUFSLevel;
+   double mRMSLevel;
    bool   mDualMono;
    int    mNormalizeTo;
    int    mGUINormalizeTo;
+#endif
 
    double mCurT0;
    double mCurT1;
@@ -115,24 +123,29 @@ private:
    float  mOffset[2];   // MM: all those 2's must be increased once surround channels are supported
    float  mMin[2];
    float  mMax[2];
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    float  mRMS[2];
+#endif
    double mSum[2];
    sampleCount    mCount;
 
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
-   wxChoice   *mNormalizeToCtl;
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
+   wxChoice   *mNormalizeToCtl;
    wxCheckBox *mDualMonoCheckBox;
+#endif
 
    Floats mTrackBuffer[2];    // MM: must be increased once surround channels are supported
    size_t mTrackBufferLen;
    size_t mTrackBufferCapacity;
    bool   mProcStereo;
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    static const size_t HIST_BIN_COUNT = 65536;
    static constexpr double GAMMA_A = (-70.0 + 0.691) / 10.0;   // EBU R128 absolute threshold
    ArrayOf<long int> mLoudnessHist;
@@ -144,6 +157,7 @@ private:
 
    Biquad mR128HSF[2];
    Biquad mR128HPF[2];
+#endif
 
    DECLARE_EVENT_TABLE()
 };

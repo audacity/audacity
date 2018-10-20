@@ -48,13 +48,15 @@ static const ComponentInterfaceSymbol kNormalizeTargetStrings[nAlgos] =
 //
 //     Name         Type     Key                        Def         Min      Max       Scale
 Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,       -145.0,  0.0,      1  );
-Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,      -145.0,  0.0,      1  );
-Param( RMSLevel,    double,  wxT("RMSLevel"),            -20.0,      -145.0,  0.0,      1  );
 Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,       false,   true,     1  );
 Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,       false,   true,     1  );
 Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,      false,   true,     1  );
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
+Param( LUFSLevel,   double,  wxT("LUFSLevel"),           -23.0,      -145.0,  0.0,      1  );
+Param( RMSLevel,    double,  wxT("RMSLevel"),            -20.0,      -145.0,  0.0,      1  );
 Param( DualMono,    bool,    wxT("DualMono"),            true,       false,   true,     1  );
 Param( NormalizeTo, int,     wxT("NormalizeTo"),         kAmplitude, 0    ,   nAlgos-1, 1  );
+#endif
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_CHOICE(wxID_ANY, EffectNormalize::OnUpdateUI)
@@ -64,16 +66,20 @@ END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize(bool isLoudness)
 {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    mIsLoudness = isLoudness;
+#endif
 
    mPeakLevel = DEF_PeakLevel;
-   mLUFSLevel = DEF_LUFSLevel;
-   mRMSLevel = DEF_RMSLevel;
    mDC = DEF_RemoveDC;
    mGain = DEF_ApplyGain;
    mStereoInd = DEF_StereoInd;
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
+   mLUFSLevel = DEF_LUFSLevel;
+   mRMSLevel = DEF_RMSLevel;
    mDualMono = DEF_DualMono;
    mNormalizeTo = DEF_NormalizeTo;
+#endif
 
    SetLinearEffectFlag(false);
 }
@@ -86,25 +92,31 @@ EffectNormalize::~EffectNormalize()
 
 ComponentInterfaceSymbol EffectNormalize::GetSymbol()
 {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
       return LOUDNESS_PLUGIN_SYMBOL;
    else
+#endif
       return NORMALIZE_PLUGIN_SYMBOL;
 }
 
 wxString EffectNormalize::GetDescription()
 {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
       return _("Sets the peak amplitude or loudness of one or more tracks");
    else
+#endif
       return _("Sets the peak amplitude of one or more tracks");
 }
 
 wxString EffectNormalize::ManualPage()
 {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
       return wxT("Loudness");
    else
+#endif
       return wxT("Normalize");
 }
 
@@ -122,6 +134,7 @@ bool EffectNormalize::DefineParams( ShuttleParams & S )
    S.SHUTTLE_PARAM( mGain, ApplyGain );
    S.SHUTTLE_PARAM( mDC, RemoveDC );
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
    {
       S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );
@@ -131,6 +144,7 @@ bool EffectNormalize::DefineParams( ShuttleParams & S )
    }
    else
       mNormalizeTo = kAmplitude;
+#endif
    return true;
 }
 
@@ -140,6 +154,7 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
    parms.Write(KEY_ApplyGain, mGain);
    parms.Write(KEY_RemoveDC, mDC);
    parms.Write(KEY_StereoInd, mStereoInd);
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
    {
       parms.Write(KEY_LUFSLevel, mLUFSLevel);
@@ -147,6 +162,7 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
       parms.Write(KEY_DualMono, mDualMono);
       parms.Write(KEY_NormalizeTo, mNormalizeTo);
    }
+#endif
 
    return true;
 }
@@ -163,6 +179,7 @@ bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
    mDC = RemoveDC;
    mStereoInd = StereoInd;
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
    {
       ReadAndVerifyDouble(LUFSLevel);
@@ -177,6 +194,7 @@ bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
    }
    else
       mNormalizeTo = kAmplitude;
+#endif
 
    return true;
 }
@@ -191,9 +209,11 @@ bool EffectNormalize::CheckWhetherSkipEffect()
 bool EffectNormalize::Startup()
 {
    wxString base;
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
       base = wxT("/Effects/Loudness/");
    else
+#endif
       base = wxT("/Effects/Normalize/");
 
    // Migrate settings from 2.1.0 or before
@@ -216,6 +236,7 @@ bool EffectNormalize::Startup()
          mPeakLevel = -mPeakLevel;
       boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
       mStereoInd = (boolProxy == 1);
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       if(mIsLoudness)
       {
          mDualMono = DEF_DualMono;
@@ -223,6 +244,7 @@ bool EffectNormalize::Startup()
          mLUFSLevel = DEF_LUFSLevel;
          mRMSLevel = DEF_RMSLevel;
       }
+#endif
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -238,21 +260,29 @@ bool EffectNormalize::Process()
 {
    // Use temporary copy of mDC so that the checkbox
    // state is unaffected by the operation below.
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    bool dc = mDC && mNormalizeTo != kRMS;
+#else
+   bool dc = mDC;
+#endif
    if (mGain == false && dc == false)
       return true;
 
    float ratio;
    if( mGain )
    {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       if(mNormalizeTo == kAmplitude)
+#endif
          ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       else if(mNormalizeTo == kLoudness)
          // LU use 10*log10(...) instead of 20*log10(...)
          // so multiply level by 2 and use standard DB_TO_LINEAR macro.
          ratio = DB_TO_LINEAR(TrapDouble(mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
       else // RMS
          ratio = DB_TO_LINEAR(TrapDouble(mRMSLevel, MIN_RMSLevel, MAX_RMSLevel));
+#endif
 
    }
    else
@@ -307,29 +337,42 @@ bool EffectNormalize::Process()
       mProcStereo = range.size() > 1;
 
       // Get track min/max/rms in peak/rms mode
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       if(mGain && (mNormalizeTo == kAmplitude || mNormalizeTo == kRMS))
+#else
+      if(mGain)
+#endif
       {
          size_t idx = 0;
          for(auto channel : range)
          {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
             if(mNormalizeTo == kAmplitude)
             {
+#endif
                if(!GetTrackMinMax(channel, mMin[idx], mMax[idx]))
                   return false;
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
             }
             else // RMS
             {
                if(!GetTrackRMS(channel, mRMS[idx]))
                   return false;
             }
+#endif
             ++idx;
          }
       }
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       // Skip analyze pass if it is not necessary.
       if(mNormalizeTo == kLoudness || dc)
       {
          mBlockSize = 0.4 * mCurRate; // 400 ms blocks
          mBlockOverlap = 0.1 * mCurRate; // 100 ms overlap
+#else
+      if(dc)
+      {
+#endif
          if(!ProcessOne(range, true))
             // Processing failed -> abort
             return false;
@@ -355,9 +398,12 @@ bool EffectNormalize::Process()
       }
 
       float extent;
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       if(mNormalizeTo == kAmplitude)
       {
+#endif
          extent = fmax(fabs(mMin[0]), fabs(mMax[0]));
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       }
       else if(mNormalizeTo == kLoudness)
       {
@@ -398,15 +444,19 @@ bool EffectNormalize::Process()
       {
          extent = mRMS[0];
       }
+#endif
 
       if(mProcStereo)
       {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
          if(mNormalizeTo == kAmplitude)
          {
+#endif
             // Peak: use maximum of both tracks.
             float extent2;
             extent2 = fmax(fabs(mMin[1]), fabs(mMax[1]));;
             extent = fmax(extent, extent2);
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
          }
          else if(mNormalizeTo == kRMS)
          {
@@ -414,12 +464,13 @@ bool EffectNormalize::Process()
             extent = (extent + mRMS[1]) / 2.0;
          }
          // else: mNormalizeTo == kLoudness : do nothing (this is already handled in histogram)
+#endif
       }
 
       if( (extent > 0) && mGain )
       {
          mMult = ratio / extent;
-
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
          if(mNormalizeTo == kLoudness)
          {
             // Target half the LUFS value if mono (or independent processed stereo)
@@ -430,6 +481,7 @@ bool EffectNormalize::Process()
             // LUFS are related to square values so the multiplier must be the root.
             mMult = sqrt(mMult);
          }
+#endif
       }
       else
          mMult = 1.0;
@@ -447,8 +499,10 @@ bool EffectNormalize::Process()
    // Free memory
    mTrackBuffer[0].reset();
    mTrackBuffer[1].reset();
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    mBlockRingBuffer.reset();
    mLoudnessHist.reset();
+#endif
 
    return bGoodResult;
 }
@@ -468,15 +522,20 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT, false);
             {
                // Now make the checkbox.
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
                wxString checkboxLabel = mIsLoudness
                                       ? _("Normalize")
                                       : _("Normalize peak amplitude to");
+#else
+               wxString checkboxLabel = _("Normalize peak amplitude to");
+#endif
 
                mGainCheckBox = S.AddCheckBox(checkboxLabel,
                                              mGain ? wxT("true") : wxT("false"));
                mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
                mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
                if(mIsLoudness)
                {
                   auto targetChoices = LocalizedStrings(kNormalizeTargetStrings, nAlgos);
@@ -485,6 +544,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                   S.AddVariableText(_("to"), false,
                                     wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                }
+#endif
 
                FloatingPointValidator<double> vldLevel(2, &mPeakLevel,
                                                        NumValidatorStyle::ONE_TRAILING_ZERO);
@@ -504,12 +564,14 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                                                mStereoInd ? wxT("true") : wxT("false"));
             mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
             if(mIsLoudness)
             {
                mDualMonoCheckBox = S.AddCheckBox(_("Treat mono as dual-mono (recommended)"),
                                                  mDualMono ? wxT("true") : wxT("false"));
                mDualMonoCheckBox->SetValidator(wxGenericValidator(&mDualMono));
             }
+#endif
          }
          S.EndVerticalLay();
       }
@@ -517,14 +579,18 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
    // To ensure that the UpdateUI on creation sets the prompts correctly.
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    mGUINormalizeTo = !mNormalizeTo;
+#endif
 }
 
 bool EffectNormalize::TransferDataToWindow()
 {
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    // Force mNormalizeTo to kAmplitude if simple GUI is used, just in case.
    if(mIsLoudness == false)
       mNormalizeTo = kAmplitude;
+#endif
    if (!mUIParent->TransferDataToWindow())
    {
       return false;
@@ -541,9 +607,11 @@ bool EffectNormalize::TransferDataFromWindow()
    {
       return false;
    }
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    // Force mNormalizeTo to kAmplitude if simple GUI is used, just in case.
    if(mIsLoudness == false)
       mNormalizeTo = kAmplitude;
+#endif
 
    return true;
 }
@@ -569,6 +637,7 @@ bool EffectNormalize::GetTrackMinMax(WaveTrack* track, float& min, float& max)
    return true;
 }
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
 bool EffectNormalize::GetTrackRMS(WaveTrack* track, float& rms)
 {
    // Since we need complete summary data, we need to block until the OD tasks are done for this track
@@ -587,6 +656,7 @@ bool EffectNormalize::GetTrackRMS(WaveTrack* track, float& rms)
    rms = _rms;
    return true;
 }
+#endif
 
 /// Get required buffer size for the largest whole track and allocate buffers.
 /// This reduces the amount of allocations required.
@@ -608,8 +678,10 @@ void EffectNormalize::AllocBuffers()
    }
 
    // Allocate histogram buffers
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    mLoudnessHist.reinit(HIST_BIN_COUNT, false);
    mBlockRingBuffer.reinit(static_cast<size_t>(ceil(0.4 * maxSampleRate))); // 400 ms blocks
+#endif
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -716,6 +788,7 @@ bool EffectNormalize::AnalyseBufferBlock()
          if(mProcStereo)
             mSum[1] += (double)mTrackBuffer[1][i];
       }
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
       if(mOp & ANALYSE_LOUDNESS)
       {
          double value;
@@ -768,6 +841,7 @@ bool EffectNormalize::AnalyseBufferBlock()
          if(mBlockRingPos == mBlockSize)
             mBlockRingPos = 0;
       }
+#endif
    }
    mCount += mTrackBufferLen;
 
@@ -808,6 +882,7 @@ void EffectNormalize::InitTrackAnalysis(bool dc)
    mSum[1]   = 0.0;
    mCount = 0;
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    mBlockRingPos = 0;
    mBlockRingSize = 0;
    memset(mLoudnessHist.get(), 0, HIST_BIN_COUNT*sizeof(long int));
@@ -833,6 +908,9 @@ void EffectNormalize::InitTrackAnalysis(bool dc)
    }
    // Just remove DC ?
    else if(dc)
+#else
+   if(dc)
+#endif
    {
       mMin[0] = -1.0, mMax[0] = 1.0;   // sensible defaults?
       mMin[1] = -1.0, mMax[1] = 1.0;
@@ -849,6 +927,7 @@ void EffectNormalize::InitTrackAnalysis(bool dc)
    }
 }
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
 // EBU R128 parameter sampling rate adaption after
 // Mansbridge, Stuart, Saoirse Finn, and Joshua D. Reiss.
 // "Implementation and Evaluation of Autonomous Multi-track Fader Control."
@@ -916,6 +995,7 @@ void EffectNormalize::CalcEBUR128HSF(float fs)
       mR128HSF[1].fDenomCoeffs[Biquad::A2] = mR128HSF[0].fDenomCoeffs[Biquad::A2];
    }
 }
+#endif
 
 bool EffectNormalize::UpdateProgress()
 {
@@ -939,6 +1019,7 @@ void EffectNormalize::UpdateUI()
    }
    mWarning->SetLabel(wxT(""));
 
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    // Changing the prompts causes an unwanted UpdateUI event.  
    // This 'guard' stops that becoming an infinite recursion.
    if (mNormalizeTo != mGUINormalizeTo)
@@ -974,11 +1055,13 @@ void EffectNormalize::UpdateUI()
          mLeveldB->SetLabel(_("dB"));
       }
    }
+#endif
 
    // Disallow level stuff if not normalizing
    mLevelTextCtrl->Enable(mGain);
    mLeveldB->Enable(mGain);
    mStereoIndCheckBox->Enable(mGain);
+#ifdef EXPERIMENTAL_LOUDNESS_EFFECT
    if(mIsLoudness)
    {
       mDualMonoCheckBox->Enable(mGain && mNormalizeTo == kLoudness);
@@ -989,6 +1072,7 @@ void EffectNormalize::UpdateUI()
       // Loudness is immune to this effect because is has highpass characteristic.
       mDCCheckBox->Enable(mNormalizeTo != kRMS);
    }
+#endif
 
    // Disallow OK/Preview if doing nothing
    EnableApply(mGain || mDC);
