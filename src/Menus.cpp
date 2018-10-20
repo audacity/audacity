@@ -553,6 +553,7 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -574,6 +575,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraCursorMenu
    , ExtraTrackMenu
    , ExtraScriptablesIMenu
+   , ExtraScriptablesIIMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -2121,6 +2123,44 @@ MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+
+   // Less useful to VI users.
+   return Menu( _("Scripta&bles II"),
+      Command( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetTrack"), XXO("Set Track..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("GetInfo"), XXO("Get Info..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("Message"), XXO("Message..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("Help"), XXO("Help..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("Import2"), XXO("Import..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("Export2"), XXO("Export..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("OpenProject2"), XXO("Open Project..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SaveProject2"), XXO("Save Project..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("Drag"), XXO("Move Mouse..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("CompareAudio"), XXO("Compare Audio..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      // i18n-hint: Screenshot in the help menu has a much bigger dialog.
+      Command( wxT("Screenshot"), XXO("Screenshot (short format)..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -2152,41 +2192,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
-
-      // Less useful to VI users.
-      c->BeginMenu( _("Scripta&bles II") );
-
-      c->AddItem( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetTrack"), XXO("Set Track..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("GetInfo"), XXO("Get Info..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("Message"), XXO("Message..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("Help"), XXO("Help..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-
-      c->AddItem( wxT("Import2"), XXO("Import..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("Export2"), XXO("Export..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("OpenProject2"), XXO("Open Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SaveProject2"), XXO("Save Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-
-      c->AddItem( wxT("Drag"), XXO("Move Mouse..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("CompareAudio"), XXO("Compare Audio..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      // i18n-hint: Screenshot in the help menu has a much bigger dialog.
-      c->AddItem( wxT("Screenshot"), XXO("Screenshot (short format)..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-
-
-      c->EndMenu();
-
 
       // Accel key is not bindable.
       c->AddItem( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"), FN(OnFullScreen),
