@@ -552,6 +552,7 @@ MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & );
 MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -572,6 +573,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraFocusMenu
    , ExtraCursorMenu
    , ExtraTrackMenu
+   , ExtraScriptablesIMenu
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -2073,6 +2075,52 @@ MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & )
+{
+   using namespace MenuTable;
+
+   // These are the more useful to VI user Scriptables.
+   // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
+   return Menu( _("Script&ables I"),
+      // Note that the PLUGIN_SYMBOL must have a space between words, 
+      // whereas the short-form used here must not.
+      // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
+      // you would have to use "Compareaudio" here.)
+      Command( wxT("SelectTime"), XXO("Select Time..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SelectTracks"), XXO("Select Tracks..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetTrackStatus"), XXO("Set Track Status..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetTrackAudio"), XXO("Set Track Audio..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("GetPreference"), XXO("Get Preference..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetPreference"), XXO("Set Preference..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetClip"), XXO("Set Clip..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetEnvelope"), XXO("Set Envelope..."),
+         FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetLabel"), XXO("Set Label..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag ),
+      Command( wxT("SetProject"), XXO("Set Project..."), FN(OnAudacityCommand),
+         AudioIONotBusyFlag )
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -2105,44 +2153,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       // i18n-hint: Extra is a menu with extra commands
       c->BeginMenu( _("Ext&ra_") );
 
-      // These are the more useful to VI user Scriptables.
-      // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-      c->BeginMenu( _("Script&ables I") );
-
-      // Note that the PLUGIN_SYMBOL must have a space between words, 
-      // whereas the short-form used here must not.
-      // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
-      // you would have to use "Compareaudio" here.)
-
-      c->AddItem( wxT("SelectTime"), XXO("Select Time..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SelectFrequencies"), XXO("Select Frequencies..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SelectTracks"), XXO("Select Tracks..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-
-      c->AddItem( wxT("SetTrackStatus"), XXO("Set Track Status..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetTrackAudio"), XXO("Set Track Audio..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-
-
-      c->AddItem( wxT("GetPreference"), XXO("Get Preference..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetPreference"), XXO("Set Preference..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetClip"), XXO("Set Clip..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetEnvelope"), XXO("Set Envelope..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetLabel"), XXO("Set Label..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-      c->AddItem( wxT("SetProject"), XXO("Set Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag );
-
-      c->EndMenu();
       // Less useful to VI users.
       c->BeginMenu( _("Scripta&bles II") );
 
