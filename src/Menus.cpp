@@ -554,6 +554,7 @@ MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & );
+MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject & );
 }
 
 // Tables of menu factories.
@@ -576,6 +577,7 @@ static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
    , ExtraTrackMenu
    , ExtraScriptablesIMenu
    , ExtraScriptablesIIMenu
+   , ExtraMiscItems
 );
 
 static const auto menuTree = MenuTable::Items(
@@ -2161,12 +2163,43 @@ MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
+{
+   using namespace MenuTable;
+   using Options = CommandManager::Options;
+
+   constexpr auto key =
+#ifdef __WXMAC__
+      wxT("Ctrl+/")
+#else
+      wxT("F11")
+#endif
+   ;
+
+   // Not a menu.
+   return Items(
+      // Accel key is not bindable.
+      Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
+         FN(OnFullScreen),
+         AlwaysEnabledFlag,
+         Options{ key }
+            .CheckState( project.wxTopLevelWindow::IsFullScreen() ) )
+
+#ifdef __WXMAC__
+      ,
+      /* i18n-hint: Shrink all project windows to icons on the Macintosh
+         tooldock */
+      Command( wxT("MacMinimizeAll"), XXO("Minimize All Projects"),
+         FN(OnMacMinimizeAll),
+         AlwaysEnabledFlag, wxT("Ctrl+Alt+M") )
+#endif
+   );
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 {
-   using Options = CommandManager::Options;
-
    CommandManager *c = project.GetCommandManager();
 
    // The list of defaults to exclude depends on
@@ -2178,50 +2211,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       wxASSERT(menubar);
 
       VisitItem( project, menuTree.get() );
-
-      bool bShowExtraMenus;
-      gPrefs->Read(wxT("/GUI/ShowExtraMenus"), &bShowExtraMenus, false);
-      if( !bShowExtraMenus )
-      {
-         c->BeginOccultCommands();
-      }
-
-      /////////////////////////////////////////////////////////////////////////////
-      // Ext-Menu
-      /////////////////////////////////////////////////////////////////////////////
-
-      // i18n-hint: Extra is a menu with extra commands
-      c->BeginMenu( _("Ext&ra_") );
-
-      // Accel key is not bindable.
-      c->AddItem( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"), FN(OnFullScreen),
-         AlwaysEnabledFlag,
-         Options{
-#ifdef __WXMAC__
-            wxT("Ctrl+/"),
-#else
-            wxT("F11"),
-#endif
-         }
-            .CheckState( project.wxTopLevelWindow::IsFullScreen() ) );
-
-#ifdef __WXMAC__
-      /* i18n-hint: Shrink all project windows to icons on the Macintosh tooldock */
-      c->AddItem( wxT("MacMinimizeAll"), XXO("Minimize All Projects"),
-         FN(OnMacMinimizeAll),
-         AlwaysEnabledFlag, wxT("Ctrl+Alt+M") );
-#endif
-      
-      
-
-      c->EndMenu();
-
-
-
-      if (!bShowExtraMenus)
-      {
-          c->EndOccultCommands();
-      }
 
       /////////////////////////////////////////////////////////////////////////////
       // Help Menu
