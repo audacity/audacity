@@ -40,7 +40,7 @@ struct MenuBarListEntry
    {}
 
    wxString name;
-   wxMenuBar *menubar; // This structure does not assume memory ownership!
+   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
 };
 
 struct SubMenuListEntry
@@ -166,6 +166,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
          { mask = value; return std::move(*this); }
       Options &&LongName (const wxString &value) &&
          { longName = value; return std::move(*this); }
+      Options &&IsGlobal () &&
+         { global = true; return std::move(*this); }
 
       const wxChar *accel{ wxT("") };
       int check{ -1 }; // default value means it's not a check item
@@ -173,6 +175,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
       CommandParameter parameter{};
       CommandMask mask{ NoFlagsSpecified };
       wxString longName{}; // translated
+      bool global{ false };
    };
 
    void AddItemList(const wxString & name,
@@ -208,15 +211,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    const wxChar *accel,
                    CommandFlag flags);
 
-   void AddGlobalCommand(const wxChar *name,
-                         const wxChar *label,
-                         bool hasDialog,
-                         CommandHandlerFinder finder,
-                         CommandFunctorPointer callback,
-                         const wxChar *accel);
-
-   void SwapMenuBars();
-   void SetOccultCommands( bool bOccult);
+   void PopMenuBar();
+   void BeginOccultCommands();
+   void EndOccultCommands();
 
 
    void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
@@ -303,7 +300,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Sorted list of the shortcut keys to be exluded from the standard defaults
    static const std::vector<NormalizedKeyString> &ExcludedList();
 
-protected:
+private:
 
    //
    // Creating menus and adding commands
@@ -334,6 +331,13 @@ protected:
                                    int count,
                                    bool bIsEffect,
                                    const CommandParameter &parameter);
+   
+   void AddGlobalCommand(const wxChar *name,
+                         const wxChar *label,
+                         bool hasDialog,
+                         CommandHandlerFinder finder,
+                         CommandFunctorPointer callback,
+                         const wxChar *accel);
 
    //
    // Executing commands
@@ -391,6 +395,7 @@ private:
    wxMenu *mCurrentMenu {};
 
    bool bMakingOccultCommands;
+   std::unique_ptr< wxMenuBar > mTempMenuBar;
 };
 
 #endif

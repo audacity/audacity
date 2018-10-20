@@ -597,17 +597,17 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
 }
 
 ///
-/// Swap the last two menu bars in the list,
-/// to make the previous menu bar 'current' again.
 /// Typically used to switch back and forth
 /// between adding to a hidden menu bar and
-/// adding to one that is visible,
+/// adding to one that is visible
 ///
-void CommandManager::SwapMenuBars()
+void CommandManager::PopMenuBar()
 {
-    int l = mMenuBarList.size();
-    wxASSERT(l >= 2);
-    std::swap(mMenuBarList[l - 2], mMenuBarList[l - 1]);
+   auto iter = mMenuBarList.end();
+   if ( iter != mMenuBarList.begin() )
+      mMenuBarList.erase( --iter );
+   else
+      wxASSERT( false );
 }
 
 
@@ -754,6 +754,13 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFlag flags,
                              const Options &options)
 {
+   if (options.global) {
+      wxASSERT( flags == AlwaysEnabledFlag );
+      AddGlobalCommand(
+         name, label_in, hasDialog, finder, callback, options.accel );
+      return;
+   }
+
    wxASSERT( flags != NoFlagsSpecified );
 
    auto mask = options.mask;
@@ -1824,9 +1831,24 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("audacitykeyboard"));
 }
 
-void CommandManager::SetOccultCommands( bool bOccult)
+void CommandManager::BeginOccultCommands()
 {
-   bMakingOccultCommands = bOccult;
+   // To do:  perhaps allow occult item switching at lower levels of the
+   // menu tree.
+   wxASSERT( !CurrentMenu() );
+
+   // Make a temporary menu bar collecting items added after.
+   // This bar will be discarded but other side effects on the command
+   // manager persist.
+   mTempMenuBar = AddMenuBar(wxT("ext-menu"));
+   bMakingOccultCommands = true;
+}
+
+void CommandManager::EndOccultCommands()
+{
+   PopMenuBar();
+   bMakingOccultCommands = false;
+   mTempMenuBar.reset();
 }
 
 void CommandManager::SetCommandFlags(const wxString &name,

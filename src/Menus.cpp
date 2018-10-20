@@ -390,7 +390,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    {
       auto menubar = c->AddMenuBar(wxT("appmenu"));
       wxASSERT(menubar);
-      c->SetOccultCommands( false );
 
       /////////////////////////////////////////////////////////////////////////////
       // File menu
@@ -1394,11 +1393,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       bool bShowExtraMenus;
       gPrefs->Read(wxT("/GUI/ShowExtraMenus"), &bShowExtraMenus, false);
-      std::unique_ptr<wxMenuBar> menubar2;
       if( !bShowExtraMenus )
       {
-         menubar2 = c->AddMenuBar(wxT("ext-menu"));
-         c->SetOccultCommands(true);
+         c->BeginOccultCommands();
       }
 
       /////////////////////////////////////////////////////////////////////////////
@@ -1594,8 +1591,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->AddSeparator();
 
-      c->AddGlobalCommand(wxT("PrevWindow"), XXO("Move Backward Through Active Windows"), FN(OnPrevWindow), wxT("Alt+Shift+F6"));
-      c->AddGlobalCommand(wxT("NextWindow"), XXO("Move Forward Through Active Windows"), FN(OnNextWindow), wxT("Alt+F6"));
+      // Global commands
+      c->AddItem( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
+         FN(OnPrevWindow), AlwaysEnabledFlag,
+         Options{ wxT("Alt+Shift+F6") }.IsGlobal() );
+      c->AddItem( wxT("NextWindow"), XXO("Move Forward Through Active Windows"),
+         FN(OnNextWindow), AlwaysEnabledFlag,
+         Options{ wxT("Alt+F6") }.IsGlobal() );
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1786,8 +1788,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       if (!bShowExtraMenus)
       {
-          c->SwapMenuBars();
-          c->SetOccultCommands(false);
+          c->EndOccultCommands();
       }
 
       /////////////////////////////////////////////////////////////////////////////
