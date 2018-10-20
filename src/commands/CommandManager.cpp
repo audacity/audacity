@@ -754,6 +754,13 @@ void CommandManager::AddItem(const wxChar *name,
                              CommandFlag flags,
                              const Options &options)
 {
+   if (options.global) {
+      wxASSERT( flags == AlwaysEnabledFlag );
+      AddGlobalCommand(
+         name, label_in, hasDialog, finder, callback, options.accel );
+      return;
+   }
+
    wxASSERT( flags != NoFlagsSpecified );
 
    auto mask = options.mask;

@@ -1594,8 +1594,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       c->AddSeparator();
 
-      c->AddGlobalCommand(wxT("PrevWindow"), XXO("Move Backward Through Active Windows"), FN(OnPrevWindow), wxT("Alt+Shift+F6"));
-      c->AddGlobalCommand(wxT("NextWindow"), XXO("Move Forward Through Active Windows"), FN(OnNextWindow), wxT("Alt+F6"));
+      // Global commands
+      c->AddItem( wxT("PrevWindow"), XXO("Move Backward Through Active Windows"),
+         FN(OnPrevWindow), AlwaysEnabledFlag,
+         Options{ wxT("Alt+Shift+F6") }.IsGlobal() );
+      c->AddItem( wxT("NextWindow"), XXO("Move Forward Through Active Windows"),
+         FN(OnNextWindow), AlwaysEnabledFlag,
+         Options{ wxT("Alt+F6") }.IsGlobal() );
 
       //////////////////////////////////////////////////////////////////////////
 
