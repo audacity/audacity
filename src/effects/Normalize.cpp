@@ -455,8 +455,6 @@ bool EffectNormalize::Process()
 
 void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 {
-   mCreating = true;
-
    S.StartVerticalLay(0);
    {
       S.StartMultiColumn(2, wxALIGN_CENTER);
@@ -520,7 +518,6 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
    S.EndVerticalLay();
    // To ensure that the UpdateUI on creation sets the prompts correctly.
    mGUINormalizeTo = !mNormalizeTo;
-   mCreating = false;
 }
 
 bool EffectNormalize::TransferDataToWindow()

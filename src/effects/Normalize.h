@@ -142,7 +142,6 @@ private:
    size_t mBlockSize;
    size_t mBlockOverlap;
 
-   bool mCreating;
    Biquad mR128HSF[2];
    Biquad mR128HPF[2];
 
