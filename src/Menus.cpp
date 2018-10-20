@@ -537,6 +537,7 @@ MenuTable::BaseItemPtr GenerateMenu( AudacityProject& );
 MenuTable::BaseItemPtr EffectMenu( AudacityProject& );
 MenuTable::BaseItemPtr AnalyzeMenu( AudacityProject& );
 MenuTable::BaseItemPtr ToolsMenu( AudacityProject& );
+MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
 }
 
 // Tables of menu factories.
@@ -555,6 +556,7 @@ static const auto menuTree = MenuTable::Items(
    , EffectMenu
    , AnalyzeMenu
    , ToolsMenu
+   , WindowMenu
 );
 
 namespace {
@@ -1672,6 +1674,35 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject & )
    );
 }
 
+MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
+{
+#ifdef __WXMAC__
+      /////////////////////////////////////////////////////////////////////////////
+      // poor imitation of the Mac Windows Menu
+      /////////////////////////////////////////////////////////////////////////////
+   using namespace MenuTable;
+   return Menu( _("&Window"),
+      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+       * window) shrink to an icon on the dock */
+      Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),
+         NotMinimizedFlag, wxT("Ctrl+M") ),
+      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
+       * window) full sized */
+      Command( wxT("MacZoom"), XXO("&Zoom"),
+         FN(OnMacZoom), NotMinimizedFlag ),
+
+      Separator(),
+
+      /* i18n-hint: Standard Macintosh Window menu item:  Make all project
+       * windows un-hidden */
+      Command( wxT("MacBringAllToFront"), XXO("&Bring All to Front"),
+         FN(OnMacBringAllToFront), AlwaysEnabledFlag )
+   );
+#else
+   return {};
+#endif
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
@@ -1689,32 +1720,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       wxASSERT(menubar);
 
       VisitItem( project, menuTree.get() );
-
-#ifdef __WXMAC__
-      /////////////////////////////////////////////////////////////////////////////
-      // poor imitation of the Mac Windows Menu
-      /////////////////////////////////////////////////////////////////////////////
-
-      {
-      c->BeginMenu( _("&Window") );
-      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
-       * window) shrink to an icon on the dock */
-         c->AddItem( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize), NotMinimizedFlag,
-                    wxT("Ctrl+M") );
-      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
-       * window) full sized */
-      c->AddItem( wxT("MacZoom"), XXO("&Zoom"), FN(OnMacZoom),
-                 NotMinimizedFlag );
-      c->AddSeparator();
-      /* i18n-hint: Standard Macintosh Window menu item:  Make all project
-       * windows un-hidden */
-      c->AddItem( wxT("MacBringAllToFront"),
-                 XXO("&Bring All to Front"), FN(OnMacBringAllToFront),
-                 AlwaysEnabledFlag );
-      c->EndMenu();
-      }
-#endif
-
 
       bool bShowExtraMenus;
       gPrefs->Read(wxT("/GUI/ShowExtraMenus"), &bShowExtraMenus, false);
