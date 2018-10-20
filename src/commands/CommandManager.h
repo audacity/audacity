@@ -212,7 +212,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                    CommandFlag flags);
 
    void PopMenuBar();
-   void SetOccultCommands( bool bOccult);
+   void BeginOccultCommands();
+   void EndOccultCommands();
 
 
    void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
@@ -394,6 +395,7 @@ private:
    wxMenu *mCurrentMenu {};
 
    bool bMakingOccultCommands;
+   std::unique_ptr< wxMenuBar > mTempMenuBar;
 };
 
 #endif

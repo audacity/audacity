@@ -1831,9 +1831,24 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("audacitykeyboard"));
 }
 
-void CommandManager::SetOccultCommands( bool bOccult)
+void CommandManager::BeginOccultCommands()
 {
-   bMakingOccultCommands = bOccult;
+   // To do:  perhaps allow occult item switching at lower levels of the
+   // menu tree.
+   wxASSERT( !CurrentMenu() );
+
+   // Make a temporary menu bar collecting items added after.
+   // This bar will be discarded but other side effects on the command
+   // manager persist.
+   mTempMenuBar = AddMenuBar(wxT("ext-menu"));
+   bMakingOccultCommands = true;
+}
+
+void CommandManager::EndOccultCommands()
+{
+   PopMenuBar();
+   bMakingOccultCommands = false;
+   mTempMenuBar.reset();
 }
 
 void CommandManager::SetCommandFlags(const wxString &name,

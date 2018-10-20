@@ -390,7 +390,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    {
       auto menubar = c->AddMenuBar(wxT("appmenu"));
       wxASSERT(menubar);
-      c->SetOccultCommands( false );
 
       /////////////////////////////////////////////////////////////////////////////
       // File menu
@@ -1394,14 +1393,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       bool bShowExtraMenus;
       gPrefs->Read(wxT("/GUI/ShowExtraMenus"), &bShowExtraMenus, false);
-      std::unique_ptr<wxMenuBar> menubar2;
       if( !bShowExtraMenus )
       {
-         // Make a temporary menu bar collecting items added below.
-         // This bar will be discarded but other side effects on the command
-         // manager persist.
-         menubar2 = c->AddMenuBar(wxT("ext-menu"));
-         c->SetOccultCommands(true);
+         c->BeginOccultCommands();
       }
 
       /////////////////////////////////////////////////////////////////////////////
@@ -1794,8 +1788,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 
       if (!bShowExtraMenus)
       {
-          c->PopMenuBar();
-          c->SetOccultCommands(false);
+          c->EndOccultCommands();
       }
 
       /////////////////////////////////////////////////////////////////////////////
