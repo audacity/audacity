@@ -171,8 +171,23 @@ static void AddEffectMenuItemGroup(
 
 constexpr size_t kAlignLabelsCount = 5;
 
+static const AudacityProject::RegisteredAttachedObjectFactory factory{ []{
+   return std::make_unique< MenuCommandHandler >();
+} };
+
+PrefsListener::~PrefsListener()
+{
+}
+
+void PrefsListener::UpdatePrefs()
+{
+}
+
 MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project)
-{ return *project.mMenuCommandHandler; }
+{
+   return static_cast<MenuCommandHandler&>(
+      project.GetAttachedObject( factory ) );
+}
 
 MenuManager &GetMenuManager(AudacityProject &project)
 { return *project.mMenuManager; }

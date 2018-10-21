@@ -35,8 +35,16 @@ enum EffectType : int;
 typedef wxString PluginID;
 typedef wxArrayString PluginIDList;
 
+class PrefsListener
+{
+public:
+   virtual ~PrefsListener();
+   virtual void UpdatePrefs(); // default is no-op
+};
+
 struct MenuCommandHandler final
    : public CommandHandlerObject // MUST be the first base class!
+   , public PrefsListener
 {
    MenuCommandHandler();
    ~MenuCommandHandler();
@@ -592,7 +600,7 @@ public:
    bool mCircularTrackNavigation{};
    wxLongLong mLastSelectionAdjustment;
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
 };
 
 class MenuCreator
