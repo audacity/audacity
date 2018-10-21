@@ -21,7 +21,7 @@ sudo apt-get install build-essential cmake
 
 - Auto-tools are also needed.
 
-sudo apt-get install libasound libgtk2.0-dev libgtk-3-dev
+sudo apt-get install libasound2-dev libgtk2.0-dev libgtk-3-dev
 sudo apt-get install autoconf automake
 
 - Since you will be fetching code from git repositories you 
