@@ -460,9 +460,14 @@ namespace MenuTable {
             Append( std::forward<Args>(moreArgs)... );
          };
 
+      // Move one unique_ptr to an item into our array
       void AppendOne( BaseItemPtr&& ptr );
-      // This override allows a lambda or function pointer in the variadic
-      // argument lists without any other syntactic wrapping:
+      // This overload allows a lambda or function pointer in the variadic
+      // argument lists without any other syntactic wrapping, and also
+      // allows implicit conversions to type Factory.
+      // (Thus, a lambda can return a unique_ptr<BaseItem> rvalue even though
+      // Factory's return type is shared_ptr, and the needed conversion is
+      // appled implicitly.)
       void AppendOne( const Factory &factory )
       { AppendOne( std::make_unique<ComputedItem>( factory ) ); }
    };
