@@ -296,7 +296,7 @@ Name: "ta"; MessagesFile: "{#Dummy('Tamil', '0449')}"
 Name: "tg"; MessagesFile: "{#Dummy('Tajik', '0428')}"
 Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
 Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
-Name: "vi"; MessagesFile: "{#Get('Vietnamese.isl')}"
+Name: "vi"; MessagesFile: "{#Get('Vietnamese.islu')}"
 Name: "zh_CN"; MessagesFile: "{#Get('ChineseSimplified.isl')}"
 Name: "zh_TW"; MessagesFile: "{#Get('ChineseTraditional.isl')}"
 
