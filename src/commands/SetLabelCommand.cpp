@@ -112,5 +112,6 @@ bool SetLabelCommand::Apply(const CommandContext & context)
          labelTrack->mSelIndex = -1;
    }
 
+   labelTrack->SortLabels();
    return true;
 }
