@@ -218,36 +218,10 @@ void OnMacBringAllToFront(const CommandContext &context );
 
 // File Menu
 
-void OnNew(const CommandContext &context );
-void OnOpen(const CommandContext &context );
-void OnProjectReset(const CommandContext &context);
-void OnClose(const CommandContext &context );
-void OnSave(const CommandContext &context );
-void OnSaveAs(const CommandContext &context );
-void OnSaveCopy(const CommandContext &context );
-#ifdef USE_LIBVORBIS
-   void OnSaveCompressed(const CommandContext &context );
-#endif
-
 void OnCheckDependencies(const CommandContext &context );
-
-void DoExport(AudacityProject &project, const wxString & Format);
-void OnExportAudio(const CommandContext &context );
-void OnExportMp3(const CommandContext &context );
-void OnExportWav(const CommandContext &context );
-void OnExportOgg(const CommandContext &context );
-void OnExportSelection(const CommandContext &context );
-void OnExportMultiple(const CommandContext &context );
-void OnExportLabels(const CommandContext &context );
-void OnExportMIDI(const CommandContext &context );
 
 void OnPreferences(const CommandContext &context );
 void OnReloadPreferences(const CommandContext &context );
-
-void OnPageSetup(const CommandContext &context );
-void OnPrint(const CommandContext &context );
-
-void OnExit(const CommandContext &context );
 
 // Edit Menu
 
@@ -416,16 +390,6 @@ void OnPunchAndRoll(const CommandContext &context);
 #endif
 
 // Import Submenu
-void OnImport(const CommandContext &context );
-void OnImportLabels(const CommandContext &context );
-void OnImportMIDI(const CommandContext &context );
-
-// return null on failure; if success, return the given project, or a NEW
-// one, if the given was null; create no NEW project if failure
-static AudacityProject *DoImportMIDI(
-   AudacityProject *pProject, const wxString &fileName);
-
-void OnImportRaw(const CommandContext &context );
 
 void OnEditMetadata(const CommandContext &context );
 bool DoEditMetadata(AudacityProject &project,
@@ -655,6 +619,12 @@ private:
 
 MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
 MenuManager &GetMenuManager(AudacityProject &project);
+
+// Exported helper functions from various menu handling source files
+namespace FileActions {
+AudacityProject *DoImportMIDI(
+   AudacityProject *pProject, const wxString &fileName );
+}
 
 #endif
 

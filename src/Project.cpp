@@ -473,7 +473,7 @@ public:
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
             if (Importer::IsMidi(name))
-               MenuCommandHandler::DoImportMIDI(mProject, name);
+               FileActions::DoImportMIDI(mProject, name);
             else
 #endif
                mProject->Import(name);
@@ -3133,7 +3133,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       {
 #ifdef USE_MIDI
          if (Importer::IsMidi(fileName))
-            MenuCommandHandler::DoImportMIDI(this, fileName);
+            FileActions::DoImportMIDI(this, fileName);
          else
 #endif
             Import(fileName);
