@@ -105,6 +105,9 @@
     <Filter Include="src\tracks\playabletrack\ui">
       <UniqueIdentifier>{1af54030-3637-42e2-8339-b48bf05b8564}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\menus">
+      <UniqueIdentifier>{86457c18-e1ec-4e2a-9790-f4ceaf6380a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp">
@@ -1084,6 +1087,48 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\CellularPanel.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\WindowMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ViewMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\TransportMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\TrackMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ToolbarMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\SelectMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\PluginMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\NavigationMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\LabelMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\HelpMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\FileMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ExtraMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\EditMenus.cpp">
+      <Filter>src\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\menus\ClipMenus.cpp">
+      <Filter>src\menus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
