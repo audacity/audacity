@@ -42,9 +42,6 @@ struct MenuCommandHandler : public wxEvtHandler {
 int DoAddLabel(
    AudacityProject &project,
    const SelectedRegion& region, bool preserveFocus = false);
-static int DialogForLabelName(
-   AudacityProject &project,
-   const SelectedRegion& region, const wxString& initialValue, wxString& value);
 
 double NearestZeroCrossing(AudacityProject &project, double t0);
 
@@ -481,8 +478,6 @@ void OnMoveSelectionWithTracks(const CommandContext &context );
 void OnSyncLock(const CommandContext &context );
 void OnAddLabel(const CommandContext &context );
 void OnAddLabelPlaying(const CommandContext &context );
-void DoEditLabels(AudacityProject &project,
-   LabelTrack *lt = nullptr, int index = -1);
 void OnEditLabels(const CommandContext &context );
 void OnToggleTypeToCreateLabel(const CommandContext &context );
 
