@@ -3224,7 +3224,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                mTrackPanel->Refresh(true);
                */
             closed = true;
-            GetMenuCommandHandler(*this).OnClose(*this);
+            SetMenuClose(true);
+            Close();
             return;
          }
          else if (status & FSCKstatus_CHANGED)
