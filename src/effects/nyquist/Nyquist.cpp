@@ -3230,7 +3230,7 @@ static void RegisterFunctions()
 
       static const FUNDEF functions[] = {
          { "_", SUBR, gettext },
-         { "ngettext", SUBR, ngettext },
+         { "NGETTEXT", SUBR, ngettext },
          { "AUD-DO",  SUBR, xlc_aud_do },
        };
 
