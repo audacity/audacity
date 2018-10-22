@@ -2409,9 +2409,9 @@ bool MenuManager::TryToMakeActionAllowed
    if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
-   // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
+   // This was 'OnSelectAll'.  Changing it to DoSelectSomething means if
    // selecting all tracks is enough, we just do that.
-   GetMenuCommandHandler(project).OnSelectSomething(project);
+   SelectActions::DoSelectSomething(project);
    flags = GetMenuManager(project).GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
@@ -5896,7 +5896,7 @@ bool AudacityProject::IsProjectSaved() {
 
 // This is done to empty out the tracks, but without creating a new project.
 void AudacityProject::ResetProjectToEmpty() {
-   GetMenuCommandHandler(*this).OnSelectAll(*this);
+   SelectActions::DoSelectAll(*this);
    GetMenuCommandHandler(*this).OnRemoveTracks(*this);
    // A new DirManager.
    mDirManager = std::make_shared<DirManager>();

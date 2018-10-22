@@ -547,8 +547,8 @@ UIHandle::Result SelectHandle::Click
          // text boxes.
          bool bShift = event.ShiftDown();
          bool unsafe = pProject->IsAudioActive();
-         GetMenuCommandHandler(*pProject)
-            .HandleListSelection(*pProject, pTrack, bShift, true, !unsafe);
+         SelectActions::DoListSelection(
+            *pProject, pTrack, bShift, true, !unsafe);
          return true;
        } )
    );
