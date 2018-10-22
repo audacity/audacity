@@ -49,11 +49,6 @@ struct MenuCommandHandler final
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-//Adds label and returns index of label in labeltrack.
-int DoAddLabel(
-   AudacityProject &project,
-   const SelectedRegion& region, bool preserveFocus = false);
-
 double NearestZeroCrossing(AudacityProject &project, double t0);
 
         // Selecting a tool from the keyboard
@@ -220,50 +215,8 @@ void OnMacBringAllToFront(const CommandContext &context );
 
 void OnCheckDependencies(const CommandContext &context );
 
-void OnPreferences(const CommandContext &context );
-void OnReloadPreferences(const CommandContext &context );
-
 // Edit Menu
 
-void OnUndo(const CommandContext &context );
-void OnRedo(const CommandContext &context );
-
-static void FinishCopy(
-   const Track *n, std::unique_ptr<Track> &&dest, TrackList &list);
-
-void OnCut(const CommandContext &context );
-void OnSplitCut(const CommandContext &context );
-void OnCopy(const CommandContext &context );
-
-void OnPaste(const CommandContext &context );
-
-bool HandlePasteText(AudacityProject &project); // Handle text paste (into active label), if any. Return true if pasted.
-bool HandlePasteNothingSelected(AudacityProject &project); // Return true if nothing selected, regardless of paste result.
-
-
-void OnPasteNewLabel(const CommandContext &context );
-void OnPasteOver(const CommandContext &context );
-void OnTrim(const CommandContext &context );
-
-void OnDelete(const CommandContext &context );
-void OnSplitDelete(const CommandContext &context );
-void OnSilence(const CommandContext &context );
-
-void OnSplit(const CommandContext &context );
-void OnSplitNew(const CommandContext &context );
-void OnJoin(const CommandContext &context );
-void OnDisjoin(const CommandContext &context );
-void OnDuplicate(const CommandContext &context );
-
-void OnCutLabels(const CommandContext &context );
-void OnSplitCutLabels(const CommandContext &context );
-void OnCopyLabels(const CommandContext &context );
-void OnDeleteLabels(const CommandContext &context );
-void OnSplitDeleteLabels(const CommandContext &context );
-void OnSilenceLabels(const CommandContext &context );
-void OnSplitLabels(const CommandContext &context );
-void OnJoinLabels(const CommandContext &context );
-void OnDisjoinLabels(const CommandContext &context );
 
 void OnSelectTimeAndTracks
 (AudacityProject &project, bool bAllTime, bool bAllTracks);
@@ -391,10 +344,6 @@ void OnPunchAndRoll(const CommandContext &context);
 
 // Import Submenu
 
-void OnEditMetadata(const CommandContext &context );
-bool DoEditMetadata(AudacityProject &project,
-   const wxString &title, const wxString &shortUndoDescription, bool force);
-
 void OnMixAndRender(const CommandContext &context );
 void OnMixAndRenderToNewTrack(const CommandContext &context );
 void HandleMixAndRender(AudacityProject &project, bool toNewTrack);
@@ -451,10 +400,6 @@ void OnTimerRecord(const CommandContext &context );
 void OnRemoveTracks(const CommandContext &context );
 void OnMoveSelectionWithTracks(const CommandContext &context );
 void OnSyncLock(const CommandContext &context );
-void OnAddLabel(const CommandContext &context );
-void OnAddLabelPlaying(const CommandContext &context );
-void OnEditLabels(const CommandContext &context );
-void OnToggleTypeToCreateLabel(const CommandContext &context );
 
 // Effect Menu
 
@@ -624,6 +569,14 @@ MenuManager &GetMenuManager(AudacityProject &project);
 namespace FileActions {
 AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName );
+}
+
+namespace EditActions {
+bool DoEditMetadata(
+   AudacityProject &project,
+   const wxString &title, const wxString &shortUndoDescription, bool force );
+void DoReloadPreferences( AudacityProject & );
+void DoUndo( AudacityProject &project );
 }
 
 #endif

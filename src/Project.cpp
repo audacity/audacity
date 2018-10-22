@@ -5575,7 +5575,7 @@ You are saving directly to a slow external storage device\n\
       // Reset timer record 
       if (IsTimerRecordCancelled())
       {
-         GetMenuCommandHandler(*this).OnUndo(*this);
+         EditActions::DoUndo( *this );
          ResetTimerRecordCancelled();
       }
 
