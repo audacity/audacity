@@ -16,6 +16,7 @@
 #include <vector>
 #include <wx/event.h>
 #include "SelectedRegion.h"
+#include "commands/CommandFunctors.h"
 
 class AudacityProject;
 class CommandContext;
@@ -34,7 +35,9 @@ enum EffectType : int;
 typedef wxString PluginID;
 typedef wxArrayString PluginIDList;
 
-struct MenuCommandHandler : public wxEvtHandler {
+struct MenuCommandHandler final
+   : public CommandHandlerObject // MUST be the first base class!
+{
    MenuCommandHandler();
    ~MenuCommandHandler();
 
