@@ -3228,6 +3228,7 @@ static void RegisterFunctions()
    if (firstTime) {
       firstTime = false;
 
+      // All function names must be UP-CASED
       static const FUNDEF functions[] = {
          { "_", SUBR, gettext },
          { "NGETTEXT", SUBR, ngettext },
