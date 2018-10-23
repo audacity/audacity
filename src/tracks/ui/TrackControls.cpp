@@ -232,21 +232,21 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
 void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 {
    AudacityProject *const project = GetActiveProject();
-   MenuCommandHandler::MoveChoice choice;
+   TrackActions::MoveChoice choice;
    switch (event.GetId()) {
    default:
       wxASSERT(false);
    case OnMoveUpID:
-      choice = MenuCommandHandler::OnMoveUpID; break;
+      choice = TrackActions::OnMoveUpID; break;
    case OnMoveDownID:
-      choice = MenuCommandHandler::OnMoveDownID; break;
+      choice = TrackActions::OnMoveDownID; break;
    case OnMoveTopID:
-      choice = MenuCommandHandler::OnMoveTopID; break;
+      choice = TrackActions::OnMoveTopID; break;
    case OnMoveBottomID:
-      choice = MenuCommandHandler::OnMoveBottomID; break;
+      choice = TrackActions::OnMoveBottomID; break;
    }
 
-   GetMenuCommandHandler(*project).MoveTrack(*project, mpData->pTrack, choice);
+   TrackActions::DoMoveTrack(*project, mpData->pTrack, choice);
 
    // MoveTrack already refreshed TrackPanel, which means repaint will happen.
    // This is a harmless redundancy:

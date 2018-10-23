@@ -49,26 +49,6 @@ struct MenuCommandHandler final
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-        // Wave track control
-
-void OnTrackPan(const CommandContext &context );
-void OnTrackPanLeft(const CommandContext &context );
-void OnTrackPanRight(const CommandContext &context );
-void OnTrackGain(const CommandContext &context );
-void OnTrackGainInc(const CommandContext &context );
-void OnTrackGainDec(const CommandContext &context );
-void OnTrackMenu(const CommandContext &context );
-void OnTrackMute(const CommandContext &context );
-void OnTrackSolo(const CommandContext &context );
-void OnTrackClose(const CommandContext &context );
-void OnTrackMoveUp(const CommandContext &context );
-void OnTrackMoveDown(const CommandContext &context );
-void OnTrackMoveTop(const CommandContext &context );
-void OnTrackMoveBottom(const CommandContext &context );
-
-enum MoveChoice { OnMoveUpID, OnMoveDownID, OnMoveTopID, OnMoveBottomID };
-void MoveTrack(AudacityProject &project, Track* target, MoveChoice choice);
-
         // Device control
 void OnInputDevice(const CommandContext &context );
 void OnOutputDevice(const CommandContext &context );
@@ -100,9 +80,6 @@ void OnShiftDown(const CommandContext &context );
 void OnToggle(const CommandContext &context );
 
 
-void OnSortTime(const CommandContext &context );
-void OnSortName(const CommandContext &context );
-
 void OnFullScreen(const CommandContext &context );
 
 static void DoMacMinimize(AudacityProject *project);
@@ -120,40 +97,8 @@ void OnCheckDependencies(const CommandContext &context );
 
 public:
 
-void DoPanTracks(AudacityProject &project, float PanValue);
-void OnPanLeft(const CommandContext &context );
-void OnPanRight(const CommandContext &context );
-void OnPanCenter(const CommandContext &context );
-
-void OnMuteAllTracks(const CommandContext &context );
-void OnUnmuteAllTracks(const CommandContext &context );
-
 void OnPlotSpectrum(const CommandContext &context );
 void OnContrast(const CommandContext &context );
-
-// Import Submenu
-
-void OnMixAndRender(const CommandContext &context );
-void OnMixAndRenderToNewTrack(const CommandContext &context );
-void HandleMixAndRender(AudacityProject &project, bool toNewTrack);
-
-void OnAlignNoSync(const CommandContext &context );
-void OnAlign(const CommandContext &context );
-//void OnAlignMoveSel(int index);
-void HandleAlign(AudacityProject &project, int index, bool moveSel);
-
-#ifdef EXPERIMENTAL_SCOREALIGN
-void OnScoreAlign(const CommandContext &context );
-#endif // EXPERIMENTAL_SCOREALIGN
-
-// Tracks menu
-void OnNewWaveTrack(const CommandContext &context );
-void OnNewStereoTrack(const CommandContext &context );
-void OnNewLabelTrack(const CommandContext &context );
-void OnNewTimeTrack(const CommandContext &context );
-void OnRemoveTracks(const CommandContext &context );
-void OnMoveSelectionWithTracks(const CommandContext &context );
-void OnSyncLock(const CommandContext &context );
 
 // Effect Menu
 
@@ -177,7 +122,6 @@ bool DoAudacityCommand(const PluginID & ID, const CommandContext &, int flags);
 void OnApplyMacroDirectly(const CommandContext &context );
 void OnApplyMacrosPalette(const CommandContext &context );
 void OnManageMacros(const CommandContext &context );
-void OnStereoToMono(const CommandContext &context );
 void OnAudacityCommand(const CommandContext &context );
 void DoManagePluginsMenu(AudacityProject &project, EffectType Type);
 static void RebuildAllMenuBars();
@@ -216,8 +160,6 @@ void OnNextFrame(const CommandContext &context );
 
 void OnPrevWindow(const CommandContext &context );
 void OnNextWindow(const CommandContext &context );
-
-void OnResample(const CommandContext &context );
 
 public:
    bool mCircularTrackNavigation{};
@@ -314,6 +256,15 @@ void DoLockPlayRegion( AudacityProject & );
 void DoUnlockPlayRegion( AudacityProject & );
 void DoTogglePinnedHead( AudacityProject & );
 void DoRecord( AudacityProject & );
+}
+
+namespace TrackActions {
+   enum MoveChoice {
+      OnMoveUpID, OnMoveDownID, OnMoveTopID, OnMoveBottomID
+   };
+/// Move a track up, down, to top or to bottom.
+void DoMoveTrack( AudacityProject &project, Track* target, MoveChoice choice );
+void DoRemoveTracks( AudacityProject & );
 }
 
 #endif

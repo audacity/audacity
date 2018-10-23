@@ -5897,7 +5897,7 @@ bool AudacityProject::IsProjectSaved() {
 // This is done to empty out the tracks, but without creating a new project.
 void AudacityProject::ResetProjectToEmpty() {
    SelectActions::DoSelectAll(*this);
-   GetMenuCommandHandler(*this).OnRemoveTracks(*this);
+   TrackActions::DoRemoveTracks(*this);
    // A new DirManager.
    mDirManager = std::make_shared<DirManager>();
    mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
