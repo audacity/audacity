@@ -49,32 +49,6 @@ struct MenuCommandHandler final
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-        // Audio I/O Commands
-
-void OnStop(const CommandContext &context );
-void OnPause(const CommandContext &context );
-void OnRecord(const CommandContext &context );
-void OnRecord2ndChoice(const CommandContext &context );
-void OnStopSelect(const CommandContext &context );
-
-        // Different posibilities for playing sound
-
-bool MakeReadyToPlay(AudacityProject &project,
-                     bool loop = false, bool cutpreview = false); // Helper function that sets button states etc.
-void OnPlayStop(const CommandContext &context );
-bool DoPlayStopSelect(AudacityProject &project, bool click, bool shift);
-void OnPlayStopSelect(const CommandContext &context );
-void OnPlayOneSecond(const CommandContext &context );
-void OnPlayToSelection(const CommandContext &context );
-void OnPlayBeforeSelectionStart(const CommandContext &context );
-void OnPlayAfterSelectionStart(const CommandContext &context );
-void OnPlayBeforeSelectionEnd(const CommandContext &context );
-void OnPlayAfterSelectionEnd(const CommandContext &context );
-void OnPlayBeforeAndAfterSelectionStart(const CommandContext &context );
-void OnPlayBeforeAndAfterSelectionEnd(const CommandContext &context );
-void OnPlayLooped(const CommandContext &context );
-void OnPlayCutPreview(const CommandContext &context );
-
         // Wave track control
 
 void OnTrackPan(const CommandContext &context );
@@ -110,15 +84,6 @@ void OnOutputGainDec(const CommandContext &context );
 void OnInputGainInc(const CommandContext &context );
 void OnInputGainDec(const CommandContext &context );
 
-        // Transcription control
-
-void OnPlayAtSpeed(const CommandContext &context );
-void OnPlayAtSpeedLooped(const CommandContext &context );
-void OnPlayAtSpeedCutPreview(const CommandContext &context );
-void OnSetPlaySpeed(const CommandContext &context );
-void OnPlaySpeedInc(const CommandContext &context );
-void OnPlaySpeedDec(const CommandContext &context );
-
         // Moving track focus commands
 
 void DoPrevTrack( AudacityProject &project, bool shift );
@@ -134,13 +99,6 @@ void OnShiftUp(const CommandContext &context );
 void OnShiftDown(const CommandContext &context );
 void OnToggle(const CommandContext &context );
 
-
-void OnMoveToNextLabel(const CommandContext &context );
-void OnMoveToPrevLabel(const CommandContext &context );
-void DoMoveToLabel(AudacityProject &project, bool next);
-
-void OnLockPlayRegion(const CommandContext &context );
-void OnUnlockPlayRegion(const CommandContext &context );
 
 void OnSortTime(const CommandContext &context );
 void OnSortName(const CommandContext &context );
@@ -173,22 +131,6 @@ void OnUnmuteAllTracks(const CommandContext &context );
 void OnPlotSpectrum(const CommandContext &context );
 void OnContrast(const CommandContext &context );
 
-// Transport Menu
-
-void OnSoundActivated(const CommandContext &context );
-void OnToggleSoundActivated(const CommandContext &context );
-void OnTogglePinnedHead(const CommandContext &context );
-void OnTogglePlayRecording(const CommandContext &context );
-void OnToggleSWPlaythrough(const CommandContext &context );
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   void OnToggleAutomatedInputLevelAdjustment(const CommandContext &context );
-#endif
-void OnRescanDevices(const CommandContext &context );
-
-#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
-void OnPunchAndRoll(const CommandContext &context);
-#endif
-
 // Import Submenu
 
 void OnMixAndRender(const CommandContext &context );
@@ -209,7 +151,6 @@ void OnNewWaveTrack(const CommandContext &context );
 void OnNewStereoTrack(const CommandContext &context );
 void OnNewLabelTrack(const CommandContext &context );
 void OnNewTimeTrack(const CommandContext &context );
-void OnTimerRecord(const CommandContext &context );
 void OnRemoveTracks(const CommandContext &context );
 void OnMoveSelectionWithTracks(const CommandContext &context );
 void OnSyncLock(const CommandContext &context );
@@ -362,6 +303,17 @@ void DoSelectSomething( AudacityProject &project );
 namespace ViewActions {
 void DoZoomFit( AudacityProject &project );
 void DoZoomFitV( AudacityProject &project );
+}
+
+namespace TransportActions {
+bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
+void DoPlayStopSelect( AudacityProject &project );
+void DoStop( AudacityProject & );
+void DoPause( AudacityProject & );
+void DoLockPlayRegion( AudacityProject & );
+void DoUnlockPlayRegion( AudacityProject & );
+void DoTogglePinnedHead( AudacityProject & );
+void DoRecord( AudacityProject & );
 }
 
 #endif
