@@ -130,7 +130,7 @@ public:
 
    virtual bool DoWriteDouble(const wxString & key, double value) override
    {
-      return DoWriteString(key, wxString::Format(wxT("%g"), value));
+      return DoWriteString(key, wxString::Format(wxT("%.8g"), value));
    }
 
    bool ReadFloat(const wxString & key, float *pf) const
