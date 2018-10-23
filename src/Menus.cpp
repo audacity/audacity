@@ -72,7 +72,6 @@ menu items.
 #include "prefs/PrefsDialog.h"
 #include "prefs/PlaybackPrefs.h"
 #include "ShuttleGui.h"
-#include "HistoryWindow.h"
 #include "LyricsWindow.h"
 #include "MixerBoard.h"
 #include "Project.h"
@@ -96,7 +95,6 @@ menu items.
 
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
-#include "toolbars/ToolsToolBar.h"
 #include "toolbars/EditToolBar.h"
 #include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
@@ -532,9 +530,11 @@ MenuTable::BaseItemPtr CursorMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
 
-namespace {
-MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& );
+MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
+
 MenuTable::BaseItemPtr ViewMenu( AudacityProject& );
+
+namespace {
 MenuTable::BaseItemPtr TransportMenu( AudacityProject& );
 MenuTable::BaseItemPtr TracksMenu( AudacityProject& );
 MenuTable::BaseItemPtr GenerateMenu( AudacityProject& );
@@ -545,7 +545,6 @@ MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
 
 MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
@@ -599,187 +598,6 @@ static const auto menuTree = MenuTable::Items(
 );
 
 namespace {
-
-MenuTable::BaseItemPtr ToolbarsMenu( AudacityProject& )
-{
-   using namespace MenuTable;
-   using Options = CommandManager::Options;
-   
-   static const auto checkOff = Options{}.CheckState( false );
-
-   return Menu( _("&Toolbars"),
-      /* i18n-hint: (verb)*/
-      Command( wxT("ResetToolbars"), XXO("Reset Toolb&ars"),
-         FN(OnResetToolBars), AlwaysEnabledFlag ),
-
-      Separator(),
-
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the big buttons on it (play record etc)*/
-      Command( wxT("ShowTransportTB"), XXO("&Transport Toolbar"),
-         FN(OnShowTransportToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows a toolbar
-         that has some tools in it*/
-      Command( wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
-         FN(OnShowToolsToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the recording level meters*/
-      Command( wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
-         FN(OnShowRecordMeterToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the playback level meter*/
-      Command( wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
-         FN(OnShowPlayMeterToolBar), AlwaysEnabledFlag, checkOff ),
-
-      /* --i18nhint: Clicking this menu item shows the toolbar
-         which has sound level meters*/
-      //Command( wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
-      //   FN(OnShowMeterToolBar), AlwaysEnabledFlag, checkOff ),
-
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         with the mixer*/
-      Command( wxT("ShowMixerTB"), XXO("Mi&xer Toolbar"),
-         FN(OnShowMixerToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
-      Command( wxT("ShowEditTB"), XXO("&Edit Toolbar"),
-         FN(OnShowEditToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for transcription (currently just vary play speed)*/
-      Command( wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar"),
-         FN(OnShowTranscriptionToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         that enables Scrub or Seek playback and Scrub Ruler*/
-      Command( wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar"),
-         FN(OnShowScrubbingToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         that manages devices*/
-      Command( wxT("ShowDeviceTB"), XXO("&Device Toolbar"),
-         FN(OnShowDeviceToolBar), AlwaysEnabledFlag, checkOff ),
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for selecting a time range of audio*/
-      Command( wxT("ShowSelectionTB"), XXO("&Selection Toolbar"),
-         FN(OnShowSelectionToolBar), AlwaysEnabledFlag, checkOff )
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      /* i18n-hint: Clicking this menu item shows the toolbar
-         for selecting a frequency range of audio*/
-      ,
-      Command( wxT("ShowSpectralSelectionTB"),
-         XXO("Spe&ctral Selection Toolbar"),
-         FN(OnShowSpectralSelectionToolBar), AlwaysEnabledFlag, checkOff )
-#endif
-   );
-}
-
-MenuTable::BaseItemPtr ViewMenu( AudacityProject& )
-{
-   using namespace MenuTable;
-   using Options = CommandManager::Options;
-   
-   static const auto checkOff = Options{}.CheckState( false );
-   
-   return Menu( _("&View"),
-      Menu( _("&Zoom"),
-         Command( wxT("ZoomIn"), XXO("Zoom &In"), FN(OnZoomIn),
-            ZoomInAvailableFlag, wxT("Ctrl+1") ),
-         Command( wxT("ZoomNormal"), XXO("Zoom &Normal"), FN(OnZoomNormal),
-            TracksExistFlag, wxT("Ctrl+2") ),
-         Command( wxT("ZoomOut"), XXO("Zoom &Out"), FN(OnZoomOut),
-            ZoomOutAvailableFlag, wxT("Ctrl+3") ),
-         Command( wxT("ZoomSel"), XXO("&Zoom to Selection"), FN(OnZoomSel),
-            TimeSelectedFlag, wxT("Ctrl+E") ),
-         Command( wxT("ZoomToggle"), XXO("Zoom &Toggle"), FN(OnZoomToggle),
-            TracksExistFlag, wxT("Shift+Z") )
-      ),
-
-      Menu( _("T&rack Size"),
-         Command( wxT("FitInWindow"), XXO("&Fit to Width"), FN(OnZoomFit),
-            TracksExistFlag, wxT("Ctrl+F") ),
-         Command( wxT("FitV"), XXO("Fit to &Height"), FN(OnZoomFitV),
-            TracksExistFlag, wxT("Ctrl+Shift+F") ),
-         Command( wxT("CollapseAllTracks"), XXO("&Collapse All Tracks"),
-            FN(OnCollapseAllTracks), TracksExistFlag, wxT("Ctrl+Shift+C") ),
-         Command( wxT("ExpandAllTracks"), XXO("E&xpand Collapsed Tracks"),
-            FN(OnExpandAllTracks), TracksExistFlag, wxT("Ctrl+Shift+X") )
-      ),
-
-      Menu( _("Sk&ip to"),
-         Command( wxT("SkipSelStart"), XXO("Selection Sta&rt"),
-            FN(OnGoSelStart), TimeSelectedFlag,
-            Options{ wxT("Ctrl+["), _("Skip to Selection Start") } ),
-         Command( wxT("SkipSelEnd"), XXO("Selection En&d"), FN(OnGoSelEnd),
-            TimeSelectedFlag,
-            Options{ wxT("Ctrl+]"), _("Skip to Selection End") } )
-      ),
-
-      Separator(),
-
-      // History window should be available either for UndoAvailableFlag
-      // or RedoAvailableFlag,
-      // but we can't make the AddItem flags and mask have both,
-      // because they'd both have to be true for the
-      // command to be enabled.
-      //    If user has Undone the entire stack, RedoAvailableFlag is on
-      //    but UndoAvailableFlag is off.
-      //    If user has done things but not Undone anything,
-      //    RedoAvailableFlag is off but UndoAvailableFlag is on.
-      // So in either of those cases,
-      // (AudioIONotBusyFlag | UndoAvailableFlag | RedoAvailableFlag) mask
-      // would fail.
-      // The only way to fix this in the current architecture
-      // is to hack in special cases for RedoAvailableFlag
-      // in AudacityProject::UpdateMenus() (ugly)
-      // and CommandManager::HandleCommandEntry() (*really* ugly --
-      // shouldn't know about particular command names and flags).
-      // Here's the hack that would be necessary in
-      // AudacityProject::UpdateMenus(), if somebody decides to do it:
-      //    // Because EnableUsingFlags requires all the flag bits match the
-      //    // corresponding mask bits,
-      //    // "UndoHistory" specifies only
-      //    // AudioIONotBusyFlag | UndoAvailableFlag, because that
-      //    // covers the majority of cases where it should be enabled.
-      //    // If history is not empty but we've Undone the whole stack,
-      //    // we also want to enable,
-      //    // to show the Redo's on stack.
-      //    // "UndoHistory" might already be enabled,
-      //    // but add this check for RedoAvailableFlag.
-      //    if (flags & RedoAvailableFlag)
-      //       GetCommandManager()->Enable(wxT("UndoHistory"), true);
-      // So for now, enable the command regardless of stack.
-      // It will just show empty sometimes.
-      // FOR REDESIGN,
-      // clearly there are some limitations with the flags/mask bitmaps.
-
-      /* i18n-hint: Clicking this menu item shows the various editing steps
-         that have been taken.*/
-      Command( wxT("UndoHistory"), XXO("&History..."), FN(OnHistory),
-         AudioIONotBusyFlag ),
-
-      Command( wxT("Karaoke"), XXO("&Karaoke..."), FN(OnKaraoke),
-         LabelTracksExistFlag ),
-      Command( wxT("MixerBoard"), XXO("&Mixer Board..."), FN(OnMixerBoard),
-         PlayableTracksExistFlag ),
-
-      Separator(),
-
-      /////////////////////////////////////////////////////////////////////////////
-
-      ToolbarsMenu,
-
-      Separator(),
-
-      Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
-         FN(OnShowExtraMenus), AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L) ) ),
-      Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
-         FN(OnShowClipping), AlwaysEnabledFlag,
-         Options{}.CheckState( gPrefs->Read(wxT("/GUI/ShowClipping"), 0L) ) )
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-      ,
-      Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
-         FN(OnShowEffectsRack), AlwaysEnabledFlag, checkOff )
-#endif
-   );
-}
 
 MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
 {
@@ -1295,29 +1113,6 @@ MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & )
       Command( wxT("PlayCutPreview"), XXO("Play C&ut Preview"),
          FN(OnPlayCutPreview),
          CaptureNotBusyFlag, wxT("C") )
-   );
-}
-
-MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & )
-{
-   using namespace MenuTable;
-   return Menu( _("T&ools"),
-      Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
-         AlwaysEnabledFlag, wxT("F1") ),
-      Command( wxT("EnvelopeTool"), XXO("&Envelope Tool"),
-         FN(OnEnvelopeTool), AlwaysEnabledFlag, wxT("F2") ),
-      Command( wxT("DrawTool"), XXO("&Draw Tool"), FN(OnDrawTool),
-         AlwaysEnabledFlag, wxT("F3") ),
-      Command( wxT("ZoomTool"), XXO("&Zoom Tool"), FN(OnZoomTool),
-         AlwaysEnabledFlag, wxT("F4") ),
-      Command( wxT("TimeShiftTool"), XXO("&Time Shift Tool"),
-         FN(OnTimeShiftTool), AlwaysEnabledFlag, wxT("F5") ),
-      Command( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
-         AlwaysEnabledFlag, wxT("F6") ),
-      Command( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
-         AlwaysEnabledFlag, wxT("A") ),
-      Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
-         AlwaysEnabledFlag, wxT("D") )
    );
 }
 
@@ -2491,84 +2286,6 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
 
    MenuManager::ModifyToolbarMenus(project);
 }
-
-//
-// Tool selection commands
-//
-
-/// Called by handlers that set tools.
-void MenuCommandHandler::SetTool(AudacityProject &project, int tool)
-{
-   ToolsToolBar *toolbar = project.GetToolsToolBar();
-   if (toolbar) {
-      toolbar->SetCurrentTool(tool);
-      project.GetTrackPanel()->Refresh(false);
-   }
-}
-
-/// Handler to set the select tool active
-void MenuCommandHandler::OnSelectTool(const CommandContext &context)
-{
-   SetTool(context.project, selectTool);
-}
-
-/// Handler to set the Zoom tool active
-void MenuCommandHandler::OnZoomTool(const CommandContext &context)
-{
-   SetTool(context.project, zoomTool);
-}
-
-/// Handler to set the Envelope tool active
-void MenuCommandHandler::OnEnvelopeTool(const CommandContext &context)
-{
-   SetTool(context.project, envelopeTool);
-}
-
-/// Handler to set the Time shift tool active
-void MenuCommandHandler::OnTimeShiftTool(const CommandContext &context)
-{
-   SetTool(context.project, slideTool);
-}
-
-void MenuCommandHandler::OnDrawTool(const CommandContext &context)
-{
-   SetTool(context.project, drawTool);
-}
-
-void MenuCommandHandler::OnMultiTool(const CommandContext &context)
-{
-   SetTool(context.project, multiTool);
-}
-
-
-void MenuCommandHandler::OnNextTool(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolbar = project.GetToolsToolBar();
-   auto trackPanel = project.GetTrackPanel();
-
-   if (toolbar) {
-      // Use GetDownTool() here since GetCurrentTool() can return a value that
-      // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+1)%numTools);
-      trackPanel->Refresh(false);
-   }
-}
-
-void MenuCommandHandler::OnPrevTool(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolbar = project.GetToolsToolBar();
-   auto trackPanel = project.GetTrackPanel();
-
-   if (toolbar) {
-      // Use GetDownTool() here since GetCurrentTool() can return a value that
-      // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+(numTools-1))%numTools);
-      trackPanel->Refresh(false);
-   }
-}
-
 
 //
 // Audio I/O Commands
@@ -4324,7 +4041,7 @@ bool MenuCommandHandler::DoEffect(
    if (type == EffectTypeGenerate)
    {
       if (count == 0 || (clean && selectedRegion.t0() == 0.0))
-         OnZoomFit(project);
+         ViewActions::DoZoomFit(project);
          //  trackPanel->Refresh(false);
    }
    project.RedrawProject();
@@ -4458,12 +4175,6 @@ void AudacityProject::SelectNone()
 // View Menu
 //
 
-void MenuCommandHandler::OnZoomIn(const CommandContext &context)
-{
-   auto &project = context.project;
-   project.ZoomInByFactor( 2.0 );
-}
-
 double AudacityProject::GetScreenEndTime() const
 {
    return mTrackPanel->GetScreenEndTime();
@@ -4542,12 +4253,6 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    TP_ScrollWindow(newh);
 }
 
-void MenuCommandHandler::OnZoomOut(const CommandContext &context)
-{
-   auto &project = context.project;
-   project.ZoomOutByFactor( 1 /2.0 );
-}
-
 
 void AudacityProject::ZoomOutByFactor( double ZoomFactor )
 {
@@ -4561,152 +4266,6 @@ void AudacityProject::ZoomOutByFactor( double ZoomFactor )
    const double newh = origLeft + (origWidth - newWidth) / 2;
    // newh = (newh > 0) ? newh : 0;
    TP_ScrollWindow(newh);
-}
-
-void MenuCommandHandler::OnZoomToggle(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
-   auto trackPanel = project.GetTrackPanel();
-
-//   const double origLeft = viewInfo.h;
-//   const double origWidth = GetScreenEndTime() - origLeft;
-
-   // Choose the zoom that is most different to the current zoom.
-   double Zoom1 = project.GetZoomOfPreset( TracksPrefs::Zoom1Choice() );
-   double Zoom2 = project.GetZoomOfPreset( TracksPrefs::Zoom2Choice() );
-   double Z = viewInfo.GetZoom();// Current Zoom.
-   double ChosenZoom = fabs(log(Zoom1 / Z)) > fabs(log( Z / Zoom2)) ? Zoom1:Zoom2;
-
-   project.Zoom(ChosenZoom);
-   trackPanel->Refresh(false);
-//   const double newWidth = GetScreenEndTime() - viewInfo.h;
-//   const double newh = origLeft + (origWidth - newWidth) / 2;
-//   TP_ScrollWindow(newh);
-}
-
-
-void MenuCommandHandler::OnZoomNormal(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto trackPanel = project.GetTrackPanel();
-
-   project.Zoom(ZoomInfo::GetDefaultZoom());
-   trackPanel->Refresh(false);
-}
-
-void MenuCommandHandler::OnZoomFit(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
-   auto tracks = project.GetTracks();
-
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks->GetStartTime(), 0.0)
-      : 0;
-
-   project.Zoom( project.GetZoomOfToFit() );
-   project.TP_ScrollWindow(start);
-}
-
-void MenuCommandHandler::DoZoomFitV(AudacityProject &project)
-{
-   auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
-
-   // Only nonminimized audio tracks will be resized
-   auto range = tracks->Any<AudioTrack>() - &Track::GetMinimized;
-   auto count = range.size();
-   if (count == 0)
-      return;
-
-   // Find total height to apportion
-   int height;
-   trackPanel->GetTracksUsableArea(NULL, &height);
-   height -= 28;
-   
-   // The height of minimized and non-audio tracks cannot be apportioned
-   height -=
-      tracks->Any().sum( &Track::GetHeight ) - range.sum( &Track::GetHeight );
-   
-   // Give each resized track the average of the remaining height
-   height = height / count;
-   height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
-
-   for (auto t : range)
-      t->SetHeight(height);
-}
-
-void MenuCommandHandler::OnZoomFitV(const CommandContext &context)
-{
-   auto &project = context.project;
-
-   DoZoomFitV(project);
-
-   project.GetVerticalScrollBar().SetThumbPosition(0);
-   project.RedrawProject();
-   project.ModifyState(true);
-}
-
-void MenuCommandHandler::OnZoomSel(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
-
-   project.Zoom( project.GetZoomOfSelection() );
-   project.TP_ScrollWindow(selectedRegion.t0());
-}
-
-void MenuCommandHandler::OnGoSelStart(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
-   auto &selectedRegion = viewInfo.selectedRegion;
-
-   if (selectedRegion.isPoint())
-      return;
-
-   project.TP_ScrollWindow(
-      selectedRegion.t0() - ((project.GetScreenEndTime() - viewInfo.h) / 2));
-}
-
-void MenuCommandHandler::OnGoSelEnd(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &viewInfo = project.GetViewInfo();
-   auto &selectedRegion = viewInfo.selectedRegion;
-
-   if (selectedRegion.isPoint())
-      return;
-
-   project.TP_ScrollWindow(
-      selectedRegion.t1() - ((project.GetScreenEndTime() - viewInfo.h) / 2));
-}
-
-void MenuCommandHandler::OnShowClipping(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
-   auto trackPanel = project.GetTrackPanel();
-
-   bool checked = !gPrefs->Read(wxT("/GUI/ShowClipping"), 0L);
-   gPrefs->Write(wxT("/GUI/ShowClipping"), checked);
-   gPrefs->Flush();
-   commandManager->Check(wxT("ShowClipping"), checked);
-   trackPanel->UpdatePrefs();
-   trackPanel->Refresh(false);
-}
-
-void MenuCommandHandler::OnShowExtraMenus(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
-
-   bool checked = !gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L);
-   gPrefs->Write(wxT("/GUI/ShowExtraMenus"), checked);
-   gPrefs->Flush();
-   commandManager->Check(wxT("ShowExtraMenus"), checked);
-   RebuildAllMenuBars();
 }
 
 void MenuCommandHandler::OnApplyMacroDirectly(const CommandContext &context )
@@ -4742,36 +4301,6 @@ void MenuCommandHandler::OnManageMacros(const CommandContext &context )
    project.GetMacrosWindow( true, true );
 }
 
-void MenuCommandHandler::OnHistory(const CommandContext &context)
-{
-   auto &project = context.project;
-
-   auto historyWindow = project.GetHistoryWindow(true);
-   historyWindow->Show();
-   historyWindow->Raise();
-   historyWindow->UpdateDisplay();
-}
-
-void MenuCommandHandler::OnKaraoke(const CommandContext &context)
-{
-   auto &project = context.project;
-
-   auto lyricsWindow = project.GetLyricsWindow(true);
-   lyricsWindow->Show();
-   project.UpdateLyrics();
-   lyricsWindow->Raise();
-}
-
-void MenuCommandHandler::OnMixerBoard(const CommandContext &context)
-{
-   auto &project = context.project;
-
-   auto mixerBoardFrame = project.GetMixerBoardFrame(true);
-   mixerBoardFrame->Show();
-   mixerBoardFrame->Raise();
-   mixerBoardFrame->SetFocus();
-}
-
 void MenuCommandHandler::OnPlotSpectrum(const CommandContext &context)
 {
    auto &project = context.project;
@@ -4797,146 +4326,6 @@ void MenuCommandHandler::OnContrast(const CommandContext &context)
    contrastDialog->Show();
 }
 
-
-void MenuCommandHandler::OnShowTransportToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide(TransportBarID);
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowDeviceToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( DeviceBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowEditToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( EditBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowMeterToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   if( !toolManager->IsVisible( MeterBarID ) )
-   {
-      toolManager->Expose( PlayMeterBarID, false );
-      toolManager->Expose( RecordMeterBarID, false );
-   }
-   toolManager->ShowHide( MeterBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowRecordMeterToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   if( !toolManager->IsVisible( RecordMeterBarID ) )
-   {
-      toolManager->Expose( MeterBarID, false );
-   }
-   toolManager->ShowHide( RecordMeterBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowPlayMeterToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   if( !toolManager->IsVisible( PlayMeterBarID ) )
-   {
-      toolManager->Expose( MeterBarID, false );
-   }
-
-   toolManager->ShowHide( PlayMeterBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowMixerToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( MixerBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowScrubbingToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( ScrubbingBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowSelectionToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( SelectionBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-void MenuCommandHandler::OnShowSpectralSelectionToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( SpectralSelectionBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-#endif
-
-void MenuCommandHandler::OnShowToolsToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( ToolsBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnShowTranscriptionToolBar(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->ShowHide( TranscriptionBarID );
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-void MenuCommandHandler::OnResetToolBars(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto toolManager = project.GetToolManager();
-
-   toolManager->Reset();
-   MenuManager::ModifyToolbarMenus(project);
-}
-
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-void MenuCommandHandler::OnShowEffectsRack(const &WXUNUSED(context) )
-{
-   EffectManager::Get().ShowRack();
-}
-#endif
 
 //
 // Project Menu
@@ -5146,7 +4535,7 @@ void MenuCommandHandler::HandleAlign
             newPos += (trackEnd - trackStart);
       }
       if (index == kAlignEndToEnd) {
-         OnZoomFit(project);
+         ViewActions::DoZoomFit(project);
       }
    }
 
@@ -6042,30 +5431,6 @@ void MenuCommandHandler::OnMidiDeviceInfo(const CommandContext &context)
    }
 }
 #endif
-
-void MenuCommandHandler::OnCollapseAllTracks(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tracks = project.GetTracks();
-
-   for (auto t : tracks->Any())
-      t->SetMinimized(true);
-
-   project.ModifyState(true);
-   project.RedrawProject();
-}
-
-void MenuCommandHandler::OnExpandAllTracks(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tracks = project.GetTracks();
-
-   for (auto t : tracks->Any())
-      t->SetMinimized(false);
-
-   project.ModifyState(true);
-   project.RedrawProject();
-}
 
 void MenuCommandHandler::DoPanTracks(AudacityProject &project, float PanValue)
 {

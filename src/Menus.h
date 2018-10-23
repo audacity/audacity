@@ -49,20 +49,6 @@ struct MenuCommandHandler final
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-        // Selecting a tool from the keyboard
-
-void SetTool(AudacityProject &project, int tool);
-void OnSelectTool(const CommandContext &context );
-void OnZoomTool(const CommandContext &context );
-void OnEnvelopeTool(const CommandContext &context );
-void OnTimeShiftTool(const CommandContext &context );
-void OnDrawTool(const CommandContext &context );
-void OnMultiTool(const CommandContext &context );
-
-void OnNextTool(const CommandContext &context );
-void OnPrevTool(const CommandContext &context );
-
-
         // Audio I/O Commands
 
 void OnStop(const CommandContext &context );
@@ -176,20 +162,6 @@ void OnCheckDependencies(const CommandContext &context );
 
 public:
 
-void OnZoomIn(const CommandContext &context );
-void OnZoomOut(const CommandContext &context );
-void OnZoomToggle(const CommandContext &context );
-void OnZoomNormal(const CommandContext &context );
-void OnZoomFit(const CommandContext &context );
-void OnZoomFitV(const CommandContext &context );
-void DoZoomFitV(AudacityProject &project);
-void OnZoomSel(const CommandContext &context );
-void OnGoSelStart(const CommandContext &context );
-void OnGoSelEnd(const CommandContext &context );
-
-void OnExpandAllTracks(const CommandContext &context );
-void OnCollapseAllTracks(const CommandContext &context );
-
 void DoPanTracks(AudacityProject &project, float PanValue);
 void OnPanLeft(const CommandContext &context );
 void OnPanRight(const CommandContext &context );
@@ -198,36 +170,8 @@ void OnPanCenter(const CommandContext &context );
 void OnMuteAllTracks(const CommandContext &context );
 void OnUnmuteAllTracks(const CommandContext &context );
 
-void OnShowClipping(const CommandContext &context );
-void OnShowExtraMenus(const CommandContext &context );
-
-void OnHistory(const CommandContext &context );
-
-void OnKaraoke(const CommandContext &context );
-void OnMixerBoard(const CommandContext &context );
-
 void OnPlotSpectrum(const CommandContext &context );
 void OnContrast(const CommandContext &context );
-
-void OnShowTransportToolBar(const CommandContext &context );
-void OnShowDeviceToolBar(const CommandContext &context );
-void OnShowEditToolBar(const CommandContext &context );
-void OnShowMeterToolBar(const CommandContext &context );
-void OnShowRecordMeterToolBar(const CommandContext &context );
-void OnShowPlayMeterToolBar(const CommandContext &context );
-void OnShowMixerToolBar(const CommandContext &context );
-void OnShowSelectionToolBar(const CommandContext &context );
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-void OnShowSpectralSelectionToolBar(const CommandContext &context );
-#endif
-void OnShowScrubbingToolBar(const CommandContext &context );
-void OnShowToolsToolBar(const CommandContext &context );
-void OnShowTranscriptionToolBar(const CommandContext &context );
-void OnResetToolBars(const CommandContext &context );
-
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-void OnShowEffectsRack(const CommandContext &context );
-#endif
 
 // Transport Menu
 
@@ -413,6 +357,11 @@ void DoListSelection(
    bool shift, bool ctrl, bool modifyState );
 void DoSelectAll( AudacityProject &project );
 void DoSelectSomething( AudacityProject &project );
+}
+
+namespace ViewActions {
+void DoZoomFit( AudacityProject &project );
+void DoZoomFitV( AudacityProject &project );
 }
 
 #endif
