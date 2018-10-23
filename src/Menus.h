@@ -49,25 +49,6 @@ struct MenuCommandHandler final
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-        // Device control
-void OnInputDevice(const CommandContext &context );
-void OnOutputDevice(const CommandContext &context );
-void OnAudioHost(const CommandContext &context );
-void OnInputChannels(const CommandContext &context );
-
-        // Mixer control
-
-void OnOutputGain(const CommandContext &context );
-void OnInputGain(const CommandContext &context );
-void OnOutputGainInc(const CommandContext &context );
-void OnOutputGainDec(const CommandContext &context );
-void OnInputGainInc(const CommandContext &context );
-void OnInputGainDec(const CommandContext &context );
-
-
-
-void OnFullScreen(const CommandContext &context );
-
 // File Menu
 
 void OnCheckDependencies(const CommandContext &context );

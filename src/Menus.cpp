@@ -91,8 +91,6 @@ menu items.
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/EditToolBar.h"
-#include "toolbars/DeviceToolBar.h"
-#include "toolbars/MixerToolBar.h"
 
 #include "tracks/ui/SelectHandle.h"
 
@@ -336,71 +334,30 @@ static CommandHandlerObject &findMenuCommandHandler(AudacityProject &project)
 MenuTable::BaseItemPtr FileMenu( AudacityProject& );
 
 MenuTable::BaseItemPtr EditMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraEditMenu( AudacityProject & );
 
 MenuTable::BaseItemPtr SelectMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraSelectionMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraCursorMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraSeekMenu( AudacityProject & );
-
-MenuTable::BaseItemPtr ExtraToolsMenu( AudacityProject & );
 
 MenuTable::BaseItemPtr ViewMenu( AudacityProject& );
 
 MenuTable::BaseItemPtr TransportMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraTransportMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraPlayAtSpeedMenu( AudacityProject & );
 
 MenuTable::BaseItemPtr TracksMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraTrackMenu( AudacityProject & );
 
 MenuTable::BaseItemPtr GenerateMenu( AudacityProject& );
 MenuTable::BaseItemPtr EffectMenu( AudacityProject& );
 MenuTable::BaseItemPtr AnalyzeMenu( AudacityProject& );
 MenuTable::BaseItemPtr ToolsMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & );
 
 MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & );
-
-
-MenuTable::BaseItemPtr ExtraGlobalCommands( AudacityProject & );
-MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & );
-
-namespace {
 
 MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
-MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & );
-MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject & );
 
+namespace {
 MenuTable::BaseItemPtr HelpMenu( AudacityProject& );
 }
 
-// Tables of menu factories.
+// Table of menu factories.
 // TODO:  devise a registration system instead.
-static const std::shared_ptr<MenuTable::BaseItem> extraItems = MenuTable::Items(
-   ExtraTransportMenu
-   , ExtraToolsMenu
-   , ExtraMixerMenu
-   , ExtraEditMenu
-   , ExtraPlayAtSpeedMenu
-   , ExtraSeekMenu
-   , ExtraDeviceMenu
-   , ExtraSelectionMenu
-
-   , MenuTable::Separator()
-
-   , ExtraGlobalCommands
-   , ExtraFocusMenu
-   , ExtraCursorMenu
-   , ExtraTrackMenu
-   , ExtraScriptablesIMenu
-   , ExtraScriptablesIIMenu
-   , ExtraMiscItems
-);
-
 static const auto menuTree = MenuTable::Items(
    FileMenu
    , EditMenu
@@ -418,79 +375,6 @@ static const auto menuTree = MenuTable::Items(
 );
 
 namespace {
-
-MenuTable::BaseItemPtr ExtraMenu( AudacityProject & )
-{
-   using namespace MenuTable;
-   static const auto pred =
-      []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
-   static const auto factory =
-      [](AudacityProject &){ return extraItems; };
-   return ConditionalItems( pred, Menu( _("Ext&ra"), factory ) );
-}
-
-MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & )
-{
-   using namespace MenuTable;
-   return Menu( _("Mi&xer"),
-      Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
-         FN(OnOutputGain), AlwaysEnabledFlag ),
-      Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
-         FN(OnOutputGainInc), AlwaysEnabledFlag ),
-      Command( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"),
-         FN(OnOutputGainDec), AlwaysEnabledFlag ),
-      Command( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
-         FN(OnInputGain), AlwaysEnabledFlag ),
-      Command( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
-         FN(OnInputGainInc), AlwaysEnabledFlag ),
-      Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
-         FN(OnInputGainDec), AlwaysEnabledFlag )
-   );
-}
-
-MenuTable::BaseItemPtr ExtraDeviceMenu( AudacityProject & )
-{
-   using namespace MenuTable;
-   return Menu( _("De&vice"),
-      Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
-         FN(OnInputDevice),
-         AudioIONotBusyFlag, wxT("Shift+I") ),
-      Command( wxT("OutputDevice"), XXO("Change &Playback Device..."),
-         FN(OnOutputDevice),
-         AudioIONotBusyFlag, wxT("Shift+O") ),
-      Command( wxT("AudioHost"), XXO("Change Audio &Host..."), FN(OnAudioHost),
-         AudioIONotBusyFlag, wxT("Shift+H") ),
-      Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
-         FN(OnInputChannels),
-         AudioIONotBusyFlag, wxT("Shift+N") )
-   );
-}
-
-MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )
-{
-   using namespace MenuTable;
-   using Options = CommandManager::Options;
-
-   constexpr auto key =
-#ifdef __WXMAC__
-      wxT("Ctrl+/")
-#else
-      wxT("F11")
-#endif
-   ;
-
-   // Not a menu.
-   return Items(
-      // Accel key is not bindable.
-      Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
-         FN(OnFullScreen),
-         AlwaysEnabledFlag,
-         Options{ key }
-            .CheckState( project.wxTopLevelWindow::IsFullScreen() ) ),
-
-      ExtraWindowItems
-   );
-}
 
 MenuTable::BaseItemPtr HelpMenu( AudacityProject & )
 {
@@ -843,6 +727,10 @@ CommandFlag MenuManager::GetUpdateFlags
    return flags;
 }
 
+namespace SelectActions {
+void DoSelectSomething(AudacityProject &project);
+}
+
 // Select the full time range, if no
 // time range is selected.
 void AudacityProject::SelectAllIfNone()
@@ -851,6 +739,10 @@ void AudacityProject::SelectAllIfNone()
    if(!(flags & TracksSelectedFlag) ||
       (mViewInfo.selectedRegion.isPoint()))
       SelectActions::DoSelectSomething(*this);
+}
+
+namespace TransportActions {
+   void DoStop( AudacityProject & );
 }
 
 // Stop playing or recording, if paused.
@@ -1102,106 +994,6 @@ void AudacityProject::SortTracks(int flags)
 /// The following method moves to the previous track
 /// selecting and unselecting depending if you are on the start of a
 /// block or not.
-
-void MenuCommandHandler::OnInputDevice(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowInputDialog();
-   }
-}
-
-void MenuCommandHandler::OnOutputDevice(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowOutputDialog();
-   }
-}
-
-void MenuCommandHandler::OnAudioHost(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowHostDialog();
-   }
-}
-
-void MenuCommandHandler::OnInputChannels(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetDeviceToolBar();
-
-   if (tb) {
-      tb->ShowChannelsDialog();
-   }
-}
-
-void MenuCommandHandler::OnOutputGain(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
-
-   if (tb) {
-      tb->ShowOutputGainDialog();
-   }
-}
-
-void MenuCommandHandler::OnInputGain(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
-
-   if (tb) {
-      tb->ShowInputGainDialog();
-   }
-}
-
-void MenuCommandHandler::OnOutputGainInc(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
-
-   if (tb) {
-      tb->AdjustOutputGain(1);
-   }
-}
-
-void MenuCommandHandler::OnOutputGainDec(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
-
-   if (tb) {
-      tb->AdjustOutputGain(-1);
-   }
-}
-
-void MenuCommandHandler::OnInputGainInc(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
-
-   if (tb) {
-      tb->AdjustInputGain(1);
-   }
-}
-
-void MenuCommandHandler::OnInputGainDec(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = project.GetMixerToolBar();
-
-   if (tb) {
-      tb->AdjustInputGain(-1);
-   }
-}
 
 void MenuCommandHandler::RebuildAllMenuBars()
 {
@@ -1511,13 +1303,3 @@ void MenuCommandHandler::OnMidiDeviceInfo(const CommandContext &context)
    }
 }
 #endif
-
-void MenuCommandHandler::OnFullScreen(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto commandManager = project.GetCommandManager();
-
-   bool bChecked = !project.wxTopLevelWindow::IsFullScreen();
-   project.wxTopLevelWindow::ShowFullScreen(bChecked);
-   commandManager->Check(wxT("FullScreenOnOff"), bChecked);
-}
