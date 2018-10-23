@@ -185,6 +185,3 @@ void DoShowLog( AudacityProject& );
 }
 
 #endif
-
-
-

@@ -6245,3 +6245,124 @@ ContrastDialog *AudacityProject::GetContrastDialog(bool create)
 
    return mContrastDialog.get();
 }
+
+double AudacityProject::GetScreenEndTime() const
+{
+   return mTrackPanel->GetScreenEndTime();
+}
+
+void AudacityProject::SelectNone()
+{
+   for (auto t : GetTracks()->Any())
+      t->SetSelected(false);
+
+   mTrackPanel->Refresh(false);
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);
+}
+
+void AudacityProject::ZoomInByFactor( double ZoomFactor )
+{
+   // LLL: Handling positioning differently when audio is
+   // actively playing.  Don't do this if paused.
+   if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) &&
+       !gAudioIO->IsPaused()){
+      ZoomBy(ZoomFactor);
+      mTrackPanel->ScrollIntoView(gAudioIO->GetStreamTime());
+      mTrackPanel->Refresh(false);
+      return;
+   }
+
+   // DMM: Here's my attempt to get logical zooming behavior
+   // when there's a selection that's currently at least
+   // partially on-screen
+
+   const double endTime = GetScreenEndTime();
+   const double duration = endTime - mViewInfo.h;
+
+   bool selectionIsOnscreen =
+      (mViewInfo.selectedRegion.t0() < endTime) &&
+      (mViewInfo.selectedRegion.t1() >= mViewInfo.h);
+
+   bool selectionFillsScreen =
+      (mViewInfo.selectedRegion.t0() < mViewInfo.h) &&
+      (mViewInfo.selectedRegion.t1() > endTime);
+
+   if (selectionIsOnscreen && !selectionFillsScreen) {
+      // Start with the center of the selection
+      double selCenter = (mViewInfo.selectedRegion.t0() +
+                          mViewInfo.selectedRegion.t1()) / 2;
+
+      // If the selection center is off-screen, pick the
+      // center of the part that is on-screen.
+      if (selCenter < mViewInfo.h)
+         selCenter = mViewInfo.h +
+                     (mViewInfo.selectedRegion.t1() - mViewInfo.h) / 2;
+      if (selCenter > endTime)
+         selCenter = endTime -
+            (endTime - mViewInfo.selectedRegion.t0()) / 2;
+
+      // Zoom in
+      ZoomBy(ZoomFactor);
+      const double newDuration = GetScreenEndTime() - mViewInfo.h;
+
+      // Recenter on selCenter
+      TP_ScrollWindow(selCenter - newDuration / 2);
+      return;
+   }
+
+
+   double origLeft = mViewInfo.h;
+   double origWidth = duration;
+   ZoomBy(ZoomFactor);
+
+   const double newDuration = GetScreenEndTime() - mViewInfo.h;
+   double newh = origLeft + (origWidth - newDuration) / 2;
+
+   // MM: Commented this out because it was confusing users
+   /*
+   // make sure that the *right-hand* end of the selection is
+   // no further *left* than 1/3 of the way across the screen
+   if (mViewInfo.selectedRegion.t1() < newh + mViewInfo.screen / 3)
+      newh = mViewInfo.selectedRegion.t1() - mViewInfo.screen / 3;
+
+   // make sure that the *left-hand* end of the selection is
+   // no further *right* than 2/3 of the way across the screen
+   if (mViewInfo.selectedRegion.t0() > newh + mViewInfo.screen * 2 / 3)
+      newh = mViewInfo.selectedRegion.t0() - mViewInfo.screen * 2 / 3;
+   */
+
+   TP_ScrollWindow(newh);
+}
+
+void AudacityProject::ZoomOutByFactor( double ZoomFactor )
+{
+   //Zoom() may change these, so record original values:
+   const double origLeft = mViewInfo.h;
+   const double origWidth = GetScreenEndTime() - origLeft;
+
+   ZoomBy(ZoomFactor);
+   const double newWidth = GetScreenEndTime() - mViewInfo.h;
+
+   const double newh = origLeft + (origWidth - newWidth) / 2;
+   // newh = (newh > 0) ? newh : 0;
+   TP_ScrollWindow(newh);
+}
+
+// Select the full time range, if no
+// time range is selected.
+void AudacityProject::SelectAllIfNone()
+{
+   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
+   if(!(flags & TracksSelectedFlag) ||
+      (mViewInfo.selectedRegion.isPoint()))
+      SelectActions::DoSelectSomething(*this);
+}
+
+// Stop playing or recording, if paused.
+void AudacityProject::StopIfPaused()
+{
+   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
+   if( flags & PausedFlag )
+      TransportActions::DoStop(*this);
+}

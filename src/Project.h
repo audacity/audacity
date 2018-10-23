@@ -375,7 +375,6 @@ public:
    static void CaptureKeyboard(wxWindow *handler);
    static void ReleaseKeyboard(wxWindow *handler);
 
-   void RebuildOtherMenus();
    void MayStartMonitoring();
 
 
