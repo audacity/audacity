@@ -87,6 +87,7 @@ scroll information.  It also has some status flags.
 #endif
 #endif
 
+#include "AdornedRulerPanel.h"
 #include "AudacityException.h"
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
@@ -124,7 +125,6 @@ scroll information.  It also has some status flags.
 #include "widgets/LinkingHtmlWindow.h"
 #include "widgets/ASlider.h"
 #include "widgets/ErrorDialog.h"
-#include "widgets/Ruler.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
 #include "PlatformCompatibility.h"
@@ -1102,10 +1102,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Create the horizontal ruler
    //
    mRuler = safenew AdornedRulerPanel( this, mTopPanel,
-                                   wxID_ANY,
-                                   wxDefaultPosition,
-                                   wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
-                                   &mViewInfo );
+      wxID_ANY,
+      wxDefaultPosition,
+      wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
+      &mViewInfo );
    mRuler->SetLayoutDirection(wxLayout_LeftToRight);
 
    //

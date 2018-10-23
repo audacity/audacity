@@ -1,3 +1,4 @@
+#include "../AdornedRulerPanel.h"
 #include "../HistoryWindow.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
@@ -16,7 +17,6 @@
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/SpectrogramSettings.h"
 #include "../prefs/WaveformSettings.h"
-#include "../widgets/Ruler.h"
 
 // private helper classes and functions
 namespace {

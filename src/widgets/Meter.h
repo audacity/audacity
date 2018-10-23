@@ -16,7 +16,10 @@
 #ifndef __AUDACITY_METER__
 #define __AUDACITY_METER__
 
+#include <wx/brush.h>
 #include <wx/defs.h>
+#include <wx/gdicmn.h>
+#include <wx/string.h>
 #include <wx/timer.h>
 
 #include "../SampleFormat.h"
@@ -25,6 +28,8 @@
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 #endif
+
+class AudacityProject;
 
 // Event used to notify all meters of preference changes
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,

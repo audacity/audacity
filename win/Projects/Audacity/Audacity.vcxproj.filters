@@ -1130,6 +1130,9 @@
     <ClCompile Include="..\..\..\src\menus\ClipMenus.cpp">
       <Filter>src\menus</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\AdornedRulerPanel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2207,6 +2210,9 @@
       <Filter>src\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\CellularPanel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AdornedRulerPanel.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

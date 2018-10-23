@@ -28,6 +28,7 @@ small calculations of rectangles.
 #include <wx/bitmap.h>
 #include <wx/valgen.h>
 
+#include "../AdornedRulerPanel.h"
 #include "../Track.h"
 #include "../TrackPanel.h"
 #include "../toolbars/ToolManager.h"
@@ -40,7 +41,6 @@ small calculations of rectangles.
 #include "../toolbars/SelectionBar.h"
 #include "../toolbars/ToolsToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
-#include "../widgets/Ruler.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"

@@ -58,6 +58,7 @@
 #include "MeterToolBar.h"
 
 #include "../AColor.h"
+#include "../AdornedRulerPanel.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"

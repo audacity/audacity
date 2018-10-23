@@ -1,3 +1,4 @@
+#include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
 #include "../Experimental.h"
 #include "../FreqWindow.h"

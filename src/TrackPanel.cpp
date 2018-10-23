@@ -147,6 +147,7 @@ is time to refresh some aspect of the screen.
 *//*****************************************************************/
 
 #include "Audacity.h"
+#include "AdornedRulerPanel.h"
 #include "Experimental.h"
 #include "TrackPanel.h"
 #include "Project.h"
@@ -176,7 +177,6 @@ is time to refresh some aspect of the screen.
 #include "../images/Cursors.h"
 
 #include "widgets/ASlider.h"
-#include "widgets/Ruler.h"
 #include <algorithm>
 
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);

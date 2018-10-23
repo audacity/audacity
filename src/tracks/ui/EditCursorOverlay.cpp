@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Experimental.h"
 
 #include "../../AColor.h"
-#include "../../widgets/Ruler.h"
+#include "../../AdornedRulerPanel.h"
 #include "../../Project.h"
 #include "../../TrackPanelCell.h"
 #include "../../TrackPanelCellIterator.h"

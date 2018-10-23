@@ -71,7 +71,6 @@ can't be.
 #include "Project.h"
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
-#include "widgets/Ruler.h"
 #include "ImageManipulation.h"
 #include "Theme.h"
 #include "Experimental.h"
@@ -79,6 +78,7 @@ can't be.
 #include "FileNames.h"
 #include "Prefs.h"
 #include "AColor.h"
+#include "AdornedRulerPanel.h"
 #include "ImageManipulation.h"
 #include "widgets/ErrorDialog.h"
 

@@ -289,8 +289,9 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	blockfile/SilentBlockFile.cpp blockfile/SilentBlockFile.h \
 	blockfile/SimpleBlockFile.cpp blockfile/SimpleBlockFile.h \
 	xml/XMLTagHandler.cpp xml/XMLTagHandler.h AboutDialog.cpp \
-	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
-	Audacity.h AudacityApp.cpp AudacityApp.h AudacityException.cpp \
+	AboutDialog.h AColor.cpp AColor.h AdornedRulerPanel.cpp \
+	AdornedRulerPanel.h AllThemeResources.h Audacity.h \
+	AudacityApp.cpp AudacityApp.h AudacityException.cpp \
 	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
 	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
 	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
@@ -622,7 +623,8 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 @USE_VST_TRUE@	effects/VST/audacity-VSTEffect.$(OBJEXT) \
 @USE_VST_TRUE@	effects/VST/audacity-VSTControlGTK.$(OBJEXT)
 am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
-	audacity-AColor.$(OBJEXT) audacity-AudacityApp.$(OBJEXT) \
+	audacity-AColor.$(OBJEXT) audacity-AdornedRulerPanel.$(OBJEXT) \
+	audacity-AudacityApp.$(OBJEXT) \
 	audacity-AudacityException.$(OBJEXT) \
 	audacity-AudacityLogger.$(OBJEXT) audacity-AudioIO.$(OBJEXT) \
 	audacity-AutoRecovery.$(OBJEXT) \
@@ -1335,8 +1337,9 @@ audacity_LDADD = $(EXPAT_LIBS) $(FILEDIALOG_LIBS) $(PORTAUDIO_LIBS) \
 	$(am__append_35) $(am__append_38) $(am__append_40) \
 	$(am__append_43) $(am__append_45) $(am__append_48)
 audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
-	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
-	Audacity.h AudacityApp.cpp AudacityApp.h AudacityException.cpp \
+	AboutDialog.h AColor.cpp AColor.h AdornedRulerPanel.cpp \
+	AdornedRulerPanel.h AllThemeResources.h Audacity.h \
+	AudacityApp.cpp AudacityApp.h AudacityException.cpp \
 	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
 	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
 	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
@@ -2474,6 +2477,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AColor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AboutDialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AdornedRulerPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityApp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityLogger.Po@am__quote@
@@ -3237,6 +3241,20 @@ audacity-AColor.obj: AColor.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AColor.cpp' object='audacity-AColor.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AColor.obj `if test -f 'AColor.cpp'; then $(CYGPATH_W) 'AColor.cpp'; else $(CYGPATH_W) '$(srcdir)/AColor.cpp'; fi`
+
+audacity-AdornedRulerPanel.o: AdornedRulerPanel.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AdornedRulerPanel.o -MD -MP -MF $(DEPDIR)/audacity-AdornedRulerPanel.Tpo -c -o audacity-AdornedRulerPanel.o `test -f 'AdornedRulerPanel.cpp' || echo '$(srcdir)/'`AdornedRulerPanel.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AdornedRulerPanel.Tpo $(DEPDIR)/audacity-AdornedRulerPanel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AdornedRulerPanel.cpp' object='audacity-AdornedRulerPanel.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AdornedRulerPanel.o `test -f 'AdornedRulerPanel.cpp' || echo '$(srcdir)/'`AdornedRulerPanel.cpp
+
+audacity-AdornedRulerPanel.obj: AdornedRulerPanel.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AdornedRulerPanel.obj -MD -MP -MF $(DEPDIR)/audacity-AdornedRulerPanel.Tpo -c -o audacity-AdornedRulerPanel.obj `if test -f 'AdornedRulerPanel.cpp'; then $(CYGPATH_W) 'AdornedRulerPanel.cpp'; else $(CYGPATH_W) '$(srcdir)/AdornedRulerPanel.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AdornedRulerPanel.Tpo $(DEPDIR)/audacity-AdornedRulerPanel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AdornedRulerPanel.cpp' object='audacity-AdornedRulerPanel.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AdornedRulerPanel.obj `if test -f 'AdornedRulerPanel.cpp'; then $(CYGPATH_W) 'AdornedRulerPanel.cpp'; else $(CYGPATH_W) '$(srcdir)/AdornedRulerPanel.cpp'; fi`
 
 audacity-AudacityApp.o: AudacityApp.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AudacityApp.o -MD -MP -MF $(DEPDIR)/audacity-AudacityApp.Tpo -c -o audacity-AudacityApp.o `test -f 'AudacityApp.cpp' || echo '$(srcdir)/'`AudacityApp.cpp

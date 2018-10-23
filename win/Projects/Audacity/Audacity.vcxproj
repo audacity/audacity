@@ -123,6 +123,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp" />
     <ClCompile Include="..\..\..\src\AColor.cpp" />
+    <ClCompile Include="..\..\..\src\AdornedRulerPanel.cpp" />
     <ClCompile Include="..\..\..\src\AudacityApp.cpp" />
     <ClCompile Include="..\..\..\src\AudacityException.cpp" />
     <ClCompile Include="..\..\..\src\AudacityHeaders.cpp">
@@ -481,6 +482,7 @@
     <ClInclude Include="..\..\..\include\audacity\Types.h" />
     <ClInclude Include="..\..\..\src\AboutDialog.h" />
     <ClInclude Include="..\..\..\src\AColor.h" />
+    <ClInclude Include="..\..\..\src\AdornedRulerPanel.h" />
     <ClInclude Include="..\..\..\src\AllThemeResources.h" />
     <ClInclude Include="..\..\..\src\Audacity.h" />
     <ClInclude Include="..\..\..\src\AudacityApp.h" />

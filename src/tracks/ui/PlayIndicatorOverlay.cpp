@@ -12,12 +12,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "PlayIndicatorOverlay.h"
 
 #include "../../AColor.h"
+#include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
 #include "../../TrackPanelCellIterator.h"
-#include "../../widgets/Ruler.h"
 #include "Scrubbing.h"
 
 #include <wx/dc.h>

@@ -1205,6 +1205,7 @@
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
+		5E08C7392180D460004079AE /* AdornedRulerPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */; };
 		5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E00F217E4467003C6C99 /* ClipMenus.cpp */; };
 		5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */; };
 		5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E013217E5F66003C6C99 /* LabelMenus.cpp */; };
@@ -3068,6 +3069,8 @@
 		5E07842D1DEE6B8600CA76EA /* FileException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileException.h; sourceTree = "<group>"; };
 		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
 		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
+		5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AdornedRulerPanel.cpp; sourceTree = "<group>"; };
+		5E08C7382180D460004079AE /* AdornedRulerPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdornedRulerPanel.h; sourceTree = "<group>"; };
 		5E08E00F217E4467003C6C99 /* ClipMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClipMenus.cpp; path = menus/ClipMenus.cpp; sourceTree = "<group>"; };
 		5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToolbarMenus.cpp; path = menus/ToolbarMenus.cpp; sourceTree = "<group>"; };
 		5E08E013217E5F66003C6C99 /* LabelMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LabelMenus.cpp; path = menus/LabelMenus.cpp; sourceTree = "<group>"; };
@@ -4080,6 +4083,7 @@
 			children = (
 				1790AFC709883BFD008A330A /* AboutDialog.cpp */,
 				1790AFC909883BFD008A330A /* AColor.cpp */,
+				5E08C7372180D460004079AE /* AdornedRulerPanel.cpp */,
 				1790AFCE09883BFD008A330A /* AudacityApp.cpp */,
 				5E78388D1DE4995E003270C0 /* AudacityException.cpp */,
 				28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */,
@@ -4170,6 +4174,7 @@
 				28FC1AF90A47762C00A188AE /* WrappedType.cpp */,
 				1790AFC809883BFD008A330A /* AboutDialog.h */,
 				1790AFCA09883BFD008A330A /* AColor.h */,
+				5E08C7382180D460004079AE /* AdornedRulerPanel.h */,
 				28FB12230A3790DF006F0917 /* AllThemeResources.h */,
 				1790AFCC09883BFD008A330A /* Audacity.h */,
 				1790AFCF09883BFD008A330A /* AudacityApp.h */,
@@ -8157,6 +8162,7 @@
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				5EF3E65C203FDACE006C6882 /* SetProjectCommand.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
+				5E08C7392180D460004079AE /* AdornedRulerPanel.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,

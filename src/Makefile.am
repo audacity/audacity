@@ -100,6 +100,8 @@ audacity_SOURCES = \
 	AboutDialog.h \
 	AColor.cpp \
 	AColor.h \
+	AdornedRulerPanel.cpp \
+	AdornedRulerPanel.h \
 	AllThemeResources.h \
 	Audacity.h \
 	AudacityApp.cpp \

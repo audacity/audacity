@@ -28,6 +28,7 @@
 #include "Audacity.h"
 #include "Menus.h"
 
+#include "AdornedRulerPanel.h"
 #include "AudacityApp.h"
 #include "AudioIO.h"
 #include "LabelTrack.h"
@@ -45,7 +46,6 @@
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
-#include "widgets/Ruler.h"
 
 PrefsListener::~PrefsListener()
 {

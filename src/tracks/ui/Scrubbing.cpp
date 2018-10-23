@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Experimental.h"
 #include <functional>
 
+#include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "../../Menus.h"
 #include "../../Project.h"
@@ -30,7 +31,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/TranscriptionToolBar.h"
 #endif
 
-#include "../../widgets/Ruler.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../commands/CommandContext.h"
 #include "../../commands/CommandManager.h"

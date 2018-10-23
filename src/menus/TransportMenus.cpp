@@ -1,3 +1,4 @@
+#include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
 #include "../DeviceManager.h"
 #include "../Experimental.h"
@@ -16,7 +17,6 @@
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../tracks/ui/Scrubbing.h"
-#include "../widgets/Ruler.h"
 
 #include <float.h>
 

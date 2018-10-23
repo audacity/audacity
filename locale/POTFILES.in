@@ -25,6 +25,8 @@ lib-src/mod-script-pipe/ScripterCallback.cpp
 lib-src/mod-script-pipe/ScripterCallback.h
 src/AColor.cpp
 src/AColor.h
+src/AdornedRulerPanel.cpp
+src/AdornedRulerPanel.h
 src/AboutDialog.cpp
 src/AboutDialog.h
 src/AllThemeResources.h

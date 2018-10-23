@@ -84,6 +84,7 @@ and in the spectrogram spectral selection.
 #include "./widgets/LinkingHtmlWindow.h"
 #include "./widgets/HelpSystem.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/Ruler.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
