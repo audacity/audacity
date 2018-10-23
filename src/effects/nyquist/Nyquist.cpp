@@ -783,7 +783,8 @@ bool NyquistEffect::Process()
 
    for (;
         bOnePassTool || pRange->first != pRange->second;
-        ++pRange->first) {
+        (void) (!pRange || (++pRange->first, true))
+   ) {
       mCurTrack[0] = pRange ? *pRange->first : nullptr;
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
