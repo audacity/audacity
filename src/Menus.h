@@ -64,20 +64,6 @@ void OnOutputGainDec(const CommandContext &context );
 void OnInputGainInc(const CommandContext &context );
 void OnInputGainDec(const CommandContext &context );
 
-        // Moving track focus commands
-
-void DoPrevTrack( AudacityProject &project, bool shift );
-void DoNextTrack( AudacityProject &project, bool shift );
-void OnCursorUp(const CommandContext &context );
-void OnCursorDown(const CommandContext &context );
-void OnFirstTrack(const CommandContext &context );
-void OnLastTrack(const CommandContext &context );
-
-        // Selection-Editing Commands
-
-void OnShiftUp(const CommandContext &context );
-void OnShiftDown(const CommandContext &context );
-void OnToggle(const CommandContext &context );
 
 
 void OnFullScreen(const CommandContext &context );
@@ -126,18 +112,7 @@ void OnAudioDeviceInfo(const CommandContext &context );
 void OnMidiDeviceInfo(const CommandContext &context );
 #endif
 
-// Keyboard navigation
-
-void NextOrPrevFrame(AudacityProject &project, bool next);
-void OnPrevFrame(const CommandContext &context );
-void OnNextFrame(const CommandContext &context );
-
-void OnPrevWindow(const CommandContext &context );
-void OnNextWindow(const CommandContext &context );
-
 public:
-   bool mCircularTrackNavigation{};
-
    void UpdatePrefs() override;
 };
 
