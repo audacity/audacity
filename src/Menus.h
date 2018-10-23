@@ -97,9 +97,6 @@ void OnCheckDependencies(const CommandContext &context );
 
 public:
 
-void OnPlotSpectrum(const CommandContext &context );
-void OnContrast(const CommandContext &context );
-
 // Effect Menu
 
 struct OnEffectFlags
@@ -115,20 +112,7 @@ struct OnEffectFlags
    static const int kDontRepeatLast = 0x04;
 };
 
-bool DoEffect(const PluginID & ID, const CommandContext & context, int flags);
-void OnEffect(const CommandContext &context );
-void OnRepeatLastEffect(const CommandContext &context );
-bool DoAudacityCommand(const PluginID & ID, const CommandContext &, int flags);
-void OnApplyMacroDirectly(const CommandContext &context );
-void OnApplyMacrosPalette(const CommandContext &context );
-void OnManageMacros(const CommandContext &context );
-void OnAudacityCommand(const CommandContext &context );
-void DoManagePluginsMenu(AudacityProject &project, EffectType Type);
 static void RebuildAllMenuBars();
-void OnManageGenerators(const CommandContext &context );
-void OnManageEffects(const CommandContext &context );
-void OnManageAnalyzers(const CommandContext &context );
-void OnManageTools(const CommandContext &context );
 
 // Help Menu
 
@@ -140,13 +124,9 @@ void OnCheckForUpdates(const CommandContext &context );
 void MayCheckForUpdates(AudacityProject &project);
 void OnShowLog(const CommandContext &context );
 void OnHelpWelcome(const CommandContext &context );
-void OnBenchmark(const CommandContext &context );
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 void OnCrashReport(const CommandContext &context );
 #endif
-void OnSimulateRecordingErrors(const CommandContext &context );
-void OnDetectUpstreamDropouts(const CommandContext &context );
-void OnScreenshot(const CommandContext &context );
 void OnAudioDeviceInfo(const CommandContext &context );
 #ifdef EXPERIMENTAL_MIDI_OUT
 void OnMidiDeviceInfo(const CommandContext &context );
@@ -265,6 +245,13 @@ namespace TrackActions {
 /// Move a track up, down, to top or to bottom.
 void DoMoveTrack( AudacityProject &project, Track* target, MoveChoice choice );
 void DoRemoveTracks( AudacityProject & );
+}
+
+namespace PluginActions {
+bool DoEffect(
+   const PluginID & ID, const CommandContext & context, unsigned flags );
+bool DoAudacityCommand(
+   const PluginID & ID, const CommandContext & context, unsigned flags );
 }
 
 #endif

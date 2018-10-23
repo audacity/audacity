@@ -4416,8 +4416,8 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       SelectNone();
       SelectAllIfNone();
       const CommandContext context( *this);
-      GetMenuCommandHandler(*this)
-         .DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
+      PluginActions::DoEffect(
+         EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
          MenuCommandHandler::OnEffectFlags::kConfigured);
    }
