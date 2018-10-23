@@ -82,12 +82,6 @@ void OnToggle(const CommandContext &context );
 
 void OnFullScreen(const CommandContext &context );
 
-static void DoMacMinimize(AudacityProject *project);
-void OnMacMinimize(const CommandContext &context );
-void OnMacMinimizeAll(const CommandContext &context );
-void OnMacZoom(const CommandContext &context );
-void OnMacBringAllToFront(const CommandContext &context );
-
 // File Menu
 
 void OnCheckDependencies(const CommandContext &context );

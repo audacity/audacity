@@ -363,8 +363,11 @@ MenuTable::BaseItemPtr ToolsMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraScriptablesIMenu( AudacityProject & );
 MenuTable::BaseItemPtr ExtraScriptablesIIMenu( AudacityProject & );
 
-namespace {
 MenuTable::BaseItemPtr WindowMenu( AudacityProject& );
+MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & );
+
+
+namespace {
 
 MenuTable::BaseItemPtr ExtraMenu( AudacityProject& );
 MenuTable::BaseItemPtr ExtraMixerMenu( AudacityProject & );
@@ -416,35 +419,6 @@ static const auto menuTree = MenuTable::Items(
 );
 
 namespace {
-
-MenuTable::BaseItemPtr WindowMenu( AudacityProject & )
-{
-#ifdef __WXMAC__
-      /////////////////////////////////////////////////////////////////////////////
-      // poor imitation of the Mac Windows Menu
-      /////////////////////////////////////////////////////////////////////////////
-   using namespace MenuTable;
-   return Menu( _("&Window"),
-      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
-       * window) shrink to an icon on the dock */
-      Command( wxT("MacMinimize"), XXO("&Minimize"), FN(OnMacMinimize),
-         NotMinimizedFlag, wxT("Ctrl+M") ),
-      /* i18n-hint: Standard Macintosh Window menu item:  Make (the current
-       * window) full sized */
-      Command( wxT("MacZoom"), XXO("&Zoom"),
-         FN(OnMacZoom), NotMinimizedFlag ),
-
-      Separator(),
-
-      /* i18n-hint: Standard Macintosh Window menu item:  Make all project
-       * windows un-hidden */
-      Command( wxT("MacBringAllToFront"), XXO("&Bring All to Front"),
-         FN(OnMacBringAllToFront), AlwaysEnabledFlag )
-   );
-#else
-   return {};
-#endif
-}
 
 MenuTable::BaseItemPtr ExtraMenu( AudacityProject & )
 {
@@ -537,23 +511,6 @@ MenuTable::BaseItemPtr ExtraFocusMenu( AudacityProject & )
       Command( wxT("ToggleAlt"), XXO("Toggle Focuse&d Track"), FN(OnToggle),
          FocusedTracksFlags, wxT("NUMPAD_ENTER") )
    );
-}
-
-MenuTable::BaseItemPtr ExtraWindowItems( AudacityProject & )
-{
-#ifdef __WXMAC__
-   using namespace MenuTable;
-
-   return Items(
-      /* i18n-hint: Shrink all project windows to icons on the Macintosh
-         tooldock */
-      Command( wxT("MacMinimizeAll"), XXO("Minimize All Projects"),
-         FN(OnMacMinimizeAll),
-         AlwaysEnabledFlag, wxT("Ctrl+Alt+M") )
-   );
-#else
-   return nullptr;
-#endif
 }
 
 MenuTable::BaseItemPtr ExtraMiscItems( AudacityProject &project )

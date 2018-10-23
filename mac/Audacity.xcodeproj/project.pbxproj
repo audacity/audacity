@@ -1208,7 +1208,6 @@
 		5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E00F217E4467003C6C99 /* ClipMenus.cpp */; };
 		5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */; };
 		5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E013217E5F66003C6C99 /* LabelMenus.cpp */; };
-		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
 		5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */; };
 		5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
@@ -1234,7 +1233,8 @@
 		5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A5217FA2430068E082 /* TransportMenus.cpp */; };
 		5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A6217FA2430068E082 /* ViewMenus.cpp */; };
 		5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A7217FA2430068E082 /* WindowMenus.cpp */; };
-		5E36A0B2217FC5A10068E082 /* HelpMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0B1217FC5A10068E082 /* HelpMenus.cpp */; };
+		5E36A0B2217FC5A10068E082 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0B3217FC6540068E082 /* HelpMenus.cpp */; };
 		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
 		5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */; };
 		5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A611F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp */; };
@@ -3071,7 +3071,6 @@
 		5E08E00F217E4467003C6C99 /* ClipMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClipMenus.cpp; path = menus/ClipMenus.cpp; sourceTree = "<group>"; };
 		5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToolbarMenus.cpp; path = menus/ToolbarMenus.cpp; sourceTree = "<group>"; };
 		5E08E013217E5F66003C6C99 /* LabelMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LabelMenus.cpp; path = menus/LabelMenus.cpp; sourceTree = "<group>"; };
-		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
 		5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CellularPanel.cpp; sourceTree = "<group>"; };
 		5E0A1CDC20E95FF7001AAF8D /* CellularPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellularPanel.h; sourceTree = "<group>"; };
 		5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackButtonHandles.cpp; sourceTree = "<group>"; };
@@ -3110,8 +3109,8 @@
 		5E36A0A4217FA2430068E082 /* TrackMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrackMenus.cpp; path = menus/TrackMenus.cpp; sourceTree = "<group>"; };
 		5E36A0A5217FA2430068E082 /* TransportMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TransportMenus.cpp; path = menus/TransportMenus.cpp; sourceTree = "<group>"; };
 		5E36A0A6217FA2430068E082 /* ViewMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ViewMenus.cpp; path = menus/ViewMenus.cpp; sourceTree = "<group>"; };
-		5E36A0A7217FA2430068E082 /* WindowMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WindowMenus.cpp; path = menus/WindowMenus.cpp; sourceTree = "<group>"; };
-		5E36A0B1217FC5A10068E082 /* HelpMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelpMenus.cpp; path = menus/HelpMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A7217FA2430068E082 /* WindowMenus.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = WindowMenus.cpp; path = menus/WindowMenus.cpp; sourceTree = "<group>"; };
+		5E36A0B3217FC6540068E082 /* HelpMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelpMenus.cpp; path = menus/HelpMenus.cpp; sourceTree = "<group>"; };
 		5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackSliderHandles.cpp; sourceTree = "<group>"; };
 		5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
@@ -4122,7 +4121,6 @@
 				1865A9B61004490500946EE6 /* LyricsWindow.cpp */,
 				28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */,
 				1790B0A709883BFD008A330A /* Menus.cpp */,
-				5E0A0E301D23019A00CD2567 /* MenusMac.cpp */,
 				1790B0AB09883BFD008A330A /* Mix.cpp */,
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
@@ -5924,7 +5922,7 @@
 				5E36A09F217FA2430068E082 /* EditMenus.cpp */,
 				5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */,
 				5E36A0A1217FA2430068E082 /* FileMenus.cpp */,
-				5E36A0B1217FC5A10068E082 /* HelpMenus.cpp */,
+				5E36A0B3217FC6540068E082 /* HelpMenus.cpp */,
 				5E08E013217E5F66003C6C99 /* LabelMenus.cpp */,
 				5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */,
 				5E19D64C217D51190024D0B1 /* PluginMenus.cpp */,
@@ -7897,7 +7895,8 @@
 				5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */,
 				1790B18709883BFD008A330A /* QualityPrefs.cpp in Sources */,
 				1790B18809883BFD008A330A /* SpectrumPrefs.cpp in Sources */,
-				5E36A0B2217FC5A10068E082 /* HelpMenus.cpp in Sources */,
+				5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */,
+				5E36A0B2217FC5A10068E082 /* (null) in Sources */,
 				1790B18909883BFD008A330A /* Prefs.cpp in Sources */,
 				5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */,
 				1790B18A09883BFD008A330A /* Printing.cpp in Sources */,
@@ -7941,7 +7940,6 @@
 				283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */,
 				283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */,
 				28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */,
-				5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */,
 				5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */,
 				28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */,
 				28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */,
