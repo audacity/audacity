@@ -716,7 +716,7 @@ void OnStereoToMono(const CommandContext &context)
    PluginActions::DoEffect(
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
       context,
-      MenuCommandHandler::OnEffectFlags::kConfigured);
+      PluginActions::kConfigured);
 }
 
 void OnMixAndRender(const CommandContext &context)

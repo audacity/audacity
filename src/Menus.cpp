@@ -811,7 +811,7 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
 /// selecting and unselecting depending if you are on the start of a
 /// block or not.
 
-void MenuCommandHandler::RebuildAllMenuBars()
+void MenuCreator::RebuildAllMenuBars()
 {
    for( size_t i = 0; i < gAudacityProjects.size(); i++ ) {
       AudacityProject *p = gAudacityProjects[i].get();

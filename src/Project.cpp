@@ -3124,7 +3124,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 #ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
       // Is it a plug-in?
       if (PluginManager::Get().DropFile(fileName)) {
-         MenuCommandHandler::RebuildAllMenuBars();
+         MenuCreator::RebuildAllMenuBars();
       }
       else
       // No, so import.
@@ -4419,7 +4419,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       PluginActions::DoEffect(
          EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
-         MenuCommandHandler::OnEffectFlags::kConfigured);
+         PluginActions::kConfigured);
    }
 
    // This is a no-fail:

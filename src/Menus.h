@@ -49,26 +49,6 @@ struct MenuCommandHandler final
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-public:
-
-// Effect Menu
-
-struct OnEffectFlags
-{
-
-   // No flags specified
-   static const int kNone = 0x00;
-   // Flag used to disable prompting for configuration parameteres.
-   static const int kConfigured = 0x01;
-   // Flag used to disable saving the state after processing.
-   static const int kSkipState  = 0x02;
-   // Flag used to disable "Repeat Last Effect"
-   static const int kDontRepeatLast = 0x04;
-};
-
-static void RebuildAllMenuBars();
-
-public:
    void UpdatePrefs() override;
 };
 
@@ -79,6 +59,8 @@ public:
    ~MenuCreator();
    void CreateMenusAndCommands(AudacityProject &project);
    void RebuildMenuBar(AudacityProject &project);
+
+   static void RebuildAllMenuBars();
 
 public:
    CommandFlag mLastFlags;
@@ -173,6 +155,16 @@ void DoRemoveTracks( AudacityProject & );
 }
 
 namespace PluginActions {
+   enum : unsigned {
+      // No flags specified
+      kNone = 0x00,
+      // Flag used to disable prompting for configuration parameteres.
+      kConfigured = 0x01,
+      // Flag used to disable saving the state after processing.
+      kSkipState  = 0x02,
+      // Flag used to disable "Repeat Last Effect"
+      kDontRepeatLast = 0x04,
+   };
 bool DoEffect(
    const PluginID & ID, const CommandContext & context, unsigned flags );
 bool DoAudacityCommand(

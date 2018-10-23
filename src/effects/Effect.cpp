@@ -769,7 +769,7 @@ bool Effect::Apply()
    //
    // It should callback to the EffectManager to kick off the processing
    return PluginActions::DoEffect(GetID(), context,
-      MenuCommandHandler::OnEffectFlags::kConfigured);
+      PluginActions::kConfigured);
 }
 
 void Effect::Preview()
