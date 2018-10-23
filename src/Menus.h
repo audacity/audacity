@@ -49,13 +49,6 @@ struct MenuCommandHandler final
    MenuCommandHandler();
    ~MenuCommandHandler();
 
-// File Menu
-
-void OnCheckDependencies(const CommandContext &context );
-
-// Edit Menu
-
-
 public:
 
 // Effect Menu
@@ -74,24 +67,6 @@ struct OnEffectFlags
 };
 
 static void RebuildAllMenuBars();
-
-// Help Menu
-
-void OnAbout(const CommandContext &context );
-void OnQuickHelp(const CommandContext &context );
-void OnQuickFix(const CommandContext &context );
-void OnManual(const CommandContext &context );
-void OnCheckForUpdates(const CommandContext &context );
-void MayCheckForUpdates(AudacityProject &project);
-void OnShowLog(const CommandContext &context );
-void OnHelpWelcome(const CommandContext &context );
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-void OnCrashReport(const CommandContext &context );
-#endif
-void OnAudioDeviceInfo(const CommandContext &context );
-#ifdef EXPERIMENTAL_MIDI_OUT
-void OnMidiDeviceInfo(const CommandContext &context );
-#endif
 
 public:
    void UpdatePrefs() override;
@@ -202,6 +177,11 @@ bool DoEffect(
    const PluginID & ID, const CommandContext & context, unsigned flags );
 bool DoAudacityCommand(
    const PluginID & ID, const CommandContext & context, unsigned flags );
+}
+
+namespace HelpActions {
+void DoHelpWelcome( AudacityProject & );
+void DoShowLog( AudacityProject& );
 }
 
 #endif
