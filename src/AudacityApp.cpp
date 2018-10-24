@@ -1595,7 +1595,7 @@ bool AudacityApp::OnInit()
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.
       // project->MayCheckForUpdates();
-      GetMenuCommandHandler(*project).OnHelpWelcome(*project);
+      HelpActions::DoHelpWelcome(*project);
    }
 
    // JKC 10-Sep-2007: Enable monitoring from the start.
@@ -1688,7 +1688,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
                gAudioIO->GetNumCaptureChannels() == 0) ||
          scrubbing)
          // ESC out of other play (but not record)
-         GetMenuCommandHandler(*project).OnStop(*project);
+         TransportActions::DoStop(*project);
       else
          event.Skip();
    }

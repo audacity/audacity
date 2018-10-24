@@ -473,7 +473,7 @@ public:
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
             if (Importer::IsMidi(name))
-               MenuCommandHandler::DoImportMIDI(mProject, name);
+               FileActions::DoImportMIDI(mProject, name);
             else
 #endif
                mProject->Import(name);
@@ -2409,9 +2409,9 @@ bool MenuManager::TryToMakeActionAllowed
    if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
-   // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
+   // This was 'OnSelectAll'.  Changing it to DoSelectSomething means if
    // selecting all tracks is enough, we just do that.
-   GetMenuCommandHandler(project).OnSelectSomething(project);
+   SelectActions::DoSelectSomething(project);
    flags = GetMenuManager(project).GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
@@ -3133,7 +3133,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       {
 #ifdef USE_MIDI
          if (Importer::IsMidi(fileName))
-            MenuCommandHandler::DoImportMIDI(this, fileName);
+            FileActions::DoImportMIDI(this, fileName);
          else
 #endif
             Import(fileName);
@@ -4325,10 +4325,10 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
 #if defined(__WXGTK__)
    // See bug #1224
-   // The track panel hasn't we been fully created, so the OnZoomFit() will not give
+   // The track panel hasn't we been fully created, so the DoZoomFit() will not give
    // expected results due to a window width of zero.  Should be safe to yield here to
    // allow the creattion to complete.  If this becomes a problem, it "might" be possible
-   // to queue a dummy event to trigger the OnZoomFit().
+   // to queue a dummy event to trigger the DoZoomFit().
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
 
@@ -4347,7 +4347,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
 void AudacityProject::ZoomAfterImport(Track *pTrack)
 {
-   GetMenuCommandHandler(*this).OnZoomFit(*this);
+   ViewActions::DoZoomFit(*this);
 
    mTrackPanel->SetFocus();
    RedrawProject();
@@ -4416,8 +4416,8 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       SelectNone();
       SelectAllIfNone();
       const CommandContext context( *this);
-      GetMenuCommandHandler(*this)
-         .DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
+      PluginActions::DoEffect(
+         EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
          MenuCommandHandler::OnEffectFlags::kConfigured);
    }
@@ -4720,7 +4720,7 @@ void AudacityProject::PushState(const wxString &desc,
    }
 
    if (GetTracksFitVerticallyZoomed())
-      GetMenuCommandHandler(*this).DoZoomFitV(*this);
+      ViewActions::DoZoomFitV(*this);
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 
@@ -5575,7 +5575,7 @@ You are saving directly to a slow external storage device\n\
       // Reset timer record 
       if (IsTimerRecordCancelled())
       {
-         GetMenuCommandHandler(*this).OnUndo(*this);
+         EditActions::DoUndo( *this );
          ResetTimerRecordCancelled();
       }
 
@@ -5896,8 +5896,8 @@ bool AudacityProject::IsProjectSaved() {
 
 // This is done to empty out the tracks, but without creating a new project.
 void AudacityProject::ResetProjectToEmpty() {
-   GetMenuCommandHandler(*this).OnSelectAll(*this);
-   GetMenuCommandHandler(*this).OnRemoveTracks(*this);
+   SelectActions::DoSelectAll(*this);
+   TrackActions::DoRemoveTracks(*this);
    // A new DirManager.
    mDirManager = std::make_shared<DirManager>();
    mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });

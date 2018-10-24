@@ -1205,7 +1205,9 @@
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
-		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
+		5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E00F217E4467003C6C99 /* ClipMenus.cpp */; };
+		5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */; };
+		5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E08E013217E5F66003C6C99 /* LabelMenus.cpp */; };
 		5E0A1CDD20E95FF7001AAF8D /* CellularPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */; };
 		5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
@@ -1220,7 +1222,19 @@
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
 		5E16FF4D1FF9CE0B0085E1B8 /* LanguageNames.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */; };
+		5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E19D64C217D51190024D0B1 /* PluginMenus.cpp */; };
 		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
+		5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A09F217FA2430068E082 /* EditMenus.cpp */; };
+		5E36A0A9217FA2430068E082 /* ExtraMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */; };
+		5E36A0AA217FA2430068E082 /* FileMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A1217FA2430068E082 /* FileMenus.cpp */; };
+		5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */; };
+		5E36A0AC217FA2430068E082 /* SelectMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A3217FA2430068E082 /* SelectMenus.cpp */; };
+		5E36A0AD217FA2430068E082 /* TrackMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A4217FA2430068E082 /* TrackMenus.cpp */; };
+		5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A5217FA2430068E082 /* TransportMenus.cpp */; };
+		5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A6217FA2430068E082 /* ViewMenus.cpp */; };
+		5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0A7217FA2430068E082 /* WindowMenus.cpp */; };
+		5E36A0B2217FC5A10068E082 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E36A0B3217FC6540068E082 /* HelpMenus.cpp */; };
 		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
 		5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */; };
 		5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A611F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp */; };
@@ -3054,7 +3068,9 @@
 		5E07842D1DEE6B8600CA76EA /* FileException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileException.h; sourceTree = "<group>"; };
 		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
 		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
-		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
+		5E08E00F217E4467003C6C99 /* ClipMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClipMenus.cpp; path = menus/ClipMenus.cpp; sourceTree = "<group>"; };
+		5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToolbarMenus.cpp; path = menus/ToolbarMenus.cpp; sourceTree = "<group>"; };
+		5E08E013217E5F66003C6C99 /* LabelMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LabelMenus.cpp; path = menus/LabelMenus.cpp; sourceTree = "<group>"; };
 		5E0A1CDB20E95FF7001AAF8D /* CellularPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CellularPanel.cpp; sourceTree = "<group>"; };
 		5E0A1CDC20E95FF7001AAF8D /* CellularPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellularPanel.h; sourceTree = "<group>"; };
 		5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackButtonHandles.cpp; sourceTree = "<group>"; };
@@ -3082,8 +3098,19 @@
 		5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
 		5E16FF4C1FF9CE0B0085E1B8 /* LanguageNames.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LanguageNames.txt; path = ../locale/LanguageNames.txt; sourceTree = "<group>"; };
+		5E19D64C217D51190024D0B1 /* PluginMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginMenus.cpp; path = menus/PluginMenus.cpp; sourceTree = "<group>"; };
 		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
 		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
+		5E36A09F217FA2430068E082 /* EditMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditMenus.cpp; path = menus/EditMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtraMenus.cpp; path = menus/ExtraMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A1217FA2430068E082 /* FileMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileMenus.cpp; path = menus/FileMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavigationMenus.cpp; path = menus/NavigationMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A3217FA2430068E082 /* SelectMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectMenus.cpp; path = menus/SelectMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A4217FA2430068E082 /* TrackMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrackMenus.cpp; path = menus/TrackMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A5217FA2430068E082 /* TransportMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TransportMenus.cpp; path = menus/TransportMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A6217FA2430068E082 /* ViewMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ViewMenus.cpp; path = menus/ViewMenus.cpp; sourceTree = "<group>"; };
+		5E36A0A7217FA2430068E082 /* WindowMenus.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = WindowMenus.cpp; path = menus/WindowMenus.cpp; sourceTree = "<group>"; };
+		5E36A0B3217FC6540068E082 /* HelpMenus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelpMenus.cpp; path = menus/HelpMenus.cpp; sourceTree = "<group>"; };
 		5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackSliderHandles.cpp; sourceTree = "<group>"; };
 		5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
@@ -4094,7 +4121,6 @@
 				1865A9B61004490500946EE6 /* LyricsWindow.cpp */,
 				28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */,
 				1790B0A709883BFD008A330A /* Menus.cpp */,
-				5E0A0E301D23019A00CD2567 /* MenusMac.cpp */,
 				1790B0AB09883BFD008A330A /* Mix.cpp */,
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
@@ -4264,6 +4290,7 @@
 				1790AFFD09883BFD008A330A /* effects */,
 				1790B06209883BFD008A330A /* export */,
 				1790B07D09883BFD008A330A /* import */,
+				5E19D648217D50AB0024D0B1 /* menus */,
 				1841B4FD0E00AD3D00F386E9 /* ondemand */,
 				1790B0B509883BFD008A330A /* prefs */,
 				2897F6DB0AB3DB5A003C20C5 /* toolbars */,
@@ -5886,6 +5913,27 @@
 				5E1512521DB000DC00702E29 /* TimeTrackVRulerControls.h */,
 			);
 			path = ui;
+			sourceTree = "<group>";
+		};
+		5E19D648217D50AB0024D0B1 /* menus */ = {
+			isa = PBXGroup;
+			children = (
+				5E08E00F217E4467003C6C99 /* ClipMenus.cpp */,
+				5E36A09F217FA2430068E082 /* EditMenus.cpp */,
+				5E36A0A0217FA2430068E082 /* ExtraMenus.cpp */,
+				5E36A0A1217FA2430068E082 /* FileMenus.cpp */,
+				5E36A0B3217FC6540068E082 /* HelpMenus.cpp */,
+				5E08E013217E5F66003C6C99 /* LabelMenus.cpp */,
+				5E36A0A2217FA2430068E082 /* NavigationMenus.cpp */,
+				5E19D64C217D51190024D0B1 /* PluginMenus.cpp */,
+				5E36A0A3217FA2430068E082 /* SelectMenus.cpp */,
+				5E08E011217E549B003C6C99 /* ToolbarMenus.cpp */,
+				5E36A0A4217FA2430068E082 /* TrackMenus.cpp */,
+				5E36A0A5217FA2430068E082 /* TransportMenus.cpp */,
+				5E36A0A6217FA2430068E082 /* ViewMenus.cpp */,
+				5E36A0A7217FA2430068E082 /* WindowMenus.cpp */,
+			);
+			name = menus;
 			sourceTree = "<group>";
 		};
 		5E74D2DB1CC4429700D88B0B /* tracks */ = {
@@ -7778,6 +7826,7 @@
 				1790B14109883BFD008A330A /* Leveller.cpp in Sources */,
 				1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */,
 				5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */,
+				5E36A0A8217FA2430068E082 /* EditMenus.cpp in Sources */,
 				1790B14309883BFD008A330A /* Noise.cpp in Sources */,
 				1790B14409883BFD008A330A /* NoiseRemoval.cpp in Sources */,
 				1790B14509883BFD008A330A /* Normalize.cpp in Sources */,
@@ -7785,6 +7834,7 @@
 				1790B14709883BFD008A330A /* Nyquist.cpp in Sources */,
 				1790B14809883BFD008A330A /* Phaser.cpp in Sources */,
 				1790B14A09883BFD008A330A /* Repeat.cpp in Sources */,
+				5E08E014217E5F66003C6C99 /* LabelMenus.cpp in Sources */,
 				5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */,
 				1790B14B09883BFD008A330A /* Reverse.cpp in Sources */,
 				1790B14C09883BFD008A330A /* Silence.cpp in Sources */,
@@ -7831,6 +7881,7 @@
 				1790B17509883BFD008A330A /* Legacy.cpp in Sources */,
 				1790B17809883BFD008A330A /* Menus.cpp in Sources */,
 				1790B17A09883BFD008A330A /* Mix.cpp in Sources */,
+				5E08E012217E549B003C6C99 /* ToolbarMenus.cpp in Sources */,
 				1790B17C09883BFD008A330A /* NoteTrack.cpp in Sources */,
 				1790B17D09883BFD008A330A /* PitchName.cpp in Sources */,
 				1790B17E09883BFD008A330A /* PlatformCompatibility.cpp in Sources */,
@@ -7844,6 +7895,8 @@
 				5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */,
 				1790B18709883BFD008A330A /* QualityPrefs.cpp in Sources */,
 				1790B18809883BFD008A330A /* SpectrumPrefs.cpp in Sources */,
+				5E36A0B4217FC6540068E082 /* HelpMenus.cpp in Sources */,
+				5E36A0B2217FC5A10068E082 /* (null) in Sources */,
 				1790B18909883BFD008A330A /* Prefs.cpp in Sources */,
 				5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */,
 				1790B18A09883BFD008A330A /* Printing.cpp in Sources */,
@@ -7852,6 +7905,7 @@
 				1790B18D09883BFD008A330A /* RingBuffer.cpp in Sources */,
 				1790B18E09883BFD008A330A /* SampleFormat.cpp in Sources */,
 				1790B19009883BFD008A330A /* Sequence.cpp in Sources */,
+				5E36A0AF217FA2430068E082 /* ViewMenus.cpp in Sources */,
 				1790B19109883BFD008A330A /* Shuttle.cpp in Sources */,
 				1790B19209883BFD008A330A /* Spectrum.cpp in Sources */,
 				1790B19309883BFD008A330A /* Tags.cpp in Sources */,
@@ -7879,13 +7933,13 @@
 				1790B1AA09883BFD008A330A /* XMLTagHandler.cpp in Sources */,
 				5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */,
 				17190D24098A3F0B004583C6 /* AColor.cpp in Sources */,
+				5E36A0AD217FA2430068E082 /* TrackMenus.cpp in Sources */,
 				17190D25098A3F15004583C6 /* AboutDialog.cpp in Sources */,
 				174D9031098C78AF00D5909F /* CommandManager.cpp in Sources */,
 				174D9033098C78AF00D5909F /* Keyboard.cpp in Sources */,
 				283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */,
 				283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */,
 				28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */,
-				5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */,
 				5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */,
 				28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */,
 				28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */,
@@ -7913,6 +7967,7 @@
 				2897F6F30AB3DB5A003C20C5 /* MixerToolBar.cpp in Sources */,
 				2897F6F40AB3DB5A003C20C5 /* SelectionBar.cpp in Sources */,
 				2897F6F50AB3DB5A003C20C5 /* ToolBar.cpp in Sources */,
+				5E36A0B0217FA2430068E082 /* WindowMenus.cpp in Sources */,
 				2897F6F60AB3DB5A003C20C5 /* ToolDock.cpp in Sources */,
 				5EF3E64E203FBAFB006C6882 /* CommandContext.cpp in Sources */,
 				2897F6F70AB3DB5A003C20C5 /* ToolManager.cpp in Sources */,
@@ -7961,12 +8016,14 @@
 				5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */,
 				2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */,
 				2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */,
+				5E36A0AB217FA2430068E082 /* NavigationMenus.cpp in Sources */,
 				28D587CB0E264CF4009C7DEA /* LoadLV2.cpp in Sources */,
 				5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */,
 				28D587CC0E264CF4009C7DEA /* LV2Effect.cpp in Sources */,
 				28DA07390E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp in Sources */,
 				186CCE6D0E51F47400659159 /* ODDecodeBlockFile.cpp in Sources */,
 				186CCE720E51F48500659159 /* ODDecodeFlacTask.cpp in Sources */,
+				5E36A0AE217FA2430068E082 /* TransportMenus.cpp in Sources */,
 				186CCE730E51F48500659159 /* ODDecodeTask.cpp in Sources */,
 				186CCEA40E523C8E00659159 /* Profiler.cpp in Sources */,
 				18D8314E0ED0F56300FD870D /* Contrast.cpp in Sources */,
@@ -7992,6 +8049,7 @@
 				5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */,
 				5E667A691F0D723A00C942A5 /* TrackPanelResizerCell.cpp in Sources */,
 				28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */,
+				5E36A0AC217FA2430068E082 /* SelectMenus.cpp in Sources */,
 				28FBCA6A1B42E01100BB3405 /* AUControl.mm in Sources */,
 				28D540060FD1912A00FA7C75 /* CommandBuilder.cpp in Sources */,
 				28D540070FD1912A00FA7C75 /* CommandHandler.cpp in Sources */,
@@ -8039,6 +8097,7 @@
 				5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */,
 				28884945131B6CF600B59735 /* be.po in Sources */,
 				28884946131B6CF600B59735 /* bg.po in Sources */,
+				5E36A0A9217FA2430068E082 /* ExtraMenus.cpp in Sources */,
 				28884947131B6CF600B59735 /* bn.po in Sources */,
 				5EF3E64D203FBAFB006C6882 /* AudacityCommand.cpp in Sources */,
 				AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */,
@@ -8050,6 +8109,7 @@
 				2888494D131B6CF600B59735 /* da.po in Sources */,
 				2888494E131B6CF600B59735 /* de.po in Sources */,
 				2888494F131B6CF600B59735 /* el.po in Sources */,
+				5E08E010217E4467003C6C99 /* ClipMenus.cpp in Sources */,
 				28884950131B6CF600B59735 /* es.po in Sources */,
 				28884951131B6CF600B59735 /* eu.po in Sources */,
 				28884952131B6CF600B59735 /* fa.po in Sources */,
@@ -8101,6 +8161,7 @@
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
 				2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */,
+				5E36A0AA217FA2430068E082 /* FileMenus.cpp in Sources */,
 				5E15126D1DB0010C00702E29 /* CommonTrackPanelCell.cpp in Sources */,
 				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
 				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,
@@ -8111,6 +8172,7 @@
 				5E7396621DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp in Sources */,
 				EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
 				EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
+				5E19D655217D51190024D0B1 /* PluginMenus.cpp in Sources */,
 				EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */,
 				2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */,
 				28F67179197DFA1C00075C32 /* FormatClassifier.cpp in Sources */,
@@ -8528,6 +8590,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",
@@ -8852,6 +8915,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
 					"-headerpad_max_install_names",

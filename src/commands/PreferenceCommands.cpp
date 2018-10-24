@@ -21,7 +21,6 @@ SetPreferenceCommand classes
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandContext.h"
-#include "../Project.h" // for "OnReloadPreferences".
 
 bool GetPreferenceCommand::DefineParams( ShuttleParams & S ){
    S.Define( mName, wxT("Name"),   wxT("") );
@@ -75,7 +74,7 @@ bool SetPreferenceCommand::Apply(const CommandContext & context)
    bool bOK = gPrefs->Write(mName, mValue) && gPrefs->Flush();
    if( bOK && mbReload ){
       auto &project = context.project;
-      GetMenuCommandHandler(project).OnReloadPreferences( context );
+      EditActions::DoReloadPreferences( project );
    }
    return bOK;
 }

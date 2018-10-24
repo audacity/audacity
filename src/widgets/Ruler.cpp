@@ -81,6 +81,7 @@ array of Ruler::Label.
 #include "../AColor.h"
 #include "../AudioIO.h"
 #include "../Internat.h"
+#include "../Menus.h"
 #include "../Project.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../Theme.h"
@@ -89,7 +90,6 @@ array of Ruler::Label.
 #include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelCellIterator.h"
-#include "../Menus.h"
 #include "../NumberScale.h"
 #include "../Prefs.h"
 #include "../Snap.h"
@@ -2895,7 +2895,7 @@ auto AdornedRulerPanel::QPHandle::Click
          if(scrubber.HasMark()) {
             // We can't stop scrubbing yet (see comments in Bug 1391),
             // but we can pause it.
-            GetMenuCommandHandler(*pProject).OnPause(*pProject);
+            TransportActions::DoPause(*pProject);
          }
 
          // Store the initial play region state
@@ -2919,7 +2919,7 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Temporarily unlock locked play region
    if (mPlayRegionLock && evt.LeftDown()) {
       //mPlayRegionLock = true;
-      GetMenuCommandHandler(*mProject).OnUnlockPlayRegion(*mProject);
+      TransportActions::DoUnlockPlayRegion(*mProject);
    }
 
    mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
@@ -3170,7 +3170,7 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       if (mPlayRegionLock) {
          // Restore Locked Play region
          SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
-         GetMenuCommandHandler(*mProject).OnLockPlayRegion(*mProject);
+         TransportActions::DoLockPlayRegion(*mProject);
          // and release local lock
          mPlayRegionLock = false;
       }
@@ -3192,7 +3192,7 @@ auto AdornedRulerPanel::QPHandle::Cancel
             mParent->mOldPlayRegionStart, mParent->mOldPlayRegionEnd);
          if (mParent->mPlayRegionLock) {
             // Restore Locked Play region
-            GetMenuCommandHandler(*pProject).OnLockPlayRegion(*pProject);
+            TransportActions::DoLockPlayRegion(*pProject);
             // and release local lock
             mParent->mPlayRegionLock = false;
          }
@@ -3328,7 +3328,7 @@ void AdornedRulerPanel::UpdateButtonStates()
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 {
-   GetMenuCommandHandler(*mProject).OnTogglePinnedHead(*mProject);
+   TransportActions::DoTogglePinnedHead(*mProject);
    UpdateButtonStates();
 }
 
@@ -3466,9 +3466,9 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
 {
    if (mProject->IsPlayRegionLocked())
-      GetMenuCommandHandler(*mProject).OnUnlockPlayRegion(*mProject);
+      TransportActions::DoUnlockPlayRegion(*mProject);
    else
-      GetMenuCommandHandler(*mProject).OnLockPlayRegion(*mProject);
+      TransportActions::DoLockPlayRegion(*mProject);
 }
 
 

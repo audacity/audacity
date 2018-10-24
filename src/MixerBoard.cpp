@@ -690,7 +690,7 @@ wxColour MixerTrackCluster::GetTrackColor()
 
 void MixerTrackCluster::HandleSelect(bool bShiftDown, bool bControlDown)
 {
-   GetMenuCommandHandler(*mProject).HandleListSelection(*mProject,
+   SelectActions::DoListSelection(*mProject,
       mTrack.get(), bShiftDown, bControlDown, true);
 }
 

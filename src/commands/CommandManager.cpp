@@ -1587,7 +1587,9 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandCon
    {
       if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str, false))
       {
-         return GetMenuCommandHandler(*proj).DoEffect(plug->GetID(), context, MenuCommandHandler::OnEffectFlags::kConfigured);
+         return PluginActions::DoEffect(
+            plug->GetID(), context,
+            MenuCommandHandler::OnEffectFlags::kConfigured);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
