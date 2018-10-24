@@ -169,8 +169,9 @@ class WaveTrack;
 #include "./commands/CommandFlag.h"
 #include "../include/audacity/EffectInterface.h"
 
-struct MenuCommandHandler;
 class MenuManager;
+
+class PrefsListener;
 
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
@@ -183,6 +184,24 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
+
+   using AttachedObject = PrefsListener;
+   using AttachedObjectFactory =
+      std::function< std::unique_ptr<AttachedObject>() >;
+
+   // Typically a static object.  Allows various application code to
+   // attach per-project state, without Project.cpp needing to include a header
+   // file or know the details.
+   class RegisteredAttachedObjectFactory {
+   public:
+      RegisteredAttachedObjectFactory( const AttachedObjectFactory &factory );
+
+   private:
+      friend AudacityProject;
+      size_t mIndex {};
+   };
+   AttachedObject &
+      GetAttachedObject( const RegisteredAttachedObjectFactory& factory );
 
    virtual void ApplyUpdatedTheme();
 
@@ -355,7 +374,6 @@ public:
    static void CaptureKeyboard(wxWindow *handler);
    static void ReleaseKeyboard(wxWindow *handler);
 
-   void RebuildOtherMenus();
    void MayStartMonitoring();
 
 
@@ -807,11 +825,10 @@ private:
 #endif
 
 private:
-   std::unique_ptr<MenuCommandHandler> mMenuCommandHandler;
+   std::vector< std::unique_ptr<AttachedObject> > mAttachedObjects;
    std::unique_ptr<MenuManager> mMenuManager;
 
 public:
-   friend MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
    friend MenuManager &GetMenuManager(AudacityProject &project);
 
    class PlaybackScroller final : public wxEvtHandler

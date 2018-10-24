@@ -426,7 +426,14 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	import/RawAudioGuess.h import/FormatClassifier.cpp \
 	import/FormatClassifier.h import/MultiFormatReader.cpp \
 	import/MultiFormatReader.h import/SpecPowerMeter.cpp \
-	import/SpecPowerMeter.h ondemand/ODComputeSummaryTask.cpp \
+	import/SpecPowerMeter.h menus/ClipMenus.cpp \
+	menus/EditMenus.cpp menus/ExtraMenus.cpp menus/FileMenus.cpp \
+	menus/HelpMenus.cpp menus/LabelMenus.cpp \
+	menus/NavigationMenus.cpp menus/PluginMenus.cpp \
+	menus/SelectMenus.cpp menus/ToolbarMenus.cpp \
+	menus/TrackMenus.cpp menus/TransportMenus.cpp \
+	menus/ViewMenus.cpp menus/WindowMenus.cpp \
+	ondemand/ODComputeSummaryTask.cpp \
 	ondemand/ODComputeSummaryTask.h \
 	ondemand/ODDecodeFFmpegTask.cpp ondemand/ODDecodeFFmpegTask.h \
 	ondemand/ODDecodeTask.cpp ondemand/ODDecodeTask.h \
@@ -762,6 +769,20 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	import/audacity-FormatClassifier.$(OBJEXT) \
 	import/audacity-MultiFormatReader.$(OBJEXT) \
 	import/audacity-SpecPowerMeter.$(OBJEXT) \
+	menus/audacity-ClipMenus.$(OBJEXT) \
+	menus/audacity-EditMenus.$(OBJEXT) \
+	menus/audacity-ExtraMenus.$(OBJEXT) \
+	menus/audacity-FileMenus.$(OBJEXT) \
+	menus/audacity-HelpMenus.$(OBJEXT) \
+	menus/audacity-LabelMenus.$(OBJEXT) \
+	menus/audacity-NavigationMenus.$(OBJEXT) \
+	menus/audacity-PluginMenus.$(OBJEXT) \
+	menus/audacity-SelectMenus.$(OBJEXT) \
+	menus/audacity-ToolbarMenus.$(OBJEXT) \
+	menus/audacity-TrackMenus.$(OBJEXT) \
+	menus/audacity-TransportMenus.$(OBJEXT) \
+	menus/audacity-ViewMenus.$(OBJEXT) \
+	menus/audacity-WindowMenus.$(OBJEXT) \
 	ondemand/audacity-ODComputeSummaryTask.$(OBJEXT) \
 	ondemand/audacity-ODDecodeFFmpegTask.$(OBJEXT) \
 	ondemand/audacity-ODDecodeTask.$(OBJEXT) \
@@ -1219,7 +1240,6 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
-runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -1453,7 +1473,14 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	import/RawAudioGuess.h import/FormatClassifier.cpp \
 	import/FormatClassifier.h import/MultiFormatReader.cpp \
 	import/MultiFormatReader.h import/SpecPowerMeter.cpp \
-	import/SpecPowerMeter.h ondemand/ODComputeSummaryTask.cpp \
+	import/SpecPowerMeter.h menus/ClipMenus.cpp \
+	menus/EditMenus.cpp menus/ExtraMenus.cpp menus/FileMenus.cpp \
+	menus/HelpMenus.cpp menus/LabelMenus.cpp \
+	menus/NavigationMenus.cpp menus/PluginMenus.cpp \
+	menus/SelectMenus.cpp menus/ToolbarMenus.cpp \
+	menus/TrackMenus.cpp menus/TransportMenus.cpp \
+	menus/ViewMenus.cpp menus/WindowMenus.cpp \
+	ondemand/ODComputeSummaryTask.cpp \
 	ondemand/ODComputeSummaryTask.h \
 	ondemand/ODDecodeFFmpegTask.cpp ondemand/ODDecodeFFmpegTask.h \
 	ondemand/ODDecodeTask.cpp ondemand/ODDecodeTask.h \
@@ -1988,6 +2015,40 @@ import/audacity-MultiFormatReader.$(OBJEXT): import/$(am__dirstamp) \
 	import/$(DEPDIR)/$(am__dirstamp)
 import/audacity-SpecPowerMeter.$(OBJEXT): import/$(am__dirstamp) \
 	import/$(DEPDIR)/$(am__dirstamp)
+menus/$(am__dirstamp):
+	@$(MKDIR_P) menus
+	@: > menus/$(am__dirstamp)
+menus/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) menus/$(DEPDIR)
+	@: > menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-ClipMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-EditMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-ExtraMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-FileMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-HelpMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-LabelMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-NavigationMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-PluginMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-SelectMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-ToolbarMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-TrackMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-TransportMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-ViewMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
+menus/audacity-WindowMenus.$(OBJEXT): menus/$(am__dirstamp) \
+	menus/$(DEPDIR)/$(am__dirstamp)
 ondemand/$(am__dirstamp):
 	@$(MKDIR_P) ondemand
 	@: > ondemand/$(am__dirstamp)
@@ -2394,6 +2455,7 @@ mostlyclean-compile:
 	-rm -f effects/vamp/*.$(OBJEXT)
 	-rm -f export/*.$(OBJEXT)
 	-rm -f import/*.$(OBJEXT)
+	-rm -f menus/*.$(OBJEXT)
 	-rm -f ondemand/*.$(OBJEXT)
 	-rm -f prefs/*.$(OBJEXT)
 	-rm -f toolbars/*.$(OBJEXT)
@@ -2636,6 +2698,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-MultiFormatReader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-RawAudioGuess.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-SpecPowerMeter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-ClipMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-EditMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-ExtraMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-FileMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-HelpMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-LabelMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-NavigationMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-PluginMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-SelectMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-ToolbarMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-TrackMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-TransportMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-ViewMenus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@menus/$(DEPDIR)/audacity-WindowMenus.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ondemand/$(DEPDIR)/audacity-ODComputeSummaryTask.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ondemand/$(DEPDIR)/audacity-ODDecodeFFmpegTask.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ondemand/$(DEPDIR)/audacity-ODDecodeFlacTask.Po@am__quote@
@@ -5612,6 +5688,202 @@ import/audacity-SpecPowerMeter.obj: import/SpecPowerMeter.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-SpecPowerMeter.obj `if test -f 'import/SpecPowerMeter.cpp'; then $(CYGPATH_W) 'import/SpecPowerMeter.cpp'; else $(CYGPATH_W) '$(srcdir)/import/SpecPowerMeter.cpp'; fi`
 
+menus/audacity-ClipMenus.o: menus/ClipMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ClipMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-ClipMenus.Tpo -c -o menus/audacity-ClipMenus.o `test -f 'menus/ClipMenus.cpp' || echo '$(srcdir)/'`menus/ClipMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ClipMenus.Tpo menus/$(DEPDIR)/audacity-ClipMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ClipMenus.cpp' object='menus/audacity-ClipMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ClipMenus.o `test -f 'menus/ClipMenus.cpp' || echo '$(srcdir)/'`menus/ClipMenus.cpp
+
+menus/audacity-ClipMenus.obj: menus/ClipMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ClipMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-ClipMenus.Tpo -c -o menus/audacity-ClipMenus.obj `if test -f 'menus/ClipMenus.cpp'; then $(CYGPATH_W) 'menus/ClipMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ClipMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ClipMenus.Tpo menus/$(DEPDIR)/audacity-ClipMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ClipMenus.cpp' object='menus/audacity-ClipMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ClipMenus.obj `if test -f 'menus/ClipMenus.cpp'; then $(CYGPATH_W) 'menus/ClipMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ClipMenus.cpp'; fi`
+
+menus/audacity-EditMenus.o: menus/EditMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-EditMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-EditMenus.Tpo -c -o menus/audacity-EditMenus.o `test -f 'menus/EditMenus.cpp' || echo '$(srcdir)/'`menus/EditMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-EditMenus.Tpo menus/$(DEPDIR)/audacity-EditMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/EditMenus.cpp' object='menus/audacity-EditMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-EditMenus.o `test -f 'menus/EditMenus.cpp' || echo '$(srcdir)/'`menus/EditMenus.cpp
+
+menus/audacity-EditMenus.obj: menus/EditMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-EditMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-EditMenus.Tpo -c -o menus/audacity-EditMenus.obj `if test -f 'menus/EditMenus.cpp'; then $(CYGPATH_W) 'menus/EditMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/EditMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-EditMenus.Tpo menus/$(DEPDIR)/audacity-EditMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/EditMenus.cpp' object='menus/audacity-EditMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-EditMenus.obj `if test -f 'menus/EditMenus.cpp'; then $(CYGPATH_W) 'menus/EditMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/EditMenus.cpp'; fi`
+
+menus/audacity-ExtraMenus.o: menus/ExtraMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ExtraMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-ExtraMenus.Tpo -c -o menus/audacity-ExtraMenus.o `test -f 'menus/ExtraMenus.cpp' || echo '$(srcdir)/'`menus/ExtraMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ExtraMenus.Tpo menus/$(DEPDIR)/audacity-ExtraMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ExtraMenus.cpp' object='menus/audacity-ExtraMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ExtraMenus.o `test -f 'menus/ExtraMenus.cpp' || echo '$(srcdir)/'`menus/ExtraMenus.cpp
+
+menus/audacity-ExtraMenus.obj: menus/ExtraMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ExtraMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-ExtraMenus.Tpo -c -o menus/audacity-ExtraMenus.obj `if test -f 'menus/ExtraMenus.cpp'; then $(CYGPATH_W) 'menus/ExtraMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ExtraMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ExtraMenus.Tpo menus/$(DEPDIR)/audacity-ExtraMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ExtraMenus.cpp' object='menus/audacity-ExtraMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ExtraMenus.obj `if test -f 'menus/ExtraMenus.cpp'; then $(CYGPATH_W) 'menus/ExtraMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ExtraMenus.cpp'; fi`
+
+menus/audacity-FileMenus.o: menus/FileMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-FileMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-FileMenus.Tpo -c -o menus/audacity-FileMenus.o `test -f 'menus/FileMenus.cpp' || echo '$(srcdir)/'`menus/FileMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-FileMenus.Tpo menus/$(DEPDIR)/audacity-FileMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/FileMenus.cpp' object='menus/audacity-FileMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-FileMenus.o `test -f 'menus/FileMenus.cpp' || echo '$(srcdir)/'`menus/FileMenus.cpp
+
+menus/audacity-FileMenus.obj: menus/FileMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-FileMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-FileMenus.Tpo -c -o menus/audacity-FileMenus.obj `if test -f 'menus/FileMenus.cpp'; then $(CYGPATH_W) 'menus/FileMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/FileMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-FileMenus.Tpo menus/$(DEPDIR)/audacity-FileMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/FileMenus.cpp' object='menus/audacity-FileMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-FileMenus.obj `if test -f 'menus/FileMenus.cpp'; then $(CYGPATH_W) 'menus/FileMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/FileMenus.cpp'; fi`
+
+menus/audacity-HelpMenus.o: menus/HelpMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-HelpMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-HelpMenus.Tpo -c -o menus/audacity-HelpMenus.o `test -f 'menus/HelpMenus.cpp' || echo '$(srcdir)/'`menus/HelpMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-HelpMenus.Tpo menus/$(DEPDIR)/audacity-HelpMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/HelpMenus.cpp' object='menus/audacity-HelpMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-HelpMenus.o `test -f 'menus/HelpMenus.cpp' || echo '$(srcdir)/'`menus/HelpMenus.cpp
+
+menus/audacity-HelpMenus.obj: menus/HelpMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-HelpMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-HelpMenus.Tpo -c -o menus/audacity-HelpMenus.obj `if test -f 'menus/HelpMenus.cpp'; then $(CYGPATH_W) 'menus/HelpMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/HelpMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-HelpMenus.Tpo menus/$(DEPDIR)/audacity-HelpMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/HelpMenus.cpp' object='menus/audacity-HelpMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-HelpMenus.obj `if test -f 'menus/HelpMenus.cpp'; then $(CYGPATH_W) 'menus/HelpMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/HelpMenus.cpp'; fi`
+
+menus/audacity-LabelMenus.o: menus/LabelMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-LabelMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-LabelMenus.Tpo -c -o menus/audacity-LabelMenus.o `test -f 'menus/LabelMenus.cpp' || echo '$(srcdir)/'`menus/LabelMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-LabelMenus.Tpo menus/$(DEPDIR)/audacity-LabelMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/LabelMenus.cpp' object='menus/audacity-LabelMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-LabelMenus.o `test -f 'menus/LabelMenus.cpp' || echo '$(srcdir)/'`menus/LabelMenus.cpp
+
+menus/audacity-LabelMenus.obj: menus/LabelMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-LabelMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-LabelMenus.Tpo -c -o menus/audacity-LabelMenus.obj `if test -f 'menus/LabelMenus.cpp'; then $(CYGPATH_W) 'menus/LabelMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/LabelMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-LabelMenus.Tpo menus/$(DEPDIR)/audacity-LabelMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/LabelMenus.cpp' object='menus/audacity-LabelMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-LabelMenus.obj `if test -f 'menus/LabelMenus.cpp'; then $(CYGPATH_W) 'menus/LabelMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/LabelMenus.cpp'; fi`
+
+menus/audacity-NavigationMenus.o: menus/NavigationMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-NavigationMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-NavigationMenus.Tpo -c -o menus/audacity-NavigationMenus.o `test -f 'menus/NavigationMenus.cpp' || echo '$(srcdir)/'`menus/NavigationMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-NavigationMenus.Tpo menus/$(DEPDIR)/audacity-NavigationMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/NavigationMenus.cpp' object='menus/audacity-NavigationMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-NavigationMenus.o `test -f 'menus/NavigationMenus.cpp' || echo '$(srcdir)/'`menus/NavigationMenus.cpp
+
+menus/audacity-NavigationMenus.obj: menus/NavigationMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-NavigationMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-NavigationMenus.Tpo -c -o menus/audacity-NavigationMenus.obj `if test -f 'menus/NavigationMenus.cpp'; then $(CYGPATH_W) 'menus/NavigationMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/NavigationMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-NavigationMenus.Tpo menus/$(DEPDIR)/audacity-NavigationMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/NavigationMenus.cpp' object='menus/audacity-NavigationMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-NavigationMenus.obj `if test -f 'menus/NavigationMenus.cpp'; then $(CYGPATH_W) 'menus/NavigationMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/NavigationMenus.cpp'; fi`
+
+menus/audacity-PluginMenus.o: menus/PluginMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-PluginMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-PluginMenus.Tpo -c -o menus/audacity-PluginMenus.o `test -f 'menus/PluginMenus.cpp' || echo '$(srcdir)/'`menus/PluginMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-PluginMenus.Tpo menus/$(DEPDIR)/audacity-PluginMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/PluginMenus.cpp' object='menus/audacity-PluginMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-PluginMenus.o `test -f 'menus/PluginMenus.cpp' || echo '$(srcdir)/'`menus/PluginMenus.cpp
+
+menus/audacity-PluginMenus.obj: menus/PluginMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-PluginMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-PluginMenus.Tpo -c -o menus/audacity-PluginMenus.obj `if test -f 'menus/PluginMenus.cpp'; then $(CYGPATH_W) 'menus/PluginMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/PluginMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-PluginMenus.Tpo menus/$(DEPDIR)/audacity-PluginMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/PluginMenus.cpp' object='menus/audacity-PluginMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-PluginMenus.obj `if test -f 'menus/PluginMenus.cpp'; then $(CYGPATH_W) 'menus/PluginMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/PluginMenus.cpp'; fi`
+
+menus/audacity-SelectMenus.o: menus/SelectMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-SelectMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-SelectMenus.Tpo -c -o menus/audacity-SelectMenus.o `test -f 'menus/SelectMenus.cpp' || echo '$(srcdir)/'`menus/SelectMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-SelectMenus.Tpo menus/$(DEPDIR)/audacity-SelectMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/SelectMenus.cpp' object='menus/audacity-SelectMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-SelectMenus.o `test -f 'menus/SelectMenus.cpp' || echo '$(srcdir)/'`menus/SelectMenus.cpp
+
+menus/audacity-SelectMenus.obj: menus/SelectMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-SelectMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-SelectMenus.Tpo -c -o menus/audacity-SelectMenus.obj `if test -f 'menus/SelectMenus.cpp'; then $(CYGPATH_W) 'menus/SelectMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/SelectMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-SelectMenus.Tpo menus/$(DEPDIR)/audacity-SelectMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/SelectMenus.cpp' object='menus/audacity-SelectMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-SelectMenus.obj `if test -f 'menus/SelectMenus.cpp'; then $(CYGPATH_W) 'menus/SelectMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/SelectMenus.cpp'; fi`
+
+menus/audacity-ToolbarMenus.o: menus/ToolbarMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ToolbarMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-ToolbarMenus.Tpo -c -o menus/audacity-ToolbarMenus.o `test -f 'menus/ToolbarMenus.cpp' || echo '$(srcdir)/'`menus/ToolbarMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ToolbarMenus.Tpo menus/$(DEPDIR)/audacity-ToolbarMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ToolbarMenus.cpp' object='menus/audacity-ToolbarMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ToolbarMenus.o `test -f 'menus/ToolbarMenus.cpp' || echo '$(srcdir)/'`menus/ToolbarMenus.cpp
+
+menus/audacity-ToolbarMenus.obj: menus/ToolbarMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ToolbarMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-ToolbarMenus.Tpo -c -o menus/audacity-ToolbarMenus.obj `if test -f 'menus/ToolbarMenus.cpp'; then $(CYGPATH_W) 'menus/ToolbarMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ToolbarMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ToolbarMenus.Tpo menus/$(DEPDIR)/audacity-ToolbarMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ToolbarMenus.cpp' object='menus/audacity-ToolbarMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ToolbarMenus.obj `if test -f 'menus/ToolbarMenus.cpp'; then $(CYGPATH_W) 'menus/ToolbarMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ToolbarMenus.cpp'; fi`
+
+menus/audacity-TrackMenus.o: menus/TrackMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-TrackMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-TrackMenus.Tpo -c -o menus/audacity-TrackMenus.o `test -f 'menus/TrackMenus.cpp' || echo '$(srcdir)/'`menus/TrackMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-TrackMenus.Tpo menus/$(DEPDIR)/audacity-TrackMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/TrackMenus.cpp' object='menus/audacity-TrackMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-TrackMenus.o `test -f 'menus/TrackMenus.cpp' || echo '$(srcdir)/'`menus/TrackMenus.cpp
+
+menus/audacity-TrackMenus.obj: menus/TrackMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-TrackMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-TrackMenus.Tpo -c -o menus/audacity-TrackMenus.obj `if test -f 'menus/TrackMenus.cpp'; then $(CYGPATH_W) 'menus/TrackMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/TrackMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-TrackMenus.Tpo menus/$(DEPDIR)/audacity-TrackMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/TrackMenus.cpp' object='menus/audacity-TrackMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-TrackMenus.obj `if test -f 'menus/TrackMenus.cpp'; then $(CYGPATH_W) 'menus/TrackMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/TrackMenus.cpp'; fi`
+
+menus/audacity-TransportMenus.o: menus/TransportMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-TransportMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-TransportMenus.Tpo -c -o menus/audacity-TransportMenus.o `test -f 'menus/TransportMenus.cpp' || echo '$(srcdir)/'`menus/TransportMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-TransportMenus.Tpo menus/$(DEPDIR)/audacity-TransportMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/TransportMenus.cpp' object='menus/audacity-TransportMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-TransportMenus.o `test -f 'menus/TransportMenus.cpp' || echo '$(srcdir)/'`menus/TransportMenus.cpp
+
+menus/audacity-TransportMenus.obj: menus/TransportMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-TransportMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-TransportMenus.Tpo -c -o menus/audacity-TransportMenus.obj `if test -f 'menus/TransportMenus.cpp'; then $(CYGPATH_W) 'menus/TransportMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/TransportMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-TransportMenus.Tpo menus/$(DEPDIR)/audacity-TransportMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/TransportMenus.cpp' object='menus/audacity-TransportMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-TransportMenus.obj `if test -f 'menus/TransportMenus.cpp'; then $(CYGPATH_W) 'menus/TransportMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/TransportMenus.cpp'; fi`
+
+menus/audacity-ViewMenus.o: menus/ViewMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ViewMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-ViewMenus.Tpo -c -o menus/audacity-ViewMenus.o `test -f 'menus/ViewMenus.cpp' || echo '$(srcdir)/'`menus/ViewMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ViewMenus.Tpo menus/$(DEPDIR)/audacity-ViewMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ViewMenus.cpp' object='menus/audacity-ViewMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ViewMenus.o `test -f 'menus/ViewMenus.cpp' || echo '$(srcdir)/'`menus/ViewMenus.cpp
+
+menus/audacity-ViewMenus.obj: menus/ViewMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-ViewMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-ViewMenus.Tpo -c -o menus/audacity-ViewMenus.obj `if test -f 'menus/ViewMenus.cpp'; then $(CYGPATH_W) 'menus/ViewMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ViewMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-ViewMenus.Tpo menus/$(DEPDIR)/audacity-ViewMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/ViewMenus.cpp' object='menus/audacity-ViewMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-ViewMenus.obj `if test -f 'menus/ViewMenus.cpp'; then $(CYGPATH_W) 'menus/ViewMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/ViewMenus.cpp'; fi`
+
+menus/audacity-WindowMenus.o: menus/WindowMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-WindowMenus.o -MD -MP -MF menus/$(DEPDIR)/audacity-WindowMenus.Tpo -c -o menus/audacity-WindowMenus.o `test -f 'menus/WindowMenus.cpp' || echo '$(srcdir)/'`menus/WindowMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-WindowMenus.Tpo menus/$(DEPDIR)/audacity-WindowMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/WindowMenus.cpp' object='menus/audacity-WindowMenus.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-WindowMenus.o `test -f 'menus/WindowMenus.cpp' || echo '$(srcdir)/'`menus/WindowMenus.cpp
+
+menus/audacity-WindowMenus.obj: menus/WindowMenus.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT menus/audacity-WindowMenus.obj -MD -MP -MF menus/$(DEPDIR)/audacity-WindowMenus.Tpo -c -o menus/audacity-WindowMenus.obj `if test -f 'menus/WindowMenus.cpp'; then $(CYGPATH_W) 'menus/WindowMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/WindowMenus.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) menus/$(DEPDIR)/audacity-WindowMenus.Tpo menus/$(DEPDIR)/audacity-WindowMenus.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menus/WindowMenus.cpp' object='menus/audacity-WindowMenus.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o menus/audacity-WindowMenus.obj `if test -f 'menus/WindowMenus.cpp'; then $(CYGPATH_W) 'menus/WindowMenus.cpp'; else $(CYGPATH_W) '$(srcdir)/menus/WindowMenus.cpp'; fi`
+
 ondemand/audacity-ODComputeSummaryTask.o: ondemand/ODComputeSummaryTask.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT ondemand/audacity-ODComputeSummaryTask.o -MD -MP -MF ondemand/$(DEPDIR)/audacity-ODComputeSummaryTask.Tpo -c -o ondemand/audacity-ODComputeSummaryTask.o `test -f 'ondemand/ODComputeSummaryTask.cpp' || echo '$(srcdir)/'`ondemand/ODComputeSummaryTask.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) ondemand/$(DEPDIR)/audacity-ODComputeSummaryTask.Tpo ondemand/$(DEPDIR)/audacity-ODComputeSummaryTask.Po
@@ -7634,6 +7906,8 @@ distclean-generic:
 	-rm -f export/$(am__dirstamp)
 	-rm -f import/$(DEPDIR)/$(am__dirstamp)
 	-rm -f import/$(am__dirstamp)
+	-rm -f menus/$(DEPDIR)/$(am__dirstamp)
+	-rm -f menus/$(am__dirstamp)
 	-rm -f ondemand/$(DEPDIR)/$(am__dirstamp)
 	-rm -f ondemand/$(am__dirstamp)
 	-rm -f prefs/$(DEPDIR)/$(am__dirstamp)
@@ -7666,7 +7940,7 @@ clean-am: clean-binPROGRAMS clean-checkLTLIBRARIES clean-generic \
 	clean-libtool mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/labeltrack/ui/$(DEPDIR) tracks/playabletrack/notetrack/ui/$(DEPDIR) tracks/playabletrack/ui/$(DEPDIR) tracks/playabletrack/wavetrack/ui/$(DEPDIR) tracks/timetrack/ui/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) menus/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/labeltrack/ui/$(DEPDIR) tracks/playabletrack/notetrack/ui/$(DEPDIR) tracks/playabletrack/ui/$(DEPDIR) tracks/playabletrack/wavetrack/ui/$(DEPDIR) tracks/timetrack/ui/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -7712,7 +7986,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/labeltrack/ui/$(DEPDIR) tracks/playabletrack/notetrack/ui/$(DEPDIR) tracks/playabletrack/ui/$(DEPDIR) tracks/playabletrack/wavetrack/ui/$(DEPDIR) tracks/timetrack/ui/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) menus/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/labeltrack/ui/$(DEPDIR) tracks/playabletrack/notetrack/ui/$(DEPDIR) tracks/playabletrack/ui/$(DEPDIR) tracks/playabletrack/wavetrack/ui/$(DEPDIR) tracks/timetrack/ui/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

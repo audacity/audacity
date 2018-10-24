@@ -768,8 +768,8 @@ bool Effect::Apply()
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   return GetMenuCommandHandler(project).DoEffect(GetID(), context,
-      MenuCommandHandler::OnEffectFlags::kConfigured);
+   return PluginActions::DoEffect(GetID(), context,
+      PluginActions::kConfigured);
 }
 
 void Effect::Preview()

@@ -98,6 +98,7 @@ scroll information.  It also has some status flags.
 #include "Dependencies.h"
 #include "Diags.h"
 #include "HistoryWindow.h"
+#include "InconsistencyException.h"
 #include "Lyrics.h"
 #include "LyricsWindow.h"
 #include "MixerBoard.h"
@@ -472,7 +473,7 @@ public:
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
             if (Importer::IsMidi(name))
-               MenuCommandHandler::DoImportMIDI(mProject, name);
+               FileActions::DoImportMIDI(mProject, name);
             else
 #endif
                mProject->Import(name);
@@ -888,6 +889,64 @@ static wxString CreateUniqueName()
           wxString::Format(wxT(" N-%i"), ++count);
 }
 
+namespace {
+
+#if 0
+std::mutex sObjectFactoriesMutex;
+struct ObjectFactorySetLocker : private std::unique_lock< std::mutex >
+{
+   ObjectFactorySetLocker()
+      : std::unique_lock< std::mutex > { sObjectFactoriesMutex }
+   {}
+};
+#else
+struct ObjectFactorySetLocker {};
+#endif
+
+std::vector<AudacityProject::AttachedObjectFactory> &sObjectFactories()
+{
+   // Put this declaration inside a function to avoid problems of undefined
+   // sequence of initialization of file-scope statics in different
+   // compilation units.
+   // Note that mutex locking is not needed for constructing a static object
+   // in C++11:
+   //https://en.cppreference.com/w/cpp/language/storage_duration#Static_local_variables
+   static std::vector<AudacityProject::AttachedObjectFactory> factories;
+   return factories;
+}
+}
+
+AudacityProject::
+RegisteredAttachedObjectFactory::RegisteredAttachedObjectFactory(
+   const AttachedObjectFactory &factory )
+{
+   ObjectFactorySetLocker locker;
+   mIndex = sObjectFactories().size();
+   sObjectFactories().push_back( factory );
+   
+   // In case registration happens while projects exist:
+   for (const auto &pProject : gAudacityProjects) {
+      if (pProject->mAttachedObjects.size() == mIndex) {
+         auto pObject = factory();
+         wxASSERT( pObject );
+         pProject->mAttachedObjects.push_back( std::move( pObject ) );
+      }
+   }
+}
+
+AudacityProject::
+AttachedObject &AudacityProject::GetAttachedObject(
+   const RegisteredAttachedObjectFactory &factory )
+{
+   ObjectFactorySetLocker locker;
+   if ( factory.mIndex >= mAttachedObjects.size() )
+      THROW_INCONSISTENCY_EXCEPTION;
+   auto &pObject = mAttachedObjects[ factory.mIndex ];
+   if ( !pObject )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return *pObject;
+}
+
 enum {
    FirstID = 1000,
 
@@ -982,7 +1041,15 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Initialize view info (shared with TrackPanel)
    //
 
-   mMenuCommandHandler = std::make_unique<MenuCommandHandler>();
+   {
+      ObjectFactorySetLocker locker;
+      for (const auto &factory : sObjectFactories()) {
+         auto pObject = factory();
+         wxASSERT( pObject );
+         mAttachedObjects.push_back( std::move( pObject ) );
+      }
+   }
+
    mMenuManager = std::make_unique<MenuManager>();
 
    UpdatePrefs();
@@ -1364,7 +1431,12 @@ void AudacityProject::UpdatePrefs()
 
    SetProjectTitle();
 
-   GetMenuCommandHandler(*this).UpdatePrefs();
+   {
+      ObjectFactorySetLocker locker;
+      for( const auto &pObject : mAttachedObjects )
+         pObject->UpdatePrefs();
+   }
+
    GetMenuManager(*this).UpdatePrefs();
 
    if (mTrackPanel) {
@@ -2337,9 +2409,9 @@ bool MenuManager::TryToMakeActionAllowed
    if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
-   // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
+   // This was 'OnSelectAll'.  Changing it to DoSelectSomething means if
    // selecting all tracks is enough, we just do that.
-   GetMenuCommandHandler(project).OnSelectSomething(project);
+   SelectActions::DoSelectSomething(project);
    flags = GetMenuManager(project).GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
@@ -3052,7 +3124,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 #ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
       // Is it a plug-in?
       if (PluginManager::Get().DropFile(fileName)) {
-         MenuCommandHandler::RebuildAllMenuBars();
+         MenuCreator::RebuildAllMenuBars();
       }
       else
       // No, so import.
@@ -3061,7 +3133,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       {
 #ifdef USE_MIDI
          if (Importer::IsMidi(fileName))
-            MenuCommandHandler::DoImportMIDI(this, fileName);
+            FileActions::DoImportMIDI(this, fileName);
          else
 #endif
             Import(fileName);
@@ -3224,7 +3296,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                mTrackPanel->Refresh(true);
                */
             closed = true;
-            GetMenuCommandHandler(*this).OnClose(*this);
+            SetMenuClose(true);
+            Close();
             return;
          }
          else if (status & FSCKstatus_CHANGED)
@@ -4252,10 +4325,10 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
 #if defined(__WXGTK__)
    // See bug #1224
-   // The track panel hasn't we been fully created, so the OnZoomFit() will not give
+   // The track panel hasn't we been fully created, so the DoZoomFit() will not give
    // expected results due to a window width of zero.  Should be safe to yield here to
    // allow the creattion to complete.  If this becomes a problem, it "might" be possible
-   // to queue a dummy event to trigger the OnZoomFit().
+   // to queue a dummy event to trigger the DoZoomFit().
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
 
@@ -4274,7 +4347,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
 void AudacityProject::ZoomAfterImport(Track *pTrack)
 {
-   GetMenuCommandHandler(*this).OnZoomFit(*this);
+   ViewActions::DoZoomFit(*this);
 
    mTrackPanel->SetFocus();
    RedrawProject();
@@ -4343,10 +4416,10 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       SelectNone();
       SelectAllIfNone();
       const CommandContext context( *this);
-      GetMenuCommandHandler(*this)
-         .DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
+      PluginActions::DoEffect(
+         EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
-         MenuCommandHandler::OnEffectFlags::kConfigured);
+         PluginActions::kConfigured);
    }
 
    // This is a no-fail:
@@ -4647,7 +4720,7 @@ void AudacityProject::PushState(const wxString &desc,
    }
 
    if (GetTracksFitVerticallyZoomed())
-      GetMenuCommandHandler(*this).DoZoomFitV(*this);
+      ViewActions::DoZoomFitV(*this);
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 
@@ -5502,7 +5575,7 @@ You are saving directly to a slow external storage device\n\
       // Reset timer record 
       if (IsTimerRecordCancelled())
       {
-         GetMenuCommandHandler(*this).OnUndo(*this);
+         EditActions::DoUndo( *this );
          ResetTimerRecordCancelled();
       }
 
@@ -5823,8 +5896,8 @@ bool AudacityProject::IsProjectSaved() {
 
 // This is done to empty out the tracks, but without creating a new project.
 void AudacityProject::ResetProjectToEmpty() {
-   GetMenuCommandHandler(*this).OnSelectAll(*this);
-   GetMenuCommandHandler(*this).OnRemoveTracks(*this);
+   SelectActions::DoSelectAll(*this);
+   TrackActions::DoRemoveTracks(*this);
    // A new DirManager.
    mDirManager = std::make_shared<DirManager>();
    mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
@@ -6171,4 +6244,125 @@ ContrastDialog *AudacityProject::GetContrastDialog(bool create)
       } );
 
    return mContrastDialog.get();
+}
+
+double AudacityProject::GetScreenEndTime() const
+{
+   return mTrackPanel->GetScreenEndTime();
+}
+
+void AudacityProject::SelectNone()
+{
+   for (auto t : GetTracks()->Any())
+      t->SetSelected(false);
+
+   mTrackPanel->Refresh(false);
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);
+}
+
+void AudacityProject::ZoomInByFactor( double ZoomFactor )
+{
+   // LLL: Handling positioning differently when audio is
+   // actively playing.  Don't do this if paused.
+   if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) &&
+       !gAudioIO->IsPaused()){
+      ZoomBy(ZoomFactor);
+      mTrackPanel->ScrollIntoView(gAudioIO->GetStreamTime());
+      mTrackPanel->Refresh(false);
+      return;
+   }
+
+   // DMM: Here's my attempt to get logical zooming behavior
+   // when there's a selection that's currently at least
+   // partially on-screen
+
+   const double endTime = GetScreenEndTime();
+   const double duration = endTime - mViewInfo.h;
+
+   bool selectionIsOnscreen =
+      (mViewInfo.selectedRegion.t0() < endTime) &&
+      (mViewInfo.selectedRegion.t1() >= mViewInfo.h);
+
+   bool selectionFillsScreen =
+      (mViewInfo.selectedRegion.t0() < mViewInfo.h) &&
+      (mViewInfo.selectedRegion.t1() > endTime);
+
+   if (selectionIsOnscreen && !selectionFillsScreen) {
+      // Start with the center of the selection
+      double selCenter = (mViewInfo.selectedRegion.t0() +
+                          mViewInfo.selectedRegion.t1()) / 2;
+
+      // If the selection center is off-screen, pick the
+      // center of the part that is on-screen.
+      if (selCenter < mViewInfo.h)
+         selCenter = mViewInfo.h +
+                     (mViewInfo.selectedRegion.t1() - mViewInfo.h) / 2;
+      if (selCenter > endTime)
+         selCenter = endTime -
+            (endTime - mViewInfo.selectedRegion.t0()) / 2;
+
+      // Zoom in
+      ZoomBy(ZoomFactor);
+      const double newDuration = GetScreenEndTime() - mViewInfo.h;
+
+      // Recenter on selCenter
+      TP_ScrollWindow(selCenter - newDuration / 2);
+      return;
+   }
+
+
+   double origLeft = mViewInfo.h;
+   double origWidth = duration;
+   ZoomBy(ZoomFactor);
+
+   const double newDuration = GetScreenEndTime() - mViewInfo.h;
+   double newh = origLeft + (origWidth - newDuration) / 2;
+
+   // MM: Commented this out because it was confusing users
+   /*
+   // make sure that the *right-hand* end of the selection is
+   // no further *left* than 1/3 of the way across the screen
+   if (mViewInfo.selectedRegion.t1() < newh + mViewInfo.screen / 3)
+      newh = mViewInfo.selectedRegion.t1() - mViewInfo.screen / 3;
+
+   // make sure that the *left-hand* end of the selection is
+   // no further *right* than 2/3 of the way across the screen
+   if (mViewInfo.selectedRegion.t0() > newh + mViewInfo.screen * 2 / 3)
+      newh = mViewInfo.selectedRegion.t0() - mViewInfo.screen * 2 / 3;
+   */
+
+   TP_ScrollWindow(newh);
+}
+
+void AudacityProject::ZoomOutByFactor( double ZoomFactor )
+{
+   //Zoom() may change these, so record original values:
+   const double origLeft = mViewInfo.h;
+   const double origWidth = GetScreenEndTime() - origLeft;
+
+   ZoomBy(ZoomFactor);
+   const double newWidth = GetScreenEndTime() - mViewInfo.h;
+
+   const double newh = origLeft + (origWidth - newWidth) / 2;
+   // newh = (newh > 0) ? newh : 0;
+   TP_ScrollWindow(newh);
+}
+
+// Select the full time range, if no
+// time range is selected.
+void AudacityProject::SelectAllIfNone()
+{
+   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
+   if(!(flags & TracksSelectedFlag) ||
+      (mViewInfo.selectedRegion.isPoint()))
+      SelectActions::DoSelectSomething(*this);
+}
+
+// Stop playing or recording, if paused.
+void AudacityProject::StopIfPaused()
+{
+   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
+   if( flags & PausedFlag )
+      TransportActions::DoStop(*this);
 }

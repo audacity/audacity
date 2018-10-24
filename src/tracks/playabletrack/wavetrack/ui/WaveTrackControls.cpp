@@ -798,7 +798,7 @@ void WaveTrackMenuTable::OnSpectrogramSettings(wxCommandEvent &)
       //Bug 1725 Toolbar was left greyed out.
       //This solution is overkill, but does fix the problem and is what the
       //prefs dialog normally does.
-      MenuCommandHandler::RebuildAllMenuBars();
+      MenuCreator::RebuildAllMenuBars();
       mpData->result = RefreshCode::RefreshAll;
    }
 }

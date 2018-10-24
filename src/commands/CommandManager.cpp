@@ -1536,7 +1536,7 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
       factories.push_back(&keyConfigPrefsFactory);
       GlobalPrefsDialog dialog(GetActiveProject(), factories);
       dialog.ShowModal();
-      MenuCommandHandler::RebuildAllMenuBars();
+      MenuCreator::RebuildAllMenuBars();
       return true;
    }
 #endif
@@ -1587,7 +1587,9 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandCon
    {
       if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str, false))
       {
-         return GetMenuCommandHandler(*proj).DoEffect(plug->GetID(), context, MenuCommandHandler::OnEffectFlags::kConfigured);
+         return PluginActions::DoEffect(
+            plug->GetID(), context,
+            PluginActions::kConfigured);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }

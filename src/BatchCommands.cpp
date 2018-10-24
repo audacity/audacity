@@ -720,18 +720,18 @@ bool MacroCommands::ApplyEffectCommand(
    {
       if( plug->GetPluginType() == PluginTypeAudacityCommand )
          // and apply the effect...
-         res = GetMenuCommandHandler(*project).DoAudacityCommand(ID,
+         res = PluginActions::DoAudacityCommand(ID,
             Context,
-            MenuCommandHandler::OnEffectFlags::kConfigured |
-            MenuCommandHandler::OnEffectFlags::kSkipState |
-            MenuCommandHandler::OnEffectFlags::kDontRepeatLast);
+            PluginActions::kConfigured |
+            PluginActions::kSkipState |
+            PluginActions::kDontRepeatLast);
       else
          // and apply the effect...
-         res = GetMenuCommandHandler(*project).DoEffect(ID, 
+         res = PluginActions::DoEffect(ID,
             Context,
-            MenuCommandHandler::OnEffectFlags::kConfigured |
-            MenuCommandHandler::OnEffectFlags::kSkipState |
-            MenuCommandHandler::OnEffectFlags::kDontRepeatLast);
+            PluginActions::kConfigured |
+            PluginActions::kSkipState |
+            PluginActions::kDontRepeatLast);
    }
 
    return res;

@@ -101,7 +101,7 @@ UIHandle::Result TrackSelectHandle::Click
       CalculateRearrangingThresholds(event);
    }
 
-   GetMenuCommandHandler(*pProject).HandleListSelection(*pProject,
+   SelectActions::DoListSelection(*pProject,
       pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 
    mClicked = true;

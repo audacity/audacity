@@ -115,6 +115,12 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    friend class LabelStruct;
 
  public:
+   static void DoEditLabels(
+      AudacityProject &project, LabelTrack *lt = nullptr, int index = -1);
+   static int DialogForLabelName(
+      AudacityProject &project, const SelectedRegion& region,
+      const wxString& initialValue, wxString& value);
+
    bool IsGoodLabelFirstKey(const wxKeyEvent & evt);
    bool IsGoodLabelEditKey(const wxKeyEvent & evt);
    bool IsTextSelected();

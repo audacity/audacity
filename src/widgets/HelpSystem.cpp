@@ -529,8 +529,7 @@ void QuickFixDialog::OnFix(wxCommandEvent &event)
       // This is overkill (aka slow), as all preferences are reloaded and all 
       // toolbars recreated.
       // Overkill probably doesn't matter, as this command is infrequently used.
-      CommandContext context( project );
-      GetMenuCommandHandler(project).OnReloadPreferences( context );
+      EditActions::DoReloadPreferences( project );
    }
    
    // Change the label after doing the fix, as the fix may take a second or two.
