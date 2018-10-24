@@ -497,8 +497,7 @@ void CellularPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
    }
 
    if(event.GetWheelAxis() == wxMOUSE_WHEEL_HORIZONTAL) {
-      // Two-fingered horizontal swipe on mac is treated like shift-mousewheel
-      event.SetShiftDown(true);
+      tpmEvent.horizontal = true;
       // This makes the wave move in the same direction as the fingers, and the scrollbar
       // thumb moves oppositely
       steps *= -1;

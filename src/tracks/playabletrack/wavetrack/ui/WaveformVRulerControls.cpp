@@ -63,7 +63,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;
 
-   if (!(event.ShiftDown() || event.CmdDown()))
+   if (evt.horizontal || !(event.ShiftDown() || event.CmdDown()))
       return RefreshNone;
 
    // Always stop propagation even if the ruler didn't change.  The ruler

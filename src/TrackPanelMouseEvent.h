@@ -52,6 +52,7 @@ struct TrackPanelMouseEvent
       , whole{ whole_ }
       , pCell{ pCell_ }
       , steps{ 0 }
+      , horizontal{ false }
    {
    }
 
@@ -60,6 +61,7 @@ struct TrackPanelMouseEvent
    const wxSize &whole;
    std::shared_ptr<TrackPanelCell> pCell; // may be NULL
    double steps;  // for mouse wheel rotation
+   bool horizontal;  // true for horizontal mouse wheel motion
 };
 
 #endif

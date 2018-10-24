@@ -380,7 +380,7 @@ unsigned operator()
    auto &window = ProjectWindow::Get( *pProject );
    const auto steps = evt.steps;
 
-   if (event.ShiftDown()
+   if ((event.ShiftDown() || evt.horizontal)
        // Don't pan during smooth scrolling.  That would conflict with keeping
        // the play indicator centered.
        && !scrubber.IsScrollScrubbing()
