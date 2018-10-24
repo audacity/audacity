@@ -16,6 +16,7 @@
 #include <vector>
 #include <wx/event.h>
 #include "SelectedRegion.h"
+#include "commands/CommandFunctors.h"
 
 class AudacityProject;
 class CommandContext;
@@ -34,7 +35,17 @@ enum EffectType : int;
 typedef wxString PluginID;
 typedef wxArrayString PluginIDList;
 
-struct MenuCommandHandler : public wxEvtHandler {
+class PrefsListener
+{
+public:
+   virtual ~PrefsListener();
+   virtual void UpdatePrefs(); // default is no-op
+};
+
+struct MenuCommandHandler final
+   : public CommandHandlerObject // MUST be the first base class!
+   , public PrefsListener
+{
    MenuCommandHandler();
    ~MenuCommandHandler();
 
@@ -42,9 +53,6 @@ struct MenuCommandHandler : public wxEvtHandler {
 int DoAddLabel(
    AudacityProject &project,
    const SelectedRegion& region, bool preserveFocus = false);
-static int DialogForLabelName(
-   AudacityProject &project,
-   const SelectedRegion& region, const wxString& initialValue, wxString& value);
 
 double NearestZeroCrossing(AudacityProject &project, double t0);
 
@@ -481,8 +489,6 @@ void OnMoveSelectionWithTracks(const CommandContext &context );
 void OnSyncLock(const CommandContext &context );
 void OnAddLabel(const CommandContext &context );
 void OnAddLabelPlaying(const CommandContext &context );
-void DoEditLabels(AudacityProject &project,
-   LabelTrack *lt = nullptr, int index = -1);
 void OnEditLabels(const CommandContext &context );
 void OnToggleTypeToCreateLabel(const CommandContext &context );
 
@@ -594,7 +600,7 @@ public:
    bool mCircularTrackNavigation{};
    wxLongLong mLastSelectionAdjustment;
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
 };
 
 class MenuCreator

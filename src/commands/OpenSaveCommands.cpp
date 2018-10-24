@@ -47,7 +47,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    if(mFileName.IsEmpty())
    {
       auto project = context.GetProject();
-      GetMenuCommandHandler(*project).OnOpen(*project);
+      AudacityProject::OpenFiles(project);
    }
    else
    {

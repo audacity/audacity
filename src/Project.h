@@ -172,6 +172,8 @@ class WaveTrack;
 struct MenuCommandHandler;
 class MenuManager;
 
+class PrefsListener;
+
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
@@ -183,6 +185,24 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
+
+   using AttachedObject = PrefsListener;
+   using AttachedObjectFactory =
+      std::function< std::unique_ptr<AttachedObject>() >;
+
+   // Typically a static object.  Allows various application code to
+   // attach per-project state, without Project.cpp needing to include a header
+   // file or know the details.
+   class RegisteredAttachedObjectFactory {
+   public:
+      RegisteredAttachedObjectFactory( const AttachedObjectFactory &factory );
+
+   private:
+      friend AudacityProject;
+      size_t mIndex {};
+   };
+   AttachedObject &
+      GetAttachedObject( const RegisteredAttachedObjectFactory& factory );
 
    virtual void ApplyUpdatedTheme();
 
@@ -807,7 +827,7 @@ private:
 #endif
 
 private:
-   std::unique_ptr<MenuCommandHandler> mMenuCommandHandler;
+   std::vector< std::unique_ptr<AttachedObject> > mAttachedObjects;
    std::unique_ptr<MenuManager> mMenuManager;
 
 public:
