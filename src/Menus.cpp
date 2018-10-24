@@ -9437,14 +9437,18 @@ void MenuCommandHandler::OnRescanDevices(const CommandContext &WXUNUSED(context)
 }
 
 int MenuCommandHandler::DialogForLabelName(
-   AudacityProject &project, const wxString& initialValue, wxString& value)
+   AudacityProject &project,
+   const SelectedRegion& region, const wxString& initialValue, wxString& value)
 {
    auto trackPanel = project.GetTrackPanel();
    auto &viewInfo = project.GetViewInfo();
 
    wxPoint position = trackPanel->FindTrackRect(trackPanel->GetFocusedTrack(), false).GetBottomLeft();
-   // the start of the text in the text box will be roughly in line with Audacity's edit cursor 
-   position.x += trackPanel->GetLabelWidth() + viewInfo.TimeToPosition(viewInfo.selectedRegion.t0()) - 40;
+   // The start of the text in the text box will be roughly in line with the label's position
+   // if it's a point label, or the start of its region if it's a region label.
+   position.x += trackPanel->GetLabelWidth()
+      + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
+      -40;
    position.y += 2;  // just below the bottom of the track
    position = trackPanel->ClientToScreen(position);
    AudacityTextEntryDialog dialog{ &project,
@@ -9615,7 +9619,7 @@ int MenuCommandHandler::DoAddLabel(
    bool useDialog;
    gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
    if (useDialog) {
-      if (DialogForLabelName(project, wxEmptyString, title) == wxID_CANCEL)
+      if (DialogForLabelName(project, region, wxEmptyString, title) == wxID_CANCEL)
          return -1;     // index
    }
 

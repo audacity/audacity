@@ -2102,7 +2102,7 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       gPrefs->Read(wxT("/Gui/DialogForNameNewLabel"), &useDialog, false);
       if (useDialog) {
          wxString title;
-         if (MenuCommandHandler::DialogForLabelName(*p, charCode, title) ==
+         if (MenuCommandHandler::DialogForLabelName(*p, p->mViewInfo.selectedRegion, charCode, title) ==
              wxID_CANCEL) {
             return false;
          }

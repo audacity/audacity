@@ -43,7 +43,8 @@ int DoAddLabel(
    AudacityProject &project,
    const SelectedRegion& region, bool preserveFocus = false);
 static int DialogForLabelName(
-   AudacityProject &project, const wxString& initialValue, wxString& value);
+   AudacityProject &project,
+   const SelectedRegion& region, const wxString& initialValue, wxString& value);
 
 double NearestZeroCrossing(AudacityProject &project, double t0);
 
