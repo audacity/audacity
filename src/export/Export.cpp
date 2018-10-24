@@ -30,7 +30,6 @@
 
 #include "../Audacity.h"
 #include "Export.h"
-#include "Menus.h"
 
 #include <wx/file.h>
 #include <wx/filename.h>
