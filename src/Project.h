@@ -169,7 +169,6 @@ class WaveTrack;
 #include "./commands/CommandFlag.h"
 #include "../include/audacity/EffectInterface.h"
 
-struct MenuCommandHandler;
 class MenuManager;
 
 class PrefsListener;
@@ -830,7 +829,6 @@ private:
    std::unique_ptr<MenuManager> mMenuManager;
 
 public:
-   friend MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
    friend MenuManager &GetMenuManager(AudacityProject &project);
 
    class PlaybackScroller final : public wxEvtHandler

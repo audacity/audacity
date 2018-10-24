@@ -11,17 +11,7 @@
 *******************************************************************//**
 
 \file Menus.cpp
-\brief Functions that provide most of the menu actions.
-
-  This file implements the method that creates the menu bar, plus
-  most of the methods that get called when you select an item
-  from a menu.
-
-*//****************************************************************//**
-
-\class MenuCommandHandler
-\brief MenuCommandHandler contains many command handlers for individual 
-menu items.
+\brief Functions for building toobar menus and enabling and disabling items
 
 *//****************************************************************//**
 
@@ -37,75 +27,25 @@ menu items.
 
 #include "Audacity.h"
 #include "Menus.h"
-#include "commands/CommandManager.h"
-#include "commands/CommandContext.h"
-
-#include <cfloat>
-#include <iterator>
-#include <algorithm>
-#include <limits>
-#include <math.h>
-
-
-#include <wx/defs.h>
-#include <wx/docview.h>
-#include <wx/filedlg.h>
-#include <wx/textfile.h>
-#include <wx/textdlg.h>
-#include <wx/progdlg.h>
-#include <wx/scrolbar.h>
-#include <wx/ffile.h>
-#include <wx/statusbr.h>
-#include <wx/utils.h>
-
-#include "TrackPanel.h"
-#include "widgets/Ruler.h"
-
-#include "effects/EffectManager.h"
 
 #include "AudacityApp.h"
 #include "AudioIO.h"
-#include "float_cast.h"
 #include "LabelTrack.h"
-#include "import/ImportRaw.h"
-#include "prefs/PrefsDialog.h"
-#include "prefs/PlaybackPrefs.h"
 #include "LyricsWindow.h"
-#include "MixerBoard.h"
-#include "Project.h"
-#include "Internat.h"
-#include "FileFormats.h"
 #include "ModuleManager.h"
-#include "Prefs.h"
 #ifdef USE_MIDI
 #include "NoteTrack.h"
 #endif // USE_MIDI
-#include "ondemand/ODManager.h"
-
-#include "prefs/BatchPrefs.h"
-
-#include "toolbars/ToolManager.h"
-#include "toolbars/ControlToolBar.h"
-#include "toolbars/EditToolBar.h"
-
-#include "tracks/ui/SelectHandle.h"
-
-#include "widgets/LinkingHtmlWindow.h"
-
-#include "Experimental.h"
-#include "PlatformCompatibility.h"
-
+#include "Prefs.h"
+#include "Project.h"
+#include "TrackPanel.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
-
+#include "commands/CommandManager.h"
 #include "prefs/TracksPrefs.h"
-
-#include "widgets/ErrorDialog.h"
-#include "./commands/AudacityCommand.h"
-
-static const AudacityProject::RegisteredAttachedObjectFactory factory{ []{
-   return std::make_unique< MenuCommandHandler >();
-} };
+#include "toolbars/ControlToolBar.h"
+#include "toolbars/ToolManager.h"
+#include "widgets/Ruler.h"
 
 PrefsListener::~PrefsListener()
 {
@@ -115,31 +55,14 @@ void PrefsListener::UpdatePrefs()
 {
 }
 
-MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project)
-{
-   return static_cast<MenuCommandHandler&>(
-      project.GetAttachedObject( factory ) );
-}
-
 MenuManager &GetMenuManager(AudacityProject &project)
 { return *project.mMenuManager; }
 
-MenuCommandHandler::MenuCommandHandler()
+MenuCreator::MenuCreator()
 {
-}
-
-MenuCommandHandler::~MenuCommandHandler()
-{
-}
-
-MenuCreator::MenuCreator(){
 }
 
 MenuCreator::~MenuCreator()
-{
-}
-
-void MenuCommandHandler::UpdatePrefs()
 {
 }
 
@@ -311,14 +234,6 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
 /// changes in configured preferences - for example changes in key-bindings
 /// affect the short-cut key legend that appears beside each command,
 
-// To supply the "finder" argument in AddItem calls
-static CommandHandlerObject &findMenuCommandHandler(AudacityProject &project)
-{ return GetMenuCommandHandler( project ); }
-
-#define FN(X) findMenuCommandHandler, \
-   static_cast<CommandFunctorPointer>(& MenuCommandHandler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
-
 MenuTable::BaseItemPtr FileMenu( AudacityProject& );
 
 MenuTable::BaseItemPtr EditMenu( AudacityProject& );
@@ -381,9 +296,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 //   c->CheckDups();
 #endif
 }
-
-#undef XXO
-#undef FN
 
 // TODO: This surely belongs in CommandManager?
 void MenuManager::ModifyUndoMenuItems(AudacityProject &project)

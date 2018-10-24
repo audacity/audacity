@@ -12,11 +12,7 @@
 
 #include "Experimental.h"
 
-#include <memory>
-#include <vector>
-#include <wx/event.h>
-#include "SelectedRegion.h"
-#include "commands/CommandFunctors.h"
+#include <wx/arrstr.h>
 
 class AudacityProject;
 class CommandContext;
@@ -40,16 +36,6 @@ class PrefsListener
 public:
    virtual ~PrefsListener();
    virtual void UpdatePrefs(); // default is no-op
-};
-
-struct MenuCommandHandler final
-   : public CommandHandlerObject // MUST be the first base class!
-   , public PrefsListener
-{
-   MenuCommandHandler();
-   ~MenuCommandHandler();
-
-   void UpdatePrefs() override;
 };
 
 class MenuCreator
@@ -83,16 +69,18 @@ public:
 
    // If checkActive, do not do complete flags testing on an
    // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags(AudacityProject &project, bool checkActive = false);
+   CommandFlag GetUpdateFlags(
+      AudacityProject &project, bool checkActive = false);
    void UpdatePrefs();
 
    // Command Handling
-   bool ReportIfActionNotAllowed
-      ( AudacityProject &project,
-        const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
-   bool TryToMakeActionAllowed
-      ( AudacityProject &project,
-        CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+   bool ReportIfActionNotAllowed(
+      AudacityProject &project,
+      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd,
+      CommandFlag mask );
+   bool TryToMakeActionAllowed(
+      AudacityProject &project,
+      CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
 
 private:
@@ -104,10 +92,10 @@ private:
 };
 
 
-MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
 MenuManager &GetMenuManager(AudacityProject &project);
 
 // Exported helper functions from various menu handling source files
+
 namespace FileActions {
 AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName );
