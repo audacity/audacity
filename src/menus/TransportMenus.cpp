@@ -1087,11 +1087,9 @@ MenuTable::BaseItemPtr TransportMenu( AudacityProject &project )
          // JKC: I decided to duplicate this between play and record,
          // rather than put it at the top level.
          // CommandManger::AddItem can now cope with simple duplicated items.
-         // PRL:  This second registration of wxT("Pause") and XXO("&Pause")
-         // in fact will ignore the given flags and use the same flags as in
-         // the previous registration.
-         Command( wxT("Pause"), XXO("&Pause"), FN(OnPause), CanStopFlags,
-            wxT("P") )
+         // PRL:  caution, this is a duplicated command name!
+         Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
+            CanStopAudioStreamFlag, wxT("P") )
       ),
 
       // Scrubbing sub-menu
