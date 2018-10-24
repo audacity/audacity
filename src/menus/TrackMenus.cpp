@@ -427,6 +427,84 @@ long mixer_process(void *mixer, float **buffer, long n)
 
 #endif // EXPERIMENTAL_SCOREALIGN
 
+//sort based on flags.  see Project.h for sort flags
+void DoSortTracks( AudacityProject &project, int flags )
+{
+   auto GetTime = [](const Track *t) {
+      return t->TypeSwitch< double >(
+         [&](const WaveTrack* w) {
+            auto stime = w->GetEndTime();
+
+            int ndx;
+            for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
+               const auto c = w->GetClipByIndex(ndx);
+               if (c->GetNumSamples() == 0)
+                  continue;
+               stime = std::min(stime, c->GetStartTime());
+            }
+            return stime;
+         },
+         [&](const LabelTrack* l) {
+            return l->GetStartTime();
+         }
+      );
+   };
+
+   size_t ndx = 0;
+   // This one place outside of TrackList where we must use undisguised
+   // std::list iterators!  Avoid this elsewhere!
+   std::vector<TrackNodePointer> arr;
+   auto pTracks = project.GetTracks();
+   arr.reserve(pTracks->size());
+
+   // First find the permutation.
+   // This routine, very unusually, deals with the underlying stl list
+   // iterators, not with TrackIter!  Dangerous!
+   for (auto iter = pTracks->ListOfTracks::begin(),
+        end = pTracks->ListOfTracks::end(); iter != end; ++iter) {
+      const auto &track = *iter;
+      if ( !track->IsLeader() )
+         // keep channels contiguous
+         ndx++;
+      else {
+         auto size = arr.size();
+         for (ndx = 0; ndx < size;) {
+            Track &arrTrack = **arr[ndx].first;
+            auto channels = TrackList::Channels(&arrTrack);
+            if(flags & kAudacitySortByName) {
+               //do case insensitive sort - cmpNoCase returns less than zero if
+               // the string is 'less than' its argument
+               //also if we have case insensitive equality, then we need to sort
+               // by case as well
+               //We sort 'b' before 'B' accordingly.  We uncharacteristically
+               // use greater than for the case sensitive
+               //compare because 'b' is greater than 'B' in ascii.
+               auto cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
+               if ( cmpValue < 0 ||
+                     ( 0 == cmpValue &&
+                        track->GetName().CompareTo(arrTrack.GetName()) > 0 ) )
+                  break;
+            }
+            //sort by time otherwise
+            else if(flags & kAudacitySortByTime) {
+               auto time1 = TrackList::Channels(track.get()).min( GetTime );
+
+               //get candidate's (from sorted array) time
+               auto time2 = channels.min( GetTime );
+
+               if (time1 < time2)
+                  break;
+            }
+            ndx += channels.size();
+         }
+      }
+      arr.insert(arr.begin() + ndx, TrackNodePointer{iter, pTracks});
+   }
+
+   // Now apply the permutation
+   pTracks->Permute(arr);
+}
+
 }
 
 namespace TrackActions {
@@ -638,7 +716,7 @@ void OnStereoToMono(const CommandContext &context)
    PluginActions::DoEffect(
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
       context,
-      MenuCommandHandler::OnEffectFlags::kConfigured);
+      PluginActions::kConfigured);
 }
 
 void OnMixAndRender(const CommandContext &context)
@@ -989,7 +1067,7 @@ void OnScoreAlign(const CommandContext &context)
 void OnSortTime(const CommandContext &context)
 {
    auto &project = context.project;
-   project.SortTracks(kAudacitySortByTime);
+   DoSortTracks(project, kAudacitySortByTime);
 
    project.PushState(_("Tracks sorted by time"), _("Sort by Time"));
 
@@ -1000,7 +1078,7 @@ void OnSortTime(const CommandContext &context)
 void OnSortName(const CommandContext &context)
 {
    auto &project = context.project;
-   project.SortTracks(kAudacitySortByName);
+   DoSortTracks(project, kAudacitySortByName);
 
    project.PushState(_("Tracks sorted by name"), _("Sort by Name"));
 

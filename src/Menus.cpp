@@ -11,17 +11,7 @@
 *******************************************************************//**
 
 \file Menus.cpp
-\brief Functions that provide most of the menu actions.
-
-  This file implements the method that creates the menu bar, plus
-  most of the methods that get called when you select an item
-  from a menu.
-
-*//****************************************************************//**
-
-\class MenuCommandHandler
-\brief MenuCommandHandler contains many command handlers for individual 
-menu items.
+\brief Functions for building toobar menus and enabling and disabling items
 
 *//****************************************************************//**
 
@@ -37,75 +27,25 @@ menu items.
 
 #include "Audacity.h"
 #include "Menus.h"
-#include "commands/CommandManager.h"
-#include "commands/CommandContext.h"
-
-#include <cfloat>
-#include <iterator>
-#include <algorithm>
-#include <limits>
-#include <math.h>
-
-
-#include <wx/defs.h>
-#include <wx/docview.h>
-#include <wx/filedlg.h>
-#include <wx/textfile.h>
-#include <wx/textdlg.h>
-#include <wx/progdlg.h>
-#include <wx/scrolbar.h>
-#include <wx/ffile.h>
-#include <wx/statusbr.h>
-#include <wx/utils.h>
-
-#include "TrackPanel.h"
-#include "widgets/Ruler.h"
-
-#include "effects/EffectManager.h"
 
 #include "AudacityApp.h"
 #include "AudioIO.h"
-#include "float_cast.h"
 #include "LabelTrack.h"
-#include "import/ImportRaw.h"
-#include "prefs/PrefsDialog.h"
-#include "prefs/PlaybackPrefs.h"
 #include "LyricsWindow.h"
-#include "MixerBoard.h"
-#include "Project.h"
-#include "Internat.h"
-#include "FileFormats.h"
 #include "ModuleManager.h"
-#include "Prefs.h"
 #ifdef USE_MIDI
 #include "NoteTrack.h"
 #endif // USE_MIDI
-#include "ondemand/ODManager.h"
-
-#include "prefs/BatchPrefs.h"
-
-#include "toolbars/ToolManager.h"
-#include "toolbars/ControlToolBar.h"
-#include "toolbars/EditToolBar.h"
-
-#include "tracks/ui/SelectHandle.h"
-
-#include "widgets/LinkingHtmlWindow.h"
-
-#include "Experimental.h"
-#include "PlatformCompatibility.h"
-
+#include "Prefs.h"
+#include "Project.h"
+#include "TrackPanel.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
-
+#include "commands/CommandManager.h"
 #include "prefs/TracksPrefs.h"
-
-#include "widgets/ErrorDialog.h"
-#include "./commands/AudacityCommand.h"
-
-static const AudacityProject::RegisteredAttachedObjectFactory factory{ []{
-   return std::make_unique< MenuCommandHandler >();
-} };
+#include "toolbars/ControlToolBar.h"
+#include "toolbars/ToolManager.h"
+#include "widgets/Ruler.h"
 
 PrefsListener::~PrefsListener()
 {
@@ -115,31 +55,14 @@ void PrefsListener::UpdatePrefs()
 {
 }
 
-MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project)
-{
-   return static_cast<MenuCommandHandler&>(
-      project.GetAttachedObject( factory ) );
-}
-
 MenuManager &GetMenuManager(AudacityProject &project)
 { return *project.mMenuManager; }
 
-MenuCommandHandler::MenuCommandHandler()
+MenuCreator::MenuCreator()
 {
-}
-
-MenuCommandHandler::~MenuCommandHandler()
-{
-}
-
-MenuCreator::MenuCreator(){
 }
 
 MenuCreator::~MenuCreator()
-{
-}
-
-void MenuCommandHandler::UpdatePrefs()
 {
 }
 
@@ -311,14 +234,6 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
 /// changes in configured preferences - for example changes in key-bindings
 /// affect the short-cut key legend that appears beside each command,
 
-// To supply the "finder" argument in AddItem calls
-static CommandHandlerObject &findMenuCommandHandler(AudacityProject &project)
-{ return GetMenuCommandHandler( project ); }
-
-#define FN(X) findMenuCommandHandler, \
-   static_cast<CommandFunctorPointer>(& MenuCommandHandler :: X)
-#define XXO(X) _(X), wxString{X}.Contains("...")
-
 MenuTable::BaseItemPtr FileMenu( AudacityProject& );
 
 MenuTable::BaseItemPtr EditMenu( AudacityProject& );
@@ -382,9 +297,6 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 #endif
 }
 
-#undef XXO
-#undef FN
-
 // TODO: This surely belongs in CommandManager?
 void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
 {
@@ -445,10 +357,6 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    CreateMenusAndCommands(project);
 
    ModuleManager::Get().Dispatch(MenusRebuilt);
-}
-
-void AudacityProject::RebuildOtherMenus()
-{
 }
 
 CommandFlag MenuManager::GetFocusedFrame(AudacityProject &project)
@@ -647,32 +555,6 @@ CommandFlag MenuManager::GetUpdateFlags
    return flags;
 }
 
-namespace SelectActions {
-void DoSelectSomething(AudacityProject &project);
-}
-
-// Select the full time range, if no
-// time range is selected.
-void AudacityProject::SelectAllIfNone()
-{
-   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
-   if(!(flags & TracksSelectedFlag) ||
-      (mViewInfo.selectedRegion.isPoint()))
-      SelectActions::DoSelectSomething(*this);
-}
-
-namespace TransportActions {
-   void DoStop( AudacityProject & );
-}
-
-// Stop playing or recording, if paused.
-void AudacityProject::StopIfPaused()
-{
-   auto flags = GetMenuManager(*this).GetUpdateFlags(*this);
-   if( flags & PausedFlag )
-      TransportActions::DoStop(*this);
-}
-
 void MenuManager::ModifyAllProjectToolbarMenus()
 {
    AProjectArray::iterator i;
@@ -837,85 +719,11 @@ void MenuManager::UpdateMenus(AudacityProject &project, bool checkActive)
    MenuManager::ModifyToolbarMenus(project);
 }
 
-//sort based on flags.  see Project.h for sort flags
-void AudacityProject::SortTracks(int flags)
-{
-   auto GetTime = [](const Track *t) {
-      return t->TypeSwitch< double >(
-         [&](const WaveTrack* w) {
-            auto stime = w->GetEndTime();
-
-            int ndx;
-            for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
-               const auto c = w->GetClipByIndex(ndx);
-               if (c->GetNumSamples() == 0)
-                  continue;
-               stime = std::min(stime, c->GetStartTime());
-            }
-            return stime;
-         },
-         [&](const LabelTrack* l) {
-            return l->GetStartTime();
-         }
-      );
-   };
-
-   size_t ndx = 0;
-   // This one place outside of TrackList where we must use undisguised
-   // std::list iterators!  Avoid this elsewhere!
-   std::vector<TrackNodePointer> arr;
-   arr.reserve(mTracks->size());
-
-   // First find the permutation.
-   // This routine, very unusually, deals with the underlying stl list
-   // iterators, not with TrackIter!  Dangerous!
-   for (auto iter = mTracks->ListOfTracks::begin(),
-        end = mTracks->ListOfTracks::end(); iter != end; ++iter) {
-      const auto &track = *iter;
-      if ( !track->IsLeader() )
-         // keep channels contiguous
-         ndx++;
-      else {
-         auto size = arr.size();
-         for (ndx = 0; ndx < size;) {
-            Track &arrTrack = **arr[ndx].first;
-            auto channels = TrackList::Channels(&arrTrack);
-            if(flags & kAudacitySortByName) {
-               //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
-               //also if we have case insensitive equality, then we need to sort by case as well
-               //We sort 'b' before 'B' accordingly.  We uncharacteristically use greater than for the case sensitive
-               //compare because 'b' is greater than 'B' in ascii.
-               auto cmpValue = track->GetName().CmpNoCase(arrTrack.GetName());
-               if ( cmpValue < 0 ||
-                     ( 0 == cmpValue &&
-                        track->GetName().CompareTo(arrTrack.GetName()) > 0 ) )
-                  break;
-            }
-            //sort by time otherwise
-            else if(flags & kAudacitySortByTime) {
-               auto time1 = TrackList::Channels(track.get()).min( GetTime );
-
-               //get candidate's (from sorted array) time
-               auto time2 = channels.min( GetTime );
-
-               if (time1 < time2)
-                  break;
-            }
-            ndx += channels.size();
-         }
-      }
-      arr.insert(arr.begin() + ndx, TrackNodePointer{iter, mTracks.get()});
-   }
-
-   // Now apply the permutation
-   mTracks->Permute(arr);
-}
-
 /// The following method moves to the previous track
 /// selecting and unselecting depending if you are on the start of a
 /// block or not.
 
-void MenuCommandHandler::RebuildAllMenuBars()
+void MenuCreator::RebuildAllMenuBars()
 {
    for( size_t i = 0; i < gAudacityProjects.size(); i++ ) {
       AudacityProject *p = gAudacityProjects[i].get();
@@ -933,112 +741,3 @@ void MenuCommandHandler::RebuildAllMenuBars()
 #endif
    }
 }
-
-void AudacityProject::SelectNone()
-{
-   for (auto t : GetTracks()->Any())
-      t->SetSelected(false);
-
-   mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);
-}
-
-//
-// View Menu
-//
-
-double AudacityProject::GetScreenEndTime() const
-{
-   return mTrackPanel->GetScreenEndTime();
-}
-
-void AudacityProject::ZoomInByFactor( double ZoomFactor )
-{
-   // LLL: Handling positioning differently when audio is
-   // actively playing.  Don't do this if paused.
-   if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) && !gAudioIO->IsPaused()){
-      ZoomBy(ZoomFactor);
-      mTrackPanel->ScrollIntoView(gAudioIO->GetStreamTime());
-      mTrackPanel->Refresh(false);
-      return;
-   }
-
-   // DMM: Here's my attempt to get logical zooming behavior
-   // when there's a selection that's currently at least
-   // partially on-screen
-
-   const double endTime = GetScreenEndTime();
-   const double duration = endTime - mViewInfo.h;
-
-   bool selectionIsOnscreen =
-      (mViewInfo.selectedRegion.t0() < endTime) &&
-      (mViewInfo.selectedRegion.t1() >= mViewInfo.h);
-
-   bool selectionFillsScreen =
-      (mViewInfo.selectedRegion.t0() < mViewInfo.h) &&
-      (mViewInfo.selectedRegion.t1() > endTime);
-
-   if (selectionIsOnscreen && !selectionFillsScreen) {
-      // Start with the center of the selection
-      double selCenter = (mViewInfo.selectedRegion.t0() +
-                          mViewInfo.selectedRegion.t1()) / 2;
-
-      // If the selection center is off-screen, pick the
-      // center of the part that is on-screen.
-      if (selCenter < mViewInfo.h)
-         selCenter = mViewInfo.h +
-                     (mViewInfo.selectedRegion.t1() - mViewInfo.h) / 2;
-      if (selCenter > endTime)
-         selCenter = endTime -
-            (endTime - mViewInfo.selectedRegion.t0()) / 2;
-
-      // Zoom in
-      ZoomBy(ZoomFactor);
-      const double newDuration = GetScreenEndTime() - mViewInfo.h;
-
-      // Recenter on selCenter
-      TP_ScrollWindow(selCenter - newDuration / 2);
-      return;
-   }
-
-
-   double origLeft = mViewInfo.h;
-   double origWidth = duration;
-   ZoomBy(ZoomFactor);
-
-   const double newDuration = GetScreenEndTime() - mViewInfo.h;
-   double newh = origLeft + (origWidth - newDuration) / 2;
-
-   // MM: Commented this out because it was confusing users
-   /*
-   // make sure that the *right-hand* end of the selection is
-   // no further *left* than 1/3 of the way across the screen
-   if (mViewInfo.selectedRegion.t1() < newh + mViewInfo.screen / 3)
-      newh = mViewInfo.selectedRegion.t1() - mViewInfo.screen / 3;
-
-   // make sure that the *left-hand* end of the selection is
-   // no further *right* than 2/3 of the way across the screen
-   if (mViewInfo.selectedRegion.t0() > newh + mViewInfo.screen * 2 / 3)
-      newh = mViewInfo.selectedRegion.t0() - mViewInfo.screen * 2 / 3;
-   */
-
-   TP_ScrollWindow(newh);
-}
-
-
-void AudacityProject::ZoomOutByFactor( double ZoomFactor )
-{
-   //Zoom() may change these, so record original values:
-   const double origLeft = mViewInfo.h;
-   const double origWidth = GetScreenEndTime() - origLeft;
-
-   ZoomBy(ZoomFactor);
-   const double newWidth = GetScreenEndTime() - mViewInfo.h;
-
-   const double newh = origLeft + (origWidth - newWidth) / 2;
-   // newh = (newh > 0) ? newh : 0;
-   TP_ScrollWindow(newh);
-}
-
-//

@@ -12,11 +12,7 @@
 
 #include "Experimental.h"
 
-#include <memory>
-#include <vector>
-#include <wx/event.h>
-#include "SelectedRegion.h"
-#include "commands/CommandFunctors.h"
+#include <wx/arrstr.h>
 
 class AudacityProject;
 class CommandContext;
@@ -42,36 +38,6 @@ public:
    virtual void UpdatePrefs(); // default is no-op
 };
 
-struct MenuCommandHandler final
-   : public CommandHandlerObject // MUST be the first base class!
-   , public PrefsListener
-{
-   MenuCommandHandler();
-   ~MenuCommandHandler();
-
-public:
-
-// Effect Menu
-
-struct OnEffectFlags
-{
-
-   // No flags specified
-   static const int kNone = 0x00;
-   // Flag used to disable prompting for configuration parameteres.
-   static const int kConfigured = 0x01;
-   // Flag used to disable saving the state after processing.
-   static const int kSkipState  = 0x02;
-   // Flag used to disable "Repeat Last Effect"
-   static const int kDontRepeatLast = 0x04;
-};
-
-static void RebuildAllMenuBars();
-
-public:
-   void UpdatePrefs() override;
-};
-
 class MenuCreator
 {
 public:
@@ -79,6 +45,8 @@ public:
    ~MenuCreator();
    void CreateMenusAndCommands(AudacityProject &project);
    void RebuildMenuBar(AudacityProject &project);
+
+   static void RebuildAllMenuBars();
 
 public:
    CommandFlag mLastFlags;
@@ -101,16 +69,18 @@ public:
 
    // If checkActive, do not do complete flags testing on an
    // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags(AudacityProject &project, bool checkActive = false);
+   CommandFlag GetUpdateFlags(
+      AudacityProject &project, bool checkActive = false);
    void UpdatePrefs();
 
    // Command Handling
-   bool ReportIfActionNotAllowed
-      ( AudacityProject &project,
-        const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
-   bool TryToMakeActionAllowed
-      ( AudacityProject &project,
-        CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
+   bool ReportIfActionNotAllowed(
+      AudacityProject &project,
+      const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd,
+      CommandFlag mask );
+   bool TryToMakeActionAllowed(
+      AudacityProject &project,
+      CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
 
 private:
@@ -122,10 +92,10 @@ private:
 };
 
 
-MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
 MenuManager &GetMenuManager(AudacityProject &project);
 
 // Exported helper functions from various menu handling source files
+
 namespace FileActions {
 AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName );
@@ -173,6 +143,16 @@ void DoRemoveTracks( AudacityProject & );
 }
 
 namespace PluginActions {
+   enum : unsigned {
+      // No flags specified
+      kNone = 0x00,
+      // Flag used to disable prompting for configuration parameteres.
+      kConfigured = 0x01,
+      // Flag used to disable saving the state after processing.
+      kSkipState  = 0x02,
+      // Flag used to disable "Repeat Last Effect"
+      kDontRepeatLast = 0x04,
+   };
 bool DoEffect(
    const PluginID & ID, const CommandContext & context, unsigned flags );
 bool DoAudacityCommand(
@@ -185,6 +165,3 @@ void DoShowLog( AudacityProject& );
 }
 
 #endif
-
-
-

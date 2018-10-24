@@ -223,7 +223,7 @@ void OnShowExtraMenus(const CommandContext &context)
    gPrefs->Write(wxT("/GUI/ShowExtraMenus"), checked);
    gPrefs->Flush();
    commandManager->Check(wxT("ShowExtraMenus"), checked);
-   MenuCommandHandler::RebuildAllMenuBars();
+   MenuCreator::RebuildAllMenuBars();
 }
 
 void OnShowClipping(const CommandContext &context)

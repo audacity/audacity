@@ -23,7 +23,7 @@ void DoManagePluginsMenu
 (AudacityProject &project, EffectType type)
 {
    if (PluginManager::Get().ShowManager(&project, type))
-      MenuCommandHandler::RebuildAllMenuBars();
+      MenuCreator::RebuildAllMenuBars();
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
@@ -404,7 +404,7 @@ bool DoEffect(
    // Make sure there's no activity since the effect is about to be applied
    // to the project's tracks.  Mainly for Apply during RTP, but also used
    // for batch commands
-   if (flags & MenuCommandHandler::OnEffectFlags::kConfigured)
+   if (flags & kConfigured)
    {
       TransportActions::DoStop(project);
       project.SelectAllIfNone();
@@ -443,22 +443,22 @@ bool DoEffect(
 
    success = em.DoEffect(ID, &project, rate,
       tracks, trackFactory, &selectedRegion,
-      (flags & MenuCommandHandler::OnEffectFlags::kConfigured) == 0);
+      (flags & kConfigured) == 0);
 
    if (!success)
       return false;
 
    if (em.GetSkipStateFlag())
-      flags = flags | MenuCommandHandler::OnEffectFlags::kSkipState;
+      flags = flags | kSkipState;
 
-   if (!(flags & MenuCommandHandler::OnEffectFlags::kSkipState))
+   if (!(flags & kSkipState))
    {
       wxString shortDesc = em.GetCommandName(ID);
       wxString longDesc = em.GetCommandDescription(ID);
       project.PushState(longDesc, shortDesc);
    }
 
-   if (!(flags & MenuCommandHandler::OnEffectFlags::kDontRepeatLast))
+   if (!(flags & kDontRepeatLast))
    {
       // Only remember a successful effect, don't remember insert,
       // or analyze effects.
@@ -515,7 +515,7 @@ bool DoAudacityCommand(
    if (!plug)
       return false;
 
-   if (flags & MenuCommandHandler::OnEffectFlags::kConfigured)
+   if (flags & kConfigured)
    {
       TransportActions::DoStop(project);
 //    SelectAllIfNone();
@@ -525,7 +525,7 @@ bool DoAudacityCommand(
    bool success = em.DoAudacityCommand(ID, 
       context,
       &project,
-      (flags & MenuCommandHandler::OnEffectFlags::kConfigured) == 0);
+      (flags & kConfigured) == 0);
 
    if (!success)
       return false;
@@ -571,8 +571,7 @@ void OnRepeatLastEffect(const CommandContext &context)
    auto lastEffect = GetMenuManager(context.project).mLastEffect;
    if (!lastEffect.IsEmpty())
    {
-      DoEffect(lastEffect,
-         context, MenuCommandHandler::OnEffectFlags::kConfigured);
+      DoEffect( lastEffect, context, kConfigured );
    }
 }
 
@@ -682,8 +681,7 @@ void OnAudacityCommand(const CommandContext & ctx)
    wxLogDebug( "Command was: %s", ctx.parameter);
    // Not configured, so prompt user.
    DoAudacityCommand(EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
-      ctx,
-      MenuCommandHandler::OnEffectFlags::kNone);
+      ctx, kNone);
 }
 
 }; // struct Handler

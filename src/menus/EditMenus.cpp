@@ -178,7 +178,6 @@ void DoReloadPreferences( AudacityProject &project )
       AudacityProject *p = gAudacityProjects[i].get();
 
       GetMenuManager(*p).RebuildMenuBar(*p);
-      p->RebuildOtherMenus();
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:
@@ -1030,7 +1029,6 @@ void OnPreferences(const CommandContext &context)
       AudacityProject *p = gAudacityProjects[i].get();
 
       GetMenuManager(*p).RebuildMenuBar(*p);
-      p->RebuildOtherMenus();
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:
