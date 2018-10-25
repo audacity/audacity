@@ -1076,6 +1076,8 @@ ProgressResult TimerRecordDialog::WaitForStart()
       _("Audacity Timer Record - Waiting for Start"),
       columns,
       pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
+      /* i18n-hint: "in" means after a duration of time,
+         which is shown below this string */
       _("Recording will commence in:"));
 
    auto updateResult = ProgressResult::Success;
@@ -1093,7 +1095,10 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
 {
    wxString sAction = m_pTimerAfterCompleteChoiceCtrl->GetString(iActionIndex);
    wxString sCountdownLabel;
-   sCountdownLabel.Printf("%s in:", sAction);
+   /* i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+      or "Shutdown system", and
+      "in" means after a duration of time, shown below this string */
+   sCountdownLabel.Printf(_("%s in:"), sAction);
 
    // Two column layout.
    TimerProgressDialog::MessageTable columns(2);
