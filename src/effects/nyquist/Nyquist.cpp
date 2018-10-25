@@ -1375,7 +1375,7 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_double) {
       wxString str;
-      str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %f")),
+      str.Printf(_("Nyquist returned the value: %f"),
                  nyx_get_double());
       Effect::MessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
@@ -1383,7 +1383,7 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_int) {
       wxString str;
-      str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %d")),
+      str.Printf(_("Nyquist returned the value: %d"),
                  nyx_get_int());
       Effect::MessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
