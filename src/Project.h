@@ -93,8 +93,6 @@ class MixerBoardFrame;
 struct AudioIOStartStreamOptions;
 struct UndoState;
 
-class Regions;
-
 class LWSlider;
 class UndoManager;
 enum class UndoPush : unsigned char;
@@ -424,12 +422,6 @@ public:
    void SkipEnd(bool shift);
 
 
-   typedef void (WaveTrack::* EditFunction)(double, double);
-   typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
-
-   void EditByLabel(EditFunction action, bool bSyncLockedTracks);
-   void EditClipboardByLabel(EditDestFunction action );
-
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
 
@@ -600,8 +592,6 @@ public:
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
    void PopState(const UndoState &state);
-
-   void GetRegionsByLabel( Regions &regions );
 
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
