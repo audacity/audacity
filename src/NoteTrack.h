@@ -114,7 +114,7 @@ class AUDACITY_DLL_API NoteTrack final
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    float GetVelocity() const { return mVelocity; }
-   void SetVelocity(float velocity) { mVelocity = velocity; }
+   void SetVelocity(float velocity);
 #endif
 
    QuantizedTimeAndBeat NearestBeatTime( double time ) const;

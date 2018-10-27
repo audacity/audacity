@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Experimental.h"
 #include "../../HitTestResult.h"
 #include "../../Menus.h"
-#include "../../MixerBoard.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanel.h"
@@ -123,21 +122,14 @@ UIHandle::Result TrackSelectHandle::Drag
    if (unsafe)
       return result;
 
-   MixerBoard* pMixerBoard = pProject->GetMixerBoard(); // Update mixer board, too.
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
       tracks->MoveUp(mpTrack.get());
       --mRearrangeCount;
-      if (pMixerBoard)
-         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack.get() ))
-            pMixerBoard->MoveTrackCluster(pPlayable, true /* up */);
    }
    else if ( event.m_y > mMoveDownThreshold
       || event.m_y > evt.whole.GetHeight() ) {
       tracks->MoveDown(mpTrack.get());
       ++mRearrangeCount;
-      if (pMixerBoard)
-         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack.get() ))
-            pMixerBoard->MoveTrackCluster(pPlayable, false /* down */);
    }
    else
       return result;

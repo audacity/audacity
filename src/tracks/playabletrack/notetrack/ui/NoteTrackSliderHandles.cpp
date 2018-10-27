@@ -14,7 +14,6 @@
 #ifdef EXPERIMENTAL_MIDI_OUT
 
 #include "../../../../HitTestResult.h"
-#include "../../../../MixerBoard.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h" // for TrackInfo
@@ -51,10 +50,6 @@ UIHandle::Result VelocitySliderHandle::SetValue
 
    if (pTrack) {
       pTrack->SetVelocity(newValue);
-
-      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->UpdateVelocity(pTrack.get());
    }
 
    return RefreshCode::RefreshCell;

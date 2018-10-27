@@ -3,7 +3,6 @@
 #include "../Experimental.h"
 #include "../FreqWindow.h"
 #include "../Menus.h" // for PrefsListener
-#include "../MixerBoard.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../TimeDialog.h"
@@ -23,7 +22,6 @@ void DoSelectTimeAndTracks
    auto tracks = project.GetTracks();
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
-   auto mixerBoard = project.GetMixerBoard();
 
    if( bAllTime )
       selectedRegion.setTimes(
@@ -35,8 +33,6 @@ void DoSelectTimeAndTracks
 
       project.ModifyState(false);
       trackPanel->Refresh(false);
-      if (mixerBoard)
-         mixerBoard->Refresh(false);
    }
 }
 
@@ -467,11 +463,10 @@ void DoListSelection
    auto &selectionState = project.GetSelectionState();
    auto &viewInfo = project.GetViewInfo();
    auto isSyncLocked = project.IsSyncLocked();
-   auto mixerBoard = project.GetMixerBoard();
 
    selectionState.HandleListSelection
       ( *tracks, viewInfo, *t,
-        shift, ctrl, isSyncLocked, mixerBoard );
+        shift, ctrl, isSyncLocked );
 
    if (! ctrl )
       trackPanel->SetFocusedTrack(t);
@@ -535,7 +530,6 @@ void OnSelectSyncLockSel(const CommandContext &context)
    auto &project = context.project;
    auto tracks = project.GetTracks();
    auto trackPanel = project.GetTrackPanel();
-   auto mixerBoard = project.GetMixerBoard();
 
    bool selected = false;
    for (auto t : tracks->Any()
@@ -548,8 +542,6 @@ void OnSelectSyncLockSel(const CommandContext &context)
       project.ModifyState(false);
 
    trackPanel->Refresh(false);
-   if (mixerBoard)
-      mixerBoard->Refresh(false);
 }
 
 //this pops up a dialog which allows the left selection to be set.

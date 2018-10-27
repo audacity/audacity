@@ -16,7 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../AudioIO.h"
 #include "../../../../HitTestResult.h"
-#include "../../../../MixerBoard.h"
 #include "../../../../Menus.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
@@ -943,10 +942,6 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    TrackList *const tracks = project->GetTracks();
    tracks->MoveUp( partner );
    tracks->GroupChannels( *partner, 2 );
-
-   MixerBoard* pMixerBoard = project->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->UpdateTrackClusters();
 
    if (hasFocus)
       project->GetTrackPanel()->SetFocusedTrack(partner);

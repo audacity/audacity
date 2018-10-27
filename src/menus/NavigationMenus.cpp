@@ -84,7 +84,6 @@ void DoPrevTrack(
    auto trackPanel = project.GetTrackPanel();
    auto tracks = project.GetTracks();
    auto &selectionState = project.GetSelectionState();
-   auto mixerBoard = project.GetMixerBoard();
 
    Track* t = trackPanel->GetFocusedTrack();
    if( t == NULL )   // if there isn't one, focus on last
@@ -121,7 +120,7 @@ void DoPrevTrack(
       if( tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *t, false, false, mixerBoard );
+            ( *t, false, false );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
@@ -130,7 +129,7 @@ void DoPrevTrack(
       if( tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *p, true, false, mixerBoard );
+            ( *p, true, false );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
@@ -139,7 +138,7 @@ void DoPrevTrack(
       if( !tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *p, false, false, mixerBoard );
+            ( *p, false, false );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
@@ -148,7 +147,7 @@ void DoPrevTrack(
       if( !tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *t, true, false, mixerBoard );
+            ( *t, true, false );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
           project.ModifyState(false);
@@ -195,7 +194,6 @@ void DoNextTrack(
    auto trackPanel = project.GetTrackPanel();
    auto tracks = project.GetTracks();
    auto &selectionState = project.GetSelectionState();
-   auto mixerBoard = project.GetMixerBoard();
 
    auto t = trackPanel->GetFocusedTrack();   // Get currently focused track
    if( t == NULL )   // if there isn't one, focus on first
@@ -226,7 +224,7 @@ void DoNextTrack(
       if( tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *t, false, false, mixerBoard );
+            ( *t, false, false );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -235,7 +233,7 @@ void DoNextTrack(
       if( tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *n, true, false, mixerBoard );
+            ( *n, true, false );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -244,7 +242,7 @@ void DoNextTrack(
       if( !tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *n, false, false, mixerBoard );
+            ( *n, false, false );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -253,7 +251,7 @@ void DoNextTrack(
       if( !tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *t, true, false, mixerBoard );
+            ( *t, true, false );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -506,7 +504,6 @@ void OnToggle(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
    auto &selectionState = project.GetSelectionState();
-   auto mixerBoard = project.GetMixerBoard();
 
    Track *t;
 
@@ -515,7 +512,7 @@ void OnToggle(const CommandContext &context)
       return;
 
    selectionState.SelectTrack
-      ( *t, !t->GetSelected(), true, mixerBoard );
+      ( *t, !t->GetSelected(), true );
    trackPanel->EnsureVisible( t );
    project.ModifyState(false);
 

@@ -3,7 +3,7 @@
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Mix.h"
-#include "../MixerBoard.h"
+
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
@@ -13,6 +13,7 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../widgets/ASlider.h"
 
 #include <wx/combobox.h>
 
@@ -103,7 +104,6 @@ void DoMixAndRender
 void DoPanTracks(AudacityProject &project, float PanValue)
 {
    auto tracks = project.GetTracks();
-   auto mixerBoard = project.GetMixerBoard();
 
    // count selected wave tracks
    const auto range = tracks->Any< WaveTrack >();
@@ -115,8 +115,6 @@ void DoPanTracks(AudacityProject &project, float PanValue)
       left->SetPan( PanValue );
 
    project.RedrawProject();
-   if (mixerBoard)
-      mixerBoard->UpdatePan();
 
    auto flags = UndoPush::AUTOSAVE;
    /*i18n-hint: One or more audio tracks have been panned*/
@@ -515,7 +513,6 @@ void DoRemoveTracks( AudacityProject &project )
 {
    auto tracks = project.GetTracks();
    auto trackPanel = project.GetTrackPanel();
-   auto mixerBoard = project.GetMixerBoard();
 
    std::vector<Track*> toRemove;
    for (auto track : tracks->Selected())
@@ -527,10 +524,6 @@ void DoRemoveTracks( AudacityProject &project )
       auto found = tracks->Find(toRemove[0]);
       f = *--found;
    }
-
-   if (mixerBoard)
-      for (auto track : tracks->Selected<PlayableTrack>())
-         mixerBoard->RemoveTrackCluster(track);
 
    for (auto track : toRemove)
       tracks->Remove(track);
@@ -554,9 +547,6 @@ void DoRemoveTracks( AudacityProject &project )
 
    trackPanel->UpdateViewIfNoTracks();
    trackPanel->Refresh(false);
-
-   if (mixerBoard)
-      mixerBoard->Refresh(true);
 }
 
 void DoMoveTrack
@@ -564,11 +554,9 @@ void DoMoveTrack
 {
    auto trackPanel = project.GetTrackPanel();
    auto tracks = project.GetTracks();
-   auto mixerBoard = project.GetMixerBoard(); // Update mixer board.
 
    wxString longDesc, shortDesc;
 
-   auto pt = dynamic_cast<PlayableTrack*>(target);
    switch (choice)
    {
    case OnMoveTopID:
@@ -576,32 +564,27 @@ void DoMoveTrack
       longDesc = _("Moved '%s' to Top");
       shortDesc = _("Move Track to Top");
 
-      while (tracks->CanMoveUp(target)) {
-         if (tracks->Move(target, true)) {
-            if (mixerBoard && pt)
-               mixerBoard->MoveTrackCluster(pt, true);
-         }
-      }
+      // TODO: write TrackList::Rotate to do this in one step and avoid emitting
+      // an event for each swap
+      while (tracks->CanMoveUp(target))
+         tracks->Move(target, true);
+
       break;
    case OnMoveBottomID:
       /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
       longDesc = _("Moved '%s' to Bottom");
       shortDesc = _("Move Track to Bottom");
 
-      while (tracks->CanMoveDown(target)) {
-         if(tracks->Move(target, false)) {
-            if (mixerBoard && pt)
-               mixerBoard->MoveTrackCluster(pt, false);
-         }
-      }
+      // TODO: write TrackList::Rotate to do this in one step and avoid emitting
+      // an event for each swap
+      while (tracks->CanMoveDown(target))
+         tracks->Move(target, false);
+
       break;
    default:
       bool bUp = (OnMoveUpID == choice);
 
-      if (tracks->Move(target, bUp)) {
-         if (mixerBoard && pt)
-            mixerBoard->MoveTrackCluster(pt, bUp);
-      }
+      tracks->Move(target, bUp);
       longDesc =
          /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
          bUp? _("Moved '%s' Up")
@@ -847,7 +830,6 @@ void OnMuteAllTracks(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto soloSimple = project.IsSoloSimple();
    auto soloNone = project.IsSoloNone();
-   auto mixerBoard = project.GetMixerBoard();
 
    for (auto pt : tracks->Any<PlayableTrack>())
    {
@@ -858,11 +840,6 @@ void OnMuteAllTracks(const CommandContext &context)
 
    project.ModifyState(true);
    project.RedrawProject();
-   if (mixerBoard) {
-      mixerBoard->UpdateMute();
-      if (soloSimple || soloNone)
-         mixerBoard->UpdateSolo();
-   }
 }
 
 void OnUnmuteAllTracks(const CommandContext &context)
@@ -871,7 +848,6 @@ void OnUnmuteAllTracks(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto soloSimple = project.IsSoloSimple();
    auto soloNone = project.IsSoloNone();
-   auto mixerBoard = project.GetMixerBoard();
 
    for (auto pt : tracks->Any<PlayableTrack>())
    {
@@ -882,11 +858,6 @@ void OnUnmuteAllTracks(const CommandContext &context)
 
    project.ModifyState(true);
    project.RedrawProject();
-   if (mixerBoard) {
-      mixerBoard->UpdateMute();
-      if (soloSimple || soloNone)
-         mixerBoard->UpdateSolo();
-   }
 }
 
 void OnPanLeft(const CommandContext &context)

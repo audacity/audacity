@@ -531,7 +531,6 @@ public:
 
    LyricsWindow* GetLyricsWindow(bool create = false);
    MixerBoardFrame* GetMixerBoardFrame(bool create = false);
-   MixerBoard* GetMixerBoard() { return mMixerBoard; }
    HistoryWindow *GetHistoryWindow(bool create = false);
    MacrosWindow *GetMacrosWindow(bool bExpanded, bool create = false);
    FreqWindow *GetFreqWindow(bool create = false);
@@ -601,12 +600,8 @@ public:
  public:
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-   void RecreateMixerBoard();
 
    void PopState(const UndoState &state);
-
-   void UpdateLyrics();
-   void UpdateMixerBoard();
 
    void GetRegionsByLabel( Regions &regions );
 

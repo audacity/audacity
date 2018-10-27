@@ -50,8 +50,7 @@ public:
       // AS: If the user clicked outside all tracks, make nothing
       //  selected.
       if ((event.ButtonDown() || event.ButtonDClick())) {
-         pProject->GetSelectionState().SelectNone
-            ( *pProject->GetTracks(), pProject->GetMixerBoard() );
+         pProject->GetSelectionState().SelectNone( *pProject->GetTracks() );
          result |= RefreshAll;
       }
 

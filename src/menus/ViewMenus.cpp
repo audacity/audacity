@@ -191,7 +191,6 @@ void OnHistory(const CommandContext &context)
    auto historyWindow = project.GetHistoryWindow(true);
    historyWindow->Show();
    historyWindow->Raise();
-   historyWindow->UpdateDisplay();
 }
 
 void OnKaraoke(const CommandContext &context)
@@ -200,7 +199,6 @@ void OnKaraoke(const CommandContext &context)
 
    auto lyricsWindow = project.GetLyricsWindow(true);
    lyricsWindow->Show();
-   project.UpdateLyrics();
    lyricsWindow->Raise();
 }
 

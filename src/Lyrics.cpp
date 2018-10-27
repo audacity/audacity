@@ -15,11 +15,13 @@
 #include <wx/dcmemory.h>
 #include <wx/mimetype.h>
 
+#include "AudioIO.h"
 #include "Lyrics.h"
 #include "Internat.h"
 #include "Project.h" // for GetActiveProject
 #include "LabelTrack.h"
 #include "commands/CommandManager.h"
+#include "UndoManager.h"
 
 
 BEGIN_EVENT_TABLE(HighlightTextCtrl, wxTextCtrl)
@@ -80,10 +82,12 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(LyricsPanel, wxPanel)
 
 LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
+               AudacityProject *project,
                const wxPoint& pos /*= wxDefaultPosition*/,
-               const wxSize& size /*= wxDefaultSize*/):
+               const wxSize& size /*= wxDefaultSize*/) :
    wxPanelWrapper(parent, id, pos, size, wxWANTS_CHARS),
    mWidth(size.x), mHeight(size.y)
+   , mProject(project)
 {
    mKaraokeHeight = mHeight;
    mLyricsStyle = kBouncingBallLyrics; // default
@@ -109,6 +113,16 @@ LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
       wxSizeEvent dummyEvent;
       OnSize(dummyEvent);
    #endif
+
+   parent->Bind(wxEVT_SHOW, &LyricsPanel::OnShow, this);
+
+   auto undoManager = project->GetUndoManager();
+   undoManager->Bind(EVT_UNDO_PUSHED, &LyricsPanel::UpdateLyrics, this);
+   undoManager->Bind(EVT_UNDO_MODIFIED, &LyricsPanel::UpdateLyrics, this);
+   undoManager->Bind(EVT_UNDO_RESET, &LyricsPanel::UpdateLyrics, this);
+
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK, &LyricsPanel::OnStartStop, this);
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE, &LyricsPanel::OnStartStop, this);
 }
 
 LyricsPanel::~LyricsPanel()
@@ -454,6 +468,55 @@ void LyricsPanel::Update(double t)
 
       //v Too much flicker:   mHighlightTextCtrl->ShowPosition(mSyllables[i].char0);
    }
+}
+
+void LyricsPanel::UpdateLyrics(wxEvent &e)
+{
+   e.Skip();
+
+   // It's crucial to not do that repopulating during playback.
+   if (gAudioIO->IsStreamActive()) {
+      mDelayedUpdate = true;
+      return;
+   }
+
+   Clear();
+
+   if (!mProject)
+      return;
+
+   // Lyrics come from only the first label track.
+   auto pLabelTrack = *mProject->GetTracks()->Any< const LabelTrack >().begin();
+   if (!pLabelTrack)
+      return;
+
+   // The code that updates the lyrics is rather expensive when there
+   // are a lot of labels.
+   // So - bail out early if the lyrics window is not visible.
+   // We will later force an update when the lyrics window is made visible.
+   auto parent = dynamic_cast<wxFrame*>(GetParent());
+   if( !(parent && parent->IsVisible()) )
+      return;
+
+   AddLabels(pLabelTrack);
+   Finish(pLabelTrack->GetEndTime());
+   Update(mProject->GetSel0());
+}
+
+void LyricsPanel::OnStartStop(wxCommandEvent &e)
+{
+   e.Skip();
+   if ( !e.GetInt() && mDelayedUpdate ) {
+      mDelayedUpdate = false;
+      UpdateLyrics( e );
+   }
+}
+
+void LyricsPanel::OnShow(wxShowEvent &e)
+{
+   e.Skip();
+   if (e.IsShown())
+      UpdateLyrics(e);
 }
 
 void LyricsPanel::OnKeyEvent(wxKeyEvent & event)

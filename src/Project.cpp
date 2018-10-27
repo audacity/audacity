@@ -100,8 +100,6 @@ scroll information.  It also has some status flags.
 #include "Diags.h"
 #include "HistoryWindow.h"
 #include "InconsistencyException.h"
-#include "Lyrics.h"
-#include "LyricsWindow.h"
 #include "MixerBoard.h"
 #include "Internat.h"
 #include "import/Import.h"
@@ -4591,14 +4589,9 @@ void AudacityProject::InitialState()
 
    GetUndoManager()->StateSaved();
 
-   if (mHistoryWindow)
-      mHistoryWindow->UpdateDisplay();
-
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
 
    GetMenuManager(*this).UpdateMenus(*this);
-   this->UpdateLyrics();
-   this->UpdateMixerBoard();
 }
 
 bool AudacityProject::UndoAvailable()
@@ -4629,23 +4622,9 @@ void AudacityProject::PushState(const wxString &desc,
 
    mDirty = true;
 
-   if (mHistoryWindow)
-      mHistoryWindow->UpdateDisplay();
-
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
 
    GetMenuManager(*this).UpdateMenus(*this);
-
-   // Some state pushes, like changing a track gain control (& probably others),
-   // should not repopulate Lyrics Window and MixerBoard.
-   // Others, such as deleting a label or adding a wave track, obviously do.
-   // Could categorize these state changes, but for now...
-   // It's crucial to not do that repopulating during playback.
-   if (!gAudioIO->IsStreamActive(GetAudioIOToken()))
-   {
-      this->UpdateLyrics();
-      this->UpdateMixerBoard();
-   }
 
    if (GetTracksFitVerticallyZoomed())
       ViewActions::DoZoomFitV(*this);
@@ -4673,6 +4652,8 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
 //    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
 void AudacityProject::PopState(const UndoState &state)
 {
+   mViewInfo.selectedRegion = state.selectedRegion;
+
    // Restore tags
    mTags = state.tags;
 
@@ -4717,80 +4698,19 @@ void AudacityProject::PopState(const UndoState &state)
    HandleResize();
 
    GetMenuManager(*this).UpdateMenus(*this);
-   this->UpdateLyrics();
-   this->UpdateMixerBoard();
 
    AutoSave();
 }
 
 void AudacityProject::SetStateTo(unsigned int n)
 {
-   const UndoState &state =
-       GetUndoManager()->SetStateTo(n, &mViewInfo.selectedRegion);
-   PopState(state);
+   GetUndoManager()->SetStateTo(n,
+      [this]( const UndoState &state ){ PopState(state); } );
 
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
    GetMenuManager(*this).ModifyUndoMenuItems(*this);
-   this->UpdateLyrics();
-   this->UpdateMixerBoard();
-}
-
-void AudacityProject::UpdateLyrics()
-{
-   // JKC: Previously we created a lyrics window,
-   // if it did not exist.  But we don't need to.
-   if (!mLyricsWindow)
-      return;
-
-   // Lyrics come from only the first label track.
-   auto pLabelTrack = *GetTracks()->Any< const LabelTrack >().begin();
-   if (!pLabelTrack)
-      return;
-
-   // The code that updates the lyrics is rather expensive when there
-   // are a lot of labels.
-   // So - bail out early if the lyrics window is not visible.
-   // We will later force an update when the lyrics window is made visible.
-   if( !mLyricsWindow->IsVisible() )
-      return;
-
-   LyricsPanel* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
-   pLyricsPanel->Clear();
-   pLyricsPanel->AddLabels(pLabelTrack);
-   pLyricsPanel->Finish(pLabelTrack->GetEndTime());
-   pLyricsPanel->Update(this->GetSel0());
-}
-
-void AudacityProject::UpdateMixerBoard()
-{
-   if (!mMixerBoard)
-      return;
-   mMixerBoard->UpdateTrackClusters();
-
-   // Vaughan, 2011-01-28: AudacityProject::UpdateMixerBoard() is called on state changes,
-   //   so don't really need to call UpdateMeters().
-   //mMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), (mLastPlayMode == loopedPlay));
-}
-
-
-void AudacityProject::RecreateMixerBoard( )
-{
-   wxASSERT( mMixerBoard );
-   wxASSERT( mMixerBoardFrame );
-   wxPoint  pos = mMixerBoard->GetPosition();
-   wxSize siz = mMixerBoard->GetSize();
-   wxSize siz2 = mMixerBoardFrame->GetSize();
-   //wxLogDebug("Got rid of board %p", mMixerBoard );
-   mMixerBoard->Destroy();
-   mMixerBoard = NULL;
-   mMixerBoard = safenew MixerBoard(this, mMixerBoardFrame, pos, siz);
-   mMixerBoardFrame->mMixerBoard = mMixerBoard;
-   //wxLogDebug("Created NEW board %p", mMixerBoard );
-   mMixerBoard->UpdateTrackClusters();
-   mMixerBoard->SetSize( siz );
-   mMixerBoardFrame->SetSize( siz2 );
 }
 
 //
@@ -5231,12 +5151,10 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    msClipT0 = regions.front().start;
    msClipT1 = regions.back().end;
-
-   if (mHistoryWindow)
-      mHistoryWindow->UpdateDisplay();
 }
 
 
@@ -5567,14 +5485,6 @@ void AudacityProject::DoTrackMute(Track *t, bool exclusive)
 {
    HandleTrackMute(t, exclusive);
 
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
-
    mTrackPanel->UpdateAccessibility();
    mTrackPanel->Refresh(false);
 }
@@ -5582,14 +5492,6 @@ void AudacityProject::DoTrackMute(Track *t, bool exclusive)
 void AudacityProject::DoTrackSolo(Track *t, bool exclusive)
 {
    HandleTrackSolo(t, exclusive);
-
-   // Update mixer board, too.
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard)
-   {
-      pMixerBoard->UpdateMute(); // Update for all tracks.
-      pMixerBoard->UpdateSolo(); // Update for all tracks.
-   }
 
    mTrackPanel->UpdateAccessibility();
    mTrackPanel->Refresh(false);
@@ -5638,15 +5540,6 @@ void AudacityProject::RemoveTrack(Track * toRemove)
    }
 
    wxString name = toRemove->GetName();
-
-   auto playable = dynamic_cast<PlayableTrack*>(toRemove);
-   if (playable)
-   {
-      // Update mixer board displayed tracks.
-      MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard)
-         pMixerBoard->RemoveTrackCluster(playable); // Will remove partner shown in same cluster.
-   }
 
    auto channels = TrackList::Channels(toRemove);
    // Be careful to post-increment over positions that get erased!
@@ -6185,8 +6078,6 @@ void AudacityProject::SelectNone()
       t->SetSelected(false);
 
    mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);
 }
 
 void AudacityProject::ZoomInByFactor( double ZoomFactor )

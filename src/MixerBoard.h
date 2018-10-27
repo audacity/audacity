@@ -25,6 +25,8 @@
 #include "widgets/ASlider.h"
 #include "widgets/wxPanelWrapper.h"
 
+class TrackListEvent;
+
 // containment hierarchy:
 //    MixerBoardFrame -> MixerBoard -> MixerBoardScrolledWindow -> MixerTrackCluster(s)
 
@@ -96,16 +98,7 @@ public:
 
    void ResetMeter(const bool bResetClipping);
 
-   // These are used by TrackPanel for synchronizing control states.
-   void UpdateForStateChange(); // Update the controls that can be affected by state change.
-   void UpdateName();
-   void UpdateMute();
-   void UpdateSolo();
-   void UpdatePan();
-   void UpdateGain();
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void UpdateVelocity();
-#endif
+   void UpdateForStateChange();
    void UpdateMeter(const double t0, const double t1);
 
 private:
@@ -212,36 +205,23 @@ public:
    void UpdateTrackClusters();
 
    int GetTrackClustersWidth();
-   void MoveTrackCluster(const PlayableTrack* pTrack, bool bUp); // Up in TrackPanel is left in MixerBoard.
-   void RemoveTrackCluster(const PlayableTrack* pTrack);
-   void RemoveTrackCluster(size_t nIndex);
 
 
    wxBitmap* GetMusicalInstrumentBitmap(const Track *pTrack);
 
    bool HasSolo();
 
-   void RefreshTrackCluster(const PlayableTrack* pTrack, bool bEraseBackground = true);
    void RefreshTrackClusters(bool bEraseBackground = true);
    void ResizeTrackClusters();
-
-   void ResetMeters(const bool bResetClipping);
-
-   void UpdateName(const PlayableTrack* pTrack);
-   void UpdateMute(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdateSolo(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdatePan(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdateGain(const PlayableTrack* pTrack);
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void UpdateVelocity(const PlayableTrack* pTrack);
-#endif
 
    void UpdateMeters(const double t1, const bool bLoopedPlay);
 
    void UpdateWidth();
 
 private:
-   void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap, 
+   void ResetMeters(const bool bResetClipping);   
+   void RemoveTrackCluster(size_t nIndex);
+   void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap,
       wxRect & bev, const wxString & str, bool up );
    void CreateMuteSoloImages();
    int FindMixerTrackCluster(const PlayableTrack* pTrack,
@@ -249,9 +229,12 @@ private:
    void LoadMusicalInstruments();
 
    // event handlers
+   void OnPaint(wxPaintEvent& evt);
    void OnSize(wxSizeEvent &evt);
    void OnTimer(wxCommandEvent &event);
-
+   void OnTrackSetChanged(wxEvent &event);
+   void OnTrackChanged(TrackListEvent &event);
+   void OnStartStop(wxCommandEvent &event);
 
 public:
    // mute & solo button images: Create once and store on MixerBoard for use in all MixerTrackClusters.
@@ -270,6 +253,7 @@ private:
    MixerBoardScrolledWindow*  mScrolledWindow; // Holds the MixerTrackClusters and handles scrolling.
    double                     mPrevT1;
    TrackList*                 mTracks;
+   bool                       mUpToDate{ false };
 
 public:
    DECLARE_EVENT_TABLE()
@@ -281,6 +265,8 @@ class MixerBoardFrame final : public wxFrame
 public:
    MixerBoardFrame(AudacityProject* parent);
    virtual ~MixerBoardFrame();
+
+   void Recreate(AudacityProject *pProject);
 
 private:
    // event handlers

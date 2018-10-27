@@ -1,8 +1,7 @@
 #include "../AdornedRulerPanel.h"
-#include "../HistoryWindow.h"
+#include "../AudacityApp.h" // for EVT_CLIPBOARD_CHANGE
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../MixerBoard.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -219,8 +218,6 @@ void DoUndo(AudacityProject &project)
 {
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
-   auto mixerBoard = project.GetMixerBoard();
    auto historyWindow = project.GetHistoryWindow();
 
    if (!project.UndoAvailable()) {
@@ -233,19 +230,12 @@ void DoUndo(AudacityProject &project)
       return;
    }
 
-   const UndoState &state = undoManager.Undo(&selectedRegion);
-   project.PopState(state);
+   undoManager.Undo(
+      [&]( const UndoState &state ){ project.PopState( state ); } );
 
    trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
 
    project.RedrawProject();
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
-
-   if (mixerBoard)
-      // Mixer board may need to change for selection state and pan/gain
-      mixerBoard->Refresh();
 
    MenuManager::ModifyUndoMenuItems(project);
 }
@@ -264,8 +254,6 @@ void OnRedo(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto &selectedRegion = project.GetViewInfo().selectedRegion;
-   auto mixerBoard = project.GetMixerBoard();
    auto historyWindow = project.GetHistoryWindow();
 
    if (!project.RedoAvailable()) {
@@ -277,19 +265,12 @@ void OnRedo(const CommandContext &context)
       return;
    }
 
-   const UndoState &state = undoManager.Redo(&selectedRegion);
-   project.PopState(state);
+   undoManager.Redo(
+      [&]( const UndoState &state ){ project.PopState( state ); } );
 
    trackPanel->EnsureVisible(trackPanel->GetFirstSelectedTrack());
 
    project.RedrawProject();
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
-
-   if (mixerBoard)
-      // Mixer board may need to change for selection state and pan/gain
-      mixerBoard->Refresh();
 
    MenuManager::ModifyUndoMenuItems(project);
 }
@@ -337,6 +318,7 @@ void OnCut(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
@@ -377,9 +359,6 @@ void OnCut(const CommandContext &context)
    ruler->DrawOverlays( true );
 
    project.RedrawProject();
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
 }
 
 void OnDelete(const CommandContext &context)
@@ -416,6 +395,7 @@ void OnCopy(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    AudacityProject::msClipT0 = selectedRegion.t0();
    AudacityProject::msClipT1 = selectedRegion.t1();
@@ -423,9 +403,6 @@ void OnCopy(const CommandContext &context)
 
    //Make sure the menus/toolbar states get updated
    trackPanel->Refresh(false);
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
 }
 
 void OnPaste(const CommandContext &context)
@@ -756,6 +733,7 @@ void OnSplitCut(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
+   wxTheApp->AddPendingEvent( wxCommandEvent{ EVT_CLIPBOARD_CHANGE } );
 
    AudacityProject::msClipT0 = selectedRegion.t0();
    AudacityProject::msClipT1 = selectedRegion.t1();
@@ -764,9 +742,6 @@ void OnSplitCut(const CommandContext &context)
    project.PushState(_("Split-cut to the clipboard"), _("Split Cut"));
 
    project.RedrawProject();
-
-   if (historyWindow)
-      historyWindow->UpdateDisplay();
 }
 
 void OnSplitDelete(const CommandContext &context)
