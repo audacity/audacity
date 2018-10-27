@@ -503,6 +503,32 @@ void DoSortTracks( AudacityProject &project, int flags )
    pTracks->Permute(arr);
 }
 
+void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
+{
+   wxASSERT(wt);
+   float newValue = slider->Get();
+
+   for (auto channel : TrackList::Channels(wt))
+      channel->SetGain(newValue);
+
+   project.PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
+
+   project.GetTrackPanel()->RefreshTrack(wt);
+}
+
+void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
+{
+   wxASSERT(wt);
+   float newValue = slider->Get();
+
+   for (auto channel : TrackList::Channels(wt))
+      channel->SetPan(newValue);
+
+   project.PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
+
+   project.GetTrackPanel()->RefreshTrack(wt);
+}
+
 }
 
 namespace TrackActions {
@@ -1084,7 +1110,7 @@ void OnTrackPan(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->PanSlider(wt);
       if (slider->ShowDialog())
-         project.SetTrackPan(wt, slider);
+         SetTrackPan(project, wt, slider);
    });
 }
 
@@ -1097,7 +1123,7 @@ void OnTrackPanLeft(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->PanSlider(wt);
       slider->Decrease(1);
-      project.SetTrackPan(wt, slider);
+      SetTrackPan(project, wt, slider);
    });
 }
 
@@ -1110,7 +1136,7 @@ void OnTrackPanRight(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->PanSlider(wt);
       slider->Increase(1);
-      project.SetTrackPan(wt, slider);
+      SetTrackPan(project, wt, slider);
    });
 }
 
@@ -1124,7 +1150,7 @@ void OnTrackGain(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->GainSlider(wt);
       if (slider->ShowDialog())
-         project.SetTrackGain(wt, slider);
+         SetTrackGain(project, wt, slider);
    });
 }
 
@@ -1137,7 +1163,7 @@ void OnTrackGainInc(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->GainSlider(wt);
       slider->Increase(1);
-      project.SetTrackGain(wt, slider);
+      SetTrackGain(project, wt, slider);
    });
 }
 
@@ -1150,7 +1176,7 @@ void OnTrackGainDec(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->GainSlider(wt);
       slider->Decrease(1);
-      project.SetTrackGain(wt, slider);
+      SetTrackGain(project, wt, slider);
    });
 }
 

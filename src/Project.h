@@ -427,8 +427,6 @@ public:
 
    void DoTrackMute(Track *pTrack, bool exclusive);
    void DoTrackSolo(Track *pTrack, bool exclusive);
-   void SetTrackGain(WaveTrack * track, LWSlider * slider);
-   void SetTrackPan(WaveTrack * track, LWSlider * slider);
 
    void RemoveTrack(Track * toRemove);
 
