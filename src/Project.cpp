@@ -4739,26 +4739,6 @@ void AudacityProject::ClearClipboard()
    }
 }
 
-void AudacityProject::Clear()
-{
-   for (auto n : GetTracks()->Any()) {
-      if (n->GetSelected() || n->IsSyncLockSelected()) {
-         n->Clear(mViewInfo.selectedRegion.t0(), mViewInfo.selectedRegion.t1());
-      }
-   }
-
-   double seconds = mViewInfo.selectedRegion.duration();
-
-   mViewInfo.selectedRegion.collapseToT0();
-
-   PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
-                              seconds,
-                              mViewInfo.selectedRegion.t0()),
-             _("Delete"));
-
-   RedrawProject();
-}
-
 // Utility function called by other zoom methods
 void AudacityProject::Zoom(double level)
 {

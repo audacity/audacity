@@ -318,8 +318,6 @@ private:
    bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 public:
 
-   void Clear();// clears a selection
-
    const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
    void SetProjectTitle( int number =-1);
