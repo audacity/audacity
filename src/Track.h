@@ -1093,13 +1093,13 @@ template <
  * Clear, and Contains, plus serialization of the list of tracks.
  */
 
-struct TrackListEvent : public wxEvent
+struct TrackListEvent : public wxCommandEvent
 {
    explicit
    TrackListEvent(
       wxEventType commandType,
       const std::weak_ptr<Track> &pTrack = {}, int code = -1)
-   : wxEvent{ commandType }
+   : wxCommandEvent{ commandType }
    , mpTrack{ pTrack }
    , mCode{ code }
    {}
