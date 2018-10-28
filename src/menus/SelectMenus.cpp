@@ -1070,6 +1070,10 @@ void UpdatePrefs() override
    gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekInfo.mSeekShort, 1.0);
    gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekInfo.mSeekShort, 15.0);
 }
+Handler()
+{
+   UpdatePrefs();
+}
 
 }; // struct Handler
 

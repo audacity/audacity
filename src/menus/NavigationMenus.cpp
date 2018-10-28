@@ -526,6 +526,10 @@ void UpdatePrefs() override
    mCircularTrackNavigation =
       gPrefs->ReadBool(wxT("/GUI/CircularTrackNavigation"), false);
 }
+Handler()
+{
+   UpdatePrefs();
+}
 
 }; // struct Handler
 
