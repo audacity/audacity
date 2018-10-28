@@ -503,6 +503,32 @@ void DoSortTracks( AudacityProject &project, int flags )
    pTracks->Permute(arr);
 }
 
+void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
+{
+   wxASSERT(wt);
+   float newValue = slider->Get();
+
+   for (auto channel : TrackList::Channels(wt))
+      channel->SetGain(newValue);
+
+   project.PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
+
+   project.GetTrackPanel()->RefreshTrack(wt);
+}
+
+void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
+{
+   wxASSERT(wt);
+   float newValue = slider->Get();
+
+   for (auto channel : TrackList::Channels(wt))
+      channel->SetPan(newValue);
+
+   project.PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
+
+   project.GetTrackPanel()->RefreshTrack(wt);
+}
+
 }
 
 namespace TrackActions {
@@ -547,6 +573,146 @@ void DoRemoveTracks( AudacityProject &project )
 
    trackPanel->UpdateViewIfNoTracks();
    trackPanel->Refresh(false);
+}
+
+void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
+{
+   auto &tracks = *project.GetTracks();
+   auto &trackPanel = *project.GetTrackPanel();
+
+   // Whatever t is, replace with lead channel
+   t = *tracks.FindLeader(t);
+
+   // "exclusive" mute means mute the chosen track and unmute all others.
+   if (exclusive) {
+      for (auto leader : tracks.Leaders<PlayableTrack>()) {
+         const auto group = TrackList::Channels(leader);
+         bool chosen = (t == leader);
+         for (auto channel : group)
+            channel->SetMute( chosen ),
+            channel->SetSolo( false );
+      }
+   }
+   else {
+      // Normal click toggles this track.
+      auto pt = dynamic_cast<PlayableTrack *>( t );
+      if (!pt)
+         return;
+
+      bool wasMute = pt->GetMute();
+      for (auto channel : TrackList::Channels(pt))
+         channel->SetMute( !wasMute );
+
+      if (project.IsSoloSimple() || project.IsSoloNone())
+      {
+         // We also set a solo indicator if we have just one track / stereo pair playing.
+         // in a group of more than one playable tracks.
+         // otherwise clear solo on everything.
+
+         auto range = tracks.Leaders<PlayableTrack>();
+         auto nPlayableTracks = range.size();
+         auto nPlaying = (range - &PlayableTrack::GetMute).size();
+
+         for (auto track : tracks.Any<PlayableTrack>())
+            // will set both of a stereo pair
+            track->SetSolo( (nPlaying==1) && (nPlayableTracks > 1 ) && !track->GetMute() );
+      }
+   }
+   project.ModifyState(true);
+
+   trackPanel.UpdateAccessibility();
+   trackPanel.Refresh(false);
+}
+
+void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
+{
+   auto &tracks = *project.GetTracks();
+   auto &trackPanel = *project.GetTrackPanel();
+   
+   // Whatever t is, replace with lead channel
+   t = *tracks.FindLeader(t);
+
+   const auto pt = dynamic_cast<PlayableTrack *>( t );
+   if (!pt)
+      return;
+   bool bWasSolo = pt->GetSolo();
+
+   bool bSoloMultiple = !project.IsSoloSimple() ^ exclusive;
+
+   // Standard and Simple solo have opposite defaults:
+   //   Standard - Behaves as individual buttons, shift=radio buttons
+   //   Simple   - Behaves as radio buttons, shift=individual
+   // In addition, Simple solo will mute/unmute tracks
+   // when in standard radio button mode.
+   if ( bSoloMultiple )
+   {
+      for (auto channel : TrackList::Channels(pt))
+         channel->SetSolo( !bWasSolo );
+   }
+   else
+   {
+      // Normal click solo this track only, mute everything else.
+      // OR unmute and unsolo everything.
+      for (auto leader : tracks.Leaders<PlayableTrack>()) {
+         const auto group = TrackList::Channels(leader);
+         bool chosen = (t == leader);
+         for (auto channel : group) {
+            if (chosen) {
+               channel->SetSolo( !bWasSolo );
+               if( project.IsSoloSimple() )
+                  channel->SetMute( false );
+            }
+            else {
+               channel->SetSolo( false );
+               if( project.IsSoloSimple() )
+                  channel->SetMute( !bWasSolo );
+            }
+         }
+      }
+   }
+   project.ModifyState(true);
+
+   trackPanel.UpdateAccessibility();
+   trackPanel.Refresh(false);
+}
+
+void DoRemoveTrack(AudacityProject &project, Track * toRemove)
+{
+   auto &tracks = *project.GetTracks();
+   auto &trackPanel = *project.GetTrackPanel();
+
+   // If it was focused, then NEW focus is the next or, if
+   // unavailable, the previous track. (The NEW focus is set
+   // after the track has been removed.)
+   bool toRemoveWasFocused = trackPanel.GetFocusedTrack() == toRemove;
+   Track* newFocus{};
+   if (toRemoveWasFocused) {
+      auto iterNext = tracks.FindLeader(toRemove), iterPrev = iterNext;
+      newFocus = *++iterNext;
+      if (!newFocus) {
+         newFocus = *--iterPrev;
+      }
+   }
+
+   wxString name = toRemove->GetName();
+
+   auto channels = TrackList::Channels(toRemove);
+   // Be careful to post-increment over positions that get erased!
+   auto &iter = channels.first;
+   while (iter != channels.end())
+      tracks.Remove( * iter++ );
+
+   if (toRemoveWasFocused)
+      trackPanel.SetFocusedTrack(newFocus);
+
+   project.PushState(
+      wxString::Format(_("Removed track '%s.'"),
+      name),
+      _("Track Remove"));
+
+   project.FixScrollbars();
+   project.HandleResize();
+   trackPanel.Refresh(false);
 }
 
 void DoMoveTrack
@@ -1084,7 +1250,7 @@ void OnTrackPan(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->PanSlider(wt);
       if (slider->ShowDialog())
-         project.SetTrackPan(wt, slider);
+         SetTrackPan(project, wt, slider);
    });
 }
 
@@ -1097,7 +1263,7 @@ void OnTrackPanLeft(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->PanSlider(wt);
       slider->Decrease(1);
-      project.SetTrackPan(wt, slider);
+      SetTrackPan(project, wt, slider);
    });
 }
 
@@ -1110,7 +1276,7 @@ void OnTrackPanRight(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->PanSlider(wt);
       slider->Increase(1);
-      project.SetTrackPan(wt, slider);
+      SetTrackPan(project, wt, slider);
    });
 }
 
@@ -1124,7 +1290,7 @@ void OnTrackGain(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->GainSlider(wt);
       if (slider->ShowDialog())
-         project.SetTrackGain(wt, slider);
+         SetTrackGain(project, wt, slider);
    });
 }
 
@@ -1137,7 +1303,7 @@ void OnTrackGainInc(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->GainSlider(wt);
       slider->Increase(1);
-      project.SetTrackGain(wt, slider);
+      SetTrackGain(project, wt, slider);
    });
 }
 
@@ -1150,7 +1316,7 @@ void OnTrackGainDec(const CommandContext &context)
    if (track) track->TypeSwitch( [&](WaveTrack *wt) {
       LWSlider *slider = trackPanel->GainSlider(wt);
       slider->Decrease(1);
-      project.SetTrackGain(wt, slider);
+      SetTrackGain(project, wt, slider);
    });
 }
 
@@ -1169,7 +1335,7 @@ void OnTrackMute(const CommandContext &context)
 
    const auto track = trackPanel->GetFocusedTrack();
    if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      project.DoTrackMute(t, false);
+      DoTrackMute(project, t, false);
    });
 }
 
@@ -1180,7 +1346,7 @@ void OnTrackSolo(const CommandContext &context)
 
    const auto track = trackPanel->GetFocusedTrack();
    if (track) track->TypeSwitch( [&](PlayableTrack *t) {
-      project.DoTrackSolo(t, false);
+      DoTrackSolo(project, t, false);
    });
 }
 
@@ -1203,7 +1369,7 @@ void OnTrackClose(const CommandContext &context)
       return;
    }
 
-   project.RemoveTrack(t);
+   DoRemoveTrack(project, t);
 
    trackPanel->UpdateViewIfNoTracks();
    trackPanel->Refresh(false);

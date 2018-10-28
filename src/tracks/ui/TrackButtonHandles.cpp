@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackButtonHandles.h"
 
 #include "../../HitTestResult.h"
+#include "../../Menus.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../Track.h"
@@ -95,7 +96,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
       pProject->StopIfPaused();
       if (!pProject->IsAudioActive()) {
          // This pushes an undo item:
-         pProject->RemoveTrack(pTrack.get());
+         TrackActions::DoRemoveTrack(*pProject, pTrack.get());
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

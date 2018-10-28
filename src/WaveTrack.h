@@ -53,7 +53,7 @@ struct Region
    }
 };
 
-class Regions : public std::vector < Region > {};
+using Regions = std::vector < Region >;
 
 class Envelope;
 

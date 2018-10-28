@@ -93,8 +93,6 @@ class MixerBoardFrame;
 struct AudioIOStartStreamOptions;
 struct UndoState;
 
-class Regions;
-
 class LWSlider;
 class UndoManager;
 enum class UndoPush : unsigned char;
@@ -318,8 +316,6 @@ private:
    bool DoSave(bool fromSaveAs, bool bWantSaveCopy, bool bLossless = false);
 public:
 
-   void Clear();// clears a selection
-
    const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
    void SetProjectTitle( int number =-1);
@@ -426,28 +422,8 @@ public:
    void SkipEnd(bool shift);
 
 
-   typedef void (WaveTrack::* EditFunction)(double, double);
-   typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
-
-   void EditByLabel(EditFunction action, bool bSyncLockedTracks);
-   void EditClipboardByLabel(EditDestFunction action );
-
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
-
-   void DoTrackMute(Track *pTrack, bool exclusive);
-   void DoTrackSolo(Track *pTrack, bool exclusive);
-   void SetTrackGain(WaveTrack * track, LWSlider * slider);
-   void SetTrackPan(WaveTrack * track, LWSlider * slider);
-
-   void RemoveTrack(Track * toRemove);
-
-   // "exclusive" mute means mute the chosen track and unmute all others.
-   void HandleTrackMute(Track *t, const bool exclusive);
-
-   // Type of solo (standard or simple) follows the set preference, unless
-   // alternate == true, which causes the opposite behavior.
-   void HandleTrackSolo(Track *t, const bool alternate);
 
    // Snap To
 
@@ -603,17 +579,10 @@ public:
 
    void PopState(const UndoState &state);
 
-   void GetRegionsByLabel( Regions &regions );
-
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
 
  public:
-   double GetZoomOfToFit();
-   double GetZoomOfSelection();
-
-   double GetZoomOfPreset(int preset );
-
    bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
    bool IsSoloNone() const { return mSoloPref == wxT("None"); }
 

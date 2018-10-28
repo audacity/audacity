@@ -364,8 +364,27 @@ void OnCut(const CommandContext &context)
 void OnDelete(const CommandContext &context)
 {
    auto &project = context.project;
-   project.Clear();
+   auto &tracks = *project.GetTracks();
+   auto &selectedRegion = project.GetViewInfo().selectedRegion;
+
+   for (auto n : tracks.Any()) {
+      if (n->GetSelected() || n->IsSyncLockSelected()) {
+         n->Clear(selectedRegion.t0(), selectedRegion.t1());
+      }
+   }
+
+   double seconds = selectedRegion.duration();
+
+   selectedRegion.collapseToT0();
+
+   project.PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
+                              seconds,
+                              selectedRegion.t0()),
+             _("Delete"));
+
+   project.RedrawProject();
 }
+
 
 void OnCopy(const CommandContext &context)
 {

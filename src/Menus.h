@@ -118,6 +118,7 @@ void DoSelectSomething( AudacityProject &project );
 }
 
 namespace ViewActions {
+double GetZoomOfToFit( const AudacityProject &project );
 void DoZoomFit( AudacityProject &project );
 void DoZoomFitV( AudacityProject &project );
 }
@@ -139,6 +140,12 @@ namespace TrackActions {
    };
 /// Move a track up, down, to top or to bottom.
 void DoMoveTrack( AudacityProject &project, Track* target, MoveChoice choice );
+// "exclusive" mute means mute the chosen track and unmute all others.
+void DoTrackMute( AudacityProject &project, Track *pTrack, bool exclusive );
+// Type of solo (standard or simple) follows the set preference, unless
+// exclusive == true, which causes the opposite behavior.
+void DoTrackSolo( AudacityProject &project, Track *pTrack, bool exclusive );
+void DoRemoveTrack( AudacityProject &project, Track * toRemove );
 void DoRemoveTracks( AudacityProject & );
 }
 

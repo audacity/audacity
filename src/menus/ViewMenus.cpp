@@ -14,11 +14,124 @@
 
 // private helper classes and functions
 namespace {
+
+double GetZoomOfSelection( const AudacityProject &project )
+{
+   const auto &viewInfo = project.GetViewInfo();
+   const auto &trackPanel = *project.GetTrackPanel();
+
+   const double lowerBound =
+      std::max(viewInfo.selectedRegion.t0(),
+         project.ScrollingLowerBoundTime());
+   const double denom =
+      viewInfo.selectedRegion.t1() - lowerBound;
+   if (denom <= 0.0)
+      return viewInfo.GetZoom();
+
+   // LL:  The "-1" is just a hack to get around an issue where zooming to
+   //      selection doesn't actually get the entire selected region within the
+   //      visible area.  This causes a problem with scrolling at end of playback
+   //      where the selected region may be scrolled off the left of the screen.
+   //      I know this isn't right, but until the real rounding or 1-off issue is
+   //      found, this will have to work.
+   // PRL:  Did I fix this?  I am not sure, so I leave the hack in place.
+   //      Fixes might have resulted from commits
+   //      1b8f44d0537d987c59653b11ed75a842b48896ea and
+   //      e7c7bb84a966c3b3cc4b3a9717d5f247f25e7296
+   int width;
+   trackPanel.GetTracksUsableArea(&width, NULL);
+   return (width - 1) / denom;
+}
+
+double GetZoomOfPreset( const AudacityProject &project, int preset )
+{
+
+   // Sets a limit on how far we will zoom out as a factor over zoom to fit.
+   const double maxZoomOutFactor = 4.0;
+   // Sets how many pixels we allow for one uint, such as seconds.
+   const double pixelsPerUnit = 5.0;
+
+   double result = 1.0;
+   double zoomToFit = ViewActions::GetZoomOfToFit( project );
+   switch( preset ){
+      default:
+      case WaveTrack::kZoomDefault:
+         result = ZoomInfo::GetDefaultZoom();
+         break;
+      case WaveTrack::kZoomToFit:
+         result = zoomToFit;
+         break;
+      case WaveTrack::kZoomToSelection:
+         result = GetZoomOfSelection( project );
+         break;
+      case WaveTrack::kZoomMinutes:
+         result = pixelsPerUnit * 1.0/60;
+         break;
+      case WaveTrack::kZoomSeconds:
+         result = pixelsPerUnit * 1.0;
+         break;
+      case WaveTrack::kZoom5ths:
+         result = pixelsPerUnit * 5.0;
+         break;
+      case WaveTrack::kZoom10ths:
+         result = pixelsPerUnit * 10.0;
+         break;
+      case WaveTrack::kZoom20ths:
+         result = pixelsPerUnit * 20.0;
+         break;
+      case WaveTrack::kZoom50ths:
+         result = pixelsPerUnit * 50.0;
+         break;
+      case WaveTrack::kZoom100ths:
+         result = pixelsPerUnit * 100.0;
+         break;
+      case WaveTrack::kZoom500ths:
+         result = pixelsPerUnit * 500.0;
+         break;
+      case WaveTrack::kZoomMilliSeconds:
+         result = pixelsPerUnit * 1000.0;
+         break;
+      case WaveTrack::kZoomSamples:
+         result = 44100.0;
+         break;
+      case WaveTrack::kZoom4To1:
+         result = 44100.0 * 4;
+         break;
+      case WaveTrack::kMaxZoom:
+         result = ZoomInfo::GetMaxZoom();
+         break;
+   };
+   if( result < (zoomToFit/maxZoomOutFactor) )
+      result = zoomToFit / maxZoomOutFactor;
+   return result;
+}
+
 }
 
 namespace ViewActions {
 
 // exported helper functions
+
+double GetZoomOfToFit( const AudacityProject &project )
+{
+   const auto &tracks = *project.GetTracks();
+   const auto &viewInfo = project.GetViewInfo();
+   const auto &trackPanel = *project.GetTrackPanel();
+
+   const double end = tracks.GetEndTime();
+   const double start = viewInfo.bScrollBeyondZero
+      ? std::min( tracks.GetStartTime(), 0.0)
+      : 0;
+   const double len = end - start;
+
+   if (len <= 0.0)
+      return viewInfo.GetZoom();
+
+   int w;
+   trackPanel.GetTracksUsableArea(&w, NULL);
+   w -= 10;
+   return w/len;
+}
 
 void DoZoomFit(AudacityProject &project)
 {
@@ -29,7 +142,7 @@ void DoZoomFit(AudacityProject &project)
       ? std::min(tracks->GetStartTime(), 0.0)
       : 0;
 
-   project.Zoom( project.GetZoomOfToFit() );
+   project.Zoom( GetZoomOfToFit( project ) );
    project.TP_ScrollWindow(start);
 }
 
@@ -91,7 +204,7 @@ void OnZoomSel(const CommandContext &context)
    auto &project = context.project;
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   project.Zoom( project.GetZoomOfSelection() );
+   project.Zoom( GetZoomOfSelection( project ) );
    project.TP_ScrollWindow(selectedRegion.t0());
 }
 
@@ -105,8 +218,8 @@ void OnZoomToggle(const CommandContext &context)
 //   const double origWidth = GetScreenEndTime() - origLeft;
 
    // Choose the zoom that is most different to the current zoom.
-   double Zoom1 = project.GetZoomOfPreset( TracksPrefs::Zoom1Choice() );
-   double Zoom2 = project.GetZoomOfPreset( TracksPrefs::Zoom2Choice() );
+   double Zoom1 = GetZoomOfPreset( project, TracksPrefs::Zoom1Choice() );
+   double Zoom2 = GetZoomOfPreset( project, TracksPrefs::Zoom2Choice() );
    double Z = viewInfo.GetZoom();// Current Zoom.
    double ChosenZoom =
       fabs(log(Zoom1 / Z)) > fabs(log( Z / Zoom2)) ? Zoom1:Zoom2;
