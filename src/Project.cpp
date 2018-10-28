@@ -5328,43 +5328,6 @@ void AudacityProject::DoTrackSolo(Track *t, bool exclusive)
    mTrackPanel->Refresh(false);
 }
 
-/// Removes the specified track.  Called from HandleClosing.
-void AudacityProject::RemoveTrack(Track * toRemove)
-{
-   // If it was focused, then NEW focus is the next or, if
-   // unavailable, the previous track. (The NEW focus is set
-   // after the track has been removed.)
-   bool toRemoveWasFocused = mTrackPanel->GetFocusedTrack() == toRemove;
-   Track* newFocus{};
-   if (toRemoveWasFocused) {
-      auto iterNext = mTracks->FindLeader(toRemove), iterPrev = iterNext;
-      newFocus = *++iterNext;
-      if (!newFocus) {
-         newFocus = *--iterPrev;
-      }
-   }
-
-   wxString name = toRemove->GetName();
-
-   auto channels = TrackList::Channels(toRemove);
-   // Be careful to post-increment over positions that get erased!
-   auto &iter = channels.first;
-   while (iter != channels.end())
-      mTracks->Remove( * iter++ );
-
-   if (toRemoveWasFocused)
-      mTrackPanel->SetFocusedTrack(newFocus);
-
-   PushState(
-      wxString::Format(_("Removed track '%s.'"),
-      name),
-      _("Track Remove"));
-
-   TP_RedrawScrollbars();
-   HandleResize();
-   GetTrackPanel()->Refresh(false);
-}
-
 void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
 {
    // Whatever t is, replace with lead channel

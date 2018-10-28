@@ -140,6 +140,7 @@ namespace TrackActions {
    };
 /// Move a track up, down, to top or to bottom.
 void DoMoveTrack( AudacityProject &project, Track* target, MoveChoice choice );
+void DoRemoveTrack( AudacityProject &project, Track * toRemove );
 void DoRemoveTracks( AudacityProject & );
 }
 

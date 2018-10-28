@@ -428,8 +428,6 @@ public:
    void DoTrackMute(Track *pTrack, bool exclusive);
    void DoTrackSolo(Track *pTrack, bool exclusive);
 
-   void RemoveTrack(Track * toRemove);
-
    // "exclusive" mute means mute the chosen track and unmute all others.
    void HandleTrackMute(Track *t, const bool exclusive);
 
