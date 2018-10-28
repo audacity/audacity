@@ -348,6 +348,10 @@ NoteTrack *MixerTrackCluster::GetNote() const
 }
 #endif
 
+// Old approach modified things in situ.
+// However with a theme change there is so much to modify, it is easier
+// to recreate.
+#if 0
 void MixerTrackCluster::UpdatePrefs()
 {
    this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
@@ -356,6 +360,7 @@ void MixerTrackCluster::UpdatePrefs()
       mMeter->UpdatePrefs(); // in case meter range has changed
    HandleResize(); // in case prefs "/GUI/Solo" changed
 }
+#endif
 
 void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider and meter.
 {

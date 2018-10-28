@@ -86,7 +86,7 @@ public:
    NoteTrack *GetNote() const;
 #endif
 
-   void UpdatePrefs();
+   //void UpdatePrefs();
 
    void HandleResize(); // For wxSizeEvents, update gain slider and meter.
 
