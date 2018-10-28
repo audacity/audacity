@@ -425,16 +425,6 @@ public:
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
 
-   void DoTrackMute(Track *pTrack, bool exclusive);
-   void DoTrackSolo(Track *pTrack, bool exclusive);
-
-   // "exclusive" mute means mute the chosen track and unmute all others.
-   void HandleTrackMute(Track *t, const bool exclusive);
-
-   // Type of solo (standard or simple) follows the set preference, unless
-   // alternate == true, which causes the opposite behavior.
-   void HandleTrackSolo(Track *t, const bool alternate);
-
    // Snap To
 
    void SetSnapTo(int snap);

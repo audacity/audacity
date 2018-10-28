@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "Audacity.h"
+#include "Menus.h"
 #include "MixerBoard.h"
 
 #include <cfloat>
@@ -744,7 +745,8 @@ void MixerTrackCluster::OnSlider_Pan(wxCommandEvent& WXUNUSED(event))
 
 void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 {
-   mProject->HandleTrackMute(mTrack.get(), mToggleButton_Mute->WasShiftDown());
+   TrackActions::DoTrackMute(
+      *mProject, mTrack.get(), mToggleButton_Mute->WasShiftDown());
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
@@ -759,7 +761,8 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 
 void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 {
-   mProject->HandleTrackSolo(mTrack.get(), mToggleButton_Solo->WasShiftDown());
+   TrackActions::DoTrackSolo(
+      *mProject, mTrack.get(), mToggleButton_Solo->WasShiftDown());
    bool bIsSolo = mTrack->GetSolo();
    mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
 
