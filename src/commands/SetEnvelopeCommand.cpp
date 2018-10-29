@@ -73,7 +73,7 @@ bool SetEnvelopeCommand::ApplyInner( const CommandContext & context, Track * t )
             if( bHasDelete && mbDelete )
                pEnv->mEnv.clear();
             if( bHasT && bHasV )
-               pEnv->InsertOrReplace( mT, mV );
+               pEnv->InsertOrReplace( mT, pEnv->ClampValue( mV ) );
          }
       }
    } );
