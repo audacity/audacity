@@ -42,6 +42,7 @@ effects from this one class.
 #include <wx/valgen.h>
 #include <wx/wfstream.h>
 #include <wx/numformatter.h>
+#include <wx/stdpaths.h>
 
 #include "../../AudacityApp.h"
 #include "../../FileException.h"
@@ -673,6 +674,9 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HELP)\n"), EscapeString(FileNames::HtmlHelpDir().RemoveLast()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'TEMP)\n"), EscapeString(FileNames::TempDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'SYS-TEMP)\n"), EscapeString(wxStandardPaths::Get().GetTempDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"), EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"), EscapeString(wxGetHomeDir()));
 
       wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
       wxString list;
@@ -684,7 +688,8 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list);
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list);
-
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'USER-PLUG-IN)\n"),
+                                 EscapeString(FileNames::PlugInDir()));
 
       // Date and time:
       wxDateTime now = wxDateTime::Now();

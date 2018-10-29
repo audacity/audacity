@@ -67,3 +67,12 @@
         (error (format nil "(aud-get-info ~a) failed.~%" str)))
     (let ((info-string (first info)))
       (eval-string (quote-string info-string)))))
+
+
+;;; Path to Nyquist .lsp files.
+(setf *NYQ-PATH* (current-path))
+
+;;; Load wrapper functions for aud-do commands.
+;;; If commented out, "aud-do-support.lsp" may be loaded by a plug-in.
+;;; Example: (lisp-loader (strcat *NYQ-PATH* "aud-do-support.lsp"))
+(load "aud-do-support.lsp")
