@@ -355,8 +355,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
       comp1 = comp2 = CompareEffectsByName;
 
    std::sort( defplugs.begin(), defplugs.end(), comp1 );
-   if ( comp1 != comp2 )
-      std::stable_sort( optplugs.begin(), optplugs.end(), comp2 );
+   std::sort( optplugs.begin(), optplugs.end(), comp2 );
 
    AddEffectMenuItems( result, defplugs, batchflags, realflags, true );
 
