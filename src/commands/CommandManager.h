@@ -568,10 +568,6 @@ namespace MenuTable {
    inline BaseItemPtr Items( Args&&... args )
          { return std::make_unique<GroupItem>(
             std::forward<Args>(args)... ); }
-   inline BaseItemPtr Items(
-      const wxString &title, BaseItemPtrs &&items )
-         { (void)title; // Compiler food
-            return std::make_unique<GroupItem>( std::move( items ) ); }
 
    // Menu items can be constructed two ways, as for group items
    // Items will appear in a main toolbar menu or in a sub-menu
