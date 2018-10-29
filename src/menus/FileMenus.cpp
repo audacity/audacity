@@ -143,6 +143,7 @@ struct Handler : CommandHandlerObject {
 
 void OnNew(const CommandContext &context )
 {
+   (void)context;// Compiler food
    CreateNewAudacityProject();
 }
 

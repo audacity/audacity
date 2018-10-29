@@ -36,7 +36,7 @@ void SelectionState::SelectTrackLength
 void SelectionState::SelectTrack(
    Track &track, bool selected, bool updateLastPicked )
 {
-   bool wasCorrect = (selected == track.GetSelected());
+   //bool wasCorrect = (selected == track.GetSelected());
 
    for (auto channel : TrackList::Channels(&track))
       channel->SetSelected(selected);

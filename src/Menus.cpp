@@ -220,9 +220,9 @@ void VisitItem( AudacityProject &project, MenuTable::BaseItem *pItem )
    else
    if (const auto pSpecial =
        dynamic_cast<SpecialItem*>( pItem )) {
-      const auto pMenu = manager.CurrentMenu();
-      wxASSERT( pMenu );
-      pSpecial->fn( project, *pMenu );
+      const auto pCurrentMenu = manager.CurrentMenu();
+      wxASSERT( pCurrentMenu );
+      pSpecial->fn( project, *pCurrentMenu );
    }
    else
       wxASSERT( false );

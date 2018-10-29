@@ -46,6 +46,7 @@ float VelocitySliderHandle::GetValue()
 UIHandle::Result VelocitySliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
+   (void)pProject;//Compiler food
    auto pTrack = GetNoteTrack();
 
    if (pTrack) {

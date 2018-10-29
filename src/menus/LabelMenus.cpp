@@ -575,6 +575,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project )
 {
+   (void)project;//Compiler food
    using namespace MenuTable;
    using Options = CommandManager::Options;
 

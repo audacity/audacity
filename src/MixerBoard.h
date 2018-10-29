@@ -25,7 +25,7 @@
 #include "widgets/ASlider.h"
 #include "widgets/wxPanelWrapper.h"
 
-class TrackListEvent;
+struct TrackListEvent;
 
 // containment hierarchy:
 //    MixerBoardFrame -> MixerBoard -> MixerBoardScrolledWindow -> MixerTrackCluster(s)

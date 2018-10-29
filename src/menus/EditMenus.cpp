@@ -218,7 +218,7 @@ void DoUndo(AudacityProject &project)
 {
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto historyWindow = project.GetHistoryWindow();
+   //auto historyWindow = project.GetHistoryWindow();
 
    if (!project.UndoAvailable()) {
       AudacityMessageBox(_("Nothing to undo"));
@@ -254,7 +254,7 @@ void OnRedo(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
    auto &undoManager = *project.GetUndoManager();
-   auto historyWindow = project.GetHistoryWindow();
+   //auto historyWindow = project.GetHistoryWindow();
 
    if (!project.RedoAvailable()) {
       AudacityMessageBox(_("Nothing to redo"));
@@ -282,7 +282,7 @@ void OnCut(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
    auto ruler = project.GetRulerPanel();
-   auto historyWindow = project.GetHistoryWindow();
+   //auto historyWindow = project.GetHistoryWindow();
 
    // This doesn't handle cutting labels, it handles
    // cutting the _text_ inside of labels, i.e. if you're
@@ -392,7 +392,7 @@ void OnCopy(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto trackPanel = project.GetTrackPanel();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
-   auto historyWindow = project.GetHistoryWindow();
+   //auto historyWindow = project.GetHistoryWindow();
 
    for (auto lt : tracks->Selected< LabelTrack >()) {
       if (lt->CopySelectedText()) {
@@ -723,7 +723,7 @@ void OnSplitCut(const CommandContext &context)
    auto &project = context.project;
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
-   auto historyWindow = project.GetHistoryWindow();
+   //auto historyWindow = project.GetHistoryWindow();
 
    AudacityProject::ClearClipboard();
 
@@ -1080,6 +1080,7 @@ MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project );
 
 MenuTable::BaseItemPtr EditMenu( AudacityProject &project )
 {
+   (void)project;// Compiler food
    using namespace MenuTable;
    using Options = CommandManager::Options;
 

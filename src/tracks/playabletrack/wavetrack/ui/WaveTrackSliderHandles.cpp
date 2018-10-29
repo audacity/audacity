@@ -43,6 +43,7 @@ float GainSliderHandle::GetValue()
 UIHandle::Result GainSliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
+   (void)pProject;//Compiler food
    auto pTrack = GetWaveTrack();
 
    if (pTrack) {
@@ -118,6 +119,7 @@ float PanSliderHandle::GetValue()
 
 UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newValue)
 {
+   (void)pProject;//Compiler food
    using namespace RefreshCode;
    Result result = RefreshNone;
    auto pTrack = GetWaveTrack();

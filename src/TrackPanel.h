@@ -33,7 +33,7 @@ class LabelTrack;
 class SpectrumAnalyst;
 class Track;
 class TrackList;
-class TrackListEvent;
+struct TrackListEvent;
 class TrackPanel;
 class TrackArtist;
 class Ruler;
