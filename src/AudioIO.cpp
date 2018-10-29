@@ -5044,7 +5044,7 @@ bool AudioIoCallback::FillOutputBuffers(
    // wxASSERT( maxLen == toGet );
 
    em.RealtimeProcessEnd();
-   mLastPlaybackTimeMillis = ::wxGetLocalTimeMillis();
+   mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
 
    ClampBuffer( outputFloats, framesPerBuffer*numPlaybackChannels );
    if (outputMeterFloats != outputFloats)

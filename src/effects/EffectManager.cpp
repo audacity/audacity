@@ -751,7 +751,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
 
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
-   wxMilliClock_t start = wxGetLocalTimeMillis();
+   wxMilliClock_t start = wxGetUTCTimeMillis();
 
    // Allocate the in/out buffer arrays
    float **ibuf = (float **) alloca(chans * sizeof(float *));
@@ -798,7 +798,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
    }
 
    // Remember the latency
-   mRealtimeLatency = (int) (wxGetLocalTimeMillis() - start).GetValue();
+   mRealtimeLatency = (int) (wxGetUTCTimeMillis() - start).GetValue();
 
    mRealtimeLock.Leave();
 
