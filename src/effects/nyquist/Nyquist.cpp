@@ -2129,7 +2129,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    while (!stream.Eof() && stream.IsOk())
    {
       bool dollar = false;
-      wxString line = pgm.ReadLine().Trim(false);
+      wxString line = pgm.ReadLine();
       if (line.Length() > 1 &&
           // New in 2.3.0:  allow magic comment lines to start with $
           // The trick is that xgettext will not consider such lines comments
@@ -2144,7 +2144,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
             // Allow run-ons only for new $ format header lines
             done = Parse(tzer, line, !dollar || stream.Eof(), nLines == 1);
          while(!done &&
-            (line = pgm.ReadLine().Trim(false), ++nLines, true));
+            (line = pgm.ReadLine(), ++nLines, true));
 
          // Don't pass these lines to the interpreter, so it doesn't get confused
          // by $, but pass blanks,
