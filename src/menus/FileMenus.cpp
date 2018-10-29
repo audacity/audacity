@@ -141,9 +141,8 @@ AudacityProject *DoImportMIDI(
 
 struct Handler : CommandHandlerObject {
 
-void OnNew(const CommandContext &context )
+void OnNew(const CommandContext & )
 {
-   (void)context;// Compiler food
    CreateNewAudacityProject();
 }
 

@@ -573,9 +573,8 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
    static_cast<CommandFunctorPointer>(& LabelEditActions::Handler :: X)
 #define XXO(X) _(X), wxString{X}.Contains("...")
 
-MenuTable::BaseItemPtr LabelEditMenus( AudacityProject &project )
+MenuTable::BaseItemPtr LabelEditMenus( AudacityProject & )
 {
-   (void)project;//Compiler food
    using namespace MenuTable;
    using Options = CommandManager::Options;
 
