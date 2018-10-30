@@ -69,9 +69,9 @@ class AUDACITY_DLL_API TrackArtist {
                   bool hasSolo);
 
    void DrawVRuler(TrackPanelDrawingContext &context,
-                   const Track *t, wxRect & rect);
+                   const Track *t, const wxRect & rect);
 
-   void UpdateVRuler(const Track *t, wxRect & rect);
+   void UpdateVRuler(const Track *t, const wxRect & rect);
 
    void SetMargins(int left, int top, int right, int bottom);
 
@@ -86,11 +86,11 @@ class AUDACITY_DLL_API TrackArtist {
    }
 
    // Helper: draws the "sync-locked" watermark tiled to a rectangle
-   static void DrawSyncLockTiles(wxDC *dc, wxRect rect);
+   static void DrawSyncLockTiles(wxDC *dc, const wxRect &rect);
 
    // Helper: draws background with selection rect
    static void DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
-         const Track *track, wxBrush &selBrush, wxBrush &unselBrush,
+         const Track *track, const wxBrush &selBrush, const wxBrush &unselBrush,
          const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
 
  private:

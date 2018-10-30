@@ -503,7 +503,7 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
 }
 
 void TrackArtist::DrawVRuler
-(TrackPanelDrawingContext &context, const Track *t, wxRect & rect)
+(TrackPanelDrawingContext &context, const Track *t, const wxRect & rect_)
 {
    auto dc = &context.dc;
    bool highlight = false;
@@ -516,6 +516,7 @@ void TrackArtist::DrawVRuler
    // But give it a beveled area
    t->TypeSwitch(
       [&](const LabelTrack *) {
+         const wxRect &rect = rect_;
          wxRect bev = rect;
          bev.Inflate(-1, 0);
          bev.width += 1;
@@ -523,6 +524,7 @@ void TrackArtist::DrawVRuler
       },
 
       [&](const TimeTrack *) {
+         const wxRect &rect = rect_;
          wxRect bev = rect;
          bev.Inflate(-1, 0);
          bev.width += 1;
@@ -544,6 +546,7 @@ void TrackArtist::DrawVRuler
       },
 
       [&](const WaveTrack *) {
+         const wxRect &rect = rect_;
          // All waves have a ruler in the info panel
          // The ruler needs a bevelled surround.
          wxRect bev = rect;
@@ -569,6 +572,8 @@ void TrackArtist::DrawVRuler
 #ifdef USE_MIDI
       ,
       [&](const NoteTrack *track) {
+         wxRect rect = rect_;
+
       // The note track draws a vertical keyboard to label pitches
          UpdateVRuler(t, rect);
 
@@ -664,7 +669,7 @@ void TrackArtist::DrawVRuler
    );
 }
 
-void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
+void TrackArtist::UpdateVRuler(const Track *t, const wxRect & rect)
 {
    auto update = t->TypeSwitch<bool>(
       [] (const LabelTrack *) {
@@ -3307,7 +3312,7 @@ void TrackArtist::UpdatePrefs()
 // 5x5 box.
 //
 // There may be a better way to do this, or a more appealing pattern.
-void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
+void TrackArtist::DrawSyncLockTiles(wxDC *dc, const wxRect &rect)
 {
    wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockSelTile));
 
@@ -3415,7 +3420,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect rect)
 }
 
 void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
-   const Track *track, wxBrush &selBrush, wxBrush &unselBrush,
+   const Track *track, const wxBrush &selBrush, const wxBrush &unselBrush,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
    //MM: Draw background. We should optimize that a bit more.
