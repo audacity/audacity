@@ -1015,6 +1015,7 @@ template <
    }
 
    // Specify the added conjunct as a pointer to member function
+   // Read + as "and"
    template< typename R, typename C >
       TrackIterRange operator + ( R ( C ::* pmf ) () const ) const
    {
@@ -1033,6 +1034,7 @@ template <
    }
 
    // Specify the negated conjunct as a pointer to member function
+   // Read - as "and not"
    template< typename R, typename C >
       TrackIterRange operator - ( R ( C ::* pmf ) () const ) const
    {
