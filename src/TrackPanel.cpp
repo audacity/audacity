@@ -1608,13 +1608,12 @@ void TrackPanel::DrawOutside
  const Track * t, const wxRect & rec)
 {
    auto dc = &context.dc;
-   const auto wt = track_cast<const WaveTrack*>(t);
 
    // Draw things that extend right of track control panel
    {
       // Start with whole track rect
       wxRect rect = rec;
-      DrawOutsideOfTrack(context, t, rect);
+      DrawOutsideOfTrack(context, rect);
 
       {
          auto channels = TrackList::Channels(t);
@@ -1632,8 +1631,7 @@ void TrackPanel::DrawOutside
       rect.height -= kTopInset;
 
       int labelw = GetLabelWidth();
-      int vrul = GetVRulerOffset();
-      mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), (wt != nullptr), labelw, vrul);
+      mTrackInfo.DrawBackground( dc, rect, t->GetSelected(), labelw );
 
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
@@ -1644,6 +1642,7 @@ void TrackPanel::DrawOutside
       //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
       //}
 
+      int vrul = GetVRulerOffset();
       DrawBordersAroundTrack(dc, rect, vrul);
       {
          auto channels = TrackList::Channels(t);
@@ -1654,7 +1653,7 @@ void TrackPanel::DrawOutside
             DrawBordersAroundSash(channel, dc, rect, labelw);
       }
 
-      DrawShadow(t, dc, rect);
+      DrawShadow( dc, rect );
    }
 
    // Draw things within the track control panel
@@ -1674,9 +1673,8 @@ void TrackPanel::DrawOutside
 // If linked to a following channel, also paint the separator area, which
 // overlaps the next track rectangle's top
 void TrackPanel::DrawOutsideOfTrack
-(TrackPanelDrawingContext &context, const Track * t, const wxRect & rect)
+(TrackPanelDrawingContext &context, const wxRect & rect)
 {
-   (void)t;// Compiler food
    auto dc = &context.dc;
 
    // Fill in area outside of the track
@@ -1933,7 +1931,7 @@ void TrackPanel::DrawBordersAroundSash(const Track * t, wxDC * dc,
 // Given rectangle has insets subtracted left, right, and top
 // Stroke lines along bottom and right, which are slightly short at
 // bottom-left and top-right
-void TrackPanel::DrawShadow(const Track * /* t */ , wxDC * dc, const wxRect & rect)
+void TrackPanel::DrawShadow( wxDC * dc, const wxRect & rect )
 {
    int right = rect.x + rect.width - 1;
    int bottom = rect.y + rect.height - 1;
@@ -2512,13 +2510,9 @@ void TrackInfo::DrawBordersWithin
 //#define USE_BEVELS
 
 // Paint the whole given rectangle some fill color
-void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
-   bool bHasMuteSolo, const int labelw, const int vrul) const
+void TrackInfo::DrawBackground(
+   wxDC * dc, const wxRect & rect, bool bSelected, const int labelw) const
 {
-   //compiler food.
-   static_cast<void>(bHasMuteSolo);
-   static_cast<void>(vrul);
-
    // fill in label
    wxRect fill = rect;
    fill.width = labelw - kLeftInset;
@@ -2527,7 +2521,9 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
 
 #ifdef USE_BEVELS
    // This branch is not now used
-   // PRL:  todo:  banish magic numbers
+   // PRL:  todo:  banish magic numbers.
+   // PRL: vrul was the x coordinate of left edge of the vertical ruler.
+   // PRL: bHasMuteSolo was true iff the track was WaveTrack.
    if( bHasMuteSolo )
    {
       int ylast = rect.height-20;
