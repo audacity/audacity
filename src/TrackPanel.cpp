@@ -2758,8 +2758,8 @@ void TrackPanelCellIterator::UpdateRect()
       // Find a disjoint, maybe empty, rectangle
       // for the empty space appearing at bottom
 
-      mRect.x = kLeftMargin;
-      mRect.width = size.x - (mRect.x + kRightMargin);
+      mRect.x = 0;
+      mRect.width = size.x;
 
       // Use previous value of the bottom, either the whole area if
       // there were no tracks, or else the resizer of the last track
