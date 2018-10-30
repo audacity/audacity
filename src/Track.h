@@ -824,6 +824,8 @@ template<typename T>
       return nullptr;
 }
 
+template < typename TrackType > struct TrackIterRange;
+
 // new track iterators can eliminate the need to cast the result
 template <
    typename TrackType // Track or a subclass, maybe const-qualified
@@ -978,6 +980,9 @@ private:
       return !this->mPred || this->mPred( pTrack );
    }
 
+   // This friendship is needed in TrackIterRange::EndingAfter()
+   friend TrackIterRange< TrackType >;
+
    // The class invariant is that mIter == mEnd, or else, mIter != mEnd and
    // **mIter is of the appropriate subclass and mPred(&**mIter) is true.
    TrackNodePointer mBegin, mIter, mEnd;
@@ -1060,9 +1065,15 @@ template <
 
    TrackIterRange EndingAfter( const Track *pTrack ) const
    {
+      const auto newEnd = this->reversal().find( pTrack ).base();
+      // More careful construction is needed so that the independent
+      // increment and decrement of each iterator in the NEW pair
+      // has the expected behavior at boundaries of the range
       return {
-         this->first,
-         this->reversal().find( pTrack ).base()
+         { this->first.mBegin, this->first.mIter, newEnd.mIter,
+           this->first.GetPredicate() },
+         { this->first.mBegin, newEnd.mIter,      newEnd.mIter,
+           this->second.GetPredicate() }
       };
    }
 
