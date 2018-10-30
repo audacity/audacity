@@ -2456,6 +2456,7 @@ void TrackInfo::SetTrackInfoFont(wxDC * dc)
    dc->SetFont(gFont);
 }
 
+#if 0
 void TrackInfo::DrawBordersWithin
    ( wxDC* dc, const wxRect & rect, const Track &track ) const
 {
@@ -2506,6 +2507,7 @@ void TrackInfo::DrawBordersWithin
       (*dc, minimizeRect.x,                          minimizeRect.y - 1,
             minimizeRect.x + minimizeRect.width - 1, minimizeRect.y - 1);
 }
+#endif
 
 //#define USE_BEVELS
 

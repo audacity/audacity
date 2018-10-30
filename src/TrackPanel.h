@@ -153,7 +153,8 @@ public:
 
    void DrawBackground(
       wxDC * dc, const wxRect & rect, bool bSelected, const int labelw ) const;
-   void DrawBordersWithin(wxDC * dc, const wxRect & rect, const Track &track ) const;
+   // void DrawBordersWithin(
+   //   wxDC * dc, const wxRect & rect, const Track &track ) const;
 
    static void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
