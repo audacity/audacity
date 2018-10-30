@@ -275,7 +275,8 @@ bool EffectNormalize::Process()
          
          // Analysis loop over channels collects offsets and extent
          for (auto channel : range) {
-            float offset, extent2;
+            float offset = 0;
+            float extent2 = 0;
             bGoodResult =
                AnalyseTrack( channel, msg, progress, offset, extent2 );
             if ( ! bGoodResult )
