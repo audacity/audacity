@@ -325,13 +325,19 @@ bool Track::IsSyncLockSelected() const
    auto pList = mList.lock();
    if (!pList)
       return false;
-   auto trackRange = TrackList::SyncLockGroup(this);
+
+   auto shTrack = this->SubstituteOriginalTrack();
+   if (!shTrack)
+      return false;
+   
+   const auto pTrack = shTrack.get();
+   auto trackRange = TrackList::SyncLockGroup( pTrack );
 
    if (trackRange.size() <= 1) {
       // Not in a sync-locked group.
       // Return true iff selected and of a sync-lockable type.
-      return (IsSyncLockableNonLabelTrack(this) ||
-              track_cast<const LabelTrack*>(this)) && GetSelected();
+      return (IsSyncLockableNonLabelTrack( pTrack ) ||
+              track_cast<const LabelTrack*>( pTrack )) && GetSelected();
    }
 
    // Return true iff any track in the group is selected.
@@ -1373,6 +1379,26 @@ std::shared_ptr<const Track> Track::SubstitutePendingChangedTrack() const
          [=](const ListOfTracks::value_type &ptr){ return ptr->GetId() == id; } );
       if (it != end)
          return *it;
+   }
+   return Pointer( this );
+}
+
+std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
+{
+   auto pList = mList.lock();
+   if (pList) {
+      const auto id = GetId();
+      const auto pred = [=]( const ListOfTracks::value_type &ptr ) {
+         return ptr->GetId() == id; };
+      const auto end = pList->mPendingUpdates.end();
+      const auto it = std::find_if( pList->mPendingUpdates.begin(), end, pred );
+      if (it != end) {
+         const auto &list2 = (const ListOfTracks &) *pList;
+         const auto end2 = list2.end();
+         const auto it2 = std::find_if( list2.begin(), end2, pred );
+         if ( it2 != end2 )
+            return *it2;
+      }
    }
    return Pointer( this );
 }

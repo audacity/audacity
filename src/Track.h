@@ -257,6 +257,10 @@ class AUDACITY_DLL_API Track /* not final */
    // not yet cleared or applied; if no such exists, return this track
    std::shared_ptr<const Track> SubstitutePendingChangedTrack() const;
 
+   // If this track is a pending changed track, return the corresponding
+   // original; else return this track
+   std::shared_ptr<const Track> SubstituteOriginalTrack() const;
+
    // Cause certain overriding tool modes (Zoom; future ones?) to behave
    // uniformly in all tracks, disregarding track contents.
    // Do not further override this...
