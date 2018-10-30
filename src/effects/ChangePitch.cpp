@@ -407,9 +407,17 @@ bool EffectChangePitch::TransferDataFromWindow()
 // the selection. Then set some other params accordingly.
 void EffectChangePitch::DeduceFrequencies()
 {
+    auto FirstTrack = [&]()->const WaveTrack *{
+      if( !inputTracks() )
+         return nullptr;
+      return *( inputTracks()->Selected< const WaveTrack >() ).first;
+   };
+
+   m_dStartFrequency = 261.265;// Middle C.
+
    // As a neat trick, attempt to get the frequency of the note at the
    // beginning of the selection.
-   auto track = *( inputTracks()->Selected< const WaveTrack >() ).first;
+   auto track = FirstTrack();
    if (track) {
       double rate = track->GetRate();
 
