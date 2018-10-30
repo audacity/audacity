@@ -980,7 +980,8 @@ private:
       return !this->mPred || this->mPred( pTrack );
    }
 
-   // This friendship is needed in TrackIterRange::EndingAfter()
+   // This friendship is needed in TrackIterRange::StartingWith and
+   // TrackIterRange::EndingAfter()
    friend TrackIterRange< TrackType >;
 
    // The class invariant is that mIter == mEnd, or else, mIter != mEnd and
@@ -1057,9 +1058,15 @@ template <
 
    TrackIterRange StartingWith( const Track *pTrack ) const
    {
+      auto newBegin = this->find( pTrack );
+      // More careful construction is needed so that the independent
+      // increment and decrement of each iterator in the NEW pair
+      // has the expected behavior at boundaries of the range
       return {
-         this->find( pTrack ),
-         this->second
+         { newBegin.mIter, newBegin.mIter,    this->second.mEnd,
+           this->first.GetPredicate() },
+         { newBegin.mIter, this->second.mEnd, this->second.mEnd,
+           this->second.GetPredicate() }
       };
    }
 
