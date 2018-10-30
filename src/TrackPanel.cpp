@@ -242,8 +242,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mTrackArtist = std::make_unique<TrackArtist>();
 
-   mTrackArtist->SetMargins(1, kTopMargin, kRightMargin, kBottomMargin);
-
    mTimeCount = 0;
    mTimer.parent = this;
    // Timer is started after the window is visible
@@ -1053,13 +1051,6 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const wxRect clip = GetRect();
 
-   wxRect panelRect = clip;
-   panelRect.y = -mViewInfo->vpos;
-
-   wxRect tracksRect = panelRect;
-   tracksRect.x += GetLabelWidth();
-   tracksRect.width -= GetLabelWidth();
-
    ToolsToolBar *pTtb = mListener->TP_GetToolsToolBar();
    bool bMultiToolDown = pTtb->IsDown(multiTool);
    bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
@@ -1070,7 +1061,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    // The track artist actually draws the stuff inside each track
    mTrackArtist->DrawTracks(context, GetTracks(),
-                            region, tracksRect, clip,
+                            region, clip, GetLeftOffset(),
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
 
