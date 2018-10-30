@@ -1123,12 +1123,13 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 #endif
 
       if (region.Contains(0, trackRect.y, GetLeftOffset(), trackRect.height)) {
-         wxRect rect = trackRect;
-         rect.x += GetVRulerOffset();
-         rect.y += kTopMargin;
-         rect.width = GetVRulerWidth();
-         rect.height -= (kTopMargin + kBottomMargin);
-         mTrackArtist->DrawVRuler(context, visibleT, rect, t->GetSelected());
+         wxRect rect{
+            GetVRulerOffset(),
+            trackRect.y + kTopMargin,
+            GetVRulerWidth() + 1,
+            trackRect.height - kSeparatorThickness
+         };
+         mTrackArtist->DrawVRuler( context, visibleT, rect, t->GetSelected() );
       }
    }
 
