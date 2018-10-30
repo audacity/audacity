@@ -17831,7 +17831,7 @@ msgstr "Уровень ДО (%)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
-msgstr "Уаление и изоляция вокала"
+msgstr "Удаление и изоляция вокала"
 
 #: plug-ins/vocalrediso.ny
 msgid "Applying Action..."
