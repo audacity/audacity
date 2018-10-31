@@ -1372,6 +1372,7 @@ void MixerBoard::OnTrackSetChanged(wxEvent &evt)
 {
    evt.Skip();
    mUpToDate = false;
+   UpdateTrackClusters();
    Refresh();
 }
 
