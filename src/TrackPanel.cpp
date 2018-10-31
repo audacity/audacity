@@ -1080,9 +1080,12 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 {
    // We draw everything else
    auto dc = &context.dc;
-   wxRect focusRect(-1, -1, 0, 0);
-   wxRect trackRect = clip;
-   trackRect.height = 0;   // for drawing background in no tracks case.
+
+   // Fix the horizontal extent, will vary the vertical:
+   wxRect trackRect{
+      kLeftMargin, 0, clip.width - (kLeftMargin + kRightMargin), 0
+   };
+   wxRect focusRect{};
 
    for ( auto t :
          GetTracks()->Any< const Track >() + IsVisibleTrack{ GetProject() } ) {
@@ -1608,10 +1611,8 @@ void TrackPanel::DrawOutside
       wxRect rect = rec;
       ClearOutsideOfTrack(context, rect);
 
-      // Now exclude left, right, and top insets
-      rect.x += kLeftInset;
+      // Now exclude top inset
       rect.y += kTopInset;
-      rect.width -= kLeftInset * 2;
       rect.height -= kTopInset;
 
       int labelw = GetLabelWidth();
@@ -1651,7 +1652,6 @@ void TrackPanel::DrawOutside
 
    // Draw things within the track control panel
    wxRect rect = rec;
-   rect.x += kLeftMargin;
    rect.width = kTrackInfoWidth - kLeftMargin;
    rect.y += kTopMargin;
    rect.height -= (kBottomMargin + kTopMargin);
@@ -1755,11 +1755,12 @@ std::shared_ptr< TrackPanelCell > TrackPanel::GetBackgroundCell()
 /// Draw a three-level highlight gradient around the focused track.
 void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
 {
-   wxRect theRect = rect;
-   theRect.x += kLeftInset;
-   theRect.y += kTopInset;
-   theRect.width -= kLeftInset * 2;
-   theRect.height -= kTopInset;
+   wxRect theRect{
+      rect.x - kBorderThickness,
+      rect.y + kTopInset,
+      rect.width + 2 * kBorderThickness + kShadowThickness,
+      rect.height - kTopInset
+   };
 
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
 
@@ -1939,18 +1940,22 @@ void TrackPanel::DrawBordersAroundTrack( wxDC * dc, const wxRect & rect )
    // leaving room for the shadow
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
    dc->SetPen(*wxBLACK_PEN);
-   dc->DrawRectangle(rect.x, rect.y,
-                     rect.width - kShadowThickness,
-                     rect.height - kShadowThickness);
+   dc->DrawRectangle(
+      rect.x - kBorderThickness,
+      rect.y,
+      rect.width + 2 * kBorderThickness,
+      rect.height - kShadowThickness
+   );
 }
 
-// Given rectangle has insets subtracted left, right, and top
+// Given rectangle has margins subtracted left and right
+// and inset subtracted at top
 // Stroke lines along bottom and right, which are slightly short at
 // bottom-left and top-right
 void TrackPanel::DrawShadow( wxDC * dc, const wxRect & rect )
 {
-   int right = rect.x + rect.width - 1;
-   int bottom = rect.y + rect.height - 1;
+   int right = rect.GetRight() + kBorderThickness + kShadowThickness;
+   int bottom = rect.GetBottom();
 
    // shadow color for lines
    dc->SetPen(*wxBLACK_PEN);
@@ -2533,7 +2538,7 @@ void TrackInfo::DrawBackground(
 {
    // fill in label
    wxRect fill = rect;
-   fill.width = vrul - kLeftInset;
+   fill.width = vrul - kLeftMargin;
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
 
