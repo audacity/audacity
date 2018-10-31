@@ -11,24 +11,9 @@
 
 ********************************************************************//*!
 
-\todo
-  Refactoring of the TrackPanel, possibly as described
-  in \ref TrackPanelRefactor
-
-*//*****************************************************************//*!
-
 \file TrackPanel.cpp
 \brief
   Implements TrackPanel and TrackInfo.
-
-  TrackPanel.cpp is currently some of the worst code in Audacity.
-  It's not really unreadable, there's just way too much stuff in this
-  one file.  Rather than apply a quick fix, the long-term plan
-  is to create a GUITrack class that knows how to draw itself
-  and handle events.  Then this class just helps coordinate
-  between tracks.
-
-  Plans under discussion are described in \ref TrackPanelRefactor
 
 *//********************************************************************/
 
@@ -65,9 +50,6 @@
   It has the menus, pan and gain controls displayed in it.
   So "Info" is somewhat a misnomer. Should possibly be "TrackControls".
 
-  TrackPanel and not TrackInfo takes care of the functionality for
-  each of the buttons in that panel.
-
   In its current implementation TrackInfo is not derived from a
   wxWindow.  Following the original coding style, it has
   been coded as a 'flyweight' class, which is passed
@@ -78,71 +60,9 @@
 
 *//**************************************************************//**
 
-\class TrackPanelListener
-\brief A now badly named class which is used to give access to a
-subset of the TrackPanel methods from all over the place.
-
-*//**************************************************************//**
-
-\class TrackList
-\brief A list of TrackListNode items.
-
-*//**************************************************************//**
-
-\class TrackListNode
-\brief Used by TrackList, points to a Track.
-
-*//**************************************************************//**
-
 \class TrackPanel::AudacityTimer
-\brief Timer class dedicated to infomring the TrackPanel that it
+\brief Timer class dedicated to informing the TrackPanel that it
 is time to refresh some aspect of the screen.
-
-*//*****************************************************************//**
-
-\page TrackPanelRefactor Track Panel Refactor
-\brief Planned refactoring of TrackPanel.cpp
-
- - Move menus from current TrackPanel into TrackInfo.
- - Convert TrackInfo from 'flyweight' to heavyweight.
- - Split GuiStereoTrack and GuiWaveTrack out from TrackPanel.
-
-  JKC: Incremental refactoring started April/2003
-
-  Possibly aiming for Gui classes something like this - it's under
-  discussion:
-
-<pre>
-   +----------------------------------------------------+
-   |      AdornedRulerPanel                             |
-   +----------------------------------------------------+
-   +----------------------------------------------------+
-   |+------------+ +-----------------------------------+|
-   ||            | | (L)  GuiWaveTrack                 ||
-   || TrackInfo  | +-----------------------------------+|
-   ||            | +-----------------------------------+|
-   ||            | | (R)  GuiWaveTrack                 ||
-   |+------------+ +-----------------------------------+|
-   +-------- GuiStereoTrack ----------------------------+
-   +----------------------------------------------------+
-   |+------------+ +-----------------------------------+|
-   ||            | | (L)  GuiWaveTrack                 ||
-   || TrackInfo  | +-----------------------------------+|
-   ||            | +-----------------------------------+|
-   ||            | | (R)  GuiWaveTrack                 ||
-   |+------------+ +-----------------------------------+|
-   +-------- GuiStereoTrack ----------------------------+
-</pre>
-
-  With the whole lot sitting in a TrackPanel which forwards
-  events to the sub objects.
-
-  The GuiStereoTrack class will do the special logic for
-  Stereo channel grouping.
-
-  The precise names of the classes are subject to revision.
-  Have deliberately not created NEW files for the NEW classes
-  such as AdornedRulerPanel and TrackInfo - yet.
 
 *//*****************************************************************/
 
@@ -184,10 +104,11 @@ wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 /*
 
 This is a diagram of TrackPanel's division of one (non-stereo) track rectangle.
-Total height equals Track::GetHeight()'s value.  Total width is the wxWindow's width.
-Each charater that is not . represents one pixel.
+Total height equals Track::GetHeight()'s value.  Total width is the wxWindow's
+width.  Each charater that is not . represents one pixel.
 
-Inset space of this track, and top inset of the next track, are used to draw the focus highlight.
+Inset space of this track, and top inset of the next track, are used to draw the
+focus highlight.
 
 Top inset of the right channel of a stereo track, and bottom shadow line of the
 left channel, are used for the channel separator.
@@ -196,10 +117,11 @@ left channel, are used for the channel separator.
 shadow plus border (right and bottom).
 
 TrackInfo::GetTrackInfoWidth() == GetVRulerOffset()
-counts columns from the left edge up to and including controls, and is a constant.
+counts columns from the left edge up to and including controls, and is a
+constant.
 
-GetVRulerWidth() is variable -- all tracks have the same ruler width at any time,
-but that width may be adjusted when tracks change their vertical scales.
+GetVRulerWidth() is variable -- all tracks have the same ruler width at any
+time, but that width may be adjusted when tracks change their vertical scales.
 
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
@@ -211,7 +133,7 @@ FindCell() for vruler returns a rectangle right of the label,
 up to and including the One Pixel column, and OMITS top and bottom margins
 
 FindCell() for track returns a rectangle with x == GetLeftOffset(), and OMITS
-right top, and bottom margins
+right, top, and bottom margins
 
 +--------------- ... ------ ... --------------------- ...       ... -------------+
 | Top Inset                                                                      |
