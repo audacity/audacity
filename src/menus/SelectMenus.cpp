@@ -1023,13 +1023,13 @@ void OnCursorShortJumpRight(const CommandContext &context)
 void OnCursorLongJumpLeft(const CommandContext &context)
 {
    DoCursorMove( context.project,
-      -mSeekInfo.mSeekShort, mSeekInfo.mLastSelectionAdjustment );
+      -mSeekInfo.mSeekLong, mSeekInfo.mLastSelectionAdjustment );
 }
 
 void OnCursorLongJumpRight(const CommandContext &context)
 {
    DoCursorMove( context.project,
-      mSeekInfo.mSeekShort, mSeekInfo.mLastSelectionAdjustment );
+      mSeekInfo.mSeekLong, mSeekInfo.mLastSelectionAdjustment );
 }
 
 void OnSeekLeftShort(const CommandContext &context)
@@ -1068,7 +1068,7 @@ void OnSelectAllTime(const CommandContext &context)
 void UpdatePrefs() override
 {
    gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekInfo.mSeekShort, 1.0);
-   gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekInfo.mSeekShort, 15.0);
+   gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekInfo.mSeekLong, 15.0);
 }
 Handler()
 {
