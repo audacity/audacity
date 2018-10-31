@@ -1051,13 +1051,15 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const wxRect clip = GetRect();
 
+   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
+
+   ClearLeftAndRightMargins(context, clip);
+
    ToolsToolBar *pTtb = mListener->TP_GetToolsToolBar();
    bool bMultiToolDown = pTtb->IsDown(multiTool);
    bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
    bool sliderFlag     = bMultiToolDown;
-
-   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
 
    // The track artist actually draws the stuff inside each track
    mTrackArtist->DrawTracks(context, GetTracks(),
@@ -1604,7 +1606,7 @@ void TrackPanel::DrawOutside
    {
       // Start with whole track rect
       wxRect rect = rec;
-      DrawOutsideOfTrack(context, rect);
+      ClearOutsideOfTrack(context, rect);
 
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
@@ -1659,11 +1661,32 @@ void TrackPanel::DrawOutside
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 }
 
+// Paint the inset areas of the whole panel, left and right, in a background
+// color
+void TrackPanel::ClearLeftAndRightMargins
+(TrackPanelDrawingContext &context, const wxRect & clip)
+{
+   auto dc = &context.dc;
+
+   // Fill in area outside of tracks
+   AColor::TrackPanelBackground(dc, false);
+   wxRect side;
+
+   // Area between panel border and left track border
+   side = clip;
+   side.width = kLeftMargin;
+   dc->DrawRectangle(side);
+
+   // Area between panel border and right track border
+   side = clip;
+   side.x += side.width - kRightMargin;
+   side.width = kRightMargin;
+   dc->DrawRectangle(side);
+}
+
 // Given rectangle should be the whole track rectangle
-// Paint the inset areas left, top, and right in a background color
-// If linked to a following channel, also paint the separator area, which
-// overlaps the next track rectangle's top
-void TrackPanel::DrawOutsideOfTrack
+// Paint the inset area above in a background color
+void TrackPanel::ClearOutsideOfTrack
 (TrackPanelDrawingContext &context, const wxRect & rect)
 {
    auto dc = &context.dc;
@@ -1672,20 +1695,9 @@ void TrackPanel::DrawOutsideOfTrack
    AColor::TrackPanelBackground(dc, false);
    wxRect side;
 
-   // Area between panel border and left track border
-   side = rect;
-   side.width = kLeftInset;
-   dc->DrawRectangle(side);
-
    // Area between panel border and top track border
    side = rect;
    side.height = kTopInset;
-   dc->DrawRectangle(side);
-
-   // Area between panel border and right track border
-   side = rect;
-   side.x += side.width - kRightInset;
-   side.width = kRightInset;
    dc->DrawRectangle(side);
 }
 
