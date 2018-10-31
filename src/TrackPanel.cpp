@@ -1732,13 +1732,16 @@ void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
 
    AColor::TrackFocusPen(dc, 0);
-   dc->DrawRectangle(theRect.x - 1, theRect.y - 1, theRect.width + 2, theRect.height + 2);
+   theRect.Inflate(1);
+   dc->DrawRectangle(theRect);
 
    AColor::TrackFocusPen(dc, 1);
-   dc->DrawRectangle(theRect.x - 2, theRect.y - 2, theRect.width + 4, theRect.height + 4);
+   theRect.Inflate(1);
+   dc->DrawRectangle(theRect);
 
    AColor::TrackFocusPen(dc, 2);
-   dc->DrawRectangle(theRect.x - 3, theRect.y - 3, theRect.width + 6, theRect.height + 6);
+   theRect.Inflate(1);
+   dc->DrawRectangle(theRect);
 }
 
 void TrackPanel::UpdateVRulers()
