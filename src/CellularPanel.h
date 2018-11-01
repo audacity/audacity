@@ -18,6 +18,7 @@ class ViewInfo;
 class AudacityProject;
 
 class TrackPanelCell;
+class TrackPanelGroup;
 class TrackPanelNode;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
@@ -55,6 +56,29 @@ public:
 
    virtual FoundCell FindCell(int mouseX, int mouseY) = 0;
    virtual wxRect FindRect(const TrackPanelCell &cell) = 0;
+
+   // Structure and functions for generalized visitation of the subdivision
+   struct Visitor {
+      virtual ~Visitor();
+      virtual void VisitCell( const wxRect &rect, TrackPanelCell &cell );
+      virtual void BeginGroup( const wxRect &rect, TrackPanelGroup &group );
+      virtual void EndGroup( const wxRect &rect, TrackPanelGroup &group );
+   };
+
+   // Most general visit
+   void Visit( Visitor &visitor );
+
+   // Easier visit when you care only about cells
+   using SimpleCellVisitor =
+      std::function< void( const wxRect &rect, TrackPanelCell &cell ) >;
+   void VisitCells( const SimpleCellVisitor &visitor );
+
+   // Easier visits when you want to visit each node once only
+   using SimpleNodeVisitor =
+      std::function< void( const wxRect &rect, TrackPanelNode &node ) >;
+   void VisitPreorder( const SimpleNodeVisitor &visitor );
+   void VisitPostorder( const SimpleNodeVisitor &visitor );
+
    virtual TrackPanelCell *GetFocusedCell() = 0;
    virtual void SetFocusedCell() = 0;
    
@@ -86,6 +110,10 @@ protected:
    void ClearTargets();
    
 private:
+   void Visit(
+      const wxRect &rect, const std::shared_ptr<TrackPanelNode> &node,
+      Visitor &visitor );
+
    bool HasRotation();
    bool ChangeTarget(bool forward, bool cycle);
    

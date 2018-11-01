@@ -860,6 +860,122 @@ void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
    Refresh( false);
 }
 
+// Empty out-of-line default functions to fill Visitor's vtable
+CellularPanel::Visitor::~Visitor() {}
+void CellularPanel::Visitor::VisitCell(
+   const wxRect &rect, TrackPanelCell &cell ) {}
+void CellularPanel::Visitor::BeginGroup(
+   const wxRect &rect, TrackPanelGroup &group ) {}
+void CellularPanel::Visitor::EndGroup(
+   const wxRect &rect, TrackPanelGroup &group ) {}
+
+// Public, top-level entry for generalized Visit
+void CellularPanel::Visit( Visitor &visitor )
+{
+   Visit( GetClientRect(), Root(), visitor );
+}
+
+// Common utility class for the functions that follow
+namespace {
+   struct Adaptor : CellularPanel::Visitor {
+      using SimpleCellVisitor = CellularPanel::SimpleCellVisitor;
+      using SimpleNodeVisitor = CellularPanel::SimpleNodeVisitor;
+
+      // Visit cells only
+      Adaptor( const SimpleCellVisitor& function_ )
+      : function{ [&](const wxRect &rect, TrackPanelNode &cell) {
+         return function_( rect, static_cast<TrackPanelCell&>(cell) );
+      } }
+      {}
+
+      // Visit cells and groups, each once only, choosing pre- or post- ordering
+      // for the groups
+      Adaptor( const SimpleNodeVisitor &function_, bool pre_ )
+         : function{ function_ }, pre{ pre_ }, post{ ! pre_ } {}
+
+      void VisitCell( const wxRect &rect, TrackPanelCell &cell ) override
+         { return function( rect, cell ); }
+      void BeginGroup( const wxRect &rect, TrackPanelGroup &group ) override
+         { if (pre) return function( rect, group ); }
+      void EndGroup( const wxRect &rect, TrackPanelGroup &group ) override
+         { if (post) return function( rect, group ); }
+
+      SimpleNodeVisitor function;
+      const bool pre{ false }, post{ false };
+   };
+}
+
+// Simplified entry points for visits that don't need all the generality of
+// CellularPanel::Visitor
+void CellularPanel::VisitCells( const SimpleCellVisitor &visitor )
+{
+   Adaptor adaptor{ visitor };
+   Visit( adaptor );
+}
+
+void CellularPanel::VisitPreorder( const SimpleNodeVisitor &visitor )
+{
+   Adaptor adaptor{ visitor, true };
+   Visit( adaptor );
+}
+
+void CellularPanel::VisitPostorder( const SimpleNodeVisitor &visitor )
+{
+   Adaptor adaptor{ visitor, false };
+   Visit( adaptor );
+}
+
+namespace {
+   wxRect Subdivide(
+      const wxRect &rect, bool divideX,
+      const TrackPanelGroup::Refinement &children,
+      const TrackPanelGroup::Refinement::const_iterator iter)
+   {
+      const auto lowerBound = (divideX ? rect.GetLeft() : rect.GetTop());
+      const auto upperBound = (divideX ? rect.GetRight() : rect.GetBottom());
+      const auto next = iter + 1;
+      const auto end = children.end();
+      const auto nextCoord = ((next == end) ? upperBound : next->first - 1);
+
+      // Some defense against bad overrides of TrackPanelGroup::Children
+      auto lesser = std::max(lowerBound, std::min(upperBound, iter->first));
+      auto greater = std::max(lesser, std::min(upperBound, nextCoord));
+
+      auto result = rect;
+      if (divideX)
+         result.SetLeft(lesser), result.SetRight(greater);
+      else
+         result.SetTop(lesser), result.SetBottom(greater);
+
+      return result;
+   };
+}
+
+// Private, recursive implementation function of Visit
+void CellularPanel::Visit(
+   const wxRect &rect, const std::shared_ptr<TrackPanelNode> &node,
+   Visitor &visitor )
+{
+   if (auto pCell = dynamic_cast<TrackPanelCell*>(node.get()))
+      visitor.VisitCell( rect, *pCell );
+   else if (auto pGroup = dynamic_cast<TrackPanelGroup*>(node.get())) {
+      visitor.BeginGroup( rect, *pGroup );
+
+      // Recur on children
+      const auto results = pGroup->Children( rect );
+      const bool divideX = results.first == TrackPanelGroup::Axis::X;
+      const auto &children = results.second;
+      const auto begin = children.begin(), end = children.end();
+      for (auto iter = begin; iter != end; ++iter)
+         Visit(
+            Subdivide(rect, divideX, children, iter), iter->second, visitor );
+
+      visitor.EndGroup( rect, *pGroup );
+   }
+   else
+      return;
+}
+
 UIHandlePtr CellularPanel::Target()
 {
    auto &state = *mState;
