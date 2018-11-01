@@ -1087,35 +1087,28 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    };
    wxRect focusRect{};
 
-   for ( auto t :
-         GetTracks()->Any< const Track >() + IsVisibleTrack{ GetProject() } ) {
-      auto visibleT = t->SubstitutePendingChangedTrack().get();
-      trackRect.y = visibleT->GetY() - mViewInfo->vpos;
-      trackRect.height = visibleT->GetHeight();
-
-      auto leaderTrack = *GetTracks()->FindLeader( t );
-      // If the previous track is linked to this one but isn't on the screen
-      // (and thus would have been skipped) we need to draw that track's border
-      // instead.
-      bool drawBorder = (t == leaderTrack || trackRect.y < 0);
-
-      if (drawBorder) {
-         wxRect teamRect = trackRect;
-         auto visibleLeaderTrack =
-           leaderTrack->SubstitutePendingChangedTrack().get();
-         teamRect.y = visibleLeaderTrack->GetY() - mViewInfo->vpos;
-         teamRect.height = TrackList::Channels(leaderTrack).sum(
-            [&] (const Track *channel) {
-               channel = channel->SubstitutePendingChangedTrack().get();
-               return channel->GetHeight();
-            }
-         );
-
-         if (mAx->IsFocused(t)) {
-            focusRect = teamRect;
-         }
-         DrawOutside(context, leaderTrack, teamRect);
+   for ( auto leaderTrack : GetTracks()->Leaders< const Track >()
+         // Predicate is true iff any channel in the group is wholly or partly
+         // visible:
+         + IsVisibleTrack{ GetProject() } ) {
+      const auto channels = TrackList::Channels(leaderTrack);
+      bool focused = false;
+      wxRect teamRect = trackRect;
+      teamRect.height = 0;
+      bool first = true;
+      for (auto channel : channels) {
+         focused = focused || mAx->IsFocused(channel);
+         channel = channel->SubstitutePendingChangedTrack().get();
+         if (first)
+            first = false,
+            teamRect.y = channel->GetY() - mViewInfo->vpos;
+         teamRect.height += channel->GetHeight();
       }
+
+      if (focused) {
+         focusRect = teamRect;
+      }
+      DrawOutside(context, leaderTrack, teamRect);
 
       // Believe it or not, we can speed up redrawing if we don't
       // redraw the vertical ruler when only the waveform data has
@@ -1127,14 +1120,21 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 //             rbox.x, rbox.y, rbox.width, rbox.height);
 #endif
 
-      if (region.Contains(0, trackRect.y, GetLeftOffset(), trackRect.height)) {
-         wxRect rect{
-            GetVRulerOffset(),
-            trackRect.y + kTopMargin,
-            GetVRulerWidth() + 1,
-            trackRect.height - kSeparatorThickness
-         };
-         mTrackArtist->DrawVRuler( context, visibleT, rect, t->GetSelected() );
+      for (auto channel : channels) {
+         bool bSelected = channel->GetSelected();
+         channel = channel->SubstitutePendingChangedTrack().get();
+         trackRect.y = channel->GetY() - mViewInfo->vpos;
+         trackRect.height = channel->GetHeight();
+         if (region.Contains(
+            0, trackRect.y, GetLeftOffset(), trackRect.height)) {
+            wxRect rect{
+               GetVRulerOffset(),
+               trackRect.y + kTopMargin,
+               GetVRulerWidth() + 1,
+               trackRect.height - kSeparatorThickness
+            };
+            mTrackArtist->DrawVRuler(context, channel, rect, bSelected);
+         }
       }
    }
 
