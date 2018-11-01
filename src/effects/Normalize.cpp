@@ -328,13 +328,13 @@ bool EffectNormalize::Process()
       mProgressMsg =
          topMsg + wxString::Format( _("Analyzing: %s"), trackName );
 
-      InitTrackAnalysis(dc);
-
       auto range = mStereoInd
          ? TrackList::SingletonRange(track)
          : TrackList::Channels(track);
 
       mProcStereo = range.size() > 1;
+
+      InitTrackAnalysis(dc);
 
       // Get track min/max/rms in peak/rms mode
 #ifdef EXPERIMENTAL_LOUDNESS_EFFECT
