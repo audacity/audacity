@@ -33,7 +33,6 @@
 #include "RefreshCode.h"
 #include "Snap.h"
 #include "TrackPanel.h"
-#include "TrackPanelCellIterator.h"
 #include "TrackPanelMouseEvent.h"
 #include "UIHandle.h"
 #include "prefs/TracksBehaviorsPrefs.h"
@@ -328,20 +327,19 @@ void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
       ;
 
       // Draw indicator in all visible tracks
-      for ( const auto &data : static_cast<TrackPanel&>(panel).Cells() )
-      {
-         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
-         if (!pTrack)
-            continue;
-         const wxRect &rect = data.second;
+      static_cast<TrackPanel&>(panel)
+         .VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+            const auto pTrack = dynamic_cast<Track*>(&cell);
+            if (!pTrack)
+               return;
 
-         // Draw the NEW indicator in its NEW location
-         AColor::Line(dc,
-            mOldQPIndicatorPos,
-            rect.GetTop(),
-            mOldQPIndicatorPos,
-            rect.GetBottom());
-      }
+            // Draw the NEW indicator in its NEW location
+            AColor::Line(dc,
+               mOldQPIndicatorPos,
+               rect.GetTop(),
+               mOldQPIndicatorPos,
+               rect.GetBottom());
+      } );
    }
 }
 
@@ -2101,30 +2099,45 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
    mRuler.GetMaxSize(width, height);
 }
 
+// Second-level subdivision includes quick-play region and maybe the scrub bar
+// and also shaves little margins above and below
+struct AdornedRulerPanel::Subgroup final : TrackPanelGroup {
+   explicit Subgroup( const AdornedRulerPanel &ruler ) : mRuler{ ruler } {}
+   Subdivision Children( const wxRect & ) override
+   {
+      return { Axis::Y, ( mRuler.mShowScrubbing )
+         ? Refinement{
+            { mRuler.mInner.GetTop(), mRuler.mQPCell },
+            { mRuler.mScrubZone.GetTop(), mRuler.mScrubbingCell },
+            { mRuler.mScrubZone.GetBottom() + 1, nullptr }
+         }
+         : Refinement{
+            { mRuler.mInner.GetTop(), mRuler.mQPCell },
+            { mRuler.mInner.GetBottom() + 1, nullptr }
+         }
+      };
+   }
+   const AdornedRulerPanel &mRuler;
+};
+
+// Top-level subdivision shaves little margins off left and right
+struct AdornedRulerPanel::MainGroup final : TrackPanelGroup {
+   explicit MainGroup( const AdornedRulerPanel &ruler ) : mRuler{ ruler } {}
+   Subdivision Children( const wxRect & ) override
+   { return { Axis::X, Refinement{
+      // Subgroup is a throwaway object
+      { mRuler.mInner.GetLeft(), std::make_shared< Subgroup >( mRuler ) },
+      { mRuler.mInner.GetRight() + 1, nullptr }
+   } }; }
+   const AdornedRulerPanel &mRuler;
+};
+
 // CellularPanel implementation
-auto AdornedRulerPanel::FindCell(int mouseX, int mouseY) -> FoundCell
+std::shared_ptr<TrackPanelNode> AdornedRulerPanel::Root()
 {
-   bool mayScrub = mProject->GetScrubber().CanScrub() &&
-      mShowScrubbing;
-   if (mayScrub && mScrubZone.Contains(mouseX, mouseY))
-      return { mScrubbingCell, mScrubZone };
-
-   if (mInner.Contains(mouseX, mouseY))
-      return { mQPCell, mInner };
-
-   return {};
+   // Root is a throwaway object
+   return std::make_shared< MainGroup >( *this );
 }
-
-wxRect AdornedRulerPanel::FindRect(const TrackPanelCell &cell)
-{
-   if (&cell == mScrubbingCell.get())
-      return mScrubZone;
-   if (&cell == mQPCell.get())
-      return mInner;
-   
-   return {};
-}
-
 
 AudacityProject * AdornedRulerPanel::GetProject() const
 {

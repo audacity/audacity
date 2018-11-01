@@ -29,7 +29,6 @@ public:
 
    std::shared_ptr<Track> FindTrack() override { return mpTrack.lock(); };
 private:
-   friend class TrackPanelCellIterator;
    std::weak_ptr<Track> mpTrack;
 
    std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;

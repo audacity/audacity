@@ -205,7 +205,6 @@ src/TrackPanel.h
 src/TrackPanelAx.cpp
 src/TrackPanelAx.h
 src/TrackPanelCell.h
-src/TrackPanelCellIterator.h
 src/TrackPanelDrawingContext.h
 src/TrackPanelListener.h
 src/TrackPanelMouseEvent.h

@@ -44,7 +44,6 @@ class ControlToolBar; //Needed because state of controls can affect what gets dr
 class ToolsToolBar; //Needed because state of controls can affect what gets drawn.
 
 class TrackPanelAx;
-class TrackPanelCellIterator;
 
 class NoteTrack;
 class WaveTrack;
@@ -248,8 +247,6 @@ class AUDACITY_DLL_API TrackPanel final : public CellularPanel {
 
    virtual ~ TrackPanel();
 
-   IteratorRange< TrackPanelCellIterator > Cells();
-
    void UpdatePrefs();
    void ApplyUpdatedTheme();
 
@@ -337,11 +334,9 @@ protected:
    void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
-   // Find track info by coordinate
-   FoundCell FindCell(int mouseX, int mouseY) override;
-
-   // Find rectangle of the given cell
-   wxRect FindRect(const TrackPanelCell &cell) override;
+   // Get the root object defining a recursive subdivision of the panel's
+   // area into cells
+   std::shared_ptr<TrackPanelNode> Root() override;
 
    int GetVRulerWidth() const;
    int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
@@ -514,6 +509,7 @@ enum : int {
    kBottomMargin = kShadowThickness + kBorderThickness,
    kLeftMargin = kLeftInset + kBorderThickness,
    kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+   kSeparatorThickness = kBottomMargin + kTopMargin,
 };
 
 enum : int {

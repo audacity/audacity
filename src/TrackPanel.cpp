@@ -71,7 +71,6 @@ is time to refresh some aspect of the screen.
 #include "Experimental.h"
 #include "TrackPanel.h"
 #include "Project.h"
-#include "TrackPanelCellIterator.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1
@@ -126,13 +125,13 @@ time, but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindCell() for label returns a rectangle that OMITS left, top, and bottom
+Cell for label has a rectangle that OMITS left, top, and bottom
 margins
 
-FindCell() for vruler returns a rectangle right of the label,
+Cell for vruler has a rectangle right of the label,
 up to and including the One Pixel column, and OMITS top and bottom margins
 
-FindCell() for track returns a rectangle with x == GetLeftOffset(), and OMITS
+Cell() for track returns a rectangle with x == GetLeftOffset(), and OMITS
 right, top, and bottom margins
 
 +--------------- ... ------ ... --------------------- ...       ... -------------+
@@ -1956,39 +1955,136 @@ void TrackPanel::DrawShadow(const Track * /* t */ , wxDC * dc, const wxRect & re
    AColor::Line(*dc, right, rect.y, right, rect.y + 1);
 }
 
-/// Determines which cell is under the mouse
-///  @param mouseX - mouse X position.
-///  @param mouseY - mouse Y position.
-auto TrackPanel::FindCell(int mouseX, int mouseY) -> FoundCell
-{
-   auto range = Cells();
-   auto &iter = range.first, &end = range.second;
-   while
-      ( iter != end &&
-        !(*iter).second.Contains( mouseX, mouseY ) )
-      ++iter;
-   if (iter == end)
-      return {};
+namespace {
 
-   auto found = *iter;
-   return {
-      found.first,
-      found.second
-   };
+// Helper classes to implement the subdivision of TrackPanel area for
+// CellularPanel
+
+struct EmptyCell final : CommonTrackPanelCell {
+   std::vector< UIHandlePtr > HitTest(
+      const TrackPanelMouseState &, const AudacityProject *) override
+   { return {}; }
+   virtual std::shared_ptr< Track > FindTrack() override { return {}; }
+   static std::shared_ptr<EmptyCell> Instance()
+   {
+      static auto instance = std::make_shared< EmptyCell >();
+      return instance;
+   }
+};
+
+// n channels alternating with n - 1 resizers
+struct ChannelGroup final : TrackPanelGroup {
+   ChannelGroup( const std::shared_ptr< Track > &pTrack )
+      : mpTrack{ pTrack } {}
+   Subdivision Children( const wxRect &rect ) override
+   {
+      Refinement refinement;
+
+      const auto channels = TrackList::Channels( mpTrack.get() );
+      const auto pLast = *channels.rbegin();
+      wxCoord yy = rect.GetTop();
+      for ( auto channel : channels ) {
+         refinement.emplace_back( yy, Track::Pointer( channel ) );
+         if ( channel != pLast ) {
+            const auto substitute =
+               Track::Pointer( channel )->SubstitutePendingChangedTrack();
+            yy += substitute->GetHeight();
+            refinement.emplace_back(
+               yy - kSeparatorThickness, channel->GetResizer() );
+         }
+      }
+
+      return { Axis::Y, std::move( refinement ) };
+   }
+   std::shared_ptr< Track > mpTrack;
+};
+
+// A track control panel left of n channels alternating with n - 1 resizers
+struct LabeledChannelGroup final : TrackPanelGroup {
+   LabeledChannelGroup(
+      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+         : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
+   Subdivision Children( const wxRect &rect ) override
+   { return { Axis::X, Refinement{
+      { rect.GetLeft(), mpTrack->GetTrackControl() },
+      { mLeftOffset, std::make_shared< ChannelGroup >( mpTrack ) }
+   } }; }
+   std::shared_ptr< Track > mpTrack;
+   wxCoord mLeftOffset;
+};
+
+// Stacks a label and a single or multi-channel track on a resizer below,
+// which is associated with the last channel
+struct ResizingChannelGroup final : TrackPanelGroup {
+   ResizingChannelGroup(
+      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+         : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
+   Subdivision Children( const wxRect &rect ) override
+   { return { Axis::Y, Refinement{
+      { rect.GetTop(),
+         std::make_shared< LabeledChannelGroup >( mpTrack, mLeftOffset ) },
+      { rect.GetTop() + rect.GetHeight() - kSeparatorThickness,
+         ( *TrackList::Channels( mpTrack.get() ).rbegin() )->GetResizer() }
+   } }; }
+   std::shared_ptr< Track > mpTrack;
+   wxCoord mLeftOffset;
+};
+
+// Stacks a dead area at top, the tracks, and the click-to-deselect area below
+struct Subgroup final : TrackPanelGroup {
+   explicit Subgroup( TrackPanel &panel ) : mPanel{ panel } {}
+   Subdivision Children( const wxRect &rect ) override
+   {
+      wxCoord yy = -mPanel.GetViewInfo()->vpos;
+      Refinement refinement;
+
+      auto &tracks = *mPanel.GetTracks();
+      if ( tracks.Any() )
+         refinement.emplace_back( yy, EmptyCell::Instance() ),
+         yy += kTopMargin;
+
+      for ( const auto leader : tracks.Leaders() ) {
+         wxCoord height = 0;
+         for ( auto channel : TrackList::Channels( leader ) ) {
+            auto substitute =
+               Track::Pointer( channel )->SubstitutePendingChangedTrack();
+            height += substitute->GetHeight();
+         }
+         refinement.emplace_back( yy,
+            std::make_shared< ResizingChannelGroup >(
+               Track::Pointer( leader ), mPanel.GetLeftOffset() )
+         );
+         yy += height;
+      }
+
+      refinement.emplace_back( std::max( 0, yy ), mPanel.GetBackgroundCell() );
+
+      return { Axis::Y, std::move( refinement ) };
+   }
+   TrackPanel &mPanel;
+};
+
+// Main group shaves off the left and right margins
+struct MainGroup final : TrackPanelGroup {
+   explicit MainGroup( TrackPanel &panel ) : mPanel{ panel } {}
+   Subdivision Children( const wxRect &rect ) override
+   { return { Axis::X, Refinement{
+      { 0, EmptyCell::Instance() },
+      { kLeftMargin, std::make_shared< Subgroup >( mPanel ) },
+      { rect.GetRight() + 1 - kRightMargin, EmptyCell::Instance() }
+   } }; }
+   TrackPanel &mPanel;
+};
+
 }
 
-wxRect TrackPanel::FindRect( const TrackPanelCell &cell )
+std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 {
-   auto range = Cells();
-   auto end = range.second,
-      iter = std::find_if( range.first, end,
-         [&]( const decltype(*end) &pair )
-            { return pair.first.get() == &cell; }
-      );
-   if (iter == end)
-      return {};
-   else
-      return (*iter).second;
+   // Root and other subgroup objects are throwaways.
+   // They might instead be cached to avoid repeated allocation.
+   // That cache would need invalidation when there is addition, deletion, or
+   // permutation of tracks, or change of width of the vertical rulers.
+   return std::make_shared< MainGroup >( *this );
 }
 
 // This finds the rectangle of a given track (including all channels),
@@ -2537,164 +2633,6 @@ void TrackInfo::UpdatePrefs()
    } while (textWidth >= allowableWidth);
 }
 
-IteratorRange< TrackPanelCellIterator > TrackPanel::Cells()
-{
-   return {
-      TrackPanelCellIterator( this, true ),
-      TrackPanelCellIterator( this, false )
-   };
-}
-
-TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
-   : mPanel{ trackPanel }
-   , mIter{
-        trackPanel->GetTracks()->Any().begin()
-           .Filter( IsVisibleTrack( trackPanel->GetProject() ) )
-     }
-{
-   if (begin) {
-      mpTrack = Track::Pointer( *mIter );
-      if (mpTrack)
-         mpCell = mpTrack;
-      else
-         mpCell = trackPanel->GetBackgroundCell();
-   }
-   else
-      mDidBackground = true;
-
-   const auto size = mPanel->GetSize();
-   mRect = { 0, 0, size.x, size.y };
-   UpdateRect();
-}
-
-TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
-{
-   if ( mpTrack ) {
-      if ( ++ mType == CellType::Background )
-         mType = CellType::Track, mpTrack = Track::Pointer( * ++ mIter );
-   }
-   if ( mpTrack ) {
-      if ( mType == CellType::Label &&
-           !mpTrack->IsLeader() )
-         // Visit label of stereo track only once
-         ++mType;
-      switch ( mType ) {
-         case CellType::Track:
-            mpCell = mpTrack;
-            break;
-         case CellType::Label:
-            mpCell = mpTrack->GetTrackControl();
-            break;
-         case CellType::VRuler:
-            mpCell = mpTrack->GetVRulerControl();
-            break;
-         case CellType::Resizer: {
-            mpCell = mpTrack->GetResizer();
-            break;
-         }
-         default:
-            // should not happen
-            mpCell.reset();
-            break;
-      }
-   }
-   else if ( !mDidBackground )
-      mpCell = mPanel->GetBackgroundCell(), mDidBackground = true;
-   else
-      mpCell.reset();
-
-   UpdateRect();
-
-   return *this;
-}
-
-TrackPanelCellIterator TrackPanelCellIterator::operator++ (int)
-{
-   TrackPanelCellIterator copy(*this);
-   ++ *this;
-   return copy;
-}
-
-auto TrackPanelCellIterator::operator* () const -> value_type
-{
-   return { mpCell, mRect };
-}
-
-void TrackPanelCellIterator::UpdateRect()
-{
-   const auto size = mPanel->GetSize();
-   if ( mpTrack ) {
-      mRect = {
-         0,
-         mpTrack->GetY() - mPanel->GetViewInfo()->vpos,
-         size.x,
-         mpTrack->GetHeight()
-      };
-      switch ( mType ) {
-         case CellType::Track:
-            mRect.x = mPanel->GetLeftOffset();
-            mRect.width -= (mRect.x + kRightMargin);
-            mRect.y += kTopMargin;
-            mRect.height -= (kBottomMargin + kTopMargin);
-            break;
-         case CellType::Label: {
-            mRect.x = kLeftMargin;
-            mRect.width = kTrackInfoWidth - mRect.x;
-            mRect.y += kTopMargin;
-            mRect.height =
-               TrackList::Channels(mpTrack.get())
-                  .sum( &Track::GetHeight );
-            mRect.height -= (kBottomMargin + kTopMargin);
-            break;
-         }
-         case CellType::VRuler:
-            {
-               mRect.x = kTrackInfoWidth;
-               // Right edge of the VRuler is inactive.
-               mRect.width = mPanel->GetLeftOffset() - mRect.x;
-               mRect.y += kTopMargin;
-               mRect.height -= (kBottomMargin + kTopMargin);
-            }
-            break;
-         case CellType::Resizer: {
-            // The resizer region encompasses the bottom margin proper to this
-            // track, plus the top margin of the next track (or, an equally
-            // tall zone below, in case there is no next track)
-            if ( mpTrack.get() ==
-                *TrackList::Channels(mpTrack.get()).rbegin() )
-               // Last channel has a resizer extending farther leftward
-               mRect.x = kLeftMargin;
-            else
-               mRect.x = kTrackInfoWidth;
-            mRect.width -= (mRect.x + kRightMargin);
-            mRect.y += (mRect.height - kBottomMargin);
-            mRect.height = (kBottomMargin + kTopMargin);
-            break;
-         }
-         default:
-            // should not happen
-            break;
-      }
-   }
-   else if ( mpCell ) {
-      // Find a disjoint, maybe empty, rectangle
-      // for the empty space appearing at bottom
-
-      mRect.x = kLeftMargin;
-      mRect.width = size.x - (mRect.x + kRightMargin);
-
-      // Use previous value of the bottom, either the whole area if
-      // there were no tracks, or else the resizer of the last track
-      mRect.y =
-         std::min( size.y,
-            std::max( 0,
-               mRect.y + mRect.height ) );
-      mRect.height = size.y - mRect.y;
-   }
-   else
-      mRect = {};
-}
-
 static TrackPanel * TrackPanelFactory(wxWindow * parent,
    wxWindowID id,
    const wxPoint & pos,
@@ -2728,6 +2666,22 @@ TrackPanel *(*TrackPanel::FactoryFunction)(
               ViewInfo * viewInfo,
               TrackPanelListener * listener,
               AdornedRulerPanel * ruler) = TrackPanelFactory;
+
+TrackPanelNode::TrackPanelNode()
+{
+}
+
+TrackPanelNode::~TrackPanelNode()
+{
+}
+
+TrackPanelGroup::TrackPanelGroup()
+{
+}
+
+TrackPanelGroup::~TrackPanelGroup()
+{
+}
 
 TrackPanelCell::~TrackPanelCell()
 {

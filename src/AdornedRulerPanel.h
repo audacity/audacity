@@ -172,8 +172,10 @@ private:
    //
    // CellularPanel implementation
    //
-   FoundCell FindCell(int mouseX, int mouseY) override;
-   wxRect FindRect(const TrackPanelCell &cell) override;
+
+   // Get the root object defining a recursive subdivision of the panel's
+   // area into cells
+   std::shared_ptr<TrackPanelNode> Root() override;
 public:
    AudacityProject * GetProject() const override;
 private:
@@ -207,6 +209,10 @@ private:
    
    class ScrubbingCell;
    std::shared_ptr<ScrubbingCell> mScrubbingCell;
+
+   // classes implementing subdivision for CellularPanel
+   struct Subgroup;
+   struct MainGroup;
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

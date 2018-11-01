@@ -16,8 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AudioIO.h"
 #include "../../Project.h"
 #include "../../TrackPanel.h"
-#include "../../TrackPanelCell.h"
-#include "../../TrackPanelCellIterator.h"
 #include "Scrubbing.h"
 
 #include <wx/dc.h>
@@ -82,9 +80,8 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       wxASSERT(mIsMaster);
 
       // Draw indicator in all visible tracks
-      for ( const auto &data : tp->Cells() )
-      {
-         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
+      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+         const auto pTrack = dynamic_cast<Track*>(&cell);
          if (pTrack) pTrack->TypeSwitch(
             [](LabelTrack *) {
                // Don't draw the indicator in label tracks
@@ -92,7 +89,6 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
             [&](Track *) {
                // Draw the NEW indicator in its NEW location
                // AColor::Line includes both endpoints so use GetBottom()
-               const wxRect &rect = data.second;
                AColor::Line(dc,
                             mLastIndicatorX,
                             rect.GetTop(),
@@ -100,7 +96,7 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
                             rect.GetBottom());
             }
          );
-      }
+      } );
    }
    else if(auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);

@@ -15,8 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AColor.h"
 #include "../../AdornedRulerPanel.h"
 #include "../../Project.h"
-#include "../../TrackPanelCell.h"
-#include "../../TrackPanelCellIterator.h"
 #include "../../TrackPanelAx.h"
 #include "../../ViewInfo.h"
 
@@ -100,21 +98,19 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       AColor::CursorColor(&dc);
 
       // Draw cursor in all selected tracks
-      for ( const auto &data : tp->Cells() )
-      {
-         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
+      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+         const auto pTrack = dynamic_cast<Track*>(&cell);
          if (!pTrack)
-            continue;
+            return;
          if (pTrack->GetSelected() ||
              mProject->GetTrackPanel()->GetAx().IsFocused(pTrack))
          {
-            const wxRect &rect = data.second;
             // AColor::Line includes both endpoints so use GetBottom()
             AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
             // ^^^ The whole point of this routine.
 
          }
-      }
+      } );
    }
    else if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);
