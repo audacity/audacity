@@ -33,7 +33,6 @@
 #include "RefreshCode.h"
 #include "Snap.h"
 #include "TrackPanel.h"
-#include "TrackPanelCellIterator.h"
 #include "TrackPanelMouseEvent.h"
 #include "UIHandle.h"
 #include "prefs/TracksBehaviorsPrefs.h"
@@ -328,20 +327,19 @@ void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
       ;
 
       // Draw indicator in all visible tracks
-      for ( const auto &data : static_cast<TrackPanel&>(panel).Cells() )
-      {
-         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
-         if (!pTrack)
-            continue;
-         const wxRect &rect = data.second;
+      static_cast<TrackPanel&>(panel)
+         .VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
+            const auto pTrack = dynamic_cast<Track*>(&cell);
+            if (!pTrack)
+               return;
 
-         // Draw the NEW indicator in its NEW location
-         AColor::Line(dc,
-            mOldQPIndicatorPos,
-            rect.GetTop(),
-            mOldQPIndicatorPos,
-            rect.GetBottom());
-      }
+            // Draw the NEW indicator in its NEW location
+            AColor::Line(dc,
+               mOldQPIndicatorPos,
+               rect.GetTop(),
+               mOldQPIndicatorPos,
+               rect.GetBottom());
+      } );
    }
 }
 

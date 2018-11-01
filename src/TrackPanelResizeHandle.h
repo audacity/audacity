@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "UIHandle.h"
 
 class Track;
-class TrackPanelCellIterator;
 
 class TrackPanelResizeHandle final : public UIHandle
 {
