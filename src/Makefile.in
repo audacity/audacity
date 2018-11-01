@@ -330,12 +330,12 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	TrackPanelCell.h TrackPanelCellIterator.h \
-	TrackPanelDrawingContext.h TrackPanelListener.h \
-	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
-	TrackPanelResizeHandle.h TrackPanelResizerCell.cpp \
-	TrackPanelResizerCell.h TranslatableStringArray.h UIHandle.h \
-	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
+	TrackPanelCell.h TrackPanelDrawingContext.h \
+	TrackPanelListener.h TrackPanelMouseEvent.h \
+	TrackPanelResizeHandle.cpp TrackPanelResizeHandle.h \
+	TrackPanelResizerCell.cpp TrackPanelResizerCell.h \
+	TranslatableStringArray.h UIHandle.h UIHandle.cpp \
+	UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h \
@@ -1378,12 +1378,12 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	TrackPanelCell.h TrackPanelCellIterator.h \
-	TrackPanelDrawingContext.h TrackPanelListener.h \
-	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
-	TrackPanelResizeHandle.h TrackPanelResizerCell.cpp \
-	TrackPanelResizerCell.h TranslatableStringArray.h UIHandle.h \
-	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
+	TrackPanelCell.h TrackPanelDrawingContext.h \
+	TrackPanelListener.h TrackPanelMouseEvent.h \
+	TrackPanelResizeHandle.cpp TrackPanelResizeHandle.h \
+	TrackPanelResizerCell.cpp TrackPanelResizerCell.h \
+	TranslatableStringArray.h UIHandle.h UIHandle.cpp \
+	UndoManager.cpp UndoManager.h UserException.cpp \
 	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
 	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
 	WaveTrackLocation.h WrappedType.cpp WrappedType.h \

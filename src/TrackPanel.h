@@ -44,7 +44,6 @@ class ControlToolBar; //Needed because state of controls can affect what gets dr
 class ToolsToolBar; //Needed because state of controls can affect what gets drawn.
 
 class TrackPanelAx;
-class TrackPanelCellIterator;
 
 class NoteTrack;
 class WaveTrack;
@@ -247,8 +246,6 @@ class AUDACITY_DLL_API TrackPanel final : public CellularPanel {
               AdornedRulerPanel * ruler );
 
    virtual ~ TrackPanel();
-
-   IteratorRange< TrackPanelCellIterator > Cells();
 
    void UpdatePrefs();
    void ApplyUpdatedTheme();

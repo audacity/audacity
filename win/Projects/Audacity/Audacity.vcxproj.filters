@@ -1978,9 +1978,6 @@
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h">
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h">
       <Filter>src\commands</Filter>
     </ClInclude>
