@@ -518,6 +518,7 @@ enum : int {
    kBottomMargin = kShadowThickness + kBorderThickness,
    kLeftMargin = kLeftInset + kBorderThickness,
    kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+   kSeparatorThickness = kBottomMargin + kTopMargin,
 };
 
 enum : int {

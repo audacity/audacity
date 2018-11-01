@@ -1956,9 +1956,136 @@ void TrackPanel::DrawShadow(const Track * /* t */ , wxDC * dc, const wxRect & re
    AColor::Line(*dc, right, rect.y, right, rect.y + 1);
 }
 
+namespace {
+
+// Helper classes to implement the subdivision of TrackPanel area for
+// CellularPanel
+
+struct EmptyCell final : CommonTrackPanelCell {
+   std::vector< UIHandlePtr > HitTest(
+      const TrackPanelMouseState &, const AudacityProject *) override
+   { return {}; }
+   virtual std::shared_ptr< Track > FindTrack() override { return {}; }
+   static std::shared_ptr<EmptyCell> Instance()
+   {
+      static auto instance = std::make_shared< EmptyCell >();
+      return instance;
+   }
+};
+
+// n channels alternating with n - 1 resizers
+struct ChannelGroup final : TrackPanelGroup {
+   ChannelGroup( const std::shared_ptr< Track > &pTrack )
+      : mpTrack{ pTrack } {}
+   Subdivision Children( const wxRect &rect ) override
+   {
+      Refinement refinement;
+
+      const auto channels = TrackList::Channels( mpTrack.get() );
+      const auto pLast = *channels.rbegin();
+      wxCoord yy = rect.GetTop();
+      for ( auto channel : channels ) {
+         refinement.emplace_back( yy, Track::Pointer( channel ) );
+         if ( channel != pLast ) {
+            const auto substitute =
+               Track::Pointer( channel )->SubstitutePendingChangedTrack();
+            yy += substitute->GetHeight();
+            refinement.emplace_back(
+               yy - kSeparatorThickness, channel->GetResizer() );
+         }
+      }
+
+      return { Axis::Y, std::move( refinement ) };
+   }
+   std::shared_ptr< Track > mpTrack;
+};
+
+// A track control panel left of n channels alternating with n - 1 resizers
+struct LabeledChannelGroup final : TrackPanelGroup {
+   LabeledChannelGroup(
+      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+         : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
+   Subdivision Children( const wxRect &rect ) override
+   { return { Axis::X, Refinement{
+      { rect.GetLeft(), mpTrack->GetTrackControl() },
+      { mLeftOffset, std::make_shared< ChannelGroup >( mpTrack ) }
+   } }; }
+   std::shared_ptr< Track > mpTrack;
+   wxCoord mLeftOffset;
+};
+
+// Stacks a label and a single or multi-channel track on a resizer below,
+// which is associated with the last channel
+struct ResizingChannelGroup final : TrackPanelGroup {
+   ResizingChannelGroup(
+      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+         : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
+   Subdivision Children( const wxRect &rect ) override
+   { return { Axis::Y, Refinement{
+      { rect.GetTop(),
+         std::make_shared< LabeledChannelGroup >( mpTrack, mLeftOffset ) },
+      { rect.GetTop() + rect.GetHeight() - kSeparatorThickness,
+         ( *TrackList::Channels( mpTrack.get() ).rbegin() )->GetResizer() }
+   } }; }
+   std::shared_ptr< Track > mpTrack;
+   wxCoord mLeftOffset;
+};
+
+// Stacks a dead area at top, the tracks, and the click-to-deselect area below
+struct Subgroup final : TrackPanelGroup {
+   explicit Subgroup( TrackPanel &panel ) : mPanel{ panel } {}
+   Subdivision Children( const wxRect &rect ) override
+   {
+      wxCoord yy = -mPanel.GetViewInfo()->vpos;
+      Refinement refinement;
+
+      auto &tracks = *mPanel.GetTracks();
+      if ( tracks.Any() )
+         refinement.emplace_back( yy, EmptyCell::Instance() ),
+         yy += kTopMargin;
+
+      for ( const auto leader : tracks.Leaders() ) {
+         wxCoord height = 0;
+         for ( auto channel : TrackList::Channels( leader ) ) {
+            auto substitute =
+               Track::Pointer( channel )->SubstitutePendingChangedTrack();
+            height += substitute->GetHeight();
+         }
+         refinement.emplace_back( yy,
+            std::make_shared< ResizingChannelGroup >(
+               Track::Pointer( leader ), mPanel.GetLeftOffset() )
+         );
+         yy += height;
+      }
+
+      refinement.emplace_back( std::max( 0, yy ), mPanel.GetBackgroundCell() );
+
+      return { Axis::Y, std::move( refinement ) };
+   }
+   TrackPanel &mPanel;
+};
+
+// Main group shaves off the left and right margins
+struct MainGroup final : TrackPanelGroup {
+   explicit MainGroup( TrackPanel &panel ) : mPanel{ panel } {}
+   Subdivision Children( const wxRect &rect ) override
+   { return { Axis::X, Refinement{
+      { 0, EmptyCell::Instance() },
+      { kLeftMargin, std::make_shared< Subgroup >( mPanel ) },
+      { rect.GetRight() + 1 - kRightMargin, EmptyCell::Instance() }
+   } }; }
+   TrackPanel &mPanel;
+};
+
+}
+
 std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 {
-   return {};
+   // Root and other subgroup objects are throwaways.
+   // They might instead be cached to avoid repeated allocation.
+   // That cache would need invalidation when there is addition, deletion, or
+   // permutation of tracks, or change of width of the vertical rulers.
+   return std::make_shared< MainGroup >( *this );
 }
 
 /// Determines which cell is under the mouse
