@@ -1758,6 +1758,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
    gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mPauseRec, false);
+   gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
    int silenceLevelDB;
    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);
    int dBRange;
@@ -2435,7 +2436,7 @@ void AudioIO::StopStream()
       // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through 
       // the sound card, then do so.  If we can't, don't wait around.  Just stop quickly and accept 
       // there will be a click.
-      if( latency < 150 )
+      if( mbMicroFades  && (latency < 150 ))
          wxMilliSleep( latency + 50);
    }
 
@@ -4842,6 +4843,9 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    float oldGain = vt->GetOldChannelGain(chan);
    if( gain != oldGain )
       vt->SetOldChannelGain(chan, gain);
+   // if no microfades, jump in volume.
+   if( !mbMicroFades )
+      oldGain =gain;
    wxASSERT(len > 0);
 
    // Linear interpolate.
@@ -4958,7 +4962,8 @@ bool AudioIoCallback::FillOutputBuffers(
          dropQuickly = drop;
       }
 
-      dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
+      if( mbMicroFades )
+         dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
          
       decltype(framesPerBuffer) len = 0;
 
@@ -5483,7 +5488,7 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
       outputMeterFloats);
 
    // Test for no track audio to play (because we are paused and have faded out)
-   if( mPaused && AllTracksAlreadySilent() )
+   if( mPaused &&  (( !mbMicroFades ) || AllTracksAlreadySilent() ))
       return mCallbackReturn;
 
    // To add track output to output (to play sound on speaker)

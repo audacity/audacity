@@ -505,6 +505,7 @@ public:
    /// Audio playback rate in samples per second
    double              mRate;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
+   bool                mbMicroFades; 
 
    double              mSeek;
    double              mPlaybackRingBufferSecs;
