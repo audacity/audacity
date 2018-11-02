@@ -378,6 +378,13 @@ void TrackArtist::DrawVRuler
 #endif
 
 
+   // Stroke the left border
+   dc->SetPen(*wxBLACK_PEN);
+   {
+      const auto left = rect_.GetLeft();
+      AColor::Line( *dc, left, rect_.GetTop(), left, rect_.GetBottom() );
+   }
+
    // Label and Time tracks do not have a vruler
    // But give it a beveled area
    t->TypeSwitch(

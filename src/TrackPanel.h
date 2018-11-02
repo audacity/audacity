@@ -376,8 +376,7 @@ protected:
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
    void DrawShadow            ( wxDC* dc, const wxRect & rect );
-   void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect,
-                                       const int vrul);
+   void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect );
    void DrawOutsideOfTrack    (
       TrackPanelDrawingContext &context, const wxRect & rect );
    void DrawSash              ( wxDC* dc, const wxRect & rect, int labelw );

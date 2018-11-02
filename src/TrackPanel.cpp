@@ -1624,7 +1624,7 @@ void TrackPanel::DrawOutside
       //}
 
       int vrul = GetVRulerOffset();
-      DrawBordersAroundTrack(dc, rect, vrul);
+      DrawBordersAroundTrack( dc, rect );
       {
          auto channels = TrackList::Channels(t);
          // omit last (perhaps, only) channel
@@ -1694,6 +1694,14 @@ void TrackPanel::DrawSash( wxDC * dc, const wxRect & rect, int labelw )
    // channel, down to and including the upper border of the next channel
 
    ADCChanger cleanup{ dc };
+
+   // Stroke the left border
+   dc->SetPen(*wxBLACK_PEN);
+   {
+      const auto left = rect.GetLeft();
+      AColor::Line( *dc, left, rect.GetTop(), left, rect.GetBottom() );
+   }
+
    AColor::TrackPanelBackground(dc, false);
 
    wxRect rec{ rect };
@@ -1905,11 +1913,8 @@ void TrackPanel::VerticalScroll( float fracPosition){
 
 
 // Given rectangle excludes the insets left, right, and top
-// Draw a rectangular border and also a vertical separator of track controls
-// from the rest (ruler and proper track area)
-void TrackPanel::DrawBordersAroundTrack(wxDC * dc,
-                                        const wxRect & rect,
-                                        const int vrul)
+// Draw a rectangular border
+void TrackPanel::DrawBordersAroundTrack( wxDC * dc, const wxRect & rect )
 {
    // Border around track and label area
    // leaving room for the shadow
@@ -1918,10 +1923,6 @@ void TrackPanel::DrawBordersAroundTrack(wxDC * dc,
    dc->DrawRectangle(rect.x, rect.y,
                      rect.width - kShadowThickness,
                      rect.height - kShadowThickness);
-
-
-   // between vruler and TrackInfo
-   AColor::Line(*dc, vrul, rect.y, vrul, rect.y + rect.height - 1);
 }
 
 // Given rectangle has insets subtracted left, right, and top
