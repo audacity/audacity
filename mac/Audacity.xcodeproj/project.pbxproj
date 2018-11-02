@@ -2168,7 +2168,6 @@
 		2809C4B70BCB7E560006010F /* FileIO.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileIO.h; sourceTree = "<group>"; tabWidth = 3; };
 		280A8B3E19F440160091DE70 /* ConfigInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigInterface.h; path = ../include/audacity/ConfigInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B3F19F440160091DE70 /* EffectInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectInterface.h; path = ../include/audacity/EffectInterface.h; sourceTree = SOURCE_ROOT; };
-		280A8B4019F440160091DE70 /* IdentInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IdentInterface.h; path = ../include/audacity/IdentInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4119F440160091DE70 /* ImporterInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImporterInterface.h; path = ../include/audacity/ImporterInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4219F440160091DE70 /* ModuleInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModuleInterface.h; path = ../include/audacity/ModuleInterface.h; sourceTree = SOURCE_ROOT; };
 		280A8B4319F440160091DE70 /* PluginInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PluginInterface.h; path = ../include/audacity/PluginInterface.h; sourceTree = SOURCE_ROOT; };
@@ -3180,6 +3179,7 @@
 		5E89EEE91F78D017000F5E82 /* zh_CN.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = zh_CN.po; path = ../locale/zh_CN.po; sourceTree = "<group>"; };
 		5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wxPanelWrapper.cpp; sourceTree = "<group>"; };
 		5E94A1B91D1F1C8400A8713A /* wxPanelWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wxPanelWrapper.h; sourceTree = "<group>"; };
+		5E9985D0218D0A7D00278D81 /* ComponentInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentInterface.h; path = ../include/audacity/ComponentInterface.h; sourceTree = "<group>"; };
 		5EA0181C1EC7B226001F2996 /* NoteTrackControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackControls.cpp; sourceTree = "<group>"; };
 		5EA0181D1EC7B226001F2996 /* NoteTrackControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackControls.h; sourceTree = "<group>"; };
 		5EA0181E1EC7B226001F2996 /* NoteTrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackUI.cpp; sourceTree = "<group>"; };
@@ -4796,10 +4796,10 @@
 		280A8B3D19F440010091DE70 /* audacity */ = {
 			isa = PBXGroup;
 			children = (
-				28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */,
+				5E9985D0218D0A7D00278D81 /* ComponentInterface.h */,
 				280A8B3E19F440160091DE70 /* ConfigInterface.h */,
+				28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */,
 				280A8B3F19F440160091DE70 /* EffectInterface.h */,
-				280A8B4019F440160091DE70 /* IdentInterface.h */,
 				280A8B4119F440160091DE70 /* ImporterInterface.h */,
 				280A8B4219F440160091DE70 /* ModuleInterface.h */,
 				280A8B4319F440160091DE70 /* PluginInterface.h */,
