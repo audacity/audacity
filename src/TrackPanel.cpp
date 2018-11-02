@@ -1972,10 +1972,26 @@ struct EmptyCell final : CommonTrackPanelCell {
    }
 };
 
-// n channels alternating with n - 1 resizers
+// A vertical ruler left of a channel
+struct VRulerAndChannel final : TrackPanelGroup {
+   VRulerAndChannel(
+      const std::shared_ptr< Track > &pChannel, wxCoord leftOffset )
+         : mpChannel{ pChannel }, mLeftOffset{ leftOffset } {}
+   Subdivision Children( const wxRect &rect ) override
+   {
+      return { Axis::X, Refinement{
+         { rect.GetLeft(), mpChannel->GetVRulerControl() },
+         { mLeftOffset, mpChannel }
+      } };
+   }
+   std::shared_ptr< Track > mpChannel;
+   wxCoord mLeftOffset;
+};
+
+// n channels with vertical rulers, alternating with n - 1 resizers
 struct ChannelGroup final : TrackPanelGroup {
-   ChannelGroup( const std::shared_ptr< Track > &pTrack )
-      : mpTrack{ pTrack } {}
+   ChannelGroup( const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
+      : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    {
       Refinement refinement;
@@ -1984,7 +2000,9 @@ struct ChannelGroup final : TrackPanelGroup {
       const auto pLast = *channels.rbegin();
       wxCoord yy = rect.GetTop();
       for ( auto channel : channels ) {
-         refinement.emplace_back( yy, Track::Pointer( channel ) );
+         refinement.emplace_back( yy,
+            std::make_shared< VRulerAndChannel >(
+               Track::Pointer( channel ), mLeftOffset ) );
          if ( channel != pLast ) {
             const auto substitute =
                Track::Pointer( channel )->SubstitutePendingChangedTrack();
@@ -1997,9 +2015,11 @@ struct ChannelGroup final : TrackPanelGroup {
       return { Axis::Y, std::move( refinement ) };
    }
    std::shared_ptr< Track > mpTrack;
+   wxCoord mLeftOffset;
 };
 
-// A track control panel left of n channels alternating with n - 1 resizers
+// A track control panel, left of n vertical rulers and n channels
+// alternating with n - 1 resizers
 struct LabeledChannelGroup final : TrackPanelGroup {
    LabeledChannelGroup(
       const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
@@ -2007,7 +2027,8 @@ struct LabeledChannelGroup final : TrackPanelGroup {
    Subdivision Children( const wxRect &rect ) override
    { return { Axis::X, Refinement{
       { rect.GetLeft(), mpTrack->GetTrackControl() },
-      { mLeftOffset, std::make_shared< ChannelGroup >( mpTrack ) }
+      { kTrackInfoWidth,
+        std::make_shared< ChannelGroup >( mpTrack, mLeftOffset ) }
    } }; }
    std::shared_ptr< Track > mpTrack;
    wxCoord mLeftOffset;
