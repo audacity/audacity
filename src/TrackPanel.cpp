@@ -1600,20 +1600,10 @@ void TrackPanel::DrawOutside
 {
    auto dc = &context.dc;
 
-   // Draw things that extend right of track control panel
    {
       // Start with whole track rect
       wxRect rect = rec;
       DrawOutsideOfTrack(context, rect);
-
-      {
-         auto channels = TrackList::Channels(t);
-         // omit last (perhaps, only) channel
-         --channels.second;
-         for (auto channel : channels)
-            // draw the sash below this channel
-            DrawSash(channel, dc, rect);
-      }
 
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
@@ -1639,9 +1629,17 @@ void TrackPanel::DrawOutside
          auto channels = TrackList::Channels(t);
          // omit last (perhaps, only) channel
          --channels.second;
-         for (auto channel : channels)
+         for (auto channel : channels) {
             // draw the sash below this channel
-            DrawBordersAroundSash(channel, dc, rect, labelw);
+            channel = channel->SubstitutePendingChangedTrack().get();
+            auto yy =
+               channel->GetY() - mViewInfo->vpos + channel->GetHeight()
+                  - kBottomMargin;
+            wxRect sashRect{
+               vrul, yy, rect.GetRight() - vrul, kSeparatorThickness
+            };
+            DrawSash( dc, sashRect, labelw );
+         }
       }
 
       DrawShadow( dc, rect );
@@ -1689,16 +1687,32 @@ void TrackPanel::DrawOutsideOfTrack
    dc->DrawRectangle(side);
 }
 
-void TrackPanel::DrawSash(const Track * t, wxDC * dc, const wxRect & rect)
+void TrackPanel::DrawSash( wxDC * dc, const wxRect & rect, int labelw )
 {
    // Area between channels of a group
-   // Paint the channel separator over (what would be) the shadow of this
-   // channel, and the top inset of the following channel
-   wxRect side = rect;
-   side.y = t->GetY() - mViewInfo->vpos + t->GetHeight() - kShadowThickness;
-   side.height = kTopInset + kShadowThickness;
-   dc->DrawRectangle(side);
+   // Paint the channel separator over (what would be) the lower border of this
+   // channel, down to and including the upper border of the next channel
+
+   ADCChanger cleanup{ dc };
+   AColor::TrackPanelBackground(dc, false);
+
+   wxRect rec{ rect };
+   rec.width -= labelw - rec.x;
+   rec.x = labelw;
+
+   dc->DrawRectangle( wxRect{ rec }.Inflate( 0, -kBorderThickness ) );
+
+   // These lines stroke over what is otherwise "border" of each channel
+   dc->SetBrush(*wxTRANSPARENT_BRUSH);
+   dc->SetPen(*wxBLACK_PEN);
+   const auto left = rec.GetLeft();
+   const auto right = rec.GetRight();
+   const auto top = rec.GetTop();
+   const auto bottom = rec.GetBottom();
+   AColor::Line( *dc, left, top,    right, top    );
+   AColor::Line( *dc, left, bottom, right, bottom );
 }
+
 
 void TrackPanel::SetBackgroundCell
 (const std::shared_ptr< TrackPanelCell > &pCell)
@@ -1908,18 +1922,6 @@ void TrackPanel::DrawBordersAroundTrack(wxDC * dc,
 
    // between vruler and TrackInfo
    AColor::Line(*dc, vrul, rect.y, vrul, rect.y + rect.height - 1);
-}
-
-void TrackPanel::DrawBordersAroundSash(const Track * t, wxDC * dc,
-                                        const wxRect & rect, const int labelw)
-{
-   int h1 = t->GetY() - mViewInfo->vpos + t->GetHeight();
-   // h1 is the top coordinate of the following channel's rectangle
-   // Draw (part of) the bottom border of the top channel and top border of the bottom
-   // At left it extends between the vertical rulers too
-   // These lines stroke over what is otherwise "border" of each channel
-   AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
-   AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
 }
 
 // Given rectangle has insets subtracted left, right, and top
