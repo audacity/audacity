@@ -151,8 +151,10 @@ public:
    static void SetTrackInfoFont(wxDC *dc);
 
 
-   void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
-   void DrawBordersWithin(wxDC * dc, const wxRect & rect, const Track &track ) const;
+   void DrawBackground(
+      wxDC * dc, const wxRect & rect, bool bSelected, const int labelw ) const;
+   // void DrawBordersWithin(
+   //   wxDC * dc, const wxRect & rect, const Track &track ) const;
 
    static void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
@@ -373,14 +375,13 @@ protected:
       const Track *leaderTrack, const wxRect & teamRect);
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
-   void DrawShadow            (const Track *t, wxDC* dc, const wxRect & rect);
+   void DrawShadow            ( wxDC* dc, const wxRect & rect );
    void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect,
                                        const int vrul);
    void DrawBordersAroundSash (const Track *t, wxDC* dc, const wxRect & rect,
                                        const int labelw);
    void DrawOutsideOfTrack    (
-      TrackPanelDrawingContext &context,
-      const Track *t, const wxRect & rect);
+      TrackPanelDrawingContext &context, const wxRect & rect );
    void DrawSash              (const Track *t, wxDC* dc, const wxRect & rect);
 
 public:

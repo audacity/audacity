@@ -78,6 +78,7 @@ audio tracks.
 #include "prefs/TracksPrefs.h"
 #include "prefs/WaveformSettings.h"
 #include "Spectrum.h"
+#include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "widgets/Ruler.h"
 #include "Theme.h"
@@ -165,11 +166,6 @@ int TrackArtist::GetBottom(NoteTrack *t, const wxRect &rect)
 
 TrackArtist::TrackArtist()
 {
-   mMarginLeft   = 0;
-   mMarginTop    = 0;
-   mMarginRight  = 0;
-   mMarginBottom = 0;
-
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
    mSampleDisplay = 1;// Stem plots by default.
@@ -230,27 +226,20 @@ void TrackArtist::SetColours( int iColorIndex)
    }
 }
 
-void TrackArtist::SetMargins(int left, int top, int right, int bottom)
-{
-   mMarginLeft   = left;
-   mMarginTop    = top;
-   mMarginRight  = right;
-   mMarginBottom = bottom;
-}
-
 void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
                              const TrackList * tracks,
                              const wxRegion & reg,
-                             const wxRect & rect,
-                             const wxRect & clip,
+                             const wxRect & clip, int leftOffset,
                              const SelectedRegion &selectedRegion,
                              const ZoomInfo &zoomInfo,
                              bool drawEnvelope,
                              bool bigPoints,
                              bool drawSliders)
 {
-   // Copy the horizontal extent of rect; will later change only the vertical.
-   wxRect teamRect = rect;
+   // Fix the horizontal extent; will later change only the vertical extent.
+   wxRect teamRect{
+      clip.x + leftOffset, 0, clip.width - (leftOffset + kRightMargin), 0
+   };
 
    bool hasSolo = false;
    for (const Track *t : *tracks) {
@@ -261,19 +250,6 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
          break;
       }
    }
-
-#if defined(DEBUG_CLIENT_AREA)
-   // Change the +0 to +1 or +2 to see the bounding box
-   mMarginLeft = 1+0; mMarginTop = 5+0; mMarginRight = 6+0; mMarginBottom = 2+0;
-
-   // This just shows what the passed in rectangles enclose
-   dc.SetPen(wxColour(*wxGREEN));
-   dc.SetBrush(*wxTRANSPARENT_BRUSH);
-   dc.DrawRectangle(rect);
-   dc.SetPen(wxColour(*wxBLUE));
-   dc.SetBrush(*wxTRANSPARENT_BRUSH);
-   dc.DrawRectangle(clip);
-#endif
 
    gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), &mbShowTrackNameInWaveform, false);
 
@@ -293,15 +269,6 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
          break;
 
       for (auto t : group) {
-#if defined(DEBUG_CLIENT_AREA)
-         // Filled rectangle to show the interior of the client area
-         wxRect zr = trackRect;
-         zr.x+=1; zr.y+=5; zr.width-=7; zr.height-=7;
-         dc.SetPen(*wxCYAN_PEN);
-         dc.SetBrush(*wxRED_BRUSH);
-         dc.DrawRectangle(zr);
-#endif
-
          // For various reasons, the code will break if we display one
          // of a stereo pair of tracks but not the other - for example,
          // if you try to edit the envelope of one track when its linked
@@ -313,10 +280,10 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
          if (teamRect.Intersects(clip) && reg.Contains(teamRect)) {
             t = t->SubstitutePendingChangedTrack().get();
             wxRect trackRect {
-               rect.x + mMarginLeft,
-               t->GetY() - zoomInfo.vpos + mMarginTop,
-               rect.width - (mMarginLeft + mMarginRight),
-               t->GetHeight() - (mMarginTop + mMarginBottom)
+               teamRect.x,
+               t->GetY() - zoomInfo.vpos + kTopMargin,
+               teamRect.width,
+               t->GetHeight() - (kTopMargin + kBottomMargin)
             };
             DrawTrack(context, t, trackRect,
                       selectedRegion, zoomInfo,

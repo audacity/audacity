@@ -57,7 +57,7 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawTracks(TrackPanelDrawingContext &context,
                    const TrackList *tracks,
                    const wxRegion & reg,
-                   const wxRect & rect, const wxRect & clip,
+                   const wxRect &clip, int leftOffset,
                    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                    bool drawEnvelope, bool bigPoints, bool drawSliders);
 
@@ -72,8 +72,6 @@ class AUDACITY_DLL_API TrackArtist {
                    const Track *t, const wxRect & rect);
 
    void UpdateVRuler(const Track *t, const wxRect & rect);
-
-   void SetMargins(int left, int top, int right, int bottom);
 
    void UpdatePrefs();
 
@@ -181,11 +179,6 @@ class AUDACITY_DLL_API TrackArtist {
    long mShowClipping;        // "/GUI/ShowClipping"
    int  mSampleDisplay;
    bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
-
-   int mMarginLeft;
-   int mMarginTop;
-   int mMarginRight;
-   int mMarginBottom;
 
    wxBrush blankBrush;
    wxBrush unselectedBrush;
