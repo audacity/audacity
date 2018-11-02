@@ -241,14 +241,14 @@ MenuTable::BaseItemPtr HelpMenu( AudacityProject & )
    using namespace MenuTable;
 
    return Menu( _("&Help"),
+      // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
+#ifdef EXPERIMENTAL_DA
+      // DA: Has QuickFix menu item.
       Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
          AlwaysEnabledFlag ),
-      // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-#ifdef EXPERIMENTAL_DA
-      // 'Getting Started' rather than 'Quick Help' for DarkAudacity.
-      // At the moment the video tutorials are aspirational (aka do not exist
-      // yet). Emphasise that manual is for Audacity, not DarkAudacity.
+      // DA: 'Getting Started' rather than 'Quick Help'.
       Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp) ),
+      // DA: Emphasise it is the Audacity Manual (No separate DA manual).
       Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual) ),
 #else
       Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
