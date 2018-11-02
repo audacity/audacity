@@ -82,9 +82,9 @@ EffectTimeScale::~EffectTimeScale()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectTimeScale::GetSymbol()
+ComponentInterfaceSymbol EffectTimeScale::GetSymbol()
 {
    return TIMESCALE_PLUGIN_SYMBOL;
 }

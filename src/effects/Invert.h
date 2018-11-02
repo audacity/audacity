@@ -17,7 +17,7 @@
 
 #include "Effect.h"
 
-#define INVERT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Invert") }
+#define INVERT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Invert") }
 
 class EffectInvert final : public Effect
 {
@@ -25,9 +25,9 @@ public:
    EffectInvert();
    virtual ~EffectInvert();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation

@@ -86,7 +86,7 @@ enum kTypes
    nTypes
 };
 
-static const IdentInterfaceSymbol kTypeStrings[nTypes] =
+static const ComponentInterfaceSymbol kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -103,7 +103,7 @@ enum kSubTypes
    nSubTypes
 };
 
-static const IdentInterfaceSymbol kSubTypeStrings[nSubTypes] =
+static const ComponentInterfaceSymbol kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },
@@ -178,9 +178,9 @@ EffectScienFilter::~EffectScienFilter()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectScienFilter::GetSymbol()
+ComponentInterfaceSymbol EffectScienFilter::GetSymbol()
 {
    return CLASSICFILTERS_PLUGIN_SYMBOL;
 }

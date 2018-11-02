@@ -144,7 +144,7 @@ enum kInterpolations
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const IdentInterfaceSymbol kInterpStrings[nInterpolations] =
+static const ComponentInterfaceSymbol kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -280,9 +280,9 @@ EffectEqualization::~EffectEqualization()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectEqualization::GetSymbol()
+ComponentInterfaceSymbol EffectEqualization::GetSymbol()
 {
    return EQUALIZATION_PLUGIN_SYMBOL;
 }

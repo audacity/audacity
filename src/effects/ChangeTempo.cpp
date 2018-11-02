@@ -104,9 +104,9 @@ EffectChangeTempo::~EffectChangeTempo()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectChangeTempo::GetSymbol()
+ComponentInterfaceSymbol EffectChangeTempo::GetSymbol()
 {
    return CHANGETEMPO_PLUGIN_SYMBOL;
 }

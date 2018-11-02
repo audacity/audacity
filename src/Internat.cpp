@@ -31,7 +31,7 @@ and on Mac OS X for the filesystem.
 #include "FileNames.h"
 #include "widgets/ErrorDialog.h"
 #include "Internat.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -301,10 +301,10 @@ wxString Internat::StripAccelerators(const wxString &s)
 }
 
 wxArrayString LocalizedStrings(
-   const IdentInterfaceSymbol strings[], size_t nStrings)
+   const ComponentInterfaceSymbol strings[], size_t nStrings)
 {
    wxArrayString results;
    std::transform( strings, strings + nStrings, std::back_inserter(results),
-                   std::mem_fn( &IdentInterfaceSymbol::Translation ) );
+                   std::mem_fn( &ComponentInterfaceSymbol::Translation ) );
    return results;
 }

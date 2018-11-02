@@ -27,7 +27,7 @@ class ShuttleGui;
 
 #define NUM_STAGES 24
 
-#define PHASER_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Phaser") }
+#define PHASER_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Phaser") }
 
 class EffectPhaserState
 {
@@ -50,9 +50,9 @@ public:
    EffectPhaser();
    virtual ~EffectPhaser();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

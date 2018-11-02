@@ -47,7 +47,7 @@ small calculations of rectangles.
 #include "CommandManager.h"
 
 
-static const IdentInterfaceSymbol
+static const ComponentInterfaceSymbol
 kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 {
    { XO("Window") },
@@ -85,7 +85,7 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
 };
 
 
-static const IdentInterfaceSymbol
+static const ComponentInterfaceSymbol
 kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 {
    // These are acceptable dual purpose internal/visible names

@@ -231,12 +231,12 @@ public:
       return mPath;
    }
 
-   IdentInterfaceSymbol GetSymbol() override
+   ComponentInterfaceSymbol GetSymbol() override
    {
       return mName;
    }
 
-   IdentInterfaceSymbol GetVendor() override
+   ComponentInterfaceSymbol GetVendor() override
    {
       return { mVendor };
    }
@@ -251,7 +251,7 @@ public:
       return mDescription;
    }
 
-   IdentInterfaceSymbol GetFamilyId() override
+   ComponentInterfaceSymbol GetFamilyId() override
    {
       return VSTPLUGINTYPE;
    }
@@ -318,7 +318,7 @@ VSTEffectsModule::~VSTEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString VSTEffectsModule::GetPath()
@@ -326,12 +326,12 @@ wxString VSTEffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol VSTEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
 {
    return XO("VST Effects");
 }
 
-IdentInterfaceSymbol VSTEffectsModule::GetVendor()
+ComponentInterfaceSymbol VSTEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -677,7 +677,7 @@ bool VSTEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
@@ -685,7 +685,7 @@ IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
    return safenew VSTEffect(path);
 }
 
-void VSTEffectsModule::DeleteInstance(IdentInterface *instance)
+void VSTEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < VSTEffect > {
       dynamic_cast<VSTEffect *>(instance)
@@ -1182,7 +1182,7 @@ VSTEffect::~VSTEffect()
 }
 
 // ============================================================================
-// IdentInterface Implementation
+// ComponentInterface Implementation
 // ============================================================================
 
 wxString VSTEffect::GetPath()
@@ -1190,12 +1190,12 @@ wxString VSTEffect::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol VSTEffect::GetSymbol()
+ComponentInterfaceSymbol VSTEffect::GetSymbol()
 {
    return mName;
 }
 
-IdentInterfaceSymbol VSTEffect::GetVendor()
+ComponentInterfaceSymbol VSTEffect::GetVendor()
 {
    return { mVendor };
 }
@@ -1253,7 +1253,7 @@ EffectType VSTEffect::GetType()
 }
 
 
-IdentInterfaceSymbol VSTEffect::GetFamilyId()
+ComponentInterfaceSymbol VSTEffect::GetFamilyId()
 {
    return VSTPLUGINTYPE;
 }

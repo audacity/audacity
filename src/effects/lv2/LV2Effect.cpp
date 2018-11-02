@@ -322,7 +322,7 @@ LV2Effect::~LV2Effect()
 }
 
 // ============================================================================
-// IdentInterface Implementation
+// ComponentInterface Implementation
 // ============================================================================
 
 wxString LV2Effect::GetPath()
@@ -330,12 +330,12 @@ wxString LV2Effect::GetPath()
    return LilvString(lilv_plugin_get_uri(mPlug));
 }
 
-IdentInterfaceSymbol LV2Effect::GetSymbol()
+ComponentInterfaceSymbol LV2Effect::GetSymbol()
 {
    return LilvString(lilv_plugin_get_name(mPlug), true);
 }
 
-IdentInterfaceSymbol LV2Effect::GetVendor()
+ComponentInterfaceSymbol LV2Effect::GetVendor()
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 
@@ -381,7 +381,7 @@ EffectType LV2Effect::GetType()
    return EffectTypeProcess;
 }
 
-IdentInterfaceSymbol LV2Effect::GetFamilyId()
+ComponentInterfaceSymbol LV2Effect::GetFamilyId()
 {
    return LV2EFFECTS_FAMILY;
 }

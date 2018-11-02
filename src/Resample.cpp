@@ -26,7 +26,7 @@
 #include "Prefs.h"
 #include "TranslatableStringArray.h"
 #include "Internat.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 
 #include <soxr.h>
 
@@ -52,7 +52,7 @@ Resample::~Resample()
 }
 
 //////////
-static const IdentInterfaceSymbol methodNames[] = {
+static const ComponentInterfaceSymbol methodNames[] = {
    { wxT("LowQuality"), XO("Low Quality (Fastest)") },
    { wxT("MediumQuality"), XO("Medium Quality") },
    { wxT("HighQuality"), XO("High Quality") },

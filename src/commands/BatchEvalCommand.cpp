@@ -17,7 +17,7 @@
 #include "BatchEvalCommand.h"
 #include "CommandContext.h"
 
-IdentInterfaceSymbol BatchEvalCommandType::BuildName()
+ComponentInterfaceSymbol BatchEvalCommandType::BuildName()
 {
    return { wxT("BatchCommand"), XO("Batch Command") };
 }

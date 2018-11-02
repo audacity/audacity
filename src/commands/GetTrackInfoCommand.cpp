@@ -27,7 +27,7 @@
 #include "CommandContext.h"
 
 const int nTypes =3;
-static const IdentInterfaceSymbol kTypes[nTypes] =
+static const ComponentInterfaceSymbol kTypes[nTypes] =
 {
    { XO("Tracks") },
    { XO("Clips") },

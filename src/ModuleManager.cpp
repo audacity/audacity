@@ -552,7 +552,7 @@ bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const wxSt
    return nFound > 0;
 }
 
-IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
+ComponentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
                                                       const wxString & path)
 {
    if (path.IsEmpty() && mDynModules.find(providerID) != mDynModules.end())
@@ -563,7 +563,7 @@ IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerI
    return LoadModule(path);
 }
 
-IdentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
+ComponentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
                                               const wxString & path)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -575,7 +575,7 @@ IdentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
 }
 
 void ModuleManager::DeleteInstance(const PluginID & providerID,
-                                   IdentInterface *instance)
+                                   ComponentInterface *instance)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
    {

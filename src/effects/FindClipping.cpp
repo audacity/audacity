@@ -50,9 +50,9 @@ EffectFindClipping::~EffectFindClipping()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectFindClipping::GetSymbol()
+ComponentInterfaceSymbol EffectFindClipping::GetSymbol()
 {
    return FINDCLIPPING_PLUGIN_SYMBOL;
 }

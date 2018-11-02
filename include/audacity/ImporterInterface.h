@@ -44,7 +44,7 @@
 
 #include "audacity/Types.h"
 #include "audacity/ConfigInterface.h"
-#include "audacity/IdentInterface.h"
+#include "audacity/ComponentInterface.h"
 
 // ============================================================================
 //
@@ -54,7 +54,7 @@
 
 class ImporterHostInterface;
 class ImporterClientInterface;
-class ImporterInterface : public IdentInterface
+class ImporterInterface : public ComponentInterface
 {
 public:
    virtual ~ImporterInterface() {};

@@ -88,9 +88,9 @@ EffectWahwah::~EffectWahwah()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectWahwah::GetSymbol()
+ComponentInterfaceSymbol EffectWahwah::GetSymbol()
 {
    return WAHWAH_PLUGIN_SYMBOL;
 }

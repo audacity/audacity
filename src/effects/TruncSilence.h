@@ -29,7 +29,7 @@ class wxChoice;
 class wxTextCtrl;
 class wxCheckBox;
 
-#define TRUNCATESILENCE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Truncate Silence") }
+#define TRUNCATESILENCE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Truncate Silence") }
 
 class RegionList;
 
@@ -39,9 +39,9 @@ public:
    EffectTruncSilence();
    virtual ~EffectTruncSilence();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

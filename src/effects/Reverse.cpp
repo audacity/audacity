@@ -36,9 +36,9 @@ EffectReverse::~EffectReverse()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectReverse::GetSymbol()
+ComponentInterfaceSymbol EffectReverse::GetSymbol()
 {
    return REVERSE_PLUGIN_SYMBOL;
 }

@@ -102,9 +102,9 @@ public:
    bool RegisterEffectPlugin(const PluginID & provider, const wxString & path,
                        wxString &errMsg);
 
-   IdentInterface *CreateProviderInstance(const PluginID & provider, const wxString & path);
-   IdentInterface *CreateInstance(const PluginID & provider, const wxString & path);
-   void DeleteInstance(const PluginID & provider, IdentInterface *instance);
+   ComponentInterface *CreateProviderInstance(const PluginID & provider, const wxString & path);
+   ComponentInterface *CreateInstance(const PluginID & provider, const wxString & path);
+   void DeleteInstance(const PluginID & provider, ComponentInterface *instance);
 
    bool IsProviderValid(const PluginID & provider, const wxString & path);
    bool IsPluginValid(const PluginID & provider, const wxString & path, bool bFast);

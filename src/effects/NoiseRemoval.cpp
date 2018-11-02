@@ -108,9 +108,9 @@ EffectNoiseRemoval::~EffectNoiseRemoval()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
 {
    return XO("Noise Removal");
 }

@@ -427,9 +427,9 @@ EffectNoiseReduction::~EffectNoiseReduction()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNoiseReduction::GetSymbol()
+ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol()
 {
    return NOISEREDUCTION_PLUGIN_SYMBOL;
 }

@@ -57,7 +57,7 @@ enum kTableType
    nTableTypes
 };
 
-static const IdentInterfaceSymbol kTableTypeStrings[nTableTypes] =
+static const ComponentInterfaceSymbol kTableTypeStrings[nTableTypes] =
 {
    { XO("Hard Clipping") },
    { XO("Soft Clipping") },
@@ -188,9 +188,9 @@ EffectDistortion::~EffectDistortion()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectDistortion::GetSymbol()
+ComponentInterfaceSymbol EffectDistortion::GetSymbol()
 {
    return DISTORTION_PLUGIN_SYMBOL;
 }

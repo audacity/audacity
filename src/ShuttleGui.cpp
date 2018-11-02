@@ -107,7 +107,7 @@ for registering for changes.
 #include <wx/treectrl.h>
 #include <wx/spinctrl.h>
 #include <wx/bmpbuttn.h>
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 #include "Internat.h"
 #include "WrappedType.h"
 #include "widgets/wxPanelWrapper.h"

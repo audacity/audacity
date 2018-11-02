@@ -32,7 +32,7 @@
 
 //////////
 
-static const IdentInterfaceSymbol choicesFormat[] = {
+static const ComponentInterfaceSymbol choicesFormat[] = {
    { wxT("Format16Bit"), XO("16-bit") },
    { wxT("Format24Bit"), XO("24-bit") },
    { wxT("Format32BitFloat"), XO("32-bit float") }
@@ -56,7 +56,7 @@ static EncodedEnumSetting formatSetting{
 };
 
 //////////
-static const IdentInterfaceSymbol choicesDither[] = {
+static const ComponentInterfaceSymbol choicesDither[] = {
    { XO("None") },
    { XO("Rectangle") },
    { XO("Triangle") },

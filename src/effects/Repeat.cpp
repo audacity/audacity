@@ -55,9 +55,9 @@ EffectRepeat::~EffectRepeat()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectRepeat::GetSymbol()
+ComponentInterfaceSymbol EffectRepeat::GetSymbol()
 {
    return REPEAT_PLUGIN_SYMBOL;
 }

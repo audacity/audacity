@@ -25,7 +25,7 @@
 
 class ShuttleGui;
 
-#define CHANGESPEED_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Change Speed") }
+#define CHANGESPEED_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Change Speed") }
 
 class EffectChangeSpeed final : public Effect
 {
@@ -33,9 +33,9 @@ public:
    EffectChangeSpeed();
    virtual ~EffectChangeSpeed();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

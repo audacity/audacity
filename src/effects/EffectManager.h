@@ -89,7 +89,7 @@ public:
                          bool shouldPrompt  = true );
 
    // Renamed from 'Effect' to 'Command' prior to moving out of this class.
-   IdentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
+   ComponentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
    wxString GetCommandName(const PluginID & ID); // translated
    wxString GetCommandIdentifier(const PluginID & ID);
    wxString GetCommandDescription(const PluginID & ID);

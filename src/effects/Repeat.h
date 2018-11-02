@@ -20,7 +20,7 @@
 
 class ShuttleGui;
 
-#define REPEAT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Repeat") }
+#define REPEAT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Repeat") }
 
 class EffectRepeat final : public Effect
 {
@@ -28,9 +28,9 @@ public:
    EffectRepeat();
    virtual ~EffectRepeat();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

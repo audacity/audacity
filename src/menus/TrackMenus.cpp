@@ -1531,7 +1531,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
       Menu( _("&Align Tracks"), //_("Just Move Tracks"),
          []{
             // Mutual alignment of tracks independent of selection or zero
-            static const IdentInterfaceSymbol alignLabelsNoSync[] = {
+            static const ComponentInterfaceSymbol alignLabelsNoSync[] = {
                { wxT("EndToEnd"),     XO("&Align End to End") },
                { wxT("Together"),     XO("Align &Together") },
             };
@@ -1544,7 +1544,7 @@ MenuTable::BaseItemPtr TracksMenu( AudacityProject & )
 
          []{
             // Alignment commands using selection or zero
-            static const IdentInterfaceSymbol alignLabels[] = {
+            static const ComponentInterfaceSymbol alignLabels[] = {
                { wxT("StartToZero"),     XO("Start to &Zero") },
                { wxT("StartToSelStart"), XO("Start to &Cursor/Selection Start")
                },

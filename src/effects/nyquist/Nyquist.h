@@ -32,7 +32,7 @@
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
-#define NYQUISTEFFECTS_FAMILY ( IdentInterfaceSymbol{ XO("Nyquist") } )
+#define NYQUISTEFFECTS_FAMILY ( ComponentInterfaceSymbol{ XO("Nyquist") } )
 
 #define NYQUIST_EFFECTS_PROMPT_ID wxT("Nyquist Effects Prompt")
 #define NYQUIST_TOOLS_PROMPT_ID wxT("Nyquist Prompt")
@@ -64,7 +64,7 @@ public:
    wxString var;
    wxString name;
    wxString label;
-   std::vector<IdentInterfaceSymbol> choices;
+   std::vector<ComponentInterfaceSymbol> choices;
    wxString valStr;
    wxString lowStr;
    wxString highStr;
@@ -85,11 +85,11 @@ public:
    NyquistEffect(const wxString &fName);
    virtual ~NyquistEffect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
    
@@ -100,7 +100,7 @@ public:
 
    EffectType GetType() override;
    EffectType GetClassification() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   ComponentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
 
@@ -150,7 +150,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-   static std::vector<IdentInterfaceSymbol> ParseChoice(const wxString & text);
+   static std::vector<ComponentInterfaceSymbol> ParseChoice(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,

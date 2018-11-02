@@ -38,7 +38,7 @@ enum kColours
    nColours
 };
 
-static const IdentInterfaceSymbol kColourStrings[nColours] =
+static const ComponentInterfaceSymbol kColourStrings[nColours] =
 {
    { wxT("Color0"), XO("Color 0") },
    { wxT("Color1"), XO("Color 1") },

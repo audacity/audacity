@@ -85,18 +85,18 @@ class VSTEffect final : public wxEvtHandler,
    VSTEffect(const wxString & path, VSTEffect *master = NULL);
    virtual ~VSTEffect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   ComponentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -378,11 +378,11 @@ public:
    VSTEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~VSTEffectsModule();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
@@ -403,8 +403,8 @@ public:
 
    bool IsPluginValid(const wxString & path, bool bFast) override;
 
-   IdentInterface *CreateInstance(const wxString & path) override;
-   void DeleteInstance(IdentInterface *instance) override;
+   ComponentInterface *CreateInstance(const wxString & path) override;
+   void DeleteInstance(ComponentInterface *instance) override;
 
    // VSTEffectModule implementation
 

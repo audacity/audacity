@@ -103,9 +103,9 @@ EffectChangeSpeed::~EffectChangeSpeed()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectChangeSpeed::GetSymbol()
+ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol()
 {
    return CHANGESPEED_PLUGIN_SYMBOL;
 }

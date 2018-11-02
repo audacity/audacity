@@ -93,7 +93,7 @@ NyquistEffectsModule::~NyquistEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString NyquistEffectsModule::GetPath()
@@ -101,12 +101,12 @@ wxString NyquistEffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol NyquistEffectsModule::GetSymbol()
+ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol()
 {
    return XO("Nyquist Effects");
 }
 
-IdentInterfaceSymbol NyquistEffectsModule::GetVendor()
+ComponentInterfaceSymbol NyquistEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -255,7 +255,7 @@ bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(path);
 }
 
-IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    auto effect = std::make_unique<NyquistEffect>(path);
@@ -268,7 +268,7 @@ IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
    return NULL;
 }
 
-void NyquistEffectsModule::DeleteInstance(IdentInterface *instance)
+void NyquistEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < NyquistEffect > {
       dynamic_cast<NyquistEffect *>(instance)

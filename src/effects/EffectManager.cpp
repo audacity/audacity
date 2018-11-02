@@ -142,7 +142,7 @@ bool EffectManager::DoAudacityCommand(const PluginID & ID,
    return res;
 }
 
-IdentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
+ComponentInterfaceSymbol EffectManager::GetCommandSymbol(const PluginID & ID)
 {
    return PluginManager::Get().GetSymbol(ID);
 }
@@ -231,7 +231,7 @@ wxString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   ParamsInterface *command;
+   ComponentInterface *command;
    command = GetEffect(ID);
    if( !command )
       command = GetAudacityCommand( ID );

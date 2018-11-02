@@ -108,7 +108,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString LadspaEffectsModule::GetPath()
@@ -116,7 +116,7 @@ wxString LadspaEffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol LadspaEffectsModule::GetSymbol()
+ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
 {
    /* i8n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
       (Application programming interface)
@@ -124,7 +124,7 @@ IdentInterfaceSymbol LadspaEffectsModule::GetSymbol()
    return XO("LADSPA Effects");
 }
 
-IdentInterfaceSymbol LadspaEffectsModule::GetVendor()
+ComponentInterfaceSymbol LadspaEffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -309,7 +309,7 @@ bool LadspaEffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return wxFileName::FileExists(realPath);
 }
 
-IdentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.
@@ -323,7 +323,7 @@ IdentInterface *LadspaEffectsModule::CreateInstance(const wxString & path)
    return safenew LadspaEffect(realPath, (int)index);
 }
 
-void LadspaEffectsModule::DeleteInstance(IdentInterface *instance)
+void LadspaEffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < LadspaEffect > {
       dynamic_cast<LadspaEffect *>(instance)
@@ -613,7 +613,7 @@ LadspaEffect::~LadspaEffect()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString LadspaEffect::GetPath()
@@ -621,12 +621,12 @@ wxString LadspaEffect::GetPath()
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-IdentInterfaceSymbol LadspaEffect::GetSymbol()
+ComponentInterfaceSymbol LadspaEffect::GetSymbol()
 {
    return LAT1CTOWX(mData->Name);
 }
 
-IdentInterfaceSymbol LadspaEffect::GetVendor()
+ComponentInterfaceSymbol LadspaEffect::GetVendor()
 {
    return { LAT1CTOWX(mData->Maker) };
 }
@@ -665,7 +665,7 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-IdentInterfaceSymbol LadspaEffect::GetFamilyId()
+ComponentInterfaceSymbol LadspaEffect::GetFamilyId()
 {
    return LADSPAEFFECTS_FAMILY;
 }

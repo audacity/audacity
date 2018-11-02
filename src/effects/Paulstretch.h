@@ -16,7 +16,7 @@
 
 class ShuttleGui;
 
-#define PAULSTRETCH_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Paulstretch") }
+#define PAULSTRETCH_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Paulstretch") }
 
 class EffectPaulstretch final : public Effect
 {
@@ -24,9 +24,9 @@ public:
    EffectPaulstretch();
    virtual ~EffectPaulstretch();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

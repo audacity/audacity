@@ -44,7 +44,7 @@
 
 #include <functional>
 #include "audacity/Types.h"
-#include "audacity/IdentInterface.h"
+#include "audacity/ComponentInterface.h"
 #include "audacity/PluginInterface.h"
 
 // ============================================================================
@@ -64,7 +64,7 @@
 ///
 // ============================================================================
 
-class ModuleInterface  /* not final */ : public IdentInterface
+class ModuleInterface  /* not final */ : public ComponentInterface
 {
 public:
    virtual ~ModuleInterface() {};
@@ -113,7 +113,7 @@ public:
    // Return value is the number of plugins found.
    using RegistrationCallback =
       std::function<
-         const PluginID &(ModuleInterface *, IdentInterface *) >;
+         const PluginID &(ModuleInterface *, ComponentInterface *) >;
    virtual unsigned DiscoverPluginsAtPath(
       const wxString & path, wxString &errMsg,
       const RegistrationCallback &callback )
@@ -124,10 +124,10 @@ public:
    virtual bool IsPluginValid(const wxString & path, bool bFast) = 0;
 
    // When appropriate, CreateInstance() will be called to instantiate the plugin.
-   virtual IdentInterface *CreateInstance(const wxString & path) = 0;
+   virtual ComponentInterface *CreateInstance(const wxString & path) = 0;
 
    // When appropriate, DeleteInstance() will be called to delete the plugin.
-   virtual void DeleteInstance(IdentInterface *instance) = 0;
+   virtual void DeleteInstance(ComponentInterface *instance) = 0;
 };
 
 // ============================================================================

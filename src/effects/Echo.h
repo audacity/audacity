@@ -21,7 +21,7 @@
 
 class ShuttleGui;
 
-#define ECHO_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Echo") }
+#define ECHO_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Echo") }
 
 class EffectEcho final : public Effect
 {
@@ -29,9 +29,9 @@ public:
    EffectEcho();
    virtual ~EffectEcho();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

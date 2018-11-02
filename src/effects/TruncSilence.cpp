@@ -37,10 +37,10 @@
 class Enums {
 public:
    static const size_t    NumDbChoices;
-   static const IdentInterfaceSymbol DbChoices[];
+   static const ComponentInterfaceSymbol DbChoices[];
 };
 
-const IdentInterfaceSymbol Enums::DbChoices[] = {
+const ComponentInterfaceSymbol Enums::DbChoices[] = {
    // Table of text values, only for reading what was stored in legacy config
    // files.
    // It was inappropriate to make this a discrete choice control.
@@ -74,7 +74,7 @@ enum kActions
    nActions
 };
 
-static const IdentInterfaceSymbol kActionStrings[nActions] =
+static const ComponentInterfaceSymbol kActionStrings[nActions] =
 {
    { XO("Truncate Detected Silence") },
    { XO("Compress Excess Silence") }
@@ -148,9 +148,9 @@ EffectTruncSilence::~EffectTruncSilence()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectTruncSilence::GetSymbol()
+ComponentInterfaceSymbol EffectTruncSilence::GetSymbol()
 {
    return TRUNCATESILENCE_PLUGIN_SYMBOL;
 }

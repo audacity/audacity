@@ -179,7 +179,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    };
 
    void AddItemList(const wxString & name,
-                    const IdentInterfaceSymbol items[],
+                    const ComponentInterfaceSymbol items[],
                     size_t nItems,
                     CommandHandlerFinder finder,
                     CommandFunctorPointer callback,
@@ -528,7 +528,7 @@ namespace MenuTable {
 
    struct CommandGroupItem final : BaseItem {
       CommandGroupItem(const wxString &name_,
-               const IdentInterfaceSymbol items_[],
+               const ComponentInterfaceSymbol items_[],
                size_t nItems_,
                CommandHandlerFinder finder_,
                CommandFunctorPointer callback_,
@@ -537,7 +537,7 @@ namespace MenuTable {
       ~CommandGroupItem() override;
 
       const wxString name;
-      const std::vector<IdentInterfaceSymbol> items;
+      const std::vector<ComponentInterfaceSymbol> items;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
       CommandFlag flags;
@@ -620,7 +620,7 @@ namespace MenuTable {
 
    inline std::unique_ptr<CommandGroupItem> CommandGroup(
       const wxString &name,
-      const IdentInterfaceSymbol items[], size_t nItems,
+      const ComponentInterfaceSymbol items[], size_t nItems,
       CommandHandlerFinder finder, CommandFunctorPointer callback,
       CommandFlag flags, bool isEffect = false)
    {

@@ -472,10 +472,10 @@
     <ClCompile Include="..\..\..\src\effects\lv2\LV2Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\audacity\ComponentInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ConfigInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectAutomationParameters.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectInterface.h" />
-    <ClInclude Include="..\..\..\include\audacity\IdentInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ModuleInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\PluginInterface.h" />

@@ -77,9 +77,9 @@ EffectBassTreble::~EffectBassTreble()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectBassTreble::GetSymbol()
+ComponentInterfaceSymbol EffectBassTreble::GetSymbol()
 {
    return BASSTREBLE_PLUGIN_SYMBOL;
 }

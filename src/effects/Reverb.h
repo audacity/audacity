@@ -22,7 +22,7 @@
 
 class ShuttleGui;
 
-#define REVERB_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Reverb") }
+#define REVERB_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Reverb") }
 
 struct Reverb_priv_t;
 
@@ -46,9 +46,9 @@ public:
       bool mWetOnly;
    };
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

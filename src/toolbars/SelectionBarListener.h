@@ -11,8 +11,8 @@
 #ifndef __AUDACITY_SELECTION_BAR_LISTENER__
 #define __AUDACITY_SELECTION_BAR_LISTENER__
 
-class IdentInterfaceSymbol;
-using NumericFormatId = IdentInterfaceSymbol;
+class ComponentInterfaceSymbol;
+using NumericFormatId = ComponentInterfaceSymbol;
 class SelectedRegion;
 
 class AUDACITY_DLL_API SelectionBarListener /* not final */ {

@@ -35,7 +35,7 @@ enum kTypes
    nTypes
 };
 
-static const IdentInterfaceSymbol kTypeStrings[nTypes] =
+static const ComponentInterfaceSymbol kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("White") },
@@ -67,9 +67,9 @@ EffectNoise::~EffectNoise()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNoise::GetSymbol()
+ComponentInterfaceSymbol EffectNoise::GetSymbol()
 {
    return NOISE_PLUGIN_SYMBOL;
 }

@@ -28,9 +28,9 @@ EffectFade::~EffectFade()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectFade::GetSymbol()
+ComponentInterfaceSymbol EffectFade::GetSymbol()
 {
    return mFadeIn
       ? FADEIN_PLUGIN_SYMBOL

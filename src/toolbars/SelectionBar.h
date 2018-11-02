@@ -39,7 +39,7 @@ class wxStaticText;
 class SelectionBarListener;
 class NumericTextCtrl;
 
-using NumericFormatId = IdentInterfaceSymbol;
+using NumericFormatId = ComponentInterfaceSymbol;
 
 class SelectionBar final : public ToolBar {
 

@@ -50,18 +50,18 @@ public:
                    AudioUnitEffect *master = NULL);
    virtual ~AudioUnitEffect();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
-   // EffectIdentInterface implementation
+   // EffectComponentInterface implementation
 
    EffectType GetType() override;
-   IdentInterfaceSymbol GetFamilyId() override;
+   ComponentInterfaceSymbol GetFamilyId() override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool IsLegacy() override;
@@ -229,11 +229,11 @@ public:
    AudioUnitEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~AudioUnitEffectsModule();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    wxString GetPath() override;
-   IdentInterfaceSymbol GetSymbol() override;
-   IdentInterfaceSymbol GetVendor() override;
+   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
 
@@ -254,8 +254,8 @@ public:
 
    bool IsPluginValid(const wxString & path, bool bFast) override;
 
-   IdentInterface *CreateInstance(const wxString & path) override;
-   void DeleteInstance(IdentInterface *instance) override;
+   ComponentInterface *CreateInstance(const wxString & path) override;
+   void DeleteInstance(ComponentInterface *instance) override;
 
    // AudioUnitEffectModule implementation
 

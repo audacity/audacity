@@ -35,7 +35,7 @@ class wxWindow;
 #include "../Shuttle.h"
 #include "../Internat.h"
 #include "../widgets/ProgressDialog.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 #include "../include/audacity/EffectAutomationParameters.h" // for command automation
 
 #include "../Track.h"
@@ -51,7 +51,7 @@ class CommandContext;
 
 
 class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
-                                public CommandDefinitionInterface
+                                public ComponentInterface
 {
  public:
    //std::unique_ptr<CommandOutputTargets> mOutput;
@@ -60,16 +60,16 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    AudacityCommand();
    virtual ~AudacityCommand();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
    //These four can be defaulted....
    wxString GetPath() override;
-   IdentInterfaceSymbol GetVendor() override;
+   ComponentInterfaceSymbol GetVendor() override;
    wxString GetVersion() override;
    //  virtual wxString GetFamily();
 
    //These two must be implemented by instances.
-   IdentInterfaceSymbol GetSymbol() override = 0;
+   ComponentInterfaceSymbol GetSymbol() override = 0;
    virtual wxString GetDescription() override
    {wxFAIL_MSG( "Implement a Description for this command");return "FAIL";};
 

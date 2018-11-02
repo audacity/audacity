@@ -27,7 +27,7 @@ class ShuttleGui;
 // two strings here
 // unusual case
 #define TIMESCALE_PLUGIN_SYMBOL \
-   IdentInterfaceSymbol{ wxT("Sliding Stretch"), \
+   ComponentInterfaceSymbol{ wxT("Sliding Stretch"), \
                          XO("Sliding Stretch") }
 
 class EffectTimeScale final : public EffectSBSMS
@@ -36,9 +36,9 @@ public:
    EffectTimeScale();
    virtual ~EffectTimeScale();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

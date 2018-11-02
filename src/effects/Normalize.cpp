@@ -65,9 +65,9 @@ EffectNormalize::~EffectNormalize()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectNormalize::GetSymbol()
+ComponentInterfaceSymbol EffectNormalize::GetSymbol()
 {
    return NORMALIZE_PLUGIN_SYMBOL;
 }

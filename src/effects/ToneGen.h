@@ -22,8 +22,8 @@
 
 class ShuttleGui;
 
-#define CHIRP_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Chirp") }
-#define TONE_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Tone") }
+#define CHIRP_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Chirp") }
+#define TONE_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tone") }
 
 class EffectToneGen final : public Effect
 {
@@ -31,9 +31,9 @@ public:
    EffectToneGen(bool isChirp);
    virtual ~EffectToneGen();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

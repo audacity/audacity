@@ -127,7 +127,7 @@ CommandItem::CommandItem(const wxString &name_,
 CommandItem::~CommandItem() {}
 
 CommandGroupItem::CommandGroupItem(const wxString &name_,
-         const IdentInterfaceSymbol items_[],
+         const ComponentInterfaceSymbol items_[],
          size_t nItems_,
          CommandHandlerFinder finder_,
          CommandFunctorPointer callback_,

@@ -90,7 +90,7 @@ LV2EffectsModule::~LV2EffectsModule()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString LV2EffectsModule::GetPath()
@@ -98,12 +98,12 @@ wxString LV2EffectsModule::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol LV2EffectsModule::GetSymbol()
+ComponentInterfaceSymbol LV2EffectsModule::GetSymbol()
 {
    return XO("LV2 Effects");
 }
 
-IdentInterfaceSymbol LV2EffectsModule::GetVendor()
+ComponentInterfaceSymbol LV2EffectsModule::GetVendor()
 {
    return XO("The Audacity Team");
 }
@@ -267,7 +267,7 @@ bool LV2EffectsModule::IsPluginValid(const wxString & path, bool bFast)
    return GetPlugin(path) != NULL;
 }
 
-IdentInterface *LV2EffectsModule::CreateInstance(const wxString & path)
+ComponentInterface *LV2EffectsModule::CreateInstance(const wxString & path)
 {
    // Acquires a resource for the application.
    const LilvPlugin *plug = GetPlugin(path);
@@ -280,7 +280,7 @@ IdentInterface *LV2EffectsModule::CreateInstance(const wxString & path)
    return safenew LV2Effect(plug);
 }
 
-void LV2EffectsModule::DeleteInstance(IdentInterface *instance)
+void LV2EffectsModule::DeleteInstance(ComponentInterface *instance)
 {
    std::unique_ptr < LV2Effect > {
       dynamic_cast<LV2Effect *>(instance)

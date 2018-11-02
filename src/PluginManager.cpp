@@ -1106,7 +1106,7 @@ bool PluginDescriptor::IsInstantiated() const
    return mInstance != NULL;
 }
 
-IdentInterface *PluginDescriptor::GetInstance()
+ComponentInterface *PluginDescriptor::GetInstance()
 {
    if (!mInstance)
    {
@@ -1123,7 +1123,7 @@ IdentInterface *PluginDescriptor::GetInstance()
    return mInstance;
 }
 
-void PluginDescriptor::SetInstance(IdentInterface *instance)
+void PluginDescriptor::SetInstance(ComponentInterface *instance)
 {
    if (mInstance && mInstance != instance)
    {
@@ -1156,7 +1156,7 @@ const wxString & PluginDescriptor::GetPath() const
    return mPath;
 }
 
-const IdentInterfaceSymbol & PluginDescriptor::GetSymbol() const
+const ComponentInterfaceSymbol & PluginDescriptor::GetSymbol() const
 {
    return mSymbol;
 }
@@ -1201,7 +1201,7 @@ void PluginDescriptor::SetPath(const wxString & path)
    mPath = path;
 }
 
-void PluginDescriptor::SetSymbol(const IdentInterfaceSymbol & symbol)
+void PluginDescriptor::SetSymbol(const ComponentInterfaceSymbol & symbol)
 {
    mSymbol = symbol;
 }
@@ -1380,12 +1380,12 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 // ============================================================================
 
 const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
-   ModuleInterface *provider, IdentInterface *pInterface )
+   ModuleInterface *provider, ComponentInterface *pInterface )
 {
    EffectDefinitionInterface * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
    if( pEInterface )
       return PluginManager::Get().RegisterPlugin(provider, pEInterface, PluginTypeEffect);
-   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
+   ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
    static wxString empty;
@@ -1393,9 +1393,9 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
 }
 
 const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
-   ModuleInterface *provider, IdentInterface *pInterface )
+   ModuleInterface *provider, ComponentInterface *pInterface )
 {
-   CommandDefinitionInterface * pCInterface = dynamic_cast<CommandDefinitionInterface*>(pInterface);
+   ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
    static wxString empty;
@@ -1426,7 +1426,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, CommandDefinitionInterface *command)
+const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ComponentInterface *command)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeAudacityCommand);
 
@@ -1845,7 +1845,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, IdentInterface *ident)
+               [&](ModuleInterface *provider, ComponentInterface *ident)
                                                      -> const PluginID& {
                   // Register as by default, but also collecting the PluginIDs
                   // and names
@@ -2615,18 +2615,18 @@ void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
    return mPlugins[ID].SetEnabled(enable);
 }
 
-const IdentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
+const ComponentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
-      static IdentInterfaceSymbol empty;
+      static ComponentInterfaceSymbol empty;
       return empty;
    }
 
    return mPlugins[ID].GetSymbol();
 }
 
-IdentInterface *PluginManager::GetInstance(const PluginID & ID)
+ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
@@ -2659,7 +2659,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
                            module->GetPath());
 }
 
-PluginID PluginManager::GetID(CommandDefinitionInterface *command)
+PluginID PluginManager::GetID(ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeAudacityCommand),
@@ -2725,7 +2725,7 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
 }
 
 PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
-                                               IdentInterface *ident,
+                                               ComponentInterface *ident,
                                                PluginType type)
 {
    // This will either create a NEW entry or replace an existing entry
@@ -3192,9 +3192,9 @@ int PluginManager::b64decode(const wxString &in, void *out)
    return p - (unsigned char *) out;
 }
 
-// These are defined out-of-line here, to keep IdentInterface free of other
+// These are defined out-of-line here, to keep ComponentInterface free of other
 // #include directives.
-const wxString& IdentInterface::GetTranslatedName()
+const wxString& ComponentInterface::GetTranslatedName()
 {
    return GetSymbol().Translation();
 }

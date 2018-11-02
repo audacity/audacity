@@ -127,9 +127,9 @@ EffectChangePitch::~EffectChangePitch()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectChangePitch::GetSymbol()
+ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
 {
    return CHANGEPITCH_PLUGIN_SYMBOL;
 }

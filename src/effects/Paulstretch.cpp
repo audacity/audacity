@@ -96,9 +96,9 @@ EffectPaulstretch::~EffectPaulstretch()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectPaulstretch::GetSymbol()
+ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
 {
    return PAULSTRETCH_PLUGIN_SYMBOL;
 }

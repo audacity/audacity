@@ -23,13 +23,13 @@
 #include "CommandType.h"
 #include "Command.h"
 
-#define HELP_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Help") }
+#define HELP_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Help") }
 
 class HelpCommand : public AudacityCommand
 {
 public:
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override {return HELP_PLUGIN_SYMBOL;};
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return HELP_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Gives help on a command.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

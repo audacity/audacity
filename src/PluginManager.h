@@ -48,8 +48,8 @@ public:
    virtual ~PluginDescriptor();
 
    bool IsInstantiated() const;
-   IdentInterface *GetInstance();
-   void SetInstance(IdentInterface *instance);
+   ComponentInterface *GetInstance();
+   void SetInstance(ComponentInterface *instance);
 
    PluginType GetPluginType() const;
    void SetPluginType(PluginType type);
@@ -60,7 +60,7 @@ public:
    const wxString & GetID() const;
    const wxString & GetProviderID() const;
    const wxString & GetPath() const;
-   const IdentInterfaceSymbol & GetSymbol() const;
+   const ComponentInterfaceSymbol & GetSymbol() const;
 
    wxString GetUntranslatedVersion() const;
    // There is no translated version
@@ -74,7 +74,7 @@ public:
    void SetID(const PluginID & ID);
    void SetProviderID(const PluginID & providerID);
    void SetPath(const wxString & path);
-   void SetSymbol(const IdentInterfaceSymbol & symbol);
+   void SetSymbol(const ComponentInterfaceSymbol & symbol);
 
    // These should be passed an untranslated value wrapped in XO() so
    // the value will still be extracted for translation
@@ -127,13 +127,13 @@ private:
    // Among other purposes, PluginDescriptor acts as the resouce handle,
    // or smart pointer, to a resource created in a plugin library, and is responsible
    // for a cleanup of this pointer.
-   IdentInterface *mInstance;
+   ComponentInterface *mInstance;
 
    PluginType mPluginType;
 
    wxString mID;
    wxString mPath;
-   IdentInterfaceSymbol mSymbol;
+   ComponentInterfaceSymbol mSymbol;
    wxString mVersion;
    wxString mVendor;
    wxString mProviderID;
@@ -178,7 +178,7 @@ public:
    bool IsPluginRegistered(const wxString & path) override;
 
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
-   const PluginID & RegisterPlugin(ModuleInterface *provider, CommandDefinitionInterface *command);
+   const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
    const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) override;
 
@@ -233,7 +233,7 @@ public:
    static PluginManager & Get();
 
    static PluginID GetID(ModuleInterface *module);
-   static PluginID GetID(CommandDefinitionInterface *command);
+   static PluginID GetID(ComponentInterface *command);
    static PluginID GetID(EffectDefinitionInterface *effect);
    static PluginID GetID(ImporterInterface *importer);
 
@@ -253,8 +253,8 @@ public:
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
-   const IdentInterfaceSymbol & GetSymbol(const PluginID & ID);
-   IdentInterface *GetInstance(const PluginID & ID);
+   const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID);
+   ComponentInterface *GetInstance(const PluginID & ID);
 
    void CheckForUpdates(bool bFast = false);
 
@@ -273,7 +273,7 @@ private:
    void Save();
    void SaveGroup(wxFileConfig *pRegistry, PluginType type);
 
-   PluginDescriptor & CreatePlugin(const PluginID & id, IdentInterface *ident, PluginType type);
+   PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
 
    wxFileConfig *GetSettings();
 

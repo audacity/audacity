@@ -31,7 +31,7 @@ class GridAx;
 #endif
 
 class NumericTextCtrl;
-using NumericFormatId = IdentInterfaceSymbol;
+using NumericFormatId = ComponentInterfaceSymbol;
 
 // ----------------------------------------------------------------------------
 // NumericEditor

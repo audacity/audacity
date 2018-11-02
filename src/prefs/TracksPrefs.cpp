@@ -56,7 +56,7 @@ namespace {
 
 
 //////////
-static const IdentInterfaceSymbol choicesView[] = {
+static const ComponentInterfaceSymbol choicesView[] = {
    { XO("Waveform") },
    { wxT("WaveformDB"), XO("Waveform (dB)") },
    { XO("Spectrogram") }
@@ -75,7 +75,7 @@ class TracksViewModeSetting : public EncodedEnumSetting {
 public:
    TracksViewModeSetting(
       const wxString &key,
-      const IdentInterfaceSymbol symbols[], size_t nSymbols,
+      const ComponentInterfaceSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol,
 
       const int intValues[],
@@ -129,7 +129,7 @@ WaveTrack::WaveTrackDisplay TracksPrefs::ViewModeChoice()
 }
 
 //////////
-static const IdentInterfaceSymbol choicesSampleDisplay[] = {
+static const ComponentInterfaceSymbol choicesSampleDisplay[] = {
    { wxT("ConnectDots"), XO("Connect dots") },
    { wxT("StemPlot"), XO("Stem plot") }
 };
@@ -157,7 +157,7 @@ WaveTrack::SampleDisplay TracksPrefs::SampleViewChoice()
 }
 
 //////////
-static const IdentInterfaceSymbol choicesZoom[] = {
+static const ComponentInterfaceSymbol choicesZoom[] = {
    { wxT("FitToWidth"), XO("Fit to Width") },
    { wxT("ZoomToSelection"), XO("Zoom to Selection") },
    { wxT("ZoomDefault"), XO("Zoom Default") },

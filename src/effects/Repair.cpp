@@ -41,9 +41,9 @@ EffectRepair::~EffectRepair()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectRepair::GetSymbol()
+ComponentInterfaceSymbol EffectRepair::GetSymbol()
 {
    return REPAIR_PLUGIN_SYMBOL;
 }

@@ -31,7 +31,7 @@ OldStyleCommandType::~OldStyleCommandType()
 {
 }
 
-IdentInterfaceSymbol OldStyleCommandType::GetSymbol()
+ComponentInterfaceSymbol OldStyleCommandType::GetSymbol()
 {
    if (mSymbol.empty())
       mSymbol = BuildName();

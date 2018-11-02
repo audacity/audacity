@@ -31,7 +31,7 @@ class wxTextCtrl;
 class RulerPanel;
 class ShuttleGui;
 
-#define CLASSICFILTERS_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Classic Filters") }
+#define CLASSICFILTERS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Classic Filters") }
 
 class EffectScienFilterPanel;
 
@@ -41,9 +41,9 @@ public:
    EffectScienFilter();
    virtual ~EffectScienFilter();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

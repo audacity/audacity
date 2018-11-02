@@ -13,8 +13,8 @@
 
 #include "../Audacity.h"
 
-class IdentInterfaceSymbol;
-using NumericFormatId = IdentInterfaceSymbol;
+class ComponentInterfaceSymbol;
+using NumericFormatId = ComponentInterfaceSymbol;
 
 class AUDACITY_DLL_API SpectralSelectionBarListener /* not final */ {
 

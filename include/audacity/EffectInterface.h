@@ -43,7 +43,7 @@
 #define __AUDACITY_EFFECTINTERFACE_H__
 
 #include "audacity/Types.h"
-#include "audacity/IdentInterface.h"
+#include "audacity/ComponentInterface.h"
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectAutomationParameters.h" // for command automation
 
@@ -59,46 +59,18 @@ typedef enum EffectType : int
    EffectTypeTool,
 } EffectType;
 
-using NumericFormatId = IdentInterfaceSymbol;
-class ShuttleParams;
+using NumericFormatId = ComponentInterfaceSymbol;
 
-/*************************************************************************************//**
-
-\class ParamsInterface 
-\brief ParamsInterface provides a DefineParameters virtual function, 
-that defines the parameters of the command.
-
-*******************************************************************************************/
-class AUDACITY_DLL_API ParamsInterface  /* not final */ 
-{
-public:
-   virtual ~ParamsInterface() {};
-   // returns true if implemented.
-   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};
-};
-
-/*************************************************************************************//**
-
-\class CommandDefinitionInterface 
-\brief CommandDefinitionInterface is an IdentInterface (to name the command) along with a
-DefineParameters virtual function, that defines the parameters of the command.
-
-*******************************************************************************************/
-class AUDACITY_DLL_API CommandDefinitionInterface  /* not final */ : public IdentInterface, public ParamsInterface
-{
-public:
-   virtual ~CommandDefinitionInterface() {};
-};
 
 /*************************************************************************************//**
 
 \class EffectDefinitionInterface 
 
-\brief EffectDefinitionInterface is a CommandDefinitionInterface that additionally tracks
+\brief EffectDefinitionInterface is a ComponentInterface that additionally tracks
 flag-functions for interactivity, play-preview and whether the effect can run without a GUI.
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public IdentInterface, public ParamsInterface
+class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
 {
 public:
    virtual ~EffectDefinitionInterface() {};
@@ -108,7 +80,7 @@ public:
    // Classification determines which menu it appears in.
    virtual EffectType GetClassification() { return GetType();};
 
-   virtual IdentInterfaceSymbol GetFamilyId() = 0;
+   virtual ComponentInterfaceSymbol GetFamilyId() = 0;
 
    // These should move to the "EffectClientInterface" class once all
    // effects have been converted.

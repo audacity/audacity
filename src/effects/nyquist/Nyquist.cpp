@@ -199,7 +199,7 @@ NyquistEffect::~NyquistEffect()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
 wxString NyquistEffect::GetPath()
 {
@@ -211,7 +211,7 @@ wxString NyquistEffect::GetPath()
    return mFileName.GetFullPath();
 }
 
-IdentInterfaceSymbol NyquistEffect::GetSymbol()
+ComponentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
       return (mPromptType == EffectTypeTool) ?
@@ -221,7 +221,7 @@ IdentInterfaceSymbol NyquistEffect::GetSymbol()
    return mName;
 }
 
-IdentInterfaceSymbol NyquistEffect::GetVendor()
+ComponentInterfaceSymbol NyquistEffect::GetVendor()
 {
    if (mIsPrompt)
    {
@@ -277,7 +277,7 @@ EffectType NyquistEffect::GetClassification()
    return mType;
 }
 
-IdentInterfaceSymbol NyquistEffect::GetFamilyId()
+ComponentInterfaceSymbol NyquistEffect::GetFamilyId()
 {
    return NYQUISTEFFECTS_FAMILY;
 }
@@ -1546,9 +1546,9 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
    return str;
 }
 
-std::vector<IdentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & text)
+std::vector<ComponentInterfaceSymbol> NyquistEffect::ParseChoice(const wxString & text)
 {
-   std::vector<IdentInterfaceSymbol> results;
+   std::vector<ComponentInterfaceSymbol> results;
    if (text[0] == wxT('(')) {
       // New style:  expecting a Lisp-like list of strings
       Tokenizer tzer;

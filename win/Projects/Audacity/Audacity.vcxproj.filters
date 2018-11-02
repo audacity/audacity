@@ -1867,9 +1867,6 @@
     <ClInclude Include="..\..\..\include\audacity\EffectInterface.h">
       <Filter>includes\audacity</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\audacity\IdentInterface.h">
-      <Filter>includes\audacity</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h">
       <Filter>includes\audacity</Filter>
     </ClInclude>
@@ -2211,6 +2208,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\AdornedRulerPanel.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\ComponentInterface.h">
+      <Filter>includes\audacity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,7 @@ class ShuttleGui;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
-#define AUTODUCK_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Auto Duck") }
+#define AUTODUCK_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Auto Duck") }
 
 class EffectAutoDuck final : public Effect
 {
@@ -34,9 +34,9 @@ public:
    EffectAutoDuck();
    virtual ~EffectAutoDuck();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

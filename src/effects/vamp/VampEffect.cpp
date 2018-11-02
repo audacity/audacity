@@ -84,7 +84,7 @@ VampEffect::~VampEffect()
 }
 
 // ============================================================================
-// IdentInterface implementation
+// ComponentInterface implementation
 // ============================================================================
 
 wxString VampEffect::GetPath()
@@ -92,12 +92,12 @@ wxString VampEffect::GetPath()
    return mPath;
 }
 
-IdentInterfaceSymbol VampEffect::GetSymbol()
+ComponentInterfaceSymbol VampEffect::GetSymbol()
 {
    return mName;
 }
 
-IdentInterfaceSymbol VampEffect::GetVendor()
+ComponentInterfaceSymbol VampEffect::GetVendor()
 {
    return { wxString::FromUTF8(mPlugin->getMaker().c_str()) };
 }
@@ -121,7 +121,7 @@ EffectType VampEffect::GetType()
    return EffectTypeAnalyze;
 }
 
-IdentInterfaceSymbol VampEffect::GetFamilyId()
+ComponentInterfaceSymbol VampEffect::GetFamilyId()
 {
    return VAMPEFFECTS_FAMILY;
 }
@@ -166,7 +166,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         std::vector<IdentInterfaceSymbol> choices;
+         std::vector<ComponentInterfaceSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
@@ -213,7 +213,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         std::vector<IdentInterfaceSymbol> choices;
+         std::vector<ComponentInterfaceSymbol> choices;
          int val;
 
          for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
@@ -259,7 +259,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
                mParameters[p].quantizeStep == 1.0 &&
                !mParameters[p].valueNames.empty())
       {
-         std::vector<IdentInterfaceSymbol> choices;
+         std::vector<ComponentInterfaceSymbol> choices;
          int val = 0;
 
          for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)

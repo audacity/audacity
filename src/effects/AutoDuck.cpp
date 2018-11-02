@@ -100,9 +100,9 @@ EffectAutoDuck::~EffectAutoDuck()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectAutoDuck::GetSymbol()
+ComponentInterfaceSymbol EffectAutoDuck::GetSymbol()
 {
    return AUTODUCK_PLUGIN_SYMBOL;
 }

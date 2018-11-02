@@ -36,7 +36,7 @@ the pitch without changing the tempo.
 
 class ShuttleGui;
 
-#define CHANGEPITCH_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Change Pitch") }
+#define CHANGEPITCH_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Change Pitch") }
 
 class EffectChangePitch final : public EffectSoundTouch
 {
@@ -44,9 +44,9 @@ public:
    EffectChangePitch();
    virtual ~EffectChangePitch();
 
-   // IdentInterface implementation
+   // ComponentInterface implementation
 
-   IdentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() override;
    wxString GetDescription() override;
    wxString ManualPage() override;
 

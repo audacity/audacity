@@ -78,9 +78,9 @@ EffectAmplify::~EffectAmplify()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectAmplify::GetSymbol()
+ComponentInterfaceSymbol EffectAmplify::GetSymbol()
 {
    return AMPLIFY_PLUGIN_SYMBOL;
 }

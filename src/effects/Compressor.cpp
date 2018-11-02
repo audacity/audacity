@@ -94,9 +94,9 @@ EffectCompressor::~EffectCompressor()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectCompressor::GetSymbol()
+ComponentInterfaceSymbol EffectCompressor::GetSymbol()
 {
    return COMPRESSOR_PLUGIN_SYMBOL;
 }

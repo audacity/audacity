@@ -23,13 +23,13 @@
 
 // Import
 
-#define IMPORT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Import2") }
+#define IMPORT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Import2") }
 
 class ImportCommand : public AudacityCommand
 {
 public:
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override {return IMPORT_PLUGIN_SYMBOL;};
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return IMPORT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Imports from a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -41,13 +41,13 @@ public:
    wxString mFileName;
 };
 
-#define EXPORT_PLUGIN_SYMBOL IdentInterfaceSymbol{ XO("Export2") }
+#define EXPORT_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Export2") }
 
 class ExportCommand : public AudacityCommand
 {
 public:
-   // CommandDefinitionInterface overrides
-   IdentInterfaceSymbol GetSymbol() override {return EXPORT_PLUGIN_SYMBOL;};
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return EXPORT_PLUGIN_SYMBOL;};
    wxString GetDescription() override {return _("Exports to a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

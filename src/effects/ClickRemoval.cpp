@@ -73,9 +73,9 @@ EffectClickRemoval::~EffectClickRemoval()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectClickRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
 {
    return CLICKREMOVAL_PLUGIN_SYMBOL;
 }

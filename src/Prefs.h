@@ -30,7 +30,7 @@
 #define __AUDACITY_PREFS__
 
 #include "Audacity.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 
 #include <wx/config.h>
 #include <wx/fileconf.h>
@@ -65,7 +65,7 @@ class EnumSetting
 public:
    EnumSetting(
       const wxString &key,
-      const IdentInterfaceSymbol symbols[], size_t nSymbols,
+      const ComponentInterfaceSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol
    )
       : mKey{ key }
@@ -79,10 +79,10 @@ public:
    }
 
    const wxString &Key() const { return mKey; }
-   const IdentInterfaceSymbol &Default() const
+   const ComponentInterfaceSymbol &Default() const
       { return mSymbols[mDefaultSymbol]; }
-   const IdentInterfaceSymbol *begin() const { return mSymbols; }
-   const IdentInterfaceSymbol *end() const { return mSymbols + mnSymbols; }
+   const ComponentInterfaceSymbol *begin() const { return mSymbols; }
+   const ComponentInterfaceSymbol *end() const { return mSymbols + mnSymbols; }
 
    wxString Read() const;
    bool Write( const wxString &value ); // you flush gPrefs afterward
@@ -93,7 +93,7 @@ protected:
 
    const wxString mKey;
 
-   const IdentInterfaceSymbol *mSymbols;
+   const ComponentInterfaceSymbol *mSymbols;
    const size_t mnSymbols;
 
    // stores an internal value
@@ -111,7 +111,7 @@ class EncodedEnumSetting : public EnumSetting
 public:
    EncodedEnumSetting(
       const wxString &key,
-      const IdentInterfaceSymbol symbols[], size_t nSymbols,
+      const ComponentInterfaceSymbol symbols[], size_t nSymbols,
       size_t defaultSymbol,
 
       const int intValues[] = nullptr, // must have same size as symbols

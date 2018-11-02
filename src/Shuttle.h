@@ -12,9 +12,9 @@
 #define __AUDACITY_SHUTTLE__
 
 #include "commands/CommandTargets.h"
-#include "../include/audacity/IdentInterface.h"
+#include "../include/audacity/ComponentInterface.h"
 
-class IdentInterfaceSymbol;
+class ComponentInterfaceSymbol;
 class WrappedType;
 
 class Shuttle /* not final */ {
@@ -78,7 +78,7 @@ public:
    virtual void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl=1.0f );
    virtual void Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin="", const wxString vmax="", const wxString vscl="" );
    virtual void DefineEnum( int &var, const wxChar * key, const int vdefault,
-      const IdentInterfaceSymbol strings[], size_t nStrings );
+      const ComponentInterfaceSymbol strings[], size_t nStrings );
 };
 
 /**************************************************************************//**
@@ -96,7 +96,7 @@ public:
    void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
    void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
    void DefineEnum( int &var, const wxChar * key, const int vdefault,
-      const IdentInterfaceSymbol strings[], size_t nStrings ) override;
+      const ComponentInterfaceSymbol strings[], size_t nStrings ) override;
 };
 
 /**************************************************************************//**
@@ -120,7 +120,7 @@ public:
    void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
    void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
    void DefineEnum( int &var, const wxChar * key, const int vdefault,
-      const IdentInterfaceSymbol strings[], size_t nStrings ) override;
+      const ComponentInterfaceSymbol strings[], size_t nStrings ) override;
 };
 
 /**************************************************************************//**
@@ -141,7 +141,7 @@ public:
    void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
    void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
    void DefineEnum( int &var, const wxChar * key, const int vdefault,
-      const IdentInterfaceSymbol strings[], size_t nStrings ) override;
+      const ComponentInterfaceSymbol strings[], size_t nStrings ) override;
 };
 
 
@@ -178,7 +178,7 @@ public:
       const wxString WXUNUSED(vmin), const wxString WXUNUSED(vmax), const wxString WXUNUSED(vscl) ) 
       override { var = vdefault;};
    void DefineEnum( int &var,        const wxChar * WXUNUSED(key),  const int vdefault,
-      const IdentInterfaceSymbol WXUNUSED(strings) [], size_t WXUNUSED( nStrings ) )
+      const ComponentInterfaceSymbol WXUNUSED(strings) [], size_t WXUNUSED( nStrings ) )
       override { var = vdefault;};
 };
 

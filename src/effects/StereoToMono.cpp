@@ -29,9 +29,9 @@ EffectStereoToMono::~EffectStereoToMono()
 {
 }
 
-// IdentInterface implementation
+// ComponentInterface implementation
 
-IdentInterfaceSymbol EffectStereoToMono::GetSymbol()
+ComponentInterfaceSymbol EffectStereoToMono::GetSymbol()
 {
    return STEREOTOMONO_PLUGIN_SYMBOL;
 }
