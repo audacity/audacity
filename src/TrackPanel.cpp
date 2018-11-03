@@ -1051,13 +1051,21 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const wxRect clip = GetRect();
 
+   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
+
+   // Draw margins on two or three sides.
+   ClearLeftAndRightMargins(context, clip);
+   if ( GetTracks()->Any() )
+      // This margin may may scrolled up out of view
+      ClearTopMargin( context, clip );
+
+   // Don't draw a bottom margin here.
+
    ToolsToolBar *pTtb = mListener->TP_GetToolsToolBar();
    bool bMultiToolDown = pTtb->IsDown(multiTool);
    bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
    bool sliderFlag     = bMultiToolDown;
-
-   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
 
    // The track artist actually draws the stuff inside each track
    mTrackArtist->DrawTracks(context, GetTracks(),
@@ -1065,6 +1073,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
 
+   // Draw the rest, including the click-to-deselect blank area below all
+   // tracks
    DrawEverythingElse(context, region, clip);
 }
 
@@ -1078,39 +1088,39 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 {
    // We draw everything else
    auto dc = &context.dc;
-   wxRect focusRect(-1, -1, 0, 0);
-   wxRect trackRect = clip;
-   trackRect.height = 0;   // for drawing background in no tracks case.
 
-   for ( auto t :
-         GetTracks()->Any< const Track >() + IsVisibleTrack{ GetProject() } ) {
-      auto visibleT = t->SubstitutePendingChangedTrack().get();
-      trackRect.y = visibleT->GetY() - mViewInfo->vpos;
-      trackRect.height = visibleT->GetHeight();
+   // Fix the horizontal extent, will vary the vertical:
+   wxRect trackRect{
+      kLeftMargin, 0, clip.width - (kLeftMargin + kRightMargin), 0
+   };
+   wxRect focusRect{};
 
-      auto leaderTrack = *GetTracks()->FindLeader( t );
-      // If the previous track is linked to this one but isn't on the screen
-      // (and thus would have been skipped) we need to draw that track's border
-      // instead.
-      bool drawBorder = (t == leaderTrack || trackRect.y < 0);
+   // The loop below now groups each track with the margin BELOW it, to
+   // correspond better with the subdivision of panel area used in hit testing.
 
-      if (drawBorder) {
-         wxRect teamRect = trackRect;
-         auto visibleLeaderTrack =
-           leaderTrack->SubstitutePendingChangedTrack().get();
-         teamRect.y = visibleLeaderTrack->GetY() - mViewInfo->vpos;
-         teamRect.height = TrackList::Channels(leaderTrack).sum(
-            [&] (const Track *channel) {
-               channel = channel->SubstitutePendingChangedTrack().get();
-               return channel->GetHeight();
-            }
-         );
-
-         if (mAx->IsFocused(t)) {
-            focusRect = teamRect;
-         }
-         DrawOutside(context, leaderTrack, teamRect);
+   for ( auto leaderTrack : GetTracks()->Leaders< const Track >()
+         // Predicate is true iff any channel in the group is wholly or partly
+         // visible:
+         + IsVisibleTrack{ GetProject() } ) {
+      const auto channels = TrackList::Channels(leaderTrack);
+      bool focused = false;
+      wxRect teamRect = trackRect;
+      teamRect.height = 0;
+      bool first = true;
+      for (auto channel : channels) {
+         focused = focused || mAx->IsFocused(channel);
+         channel = channel->SubstitutePendingChangedTrack().get();
+         if (first)
+            first = false,
+            teamRect.y = channel->GetY() - mViewInfo->vpos + kTopMargin;
+         teamRect.height += channel->GetHeight();
       }
+
+      if (focused) {
+         focusRect = teamRect;
+         focusRect.height -= kSeparatorThickness;
+      }
+      DrawOutside(context, leaderTrack, teamRect);
 
       // Believe it or not, we can speed up redrawing if we don't
       // redraw the vertical ruler when only the waveform data has
@@ -1122,13 +1132,21 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 //             rbox.x, rbox.y, rbox.width, rbox.height);
 #endif
 
-      if (region.Contains(0, trackRect.y, GetLeftOffset(), trackRect.height)) {
-         wxRect rect = trackRect;
-         rect.x += GetVRulerOffset();
-         rect.y += kTopMargin;
-         rect.width = GetVRulerWidth();
-         rect.height -= (kTopMargin + kBottomMargin);
-         mTrackArtist->DrawVRuler(context, visibleT, rect);
+      for (auto channel : channels) {
+         bool bSelected = channel->GetSelected();
+         channel = channel->SubstitutePendingChangedTrack().get();
+         trackRect.y = channel->GetY() - mViewInfo->vpos + kTopMargin;
+         trackRect.height = channel->GetHeight();
+         if (region.Contains(
+            0, trackRect.y, GetLeftOffset(), trackRect.height)) {
+            wxRect rect{
+               GetVRulerOffset(),
+               trackRect.y,
+               GetVRulerWidth() + 1,
+               trackRect.height - kSeparatorThickness
+            };
+            mTrackArtist->DrawVRuler(context, channel, rect, bSelected);
+         }
       }
    }
 
@@ -1598,31 +1616,24 @@ void TrackPanel::DrawOutside
 (TrackPanelDrawingContext &context,
  const Track * t, const wxRect & rec)
 {
+   // Given rectangle excludes left and right margins, and encompasses a
+   // channel group of tracks, plus the resizer area below
+
    auto dc = &context.dc;
 
-   // Draw things that extend right of track control panel
+   // Start with whole track rect
+   wxRect rect = rec;
+
    {
-      // Start with whole track rect
-      wxRect rect = rec;
-      DrawOutsideOfTrack(context, rect);
+      ClearSeparator(context, rect);
 
-      {
-         auto channels = TrackList::Channels(t);
-         // omit last (perhaps, only) channel
-         --channels.second;
-         for (auto channel : channels)
-            // draw the sash below this channel
-            DrawSash(channel, dc, rect);
-      }
-
-      // Now exclude left, right, and top insets
-      rect.x += kLeftInset;
-      rect.y += kTopInset;
-      rect.width -= kLeftInset * 2;
-      rect.height -= kTopInset;
+      // Now exclude the resizer below
+      rect.height -= kSeparatorThickness;
 
       int labelw = GetLabelWidth();
-      mTrackInfo.DrawBackground( dc, rect, t->GetSelected(), labelw );
+      int vrul = GetVRulerOffset();
+
+      mTrackInfo.DrawBackground( dc, rect, t->GetSelected(), vrul );
 
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
@@ -1633,72 +1644,135 @@ void TrackPanel::DrawOutside
       //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
       //}
 
-      int vrul = GetVRulerOffset();
-      DrawBordersAroundTrack(dc, rect, vrul);
+      DrawBordersAroundTrack( dc, rect );
       {
          auto channels = TrackList::Channels(t);
          // omit last (perhaps, only) channel
          --channels.second;
-         for (auto channel : channels)
+         for (auto channel : channels) {
             // draw the sash below this channel
-            DrawBordersAroundSash(channel, dc, rect, labelw);
+            channel = channel->SubstitutePendingChangedTrack().get();
+            auto yy =
+               channel->GetY() - mViewInfo->vpos + channel->GetHeight()
+                  - kBottomMargin;
+            wxRect sashRect{
+               vrul, yy, rect.GetRight() - vrul, kSeparatorThickness
+            };
+            DrawSash( dc, sashRect, labelw, t->GetSelected() );
+         }
       }
 
       DrawShadow( dc, rect );
    }
 
    // Draw things within the track control panel
-   wxRect rect = rec;
-   rect.x += kLeftMargin;
    rect.width = kTrackInfoWidth - kLeftMargin;
-   rect.y += kTopMargin;
-   rect.height -= (kBottomMargin + kTopMargin);
-
    TrackInfo::DrawItems( context, rect, *t );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 }
 
+void TrackPanel::ClearTopMargin
+(TrackPanelDrawingContext &context, const wxRect &clip)
+{
+   auto dc = &context.dc;
+
+   // Area above the first track if there is one
+   AColor::TrackPanelBackground(dc, false);
+   wxRect side{
+      clip.x + kLeftMargin,
+      -mViewInfo->vpos,
+      clip.width - ( kLeftMargin + kRightMargin ),
+      kTopMargin
+   };
+
+   if (side.Intersects(clip))
+      dc->DrawRectangle(side);
+}
+
+// Paint the inset areas of the whole panel, left and right, in a background
+// color
+void TrackPanel::ClearLeftAndRightMargins
+(TrackPanelDrawingContext &context, const wxRect & clip)
+{
+   auto dc = &context.dc;
+
+   // Fill in area outside of tracks
+   AColor::TrackPanelBackground(dc, false);
+   wxRect side;
+
+   // Area between panel border and left track border
+   side = clip;
+   side.width = kLeftMargin;
+   dc->DrawRectangle(side);
+
+   // Area between panel border and right track border
+   side = clip;
+   side.x += side.width - kRightMargin;
+   side.width = kRightMargin;
+   dc->DrawRectangle(side);
+}
+
 // Given rectangle should be the whole track rectangle
-// Paint the inset areas left, top, and right in a background color
-// If linked to a following channel, also paint the separator area, which
-// overlaps the next track rectangle's top
-void TrackPanel::DrawOutsideOfTrack
+// Paint the separator area below in a background color
+void TrackPanel::ClearSeparator
 (TrackPanelDrawingContext &context, const wxRect & rect)
 {
    auto dc = &context.dc;
 
    // Fill in area outside of the track
    AColor::TrackPanelBackground(dc, false);
-   wxRect side;
 
-   // Area between panel border and left track border
-   side = rect;
-   side.width = kLeftInset;
-   dc->DrawRectangle(side);
-
-   // Area between panel border and top track border
-   side = rect;
-   side.height = kTopInset;
-   dc->DrawRectangle(side);
-
-   // Area between panel border and right track border
-   side = rect;
-   side.x += side.width - kRightInset;
-   side.width = kRightInset;
+   // Area below the track, where the resizer will be
+   auto height = kSeparatorThickness;
+   wxRect side{
+      rect.x,
+      rect.y + rect.height - height,
+      rect.width,
+      height
+   };
    dc->DrawRectangle(side);
 }
 
-void TrackPanel::DrawSash(const Track * t, wxDC * dc, const wxRect & rect)
+void TrackPanel::DrawSash(
+   wxDC * dc, const wxRect & rect, int labelw, bool bSelected )
 {
    // Area between channels of a group
-   // Paint the channel separator over (what would be) the shadow of this
-   // channel, and the top inset of the following channel
-   wxRect side = rect;
-   side.y = t->GetY() - mViewInfo->vpos + t->GetHeight() - kShadowThickness;
-   side.height = kTopInset + kShadowThickness;
-   dc->DrawRectangle(side);
+   // Paint the channel separator over (what would be) the lower border of this
+   // channel, down to and including the upper border of the next channel
+
+   ADCChanger cleanup{ dc };
+
+   // Paint the left part of the background
+   AColor::MediumTrackInfo(dc, bSelected);
+   dc->DrawRectangle( rect.GetX(), rect.GetY(), labelw, rect.GetHeight() );
+
+   // Stroke the left border
+   dc->SetPen(*wxBLACK_PEN);
+   {
+      const auto left = rect.GetLeft();
+      AColor::Line( *dc, left, rect.GetTop(), left, rect.GetBottom() );
+   }
+
+   AColor::TrackPanelBackground(dc, false);
+
+   wxRect rec{ rect };
+   rec.width -= labelw - rec.x;
+   rec.x = labelw;
+
+   dc->DrawRectangle( wxRect{ rec }.Inflate( 0, -kBorderThickness ) );
+
+   // These lines stroke over what is otherwise "border" of each channel
+   dc->SetBrush(*wxTRANSPARENT_BRUSH);
+   dc->SetPen(*wxBLACK_PEN);
+   const auto left = rec.GetLeft();
+   const auto right = rec.GetRight();
+   const auto top = rec.GetTop();
+   const auto bottom = rec.GetBottom();
+   AColor::Line( *dc, left, top,    right, top    );
+   AColor::Line( *dc, left, bottom, right, bottom );
 }
+
 
 void TrackPanel::SetBackgroundCell
 (const std::shared_ptr< TrackPanelCell > &pCell)
@@ -1715,11 +1789,9 @@ std::shared_ptr< TrackPanelCell > TrackPanel::GetBackgroundCell()
 void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
 {
    wxRect theRect = rect;
-   theRect.x += kLeftInset;
-   theRect.y += kTopInset;
-   theRect.width -= kLeftInset * 2;
-   theRect.height -= kTopInset;
-
+   theRect.Inflate( kBorderThickness );
+   theRect.width += kShadowThickness;
+   theRect.height += kShadowThickness;
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
 
    AColor::TrackFocusPen(dc, 0);
@@ -1890,45 +1962,23 @@ void TrackPanel::VerticalScroll( float fracPosition){
 }
 
 
-// Given rectangle excludes the insets left, right, and top
-// Draw a rectangular border and also a vertical separator of track controls
-// from the rest (ruler and proper track area)
-void TrackPanel::DrawBordersAroundTrack(wxDC * dc,
-                                        const wxRect & rect,
-                                        const int vrul)
+// Draw a rectangular border
+void TrackPanel::DrawBordersAroundTrack( wxDC * dc, const wxRect & rect )
 {
    // Border around track and label area
    // leaving room for the shadow
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
    dc->SetPen(*wxBLACK_PEN);
-   dc->DrawRectangle(rect.x, rect.y,
-                     rect.width - kShadowThickness,
-                     rect.height - kShadowThickness);
-
-
-   // between vruler and TrackInfo
-   AColor::Line(*dc, vrul, rect.y, vrul, rect.y + rect.height - 1);
+   dc->DrawRectangle( rect.Inflate( kBorderThickness, kBorderThickness ) );
 }
 
-void TrackPanel::DrawBordersAroundSash(const Track * t, wxDC * dc,
-                                        const wxRect & rect, const int labelw)
-{
-   int h1 = t->GetY() - mViewInfo->vpos + t->GetHeight();
-   // h1 is the top coordinate of the following channel's rectangle
-   // Draw (part of) the bottom border of the top channel and top border of the bottom
-   // At left it extends between the vertical rulers too
-   // These lines stroke over what is otherwise "border" of each channel
-   AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
-   AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
-}
-
-// Given rectangle has insets subtracted left, right, and top
+// Given rectangle is the track rectangle excluding the border
 // Stroke lines along bottom and right, which are slightly short at
 // bottom-left and top-right
 void TrackPanel::DrawShadow( wxDC * dc, const wxRect & rect )
 {
-   int right = rect.x + rect.width - 1;
-   int bottom = rect.y + rect.height - 1;
+   int right = rect.GetRight() + kBorderThickness + kShadowThickness;
+   int bottom = rect.GetBottom() + kBorderThickness + kShadowThickness;
 
    // shadow color for lines
    dc->SetPen(*wxBLACK_PEN);
@@ -2507,11 +2557,11 @@ void TrackInfo::DrawBordersWithin
 
 // Paint the whole given rectangle some fill color
 void TrackInfo::DrawBackground(
-   wxDC * dc, const wxRect & rect, bool bSelected, const int labelw) const
+   wxDC * dc, const wxRect & rect, bool bSelected, const int vrul) const
 {
    // fill in label
    wxRect fill = rect;
-   fill.width = labelw - kLeftInset;
+   fill.width = vrul - kLeftMargin;
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
 

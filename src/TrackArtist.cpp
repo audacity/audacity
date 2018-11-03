@@ -369,8 +369,12 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
 }
 
 void TrackArtist::DrawVRuler
-(TrackPanelDrawingContext &context, const Track *t, const wxRect & rect_)
+( TrackPanelDrawingContext &context, const Track *t, const wxRect & rect_,
+  bool bSelected )
 {
+   auto rect = rect_;
+   --rect.width;
+
    auto dc = &context.dc;
    bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -378,11 +382,21 @@ void TrackArtist::DrawVRuler
 #endif
 
 
+   // Paint the background
+   AColor::MediumTrackInfo(dc, bSelected);
+   dc->DrawRectangle( rect );
+
+   // Stroke the left border
+   dc->SetPen(*wxBLACK_PEN);
+   {
+      const auto left = rect.GetLeft();
+      AColor::Line( *dc, left, rect.GetTop(), left, rect.GetBottom() );
+   }
+
    // Label and Time tracks do not have a vruler
    // But give it a beveled area
    t->TypeSwitch(
       [&](const LabelTrack *) {
-         const wxRect &rect = rect_;
          wxRect bev = rect;
          bev.Inflate(-1, 0);
          bev.width += 1;
@@ -390,7 +404,6 @@ void TrackArtist::DrawVRuler
       },
 
       [&](const TimeTrack *) {
-         const wxRect &rect = rect_;
          wxRect bev = rect;
          bev.Inflate(-1, 0);
          bev.width += 1;
@@ -412,7 +425,6 @@ void TrackArtist::DrawVRuler
       },
 
       [&](const WaveTrack *) {
-         const wxRect &rect = rect_;
          // All waves have a ruler in the info panel
          // The ruler needs a bevelled surround.
          wxRect bev = rect;
@@ -438,8 +450,6 @@ void TrackArtist::DrawVRuler
 #ifdef USE_MIDI
       ,
       [&](const NoteTrack *track) {
-         wxRect rect = rect_;
-
       // The note track draws a vertical keyboard to label pitches
          UpdateVRuler(t, rect);
 
