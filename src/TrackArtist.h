@@ -161,6 +161,12 @@ namespace TrackArt {
 class AUDACITY_DLL_API TrackArtist final : private PrefsListener {
 
 public:
+
+   enum : unsigned {
+      
+      NPasses
+   };
+
    TrackArtist( TrackPanel *parent_ );
    ~TrackArtist();
    static TrackArtist *Get( TrackPanelDrawingContext & );

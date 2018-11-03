@@ -917,6 +917,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
    mTrackArtist->hasSolo = hasSolo;
    TrackArt::DrawTracks( context, GetTracks(), region, clip );
 
+   this->CellularPanel::Draw( context, TrackArtist::NPasses );
+
    // Draw the rest, including the click-to-deselect blank area below all
    // tracks
    DrawEverythingElse(context, region, clip);
