@@ -183,14 +183,6 @@ protected:
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
    void DrawShadow            ( wxDC* dc, const wxRect & rect );
    void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect );
-   void ClearTopMargin        (
-      TrackPanelDrawingContext &context, const wxRect &clip);
-   void ClearLeftAndRightMargins    (
-      TrackPanelDrawingContext &context, const wxRect & clip);
-   void ClearSeparator    (
-      TrackPanelDrawingContext &context, const wxRect & rect);
-   void DrawSash              (
-      wxDC* dc, const wxRect & rect, int labelw, bool bSelected );
 
 public:
    // Set the object that performs catch-all event handling when the pointer
