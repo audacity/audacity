@@ -1122,3 +1122,32 @@ std::shared_ptr<TrackPanelCell> CellularPanel::LastCell() const
    auto &state = *mState;
    return state.mLastCell.lock();
 }
+
+void CellularPanel::Draw( TrackPanelDrawingContext &context, unsigned nPasses )
+{
+   const auto panelRect = GetClientRect();
+   auto lastCell = LastCell();
+   for ( unsigned iPass = 0; iPass < nPasses; ++iPass ) {
+
+      VisitPostorder( [&]( const wxRect &rect, TrackPanelNode &node ) {
+
+         // Draw the node
+         const auto newRect = node.DrawingArea( rect, panelRect, iPass );
+         if ( newRect.Intersects( panelRect ) )
+            node.Draw( context, newRect, iPass );
+
+         // Draw the current handle if it is associated with the node
+         if ( &node == lastCell.get() ) {
+            auto target = Target();
+            if ( target ) {
+               const auto targetRect =
+                  target->DrawingArea( rect, panelRect, iPass );
+               if ( targetRect.Intersects( panelRect ) )
+                  target->Draw( context, targetRect, iPass );
+            }
+         }
+
+      } ); // nodes
+
+   } // passes
+}

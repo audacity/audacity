@@ -2404,6 +2404,9 @@
     <ClInclude Include="..\..\..\src\tracks\ui\TrackView.h">
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelDrawable.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">
