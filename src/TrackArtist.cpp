@@ -3139,13 +3139,7 @@ void TrackArtist::DrawLabelTrack(TrackPanelDrawingContext &context,
                                  const SelectedRegion &selectedRegion,
                                  const ZoomInfo &zoomInfo)
 {
-   double sel0 = selectedRegion.t0();
-   double sel1 = selectedRegion.t1();
-
-   if (!track->GetSelected() && !track->IsSyncLockSelected())
-      sel0 = sel1 = 0.0;
-
-   track->Draw(context, rect, SelectedRegion(sel0, sel1), zoomInfo);
+   track->Draw(context, rect, selectedRegion, zoomInfo);
 }
 
 void TrackArtist::DrawTimeTrack(TrackPanelDrawingContext &context,
@@ -3301,11 +3295,12 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, const wxRect &rect)
 
 void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
    const Track *track, const wxBrush &selBrush, const wxBrush &unselBrush,
-   const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
+   const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
+   bool useSelection)
 {
    //MM: Draw background. We should optimize that a bit more.
-   const double sel0 = selectedRegion.t0();
-   const double sel1 = selectedRegion.t1();
+   const double sel0 = useSelection ? selectedRegion.t0() : 0.0;
+   const double sel1 = useSelection ? selectedRegion.t1() : 0.0;
 
    dc->SetPen(*wxTRANSPARENT_PEN);
    if (track->GetSelected() || track->IsSyncLockSelected())

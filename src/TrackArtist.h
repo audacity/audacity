@@ -89,7 +89,8 @@ class AUDACITY_DLL_API TrackArtist {
    // Helper: draws background with selection rect
    static void DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
          const Track *track, const wxBrush &selBrush, const wxBrush &unselBrush,
-         const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
+         const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
+         bool useSelection = true);
 
  private:
 

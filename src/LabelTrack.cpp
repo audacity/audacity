@@ -797,7 +797,8 @@ void LabelTrack::Draw
 
    TrackArtist::DrawBackgroundWithSelection(&dc, r, this,
          AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-         selectedRegion, zoomInfo);
+         selectedRegion, zoomInfo,
+            ( GetSelected() || IsSyncLockSelected() ) );
 
    wxCoord textWidth, textHeight;
 
