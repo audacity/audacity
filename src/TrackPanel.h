@@ -24,7 +24,6 @@
 
 #include "CellularPanel.h"
 
-#include "SelectionState.h"
 
 class wxMenu;
 class wxRect;
