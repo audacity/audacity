@@ -43,6 +43,10 @@ public:
       ( wxDC *dc, const wxRect &cellRect, const wxRect &panelRect,
         int zoomStart, int zoomEnd);
 
+   // Modify the ruler rectangle, and related display parameters,
+   // cached in the associated track
+   virtual void UpdateRuler( const wxRect &rect ) = 0;
+
 protected:
    std::shared_ptr<Track> DoFindTrack() override;
 
@@ -50,6 +54,9 @@ protected:
    void Draw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
+
+   wxRect DrawingArea(
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
 
    Track *GetTrack() const;
 

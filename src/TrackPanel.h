@@ -131,7 +131,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
-   void UpdateTrackVRuler(const Track *t);
+   void UpdateTrackVRuler(Track *t);
    void UpdateVRulerSize();
 
  protected:

@@ -944,23 +944,22 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          + IsVisibleTrack{ GetProject() } ) {
       const auto channels = TrackList::Channels(leaderTrack);
       bool focused = false;
-      wxRect teamRect = trackRect;
-      teamRect.height = 0;
+      trackRect.height = 0;
       bool first = true;
       for (auto channel : channels) {
          focused = focused || mAx->IsFocused(channel);
          auto &view = TrackView::Get( *channel );
          if (first)
             first = false,
-            teamRect.y = view.GetY() - mViewInfo->vpos + kTopMargin;
-         teamRect.height += view.GetHeight();
+            trackRect.y = view.GetY() - mViewInfo->vpos + kTopMargin;
+         trackRect.height += view.GetHeight();
       }
 
       if (focused) {
-         focusRect = teamRect;
+         focusRect = trackRect;
          focusRect.height -= kSeparatorThickness;
       }
-      DrawOutside(context, leaderTrack, teamRect);
+      DrawOutside(context, leaderTrack, trackRect);
 
       // Believe it or not, we can speed up redrawing if we don't
       // redraw the vertical ruler when only the waveform data has
@@ -971,24 +970,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 //      wxPrintf(wxT("Update Region: %d %d %d %d\n"),
 //             rbox.x, rbox.y, rbox.width, rbox.height);
 #endif
-
-      for (auto channel : channels) {
-         auto &view = TrackView::Get( *channel );
-         bool bSelected = channel->GetSelected();
-         channel = channel->SubstitutePendingChangedTrack().get();
-         trackRect.y = view.GetY() - mViewInfo->vpos + kTopMargin;
-         trackRect.height = view.GetHeight();
-         if (region.Contains(
-            0, trackRect.y, mViewInfo->GetLeftOffset(), trackRect.height)) {
-            wxRect rect{
-               mViewInfo->GetVRulerOffset(),
-               trackRect.y,
-               mViewInfo->GetVRulerWidth() + 1,
-               trackRect.height - kSeparatorThickness
-            };
-            TrackArt::DrawVRuler(context, channel, rect, bSelected);
-         }
-      }
    }
 
    auto target = Target();
@@ -1086,7 +1067,7 @@ void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
 
 void TrackPanel::UpdateVRulers()
 {
-   for (auto t : GetTracks()->Any< const WaveTrack >())
+   for (auto t : GetTracks()->Any< WaveTrack >())
       UpdateTrackVRuler(t);
 
    UpdateVRulerSize();
@@ -1100,7 +1081,7 @@ void TrackPanel::UpdateVRuler(Track *t)
    UpdateVRulerSize();
 }
 
-void TrackPanel::UpdateTrackVRuler(const Track *t)
+void TrackPanel::UpdateTrackVRuler(Track *t)
 {
    wxASSERT(t);
    if (!t)
@@ -1115,7 +1096,7 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
    for (auto channel : TrackList::Channels(t)) {
       auto &view = TrackView::Get( *channel );
       rect.height = view.GetHeight() - (kTopMargin + kBottomMargin);
-      mTrackArtist->UpdateVRuler(channel, rect);
+      TrackVRulerControls::Get( *channel ).UpdateRuler( rect );
    }
 }
 

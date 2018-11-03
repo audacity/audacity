@@ -114,3 +114,14 @@ void TrackVRulerControls::Draw(
       }
    }
 }
+
+wxRect TrackVRulerControls::DrawingArea(
+   const wxRect &rect, const wxRect &, unsigned iPass )
+{
+   // Common area change for all subclasses when drawing the controls
+   // A bevel extends below one pixel outside of the hit-test area
+   if ( iPass == TrackArtist::PassControls )
+      return { rect.x, rect.y, rect.width, rect.height + 1 };
+   else
+      return rect;
+}
