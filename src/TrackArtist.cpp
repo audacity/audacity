@@ -369,7 +369,8 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
 }
 
 void TrackArtist::DrawVRuler
-(TrackPanelDrawingContext &context, const Track *t, const wxRect & rect_)
+( TrackPanelDrawingContext &context, const Track *t, const wxRect & rect_,
+  bool bSelected )
 {
    auto dc = &context.dc;
    bool highlight = false;
@@ -378,11 +379,16 @@ void TrackArtist::DrawVRuler
 #endif
 
 
+   // Paint the background
+   AColor::MediumTrackInfo(dc, bSelected);
+   dc->DrawRectangle( rect_ );
+
    // Stroke the left border
    dc->SetPen(*wxBLACK_PEN);
    {
       const auto left = rect_.GetLeft();
       AColor::Line( *dc, left, rect_.GetTop(), left, rect_.GetBottom() );
+
    }
 
    // Label and Time tracks do not have a vruler

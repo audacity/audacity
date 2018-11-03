@@ -69,7 +69,7 @@ class AUDACITY_DLL_API TrackArtist {
                   bool hasSolo);
 
    void DrawVRuler(TrackPanelDrawingContext &context,
-                   const Track *t, const wxRect & rect);
+                   const Track *t, const wxRect & rect, bool bSelected );
 
    void UpdateVRuler(const Track *t, const wxRect & rect);
 

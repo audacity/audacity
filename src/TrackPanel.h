@@ -152,7 +152,7 @@ public:
 
 
    void DrawBackground(
-      wxDC * dc, const wxRect & rect, bool bSelected, const int labelw ) const;
+      wxDC * dc, const wxRect & rect, bool bSelected, const int vrul ) const;
    // void DrawBordersWithin(
    //   wxDC * dc, const wxRect & rect, const Track &track ) const;
 
@@ -379,7 +379,8 @@ protected:
    void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect );
    void DrawOutsideOfTrack    (
       TrackPanelDrawingContext &context, const wxRect & rect );
-   void DrawSash              ( wxDC* dc, const wxRect & rect, int labelw );
+   void DrawSash              (
+      wxDC* dc, const wxRect & rect, int labelw, bool bSelected );
 
 public:
    // Set the object that performs catch-all event handling when the pointer

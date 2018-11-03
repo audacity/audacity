@@ -1128,7 +1128,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          rect.y += kTopMargin;
          rect.width = GetVRulerWidth();
          rect.height -= (kTopMargin + kBottomMargin);
-         mTrackArtist->DrawVRuler(context, visibleT, rect);
+         mTrackArtist->DrawVRuler(context, visibleT, rect, t->GetSelected());
       }
    }
 
@@ -1612,7 +1612,9 @@ void TrackPanel::DrawOutside
       rect.height -= kTopInset;
 
       int labelw = GetLabelWidth();
-      mTrackInfo.DrawBackground( dc, rect, t->GetSelected(), labelw );
+      int vrul = GetVRulerOffset();
+
+      mTrackInfo.DrawBackground( dc, rect, t->GetSelected(), vrul );
 
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
@@ -1623,7 +1625,6 @@ void TrackPanel::DrawOutside
       //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
       //}
 
-      int vrul = GetVRulerOffset();
       DrawBordersAroundTrack( dc, rect );
       {
          auto channels = TrackList::Channels(t);
@@ -1638,7 +1639,7 @@ void TrackPanel::DrawOutside
             wxRect sashRect{
                vrul, yy, rect.GetRight() - vrul, kSeparatorThickness
             };
-            DrawSash( dc, sashRect, labelw );
+            DrawSash( dc, sashRect, labelw, t->GetSelected() );
          }
       }
 
@@ -1687,13 +1688,18 @@ void TrackPanel::DrawOutsideOfTrack
    dc->DrawRectangle(side);
 }
 
-void TrackPanel::DrawSash( wxDC * dc, const wxRect & rect, int labelw )
+void TrackPanel::DrawSash(
+   wxDC * dc, const wxRect & rect, int labelw, bool bSelected )
 {
    // Area between channels of a group
    // Paint the channel separator over (what would be) the lower border of this
    // channel, down to and including the upper border of the next channel
 
    ADCChanger cleanup{ dc };
+
+   // Paint the left part of the background
+   AColor::MediumTrackInfo(dc, bSelected);
+   dc->DrawRectangle( rect.GetX(), rect.GetY(), labelw, rect.GetHeight() );
 
    // Stroke the left border
    dc->SetPen(*wxBLACK_PEN);
@@ -2510,11 +2516,11 @@ void TrackInfo::DrawBordersWithin
 
 // Paint the whole given rectangle some fill color
 void TrackInfo::DrawBackground(
-   wxDC * dc, const wxRect & rect, bool bSelected, const int labelw) const
+   wxDC * dc, const wxRect & rect, bool bSelected, const int vrul) const
 {
    // fill in label
    wxRect fill = rect;
-   fill.width = labelw - kLeftInset;
+   fill.width = vrul - kLeftInset;
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
 
