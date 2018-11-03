@@ -48,6 +48,20 @@ public:
    // area into cells
    virtual std::shared_ptr<TrackPanelNode> Root() = 0;
 
+   virtual TrackPanelCell *GetFocusedCell() = 0;
+   virtual void SetFocusedCell() = 0;
+   
+   virtual void ProcessUIHandleResult
+   (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
+    unsigned refreshResult) = 0;
+   
+   virtual void UpdateStatusMessage( const wxString & )  = 0;
+   
+   // Whether this panel keeps focus after a click and drag, or only borrows
+   // it.
+   virtual bool TakesFocus() const = 0;
+   
+public:
    // Structure and functions for generalized visitation of the subdivision
    struct Visitor {
       virtual ~Visitor();
@@ -70,20 +84,6 @@ public:
    void VisitPreorder( const SimpleNodeVisitor &visitor );
    void VisitPostorder( const SimpleNodeVisitor &visitor );
 
-   virtual TrackPanelCell *GetFocusedCell() = 0;
-   virtual void SetFocusedCell() = 0;
-   
-   virtual void ProcessUIHandleResult
-   (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
-    unsigned refreshResult) = 0;
-   
-   virtual void UpdateStatusMessage( const wxString & )  = 0;
-   
-   // Whether this panel keeps focus after a click and drag, or only borrows
-   // it.
-   virtual bool TakesFocus() const = 0;
-   
-public:
    // Find cell by coordinate
    struct FoundCell {
       std::shared_ptr< TrackPanelCell > pCell;
