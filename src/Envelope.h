@@ -119,7 +119,7 @@ public:
 
    void DrawPoints(
       TrackPanelDrawingContext &context,
-      const wxRect & r, const ZoomInfo &zoomInfo,
+      const wxRect & r,
       bool dB, double dBRange,
       float zoomMin, float zoomMax, bool mirrored) const;
 

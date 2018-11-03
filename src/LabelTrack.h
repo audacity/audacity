@@ -153,9 +153,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
    static void ResetFont();
 
-   void Draw(TrackPanelDrawingContext &context, const wxRect & r,
-             const SelectedRegion &selectedRegion,
-             const ZoomInfo &zoomInfo) const;
+   void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
    int getSelectedIndex() const { return mSelIndex; }
 

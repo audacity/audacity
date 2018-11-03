@@ -1048,7 +1048,11 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const wxRect clip = GetRect();
 
-   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
+   mTrackArtist->pSelectedRegion = &mViewInfo->selectedRegion;
+   mTrackArtist->pZoomInfo = mViewInfo;
+   TrackPanelDrawingContext context {
+      *dc, Target(), mLastMouseState, mTrackArtist.get()
+   };
 
    // Draw margins on two or three sides.
    ClearLeftAndRightMargins(context, clip);
@@ -1064,11 +1068,19 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
    bool sliderFlag     = bMultiToolDown;
 
-   // The track artist actually draws the stuff inside each track
-   mTrackArtist->DrawTracks(context, GetTracks(),
-                            region, clip, GetLeftOffset(),
-                            mViewInfo->selectedRegion, *mViewInfo,
-                            envelopeFlag, bigPointsFlag, sliderFlag);
+   const bool hasSolo = GetTracks()->Any< PlayableTrack >()
+      .any_of( []( const PlayableTrack *pt ) {
+         pt = static_cast< const PlayableTrack * >(
+            pt->SubstitutePendingChangedTrack().get() );
+         return (pt && pt->GetSolo());
+      } );
+
+   mTrackArtist->leftOffset = GetLeftOffset();
+   mTrackArtist->drawEnvelope = envelopeFlag;
+   mTrackArtist->bigPoints = bigPointsFlag;
+   mTrackArtist->drawSliders = sliderFlag;
+   mTrackArtist->hasSolo = hasSolo;
+   mTrackArtist->DrawTracks( context, GetTracks(), region, clip );
 
    // Draw the rest, including the click-to-deselect blank area below all
    // tracks

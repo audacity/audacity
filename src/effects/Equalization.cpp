@@ -90,6 +90,7 @@
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../TrackArtist.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../xml/XMLFileReader.h"
@@ -3049,9 +3050,12 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    memDC.SetPen(*wxBLACK_PEN);
    if( mEffect->mDraw->GetValue() )
    {
-      TrackPanelDrawingContext context{ memDC, {}, {} };
+      ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
+      TrackArtist artist;
+      artist.pZoomInfo = &zoomInfo;
+      TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
       mEffect->mEnvelope->DrawPoints(
-         context, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
+         context, mEnvRect, false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax, false);
    }
 

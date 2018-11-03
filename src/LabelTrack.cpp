@@ -782,11 +782,12 @@ namespace {
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
 void LabelTrack::Draw
-(TrackPanelDrawingContext &context, const wxRect & r,
- const SelectedRegion &selectedRegion,
- const ZoomInfo &zoomInfo) const
+( TrackPanelDrawingContext &context, const wxRect & r ) const
 {
    auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+
    auto pHit = findHit();
 
    if(msFont.Ok())
@@ -795,10 +796,9 @@ void LabelTrack::Draw
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   TrackArtist::DrawBackgroundWithSelection(&dc, r, this,
-         AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-         selectedRegion, zoomInfo,
-            ( GetSelected() || IsSyncLockSelected() ) );
+   TrackArtist::DrawBackgroundWithSelection( context, r, this,
+      AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
+      ( GetSelected() || IsSyncLockSelected() ) );
 
    wxCoord textWidth, textHeight;
 
