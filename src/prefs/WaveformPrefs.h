@@ -56,6 +56,7 @@ private:
    bool mPopulating;
 };
 
+/// A PrefsPanelFactory that creates one WaveformPrefs panel.
 class WaveformPrefsFactory final : public PrefsPanelFactory
 {
 public:

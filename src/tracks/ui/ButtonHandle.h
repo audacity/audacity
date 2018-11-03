@@ -20,6 +20,9 @@ class wxMouseState;
 
 class Track;
 
+
+/// \brief A UIHandle for a TrackPanel button, such as the Mute and Solo 
+/// buttons.
 class ButtonHandle /* not final */ : public UIHandle
 {
    ButtonHandle(const ButtonHandle&) = delete;

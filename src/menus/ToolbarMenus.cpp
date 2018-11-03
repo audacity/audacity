@@ -22,6 +22,7 @@ void SetTool(AudacityProject &project, int tool)
 
 }
 
+/// Namespace for functions for View Toolbar menu
 namespace ToolbarActions {
 
 // exported helper functions

@@ -952,6 +952,9 @@ private:
 // utilites for RAII:
 
 // Deleter adaptor for functions like av_free that take a pointer
+
+/// \brief AV_Deleter is part of FFmpeg support.  It's used with the RAII
+/// idiom.
 template<typename T, typename R, R(*Fn)(T*)> struct AV_Deleter {
    inline R operator() (T* p) const
    {

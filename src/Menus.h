@@ -96,11 +96,14 @@ MenuManager &GetMenuManager(AudacityProject &project);
 
 // Exported helper functions from various menu handling source files
 
+
+/// Namespace for functions for File menu
 namespace FileActions {
 AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName );
 }
 
+/// Namespace for functions for Edit menu
 namespace EditActions {
 bool DoEditMetadata(
    AudacityProject &project,
@@ -109,6 +112,7 @@ void DoReloadPreferences( AudacityProject & );
 void DoUndo( AudacityProject &project );
 }
 
+/// Namespace for functions for Select menu
 namespace SelectActions {
 void DoListSelection(
    AudacityProject &project, Track *t,
@@ -117,12 +121,14 @@ void DoSelectAll( AudacityProject &project );
 void DoSelectSomething( AudacityProject &project );
 }
 
+/// Namespace for functions for View menu
 namespace ViewActions {
 double GetZoomOfToFit( const AudacityProject &project );
 void DoZoomFit( AudacityProject &project );
 void DoZoomFitV( AudacityProject &project );
 }
 
+/// Namespace for functions for Transport menu
 namespace TransportActions {
 bool DoPlayStopSelect( AudacityProject &project, bool click, bool shift );
 void DoPlayStopSelect( AudacityProject &project );
@@ -134,6 +140,7 @@ void DoTogglePinnedHead( AudacityProject & );
 void DoRecord( AudacityProject & );
 }
 
+/// Namespace for functions for Track menu
 namespace TrackActions {
    enum MoveChoice {
       OnMoveUpID, OnMoveDownID, OnMoveTopID, OnMoveBottomID
@@ -149,6 +156,8 @@ void DoRemoveTrack( AudacityProject &project, Track * toRemove );
 void DoRemoveTracks( AudacityProject & );
 }
 
+
+/// Namespace for helper functions to do with plug ins
 namespace PluginActions {
    enum : unsigned {
       // No flags specified
@@ -166,6 +175,7 @@ bool DoAudacityCommand(
    const PluginID & ID, const CommandContext & context, unsigned flags );
 }
 
+/// Namespace for functions for Help menu
 namespace HelpActions {
 void DoHelpWelcome( AudacityProject & );
 void DoShowLog( AudacityProject& );

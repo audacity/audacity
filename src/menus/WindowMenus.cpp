@@ -48,6 +48,7 @@ void DoMacMinimize(AudacityProject *project)
 
 }
 
+/// Namespace for functions for window management (mac only?)
 namespace WindowActions {
 
 // exported helper functions

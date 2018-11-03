@@ -726,6 +726,7 @@ void DoClipLeftOrRight
 
 }
 
+/// Namespace for functions for Clip menu
 namespace ClipActions {
 
 // exported helper functions

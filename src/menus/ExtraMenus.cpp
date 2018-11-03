@@ -9,6 +9,7 @@
 namespace {
 }
 
+/// Namespace for helper functions for Extra menu
 namespace ExtraActions {
 
 // exported helper functions

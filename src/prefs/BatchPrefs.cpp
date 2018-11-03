@@ -10,8 +10,8 @@
 *******************************************************************//**
 
 \class BatchPrefs
-\brief A PrefsPanel that builds up a chain of effects in MacroCommands
-
+\brief A probably unused PrefsPanel that in debug builds could offer a 
+setting used in debugging batch (aka macros) processing.
 *//*******************************************************************/
 
 #include "../Audacity.h"

@@ -34,6 +34,7 @@ class ProjectsPrefs final : public PrefsPanel
    void Populate();
 };
 
+/// A PrefsPanelFactory that creates one ProjectPrefs panel.
 class ProjectsPrefsFactory final : public PrefsPanelFactory
 {
 public:

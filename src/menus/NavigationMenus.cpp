@@ -290,6 +290,7 @@ void DoNextTrack(
 
 }
 
+/// Namespace for functions for project navigation menu (part of Extra menu)
 namespace NavigationActions {
 
 // exported helper functions

@@ -86,9 +86,9 @@ enum class TrackKind
    All
 };
 
-// Compile-time function on enum values.
-// It knows all inheritance relations among Track subclasses
-// even where the track types are only forward declared.
+/// Compile-time function on enum values.
+/// It knows all inheritance relations among Track subclasses
+/// even where the track types are only forward declared.
 constexpr bool CompatibleTrackKinds( TrackKind desired, TrackKind actual )
 {
    return
@@ -110,8 +110,8 @@ constexpr bool CompatibleTrackKinds( TrackKind desired, TrackKind actual )
    ;
 }
 
-// This bit of metaprogramming lets track_cast work even when the track
-// subclasses are visible only as incomplete types
+/// \brief Metaprogramming in TrackTyper lets track_cast work even when the track
+/// subclasses are visible only as incomplete types
 namespace TrackTyper {
    template<typename, TrackKind> struct Pair;
    using List = std::tuple<
@@ -160,12 +160,13 @@ template<typename T>
 
 class ViewInfo;
 
-// This is an in-session identifier of track objects across undo states
-// It does not persist between sessions
-// Default constructed value is not equal to the id of any track that has ever
-// been added to a TrackList, or (directly or transitively) copied from such
-// (A pending additional track that is not yet applied is not considered added)
-// TrackIds are assigned uniquely across projects
+/// This is an in-session identifier of track objects across undo states
+///
+/// It does not persist between sessions
+/// Default constructed value is not equal to the id of any track that has ever
+/// been added to a TrackList, or (directly or transitively) copied from such
+/// (A pending additional track that is not yet applied is not considered added)
+/// TrackIds are assigned uniquely across projects
 class TrackId
 {
 public:

@@ -81,6 +81,7 @@ void MenuManager::UpdatePrefs()
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
 }
 
+/// Namespace for structures that go into building a menu
 namespace MenuTable {
 
 BaseItem::~BaseItem() {}

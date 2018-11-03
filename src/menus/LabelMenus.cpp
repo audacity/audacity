@@ -242,6 +242,7 @@ void EditClipboardByLabel(
 
 }
 
+/// Namespace for functions for Edit Label submenu
 namespace LabelEditActions {
 
 // exported helper functions

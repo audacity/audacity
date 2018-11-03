@@ -49,6 +49,7 @@ class GUIPrefs final : public PrefsPanel
    wxArrayString mRangeChoices;
 };
 
+/// A PrefsPanelFactory that creates one GUIPrefs panel.
 class GUIPrefsFactory final : public PrefsPanelFactory
 {
 public:

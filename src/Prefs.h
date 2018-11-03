@@ -45,6 +45,10 @@ class AudacityPrefs;
 extern AUDACITY_DLL_API AudacityPrefs *gPrefs;
 extern int gMenusDirty;
 
+
+/// \brief Our own specialisation of wxFileConfig.  It is essentially a renaming,
+/// though it does provide one new access function.  Most of the prefs work
+/// is actually done by the InitPreferences() function.
 class  AUDACITY_DLL_API AudacityPrefs : public wxFileConfig 
 {
 public:
@@ -57,9 +61,8 @@ public:
    bool GetEditClipsCanMove();
 };
 
-// Packages a table of user-visible choices each with an internal code string,
-// a preference key path,
-// and a default choice
+/// Packages a table of user-visible choices each with an internal code string,
+/// a preference key path, and a default choice
 class EnumSetting
 {
 public:
@@ -102,10 +105,10 @@ protected:
    const size_t mDefaultSymbol;
 };
 
-// Extends EnumSetting with a corresponding table of integer codes
-// (generally not equal to their table positions),
-// and optionally an old preference key path that stored integer codes, to be
-// migrated into one that stores internal string values instead
+/// Extends EnumSetting with a corresponding table of integer codes
+/// (generally not equal to their table positions),
+/// and optionally an old preference key path that stored integer codes, to be
+/// migrated into one that stores internal string values instead
 class EncodedEnumSetting : public EnumSetting
 {
 public:

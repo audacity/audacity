@@ -104,6 +104,7 @@ class SpectrumPrefs final : public PrefsPanel
    bool mCommitted{};
 };
 
+/// A PrefsPanelFactory that creates one SpectrumPrefs panel.
 class SpectrumPrefsFactory final : public PrefsPanelFactory
 {
 public:

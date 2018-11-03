@@ -94,6 +94,7 @@ private:
 };
 
 
+/// A PrefsPanelFactory that creates one KeyConfigPrefs panel.
 class KeyConfigPrefsFactory final : public PrefsPanelFactory
 {
 public:
