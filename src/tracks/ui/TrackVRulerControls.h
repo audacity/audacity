@@ -46,6 +46,11 @@ public:
 protected:
    std::shared_ptr<Track> DoFindTrack() override;
 
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
    Track *GetTrack() const;
 
    std::weak_ptr<TrackView> mwTrackView;

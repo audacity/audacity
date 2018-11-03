@@ -293,17 +293,6 @@ void TrackArt::DrawVRuler
 #endif
 
 
-   // Paint the background
-   AColor::MediumTrackInfo(dc, bSelected);
-   dc->DrawRectangle( rect );
-
-   // Stroke the left border
-   dc->SetPen(*wxBLACK_PEN);
-   {
-      const auto left = rect.GetLeft();
-      AColor::Line( *dc, left, rect.GetTop(), left, rect.GetBottom() );
-   }
-
    // Label and Time tracks do not have a vruler
    // But give it a beveled area
    t->TypeSwitch(
