@@ -173,6 +173,8 @@ TrackArtist::TrackArtist()
 
    SetColours(0);
    vruler = std::make_unique<Ruler>();
+
+   UpdatePrefs();
 }
 
 TrackArtist::~TrackArtist()
@@ -250,8 +252,6 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
          break;
       }
    }
-
-   gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), &mbShowTrackNameInWaveform, false);
 
    for(auto leader : tracks->Leaders()) {
       auto group = TrackList::Channels( leader );
@@ -3172,6 +3172,10 @@ void TrackArtist::UpdatePrefs()
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
    mSampleDisplay = TracksPrefs::SampleViewChoice();
+
+   mbShowTrackNameInWaveform =
+      gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
+   
    SetColours(0);
 }
 
