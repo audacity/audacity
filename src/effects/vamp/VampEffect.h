@@ -75,7 +75,7 @@ public:
    bool TransferDataFromWindow() override;
 
 private:
-   // VampEffect implemetation
+   // VampEffect implementation
 
    void AddFeatures(LabelTrack *track, Vamp::Plugin::FeatureSet & features);
 

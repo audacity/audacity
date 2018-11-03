@@ -25,7 +25,7 @@ public:
    bool Process() override;
 
 protected:
-   // EffectTwoPassSimpleMono implemetation
+   // EffectTwoPassSimpleMono implementation
 
    // Override these methods if you need to initialize something
    // before each pass. Return None if processing should stop.
