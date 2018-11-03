@@ -258,7 +258,7 @@ namespace {
 
       { wxT("ToggleScrubRuler"),            XO("Scrub &Ruler"),   wxT(""),
          AlwaysEnabledFlag,
-         &Scrubber::OnToggleScrubRuler, true,    &Scrubber::ShowsBar,
+         &Scrubber::OnToggleScrubRuler, false,    &Scrubber::ShowsBar,
       },
    };
 
