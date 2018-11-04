@@ -143,7 +143,6 @@ namespace TrackInfo
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   int GetTrackInfoWidth();
    void SetTrackInfoFont(wxDC *dc);
 
 
@@ -215,6 +214,37 @@ namespace TrackInfo
 
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
+
+// See big pictorial comment in TrackPanel for explanation of these numbers
+enum : int {
+   kLeftInset = 4,
+   kRightInset = kLeftInset,
+   kTopInset = 4,
+   kShadowThickness = 1,
+   kBorderThickness = 1,
+   kTopMargin = kTopInset + kBorderThickness,
+   kBottomMargin = kShadowThickness + kBorderThickness,
+   kLeftMargin = kLeftInset + kBorderThickness,
+   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
+   kSeparatorThickness = kBottomMargin + kTopMargin,
+};
+
+enum : int {
+   kTrackInfoWidth = 100 - kLeftMargin,
+   kTrackInfoBtnSize = 18, // widely used dimension, usually height
+   kTrackInfoSliderHeight = 25,
+   kTrackInfoSliderWidth = 84,
+   kTrackInfoSliderAllowance = 5,
+   kTrackInfoSliderExtra = 5,
+};
+
+#ifdef USE_MIDI
+enum : int {
+   // PRL:  was it correct to include the margin?
+   kMidiCellWidth = ( ( kTrackInfoWidth + kLeftMargin ) / 4) - 2,
+   kMidiCellHeight = kTrackInfoBtnSize
+};
+#endif
 
 class AUDACITY_DLL_API TrackPanel final : public CellularPanel {
 
@@ -322,11 +352,11 @@ protected:
    std::shared_ptr<TrackPanelNode> Root() override;
 
    int GetVRulerWidth() const;
-   int GetVRulerOffset() const { return TrackInfo::GetTrackInfoWidth(); }
+   int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
 
 public:
    int GetLabelWidth() const
-      { return TrackInfo::GetTrackInfoWidth() + GetVRulerWidth(); }
+      { return GetVRulerOffset() + GetVRulerWidth(); }
 
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
@@ -475,35 +505,5 @@ struct IsVisibleTrack
 
    wxRect mPanelRect;
 };
-
-// See big pictorial comment in TrackPanel for explanation of these numbers
-enum : int {
-   kLeftInset = 4,
-   kRightInset = kLeftInset,
-   kTopInset = 4,
-   kShadowThickness = 1,
-   kBorderThickness = 1,
-   kTopMargin = kTopInset + kBorderThickness,
-   kBottomMargin = kShadowThickness + kBorderThickness,
-   kLeftMargin = kLeftInset + kBorderThickness,
-   kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
-   kSeparatorThickness = kBottomMargin + kTopMargin,
-};
-
-enum : int {
-   kTrackInfoWidth = 100,
-   kTrackInfoBtnSize = 18, // widely used dimension, usually height
-   kTrackInfoSliderHeight = 25,
-   kTrackInfoSliderWidth = 84,
-   kTrackInfoSliderAllowance = 5,
-   kTrackInfoSliderExtra = 5,
-};
-
-#ifdef USE_MIDI
-enum : int {
-   kMidiCellWidth = (kTrackInfoWidth / 4) - 2,
-   kMidiCellHeight = kTrackInfoBtnSize
-};
-#endif
 
 #endif

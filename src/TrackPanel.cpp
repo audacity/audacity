@@ -111,9 +111,8 @@ left channel, are used for the channel separator.
 "Margin" is a term used for inset plus border (top and left) or inset plus
 shadow plus border (right and bottom).
 
-TrackInfo::GetTrackInfoWidth() == GetVRulerOffset()
-counts columns from the left edge up to and including controls, and is a
-constant.
+GetVRulerOffset() counts columns from the left edge up to and including
+controls, and is a constant.
 
 GetVRulerWidth() is variable -- all tracks have the same ruler width at any
 time, but that width may be adjusted when tracks change their vertical scales.
@@ -1664,7 +1663,7 @@ void TrackPanel::DrawOutside
    }
 
    // Draw things within the track control panel
-   rect.width = kTrackInfoWidth - kLeftMargin;
+   rect.width = kTrackInfoWidth;
    TrackInfo::DrawItems( context, rect, *t );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
@@ -2067,7 +2066,7 @@ struct LabeledChannelGroup final : TrackPanelGroup {
    Subdivision Children( const wxRect &rect ) override
    { return { Axis::X, Refinement{
       { rect.GetLeft(), mpTrack->GetTrackControl() },
-      { kTrackInfoWidth,
+      { rect.GetLeft() + kTrackInfoWidth,
         std::make_shared< ChannelGroup >( mpTrack, mLeftOffset ) }
    } }; }
    std::shared_ptr< Track > mpTrack;
@@ -2311,11 +2310,6 @@ void TrackInfo::ReCreateSliders( wxWindow *pParent ){
    gVelocityCaptured->SetDefaultValue(0.0);
 #endif
 
-}
-
-int TrackInfo::GetTrackInfoWidth()
-{
-   return kTrackInfoWidth;
 }
 
 void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
@@ -2670,7 +2664,10 @@ void TrackInfo::UpdatePrefs( wxWindow *pParent )
    int fontSize = 10;
    gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-   int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
+   int allowableWidth =
+      // PRL:  was it correct to include the margin?
+      ( kTrackInfoWidth + kLeftMargin )
+         - 2; // 2 to allow for left/right borders
    int textWidth, textHeight;
    do {
       gFont.SetPointSize(fontSize);
