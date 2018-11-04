@@ -15,14 +15,7 @@
 \brief
   Implements TrackPanel and TrackInfo.
 
-*//********************************************************************/
-
-// Documentation: Rather than have a lengthy \todo section, having
-// a \todo a \file and a \page in EXACTLY that order gets Doxygen to
-// put the following lengthy description of refactoring on a NEW page
-// and link to it from the docs.
-
-/*****************************************************************//**
+*//***************************************************************//**
 
 \class TrackPanel
 \brief
@@ -100,7 +93,9 @@ is time to refresh some aspect of the screen.
 
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
-/*
+/**
+
+\class TrackPanel
 
 This is a diagram of TrackPanel's division of one (non-stereo) track rectangle.
 Total height equals Track::GetHeight()'s value.  Total width is the wxWindow's

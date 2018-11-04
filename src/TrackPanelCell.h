@@ -28,7 +28,7 @@ using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 #include <vector>
 
-/// The TrackPanel is built up of nodes, subtrees of the CellularPanel's area
+/// \brief The TrackPanel is built up of nodes, subtrees of the CellularPanel's area
 /// This class itself has almost nothing in it.  Other classes derived from it
 /// build up the capabilities.
 class AUDACITY_DLL_API /* not final */ TrackPanelNode

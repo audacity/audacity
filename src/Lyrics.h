@@ -25,6 +25,8 @@ class LabelTrack;
 #define LYRICS_DEFAULT_WIDTH 608
 #define LYRICS_DEFAULT_HEIGHT 280
 
+/// \brief used in LyricsPanel, a Syllable gives positional information to
+/// be used with the bouncing ball effect.
 struct Syllable {
    Syllable() = default;
    Syllable( const Syllable& ) = default;

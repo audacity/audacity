@@ -999,6 +999,9 @@ using AVCodecContextHolder = std::unique_ptr<
 using AVDictionaryCleanup = std::unique_ptr<
    AVDictionary*, AV_Deleter<AVDictionary*, void, av_dict_free>
 >;
+
+/// \brief FFmpeg structure to hold a file pointer and provide a return 
+/// value when closing the file.
 struct UFileHolder : public std::unique_ptr<
    AVIOContext, ::AV_Deleter<AVIOContext, int, ufile_close>
 >

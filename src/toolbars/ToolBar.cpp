@@ -64,6 +64,9 @@ in which buttons can be placed.
 //
 #define RWIDTH 4
 
+/// \brief a wxWindow that provides the resizer for a toolbar on the 
+/// right hand side.  Responsible for drawing the resizer appearance, 
+/// resizing mouse events and constraining the resizing.
 class ToolBarResizer final : public wxWindow
 {
 public:
