@@ -181,8 +181,6 @@ protected:
       const Track *leaderTrack, const wxRect & teamRect);
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
-   void DrawShadow            ( wxDC* dc, const wxRect & rect );
-   void DrawBordersAroundTrack(wxDC* dc, const wxRect & rect );
 
 public:
    // Set the object that performs catch-all event handling when the pointer

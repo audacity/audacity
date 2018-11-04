@@ -1032,23 +1032,17 @@ void TrackPanel::DrawOutside
    // Start with whole track rect
    wxRect rect = rec;
 
-   {
-      // Now exclude the resizer below
-      rect.height -= kSeparatorThickness;
+   // Now exclude the resizer below
+   rect.height -= kSeparatorThickness;
 
-      // Vaughan, 2010-08-24: No longer doing this.
-      // Draw sync-lock tiles in ruler area.
-      //if (t->IsSyncLockSelected()) {
-      //   wxRect tileFill = rect;
-      //   tileFill.x = mViewInfo->GetVRulerOffset();
-      //   tileFill.width = mViewInfo->GetVRulerWidth();
-      //   TrackArt::DrawSyncLockTiles(dc, tileFill);
-      //}
-
-      DrawBordersAroundTrack( dc, rect );
-
-      DrawShadow( dc, rect );
-   }
+   // Vaughan, 2010-08-24: No longer doing this.
+   // Draw sync-lock tiles in ruler area.
+   //if (t->IsSyncLockSelected()) {
+   //   wxRect tileFill = rect;
+   //   tileFill.x = mViewInfo->GetVRulerOffset();
+   //   tileFill.width = mViewInfo->GetVRulerWidth();
+   //   TrackArt::DrawSyncLockTiles(dc, tileFill);
+   //}
 
    // Draw things within the track control panel
    rect.width = kTrackInfoWidth;
@@ -1244,41 +1238,6 @@ void TrackPanel::VerticalScroll( float fracPosition){
 }
 
 
-// Draw a rectangular border
-void TrackPanel::DrawBordersAroundTrack( wxDC * dc, const wxRect & rect )
-{
-   // Border around track and label area
-   // leaving room for the shadow
-   dc->SetBrush(*wxTRANSPARENT_BRUSH);
-   dc->SetPen(*wxBLACK_PEN);
-   dc->DrawRectangle( rect.Inflate( kBorderThickness, kBorderThickness ) );
-}
-
-// Given rectangle is the track rectangle excluding the border
-// Stroke lines along bottom and right, which are slightly short at
-// bottom-left and top-right
-void TrackPanel::DrawShadow( wxDC * dc, const wxRect & rect )
-{
-   int right = rect.GetRight() + kBorderThickness + kShadowThickness;
-   int bottom = rect.GetBottom() + kBorderThickness + kShadowThickness;
-
-   // shadow color for lines
-   dc->SetPen(*wxBLACK_PEN);
-
-   // bottom
-   AColor::Line(*dc, rect.x, bottom, right, bottom);
-   // right
-   AColor::Line(*dc, right, rect.y, right, bottom);
-
-   // background color erases small parts of those lines
-   AColor::TrackPanelBackground(dc, false);
-
-   // bottom-left
-   AColor::Line(*dc, rect.x, bottom, rect.x + 1, bottom);
-   // top-right
-   AColor::Line(*dc, right, rect.y, right, rect.y + 1);
-}
-
 namespace {
 
 /*
@@ -1402,6 +1361,49 @@ struct LabeledChannelGroup final : TrackPanelGroup {
       { rect.GetLeft() + kTrackInfoWidth,
         std::make_shared< ChannelGroup >( mpTrack, mLeftOffset ) }
    } }; }
+
+   // TrackPanelDrawable impementation
+   void Draw( TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override
+   {
+      if ( iPass == TrackArtist::PassBorders ) {
+         auto &dc = context.dc;
+         dc.SetBrush(*wxTRANSPARENT_BRUSH);
+         dc.SetPen(*wxBLACK_PEN);
+
+         // border
+         dc.DrawRectangle(
+            rect.x, rect.y,
+            rect.width - kShadowThickness, rect.height - kShadowThickness
+         );
+
+         // shadow
+         // Stroke lines along bottom and right, which are slightly short at
+         // bottom-left and top-right
+         const auto right = rect.GetRight();
+         const auto bottom = rect.GetBottom();
+
+         // bottom
+         AColor::Line(dc, rect.x + 2, bottom, right, bottom);
+         // right
+         AColor::Line(dc, right, rect.y + 2, right, bottom);
+      }
+   }
+
+   wxRect DrawingArea(
+      const wxRect &rect, const wxRect &, unsigned iPass ) override
+   {
+      if ( iPass == TrackArtist::PassBorders )
+         return {
+            rect.x - kBorderThickness,
+            rect.y - kBorderThickness,
+            rect.width + 2 * kBorderThickness + kShadowThickness,
+            rect.height + 2 * kBorderThickness + kShadowThickness
+         };
+      else
+         return rect;
+   }
+
    std::shared_ptr< Track > mpTrack;
    wxCoord mLeftOffset;
 };

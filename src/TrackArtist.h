@@ -71,6 +71,7 @@ public:
    enum : unsigned {
       PassTracks,
       PassMargins,
+      PassBorders,
       
       NPasses
    };
