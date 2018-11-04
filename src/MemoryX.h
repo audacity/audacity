@@ -193,6 +193,8 @@ public:
   You might also use it as a member.
   Initialize with create(), then use like a smart pointer,
   with *, ->, get(), reset(), or in if()
+
+  Like std::optional of C++17 but with other member naming conventions
  */
 
 // Placement-NEW is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
