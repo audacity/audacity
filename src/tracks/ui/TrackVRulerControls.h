@@ -39,9 +39,11 @@ public:
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 
+   // Helpers for handle classes' TrackPanelDrawable implementations
    static void DrawZooming
-      ( wxDC *dc, const wxRect &cellRect, const wxRect &panelRect,
+      ( TrackPanelDrawingContext &context, const wxRect &rect,
         int zoomStart, int zoomEnd);
+   static wxRect ZoomingArea( const wxRect &rect, const wxRect &panelRect );
 
    // Modify the ruler rectangle, and related display parameters,
    // cached in the associated track

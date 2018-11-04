@@ -50,12 +50,16 @@ public:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   void DrawExtras
-      (DrawingPass pass,
-       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
-      override;
-
 private:
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
+   wxRect DrawingArea(
+      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+
    bool IsDragZooming() const;
 
    int mZoomStart{}, mZoomEnd{};

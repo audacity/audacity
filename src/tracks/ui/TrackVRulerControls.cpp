@@ -68,25 +68,40 @@ std::vector<UIHandlePtr> TrackVRulerControls::HitTest
 }
 
 void TrackVRulerControls::DrawZooming
-   ( wxDC *dc, const wxRect &cellRect, const wxRect &panelRect,
+   ( TrackPanelDrawingContext &context, const wxRect &rect_,
      int zoomStart, int zoomEnd )
 {
    // Draw a dashed rectangle, its right side disappearing in the black right
    // border of the track area, which is not part of this cell but right of it.
-   wxRect rect;
+   auto &dc = context.dc;
 
-   dc->SetBrush(*wxTRANSPARENT_BRUSH);
-   dc->SetPen(*wxBLACK_DASHED_PEN);
+   dc.SetBrush(*wxTRANSPARENT_BRUSH);
+   dc.SetPen(*wxBLACK_DASHED_PEN);
 
-   rect.y = std::min( zoomStart, zoomEnd);
-   rect.height = 1 + abs( zoomEnd - zoomStart);
+   wxRect rect {
+      rect_.x,
+      std::min( zoomStart, zoomEnd),
+      rect_.width,
+      1 + abs( zoomEnd - zoomStart)
+   };
 
-   rect.x = cellRect.x;
+   dc.DrawRectangle(rect);
+}
+
+wxRect TrackVRulerControls::ZoomingArea(
+   const wxRect &rect, const wxRect &panelRect )
+{
    // TODO: Don't use the constant kRightMargin, but somehow discover the
    // neighboring track rectangle
-   rect.SetRight(panelRect.GetWidth() - kRightMargin);
-
-   dc->DrawRectangle(rect);
+   return {
+      // Left edge of the rectangle disappears in the vertical line at
+      // left edge of the ruler
+      rect.x,
+      rect.y,
+      // Extend the dashed rectangle right up to the track border
+      (panelRect.width - kRightMargin + kBorderThickness) - rect.x,
+      rect.height
+   };
 }
 
 void TrackVRulerControls::Draw(

@@ -43,7 +43,6 @@ public:
 
    // Argument for the drawing function
    enum DrawingPass {
-      Cells,
       Panel,
    };
 
