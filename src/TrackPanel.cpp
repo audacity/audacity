@@ -959,7 +959,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          focusRect = trackRect;
          focusRect.height -= kSeparatorThickness;
       }
-      DrawOutside(context, leaderTrack, trackRect);
 
       // Believe it or not, we can speed up redrawing if we don't
       // redraw the vertical ruler when only the waveform data has
@@ -999,37 +998,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
    if (target)
       target->DrawExtras(UIHandle::Panel, dc, region, clip);
-}
-
-void TrackPanel::DrawOutside
-(TrackPanelDrawingContext &context,
- const Track * t, const wxRect & rec)
-{
-   // Given rectangle excludes left and right margins, and encompasses a
-   // channel group of tracks, plus the resizer area below
-
-   auto dc = &context.dc;
-
-   // Start with whole track rect
-   wxRect rect = rec;
-
-   // Now exclude the resizer below
-   rect.height -= kSeparatorThickness;
-
-   // Vaughan, 2010-08-24: No longer doing this.
-   // Draw sync-lock tiles in ruler area.
-   //if (t->IsSyncLockSelected()) {
-   //   wxRect tileFill = rect;
-   //   tileFill.x = mViewInfo->GetVRulerOffset();
-   //   tileFill.width = mViewInfo->GetVRulerWidth();
-   //   TrackArt::DrawSyncLockTiles(dc, tileFill);
-   //}
-
-   // Draw things within the track control panel
-   rect.width = kTrackInfoWidth;
-   TrackInfo::DrawItems( context, rect, *t );
-
-   //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 }
 
 void TrackPanel::SetBackgroundCell

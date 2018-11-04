@@ -176,9 +176,6 @@ protected:
    void DrawEverythingElse(TrackPanelDrawingContext &context,
                            const wxRegion & region,
                            const wxRect & clip);
-   void DrawOutside(
-      TrackPanelDrawingContext &context,
-      const Track *leaderTrack, const wxRect & teamRect);
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
 

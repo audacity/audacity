@@ -270,16 +270,95 @@ unsigned CommonTrackControls::DoContextMenu
    return data.result;
 }
 
+// Some old cut-and-paste legacy from TrackPanel.cpp here:
+#if 0
+void TrackInfo::DrawBordersWithin
+   ( wxDC* dc, const wxRect & rect, const Track &track ) const
+{
+   AColor::Dark(dc, false); // same color as border of toolbars (ToolBar::OnPaint())
+
+   // below close box and title bar
+   wxRect buttonRect;
+   GetTitleBarRect( rect, buttonRect );
+   AColor::Line
+      (*dc, rect.x,              buttonRect.y + buttonRect.height,
+            rect.width - 1,      buttonRect.y + buttonRect.height);
+
+   // between close box and title bar
+   AColor::Line
+      (*dc, buttonRect.x, buttonRect.y,
+            buttonRect.x, buttonRect.y + buttonRect.height - 1);
+
+   GetMuteSoloRect( rect, buttonRect, false, true, &track );
+
+   bool bHasMuteSolo = dynamic_cast<const PlayableTrack*>( &track ) != NULL;
+   if( bHasMuteSolo && !TrackInfo::HideTopItem( rect, buttonRect ) )
+   {
+      // above mute/solo
+      AColor::Line
+         (*dc, rect.x,          buttonRect.y,
+               rect.width - 1,  buttonRect.y);
+
+      // between mute/solo
+      // Draw this little line; if there is no solo, wide mute button will
+      // overpaint it later:
+      AColor::Line
+         (*dc, buttonRect.x + buttonRect.width, buttonRect.y,
+               buttonRect.x + buttonRect.width, buttonRect.y + buttonRect.height - 1);
+
+      // below mute/solo
+      AColor::Line
+         (*dc, rect.x,          buttonRect.y + buttonRect.height,
+               rect.width - 1,  buttonRect.y + buttonRect.height);
+   }
+
+   // left of and above minimize button
+   wxRect minimizeRect;
+   this->GetMinimizeRect(rect, minimizeRect);
+   AColor::Line
+      (*dc, minimizeRect.x - 1, minimizeRect.y,
+            minimizeRect.x - 1, minimizeRect.y + minimizeRect.height - 1);
+   AColor::Line
+      (*dc, minimizeRect.x,                          minimizeRect.y - 1,
+            minimizeRect.x + minimizeRect.width - 1, minimizeRect.y - 1);
+}
+#endif
+
 void CommonTrackControls::Draw(
    TrackPanelDrawingContext &context,
-   const wxRect &rect, unsigned iPass )
+   const wxRect &rect_, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassMargins ) {
       // fill in label
       auto dc = &context.dc;
       const auto pTrack = FindTrack();
       AColor::MediumTrackInfo( dc, pTrack && pTrack->GetSelected() );
-      dc->DrawRectangle( rect );
+      dc->DrawRectangle( rect_ );
+   }
+
+   if ( iPass == TrackArtist::PassControls ) {
+      // Given rectangle excludes left and right margins, and encompasses a
+      // channel group of tracks, plus the resizer area below
+      auto pTrack = FindTrack();
+      // First counteract DrawingArea() correction
+      wxRect rect{ rect_.x, rect_.y, rect_.width - 1, rect_.height };
+   
+      // Vaughan, 2010-08-24: No longer doing this.
+      // Draw sync-lock tiles in ruler area.
+      //if (t->IsSyncLockSelected()) {
+      //   wxRect tileFill = rect;
+      //   tileFill.x = mViewInfo->GetVRulerOffset();
+      //   tileFill.width = mViewInfo->GetVRulerWidth();
+      //   TrackArt::DrawSyncLockTiles(dc, tileFill);
+      //}
+
+      if (pTrack)
+         // Draw things within the track control panel
+         TrackInfo::DrawItems( context, rect, *pTrack );
+
+      TrackInfo::DrawItems( context, rect, *FindTrack() );
+
+      //mTrackInfo.DrawBordersWithin( dc, rect, *t );
    }
 
    // Some old cut-and-paste legacy from TrackPanel.cpp here:
@@ -310,4 +389,14 @@ void CommonTrackControls::Draw(
    }
 #endif
 
+}
+
+wxRect CommonTrackControls::DrawingArea(
+   const wxRect &rect, const wxRect &, unsigned iPass )
+{
+   if ( iPass == TrackArtist::PassControls )
+      // Some bevels spill out right
+      return { rect.x, rect.y, rect.width + 1, rect.height };
+   else
+      return rect;
 }
