@@ -973,17 +973,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
    auto target = Target();
 
-   // Sometimes highlight is not drawn on backing bitmap. I thought
-   // it was because FindFocus did not return "this" on Mac, but
-   // when I removed that test, yielding this condition:
-   //     if (GetFocusedTrack() != NULL) {
-   // the highlight was reportedly drawn even when something else
-   // was the focus and no highlight should be drawn. -RBD
-   if (GetFocusedTrack() != NULL &&
-      wxWindow::FindFocus() == this ) {
-      HighlightFocusedTrack(dc, focusRect);
-   }
-
    if (target)
       target->DrawExtras(UIHandle::Panel, dc, region, clip);
 }
@@ -997,28 +986,6 @@ void TrackPanel::SetBackgroundCell
 std::shared_ptr< TrackPanelCell > TrackPanel::GetBackgroundCell()
 {
    return mpBackground;
-}
-
-/// Draw a three-level highlight gradient around the focused track.
-void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
-{
-   wxRect theRect = rect;
-   theRect.Inflate( kBorderThickness );
-   theRect.width += kShadowThickness;
-   theRect.height += kShadowThickness;
-   dc->SetBrush(*wxTRANSPARENT_BRUSH);
-
-   AColor::TrackFocusPen(dc, 0);
-   theRect.Inflate(1);
-   dc->DrawRectangle(theRect);
-
-   AColor::TrackFocusPen(dc, 1);
-   theRect.Inflate(1);
-   dc->DrawRectangle(theRect);
-
-   AColor::TrackFocusPen(dc, 2);
-   theRect.Inflate(1);
-   dc->DrawRectangle(theRect);
 }
 
 void TrackPanel::UpdateVRulers()
@@ -1325,6 +1292,34 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          // right
          AColor::Line(dc, right, rect.y + 2, right, bottom);
       }
+      if ( iPass == TrackArtist::PassFocus ) {
+         // Sometimes highlight is not drawn on backing bitmap. I thought
+         // it was because FindFocus did not return the TrackPanel on Mac, but
+         // when I removed that test, yielding this condition:
+         //     if (GetFocusedTrack() != NULL) {
+         // the highlight was reportedly drawn even when something else
+         // was the focus and no highlight should be drawn. -RBD
+         const auto artist = TrackArtist::Get( context );
+         auto &trackPanel = *artist->parent;
+         if (trackPanel.GetFocusedTrack() == mpTrack.get() &&
+             wxWindow::FindFocus() == &trackPanel ) {
+            /// Draw a three-level highlight gradient around the focused track.
+            wxRect theRect = rect;
+            auto &dc = context.dc;
+            dc.SetBrush(*wxTRANSPARENT_BRUSH);
+            
+            AColor::TrackFocusPen( &dc, 2 );
+            dc.DrawRectangle(theRect);
+            theRect.Deflate(1);
+            
+            AColor::TrackFocusPen( &dc, 1 );
+            dc.DrawRectangle(theRect);
+            theRect.Deflate(1);
+            
+            AColor::TrackFocusPen( &dc, 0 );
+            dc.DrawRectangle(theRect);
+         }
+      }
    }
 
    wxRect DrawingArea(
@@ -1337,6 +1332,15 @@ struct LabeledChannelGroup final : TrackPanelGroup {
             rect.width + 2 * kBorderThickness + kShadowThickness,
             rect.height + 2 * kBorderThickness + kShadowThickness
          };
+      else if ( iPass == TrackArtist::PassFocus ) {
+         constexpr auto extra = kBorderThickness + 3;
+         return {
+            rect.x - extra,
+            rect.y - extra,
+            rect.width + 2 * extra + kShadowThickness,
+            rect.height + 2 * extra + kShadowThickness
+         };
+      }
       else
          return rect;
    }

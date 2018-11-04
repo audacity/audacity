@@ -71,6 +71,7 @@ public:
       PassControls,
       PassZooming,
       PassBackground,
+      PassFocus,
       
       NPasses
    };

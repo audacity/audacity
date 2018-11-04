@@ -177,8 +177,6 @@ protected:
                            const wxRegion & region,
                            const wxRect & clip);
 
-   void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
-
 public:
    // Set the object that performs catch-all event handling when the pointer
    // is not in any track or ruler or control panel.
