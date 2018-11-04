@@ -973,16 +973,6 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 
    auto target = Target();
 
-   // Paint over the part below the tracks
-   trackRect.y += trackRect.height;
-   if (trackRect.y < clip.GetBottom()) {
-      AColor::TrackPanelBackground(dc, false);
-      dc->DrawRectangle(trackRect.x,
-                        trackRect.y,
-                        trackRect.width,
-                        clip.height - trackRect.y);
-   }
-
    // Sometimes highlight is not drawn on backing bitmap. I thought
    // it was because FindFocus did not return "this" on Mac, but
    // when I removed that test, yielding this condition:
