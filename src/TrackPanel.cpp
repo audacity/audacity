@@ -37,19 +37,20 @@
 
 *//*****************************************************************//**
 
-\class TrackInfo
+\namespace TrackInfo
 \brief
-  The TrackInfo is shown to the side of a track
+  Functions for drawing the track control panel, which is shown to the side
+  of a track
   It has the menus, pan and gain controls displayed in it.
   So "Info" is somewhat a misnomer. Should possibly be "TrackControls".
 
-  In its current implementation TrackInfo is not derived from a
-  wxWindow.  Following the original coding style, it has
-  been coded as a 'flyweight' class, which is passed
-  state as needed, except for the array of gains and pans.
+  It maintains global slider widget instances that are reparented and
+  repositioned as needed for drawing and interaction with the user,
+  interoperating with the custom panel subdivision implemented in CellularPanel
+  and avoiding wxWidgets sizers
 
   If we'd instead coded it as a wxWindow, we would have an instance
-  of this class for each instance displayed.
+  of this class for each track displayed.
 
 *//**************************************************************//**
 
@@ -206,7 +207,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        AdornedRulerPanel * ruler)
    : CellularPanel(parent, id, pos, size, viewInfo,
                    wxWANTS_CHARS | wxNO_BORDER),
-     mTrackInfo(this),
      mListener(listener),
      mTracks(tracks),
      mRuler(ruler),
@@ -217,6 +217,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #pragma warning( default: 4355 )
 #endif
 {
+   TrackInfo::ReCreateSliders( this );
+   TrackInfo::UpdatePrefs( this );
+
    SetLayoutDirection(wxLayout_LeftToRight);
    SetLabel(_("Track Panel"));
    SetName(_("Track Panel"));
@@ -312,14 +315,14 @@ void TrackPanel::UpdatePrefs()
    // frequences may have been changed.
    UpdateVRulers();
 
-   mTrackInfo.UpdatePrefs();
+   TrackInfo::UpdatePrefs( this );
 
    Refresh();
 }
 
 void TrackPanel::ApplyUpdatedTheme()
 {
-   mTrackInfo.ReCreateSliders();
+   TrackInfo::ReCreateSliders( this );
 }
 
 
@@ -1628,7 +1631,7 @@ void TrackPanel::DrawOutside
       int labelw = GetLabelWidth();
       int vrul = GetVRulerOffset();
 
-      mTrackInfo.DrawBackground( dc, rect, t->GetSelected(), vrul );
+      TrackInfo::DrawBackground( dc, rect, t->GetSelected(), vrul );
 
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
@@ -2237,24 +2240,27 @@ void TrackPanel::SetFocusedTrack( Track *t )
 /**********************************************************************
 
   TrackInfo code is destined to move out of this file.
-  Code should become a lot cleaner when we have sizers.
 
 **********************************************************************/
 
-TrackInfo::TrackInfo(TrackPanel * pParentIn)
-{
-   pParent = pParentIn;
+namespace {
 
-   ReCreateSliders();
+wxFont gFont;
 
-   UpdatePrefs();
+std::unique_ptr<LWSlider>
+   gGainCaptured
+   , gPanCaptured
+   , gGain
+   , gPan
+#ifdef EXPERIMENTAL_MIDI_OUT
+   , gVelocityCaptured
+   , gVelocity
+#endif
+;
+
 }
 
-TrackInfo::~TrackInfo()
-{
-}
-
-void TrackInfo::ReCreateSliders(){
+void TrackInfo::ReCreateSliders( wxWindow *pParent ){
    const wxPoint point{ 0, 0 };
    wxRect sliderRect;
    GetGainRect(point, sliderRect);
@@ -2307,7 +2313,7 @@ void TrackInfo::ReCreateSliders(){
 
 }
 
-int TrackInfo::GetTrackInfoWidth() const
+int TrackInfo::GetTrackInfoWidth()
 {
    return kTrackInfoWidth;
 }
@@ -2487,8 +2493,6 @@ void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
 }
 #endif
 
-wxFont TrackInfo::gFont;
-
 /// \todo Probably should move to 'Utils.cpp'.
 void TrackInfo::SetTrackInfoFont(wxDC * dc)
 {
@@ -2552,7 +2556,7 @@ void TrackInfo::DrawBordersWithin
 
 // Paint the whole given rectangle some fill color
 void TrackInfo::DrawBackground(
-   wxDC * dc, const wxRect & rect, bool bSelected, const int vrul) const
+   wxDC * dc, const wxRect & rect, bool bSelected, const int vrul)
 {
    // fill in label
    wxRect fill = rect;
@@ -2608,17 +2612,6 @@ unsigned TrackInfo::DefaultWaveTrackHeight()
    return DefaultTrackHeight( waveTrackTCPLines );
 }
 
-std::unique_ptr<LWSlider>
-   TrackInfo::gGainCaptured
-   , TrackInfo::gPanCaptured
-   , TrackInfo::gGain
-   , TrackInfo::gPan
-#ifdef EXPERIMENTAL_MIDI_OUT
-   , TrackInfo::gVelocityCaptured
-   , TrackInfo::gVelocity
-#endif
-;
-
 LWSlider * TrackInfo::GainSlider
 (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
@@ -2669,7 +2662,7 @@ LWSlider * TrackInfo::VelocitySlider
 }
 #endif
 
-void TrackInfo::UpdatePrefs()
+void TrackInfo::UpdatePrefs( wxWindow *pParent )
 {
    // Calculation of best font size depends on language, so it should be redone in case
    // the language preference changed.

@@ -64,171 +64,152 @@ enum {
 };
 
 
-class AUDACITY_DLL_API TrackInfo
+namespace TrackInfo
 {
-public:
-   TrackInfo(TrackPanel * pParentIn);
-   ~TrackInfo();
-   void ReCreateSliders();
+   void ReCreateSliders( wxWindow *pParent );
 
-   static unsigned MinimumTrackHeight();
+   unsigned MinimumTrackHeight();
 
    struct TCPLine;
 
-   static void DrawItems
+   void DrawItems
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track &track );
 
-   static void DrawItems
+   void DrawItems
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack,
         const std::vector<TCPLine> &topLines,
         const std::vector<TCPLine> &bottomLines );
 
-   static void CloseTitleDrawFunction
+   void CloseTitleDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   static void MinimizeSyncLockDrawFunction
+   void MinimizeSyncLockDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   static void MidiControlsDrawFunction
+   void MidiControlsDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
    template<typename TrackClass>
-   static void SliderDrawFunction
+   void SliderDrawFunction
       ( LWSlider *(*Selector)
            (const wxRect &sliderRect, const TrackClass *t, bool captured,
             wxWindow*),
         wxDC *dc, const wxRect &rect, const Track *pTrack,
         bool captured, bool highlight );
 
-   static void PanSliderDrawFunction
+   void PanSliderDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   static void GainSliderDrawFunction
+   void GainSliderDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   static void VelocitySliderDrawFunction
+   void VelocitySliderDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 #endif
 
-   static void MuteOrSoloDrawFunction
+   void MuteOrSoloDrawFunction
       ( wxDC *dc, const wxRect &rect, const Track *pTrack, bool down,
         bool captured, bool solo, bool hit );
 
-   static void WideMuteDrawFunction
+   void WideMuteDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   static void WideSoloDrawFunction
+   void WideSoloDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   static void MuteAndSoloDrawFunction
+   void MuteAndSoloDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   static void StatusDrawFunction
+   void StatusDrawFunction
       ( const wxString &string, wxDC *dc, const wxRect &rect );
 
-   static void Status1DrawFunction
+   void Status1DrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-   static void Status2DrawFunction
+   void Status2DrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
-public:
-   int GetTrackInfoWidth() const;
-   static void SetTrackInfoFont(wxDC *dc);
+   int GetTrackInfoWidth();
+   void SetTrackInfoFont(wxDC *dc);
 
 
    void DrawBackground(
-      wxDC * dc, const wxRect & rect, bool bSelected, const int vrul ) const;
+      wxDC * dc, const wxRect & rect, bool bSelected, const int vrul );
    // void DrawBordersWithin(
    //   wxDC * dc, const wxRect & rect, const Track &track ) const;
 
-   static void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
-   static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
+   void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
+   void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
 
-   static void GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest );
-   static void GetTitleBarRect(const wxRect & rect, wxRect &dest);
+   void GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest );
+   void GetTitleBarRect(const wxRect & rect, wxRect &dest);
 
-   static void GetNarrowMuteHorizontalBounds
+   void GetNarrowMuteHorizontalBounds
       ( const wxRect & rect, wxRect &dest );
-   static void GetNarrowSoloHorizontalBounds
+   void GetNarrowSoloHorizontalBounds
       ( const wxRect & rect, wxRect &dest );
-   static void GetWideMuteSoloHorizontalBounds
+   void GetWideMuteSoloHorizontalBounds
       ( const wxRect & rect, wxRect &dest );
-   static void GetMuteSoloRect
+   void GetMuteSoloRect
       (const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
        const Track *pTrack);
 
-   static void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
+   void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
 
-   static void GetGainRect(const wxPoint & topLeft, wxRect &dest);
+   void GetGainRect(const wxPoint & topLeft, wxRect &dest);
 
-   static void GetPanRect(const wxPoint & topLeft, wxRect &dest);
+   void GetPanRect(const wxPoint & topLeft, wxRect &dest);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   static void GetVelocityRect(const wxPoint & topLeft, wxRect &dest);
+   void GetVelocityRect(const wxPoint & topLeft, wxRect &dest);
 #endif
 
-   static void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );
-   static void GetMinimizeRect(const wxRect & rect, wxRect &dest);
+   void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );
+   void GetMinimizeRect(const wxRect & rect, wxRect &dest);
 
-   static void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );
-   static void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);
+   void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );
+   void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);
 
 #ifdef USE_MIDI
-   static void GetMidiControlsHorizontalBounds
+   void GetMidiControlsHorizontalBounds
       ( const wxRect &rect, wxRect &dest );
-   static void GetMidiControlsRect(const wxRect & rect, wxRect &dest);
+   void GetMidiControlsRect(const wxRect & rect, wxRect &dest);
 #endif
 
-   static bool HideTopItem( const wxRect &rect, const wxRect &subRect,
+   bool HideTopItem( const wxRect &rect, const wxRect &subRect,
                                int allowance = 0 );
 
-   static unsigned DefaultNoteTrackHeight();
-   static unsigned DefaultWaveTrackHeight();
+   unsigned DefaultNoteTrackHeight();
+   unsigned DefaultWaveTrackHeight();
 
-   static LWSlider * GainSlider
+   LWSlider * GainSlider
       (const wxRect &sliderRect, const WaveTrack *t, bool captured,
        wxWindow *pParent);
-   static LWSlider * PanSlider
+   LWSlider * PanSlider
       (const wxRect &sliderRect, const WaveTrack *t, bool captured,
        wxWindow *pParent);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   static LWSlider * VelocitySlider
+   LWSlider * VelocitySlider
       (const wxRect &sliderRect, const NoteTrack *t, bool captured,
        wxWindow *pParent);
 #endif
 
-private:
-   void UpdatePrefs();
-
-   TrackPanel * pParent;
-   static wxFont gFont;
-   // These are on separate lines to work around an MSVC 2013 compiler bug.
-   static std::unique_ptr<LWSlider> gGainCaptured;
-   static std::unique_ptr<LWSlider> gPanCaptured;
-   static std::unique_ptr<LWSlider> gGain;
-   static std::unique_ptr<LWSlider> gPan;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   static std::unique_ptr<LWSlider> gVelocityCaptured;
-   static std::unique_ptr<LWSlider> gVelocity;
-#endif
-
-   friend class TrackPanel;
+   void UpdatePrefs( wxWindow *pParent );
 };
 
 
@@ -341,10 +322,11 @@ protected:
    std::shared_ptr<TrackPanelNode> Root() override;
 
    int GetVRulerWidth() const;
-   int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
+   int GetVRulerOffset() const { return TrackInfo::GetTrackInfoWidth(); }
 
 public:
-   int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); }
+   int GetLabelWidth() const
+      { return TrackInfo::GetTrackInfoWidth() + GetVRulerWidth(); }
 
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
@@ -397,10 +379,6 @@ public:
    // Accessors...
    static bool HasSoloButton(){  return gSoloPref!=wxT("None");}
 
-protected:
-
-   TrackInfo mTrackInfo;
-
 public:
 
    LWSlider *GainSlider( const WaveTrack *wt );
@@ -408,9 +386,6 @@ public:
 #ifdef EXPERIMENTAL_MIDI_OUT
    LWSlider *VelocitySlider( const NoteTrack *nt );
 #endif
-
-   TrackInfo *GetTrackInfo() { return &mTrackInfo; }
-   const TrackInfo *GetTrackInfo() const { return &mTrackInfo; }
 
 protected:
    TrackPanelListener *mListener;
