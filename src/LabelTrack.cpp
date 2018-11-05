@@ -796,7 +796,7 @@ void LabelTrack::Draw
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   TrackArtist::DrawBackgroundWithSelection( context, r, this,
+   TrackArt::DrawBackgroundWithSelection( context, r, this,
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
       ( GetSelected() || IsSyncLockSelected() ) );
 

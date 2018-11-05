@@ -153,7 +153,7 @@ const int notePos[12] = { 1, 6, 11, 16, 21, 27,
 // IPITCH_TO_Y above, which computes coordinates relative to GetBottom()
 // Note the -NOTE_MARGIN, which leaves a little margin to draw notes that
 // are out of bounds. I'm not sure why the -2 is necessary.
-int TrackArtist::GetBottom(NoteTrack *t, const wxRect &rect)
+int TrackArt::GetBottom(NoteTrack *t, const wxRect &rect)
 {
    int bottomNote = t->GetBottomNote();
    int bottom = rect.y + rect.height - 2 - t->GetNoteMargin() +
@@ -233,17 +233,18 @@ void TrackArtist::SetColours( int iColorIndex)
    }
 }
 
-void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
+void TrackArt::DrawTracks(TrackPanelDrawingContext &context,
                              const TrackList * tracks,
                              const wxRegion & reg,
                              const wxRect & clip)
 {
    // Fix the horizontal extent; will later change only the vertical extent.
+   const auto artist = TrackArtist::Get( context );
+   const auto leftOffset = artist->leftOffset;
    wxRect teamRect{
       clip.x + leftOffset, 0, clip.width - (leftOffset + kRightMargin), 0
    };
 
-   const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
    for(auto leader : tracks->Leaders()) {
@@ -284,7 +285,7 @@ void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
    }
 }
 
-void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
+void TrackArt::DrawTrack(TrackPanelDrawingContext &context,
                             const Track * t,
                             const wxRect & rect)
 {
@@ -296,6 +297,8 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
             clip->ClearDisplayRect();
          }
 
+         const auto artist = TrackArtist::Get( context );
+         const auto hasSolo = artist->hasSolo;
          bool muted = (hasSolo || wt->GetMute()) &&
             !wt->GetSolo();
 
@@ -319,7 +322,9 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
          dc.GetGraphicsContext()->SetAntialiasMode(aamode);
    #endif
 
-         if (mbShowTrackNameInWaveform &&
+         const auto bShowTrackNameInWaveform =
+            artist->mbShowTrackNameInWaveform;
+         if (bShowTrackNameInWaveform &&
              wt->IsLeader() &&
              // Exclude empty name.
              !wt->GetName().IsEmpty()) {
@@ -339,6 +344,8 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
       [&](const NoteTrack *nt) {
          bool muted = false;
 #ifdef EXPERIMENTAL_MIDI_OUT
+         const auto artist = TrackArtist::Get( context );
+         const auto hasSolo = artist->hasSolo;
          muted = (hasSolo || nt->GetMute()) && !nt->GetSolo();
 #endif
          DrawNoteTrack( context, nt, rect, muted );
@@ -353,7 +360,7 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
    );
 }
 
-void TrackArtist::DrawVRuler
+void TrackArt::DrawVRuler
 ( TrackPanelDrawingContext &context, const Track *t, const wxRect & rect_,
   bool bSelected )
 {
@@ -403,8 +410,10 @@ void TrackArtist::DrawVRuler
             rr.width -= adj;
          }
 
-         UpdateVRuler(t, rr);
+         const auto artist = TrackArtist::Get( context );
+         artist->UpdateVRuler(t, rr);
 
+         const auto &vruler = artist->vruler;
          vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
          vruler->Draw(*dc);
       },
@@ -426,8 +435,10 @@ void TrackArtist::DrawVRuler
             rr.width -= adj;
          }
 
-         UpdateVRuler(t, rr);
+         const auto artist = TrackArtist::Get( context );
+         artist->UpdateVRuler(t, rr);
 
+         const auto &vruler = artist->vruler;
          vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
          vruler->Draw(*dc);
       }
@@ -436,7 +447,8 @@ void TrackArtist::DrawVRuler
       ,
       [&](const NoteTrack *track) {
       // The note track draws a vertical keyboard to label pitches
-         UpdateVRuler(t, rect);
+         const auto artist = TrackArtist::Get( context );
+         artist->UpdateVRuler(t, rect);
 
          dc->SetPen(highlight ? AColor::uglyPen : *wxTRANSPARENT_PEN);
          dc->SetBrush(*wxWHITE_BRUSH);
@@ -884,7 +896,7 @@ float ValueOfPixel(int yy, int height, bool offset,
    return v;
 }
 
-void TrackArtist::DrawNegativeOffsetTrackArrows(
+void TrackArt::DrawNegativeOffsetTrackArrows(
    TrackPanelDrawingContext &context, const wxRect &rect )
 {
    auto &dc = context.dc;
@@ -914,7 +926,7 @@ void TrackArtist::DrawNegativeOffsetTrackArrows(
                 rect.x + 6, rect.y + rect.height - 12);
 }
 
-void TrackArtist::DrawWaveformBackground(TrackPanelDrawingContext &context,
+void TrackArt::DrawWaveformBackground(TrackPanelDrawingContext &context,
                                          int leftOffset, const wxRect &rect,
                                          const double env[],
                                          float zoomMin, float zoomMax,
@@ -947,6 +959,10 @@ void TrackArtist::DrawWaveformBackground(TrackPanelDrawingContext &context,
    int xx, lx = 0;
    int l, w;
 
+   const auto &blankBrush = artist->blankBrush;
+   const auto &selectedBrush = artist->selectedBrush;
+   const auto &unselectedBrush = artist->unselectedBrush;
+
    dc.SetPen(*wxTRANSPARENT_PEN);
    dc.SetBrush(blankBrush);
    dc.DrawRectangle(rect);
@@ -972,6 +988,7 @@ void TrackArtist::DrawWaveformBackground(TrackPanelDrawingContext &context,
       mintop +=1;
       minbot +=1;
 
+      const auto drawEnvelope = artist->drawEnvelope;
       if (!drawEnvelope || maxbot > mintop) {
          maxbot = halfHeight;
          mintop = halfHeight;
@@ -1047,7 +1064,7 @@ void TrackArtist::DrawWaveformBackground(TrackPanelDrawingContext &context,
 }
 
 
-void TrackArtist::DrawMinMaxRMS(
+void TrackArt::DrawMinMaxRMS(
    TrackPanelDrawingContext &context, const wxRect & rect, const double env[],
    float zoomMin, float zoomMax,
    bool dB, float dBRange,
@@ -1067,7 +1084,9 @@ void TrackArtist::DrawMinMaxRMS(
    ArrayOf<int> clipped;
    int clipcnt = 0;
 
-   if (mShowClipping) {
+   const auto artist = TrackArtist::Get( context );
+   const auto bShowClipping = artist->mShowClipping;
+   if (bShowClipping) {
       clipped.reinit( size_t(rect.width) );
    }
 
@@ -1077,12 +1096,15 @@ void TrackArtist::DrawMinMaxRMS(
    bool drawStripes = true;
    bool drawWaveform = true;
 
+   const auto &muteSamplePen = artist->muteSamplePen;
+   const auto &samplePen = artist->samplePen;
+
    dc.SetPen(muted ? muteSamplePen : samplePen);
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int xx = rect.x + x0;
       double v;
       v = min[x0] * env[x0];
-      if (clipped && mShowClipping && (v <= -MAX_AUDIO))
+      if (clipped && bShowClipping && (v <= -MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
             clipped[clipcnt++] = xx;
@@ -1092,7 +1114,7 @@ void TrackArtist::DrawMinMaxRMS(
                        rect.height, dB, true, dBRange, true);
 
       v = max[x0] * env[x0];
-      if (clipped && mShowClipping && (v >= MAX_AUDIO))
+      if (clipped && bShowClipping && (v >= MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
             clipped[clipcnt++] = xx;
@@ -1165,6 +1187,9 @@ void TrackArtist::DrawMinMaxRMS(
    }
 
    // Stroke rms over the min-max
+   const auto &muteRmsPen = artist->muteRmsPen;
+   const auto &rmsPen = artist->rmsPen;
+
    dc.SetPen(muted ? muteRmsPen : rmsPen);
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int xx = rect.x + x0;
@@ -1177,6 +1202,9 @@ void TrackArtist::DrawMinMaxRMS(
 
    // Draw the clipping lines
    if (clipcnt) {
+      const auto &muteClippedPen = artist->muteClippedPen;
+      const auto &clippedPen = artist->clippedPen;
+
       dc.SetPen(muted ? muteClippedPen : clippedPen);
       while (--clipcnt >= 0) {
          int xx = clipped[clipcnt];
@@ -1185,7 +1213,7 @@ void TrackArtist::DrawMinMaxRMS(
    }
 }
 
-void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
+void TrackArt::DrawIndividualSamples(TrackPanelDrawingContext &context,
                                         int leftOffset, const wxRect &rect,
                                         float zoomMin, float zoomMax,
                                         bool dB, float dBRange,
@@ -1225,9 +1253,12 @@ void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
    ArrayOf<int> clipped;
    int clipcnt = 0;
 
-   if (mShowClipping)
+   const auto bShowClipping = artist->mShowClipping;
+   if (bShowClipping)
       clipped.reinit( size_t(slen) );
 
+   const auto &muteSamplePen = artist->muteSamplePen;
+   const auto &samplePen = artist->samplePen;
    auto &pen = highlight ? AColor::uglyPen : muted ? muteSamplePen : samplePen;
    dc.SetPen( pen );
 
@@ -1243,7 +1274,7 @@ void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
          clip->GetEnvelope()->GetValue( time, 1.0 / clip->GetRate() );
       const double tt = buffer[s] * value;
 
-      if (clipped && mShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
+      if (clipped && bShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
          clipped[clipcnt++] = xx;
       ypos[s] =
          std::max(-1,
@@ -1255,11 +1286,14 @@ void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
 
    if (showPoints) {
       // Draw points where spacing is enough
+      const auto bigPoints = artist->bigPoints;
       const int tickSize = bigPoints ? 4 : 3;// Bigger ellipses when draggable.
       wxRect pr;
       pr.width = tickSize;
       pr.height = tickSize;
       //different colour when draggable.
+      const auto &dragsampleBrush = artist->dragsampleBrush;
+      const auto &sampleBrush = artist->sampleBrush;
       auto &brush = highlight
          ? AColor::uglyBrush
          : bigPoints ? dragsampleBrush : sampleBrush;
@@ -1273,7 +1307,8 @@ void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
       }
    }
 
-   if (showPoints && (mSampleDisplay == (int) WaveTrack::StemPlot)) {
+   const auto sampleDisplay = artist->mSampleDisplay;
+   if (showPoints && (sampleDisplay == (int) WaveTrack::StemPlot)) {
       // Draw vertical lines
       int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height, dB, true, dBRange, false);
       yZero = rect.y + std::max(-1, std::min(rect.height, yZero));
@@ -1294,6 +1329,8 @@ void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
 
    // Draw clipping
    if (clipcnt) {
+      const auto &muteClippedPen = artist->muteClippedPen;
+      const auto &clippedPen = artist->clippedPen;
       dc.SetPen(muted ? muteClippedPen : clippedPen);
       while (--clipcnt >= 0) {
          auto s = clipped[clipcnt];
@@ -1302,7 +1339,7 @@ void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
    }
 }
 
-void TrackArtist::DrawEnvelope(TrackPanelDrawingContext &context,
+void TrackArt::DrawEnvelope(TrackPanelDrawingContext &context,
                                const wxRect &rect, const double env[],
                                float zoomMin, float zoomMax,
                                bool dB, float dBRange, bool highlight)
@@ -1339,7 +1376,7 @@ void TrackArtist::DrawEnvelope(TrackPanelDrawingContext &context,
    }
 }
 
-void TrackArtist::DrawEnvLine(
+void TrackArt::DrawEnvLine(
    TrackPanelDrawingContext &context,
    const wxRect &rect, int x0, int y0, int cy, bool top )
 {
@@ -1370,7 +1407,7 @@ void TrackArtist::DrawEnvLine(
 
 #include "tracks/ui/TimeShiftHandle.h"
 #include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
-void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
+void TrackArt::DrawWaveform(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
                                bool muted)
@@ -1388,6 +1425,8 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
 
    const bool dB = !track->GetWaveformSettings().isLinear();
 
+   const auto &blankSelectedBrush = artist->blankSelectedBrush;
+   const auto &blankBrush = artist->blankBrush;
    DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
@@ -1431,6 +1470,7 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
       }
    }
 
+   const auto drawSliders = artist->drawSliders;
    if (drawSliders) {
       DrawTimeSlider( context, rect, true, highlight && gripHit );  // directed right
       DrawTimeSlider( context, rect, false, highlight && gripHit ); // directed left
@@ -1654,7 +1694,7 @@ void FindWavePortions
 
 #include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
 #include "tracks/ui/EnvelopeHandle.h"
-void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
+void TrackArt::DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
                                    const WaveClip *clip,
                                    const wxRect & rect,
@@ -1700,7 +1740,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
 
    dc.SetPen(*wxTRANSPARENT_PEN);
    int iColorIndex = clip->GetColourIndex();
-   SetColours( iColorIndex );
+   artist->SetColours( iColorIndex );
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.
@@ -1884,6 +1924,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
       leftOffset += rectPortion.width + skippedRight;
    }
 
+   const auto drawEnvelope = artist->drawEnvelope;
    if (drawEnvelope) {
       DrawEnvelope(
          context, mid, env, zoomMin, zoomMax, dB, dBRange, highlightEnvelope );
@@ -1912,7 +1953,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
 }
 
 
-void TrackArtist::DrawTimeSlider( TrackPanelDrawingContext &context,
+void TrackArt::DrawTimeSlider( TrackPanelDrawingContext &context,
                                   const wxRect & rect,
                                   bool rightwards, bool highlight )
 {
@@ -1970,10 +2011,13 @@ void TrackArtist::DrawTimeSlider( TrackPanelDrawingContext &context,
    }
 }
 
-void TrackArtist::DrawSpectrum( TrackPanelDrawingContext &context,
+void TrackArt::DrawSpectrum( TrackPanelDrawingContext &context,
                                 const WaveTrack *track,
                                 const wxRect & rect )
 {
+   const auto artist = TrackArtist::Get( context );
+   const auto &blankSelectedBrush = artist->blankSelectedBrush;
+   const auto &blankBrush = artist->blankBrush;
    DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
@@ -2063,7 +2107,7 @@ AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBin
 }
 
 
-void TrackArtist::DrawClipSpectrum(TrackPanelDrawingContext &context,
+void TrackArt::DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    WaveTrackCache &waveTrackCache,
                                    const WaveClip *clip,
                                    const wxRect & rect)
@@ -2685,7 +2729,7 @@ int PitchToY(double p, int bottom)
    sel is equal to rect, and the entire region is drawn with unselected
    background colors.
  */
-void TrackArtist::DrawNoteBackground(TrackPanelDrawingContext &context,
+void TrackArt::DrawNoteBackground(TrackPanelDrawingContext &context,
                                      const NoteTrack *track,
                                      const wxRect &rect, const wxRect &sel,
                                      const wxBrush &wb, const wxPen &wp,
@@ -2785,7 +2829,7 @@ graphics. Since there may be notes outside of the display region,
 reserve a half-note-height margin at the top and bottom of the
 window and draw out-of-bounds notes here instead.
 */
-void TrackArtist::DrawNoteTrack(TrackPanelDrawingContext &context,
+void TrackArt::DrawNoteTrack(TrackPanelDrawingContext &context,
                                 const NoteTrack *track,
                                 const wxRect & rect,
                                 bool muted)
@@ -2836,6 +2880,8 @@ void TrackArtist::DrawNoteTrack(TrackPanelDrawingContext &context,
    wxPen barLinePen;
    barLinePen.SetColour(theTheme.Colour( clrMidiLines));
 
+   const auto &blankBrush = artist->blankBrush;
+   const auto &blankPen = artist->blankPen;
    DrawNoteBackground(context, track, rect, rect, blankBrush, blankPen,
                       blackStripeBrush, blackStripePen, barLinePen);
 
@@ -3148,7 +3194,7 @@ void TrackArtist::DrawNoteTrack(TrackPanelDrawingContext &context,
 #endif // USE_MIDI
 
 
-void TrackArtist::DrawTimeTrack(TrackPanelDrawingContext &context,
+void TrackArt::DrawTimeTrack(TrackPanelDrawingContext &context,
                                 const TimeTrack *track,
                                 const wxRect & rect)
 {
@@ -3156,14 +3202,16 @@ void TrackArtist::DrawTimeTrack(TrackPanelDrawingContext &context,
    wxRect envRect = rect;
    envRect.height -= 2;
    double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
+   const auto artist = TrackArtist::Get( context );
+   const auto dbRange = artist->mdBrange;
    if(track->GetDisplayLog()) {
       // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / mdBrange + 1.0;
-      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / mdBrange + 1.0;
+      lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dbRange + 1.0;
+      upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dbRange + 1.0;
    }
    track->GetEnvelope()->DrawPoints
       ( context, envRect,
-        track->GetDisplayLog(), mdBrange, lower, upper, false );
+        track->GetDisplayLog(), dbRange, lower, upper, false );
 }
 
 void TrackArtist::UpdatePrefs()
@@ -3191,7 +3239,7 @@ void TrackArtist::UpdatePrefs()
 // 5x5 box.
 //
 // There may be a better way to do this, or a more appealing pattern.
-void TrackArtist::DrawSyncLockTiles(
+void TrackArt::DrawSyncLockTiles(
    TrackPanelDrawingContext &context, const wxRect &rect )
 {
    const auto dc = &context.dc;
@@ -3301,7 +3349,7 @@ void TrackArtist::DrawSyncLockTiles(
    }
 }
 
-void TrackArtist::DrawBackgroundWithSelection(
+void TrackArt::DrawBackgroundWithSelection(
    TrackPanelDrawingContext &context, const wxRect &rect,
    const Track *track, const wxBrush &selBrush, const wxBrush &unselBrush,
    bool useSelection)

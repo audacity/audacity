@@ -46,14 +46,7 @@ struct TrackPanelDrawingContext;
 typedef unsigned char uchar;
 #endif
 
-class AUDACITY_DLL_API TrackArtist {
-
- public:
-   TrackArtist();
-   ~TrackArtist();
-   static TrackArtist *Get( TrackPanelDrawingContext & );
-
-   void SetColours(int iColorIndex);
+namespace TrackArt {
    void DrawTracks(TrackPanelDrawingContext &context,
                    const TrackList *tracks,
                    const wxRegion & reg,
@@ -66,29 +59,15 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawVRuler(TrackPanelDrawingContext &context,
                    const Track *t, const wxRect & rect, bool bSelected );
 
-   void UpdateVRuler(const Track *t, const wxRect & rect);
-
-   void UpdatePrefs();
-
-   void SetBackgroundBrushes(wxBrush unselectedBrushIn, wxBrush selectedBrushIn,
-                             wxPen unselectedPenIn, wxPen selectedPenIn) {
-     this->unselectedBrush = unselectedBrushIn;
-     this->selectedBrush = selectedBrushIn;
-     this->unselectedPen = unselectedPenIn;
-     this->selectedPen = selectedPenIn;
-   }
-
    // Helper: draws the "sync-locked" watermark tiled to a rectangle
-   static void DrawSyncLockTiles(
+   void DrawSyncLockTiles(
       TrackPanelDrawingContext &context, const wxRect &rect );
 
    // Helper: draws background with selection rect
-   static void DrawBackgroundWithSelection(TrackPanelDrawingContext &contex,
+   void DrawBackgroundWithSelection(TrackPanelDrawingContext &contex,
          const wxRect &rect, const Track *track,
          const wxBrush &selBrush, const wxBrush &unselBrush,
          bool useSelection = true);
-
- private:
 
    //
    // Lower-level drawing functions
@@ -167,6 +146,28 @@ class AUDACITY_DLL_API TrackArtist {
                      bool dB, float dBRange, bool highlight);
    void DrawEnvLine(TrackPanelDrawingContext &context,
                     const wxRect & rect, int x0, int y0, int cy, bool top);
+}
+
+class AUDACITY_DLL_API TrackArtist {
+
+public:
+   TrackArtist();
+   ~TrackArtist();
+   static TrackArtist *Get( TrackPanelDrawingContext & );
+
+   void SetBackgroundBrushes(wxBrush unselectedBrushIn, wxBrush selectedBrushIn,
+                             wxPen unselectedPenIn, wxPen selectedPenIn) {
+     this->unselectedBrush = unselectedBrushIn;
+     this->selectedBrush = selectedBrushIn;
+     this->unselectedPen = unselectedPenIn;
+     this->selectedPen = selectedPenIn;
+   }
+
+   void SetColours(int iColorIndex);
+
+   void UpdatePrefs();
+
+   void UpdateVRuler(const Track *t, const wxRect & rect);
 
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
@@ -210,7 +211,6 @@ class AUDACITY_DLL_API TrackArtist {
    bool findNotesQuantizeOld;
 #endif
 
-public:
    SelectedRegion *pSelectedRegion{};
    ZoomInfo *pZoomInfo{};
 

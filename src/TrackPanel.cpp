@@ -1080,7 +1080,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    mTrackArtist->bigPoints = bigPointsFlag;
    mTrackArtist->drawSliders = sliderFlag;
    mTrackArtist->hasSolo = hasSolo;
-   mTrackArtist->DrawTracks( context, GetTracks(), region, clip );
+   TrackArt::DrawTracks( context, GetTracks(), region, clip );
 
    // Draw the rest, including the click-to-deselect blank area below all
    // tracks
@@ -1154,7 +1154,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
                GetVRulerWidth() + 1,
                trackRect.height - kSeparatorThickness
             };
-            mTrackArtist->DrawVRuler(context, channel, rect, bSelected);
+            TrackArt::DrawVRuler(context, channel, rect, bSelected);
          }
       }
    }
@@ -1650,7 +1650,7 @@ void TrackPanel::DrawOutside
       //   wxRect tileFill = rect;
       //   tileFill.x = GetVRulerOffset();
       //   tileFill.width = GetVRulerWidth();
-      //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
+      //   TrackArt::DrawSyncLockTiles(dc, tileFill);
       //}
 
       DrawBordersAroundTrack( dc, rect );

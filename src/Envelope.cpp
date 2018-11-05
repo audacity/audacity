@@ -360,7 +360,7 @@ void Envelope::DrawPoints
                true, dBRange, false);
 
             // This follows the same logic as the envelop drawing in
-            // TrackArtist::DrawEnvelope().
+            // TrackArt::DrawEnvelope().
             // TODO: make this calculation into a reusable function.
             if (y2 - y < 9) {
                int value = (int)((zoomMax / (zoomMax - zoomMin)) * r.height);
