@@ -66,8 +66,7 @@ class TimeTrack final : public Track {
    double GetEndTime() const override { return 0.0; }
 
    void Draw
-      (TrackPanelDrawingContext &context,
-       const wxRect & r, const ZoomInfo &zoomInfo) const;
+      ( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
    // XMLTagHandler callback methods for loading and saving
 

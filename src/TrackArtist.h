@@ -24,7 +24,6 @@
 #include "Experimental.h"
 #include "audacity/Types.h"
 
-class wxDC;
 class wxRect;
 class wxHashTable;
 
@@ -47,33 +46,114 @@ struct TrackPanelDrawingContext;
 typedef unsigned char uchar;
 #endif
 
-class AUDACITY_DLL_API TrackArtist {
-
- public:
-   TrackArtist();
-   ~TrackArtist();
-
-   void SetColours(int iColorIndex);
+namespace TrackArt {
    void DrawTracks(TrackPanelDrawingContext &context,
                    const TrackList *tracks,
                    const wxRegion & reg,
-                   const wxRect &clip, int leftOffset,
-                   const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
-                   bool drawEnvelope, bool bigPoints, bool drawSliders);
+                   const wxRect &clip);
 
    void DrawTrack(TrackPanelDrawingContext &context,
                   const Track *t,
-                  const wxRect & rect,
-                  const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
-                  bool drawEnvelope, bool bigPoints, bool drawSliders,
-                  bool hasSolo);
+                  const wxRect & rect);
 
    void DrawVRuler(TrackPanelDrawingContext &context,
                    const Track *t, const wxRect & rect, bool bSelected );
 
-   void UpdateVRuler(const Track *t, const wxRect & rect);
+   // Helper: draws the "sync-locked" watermark tiled to a rectangle
+   void DrawSyncLockTiles(
+      TrackPanelDrawingContext &context, const wxRect &rect );
 
-   void UpdatePrefs();
+   // Helper: draws background with selection rect
+   void DrawBackgroundWithSelection(TrackPanelDrawingContext &contex,
+         const wxRect &rect, const Track *track,
+         const wxBrush &selBrush, const wxBrush &unselBrush,
+         bool useSelection = true);
+
+   //
+   // Lower-level drawing functions
+   //
+
+   void DrawWaveform(TrackPanelDrawingContext &context,
+                     const WaveTrack *track,
+                     const wxRect & rect,
+                     bool muted);
+
+   void DrawSpectrum(TrackPanelDrawingContext &context,
+                     const WaveTrack *track,
+                     const wxRect & rect);
+#ifdef USE_MIDI
+   int GetBottom(NoteTrack *t, const wxRect &rect);
+   void DrawNoteBackground(TrackPanelDrawingContext &context,
+                           const NoteTrack *track,
+                           const wxRect &rect, const wxRect &sel,
+                           const wxBrush &wb, const wxPen &wp,
+                           const wxBrush &bb, const wxPen &bp,
+                           const wxPen &mp);
+   void DrawNoteTrack(TrackPanelDrawingContext &context,
+                      const NoteTrack *track,
+                      const wxRect & rect,
+                      bool muted);
+#endif // USE_MIDI
+
+   void DrawTimeTrack(TrackPanelDrawingContext &context,
+                      const TimeTrack *track,
+                      const wxRect & rect);
+
+   void DrawTimeSlider(TrackPanelDrawingContext &context,
+                       const wxRect & rect,
+                       bool rightwards, bool highlight);
+
+   void DrawClipWaveform(TrackPanelDrawingContext &context,
+                         const WaveTrack *track, const WaveClip *clip,
+                         const wxRect & rect,
+                         bool dB, bool muted);
+
+   void DrawClipSpectrum(TrackPanelDrawingContext &context,
+                         WaveTrackCache &cache, const WaveClip *clip,
+                         const wxRect & rect);
+
+   // Waveform utility functions
+
+   void DrawWaveformBackground(TrackPanelDrawingContext &context,
+                               int leftOffset, const wxRect &rect,
+                               const double env[],
+                               float zoomMin, float zoomMax,
+                               int zeroLevelYCoordinate,
+                               bool dB, float dBRange,
+                               double t0, double t1,
+                               bool bIsSyncLockSelected,
+                               bool highlightEnvelope);
+   void DrawMinMaxRMS(TrackPanelDrawingContext &context,
+                      const wxRect & rect, const double env[],
+                      float zoomMin, float zoomMax,
+                      bool dB, float dBRange,
+                      const float *min, const float *max, const float *rms, const int *bl,
+                      bool /* showProgress */, bool muted);
+   void DrawIndividualSamples(TrackPanelDrawingContext &context,
+                              int leftOffset, const wxRect & rect,
+                              float zoomMin, float zoomMax,
+                              bool dB, float dBRange,
+                              const WaveClip *clip,
+                              bool showPoints, bool muted,
+                              bool highlight);
+
+   void DrawNegativeOffsetTrackArrows( TrackPanelDrawingContext &context,
+                                       const wxRect & rect );
+
+   void DrawEnvelope(TrackPanelDrawingContext &context,
+                     const wxRect & rect, const double env[],
+                     float zoomMin, float zoomMax,
+                     bool dB, float dBRange, bool highlight);
+   void DrawEnvLine(TrackPanelDrawingContext &context,
+                    const wxRect & rect, int x0, int y0, int cy, bool top);
+}
+
+class AUDACITY_DLL_API TrackArtist {
+
+public:
+   TrackArtist();
+   ~TrackArtist();
+   static TrackArtist *Get( TrackPanelDrawingContext & );
 
    void SetBackgroundBrushes(wxBrush unselectedBrushIn, wxBrush selectedBrushIn,
                              wxPen unselectedPenIn, wxPen selectedPenIn) {
@@ -83,96 +163,11 @@ class AUDACITY_DLL_API TrackArtist {
      this->selectedPen = selectedPenIn;
    }
 
-   // Helper: draws the "sync-locked" watermark tiled to a rectangle
-   static void DrawSyncLockTiles(wxDC *dc, const wxRect &rect);
+   void SetColours(int iColorIndex);
 
-   // Helper: draws background with selection rect
-   static void DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
-         const Track *track, const wxBrush &selBrush, const wxBrush &unselBrush,
-         const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
+   void UpdatePrefs();
 
- private:
-
-   //
-   // Lower-level drawing functions
-   //
-
-   void DrawWaveform(TrackPanelDrawingContext &context,
-                     const WaveTrack *track,
-                     const wxRect & rect,
-                     const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
-                     bool drawEnvelope, bool bigPoints, bool drawSliders,
-                     bool muted);
-
-   void DrawSpectrum(const WaveTrack *track,
-                     wxDC & dc, const wxRect & rect,
-                     const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
-#ifdef USE_MIDI
-   int GetBottom(NoteTrack *t, const wxRect &rect);
-   void DrawNoteBackground(const NoteTrack *track, wxDC &dc,
-                           const wxRect &rect, const wxRect &sel,
-                           const ZoomInfo &zoomInfo,
-                           const wxBrush &wb, const wxPen &wp,
-                           const wxBrush &bb, const wxPen &bp,
-                           const wxPen &mp);
-   void DrawNoteTrack(const NoteTrack *track,
-                      wxDC & dc, const wxRect & rect,
-                      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
-                      bool muted);
-#endif // USE_MIDI
-
-   void DrawLabelTrack(TrackPanelDrawingContext &context,
-                       const LabelTrack *track,
-                       const wxRect & rect,
-                       const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
-
-   void DrawTimeTrack(TrackPanelDrawingContext &context,
-                      const TimeTrack *track,
-                      const wxRect & rect, const ZoomInfo &zoomInfo);
-
-   void DrawTimeSlider(wxDC & dc, const wxRect & rect,
-                       bool rightwards, bool highlight);
-
-   void DrawClipWaveform(TrackPanelDrawingContext &context,
-                         const WaveTrack *track, const WaveClip *clip,
-                         const wxRect & rect,
-                         const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
-                         bool drawEnvelope, bool bigPoints,
-                         bool dB, bool muted);
-
-   void DrawClipSpectrum(WaveTrackCache &cache, const WaveClip *clip,
-                         wxDC & dc, const wxRect & rect,
-                         const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
-
-   // Waveform utility functions
-
-   void DrawWaveformBackground(wxDC & dc, int leftOffset, const wxRect &rect,
-                               const double env[],
-                               float zoomMin, float zoomMax,
-                               int zeroLevelYCoordinate,
-                               bool dB, float dBRange,
-                               double t0, double t1, const ZoomInfo &zoomInfo,
-                               bool drawEnvelope, bool bIsSyncLockSelected,
-                               bool highlightEnvelope);
-   void DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[],
-                      float zoomMin, float zoomMax,
-                      bool dB, float dBRange,
-                      const float *min, const float *max, const float *rms, const int *bl,
-                      bool /* showProgress */, bool muted);
-   void DrawIndividualSamples(wxDC & dc, int leftOffset, const wxRect & rect,
-                              float zoomMin, float zoomMax,
-                              bool dB, float dBRange,
-                              const WaveClip *clip,
-                              const ZoomInfo &zoomInfo,
-                              bool bigPoints, bool showPoints, bool muted,
-                              bool highlight);
-
-   void DrawNegativeOffsetTrackArrows(wxDC & dc, const wxRect & rect);
-
-   void DrawEnvelope(wxDC & dc, const wxRect & rect, const double env[],
-                     float zoomMin, float zoomMax,
-                     bool dB, float dBRange, bool highlight);
-   void DrawEnvLine(wxDC & dc, const wxRect & rect, int x0, int y0, int cy, bool top);
+   void UpdateVRuler(const Track *t, const wxRect & rect);
 
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
@@ -215,6 +210,15 @@ class AUDACITY_DLL_API TrackArtist {
    int findNotesNOld;
    bool findNotesQuantizeOld;
 #endif
+
+   SelectedRegion *pSelectedRegion{};
+   ZoomInfo *pZoomInfo{};
+
+   int leftOffset{ 0 };
+   bool drawEnvelope{ false };
+   bool bigPoints{ false };
+   bool drawSliders{ false };
+   bool hasSolo{ false };
 };
 
 extern int GetWaveYPos(float value, float min, float max,

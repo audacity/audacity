@@ -24,6 +24,7 @@
 #include "Envelope.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "TrackArtist.h"
 #include "Internat.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
@@ -265,9 +266,12 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
 #include "tracks/ui/EnvelopeHandle.h"
 
 void TimeTrack::Draw
-(TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo) const
+( TrackPanelDrawingContext &context, const wxRect & r ) const
 {
    auto &dc = context.dc;
+   const auto artist = TrackArtist::Get( context );
+   const auto &zoomInfo = *artist->pZoomInfo;
+
    bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());

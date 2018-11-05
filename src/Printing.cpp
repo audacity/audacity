@@ -88,7 +88,10 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    artist.SetBackgroundBrushes(*wxWHITE_BRUSH, *wxWHITE_BRUSH,
                                *wxWHITE_PEN, *wxWHITE_PEN);
    const double screenDuration = mTracks->GetEndTime();
+   SelectedRegion region{};
+   artist.pSelectedRegion = &region;
    ZoomInfo zoomInfo(0.0, width / screenDuration);
+   artist.pZoomInfo = &zoomInfo;
    int y = rulerPageHeight;
 
    for (auto n : mTracks->Any()) {
@@ -98,9 +101,10 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       r.width = width;
       r.height = (int)(n->GetHeight() * scale);
 
-      TrackPanelDrawingContext context{ *dc, {}, {} };
-      artist.DrawTrack(
-         context, n, r, SelectedRegion(), zoomInfo, false, false, false, false);
+      TrackPanelDrawingContext context{
+         *dc, {}, {}, &artist
+      };
+      TrackArt::DrawTrack( context, n, r );
 
       dc->SetPen(*wxBLACK_PEN);
       AColor::Line(*dc, 0, r.y, width, r.y);

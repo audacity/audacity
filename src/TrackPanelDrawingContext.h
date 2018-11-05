@@ -24,6 +24,8 @@ struct TrackPanelDrawingContext {
    UIHandlePtr target;
    wxMouseState lastState;
 
+   void *pUserData;
+
    // This redundancy fixes an MSVC compiler warning:
    TrackPanelDrawingContext() = delete;
 };
