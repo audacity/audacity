@@ -532,7 +532,7 @@ void OnPrint(const CommandContext &context)
    auto &project = context.project;
    auto name = project.GetName();
    auto tracks = project.GetTracks();
-   HandlePrint(&project, name, tracks);
+   HandlePrint(&project, name, tracks, *project.GetTrackPanel());
 }
 
 void OnExit(const CommandContext &WXUNUSED(context) )

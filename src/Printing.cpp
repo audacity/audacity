@@ -46,9 +46,10 @@ class AudacityPrintout final : public wxPrintout
 {
  public:
    AudacityPrintout(wxString title,
-                    TrackList *tracks):
+                    TrackList *tracks, TrackPanel &panel):
       wxPrintout(title),
       mTracks(tracks)
+      , mPanel(panel)
    {
    }
    bool OnPrintPage(int page);
@@ -58,6 +59,7 @@ class AudacityPrintout final : public wxPrintout
                     int *selPageFrom, int *selPageTo);
 
  private:
+   TrackPanel &mPanel;
    TrackList *mTracks;
 };
 
@@ -84,7 +86,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    ruler.SetLabelEdges(true);
    ruler.Draw(*dc);
 
-   TrackArtist artist;
+   TrackArtist artist( &mPanel );
    artist.SetBackgroundBrushes(*wxWHITE_BRUSH, *wxWHITE_BRUSH,
                                *wxWHITE_PEN, *wxWHITE_PEN);
    const double screenDuration = mTracks->GetEndTime();
@@ -144,12 +146,14 @@ void HandlePageSetup(wxWindow *parent)
    gPrintData() = pageSetupDialog.GetPageSetupData().GetPrintData();
 }
 
-void HandlePrint(wxWindow *parent, const wxString &name, TrackList *tracks)
+void HandlePrint(
+   wxWindow *parent, const wxString &name, TrackList *tracks,
+   TrackPanel &panel)
 {
    wxPrintDialogData printDialogData(gPrintData());
 
    wxPrinter printer(&printDialogData);
-   AudacityPrintout printout(name, tracks);
+   AudacityPrintout printout(name, tracks, panel);
    if (!printer.Print(parent, &printout, true)) {
       if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
          AudacityMessageBox(_("There was a problem printing."),

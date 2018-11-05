@@ -36,6 +36,7 @@ class NoteTrack;
 class LabelTrack;
 class TimeTrack;
 class TrackList;
+class TrackPanel;
 class Ruler;
 class SelectedRegion;
 class ZoomInfo;
@@ -151,7 +152,7 @@ namespace TrackArt {
 class AUDACITY_DLL_API TrackArtist {
 
 public:
-   TrackArtist();
+   TrackArtist( TrackPanel *parent_ );
    ~TrackArtist();
    static TrackArtist *Get( TrackPanelDrawingContext & );
 
@@ -168,6 +169,8 @@ public:
    void UpdatePrefs();
 
    void UpdateVRuler(const Track *t, const wxRect & rect);
+
+   TrackPanel *parent;
 
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"

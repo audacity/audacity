@@ -164,7 +164,8 @@ int TrackArt::GetBottom(NoteTrack *t, const wxRect &rect)
 */
 #endif // USE_MIDI
 
-TrackArtist::TrackArtist()
+TrackArtist::TrackArtist( TrackPanel *parent_ )
+   : parent( parent_ )
 {
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;

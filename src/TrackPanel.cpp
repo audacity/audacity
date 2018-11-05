@@ -237,7 +237,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mRedrawAfterStop = false;
 
-   mTrackArtist = std::make_unique<TrackArtist>();
+   mTrackArtist = std::make_unique<TrackArtist>( this );
 
    mTimeCount = 0;
    mTimer.parent = this;

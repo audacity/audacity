@@ -3051,7 +3051,11 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    if( mEffect->mDraw->GetValue() )
    {
       ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
-      TrackArtist artist;
+
+      // Back pointer to TrackPanel won't be needed in the one drawing
+      // function we use here
+      TrackArtist artist( nullptr );
+
       artist.pZoomInfo = &zoomInfo;
       TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
       mEffect->mEnvelope->DrawPoints(
