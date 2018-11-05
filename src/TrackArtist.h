@@ -97,7 +97,6 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawWaveform(TrackPanelDrawingContext &context,
                      const WaveTrack *track,
                      const wxRect & rect,
-                     bool drawEnvelope, bool bigPoints, bool drawSliders,
                      bool muted);
 
    void DrawSpectrum(TrackPanelDrawingContext &context,
@@ -128,7 +127,6 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawClipWaveform(TrackPanelDrawingContext &context,
                          const WaveTrack *track, const WaveClip *clip,
                          const wxRect & rect,
-                         bool drawEnvelope, bool bigPoints,
                          bool dB, bool muted);
 
    void DrawClipSpectrum(TrackPanelDrawingContext &context,
@@ -144,7 +142,7 @@ class AUDACITY_DLL_API TrackArtist {
                                int zeroLevelYCoordinate,
                                bool dB, float dBRange,
                                double t0, double t1,
-                               bool drawEnvelope, bool bIsSyncLockSelected,
+                               bool bIsSyncLockSelected,
                                bool highlightEnvelope);
    void DrawMinMaxRMS(TrackPanelDrawingContext &context,
                       const wxRect & rect, const double env[],
@@ -157,7 +155,7 @@ class AUDACITY_DLL_API TrackArtist {
                               float zoomMin, float zoomMax,
                               bool dB, float dBRange,
                               const WaveClip *clip,
-                              bool bigPoints, bool showPoints, bool muted,
+                              bool showPoints, bool muted,
                               bool highlight);
 
    void DrawNegativeOffsetTrackArrows( TrackPanelDrawingContext &context,

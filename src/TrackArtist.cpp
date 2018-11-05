@@ -306,8 +306,7 @@ void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
 
          switch (wt->GetDisplay()) {
          case WaveTrack::Waveform:
-            DrawWaveform(context, wt, rect,
-                         drawEnvelope,  bigPoints, drawSliders, muted);
+            DrawWaveform(context, wt, rect, muted);
             break;
          case WaveTrack::Spectrum:
             DrawSpectrum( context, wt, rect );
@@ -922,7 +921,7 @@ void TrackArtist::DrawWaveformBackground(TrackPanelDrawingContext &context,
                                          int zeroLevelYCoordinate,
                                          bool dB, float dBRange,
                                          double t0, double t1,
-                                         bool drawEnvelope, bool bIsSyncLockSelected,
+                                         bool bIsSyncLockSelected,
                                          bool highlightEnvelope)
 {
    auto &dc = context.dc;
@@ -1191,7 +1190,7 @@ void TrackArtist::DrawIndividualSamples(TrackPanelDrawingContext &context,
                                         float zoomMin, float zoomMax,
                                         bool dB, float dBRange,
                                         const WaveClip *clip,
-                                        bool bigPoints, bool showPoints, bool muted,
+                                        bool showPoints, bool muted,
                                         bool highlight)
 {
    auto &dc = context.dc;
@@ -1374,9 +1373,6 @@ void TrackArtist::DrawEnvLine(
 void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
-                               bool drawEnvelope,
-                               bool bigPoints,
-                               bool drawSliders,
                                bool muted)
 {
    auto &dc = context.dc;
@@ -1397,7 +1393,6 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
 
    for (const auto &clip: track->GetClips())
       DrawClipWaveform(context, track, clip.get(), rect,
-                       drawEnvelope, bigPoints,
                        dB, muted);
 
    // Update cache for locations, e.g. cutlines and merge points
@@ -1663,8 +1658,6 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
                                    const WaveClip *clip,
                                    const wxRect & rect,
-                                   bool drawEnvelope,
-                                   bool bigPoints,
                                    bool dB,
                                    bool muted)
 {
@@ -1745,7 +1738,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
          zoomMin, zoomMax,
          track->ZeroLevelYCoordinate(mid),
          dB, dBRange,
-         tt0, tt1, drawEnvelope,
+         tt0, tt1,
          !track->GetSelected(), highlightEnvelope);
    }
 
@@ -1884,7 +1877,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
                context, leftOffset, rectPortion, zoomMin, zoomMax,
                dB, dBRange,
                clip,
-               bigPoints, showPoints, muted, highlight );
+               showPoints, muted, highlight );
          }
       }
 
